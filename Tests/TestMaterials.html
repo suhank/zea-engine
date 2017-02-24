@@ -1,0 +1,66 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Lightmaps</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+
+// Note: launch Chrome with  --allow-file-access-from-files
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+    let envMapURL = "Assets/CornellBoxEnv.hdr";
+    // let envMapURL = "Assets/hdri_sky_01_sample.hdr";
+
+    let scene = new Visualive.Scene();
+    let envMap =  new Visualive.EnvMap('env', envMapURL);
+    scene.setEnvMap(envMap);
+
+    let addMeshShape = (shape, pos, mat)=>{
+        let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, mat);
+        geomItem.localXfo.tr = pos;
+        scene.getRoot().addChild(geomItem);
+    }
+    for(let i=0; i<10; i++){
+        for(let j=0; j<10; j++){
+            let material = new Visualive.StandardMaterial('ground');
+            material.baseColor = new Visualive.Color(0.6, 0.6, 0.6);
+            material.roughness = i/9;
+            material.metallic = j/9;
+            if(j < 6)
+                material.reflectance = 0.02;
+            else
+                material.reflectance = 0.5;
+            addMeshShape(new Visualive.Sphere('Sphere'+i+"-"+j, 1.4, 40), new Visualive.Vec3(i*3.4, 0, j*3.4), material);
+        }
+    }
+    
+    let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600, true));
+    renderer.exposure = 5;
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+    
+    envMap.loaded.connect(() => {
+
+        renderer.setScene(scene);
+        renderer.frameAll();
+
+        let gui = addGUI();
+        renderer.addGUI(gui);
+    
+        renderer.resumeDrawing();
+    });
+
+
+});
+        </script> 
+    </body>
+</html>

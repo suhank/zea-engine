@@ -1,0 +1,11 @@
+name "INSTALLER UMC1.2"
+description "3DStudio.nl Scripts"
+version 1.2
+
+treeCopy "payload" to "$temp\UMCv1.2"
+copy "mzpinstaller.ms" to "$temp\UMCv1.2"
+copy "mzpbuilder_UMC.ini" to "$temp\UMCv1.2"
+copy "mzpbuilder_UMC.xml" to "$temp\UMCv1.2"
+copy "readme.txt" to "$temp\UMCv1.2"
+drop $temp\UMCv1.2\mzpinstaller.ms
+run $temp\UMCv1.2\mzpinstaller.ms

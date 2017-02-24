@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test HDR Images</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../external/Unpack.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+// Note: launch Chrome with  --allow-file-access-from-files
+document.addEventListener("DOMContentLoaded", function(event) {
+
+    let loadEnv = (url)=>{
+        let scene = new Visualive.Scene();
+        let envMap =  new Visualive.HDRImage2D('envMap', url);
+        scene.setEnvMap(envMap);
+
+        let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600));
+        renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+
+        let async = new Visualive.Async();
+        async.incAsyncCount(3);
+        envMap.loaded.connect(() => {
+            renderer.setScene(scene);
+            renderer.resumeDrawing();
+            
+            let gui = addGUI();
+            renderer.addGUI(gui);
+        });
+
+
+    }
+
+    //loadEnv("Assets/night_free_Ref.vlh");
+    // loadEnv("Assets/pisa.vlh");
+    // loadEnv("Assets/hdri_sky_02_sample.vlh");
+    loadEnv("Assets/HDR_041_Path_Ref.vlh");
+
+
+});
+        </script> 
+    </body>
+</html>

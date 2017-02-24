@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Binary Mesh Loading</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+// Note: launch Chrome with  --allow-file-access-from-files
+document.addEventListener("DOMContentLoaded", function(event) { 
+    
+    let loadBinMesh = (path)=>{
+        let asset =  new Visualive.BinAsset();
+        asset.loadURLs(path);
+
+        let scene = new Visualive.Scene();
+        let canvasDiv = addCanvas(600, 600);
+        let renderer = new Visualive.GLSimpleRenderer(canvasDiv);
+        renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+        renderer.setScene(scene)
+
+        let onLoaded = function() {
+            scene.getRoot().addChild(asset);
+            // renderer.getViewport().getCamera().frameView([scene.getRoot()]);
+            renderer.resumeDrawing();
+        }
+        asset.loaded.connect(onLoaded, this);
+    }
+
+    // loadBinMesh("file://localhost/D:/Projects/HordeSoftware/Visualive/Podium/Testing/TestOutputFiles/Clustering/cube");
+    loadBinMesh("file://localhost/D:/Projects/HordeSoftware/Visualive/Podium/Testing/TestOutputFiles/Clustering/GeoSphere");
+    loadBinMesh("file://localhost/D:/Projects/HordeSoftware/Visualive/Podium/Testing/TestOutputFiles/Clustering/Cow");
+ 
+    // {
+    //     let geomLibrary =  new Visualive.GeomLibrary();
+    //     geomLibrary.loadURL("file://localhost/D:/Projects/HordeSoftware/Visualive/Podium/Testing/TestOutputFiles/TestPersistence/Winged Victory.bin");
+    // }
+
+
+});
+        </script> 
+    </body>
+</html>

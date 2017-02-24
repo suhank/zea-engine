@@ -1,0 +1,81 @@
+import {
+    Color,
+    Xfo,
+    Ray
+} from '../../Math/Math.js';
+import {
+    Circle,
+    Cylinder,
+    Torus,
+    TreeItem,
+    GeomItem
+} from '../../SceneTree/SceneTree.js';
+import {
+    GLMesh
+} from '../GLMesh.js';
+import {
+    GLDrawItem
+} from '../GLDrawItem.js';
+import {
+    Gizmo
+} from './Gizmo.js';
+
+class AxialRotationGizmo extends Gizmo {
+    constructor(gl, context, name, color, xfo) {
+        super(color);
+
+        this.__context = context;
+        this.__treeItem = new TreeItem('AxialRotationGizmo'+name);
+        this.__treeItem.localXfo = xfo;
+        context.treeItem.addChild(this.__treeItem);
+
+        // let geom = new Circle('circle', 1.0, 32);
+        let geom = new Cylinder('Cylinder', 1.0, 0.04, 32, 2, false)
+        let geomItem = new GeomItem('circle', geom);
+        let geomglGeom = new GLMesh(gl, geom);
+        let geomglGeomItem = new GLDrawItem(gl, geomItem, geomglGeom);
+        this.__treeItem.addChild(geomItem);
+
+        this.__addDrawItem(geomglGeomItem);
+
+        // // Generate the proxy geom that we use to render the data buffer. 
+        // let proxyGeom = new Torus('proxy', 0.1, 1.0, 32);
+        let proxyGeom = new Cylinder('Cylinder', 1.0, 0.2, 32, 2, false)
+        let proxyGeomItem = new GeomItem('proxy', proxyGeom);
+        let proxyGeomglGeom = new GLMesh(gl, proxyGeom);
+        let proxyGeomglGeomItem = new GLDrawItem(gl, proxyGeomItem, proxyGeomglGeom);
+        this.__treeItem.addChild(proxyGeomItem);
+
+        // this.__addDrawItem(proxyGeomglGeomItem);
+        this.__setProxyItem(proxyGeomglGeomItem);
+    }
+
+    onDragStart(event, mousePos, viewport) {
+        this.manipRay = new Ray(this.__treeItem.globalXfo.tr, this.__treeItem.globalXfo.ori.getYaxis());
+        let mouseRay = viewport.calcRayFromScreenPos(mousePos);
+
+        let dist = mouseRay.intersectRayPlane(this.manipRay);
+        let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
+        let intersectionTangent = intersectionPos.subtract(this.manipRay.start).cross(this.manipRay.dir).normalize();
+        this.sliderRay = new Ray(intersectionPos, intersectionTangent);
+        this.mouseDownDist = this.sliderRay.intersectRayVector(mouseRay)[0];
+
+        this.__context.beginManipulation();
+    }
+
+    onDrag(event, mousePos, viewport) {
+        let mouseRay = viewport.calcRayFromScreenPos(mousePos);
+        let dist = this.sliderRay.intersectRayVector(mouseRay)[0];
+        let delta = (dist - this.mouseDownDist);
+        this.__context.rotate(this.manipRay.dir, -delta);
+    }
+
+    onDragEnd(event, mousePos, viewport) {
+        this.__context.endManipulation();
+    }
+
+};
+
+export {
+    AxialRotationGizmo
+};

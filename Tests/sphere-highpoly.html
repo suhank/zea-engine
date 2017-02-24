@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Podium Client</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+
+    let gui = addGUI();
+
+    /////////////////////////////////////
+    // Scene
+    let scene = new Visualive.Scene();
+    scene.getCamera().setPositionAndTarget(new Visualive.Vec3(8, 7, 4), new Visualive.Vec3(3, 3, 0));
+    // scene.envMap = new Visualive.EnvMapOctahedral('envMap', '/Tests/Assets/envs/test.env');
+    // scene.addIrradianceMap('Environment', 0.02); // 2cm texels
+    // scene.envMap.addGUI(gui);
+
+    /////////////////////////////////////
+    // Renderer
+    let renderer = new Visualive.GLSimpleRenderer(addCanvas(1600, 900, true));
+    renderer.setScene(scene);
+    // renderer.addGUI(gui);
+
+    /////////////////////////////////////
+    // Bin Asset
+    let asset = new Visualive.BinAsset('asset');
+    asset.localXfo.tr.set(0, 3.55, 0);
+    scene.getRoot().addChild(asset);
+    asset.loaded.connect(function() {
+        renderer.frameAll();
+        renderer.resumeDrawing();
+    });
+    asset.loadURL("/Tests/Assets/sphere-highpoly/sphere-highpoly.json");
+
+
+    /////////////////////////////////////
+    // Obj Asset
+    // let asset = new Visualive.ObjAsset('obj');
+    // asset.splitObjects = true;
+    // asset.splitGroupsIntoObjects = true;
+    // asset.loadMtlFile = true;
+    // asset.localXfo.tr.set(0, 3.55, 0);
+    // scene.getRoot().addChild(asset);
+
+    // asset.loaded.connect(function() {
+    //     renderer.frameAll();
+    //     renderer.resumeDrawing();
+    // });
+    // asset.loadURL("/Tests/Assets/M4A1/M4A1.obj");
+
+});
+        </script> 
+    </body>
+</html>

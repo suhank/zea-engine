@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Cow</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+    let gui = addGUI();
+
+    /////////////////////////////////////
+    // Scene
+    let scene = new Visualive.Scene();
+    scene.getCamera().setPositionAndTarget(new Visualive.Vec3(8, 7, 4), new Visualive.Vec3(3, 3, 0));
+
+    // scene.envMap = new Visualive.EnvMapOctahedral('envMap', '/Tests/Assets/envs/test.env');
+    // scene.addIrradianceMap('Environment', 0.02); // 2cm texels
+    // scene.envMap.addGUI(gui);
+
+    /////////////////////////////////////
+    // Ground Plane
+    let groundMaterial = new Visualive.StandardMaterial('ground');
+    groundMaterial.baseColor = new Visualive.Color(89 / 255, 182 / 255, 92 / 255);
+    groundMaterial.roughness = 1.0;
+    groundMaterial.metallic = 0.0;
+    let f1 = gui.addFolder('Ground');
+    let paramHolder0 = {};
+    Object.defineProperty(paramHolder0, 'baseColor', {
+        'get': () => {
+            return groundMaterial.baseColor.getAsRGBArray();
+        },
+        'set': (val) => {
+            groundMaterial.baseColor.setFromRGBArray(val);
+            groundMaterial.updated.emit();
+        }
+    });
+    f1.addColor(paramHolder0, 'baseColor');
+    f1.add(groundMaterial, 'roughness', 0, 1);
+    f1.add(groundMaterial, 'metallic', 0, 1);
+    f1.add(groundMaterial, 'reflectance', 0.0, 1); 
+
+    let quad = new Visualive.Plane('quad', 20, 20);
+    let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
+    groundPlaneItem.localXfo.ori.rotateX(Math.PI * -0.5);
+    groundPlaneItem.irradianceMap = 'Environment';
+    scene.getRoot().addChild(groundPlaneItem);
+
+    /////////////////////////////////////
+    // Renderer
+    
+    let renderer = new Visualive.GLSimpleRenderer(addCanvas(1600, 900, true));
+    // let renderer = new Visualive.GLVisualiveRenderer(addCanvas(1600, 900, true));
+    renderer.setScene(scene);
+    // renderer.addGUI(gui);
+
+    /////////////////////////////////////
+    // Obj Asset
+    let objAsset = new Visualive.ObjAsset('obj');
+    objAsset.splitObjects = false;
+    objAsset.splitGroupsIntoObjects = false;
+    objAsset.loadMtlFile = false;
+    objAsset.localXfo.tr.set(0, 3.55, 0);
+    scene.getRoot().addChild(objAsset);
+
+    objAsset.loaded.connect(function() {
+        // scene.generateIrradianceMapCoords();
+        renderer.frameAll();
+        renderer.resumeDrawing();
+        // Visualive.profilerReporter.generateReport();
+    });
+    objAsset.loadURL("/Tests/Assets/cow.obj");
+
+});
+        </script> 
+    </body>
+</html>

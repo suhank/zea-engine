@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Mesh Vertices Rendering</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+    let scene = new Visualive.Scene();
+    let objAsset = new Visualive.ObjAsset('obj');
+    objAsset.splitObjects = true;
+    objAsset.splitGroupsIntoObjects = true;
+    objAsset.loadMtlFile = false;
+    scene.getRoot().addChild(objAsset);
+
+
+    let renderer = new Visualive.GLSimpleRenderer(addCanvas(350, 256, true));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0));
+    renderer.addPass(new Visualive.GLMeshPointsPass(renderer.gl));
+    renderer.setScene(scene)
+
+    let onLoaded = function() {
+        renderer.resumeDrawing();
+        scene.getCamera().frameView([scene.getRoot()]);
+    }
+    objAsset.loaded.connect(onLoaded);
+    objAsset.loadURL("/Tests/Assets/cow.obj");
+
+});
+        </script> 
+        <br>
+    </body>
+</html>

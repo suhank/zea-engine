@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Obj Asset</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+
+        <script>
+            
+
+//////////////////////////////////
+// Test Obj Loader Shader
+let testobjGeom = function(path, cameraPos, cameraTarget, geomPos, vpSize, quadify = false) {
+
+    let scene = new Visualive.Scene();
+    let objAsset = new Visualive.ObjAsset('obj');
+    objAsset.splitObjects = true;
+    objAsset.splitGroupsIntoObjects = true;
+    objAsset.loadMtlFile = false;
+
+    if (geomPos != undefined)
+        objAsset.localXfo.tr.setFromOther(geomPos);
+
+
+    let canvasDiv;
+    if (vpSize != undefined)
+        canvasDiv = addCanvas(vpSize[0], vpSize[1]);
+    else
+        canvasDiv = addCanvas(350, 256);
+    let renderer = new Visualive.GLSimpleRenderer(canvasDiv);
+    renderer.getViewport().getCamera().setPositionAndTarget(cameraPos, cameraTarget);
+    renderer.setScene(scene)
+    renderer.resumeDrawing();
+
+    let onLoaded = function() {
+
+        scene.getRoot().addChild(objAsset);
+        renderer.getViewport().getCamera().frameView([scene.getRoot()]);
+    }
+    objAsset.loaded.connect(onLoaded, this);
+    objAsset.loadURL(path);
+}
+
+// testobjGeom("/Tests/Assets/cube-textures.obj", new Visualive.Vec3(2, 2, 2), new Visualive.Vec3(1, 1, 1), new Visualive.Vec3(0, 0, 0), [800, 600], true);
+testobjGeom("/Tests/Assets/cow.obj", new Visualive.Vec3(8, 2, 4), new Visualive.Vec3(3, 0, 0), new Visualive.Vec3(0, 0, 0), [800, 600]);
+// testobjGeom("/Tests/Assets/shelf.obj", new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0), new Visualive.Vec3(0, 2, 0), [800, 600]);
+
+// testobjGeom("/Tests/Assets/booleantestforVisualive.obj", new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0), new Visualive.Vec3(0, 2, 0), [800, 600]);
+// testobjGeom("/Tests/Assets/stanford_buddha/buddha.obj", new Visualive.Vec3(7, 7, 7), new Visualive.Vec3(0, 5, 0));
+
+
+
+
+        </script>  
+        <br>
+    </body>
+</html>

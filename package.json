@@ -1,0 +1,44 @@
+{
+  "name": "Visualive",
+  "version": "0.0.5",
+  "description": "Visualive core engine",
+  "main": "lib/Visualive.js",
+  "scripts": {
+    "build": "webpack --mode=build",
+    "buildES6": "webpack --mode=buildES6",
+    "dev": "webpack --progress --colors --watch --mode=dev",
+    "devES6": "webpack --progress --colors --watch --mode=devES6",
+    "test": "webpack --mode=dev && mocha --compilers js:babel-core/register --colors -w --recursive ./Tests/**/*test.js"
+  },
+  "devDependencies": {
+    "babel": "6.3.13",
+    "babel-core": "6.1.18",
+    "babel-eslint": "5.0.0",
+    "babel-loader": "6.1.0",
+    "babel-plugin-add-module-exports": "0.1.2",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.14.0",
+    "babel-preset-es2015": "6.3.13",
+    "chai": "3.4.1",
+    "eslint": "1.7.2",
+    "eslint-loader": "1.1.0",
+    "macro-loader": "^1.0.0",
+    "mocha": "2.3.4",
+    "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
+    "webpack": "^1.14.0",
+    "yargs": "3.32.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:phil_visualive/visualiveengine.git"
+  },
+  "keywords": [
+    "WebGL",
+    "es6"
+  ],
+  "author": "Philip Taylor",
+  "license": "Private",
+  "bugs": {
+    "url": "https://bitbucket.org/phil_visualive/visualiveengine/issues"
+  },
+  "homepage": "https://bitbucket.org/phil_visualive/visualiveengine"
+}

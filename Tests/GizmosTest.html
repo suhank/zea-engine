@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Gizmos Test</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+        <link rel="stylesheet" href="../external/jquery-ui-1.11.4/jquery-ui.css">
+        <link rel="stylesheet" href="./BaseTest.css">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-0.0.5.js"></script>
+        
+        <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+
+    let scene = new Scene();
+    scene.envMap = new EnvMapOctahedral('envMap', '/Tests/Assets/envs/test.env');
+    scene.envMap.backgroundRotation = -100;
+    scene.addIrradianceMap('Environment', 0.03); // 10cm texels
+    scene.addIrradianceMap('Default', 0.02); // 2cm texels
+    scene.getCamera().setPositionAndTarget(new Vec3(15, 2, 15), new Vec3(0, 0, 0));
+
+
+    // let quad = new Plane('quad', 80, 80);
+    // let groundMaterial = new StandardMaterial('ground');
+    // groundMaterial.baseColor = new Color(89 / 255, 182 / 255, 92 / 255);
+    // groundMaterial.roughness = 1.0;
+    // groundMaterial.metallic = 0.0;
+    // let groundPlaneItem = new GeomItem('groundPlaneItem', quad, groundMaterial);
+    // groundPlaneItem.localXfo.ori.rotateX(Math.PI * -0.5);
+    // groundPlaneItem.irradianceMap = 'Environment';
+    // scene.getRoot().addChild(groundPlaneItem);
+
+    let renderer = new GLSimpleRenderer(addCanvas(0, 0, true));
+    // let renderer = new GLVisualiveRenderer(addCanvas(0, 0, true));
+    renderer.setScene(scene);
+
+    // let gui = addGUI();
+    // scene.envMap.addGUI(gui);
+    // renderer.addGUI(gui);
+
+    // let objAsset = new ObjAsset('obj');
+    // objAsset.splitObjects = true;
+    // objAsset.splitGroupsIntoObjects = true;
+    // objAsset.unitsConversion = 0.01;
+    // objAsset.loaded.connect(function() {
+    //     console.log("Obj loaded...");
+    //     scene.getRoot().addChild(objAsset);
+    //     scene.generateIrradianceMapCoords();
+    //     renderer.frameAll();
+    //     renderer.resumeDrawing();
+    //     // profilerReporter.generateReport();
+    // });
+    // objAsset.loadURL("/Tests/Assets/HouseModern/HouseModern_OBJ_2.obj");
+    renderer.resumeDrawing();
+
+
+});
+        </script> 
+    </body>
+</html>
