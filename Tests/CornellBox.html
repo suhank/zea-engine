@@ -10,6 +10,7 @@
         <script src="../external/dat.gui.js"></script>
         <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
+        <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-0.0.5.js"></script>
         
         <script type="text/javascript">
@@ -19,12 +20,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     let loadBinMesh = (url)=>{
         let asset =  new Visualive.BinAsset();
-        asset.loadURLs(url);
+        asset.loadURL(url+'.vla');
 
         let scene = new Visualive.Scene();
-        let envMap =  new Visualive.EnvMap('pisa', url+'Env.hdr');
+        let envMap =  new Visualive.HDRImage2D('pisa', url+'Env.vlh');
         scene.setEnvMap(envMap);
-        let lightmap =  new Visualive.EnvMap('lightmap', url+'Lightmap.hdr');
+        let lightmap =  new Visualive.HDRImage2D('lightmap', url+'Lightmap.vlh');
         scene.setLightMap('Default', lightmap);
 
         let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600));

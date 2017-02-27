@@ -258,68 +258,9 @@ class Mesh extends BaseGeom {
     }
 
     loadBin(reader) {
-        /*
-        super.loadBaseGeomBin(reader);
-
-        this.setFaceCounts(reader.loadUInt32Array());
-        this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length);
-
-        let numVerts = this.numVertices();
-        let numFaces = this.getNumFaces();
-        
-        let faceVertexIndices_8bit = reader.loadUInt8Array();
-        if (numVerts < 256) {
-            this.__faceVertexIndices = faceVertexIndices_8bit;
-            let offset = 0;
-            for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
-                let count = this.__faceVertexCounts[faceIndex] + 3;
-                this.__faceOffsets[faceIndex] = offset;
-                offset += count;
-            }
-            this.__numPopulatedFaceVertexIndices = this.__faceVertexIndices.length;
-        } else {
-
-            let fixupsvec = reader.loadUInt32Array();
-            let fixups = {};
-            if (fixupsvec.length > 0) {
-                for (let i = 0; i < fixupsvec.length; i += 2)
-                    fixups[fixupsvec[i]] = fixupsvec[i + 1];
-            }
-
-            // Because of the exporting, values will generally be ascending.
-            // We allow values to ascend by up to 240 to fit within an 8 bit
-            // indexing table. Decending values will be more rare, and will
-            // either be small(because they are indexig local verts), or large(indexing non-local verts).
-            let deltaRangePos = 180;
-            let deltaRangeNeg = 256 - deltaRangePos;
-
-            let offset = 0;
-            let fixed = 0;
-            for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
-                let count = this.__faceVertexCounts[faceIndex] + 3;
-                this.__faceOffsets[faceIndex] = offset;
-                for (let j = 0; j < count; j++) {
-                    let faceVertex = offset + j;
-                    if (faceVertex in fixups) {
-                        this.__faceVertexIndices[faceVertex] = fixups[faceVertex];
-                        fixed++;
-                    } else {
-                        let delta = faceVertexIndices_8bit[faceVertex - fixed] - deltaRangeNeg;;
-                        if (faceIndex == 0)
-                            this.__faceVertexIndices[faceVertex] = delta;
-                        else {
-                            let prevFaceVertex = this.__faceOffsets[faceIndex - 1] + j;
-                            this.__faceVertexIndices[faceVertex] = this.__faceVertexIndices[prevFaceVertex] + delta;
-                        }
-                    }
-                }
-                offset += count;
-            }
-            this.__numPopulatedFaceVertexIndices = offset;
-        }
-        */
 
         this.name = reader.loadStr();
+        this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
 
         let normalsAttr = this.addVertexAttribute('normals', Vec3);
         let lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);

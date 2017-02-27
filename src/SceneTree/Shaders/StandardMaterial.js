@@ -200,7 +200,7 @@ void main(void) {
             viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
         }
 
-#ifdef ENABLE_LIGHTMAPS
+#ifdef __ENABLE_LIGHTMAPS
  
         vec3 albedoLinear = baseColor.rgb;  
 
