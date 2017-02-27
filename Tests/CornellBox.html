@@ -18,14 +18,14 @@
 // Note: launch Chrome with  --allow-file-access-from-files
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-    let loadBinMesh = (url)=>{
+    let loadBinMesh = (url, lightmapName)=>{
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
 
         let scene = new Visualive.Scene();
-        let envMap =  new Visualive.HDRImage2D('pisa', url+'Env.vlh');
+        let envMap =  new Visualive.HDRImage2D('pisa', url+'_'+lightmapName+'_Env.vlh');
         scene.setEnvMap(envMap);
-        let lightmap =  new Visualive.HDRImage2D('lightmap', url+'Lightmap.vlh');
+        let lightmap =  new Visualive.HDRImage2D('lightmap', url+'_'+lightmapName+'_Lightmap.vlh');
         scene.setLightMap('Default', lightmap);
 
         let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600));
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     setTimeout(function(){ 
-    loadBinMesh("Assets/CornellBox");
+    loadBinMesh("Assets/CornellBox", "HDR_041_Path_Ref");//"HDR_041_Path_Ref");
 
     }, 1000);
 });

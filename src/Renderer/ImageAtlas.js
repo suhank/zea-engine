@@ -164,7 +164,7 @@ class ImageAtlas extends GLTexture2D {
         let height = tree.rect.top.value;
         let scl = new Vec2(1.0 / width, 1.0 / height);
 
-        console.log(" Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
+        console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
         this.configure({
             width,

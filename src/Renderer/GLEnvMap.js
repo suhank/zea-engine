@@ -87,7 +87,7 @@ class GLEnvMap extends ImageAtlas {
         let screenQuad = this.__renderer.getScreenQuad();
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
         
-        this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, screenQuad, false);
+        this.__imagePyramid = new ImagePyramid(gl, 'EnvMapImagePyramid', srcGLTex, screenQuad, false);
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         // Compile and bind the convolver shader.

@@ -35,6 +35,7 @@ class GLHDRImage extends GLTexture2D {
             width: ldr.width,
             height: ldr.height,
             filter: 'NEAREST',
+            mipMapped: false,
             wrap: 'CLAMP_TO_EDGE',
             data: ldr
         });
@@ -44,6 +45,7 @@ class GLHDRImage extends GLTexture2D {
             width: ldr.width,
             height: ldr.height,
             filter: 'NEAREST',
+            mipMapped: false,
             wrap: 'CLAMP_TO_EDGE',
             data: envMapParams.cdm
         });

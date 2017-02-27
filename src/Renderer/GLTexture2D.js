@@ -99,6 +99,9 @@ class GLTexture2D extends RefCounted {
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.channels], gl[this.channels], gl[this.format], data);
             }
             else {
+                // Note: data images must have an even size width/height to load correctly. 
+                // this doesn't mean they must be pot textures...
+                //console.log(this.width + "x"+ this.height+ ":" + data.length + " channels:" + this.channels + " format:" + this.format);
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.channels], this.width, this.height, 0, gl[this.channels], gl[this.format], data);
             }
 
@@ -115,7 +118,7 @@ class GLTexture2D extends RefCounted {
         let gl = this.__gl;
         let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
         if(this.width < 0 || this.width > maxSize || this.height < 0 || this.height > maxSize) {
-            throw new Error('gl-texture2d: Invalid texture size')
+            throw new Error('gl-texture2d: Invalid texture size');
         }
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
 

@@ -74,7 +74,7 @@ class HDRImage2D extends Image2D {
                     _this.height =  _this.__ldrPic.height;
                     _this.__loaded = true;
                     _this.loaded.emit();
-                    console.log("Unpack:" + path+ ":" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                    console.log(path+ " width:"+_this.width + " height:" +_this.height + " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
                 }
                 this.__ldrPic.src= URL.createObjectURL(blob);
 
