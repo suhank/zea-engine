@@ -42,6 +42,8 @@ class GLForwardPass extends GLPass {
             let unifs = renderstate.unifs;
             if ('debugLightmapTexelSize' in unifs)
                 this.__gl.uniform1f(unifs.debugLightmapTexelSize.location, renderstate.debugLightmaps);
+            if ('planeX' in unifs)
+                this.__gl.uniform1f(unifs.planeX.location, renderstate.planeX);
             return true;
         }
         return false;

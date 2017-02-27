@@ -70,6 +70,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__displayEnvironment = true;
         this.__debugMode = 0;
         this.__debugLightmaps = false;
+        this.__planeX = 0.0;
 
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
@@ -247,6 +248,15 @@ class GLVisualiveRenderer extends GLRenderer {
         this.requestRedraw();
     }
 
+    get planeX() {
+        return this.__planeX;
+    }
+
+    set planeX(val) {
+        this.__planeX = val;
+        this.requestRedraw();
+    }
+
     addGUI(gui) {
         let _this = this;
         gui.add(this, 'exposure', 0.0, 6.0);
@@ -327,6 +337,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
+        renderstate.planeX = this.__planeX;
         renderstate.exposure = this.__exposure;
 
         for (let pass of this.__passes)

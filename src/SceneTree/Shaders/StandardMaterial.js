@@ -106,6 +106,7 @@ uniform float exposure;
 #endif
 
 uniform mat4 cameraMatrix;
+uniform float planeX;
 
 uniform color _baseColor;
 uniform sampler2D _baseColorTex;
@@ -190,7 +191,7 @@ void main(void) {
     }
     else{
 
-        vec3 planePos = vec3(0,0,0);
+        vec3 planePos = vec3(planeX,0,0);
         vec3 planeNormal = vec3(1,0,0);
         vec3 planeDir = v_worldPos - planePos;
         float planeOffset = dot(planeDir, planeNormal);
