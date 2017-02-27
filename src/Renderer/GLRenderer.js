@@ -275,6 +275,8 @@ class GLRenderer {
         webglOptions.alpha = true;
         this.__gl = setupWebGL(this.__glcanvas, webglOptions);
 
+        this.__isFragDepthAvailable = this.__gl.getExtension("EXT_frag_depth");
+
         // Setup event handlers
         this.__glcanvas.onmouseenter = function(event) {
             if (!mouseIsDown) {
