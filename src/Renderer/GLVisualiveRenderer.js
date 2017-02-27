@@ -3,6 +3,9 @@ import {
 } from '../Math/Math.js';
 
 import {
+    GLHDRImage
+} from './GLHDRImage.js';
+import {
     GLEnvMap
 } from './GLEnvMap.js';
 
@@ -57,7 +60,6 @@ class GLVisualiveRenderer extends GLRenderer {
 
         /////////////////////////
         // Renderer Setup
-        this.__lightmapMultiplier = lightmapMultiplier;
         this.__exposure = 1.0;
         this.__tonemap = true;
         this.__gamma = 2.2;
@@ -114,7 +116,7 @@ class GLVisualiveRenderer extends GLRenderer {
         }
         let lightMaps = scene.getLightMaps();
         for(let name in lightMaps)
-            this.__glLightmaps[name] = new GLTexture2D(this.__gl, lightMaps[name]);
+            this.__glLightmaps[name] = new GLHDRImage(this.__gl, lightMaps[name]);
     }
 
     addViewport(name) {

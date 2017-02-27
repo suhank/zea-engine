@@ -200,7 +200,7 @@ void main(void) {
             viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
         }
 
-#ifdef __ENABLE_LIGHTMAPS
+#ifdef ENABLE_LIGHTMAPS
  
         vec3 albedoLinear = baseColor.rgb;  
 
@@ -208,8 +208,8 @@ void main(void) {
         vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
         float NdotV = dot(normal, normalize(viewVector));
 
-        //vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-        vec3 irradiance = sampleEnvMap(normal, 1.0);
+        vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
+        //vec3 irradiance = sampleEnvMap(normal, 1.0);
 
         // // -------------------------- Diffuse Reflectance --------------------------
 

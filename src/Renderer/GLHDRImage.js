@@ -62,6 +62,16 @@ class GLHDRImage extends GLTexture2D {
         srcCDMTex.bind(renderstate, unifs.cdmSampler.location);
 
         gl.drawQuad();
+
+
+        // // Debug a block of pixels.
+        // gl.finish();
+        // let numPixels = 4;
+        // let pixels = new Float32Array(4 * numPixels);
+        // gl.readPixels(ldr.width / 4, ldr.height/4, numPixels, 1, gl.RGBA, gl.FLOAT, pixels);
+        // console.log(pixels);
+        // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
         fbo.destroy();
         srcLDRTex.destroy();
         srcCDMTex.destroy();
