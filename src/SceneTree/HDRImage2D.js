@@ -51,14 +51,18 @@ class HDRImage2D extends Image2D {
                 let unpack = new Unpack(data);
                 let entries = unpack.getEntries();
                 let ldrEntry = (entries[0].name.endsWith('.jpg') ? entries[0] : (entries[1].name.endsWith('.jpg') ? entries[1] : undefined));
-                let cdmEntry = (entries[0].name.endsWith('.bin') ? entries[0] : (entries[1].name.endsWith('.bin') ? entries[1] : undefined));
+                let cdmEntry = (entries[0].name.endsWith('.packed') ? entries[0] : (entries[1].name.endsWith('.packed') ? entries[1] : undefined));
                 if (!ldrEntry || !cdmEntry)
                     throw ("Invalid HDR resource");
                 let ldr = unpack.decompress(ldrEntry.name);
-                let cdm = unpack.decompress(cdmEntry.name);
-                if (!ldr || !cdm)
+                let cdmPacked = unpack.decompress(cdmEntry.name);
+                if (!ldr || !cdmPacked)
                     throw ("Invalid HDR resource");
                 unpack.close();
+
+
+                let unpackCDM = new Unpack(cdmPacked);
+                let cdm = unpackCDM.decompress(unpack.getEntries()[0]);
 
                 let unpacked = performance.now();
 
