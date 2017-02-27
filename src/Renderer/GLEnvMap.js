@@ -148,8 +148,8 @@ class GLEnvMap extends ImageAtlas {
 
         glConvolverShader.destroy();
         hammersleyTexture.destroy();
-        srcGLTex.destroy();
-        // this.__srcGLTex = srcGLTex;
+        //srcGLTex.destroy();
+        this.__srcGLTex = srcGLTex;
 
         
         // this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
@@ -208,10 +208,10 @@ class GLEnvMap extends ImageAtlas {
                 this.__glEnvMapShader.bind(renderstate, 'GLEnvMap');
                 let gl = this.__gl;
                 let unifs = renderstate.unifs;
-                this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-                this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
                 // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+                //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+                this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
 
                 if ('focus' in unifs)
                     gl.uniform1f(unifs.focus.location, this.__backgroundFocus);

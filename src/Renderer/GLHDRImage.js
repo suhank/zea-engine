@@ -21,7 +21,7 @@ class GLHDRImage extends GLTexture2D {
             format: 'FLOAT',
             width: hdrImage.width,
             height: hdrImage.height,
-            filter: 'NEAREST',
+            filter: 'LINEAR',
             wrap: 'CLAMP_TO_EDGE'
         });
         let fbo = new GLFbo(gl, this);

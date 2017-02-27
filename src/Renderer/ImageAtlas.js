@@ -170,7 +170,8 @@ class ImageAtlas extends GLTexture2D {
             width,
             height,
             channels:this.__channels,
-            format:this.__format
+            format:this.__format,
+            filter: 'LINEAR'
         });
 
         let fbo = new GLFbo(gl, this);
