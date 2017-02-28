@@ -191,6 +191,7 @@ void main(void) {
     }
     else{
 
+#ifdef ENABLE_CROSS_SECTIONS
         // Only do cross sections on opaque surfaces. 
         vec3 planePos = vec3(planeX,0,0);
         vec3 planeNormal = vec3(1,0,0);
@@ -211,10 +212,12 @@ void main(void) {
                 discard;
             return;
         }
-        // if(!gl_FrontFacing){
-        //    viewNormal *= -1.0;
-        // }
-        
+#else
+        if(!gl_FrontFacing){
+            viewNormal *= -1.0;
+        }
+#endif
+
         viewNormal = normalize(viewNormal);
         vec3 surfacePos = -v_viewPos.xyz;
 
