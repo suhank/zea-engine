@@ -192,26 +192,29 @@ void main(void) {
     else{
 
         // Only do cross sections on opaque surfaces. 
-        if(opacity > 0.5){
-            vec3 planePos = vec3(planeX,0,0);
-            vec3 planeNormal = vec3(1,0,0);
-            vec3 planeDir = v_worldPos - planePos;
-            float planeOffset = dot(planeDir, planeNormal);
-            if(planeOffset < 0.0){
-                discard;
-                return;
-            }
-            if(!gl_FrontFacing){
+        vec3 planePos = vec3(planeX,0,0);
+        vec3 planeNormal = vec3(1,0,0);
+        vec3 planeDir = v_worldPos - planePos;
+        float planeOffset = dot(planeDir, planeNormal);
+        if(planeOffset < 0.0){
+            discard;
+            return;
+        }
+        if(!gl_FrontFacing){
+            if(opacity > 0.5){
                 gl_FragColor = vec4(0.8,0,0,1);
                 // TODO: compute frag depth to be at the level of the plane.
                 //vec3 planeSurfacePos = planeDir + planeOffset;
                 //gl_FragDepthEXT = 0.0;
-                return;
             }
+            else
+                discard;
+            return;
         }
-        //if(!gl_FrontFacing){
+        // if(!gl_FrontFacing){
         //    viewNormal *= -1.0;
-        //}
+        // }
+        
         viewNormal = normalize(viewNormal);
         vec3 surfacePos = -v_viewPos.xyz;
 
