@@ -66,7 +66,7 @@ class BinAsset extends AssetItem {
                 this.__geoms.loadBin(new BinReader(geomData.buffer));
                 this.fromJSON(JSON.parse(new TextDecoder("utf-8").decode(assetTree)));
 
-                console.log("Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
 
                 this.loaded.emit();
             },

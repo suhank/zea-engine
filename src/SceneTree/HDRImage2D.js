@@ -51,18 +51,22 @@ class HDRImage2D extends Image2D {
                 let unpack = new Unpack(data);
                 let entries = unpack.getEntries();
                 let ldrEntry = (entries[0].name.endsWith('.jpg') ? entries[0] : (entries[1].name.endsWith('.jpg') ? entries[1] : undefined));
-                let cdmEntry = (entries[0].name.endsWith('.packed') ? entries[0] : (entries[1].name.endsWith('.packed') ? entries[1] : undefined));
-                if (!ldrEntry || !cdmEntry)
-                    throw ("Invalid HDR resource");
+                let cdmEntry = entries[0].name.endsWith('.jpg') ? entries[1] : entries[0];
+                let cdm;
+                if(cdmEntry && cdmEntry.name.endsWith('.packed')){
+                    let cdmPacked = unpack.decompress(cdmEntry.name);
+                    let unpackCDM = new Unpack(cdmPacked.buffer);
+                    cdm = unpackCDM.decompress(unpackCDM.getEntries()[0].name);
+                    unpackCDM.close();
+                }
+                else{
+                    cdmEntry = (entries[0].name.endsWith('.bin') ? entries[0] : (entries[1].name.endsWith('.bin') ? entries[1] : undefined));
+                    cdm = unpack.decompress(cdmEntry.name);
+                }
+                if (!ldrEntry || !cdm)
+                    throw ("Invalid VLH file");
                 let ldr = unpack.decompress(ldrEntry.name);
-                let cdmPacked = unpack.decompress(cdmEntry.name);
-                if (!ldr || !cdmPacked)
-                    throw ("Invalid HDR resource");
                 unpack.close();
-
-
-                let unpackCDM = new Unpack(cdmPacked);
-                let cdm = unpackCDM.decompress(unpack.getEntries()[0]);
 
                 let unpacked = performance.now();
 
