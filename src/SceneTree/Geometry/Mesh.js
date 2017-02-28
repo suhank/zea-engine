@@ -260,6 +260,7 @@ class Mesh extends BaseGeom {
     loadBin(reader) {
 
         this.name = reader.loadStr();
+        // console.log("loadBin:" + this.name);
         this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
 
         let normalsAttr = this.addVertexAttribute('normals', Vec3);

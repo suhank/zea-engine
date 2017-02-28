@@ -51,7 +51,7 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, lightmapMultiplier=1.01) {
+    constructor(canvasDiv, enableCrossSections=false) {
 
         super(canvasDiv, {
             antialias: true,
@@ -95,6 +95,8 @@ class GLVisualiveRenderer extends GLRenderer {
 #define ENABLE_INLINE_GAMMACORRECTION
 `
         };
+        if(enableCrossSections)
+            this.__shaderDirectives.defines = this.__shaderDirectives.defines + '\n#define ENABLE_CROSS_SECTIONS'
     }
 
     getScreenQuad(){
@@ -259,7 +261,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
     addGUI(gui) {
         let _this = this;
-        gui.add(this, 'exposure', 0.0, 6.0);
+        gui.add(this, 'exposure', 0.0, 10.0);
         // gui.add(this, 'tonemap', 0, 1);
         // gui.add(this, 'gamma', 0, 5.0);
         // gui.add(this, 'antialiase');
