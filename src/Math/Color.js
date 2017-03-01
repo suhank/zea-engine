@@ -85,6 +85,12 @@ class Color extends AttrValue {
         vals.push(this.b * 255);
         return vals;
     }
+    setFromRGB(r, g, b, a) {
+        this.r = r / 255;
+        this.g = g / 255;
+        this.b = b / 255;
+        this.a = a ? (a / 255) : 1.0;
+    }
     setFromRGBArray(vals) {
         this.r = vals[0] / 255;
         this.g = vals[1] / 255;

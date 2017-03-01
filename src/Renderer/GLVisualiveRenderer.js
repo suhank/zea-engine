@@ -261,7 +261,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
     addGUI(gui) {
         let _this = this;
-        gui.add(this, 'exposure', 0.0, 15.0);
+        gui.add(this, 'exposure', 0.0, 20.0);
         // gui.add(this, 'tonemap', 0, 1);
         // gui.add(this, 'gamma', 0, 5.0);
         // gui.add(this, 'antialiase');
