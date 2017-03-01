@@ -94,22 +94,23 @@ class GLTexture2D extends RefCounted {
 
     __bufferData(data){
         let gl = this.__gl;
+        let channels = (typeof this.channels) == "string" ? gl[this.channels] : this.channels;
         if (data != undefined) {
             if (data instanceof Image) {
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.channels], gl[this.channels], gl[this.format], data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, gl[this.format], data);
             }
             else {
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
                 //console.log(this.width + "x"+ this.height+ ":" + data.length + " channels:" + this.channels + " format:" + this.format);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.channels], this.width, this.height, 0, gl[this.channels], gl[this.format], data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, gl[this.format], data);
             }
 
             if (this.mipMapped)
                 gl.generateMipmap(gl.TEXTURE_2D);
         } 
         else
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl[this.channels], this.width, this.height, 0, gl[this.channels], gl[this.format], null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, gl[this.format], null);
     }
 
     resize(width, height, data) {

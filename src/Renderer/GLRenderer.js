@@ -202,7 +202,7 @@ class GLRenderer {
     }
 
     activateViewportAtPos(offsetX, offsetY) {
-        this.__activeViewport = this.getViewportAtPos(event.offsetX, event.offsetY);
+        this.__activeViewport = this.getViewportAtPos(offsetX, offsetY);
     }
 
     getActiveViewport() {

@@ -3,20 +3,16 @@ import '../Math/Math.js';
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLFbo {
-    constructor(gl, colorTexture, createDepthTexture = false, geomIdTexture = undefined) {
+    constructor(gl, colorTexture, createDepthTexture = false) {
         this.__gl = gl;
         this.__colorTexture = colorTexture;
-        this.__depthTexture = undefined;
         this.__createDepthTexture = createDepthTexture;
-        this.__geomIdTexture = geomIdTexture;
         this.__clearColor = [0, 0, 0, 1];
+        this.__depthTexture = undefined;
+        this.__colorTexture.resized.connect(this.resize, this);
 
         this.setup();
 
-        // If multiple attachments, we can't automatically resize here.
-        // TODO: this solutoin isn't very nice. Find a better approach. 
-        if(!geomIdTexture)
-            this.__colorTexture.resized.connect(this.resize, this);
     }
 
     setClearColor(clearColor) {
@@ -33,39 +29,19 @@ class GLFbo {
                 console.warn("'WEBGL_depth_texture' not found. depth textures not supported...");
         }
 
-        // Note: DEPRECATED
-        if (this.__geomIdTexture) {
-            this.__ext_WEBGL_draw_buffers = gl.getExtension("WEBGL_draw_buffers");
-            if (!this.__ext_WEBGL_draw_buffers) {
-                console.warn("Selection isn't possible without support for WEBGL_draw_buffers");
-                this.__geomIdTexture.destroy();
-                this.__geomIdTexture = undefined;
-            }
-        }
-
         this.__fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
-        if (this.__colorTexture.type == 'FLOAT') {
-            // Note: Fails on all browsers..
-            // let ext = gl.getExtension('WEBGL_color_buffer_float');
-            // if(!ext)
-            //     throw("Unable to write to float textures.");
+        if (this.__colorTexture.format == 'FLOAT') {
+            if(!gl.__ext_float)
+                throw("Unable to write to float textures.");
             if (this.__colorTexture.filter != 'NEAREST') {
-                let ext = gl.getExtension('OES_texture_float_linear');
-                if (!ext)
+                if (!gl.__ext_float_linear)
                     throw ("Unable to use filtering on floating point textures");
             }
         }
 
-        if (this.__geomIdTexture) {
-            // Note: DEPRECATED
-            let ext = this.__ext_WEBGL_draw_buffers;
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, ext.COLOR_ATTACHMENT0_WEBGL, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, ext.COLOR_ATTACHMENT1_WEBGL, gl.TEXTURE_2D, this.__geomIdTexture.glTex, 0);
-        } else {
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
-        }
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
 
         // Create the depth texture
         if (this.__createDepthTexture) {
@@ -158,14 +134,6 @@ class GLFbo {
         let gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
         gl.viewport(0, 0, this.width * viewportScaleFactor, this.height * viewportScaleFactor); // Match the viewport to the texture size
-
-        // Note: DEPRECATED
-        if (this.__geomIdTexture) {
-            this.__ext_WEBGL_draw_buffers.drawBuffersWEBGL([
-                this.__ext_WEBGL_draw_buffers.COLOR_ATTACHMENT0_WEBGL, // gl_FragData[0]
-                this.__ext_WEBGL_draw_buffers.COLOR_ATTACHMENT1_WEBGL // gl_FragData[1]
-            ]);
-        }
     }
 
     clear() {

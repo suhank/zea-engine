@@ -17,7 +17,7 @@ import {
 class GLHDRImage extends GLTexture2D {
     constructor(gl, hdrImage) {
         super(gl, {
-            channels: 'RGB',
+            channels: 'RGBA',
             format: 'FLOAT',
             width: hdrImage.width,
             height: hdrImage.height,

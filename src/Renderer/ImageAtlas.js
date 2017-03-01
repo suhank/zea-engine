@@ -99,7 +99,7 @@ import '../SceneTree/Shaders/GLSL/ImageAtlas.js';
 
 
 class ImageAtlas extends GLTexture2D {
-    constructor(gl, name, channels="RGB", format = "FLOAT") {
+    constructor(gl, name, channels='RGBA', format = 'FLOAT') {
         super(gl);
         this.__name = name;
         this.__channels = channels;
@@ -166,10 +166,11 @@ class ImageAtlas extends GLTexture2D {
 
         console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
+        // Note: only RGBA Float textures can be rendered to on Firefox.(Not RGB)
         this.configure({
             width,
             height,
-            channels:this.__channels,
+            channels:(this.__format=='FLOAT'&&this.__channels=='RGB')?'RGBA':this.__channels,
             format:this.__format,
             filter: 'LINEAR'
         });

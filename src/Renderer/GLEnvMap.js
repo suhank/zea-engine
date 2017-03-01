@@ -123,7 +123,7 @@ class GLEnvMap extends ImageAtlas {
             gl.uniform1f(roughnessLocation, (j+1)/levels);
 
             let level = new GLTexture2D(gl, {
-                channels: 'RGB',
+                channels: 'RGBA',
                 format: 'FLOAT',
                 width: currRez[0],
                 height: currRez[1],
