@@ -24,7 +24,7 @@ import {
 let Math_log2 = function(value){
     // IE11 doesn't support Math.log2
     return Math.log2( value )
-    return Math.log( value ) / Math.log( 2 ) - 2;
+    //return Math.log( value ) / Math.log( 2 ) - 2;
 }
 
 import {
