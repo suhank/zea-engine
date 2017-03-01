@@ -165,7 +165,6 @@ class Camera extends TreeItem {
     }
 
     onDragStart(event, mouseDownPos, viewport) {
-        event.target.requestPointerLock();
         this.__mouseDragDelta.set(0,0);
         this.__mouseDownCameraXfo = this.__globalXfo.clone();
         this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
