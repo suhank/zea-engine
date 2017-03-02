@@ -1,7 +1,7 @@
-let addGUI = function() {
+let addGUI = function(div) {
     let moveGUIDiv = document.createElement("div");
     moveGUIDiv.id = 'moveGUI';
-    document.body.appendChild(moveGUIDiv);
+    div.appendChild(moveGUIDiv);
     let gui = new dat.GUI({
         autoPlace: false
     });

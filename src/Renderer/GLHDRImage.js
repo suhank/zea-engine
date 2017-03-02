@@ -42,8 +42,8 @@ class GLHDRImage extends GLTexture2D {
         let srcCDMTex = new GLTexture2D(gl, {
             channels: 'ALPHA',
             format: 'UNSIGNED_BYTE',
-            width: ldr.width,
-            height: ldr.height,
+            width: ldr.width/*8*/,
+            height: ldr.height/*8*/,
             filter: 'NEAREST',
             mipMapped: false,
             wrap: 'CLAMP_TO_EDGE',

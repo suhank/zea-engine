@@ -23,7 +23,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let envMap =  new Visualive.HDRImage2D('envMap', url);
         scene.setEnvMap(envMap);
 
-        let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600));
+        let div = addCanvas(800, 600);
+        let renderer = new Visualive.GLVisualiveRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
         let async = new Visualive.Async();
@@ -32,17 +33,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
             renderer.setScene(scene);
             renderer.resumeDrawing();
             
-            let gui = addGUI();
+            let gui = addGUI(div);
             renderer.addGUI(gui);
         });
 
 
     }
 
-    //loadEnv("Assets/night_free_Ref.vlh");
+    loadEnv("Assets/night_free_Ref.vlh");
     // loadEnv("Assets/pisa.vlh");
-    //loadEnv("Assets/hdri_sky_02_sample.vlh");
-    loadEnv("Assets/HDR_041_Path_Ref.vlh");
+    // loadEnv("Assets/hdri_sky_02_sample.vlh");
+    // loadEnv("Assets/HDR_041_Path_Ref.vlh");
 
 
 });
