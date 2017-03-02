@@ -51,7 +51,7 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, enableCrossSections=false) {
+    constructor(canvasDiv, enableCrossSections=false, exposureRange=[0,5]) {
 
         super(canvasDiv, {
             antialias: true,
@@ -61,6 +61,7 @@ class GLVisualiveRenderer extends GLRenderer {
         /////////////////////////
         // Renderer Setup
         this.__exposure = 1.0;
+        this.__exposureRange = exposureRange;
         this.__tonemap = true;
         this.__gamma = 2.2;
         this.__antialiase = false;
@@ -261,7 +262,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
     addGUI(gui) {
         let _this = this;
-        gui.add(this, 'exposure', 0.0, 20.0);
+        gui.add(this, 'exposure', this.__exposureRange[0], this.__exposureRange[1]);
         // gui.add(this, 'tonemap', 0, 1);
         // gui.add(this, 'gamma', 0, 5.0);
         // gui.add(this, 'antialiase');
