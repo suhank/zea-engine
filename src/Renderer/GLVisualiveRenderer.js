@@ -1,6 +1,11 @@
 import {
     Vec3
 } from '../Math/Math.js';
+import {
+    HDRImage2D,
+    ProceduralSky
+} from '../SceneTree/SceneTree.js';
+
 
 import {
     GLHDRImage
@@ -8,6 +13,9 @@ import {
 import {
     GLEnvMap
 } from './GLEnvMap.js';
+import {
+    GLProceduralSky
+} from './GLProceduralSky.js';
 
 import {
     GLShader
@@ -88,8 +96,6 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__debugTextures.push(this.__viewports[0].__fwBuffer);
         this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
 
-        this.__screenQuad = new GLScreenQuad(this.__gl);
-
         this.__shaderDirectives = {
             defines:`
 #define ENABLE_LIGHTMAPS
@@ -100,10 +106,6 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__shaderDirectives.defines = this.__shaderDirectives.defines + '\n#define ENABLE_CROSS_SECTIONS'
     }
 
-    getScreenQuad(){
-        return this.__screenQuad;
-    }
-
     getShaderPreprocessorDirectives() {
         return this.__shaderDirectives;
     }
@@ -111,9 +113,15 @@ class GLVisualiveRenderer extends GLRenderer {
     setScene(scene) {
         super.setScene(scene);
 
-        if (scene.getEnvMap() != undefined) {
-            this.__glEnvMap = new GLEnvMap(this, scene.getEnvMap());
-            this.__shaderDirectives.repl = this.__glEnvMap.getShaderPreprocessorDirectives();
+        if (scene.getEnvMap() != undefined) {  
+            let env = scene.getEnvMap();
+            if(env instanceof HDRImage2D){
+                this.__glEnvMap = new GLEnvMap(this, env);
+                this.__shaderDirectives.repl = this.__glEnvMap.getShaderPreprocessorDirectives();
+            }
+            else if(env instanceof ProceduralSky){
+                this.__glEnvMap = new GLProceduralSky(this.__gl, env);
+            }
             this.__glEnvMap.updated.connect((data) => {
                 this.requestRedraw();
             }, this);

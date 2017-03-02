@@ -277,6 +277,9 @@ class GLRenderer {
 
         this.__isFragDepthAvailable = this.__gl.getExtension("EXT_frag_depth");
 
+        this.__gl.screenQuad = new GLScreenQuad(this.__gl);
+        this.__screenQuad = this.__gl.screenQuad;
+
         // Setup event handlers
         this.__glcanvas.onmouseenter = function(event) {
             if (!mouseIsDown) {
@@ -368,6 +371,10 @@ class GLRenderer {
 
     getGLCanvas() {
         return this.__glcanvas;
+    }
+
+    getScreenQuad(){
+        return this.__screenQuad;
     }
 
     onKeyPressed(key) {

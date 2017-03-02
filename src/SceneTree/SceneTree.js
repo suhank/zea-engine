@@ -22,6 +22,7 @@ export * from './Scene.js';
 export * from './BinAsset.js';
 export * from './ObjAsset.js';
 export * from './HDRImage2D.js';
+export * from './ProceduralSky.js';
 
 export * from './Shaders/Shaders.js';
 
