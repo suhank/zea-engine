@@ -199,9 +199,9 @@ class GLEnvMap extends ImageAtlas {
                 let screenQuad = this.__renderer.getScreenQuad();
                 screenQuad.bindShader(renderstate);
                 // screenQuad.draw(renderstate, this.__srcCDMTex);
-                screenQuad.draw(renderstate, this.__srcGLTex);
-                //screenQuad.draw(renderstate, this.__imagePyramid);
-                // screenQuad.draw(renderstate, this);
+                // screenQuad.draw(renderstate, this.__srcGLTex);
+                // screenQuad.draw(renderstate, this.__imagePyramid);
+                screenQuad.draw(renderstate, this);
             }
             else{
                 ///////////////////

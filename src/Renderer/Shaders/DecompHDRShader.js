@@ -33,8 +33,13 @@ uniform sampler2D ldrSampler;
 uniform sampler2D cdmSampler;
 
 vec3 decodeHDR(const in vec3 ldrPixel, const in float cdmAlpha) {
-    float a = (cdmAlpha * 16.0 - 8.0) / 4.0;
-    vec3 color = ldrPixel / (a * (1.0 - ldrPixel));
+    float avg = (cdmAlpha * 16.0 - 8.0);
+    vec3 color;
+    color.x = tan((ldrPixel.x-0.5)*1.5)+avg;
+    color.y = tan((ldrPixel.y-0.5)*1.5)+avg;
+    color.z = tan((ldrPixel.z-0.5)*1.5)+avg;
+
+    // convert from logarithmic curve to linear curve.
     color.x = pow(10.0, color.x);
     color.y = pow(10.0, color.y);
     color.z = pow(10.0, color.z);

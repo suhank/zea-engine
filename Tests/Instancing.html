@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Test Lightmaps</title>
+        <title>Instancing</title>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     </head>
     <body text-align: left;>
@@ -16,46 +16,45 @@
         <script type="text/javascript">
 
 // Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) {
+document.addEventListener("DOMContentLoaded", function(event) { 
 
     let loadBinMesh = (url, lightmapName)=>{
         let asset =  new Visualive.BinAsset();
-        asset.loadURLs(url);
+        asset.loadURL(url+'.vla');
 
         let scene = new Visualive.Scene();
         let envMap =  new Visualive.HDRImage2D('pisa', url+'_'+lightmapName+'_Env.vlh');
         scene.setEnvMap(envMap);
         let lightmap =  new Visualive.HDRImage2D('lightmap', url+'_'+lightmapName+'_Lightmap.vlh');
         scene.setLightMap('Default', lightmap);
-        let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600));
+
+        let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600), true);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
         let async = new Visualive.Async();
         async.incAsyncCount(3);
-        envMap.loaded.connect(async.decAsyncCount, async);
         lightmap.loaded.connect(async.decAsyncCount, async);
+        envMap.loaded.connect(async.decAsyncCount, async);
         asset.loaded.connect(async.decAsyncCount, async);
         async.ready.connect(() => {
-            renderer.setScene(scene);
             scene.getRoot().addChild(asset);
+            renderer.setScene(scene);
             renderer.frameAll();
             renderer.resumeDrawing();
+
+            let gui = addGUI();
+            renderer.addGUI(gui);
+
+            gui.add(renderer, 'planeX', -3, 3);
         });
 
-        let gui = addGUI();
-        renderer.addGUI(gui);
 
     }
 
-    // loadBinMesh("Assets/facingTriangles");
-    loadBinMesh("Assets/facingTriangles_Transparency", "hdri_sky_02_sample");
-    // loadBinMesh("Assets/facingTriangles_Emission");
-    // loadBinMesh("Assets/CornellBox");
-    // loadBinMesh("Assets/sphereOnAPlane");
-    // loadBinMesh("Assets/BrokenGeom");
-    // loadBinMesh("Assets/Cow");
+    setTimeout(function(){ 
+    loadBinMesh("Assets/Instancing", "pisa");//"");
 
-
+    }, 1000);
 });
         </script> 
     </body>
