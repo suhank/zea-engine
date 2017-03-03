@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Test HDR Images</title>
+        <title>Procedural Sky</title>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     </head>
     <body text-align: left;>
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let envMap =  new Visualive.ProceduralSky();
     scene.setEnvMap(envMap);
 
-    let div = addCanvas(800, 600);
+    let div = addCanvas(800, 600, true);
     let renderer = new Visualive.GLVisualiveRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 

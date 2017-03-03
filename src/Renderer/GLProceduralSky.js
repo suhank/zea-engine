@@ -141,14 +141,17 @@ vec2 SunAtTime(in float julianDay2000, in float latitude, in float longitude) {
     return vec2(sin(ha)>0.? azimuth : pi2-azimuth, elevation);
 }
 
+
 void main() {
     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
 
+    vec3 sunDir = normalize(sunPos);
+    float sunIntensity = 22.0;
     vec3 color = atmosphere(
-        normalize(viewVector),           // normalized ray direction
+        viewVector,                     // normalized ray direction
         vec3(0,6372e3,0),               // ray origin
-        sunPos,                        // position of the sun
-        22.0,                           // intensity of the sun
+        sunDir,                         // position of the sun
+        sunIntensity,                   // intensity of the sun
         6371e3,                         // radius of the planet in meters
         6471e3,                         // radius of the atmosphere in meters
         vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
@@ -157,6 +160,19 @@ void main() {
         1.2e3,                          // Mie scale height
         0.758                           // Mie preferred scattering direction
     );
+
+    // Render the sun as a disk of approx 2 degrees radius. 
+    // Very hacky scattering using smoothstep.
+    const float DEGTORAD = PI / 180.0;
+    const float sunDiskSize = 3.0;
+    float angleToSun = degrees(acos(dot(viewVector, sunDir)));
+    float angleToHorison = degrees(acos(dot(viewVector, vec3(viewVector.x, 0.0, viewVector.z)))) * sign(viewVector.y);
+    if(angleToSun < sunDiskSize && angleToHorison > 0.0){
+        float modulator = min(pow((sunDiskSize - angleToSun)/sunDiskSize, 3.0), 1.0);
+        if(angleToHorison < 2.0)
+            modulator *= max(pow(angleToHorison/2.0, 3.0), 0.0);
+        color += vec3(modulator * sunIntensity);
+    }
 
     // Apply exposure.
     color = 1.0 - exp(-1.0 * color);
@@ -211,7 +227,7 @@ class GLProceduralSky /*extends GLProbe*/ {
 
     addGUI(gui) {
         gui.add(this, 'backgroundFocus', 0.0, 1.0);
-        gui.add(this, 'sunAzumith', 0.0, 3.0);
+        gui.add(this, 'sunAzumith', -3.0, 3.0);
     }
 
     // getShaderPreprocessorDirectives(){
