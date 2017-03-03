@@ -47,30 +47,8 @@ class GLEnvMap extends GLProbe {
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
         this.convolveEnvMap(srcGLTex);
 
-        // this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
-        // let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
-        // let envMapShaderComp = this.__glEnvMapShader.compileForTarget('GLEnvMap', {
-        //     defines: rendererpreproc.defines,
-        //     repl:{
-        //         "ATLAS_NAME": "EnvMap",
-        //         "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
-        //         "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
-        //     }
-        // });
-        // this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
-
-        
-        this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
-        let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
-        let envMapShaderComp = this.__glEnvMapShader.compileForTarget('GLEnvMap', {
-            defines: rendererpreproc.defines,
-            repl:{
-                "ATLAS_NAME": "EnvMap",
-                "EnvMap_COUNT": this.numSubImages(),
-                "EnvMap_LAYOUT": this.getLayoutFn()
-            }
-        });
-        this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        //srcGLTex.destroy();
+        this.__srcGLTex = srcGLTex;
     }
 
     get backgroundFocus() {
@@ -97,9 +75,10 @@ class GLEnvMap extends GLProbe {
     draw(renderstate) {
         if (this.__envMap.isLoaded()) {
 
+            let gl = this.__gl;
             let displayAtlas = false;
             if(displayAtlas){
-                let screenQuad = this.__renderer.getScreenQuad();
+                let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
                 // screenQuad.draw(renderstate, this.__srcCDMTex);
                 // screenQuad.draw(renderstate, this.__srcGLTex);
@@ -109,7 +88,6 @@ class GLEnvMap extends GLProbe {
             else{
                 ///////////////////
                 this.__glEnvMapShader.bind(renderstate, 'GLEnvMap');
-                let gl = this.__gl;
                 let unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
                 // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);

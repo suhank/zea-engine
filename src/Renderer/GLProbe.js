@@ -34,14 +34,15 @@ import {
 } from '../Math/Math.js';
 
 class GLProbe extends ImageAtlas {
-    constructor(gl, srcGLTex) {
-        super(gl, 'EnvMap');
+    constructor(gl, name, srcGLTex=undefined) {
+        super(gl, name);
         this.__gl = gl;
 
         if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
 
-        this.convolveEnvMap(renderer, srcGLTex);
+        if(srcGLTex)
+            this.convolveEnvMap(renderer, srcGLTex);
     }
 
     generateHammersleySamples(numSamples) {
@@ -66,7 +67,7 @@ class GLProbe extends ImageAtlas {
         return hammersleyTexture;
     }
 
-    convolveEnvMap() {
+    convolveEnvMap(srcGLTex) {
         let gl = this.__gl;
         let screenQuad = gl.screenQuad;
         
@@ -98,7 +99,7 @@ class GLProbe extends ImageAtlas {
 
         this.addSubImage(srcGLTex);
 
-        let currRez = [this.__envMap.width / 2, this.__envMap.height / 2];
+        let currRez = [srcGLTex.width / 2, srcGLTex.height / 2];
         let levels = 6;//this.__imagePyramid.numSubImages();
         let pyramidBound = false;
         for (let j = 0; j < levels; j++) {
@@ -131,8 +132,42 @@ class GLProbe extends ImageAtlas {
 
         glConvolverShader.destroy();
         hammersleyTexture.destroy();
-        //srcGLTex.destroy();
-        this.__srcGLTex = srcGLTex;
+
+
+        // this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
+        // let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
+        // let envMapShaderComp = this.__glEnvMapShader.compileForTarget('GLEnvMap', {
+        //     defines: rendererpreproc.defines,
+        //     repl:{
+        //         "ATLAS_NAME": "EnvMap",
+        //         "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
+        //         "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
+        //     }
+        // });
+        // this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+
+        
+        this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
+        //let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
+        let envMapShaderComp = this.__glEnvMapShader.compileForTarget('GLEnvMap', {
+            /*defines: rendererpreproc.defines,*/
+            repl:{
+                "ATLAS_NAME": "EnvMap",
+                "EnvMap_COUNT": this.numSubImages(),
+                "EnvMap_LAYOUT": this.getLayoutFn()
+            }
+        });
+        this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+    }
+
+    // TODO: we shouldn't template the shaders to use an env map.
+    // These values need to be passed in as uniforms.
+    getShaderPreprocessorDirectives(){
+        return {
+            "ATLAS_NAME": "EnvMap",
+            "EnvMap_COUNT": this.numSubImages(),
+            "EnvMap_LAYOUT": this.getLayoutFn()
+        }
     }
 
     bindforReading(renderstate, location){

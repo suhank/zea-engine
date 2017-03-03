@@ -55,6 +55,7 @@ precision highp float;
 
 uniform float focus;
 
+#define ENABLE_INLINE_GAMMACORRECTION
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif

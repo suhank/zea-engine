@@ -48,49 +48,15 @@ import {
 import '../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import './Shaders/wwwtyro/glsl-atmosphere.js';
 
-class SkyShader extends Shader {
-    
-    constructor(name) {
-        super();
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `
-
-<%include file="utils/quadVertexFromID.glsl"/>
-<%include file="stack-gl/inverse.glsl"/>
-
-uniform mat4 projectionMatrix;
-
-/* VS Outputs */
-varying vec2 v_texCoord;
-varying vec4 v_viewPos;
- 
-void main()
-{
-    vec2 position = getScreenSpaceVertexPosition();
-    v_texCoord = position+0.5;
-    gl_Position = vec4(position*2.0, 0.0, 1.0);
-
-    v_viewPos = inverse(projectionMatrix) * gl_Position;
-}
-
-`);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SkyShader.fragmentShader', `
-
-precision highp float;
+// https://github.com/wwwtyro/glsl-atmosphere
+shaderLibrary.setShaderModule('sunAndSky.glsl', `
 
 // https://github.com/wwwtyro/glsl-atmosphere
 <%include file="wwwtyro/glsl-atmosphere.glsl"/>
 
-precision highp float;
-
-uniform mat4 cameraMatrix;
 uniform float unixTimeS;
 uniform float latitude;
 uniform float longitude;
-
-varying vec2 v_texCoord;
-varying vec4 v_viewPos;
-
-
 
 //////////////////////////////////////////////////
 // https://www.shadertoy.com/view/lss3DS [ in the comments]
@@ -153,9 +119,7 @@ vec3 polarToCartensian(vec2 polar){
     );
 }
 
-void main() {
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-
+vec3 sunAndSky(vec3 viewVector){
     vec2 sunDirPolarCoords = SunAtTime(JulianDay2000FromUnixTime(unixTimeS), latitude, longitude);
 
     vec3 sunDir = polarToCartensian(sunDirPolarCoords);
@@ -174,47 +138,143 @@ void main() {
         0.758                           // Mie preferred scattering direction
     );
 
-    // Render the sun as a disk of approx 2 degrees radius. 
-    // Very hacky scattering using smoothstep.
+    // Apply exposure.
+    color = 1.0 - exp(-1.0 * color);
+
+
+    // Render the sun as a disk of approx 2 degrees diameter. 
+    // Very hacky scattering using pow function.
     const float DEGTORAD = PI / 180.0;
-    const float sunDiskSize = 3.0;
+    const float sunDiskSize = 5.0;
+    const float sunSize = 1.0;
     float angleToSun = degrees(acos(dot(viewVector, sunDir)));
     float angleToHorison = degrees(acos(dot(viewVector, vec3(viewVector.x, 0.0, viewVector.z)))) * sign(viewVector.y);
     if(angleToSun < sunDiskSize && angleToHorison > 0.0){
-        float modulator = min(pow((sunDiskSize - angleToSun)/sunDiskSize, 3.0), 1.0);
+        float modulator = 1.0;
+        if(angleToSun > sunSize)
+            modulator = pow(1.0 - ((angleToSun - sunSize)/(sunDiskSize-sunSize)), 10.0);
         if(angleToHorison < 2.0)
             modulator *= max(pow(angleToHorison/2.0, 3.0), 0.0);
         color += vec3(modulator * sunIntensity);
     }
 
-    // Apply exposure.
-    color = 1.0 - exp(-1.0 * color);
 
-    gl_FragColor = vec4(color, 1);
+    return color;
+}
+`);
+
+class SkyShader extends Shader {
+    constructor() {
+        super();
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `
+precision highp float;
+
+<%include file="utils/quadVertexFromID.glsl"/>
+<%include file="stack-gl/inverse.glsl"/>
+
+uniform mat4 projectionMatrix;
+
+/* VS Outputs */
+varying vec2 v_texCoord;
+varying vec4 v_viewPos;
+ 
+void main()
+{
+    vec2 position = getScreenSpaceVertexPosition();
+    v_texCoord = position+0.5;
+    gl_Position = vec4(position*2.0, 0.0, 1.0);
+
+    v_viewPos = inverse(projectionMatrix) * gl_Position;
 }
 
+`);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SkyShader.fragmentShader', `
+precision highp float;
+
+uniform mat4 cameraMatrix;
+
+varying vec2 v_texCoord;
+varying vec4 v_viewPos;
+
+<%include file="sunAndSky.glsl"/>
+
+void main() {
+    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
+    vec3 color = sunAndSky(viewVector);
+    gl_FragColor = vec4(color, 1);
+}
 `);
     }
 };
 
-class GLProceduralSky /*extends GLProbe*/ {
+
+class SkyDomeShader extends Shader {
+    constructor() {
+        super();
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `
+precision highp float;
+
+<%include file="utils/quadVertexFromID.glsl"/>
+
+/* VS Outputs */
+varying vec2 v_texCoord;
+ 
+void main()
+{
+    vec2 position = getScreenSpaceVertexPosition();
+    v_texCoord = position+0.5;
+    gl_Position = vec4(position*2.0, 0.0, 1.0);
+}
+
+`);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SkyShader.fragmentShader', `
+precision highp float;
+
+varying vec2 v_texCoord;
+
+<%include file="sunAndSky.glsl"/>
+
+vec3 dirFromLatLongUVs(vec2 uv){
+    float theta = PI*((uv.x * 2.0)-1.0);
+    float phi = PI*uv.y;
+    return vec3(sin(phi)*sin(theta), cos(phi), -sin(phi)*cos(theta));
+}
+
+void main() {
+    vec3 viewVector = dirFromLatLongUVs(v_texCoord);
+    vec3 color = sunAndSky(viewVector);
+    gl_FragColor = vec4(color, 1);
+}
+`);
+    }
+};
+
+class GLProceduralSky extends GLProbe {
     constructor(gl, sky) {
-        //super(gl.gl, 'EnvMap');
+        super(gl, 'EnvMap');
         this.__gl = gl;
         this.__sky = sky;
         this.__backgroundFocus = 0.0;
 
-        // if (!gl.__quadVertexIdsBuffer)
-        //     gl.setupInstancedQuad();
-
-        // let srcGLTex = new GLHDRImage(gl, this.__envMap);
-
+        this.__srcGLTex = new GLTexture2D(gl, {
+            channels: 'RGBA',
+            format: 'FLOAT',
+            width: 2048,
+            height: 1024,
+            filter: 'LINEAR',
+            wrap: 'CLAMP_TO_EDGE'
+        });
+        this.__renderSkyFbo = new GLFbo(gl, this.__srcGLTex);
 
         // this.convolveEnvMap(srcGLTex);
 
         this.__skyShader = new GLShader(gl, new SkyShader());
-        let envMapShaderComp = this.__skyShader.compileForTarget('GLProceduralSky');
-        this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        let skyShaderShaderComp = this.__skyShader.compileForTarget('GLProceduralSky');
+        this.__skyShaderBinding = generateShaderGeomBinding(gl, skyShaderShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+
+        this.__skyDomeShader = new GLShader(gl, new SkyDomeShader());
+        let skyDomeShaderComp = this.__skyDomeShader.compileForTarget('GLProceduralSky');
+        this.__skyDomeShaderBinding = generateShaderGeomBinding(gl, skyDomeShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
         this.__sunAzumith = 0.1;
         this.__longitude = 45.527162;
@@ -223,7 +283,9 @@ class GLProceduralSky /*extends GLProbe*/ {
         this.updated = new Signal();
 
         let now = new Date();
-        this.time = now.getHours() + (now.getMinutes() / 60)
+        this.time = now.getHours() + (now.getMinutes() / 60);
+
+        // this.renderSky();
     }
 
     get backgroundFocus() {
@@ -263,6 +325,7 @@ class GLProceduralSky /*extends GLProbe*/ {
         let minutes = (this.__time - hour) * 60;
         let date = new Date(2017, 7, 3, hour, minutes);
         this.__unixTime = Math.round(date.getTime() / 1000);
+        // this.renderSky();
         this.updated.emit();
     }
 
@@ -273,46 +336,64 @@ class GLProceduralSky /*extends GLProbe*/ {
         gui.add(this, 'time', 4.1, 20.1);
     }
 
-    // getShaderPreprocessorDirectives(){
-    //     return {
-    //         "ATLAS_NAME": "EnvMap",
-    //         "EnvMap_COUNT": this.numSubImages(),
-    //         "EnvMap_LAYOUT": this.getLayoutFn()
-    //     }
-    // }
+    renderSky(){
+        let gl = this.__gl;
+
+        let renderstate = {};
+        this.__skyDomeShader.bind(renderstate, 'GLProceduralSky');
+        this.__skyDomeShaderBinding.bind(renderstate);
+        let unifs = renderstate.unifs;
+
+        gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
+        gl.uniform1f(unifs.longitude.location, this.__longitude);
+        gl.uniform1f(unifs.latitude.location, this.__latitude);
+
+        this.__renderSkyFbo.bind();
+
+        gl.drawQuad();
+
+        this.convolveEnvMap(this.__srcGLTex);
+    }
 
     draw(renderstate) {
             let gl = this.__gl;
-            let displayAtlas = true;
+            let displayAtlas = false;
             if(displayAtlas){
+                let screenQuad = gl.screenQuad;
+                screenQuad.bindShader(renderstate);
+                //screenQuad.draw(renderstate, this.__srcGLTex);
+                //screenQuad.draw(renderstate, this.__imagePyramid);
+                screenQuad.draw(renderstate, this);
+            }
+            else{
                 this.__skyShader.bind(renderstate, 'GLProceduralSky');
                 let unifs = renderstate.unifs;
                 gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
                 gl.uniform1f(unifs.longitude.location, this.__longitude);
                 gl.uniform1f(unifs.latitude.location, this.__latitude);
 
-                this.__shaderBinding.bind(renderstate);
+                this.__skyShaderBinding.bind(renderstate);
                 gl.drawQuad();
             }
-        //     else{
-        //         ///////////////////
-        //         this.__skyShader.bind(renderstate, 'GLProceduralSky');
-        //         let unifs = renderstate.unifs;
-        //         // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-        //         // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-        //         //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-        //         this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+            // else{
+            //     ///////////////////
+            //     this.__glEnvMapShader.bind(renderstate, 'GLEnvMap');
+            //     let unifs = renderstate.unifs;
+            //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+            //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+            //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+            //     this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
 
-        //         if ('focus' in unifs)
-        //             gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
-        //         if ('exposure' in unifs)
-        //             gl.uniform1f(unifs.exposure.location, renderstate.exposure);
+            //     if ('focus' in unifs)
+            //         gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
+            //     if ('exposure' in unifs)
+            //         gl.uniform1f(unifs.exposure.location, renderstate.exposure);
 
-        //         this.__shaderBinding.bind(renderstate);
+            //     this.__shaderBinding.bind(renderstate);
 
-        //         gl.depthMask(false);
-        //         gl.drawQuad();
-        //     }
+            //     gl.depthMask(false);
+            //     gl.drawQuad();
+            // }
     }
 };
 
