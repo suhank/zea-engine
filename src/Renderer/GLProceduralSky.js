@@ -83,7 +83,9 @@ precision highp float;
 precision highp float;
 
 uniform mat4 cameraMatrix;
-uniform vec3 sunPos;
+uniform float unixTimeS;
+uniform float latitude;
+uniform float longitude;
 
 varying vec2 v_texCoord;
 varying vec4 v_viewPos;
@@ -100,7 +102,7 @@ const float
     toRad = PI/180.,
     toDeg = 180./PI;
     
-float julianDay2000(in float unixTimeS) {
+float JulianDay2000FromUnixTime(in float unixTimeS) {
     return (unixTimeS / 86400.0) - 10957.5;// = + 2440587.5-2451545;
 }
 
@@ -141,11 +143,22 @@ vec2 SunAtTime(in float julianDay2000, in float latitude, in float longitude) {
     return vec2(sin(ha)>0.? azimuth : pi2-azimuth, elevation);
 }
 
+vec3 polarToCartensian(vec2 polar){
+    float theta = polar.x;
+    float phi = polar.y;
+    return vec3(
+        cos(theta) * cos(phi),
+        sin(theta) * cos(phi),
+        sin(phi)
+    );
+}
 
 void main() {
     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
 
-    vec3 sunDir = normalize(sunPos);
+    vec2 sunDirPolarCoords = SunAtTime(JulianDay2000FromUnixTime(unixTimeS), latitude, longitude);
+
+    vec3 sunDir = polarToCartensian(sunDirPolarCoords);
     float sunIntensity = 22.0;
     vec3 color = atmosphere(
         viewVector,                     // normalized ray direction
@@ -204,7 +217,13 @@ class GLProceduralSky /*extends GLProbe*/ {
         this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
         this.__sunAzumith = 0.1;
+        this.__longitude = 45.527162;
+        this.__latitude = -73.575307;
+
         this.updated = new Signal();
+
+        let now = new Date();
+        this.time = now.getHours() + (now.getMinutes() / 60)
     }
 
     get backgroundFocus() {
@@ -216,18 +235,42 @@ class GLProceduralSky /*extends GLProbe*/ {
         this.updated.emit();
     }
 
-    get sunAzumith() {
-        return this.__sunAzumith;
+    get longitude() {
+        return this.__longitude;
     }
 
-    set sunAzumith(val) {
-        this.__sunAzumith = val;
+    set longitude(val) {
+        this.__longitude = val;
+        this.updated.emit();
+    }
+
+    get latitude() {
+        return this.__latitude;
+    }
+
+    set latitude(val) {
+        this.__latitude = val;
+        this.updated.emit();
+    }
+
+    get time() {
+        return this.__time;
+    }
+
+    set time(val) {
+        this.__time = val;
+        let hour = Math.floor(this.__time);
+        let minutes = (this.__time - hour) * 60;
+        let date = new Date(2017, 7, 3, hour, minutes);
+        this.__unixTime = Math.round(date.getTime() / 1000);
         this.updated.emit();
     }
 
     addGUI(gui) {
         gui.add(this, 'backgroundFocus', 0.0, 1.0);
-        gui.add(this, 'sunAzumith', -3.0, 3.0);
+        gui.add(this, 'longitude');
+        gui.add(this, 'latitude');
+        gui.add(this, 'time', 4.1, 20.1);
     }
 
     // getShaderPreprocessorDirectives(){
@@ -244,8 +287,9 @@ class GLProceduralSky /*extends GLProbe*/ {
             if(displayAtlas){
                 this.__skyShader.bind(renderstate, 'GLProceduralSky');
                 let unifs = renderstate.unifs;
-                if ('sunPos' in unifs)
-                    gl.uniform3fv(unifs.sunPos.location, [0, this.__sunAzumith, -1]);
+                gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
+                gl.uniform1f(unifs.longitude.location, this.__longitude);
+                gl.uniform1f(unifs.latitude.location, this.__latitude);
 
                 this.__shaderBinding.bind(renderstate);
                 gl.drawQuad();
