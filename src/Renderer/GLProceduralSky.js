@@ -51,6 +51,8 @@ import './Shaders/wwwtyro/glsl-atmosphere.js';
 // https://github.com/wwwtyro/glsl-atmosphere
 shaderLibrary.setShaderModule('sunAndSky.glsl', `
 
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+
 // https://github.com/wwwtyro/glsl-atmosphere
 <%include file="wwwtyro/glsl-atmosphere.glsl"/>
 
@@ -107,21 +109,6 @@ vec2 SunAtTime(in float julianDay2000, in float latitude, in float longitude) {
         azimuth   = acos((sin_dec - (sin_lat*sin(elevation))) / (cos_lat*cos(elevation)));
     
     return vec2(sin(ha)>0.? azimuth : pi2-azimuth, elevation);
-}
-
-
-// Note: when u == 0.5 z = 1.0
-vec3 dirFromLatLongUVs(float u, float v) {
-    // http://gl.ict.usc.edu/Data/HighResProbes/
-    float theta = PI*((u * 2.0) - 1.0);
-    float phi = PI*v;
-    return vec3(sin(phi)*sin(theta), cos(phi), -sin(phi)*cos(theta));
-}
-
-vec3 dirFromPolar(Vec2_32f polar) {
-    float u = polar.x / (PI * 2);
-    float v = polar.y / PI;
-    return dirFromLatLongUVs(u, v);
 }
 
 

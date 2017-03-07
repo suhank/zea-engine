@@ -5,7 +5,6 @@ import {
 // https://github.com/wwwtyro/glsl-atmosphere
 shaderLibrary.setShaderModule('wwwtyro/glsl-atmosphere.glsl', `
 
-#define PI 3.141592
 #define iSteps 16
 #define jSteps 8
 
