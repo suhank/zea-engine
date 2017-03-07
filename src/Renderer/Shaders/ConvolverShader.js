@@ -77,10 +77,10 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
 
 
 void main(void) {
-    vec3 N = envMapEquirect_DirFromUV(v_texCoord);
+    vec3 N = dirFromLatLongUVs(v_texCoord.x, v_texCoord.y);
 
     if(false){
-        vec2 uv = envMapEquirect_UvFromDir(N);
+        vec2 uv = latLongUVsFromDir(N);
         gl_FragColor = sampleImagePyramid_EnvMap(uv, roughness);
     }
     else{
@@ -96,7 +96,7 @@ void main(void) {
             vec3 V = normalize(vecSpace * H);
             float VdotN = dot(V, N);
 
-            vec2 uv = envMapEquirect_UvFromDir(V);
+            vec2 uv = latLongUVsFromDir(V);
             color += sampleImagePyramid_EnvMap(uv, 0.0) * VdotN;
             weight += VdotN;
         }

@@ -11,7 +11,7 @@ shaderLibrary.setShaderModule('GGX_Specular.glsl', `
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 <%include file="utils/imagePyramid.glsl" ATLAS_NAME="EnvMap"/>
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramid_EnvMap(envMapEquirect_UvFromDir(dir), roughness).rgb;
+    return sampleImagePyramid_EnvMap(latLongUVsFromDir(dir), roughness).rgb;
 }
 
 

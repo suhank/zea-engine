@@ -17,25 +17,39 @@ shaderLibrary.setShaderModule('pragmatic-pbr/envmap-equirect.glsl', `
  * @return {vec2} equirectangular texture coordinate-
  * @description Based on http://http.developer.nvidia.com/GPUGems/gpugems_ch17.html and http://gl.ict.usc.edu/Data/HighResProbes/
  */
-vec2 envMapEquirect_UvFromDir(vec3 dir, float flipEnvMap) {
+vec2 latLongUVsFromDir(vec3 dir, float flipEnvMap) {
   //I assume envMap texture has been flipped the WebGL way (pixel 0,0 is a the bottom)
   //therefore we flip dir.y as acos(1) = 0
+  //float phi = acos(dir.y);
+  //float theta = atan(dir.x, -dir.z) + PI;
+  //return vec2(1.0 - (theta / TwoPI), phi / PI);
+
+
+  // Math function taken from...
+  // http://gl.ict.usc.edu/Data/HighResProbes/
+  // Note: Scaling from u=[0,2], v=[0,1] to u=[0,1], v=[0,1]
   float phi = acos(dir.y);
-  float theta = atan(flipEnvMap * dir.x, dir.z) + PI;
-  return vec2(theta / TwoPI, phi / PI);
+  float theta = atan(dir.x, -dir.z);
+  return vec2((1.0 + theta / PI) / 2.0, phi / PI);
 }
 
-vec2 envMapEquirect_UvFromDir(vec3 dir) {
+vec2 latLongUVsFromDir(vec3 dir) {
     //-1.0 for left handed coordinate system oriented texture (usual case)
-    return envMapEquirect_UvFromDir(dir, -1.0);
+    return latLongUVsFromDir(dir, -1.0);
 }
 
-
-// 
-vec3 envMapEquirect_DirFromUV(vec2 uv) {
-    float theta= PI*((uv.x * 2.0));
-    float phi=PI*uv.y;
+// Note: when u == 0.5 z = 1.0
+vec3 dirFromLatLongUVs(float u, float v) {
+    // http://gl.ict.usc.edu/Data/HighResProbes/
+    float theta = PI*((u * 2.0) - 1.0);
+    float phi = PI*v;
     return vec3(sin(phi)*sin(theta), cos(phi), -sin(phi)*cos(theta));
+}
+
+vec3 dirFromPolar(vec2 polar) {
+    float u = polar.x / (PI * 2.0);
+    float v = polar.y / PI;
+    return dirFromLatLongUVs(u, v);
 }
 
 `);

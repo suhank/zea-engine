@@ -66,7 +66,7 @@ varying vec2 v_texCoord;
 
 void main(void) {
 
-    vec2 uv = envMapEquirect_UvFromDir(normalize(v_worldDir));
+    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
         vec4 texel = texture2D(atlas_EnvMap, uv);
