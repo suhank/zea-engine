@@ -59,7 +59,7 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, enableCrossSections=false, exposureRange=[0,5]) {
+    constructor(canvasDiv, enableCrossSections=false, exposureRange=[0,30]) {
 
         super(canvasDiv, {
             antialias: true,
