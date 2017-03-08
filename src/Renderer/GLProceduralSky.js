@@ -111,11 +111,23 @@ vec2 SunAtTime(in float julianDay2000, in float latitude, in float longitude) {
     return vec2(sin(ha)>0.? azimuth : pi2-azimuth, elevation);
 }
 
+// Note: this method _must_ be completely wrong, but for now it looks good enough. 
+// 
+vec3 sunPosFromPolarCoords(vec2 polar){
+    float theta = polar.x;
+    float phi = polar.y;
+    return vec3(
+        cos(theta) * cos(phi),
+        sin(theta) * cos(phi),
+        sin(phi)
+    );
+}
+
 
 vec3 sunAndSky(vec3 viewVector){
     vec2 sunDirPolarCoords = SunAtTime(JulianDay2000FromUnixTime(unixTimeS), latitude, longitude);
 
-    vec3 sunDir = dirFromPolar(sunDirPolarCoords);
+    vec3 sunDir = sunPosFromPolarCoords(sunDirPolarCoords);
     float sunIntensity = 22.0;
     vec3 color = atmosphere(
         viewVector,                     // normalized ray direction
@@ -269,7 +281,6 @@ class GLProceduralSky extends GLProbe {
         let skyDomeShaderComp = this.__skyDomeShader.compileForTarget('GLProceduralSky');
         this.__skyDomeShaderBinding = generateShaderGeomBinding(gl, skyDomeShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-        this.__sunAzumith = 0.1;
         this.__longitude = 45.527162;
         this.__latitude = -73.575307;
 
@@ -314,10 +325,14 @@ class GLProceduralSky extends GLProbe {
 
     set time(val) {
         this.__time = val;
-        let hour = Math.floor(this.__time);
-        let minutes = (this.__time - hour) * 60;
-        let date = new Date(2017, 2, 3, hour, minutes);
-        this.__unixTime = Math.round(date.getTime() / 1000);
+        let t = (val - 3);
+        let hour = Math.floor(t);
+        let minutes = Math.floor((t - hour) * 60);
+        //let date = new Date(2017, 2, 3, hour, minutes);
+        // Note: getTime returns miliseconds, so convert to seconds.
+        //this.__unixTime = Math.round(date.getTime() / 1000|0);
+        this.__unixTime = (1488517200 + (minutes * 60) + (hour * 3600))|0;
+        console.log(this.__unixTime)
         // this.renderSky();
         this.updated.emit();
     }
@@ -326,7 +341,7 @@ class GLProceduralSky extends GLProbe {
         gui.add(this, 'backgroundFocus', 0.0, 1.0);
         gui.add(this, 'longitude');
         gui.add(this, 'latitude');
-        gui.add(this, 'time', 4.1, 20.1);
+        gui.add(this, 'time', 0, 30);
     }
 
     renderSky(){
