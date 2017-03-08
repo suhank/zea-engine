@@ -117,7 +117,7 @@ class GLDrawItem {
         if ('lightmaps' in renderstate && 'lightmap' in unifs) {
             if (renderstate.boundLightmap != this.__lightmapName) {
                 let gllightmap = renderstate.lightmaps[this.__lightmapName];
-                if (gllightmap) {
+                if (gllightmap && gllightmap.isLoaded()) {
                     gllightmap.bind(renderstate, unifs.lightmap.location);
                     gl.uniform2fv(unifs.lightmapSize.location, gllightmap.getSize());
                     renderstate.boundLightmap = this.__lightmapName;

@@ -41,6 +41,9 @@ class GLTexture2D extends RefCounted {
         }
     }
 
+    isLoaded(){
+        return this.__loaded;
+    }
     getTexture(){
         return this.__texture;
     }

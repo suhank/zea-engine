@@ -82,12 +82,13 @@ class GLHDRImage extends GLTexture2D {
             this.__srcLDRTex.bufferData(ldr);
             this.__srcCDMTex.bufferData(cdm);
         }
+        
+        this.__fbo.bind();
 
         let renderstate = {};
         this.__glDecompHDRShader.bind(renderstate, 'GLHDRImage');
         this.__shaderBinding.bind(renderstate);
 
-        this.__fbo.bind();
 
         let unifs = renderstate.unifs;
         this.__srcLDRTex.bind(renderstate, unifs.ldrSampler.location);
@@ -104,11 +105,12 @@ class GLHDRImage extends GLTexture2D {
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         if(!this.__hdrImage.isStream()){
-            this.__cleanup();
+            this.destroy();
         }
     }
 
-    __cleanup() {
+    destroy(){
+        super.destroy();
         this.__fbo.destroy();
         this.__srcLDRTex.destroy();
         this.__srcCDMTex.destroy();
