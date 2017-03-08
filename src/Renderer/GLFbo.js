@@ -72,15 +72,15 @@ class GLFbo {
     }
 
     resize() {
-        let gl = this.__gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+        //gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
         // gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
         if (this.__depthTexture) {
+            let gl = this.__gl;
             gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
         }
-        this.__checkFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        //this.__checkFramebuffer();
+        //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
     __checkFramebuffer() {
@@ -161,6 +161,8 @@ class GLFbo {
         let gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.deleteFramebuffer(this.__fbo);
+        this.__fbo = null;
+        this.__colorTexture.resized.disconnect(this.resize, this);
     }
 };
 

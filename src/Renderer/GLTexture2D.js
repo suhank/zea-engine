@@ -19,6 +19,7 @@ class GLTexture2D extends RefCounted {
         this.__gltex = this.__gl.createTexture();
         this.width = 0;
         this.height = 0;
+        this.__loaded = false;
         if (params != undefined){
             if (params instanceof Image2D){
                 this.__texture = params;
@@ -48,12 +49,6 @@ class GLTexture2D extends RefCounted {
 
         if (!('channels' in params) || !('width' in params) || !('height' in params))
             throw ("Invalid texture params");
-        this.channels = params['channels'];
-        this.format = params['format'];
-        this.filter = ('filter' in params) ? params['filter'] : 'LINEAR';
-        let wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
-        let flipY = ('flipY' in params) ? params['flipY'] : false;
-        this.mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
 
         let width = params['width'];
         let height = params['height'];
@@ -61,9 +56,16 @@ class GLTexture2D extends RefCounted {
 
         let gl = this.__gl;
         let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
-        if(width < 0 || width > maxSize || height < 0 || height > maxSize) {
+        if(width <= 0 || width > maxSize || height <= 0 || height > maxSize) {
             throw new Error('gl-texture2d: Invalid texture size')
         }
+
+        this.channels = params['channels'];
+        this.format = params['format'];
+        this.filter = ('filter' in params) ? params['filter'] : 'LINEAR';
+        let wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
+        let flipY = ('flipY' in params) ? params['flipY'] : false;
+        this.mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
 
         if (this.format == 'FLOAT') {
             this.__ext_float = gl.getExtension('OES_texture_float');
@@ -88,11 +90,12 @@ class GLTexture2D extends RefCounted {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap]);
 
         this.resize(width, height, data);
+        this.__loaded = true;
         
         this.updated.emit();
     }
 
-    __bufferData(data){
+    bufferData(data){
         let gl = this.__gl;
         let channels = (typeof this.channels) == "string" ? gl[this.channels] : this.channels;
         if (data != undefined) {
@@ -114,18 +117,22 @@ class GLTexture2D extends RefCounted {
     }
 
     resize(width, height, data) {
-        this.width = width;
-        this.height = height;
+        let sizeChanged = this.width != width || this.height != height;
         let gl = this.__gl;
-        let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
-        if(this.width < 0 || this.width > maxSize || this.height < 0 || this.height > maxSize) {
-            throw new Error('gl-texture2d: Invalid texture size');
+        if(sizeChanged){
+            this.width = width;
+            this.height = height;
+            let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
+            if(this.width < 0 || this.width > maxSize || this.height < 0 || this.height > maxSize) {
+                throw new Error('gl-texture2d: Invalid texture size');
+            }
         }
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
 
-        this.__bufferData(data);
+        this.bufferData(data);
         gl.bindTexture(gl.TEXTURE_2D, null);
-        this.resized.emit();
+        if(sizeChanged)
+            this.resized.emit();
     }
 
     getSize(){
@@ -137,6 +144,9 @@ class GLTexture2D extends RefCounted {
     }
 
     bind(renderstate, location) {
+        if(!this.__loaded){
+            return;
+        }
         if(!this.__gltex){
             throw("Unable to bind non-initialized or deleted texture.");
         }

@@ -1,11 +1,8 @@
 
 
 
-
-
 class GeomShaderBinding {
     constructor(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers, transformIdsBuffer) {
-
         this.__gl = gl;
         this.__glattrbuffers = glattrbuffers;
         this.__extrAttrBuffers = extrAttrBuffers;
@@ -64,7 +61,9 @@ class GeomShaderBinding {
     }
 
     unbind() {
-        // this.__gl.__ext_VAO.bindVertexArrayOES(null);
+    }
+
+    destroy(){
     }
 };
 
@@ -130,6 +129,10 @@ class VAOGeomShaderBinding {
 
     unbind() {
         this.__gl.__ext_VAO.bindVertexArrayOES(null);
+    }
+
+    destroy(){
+        this.__gl.__ext_VAO.deleteVertexArrayOES(this.__vao);
     }
 };
 

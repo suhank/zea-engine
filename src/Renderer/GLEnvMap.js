@@ -45,7 +45,23 @@ class GLEnvMap extends GLProbe {
             gl.setupInstancedQuad();
 
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
-        this.convolveEnvMap(srcGLTex);
+
+
+        srcGLTex.updated.connect(() => {
+            this.convolveEnvMap(srcGLTex);
+        }, this);
+        if (this.__envMap.isLoaded()) {
+            this.convolveEnvMap(srcGLTex);
+        }
+        //else{
+        //    //this.__envMap.loaded.connect(() => {
+        //    //    this.convolveEnvMap(srcGLTex);
+        //    //}, this);
+        //}
+        srcGLTex.destructing.connect(() => {
+            console.log(this.__hdrImage.name + " destructing");
+            this.destroy();
+        }, this);
 
         //srcGLTex.destroy();
         this.__srcGLTex = srcGLTex;

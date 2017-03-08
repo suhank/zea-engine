@@ -41,6 +41,7 @@ class GLProbe extends ImageAtlas {
         if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
 
+        this.__convolved = false;
         if(srcGLTex)
             this.convolveEnvMap(renderer, srcGLTex);
     }
@@ -128,8 +129,8 @@ class GLProbe extends ImageAtlas {
             this.addSubImage(level);
             currRez = [currRez[0] / 2, currRez[1] / 2];
         }
-        this.generateAtlas(gl, screenQuad, false);
 
+        this.generateAtlas(gl, screenQuad, false);
         glConvolverShader.destroy();
         hammersleyTexture.destroy();
 
@@ -158,6 +159,7 @@ class GLProbe extends ImageAtlas {
             }
         });
         this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        this.__convolved = true;
     }
 
     // TODO: we shouldn't template the shaders to use an env map.
@@ -172,7 +174,8 @@ class GLProbe extends ImageAtlas {
 
     bindforReading(renderstate, location){
         //this.__imagePyramid.getSubImage(3).bind(renderstate, location);
-        this.bind(renderstate, location);
+        if(this.__convolved)
+            this.bind(renderstate, location);
     }
 };
 
