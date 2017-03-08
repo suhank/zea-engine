@@ -111,11 +111,23 @@ vec2 SunAtTime(in float julianDay2000, in float latitude, in float longitude) {
     return vec2(sin(ha)>0.? azimuth : pi2-azimuth, elevation);
 }
 
+// Note: this method _must_ be completely wrong, but for now it looks good enough. 
+// 
+vec3 sunPosFromPolarCoords(vec2 polar){
+    float theta = polar.x;
+    float phi = polar.y;
+    return vec3(
+        cos(theta) * cos(phi),
+        sin(theta) * cos(phi),
+        sin(phi)
+    );
+}
+
 
 vec3 sunAndSky(vec3 viewVector){
     vec2 sunDirPolarCoords = SunAtTime(JulianDay2000FromUnixTime(unixTimeS), latitude, longitude);
 
-    vec3 sunDir = dirFromPolar(sunDirPolarCoords);
+    vec3 sunDir = sunPosFromPolarCoords(sunDirPolarCoords);
     float sunIntensity = 22.0;
     vec3 color = atmosphere(
         viewVector,                     // normalized ray direction
