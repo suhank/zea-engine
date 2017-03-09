@@ -20,6 +20,7 @@ class GLTexture2D extends RefCounted {
         this.width = 0;
         this.height = 0;
         this.__loaded = false;
+        this.__bound = false;
         if (params != undefined){
             if (params instanceof Image2D){
                 this.__texture = params;
@@ -92,14 +93,16 @@ class GLTexture2D extends RefCounted {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[wrap]);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap]);
 
-        this.resize(width, height, data);
+        this.resize(width, height, data, false);
         this.__loaded = true;
         
         this.updated.emit();
     }
 
-    bufferData(data){
+    bufferData(data, bind=true){
         let gl = this.__gl;
+        if(bind)
+            gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         let channels = (typeof this.channels) == "string" ? gl[this.channels] : this.channels;
         if (data != undefined) {
             if (data instanceof Image) {
@@ -119,9 +122,9 @@ class GLTexture2D extends RefCounted {
             gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, gl[this.format], null);
     }
 
-    resize(width, height, data) {
-        let sizeChanged = this.width != width || this.height != height;
+    resize(width, height, data, bind=true) {
         let gl = this.__gl;
+        let sizeChanged = this.width != width || this.height != height;
         if(sizeChanged){
             this.width = width;
             this.height = height;
@@ -130,10 +133,10 @@ class GLTexture2D extends RefCounted {
                 throw new Error('gl-texture2d: Invalid texture size');
             }
         }
-        gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
+        if(bind)
+            gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
 
-        this.bufferData(data);
-        gl.bindTexture(gl.TEXTURE_2D, null);
+        this.bufferData(data, false);
         if(sizeChanged)
             this.resized.emit();
     }

@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let envMapURL = "Assets/hdri_sky_02_sample.vlh";
 
     let scene = new Visualive.Scene();
-    let envMap =  new Visualive.HDRImage2D('env', envMapURL);
+    let envMap =  new Visualive.HDRImage2D('env', envMapURL, true);
     scene.setEnvMap(envMap);
 
     let addMeshShape = (shape, pos, mat)=>{

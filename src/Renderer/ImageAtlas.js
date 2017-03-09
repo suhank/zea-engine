@@ -213,6 +213,8 @@ class ImageAtlas extends GLTexture2D {
             this.__fbo.destroy();
             this.__fbo = null;
         }
+
+        this.updated.emit();
     }
 
     getLayoutFn(){

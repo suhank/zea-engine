@@ -121,7 +121,8 @@ class GLHDRImage extends GLTexture2D {
         this.__glDecompHDRShader.destroy();
         this.__shaderBinding.destroy();
 
-        this.__hdrImage.disconnectScope(this);
+        this.__hdrImage.loaded.disconnectScope(this);
+        this.__hdrImage.updated.disconnectScope(this);
     }
 };
 

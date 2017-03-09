@@ -163,9 +163,9 @@ class GLProbe extends ImageAtlas {
             gl.drawQuad();
         }
 
+        this.__convolved = true;
 
         this.renderAtlas(false);
-        this.__convolved = true;
     }
 
     // TODO: we shouldn't template the shaders to use an env map.

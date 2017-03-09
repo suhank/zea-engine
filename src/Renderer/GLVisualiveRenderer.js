@@ -127,8 +127,9 @@ class GLVisualiveRenderer extends GLRenderer {
             }, this);
         }
         let lightMaps = scene.getLightMaps();
-        for(let name in lightMaps)
+        for(let name in lightMaps){
             this.__glLightmaps[name] = new GLHDRImage(this.__gl, lightMaps[name]);
+        }
     }
 
     addViewport(name) {
