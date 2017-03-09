@@ -1,37 +1,12 @@
 import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
     GLHDRImage
 } from './GLHDRImage.js';
 import {
     GLProbe
 } from './GLProbe.js';
 import {
-    ConvolverShader
-} from './Shaders/ConvolverShader.js';
-import {
-    EnvMapShader
-} from './Shaders/EnvMapShader.js';
-import {
-    GLFbo
-} from './GLFbo.js';
-
-import {
     ImagePyramid
 } from './ImagePyramid.js';
-
-import {
-    generateShaderGeomBinding,
-} from './GeomShaderBinding.js';
-
-import {
-    Vec3,
-    hammersley
-} from '../Math/Math.js';
 
 class GLEnvMap extends GLProbe {
     constructor(renderer, envMap) {
@@ -45,7 +20,11 @@ class GLEnvMap extends GLProbe {
             gl.setupInstancedQuad();
 
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
+        this.__srcGLTex = srcGLTex;
 
+        // Note: we must setup the image pyramid before conneecting our listeners to the signals
+        // this is so that during updates, the pyramid is updated first.
+        this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
 
         srcGLTex.updated.connect(() => {
             this.convolveEnvMap(srcGLTex);
@@ -53,18 +32,16 @@ class GLEnvMap extends GLProbe {
         if (this.__envMap.isLoaded()) {
             this.convolveEnvMap(srcGLTex);
         }
-        //else{
-        //    //this.__envMap.loaded.connect(() => {
-        //    //    this.convolveEnvMap(srcGLTex);
-        //    //}, this);
-        //}
+        else{
+           this.__envMap.loaded.connect(() => {
+              this.convolveEnvMap(srcGLTex);
+           }, this);
+        }
         srcGLTex.destructing.connect(() => {
             console.log(this.__hdrImage.name + " destructing");
             this.destroy();
         }, this);
 
-        //srcGLTex.destroy();
-        this.__srcGLTex = srcGLTex;
     }
 
     get backgroundFocus() {
@@ -92,21 +69,20 @@ class GLEnvMap extends GLProbe {
         if (this.__envMap.isLoaded()) {
 
             let gl = this.__gl;
-            let displayAtlas = false;
+            let displayAtlas = true;
             if(displayAtlas){
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
-                // screenQuad.draw(renderstate, this.__srcCDMTex);
-                // screenQuad.draw(renderstate, this.__srcGLTex);
-                // screenQuad.draw(renderstate, this.__imagePyramid);
+                //screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex);
+                //screenQuad.draw(renderstate, this.__srcGLTex);
+                //screenQuad.draw(renderstate, this.__imagePyramid);
                 screenQuad.draw(renderstate, this);
             }
             else{
                 ///////////////////
-                this.__glEnvMapShader.bind(renderstate, 'GLEnvMap');
+                this.__envMapShader.bind(renderstate, 'GLEnvMap');
                 let unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-                // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
                 //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
                 this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
 
@@ -115,12 +91,18 @@ class GLEnvMap extends GLProbe {
                 if ('exposure' in unifs)
                     gl.uniform1f(unifs.exposure.location, renderstate.exposure);
 
-                this.__shaderBinding.bind(renderstate);
+                this.__envMapShaderBinding.bind(renderstate);
 
                 gl.depthMask(false);
                 gl.drawQuad();
             }
         }
+    }
+
+    destroy(){
+        super.destroy();
+        this.__srcGLTex.disconnectScope(this);
+        this.__srcGLTex.destroy();
     }
 };
 

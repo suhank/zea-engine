@@ -119,7 +119,7 @@ class ImageAtlas extends GLTexture2D {
         return this.__subImages.length;
     }
 
-    generateAtlas(gl, screenQuad, destroySubImages=true) {
+    generateAtlasLayout() {
         let maxRez = [this.__subImages[0].width, this.__subImages[0].height];
         let border = 2;
         let initialWidth = maxRez[0] + (border * 2);
@@ -162,7 +162,6 @@ class ImageAtlas extends GLTexture2D {
 
         let width = tree.rect.right.value;
         let height = tree.rect.top.value;
-        let scl = new Vec2(1.0 / width, 1.0 / height);
 
         console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
@@ -174,24 +173,26 @@ class ImageAtlas extends GLTexture2D {
             format:this.__format,
             filter: 'LINEAR'
         });
-
-        let fbo = new GLFbo(gl, this);
-        fbo.bind();
-
+        let gl = this.__gl;
+        this.__fbo = new GLFbo(gl, this);
         if (!gl.__quadVertexIdsBuffer) 
             gl.setupInstancedQuad();
-
 
         if(!gl.__atlasLayoutShader){
             gl.__atlasLayoutShader = new GLShader(gl, new AtlasLayoutShader());
             let shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas');
             gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
+    }
+
+    renderAtlas(cleanup=true) {
+        let gl = this.__gl;
+        this.__fbo.bind();
 
         let renderstate = {};
-        // screenQuad.bindShader(renderstate);
         gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas');
         gl.__atlasLayoutShaderBinding.bind(renderstate);
+        let scl = new Vec2(1.0 / this.width, 1.0 / this.height);
 
         let unifs = renderstate.unifs;
         for (let j = 0; j < this.__subImages.length; j++) {
@@ -201,14 +202,17 @@ class ImageAtlas extends GLTexture2D {
             gl.uniform2fv(unifs.pos.location, item.rectPos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, item.rectSize.multiply(scl).asArray());
             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
-            // screenQuad.draw(renderstate, image, item.pos.multiply(scl), item.size.multiply(scl));
             gl.drawQuad();
 
-            if(destroySubImages)
+            if(cleanup)
                 image.destroy();
         }
 
-        fbo.destroy();
+        if(cleanup){
+            this.__subImages = [];
+            this.__fbo.destroy();
+            this.__fbo = null;
+        }
     }
 
     getLayoutFn(){
@@ -227,14 +231,22 @@ class ImageAtlas extends GLTexture2D {
         let gl = this.__gl;
         let unifs = renderstate.unifs;
         let atlasSizeUnifName = 'atlasSize_'+this.__name;
-        if(atlasSizeUnifName in unifs)
+        if(atlasSizeUnifName in unifs){
             gl.uniform2f(unifs[atlasSizeUnifName].location, this.width, this.height);
+        }
+        else{
+            // Note: during debuggin we render the atlas to screen.
+            // Atlas size is requred to index the atlas images.
+            console.warn("Missing atlas size uniform:" + atlasSizeUnifName)
+        }
     }
 
     destory(){
         for (let image of this.__subImages) {
             image.destroy();
         }
+        if(this.__fbo)
+            this.__fbo.destroy();
         super.destroy();
     }
 

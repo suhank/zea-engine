@@ -201,6 +201,7 @@ var create3DContext = function(canvas, opt_attribs) {
     this.drawElements(this.TRIANGLES, 6, this.UNSIGNED_SHORT, 0);
   }
 
+
   return context;
 };
 

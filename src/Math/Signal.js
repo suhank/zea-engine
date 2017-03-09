@@ -19,6 +19,16 @@ class Signal {
         );
     }
 
+    disconnectScope(scope) {
+        this.__slots = this.__slots.filter(
+            function (item) {
+                if (item["scope"] !== scope) {
+                    return item;
+                }
+            }
+        );
+    }
+
     // emit the signal to all slots(observers)
     emit(data) {
         this.__slots.forEach(function (item) {

@@ -34,131 +34,137 @@ import {
 } from '../Math/Math.js';
 
 class GLProbe extends ImageAtlas {
-    constructor(gl, name, srcGLTex=undefined) {
+    constructor(gl, name) {
         super(gl, name);
         this.__gl = gl;
 
         if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
-
+        
         this.__convolved = false;
-        if(srcGLTex)
-            this.convolveEnvMap(renderer, srcGLTex);
+        this.__fbos = [];
     }
 
     generateHammersleySamples(numSamples) {
         let gl = this.__gl;
-        let dataArray = new Float32Array(numSamples*3);
-        for (let i=0; i<numSamples; i++) {
-            let Xi = hammersley(i, numSamples);
-            let offset = i * 3;
-            let vec3 = Vec3.createFromFloat32Buffer(dataArray.buffer, offset);
-            vec3.set(Xi[0], Xi[1], 0.0);
+        if(!gl['Hammersley'+numSamples]){
+            let dataArray = new Float32Array(numSamples*3);
+            for (let i=0; i<numSamples; i++) {
+                let Xi = hammersley(i, numSamples);
+                let offset = i * 3;
+                let vec3 = Vec3.createFromFloat32Buffer(dataArray.buffer, offset);
+                vec3.set(Xi[0], Xi[1], 0.0);
+            }
+            gl['Hammersley'+numSamples] = new GLTexture2D(gl, {
+                channels: 'RGB',
+                format: 'FLOAT',
+                width: numSamples,
+                height: 1,
+                filter: 'NEAREST',
+                wrap: 'CLAMP_TO_EDGE',
+                data: dataArray,
+                mipMapped: false
+            });
         }
-        let hammersleyTexture = new GLTexture2D(gl, {
-            channels: 'RGB',
-            format: 'FLOAT',
-            width: numSamples,
-            height: 1,
-            filter: 'NEAREST',
-            wrap: 'CLAMP_TO_EDGE',
-            data: dataArray,
-            mipMapped: false
-        });
-        return hammersleyTexture;
+        return gl['Hammersley'+numSamples];
     }
 
     convolveEnvMap(srcGLTex) {
         let gl = this.__gl;
-        let screenQuad = gl.screenQuad;
-        
-        this.__imagePyramid = new ImagePyramid(gl, 'EnvMapImagePyramid', srcGLTex, screenQuad, false);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         // Compile and bind the convolver shader.
         let numSamples = 1024; 
         // let numSamples = 64;
         let hammersleyTexture = this.generateHammersleySamples(numSamples);
-        let glConvolverShader = new GLShader(gl, new ConvolverShader());
-        let covolverShaderComp = glConvolverShader.compileForTarget('GLProbe', {
-            repl:{
-                "NUM_SAMPLES": numSamples,
-                "ATLAS_NAME": "EnvMap",
-                "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
-                "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
+
+        if(!this.__convolved){
+            if(!this.__imagePyramid)
+                this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
+
+            this.addSubImage(srcGLTex);
+
+            let currRez = [srcGLTex.width / 2, srcGLTex.height / 2];
+
+            let levels = 6;//this.__imagePyramid.numSubImages();
+            for (let i = 0; i < levels; i++) {
+                let level = new GLTexture2D(gl, {
+                    channels: 'RGBA',
+                    format: 'FLOAT',
+                    width: currRez[0],
+                    height: currRez[1],
+                    filter: 'LINEAR',
+                    wrap: 'CLAMP_TO_EDGE'
+                });
+                this.addSubImage(level);
+
+                let fbo = new GLFbo(gl, level);
+                this.__fbos.push(fbo);
+
+                currRez = [currRez[0] / 2, currRez[1] / 2];
             }
-        });
-        let covolverShaderBinding = generateShaderGeomBinding(gl, covolverShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
+            this.generateAtlasLayout();
 
-        let renderstate = {};
-        glConvolverShader.bind(renderstate, 'GLProbe');
-        covolverShaderBinding.bind(renderstate);
-
-        let unifs = renderstate.unifs;
-        let roughnessLocation = unifs.roughness.location;
-
-        this.addSubImage(srcGLTex);
-
-        let currRez = [srcGLTex.width / 2, srcGLTex.height / 2];
-        let levels = 6;//this.__imagePyramid.numSubImages();
-        let pyramidBound = false;
-        for (let j = 0; j < levels; j++) {
-            // Set the roughness.
-            gl.uniform1f(roughnessLocation, (j+1)/levels);
-
-            let level = new GLTexture2D(gl, {
-                channels: 'RGBA',
-                format: 'FLOAT',
-                width: currRez[0],
-                height: currRez[1],
-                filter: 'LINEAR',
-                wrap: 'CLAMP_TO_EDGE'
+            this.__convolverShader = new GLShader(gl, new ConvolverShader());
+            let covolverShaderComp = this.__convolverShader.compileForTarget('GLProbe', {
+                repl:{
+                    "NUM_SAMPLES": numSamples,
+                    "ATLAS_NAME": "EnvMap",
+                    "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
+                    "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
+                }
             });
+            this.__covolverShaderBinding = generateShaderGeomBinding(gl, covolverShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-            let fbo = new GLFbo(gl, level);
-            fbo.bind();
+
+            // this.__envMapShader = new GLShader(gl, new EnvMapShader());
+            // let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
+            // let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', {
+            //     defines: rendererpreproc.defines,
+            //     repl:{
+            //         "ATLAS_NAME": "EnvMap",
+            //         "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
+            //         "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
+            //     }
+            // });
+            // this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+
+            
+            this.__envMapShader = new GLShader(gl, new EnvMapShader());
+            //let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
+            let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', {
+                /*defines: rendererpreproc.defines,*/
+                repl:{
+                    "ATLAS_NAME": "EnvMap",
+                    "EnvMap_COUNT": this.numSubImages(),
+                    "EnvMap_LAYOUT": this.getLayoutFn()
+                }
+            });
+            this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        }
+
+        for (let i = 0; i < this.__fbos.length; i++) {
+            this.__fbos[i].bind();
+
+            let renderstate = {};
+            this.__convolverShader.bind(renderstate, 'GLProbe');
+            this.__covolverShaderBinding.bind(renderstate);
+
+            // Set the roughness.
+            let unifs = renderstate.unifs;
+            let roughnessLocation = unifs.roughness.location;
+            let roughness = (i+1)/this.__fbos.length;
+            gl.uniform1f(roughnessLocation, roughness);
 
             // Note: we should not need to bind the texture every iteration. 
             this.__imagePyramid.bind(renderstate, unifs.atlas_EnvMap.location);
             hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
 
             gl.drawQuad();
-            fbo.destroy();
-
-            this.addSubImage(level);
-            currRez = [currRez[0] / 2, currRez[1] / 2];
         }
 
-        this.generateAtlas(gl, screenQuad, false);
-        glConvolverShader.destroy();
-        hammersleyTexture.destroy();
 
-
-        // this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
-        // let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
-        // let envMapShaderComp = this.__glEnvMapShader.compileForTarget('GLEnvMap', {
-        //     defines: rendererpreproc.defines,
-        //     repl:{
-        //         "ATLAS_NAME": "EnvMap",
-        //         "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
-        //         "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
-        //     }
-        // });
-        // this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
-
-        
-        this.__glEnvMapShader = new GLShader(gl, new EnvMapShader());
-        //let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
-        let envMapShaderComp = this.__glEnvMapShader.compileForTarget('GLEnvMap', {
-            /*defines: rendererpreproc.defines,*/
-            repl:{
-                "ATLAS_NAME": "EnvMap",
-                "EnvMap_COUNT": this.numSubImages(),
-                "EnvMap_LAYOUT": this.getLayoutFn()
-            }
-        });
-        this.__shaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        this.renderAtlas(false);
         this.__convolved = true;
     }
 
@@ -176,6 +182,15 @@ class GLProbe extends ImageAtlas {
         //this.__imagePyramid.getSubImage(3).bind(renderstate, location);
         if(this.__convolved)
             this.bind(renderstate, location);
+    }
+
+    destroy(){
+        super.destroy();
+        this.__convolverShader.destroy();
+
+        for (let fbo of this.__fbos) {
+            fbo.destroy();
+        }
     }
 };
 

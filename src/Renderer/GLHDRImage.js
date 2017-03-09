@@ -82,7 +82,7 @@ class GLHDRImage extends GLTexture2D {
             this.__srcLDRTex.bufferData(ldr);
             this.__srcCDMTex.bufferData(cdm);
         }
-        
+
         this.__fbo.bind();
 
         let renderstate = {};
@@ -104,9 +104,13 @@ class GLHDRImage extends GLTexture2D {
         // console.log(pixels);
         // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
+        this.__fbo.unbind();
+
         if(!this.__hdrImage.isStream()){
             this.destroy();
         }
+
+        this.updated.emit();
     }
 
     destroy(){
@@ -116,6 +120,8 @@ class GLHDRImage extends GLTexture2D {
         this.__srcCDMTex.destroy();
         this.__glDecompHDRShader.destroy();
         this.__shaderBinding.destroy();
+
+        this.__hdrImage.disconnectScope(this);
     }
 };
 

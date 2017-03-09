@@ -385,7 +385,7 @@ class GLProceduralSky extends GLProbe {
             }
             // else{
             //     ///////////////////
-            //     this.__glEnvMapShader.bind(renderstate, 'GLEnvMap');
+            //     this.__envMapShader.bind(renderstate, 'GLEnvMap');
             //     let unifs = renderstate.unifs;
             //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
             //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
