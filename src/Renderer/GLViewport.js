@@ -51,6 +51,7 @@ class GLViewport {
         this.updated = new Signal();
         this.resized = new Signal();
         this.keyPressed = new Signal();
+        this.mouseMoved = new Signal();
 
         this.resize(width, height);
     }
@@ -499,6 +500,10 @@ class GLViewport {
                 //     getGeomUnderMouse.call(this);
                 if (this.__gizmoPass)
                     getGizmoUnderMouse.call(this);
+
+                let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                let ray = this.calcRayFromScreenPos(mousePos);
+                this.mouseMoved.emit(event, mousePos, ray);
                 break;
             case 'gizmo-manipulation':
                 {

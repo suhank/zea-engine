@@ -9,15 +9,20 @@ class Signal {
         this.__slots.push({"fn": fn, "scope": scope});
     }
 
-    disconnect(fn) {
+    disconnect(fn, scope = this) {
+        let length = this.__slots.length;
         this.__slots = this.__slots.filter(
             function (item) {
-                if (item["fn"] !== fn) {
+                if (item["fn"] !== fn || item["scope"] !== scope) {
                     return item;
                 }
             }
         );
+        if(this.__slots.length != length-1){
+            throw("callback :" + fn.name + " was not connected to this signal:" + this.__name);
+        }
     }
+
 
     disconnectScope(scope) {
         this.__slots = this.__slots.filter(
@@ -30,9 +35,9 @@ class Signal {
     }
 
     // emit the signal to all slots(observers)
-    emit(data) {
+    emit(...data) {
         this.__slots.forEach(function (item) {
-            item["fn"].call(item["scope"], data);
+            item["fn"].call(item["scope"], ...data);
         });
     }
 };
