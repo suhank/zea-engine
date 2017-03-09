@@ -1,10 +1,11 @@
-let addGUI = function(div) {
+let addGUI = function(div, options) {
     let moveGUIDiv = document.createElement("div");
     moveGUIDiv.id = 'moveGUI';
     div.appendChild(moveGUIDiv);
-    let gui = new dat.GUI({
-        autoPlace: false
-    });
+    options = options ? options : {};
+    options.autoPlace = false;
+    let gui = new dat.GUI(options);
+    
     moveGUIDiv.style.position = 'absolute';
     moveGUIDiv.style.top = '0px';
     moveGUIDiv.style.right = '30px';
