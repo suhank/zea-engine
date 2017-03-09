@@ -19,6 +19,7 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
 
     let loadBinMesh = (url, lightmapName)=>{
+        let div = addCanvas(800, 600);
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
 
@@ -28,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let lightmap =  new Visualive.HDRImage2D('lightmap', url+'_'+lightmapName+'_Lightmap.vlh');
         scene.setLightMap('Default', lightmap);
 
-        let renderer = new Visualive.GLVisualiveRenderer(addCanvas(800, 600));
+        let renderer = new Visualive.GLVisualiveRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
         let async = new Visualive.Async();
@@ -43,7 +44,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
             renderer.resumeDrawing();
         });
 
-        let gui = addGUI();
+        let gui = addGUI(div);
         renderer.addGUI(gui);
 
     }

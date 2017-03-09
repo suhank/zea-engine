@@ -16,6 +16,8 @@
 
 document.addEventListener("DOMContentLoaded", function(event) { 
     
+    let div = addCanvas();
+    let gui = addGUI(div);
     /////////////////////////////////////
     // Scene
     let scene = new Visualive.Scene();
@@ -23,8 +25,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     /////////////////////////////////////
     // Renderer
     
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(1600, 900, true));
-    // let renderer = new Visualive.GLVisualiveRenderer(addCanvas(1600, 900, true));
+    let renderer = new Visualive.GLSimpleRenderer(div);
+    // let renderer = new Visualive.GLVisualiveRenderer(div);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();
