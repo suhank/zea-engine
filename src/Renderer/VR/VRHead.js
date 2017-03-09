@@ -29,18 +29,18 @@ class VRHead extends Gizmo {
         let mat1 = new FlatMaterial('mat1');
         mat1.baseColor = new Color(1, 1, 0);
 
-        this.__geomItem0 = new GeomItem('VRHead', geom, mat0);
-        this.__geomItem0.selectable = false;
-        this.__geomItem1 = new GeomItem('VRHead', geom, mat1);
-        this.__geomItem1.selectable = false;
+        // this.__geomItem0 = new GeomItem('VRHead', geom, mat0);
+        // this.__geomItem0.selectable = false;
+        // this.__geomItem1 = new GeomItem('VRHead', geom, mat1);
+        // this.__geomItem1.selectable = false;
 
-        let xfo = new Xfo();
-        xfo.sc.set(1.2, 0.3, 0.6);
-        xfo.tr.set(0, 0.03, -0.05);
-        this.__geomItem1.setGeomOffsetXfo(xfo);
+        // let xfo = new Xfo();
+        // xfo.sc.set(1.2, 0.3, 0.6);
+        // xfo.tr.set(0, 0.03, -0.05);
+        // this.__geomItem1.setGeomOffsetXfo(xfo);
 
-        stageTreeItem.addChild(this.__geomItem0);
-        this.__geomItem0.addChild(this.__geomItem1);
+        // stageTreeItem.addChild(this.__geomItem0);
+        // this.__geomItem0.addChild(this.__geomItem1);
 
         // let geomglGeom = new GLMesh(gl, geom);
         // this.__geomglDrawItem0 = new GLDrawItem(gl, this.__geomItem0, geomglGeom);
@@ -58,8 +58,8 @@ class VRHead extends Gizmo {
     }
 
     setVisible(val){
-        this.__geomItem0.setVisible(val);
-        this.__geomItem1.setVisible(val);
+        // this.__geomItem0.setVisible(val);
+        // this.__geomItem1.setVisible(val);
     }
 
     update(frameData){
@@ -70,7 +70,7 @@ class VRHead extends Gizmo {
             this.__xfo.tr.setDataArray(frameData.pose.position);
         if(frameData.pose.orientation)
             this.__xfo.ori.setDataArray(frameData.pose.orientation);
-        this.__geomItem0.localXfo = this.__xfo;
+        // this.__geomItem0.localXfo = this.__xfo;
     }
 
     getXfo(){

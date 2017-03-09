@@ -59,7 +59,7 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, enableCrossSections=false, exposureRange=[0,30]) {
+    constructor(canvasDiv, enableCrossSections=false, exposureRange=[-5,10]) {
 
         super(canvasDiv, {
             antialias: true,
@@ -349,7 +349,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
         renderstate.planeX = this.__planeX;
-        renderstate.exposure = this.__exposure;
+        renderstate.exposure = Math.pow(2, this.__exposure);
 
         for (let pass of this.__passes)
             pass.draw(renderstate);
