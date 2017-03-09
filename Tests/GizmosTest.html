@@ -19,6 +19,7 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
 
 
+    let div = addCanvas();
     let scene = new Scene();
     scene.envMap = new EnvMapOctahedral('envMap', '/Tests/Assets/envs/test.env');
     scene.envMap.backgroundRotation = -100;
@@ -37,8 +38,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // groundPlaneItem.irradianceMap = 'Environment';
     // scene.getRoot().addChild(groundPlaneItem);
 
-    let renderer = new GLSimpleRenderer(addCanvas(0, 0, true));
-    // let renderer = new GLVisualiveRenderer(addCanvas(0, 0, true));
+    let renderer = new GLSimpleRenderer(div);
+    // let renderer = new GLVisualiveRenderer(div);
     renderer.setScene(scene);
 
     // let gui = addGUI();

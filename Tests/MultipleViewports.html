@@ -16,6 +16,7 @@
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 
+    let div = addCanvas();
     let cuboid = new Visualive.Cuboid('myCuboid', 2, 3, 4);
     let material = new Visualive.StandardMaterial('mat0');
     let geomItem = new Visualive.GeomItem('geomItem', cuboid, material);
@@ -25,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     scene.getRoot().addChild(geomItem);
     scene.getRoot().addChild(cam2);
 
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(1, 1, true));
+    let renderer = new Visualive.GLSimpleRenderer(div);
     renderer.setScene(scene);
 
     renderer.getViewport(0).tr = new Visualive.Vec2(0.499, 1.0);

@@ -13,10 +13,10 @@ let addGUI = function(div) {
     return gui;
 }
 
-let addCanvas = function(width, height, fullscreen) {
+let addCanvas = function(width, height) {
     let resizeDiv = document.createElement("div");
     resizeDiv.id = 'sapphireHolder';
-    if (fullscreen) {
+    if (width == undefined) {
         resizeDiv.style.width = '100%';
         resizeDiv.style.height = '100%';
         resizeDiv.style.position = 'absolute';
@@ -29,7 +29,7 @@ let addCanvas = function(width, height, fullscreen) {
         // $(resizeDiv).resizable();
     }
     document.body.appendChild(resizeDiv);
-    if (!fullscreen) {
+    if (width !== undefined) {
         document.body.appendChild(document.createElement("br"));
     }
     return resizeDiv;

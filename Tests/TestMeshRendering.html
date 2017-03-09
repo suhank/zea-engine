@@ -40,6 +40,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     let TestRenderTriangle = function() {
+        let div = addCanvas(350, 256);
 
         let triangle = new Mesh('triangle', 1);
         triangle.setNumVertices(3);
@@ -59,12 +60,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2.0, 1.0, 5.0), new Vec3(0.0, 1.0, 0.0));
         renderer.setScene(scene);
         renderer.resumeDrawing();
     }
     let TestRenderManualQuad = function() {
+        let div = addCanvas(350, 256);
 
         let quad = new Mesh('quad', 1);
         quad.setNumVertices(4);
@@ -86,12 +88,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2.0, 2.0, -15.0), new Vec3(-2.0, 2.0, 0.0));
         renderer.setScene(scene);
         renderer.resumeDrawing();
     }
     let TestRenderPlane = function() {
+        let div = addCanvas(350, 256);
         // Test a simple plane..
         let quad = new Plane('quad', 1, 1, 1, 1);
         let material = new StandardMaterial('mat0');
@@ -100,12 +103,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2.0, 1.0, 2.0), new Vec3());
         renderer.setScene(scene);
         renderer.resumeDrawing();
     }
     let TestRenderUVSeam = function() {
+        let div = addCanvas(350, 256);
         // Test generating a UV seam in a simply plane..
 
         let quad = new Plane('quad', 1, 2, 1, 2);
@@ -129,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(2.0, 1.0, 2.0), new Vec3());
         renderer.setScene(scene);
         let counter = 1;
@@ -143,6 +147,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     let TestRenderUVAndNormalSeam = function() {
+        let div = addCanvas(350, 256);
         // Test generating a UV seam in a simply plane..
 
         let quad = new Plane('quad', 1, 2, 1, 2);
@@ -172,7 +177,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(1.3, 1.3, 1.3), new Vec3());
         renderer.setScene(scene);
         let counter = 1;
@@ -186,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     let TestRenderCuboid = function() {
+        let div = addCanvas(350, 256);
 
         let cuboid = new Cuboid('myCuboid', 2, 3, 4);
         let material = new StandardMaterial('mat0');
@@ -194,12 +200,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-2.0, 2.0, -8.0), new Vec3(0, 0, 0));
         renderer.setScene(scene);
         renderer.resumeDrawing();
     }
     let TestRenderTexturedCuboid = function() {
+        let div = addCanvas(350, 256);
 
         let cuboid = new Cuboid('myCuboid', 2, 3, 4);
         let material = new StandardMaterial();
@@ -211,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
-        let renderer = new GLSimpleRenderer(addCanvas(350, 256));
+        let renderer = new GLSimpleRenderer(div);
         renderer.getViewport().getCamera().setPositionAndTarget(new Vec3(-5.0, 5.0, -5.0), new Vec3());
         renderer.setScene(scene);
         renderer.resumeDrawing();

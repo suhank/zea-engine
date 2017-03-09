@@ -15,6 +15,7 @@
         <script type="text/javascript">
 
 document.addEventListener("DOMContentLoaded", function(event) { 
+    let div = addCanvas();
 
     let scene = new Visualive.Scene();
 
@@ -44,7 +45,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     geomItem3.localXfo.ori.rotateX(Math.degToRad(90));
     geomItem2.addChild(geomItem3);
 
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(350, 256, true));
+    let renderer = new Visualive.GLSimpleRenderer(div);
     renderer.setScene(scene);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     renderer.frameAll();

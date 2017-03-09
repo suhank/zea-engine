@@ -16,6 +16,7 @@
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 
+    let gui = addGUI(div);
     /////////////////////////////////////
     // Scene
     let scene = new Visualive.Scene();
@@ -38,8 +39,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     /////////////////////////////////////
     // Renderer
     
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(1600, 900, true));
-    // let renderer = new Visualive.GLVisualiveRenderer(addCanvas(1600, 900, true));
+    let renderer = new Visualive.GLSimpleRenderer(gui);
+    // let renderer = new Visualive.GLVisualiveRenderer(div);
     // renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1.2, 1), new Visualive.Vec3(0, 0.1, 0));
     renderer.getViewport().setCamera(camera);
     // renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);

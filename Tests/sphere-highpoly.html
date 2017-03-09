@@ -17,7 +17,8 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
 
 
-    let gui = addGUI();
+    let div = addCanvas();
+    let gui = addGUI(div);
 
     /////////////////////////////////////
     // Scene
@@ -29,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     /////////////////////////////////////
     // Renderer
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(1600, 900, true));
+    let renderer = new Visualive.GLSimpleRenderer(div);
     renderer.setScene(scene);
     // renderer.addGUI(gui);
 

@@ -18,11 +18,11 @@
 // Note: launch Chrome with  --allow-file-access-from-files
 document.addEventListener("DOMContentLoaded", function(event) {
 
+    let div = addCanvas();
     let scene = new Visualive.Scene();
     let envMap =  new Visualive.ProceduralSky();
     scene.setEnvMap(envMap);
 
-    let div = addCanvas(800, 600, true);
     let renderer = new Visualive.GLVisualiveRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 

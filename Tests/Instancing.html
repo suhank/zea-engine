@@ -19,7 +19,7 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
 
     let loadBinMesh = (url, lightmapName)=>{
-        let domElement = addCanvas(800, 600, true);
+        let domElement = addCanvas();
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
 

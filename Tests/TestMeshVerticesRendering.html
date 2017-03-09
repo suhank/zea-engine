@@ -15,7 +15,7 @@
         <script type="text/javascript">
 
 document.addEventListener("DOMContentLoaded", function(event) { 
-
+    let div = addCanvas();
     let scene = new Visualive.Scene();
     let objAsset = new Visualive.ObjAsset('obj');
     objAsset.splitObjects = true;
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     scene.getRoot().addChild(objAsset);
 
 
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(350, 256, true));
+    let renderer = new Visualive.GLSimpleRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0));
     renderer.addPass(new Visualive.GLMeshPointsPass(renderer.gl));
     renderer.setScene(scene)

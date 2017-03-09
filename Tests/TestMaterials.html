@@ -19,8 +19,8 @@
 // Note: launch Chrome with  --allow-file-access-from-files
 document.addEventListener("DOMContentLoaded", function(event) { 
 
+    let domElement = addCanvas();
     let envMapURL = "Assets/hdri_sky_02_sample.vlh";
-    let domElement = addCanvas(800, 600, true);
 
     let scene = new Visualive.Scene();
     let envMap =  new Visualive.HDRImage2D('env', envMapURL);
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     
     let renderer = new Visualive.GLVisualiveRenderer(domElement);
-    renderer.exposure = 5;
+    renderer.exposure = 1.5;
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
     
     envMap.loaded.connect(() => {

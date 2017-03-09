@@ -16,6 +16,7 @@
 
 document.addEventListener("DOMContentLoaded", function(event) { 
 
+    let div = addCanvas();
     let scene = new Visualive.Scene();
 
     let standardMaterial = new Visualive.StandardMaterial('mat');
@@ -53,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     addLinesShape(new Visualive.Rect('Rect', 1.5, 2.0), new Visualive.Vec3(-3, 0, 6));
 
 
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(350, 256, true));
+    let renderer = new Visualive.GLSimpleRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     // renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
