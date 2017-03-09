@@ -6,7 +6,6 @@ import {
     ProceduralSky
 } from '../SceneTree/SceneTree.js';
 
-
 import {
     GLHDRImage
 } from './GLHDRImage.js';
@@ -68,7 +67,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
         /////////////////////////
         // Renderer Setup
-        this.__exposure = 1.0;
+        this.__exposure = 0.0;
         this.__exposureRange = exposureRange;
         this.__tonemap = true;
         this.__gamma = 2.2;

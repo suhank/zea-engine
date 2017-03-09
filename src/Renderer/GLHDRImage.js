@@ -107,7 +107,12 @@ class GLHDRImage extends GLTexture2D {
         this.__fbo.unbind();
 
         if(!this.__hdrImage.isStream()){
-            this.destroy();
+            this.__fbo.destroy();
+            this.__srcLDRTex.destroy();
+            this.__srcCDMTex.destroy();
+            this.__fbo = null;
+            this.__srcLDRTex = null;
+            this.__srcCDMTex = null;
         }
 
         this.updated.emit();
@@ -115,9 +120,11 @@ class GLHDRImage extends GLTexture2D {
 
     destroy(){
         super.destroy();
-        this.__fbo.destroy();
-        this.__srcLDRTex.destroy();
-        this.__srcCDMTex.destroy();
+        if(this.__fbo){
+            this.__fbo.destroy();
+            this.__srcLDRTex.destroy();
+            this.__srcCDMTex.destroy();
+        }
         this.__glDecompHDRShader.destroy();
         this.__shaderBinding.destroy();
 
