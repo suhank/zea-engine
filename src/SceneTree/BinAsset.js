@@ -80,7 +80,7 @@ class BinAsset extends AssetItem {
                 }
                 this.fromJSON(JSON.parse(assetTreeStr));
 
-                console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                // console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
 
                 this.loaded.emit();
             },

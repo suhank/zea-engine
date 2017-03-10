@@ -111,16 +111,13 @@ class BinReader {
 
     loadStr(){
         let numChars = this.loadUInt32();
-        console.log("BinReader.loadStr numChars:" + numChars);
         let chars = new Uint8Array(this.__data, this.__byteOffset, numChars); 
-        console.log("chars:" + chars);
         this.__byteOffset+=numChars;
         let result = '';
         for (let i = 0; i<numChars; i++)
             result = result + String.fromCharCode(chars[i]);
         if(numChars % 4 != 0)
             this.__byteOffset+=4 - (numChars % 4);
-        console.log("result:" + result);
         return result;
     }
 

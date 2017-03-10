@@ -78,7 +78,7 @@ if (process === 'undefined' || process.browser == true) {
 }
 
 class GLRenderer {
-    constructor(canvasDiv, webglOptions) {
+    constructor(canvasDiv, options, webglOptions) {
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
@@ -96,6 +96,7 @@ class GLRenderer {
 
         this.resized = new Signal();
         this.keyPressed = new Signal();
+        this.vrViewportSetup = new Signal();
 
         this.setupWebGL(canvasDiv, webglOptions);
 
@@ -109,14 +110,16 @@ class GLRenderer {
         this.__vrViewport = undefined;
         this.mirrorVRisplayToViewport = true;
         if (navigator.getVRDisplays)
-            this.setupVRViewport();
+            this.__setupVRViewport();
 
-        this.__stats = new Stats();
-        this.__stats.dom.style.position = 'absolute';
-        this.__stats.dom.style.top = 0;
-        this.__stats.dom.style.left = 0;
-        this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        canvasDiv.appendChild(this.__stats.dom);
+        if(options.displayStats){
+            this.__stats = new Stats();
+            this.__stats.dom.style.position = 'absolute';
+            this.__stats.dom.style.top = 0;
+            this.__stats.dom.style.left = 0;
+            this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+            canvasDiv.appendChild(this.__stats.dom);
+        }
     }
 
     getScene() {
@@ -151,10 +154,12 @@ class GLRenderer {
     }
     
     toggleDebugPanel() {
-        if (this.__stats.dom.style.visibility == "hidden")
-            this.__stats.dom.style.visibility = "visible";
-        else
-            this.__stats.dom.style.visibility = "hidden";
+        if(this.__stats){
+            if (this.__stats.dom.style.visibility == "hidden")
+                this.__stats.dom.style.visibility = "visible";
+            else
+                this.__stats.dom.style.visibility = "hidden";
+        }
     }
 
     setScene(scene) {
@@ -428,16 +433,18 @@ class GLRenderer {
     /////////////////////////
     // VR Setup
 
-    setupVRViewport() {
-        if (!navigator.getVRDisplays)
-            return false;
+    supportsVR(){
+        return navigator.getVRDisplays;
+    }
 
+    __setupVRViewport() {
         //this.frameData = new VRFrameData();
         let renderer = this;
         return navigator.getVRDisplays().then(function(displays) {
             if (displays.length > 0) {
                 let vrDisplay = displays[0];
                 renderer.__vrViewport = new VRViewport(renderer, vrDisplay /*, renderer.getWidth(), renderer.getHeight()*/ );
+                renderer.vrViewportSetup.emit(renderer.__vrViewport);
             } else {
                 //setStatus("WebVR supported, but no VRDisplays found.")
                 console.warn("WebVR supported, but no VRDisplays found.");
@@ -528,12 +535,14 @@ class GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        this.__stats.begin();
+        if(this.__stats)
+            this.__stats.begin();
 
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        this.__stats.end();
+        if(this.__stats)
+            this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
 };

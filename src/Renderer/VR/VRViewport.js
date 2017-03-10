@@ -62,9 +62,11 @@ class VRViewport {
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
         this.__vrControllers = [];
         this.__vrTools = {};
-        this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-        this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-        this.__vrTools['Markerpen'] = new MarkerpenTool(this, this.__vrhead, this.__vrControllers);
+        if(Visualive.isMobileDevice()){
+            this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['Markerpen'] = new MarkerpenTool(this, this.__vrhead, this.__vrControllers);
+        }
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
         this.__renderer.getCollector().finalize();// TODO this should not be explicit.
 

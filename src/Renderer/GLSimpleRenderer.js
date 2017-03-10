@@ -94,7 +94,8 @@ class GLSimpleRenderer extends GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        this.__stats.begin();
+        if(this.__stats)
+            this.__stats.begin();
 
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()){
@@ -113,7 +114,8 @@ class GLSimpleRenderer extends GLRenderer {
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        this.__stats.end();
+        if(this.__stats)
+            this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
 };

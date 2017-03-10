@@ -41,13 +41,10 @@ class GeomLibrary {
 
     loadBin(reader) {
         let numGeoms = reader.loadUInt32();
-        console.log("GeomLibrary.loadBin:" + numGeoms);
         let toc = reader.loadUInt32Array(numGeoms);
-        console.log("toc:" + toc);
         for (let i = 0; i < numGeoms; i++) {
             let geomReader = new BinReader(reader.data, toc[i], reader.isLittleEndian);
             let className = geomReader.loadStr();
-            console.log(i + " className:" + className);
             let geom;
             switch (className) {
                 case 'Points':

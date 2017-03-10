@@ -58,9 +58,9 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, enableCrossSections=false, exposureRange=[-5,10]) {
+    constructor(canvasDiv, enableCrossSections=false, exposureRange=[-5,10], options={}) {
 
-        super(canvasDiv, {
+        super(canvasDiv, options, {
             antialias: true,
             depth: true
         });
@@ -368,7 +368,8 @@ class GLVisualiveRenderer extends GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        this.__stats.begin();
+        if(this.__stats)
+            this.__stats.begin();
 
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()){
@@ -387,7 +388,8 @@ class GLVisualiveRenderer extends GLRenderer {
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        this.__stats.end();
+        if(this.__stats)
+            this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
 
