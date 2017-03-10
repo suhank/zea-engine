@@ -260,7 +260,7 @@ class Mesh extends BaseGeom {
     loadBin(reader) {
 
         this.name = reader.loadStr();
-        // console.log("loadBin:" + this.name);
+        console.log("Mesh.loadBin:" + this.name);
         this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
 
         let normalsAttr = this.addVertexAttribute('normals', Vec3);
@@ -268,9 +268,11 @@ class Mesh extends BaseGeom {
         let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
 
         let numVertices = reader.loadUInt32();
+        console.log("numVertices:" + numVertices);
         this.setNumVertices(numVertices);
 
         let faceCounts_8bit = reader.loadUInt32Array();
+        console.log("faceCounts_8bit:" + faceCounts_8bit);
         this.setFaceCounts(faceCounts_8bit);
 
         let numClusters = reader.loadUInt32();

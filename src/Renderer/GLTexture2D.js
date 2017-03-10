@@ -72,48 +72,26 @@ class GLTexture2D extends RefCounted {
         this.mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
 
         this.__format = gl[this.format];
-        if (this.format == 'FLOAT') {
-            if (gl.__ext_float){
-                if (!gl.__ext_float_linear)
-                    throw ("OES_texture_float_linear is not available");
-            }
-            else{
-                if(gl.__ext_half_float){
-                    this.__format = gl.__ext_half_float.HALF_FLOAT_OES;    
-                    gl.__ext_texture_half_float_linear = gl.getExtension("OES_texture_half_float_linear");
-/*
-                    if(!data){
-                        let buffer = new Float16Array(width * height * 4); // have enough bytes
-                        let canvas = document.createElement('canvas'),
-                            ctx = canvas.getContext('2d');
-                        canvas.width = width;
-                        canvas.height = height;
+        // if (this.format == 'FLOAT') {
+        //     if (gl.__ext_float){
+        //         if (!gl.__ext_float_linear)
+        //             throw ("OES_texture_float_linear is not available");
+        //     }
+        // }
+        // // else if (this.format == 'HALF_FLOAT') {
+        // //     if(gl.__ext_half_float){
+        // //         this.__format = gl.__ext_half_float.HALF_FLOAT_OES;    
+        // //         if (!gl.__ext_texture_half_float_linear)
+        // //             throw ("OES_texture_float_linear is not available");
+        // //     }
+        // //     else
+        // //         throw ("OES_texture_half_float is not available");
 
-                        // create imageData object
-                        let idata = ctx.createImageData(width, height);
-
-                        // set our buffer as source
-                        idata.data.set(buffer);
-
-                        // update canvas with new data
-                        ctx.putImageData(idata, 0, 0);
-
-                        // create a new img object
-                        let image=new Image();
-                        //image.onload = imageLoaded;       // optional callback function
-                        image.src = canvas.toDataURL(); // produces a PNG file
-                        data = image;
-                    }
-                    */
-                }
-                else
-                    throw ("OES_texture_float is not available");
-
-            }
-        } else if (this.format == 'sRGB') {
-            if (!gl.__ext_sRGB)
-                throw ("EXT_sRGB is not available");
-        }
+        // // } 
+        // else if (this.format == 'sRGB') {
+        //     if (!gl.__ext_sRGB)
+        //         throw ("EXT_sRGB is not available");
+        // }
 
         // Load the image into the GPU for rendering.
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
