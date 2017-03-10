@@ -284,9 +284,9 @@ class GLVisualiveRenderer extends GLRenderer {
     ////////////////////////////
     // Rendering
 
-    drawEnv() {
+    drawEnv(renderstate) {
         if (this.__glEnvMap != undefined) {
-            this.__glEnvMap.draw(this.__renderstate);
+            this.__glEnvMap.draw(renderstate);
         }
     }
 
@@ -340,16 +340,15 @@ class GLVisualiveRenderer extends GLRenderer {
 
     drawScene(renderstate){
         renderstate['drawCalls'] = 0;
-
-        if (this.__displayEnvironment)
-            this.drawEnv();
-
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
         renderstate.planeX = this.__planeX;
         renderstate.exposure = Math.pow(2, this.__exposure);
+
+        if (this.__displayEnvironment)
+            this.drawEnv(renderstate);
 
         for (let pass of this.__passes)
             pass.draw(renderstate);
