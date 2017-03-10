@@ -33,11 +33,20 @@ class GLFbo {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
         if (this.__colorTexture.format == 'FLOAT') {
-            if(!gl.__ext_float)
-                throw("Unable to write to float textures.");
-            if (this.__colorTexture.filter != 'NEAREST') {
-                if (!gl.__ext_float_linear)
-                    throw ("Unable to use filtering on floating point textures");
+            if(gl.__ext_float){
+                if (this.__colorTexture.filter == 'LINEAR') {
+                    if (!gl.__ext_float_linear)
+                        throw ("Unable to use filtering on floating point textures");
+                }
+            }
+            else if(gl.__ext_half_float){
+                if (this.__colorTexture.filter == 'LINEAR') {
+                    if (!gl.__ext_texture_half_float_linear)
+                        throw ("Unable to use filtering on half-floating point textures");
+                }
+            }
+            else{
+                throw("floating point textures unsupported.");
             }
         }
 

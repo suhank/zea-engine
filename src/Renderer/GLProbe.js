@@ -48,23 +48,54 @@ class GLProbe extends ImageAtlas {
     generateHammersleySamples(numSamples) {
         let gl = this.__gl;
         if(!gl['Hammersley'+numSamples]){
-            let dataArray = new Float32Array(numSamples*3);
-            for (let i=0; i<numSamples; i++) {
-                let Xi = hammersley(i, numSamples);
-                let offset = i * 3;
-                let vec3 = Vec3.createFromFloat32Buffer(dataArray.buffer, offset);
-                vec3.set(Xi[0], Xi[1], 0.0);
+
+            /*
+            if(gl.__ext_float){
+                let dataArray = new Float32Array(numSamples*3);
+                for (let i=0; i<numSamples; i++) {
+                    let Xi = hammersley(i, numSamples);
+                    let offset = i * 3;
+                    dataArray[offset+0] = Xi[0];
+                    dataArray[offset+2] = Xi[2];
+                }
+                gl['Hammersley'+numSamples] = new GLTexture2D(gl, {
+                    channels: 'RGB',
+                    format: 'FLOAT',
+                    width: numSamples,
+                    height: 1,
+                    filter: 'NEAREST',
+                    wrap: 'CLAMP_TO_EDGE',
+                    data: dataArray,
+                    mipMapped: false
+                });
             }
-            gl['Hammersley'+numSamples] = new GLTexture2D(gl, {
-                channels: 'RGB',
-                format: 'FLOAT',
-                width: numSamples,
-                height: 1,
-                filter: 'NEAREST',
-                wrap: 'CLAMP_TO_EDGE',
-                data: dataArray,
-                mipMapped: false
-            });
+            else{
+                */
+                let dataArray = new Uint8Array(numSamples*4);
+                for (let i=0; i<numSamples; i++) {
+                    let Xi = hammersley(i, numSamples);
+                    let offset = i * 3;
+                    dataArray[offset+0] = Math.floor(Xi[0] * 256);
+                    dataArray[offset+1] = Math.floor((Xi[0] * 65535) % 256);
+                    dataArray[offset+2] = Math.floor(Xi[1] * 256);
+                    dataArray[offset+3] = Math.floor((Xi[1] * 65535) % 256);
+
+                    // let rgba =  [dataArray[offset+0] / 255, dataArray[offset+1] / 255, dataArray[offset+2] / 255, dataArray[offset+3] / 255];
+                    // let scl = 0.00390625;//1.0/256.0;
+                    // let Xi_2 = [rgba[0] + (rgba[1]*scl), rgba[2] + (rgba[3]*scl)];
+                    // console.log(Xi + ":" + Xi_2 + ":" + [rgba[1]*scl, rgba[3]*scl] + ":" + [(Xi_2[0] - Xi[0]), (Xi_2[1] - Xi[1])]);
+                }
+                gl['Hammersley'+numSamples] = new GLTexture2D(gl, {
+                    channels: 'RGBA',
+                    format: 'UNSIGNED_BYTE',
+                    width: numSamples,
+                    height: 1,
+                    filter: 'NEAREST',
+                    wrap: 'CLAMP_TO_EDGE',
+                    data: dataArray,
+                    mipMapped: false
+                });
+            //}
         }
         return gl['Hammersley'+numSamples];
     }

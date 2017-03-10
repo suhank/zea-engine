@@ -156,7 +156,8 @@ var create3DContext = function(canvas, opt_attribs) {
             }
         };
 
-  context.__ext_float = context.getExtension("OES_texture_float");
+  //context.__ext_float = context.getExtension("OES_texture_float");
+  context.__ext_half_float = context.getExtension("OES_texture_half_float");
   context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
   context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
   // context.__ext_sRGB = context.getExtension("EXT_sRGB");

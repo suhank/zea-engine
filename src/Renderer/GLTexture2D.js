@@ -71,16 +71,47 @@ class GLTexture2D extends RefCounted {
         let flipY = ('flipY' in params) ? params['flipY'] : false;
         this.mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
 
+        this.__format = gl[this.format];
         if (this.format == 'FLOAT') {
-            this.__ext_float = gl.getExtension('OES_texture_float');
-            if (!this.__ext_float)
-                throw ("OES_texture_float is not available");
-            this.__ext_OES_texture_float_linear = gl.getExtension('OES_texture_float_linear');
-            if (!this.__ext_OES_texture_float_linear)
-                throw ("OES_texture_float_linear is not available");
+            if (gl.__ext_float){
+                if (!gl.__ext_float_linear)
+                    throw ("OES_texture_float_linear is not available");
+            }
+            else{
+                if(gl.__ext_half_float){
+                    this.__format = gl.__ext_half_float.HALF_FLOAT_OES;    
+                    gl.__ext_texture_half_float_linear = gl.getExtension("OES_texture_half_float_linear");
+/*
+                    if(!data){
+                        let buffer = new Float16Array(width * height * 4); // have enough bytes
+                        let canvas = document.createElement('canvas'),
+                            ctx = canvas.getContext('2d');
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        // create imageData object
+                        let idata = ctx.createImageData(width, height);
+
+                        // set our buffer as source
+                        idata.data.set(buffer);
+
+                        // update canvas with new data
+                        ctx.putImageData(idata, 0, 0);
+
+                        // create a new img object
+                        let image=new Image();
+                        //image.onload = imageLoaded;       // optional callback function
+                        image.src = canvas.toDataURL(); // produces a PNG file
+                        data = image;
+                    }
+                    */
+                }
+                else
+                    throw ("OES_texture_float is not available");
+
+            }
         } else if (this.format == 'sRGB') {
-            this.__ext_sRGB = gl.getExtension('EXT_sRGB');
-            if (!this.__ext_sRGB)
+            if (!gl.__ext_sRGB)
                 throw ("EXT_sRGB is not available");
         }
 
@@ -106,20 +137,20 @@ class GLTexture2D extends RefCounted {
         let channels = (typeof this.channels) == "string" ? gl[this.channels] : this.channels;
         if (data != undefined) {
             if (data instanceof Image) {
-                gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, gl[this.format], data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, this.__format, data);
             }
             else {
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
                 //console.log(this.width + "x"+ this.height+ ":" + data.length + " channels:" + this.channels + " format:" + this.format);
-                gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, gl[this.format], data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, this.__format, data);
             }
 
             if (this.mipMapped)
                 gl.generateMipmap(gl.TEXTURE_2D);
         } 
         else
-            gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, gl[this.format], null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, this.__format, null);
     }
 
     resize(width, height, data, bind=true) {
