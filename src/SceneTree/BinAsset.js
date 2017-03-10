@@ -20,23 +20,6 @@ import {
 } from '../external/Unpack.js';
 #endif
 
-
-function isMobileDevice() {
-    if (navigator.userAgent.match(/Android/i) || 
-        navigator.userAgent.match(/webOS/i) || 
-        navigator.userAgent.match(/iPhone/i) || 
-        navigator.userAgent.match(/iPad/i) || 
-        navigator.userAgent.match(/iPod/i) || 
-        navigator.userAgent.match(/BlackBerry/i) || 
-        navigator.userAgent.match(/Windows Phone/i)
-    ) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-
 class BinAsset extends AssetItem {
     constructor(name = undefined) {
         super(name);
@@ -55,18 +38,7 @@ class BinAsset extends AssetItem {
         this.localXfo = localXfo;
     }
 
-    loadURL(resourcesName, resources) {
-        let fileUrl;
-        // On mobile make sure to load the mobile version of the binary data.
-        let isMobile = isMobileDevice();
-        //if(isMobile){
-        //    console.log("BinAsset.loadURL:" +resourcesName + '_m');
-        //    fileUrl = resources[resourcesName + '_m'];
-        //}
-        //else{
-            console.log("BinAsset.loadURL:" +resourcesName);
-            fileUrl = resources[resourcesName];
-        //}
+    loadURL(fileUrl) {
 
         loadBinfile(
             fileUrl,
@@ -91,7 +63,7 @@ class BinAsset extends AssetItem {
 
                 /////////////////////////////////
                 // Parse the data.
-                this.__geoms.loadBin(new BinReader(geomData.buffer, 0, !isMobile));
+                this.__geoms.loadBin(new BinReader(geomData.buffer));
                 let assetTreeStr;
                 // Note: TextDecoder is not supported on Edge yet. 
                 // TextDecoder is a lot faster if available...
@@ -119,7 +91,6 @@ class BinAsset extends AssetItem {
     }
 
     loadURLs(fileUrl) {
-        let isMobile = isMobileDevice();
 
         let jsonFileData, binFileData;
         let loadCount = 2;
@@ -133,7 +104,7 @@ class BinAsset extends AssetItem {
 
             /////////////////////////////////
             // Parse the data.
-            this.__geoms.loadBin(new BinReader(binFileData, 0, !isMobile));
+            this.__geoms.loadBin(new BinReader(binFileData));
             this.fromJSON(JSON.parse(jsonFileData));
 
             console.log("Parse:" + (performance.now() - start).toFixed(2));
