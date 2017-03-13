@@ -3,12 +3,16 @@ import {
 } from '../Math/Math.js';
 import {
     HDRImage2D,
+    HDRImageMixer,
     ProceduralSky
 } from '../SceneTree/SceneTree.js';
 
 import {
     GLHDRImage
 } from './GLHDRImage.js';
+import {
+    GLHDRImageMixer
+} from './GLHDRImageMixer.js';
 import {
     GLEnvMap
 } from './GLEnvMap.js';
@@ -127,7 +131,10 @@ class GLVisualiveRenderer extends GLRenderer {
         }
         let lightMaps = scene.getLightMaps();
         for(let name in lightMaps){
-            this.__glLightmaps[name] = new GLHDRImage(this.__gl, lightMaps[name]);
+            if(lightMaps[name] instanceof HDRImageMixer)
+                this.__glLightmaps[name] = new GLHDRImageMixer(this.__gl, lightMaps[name]);
+            else
+                this.__glLightmaps[name] = new GLHDRImage(this.__gl, lightMaps[name]);
         }
     }
 

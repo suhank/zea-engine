@@ -5,8 +5,8 @@ import {
     GLTexture2D
 } from './GLTexture2D.js';
 import {
-    DecompHDRShader
-} from './Shaders/DecompHDRShader.js';
+    UnpackHDRShader
+} from './Shaders/UnpackHDRShader.js';
 import {
     GLFbo
 } from './GLFbo.js';
@@ -54,6 +54,8 @@ class GLHDRImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE'
             });
             this.__fbo = new GLFbo(gl, this);
+            this.__fbo.setClearColor([0,0,0,0]);
+            
             this.__srcLDRTex = new GLTexture2D(gl, {
                 channels: 'RGB',
                 format: 'UNSIGNED_BYTE',
@@ -74,8 +76,8 @@ class GLHDRImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE',
                 data: cdm
             });
-            this.__glDecompHDRShader = new GLShader(gl, new DecompHDRShader());
-            let shaderComp = this.__glDecompHDRShader.compileForTarget('GLHDRImage');
+            this.__unpackHDRShader = new GLShader(gl, new UnpackHDRShader());
+            let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
         else{
@@ -83,10 +85,10 @@ class GLHDRImage extends GLTexture2D {
             this.__srcCDMTex.bufferData(cdm);
         }
 
-        this.__fbo.bind();
+        this.__fbo.bindAndClear();
 
         let renderstate = {};
-        this.__glDecompHDRShader.bind(renderstate, 'GLHDRImage');
+        this.__unpackHDRShader.bind(renderstate, 'GLHDRImage');
         this.__shaderBinding.bind(renderstate);
 
 
@@ -125,7 +127,7 @@ class GLHDRImage extends GLTexture2D {
             this.__srcLDRTex.destroy();
             this.__srcCDMTex.destroy();
         }
-        this.__glDecompHDRShader.destroy();
+        this.__unpackHDRShader.destroy();
         this.__shaderBinding.destroy();
 
         this.__hdrImage.loaded.disconnectScope(this);

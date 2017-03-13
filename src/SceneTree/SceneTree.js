@@ -14,6 +14,10 @@ export * from './ShaderLibrary.js';
 export * from './Shader.js';
 export * from './Image2D.js';
 export * from './FileImage2D.js';
+export * from './HDRImage2D.js';
+export * from './HDRImageMixer.js';
+export * from './ProceduralSky.js';
+
 export * from './Material.js';
 
 export * from './SelectionManager.js';
@@ -21,8 +25,5 @@ export * from './Scene.js';
 
 export * from './BinAsset.js';
 export * from './ObjAsset.js';
-export * from './HDRImage2D.js';
-export * from './ProceduralSky.js';
-
 export * from './Shaders/Shaders.js';
 

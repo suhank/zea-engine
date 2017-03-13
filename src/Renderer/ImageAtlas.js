@@ -175,6 +175,8 @@ class ImageAtlas extends GLTexture2D {
         });
         let gl = this.__gl;
         this.__fbo = new GLFbo(gl, this);
+        this.__fbo.setClearColor([0,0,0,0]);
+        
         if (!gl.__quadVertexIdsBuffer) 
             gl.setupInstancedQuad();
 
@@ -187,7 +189,7 @@ class ImageAtlas extends GLTexture2D {
 
     renderAtlas(cleanup=true) {
         let gl = this.__gl;
-        this.__fbo.bind();
+        this.__fbo.bindAndClear();
 
         let renderstate = {};
         gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas');

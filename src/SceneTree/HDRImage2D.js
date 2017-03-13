@@ -15,33 +15,41 @@ import {
     parseHdr
 } from '../external/parse-hdr.js';
 
-#ifdef BUILD_RELEASE
-import {
-    Unpack
-} from '../external/Unpack.js';
-#endif
+// #ifdef BUILD_RELEASE
+// import {
+//     Unpack
+// } from '../external/Unpack.js';
+// #endif
 
 class HDRImage2D extends Image2D {
     constructor(name, url, isStream) {
-        super();
+        super({
+            format: 'FLOAT',
+            channels: 'RGB'
+        });
 
         this.__name = name;
         this.__url = url;
         this.__stream = isStream;
-
-        this.channels = 'RGB';
-        this.format = 'FLOAT';
+        this.__loaded = false;
+        this.__data = {};
 
         this.loaded = new Signal();
         this.updated = new Signal();
 
-        this.__loaded = false;
-        this.__data = {};
         if(url){
             this.loadURL(url);
         }
     }
 
+    isLoaded() {
+        return this.__loaded;
+    }
+
+    isStream() {
+        return this.__stream;
+    }
+    
     loadURL(fileUrl) {
         if(fileUrl in this.__data){
             this.__currKey = fileUrl;
@@ -115,13 +123,6 @@ class HDRImage2D extends Image2D {
         return this.__loaded;
     }
 
-    isLoaded() {
-        return this.__loaded;
-    }
-
-    isStream() {
-        return this.__stream;
-    }
 
     getData(){
         return this.__hdrInfo.data;
