@@ -51,6 +51,16 @@ class GeomItem extends TreeItem {
         }
     }
 
+    get globalXfo() {
+        return super.globalXfo;
+    }
+
+    set globalXfo(xfo) {
+        super.globalXfo = xfo;
+        this.__geomMatrix = this.__globalXfo.multiply(this.__geomOffsetXfo).toMat4();
+    }
+
+
     get material() {
         return this.__material;
     }
