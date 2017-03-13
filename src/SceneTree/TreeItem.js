@@ -223,6 +223,13 @@ class TreeItem {
         this.__boundingBoxDirty = true;
     }
 
+    removeChildByHandle(childItem) {
+        let index = this.__childItems.indexOf(childItem);
+        if(index == -1)
+            throw("Error in removeChildByHandle. Child not found:" + childItem.name);
+        return this.removeChild(index);
+    }
+
     removeAllChildren(destroy = true) {
         if (destroy)
             for (let childItem of this.__childItems)
@@ -231,6 +238,10 @@ class TreeItem {
         this.__boundingBoxDirty = true;
     }
 
+    indexOfChild(childItem) {
+        return this.__childItems.indexOf(childItem);
+    }
+    
     //////////////////////////////////////////
     // Metadata
 

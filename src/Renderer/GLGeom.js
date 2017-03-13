@@ -86,6 +86,11 @@ class GLGeom {
         throw ("Not implemented. Implement this method in a derived class.")
     }
 
+    destroy() {
+        this.destroyBuffers();
+        this.__destroyed = true;
+        this.destructing.emit(this);
+    }
 };
 
 export {
