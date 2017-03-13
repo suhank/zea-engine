@@ -4,43 +4,43 @@ import {
 } from '../Math/Math.js';
 
 class BinReader {
-    constructor(data, byteOffset=0, littleEndian=true) {
+    constructor(data, byteOffset = 0, isMobileDevice = true) {
         this.__data = data;
         this.__byteOffset = byteOffset;
         this.__dataView = new DataView(this.__data);
-        this.__littleEndian = true;//littleEndian;
+        this.__isMobileDevice = isMobileDevice; //littleEndian;
     }
 
-    get isLittleEndian(){
-        return this.__littleEndian;
+    get isMobileDevice() {
+        return this.__isMobileDevice;
     }
 
-    get data(){
+    get data() {
         return this.__data;
     }
 
-    pos(){
+    pos() {
         return this.__byteOffset;
     }
 
-    seek(byteOffset){
+    seek(byteOffset) {
         this.__byteOffset = byteOffset;
     }
 
     loadUInt32() {
-        let result = this.__dataView.getUint32(this.__byteOffset, this.__littleEndian);
+        let result = this.__dataView.getUint32(this.__byteOffset, true);
         this.__byteOffset += 4;
         return result;
     }
 
     loadFloat32() {
-        let result = this.__dataView.getFloat32(this.__byteOffset, this.__littleEndian);
+        let result = this.__dataView.getFloat32(this.__byteOffset, true);
         this.__byteOffset += 4;
         return result;
     }
 
-    loadUInt8Array(size=undefined, clone=false) {
-        if(size==undefined)
+    loadUInt8Array(size = undefined, clone = false) {
+        if (size == undefined)
             size = this.loadUInt32();
         let result = new Uint8Array(this.__data, this.__byteOffset, size);
         this.__byteOffset += size;
@@ -51,18 +51,17 @@ class BinReader {
     }
 
 
-    loadUInt16Array(size=undefined, clone=false) {
-        if(size==undefined)
+    loadUInt16Array(size = undefined, clone = false) {
+        if (size == undefined)
             size = this.loadUInt32();
         let result;
-        if(!this.__littleEndian){
+        if (this.__isMobileDevice) {
             result = new Uint16Array(size);
-            for(let i=0;i<size; i++){
-                result[i] = this.__dataView.getUint16(this.__byteOffset, this.__littleEndian);
+            for (let i = 0; i < size; i++) {
+                result[i] = this.__dataView.getUint16(this.__byteOffset, true);
                 this.__byteOffset += 2;
             }
-        }
-        else{
+        } else {
             result = new Uint16Array(this.__data, this.__byteOffset, size);
         }
         this.__byteOffset += size * 2;
@@ -72,18 +71,17 @@ class BinReader {
         return result;
     }
 
-    loadUInt32Array(size=undefined, clone=false) {
-        if(size==undefined)
+    loadUInt32Array(size = undefined, clone = false) {
+        if (size == undefined)
             size = this.loadUInt32();
         let result;
-        if(!this.__littleEndian){
+        if (this.__isMobileDevice) {
             result = new Uint32Array(size);
-            for(let i=0;i<size; i++){
-                result[i] = this.__dataView.getUint32(this.__byteOffset, this.__littleEndian);
+            for (let i = 0; i < size; i++) {
+                result[i] = this.__dataView.getUint32(this.__byteOffset, true);
                 this.__byteOffset += 4;
             }
-        }
-        else{
+        } else {
             result = new Uint32Array(this.__data, this.__byteOffset, size);
         }
         this.__byteOffset += size * 4;
@@ -91,45 +89,44 @@ class BinReader {
     }
 
 
-    loadFloat32Array(size=undefined, clone=false) {
-        if(size==undefined)
+    loadFloat32Array(size = undefined, clone = false) {
+        if (size == undefined)
             size = this.loadUInt32();
         let result;
-        if(!this.__littleEndian){
+        if (this.__isMobileDevice) {
             result = new Uint16Array(size);
-            for(let i=0;i<size; i++){
-                result[i] = this.__dataView.getFloat32(this.__byteOffset, this.__littleEndian);
+            for (let i = 0; i < size; i++) {
+                result[i] = this.__dataView.getFloat32(this.__byteOffset, true);
                 this.__byteOffset += 4;
             }
-        }
-        else{
+        } else {
             result = new Float32Array(this.__data, this.__byteOffset, size);
         }
         this.__byteOffset += size * 4;
         return result;
     }
 
-    loadStr(){
+    loadStr() {
         let numChars = this.loadUInt32();
-        let chars = new Uint8Array(this.__data, this.__byteOffset, numChars); 
-        this.__byteOffset+=numChars;
+        let chars = new Uint8Array(this.__data, this.__byteOffset, numChars);
+        this.__byteOffset += numChars;
         let result = '';
-        for (let i = 0; i<numChars; i++)
+        for (let i = 0; i < numChars; i++)
             result = result + String.fromCharCode(chars[i]);
-        if(numChars % 4 != 0)
-            this.__byteOffset+=4 - (numChars % 4);
+        if (numChars % 4 != 0)
+            this.__byteOffset += 4 - (numChars % 4);
         return result;
     }
 
-    loadUInt32Vec2(){
-        let array = new Uint32Array(this.__data, this.__byteOffset, 2); 
-        this.__byteOffset+=8;
+    loadUInt32Vec2() {
+        let array = new Uint32Array(this.__data, this.__byteOffset, 2);
+        this.__byteOffset += 8;
         return new Vec2(array);
     }
 
-    loadFloat32Vec3(){
-        let result = new Vec3(this.__data, this.__byteOffset); 
-        this.__byteOffset+=12;
+    loadFloat32Vec3() {
+        let result = new Vec3(this.__data, this.__byteOffset);
+        this.__byteOffset += 12;
         return result;
     }
 
@@ -138,5 +135,3 @@ class BinReader {
 export {
     BinReader
 };
-
-

@@ -1,4 +1,5 @@
 import {
+    isMobileDevice,
     Signal
 } from '../Math/Math.js';
 import {
@@ -63,7 +64,7 @@ class BinAsset extends AssetItem {
 
                 /////////////////////////////////
                 // Parse the data.
-                this.__geoms.loadBin(new BinReader(geomData.buffer));
+                this.__geoms.loadBin(new BinReader(geomData.buffer, 0, isMobileDevice()));
                 let assetTreeStr;
                 // Note: TextDecoder is not supported on Edge yet. 
                 // TextDecoder is a lot faster if available...

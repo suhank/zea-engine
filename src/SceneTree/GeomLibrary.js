@@ -43,7 +43,7 @@ class GeomLibrary {
         let numGeoms = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
         for (let i = 0; i < numGeoms; i++) {
-            let geomReader = new BinReader(reader.data, toc[i], reader.isLittleEndian);
+            let geomReader = new BinReader(reader.data, toc[i], reader.isMobileDevice);
             let className = geomReader.loadStr();
             let geom;
             switch (className) {
