@@ -19,7 +19,7 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
 
     let loadBinMesh = (url)=>{
-        let div = addCanvas(800, 600);
+        let div = addCanvas();
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
 
