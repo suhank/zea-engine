@@ -103,6 +103,16 @@ class Camera extends TreeItem {
         this.viewMatChanged.emit(this.__globalXfo);
     }
 
+    get localXfo() {
+        return super.localXfo;
+    }
+
+    set localXfo(xfo) {
+        super.localXfo = xfo;
+        this.__viewMatrix = this.__globalXfo.inverse().toMat4();
+        this.viewMatChanged.emit(this.__globalXfo);
+    }
+
     setPositionAndTarget(position, target) {
         this.focalDistance = position.distanceTo(target);
         let xfo = new Xfo();

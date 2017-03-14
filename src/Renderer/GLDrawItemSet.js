@@ -83,6 +83,7 @@ class GLDrawItemSet {
         // to be drawn individually,
 
         // this.__numTris += gldrawItem.getGLGeom().getNumTriangles();
+        let index = this.__gldrawItems.length;
         this.__gldrawItems.push(gldrawItem);
         this.__drawCount++;
 
@@ -90,6 +91,14 @@ class GLDrawItemSet {
             this.__mirrored = gldrawItem.isMirrored();
             this.__lightmapName = gldrawItem.getGeomItem().getLightmap();
         }
+
+        gldrawItem.destructing.connect(() => {
+            this.__gldrawItems.splice(index, 1);
+            this.__drawCount--;
+            if(this.__gldrawItems.length == 0){
+
+            }
+        }, this);
     }
 
 
@@ -177,7 +186,7 @@ class GLDrawItemSet {
         // due to culling. We can maintain a high-water mark
         // buffer, and then only render the first N items. 
         for (let i = 0; i < transformIds.length; i++) {
-            this.__transformIdsArray[i] = transformIds;
+            this.__transformIdsArray[i] = transformIds[i];
         }
         // Note: the draw cound can be less than the number of instances
         // we re-use the same buffer and simply invoke fewer draw calls.

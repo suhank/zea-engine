@@ -45,7 +45,7 @@ import {
 class GLShaderMaterials {
     constructor(glshader=undefined){
         this.__glshader = glshader;
-        this.__glmaterialGeoms = [];
+        this.__glmaterialDrawItemSets = [];
 
     }
 
@@ -53,13 +53,18 @@ class GLShaderMaterials {
         return this.__glshader;
     }
 
-    addMaterialDrawItemSets(glmaterial) {
-        if (this.__glmaterialGeoms.indexOf(glmaterial) == -1)
-            this.__glmaterialGeoms.push(glmaterial);
+    addMaterialDrawItemSets(glmaterialDrawItemSets) {
+        if (this.__glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets) == -1)
+            this.__glmaterialDrawItemSets.push(glmaterialDrawItemSets);
+    }
+
+    removeMaterialDrawItemSets(glmaterialDrawItemSets) {
+        let index = this.__glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets);
+        this.__glmaterialDrawItemSets.splice(index, 1);
     }
 
     getMaterialDrawItemSets() {
-        return this.__glmaterialGeoms;
+        return this.__glmaterialDrawItemSets;
     }
 }
 
@@ -76,6 +81,11 @@ class GLMaterialDrawItemSets {
     addDrawItemSet(drawItemSet) {
         if (this.__drawItemSets.indexOf(drawItemSet) == -1)
             this.__drawItemSets.push(drawItemSet);
+    }
+
+    removeDrawItemSet(drawItemSet) {
+        let index = this.__drawItemSets.indexOf(drawItemSet);
+        this.__drawItemSets.splice(index, 1);
     }
 
     findDrawItemSet(glgeom) {
@@ -104,7 +114,7 @@ class GLCollector {
         // {GLShaders}[GLMaterials][GLGeoms][GLDrawItems]
         this.__glshadermaterials = {};
 
-        this.renderTreeGenerated = new Signal();
+        this.renderTreeUpdated = new Signal();
     }
 
     getRenderer(){
@@ -153,6 +163,11 @@ class GLCollector {
         glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSets);
 
         material.setMetadata('glmaterialDrawItemSets', glmaterialDrawItemSets);
+
+        material.destructing.connect(() => {
+            this.removeMaterial(material);
+        }, this);
+
         return glmaterialDrawItemSets;
     }
 
@@ -202,8 +217,6 @@ class GLCollector {
         // and so cannot be moved.
         gldrawItem.destructing.connect(() => {
             this.removeDrawItem(gldrawItem);
-            this.__drawItems[index] = null;
-            this.__drawItemsIndexFreeList.push(index);
         }, this);
 
         gldrawItem.transformChanged.connect(() => {
@@ -236,12 +249,11 @@ class GLCollector {
         // }
         // else 
         if (treeItem instanceof GeomItem) {
-            let gldrawItem = treeItem.getMetadata('gldrawItem');
-            if (!gldrawItem) {
+            if (!treeItem.getMetadata('gldrawItem')) {
                 if (treeItem.material == undefined) {
                     throw ("Scene item :" + treeItem.path + " has no material");
                 }
-                gldrawItem = this.addGeomItem(treeItem);
+                this.addGeomItem(treeItem);
             }
         }
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
@@ -251,46 +263,24 @@ class GLCollector {
     }
 
     removeDrawItem(gldrawItem) {
-        // TODO:
-
-
-        // let glmaterial = gldrawItem.getMetadata('glmaterial');
-
-        // for (let geomItemMapping of materialGeomMapping.geomItemMappings) {
-        //     if (geomItemMapping.glgeom == drawItem.glgeom) {
-        //         let index = geomItemMapping.items.indexOf(drawItem);
-        //         geomItemMapping.items.splice(index, 1);
-
-        //         drawItem.destructing.disconnect(this.removeDrawItem, this);
-
-        //         if (geomItemMapping.items.length == 0) {
-        //             this.removeGeomItemMapping(geomItemMapping, materialGeomMapping);
-        //         }
-        //         return true;
-        //     }
-        // }
-        // Note: when the GLGeoms destory they are removed from the pass, which happens before the draw item 
-        // is destroyed. Here we might not find the glgeom.
-        // throw("Unable to find draw item '"+drawItem.geomItem.name + "' in pass:" + this.constructor.name);
+        let index = gldrawItem.getId();
+        this.__drawItems[index] = null;
+        this.__drawItemsIndexFreeList.push(index);
+        gldrawItem.destructing.disconnectScope(this);
+        gldrawItem.transformChanged.disconnectScope(this);
+        this.renderTreeUpdated.emit();
+        this.__renderer.requestRedraw();
     }
 
-    removeGLMaterial(glmaterial) {
-        let shaderMaterialMapping = this.__shaderMaterialMappings[glmaterial.hash];
-        for (let index = 0; index < shaderMaterialMapping.materialGeomMappings.length; index++) {
-            if (shaderMaterialMapping.materialGeomMappings[index].glmaterial == glmaterial) {
-                shaderMaterialMapping.materialGeomMappings.splice(index, 1);
-                glmaterial.destructing.disconnect(this.removeMaterialGeomMapping, this);
-                // TODO: Destroy the shader propperly... commenting for now. 
-                // if(shaderMaterialMapping.materialGeomMappings.length == 0){
-                //     if(!this.__explicitShader){
-                //         // Finally remove the shader material mapping if we have no materials left.
-                //         // delete this.__shaderMaterialMappings[glmaterial.hash];
-                //     }
-                // }
-                return;
-            }
+    removeMaterial(material) {
+        let glshaderMaterials = this.__glshadermaterials[material.hash];
+        if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
+            console.warn("Material not found in GLCollector");
+            return;
         }
-        throw ("GLMaterial not found in GLPass");
+
+        let glmaterialDrawItemSets = material.getMetadata('glmaterialDrawItemSets');
+        glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
     }
 
     removeGLGeom(geomItemMapping, materialGeomMapping) {
@@ -373,7 +363,7 @@ class GLCollector {
         }
 
 
-        this.renderTreeGenerated.emit();
+        this.renderTreeUpdated.emit();
     }
 
     __updateTransform(index, gldrawItem){

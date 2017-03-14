@@ -12,7 +12,7 @@ class GLPass {
         
         this.updated = new Signal();
 
-        this.__collector.renderTreeGenerated.connect(this.filterRenderTree, this);
+        this.__collector.renderTreeUpdated.connect(this.filterRenderTree, this);
     }
 
     toggleEnabled(){

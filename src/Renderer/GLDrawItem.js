@@ -42,8 +42,7 @@ class GLDrawItem {
             // Note: it is possible for several draw items to reference the same
             // GLGeom, so we should be maintaining a ref count, and only destroying 
             // when the last ref is removed.
-            this.__glGeom.destroy();
-            this.destructing.emit();
+            this.destroy();
         }, this);
     }
 
@@ -128,6 +127,15 @@ class GLDrawItem {
         }
 
         return true;
+    }
+
+
+    destroy() {
+        this.__geomItem.visibilityChanged.disconnectScope(this);
+        this.__geomItem.globalXfoChanged.disconnectScope(this);
+        this.__geomItem.selectionChanged.disconnectScope(this);
+        this.__geomItem.destructing.disconnectScope(this);
+        this.destructing.emit(this);
     }
 };
 
