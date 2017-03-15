@@ -63,7 +63,7 @@ class VRViewport {
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
         this.__vrControllers = [];
         this.__vrTools = {};
-        if(isMobileDevice()){
+        if(!isMobileDevice()){
             this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new MarkerpenTool(this, this.__vrhead, this.__vrControllers);

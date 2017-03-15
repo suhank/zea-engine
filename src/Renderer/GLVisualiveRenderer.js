@@ -384,7 +384,8 @@ class GLVisualiveRenderer extends GLRenderer {
                 if(this.mirrorVRisplayToViewport){
                     this.__gl.viewport(0, 0, this.getWidth(), this.getHeight());
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
-                    this.__stats.end();
+                    if(this.__stats)
+                        this.__stats.end();
                     return;
                 }
             }
