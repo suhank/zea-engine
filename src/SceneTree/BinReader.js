@@ -8,7 +8,7 @@ class BinReader {
         this.__data = data;
         this.__byteOffset = byteOffset;
         this.__dataView = new DataView(this.__data);
-        this.__isMobileDevice = isMobileDevice; //littleEndian;
+        this.__isMobileDevice = isMobileDevice;
     }
 
     get isMobileDevice() {
@@ -63,8 +63,8 @@ class BinReader {
             }
         } else {
             result = new Uint16Array(this.__data, this.__byteOffset, size);
+            this.__byteOffset += size * 2;
         }
-        this.__byteOffset += size * 2;
         let padd = (size * 2) % 4;
         if (padd != 0)
             this.__byteOffset += 4 - padd;
@@ -83,8 +83,8 @@ class BinReader {
             }
         } else {
             result = new Uint32Array(this.__data, this.__byteOffset, size);
+            this.__byteOffset += size * 4;
         }
-        this.__byteOffset += size * 4;
         return result;
     }
 
@@ -101,8 +101,8 @@ class BinReader {
             }
         } else {
             result = new Float32Array(this.__data, this.__byteOffset, size);
+            this.__byteOffset += size * 4;
         }
-        this.__byteOffset += size * 4;
         return result;
     }
 

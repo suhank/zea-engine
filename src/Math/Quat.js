@@ -31,6 +31,30 @@ class EulerAngles extends AttrValue {
         }
     }
 
+    get x() {
+        return this.__data[0];
+    }
+
+    set x(val) {
+        this.__data[0] = val;
+    }
+
+    get y() {
+        return this.__data[1];
+    }
+
+    set y(val) {
+        this.__data[1] = val;
+    }
+
+    get z() {
+        return this.__data[2];
+    }
+
+    set z(val) {
+        this.__data[2] = val;
+    }
+
 };
 
 class Quat extends AttrValue {

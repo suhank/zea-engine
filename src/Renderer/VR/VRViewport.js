@@ -241,11 +241,16 @@ class VRViewport {
     }
 
     startPresenting() {
-        this.__vrDisplay.requestPresent([{
-            source: this.__renderer.getGLCanvas()
-        }]).then(function() {}, function() {
-            console.warn("requestPresent failed.");
-        });
+        if(this.__vrDisplay.capabilities.canPresent){
+            this.__vrDisplay.requestPresent([{
+                source: this.__renderer.getGLCanvas()
+            }]).then(function() {}, function() {
+                console.warn("requestPresent failed.");
+            });
+        }
+        else{
+            console.warn("VRViewport does not support presenting.");
+        }
     }
 
     stopPresenting() {
@@ -316,6 +321,9 @@ class VRViewport {
     // Rendering
 
     updateHeadAndControllers() {
+
+        if(!this.__frameData.pose)
+            return;
 
         this.__vrhead.update(this.__frameData);
 
