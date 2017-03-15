@@ -7,7 +7,8 @@ import {
     Xfo,
     Box3,
     Color,
-    Signal
+    Signal,
+    isMobileDevice
 } from '../Math/Math.js';
 import {
     StandardMaterial
@@ -33,7 +34,7 @@ class Camera extends TreeItem {
         this.__near = 0.1;
         this.__focalDistance = 5.0;
         this.__viewMatrix = new Mat4();
-        this.orbitRate = 0.01;
+        this.orbitRate = isMobileDevice() ? -0.002 : 0.01;
         this.dollySpeed = 0.02;
         this.mouseWheelDollySpeed = 0.002;
         this.__manipulationState = 'orbit';
@@ -103,6 +104,16 @@ class Camera extends TreeItem {
         this.viewMatChanged.emit(this.__globalXfo);
     }
 
+    get localXfo() {
+        return super.localXfo;
+    }
+
+    set localXfo(xfo) {
+        super.localXfo = xfo;
+        this.__viewMatrix = this.__globalXfo.inverse().toMat4();
+        this.viewMatChanged.emit(this.__globalXfo);
+    }
+
     setPositionAndTarget(position, target) {
         this.focalDistance = position.distanceTo(target);
         let xfo = new Xfo();
@@ -165,6 +176,7 @@ class Camera extends TreeItem {
     }
 
     onDragStart(event, mouseDownPos, viewport) {
+        this.__mouseDownPos = mouseDownPos;
         this.__mouseDragDelta.set(0,0);
         this.__mouseDownCameraXfo = this.__globalXfo.clone();
         this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
@@ -184,13 +196,21 @@ class Camera extends TreeItem {
         // During requestPointerLock, the offsetX/Y values are not updated.
         // Instead we get a relative delta that we use to compute the total
         // delta for the drag.
+        // if(this.__keyboardMovement){
+        //     this.__mouseDragDelta.x = event.movementX;
+        //     this.__mouseDragDelta.y = event.movementY;
+        // }
+        // else{
+        //     this.__mouseDragDelta.x += event.movementX;
+        //     this.__mouseDragDelta.y += event.movementY;
+        // }
         if(this.__keyboardMovement){
-            this.__mouseDragDelta.x = event.movementX;
-            this.__mouseDragDelta.y = event.movementY;
+            this.__mouseDragDelta.x = event.offsetX;
+            this.__mouseDragDelta.y = event.offsetY;
         }
         else{
-            this.__mouseDragDelta.x += event.movementX;
-            this.__mouseDragDelta.y += event.movementY;
+            this.__mouseDragDelta.x = event.offsetX - this.__mouseDownPos.x;
+            this.__mouseDragDelta.y = event.offsetY - this.__mouseDownPos.y;
         }
         switch (this.__manipulationState) {
             case 'orbit':

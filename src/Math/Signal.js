@@ -1,12 +1,24 @@
 class Signal {
-    constructor() {
-        this.__slots = []
+    constructor(toggledSignal=false) {
+        this.__slots = [];
+        // A toggled signal means that once it is fired, it is toggled to true
+        // and never fired again. Any connections are immedietly emitted. 
+        // Note: this is emulating the 'promise' system, and I really should
+        // investigate using promisses. 
+        this.__toggledSignal = toggledSignal;
+        this.__toggled = false;
+        this.__data = null;
     }
 
     connect(fn, scope = this) {
         if (fn == undefined)
             throw("a function callback must be passed to Signal.connect");
         this.__slots.push({"fn": fn, "scope": scope});
+
+        if(this.__toggledSignal && this.__toggled){
+            // This signal has already been toggled, so we should emit immedietly.
+            fn.call(scope, ...this.__data);
+        }
     }
 
     disconnect(fn, scope = this) {
@@ -36,6 +48,14 @@ class Signal {
 
     // emit the signal to all slots(observers)
     emit(...data) {
+        if(this.__toggledSignal){
+            if(!this.__toggled){
+                this.__toggled = true;
+                this.__data = data;
+            }
+            else
+                console.warn("Toggled signals should only be fired once.");
+        }
         this.__slots.forEach(function (item) {
             item["fn"].call(item["scope"], ...data);
         });

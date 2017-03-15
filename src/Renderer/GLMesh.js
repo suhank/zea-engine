@@ -125,12 +125,6 @@ class GLMesh extends GLGeom {
 
     }
 
-    destroyBuffers() {
-        super.destroyBuffers();
-        let gl = this.__gl;
-        gl.deleteBuffer(this.__indexBuffer);
-        this.__indexBuffer = undefined;
-    }
 
     getNumUnSplitVerts(){
         return this.__geom.vertices.length;
@@ -264,11 +258,14 @@ class GLMesh extends GLGeom {
 
 
     destroy() {
-        if (this.__wireframesVao)
-            this.__ext.deleteVertexArrayOES(this.__wireframesVao);
-        if (this.__hardEdgesVao)
-            this.__ext.deleteVertexArrayOES(this.__hardEdgesVao);
         super.destroy();
+        let gl = this.__gl;
+        gl.deleteBuffer(this.__indexBuffer);
+        this.__indexBuffer = undefined;
+        // if (this.__wireframesVao)
+        //     this.__ext.deleteVertexArrayOES(this.__wireframesVao);
+        // if (this.__hardEdgesVao)
+        //     this.__ext.deleteVertexArrayOES(this.__hardEdgesVao);
     }
 };
 

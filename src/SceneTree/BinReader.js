@@ -8,7 +8,7 @@ class BinReader {
         this.__data = data;
         this.__byteOffset = byteOffset;
         this.__dataView = new DataView(this.__data);
-        this.__isMobileDevice = isMobileDevice; //littleEndian;
+        this.__isMobileDevice = isMobileDevice;
     }
 
     get isMobileDevice() {
@@ -50,7 +50,6 @@ class BinReader {
         return result;
     }
 
-
     loadUInt16Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
@@ -63,8 +62,8 @@ class BinReader {
             }
         } else {
             result = new Uint16Array(this.__data, this.__byteOffset, size);
+            this.__byteOffset += size * 2;
         }
-        this.__byteOffset += size * 2;
         let padd = (size * 2) % 4;
         if (padd != 0)
             this.__byteOffset += 4 - padd;
@@ -83,8 +82,8 @@ class BinReader {
             }
         } else {
             result = new Uint32Array(this.__data, this.__byteOffset, size);
+            this.__byteOffset += size * 4;
         }
-        this.__byteOffset += size * 4;
         return result;
     }
 
@@ -94,15 +93,15 @@ class BinReader {
             size = this.loadUInt32();
         let result;
         if (this.__isMobileDevice) {
-            result = new Uint16Array(size);
+            result = new Float32Array(size);
             for (let i = 0; i < size; i++) {
                 result[i] = this.__dataView.getFloat32(this.__byteOffset, true);
                 this.__byteOffset += 4;
             }
         } else {
             result = new Float32Array(this.__data, this.__byteOffset, size);
+            this.__byteOffset += size * 4;
         }
-        this.__byteOffset += size * 4;
         return result;
     }
 
@@ -125,8 +124,17 @@ class BinReader {
     }
 
     loadFloat32Vec3() {
-        let result = new Vec3(this.__data, this.__byteOffset);
-        this.__byteOffset += 12;
+        let result;
+        if (this.__isMobileDevice) {
+            let x = this.__dataView.getFloat32(this.__byteOffset, true);  this.__byteOffset += 4;
+            let y = this.__dataView.getFloat32(this.__byteOffset, true);  this.__byteOffset += 4;
+            let z = this.__dataView.getFloat32(this.__byteOffset, true);  this.__byteOffset += 4;
+            result = new Vec3(x, y,z);
+        }
+        else{
+            result = new Vec3(this.__data, this.__byteOffset);
+            this.__byteOffset += 12;
+        }
         return result;
     }
 

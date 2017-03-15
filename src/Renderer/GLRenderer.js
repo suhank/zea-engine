@@ -79,6 +79,7 @@ if (process === 'undefined' || process.browser == true) {
 
 class GLRenderer {
     constructor(canvasDiv, options, webglOptions) {
+
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
@@ -96,7 +97,7 @@ class GLRenderer {
 
         this.resized = new Signal();
         this.keyPressed = new Signal();
-        this.vrViewportSetup = new Signal();
+        this.vrViewportSetup = new Signal(true);
 
         this.setupWebGL(canvasDiv, webglOptions);
 
@@ -112,7 +113,7 @@ class GLRenderer {
         if (navigator.getVRDisplays)
             this.__setupVRViewport();
 
-        if(options.displayStats){
+        if (options.displayStats) {
             this.__stats = new Stats();
             this.__stats.dom.style.position = 'absolute';
             this.__stats.dom.style.top = 0;
@@ -152,9 +153,9 @@ class GLRenderer {
         this.__gridItem.visible = !this.__gridItem.visible;
         this.requestRedraw();
     }
-    
+
     toggleDebugPanel() {
-        if(this.__stats){
+        if (this.__stats) {
             if (this.__stats.dom.style.visibility == "hidden")
                 this.__stats.dom.style.visibility = "visible";
             else
@@ -208,6 +209,7 @@ class GLRenderer {
 
     activateViewportAtPos(offsetX, offsetY) {
         this.__activeViewport = this.getViewportAtPos(offsetX, offsetY);
+        return this.__activeViewport;
     }
 
     getActiveViewport() {
@@ -372,13 +374,146 @@ class GLRenderer {
                 _this.onKeyUp(key);
             }
         };
+
+        let ongoingTouches = [];
+        function startTouch(touch) {
+            ongoingTouches.push({ identifier: touch.identifier, pageX: touch.pageX, pageY: touch.pageY });
+        }
+        function ongoingTouchIndexById(id) {
+            for (let i = 0; i < ongoingTouches.length; i++) {
+                if (id == ongoingTouches[i].identifier) {
+                    return i;
+                }
+            }
+            return -1; // not found
+        }
+
+        function handleStart(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log("touchstart.");
+            let touches = event.changedTouches;
+
+            // Set this renderer as the active renderer. 
+            // Note: on mobile devices we don't get the mouse enter/leave
+            activeGLRenderer = _this;
+            if(touches.length == 1){
+                let touch = touches[0];
+                startTouch(touch);
+
+                let vp = activeGLRenderer.activateViewportAtPos(touch.pageX, touch.pageY);
+                vp.onMouseDown({
+                    'button': 0,
+                    'offsetX': touch.pageX,
+                    'offsetY': touch.pageY
+                });
+            }
+            // for (let i = 0; i < touches.length; i++) {
+            //     console.log("touchstart:" + i + "...");
+            //     startTouch(touches[i]);
+            //     let color = colorForTouch(touches[i]);
+            //     ctx.beginPath();
+            //     ctx.arc(touches[i].pageX, touches[i].pageY, 4, 0, 2 * Math.PI, false); // a circle at the start
+            //     ctx.fillStyle = color;
+            //     ctx.fill();
+            //     console.log("touchstart:" + i + ".");
+            // }
+        }
+
+        function handleMove(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            let touches = event.changedTouches;
+            let vp = _this.getActiveViewport();
+            if (vp) {
+                if(touches.length == 1){
+                    let touch = touches[0];
+                    vp.onMouseMove({
+                        'button': 0,
+                        'offsetX': touch.pageX,
+                        'offsetY': touch.pageY
+                    });
+                }
+            }
+
+            // for (let i = 0; i < touches.length; i++) {
+            //     let idx = ongoingTouchIndexById(touches[i].identifier);
+
+            //     if (idx >= 0) {
+            //         console.log("continuing touch " + idx);
+            //         ctx.beginPath();
+            //         console.log("ctx.moveTo(" + ongoingTouches[idx].pageX + ", " + ongoingTouches[idx].pageY + ");");
+            //         ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
+            //         console.log("ctx.lineTo(" + touches[i].pageX + ", " + touches[i].pageY + ");");
+            //         ctx.lineTo(touches[i].pageX, touches[i].pageY);
+            //         ctx.lineWidth = 4;
+            //         ctx.stroke();
+
+            //         ongoingTouches.splice(idx, 1, copyTouch(touches[i])); // swap in the new touch record
+            //         console.log(".");
+            //     } else {
+            //         console.log("can't figure out which touch to continue");
+            //     }
+            // }
+        }
+
+        function handleEnd(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log("touchend");
+            let touches = event.changedTouches;
+            let vp = _this.getActiveViewport();
+            if (vp) {
+                if(touches.length == 1){
+                    let touch = touches[0];
+                    vp.onMouseUp({
+                        'button': 0,
+                        'offsetX': touch.pageX,
+                        'offsetY': touch.pageY
+                    });
+                }
+            }
+
+            // for (let i = 0; i < touches.length; i++) {
+            //     let color = colorForTouch(touches[i]);
+            //     let idx = ongoingTouchIndexById(touches[i].identifier);
+
+            //     if (idx >= 0) {
+            //         ctx.lineWidth = 4;
+            //         ctx.fillStyle = color;
+            //         ctx.beginPath();
+            //         ctx.moveTo(ongoingTouches[idx].pageX, ongoingTouches[idx].pageY);
+            //         ctx.lineTo(touches[i].pageX, touches[i].pageY);
+            //         ctx.fillRect(touches[i].pageX - 4, touches[i].pageY - 4, 8, 8); // and a square at the end
+            //         ongoingTouches.splice(idx, 1); // remove it; we're done
+            //     } else {
+            //         console.log("can't figure out which touch to end");
+            //     }
+            // }
+        }
+
+        function handleCancel(event) {
+            event.preventDefault();
+            console.log("touchcancel.");
+            let touches = event.changedTouches;
+
+            for (let i = 0; i < touches.length; i++) {
+                let idx = ongoingTouchIndexById(touches[i].identifier);
+                ongoingTouches.splice(idx, 1); // remove it; we're done
+            }
+        }
+
+        this.__glcanvas.addEventListener("touchstart", handleStart, false);
+        this.__glcanvas.addEventListener("touchend", handleEnd, false);
+        this.__glcanvas.addEventListener("touchcancel", handleCancel, false);
+        this.__glcanvas.addEventListener("touchmove", handleMove, false);
     }
 
     getGLCanvas() {
         return this.__glcanvas;
     }
 
-    getScreenQuad(){
+    getScreenQuad() {
         return this.__screenQuad;
     }
 
@@ -433,7 +568,7 @@ class GLRenderer {
     /////////////////////////
     // VR Setup
 
-    supportsVR(){
+    supportsVR() {
         return navigator.getVRDisplays;
     }
 
@@ -482,10 +617,9 @@ class GLRenderer {
     }
 
     toggleContinuousDrawing() {
-        if(!this.__continuousDrawing){
+        if (!this.__continuousDrawing) {
             this.startContinuousDrawing();
-        }
-        else{
+        } else {
             this.stopContinuousDrawing();
         }
     }
@@ -535,13 +669,13 @@ class GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        if(this.__stats)
+        if (this.__stats)
             this.__stats.begin();
 
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        if(this.__stats)
+        if (this.__stats)
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
