@@ -50,7 +50,6 @@ class BinReader {
         return result;
     }
 
-
     loadUInt16Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
@@ -94,7 +93,7 @@ class BinReader {
             size = this.loadUInt32();
         let result;
         if (this.__isMobileDevice) {
-            result = new Uint16Array(size);
+            result = new Float32Array(size);
             for (let i = 0; i < size; i++) {
                 result[i] = this.__dataView.getFloat32(this.__byteOffset, true);
                 this.__byteOffset += 4;
@@ -125,8 +124,17 @@ class BinReader {
     }
 
     loadFloat32Vec3() {
-        let result = new Vec3(this.__data, this.__byteOffset);
-        this.__byteOffset += 12;
+        let result;
+        if (this.__isMobileDevice) {
+            let x = this.__dataView.getFloat32(this.__byteOffset, true);  this.__byteOffset += 4;
+            let y = this.__dataView.getFloat32(this.__byteOffset, true);  this.__byteOffset += 4;
+            let z = this.__dataView.getFloat32(this.__byteOffset, true);  this.__byteOffset += 4;
+            result = new Vec3(x, y,z);
+        }
+        else{
+            result = new Vec3(this.__data, this.__byteOffset);
+            this.__byteOffset += 12;
+        }
         return result;
     }
 
