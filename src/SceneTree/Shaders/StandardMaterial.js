@@ -67,6 +67,7 @@ void main(void) {
 #ifdef ENABLE_LIGHTMAPS
     v_lightmapCoordsOffset = getLightmapCoordsOffset();
     v_lightmapCoord = ((v_lightmapCoordsOffset+lightmapCoords) / lightmapSize);
+    v_lightmapCoord *= 2.0;
     v_clusterID = clusterIDs;
 #endif
 
@@ -106,7 +107,8 @@ uniform float exposure;
 #endif
 
 uniform mat4 cameraMatrix;
-uniform float planeX;
+uniform float planeDist;
+uniform float planeAngle;
 
 uniform color _baseColor;
 uniform sampler2D _baseColorTex;
@@ -193,8 +195,8 @@ void main(void) {
 
 #ifdef ENABLE_CROSS_SECTIONS
         // Only do cross sections on opaque surfaces. 
-        vec3 planePos = vec3(planeX,0,0);
-        vec3 planeNormal = vec3(1,0,0);
+        vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
+        vec3 planePos = planeNormal * planeDist;
         vec3 planeDir = v_worldPos - planePos;
         float planeOffset = dot(planeDir, planeNormal);
         if(planeOffset < 0.0){

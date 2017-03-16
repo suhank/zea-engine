@@ -69,7 +69,12 @@ class HDRImageMixer extends Image2D {
             subImage.loaded.connect(async.decAsyncCount, async);
             subImage.updated.connect(this.updated.emit, this.updated);
             this.__subImages.push(subImage);
+            this.__weights.push(1.0);
         }
+    }
+
+    setURL(index, url) {
+        this.__subImages[index].loadURL(url);
     }
 
     setWeights(weights) {

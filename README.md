@@ -1,6 +1,9 @@
 # Visualive WebGL
 
 
+Install the httpserver
+ npm install http-server -g
+
 
 ## Getting started
 

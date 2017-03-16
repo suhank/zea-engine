@@ -82,7 +82,8 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__displayEnvironment = true;
         this.__debugMode = 0;
         this.__debugLightmaps = false;
-        this.__planeX = 0.0;
+        this.__planeDist = 0.0;
+        this.__planeAngle = 0.0;
 
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
@@ -131,10 +132,15 @@ class GLVisualiveRenderer extends GLRenderer {
         }
         let lightMaps = scene.getLightMaps();
         for(let name in lightMaps){
+            let gllightmap;
             if(lightMaps[name] instanceof HDRImageMixer)
-                this.__glLightmaps[name] = new GLHDRImageMixer(this.__gl, lightMaps[name]);
+                gllightmap = new GLHDRImageMixer(this.__gl, lightMaps[name]);
             else
-                this.__glLightmaps[name] = new GLHDRImage(this.__gl, lightMaps[name]);
+                gllightmap = new GLHDRImage(this.__gl, lightMaps[name]);
+            gllightmap.updated.connect((data) => {
+                this.requestRedraw();
+            }, this);
+            this.__glLightmaps[name] = gllightmap;
         }
     }
 
@@ -266,12 +272,21 @@ class GLVisualiveRenderer extends GLRenderer {
         this.requestRedraw();
     }
 
-    get planeX() {
-        return this.__planeX;
+    get planeDist() {
+        return this.__planeDist;
     }
 
-    set planeX(val) {
-        this.__planeX = val;
+    set planeDist(val) {
+        this.__planeDist = val;
+        this.requestRedraw();
+    }
+
+    get planeAngle() {
+        return this.__planeAngle;
+    }
+
+    set planeAngle(val) {
+        this.__planeAngle = val;
         this.requestRedraw();
     }
 
@@ -351,7 +366,8 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
-        renderstate.planeX = this.__planeX;
+        renderstate.planeDist = this.__planeDist;
+        renderstate.planeAngle = this.__planeAngle;
         renderstate.exposure = Math.pow(2, this.__exposure);
 
         if (this.__displayEnvironment)
