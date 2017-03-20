@@ -50,23 +50,41 @@ document.addEventListener("DOMContentLoaded", function(event) {
             let gui = addGUI(domElement);
             renderer.addGUI(gui);
 
-            gui.add(renderer, 'planeX', -3, 3);
+            gui.add(renderer, 'planeDist', -3, 3);
         });
 
-        let userMarker = new Visualive.MarkerpenTool('client');
+        let userMarker = new Visualive.MarkerpenTool('clientX');
         scene.getRoot().addChild(userMarker.getTreeItem());
 
         renderer.getViewport().strokeStarted.connect((data)=>{
-            console.log(data.xfo.tr.toString());
+            // console.log(data.xfo.tr.toString());
 
-            // let color = new Color();
-            // color.froJSON(data.color);
-            userMarker.startStroke(data.xfo, data.color, data.thickness);
+            let dataFromWebsocket = {
+                'xfo': data.xfo.toJSON(), 
+                'color': data.color.toJSON(), 
+                'thickness': data.thickness
+            }
+            // send over websocket....
+
+            // recieved from websocket.
+            let xfo = new Visualive.Xfo();
+            xfo.fromJSON(dataFromWebsocket.xfo);
+            let color = new Visualive.Color();
+            color.fromJSON(dataFromWebsocket.color);
+            let thickness = dataFromWebsocket.thickness;
+            userMarker.startStroke(xfo, color, thickness);
         });
         renderer.getViewport().strokeEnded.connect(()=>{
         });
         renderer.getViewport().strokeSegmentAdded.connect((data)=>{
-            console.log(data.tr.toString());
+            // console.log(data.tr.toString());
+
+            let dataFromWebsocket = data.toJSON();
+            // send over websocket....
+
+            // recieved from websocket.
+            let xfo = new Visualive.Xfo();
+            xfo.fromJSON(dataFromWebsocket);
             userMarker.addSegmentToStroke(xfo);
         });
 

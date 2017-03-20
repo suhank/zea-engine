@@ -187,9 +187,6 @@ class TreeItem {
         this.__childItems.push(child);
         child.parentItem = this;
 
-        child.childAdded.connect(function(data) {
-            this.childAdded.emit(data);
-        }, this);
         child.boundingBoxChanged.connect(() => {
             this.__boundingBoxDirty = true;
             this.boundingBoxChanged.emit();

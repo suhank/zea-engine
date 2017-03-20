@@ -29,8 +29,8 @@ import {
     VR2HandedGrabTool
 } from './VR2HandedGrabTool.js'
 import {
-    MarkerpenTool
-} from './MarkerpenTool.js'
+    VRMarkerpenTool
+} from './VRMarkerpenTool.js'
 
 
 class VRViewport {

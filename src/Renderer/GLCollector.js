@@ -245,11 +245,7 @@ class GLCollector {
     }
 
     addTreeItem(treeItem) {
-        // if (treeItem instanceof AssetItem) {
-        //     let lightmap = treeItem.getLightmap();
-        //     this.__lightmaps[lightmap] = new GLLightmap(this.__renderer.gl, lightmap);
-        // }
-        // else 
+
         if (treeItem instanceof GeomItem) {
             if (!treeItem.getMetadata('gldrawItem')) {
                 if (treeItem.material == undefined) {
