@@ -8,6 +8,7 @@ class VR2HandedGrabTool {
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;
         this.__vrControllers = vrControllers;
+        this.__enableScaling = true;
     }
 
     startAction() {
@@ -37,17 +38,20 @@ class VR2HandedGrabTool {
 
         ////////////////
         // Compute sc
-        let sc = this.__grabDist / grabDir.length();
-        // Limit to a 10x change in scale per grab.
-        sc = Math.max(Math.min(sc, 10.0), 0.1);
+        let sc = 1.0;
+        if(this.__enableScaling){
+            let sc = this.__grabDist / grabDir.length();
+            // Limit to a 10x change in scale per grab.
+            sc = Math.max(Math.min(sc, 10.0), 0.1);
 
-        // Avoid causing a scale that would make the user < 1.0 scale factor.
-        let stageSc = this.__stageXfo__GrabStart.sc.x * sc;
-        if(stageSc < 1.0){
-            sc = 1.0 / this.__stageXfo__GrabStart.sc.x;
+            // Avoid causing a scale that would make the user < 1.0 scale factor.
+            let stageSc = this.__stageXfo__GrabStart.sc.x * sc;
+            if(stageSc < 1.0){
+                sc = 1.0 / this.__stageXfo__GrabStart.sc.x;
+            }
+
+            deltaXfo.sc.set(sc, sc, sc);
         }
-
-        deltaXfo.sc.set(sc, sc, sc);
 
         ////////////////
         // Compute ori
@@ -64,16 +68,19 @@ class VR2HandedGrabTool {
         deltaXfo.tr.addInPlace(this.__grabPos.subtract(oriTrDelta));
 
         // Scale around the point between the hands.
-        let deltaSc = this.__grabPos.scale(1.0-sc);
-        deltaXfo.tr.addInPlace(deltaXfo.ori.rotateVec3(deltaSc));
+        if(this.__enableScaling){
+            let deltaSc = this.__grabPos.scale(1.0-sc);
+            deltaXfo.tr.addInPlace(deltaXfo.ori.rotateVec3(deltaSc));
+        }
 
         ////////////////
-        // Compute tr
-        // Not quite working.....
-        let deltaTr = this.__grabPos.subtract(grabPos).scale(sc);
+        // add tr
+        // Scale around the point between the hands.
+        let deltaTr = this.__grabPos.subtract(grabPos);
+        if(this.__enableScaling){
+            deltaTr.scaleInPlace(sc);
+        }
         deltaXfo.tr.addInPlace(deltaXfo.ori.rotateVec3(deltaTr));
-
-
 
         ////////////////
         // Update the stage Xfo
