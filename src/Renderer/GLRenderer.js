@@ -121,6 +121,15 @@ class GLRenderer {
             this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
             canvasDiv.appendChild(this.__stats.dom);
         }
+        //if (options.displayLogo)
+        {
+            let logo = new Image();
+            logo.src = window.location.origin+'/Assets/LogoSmall.png';
+            logo.style.position = 'absolute';
+            logo.style.bottom = '10px';
+            logo.style.left = '10px';
+            canvasDiv.appendChild(logo);
+        }
     }
 
     getScene() {

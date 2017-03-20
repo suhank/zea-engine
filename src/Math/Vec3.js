@@ -55,8 +55,8 @@ class Vec3 extends AttrValue {
     // Setter from scalar components
     set(x, y, z) {
         this.x = x;
-        this.y = y;
-        this.z = z;
+        this.y = y ? y : x;
+        this.z = z ? z : x;
     }
     
     setDataArray(float32Array){
