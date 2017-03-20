@@ -41,8 +41,7 @@ varying vec2 v_texCoord;
 uniform sampler2D hammersleyMap;
 vec2 Hammersley(int i, int N) {
     vec4 rgba =  texture2D(hammersleyMap, vec2((float(i) + 0.5)/float(N)), 0.5);
-    //return vec2(rgba.r + (rgba.g/255.0), rgba.b + (rgba.a/255.0));
-    return rgba.rb;
+    return rgba.rg;
 }
 
 mat3 matrixFromVector(vec3 n) { // frisvad

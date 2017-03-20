@@ -205,7 +205,7 @@ void main(void) {
         }
         if(!gl_FrontFacing){
             if(opacity > 0.5){
-                gl_FragColor = vec4(0.8,0,0,1);
+                gl_FragColor = vec4(0,0,0,1);
                 // TODO: compute frag depth to be at the level of the plane.
                 //vec3 planeSurfacePos = planeDir + planeOffset;
                 //gl_FragDepthEXT = 0.0;
