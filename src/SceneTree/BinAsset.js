@@ -15,11 +15,6 @@ import {
     BinReader
 } from './BinReader.js';
 
-// #ifdef BUILD_RELEASE
-// import {
-//     Unpack
-// } from '../external/Unpack.js';
-// #endif
 
 class BinAsset extends AssetItem {
     constructor(name = undefined) {
