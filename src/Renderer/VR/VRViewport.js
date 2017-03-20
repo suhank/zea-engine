@@ -47,6 +47,8 @@ class VRViewport {
         this.__vrDisplay.depthFar = this.__far;
 
         this.__stageXfo = new Xfo();
+        this.__stageBig = true;
+        this.__stageXfoBig = new Xfo();
         this.__standingMatrix = new Mat4();
         this.__stageMatrix = new Mat4();
 
@@ -136,11 +138,13 @@ class VRViewport {
         // return this.__stageTreeItem.globalXfo;
     }
 
-    setXfo(xfo) {
+    setXfo(xfo, isBig) {
         this.__stageXfo = xfo;
         this.__stageTreeItem.globalXfo = xfo;
         this.__stageMatrix = xfo.inverse().toMat4();
         this.__stageScale = xfo.sc.x;
+
+        this.__stageBig = isBig;
     }
 
     getRenderer() {
@@ -337,9 +341,26 @@ class VRViewport {
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
-                            this.setMoveMode(true);
+                            // this.setMoveMode(true);
+
+                            if(this.__stageBig){
+                                // Place the user inside the volume at the position of the
+                                // controller at 1:1 scale.
+                                this.__stageXfoBig = this.__stageXfo.clone();
+                                let stageXfoSmall = this.__stageXfo.clone();
+                                stageXfoSmall.tr = vrController.getTipGlobalXfo().tr;
+                                stageXfoSmall.tr.y -= 0.5;
+                                stageXfoSmall.sc.set(1,1,1);
+                                this.setXfo(stageXfoSmall, false);
+                            }
+
                         } else if (vals[1] < 0) {
-                            this.setMoveMode(false);
+                            // this.setMoveMode(false);
+
+                            if(!this.__stageBig){
+                                // Restore the user to thier previous scale
+                                this.setXfo(this.__stageXfoBig, true);
+                            }
                         }
                     }, this);
 

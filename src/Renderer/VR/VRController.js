@@ -136,6 +136,10 @@ class VRController extends Gizmo {
     getTipXfo(){
         return this.__xfo;
     }
+
+    getTipGlobalXfo(){
+        return this.__treeItem.globalXfo;
+    }
 };
 
 export {
