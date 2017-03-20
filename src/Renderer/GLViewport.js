@@ -7,8 +7,9 @@ import {
     Signal
 } from '../Math';
 import {
-    Camera
-} from '../SceneTree/Camera.js';
+    Camera,
+    MarkerpenTool
+} from '../SceneTree';
 import {
     GLFbo
 } from './GLFbo.js';
@@ -44,6 +45,9 @@ class GLViewport {
         this.__geomDataBufferFboRezScale = 0.5;
         this.setCamera(new Camera('Default'));
 
+        this.__markerPen = new MarkerpenTool();
+        this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
+
         // this.__selectionRect = new GLSelectionRect(this.__renderer.gl);
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
         // this.__overlayPass.addDrawItem(this.__selectionRect);
@@ -52,6 +56,12 @@ class GLViewport {
         this.resized = new Signal();
         this.keyPressed = new Signal();
         this.mouseMoved = new Signal();
+
+
+        // Stroke Signals
+        this.strokeStarted = new Signal();
+        this.strokeEnded = new Signal();
+        this.strokeSegmentAdded = new Signal();
 
         this.resize(width, height);
     }
@@ -344,20 +354,38 @@ class GLViewport {
         this.__mouseDownPos.set(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
 
         if (event.button == 0) {
-            let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
-            if (geomData != undefined && geomData.flags == 1) {
-                let drawItem = this.__renderer.getDrawItem(geomData.id);
-                if (drawItem) {
-                    console.log(drawItem.geomItem.name);
-                }
+            if (event.shiftKey) {
+                this.__manipMode = 'marker-tool';
+                let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                let ray = this.calcRayFromScreenPos(mousePos);
+                let xfo = this.__camera.globalXfo.clone();
+                xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
+                let color = new Color(1,0,0);
+                let thickness = this.__camera.focalDistance * 0.01;
+                this.__markerPen.startStroke(xfo, color, thickness);
+
+                this.strokeStarted.emit({
+                    xfo,
+                    color, 
+                    thickness
+                });
             }
-            if (geomData != undefined && geomData.flags == 2) {
-                this.__manipMode = 'gizmo-manipulation';
-                this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
-                this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
-            } else {
-                this.__manipMode = 'camera-manipulation';
-                this.__camera.onDragStart(event, this.__mouseDownPos, this);
+            else {
+                let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
+                if (geomData != undefined && geomData.flags == 1) {
+                    let drawItem = this.__renderer.getDrawItem(geomData.id);
+                    if (drawItem) {
+                        console.log(drawItem.geomItem.name);
+                    }
+                }
+                if (geomData != undefined && geomData.flags == 2) {
+                    this.__manipMode = 'gizmo-manipulation';
+                    this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
+                    this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
+                } else {
+                    this.__manipMode = 'camera-manipulation';
+                    this.__camera.onDragStart(event, this.__mouseDownPos, this);
+                }
             }
         } else if (event.button == 2) {
             if (event.shiftKey) {
@@ -436,6 +464,11 @@ class GLViewport {
                 this.__renderer.resumeDrawing();
                 document.exitPointerLock();
                 break;
+            case 'marker-tool':
+                this.__markerPen.endStroke();
+
+                this.strokeEnded.emit();
+                break;
         }
         this.__manipMode = 'highlighting';
         return false;
@@ -496,14 +529,17 @@ class GLViewport {
 
         switch (this.__manipMode) {
             case 'highlighting':
-                // if (this.__geomDataPass)
-                //     getGeomUnderMouse.call(this);
-                if (this.__gizmoPass)
-                    getGizmoUnderMouse.call(this);
+                {
+                    // if (this.__geomDataPass)
+                    //     getGeomUnderMouse.call(this);
+                    if (this.__gizmoPass)
+                        getGizmoUnderMouse.call(this);
 
-                let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-                let ray = this.calcRayFromScreenPos(mousePos);
-                this.mouseMoved.emit(event, mousePos, ray);
+
+                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                    let ray = this.calcRayFromScreenPos(mousePos);
+                    this.mouseMoved.emit(event, mousePos, ray);
+                }
                 break;
             case 'gizmo-manipulation':
                 {
@@ -534,6 +570,17 @@ class GLViewport {
                 this.__selectionRect.setVisible(true);
             case 'remove-selection-rect':
                 updateSelectionRect.call(this);
+                break;
+            case 'marker-tool':
+                {
+                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                    let ray = this.calcRayFromScreenPos(mousePos);
+                    let xfo = this.__camera.globalXfo.clone();
+                    xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
+                    this.__markerPen.addSegmentToStroke(xfo);
+
+                    this.strokeSegmentAdded.emit(xfo);
+                }
                 break;
         }
         return false;

@@ -4,18 +4,24 @@ import {
     Xfo
 } from '../../Math';
 import {
+    TreeItem,
     Lines,
     GeomItem,
     FatLinesMaterial
 } from '../../SceneTree';
 
 class MarkerpenTool {
-    constructor(ownerTreeItem) {
-        this.__ownerTreeItem = ownerTreeItem;
+    constructor() {
+        this.__treeItem = new TreeItem('MarkerpenTool');
+        this.__strokeCount = 0;
+    }
+
+    getTreeItem(){
+        return this.__treeItem;
     }
 
     startStroke(xfo, color, lineThickness) {
-        this.__lineGeom = new Lines('MarkerpenTool_Stroke');
+        this.__lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
         this.__lineGeom.lineThickness = lineThickness;
 
         this.__used = 0;
@@ -27,13 +33,13 @@ class MarkerpenTool {
         let material = new FatLinesMaterial('stroke');
         material.color = color;
 
-        let geomItem = new GeomItem('MarkerpenTool_Stroke'+this.__strokeCount, this.__lineGeom, this.__material);
-        this.__ownerTreeItem.addChild(geomItem);
+        let geomItem = new GeomItem('Stroke'+this.__strokeCount, this.__lineGeom, material);
+        this.__treeItem.addChild(geomItem);
 
         this.__strokeCount++;
     }
 
-    endStroke(xfo) {
+    endStroke() {
 
     }
 

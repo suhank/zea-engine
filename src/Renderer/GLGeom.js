@@ -17,9 +17,11 @@ class GLGeom {
         this.__glattrbuffers = {};
         this.__shaderBindings = {};
         this.destructing = new Signal();
+        this.updated = new Signal();
 
         let updateBuffers = function(opts) {
             this.updateBuffers(opts);
+            this.updated.emit();
         }
         this.__geom.geomDataChanged.connect(updateBuffers, this);
 

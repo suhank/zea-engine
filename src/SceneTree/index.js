@@ -2,7 +2,7 @@
 // TODO: Move me to 'Common'
 export * from './RefCounted.js';
 
-export * from './Geometry/Geometry.js';
+export * from './Geometry';
 export * from './TreeItem.js';
 export * from './GeomItem.js';
 export * from './GizmoItem.js';
@@ -25,5 +25,6 @@ export * from './Scene.js';
 
 export * from './BinAsset.js';
 export * from './ObjAsset.js';
-export * from './Shaders/Shaders.js';
 
+export * from './Shaders';
+export * from './Tools';

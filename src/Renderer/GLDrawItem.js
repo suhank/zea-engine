@@ -38,6 +38,10 @@ class GLDrawItem {
                 this.unhighlight();
         }, this);
 
+        this.__glGeom.updated.connect(() => {
+            this.updated.emit();
+        }, this);
+
         this.__geomItem.destructing.connect(() => {
             // Note: it is possible for several draw items to reference the same
             // GLGeom, so we should be maintaining a ref count, and only destroying 

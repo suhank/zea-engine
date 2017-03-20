@@ -209,6 +209,8 @@ class GLCollector {
         let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
+        gldrawItem.updated.connect(this.__renderer.requestRedraw, this.__renderer);
+
         this.__drawItems[index] = gldrawItem;
 
         // Null the entry in the array. 
@@ -260,6 +262,14 @@ class GLCollector {
         for (let childItem of treeItem.getChildren()) {
             this.addTreeItem(childItem);
         }
+
+
+        treeItem.childAdded.connect(this.__childAdded, this);
+    }
+
+    __childAdded(child){
+        this.addTreeItem(child);
+        this.finalize();
     }
 
     removeDrawItem(gldrawItem) {
@@ -268,6 +278,11 @@ class GLCollector {
         this.__drawItemsIndexFreeList.push(index);
         gldrawItem.destructing.disconnectScope(this);
         gldrawItem.transformChanged.disconnectScope(this);
+
+        // TODO: remove listers to childAdded on tree items when they are removed.
+        // (which they never are right now);
+        gldrawItem.getGeomItem().childAdded.disconnectScope(this);
+
         this.renderTreeUpdated.emit();
         this.__renderer.requestRedraw();
     }

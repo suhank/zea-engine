@@ -30,6 +30,10 @@ class Ray {
         return this.start.add(this.dir.scale(fract));
     }
 
+    pointAtDist(dist){
+        return this.start.add(this.dir.scale(dist));
+    }
+
     // Returns the 2 ray params that represent the closest point between the 2 rays.
     intersectRayVector(ray) {
 

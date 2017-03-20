@@ -131,7 +131,6 @@ class GLRenderer {
             canvasDiv.appendChild(logo);
         }
 
-        MarkerpenTool
     }
 
     getScene() {
@@ -178,11 +177,6 @@ class GLRenderer {
         this.__scene = scene;
         this.__collector.addTreeItem(this.__scene.getRoot());
         this.__collector.finalize();
-        let childAdded = function(child) {
-            this.__collector.addTreeItem(child);
-            this.__collector.finalize();
-        };
-        this.__scene.childAdded.connect(childAdded, this);
 
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
