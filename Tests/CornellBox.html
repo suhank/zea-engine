@@ -53,17 +53,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
             gui.add(renderer, 'planeX', -3, 3);
         });
 
+        let userMarker = new Visualive.MarkerpenTool('client');
+        scene.getRoot().addChild(userMarker.getTreeItem());
+
         renderer.getViewport().strokeStarted.connect((data)=>{
-            console.log(data);
+            console.log(data.xfo.tr.toString());
+
+            // let color = new Color();
+            // color.froJSON(data.color);
+            userMarker.startStroke(data.xfo, data.color, data.thickness);
         });
         renderer.getViewport().strokeEnded.connect(()=>{
         });
         renderer.getViewport().strokeSegmentAdded.connect((data)=>{
-            console.log(data);
+            console.log(data.tr.toString());
+            userMarker.addSegmentToStroke(xfo);
         });
 
-        let userMarker = new Visualive.MarkerpenTool('client');
-        scene.getRoot().addChild(userMarker.getTreeItem());
     }
 
     setTimeout(function(){ 

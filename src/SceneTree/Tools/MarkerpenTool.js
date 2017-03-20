@@ -1,7 +1,8 @@
 import {
     Vec3,
     Color,
-    Xfo
+    Xfo,
+    Signal
 } from '../../Math';
 import {
     TreeItem,
@@ -15,15 +16,20 @@ class MarkerpenTool {
         this.__name = name;
         this.__treeItem = new TreeItem(name+'MarkerpenTool');
         this.__strokeCount = 0;
+
+        // Stroke Signals
+        this.strokeStarted = new Signal();
+        this.strokeEnded = new Signal();
+        this.strokeSegmentAdded = new Signal();
     }
 
     getTreeItem(){
         return this.__treeItem;
     }
 
-    startStroke(xfo, color, lineThickness) {
+    startStroke(xfo, color, thickness) {
         this.__lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
-        this.__lineGeom.lineThickness = lineThickness;
+        this.__lineGeom.lineThickness = thickness;
 
         this.__used = 0;
         this.__vertexCount = 100;
@@ -38,6 +44,12 @@ class MarkerpenTool {
         this.__treeItem.addChild(geomItem);
 
         this.__strokeCount++;
+
+        this.strokeStarted.emit({
+            xfo,
+            color, 
+            thickness
+        });
     }
 
     endStroke() {
