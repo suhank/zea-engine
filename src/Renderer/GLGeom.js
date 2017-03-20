@@ -1,7 +1,7 @@
 import {
     Signal
-} from '../Math/Math.js';
-import '../SceneTree/SceneTree.js';
+} from '../Math';
+import '../SceneTree';
 import '../SceneTree/Geometry/BaseGeom.js';
 
 import {

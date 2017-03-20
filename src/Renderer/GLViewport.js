@@ -5,7 +5,7 @@ import {
     Mat4,
     Color,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     Camera
 } from '../SceneTree/Camera.js';

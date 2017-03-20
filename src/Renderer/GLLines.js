@@ -1,6 +1,6 @@
 import {
     Vec3
-} from '../Math/Math.js';
+} from '../Math';
 import {
     GLGeom
 } from './GLGeom.js';

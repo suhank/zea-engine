@@ -4,7 +4,7 @@ import {
     Color,
     Signal,
     getRandomInt
-} from '../Math/Math.js';
+} from '../Math';
 import {
     getFileFolder
 } from './Utils.js';

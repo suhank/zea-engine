@@ -1,7 +1,7 @@
 import {
     Vec3,
     Mat4
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     GLFbo
 } from '../GLFbo.js';

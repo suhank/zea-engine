@@ -2,7 +2,7 @@
 import {
     Rect,
     GeomItem
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 import {
     GLLines

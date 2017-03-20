@@ -2,7 +2,7 @@ import {
     Vec2,
     Async,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     Image2D

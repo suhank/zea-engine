@@ -1,7 +1,7 @@
 import {
     Signal,
     hashStr
-} from '../Math/Math.js';
+} from '../Math';
 import {
     RefCounted
 } from './RefCounted.js';

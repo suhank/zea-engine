@@ -2,7 +2,7 @@ import {
     Vec3,
     Vec4,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     AssetItem,
     GeomItem,
@@ -11,7 +11,7 @@ import {
     Mesh,
     Grid,
     LinesMaterial
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 import {
     GLPoints
 } from './GLPoints.js';

@@ -1,7 +1,7 @@
 import {
     shaderLibrary,
     Shader
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 import './utils/quadVertexFromID.js';
 import './utils/unpackHDR.js';

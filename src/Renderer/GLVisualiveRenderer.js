@@ -1,11 +1,11 @@
 import {
     Vec3
-} from '../Math/Math.js';
+} from '../Math';
 import {
     HDRImage2D,
     HDRImageMixer,
     ProceduralSky
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 
 import {
     GLHDRImage

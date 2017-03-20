@@ -1,7 +1,7 @@
 import {
     Vec3,
     Xfo
-} from '../../Math/Math.js';
+} from '../../Math';
 
 class VR1HandedGrabTool {
     constructor(vrStage, vrHead, vrControllers) {

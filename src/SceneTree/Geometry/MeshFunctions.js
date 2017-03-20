@@ -2,7 +2,7 @@ import {
     Vec2,
     Vec3,
     Signal
-} from '../../Math/Math.js';
+} from '../../Math';
 
 import {
     Attribute

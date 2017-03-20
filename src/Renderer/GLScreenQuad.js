@@ -1,7 +1,7 @@
 import {
     AttrValue,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     GLShader
 } from './GLShader.js';

@@ -1,10 +1,10 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     shaderLibrary
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 
 class GLShader {
     constructor(gl, shader) {

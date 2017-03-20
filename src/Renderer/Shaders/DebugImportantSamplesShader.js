@@ -2,7 +2,7 @@
 import {
     shaderLibrary,
     Shader
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 class DebugImportantSamplesShader extends Shader {
     

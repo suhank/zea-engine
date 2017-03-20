@@ -1,6 +1,6 @@
 import {
     Xfo
-} from '../../Math/Math.js';
+} from '../../Math';
 
 class VR2HandedGrabTool {
     constructor(vrStage, vrHead, vrControllers) {

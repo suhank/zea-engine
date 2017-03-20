@@ -7,7 +7,7 @@ import {
     LOADFLAGS_SKIP_CHILDREN,
     LOADFLAGS_SKIP_MATERIALS,
     LOADFLAGS_SKIP_GEOMETRIES
-} from './SceneTree/SceneTree.js';
+} from './SceneTree';
 
 
 class Project {

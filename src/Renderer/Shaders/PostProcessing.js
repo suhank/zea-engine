@@ -1,7 +1,7 @@
 import {
     shaderLibrary,
     Shader
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 import './pragmatic-pbr/exposure.js';
 import './pragmatic-pbr/tonemap-filmic.js';

@@ -4,10 +4,10 @@ import {
     Mat3,
     Quat,
     Xfo
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     TreeItem
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     LinearTranslationGizmo
 } from './LinearTranslationGizmo.js';

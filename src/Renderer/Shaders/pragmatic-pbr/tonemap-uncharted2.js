@@ -1,6 +1,6 @@
 import {
     shaderLibrary
-} from '../../../SceneTree/SceneTree.js';
+} from '../../../SceneTree';
 
 shaderLibrary.setShaderModule('pragmatic-pbr/tonemap-uncharted2.glsl', `
 

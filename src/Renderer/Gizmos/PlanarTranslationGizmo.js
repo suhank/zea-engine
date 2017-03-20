@@ -3,13 +3,13 @@ import {
     Color,
     Xfo,
     Ray
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     Cuboid,
     Cone,
     TreeItem,
     GeomItem
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     GLMesh
 } from '../GLMesh.js';

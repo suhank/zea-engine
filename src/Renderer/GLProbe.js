@@ -31,7 +31,7 @@ import {
 import {
     Vec3,
     hammersley
-} from '../Math/Math.js';
+} from '../Math';
 
 class GLProbe extends ImageAtlas {
     constructor(gl, name) {

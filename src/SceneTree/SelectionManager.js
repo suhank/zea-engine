@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 
 class SelectionManager {
     constructor(scene) {

@@ -1,7 +1,7 @@
 import {
     Color,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     Image2D
 } from './Image2D.js';

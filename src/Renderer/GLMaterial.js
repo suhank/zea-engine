@@ -9,12 +9,12 @@ import {
     Mat3,
     Mat4,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     Image2D
 } from '../SceneTree/Image2D.js';
 import '../SceneTree/Material.js';
-import '../SceneTree/SceneTree.js';
+import '../SceneTree';
 
 import {
     GLTexture2D

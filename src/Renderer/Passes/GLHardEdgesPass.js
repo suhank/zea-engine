@@ -1,9 +1,9 @@
 import {
     Color
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     Mesh
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     WireShader
 } from '../Shaders/WireShader.js';

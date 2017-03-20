@@ -1,7 +1,7 @@
 import {
     Vec2,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     Image2D

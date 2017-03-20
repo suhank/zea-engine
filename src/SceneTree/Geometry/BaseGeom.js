@@ -3,7 +3,7 @@ import {
     Box3,
     Signal,
     typeRegistry
-} from '../../Math/Math.js';
+} from '../../Math';
 
 import {
     RefCounted

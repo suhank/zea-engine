@@ -1,11 +1,11 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     RefCounted,
     Image2D
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 
 
 class GLTexture2D extends RefCounted {

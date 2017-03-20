@@ -9,7 +9,7 @@ import {
     Color,
     Signal,
     isMobileDevice
-} from '../Math/Math.js';
+} from '../Math';
 import {
     StandardMaterial
 } from './Shaders/StandardMaterial.js';

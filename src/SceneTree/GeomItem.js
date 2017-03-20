@@ -4,7 +4,7 @@ import {
     Mat4,
     Xfo,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     TreeItem,
     LOADFLAGS_SKIP_MATERIALS,

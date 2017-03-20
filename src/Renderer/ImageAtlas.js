@@ -4,12 +4,12 @@ import {
     BinTreeNode,
     BinTreeRect,
     BinTreeRectBorder
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     Shader,
     shaderLibrary
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 
 import {
     GLShader

@@ -2,14 +2,14 @@ import {
     Color,
     Xfo,
     Ray
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     Circle,
     Cylinder,
     Torus,
     TreeItem,
     GeomItem
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     GLMesh
 } from '../GLMesh.js';

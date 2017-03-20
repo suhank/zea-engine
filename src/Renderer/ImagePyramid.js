@@ -15,7 +15,7 @@ import {
 import {
     Vec2,
     Rect2
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     generateShaderGeomBinding
@@ -30,7 +30,7 @@ let Math_log2 = function(value){
 import {
     Shader,
     shaderLibrary
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 
 import '../SceneTree/Shaders/GLSL/ImagePyramid.js';
 

@@ -1,7 +1,7 @@
 import {
     shaderLibrary,
     Shader
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 class ScreenSpaceOverlayShader extends Shader {
     

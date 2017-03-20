@@ -1,6 +1,6 @@
 import {
     Mesh
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     PointsShader
 } from '../Shaders/PointsShader.js';

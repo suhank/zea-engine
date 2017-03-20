@@ -2,12 +2,12 @@ import {
     Color,
     Mat4,
     Xfo
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     Cuboid,
     GeomItem,
     FlatMaterial
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     GLMesh
 } from '../GLMesh.js';

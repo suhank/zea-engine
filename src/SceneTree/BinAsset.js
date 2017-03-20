@@ -1,7 +1,7 @@
 import {
     isMobileDevice,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     AssetItem
 } from './AssetItem.js';

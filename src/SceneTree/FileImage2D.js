@@ -1,7 +1,7 @@
 
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     sgFactory
 } from './SGFactory.js';

@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLPass {

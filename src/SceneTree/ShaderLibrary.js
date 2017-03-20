@@ -9,7 +9,7 @@ import {
     Mat3,
     Mat4,
     hashStr
-} from '../Math/Math.js';
+} from '../Math';
 
 import {
     Image2D

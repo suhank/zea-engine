@@ -1,7 +1,7 @@
 import {
     Vec2,
     Vec3
-} from '../Math/Math.js';
+} from '../Math';
 
 class BinReader {
     constructor(data, byteOffset = 0, isMobileDevice = true) {

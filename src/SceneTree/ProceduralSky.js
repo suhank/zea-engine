@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     RefCounted
 } from './RefCounted.js';

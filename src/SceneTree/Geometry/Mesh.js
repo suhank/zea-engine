@@ -4,7 +4,7 @@ import {
     Vec3,
     Mat4,
     Signal
-} from '../../Math/Math.js';
+} from '../../Math';
 
 import {
     BaseGeom

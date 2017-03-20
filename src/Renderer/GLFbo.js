@@ -1,5 +1,5 @@
 
-import '../Math/Math.js';
+import '../Math';
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLFbo {

@@ -2,12 +2,12 @@ import {
     Vec3,
     Color,
     Xfo
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     Lines,
     GeomItem,
     FatLinesMaterial
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 class MarkerpenTool {
     constructor(ownerTreeItem) {

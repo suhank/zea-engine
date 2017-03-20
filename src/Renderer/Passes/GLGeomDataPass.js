@@ -10,7 +10,7 @@ import {
 } from '../Shaders/GeomDataShader.js';
 import {
     Lines
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 class GLGeomDataPass extends GLPass {
     constructor(gl, glshader) {

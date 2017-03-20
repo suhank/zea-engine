@@ -1,10 +1,10 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     shaderLibrary,
     Shader
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 
 import {
     GLShader
@@ -39,7 +39,7 @@ import {
 import {
     Vec3,
     hammersley
-} from '../Math/Math.js';
+} from '../Math';
 
 
 // // https://threejs.org/examples/?q=sky#webgl_shaders_sky

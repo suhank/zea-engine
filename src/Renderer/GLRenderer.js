@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     setupWebGL,
     onResize
@@ -11,7 +11,7 @@ import {
     Mesh,
     Grid,
     LinesMaterial
-} from '../SceneTree/SceneTree.js';
+} from '../SceneTree';
 import {
     GLScreenQuad
 } from './GLScreenQuad.js';
@@ -130,6 +130,8 @@ class GLRenderer {
             logo.style.left = '10px';
             canvasDiv.appendChild(logo);
         }
+
+        MarkerpenTool
     }
 
     getScene() {

@@ -51,7 +51,7 @@ console.log("Building: " + outputFile);
 
 let srcPath = path.resolve('./src');
 let config = {
-  entry: __dirname + '/src/Visualive.js',
+  entry: __dirname + '/src/index.js',
   devtool: 'source-map',
   output: {
     path: __dirname + '/lib',

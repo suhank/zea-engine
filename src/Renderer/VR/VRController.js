@@ -5,14 +5,14 @@ import {
     Xfo,
     Color,
     Signal
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     Cuboid,
     Sphere,
     TreeItem,
     GeomItem,
     FlatMaterial
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     GLMesh
 } from '../GLMesh.js';

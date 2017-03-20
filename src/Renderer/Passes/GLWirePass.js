@@ -9,7 +9,7 @@ import {
 } from '../GLShader.js';
 import {
     Mesh
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 class GLWirePass extends GLPass {
     constructor(gl) {

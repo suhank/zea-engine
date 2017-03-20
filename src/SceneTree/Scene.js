@@ -1,7 +1,7 @@
 import {
     JSON_stringify_fixedPrecision,
     Signal
-} from '../Math/Math.js';
+} from '../Math';
 import {
     TreeItem
 } from './TreeItem.js';

@@ -6,10 +6,10 @@ import {
     Xfo,
     Color,
     Signal
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     TreeItem
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 import {
     GLFbo
 } from '../GLFbo.js';

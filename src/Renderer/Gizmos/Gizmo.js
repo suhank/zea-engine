@@ -1,9 +1,9 @@
 import {
     Color
-} from '../../Math/Math.js';
+} from '../../Math';
 import {
     GeomItem
-} from '../../SceneTree/SceneTree.js';
+} from '../../SceneTree';
 
 import {
     GLDrawItem

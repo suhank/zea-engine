@@ -2,7 +2,7 @@
 import {
     AttrValue,
     Float32
-} from '../../Math/Math.js';
+} from '../../Math';
 
 
 class Attribute {

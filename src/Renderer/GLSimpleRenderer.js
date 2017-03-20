@@ -1,7 +1,7 @@
 import {
     Color,
     Mat4
-} from '../Math/Math.js';
+} from '../Math';
 import {
     GLRenderer
 } from './GLRenderer.js';

@@ -1,6 +1,6 @@
 import {
     Vec2
-} from '../Math/Math.js';
+} from '../Math';
 import {
     TreeItem,
     LOADFLAGS_SKIP_MATERIALS
