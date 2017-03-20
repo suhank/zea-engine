@@ -11,8 +11,9 @@ import {
 } from '../../SceneTree';
 
 class MarkerpenTool {
-    constructor() {
-        this.__treeItem = new TreeItem('MarkerpenTool');
+    constructor(name) {
+        this.__name = name;
+        this.__treeItem = new TreeItem(name+'MarkerpenTool');
         this.__strokeCount = 0;
     }
 

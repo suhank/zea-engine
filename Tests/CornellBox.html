@@ -53,7 +53,17 @@ document.addEventListener("DOMContentLoaded", function(event) {
             gui.add(renderer, 'planeX', -3, 3);
         });
 
+        renderer.getViewport().strokeStarted.connect((data)=>{
+            console.log(data);
+        });
+        renderer.getViewport().strokeEnded.connect(()=>{
+        });
+        renderer.getViewport().strokeSegmentAdded.connect((data)=>{
+            console.log(data);
+        });
 
+        let userMarker = new Visualive.MarkerpenTool('client');
+        scene.getRoot().addChild(userMarker.getTreeItem());
     }
 
     setTimeout(function(){ 
