@@ -28,8 +28,8 @@ import {
 } from './Passes/GLNormalsPass.js';
 
 class GLSimpleRenderer extends GLRenderer {
-    constructor(canvasDiv) {
-        super(canvasDiv, {
+    constructor(canvasDiv, options={}) {
+        super(canvasDiv, options, {
             alpha: false,
             depth: true,
             antialias: true,

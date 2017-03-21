@@ -67,7 +67,7 @@ void main(void) {
 #ifdef ENABLE_LIGHTMAPS
     v_lightmapCoordsOffset = getLightmapCoordsOffset();
     v_lightmapCoord = ((v_lightmapCoordsOffset+lightmapCoords) / lightmapSize);
-    v_lightmapCoord *= 2.0;
+    // v_lightmapCoord *= 2.0;
     v_clusterID = clusterIDs;
 #endif
 
