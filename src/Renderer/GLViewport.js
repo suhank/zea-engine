@@ -362,7 +362,7 @@ class GLViewport {
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                 let color = new Color(1,0,0);
                 let thickness = this.__camera.focalDistance * 0.01;
-                this.__markerPen.startStroke(xfo, color, thickness);
+                this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
 
                 this.strokeStarted.emit({
                     xfo,
@@ -465,7 +465,7 @@ class GLViewport {
                 document.exitPointerLock();
                 break;
             case 'marker-tool':
-                this.__markerPen.endStroke();
+                this.__markerPen.endStroke(this.__markerLineId);
 
                 this.strokeEnded.emit();
                 break;
@@ -577,7 +577,7 @@ class GLViewport {
                     let ray = this.calcRayFromScreenPos(mousePos);
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                    this.__markerPen.addSegmentToStroke(xfo);
+                    this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
 
                     this.strokeSegmentAdded.emit(xfo);
                 }
