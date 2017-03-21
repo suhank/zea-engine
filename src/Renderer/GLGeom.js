@@ -25,8 +25,10 @@ class GLGeom {
         }
         this.__geom.geomDataChanged.connect(updateBuffers, this);
 
-        let regenBuffers = function() {
-            this.updateBuffers();
+        let regenBuffers = function(opts) {
+            this.clearShaderBindings();
+            this.updateBuffers(opts);
+            this.updated.emit();
         }
         this.__geom.geomDataTopologyChanged.connect(regenBuffers, this);
         
@@ -82,12 +84,17 @@ class GLGeom {
         throw ("Not implemented. Implement this method in a derived class.")
     }
 
-    destroy() {
+    clearShaderBindings(){
 
         for(let shaderkey in this.__shaderBindings){
             let shaderBinding = this.__shaderBindings[shaderkey];
             shaderBinding.destroy();
         }
+        this.__shaderBindings = {};
+    }
+
+    destroy() {
+        this.clearShaderBindings();
 
         let gl = this.__gl;
         for(let attrName in  this.__glattrbuffers){

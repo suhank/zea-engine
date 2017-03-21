@@ -8,6 +8,7 @@ import {
     TreeItem,
     Lines,
     GeomItem,
+    LinesMaterial,
     FatLinesMaterial
 } from '../../SceneTree';
 
@@ -29,7 +30,7 @@ class MarkerpenTool {
 
     startStroke(xfo, color, thickness) {
         this.__lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
-        this.__lineGeom.lineThickness = thickness;
+        this.__lineGeom.lineThickness = 0;//thickness;
 
         this.__used = 0;
         this.__vertexCount = 100;
@@ -37,7 +38,8 @@ class MarkerpenTool {
         this.__lineGeom.setNumSegments(this.__vertexCount-1);
         this.__lineGeom.vertices.setValue(this.__used, xfo.tr);
 
-        let material = new FatLinesMaterial('stroke');
+        // let material = new FatLinesMaterial('stroke');
+        let material = new LinesMaterial('stroke');
         material.color = color;
 
         let geomItem = new GeomItem('Stroke'+this.__strokeCount, this.__lineGeom, material);
@@ -61,7 +63,7 @@ class MarkerpenTool {
 
         let realloc = false;
         if(this.__used >= this.__lineGeom.getNumSegments()){
-            this.__vertexCount = this.__vertexCount * 2;
+            this.__vertexCount = this.__vertexCount + 100;
             this.__lineGeom.setNumVertices(this.__vertexCount);
             this.__lineGeom.setNumSegments(this.__vertexCount-1);
             realloc = true;
@@ -71,7 +73,7 @@ class MarkerpenTool {
         this.__lineGeom.setSegment(this.__used-1, this.__used-1, this.__used);
 
         if(realloc){
-            this.__lineGeom.geomDataTopologyChanged.emit();
+            this.__lineGeom.geomDataTopologyChanged.emit({'indicesChanged':true});
         }
         else{
             this.__lineGeom.geomDataChanged.emit({'indicesChanged':true});

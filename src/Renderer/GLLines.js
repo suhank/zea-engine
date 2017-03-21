@@ -134,6 +134,8 @@ class GLLines extends GLGeom {
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
+            this.__indexBuffer.size = indices.length;
+
             let attribIndexOffset = 1;
             for (let attrName in vertexAttributes) {
                 let attr = vertexAttributes[attrName];
@@ -148,6 +150,8 @@ class GLLines extends GLGeom {
                     buffer: attrBuffer,
                     dimension: dimension
                 };
+
+                this.__glattrbuffers[attrName].size = data.length;
             }
         }
 
@@ -210,20 +214,32 @@ class GLLines extends GLGeom {
 
         } else {
 
-            this.__ext.bindVertexArrayOES(this.__vao);
-
             let vertexAttributes = this.__geom.getVertexAttributes();
 
             if (opts.indicesChanged) {
                 let indices = this.__geom.getIndices();
+                if(this.__indexBuffer.size != indices.length){
+                    gl.deleteBuffer(this.__indexBuffer);
+                    this.__indexBuffer = gl.createBuffer();
+                }
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+                this.__indexBuffer.size = indices.length;
+                this.__numSegIndices = indices.length;
             }
 
             // Update the vertex attribute buffers
             for (let attrName in vertexAttributes) {
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers[attrName].buffer);
-                gl.bufferData(gl.ARRAY_BUFFER, vertexAttributes[attrName].data, gl.STATIC_DRAW);
+                let attr = vertexAttributes[attrName];
+                let glattr = this.__glattrbuffers[attrName];
+                if(glattr.size != attr.data.length){
+                    gl.deleteBuffer(glattr.buffer);
+                    glattr.buffer = gl.createBuffer();
+                }
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, attr.data, gl.STATIC_DRAW);
+                glattr.size = attr.data.length;
             }
         }
     }
