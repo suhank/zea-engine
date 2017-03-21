@@ -7,9 +7,10 @@ Install the httpserver
 
 ## Getting started
 
-1. Install Python 2.7.x
-  * from here: https://www.python.org/downloads/
-  * You might have to add Python to the PATH environment variables.
+1. Install Git
+1. Install Git LFS
+  https://git-lfs.github.com/
+  
 2. Install Nodejs
   * from here: https://nodejs.org/en/download/
   * Use default options. It should be straight forward.
