@@ -42,16 +42,21 @@ class MarkerpenTool {
         let material = new LinesMaterial('stroke');
         material.color = color;
 
-        let geomItem = new GeomItem('Stroke'+this.__strokeCount, this.__lineGeom, material);
+        // TOOD: Cristyan, add a guid here...
+        let id = 'Stroke'+this.__strokeCount;
+
+        let geomItem = new GeomItem(id, this.__lineGeom, material);
         this.__treeItem.addChild(geomItem);
 
         this.__strokeCount++;
 
         this.strokeStarted.emit({
+            id,
             xfo,
             color, 
             thickness
         });
+        return id;
     }
 
     endStroke() {
@@ -78,6 +83,11 @@ class MarkerpenTool {
         else{
             this.__lineGeom.geomDataChanged.emit({'indicesChanged':true});
         }
+    }
+
+    removeStroke(id) {
+        let geomItem = this.__treeItem.getChildByName(id);
+        this.__treeItem.removeChildByHandle(geomItem);
     }
 };
 
