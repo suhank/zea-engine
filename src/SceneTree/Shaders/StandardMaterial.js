@@ -314,6 +314,10 @@ void main(void) {
             vec4 color = baseColor * NdotV;
             gl_FragColor = vec4(color.rgb, opacity);
         }
+        else if(debugLevel == 1){
+            vec4 color = baseColor;
+            gl_FragColor = vec4(color.rgb, opacity);
+        }
         else{
             vec3 wsnormal = mat3(cameraMatrix) * viewNormal;
             vec4 color = vec4(abs(wsnormal.x), abs(wsnormal.y), abs(wsnormal.z), 1.0) * abs(viewNormal.z);

@@ -140,7 +140,7 @@ class GLShader {
 
             let location = gl.getUniformLocation(shaderProgramHdl, uniformName);
             if (location == undefined) {
-                console.warn("Shader uniform not found:" + uniformName);
+                console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
                 continue;
             }
             result.unifs[uniformName] = {
@@ -201,7 +201,7 @@ class GLShader {
             renderstate.envMap.bindforReading(renderstate, unifs.atlas_EnvMap.location);
         }
         if ('exposure' in unifs)
-            gl.uniform1f(unifs.exposure.location, renderstate.exposure);
+            gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
 
         return true;
     }
