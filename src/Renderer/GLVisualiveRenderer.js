@@ -62,17 +62,17 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, enableCrossSections=false, exposureRange=[-5,10], options={}) {
+    constructor(canvasDiv, options={}) {
 
         super(canvasDiv, options, {
             antialias: true,
             depth: true
         });
-
+        
         /////////////////////////
         // Renderer Setup
         this.__exposure = 0.0;
-        this.__exposureRange = exposureRange;
+        this.__exposureRange = options.exposureRange ? options.exposureRange : [-5,10];
         this.__tonemap = true;
         this.__gamma = 2.2;
         this.__antialiase = false;
@@ -106,7 +106,7 @@ class GLVisualiveRenderer extends GLRenderer {
 #define ENABLE_INLINE_GAMMACORRECTION
 `
         };
-        if(enableCrossSections)
+        if(options.enableCrossSections )
             this.__shaderDirectives.defines = this.__shaderDirectives.defines + '\n#define ENABLE_CROSS_SECTIONS'
     }
 
