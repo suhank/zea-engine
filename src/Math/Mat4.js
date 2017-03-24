@@ -279,7 +279,7 @@ class Mat4 extends AttrValue {
     }
 
     transpose() {
-        return Mat4(
+        return new Mat4(
             this.__data[0],
             this.__data[4],
             this.__data[8],
