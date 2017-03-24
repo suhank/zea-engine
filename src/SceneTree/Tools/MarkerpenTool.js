@@ -30,7 +30,7 @@ class MarkerpenTool {
         return this.__treeItem;
     }
 
-    startStroke(xfo, color, thickness) {
+    startStroke(xfo, color, thickness, id) {
         let lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
         lineGeom.lineThickness = 0;//thickness;
 
@@ -45,7 +45,9 @@ class MarkerpenTool {
         material.color = color;
 
         // TODO: Cristyan, add a guid here...
-        let id = 'Stroke'+this.__strokeCount;
+        if(!id){
+            id = 'Stroke'+this.__strokeCount;
+        }
 
         let geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
