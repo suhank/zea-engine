@@ -109,6 +109,11 @@ class MarkerpenTool {
         lineGeom.setSegment(stroke.used-1, 0, 0);
         lineGeom.geomDataChanged.emit({'indicesChanged':true});
     }
+
+    destroy(){
+        this.__treeItem.parentItem.removeChildByHandle(this.__treeItem);
+        this.__treeItem = null;
+    }
 };
 
 export {
