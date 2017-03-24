@@ -323,7 +323,7 @@ class Mat4 extends AttrValue {
         let det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
         if (!det) {
-            throw("Unable to invert Mat4");
+            console.warn("Unable to invert Mat4");
             return null;
         }
         det = 1.0 / det;

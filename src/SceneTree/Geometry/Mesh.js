@@ -314,10 +314,16 @@ class Mesh extends BaseGeom {
             // Note: cluster transforms often cannot be inverted due to zero scaling
             // on the axis.
             let normalMatrix = mat4.clone();
+            for(let i=0; i<normalMatrix.__data.length; i++)
+                normalMatrix.__data[i] *= 100.0;
             if(sclY < 0.0001)
-                normalMatrix.yAxis = mat4.zAxis.cross(mat4.xAxis).normalize();
+                normalMatrix.yAxis = normalMatrix.zAxis.cross(normalMatrix.xAxis).normalize();
             normalMatrix = normalMatrix.inverse();
+            if(!normalMatrix)
+                continue;
             normalMatrix.transposeInPlace();
+            for(let i=0; i<normalMatrix.__data.length; i++)
+                normalMatrix.__data[i] /= 100.0;
 
             let clusterData = clustersData[clusterId];
             let scaleFactor = (1 << 16)-1;
