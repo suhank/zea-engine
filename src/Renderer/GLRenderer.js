@@ -79,7 +79,7 @@ if (process === 'undefined' || process.browser == true) {
 }
 
 class GLRenderer {
-    constructor(canvasDiv, options, webglOptions) {
+    constructor(canvasDiv, options={}, webglOptions={}) {
 
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
