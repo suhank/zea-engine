@@ -45,10 +45,12 @@ class MarkerpenTool {
         material.color = color;
 
         // TODO: Cristyan, add a guid here...
+        let replayMode = true;
         if(!id){
             id = 'Stroke'+this.__strokeCount;
+            replayMode = false;
         }
-
+        
         let geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
 
@@ -60,12 +62,14 @@ class MarkerpenTool {
             vertexCount
         };
 
-        this.strokeStarted.emit({
-            id,
-            xfo,
-            color, 
-            thickness
-        });
+        if(!replayMode){
+            this.strokeStarted.emit({
+                id,
+                xfo,
+                color, 
+                thickness
+            });
+        }
         return id;
     }
 

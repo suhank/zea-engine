@@ -261,6 +261,10 @@ class GLCollector {
 
 
         treeItem.childAdded.connect(this.__childAdded, this);
+        treeItem.destructing.connect(() => {
+            treeItem.childAdded.disconnect(this.__childAdded, this);
+            treeItem.destructing.disconnectScope(this);
+        }, this);
     }
 
     __childAdded(child){
@@ -274,10 +278,6 @@ class GLCollector {
         this.__drawItemsIndexFreeList.push(index);
         gldrawItem.destructing.disconnectScope(this);
         gldrawItem.transformChanged.disconnectScope(this);
-
-        // TODO: remove listers to childAdded on tree items when they are removed.
-        // (which they never are right now);
-        gldrawItem.getGeomItem().childAdded.disconnectScope(this);
 
         this.renderTreeUpdated.emit();
         this.__renderer.requestRedraw();
@@ -353,6 +353,10 @@ class GLCollector {
         let offset = 0;
         for (let i=0; i<this.__drawItems.length; i++) {
             let gldrawItem = this.__drawItems[i];
+            // When an item is deleted, we allocate its index to the free list
+            // and null this item in the array. skip over null items.
+            if(!gldrawItem)
+                continue;
             let mat4 = gldrawItem.getGeomItem().getGeomMatrix();
             let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
             this.__populateTransformDataArray(i, mat4, lightmapCoordsOffset, dataArray);
