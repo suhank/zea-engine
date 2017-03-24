@@ -65,11 +65,6 @@ class VRViewport {
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
         this.__vrControllers = [];
         this.__vrTools = {};
-        if(!isMobileDevice()){
-            this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['Markerpen'] = new MarkerpenTool(this, this.__vrhead, this.__vrControllers);
-        }
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
         this.__renderer.getCollector().finalize();// TODO this should not be explicit.
 
@@ -113,6 +108,34 @@ class VRViewport {
         this.updated = new Signal();
         this.resized = new Signal();
 
+        // Signals to abstract the user view. 
+        // i.e. when a user switches to VR mode, the signals 
+        // simply emit the new VR data.
+        this.viewChanged = new Signal();
+        this.pointerMoved = new Signal();
+
+        // Stroke Signals
+        this.actionStarted = new Signal();
+        this.actionEnded = new Signal();
+        this.actionOccuring = new Signal();
+
+
+        if(!isMobileDevice()){
+            this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['Markerpen'] = new MarkerpenTool(this, this.__vrhead, this.__vrControllers);
+
+            let markerpenTool = this.__vrTools['Markerpen'];
+            markerpenTool.strokeStarted.connect((data)=>{
+                this.actionStarted.emit(data);
+            }, this);
+            markerpenTool.strokeEnded.connect((data)=>{
+                this.actionEnded.emit(data);
+            }, this);
+            markerpenTool.strokeSegmentAdded.connect((data)=>{
+                this.actionOccuring.emit(data);
+            }, this);
+        }
         // this.__createOffscreenFbo();
 
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
@@ -402,6 +425,21 @@ class VRViewport {
         if (this.__currentTool) {
             this.__currentTool.applyAction();
         }
+
+
+        /////////////////////////
+        // Emit a signal for the shared session.
+        let data = {
+            interfaceType: 'Vive',
+            headXfo: this.__vrhead.getTreeItem().globalXfo.toJSON(),
+            controllers:[]
+        }
+        for(let controller of this.__vrControllers){
+            data.controllers.push({
+                xfo: controller.getTreeItem().globalXfo.toJSON()
+            });
+        }
+        this.viewChanged.emit(data);
     }
 
     bindAndClear(renderstate) {

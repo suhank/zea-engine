@@ -21,13 +21,17 @@ import {
 class VRHead extends Gizmo {
     constructor(gl, stageTreeItem) {
         super(new Color(0, 0, 1));
-        // Head faces Z axis....
-        let geom = new Cuboid('VRHead', 0.16, 0.24, 0.2);
 
-        let mat0 = new FlatMaterial('mat0');
-        mat0.baseColor = new Color(0, 0, 1);
-        let mat1 = new FlatMaterial('mat1');
-        mat1.baseColor = new Color(1, 1, 0);
+        this.__treeItem = new TreeItem('VRHead');
+        stageTreeItem.addChild(this.__treeItem);
+
+        // // Head faces Z axis....
+        // let geom = new Cuboid('VRHead', 0.16, 0.24, 0.2);
+
+        // let mat0 = new FlatMaterial('mat0');
+        // mat0.baseColor = new Color(0, 0, 1);
+        // let mat1 = new FlatMaterial('mat1');
+        // mat1.baseColor = new Color(1, 1, 0);
 
         // this.__geomItem0 = new GeomItem('VRHead', geom, mat0);
         // this.__geomItem0.selectable = false;
@@ -39,7 +43,6 @@ class VRHead extends Gizmo {
         // xfo.tr.set(0, 0.03, -0.05);
         // this.__geomItem1.setGeomOffsetXfo(xfo);
 
-        // stageTreeItem.addChild(this.__geomItem0);
         // this.__geomItem0.addChild(this.__geomItem1);
 
         // let geomglGeom = new GLMesh(gl, geom);
@@ -52,7 +55,8 @@ class VRHead extends Gizmo {
 
         // this.__setProxyItem(this.__geomglDrawItem0);
 
-        this.__xfo = new Xfo();
+        // this.__treeItem.addChild(this.__geomItem0);
+
 
         this.setVisible(true);
     }
@@ -66,15 +70,19 @@ class VRHead extends Gizmo {
         // For fun, draw a blue cube where the players head would have been if
         // we weren't taking the stageParameters into account. It'll start in
         // the center of the floor.
+        let localXfo = this.__treeItem.localXfo;
         if(frameData.pose.position)
-            this.__xfo.tr.setDataArray(frameData.pose.position);
+            localXfo.tr.setDataArray(frameData.pose.position);
         if(frameData.pose.orientation)
-            this.__xfo.ori.setDataArray(frameData.pose.orientation);
-        // this.__geomItem0.localXfo = this.__xfo;
+            localXfo.ori.setDataArray(frameData.pose.orientation);
+        this.__treeItem.localXfo = localXfo;
     }
 
+    getTreeItem(){
+        return this.__treeItem;
+    }
     getXfo(){
-        return this.__xfo;
+        return this.__treeItem.localXfo;
     }
 };
 
