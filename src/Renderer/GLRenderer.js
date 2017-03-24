@@ -587,7 +587,7 @@ class GLRenderer {
         return navigator.getVRDisplays().then(function(displays) {
             if (displays.length > 0) {
                 let vrDisplay = displays[0];
-                renderer.__vrViewport = new VRViewport(renderer, vrDisplay /*, renderer.getWidth(), renderer.getHeight()*/ );
+                renderer.__vrViewport = new VRViewport(renderer, vrDisplay);
                 renderer.vrViewportSetup.emit(renderer.__vrViewport);
             } else {
                 //setStatus("WebVR supported, but no VRDisplays found.")
