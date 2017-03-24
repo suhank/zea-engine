@@ -656,17 +656,17 @@ class GLRenderer {
                 let vrvp = new VRViewport(renderer, vrDisplay);
                 
                 vrvp.viewChanged.connect((data)=>{
-                    this.viewChanged.emit(data);
-                }, this);
+                    renderer.viewChanged.emit(data);
+                }, renderer);
                 vrvp.actionStarted.connect((data)=>{
-                    this.actionStarted.emit(data);
-                }, this);
+                    renderer.actionStarted.emit(data);
+                }, renderer);
                 vrvp.actionEnded.connect((data)=>{
-                    this.actionEnded.emit(data);
-                }, this);
+                    renderer.actionEnded.emit(data);
+                }, renderer);
                 vrvp.actionOccuring.connect((data)=>{
-                    this.actionOccuring.emit(data);
-                }, this);
+                    renderer.actionOccuring.emit(data);
+                }, renderer);
 
                 renderer.__vrViewport = vrvp;
 

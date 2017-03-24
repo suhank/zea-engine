@@ -5,6 +5,7 @@ import {
 } from '../../Math';
 import {
     Cuboid,
+    TreeItem,
     GeomItem,
     FlatMaterial
 } from '../../SceneTree';

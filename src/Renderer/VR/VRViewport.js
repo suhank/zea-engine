@@ -123,7 +123,7 @@ class VRViewport {
         if(!isMobileDevice()){
             this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['Markerpen'] = new MarkerpenTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
 
             let markerpenTool = this.__vrTools['Markerpen'];
             markerpenTool.strokeStarted.connect((data)=>{
