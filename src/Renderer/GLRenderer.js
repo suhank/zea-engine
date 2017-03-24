@@ -6,6 +6,7 @@ import {
     onResize
 } from '../external/webgl-utils.js';
 import {
+    loadBinfile,
     GeomItem,
     Lines,
     Mesh,
@@ -121,14 +122,50 @@ class GLRenderer {
             this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
             canvasDiv.appendChild(this.__stats.dom);
         }
-        //if (options.displayLogo)
-        {
-            let logo = new Image();
-            logo.src = window.location.origin+'/Assets/LogoSmall.png';
-            logo.style.position = 'absolute';
-            logo.style.bottom = '10px';
-            logo.style.left = '10px';
-            canvasDiv.appendChild(logo);
+
+        if(options.resources){
+            loadBinfile(
+                options.resources,
+                (path, data) => {
+                    /////////////////////////////////
+                    // Un-pack the data.
+                    let unpack = new Unpack(data);
+                    let entries = unpack.getEntries();
+                    this.__resources = {};
+                    for(let res of entries){
+                        this.__resources[res.name] = unpack.decompress(res.name);
+                    }
+
+                    //if (options.displayLogo)
+                    {
+                        let logo = new Image();
+                        logo.src = URL.createObjectURL(new Blob([this.__resources['LogoSmall.png'].buffer]));
+                        logo.style.position = 'absolute';
+                        logo.style.bottom = '10px';
+                        logo.style.right = '10px';
+                        canvasDiv.appendChild(logo);
+                    }
+
+                    //if (options.displayLoading)
+                    {
+                        let loadingDiv = document.createElement("div");
+                        loadingDiv.style.position = 'absolute';
+                        loadingDiv.style.top = '50%';
+                        loadingDiv.style.left = '50%';
+                        let loading = new Image();
+                        loading.src = URL.createObjectURL(new Blob([this.__resources['loading.gif'].buffer]));
+                        loading.style.width = '20%';
+                        loading.style.height = '20%';
+                        loading.style.transform = 'translate(-50%, -50%)';
+                        loadingDiv.appendChild(loading);
+                        canvasDiv.appendChild(loadingDiv);
+                        this.__loadingImg = loadingDiv;
+                    }  
+                },
+                () => {
+
+                },
+                this);
         }
 
     }
@@ -228,6 +265,9 @@ class GLRenderer {
     resumeDrawing() {
         this.__drawSuspensionLevel--;
         if (this.__drawSuspensionLevel == 0) {
+            if(this.__loadingImg)
+                this.__glcanvasDiv.removeChild(this.__loadingImg);
+                
             // New Items may have been added during the pause.
             // this.renderGeomDataFbos();
             this.requestRedraw();

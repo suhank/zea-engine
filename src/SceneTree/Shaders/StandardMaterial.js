@@ -13,7 +13,6 @@ import {
 
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
-import './GLSL/Florian/Lookup.js';
 import './GLSL/GGX_Specular.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';

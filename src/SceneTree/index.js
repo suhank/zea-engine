@@ -1,6 +1,7 @@
 
 // TODO: Move me to 'Common'
 export * from './RefCounted.js';
+export * from './Utils.js';
 
 export * from './Geometry';
 export * from './TreeItem.js';

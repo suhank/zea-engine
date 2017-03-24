@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let lightmap =  new Visualive.HDRImage2D('lightmap', url+'_'+lightmapName+'_Lightmap.vlh');
         scene.setLightMap('Default', lightmap);
 
-        let renderer = new Visualive.GLVisualiveRenderer(domElement, true);
+        let renderer = new Visualive.GLVisualiveRenderer(domElement, { resources:'../Resources/Resources.vlr' });
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
         let async = new Visualive.Async();

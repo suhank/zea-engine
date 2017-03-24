@@ -22,15 +22,8 @@ import {
     ConvolverShader
 } from './Shaders/ConvolverShader.js';
 import {
-    EnvMapShader
-} from './Shaders/EnvMapShader.js';
-import {
     GLFbo
 } from './GLFbo.js';
-
-import {
-    ImagePyramid
-} from './ImagePyramid.js';
 
 import {
     generateShaderGeomBinding,

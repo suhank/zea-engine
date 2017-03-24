@@ -62,7 +62,7 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, options={}) {
+    constructor(canvasDiv, options) {
 
         super(canvasDiv, options, {
             antialias: true,
