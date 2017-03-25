@@ -19,13 +19,7 @@ class FatLinesMaterial extends Material {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FatLinesMaterial.vertexShader', `
 precision highp float;
 
-#define USE_POSITIONS_TEXTURE
-#ifdef USE_POSITIONS_TEXTURE
 instancedattribute vec2 segmentIndices;
-#else
-instancedattribute vec4 data_0;
-instancedattribute vec4 data_1;
-#endif
 attribute float vertexIDs;
 
 uniform mat4 viewMatrix;
@@ -35,10 +29,8 @@ uniform mat4 cameraMatrix;
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-#ifdef USE_POSITIONS_TEXTURE
 uniform sampler2D positionsTexture;
 uniform int positionsTextureSize;
-#endif
 
 uniform float _lineThickness;
 
@@ -53,12 +45,14 @@ void main(void) {
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
+    int seqentialIndex_0 = int(mod(segmentIndices.x, 2.));
+    int seqentialIndex_1 = int(mod(segmentIndices.y, 2.));
+    int index_0 = int(segmentIndices.x) / 2;
+    int index_1 = int(segmentIndices.y) / 2;
+
     vec3 viewPos;
-#ifdef USE_POSITIONS_TEXTURE
-    vec4 data_0, data_1;
-    data_0 = texelFetch(positionsTexture, positionsTextureSize, int(segmentIndices.x));
-    data_1 = texelFetch(positionsTexture, positionsTextureSize, int(segmentIndices.y));
-#endif
+    vec4 data_0 = texelFetch(positionsTexture, positionsTextureSize, index_0);
+    vec4 data_1 = texelFetch(positionsTexture, positionsTextureSize, index_1);
 
     vec4 pos_0 = modelViewMatrix * vec4(data_0.xyz, 1.0);
     vec4 pos_1 = modelViewMatrix * vec4(data_1.xyz, 1.0);
@@ -74,31 +68,49 @@ void main(void) {
     if(pos_1 != pos_0){
         vec3 segmentDir = normalize(pos_1.xyz - pos_0.xyz);
         vec3 viewVector = normalize(viewPos);
-        vec3 biTangent = normalize(cross(segmentDir, viewVector));
-        v_viewNormal = normalize(cross(segmentDir, biTangent));
 
         if(vertexID < 2){
+            vec3 segmentStartDir = segmentDir;
+            if(seqentialIndex_0 != 0){
+                // TODO: if index_0 == 0, get the last index in the line as previous
+                int index_prev = index_0-1;
+                vec4 data_prev = texelFetch(positionsTexture, positionsTextureSize, index_prev);
+                vec4 pos_prev = modelViewMatrix * vec4(data_prev.xyz, 1.0);
+                segmentStartDir = normalize(pos_1.xyz - pos_prev.xyz);
+            }
+            vec3 startBiTangent = normalize(cross(segmentStartDir, viewVector));
+            v_viewNormal = normalize(cross(segmentStartDir, startBiTangent));
             // Move the endpoints to overlap a bit more.
-            //viewPos -= vec3(segmentDir * lineThickness_0 * 0.25);
+            //viewPos -= vec3(segmentStartDir * lineThickness_0 * 0.25);
             if(mod(vertexIDs, 2.0) == 0.0){
-                viewPos += vec3(biTangent * lineThickness_0);
+                viewPos += vec3(startBiTangent * lineThickness_0);
                 v_texCoord.x = 1.0;
             }
             else{
-                viewPos -= vec3(biTangent * lineThickness_0);
+                viewPos -= vec3(startBiTangent * lineThickness_0);
                 v_texCoord.x = 0.0;
             }
             v_texCoord.y = 0.0;
         }
         else{
+            vec3 segmentEndDir = segmentDir;
+            if(seqentialIndex_1 != 0){
+                // TODO: if index_0 == numPoints-1, get the first index in the line as previous
+                int index_next = index_1+1;
+                vec4 data_next = texelFetch(positionsTexture, positionsTextureSize, index_next);
+                vec4 pos_next = modelViewMatrix * vec4(data_next.xyz, 1.0);
+                segmentEndDir = normalize(pos_next.xyz - pos_0.xyz);
+            }
+            vec3 endBiTangent = normalize(cross(segmentEndDir, viewVector));
+            v_viewNormal = normalize(cross(segmentEndDir, endBiTangent));
             // Move the endpoints to overlap a bit more.
-            //viewPos += vec3(segmentDir * lineThickness_1 * 0.25);
+            //viewPos += vec3(segmentEndDir * lineThickness_1 * 0.25);
             if(mod(vertexIDs, 2.0) == 0.0){
-                viewPos += vec3(biTangent * lineThickness_1);
+                viewPos += vec3(endBiTangent * lineThickness_1);
                 v_texCoord.x = 1.0;
             }
             else{
-                viewPos -= vec3(biTangent * lineThickness_1);
+                viewPos -= vec3(endBiTangent * lineThickness_1);
                 v_texCoord.x = 0.0;
             }
             v_texCoord.y = 1.0;
