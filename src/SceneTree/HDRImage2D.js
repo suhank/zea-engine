@@ -15,12 +15,6 @@ import {
     parseHdr
 } from '../external/parse-hdr.js';
 
-// #ifdef BUILD_RELEASE
-// import {
-//     Unpack
-// } from '../external/Unpack.js';
-// #endif
-
 class HDRImage2D extends Image2D {
     constructor(name, url, isStream) {
         super({

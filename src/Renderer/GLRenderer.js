@@ -100,6 +100,17 @@ class GLRenderer {
         this.keyPressed = new Signal();
         this.vrViewportSetup = new Signal(true);
 
+        // Signals to abstract the user view. 
+        // i.e. when a user switches to VR mode, the signals 
+        // simply emit the new VR data.
+        this.viewChanged = new Signal();
+        this.pointerMoved = new Signal();
+
+        // Stroke Signals
+        this.actionStarted = new Signal();
+        this.actionEnded = new Signal();
+        this.actionOccuring = new Signal();
+
         this.setupWebGL(canvasDiv, webglOptions);
 
         // this.__defaultGeomsPass = new GLForwardPass(this.__collector);
@@ -228,6 +239,25 @@ class GLRenderer {
         vp.createGeomDataFbo();
         vp.setGeomDataPass(this.__geomDataPass);
         vp.setGizmoPass(this.__gizmoPass);
+
+        vp.viewChanged.connect((data)=>{
+            this.viewChanged.emit(data);
+        }, this);
+        vp.mouseMoved.connect((event, mousePos, ray)=>{
+            this.pointerMoved.emit({
+                mousePos: mousePos.toJSON(),
+                ray: ray.toJSON()
+            });
+        }, this);
+        vp.actionStarted.connect((data)=>{
+            this.actionStarted.emit(data);
+        }, this);
+        vp.actionEnded.connect((data)=>{
+            this.actionEnded.emit(data);
+        }, this);
+        vp.actionOccuring.connect((data)=>{
+            this.actionOccuring.emit(data);
+        }, this);
 
         this.__viewports.push(vp);
         return vp;
@@ -623,7 +653,23 @@ class GLRenderer {
         return navigator.getVRDisplays().then(function(displays) {
             if (displays.length > 0) {
                 let vrDisplay = displays[0];
-                renderer.__vrViewport = new VRViewport(renderer, vrDisplay /*, renderer.getWidth(), renderer.getHeight()*/ );
+                let vrvp = new VRViewport(renderer, vrDisplay);
+                
+                vrvp.viewChanged.connect((data)=>{
+                    renderer.viewChanged.emit(data);
+                }, renderer);
+                vrvp.actionStarted.connect((data)=>{
+                    renderer.actionStarted.emit(data);
+                }, renderer);
+                vrvp.actionEnded.connect((data)=>{
+                    renderer.actionEnded.emit(data);
+                }, renderer);
+                vrvp.actionOccuring.connect((data)=>{
+                    renderer.actionOccuring.emit(data);
+                }, renderer);
+
+                renderer.__vrViewport = vrvp;
+
                 renderer.vrViewportSetup.emit(renderer.__vrViewport);
             } else {
                 //setStatus("WebVR supported, but no VRDisplays found.")

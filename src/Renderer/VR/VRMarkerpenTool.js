@@ -21,7 +21,7 @@ class VRMarkerpenTool extends MarkerpenTool {
         this.__tipOffsetXfo = new Xfo();
         this.__tipOffsetXfo.tr.set(0.0,-0.01, -0.03);
 
-        this.__vrStage.getCollector().addTreeItem(this.getTreeItem());
+        this.__vrStage.getRenderer().getCollector().addTreeItem(this.getTreeItem());
     }
 
     startAction() {
@@ -50,5 +50,5 @@ class VRMarkerpenTool extends MarkerpenTool {
 };
 
 export {
-    MarkerpenTool
+    VRMarkerpenTool
 };

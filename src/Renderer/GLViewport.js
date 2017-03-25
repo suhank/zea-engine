@@ -43,10 +43,6 @@ class GLViewport {
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFboRezScale = 0.5;
-        this.setCamera(new Camera('Default'));
-
-        this.__markerPen = new MarkerpenTool();
-        this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
 
         // this.__selectionRect = new GLSelectionRect(this.__renderer.gl);
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
@@ -57,11 +53,30 @@ class GLViewport {
         this.keyPressed = new Signal();
         this.mouseMoved = new Signal();
 
+        // Signals to abstract the user view. 
+        // i.e. when a user switches to VR mode, the signals 
+        // simply emit the new VR data.
+        this.viewChanged = new Signal();
+        this.pointerMoved = new Signal();
 
         // Stroke Signals
-        this.strokeStarted = new Signal();
-        this.strokeEnded = new Signal();
-        this.strokeSegmentAdded = new Signal();
+        this.actionStarted = new Signal();
+        this.actionEnded = new Signal();
+        this.actionOccuring = new Signal();
+
+        this.__markerPen = new MarkerpenTool();
+        this.__markerPen.strokeStarted.connect((data)=>{
+            this.actionStarted.emit(data);
+        }, this);
+        this.__markerPen.strokeEnded.connect((data)=>{
+            this.actionEnded.emit(data);
+        }, this);
+        this.__markerPen.strokeSegmentAdded.connect((data)=>{
+            this.actionOccuring.emit(data);
+        }, this);
+        this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
+
+        this.setCamera(new Camera('Default'));
 
         this.resize(width, height);
     }
@@ -138,8 +153,12 @@ class GLViewport {
 
     setCamera(camera) {
         this.__camera = camera;
-        this.__camera.viewMatChanged.connect(function() {
+        this.__camera.viewMatChanged.connect(function(globalXfo) {
             this.updated.emit();
+            this.viewChanged.emit({
+                interfaceType:'MouseAndKeyboard',
+                cameraXfo: globalXfo.toJSON()
+            });
         }, this);
         this.__camera.clippingRangesChanged.connect(function() {
             this.__updateProjectionMatrix();
@@ -363,12 +382,6 @@ class GLViewport {
                 let color = new Color(1,0,0);
                 let thickness = this.__camera.focalDistance * 0.01;
                 this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
-
-                this.strokeStarted.emit({
-                    xfo,
-                    color, 
-                    thickness
-                });
             }
             else {
                 let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
@@ -466,8 +479,6 @@ class GLViewport {
                 break;
             case 'marker-tool':
                 this.__markerPen.endStroke(this.__markerLineId);
-
-                this.strokeEnded.emit();
                 break;
         }
         this.__manipMode = 'highlighting';
@@ -578,11 +589,10 @@ class GLViewport {
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                     this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
-
-                    this.strokeSegmentAdded.emit(xfo);
                 }
                 break;
         }
+
         return false;
     }
 

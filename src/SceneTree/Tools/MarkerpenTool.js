@@ -30,7 +30,7 @@ class MarkerpenTool {
         return this.__treeItem;
     }
 
-    startStroke(xfo, color, thickness) {
+    startStroke(xfo, color, thickness, id) {
         let lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
         lineGeom.lineThickness = 0;//thickness;
 
@@ -45,7 +45,11 @@ class MarkerpenTool {
         material.color = color;
 
         // TODO: Cristyan, add a guid here...
-        let id = 'Stroke'+this.__strokeCount;
+        let replayMode = true;
+        if(!id){
+            id = 'Stroke'+this.__strokeCount;
+            replayMode = false;
+        }
 
         let geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
@@ -55,15 +59,21 @@ class MarkerpenTool {
         this.__strokes[id] = {
             geomItem,
             used,
-            vertexCount
+            vertexCount,
+            replayMode
         };
 
-        this.strokeStarted.emit({
-            id,
-            xfo,
-            color, 
-            thickness
-        });
+        if(!replayMode){
+            this.strokeStarted.emit({
+                type: 'strokeStarted',
+                data: {
+                    id: id,
+                    xfo: xfo.toJSON(),
+                    color: color.toJSON(),
+                    thickness: thickness
+                }
+            });
+        }
         return id;
     }
 
@@ -94,20 +104,35 @@ class MarkerpenTool {
             lineGeom.geomDataChanged.emit({'indicesChanged':true});
         }
         lineGeom.__strokeCount = stroke.used;
+
+         
+        if(!stroke.replayMode){
+            this.strokeSegmentAdded.emit({
+                type: 'strokeSegmentAdded',
+                data: {
+                  id: id,
+                  xfo: xfo.toJSON()
+                }
+            });
+        }
     }
 
-    removeStroke(id) {
-        let geomItem = this.__treeItem.getChildByName(id);
-        this.__treeItem.removeChildByHandle(geomItem);
-    }
+    // removeStroke(id) {
+    //     let geomItem = this.__treeItem.getChildByName(id);
+    //     this.__treeItem.removeChildByHandle(geomItem);
+    // }
 
+    // removeSegmentFromStroke(id) {
+    //     let stroke = this.__strokes[id];
+    //     let lineGeom = stroke.geomItem.geom;
+    //     stroke.used--;
+    //     lineGeom.setSegment(stroke.used-1, 0, 0);
+    //     lineGeom.geomDataChanged.emit({'indicesChanged':true});
+    // }
 
-    removeSegmentFromStroke(id) {
-        let stroke = this.__strokes[id];
-        let lineGeom = stroke.geomItem.geom;
-        stroke.used--;
-        lineGeom.setSegment(stroke.used-1, 0, 0);
-        lineGeom.geomDataChanged.emit({'indicesChanged':true});
+    destroy(){
+        this.__treeItem.parentItem.removeChildByHandle(this.__treeItem);
+        this.__treeItem = null;
     }
 };
 
