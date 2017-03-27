@@ -40,6 +40,7 @@ class GLViewport {
         this.__mouseOverGizmo = undefined;
         this.__manipGizmo = undefined;
         this.__mouseDownPos = new Vec2();
+        this.__ongoingTouches = {};
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFboRezScale = 0.5;
@@ -65,13 +66,13 @@ class GLViewport {
         this.actionOccuring = new Signal();
 
         this.__markerPen = new MarkerpenTool();
-        this.__markerPen.strokeStarted.connect((data)=>{
+        this.__markerPen.strokeStarted.connect((data) => {
             this.actionStarted.emit(data);
         }, this);
-        this.__markerPen.strokeEnded.connect((data)=>{
+        this.__markerPen.strokeEnded.connect((data) => {
             this.actionEnded.emit(data);
         }, this);
-        this.__markerPen.strokeSegmentAdded.connect((data)=>{
+        this.__markerPen.strokeSegmentAdded.connect((data) => {
             this.actionOccuring.emit(data);
         }, this);
         this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
@@ -156,7 +157,7 @@ class GLViewport {
         this.__camera.viewMatChanged.connect(function(globalXfo) {
             this.updated.emit();
             this.viewChanged.emit({
-                interfaceType:'MouseAndKeyboard',
+                interfaceType: 'MouseAndKeyboard',
                 cameraXfo: globalXfo.toJSON()
             });
         }, this);
@@ -379,11 +380,10 @@ class GLViewport {
                 let ray = this.calcRayFromScreenPos(mousePos);
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                let color = new Color(1,0,0);
+                let color = new Color(1, 0, 0);
                 let thickness = this.__camera.focalDistance * 0.01;
                 this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
-            }
-            else {
+            } else {
                 let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
                 if (geomData != undefined && geomData.flags == 1) {
                     let drawItem = this.__renderer.getDrawItem(geomData.id);
@@ -631,6 +631,90 @@ class GLViewport {
         this.renderGeomDataFbo();
     }
 
+    __startTouch(touch) {
+        this.__ongoingTouches[touch.identifier] = {
+            identifier: touch.identifier,
+            pos: new Vec2(touch.pageX, touch.pageY)
+        };
+    }
+    __endTouch(touch) {
+        // let idx = this.__ongoingTouchIndexById(touch.identifier);
+        // this.__ongoingTouches.splice(idx, 1); // remove it; we're done
+        delete this.__ongoingTouches[touch.identifier];
+    }
+
+    // Touch events
+    onTouchStart(event) {
+        // console.log("onTouchStart");
+        event.preventDefault();
+        event.stopPropagation();
+        let touches = event.changedTouches;
+        for (let i = 0; i < touches.length; i++) {
+            this.__startTouch(touches[i]);
+        }
+        this.__camera.initDrag();
+    }
+
+    onTouchMove(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        // console.log("this.__manipMode:" + this.__manipMode);
+            
+        let touches = event.changedTouches;
+        if (touches.length == 1) {
+            let touch = touches[0];
+            let touchPos = new Vec2(touch.pageX, touch.pageY);
+            let touchData = this.__ongoingTouches[touch.identifier];
+            let dragVec = touchData.pos.subtract(touchPos);
+            this.__camera.orbit(dragVec, this);
+        } else if (touches.length == 2) {
+            let touch0 = touches[0];
+            let touchData0 = this.__ongoingTouches[touch0.identifier];
+            let touch1 = touches[1];
+            let touchData1 = this.__ongoingTouches[touch1.identifier];
+
+            let touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
+            let touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
+            let startSeparation = touchData1.pos.subtract(touchData0.pos)
+            let dragSeparation = touch1Pos.subtract(touch0Pos);
+            let separationDist = startSeparation.subtract(dragSeparation).length();
+            if(separationDist > startSeparation.length())
+                separationDist = -separationDist;
+
+            let touch0Drag = touch0Pos.subtract(touchData0.pos);
+            let touch1Drag = touch1Pos.subtract(touchData1.pos);
+            let dragVec = touch0Drag.add(touch1Drag);
+            // TODO: scale panning here.
+            dragVec.scaleInPlace(0.5);
+            this.__camera.panAndZoom(dragVec, separationDist * 0.001, this);
+        }
+    }
+
+    onTouchEnd(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let touches = event.changedTouches;
+        // switch (this.__manipMode) {
+        // case 'camera-manipulation':
+        //     let touch = touches[0];
+        //     let releasePos = new Vec2(touch.pageX, touch.pageY);
+        //     this.__camera.onDragEnd(event, releasePos, this);
+        //     break;
+        // }
+        for (let i = 0; i < touches.length; i++) {
+            this.__endTouch(touches[i]);
+        }
+    }
+    onTouchCancel(event) {
+        event.preventDefault();
+        console.log("touchcancel.");
+        let touches = event.changedTouches;
+        for (let i = 0; i < touches.length; i++) {
+            this.__endTouch(touches[i]);
+        }
+    }
+
+
     ////////////////////////////
     // Rendering
 
@@ -652,7 +736,7 @@ class GLViewport {
 
     draw(renderstate) {
         this.bindAndClear(renderstate);
-        
+
         renderstate.viewport = this;
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();

@@ -169,19 +169,41 @@ class Camera extends TreeItem {
 
     dolly(mouseDelta, viewport) {
         let dollyDist = mouseDelta.x * this.dollySpeed;
-
         let delta = new Xfo();
-        delta.tr.addInPlace(new Vec3(0, 0, 1).scale(dollyDist));
+        delta.tr.set(0, 0, dollyDist);
         this.globalXfo = this.__mouseDownCameraXfo.multiply(delta);
     }
 
-    onDragStart(event, mouseDownPos, viewport) {
+    panAndZoom(panDelta, dragDist, viewport) {
+
+        let xAxis = new Vec3(1, 0, 0);
+        let yAxis = new Vec3(0, 1, 0);
+
+        let cameraPlaneHeight = 2.0 * this.__focalDistance * Math.tan(0.5 * this.__fov);
+        let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
+        let delta = new Xfo();
+        delta.tr = xAxis.scale(-(panDelta.x / viewport.getWidth()) * cameraPlaneWidth)
+        delta.tr.addInPlace(yAxis.scale((panDelta.y / viewport.getHeight()) * cameraPlaneHeight));
+
+
+        let zoomDist = dragDist * this.__focalDistance;
+        this.focalDistance = this.__mouseDownFocalDist + zoomDist;
+        delta.tr.z += zoomDist;
+        this.globalXfo = this.__mouseDownCameraXfo.multiply(delta);
+    }
+
+    initDrag(mouseDownPos) {
         this.__mouseDownPos = mouseDownPos;
         this.__mouseDragDelta.set(0,0);
         this.__mouseDownCameraXfo = this.__globalXfo.clone();
         this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
         let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
         this.__mouseDownCameraTarget = this.__globalXfo.tr.add(targetOffset);
+        this.__mouseDownFocalDist = this.__focalDistance;
+    }
+
+    onDragStart(event, mouseDownPos, viewport) {
+        this.initDrag(mouseDownPos);
 
         if (event.altKey) {
             this.__manipulationState = 'pan';
@@ -234,10 +256,10 @@ class Camera extends TreeItem {
     }
 
     onWheel(event) {
-        let dollyDist = event.deltaY * -this.mouseWheelDollySpeed * this.__focalDistance;
-        this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(dollyDist));
-        this.focalDistance = this.__focalDistance + dollyDist;
-        this.globalXfo = this.__globalXfo;
+        let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
+        this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(zoomDist));
+        this.focalDistance = this.__focalDistance + zoomDist;
+        this.globalXfo = this.__globalXfo; 
     }
 
     __integrateVelocityChange(velChange){
@@ -314,6 +336,9 @@ class Camera extends TreeItem {
             this.__keyboardMovement = false;
         return true;
     }
+
+
+    /////////////////////////////
 
     frameView(viewport, treeItems) {
         let boundingBox = new Box3();
