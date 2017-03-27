@@ -45,12 +45,12 @@ let TestRenderLines = function() {
 let TestRenderCircle = function() {
     let div = addCanvas(350, 256);
 
-    let lines = new Visualive.Circle('lines', 2.0, 48);
+    let lines = new Visualive.Circle('lines', 2.0, 8);
     lines.lineThickness = 0.1;
 
     let lineThickness = lines.addVertexAttribute('lineThickness', Visualive.Float32);
     for(let i=0; i<lineThickness.length; i++)
-        lineThickness.setFloat32Value(i, i/lineThickness.length);
+        lineThickness.setFloat32Value(i, /*(i/lineThickness.length) */ 3.6);
 
     let material = new Visualive.FatLinesMaterial();
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);

@@ -40,85 +40,52 @@ class GLLines extends GLGeom {
 
             let vertexAttributes = this.__geom.getVertexAttributes();
 
-            let usePositionsTexture = true;
-            if (usePositionsTexture) {
-                let positions = vertexAttributes.positions;
-                let lineThickness = vertexAttributes.lineThickness;
+            let positions = vertexAttributes.positions;
+            let lineThickness = vertexAttributes.lineThickness;
 
-                let stride = 4; // The number of floats per draw item.
-                let size = positions.length * stride; // each 
-                let dataArray = new Float32Array(size);
-                for (let i = 0; i < positions.length; i++) {
-                    let pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
-                    pos.setFromOther(positions.getValueRef(i));
+            let stride = 4; // The number of floats per draw item.
+            let size = positions.length * stride; // each 
+            let dataArray = new Float32Array(size);
+            for (let i = 0; i < positions.length; i++) {
+                let pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
+                pos.setFromOther(positions.getValueRef(i));
 
-                    // The thickness of the line.
-                    if(lineThickness)
-                        dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i); 
-                    else
-                        dataArray[(i * 4) + 3] = 1.0;
-                }
-                this.__positionsTexture = new GLTexture2D(gl, {
-                    channels: 'RGBA',
-                    format: 'FLOAT',
-                    width: size / 4,
-                    /*each pixel has 4 floats*/
-                    height: 1,
-                    filter: 'NEAREST',
-                    wrap: 'CLAMP_TO_EDGE',
-                    data: dataArray,
-                    mipMapped: false
-                });
+                // The thickness of the line.
+                if(lineThickness)
+                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i); 
+                else
+                    dataArray[(i * 4) + 3] = 1.0;
+            }
+            this.__positionsTexture = new GLTexture2D(gl, {
+                channels: 'RGBA',
+                format: 'FLOAT',
+                width: size / 4,
+                /*each pixel has 4 floats*/
+                height: 1,
+                filter: 'NEAREST',
+                wrap: 'CLAMP_TO_EDGE',
+                data: dataArray,
+                mipMapped: false
+            });
 
-                let indexArray = new Float32Array(indices.length);
-                for (let i = 0; i < indices.length; i++)
-                    indexArray[i] = indices[i];
-                let indexBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+            let indexArray = new Float32Array(indices.length);
+            for (let i = 0; i < indices.length; i++){
+                let seqentialIndex;
+                if(i % 2 == 0)
+                    seqentialIndex = (i > 0) && (indices[i] == indices[i-1]);
+                else
+                    seqentialIndex = (i < indices.length-1) && (indices[i] == indices[i+1]);
+                indexArray[i] = (seqentialIndex ? 1 : 0) + indices[i] * 2.0;
+            }
+            let indexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
 
-                this.__glattrbuffers.segmentIndices = {
-                    buffer: indexBuffer,
-                    instanced: true,
-                    dimension: 2,
-                    count: indices.length / 2
-                }
-            } else {
-                function setupVertexAttr(attrName, attr, attrBuffer, offset) {
-                    let dimension = attr.numFloat32Elements;
-
-                    this.__glattrbuffers[attrName] = {
-                        buffer: attrBuffer,
-                        instanced: true,
-                        dimension: dimension,
-                        count: attr.length,
-                        offset: offset
-                    }
-                }
-                let attrName = 'positions';
-                let attr = vertexAttributes.positions;
-                let data = attr.data;
-                let dimension = attr.numFloat32Elements;
-
-                let paddedData = new Float32Array((indices.length + 1) * (dimension + 1));
-                for (let i = 0; i < indices.length; i++){
-                    for (let j = 0; j < dimension; j++)
-                        paddedData[(i * (dimension+1)) + j] = data[(indices[i] * dimension) + j];
-
-                    paddedData[(i * (dimension+1)) + 3] = 1.0;
-                }
-
-                let lastIndex = indices[indices.length - 2];
-                for (let i = 0; i < dimension; i++)
-                    paddedData[(paddedData.length - (dimension+1)) + i] = data[(indices[lastIndex] * dimension) + i];
-                paddedData[paddedData.length - 1] = 1.0;
-
-                let attrBuffer = gl.createBuffer();
-                gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, paddedData, gl.STATIC_DRAW);
-
-                setupVertexAttr.call(this, attrName + '_0', attr, attrBuffer, 0);
-                setupVertexAttr.call(this, attrName + '_1', attr, attrBuffer, 1);
+            this.__glattrbuffers.segmentIndices = {
+                buffer: indexBuffer,
+                instanced: true,
+                dimension: 2,
+                count: indices.length / 2
             }
 
 
@@ -166,51 +133,30 @@ class GLLines extends GLGeom {
 
             let vertexAttributes = this.__geom.getVertexAttributes();
 
-            let usePositionsTexture = true;
-            if (usePositionsTexture) {
-                let positions = vertexAttributes.positions;
-                let lineThickness = vertexAttributes.lineThickness;
+            let positions = vertexAttributes.positions;
+            let lineThickness = vertexAttributes.lineThickness;
 
-                let stride = 4; // The number of floats per draw item.
-                let size = positions.length * stride; // each 
-                let dataArray = new Float32Array(size);
-                for (let i = 0; i < positions.length; i++) {
-                    let pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
-                    pos.setFromOther(positions.getValueRef(i));
+            let stride = 4; // The number of floats per draw item.
+            let size = positions.length * stride; // each 
+            let dataArray = new Float32Array(size);
+            for (let i = 0; i < positions.length; i++) {
+                let pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
+                pos.setFromOther(positions.getValueRef(i));
 
-                    // The thickness of the line.
-                    if(lineThickness)
-                        dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i); 
-                    else
-                        dataArray[(i * 4) + 3] = 1.0;
-                }
-                this.__positionsTexture.resize(size / 4, 1, dataArray);
-
-                let indexArray = new Float32Array(indices.length);
-                for (let i = 0; i < indices.length; i++)
-                    indexArray[i] = indices[i];
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers.segmentIndices.buffer);
-                gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+                // The thickness of the line.
+                if(lineThickness)
+                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i); 
+                else
+                    dataArray[(i * 4) + 3] = 1.0;
             }
-            else{
+            this.__positionsTexture.resize(size / 4, 1, dataArray);
 
-                let vertexAttributes = this.__geom.getVertexAttributes();
-                for (let attrName in vertexAttributes) {
-                    let attr = vertexAttributes[attrName];
-                    let data = attr.data;
-                    let dimension = attr.numFloat32Elements;
-
-                    let paddedData = new Float32Array((indices.length + 1) * dimension);
-                    for (let i = 0; i < indices.length; i++)
-                        for (let j = 0; j < dimension; j++)
-                            paddedData[(i * dimension) + j] = data[(indices[i] * dimension) + j];
-                    let lastIndex = indices[indices.length - 2];
-                    for (let i = 0; i < dimension; i++)
-                        paddedData[(paddedData.length - dimension) + i] = data[(indices[lastIndex] * dimension) + i];
-                    gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers[attrName + '_0'].buffer);
-                    gl.bufferData(gl.ARRAY_BUFFER, paddedData, gl.STATIC_DRAW);
-                }
-            }
+            let indexArray = new Float32Array(indices.length);
+            for (let i = 0; i < indices.length; i++)
+                indexArray[i] = indices[i];
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers.segmentIndices.buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+            
 
         } else {
 
