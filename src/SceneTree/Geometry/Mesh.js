@@ -200,43 +200,6 @@ class Mesh extends BaseGeom {
     }
 
 
-    // populateTriangulatedIndices(splitData, trianglulatedIndices, indicesOffset, attrOffset) {
-
-    //     let trisCount = this.computeNumTriangles();
-
-    //     let faceVertexIndices = this.getFaceVertexIndices();
-    //     let faceCounts = this.getFaceCounts();
-    //     let faceCount = this.getNumFaces();
-    //     let numVertsPerFace = 3;
-    //     let numFaceVertices = 0;
-    //     let faceIndex = 0;
-    //     let triangleVertex = 0;
-    //     let addTriangleVertexIndex = function(vertex, faceIndex) {
-    //         if (vertex in splitIndices && faceIndex in splitIndices[vertex])
-    //             vertex = numUnSplitVertices + splitIndices[vertex][faceIndex];
-    //         trianglulatedIndices[indicesOffset+triangleVertex] = attrOffset+vertex;
-    //         triangleVertex++;
-    //     }
-    //     for (let fc of faceCounts) {
-    //         for (let i = 0; i < fc; i++) {
-    //             for (let j = 0; j < numVertsPerFace; j++) {
-    //                 if (j >= 3) {
-    //                     // For each aditional triangle, we have to add 2 indices.
-    //                     addTriangleVertexIndex(faceVertexIndices[numFaceVertices + (i * numVertsPerFace)], faceIndex);
-    //                     addTriangleVertexIndex(faceVertexIndices[numFaceVertices + (i * numVertsPerFace) + (j - 1)], faceIndex);
-    //                 }
-    //                 addTriangleVertexIndex(faceVertexIndices[numFaceVertices + (i * numVertsPerFace) + j], faceIndex);
-    //             }
-    //             faceIndex++;
-    //         }
-    //         numFaceVertices += fc * numVertsPerFace;
-    //         numVertsPerFace++;
-    //     }
-    //     return trianglulatedIndices
-
-    // }
-
-
     computeHardEdgesIndices() {
         let hardEdges = [];
         let addEdge = (index) => {
@@ -314,16 +277,17 @@ class Mesh extends BaseGeom {
             // Note: cluster transforms often cannot be inverted due to zero scaling
             // on the axis.
             let normalMatrix = mat4.clone();
-            for(let i=0; i<normalMatrix.__data.length; i++)
-                normalMatrix.__data[i] *= 100.0;
+            // for(let i=0; i<normalMatrix.__data.length; i++)
+            //     normalMatrix.__data[i] *= 100.0;
             if(sclY < 0.0001)
                 normalMatrix.yAxis = normalMatrix.zAxis.cross(normalMatrix.xAxis).normalize();
             normalMatrix = normalMatrix.inverse();
             if(!normalMatrix)
                 continue;
             normalMatrix.transposeInPlace();
-            for(let i=0; i<normalMatrix.__data.length; i++)
-                normalMatrix.__data[i] /= 100.0;
+            // for(let i=0; i<normalMatrix.__data.length; i++)
+            //     normalMatrix.__data[i] /= 100.0;
+
 
             let clusterData = clustersData[clusterId];
             let scaleFactor = (1 << 16)-1;
@@ -346,12 +310,13 @@ class Mesh extends BaseGeom {
                 // normal_z = Math.pow(normal_z, EXPONENT);
                 normal_x = normal_x * Math.HALF_PI;
                 normal_z = normal_z * Math.HALF_PI;
-                let normal = new Vec3(
+                let normal = normalMatrix.transformVec3(new Vec3(
                     Math.sin(normal_x),
                     Math.cos(normal_x),
                     Math.sin(normal_z)
-                    );
-                normalsAttr.setValue(voffset + j, normalMatrix.transformVec3(normal));
+                    ));
+                normal.normalizeInPlace();
+                normalsAttr.setValue(voffset + j, normal);
 
                 let texCoord = new Vec2( (pos_x * sclX) / clusterData.texelSize, (pos_z * sclZ) / clusterData.texelSize);
                 lightmapCoordsAttr.setValue(voffset + j, texCoord.add(uvAtlasPos));

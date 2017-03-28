@@ -32,8 +32,6 @@ class MarkerpenTool {
 
     startStroke(xfo, color, thickness, id) {
         let lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
-        lineGeom.lineThickness = thickness;
-        // lineGeom.lineThickness = 0;
 
         let used = 0;
         let vertexCount = 100;
@@ -41,8 +39,10 @@ class MarkerpenTool {
         lineGeom.setNumSegments(vertexCount-1);
         lineGeom.vertices.setValue(used, xfo.tr);
 
+        lineGeom.lineThickness = thickness;
         let material = new FatLinesMaterial('stroke');
         // let material = new LinesMaterial('stroke');
+        // lineGeom.lineThickness = 0;
         material.color = color;
 
         // TODO: Cristyan, add a guid here...

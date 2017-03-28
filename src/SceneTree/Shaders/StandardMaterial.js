@@ -57,7 +57,7 @@ void main(void) {
     mat4 modelMatrix = getModelMatrix();
     v_worldPos =  (modelMatrix * vec4(positions, 1.0)).xyz;
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
+    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
 
     v_viewPos       = -viewPos;
