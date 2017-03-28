@@ -135,4 +135,8 @@ class UserAvatar {
     destroy() {
         this.__treeItem.destroy();
     }
-}
+};
+
+export {
+    UserAvatar
+};

@@ -95,13 +95,7 @@ class VRViewport {
         this.__vrPresentButton.addEventListener('click', function() {
             _this.togglePresenting();
         });
-
-        // VRSamplesUtil.addButton("Reset Pose", "R", null, function() {
-        //     this.__vrDisplay.resetPose();
-        // });
-        // if (this.__vrDisplay.capabilities.canPresent)
-        //     vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "media/icons/cardboard64.png", onVRRequestPresent);
-
+        
         let vrViewport = this;
 
         function vrdisplaypresentchange() {
