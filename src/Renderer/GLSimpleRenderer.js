@@ -38,7 +38,7 @@ class GLSimpleRenderer extends GLRenderer {
 
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
-        this.addPass(new GLNormalsPass(this.__gl, this.__collector));
+        // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
     }
 
     getShaderPreprocessorDirectives() {
