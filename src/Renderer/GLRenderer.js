@@ -331,6 +331,7 @@ class GLRenderer {
             this.__glcanvas.height = this.__glcanvas.offsetHeight * window.devicePixelRatio;
         }
         this.__onResizeViewports();
+        this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
         this.requestRedraw();
 
     }
@@ -528,7 +529,7 @@ class GLRenderer {
     // VR Setup
 
     supportsVR() {
-        return navigator.getVRDisplays;
+        return navigator.getVRDisplays != null;
     }
 
     __setupVRViewport() {

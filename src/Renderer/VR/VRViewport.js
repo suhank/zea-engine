@@ -38,7 +38,7 @@ class VRViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
         this.__renderer = renderer;
         this.__vrDisplay = vrDisplay;
-        this.__bgColor = new Color(0.94, 0.94, 0.94);
+        this.__bgColor = renderer.getViewport().getBackgroundColor();
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
@@ -389,26 +389,26 @@ class VRViewport {
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
-                            // this.setMoveMode(true);
+                            this.setMoveMode(true);
 
-                            if (this.__stageBig) {
-                                // Place the user inside the volume at the position of the
-                                // controller at 1:1 scale.
-                                this.__stageXfoBig = this.__stageXfo.clone();
-                                let stageXfoSmall = this.__stageXfo.clone();
-                                stageXfoSmall.tr = vrController.getTipGlobalXfo().tr;
-                                stageXfoSmall.tr.y -= 0.5;
-                                stageXfoSmall.sc.set(1, 1, 1);
-                                this.setXfo(stageXfoSmall, false);
-                            }
+                            // if (this.__stageBig) {
+                            //     // Place the user inside the volume at the position of the
+                            //     // controller at 1:1 scale.
+                            //     this.__stageXfoBig = this.__stageXfo.clone();
+                            //     let stageXfoSmall = this.__stageXfo.clone();
+                            //     stageXfoSmall.tr = vrController.getTipGlobalXfo().tr;
+                            //     stageXfoSmall.tr.y -= 0.5;
+                            //     stageXfoSmall.sc.set(1, 1, 1);
+                            //     this.setXfo(stageXfoSmall, false);
+                            // }
 
                         } else if (vals[1] < 0) {
-                            // this.setMoveMode(false);
+                            this.setMoveMode(false);
 
-                            if (!this.__stageBig) {
-                                // Restore the user to thier previous scale
-                                this.setXfo(this.__stageXfoBig, true);
-                            }
+                            // if (!this.__stageBig) {
+                            //     // Restore the user to thier previous scale
+                            //     this.setXfo(this.__stageXfoBig, true);
+                            // }
                         }
                     }, this);
 
@@ -456,6 +456,7 @@ class VRViewport {
         // Emit a signal for the shared session.
         let data = {
             interfaceType: 'Vive',
+            stageXfo: this.__stageXfo.toJSON(),
             headXfo: this.__vrhead.getTreeItem().globalXfo.toJSON(),
             controllers: []
         }

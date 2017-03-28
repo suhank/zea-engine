@@ -108,7 +108,18 @@ class SessionClient {
         timeline.setAttribute('max', '100');
         timeline.setAttribute('step', '0.1');
         timeline.setAttribute('value', "0");
-        timeline.style.width = (div.clientWidth - 420) + 'px';
+        let rhsSpace = 360;
+        let resizeTimeline = () => {
+            timeline.style.width = (div.clientWidth - rhsSpace) + 'px';
+        }
+        renderer.vrViewportSetup.connect(() => {
+            rhsSpace = 480;
+            resizeTimeline();
+        });
+        renderer.resized.connect((width, height) => {
+            resizeTimeline();
+        })
+        resizeTimeline();
         div.appendChild(timeline);
 
         let socketOpen = false;
@@ -273,7 +284,6 @@ class SessionClient {
             }
         };
 
-
         function play() {
             duration = new Date(replayData.stopTime) - new Date(replayData.startTime);
             rate = duration / 100;
@@ -284,11 +294,11 @@ class SessionClient {
         }
 
         function stop() {
-            start = null;
-            duration = null;
+            // start = null;
+            // duration = null;
             isPlay = false;
-            stateByTime(0);
-            timeline.value = 0;
+            // stateByTime(0);
+            // timeline.value = 0;
             window.cancelAnimationFrame(requestId);
         }
 
@@ -309,6 +319,7 @@ class SessionClient {
 
             if (!playWait && !isPlay) {
                 if (replayData && replayData.id == recSelector.value) {
+                    playButton.innerText = 'Stop';
                     play();
                 } else {
                     playWait = true;
@@ -323,6 +334,7 @@ class SessionClient {
             }
 
             if (isPlay) {
+                playButton.innerText = 'Play';
                 stop();
             }
         };
@@ -344,11 +356,13 @@ class SessionClient {
 
         renderer.viewChanged.connect(function(data) {
             // convert the data type to raw json and send to the server.
-            ws.send(JSON.stringify({
-                type: 'viewChanged',
-                room: sessionID,
-                data: data
-            }));
+            if (socketOpen) {
+                ws.send(JSON.stringify({
+                    type: 'viewChanged',
+                    room: sessionID,
+                    data: data
+                }));
+            }
         });
 
         // renderer.getViewport().mouseMoved.connect(function (event, mousePos, ray) {
@@ -361,7 +375,6 @@ class SessionClient {
             // console.log("mousePos:", mousePos.toJSON());
             // console.log("ray:", ray.toJSON());
             if (socketOpen) {
-
                 ws.send(JSON.stringify({
                     type: 'pointerMoved',
                     room: sessionID,
@@ -372,13 +385,16 @@ class SessionClient {
 
 
         renderer.getViewport().actionStarted.connect((data) => {
-            ws.send(JSON.stringify(data));
+            if (socketOpen)
+                ws.send(JSON.stringify(data));
         });
         renderer.getViewport().actionOccuring.connect((data) => {
-            ws.send(JSON.stringify(data));
+            if (socketOpen)
+                ws.send(JSON.stringify(data));
         });
         renderer.getViewport().actionEnded.connect((data) => {
-            ws.send(JSON.stringify(data));
+            if (socketOpen)
+                ws.send(JSON.stringify(data));
         });
 
 
@@ -452,6 +468,9 @@ class SessionClient {
                     case 'viewChanged':
                         onUserViewChange(currentEvent.client, currentEvent.data);
                         break;
+                    case 'pointerMoved':
+                        onUserPointerMoved(currentEvent.client, currentEvent.data);
+                        break;
                     case 'strokeStarted':
                         {
                             let xfo = new Visualive.Xfo();
@@ -478,63 +497,22 @@ class SessionClient {
         ////////////////////////////////////////////////////////
         // Handle connections from other users.
 
-
         let onUserConnected = (id, color) => {
-            let shape = new Visualive.Cuboid('Camera', 1.1, 2.0, 1.0);
-            let material = new Visualive.StandardMaterial('user#Material');
-            material.baseColor = new Visualive.Color(color.r, color.g, color.b);
-
-            let geomItem = new Visualive.GeomItem(id, shape, material);
-            avatarsTreeRoot.addChild(geomItem);
-            let userMarker = new Visualive.MarkerpenTool('client' + id);
-            avatarsTreeRoot.addChild(userMarker.getTreeItem());
-
-            connectedUsers[id] = {
-                geomItem,
-                userMarker
-            };
+            connectedUsers[id] = new UserAvatar(id, color, avatarsTreeRoot);
         };
 
         let onUserDisconnected = (id) => {
-            let geomItem = connectedUsers[id].geomItem;
-            avatarsTreeRoot.removeChildByHandle(geomItem);
+            connectedUsers[id].destroy();
             delete connectedUsers[id];
             renderer.requestRedraw();
         };
 
         let onUserViewChange = (id, data) => {
-            let viewChangeData = data.data;
-            switch (viewChangeData.interfaceType) {
-                case 'MouseAndKeyboard':
-                    {
-                        let geomItem = connectedUsers[id].geomItem;
-                        const xfo = new Visualive.Xfo();
-                        xfo.fromJSON(viewChangeData.cameraXfo);
-                        geomItem.localXfo = xfo;
-                    }
-                    break;
-                case 'TabletAndFinger':
-
-                    break;
-                case 'Vive':
-                    {
-                        let geomItem = connectedUsers[id].geomItem;
-                        const xfo = new Visualive.Xfo();
-                        xfo.fromJSON(viewChangeData.headXfo);
-                        geomItem.localXfo = xfo;
-                        // leftHandXfo = data.leftHand;
-                        // rightHandXfo = data.rightHand;
-                    }
-
-                    break;
-                case 'Daydream':
-
-                    break;
-                case 'Occulus':
-
-                    break;
-            }
-
+            connectedUsers[id].onViewChange(data.data);
+            renderer.requestRedraw();
+        };
+        let onUserPointerMoved = (id, data) => {
+            connectedUsers[id].pointerMoved(data);
             renderer.requestRedraw();
         };
 
