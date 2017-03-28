@@ -49,7 +49,7 @@ class SessionClient {
 
         let sessionID = getUrlVars()['id'];
         if (!sessionID) {
-            sessionID = this.generateSessionID();
+            sessionID = generateSessionID();
         }
 
         let div = renderer.getDiv();
@@ -411,7 +411,7 @@ class SessionClient {
             const duration = lastTime - init;
             const rate = duration / 100;
             const timeSet = percent * rate;
-            this.stateByTime(timeSet);
+            stateByTime(timeSet);
         }
 
         let resetState = () => {
