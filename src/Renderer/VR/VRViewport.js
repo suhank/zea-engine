@@ -2,6 +2,7 @@ import {
     isMobileDevice,
     Vec2,
     Vec3,
+    Quat,
     Mat4,
     Xfo,
     Color,
@@ -282,9 +283,23 @@ class VRViewport {
 
     startPresenting() {
         if (this.__vrDisplay.capabilities.canPresent) {
-            this.__vrPresentButton.innerText = 'Exit VR';
-            let camera = this.__renderer.getViewport().getCamera();
-            this.__vrhead.getTreeItem().globalXfo = camera.globalXfo.clone();
+
+            {
+                let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
+                let yaxis = xfo.ori.getYaxis();
+                let up = new Vec3(0,1,0);
+                let angle = yaxis.angleTo(up);
+                if(angle > 0.0001){
+                    let axis = yaxis.cross(up);
+                    let align = new Quat();
+                    align.setFromAxisAndAngle(axis, angle);
+                    xfo.ori = align.multiply(xfo.ori);
+                }
+                //if (!isMobileDevice()) {
+                //    xfo.tr.y = 0;
+                //}
+                this.setXfo(xfo);
+            }
             this.__vrDisplay.requestPresent([{
                 source: this.__renderer.getGLCanvas()
             }]).then(function() {}, function() {
@@ -296,7 +311,6 @@ class VRViewport {
     }
 
     stopPresenting() {
-        this.__vrPresentButton.innerText = 'Enter VR';
         if (!this.__vrDisplay.isPresenting)
             return;
 
@@ -330,6 +344,7 @@ class VRViewport {
     __onVRPresentChange() {
         if (this.__vrDisplay.isPresenting) {
 
+
             let leftEye = this.__vrDisplay.getEyeParameters("left");
             let rightEye = this.__vrDisplay.getEyeParameters("right");
             this.__hmdCanvasSize = [
@@ -341,19 +356,18 @@ class VRViewport {
                 vrController.setVisible(true);
 
             if (this.__vrDisplay.capabilities.hasExternalDisplay) {
-                // VRSamplesUtil.removeButton(vrPresentButton);
-                // vrPresentButton = VRSamplesUtil.addButton("Exit VR", "E", "media/icons/cardboard64.png", onVRExitPresent);
+                this.__vrPresentButton.innerText = 'Exit VR';
             }
 
             this.startContinuousDrawing();
         } else {
+
             this.__vrhead.setVisible(false);
             for (let vrController of this.__vrControllers)
                 vrController.setVisible(false);
 
             if (this.__vrDisplay.capabilities.hasExternalDisplay) {
-                // VRSamplesUtil.removeButton(vrPresentButton);
-                // vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "media/icons/cardboard64.png", onVRRequestPresent);
+                this.__vrPresentButton.innerText = 'Enter VR';
             }
             this.stopContinuousDrawing();
         }
