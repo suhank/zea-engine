@@ -66,7 +66,7 @@ class VRViewport {
         this.__vrControllers = [];
         this.__vrTools = {};
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
-        this.__renderer.getCollector().finalize();// TODO this should not be explicit.
+        this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
 
         this.__pressedButtons = 0;
         this.__currentTool = undefined;
@@ -81,6 +81,19 @@ class VRViewport {
                 console.warn("VRDisplay did not report stageParameters");
             }
         }
+
+        this.__vrPresentButton = document.createElement('button');
+        this.__vrPresentButton.style.position = 'fixed';
+        this.__vrPresentButton.style.right = '20px';
+        this.__vrPresentButton.style.bottom = '20px';
+        this.__vrPresentButton.style.padding = '20px';
+        this.__vrPresentButton.innerText = 'Enter VR';
+        renderer.getDiv().appendChild(this.__vrPresentButton);
+
+        let _this = this;
+        this.__vrPresentButton.addEventListener('click', function() {
+            _this.togglePresenting();
+        });
 
         // VRSamplesUtil.addButton("Reset Pose", "R", null, function() {
         //     this.__vrDisplay.resetPose();
@@ -120,19 +133,19 @@ class VRViewport {
         this.actionOccuring = new Signal();
 
 
-        if(!isMobileDevice()){
+        if (!isMobileDevice()) {
             this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
 
             let markerpenTool = this.__vrTools['Markerpen'];
-            markerpenTool.strokeStarted.connect((data)=>{
+            markerpenTool.strokeStarted.connect((data) => {
                 this.actionStarted.emit(data);
             }, this);
-            markerpenTool.strokeEnded.connect((data)=>{
+            markerpenTool.strokeEnded.connect((data) => {
                 this.actionEnded.emit(data);
             }, this);
-            markerpenTool.strokeSegmentAdded.connect((data)=>{
+            markerpenTool.strokeSegmentAdded.connect((data) => {
                 this.actionOccuring.emit(data);
             }, this);
         }
@@ -268,21 +281,25 @@ class VRViewport {
     }
 
     startPresenting() {
-        if(this.__vrDisplay.capabilities.canPresent){
+        if (this.__vrDisplay.capabilities.canPresent) {
+            this.__vrPresentButton.innerText = 'Exit VR';
+            let camera = this.__renderer.getViewport().getCamera();
+            this.__vrhead.getTreeItem().globalXfo = camera.globalXfo.clone();
             this.__vrDisplay.requestPresent([{
                 source: this.__renderer.getGLCanvas()
             }]).then(function() {}, function() {
                 console.warn("requestPresent failed.");
             });
-        }
-        else{
+        } else {
             console.warn("VRViewport does not support presenting.");
         }
     }
 
     stopPresenting() {
+        this.__vrPresentButton.innerText = 'Enter VR';
         if (!this.__vrDisplay.isPresenting)
             return;
+
         this.__vrDisplay.exitPresent().then(function() {}, function() {
             console.warn("exitPresent failed.");
         });
@@ -349,7 +366,7 @@ class VRViewport {
 
     updateHeadAndControllers() {
 
-        if(!this.__frameData.pose)
+        if (!this.__frameData.pose)
             return;
 
         this.__vrhead.update(this.__frameData);
@@ -366,21 +383,21 @@ class VRViewport {
                         if (vals[1] > 0) {
                             // this.setMoveMode(true);
 
-                            if(this.__stageBig){
+                            if (this.__stageBig) {
                                 // Place the user inside the volume at the position of the
                                 // controller at 1:1 scale.
                                 this.__stageXfoBig = this.__stageXfo.clone();
                                 let stageXfoSmall = this.__stageXfo.clone();
                                 stageXfoSmall.tr = vrController.getTipGlobalXfo().tr;
                                 stageXfoSmall.tr.y -= 0.5;
-                                stageXfoSmall.sc.set(1,1,1);
+                                stageXfoSmall.sc.set(1, 1, 1);
                                 this.setXfo(stageXfoSmall, false);
                             }
 
                         } else if (vals[1] < 0) {
                             // this.setMoveMode(false);
 
-                            if(!this.__stageBig){
+                            if (!this.__stageBig) {
                                 // Restore the user to thier previous scale
                                 this.setXfo(this.__stageXfoBig, true);
                             }
@@ -415,7 +432,7 @@ class VRViewport {
 
                     this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
                     this.__vrControllers[id] = vrController;
-                    this.__renderer.getCollector().finalize();// TODO this should not be explicit.
+                    this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
                 }
                 this.__vrControllers[id].update(gamepad);
                 id++;
@@ -432,9 +449,9 @@ class VRViewport {
         let data = {
             interfaceType: 'Vive',
             headXfo: this.__vrhead.getTreeItem().globalXfo.toJSON(),
-            controllers:[]
+            controllers: []
         }
-        for(let controller of this.__vrControllers){
+        for (let controller of this.__vrControllers) {
             data.controllers.push({
                 xfo: controller.getTreeItem().globalXfo.toJSON()
             });
@@ -462,7 +479,7 @@ class VRViewport {
 
 
         this.__vrDisplay.getFrameData(this.__frameData);
-        if(!this.__projectionMatriciesUpdated){
+        if (!this.__projectionMatriciesUpdated) {
             this.__leftProjectionMatrix.setDataArray(this.__frameData.leftProjectionMatrix);
             this.__rightProjectionMatrix.setDataArray(this.__frameData.rightProjectionMatrix);
             this.__projectionMatriciesUpdated = true;

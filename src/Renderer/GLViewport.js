@@ -648,6 +648,10 @@ class GLViewport {
         // console.log("onTouchStart");
         event.preventDefault();
         event.stopPropagation();
+
+        if(Object.keys(this.__ongoingTouches).length == 0)
+            this.__manipMode = undefined;
+
         let touches = event.changedTouches;
         for (let i = 0; i < touches.length; i++) {
             this.__startTouch(touches[i]);
@@ -661,7 +665,7 @@ class GLViewport {
         // console.log("this.__manipMode:" + this.__manipMode);
             
         let touches = event.changedTouches;
-        if (touches.length == 1) {
+        if (touches.length == 1 && this.__manipMode != "panAndZoom") {
             let touch = touches[0];
             let touchPos = new Vec2(touch.pageX, touch.pageY);
             let touchData = this.__ongoingTouches[touch.identifier];
@@ -675,18 +679,17 @@ class GLViewport {
 
             let touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
             let touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
-            let startSeparation = touchData1.pos.subtract(touchData0.pos)
-            let dragSeparation = touch1Pos.subtract(touch0Pos);
-            let separationDist = startSeparation.subtract(dragSeparation).length();
-            if(separationDist > startSeparation.length())
-                separationDist = -separationDist;
+            let startSeparation = touchData1.pos.subtract(touchData0.pos).length();
+            let dragSeparation = touch1Pos.subtract(touch0Pos).length();
+            let separationDist = startSeparation - dragSeparation;
 
             let touch0Drag = touch0Pos.subtract(touchData0.pos);
             let touch1Drag = touch1Pos.subtract(touchData1.pos);
             let dragVec = touch0Drag.add(touch1Drag);
             // TODO: scale panning here.
             dragVec.scaleInPlace(0.5);
-            this.__camera.panAndZoom(dragVec, separationDist * 0.001, this);
+            this.__camera.panAndZoom(dragVec, separationDist * 0.002, this);
+            this.__manipMode = "panAndZoom";
         }
     }
 

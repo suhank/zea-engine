@@ -340,6 +340,10 @@ class GLRenderer {
             vp.resize(this.__glcanvas.width, this.__glcanvas.height);
     }
 
+    getDiv(){
+        return this.__glcanvasDiv;
+    }
+
     setupWebGL(canvasDiv, webglOptions) {
         this.__glcanvas = document.createElement('canvas');
         this.__glcanvas.style.width = '100%';
