@@ -387,11 +387,11 @@ class VRViewport {
                 if (!this.__vrControllers[id]) {
 
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
-                    vrController.touchpadTouched.connect((vals) => {
+                   vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
                             this.setMoveMode(true);
 
-                            // if (this.__stageBig) {
+                            // if(this.__stageBig){
                             //     // Place the user inside the volume at the position of the
                             //     // controller at 1:1 scale.
                             //     this.__stageXfoBig = this.__stageXfo.clone();
@@ -405,7 +405,7 @@ class VRViewport {
                         } else if (vals[1] < 0) {
                             this.setMoveMode(false);
 
-                            // if (!this.__stageBig) {
+                            // if(!this.__stageBig){
                             //     // Restore the user to thier previous scale
                             //     this.setXfo(this.__stageXfoBig, true);
                             // }

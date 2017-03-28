@@ -205,7 +205,7 @@ class Mat3 extends AttrValue {
         );
     }
 
-    multiplyVec3(vec3) {
+    transformVec3(vec3) {
       return new Vec3(
         this.__data[0] * vec3.x + this.__data[1] * vec3.y + this.__data[2] * vec3.z,
         this.__data[3] * vec3.x + this.__data[4] * vec3.y + this.__data[5] * vec3.z,

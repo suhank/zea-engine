@@ -54,7 +54,7 @@ class GLProbe extends ImageAtlas {
                 let Xi = hammersley(i, numSamples);
                 let offset = i * 3;
                 dataArray[offset+0] = Xi[0];
-                dataArray[offset+2] = Xi[2];
+                dataArray[offset+1] = Xi[1];
             }
             gl['Hammersley'+numSamples] = new GLTexture2D(gl, {
                 channels: 'RGB',

@@ -307,22 +307,23 @@ class Mesh extends BaseGeom {
             let uvAtlasPos = new Vec2(reader.loadFloat32Array(2));
             let clusterId = reader.loadUInt32();
 
+            let sclX = mat4.xAxis.length();
+            let sclY = mat4.yAxis.length();
+            let sclZ = mat4.zAxis.length();
 
-            // if(i != 1)
-            //     continue;
-
-            let normalMatrix = mat4.toMat3();
-            let sizeX = mat4.xAxis.length();
-            let sizeZ = mat4.zAxis.length();
-
-            normalMatrix.xAxis.normalizeInPlace();
-            normalMatrix.zAxis.normalizeInPlace();
-            let xaxis = normalMatrix.xAxis;
-            let zaxis = normalMatrix.zAxis;
-            let yaxis = zaxis.cross(xaxis);
-            yaxis.normalizeInPlace();
-            normalMatrix.yAxis = yaxis;
+            // Note: cluster transforms often cannot be inverted due to zero scaling
+            // on the axis.
+            let normalMatrix = mat4.clone();
+            for(let i=0; i<normalMatrix.__data.length; i++)
+                normalMatrix.__data[i] *= 100.0;
+            if(sclY < 0.0001)
+                normalMatrix.yAxis = normalMatrix.zAxis.cross(normalMatrix.xAxis).normalize();
+            normalMatrix = normalMatrix.inverse();
+            if(!normalMatrix)
+                continue;
             normalMatrix.transposeInPlace();
+            for(let i=0; i<normalMatrix.__data.length; i++)
+                normalMatrix.__data[i] /= 100.0;
 
             let clusterData = clustersData[clusterId];
             let scaleFactor = (1 << 16)-1;
@@ -333,8 +334,9 @@ class Mesh extends BaseGeom {
                 let pos = new Vec3(pos_x, pos_y, pos_z);
                 vertices.setValue(voffset + j, mat4.transformVec3(pos));
 
-                let normal_x =  clusterData.normals[(j * 2) + 0] / 255.0;
-                let normal_z =  clusterData.normals[(j * 2) + 1] / 255.0;
+                // Note: 127 represents 0.5, so our range of values is actualluy 0..124
+                let normal_x =  clusterData.normals[(j * 2) + 0] / 254.0;
+                let normal_z =  clusterData.normals[(j * 2) + 1] / 254.0;
 
                 // Decompress the scalar value
                 normal_x = (normal_x - 0.5) * 2.0;
@@ -349,9 +351,9 @@ class Mesh extends BaseGeom {
                     Math.cos(normal_x),
                     Math.sin(normal_z)
                     );
-                normalsAttr.setValue(voffset + j, normalMatrix.multiplyVec3(normal));
+                normalsAttr.setValue(voffset + j, normalMatrix.transformVec3(normal));
 
-                let texCoord = new Vec2( (pos_x * sizeX) / clusterData.texelSize, (pos_z * sizeZ) / clusterData.texelSize);
+                let texCoord = new Vec2( (pos_x * sclX) / clusterData.texelSize, (pos_z * sclZ) / clusterData.texelSize);
                 lightmapCoordsAttr.setValue(voffset + j, texCoord.add(uvAtlasPos));
 
                 // for debugging.
