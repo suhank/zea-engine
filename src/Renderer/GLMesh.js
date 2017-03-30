@@ -94,7 +94,7 @@ class GLMesh extends GLGeom {
             let dimension = attr.numFloat32Elements;
             let count = data.length / dimension;
 
-            // if(attrName == "texCoords"){
+            // if(attrName == "lightmapCoords"){
             //     console.log(attrName + ":"  + data);
             //     let temp = attr.generateSplitValues(attr.getSplits(), attr.getSplitCount());
             //     for(let i=0;i<temp.length; i+=dimension){

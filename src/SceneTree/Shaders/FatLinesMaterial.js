@@ -56,6 +56,7 @@ void main(void) {
 
     vec4 pos_0 = modelViewMatrix * vec4(data_0.xyz, 1.0);
     vec4 pos_1 = modelViewMatrix * vec4(data_1.xyz, 1.0);
+    // Note: multiply the per-vertex line thickness with the line thickness uniform value;
     float lineThickness_0 = _lineThickness * data_0.w;
     float lineThickness_1 = _lineThickness * data_1.w;
 

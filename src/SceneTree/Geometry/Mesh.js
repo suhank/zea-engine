@@ -274,19 +274,30 @@ class Mesh extends BaseGeom {
             let sclY = mat4.yAxis.length();
             let sclZ = mat4.zAxis.length();
 
-            // Note: cluster transforms often cannot be inverted due to zero scaling
-            // on the axis.
-            let normalMatrix = mat4.clone();
-            // for(let i=0; i<normalMatrix.__data.length; i++)
-            //     normalMatrix.__data[i] *= 100.0;
-            if(sclY < 0.0001)
-                normalMatrix.yAxis = normalMatrix.zAxis.cross(normalMatrix.xAxis).normalize();
-            normalMatrix = normalMatrix.inverse();
-            if(!normalMatrix)
-                continue;
-            normalMatrix.transposeInPlace();
-            // for(let i=0; i<normalMatrix.__data.length; i++)
-            //     normalMatrix.__data[i] /= 100.0;
+            let normalMatrix;
+            if(true)
+            {
+                normalMatrix = mat4.toMat3();
+                normalMatrix.xAxis.normalizeInPlace();
+                normalMatrix.zAxis.normalizeInPlace();
+                let xaxis = normalMatrix.xAxis;
+                let zaxis = normalMatrix.zAxis;
+                let yaxis = zaxis.cross(xaxis);
+                yaxis.normalizeInPlace();
+                normalMatrix.yAxis = yaxis;
+                normalMatrix.transposeInPlace();
+            }
+            else
+            {
+                normalMatrix = mat4.clone();
+                // Note: cluster transforms often cannot be inverted due to zero scaling
+                // on the axis.
+                if(sclY < 0.0001)
+                    normalMatrix.yAxis = normalMatrix.zAxis.cross(normalMatrix.xAxis).normalize();
+                if(!normalMatrix.invertInPlace())
+                    continue;
+                normalMatrix.transposeInPlace();
+            }
 
 
             let clusterData = clustersData[clusterId];
@@ -305,6 +316,7 @@ class Mesh extends BaseGeom {
                 // Decompress the scalar value
                 normal_x = (normal_x - 0.5) * 2.0;
                 normal_z = (normal_z - 0.5) * 2.0;
+                
                 // const EXPONENT = 3.0;
                 // normal_x = Math.pow(normal_x, EXPONENT);
                 // normal_z = Math.pow(normal_z, EXPONENT);

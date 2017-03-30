@@ -55,6 +55,7 @@ class VRViewport {
 
         this.__frameData = new VRFrameData();
         this.__stageTreeItem = new TreeItem('VRStage');
+        this.__stageTreeItem.setVisible(false);
         this.__projectionMatriciesUpdated = false;
 
         this.__leftViewMatrix = new Mat4();
@@ -278,6 +279,9 @@ class VRViewport {
     startPresenting() {
         if (this.__vrDisplay.capabilities.canPresent) {
 
+            this.__stageTreeItem.setVisible(true);
+
+            if (isMobileDevice())
             {
                 let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
                 let yaxis = xfo.ori.getYaxis();
@@ -289,7 +293,6 @@ class VRViewport {
                     align.setFromAxisAndAngle(axis, angle);
                     xfo.ori = align.multiply(xfo.ori);
                 }
-                //if (!isMobileDevice()) {
                 //    xfo.tr.y = 0;
                 //}
                 this.setXfo(xfo);
@@ -308,6 +311,7 @@ class VRViewport {
         if (!this.__vrDisplay.isPresenting)
             return;
 
+        this.__stageTreeItem.setVisible(false);
         this.__vrDisplay.exitPresent().then(function() {}, function() {
             console.warn("exitPresent failed.");
         });
@@ -457,12 +461,12 @@ class VRViewport {
         let data = {
             interfaceType: 'Vive',
             stageXfo: this.__stageXfo.toJSON(),
-            headXfo: this.__vrhead.getTreeItem().globalXfo.toJSON(),
+            headXfo: this.__vrhead.getTreeItem().localXfo.toJSON(),
             controllers: []
         }
         for (let controller of this.__vrControllers) {
             data.controllers.push({
-                xfo: controller.getTreeItem().globalXfo.toJSON()
+                xfo: controller.getTreeItem().localXfo.toJSON()
             });
         }
         this.viewChanged.emit(data);

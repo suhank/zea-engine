@@ -1,4 +1,12 @@
 import {
+    Vec3,
+    Color,
+    Xfo
+} from '../Math';
+import {
+    TreeItem
+} from '../SceneTree';
+import {
     UserAvatar
 } from './UserAvatar';
 
@@ -14,6 +22,10 @@ let getUrlVars = () => {
     return vars;
 }
 
+function random(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
+
 let generateSessionID = () => {
     let words = [
         'sun',
@@ -24,14 +36,23 @@ let generateSessionID = () => {
         'tag',
         'view'
     ];
-
-    function random(min, max) {
-        return Math.floor(Math.random() * max) + min;
-    }
-
     let sessionID = words[random(0, 6)] + words[random(0, 6)].toUpperCase() + words[random(0, 6)];
     window.location.replace('?id=' + sessionID);
     return sessionID;
+}
+
+let avatarColors = [
+    new Color(0.0, 0.15, 0.15),
+    new Color(0.0, 0.85, 0.15),
+    new Color(0.0, 0.15, 0.85),
+    new Color(0.0, 0.85, 0.85),
+    new Color(0.75, 0.15, 0.15),
+    new Color(0.75, 0.85, 0.15),
+    new Color(0.75, 0.15, 0.85),
+    new Color(0.75, 0.85, 0.85)
+];
+let randomAvatarColor = () => {
+    return avatarColors[random(0, avatarColors.length)];
 }
 
 class SessionClient {
@@ -121,6 +142,9 @@ class SessionClient {
         })
         resizeTimeline();
         div.appendChild(timeline);
+        
+        timeline.style.display = 'none';
+        playButton.style.display = 'none';
 
         let socketOpen = false;
 
@@ -160,7 +184,7 @@ class SessionClient {
             ws.send(JSON.stringify({
                 type: 'join',
                 room: sessionID,
-                color: Visualive.Color.random(0.5).toJSON()
+                color: randomAvatarColor()
             }))
         };
         ws.onmessage = function(message) {
@@ -171,7 +195,7 @@ class SessionClient {
             }
         };
 
-        let avatarsTreeRoot = new Visualive.TreeItem("avatarsTreeRoot");
+        let avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
         //scene.getRoot().addChild(avatarsTreeRoot);
         renderer.getCollector().addTreeItem(avatarsTreeRoot);
         this.__avatarsTreeRoot = avatarsTreeRoot;
@@ -200,7 +224,8 @@ class SessionClient {
                 option.value = id;
                 option.innerHTML = id;
                 recSelector.appendChild(option);
-            })
+            });
+            recSelector.selectedIndex = message.data.recordings.length;
         };
 
 
@@ -219,9 +244,9 @@ class SessionClient {
 
         listeners.strokeStarted = function(message) {
             if (myId == message.data.emitter) return;
-            let xfo = new Visualive.Xfo();
+            let xfo = new Xfo();
             xfo.fromJSON(message.data.xfo);
-            let color = new Visualive.Color();
+            let color = new Color();
             color.fromJSON(message.data.color);
             let thickness = message.data.thickness;
             console.log(message);
@@ -230,7 +255,7 @@ class SessionClient {
 
         listeners.strokeSegmentAdded = function(message) {
             if (myId == message.data.emitter) return;
-            let xfo = new Visualive.Xfo();
+            let xfo = new Xfo();
             xfo.fromJSON(message.data.xfo);
             onUserStrokeSegmentAdded(message.data.emitter, xfo, message.data.id);
         };
@@ -278,6 +303,8 @@ class SessionClient {
         listeners.replay = function(message) {
             replayData = message.data;
             recSelector.value = replayData.id;
+            playButton.style.display = 'block';
+            timeline.style.display = 'block';
             timeline.value = 0;
             if (playWait) {
                 play();
@@ -290,7 +317,9 @@ class SessionClient {
             playWait = false;
             isPlay = true;
             start = Date.now();
-            requestId = requestAnimationFrame(step);
+            // requestId = requestAnimationFrame(step);
+            renderer.redrawOccured.connect(step);
+            renderer.startContinuousDrawing();
         }
 
         function stop() {
@@ -299,7 +328,9 @@ class SessionClient {
             isPlay = false;
             // stateByTime(0);
             // timeline.value = 0;
-            window.cancelAnimationFrame(requestId);
+            // window.cancelAnimationFrame(requestId);
+            renderer.stopContinuousDrawing();
+            renderer.redrawOccured.disconnect(step);
         }
 
         function step() {
@@ -307,7 +338,7 @@ class SessionClient {
             if (actualMS < duration) {
                 stateByTime(actualMS);
                 timeline.value = actualMS / rate;
-                requestId = requestAnimationFrame(step);
+                // requestId = requestAnimationFrame(step);
             } else {
                 stop();
             }
@@ -341,7 +372,11 @@ class SessionClient {
 
 
         recSelector.onchange = function(event) {
-            if (recSelector.value != 'new') {
+            if (recSelector.value == 'new') {
+                timeline.style.display = 'none';
+                playButton.style.display = 'none';
+            }
+            else{
                 ws.send(JSON.stringify({
                     type: 'requestReplay',
                     data: {
@@ -383,16 +418,15 @@ class SessionClient {
             }
         });
 
-
-        renderer.getViewport().actionStarted.connect((data) => {
+        renderer.actionStarted.connect((data) => {
             if (socketOpen)
                 ws.send(JSON.stringify(data));
         });
-        renderer.getViewport().actionOccuring.connect((data) => {
+        renderer.actionOccuring.connect((data) => {
             if (socketOpen)
                 ws.send(JSON.stringify(data));
         });
-        renderer.getViewport().actionEnded.connect((data) => {
+        renderer.actionEnded.connect((data) => {
             if (socketOpen)
                 ws.send(JSON.stringify(data));
         });
@@ -473,9 +507,9 @@ class SessionClient {
                         break;
                     case 'strokeStarted':
                         {
-                            let xfo = new Visualive.Xfo();
+                            let xfo = new Xfo();
                             xfo.fromJSON(currentEvent.data.xfo);
-                            let color = new Visualive.Color();
+                            let color = new Color();
                             color.fromJSON(currentEvent.data.color);
                             let thickness = currentEvent.data.thickness;
                             onUserStrokeStarted(currentEvent.client, xfo, color, thickness, currentEvent.data.id);
@@ -483,7 +517,7 @@ class SessionClient {
                         break;
                     case 'strokeSegmentAdded':
                         {
-                            let xfo = new Visualive.Xfo();
+                            let xfo = new Xfo();
                             xfo.fromJSON(currentEvent.data.xfo);
                             onUserStrokeSegmentAdded(currentEvent.client, xfo, currentEvent.data.id);
                         }

@@ -39,6 +39,7 @@ class GLSimpleRenderer extends GLRenderer {
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
         // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
+        this.__debugLightmaps = false;
     }
 
     getShaderPreprocessorDirectives() {
@@ -59,6 +60,9 @@ class GLSimpleRenderer extends GLRenderer {
                     this.__viewport.getCamera().frameView([scene.getRoot()]);
                 else
                     this.__viewport.getCamera().frameView(selection);
+                break;
+            case 'k':
+                this.__debugLightmaps = !this.__debugLightmaps;
                 break;
             case ' ':
                 if(this.__vrViewport)
@@ -83,6 +87,9 @@ class GLSimpleRenderer extends GLRenderer {
     }
 
     drawScene(renderstate, vrView = false) {
+
+        renderstate.debugLightmaps = this.__debugLightmaps;
+
         super.drawScene(renderstate);
 
         // if (!vrView) {
@@ -105,11 +112,15 @@ class GLSimpleRenderer extends GLRenderer {
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
                     if(this.__stats)
                         this.__stats.end();
+                    this.redrawOccured.emit();
                     return;
                 }
             }
-            else
-                this.__vrViewport.updateHeadAndControllers();
+            // Cannot upate the view, else it sends signals which
+            // end up propagating through the websocket. 
+            // TODO: Make the head invisible till active
+            // else
+            //     this.__vrViewport.updateHeadAndControllers();
         }
 
         for (let vp of this.__viewports)
@@ -118,6 +129,7 @@ class GLSimpleRenderer extends GLRenderer {
         if(this.__stats)
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+        this.redrawOccured.emit();
     }
 };
 

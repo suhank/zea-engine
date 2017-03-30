@@ -405,8 +405,11 @@ class GLVisualiveRenderer extends GLRenderer {
                     return;
                 }
             }
-            else
-                this.__vrViewport.updateHeadAndControllers();
+            // Cannot upate the view, else it sends signals which
+            // end up propagating through the websocket. 
+            // TODO: Make the head invisible till active
+            // else
+            //     this.__vrViewport.updateHeadAndControllers();
         }
 
         for (let vp of this.__viewports)
@@ -415,6 +418,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if(this.__stats)
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+        this.redrawOccured.emit();
     }
 
     ////////////////////////////

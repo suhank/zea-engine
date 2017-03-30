@@ -105,6 +105,7 @@ class GLRenderer {
         // simply emit the new VR data.
         this.viewChanged = new Signal();
         this.pointerMoved = new Signal();
+        this.redrawOccured = new Signal();
 
         // Stroke Signals
         this.actionStarted = new Signal();
@@ -152,8 +153,8 @@ class GLRenderer {
                         let logo = new Image();
                         logo.src = URL.createObjectURL(new Blob([this.__resources['LogoSmall.png'].buffer]));
                         logo.style.position = 'absolute';
-                        logo.style.bottom = '10px';
-                        logo.style.right = '10px';
+                        logo.style.top = '10px';
+                        logo.style.left = '10px';
                         canvasDiv.appendChild(logo);
                     }
 
@@ -576,12 +577,16 @@ class GLRenderer {
     }
 
     startContinuousDrawing() {
+        if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
+            return;
 
         let renderer = this;
 
         function onAnimationFrame() {
-            if (renderer.isContinuouslyDrawing())
-                window.requestAnimationFrame(onAnimationFrame);
+            if (renderer.isContinuouslyDrawing()){
+                if(!renderer.getVRViewport() || !renderer.getVRViewport().isContinuouslyDrawing())
+                    window.requestAnimationFrame(onAnimationFrame);
+            }
             renderer.draw();
         }
 
@@ -655,6 +660,8 @@ class GLRenderer {
         if (this.__stats)
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+
+        this.redrawOccured.emit();
     }
 };
 

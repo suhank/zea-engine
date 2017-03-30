@@ -22,8 +22,8 @@ class UserAvatar {
         this.__parentTreeItem = parentTreeItem;
 
         this.__treeItem = new TreeItem(id);
-        this.__material = new Visualive.StandardMaterial('user#Material');
-        this.__material.baseColor = new Visualive.Color(color.r, color.g, color.b);
+        this.__material = new FlatMaterial('user'+id+'Material');
+        this.__material.baseColor = new Color(color.r, color.g, color.b);
 
         this.setMouseAndCameraRepresentation();
         this.__parentTreeItem.addChild(this.__treeItem);
@@ -36,8 +36,9 @@ class UserAvatar {
 
     setMouseAndCameraRepresentation() {
         this.__treeItem.removeAllChildren();
-        let shape = new Visualive.Cuboid('Camera', 1.1, 2.0, 1.0);
-        let geomItem = new Visualive.GeomItem(this.__id, shape, this.__material);
+        this.__treeItem.localXfo = new Xfo();
+        let shape = new Cuboid('Camera', 0.1, 0.1, 0.2);
+        let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
         this.__currentViewMode = 'MouseAndKeyboard';
         this.__controllers = [];
@@ -45,8 +46,9 @@ class UserAvatar {
 
     setTabletAndFingerRepresentation() {
         this.__treeItem.removeAllChildren();
-        let shape = new Visualive.Cuboid('Camera', 1.1, 2.0, 1.0);
-        let geomItem = new Visualive.GeomItem(this.__id, shape, this.__material);
+        this.__treeItem.localXfo = new Xfo();
+        let shape = new Cuboid('Camera', 0.1, 0.1, 0.2);
+        let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
         this.__currentViewMode = 'TabletAndFinger';
         this.__controllers = [];
@@ -54,8 +56,9 @@ class UserAvatar {
 
     setViveRepresentation(data) {
         this.__treeItem.removeAllChildren();
-        let shape = new Visualive.Cuboid('Camera', 0.16, 0.24, 0.2);
-        let geomItem = new Visualive.GeomItem(this.__id, shape, this.__material);
+        this.__treeItem.localXfo = new Xfo();
+        let shape = new Cuboid('Camera', 0.16, 0.24, 0.2);
+        let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
 
         this.__handle = new Cuboid('VRControllerHandle', 0.04, 0.025, 0.16);
@@ -77,7 +80,7 @@ class UserAvatar {
                 this.__treeItem.addChild(handleItem);
                 this.__controllers.push(handleItem);
             }
-            const controllerXfo = new Visualive.Xfo();
+            const controllerXfo = new Xfo();
             controllerXfo.fromJSON(data.controllers[i].xfo);
             this.__controllers[i].localXfo = controllerXfo;
         }
@@ -95,7 +98,7 @@ class UserAvatar {
                     if (this.__currentViewMode !== 'MouseAndKeyboard') {
                         this.setMouseAndCameraRepresentation(data);
                     }
-                    const xfo = new Visualive.Xfo();
+                    const xfo = new Xfo();
                     xfo.fromJSON(data.cameraXfo);
                     this.__treeItem.getChild(0).localXfo = xfo;
                 }
@@ -112,9 +115,9 @@ class UserAvatar {
                         this.setViveRepresentation(data);
                     }
 
-                    const stageXfo = new Visualive.Xfo();
+                    const stageXfo = new Xfo();
                     stageXfo.fromJSON(data.stageXfo);
-                    const headXfo = new Visualive.Xfo();
+                    const headXfo = new Xfo();
                     headXfo.fromJSON(data.headXfo);
                     this.__treeItem.localXfo = stageXfo;
                     this.__treeItem.getChild(0).localXfo = headXfo;

@@ -381,7 +381,7 @@ class GLViewport {
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                 let color = new Color(1, 0, 0);
-                let thickness = this.__camera.focalDistance * 0.01;
+                let thickness = this.__camera.focalDistance * 0.002;
                 this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
             } else {
                 let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
