@@ -60,10 +60,10 @@ void main(void) {
     v_clusterID = clusterIDs;
 #endif
 
-    //vec4 pos = vec4((lightmapCoords + v_lightmapCoordsOffset), 0.0, 1.0);
-    vec4 pos = vec4(positions, 1.0);
+    //vec4 pos = vec4((lightmapCoords + v_lightmapCoordsOffset), 0., 1.);
+    vec4 pos = vec4(positions, 1.);
 
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = mat4(1.);// = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     vec4 viewPos = modelViewMatrix * pos;
@@ -170,9 +170,6 @@ void main(void) {
     float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
     float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
     vec3 emission       = toLinear(_emission.xyz);//getColorParamValue(_emission, _emissionTex, _emissionTexConnected, texCoords).xyz;
-
-    // reflectance *= 0.2;
-
 
     vec2 lightmapCoords = v_lightmapCoord;
 #ifdef ENABLE_LIGHTMAPS
