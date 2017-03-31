@@ -15,6 +15,7 @@ import {
     parseHdr
 } from '../external/parse-hdr.js';
 
+
 class HDRImage2D extends Image2D {
     constructor(name, url, isStream) {
         super({

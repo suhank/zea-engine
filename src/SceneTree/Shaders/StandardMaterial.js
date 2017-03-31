@@ -72,6 +72,7 @@ void main(void) {
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
     gl_Position     = projectionMatrix * viewPos;
+
 }
 `);
 
@@ -169,6 +170,8 @@ void main(void) {
     float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
     float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
     vec3 emission       = toLinear(_emission.xyz);//getColorParamValue(_emission, _emissionTex, _emissionTexConnected, texCoords).xyz;
+
+    // reflectance *= 0.2;
 
 
     vec2 lightmapCoords = v_lightmapCoord;
