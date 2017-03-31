@@ -38,11 +38,9 @@ uniform mat4 projectionMatrix;
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-#ifdef ENABLE_LIGHTMAPS
 attribute float clusterIDs;
 uniform vec2 lightmapSize;
 varying float v_clusterID;
-#endif
 
 /* VS Outputs */
 varying vec3 v_worldPos;
@@ -71,6 +69,7 @@ void main(void) {
     v_worldPos      = (modelMatrix * pos).xyz;
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
+
     gl_Position     = projectionMatrix * viewPos;
 
 }
@@ -91,7 +90,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_lightmapCoord;
 varying vec2 v_lightmapCoordsOffset;
 
-#ifdef ENABLE_LIGHTMAPS
 varying float v_clusterID;
 
 uniform sampler2D lightmap; // 0
@@ -99,6 +97,8 @@ uniform vec2 lightmapSize;
 uniform bool debugLightmapTexelSize;
 
 <%include file="debugColors.glsl"/>
+
+#ifdef ENABLE_LIGHTMAPS
 <%include file="GGX_Specular.glsl"/>
 
 #endif
@@ -112,10 +112,12 @@ uniform float planeDist;
 uniform float planeAngle;
 
 uniform color _baseColor;
+uniform float _opacity;
+
+#ifdef ENABLE_LIGHTMAPS
 uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
 
-uniform float _opacity;
 //uniform sampler2D _opacityTex;
 //uniform bool _opacityTexConnected;
 
@@ -139,6 +141,7 @@ uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
 //uniform float _normalScale;
 
+#endif
 
 float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
@@ -161,37 +164,43 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 
 void main(void) {
 
-    // Planare YZ projection for texturing, repeating every meter.
-    vec2 texCoords = v_worldPos.xz * 0.2;
-
-    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoords);
-    float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
-    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoords);
-    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
-    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
-    vec3 emission       = toLinear(_emission.xyz);//getColorParamValue(_emission, _emissionTex, _emissionTexConnected, texCoords).xyz;
-
     vec2 lightmapCoords = v_lightmapCoord;
-#ifdef ENABLE_LIGHTMAPS
-    if(debugLightmapTexelSize)
-    {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_lightmapCoordsOffset;
-        float total = floor(coord_texelSpace.x) +
-                      floor(coord_texelSpace.y);
-                      
-        vec3 clustercolor = getDebugColor(v_clusterID);
-
-        if(mod(total,2.0)==0.0)
-            baseColor = vec4(clustercolor, 1.0);
-    }
-#endif
 
     vec3 surfacePos = -v_viewPos.xyz;
     vec3 viewNormal = v_viewNormal;
     if(viewNormal.x == 0.0 && viewNormal.y == 0.0 && viewNormal.z == 0.0){
-        gl_FragColor = vec4(baseColor.rgb, 1);
+        gl_FragColor = vec4(_baseColor.rgb, 1);
     }
     else{
+
+#ifdef ENABLE_LIGHTMAPS
+        // Planar YZ projection for texturing, repeating every meter.
+        vec2 texCoords = v_worldPos.xz * 0.2;
+
+        vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoords);
+        float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
+        float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoords);
+        float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
+        float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
+        vec3 emission       = toLinear(_emission.xyz);//getColorParamValue(_emission, _emissionTex, _emissionTexConnected, texCoords).xyz;
+
+#else
+        vec4 baseColor = toLinear(_baseColor);
+        float opacity       = _opacity;
+
+#endif
+
+        if(debugLightmapTexelSize)
+        {
+            vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_lightmapCoordsOffset;
+            float total = floor(coord_texelSpace.x) +
+                          floor(coord_texelSpace.y);
+                          
+            vec3 clustercolor = getDebugColor(v_clusterID);
+
+            if(mod(total,2.0)==0.0)
+                baseColor = vec4(clustercolor, 1.0);
+        }
 
 #ifdef ENABLE_CROSS_SECTIONS
         // Only do cross sections on opaque surfaces. 
@@ -223,12 +232,13 @@ void main(void) {
         viewNormal = normalize(viewNormal);
         vec3 surfacePos = -v_viewPos.xyz;
 
+
+#ifdef ENABLE_LIGHTMAPS
+
         if(_normalTexConnected){
             vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
             viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
         }
-
-#ifdef ENABLE_LIGHTMAPS
  
         vec3 albedoLinear = baseColor.rgb;  
 

@@ -259,7 +259,6 @@ class GLCollector {
             this.addTreeItem(childItem);
         }
 
-
         treeItem.childAdded.connect(this.__childAdded, this);
         treeItem.destructing.connect(() => {
             treeItem.childAdded.disconnect(this.__childAdded, this);

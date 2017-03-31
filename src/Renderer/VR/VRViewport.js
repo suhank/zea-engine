@@ -2,6 +2,7 @@ import {
     isMobileDevice,
     Vec2,
     Vec3,
+    Quat,
     Mat4,
     Xfo,
     Color,
@@ -37,7 +38,7 @@ class VRViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
         this.__renderer = renderer;
         this.__vrDisplay = vrDisplay;
-        this.__bgColor = new Color(0.94, 0.94, 0.94);
+        this.__bgColor = renderer.getViewport().getBackgroundColor();
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
@@ -54,6 +55,7 @@ class VRViewport {
 
         this.__frameData = new VRFrameData();
         this.__stageTreeItem = new TreeItem('VRStage');
+        this.__stageTreeItem.setVisible(false);
         this.__projectionMatriciesUpdated = false;
 
         this.__leftViewMatrix = new Mat4();
@@ -66,7 +68,7 @@ class VRViewport {
         this.__vrControllers = [];
         this.__vrTools = {};
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
-        this.__renderer.getCollector().finalize();// TODO this should not be explicit.
+        this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
 
         this.__pressedButtons = 0;
         this.__currentTool = undefined;
@@ -82,12 +84,19 @@ class VRViewport {
             }
         }
 
-        // VRSamplesUtil.addButton("Reset Pose", "R", null, function() {
-        //     this.__vrDisplay.resetPose();
-        // });
-        // if (this.__vrDisplay.capabilities.canPresent)
-        //     vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "media/icons/cardboard64.png", onVRRequestPresent);
+        this.__vrPresentButton = document.createElement('button');
+        this.__vrPresentButton.style.position = 'fixed';
+        this.__vrPresentButton.style.right = '20px';
+        this.__vrPresentButton.style.bottom = '20px';
+        this.__vrPresentButton.style.padding = '20px';
+        this.__vrPresentButton.innerText = 'Enter VR';
+        renderer.getDiv().appendChild(this.__vrPresentButton);
 
+        let _this = this;
+        this.__vrPresentButton.addEventListener('click', function() {
+            _this.togglePresenting();
+        });
+        
         let vrViewport = this;
 
         function vrdisplaypresentchange() {
@@ -120,19 +129,19 @@ class VRViewport {
         this.actionOccuring = new Signal();
 
 
-        if(!isMobileDevice()){
+        if (!isMobileDevice()) {
             this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
 
             let markerpenTool = this.__vrTools['Markerpen'];
-            markerpenTool.strokeStarted.connect((data)=>{
+            markerpenTool.strokeStarted.connect((data) => {
                 this.actionStarted.emit(data);
             }, this);
-            markerpenTool.strokeEnded.connect((data)=>{
+            markerpenTool.strokeEnded.connect((data) => {
                 this.actionEnded.emit(data);
             }, this);
-            markerpenTool.strokeSegmentAdded.connect((data)=>{
+            markerpenTool.strokeSegmentAdded.connect((data) => {
                 this.actionOccuring.emit(data);
             }, this);
         }
@@ -268,14 +277,32 @@ class VRViewport {
     }
 
     startPresenting() {
-        if(this.__vrDisplay.capabilities.canPresent){
+        if (this.__vrDisplay.capabilities.canPresent) {
+
+            this.__stageTreeItem.setVisible(true);
+
+            if (isMobileDevice())
+            {
+                let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
+                let yaxis = xfo.ori.getYaxis();
+                let up = new Vec3(0,1,0);
+                let angle = yaxis.angleTo(up);
+                if(angle > 0.0001){
+                    let axis = yaxis.cross(up);
+                    let align = new Quat();
+                    align.setFromAxisAndAngle(axis, angle);
+                    xfo.ori = align.multiply(xfo.ori);
+                }
+                //    xfo.tr.y = 0;
+                //}
+                this.setXfo(xfo);
+            }
             this.__vrDisplay.requestPresent([{
                 source: this.__renderer.getGLCanvas()
             }]).then(function() {}, function() {
                 console.warn("requestPresent failed.");
             });
-        }
-        else{
+        } else {
             console.warn("VRViewport does not support presenting.");
         }
     }
@@ -283,6 +310,8 @@ class VRViewport {
     stopPresenting() {
         if (!this.__vrDisplay.isPresenting)
             return;
+
+        this.__stageTreeItem.setVisible(false);
         this.__vrDisplay.exitPresent().then(function() {}, function() {
             console.warn("exitPresent failed.");
         });
@@ -313,6 +342,7 @@ class VRViewport {
     __onVRPresentChange() {
         if (this.__vrDisplay.isPresenting) {
 
+
             let leftEye = this.__vrDisplay.getEyeParameters("left");
             let rightEye = this.__vrDisplay.getEyeParameters("right");
             this.__hmdCanvasSize = [
@@ -324,19 +354,18 @@ class VRViewport {
                 vrController.setVisible(true);
 
             if (this.__vrDisplay.capabilities.hasExternalDisplay) {
-                // VRSamplesUtil.removeButton(vrPresentButton);
-                // vrPresentButton = VRSamplesUtil.addButton("Exit VR", "E", "media/icons/cardboard64.png", onVRExitPresent);
+                this.__vrPresentButton.innerText = 'Exit VR';
             }
 
             this.startContinuousDrawing();
         } else {
+
             this.__vrhead.setVisible(false);
             for (let vrController of this.__vrControllers)
                 vrController.setVisible(false);
 
             if (this.__vrDisplay.capabilities.hasExternalDisplay) {
-                // VRSamplesUtil.removeButton(vrPresentButton);
-                // vrPresentButton = VRSamplesUtil.addButton("Enter VR", "E", "media/icons/cardboard64.png", onVRRequestPresent);
+                this.__vrPresentButton.innerText = 'Enter VR';
             }
             this.stopContinuousDrawing();
         }
@@ -349,7 +378,7 @@ class VRViewport {
 
     updateHeadAndControllers() {
 
-        if(!this.__frameData.pose)
+        if (!this.__frameData.pose)
             return;
 
         this.__vrhead.update(this.__frameData);
@@ -362,7 +391,7 @@ class VRViewport {
                 if (!this.__vrControllers[id]) {
 
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
-                   /* vrController.touchpadTouched.connect((vals) => {
+                   vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
                             this.setMoveMode(true);
 
@@ -373,7 +402,7 @@ class VRViewport {
                             //     let stageXfoSmall = this.__stageXfo.clone();
                             //     stageXfoSmall.tr = vrController.getTipGlobalXfo().tr;
                             //     stageXfoSmall.tr.y -= 0.5;
-                            //     stageXfoSmall.sc.set(1,1,1);
+                            //     stageXfoSmall.sc.set(1, 1, 1);
                             //     this.setXfo(stageXfoSmall, false);
                             // }
 
@@ -385,7 +414,7 @@ class VRViewport {
                             //     this.setXfo(this.__stageXfoBig, true);
                             // }
                         }
-                    }, this);*/
+                    }, this);
 
                     vrController.buttonPressed.connect(() => {
                         this.__pressedButtons++;
@@ -415,7 +444,7 @@ class VRViewport {
 
                     this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
                     this.__vrControllers[id] = vrController;
-                    this.__renderer.getCollector().finalize();// TODO this should not be explicit.
+                    this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
                 }
                 this.__vrControllers[id].update(gamepad);
                 id++;
@@ -431,12 +460,13 @@ class VRViewport {
         // Emit a signal for the shared session.
         let data = {
             interfaceType: 'Vive',
-            headXfo: this.__vrhead.getTreeItem().globalXfo.toJSON(),
-            controllers:[]
+            stageXfo: this.__stageXfo.toJSON(),
+            headXfo: this.__vrhead.getTreeItem().localXfo.toJSON(),
+            controllers: []
         }
-        for(let controller of this.__vrControllers){
+        for (let controller of this.__vrControllers) {
             data.controllers.push({
-                xfo: controller.getTreeItem().globalXfo.toJSON()
+                xfo: controller.getTreeItem().localXfo.toJSON()
             });
         }
         this.viewChanged.emit(data);
@@ -462,7 +492,7 @@ class VRViewport {
 
 
         this.__vrDisplay.getFrameData(this.__frameData);
-        if(!this.__projectionMatriciesUpdated){
+        if (!this.__projectionMatriciesUpdated) {
             this.__leftProjectionMatrix.setDataArray(this.__frameData.leftProjectionMatrix);
             this.__rightProjectionMatrix.setDataArray(this.__frameData.rightProjectionMatrix);
             this.__projectionMatriciesUpdated = true;

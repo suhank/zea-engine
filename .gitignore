@@ -35,3 +35,4 @@ build/Release
 
 ./Tests/Assets
 Tests/Assets/
+SteamServer/node_modules/

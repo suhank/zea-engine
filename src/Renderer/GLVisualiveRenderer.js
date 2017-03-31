@@ -98,7 +98,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
         this.__debugTextures = [undefined];
         this.__debugTextures.push(this.__viewports[0].__fwBuffer);
-        this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
+        // this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
 
         this.__shaderDirectives = {
             defines:`
@@ -405,8 +405,11 @@ class GLVisualiveRenderer extends GLRenderer {
                     return;
                 }
             }
-            else
-                this.__vrViewport.updateHeadAndControllers();
+            // Cannot upate the view, else it sends signals which
+            // end up propagating through the websocket. 
+            // TODO: Make the head invisible till active
+            // else
+            //     this.__vrViewport.updateHeadAndControllers();
         }
 
         for (let vp of this.__viewports)
@@ -415,6 +418,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if(this.__stats)
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+        this.redrawOccured.emit();
     }
 
     ////////////////////////////

@@ -75,7 +75,7 @@ class GLLines extends GLGeom {
                     seqentialIndex = (i > 0) && (indices[i] == indices[i-1]);
                 else
                     seqentialIndex = (i < indices.length-1) && (indices[i] == indices[i+1]);
-                indexArray[i] = (seqentialIndex ? 1 : 0) + indices[i] * 2.0;
+                indexArray[i] = (seqentialIndex ? 1 : 0) + (indices[i] * 2);
             }
             let indexBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
@@ -152,8 +152,14 @@ class GLLines extends GLGeom {
             this.__positionsTexture.resize(size / 4, 1, dataArray);
 
             let indexArray = new Float32Array(indices.length);
-            for (let i = 0; i < indices.length; i++)
-                indexArray[i] = indices[i];
+            for (let i = 0; i < indices.length; i++){
+                let seqentialIndex;
+                if(i % 2 == 0)
+                    seqentialIndex = (i > 0) && (indices[i] == indices[i-1]);
+                else
+                    seqentialIndex = (i < indices.length-1) && (indices[i] == indices[i+1]);
+                indexArray[i] = (seqentialIndex ? 1 : 0) + (indices[i] * 2);
+            }
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers.segmentIndices.buffer);
             gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
             

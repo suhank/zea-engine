@@ -1,0 +1,18 @@
+{
+  "name": "VLESteamingServer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "redux": "^3.6.0",
+    "shortid": "^2.2.8",
+    "uws": "^0.14.1"
+  }
+}

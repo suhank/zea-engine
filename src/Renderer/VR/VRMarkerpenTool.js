@@ -20,6 +20,7 @@ class VRMarkerpenTool extends MarkerpenTool {
 
         this.__tipOffsetXfo = new Xfo();
         this.__tipOffsetXfo.tr.set(0.0,-0.01, -0.03);
+        this.__color = new Color(1.0, 0.2, 0.2);
 
         this.__vrStage.getRenderer().getCollector().addTreeItem(this.getTreeItem());
     }
@@ -36,7 +37,7 @@ class VRMarkerpenTool extends MarkerpenTool {
         let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
         let sc = this.__vrStage.getXfo().sc;
         let lineThickness = 0.0075 * sc.x;
-        this.startStroke(xfo, new Color(1.0, 0.2, 0.2), lineThickness);
+        this.__currStrokeID = this.startStroke(xfo, this.__color, lineThickness);
     }
 
     endAction() {
@@ -45,7 +46,7 @@ class VRMarkerpenTool extends MarkerpenTool {
 
     applyAction() {
         let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
-        this.addSegmentToStroke(xfo);
+        this.addSegmentToStroke(this.__currStrokeID, xfo);
     }
 };
 

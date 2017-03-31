@@ -179,18 +179,70 @@ class Mat3 extends AttrValue {
     }
 
 
-    transposeInPlace() {
-        // If we are transposing ourselves we can skip a few steps but have to cache some values
-        let a01 = this.__data[1], a02 = this.__data[2], a12 = this.__data[5];
+    // returnse the inverted matrix
+    inverse() {
+        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2],
+            a10 = this.__data[3], a11 = this.__data[4], a12 = this.__data[5],
+            a20 = this.__data[6], a21 = this.__data[7], a22 = this.__data[8],
 
-        this.__data[1] = this.__data[3];
-        this.__data[2] = this.__data[6];
-        this.__data[3] = a01;
-        this.__data[5] = this.__data[7];
-        this.__data[6] = a02;
-        this.__data[7] = a12;
-    }
+            b01 = a22 * a11 - a12 * a21,
+            b11 = -a22 * a10 + a12 * a20,
+            b21 = a21 * a10 - a11 * a20,
 
+            // Calculate the determinant
+            det = a00 * b01 + a01 * b11 + a02 * b21;
+
+        if (!det) {
+            console.warn("Unable to invert Mat3");
+            return null;
+        }
+        det = 1.0 / det;
+
+        return new Mat3(
+            b01 * det,
+            (-a22 * a01 + a02 * a21) * det,
+            (a12 * a01 - a02 * a11) * det,
+            b11 * det,
+            (a22 * a00 - a02 * a20) * det,
+            (-a12 * a00 + a02 * a10) * det,
+            b21 * det,
+            (-a21 * a00 + a01 * a20) * det,
+            (a11 * a00 - a01 * a10) * det
+        );
+    };
+
+    invertInPlace() {
+        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2],
+            a10 = this.__data[3], a11 = this.__data[4], a12 = this.__data[5],
+            a20 = this.__data[6], a21 = this.__data[7], a22 = this.__data[8],
+
+            b01 = a22 * a11 - a12 * a21,
+            b11 = -a22 * a10 + a12 * a20,
+            b21 = a21 * a10 - a11 * a20,
+
+            // Calculate the determinant
+            det = a00 * b01 + a01 * b11 + a02 * b21;
+
+        if (!det) {
+            console.warn("Unable to invert Mat3");
+            return false;
+        }
+        det = 1.0 / det;
+
+        this.set(
+            b01 * det,
+            (-a22 * a01 + a02 * a21) * det,
+            (a12 * a01 - a02 * a11) * det,
+            b11 * det,
+            (a22 * a00 - a02 * a20) * det,
+            (-a12 * a00 + a02 * a10) * det,
+            b21 * det,
+            (-a21 * a00 + a01 * a20) * det,
+            (a11 * a00 - a01 * a10) * det
+        );
+        return true;
+    };
+    
     transpose() {
         return Mat4(
             this.__data[0],
@@ -203,6 +255,18 @@ class Mat3 extends AttrValue {
             this.__data[5],
             this.__data[8]
         );
+    }
+
+    transposeInPlace() {
+        // If we are transposing ourselves we can skip a few steps but have to cache some values
+        let a01 = this.__data[1], a02 = this.__data[2], a12 = this.__data[5];
+
+        this.__data[1] = this.__data[3];
+        this.__data[2] = this.__data[6];
+        this.__data[3] = a01;
+        this.__data[5] = this.__data[7];
+        this.__data[6] = a02;
+        this.__data[7] = a12;
     }
 
     transformVec3(vec3) {
