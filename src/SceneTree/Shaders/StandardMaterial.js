@@ -54,23 +54,24 @@ varying vec2 v_lightmapCoordsOffset;
 
 void main(void) {
 
-    mat4 modelMatrix = getModelMatrix();
-    v_worldPos =  (modelMatrix * vec4(positions, 1.0)).xyz;
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
-
-    v_viewPos       = -viewPos;
-    v_viewNormal    = normalMatrix * normals;
-    
 #ifdef ENABLE_LIGHTMAPS
     v_lightmapCoordsOffset = getLightmapCoordsOffset();
-    v_lightmapCoord = ((v_lightmapCoordsOffset+lightmapCoords) / lightmapSize);
-    // v_lightmapCoord *= 2.0;
+    v_lightmapCoord = (lightmapCoords + v_lightmapCoordsOffset) / lightmapSize;
     v_clusterID = clusterIDs;
 #endif
 
-    gl_Position = projectionMatrix * viewPos;
+    //vec4 pos = vec4((lightmapCoords + v_lightmapCoordsOffset), 0.0, 1.0);
+    vec4 pos = vec4(positions, 1.0);
+
+    mat4 modelMatrix = getModelMatrix();
+    mat4 modelViewMatrix = viewMatrix * modelMatrix;
+    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    vec4 viewPos = modelViewMatrix * pos;
+
+    v_worldPos      = (modelMatrix * pos).xyz;
+    v_viewPos       = -viewPos;
+    v_viewNormal    = normalMatrix * normals;
+    gl_Position     = projectionMatrix * viewPos;
 }
 `);
 

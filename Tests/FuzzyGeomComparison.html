@@ -36,6 +36,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let renderer = new Visualive.GLVisualiveRenderer(domElement, { resources:'../Resources/Resources.vlr' });
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
+        let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
+        normalsPass.normalLength = 2.2;
+        renderer.addPass(normalsPass);
+
         let async = new Visualive.Async();
         async.incAsyncCount(3);
         lightmap.loaded.connect(async.decAsyncCount, async);
@@ -55,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     setTimeout(function(){ 
-    loadBinMesh("Assets/CornellBox", "HDR_041_Path_Ref");//"");
+    loadBinMesh("Assets/FuzzyGeomComparison", "hdri_sky_02_sample");//"");
 
     }, 1000);
 });
