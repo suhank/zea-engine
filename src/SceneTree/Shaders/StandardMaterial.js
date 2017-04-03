@@ -61,7 +61,7 @@ void main(void) {
     //vec4 pos = vec4((lightmapCoords + v_lightmapCoordsOffset), 0., 1.);
     vec4 pos = vec4(positions, 1.);
 
-    mat4 modelMatrix = mat4(1.);// = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     vec4 viewPos = modelViewMatrix * pos;

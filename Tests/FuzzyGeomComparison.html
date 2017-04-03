@@ -11,55 +11,53 @@
         <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
         <script src="../external/Unpack.js"></script>
-        <script src="../lib/Visualive-0.0.6.js"></script>
+        <script src="../lib/Visualive-0.0.8.js"></script>
         
         <script type="text/javascript">
 
 // Note: launch Chrome with  --allow-file-access-from-files
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-    let loadBinMesh = (url, lightmapName)=>{
+    let loadBinMesh = (url)=>{
         let domElement = addCanvas();
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
 
-        let xfo = asset.localXfo;
-        xfo.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.5);
-        asset.localXfo = xfo;
-
         let scene = new Visualive.Scene();
-        let envMap =  new Visualive.HDRImage2D('pisa', url+'_'+lightmapName+'_Env.vlh');
-        scene.setEnvMap(envMap);
-        let lightmap =  new Visualive.HDRImage2D('lightmap', url+'_'+lightmapName+'_Lightmap.vlh');
-        scene.setLightMap('Default', lightmap);
 
-        let renderer = new Visualive.GLVisualiveRenderer(domElement, { resources:'../Resources/Resources.vlr' });
+        let renderer = new Visualive.GLSimpleRenderer(domElement, { resources:'../Resources/Resources.vlr' });
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
         let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
-        normalsPass.normalLength = 2.2;
+        normalsPass.normalLength = 2.5;
         renderer.addPass(normalsPass);
 
-        let async = new Visualive.Async();
-        async.incAsyncCount(3);
-        lightmap.loaded.connect(async.decAsyncCount, async);
-        envMap.loaded.connect(async.decAsyncCount, async);
-        asset.loaded.connect(async.decAsyncCount, async);
-        async.ready.connect(() => {
+        asset.loaded.connect(() => {
+
+            let traverse = (treeItem)=>{
+                if (treeItem instanceof Visualive.GeomItem) {
+                    treeItem.globalXfo = new Visualive.Xfo();
+                    treeItem.setGeomOffsetXfo(new Visualive.Xfo());
+                }
+                for (let childItem of treeItem.getChildren()) {
+                    traverse(childItem);
+                }
+            }
+            traverse(asset);
+
             scene.getRoot().addChild(asset);
             renderer.setScene(scene);
             renderer.frameAll();
             renderer.resumeDrawing();
-
-            let gui = addGUI(domElement);
-            renderer.addGUI(gui);
-
-            gui.add(renderer, 'planeDist', -3, 3);
         });
     }
 
     setTimeout(function(){ 
-    loadBinMesh("Assets/FuzzyGeomComparison", "hdri_sky_02_sample");//"");
+    // loadBinMesh("Assets/FuzzyGeomComparison");
+    //loadBinMesh("Assets/FuzzyGeomComparison2");
+    loadBinMesh("Assets/FuzzyGeomComparison3");
+    //loadBinMesh("Assets/NormalMatrixTest");
+
 
     }, 1000);
 });

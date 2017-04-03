@@ -2,6 +2,7 @@ import {
     Float32,
     Vec2,
     Vec3,
+    Quat,
     Mat4,
     Signal
 } from '../../Math';
@@ -275,7 +276,8 @@ class Mesh extends BaseGeom {
             let sclZ = mat4.zAxis.length();
 
             let normalMatrix;
-            if(true)
+            let normalQuat;
+            if(false)
             {
                 normalMatrix = mat4.toMat3();
                 normalMatrix.xAxis.normalizeInPlace();
@@ -287,7 +289,7 @@ class Mesh extends BaseGeom {
                 normalMatrix.yAxis = yaxis;
                 normalMatrix.transposeInPlace();
             }
-            else
+            else //if(false)
             {
                 normalMatrix = mat4.clone();
                 // Note: cluster transforms often cannot be inverted due to zero scaling
@@ -322,11 +324,12 @@ class Mesh extends BaseGeom {
                 // normal_z = Math.pow(normal_z, EXPONENT);
                 normal_x = normal_x * Math.HALF_PI;
                 normal_z = normal_z * Math.HALF_PI;
-                let normal = normalMatrix.transformVec3(new Vec3(
+                let normal = new Vec3(
                     Math.sin(normal_x),
                     Math.cos(normal_x),
                     Math.sin(normal_z)
-                    ));
+                    );
+                normal = normalMatrix.transformVec3(normal);
                 normal.normalizeInPlace();
                 normalsAttr.setValue(voffset + j, normal);
 

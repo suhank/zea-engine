@@ -341,6 +341,7 @@ class Quat extends AttrValue {
             this.__data[j] = (mat3.__data[j * 3 + i] + mat3.__data[i * 3 + j]) * fRoot;
             this.__data[k] = (mat3.__data[k * 3 + i] + mat3.__data[i * 3 + k]) * fRoot;
         }
+        this.normalizeInPlace();
     }
 
     isIdentity() {

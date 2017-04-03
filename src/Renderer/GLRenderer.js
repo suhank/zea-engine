@@ -158,7 +158,7 @@ class GLRenderer {
                         canvasDiv.appendChild(logo);
                     }
 
-                    //if (options.displayLoading)
+                    if (options.displayLoading && this.__drawSuspensionLevel > 0)
                     {
                         let loadingDiv = document.createElement("div");
                         loadingDiv.style.position = 'absolute';
