@@ -277,7 +277,7 @@ class Mesh extends BaseGeom {
 
             let normalMatrix;
             let normalQuat;
-            if(false)
+            if(true)
             {
                 normalMatrix = mat4.toMat3();
                 normalMatrix.xAxis.normalizeInPlace();
