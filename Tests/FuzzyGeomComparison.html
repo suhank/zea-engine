@@ -18,7 +18,7 @@
 // Note: launch Chrome with  --allow-file-access-from-files
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-    let loadBinMesh = (url)=>{
+    let loadBinMesh = (url, drawNormals=true, resetXforms=true)=>{
         let domElement = addCanvas();
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
@@ -28,10 +28,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let renderer = new Visualive.GLSimpleRenderer(domElement, { resources:'../Resources/Resources.vlr' });
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
-        let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
-        normalsPass.normalLength = 2.5;
-        renderer.addPass(normalsPass);
-
+        if(drawNormals){
+            let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
+            normalsPass.normalLength = 0.2;
+            renderer.addPass(normalsPass);
+        }
         asset.loaded.connect(() => {
 
             let traverse = (treeItem)=>{
@@ -43,7 +44,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     traverse(childItem);
                 }
             }
-            traverse(asset);
+            if(resetXforms)
+                traverse(asset);
 
             scene.getRoot().addChild(asset);
             renderer.setScene(scene);
@@ -53,9 +55,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     setTimeout(function(){ 
-    // loadBinMesh("Assets/FuzzyGeomComparison");
+    //loadBinMesh("Assets/FuzzyGeomComparison");
     //loadBinMesh("Assets/FuzzyGeomComparison2");
-    loadBinMesh("Assets/FuzzyGeomComparison3");
+    //loadBinMesh("Assets/FuzzyGeomComparison3");
+    //loadBinMesh("Assets/FuzzyGeomComparison4");
+    loadBinMesh("Assets/FuzzyGeomComparison5", false, false);
     //loadBinMesh("Assets/NormalMatrixTest");
 
 
