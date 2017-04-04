@@ -8,13 +8,13 @@ let env = require('yargs').argv.mode;
 let package_json = JSON.parse(fs.readFileSync('package.json'));
 let libraryName = package_json.name;
 
-let plugins = [], outputFile = package_json.name+'-'+package_json.version;
+let plugins = [], outputFile = package_json.name;
 
 let webpackOptions;
 let macrosfile;
 switch(env){
   case 'devES5':
-    outputFile = outputFile + '.js';
+    outputFile = outputFile + '-dev.js';
     webpackOptions = {
       presets: ['es2015'],
       plugins: ['babel-plugin-add-module-exports']
@@ -22,7 +22,7 @@ switch(env){
     macrosfile = 'dev_macros.json';
   case 'buildES5':
     plugins.push(new UglifyJsPlugin({ minimize: true }));
-    outputFile = outputFile + '.min.js';
+    outputFile = outputFile+'-'+package_json.version+'.min.js';
     webpackOptions = {
       presets: ['es2015'],
       plugins: ['babel-plugin-add-module-exports']
@@ -30,7 +30,7 @@ switch(env){
     macrosfile = 'release_macros.json';
     break;
   case 'devES6':
-    outputFile = outputFile + '.js';
+    outputFile = outputFile + '-dev.js';
     webpackOptions =  {
       plugins: ["transform-es2015-modules-commonjs"]
     }
@@ -38,7 +38,7 @@ switch(env){
     break;
   case 'buildES6':
     plugins.push(new UglifyJsPlugin({ minimize: true }));
-    outputFile = outputFile + '.min.js';
+    outputFile = outputFile+'-'+package_json.version+'.min.js';
     webpackOptions =  {
       plugins: ["transform-es2015-modules-commonjs"]
     }
