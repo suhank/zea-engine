@@ -42,6 +42,8 @@ class GeomLibrary {
     loadBin(reader) {
         let numGeoms = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
+        let printProgress = numGeoms > 1000;
+        let progress = 0;
         for (let i = 0; i < numGeoms; i++) {
             let geomReader = new BinReader(reader.data, toc[i], reader.isMobileDevice);
             let className = geomReader.loadStr();
@@ -61,6 +63,15 @@ class GeomLibrary {
             }
             geom.loadBin(geomReader);
             this.geoms.push(geom);
+
+            if(printProgress){
+                // Avoid printing too much as it slows things down.
+                let curr = Math.round((i / numGeoms) * 100);
+                if(curr != progress){
+                    progress = curr;
+                    console.log("Loading Geoms: " + progress + "%");
+                }
+            }
         }
         this.loaded.emit();
     }

@@ -61,7 +61,7 @@ class GLTexture2D extends RefCounted {
         let gl = this.__gl;
         let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
         if(width <= 0 || width > maxSize || height <= 0 || height > maxSize) {
-            throw new Error('gl-texture2d: Invalid texture size')
+            throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
         }
 
         this.channels = params['channels'];
@@ -139,7 +139,7 @@ class GLTexture2D extends RefCounted {
             this.height = height;
             let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
             if(this.width < 0 || this.width > maxSize || this.height < 0 || this.height > maxSize) {
-                throw new Error('gl-texture2d: Invalid texture size');
+                throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
             }
         }
         if(bind)
