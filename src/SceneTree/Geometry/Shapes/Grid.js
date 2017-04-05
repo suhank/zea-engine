@@ -8,13 +8,14 @@ import {
 
 
 class Grid extends Lines {
-    constructor(name, x = 1.0, z = 1.0, xDivisions = 10, zDivisions = 10) {
+    constructor(name, x = 1.0, z = 1.0, xDivisions = 10, zDivisions = 10, skipCenterLines=false) {
         super(name);
 
         this.__x = x;
         this.__z = z;
         this.__xDivisions = xDivisions;
         this.__zDivisions = zDivisions;
+        this.__skipCenterLines = skipCenterLines;
         this.__rebuild();
     }
 
@@ -61,16 +62,20 @@ class Grid extends Lines {
     }
 
     __rebuild() {
-        this.setNumVertices((this.__xDivisions + this.__zDivisions + 2) * 2);
-        this.setNumSegments(this.__xDivisions + this.__zDivisions + 2);
+        this.setNumVertices((this.__xDivisions + this.__zDivisions + 2 - (this.__skipCenterLines ? 1 : 0)) * 2);
+        this.setNumSegments(this.__xDivisions + this.__zDivisions + 2 - (this.__skipCenterLines ? 1 : 0));
         let idx = 0;
         for (let i = 0; i <= this.__xDivisions; i++) {
+            if(this.__skipCenterLines && i == this.__xDivisions/2)
+                continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
             this.setSegment(idx, v0, v1);
             idx++;
         }
         for (let i=0; i <= this.__zDivisions; i++) {
+            if(this.__skipCenterLines && i == this.__xDivisions/2)
+                continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
             this.setSegment(idx, v0, v1);
@@ -82,6 +87,8 @@ class Grid extends Lines {
     __resize() {
         let idx = 0;
         for (let i = 0; i <= this.__xDivisions; i++) {
+            if(this.__skipCenterLines && i == this.__xDivisions/2)
+                continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
             let x = ((i / (this.__xDivisions) - 0.5)) * this.__x;
@@ -90,6 +97,8 @@ class Grid extends Lines {
             idx++;
         }
         for (let i = 0; i <= this.__zDivisions; i++) {
+            if(this.__skipCenterLines && i == this.__xDivisions/2)
+                continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
             let z = ((i / (this.__zDivisions) - 0.5)) * this.__z;

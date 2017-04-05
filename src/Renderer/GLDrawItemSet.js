@@ -124,7 +124,7 @@ class GLDrawItemSet {
         for (let glgeom of this.__glgeoms) {
             let glgeom = gldrawItem.getGLGeom();
             let geomItem = gldrawItem.getGeomItem();
-            let mat4 = geomItem.getGeomMatrix();
+            let mat4 = geomItem.getGeomXfo().toMat4();
             let splitData = glgeom.getSplitData();
             let vertexAttributes = glgeom.getGeom().getVertexAttributes();
 

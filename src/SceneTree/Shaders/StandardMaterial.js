@@ -47,18 +47,18 @@ varying vec3 v_worldPos;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_lightmapCoord;
-varying vec2 v_lightmapCoordsOffset;
+varying vec4 v_geomItemData;
 
 
 void main(void) {
 
 #ifdef ENABLE_LIGHTMAPS
-    v_lightmapCoordsOffset = getLightmapCoordsOffset();
-    v_lightmapCoord = (lightmapCoords + v_lightmapCoordsOffset) / lightmapSize;
+    v_geomItemData = getGeomItemData();
+    v_lightmapCoord = (lightmapCoords + v_geomItemData.xy) / lightmapSize;
     v_clusterID = clusterIDs;
 #endif
 
-    //vec4 pos = vec4((lightmapCoords + v_lightmapCoordsOffset), 0., 1.);
+    //vec4 pos = vec4((lightmapCoords + v_geomItemData.xy), 0., 1.);
     vec4 pos = vec4(positions, 1.);
 
     mat4 modelMatrix = getModelMatrix();
@@ -88,7 +88,7 @@ varying vec3 v_worldPos;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_lightmapCoord;
-varying vec2 v_lightmapCoordsOffset;
+varying vec4 v_geomItemData;
 
 varying float v_clusterID;
 
@@ -192,7 +192,7 @@ void main(void) {
 
         if(debugLightmapTexelSize)
         {
-            vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_lightmapCoordsOffset;
+            vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
             float total = floor(coord_texelSpace.x) +
                           floor(coord_texelSpace.y);
                           
@@ -224,7 +224,26 @@ void main(void) {
             return;
         }
 #else
-        if(!gl_FrontFacing){
+        // Note: flip normals of non-mirrored geoms if rendering the inverse side.
+        // Note: this is disabled because the flags values were not making it through.
+        // int flags = int(v_geomItemData.w);
+        // const int mirror_flag = 2; // 1 << 1;
+        // if(gl_FrontFacing){
+        //     //if((flags & mirror_flag) != 0)
+        //     if(flags == mirror_flag)
+        //         viewNormal *= -1.0;
+        // }
+        // else{
+        //     // //if((flags & mirror_flag) != 0)
+        //     // if(flags != mirror_flag)
+        //     //     viewNormal *= -1.0;
+        // }
+        // if(v_geomItemData.w > 0.0)
+        //     baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+
+        // Use this when double-sided rendering.
+        // (currently we cannot support single sideded rendering because so many geoms have flipped normals.)
+        if(gl_FrontFacing){
             viewNormal *= -1.0;
         }
 #endif
