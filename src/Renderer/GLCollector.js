@@ -351,7 +351,7 @@ class GLCollector {
 
         let gl = this.__renderer.gl;
         let stride = 4; // The number of pixels per draw item.
-        let size = Math.floor(Math.sqrt(this.__drawItems.length * stride) + 0.5);
+        let size = Math.round(Math.sqrt(this.__drawItems.length * stride) + 0.5);
         let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
         for (let i=0; i<this.__drawItems.length; i++) {
             let gldrawItem = this.__drawItems[i];

@@ -241,9 +241,12 @@ void main(void) {
         // if(v_geomItemData.w > 0.0)
         //     baseColor = vec4(1.0, 0.0, 0.0, 1.0);
 
+        if(v_geomItemData.b != 0.0 || v_geomItemData.w != 0.0)
+            baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+
         // Use this when double-sided rendering.
         // (currently we cannot support single sideded rendering because so many geoms have flipped normals.)
-        if(gl_FrontFacing){
+        if(!gl_FrontFacing){
             viewNormal *= -1.0;
         }
 #endif
