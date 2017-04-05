@@ -350,10 +350,9 @@ class GLCollector {
             return;
 
         let gl = this.__renderer.gl;
-        let stride = 16; // The number of floats per draw item.
-        let size = this.__drawItems.length * stride;// each 
-        let dataArray = new Float32Array(size);
-        let offset = 0;
+        let stride = 4; // The number of pixels per draw item.
+        let size = Math.floor(Math.sqrt(this.__drawItems.length * stride) + 0.5);
+        let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
         for (let i=0; i<this.__drawItems.length; i++) {
             let gldrawItem = this.__drawItems[i];
             // When an item is deleted, we allocate its index to the free list
@@ -368,8 +367,8 @@ class GLCollector {
             this.__transformsTexture = new GLTexture2D(gl, {
                 channels: 'RGBA',
                 format: 'FLOAT',
-                width: size / 4,/*each pixel has 4 floats*/
-                height: 1,
+                width: size,
+                height: size,
                 filter: 'NEAREST',
                 wrap: 'CLAMP_TO_EDGE',
                 data: dataArray,
@@ -377,7 +376,7 @@ class GLCollector {
             });
         }
         else{
-            this.__transformsTexture.resize(size / 4, 1, dataArray);
+            this.__transformsTexture.resize(size, size, dataArray);
         }
 
 
