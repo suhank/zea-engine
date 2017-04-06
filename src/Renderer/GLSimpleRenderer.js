@@ -128,7 +128,7 @@ class GLSimpleRenderer extends GLRenderer {
 
         if(this.__stats)
             this.__stats.end();
-        // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+        
         this.redrawOccured.emit();
     }
 };

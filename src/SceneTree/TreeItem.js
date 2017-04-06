@@ -266,6 +266,8 @@ class TreeItem {
             childItemsJSON.push(childItem.toJSON())
         return {
             "name": this.__name,
+            "localXfo": this.__localXfo.toJSON(),
+            "bbox": this.__boundingBox.toJSON(),
             "childItems": childItemsJSON
         }
     }
@@ -274,7 +276,9 @@ class TreeItem {
         this.__name = j.name;
 
         //this.setVisibility(j.visibility);
-        this.localXfo.fromJSON(j.localXfo);
+        // Note: to save space, some values are skipped if they are identity values 
+        if ('localXfo' in j)
+            this.localXfo.fromJSON(j.localXfo);
 
         if ('bbox' in j)
             this.boundingBox.fromJSON(j.bbox);

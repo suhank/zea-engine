@@ -249,6 +249,8 @@ class GLDrawItemSet {
             renderstate.mirrored = false;
         }
 
+        renderstate.drawCount+=this.__drawCount;
+
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {

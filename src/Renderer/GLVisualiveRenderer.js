@@ -361,7 +361,7 @@ class GLVisualiveRenderer extends GLRenderer {
     }
 
     drawScene(renderstate){
-        renderstate['drawCalls'] = 0;
+
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundLightmap = undefined;
@@ -373,8 +373,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (this.__displayEnvironment)
             this.drawEnv(renderstate);
 
-        for (let pass of this.__passes)
-            pass.draw(renderstate);
+        super.drawScene(renderstate);
 
         // if (this.__drawEdges)
         //     this.__edgesPass.draw(renderstate);

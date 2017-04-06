@@ -633,6 +633,7 @@ class GLRenderer {
         renderstate.profileJSON = {};
         renderstate.materialCount = 0;
         renderstate.drawCalls = 0;
+        renderstate.drawCount = 0;
 
         // this.__defaultGeomsPass.draw(this.__renderstate);
         for (let pass of this.__passes) {
@@ -641,8 +642,7 @@ class GLRenderer {
         }
 
         // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-        // console.log("materialCount:" + renderstate.materialCount);
-        // console.log("drawCalls:" + renderstate.drawCalls);
+        // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
     }
 
     draw() {
@@ -656,7 +656,6 @@ class GLRenderer {
 
         if (this.__stats)
             this.__stats.end();
-        // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
 
         this.redrawOccured.emit();
     }

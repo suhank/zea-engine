@@ -29,6 +29,9 @@ let loadTextfile = function(filePath, onSucceed, onFail = undefined, scope = und
         function(statusText) {
             if (onFail != undefined)
                 onFail.call(scope, statusText, filePath);
+            else{
+                console.error("File not found:" + filePath);
+            }
         });
 }
 
@@ -39,6 +42,9 @@ let loadBinfile = function(filePath, onSucceed, onFail = undefined, scope = unde
         function(statusText) {
             if (onFail != undefined)
                 onFail.call(scope, statusText, filePath);
+            else{
+                console.error("File not found:" + filePath);
+            }
         });
 }
 
