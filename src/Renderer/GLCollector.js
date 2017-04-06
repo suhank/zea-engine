@@ -225,13 +225,13 @@ class GLCollector {
             this.__updateTransform(index, gldrawItem);
         }, this);
 
-
-        let globalXfo = geomItem.globalXfo;
-        let mirrored = (globalXfo.sc.x < 0.0 || globalXfo.sc.y < 0.0 || globalXfo.sc.z < 0.0);
         let lightmapName = geomItem.getLightmap();
 
         let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
-        if (!drawItemSet || drawItemSet.isMirrored() != mirrored || drawItemSet.getLightmapName() != lightmapName) {
+        if (!drawItemSet || 
+            drawItemSet.isMirrored() != gldrawItem.isMirrored() || 
+            drawItemSet.getLightmapName() != lightmapName
+            ) {
             drawItemSet = new GLDrawItemSet(this.__renderer.gl);
 
             // TODO support multiple geoms per draw items sets later. 
@@ -328,7 +328,7 @@ class GLCollector {
 
     //////////////////////////////////////////////////
     // Optimization
-    __populateTransformDataArray(index, mat4, lightmapCoordsOffset, dataArray){
+    __populateTransformDataArray(gldrawItem, index, mat4, lightmapCoordsOffset, dataArray){
         let stride = 16; // The number of floats per draw item.
         let offset = index * stride;
         let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
@@ -338,7 +338,11 @@ class GLCollector {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, 0, 0);// lightmap coords offset, flags, materialid.
+        let flags = 0;
+        if(gldrawItem.isMirrored())
+            flags = 1;
+        let materialId = 0;
+        col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, flags);
     }
     
     finalize() {
@@ -347,7 +351,7 @@ class GLCollector {
 
         let gl = this.__renderer.gl;
         let stride = 4; // The number of pixels per draw item.
-        let size = Math.floor(Math.sqrt(this.__drawItems.length * stride) + 0.5);
+        let size = Math.round(Math.sqrt(this.__drawItems.length * stride) + 0.5);
         let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
         for (let i=0; i<this.__drawItems.length; i++) {
             let gldrawItem = this.__drawItems[i];
@@ -355,9 +359,9 @@ class GLCollector {
             // and null this item in the array. skip over null items.
             if(!gldrawItem)
                 continue;
-            let mat4 = gldrawItem.getGeomItem().getGeomMatrix();
+            let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
             let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
-            this.__populateTransformDataArray(i, mat4, lightmapCoordsOffset, dataArray);
+            this.__populateTransformDataArray(gldrawItem, i, mat4, lightmapCoordsOffset, dataArray);
         }
         if(!this.__transformsTexture){
             this.__transformsTexture = new GLTexture2D(gl, {
@@ -387,9 +391,9 @@ class GLCollector {
 
         let stride = 16; // The number of floats per draw item.
         let dataArray = new Float32Array(stride);
-        let mat4 = gldrawItem.getGeomItem().getGeomMatrix();
+        let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
         let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
-        this.__populateTransformDataArray(0, mat4, lightmapCoordsOffset, dataArray);
+        this.__populateTransformDataArray(gldrawItem, 0, mat4, lightmapCoordsOffset, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
         let xoffset = index*(stride/4); /*each pixel has 4 floats*/

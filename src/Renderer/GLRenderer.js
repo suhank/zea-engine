@@ -1,4 +1,6 @@
 import {
+    Vec3,
+    Xfo,
     Signal
 } from '../Math';
 import {
@@ -201,11 +203,31 @@ class GLRenderer {
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         let gridMaterial = new LinesMaterial('gridMaterial');
         gridMaterial.color = gridColor;
-        let grid = new Grid('Grid', gridSize, gridSize, resolution, resolution);
+        let grid = new Grid('Grid', gridSize, gridSize, resolution, resolution, true);
         // grid.lineThickness = lineThickness;
         this.__gridItem = new GeomItem('GridItem', grid, gridMaterial);
-        // let gridDrawItem = new GLDrawItem(this.__gl, this.__gridItem, new GLLines(this.__gl, grid), this.addMaterial(gridMaterial));
         this.__collector.addGeomItem(this.__gridItem);
+
+        let axisLine = new Lines('axisLine');
+        axisLine.setNumVertices(2);
+        axisLine.setNumSegments(1);
+        axisLine.setSegment(0, 0, 1);
+        axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
+        axisLine.getVertex(1).set(gridSize * 0.5, 0.0,  0.0);
+        // axisLine.lineThickness = lineThickness * 10.0;
+
+        let gridXAxisMaterial = new LinesMaterial('gridXAxisMaterial');
+        gridXAxisMaterial.color.set(gridColor.luminance(), 0, 0);
+        this.__xAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial);
+        this.__collector.addGeomItem(this.__xAxisLineItem);
+
+        let gridZAxisMaterial = new LinesMaterial('gridZAxisMaterial');
+        gridZAxisMaterial.color.set(0, 0, gridColor.luminance());
+        let geomOffset = new Xfo();
+        geomOffset.ori.setFromAxisAndAngle(new Vec3(0,1,0), Math.PI * 0.5);
+        this.__zAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridZAxisMaterial);
+        this.__zAxisLineItem.setGeomOffsetXfo(geomOffset);
+        this.__collector.addGeomItem(this.__zAxisLineItem);
     }
 
     toggleDrawGrid() {

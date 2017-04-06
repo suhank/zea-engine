@@ -26,7 +26,7 @@ class GeomItem extends TreeItem {
         this.__lightmap = "Default"; // the lightmap that the geom uses.
         this.__lightmapCoordsOffset = new Vec2();
         this.__geomOffsetXfo = new Xfo();
-        this.__geomMatrix = new Mat4();
+        this.__geomXfo = new Xfo();
 
         this.__selectable = true;
         this.__selected = false;
@@ -57,7 +57,7 @@ class GeomItem extends TreeItem {
 
     set globalXfo(xfo) {
         super.globalXfo = xfo;
-        this.__geomMatrix = this.__globalXfo.multiply(this.__geomOffsetXfo).toMat4();
+        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
     }
 
 
@@ -72,7 +72,7 @@ class GeomItem extends TreeItem {
     updateBoundingBox() {
         let geomBox = this.geom.boundingBox.clone();
         this.__boundingBox.reset();
-        this.__boundingBox.addBox3(geomBox, this.getGeomMatrix());
+        this.__boundingBox.addBox3(geomBox, this.getGeomXfo().toMat4());
         this.__boundingBoxDirty = false;
     }
 
@@ -101,15 +101,16 @@ class GeomItem extends TreeItem {
 
     setGeomOffsetXfo(xfo) {
         this.__geomOffsetXfo = xfo;
+        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo)
     }
 
     __updateGlobal() {
         super.__updateGlobal();
-        this.__geomMatrix = this.__globalXfo.multiply(this.__geomOffsetXfo).toMat4();
+        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo)
     }
 
-    getGeomMatrix() {
-        return this.__geomMatrix;
+    getGeomXfo() {
+        return this.__geomXfo;
     }
 
     /////////////////////////////

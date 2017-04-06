@@ -15,8 +15,8 @@ class GLDrawItem {
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
         this.__lightmapName = geomItem.getLightmap();
 
-        let globalXfo = this.__geomItem.globalXfo;
-        this.__mirrored = (globalXfo.sc.x < 0.0 || globalXfo.sc.y < 0.0 || globalXfo.sc.z < 0.0);
+        let geomXfo = this.__geomItem.getGeomXfo();
+        this.__mirrored = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
         this.__assignedPasses = [];
 
         this.setGeomID(id, flags);
@@ -25,8 +25,9 @@ class GLDrawItem {
         this.updated = new Signal();
         this.destructing = new Signal();
 
-        this.__geomItem.globalXfoChanged.connect((globalXfo) => {
-            this.__mirrored = (globalXfo.sc.x < 0.0 || globalXfo.sc.y < 0.0 || globalXfo.sc.z < 0.0);
+        this.__geomItem.globalXfoChanged.connect(() => {
+            let geomXfo = this.__geomItem.getGeomXfo();
+            this.__mirrored = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
             this.transformChanged.emit();
         }, this);
         this.__geomItem.visibilityChanged.connect(this.updated.emit, this.updated);

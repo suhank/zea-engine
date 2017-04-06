@@ -53,6 +53,9 @@ class GLForwardPass extends GLPass {
 
     draw(renderstate) {
         let gl = this.__gl;
+        // TODO: we need to provide a tool to quickly flip faces
+        // and save out a new JSON file. Then we can render only one side
+        //gl.enable(gl.CULL_FACE);
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);

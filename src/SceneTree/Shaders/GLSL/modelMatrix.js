@@ -45,12 +45,11 @@ mat4 getModelMatrix() {
 }
 
 
-vec2 getLightmapCoordsOffset(int id) {
-    vec4 col4 = texelFetch(transformsTexture, transformsTextureSize, (id * cols_per_instance) + 3);
-    return col4.xy;
+vec4 getGeomItemData(int id) {
+    return texelFetch(transformsTexture, transformsTextureSize, (id * cols_per_instance) + 3);
 }
 
-vec2 getLightmapCoordsOffset() {
+vec4 getGeomItemData() {
     int id;
     if(instancedDraw == 0){
        id = transformIndex;
@@ -58,7 +57,7 @@ vec2 getLightmapCoordsOffset() {
     else{
        id = int(instancedTransformIds);
     }
-    return getLightmapCoordsOffset(id);
+    return getGeomItemData(id);
 }
 
 
