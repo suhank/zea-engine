@@ -189,12 +189,10 @@ class TreeItem {
         child.parentItem = this;
 
         child.boundingBoxChanged.connect(() => {
-            this.__boundingBoxDirty = true;
-            this.boundingBoxChanged.emit();
+            this.setBoundingBoxDirty();
         }, this);
         child.visibilityChanged.connect(() => {
-            this.__boundingBoxDirty = true;
-            this.boundingBoxChanged.emit();
+            this.setBoundingBoxDirty();
         }, this);
 
         this.__boundingBoxDirty = true;
@@ -299,16 +297,16 @@ class TreeItem {
                 let childItem;
                 if(flags&LOADFLAGS_ASSETTREE_UPDATE){
                     childItem = this.getChildByName(childName);
-                    if (childItem){
-                        throw("Duplicate child found with name:" + childName);
-                        // childItem.fromJSON(childJson, flags, materialLibrary, geomLibrary);
-                        continue;
+                    if(childItem){
+                        childItem.fromJSON(childJson, flags, materialLibrary, geomLibrary);
                     }
                 }
-                childItem = sgFactory.constructClass(childType);
-                if(childItem){
-                    childItem.fromJSON(childJson, flags, materialLibrary, geomLibrary);
-                    this.addChild(childItem, false);
+                else{
+                    childItem = sgFactory.constructClass(childType);
+                    if(childItem){
+                        childItem.fromJSON(childJson, flags, materialLibrary, geomLibrary);
+                        this.addChild(childItem, false);
+                    }
                 }
 
                 if(printProgress){
