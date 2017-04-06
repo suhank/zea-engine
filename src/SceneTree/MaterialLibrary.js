@@ -29,6 +29,9 @@ class MaterialLibrary {
     get numMaterials(){
         return this.__materials.length;
     }
+    get materials(){
+        return this.__materials;
+    }
     
     hasMaterial(name){
         return name in this.__materials;

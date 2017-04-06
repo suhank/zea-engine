@@ -74,6 +74,10 @@ class Vec3 extends AttrValue {
     isNull() {
         return Math.abs(this.x) < Number.EPSILON && Math.abs(this.y) < Number.EPSILON && Math.abs(this.z) < Number.EPSILON;
     }
+    
+    is111() {
+        return (Math.abs(1.0 - this.x) < Number.EPSILON && Math.abs(1.0 - this.y) < Number.EPSILON && Math.abs(1.0 - this.z) < Number.EPSILON);
+    }
 
     // Returns true if this vector is the same as another one
     equal(other, precision) {

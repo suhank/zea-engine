@@ -41,10 +41,7 @@ class Xfo {
     }
 
     isIdentity() {
-        let trZero = this.tr.isNull();
-        let oriOrigin = this.ori.isIdentity();
-        let scOne = (Math.abs(1.0 - this.sc.x) < Number.EPSILON && Math.abs(1.0 - this.sc.y) < Number.EPSILON && Math.abs(1.0 - this.sc.z) < Number.EPSILON);
-        return trZero && oriOrigin && scOne;
+        return this.tr.isNull() && this.ori.isIdentity() && this.sc.is111();
     }
 
     setLookAt(pos, target, up) {
@@ -114,17 +111,21 @@ class Xfo {
 
 
     toJSON() {
-        return {
-            "tr": this.tr.toJSON(),
-            "ori": this.ori.toJSON(),
-            "sc": this.sc.toJSON()
-        }
+        let j = {
+            'tr': this.tr.toJSON(),
+            'ori': this.ori.toJSON()
+        };
+        if(!this.sc.is111())
+            j.sc = this.sc.toJSON();
+        return j;
     }
 
     fromJSON(j) {
-        this.tr.fromJSON(j['tr']);
-        this.ori.fromJSON(j['ori']);
-        this.sc.fromJSON(j['sc']);
+        this.tr.fromJSON(j.tr);
+        this.ori.fromJSON(j.ori);
+        if(j.sc){
+            this.sc.fromJSON(j.sc);
+        }
     }
 
     toString() {
