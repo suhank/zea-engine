@@ -51,10 +51,16 @@ import {
 import {
     GLDrawItem
 } from './GLDrawItem.js';
+import {
+    SessionClient
+} from './SessionClient.js';
 
 import {
     VRViewport
 } from './VR/VRViewport.js';
+
+
+
 
 let activeGLRenderer = undefined;
 let mouseIsDown = false;
@@ -115,6 +121,8 @@ class GLRenderer {
         this.actionOccuring = new Signal();
 
         this.setupWebGL(canvasDiv, webglOptions);
+
+        this.sessionClient = new SessionClient(this);
 
         // this.__defaultGeomsPass = new GLForwardPass(this.__collector);
         // this.__geomDataPass = new GLGeomDataPass(this.__collector);

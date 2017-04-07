@@ -16,14 +16,13 @@ import {
 
 class UserAvatar {
 
-    constructor(id, color, parentTreeItem) {
+    constructor(id, data, parentTreeItem) {
         this.__id = id;
-        this.__color = color;
         this.__parentTreeItem = parentTreeItem;
 
         this.__treeItem = new TreeItem(id);
         this.__material = new FlatMaterial('user'+id+'Material');
-        this.__material.baseColor = new Color(color.r, color.g, color.b);
+        this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
 
         this.setMouseAndCameraRepresentation();
         this.__parentTreeItem.addChild(this.__treeItem);
@@ -32,6 +31,10 @@ class UserAvatar {
 
         this.userMarker = new MarkerpenTool('client' + id);
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
+    }
+
+    pointerMoved(data){
+        // TODO: show a pointer beam.
     }
 
     setMouseAndCameraRepresentation() {
@@ -98,9 +101,9 @@ class UserAvatar {
                     if (this.__currentViewMode !== 'MouseAndKeyboard') {
                         this.setMouseAndCameraRepresentation(data);
                     }
-                    const xfo = new Xfo();
-                    xfo.fromJSON(data.cameraXfo);
-                    this.__treeItem.getChild(0).localXfo = xfo;
+                    const viewXfo = new Xfo();
+                    viewXfo.fromJSON(data.viewXfo);
+                    this.__treeItem.getChild(0).localXfo = viewXfo;
                 }
                 break;
             case 'TabletAndFinger':
@@ -115,12 +118,9 @@ class UserAvatar {
                         this.setViveRepresentation(data);
                     }
 
-                    const stageXfo = new Xfo();
-                    stageXfo.fromJSON(data.stageXfo);
-                    const headXfo = new Xfo();
-                    headXfo.fromJSON(data.headXfo);
-                    this.__treeItem.localXfo = stageXfo;
-                    this.__treeItem.getChild(0).localXfo = headXfo;
+                    const viewXfo = new Xfo();
+                    viewXfo.fromJSON(data.viewXfo);
+                    this.__treeItem.getChild(0).localXfo = viewXfo;
 
                     this.updateViveControllers(data);
                 }

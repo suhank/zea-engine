@@ -158,7 +158,7 @@ class GLViewport {
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'MouseAndKeyboard',
-                cameraXfo: globalXfo.toJSON()
+                viewXfo: globalXfo.toJSON()
             });
         }, this);
         this.__camera.clippingRangesChanged.connect(function() {
