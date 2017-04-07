@@ -284,13 +284,17 @@ class SessionClient {
         listeners.sessionClients = function(client, data) {
             for(let clientData of data){
                 if (clientData.id != myId) {
-                    onUserConnected(clientData.id, clientData.color);
+                    onUserConnected(clientData.id, clientData);
                 }
             }
         };
 
         listeners.sessionEvents = function(client, data) {
             let sessionEvents = data;
+            // Note: this method updates a newly connected user
+            // to the current state of the session. We really only
+            // need the latest head positions, and all the line drawing.
+            // TODO: Optimize this later once sessions get long.
             for (let eventData of sessionEvents) {
                 handleEvent(eventData.event);
             }
@@ -312,7 +316,7 @@ class SessionClient {
 
         listeners.joinClient = function(client, data) {
             if (!connectedUsers[client]) {
-                onUserConnected(client, data.color);
+                onUserConnected(client, data);
             }
         };
 

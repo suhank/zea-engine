@@ -199,8 +199,11 @@ class GLCollector {
         let flags = 1;
         let index;
         // Use recycled indices if there are any available...
-        if (this.__drawItemsIndexFreeList.length > 0)
+        if (this.__drawItemsIndexFreeList.length > 0){
             index = this.__drawItemsIndexFreeList.pop();
+            // We will need to re-populate the array from here.
+            this.__transformsDataArrayHighWaterMark = index;
+        }
         else {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
@@ -399,7 +402,6 @@ class GLCollector {
             return;
 
         let gl = this.__renderer.gl;
-
         let stride = 16; // The number of floats per draw item.
         let dataArray = new Float32Array(stride);
         this.__populateTransformDataArray(gldrawItem, 0, dataArray);
@@ -408,9 +410,12 @@ class GLCollector {
         let size = this.__transformsTexture.width;
 
         let yoffset = Math.round((index * 4) / size);
-        let xoffset = (index * 4) - (yoffset * size); /*each pixel has 4 floats*/
+        let xoffset = (index * 4) % size;
         let width = stride/4;
         let height = 1;
+        if(xoffset < 0){
+            console.log("texSubImage2D xoffset:" + xoffset + " yoffset:" + yoffset +  " width:" + width +  " height:" + height);
+        }
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
     }
 
