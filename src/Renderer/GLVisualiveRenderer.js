@@ -188,6 +188,8 @@ class GLVisualiveRenderer extends GLRenderer {
                 else
                     this.toggleContinuousDrawing();
                 break;
+            default:
+                super.onKeyPressed(key);
         }
         this.requestRedraw();
     }

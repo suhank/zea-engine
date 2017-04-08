@@ -136,13 +136,15 @@ class GLRenderer {
         if (navigator.getVRDisplays)
             this.__setupVRViewport();
 
+        this.__stats = new Stats();
+        this.__stats.dom.style.position = 'absolute';
+        this.__stats.dom.style.top = 0;
+        this.__stats.dom.style.left = 0;
+        this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        this.__stats.dom.style.visibility = "hidden"
+        canvasDiv.appendChild(this.__stats.dom);
         if (options.displayStats) {
-            this.__stats = new Stats();
-            this.__stats.dom.style.position = 'absolute';
-            this.__stats.dom.style.top = 0;
-            this.__stats.dom.style.left = 0;
-            this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-            canvasDiv.appendChild(this.__stats.dom);
+            this.__stats.dom.style.visibility = "visible"
         }
 
         if(options.resources){
@@ -513,8 +515,11 @@ class GLRenderer {
         // If running in electron, avoid handling hotkeys..
         if (window.process === undefined || process.browser == true) {
             switch (key) {
-                case 'd':
+                case '>':
                     this.toggleDebugPanel();
+                    return true;
+                case '?':
+                    this.sessionClient.toggleAnalytics();
                     return true;
             }
         }
@@ -546,6 +551,12 @@ class GLRenderer {
         // }
         pass.updated.connect(this.requestRedraw, this);
         this.__passes.push(pass);
+        return this.__passes.length - 1;
+    }
+
+    removePass(pass) {
+        let index = this.__passes.indexOf(pass);
+        this.__passes =  this.__passes.slice(index);
     }
 
     getPass(index) {

@@ -33,6 +33,10 @@ class UserAvatar {
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
     }
 
+    setVisibility(visible){
+        this.__treeItem.setVisible(visible);
+    }
+
     pointerMoved(data){
         // TODO: show a pointer beam.
     }

@@ -27,25 +27,25 @@ class Session {
     };
     ws.sessionHdl = this;
 
-    // this.emitClient(ws, {
-    //   type: 'sessionClients',
-    //   data: Object.keys(this.clients).map((key) => this.clients[key].data )
-    // });
-
+    //////////////////////////////////////////
     // Send all the events since the last clear to the new client.
     // Thsi will include any recordings that have been made.
     let sessionEvents = [];
-    for(let event of this.events){
-      if(event.timestamp >= this.clearTime)
+    for(let eventData of this.events){
+      // Note: keep client connections/disconnections so that we have avatars for cleints that have left.
+      if(eventData.timestamp >= this.clearTime || eventData.event.type == 'joinClient' || eventData.event.type == 'clientDisconnect')
         sessionEvents.push({
-          timestamp: event.timestamp - this.startTime,
-          event: event.event,
+          timestamp: eventData.timestamp - this.startTime,
+          event: eventData.event,
         });
     }
     if(sessionEvents.length > 0){
       this.emitClient(ws, {
-        type: 'sessionEvents',
-        data: sessionEvents
+        type: 'sessionUpdate',
+        data: {
+          clients: Object.keys(this.clients).map((key) => this.clients[key].data ),
+          events: sessionEvents
+        }
       });
     }
 
@@ -236,6 +236,9 @@ class WSManager {
 
   onMessage(ws, json) {
     const data = JSON.parse(json);
+    if(data.type == 'getProjectAnalytics'){
+      this.getProjectAnalytics(ws, data.projectID);
+    }
     if (ws.sessionHdl) {
       ws.sessionHdl.onMessage(ws, data);
     } else {
@@ -262,6 +265,50 @@ class WSManager {
       this.projects[data.projectID].sessions[data.sessionID] = new Session(data.projectID, data.sessionID);
     }
     this.projects[data.projectID].sessions[data.sessionID].joinClient(ws, data.clientData);
+  }
+
+  getProjectAnalytics(ws, projectID){
+    let project = this.projects[projectID];
+    if (!project) {
+      return;
+    }
+
+    let viewChangedEvents = [];
+    for(let sessionID in project.sessions){
+      let session = project.sessions[sessionID];
+      for(let eventData of session.events){
+        if(eventData.event.type == 'viewChanged')
+          viewChangedEvents.push(eventData.event.data);
+      }
+    }
+
+    let stride = 2;
+    let size = Math.sqrt(viewChangedEvents.length * stride);
+    if((size % stride) != 0)
+        size += stride - (size % stride);
+
+    let dataArray = new Float32Array((size * size) * 4);
+    let offset = 0;
+    for(let viewChanged of viewChangedEvents){
+      let sc = 1.0;
+      // encode the scale value as a single scalar, thereby enoding the Xfo as 8 floats(2 pixels)
+      if(viewChanged.viewXfo.sc)
+        sc = (viewChanged.viewXfo.sc.x + viewChanged.viewXfo.sc.y + viewChanged.viewXfo.sc.z) / 3;
+      dataArray[offset++] = viewChanged.viewXfo.tr.x;
+      dataArray[offset++] = viewChanged.viewXfo.tr.y;
+      dataArray[offset++] = viewChanged.viewXfo.tr.z;
+      dataArray[offset++] = sc; 
+      dataArray[offset++] = viewChanged.viewXfo.ori.x;
+      dataArray[offset++] = viewChanged.viewXfo.ori.y;
+      dataArray[offset++] = viewChanged.viewXfo.ori.z;
+      dataArray[offset++] = viewChanged.viewXfo.ori.w;
+    }
+    const buf = new Buffer(dataArray.buffer);
+    ws.send(JSON.stringify({
+      type: 'projectAnalytics',
+      projectID: projectID,
+      data: buf.toString('base64')
+    }));
   }
 
 }
