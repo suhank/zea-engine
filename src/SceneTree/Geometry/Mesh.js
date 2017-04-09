@@ -168,14 +168,20 @@ class Mesh extends BaseGeom {
         return trisCount;
     }
 
-    generateTriangulatedIndices(numUnSplitVertices, splitIndices) {
+    generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices) {
 
         let faceCount = this.getNumFaces();
         // let faceVertexIndices = this.getFaceVertexIndices();
 
         let trisCount = this.computeNumTriangles();
 
-        let trianglulatedIndices = new Uint32Array(trisCount * 3);
+        let trianglulatedIndices;
+        if (totalNumVertices < Math.pow(2, 8)) 
+            trianglulatedIndices = new Uint8Array(trisCount * 3);
+        else if (totalNumVertices < Math.pow(2, 16)) 
+            trianglulatedIndices = new Uint16Array(trisCount * 3);
+        else
+            trianglulatedIndices = new Uint32Array(trisCount * 3);
 
         let triangleVertex = 0;
         let addTriangleVertexIndex = function(vertex, faceIndex) {
