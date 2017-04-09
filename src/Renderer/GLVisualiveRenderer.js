@@ -102,7 +102,9 @@ class GLVisualiveRenderer extends GLRenderer {
 
         this.__shaderDirectives = {
             defines:`
+#define ENABLE_TEXTURES
 #define ENABLE_LIGHTMAPS
+#define ENABLE_SPECULAR
 #define ENABLE_INLINE_GAMMACORRECTION
 `
         };
