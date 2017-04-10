@@ -97,8 +97,8 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__glshaderScreenPostProcess = new GLShader(this.__gl, new PostProcessing());
 
         this.__debugTextures = [undefined];
-        this.__debugTextures.push(this.__viewports[0].__fwBuffer);
-        // this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
+        // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
+        this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
 
         this.__shaderDirectives = {
             defines:`

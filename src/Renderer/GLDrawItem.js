@@ -10,6 +10,8 @@ class GLDrawItem {
         this.__gl = gl;
         this.__geomItem = geomItem;
         this.__glGeom = glGeom;
+        this.__id = id;
+        this.__flags = flags;
 
         this.__color = geomItem.color ? geomItem.color : new Color(1,0,0,1);
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
@@ -18,8 +20,6 @@ class GLDrawItem {
         let geomXfo = this.__geomItem.getGeomXfo();
         this.__mirrored = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
         this.__assignedPasses = [];
-
-        this.setGeomID(id, flags);
 
         this.transformChanged = new Signal();
         this.updated = new Signal();
@@ -77,21 +77,12 @@ class GLDrawItem {
         this.__color = val;
     }
 
-    setGeomID(id, flags) {
-        // Split the integer index value into 2 8bit values 
-        this.__id = id;
-        this.__flags = flags;
-        let id_z = id % 256;
-        let id_y = Math.trunc((id - id_z) / 256);
-        this.__geomData = [flags / 255, ((id_y + 0.5) / 256), ((id_z + 0.5) / 256), 1.0];
-    }
-
     getId(){
         return  this.__id;
     }
 
-    getGeomData() {
-        return this.__geomData;
+    getFlags(){
+        return  this.__flags;
     }
 
     highlight() {

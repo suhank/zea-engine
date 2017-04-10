@@ -200,14 +200,6 @@ class GLDrawItemSet {
 
     //////////////////////////////////////
     // Drawing
-    // bindGeomData(renderstate) {
-    //     let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
-    //     if (!shaderBinding) {
-    //         shaderBinding = new GeomShaderBinding(this.__gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer, this.__transformIds);
-    //         this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
-    //     }
-    //     shaderBinding.bind(renderstate);
-    // }
 
     drawSingleItem(renderstate, index) {
 

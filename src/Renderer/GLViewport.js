@@ -43,7 +43,8 @@ class GLViewport {
         this.__ongoingTouches = {};
 
         this.__geomDataBuffer = undefined;
-        this.__geomDataBufferFboRezScale = 0.5;
+        this.__geomDataBufferFbo = undefined;
+        this.__geomDataBufferFboRezScale = 1.0;
 
         // this.__selectionRect = new GLSelectionRect(this.__renderer.gl);
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
@@ -203,7 +204,7 @@ class GLViewport {
 
     frameView(treeItems) {
         this.__camera.frameView(this, treeItems);
-        this.renderGeomDataFbo();
+        // this.renderGeomDataFbo();
     }
 
     /// compute a ray into the scene based on a mouse coordinate
@@ -261,10 +262,6 @@ class GLViewport {
     }
 
     createGeomDataFbo() {
-
-        // Note: When the viewport is created in MatterMachine, it is initially 
-        // given a a1x1 pixel canvas, which is resized later. We avoid scaling
-        // the geom data Fbo in that case.
         let gl = this.__renderer.gl;
         let scl = this.__geomDataBufferFboRezScale;
         this.__geomDataBuffer = new GLTexture2D(gl, {
@@ -287,31 +284,31 @@ class GLViewport {
     }
 
     renderGeomDataFbo() {
-        // if (this.__geomDataBufferFbo) {
-        //     this.__geomDataBufferFbo.bindAndClear();
+        if (this.__geomDataBufferFbo) {
+            this.__geomDataBufferFbo.bindAndClear();
 
-        //     let renderstate = {
-        //         'viewport': this,
-        //         'viewMatrix': this.getViewMatrix(),
-        //         'cameraMatrix': this.getCameraMatrix(),
-        //         'projectionMatrix': this.getProjectionMatrix(),
-        //         'isOrthographic': this.__camera.isOrthographic,
-        //         'fovY': this.__camera.fov,
-        //         'viewportFrustumSize': this.__frustumDim,
-        //         'drawCalls': 0,
-        //         'postOptDrawCalls': 0,
-        //         'profileJSON': {}
-        //     };
+            let renderstate = {
+                viewport: this,
+                viewMatrix: this.getViewMatrix(),
+                cameraMatrix: this.getCameraMatrix(),
+                projectionMatrix: this.getProjectionMatrix(),
+                isOrthographic: this.__camera.isOrthographic,
+                fovY: this.__camera.fov,
+                viewportFrustumSize: this.__frustumDim,
+                drawCalls: 0,
+                drawCount: 0,
+                profileJSON: {}
+            };
 
-        //     let gl = this.__renderer.gl;
-        //     gl.enable(gl.CULL_FACE);
-        //     gl.enable(gl.DEPTH_TEST);
-        //     gl.depthFunc(gl.LEQUAL);
-        //     gl.depthMask(true);
+            let gl = this.__renderer.gl;
+            gl.enable(gl.CULL_FACE);
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
+            gl.depthMask(true);
 
-        //     this.__geomDataPass.draw(renderstate);
-        //     this.__gizmoPass.drawDataPass(renderstate);
-        // }
+            this.__geomDataPass.draw(renderstate);
+            // this.__gizmoPass.drawDataPass(renderstate);
+        }
     }
 
     getGeomDataAtCoords(x, y) {

@@ -117,7 +117,7 @@ class GLRenderer {
         this.setupWebGL(canvasDiv, webglOptions);
 
         // this.__defaultGeomsPass = new GLForwardPass(this.__collector);
-        // this.__geomDataPass = new GLGeomDataPass(this.__collector);
+        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -259,8 +259,8 @@ class GLRenderer {
             this.requestRedraw();
         }, this);
 
-        // vp.createGeomDataFbo();
-        // vp.setGeomDataPass(this.__geomDataPass);
+        vp.createGeomDataFbo();
+        vp.setGeomDataPass(this.__geomDataPass);
         // vp.setGizmoPass(this.__gizmoPass);
 
         vp.viewChanged.connect((data)=>{
