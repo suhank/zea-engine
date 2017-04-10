@@ -10,13 +10,6 @@ class GLForwardPass extends GLPass {
         super(gl, collector);
     }
 
-    // filter(drawItem) {
-    //     if(!super.filter(drawItem))
-    //         return false;
-    //     let material = drawItem.geomItem.material;
-    //     return (!('opacity' in material) || ( Number.isNumeric(material.opacity) && material.opacity >= 0.99));
-    // }
-
     /////////////////////////////////////
     // Bind to Render Tree
     filterRenderTree() {

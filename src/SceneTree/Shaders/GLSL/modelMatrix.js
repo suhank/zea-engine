@@ -29,19 +29,21 @@ mat4 getMatrix(sampler2D texture, int textureSize, int index) {
     // return mat4(1.0);
 }
 
+int getID() {
+    if(instancedDraw == 0){
+       return transformIndex;
+    }
+    else{
+       return int(instancedTransformIds);
+    }
+}
+
 mat4 getModelMatrix(int id) {
     return getMatrix(transformsTexture, transformsTextureSize, id);
 }
 
 mat4 getModelMatrix() {
-    int id;
-    if(instancedDraw == 0){
-       id = transformIndex;
-    }
-    else{
-       id = int(instancedTransformIds);
-    }
-    return getModelMatrix(id);
+    return getModelMatrix(getID());
 }
 
 
@@ -50,14 +52,7 @@ vec4 getGeomItemData(int id) {
 }
 
 vec4 getGeomItemData() {
-    int id;
-    if(instancedDraw == 0){
-       id = transformIndex;
-    }
-    else{
-       id = int(instancedTransformIds);
-    }
-    return getGeomItemData(id);
+    return getGeomItemData(getID());
 }
 
 

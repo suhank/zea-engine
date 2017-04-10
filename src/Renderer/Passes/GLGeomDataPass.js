@@ -13,33 +13,41 @@ import {
 } from '../../SceneTree';
 
 class GLGeomDataPass extends GLPass {
-    constructor(gl, glshader) {
-        super(gl);
+    constructor(gl, collector) {
+        super(gl, collector);
 
-        if(!glshader)
-            glshader = new GLShader(gl, new GeomDataShader());
-        this.setExplicitShader(glshader);
+        this.__glshader = new GLShader(gl, new GeomDataShader());
     }
 
-    filter(drawItem) {
-        if(!super.filter(drawItem))
-            return false;
-        let geom = drawItem.geomItem.geom;
-        if(geom instanceof Lines)
-            return false;
-        return (drawItem.geomItem.selectable);
-    }
-
-    bindDrawItem(renderstate, drawItem) {
-        if (!super.bindDrawItem(renderstate, drawItem))
-            return false;
-
-        let unifs = renderstate['unifs'];
-        if ('geomData' in unifs) {
-            this.__gl.uniform4fv(unifs['geomData']['location'], drawItem.geomData);
+    /////////////////////////////////////
+    // Bind to Render Tree
+    filterRenderTree() {
+        let allglshaderMaterials = this.__collector.getGLShaderMaterials();
+        this.__glshadermaterials = [];
+        for (let glshaderkey in allglshaderMaterials) {
+            this.__glshadermaterials.push(allglshaderMaterials[glshaderkey]);
         }
+    }
 
+    bindShader(renderstate, glshader){
         return true;
+    }
+    bindMaterial(renderstate, glshader){
+        return true;
+    }
+    draw(renderstate) {
+        let gl = this.__gl;
+        // TODO: we need to provide a tool to quickly flip faces
+        // and save out a new JSON file. Then we can render only one side
+        //gl.enable(gl.CULL_FACE);
+        gl.disable(gl.CULL_FACE);
+        gl.disable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS);
+        gl.depthMask(true);
+
+        this.__glshader.bind(renderstate);
+
+        super.draw(renderstate);
     }
 
 };
