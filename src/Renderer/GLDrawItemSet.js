@@ -47,7 +47,7 @@ class GLDrawItemSet {
         this.__transformIdsArray = null;
         this.__transformIdsBuffer = null;
         this.__drawCount = 0;
-        this.__mirrored = false;
+        this.__inverted = false;
         this.__lightmapName = undefined;
 
         this.__shaderBindings = {};
@@ -65,8 +65,8 @@ class GLDrawItemSet {
         return this.__gldrawItems[index];
     }
 
-    isMirrored() {
-        return this.__mirrored;
+    isInverted() {
+        return this.__inverted;
     }
 
     getLightmapName() {
@@ -88,7 +88,7 @@ class GLDrawItemSet {
         this.__drawCount++;
 
         if (this.__gldrawItems.length == 1) {
-            this.__mirrored = gldrawItem.isMirrored();
+            this.__inverted = gldrawItem.isInverted();
             this.__lightmapName = gldrawItem.getGeomItem().getLightmap();
         }
 
@@ -241,12 +241,12 @@ class GLDrawItemSet {
         let gl = this.__gl;
         let unifs = renderstate.unifs;
 
-        if (this.__mirrored && renderstate.mirrored != true) {
+        if (this.__inverted && renderstate.inverted !== true) {
             gl.cullFace(gl.FRONT);
-            renderstate.mirrored = true;
-        } else if (!this.__mirrored && renderstate.mirrored == true) {
+            renderstate.inverted = true;
+        } else if (!this.__inverted && renderstate.inverted === true) {
             gl.cullFace(gl.BACK);
-            renderstate.mirrored = false;
+            renderstate.inverted = false;
         }
 
         renderstate.drawCount+=this.__drawCount;

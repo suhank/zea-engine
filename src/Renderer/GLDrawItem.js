@@ -16,7 +16,14 @@ class GLDrawItem {
         this.__lightmapName = geomItem.getLightmap();
 
         let geomXfo = this.__geomItem.getGeomXfo();
-        this.__mirrored = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
+        // Geometry is inverted if one scale value is negative and the rest is positive
+        // or all values are negative.
+        this.__inverted = (
+            (geomXfo.sc.x < 0.0 && geomXfo.sc.y > 0.0 && geomXfo.sc.z > 0.0) || 
+            (geomXfo.sc.y < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.z > 0.0) || 
+            (geomXfo.sc.z < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.y > 0.0) ||
+            (geomXfo.sc.x < 0.0 && geomXfo.sc.y < 0.0 && geomXfo.sc.z < 0.0)
+            );
         this.__assignedPasses = [];
 
         this.setGeomID(id, flags);
@@ -27,7 +34,7 @@ class GLDrawItem {
 
         this.__geomItem.globalXfoChanged.connect(() => {
             let geomXfo = this.__geomItem.getGeomXfo();
-            this.__mirrored = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
+            this.__inverted = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
             this.transformChanged.emit();
         }, this);
         this.__geomItem.visibilityChanged.connect(this.updated.emit, this.updated);
@@ -63,8 +70,8 @@ class GLDrawItem {
         return this.__geomItem.getVisible();
     }
 
-    isMirrored(){
-        return this.__mirrored;
+    isInverted(){
+        return this.__inverted;
     }
 
     // TODO: this system isn't super nice.
