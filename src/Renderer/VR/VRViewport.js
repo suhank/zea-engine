@@ -32,6 +32,9 @@ import {
 import {
     VRMarkerpenTool
 } from './VRMarkerpenTool.js'
+import {
+    VRFlyTool
+} from './VRFlyTool.js'
 
 
 class VRViewport {
@@ -96,7 +99,7 @@ class VRViewport {
         this.__vrPresentButton.addEventListener('click', function() {
             _this.togglePresenting();
         });
-        
+
         let vrViewport = this;
 
         function vrdisplaypresentchange() {
@@ -129,7 +132,10 @@ class VRViewport {
         this.actionOccuring = new Signal();
 
 
-        if (!isMobileDevice()) {
+        if (isMobileDevice()) {
+            this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
+            this.__currentTool = this.__vrTools['FlyTool'];
+        } else {
             this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
@@ -281,13 +287,12 @@ class VRViewport {
 
             this.__stageTreeItem.setVisible(true);
 
-            if (isMobileDevice())
-            {
+            if (isMobileDevice()) {
                 let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
                 let yaxis = xfo.ori.getYaxis();
-                let up = new Vec3(0,1,0);
+                let up = new Vec3(0, 1, 0);
                 let angle = yaxis.angleTo(up);
-                if(angle > 0.0001){
+                if (angle > 0.0001) {
                     let axis = yaxis.cross(up);
                     let align = new Quat();
                     align.setFromAxisAndAngle(axis, angle);
@@ -391,7 +396,7 @@ class VRViewport {
                 if (!this.__vrControllers[id]) {
 
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
-                   vrController.touchpadTouched.connect((vals) => {
+                    vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
                             this.setMoveMode(true);
 
@@ -418,27 +423,31 @@ class VRViewport {
 
                     vrController.buttonPressed.connect(() => {
                         this.__pressedButtons++;
-                        if (this.__moveMode) {
-                            if (this.__pressedButtons == 1) {
-                                this.__currentTool = this.__vrTools['1HandedGrab'];
-                            } else if (this.__pressedButtons == 2) {
-                                this.__currentTool = this.__vrTools['2HandedGrab'];
+                        if (!isMobileDevice()) {
+                            if (this.__moveMode) {
+                                if (this.__pressedButtons == 1) {
+                                    this.__currentTool = this.__vrTools['1HandedGrab'];
+                                } else if (this.__pressedButtons == 2) {
+                                    this.__currentTool = this.__vrTools['2HandedGrab'];
+                                }
+                            } else {
+                                this.__currentTool = this.__vrTools['Markerpen'];
                             }
-                        } else {
-                            this.__currentTool = this.__vrTools['Markerpen'];
                         }
                         this.__currentTool.startAction();
                     }, this);
 
                     vrController.buttonReleased.connect(() => {
                         this.__pressedButtons--;
-                        if (this.__currentTool) {
-                            this.__currentTool.endAction();
-                            this.__currentTool = null;
-                        }
-                        if (this.__moveMode && this.__pressedButtons == 1) {
-                            this.__currentTool = this.__vrTools['1HandedGrab'];
-                            this.__currentTool.startAction();
+                        if (!isMobileDevice()) {
+                            if (this.__currentTool) {
+                                this.__currentTool.endAction();
+                                this.__currentTool = null;
+                            }
+                            if (this.__moveMode && this.__pressedButtons == 1) {
+                                this.__currentTool = this.__vrTools['1HandedGrab'];
+                                this.__currentTool.startAction();
+                            }
                         }
                     }, this);
 
