@@ -26,12 +26,12 @@ class VRFlyTool {
     }
 
     applyAction() {
-        let flyDir = this.__activeController.getTipXfo().ori.getZaxis();
-        flyDir.scaleInPlace(this.__flySpeed);
+        let flyDir = this.__activeController.getTipGlobalXfo().ori.getZaxis();
+        flyDir.scaleInPlace(-this.__flySpeed);
 
         ////////////////
         // Update the stage Xfo
-        let stageXfo = this.__vrStage.getXfo(stageXfo);
+        let stageXfo = this.__vrStage.getXfo();
         stageXfo.tr.addInPlace(flyDir);
         this.__vrStage.setXfo(stageXfo);
     }

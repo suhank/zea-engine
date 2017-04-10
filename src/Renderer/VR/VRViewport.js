@@ -460,7 +460,7 @@ class VRViewport {
             }
         }
 
-        if (this.__currentTool) {
+        if (this.__currentTool && this.__pressedButtons) {
             this.__currentTool.applyAction();
         }
 

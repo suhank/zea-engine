@@ -1,5 +1,6 @@
 
 import {
+    isMobileDevice,
     EulerAngles,
     Quat,
     Xfo,
@@ -27,6 +28,7 @@ class VRController extends Gizmo {
     constructor(gl, index, stageTreeItem) {
         super(new Color(0, 0, 1));
 
+        this.__index = index;
         this.__treeItem = new TreeItem('VRController:'+index);
         stageTreeItem.addChild(this.__treeItem);
 
@@ -66,6 +68,7 @@ class VRController extends Gizmo {
         this.buttonReleased = new Signal();
 
         this.__xfo = new Xfo();
+        this.__isDaydramController = isMobileDevice();
 
         this.setVisible(true);
     }
@@ -98,12 +101,20 @@ class VRController extends Gizmo {
         this.__treeItem.localXfo = this.__xfo;
         this.__touchpadValue = gamepad.axes;
         if(gamepad.buttons[0].pressed){
-            if(gamepad.axes[0] != 0 && gamepad.axes[1] != 0)
-                this.touchpadTouched.emit(gamepad.axes);
+            if(this.__isDaydramController){
+                if(!this.__buttonPressed){
+                    this.__buttonPressed = true;
+                    this.buttonPressed.emit();
+                }
+                return;
+            }
+            else{
+                if(gamepad.axes[0] != 0 && gamepad.axes[1] != 0)
+                    this.touchpadTouched.emit(gamepad.axes);
+            }
         }
 
         // Button 0 is the touchpad clicker.
-
         for (let j = 1; j < gamepad.buttons.length; ++j) {
             if (gamepad.buttons[j].pressed) {
                 if(!this.__buttonPressed){
