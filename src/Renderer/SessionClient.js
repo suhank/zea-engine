@@ -162,7 +162,7 @@ class SessionClient {
         };
         ws.onmessage = function(message) {
             let jsonData = JSON.parse(message.data);
-            console.log("onmessage:" + jsonData.type + " client:" + jsonData.client);
+            // console.log("onmessage:" + jsonData.type + " client:" + jsonData.client);
             if (listeners[jsonData.type]) {
                 listeners[jsonData.type](jsonData.client, jsonData.data);
             }
@@ -228,8 +228,8 @@ class SessionClient {
             clearButton.disabled = true;
             timeline.style.display = 'none';
             playButton.style.display = 'none';
-            for (let client in connectedUsers) {
-                let userMarker = connectedUsers[client].userMarker;
+            for (let clientId in connectedUsers) {
+                let userMarker = connectedUsers[clientId].userMarker;
                 userMarker.clear();
             }
         };
