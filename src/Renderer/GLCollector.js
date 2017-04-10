@@ -409,8 +409,8 @@ class GLCollector {
         gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
         let size = this.__transformsTexture.width;
 
-        let yoffset = Math.round((index * 4) / size);
         let xoffset = (index * 4) % size;
+        let yoffset = Math.floor((index * 4) / size);
         let width = stride/4;
         let height = 1;
         
