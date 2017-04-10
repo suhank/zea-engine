@@ -94,7 +94,7 @@ let randomAvatarColor = () => {
 
 class SessionClient {
 
-    constructor(renderer) {
+    constructor(renderer, enableSessionRecording) {
         this.__renderer = renderer;
 
         let listeners = {};
@@ -143,11 +143,11 @@ class SessionClient {
         // Websocket setup
 
         let socketOpen = false;
-
-        let ws = new WebSocket("ws://localhost:5000", "proteocolOne");
+        let ws = new WebSocket("ws://localhost:5000", "protocolOne");
 
         let sendMessage = (data) => {
-            ws.send(JSON.stringify(data));
+            if(socketOpen)
+                ws.send(JSON.stringify(data));
         }
 
         ws.onopen = function(event) {
@@ -251,227 +251,6 @@ class SessionClient {
             onAnalyticsDataRecieved(data);
         }
 
-        ///////////////////////////////////////////////////////
-        //let generateRecordingUI = () => {
-        let div = renderer.getDiv();
-
-        // <div class="controlsContainer">
-        //     <div>
-        //         <select id="recSelector">
-        //             <option value="new">New recording</option>
-        //         </select>
-        //     </div>
-        //     <div class="icon" id="rec"><img src="rec.svg" alt=""></div>
-        //     <div class="icon" id="play"><img src="playArrow.svg" alt=""></div>
-        // </div>
-        let controlsContainer = document.createElement('div');
-        controlsContainer.setAttribute('class', 'controlsContainer');
-        controlsContainer.style.position = 'fixed';
-        controlsContainer.style.left = '20px';
-        controlsContainer.style.bottom = '20px';
-        controlsContainer.style.padding = '6px';
-
-        // let recSelectorDiv = document.createElement('div');
-        // controlsContainer.appendChild(recSelectorDiv);
-        // let recSelector = document.createElement('select');
-        // recSelector.class = "controlsContainer";
-        // recSelectorDiv.appendChild(recSelector);
-        // let newRecOption = document.createElement('option');
-        // newRecOption.value = "new";
-        // newRecOption.innerText = "New recording";
-        // recSelector.appendChild(newRecOption);
-
-        let clearButton = document.createElement('button');
-        // clearButton.class = "icon";
-        // clearButton.style.position = 'fixed';
-        // clearButton.style.right = '20px';
-        // clearButton.style.bottom = '20px';
-        // clearButton.style.padding = '20px';
-        clearButton.innerText = 'Clear';
-        controlsContainer.appendChild(clearButton);
-
-        let recButton = document.createElement('button');
-        // recButton.class = "icon";
-        // recButton.style.position = 'fixed';
-        // recButton.style.right = '20px';
-        // recButton.style.bottom = '20px';
-        // recButton.style.padding = '20px';
-        recButton.innerText = 'Record';
-        controlsContainer.appendChild(recButton);
-
-        let playButton = document.createElement('button');
-        // playButton.class = "icon";
-        // playButton.style.position = 'fixed';
-        // playButton.style.right = '20px';
-        // playButton.style.bottom = '20px';
-        // playButton.style.padding = '20px';
-        playButton.innerText = 'Play';
-        controlsContainer.appendChild(playButton);
-
-        div.appendChild(controlsContainer);
-
-        //<input id="timeline" type="range" min="0" max="100" step="0.1" value="0" style="width: 600px" />
-        let timeline = document.createElement('input');
-        timeline.setAttribute('id', 'timeline');
-        timeline.setAttribute('type', 'range');
-        timeline.setAttribute('min', '0');
-        timeline.setAttribute('max', '100');
-        timeline.setAttribute('step', '0.1');
-        timeline.setAttribute('value', "0");
-        let rhsSpace = 360;
-        let resizeTimeline = () => {
-            timeline.style.width = (div.clientWidth - rhsSpace) + 'px';
-        }
-        renderer.vrViewportSetup.connect(() => {
-            rhsSpace = 480;
-            resizeTimeline();
-        });
-        renderer.resized.connect((width, height) => {
-            resizeTimeline();
-        })
-        resizeTimeline();
-        div.appendChild(timeline);
-
-        timeline.style.display = 'none';
-        playButton.style.display = 'none';
-
-        clearButton.onclick = function(event) {
-            event.preventDefault();
-            if (socketOpen) {
-                sendMessage({
-                    type: 'clearRecording',
-                });
-            }
-        };
-
-        recButton.onclick = function(event) {
-            event.preventDefault();
-
-            if (socketOpen) {
-                if (!actualRecording) {
-                    sendMessage({
-                        type: 'startRecording',
-                    });
-                    recButton.innerText = 'Stop Recording';
-                } else {
-                    recButton.innerText = 'Record';
-                    sendMessage({
-                        type: 'stopRecording',
-                    });
-                }
-            }
-        };
-
-        timeline.addEventListener('input', function(event) {
-            if (replayData) {
-                travelTime(timeline.value);
-            }
-        });
-        // }
-        ///////////////////////////////////////////////////////
-
-        ////////////////////////////////////////
-        // Playback
-        let playWait = false;
-        let actualReplay = null;
-        let requestId = null;
-        let start = null;
-        let duration = null;
-        let rate = null;
-        let isPlaying = false;
-
-
-        let requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-            window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-        window.requestAnimationFrame = requestAnimationFrame;
-
-        // After joining, or finishing a recording
-        // we recieve the reording data from the server.
-        listeners.replayData = function(message) {
-            replayData = message.data;
-            playButton.style.display = 'block';
-            timeline.style.display = 'block';
-            timeline.value = 0;
-            if (playWait) {
-                play();
-            }
-        };
-
-        function play() {
-            duration = new Date(replayData.stopTime) - new Date(replayData.startTime);
-            rate = duration / 100;
-            playWait = false;
-            isPlaying = true;
-            start = Date.now();
-            // requestId = requestAnimationFrame(step);
-            renderer.redrawOccured.connect(step);
-            renderer.startContinuousDrawing();
-        }
-
-        function stop() {
-            // start = null;
-            // duration = null;
-            isPlaying = false;
-            // stateByTime(0);
-            // timeline.value = 0;
-            // window.cancelAnimationFrame(requestId);
-            renderer.stopContinuousDrawing();
-            renderer.redrawOccured.disconnect(step);
-        }
-
-        function step() {
-            let actualMS = Date.now() - start;
-            if (actualMS < duration) {
-                stateByTime(actualMS);
-                timeline.value = actualMS / rate;
-                // requestId = requestAnimationFrame(step);
-            } else {
-                stop();
-            }
-        }
-
-
-        playButton.onclick = function(event) {
-            event.preventDefault();
-
-            if (!playWait && !isPlaying) {
-                // if (replayData && replayData.id == recSelector.value) {
-                playButton.innerText = 'Stop';
-                play();
-                // } else {
-                //     playWait = true;
-                //     sendMessage({
-                //         type: 'requestReplay',
-                //         data: {
-                //             id: recSelector.value
-                //         }
-                //     });
-                // }
-                return;
-            }
-
-            if (isPlaying) {
-                playButton.innerText = 'Play';
-                stop();
-            }
-        };
-
-
-        // recSelector.onchange = function(event) {
-        //     if (recSelector.value == 'new') {
-        //         timeline.style.display = 'none';
-        //         playButton.style.display = 'none';
-        //     } else {
-        //         sendMessage({
-        //             type: 'requestReplay',
-        //             data: {
-        //                 id: recSelector.value
-        //             }
-        //         });
-        //     }
-        // };
-
         ////////////////////////////////////////
         // Register listeners with the renderer
 
@@ -510,69 +289,7 @@ class SessionClient {
                 sendMessage(data);
         });
 
-
-        // let updateAvatars = (data) => {
-        //     // let text = 'Clients: <br />';
-
-        //     Object.keys(data.clients).forEach(function(key) {
-        //         let client = data.clients[key];
-        //         // text += '- ' + (key == myId ? 'me' : key) + ': position [x:' + client.position.x + ', y:' + client.position.y + '] <br />'
-
-        //         if (key != myId) {
-        //             if (!connectedUsers[key]) {
-        //                 onUserConnected(key, client.color);
-        //             }
-
-        //             if (client) {
-        //                 onUserViewChange(key, client)
-        //             }
-        //         }
-        //     });
-
-        //     // clientsList.innerHTML = text;
-        // }
-
-
-        let travelTime = (percent) => {
-            const duration = new Date(replayData.duration);
-            const rate = duration / 100;
-            const timeSet = percent * rate;
-            stateByTime(timeSet);
-        }
-
-        let resetState = () => {
-            Object.keys(connectedUsers).forEach(function(key) {
-                connectedUsers[key].userMarker.destroy();
-                onUserDisconnected(key);
-            });
-        }
-
-        let stateByTime = (time) => {
-            // console.log("stateByTime:" + time);
-            const initState = {};
-
-            if (time < lastTime) {
-                lastTime = 0;
-                lastEvent = 0;
-                resetState();
-            }
-
-            for (lastEvent; lastEvent < replayData.events.length; lastEvent++) {
-                const currentEvent = replayData.events[lastEvent];
-                const actualTime = new Date(currentEvent.timestamp);
-                if (actualTime > time) {
-                    break;
-                }
-
-                // if (!connectedUsers[currentEvent.client]) {
-                //     onUserConnected(currentEvent.client, replayData.clients[currentEvent.client].color);
-                // }
-
-                handleEvent(currentEvent.event);
-            }
-
-            lastTime = time;
-        }
+        ////////////////////////////////////////
 
         let handleEvent = (event) => {
 
@@ -646,6 +363,295 @@ class SessionClient {
             userMarker.addSegmentToStroke(data.id, xfo);
         }
 
+        ////////////////////////////////////////////////////////
+        if(enableSessionRecording) {
+
+            //let generateRecordingUI = () => {
+            let div = renderer.getDiv();
+
+            // <div class="controlsContainer">
+            //     <div>
+            //         <select id="recSelector">
+            //             <option value="new">New recording</option>
+            //         </select>
+            //     </div>
+            //     <div class="icon" id="rec"><img src="rec.svg" alt=""></div>
+            //     <div class="icon" id="play"><img src="playArrow.svg" alt=""></div>
+            // </div>
+            let controlsContainer = document.createElement('div');
+            controlsContainer.setAttribute('class', 'controlsContainer');
+            controlsContainer.style.position = 'fixed';
+            controlsContainer.style.left = '20px';
+            controlsContainer.style.bottom = '20px';
+            controlsContainer.style.padding = '6px';
+
+            // let recSelectorDiv = document.createElement('div');
+            // controlsContainer.appendChild(recSelectorDiv);
+            // let recSelector = document.createElement('select');
+            // recSelector.class = "controlsContainer";
+            // recSelectorDiv.appendChild(recSelector);
+            // let newRecOption = document.createElement('option');
+            // newRecOption.value = "new";
+            // newRecOption.innerText = "New recording";
+            // recSelector.appendChild(newRecOption);
+
+            let clearButton = document.createElement('button');
+            // clearButton.class = "icon";
+            // clearButton.style.position = 'fixed';
+            // clearButton.style.right = '20px';
+            // clearButton.style.bottom = '20px';
+            // clearButton.style.padding = '20px';
+            clearButton.innerText = 'Clear';
+            controlsContainer.appendChild(clearButton);
+
+            let recButton = document.createElement('button');
+            // recButton.class = "icon";
+            // recButton.style.position = 'fixed';
+            // recButton.style.right = '20px';
+            // recButton.style.bottom = '20px';
+            // recButton.style.padding = '20px';
+            recButton.innerText = 'Record';
+            controlsContainer.appendChild(recButton);
+
+            let playButton = document.createElement('button');
+            // playButton.class = "icon";
+            // playButton.style.position = 'fixed';
+            // playButton.style.right = '20px';
+            // playButton.style.bottom = '20px';
+            // playButton.style.padding = '20px';
+            playButton.innerText = 'Play';
+            controlsContainer.appendChild(playButton);
+
+            div.appendChild(controlsContainer);
+
+            //<input id="timeline" type="range" min="0" max="100" step="0.1" value="0" style="width: 600px" />
+            let timeline = document.createElement('input');
+            timeline.setAttribute('id', 'timeline');
+            timeline.setAttribute('type', 'range');
+            timeline.setAttribute('min', '0');
+            timeline.setAttribute('max', '100');
+            timeline.setAttribute('step', '0.1');
+            timeline.setAttribute('value', "0");
+            let rhsSpace = 360;
+            let resizeTimeline = () => {
+                timeline.style.width = (div.clientWidth - rhsSpace) + 'px';
+            }
+            renderer.vrViewportSetup.connect(() => {
+                rhsSpace = 480;
+                resizeTimeline();
+            });
+            renderer.resized.connect((width, height) => {
+                resizeTimeline();
+            })
+            resizeTimeline();
+            div.appendChild(timeline);
+
+            timeline.style.display = 'none';
+            playButton.style.display = 'none';
+
+            clearButton.onclick = function(event) {
+                event.preventDefault();
+                if (socketOpen) {
+                    sendMessage({
+                        type: 'clearRecording',
+                    });
+                }
+            };
+
+            recButton.onclick = function(event) {
+                event.preventDefault();
+
+                if (socketOpen) {
+                    if (!actualRecording) {
+                        sendMessage({
+                            type: 'startRecording',
+                        });
+                        recButton.innerText = 'Stop Recording';
+                    } else {
+                        recButton.innerText = 'Record';
+                        sendMessage({
+                            type: 'stopRecording',
+                        });
+                    }
+                }
+            };
+
+            timeline.addEventListener('input', function(event) {
+                if (replayData) {
+                    travelTime(timeline.value);
+                }
+            });
+
+            ////////////////////////////////////////
+            // Playback
+            let playWait = false;
+            let actualReplay = null;
+            let requestId = null;
+            let start = null;
+            let duration = null;
+            let rate = null;
+            let isPlaying = false;
+
+
+            let requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+            window.requestAnimationFrame = requestAnimationFrame;
+
+            // After joining, or finishing a recording
+            // we recieve the reording data from the server.
+            listeners.replayData = function(message) {
+                replayData = message.data;
+                playButton.style.display = 'block';
+                timeline.style.display = 'block';
+                timeline.value = 0;
+                if (playWait) {
+                    play();
+                }
+            };
+
+            function play() {
+                duration = new Date(replayData.stopTime) - new Date(replayData.startTime);
+                rate = duration / 100;
+                playWait = false;
+                isPlaying = true;
+                start = Date.now();
+                // requestId = requestAnimationFrame(step);
+                renderer.redrawOccured.connect(step);
+                renderer.startContinuousDrawing();
+            }
+
+            function stop() {
+                // start = null;
+                // duration = null;
+                isPlaying = false;
+                // stateByTime(0);
+                // timeline.value = 0;
+                // window.cancelAnimationFrame(requestId);
+                renderer.stopContinuousDrawing();
+                renderer.redrawOccured.disconnect(step);
+            }
+
+            function step() {
+                let actualMS = Date.now() - start;
+                if (actualMS < duration) {
+                    stateByTime(actualMS);
+                    timeline.value = actualMS / rate;
+                    // requestId = requestAnimationFrame(step);
+                } else {
+                    stop();
+                }
+            }
+
+
+            playButton.onclick = function(event) {
+                event.preventDefault();
+
+                if (!playWait && !isPlaying) {
+                    // if (replayData && replayData.id == recSelector.value) {
+                    playButton.innerText = 'Stop';
+                    play();
+                    // } else {
+                    //     playWait = true;
+                    //     sendMessage({
+                    //         type: 'requestReplay',
+                    //         data: {
+                    //             id: recSelector.value
+                    //         }
+                    //     });
+                    // }
+                    return;
+                }
+
+                if (isPlaying) {
+                    playButton.innerText = 'Play';
+                    stop();
+                }
+            };
+
+
+            // recSelector.onchange = function(event) {
+            //     if (recSelector.value == 'new') {
+            //         timeline.style.display = 'none';
+            //         playButton.style.display = 'none';
+            //     } else {
+            //         sendMessage({
+            //             type: 'requestReplay',
+            //             data: {
+            //                 id: recSelector.value
+            //             }
+            //         });
+            //     }
+            // };
+
+            ///////////////////////////////////////////////////////
+
+
+            // let updateAvatars = (data) => {
+            //     // let text = 'Clients: <br />';
+
+            //     Object.keys(data.clients).forEach(function(key) {
+            //         let client = data.clients[key];
+            //         // text += '- ' + (key == myId ? 'me' : key) + ': position [x:' + client.position.x + ', y:' + client.position.y + '] <br />'
+
+            //         if (key != myId) {
+            //             if (!connectedUsers[key]) {
+            //                 onUserConnected(key, client.color);
+            //             }
+
+            //             if (client) {
+            //                 onUserViewChange(key, client)
+            //             }
+            //         }
+            //     });
+
+            //     // clientsList.innerHTML = text;
+            // }
+
+
+            let travelTime = (percent) => {
+                const duration = new Date(replayData.duration);
+                const rate = duration / 100;
+                const timeSet = percent * rate;
+                stateByTime(timeSet);
+            }
+
+            let resetState = () => {
+                Object.keys(connectedUsers).forEach(function(key) {
+                    connectedUsers[key].userMarker.destroy();
+                    onUserDisconnected(key);
+                });
+            }
+
+            let stateByTime = (time) => {
+                // console.log("stateByTime:" + time);
+                const initState = {};
+
+                if (time < lastTime) {
+                    lastTime = 0;
+                    lastEvent = 0;
+                    resetState();
+                }
+
+                for (lastEvent; lastEvent < replayData.events.length; lastEvent++) {
+                    const currentEvent = replayData.events[lastEvent];
+                    const actualTime = new Date(currentEvent.timestamp);
+                    if (actualTime > time) {
+                        break;
+                    }
+
+                    // if (!connectedUsers[currentEvent.client]) {
+                    //     onUserConnected(currentEvent.client, replayData.clients[currentEvent.client].color);
+                    // }
+
+                    handleEvent(currentEvent.event);
+                }
+
+                lastTime = time;
+            }
+        }
+
+
         /////////////////////////////////////////////////
         // Analytics Display
         let analyticsPass = undefined;
@@ -677,9 +683,8 @@ class SessionClient {
             analyticsTexture = undefined;
         }
 
-        let analyticsDisplayed = false;
         this.toggleAnalytics = ()=>{
-            if(!analyticsDisplayed)
+            if(!analyticsPass)
                 requestAnalytics();
             else
                 removeAnalytics();
