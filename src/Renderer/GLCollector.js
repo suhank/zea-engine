@@ -413,9 +413,7 @@ class GLCollector {
         let xoffset = (index * 4) % size;
         let width = stride/4;
         let height = 1;
-        if(xoffset < 0){
-            console.log("texSubImage2D xoffset:" + xoffset + " yoffset:" + yoffset +  " width:" + width +  " height:" + height);
-        }
+        
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
     }
 
