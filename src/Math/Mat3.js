@@ -1,6 +1,4 @@
-import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
+
 import {
     AttrValue
 } from './AttrValue.js';
@@ -313,7 +311,6 @@ class Mat3 extends AttrValue {
     // Debugging
 
     toString() {
-        // return JSON_stringify_fixedPrecision(this.toJSON());
         return this.toJSON().toString();
     }
 };

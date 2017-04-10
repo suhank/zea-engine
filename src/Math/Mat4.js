@@ -1,7 +1,4 @@
 import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
-import {
     AttrValue
 } from './AttrValue.js';
 import {
@@ -928,11 +925,6 @@ class Mat4 extends AttrValue {
         this.__data = new Float32Array(json);
     }
 
-    /////////////////////////////
-    // Debugging
-    toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON())
-    }
 };
 
 export {

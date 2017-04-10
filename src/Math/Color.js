@@ -1,6 +1,4 @@
-import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
+
 import {
     AttrValue
 } from './AttrValue.js';
@@ -235,9 +233,6 @@ class Color extends AttrValue {
         this.a = j.a;
     }
 
-    toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON())
-    }
 };
 
 export {

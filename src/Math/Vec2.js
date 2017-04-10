@@ -1,7 +1,4 @@
 import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
-import {
     AttrValue
 } from './AttrValue.js';
 import {

@@ -1,7 +1,4 @@
 import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
-import {
     AttrValue
 } from './AttrValue.js';
 import {
@@ -893,6 +890,9 @@ class Quat extends AttrValue {
         );
     }
 
+    /////////////////////////////
+    // Persistence
+    
     toJSON() {
         return {
             "x": this.x,
@@ -909,9 +909,6 @@ class Quat extends AttrValue {
         this.w = j['w'];
     }
 
-    toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON())
-    }
 };
 
 
