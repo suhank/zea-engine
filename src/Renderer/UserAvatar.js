@@ -19,6 +19,7 @@ class UserAvatar {
     constructor(id, data, parentTreeItem) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
+        this.__avatarScale = 10.0;
 
         this.__treeItem = new TreeItem(id);
         this.__material = new FlatMaterial('user'+id+'Material');
@@ -44,7 +45,7 @@ class UserAvatar {
     setMouseAndCameraRepresentation() {
         this.__treeItem.removeAllChildren();
         this.__treeItem.localXfo = new Xfo();
-        let shape = new Cuboid('Camera', 0.1, 0.1, 0.2);
+        let shape = new Cuboid('Camera', 0.1*this.__avatarScale, 0.1*this.__avatarScale, 0.2*this.__avatarScale);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
         this.__currentViewMode = 'MouseAndKeyboard';

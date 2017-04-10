@@ -51,7 +51,10 @@ uniform vec2 lightmapSize;
 /* VS Outputs */
 #ifdef ENABLE_LIGHTMAPS
 varying vec2 v_lightmapCoord;
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
+varying vec4 v_geomItemData;
+#endif
 #endif
 #ifdef ENABLE_SPECULAR
 varying vec4 v_viewPos;
@@ -59,18 +62,24 @@ varying vec3 v_viewNormal;
 #endif
 #ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
+#elseif ENABLE_CROSS_SECTIONS
+varying vec3 v_worldPos;
 #endif
-varying vec4 v_geomItemData;
 /* VS Outputs */
 
 void main(void) {
 
+    vec4 geomItemData = getGeomItemData();
+
 #ifdef ENABLE_LIGHTMAPS
-    v_lightmapCoord = (lightmapCoords + v_geomItemData.xy) / lightmapSize;
+    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
     v_clusterID = clusterIDs;
+    v_geomItemData = geomItemData;
+#endif
 #endif
 
-    //vec4 pos = vec4((lightmapCoords + v_geomItemData.xy), 0., 1.);
+    //vec4 pos = vec4((lightmapCoords + geomItemData.xy), 0., 1.);
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
@@ -79,6 +88,8 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
     v_worldPos      = (modelMatrix * pos).xyz;
+#elseif ENABLE_CROSS_SECTIONS
+    v_worldPos      = (modelMatrix * pos).xyz;
 #endif
 
 #ifdef ENABLE_SPECULAR
@@ -86,7 +97,6 @@ void main(void) {
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
 #endif
-
 
     v_geomItemData = getGeomItemData();
 }
@@ -102,7 +112,10 @@ precision highp float;
 /* VS Outputs */
 #ifdef ENABLE_LIGHTMAPS
 varying vec2 v_lightmapCoord;
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
+varying vec4 v_geomItemData;
+#endif
 #endif
 #ifdef ENABLE_SPECULAR
 varying vec4 v_viewPos;
@@ -110,16 +123,19 @@ varying vec3 v_viewNormal;
 #endif
 #ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
+#elseif ENABLE_CROSS_SECTIONS
+varying vec3 v_worldPos;
 #endif
-varying vec4 v_geomItemData;
 /* VS Outputs */
 
 
 #ifdef ENABLE_LIGHTMAPS
+uniform sampler2D lightmap;
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
 <%include file="debugColors.glsl"/>
 uniform vec2 lightmapSize;
 uniform bool debugLightmapTexelSize;
-uniform sampler2D lightmap;
+#endif
 #endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -189,7 +205,13 @@ void main(void) {
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor      = toLinear(_baseColor);
-    //float opacity       = _opacity;
+
+#ifdef ENABLE_SPECULAR
+    float roughness     = _roughness;
+    float metallic      = _metallic;
+    float reflectance   = _reflectance;
+#endif
+
 #else
     // Planar YZ projection for texturing, repeating every meter.
     vec2 texCoords      = v_worldPos.xz * 0.2;
@@ -201,6 +223,7 @@ void main(void) {
     //vec3 emission       = toLinear(_emission.xyz);//getColorParamValue(_emission, _emissionTex, _emissionTexConnected, texCoords).xyz;
 #endif
 
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
         vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
@@ -212,6 +235,7 @@ void main(void) {
         if(mod(total,2.0)==0.0)
             baseColor = vec4(clustercolor, 1.0);
     }
+#endif
 
 #ifdef ENABLE_CROSS_SECTIONS
     // Only do cross sections on opaque surfaces. 
@@ -227,27 +251,6 @@ void main(void) {
         discard;
         return;
     }
-#else
-    // Note: flip normals of non-mirrored geoms if rendering the inverse side.
-    // Note: this is disabled because the flags values were not making it through.
-    // int flags = int(v_geomItemData.w);
-    // const int mirror_flag = 2; // 1 << 1;
-    // if(gl_FrontFacing){
-    //     //if((flags & mirror_flag) != 0)
-    //     if(flags == mirror_flag)
-    //         viewNormal *= -1.0;
-    // }
-    // else{
-    //     // //if((flags & mirror_flag) != 0)
-    //     // if(flags != mirror_flag)
-    //     //     viewNormal *= -1.0;
-    // }
-    // if(v_geomItemData.w > 0.0)
-    //     baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-
-    // if(v_geomItemData.b != 0.0 || v_geomItemData.w != 0.0)
-    //     baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-
 #endif
 
 #ifdef ENABLE_LIGHTMAPS
@@ -255,20 +258,22 @@ void main(void) {
 #endif
 
 #ifndef ENABLE_SPECULAR
-    vec3 radiance = baseColor.rgb * irradiance;
-    gl_FragColor = vec4(radiance, 1);
+    // I'm not sure why we must reduce the irradiance here.
+    // If not, the scene is far to bright. 
+    irradiance *= 0.5;
+    vec3 diffuseReflectance = baseColor.rgb * irradiance;
+    gl_FragColor = vec4(diffuseReflectance, 1);
 #else
 
     vec3 viewNormal = normalize(v_viewNormal);
-    if(!gl_FrontFacing){
-        viewNormal *= -1.0;
-    }
     //vec3 surfacePos = -v_viewPos.xyz;
 
+#ifdef ENABLE_TEXTURES
     if(_normalTexConnected){
         vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
+#endif
 
     vec3 albedoLinear = baseColor.rgb;  
 
@@ -276,7 +281,7 @@ void main(void) {
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
     float NdotV = dot(normal, normalize(viewVector));
 
-    // // -------------------------- Diffuse Reflectance --------------------------
+    // -------------------------- Diffuse Reflectance --------------------------
 
     vec3 diffuseReflectance = albedoLinear * irradiance;
 

@@ -122,7 +122,7 @@ class GLRenderer {
 
         this.setupWebGL(canvasDiv, webglOptions);
 
-        this.sessionClient = new SessionClient(this);
+        this.sessionClient = new SessionClient(this, options.enableSessionRecording);
 
         // this.__defaultGeomsPass = new GLForwardPass(this.__collector);
         // this.__geomDataPass = new GLGeomDataPass(this.__collector);
