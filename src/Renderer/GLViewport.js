@@ -424,7 +424,6 @@ class GLViewport {
             case 'camera-manipulation':
                 this.__camera.onDragEnd(event, mouseUpPos, this);
                 this.renderGeomDataFbo();
-                document.exitPointerLock();
                 break;
             case 'gizmo-manipulation':
                 this.__manipGizmo.onDragEnd(event, mouseUpPos, this);
@@ -475,7 +474,6 @@ class GLViewport {
                 }
                 // Not
                 this.__renderer.resumeDrawing();
-                document.exitPointerLock();
                 break;
             case 'marker-tool':
                 this.__markerPen.endStroke(this.__markerLineId);
