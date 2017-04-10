@@ -223,32 +223,6 @@ void main(void) {
                 discard;
             return;
         }
-#else
-        // Note: flip normals of non-mirrored geoms if rendering the inverse side.
-        // Note: this is disabled because the flags values were not making it through.
-        // int flags = int(v_geomItemData.w);
-        // const int mirror_flag = 2; // 1 << 1;
-        // if(gl_FrontFacing){
-        //     //if((flags & mirror_flag) != 0)
-        //     if(flags == mirror_flag)
-        //         viewNormal *= -1.0;
-        // }
-        // else{
-        //     // //if((flags & mirror_flag) != 0)
-        //     // if(flags != mirror_flag)
-        //     //     viewNormal *= -1.0;
-        // }
-        // if(v_geomItemData.w > 0.0)
-        //     baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-
-        if(v_geomItemData.b != 0.0 || v_geomItemData.w != 0.0)
-            baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-
-        // Use this when double-sided rendering.
-        // (currently we cannot support single sideded rendering because so many geoms have flipped normals.)
-        if(!gl_FrontFacing){
-            viewNormal *= -1.0;
-        }
 #endif
 
         viewNormal = normalize(viewNormal);
