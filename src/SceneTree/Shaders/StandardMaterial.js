@@ -83,7 +83,7 @@ void main(void) {
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    vec4 viewPos = modelViewMatrix * pos;
+    vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
 #ifdef ENABLE_TEXTURES
@@ -97,8 +97,6 @@ void main(void) {
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
 #endif
-
-    v_geomItemData = getGeomItemData();
 }
 `);
 
@@ -182,6 +180,7 @@ uniform bool _normalTexConnected;
 //uniform float _normalScale;
 #endif
 
+#ifdef ENABLE_TEXTURES
 float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
@@ -199,7 +198,7 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
     else
         return value;
 }
-
+#endif
 
 void main(void) {
 
@@ -350,7 +349,7 @@ void main(void) {
     // if(debugLevel == 0){
     //     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
     //     vec3 normal = mat3(cameraMatrix) * viewNormal;
-    //     float NdotV = dot(normalize(normal),normalize(viewVector));
+    //     float NdotV = dot(normalize(normal), normalize(viewVector));
     //     // vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
 
     //     vec4 color = baseColor * NdotV;
