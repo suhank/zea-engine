@@ -1,4 +1,7 @@
 import {
+    isIOSDevice
+} from '../Math';
+import {
     GLShader
 } from './GLShader.js';
 import {
@@ -45,9 +48,12 @@ class GLHDRImage extends GLTexture2D {
         let cdm = hdrImageParams.cdm;
 
         if(!this.__fbo){
+
+            // Note: iOS devices create FLOAT Fbox.
+            // If we want better quality, we could unpack the texture in JavaScript. 
             this.configure({
                 channels: 'RGBA',
-                format: 'FLOAT',
+                format: (isIOSDevice() ? 'UNSIGNED_BYTE' : 'FLOAT'),
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'LINEAR',
