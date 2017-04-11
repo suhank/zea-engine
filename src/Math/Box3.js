@@ -60,20 +60,20 @@ class Box3 {
         }
     }
 
-    addBox3(box, mat4 = undefined) {
-        if (mat4) {
-            // transform each corner of the box3 into the new coord sys
-            this.addPoint(mat4.transformVec3(box.p0));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p0.x,box.p0.y, box.p1.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p0.x,box.p1.y, box.p0.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p1.x,box.p0.y, box.p0.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p0.x,box.p1.y, box.p1.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p1.x,box.p0.y, box.p1.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p1.x,box.p1.y, box.p0.z)));
-            this.addPoint(mat4.transformVec3(box.p1));
+    addBox3(box3, xfo = undefined) {
+        if (xfo) {
+            // transform each corner of the box33 into the new coord sys
+            this.addPoint(xfo.transformVec3(box3.p0));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p0.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p1.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p0.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p1.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p0.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p1.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(box3.p1));
         } else {
-            this.addPoint(box.p0);
-            this.addPoint(box.p1);
+            this.addPoint(box3.p0);
+            this.addPoint(box3.p1);
         }
     }
 

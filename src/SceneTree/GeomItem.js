@@ -72,7 +72,7 @@ class GeomItem extends TreeItem {
     updateBoundingBox() {
         let geomBox = this.geom.boundingBox.clone();
         this.__boundingBox.reset();
-        this.__boundingBox.addBox3(geomBox, this.getGeomXfo().toMat4());
+        this.__boundingBox.addBox3(geomBox, this.getGeomXfo());
         this.__boundingBoxDirty = false;
     }
 
