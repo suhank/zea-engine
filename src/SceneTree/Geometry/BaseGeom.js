@@ -126,6 +126,85 @@ class BaseGeom extends RefCounted {
     //////////////////////////////////////////
     // Persistence
     
+    loadBaseGeomBinary(reader){
+
+        this.name = reader.loadStr();
+        let numVerts = reader.loadUInt32();
+        this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+
+        this.setNumVertices(numVerts);
+        let positionsAttr = this.vertices;
+        let normalsAttr = this.getVertexAttribute('normals');
+        if(!normalsAttr)
+            normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0)
+
+        let load8BitPositionsArray = (start, end, offset, sclVec, positions_8bit)=>{
+            for (let i = start; i<end; i++) {
+                let pos = new Vec3(
+                    positions_8bit[(i * 3) + 0] / 255.0, 
+                    positions_8bit[(i * 3) + 1] / 255.0, 
+                    positions_8bit[(i * 3) + 2] / 255.0
+                    );
+                pos.multiplyInPlace(sclVec);
+                pos.addInPlace(offset);
+                positionsAttr.setValue(i, pos);
+            }
+        }
+
+        let load8BitNormalsArray = (start, end, offset, sclVec, normals_8bit)=>{
+            if(sclVec.isNull())
+                sclVec.set(1,1,1);
+            for (let i = start; i<end; i++) {
+                let normal = new Vec3(
+                    normals_8bit[(i * 3) + 0] / 255.0, 
+                    normals_8bit[(i * 3) + 1] / 255.0, 
+                    normals_8bit[(i * 3) + 2] / 255.0
+                    );
+                normal.multiplyInPlace(sclVec);
+                normal.addInPlace(offset);
+                normal.normalizeInPlace();
+                normalsAttr.setValue(i, normal);
+            }
+        }
+
+        let numClusters = reader.loadUInt32();
+        if (numClusters == 1) {
+            let box3 = this.__boundingBox;
+            let positions_8bit = reader.loadUInt8Array(numVerts*3);
+            load8BitPositionsArray(0, numVerts, box3.p0, box3.diagonal(), positions_8bit);
+
+            box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+            let normals_8bit = reader.loadUInt8Array(numVerts*3);
+            load8BitNormalsArray(0, numVerts, box3.p0, box3.diagonal(), normals_8bit);
+        }
+        else{
+            let clusters = [];
+            let offset = 0;
+            for (let i = 0; i < numClusters; i++) {
+                let count = reader.loadUInt32();
+                let box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+                let normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+                clusters.push({
+                    'range': [offset, offset + count],
+                    'bbox': box3,
+                    'normalsRange': normalsRange
+                });
+
+                offset += count;
+            }
+            let positions_8bit = reader.loadUInt8Array(numVerts*3);
+            let normals_8bit = reader.loadUInt8Array(numVerts*3);
+
+            for (let i = 0; i < numClusters; i++) {
+
+                let box3 = clusters[i].bbox;
+                load8BitPositionsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), positions_8bit);
+                
+                box3 = clusters[i].normalsRange;
+                load8BitNormalsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), normals_8bit);
+            }
+        }
+    }
 
     toJSON(opts) {
         let vertexAttributes = {};

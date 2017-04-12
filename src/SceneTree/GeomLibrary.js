@@ -39,7 +39,7 @@ class GeomLibrary {
         );
     }
 
-    loadBin(reader) {
+    readBinary(reader) {
         let numGeoms = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
         let printProgress = numGeoms > 1000;
@@ -61,7 +61,7 @@ class GeomLibrary {
                 default:
                     throw ("Unsupported Geom type:" + className);
             }
-            geom.loadBin(geomReader);
+            geom.readBinary(geomReader);
             this.geoms.push(geom);
 
             if(printProgress){

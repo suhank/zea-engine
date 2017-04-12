@@ -45,6 +45,9 @@ class MaterialLibrary {
         return this.__materials[name];
     }
 
+    //////////////////////////////////////////
+    // Persistence
+
     load(filePath){
         let xhr = new XMLHttpRequest();
         xhr.open("GET", filePath, true);
@@ -79,6 +82,28 @@ class MaterialLibrary {
 
     toJSON() {
         return {"numMaterials": this.geoms.length() }
+    }
+
+
+    readBinary(reader, flags){
+        this.name = reader.loadStr();
+
+        let numTextures = reader.loadUInt32();
+        for (let i=0; i< numTextures; i++) {
+            let type = reader.loadStr();
+            let name = reader.loadStr();
+            let texture = sgFactory.constructClass(type);
+            texture.readBinary(reader, flags);
+            this.__textures[name] = texture;
+        }
+        let numMaterials = reader.loadUInt32();
+        for (let i=0; i< numMaterials; i++) {
+            let type = reader.loadStr();
+            let name = reader.loadStr();
+            let material = sgFactory.constructClass('StandardMaterial');
+            material.readBinary(reader, flags);
+            this.__materials[name] = material;
+        }
     }
 
     toString() {

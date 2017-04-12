@@ -10,7 +10,7 @@ class Vec2 extends AttrValue {
     constructor(x = 0, y = 0) {
         super();
 
-        if (x instanceof Float32Array || x instanceof Uint32Array) {
+        if (x instanceof Float32Array || x instanceof Uint32Array || x instanceof Int32Array) {
             this.__data = x;
         } else if (x instanceof ArrayBuffer) {
             let buffer = x

@@ -118,6 +118,9 @@ class Material extends Shader {
         return this.__props[name];
     }
 
+    //////////////////////////////////////////
+    // Persistence
+
     toJSON() {
         let json = {
             "name": this.name
@@ -139,6 +142,28 @@ class Material extends Shader {
                 }
             }
         }
+    }
+
+    readBinary(reader, flags){
+        // super.readBinary(reader, flags);
+
+        let numParams = reader.loadUInt32();
+        let props = this.__props;
+        for(let i=0; i<numParams; i++){
+            let propName = '_'+reader.loadStr();
+            if(propName in props){
+                if(props[propName] instanceof Color)
+                    props[propName] = reader.loadFloat32Color();
+                else{
+                    props[propName] = reader.loadFloat32();
+                }
+            }
+            else{
+                // Hack to handle missing opacity on the client side.
+                reader.loadFloat32();
+            }
+        }
+       
     }
     
     //////////////////////////////////////////

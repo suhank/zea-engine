@@ -16,6 +16,11 @@ import {
 
 class Xfo {
     constructor(tr = undefined, ori = undefined, sc = undefined) {
+
+        if (tr instanceof Float32Array) {
+            this.setFromFloat32Array(tr);
+            return;
+        }
         if (tr instanceof Vec3) {
             this.tr = tr;
         } else {
@@ -110,6 +115,8 @@ class Xfo {
     }
 
 
+
+
     toJSON() {
         let j = {
             'tr': this.tr.toJSON(),
@@ -125,6 +132,28 @@ class Xfo {
         this.ori.fromJSON(j.ori);
         if(j.sc){
             this.sc.fromJSON(j.sc);
+        }
+    }
+
+    setFromFloat32Array(float32array) {
+        if(float32array.length == 7){
+            this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
+            this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
+            this.sc = new Vec3(1, 1, 1);
+            return;
+        }
+        if(float32array.length == 8){
+            this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
+            this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
+            let scl = float32array[7];
+            this.sc = new Vec3(scl, scl, scl);
+            return;
+        }
+        if(float32array.length == 10){
+            this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
+            this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
+            this.sc = new Vec3(float32array.buffer, float32array.byteOffset+21);
+            return;
         }
     }
 

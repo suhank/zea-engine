@@ -1,3 +1,8 @@
+
+import {
+    AttrValue,
+    Float32
+} from '../../Math';
 import {
     Attribute
 } from './Attribute.js';
@@ -36,6 +41,10 @@ class VertexAttribute extends Attribute {
 
     setFaceVertexValue(face, facevertex, value) {
         let vertex = this.__geom.getFaceVertexIndex(face, facevertex);
+        return this.setFaceVertexValue_ByVertexIndex(face, vertex, value);
+    }
+
+    setFaceVertexValue_ByVertexIndex(face, vertex, value) {
 
         // let valueRef = this.getValueRef(vertex);
         // valueRef.setFromOther(value);
@@ -115,7 +124,7 @@ class VertexAttribute extends Attribute {
 
         let numUnSplitValues = this.length;
         let count = this.length + splitCount;
-        let numElems = this.__dataType.numFloat32Elements();
+        let numElems = this.__dataType == Float32 ? 1 : this.__dataType.numFloat32Elements();
         let data = new Float32Array(count * numElems);
         for (let i = 0; i < this.__data.length; i++)
             data[i] = this.__data[i];
@@ -130,7 +139,10 @@ class VertexAttribute extends Attribute {
                     // this attribue has a split value in its array. 
                     // we must use that value...
                     let src = this.__splits[vertex][face];
-                    this.__dataType.createFromFloat32Buffer(data.buffer, tgt * numElems).setFromOther(this.__splitValues[src]);
+                    if(this.__dataType == Float32)
+                        data[tgt * numElems] = this.__splitValues[src];
+                    else
+                        this.__dataType.createFromFloat32Buffer(data.buffer, tgt * numElems).setFromOther(this.__splitValues[src]);
                 } else {
                     // Copy each scalar value to the new place in the array.
                     let src = parseInt(vertex);

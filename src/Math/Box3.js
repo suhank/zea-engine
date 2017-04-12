@@ -10,6 +10,10 @@ import {
 
 class Box3 {
     constructor(p0 = undefined, p1 = undefined) {
+        if (p0 instanceof Float32Array) {
+            this.setFromFloat32Array(p0);
+            return;
+        }
         if (p0 instanceof Vec3) {
             this.p0 = p0;
         } else {
@@ -80,6 +84,9 @@ class Box3 {
     size() {
         return this.p1.subtract(this.p0);
     }
+    diagonal() {
+        return this.p1.subtract(this.p0);
+    }
 
     center() {
         let result = this.p1.subtract(this.p0);
@@ -120,6 +127,12 @@ class Box3 {
     loadBin(data, byteOffset) {
         this.p0.loadBin(data, byteOffset);
         this.p0.loadBin(data, byteOffset + 12);
+    }
+
+
+    setFromFloat32Array(float32array) {
+        this.p0 = new Vec3(float32array.buffer, float32array.byteOffset);
+        this.p1 = new Vec3(float32array.buffer, float32array.byteOffset+12);
     }
 
     toString() {
