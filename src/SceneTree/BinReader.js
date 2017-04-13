@@ -13,6 +13,10 @@ class BinReader {
         this.__isMobileDevice = isMobileDevice;
     }
 
+    seek(pos){
+        this.__byteOffset = pos;
+    }
+
     get isMobileDevice() {
         return this.__isMobileDevice;
     }

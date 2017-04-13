@@ -146,14 +146,17 @@ class Material extends Shader {
 
     readBinary(reader, flags){
         // super.readBinary(reader, flags);
+        let type = reader.loadStr();
+        let name = reader.loadStr();
 
         let numParams = reader.loadUInt32();
         let props = this.__props;
         for(let i=0; i<numParams; i++){
             let propName = '_'+reader.loadStr();
             if(propName in props){
-                if(props[propName] instanceof Color)
+                if(props[propName] instanceof Color){
                     props[propName] = reader.loadFloat32Color();
+                }
                 else{
                     props[propName] = reader.loadFloat32();
                 }

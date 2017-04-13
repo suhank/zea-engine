@@ -54,8 +54,8 @@ class GLForwardPass extends GLPass {
     draw(renderstate) {
         let gl = this.__gl;
         // TODO: disable cull face when rendering cross sections.
-        gl.enable(gl.CULL_FACE);
-        // gl.disable(gl.CULL_FACE);
+        // gl.enable(gl.CULL_FACE);
+        gl.disable(gl.CULL_FACE);
         
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);

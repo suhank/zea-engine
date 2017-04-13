@@ -267,7 +267,11 @@ void main(void) {
     // Hacky simple irradiance. 
     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
     vec3 normal = mat3(cameraMatrix) * v_viewNormal;
+    // if(!gl_FrontFacing){
+    //     normal *= -1.0; 
+    // }
     vec3 irradiance = vec3(dot(normalize(normal), normalize(viewVector)));
+
 #else
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 #endif

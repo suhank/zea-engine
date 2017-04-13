@@ -241,13 +241,13 @@ class GLDrawItemSet {
         let gl = this.__gl;
         let unifs = renderstate.unifs;
 
-        if (this.__inverted && renderstate.inverted !== true) {
-            gl.cullFace(gl.FRONT);
-            renderstate.inverted = true;
-        } else if (!this.__inverted && renderstate.inverted === true) {
-            gl.cullFace(gl.BACK);
-            renderstate.inverted = false;
-        }
+        // if (this.__inverted && renderstate.inverted !== true) {
+        //     gl.cullFace(gl.FRONT);
+        //     renderstate.inverted = true;
+        // } else if (!this.__inverted && renderstate.inverted === true) {
+        //     gl.cullFace(gl.BACK);
+        //     renderstate.inverted = false;
+        // }
 
         renderstate.drawCount+=this.__drawCount;
 

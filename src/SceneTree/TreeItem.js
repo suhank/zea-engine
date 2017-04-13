@@ -7,6 +7,9 @@ import {
 import {
     sgFactory
 } from './SGFactory.js';
+import {
+    BinReader
+} from './BinReader.js';
 
 
 // Defines used to explicity specify types for WebGL.
@@ -324,6 +327,7 @@ class TreeItem {
 
     readBinary(reader, flags, materialLibrary, geomLibrary){
 
+        let type = reader.loadStr();
         this.name = reader.loadStr();
         let itemflags = reader.loadUInt8();
 
@@ -346,11 +350,45 @@ class TreeItem {
         let numChildren = reader.loadUInt32();
         if (/*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
 
+            let toc = reader.loadUInt32Array(numChildren);
+
             let printProgress = numChildren > 10000;
             let progress = 0;
             for (let i=0; i< numChildren; i++) {
+                reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 let childType = reader.loadStr();
+                let childName = reader.loadStr();
+                // if(type == 'FbxAsset'){
+                //     // if(i == 19){ // Seats
+                //     //     console.log("Skipping Broken:" + childName);
+                //     //     continue;
+                //     // }
+                //     // if(i == 24){
+                //     //     console.log("Skipping Broken:" + childName);
+                //     //     continue;
+                //     // }
+                //     // if( childName.startsWith('Basket') || 
+                //     //     childName.startsWith('Benches') || 
+                //     //     childName.startsWith('Rails')|| 
+                //     //     childName.startsWith('Stairs') || 
+                //     //     childName.startsWith('Lights') || 
+                //     //     childName.startsWith('Doors') || 
+                //     //     childName.startsWith('Air Vents') || 
+                //     //     childName.startsWith('Exterior') || 
+                //     //     childName.startsWith('Construction_Elements')|| 
+                //     //     childName.startsWith('Roof001')){
+                //     //     console.log("Skipping:" + childName);
+                //     //     continue;
+                //     // }
+
+                //     if(!childName.startsWith('Rails'))
+                //         continue;
+                    
+                //     console.log(childName);
+                // } 
+
                 let childItem = sgFactory.constructClass(childType);
+                reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 childItem.readBinary(reader, flags, materialLibrary, geomLibrary);
                 this.addChild(childItem, false);
 

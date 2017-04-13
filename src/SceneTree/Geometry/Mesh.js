@@ -374,15 +374,19 @@ class Mesh extends BaseGeom {
     readBinary(reader) {
         super.loadBaseGeomBinary(reader);
 
+        console.log("Loading:" + this.name);
+
         this.setFaceCounts(reader.loadUInt32Array());
         this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length);
         let offsetRange = reader.loadSInt32Vec2();
         let bytes = reader.loadUInt8();
-        let faceVertexIndices;
+        let faceVertexIndexDeltas;
         if(bytes == 1)
-            faceVertexIndices = reader.loadUInt8Array();
-        else
-            faceVertexIndices = reader.loadUInt16Array();
+            faceVertexIndexDeltas = reader.loadUInt8Array();
+        else if(bytes == 2)
+            faceVertexIndexDeltas = reader.loadUInt16Array();
+        else if(bytes == 4)
+            faceVertexIndexDeltas = reader.loadUInt32Array();
 
         let numVerts = this.numVertices();
 
@@ -394,7 +398,7 @@ class Mesh extends BaseGeom {
             this.__faceOffsets[faceIndex] = offset;
             for (let j = 0; j < count; j++) {
                 let faceVertex = offset + j;
-                let delta = faceVertexIndices[faceVertex] + offsetRange.x;
+                let delta = faceVertexIndexDeltas[faceVertex] + offsetRange.x;
                 if (faceIndex == 0)
                     this.__faceVertexIndices[faceVertex] = delta;
                 else {
@@ -410,29 +414,34 @@ class Mesh extends BaseGeom {
 
         /////////////////////////////////////
         // Clusters
-        let numClusters = reader.loadUInt32();
-        let positionsAttr = this.vertices;
-        let lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
-        let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
+        const numClusters = reader.loadUInt32();
+        const positionsAttr = this.vertices;
+        const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
+        // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
         for (let i = 0; i < numClusters; i++) {
             let xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat());
-            let sc = reader.loadFloat32Vec2();
-            xfo.sc.set(sc.x, 0.0, sc.y);
+            const scl = reader.loadFloat32();
+            xfo.sc.set(scl, 0.0, scl);
             let atlasPos = reader.loadFloat32Vec2();
             let offsetRange = reader.loadSInt32Vec2();
             let bytes = reader.loadUInt8();
             let clusterFaceIndiceDeltas;
             if(bytes == 1)
                 clusterFaceIndiceDeltas = reader.loadUInt8Array();
-            else
+            else if(bytes == 2)
                 clusterFaceIndiceDeltas = reader.loadUInt16Array();
+            else
+                clusterFaceIndiceDeltas = reader.loadUInt32Array();
             for (let delta of clusterFaceIndiceDeltas) {
                 let face = delta + offsetRange.x;
+                console.log(face);
                 let vertexIndices = this.getFaceVertexIndices(face);
                 for(let vertexIndex of vertexIndices){
-                    let pos = positionsAttr.getValueRef(i);
+                    let pos = positionsAttr.getValueRef(vertexIndex);
                     let tmp = xfo.transformVec3(pos);
+                    console.log(tmp.toString());
                     let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
+                    //lightmapCoord.scaleInPlace(coordsScale);
                     lightmapCoord.addInPlace(atlasPos);
                     lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord);
 

@@ -96,12 +96,11 @@ class AssetItem extends TreeItem {
 
         this.__materials.readBinary(reader, flags);
 
-        let type = reader.loadStr();
         super.readBinary(reader, flags, this.__materials, this.__geoms);
 
-        let texelSize = reader.loadFloat32();
-        this.atlasSize = reader.loadFloat32Vec2();
-        this.lightmapName = reader.loadStr();
+        // let texelSize = reader.loadFloat32();
+        // this.atlasSize = reader.loadFloat32Vec2();
+        // this.lightmapName = reader.loadStr();
 
     }
 

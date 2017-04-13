@@ -97,12 +97,16 @@ class MaterialLibrary {
             this.__textures[name] = texture;
         }
         let numMaterials = reader.loadUInt32();
-        for (let i=0; i< numMaterials; i++) {
-            let type = reader.loadStr();
-            let name = reader.loadStr();
-            let material = sgFactory.constructClass('StandardMaterial');
-            material.readBinary(reader, flags);
-            this.__materials[name] = material;
+        if(numMaterials > 0){
+            let toc = reader.loadUInt32Array(numMaterials);
+            for (let i=0; i< numMaterials; i++) {
+                let type = reader.loadStr();
+                let name = reader.loadStr();
+                let material = sgFactory.constructClass('StandardMaterial');
+                reader.seek(toc[i]); // Reset the pointer to the start of the item data.
+                material.readBinary(reader, flags);
+                this.__materials[name] = material;
+            }
         }
     }
 

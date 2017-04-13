@@ -683,7 +683,7 @@ class GLRenderer {
         }
 
         // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-        // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+        console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
     }
 
     draw() {

@@ -45,6 +45,7 @@ class GeomLibrary {
         let printProgress = numGeoms > 1000;
         let progress = 0;
         for (let i = 0; i < numGeoms; i++) {
+
             let geomReader = new BinReader(reader.data, toc[i], reader.isMobileDevice);
             let className = geomReader.loadStr();
             let geom;

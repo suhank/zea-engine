@@ -72,6 +72,8 @@ class GLSimpleRenderer extends GLRenderer {
                 break;
             case 'v':
                 this.mirrorVRisplayToViewport = !this.mirrorVRisplayToViewport;
+            default:
+                super.onKeyPressed(key);
 
         }
     }

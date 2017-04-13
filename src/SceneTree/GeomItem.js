@@ -196,6 +196,7 @@ class GeomItem extends TreeItem {
         const materialFlag = 1<<3;
         if (itemflags&materialFlag){
             let materialName = reader.loadStr();
+                    console.log(" materialName:" + materialName );
             this.material = materialLibrary.getMaterial(materialName);
             if(!this.material){
                 console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
