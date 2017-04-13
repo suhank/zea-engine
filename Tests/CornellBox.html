@@ -38,10 +38,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
         let async = new Visualive.Async();
         async.incAsyncCount(1);
+        asset.loaded.connect(async.decAsyncCount, async);
         // async.incAsyncCount(3);
         // lightmap.loaded.connect(async.decAsyncCount, async);
         // envMap.loaded.connect(async.decAsyncCount, async);
-        asset.loaded.connect(async.decAsyncCount, async);
         async.ready.connect(() => {
             scene.getRoot().addChild(asset);
             renderer.setScene(scene);
@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     setTimeout(function(){ 
-    loadBinMesh("Assets/box", "HDR_041_Path_Ref");//"");
+    loadBinMesh("Assets/FunkySphere", "HDR_041_Path_Ref");//"");
 
     }, 1000);
 });

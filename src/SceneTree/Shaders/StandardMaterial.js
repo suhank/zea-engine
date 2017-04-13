@@ -49,7 +49,11 @@ uniform vec2 lightmapSize;
 #endif
 
 /* VS Outputs */
-#ifdef ENABLE_LIGHTMAPS
+#ifndef ENABLE_LIGHTMAPS
+<%include file="stack-gl/inverse.glsl"/>
+varying vec4 v_viewPos;
+varying vec3 v_viewNormal;
+#else
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
@@ -71,20 +75,24 @@ void main(void) {
 
     vec4 geomItemData = getGeomItemData();
 
-#ifdef ENABLE_LIGHTMAPS
-    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    v_clusterID = clusterIDs;
-    v_geomItemData = geomItemData;
-#endif
-#endif
-
     //vec4 pos = vec4((lightmapCoords + geomItemData.xy), 0., 1.);
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
+
+#ifndef ENABLE_LIGHTMAPS
+    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    v_viewPos       = -viewPos;
+    v_viewNormal    = normalMatrix * normals;
+#else
+    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
+    v_clusterID = clusterIDs;
+    v_geomItemData = geomItemData;
+#endif
+#endif
 
 #ifdef ENABLE_TEXTURES
     v_worldPos      = (modelMatrix * pos).xyz;
@@ -108,7 +116,10 @@ precision highp float;
 #endif
 
 /* VS Outputs */
-#ifdef ENABLE_LIGHTMAPS
+#ifndef ENABLE_LIGHTMAPS
+varying vec4 v_viewPos;
+varying vec3 v_viewNormal;
+#else
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
@@ -252,7 +263,12 @@ void main(void) {
     }
 #endif
 
-#ifdef ENABLE_LIGHTMAPS
+#ifndef ENABLE_LIGHTMAPS
+    // Hacky simple irradiance. 
+    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
+    vec3 normal = mat3(cameraMatrix) * v_viewNormal;
+    vec3 irradiance = vec3(dot(normalize(normal), normalize(viewVector)));
+#else
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 #endif
 

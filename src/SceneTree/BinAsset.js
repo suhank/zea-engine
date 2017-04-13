@@ -77,7 +77,7 @@ class BinAsset extends AssetItem {
                 // this.fromJSON(JSON.parse(assetTreeStr));
                 this.readBinary(new BinReader(assetTreeData.buffer, 0, isMobileDevice()));
 
-                // console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
 
                 this.loaded.emit();
             },

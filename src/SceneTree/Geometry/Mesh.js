@@ -416,8 +416,8 @@ class Mesh extends BaseGeom {
         let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
         for (let i = 0; i < numClusters; i++) {
             let xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat());
-            let clusterSize = reader.loadFloat32Vec2();
-            xfo.sc.set(1.0/clusterSize.x, 0.0, 1.0/clusterSize.y);
+            let sc = reader.loadFloat32Vec2();
+            xfo.sc.set(sc.x, 0.0, sc.y);
             let atlasPos = reader.loadFloat32Vec2();
             let offsetRange = reader.loadSInt32Vec2();
             let bytes = reader.loadUInt8();
