@@ -126,7 +126,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (scene.getEnvMap() != undefined) {  
             let env = scene.getEnvMap();
             if(env instanceof HDRImage2D){
-                this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
+                this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR\n';
                 this.__glEnvMap = new GLEnvMap(this, env);
                 this.__shaderDirectives.repl = this.__glEnvMap.getShaderPreprocessorDirectives();
             }
