@@ -314,7 +314,7 @@ class GLViewport {
         // }
     }
 
-    getGeomDataAtCoords(x, y) {
+    getGeomDataAtPos(screenPos) {
         if (this.__geomDataBufferFbo) {
             let gl = this.__renderer.gl;
             gl.finish();
@@ -323,7 +323,7 @@ class GLViewport {
 
             let scl = this.__geomDataBufferFboRezScale;
             this.__geomDataBufferFbo.bind();
-            gl.readPixels(x * scl, (this.__height - y) * scl, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            gl.readPixels(screenPos.x * scl, (this.__height - screenPos.y) * scl, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             if (pixels[0] == 0)
                 return undefined;
@@ -369,22 +369,29 @@ class GLViewport {
     /////////////////////////////
     // Events
 
+
+    __eventMousePos(event){
+        return new Vec2(
+            (event.offsetX * window.devicePixelRatio) - this.getPosX(), 
+            (event.offsetY * window.devicePixelRatio) - this.getPosY()
+            );
+    }
+
     onMouseDown(event) {
 
-        this.__mouseDownPos.set(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+        this.__mouseDownPos = this.__eventMousePos(event);
 
         if (event.button == 0) {
             if (event.shiftKey) {
                 this.__manipMode = 'marker-tool';
-                let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-                let ray = this.calcRayFromScreenPos(mousePos);
+                let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                 let color = new Color(1, 0, 0);
                 let thickness = this.__camera.focalDistance * 0.002;
                 this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
             } else {
-                let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
+                let geomData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (geomData != undefined && geomData.flags == 1) {
                     let drawItem = this.__renderer.getDrawItem(geomData.id);
                     if (drawItem) {
@@ -417,7 +424,7 @@ class GLViewport {
     }
 
     onMouseUp(event) {
-        let mouseUpPos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+        let mouseUpPos = this.__eventMousePos(event);
         switch (this.__manipMode) {
             case 'highlighting':
                 break;
@@ -435,7 +442,7 @@ class GLViewport {
                 this.__renderer.getScene().getSelectionManager().clearSelection();
             case 'add-selection':
                 this.__renderer.suspendDrawing();
-                let geomData = this.getGeomDataAtCoords(event.offsetX - this.x, event.offsetY - this.y);
+                let geomData = this.getGeomDataAtPos(mouseUpPos);
                 if (geomData != undefined && geomData.flags == 1) {
                     let drawItem = this.__renderer.getDrawItem(geomData.id);
                     if (drawItem) {
@@ -493,7 +500,7 @@ class GLViewport {
         }
         let updateSelectionRect = function() {
             // Update the rect.
-            let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+            let mousePos = this.__eventMousePos(event);
             let tl = new Vec2(Math.min(this.__mouseDownPos.x, mousePos.x), Math.min(this.__mouseDownPos.y, mousePos.y));
             let br = new Vec2(Math.max(this.__mouseDownPos.x, mousePos.x), Math.max(this.__mouseDownPos.y, mousePos.y));
             let rectWidth = (br.x - tl.x);
@@ -513,8 +520,7 @@ class GLViewport {
         }
 
         let getGizmoUnderMouse = function() {
-            let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-            let geomData = this.getGeomDataAtCoords(mousePos.x, mousePos.y);
+            let geomData = this.getGeomDataAtPos(mousePos);
             if (geomData != undefined && geomData.flags == 2) {
                 let gizmo = this.__gizmoPass.getGizmo(geomData.id);
                 if (this.__mouseOverGizmo && this.__mouseOverGizmo != gizmo) {
@@ -546,15 +552,14 @@ class GLViewport {
                     if (this.__gizmoPass)
                         getGizmoUnderMouse.call(this);
 
-
-                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                    let mousePos = this.__eventMousePos(event);
                     let ray = this.calcRayFromScreenPos(mousePos);
                     this.mouseMoved.emit(event, mousePos, ray);
                 }
                 break;
             case 'gizmo-manipulation':
                 {
-                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                    let mousePos = this.__eventMousePos(event);
                     this.__manipGizmo.onDrag(event, mousePos, this);
                     this.__renderer.draw();
                     break;
@@ -584,8 +589,7 @@ class GLViewport {
                 break;
             case 'marker-tool':
                 {
-                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-                    let ray = this.calcRayFromScreenPos(mousePos);
+                    let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                     this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
