@@ -6,8 +6,8 @@ import {
     Shader
 } from '../../SceneTree/Shader.js';
 
-import '../../SceneTree/Shaders/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/stack-gl/transpose.js';
+import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
+import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
 
 class BillboardShader extends Shader {
     
@@ -16,48 +16,23 @@ class BillboardShader extends Shader {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PointsMaterial.vertexShader', `
 precision highp float;
 
-instancedattribute float instancedBillboardIds;    // instanced attribute..
-uniform sampler2D billboardDataTexture;
-uniform int billboardDataTextureSize;
+instancedattribute float billboardIds;    // instanced attribute..
 
 <%include file="utils/quadVertexFromID.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
-<%include file="modelMatrix.glsl"/>
-
-
-const int cols_per_instance = 4;
-
-mat4 getBillboardMatrix() {
-    int index = int(instancedBillboardIds);
-
-    // Unpack 3 x 4 matix columns into a 4 x 4 matrix.
-    vec4 col0 = texelFetch(texture, textureSize, (index * cols_per_instance));
-    vec4 col1 = texelFetch(texture, textureSize, (index * cols_per_instance) + 1);
-    vec4 col2 = texelFetch(texture, textureSize, (index * cols_per_instance) + 2);
-    mat4 result = mat4(col0, col1, col2, vec4(0.0, 0.0, 0.0, 1.0));
-    return transpose(result);
-}
-
-
-vec4 getBillboardData() {
-    int index = int(instancedBillboardIds);
-    return texelFetch(billboardDataTexture, billboardDataTextureSize, (index * cols_per_instance) + 3);
-}
-
+<%include file="matrixTexture.glsl"/>
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-
-uniform vec2 texDim;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
 
 void main(void) {
-    int vertexID = int(vertexIDs);
+    int instanceID = int(billboardIds);
 
-    mat4 modelMatrix = getBillboardMatrix();
-    vec4 billboardData = getBillboardData();
+    mat4 modelMatrix = getModelMatrix(instanceID);
+    vec4 billboardData = getInstanceData(instanceID);
     vec2 quadVertex = getQuadVertexPositionFromID();
 
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
@@ -77,8 +52,6 @@ uniform sampler2D texture;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
-
-uniform sampler2D texture;
 
 void main(void) {
     gl_FragColor = texture2D(texture, v_texCoord);

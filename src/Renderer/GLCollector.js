@@ -116,6 +116,7 @@ class GLCollector {
         this.__glshadermaterials = {};
 
         this.renderTreeUpdated = new Signal();
+        this.billboardDiscovered = new Signal();
     }
 
     getRenderer(){
@@ -412,9 +413,9 @@ class GLCollector {
     bind(renderstate) {
         let gl = this.__renderer.gl;
         let unifs = renderstate.unifs;
-        if(unifs.transformsTexture){
-            this.__transformsTexture.bind(renderstate, unifs.transformsTexture.location);
-            gl.uniform1i(unifs.transformsTextureSize.location, this.__transformsTexture.width);
+        if(unifs.instancesTexture){
+            this.__transformsTexture.bind(renderstate, unifs.instancesTexture.location);
+            gl.uniform1i(unifs.instancesTextureSize.location, this.__transformsTexture.width);
         }
 
         // Note: the Scene owns the lightmaps. 

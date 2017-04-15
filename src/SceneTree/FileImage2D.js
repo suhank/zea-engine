@@ -14,7 +14,7 @@ class FileImage2D extends Image2D {
         super();
 
         this.__name = name;
-        this.__url = url;
+        this.__url = url ? url : name;
 
         let _this = this;
         this._image = new Image();

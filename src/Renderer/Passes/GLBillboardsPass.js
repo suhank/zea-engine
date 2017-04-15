@@ -1,58 +1,59 @@
 import {
-    Vec2,
-    Vec3,
-    Vec4,
-    Color,
-    Mat4
-} from '../Math/Math.js';
-import {
-    GLLabelItem
-} from './GLLabelItem.js';
+    Vec4
+} from '../../Math';
 import {
     BillboardShader
-} from './Shaders/BillboardShader.js';
+} from '../Shaders/BillboardShader.js';
 import {
     GLPass
-} from './GLPass.js';
+} from '../GLPass.js';
 import {
     GLShader
-} from './GLShader.js';
-
+} from '../GLShader.js';
+import {
+    ImageAtlas
+} from '../ImageAtlas.js';
+import {
+    GLTexture2D
+} from '../GLTexture2D.js';
+import {
+    generateShaderGeomBinding,
+} from '../GeomShaderBinding.js';
 
 class GLBillboardsPass extends GLPass {
     constructor(gl, collector) {
         super(gl, collector);
 
-        this.__glshader = new GLShader(gl, new BillboardShader(gl));
-        this.__billboards = [];
-        this.__atlas = new ImageAtlas(gl, 'Billboards', channels='RGB', format = 'UNSIGNED_BYTE');
-
         if (!gl.__quadVertexIdsBuffer) {
             gl.setupInstancedQuad();
         }
 
-        this.__buffers = {
-            'billboardIds': gl.createBuffer()
-        };
+        this.__billboards = [];
+        this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE');
+        this.__glshader = new GLShader(gl, new BillboardShader(gl));
+
+        let shaderComp = this.__glshader.compileForTarget();
+        this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
         this.__collector.billboardDiscovered.connect(this.addBillboard, this);
+        this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);
+
     }
 
     addBillboard(billboard) {
 
+        let index = this.__billboards.length;
+        let billboardData = {
+            billboard: billboard,
+            imageIndex: this.__atlas.addSubImage(billboard.image2d)
+        };
+        this.__billboards.push(billboardData);
+
         billboard.visibilityChanged.connect(() => {
-            //this.__updateLabelInstanceData();
+            this.__updateBillboard(index, billboardData);
         });
 
         billboard.destructing.connect(this.removeBillboardItem, this);
-        billboard.billboard.__assignedToPass = true;
-
-        this.__billboards.push({
-            billboard: billboard,
-            imageIndex: this.__atlas.addSubImage(billboard.image2d);
-        });
-
-        this.__uploadRequired = true;
     }
 
     removeBillboardItem(billboard) {
@@ -62,8 +63,8 @@ class GLBillboardsPass extends GLPass {
     }
 
 
-    __populateBillboardDataArray(billboard, index, dataArray){
-        let mat4 = billboard.getGlobalXfo().toMat4();
+    __populateBillboardDataArray(billboardData, index, dataArray){
+        let mat4 = billboardData.billboard.globalXfo.toMat4();
 
         let stride = 16; // The number of floats per draw item.
         let offset = index * stride;
@@ -74,18 +75,15 @@ class GLBillboardsPass extends GLPass {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        let flags = 0;
-        if(gldrawItem.isMirrored())
-            flags = 1;
-        let materialId = 0;
-        col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, flags);
+
+        col3.set(billboardData.imageIndex, 0.0, 0, 0);
     }
 
-    __updateBillboardInstanceData() {
+    __updateBillboards() {
         if(this.__billboards.length == 0)
             return;
 
-        let gl = this.__renderer.gl;
+        let gl = this.__gl;
         let stride = 4; // The number of pixels per draw item.
         let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
         let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
@@ -108,7 +106,7 @@ class GLBillboardsPass extends GLPass {
             this.__instancesTexture.resize(size, size, dataArray);
         }
 
-        let indexArray = new Float32Array(indices.length);
+        let indexArray = new Float32Array(this.__billboards.length);
         for (let i=0; i<this.__billboards.length; i++) {
             indexArray[i] = i;
         }
@@ -117,24 +115,24 @@ class GLBillboardsPass extends GLPass {
         gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
 
         this.__glattrbuffers = {
-            billboardIndices: {
+            billboardIds: {
                 buffer: indexBuffer,
                 instanced: true,
                 dimension: 1,
-                count: indices.length
+                count: this.__billboards.length
             }
         };
     }
 
-    __updateBillboard(index, billboard){
+    __updateBillboard(index, billboardData){
         if(!this.__instancesTexture)
             return;
 
-        let gl = this.__renderer.gl;
+        let gl = this.__gl;
 
         let stride = 16; // The number of floats per draw item.
         let dataArray = new Float32Array(stride);
-        this.__populateBillboardDataArray(billboard, 0, dataArray);
+        this.__populateBillboardDataArray(billboardData, 0, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__instancesTexture.glTex);
         let xoffset = index*(stride/4); /*each pixel has 4 floats*/
@@ -150,20 +148,13 @@ class GLBillboardsPass extends GLPass {
         if (this.__billboards.length == 0)
             return;
 
-
         let gl = this.__gl;
         this.__glshader.bind(renderstate);
-
-        let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
-        if (!shaderBinding) {
-            shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, gl.__quadIndexBuffer, extrAttrBuffers, transformIds);
-            this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
-        }
-        shaderBinding.bind(renderstate);
+        this.__shaderBinding.bind(renderstate);
 
         let unifs = renderstate.unifs;
-        this.__instancesTexture.bind(renderstate, unifs.billboardInstancesTexture.location);
-        gl.uniform1i(unifs.billboardInstancesTextureSize.location, this.__instancesTexture.width);
+        this.__instancesTexture.bind(renderstate, unifs.instancesTexture.location);
+        gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
 
         gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
     }

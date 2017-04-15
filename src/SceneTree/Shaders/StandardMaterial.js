@@ -53,7 +53,7 @@ varying vec4 v_geomItemData;
 void main(void) {
 
 #ifdef ENABLE_LIGHTMAPS
-    v_geomItemData = getGeomItemData();
+    v_geomItemData = getInstanceData();
     v_lightmapCoord = (lightmapCoords + v_geomItemData.xy) / lightmapSize;
     v_clusterID = clusterIDs;
 #endif

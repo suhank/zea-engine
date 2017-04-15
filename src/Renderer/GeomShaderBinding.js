@@ -23,7 +23,7 @@ class GeomShaderBinding {
             if (!glattrbuffer) {
                 glattrbuffer = this.__extrAttrBuffers ? this.__extrAttrBuffers[attrName] : undefined;
                 if (!glattrbuffer) {
-                    if (attrName == 'instancedTransformIds' && this.__transformIdsBuffer) {
+                    if (attrName == 'instancedIds' && this.__transformIdsBuffer) {
 
                         // The instanced transform ids are bound as an instanced attribute.
                         let dimension = 1;
@@ -84,7 +84,7 @@ class VAOGeomShaderBinding {
                 glattrbuffer = extrAttrBuffers ? extrAttrBuffers[attrName] : undefined;
                 if (!glattrbuffer) {
                     // console.warn("glattrbuffer missing:" + attrName);
-                    if (attrName != 'instancedTransformIds' || !transformIdsBuffer)
+                    if (attrName != 'instancedIds' || !transformIdsBuffer)
                         gl.disableVertexAttribArray(location);
                     continue;
                 }
@@ -108,9 +108,9 @@ class VAOGeomShaderBinding {
 
         }
 
-        if (transformIdsBuffer && shaderAttrs.instancedTransformIds) {
+        if (transformIdsBuffer && shaderAttrs.instancedIds) {
             // The instanced transform ids are bound as an instanced attribute.
-            let location = shaderAttrs.instancedTransformIds.location;
+            let location = shaderAttrs.instancedIds.location;
             gl.bindBuffer(gl.ARRAY_BUFFER, transformIdsBuffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);

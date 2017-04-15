@@ -1,4 +1,6 @@
 
+export * from './GLSL';
+
 export * from './FlatMaterial.js';
 export * from './StandardMaterial.js';
 export * from './PointsMaterial.js';
