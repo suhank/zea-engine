@@ -6,7 +6,7 @@ shaderLibrary.setShaderModule('utils/quadVertexFromID.glsl', `
 
 attribute float vertexIDs;
 
-vec2 getScreenSpaceVertexPosition(){
+vec2 getQuadVertexPositionFromID(){
 
 #ifdef GLSL_ES3
     const vec2 quadVertices[4] = vec2[4]( vec2(-0.5, -0.5), vec2(0.5, -0.5), vec2(-0.5, 0.5), vec2(0.5, 0.5) );

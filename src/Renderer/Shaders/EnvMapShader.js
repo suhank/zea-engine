@@ -29,7 +29,7 @@ varying vec2 v_texCoord;
  
 void main()
 {
-    vec2 position = getScreenSpaceVertexPosition() * 2.0;
+    vec2 position = getQuadVertexPositionFromID() * 2.0;
 
     mat4 inverseProjection = inverse(projectionMatrix);
     mat3 inverseModelview = transpose(mat3(viewMatrix));

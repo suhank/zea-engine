@@ -7,6 +7,7 @@ import {
 } from '../Math';
 
 import {
+    Image2D,
     Shader,
     shaderLibrary
 } from '../SceneTree';
@@ -46,7 +47,7 @@ varying vec2 v_texCoord;
  
 void main()
 {
-    vec2 position = getScreenSpaceVertexPosition();
+    vec2 position = getQuadVertexPositionFromID();
     v_texCoord = position+0.5;
     gl_Position = vec4(vec2(-1.0, -1.0) + (pos * 2.0) + (v_texCoord * size * 2.0), 0.0, 1.0);
 
@@ -108,7 +109,11 @@ class ImageAtlas extends GLTexture2D {
     }
 
     addSubImage(subImage) {
-        this.__subImages.push(subImage);
+        if(subImage instanceof Image2D)
+            this.__subImages.push(new GLTexture2D(gl, subImage));
+        else
+            this.__subImages.push(subImage);
+        return this.__subImages.length - 1;
     }
 
     getSubImage(index) {

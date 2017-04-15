@@ -10,7 +10,8 @@ import {
     Lines,
     Mesh,
     Grid,
-    LinesMaterial
+    LinesMaterial,
+    BillboardItem
 } from '../SceneTree';
 import {
     GLPoints
@@ -254,6 +255,10 @@ class GLCollector {
                 this.addGeomItem(treeItem);
             }
         }
+        else if (treeItem instanceof BillboardItem) {
+            this.billboardDiscovered.emit(treeItem);
+        }
+
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
             this.addTreeItem(childItem);
