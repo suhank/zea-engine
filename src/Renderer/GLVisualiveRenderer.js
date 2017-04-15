@@ -1,4 +1,5 @@
 import {
+    isMobileDevice,
     Vec3
 } from '../Math';
 import {
@@ -112,8 +113,14 @@ class GLVisualiveRenderer extends GLRenderer {
 #define ENABLE_INLINE_GAMMACORRECTION
 `
         };
-        if (options.enableCrossSections)
-            this.__shaderDirectives.defines = this.__shaderDirectives.defines + '\n#define ENABLE_CROSS_SECTIONS'
+
+        if(!isMobileDevice()){
+            this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
+            //this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
+            this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS';
+        }
+        if(options.enableCrossSections )
+            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS'
     }
 
     getShaderPreprocessorDirectives() {
@@ -193,6 +200,8 @@ class GLVisualiveRenderer extends GLRenderer {
                 else
                     this.toggleContinuousDrawing();
                 break;
+            default:
+                super.onKeyPressed(key);
         }
         this.requestRedraw();
     }

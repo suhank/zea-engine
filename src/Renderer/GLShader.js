@@ -140,7 +140,7 @@ class GLShader {
 
             let location = gl.getUniformLocation(shaderProgramHdl, uniformName);
             if (location == undefined) {
-                console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
+                // console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
                 continue;
             }
             result.unifs[uniformName] = {

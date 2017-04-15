@@ -2,19 +2,16 @@ import {
     shaderLibrary
 } from '../../ShaderLibrary.js';
 
+import './glslutils.js';
+
 shaderLibrary.setShaderModule('matrixTexture.glsl', `
 
 uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
 
-const int cols_per_instance = 4;
+<%include file="glslutils.glsl"/>
 
-vec4 texelFetch(sampler2D texture, int textureSize, int index) {
-    float x = mod(float(index), float(textureSize));
-    float y = float(index / textureSize);
-    vec2 texCoord = vec2((float(x)+0.5)/float(textureSize), (float(y)+0.5)/float(textureSize));
-    return texture2D(texture, texCoord);
-}
+const int cols_per_instance = 4;
 
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
     // Unpack 3 x 4 matix columns into a 4 x 4 matrix.

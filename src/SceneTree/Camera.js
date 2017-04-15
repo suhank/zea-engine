@@ -82,7 +82,7 @@ class Camera extends TreeItem {
         this.clippingRangesChanged.emit();
     }
 
-    get isOrthographic(){
+    get isOrthographic() {
         return this.__isOrthographic;
     }
 
@@ -118,7 +118,7 @@ class Camera extends TreeItem {
     }
 
     orbit(mouseDelta, viewport) {
-        if(this.__keyboardMovement){
+        if (this.__keyboardMovement) {
             this.__mouseDownCameraXfo = this.__globalXfo.clone();
             this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
             let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
@@ -140,13 +140,12 @@ class Camera extends TreeItem {
 
         globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(this.__focalDistance));
 
-        if(this.__keyboardMovement){
+        if (this.__keyboardMovement) {
             // Avoid generating a signal because we have an animation frame occuring.
             // see: onKeyPressed
             this.__globalXfo = globalXfo;
             this.__viewMatrix = globalXfo.inverse().toMat4();
-        }
-        else
+        } else
             this.globalXfo = globalXfo;
     }
 
@@ -190,7 +189,7 @@ class Camera extends TreeItem {
 
     initDrag(mouseDownPos) {
         this.__mouseDownPos = mouseDownPos;
-        this.__mouseDragDelta.set(0,0);
+        this.__mouseDragDelta.set(0, 0);
         this.__mouseDownCameraXfo = this.__globalXfo.clone();
         this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
         let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
@@ -210,7 +209,7 @@ class Camera extends TreeItem {
         }
     }
 
-    onDrag(event, viewport) {
+    onDrag(event, mousePos, viewport) {
         // During requestPointerLock, the offsetX/Y values are not updated.
         // Instead we get a relative delta that we use to compute the total
         // delta for the drag.
@@ -222,13 +221,10 @@ class Camera extends TreeItem {
         //     this.__mouseDragDelta.x += event.movementX;
         //     this.__mouseDragDelta.y += event.movementY;
         // }
-        if(this.__keyboardMovement){
-            this.__mouseDragDelta.x = event.offsetX;
-            this.__mouseDragDelta.y = event.offsetY;
-        }
-        else{
-            this.__mouseDragDelta.x = event.offsetX - this.__mouseDownPos.x;
-            this.__mouseDragDelta.y = event.offsetY - this.__mouseDownPos.y;
+        if (this.__keyboardMovement) {
+            this.__mouseDragDelta = mousePos;
+        } else {
+            this.__mouseDragDelta = mousePos.subtract(this.__mouseDownPos);
         }
         switch (this.__manipulationState) {
             case 'orbit':
@@ -255,10 +251,10 @@ class Camera extends TreeItem {
         let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
         this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(zoomDist));
         this.focalDistance = this.__focalDistance + zoomDist;
-        this.globalXfo = this.__globalXfo; 
+        this.globalXfo = this.__globalXfo;
     }
 
-    __integrateVelocityChange(velChange){
+    __integrateVelocityChange(velChange) {
         let delta = new Xfo();
         delta.tr = this.__velocity.normalize().scale(this.__maxVel);
         this.globalXfo = this.__globalXfo.multiply(delta);
@@ -270,22 +266,22 @@ class Camera extends TreeItem {
         // (TODO: move this logic to GLRenderer)
         switch (key) {
             case 'w':
-                if(this.__keysPressed.indexOf(key) != -1)
+                if (this.__keysPressed.indexOf(key) != -1)
                     return false;
                 this.__velocity.z -= 1.0;
                 break;
             case 's':
-                if(this.__keysPressed.indexOf(key) != -1)
+                if (this.__keysPressed.indexOf(key) != -1)
                     return false;
                 this.__velocity.z += 1.0;
                 break;
             case 'a':
-                if(this.__keysPressed.indexOf(key) != -1)
+                if (this.__keysPressed.indexOf(key) != -1)
                     return false;
                 this.__velocity.x -= 1.0;
                 break;
             case 'd':
-                if(this.__keysPressed.indexOf(key) != -1)
+                if (this.__keysPressed.indexOf(key) != -1)
                     return false;
                 this.__velocity.x += 1.0;
                 break;
@@ -293,12 +289,12 @@ class Camera extends TreeItem {
                 return false;
         }
         this.__keysPressed.push(key);
-        if(!this.__keyboardMovement){
+        if (!this.__keyboardMovement) {
             this.__keyboardMovement = true;
             let _this = this;
-            let animationFrame = function(){
+            let animationFrame = function() {
                 _this.__integrateVelocityChange()
-                if(_this.__keyboardMovement)
+                if (_this.__keyboardMovement)
                     window.requestAnimationFrame(animationFrame);
             }
             window.requestAnimationFrame(animationFrame);
@@ -306,8 +302,7 @@ class Camera extends TreeItem {
         return true;
     }
 
-    onKeyDown(key) {
-    }
+    onKeyDown(key) {}
 
     onKeyUp(key) {
         switch (key) {
@@ -328,7 +323,7 @@ class Camera extends TreeItem {
         }
         let keyIndex = this.__keysPressed.indexOf(key);
         this.__keysPressed.splice(keyIndex, 1);
-        if(this.__keysPressed.length == 0)
+        if (this.__keysPressed.length == 0)
             this.__keyboardMovement = false;
         return true;
     }
@@ -351,7 +346,7 @@ class Camera extends TreeItem {
 
         let transformedBBox = new Box3();
         let mat3 = this.__globalXfo.toMat4();
-        mat3.translation.set(0,0,0);
+        mat3.translation.set(0, 0, 0);
         transformedBBox.addBox3(boundingBox, mat3);
         let boundingBoxSize = transformedBBox.size();
         let boundingBoxRad = (boundingBoxSize.x + boundingBoxSize.z) * 0.25;

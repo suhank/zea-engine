@@ -158,7 +158,7 @@ class GLViewport {
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'MouseAndKeyboard',
-                cameraXfo: globalXfo.toJSON()
+                viewXfo: globalXfo.toJSON()
             });
         }, this);
         this.__camera.clippingRangesChanged.connect(function() {
@@ -566,7 +566,8 @@ class GLViewport {
                 }
             case 'camera-manipulation':
                 {
-                    this.__camera.onDrag(event, this);
+                    let mousePos = this.__eventMousePos(event);
+                    this.__camera.onDrag(event, mousePos, this);
                     break;
                 }
             case 'new-selection':

@@ -131,6 +131,12 @@ class MarkerpenTool {
     //     lineGeom.geomDataChanged.emit({'indicesChanged':true});
     // }
 
+    clear(){
+        this.__strokeCount = 0;
+        this.__strokes = {};
+        this.__treeItem.removeAllChildren();
+    }
+
     destroy(){
         this.__treeItem.parentItem.removeChildByHandle(this.__treeItem);
         this.__treeItem = null;
