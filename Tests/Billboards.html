@@ -20,8 +20,21 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     let scene = new Visualive.Scene();
 
-    let billboard = new Visualive.BillboardItem('billboard', new Visualive.FileImage2D('./Assets/texture.png'));
-    scene.getRoot().addChild(billboard);
+    {
+        let billboard1 = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D('./Assets/texture.jpg'));
+        let xfo1 = new Visualive.Xfo();
+        xfo1.tr.set( -1, 0, 1 );
+        billboard1.localXfo = xfo1;
+        scene.getRoot().addChild(billboard1);
+    }
+    {
+        let billboard0 = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D('./Assets/texture.png'));
+        let xfo0 = new Visualive.Xfo();
+        xfo0.tr.set( 1, 0, 0 );
+        xfo0.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
+        billboard0.localXfo = xfo0; 
+        scene.getRoot().addChild(billboard0);
+    }
 
     let renderer = new Visualive.GLSimpleRenderer(addCanvas(), { resources:'../Resources/Resources.vlr' });
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);

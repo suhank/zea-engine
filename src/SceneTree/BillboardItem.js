@@ -12,7 +12,7 @@ class BillboardItem extends TreeItem {
     constructor(name, image2d) {
         super(name);
 
-        this.image2d = undefined;
+        this.image2d = image2d;
     }
 
 };

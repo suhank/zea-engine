@@ -16,7 +16,7 @@ class BillboardShader extends Shader {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PointsMaterial.vertexShader', `
 precision highp float;
 
-instancedattribute float billboardIds;    // instanced attribute..
+instancedattribute float instancedIds;    // instanced attribute..
 
 <%include file="utils/quadVertexFromID.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
@@ -29,7 +29,7 @@ uniform mat4 projectionMatrix;
 varying vec2 v_texCoord;
 
 void main(void) {
-    int instanceID = int(billboardIds);
+    int instanceID = int(instancedIds);
 
     mat4 modelMatrix = getModelMatrix(instanceID);
     vec4 billboardData = getInstanceData(instanceID);
@@ -41,7 +41,7 @@ void main(void) {
     v_texCoord *= billboardData.zw;
     v_texCoord += billboardData.xy;
 
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x, quadVertex.y, 0.0, 1.0);
+    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x, (quadVertex.y + 0.5), 0.0, 1.0);
 }
 `);
 
@@ -55,6 +55,7 @@ varying vec2 v_texCoord;
 
 void main(void) {
     gl_FragColor = texture2D(texture, v_texCoord);
+    //gl_FragColor = vec4(1.0,0.0,0.0,1.0);
 }
 `);
     }

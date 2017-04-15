@@ -32,9 +32,6 @@ class GLBillboardsPass extends GLPass {
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE');
         this.__glshader = new GLShader(gl, new BillboardShader(gl));
 
-        let shaderComp = this.__glshader.compileForTarget();
-        this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
-
         this.__collector.billboardDiscovered.connect(this.addBillboard, this);
         this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);
 
@@ -43,14 +40,13 @@ class GLBillboardsPass extends GLPass {
     addBillboard(billboard) {
 
         let index = this.__billboards.length;
-        let billboardData = {
+        this.__billboards.push({
             billboard: billboard,
             imageIndex: this.__atlas.addSubImage(billboard.image2d)
-        };
-        this.__billboards.push(billboardData);
+        });
 
         billboard.visibilityChanged.connect(() => {
-            this.__updateBillboard(index, billboardData);
+            this.__updateBillboard(index);
         });
 
         billboard.destructing.connect(this.removeBillboardItem, this);
@@ -76,52 +72,63 @@ class GLBillboardsPass extends GLPass {
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
 
-        col3.set(billboardData.imageIndex, 0.0, 0, 0);
+        let imageLayout = this.__atlas.getImageLayoutData(billboardData.imageIndex);
+        let atlasWidth = this.__atlas.width;
+        let atlasHeight = this.__atlas.height;
+        col3.set(imageLayout.pos.x / atlasWidth, imageLayout.pos.y / atlasHeight, imageLayout.size.x / atlasWidth, imageLayout.size.y / atlasHeight);
     }
 
     __updateBillboards() {
         if(this.__billboards.length == 0)
             return;
 
-        let gl = this.__gl;
-        let stride = 4; // The number of pixels per draw item.
-        let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
-        let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
-        for (let i=0; i<this.__billboards.length; i++) {
-            this.__populateBillboardDataArray(this.__billboards[i], i, dataArray);
-        }
-        if(!this.__instancesTexture){
-            this.__instancesTexture = new GLTexture2D(gl, {
-                channels: 'RGBA',
-                format: 'FLOAT',
-                width: size,
-                height: size,
-                filter: 'NEAREST',
-                wrap: 'CLAMP_TO_EDGE',
-                data: dataArray,
-                mipMapped: false
-            });
+        let doIt = function() {
+            this.__atlas.renderAtlas();
+
+            let gl = this.__gl;
+            let stride = 4; // The number of pixels per draw item.
+            let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
+            let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
+            for (let i=0; i<this.__billboards.length; i++) {
+                this.__populateBillboardDataArray(this.__billboards[i], i, dataArray);
+            }
+            if(!this.__instancesTexture){
+                this.__instancesTexture = new GLTexture2D(gl, {
+                    channels: 'RGBA',
+                    format: 'FLOAT',
+                    width: size,
+                    height: size,
+                    filter: 'NEAREST',
+                    wrap: 'CLAMP_TO_EDGE',
+                    data: dataArray,
+                    mipMapped: false
+                });
+            }
+            else{
+                this.__instancesTexture.resize(size, size, dataArray);
+            }
+
+            // TODO: When the camera moves, sort thi array and re-upload.
+            let indexArray = new Float32Array(this.__billboards.length);
+            for (let i=0; i<this.__billboards.length; i++) {
+                indexArray[i] = i;
+            }
+            let instancedIdsBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, instancedIdsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+
+
+            let shaderComp = this.__glshader.compileForTarget();
+            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer, undefined, instancedIdsBuffer);
+
+        }.bind(this);
+
+        if(this.__atlas.isLoaded()){
+            doIt();
         }
         else{
-            this.__instancesTexture.resize(size, size, dataArray);
+            this.__atlas.loaded.connect(doIt)
         }
-
-        let indexArray = new Float32Array(this.__billboards.length);
-        for (let i=0; i<this.__billboards.length; i++) {
-            indexArray[i] = i;
-        }
-        let indexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
-
-        this.__glattrbuffers = {
-            billboardIds: {
-                buffer: indexBuffer,
-                instanced: true,
-                dimension: 1,
-                count: this.__billboards.length
-            }
-        };
     }
 
     __updateBillboard(index, billboardData){
@@ -145,7 +152,7 @@ class GLBillboardsPass extends GLPass {
 
     draw(renderstate) {
 
-        if (this.__billboards.length == 0)
+        if (!this.__instancesTexture)
             return;
 
         let gl = this.__gl;
@@ -155,6 +162,12 @@ class GLBillboardsPass extends GLPass {
         let unifs = renderstate.unifs;
         this.__instancesTexture.bind(renderstate, unifs.instancesTexture.location);
         gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
+
+        this.__atlas.bind(renderstate, unifs.texture.location);
+
+        gl.enable(gl.BLEND);
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
     }
