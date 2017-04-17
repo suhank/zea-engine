@@ -25,6 +25,9 @@ instancedattribute float instancedIds;    // instanced attribute..
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+uniform sampler2D atlasLayout;
+uniform vec4 atlasDesc;
+
 /* VS Outputs */
 varying vec2 v_texCoord;
 
@@ -37,11 +40,15 @@ void main(void) {
 
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
-    v_texCoord = quadVertex + vec2(0.5, 0.5);
-    v_texCoord *= billboardData.zw;
-    v_texCoord += billboardData.xy;
+    v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
+    vec4 layoutData = texelFetch1D(atlasLayout, int(atlasDesc.x), int(billboardData.z));
+    v_texCoord *= layoutData.zw;
+    v_texCoord += layoutData.xy;
 
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x, (quadVertex.y + 0.5), 0.0, 1.0);
+    float scl = 0.006;
+    float width = layoutData.z * atlasDesc.y * scl;
+    float height = layoutData.w * atlasDesc.z * scl;
+    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
 }
 `);
 
@@ -54,8 +61,8 @@ uniform sampler2D texture;
 varying vec2 v_texCoord;
 
 void main(void) {
-    gl_FragColor = texture2D(texture, v_texCoord);
-    //gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+    vec4 color = texture2D(texture, v_texCoord);
+    gl_FragColor = vec4(1.0,0.0,0.0, 1.0-color.r);
 }
 `);
     }

@@ -72,10 +72,11 @@ class GLBillboardsPass extends GLPass {
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
 
-        let imageLayout = this.__atlas.getImageLayoutData(billboardData.imageIndex);
-        let atlasWidth = this.__atlas.width;
-        let atlasHeight = this.__atlas.height;
-        col3.set(imageLayout.pos.x / atlasWidth, imageLayout.pos.y / atlasHeight, imageLayout.size.x / atlasWidth, imageLayout.size.y / atlasHeight);
+        // let imageLayout = this.__atlas.getImageLayoutData(billboardData.imageIndex);
+        // let atlasWidth = this.__atlas.width;
+        // let atlasHeight = this.__atlas.height;
+        // col3.set(imageLayout.pos.x / atlasWidth, imageLayout.pos.y / atlasHeight, imageLayout.size.x / atlasWidth, imageLayout.size.y / atlasHeight);
+        col3.set(0.6, 1.7, billboardData.imageIndex, 0.0);
     }
 
     __updateBillboards() {
@@ -83,9 +84,36 @@ class GLBillboardsPass extends GLPass {
             return;
 
         let doIt = function() {
+            let gl = this.__gl;
             this.__atlas.renderAtlas();
 
-            let gl = this.__gl;
+            {
+                let numImages = this.__atlas.numSubImages();
+                let width = this.__atlas.width;
+                let height = this.__atlas.height;
+                let dataArray = new Float32Array(numImages*4); /*each pixel has 4 floats*/
+                for (let i=0; i<numImages; i++) {
+                    let imageLayout = this.__atlas.getImageLayoutData(i);
+                    let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i*4);
+                    vec4.set(imageLayout.pos.x / width, imageLayout.pos.y / height, imageLayout.size.x / width, imageLayout.size.y / height)
+                }
+                if(!this.__atlasLayoutTexture){
+                    this.__atlasLayoutTexture = new GLTexture2D(gl, {
+                        channels: 'RGBA',
+                        format: 'FLOAT',
+                        width: numImages,
+                        height: 1,
+                        filter: 'NEAREST',
+                        wrap: 'CLAMP_TO_EDGE',
+                        data: dataArray,
+                        mipMapped: false
+                    });
+                }
+                else{
+                    this.__atlasLayoutTexture.resize(numImages, 1, dataArray);
+                }
+            }
+
             let stride = 4; // The number of pixels per draw item.
             let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
             let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
@@ -163,9 +191,15 @@ class GLBillboardsPass extends GLPass {
         this.__instancesTexture.bind(renderstate, unifs.instancesTexture.location);
         gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
 
+        this.__atlasLayoutTexture.bind(renderstate, unifs.atlasLayout.location);
+        let width = this.__atlas.width;
+        let height = this.__atlas.height;
+        gl.uniform4f(unifs.atlasDesc.location, this.__atlas.numSubImages(), width, height, 0.0);
+
         this.__atlas.bind(renderstate, unifs.texture.location);
 
         gl.enable(gl.BLEND);
+        gl.disable(gl.CULL_FACE);
         gl.blendEquation(gl.FUNC_ADD);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 

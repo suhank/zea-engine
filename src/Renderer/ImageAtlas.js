@@ -116,6 +116,10 @@ class ImageAtlas extends GLTexture2D {
         return this.__async.count == 0;
     }
 
+    getMainImage(){
+        return this.super;
+    }
+
     addSubImage(subImage) {
         if (subImage instanceof Image2D) {
             this.__subImages.push(new GLTexture2D(this.__gl, subImage));
@@ -134,6 +138,8 @@ class ImageAtlas extends GLTexture2D {
     }
 
     numSubImages() {
+        if(this.__layout)
+            return this.__layout.length;
         return this.__subImages.length;
     }
 
@@ -193,6 +199,7 @@ class ImageAtlas extends GLTexture2D {
             format: this.__format,
             filter: 'LINEAR'
         });
+        
         let gl = this.__gl;
         this.__fbo = new GLFbo(gl, this);
         this.__fbo.setClearColor([0, 0, 0, 0]);
