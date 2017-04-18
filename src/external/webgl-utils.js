@@ -210,6 +210,26 @@ var create3DContext = function(canvas, opt_attribs) {
     this.drawElements(this.TRIANGLES, 6, this.UNSIGNED_SHORT, 0);
   }
 
+  context.setupLineSegAttrBuffers = function(){
+    //////////////////////////////
+    // Generate a buffer for drawing an instanced 2 point line
+    let vertexIDs = new Float32Array([
+        0.0,
+        1.0
+    ]);
+    let vertexIdsBuffer = context.createBuffer();
+    context.bindBuffer(context.ARRAY_BUFFER, vertexIdsBuffer);
+    context.bufferData(context.ARRAY_BUFFER, vertexIDs, context.STATIC_DRAW);
+
+    context.__linesegattrbuffers = {
+        vertexIDs: {
+            buffer: vertexIdsBuffer,
+            dimension: 1,
+            count: vertexIDs.length
+        }
+    };
+  }
+
 
   return context;
 };

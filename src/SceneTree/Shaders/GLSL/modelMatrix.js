@@ -2,22 +2,16 @@ import {
     shaderLibrary
 } from '../../ShaderLibrary.js';
 
-shaderLibrary.setShaderModule('modelMatrix.glsl', `
+import './glslutils.js';
 
-attribute float instancedTransformIds;    // instanced attribute..
-uniform sampler2D transformsTexture;
-uniform int transformsTextureSize;
-uniform int transformIndex;
-uniform int instancedDraw;
+shaderLibrary.setShaderModule('matrixTexture.glsl', `
+
+uniform sampler2D instancesTexture;
+uniform int instancesTextureSize;
+
+<%include file="glslutils.glsl"/>
 
 const int cols_per_instance = 4;
-
-vec4 texelFetch(sampler2D texture, int textureSize, int index) {
-    float x = mod(float(index), float(textureSize));
-    float y = float(index / textureSize);
-    vec2 texCoord = vec2((float(x)+0.5)/float(textureSize), (float(y)+0.5)/float(textureSize));
-    return texture2D(texture, texCoord);
-}
 
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
     // Unpack 3 x 4 matix columns into a 4 x 4 matrix.
@@ -30,34 +24,39 @@ mat4 getMatrix(sampler2D texture, int textureSize, int index) {
 }
 
 mat4 getModelMatrix(int id) {
-    return getMatrix(transformsTexture, transformsTextureSize, id);
+    return getMatrix(instancesTexture, instancesTextureSize, id);
 }
+vec4 getInstanceData(int id) {
+    return texelFetch(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 3);
+}
+
+`);
+
+
+shaderLibrary.setShaderModule('modelMatrix.glsl', `
+
+<%include file="matrixTexture.glsl"/>
+
+attribute float instancedIds;    // instanced attribute..
+uniform int transformIndex;
+uniform int instancedDraw;
 
 mat4 getModelMatrix() {
-    int id;
     if(instancedDraw == 0){
-       id = transformIndex;
+       return getModelMatrix(transformIndex);
     }
     else{
-       id = int(instancedTransformIds);
+       return getModelMatrix(int(instancedIds));
     }
-    return getModelMatrix(id);
 }
 
-
-vec4 getGeomItemData(int id) {
-    return texelFetch(transformsTexture, transformsTextureSize, (id * cols_per_instance) + 3);
-}
-
-vec4 getGeomItemData() {
-    int id;
+vec4 getInstanceData() {
     if(instancedDraw == 0){
-       id = transformIndex;
+       return getInstanceData(transformIndex);
     }
     else{
-       id = int(instancedTransformIds);
+       return getInstanceData(int(instancedIds));
     }
-    return getGeomItemData(id);
 }
 
 

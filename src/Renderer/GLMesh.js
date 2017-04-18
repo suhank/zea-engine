@@ -66,9 +66,15 @@ class GLMesh extends GLGeom {
         //     this.destroyVBO();
         //     return;
         // }
-        let indices = this.__geom.generateTriangulatedIndices(numUnSplitVertices, splitIndices);
+        let indices = this.__geom.generateTriangulatedIndices(this.__totalNumVertices, numUnSplitVertices, splitIndices);
 
         this.__numTriIndices = indices.length;
+        if(indices instanceof Uint8Array)
+            this.__indexDataType = this.__gl.UNSIGNED_BYTE ;
+        if(indices instanceof Uint16Array)
+            this.__indexDataType = this.__gl.UNSIGNED_SHORT;
+        if(indices instanceof Uint32Array)
+            this.__indexDataType = this.__gl.UNSIGNED_INT;
 
         let gl = this.__gl;
         this.__indexBuffer = gl.createBuffer();
@@ -249,11 +255,11 @@ class GLMesh extends GLGeom {
 
     // Draw an item to screen.
     draw() {
-        this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__gl.UNSIGNED_INT, 0);
+        this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0);
     }
 
     drawInstanced(count) {
-        this.__gl.__ext_Inst.drawElementsInstancedANGLE(this.__gl.TRIANGLES, this.__numTriIndices, this.__gl.UNSIGNED_INT, 0, count);
+        this.__gl.__ext_Inst.drawElementsInstancedANGLE(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, count);
     }
 
 

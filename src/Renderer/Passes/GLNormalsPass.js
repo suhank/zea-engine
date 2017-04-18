@@ -39,24 +39,9 @@ class GLNormalsPass extends GLPass {
         //     }, this);
         // }, this);
 
-        if (!gl.__normalattrbuffers) {
-            //////////////////////////////
-            // Generate a buffer for drawing an instanced 2 point line
-            let vertexIDs = new Float32Array([
-                0.0,
-                1.0
-            ]);
-            let vertexIdsBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, vertexIdsBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, vertexIDs, gl.STATIC_DRAW);
 
-            gl.__normalattrbuffers = {
-                vertexIDs: {
-                    buffer: vertexIdsBuffer,
-                    dimension: 1,
-                    count: vertexIDs.length
-                }
-            };
+        if (!gl.__linesegattrbuffers) {
+            gl.setupLineSegAttrBuffers();
         }
     }
 
@@ -115,7 +100,7 @@ class GLNormalsPass extends GLPass {
                     // renderstate.drawCalls++;
                     if(gldrawitemset.getDrawCount() > 0){
                         let glgeom = gldrawitemset.getGLGeom();
-                        if(glgeom.bind(renderstate, gl.__normalattrbuffers)){
+                        if(glgeom.bind(renderstate, gl.__linesegattrbuffers)){
                             for(let i=0; i<gldrawitemset.getDrawCount(); i++){
                                 let gldrawitem = gldrawitemset.getGLDrawItem(i);
                                 if (gldrawitem.bind(renderstate)) {

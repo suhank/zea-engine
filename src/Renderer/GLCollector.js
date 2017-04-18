@@ -10,7 +10,8 @@ import {
     Lines,
     Mesh,
     Grid,
-    LinesMaterial
+    LinesMaterial,
+    BillboardItem
 } from '../SceneTree';
 import {
     GLPoints
@@ -115,6 +116,7 @@ class GLCollector {
         this.__glshadermaterials = {};
 
         this.renderTreeUpdated = new Signal();
+        this.billboardDiscovered = new Signal();
     }
 
     getRenderer(){
@@ -199,8 +201,11 @@ class GLCollector {
         let flags = 1;
         let index;
         // Use recycled indices if there are any available...
-        if (this.__drawItemsIndexFreeList.length > 0)
+        if (this.__drawItemsIndexFreeList.length > 0){
             index = this.__drawItemsIndexFreeList.pop();
+            // We will need to re-populate the array from here.
+            this.__transformsDataArrayHighWaterMark = index;
+        }
         else {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
@@ -254,6 +259,10 @@ class GLCollector {
                 this.addGeomItem(treeItem);
             }
         }
+        else if (treeItem instanceof BillboardItem) {
+            this.billboardDiscovered.emit(treeItem);
+        }
+
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
             this.addTreeItem(childItem);
@@ -328,7 +337,11 @@ class GLCollector {
 
     //////////////////////////////////////////////////
     // Optimization
-    __populateTransformDataArray(gldrawItem, index, mat4, lightmapCoordsOffset, dataArray){
+    __populateTransformDataArray(gldrawItem, index, dataArray){
+
+        let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
+        let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
+
         let stride = 16; // The number of floats per draw item.
         let offset = index * stride;
         let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
@@ -351,18 +364,26 @@ class GLCollector {
 
         let gl = this.__renderer.gl;
         let stride = 4; // The number of pixels per draw item.
-        let size = Math.round(Math.sqrt(this.__drawItems.length * stride) + 0.5);
-        let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
-        for (let i=0; i<this.__drawItems.length; i++) {
+        let size = Math.sqrt(this.__drawItems.length * stride);
+        // Size should be a multiple of 4 pixels, so each geom item is always contiguous
+        // in memory. (makes updating a lot easier. See __updateTransform below)
+        if((size % 4) != 0)
+            size += 4 - (size % 4);
+        // Re-allocate a new array once we hit the limit of the old one.
+        let arraySize = (size * size) * 4; /*each pixel has 4 floats*/
+        if(!this.__transformsDataArray || arraySize != this.__transformsDataArray.length){
+            this.__transformsDataArray = new Float32Array(arraySize);
+            this.__transformsDataArrayHighWaterMark = 0;
+        }
+        for (let i=this.__transformsDataArrayHighWaterMark; i<this.__drawItems.length; i++) {
             let gldrawItem = this.__drawItems[i];
             // When an item is deleted, we allocate its index to the free list
             // and null this item in the array. skip over null items.
             if(!gldrawItem)
                 continue;
-            let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
-            let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
-            this.__populateTransformDataArray(gldrawItem, i, mat4, lightmapCoordsOffset, dataArray);
+            this.__populateTransformDataArray(gldrawItem, i, this.__transformsDataArray);
         }
+        this.__transformsDataArrayHighWaterMark = this.__drawItems.length;
         if(!this.__transformsTexture){
             this.__transformsTexture = new GLTexture2D(gl, {
                 channels: 'RGBA',
@@ -371,14 +392,13 @@ class GLCollector {
                 height: size,
                 filter: 'NEAREST',
                 wrap: 'CLAMP_TO_EDGE',
-                data: dataArray,
+                data: this.__transformsDataArray,
                 mipMapped: false
             });
         }
         else{
-            this.__transformsTexture.resize(size, size, dataArray);
+            this.__transformsTexture.resize(size, size, this.__transformsDataArray);
         }
-
 
         this.renderTreeUpdated.emit();
     }
@@ -388,28 +408,27 @@ class GLCollector {
             return;
 
         let gl = this.__renderer.gl;
-
         let stride = 16; // The number of floats per draw item.
         let dataArray = new Float32Array(stride);
-        let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
-        let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
-        this.__populateTransformDataArray(gldrawItem, 0, mat4, lightmapCoordsOffset, dataArray);
+        this.__populateTransformDataArray(gldrawItem, 0, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
-        let xoffset = index*(stride/4); /*each pixel has 4 floats*/
-        let yoffset = 0;
+        let size = this.__transformsTexture.width;
+
+        let yoffset = Math.round((index * 4) / size);
+        let xoffset = (index * 4) % size;
         let width = stride/4;
         let height = 1;
+        
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
-
     }
 
     bind(renderstate) {
         let gl = this.__renderer.gl;
         let unifs = renderstate.unifs;
-        if(unifs.transformsTexture){
-            this.__transformsTexture.bind(renderstate, unifs.transformsTexture.location);
-            gl.uniform1i(unifs.transformsTextureSize.location, this.__transformsTexture.width);
+        if(unifs.instancesTexture){
+            this.__transformsTexture.bind(renderstate, unifs.instancesTexture.location);
+            gl.uniform1i(unifs.instancesTextureSize.location, this.__transformsTexture.width);
         }
 
         // Note: the Scene owns the lightmaps. 

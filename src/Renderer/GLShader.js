@@ -131,6 +131,20 @@ class GLShader {
         let unifs = this.__shader.getUniforms();
         for (let uniformName in unifs) {
             let unifType = unifs[uniformName];
+            if(unifType instanceof Array){
+                for(let member of unifType){
+                    let structMemberName = uniformName+'.'+member.name;
+                    let location = gl.getUniformLocation(shaderProgramHdl, structMemberName);
+                    if (location == undefined) {
+                        // console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
+                        continue;
+                    }
+                    result.unifs[structMemberName] = {
+                        location: location,
+                        type: member.type
+                    };
+                }
+            }
             if (preproc){
                 if (preproc.repl){
                     for(let key in preproc.repl)
@@ -140,7 +154,7 @@ class GLShader {
 
             let location = gl.getUniformLocation(shaderProgramHdl, uniformName);
             if (location == undefined) {
-                console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
+                // console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
                 continue;
             }
             result.unifs[uniformName] = {
@@ -197,8 +211,8 @@ class GLShader {
         if ('projectionMatrix' in unifs)
             gl.uniformMatrix4fv(unifs.projectionMatrix.location, false, renderstate.projectionMatrix.asArray());
 
-        if ('atlas_EnvMap' in unifs && renderstate.envMap != undefined) {
-            renderstate.envMap.bindforReading(renderstate, unifs.atlas_EnvMap.location);
+        if ('atlasEnvMap.image' in unifs && renderstate.envMap != undefined) {
+            renderstate.envMap.bindforReading(renderstate);
         }
         if ('exposure' in unifs)
             gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);

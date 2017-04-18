@@ -6,25 +6,30 @@ import {
 class Async {
     constructor() {
         this.__asyncCount = 0;
-        this.ready = new Signal();
-    }
+        this.ready = new Signal(true);
 
-    incAsyncCount(count=1) {
-        this.__asyncCount+=count;
-    }
+        this.incAsyncCount = function(count=1) {
+            this.__asyncCount+=count;
+        }.bind(this)
 
-    decAsyncCount() {
-        if (this.__asyncCount > 0){
-            this.__asyncCount--;
-            if (this.__asyncCount == 0) {
-                this.__asyncsCompleted();
+        this.decAsyncCount = function() {
+            if (this.__asyncCount > 0){
+                this.__asyncCount--;
+                if (this.__asyncCount == 0) {
+                    this.__asyncsCompleted();
+                }
             }
-        }
+        }.bind(this)
+
+        this.__asyncsCompleted = function(){
+            this.ready.emit();
+        }.bind(this)
     }
 
-    __asyncsCompleted(){
-        this.ready.emit();
+    get count(){
+        return this.__asyncCount;
     }
+
 };
 
 export {

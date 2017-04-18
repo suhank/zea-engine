@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "buffer": "^5.0.6",
     "immutable": "^3.8.1",
     "redux": "^3.6.0",
     "shortid": "^2.2.8",

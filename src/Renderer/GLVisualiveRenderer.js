@@ -1,4 +1,5 @@
 import {
+    isMobileDevice,
     Vec3
 } from '../Math';
 import {
@@ -47,6 +48,10 @@ import {
     GLGeomDataPass
 } from './Passes/GLGeomDataPass.js';
 import {
+    GLBillboardsPass
+} from './Passes/GLBillboardsPass.js';
+
+import {
     GLRenderer
 } from './GLRenderer.js';
 import {
@@ -62,17 +67,17 @@ import {
 
 
 class GLVisualiveRenderer extends GLRenderer {
-    constructor(canvasDiv, options={}) {
+    constructor(canvasDiv, options = {}) {
 
         super(canvasDiv, options, {
             antialias: true,
             depth: true
         });
-        
+
         /////////////////////////
         // Renderer Setup
         this.__exposure = 0.0;
-        this.__exposureRange = options.exposureRange ? options.exposureRange : [-5,10];
+        this.__exposureRange = options.exposureRange ? options.exposureRange : [-5, 10];
         this.__tonemap = true;
         this.__gamma = 2.2;
         this.__antialiase = false;
@@ -91,6 +96,8 @@ class GLVisualiveRenderer extends GLRenderer {
         // this.addPass(new GLWirePass(this.__gl, this.__collector));
         // this.__edgesPass = new GLHardEdgesPass(this.__gl, this.__collector);
         // this.__pointsPass = new GLMeshPointsPass(this.__gl, this.__collector);
+        this.addPass(new GLBillboardsPass(this.__gl, this.__collector));
+        
         this.__drawEdges = false;
         this.__drawPoints = false;
 
@@ -101,13 +108,19 @@ class GLVisualiveRenderer extends GLRenderer {
         // this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
 
         this.__shaderDirectives = {
-            defines:`
+            defines: `
 #define ENABLE_LIGHTMAPS
 #define ENABLE_INLINE_GAMMACORRECTION
 `
         };
+
+        if(!isMobileDevice()){
+            this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
+            //this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
+            this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS\n';
+        }
         if(options.enableCrossSections )
-            this.__shaderDirectives.defines = this.__shaderDirectives.defines + '\n#define ENABLE_CROSS_SECTIONS'
+            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS'
     }
 
     getShaderPreprocessorDirectives() {
@@ -117,13 +130,12 @@ class GLVisualiveRenderer extends GLRenderer {
     setScene(scene) {
         super.setScene(scene);
 
-        if (scene.getEnvMap() != undefined) {  
+        if (scene.getEnvMap() != undefined) {
             let env = scene.getEnvMap();
-            if(env instanceof HDRImage2D){
+            if (env instanceof HDRImage2D) {
                 this.__glEnvMap = new GLEnvMap(this, env);
                 this.__shaderDirectives.repl = this.__glEnvMap.getShaderPreprocessorDirectives();
-            }
-            else if(env instanceof ProceduralSky){
+            } else if (env instanceof ProceduralSky) {
                 this.__glEnvMap = new GLProceduralSky(this.__gl, env);
             }
             this.__glEnvMap.updated.connect((data) => {
@@ -131,9 +143,9 @@ class GLVisualiveRenderer extends GLRenderer {
             }, this);
         }
         let lightMaps = scene.getLightMaps();
-        for(let name in lightMaps){
+        for (let name in lightMaps) {
             let gllightmap;
-            if(lightMaps[name] instanceof HDRImageMixer)
+            if (lightMaps[name] instanceof HDRImageMixer)
                 gllightmap = new GLHDRImageMixer(this.__gl, lightMaps[name]);
             else
                 gllightmap = new GLHDRImage(this.__gl, lightMaps[name]);
@@ -183,11 +195,13 @@ class GLVisualiveRenderer extends GLRenderer {
                 this.__displayEnvironment = !this.__displayEnvironment;
                 break;
             case ' ':
-                if(this.__vrViewport)
+                if (this.__vrViewport)
                     this.__vrViewport.togglePresenting();
                 else
                     this.toggleContinuousDrawing();
                 break;
+            default:
+                super.onKeyPressed(key);
         }
         this.requestRedraw();
     }
@@ -299,7 +313,7 @@ class GLVisualiveRenderer extends GLRenderer {
         gui.add(this, 'displayEnvironment');
         // gui.add(this, 'debugLightmaps');
 
-        if(this.__glEnvMap)
+        if (this.__glEnvMap)
             this.__glEnvMap.addGUI(gui);
     }
 
@@ -328,39 +342,39 @@ class GLVisualiveRenderer extends GLRenderer {
         } else {
 
             viewport.draw(this.__renderstate);
-/*
-            /////////////////////////////////////
-            // Post processing.
+            /*
+                        /////////////////////////////////////
+                        // Post processing.
 
-            // Bind the default framebuffer
-            let gl = this.__gl;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0, 0, this.getWidth(), this.getHeight());
+                        // Bind the default framebuffer
+                        let gl = this.__gl;
+                        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                        gl.viewport(0, 0, this.getWidth(), this.getHeight());
 
-            this.__glshaderScreenPostProcess.bind(this.__renderstate);
+                        this.__glshaderScreenPostProcess.bind(this.__renderstate);
 
-            let unifs = this.__renderstate.unifs;
-            let fbo = viewport.getFbo();
-            if ('antialiase' in unifs)
-                gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-            if ('textureSize' in unifs)
-                gl.uniform2fv(unifs.textureSize.location, fbo.size);
-            if ('gamma' in unifs)
-                gl.uniform1f(unifs.gamma.location, this.__gamma);
-            if ('exposure' in unifs)
-                gl.uniform1f(unifs.exposure.location, this.__exposure);
-            if ('tonemap' in unifs)
-                gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+                        let unifs = this.__renderstate.unifs;
+                        let fbo = viewport.getFbo();
+                        if ('antialiase' in unifs)
+                            gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+                        if ('textureSize' in unifs)
+                            gl.uniform2fv(unifs.textureSize.location, fbo.size);
+                        if ('gamma' in unifs)
+                            gl.uniform1f(unifs.gamma.location, this.__gamma);
+                        if ('exposure' in unifs)
+                            gl.uniform1f(unifs.exposure.location, this.__exposure);
+                        if ('tonemap' in unifs)
+                            gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
 
-            this.__screenQuad.draw(this.__renderstate, fbo.colorTexture);
-*/
+                        this.__screenQuad.draw(this.__renderstate, fbo.colorTexture);
+            */
 
             // this.__gizmoPass.draw(this.__renderstate);
             // viewport.drawOverlays(this.__renderstate);
         }
     }
 
-    drawScene(renderstate){
+    drawScene(renderstate) {
 
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
@@ -380,9 +394,9 @@ class GLVisualiveRenderer extends GLRenderer {
 
         // if (this.__drawPoints)
         //     this.__pointsPass.draw(renderstate);
-        
+
         // this.__gizmoPass.draw(renderstate);
-        
+
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
 
@@ -390,16 +404,16 @@ class GLVisualiveRenderer extends GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        if(this.__stats)
+        if (this.__stats)
             this.__stats.begin();
 
         if (this.__vrViewport) {
-            if (this.__vrViewport.isPresenting()){
+            if (this.__vrViewport.isPresenting()) {
                 this.__vrViewport.draw(this.__renderstate);
-                if(this.mirrorVRisplayToViewport){
+                if (this.mirrorVRisplayToViewport) {
                     this.__gl.viewport(0, 0, this.getWidth(), this.getHeight());
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
-                    if(this.__stats)
+                    if (this.__stats)
                         this.__stats.end();
                     return;
                 }
@@ -414,7 +428,7 @@ class GLVisualiveRenderer extends GLRenderer {
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        if(this.__stats)
+        if (this.__stats)
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
         this.redrawOccured.emit();

@@ -178,7 +178,7 @@ varying vec4 v_viewPos;
  
 void main()
 {
-    vec2 position = getScreenSpaceVertexPosition();
+    vec2 position = getQuadVertexPositionFromID();
     v_texCoord = position+0.5;
     gl_Position = vec4(position*2.0, 0.0, 1.0);
 
@@ -219,7 +219,7 @@ varying vec2 v_texCoord;
  
 void main()
 {
-    vec2 position = getScreenSpaceVertexPosition();
+    vec2 position = getQuadVertexPositionFromID();
     v_texCoord = position+0.5;
     gl_Position = vec4(position*2.0, 0.0, 1.0);
 }
@@ -380,10 +380,10 @@ class GLProceduralSky extends GLProbe {
             //     ///////////////////
             //     this.__envMapShader.bind(renderstate, 'GLEnvMap');
             //     let unifs = renderstate.unifs;
-            //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-            //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-            //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-            //     this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+            //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+            //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+            //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+            //     this.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
 
             //     if ('focus' in unifs)
             //         gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
