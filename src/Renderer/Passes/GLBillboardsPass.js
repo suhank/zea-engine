@@ -1,4 +1,5 @@
 import {
+    Vec3,
     Vec4
 } from '../../Math';
 import {
@@ -29,12 +30,14 @@ class GLBillboardsPass extends GLPass {
         }
 
         this.__billboards = [];
+        this.__closestBillboard = 0.0;
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE');
         this.__glshader = new GLShader(gl, new BillboardShader(gl));
 
         this.__collector.billboardDiscovered.connect(this.addBillboard, this);
         this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);
 
+        this.__prevSortCameraPos = new Vec3();
     }
 
     addBillboard(billboard) {
@@ -42,6 +45,7 @@ class GLBillboardsPass extends GLPass {
         let index = this.__billboards.length;
         this.__billboards.push({
             billboard: billboard,
+            index: index,
             imageIndex: this.__atlas.addSubImage(billboard.image2d)
         });
 
@@ -59,15 +63,15 @@ class GLBillboardsPass extends GLPass {
     }
 
 
-    __populateBillboardDataArray(billboardData, index, dataArray){
+    __populateBillboardDataArray(billboardData, index, dataArray) {
         let mat4 = billboardData.billboard.globalXfo.toMat4();
 
         let stride = 16; // The number of floats per draw item.
         let offset = index * stride;
         let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
-        let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset+4);
-        let col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset+8);
-        let col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset+12);
+        let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
+        let col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
+        let col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
@@ -80,7 +84,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     __updateBillboards() {
-        if(this.__billboards.length == 0)
+        if (this.__billboards.length == 0)
             return;
 
         let doIt = function() {
@@ -91,13 +95,13 @@ class GLBillboardsPass extends GLPass {
                 let numImages = this.__atlas.numSubImages();
                 let width = this.__atlas.width;
                 let height = this.__atlas.height;
-                let dataArray = new Float32Array(numImages*4); /*each pixel has 4 floats*/
-                for (let i=0; i<numImages; i++) {
+                let dataArray = new Float32Array(numImages * 4); /*each pixel has 4 floats*/
+                for (let i = 0; i < numImages; i++) {
                     let imageLayout = this.__atlas.getImageLayoutData(i);
-                    let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i*4);
+                    let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
                     vec4.set(imageLayout.pos.x / width, imageLayout.pos.y / height, imageLayout.size.x / width, imageLayout.size.y / height)
                 }
-                if(!this.__atlasLayoutTexture){
+                if (!this.__atlasLayoutTexture) {
                     this.__atlasLayoutTexture = new GLTexture2D(gl, {
                         channels: 'RGBA',
                         format: 'FLOAT',
@@ -108,8 +112,7 @@ class GLBillboardsPass extends GLPass {
                         data: dataArray,
                         mipMapped: false
                     });
-                }
-                else{
+                } else {
                     this.__atlasLayoutTexture.resize(numImages, 1, dataArray);
                 }
             }
@@ -117,10 +120,10 @@ class GLBillboardsPass extends GLPass {
             let stride = 4; // The number of pixels per draw item.
             let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
             let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
-            for (let i=0; i<this.__billboards.length; i++) {
+            for (let i = 0; i < this.__billboards.length; i++) {
                 this.__populateBillboardDataArray(this.__billboards[i], i, dataArray);
             }
-            if(!this.__instancesTexture){
+            if (!this.__instancesTexture) {
                 this.__instancesTexture = new GLTexture2D(gl, {
                     channels: 'RGBA',
                     format: 'FLOAT',
@@ -131,36 +134,31 @@ class GLBillboardsPass extends GLPass {
                     data: dataArray,
                     mipMapped: false
                 });
-            }
-            else{
+            } else {
                 this.__instancesTexture.resize(size, size, dataArray);
             }
 
-            // TODO: When the camera moves, sort thi array and re-upload.
-            let indexArray = new Float32Array(this.__billboards.length);
-            for (let i=0; i<this.__billboards.length; i++) {
-                indexArray[i] = i;
-            }
-            let instancedIdsBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, instancedIdsBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+            // Note: When the camera moves, this array is sorted and re-upload.
+            this.__indexArray = new Float32Array(this.__billboards.length);
+            this.__instancedIdsBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
 
 
             let shaderComp = this.__glshader.compileForTarget();
-            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer, undefined, instancedIdsBuffer);
+            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer, undefined, this.__instancedIdsBuffer);
 
         }.bind(this);
 
-        if(this.__atlas.isLoaded()){
+        if (this.__atlas.isLoaded()) {
             doIt();
-        }
-        else{
+        } else {
             this.__atlas.loaded.connect(doIt)
         }
     }
 
-    __updateBillboard(index, billboardData){
-        if(!this.__instancesTexture)
+    __updateBillboard(index, billboardData) {
+        if (!this.__instancesTexture)
             return;
 
         let gl = this.__gl;
@@ -170,18 +168,42 @@ class GLBillboardsPass extends GLPass {
         this.__populateBillboardDataArray(billboardData, 0, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__instancesTexture.glTex);
-        let xoffset = index*(stride/4); /*each pixel has 4 floats*/
+        let xoffset = index * (stride / 4); /*each pixel has 4 floats*/
         let yoffset = 0;
-        let width = stride/4;
+        let width = stride / 4;
         let height = 1;
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
 
     }
 
+    sort(cameraPos) {
+        console.log("sort");
+        let gl = this.__gl;
+        for (let billboardData of this.__billboards)
+            billboardData.dist = billboardData.billboard.globalXfo.tr.distanceTo(cameraPos);
+        this.__billboards.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
+
+        for (let i = 0; i < this.__billboards.length; i++) {
+            this.__indexArray[i] = this.__billboards[i].index;
+        }
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
+    }
+
+
     draw(renderstate) {
 
         if (!this.__instancesTexture)
             return;
+
+        let cameraPos = renderstate.cameraMatrix.translation;
+        let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
+        // Avoid sorting if the camera did not move more than 3 meters.
+        if (dist > this.__closestBillboard) {
+            this.sort(cameraPos);
+            this.__prevSortCameraPos = cameraPos.clone();
+            this.__closestBillboard = this.__billboards[0].dist;
+        }
 
         let gl = this.__gl;
         this.__glshader.bind(renderstate);

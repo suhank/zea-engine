@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let scene = new Visualive.Scene();
 
     {
-        let billboard1 = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D('../Resources/People/Circus/DoubleArealAcrobatics.png'));
+        let billboard1 = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D('../Resources/People/Circus/VerticalDoubleMaleTrapeze2.png'));
         let xfo1 = new Visualive.Xfo();
         xfo1.tr.set( -1, 0, 1 );
         billboard1.localXfo = xfo1;
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     {
-        let billboard0 = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D('../Resources/People/Circus/SolorFloorPerformer2.png'));
+        let billboard0 = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D('../Resources/People/Circus/SolorFloorPerformer.png'));
         let xfo0 = new Visualive.Xfo();
         xfo0.tr.set( 1, 0, 0 );
         xfo0.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
