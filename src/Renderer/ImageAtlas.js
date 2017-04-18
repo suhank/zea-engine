@@ -1,5 +1,6 @@
 import {
     Vec2,
+    Vec4,
     Rect2,
     BinTreeNode,
     BinTreeRect,
@@ -199,7 +200,7 @@ class ImageAtlas extends GLTexture2D {
             format: this.__format,
             filter: 'LINEAR'
         });
-        
+
         let gl = this.__gl;
         this.__fbo = new GLFbo(gl, this);
         this.__fbo.setClearColor([0, 0, 0, 0]);
@@ -211,6 +212,30 @@ class ImageAtlas extends GLTexture2D {
             gl.__atlasLayoutShader = new GLShader(gl, new AtlasLayoutShader());
             let shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas');
             gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        }
+
+
+        {
+            let dataArray = new Float32Array(this.__layout.length * 4); /*each pixel has 4 floats*/
+            for (let i = 0; i < this.__layout.length; i++) {
+                let imageLayout = this.__layout[i];
+                let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
+                vec4.set(imageLayout.pos.x / width, imageLayout.pos.y / height, imageLayout.size.x / width, imageLayout.size.y / height)
+            }
+            if (!this.__atlasLayoutTexture) {
+                this.__atlasLayoutTexture = new GLTexture2D(gl, {
+                    channels: 'RGBA',
+                    format: 'FLOAT',
+                    width: this.__layout.length,
+                    height: 1,
+                    filter: 'NEAREST',
+                    wrap: 'CLAMP_TO_EDGE',
+                    data: dataArray,
+                    mipMapped: false
+                });
+            } else {
+                this.__atlasLayoutTexture.resize(this.__layout.length, 1, dataArray);
+            }
         }
 
         this.__layoutNeedsRegeneration = false;
@@ -281,14 +306,17 @@ class ImageAtlas extends GLTexture2D {
         super.bind(renderstate, location);
         let gl = this.__gl;
         let unifs = renderstate.unifs;
-        let atlasSizeUnifName = 'atlasSize_' + this.__name;
-        if (atlasSizeUnifName in unifs) {
-            gl.uniform2f(unifs[atlasSizeUnifName].location, this.width, this.height);
-        } else {
-            // Note: during debuggin we render the atlas to screen.
-            // Atlas size is requred to index the atlas images.
-            console.warn("Missing atlas size uniform:" + atlasSizeUnifName)
-        }
+        // let atlasSizeUnifName = 'atlasSize_' + this.__name;
+        // if (atlasSizeUnifName in unifs) {
+        //     gl.uniform2f(unifs[atlasSizeUnifName].location, this.width, this.height);
+        // } else {
+        //     // Note: during debuggin we render the atlas to screen.
+        //     // Atlas size is requred to index the atlas images.
+        //     console.warn("Missing atlas size uniform:" + atlasSizeUnifName)
+        // }
+
+        this.__atlasLayoutTexture.bind(renderstate, unifs.atlasLayoutBillboards.location);
+        gl.uniform4f(unifs.atlasDescBillboards.location, this.numSubImages(), this.width, this.height, 0.0);
     }
 
     destroy() {

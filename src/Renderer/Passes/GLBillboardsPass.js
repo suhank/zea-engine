@@ -91,31 +91,6 @@ class GLBillboardsPass extends GLPass {
             let gl = this.__gl;
             this.__atlas.renderAtlas();
 
-            {
-                let numImages = this.__atlas.numSubImages();
-                let width = this.__atlas.width;
-                let height = this.__atlas.height;
-                let dataArray = new Float32Array(numImages * 4); /*each pixel has 4 floats*/
-                for (let i = 0; i < numImages; i++) {
-                    let imageLayout = this.__atlas.getImageLayoutData(i);
-                    let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
-                    vec4.set(imageLayout.pos.x / width, imageLayout.pos.y / height, imageLayout.size.x / width, imageLayout.size.y / height)
-                }
-                if (!this.__atlasLayoutTexture) {
-                    this.__atlasLayoutTexture = new GLTexture2D(gl, {
-                        channels: 'RGBA',
-                        format: 'FLOAT',
-                        width: numImages,
-                        height: 1,
-                        filter: 'NEAREST',
-                        wrap: 'CLAMP_TO_EDGE',
-                        data: dataArray,
-                        mipMapped: false
-                    });
-                } else {
-                    this.__atlasLayoutTexture.resize(numImages, 1, dataArray);
-                }
-            }
 
             let stride = 4; // The number of pixels per draw item.
             let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
@@ -177,15 +152,15 @@ class GLBillboardsPass extends GLPass {
     }
 
     sort(cameraPos) {
-        console.log("sort");
-        let gl = this.__gl;
-        for (let billboardData of this.__billboards)
+        for (let billboardData of this.__billboards){
             billboardData.dist = billboardData.billboard.globalXfo.tr.distanceTo(cameraPos);
+        }
         this.__billboards.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
 
         for (let i = 0; i < this.__billboards.length; i++) {
             this.__indexArray[i] = this.__billboards[i].index;
         }
+        let gl = this.__gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
     }
@@ -213,12 +188,7 @@ class GLBillboardsPass extends GLPass {
         this.__instancesTexture.bind(renderstate, unifs.instancesTexture.location);
         gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
 
-        this.__atlasLayoutTexture.bind(renderstate, unifs.atlasLayout.location);
-        let width = this.__atlas.width;
-        let height = this.__atlas.height;
-        gl.uniform4f(unifs.atlasDesc.location, this.__atlas.numSubImages(), width, height, 0.0);
-
-        this.__atlas.bind(renderstate, unifs.texture.location);
+        this.__atlas.bind(renderstate, unifs.atlasBillboards.location);
 
         gl.enable(gl.BLEND);
         gl.disable(gl.CULL_FACE);
