@@ -228,19 +228,12 @@ class GLCollector {
             this.__updateTransform(index, gldrawItem);
         }, this);
 
-        let lightmapName = geomItem.getLightmap();
-
         let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
-        if (!drawItemSet || 
-            drawItemSet.isInverted() != gldrawItem.isInverted() || 
-            drawItemSet.getLightmapName() != lightmapName
-            ) {
+        if (!drawItemSet) {
             drawItemSet = new GLDrawItemSet(this.__renderer.gl);
-
-            // TODO support multiple geoms per draw items sets later. 
             drawItemSet.addGLGeom(glgeom);
+            glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
         }
-        glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
 
         drawItemSet.addDrawItem(gldrawItem)
 

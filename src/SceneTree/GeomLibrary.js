@@ -42,7 +42,7 @@ class GeomLibrary {
     readBinary(reader) {
         let numGeoms = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
-        let printProgress = numGeoms > 1000;
+        let printProgress = numGeoms > 500;
         let progress = 0;
         for (let i = 0; i < numGeoms; i++) {
 

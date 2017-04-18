@@ -434,12 +434,12 @@ class Mesh extends BaseGeom {
                 clusterFaceIndiceDeltas = reader.loadUInt32Array();
             for (let delta of clusterFaceIndiceDeltas) {
                 let face = delta + offsetRange.x;
-                console.log(face);
+                // console.log(face);
                 let vertexIndices = this.getFaceVertexIndices(face);
                 for(let vertexIndex of vertexIndices){
                     let pos = positionsAttr.getValueRef(vertexIndex);
                     let tmp = xfo.transformVec3(pos);
-                    console.log(tmp.toString());
+                    // console.log(tmp.toString());
                     let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
                     //lightmapCoord.scaleInPlace(coordsScale);
                     lightmapCoord.addInPlace(atlasPos);

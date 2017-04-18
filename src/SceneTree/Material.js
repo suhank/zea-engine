@@ -147,7 +147,7 @@ class Material extends Shader {
     readBinary(reader, flags){
         // super.readBinary(reader, flags);
         let type = reader.loadStr();
-        let name = reader.loadStr();
+        this.name = reader.loadStr();
 
         let numParams = reader.loadUInt32();
         let props = this.__props;

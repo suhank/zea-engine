@@ -144,7 +144,8 @@ class GLRenderer {
         this.__stats.dom.style.visibility = "hidden"
         canvasDiv.appendChild(this.__stats.dom);
         if (options.displayStats) {
-            this.__stats.dom.style.visibility = "visible"
+            this.__stats.dom.style.visibility = "visible";
+            this.__displayStats = true;
         }
 
         if(options.resources){
@@ -245,12 +246,16 @@ class GLRenderer {
         this.requestRedraw();
     }
 
-    toggleDebugPanel() {
+    toggleStats() {
         if (this.__stats) {
-            if (this.__stats.dom.style.visibility == "hidden")
-                this.__stats.dom.style.visibility = "visible";
-            else
+            if (this.__displayStats){
                 this.__stats.dom.style.visibility = "hidden";
+                this.__displayStats = false;
+            }
+            else{
+                this.__stats.dom.style.visibility = "visible";
+                this.__displayStats = true;
+            }
         }
     }
 
@@ -516,7 +521,7 @@ class GLRenderer {
         if (window.process === undefined || process.browser == true) {
             switch (key) {
                 case '>':
-                    this.toggleDebugPanel();
+                    this.toggleStats();
                     return true;
                 case '?':
                     this.sessionClient.toggleAnalytics();
@@ -682,8 +687,10 @@ class GLRenderer {
                 pass.draw(renderstate);
         }
 
-        // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-        console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+        if(this.__displayStats){
+            // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
+            console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+        }
     }
 
     draw() {

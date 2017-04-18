@@ -358,15 +358,15 @@ class TreeItem {
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 let childType = reader.loadStr();
                 let childName = reader.loadStr();
-                // if(type == 'FbxAsset'){
-                //     // if(i == 19){ // Seats
-                //     //     console.log("Skipping Broken:" + childName);
-                //     //     continue;
-                //     // }
-                //     // if(i == 24){
-                //     //     console.log("Skipping Broken:" + childName);
-                //     //     continue;
-                //     // }
+                if(type == 'FbxAsset'){
+                    // if(i != 19){ // Seats
+                    //     console.log("Skipping Broken:" + childName);
+                    //     continue;
+                    // }
+                    // if(i == 24){
+                    //     console.log("Skipping Broken:" + childName);
+                    //     continue;
+                    // }
                 //     // if( childName.startsWith('Basket') || 
                 //     //     childName.startsWith('Benches') || 
                 //     //     childName.startsWith('Rails')|| 
@@ -381,11 +381,11 @@ class TreeItem {
                 //     //     continue;
                 //     // }
 
-                //     if(!childName.startsWith('Rails'))
-                //         continue;
+                    // if(!childName.startsWith('Rails'))
+                    //     continue;
                     
-                //     console.log(childName);
-                // } 
+                    console.log(childName);
+                } 
 
                 let childItem = sgFactory.constructClass(childType);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.

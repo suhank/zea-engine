@@ -259,10 +259,19 @@ class GLDrawItemSet {
 
         // If not already bound...
         let glgeom = this.__glgeoms[0];
-        glgeom.bind(renderstate, {}, this.__transformIdsBuffer);
+        glgeom.bind(renderstate);
 
         // Specify an instanced draw to the shader
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
+
+        {
+            // The instanced transform ids are bound as an instanced attribute.
+            let location = renderstate.attrs.instancedTransformIds.location;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__transformIdsBuffer);
+            gl.enableVertexAttribArray(location);
+            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
+            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+        }
 
         if ('lightmaps' in renderstate && 'lightmap' in unifs) {
             if (renderstate.boundLightmap != this.__lightmapName) {
