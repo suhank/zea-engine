@@ -105,7 +105,6 @@ class ShaderLibrary {
                         line = line.slice(0, line.length - 2);
                     else
                         line = line.slice(0, line.length - 1);
-                    let WHITESPACE_RE = /\s+/;
                     let parts = line.split(WHITESPACE_RE);
                     let tag = parts.shift();
                     let result = {
@@ -138,11 +137,13 @@ class ShaderLibrary {
                             includedGLSL = includedGLSL.substring(includedGLSL.indexOf('\n')+1);
                             result.glsl = result.glsl + "#line 0 " + includedModuleHash + " //including:" + elements.attributes.file +"\n";
 
+                            let repl = {};
                             for(let key in elements.attributes){
                                 if(key == 'file')
                                     continue;
                                 let value = elements.attributes[key];
                                 includedGLSL = includedGLSL.replaceAll(key, value);
+                                repl[key] = value;
                             }
 
                             result.glsl = result.glsl + includedGLSL;
@@ -153,10 +154,16 @@ class ShaderLibrary {
                             result.numLines += shaderModule.numLines + 1;
 
                             for (let name in shaderModule.attributes) {
-                                result.attributes[name] = shaderModule.attributes[name];
+                                let newname = name;
+                                for(let key in repl)
+                                    newname = newname.replaceAll(key, repl[key]);
+                                result.attributes[newname] = shaderModule.attributes[name];
                             }
                             for (let name in shaderModule.uniforms) {
-                                result.uniforms[name] = shaderModule.uniforms[name];
+                                let newname = name;
+                                for(let key in repl)
+                                    newname = newname.replaceAll(key, repl[key]);
+                                result.uniforms[newname] = shaderModule.uniforms[name];
                             }
 
                             break;
@@ -183,7 +190,28 @@ class ShaderLibrary {
                         line = parts.join(' ');
                     }
                 }
-                if (trimmedline.startsWith('attribute')) {
+                if (trimmedline.startsWith('struct')) {
+                    if(trimmedline.indexOf('}') == -1){
+                        i++;
+                        while(true){
+                            line += lines[i];
+                            i++;
+                            if(line.indexOf('}') != -1)
+                                break;
+                        }
+                    }
+                    let structMembers = line.substring(line.indexOf('{')+1, line.indexOf('}')-1);
+                    let members = structMembers.split(';');
+                    let structDesc = [];
+                    for(let member of members){
+                        if(member.length == 0)
+                            continue;
+                        let memberparts = member.trim().split(WHITESPACE_RE);
+                        structDesc.push({ 'name': memberparts[1], 'type': glslTypes[memberparts[0]] });
+                    }
+                    let parts = trimmedline.split(WHITESPACE_RE);
+                    glslTypes[parts[1]] = structDesc;
+                } if (trimmedline.startsWith('attribute')) {
                     let parts = trimmedline.split(WHITESPACE_RE);
                     parseAttr(parts, false);
                 } if (trimmedline.startsWith('instancedattribute')) {
@@ -199,6 +227,9 @@ class ShaderLibrary {
                     result.uniforms[name] = glslTypes[parts[1]];
                     // console.log('uniform:' + name + ":" + parts[1]);
 
+                    if (result.uniforms[name] == 'struct') {
+                        console.log(parts);
+                    }
                     if (parts[1] == 'color') {
                         parts[1] = 'vec4';
                         line = parts.join(' ');

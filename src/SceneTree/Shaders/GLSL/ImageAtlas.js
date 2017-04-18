@@ -3,6 +3,8 @@ import {
     shaderLibrary
 } from '../../ShaderLibrary.js';
 
+import './glslutils.js';
+
 // shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 
 // uniform sampler2D atlas_ATLAS_NAME;
@@ -24,21 +26,26 @@ import {
 
 shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 
-uniform sampler2D atlasATLAS_NAME;
-uniform sampler2D atlasLayoutATLAS_NAME;
-uniform vec4 atlasDescATLAS_NAME;
+<%include file="glslutils.glsl"/>
 
-vec4 getSubImageLayoutATLAS_NAME(int imageId){
-    return texelFetch1D(atlasLayoutATLAS_NAME, int(atlasDescATLAS_NAME.x), imageId);
+
+struct ImageAtlas {
+    sampler2D image;
+    sampler2D layout;
+    vec4 desc;
+};
+
+vec4 getSubImageLayout(int imageId, in ImageAtlas atlas){
+    return texelFetch1D(atlas.layout, int(atlas.desc.z), imageId);
 }
 
-vec2 calcSubImageTexCoordsATLAS_NAME(vec2 texCoord, int imageId){
-    vec4 layoutData = getSubImageLayoutATLAS_NAME(imageId);
+vec2 calcSubImageTexCoords(vec2 texCoord, int imageId, in ImageAtlas atlas){
+    vec4 layoutData = getSubImageLayout(imageId, atlas);
     return (texCoord * layoutData.zw) + layoutData.xy;
 }
 
-vec4 sampleSubImageATLAS_NAME(vec2 texCoord, int imageId){
-    return texture2D(atlasATLAS_NAME, calcSubImageTexCoordsATLAS_NAME(texCoord, imageId));
+vec4 sampleSubImage(vec2 texCoord, int imageId, in ImageAtlas atlas){
+    return texture2D(atlas.image, calcSubImageTexCoords(texCoord, imageId, atlas));
 }
 
 `);

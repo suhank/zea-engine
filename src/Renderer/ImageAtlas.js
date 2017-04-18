@@ -303,20 +303,18 @@ class ImageAtlas extends GLTexture2D {
 
 
     bind(renderstate, location) {
-        super.bind(renderstate, location);
-        let gl = this.__gl;
-        let unifs = renderstate.unifs;
-        // let atlasSizeUnifName = 'atlasSize_' + this.__name;
-        // if (atlasSizeUnifName in unifs) {
-        //     gl.uniform2f(unifs[atlasSizeUnifName].location, this.width, this.height);
-        // } else {
-        //     // Note: during debuggin we render the atlas to screen.
-        //     // Atlas size is requred to index the atlas images.
-        //     console.warn("Missing atlas size uniform:" + atlasSizeUnifName)
-        // }
+        let structName = 'atlas' + this.__name;
 
-        this.__atlasLayoutTexture.bind(renderstate, unifs.atlasLayoutBillboards.location);
-        gl.uniform4f(unifs.atlasDescBillboards.location, this.numSubImages(), this.width, this.height, 0.0);
+        let unifs = renderstate.unifs;
+        super.bind(renderstate, location ? location : unifs[structName+'.image'].location);
+
+        let atlasLayoutUnifName = structName+'.layout';
+        if(atlasLayoutUnifName in unifs)
+            this.__atlasLayoutTexture.bind(renderstate, unifs[atlasLayoutUnifName].location);
+
+        let atlasDescUnifName = structName+'.desc';
+        if(atlasDescUnifName in unifs)
+            this.__gl.uniform4f(unifs[atlasDescUnifName].location, this.width, this.height, this.__layout.length, 0.0);
     }
 
     destroy() {

@@ -109,10 +109,7 @@ class GLProbe extends ImageAtlas {
             this.__convolverShader = new GLShader(gl, new ConvolverShader());
             let covolverShaderComp = this.__convolverShader.compileForTarget('GLProbe', {
                 repl:{
-                    "NUM_SAMPLES": numSamples,
-                    "ATLAS_NAME": "EnvMap",
-                    "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
-                    "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
+                    "NUM_SAMPLES": numSamples
                 }
             });
             this.__covolverShaderBinding = generateShaderGeomBinding(gl, covolverShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
@@ -132,15 +129,7 @@ class GLProbe extends ImageAtlas {
 
             
             this.__envMapShader = new GLShader(gl, new EnvMapShader());
-            //let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
-            let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', {
-                /*defines: rendererpreproc.defines,*/
-                repl:{
-                    "ATLAS_NAME": "EnvMap",
-                    "EnvMap_COUNT": this.numSubImages(),
-                    "EnvMap_LAYOUT": this.getLayoutFn()
-                }
-            });
+            let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
             this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 
@@ -153,13 +142,12 @@ class GLProbe extends ImageAtlas {
 
             // Set the roughness.
             let unifs = renderstate.unifs;
-            let roughnessLocation = unifs.roughness.location;
-            let roughness = (i+1)/this.__fbos.length;
-            gl.uniform1f(roughnessLocation, roughness);
+            // let roughness = (i+1)/this.__fbos.length;
+            // gl.uniform1f(unifs.roughness.location, roughness);
 
             // Note: we should not need to bind the texture every iteration. 
-            this.__imagePyramid.bind(renderstate, unifs.atlas_EnvMap.location);
-            hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
+            this.__imagePyramid.bind(renderstate);
+            // hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
 
             gl.drawQuad();
         }

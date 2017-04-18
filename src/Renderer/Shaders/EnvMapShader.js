@@ -60,6 +60,8 @@ uniform float focus;
 uniform float exposure;
 #endif
 
+uniform ImageAtlas atlasEnvMap;
+
 /* VS Outputs */
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
@@ -69,11 +71,11 @@ void main(void) {
     vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
-        vec4 texel = texture2D(atlas_EnvMap, uv);
+        vec4 texel = texture2D(atlasEnvMap.image, uv);
         gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
     }
     else{
-        gl_FragColor = vec4(sampleImagePyramid_EnvMap(uv, focus).rgb, 1.0);
+        gl_FragColor = vec4(sampleImagePyramid(uv, focus, atlasEnvMap).rgb, 1.0);
     }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

@@ -22,7 +22,7 @@ class GLEnvMap extends GLProbe {
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
         this.__srcGLTex = srcGLTex;
 
-        // Note: we must setup the image pyramid before conneecting our listeners to the signals
+        // Note: we must setup the image pyramid before connecting our listeners to the signals
         // this is so that during updates, the pyramid is updated first.
         this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
 
@@ -69,7 +69,7 @@ class GLEnvMap extends GLProbe {
         if (this.__envMap.isLoaded()) {
 
             let gl = this.__gl;
-            let displayAtlas = false;
+            let displayAtlas = true;
             if(displayAtlas){
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
@@ -82,9 +82,9 @@ class GLEnvMap extends GLProbe {
                 ///////////////////
                 this.__envMapShader.bind(renderstate, 'GLEnvMap');
                 let unifs = renderstate.unifs;
-                // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-                //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-                this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+                // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+                //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+                this.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
 
                 if ('focus' in unifs)
                     gl.uniform1f(unifs.focus.location, this.__backgroundFocus);

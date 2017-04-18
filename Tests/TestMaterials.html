@@ -26,24 +26,24 @@ document.addEventListener("DOMContentLoaded", function(event) {
     let envMap =  new Visualive.HDRImage2D('env', envMapURL, true);
     scene.setEnvMap(envMap);
 
-    let addMeshShape = (shape, pos, mat)=>{
-        let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, mat);
-        geomItem.localXfo.tr = pos;
-        scene.getRoot().addChild(geomItem);
-    }
-    for(let i=0; i<10; i++){
-        for(let j=0; j<10; j++){
-            let material = new Visualive.StandardMaterial('ground');
-            material.baseColor = new Visualive.Color(0.6, 0.6, 0.6);
-            material.roughness = i/9;
-            material.metallic = j/9;
-            if(j < 6)
-                material.reflectance = 0.02;
-            else
-                material.reflectance = 0.5;
-            addMeshShape(new Visualive.Sphere('Sphere'+i+"-"+j, 1.4, 40), new Visualive.Vec3(i*3.4, 0, j*3.4), material);
-        }
-    }
+    // let addMeshShape = (shape, pos, mat)=>{
+    //     let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, mat);
+    //     geomItem.localXfo.tr = pos;
+    //     scene.getRoot().addChild(geomItem);
+    // }
+    // for(let i=0; i<10; i++){
+    //     for(let j=0; j<10; j++){
+    //         let material = new Visualive.StandardMaterial('ground');
+    //         material.baseColor = new Visualive.Color(0.6, 0.6, 0.6);
+    //         material.roughness = i/9;
+    //         material.metallic = j/9;
+    //         if(j < 6)
+    //             material.reflectance = 0.02;
+    //         else
+    //             material.reflectance = 0.5;
+    //         addMeshShape(new Visualive.Sphere('Sphere'+i+"-"+j, 1.4, 40), new Visualive.Vec3(i*3.4, 0, j*3.4), material);
+    //     }
+    // }
     
     let renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.exposure = 1.5;

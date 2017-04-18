@@ -76,13 +76,16 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
  //   return max(0.0, 0.5*log2((ww*hh)/float(num_samples)) - 0.5*log2(pdf));
 //}
 
+uniform ImageAtlas atlasEnvMap;
 
 void main(void) {
     vec3 N = dirFromLatLongUVs(v_texCoord.x, v_texCoord.y);
 
-    if(false){
+    if(true){
         vec2 uv = latLongUVsFromDir(N);
-        gl_FragColor = sampleImagePyramid_EnvMap(uv, roughness);
+        //gl_FragColor = sampleImagePyramid(uv, roughness, atlasEnvMap);
+        gl_FragColor = sampleSubImage(uv, 0, atlasEnvMap);
+        //gl_FragColor = texture2D(atlasEnvMap, uv);
     }
     else{
         const int numSamples = NUM_SAMPLES;
@@ -98,7 +101,7 @@ void main(void) {
             float VdotN = dot(V, N);
 
             vec2 uv = latLongUVsFromDir(V);
-            color += sampleImagePyramid_EnvMap(uv, 0.0) * VdotN;
+            color += sampleImagePyramid(uv, 0.0, atlasEnvMap) * VdotN;
             weight += VdotN;
         }
         color /= float(weight);

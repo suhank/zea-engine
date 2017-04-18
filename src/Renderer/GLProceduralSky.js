@@ -380,10 +380,10 @@ class GLProceduralSky extends GLProbe {
             //     ///////////////////
             //     this.__envMapShader.bind(renderstate, 'GLEnvMap');
             //     let unifs = renderstate.unifs;
-            //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-            //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-            //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
-            //     this.bind(renderstate, renderstate.unifs.atlas_EnvMap.location);
+            //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+            //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+            //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+            //     this.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
 
             //     if ('focus' in unifs)
             //         gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
