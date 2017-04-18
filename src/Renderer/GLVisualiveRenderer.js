@@ -117,7 +117,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if(!isMobileDevice()){
             this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
             //this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
-            this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS';
+            this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS\n';
         }
         if(options.enableCrossSections )
             this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS'

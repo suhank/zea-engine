@@ -9,9 +9,12 @@ shaderLibrary.setShaderModule('GGX_Specular.glsl', `
 
 
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-<%include file="utils/imagePyramid.glsl" ATLAS_NAME="EnvMap"/>
+<%include file="utils/imagePyramid.glsl"/>
+
+uniform ImageAtlas atlasEnvMap;
+
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramidEnvMap(latLongUVsFromDir(dir), roughness).rgb;
+    return sampleImagePyramid(latLongUVsFromDir(dir), roughness, atlasEnvMap).rgb;
 }
 
 

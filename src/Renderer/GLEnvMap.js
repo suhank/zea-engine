@@ -69,7 +69,7 @@ class GLEnvMap extends GLProbe {
         if (this.__envMap.isLoaded()) {
 
             let gl = this.__gl;
-            let displayAtlas = true;
+            let displayAtlas = false;
             if(displayAtlas){
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
@@ -84,7 +84,7 @@ class GLEnvMap extends GLProbe {
                 let unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
                 //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
-                this.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
+                this.bind(renderstate);
 
                 if ('focus' in unifs)
                     gl.uniform1f(unifs.focus.location, this.__backgroundFocus);

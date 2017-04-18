@@ -50,7 +50,7 @@ void main()
 precision highp float;
 
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-<%include file="utils/imagePyramid.glsl" ATLAS_NAME="EnvMap"/>
+<%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
 uniform float focus;

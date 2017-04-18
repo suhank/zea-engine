@@ -28,11 +28,10 @@ shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 
 <%include file="glslutils.glsl"/>
 
-
 struct ImageAtlas {
-    sampler2D image;
     sampler2D layout;
     vec4 desc;
+    sampler2D image;
 };
 
 vec4 getSubImageLayout(int imageId, in ImageAtlas atlas){
@@ -40,12 +39,13 @@ vec4 getSubImageLayout(int imageId, in ImageAtlas atlas){
 }
 
 vec2 calcSubImageTexCoords(vec2 texCoord, int imageId, in ImageAtlas atlas){
-    vec4 layoutData = getSubImageLayout(imageId, atlas);
+    vec4 layoutData = texelFetch1D(atlas.layout, int(atlas.desc.z), imageId);
     return (texCoord * layoutData.zw) + layoutData.xy;
 }
 
 vec4 sampleSubImage(vec2 texCoord, int imageId, in ImageAtlas atlas){
-    return texture2D(atlas.image, calcSubImageTexCoords(texCoord, imageId, atlas));
+    vec4 layoutData = texture2D(atlas.layout, vec2((float(imageId)+0.5)/float(5), 0.5));
+    return texture2D(atlas.image, (texCoord * layoutData.zw) + layoutData.xy);
 }
 
 `);

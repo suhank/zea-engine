@@ -32,7 +32,7 @@ void main()
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('ConvolverShader.fragmentShader', `
 precision highp float;
 
-<%include file="utils/imagePyramid.glsl" ATLAS_NAME="EnvMap"/>
+<%include file="utils/imagePyramid.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 
 uniform float roughness;

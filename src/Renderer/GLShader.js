@@ -211,8 +211,8 @@ class GLShader {
         if ('projectionMatrix' in unifs)
             gl.uniformMatrix4fv(unifs.projectionMatrix.location, false, renderstate.projectionMatrix.asArray());
 
-        if ('atlasEnvMap' in unifs && renderstate.envMap != undefined) {
-            renderstate.envMap.bindforReading(renderstate, unifs.atlasEnvMap.location);
+        if ('atlasEnvMap.image' in unifs && renderstate.envMap != undefined) {
+            renderstate.envMap.bindforReading(renderstate);
         }
         if ('exposure' in unifs)
             gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
