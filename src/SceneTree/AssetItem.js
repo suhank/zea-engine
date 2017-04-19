@@ -57,20 +57,6 @@ class AssetItem extends TreeItem {
         return this.__lightmap;
     }
 
-    // __propagateLightmap(){
-    //     let lightmap = this.__lightmap;
-    //     let traverse = (treeItem)=>{
-    //         if (treeItem instanceof GeomItem) {
-    //             treeItem.setLightmap(lightmap);
-    //         }
-    //         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
-    //         for (let childItem of treeItem.getChildren()) {
-    //             traverse(childItem);
-    //         }
-    //     }
-    //     traverse(this);
-    // }
-
     //////////////////////////////////////////
     // Persistence
 
@@ -101,7 +87,7 @@ class AssetItem extends TreeItem {
         this.lightmapCoordsOffset = reader.loadFloat32Vec2();
         this.lightmapName = reader.loadStr();
 
-        this.__propagateLightmapOffset();
+        //this.__propagateLightmapOffset();
     }
 
     __propagateLightmapOffset(){

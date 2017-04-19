@@ -19,7 +19,7 @@ class UserAvatar {
     constructor(id, data, parentTreeItem) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
-        this.__avatarScale = 5.0;
+        this.__avatarScale = 500.0;
 
         this.__treeItem = new TreeItem(id);
         this.__material = new FlatMaterial('user'+id+'Material');

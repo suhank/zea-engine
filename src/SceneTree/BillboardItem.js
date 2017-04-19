@@ -1,4 +1,5 @@
 import {
+	Color,
     Signal
 } from '../Math';
 import {
@@ -14,6 +15,7 @@ class BillboardItem extends TreeItem {
 
         this.image2d = image2d;
         this.scale = 0.01;
+        this.color = Color.random(0.2);
     }
 
 };

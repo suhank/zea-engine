@@ -388,6 +388,8 @@ class TreeItem {
                 } 
 
                 let childItem = sgFactory.constructClass(childType);
+                if(!childItem)
+                    continue;
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 childItem.readBinary(reader, flags, materialLibrary, geomLibrary);
                 this.addChild(childItem, false);

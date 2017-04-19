@@ -197,7 +197,7 @@ class VertexAttribute extends Attribute {
                     numSplitValues = splitId+1;
             }
             this.__splits[vertexId] = splits;
-            if(offset == splitIndices.length)
+            if(offset >= splitIndices.length)
                 break;
         }
         let dim = this.__numFloat32Elements;

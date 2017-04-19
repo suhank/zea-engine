@@ -66,7 +66,7 @@ class GLBillboardsPass extends GLPass {
     __populateBillboardDataArray(billboardData, index, dataArray) {
         let mat4 = billboardData.billboard.globalXfo.toMat4();
 
-        let stride = 16; // The number of floats per draw item.
+        let stride = 24; // The number of floats per draw item.
         let offset = index * stride;
         let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
         let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
@@ -75,7 +75,11 @@ class GLBillboardsPass extends GLPass {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        col3.set(billboardData.billboard.scale, 0.0, billboardData.imageIndex, 0.0);
+        col3.set(billboardData.billboard.scale, 1.0, billboardData.imageIndex, 0.0);
+
+        let col4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
+        let color = billboardData.billboard.color;
+        col4.set(color.r, color.g, color.b, color.a);
     }
 
     __updateBillboards() {
@@ -87,7 +91,7 @@ class GLBillboardsPass extends GLPass {
             this.__atlas.renderAtlas();
 
 
-            let stride = 4; // The number of pixels per draw item.
+            let stride = 6; // The number of pixels per draw item.
             let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
             let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
             for (let i = 0; i < this.__billboards.length; i++) {
