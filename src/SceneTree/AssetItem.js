@@ -57,19 +57,19 @@ class AssetItem extends TreeItem {
         return this.__lightmap;
     }
 
-    __propagateLightmap(){
-        let lightmap = this.__lightmap;
-        let traverse = (treeItem)=>{
-            if (treeItem instanceof GeomItem) {
-                treeItem.setLightmap(lightmap);
-            }
-            // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
-            for (let childItem of treeItem.getChildren()) {
-                traverse(childItem);
-            }
-        }
-        traverse(this);
-    }
+    // __propagateLightmap(){
+    //     let lightmap = this.__lightmap;
+    //     let traverse = (treeItem)=>{
+    //         if (treeItem instanceof GeomItem) {
+    //             treeItem.setLightmap(lightmap);
+    //         }
+    //         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
+    //         for (let childItem of treeItem.getChildren()) {
+    //             traverse(childItem);
+    //         }
+    //     }
+    //     traverse(this);
+    // }
 
     //////////////////////////////////////////
     // Persistence
@@ -98,12 +98,26 @@ class AssetItem extends TreeItem {
 
         super.readBinary(reader, flags, this.__materials, this.__geoms);
 
-        // let texelSize = reader.loadFloat32();
-        // this.atlasSize = reader.loadFloat32Vec2();
-        // this.lightmapName = reader.loadStr();
+        this.lightmapCoordsOffset = reader.loadFloat32Vec2();
+        this.lightmapName = reader.loadStr();
 
+        this.__propagateLightmapOffset();
     }
 
+    __propagateLightmapOffset(){
+        let lightmapCoordsOffset = this.lightmapCoordsOffset;
+        let lightmapName = this.lightmapName;
+        let traverse = (treeItem)=>{
+            if (treeItem instanceof GeomItem) {
+                treeItem.applyAssetLightmapSettings(lightmapName, lightmapCoordsOffset);
+            }
+            // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
+            for (let childItem of treeItem.getChildren()) {
+                traverse(childItem);
+            }
+        }
+        traverse(this);
+    }
 
 };
 

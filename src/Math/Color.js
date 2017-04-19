@@ -141,6 +141,34 @@ class Color extends AttrValue {
         );
     }
 
+    // Returns a new vector which is this vector scaled by scalar
+    scale(scalar) {
+        return new Vec4(
+            this.r * scalar,
+            this.g * scalar,
+            this.b * scalar,
+            this.a * scalar
+        );
+    }
+    
+    scaleInPlace(scalar) {
+        this.set(
+            this.r * scalar,
+            this.g * scalar,
+            this.b * scalar,
+            this.a * scalar
+        );
+    }
+    
+    applyGamma(gamma) {
+        this.set(
+            Math.pow(this.r, gamma),
+            Math.pow(this.g, gamma),
+            Math.pow(this.b, gamma),
+            Math.pow(this.a, gamma)
+        );
+    }
+
     luminance() {
         return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b;
     }

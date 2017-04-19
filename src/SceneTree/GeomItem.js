@@ -114,7 +114,7 @@ class GeomItem extends TreeItem {
     }
 
     /////////////////////////////
-    // Irradiance Maps
+    // Lightmaps
 
     getLightmap() {
         return this.__lightmap;
@@ -132,12 +132,11 @@ class GeomItem extends TreeItem {
         this.__lightmapCoordsOffset = offset;
     }
 
-    getlightmapCoords(texelSize, generateClusters) {
-        if (this.__geom instanceof Mesh) {
-            return this.__geom.getlightmapCoords(texelSize, generateClusters);
-        } else {
-            console.warn("Geom type not light-mappable:" + this.__geom.constructor.name);
-        }
+    // The root asset item pushes its offset to the geom items in the
+    // tree. This offsets the light cooords for each geom.
+    applyAssetLightmapSettings(lightmapName, offset) {
+        this.__lightmap = lightmapName;
+        this.__lightmapCoordsOffset.addInPlace(offset);
     }
 
     /////////////////////////////

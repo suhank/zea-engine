@@ -131,6 +131,15 @@ class Vec4 extends AttrValue {
             this.t * scalar
         );
     }
+    
+    scaleInPlace(scalar) {
+        this.set(
+            this.x * scalar,
+            this.y * scalar,
+            this.z * scalar,
+            this.t * scalar
+        );
+    }
 
     /**
      * Calculates the length of a vec4

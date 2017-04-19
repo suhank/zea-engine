@@ -420,9 +420,8 @@ class Mesh extends BaseGeom {
         // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
         for (let i = 0; i < numClusters; i++) {
             let xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat());
-            const scl = reader.loadFloat32();
-            xfo.sc.set(scl, 0.0, scl);
-            let atlasPos = reader.loadFloat32Vec2();
+            const coordsScale = reader.loadFloat32();
+            let offset = reader.loadFloat32Vec2();
             let offsetRange = reader.loadSInt32Vec2();
             let bytes = reader.loadUInt8();
             let clusterFaceIndiceDeltas;
@@ -439,10 +438,10 @@ class Mesh extends BaseGeom {
                 for(let vertexIndex of vertexIndices){
                     let pos = positionsAttr.getValueRef(vertexIndex);
                     let tmp = xfo.transformVec3(pos);
-                    // console.log(tmp.toString());
                     let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
-                    //lightmapCoord.scaleInPlace(coordsScale);
-                    lightmapCoord.addInPlace(atlasPos);
+                    lightmapCoord.scaleInPlace(coordsScale);
+                    lightmapCoord.addInPlace(offset);
+                    console.log(lightmapCoord.toJSON());
                     lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord);
 
                     // for debugging.

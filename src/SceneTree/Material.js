@@ -156,6 +156,8 @@ class Material extends Shader {
             if(propName in props){
                 if(props[propName] instanceof Color){
                     props[propName] = reader.loadFloat32Color();
+                    // If the value is in linear space, then we should convert it to gamma space.
+                    props[propName].applyGamma(2.2);
                 }
                 else{
                     props[propName] = reader.loadFloat32();

@@ -177,6 +177,36 @@ class VertexAttribute extends Attribute {
             this.__splitValues.push(this.__dataType.createFromJSON(valjson));
     }
 
+    loadSplitValues(reader){
+
+        let splitIndices = reader.loadUInt32Array();
+        let offset = 0;
+        let numSplitValues = 0;
+        while (true) {
+            let vertexId = splitIndices[offset++];
+            let numSplits = splitIndices[offset++];
+
+            let splits = {};
+            for (let i = 0; i<numSplits; i++) {
+                let faceId = splitIndices[offset++];
+                let splitId = splitIndices[offset++];
+                splits[faceId] = splitId;
+                if(splitId >= numSplitValues)
+                    numSplitValues = splitId+1;
+            }
+            this.__splits[vertexId] = splits;
+            if(offset == splitIndices.length)
+                break;
+        }
+        let dim = this.__numFloat32Elements;
+        let splitValues = reader.loadFloat32Array(numSplitValues*dim);
+        this.__splitValues = [];
+        for (let i = 0; i<numSplitValues; i++) {
+            let val = this.__dataType.createFromFloat32Array(splitValues.slice(i*dim, (i*dim)+dim));
+            this.__splitValues.push(val);
+        }
+    }
+
 };
 
 export {

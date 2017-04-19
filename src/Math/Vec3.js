@@ -16,7 +16,7 @@ class Vec3 extends AttrValue {
         if (x instanceof Float32Array || x instanceof Uint32Array) {
             this.__data = x;
         }
-        if (x instanceof ArrayBuffer) {
+        else if (x instanceof ArrayBuffer) {
             let buffer = x;
             let byteOffset = y;
             this.__data = new Float32Array(buffer, byteOffset, 3);
@@ -337,6 +337,11 @@ class Vec3 extends AttrValue {
 
     static createFromFloat32Buffer(buffer, offset = 0) {
         return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
+    }
+
+
+    static createFromFloat32Array(array) {
+        return new Vec3(array);
     }
 
     static numFloat32Elements() {
