@@ -70,6 +70,8 @@ class BinReader {
     loadUInt16Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
+        if(size == 0)
+            return new Uint16Array();
         this.readPadd(2);
         let result;
         if (this.__isMobileDevice) {
@@ -89,6 +91,8 @@ class BinReader {
     loadUInt32Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
+        if(size == 0)
+            return new Uint32Array();
         this.readPadd(4);
         let result;
         if (this.__isMobileDevice) {
@@ -108,6 +112,8 @@ class BinReader {
     loadFloat32Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
+        if(size == 0)
+            return new Float32Array();
         this.readPadd(4);
         let result;
         if (this.__isMobileDevice) {

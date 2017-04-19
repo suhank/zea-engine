@@ -178,7 +178,7 @@ class BaseGeom extends RefCounted {
             let normals_8bit = reader.loadUInt8Array(numVerts*3);
             load8BitNormalsArray(0, numVerts, box3.p0, box3.diagonal(), normals_8bit);
 
-            //normalsAttr.loadSplitValues(reader);
+            normalsAttr.loadSplitValues(reader);
         }
         else{
             let clusters = [];
@@ -206,7 +206,7 @@ class BaseGeom extends RefCounted {
                 box3 = clusters[i].normalsRange;
                 load8BitNormalsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), normals_8bit);
             }
-            //normalsAttr.loadSplitValues(reader);
+            normalsAttr.loadSplitValues(reader);
         }
     }
 
