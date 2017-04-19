@@ -264,15 +264,10 @@ class ImageAtlas extends GLTexture2D {
             gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
             gl.drawQuad();
-
-            if (cleanup)
-                image.destroy();
         }
 
         if (cleanup) {
-            this.__subImages = [];
-            this.__fbo.destroy();
-            this.__fbo = null;
+            this.cleanup();
         }
 
         this.updated.emit();
@@ -319,12 +314,18 @@ class ImageAtlas extends GLTexture2D {
             this.__gl.uniform4f(unifs[atlasDescUnifName].location, this.width, this.height, this.__layout.length, 0.0);
     }
 
-    destroy() {
+    cleanup() {
         for (let image of this.__subImages) {
             image.destroy();
         }
         if (this.__fbo)
             this.__fbo.destroy();
+        this.__subImages = [];
+        this.__fbo = null;
+    }
+
+    destroy() {
+        this.cleanup();
         super.destroy();
     }
 

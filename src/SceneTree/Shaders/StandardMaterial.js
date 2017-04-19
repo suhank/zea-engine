@@ -283,7 +283,7 @@ void main(void) {
 #ifndef ENABLE_SPECULAR
     // I'm not sure why we must reduce the irradiance here.
     // If not, the scene is far to bright. 
-    irradiance *= 0.05;
+    //irradiance *= 0.05;
     vec3 diffuseReflectance = baseColor.rgb * irradiance;
     gl_FragColor = vec4(diffuseReflectance, 1);
 #else

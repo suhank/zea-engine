@@ -18,6 +18,8 @@ export * from './Image2D.js';
 export * from './FileImage2D.js';
 export * from './HDRImage2D.js';
 export * from './HDRImageMixer.js';
+export * from './ImageLibrary.js';
+
 export * from './ProceduralSky.js';
 
 export * from './Material.js';

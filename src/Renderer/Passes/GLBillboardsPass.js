@@ -39,6 +39,11 @@ class GLBillboardsPass extends GLPass {
 
         this.__prevSortCameraPos = new Vec3();
     }
+    
+    /////////////////////////////////////
+    // Bind to Render Tree
+    filterRenderTree() {
+    }
 
     addBillboard(billboard) {
 
