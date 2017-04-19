@@ -38,7 +38,7 @@ void main(void) {
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
     vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
-    vec2 quadVert = getScreenSpaceVertexPosition();
+    vec2 quadVert = getQuadVertexPositionFromID();
 
     viewPos += vec4(quadVert, 0, 0) * _pointSize;
 

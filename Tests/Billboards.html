@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Billboards</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../external/Unpack.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        
+        <script type="text/javascript">
+
+// Note: launch Chrome with  --allow-file-access-from-files
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+    let scene = new Visualive.Scene();
+
+    {
+        let billboard1 = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D('../Resources/People/Circus/VerticalDoubleMaleTrapeze2.png'));
+        let xfo1 = new Visualive.Xfo();
+        xfo1.tr.set( -1, 0, 1 );
+        billboard1.localXfo = xfo1;
+        scene.getRoot().addChild(billboard1);
+    }
+
+    {
+        let billboard0 = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D('../Resources/People/Circus/SolorFloorPerformer.png'));
+        let xfo0 = new Visualive.Xfo();
+        xfo0.tr.set( 1, 0, 0 );
+        xfo0.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
+        billboard0.localXfo = xfo0; 
+        scene.getRoot().addChild(billboard0);
+    }
+
+    let renderer = new Visualive.GLSimpleRenderer(addCanvas(), { resources:'../Resources/Resources.vlr' });
+    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+
+    renderer.setScene(scene);
+    renderer.resumeDrawing();
+
+});
+        </script> 
+    </body>
+</html>

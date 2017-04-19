@@ -29,7 +29,7 @@ varying vec2 v_texCoord;
  
 void main()
 {
-    vec2 position = getScreenSpaceVertexPosition() * 2.0;
+    vec2 position = getQuadVertexPositionFromID() * 2.0;
 
     mat4 inverseProjection = inverse(projectionMatrix);
     mat3 inverseModelview = transpose(mat3(viewMatrix));
@@ -50,7 +50,7 @@ void main()
 precision highp float;
 
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-<%include file="utils/imagePyramid.glsl" ATLAS_NAME="EnvMap"/>
+<%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
 uniform float focus;
@@ -59,6 +59,8 @@ uniform float focus;
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif
+
+uniform ImageAtlas atlasEnvMap;
 
 /* VS Outputs */
 varying vec3 v_worldDir;
@@ -69,11 +71,11 @@ void main(void) {
     vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
-        vec4 texel = texture2D(atlas_EnvMap, uv);
+        vec4 texel = texture2D(atlasEnvMap.image, uv);
         gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
     }
     else{
-        gl_FragColor = vec4(sampleImagePyramid_EnvMap(uv, focus).rgb, 1.0);
+        gl_FragColor = vec4(sampleImagePyramid(uv, focus, atlasEnvMap).rgb, 1.0);
     }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

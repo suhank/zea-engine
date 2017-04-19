@@ -8,6 +8,7 @@ export * from './TreeItem.js';
 export * from './GeomItem.js';
 export * from './GizmoItem.js';
 export * from './AssetItem.js';
+export * from './BillboardItem.js';
 export * from './Camera.js';
 
 export * from './GeomLibrary.js';

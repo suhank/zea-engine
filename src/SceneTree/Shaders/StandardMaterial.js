@@ -73,7 +73,7 @@ varying vec3 v_worldPos;
 
 void main(void) {
 
-    vec4 geomItemData = getGeomItemData();
+    vec4 geomItemData = getInstanceData();
 
     //vec4 pos = vec4((lightmapCoords + geomItemData.xy), 0., 1.);
     vec4 pos = vec4(positions, 1.);
@@ -157,6 +157,14 @@ uniform float planeAngle;
 
 uniform color _baseColor;
 //uniform float _opacity;
+//uniform color _emission;
+
+#ifdef ENABLE_SPECULAR
+<%include file="GGX_Specular.glsl"/>
+uniform float _roughness;
+uniform float _metallic;
+uniform float _reflectance;
+#endif
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D _baseColorTex;
@@ -167,31 +175,24 @@ uniform bool _baseColorTexConnected;
 //uniform sampler2D _opacityTex;
 //uniform bool _opacityTexConnected;
 
-#ifdef ENABLE_SPECULAR
-<%include file="GGX_Specular.glsl"/>
+#ifdef ENABLE_TEXTURES
 
-uniform float _roughness;
 uniform sampler2D _roughnessTex;
 uniform bool _roughnessTexConnected;
 
-uniform float _metallic;
 uniform sampler2D _metallicTex;
 uniform bool _metallicTexConnected;
 
-uniform float _reflectance;
 //uniform sampler2D _reflectanceTex;
 //uniform bool _reflectanceTexConnected;
 
-//uniform color _emission;
 //uniform sampler2D _emissionTex;
 //uniform bool _emissionTexConnected;
 
 uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
 //uniform float _normalScale;
-#endif
 
-#ifdef ENABLE_TEXTURES
 float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }

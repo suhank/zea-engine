@@ -44,8 +44,8 @@ class GLDrawItemSet {
         // this.__coalescedGeomAttributes = {};
         // this.__coalescedIndices = 0;
 
-        this.__transformIdsArray = null;
-        this.__transformIdsBuffer = null;
+        this.__instancedIdsArray = null;
+        this.__instancedIdsBuffer = null;
         this.__drawCount = 0;
         this.__inverted = false;
         this.__lightmapName = undefined;
@@ -137,7 +137,7 @@ class GLDrawItemSet {
             glgeom.getGeom().populateTriangulatedIndices(splitData, triIndices, indicesOffset, attrsOffset);
             glgeom.setIndicesOffset(indicesOffset);
 
-            this.__transformIdsArray[index] = gldrawItem.getId();
+            this.__instancedIdsArray[index] = gldrawItem.getId();
 
             attrsOffset += glgeom.getAttrCount();
             indicesOffset += glgeom.getNumTriangles();
@@ -160,17 +160,17 @@ class GLDrawItemSet {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, triIndices, gl.STATIC_DRAW);
 */
 
-        this.__transformIdsArray = new Float32Array(this.__gldrawItems.length);
+        this.__instancedIdsArray = new Float32Array(this.__gldrawItems.length);
         for (let i = 0; i < this.__gldrawItems.length; i++) {
-            this.__transformIdsArray[i] = this.__gldrawItems[i].getId();
+            this.__instancedIdsArray[i] = this.__gldrawItems[i].getId();
         }
 
-        this.__transformIdsBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__transformIdsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.__transformIdsArray, gl.STATIC_DRAW);
-        this.__drawCount = this.__transformIdsArray.length;
+        this.__instancedIdsBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.__instancedIdsArray, gl.STATIC_DRAW);
+        this.__drawCount = this.__instancedIdsArray.length;
 
-        this.__transformIdsBuffer.name = 'transformIds';
+        this.__instancedIdsBuffer.name = 'transformIds';
     }
 
     //////////////////////////////////////
@@ -186,12 +186,12 @@ class GLDrawItemSet {
         // due to culling. We can maintain a high-water mark
         // buffer, and then only render the first N items. 
         for (let i = 0; i < transformIds.length; i++) {
-            this.__transformIdsArray[i] = transformIds[i];
+            this.__instancedIdsArray[i] = transformIds[i];
         }
         // Note: the draw cound can be less than the number of instances
         // we re-use the same buffer and simply invoke fewer draw calls.
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__transformIdsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.__transformIdsArray, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.__instancedIdsArray, gl.STATIC_DRAW);
     }
 
     getDrawCount() {
@@ -234,7 +234,7 @@ class GLDrawItemSet {
             return;
         }
 
-        if (!this.__transformIdsBuffer) {
+        if (!this.__instancedIdsBuffer) {
             this.genBuffers();
         }
 
@@ -267,7 +267,7 @@ class GLDrawItemSet {
         {
             // The instanced transform ids are bound as an instanced attribute.
             let location = renderstate.attrs.instancedTransformIds.location;
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__transformIdsBuffer);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
             gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
