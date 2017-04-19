@@ -245,9 +245,11 @@ class ImageAtlas extends GLTexture2D {
         if(this.__layoutNeedsRegeneration){
             this.generateAtlasLayout();
         }
-        let gl = this.__gl;
+        if(!this.__fbo)
+            return;
         this.__fbo.bindAndClear();
 
+        let gl = this.__gl;
         let renderstate = {};
         gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas');
         gl.__atlasLayoutShaderBinding.bind(renderstate);

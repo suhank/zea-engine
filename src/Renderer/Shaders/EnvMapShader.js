@@ -49,6 +49,7 @@ void main()
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('EnvMapShader.fragmentShader', `
 precision highp float;
 
+<%include file="glslutils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>

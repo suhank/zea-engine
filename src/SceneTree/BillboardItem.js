@@ -13,6 +13,7 @@ class BillboardItem extends TreeItem {
         super(name);
 
         this.image2d = image2d;
+        this.scale = 0.01;
     }
 
 };

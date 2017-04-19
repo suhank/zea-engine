@@ -26,7 +26,6 @@ import './glslutils.js';
 
 shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 
-<%include file="glslutils.glsl"/>
 
 struct ImageAtlas {
     sampler2D layout;

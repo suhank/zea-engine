@@ -202,7 +202,7 @@ class GeomItem extends TreeItem {
             }
         }
 
-        this.__lightmapCoordsOffset.tr = reader.loadFloat32Vec2();
+        this.__lightmapCoordsOffset = reader.loadFloat32Vec2();
     }
 
 

@@ -75,7 +75,6 @@ void main(void) {
 
     vec4 geomItemData = getInstanceData();
 
-    //vec4 pos = vec4((lightmapCoords + geomItemData.xy), 0., 1.);
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
@@ -88,6 +87,9 @@ void main(void) {
     v_viewNormal    = normalMatrix * normals;
 #else
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+
+    // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
+    // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     v_clusterID = clusterIDs;
     v_geomItemData = geomItemData;
@@ -160,6 +162,7 @@ uniform color _baseColor;
 //uniform color _emission;
 
 #ifdef ENABLE_SPECULAR
+<%include file="glslutils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 uniform float _roughness;
 uniform float _metallic;
@@ -280,7 +283,7 @@ void main(void) {
 #ifndef ENABLE_SPECULAR
     // I'm not sure why we must reduce the irradiance here.
     // If not, the scene is far to bright. 
-    //irradiance *= 0.5;
+    irradiance *= 0.05;
     vec3 diffuseReflectance = baseColor.rgb * irradiance;
     gl_FragColor = vec4(diffuseReflectance, 1);
 #else

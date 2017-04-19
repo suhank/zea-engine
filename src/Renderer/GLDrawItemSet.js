@@ -266,7 +266,7 @@ class GLDrawItemSet {
 
         {
             // The instanced transform ids are bound as an instanced attribute.
-            let location = renderstate.attrs.instancedTransformIds.location;
+            let location = renderstate.attrs.instancedIds.location;
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);

@@ -431,9 +431,11 @@ class Mesh extends BaseGeom {
                 clusterFaceIndiceDeltas = reader.loadUInt16Array();
             else
                 clusterFaceIndiceDeltas = reader.loadUInt32Array();
+            let prevFace = 0;
             for (let delta of clusterFaceIndiceDeltas) {
                 let face = delta + offsetRange.x;
-                // console.log(face);
+                face += prevFace;
+                prevFace = face;
                 let vertexIndices = this.getFaceVertexIndices(face);
                 for(let vertexIndex of vertexIndices){
                     let pos = positionsAttr.getValueRef(vertexIndex);
@@ -441,7 +443,6 @@ class Mesh extends BaseGeom {
                     let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
                     lightmapCoord.scaleInPlace(coordsScale);
                     lightmapCoord.addInPlace(offset);
-                    console.log(lightmapCoord.toJSON());
                     lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord);
 
                     // for debugging.

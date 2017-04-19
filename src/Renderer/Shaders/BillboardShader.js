@@ -21,13 +21,12 @@ instancedattribute float instancedIds;    // instanced attribute..
 <%include file="utils/quadVertexFromID.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="matrixTexture.glsl"/>
- ///<%include file="utils/imageAtlas.glsl" ATLAS_NAME="Billboards"/>
+<%include file="utils/imageAtlas.glsl"/>
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-uniform sampler2D layoutBillboards;
-uniform vec4 descBillboards;
+uniform ImageAtlas atlasBillboards;
 
 
 /* VS Outputs */
@@ -43,13 +42,13 @@ void main(void) {
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
     v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
-    vec4 layoutData = texelFetch1D(layoutBillboards, int(descBillboards.x), int(billboardData.z));
+    vec4 layoutData = texelFetch1D(atlasBillboards.layout, int(atlasBillboards.desc.z), int(billboardData.z));
     v_texCoord *= layoutData.zw;
     v_texCoord += layoutData.xy;
 
-    float scl = 0.006;
-    float width = layoutData.z * descBillboards.y * scl;
-    float height = layoutData.w * descBillboards.z * scl;
+    float scl = billboardData.x;
+    float width = layoutData.z * atlasBillboards.desc.x * scl;
+    float height = layoutData.w * atlasBillboards.desc.y * scl;
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
 }
 `);
@@ -57,17 +56,19 @@ void main(void) {
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('BillboardShader.fragmentShader', `
 precision highp float;
 
- ///<%include file="glslutils.glsl"/>
- ///<%include file="utils/imageAtlas.glsl" ATLAS_NAME="Billboards"/>
+ <%include file="glslutils.glsl"/>
+ <%include file="utils/imageAtlas.glsl"/>
 
-uniform sampler2D imageBillboards;
+uniform ImageAtlas atlasBillboards;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
 
 void main(void) {
-    vec4 color = texture2D(imageBillboards, v_texCoord);
-    gl_FragColor = vec4(0.0,0.0,0.0, 1.0-color.r);
+    vec4 color = texture2D(atlasBillboards.image, v_texCoord);
+    if(color.r > 0.95)
+        discard;
+    gl_FragColor = vec4(1.0,0.0,0.0, 1.0-color.r);
 }
 `);
     }

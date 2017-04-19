@@ -149,12 +149,13 @@ class BaseGeom extends RefCounted {
                 pos.addInPlace(offset);
                 positionsAttr.setValue(i, pos);
             }
+
         }
 
         let load8BitNormalsArray = (start, end, offset, sclVec, normals_8bit)=>{
             if(sclVec.isNull())
                 sclVec.set(1,1,1);
-            for (let i = start; i<end; i++) {
+            for (let i = start; i<end; i++) {    
                 let normal = new Vec3(
                     normals_8bit[(i * 3) + 0] / 255.0, 
                     normals_8bit[(i * 3) + 1] / 255.0, 
@@ -177,7 +178,7 @@ class BaseGeom extends RefCounted {
             let normals_8bit = reader.loadUInt8Array(numVerts*3);
             load8BitNormalsArray(0, numVerts, box3.p0, box3.diagonal(), normals_8bit);
 
-            normalsAttr.loadSplitValues(reader);
+            //normalsAttr.loadSplitValues(reader);
         }
         else{
             let clusters = [];
@@ -205,7 +206,7 @@ class BaseGeom extends RefCounted {
                 box3 = clusters[i].normalsRange;
                 load8BitNormalsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), normals_8bit);
             }
-            normalsAttr.loadSplitValues(reader);
+            //normalsAttr.loadSplitValues(reader);
         }
     }
 

@@ -75,12 +75,7 @@ class GLBillboardsPass extends GLPass {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-
-        // let imageLayout = this.__atlas.getImageLayoutData(billboardData.imageIndex);
-        // let atlasWidth = this.__atlas.width;
-        // let atlasHeight = this.__atlas.height;
-        // col3.set(imageLayout.pos.x / atlasWidth, imageLayout.pos.y / atlasHeight, imageLayout.size.x / atlasWidth, imageLayout.size.y / atlasHeight);
-        col3.set(0.6, 1.7, billboardData.imageIndex, 0.0);
+        col3.set(billboardData.billboard.scale, 0.0, billboardData.imageIndex, 0.0);
     }
 
     __updateBillboards() {
@@ -188,7 +183,7 @@ class GLBillboardsPass extends GLPass {
         this.__instancesTexture.bind(renderstate, unifs.instancesTexture.location);
         gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
 
-        this.__atlas.bind(renderstate, unifs.atlasBillboards.location);
+        this.__atlas.bind(renderstate);
 
         gl.enable(gl.BLEND);
         gl.disable(gl.CULL_FACE);
