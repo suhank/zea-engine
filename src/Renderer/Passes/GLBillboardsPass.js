@@ -31,6 +31,7 @@ class GLBillboardsPass extends GLPass {
 
         this.__billboards = [];
         this.__closestBillboard = 0.0;
+        this.__atlasNeedsUpdating = false;
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE');
         this.__glshader = new GLShader(gl, new BillboardShader(gl));
 
@@ -59,12 +60,14 @@ class GLBillboardsPass extends GLPass {
         });
 
         billboard.destructing.connect(this.removeBillboardItem, this);
+        this.__atlasNeedsUpdating = true;
     }
 
     removeBillboardItem(billboard) {
         let index = this.__billboards.indexOf(billboard);
         billboard.destructing.disconnect(this.removeBillboardItem, this);
         this.__billboards.splice(index, 1);
+        this.__atlasNeedsUpdating = true;
     }
 
 
@@ -88,11 +91,15 @@ class GLBillboardsPass extends GLPass {
     }
 
     __updateBillboards() {
-        if (this.__billboards.length == 0)
+        if (!this.__atlasNeedsUpdating)
             return;
 
         let doIt = function() {
             let gl = this.__gl;
+
+            // Note: Currently the atlas destorys all the source images
+            // after loading them(to save memory). This means we can't
+            // re-render the atlas. If re-rendering is needed, add an age
             this.__atlas.renderAtlas();
 
 
@@ -125,8 +132,9 @@ class GLBillboardsPass extends GLPass {
 
 
             let shaderComp = this.__glshader.compileForTarget();
-            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer, undefined, this.__instancedIdsBuffer);
+            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
+            this.__atlasNeedsUpdating = false;
         }.bind(this);
 
         if (this.__atlas.isLoaded()) {
@@ -193,6 +201,16 @@ class GLBillboardsPass extends GLPass {
         gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
 
         this.__atlas.bind(renderstate);
+
+        {
+            // The instanced transform ids are bound as an instanced attribute.
+            let location = renderstate.attrs.instancedIds.location;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+            gl.enableVertexAttribArray(location);
+            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
+            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+        }
+
 
         gl.enable(gl.BLEND);
         gl.disable(gl.CULL_FACE);

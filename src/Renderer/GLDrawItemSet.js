@@ -249,13 +249,19 @@ class GLDrawItemSet {
         //     renderstate.inverted = false;
         // }
 
-        renderstate.drawCount+=this.__drawCount;
 
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {
+            renderstate.drawCalls++;
+            renderstate.drawCount+=this.__drawCount;
+            //return;
             return this.drawSingleItem(renderstate, 0);
         }
+        //return;
+        renderstate.drawCalls++;
+        renderstate.drawCount+=this.__drawCount;
+                            
 
         // If not already bound...
         let glgeom = this.__glgeoms[0];

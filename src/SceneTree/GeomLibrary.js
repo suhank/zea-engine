@@ -22,6 +22,10 @@ class GeomLibrary {
     }
 
     getGeom(index) {
+        if(index >= this.geoms.length){
+            console.warn("Geom index invalid:" + index);
+            return null;
+        }
         return this.geoms[index];
     }
 

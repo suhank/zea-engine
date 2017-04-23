@@ -70,9 +70,10 @@ class GeomItem extends TreeItem {
     }
 
     updateBoundingBox() {
-        let geomBox = this.geom.boundingBox.clone();
         this.__boundingBox.reset();
-        this.__boundingBox.addBox3(geomBox, this.getGeomXfo());
+        if(this.geom){
+            this.__boundingBox.addBox3(this.geom.boundingBox, this.getGeomXfo());
+        }
         this.__boundingBoxDirty = false;
     }
 
@@ -178,8 +179,6 @@ class GeomItem extends TreeItem {
     readBinary(reader, flags, materialLibrary, geomLibrary){
         super.readBinary(reader, flags);
 
-        // this.name = reader.loadStr();
-        // this.name = reader.loadStr();
         let itemflags = reader.loadUInt8();
         this.geom = geomLibrary.getGeom(reader.loadUInt32());
 

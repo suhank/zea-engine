@@ -374,8 +374,6 @@ class Mesh extends BaseGeom {
     readBinary(reader) {
         super.loadBaseGeomBinary(reader);
 
-        console.log("Loading:" + this.name);
-
         this.setFaceCounts(reader.loadUInt32Array());
         this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length);
         let offsetRange = reader.loadSInt32Vec2();

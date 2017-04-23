@@ -682,7 +682,6 @@ class SessionClient {
         let removeAnalytics = () => {
             renderer.removePass(analyticsPass);
             analyticsPass.destroy();
-            analyticsTexture = undefined;
         }
 
         this.toggleAnalytics = ()=>{

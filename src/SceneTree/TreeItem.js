@@ -381,6 +381,14 @@ class TreeItem {
                 //     //     continue;
                 //     // }
 
+                    if(childName.startsWith('Doors') || 
+                        childName.startsWith('Air Vents') || 
+                        childName.startsWith('Exterior') || 
+                        childName.startsWith('Construction')){
+                        console.log("Skipping:" + childName);
+                        continue;
+                    }
+
                     // if(!childName.startsWith('Rails'))
                     //     continue;
                     

@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Fuzzy Geom Comparison</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../external/Unpack.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        
+        <script type="text/javascript">
+
+// Note: launch Chrome with  --allow-file-access-from-files
+document.addEventListener("DOMContentLoaded", function(event) { 
+
+    let loadBinMesh = (url, normalsLength=0.2)=>{
+        let domElement = addCanvas();
+        let asset =  new Visualive.BinAsset();
+        asset.loadURL(url+'.vla');
+
+        let scene = new Visualive.Scene();
+
+        let renderer = new Visualive.GLSimpleRenderer(domElement, { resources:'../Resources/Resources.vlr' });
+        renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
+        renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+
+        if(normalsLength > 0.0){
+            let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
+            normalsPass.normalLength = normalsLength;
+            renderer.addPass(normalsPass);
+        }
+        asset.loaded.connect(() => {
+
+            console.log("numGeoms:" + asset.getGeometryLibary().numGeoms);
+
+            scene.getRoot().addChild(asset);
+            renderer.setScene(scene);
+            renderer.frameAll();
+            renderer.resumeDrawing();
+        });
+    }
+
+    setTimeout(function(){ 
+    // loadBinMesh("Assets/FuzedTeapots", 20.0);
+    // loadBinMesh("Assets/MultiMaterialIDs", 20.0);
+    //loadBinMesh("Assets/MultiMaterialIDs2", 20.0);
+    loadBinMesh("Assets/MultiMaterialIDs3", 20.0);
+
+
+    }, 1000);
+});
+        </script> 
+    </body>
+</html>

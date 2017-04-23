@@ -556,12 +556,14 @@ class GLRenderer {
         // }
         pass.updated.connect(this.requestRedraw, this);
         this.__passes.push(pass);
+        this.requestRedraw();
         return this.__passes.length - 1;
     }
 
     removePass(pass) {
         let index = this.__passes.indexOf(pass);
-        this.__passes =  this.__passes.slice(index);
+        this.__passes.splice(index, 1);
+        this.requestRedraw();
     }
 
     getPass(index) {
