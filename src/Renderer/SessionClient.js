@@ -207,8 +207,8 @@ class SessionClient {
         // Websocket setup
 
         let socketOpen = false;
-        let ws = new WebSocket("ws://localhost:5000", "protocolOne");
-        // let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
+        //let ws = new WebSocket("ws://localhost:5000", "protocolOne");
+        let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
         //let ws = new WebSocket("wss://108.59.85.106:5000", "protocolOne");
 
         let sendMessage = (message) => {

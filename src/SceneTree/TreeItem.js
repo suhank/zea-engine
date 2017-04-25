@@ -359,40 +359,13 @@ class TreeItem {
                 let childType = reader.loadStr();
                 let childName = reader.loadStr();
                 if(type == 'FbxAsset'){
-                    // if(i != 19){ // Seats
-                    //     console.log("Skipping Broken:" + childName);
-                    //     continue;
-                    // }
-                    // if(i == 24){
-                    //     console.log("Skipping Broken:" + childName);
-                    //     continue;
-                    // }
-                //     // if( childName.startsWith('Basket') || 
-                //     //     childName.startsWith('Benches') || 
-                //     //     childName.startsWith('Rails')|| 
-                //     //     childName.startsWith('Stairs') || 
-                //     //     childName.startsWith('Lights') || 
-                //     //     childName.startsWith('Doors') || 
-                //     //     childName.startsWith('Air Vents') || 
-                //     //     childName.startsWith('Exterior') || 
-                //     //     childName.startsWith('Construction_Elements')|| 
-                //     //     childName.startsWith('Roof001')){
-                //     //     console.log("Skipping:" + childName);
-                //     //     continue;
-                //     // }
 
-                    if(childName.startsWith('Doors') || 
-                        childName.startsWith('Air Vents') || 
-                        childName.startsWith('Exterior') || 
-                        childName.startsWith('Construction')){
+                    if(childName.startsWith('Doors')){
                         console.log("Skipping:" + childName);
                         continue;
                     }
-
-                    // if(!childName.startsWith('Rails'))
-                    //     continue;
                     
-                    console.log(childName);
+                    console.log('FbxAsset.'+childName);
                 } 
 
                 let childItem = sgFactory.constructClass(childType);

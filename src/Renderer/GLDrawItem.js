@@ -22,7 +22,9 @@ class GLDrawItem {
             (geomXfo.sc.x < 0.0 && geomXfo.sc.y > 0.0 && geomXfo.sc.z > 0.0) || 
             (geomXfo.sc.y < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.z > 0.0) || 
             (geomXfo.sc.z < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.y > 0.0) ||
-            (geomXfo.sc.x < 0.0 && geomXfo.sc.y < 0.0 && geomXfo.sc.z < 0.0)
+            (geomXfo.sc.x > 0.0 && geomXfo.sc.y < 0.0 && geomXfo.sc.z < 0.0) || 
+            (geomXfo.sc.y > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.z < 0.0) || 
+            (geomXfo.sc.z > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.y < 0.0)
             );
         this.__assignedPasses = [];
 
