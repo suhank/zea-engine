@@ -105,6 +105,7 @@ class GLHDRImage extends GLTexture2D {
         gl.drawQuad();
 
         // // Debug a block of pixels.
+        // console.log(this.__hdrImage.name);
         // gl.finish();
         // let numPixels = 4;
         // let pixels = new Float32Array(4 * numPixels);

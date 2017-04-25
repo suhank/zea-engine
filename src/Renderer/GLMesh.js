@@ -125,7 +125,8 @@ class GLMesh extends GLGeom {
                 normalized: attrName == 'normals'
             };
         }
-        // this.unbind();
+        
+        this.__geom.freeData();
 
     }
 

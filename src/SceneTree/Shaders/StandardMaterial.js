@@ -237,19 +237,6 @@ void main(void) {
     //vec3 emission       = toLinear(_emission.xyz);//getColorParamValue(_emission, _emissionTex, _emissionTexConnected, texCoords).xyz;
 #endif
 
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    if(debugLightmapTexelSize)
-    {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
-        float total = floor(coord_texelSpace.x) +
-                      floor(coord_texelSpace.y);
-                      
-        vec3 clustercolor = getDebugColor(v_clusterID);
-
-        if(mod(total,2.0)==0.0)
-            baseColor = vec4(clustercolor, 1.0);
-    }
-#endif
 
 #ifdef ENABLE_CROSS_SECTIONS
     // Only do cross sections on opaque surfaces. 
@@ -285,6 +272,25 @@ void main(void) {
 
 #else
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
+#endif
+
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
+    if(debugLightmapTexelSize)
+    {
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        float total = floor(coord_texelSpace.x) +
+                      floor(coord_texelSpace.y);
+                      
+        vec3 clustercolor = getDebugColor(v_clusterID);
+
+        if(mod(total,2.0)==0.0){
+            baseColor = vec4(clustercolor, 1.0);
+            irradiance = vec3(1.0);
+        }
+        else
+            baseColor = baseColor * 1.5;
+
+    }
 #endif
 
 #ifndef ENABLE_SPECULAR

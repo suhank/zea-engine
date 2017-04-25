@@ -102,11 +102,12 @@ import '../SceneTree/Shaders/GLSL/ImageAtlas.js';
 
 
 class ImageAtlas extends GLTexture2D {
-    constructor(gl, name, channels = 'RGBA', format = 'FLOAT') {
+    constructor(gl, name, channels = 'RGBA', format = 'FLOAT', clearColor=[0,0,0,0]) {
         super(gl);
         this.__name = name;
         this.__channels = channels;
         this.__format = format;
+        this.__clearColor = clearColor;
         this.__subImages = [];
         this.__layoutNeedsRegeneration = false;
         this.__async = new Async();
@@ -203,7 +204,7 @@ class ImageAtlas extends GLTexture2D {
 
         let gl = this.__gl;
         this.__fbo = new GLFbo(gl, this);
-        this.__fbo.setClearColor([0, 0, 0, 0]);
+        this.__fbo.setClearColor(this.__clearColor);
 
         if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();

@@ -1,7 +1,10 @@
 import {
+    AttrValue,
+    Vec2,
     Vec3,
     Color,
-    Xfo
+    Xfo,
+    Ray
 } from '../Math';
 import {
     TreeItem
@@ -31,6 +34,8 @@ let getUrlVars = () => {
         hash = hashes[i].split('=');
         args[hash[0]] = hash[1];
     }
+    if(projectID == "")
+        projectID = "SharedSession";
     return {
         projectID,
         args
@@ -97,6 +102,8 @@ class SessionClient {
     constructor(renderer, enableSessionRecording) {
         this.__renderer = renderer;
 
+        this.scaleFactor = 1.0;
+
         let listeners = {};
         let linesCount = 0;
         let connectedUsers = {};
@@ -113,7 +120,7 @@ class SessionClient {
         // Client IDs need to be persistent.
         // TODO: Integrate with app login, so we can track users
         // by thier profile.
-        let clientData; // = JSON.parse(localStorage.getItem('clientData'));
+        let clientData;// = JSON.parse(localStorage.getItem('clientData'));
         // getJSON('//freegeoip.net/json', function(data) {
         //     console.log(JSON.stringify(data, null, 2));
         // });
@@ -123,13 +130,12 @@ class SessionClient {
                 id: guid(),
                 color: randomAvatarColor()
             };
-            // localStorage.setItem('clientData', JSON.stringify(clientData));
+            localStorage.setItem('clientData', JSON.stringify(clientData));
         }
         let myId = clientData.id;
 
         // Add an avatar for us. 
-        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot);
-        myAvatar.setVisibility(false); // Note: during playback, avatart becomes visible.
+        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false);
         connectedUsers[myId] = myAvatar;
 
         let urlVars = getUrlVars();
@@ -138,18 +144,67 @@ class SessionClient {
         if (!sessionID) {
             sessionID = generateSessionID();
         }
+        console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
 
         //////////////////////////////////////
         // Websocket setup
 
         let socketOpen = false;
-        // let ws = new WebSocket("ws://localhost:5000", "protocolOne");
-        let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
+        let ws = new WebSocket("ws://localhost:5000", "protocolOne");
+        // let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
+        //let ws = new WebSocket("wss://108.59.85.106:5000", "protocolOne");
 
 
-        let sendMessage = (data) => {
-            if(socketOpen)
-                ws.send(JSON.stringify(data));
+        let convertValuesFromJSON = (data) => {
+            let fromJSON = (key, value) => {
+                value.fromJSON(data[key]);
+                data[key] = value;
+            }
+            for(let key in data){
+                let dataValue = data[key];
+                let className = dataValue.className;
+                if(className){
+                    // TODO: Implement a factory system so all types are registered
+                    // and can be construced from the classname.
+                    switch(className) {
+                    case 'Vec2': fromJSON(key, new Vec2()); break;
+                    case 'Vec3': fromJSON(key, new Vec3()); break;
+                    case 'Color': fromJSON(key, new Color()); break;
+                    case 'Xfo': fromJSON(key, new Xfo()); break;
+                    case 'Ray': fromJSON(key, new Ray()); break;
+                    }
+                }
+                else if(Array.isArray(dataValue)) {
+                    convertValuesFromJSON(dataValue);
+                }
+                else if(typeof dataValue === "object") {
+                    convertValuesFromJSON(dataValue);
+                }
+            }
+        }
+
+
+        let convertValuesToJSON = (data) => {
+            for(let key in data){
+                let value = data[key];
+                if(value.toJSON){
+                    data[key] = value.toJSON();
+                    data[key].className = value.constructor.name;
+                }
+                else if(Array.isArray(value)) {
+                    convertValuesToJSON(value);
+                }
+                else if(typeof value === "object") {
+                    convertValuesToJSON(value);
+                }
+            }
+        }
+        let sendMessage = (message) => {
+            if(socketOpen){
+                if(message)
+                    convertValuesToJSON(message);
+                ws.send(JSON.stringify(message));
+            }
         }
 
         ws.onopen = function(event) {
@@ -164,6 +219,8 @@ class SessionClient {
         };
         ws.onmessage = function(message) {
             let jsonData = JSON.parse(message.data);
+
+            convertValuesFromJSON(jsonData.data);
             // console.log("onmessage:" + jsonData.type + " client:" + jsonData.client);
             if (listeners[jsonData.type]) {
                 listeners[jsonData.type](jsonData.client, jsonData.data);
@@ -278,17 +335,33 @@ class SessionClient {
             }
         });
 
-        renderer.actionStarted.connect((data) => {
+        renderer.actionStarted.connect((msg) => {
+            if(msg.type == 'strokeStarted') {
+                let myMarker = connectedUsers[myId].userMarker;
+                let data = msg.data;
+                data.id = myMarker.startStroke(data.xfo, data.color, data.thickness);
+            }
             if (socketOpen)
-                sendMessage(data);
+                sendMessage(msg);
         });
-        renderer.actionOccuring.connect((data) => {
+        renderer.actionOccuring.connect((msg) => {
+            if(msg.type == 'strokeSegmentAdded') {
+                let myMarker = connectedUsers[myId].userMarker;
+                let data = msg.data;
+                data.id = myMarker.addSegmentToStroke(data.xfo);
+            }
             if (socketOpen)
-                sendMessage(data);
+                sendMessage(msg);
         });
-        renderer.actionEnded.connect((data) => {
+        renderer.actionEnded.connect((msg) => {
+            if(msg.type == 'strokeEnded') {
+                let myMarker = connectedUsers[myId].userMarker;
+                msg.data = {
+                    id: myMarker.endStroke()
+                };
+            }
             if (socketOpen)
-                sendMessage(data);
+                sendMessage(msg);
         });
 
         ////////////////////////////////////////
@@ -329,7 +402,7 @@ class SessionClient {
             if (client in connectedUsers) {
                 connectedUsers[client].setVisibility(true);
             } else {
-                connectedUsers[client] = new UserAvatar(client, data, avatarsTreeRoot);
+                connectedUsers[client] = new UserAvatar(client, data, avatarsTreeRoot, this.scaleFactor);
             }
         };
 
@@ -351,18 +424,12 @@ class SessionClient {
 
         let onUserStrokeStarted = (client, data) => {
             let userMarker = connectedUsers[client].userMarker;
-            let xfo = new Xfo();
-            xfo.fromJSON(data.xfo);
-            let color = new Color();
-            color.fromJSON(data.color);
-            userMarker.startStroke(xfo, color, data.thickness, data.id);
+            userMarker.startStroke(data.xfo, data.color, data.thickness, data.id);
         };
 
         let onUserStrokeSegmentAdded = (client, data) => {
             let userMarker = connectedUsers[client].userMarker;
-            let xfo = new Xfo();
-            xfo.fromJSON(data.xfo);
-            userMarker.addSegmentToStroke(data.id, xfo);
+            userMarker.addSegmentToStroke(data.xfo, data.id);
         }
 
         ////////////////////////////////////////////////////////

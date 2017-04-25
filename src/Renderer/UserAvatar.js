@@ -16,26 +16,37 @@ import {
 
 class UserAvatar {
 
-    constructor(id, data, parentTreeItem) {
+    constructor(id, data, parentTreeItem, scaleFactor=1.0, visible=true) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
-        this.__avatarScale = 500.0;
 
-        this.__treeItem = new TreeItem(id);
-        this.__material = new FlatMaterial('user'+id+'Material');
-        this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
-
-        this.setMouseAndCameraRepresentation();
-        this.__parentTreeItem.addChild(this.__treeItem);
+        // Used when the scene scale is not meters. (usualy testin scenes)
+        this.__avatarScale = scaleFactor;
 
         this.__controllers = [];
 
         this.userMarker = new MarkerpenTool('client' + id);
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
+
+        this.__treeItem = new TreeItem(id);
+        this.__material = new FlatMaterial('user'+id+'Material');
+        this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
+        this.setMouseAndCameraRepresentation();
+
+        this.__visible = visible;
+        if(this.__visible){
+            this.__parentTreeItem.addChild(this.__treeItem);
+        }
     }
 
     setVisibility(visible){
-        this.__treeItem.setVisible(visible);
+        if(visible && !this.__visible){
+            this.__parentTreeItem.addChild(this.__treeItem);
+        }
+        else if(!visible && this.__visible){
+            this.__parentTreeItem.removeChildByHandle(this.__treeItem, false);
+        }
+        this.__visible = visible;
     }
 
     pointerMoved(data){
@@ -123,9 +134,7 @@ class UserAvatar {
                         this.setViveRepresentation(data);
                     }
 
-                    const viewXfo = new Xfo();
-                    viewXfo.fromJSON(data.viewXfo);
-                    this.__treeItem.getChild(0).localXfo = viewXfo;
+                    this.__treeItem.getChild(0).localXfo = data.viewXfo;
 
                     this.updateViveControllers(data);
                 }

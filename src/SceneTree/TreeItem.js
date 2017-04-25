@@ -222,11 +222,11 @@ class TreeItem {
         this.__boundingBoxDirty = true;
     }
 
-    removeChildByHandle(childItem) {
+    removeChildByHandle(childItem, destroy = true) {
         let index = this.__childItems.indexOf(childItem);
         if(index == -1)
             throw("Error in removeChildByHandle. Child not found:" + childItem.name);
-        return this.removeChild(index);
+        return this.removeChild(index, destroy);
     }
 
     removeAllChildren(destroy = true) {

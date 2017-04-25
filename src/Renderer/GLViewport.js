@@ -65,17 +65,19 @@ class GLViewport {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-        this.__markerPen = new MarkerpenTool();
-        this.__markerPen.strokeStarted.connect((data) => {
-            this.actionStarted.emit(data);
-        }, this);
-        this.__markerPen.strokeEnded.connect((data) => {
-            this.actionEnded.emit(data);
-        }, this);
-        this.__markerPen.strokeSegmentAdded.connect((data) => {
-            this.actionOccuring.emit(data);
-        }, this);
-        this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
+
+        this.__markerPenColor = new Color(1, 0, 0);
+        // this.__markerPen = new MarkerpenTool();
+        // this.__markerPen.strokeStarted.connect((data) => {
+        //     this.actionStarted.emit(data);
+        // }, this);
+        // this.__markerPen.strokeEnded.connect((data) => {
+        //     this.actionEnded.emit(data);
+        // }, this);
+        // this.__markerPen.strokeSegmentAdded.connect((data) => {
+        //     this.actionOccuring.emit(data);
+        // }, this);
+        // this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
 
         this.setCamera(new Camera('Default'));
 
@@ -158,7 +160,7 @@ class GLViewport {
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'MouseAndKeyboard',
-                viewXfo: globalXfo.toJSON()
+                viewXfo: globalXfo
             });
         }, this);
         this.__camera.clippingRangesChanged.connect(function() {
@@ -387,9 +389,19 @@ class GLViewport {
                 let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                let color = new Color(1, 0, 0);
                 let thickness = this.__camera.focalDistance * 0.002;
-                this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
+                // this.__markerLineId = this.__markerPen.startStroke(xfo, this.__markerPenColor, thickness);
+
+                this.__currStrokeID++;
+                this.actionStarted.emit({
+                    type: 'strokeStarted',
+                    data: {
+                        xfo: xfo,
+                        color:  this.__markerPenColor,
+                        thickness: thickness
+                    }
+                });
+
             } else {
                 let geomData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (geomData != undefined && geomData.flags == 1) {
@@ -407,7 +419,7 @@ class GLViewport {
                     this.__camera.onDragStart(event, this.__mouseDownPos, this);
                 }
             }
-        } else if (event.button == 2) {
+        }/* else if (event.button == 2) {
             if (event.shiftKey) {
                 if (this.__geomDataPass) {
                     this.__manipMode = 'add-selection';
@@ -420,6 +432,7 @@ class GLViewport {
                 this.__manipMode = 'new-selection';
             }
         }
+        */
         return false;
     }
 
@@ -483,7 +496,10 @@ class GLViewport {
                 this.__renderer.resumeDrawing();
                 break;
             case 'marker-tool':
-                this.__markerPen.endStroke(this.__markerLineId);
+                // this.__markerPen.endStroke(this.__markerLineId);
+                this.actionEnded.emit({
+                    type: 'strokeEnded'
+                });
                 break;
         }
         this.__manipMode = 'highlighting';
@@ -591,7 +607,14 @@ class GLViewport {
                     let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                    this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
+                    // this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
+                    this.actionOccuring.emit({
+                        type: 'strokeSegmentAdded',
+                        data: {
+                          id: this.__currStrokeID,
+                          xfo: xfo
+                        }
+                    });
                 }
                 break;
         }

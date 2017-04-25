@@ -21,9 +21,9 @@ class MarkerpenTool {
         this.__strokes = {};
 
         // Stroke Signals
-        this.strokeStarted = new Signal();
-        this.strokeEnded = new Signal();
-        this.strokeSegmentAdded = new Signal();
+        // this.strokeStarted = new Signal();
+        // this.strokeEnded = new Signal();
+        // this.strokeSegmentAdded = new Signal();
     }
 
     getTreeItem(){
@@ -31,7 +31,14 @@ class MarkerpenTool {
     }
 
     startStroke(xfo, color, thickness, id) {
-        let lineGeom = new Lines('MarkerpenTool_Stroke'+this.__strokeCount);
+        this.__strokeCount++;
+        let replayMode = true;
+        if(!id){
+            id = 'Stroke'+this.__strokeCount;
+            replayMode = false;
+        }
+
+        let lineGeom = new Lines(id);
 
         let used = 0;
         let vertexCount = 100;
@@ -41,21 +48,12 @@ class MarkerpenTool {
 
         lineGeom.lineThickness = thickness;
         let material = new FatLinesMaterial('stroke');
-        // let material = new LinesMaterial('stroke');
-        // lineGeom.lineThickness = 0;
         material.color = color;
 
-        // TODO: Cristyan, add a guid here...
-        let replayMode = true;
-        if(!id){
-            id = 'Stroke'+this.__strokeCount;
-            replayMode = false;
-        }
 
         let geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
 
-        this.__strokeCount++;
 
         this.__strokes[id] = {
             geomItem,
@@ -64,25 +62,36 @@ class MarkerpenTool {
             replayMode
         };
 
-        if(!replayMode){
-            this.strokeStarted.emit({
-                type: 'strokeStarted',
-                data: {
-                    id: id,
-                    xfo: xfo.toJSON(),
-                    color: color.toJSON(),
-                    thickness: thickness
-                }
-            });
-        }
+        // if(!replayMode){
+        //     this.strokeStarted.emit({
+        //         type: 'strokeStarted',
+        //         data: {
+        //             id: id,
+        //             xfo: xfo.toJSON(),
+        //             color: color.toJSON(),
+        //             thickness: thickness
+        //         }
+        //     });
+        // }
         return id;
     }
 
-    endStroke(id) {
+    endStroke(id=undefined) {
+        let replayMode = true;
+        if(!id){
+            id = 'Stroke'+this.__strokeCount;
+            replayMode = false;
+        }
 
+        return id;
     }
 
-    addSegmentToStroke(id, xfo) {
+    addSegmentToStroke(xfo, id=undefined) {
+        let replayMode = true;
+        if(!id){
+            id = 'Stroke'+this.__strokeCount;
+            replayMode = false;
+        }
         let stroke = this.__strokes[id];
         let lineGeom = stroke.geomItem.geom;
         stroke.used++;
@@ -107,15 +116,16 @@ class MarkerpenTool {
         lineGeom.__strokeCount = stroke.used;
 
          
-        if(!stroke.replayMode){
-            this.strokeSegmentAdded.emit({
-                type: 'strokeSegmentAdded',
-                data: {
-                  id: id,
-                  xfo: xfo.toJSON()
-                }
-            });
-        }
+        // if(!stroke.replayMode){
+        //     this.strokeSegmentAdded.emit({
+        //         type: 'strokeSegmentAdded',
+        //         data: {
+        //           id: id,
+        //           xfo: xfo.toJSON()
+        //         }
+        //     });
+        // }
+        return id;
     }
 
     // removeStroke(id) {

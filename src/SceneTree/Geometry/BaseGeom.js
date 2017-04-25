@@ -106,6 +106,7 @@ class BaseGeom extends RefCounted {
         for(let i=0; i<numVerts; i++)
             bbox.addPoint(vertices.getValueRef(i));
         this.__boundingBox = bbox;
+        this.__boundingBoxDirty = false;
     }
 
     //////////////////////////////////////////
@@ -121,6 +122,17 @@ class BaseGeom extends RefCounted {
 
     setMetadata(key, metaData) {
         this.__metaData.set(key, metaData);
+    }
+    
+    //////////////////////////////////////////
+    // Memory
+    
+    freeData(){
+        // Before destroying all our data, 
+        // make sure the bbox is up to date.
+        if (this.__boundingBoxDirty)
+            this.updateBoundingBox();
+        this.__vertexAttributes = new Map();
     }
 
     //////////////////////////////////////////

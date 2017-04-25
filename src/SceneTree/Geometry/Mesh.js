@@ -28,6 +28,10 @@ import {
 class Mesh extends BaseGeom {
     constructor(name) {
         super(name);
+        this.init();
+    }
+
+    init() {
         this.__faceCounts = [];
         this.__faceVertexCounts = new Uint8Array();
         this.__faceOffsets = new Uint32Array();
@@ -228,6 +232,17 @@ class Mesh extends BaseGeom {
         return indices;
     }
 
+    //////////////////////////////////////////
+    // Memory
+    
+    freeData(){
+        super.freeData();
+        this.init();
+    }
+
+    //////////////////////////////////////////
+    // Persistence
+    
 /*
     loadBin(reader) {
 

@@ -283,8 +283,8 @@ class GLRenderer {
         }, this);
         vp.mouseMoved.connect((event, mousePos, ray)=>{
             this.pointerMoved.emit({
-                mousePos: mousePos.toJSON(),
-                ray: ray.toJSON()
+                mousePos: mousePos,
+                ray: ray
             });
         }, this);
         vp.actionStarted.connect((data)=>{
@@ -691,7 +691,7 @@ class GLRenderer {
 
         if(this.__displayStats){
             // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-            console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+            //console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
         }
     }
 

@@ -469,12 +469,12 @@ class VRViewport {
         // Emit a signal for the shared session.
         let data = {
             interfaceType: 'Vive',
-            viewXfo: this.__vrhead.getTreeItem().globalXfo.toJSON(),
+            viewXfo: this.__vrhead.getTreeItem().globalXfo,
             controllers: []
         }
         for (let controller of this.__vrControllers) {
             data.controllers.push({
-                xfo: controller.getTreeItem().globalXfo.toJSON()
+                xfo: controller.getTreeItem().globalXfo
             });
         }
         this.viewChanged.emit(data);

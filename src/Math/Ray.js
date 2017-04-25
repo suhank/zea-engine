@@ -110,6 +110,11 @@ class Ray {
         }
     }
 
+    fromJSON(j) {
+        this.start.fromJSON(j.start);
+        this.dir.fromJSON(j.dir);
+    }
+
     toString() {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }

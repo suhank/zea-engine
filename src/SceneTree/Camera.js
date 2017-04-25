@@ -48,11 +48,6 @@ class Camera extends TreeItem {
         this.viewMatChanged = new Signal();
         this.clippingRangesChanged = new Signal();
 
-        let material = new StandardMaterial('ground');
-        material.baseColor = new Color(0, 0, 1);
-        material.roughness = 1.0;
-        material.metallic = 0.0;
-
         // Initial viewing coords of a person standing 3 meters away from the
         // center of the stage looking at something 1 meter off the ground.
         this.setPositionAndTarget(new Vec3(3, 1.75, 3), new Vec3(0, 1, 0));
