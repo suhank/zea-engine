@@ -71,16 +71,21 @@ let generateSessionID = () => {
     return sessionID;
 }
 
-let getJSON = (url, callback) => {
+let getLocationData = (callback) => {
     function createElements(elements) {
         // Assuming you get an array of objects.
-        elements = JSON.parse(elements);
-        callback(elements);
+        if(typeof elements == 'string')
+            callback(JSON.parse(elements));
     }
-    let request = new XMLHttpRequest();
-    request.onload = createElements;
-    request.open("get", url, true);
-    request.send()
+    let xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (this.readyState == 4) {
+          createElements(this.responseText);
+        }
+    }
+    xhr.onload = createElements;
+    xhr.open("get", '//freegeoip.net/json/', true);
+    xhr.send()
 }
 
 let avatarColors = [
@@ -116,43 +121,6 @@ class SessionClient {
         //scene.getRoot().addChild(avatarsTreeRoot);
         renderer.getCollector().addTreeItem(avatarsTreeRoot);
         this.__avatarsTreeRoot = avatarsTreeRoot;
-
-        // Client IDs need to be persistent.
-        // TODO: Integrate with app login, so we can track users
-        // by thier profile.
-        let clientData;// = JSON.parse(localStorage.getItem('clientData'));
-        // getJSON('//freegeoip.net/json', function(data) {
-        //     console.log(JSON.stringify(data, null, 2));
-        // });
-
-        if (!clientData) {
-            clientData = {
-                id: guid(),
-                color: randomAvatarColor()
-            };
-            localStorage.setItem('clientData', JSON.stringify(clientData));
-        }
-        let myId = clientData.id;
-
-        // Add an avatar for us. 
-        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false);
-        connectedUsers[myId] = myAvatar;
-
-        let urlVars = getUrlVars();
-        let projectID = urlVars.projectID;
-        let sessionID = urlVars.args['id'];
-        if (!sessionID) {
-            sessionID = generateSessionID();
-        }
-        console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
-
-        //////////////////////////////////////
-        // Websocket setup
-
-        let socketOpen = false;
-        let ws = new WebSocket("ws://localhost:5000", "protocolOne");
-        // let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
-        //let ws = new WebSocket("wss://108.59.85.106:5000", "protocolOne");
 
 
         let convertValuesFromJSON = (data) => {
@@ -199,6 +167,50 @@ class SessionClient {
                 }
             }
         }
+
+        // Client IDs need to be persistent.
+        // TODO: Integrate with app login, so we can track users
+        // by thier profile.
+        let clientData = JSON.parse(localStorage.getItem('clientData'));
+        if(clientData) {
+            convertValuesFromJSON(clientData);
+        }
+        else {
+            clientData = {
+                id: guid(),
+                color: randomAvatarColor()
+            };
+            getLocationData(function(data) {
+                clientData.location = data;
+                localStorage.setItem('clientData', JSON.stringify(clientData));
+                sendMessage({
+                    type: 'updateClientData',
+                    data: clientData
+                });
+            });
+        }
+        let myId = clientData.id;
+
+        // Add an avatar for us. 
+        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false);
+        connectedUsers[myId] = myAvatar;
+
+        let urlVars = getUrlVars();
+        let projectID = urlVars.projectID;
+        let sessionID = urlVars.args['id'];
+        if (!sessionID) {
+            sessionID = generateSessionID();
+        }
+        console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
+
+        //////////////////////////////////////
+        // Websocket setup
+
+        let socketOpen = false;
+        let ws = new WebSocket("ws://localhost:5000", "protocolOne");
+        // let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
+        //let ws = new WebSocket("wss://108.59.85.106:5000", "protocolOne");
+
         let sendMessage = (message) => {
             if(socketOpen){
                 if(message)
@@ -339,6 +351,7 @@ class SessionClient {
             if(msg.type == 'strokeStarted') {
                 let myMarker = connectedUsers[myId].userMarker;
                 let data = msg.data;
+                data.color.fromJSON(clientData.color);
                 data.id = myMarker.startStroke(data.xfo, data.color, data.thickness);
             }
             if (socketOpen)

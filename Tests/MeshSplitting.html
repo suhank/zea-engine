@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let renderer = new Visualive.GLSimpleRenderer(domElement, { resources:'../Resources/Resources.vlr' });
         renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
-        renderer.sessionClient.scaleFactor = 300;
+        renderer.sessionClient.scaleFactor = 100;
 
         if(normalsLength > 0.0){
             let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
