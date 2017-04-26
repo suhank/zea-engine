@@ -155,7 +155,7 @@ class Material extends Shader {
             let propName = '_'+reader.loadStr();
             if(propName in props){
                 if(props[propName] instanceof Color){
-                    props[propName] = reader.loadFloat32Color();
+                    props[propName] = reader.loadRGBAFloat32Color();
                     // If the value is in linear space, then we should convert it to gamma space.
                     props[propName].applyGamma(2.2);
                 }
@@ -164,11 +164,11 @@ class Material extends Shader {
                 }
             }
             else{
-                // Hack to handle missing opacity on the client side.
-                reader.loadFloat32();
+                // Make sure to load the data, ()
+                let value = reader.loadFloat32();
+                //console.log("Unhandled param:" + propName + ":" + value);
             }
         }
-       
     }
     
     //////////////////////////////////////////

@@ -26,7 +26,7 @@ let getUrlVars = () => {
         hash;
 
     let parts = url.split('#');
-    let tmp = parts[0].split('/');
+    let tmp = parts[0].split('/').filter((val) => val != '');
     projectID = tmp[tmp.length - 1];
 
     let hashes = parts.length > 1 ? parts[1].split('&') : [];

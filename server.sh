@@ -1,1 +1,1 @@
-http-server ./ -p3000 -cors
+http-server ./ -p3000

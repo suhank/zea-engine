@@ -51,6 +51,12 @@ class BinReader {
         return result;
     }
 
+    loadSInt32() {
+        let result = this.__dataView.getInt32(this.__byteOffset, true);
+        this.__byteOffset += 4;
+        return result;
+    }
+
     loadFloat32() {
         let result = this.__dataView.getFloat32(this.__byteOffset, true);
         this.__byteOffset += 4;
@@ -140,95 +146,69 @@ class BinReader {
     }
 
     loadSInt32Vec2() {
-        let x = this.__dataView.getInt32(this.__byteOffset, true);
-        this.__byteOffset += 4;
-        let y = this.__dataView.getInt32(this.__byteOffset, true);
-        this.__byteOffset += 4;
+        let x = this.loadSInt32();
+        let y = this.loadSInt32();
         return new Vec2(x, y);
-        // let array = new Int32Array(this.__data, this.__byteOffset, 2);
-        // this.__byteOffset += 8;
-        // return new Vec2(array);
     }
 
     loadUInt32Vec2() {
-        let x = this.__dataView.getUint32(this.__byteOffset, true);
-        this.__byteOffset += 4;
-        let y = this.__dataView.getUint32(this.__byteOffset, true);
-        this.__byteOffset += 4;
+        let x = this.loadUInt32();
+        let y = this.loadUInt32();
         return new Vec2(x, y);
-        // let array = new Uint32Array(this.__data, this.__byteOffset, 2);
-        // this.__byteOffset += 8;
-        // return new Vec2(array);
     }
 
     loadFloat32Vec2() {
-        let result;
-        //if (this.__isMobileDevice) {
-            let x = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let y = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            result = new Vec2(x, y);
-        // } else {
-        //     result = new Vec2(this.__data, this.__byteOffset);
-        //     this.__byteOffset += 8;
-        // }
-        return result;
+        let x = this.loadFloat32();
+        let y = this.loadFloat32();
+        return new Vec2(x, y);
     }
 
     loadFloat32Vec3() {
         let result;
-        //if (this.__isMobileDevice) {
-            let x = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let y = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let z = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            result = new Vec3(x, y, z);
-        // } else {
-        //     result = new Vec3(this.__data, this.__byteOffset);
-        //     this.__byteOffset += 12;
-        // }
-        return result;
+        let x = this.loadFloat32();
+        let y = this.loadFloat32();
+        let z = this.loadFloat32();
+        return new Vec3(x, y, z);
     }
 
     loadFloat32Quat() {
-        let result;
-        // if (this.__isMobileDevice) {
-            let x = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let y = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let z = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let w = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            result = new Quat(x, y, z, w);
-        // } else {
-        //     result = new Quat(this.__data, this.__byteOffset);
-        //     this.__byteOffset += 12;
-        // }
-        return result;
+        let x = this.loadFloat32();
+        let y = this.loadFloat32();
+        let z = this.loadFloat32();
+        let w = this.loadFloat32();
+        return new Quat(x, y, z, w);
     }
 
-    loadFloat32Color() {
+    loadRGBFloat32Color() {
+        let r = this.loadFloat32();
+        let g = this.loadFloat32();
+        let b = this.loadFloat32();
+        return new Color(r, g, b);
+    }
+
+    loadRGBAFloat32Color() {
+        let r = this.loadFloat32();
+        let g = this.loadFloat32();
+        let b = this.loadFloat32();
+        let a = this.loadFloat32();
+        return new Color(r, g, b, a);
+    }
+
+    loadRGBUInt8Color() {
         let result;
-        // if (this.__isMobileDevice) {
-            let r = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let g = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let b = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            let a = this.__dataView.getFloat32(this.__byteOffset, true);
-            this.__byteOffset += 4;
-            result = new Color(r, g, b, a);
-        // } else {
-        //     result = new Quat(this.__data, this.__byteOffset);
-        //     this.__byteOffset += 12;
-        // }
-        return result;
+        let r = this.loadUInt8();
+        let g = this.loadUInt8();
+        let b = this.loadUInt8();
+        return new Color(r/255, g/255, b/255);
+    }
+
+    loadRGBAUInt8Color() {
+        let result;
+        let r = this.loadUInt8();
+        let g = this.loadUInt8();
+        let b = this.loadUInt8();
+        let a = this.loadUInt8();
+        return new Color(r/255, g/255, b/255, a/255);
     }
 
     readPadd(stride){

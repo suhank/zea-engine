@@ -11,17 +11,8 @@ import {
     isMobileDevice
 } from '../Math';
 import {
-    StandardMaterial
-} from './Shaders/StandardMaterial.js';
-import {
     TreeItem
 } from './TreeItem.js';
-import {
-    GeomItem
-} from './GeomItem.js';
-import {
-    Cuboid
-} from './Geometry/Shapes/Cuboid.js';
 
 class Camera extends TreeItem {
     constructor(name = undefined) {

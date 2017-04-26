@@ -141,6 +141,7 @@ class BaseGeom extends RefCounted {
     loadBaseGeomBinary(reader){
 
         this.name = reader.loadStr();
+        this.debugColor = reader.loadRGBFloat32Color();
         let numVerts = reader.loadUInt32();
         this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
 
