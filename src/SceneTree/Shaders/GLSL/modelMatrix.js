@@ -41,22 +41,21 @@ attribute float instancedIds;    // instanced attribute..
 uniform int transformIndex;
 uniform int instancedDraw;
 
-mat4 getModelMatrix() {
+int getID() {
     if(instancedDraw == 0){
-       return getModelMatrix(transformIndex);
+       return transformIndex;
     }
     else{
-       return getModelMatrix(int(instancedIds));
+       return int(instancedIds);
     }
 }
 
+mat4 getModelMatrix() {
+    return getModelMatrix(getID());
+}
+
 vec4 getInstanceData() {
-    if(instancedDraw == 0){
-       return getInstanceData(transformIndex);
-    }
-    else{
-       return getInstanceData(int(instancedIds));
-    }
+    return getInstanceData(getID());
 }
 
 

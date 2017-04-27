@@ -43,6 +43,10 @@ class GLPass {
         return true;
     }
 
+    bindMaterial(renderstate, glmaterial){
+        return glmaterial.bind(renderstate);
+    }
+
     draw(renderstate) {
         let gl = this.__gl;
         // let passProfile = [];
@@ -53,7 +57,7 @@ class GLPass {
                 let glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
                 for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
                     // let materialProfile = [];
-                    if(glmaterialDrawItemSet.getGLMaterial().bind(renderstate)){
+                    if(this.bindMaterial(renderstate, glmaterialDrawItemSet.getGLMaterial())){
                         let gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                         for (let gldrawitemset of gldrawitemsets) {
                             // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );

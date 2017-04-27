@@ -174,6 +174,7 @@ var create3DContext = function(canvas, opt_attribs) {
   context.__ext_Inst = context.getExtension("ANGLE_instanced_arrays");
   context.__ext_VAO = context.getExtension("OES_vertex_array_object");
   context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
+  context.__ext__WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
 
   context.setupInstancedQuad = function(){
     //////////////////////////////

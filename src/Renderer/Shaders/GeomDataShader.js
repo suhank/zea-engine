@@ -13,30 +13,37 @@ class GeomDataShader extends Shader {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GeomDataShader.vertexShader', `
 precision highp float;
 
-attribute vec3 positions;    //(location = 0)
+attribute vec3 positions;
 
-uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-/* VS Outputs */
-varying vec4 v_viewPos;
-varying vec3 v_viewNormal;
-varying vec2 v_texCoord;
+<%include file="stack-gl/transpose.glsl"/>
+<%include file="modelMatrix.glsl"/>
+
+
+varying vec3 v_geomData;
 
 void main(void) {
+    mat4 modelMatrix = getModelMatrix();
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
+
+    int id = getID();
+    vec4 geomItemData = getGeomItemData(id);
+    v_geomData.x = float(id);
+    v_geomData.y = geomItemData.z;
+    v_geomData.z = geomItemData.t;
 }
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('GeomDataShader.fragmentShader', `
 precision highp float;
 
-uniform vec4 geomData;
+varying vec3 v_geomData;
 
 void main(void) {
-    gl_FragColor = geomData;
+    gl_FragColor = vec4(v_geomData, 1.0);
 }
 `);
     }
