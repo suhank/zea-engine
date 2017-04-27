@@ -359,13 +359,12 @@ class TreeItem {
                 let childType = reader.loadStr();
                 let childName = reader.loadStr();
                 if(type == 'FbxAsset'){
-
                     if(childName.startsWith('Doors')){
+                        // Note: in the Cirque Stage demo, the doors caused corruption in the scene
+                        // Not sure why.
                         console.log("Skipping:" + childName);
                         continue;
                     }
-                    
-                    console.log('FbxAsset.'+childName);
                 } 
 
                 let childItem = sgFactory.constructClass(childType);

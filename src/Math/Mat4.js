@@ -7,6 +7,9 @@ import {
 import {
     Mat3
 } from './Mat3.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 // This matrix class is based on GLM, and is column major.
 
@@ -913,6 +916,14 @@ class Mat4 extends AttrValue {
         );
     }
 
+    
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Mat4(...args);
+    }
+
 
     /////////////////////////////
     // Persistence
@@ -926,6 +937,8 @@ class Mat4 extends AttrValue {
     }
 
 };
+
+typeRegistry.registerType('Mat4', Mat4);
 
 export {
     Mat4

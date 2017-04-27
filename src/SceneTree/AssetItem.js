@@ -18,7 +18,7 @@ import {
 
 class Lightmap {
     constructor(name = undefined) {
-        this.__name = name ? name : 'Lightma';
+        this.__name = name ? name : 'Default';
         this.__texelSize = 0;
         this.__atlasSize = new Vec2();
     }
@@ -40,6 +40,7 @@ class AssetItem extends TreeItem {
         this.__materials = new MaterialLibrary();
 
         this.__lightmap = new Lightmap();
+        this.lightmapName = 'Default';
     }
 
     getGeometryLibary(){
@@ -84,8 +85,8 @@ class AssetItem extends TreeItem {
 
         super.readBinary(reader, flags, this.__materials, this.__geoms);
 
-        this.lightmapCoordsOffset = reader.loadFloat32Vec2();
-        this.lightmapName = reader.loadStr();
+        // this.lightmapCoordsOffset = reader.loadFloat32Vec2();
+        // this.lightmapName = reader.loadStr();
 
         //this.__propagateLightmapOffset();
     }

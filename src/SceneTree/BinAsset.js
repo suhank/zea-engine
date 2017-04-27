@@ -60,21 +60,6 @@ class BinAsset extends AssetItem {
                 /////////////////////////////////
                 // Parse the data.
                 this.__geoms.readBinary(new BinReader(geomData.buffer, 0, isMobileDevice()));
-                // let assetTreeStr;
-                // // Note: TextDecoder is not supported on Edge yet. 
-                // // TextDecoder is a lot faster if available...
-                // if(window.TextDecoder)
-                //     assetTreeStr = new TextDecoder("utf-8").decode(assetTree);
-                // else{
-                //     let textDecoder = (utf8Buffer)=>{
-                //         let str = "";
-                //         for(let i=0; i<utf8Buffer.length; i++)
-                //             str = str + String.fromCharCode(utf8Buffer[i]);
-                //         return str;
-                //     }
-                //     assetTreeStr = textDecoder(assetTree);
-                // }
-                // this.fromJSON(JSON.parse(assetTreeStr));
                 this.readBinary(new BinReader(assetTreeData.buffer, 0, isMobileDevice()));
 
                 console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
