@@ -10,6 +10,9 @@ import {
 import {
     Mat4
 } from './Mat4.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class EulerAngles extends AttrValue {
     constructor(x = 0, y = 0, z = 0, order = 0) {
@@ -370,7 +373,7 @@ class Quat extends AttrValue {
 
     // Returns true if this vector is the same as another one
     // (given a precision)
-    almostEqual(other) {
+    approxEqual(other) {
         return (Math.abs(this.x - other.x) < Number.EPSILON) &&
             (Math.abs(this.y - other.y) < Number.EPSILON) &&
             (Math.abs(this.z - other.z) < Number.EPSILON) &&
@@ -872,6 +875,13 @@ class Quat extends AttrValue {
     //     return out;
     // }
 
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Quat(...args);
+    }
+
     // Creates a new Mat4 to wrap existing memory in a buffer.
     static createFromFloat32Buffer(buffer, offset = 0) {
         return new Quat(buffer, offset * 4) // 4 bytes per 32bit float
@@ -911,6 +921,8 @@ class Quat extends AttrValue {
 
 };
 
+typeRegistry.registerType('EulerAngles', EulerAngles);
+typeRegistry.registerType('Quat', Quat);
 
 export {
     EulerAngles,

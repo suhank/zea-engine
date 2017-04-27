@@ -4,6 +4,9 @@ import {
 import {
     Vec2
 } from './Vec2.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 
 class Rect2 {
@@ -61,6 +64,24 @@ class Rect2 {
         this.size.scaleInPlace(scalar);
     }
 
+    corners() {
+        return {
+            "p0": this.pos.toJSON(),
+            "p1": this.pos.add(this.size).toJSON()
+        }
+    }
+    
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Rect2(...args);
+    }
+
+    /////////////////////////////
+    // Persistence
+
+
     toJSON() {
         return {
             "pos": this.pos.toJSON(),
@@ -71,14 +92,9 @@ class Rect2 {
     toString() {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
-
-    corners() {
-        return {
-            "p0": this.pos.toJSON(),
-            "p1": this.pos.add(this.size).toJSON()
-        }
-    }
 };
+
+typeRegistry.registerType('Rect2', Rect2);
 
 export {
     Rect2

@@ -13,6 +13,9 @@ import {
 import {
     Quat
 } from './Quat.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Xfo {
     constructor(tr = undefined, ori = undefined, sc = undefined) {
@@ -106,34 +109,6 @@ class Xfo {
         return trn.multiply(rot).multiply(scl);
     }
 
-    clone() {
-        return new Xfo(
-            this.tr.clone(),
-            this.ori.clone(),
-            this.sc.clone()
-        );
-    }
-
-
-
-
-    toJSON() {
-        let j = {
-            'tr': this.tr.toJSON(),
-            'ori': this.ori.toJSON()
-        };
-        if(!this.sc.is111())
-            j.sc = this.sc.toJSON();
-        return j;
-    }
-
-    fromJSON(j) {
-        this.tr.fromJSON(j.tr);
-        this.ori.fromJSON(j.ori);
-        if(j.sc){
-            this.sc.fromJSON(j.sc);
-        }
-    }
 
     setFromFloat32Array(float32array) {
         if(float32array.length == 7){
@@ -157,10 +132,49 @@ class Xfo {
         }
     }
 
+    clone() {
+        return new Xfo(
+            this.tr.clone(),
+            this.ori.clone(),
+            this.sc.clone()
+        );
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Xfo(...args);
+    }
+
+    /////////////////////////////
+    // Persistence
+
+
+    toJSON() {
+        let j = {
+            'tr': this.tr.toJSON(),
+            'ori': this.ori.toJSON()
+        };
+        if(!this.sc.is111())
+            j.sc = this.sc.toJSON();
+        return j;
+    }
+
+    fromJSON(j) {
+        this.tr.fromJSON(j.tr);
+        this.ori.fromJSON(j.ori);
+        if(j.sc){
+            this.sc.fromJSON(j.sc);
+        }
+    }
+
     toString() {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
 };
+
+typeRegistry.registerType('Xfo', Xfo);
 
 export {
     Xfo

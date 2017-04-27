@@ -67,7 +67,7 @@ class Vec2 extends AttrValue {
 
     // Returns true if this vector is the same as another one
     // (given a precision)
-    almostEqual(other) {
+    approxEqual(other) {
         return (Math.abs(this.x - other.x) < Number.EPSILON) && (Math.abs(this.y - other.y) < Number.EPSILON);
     }
 
@@ -238,6 +238,16 @@ class Vec2 extends AttrValue {
             this.__data[1]
         );
     }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Vec2(...args);
+    }
+
+    /////////////////////////////
+    // Persistence
 
     toJSON() {
         return {

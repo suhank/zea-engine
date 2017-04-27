@@ -41,41 +41,47 @@ class VertexAttribute extends Attribute {
 
     setFaceVertexValue(face, facevertex, value) {
         let vertex = this.__geom.getFaceVertexIndex(face, facevertex);
-        return this.setFaceVertexValue_ByVertexIndex(face, vertex, value);
+        this.setFaceVertexValue_ByVertexIndex(face, vertex, value);
     }
 
     setFaceVertexValue_ByVertexIndex(face, vertex, value) {
-
-        // let valueRef = this.getValueRef(vertex);
-        // valueRef.setFromOther(value);
-
-        let result = {
-            'kept': true,
-            'value': undefined
-        }
 
         let valueRef = this.getValueRef(vertex);
         if (!valueRef.isValid()) {
             // the value is uninitialized. Initialize it.
             valueRef.setFromOther(value);
-            result['value'] = valueRef;
-        } else if (valueRef.almostEqual(value)) {
-            // Keep the existing value, don't generate a split.
-            result['kept'] = false;
-        }
+        } else if (valueRef.approxEqual(value)) {
+            // Reusing vertex value. Do nothing
+        }  else{
+            // The new value is different from the existing value
 
-        if (vertex in this.__splits && face in this.__splits[vertex]) {
-            let valueRef = this.__splitValues[this.__splits[vertex][face]];
-            valueRef.setFromOther(value);
-        } else {
-            // Generate a split.
-            if (!(vertex in this.__splits))
+            if (vertex in this.__splits){
+                // Now check if any existing splits for this vertex match the value being set.
+                // i.e. for faces around a vertex, there will often be a seam along 2 edges
+                // where the values differ. On each side of the seam, all faces can use the same
+                // value. We should see then only one split value for the vertex.
+                let vertexSplitIds = this.__splits[vertex];
+                for(let fid in vertexSplitIds) {
+                    let splitId = vertexSplitIds[fid];
+                    if(this.__splitValues[splitId].approxEqual(value)){
+                        // re-use this split value
+                        vertexSplitIds[face] = splitId;
+                        return;
+                    }
+                }
+
+                // If a split already exists for this face, re-use it.
+                if(face in this.__splits[vertex]) {
+                    let valueRef = this.__splitValues[this.__splits[vertex][face]];
+                    valueRef.setFromOther(value);
+                    return;
+                }
+            } else {
                 this.__splits[vertex] = {};
+            }
             this.__splits[vertex][face] = this.__splitValues.length;
             this.__splitValues.push(value);
-            result['value'] = value;
         }
-        return result;
     }
 
     setSplitVertexValue(vertex, face, value) {
@@ -83,7 +89,7 @@ class VertexAttribute extends Attribute {
             this.__splits[vertex] = {};
         if (face in this.__splits[vertex]) {
             let currValue = this.__splitValues[this.__splits[vertex][face]];
-            if (currValue.almostEqual(value))
+            if (currValue.approxEqual(value))
                 return;
             console.warn("Face Vertex Already Split with different value");
         }
@@ -99,7 +105,7 @@ class VertexAttribute extends Attribute {
         for (let face of faceGroup) {
             // if (face in this.__splits[vertex]) {
             //     let currValue = this.__splitValues[this.__splits[vertex][face]];
-            //     if (currValue.almostEqual(value))
+            //     if (currValue.approxEqual(value))
             //         return;
             //     console.warn("Face Vertex Already Split with different value");
             // }

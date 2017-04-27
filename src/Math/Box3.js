@@ -7,6 +7,9 @@ import {
 import {
     Mat4
 } from './Mat4.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Box3 {
     constructor(p0 = undefined, p1 = undefined) {
@@ -114,6 +117,14 @@ class Box3 {
         );
     }
 
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Box2(...args);
+    }
+
     //////////////////////////////////////////
     // Persistence
 
@@ -139,6 +150,8 @@ class Box3 {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
 };
+
+typeRegistry.registerType('Box3', Box3);
 
 export {
     Box3

@@ -4,7 +4,8 @@ import {
     Vec3,
     Color,
     Xfo,
-    Ray
+    Ray,
+    typeRegistry
 } from '../Math';
 import {
     TreeItem
@@ -132,15 +133,8 @@ class SessionClient {
                 let dataValue = data[key];
                 let className = dataValue.className;
                 if(className){
-                    // TODO: Implement a factory system so all types are registered
-                    // and can be construced from the classname.
-                    switch(className) {
-                    case 'Vec2': fromJSON(key, new Vec2()); break;
-                    case 'Vec3': fromJSON(key, new Vec3()); break;
-                    case 'Color': fromJSON(key, new Color()); break;
-                    case 'Xfo': fromJSON(key, new Xfo()); break;
-                    case 'Ray': fromJSON(key, new Ray()); break;
-                    }
+                    let dataType = typeRegistry.getType(className);
+                    fromJSON(key, dataType.create());
                 }
                 else if(Array.isArray(dataValue)) {
                     convertValuesFromJSON(dataValue);

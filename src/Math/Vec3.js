@@ -97,7 +97,7 @@ class Vec3 extends AttrValue {
 
     // Returns true if this vector is the same as another one
     // (given a precision)
-    almostEqual(other) {
+    approxEqual(other) {
         return (Math.abs(this.x - other.x) < Number.EPSILON) &&
             (Math.abs(this.y - other.y) < Number.EPSILON) &&
             (Math.abs(this.z - other.z) < Number.EPSILON);
@@ -329,6 +329,21 @@ class Vec3 extends AttrValue {
         return this;
     }
 
+    clone() {
+        return new Vec3(
+            this.__data[0],
+            this.__data[1],
+            this.__data[2]
+        );
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Vec3(...args);
+    }
+    
     static createFromJSON(json) {
         let result = new Vec3();
         result.fromJSON(json);
@@ -348,13 +363,9 @@ class Vec3 extends AttrValue {
         return 3;
     }
 
-    clone() {
-        return new Vec3(
-            this.__data[0],
-            this.__data[1],
-            this.__data[2]
-        );
-    }
+
+    /////////////////////////////
+    // Persistence
 
     toJSON() {
         return {

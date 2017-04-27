@@ -4,6 +4,9 @@ import {
 import {
     Vec2
 } from './Vec2.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Box2 {
     constructor(p0 = undefined, p1 = undefined) {
@@ -43,6 +46,17 @@ class Box2 {
         result.addInPlace(this.p0);
         return result;
     }
+
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Box2(...args);
+    }
+    
+    //////////////////////////////////////////
+    // Persistence
     
     toJSON() {
         return {"p0": this.p0.toJSON(), "p1": this.p1.toJSON()}
@@ -52,6 +66,9 @@ class Box2 {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
 };
+
+typeRegistry.registerType('Box2', Box2);
+
 
 export {
     Box2

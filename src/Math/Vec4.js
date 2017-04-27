@@ -4,6 +4,9 @@ import {
 import {
     AttrValue
 } from './AttrValue.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Vec4 extends AttrValue {
     constructor(x = 0, y = 0, z = 0, t = 0) {
@@ -92,7 +95,7 @@ class Vec4 extends AttrValue {
 
     // Returns true if this vector is the same as another one
     // (given a precision)
-    almostEqual(other) {
+    approxEqual(other) {
         return (Math.abs(this.x - other.x) < Number.EPSILON) &&
             (Math.abs(this.y - other.y) < Number.EPSILON) &&
             (Math.abs(this.z - other.z) < Number.EPSILON) &&
@@ -292,6 +295,22 @@ class Vec4 extends AttrValue {
         return out;
     }
 
+    clone() {
+        return new Vec4(
+            this.__data[0],
+            this.__data[1],
+            this.__data[2],
+            this.__data[3]
+        );
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Vec3(...args);
+    }
+    
     // Creates a new Mat4 to wrap existing memory in a buffer.
     static createFromFloat32Buffer(buffer, offset = 0) {
         return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float
@@ -301,14 +320,8 @@ class Vec4 extends AttrValue {
         return 4;
     }
 
-    clone() {
-        return new Vec4(
-            this.__data[0],
-            this.__data[1],
-            this.__data[2],
-            this.__data[3]
-        );
-    }
+    /////////////////////////////
+    // Persistence
 
     toJSON() {
         return {
@@ -324,6 +337,8 @@ class Vec4 extends AttrValue {
     }
 
 };
+
+typeRegistry.registerType('Vec4', Vec4);
 
 export {
     Vec4
