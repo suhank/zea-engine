@@ -32,20 +32,13 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="stack-gl/inverse.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-#ifdef ENABLE_SPECULAR
-<%include file="stack-gl/inverse.glsl"/>
-#endif
-
 /* VS Outputs */
-<%include file="stack-gl/inverse.glsl"/>
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
-#ifdef ENABLE_SPECULAR
-varying vec4 v_viewPos;
-varying vec3 v_viewNormal;
-#endif
+
 #ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
 #elseif ENABLE_CROSS_SECTIONS
@@ -72,11 +65,9 @@ void main(void) {
     v_worldPos      = (modelMatrix * pos).xyz;
 #endif
 
-#ifdef ENABLE_SPECULAR
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
-#endif
 }
 `);
 
@@ -91,10 +82,6 @@ precision highp float;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 
-#ifdef ENABLE_SPECULAR
-varying vec4 v_viewPos;
-varying vec3 v_viewNormal;
-#endif
 #ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
 #elseif ENABLE_CROSS_SECTIONS
@@ -198,18 +185,18 @@ void main(void) {
     // Hacky simple irradiance. 
     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
     vec3 normal = mat3(cameraMatrix) * v_viewNormal;
-    float ndotv = dot(normalize(normal), normalize(viewVector));
+    float NdotV = dot(normalize(normal), normalize(viewVector));
     vec3 irradiance;
-    if(ndotv < 0.0){
+    if(NdotV < 0.0){
         normal = -normal;
-        ndotv = dot(normalize(normal), normalize(viewVector));
+        NdotV = dot(normalize(normal), normalize(viewVector));
 
         // Note: these 2 lines can be used to debug inverted meshes.
         baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         irradiance = vec3(1.0, 1.0, 1.0);
     }
     //else{
-        irradiance = vec3(ndotv);
+        irradiance = vec3(NdotV);
     //}
 
 #ifndef ENABLE_SPECULAR
@@ -229,10 +216,6 @@ void main(void) {
 #endif
 
     vec3 albedoLinear = baseColor.rgb;  
-
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    float NdotV = dot(normal, normalize(viewVector));
 
     // -------------------------- Specular Reflactance --------------------------
     // vec3 ks = vec3(0.0);

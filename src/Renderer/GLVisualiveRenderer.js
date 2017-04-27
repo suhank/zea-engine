@@ -105,18 +105,22 @@ class GLVisualiveRenderer extends GLRenderer {
 
         this.__debugTextures = [undefined];
         // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
-        this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
+        if(this.__geomDataPass){
+            this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
+        }
 
         this.__shaderDirectives = {
             defines: `
-#define ENABLE_LIGHTMAPS
 #define ENABLE_INLINE_GAMMACORRECTION
 `
         };
 
+        if(!options.disableLightmaps)
+            this.__shaderDirectives.defines += '\n#define ENABLE_LIGHTMAPS';
+
         if (!isMobileDevice()) {
-            if(!options.disableSpecular)
-                this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
+            // if(!options.disableSpecular)
+            //     this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
             //if(!options.disableTextures)
             //this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
             this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS\n';

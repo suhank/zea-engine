@@ -124,8 +124,8 @@ class GLRenderer {
 
         this.sessionClient = new SessionClient(this, options.enableSessionRecording);
 
-        // this.__defaultGeomsPass = new GLForwardPass(this.__collector);
-        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
+        // Note: using the geom data pass crashes VR scenes.
+        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -274,9 +274,11 @@ class GLRenderer {
             this.requestRedraw();
         }, this);
 
-        vp.createGeomDataFbo();
-        vp.setGeomDataPass(this.__geomDataPass);
-        // vp.setGizmoPass(this.__gizmoPass);
+        if(this.__geomDataPass){
+            vp.createGeomDataFbo();
+            vp.setGeomDataPass(this.__geomDataPass);
+            // vp.setGizmoPass(this.__gizmoPass);
+        }
 
         vp.viewChanged.connect((data)=>{
             this.viewChanged.emit(data);
@@ -337,7 +339,8 @@ class GLRenderer {
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
                 
             // New Items may have been added during the pause.
-            this.renderGeomDataFbos();
+            if(this.__geomDataPass)
+                this.renderGeomDataFbos();
             this.requestRedraw();
         }
     }
