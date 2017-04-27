@@ -105,7 +105,7 @@ class GLMaterialDrawItemSets {
 class GLCollector {
     constructor(renderer) {
         this.__renderer = renderer;
-        this.__drawItems = [];
+        this.__drawItems = [undefined];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
 
@@ -331,7 +331,7 @@ class GLCollector {
 
     getDrawItem(id) {
         if (id >= this.__drawItems.length)
-            throw ("Invalid Draw Item id:" + id + " NumItems:" + this.__drawItems.length);
+            throw ("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length-1));
         return this.__drawItems[id];
     }
 

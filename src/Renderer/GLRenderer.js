@@ -337,7 +337,7 @@ class GLRenderer {
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
                 
             // New Items may have been added during the pause.
-            // this.renderGeomDataFbos();
+            this.renderGeomDataFbos();
             this.requestRedraw();
         }
     }

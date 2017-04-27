@@ -46,6 +46,7 @@ class GLGeomDataPass extends GLPass {
         gl.depthMask(true);
 
         this.__glshader.bind(renderstate);
+        this.__collector.bind(renderstate);
 
         super.draw(renderstate);
     }

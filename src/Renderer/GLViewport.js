@@ -267,7 +267,7 @@ class GLViewport {
         let gl = this.__renderer.gl;
         let scl = this.__geomDataBufferFboRezScale;
         this.__geomDataBuffer = new GLTexture2D(gl, {
-            format: 'UNSIGNED_BYTE',
+            format: 'FLOAT',
             channels: 'RGBA',
             width: this.__width <= 1 ? 1 : this.__width * scl,
             height: this.__height <= 1 ? 1 : this.__height * scl,
@@ -318,18 +318,19 @@ class GLViewport {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a 1 pixel block.
-            let pixels = new Uint8Array(4);
+            let pixels = new Float32Array(4);
 
             let scl = this.__geomDataBufferFboRezScale;
             this.__geomDataBufferFbo.bind();
-            gl.readPixels(screenPos.x * scl, (this.__height - screenPos.y) * scl, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            gl.readPixels(screenPos.x * scl, (this.__height - screenPos.y) * scl, 1, 1, gl.RGBA, gl.FLOAT, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            if (pixels[0] == 0)
-                return undefined;
-            // Merge the 2 last 8bit values to make a 16bit integer index value
+            // if (pixels[0] == 0)
+            //     return undefined;
             return {
-                'flags': pixels[0],
-                'id': (pixels[1] * 256) + pixels[2]
+                'id': Math.round(pixels[0]),
+                'data1': pixels[1],
+                'data2': pixels[2],
+                'data3': pixels[3]
             };
         }
     }
@@ -401,20 +402,24 @@ class GLViewport {
 
             } else {
                 let geomData = this.getGeomDataAtPos(this.__mouseDownPos);
-                if (geomData != undefined && geomData.flags == 1) {
-                    let drawItem = this.__renderer.getDrawItem(geomData.id);
+                if (geomData != undefined) {
+                    let drawItem = this.__renderer.getCollector().getDrawItem(geomData.id);
                     if (drawItem) {
-                        console.log(drawItem.geomItem.name);
+                        // Check to see if we mouse-downed on a gizmo.
+                        // If so, start a gizmo manipulation
+                        let geomItem = drawItem.getGeomItem();
+                        console.log(geomItem.name + " Material:" + geomItem.material.name);
+                        // if(isGizmo)
+                        //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
+                        //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
+                        //     //this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
+                        // }
                     }
                 }
-                if (geomData != undefined && geomData.flags == 2) {
-                    this.__manipMode = 'gizmo-manipulation';
-                    this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
-                    this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
-                } else {
-                    this.__manipMode = 'camera-manipulation';
-                    this.__camera.onDragStart(event, this.__mouseDownPos, this);
-                }
+
+                // Default to camera manipulation
+                this.__manipMode = 'camera-manipulation';
+                this.__camera.onDragStart(event, this.__mouseDownPos, this);
             }
         }/* else if (event.button == 2) {
             if (event.shiftKey) {

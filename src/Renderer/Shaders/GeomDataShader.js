@@ -30,7 +30,7 @@ void main(void) {
     gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
 
     int id = getID();
-    vec4 geomItemData = getGeomItemData(id);
+    vec4 geomItemData = getInstanceData(id);
     v_geomData.x = float(id);
     v_geomData.y = geomItemData.z;
     v_geomData.z = geomItemData.t;
