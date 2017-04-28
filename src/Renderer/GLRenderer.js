@@ -262,7 +262,6 @@ class GLRenderer {
     setScene(scene) {
         this.__scene = scene;
         this.__collector.addTreeItem(this.__scene.getRoot());
-        this.__collector.finalize();
 
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
@@ -337,6 +336,9 @@ class GLRenderer {
         if (this.__drawSuspensionLevel == 0) {
             if(this.__loadingImg)
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
+
+            if(this.__collector.newItemsReadyForLoading())
+                this.__collector.finalize();
                 
             // New Items may have been added during the pause.
             if(this.__geomDataPass)

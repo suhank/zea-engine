@@ -37,8 +37,11 @@ let getUrlVars = () => {
     }
     if(projectID == "")
         projectID = "SharedSession";
+
+    let isSecureConnection = url.startsWith('https');
     return {
         projectID,
+        isSecureConnection,
         args
     };
 }
@@ -190,6 +193,11 @@ class SessionClient {
         connectedUsers[myId] = myAvatar;
 
         let urlVars = getUrlVars();
+
+        // Once we have an sssl certificat, we can support wss sockets and remove this.
+        if(urlVars.isSecureConnection)
+            return;
+
         let projectID = urlVars.projectID;
         let sessionID = urlVars.args['id'];
         if (!sessionID) {
@@ -197,13 +205,69 @@ class SessionClient {
         }
         console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
 
+        ////////////////////////////////////////
+        // Register listeners with the renderer
+
+        renderer.viewChanged.connect(function(data) {
+            // convert the data type to raw json and send to the server.
+            if (socketOpen) {
+                sendMessage({
+                    type: 'viewChanged',
+                    data: data
+                });
+            }
+        });
+
+        renderer.pointerMoved.connect(function(data) {
+            // convert the data type to raw json and send to the server.
+            // console.log("mousePos:", mousePos.toJSON());
+            // console.log("ray:", ray.toJSON());
+            if (socketOpen) {
+                sendMessage({
+                    type: 'pointerMoved',
+                    data: data
+                });
+            }
+        });
+
+        renderer.actionStarted.connect((msg) => {
+            if(msg.type == 'strokeStarted') {
+                let myMarker = connectedUsers[myId].userMarker;
+                let data = msg.data;
+                data.color.fromJSON(clientData.color);
+                data.id = myMarker.startStroke(data.xfo, data.color, data.thickness);
+            }
+            if (socketOpen)
+                sendMessage(msg);
+        });
+        renderer.actionOccuring.connect((msg) => {
+            if(msg.type == 'strokeSegmentAdded') {
+                let myMarker = connectedUsers[myId].userMarker;
+                let data = msg.data;
+                data.id = myMarker.addSegmentToStroke(data.xfo);
+            }
+            if (socketOpen)
+                sendMessage(msg);
+        });
+        renderer.actionEnded.connect((msg) => {
+            if(msg.type == 'strokeEnded') {
+                let myMarker = connectedUsers[myId].userMarker;
+                msg.data = {
+                    id: myMarker.endStroke()
+                };
+            }
+            if (socketOpen)
+                sendMessage(msg);
+        });
+
         //////////////////////////////////////
         // Websocket setup
 
         let socketOpen = false;
-        //let ws = new WebSocket("ws://localhost:5000", "protocolOne");
-        let ws = new WebSocket("ws://108.59.85.106:5000", "protocolOne");
-        //let ws = new WebSocket("wss://108.59.85.106:5000", "protocolOne");
+        //let ws = new WebSocket("ws://localhost:8000", "protocolOne");
+        let ws = new WebSocket("ws://108.59.85.106:8000", "protocolOne");
+        //let ws = new WebSocket("wss://108.59.85.106:8000", "protocolOne");
+        // let ws = new WebSocket("wss://ws.visualive.io:8000", "protocolOne");
 
         let sendMessage = (message) => {
             if(socketOpen){
@@ -222,6 +286,10 @@ class SessionClient {
                 sessionID: sessionID
             });
             // generateRecordingUI();
+        };
+        ws.onclose = function(event) {
+            socketOpen = false;
+            console.log("Websocket closed.")
         };
         ws.onmessage = function(message) {
             let jsonData = JSON.parse(message.data);
@@ -315,61 +383,6 @@ class SessionClient {
         listeners.projectAnalytics = function(client, data) {
             onAnalyticsDataRecieved(data);
         }
-
-        ////////////////////////////////////////
-        // Register listeners with the renderer
-
-        renderer.viewChanged.connect(function(data) {
-            // convert the data type to raw json and send to the server.
-            if (socketOpen) {
-                sendMessage({
-                    type: 'viewChanged',
-                    data: data
-                });
-            }
-        });
-
-        renderer.pointerMoved.connect(function(data) {
-            // convert the data type to raw json and send to the server.
-            // console.log("mousePos:", mousePos.toJSON());
-            // console.log("ray:", ray.toJSON());
-            if (socketOpen) {
-                sendMessage({
-                    type: 'pointerMoved',
-                    data: data
-                });
-            }
-        });
-
-        renderer.actionStarted.connect((msg) => {
-            if(msg.type == 'strokeStarted') {
-                let myMarker = connectedUsers[myId].userMarker;
-                let data = msg.data;
-                data.color.fromJSON(clientData.color);
-                data.id = myMarker.startStroke(data.xfo, data.color, data.thickness);
-            }
-            if (socketOpen)
-                sendMessage(msg);
-        });
-        renderer.actionOccuring.connect((msg) => {
-            if(msg.type == 'strokeSegmentAdded') {
-                let myMarker = connectedUsers[myId].userMarker;
-                let data = msg.data;
-                data.id = myMarker.addSegmentToStroke(data.xfo);
-            }
-            if (socketOpen)
-                sendMessage(msg);
-        });
-        renderer.actionEnded.connect((msg) => {
-            if(msg.type == 'strokeEnded') {
-                let myMarker = connectedUsers[myId].userMarker;
-                msg.data = {
-                    id: myMarker.endStroke()
-                };
-            }
-            if (socketOpen)
-                sendMessage(msg);
-        });
 
         ////////////////////////////////////////
 

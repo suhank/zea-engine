@@ -124,6 +124,10 @@ class GLCollector {
         return this.__renderer;
     }
 
+    newItemsReadyForLoading() {
+        return this.__newItemIndices.length > 0;
+    }
+
     getGLShaderMaterials() {
         return this.__glshadermaterials;
     }
