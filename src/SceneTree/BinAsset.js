@@ -79,7 +79,8 @@ class BinAsset extends AssetItem {
                     if(numGeomsFiles > 0) {
                         geomFileID++;
                         let nextGeomFileName = fileName.split('.')[0] + geomFileID + '.geoms';
-                        loadGeomsfile(nextGeomFileName);
+                        if(nextGeomFileName in resources)
+                            loadGeomsfile(resources[nextGeomFileName]);
                     }
                 },
                 () => {
