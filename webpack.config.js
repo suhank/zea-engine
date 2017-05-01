@@ -12,7 +12,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: `${outputFile}-${package_json.version}${prod ? '.min' : ''}.js`,
-    path: path.resolve(__dirname, 'lib')
+    path: path.resolve(__dirname, 'lib'),
+  	library: libraryName
   },
   devtool: 'source-map'
 };
