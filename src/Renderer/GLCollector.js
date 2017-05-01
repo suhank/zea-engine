@@ -243,10 +243,7 @@ class GLCollector {
             glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
         }
 
-        drawItemSet.addDrawItem(gldrawItem);
-
-        // Note: before the renderer is disabled, this is a  no-op.
-        this.__renderer.requestRedraw();
+        drawItemSet.addDrawItem(gldrawItem)
 
         return gldrawItem;
     }
@@ -255,16 +252,13 @@ class GLCollector {
 
         if (treeItem instanceof GeomItem) {
             if (!treeItem.getMetadata('gldrawItem')) {
-                if (treeItem.material == undefined) {
-                    throw ("Scene item :" + treeItem.path + " has no material");
-                }
                 if (treeItem.geom == undefined) {
                     // we will add this geomitem once it recieves its geom.
-                    treeItem.geomAssigned.connect(()=>{
-                        this.addGeomItem(treeItem);
-                    })
                 }
                 else{
+                    if (treeItem.material == undefined) {
+                        throw ("Scene item :" + treeItem.path + " has no material");
+                    }
                     this.addGeomItem(treeItem);
                 }
             }
