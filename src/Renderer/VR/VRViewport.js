@@ -322,17 +322,6 @@ class VRViewport {
         });
     }
 
-    setMoveMode(mode) {
-        this.__moveMode = mode;
-        if (this.__moveMode) {
-            for (let vrController of this.__vrControllers)
-                vrController.setHandleColor(new Color(0, 0, 1));
-        } else {
-            for (let vrController of this.__vrControllers)
-                vrController.setHandleColor(new Color(0, 1, 0));
-        }
-    }
-
     togglePresenting() {
         if (this.__vrDisplay.isPresenting)
             this.stopPresenting();
@@ -398,7 +387,8 @@ class VRViewport {
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
-                            this.setMoveMode(true);
+                            this.__currentTool = this.__vrTools['VRToolMoveStage'];
+                            this.__currentTool.activateTool();
 
                             // if(this.__stageBig){
                             //     // Place the user inside the volume at the position of the
@@ -412,7 +402,8 @@ class VRViewport {
                             // }
 
                         } else if (vals[1] < 0) {
-                            this.setMoveMode(false);
+                            this.__currentTool = this.__vrTools['Markerpen'];
+                            this.__currentTool.activateTool();
 
                             // if(!this.__stageBig){
                             //     // Restore the user to thier previous scale
@@ -426,7 +417,6 @@ class VRViewport {
                         if (!isMobileDevice()) {
                             if (this.__moveMode) {
                                 if (this.__pressedButtons == 1) {
-                                    this.__currentTool = this.__vrTools['1HandedGrab'];
                                 } else if (this.__pressedButtons == 2) {
                                     this.__currentTool = this.__vrTools['2HandedGrab'];
                                 }
@@ -434,19 +424,18 @@ class VRViewport {
                                 this.__currentTool = this.__vrTools['Markerpen'];
                             }
                         }
-                        this.__currentTool.startAction();
                     }, this);
 
                     vrController.buttonReleased.connect(() => {
                         this.__pressedButtons--;
                         if (!isMobileDevice()) {
                             if (this.__currentTool) {
-                                this.__currentTool.endAction();
+                                this.__currentTool.deactivateTool();
                                 this.__currentTool = null;
                             }
                             if (this.__moveMode && this.__pressedButtons == 1) {
                                 this.__currentTool = this.__vrTools['1HandedGrab'];
-                                this.__currentTool.startAction();
+                                this.__currentTool.activateTool();
                             }
                         }
                     }, this);
@@ -461,7 +450,7 @@ class VRViewport {
         }
 
         if (this.__currentTool && this.__pressedButtons) {
-            this.__currentTool.applyAction();
+            this.__currentTool.evalTool();
         }
 
 

@@ -211,6 +211,10 @@ class GLRenderer {
         return this.__collector;
     }
 
+    getGeomDataPass() {
+        return this.__geomDataPass;
+    }
+
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         let gridMaterial = new LinesMaterial('gridMaterial');
         gridMaterial.color = gridColor;
@@ -275,8 +279,6 @@ class GLRenderer {
 
         if(this.__geomDataPass){
             vp.createGeomDataFbo();
-            vp.setGeomDataPass(this.__geomDataPass);
-            // vp.setGizmoPass(this.__gizmoPass);
         }
 
         vp.viewChanged.connect((data)=>{
