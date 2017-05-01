@@ -85,7 +85,7 @@ class Mesh extends BaseGeom {
             attr.resize(numFaces);
     }
 
-    setFaceVertexIndices(faceIndex, /*vertexIndices*/ ) {
+    setFaceVertexIndices(faceIndex) {
         let vertexIndices = Array.prototype.slice.call(arguments, 1);
 
         let start = this.__numPopulatedFaceVertexIndices;

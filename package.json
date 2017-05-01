@@ -4,11 +4,8 @@
   "description": "Visualive core engine",
   "main": "lib/Visualive.js",
   "scripts": {
-    "build": "webpack --mode=build",
-    "buildES6": "webpack --mode=buildES6",
-    "dev": "webpack --progress --colors --watch --mode=dev",
-    "devES6": "webpack --progress --colors --watch --mode=devES6",
-    "test": "webpack --mode=dev && mocha --compilers js:babel-core/register --colors -w --recursive ./Tests/**/*test.js"
+    "build": "webpack --config webpack.config.js",
+    "build:production": "webpack -p --config webpack.config.js"
   },
   "devDependencies": {
     "babel": "6.3.13",
@@ -24,7 +21,7 @@
     "macro-loader": "^1.0.0",
     "mocha": "2.3.4",
     "uglify-js": "git+https://github.com/mishoo/UglifyJS2.git#harmony",
-    "webpack": "^1.14.0",
+    "webpack": "^2.4.1",
     "yargs": "3.32.0"
   },
   "repository": {
