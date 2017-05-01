@@ -11,7 +11,7 @@ const prod = process.argv.indexOf('-p') !== -1;
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: `${outputFile}-${package_json.version}${prod ? '.min' : ''}.js`,
+    filename: `${outputFile}-${prod ? package_json.version : 'dev'}${prod ? '.min' : ''}.js`,
     path: path.resolve(__dirname, 'lib'),
   	library: libraryName
   },
