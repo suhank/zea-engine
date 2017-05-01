@@ -4,7 +4,7 @@ import {
     Xfo,
     Signal
 } from '../../Math';
-import { VRTool } fromm 'VRTool.js'
+import { VRTool } from './VRTool.js'
 
 class VRMarkerpenTool extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {

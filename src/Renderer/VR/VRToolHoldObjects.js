@@ -2,9 +2,11 @@ import {
     Xfo,
     Mat4
 } from '../../Math';
+import { VRTool } from './VRTool.js'
 
-class VRToolHoldObjects {
+class VRToolHoldObjects extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {
+        super();
 
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;

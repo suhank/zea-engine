@@ -24,11 +24,11 @@ import {
     VRController
 } from './VRController.js'
 import {
-    VR1HandedGrabTool
-} from './VR1HandedGrabTool.js'
+    VRToolMoveStage
+} from './VRToolMoveStage.js'
 import {
-    VR2HandedGrabTool
-} from './VR2HandedGrabTool.js'
+    VRToolHoldObjects
+} from './VRToolHoldObjects.js'
 import {
     VRMarkerpenTool
 } from './VRMarkerpenTool.js'
@@ -68,14 +68,11 @@ class VRViewport {
 
         // Construct the head geom and add it directly to the Gizmo pass.
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
+        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
+
         this.__vrControllers = [];
         this.__vrTools = {};
-        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
-        this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
-
-        this.__pressedButtons = 0;
         this.__currentTool = undefined;
-        this.__moveMode = true;
 
         if (this.__vrDisplay.stageParameters &&
             this.__vrDisplay.stageParameters.sizeX > 0 &&
@@ -136,9 +133,11 @@ class VRViewport {
             this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
             this.__currentTool = this.__vrTools['FlyTool'];
         } else {
-            this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
+
+            this.__currentTool = this.__vrTools['VRToolMoveStage'];
+            this.__currentTool.activateTool();
 
             let markerpenTool = this.__vrTools['Markerpen'];
             markerpenTool.strokeStarted.connect((data) => {
@@ -412,44 +411,16 @@ class VRViewport {
                         }
                     }, this);
 
-                    vrController.buttonPressed.connect(() => {
-                        this.__pressedButtons++;
-                        if (!isMobileDevice()) {
-                            if (this.__moveMode) {
-                                if (this.__pressedButtons == 1) {
-                                } else if (this.__pressedButtons == 2) {
-                                    this.__currentTool = this.__vrTools['2HandedGrab'];
-                                }
-                            } else {
-                                this.__currentTool = this.__vrTools['Markerpen'];
-                            }
-                        }
-                    }, this);
-
-                    vrController.buttonReleased.connect(() => {
-                        this.__pressedButtons--;
-                        if (!isMobileDevice()) {
-                            if (this.__currentTool) {
-                                this.__currentTool.deactivateTool();
-                                this.__currentTool = null;
-                            }
-                            if (this.__moveMode && this.__pressedButtons == 1) {
-                                this.__currentTool = this.__vrTools['1HandedGrab'];
-                                this.__currentTool.activateTool();
-                            }
-                        }
-                    }, this);
-
+                    // Note: we shoulnd't need this line.
                     this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
                     this.__vrControllers[id] = vrController;
-                    this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
                 }
                 this.__vrControllers[id].update(gamepad);
                 id++;
             }
         }
 
-        if (this.__currentTool && this.__pressedButtons) {
+        if (this.__currentTool) {
             this.__currentTool.evalTool();
         }
 

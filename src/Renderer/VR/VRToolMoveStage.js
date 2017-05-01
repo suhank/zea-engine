@@ -2,7 +2,7 @@ import {
     Xfo
 } from '../../Math';
 
-import { VRTool } fromm 'VRTool.js'
+import { VRTool } from './VRTool.js'
 
 
 class VRToolMoveStage extends VRTool {

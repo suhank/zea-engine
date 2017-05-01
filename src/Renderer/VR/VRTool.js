@@ -23,5 +23,5 @@ class VRTool {
 };
 
 export {
-    VRMarkerpenTool
+    VRTool
 };
