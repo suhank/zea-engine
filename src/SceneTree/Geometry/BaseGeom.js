@@ -149,9 +149,6 @@ class BaseGeom extends RefCounted {
         // make sure the bbox is up to date.
         if (this.__boundingBoxDirty)
             this.updateBoundingBox();
-        for (let [attrName, attr] of this.__vertexAttributes) {
-            attr.data.resize(0);
-        }
         this.__vertexAttributes = new Map();
     }
 

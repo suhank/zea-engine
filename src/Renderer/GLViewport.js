@@ -408,7 +408,7 @@ class GLViewport {
                         // Check to see if we mouse-downed on a gizmo.
                         // If so, start a gizmo manipulation
                         let geomItem = drawItem.getGeomItem();
-                        console.log(geomItem.name + " Material:" + geomItem.material.name);
+                        console.log(geomItem.name + " Material:" + geomItem.getMaterial().name);
                         // if(isGizmo)
                         //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
                         //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);

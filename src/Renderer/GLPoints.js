@@ -24,7 +24,7 @@ class GLPoints extends GLGeom {
         let geomBuffers = this.__geom.genBuffers();
 
         for (let attrName in geomBuffers.attrBuffers) {
-            let attrData = attrBuffers[attrName];
+            let attrData = geomBuffers.attrBuffers[attrName];
 
             let attrBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);

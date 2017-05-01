@@ -24,7 +24,7 @@ class GLTransparencyPass extends GLPass {
     filter(drawItem) {
         if(!super.filter(drawItem))
             return false;
-        let material = drawItem.geomItem.material;
+        let material = drawItem.geomItem.getMaterial();
         return material.isTransparent();
     }
 

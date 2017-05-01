@@ -31,7 +31,7 @@ class GLHardEdgesPass extends GLPass {
     filter(drawItem) {
         if(!super.filter(drawItem))
             return false;
-        let geom = drawItem.geomItem.geom;
+        let geom = drawItem.geomItem.getGeom();
         return (geom instanceof Mesh);
     }
 

@@ -199,8 +199,8 @@ class GLCollector {
     }
 
     addGeomItem(geomItem) {
-        let glmaterialDrawItemSets = this.addMaterial(geomItem.material);
-        let glgeom = this.addGeom(geomItem.geom);
+        let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
+        let glgeom = this.addGeom(geomItem.getGeom());
 
 
         let flags = 1;
@@ -255,10 +255,10 @@ class GLCollector {
 
         if (treeItem instanceof GeomItem) {
             if (!treeItem.getMetadata('gldrawItem')) {
-                if (treeItem.material == undefined) {
-                    throw ("Scene item :" + treeItem.path + " has no material");
+                if (treeItem.getMaterial() == undefined) {
+                    console.warn ("Scene item :" + treeItem.path + " has no material");
                 }
-                if (treeItem.geom == undefined) {
+                if (treeItem.getGeom() == undefined) {
                     // we will add this geomitem once it recieves its geom.
                     treeItem.geomAssigned.connect(()=>{
                         this.addGeomItem(treeItem);

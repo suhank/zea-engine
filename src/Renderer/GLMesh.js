@@ -30,7 +30,7 @@ class GLMesh extends GLGeom {
         super.genBuffers();
 
         let geomBuffers = this.__geom.genBuffers();
-
+        let indices = geomBuffers.indices;
         this.__numTriIndices = geomBuffers.indices.length;
         if(indices instanceof Uint8Array)
             this.__indexDataType = this.__gl.UNSIGNED_BYTE ;
@@ -50,7 +50,7 @@ class GLMesh extends GLGeom {
         if (debugAttrValues)
             maxIndex = Math.max(...indices);
         for (let attrName in geomBuffers.attrBuffers) {
-            let attrData = attrBuffers[attrName];
+            let attrData = geomBuffers.attrBuffers[attrName];
 
             let attrBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
@@ -61,10 +61,7 @@ class GLMesh extends GLGeom {
                 dimension: attrData.dimension,
                 normalized: attrData.normalized
             };
-
-            attrData.values.resize(0);
         }
-        geomBuffers.indices.resize(0);
         
         this.__geom.freeData();
 

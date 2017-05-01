@@ -204,7 +204,7 @@ class ObjAsset extends AssetItem {
                         newGeom(elements[0]);
                     break;
                 case 'usemtl':
-                    currGeom.material = elements[0];
+                    currGeom.setMaterial(elements[0]);
                     break;
                 case 'g':
                     if (this.splitGroupsIntoObjects)
@@ -349,15 +349,15 @@ class ObjAsset extends AssetItem {
         geomItem.localXfo.tr.addInPlace(delta);
 
         if (geomData.material != undefined && geomData.material in this.__materials) {
-            geomItem.material = this.__materials[geomData.material];
+            geomItem.setMaterial(this.__materials[geomData.material]);
         } else if (this.__defaultMaterial) {
-            geomItem.material = this.__defaultMaterial;
+            geomItem.setMaterial(this.__defaultMaterial);
         } else {
             let material = new StandardMaterial(geomName + 'mat');
             material.baseColor = Color.random(0.5);
             material.roughness = 0.2;
             material.reflectance = 0.2;
-            geomItem.material = material;
+            geomItem.setMaterial(material);
         }
 
         this.addChild(geomItem);

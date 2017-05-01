@@ -103,7 +103,6 @@ class GLLines extends GLGeom {
                     buffer: attrBuffer,
                     dimension: attrData.dimension
                 };
-                attrData.values.resize(0);
             }
 
             // Cache the size so we know later if it changed (see below)

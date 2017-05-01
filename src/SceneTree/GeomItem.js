@@ -31,19 +31,19 @@ class GeomItem extends TreeItem {
         this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
 
-        this.geom = geom;
-        this.material = material;
+        this.setGeom(geom);
+        this.setMaterial(material);
     }
 
     destroy() {
         super.destroy();
     }
 
-    get geom() {
+    getGeom() {
         return this.__geom;
     }
 
-    set geom(geom) {
+    setGeom(geom) {
         this.__geom = geom;
         if (this.__geom) {
             this.__geom.boundingBoxChanged.connect(() => {
@@ -64,11 +64,11 @@ class GeomItem extends TreeItem {
     }
 
 
-    get material() {
+    getMaterial() {
         return this.__material;
     }
 
-    set material(material) {
+    setMaterial(material) {
         this.__material = material;
     }
 
@@ -167,10 +167,10 @@ class GeomItem extends TreeItem {
         }
 
         if ((flags&LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json){
-            this.material = materialLibrary.getMaterial(json.materialName);
+            this.setMaterial(materialLibrary.getMaterial(json.materialName));
             if(!this.material){
                 console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
-                this.material = materialLibrary.getMaterial('DefaultMaterial');
+                this.setMaterial(materialLibrary.getMaterial('DefaultMaterial'));
             }
         }
 
@@ -185,12 +185,12 @@ class GeomItem extends TreeItem {
         let itemflags = reader.loadUInt8();
         let geomIndex = reader.loadUInt32();
         if(geomLibrary.numGeoms > geomIndex){
-            this.geom = geomLibrary.getGeom(geomIndex);
+            this.setGeom(geomLibrary.getGeom(geomIndex));
         }
         else{
             let onGeomLoaded = (range)=>{
                 if(geomIndex < range[1]){
-                    this.geom = geomLibrary.getGeom(geomIndex);
+                    this.setGeom(geomLibrary.getGeom(geomIndex));
                     geomLibrary.loaded.disconnect(onGeomLoaded, this);
                 }
             }
@@ -209,11 +209,12 @@ class GeomItem extends TreeItem {
         const materialFlag = 1<<3;
         if (itemflags&materialFlag){
             let materialName = reader.loadStr();
-            this.material = materialLibrary.getMaterial(materialName);
-            if(!this.material){
+            let material = materialLibrary.getMaterial(materialName);
+            if(!material){
                 console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
-                this.material = materialLibrary.getMaterial('DefaultMaterial');
+                material = materialLibrary.getMaterial('DefaultMaterial');
             }
+            this.setMaterial(material);
         }
 
         this.__lightmapCoordsOffset = reader.loadFloat32Vec2();
