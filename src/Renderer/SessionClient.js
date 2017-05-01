@@ -265,8 +265,8 @@ class SessionClient {
 
         let socketOpen = false;
         //let ws = new WebSocket("ws://localhost:8000", "protocolOne");
-        let ws = new WebSocket("ws://108.59.85.106:8000", "protocolOne");
-        //let ws = new WebSocket("wss://108.59.85.106:8000", "protocolOne");
+        // let ws = new WebSocket("ws://108.59.85.106:8000", "protocolOne");
+        let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
         // let ws = new WebSocket("wss://ws.visualive.io:8000", "protocolOne");
 
         let sendMessage = (message) => {
