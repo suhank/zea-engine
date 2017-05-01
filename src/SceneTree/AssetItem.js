@@ -80,15 +80,17 @@ class AssetItem extends TreeItem {
 
 
     readBinary(reader, flags){
+        let numGeomsFiles = reader.loadUInt32();
 
         this.__materials.readBinary(reader, flags);
 
         super.readBinary(reader, flags, this.__materials, this.__geoms);
 
-        // this.lightmapCoordsOffset = reader.loadFloat32Vec2();
-        // this.lightmapName = reader.loadStr();
+        this.lightmapCoordsOffset = reader.loadFloat32Vec2();
+        this.lightmapName = reader.loadStr();
 
         //this.__propagateLightmapOffset();
+        return numGeomsFiles;
     }
 
     __propagateLightmapOffset(){

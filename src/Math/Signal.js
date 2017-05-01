@@ -41,7 +41,7 @@ class Signal {
     }
 
 
-    disconnectScope(scope) {
+    disconnectScope(scope = this) {
         this.__slots = this.__slots.filter(
             function (item) {
                 if (item["scope"] !== scope) {
