@@ -101,7 +101,7 @@ class GLLines extends GLGeom {
 
                 this.__glattrbuffers[attrName] = {
                     buffer: attrBuffer,
-                    dimension: dimension
+                    dimension: attrData.dimension
                 };
                 attrData.values.resize(0);
             }
