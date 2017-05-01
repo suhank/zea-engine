@@ -234,6 +234,75 @@ class Mesh extends BaseGeom {
 
     //////////////////////////////////////////
     // Memory
+
+
+    genBuffers() {
+
+        // Compute the normals on demand. 
+        // if (!('normals' in this.__vertexAttributes)) {
+        //     // this.__geom.computeVertexNormals();
+        //     this.addVertexAttribute("normals", Vec3, 0.0);
+        // }
+
+        let splitIndices = {};
+        let splitCount = 0;
+        for (let [attrName, attr] of this.__vertexAttributes) {
+
+            let attrSplits = attr.getSplits();
+            for (let polygon in attrSplits) {
+                if (!(polygon in splitIndices))
+                    splitIndices[polygon] = {};
+                let vertices = attrSplits[polygon];
+                for (let v in vertices) {
+                    let vertex = parseInt(v);
+                    if (!(vertex in splitIndices[polygon])) {
+                        splitIndices[polygon][vertex] = splitCount;
+                        splitCount++;
+                    }
+                }
+            }
+        }
+
+        let numUnSplitVertices = this.vertices.length;
+        let totalNumVertices = numUnSplitVertices + splitCount;
+        let indices = this.generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices);
+
+        // Create some vertex attribute buffers
+        let debugAttrValues = false;
+        let maxIndex;
+        if (debugAttrValues)
+            maxIndex = Math.max(...indices);
+        let attrBuffers = {};
+        for (let [attrName, attr] of this.__vertexAttributes) {
+            let values;
+            if (splitCount == 0)
+                values = attr.data;
+            else
+                values = attr.generateSplitValues(splitIndices, splitCount);
+
+            let dimension = attr.numFloat32Elements;
+            let count = values.length / dimension;
+
+            if (debugAttrValues) {
+                if (count <= maxIndex)
+                    console.warn("Invalid indexing. Attr value is insufficient for indexing:" + attrName + ". Max Index:" + maxIndex + " Attr Size:" + count);
+            }
+
+            attrBuffers[attrName] = {
+                values: values,
+                count: count,
+                dimension: dimension,
+                normalized: attrName == 'normals'
+            };
+        }
+        
+        return {
+            numVertices: this.numVertices(),
+            indices,
+            attrBuffers
+        };
+
+    }
     
     freeData(){
         super.freeData();

@@ -126,12 +126,32 @@ class BaseGeom extends RefCounted {
     
     //////////////////////////////////////////
     // Memory
+
+
+    genBuffers() {
+        let attrBuffers = {};
+        for (let [attrName, attr] of this.__vertexAttributes) {
+            attrBuffers[attrName] = {
+                values: attr.data,
+                count: attr.size,
+                dimension: attr.numFloat32Elements,
+                normalized: false
+            };
+        }
+        return {
+            numVertices: this.numVertices(),
+            attrBuffers
+        };
+    }
     
     freeData(){
         // Before destroying all our data, 
         // make sure the bbox is up to date.
         if (this.__boundingBoxDirty)
             this.updateBoundingBox();
+        for (let [attrName, attr] of this.__vertexAttributes) {
+            attr.data.resize(0);
+        }
         this.__vertexAttributes = new Map();
     }
 

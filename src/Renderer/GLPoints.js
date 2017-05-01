@@ -21,32 +21,18 @@ class GLPoints extends GLGeom {
         super.genBuffers();
 
         let gl = this.__gl;
+        let geomBuffers = this.__geom.genBuffers();
 
-        let vertexAttributes = this.__geom.getVertexAttributes();
-        // let attribIndices = {
-        //     "positions": 0
-        // };
-        let attribIndexOffset = 1;
-        for (let attrName in vertexAttributes) {
-            let attr = vertexAttributes[attrName];
-            let data = attr.data;
-
-            let dimension = attr.numFloat32Elements;
-            let count = data.length / dimension;
-            let normalized = attrName == 'normals';
+        for (let attrName in geomBuffers.attrBuffers) {
+            let attrData = attrBuffers[attrName];
 
             let attrBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
-            // let attribIndex = (attrName in attribIndices) ? attribIndices[attrName] : (attribIndexOffset++);
-            // gl.enableVertexAttribArray(attribIndex);
-            // gl.vertexAttribPointer(attribIndex, dimension, gl.FLOAT, normalized, dimension * 4, 0);
-            // gl.__ext_Inst.vertexAttribDivisorANGLE(attribIndex, 1); // This makes it instanced!
+            gl.bufferData(gl.ARRAY_BUFFER, attr.values, gl.STATIC_DRAW);
 
             this.__glattrbuffers[attrName] = {
                 buffer: attrBuffer,
-                count: count,
-                dimension: dimension,
+                dimension: attrData.dimension,
                 instanced: true
             };
         }

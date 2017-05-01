@@ -25,8 +25,9 @@ class GLLines extends GLGeom {
     genBuffers() {
         super.genBuffers();
 
-        ///////////////////
         let gl = this.__gl;
+        let geomBuffers = this.__geom.genBuffers();
+        let indices = geomBuffers.indices;
 
         if (this.fatLines) {
 
@@ -35,13 +36,10 @@ class GLLines extends GLGeom {
             }
             this.__glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs;
 
-            let indices = this.__geom.getIndices();
             this.__drawCount = indices.length / 2;
 
-            let vertexAttributes = this.__geom.getVertexAttributes();
-
-            let positions = vertexAttributes.positions;
-            let lineThickness = vertexAttributes.lineThickness;
+            let positions = geomBuffers.attrBuffers.positions;
+            let lineThickness = geomBuffers.attrBuffers.lineThickness;
 
             let stride = 4; // The number of floats per draw item.
             let size = positions.length * stride; // each 
@@ -84,51 +82,44 @@ class GLLines extends GLGeom {
             this.__glattrbuffers.segmentIndices = {
                 buffer: indexBuffer,
                 instanced: true,
-                dimension: 2,
-                count: indices.length / 2
+                dimension: 2
             }
 
 
         } else {
 
-            let vertexAttributes = this.__geom.getVertexAttributes();
-
-            let indices = this.__geom.getIndices();
-            this.__numSegIndices = indices.length;
-
-            let gl = this.__gl;
             this.__indexBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
             gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
 
-            this.__indexBuffer.size = indices.length;
-
-            let attribIndexOffset = 1;
-            for (let attrName in vertexAttributes) {
-                let attr = vertexAttributes[attrName];
-                let data = attr.data;
-                let dimension = attr.numFloat32Elements;
+            for (let attrName in geomBuffers.attrBuffers) {
+                let attrData = geomBuffers.attrBuffers[attrName];
 
                 let attrBuffer = gl.createBuffer();
                 gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-                gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+                gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
 
                 this.__glattrbuffers[attrName] = {
                     buffer: attrBuffer,
                     dimension: dimension
                 };
-
-                this.__glattrbuffers[attrName].size = data.length;
+                attrData.values.resize(0);
             }
+
+            // Cache the size so we know later if it changed (see below)
+            this.__numVertices = geomBuffers.numVertices;
+            this.__numSegIndices = indices.length;
         }
 
     }
 
     updateBuffers(opts) {
         let gl = this.__gl;
+        let geomBuffers = this.__geom.genBuffers();
+        let indices = geomBuffers.indices;
+
         if (this.fatLines) {
 
-            let indices = this.__geom.getIndices();
             this.__drawCount = indices.length / 2;
 
             let vertexAttributes = this.__geom.getVertexAttributes();
@@ -170,29 +161,32 @@ class GLLines extends GLGeom {
 
             if (opts.indicesChanged) {
                 let indices = this.__geom.getIndices();
-                if(this.__indexBuffer.size != indices.length){
+                if(this.__numSegIndices != indices.length){
                     gl.deleteBuffer(this.__indexBuffer);
                     this.__indexBuffer = gl.createBuffer();
                 }
                 gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
                 gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-                this.__indexBuffer.size = indices.length;
                 this.__numSegIndices = indices.length;
             }
 
             // Update the vertex attribute buffers
-            for (let attrName in vertexAttributes) {
-                let attr = vertexAttributes[attrName];
+            let numVertsChanged = geomBuffers.numVertices != this.__numVertices;
+            for (let attrName in geomBuffers.attrBuffers) {
+                let attrData = geomBuffers.attrBuffers[attrName];
                 let glattr = this.__glattrbuffers[attrName];
-                if(glattr.size != attr.data.length){
+                if(numVertsChanged){
                     gl.deleteBuffer(glattr.buffer);
                     glattr.buffer = gl.createBuffer();
                 }
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
                 gl.bufferData(gl.ARRAY_BUFFER, attr.data, gl.STATIC_DRAW);
-                glattr.size = attr.data.length;
             }
+            
+            // Cache the size so we know later if it changed (see below)
+            this.__numVertices = geomBuffers.numVertices;
+            this.__numSegIndices = indices.length;
         }
     }
 

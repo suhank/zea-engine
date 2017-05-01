@@ -54,6 +54,18 @@ class Lines extends BaseGeom {
         return this.__segmentAttributes.get(name)
     }
 
+    //////////////////////////////////////////
+    // Memory
+    
+    genBuffers() {
+        let buffers = super.genBuffers();
+        buffers.indices = this.__indices;
+        return buffers;
+    }
+
+    //////////////////////////////////////////
+    // Persistence
+
     toJSON() {
         let json = super.toJSON();
         json['indices'] = this.__indices.length;

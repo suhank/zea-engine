@@ -29,46 +29,9 @@ class GLMesh extends GLGeom {
     genBuffers() {
         super.genBuffers();
 
-        let vertexAttributes = this.__geom.getVertexAttributes();
+        let geomBuffers = this.__geom.genBuffers();
 
-        // Compute the normals on demand. 
-        if (!('normals' in vertexAttributes)) {
-            // vertexAttributes['normals'] = this.__geom.computeVertexNormals();
-            vertexAttributes['normals'] = this.__geom.addVertexAttribute("normals", Vec3, 0.0);
-        }
-
-        let splitIndices = {};
-        let splitCount = 0;
-        for (let key in vertexAttributes) {
-            let attr = vertexAttributes[key];
-
-            let attrSplits = attr.getSplits();
-            for (let polygon in attrSplits) {
-                if (!(polygon in splitIndices))
-                    splitIndices[polygon] = {};
-                let vertices = attrSplits[polygon];
-                for (let v in vertices) {
-                    let vertex = parseInt(v);
-                    if (!(vertex in splitIndices[polygon])) {
-                        splitIndices[polygon][vertex] = splitCount;
-                        splitCount++;
-                    }
-                }
-            }
-        }
-
-        let numUnSplitVertices = this.__geom.vertices.length;
-        this.__totalNumVertices = numUnSplitVertices + splitCount;
-        // console.log("Splittiness:" + splitCount / numUnSplitVertices);
-        // if (totalNumVertices > Math.pow(2, 16)) {
-        //     console.warn("Unable to index vertices:" + (numUnSplitVertices + splitCount) + " on mesh:" + this.__geom.name);
-        //     this.unbind();
-        //     this.destroyVBO();
-        //     return;
-        // }
-        let indices = this.__geom.generateTriangulatedIndices(this.__totalNumVertices, numUnSplitVertices, splitIndices);
-
-        this.__numTriIndices = indices.length;
+        this.__numTriIndices = geomBuffers.indices.length;
         if(indices instanceof Uint8Array)
             this.__indexDataType = this.__gl.UNSIGNED_BYTE ;
         if(indices instanceof Uint16Array)
@@ -79,52 +42,29 @@ class GLMesh extends GLGeom {
         let gl = this.__gl;
         this.__indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-        this.__indexBuffer.name = 'indexBuffer';
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geomBuffers.indices, gl.STATIC_DRAW);
 
         // Create some vertex attribute buffers
         let debugAttrValues = false;
         let maxIndex;
         if (debugAttrValues)
             maxIndex = Math.max(...indices);
-        for (let attrName in vertexAttributes) {
-            let attr = vertexAttributes[attrName];
-            let data;
-            if (splitCount == 0)
-                data = attr.data;
-            else
-                data = attr.generateSplitValues(splitIndices, splitCount);
-
-            let dimension = attr.numFloat32Elements;
-            let count = data.length / dimension;
-
-            // if(attrName == "lightmapCoords"){
-            //     console.log(this.__geom.name + ":" + attrName);// + ":"  + data);
-            //     let temp = attr.generateSplitValues(attr.getSplits(), attr.getSplitCount());
-            //     for(let i=0;i<temp.length; i+=dimension){
-            //         let val = attr.__dataType.createFromFloat32Buffer(temp.buffer, i);
-            //         console.log(val.toString());
-            //     //     if(i >= data.length / dimension){
-            //     //         throw("Invalid indexing.Index out of range");
-            //     //     }
-            //     }
-            // }
-
-            if (debugAttrValues) {
-                if (count <= maxIndex)
-                    console.warn("Invalid indexing. Attr value is insufficient for indexing:" + attrName + ". Max Index:" + maxIndex + " Attr Size:" + count);
-            }
+        for (let attrName in geomBuffers.attrBuffers) {
+            let attrData = attrBuffers[attrName];
 
             let attrBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, data, gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
 
             this.__glattrbuffers[attrName] = {
                 buffer: attrBuffer,
-                dimension: dimension,
-                normalized: attrName == 'normals'
+                dimension: attrData.dimension,
+                normalized: attrData.normalized
             };
+
+            attrData.values.resize(0);
         }
+        geomBuffers.indices.resize(0);
         
         this.__geom.freeData();
 
