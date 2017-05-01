@@ -1,5 +1,6 @@
 import {
     isMobileDevice,
+    Async,
     Signal
 } from '../Math';
 import {
@@ -30,60 +31,67 @@ class BinAsset extends AssetItem {
         // so here we cache and then reset the value, because fromJSON will
         // load values into it. 
         let localXfo = this.localXfo.clone();
-        super.fromJSON(j, flags, this.__materials, this.__geoms);
+        super.fromJSON(j, flags);
         this.localXfo = localXfo;
     }
 
-    loadURL(fileUrl) {
+    loadURL(fileName, resources) {
+
+        let numGeomsFiles = 1;
+        let unpackBin = (data) => {
+            let unpack = new Unpack(data);
+            let entries = unpack.getEntries();
+            if (!entries[0].name.endsWith('.bin'))
+                throw ("Invalid Asset resource");
+            let binData = unpack.decompress(entries[0].name);
+            unpack.close();
+            return binData;
+        }
 
         loadBinfile(
-            fileUrl,
+            resources[fileName],
             (path, data) => {
                 let start = performance.now();
-
-                /////////////////////////////////
-                // Un-pack the data.
-                let unpack = new Unpack(data);
-                let entries = unpack.getEntries();
-                let assetTreeEntry = (entries[0].name.endsWith('.json') ? entries[0] : (entries[1].name.endsWith('.json') ? entries[1] : undefined));
-                let geomDataEntry = (entries[0].name.endsWith('.bin') ? entries[0] : (entries[1].name.endsWith('.bin') ? entries[1] : undefined));
-                if (!assetTreeEntry || !geomDataEntry)
-                    throw ("Invalid Asset resource");
-                let assetTree = unpack.decompress(assetTreeEntry.name);
-                let geomData = unpack.decompress(geomDataEntry.name);
-                if (!assetTree || !geomData)
-                    throw ("Invalid Asset resource");
-                unpack.close();
-
+                let treeData = unpackBin(data);
                 let unpacked = performance.now();
-
-                /////////////////////////////////
-                // Parse the data.
-                this.__geoms.loadBin(new BinReader(geomData.buffer, 0, isMobileDevice()));
-                let assetTreeStr;
-                // Note: TextDecoder is not supported on Edge yet. 
-                // TextDecoder is a lot faster if available...
-                if(window.TextDecoder)
-                    assetTreeStr = new TextDecoder("utf-8").decode(assetTree);
-                else{
-                    let textDecoder = (utf8Buffer)=>{
-                        let str = "";
-                        for(let i=0; i<utf8Buffer.length; i++)
-                            str = str + String.fromCharCode(utf8Buffer[i]);
-                        return str;
-                    }
-                    assetTreeStr = textDecoder(assetTree);
-                }
-                this.fromJSON(JSON.parse(assetTreeStr));
-
-                // console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
-
+                numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, isMobileDevice()));
+                console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                //async.decAsyncCount();
                 this.loaded.emit();
             },
             () => {
 
             },
             this);
+
+        let geomFileID = 0;
+        let loadGeomsfile = (url)=>{
+            loadBinfile(
+                url,
+                (path, data) => {
+                    let start = performance.now();
+                    let geomsData = unpackBin(data);
+                    let unpacked = performance.now();
+                    this.__geoms.readBinary(new BinReader(geomsData.buffer, 0, isMobileDevice()));
+                    console.log(url+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                    
+                    numGeomsFiles--;
+                    if(numGeomsFiles > 0) {
+                        geomFileID++;
+                        let nextGeomFileName = fileName.split('.')[0] + geomFileID + '.geoms';
+                        if(nextGeomFileName in resources)
+                            loadGeomsfile(resources[nextGeomFileName]);
+                    }
+                },
+                () => {
+
+                },
+                this);
+
+        }
+
+        let geomFileName = fileName.split('.')[0] + geomFileID + '.geoms';
+        loadGeomsfile(resources[geomFileName]);
     }
 
     loadURLs(fileUrl) {
@@ -100,7 +108,7 @@ class BinAsset extends AssetItem {
 
             /////////////////////////////////
             // Parse the data.
-            this.__geoms.loadBin(new BinReader(binFileData));
+            this.__geoms.readBinary(new BinReader(binFileData));
             this.fromJSON(JSON.parse(jsonFileData));
 
             console.log("Parse:" + (performance.now() - start).toFixed(2));

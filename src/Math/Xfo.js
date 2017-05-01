@@ -13,9 +13,17 @@ import {
 import {
     Quat
 } from './Quat.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Xfo {
     constructor(tr = undefined, ori = undefined, sc = undefined) {
+
+        if (tr instanceof Float32Array) {
+            this.setFromFloat32Array(tr);
+            return;
+        }
         if (tr instanceof Vec3) {
             this.tr = tr;
         } else {
@@ -101,6 +109,29 @@ class Xfo {
         return trn.multiply(rot).multiply(scl);
     }
 
+
+    setFromFloat32Array(float32array) {
+        if(float32array.length == 7){
+            this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
+            this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
+            this.sc = new Vec3(1, 1, 1);
+            return;
+        }
+        if(float32array.length == 8){
+            this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
+            this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
+            let scl = float32array[7];
+            this.sc = new Vec3(scl, scl, scl);
+            return;
+        }
+        if(float32array.length == 10){
+            this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
+            this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
+            this.sc = new Vec3(float32array.buffer, float32array.byteOffset+21);
+            return;
+        }
+    }
+
     clone() {
         return new Xfo(
             this.tr.clone(),
@@ -108,6 +139,16 @@ class Xfo {
             this.sc.clone()
         );
     }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Xfo(...args);
+    }
+
+    /////////////////////////////
+    // Persistence
 
 
     toJSON() {
@@ -132,6 +173,8 @@ class Xfo {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
 };
+
+typeRegistry.registerType('Xfo', Xfo);
 
 export {
     Xfo

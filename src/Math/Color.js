@@ -1,7 +1,9 @@
-
 import {
     AttrValue
 } from './AttrValue.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Color extends AttrValue {
     constructor(r = 0, g = 0, b = 0, a = 1.0) {
@@ -114,7 +116,7 @@ class Color extends AttrValue {
 
     // Returns true if this vector is the same as another one
     // (given a precision)
-    almostEqual(other) {
+    approxEqual(other) {
         return (Math.abs(this.r - other.r) < Number.EPSILON) &&
             (Math.abs(this.g - other.g) < Number.EPSILON) &&
             (Math.abs(this.b - other.b) < Number.EPSILON) &&
@@ -138,6 +140,34 @@ class Color extends AttrValue {
             this.g - other.g,
             this.b - other.b,
             this.a - other.a
+        );
+    }
+
+    // Returns a new vector which is this vector scaled by scalar
+    scale(scalar) {
+        return new Vec4(
+            this.r * scalar,
+            this.g * scalar,
+            this.b * scalar,
+            this.a * scalar
+        );
+    }
+    
+    scaleInPlace(scalar) {
+        this.set(
+            this.r * scalar,
+            this.g * scalar,
+            this.b * scalar,
+            this.a * scalar
+        );
+    }
+    
+    applyGamma(gamma) {
+        this.set(
+            Math.pow(this.r, gamma),
+            Math.pow(this.g, gamma),
+            Math.pow(this.b, gamma),
+            Math.pow(this.a, gamma)
         );
     }
 
@@ -199,7 +229,21 @@ class Color extends AttrValue {
         }
     }
 
-    // Creates a new Mat4 to wrap existing memory in a buffer.
+    asArray() {
+        return this.__data;
+    }
+
+    as3ComponentArray() {
+        return [this.__data[0], this.__data[1], this.__data[2]];
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Color(...args);
+    }
+
     static createFromFloat32Buffer(buffer, offset = 0) {
         return new Color(buffer, offset * 4) // 4 bytes per 32bit float
     }
@@ -208,13 +252,9 @@ class Color extends AttrValue {
         return 4;
     }
 
-    asArray() {
-        return this.__data;
-    }
-
-    as3ComponentArray() {
-        return [this.__data[0], this.__data[1], this.__data[2]];
-    }
+    //////////////////////////////////////////
+    // Persistence
+    
 
     toJSON() {
         return {
@@ -234,6 +274,8 @@ class Color extends AttrValue {
     }
 
 };
+
+typeRegistry.registerType('Color', Color);
 
 export {
     Color

@@ -22,6 +22,10 @@ class GeomLibrary {
     }
 
     getGeom(index) {
+        if(index >= this.geoms.length){
+            console.warn("Geom index invalid:" + index);
+            return null;
+        }
         return this.geoms[index];
     }
 
@@ -39,12 +43,14 @@ class GeomLibrary {
         );
     }
 
-    loadBin(reader) {
+    readBinary(reader) {
         let numGeoms = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
-        let printProgress = numGeoms > 1000;
+        let printProgress = numGeoms > 500;
         let progress = 0;
+        let geomsRange = [this.geoms.length, this.geoms.length+numGeoms];
         for (let i = 0; i < numGeoms; i++) {
+
             let geomReader = new BinReader(reader.data, toc[i], reader.isMobileDevice);
             let className = geomReader.loadStr();
             let geom;
@@ -61,7 +67,7 @@ class GeomLibrary {
                 default:
                     throw ("Unsupported Geom type:" + className);
             }
-            geom.loadBin(geomReader);
+            geom.readBinary(geomReader);
             this.geoms.push(geom);
 
             if(printProgress){
@@ -73,7 +79,7 @@ class GeomLibrary {
                 }
             }
         }
-        this.loaded.emit();
+        this.loaded.emit(geomsRange);
     }
 
     toJSON() {

@@ -124,8 +124,8 @@ class GLRenderer {
 
         this.sessionClient = new SessionClient(this, options.enableSessionRecording);
 
-        // this.__defaultGeomsPass = new GLForwardPass(this.__collector);
-        // this.__geomDataPass = new GLGeomDataPass(this.__collector);
+        // Note: using the geom data pass crashes VR scenes.
+        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -144,7 +144,8 @@ class GLRenderer {
         this.__stats.dom.style.visibility = "hidden"
         canvasDiv.appendChild(this.__stats.dom);
         if (options.displayStats) {
-            this.__stats.dom.style.visibility = "visible"
+            this.__stats.dom.style.visibility = "visible";
+            this.__displayStats = true;
         }
 
         if(options.resources){
@@ -245,19 +246,22 @@ class GLRenderer {
         this.requestRedraw();
     }
 
-    toggleDebugPanel() {
+    toggleStats() {
         if (this.__stats) {
-            if (this.__stats.dom.style.visibility == "hidden")
-                this.__stats.dom.style.visibility = "visible";
-            else
+            if (this.__displayStats){
                 this.__stats.dom.style.visibility = "hidden";
+                this.__displayStats = false;
+            }
+            else{
+                this.__stats.dom.style.visibility = "visible";
+                this.__displayStats = true;
+            }
         }
     }
 
     setScene(scene) {
         this.__scene = scene;
         this.__collector.addTreeItem(this.__scene.getRoot());
-        this.__collector.finalize();
 
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
@@ -269,17 +273,19 @@ class GLRenderer {
             this.requestRedraw();
         }, this);
 
-        // vp.createGeomDataFbo();
-        // vp.setGeomDataPass(this.__geomDataPass);
-        // vp.setGizmoPass(this.__gizmoPass);
+        if(this.__geomDataPass){
+            vp.createGeomDataFbo();
+            vp.setGeomDataPass(this.__geomDataPass);
+            // vp.setGizmoPass(this.__gizmoPass);
+        }
 
         vp.viewChanged.connect((data)=>{
             this.viewChanged.emit(data);
         }, this);
         vp.mouseMoved.connect((event, mousePos, ray)=>{
             this.pointerMoved.emit({
-                mousePos: mousePos.toJSON(),
-                ray: ray.toJSON()
+                mousePos: mousePos,
+                ray: ray
             });
         }, this);
         vp.actionStarted.connect((data)=>{
@@ -332,7 +338,8 @@ class GLRenderer {
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
                 
             // New Items may have been added during the pause.
-            // this.renderGeomDataFbos();
+            if(this.__geomDataPass)
+                this.renderGeomDataFbos();
             this.requestRedraw();
         }
     }
@@ -516,7 +523,7 @@ class GLRenderer {
         if (window.process === undefined || process.browser == true) {
             switch (key) {
                 case '>':
-                    this.toggleDebugPanel();
+                    this.toggleStats();
                     return true;
                 case '?':
                     this.sessionClient.toggleAnalytics();
@@ -551,12 +558,14 @@ class GLRenderer {
         // }
         pass.updated.connect(this.requestRedraw, this);
         this.__passes.push(pass);
+        this.requestRedraw();
         return this.__passes.length - 1;
     }
 
     removePass(pass) {
         let index = this.__passes.indexOf(pass);
-        this.__passes =  this.__passes.slice(index);
+        this.__passes.splice(index, 1);
+        this.requestRedraw();
     }
 
     getPass(index) {
@@ -671,6 +680,10 @@ class GLRenderer {
     }
 
     drawScene(renderstate, vrView = false) {
+
+        if(this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+            
         renderstate.profileJSON = {};
         renderstate.materialCount = 0;
         renderstate.drawCalls = 0;
@@ -682,8 +695,10 @@ class GLRenderer {
                 pass.draw(renderstate);
         }
 
-        // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-        // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+        if(this.__displayStats){
+            // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
+            console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+        }
     }
 
     draw() {

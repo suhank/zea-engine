@@ -16,26 +16,37 @@ import {
 
 class UserAvatar {
 
-    constructor(id, data, parentTreeItem) {
+    constructor(id, data, parentTreeItem, scaleFactor=1.0, visible=true) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
-        this.__avatarScale = 10.0;
 
-        this.__treeItem = new TreeItem(id);
-        this.__material = new FlatMaterial('user'+id+'Material');
-        this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
-
-        this.setMouseAndCameraRepresentation();
-        this.__parentTreeItem.addChild(this.__treeItem);
+        // Used when the scene scale is not meters. (usualy testin scenes)
+        this.__avatarScale = scaleFactor;
 
         this.__controllers = [];
 
         this.userMarker = new MarkerpenTool('client' + id);
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
+
+        this.__treeItem = new TreeItem(id);
+        this.__material = new FlatMaterial('user'+id+'Material');
+        this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
+        this.setMouseAndCameraRepresentation();
+
+        this.__visible = visible;
+        if(this.__visible){
+            this.__parentTreeItem.addChild(this.__treeItem);
+        }
     }
 
     setVisibility(visible){
-        this.__treeItem.setVisible(visible);
+        if(visible && !this.__visible){
+            this.__parentTreeItem.addChild(this.__treeItem);
+        }
+        else if(!visible && this.__visible){
+            this.__parentTreeItem.removeChildByHandle(this.__treeItem, false);
+        }
+        this.__visible = visible;
     }
 
     pointerMoved(data){
@@ -45,7 +56,7 @@ class UserAvatar {
     setMouseAndCameraRepresentation() {
         this.__treeItem.removeAllChildren();
         this.__treeItem.localXfo = new Xfo();
-        let shape = new Cuboid('Camera', 0.1*this.__avatarScale, 0.1*this.__avatarScale, 0.2*this.__avatarScale);
+        let shape = new Cuboid('Camera', 0.5*this.__avatarScale, 0.5*this.__avatarScale, 0.7*this.__avatarScale);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
         this.__currentViewMode = 'MouseAndKeyboard';
@@ -123,9 +134,7 @@ class UserAvatar {
                         this.setViveRepresentation(data);
                     }
 
-                    const viewXfo = new Xfo();
-                    viewXfo.fromJSON(data.viewXfo);
-                    this.__treeItem.getChild(0).localXfo = viewXfo;
+                    this.__treeItem.getChild(0).localXfo = data.viewXfo;
 
                     this.updateViveControllers(data);
                 }

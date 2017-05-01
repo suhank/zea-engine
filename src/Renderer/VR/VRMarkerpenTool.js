@@ -1,18 +1,13 @@
 import {
     Vec3,
     Color,
-    Xfo
+    Xfo,
+    Signal
 } from '../../Math';
-import {
-    Lines,
-    GeomItem,
-    FatLinesMaterial,
-    MarkerpenTool
-} from '../../SceneTree';
 
-class VRMarkerpenTool extends MarkerpenTool {
+class VRMarkerpenTool {
     constructor(vrStage, vrHead, vrControllers) {
-        super('VRMarkerpenTool');
+        // super('VRMarkerpenTool');
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;
         this.__vrControllers = vrControllers;
@@ -22,7 +17,9 @@ class VRMarkerpenTool extends MarkerpenTool {
         this.__tipOffsetXfo.tr.set(0.0,-0.01, -0.03);
         this.__color = new Color(1.0, 0.2, 0.2);
 
-        this.__vrStage.getRenderer().getCollector().addTreeItem(this.getTreeItem());
+        this.strokeStarted = new Signal();
+        this.strokeEnded = new Signal();
+        this.strokeSegmentAdded = new Signal();
     }
 
     startAction() {
@@ -37,7 +34,15 @@ class VRMarkerpenTool extends MarkerpenTool {
         let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
         let sc = this.__vrStage.getXfo().sc;
         let lineThickness = 0.0075 * sc.x;
-        this.__currStrokeID = this.startStroke(xfo, this.__color, lineThickness);
+
+        this.strokeStarted.emit({
+            type: 'strokeStarted',
+            data: {
+                xfo: xfo,
+                color: this.__color,
+                thickness: lineThickness
+            }
+        });
     }
 
     endAction() {
@@ -46,7 +51,14 @@ class VRMarkerpenTool extends MarkerpenTool {
 
     applyAction() {
         let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
-        this.addSegmentToStroke(this.__currStrokeID, xfo);
+        // this.addSegmentToStroke(this.__currStrokeID, xfo);
+
+        this.strokeSegmentAdded.emit({
+            type: 'strokeSegmentAdded',
+            data: {
+              xfo: xfo
+            }
+        });
     }
 };
 

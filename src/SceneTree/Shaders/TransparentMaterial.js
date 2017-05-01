@@ -17,21 +17,16 @@ import './GLSL/GGX_Specular.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 
-import './GLSL/ImagePyramid.js';
-
-class StandardMaterial extends Material {
+class TransparentMaterial extends Material {
     
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('TransparentMaterial.vertexShader', `
 precision highp float;
 
 
 attribute vec3 positions;
 attribute vec3 normals;
-#ifdef ENABLE_LIGHTMAPS
-attribute vec2 lightmapCoords;
-#endif
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
@@ -40,27 +35,10 @@ uniform mat4 projectionMatrix;
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-#ifdef ENABLE_LIGHTMAPS
-attribute float clusterIDs;
-uniform vec2 lightmapSize;
-#endif
-
-
 /* VS Outputs */
-#ifndef ENABLE_LIGHTMAPS
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
-#else
-varying vec2 v_lightmapCoord;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-varying float v_clusterID;
-varying vec4 v_geomItemData;
-#endif
-#endif
-#ifdef ENABLE_SPECULAR
-varying vec4 v_viewPos;
-varying vec3 v_viewNormal;
-#endif
+
 #ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
 #elseif ENABLE_CROSS_SECTIONS
@@ -78,20 +56,8 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
-#ifndef ENABLE_LIGHTMAPS
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    v_viewPos       = -viewPos;
-    v_viewNormal    = normalMatrix * normals;
-#else
-    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
-
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
     // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    v_clusterID = clusterIDs;
-    v_geomItemData = geomItemData;
-#endif
-#endif
 
 #ifdef ENABLE_TEXTURES
     v_worldPos      = (modelMatrix * pos).xyz;
@@ -99,15 +65,13 @@ void main(void) {
     v_worldPos      = (modelMatrix * pos).xyz;
 #endif
 
-#ifdef ENABLE_SPECULAR
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
-#endif
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardMaterial.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('TransparentMaterial.fragmentShader', `
 precision highp float;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -115,36 +79,15 @@ precision highp float;
 #endif
 
 /* VS Outputs */
-#ifndef ENABLE_LIGHTMAPS
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
-#else
-varying vec2 v_lightmapCoord;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-varying float v_clusterID;
-varying vec4 v_geomItemData;
-#endif
-#endif
-#ifdef ENABLE_SPECULAR
-varying vec4 v_viewPos;
-varying vec3 v_viewNormal;
-#endif
+
 #ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
 #elseif ENABLE_CROSS_SECTIONS
 varying vec3 v_worldPos;
 #endif
 /* VS Outputs */
-
-
-#ifdef ENABLE_LIGHTMAPS
-uniform sampler2D lightmap;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-<%include file="debugColors.glsl"/>
-uniform vec2 lightmapSize;
-uniform bool debugLightmapTexelSize;
-#endif
-#endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -155,7 +98,7 @@ uniform float planeDist;
 uniform float planeAngle;
 
 uniform color _baseColor;
-uniform float _emissiveStrength;
+uniform float _opacity;
 
 #ifdef ENABLE_SPECULAR
 <%include file="glslutils.glsl"/>
@@ -169,32 +112,28 @@ uniform float _reflectance;
 uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
 
+uniform sampler2D _opacityTex;
+uniform bool _opacityTexConnected;
+
 uniform sampler2D _roughnessTex;
 uniform bool _roughnessTexConnected;
 
-uniform sampler2D _metallicTex;
-uniform bool _metallicTexConnected;
-
 uniform sampler2D _reflectanceTex;
 uniform bool _reflectanceTexConnected;
-
-uniform sampler2D _emissiveStrengthTex;
-uniform bool _emissiveStrengthTexConnected;
 
 uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
 uniform float _normalScale;
 
+float luminanceFromRGB(vec3 rgb) {
+    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
+}
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoords) {
     if(_texConnected)
         return toLinear(texture2D(tex, texCoords));
     else
         return toLinear(value);
-}
-
-float luminanceFromRGB(vec3 rgb) {
-    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
 
 float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoords) {
@@ -209,7 +148,7 @@ void main(void) {
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor      = toLinear(_baseColor);
-    float emission      = _emissiveStrength;
+    float opacity       = _opacity;
 
 #ifdef ENABLE_SPECULAR
     float roughness     = _roughness;
@@ -221,11 +160,9 @@ void main(void) {
     // Planar YZ projection for texturing, repeating every meter.
     vec2 texCoords      = v_worldPos.xz * 0.2;
     vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoords);
-    //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
+    float opacity       = getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
     float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoords);
-    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
     float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
-    float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoords);
 #endif
 
 
@@ -245,47 +182,27 @@ void main(void) {
     }
 #endif
 
-#ifndef ENABLE_LIGHTMAPS
     // Hacky simple irradiance. 
     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
     vec3 normal = mat3(cameraMatrix) * v_viewNormal;
-    float ndotv = dot(normalize(normal), normalize(viewVector));
-    if(ndotv < 0.0){
+    float NdotV = dot(normalize(normal), normalize(viewVector));
+    vec3 irradiance;
+    if(NdotV < 0.0){
         normal = -normal;
-        ndotv = dot(normalize(normal), normalize(viewVector));
+        NdotV = dot(normalize(normal), normalize(viewVector));
 
         // Note: these 2 lines can be used to debug inverted meshes.
-        //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-        //ndotv = 1.0;
+        baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+        irradiance = vec3(1.0, 1.0, 1.0);
     }
-    vec3 irradiance = vec3(ndotv);
-
-#else
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-#endif
-
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    if(debugLightmapTexelSize)
-    {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
-        float total = floor(coord_texelSpace.x) +
-                      floor(coord_texelSpace.y);
-                      
-        vec3 clustercolor = getDebugColor(v_clusterID);
-
-        if(mod(total,2.0)==0.0){
-            baseColor = vec4(clustercolor, 1.0);
-            irradiance = vec3(1.0);
-        }
-        else
-            baseColor = baseColor * 1.5;
-
-    }
-#endif
+    //else{
+        irradiance = vec3(NdotV);
+    //}
 
 #ifndef ENABLE_SPECULAR
-    vec3 diffuseReflectance = baseColor.rgb * irradiance;
-    gl_FragColor = vec4(diffuseReflectance + (emission * baseColor.rgb), 1);
+    // I'm not sure why we must reduce the irradiance here.
+    // If not, the scene is far to bright. 
+    gl_FragColor = vec4(baseColor.rgb, opacity);
 #else
 
     vec3 viewNormal = normalize(v_viewNormal);
@@ -299,29 +216,6 @@ void main(void) {
 #endif
 
     vec3 albedoLinear = baseColor.rgb;  
-
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    float NdotV = dot(normal, normalize(viewVector));
-
-    // -------------------------- Diffuse Reflectance --------------------------
-
-    vec3 diffuseReflectance = albedoLinear * irradiance;
-
-    // From the Disney dielectric BRDF    
-    // Need to check if this is useful for us but the implementation works based on their paper
-    diffuseReflectance = (diffuseReflectance / PI);
-    // diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 2.5, roughness), pow(1.0 - NdotV, 5.0)));
-    diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 1.0, roughness), pow(1.0 - NdotV, 5.0)));
-
-
-    // -------------------------- Color at normal incidence --------------------------
-    
-    // Need to use 'reflectance' here instead of 'ior'
-    //vec3 F0 = vec3(abs((1.0 - ior) / (1.0 + ior)));    
-    //F0 = F0 * F0;
-    //F0 = mix(F0, albedoLinear, metallic);      
-
 
     // -------------------------- Specular Reflactance --------------------------
     // vec3 ks = vec3(0.0);
@@ -339,24 +233,11 @@ void main(void) {
     float specularOcclusion = clamp(length(irradiance), 0.01, 1.0);    
     specularReflectance = (specularReflectance * specularOcclusion);  
       
-
-    // -------------------------- Metallic --------------------------
-    // We need to do few things given a higher > 0 metallic value
-    //      1. tint specular reflectance by the albedo color (not at grazing angles)
-    //      2. almost elliminate all diffuse reflactance (in reality metals have some diffuse due to layering (i.e. dust, prints, etc.))
-    //      3. set "specular" artistic value to metallic range (0.6 - 0.85)
-
-    specularReflectance = mix(specularReflectance, specularReflectance * albedoLinear, metallic);
-    diffuseReflectance = mix(diffuseReflectance, vec3(0.0,0.0,0.0), metallic); // Leaveing at pure black for now but always need some %3 diffuse left for imperfection of pulished pure metal
     // Would be best to compute reflectace internally and set here to 0.6-0.85 for metals
    
-
-    // -------------------------- Final color --------------------------
-    // Energy conservation already taken into account in both the diffuse and specular reflectance
-    vec3 radiance = diffuseReflectance + specularReflectance;    
-
     // gl_FragColor = vec4( kd * diffuse + /*ks */ specular, 1);
-    gl_FragColor = vec4(radiance + (emission * baseColor.rgb), 1);
+    gl_FragColor = vec4(specularReflectance, opacity);
+
 
 #endif
 
@@ -368,8 +249,7 @@ void main(void) {
 `);
 
         this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
-        this.addParameter('emissiveStrength', 0.0);
-        this.addParameter('metallic', 0.0);
+        this.addParameter('opacity', 1.0);
         this.addParameter('roughness', 0.85);
         this.addParameter('normal', new Color(0.0, 0.0, 0.0));
         this.addParameter('texCoordScale', 1.0, false);
@@ -383,8 +263,8 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('StandardMaterial', StandardMaterial);
+sgFactory.registerClass('TransparentMaterial', TransparentMaterial);
 
 export {
-    StandardMaterial
+    TransparentMaterial
 };

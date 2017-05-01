@@ -10,13 +10,6 @@ class GLForwardPass extends GLPass {
         super(gl, collector);
     }
 
-    // filter(drawItem) {
-    //     if(!super.filter(drawItem))
-    //         return false;
-    //     let material = drawItem.geomItem.material;
-    //     return (!('opacity' in material) || ( Number.isNumeric(material.opacity) && material.opacity >= 0.99));
-    // }
-
     /////////////////////////////////////
     // Bind to Render Tree
     filterRenderTree() {
@@ -54,8 +47,8 @@ class GLForwardPass extends GLPass {
     draw(renderstate) {
         let gl = this.__gl;
         // TODO: disable cull face when rendering cross sections.
-        gl.enable(gl.CULL_FACE);
-        // gl.disable(gl.CULL_FACE);
+        // gl.enable(gl.CULL_FACE);
+        gl.disable(gl.CULL_FACE);
         
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);

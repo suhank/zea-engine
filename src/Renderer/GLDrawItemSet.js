@@ -44,8 +44,8 @@ class GLDrawItemSet {
         // this.__coalescedGeomAttributes = {};
         // this.__coalescedIndices = 0;
 
-        this.__transformIdsArray = null;
-        this.__transformIdsBuffer = null;
+        this.__instancedIdsArray = null;
+        this.__instancedIdsBuffer = null;
         this.__drawCount = 0;
         this.__inverted = false;
         this.__lightmapName = undefined;
@@ -137,7 +137,7 @@ class GLDrawItemSet {
             glgeom.getGeom().populateTriangulatedIndices(splitData, triIndices, indicesOffset, attrsOffset);
             glgeom.setIndicesOffset(indicesOffset);
 
-            this.__transformIdsArray[index] = gldrawItem.getId();
+            this.__instancedIdsArray[index] = gldrawItem.getId();
 
             attrsOffset += glgeom.getAttrCount();
             indicesOffset += glgeom.getNumTriangles();
@@ -160,17 +160,17 @@ class GLDrawItemSet {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, triIndices, gl.STATIC_DRAW);
 */
 
-        this.__transformIdsArray = new Float32Array(this.__gldrawItems.length);
+        this.__instancedIdsArray = new Float32Array(this.__gldrawItems.length);
         for (let i = 0; i < this.__gldrawItems.length; i++) {
-            this.__transformIdsArray[i] = this.__gldrawItems[i].getId();
+            this.__instancedIdsArray[i] = this.__gldrawItems[i].getId();
         }
 
-        this.__transformIdsBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__transformIdsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.__transformIdsArray, gl.STATIC_DRAW);
-        this.__drawCount = this.__transformIdsArray.length;
+        this.__instancedIdsBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.__instancedIdsArray, gl.STATIC_DRAW);
+        this.__drawCount = this.__instancedIdsArray.length;
 
-        this.__transformIdsBuffer.name = 'transformIds';
+        this.__instancedIdsBuffer.name = 'transformIds';
     }
 
     //////////////////////////////////////
@@ -186,12 +186,12 @@ class GLDrawItemSet {
         // due to culling. We can maintain a high-water mark
         // buffer, and then only render the first N items. 
         for (let i = 0; i < transformIds.length; i++) {
-            this.__transformIdsArray[i] = transformIds[i];
+            this.__instancedIdsArray[i] = transformIds[i];
         }
         // Note: the draw cound can be less than the number of instances
         // we re-use the same buffer and simply invoke fewer draw calls.
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__transformIdsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.__transformIdsArray, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.__instancedIdsArray, gl.STATIC_DRAW);
     }
 
     getDrawCount() {
@@ -200,14 +200,6 @@ class GLDrawItemSet {
 
     //////////////////////////////////////
     // Drawing
-    // bindGeomData(renderstate) {
-    //     let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
-    //     if (!shaderBinding) {
-    //         shaderBinding = new GeomShaderBinding(this.__gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer, this.__transformIds);
-    //         this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
-    //     }
-    //     shaderBinding.bind(renderstate);
-    // }
 
     drawSingleItem(renderstate, index) {
 
@@ -234,35 +226,41 @@ class GLDrawItemSet {
             return;
         }
 
-        if (!this.__transformIdsBuffer) {
+        if (!this.__instancedIdsBuffer) {
             this.genBuffers();
         }
 
         let gl = this.__gl;
         let unifs = renderstate.unifs;
 
-        if (this.__inverted && renderstate.inverted !== true) {
-            gl.cullFace(gl.FRONT);
-            renderstate.inverted = true;
-        } else if (!this.__inverted && renderstate.inverted === true) {
-            gl.cullFace(gl.BACK);
-            renderstate.inverted = false;
-        }
-
-        renderstate.drawCount+=this.__drawCount;
-
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {
+            renderstate.drawCalls++;
+            renderstate.drawCount+=this.__drawCount;
+            //return;
             return this.drawSingleItem(renderstate, 0);
         }
+        //return;
+        renderstate.drawCalls++;
+        renderstate.drawCount+=this.__drawCount;
+                            
 
         // If not already bound...
         let glgeom = this.__glgeoms[0];
-        glgeom.bind(renderstate, {}, this.__transformIdsBuffer);
+        glgeom.bind(renderstate);
 
         // Specify an instanced draw to the shader
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
+
+        {
+            // The instanced transform ids are bound as an instanced attribute.
+            let location = renderstate.attrs.instancedIds.location;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+            gl.enableVertexAttribArray(location);
+            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
+            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+        }
 
         if ('lightmaps' in renderstate && 'lightmap' in unifs) {
             if (renderstate.boundLightmap != this.__lightmapName) {

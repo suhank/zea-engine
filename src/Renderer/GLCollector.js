@@ -10,7 +10,8 @@ import {
     Lines,
     Mesh,
     Grid,
-    LinesMaterial
+    LinesMaterial,
+    BillboardItem
 } from '../SceneTree';
 import {
     GLPoints
@@ -104,10 +105,11 @@ class GLMaterialDrawItemSets {
 class GLCollector {
     constructor(renderer) {
         this.__renderer = renderer;
-        this.__drawItems = [];
+        this.__drawItems = [undefined];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
-        // this.__lightmaps = {};
+
+        this.__newItemIndices = [];
 
         // Un-Optimized Render Tree
         // Structured like so for efficient render traversial.
@@ -115,10 +117,15 @@ class GLCollector {
         this.__glshadermaterials = {};
 
         this.renderTreeUpdated = new Signal();
+        this.billboardDiscovered = new Signal();
     }
 
     getRenderer(){
         return this.__renderer;
+    }
+
+    newItemsReadyForLoading() {
+        return this.__newItemIndices.length > 0;
     }
 
     getGLShaderMaterials() {
@@ -208,6 +215,7 @@ class GLCollector {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
         }
+        this.__newItemIndices.push(index);
 
         let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
@@ -225,24 +233,20 @@ class GLCollector {
         }, this);
 
         gldrawItem.transformChanged.connect(() => {
-            this.__updateTransform(index, gldrawItem);
+            this.__updateItemInstanceData(index, gldrawItem);
         }, this);
 
-        let lightmapName = geomItem.getLightmap();
-
         let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
-        if (!drawItemSet || 
-            drawItemSet.isInverted() != gldrawItem.isInverted() || 
-            drawItemSet.getLightmapName() != lightmapName
-            ) {
+        if (!drawItemSet) {
             drawItemSet = new GLDrawItemSet(this.__renderer.gl);
-
-            // TODO support multiple geoms per draw items sets later. 
             drawItemSet.addGLGeom(glgeom);
+            glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
         }
-        glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
 
-        drawItemSet.addDrawItem(gldrawItem)
+        drawItemSet.addDrawItem(gldrawItem);
+
+        // Note: before the renderer is disabled, this is a  no-op.
+        this.__renderer.requestRedraw();
 
         return gldrawItem;
     }
@@ -254,9 +258,21 @@ class GLCollector {
                 if (treeItem.material == undefined) {
                     throw ("Scene item :" + treeItem.path + " has no material");
                 }
-                this.addGeomItem(treeItem);
+                if (treeItem.geom == undefined) {
+                    // we will add this geomitem once it recieves its geom.
+                    treeItem.geomAssigned.connect(()=>{
+                        this.addGeomItem(treeItem);
+                    })
+                }
+                else{
+                    this.addGeomItem(treeItem);
+                }
             }
         }
+        else if (treeItem instanceof BillboardItem) {
+            this.billboardDiscovered.emit(treeItem);
+        }
+
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
             this.addTreeItem(childItem);
@@ -325,7 +341,7 @@ class GLCollector {
 
     getDrawItem(id) {
         if (id >= this.__drawItems.length)
-            throw ("Invalid Draw Item id:" + id + " NumItems:" + this.__drawItems.length);
+            throw ("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length-1));
         return this.__drawItems[id];
     }
 
@@ -353,14 +369,14 @@ class GLCollector {
     }
     
     finalize() {
-        if(this.__drawItems.length == 0)
+        if(this.__newItemIndices.length == 0)
             return;
 
         let gl = this.__renderer.gl;
         let stride = 4; // The number of pixels per draw item.
         let size = Math.sqrt(this.__drawItems.length * stride);
         // Size should be a multiple of 4 pixels, so each geom item is always contiguous
-        // in memory. (makes updating a lot easier. See __updateTransform below)
+        // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
         if((size % 4) != 0)
             size += 4 - (size % 4);
         // Re-allocate a new array once we hit the limit of the old one.
@@ -394,10 +410,11 @@ class GLCollector {
             this.__transformsTexture.resize(size, size, this.__transformsDataArray);
         }
 
+        this.__newItemIndices = [];
         this.renderTreeUpdated.emit();
     }
 
-    __updateTransform(index, gldrawItem){
+    __updateItemInstanceData(index, gldrawItem){
         if(!this.__transformsTexture)
             return;
 
@@ -415,20 +432,19 @@ class GLCollector {
         let height = 1;
         
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
+
+        let floatOffset = index * stride;
+        for(let i=0; i<stride; i++)
+            this.__transformsDataArray[floatOffset + i] = dataArray[i];
     }
 
     bind(renderstate) {
         let gl = this.__renderer.gl;
         let unifs = renderstate.unifs;
-        if(unifs.transformsTexture){
-            this.__transformsTexture.bind(renderstate, unifs.transformsTexture.location);
-            gl.uniform1i(unifs.transformsTextureSize.location, this.__transformsTexture.width);
+        if(unifs.instancesTexture){
+            this.__transformsTexture.bind(renderstate, unifs.instancesTexture.location);
+            gl.uniform1i(unifs.instancesTextureSize.location, this.__transformsTexture.width);
         }
-
-        // Note: the Scene owns the lightmaps. 
-        // An AssetInstance might have a Lightmap name and an offset value. 
-        // renderstate.lightmaps = this.__lightmaps;
-        // renderstate.boundLightmap = undefined;
         return true;
     }
 

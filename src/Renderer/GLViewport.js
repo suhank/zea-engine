@@ -43,7 +43,8 @@ class GLViewport {
         this.__ongoingTouches = {};
 
         this.__geomDataBuffer = undefined;
-        this.__geomDataBufferFboRezScale = 0.5;
+        this.__geomDataBufferFbo = undefined;
+        this.__geomDataBufferFboRezScale = 1.0;
 
         // this.__selectionRect = new GLSelectionRect(this.__renderer.gl);
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
@@ -65,17 +66,19 @@ class GLViewport {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-        this.__markerPen = new MarkerpenTool();
-        this.__markerPen.strokeStarted.connect((data) => {
-            this.actionStarted.emit(data);
-        }, this);
-        this.__markerPen.strokeEnded.connect((data) => {
-            this.actionEnded.emit(data);
-        }, this);
-        this.__markerPen.strokeSegmentAdded.connect((data) => {
-            this.actionOccuring.emit(data);
-        }, this);
-        this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
+
+        this.__markerPenColor = new Color(1, 0, 0);
+        // this.__markerPen = new MarkerpenTool();
+        // this.__markerPen.strokeStarted.connect((data) => {
+        //     this.actionStarted.emit(data);
+        // }, this);
+        // this.__markerPen.strokeEnded.connect((data) => {
+        //     this.actionEnded.emit(data);
+        // }, this);
+        // this.__markerPen.strokeSegmentAdded.connect((data) => {
+        //     this.actionOccuring.emit(data);
+        // }, this);
+        // this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
 
         this.setCamera(new Camera('Default'));
 
@@ -158,7 +161,7 @@ class GLViewport {
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'MouseAndKeyboard',
-                viewXfo: globalXfo.toJSON()
+                viewXfo: globalXfo
             });
         }, this);
         this.__camera.clippingRangesChanged.connect(function() {
@@ -203,7 +206,7 @@ class GLViewport {
 
     frameView(treeItems) {
         this.__camera.frameView(this, treeItems);
-        this.renderGeomDataFbo();
+        // this.renderGeomDataFbo();
     }
 
     /// compute a ray into the scene based on a mouse coordinate
@@ -261,14 +264,10 @@ class GLViewport {
     }
 
     createGeomDataFbo() {
-
-        // Note: When the viewport is created in MatterMachine, it is initially 
-        // given a a1x1 pixel canvas, which is resized later. We avoid scaling
-        // the geom data Fbo in that case.
         let gl = this.__renderer.gl;
         let scl = this.__geomDataBufferFboRezScale;
         this.__geomDataBuffer = new GLTexture2D(gl, {
-            format: 'UNSIGNED_BYTE',
+            format: 'FLOAT',
             channels: 'RGBA',
             width: this.__width <= 1 ? 1 : this.__width * scl,
             height: this.__height <= 1 ? 1 : this.__height * scl,
@@ -287,50 +286,51 @@ class GLViewport {
     }
 
     renderGeomDataFbo() {
-        // if (this.__geomDataBufferFbo) {
-        //     this.__geomDataBufferFbo.bindAndClear();
+        if (this.__geomDataBufferFbo) {
+            this.__geomDataBufferFbo.bindAndClear();
 
-        //     let renderstate = {
-        //         'viewport': this,
-        //         'viewMatrix': this.getViewMatrix(),
-        //         'cameraMatrix': this.getCameraMatrix(),
-        //         'projectionMatrix': this.getProjectionMatrix(),
-        //         'isOrthographic': this.__camera.isOrthographic,
-        //         'fovY': this.__camera.fov,
-        //         'viewportFrustumSize': this.__frustumDim,
-        //         'drawCalls': 0,
-        //         'postOptDrawCalls': 0,
-        //         'profileJSON': {}
-        //     };
+            let renderstate = {
+                viewport: this,
+                viewMatrix: this.getViewMatrix(),
+                cameraMatrix: this.getCameraMatrix(),
+                projectionMatrix: this.getProjectionMatrix(),
+                isOrthographic: this.__camera.isOrthographic,
+                fovY: this.__camera.fov,
+                viewportFrustumSize: this.__frustumDim,
+                drawCalls: 0,
+                drawCount: 0,
+                profileJSON: {}
+            };
 
-        //     let gl = this.__renderer.gl;
-        //     gl.enable(gl.CULL_FACE);
-        //     gl.enable(gl.DEPTH_TEST);
-        //     gl.depthFunc(gl.LEQUAL);
-        //     gl.depthMask(true);
+            let gl = this.__renderer.gl;
+            gl.enable(gl.CULL_FACE);
+            gl.enable(gl.DEPTH_TEST);
+            gl.depthFunc(gl.LEQUAL);
+            gl.depthMask(true);
 
-        //     this.__geomDataPass.draw(renderstate);
-        //     this.__gizmoPass.drawDataPass(renderstate);
-        // }
+            this.__geomDataPass.draw(renderstate);
+            // this.__gizmoPass.drawDataPass(renderstate);
+        }
     }
 
-    getGeomDataAtCoords(x, y) {
+    getGeomDataAtPos(screenPos) {
         if (this.__geomDataBufferFbo) {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a 1 pixel block.
-            let pixels = new Uint8Array(4);
+            let pixels = new Float32Array(4);
 
             let scl = this.__geomDataBufferFboRezScale;
             this.__geomDataBufferFbo.bind();
-            gl.readPixels(x * scl, (this.__height - y) * scl, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            gl.readPixels(screenPos.x * scl, (this.__height - screenPos.y) * scl, 1, 1, gl.RGBA, gl.FLOAT, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            if (pixels[0] == 0)
-                return undefined;
-            // Merge the 2 last 8bit values to make a 16bit integer index value
+            // if (pixels[0] == 0)
+            //     return undefined;
             return {
-                'flags': pixels[0],
-                'id': (pixels[1] * 256) + pixels[2]
+                'id': Math.round(pixels[0]),
+                'data1': pixels[1],
+                'data2': pixels[2],
+                'data3': pixels[3]
             };
         }
     }
@@ -369,38 +369,59 @@ class GLViewport {
     /////////////////////////////
     // Events
 
+
+    __eventMousePos(event){
+        return new Vec2(
+            (event.offsetX * window.devicePixelRatio) - this.getPosX(), 
+            (event.offsetY * window.devicePixelRatio) - this.getPosY()
+            );
+    }
+
     onMouseDown(event) {
 
-        this.__mouseDownPos.set(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+        this.__mouseDownPos = this.__eventMousePos(event);
 
         if (event.button == 0) {
             if (event.shiftKey) {
                 this.__manipMode = 'marker-tool';
-                let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-                let ray = this.calcRayFromScreenPos(mousePos);
+                let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                let color = new Color(1, 0, 0);
                 let thickness = this.__camera.focalDistance * 0.002;
-                this.__markerLineId = this.__markerPen.startStroke(xfo, color, thickness);
+                // this.__markerLineId = this.__markerPen.startStroke(xfo, this.__markerPenColor, thickness);
+
+                this.__currStrokeID++;
+                this.actionStarted.emit({
+                    type: 'strokeStarted',
+                    data: {
+                        xfo: xfo,
+                        color:  this.__markerPenColor,
+                        thickness: thickness
+                    }
+                });
+
             } else {
-                let geomData = this.getGeomDataAtCoords(this.__mouseDownPos.x, this.__mouseDownPos.y);
-                if (geomData != undefined && geomData.flags == 1) {
-                    let drawItem = this.__renderer.getDrawItem(geomData.id);
+                let geomData = this.getGeomDataAtPos(this.__mouseDownPos);
+                if (geomData != undefined) {
+                    let drawItem = this.__renderer.getCollector().getDrawItem(geomData.id);
                     if (drawItem) {
-                        console.log(drawItem.geomItem.name);
+                        // Check to see if we mouse-downed on a gizmo.
+                        // If so, start a gizmo manipulation
+                        let geomItem = drawItem.getGeomItem();
+                        console.log(geomItem.name + " Material:" + geomItem.material.name);
+                        // if(isGizmo)
+                        //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
+                        //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
+                        //     //this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
+                        // }
                     }
                 }
-                if (geomData != undefined && geomData.flags == 2) {
-                    this.__manipMode = 'gizmo-manipulation';
-                    this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
-                    this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
-                } else {
-                    this.__manipMode = 'camera-manipulation';
-                    this.__camera.onDragStart(event, this.__mouseDownPos, this);
-                }
+
+                // Default to camera manipulation
+                this.__manipMode = 'camera-manipulation';
+                this.__camera.onDragStart(event, this.__mouseDownPos, this);
             }
-        } else if (event.button == 2) {
+        }/* else if (event.button == 2) {
             if (event.shiftKey) {
                 if (this.__geomDataPass) {
                     this.__manipMode = 'add-selection';
@@ -413,11 +434,12 @@ class GLViewport {
                 this.__manipMode = 'new-selection';
             }
         }
+        */
         return false;
     }
 
     onMouseUp(event) {
-        let mouseUpPos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+        let mouseUpPos = this.__eventMousePos(event);
         switch (this.__manipMode) {
             case 'highlighting':
                 break;
@@ -434,7 +456,7 @@ class GLViewport {
                 this.__renderer.getScene().getSelectionManager().clearSelection();
             case 'add-selection':
                 this.__renderer.suspendDrawing();
-                let geomData = this.getGeomDataAtCoords(event.offsetX - this.x, event.offsetY - this.y);
+                let geomData = this.getGeomDataAtPos(mouseUpPos);
                 if (geomData != undefined && geomData.flags == 1) {
                     let drawItem = this.__renderer.getDrawItem(geomData.id);
                     if (drawItem) {
@@ -476,7 +498,10 @@ class GLViewport {
                 this.__renderer.resumeDrawing();
                 break;
             case 'marker-tool':
-                this.__markerPen.endStroke(this.__markerLineId);
+                // this.__markerPen.endStroke(this.__markerLineId);
+                this.actionEnded.emit({
+                    type: 'strokeEnded'
+                });
                 break;
         }
         this.__manipMode = 'highlighting';
@@ -491,7 +516,7 @@ class GLViewport {
         }
         let updateSelectionRect = function() {
             // Update the rect.
-            let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+            let mousePos = this.__eventMousePos(event);
             let tl = new Vec2(Math.min(this.__mouseDownPos.x, mousePos.x), Math.min(this.__mouseDownPos.y, mousePos.y));
             let br = new Vec2(Math.max(this.__mouseDownPos.x, mousePos.x), Math.max(this.__mouseDownPos.y, mousePos.y));
             let rectWidth = (br.x - tl.x);
@@ -511,8 +536,7 @@ class GLViewport {
         }
 
         let getGizmoUnderMouse = function() {
-            let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-            let geomData = this.getGeomDataAtCoords(mousePos.x, mousePos.y);
+            let geomData = this.getGeomDataAtPos(mousePos);
             if (geomData != undefined && geomData.flags == 2) {
                 let gizmo = this.__gizmoPass.getGizmo(geomData.id);
                 if (this.__mouseOverGizmo && this.__mouseOverGizmo != gizmo) {
@@ -544,22 +568,22 @@ class GLViewport {
                     if (this.__gizmoPass)
                         getGizmoUnderMouse.call(this);
 
-
-                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                    let mousePos = this.__eventMousePos(event);
                     let ray = this.calcRayFromScreenPos(mousePos);
                     this.mouseMoved.emit(event, mousePos, ray);
                 }
                 break;
             case 'gizmo-manipulation':
                 {
-                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
+                    let mousePos = this.__eventMousePos(event);
                     this.__manipGizmo.onDrag(event, mousePos, this);
                     this.__renderer.draw();
                     break;
                 }
             case 'camera-manipulation':
                 {
-                    this.__camera.onDrag(event, this);
+                    let mousePos = this.__eventMousePos(event);
+                    this.__camera.onDrag(event, mousePos, this);
                     break;
                 }
             case 'new-selection':
@@ -582,11 +606,17 @@ class GLViewport {
                 break;
             case 'marker-tool':
                 {
-                    let mousePos = new Vec2(event.offsetX - this.getPosX(), event.offsetY - this.getPosY());
-                    let ray = this.calcRayFromScreenPos(mousePos);
+                    let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                    this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
+                    // this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
+                    this.actionOccuring.emit({
+                        type: 'strokeSegmentAdded',
+                        data: {
+                          id: this.__currStrokeID,
+                          xfo: xfo
+                        }
+                    });
                 }
                 break;
         }

@@ -7,9 +7,16 @@ import {
 import {
     Mat4
 } from './Mat4.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Box3 {
     constructor(p0 = undefined, p1 = undefined) {
+        if (p0 instanceof Float32Array) {
+            this.setFromFloat32Array(p0);
+            return;
+        }
         if (p0 instanceof Vec3) {
             this.p0 = p0;
         } else {
@@ -60,24 +67,27 @@ class Box3 {
         }
     }
 
-    addBox3(box, mat4 = undefined) {
-        if (mat4) {
-            // transform each corner of the box3 into the new coord sys
-            this.addPoint(mat4.transformVec3(box.p0));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p0.x,box.p0.y, box.p1.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p0.x,box.p1.y, box.p0.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p1.x,box.p0.y, box.p0.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p0.x,box.p1.y, box.p1.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p1.x,box.p0.y, box.p1.z)));
-            this.addPoint(mat4.transformVec3(new Vec3(box.p1.x,box.p1.y, box.p0.z)));
-            this.addPoint(mat4.transformVec3(box.p1));
+    addBox3(box3, xfo = undefined) {
+        if (xfo) {
+            // transform each corner of the box33 into the new coord sys
+            this.addPoint(xfo.transformVec3(box3.p0));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p0.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p1.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p0.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p1.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p0.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p1.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(box3.p1));
         } else {
-            this.addPoint(box.p0);
-            this.addPoint(box.p1);
+            this.addPoint(box3.p0);
+            this.addPoint(box3.p1);
         }
     }
 
     size() {
+        return this.p1.subtract(this.p0);
+    }
+    diagonal() {
         return this.p1.subtract(this.p0);
     }
 
@@ -107,6 +117,14 @@ class Box3 {
         );
     }
 
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Box2(...args);
+    }
+
     //////////////////////////////////////////
     // Persistence
 
@@ -122,10 +140,18 @@ class Box3 {
         this.p0.loadBin(data, byteOffset + 12);
     }
 
+
+    setFromFloat32Array(float32array) {
+        this.p0 = new Vec3(float32array.buffer, float32array.byteOffset);
+        this.p1 = new Vec3(float32array.buffer, float32array.byteOffset+12);
+    }
+
     toString() {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
 };
+
+typeRegistry.registerType('Box3', Box3);
 
 export {
     Box3

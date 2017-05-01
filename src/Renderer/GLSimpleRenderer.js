@@ -26,6 +26,9 @@ import {
 import {
     GLNormalsPass
 } from './Passes/GLNormalsPass.js';
+import {
+    GLBillboardsPass
+} from './Passes/GLBillboardsPass.js';
 
 class GLSimpleRenderer extends GLRenderer {
     constructor(canvasDiv, options={}) {
@@ -39,6 +42,7 @@ class GLSimpleRenderer extends GLRenderer {
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
         // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
+        this.addPass(new GLBillboardsPass(this.__gl, this.__collector));
         this.__debugLightmaps = false;
     }
 
@@ -72,6 +76,8 @@ class GLSimpleRenderer extends GLRenderer {
                 break;
             case 'v':
                 this.mirrorVRisplayToViewport = !this.mirrorVRisplayToViewport;
+            default:
+                super.onKeyPressed(key);
 
         }
     }

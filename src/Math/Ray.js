@@ -4,6 +4,9 @@ import {
 import {
     Vec3
 } from './Vec3.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Ray {
 
@@ -102,6 +105,16 @@ class Ray {
             this.dir.clone()
         );
     }
+    
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Ray(...args);
+    }
+
+    /////////////////////////////
+    // Persistence
 
     toJSON() {
         return {
@@ -110,11 +123,17 @@ class Ray {
         }
     }
 
+    fromJSON(j) {
+        this.start.fromJSON(j.start);
+        this.dir.fromJSON(j.dir);
+    }
+
     toString() {
         return JSON_stringify_fixedPrecision(this.toJSON())
     }
 };
 
+typeRegistry.registerType('Ray', Ray);
 
 export {
     Ray

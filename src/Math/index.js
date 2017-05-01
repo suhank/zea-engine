@@ -35,7 +35,6 @@ export * from './Xfo.js';
 export * from './Box2.js';
 export * from './Box3.js';
 export * from './Rect2.js';
-export * from './UVCluster.js';
 export * from './BinTreeNode.js';
 export * from './Hammersley.js';
 

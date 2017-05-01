@@ -18,7 +18,7 @@ import {
 
 class Lightmap {
     constructor(name = undefined) {
-        this.__name = name ? name : 'Lightma';
+        this.__name = name ? name : 'Default';
         this.__texelSize = 0;
         this.__atlasSize = new Vec2();
     }
@@ -40,6 +40,7 @@ class AssetItem extends TreeItem {
         this.__materials = new MaterialLibrary();
 
         this.__lightmap = new Lightmap();
+        this.lightmapName = 'Default';
     }
 
     getGeometryLibary(){
@@ -55,20 +56,6 @@ class AssetItem extends TreeItem {
 
     getLightmap(){
         return this.__lightmap;
-    }
-
-    __propagateLightmap(){
-        let lightmap = this.__lightmap;
-        let traverse = (treeItem)=>{
-            if (treeItem instanceof GeomItem) {
-                treeItem.setLightmap(lightmap);
-            }
-            // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
-            for (let childItem of treeItem.getChildren()) {
-                traverse(childItem);
-            }
-        }
-        traverse(this);
     }
 
     //////////////////////////////////////////
@@ -90,6 +77,37 @@ class AssetItem extends TreeItem {
         //this.__lightmap.fromJSON(j);
         //this.__propagateLightmap();
     }
+
+
+    readBinary(reader, flags){
+        let numGeomsFiles = reader.loadUInt32();
+
+        this.__materials.readBinary(reader, flags);
+
+        super.readBinary(reader, flags, this.__materials, this.__geoms);
+
+        this.lightmapCoordsOffset = reader.loadFloat32Vec2();
+        this.lightmapName = reader.loadStr();
+
+        //this.__propagateLightmapOffset();
+        return numGeomsFiles;
+    }
+
+    __propagateLightmapOffset(){
+        let lightmapCoordsOffset = this.lightmapCoordsOffset;
+        let lightmapName = this.lightmapName;
+        let traverse = (treeItem)=>{
+            if (treeItem instanceof GeomItem) {
+                treeItem.applyAssetLightmapSettings(lightmapName, lightmapCoordsOffset);
+            }
+            // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
+            for (let childItem of treeItem.getChildren()) {
+                traverse(childItem);
+            }
+        }
+        traverse(this);
+    }
+
 };
 
 export {

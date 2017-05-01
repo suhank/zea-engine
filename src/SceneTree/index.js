@@ -8,6 +8,7 @@ export * from './TreeItem.js';
 export * from './GeomItem.js';
 export * from './GizmoItem.js';
 export * from './AssetItem.js';
+export * from './BillboardItem.js';
 export * from './Camera.js';
 
 export * from './GeomLibrary.js';
@@ -17,6 +18,8 @@ export * from './Image2D.js';
 export * from './FileImage2D.js';
 export * from './HDRImage2D.js';
 export * from './HDRImageMixer.js';
+export * from './ImageLibrary.js';
+
 export * from './ProceduralSky.js';
 
 export * from './Material.js';

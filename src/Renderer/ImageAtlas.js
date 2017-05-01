@@ -1,12 +1,15 @@
 import {
     Vec2,
+    Vec4,
     Rect2,
     BinTreeNode,
     BinTreeRect,
-    BinTreeRectBorder
+    BinTreeRectBorder,
+    Async
 } from '../Math';
 
 import {
+    Image2D,
     Shader,
     shaderLibrary
 } from '../SceneTree';
@@ -27,7 +30,7 @@ import {
 
 
 class AtlasLayoutShader extends Shader {
-    
+
     constructor(name) {
         super();
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('AtlasLayoutShader.vertexShader', `
@@ -46,7 +49,7 @@ varying vec2 v_texCoord;
  
 void main()
 {
-    vec2 position = getScreenSpaceVertexPosition();
+    vec2 position = getQuadVertexPositionFromID();
     v_texCoord = position+0.5;
     gl_Position = vec4(vec2(-1.0, -1.0) + (pos * 2.0) + (v_texCoord * size * 2.0), 0.0, 1.0);
 
@@ -99,16 +102,37 @@ import '../SceneTree/Shaders/GLSL/ImageAtlas.js';
 
 
 class ImageAtlas extends GLTexture2D {
-    constructor(gl, name, channels='RGBA', format = 'FLOAT') {
+    constructor(gl, name, channels = 'RGBA', format = 'FLOAT', clearColor=[0,0,0,0]) {
         super(gl);
         this.__name = name;
         this.__channels = channels;
         this.__format = format;
+        this.__clearColor = clearColor;
         this.__subImages = [];
+        this.__layoutNeedsRegeneration = false;
+        this.__async = new Async();
+        this.loaded = this.__async.ready;
+    }
+
+    isLoaded(){
+        return this.__async.count == 0;
+    }
+
+    getMainImage(){
+        return this.super;
     }
 
     addSubImage(subImage) {
-        this.__subImages.push(subImage);
+        if (subImage instanceof Image2D) {
+            this.__subImages.push(new GLTexture2D(this.__gl, subImage));
+            if (!subImage.isLoaded()){
+                this.__async.incAsyncCount();
+                subImage.loaded.connect(this.__async.decAsyncCount);
+            }
+        } else
+            this.__subImages.push(subImage);
+        this.__layoutNeedsRegeneration = true;
+        return this.__subImages.length - 1;
     }
 
     getSubImage(index) {
@@ -116,6 +140,8 @@ class ImageAtlas extends GLTexture2D {
     }
 
     numSubImages() {
+        if(this.__layout)
+            return this.__layout.length;
         return this.__subImages.length;
     }
 
@@ -126,10 +152,10 @@ class ImageAtlas extends GLTexture2D {
         let initialHeight = (maxRez[1] * 1.5) + (border * 2);
         let levels = this.__subImages.length;
         let tree = new BinTreeNode(new BinTreeRect(
-            new Vec2(0, 0), 
-            new BinTreeRectBorder(initialWidth, true), 
+            new Vec2(0, 0),
+            new BinTreeRectBorder(initialWidth, true),
             new BinTreeRectBorder(initialHeight, true)
-            ), true);
+        ), true);
         this.__layout = [];
 
         for (let j = 0; j < this.__subImages.length; j++) {
@@ -155,8 +181,10 @@ class ImageAtlas extends GLTexture2D {
             this.__layout.push({
                 pos: new Vec2(node.rect.pos.x + border, node.rect.pos.y + border),
                 size: new Vec2(rectSize.x - (border * 2), rectSize.y - (border * 2)),
-                rectPos: node.rect.pos,
-                rectSize: rectSize
+                boundingRect: {
+                   pos: node.rect.pos,
+                   size: rectSize
+                }
             });
         }
 
@@ -169,28 +197,60 @@ class ImageAtlas extends GLTexture2D {
         this.configure({
             width,
             height,
-            channels:(this.__format=='FLOAT'&&this.__channels=='RGB')?'RGBA':this.__channels,
-            format:this.__format,
+            channels: (this.__format == 'FLOAT' && this.__channels == 'RGB') ? 'RGBA' : this.__channels,
+            format: this.__format,
             filter: 'LINEAR'
         });
+
         let gl = this.__gl;
         this.__fbo = new GLFbo(gl, this);
-        this.__fbo.setClearColor([0,0,0,0]);
-        
-        if (!gl.__quadVertexIdsBuffer) 
+        this.__fbo.setClearColor(this.__clearColor);
+
+        if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
 
-        if(!gl.__atlasLayoutShader){
+        if (!gl.__atlasLayoutShader) {
             gl.__atlasLayoutShader = new GLShader(gl, new AtlasLayoutShader());
             let shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas');
             gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
+
+
+        {
+            let dataArray = new Float32Array(this.__layout.length * 4); /*each pixel has 4 floats*/
+            for (let i = 0; i < this.__layout.length; i++) {
+                let imageLayout = this.__layout[i];
+                let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
+                vec4.set(imageLayout.pos.x / width, imageLayout.pos.y / height, imageLayout.size.x / width, imageLayout.size.y / height)
+            }
+            if (!this.__atlasLayoutTexture) {
+                this.__atlasLayoutTexture = new GLTexture2D(gl, {
+                    channels: 'RGBA',
+                    format: 'FLOAT',
+                    width: this.__layout.length,
+                    height: 1,
+                    filter: 'NEAREST',
+                    wrap: 'CLAMP_TO_EDGE',
+                    data: dataArray,
+                    mipMapped: false
+                });
+            } else {
+                this.__atlasLayoutTexture.resize(this.__layout.length, 1, dataArray);
+            }
+        }
+
+        this.__layoutNeedsRegeneration = false;
     }
 
-    renderAtlas(cleanup=true) {
-        let gl = this.__gl;
+    renderAtlas(cleanup = true) {
+        if(this.__layoutNeedsRegeneration){
+            this.generateAtlasLayout();
+        }
+        if(!this.__fbo)
+            return;
         this.__fbo.bindAndClear();
 
+        let gl = this.__gl;
         let renderstate = {};
         gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas');
         gl.__atlasLayoutShaderBinding.bind(renderstate);
@@ -201,56 +261,72 @@ class ImageAtlas extends GLTexture2D {
             let image = this.__subImages[j];
             let item = this.__layout[j];
             image.bind(renderstate, unifs.texture.location);
-            gl.uniform2fv(unifs.pos.location, item.rectPos.multiply(scl).asArray());
-            gl.uniform2fv(unifs.size.location, item.rectSize.multiply(scl).asArray());
+            gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
+            gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
             gl.drawQuad();
-
-            if(cleanup)
-                image.destroy();
         }
 
-        if(cleanup){
-            this.__subImages = [];
-            this.__fbo.destroy();
-            this.__fbo = null;
+        if (cleanup) {
+            this.cleanup();
         }
 
         this.updated.emit();
     }
 
-    getLayoutFn(){
+    getLayoutFn() {
         let layout = [];
         for (let j = 0; j < this.__subImages.length; j++) {
-            layout.push("     if(imageId=="+j+") return vec4("+this.__layout[j].pos.x + ", " + this.__layout[j].pos.y + ", " + this.__layout[j].size.x + ", " + this.__layout[j].size.y+");");
+            layout.push("     if(imageId==" + j + ") return vec4(" + this.__layout[j].pos.x + ", " + this.__layout[j].pos.y + ", " + this.__layout[j].size.x + ", " + this.__layout[j].size.y + ");");
         }
         // Default to the entire atlas.
-        layout.push("     return vec4(0,0,"+this.width+", "+this.height+")");
+        layout.push("     return vec4(0,0," + this.width + ", " + this.height + ")");
         return layout.join('\n');
+    }
+
+    getImageLayoutData(index) {
+        return this.__layout[index];
+    }
+
+    getLayoutData() {
+        let layout = [];
+        for (let j = 0; j < this.__subImages.length; j++) {
+            layout.push(this.__layout[j].pos.x);
+            layout.push(this.__layout[j].pos.y);
+            layout.push(this.__layout[j].size.x);
+            layout.push(this.__layout[j].size.y);
+        }
+        return layout;
     }
 
 
     bind(renderstate, location) {
-        super.bind(renderstate, location);
-        let gl = this.__gl;
+        let structName = 'atlas' + this.__name;
+
         let unifs = renderstate.unifs;
-        let atlasSizeUnifName = 'atlasSize_'+this.__name;
-        if(atlasSizeUnifName in unifs){
-            gl.uniform2f(unifs[atlasSizeUnifName].location, this.width, this.height);
-        }
-        else{
-            // Note: during debuggin we render the atlas to screen.
-            // Atlas size is requred to index the atlas images.
-            console.warn("Missing atlas size uniform:" + atlasSizeUnifName)
-        }
+        super.bind(renderstate, location ? location : unifs[structName+'.image'].location);
+
+        let atlasLayoutUnifName = structName+'.layout';
+        if(atlasLayoutUnifName in unifs)
+            this.__atlasLayoutTexture.bind(renderstate, unifs[atlasLayoutUnifName].location);
+
+        let atlasDescUnifName = structName+'.desc';
+        if(atlasDescUnifName in unifs)
+            this.__gl.uniform4f(unifs[atlasDescUnifName].location, this.width, this.height, this.__layout.length, 0.0);
     }
 
-    destory(){
+    cleanup() {
         for (let image of this.__subImages) {
             image.destroy();
         }
-        if(this.__fbo)
+        if (this.__fbo)
             this.__fbo.destroy();
+        this.__subImages = [];
+        this.__fbo = null;
+    }
+
+    destroy() {
+        this.cleanup();
         super.destroy();
     }
 

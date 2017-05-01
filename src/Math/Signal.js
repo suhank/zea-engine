@@ -8,6 +8,11 @@ class Signal {
         this.__toggledSignal = toggledSignal;
         this.__toggled = false;
         this.__data = null;
+
+        this.connect = this.connect.bind(this);
+        this.disconnect = this.disconnect.bind(this);
+        this.disconnectScope = this.disconnectScope.bind(this);
+        this.emit = this.emit.bind(this);
     }
 
     connect(fn, scope = this) {
@@ -36,7 +41,7 @@ class Signal {
     }
 
 
-    disconnectScope(scope) {
+    disconnectScope(scope = this) {
         this.__slots = this.__slots.filter(
             function (item) {
                 if (item["scope"] !== scope) {

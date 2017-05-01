@@ -21,8 +21,6 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
-        this.geom = geom;
-        this.material = material;
         this.__lightmap = "Default"; // the lightmap that the geom uses.
         this.__lightmapCoordsOffset = new Vec2();
         this.__geomOffsetXfo = new Xfo();
@@ -30,7 +28,11 @@ class GeomItem extends TreeItem {
 
         this.__selectable = true;
         this.__selected = false;
+        this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
+
+        this.geom = geom;
+        this.material = material;
     }
 
     destroy() {
@@ -48,6 +50,7 @@ class GeomItem extends TreeItem {
                 this.__boundingBoxDirty = true;
                 this.boundingBoxChanged.emit();
             }, this);
+            this.geomAssigned.emit();
         }
     }
 
@@ -70,9 +73,10 @@ class GeomItem extends TreeItem {
     }
 
     updateBoundingBox() {
-        let geomBox = this.geom.boundingBox.clone();
         this.__boundingBox.reset();
-        this.__boundingBox.addBox3(geomBox, this.getGeomXfo().toMat4());
+        if(this.geom){
+            this.__boundingBox.addBox3(this.geom.boundingBox, this.getGeomXfo());
+        }
         this.__boundingBoxDirty = false;
     }
 
@@ -114,7 +118,7 @@ class GeomItem extends TreeItem {
     }
 
     /////////////////////////////
-    // Irradiance Maps
+    // Lightmaps
 
     getLightmap() {
         return this.__lightmap;
@@ -132,12 +136,11 @@ class GeomItem extends TreeItem {
         this.__lightmapCoordsOffset = offset;
     }
 
-    getlightmapCoords(texelSize, generateClusters) {
-        if (this.__geom instanceof Mesh) {
-            return this.__geom.getlightmapCoords(texelSize, generateClusters);
-        } else {
-            console.warn("Geom type not light-mappable:" + this.__geom.constructor.name);
-        }
+    // The root asset item pushes its offset to the geom items in the
+    // tree. This offsets the light cooords for each geom.
+    applyAssetLightmapSettings(lightmapName, offset) {
+        this.__lightmap = lightmapName;
+        this.__lightmapCoordsOffset.addInPlace(offset);
     }
 
     /////////////////////////////
@@ -146,9 +149,9 @@ class GeomItem extends TreeItem {
     toJSON() {
         let json = super.toJSON();
         if (this.geom != undefined)
-            json['geom'] = this.geom.toJSON();
+            json.geom = this.geom.toJSON();
         if (this.material != undefined)
-            json['material'] = this.material.toJSON();
+            json.material = this.material.toJSON();
         return json
     }
 
@@ -160,21 +163,62 @@ class GeomItem extends TreeItem {
         }
         
         if ('geomOffsetXfo' in json){
-            this.__geomOffsetXfo.fromJSON(json['geomOffsetXfo']);
+            this.__geomOffsetXfo.fromJSON(json.geomOffsetXfo);
         }
 
         if ((flags&LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json){
-            this.material = materialLibrary.getMaterial(json['materialName']);
+            this.material = materialLibrary.getMaterial(json.materialName);
             if(!this.material){
-                console.warn("Geom :'" + this.name + "' Material not found:" + json['materialName']);
+                console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
                 this.material = materialLibrary.getMaterial('DefaultMaterial');
             }
         }
 
-        this.__lightmapCoordsOffset.fromJSON(json['lightmapCoordsOffset']);
+        this.__lightmapCoordsOffset.fromJSON(json.lightmapCoordsOffset);
         this.__boundingBoxDirty = true;
         return json
     }
+    
+    readBinary(reader, flags, materialLibrary, geomLibrary){
+        super.readBinary(reader, flags);
+
+        let itemflags = reader.loadUInt8();
+        let geomIndex = reader.loadUInt32();
+        if(geomLibrary.numGeoms > geomIndex){
+            this.geom = geomLibrary.getGeom(geomIndex);
+        }
+        else{
+            let onGeomLoaded = (range)=>{
+                if(geomIndex < range[1]){
+                    this.geom = geomLibrary.getGeom(geomIndex);
+                    geomLibrary.loaded.disconnect(onGeomLoaded, this);
+                }
+            }
+            geomLibrary.loaded.connect(onGeomLoaded, this);
+        }
+
+        //this.setVisibility(j.visibility);
+        // Note: to save space, some values are skipped if they are identity values 
+        const geomOffsetXfoFlag = 1<<2;
+        if (itemflags&geomOffsetXfoFlag){
+            this.__geomOffsetXfo.tr = reader.loadFloat32Vec3();
+            this.__geomOffsetXfo.ori = reader.loadFloat32Quat();
+            this.__geomOffsetXfo.sc = reader.loadFloat32Vec3();
+        }
+
+        const materialFlag = 1<<3;
+        if (itemflags&materialFlag){
+            let materialName = reader.loadStr();
+            this.material = materialLibrary.getMaterial(materialName);
+            if(!this.material){
+                console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
+                this.material = materialLibrary.getMaterial('DefaultMaterial');
+            }
+        }
+
+        this.__lightmapCoordsOffset = reader.loadFloat32Vec2();
+    }
+
 
     toString() {
         return JSON.stringify(this.toJSON(), null, 2)

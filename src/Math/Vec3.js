@@ -16,7 +16,7 @@ class Vec3 extends AttrValue {
         if (x instanceof Float32Array || x instanceof Uint32Array) {
             this.__data = x;
         }
-        if (x instanceof ArrayBuffer) {
+        else if (x instanceof ArrayBuffer) {
             let buffer = x;
             let byteOffset = y;
             this.__data = new Float32Array(buffer, byteOffset, 3);
@@ -97,7 +97,7 @@ class Vec3 extends AttrValue {
 
     // Returns true if this vector is the same as another one
     // (given a precision)
-    almostEqual(other) {
+    approxEqual(other) {
         return (Math.abs(this.x - other.x) < Number.EPSILON) &&
             (Math.abs(this.y - other.y) < Number.EPSILON) &&
             (Math.abs(this.z - other.z) < Number.EPSILON);
@@ -329,6 +329,21 @@ class Vec3 extends AttrValue {
         return this;
     }
 
+    clone() {
+        return new Vec3(
+            this.__data[0],
+            this.__data[1],
+            this.__data[2]
+        );
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Vec3(...args);
+    }
+    
     static createFromJSON(json) {
         let result = new Vec3();
         result.fromJSON(json);
@@ -339,17 +354,18 @@ class Vec3 extends AttrValue {
         return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
     }
 
+
+    static createFromFloat32Array(array) {
+        return new Vec3(array);
+    }
+
     static numFloat32Elements() {
         return 3;
     }
 
-    clone() {
-        return new Vec3(
-            this.__data[0],
-            this.__data[1],
-            this.__data[2]
-        );
-    }
+
+    /////////////////////////////
+    // Persistence
 
     toJSON() {
         return {

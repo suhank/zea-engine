@@ -82,9 +82,7 @@ class GLMesh extends GLGeom {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
         this.__indexBuffer.name = 'indexBuffer';
 
-        // Create some vertx attribute buffers
-
-        let attribIndexOffset = 4;
+        // Create some vertex attribute buffers
         let debugAttrValues = false;
         let maxIndex;
         if (debugAttrValues)
@@ -127,7 +125,8 @@ class GLMesh extends GLGeom {
                 normalized: attrName == 'normals'
             };
         }
-        // this.unbind();
+        
+        this.__geom.freeData();
 
     }
 

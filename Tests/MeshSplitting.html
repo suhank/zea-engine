@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Fuzzy Geom Comparison</title>
+        <title>Mesh Splitting</title>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     </head>
     <body text-align: left;>
@@ -18,7 +18,7 @@
 // Note: launch Chrome with  --allow-file-access-from-files
 document.addEventListener("DOMContentLoaded", function(event) { 
 
-    let loadBinMesh = (url, resetXforms=true, normalsLength=0.2)=>{
+    let loadBinMesh = (url, normalsLength=0.2)=>{
         let domElement = addCanvas();
         let asset =  new Visualive.BinAsset();
         asset.loadURL(url+'.vla');
@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
         let renderer = new Visualive.GLSimpleRenderer(domElement, { resources:'../Resources/Resources.vlr' });
         renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+        renderer.sessionClient.scaleFactor = 100;
 
         if(normalsLength > 0.0){
             let normalsPass = new Visualive.GLNormalsPass(renderer.gl, renderer.getCollector());
@@ -38,18 +39,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
             console.log("numGeoms:" + asset.getGeometryLibary().numGeoms);
 
-            let traverse = (treeItem)=>{
-                if (treeItem instanceof Visualive.GeomItem) {
-                    treeItem.globalXfo = new Visualive.Xfo();
-                    treeItem.setGeomOffsetXfo(new Visualive.Xfo());
-                }
-                for (let childItem of treeItem.getChildren()) {
-                    traverse(childItem);
-                }
-            }
-            if(resetXforms)
-                traverse(asset);
-
             scene.getRoot().addChild(asset);
             renderer.setScene(scene);
             renderer.frameAll();
@@ -58,14 +47,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     setTimeout(function(){ 
-    loadBinMesh("Assets/FuzzyGeomComparison", false, 0.0);
-    //loadBinMesh("Assets/FuzzyGeomComparison2");
-    //loadBinMesh("Assets/FuzzyGeomComparison3", false, 0.0);
-    // loadBinMesh("Assets/FuzzyGeomComparison4");
-    //loadBinMesh("Assets/FuzzyGeomComparison5", false, 0.0);
-    // loadBinMesh("Assets/FuzzyGeomComparison_Symmetry1", false, 0.5);
 
-    //loadBinMesh("Assets/NormalMatrixTest");
+    //loadBinMesh("Assets/FuzedBoxes", 20.0);
+    loadBinMesh("Assets/FuzedTeapots", 0.0);
+    // loadBinMesh("Assets/MultiMaterialIDs", 20.0);
+    //loadBinMesh("Assets/MultiMaterialIDs2", 20.0);
+    // loadBinMesh("Assets/MultiMaterialIDs3", 20.0);
 
 
     }, 1000);

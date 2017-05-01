@@ -22,13 +22,6 @@ class GLFbo {
     setup() {
         let gl = this.__gl;
 
-        // Query the extensions
-        if (this.__createDepthTexture) {
-            this.__ext__WEBGL_depth_texture = gl.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
-            if (!this.__ext__WEBGL_depth_texture)
-                console.warn("'WEBGL_depth_texture' not found. depth textures not supported...");
-        }
-
         this.__fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
@@ -54,7 +47,7 @@ class GLFbo {
 
         // Create the depth texture
         if (this.__createDepthTexture) {
-            if (!this.__ext__WEBGL_depth_texture) {
+            if (!gl.__ext__WEBGL_depth_texture) {
                 // Create the depth buffer
                 var depthBuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
@@ -72,7 +65,6 @@ class GLFbo {
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0);
             }
         }
-
 
         this.__checkFramebuffer();
 

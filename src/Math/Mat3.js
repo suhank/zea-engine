@@ -1,10 +1,12 @@
-
 import {
     AttrValue
 } from './AttrValue.js';
 import {
     Vec3
 } from './Vec3.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 // This matrix class is based on GLM, and is column major.
 
@@ -275,12 +277,6 @@ class Mat3 extends AttrValue {
       );
     }
 
-    // Creates a new Mat3 to wrap existing memory in a buffer.
-    static createFromFloat32Buffer(buffer, offset = 0) {
-        return new Mat3(buffer, offset * 4) // 4 bytes per 32bit float
-    }
-
-
     clone() {
         return new Mat3(
             this.__data[0],
@@ -295,6 +291,20 @@ class Mat3 extends AttrValue {
             this.__data[9]
         );
     }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static create(...args) {
+        return new Mat3(...args);
+    }
+
+
+    // Creates a new Mat3 to wrap existing memory in a buffer.
+    static createFromFloat32Buffer(buffer, offset = 0) {
+        return new Mat3(buffer, offset * 4) // 4 bytes per 32bit float
+    }
+
 
     /////////////////////////////
     // Persistence
@@ -314,6 +324,8 @@ class Mat3 extends AttrValue {
         return this.toJSON().toString();
     }
 };
+
+typeRegistry.registerType('Mat3', Mat3);
 
 export {
     Mat3
