@@ -40,7 +40,7 @@ class VRToolMoveStage extends VRTool {
     activateTool() {
         super.activateTool();
         for(let vrController of this.__vrControllers)
-            vrController.setHandleColor(new Color(1, 0, 1));
+            vrController.setHandleColor(new Color(0, 0, 1));
     }
 
     initAction() {

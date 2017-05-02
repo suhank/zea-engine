@@ -105,9 +105,9 @@ class GLVisualiveRenderer extends GLRenderer {
 
         this.__debugTextures = [undefined];
         // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
-        if(this.__geomDataPass){
-            this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
-        }
+        // if(this.__geomDataPass){
+        //     this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
+        // }
 
         this.__shaderDirectives = {
             defines: `
@@ -211,29 +211,6 @@ class GLVisualiveRenderer extends GLRenderer {
                 super.onKeyPressed(key);
         }
         this.requestRedraw();
-    }
-
-
-    //////////////////////////////////////
-    // Pass Management
-    addDrawItemToPasses(drawItem) {
-
-        super.addDrawItemToPasses(drawItem);
-
-        // TODO: not all items need to be rendered ot the geom data pass.
-        // e.g. non-selectable geoms.
-        /*
-        if (this.__geomDataPass.filter(drawItem))
-            this.__geomDataPass.addDrawItem(drawItem);
-
-        if (drawItem.geomItem.irradianceMap != 'Environment') {
-            // if (this.__edgesPass.filter(drawItem))
-            //     this.__edgesPass.addDrawItem(drawItem);
-
-            // if (this.__pointsPass.filter(drawItem))
-            //     this.__pointsPass.addDrawItem(drawItem);
-        }
-        */
     }
 
     ////////////////////////////
@@ -439,6 +416,10 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
         this.redrawOccured.emit();
+        
+        // New Items may have been added during the pause.
+        if(this.__redrawGeomDataFbos)
+            this.renderGeomDataFbos();
     }
 
     ////////////////////////////

@@ -9,6 +9,9 @@ import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
 import {
+    GLShaderMaterials
+} from '../GLCollector.js';
+import {
     Lines
 } from '../../SceneTree';
 
@@ -21,11 +24,30 @@ class GLGeomDataPass extends GLPass {
 
     /////////////////////////////////////
     // Bind to Render Tree
+    // filterRenderTree() {
+    //     let allglshaderMaterials = this.__collector.getGLShaderMaterials();
+    //     this.__glshadermaterials = [];
+    //     for (let glshaderkey in allglshaderMaterials) {
+    //         this.__glshadermaterials.push(allglshaderMaterials[glshaderkey]);
+    //     }
+    // }
+
     filterRenderTree() {
         let allglshaderMaterials = this.__collector.getGLShaderMaterials();
         this.__glshadermaterials = [];
         for (let glshaderkey in allglshaderMaterials) {
-            this.__glshadermaterials.push(allglshaderMaterials[glshaderkey]);
+            let glshaderMaterials = null;
+            let glmaterialDrawItemSets = allglshaderMaterials[glshaderkey].getMaterialDrawItemSets();
+            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
+                let material = glmaterialDrawItemSet.getGLMaterial().getMaterial();
+                if (material.nonSelectable === true)
+                    continue;
+                if(!glshaderMaterials){
+                    glshaderMaterials = new GLShaderMaterials(allglshaderMaterials[glshaderkey].getGLShader());
+                    this.__glshadermaterials.push(glshaderMaterials);
+                }
+                glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSet);
+            }
         }
     }
 

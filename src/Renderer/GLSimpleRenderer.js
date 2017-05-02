@@ -136,6 +136,10 @@ class GLSimpleRenderer extends GLRenderer {
             this.__stats.end();
         
         this.redrawOccured.emit();
+        
+        // New Items may have been added during the pause.
+        if(this.__redrawGeomDataFbos)
+            this.renderGeomDataFbos();
     }
 };
 

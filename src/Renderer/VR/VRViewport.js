@@ -137,6 +137,7 @@ class VRViewport {
             this.activateTool('FlyTool');
         } else {
             this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['VRToolHoldObjects'] = new VRToolHoldObjects(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
 
             let markerpenTool = this.__vrTools['Markerpen'];
@@ -151,6 +152,7 @@ class VRViewport {
             }, this);
 
             this.activateTool('VRToolMoveStage');
+            //this.activateTool('VRToolHoldObjects');
         }
 
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
@@ -393,7 +395,8 @@ class VRViewport {
                             this.activateTool('VRToolMoveStage');
 
                         } else if (vals[1] < 0) {
-                            this.activateTool('Markerpen');
+                            // this.activateTool('Markerpen');
+                            this.activateTool('VRToolHoldObjects');
                         }
                     }, this);
                     this.__vrControllers[id] = vrController;

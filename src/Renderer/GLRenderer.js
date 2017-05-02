@@ -125,7 +125,7 @@ class GLRenderer {
         this.sessionClient = new SessionClient(this, options.enableSessionRecording);
 
         // Note: using the geom data pass crashes VR scenes.
-        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
+        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -277,9 +277,9 @@ class GLRenderer {
             this.requestRedraw();
         }, this);
 
-        if(this.__geomDataPass){
-            vp.createGeomDataFbo();
-        }
+        // if(this.__geomDataPass){
+        //     vp.createGeomDataFbo();
+        // }
 
         vp.viewChanged.connect((data)=>{
             this.viewChanged.emit(data);
@@ -339,9 +339,7 @@ class GLRenderer {
             if(this.__loadingImg)
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
                 
-            // New Items may have been added during the pause.
-            if(this.__geomDataPass)
-                this.renderGeomDataFbos();
+            this.__redrawGeomDataFbos = true;
             this.requestRedraw();
         }
     }
@@ -349,6 +347,7 @@ class GLRenderer {
     renderGeomDataFbos() {
         for (let vp of this.__viewports)
             vp.renderGeomDataFbo();
+        this.__redrawGeomDataFbos = false;
     }
 
 
@@ -360,21 +359,23 @@ class GLRenderer {
     }
 
     __onResize() {
-
+        let vrVieportPresenting = false;
         if (this.__vrViewport && this.__vrViewport.isPresenting()) {
             var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
             this.__glcanvas.width = hmdCanvasSize[0];
             this.__glcanvas.height = hmdCanvasSize[1];
+            vrVieportPresenting = true;
         } else {
             // Emulate the Vive HMD resolution.
             // this.__glcanvas.width = 2160;
             // this.__glcanvas.height = 1200;
             this.__glcanvas.width = this.__glcanvas.offsetWidth * window.devicePixelRatio;
             this.__glcanvas.height = this.__glcanvas.offsetHeight * window.devicePixelRatio;
+
+            this.__onResizeViewports();
+            this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
+            this.requestRedraw();
         }
-        this.__onResizeViewports();
-        this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
-        this.requestRedraw();
 
     }
 
@@ -716,6 +717,10 @@ class GLRenderer {
             this.__stats.end();
 
         this.redrawOccured.emit();
+
+        // New Items may have been added during the pause.
+        if(this.__redrawGeomDataFbos)
+            this.renderGeomDataFbos();
     }
 };
 

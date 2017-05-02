@@ -100,6 +100,7 @@ void main(void) {
 
         this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
         this.addParameter('opacity', 1.0);
+        this.nonSelectable = true;
         this.finalize();
     }
 };

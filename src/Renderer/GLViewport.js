@@ -66,19 +66,7 @@ class GLViewport {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-
         this.__markerPenColor = new Color(1, 0, 0);
-        // this.__markerPen = new MarkerpenTool();
-        // this.__markerPen.strokeStarted.connect((data) => {
-        //     this.actionStarted.emit(data);
-        // }, this);
-        // this.__markerPen.strokeEnded.connect((data) => {
-        //     this.actionEnded.emit(data);
-        // }, this);
-        // this.__markerPen.strokeSegmentAdded.connect((data) => {
-        //     this.actionOccuring.emit(data);
-        // }, this);
-        // this.__renderer.getCollector().addTreeItem(this.__markerPen.getTreeItem());
 
         this.setCamera(new Camera('Default'));
 
@@ -417,11 +405,11 @@ class GLViewport {
             }
         }/* else if (event.button == 2) {
             if (event.shiftKey) {
-                if (this.__geomDataPass) {
+                if (this.__geomDataBufferFbo) {
                     this.__manipMode = 'add-selection';
                 }
             } else if (event.ctrlKey) {
-                if (this.__geomDataPass) {
+                if (this.__geomDataBufferFbo) {
                     this.__manipMode = 'remove-selection';
                 }
             } else {
@@ -557,7 +545,7 @@ class GLViewport {
         switch (this.__manipMode) {
             case 'highlighting':
                 {
-                    // if (this.__geomDataPass)
+                    // if (this.__geomDataBufferFbo)
                     //     getGeomUnderMouse.call(this);
                     if (this.__gizmoPass)
                         getGizmoUnderMouse.call(this);

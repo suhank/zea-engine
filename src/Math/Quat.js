@@ -846,15 +846,14 @@ class Quat extends AttrValue {
      * @returns {vec4} out
      */
     lerp(b, w) {
-        let ax = this.x,
-            ay = this.y,
-            az = this.z;
-        at = this.w;
-        return new Quat(
-            ax + w * (b.x - ax),
-            ay + w * (b.y - ay),
-            az + w * (b.z - az),
-            at + w * (b.w - at));
+        let result = new Quat(
+            this.x + (w * (b.x - this.x)),
+            this.y + (w * (b.y - this.y)),
+            this.z + (w * (b.z - this.z)),
+            this.w + (w * (b.w - this.w))
+        );
+        result.normalizeInPlace();
+        return result;
     }
 
     // /**
