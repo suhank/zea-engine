@@ -44,6 +44,10 @@ class TreeItem {
         this.visibilityChanged = new Signal();
         this.boundingBoxChanged = new Signal();
         this.destructing = new Signal();
+
+        this.treeItemGlobalXfoChanged = new Signal();
+
+        this.__updatePath();
     }
 
     destroy() {
@@ -60,16 +64,54 @@ class TreeItem {
 
     set name(name) {
         this.__name = name;
-        // Notify:
+        this.__updatePath();
         this.nameChanged.emit(name);
     }
 
-    get path() {
-        let parentItem = this.parentItem;
-        if (parentItem != undefined)
-            return parentItem.path + '/' + this.name;
+    __updatePath() {
+        if (this.__parentItem == undefined)
+            this.__path = this.__name;
         else
-            return this.name;
+            this.__path = this.__parentItem.getPath() + '/' + this.__name;
+
+        for (let childItem of this.__childItems)
+            childItem.__updatePath();
+    }
+
+    getPath() {
+        return this.__path;
+    }
+
+    traversePath(pathParts, index){
+
+        let child = this.getChildByName(pathParts[index]);
+        if (child == undefined)
+        {
+            //report("Unable to resolve path '"+"/".join(pathParts)+"' after:"+this.getName());
+            throw("No child called :" + pathParts[index]);
+            return nullptr;
+        }
+        if (pathParts.length == index + 1)
+            return child;
+        else
+            return child.traversePath(pathParts, index + 1);
+    }
+
+    resolvePath(path)
+    {
+        // the path is relative to this item, and does not include the item in the path
+        // the item name.
+        if (path == "")
+            return this;
+        let pathParts = path.split('/');
+        if (pathParts.length == 0){
+            console.warn("Invalid path:" + path);
+            return undefined;
+        }
+        if (pathParts.length == 1 && pathParts[0] == this.__name){
+            return this;
+        }
+        return this.traversePath( pathParts, 1 );
     }
 
     //////////////////////////////////////////
@@ -83,7 +125,9 @@ class TreeItem {
     set parentItem(parentItem) {
         // this.__private.set(parentItem, parentItem);
         this.__parentItem = parentItem;
+        this.__updatePath();
         this.__updateGlobal();
+
         // Notify:
         this.parentChanged.emit();
     }

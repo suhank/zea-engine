@@ -118,6 +118,7 @@ class GLCollector {
 
         this.renderTreeUpdated = new Signal();
         this.billboardDiscovered = new Signal();
+        this.itemTransformChanged = new Signal();
     }
 
     getRenderer(){
@@ -282,7 +283,11 @@ class GLCollector {
         treeItem.destructing.connect(() => {
             treeItem.childAdded.disconnect(this.__childAdded, this);
             treeItem.destructing.disconnectScope(this);
-        }, this);
+        });
+
+        treeItem.globalXfoChanged.connect(() => {
+            this.itemTransformChanged.emit(treeItem);
+        });
     }
 
     __childAdded(child){

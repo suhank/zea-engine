@@ -120,12 +120,10 @@ class SessionClient {
         let lastEvent = 0;
         let actualRecording = null;
         let replayData = null;
+        let updatingTreeXfos = false;
 
         let avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
-        //scene.getRoot().addChild(avatarsTreeRoot);
         renderer.getCollector().addTreeItem(avatarsTreeRoot);
-        this.__avatarsTreeRoot = avatarsTreeRoot;
-
 
         let convertValuesFromJSON = (data) => {
             let fromJSON = (key, value) => {
@@ -193,11 +191,6 @@ class SessionClient {
         connectedUsers[myId] = myAvatar;
 
         let urlVars = getUrlVars();
-
-        // Once we have an sssl certificat, we can support wss sockets and remove this.
-        if(urlVars.isSecureConnection)
-            return;
-
         let projectID = urlVars.projectID;
         let sessionID = urlVars.args['id'];
         if (!sessionID) {
@@ -206,7 +199,25 @@ class SessionClient {
         console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
 
         ////////////////////////////////////////
-        // Register listeners with the renderer
+        // Register listeners with the scene and renderer
+        renderer.getCollector().itemTransformChanged.connect(function(treeItem) {
+            if(!updatingTreeXfos){
+                let path = treeItem.getPath();
+                // Only propagate changes to the scene tree..
+                if(path.startsWith('root')){
+                    let xfo = treeItem.globalXfo;
+                    if (socketOpen) {
+                        sendMessage({
+                            type: 'treeItemGlobalXfoChanged',
+                            data: {
+                                path,
+                                xfo
+                            }
+                        });
+                    }
+                }
+            }
+        });
 
         renderer.viewChanged.connect(function(data) {
             // convert the data type to raw json and send to the server.
@@ -264,7 +275,7 @@ class SessionClient {
         // Websocket setup
 
         let socketOpen = false;
-        //let ws = new WebSocket("ws://localhost:8000", "protocolOne");
+        // let ws = new WebSocket("ws://localhost:5000", "protocolOne");
         let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
 
         let sendMessage = (message) => {
@@ -380,6 +391,13 @@ class SessionClient {
 
         listeners.projectAnalytics = function(client, data) {
             onAnalyticsDataRecieved(data);
+        }
+
+        listeners.treeItemGlobalXfoChanged = function(client, data) {
+            updatingTreeXfos = true;
+            let resolvedItem = renderer.getScene().getRoot().resolvePath(data.path);
+            resolvedItem.globalXfo = data.xfo;
+            updatingTreeXfos = false;
         }
 
         ////////////////////////////////////////

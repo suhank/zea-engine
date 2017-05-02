@@ -114,6 +114,7 @@ class GLRenderer {
         this.viewChanged = new Signal();
         this.pointerMoved = new Signal();
         this.redrawOccured = new Signal();
+        this.treeItemGlobalXfoChanged = new Signal();
 
         // Stroke Signals
         this.actionStarted = new Signal();
@@ -269,6 +270,8 @@ class GLRenderer {
 
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
+
+        this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
     }
 
     addViewport(name) {
