@@ -8,7 +8,8 @@ import { VRTool } from './VRTool.js'
 
 class VRMarkerpenTool extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {
-        // super('VRMarkerpenTool');
+        super();
+
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;
         this.__vrControllers = vrControllers;
@@ -23,9 +24,7 @@ class VRMarkerpenTool extends VRTool {
         this.strokeSegmentAdded = new Signal();
 
         this.__pressedButtons = 0;
-        for(let vrController of this.__vrControllers) {
-            vrController.setHandleColor(new Color(0, 1, 0));
-
+        let bindController = (id, vrController) => {
             vrController.buttonPressed.connect(() => {
                 if(!this.__active)
                     return;
@@ -40,7 +39,20 @@ class VRMarkerpenTool extends VRTool {
                 this.endAction();
             }, this);
         }
+
+        for(let i=0; i<this.__vrControllers.length; i++) {
+            if(this.__vrControllers[i])
+                bindController(i, this.__vrControllers[i]);
+        }
+        vrStage.controllerAdded.connect(bindController);
     }
+
+    activateTool() {
+        super.activateTool();
+        for(let vrController of this.__vrControllers)
+            vrController.setHandleColor(new Color(0, 1, 0));
+    }
+
 
     startAction() {
         if(this.__vrControllers[0].isButtonPressed()){

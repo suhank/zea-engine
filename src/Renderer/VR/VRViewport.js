@@ -128,6 +128,8 @@ class VRViewport {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
+        this.controllerAdded = new Signal();
+
 
         if (isMobileDevice()) {
             this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
@@ -412,9 +414,11 @@ class VRViewport {
                     }, this);
 
                     // Note: we shoulnd't need this line.
-                    this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
+                    // this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
                     this.__vrControllers[id] = vrController;
+                    this.controllerAdded.emit(id, vrController);
                 }
+                // Update the controllers pose in space.
                 this.__vrControllers[id].update(gamepad);
                 id++;
             }
