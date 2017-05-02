@@ -296,6 +296,9 @@ class SessionClient {
             });
             // generateRecordingUI();
         };
+        ws.onerror = function(event) {
+            console.log("Websocket Error:" + event);
+        };
         ws.onclose = function(event) {
             socketOpen = false;
             console.log("Websocket closed.")
