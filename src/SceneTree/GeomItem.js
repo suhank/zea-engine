@@ -74,8 +74,8 @@ class GeomItem extends TreeItem {
 
     updateBoundingBox() {
         this.__boundingBox.reset();
-        if(this.geom){
-            this.__boundingBox.addBox3(this.geom.boundingBox, this.getGeomXfo());
+        if(this.__geom){
+            this.__boundingBox.addBox3(this.__geom.boundingBox, this.getGeomXfo());
         }
         this.__boundingBoxDirty = false;
     }
@@ -148,8 +148,8 @@ class GeomItem extends TreeItem {
 
     toJSON() {
         let json = super.toJSON();
-        if (this.geom != undefined)
-            json.geom = this.geom.toJSON();
+        if (this.__geom != undefined)
+            json.geom = this.__geom.toJSON();
         if (this.material != undefined)
             json.material = this.material.toJSON();
         return json
@@ -159,7 +159,7 @@ class GeomItem extends TreeItem {
         super.fromJSON(json, flags, materialLibrary, geomLibrary);
 
         if ((flags&LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json){
-            this.geom = geomLibrary.getGeom(json.geomIndex);
+            this.setGeom(geomLibrary.getGeom(json.geomIndex));
         }
         
         if ('geomOffsetXfo' in json){

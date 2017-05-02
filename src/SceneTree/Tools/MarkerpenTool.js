@@ -93,7 +93,7 @@ class MarkerpenTool {
             replayMode = false;
         }
         let stroke = this.__strokes[id];
-        let lineGeom = stroke.geomItem.geom;
+        let lineGeom = stroke.geomItem.getGeom();
         stroke.used++;
 
         let realloc = false;
@@ -135,7 +135,7 @@ class MarkerpenTool {
 
     // removeSegmentFromStroke(id) {
     //     let stroke = this.__strokes[id];
-    //     let lineGeom = stroke.geomItem.geom;
+    //     let lineGeom = stroke.geomItem.getGeom();
     //     stroke.used--;
     //     lineGeom.setSegment(stroke.used-1, 0, 0);
     //     lineGeom.geomDataChanged.emit({'indicesChanged':true});

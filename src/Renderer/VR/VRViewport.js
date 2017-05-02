@@ -42,6 +42,12 @@ class VRViewport {
         this.__renderer = renderer;
         this.__vrDisplay = vrDisplay;
         this.__bgColor = renderer.getViewport().getBackgroundColor();
+        this.__frameData = new VRFrameData();
+
+        this.__stageTreeItem = new TreeItem('VRStage');
+        this.__stageTreeItem.setVisible(false);
+        this.__projectionMatriciesUpdated = false;
+
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
@@ -51,15 +57,9 @@ class VRViewport {
         this.__vrDisplay.depthFar = this.__far;
 
         this.__stageXfo = new Xfo();
-        this.__stageBig = true;
-        this.__stageXfoBig = new Xfo();
-        this.__standingMatrix = new Mat4();
+        // this.__standingMatrix = new Mat4();
         this.__stageMatrix = new Mat4();
-
-        this.__frameData = new VRFrameData();
-        this.__stageTreeItem = new TreeItem('VRStage');
-        this.__stageTreeItem.setVisible(false);
-        this.__projectionMatriciesUpdated = false;
+        this.setXfo(new Xfo()); // Reset the stage Xfo.
 
         this.__leftViewMatrix = new Mat4();
         this.__leftProjectionMatrix = new Mat4();
@@ -133,13 +133,11 @@ class VRViewport {
 
         if (isMobileDevice()) {
             this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
-            this.__currentTool = this.__vrTools['FlyTool'];
+
+            this.activateTool('FlyTool');
         } else {
             this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
-
-            this.__currentTool = this.__vrTools['VRToolMoveStage'];
-            this.__currentTool.activateTool();
 
             let markerpenTool = this.__vrTools['Markerpen'];
             markerpenTool.strokeStarted.connect((data) => {
@@ -151,8 +149,9 @@ class VRViewport {
             markerpenTool.strokeSegmentAdded.connect((data) => {
                 this.actionOccuring.emit(data);
             }, this);
+
+            this.activateTool('VRToolMoveStage');
         }
-        // this.__createOffscreenFbo();
 
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
         //this.startContinuousDrawing();
@@ -177,13 +176,11 @@ class VRViewport {
         // return this.__stageTreeItem.globalXfo;
     }
 
-    setXfo(xfo, isBig) {
+    setXfo(xfo) {
         this.__stageXfo = xfo;
         this.__stageTreeItem.globalXfo = xfo;
         this.__stageMatrix = xfo.inverse().toMat4();
         this.__stageScale = xfo.sc.x;
-
-        this.__stageBig = isBig;
     }
 
     getRenderer() {
@@ -369,7 +366,13 @@ class VRViewport {
     }
 
     ////////////////////////////
-    // Rendering
+    // Controllers
+    activateTool(name){
+        if(this.__currentTool != this.__vrTools[name]){
+            this.__currentTool = this.__vrTools[name];
+            this.__currentTool.activateTool();
+        }
+    }
 
     updateHeadAndControllers() {
 
@@ -384,37 +387,15 @@ class VRViewport {
             // Skip the new broken controller that is showing up.(maybe not a vive controller??)
             if (gamepad && gamepad.pose) {
                 if (!this.__vrControllers[id]) {
-
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
-                            this.__currentTool = this.__vrTools['VRToolMoveStage'];
-                            this.__currentTool.activateTool();
-
-                            // if(this.__stageBig){
-                            //     // Place the user inside the volume at the position of the
-                            //     // controller at 1:1 scale.
-                            //     this.__stageXfoBig = this.__stageXfo.clone();
-                            //     let stageXfoSmall = this.__stageXfo.clone();
-                            //     stageXfoSmall.tr = vrController.getTipGlobalXfo().tr;
-                            //     stageXfoSmall.tr.y -= 0.5;
-                            //     stageXfoSmall.sc.set(1, 1, 1);
-                            //     this.setXfo(stageXfoSmall, false);
-                            // }
+                            this.activateTool('VRToolMoveStage');
 
                         } else if (vals[1] < 0) {
-                            this.__currentTool = this.__vrTools['Markerpen'];
-                            this.__currentTool.activateTool();
-
-                            // if(!this.__stageBig){
-                            //     // Restore the user to thier previous scale
-                            //     this.setXfo(this.__stageXfoBig, true);
-                            // }
+                            this.activateTool('Markerpen');
                         }
                     }, this);
-
-                    // Note: we shoulnd't need this line.
-                    // this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
                     this.__vrControllers[id] = vrController;
                     this.controllerAdded.emit(id, vrController);
                 }
@@ -485,7 +466,7 @@ class VRViewport {
         // this.__standingViewMatrix = this.__standingMatrix.inverse();
 
         renderstate['viewport'] = this;
-        renderstate['cameraMatrix'] = this.__standingMatrix;
+        // renderstate['cameraMatrix'] = this.__standingMatrix;
         renderstate['viewScale'] = 1.0 / this.__stageScale;
 
         let width = this.__hmdCanvasSize[0];

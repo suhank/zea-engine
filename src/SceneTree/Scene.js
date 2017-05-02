@@ -108,8 +108,9 @@ class Scene {
                     for (let childItem of treeItem.getChildren())
                         collectMeshes(childItem);
                     if (treeItem instanceof GeomItem) {
-                        if (treeItem.geom instanceof Mesh && meshes.indexOf(treeItem.geom) == -1 )
-                            meshes.push(treeItem.geom);
+                        let geom = treeItem.getGeom();
+                        if (geom instanceof Mesh && meshes.indexOf(geom) == -1 )
+                            meshes.push(geom);
                     }
                 }
                 collectMeshes(sceneRoot);

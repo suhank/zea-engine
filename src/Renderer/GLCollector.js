@@ -287,7 +287,6 @@ class GLCollector {
 
     __childAdded(child){
         this.addTreeItem(child);
-        this.finalize();
     }
 
     removeDrawItem(gldrawItem) {
@@ -416,6 +415,9 @@ class GLCollector {
 
     __updateItemInstanceData(index, gldrawItem){
         if(!this.__transformsTexture)
+            return;
+        // There are items ready to be finalized
+        if(this.__newItemIndices.indexOf(index) != -1)
             return;
 
         let gl = this.__renderer.gl;

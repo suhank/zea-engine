@@ -1,4 +1,5 @@
 import {
+    Color,
     Xfo
 } from '../../Math';
 
@@ -34,6 +35,12 @@ class VRToolMoveStage extends VRTool {
                 bindController(i, this.__vrControllers[i]);
         }
         vrStage.controllerAdded.connect(bindController);
+    }
+
+    activateTool() {
+        super.activateTool();
+        for(let vrController of this.__vrControllers)
+            vrController.setHandleColor(new Color(1, 0, 1));
     }
 
     initAction() {
