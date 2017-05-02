@@ -274,11 +274,6 @@ class GLViewport {
         });
         this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
         this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
-        this.__geomDataPass = undefined;
-    }
-
-    setGeomDataPass(geomDataPass) {
-        this.__geomDataPass = geomDataPass;
     }
 
     getGeomDataFbo() {
@@ -290,7 +285,6 @@ class GLViewport {
             this.__geomDataBufferFbo.bindAndClear();
 
             let renderstate = {
-                viewport: this,
                 viewMatrix: this.getViewMatrix(),
                 cameraMatrix: this.getCameraMatrix(),
                 projectionMatrix: this.getProjectionMatrix(),
@@ -308,7 +302,7 @@ class GLViewport {
             gl.depthFunc(gl.LEQUAL);
             gl.depthMask(true);
 
-            this.__geomDataPass.draw(renderstate);
+            this.__renderer.getGeomDataPass().draw(renderstate);
             // this.__gizmoPass.drawDataPass(renderstate);
         }
     }
@@ -768,7 +762,6 @@ class GLViewport {
     draw(renderstate) {
         this.bindAndClear(renderstate);
 
-        renderstate.viewport = this;
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();
         renderstate.projectionMatrix = this.getProjectionMatrix();

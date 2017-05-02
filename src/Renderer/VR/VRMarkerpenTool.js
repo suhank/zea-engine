@@ -4,8 +4,9 @@ import {
     Xfo,
     Signal
 } from '../../Math';
+import { VRTool } from './VRTool.js'
 
-class VRMarkerpenTool {
+class VRMarkerpenTool extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {
         // super('VRMarkerpenTool');
         this.__vrStage = vrStage;
@@ -20,6 +21,25 @@ class VRMarkerpenTool {
         this.strokeStarted = new Signal();
         this.strokeEnded = new Signal();
         this.strokeSegmentAdded = new Signal();
+
+        this.__pressedButtons = 0;
+        for(let vrController of this.__vrControllers) {
+            vrController.setHandleColor(new Color(0, 1, 0));
+
+            vrController.buttonPressed.connect(() => {
+                if(!this.__active)
+                    return;
+                this.__pressedButtons++;
+                this.startAction();
+            }, this);
+
+            vrController.buttonReleased.connect(() => {
+                if(!this.__active)
+                    return;
+                this.__pressedButtons--;
+                this.endAction();
+            }, this);
+        }
     }
 
     startAction() {
@@ -49,16 +69,18 @@ class VRMarkerpenTool {
 
     }
 
-    applyAction() {
-        let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
-        // this.addSegmentToStroke(this.__currStrokeID, xfo);
+    evalTool() {
+        if(this.__pressedButtons == 1) {
+            let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
+            // this.addSegmentToStroke(this.__currStrokeID, xfo);
 
-        this.strokeSegmentAdded.emit({
-            type: 'strokeSegmentAdded',
-            data: {
-              xfo: xfo
-            }
-        });
+            this.strokeSegmentAdded.emit({
+                type: 'strokeSegmentAdded',
+                data: {
+                  xfo: xfo
+                }
+            });
+        }
     }
 };
 

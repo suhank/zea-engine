@@ -2,7 +2,7 @@ import {
     Xfo
 } from '../../Math';
 
-class VR2HandedGrabTool {
+class VRToolHoldObj2Handed {
     constructor(vrStage, vrHead, vrControllers) {
 
         this.__vrStage = vrStage;
@@ -11,17 +11,15 @@ class VR2HandedGrabTool {
     }
 
     startAction() {
-        let p0 = this.__vrControllers[0].getTipXfo().tr;
-        let p1 = this.__vrControllers[1].getTipXfo().tr;
-        this.__grabDir = p1.subtract(p0);
-        this.__grabPos = p0.lerp(p1, 0.5);
-        this.__grabDist = this.__grabDir.length();
-        this.__grabDir.y = 0.0;
-        this.__grabDir.normalizeInPlace();
-        this.__stageXfo__GrabStart = this.__vrStage.getXfo().clone();
-        // this.__invOri = this.__stageXfo__GrabStart.ori.inverse();
-        this.__grab_to_stage = this.__grabPos.subtract(this.__stageXfo__GrabStart.tr);
+        let xfo0 = this.__vrControllers[0].getTipXfo().tr;
+        let xfo1 = this.__vrControllers[1].getTipXfo().tr;
+        let grabXfo = new Xfo();
+        grabXfo.tr = xfo0.tr.lerp(xfo1.tr, 0.5);
+        grabXfo.ori = xfo0.ori.lerp(xfo1.ori, 0.5);
+
+        // 
     }
+
     endAction() {
 
     }
@@ -85,5 +83,5 @@ class VR2HandedGrabTool {
 };
 
 export {
-    VR2HandedGrabTool
+    VRToolHoldObj2Handed
 };

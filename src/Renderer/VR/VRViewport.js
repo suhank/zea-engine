@@ -24,11 +24,11 @@ import {
     VRController
 } from './VRController.js'
 import {
-    VR1HandedGrabTool
-} from './VR1HandedGrabTool.js'
+    VRToolMoveStage
+} from './VRToolMoveStage.js'
 import {
-    VR2HandedGrabTool
-} from './VR2HandedGrabTool.js'
+    VRToolHoldObjects
+} from './VRToolHoldObjects.js'
 import {
     VRMarkerpenTool
 } from './VRMarkerpenTool.js'
@@ -68,14 +68,11 @@ class VRViewport {
 
         // Construct the head geom and add it directly to the Gizmo pass.
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
+        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
+
         this.__vrControllers = [];
         this.__vrTools = {};
-        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
-        this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
-
-        this.__pressedButtons = 0;
         this.__currentTool = undefined;
-        this.__moveMode = true;
 
         if (this.__vrDisplay.stageParameters &&
             this.__vrDisplay.stageParameters.sizeX > 0 &&
@@ -136,9 +133,11 @@ class VRViewport {
             this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
             this.__currentTool = this.__vrTools['FlyTool'];
         } else {
-            this.__vrTools['1HandedGrab'] = new VR1HandedGrabTool(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['2HandedGrab'] = new VR2HandedGrabTool(this, this.__vrhead, this.__vrControllers);
+            this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
+
+            this.__currentTool = this.__vrTools['VRToolMoveStage'];
+            this.__currentTool.activateTool();
 
             let markerpenTool = this.__vrTools['Markerpen'];
             markerpenTool.strokeStarted.connect((data) => {
@@ -322,17 +321,6 @@ class VRViewport {
         });
     }
 
-    setMoveMode(mode) {
-        this.__moveMode = mode;
-        if (this.__moveMode) {
-            for (let vrController of this.__vrControllers)
-                vrController.setHandleColor(new Color(0, 0, 1));
-        } else {
-            for (let vrController of this.__vrControllers)
-                vrController.setHandleColor(new Color(0, 1, 0));
-        }
-    }
-
     togglePresenting() {
         if (this.__vrDisplay.isPresenting)
             this.stopPresenting();
@@ -398,7 +386,8 @@ class VRViewport {
                     let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
-                            this.setMoveMode(true);
+                            this.__currentTool = this.__vrTools['VRToolMoveStage'];
+                            this.__currentTool.activateTool();
 
                             // if(this.__stageBig){
                             //     // Place the user inside the volume at the position of the
@@ -412,7 +401,8 @@ class VRViewport {
                             // }
 
                         } else if (vals[1] < 0) {
-                            this.setMoveMode(false);
+                            this.__currentTool = this.__vrTools['Markerpen'];
+                            this.__currentTool.activateTool();
 
                             // if(!this.__stageBig){
                             //     // Restore the user to thier previous scale
@@ -421,47 +411,17 @@ class VRViewport {
                         }
                     }, this);
 
-                    vrController.buttonPressed.connect(() => {
-                        this.__pressedButtons++;
-                        if (!isMobileDevice()) {
-                            if (this.__moveMode) {
-                                if (this.__pressedButtons == 1) {
-                                    this.__currentTool = this.__vrTools['1HandedGrab'];
-                                } else if (this.__pressedButtons == 2) {
-                                    this.__currentTool = this.__vrTools['2HandedGrab'];
-                                }
-                            } else {
-                                this.__currentTool = this.__vrTools['Markerpen'];
-                            }
-                        }
-                        this.__currentTool.startAction();
-                    }, this);
-
-                    vrController.buttonReleased.connect(() => {
-                        this.__pressedButtons--;
-                        if (!isMobileDevice()) {
-                            if (this.__currentTool) {
-                                this.__currentTool.endAction();
-                                this.__currentTool = null;
-                            }
-                            if (this.__moveMode && this.__pressedButtons == 1) {
-                                this.__currentTool = this.__vrTools['1HandedGrab'];
-                                this.__currentTool.startAction();
-                            }
-                        }
-                    }, this);
-
+                    // Note: we shoulnd't need this line.
                     this.__renderer.getCollector().addTreeItem(vrController.getTreeItem());
                     this.__vrControllers[id] = vrController;
-                    this.__renderer.getCollector().finalize(); // TODO this should not be explicit.
                 }
                 this.__vrControllers[id].update(gamepad);
                 id++;
             }
         }
 
-        if (this.__currentTool && this.__pressedButtons) {
-            this.__currentTool.applyAction();
+        if (this.__currentTool) {
+            this.__currentTool.evalTool();
         }
 
 
