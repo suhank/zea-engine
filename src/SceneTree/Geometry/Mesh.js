@@ -4,6 +4,7 @@ import {
     Vec3,
     Quat,
     Mat4,
+    Xfo,
     Signal
 } from '../../Math';
 
@@ -27,6 +28,10 @@ import {
 class Mesh extends BaseGeom {
     constructor(name) {
         super(name);
+        this.init();
+    }
+
+    init() {
         this.__faceCounts = [];
         this.__faceVertexCounts = new Uint8Array();
         this.__faceOffsets = new Uint32Array();
@@ -227,6 +232,18 @@ class Mesh extends BaseGeom {
         return indices;
     }
 
+    //////////////////////////////////////////
+    // Memory
+    
+    freeData(){
+        super.freeData();
+        this.init();
+    }
+
+    //////////////////////////////////////////
+    // Persistence
+    
+/*
     loadBin(reader) {
 
         this.name = reader.loadStr();
@@ -363,6 +380,92 @@ class Mesh extends BaseGeom {
             voffset += clusterData.numVerts;
             foffset += numClusterFaces;
         }
+
+        // this.computeVertexNormals();
+        this.geomDataChanged.emit();
+    }
+*/
+
+    readBinary(reader) {
+        super.loadBaseGeomBinary(reader);
+
+        this.setFaceCounts(reader.loadUInt32Array());
+        this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length);
+        let offsetRange = reader.loadSInt32Vec2();
+        let bytes = reader.loadUInt8();
+        let faceVertexIndexDeltas;
+        if(bytes == 1)
+            faceVertexIndexDeltas = reader.loadUInt8Array();
+        else if(bytes == 2)
+            faceVertexIndexDeltas = reader.loadUInt16Array();
+        else if(bytes == 4)
+            faceVertexIndexDeltas = reader.loadUInt32Array();
+
+        let numVerts = this.numVertices();
+
+        let numFaces = this.getNumFaces();
+        let offset = 0;
+        let prevCount = 0;
+        for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
+            let count = this.__faceVertexCounts[faceIndex] + 3;
+            this.__faceOffsets[faceIndex] = offset;
+            for (let j = 0; j < count; j++) {
+                let faceVertex = offset + j;
+                let delta = faceVertexIndexDeltas[faceVertex] + offsetRange.x;
+                if (faceIndex == 0)
+                    this.__faceVertexIndices[faceVertex] = delta;
+                else {
+                    let prevFaceVertex = this.__faceOffsets[faceIndex - 1];
+                    prevFaceVertex += (j < prevCount) ? j : (prevCount-1);
+                    this.__faceVertexIndices[faceVertex] = this.__faceVertexIndices[prevFaceVertex] + delta;
+                }
+            }
+            offset += count;
+            prevCount = count;
+        }
+        this.__numPopulatedFaceVertexIndices = offset;
+
+        /////////////////////////////////////
+        // Clusters
+        const numClusters = reader.loadUInt32();
+        const positionsAttr = this.vertices;
+        const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
+        // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
+        for (let i = 0; i < numClusters; i++) {
+            let xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat());
+            const coordsScale = reader.loadFloat32();
+            let offset = reader.loadFloat32Vec2();
+            let offsetRange = reader.loadSInt32Vec2();
+            let bytes = reader.loadUInt8();
+            let clusterFaceIndiceDeltas;
+            if(bytes == 1)
+                clusterFaceIndiceDeltas = reader.loadUInt8Array();
+            else if(bytes == 2)
+                clusterFaceIndiceDeltas = reader.loadUInt16Array();
+            else
+                clusterFaceIndiceDeltas = reader.loadUInt32Array();
+            let prevFace = 0;
+            for (let delta of clusterFaceIndiceDeltas) {
+                let face = delta + offsetRange.x;
+                face += prevFace;
+                prevFace = face;
+                let vertexIndices = this.getFaceVertexIndices(face);
+                for(let vertexIndex of vertexIndices){
+                    let pos = positionsAttr.getValueRef(vertexIndex);
+                    let tmp = xfo.transformVec3(pos);
+                    let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
+                    lightmapCoord.scaleInPlace(coordsScale);
+                    lightmapCoord.addInPlace(offset);
+                    lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord);
+
+                    // for debugging.
+                    // clusterIDsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, i);
+                }
+            }
+
+            // Now compute the Uvs for the vertices.
+        }
+
 
         // this.computeVertexNormals();
         this.geomDataChanged.emit();

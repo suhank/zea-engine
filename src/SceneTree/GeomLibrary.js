@@ -48,7 +48,6 @@ class GeomLibrary {
         let toc = reader.loadUInt32Array(numGeoms);
         let printProgress = numGeoms > 500;
         let progress = 0;
-        let geomsRange = [this.geoms.length, this.geoms.length+numGeoms];
         for (let i = 0; i < numGeoms; i++) {
 
             let geomReader = new BinReader(reader.data, toc[i], reader.isMobileDevice);
@@ -79,7 +78,7 @@ class GeomLibrary {
                 }
             }
         }
-        this.loaded.emit(geomsRange);
+        this.loaded.emit();
     }
 
     toJSON() {

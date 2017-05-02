@@ -21,6 +21,8 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
+        this.geom = geom;
+        this.material = material;
         this.__lightmap = "Default"; // the lightmap that the geom uses.
         this.__lightmapCoordsOffset = new Vec2();
         this.__geomOffsetXfo = new Xfo();
@@ -28,11 +30,7 @@ class GeomItem extends TreeItem {
 
         this.__selectable = true;
         this.__selected = false;
-        this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
-
-        this.geom = geom;
-        this.material = material;
     }
 
     destroy() {
@@ -50,7 +48,6 @@ class GeomItem extends TreeItem {
                 this.__boundingBoxDirty = true;
                 this.boundingBoxChanged.emit();
             }, this);
-            this.geomAssigned.emit();
         }
     }
 
@@ -183,19 +180,7 @@ class GeomItem extends TreeItem {
         super.readBinary(reader, flags);
 
         let itemflags = reader.loadUInt8();
-        let geomIndex = reader.loadUInt32();
-        if(geomLibrary.numGeoms > geomIndex){
-            this.geom = geomLibrary.getGeom(geomIndex);
-        }
-        else{
-            let onGeomLoaded = (range)=>{
-                if(geomIndex < range[1]){
-                    this.geom = geomLibrary.getGeom(geomIndex);
-                    geomLibrary.loaded.disconnect(onGeomLoaded, this);
-                }
-            }
-            geomLibrary.loaded.connect(onGeomLoaded, this);
-        }
+        this.geom = geomLibrary.getGeom(reader.loadUInt32());
 
         //this.setVisibility(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
