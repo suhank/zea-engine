@@ -22,20 +22,21 @@ class GLEnvMap extends GLProbe {
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
         this.__srcGLTex = srcGLTex;
 
-        // Note: we must setup the image pyramid before connecting our listeners to the signals
-        // this is so that during updates, the pyramid is updated first.
-        this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
-
         srcGLTex.updated.connect(() => {
             this.convolveEnvMap(srcGLTex);
         }, this);
         if (this.__envMap.isLoaded()) {
+            // Note: we must setup the image pyramid before connecting our listeners to the signals
+            // this is so that during updates, the pyramid is updated first.
+            this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
             this.convolveEnvMap(srcGLTex);
-        }
-        else{
-           this.__envMap.loaded.connect(() => {
-              this.convolveEnvMap(srcGLTex);
-           }, this);
+        } else {
+            this.__envMap.loaded.connect(() => {
+                // Note: we must setup the image pyramid before connecting our listeners to the signals
+                // this is so that during updates, the pyramid is updated first.
+                this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
+                this.convolveEnvMap(srcGLTex);
+            }, this);
         }
         srcGLTex.destructing.connect(() => {
             console.log(this.__hdrImage.name + " destructing");
@@ -57,7 +58,7 @@ class GLEnvMap extends GLProbe {
         gui.add(this, 'backgroundFocus', 0.0, 1.0);
     }
 
-    getShaderPreprocessorDirectives(){
+    getShaderPreprocessorDirectives() {
         return {
             "ATLAS_NAME": "EnvMap",
             "EnvMap_COUNT": this.numSubImages(),
@@ -70,15 +71,14 @@ class GLEnvMap extends GLProbe {
 
             let gl = this.__gl;
             let displayAtlas = false;
-            if(displayAtlas){
+            if (displayAtlas) {
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
                 //screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex);
                 //screenQuad.draw(renderstate, this.__srcGLTex);
                 //screenQuad.draw(renderstate, this.__imagePyramid);
                 screenQuad.draw(renderstate, this);
-            }
-            else{
+            } else {
                 ///////////////////
                 this.__envMapShader.bind(renderstate, 'GLEnvMap');
                 let unifs = renderstate.unifs;
@@ -99,7 +99,7 @@ class GLEnvMap extends GLProbe {
         }
     }
 
-    destroy(){
+    destroy() {
         super.destroy();
         this.__srcGLTex.loaded.disconnectScope(this);
         this.__srcGLTex.updated.disconnectScope(this);
