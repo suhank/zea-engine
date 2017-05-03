@@ -56,7 +56,6 @@ class BinAsset extends AssetItem {
                 let unpacked = performance.now();
                 numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, isMobileDevice()));
                 console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
-                //async.decAsyncCount();
                 this.loaded.emit();
             },
             () => {

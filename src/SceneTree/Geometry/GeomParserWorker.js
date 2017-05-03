@@ -12,13 +12,15 @@ import {
 } from '../BinReader.js';
 
 
-let parseGeomsBinary = (toc, geomIndexOffset, range, isMobileDevice, dataSlice) => {
+let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, dataSlice) => {
     let geomDatas = [];
-    let offset = toc[range[0]];
+    let offset = toc[geomsRange[0]];
+    // console.log("offset:" +  offset);
     let transferables = [];
-    for (let i = range[0]; i < range[1]; i++) {
+    for (let i = geomsRange[0]; i < geomsRange[1]; i++) {
         let geomReader = new BinReader(dataSlice, toc[i] - offset, isMobileDevice);
         let className = geomReader.loadStr();
+        // console.log(i + ":" + offset + ".className:" +  className + " pos:" + (toc[i] - offset) + " dataSlice.byteLength:" +  dataSlice.byteLength);
         let geom;
         switch (className) {
             case 'Points':
@@ -40,6 +42,7 @@ let parseGeomsBinary = (toc, geomIndexOffset, range, isMobileDevice, dataSlice) 
             transferables.push(geomBuffers.indices.buffer);
         for (let name in geomBuffers.attrBuffers)
             transferables.push(geomBuffers.attrBuffers[name].values.buffer);
+        
         geomDatas.push({
             name: geom.name,
             type: className,
@@ -52,7 +55,7 @@ let parseGeomsBinary = (toc, geomIndexOffset, range, isMobileDevice, dataSlice) 
     self.postMessage({
         type: 'geomDatas',
         geomIndexOffset,
-        range,
+        geomsRange,
         geomDatas
     }, transferables);
     return geomDatas;

@@ -30,13 +30,12 @@ class GeomLibrary {
             this.workers[i] = this.__constructWorker();
         }
         this.__mostResentlyHired = 0;
-        this.__loadedGeoms = 0;
     }
 
     __constructWorker() {
         let worker = new GeomParserWorker();
         worker.onmessage = (event) => {
-            this.__revieveGeomDatas(event.data.geomDatas, event.data.geomIndexOffset, event.data.range);
+            this.__revieveGeomDatas(event.data.geomDatas, event.data.geomIndexOffset, event.data.geomsRange);
         };
         return worker;
     }
@@ -74,18 +73,39 @@ class GeomLibrary {
         let toc = reader.loadUInt32Array(numGeoms);
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
-        let dataSlice = data.slice(toc[0]);
-        let geomsRange = [0, numGeoms];
-        this.workers[this.__mostResentlyHired].postMessage({
-            toc,
-            geomIndexOffset,
-            geomsRange,
-            isMobileDevice: reader.isMobileDevice,
-            dataSlice,
-        }, [dataSlice]);
-        this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
+        let numGeomsPerWorkload = 999999;//Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1);
+        let offset = 0;
+        while (offset < numGeoms) {
+            let geomsRange;
+            let dataSlice;
+            let dataSlice_start = toc[offset];
+            let dataSlice_end;
+            if(offset+numGeomsPerWorkload >= numGeoms){
+                geomsRange = [offset, numGeoms];
+                dataSlice_end = data.byteLength;
+                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +dataSlice_start);
+            }
+            else {
+                geomsRange = [offset, offset+numGeomsPerWorkload];
+                dataSlice_end = toc[geomsRange[1]];
+                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +dataSlice_start + " end:" + dataSlice_end);
+            }
+            dataSlice = data.slice(dataSlice_start, dataSlice_end);
+            
+            this.workers[this.__mostResentlyHired].postMessage({
+                toc,
+                geomIndexOffset,
+                geomsRange,
+                isMobileDevice: reader.isMobileDevice,
+                dataSlice,
+            }, [dataSlice]);
+            this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
 
-        this.__loadedGeoms += numGeoms;
+            offset += numGeomsPerWorkload;
+            if(offset > numGeomsPerWorkload)
+                break;
+        }
+
     }
 
     __revieveGeomDatas(geomDatas, geomIndexOffset, geomsRange) {
