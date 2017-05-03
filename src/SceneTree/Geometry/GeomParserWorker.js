@@ -42,7 +42,7 @@ let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, dataSl
             transferables.push(geomBuffers.indices.buffer);
         for (let name in geomBuffers.attrBuffers)
             transferables.push(geomBuffers.attrBuffers[name].values.buffer);
-        
+
         geomDatas.push({
             name: geom.name,
             type: className,
@@ -58,7 +58,6 @@ let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, dataSl
         geomsRange,
         geomDatas
     }, transferables);
-    return geomDatas;
 }
 
 self.onmessage = function(event) {

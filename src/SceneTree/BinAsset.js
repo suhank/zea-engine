@@ -18,8 +18,9 @@ import {
 
 
 class BinAsset extends AssetItem {
-    constructor(name = undefined) {
+    constructor(name, resourceLoader) {
         super(name);
+        this.__resourceLoader = resourceLoader;
         this.loaded = new Signal();
     }
 
@@ -35,62 +36,38 @@ class BinAsset extends AssetItem {
         this.localXfo = localXfo;
     }
 
-    loadURL(fileName, resources) {
+    loadURL(filePath) {
 
         let numGeomsFiles = 1;
-        let unpackBin = (data) => {
-            let unpack = new Unpack(data);
-            let entries = unpack.getEntries();
-            if (!entries[0].name.endsWith('.bin'))
-                throw ("Invalid Asset resource");
-            let binData = unpack.decompress(entries[0].name);
-            unpack.close();
-            return binData;
-        }
-
-        loadBinfile(
-            resources[fileName],
-            (path, data) => {
-                let start = performance.now();
-                let treeData = unpackBin(data);
-                let unpacked = performance.now();
+        this.__resourceLoader.loadResources(filePath, 
+            (path, entries) => {
+                let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, isMobileDevice()));
-                console.log(path+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
                 this.loaded.emit();
-            },
-            () => {
-
-            },
-            this);
+            });
 
         let geomFileID = 0;
         let loadGeomsfile = (url)=>{
-            loadBinfile(
-                url,
-                (path, data) => {
-                    let start = performance.now();
-                    let geomsData = unpackBin(data);
-                    let unpacked = performance.now();
+            this.__resourceLoader.loadResources(url, 
+                (path, entries) => {
+                    let geomsData = entries[Object.keys(entries)[0]];
                     this.__geoms.readBinary(geomsData.buffer);
-                    console.log(url+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
-                    
                     numGeomsFiles--;
                     if(numGeomsFiles > 0) {
                         geomFileID++;
-                        let nextGeomFileName = fileName.split('.')[0] + geomFileID + '.geoms';
-                        if(nextGeomFileName in resources)
-                           loadGeomsfile(resources[nextGeomFileName]);
+                        let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.geoms';
+                        if(this.__resourceLoader.resourceAvailable(nextGeomFileName))
+                           loadGeomsfile(nextGeomFileName);
                     }
                 },
                 () => {
 
                 },
                 this);
-
         }
 
-        let geomFileName = fileName.split('.')[0] + geomFileID + '.geoms';
-        loadGeomsfile(resources[geomFileName]);
+        let geomFileName = filePath.split('.')[0] + geomFileID + '.geoms';
+        loadGeomsfile(geomFileName);
     }
 
     loadURLs(fileUrl) {

@@ -17,7 +17,7 @@ import {
 
 
 class HDRImage2D extends Image2D {
-    constructor(name, url, isStream) {
+    constructor(name, url, resourceLoader, isStream) {
         super({
             format: 'FLOAT',
             channels: 'RGB'
@@ -25,6 +25,7 @@ class HDRImage2D extends Image2D {
 
         this.__name = name;
         this.__url = url;
+        this.__resourceLoader = resourceLoader;
         this.__stream = isStream;
         this.__loaded = false;
         this.__data = {};
@@ -45,41 +46,22 @@ class HDRImage2D extends Image2D {
         return this.__stream;
     }
     
-    loadURL(fileUrl) {
-        if(fileUrl in this.__data){
-            this.__currKey = fileUrl;
+    loadURL(filePath) {
+        if(filePath in this.__data){
+            this.__currKey = filePath;
             this.updated.emit();
             return;
         }
 
-        loadBinfile(
-            fileUrl,
-            (path, data) => {
-                let start = performance.now();
-
-                /////////////////////////////////
-                // Un-pack the data.
-                let unpack = new Unpack(data);
-                let entries = unpack.getEntries();
-                let ldrEntry = (entries[0].name.endsWith('.jpg') ? entries[0] : (entries[1].name.endsWith('.jpg') ? entries[1] : undefined));
-                let cdmEntry = entries[0].name.endsWith('.jpg') ? entries[1] : entries[0];
-                let cdm;
-                if(cdmEntry && cdmEntry.name.endsWith('.packed')){
-                    let cdmPacked = unpack.decompress(cdmEntry.name);
-                    let unpackCDM = new Unpack(cdmPacked.buffer);
-                    cdm = unpackCDM.decompress(unpackCDM.getEntries()[0].name);
-                    unpackCDM.close();
+        this.__resourceLoader.loadResources(filePath, 
+            (path, entries) => {
+                let ldr, cdm;
+                for(let name in entries){
+                    if(name.endsWith('.jpg'))
+                        ldr = entries[name];
+                    else if(name.endsWith('.bin'))
+                        cdm = entries[name];
                 }
-                else{
-                    cdmEntry = (entries[0].name.endsWith('.bin') ? entries[0] : (entries[1].name.endsWith('.bin') ? entries[1] : undefined));
-                    cdm = unpack.decompress(cdmEntry.name);
-                }
-                if (!ldrEntry || !cdm)
-                    throw ("Invalid VLH file");
-                let ldr = unpack.decompress(ldrEntry.name);
-                unpack.close();
-
-                let unpacked = performance.now();
 
                 /////////////////////////////////
                 // Parse the data.
@@ -87,26 +69,21 @@ class HDRImage2D extends Image2D {
                 let _this = this;
                 let ldrPic = new Image();
                 ldrPic.onload = function () {
-                    _this.__setLoadedData(fileUrl, ldrPic, cdm);
-                    console.log(path+ " width:"+_this.width + " height:" +_this.height + " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
+                    _this.__setLoadedData(filePath, ldrPic, cdm);
                 }
                 ldrPic.src = URL.createObjectURL(blob);
 
-            },
-            () => {
-
-            },
-            this);
+            });
     }
 
-    __setLoadedData(fileUrl, ldr, cdm) {
+    __setLoadedData(filePath, ldr, cdm) {
         this.width =  ldr.width;
         this.height =  ldr.height;
-        this.__data[fileUrl] = {
+        this.__data[filePath] = {
             'ldr': ldr,
             'cdm': cdm
         }
-        this.__currKey = fileUrl;
+        this.__currKey = filePath;
         if(!this.__loaded){
             this.__loaded = true;
             this.loaded.emit();

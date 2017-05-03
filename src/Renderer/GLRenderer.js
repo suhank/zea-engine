@@ -60,6 +60,9 @@ import {
 } from './VR/VRViewport.js';
 
 
+import {
+    Unpack
+} from '../external/Unpack.js';
 
 
 let activeGLRenderer = undefined;

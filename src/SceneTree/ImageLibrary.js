@@ -19,7 +19,7 @@ class ImageLibrary {
         this.__images = {};
         this.__async = new Async();
         this.loaded = new Signal();
-        if(url)
+        if (url)
             this.loadURL(url);
     }
 
@@ -39,37 +39,24 @@ class ImageLibrary {
     }
 
     loadURL(fileUrl) {
-        let onLoad = this.__loadVLA.bind(this);
-        loadBinfile(
-            fileUrl,
-            (fileUrl, data) => {
-                onLoad(data);
-            },
-            function(statusText) {
-                console.warn(statusText);
-            },
-            this
-        );
-    }
+        this.__resourceLoader.loadResources(filePath,
+            (path, entries) => {
+                for (let name of entries) {
+                    if (name.endsWith('.png') || name.endsWith('.jpg')) {
+                        let data = entries[name];
+                        let url = URL.createObjectURL(new Blob([data.buffer]));
+                        let image = new FileImage2D(name, url);
+                        this.__async.incAsyncCount();
+                        image.loaded.connect(this.__async.decAsyncCount, this.__async);
+                        this.__images[name] = image;
+                    }
+                }
+                let images = this.__images;
+                this.__async.ready.connect(() => {
+                    this.loaded.emit(images);
+                });
 
-    __loadVLA(data) {
-        let unpack = new Unpack(data);
-        let entries = unpack.getEntries();
-
-        for (let entry of entries) {
-            if (entry.name.endsWith('.png') || entry.name.endsWith('.jpg')) {
-                let data = unpack.decompress(entry.name);
-                let url = URL.createObjectURL(new Blob([data.buffer]));
-                let image = new FileImage2D(entry.name, url);
-                this.__async.incAsyncCount();
-                image.loaded.connect(this.__async.decAsyncCount, this.__async);
-                this.__images[entry.name] = image;
-            }
-        }
-        let images = this.__images;
-        this.__async.ready.connect(()=>{
-            this.loaded.emit(images);
-        });
+            });
     }
 
 }
