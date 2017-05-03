@@ -1,15 +1,19 @@
 import {
+    isMobileDevice,
     Signal
 } from '../Math';
-import {
-    Mesh
-} from './Geometry/Mesh.js';
 import {
     BinReader
 } from './BinReader.js';
 import {
     loadBinfile
 } from './Utils.js';
+import {
+    parseGeomsBinary
+} from './Geometry/GeomParserWorker.js';
+import {
+    MeshProxy
+} from './Geometry/MeshProxy.js';
 
 class GeomLibrary {
     constructor() {
@@ -34,7 +38,7 @@ class GeomLibrary {
         loadBinfile(
             fileUrl,
             function(fileUrl, data) {
-                this.loadBin(new BinReader(data));
+                this.loadBin(data);
             },
             function(statusText) {
                 console.warn(statusText);
@@ -43,9 +47,11 @@ class GeomLibrary {
         );
     }
 
-    readBinary(reader) {
+    readBinary(data) {
+        let reader = new BinReader(data, 0, isMobileDevice());
         let numGeoms = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
+        /*
         let printProgress = numGeoms > 500;
         let progress = 0;
         let geomsRange = [this.geoms.length, this.geoms.length+numGeoms];
@@ -78,6 +84,29 @@ class GeomLibrary {
                     console.log("Loading Geoms: " + progress + "%");
                 }
             }
+        }*/
+
+        // TODO: Use SharedArrayBuffer once available.
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
+        let dataSlice = data.slice(toc[0]);
+        let geomsRange = [this.geoms.length, this.geoms.length+numGeoms];
+        let geomDatas = parseGeomsBinary(dataSlice, toc, geomsRange, reader.isMobileDevice);
+        for (let geomData of geomDatas) {
+            let proxy;
+            switch (geomData.type) {
+                case 'Points':
+                    proxy = new PointsProxy(geomData);
+                    break;
+                case 'Lines':
+                    proxy = new LinesProxy(geomData);
+                    break;
+                case 'Mesh':
+                    proxy = new MeshProxy(geomData);
+                    break;
+                default:
+                    throw ("Unsupported Geom type:" + className);
+            }
+            this.geoms.push(proxy);
         }
         this.loaded.emit(geomsRange);
     }

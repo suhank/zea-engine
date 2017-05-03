@@ -72,7 +72,7 @@ class BinAsset extends AssetItem {
                     let start = performance.now();
                     let geomsData = unpackBin(data);
                     let unpacked = performance.now();
-                    this.__geoms.readBinary(new BinReader(geomsData.buffer, 0, isMobileDevice()));
+                    this.__geoms.readBinary(geomsData.buffer);
                     console.log(url+ " Unpack:" + (unpacked - start).toFixed(2) + " Parse:" + (performance.now() - unpacked).toFixed(2));
                     
                     numGeomsFiles--;

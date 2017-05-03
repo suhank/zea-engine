@@ -9,8 +9,7 @@ import {
     Points,
     Lines,
     Mesh,
-    Grid,
-    LinesMaterial,
+    MeshProxy,
     BillboardItem
 } from '../SceneTree';
 import {
@@ -185,7 +184,7 @@ class GLCollector {
         if (glgeom) {
             return glgeom;
         }
-        if (geom instanceof Mesh) {
+        if (geom instanceof Mesh || geom instanceof MeshProxy) {
             glgeom = new GLMesh(this.__renderer.gl, geom);
         } else if (geom instanceof Lines) {
             glgeom = new GLLines(this.__renderer.gl, geom);

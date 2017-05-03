@@ -9,13 +9,6 @@ import '../SceneTree/Geometry/Mesh.js';
 class GLMesh extends GLGeom {
     constructor(gl, mesh) {
         super(gl, mesh);
-
-        this.__numTriangles = this.__geom.computeNumTriangles();
-
-        // this.__wireframesVao = undefined;
-        // this.__hardEdgesVao = undefined;
-        // this.__pointsVao = undefined;
-
         this.genBuffers();
     }
 
@@ -38,6 +31,8 @@ class GLMesh extends GLGeom {
             this.__indexDataType = this.__gl.UNSIGNED_SHORT;
         if(indices instanceof Uint32Array)
             this.__indexDataType = this.__gl.UNSIGNED_INT;
+
+        this.__numTriangles = indices.length / 3;
 
         let gl = this.__gl;
         this.__indexBuffer = gl.createBuffer();

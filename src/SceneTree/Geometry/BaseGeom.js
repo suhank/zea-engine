@@ -27,7 +27,6 @@ class BaseGeom extends RefCounted {
         this.boundingBoxChanged = new Signal();
         this.geomDataChanged = new Signal();
         this.geomDataTopologyChanged = new Signal();
-        this.destructing = new Signal();
     }
 
     destroy(){
