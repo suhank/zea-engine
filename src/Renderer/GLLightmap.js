@@ -1,4 +1,3 @@
-
 import '../SceneTree/GeomItem.js';
 
 class GLLightmap {
@@ -34,6 +33,4 @@ class GLLightmap {
 };
 
 
-export {
-    GLLightmap
-};
+export default GLLightmap;

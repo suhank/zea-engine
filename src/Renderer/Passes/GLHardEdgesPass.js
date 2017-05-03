@@ -1,18 +1,8 @@
-import {
-    Color
-} from '../../Math';
-import {
-    Mesh
-} from '../../SceneTree';
-import {
-    WireShader
-} from '../Shaders/WireShader.js';
-import {
-    GLPass
-} from '../GLPass.js';
-import {
-    GLShader
-} from '../GLShader.js';
+import Color from '../../Math/Color';
+import Mesh from '../../SceneTree/Geometry/Mesh';
+import WireShader from '../Shaders/WireShader.js';
+import GLPass from '../GLPass.js';
+import GLShader from '../GLShader.js';
 
 class GLHardEdgesPass extends GLPass {
     constructor(gl) {
@@ -83,6 +73,4 @@ class GLHardEdgesPass extends GLPass {
     }
 };
 
-export {
-    GLHardEdgesPass
-};
+export default GLHardEdgesPass;

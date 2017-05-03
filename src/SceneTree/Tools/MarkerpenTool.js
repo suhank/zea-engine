@@ -1,16 +1,6 @@
-import {
-    Vec3,
-    Color,
-    Xfo,
-    Signal
-} from '../../Math';
-import {
-    TreeItem,
-    Lines,
-    GeomItem,
-    LinesMaterial,
-    FatLinesMaterial
-} from '../../SceneTree';
+import TreeItem from '../../SceneTree/TreeItem';
+import Lines from '../../SceneTree/Geometry/Lines';
+import FatLinesMaterial from '../../SceneTree/Shaders/FatLinesMaterial';
 
 class MarkerpenTool {
     constructor(name) {
@@ -59,7 +49,7 @@ class MarkerpenTool {
             geomItem,
             used,
             vertexCount,
-            replayMode
+            replayMode,
         };
 
         // if(!replayMode){
@@ -145,14 +135,12 @@ class MarkerpenTool {
         this.__strokeCount = 0;
         this.__strokes = {};
         this.__treeItem.removeAllChildren();
-    }
+    };
 
     destroy(){
         this.__treeItem.parentItem.removeChildByHandle(this.__treeItem);
         this.__treeItem = null;
-    }
+    };
 };
 
-export {
-    MarkerpenTool
-};
+export default MarkerpenTool

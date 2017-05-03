@@ -1,7 +1,6 @@
-import {
-    Color,
-    Signal
-} from '../Math';
+import Color from '../Math/Color';
+import Signal from '../Math/Signal';
+
 import '../SceneTree/GeomItem.js';
 
 // This class abstracts the rendering of a collection of geometries to screen.
@@ -144,6 +143,4 @@ class GLDrawItem {
     }
 };
 
-export {
-    GLDrawItem
-};
+export default GLDrawItem;

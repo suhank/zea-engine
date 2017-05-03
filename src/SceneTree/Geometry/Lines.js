@@ -1,7 +1,4 @@
-import {
-    BaseGeom
-} from './BaseGeom.js';
-
+import BaseGeom from './BaseGeom.js';
 
 class Lines extends BaseGeom {
     constructor(name) {
@@ -30,8 +27,8 @@ class Lines extends BaseGeom {
     setSegment(index, p0, p1) {
         if (index >= (this.__indices.length / 2))
             throw ("Invalid line index:" + index + ". Num Segments:" + (this.__indices.length / 2));
-        this.__indices[(index * 2) + 0] = p0
-        this.__indices[(index * 2) + 1] = p1
+        this.__indices[(index * 2) + 0] = p0;
+        this.__indices[(index * 2) + 1] = p1;
     }
 
     getSegmentVertexIndex(line, linevertex) {
@@ -57,10 +54,8 @@ class Lines extends BaseGeom {
     toJSON() {
         let json = super.toJSON();
         json['indices'] = this.__indices.length;
-        return json
-    }
+        return json;
+    };
 };
 
-export {
-    Lines
-};
+export default Lines;

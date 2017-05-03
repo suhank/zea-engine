@@ -4678,6 +4678,4 @@ var RarArchiveEntry = (function () {
 // }
 
 
-export {
-    Unpack
-};
+export default Unpack;

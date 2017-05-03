@@ -1,7 +1,5 @@
-import {
-    Vec3,
-    Xfo
-} from '../../Math';
+import Vec3 from '../../Math/Vec3';
+import Xfo from '../../Math/Xfo';
 
 class VRFlyTool {
     constructor(vrStage, vrHead, vrControllers) {
@@ -37,6 +35,4 @@ class VRFlyTool {
     }
 };
 
-export {
-    VRFlyTool
-};
+export default VRFlyTool;

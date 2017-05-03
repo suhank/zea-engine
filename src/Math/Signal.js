@@ -67,9 +67,6 @@ class Signal {
     }
 };
 
-export {
-    Signal
-};
-
+export default Signal;
 
 

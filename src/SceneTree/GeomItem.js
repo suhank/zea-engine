@@ -1,21 +1,13 @@
+import Signal from '../Math/Signal';
+import Vec2 from '../Math/Vec2';
+import Xfo from '../Math/Xfo';
+import TreeItem from './TreeItem';
+import sgFactory from './SGFactory.js';
+
 import {
-    Vec2,
-    Color,
-    Mat4,
-    Xfo,
-    Signal
-} from '../Math';
-import {
-    TreeItem,
-    LOADFLAGS_SKIP_MATERIALS,
-    LOADFLAGS_SKIP_GEOMETRIES
+  LOADFLAGS_SKIP_MATERIALS,
+  LOADFLAGS_SKIP_GEOMETRIES
 } from './TreeItem.js';
-import {
-    Mesh
-} from './Geometry/Mesh.js';
-import {
-    sgFactory
-} from './SGFactory.js';
 
 class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
@@ -212,6 +204,4 @@ class GeomItem extends TreeItem {
 
 sgFactory.registerClass('GeomItem', GeomItem);
 
-export {
-    GeomItem
-};
+export default GeomItem;

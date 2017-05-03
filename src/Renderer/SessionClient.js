@@ -1,24 +1,8 @@
-import {
-    AttrValue,
-    Vec2,
-    Vec3,
-    Color,
-    Xfo,
-    Ray,
-    typeRegistry
-} from '../Math';
-import {
-    TreeItem
-} from '../SceneTree';
-import {
-    UserAvatar
-} from './UserAvatar';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
-    GLAnalyticsPass
-} from './Passes/GLAnalyticsPass.js';
+import Color from '../Math/Color';
+import typeRegistry from '../Math/TypeRegistry'
+import TreeItem from '../SceneTree/TreeItem';
+import UserAvatar from './UserAvatar';
+import GLAnalyticsPass from './Passes/GLAnalyticsPass.js';
 
 let getUrlVars = () => {
     let url = window.location.href,
@@ -779,6 +763,4 @@ class SessionClient {
 
 };
 
-export {
-    SessionClient
-};
+export default SessionClient;

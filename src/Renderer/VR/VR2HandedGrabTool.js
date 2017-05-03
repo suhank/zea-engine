@@ -1,6 +1,4 @@
-import {
-    Xfo
-} from '../../Math';
+import Xfo from '../../Math/Xfo';
 
 class VR2HandedGrabTool {
     constructor(vrStage, vrHead, vrControllers) {
@@ -84,6 +82,4 @@ class VR2HandedGrabTool {
 
 };
 
-export {
-    VR2HandedGrabTool
-};
+export default VR2HandedGrabTool;

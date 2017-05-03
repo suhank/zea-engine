@@ -1,12 +1,8 @@
 import {
     JSON_stringify_fixedPrecision
 } from './Common.js';
-import {
-    Vec2
-} from './Vec2.js';
-import {
-    typeRegistry
-} from './TypeRegistry.js';
+import Vec2 from './Vec2';
+import typeRegistry from './TypeRegistry.js';
 
 class Box2 {
     constructor(p0 = undefined, p1 = undefined) {
@@ -69,9 +65,6 @@ class Box2 {
 
 typeRegistry.registerType('Box2', Box2);
 
-
-export {
-    Box2
-};
+export default Box2;
 
 

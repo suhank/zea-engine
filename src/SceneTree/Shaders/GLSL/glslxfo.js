@@ -1,7 +1,4 @@
-import {
-    shaderLibrary
-} from '../../ShaderLibrary.js';
-
+import shaderLibrary from '../../ShaderLibrary.js';
 import './glslutils.js';
 
 shaderLibrary.setShaderModule('glslxfo.glsl', `

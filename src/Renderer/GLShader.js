@@ -1,10 +1,5 @@
-import {
-    Signal
-} from '../Math';
-
-import {
-    shaderLibrary
-} from '../SceneTree';
+import Signal from '../Math/Signal';
+import shaderLibrary from '../SceneTree/ShaderLibrary';
 
 class GLShader {
     constructor(gl, shader) {
@@ -230,6 +225,4 @@ class GLShader {
     }
 };
 
-export {
-    GLShader
-};
+export default GLShader;

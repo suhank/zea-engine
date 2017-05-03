@@ -1,18 +1,12 @@
-import {
-    EulerAngles,
-    Quat,
-    Xfo,
-    Color,
-    Signal
-} from '../Math';
-import {
-    Cuboid,
-    Sphere,
-    TreeItem,
-    GeomItem,
-    FlatMaterial,
-    MarkerpenTool
-} from '../SceneTree';
+import Xfo from '../Math/Xfo';
+import Color from '../Math/Color';
+import Signal from '../Math/Signal';
+import Cuboid from '../SceneTree/Geometry/Shapes/Cuboid';
+import Sphere from '../SceneTree/Geometry/Shapes/Sphere';
+import TreeItem from '../SceneTree/TreeItem';
+import GeomItem from '../SceneTree/GeomItem';
+import FlatMaterial from '../SceneTree/Shaders/FlatMaterial';
+import MarkerpenTool from '../SceneTree/Tools/MarkerpenTool'
 
 class UserAvatar {
 
@@ -158,6 +152,4 @@ class UserAvatar {
     }
 };
 
-export {
-    UserAvatar
-};
+export default UserAvatar;

@@ -1,10 +1,5 @@
-import {
-    GLGeom
-} from './GLGeom.js';
-
-import {
-    generateShaderGeomBinding
-} from './GeomShaderBinding.js'
+import GLGeom from './GLGeom.js';
+import generateShaderGeomBinding from './GeomShaderBinding.js'
 
 class GLPoints extends GLGeom {
     constructor(gl, points) {
@@ -78,6 +73,4 @@ class GLPoints extends GLGeom {
     }
 };
 
-export {
-    GLPoints
-};
+export default GLPoints;

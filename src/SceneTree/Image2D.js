@@ -1,9 +1,5 @@
-import {
-    Signal
-} from '../Math';
-import {
-    RefCounted
-} from './RefCounted.js';
+import Signal from '../Math/Signal';
+import RefCounted from './RefCounted.js';
 
 class Image2D extends RefCounted {
     constructor(params={}) {
@@ -52,6 +48,4 @@ class Image2D extends RefCounted {
 
 };
 
-export {
-    Image2D
-};
+export default Image2D;

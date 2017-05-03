@@ -1,38 +1,15 @@
-import {
-    Signal
-} from '../Math';
-import {
-    shaderLibrary,
-    Shader
-} from '../SceneTree';
-
-import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
-    GLHDRImage
-} from './GLHDRImage.js';
-import {
-    GLProbe
-} from './GLProbe.js';
-import {
-    ConvolverShader
-} from './Shaders/ConvolverShader.js';
-import {
-    GLFbo
-} from './GLFbo.js';
-
-import {
-    generateShaderGeomBinding,
-} from './GeomShaderBinding.js';
-
-import {
-    Vec3,
-    hammersley
-} from '../Math';
+import Signal from '../Math/Signal';
+import Vec3 from '../Math/Vec3';
+import Shader from '../SceneTree/Shader';
+import shaderLibrary from '../SceneTree/ShaderLibrary'
+import GLShader from './GLShader.js';
+import GLTexture2D from './GLTexture2D.js';
+import GLHDRImage from './GLHDRImage.js';
+import GLProbe from './GLProbe.js';
+import ConvolverShader from './Shaders/ConvolverShader.js';
+import GLFbo from './GLFbo.js';
+import generateShaderGeomBinding from './GeomShaderBinding.js';
+import { hammersley } from '../Math/Hammersley';
 
 
 // // https://threejs.org/examples/?q=sky#webgl_shaders_sky
@@ -398,6 +375,4 @@ class GLProceduralSky extends GLProbe {
     }
 };
 
-export {
-    GLProceduralSky
-};
+export default GLProceduralSky;

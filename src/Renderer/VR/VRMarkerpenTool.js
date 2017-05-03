@@ -1,9 +1,8 @@
-import {
-    Vec3,
-    Color,
-    Xfo,
-    Signal
-} from '../../Math';
+import Vec3 from '../../Math/Vec3';
+import Signal from '../../Math/Signal';
+import Mat4 from '../../Math/Mat4';
+import Xfo from '../../Math/Xfo';
+import Color from '../../Math/Color';
 
 class VRMarkerpenTool {
     constructor(vrStage, vrHead, vrControllers) {
@@ -62,6 +61,4 @@ class VRMarkerpenTool {
     }
 };
 
-export {
-    VRMarkerpenTool
-};
+export default VRMarkerpenTool;

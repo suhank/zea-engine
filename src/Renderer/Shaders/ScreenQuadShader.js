@@ -1,7 +1,5 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import shaderLibrary  from '../../SceneTree/ShaderLibrary';
+import Shader  from '../../SceneTree/Shader';
 
 import './utils/quadVertexFromID.js';
 
@@ -45,7 +43,5 @@ void main(void) {
     }
 };
 
-export {
-    ScreenQuadShader
-};
+export default ScreenQuadShader;
 

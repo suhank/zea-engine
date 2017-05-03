@@ -1,13 +1,6 @@
-
-import {
-    Signal
-} from '../Math';
-import {
-    sgFactory
-} from './SGFactory.js';
-import {
-    Image2D
-} from './Image2D.js';
+import Signal from '../Math/Signal';
+import sgFactory from './SGFactory.js';
+import Image2D from './Image2D.js';
 
 class FileImage2D extends Image2D {
     constructor(name, url) {
@@ -67,6 +60,5 @@ class FileImage2D extends Image2D {
 
 sgFactory.registerClass('FileImage2D', FileImage2D);
 
-export {
-    FileImage2D
-};
+
+export default FileImage2D;

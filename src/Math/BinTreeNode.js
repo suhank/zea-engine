@@ -1,6 +1,4 @@
-import {
-    Vec2
-} from './Vec2.js';
+import Vec2 from './Vec2.js';
 
 class BinTreeRectBorder {
     constructor(value, movable = false) {
@@ -161,3 +159,5 @@ export {
     BinTreeRectBorder,
     BinTreeNode
 };
+
+export default BinTreeNode;
