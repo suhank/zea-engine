@@ -9,25 +9,45 @@ import {
     loadBinfile
 } from './Utils.js';
 import {
-    parseGeomsBinary
-} from './Geometry/GeomParserWorker.js';
-import {
-    MeshProxy
-} from './Geometry/MeshProxy.js';
+    PointsProxy,
+    LinesProxy,
+    MeshProxy,
+} from './Geometry/GeomProxies.js';
+
+// import {
+//     parseGeomsBinary
+// } from './Geometry/GeomParserWorker.js';
+let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
 
 class GeomLibrary {
     constructor() {
         this.loaded = new Signal();
         this.geoms = [];
+
+        this.workers = [];
+        let logicalProcessors = window.navigator.hardwareConcurrency;
+        for (let i = 0; i < logicalProcessors; i++) {
+            this.workers[i] = this.__constructWorker();
+        }
+        this.__mostResentlyHired = 0;
+        this.__loadedGeoms = 0;
     }
 
-    get numGeoms() {
+    __constructWorker() {
+        let worker = new GeomParserWorker();
+        worker.onmessage = (event) => {
+            this.__revieveGeomDatas(event.data.geomDatas, event.data.geomIndexOffset, event.data.range);
+        };
+        return worker;
+    }
+
+    getNumGeoms() {
         return this.geoms.length;
     }
 
     getGeom(index) {
-        if(index >= this.geoms.length){
-            console.warn("Geom index invalid:" + index);
+        if (index >= this.geoms.length) {
+            //console.warn("Geom index invalid:" + index);
             return null;
         }
         return this.geoms[index];
@@ -50,48 +70,33 @@ class GeomLibrary {
     readBinary(data) {
         let reader = new BinReader(data, 0, isMobileDevice());
         let numGeoms = reader.loadUInt32();
+        let geomIndexOffset = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
-        /*
-        let printProgress = numGeoms > 500;
-        let progress = 0;
-        let geomsRange = [this.geoms.length, this.geoms.length+numGeoms];
-        for (let i = 0; i < numGeoms; i++) {
-
-            let geomReader = new BinReader(reader.data, toc[i], reader.isMobileDevice);
-            let className = geomReader.loadStr();
-            let geom;
-            switch (className) {
-                case 'Points':
-                    geom = new Points();
-                    break;
-                case 'Lines':
-                    geom = new Lines();
-                    break;
-                case 'Mesh':
-                    geom = new Mesh();
-                    break;
-                default:
-                    throw ("Unsupported Geom type:" + className);
-            }
-            geom.readBinary(geomReader);
-            this.geoms.push(geom);
-
-            if(printProgress){
-                // Avoid printing too much as it slows things down.
-                let curr = Math.round((i / numGeoms) * 100);
-                if(curr != progress){
-                    progress = curr;
-                    console.log("Loading Geoms: " + progress + "%");
-                }
-            }
-        }*/
-
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
         let dataSlice = data.slice(toc[0]);
-        let geomsRange = [this.geoms.length, this.geoms.length+numGeoms];
-        let geomDatas = parseGeomsBinary(dataSlice, toc, geomsRange, reader.isMobileDevice);
-        for (let geomData of geomDatas) {
+        let geomsRange = [0, numGeoms];
+        this.workers[this.__mostResentlyHired].postMessage({
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            dataSlice,
+        }, [dataSlice]);
+        this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
+
+        this.__loadedGeoms += numGeoms;
+    }
+
+    __revieveGeomDatas(geomDatas, geomIndexOffset, geomsRange) {
+
+        // We are storing a subset of the geoms from a binary file
+        // which is a subset of the geoms in an asset.
+        // geomIndexOffset: the offset of the file geoms in the asset.
+        // geomsRange: the range of geoms in the bin file.
+        let offset = geomIndexOffset + geomsRange[0];
+        for (let i = 0; i < geomDatas.length; i++) {
+            let geomData = geomDatas[i];
             let proxy;
             switch (geomData.type) {
                 case 'Points':
@@ -106,9 +111,10 @@ class GeomLibrary {
                 default:
                     throw ("Unsupported Geom type:" + className);
             }
-            this.geoms.push(proxy);
+            this.geoms[offset + i] = proxy;
         }
-        this.loaded.emit(geomsRange);
+        let storedRange = [offset, geomIndexOffset + geomsRange[1]];
+        this.loaded.emit(storedRange);
     }
 
     toJSON() {

@@ -60,5 +60,7 @@ class MeshProxy extends BaseProxy {
 };
 
 export {
+    PointsProxy,
+    LinesProxy,
     MeshProxy
 };

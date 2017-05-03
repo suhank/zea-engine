@@ -184,12 +184,13 @@ class GeomItem extends TreeItem {
 
         let itemflags = reader.loadUInt8();
         let geomIndex = reader.loadUInt32();
-        if(geomLibrary.numGeoms > geomIndex){
-            this.setGeom(geomLibrary.getGeom(geomIndex));
+        let geom = geomLibrary.getGeom(geomIndex);
+        if(geom){
+            this.setGeom(geom);
         }
         else{
             let onGeomLoaded = (range)=>{
-                if(geomIndex < range[1]){
+                if(geomIndex > range[0] && geomIndex < range[1]){
                     this.setGeom(geomLibrary.getGeom(geomIndex));
                     geomLibrary.loaded.disconnect(onGeomLoaded, this);
                 }
