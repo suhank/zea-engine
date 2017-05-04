@@ -1,20 +1,9 @@
-import {
-    Vec2,
-    Signal
-} from '../Math';
-
-import {
-    Image2D
-} from './Image2D.js';
+import Signal from '../Math/Signal';
+import Image2D from './Image2D.js';
 
 import {
     loadBinfile
 } from './Utils.js';
-
-import {
-    parseHdr
-} from '../external/parse-hdr.js';
-
 
 class HDRImage2D extends Image2D {
     constructor(name, url, isStream) {
@@ -142,7 +131,5 @@ class HDRImage2D extends Image2D {
     }
 };
 
-export {
-    HDRImage2D
-};
+export default HDRImage2D;
 

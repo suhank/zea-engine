@@ -1,8 +1,8 @@
 //Code ported by Marcin Ignac (2014)
 //Based on Java implementation from
 //https://code.google.com/r/cys12345-research/source/browse/hdr/image_processor/RGBE.java?r=7d84e9fd866b24079dbe61fa0a966ce8365f5726
-var radiancePattern = "#\\?RADIANCE"
-var commentPattern = "#.*"
+var radiancePattern = "#\\?RADIANCE";
+var commentPattern = "#.*";
 var gammaPattern = "GAMMA=";
 var exposurePattern = "EXPOSURE=\\s*([0-9]*[.][0-9]*)";
 var formatPattern = "FORMAT=32-bit_rle_rgbe";
@@ -212,6 +212,4 @@ function parseHdr(buffer) {
 
 // module.exports = parseHdr;
 
-export {
-    parseHdr
-};
+export default parseHdr;

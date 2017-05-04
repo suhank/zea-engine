@@ -1,15 +1,7 @@
-import {
-    AttrValue
-} from './AttrValue.js';
-import {
-    Vec3
-} from './Vec3.js';
-import {
-    Mat3
-} from './Mat3.js';
-import {
-    typeRegistry
-} from './TypeRegistry.js';
+import AttrValue from './AttrValue.js';
+import Vec3 from './Vec3.js';
+import Mat3 from './Mat3.js';
+import typeRegistry from './TypeRegistry.js';
 
 // This matrix class is based on GLM, and is column major.
 
@@ -940,6 +932,4 @@ class Mat4 extends AttrValue {
 
 typeRegistry.registerType('Mat4', Mat4);
 
-export {
-    Mat4
-};
+export default Mat4;

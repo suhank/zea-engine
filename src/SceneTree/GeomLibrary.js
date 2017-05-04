@@ -1,15 +1,7 @@
-import {
-    Signal
-} from '../Math';
-import {
-    Mesh
-} from './Geometry/Mesh.js';
-import {
-    BinReader
-} from './BinReader.js';
-import {
-    loadBinfile
-} from './Utils.js';
+import Signal from '../Math/Signal';
+import Mesh from './Geometry/Mesh.js';
+import BinReader from './BinReader.js';
+import { loadBinfile } from './Utils.js';
 
 class GeomLibrary {
     constructor() {
@@ -93,6 +85,4 @@ class GeomLibrary {
 
 };
 
-export {
-    GeomLibrary
-};
+export default GeomLibrary;

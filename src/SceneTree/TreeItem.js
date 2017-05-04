@@ -1,15 +1,7 @@
-import {
-    Mat4,
-    Xfo,
-    Box3,
-    Signal
-} from '../Math';
-import {
-    sgFactory
-} from './SGFactory.js';
-import {
-    BinReader
-} from './BinReader.js';
+import Xfo from '../Math/Xfo';
+import Box3 from '../Math/Box3';
+import Signal from '../Math/Signal';
+import sgFactory from './SGFactory.js';
 
 
 // Defines used to explicity specify types for WebGL.
@@ -396,8 +388,9 @@ class TreeItem {
 sgFactory.registerClass('TreeItem', TreeItem);
 
 export {
-    TreeItem,
     LOADFLAGS_SKIP_CHILDREN,
     LOADFLAGS_SKIP_MATERIALS,
     LOADFLAGS_SKIP_GEOMETRIES
 };
+
+export default TreeItem;

@@ -1,12 +1,8 @@
 import {
     JSON_stringify_fixedPrecision
 } from './Common.js';
-import {
-    AttrValue
-} from './AttrValue.js';
-import {
-    typeRegistry
-} from './TypeRegistry.js';
+import AttrValue from './AttrValue.js';
+import typeRegistry from './TypeRegistry.js';
 
 class Vec4 extends AttrValue {
     constructor(x = 0, y = 0, z = 0, t = 0) {
@@ -340,6 +336,4 @@ class Vec4 extends AttrValue {
 
 typeRegistry.registerType('Vec4', Vec4);
 
-export {
-    Vec4
-};
+export default Vec4;

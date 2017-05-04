@@ -1,7 +1,5 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import shaderLibrary  from '../../SceneTree/ShaderLibrary';
+import Shader  from '../../SceneTree/Shader';
 
 class DepthMapShader extends Shader {
     
@@ -52,7 +50,5 @@ void main(void) {
 };
 
 
-export {
-    DepthMapShader
-};
+export default DepthMapShader;
 

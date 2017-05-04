@@ -1,7 +1,4 @@
-
-import {
-    Signal
-} from '../Math';
+import Signal from '../Math/Signal';
 
 class Async {
     constructor() {
@@ -10,7 +7,7 @@ class Async {
 
         this.incAsyncCount = function(count=1) {
             this.__asyncCount+=count;
-        }.bind(this)
+        }.bind(this);
 
         this.decAsyncCount = function() {
             if (this.__asyncCount > 0){
@@ -19,7 +16,7 @@ class Async {
                     this.__asyncsCompleted();
                 }
             }
-        }.bind(this)
+        }.bind(this);
 
         this.__asyncsCompleted = function(){
             this.ready.emit();
@@ -32,6 +29,4 @@ class Async {
 
 };
 
-export {
-    Async
-};
+export default Async;

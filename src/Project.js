@@ -1,9 +1,10 @@
+import TreeItem from './SceneTree/TreeItem';
+import GeomItem from './SceneTree/GeomItem';
+import GeomLibrary from './SceneTree/GeomLibrary';
+import MaterialLibrary from './SceneTree/MaterialLibrary';
+import sgFactory from './SceneTree/SGFactory';
+
 import {
-    TreeItem,
-    GeomItem,
-    GeomLibrary,
-    MaterialLibrary,
-    sgFactory,
     LOADFLAGS_SKIP_CHILDREN,
     LOADFLAGS_SKIP_MATERIALS,
     LOADFLAGS_SKIP_GEOMETRIES,
@@ -139,6 +140,4 @@ class Project {
     }
 };
 
-export {
-    Project
-};
+export default Project;

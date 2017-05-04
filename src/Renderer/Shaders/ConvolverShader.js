@@ -1,13 +1,7 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
-
+import shaderLibrary  from '../../SceneTree/ShaderLibrary';
+import Shader  from '../../SceneTree/Shader';
 import './utils/quadVertexFromID.js';
-
-import {
-    ScreenQuadShader
-} from './ScreenQuadShader.js'
+import ScreenQuadShader from './ScreenQuadShader.js'
 
 
 class ConvolverShader extends Shader {
@@ -115,7 +109,5 @@ void main(void) {
 };
 
 
-export {
-    ConvolverShader
-};
+export default ConvolverShader;
 

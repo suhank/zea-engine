@@ -1,11 +1,6 @@
-import {
-    Async,
-    Signal
-} from '../Math';
-
-import {
-    FileImage2D
-} from './FileImage2D.js';
+import Async from '../Math/Async';
+import Signal from '../Math/Signal';
+import FileImage2D from './FileImage2D.js';
 
 import {
     loadTextfile,
@@ -74,6 +69,4 @@ class ImageLibrary {
 
 }
 
-export {
-    ImageLibrary
-};
+export default ImageLibrary;

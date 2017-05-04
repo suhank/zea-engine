@@ -1,28 +1,15 @@
-import {
-    Vec2,
-    Vec3,
-    Ray,
-    Mat4,
-    Color,
-    Signal
-} from '../Math';
-import {
-    Camera,
-    MarkerpenTool
-} from '../SceneTree';
-import {
-    GLFbo
-} from './GLFbo.js';
-import {
-    GL2DOverlayPass
-} from './Passes/GL2DOverlayPass.js';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
-    GLSelectionRect
-} from './Drawables/GLSelectionRect.js';
-
+import Vec2 from '../Math/Vec2';
+import Vec3 from '../Math/Vec3';
+import Ray from '../Math/Ray';
+import Mat4 from '../Math/Mat4';
+import Color from '../Math/Color';
+import Signal from '../Math/Signal';
+import Camera from '../SceneTree/Camera';
+import MarkerpenTool from '../SceneTree/Tools/MarkerpenTool';
+import GLFbo from './GLFbo.js';
+import GL2DOverlayPass from './Passes/GL2DOverlayPass.js';
+import GLTexture2D from './GLTexture2D.js';
+import GLSelectionRect from './Drawables/GLSelectionRect.js';
 
 class GLViewport {
     constructor(renderer, name, width, height) {
@@ -788,6 +775,4 @@ class GLViewport {
     }
 };
 
-export {
-    GLViewport
-};
+export default GLViewport;

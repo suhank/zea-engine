@@ -1,6 +1,4 @@
-import {
-    Lines
-} from '../Lines.js';
+import Lines from '../Lines.js';
 
 class Rect extends Lines {
     constructor(name, x = 1.0, y = 1.0) {
@@ -61,6 +59,4 @@ class Rect extends Lines {
     }
 };
 
-export {
-    Rect
-};
+export default Rect;

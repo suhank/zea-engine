@@ -1,20 +1,12 @@
-import {
-    isMobileDevice,
-    Signal
-} from '../Math';
-import {
-    AssetItem
-} from './AssetItem.js';
+import Signal from '../Math/Signal';
+import { isMobileDevice } from '../Math';
+import AssetItem from './AssetItem.js';
+import BinReader from './BinReader.js';
 
 import {
-    loadTextfile,
-    loadBinfile
+  loadTextfile,
+  loadBinfile
 } from './Utils.js';
-
-import {
-    BinReader
-} from './BinReader.js';
-
 
 class BinAsset extends AssetItem {
     constructor(name = undefined) {
@@ -118,6 +110,4 @@ class BinAsset extends AssetItem {
     }
 };
 
-export {
-    BinAsset
-};
+export default BinAsset;

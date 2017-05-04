@@ -1,13 +1,6 @@
-import {
-    Color
-} from '../../Math';
-import {
-    shaderLibrary
-} from '../ShaderLibrary.js';
-import {
-    Material
-} from '../Material.js';
-
+import Color from '../../Math/Color';
+import shaderLibrary from '../ShaderLibrary.js';
+import Material from '../Material.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
@@ -73,9 +66,4 @@ void main(void) {
     }
 };
 
-export {
-    PointsMaterial
-};
-
-
-
+export default PointsMaterial;

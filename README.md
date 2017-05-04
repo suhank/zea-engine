@@ -23,10 +23,9 @@ Install the httpserver
 
 ## Scripts
 
-* `npm run devES6` - produces development ES6 version of Visualive and runs a watcher.  Edited source code should auto-recompile.
-* `npm run dev` - produces development ES5 version of Visualive and runs a watcher.  Edited source code should auto-recompile.
-* `npm run build` - produces a production version of Visualive under the `lib` folder.
-* `npm run test` - run the tests. Note: builds an ES5 version for testing against.
+* `npm run build` - produces development version of Visualive.
+* `npm run build:dev` - produces development version of Visualive and runs a watcher.  Edited source code should auto-recompile.
+* `npm run build:production` - produces a production version of Visualive under the `lib` folder.
 
 
 ## Typical development workflow
@@ -34,7 +33,7 @@ Install the httpserver
 1. Open Git Bash Terminal
   * Open a Terminal in the repo root (from Source Tree using the icon in the top right)
 2. Build Visualive in development mode
-  * Run `npm run devES6`. This command will generate an non-minified version of Visualive and will run a watcher so you get re-compilation on file changes.
+  * Run `npm run build:dev`. This command will generate an non-minified version of Visualive and will run a watcher so you get re-compilation on file changes.
 3. Run the HTTP Server
   * See server section above.
 4. Run the tests/demos. 

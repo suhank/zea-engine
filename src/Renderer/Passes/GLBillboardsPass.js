@@ -1,25 +1,11 @@
-import {
-    Vec3,
-    Vec4
-} from '../../Math';
-import {
-    BillboardShader
-} from '../Shaders/BillboardShader.js';
-import {
-    GLPass
-} from '../GLPass.js';
-import {
-    GLShader
-} from '../GLShader.js';
-import {
-    ImageAtlas
-} from '../ImageAtlas.js';
-import {
-    GLTexture2D
-} from '../GLTexture2D.js';
-import {
-    generateShaderGeomBinding,
-} from '../GeomShaderBinding.js';
+import Vec3 from '../../Math/Vec3';
+import Vec4 from '../../Math/Vec4';
+import BillboardShader from '../Shaders/BillboardShader.js';
+import GLPass from '../GLPass.js';
+import GLShader from '../GLShader.js';
+import ImageAtlas from '../ImageAtlas.js';
+import GLTexture2D from '../GLTexture2D.js';
+import generateShaderGeomBinding from '../GeomShaderBinding.js';
 
 class GLBillboardsPass extends GLPass {
     constructor(gl, collector) {
@@ -43,7 +29,8 @@ class GLBillboardsPass extends GLPass {
     
     /////////////////////////////////////
     // Bind to Render Tree
-    filterRenderTree() {
+    
+  filterRenderTree() {
     }
 
     addBillboard(billboard) {
@@ -221,6 +208,4 @@ class GLBillboardsPass extends GLPass {
     }
 };
 
-export {
-    GLBillboardsPass
-};
+export default GLBillboardsPass;

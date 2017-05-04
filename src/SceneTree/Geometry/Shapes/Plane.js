@@ -1,11 +1,6 @@
-import {
-    Vec2,
-    Vec3
-} from '../../../Math';
-import {
-    Mesh
-} from '../Mesh.js';
-
+import Vec2 from '../../../Math/Vec2';
+import Vec3 from '../../../Math/Vec3';
+import Mesh from '../Mesh.js';
 
 class Plane extends Mesh {
     constructor(name, x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1) {
@@ -107,6 +102,4 @@ class Plane extends Mesh {
     }
 };
 
-export {
-    Plane
-};
+export default Plane;

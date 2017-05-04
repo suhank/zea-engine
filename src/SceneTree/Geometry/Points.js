@@ -1,6 +1,4 @@
-import {
-    BaseGeom
-} from './BaseGeom.js';
+import BaseGeom from './BaseGeom.js';
 
 class Points extends BaseGeom {
     constructor(name) {
@@ -56,7 +54,4 @@ class Points extends BaseGeom {
     }
 };
 
-export {
-    Points
-};
-
+export default Points;

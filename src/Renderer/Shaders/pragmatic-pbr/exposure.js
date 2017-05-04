@@ -1,6 +1,4 @@
-import {
-    shaderLibrary
-} from '../../../SceneTree';
+import shaderLibrary from '../../../SceneTree/ShaderLibrary';
 
 shaderLibrary.setShaderModule('pragmatic-pbr/exposure.glsl', `
 

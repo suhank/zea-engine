@@ -1,41 +1,21 @@
-import {
-    isMobileDevice,
-    Vec2,
-    Vec3,
-    Quat,
-    Mat4,
-    Xfo,
-    Color,
-    Signal
-} from '../../Math';
-import {
-    TreeItem
-} from '../../SceneTree';
-import {
-    GLFbo
-} from '../GLFbo.js';
-import {
-    GLTexture2D
-} from '../GLTexture2D.js';
-import {
-    VRHead
-} from './VRHead.js'
-import {
-    VRController
-} from './VRController.js'
-import {
-    VR1HandedGrabTool
-} from './VR1HandedGrabTool.js'
-import {
-    VR2HandedGrabTool
-} from './VR2HandedGrabTool.js'
-import {
-    VRMarkerpenTool
-} from './VRMarkerpenTool.js'
-import {
-    VRFlyTool
-} from './VRFlyTool.js'
+import Vec2 from '../../Math/Vec2';
+import Vec3 from '../../Math/Vec3';
+import Signal from '../../Math/Signal';
+import Mat4 from '../../Math/Mat4';
+import Xfo from '../../Math/Xfo';
+import Color from '../../Math/Color';
+import Quat from '../../Math/Quat';
 
+import { isMobileDevice } from '../../Math';
+import TreeItem from '../../SceneTree/TreeItem';
+import GLFbo from '../GLFbo.js';
+import GLTexture2D from '../GLTexture2D.js';
+import VRHead from './VRHead.js'
+import VRController from './VRController.js'
+import VR1HandedGrabTool from './VR1HandedGrabTool.js'
+import VR2HandedGrabTool from './VR2HandedGrabTool.js'
+import VRMarkerpenTool from './VRMarkerpenTool.js'
+import VRFlyTool from './VRFlyTool.js'
 
 class VRViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
@@ -553,6 +533,4 @@ class VRViewport {
     }
 };
 
-export {
-    VRViewport
-};
+export default VRViewport;

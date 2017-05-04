@@ -1,7 +1,5 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import shaderLibrary  from '../../SceneTree/ShaderLibrary';
+import Shader  from '../../SceneTree/Shader';
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
@@ -76,6 +74,4 @@ void main(void) {
     }
 };
 
-export {
-    OctaHedralEnvMapShader
-};
+export default OctaHedralEnvMapShader;

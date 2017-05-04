@@ -1,65 +1,32 @@
-import {
-    Vec3,
-    Xfo,
-    Signal
-} from '../Math';
+import Vec3 from '../Math/Vec3';
+import Xfo from '../Math/Xfo';
+import Signal from '../Math/Signal';
+
 import {
     setupWebGL,
     onResize
 } from '../external/webgl-utils.js';
-import {
-    loadBinfile,
-    GeomItem,
-    Lines,
-    Mesh,
-    Grid,
-    LinesMaterial
-} from '../SceneTree';
-import {
-    GLScreenQuad
-} from './GLScreenQuad.js';
-import {
-    GLCollector
-} from './GLCollector.js';
-import {
-    GLForwardPass
-} from './Passes/GLForwardPass.js';
-import {
-    GLGeomDataPass
-} from './Passes/GLGeomDataPass.js';
-import {
-    GizmoPass
-} from './Passes/GizmoPass.js';
-import {
-    GizmoContext
-} from './Gizmos/GizmoContext.js';
-import {
-    GLViewport
-} from './GLViewport.js';
-import {
-    GLMesh
-} from './GLMesh.js';
-import {
-    GLLines
-} from './GLLines.js';
-import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLMaterial
-} from './GLMaterial.js';
-import {
-    GLDrawItem
-} from './GLDrawItem.js';
-import {
-    SessionClient
-} from './SessionClient.js';
 
-import {
-    VRViewport
-} from './VR/VRViewport.js';
-
-
+import GeomItem from '../SceneTree/GeomItem';
+import {loadBinfile} from '../SceneTree/Utils';
+import Lines from '../SceneTree/Geometry/Lines';
+import Mesh from '../SceneTree/Geometry/Mesh';
+import Grid from '../SceneTree/Geometry/Shapes/Grid';
+import LinesMaterial from '../SceneTree/Shaders/LinesMaterial';
+import GLScreenQuad from './GLScreenQuad.js';
+import GLCollector from './GLCollector.js';
+import GLForwardPass from './Passes/GLForwardPass.js';
+import GLGeomDataPass from './Passes/GLGeomDataPass.js';
+import GizmoPass from './Passes/GizmoPass.js';
+import GizmoContext from './Gizmos/GizmoContext.js';
+import GLViewport from './GLViewport.js';
+import GLMesh from './GLMesh.js';
+import GLLines from './GLLines.js';
+import GLShader from './GLShader.js';
+import GLMaterial from './GLMaterial.js';
+import GLDrawItem from './GLDrawItem.js';
+import SessionClient from './SessionClient.js';
+import VRViewport from './VR/VRViewport.js';
 
 
 let activeGLRenderer = undefined;
@@ -716,6 +683,4 @@ class GLRenderer {
     }
 };
 
-export {
-    GLRenderer
-};
+export default GLRenderer;

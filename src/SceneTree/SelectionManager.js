@@ -1,6 +1,4 @@
-import {
-    Signal
-} from '../Math';
+import Signal from '../Math/Signal';
 
 class SelectionManager {
     constructor(scene) {
@@ -73,7 +71,5 @@ class SelectionManager {
     }
 };
 
-export {
-    SelectionManager
-};
+export default SelectionManager;
 

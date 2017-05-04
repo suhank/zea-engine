@@ -1,8 +1,5 @@
-
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import shaderLibrary  from '../../SceneTree/ShaderLibrary';
+import Shader  from '../../SceneTree/Shader';
 
 class DebugImportantSamplesShader extends Shader {
     
@@ -26,9 +23,7 @@ void main(void) {
     }
 };
 
-export {
-    DebugImportantSamplesShader
-};
+export default DebugImportantSamplesShader;
 
 
 

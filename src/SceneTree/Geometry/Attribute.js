@@ -1,10 +1,4 @@
 
-import {
-    AttrValue,
-    Float32
-} from '../../Math';
-
-
 class Attribute {
     constructor(dataType, expectedSize, defaultScalarValue = undefined) {
         this.__dataType = dataType;
@@ -97,6 +91,4 @@ class Attribute {
     }
 };
 
-export {
-    Attribute
-};
+export default Attribute;
