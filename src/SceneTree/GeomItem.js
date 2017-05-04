@@ -31,8 +31,10 @@ class GeomItem extends TreeItem {
         this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
 
-        this.setGeom(geom);
-        this.setMaterial(material);
+        if(geom)
+            this.setGeom(geom);
+        if(material)
+            this.setMaterial(material);
     }
 
     destroy() {
@@ -190,7 +192,7 @@ class GeomItem extends TreeItem {
         }
         else{
             let onGeomLoaded = (range)=>{
-                if(geomIndex > range[0] && geomIndex < range[1]){
+                if(geomIndex >= range[0] && geomIndex < range[1]){
                     this.setGeom(geomLibrary.getGeom(geomIndex));
                     geomLibrary.loaded.disconnect(onGeomLoaded, this);
                 }

@@ -113,6 +113,8 @@ class GeomLibrary {
         // geomIndexOffset: the offset of the file geoms in the asset.
         // geomsRange: the range of geoms in the bin file.
         let offset = geomIndexOffset + geomsRange[0];
+        let storedRange = [offset, geomIndexOffset + geomsRange[1]];
+
         for (let i = 0; i < geomDatas.length; i++) {
             let geomData = geomDatas[i];
             let proxy;
@@ -131,7 +133,6 @@ class GeomLibrary {
             }
             this.geoms[offset + i] = proxy;
         }
-        let storedRange = [offset, geomIndexOffset + geomsRange[1]];
         this.loaded.emit(storedRange);
     }
 

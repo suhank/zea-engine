@@ -43,9 +43,8 @@ class BinAsset extends AssetItem {
                 (path, entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
                     this.__geoms.readBinary(geomsData.buffer);
-                    numGeomsFiles--;
-                    if(numGeomsFiles > 0) {
-                        geomFileID++;
+                    geomFileID++;
+                    if(geomFileID < numGeomsFiles) {
                         let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.geoms';
                         if(this.__resourceLoader.resourceAvailable(nextGeomFileName))
                            loadGeomsfile(nextGeomFileName);
