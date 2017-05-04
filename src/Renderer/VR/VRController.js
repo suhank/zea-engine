@@ -25,12 +25,13 @@ import {
 } from '../Gizmos/Gizmo.js';
 
 class VRController extends Gizmo {
-    constructor(gl, index, stageTreeItem) {
+    constructor(vrstage, index) {
         super(new Color(0, 0, 1));
 
+        this.__vrstage = vrstage;
         this.__index = index;
         this.__treeItem = new TreeItem('VRController:'+index);
-        stageTreeItem.addChild(this.__treeItem);
+        vrstage.getTreeItem().addChild(this.__treeItem);
 
         let handle = new Cuboid('VRControllerHandle', 0.04, 0.025, 0.16);
         let sphere = new Sphere('VRControllerTip', 0.015);
@@ -99,6 +100,14 @@ class VRController extends Gizmo {
             this.__xfo.ori.setDataArray(gamepad.pose.orientation);
 
         this.__treeItem.localXfo = this.__xfo;
+
+        let controllerYAxis = this.__treeItem.globalXfo.ori.getYaxis();
+        let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
+        vecToHead.normalizeInPlace();
+        let angle = controllerYAxis.angleTo(vecToHead);
+        console.log("angle:" + angle);
+
+
         this.__touchpadValue = gamepad.axes;
         if(gamepad.buttons[0].pressed){
             if(this.__isDaydramController){

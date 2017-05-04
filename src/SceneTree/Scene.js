@@ -43,6 +43,7 @@ class Scene {
         };
         this.__root.childRemoved.connect(propagateChildRemoved);
 
+
     }
 
     getRoot() {
@@ -51,6 +52,20 @@ class Scene {
 
     getResourceLoader() {
         return this.__resourceLoader;
+    }
+
+    getCommonResources() {
+        // let aval = this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr');
+        return new Promise((resolve, reject) => {
+            if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
+                this.__resourceLoader.loadResources('commonResources/Resources.vlr',
+                    (path, entries) => {
+                        resolve(entries);
+                    });
+            } else {
+                reject(Error("Resources not provided"));
+            }
+        });
     }
 
     getEnvMap() {
@@ -85,7 +100,7 @@ class Scene {
 
     //     var blob = new Blob([computeNormalsMessage]);
     //     var blobURL = window.URL.createObjectURL(blob);
-        
+
     //     // Using https://eligrey.com/blog/cpu-core-estimation-with-javascript/
     //     this.__computeNormalsWorkers = [];
     //     for(let i=0; i<navigator.hardwareConcurrency-1; i++){
@@ -96,7 +111,7 @@ class Scene {
     //     }
 
     // }
-    
+
     // computeNormals() {
     //     let sceneRoot = this.__root;
     //     let computeNormalsWorkers = this.__computeNormalsWorkers;

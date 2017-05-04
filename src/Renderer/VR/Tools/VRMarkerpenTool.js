@@ -3,8 +3,8 @@ import {
     Color,
     Xfo,
     Signal
-} from '../../Math';
-import { VRTool } from './VRTool.js'
+} from '../../../Math';
+import { VRTool } from '../VRTool.js'
 
 class VRMarkerpenTool extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {
@@ -61,9 +61,8 @@ class VRMarkerpenTool extends VRTool {
         else if(this.__vrControllers[1].isButtonPressed()){
             this.__activeController = this.__vrControllers[1];
         }
-        this.__stageXfo = this.__vrStage.getXfo();
 
-        let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
+        let xfo = this.__activeController.getTipGlobalXfo().multiply(this.__tipOffsetXfo);
         let sc = this.__vrStage.getXfo().sc;
         let lineThickness = 0.0075 * sc.x;
 
@@ -83,7 +82,7 @@ class VRMarkerpenTool extends VRTool {
 
     evalTool() {
         if(this.__pressedButtons == 1) {
-            let xfo = this.__stageXfo.multiply(this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo));
+            let xfo = this.__activeController.getTipGlobalXfo().multiply(this.__tipOffsetXfo);
             // this.addSegmentToStroke(this.__currStrokeID, xfo);
 
             this.strokeSegmentAdded.emit({

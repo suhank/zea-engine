@@ -1,10 +1,12 @@
 import {
     Vec3,
     Xfo
-} from '../../Math';
+} from '../../../Math';
+import { VRTool } from '../VRTool.js'
 
-class VRFlyTool {
+class VRFlyTool extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {
+        super();
 
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;

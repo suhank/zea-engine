@@ -30,8 +30,20 @@ class ResourceLoader {
         return worker;
     }
 
+    resolveURL(filePath) {
+        let parts = filePath.split('/');
+        let curr = this.__resources;
+        for(let part of parts){
+            if(part in curr)
+                curr = curr[part];
+            else
+                return null;
+        }
+        return curr;
+    }
+    
     resourceAvailable(filePath) {
-        return filePath in this.__resources;
+        return this.resolveURL(filePath) != null;
     }
 
     loadResources(filePath, callback) {
@@ -39,9 +51,10 @@ class ResourceLoader {
             this.__callbacks[filePath] = [];
         this.__callbacks[filePath].push(callback);
 
+        let url = this.resolveURL(filePath);
         this.workers[this.__mostResentlyHired].postMessage({
             name: filePath,
-            url: this.__resources[filePath]
+            url
         });
 
         this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;

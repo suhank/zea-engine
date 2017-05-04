@@ -59,7 +59,7 @@ class VRHead extends Gizmo {
         // this.__treeItem.addChild(this.__geomItem0);
 
 
-        this.setVisible(true);
+        // this.setVisible(true);
     }
 
     setVisible(val){

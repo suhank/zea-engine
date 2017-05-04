@@ -1,9 +1,9 @@
 import {
     Color,
     Xfo
-} from '../../Math';
+} from '../../../Math';
 
-import { VRTool } from './VRTool.js'
+import { VRTool } from '../VRTool.js'
 
 
 class VRToolMoveStage extends VRTool {

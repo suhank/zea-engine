@@ -167,6 +167,14 @@ class VRViewport {
         return this.__height;
     }
 
+    getTreeItem() {
+        return this.__stageTreeItem;
+    }
+
+    getVRHead() {
+        return this.__vrhead;
+    }
+
     getXfo() {
         return this.__stageXfo;
         // return this.__stageTreeItem.globalXfo;
@@ -383,7 +391,7 @@ class VRViewport {
             // Skip the new broken controller that is showing up.(maybe not a vive controller??)
             if (gamepad && gamepad.pose) {
                 if (!this.__vrControllers[id]) {
-                    let vrController = new VRController(this.__renderer.gl, id, this.__stageTreeItem);
+                    let vrController = new VRController(this, id, this.__stageTreeItem);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
                             this.activateTool('VRToolMoveStage');

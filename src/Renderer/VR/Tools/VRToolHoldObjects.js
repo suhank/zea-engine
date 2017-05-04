@@ -3,22 +3,22 @@ import {
     Quat,
     Xfo,
     Mat4
-} from '../../Math';
+} from '../../../Math';
 import {
     Cuboid,
     GeomItem,
     FlatMaterial
-} from '../../SceneTree';
+} from '../../../SceneTree';
 
 import {
     GLTexture2D
-} from '../GLTexture2D.js';
+} from '../../GLTexture2D.js';
 
 import {
     GLFbo
-} from '../GLFbo.js';
+} from '../../GLFbo.js';
 
-import { VRTool } from './VRTool.js'
+import { VRTool } from '../VRTool.js'
 
 class VRToolHoldObjects extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {

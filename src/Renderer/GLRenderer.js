@@ -90,7 +90,7 @@ if (process === 'undefined' || process.browser == true) {
 }
 
 class GLRenderer {
-    constructor(canvasDiv, options={}, webglOptions={}) {
+    constructor(canvasDiv, options = {}, webglOptions = {}) {
 
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
@@ -152,50 +152,6 @@ class GLRenderer {
             this.__displayStats = true;
         }
 
-        if(options.resources){
-            loadBinfile(
-                options.resources,
-                (path, data) => {
-                    /////////////////////////////////
-                    // Un-pack the data.
-                    let unpack = new Unpack(data);
-                    let entries = unpack.getEntries();
-                    this.__resources = {};
-                    for(let res of entries){
-                        this.__resources[res.name] = unpack.decompress(res.name);
-                    }
-
-                    //if (options.displayLogo)
-                    {
-                        let logo = new Image();
-                        logo.src = URL.createObjectURL(new Blob([this.__resources['LogoSmall.png'].buffer]));
-                        logo.style.position = 'absolute';
-                        logo.style.top = '10px';
-                        logo.style.left = '10px';
-                        canvasDiv.appendChild(logo);
-                    }
-
-                    if (options.displayLoading && this.__drawSuspensionLevel > 0)
-                    {
-                        let loadingDiv = document.createElement("div");
-                        loadingDiv.style.position = 'absolute';
-                        loadingDiv.style.top = '50%';
-                        loadingDiv.style.left = '50%';
-                        let loading = new Image();
-                        loading.src = URL.createObjectURL(new Blob([this.__resources['loading.gif'].buffer]));
-                        loading.style.width = '20%';
-                        loading.style.height = '20%';
-                        loading.style.transform = 'translate(-50%, -50%)';
-                        loadingDiv.appendChild(loading);
-                        canvasDiv.appendChild(loadingDiv);
-                        this.__loadingImg = loadingDiv;
-                    }  
-                },
-                () => {
-
-                },
-                this);
-        }
 
     }
 
@@ -232,7 +188,7 @@ class GLRenderer {
         axisLine.setNumSegments(1);
         axisLine.setSegment(0, 0, 1);
         axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
-        axisLine.getVertex(1).set(gridSize * 0.5, 0.0,  0.0);
+        axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
         // axisLine.lineThickness = lineThickness * 10.0;
 
         let gridXAxisMaterial = new LinesMaterial('gridXAxisMaterial');
@@ -243,7 +199,7 @@ class GLRenderer {
         let gridZAxisMaterial = new LinesMaterial('gridZAxisMaterial');
         gridZAxisMaterial.color.set(0, 0, gridColor.luminance());
         let geomOffset = new Xfo();
-        geomOffset.ori.setFromAxisAndAngle(new Vec3(0,1,0), Math.PI * 0.5);
+        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI * 0.5);
         this.__zAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridZAxisMaterial);
         this.__zAxisLineItem.setGeomOffsetXfo(geomOffset);
         this.__collector.addGeomItem(this.__zAxisLineItem);
@@ -256,11 +212,10 @@ class GLRenderer {
 
     toggleStats() {
         if (this.__stats) {
-            if (this.__displayStats){
+            if (this.__displayStats) {
                 this.__stats.dom.style.visibility = "hidden";
                 this.__displayStats = false;
-            }
-            else{
+            } else {
                 this.__stats.dom.style.visibility = "visible";
                 this.__displayStats = true;
             }
@@ -275,6 +230,36 @@ class GLRenderer {
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
 
         this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
+
+        scene.getCommonResources().then((entries) => {
+            //if (options.displayLogo)
+            {
+                let logo = new Image();
+                logo.src = URL.createObjectURL(new Blob([entries['LogoSmall.png'].buffer]));
+                logo.style.position = 'absolute';
+                logo.style.top = '10px';
+                logo.style.left = '10px';
+                this.__glcanvasDiv.appendChild(logo);
+            }
+
+            // if (options.displayLoading && this.__drawSuspensionLevel > 0) {
+            //     let loadingDiv = document.createElement("div");
+            //     loadingDiv.style.position = 'absolute';
+            //     loadingDiv.style.top = '50%';
+            //     loadingDiv.style.left = '50%';
+            //     let loading = new Image();
+            //     loading.src = URL.createObjectURL(new Blob([entries['loading.gif'].buffer]));
+            //     loading.style.width = '20%';
+            //     loading.style.height = '20%';
+            //     loading.style.transform = 'translate(-50%, -50%)';
+            //     loadingDiv.appendChild(loading);
+            //     this.__glcanvasDiv.appendChild(loadingDiv);
+            //     this.__loadingImg = loadingDiv;
+            // }
+
+        }, (error) => {
+
+        });
     }
 
     addViewport(name) {
@@ -287,22 +272,22 @@ class GLRenderer {
         //     vp.createGeomDataFbo();
         // }
 
-        vp.viewChanged.connect((data)=>{
+        vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
         }, this);
-        vp.mouseMoved.connect((event, mousePos, ray)=>{
+        vp.mouseMoved.connect((event, mousePos, ray) => {
             this.pointerMoved.emit({
                 mousePos: mousePos,
                 ray: ray
             });
         }, this);
-        vp.actionStarted.connect((data)=>{
+        vp.actionStarted.connect((data) => {
             this.actionStarted.emit(data);
         }, this);
-        vp.actionEnded.connect((data)=>{
+        vp.actionEnded.connect((data) => {
             this.actionEnded.emit(data);
         }, this);
-        vp.actionOccuring.connect((data)=>{
+        vp.actionOccuring.connect((data) => {
             this.actionOccuring.emit(data);
         }, this);
 
@@ -342,9 +327,9 @@ class GLRenderer {
     resumeDrawing() {
         this.__drawSuspensionLevel--;
         if (this.__drawSuspensionLevel == 0) {
-            if(this.__loadingImg)
+            if (this.__loadingImg)
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
-                
+
             this.__redrawGeomDataFbos = true;
             this.requestRedraw();
         }
@@ -390,7 +375,7 @@ class GLRenderer {
             vp.resize(this.__glcanvas.width, this.__glcanvas.height);
     }
 
-    getDiv(){
+    getDiv() {
         return this.__glcanvasDiv;
     }
 
@@ -504,16 +489,16 @@ class GLRenderer {
             }
         };
 
-        this.__glcanvas.addEventListener("touchstart", (event)=>{
+        this.__glcanvas.addEventListener("touchstart", (event) => {
             _this.getViewport().onTouchStart(event);
         }, false);
-        this.__glcanvas.addEventListener("touchmove", (event)=>{
+        this.__glcanvas.addEventListener("touchmove", (event) => {
             _this.getViewport().onTouchMove(event);
         }, false);
-        this.__glcanvas.addEventListener("touchend", (event)=>{
+        this.__glcanvas.addEventListener("touchend", (event) => {
             _this.getViewport().onTouchEnd(event);
         }, false);
-        this.__glcanvas.addEventListener("touchcancel", (event)=>{
+        this.__glcanvas.addEventListener("touchcancel", (event) => {
             _this.getViewport().onTouchCancel(event);
         }, false);
     }
@@ -598,17 +583,17 @@ class GLRenderer {
         return navigator.getVRDisplays().then(function(displays) {
             if (displays.length > 0) {
                 let vrvp = new VRViewport(renderer, displays[0]);
-                
-                vrvp.viewChanged.connect((data)=>{
+
+                vrvp.viewChanged.connect((data) => {
                     renderer.viewChanged.emit(data);
                 }, renderer);
-                vrvp.actionStarted.connect((data)=>{
+                vrvp.actionStarted.connect((data) => {
                     renderer.actionStarted.emit(data);
                 }, renderer);
-                vrvp.actionEnded.connect((data)=>{
+                vrvp.actionEnded.connect((data) => {
                     renderer.actionEnded.emit(data);
                 }, renderer);
-                vrvp.actionOccuring.connect((data)=>{
+                vrvp.actionOccuring.connect((data) => {
                     renderer.actionOccuring.emit(data);
                 }, renderer);
 
@@ -639,8 +624,8 @@ class GLRenderer {
         let renderer = this;
 
         function onAnimationFrame() {
-            if (renderer.isContinuouslyDrawing()){
-                if(!renderer.getVRViewport() || !renderer.getVRViewport().isContinuouslyDrawing())
+            if (renderer.isContinuouslyDrawing()) {
+                if (!renderer.getVRViewport() || !renderer.getVRViewport().isContinuouslyDrawing())
                     window.requestAnimationFrame(onAnimationFrame);
             }
             renderer.draw();
@@ -690,9 +675,9 @@ class GLRenderer {
 
     drawScene(renderstate, vrView = false) {
 
-        if(this.__collector.newItemsReadyForLoading())
+        if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
-            
+
         renderstate.profileJSON = {};
         renderstate.materialCount = 0;
         renderstate.drawCalls = 0;
@@ -704,7 +689,7 @@ class GLRenderer {
                 pass.draw(renderstate);
         }
 
-        if(this.__displayStats){
+        if (this.__displayStats) {
             // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
             console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
         }
@@ -725,7 +710,7 @@ class GLRenderer {
         this.redrawOccured.emit();
 
         // New Items may have been added during the pause.
-        if(this.__redrawGeomDataFbos)
+        if (this.__redrawGeomDataFbos)
             this.renderGeomDataFbos();
     }
 };
