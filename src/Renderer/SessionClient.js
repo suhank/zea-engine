@@ -108,7 +108,7 @@ let randomAvatarColor = () => {
 
 class SessionClient {
 
-    constructor(renderer, enableSessionRecording) {
+    constructor(renderer, commonResources) {
         this.__renderer = renderer;
 
         this.scaleFactor = 1.0;
@@ -187,7 +187,7 @@ class SessionClient {
         let myId = clientData.id;
 
         // Add an avatar for us. 
-        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false);
+        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false, commonResources);
         connectedUsers[myId] = myAvatar;
 
         let urlVars = getUrlVars();
@@ -445,7 +445,7 @@ class SessionClient {
             if (client in connectedUsers) {
                 connectedUsers[client].setVisibility(true);
             } else {
-                connectedUsers[client] = new UserAvatar(client, data, avatarsTreeRoot, this.scaleFactor);
+                connectedUsers[client] = new UserAvatar(client, data, avatarsTreeRoot, this.scaleFactor, true, commonResources);
             }
         };
 
@@ -476,7 +476,7 @@ class SessionClient {
         }
 
         ////////////////////////////////////////////////////////
-        if(enableSessionRecording) {
+        if(false) {
 
             //let generateRecordingUI = () => {
             let div = renderer.getDiv();

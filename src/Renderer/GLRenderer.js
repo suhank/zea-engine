@@ -127,8 +127,6 @@ class GLRenderer {
 
         this.setupWebGL(canvasDiv, webglOptions);
 
-        this.sessionClient = new SessionClient(this, options.enableSessionRecording);
-
         // Note: using the geom data pass crashes VR scenes.
         this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
         // this.__gizmoPass = new GizmoPass(this.__collector);
@@ -138,8 +136,6 @@ class GLRenderer {
 
         this.__vrViewport = undefined;
         this.mirrorVRisplayToViewport = true;
-        if (navigator.getVRDisplays)
-            this.__setupVRViewport();
 
         this.__stats = new Stats();
         this.__stats.dom.style.position = 'absolute';
@@ -237,6 +233,12 @@ class GLRenderer {
         this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
 
         scene.getCommonResources().then((entries) => {
+
+            if (navigator.getVRDisplays)
+                this.__setupVRViewport();
+
+            // this.sessionClient = new SessionClient(this, entries);
+
             //if (options.displayLogo)
             {
                 let logo = new Image();
@@ -585,8 +587,6 @@ class GLRenderer {
     }
 
     __setupVRViewport() {
-        //this.frameData = new VRFrameData();
-        let vrvp = new VRViewport(this);
         return navigator.getVRDisplays().then((displays) => {
             if (displays.length > 0) {
                 let vrvp = new VRViewport(this, displays[0]);

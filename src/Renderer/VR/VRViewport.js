@@ -38,36 +38,6 @@ class VRViewport {
         this.__vrDisplay = vrDisplay;
 
         //////////////////////////////////////////////
-        // Tree
-        this.__bgColor = renderer.getViewport().getBackgroundColor();
-        this.__frameData = new VRFrameData();
-
-        this.__stageTreeItem = new TreeItem('VRStage');
-        this.__stageTreeItem.setVisible(false);
-        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
-
-        //////////////////////////////////////////////
-        // Vive Geoms 
-        this.__viveAsset = new BinAsset("ViveResources");
-        this.__viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
-        this.__renderer.sceneSet.connect((scene) => {
-            scene.getCommonResources().then((entries) => {
-                this.__viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
-                this.__viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-
-                let controller0 = this.__viveAsset.getChildByName('HTC_Vive_Controller').clone();
-                controller0.name = controller0.name + '0';
-                controller0.localXfo.tr.set(-0.3, 0.0, 0.0);
-                this.__stageTreeItem.addChild(controller0);
-                let controller1 = this.__viveAsset.getChildByName('HTC_Vive_Controller').clone();
-                controller0.name = controller0.name + '1';
-                controller1.localXfo.tr.set(0.3, 0.0, 0.0);
-                this.__stageTreeItem.addChild(controller1);
-            }, (error) => {
-            });
-        });
-        /*
-        //////////////////////////////////////////////
         // Viewport params
         this.__projectionMatriciesUpdated = false;
         this.__canvasSizeScale = new Vec2(1, 1);
@@ -77,7 +47,6 @@ class VRViewport {
         this.__near = 0.1;
         this.__vrDisplay.depthNear = this.__near;
         this.__vrDisplay.depthFar = this.__far;
-
 
         //////////////////////////////////////////////
         // Xfos
@@ -91,6 +60,15 @@ class VRViewport {
         this.__rightViewMatrix = new Mat4();
         this.__rightProjectionMatrix = new Mat4();
 
+        //////////////////////////////////////////////
+        // Tree
+        this.__bgColor = renderer.getViewport().getBackgroundColor();
+        this.__frameData = new VRFrameData();
+
+        this.__stageTreeItem = new TreeItem('VRStage');
+        this.__stageTreeItem.setVisible(false);
+        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
+
         // Construct the head geom and add it directly to the Gizmo pass.
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 
@@ -98,6 +76,8 @@ class VRViewport {
         this.__vrTools = {};
         this.__currentTool = undefined;
 
+        //////////////////////////////////////////////
+        // UI
         if (this.__vrDisplay.stageParameters &&
             this.__vrDisplay.stageParameters.sizeX > 0 &&
             this.__vrDisplay.stageParameters.sizeZ > 0) {} else {
@@ -121,6 +101,8 @@ class VRViewport {
             _this.togglePresenting();
         });
 
+        //////////////////////////////////////////////
+        // Events
         let vrViewport = this;
 
         function vrdisplaypresentchange() {
@@ -155,6 +137,8 @@ class VRViewport {
         this.controllerAdded = new Signal();
 
 
+        //////////////////////////////////////////////
+        // Tools Setup
         if (isMobileDevice()) {
             this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
 
@@ -182,7 +166,6 @@ class VRViewport {
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
         //this.startContinuousDrawing();
 
-        */
     }
 
     getRenderer() {
@@ -423,7 +406,7 @@ class VRViewport {
             // Skip the new broken controller that is showing up.(maybe not a vive controller??)
             if (gamepad && gamepad.pose) {
                 if (!this.__vrControllers[id]) {
-                    let vrController = new VRController(this, id, this.__stageTreeItem);
+                    let vrController = new VRController(this, id);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
                             this.activateTool('VRToolMoveStage');

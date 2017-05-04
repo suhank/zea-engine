@@ -16,12 +16,13 @@ import {
 
 class UserAvatar {
 
-    constructor(id, data, parentTreeItem, scaleFactor=1.0, visible=true) {
+    constructor(id, data, parentTreeItem, scaleFactor=1.0, visible=true, commonResources) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
 
         // Used when the scene scale is not meters. (usualy testin scenes)
         this.__avatarScale = scaleFactor;
+        this.__commonResources = commonResources;
 
         this.__controllers = [];
 
