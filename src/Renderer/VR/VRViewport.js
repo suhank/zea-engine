@@ -24,17 +24,11 @@ import {
     VRController
 } from './VRController.js'
 import {
-    VRToolMoveStage
-} from './VRToolMoveStage.js'
-import {
-    VRToolHoldObjects
-} from './VRToolHoldObjects.js'
-import {
-    VRMarkerpenTool
-} from './VRMarkerpenTool.js'
-import {
+    VRToolMoveStage,
+    VRToolHoldObjects,
+    VRMarkerpenTool,
     VRFlyTool
-} from './VRFlyTool.js'
+} from './Tools'
 
 
 class VRViewport {
