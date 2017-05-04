@@ -1,1 +1,1 @@
-npm run devES6
+npm run build -- --watch
