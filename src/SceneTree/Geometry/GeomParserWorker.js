@@ -12,15 +12,15 @@ import {
 } from '../BinReader.js';
 
 
-let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, dataSlice) => {
+let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice) => {
     let geomDatas = [];
     let offset = toc[geomsRange[0]];
     // console.log("offset:" +  offset);
     let transferables = [];
     for (let i = geomsRange[0]; i < geomsRange[1]; i++) {
-        let geomReader = new BinReader(dataSlice, toc[i] - offset, isMobileDevice);
+        let geomReader = new BinReader(bufferSlice, toc[i] - offset, isMobileDevice);
         let className = geomReader.loadStr();
-        // console.log(i + ":" + offset + ".className:" +  className + " pos:" + (toc[i] - offset) + " dataSlice.byteLength:" +  dataSlice.byteLength);
+        // console.log(i + ":" + offset + ".className:" +  className + " pos:" + (toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
         let geom;
         switch (className) {
             case 'Points':
@@ -59,5 +59,5 @@ let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, dataSl
 }
 
 self.onmessage = function(event) {
-    parseGeomsBinary(event.data.toc, event.data.geomIndexOffset, event.data.geomsRange, event.data.isMobileDevice, event.data.dataSlice);
+    parseGeomsBinary(event.data.toc, event.data.geomIndexOffset, event.data.geomsRange, event.data.isMobileDevice, event.data.bufferSlice);
 }

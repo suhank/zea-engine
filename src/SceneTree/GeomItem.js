@@ -41,6 +41,34 @@ class GeomItem extends TreeItem {
         super.destroy();
     }
 
+    clone(){
+        let cloned = new GeomItem();
+        this.copyTo(cloned);
+        return cloned;
+    }
+    copyTo(cloned){
+        super.copyTo(cloned);
+        cloned.setGeomOffsetXfo(this.__geomOffsetXfo);
+
+        if (this.__geom) {
+            cloned.setGeom(this.__geom);
+        }
+        else{
+            this.geomAssigned.connect(()=>{
+                cloned.setGeom(this.__geom);
+            });
+        }
+
+        cloned.setMaterial(this.__material);
+
+        cloned.__lightmap = this.__lightmap;
+        cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
+        cloned.__selectable = this.__selectable;
+    }
+
+    //////////////////////////////////////////
+    // Geom
+
     getGeom() {
         return this.__geom;
     }

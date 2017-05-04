@@ -23,7 +23,7 @@ class MaterialLibrary {
         material.baseColor.set(0.3, 0.3, 0.3);
         material.roughness = 0.2;
         material.reflectance = 0.2;
-        this.__materials['DefaultMaterial'] = material;
+        this.__materials['Default'] = material;
     }
 
     get numMaterials(){
@@ -31,6 +31,10 @@ class MaterialLibrary {
     }
     get materials(){
         return this.__materials;
+    }
+
+    forceMaterialType(materialType) {
+        this.__forceMaterialType = materialType;
     }
     
     hasMaterial(name){
@@ -103,7 +107,7 @@ class MaterialLibrary {
                 let type = reader.loadStr();
                 let name = reader.loadStr();
                 // console.log("Material:" + name);
-                let material = sgFactory.constructClass(type);
+                let material = sgFactory.constructClass(this.__forceMaterialType ? this.__forceMaterialType : type);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags);
                 this.__materials[name] = material;

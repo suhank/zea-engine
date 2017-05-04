@@ -14,9 +14,6 @@ import {
     MeshProxy,
 } from './Geometry/GeomProxies.js';
 
-// import {
-//     parseGeomsBinary
-// } from './Geometry/GeomParserWorker.js';
 let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
 
 class GeomLibrary {
@@ -66,8 +63,8 @@ class GeomLibrary {
         );
     }
 
-    readBinary(data) {
-        let reader = new BinReader(data, 0, isMobileDevice());
+    readBinaryBuffer(buffer) {
+        let reader = new BinReader(buffer, 0, isMobileDevice());
         let numGeoms = reader.loadUInt32();
         let geomIndexOffset = reader.loadUInt32();
         let toc = reader.loadUInt32Array(numGeoms);
@@ -77,28 +74,28 @@ class GeomLibrary {
         let offset = 0;
         while (offset < numGeoms) {
             let geomsRange;
-            let dataSlice;
-            let dataSlice_start = toc[offset];
-            let dataSlice_end;
+            let bufferSlice;
+            let bufferSlice_start = toc[offset];
+            let bufferSlice_end;
             if(offset+numGeomsPerWorkload >= numGeoms){
                 geomsRange = [offset, numGeoms];
-                dataSlice_end = data.byteLength;
-                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +dataSlice_start);
+                bufferSlice_end = buffer.byteLength;
+                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start);
             }
             else {
                 geomsRange = [offset, offset+numGeomsPerWorkload];
-                dataSlice_end = toc[geomsRange[1]];
-                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +dataSlice_start + " end:" + dataSlice_end);
+                bufferSlice_end = toc[geomsRange[1]];
+                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start + " end:" + bufferSlice_end);
             }
-            dataSlice = data.slice(dataSlice_start, dataSlice_end);
+            bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
             
             this.workers[this.__mostResentlyHired].postMessage({
                 toc,
                 geomIndexOffset,
                 geomsRange,
                 isMobileDevice: reader.isMobileDevice,
-                dataSlice,
-            }, [dataSlice]);
+                bufferSlice,
+            }, [bufferSlice]);
             this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
 
             offset += numGeomsPerWorkload;

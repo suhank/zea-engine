@@ -64,7 +64,7 @@ varying vec4 v_viewPos;
 
 void main(void) {
 
-    vec4 baseColor = toLinear(_baseColor);
+    vec4 baseColor = _baseColor;//toLinear(_baseColor);
     float opacity = _opacity;
 
     vec3 viewNormal = normalize(cross(dFdy(v_viewPos.xyz), dFdx(v_viewPos.xyz)));

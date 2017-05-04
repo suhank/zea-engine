@@ -109,6 +109,7 @@ class GLRenderer {
 
         this.resized = new Signal();
         this.keyPressed = new Signal();
+        this.sceneSet = new Signal(true);
         this.vrViewportSetup = new Signal(true);
 
         // Signals to abstract the user view. 
@@ -155,9 +156,6 @@ class GLRenderer {
 
     }
 
-    getScene() {
-        return this.__scene;
-    }
 
     getWidth() {
         return this.__glcanvas.width;
@@ -222,6 +220,13 @@ class GLRenderer {
         }
     }
 
+    ////////////////////////////////////////
+    // Scene
+
+    getScene() {
+        return this.__scene;
+    }
+
     setScene(scene) {
         this.__scene = scene;
         this.__collector.addTreeItem(this.__scene.getRoot());
@@ -260,6 +265,8 @@ class GLRenderer {
         }, (error) => {
 
         });
+
+        this.sceneSet.emit(this.__scene);
     }
 
     addViewport(name) {
@@ -579,26 +586,26 @@ class GLRenderer {
 
     __setupVRViewport() {
         //this.frameData = new VRFrameData();
-        let renderer = this;
-        return navigator.getVRDisplays().then(function(displays) {
+        let vrvp = new VRViewport(this);
+        return navigator.getVRDisplays().then((displays) => {
             if (displays.length > 0) {
-                let vrvp = new VRViewport(renderer, displays[0]);
+                let vrvp = new VRViewport(this, displays[0]);
 
                 vrvp.viewChanged.connect((data) => {
-                    renderer.viewChanged.emit(data);
-                }, renderer);
+                    this.viewChanged.emit(data);
+                }, this);
                 vrvp.actionStarted.connect((data) => {
-                    renderer.actionStarted.emit(data);
-                }, renderer);
+                    this.actionStarted.emit(data);
+                }, this);
                 vrvp.actionEnded.connect((data) => {
-                    renderer.actionEnded.emit(data);
-                }, renderer);
+                    this.actionEnded.emit(data);
+                }, this);
                 vrvp.actionOccuring.connect((data) => {
-                    renderer.actionOccuring.emit(data);
-                }, renderer);
+                    this.actionOccuring.emit(data);
+                }, this);
 
-                renderer.__vrViewport = vrvp;
-                renderer.vrViewportSetup.emit(vrvp);
+                this.__vrViewport = vrvp;
+                this.vrViewportSetup.emit(vrvp);
             } else {
                 //setStatus("WebVR supported, but no VRDisplays found.")
                 console.warn("WebVR supported, but no VRDisplays found.");

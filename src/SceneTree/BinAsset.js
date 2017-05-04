@@ -27,13 +27,17 @@ class BinAsset extends AssetItem {
     //////////////////////////////////////////
     // Persistence
 
+    readBinaryBuffer(buffer){
+        return this.readBinary(new BinReader(buffer, 0, isMobileDevice()));
+    }
+
     loadURL(filePath) {
 
         let numGeomsFiles = 1;
         this.__resourceLoader.loadResources(filePath, 
             (path, entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
-                numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, isMobileDevice()));
+                numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
                 this.loaded.emit();
             });
 
@@ -42,7 +46,7 @@ class BinAsset extends AssetItem {
             this.__resourceLoader.loadResources(geomsResourceName, 
                 (path, entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
-                    this.__geoms.readBinary(geomsData.buffer);
+                    this.__geoms.readBinaryBuffer(geomsData.buffer);
                     geomFileID++;
                     if(geomFileID < numGeomsFiles) {
                         let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.geoms';

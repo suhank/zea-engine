@@ -55,6 +55,18 @@ class TreeItem {
         this.destructing.emit();
     }
 
+    clone(){
+        let cloned = new TreeItem();
+        this.copyTo(cloned);
+        return cloned;
+    }
+    copyTo(cloned){
+        cloned.name = this.__name;
+        cloned.localXfo = this.__localXfo;
+        for(let childItem of this.__childItems)
+            cloned.addChild(childItem.clone());
+    }
+
     //////////////////////////////////////////
     // Name and Path
 

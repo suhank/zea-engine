@@ -18,7 +18,7 @@ class LinesMaterial extends Material {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LinesMaterial.vertexShader', `
 precision highp float;
 
-attribute vec3 positions;    //(location = 0)
+attribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;

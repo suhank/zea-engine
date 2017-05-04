@@ -9,7 +9,8 @@ import {
     Signal
 } from '../../Math';
 import {
-    TreeItem
+    TreeItem,
+    BinAsset
 } from '../../SceneTree';
 import {
     GLFbo
@@ -35,13 +36,40 @@ class VRViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
         this.__renderer = renderer;
         this.__vrDisplay = vrDisplay;
+
+        //////////////////////////////////////////////
+        // Tree
         this.__bgColor = renderer.getViewport().getBackgroundColor();
         this.__frameData = new VRFrameData();
 
         this.__stageTreeItem = new TreeItem('VRStage');
         this.__stageTreeItem.setVisible(false);
-        this.__projectionMatriciesUpdated = false;
+        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
 
+        //////////////////////////////////////////////
+        // Vive Geoms 
+        this.__viveAsset = new BinAsset("ViveResources");
+        this.__viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
+        this.__renderer.sceneSet.connect((scene) => {
+            scene.getCommonResources().then((entries) => {
+                this.__viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
+                this.__viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+
+                let controller0 = this.__viveAsset.getChildByName('HTC_Vive_Controller').clone();
+                controller0.name = controller0.name + '0';
+                controller0.localXfo.tr.set(-0.3, 0.0, 0.0);
+                this.__stageTreeItem.addChild(controller0);
+                let controller1 = this.__viveAsset.getChildByName('HTC_Vive_Controller').clone();
+                controller0.name = controller0.name + '1';
+                controller1.localXfo.tr.set(0.3, 0.0, 0.0);
+                this.__stageTreeItem.addChild(controller1);
+            }, (error) => {
+            });
+        });
+        /*
+        //////////////////////////////////////////////
+        // Viewport params
+        this.__projectionMatriciesUpdated = false;
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
@@ -50,6 +78,9 @@ class VRViewport {
         this.__vrDisplay.depthNear = this.__near;
         this.__vrDisplay.depthFar = this.__far;
 
+
+        //////////////////////////////////////////////
+        // Xfos
         this.__stageXfo = new Xfo();
         // this.__standingMatrix = new Mat4();
         this.__stageMatrix = new Mat4();
@@ -62,7 +93,6 @@ class VRViewport {
 
         // Construct the head geom and add it directly to the Gizmo pass.
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
-        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
 
         this.__vrControllers = [];
         this.__vrTools = {};
@@ -151,6 +181,8 @@ class VRViewport {
 
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
         //this.startContinuousDrawing();
+
+        */
     }
 
     getRenderer() {
@@ -371,8 +403,8 @@ class VRViewport {
 
     ////////////////////////////
     // Controllers
-    activateTool(name){
-        if(this.__currentTool != this.__vrTools[name]){
+    activateTool(name) {
+        if (this.__currentTool != this.__vrTools[name]) {
             this.__currentTool = this.__vrTools[name];
             this.__currentTool.activateTool();
         }
