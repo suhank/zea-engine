@@ -217,6 +217,17 @@ class BinReader {
             this.__byteOffset += stride - padd;
     }
 
+    toJSON() {
+        return {
+            "pos": this.__byteOffset,
+            "length": this.__data.byteLength
+        };
+    }
+
+    toString() {
+        return JSON.stringify(this.toJSON(), null, 2)
+    }
+
 }
 
 export {

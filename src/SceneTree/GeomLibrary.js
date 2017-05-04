@@ -73,7 +73,7 @@ class GeomLibrary {
         let toc = reader.loadUInt32Array(numGeoms);
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
-        let numGeomsPerWorkload = 999999;//Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1);
+        let numGeomsPerWorkload = Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1);
         let offset = 0;
         while (offset < numGeoms) {
             let geomsRange;
@@ -102,8 +102,6 @@ class GeomLibrary {
             this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
 
             offset += numGeomsPerWorkload;
-            if(offset > numGeomsPerWorkload)
-                break;
         }
 
     }

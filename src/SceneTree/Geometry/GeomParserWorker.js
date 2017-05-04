@@ -49,11 +49,9 @@ let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, dataSl
             geomBuffers,
             bbox: geom.boundingBox
         });
-
     }
 
     self.postMessage({
-        type: 'geomDatas',
         geomIndexOffset,
         geomsRange,
         geomDatas
