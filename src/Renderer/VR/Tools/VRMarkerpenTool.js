@@ -17,7 +17,7 @@ class VRMarkerpenTool extends VRTool {
 
         this.__tipOffsetXfo = new Xfo();
         this.__tipOffsetXfo.tr.set(0.0,-0.01, -0.03);
-        this.__color = new Color(1.0, 0.2, 0.2);
+        this.__color = new Color(.7, 0.0, 0.0);
 
         this.strokeStarted = new Signal();
         this.strokeEnded = new Signal();
@@ -38,6 +38,9 @@ class VRMarkerpenTool extends VRTool {
                 this.__pressedButtons--;
                 this.endAction();
             }, this);
+
+            if(this.__active)
+                vrController.setTipColor(this.__color);
         }
 
         for(let i=0; i<this.__vrControllers.length; i++) {
@@ -50,7 +53,7 @@ class VRMarkerpenTool extends VRTool {
     activateTool() {
         super.activateTool();
         for(let vrController of this.__vrControllers)
-            vrController.setHandleColor(new Color(0, 1, 0));
+            vrController.setTipColor(this.__color);
     }
 
 

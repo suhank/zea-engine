@@ -6,6 +6,9 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
+    Sphere
+} from './Geometry/Shapes/Sphere.js';
+import {
     GeomItem
 } from './GeomItem.js';
 import {
@@ -34,6 +37,7 @@ class Scene {
 
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
+        this.commonResourcesLoaded = new Signal(true);
 
         let _this = this;
         let propagateChildAdded = function(child) {
@@ -47,6 +51,22 @@ class Scene {
         this.__root.childRemoved.connect(propagateChildRemoved);
 
 
+        if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
+            this.__resourceLoader.loadResources('commonResources/Resources.vlr',
+                (path, entries) => {
+
+                    let viveAsset = new BinAsset("ViveResources");
+                    viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
+                    viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
+                    viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+                    entries['viveAsset'] = viveAsset;
+
+                    let sphere = new Sphere('VRControllerTip', 0.015);
+                    entries['VRControllerTip'] = sphere;
+
+                    this.commonResourcesLoaded.emit(entries);
+                });
+        }
     }
 
     getRoot() {
@@ -57,26 +77,29 @@ class Scene {
         return this.__resourceLoader;
     }
 
-    getCommonResources() {
-        // let aval = this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr');
-        return new Promise((resolve, reject) => {
-            if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
-                this.__resourceLoader.loadResources('commonResources/Resources.vlr',
-                    (path, entries) => {
+    // getCommonResources() {
+    //     // let aval = this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr');
+    //     return new Promise((resolve, reject) => {
+    //         if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
+    //             this.__resourceLoader.loadResources('commonResources/Resources.vlr',
+    //                 (path, entries) => {
 
-                        let viveAsset = new BinAsset("ViveResources");
-                        viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
-                        viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
-                        viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-                        entries['viveAsset'] = viveAsset;
+    //                     let viveAsset = new BinAsset("ViveResources");
+    //                     viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
+    //                     viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
+    //                     viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+    //                     entries['viveAsset'] = viveAsset;
 
-                        resolve(entries);
-                    });
-            } else {
-                reject(Error("Resources not provided"));
-            }
-        });
-    }
+    //                     let sphere = new Sphere('VRControllerTip', 0.015);
+    //                     entries['VRControllerTip'] = sphere;
+
+    //                     resolve(entries);
+    //                 });
+    //         } else {
+    //             reject(Error("Resources not provided"));
+    //         }
+    //     });
+    // }
 
     getEnvMap() {
         return this.__envMap;

@@ -28,9 +28,10 @@ class VRToolHoldObjects extends VRTool {
         this.__vrHead = vrHead;
         this.__vrControllers = vrControllers;
 
-        this.__SelVolume = new Cuboid('SelVolume', 0.06, 0.06, 0.06);
-        this.__mat = new FlatMaterial('mat0');
-        this.__mat.baseColor = new Color(1, 0, 0);
+        this.__color = new Color(0, 1, 0);
+        // this.__SelVolume = new Cuboid('SelVolume', 0.06, 0.06, 0.06);
+        // this.__mat = new FlatMaterial('mat0');
+        // this.__mat.baseColor = new Color(1, 0, 0);
 
         this.__projMatrix = new Mat4();
         this.__projMatrix.setOrthographicMatrix(-0.03, 0.03, -0.03, 0.03, 0.06, 0.0);
@@ -46,10 +47,10 @@ class VRToolHoldObjects extends VRTool {
 
         let bindController = (id, vrController) => {
 
-            let geomItem = new GeomItem('SelVolume', this.__SelVolume, this.__mat);
-            geomItem.localXfo.tr.set(0.0, 0, -0.03);
-            geomItem.selectable = false;
-            vrController.getTreeItem().addChild(geomItem);
+            // let geomItem = new GeomItem('SelVolume', this.__SelVolume, this.__mat);
+            // geomItem.localXfo.tr.set(0.0, 0, -0.03);
+            // geomItem.selectable = false;
+            // vrController.getTreeItem().addChild(geomItem);
 
             vrController.buttonPressed.connect(() => {
                 if(!this.__active)
@@ -92,7 +93,7 @@ class VRToolHoldObjects extends VRTool {
             }, this);
 
             if(this.__active)
-                vrController.setHandleColor(new Color(1, 0, 0));
+                vrController.setTipColor(this.__color);
         }
         for(let i =0; i<this.__vrControllers.length; i++) {
             bindController(i, this.__vrControllers[i]);
@@ -103,7 +104,7 @@ class VRToolHoldObjects extends VRTool {
     activateTool() {
         super.activateTool();
         for(let vrController of this.__vrControllers)
-            vrController.setHandleColor(new Color(1, 0, 0));
+            vrController.setTipColor(this.__color);
     }
 
     createGeomDataFbo() {

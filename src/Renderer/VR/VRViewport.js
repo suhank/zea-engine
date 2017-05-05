@@ -49,18 +49,6 @@ class VRViewport {
         this.__vrDisplay.depthFar = this.__far;
 
         //////////////////////////////////////////////
-        // Xfos
-        this.__stageXfo = new Xfo();
-        // this.__standingMatrix = new Mat4();
-        this.__stageMatrix = new Mat4();
-        this.setXfo(new Xfo()); // Reset the stage Xfo.
-
-        this.__leftViewMatrix = new Mat4();
-        this.__leftProjectionMatrix = new Mat4();
-        this.__rightViewMatrix = new Mat4();
-        this.__rightProjectionMatrix = new Mat4();
-
-        //////////////////////////////////////////////
         // Tree
         this.__bgColor = renderer.getViewport().getBackgroundColor();
         this.__frameData = new VRFrameData();
@@ -74,7 +62,20 @@ class VRViewport {
 
         this.__vrControllers = [];
         this.__vrTools = {};
+        this.__vrToolNames = [];
         this.__currentTool = undefined;
+
+        //////////////////////////////////////////////
+        // Xfos
+        this.__stageXfo = new Xfo();
+        // this.__standingMatrix = new Mat4();
+        this.__stageMatrix = new Mat4();
+        this.setXfo(new Xfo()); // Reset the stage Xfo.
+
+        this.__leftViewMatrix = new Mat4();
+        this.__leftProjectionMatrix = new Mat4();
+        this.__rightViewMatrix = new Mat4();
+        this.__rightProjectionMatrix = new Mat4();
 
         //////////////////////////////////////////////
         // UI
@@ -148,6 +149,10 @@ class VRViewport {
             this.__vrTools['VRToolHoldObjects'] = new VRToolHoldObjects(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
 
+            this.__vrToolNames.push('VRToolMoveStage');
+            this.__vrToolNames.push('VRToolHoldObjects');
+            this.__vrToolNames.push('Markerpen');
+
             let markerpenTool = this.__vrTools['Markerpen'];
             markerpenTool.strokeStarted.connect((data) => {
                 this.actionStarted.emit(data);
@@ -160,6 +165,7 @@ class VRViewport {
             }, this);
 
             this.activateTool('VRToolMoveStage');
+            this.__currentToolIndex = 0;
             //this.activateTool('VRToolHoldObjects');
         }
 
@@ -386,7 +392,9 @@ class VRViewport {
 
     ////////////////////////////
     // Controllers
+
     activateTool(name) {
+        console.log("activateTool:" + name + " this.__currentTool:" + (this.__currentTool ? this.__currentTool.constructor.name : ""));
         if (this.__currentTool != this.__vrTools[name]) {
             this.__currentTool = this.__vrTools[name];
             this.__currentTool.activateTool();
@@ -409,12 +417,13 @@ class VRViewport {
                     let vrController = new VRController(this, id);
                     vrController.touchpadTouched.connect((vals) => {
                         if (vals[1] > 0) {
-                            this.activateTool('VRToolMoveStage');
-
+                            this.__currentToolIndex = (this.__currentToolIndex + 1) % this.__vrToolNames.length;
                         } else if (vals[1] < 0) {
-                            // this.activateTool('Markerpen');
-                            this.activateTool('VRToolHoldObjects');
+                            this.__currentToolIndex--;
+                            if (this.__currentToolIndex < 0)
+                                this.__currentToolIndex = this.__vrToolNames.length - 1;
                         }
+                        this.activateTool(this.__vrToolNames[this.__currentToolIndex]);
                     }, this);
                     this.__vrControllers[id] = vrController;
                     this.controllerAdded.emit(id, vrController);

@@ -2,6 +2,7 @@ import {
     isMobileDevice,
     EulerAngles,
     Quat,
+    Vec3,
     Xfo,
     Color,
     Signal
@@ -29,44 +30,35 @@ class VRController extends Gizmo {
 
         this.__vrstage = vrstage;
         this.__index = index;
-        // vrstage.getRenderer().getScene().getCommonResources().then((entries) => {
-        //     this.__treeItem = entries['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
-        //     this.__treeItem.name = 'VRController:' + index;
-        //     vrstage.getTreeItem().addChild(this.__treeItem);
-        // }, (error) => {});
+        this.__treeItem = new TreeItem('VRController:' + index);
 
+        this.__mat = new FlatMaterial('mat1');
+        this.__mat.baseColor = new Color(.2, .2, .2);
 
-        // let handle = new Cuboid('VRControllerHandle', 0.04, 0.025, 0.16);
-        // let sphere = new Sphere('VRControllerTip', 0.015);
-        // this.__mat0 = new FlatMaterial('mat0');
-        // this.__mat0.baseColor = new Color(0, 0, 1);
-        // this.__mat1 = new FlatMaterial('mat1');
-        // this.__mat1.baseColor = new Color(1, 1, 0);
+        /*
+        Material:HandleMaterial
+        Material:OtherButtons
+        Material:Metal
+        Material:Touchpad Material
+        Material:Material #27
+        */
 
-        // this.__geomItem0 = new GeomItem('VRControllerHandle', handle, this.__mat0);
-        // this.__geomItem0.localXfo.tr.set(0.0,-0.01, 0.053);
-        // this.__geomItem0.selectable = false;
-        // this.__geomItem1 = new GeomItem('VRControllerTip', sphere, this.__mat1);
-        // this.__geomItem1.localXfo.tr.set(0.0,-0.01, -0.02);
-        // this.__geomItem1.selectable = false;
-        // this.__treeItem.addChild(this.__geomItem0);
-        // this.__treeItem.addChild(this.__geomItem1);
+        vrstage.getTreeItem().addChild(this.__treeItem);
+        vrstage.getRenderer().getScene().commonResourcesLoaded.connect((entries) => {
+            let controllerTree = entries['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
+            controllerTree.localXfo.tr.set(0, -0.035, 0.01);
+            controllerTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+            this.__treeItem.addChild(controllerTree);
 
-        this.__handleColor = new Color(0, 0, 1);
-        this.__tipColor = new Color(.2, .2, .2);
-        this.__highlightedColor = new Color(1, 0, 0);
+            let sphere = entries['VRControllerTip'];
+            let sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
+            sphereGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
+            sphereGeomItem.selectable = false;
+            this.__treeItem.addChild(sphereGeomItem);
 
-        // this.__geomglDrawItem0 = new GLDrawItem(gl, this.__geomItem0, new GLMesh(gl, handle));
-        // this.__geomglDrawItem1 = new GLDrawItem(gl, this.__geomItem1, new GLMesh(gl, sphere));
+        });
 
-        // this.__addDrawItem(this.__geomglDrawItem0);
-        // this.__addDrawItem(this.__geomglDrawItem1);
-
-        // this.__geomglDrawItem0.__color = this.__handleColor;
-        // this.__geomglDrawItem1.__color = this.__tipColor;
-
-        // this.__setProxyItem(this.__geomglDrawItem1);
-
+        this.__touchpadPressed = false;
         this.touchpadTouched = new Signal();
         this.buttonPressed = new Signal();
         this.buttonReleased = new Signal();
@@ -86,14 +78,8 @@ class VRController extends Gizmo {
         // this.__geomItem1.setVisible(val);
     }
 
-    setHandleColor(val) {
-        // this.__handleColor = val;
-        // this.__mat1.baseColor.setFromOther(this.__handleColor);
-    }
-
     setTipColor(val) {
-        // this.__tipColor = val;
-        // this.__mat1.baseColor.setFromOther(this.__tipColor);
+        this.__mat.baseColor.setFromOther(val);
     }
 
     update(gamepad) {
@@ -106,14 +92,15 @@ class VRController extends Gizmo {
             return;
         this.__treeItem.localXfo = this.__xfo;
 
-        let controllerYAxis = this.__treeItem.globalXfo.ori.getYaxis();
-        let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
-        vecToHead.normalizeInPlace();
-        let angle = controllerYAxis.angleTo(vecToHead);
-        console.log("angle:" + angle);
+        // let controllerYAxis = this.__treeItem.globalXfo.ori.getYaxis();
+        // let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
+        // vecToHead.normalizeInPlace();
+        // let angle = controllerYAxis.angleTo(vecToHead);
+        // console.log("angle:" + angle);
 
 
         this.__touchpadValue = gamepad.axes;
+        // Button 0 is the touchpad clicker.
         if (gamepad.buttons[0].pressed) {
             if (this.__isDaydramController) {
                 if (!this.__buttonPressed) {
@@ -122,9 +109,13 @@ class VRController extends Gizmo {
                 }
                 return;
             } else {
-                if (gamepad.axes[0] != 0 && gamepad.axes[1] != 0)
+                if (gamepad.axes[0] != 0 && gamepad.axes[1] != 0 && !this.__touchpadPressed) {
                     this.touchpadTouched.emit(gamepad.axes);
+                    this.__touchpadPressed = true;
+                }
             }
+        } else {
+            this.__touchpadPressed = false;
         }
 
         // Button 0 is the touchpad clicker.

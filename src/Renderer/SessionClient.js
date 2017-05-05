@@ -70,7 +70,7 @@ let generateSessionID = () => {
         'view'
     ];
     let sessionID = words[random(0, 6)] + words[random(0, 6)].toUpperCase() + words[random(0, 6)];
-    //window.location.replace('#id=' + sessionID);
+    window.location.replace('#id=' + sessionID);
     // window.history.pushState("Session", "Title", window.location+'?id=' + sessionID);
     return sessionID;
 }
@@ -194,11 +194,11 @@ class SessionClient {
         let projectID = urlVars.projectID;
 
         // https://developer.mozilla.org/en/docs/Web/API/Window/sessionStorage
-        //let sessionID = urlVars.args['id'];
-        let sessionID = sessionStorage.getItem('sessionID');
+        let sessionID = urlVars.args['id'];
+        // let sessionID = sessionStorage.getItem('sessionID');
         if (!sessionID) {
             sessionID = generateSessionID();
-            sessionStorage.setItem('sessionID', sessionID);
+            // sessionStorage.setItem('sessionID', sessionID);
         }
         console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
 

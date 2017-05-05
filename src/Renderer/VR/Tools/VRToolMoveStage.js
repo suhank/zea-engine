@@ -12,6 +12,7 @@ class VRToolMoveStage extends VRTool {
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;
         this.__vrControllers = vrControllers;
+        this.__color = new Color(0, 0, 1);
 
         this.__pressedButtons = 0;
         let bindController = (id, vrController) => {
@@ -28,6 +29,9 @@ class VRToolMoveStage extends VRTool {
                 this.__pressedButtons--;
                 this.initAction();
             }, this);
+
+            if(this.__active)
+                vrController.setTipColor(this.__color);
         }
 
         for(let i=0; i<this.__vrControllers.length; i++) {
@@ -40,7 +44,7 @@ class VRToolMoveStage extends VRTool {
     activateTool() {
         super.activateTool();
         for(let vrController of this.__vrControllers)
-            vrController.setHandleColor(new Color(0, 0, 1));
+            vrController.setTipColor(this.__color);
     }
 
     initAction() {

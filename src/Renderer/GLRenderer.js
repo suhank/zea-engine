@@ -232,12 +232,12 @@ class GLRenderer {
 
         this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
 
-        scene.getCommonResources().then((entries) => {
+        scene.commonResourcesLoaded.connect((entries) => {
 
             if (navigator.getVRDisplays)
                 this.__setupVRViewport();
 
-            // this.sessionClient = new SessionClient(this, entries);
+            this.sessionClient = new SessionClient(this, entries);
 
             //if (options.displayLogo)
             {
@@ -263,8 +263,6 @@ class GLRenderer {
             //     this.__glcanvasDiv.appendChild(loadingDiv);
             //     this.__loadingImg = loadingDiv;
             // }
-
-        }, (error) => {
 
         });
 
