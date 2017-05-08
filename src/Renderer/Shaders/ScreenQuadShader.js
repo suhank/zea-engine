@@ -1,5 +1,5 @@
-import shaderLibrary  from '../../SceneTree/ShaderLibrary';
-import Shader  from '../../SceneTree/Shader';
+import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
+import { Shader }  from '../../SceneTree/Shader';
 
 import './utils/quadVertexFromID.js';
 

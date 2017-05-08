@@ -1,4 +1,4 @@
-import Color from '../../Math/Color';
+import { Color } from '../../Math/Color';
 
 class Gizmo {
     constructor(color, constantSizeOnScreen) {

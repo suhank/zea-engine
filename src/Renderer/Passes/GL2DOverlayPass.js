@@ -1,6 +1,6 @@
-import GLPass from '../GLPass.js';
-import GLShader from '../GLShader.js';
-import ScreenSpaceOverlayShader from '../Shaders/ScreenSpaceOverlayShader.js';
+import { GLPass } from '../GLPass.js';
+import { GLShader } from '../GLShader.js';
+import { ScreenSpaceOverlayShader } from '../Shaders/ScreenSpaceOverlayShader.js';
 
 class GL2DOverlayPass extends GLPass {
     constructor(gl) {

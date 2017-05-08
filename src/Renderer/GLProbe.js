@@ -1,13 +1,13 @@
-import GLShader from './GLShader.js';
-import GLTexture2D from './GLTexture2D.js';
-import GLHDRImage from './GLHDRImage.js';
-import ImageAtlas from './ImageAtlas.js';
-import ConvolverShader from './Shaders/ConvolverShader.js';
-import EnvMapShader from './Shaders/EnvMapShader.js';
-import GLFbo from './GLFbo.js';
-import ImagePyramid from './ImagePyramid.js';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
-import Vec3 from '../Math/Vec3';
+import { GLShader } from './GLShader.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { GLHDRImage } from './GLHDRImage.js';
+import { ImageAtlas } from './ImageAtlas.js';
+import { ConvolverShader } from './Shaders/ConvolverShader.js';
+import { EnvMapShader } from './Shaders/EnvMapShader.js';
+import { GLFbo } from './GLFbo.js';
+import { ImagePyramid } from './ImagePyramid.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { Vec3 } from '../Math/Vec3';
 
 import {
     hammersley

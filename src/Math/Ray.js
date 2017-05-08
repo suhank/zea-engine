@@ -1,8 +1,8 @@
 import {
     JSON_stringify_fixedPrecision
 } from './Common.js';
-import Vec3 from './Vec3.js';
-import typeRegistry from './TypeRegistry.js';
+import { Vec3 } from './Vec3.js';
+import { typeRegistry } from './TypeRegistry.js';
 
 class Ray {
 

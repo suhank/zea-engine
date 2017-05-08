@@ -1,5 +1,5 @@
-import GLPass from '../GLPass.js';
-import {GLShaderMaterials} from '../GLCollector.js';
+import { GLPass } from '../GLPass.js';
+import { GLShaderMaterials } from '../GLCollector.js';
 
 class GLForwardPass extends GLPass {
     constructor(gl, collector) {

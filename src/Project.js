@@ -1,8 +1,8 @@
-import TreeItem from './SceneTree/TreeItem';
-import GeomItem from './SceneTree/GeomItem';
-import GeomLibrary from './SceneTree/GeomLibrary';
-import MaterialLibrary from './SceneTree/MaterialLibrary';
-import sgFactory from './SceneTree/SGFactory';
+import { TreeItem } from './SceneTree/TreeItem';
+import { GeomItem } from './SceneTree/GeomItem';
+import { GeomLibrary } from './SceneTree/GeomLibrary';
+import { MaterialLibrary } from './SceneTree/MaterialLibrary';
+import { sgFactory } from './SceneTree/SGFactory';
 
 import {
     LOADFLAGS_SKIP_CHILDREN,

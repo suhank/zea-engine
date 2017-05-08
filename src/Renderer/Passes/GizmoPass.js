@@ -1,7 +1,7 @@
-import GLPass from '../GLPass.js';
-import GLShader from '../GLShader.js';
-import GizmoShader, { GizmoDataShader } from '../Shaders/GizmoShader.js';
-import GLGeomDataPass from './GLGeomDataPass.js';
+import { GLPass } from '../GLPass.js';
+import { GLShader } from '../GLShader.js';
+import { GizmoShader, GizmoDataShader } from '../Shaders/GizmoShader.js';
+import { GLGeomDataPass } from './GLGeomDataPass.js';
 
 
 class GLGizmoDataPass extends GLGeomDataPass {

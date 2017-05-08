@@ -1,7 +1,7 @@
-import Mesh from '../../SceneTree/Geometry/Mesh';
-import PointsShader from '../Shaders/PointsShader.js';
-import GLPass from '../GLPass.js';
-import GLShader from '../GLShader.js';
+import { Mesh } from '../../SceneTree/Geometry/Mesh';
+import { PointsShader } from '../Shaders/PointsShader.js';
+import { GLPass } from '../GLPass.js';
+import { GLShader } from '../GLShader.js';
 
 class GLMeshPointsPass extends GLPass {
     constructor(gl, collector) {

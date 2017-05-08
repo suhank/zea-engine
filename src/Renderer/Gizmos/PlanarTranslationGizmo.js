@@ -1,11 +1,11 @@
-import Vec3 from '../../Math/Vec3';
-import Ray from '../../Math/Ray';
-import Cuboid from '../../SceneTree/Geometry/Shapes/Cuboid';
-import TreeItem from '../../SceneTree/TreeItem';
-import GeomItem from '../../SceneTree/GeomItem';
-import GLMesh from '../GLMesh.js';
-import GLDrawItem from '../GLDrawItem.js';
-import Gizmo from './Gizmo.js';
+import { Vec3 } from '../../Math/Vec3';
+import { Ray } from '../../Math/Ray';
+import { Cuboid } from '../../SceneTree/Geometry/Shapes/Cuboid';
+import { TreeItem } from '../../SceneTree/TreeItem';
+import { GeomItem } from '../../SceneTree/GeomItem';
+import { GLMesh } from '../GLMesh.js';
+import { GLDrawItem } from '../GLDrawItem.js';
+import { Gizmo } from './Gizmo.js';
 
 class PlanarTranslationGizmo extends Gizmo {
     constructor(gl, context, name, color, xfo) {

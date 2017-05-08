@@ -1,4 +1,4 @@
-import Signal from '../Math/Signal';
+import { Signal } from '../Math/Signal';
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLPass {

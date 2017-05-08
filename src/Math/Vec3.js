@@ -1,8 +1,8 @@
 import {
     JSON_stringify_fixedPrecision
 } from './Common.js';
-import AttrValue from './AttrValue.js';
-import typeRegistry from './TypeRegistry.js';
+import { AttrValue } from './AttrValue.js';
+import { typeRegistry } from './TypeRegistry.js';
 
 
 class Vec3 extends AttrValue {

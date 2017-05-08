@@ -1,22 +1,22 @@
 import { isMobileDevice } from '../Math';
-import HDRImage2D from '../SceneTree/HDRImage2D';
-import HDRImageMixer from '../SceneTree/HDRImageMixer';
-import ProceduralSky from '../SceneTree/ProceduralSky';
-import GLHDRImage from './GLHDRImage.js';
-import GLHDRImageMixer from './GLHDRImageMixer.js';
-import GLEnvMap from './GLEnvMap.js';
-import GLProceduralSky  from './GLProceduralSky.js';
-import GLShader from './GLShader.js';
-import GLForwardPass from './Passes/GLForwardPass.js';
-import GLTransparencyPass from './Passes/GLTransparencyPass.js';
-import GLHardEdgesPass from './Passes/GLHardEdgesPass.js';
-import GLMeshPointsPass from './Passes/GLMeshPointsPass.js';
-import GLGeomDataPass from './Passes/GLGeomDataPass.js';
-import GLBillboardsPass from './Passes/GLBillboardsPass.js';
-import GLRenderer from './GLRenderer.js';
-import GLTexture2D from './GLTexture2D.js';
-import GLScreenQuad from './GLScreenQuad.js';
-import PostProcessing from './Shaders/PostProcessing.js';
+import { HDRImage2D } from '../SceneTree/HDRImage2D';
+import { HDRImageMixer } from '../SceneTree/HDRImageMixer';
+import { ProceduralSky } from '../SceneTree/ProceduralSky';
+import { GLHDRImage } from './GLHDRImage.js';
+import { GLHDRImageMixer } from './GLHDRImageMixer.js';
+import { GLEnvMap } from './GLEnvMap.js';
+import { GLProceduralSky }  from './GLProceduralSky.js';
+import { GLShader } from './GLShader.js';
+import { GLForwardPass } from './Passes/GLForwardPass.js';
+import { GLTransparencyPass } from './Passes/GLTransparencyPass.js';
+import { GLHardEdgesPass } from './Passes/GLHardEdgesPass.js';
+import { GLMeshPointsPass } from './Passes/GLMeshPointsPass.js';
+import { GLGeomDataPass } from './Passes/GLGeomDataPass.js';
+import { GLBillboardsPass } from './Passes/GLBillboardsPass.js';
+import { GLRenderer } from './GLRenderer.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { GLScreenQuad } from './GLScreenQuad.js';
+import { PostProcessing } from './Shaders/PostProcessing.js';
 
 class GLVisualiveRenderer extends GLRenderer {
     constructor(canvasDiv, options = {}) {

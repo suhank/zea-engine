@@ -1,9 +1,15 @@
 import {
     JSON_stringify_fixedPrecision
 } from './Common.js';
-import Vec3 from './Vec3.js';
-import Mat4 from './Mat4.js';
-import typeRegistry from './TypeRegistry.js';
+import {
+    Vec3
+} from './Vec3.js';
+import {
+    Mat4
+} from './Mat4.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 class Box3 {
     constructor(p0 = undefined, p1 = undefined) {
@@ -28,16 +34,19 @@ class Box3 {
         this.p1 = p1;
     }
 
-    reset(){
-        this.p0.x = Number.POSITIVE_INFINITY; this.p1.x = Number.NEGATIVE_INFINITY;
-        this.p0.y = Number.POSITIVE_INFINITY; this.p1.y = Number.NEGATIVE_INFINITY;
-        this.p0.z = Number.POSITIVE_INFINITY; this.p1.z = Number.NEGATIVE_INFINITY;
+    reset() {
+        this.p0.x = Number.POSITIVE_INFINITY;
+        this.p1.x = Number.NEGATIVE_INFINITY;
+        this.p0.y = Number.POSITIVE_INFINITY;
+        this.p1.y = Number.NEGATIVE_INFINITY;
+        this.p0.z = Number.POSITIVE_INFINITY;
+        this.p1.z = Number.NEGATIVE_INFINITY;
     }
 
     isValid() {
-        return  this.p0.x != Number.POSITIVE_INFINITY && this.p1.x != Number.NEGATIVE_INFINITY &&
-                this.p0.y != Number.POSITIVE_INFINITY && this.p1.y != Number.NEGATIVE_INFINITY &&
-                this.p0.z != Number.POSITIVE_INFINITY && this.p1.z != Number.NEGATIVE_INFINITY;
+        return this.p0.x != Number.POSITIVE_INFINITY && this.p1.x != Number.NEGATIVE_INFINITY &&
+            this.p0.y != Number.POSITIVE_INFINITY && this.p1.y != Number.NEGATIVE_INFINITY &&
+            this.p0.z != Number.POSITIVE_INFINITY && this.p1.z != Number.NEGATIVE_INFINITY;
     }
 
     addPoint(point) {
@@ -65,12 +74,12 @@ class Box3 {
         if (xfo) {
             // transform each corner of the box33 into the new coord sys
             this.addPoint(xfo.transformVec3(box3.p0));
-            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p0.y, box3.p1.z)));
-            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p1.y, box3.p0.z)));
-            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p0.y, box3.p0.z)));
-            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x,box3.p1.y, box3.p1.z)));
-            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p0.y, box3.p1.z)));
-            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x,box3.p1.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p0.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p0.x, box3.p1.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x, box3.p0.y, box3.p1.z)));
+            this.addPoint(xfo.transformVec3(new Vec3(box3.p1.x, box3.p1.y, box3.p0.z)));
             this.addPoint(xfo.transformVec3(box3.p1));
         } else {
             this.addPoint(box3.p0);
@@ -137,7 +146,7 @@ class Box3 {
 
     setFromFloat32Array(float32array) {
         this.p0 = new Vec3(float32array.buffer, float32array.byteOffset);
-        this.p1 = new Vec3(float32array.buffer, float32array.byteOffset+12);
+        this.p1 = new Vec3(float32array.buffer, float32array.byteOffset + 12);
     }
 
     toString() {

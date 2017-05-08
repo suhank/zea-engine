@@ -1,10 +1,10 @@
-import GLTexture2D from './GLTexture2D.js';
-import GLFbo from './GLFbo.js';
-import GLShader from './GLShader.js';
-import ImageAtlas from './ImageAtlas.js';
-import Vec2 from '../Math/Vec2';
-import Rect2 from '../Math/Rect2';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { GLFbo } from './GLFbo.js';
+import { GLShader } from './GLShader.js';
+import { ImageAtlas } from './ImageAtlas.js';
+import { Vec2 } from '../Math/Vec2';
+import { Rect2 } from '../Math/Rect2';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 let Math_log2 = function(value){
     // IE11 doesn't support Math.log2
@@ -12,8 +12,8 @@ let Math_log2 = function(value){
     //return Math.log( value ) / Math.log( 2 ) - 2;
 };
 
-import Shader from '../SceneTree/Shader'
-import shaderLibrary from '../SceneTree/ShaderLibrary'
+import { Shader } from '../SceneTree/Shader'
+import { shaderLibrary } from '../SceneTree/ShaderLibrary'
 
 import '../SceneTree/Shaders/GLSL/ImagePyramid.js';
 

@@ -1,8 +1,8 @@
-import Color from '../Math/Color';
-import typeRegistry from '../Math/TypeRegistry'
-import TreeItem from '../SceneTree/TreeItem';
-import UserAvatar from './UserAvatar';
-import GLAnalyticsPass from './Passes/GLAnalyticsPass.js';
+import { Color } from '../Math/Color';
+import { typeRegistry } from '../Math/TypeRegistry'
+import { TreeItem } from '../SceneTree/TreeItem';
+import { UserAvatar } from './UserAvatar';
+import { GLAnalyticsPass } from './Passes/GLAnalyticsPass.js';
 
 let getUrlVars = () => {
     let url = window.location.href,

@@ -1,4 +1,4 @@
-import Signal from '../Math/Signal';
+import { Signal } from '../Math/Signal';
 
 class RefCounted {
     constructor() {

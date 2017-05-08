@@ -1,18 +1,18 @@
-import Vec4 from '../Math/Vec4';
-import Signal from '../Math/Signal';
-import GeomItem from '../SceneTree/GeomItem';
-import Points from '../SceneTree/Geometry/Points';
-import Lines from '../SceneTree/Geometry/Lines';
-import Mesh from '../SceneTree/Geometry/Mesh';
-import BillboardItem from '../SceneTree/BillboardItem';
-import GLPoints from './GLPoints.js';
-import GLLines from './GLLines.js';
-import GLMesh from './GLMesh.js';
-import GLShader from './GLShader.js';
-import GLMaterial from './GLMaterial.js';
-import GLDrawItem from './GLDrawItem.js';
-import GLDrawItemSet from './GLDrawItemSet.js';
-import GLTexture2D from './GLTexture2D.js';
+import { Vec4 } from '../Math/Vec4';
+import { Signal } from '../Math/Signal';
+import { GeomItem } from '../SceneTree/GeomItem';
+import { Points } from '../SceneTree/Geometry/Points';
+import { Lines } from '../SceneTree/Geometry/Lines';
+import { Mesh } from '../SceneTree/Geometry/Mesh';
+import { BillboardItem } from '../SceneTree/BillboardItem';
+import { GLPoints } from './GLPoints.js';
+import { GLLines } from './GLLines.js';
+import { GLMesh } from './GLMesh.js';
+import { GLShader } from './GLShader.js';
+import { GLMaterial } from './GLMaterial.js';
+import { GLDrawItem } from './GLDrawItem.js';
+import { GLDrawItemSet } from './GLDrawItemSet.js';
+import { GLTexture2D } from './GLTexture2D.js';
 
 
 class GLShaderMaterials {

@@ -1,6 +1,6 @@
-import Signal from '../Math/Signal';
-import Image2D from '../SceneTree/Image2D';
-import RefCounted from '../SceneTree/RefCounted';
+import { Signal } from '../Math/Signal';
+import { Image2D } from '../SceneTree/Image2D';
+import { RefCounted } from '../SceneTree/RefCounted';
 
 class GLTexture2D extends RefCounted {
     constructor(gl, params) {

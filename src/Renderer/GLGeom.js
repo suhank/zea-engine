@@ -1,7 +1,7 @@
-import Signal from '../Math/Signal';
+import { Signal } from '../Math/Signal';
 import '../SceneTree';
 import '../SceneTree/Geometry/BaseGeom.js';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 class GLGeom {
     constructor(gl, geom) {

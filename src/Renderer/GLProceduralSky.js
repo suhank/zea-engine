@@ -1,14 +1,14 @@
-import Signal from '../Math/Signal';
-import Vec3 from '../Math/Vec3';
-import Shader from '../SceneTree/Shader';
-import shaderLibrary from '../SceneTree/ShaderLibrary'
-import GLShader from './GLShader.js';
-import GLTexture2D from './GLTexture2D.js';
-import GLHDRImage from './GLHDRImage.js';
-import GLProbe from './GLProbe.js';
-import ConvolverShader from './Shaders/ConvolverShader.js';
-import GLFbo from './GLFbo.js';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
+import { Signal } from '../Math/Signal';
+import { Vec3 } from '../Math/Vec3';
+import { Shader } from '../SceneTree/Shader';
+import { shaderLibrary } from '../SceneTree/ShaderLibrary'
+import { GLShader } from './GLShader.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { GLHDRImage } from './GLHDRImage.js';
+import { GLProbe } from './GLProbe.js';
+import { ConvolverShader } from './Shaders/ConvolverShader.js';
+import { GLFbo } from './GLFbo.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 import { hammersley } from '../Math/Hammersley';
 
 

@@ -1,14 +1,14 @@
-import Color from '../Math/Color';
-import Mat4 from '../Math/Mat4';
-import GLRenderer from './GLRenderer.js';
-import GLForwardPass from './Passes/GLForwardPass.js';
-import GLTransparencyPass from './Passes/GLTransparencyPass.js';
-import GLWirePass from './Passes/GLWirePass.js';
-import GLHardEdgesPass from './Passes/GLHardEdgesPass.js';
-import GLGeomDataPass from './Passes/GLGeomDataPass.js';
-import GLMeshPointsPass from './Passes/GLMeshPointsPass.js';
-import GLNormalsPass from './Passes/GLNormalsPass.js';
-import GLBillboardsPass from './Passes/GLBillboardsPass.js';
+import { Color } from '../Math/Color';
+import { Mat4 } from '../Math/Mat4';
+import { GLRenderer } from './GLRenderer.js';
+import { GLForwardPass } from './Passes/GLForwardPass.js';
+import { GLTransparencyPass } from './Passes/GLTransparencyPass.js';
+import { GLWirePass } from './Passes/GLWirePass.js';
+import { GLHardEdgesPass } from './Passes/GLHardEdgesPass.js';
+import { GLGeomDataPass } from './Passes/GLGeomDataPass.js';
+import { GLMeshPointsPass } from './Passes/GLMeshPointsPass.js';
+import { GLNormalsPass } from './Passes/GLNormalsPass.js';
+import { GLBillboardsPass } from './Passes/GLBillboardsPass.js';
 
 class GLSimpleRenderer extends GLRenderer {
     constructor(canvasDiv, options={}) {

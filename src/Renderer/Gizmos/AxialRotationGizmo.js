@@ -1,10 +1,10 @@
-import Ray from '../../Math/Ray';
-import Cylinder from '../../SceneTree/Geometry/Shapes/Cylinder';
-import TreeItem from '../../SceneTree/TreeItem'
-import GeomItem from '../../SceneTree/GeomItem'
-import GLMesh from '../GLMesh.js';
-import GLDrawItem from '../GLDrawItem.js';
-import Gizmo from './Gizmo.js';
+import { Ray } from '../../Math/Ray';
+import { Cylinder } from '../../SceneTree/Geometry/Shapes/Cylinder';
+import { TreeItem } from '../../SceneTree/TreeItem'
+import { GeomItem } from '../../SceneTree/GeomItem'
+import { GLMesh } from '../GLMesh.js';
+import { GLDrawItem } from '../GLDrawItem.js';
+import { Gizmo } from './Gizmo.js';
 
 class AxialRotationGizmo extends Gizmo {
     constructor(gl, context, name, color, xfo) {

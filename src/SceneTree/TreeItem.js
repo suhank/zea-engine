@@ -1,7 +1,7 @@
-import Xfo from '../Math/Xfo';
-import Box3 from '../Math/Box3';
-import Signal from '../Math/Signal';
-import sgFactory from './SGFactory.js';
+import { Xfo } from '../Math/Xfo';
+import { Box3 } from '../Math/Box3';
+import { Signal } from '../Math/Signal';
+import { sgFactory } from './SGFactory.js';
 
 
 // Defines used to explicity specify types for WebGL.

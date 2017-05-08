@@ -1,5 +1,5 @@
-import shaderLibrary  from '../../SceneTree/ShaderLibrary';
-import Shader  from '../../SceneTree/Shader';
+import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
+import { Shader }  from '../../SceneTree/Shader';
 import '../../SceneTree/Shaders/GLSL/Florian/Lookup.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/diffuse-lambert.js';
 

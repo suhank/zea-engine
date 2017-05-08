@@ -1,11 +1,11 @@
 import {
     isIOSDevice
 } from '../Math';
-import GLShader from './GLShader.js';
-import GLTexture2D from './GLTexture2D.js';
-import UnpackHDRShader from './Shaders/UnpackHDRShader.js';
-import GLFbo from './GLFbo.js';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
+import { GLShader } from './GLShader.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js';
+import { GLFbo } from './GLFbo.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 class GLHDRImage extends GLTexture2D {
     constructor(gl, hdrImage) {

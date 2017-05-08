@@ -1,7 +1,7 @@
-import WireShader from '../Shaders/WireShader.js';
-import GLPass from '../GLPass.js';
-import GLShader from '../GLShader.js';
-import Mesh from '../../SceneTree/Geometry/Mesh';
+import { WireShader } from '../Shaders/WireShader.js';
+import { GLPass } from '../GLPass.js';
+import { GLShader } from '../GLShader.js';
+import { Mesh } from '../../SceneTree/Geometry/Mesh';
 
 class GLWirePass extends GLPass {
     constructor(gl) {

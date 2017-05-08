@@ -1,6 +1,6 @@
-import GLPass from '../GLPass.js';
-import GLShader from '../GLShader.js';
-import GeomDataShader from '../Shaders/GeomDataShader.js';
+import { GLPass } from '../GLPass.js';
+import { GLShader } from '../GLShader.js';
+import { GeomDataShader } from '../Shaders/GeomDataShader.js';
 
 class GLGeomDataPass extends GLPass {
     constructor(gl, collector) {

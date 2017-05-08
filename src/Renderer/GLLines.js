@@ -1,7 +1,7 @@
-import Vec3 from '../Math/Vec3';
-import GLGeom from './GLGeom.js';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
-import GLTexture2D from './GLTexture2D.js';
+import { Vec3 } from '../Math/Vec3';
+import { GLGeom } from './GLGeom.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { GLTexture2D } from './GLTexture2D.js';
 
 class GLLines extends GLGeom {
     constructor(gl, lines) {

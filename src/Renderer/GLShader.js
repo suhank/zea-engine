@@ -1,5 +1,5 @@
-import Signal from '../Math/Signal';
-import shaderLibrary from '../SceneTree/ShaderLibrary';
+import { Signal } from '../Math/Signal';
+import { shaderLibrary } from '../SceneTree/ShaderLibrary';
 
 class GLShader {
     constructor(gl, shader) {

@@ -1,10 +1,10 @@
-import Vec3 from '../../Math/Vec3';
-import Mat4 from '../../Math/Mat4';
-import GLFbo from '../GLFbo.js';
-import GLPass from '../GLPass.js';
-import GLTexture2D from '../GLTexture2D.js';
-import GLShader from '../GLShader.js';
-import DepthMapShader from '../Shaders/DepthMapShader.js';
+import { Vec3 } from '../../Math/Vec3';
+import { Mat4 } from '../../Math/Mat4';
+import { GLFbo } from '../GLFbo.js';
+import { GLPass } from '../GLPass.js';
+import { GLTexture2D } from '../GLTexture2D.js';
+import { GLShader } from '../GLShader.js';
+import { DepthMapShader } from '../Shaders/DepthMapShader.js';
 
 class GLDepthPass extends GLPass {
     constructor(gl, volSize, textureSize) {

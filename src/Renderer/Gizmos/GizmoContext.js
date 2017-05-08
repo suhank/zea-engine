@@ -1,7 +1,7 @@
-import TreeItem from '../../SceneTree/TreeItem';
-import LinearTranslationGizmo from './LinearTranslationGizmo.js';
-import PlanarTranslationGizmo from './PlanarTranslationGizmo.js';
-import AxialRotationGizmo from './AxialRotationGizmo.js';
+import { TreeItem } from '../../SceneTree/TreeItem';
+import { LinearTranslationGizmo } from './LinearTranslationGizmo.js';
+import { PlanarTranslationGizmo } from './PlanarTranslationGizmo.js';
+import { AxialRotationGizmo } from './AxialRotationGizmo.js';
 
 class GizmoContext {
     constructor(renderer) {

@@ -1,8 +1,8 @@
-import AttrValue from '../Math/AttrValue';
-import Signal from '../Math/Signal';
-import GLShader from './GLShader.js';
-import ScreenQuadShader from './Shaders/ScreenQuadShader.js';
-import generateShaderGeomBinding from './GeomShaderBinding.js';
+import { AttrValue } from '../Math/AttrValue';
+import { Signal } from '../Math/Signal';
+import { GLShader } from './GLShader.js';
+import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 class GLScreenQuad {
     constructor(gl) {

@@ -4,16 +4,16 @@ import {
   Float32,
 } from '../Math/Common';
 
-import Vec2 from '../Math/Vec2';
-import Vec3 from '../Math/Vec3';
-import Vec4 from '../Math/Vec4';
-import Color from '../Math/Color';
-import Mat4 from '../Math/Mat4';
-import Signal from '../Math/Signal';
-import Image2D from '../SceneTree/Image2D.js';
+import { Vec2 } from '../Math/Vec2';
+import { Vec3 } from '../Math/Vec3';
+import { Vec4 } from '../Math/Vec4';
+import { Color } from '../Math/Color';
+import { Mat4 } from '../Math/Mat4';
+import { Signal } from '../Math/Signal';
+import { Image2D } from '../SceneTree/Image2D.js';
 import '../SceneTree/Material.js';
 import '../SceneTree';
-import GLTexture2D from './GLTexture2D.js';
+import { GLTexture2D } from './GLTexture2D.js';
 
 class GLMaterial {
     constructor(gl, material) {

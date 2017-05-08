@@ -1,20 +1,19 @@
-import Quat, {EulerAngles} from '../../Math/Quat';
-import Xfo from '../../Math/Xfo';
-import Color from '../../Math/Color';
-import Signal from '../../Math/Signal';
-
 import {
+    Quat, EulerAngles, 
+    Xfo,
+    Color,
+    Signal
     isMobileDevice,
 } from '../../Math';
 
-import Cuboid from '../../SceneTree/Geometry/Shapes/Cuboid';
-import Sphere from '../../SceneTree/Geometry/Shapes/Sphere';
-import TreeItem from '../../SceneTree/TreeItem';
-import GeomItem from '../../SceneTree/GeomItem';
-import FlatMaterial from '../../SceneTree/Shaders/FlatMaterial';
-import GLMesh from '../GLMesh.js';
-import GLDrawItem from '../GLDrawItem.js';
-import Gizmo from '../Gizmos/Gizmo.js';
+import { Cuboid } from '../../SceneTree/Geometry/Shapes/Cuboid';
+import { Sphere } from '../../SceneTree/Geometry/Shapes/Sphere';
+import { TreeItem } from '../../SceneTree/TreeItem';
+import { GeomItem } from '../../SceneTree/GeomItem';
+import { FlatMaterial } from '../../SceneTree/Shaders/FlatMaterial';
+import { GLMesh } from '../GLMesh.js';
+import { GLDrawItem } from '../GLDrawItem.js';
+import { Gizmo } from '../Gizmos/Gizmo.js';
 
 class VRController extends Gizmo {
     constructor(gl, index, stageTreeItem) {
