@@ -1,4 +1,5 @@
 import {
+    Vec3,
     EulerAngles,
     Quat,
     Xfo,
@@ -74,15 +75,13 @@ class UserAvatar {
         this.__controllers = [];
     }
 
-    setViveRepresentation(data) {
+    setViveRepresentation() {
         this.__treeItem.removeAllChildren();
-        this.__treeItem.localXfo = new Xfo();
-        let shape = new Cuboid('Camera', 0.16, 0.24, 0.2);
-        let geomItem = new GeomItem(this.__id, shape, this.__material);
-        this.__treeItem.addChild(geomItem);
 
-        this.__handle = new Cuboid('VRControllerHandle', 0.04, 0.025, 0.16);
-        this.__sphere = new Sphere('VRControllerTip', 0.015);
+        let controllerTree = this.__commonResources['viveAsset'].getChildByName('HMD').clone();
+        controllerTree.localXfo.tr.set(0, -0.035, 0.01);
+        controllerTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+        this.__treeItem.addChild(controllerTree);
 
         this.__currentViewMode = 'Vive';
     }
@@ -90,14 +89,13 @@ class UserAvatar {
     updateViveControllers(data) {
         for (let i = 0; i < data.controllers.length; i++) {
             if (i >= this.__controllers.length) {
-                let handleItem = new GeomItem('Handle' + i, this.__handle, this.__material);
-                handleItem.localXfo.tr.set(0.0, -0.01, 0.053);
-                handleItem.selectable = false;
-                let tipItem = new GeomItem('Tip', this.__sphere, this.__material);
-                tipItem.localXfo.tr.set(0.0, 0.0, -0.02);
-                tipItem.selectable = false;
-                handleItem.addChild(tipItem);
-                this.__treeItem.addChild(handleItem);
+
+                let controllerTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
+                controllerTree.name = 'Handle' + i;
+                controllerTree.localXfo.tr.set(0, -0.035, 0.01);
+                controllerTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                this.__treeItem.addChild(controllerTree);
+
                 this.__controllers.push(handleItem);
             }
             const controllerXfo = new Xfo();
@@ -136,16 +134,13 @@ class UserAvatar {
                     }
 
                     this.__treeItem.getChild(0).localXfo = data.viewXfo;
-
                     this.updateViveControllers(data);
                 }
 
                 break;
             case 'Daydream':
-
                 break;
             case 'Occulus':
-
                 break;
         }
 
