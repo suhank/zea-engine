@@ -68,4 +68,7 @@ class Gizmo {
 
 };
 
-export default Gizmo;
+export {
+    Gizmo
+};
+// export default Gizmo;

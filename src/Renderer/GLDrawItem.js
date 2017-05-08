@@ -143,4 +143,7 @@ class GLDrawItem {
     }
 };
 
-export default GLDrawItem;
+export {
+    GLDrawItem
+};
+// export default GLDrawItem;

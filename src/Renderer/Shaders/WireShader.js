@@ -42,7 +42,10 @@ void main(void) {
     }
 };
 
-export default WireShader;
+export {
+    WireShader
+};
+//export default WireShader;
 
 
 

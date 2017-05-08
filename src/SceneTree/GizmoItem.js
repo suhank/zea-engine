@@ -19,4 +19,7 @@ class GizmoItem extends GeomItem {
 
 sgFactory.registerClass('GizmoItem', GizmoItem);
 
-export default GizmoItem;
+export {
+    GizmoItem
+};
+//export default GizmoItem;

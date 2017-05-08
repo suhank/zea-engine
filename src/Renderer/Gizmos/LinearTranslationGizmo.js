@@ -71,4 +71,7 @@ class LinearTranslationGizmo extends Gizmo {
 
 };
 
-export default LinearTranslationGizmo;
+export {
+    LinearTranslationGizmo
+};
+// export default LinearTranslationGizmo;

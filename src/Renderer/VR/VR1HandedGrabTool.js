@@ -38,4 +38,7 @@ class VR1HandedGrabTool {
     }
 };
 
-export default VR1HandedGrabTool;
+export {
+    VR1HandedGrabTool
+};
+//export default VR1HandedGrabTool;

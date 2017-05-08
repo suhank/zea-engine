@@ -174,4 +174,7 @@ class GLTexture2D extends RefCounted {
     }
 };
 
-export default GLTexture2D;
+export {
+    GLTexture2D
+};
+// export default GLTexture2D;

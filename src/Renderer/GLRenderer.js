@@ -683,4 +683,8 @@ class GLRenderer {
     }
 };
 
-export default GLRenderer;
+
+export {
+    GLRenderer
+};
+// export default GLRenderer;

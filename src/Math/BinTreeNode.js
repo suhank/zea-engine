@@ -160,4 +160,3 @@ export {
     BinTreeNode
 };
 
-export default BinTreeNode;

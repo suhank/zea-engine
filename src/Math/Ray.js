@@ -131,4 +131,7 @@ class Ray {
 
 typeRegistry.registerType('Ray', Ray);
 
-export default Ray
+export {
+    Ray
+};
+// export default Ray

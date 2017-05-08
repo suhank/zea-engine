@@ -115,4 +115,7 @@ class Grid extends Lines {
     }
 };
 
-export default Grid;
+export {
+    Grid
+};
+//export default Grid;

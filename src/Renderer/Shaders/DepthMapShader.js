@@ -50,5 +50,8 @@ void main(void) {
 };
 
 
-export default DepthMapShader;
+export {
+    DepthMapShader
+};
+//export default DepthMapShader;
 

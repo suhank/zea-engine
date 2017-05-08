@@ -84,8 +84,8 @@ void main(void) {
 
 
 export {
-    UnpackAndMixHDRShader
+    UnpackAndMixHDRShader,
+    UnpackHDRShader
 };
 
-export default UnpackHDRShader;
 

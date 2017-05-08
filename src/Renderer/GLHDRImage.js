@@ -132,4 +132,7 @@ class GLHDRImage extends GLTexture2D {
     }
 };
 
-export default GLHDRImage;
+export {
+    GLHDRImage
+};
+// export default GLHDRImage;

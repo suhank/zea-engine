@@ -152,4 +152,7 @@ class UserAvatar {
     }
 };
 
-export default UserAvatar;
+export {
+    UserAvatar
+};
+//export default UserAvatar;

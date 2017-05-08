@@ -103,4 +103,7 @@ class GLGeom {
     }
 };
 
-export default GLGeom;
+export {
+    GLGeom
+};
+// export default GLGeom;

@@ -23,8 +23,6 @@ export * from './ImageLibrary.js';
 export * from './ProceduralSky.js';
 
 export * from './Material.js';
-
-export * from './SelectionManager.js';
 export * from './Scene.js';
 
 export * from './BinAsset.js';

@@ -71,5 +71,8 @@ class GLPass {
 
 };
 
-export default GLPass;
+export {
+    GLPass
+};
+// export default GLPass;
 

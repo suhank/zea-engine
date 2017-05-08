@@ -33,4 +33,7 @@ class GLLightmap {
 };
 
 
-export default GLLightmap;
+export {
+    GLLightmap
+};
+// export default GLLightmap;

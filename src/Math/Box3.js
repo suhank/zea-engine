@@ -147,4 +147,7 @@ class Box3 {
 
 typeRegistry.registerType('Box3', Box3);
 
-export default Box3;
+export {
+    Box3
+};
+// export default Box3;

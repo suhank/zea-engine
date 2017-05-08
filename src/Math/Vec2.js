@@ -1,4 +1,4 @@
-import AttrValue from './AttrValue.js';
+import  { AttrValue } from './AttrValue.js';
 import typeRegistry from './TypeRegistry.js';
 
 class Vec2 extends AttrValue {
@@ -259,4 +259,7 @@ class Vec2 extends AttrValue {
 
 typeRegistry.registerType('Vec2', Vec2);
 
-export default Vec2;
+export {
+    Vec2
+};
+// export default Vec2;

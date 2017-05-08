@@ -73,4 +73,7 @@ class GLHardEdgesPass extends GLPass {
     }
 };
 
-export default GLHardEdgesPass;
+export {
+    GLHardEdgesPass
+};
+// export default GLHardEdgesPass;

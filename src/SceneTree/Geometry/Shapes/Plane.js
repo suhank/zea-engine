@@ -102,4 +102,7 @@ class Plane extends Mesh {
     }
 };
 
-export default Plane;
+export {
+    Plane
+};
+//export default Plane;

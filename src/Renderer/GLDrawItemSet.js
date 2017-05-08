@@ -282,4 +282,7 @@ class GLDrawItemSet {
     }
 };
 
-export default GLDrawItemSet;
+export {
+    GLDrawItemSet
+};
+// export default GLDrawItemSet;

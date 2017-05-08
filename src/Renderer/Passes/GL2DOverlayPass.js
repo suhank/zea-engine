@@ -19,4 +19,7 @@ class GL2DOverlayPass extends GLPass {
     }
 };
 
-export default GL2DOverlayPass;
+export {
+    GL2DOverlayPass
+};
+// export default GL2DOverlayPass;

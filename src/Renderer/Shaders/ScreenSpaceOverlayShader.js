@@ -34,5 +34,8 @@ void main(void) {
 };
 
 
-export default ScreenSpaceOverlayShader;
+export {
+    ScreenSpaceOverlayShader
+};
+//export default ScreenSpaceOverlayShader;
 

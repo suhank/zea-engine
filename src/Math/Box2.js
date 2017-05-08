@@ -65,6 +65,9 @@ class Box2 {
 
 typeRegistry.registerType('Box2', Box2);
 
-export default Box2;
+export {
+    Box2
+};
+// export default Box2;
 
 

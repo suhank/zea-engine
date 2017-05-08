@@ -54,4 +54,7 @@ class PlanarTranslationGizmo extends Gizmo {
 
 };
 
-export default PlanarTranslationGizmo;
+export {
+    PlanarTranslationGizmo
+};
+// export default PlanarTranslationGizmo;

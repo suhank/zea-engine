@@ -533,4 +533,7 @@ class VRViewport {
     }
 };
 
-export default VRViewport;
+export {
+    VRViewport
+};
+//export default VRViewport;

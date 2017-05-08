@@ -213,4 +213,7 @@ class VertexAttribute extends Attribute {
 
 };
 
-export default VertexAttribute;
+export {
+    VertexAttribute
+};
+//export default VertexAttribute;

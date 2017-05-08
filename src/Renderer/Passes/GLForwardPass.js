@@ -54,4 +54,7 @@ class GLForwardPass extends GLPass {
     }
 };
 
-export default GLForwardPass;
+export {
+    GLForwardPass
+};
+// export default GLForwardPass;

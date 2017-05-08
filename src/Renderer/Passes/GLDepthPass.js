@@ -143,4 +143,7 @@ class GLDepthPass extends GLPass {
     }
 };
 
-export default GLDepthPass;
+export {
+    GLDepthPass
+};
+// export default GLDepthPass;

@@ -77,4 +77,7 @@ class VRHead extends Gizmo {
     }
 };
 
-export default VRHead;
+export {
+    VRHead
+};
+//export default VRHead;

@@ -384,4 +384,7 @@ class Vec3 extends AttrValue {
 
 typeRegistry.registerType('Vec3', Vec3);
 
-export default Vec3;
+export {
+    Vec3
+};
+// export default Vec3;

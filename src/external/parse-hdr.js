@@ -211,5 +211,7 @@ function parseHdr(buffer) {
 }
 
 // module.exports = parseHdr;
-
-export default parseHdr;
+// export default parseHdr;
+export {
+    parseHdr
+};

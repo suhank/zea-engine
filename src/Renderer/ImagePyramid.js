@@ -150,4 +150,7 @@ class ImagePyramid extends ImageAtlas {
     }
 };
 
-export default ImagePyramid;
+export {
+    ImagePyramid
+};
+// export default ImagePyramid;

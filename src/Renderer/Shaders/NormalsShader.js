@@ -60,7 +60,10 @@ void main(void) {
 
 };
 
-export default NormalsShader;
+export {
+    NormalsShader
+};
+//export default NormalsShader;
 
 
 

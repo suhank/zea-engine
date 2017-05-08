@@ -178,4 +178,7 @@ this.onmessage = function(e) {
     }
 }`;
 
-export default computeNormalsMessage;
+export {
+    computeNormalsMessage
+};
+//export default computeNormalsMessage;

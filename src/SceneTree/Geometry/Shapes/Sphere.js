@@ -167,4 +167,7 @@ class Sphere extends Mesh {
     }
 };
 
-export default Sphere;
+export {
+    Sphere
+};
+//export default Sphere;

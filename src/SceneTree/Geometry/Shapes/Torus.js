@@ -140,4 +140,7 @@ class Torus extends Mesh {
     }
 };
 
-export default Torus;
+export {
+    Torus
+};
+//export default Torus;

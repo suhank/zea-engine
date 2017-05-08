@@ -96,5 +96,8 @@ class AssetItem extends TreeItem {
 
 };
 
-export default AssetItem;
+export {
+    AssetItem
+};
+//export default AssetItem;
 

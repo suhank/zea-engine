@@ -482,4 +482,7 @@ class Mesh extends BaseGeom {
     }
 };
 
-export default Mesh;
+export {
+    Mesh
+};
+//export default Mesh;

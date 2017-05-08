@@ -116,7 +116,6 @@ void main(void) {
 
 
 export {
-    GizmoDataShader
+    GizmoDataShader,
+    GizmoShader
 };
-
-export default GizmoShader;

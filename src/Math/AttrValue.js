@@ -34,4 +34,7 @@ class AttrValue {
 };
 
 
-export default AttrValue;
+export {
+    AttrValue
+};
+// export default AttrValue;

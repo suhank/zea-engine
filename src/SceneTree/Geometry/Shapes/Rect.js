@@ -59,4 +59,7 @@ class Rect extends Lines {
     }
 };
 
-export default Rect;
+export {
+    Rect
+};
+//export default Rect;

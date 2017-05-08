@@ -128,4 +128,7 @@ class GLMaterial {
     }
 };
 
-export default GLMaterial;
+export {
+    GLMaterial
+};
+// export default GLMaterial;

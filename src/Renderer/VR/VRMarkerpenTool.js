@@ -61,4 +61,7 @@ class VRMarkerpenTool {
     }
 };
 
-export default VRMarkerpenTool;
+export {
+    VRMarkerpenTool
+};
+//export default VRMarkerpenTool;

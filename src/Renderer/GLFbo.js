@@ -167,4 +167,7 @@ class GLFbo {
     }
 };
 
-export default GLFbo;
+export {
+    GLFbo
+};
+// export default GLFbo;

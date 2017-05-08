@@ -109,5 +109,8 @@ void main(void) {
 };
 
 
-export default ConvolverShader;
+export {
+    ConvolverShader
+};
+//export default ConvolverShader;
 

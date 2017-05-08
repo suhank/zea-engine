@@ -149,4 +149,7 @@ class GLHDRImageMixer extends GLTexture2D {
     }
 };
 
-export default GLHDRImageMixer;
+export {
+    GLHDRImageMixer
+};
+// export default GLHDRImageMixer;

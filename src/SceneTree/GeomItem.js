@@ -204,4 +204,7 @@ class GeomItem extends TreeItem {
 
 sgFactory.registerClass('GeomItem', GeomItem);
 
-export default GeomItem;
+export {
+    GeomItem
+};
+//export default GeomItem;

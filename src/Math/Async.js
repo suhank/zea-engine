@@ -29,4 +29,8 @@ class Async {
 
 };
 
-export default Async;
+export {
+    Async
+};
+// export default Async;
+

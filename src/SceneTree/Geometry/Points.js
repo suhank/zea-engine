@@ -54,4 +54,7 @@ class Points extends BaseGeom {
     }
 };
 
-export default Points;
+export {
+    Points
+};
+//export default Points;

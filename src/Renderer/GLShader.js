@@ -225,4 +225,7 @@ class GLShader {
     }
 };
 
-export default GLShader;
+export {
+    GLShader
+};
+// export default GLShader;

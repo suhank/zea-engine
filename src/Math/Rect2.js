@@ -92,4 +92,7 @@ class Rect2 {
 
 typeRegistry.registerType('Rect2', Rect2);
 
-export default Rect2;
+export {
+    Rect2
+};
+// export default Rect2;

@@ -74,4 +74,7 @@ void main(void) {
     }
 };
 
-export default OctaHedralEnvMapShader;
+export {
+    OctaHedralEnvMapShader
+};
+//export default OctaHedralEnvMapShader;

@@ -107,7 +107,10 @@ void main(void) {
     }
 };
 
-export default BillboardShader;
+export {
+    BillboardShader
+};
+// export default BillboardShader;
 
 
 

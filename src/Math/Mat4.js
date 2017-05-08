@@ -932,4 +932,7 @@ class Mat4 extends AttrValue {
 
 typeRegistry.registerType('Mat4', Mat4);
 
-export default Mat4;
+export {
+    Mat4
+};
+// export default Mat4;

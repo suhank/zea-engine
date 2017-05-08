@@ -82,4 +82,7 @@ class VR2HandedGrabTool {
 
 };
 
-export default VR2HandedGrabTool;
+export {
+    VR2HandedGrabTool
+};
+//export default VR2HandedGrabTool;

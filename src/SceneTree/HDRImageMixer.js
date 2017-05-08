@@ -87,4 +87,7 @@ class HDRImageMixer extends Image2D {
     }
 };
 
-export default HDRImageMixer;
+export {
+    HDRImageMixer
+};
+//export default HDRImageMixer;

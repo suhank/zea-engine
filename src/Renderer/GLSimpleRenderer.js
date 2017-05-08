@@ -119,4 +119,7 @@ class GLSimpleRenderer extends GLRenderer {
     }
 };
 
-export default GLSimpleRenderer;
+export {
+    GLSimpleRenderer
+};
+// export default GLSimpleRenderer;

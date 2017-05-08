@@ -110,4 +110,7 @@ class BinAsset extends AssetItem {
     }
 };
 
-export default BinAsset;
+// export default BinAsset;
+export {
+    BinAsset
+};

@@ -14,4 +14,7 @@ class TypeRegistry {
 }
 let typeRegistry = new TypeRegistry();
 
-export default typeRegistry;
+export {
+    typeRegistry
+};
+// export default typeRegistry;

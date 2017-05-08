@@ -229,4 +229,7 @@ class Cylinder extends Mesh {
     }
 };
 
-export default Cylinder;
+export {
+    Cylinder
+};
+//export default Cylinder;

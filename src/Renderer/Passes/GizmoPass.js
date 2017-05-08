@@ -101,4 +101,7 @@ class GizmoPass extends GLPass {
     };
 };
 
-export default GizmoPass;
+export {
+    GizmoPass
+};
+// export default GizmoPass;

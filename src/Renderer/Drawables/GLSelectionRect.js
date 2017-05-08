@@ -36,4 +36,7 @@ class GLSelectionRect extends GLDrawItem {
     };
 };
 
-export default GLSelectionRect;
+export {
+    GLSelectionRect
+};
+// export default GLSelectionRect;

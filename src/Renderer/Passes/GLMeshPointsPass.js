@@ -55,4 +55,7 @@ class GLMeshPointsPass extends GLPass {
     }
 };
 
-export default GLMeshPointsPass;
+export {
+    GLMeshPointsPass
+};
+// export default GLMeshPointsPass;

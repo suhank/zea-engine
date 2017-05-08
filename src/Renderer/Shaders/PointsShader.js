@@ -40,7 +40,10 @@ void main(void) {
     }
 };
 
-export default PointsShader;
+export {
+    PointsShader
+};
+//export default PointsShader;
 
 
 

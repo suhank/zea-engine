@@ -131,5 +131,7 @@ class HDRImage2D extends Image2D {
     }
 };
 
-export default HDRImage2D;
-
+// export default HDRImage2D;
+export {
+    HDRImage2D
+};

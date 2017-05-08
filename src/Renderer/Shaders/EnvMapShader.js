@@ -87,5 +87,8 @@ void main(void) {
 };
 
 
-export default EnvMapShader;
+export {
+    EnvMapShader
+};
+//export default EnvMapShader;
 

@@ -419,6 +419,6 @@ class GLCollector {
 export {
     GLShaderMaterials,
     GLMaterialDrawItemSets,
+    GLCollector
 };
 
-export default GLCollector;

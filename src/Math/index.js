@@ -21,7 +21,13 @@ export {
     isMobileDevice
 };
 
-export * from './Common.js';
+export {
+    SInt32,
+    UInt32,
+    Float32,
+    hashStr,
+    JSON_stringify_fixedPrecision
+} from './Common.js';
 export * from './AttrValue.js';
 export * from './Vec2.js';
 export * from './Vec3.js';

@@ -47,4 +47,7 @@ void main(void) {
     }
 };
 
-export default GeomDataShader;
+export {
+    GeomDataShader
+};
+//export default GeomDataShader;

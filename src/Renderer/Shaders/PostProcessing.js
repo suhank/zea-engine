@@ -99,5 +99,8 @@ void main(void) {
 };
 
 
-export default PostProcessing;
+export {
+    PostProcessing
+};
+//export default PostProcessing;
 

@@ -52,4 +52,8 @@ class GLWirePass extends GLPass {
     };
 };
 
-export default GLWirePass;
+
+export {
+    GLWirePass
+};
+// export default GLWirePass;

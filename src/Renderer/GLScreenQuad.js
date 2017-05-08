@@ -56,4 +56,7 @@ class GLScreenQuad {
     }
 };
 
-export default GLScreenQuad;
+export {
+    GLScreenQuad
+};
+// export default GLScreenQuad;

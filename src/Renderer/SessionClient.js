@@ -763,4 +763,7 @@ class SessionClient {
 
 };
 
-export default SessionClient;
+export {
+    SessionClient
+};
+// export default SessionClient;

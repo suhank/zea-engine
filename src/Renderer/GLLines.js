@@ -237,4 +237,7 @@ class GLLines extends GLGeom {
     }
 };
 
-export default GLLines;
+export {
+    GLLines
+};
+// export default GLLines;

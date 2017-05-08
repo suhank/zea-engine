@@ -48,4 +48,7 @@ class Image2D extends RefCounted {
 
 };
 
-export default Image2D;
+export {
+    Image2D
+};
+//export default Image2D;

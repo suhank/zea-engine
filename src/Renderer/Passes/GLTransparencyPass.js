@@ -136,4 +136,8 @@ class GLTransparencyPass extends GLPass {
     }
 };
 
-export default GLTransparencyPass;
+
+export {
+    GLTransparencyPass
+};
+// export default GLTransparencyPass;

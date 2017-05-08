@@ -208,4 +208,7 @@ class GLBillboardsPass extends GLPass {
     }
 };
 
-export default GLBillboardsPass;
+export {
+    GLBillboardsPass
+};
+// export default GLBillboardsPass;

@@ -273,4 +273,7 @@ class Color extends AttrValue {
 
 typeRegistry.registerType('Color', Color);
 
-export default Color;
+export {
+    Color
+};
+// export default Color;

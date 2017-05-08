@@ -62,4 +62,7 @@ class AxialRotationGizmo extends Gizmo {
 
 };
 
-export default AxialRotationGizmo;
+export {
+    AxialRotationGizmo
+};
+// export default AxialRotationGizmo;

@@ -50,4 +50,7 @@ class Circle extends Lines {
     }
 };
 
-export default Circle;
+export {
+    Circle
+};
+//export default Circle;

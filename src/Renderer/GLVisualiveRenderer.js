@@ -397,4 +397,7 @@ class GLVisualiveRenderer extends GLRenderer {
     // Debugging
 };
 
-export default GLVisualiveRenderer;
+// export default GLVisualiveRenderer;
+export {
+    GLVisualiveRenderer
+};

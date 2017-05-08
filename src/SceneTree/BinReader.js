@@ -217,4 +217,7 @@ class BinReader {
 
 };
 
-export default BinReader;
+export {
+    BinReader
+};
+//export default BinReader;

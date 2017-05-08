@@ -101,4 +101,7 @@ class GLEnvMap extends GLProbe {
     }
 };
 
-export default GLEnvMap;
+export {
+    GLEnvMap
+};
+// export default GLEnvMap;

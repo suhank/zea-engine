@@ -316,4 +316,7 @@ class ImageAtlas extends GLTexture2D {
 
 };
 
-export default ImageAtlas;
+export {
+    ImageAtlas
+};
+// export default ImageAtlas;

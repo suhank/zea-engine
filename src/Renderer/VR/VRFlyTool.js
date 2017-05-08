@@ -35,4 +35,7 @@ class VRFlyTool {
     }
 };
 
-export default VRFlyTool;
+export {
+    VRFlyTool
+};
+//export default VRFlyTool;

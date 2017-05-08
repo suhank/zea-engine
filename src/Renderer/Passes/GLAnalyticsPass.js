@@ -144,4 +144,7 @@ class GLAnalyticsPass {
     }
 };
 
-export default GLAnalyticsPass;
+export {
+    GLAnalyticsPass
+};
+// export default GLAnalyticsPass;

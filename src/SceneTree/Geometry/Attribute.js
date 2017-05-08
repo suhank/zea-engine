@@ -91,4 +91,7 @@ class Attribute {
     }
 };
 
-export default Attribute;
+export {
+    Attribute
+};
+//export default Attribute;

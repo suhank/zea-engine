@@ -145,5 +145,8 @@ class VRController extends Gizmo {
     }
 };
 
-export default VRController;
+export {
+    VRController
+};
+//export default VRController;
 

@@ -10,4 +10,7 @@ class BillboardItem extends TreeItem {
     }
 };
 
-export default BillboardItem;
+export {
+    BillboardItem
+};
+//export default BillboardItem;

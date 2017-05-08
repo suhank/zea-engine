@@ -172,4 +172,7 @@ class GizmoContext {
     }
 };
 
-export default GizmoContext;
+export {
+    GizmoContext
+};
+// export default GizmoContext;

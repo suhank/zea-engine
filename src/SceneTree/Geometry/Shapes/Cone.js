@@ -169,4 +169,7 @@ class Cone extends Mesh {
     }
 };
 
-export default Cone;
+export {
+    Cone
+};
+//export default Cone;

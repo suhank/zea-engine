@@ -353,4 +353,7 @@ class Camera extends TreeItem {
     }
 };
 
-export default Camera;
+export {
+    Camera
+};
+//export default Camera;

@@ -140,4 +140,7 @@ class Project {
     }
 };
 
-export default Project;
+export {
+    Project
+};
+// export default Project;

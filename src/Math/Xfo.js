@@ -165,4 +165,7 @@ class Xfo {
 
 typeRegistry.registerType('Xfo', Xfo);
 
-export default Xfo;
+export {
+    Xfo
+};
+// export default Xfo;

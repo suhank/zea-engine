@@ -109,4 +109,7 @@ class GLNormalsPass extends GLPass {
     }
 };
 
-export default GLNormalsPass;
+export {
+    GLNormalsPass
+};
+// export default GLNormalsPass;

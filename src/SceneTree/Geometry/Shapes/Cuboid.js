@@ -90,4 +90,7 @@ class Cuboid extends Mesh {
     }
 };
 
-export default Cuboid;
+export {
+    Cuboid
+};
+//export default Cuboid;

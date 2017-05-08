@@ -916,6 +916,5 @@ typeRegistry.registerType('Quat', Quat);
 
 export {
     EulerAngles,
+    Quat
 };
-
-export default Quat;
