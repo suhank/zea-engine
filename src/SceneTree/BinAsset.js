@@ -49,7 +49,7 @@ class BinAsset extends AssetItem {
                     this.__geoms.readBinaryBuffer(geomsData.buffer);
                     geomFileID++;
                     if(geomFileID < numGeomsFiles) {
-                        let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.geoms';
+                        let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
                         if(this.__resourceLoader.resourceAvailable(nextGeomFileName))
                            loadGeomsfile(nextGeomFileName);
                     }
@@ -60,7 +60,7 @@ class BinAsset extends AssetItem {
                 this);
         }
 
-        let geomFileName = filePath.split('.')[0] + geomFileID + '.geoms';
+        let geomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
         loadGeomsfile(geomFileName);
     }
 };

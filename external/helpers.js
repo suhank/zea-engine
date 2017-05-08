@@ -36,3 +36,24 @@ let addCanvas = function(width, height) {
     return resizeDiv;
 }
 
+
+let generateResourcesDict = (relOffset, list)=>{
+    let resources = {
+        commonResources: {
+            'Resources.vlr': window.location.origin+'/Resources/Resources.vlr'
+        }
+    };
+    for(let item of list){
+        let parts = item.split('/');
+        let curr = resources;
+        for(let i=0; i<parts.length-1; i++){
+            let part = parts[i];
+            if(!(part in curr)){
+                curr[part] = {};
+                curr = curr[part];
+            }
+        }
+        curr[parts[parts.length-1]] = window.location.origin+relOffset+item;
+    }
+    return resources;
+}

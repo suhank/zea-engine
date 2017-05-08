@@ -16,7 +16,7 @@ class ResourceLoader {
     __constructWorker() {
         let worker = new ResourceLoaderWorker();
         worker.onmessage = (event) => {
-            this.__recieveFileData(event.data);
+            this.__receiveFileData(event.data);
             worker.terminate();
         };
         return worker;
@@ -51,7 +51,7 @@ class ResourceLoader {
         });
     }
 
-    __recieveFileData(fileData) {
+    __receiveFileData(fileData) {
         let name = fileData.name;
         for(let callback of this.__callbacks[name])
             callback(name, fileData.entries);
