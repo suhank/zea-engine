@@ -11,7 +11,7 @@ class ResourceLoader {
         this.__resources = resources;
 
         this.workers = [];
-        let logicalProcessors = window.navigator.hardwareConcurrency;
+        let logicalProcessors = 1;//window.navigator.hardwareConcurrency;
         for (let i = 0; i < logicalProcessors; i++) {
             this.workers[i] = this.__constructWorker();
         }
@@ -52,6 +52,7 @@ class ResourceLoader {
         this.__callbacks[filePath].push(callback);
 
         let url = this.resolveURL(filePath);
+        console.log("loadResources filePath:" + filePath + " url:" + url);
         this.workers[this.__mostResentlyHired].postMessage({
             name: filePath,
             url
