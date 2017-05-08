@@ -1,5 +1,4 @@
-import { Color } from '../Math/Color';
-import { Signal } from '../Math/Signal';
+import { Color, Signal } from '../Math';
 
 import '../SceneTree/GeomItem.js';
 

@@ -1,12 +1,18 @@
-import { Signal } from '../Math/Signal';
-import { Vec2 } from '../Math/Vec2';
-import { Xfo } from '../Math/Xfo';
-import { TreeItem } from './TreeItem';
-import { sgFactory } from './SGFactory.js';
+import {
+    Signal,
+    Vec2,
+    Xfo
+} from '../Math';
+import {
+    TreeItem
+} from './TreeItem';
+import {
+    sgFactory
+} from './SGFactory.js';
 
 import {
-  LOADFLAGS_SKIP_MATERIALS,
-  LOADFLAGS_SKIP_GEOMETRIES
+    LOADFLAGS_SKIP_MATERIALS,
+    LOADFLAGS_SKIP_GEOMETRIES
 } from './TreeItem.js';
 
 class GeomItem extends TreeItem {
@@ -63,7 +69,7 @@ class GeomItem extends TreeItem {
 
     updateBoundingBox() {
         this.__boundingBox.reset();
-        if(this.geom){
+        if (this.geom) {
             this.__boundingBox.addBox3(this.geom.boundingBox, this.getGeomXfo());
         }
         this.__boundingBoxDirty = false;
@@ -147,17 +153,17 @@ class GeomItem extends TreeItem {
     fromJSON(json, flags, materialLibrary, geomLibrary) {
         super.fromJSON(json, flags, materialLibrary, geomLibrary);
 
-        if ((flags&LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json){
+        if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
             this.geom = geomLibrary.getGeom(json.geomIndex);
         }
-        
-        if ('geomOffsetXfo' in json){
+
+        if ('geomOffsetXfo' in json) {
             this.__geomOffsetXfo.fromJSON(json.geomOffsetXfo);
         }
 
-        if ((flags&LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json){
+        if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
             this.material = materialLibrary.getMaterial(json.materialName);
-            if(!this.material){
+            if (!this.material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
                 this.material = materialLibrary.getMaterial('DefaultMaterial');
             }
@@ -167,8 +173,8 @@ class GeomItem extends TreeItem {
         this.__boundingBoxDirty = true;
         return json
     }
-    
-    readBinary(reader, flags, materialLibrary, geomLibrary){
+
+    readBinary(reader, flags, materialLibrary, geomLibrary) {
         super.readBinary(reader, flags);
 
         let itemflags = reader.loadUInt8();
@@ -176,18 +182,18 @@ class GeomItem extends TreeItem {
 
         //this.setVisibility(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
-        const geomOffsetXfoFlag = 1<<2;
-        if (itemflags&geomOffsetXfoFlag){
+        const geomOffsetXfoFlag = 1 << 2;
+        if (itemflags & geomOffsetXfoFlag) {
             this.__geomOffsetXfo.tr = reader.loadFloat32Vec3();
             this.__geomOffsetXfo.ori = reader.loadFloat32Quat();
             this.__geomOffsetXfo.sc = reader.loadFloat32Vec3();
         }
 
-        const materialFlag = 1<<3;
-        if (itemflags&materialFlag){
+        const materialFlag = 1 << 3;
+        if (itemflags & materialFlag) {
             let materialName = reader.loadStr();
             this.material = materialLibrary.getMaterial(materialName);
-            if(!this.material){
+            if (!this.material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
                 this.material = materialLibrary.getMaterial('DefaultMaterial');
             }
@@ -207,4 +213,3 @@ sgFactory.registerClass('GeomItem', GeomItem);
 export {
     GeomItem
 };
-//export default GeomItem;

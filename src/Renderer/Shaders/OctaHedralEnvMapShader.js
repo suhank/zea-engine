@@ -1,5 +1,4 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import { shaderLibrary, Shader }  from '../../SceneTree';
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
