@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>VR Polyfill</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../external/webvr-polyfill.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        
+        <script type="text/javascript">
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+    
+    let div = addCanvas();
+    let gui = addGUI(div);
+    let env = "Assets/HDR_041_Path_Ref.vlh";
+    /////////////////////////////////////
+    // Scene
+    let scene = new Visualive.Scene(generateResourcesDict('/Tests/', [env]));
+
+    let layer0Material = new Visualive.EnvProjectionMaterial('layer0');
+    layer0Material.env = new Visualive.HDRImage2D('envMap', env, scene.getResourceLoader());
+    let shape = new Visualive.Plane('Plane', 50.0, 50.0);
+    let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, layer0Material);
+    geomItem.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1, 0, 0), Math.PI * 0.5);
+    scene.getRoot().addChild(geomItem);
+
+
+    /////////////////////////////////////
+    // Renderer
+    
+    let renderer = new Visualive.GLSimpleRenderer(div);
+    // let renderer = new Visualive.GLVisualiveRenderer(div);
+    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
+    renderer.getViewport().setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
+    let vrViewport = renderer.getVRViewport();
+    if(vrViewport){
+        vrViewport.setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
+    }
+
+
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1.2, 1), new Visualive.Vec3(0, 0.1, 0));
+    renderer.mirrorVRisplayToViewport = false;
+    renderer.setScene(scene);
+
+
+    renderer.resumeDrawing();
+
+});
+        </script> 
+    </body>
+</html>

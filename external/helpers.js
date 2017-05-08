@@ -37,7 +37,7 @@ let addCanvas = function(width, height) {
 }
 
 
-let generateResourcesDict = (relOffset, list)=>{
+let generateResourcesDict = (relOffset, list=[])=>{
     let resources = {
         commonResources: {
             'Resources.vlr': window.location.origin+'/Resources/Resources.vlr'

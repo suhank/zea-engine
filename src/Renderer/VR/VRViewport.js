@@ -306,7 +306,7 @@ class VRViewport {
     }
 
     startPresenting() {
-        if (this.__vrDisplay.capabilities.canPresent) {
+        //if (this.__vrDisplay.capabilities.canPresent) {
 
             this.__stageTreeItem.setVisible(true);
 
@@ -330,9 +330,9 @@ class VRViewport {
             }]).then(function() {}, function() {
                 console.warn("requestPresent failed.");
             });
-        } else {
-            console.warn("VRViewport does not support presenting.");
-        }
+        // } else {
+        //     console.warn("VRViewport does not support presenting.");
+        // }
     }
 
     stopPresenting() {

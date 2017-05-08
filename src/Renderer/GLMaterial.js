@@ -11,14 +11,18 @@ import {
     Signal
 } from '../Math';
 import {
-    Image2D
-} from '../SceneTree/Image2D.js';
+    Image2D,
+    HDRImage2D
+} from '../SceneTree';
 import '../SceneTree/Material.js';
 import '../SceneTree';
 
 import {
     GLTexture2D
 } from './GLTexture2D.js';
+import {
+    GLHDRImage
+} from './GLHDRImage.js';
 
 class GLMaterial {
     constructor(gl, material) {
@@ -60,7 +64,12 @@ class GLMaterial {
             let texture = textures[texName];
             if (texName in this.gltextures && this.gltextures[texName].getTexture() == texture)
                 continue;
-            let gltexture = new GLTexture2D(this.__gl, texture);
+
+            let gltexture;
+            if (texture instanceof HDRImage2D)
+                gltexture = new GLHDRImage(this.__gl, texture);
+            else
+                gltexture = new GLTexture2D(this.__gl, texture);
             this.gltextures[texName] = gltexture;
         }
         this.updated.emit();
