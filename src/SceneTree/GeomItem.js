@@ -1,8 +1,8 @@
-import Signal from '../Math/Signal';
-import Vec2 from '../Math/Vec2';
-import Xfo from '../Math/Xfo';
-import TreeItem from './TreeItem';
-import sgFactory from './SGFactory.js';
+import { Signal } from '../Math/Signal';
+import { Vec2 } from '../Math/Vec2';
+import { Xfo } from '../Math/Xfo';
+import { TreeItem } from './TreeItem';
+import { sgFactory } from './SGFactory.js';
 
 import {
   LOADFLAGS_SKIP_MATERIALS,

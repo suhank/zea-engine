@@ -1,6 +1,6 @@
-import Signal from '../Math/Signal';
+import { Signal } from '../Math/Signal';
 import { hashStr } from '../Math';
-import RefCounted from './RefCounted.js';
+import { RefCounted } from './RefCounted.js';
 
 ///////////////////////////////////
 // Shader
@@ -102,5 +102,7 @@ class Shader extends RefCounted {
     }
 }
 
-
-export default Shader;
+export {
+    Shader
+};
+// Shader;

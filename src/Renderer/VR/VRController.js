@@ -2,7 +2,7 @@ import {
     Quat, EulerAngles, 
     Xfo,
     Color,
-    Signal
+    Signal,
     isMobileDevice,
 } from '../../Math';
 

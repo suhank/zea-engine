@@ -72,5 +72,7 @@ class GLPoints extends GLGeom {
         gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__geom.numVertices());
     }
 };
-
-export default GLPoints;
+export {
+    GLPoints
+};
+// GLPoints;

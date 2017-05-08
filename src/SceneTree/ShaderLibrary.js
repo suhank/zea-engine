@@ -1,17 +1,16 @@
-import Vec2 from '../Math/Vec2';
-import Vec3 from '../Math/Vec3';
-import Vec4 from '../Math/Vec4';
-import Mat3 from '../Math/Mat3';
-import Mat4 from '../Math/Mat4';
-import Color from '../Math/Color';
-import Image2D from './Image2D.js';
-
 import {
     SInt32,
     UInt32,
     Float32,
-    hashStr
+    hashStr,
+    Vec2,
+    Vec3,
+    Vec4,
+    Mat3,
+    Mat4,
+    Color
 } from '../Math';
+import { Image2D } from './Image2D.js';
 
 let glslTypes = {
     'bool': Boolean,
@@ -261,5 +260,7 @@ class ShaderLibrary {
 }
 let shaderLibrary = new ShaderLibrary();
 
-
-export default shaderLibrary;
+export {
+    shaderLibrary
+};
+// shaderLibrary;

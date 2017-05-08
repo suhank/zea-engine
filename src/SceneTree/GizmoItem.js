@@ -1,5 +1,5 @@
-import GeomItem from './GeomItem.js';
-import sgFactory from './SGFactory.js';
+import { GeomItem } from './GeomItem.js';
+import { sgFactory } from './SGFactory.js';
 
 class GizmoItem extends GeomItem {
     constructor(name, geom = undefined, color = undefined) {

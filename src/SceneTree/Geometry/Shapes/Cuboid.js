@@ -1,5 +1,5 @@
-import Vec2 from '../../../Math/Vec2';
-import Mesh from '../Mesh.js';
+import { Vec2 } from '../../../Math/Vec2';
+import { Mesh } from '../Mesh.js';
 
 class Cuboid extends Mesh {
     constructor(name, x = 1.0, y = 1.0, z = 1.0) {

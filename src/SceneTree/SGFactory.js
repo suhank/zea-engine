@@ -24,6 +24,8 @@ class SGFactory {
 };
 
 let sgFactory = new SGFactory();
-
-export default sgFactory;
+export {
+    sgFactory
+};
+// sgFactory;
 

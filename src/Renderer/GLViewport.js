@@ -774,5 +774,7 @@ class GLViewport {
         this.__overlayPass.draw(renderstate);
     }
 };
-
-export default GLViewport;
+export {
+    GLViewport
+};
+// GLViewport;

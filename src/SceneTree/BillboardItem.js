@@ -1,5 +1,5 @@
-import Color from '../Math/Color';
-import TreeItem from './TreeItem.js';
+import { Color } from '../Math';
+import { TreeItem } from './TreeItem.js';
 
 class BillboardItem extends TreeItem {
     constructor(name, image2d) {

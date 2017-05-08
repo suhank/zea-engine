@@ -1,6 +1,6 @@
-import TreeItem from '../../SceneTree/TreeItem';
-import Lines from '../../SceneTree/Geometry/Lines';
-import FatLinesMaterial from '../../SceneTree/Shaders/FatLinesMaterial';
+import { TreeItem } from '../../SceneTree/TreeItem';
+import { Lines } from '../../SceneTree/Geometry/Lines';
+import { FatLinesMaterial } from '../../SceneTree/Shaders/FatLinesMaterial';
 
 class MarkerpenTool {
     constructor(name) {
@@ -142,5 +142,7 @@ class MarkerpenTool {
         this.__treeItem = null;
     };
 };
-
-export default MarkerpenTool
+export {
+    MarkerpenTool
+};
+// MarkerpenTool

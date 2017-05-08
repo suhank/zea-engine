@@ -1,7 +1,7 @@
-import Signal from '../Math/Signal';
+import { Signal } from '../Math/Signal';
 import { isMobileDevice } from '../Math';
-import AssetItem from './AssetItem.js';
-import BinReader from './BinReader.js';
+import { AssetItem } from './AssetItem.js';
+import { BinReader } from './BinReader.js';
 
 import {
   loadTextfile,

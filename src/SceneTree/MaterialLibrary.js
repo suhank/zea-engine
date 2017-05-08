@@ -1,5 +1,5 @@
-import Signal from '../Math/Signal';
-import sgFactory from './SGFactory.js';
+import { Signal } from '../Math/Signal';
+import { sgFactory } from './SGFactory.js';
 
 class MaterialLibrary {
     constructor() {
@@ -104,6 +104,8 @@ class MaterialLibrary {
         return JSON.stringify(this.toJSON(), null, 2)
     }
 };
-
-export default MaterialLibrary;
+export {
+    MaterialLibrary
+};
+// MaterialLibrary;
 

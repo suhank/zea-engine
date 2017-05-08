@@ -1,8 +1,8 @@
-import Vec2 from '../Math/Vec2';
-import TreeItem, { LOADFLAGS_SKIP_MATERIALS } from './TreeItem.js';
-import GeomLibrary from './GeomLibrary.js';
-import GeomItem from './GeomItem.js';
-import MaterialLibrary from './MaterialLibrary.js';
+import { Vec2 } from '../Math/Vec2';
+import { TreeItem, LOADFLAGS_SKIP_MATERIALS } from './TreeItem.js';
+import { GeomLibrary } from './GeomLibrary.js';
+import { GeomItem } from './GeomItem.js';
+import { MaterialLibrary } from './MaterialLibrary.js';
 
 class Lightmap {
     constructor(name = undefined) {

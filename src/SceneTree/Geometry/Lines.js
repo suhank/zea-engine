@@ -1,4 +1,4 @@
-import BaseGeom from './BaseGeom.js';
+import { BaseGeom } from './BaseGeom.js';
 
 class Lines extends BaseGeom {
     constructor(name) {

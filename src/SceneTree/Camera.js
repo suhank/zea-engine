@@ -1,11 +1,11 @@
-import Vec2 from '../Math/Vec2';
-import Vec3 from '../Math/Vec3';
-import Quat from '../Math/Quat';
-import Mat4 from '../Math/Mat4';
-import Xfo from '../Math/Xfo';
-import Signal from '../Math/Signal';
-import Box3 from '../Math/Box3';
-import TreeItem from './TreeItem.js';
+import { Vec2 } from '../Math/Vec2';
+import { Vec3 } from '../Math/Vec3';
+import { Quat } from '../Math/Quat';
+import { Mat4 } from '../Math/Mat4';
+import { Xfo } from '../Math/Xfo';
+import { Signal } from '../Math/Signal';
+import { Box3 } from '../Math/Box3';
+import { TreeItem } from './TreeItem.js';
 import { isMobileDevice } from '../Math';
 
 class Camera extends TreeItem {

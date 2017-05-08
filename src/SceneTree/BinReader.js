@@ -1,7 +1,7 @@
-import Vec2 from '../Math/Vec2';
-import Vec3 from '../Math/Vec3';
-import Quat from '../Math/Quat';
-import Color from '../Math/Color';
+import { Vec2 } from '../Math/Vec2';
+import { Vec3 } from '../Math/Vec3';
+import { Quat } from '../Math/Quat';
+import { Color } from '../Math/Color';
 
 class BinReader {
     constructor(data, byteOffset = 0, isMobileDevice = true) {

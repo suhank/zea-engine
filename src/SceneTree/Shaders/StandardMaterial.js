@@ -1,7 +1,7 @@
-import Color from '../../Math/Color';
-import sgFactory from '../SGFactory.js';
-import shaderLibrary from '../ShaderLibrary.js';
-import Material from '../Material.js';
+import { Color } from '../../Math/Color';
+import { sgFactory } from '../SGFactory.js';
+import { shaderLibrary } from '../ShaderLibrary.js';
+import { Material } from '../Material.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/GGX_Specular.js';
@@ -374,5 +374,7 @@ void main(void) {
 };
 
 sgFactory.registerClass('StandardMaterial', StandardMaterial);
-
-export default StandardMaterial;
+export {
+    StandardMaterial
+};
+// StandardMaterial;

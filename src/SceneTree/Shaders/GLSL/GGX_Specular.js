@@ -1,4 +1,4 @@
-import shaderLibrary from '../../ShaderLibrary.js';
+import { shaderLibrary } from '../../ShaderLibrary.js';
 import './ImagePyramid.js';
 import './envmap-equirect.js';
 

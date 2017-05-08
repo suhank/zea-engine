@@ -1,9 +1,9 @@
-import AttrValue from '../../Math/AttrValue';
-import Vec2 from '../../Math/Vec2';
-import Vec3 from '../../Math/Vec3';
-import RefCounted from '../RefCounted.js';
-import Attribute from './Attribute.js';
-import VertexAttribute from './VertexAttribute.js';
+import { AttrValue } from '../../Math/AttrValue';
+import { Vec2 } from '../../Math/Vec2';
+import { Vec3 } from '../../Math/Vec3';
+import { RefCounted } from '../RefCounted.js';
+import { Attribute } from './Attribute.js';
+import { VertexAttribute } from './VertexAttribute.js';
 
 import {
     genTopologyInfo,

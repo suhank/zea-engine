@@ -1,4 +1,4 @@
-import Lines from '../Lines.js';
+import { Lines } from '../Lines.js';
 
 class Circle extends Lines {
     constructor(name, radius = 1.0, numSegments=32) {

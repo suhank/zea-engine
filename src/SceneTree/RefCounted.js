@@ -33,5 +33,7 @@ class RefCounted {
         this.destructing.emit(this);
     };
 };
-
-export default RefCounted;
+export {
+    RefCounted
+};
+// RefCounted;

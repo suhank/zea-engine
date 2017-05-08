@@ -1,4 +1,4 @@
-import shaderLibrary from '../../../SceneTree/ShaderLibrary';
+import { shaderLibrary } from '../../../SceneTree';
 
 shaderLibrary.setShaderModule('utils/unpackHDR.glsl', `
 

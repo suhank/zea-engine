@@ -1,5 +1,5 @@
-import Signal from '../Math/Signal';
-import Image2D from './Image2D.js';
+import { Signal } from '../Math/Signal';
+import { Image2D } from './Image2D.js';
 
 import {
     loadBinfile

@@ -1,4 +1,4 @@
-import Xfo from '../../Math/Xfo';
+import { Xfo } from '../../Math/Xfo';
 
 class VR2HandedGrabTool {
     constructor(vrStage, vrHead, vrControllers) {

@@ -1,5 +1,5 @@
-import Vec3 from '../../Math/Vec3'
-import Xfo from '../../Math/Xfo';
+import { Vec3 } from '../../Math/Vec3'
+import { Xfo } from '../../Math/Xfo';
 
 class VR1HandedGrabTool {
     constructor(vrStage, vrHead, vrControllers) {

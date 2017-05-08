@@ -1,7 +1,7 @@
-import Vec2 from '../../Math/Vec2';
-import Xfo from '../../Math/Xfo';
-import BaseGeom from './BaseGeom.js';
-import Attribute from './Attribute.js';
+import { Vec2 } from '../../Math/Vec2';
+import { Xfo } from '../../Math/Xfo';
+import { BaseGeom } from './BaseGeom.js';
+import { Attribute } from './Attribute.js';
 
 import {
     Float32,

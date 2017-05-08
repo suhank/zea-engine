@@ -1,6 +1,6 @@
-import Vec2 from '../../../Math/Vec2';
-import Vec3 from '../../../Math/Vec3';
-import Mesh from '../Mesh.js';
+import { Vec2 } from '../../../Math/Vec2';
+import { Vec3 } from '../../../Math/Vec3';
+import { Mesh } from '../Mesh.js';
 
 class Cone extends Mesh {
     constructor(name, radius = 0.5, height = 1.0, detail = 32, cap = true) {

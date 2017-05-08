@@ -1,11 +1,11 @@
-import Signal from '../Math/Signal';
+import { Signal } from '../Math/Signal';
 import { JSON_stringify_fixedPrecision } from '../Math';
-import TreeItem from './TreeItem.js';
-import GeomItem from './GeomItem.js';
-import SelectionManager from './SelectionManager.js';
+import { TreeItem } from './TreeItem.js';
+import { GeomItem } from './GeomItem.js';
+import { SelectionManager } from './SelectionManager.js';
 
-import Mesh from './Geometry/Mesh.js';
-import computeNormalsMessage from './Geometry/ComputeNormalsWorker.js';
+import { Mesh } from './Geometry/Mesh.js';
+import { computeNormalsMessage } from './Geometry/ComputeNormalsWorker.js';
 
 class Scene {
     constructor() {

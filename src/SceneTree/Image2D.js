@@ -1,5 +1,5 @@
-import Signal from '../Math/Signal';
-import RefCounted from './RefCounted.js';
+import  { Signal } from '../Math/Signal';
+import  { RefCounted } from './RefCounted.js';
 
 class Image2D extends RefCounted {
     constructor(params={}) {

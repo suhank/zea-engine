@@ -1,7 +1,7 @@
-import Async from '../Math/Async';
-import Signal from '../Math/Signal';
-import Image2D from './Image2D.js';
-import HDRImage2D from './HDRImage2D.js';
+import { Async } from '../Math/Async';
+import { Signal } from '../Math/Signal';
+import { Image2D } from './Image2D.js';
+import { HDRImage2D } from './HDRImage2D.js';
 
 class HDRImageMixer extends Image2D {
     constructor(name, stream = true) {

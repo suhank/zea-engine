@@ -392,5 +392,7 @@ export {
     LOADFLAGS_SKIP_MATERIALS,
     LOADFLAGS_SKIP_GEOMETRIES
 };
-
-export default TreeItem;
+export {
+    TreeItem
+};
+// TreeItem;

@@ -3,7 +3,7 @@ import { Vec4 } from '../Math/Vec4';
 import { Rect2 } from '../Math/Rect2';
 import { BinTreeNode } from '../Math/BinTreeNode';
 import { Async } from '../Math/Async';
-import { {BinTreeRect }, BinTreeRectBorder} from '../Math/BinTreeNode';
+import { BinTreeRect , BinTreeRectBorder} from '../Math/BinTreeNode';
 import { Image2D } from '../SceneTree/Image2D';
 import { Shader } from '../SceneTree/Shader';
 import { shaderLibrary } from '../SceneTree/ShaderLibrary';

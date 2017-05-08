@@ -1,4 +1,4 @@
-import shaderLibrary from '../../../ShaderLibrary.js';
+import { shaderLibrary } from '../../../ShaderLibrary.js';
 
 shaderLibrary.setShaderModule('stack-gl/inverse.glsl', `
 

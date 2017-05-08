@@ -1,6 +1,6 @@
-import Vec2 from '../../../Math/Vec2';
-import Vec3 from '../../../Math/Vec3';
-import Lines from '../Lines.js';
+import { Vec2 } from '../../../Math/Vec2';
+import { Vec3 } from '../../../Math/Vec3';
+import { Lines } from '../Lines.js';
 
 class Grid extends Lines {
     constructor(name, x = 1.0, z = 1.0, xDivisions = 10, zDivisions = 10, skipCenterLines=false) {
