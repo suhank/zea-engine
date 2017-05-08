@@ -79,8 +79,12 @@ class GLProbe extends ImageAtlas {
         let hammersleyTexture = this.generateHammersleySamples(numSamples);
 
         if(!this.__convolved){
-            if(!this.__imagePyramid)
+            if(!this.__imagePyramid){
                 this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
+                this.__imagePyramid.updated.connect(() => {
+                    this.convolveEnvMap(srcGLTex);
+                }, this);
+            }
 
             this.addSubImage(srcGLTex);
 

@@ -21,18 +21,19 @@ class GeomLibrary {
         this.loaded = new Signal();
         this.geoms = [];
 
-        this.workers = [];
-        let logicalProcessors = window.navigator.hardwareConcurrency;
-        for (let i = 0; i < logicalProcessors; i++) {
-            this.workers[i] = this.__constructWorker();
-        }
-        this.__mostResentlyHired = 0;
+        // this.workers = [];
+        // let logicalProcessors = window.navigator.hardwareConcurrency;
+        // for (let i = 0; i < logicalProcessors; i++) {
+        //     this.workers[i] = this.__constructWorker();
+        // }
+        // this.__mostResentlyHired = 0;
     }
 
     __constructWorker() {
         let worker = new GeomParserWorker();
         worker.onmessage = (event) => {
             this.__revieveGeomDatas(event.data.geomDatas, event.data.geomIndexOffset, event.data.geomsRange);
+            worker.terminate();
         };
         return worker;
     }
@@ -70,7 +71,7 @@ class GeomLibrary {
         let toc = reader.loadUInt32Array(numGeoms);
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
-        let numGeomsPerWorkload = Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1);
+        let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
         let offset = 0;
         while (offset < numGeoms) {
             let geomsRange;
@@ -89,14 +90,15 @@ class GeomLibrary {
             }
             bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
             
-            this.workers[this.__mostResentlyHired].postMessage({
+            let worker = this.__constructWorker();
+            worker.postMessage({
                 toc,
                 geomIndexOffset,
                 geomsRange,
                 isMobileDevice: reader.isMobileDevice,
                 bufferSlice,
             }, [bufferSlice]);
-            this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
+            // this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
 
             offset += numGeomsPerWorkload;
         }

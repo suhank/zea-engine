@@ -49,7 +49,7 @@ class GLTexture2D extends RefCounted {
         return this.__texture;
     }
 
-    configure(params) {
+    configure(params, emit=true) {
 
         if (!('channels' in params) || !('width' in params) || !('height' in params))
             throw ("Invalid texture params");
@@ -102,13 +102,11 @@ class GLTexture2D extends RefCounted {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[wrap]);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap]);
 
-        this.resize(width, height, data, false);
+        this.resize(width, height, data, false, false);
         this.__loaded = true;
-        
-        this.updated.emit();
     }
 
-    bufferData(data, bind=true){
+    bufferData(data, bind=true, emit=true){
         let gl = this.__gl;
         if(bind)
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
@@ -129,9 +127,12 @@ class GLTexture2D extends RefCounted {
         } 
         else
             gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, this.__format, null);
+
+        if(emit)
+            this.updated.emit();
     }
 
-    resize(width, height, data, bind=true) {
+    resize(width, height, data, bind=true, emit=false) {
         let gl = this.__gl;
         let sizeChanged = this.width != width || this.height != height;
         if(sizeChanged){
@@ -145,9 +146,11 @@ class GLTexture2D extends RefCounted {
         if(bind)
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
 
-        this.bufferData(data, false);
+        this.bufferData(data, false, false);
         if(sizeChanged)
             this.resized.emit();
+        if(emit)
+            this.updated.emit();
     }
 
     getSize(){

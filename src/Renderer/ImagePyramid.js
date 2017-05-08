@@ -106,7 +106,7 @@ class ImagePyramid extends ImageAtlas {
             this.renderAtlas(destroySrcImage);
         }
         else{
-            this.__srcGLTex.loaded.connect(() => {
+            this.__srcGLTex.updated.connect(() => {
                 this.generateAtlasLayout(minTileSize);
                 this.renderAtlas(destroySrcImage);
             }, this);

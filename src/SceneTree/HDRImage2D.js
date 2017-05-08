@@ -92,7 +92,6 @@ class HDRImage2D extends Image2D {
             this.updated.emit();
         }
 
-        console.log("HDRImage2D __setLoadedData");
         return this.__loaded;
     }
 

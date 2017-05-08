@@ -9,16 +9,7 @@ let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.
 class ResourceLoader {
     constructor(resources) {
         this.__resources = resources;
-
-        this.workers = [];
-        let logicalProcessors = 1;//window.navigator.hardwareConcurrency;
-        for (let i = 0; i < logicalProcessors; i++) {
-            this.workers[i] = this.__constructWorker();
-        }
-        this.__mostResentlyHired = 0;
-
         this.__callbacks = {};
-
         this.loaded = new Signal();
     }
 
@@ -26,6 +17,7 @@ class ResourceLoader {
         let worker = new ResourceLoaderWorker();
         worker.onmessage = (event) => {
             this.__recieveFileData(event.data);
+            worker.terminate();
         };
         return worker;
     }
@@ -52,13 +44,11 @@ class ResourceLoader {
         this.__callbacks[filePath].push(callback);
 
         let url = this.resolveURL(filePath);
-        console.log("loadResources filePath:" + filePath + " url:" + url);
-        this.workers[this.__mostResentlyHired].postMessage({
+        let worker = this.__constructWorker();
+        worker.postMessage({
             name: filePath,
             url
         });
-
-        this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
     }
 
     __recieveFileData(fileData) {

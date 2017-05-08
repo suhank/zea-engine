@@ -20,21 +20,15 @@ class GLEnvMap extends GLProbe {
             gl.setupInstancedQuad();
 
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
-        this.__srcGLTex = srcGLTex;
+        this.__srcGLTex = srcGLTex; // for debugging
 
         srcGLTex.updated.connect(() => {
             this.convolveEnvMap(srcGLTex);
         }, this);
         if (this.__envMap.isLoaded()) {
-            // Note: we must setup the image pyramid before connecting our listeners to the signals
-            // this is so that during updates, the pyramid is updated first.
-            this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
             this.convolveEnvMap(srcGLTex);
         } else {
             this.__envMap.loaded.connect(() => {
-                // Note: we must setup the image pyramid before connecting our listeners to the signals
-                // this is so that during updates, the pyramid is updated first.
-                this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
                 this.convolveEnvMap(srcGLTex);
             }, this);
         }
