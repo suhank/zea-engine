@@ -157,15 +157,19 @@ class BaseGeom extends RefCounted {
     loadBaseGeomBinary(reader){
 
         this.name = reader.loadStr();
+        let flags = reader.loadUInt8();
         this.debugColor = reader.loadRGBFloat32Color();
         let numVerts = reader.loadUInt32();
         this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
 
         this.setNumVertices(numVerts);
         let positionsAttr = this.vertices;
-        let normalsAttr = this.getVertexAttribute('normals');
-        if(!normalsAttr)
-            normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0)
+        let normalsAttr;
+        if(flags&(1<<1)){
+            normalsAttr = this.getVertexAttribute('normals');
+            if(!normalsAttr)
+                normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0);
+        }
 
         let load8BitPositionsArray = (start, end, offset, sclVec, positions_8bit)=>{
             for (let i = start; i<end; i++) {
@@ -203,11 +207,13 @@ class BaseGeom extends RefCounted {
             let positions_8bit = reader.loadUInt8Array(numVerts*3);
             load8BitPositionsArray(0, numVerts, box3.p0, box3.diagonal(), positions_8bit);
 
-            box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
-            let normals_8bit = reader.loadUInt8Array(numVerts*3);
-            load8BitNormalsArray(0, numVerts, box3.p0, box3.diagonal(), normals_8bit);
+            if(normalsAttr){
+                box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+                let normals_8bit = reader.loadUInt8Array(numVerts*3);
+                load8BitNormalsArray(0, numVerts, box3.p0, box3.diagonal(), normals_8bit);
 
-            normalsAttr.loadSplitValues(reader);
+                normalsAttr.loadSplitValues(reader);
+            }
         }
         else{
             let clusters = [];
@@ -215,27 +221,36 @@ class BaseGeom extends RefCounted {
             for (let i = 0; i < numClusters; i++) {
                 let count = reader.loadUInt32();
                 let box3 = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
-                let normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
-                clusters.push({
+                let clusterData = {
                     'range': [offset, offset + count],
-                    'bbox': box3,
-                    'normalsRange': normalsRange
-                });
+                    'bbox': box3
+                };
+                if(normalsAttr){
+                    clusterData.normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+                }
 
+                clusters.push(clusterData);
                 offset += count;
             }
             let positions_8bit = reader.loadUInt8Array(numVerts*3);
-            let normals_8bit = reader.loadUInt8Array(numVerts*3);
+            let normals_8bit;
+            if(normalsAttr){
+                normals_8bit = reader.loadUInt8Array(numVerts*3);
+            }
 
             for (let i = 0; i < numClusters; i++) {
 
                 let box3 = clusters[i].bbox;
                 load8BitPositionsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), positions_8bit);
                 
-                box3 = clusters[i].normalsRange;
-                load8BitNormalsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), normals_8bit);
+                if(normalsAttr){
+                    box3 = clusters[i].normalsRange;
+                    load8BitNormalsArray(clusters[i].range[0], clusters[i].range[1], box3.p0, box3.diagonal(), normals_8bit);
+                }
             }
-            normalsAttr.loadSplitValues(reader);
+            if(normalsAttr){
+                normalsAttr.loadSplitValues(reader);
+            }
         }
     }
 

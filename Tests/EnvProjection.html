@@ -18,7 +18,6 @@
 document.addEventListener("DOMContentLoaded", function(event) { 
     
     let div = addCanvas();
-    let gui = addGUI(div);
     let env = "Assets/HDR_041_Path_Ref.vlh";
     /////////////////////////////////////
     // Scene
@@ -26,10 +25,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     let layer0Material = new Visualive.EnvProjectionMaterial('layer0');
     layer0Material.env = new Visualive.HDRImage2D('envMap', env, scene.getResourceLoader());
-    let shape = new Visualive.Plane('Plane', 50.0, 50.0);
-    let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, layer0Material);
-    geomItem.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1, 0, 0), Math.PI * 0.5);
-    scene.getRoot().addChild(geomItem);
+
+    let offset = 0;
+    let addMeshShape = (shape)=>{
+        let geomItem = new Visualive.GeomItem(shape.name+'Item' + offset, shape, layer0Material);
+        scene.getRoot().addChild(geomItem);
+        offset++
+        return geomItem;
+    }
+
+    let geomItem0 = addMeshShape(new Visualive.Plane('Plane', 50.0, 50.0));
+    geomItem0.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1, 0, 0), Math.PI * 0.5);
+    geomItem0.updateGlobalXfo();
+
+    let geomItem2 = addMeshShape(new Visualive.Plane('Plane', 5.0, 3.0));
+    geomItem2.localXfo.tr.set(0, 1, 2);
+    // geomItem2.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
+    geomItem2.updateGlobalXfo();
 
 
     /////////////////////////////////////
@@ -46,6 +58,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1.2, 1), new Visualive.Vec3(0, 0.1, 0));
+    // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.mirrorVRisplayToViewport = false;
     renderer.setScene(scene);
 

@@ -138,8 +138,8 @@ class GeomItem extends TreeItem {
         this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo)
     }
 
-    __updateGlobal() {
-        super.__updateGlobal();
+    updateGlobalXfo() {
+        super.updateGlobalXfo();
         this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo)
     }
 

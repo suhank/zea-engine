@@ -64,7 +64,7 @@ class Camera extends TreeItem {
     set focalDistance(dist) {
         this.__focalDistance = dist;
         this.__near = this.__focalDistance * 0.01;
-        this.__far = this.__focalDistance * 10.0;
+        this.__far = this.__focalDistance * 100.0;
         this.clippingRangesChanged.emit();
     }
 

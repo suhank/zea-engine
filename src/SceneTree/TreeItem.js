@@ -138,7 +138,7 @@ class TreeItem {
         // this.__private.set(parentItem, parentItem);
         this.__parentItem = parentItem;
         this.__updatePath();
-        this.__updateGlobal();
+        this.updateGlobalXfo();
 
         // Notify:
         this.parentChanged.emit();
@@ -153,7 +153,7 @@ class TreeItem {
 
     set localXfo(xfo) {
         this.__localXfo = xfo;
-        this.__updateGlobal();
+        this.updateGlobalXfo();
     }
 
     get globalXfo() {
@@ -173,10 +173,10 @@ class TreeItem {
 
         // TODO: should we be updating here, or waiting till the global mat is needed??
         for (let childItem of this.__childItems)
-            childItem.__updateGlobal();
+            childItem.updateGlobalXfo();
     }
 
-    __updateGlobal() {
+    updateGlobalXfo() {
         let parentItem = this.parentItem;
         if (parentItem !== undefined)
             this.__globalXfo = parentItem.globalXfo.multiply(this.__localXfo);
@@ -184,7 +184,7 @@ class TreeItem {
             this.__globalXfo = this.__localXfo;
         this.globalXfoChanged.emit(this.__globalXfo);
         for (let childItem of this.__childItems)
-            childItem.__updateGlobal();
+            childItem.updateGlobalXfo();
 
     }
 

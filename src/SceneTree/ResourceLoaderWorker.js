@@ -30,5 +30,7 @@ self.onmessage = function(event) {
         }
 
         self.postMessage(result, transferables);
+    }, (statusText, url) => {
+        console.warn("Unable to Load URL:"+ url);
     });
 }

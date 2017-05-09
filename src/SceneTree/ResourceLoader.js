@@ -44,6 +44,9 @@ class ResourceLoader {
         this.__callbacks[filePath].push(callback);
 
         let url = this.resolveURL(filePath);
+        if(!url){
+            console.error("Invalid filePath:'"+ filePath + "' not foundin Resources:" + JSON.stringify(this.__resources, null, 2));
+        }
         let worker = this.__constructWorker();
         worker.postMessage({
             name: filePath,

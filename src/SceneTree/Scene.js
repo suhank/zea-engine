@@ -35,38 +35,24 @@ class Scene {
         this.__selectionManager = new SelectionManager();
         this.__resourceLoader = new ResourceLoader(resources);
 
-        this.childAdded = new Signal();
-        this.childRemoved = new Signal();
         this.commonResourcesLoaded = new Signal(true);
 
-        let _this = this;
-        let propagateChildAdded = function(child) {
-            _this.childAdded.emit(child);
-        };
-        this.__root.childAdded.connect(propagateChildAdded);
+        // if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
+        //     this.__resourceLoader.loadResources('commonResources/Resources.vlr',
+        //         (path, entries) => {
 
-        let propagateChildRemoved = function(child) {
-            _this.childRemoved.emit(child);
-        };
-        this.__root.childRemoved.connect(propagateChildRemoved);
+        //             let viveAsset = new BinAsset("ViveResources");
+        //             viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
+        //             viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
+        //             viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+        //             entries['viveAsset'] = viveAsset;
 
+        //             let sphere = new Sphere('VRControllerTip', 0.015);
+        //             entries['VRControllerTip'] = sphere;
 
-        if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
-            this.__resourceLoader.loadResources('commonResources/Resources.vlr',
-                (path, entries) => {
-
-                    let viveAsset = new BinAsset("ViveResources");
-                    viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
-                    viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
-                    viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-                    entries['viveAsset'] = viveAsset;
-
-                    let sphere = new Sphere('VRControllerTip', 0.015);
-                    entries['VRControllerTip'] = sphere;
-
-                    this.commonResourcesLoaded.emit(entries);
-                });
-        }
+        //             this.commonResourcesLoaded.emit(entries);
+        //         });
+        // }
     }
 
     getRoot() {
