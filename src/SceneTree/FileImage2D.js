@@ -1,4 +1,3 @@
-
 import {
     Signal
 } from '../Math';
@@ -18,60 +17,106 @@ class FileImage2D extends Image2D {
         this.__name = name;
         this.__url = url ? url : name;
         this.__isHDR = false;
+        this.__hasAlpha = false;
         this.__loaded = false;
 
         this.loaded = new Signal();
-        if(url.endsWith('.jpg') || url.endsWith('.png')) {
-            domElement = new Image();
-            domElement.onload = () => {
-                this.width = domElement.width;
-                this.height = domElement.height;
-                this.__data = domElement;
-                this.__loaded = true;
-                this.loaded.emit();
-            };
-            domElement.src = this.__url;
-        }
-        else if(url.endsWith('.mp4') || url.endsWith('.ogg')) {
-
-            let domElement = document.createElement('video');
-            // TODO - confirm its necessary to add to DOM
-            domElement.style.display = 'none';
-            domElement.preload = 'auto';
-            // domElement.crossorigin = true;
-            document.body.appendChild(domElement);
-            domElement.addEventListener('loadedmetadata', () => {
-                // domElement.play();
-                this.width = domElement.videoHeight;
-                this.height = domElement.videoWidth;
-                this.__data = domElement;
-                this.__loaded = true;
-                this.loaded.emit(domElement);
-
-                let timerCallback = () => {
-                    if (domElement.paused || domElement.ended) {
-                        return;
-                    }
-                    this.updated.emit(domElement);
-                    setTimeout(timerCallback, 0);
-                };
-                timerCallback();
-
-            }, false);
-            domElement.src = url;
-            //domElement.load();
-            domElement.play();
-        }
-        else if(url.endsWith('.vlh')){
+        if (url.endsWith('.jpg') || url.endsWith('.png')) {
+            this.__loadLDRImage(url);
+        } else if (url.endsWith('.mp4') || url.endsWith('.ogg')) {
+            this.__loadLDRVideo(url);
+        } else if (url.endsWith('.ldralpha')) {
+            this.__hasAlpha = true;
+            this.__loadLDRAlpha(url);
+        } else if (url.endsWith('.vlh')) {
             this.__isHDR = true;
             this.__loadVLH(url);
+        } else {
+            throw ("Unsupported file type:" + url);
         }
-        else if(url.endsWith('.hdr')) {
+    }
 
-        }
-        else{
-            throw("Unsupported file type:" + url);
-        }
+    __loadLDRImage(url) {
+
+        let domElement = new Image();
+        domElement.onload = () => {
+            this.width = domElement.width;
+            this.height = domElement.height;
+            this.__data = domElement;
+            this.__loaded = true;
+            this.loaded.emit();
+        };
+        domElement.src = this.__url;
+    }
+
+    __loadLDRVideo(url) {
+
+        let domElement = document.createElement('video');
+        // TODO - confirm its necessary to add to DOM
+        domElement.style.display = 'none';
+        domElement.preload = 'auto';
+        // domElement.crossorigin = true;
+        document.body.appendChild(domElement);
+        domElement.addEventListener('loadedmetadata', () => {
+            // domElement.play();
+            this.width = domElement.videoHeight;
+            this.height = domElement.videoWidth;
+            this.__data = domElement;
+            this.__loaded = true;
+            this.loaded.emit(domElement);
+
+            let timerCallback = () => {
+                if (domElement.paused || domElement.ended) {
+                    return;
+                }
+                this.updated.emit(domElement);
+                setTimeout(timerCallback, 0);
+            };
+            timerCallback();
+
+        }, false);
+        domElement.src = url;
+        //domElement.load();
+        domElement.play();
+    }
+
+    __loadLDRAlpha(url) {
+        let worker = new ResourceLoaderWorker();
+        worker.onmessage = (event) => {
+            let data = event.data;
+            let ldr, alpha;
+            for (let name in data.entries) {
+                if (name.endsWith('.jpg'))
+                    ldr = data.entries[name];
+                else if (name.endsWith('.bin'))
+                    alpha = data.entries[name];
+            }
+
+            /////////////////////////////////
+            // Parse the data.
+            let blob = new Blob([ldr.buffer]);
+            let ldrPic = new Image();
+            ldrPic.onload = () => {
+                this.width = ldrPic.width;
+                this.height = ldrPic.height;
+                this.__data = {
+                    ldr: ldrPic,
+                    alpha: alpha
+                }
+                if (!this.__loaded) {
+                    this.__loaded = true;
+                    this.loaded.emit();
+                } else {
+                    this.updated.emit();
+                }
+            }
+            ldrPic.src = URL.createObjectURL(blob);
+            worker.terminate();
+        };
+        worker.postMessage({
+            name: this.__name,
+            url
+        });
     }
 
     __loadVLH(url) {
@@ -79,10 +124,10 @@ class FileImage2D extends Image2D {
         worker.onmessage = (event) => {
             let data = event.data;
             let ldr, cdm;
-            for(let name in data.entries){
-                if(name.endsWith('.jpg'))
+            for (let name in data.entries) {
+                if (name.endsWith('.jpg'))
                     ldr = data.entries[name];
-                else if(name.endsWith('.bin'))
+                else if (name.endsWith('.bin'))
                     cdm = data.entries[name];
             }
 
@@ -94,14 +139,13 @@ class FileImage2D extends Image2D {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
                 this.__data = {
-                    'ldr': ldrPic,
-                    'cdm': cdm
+                    ldr: ldrPic,
+                    cdm: cdm
                 }
-                if(!this.__loaded){
+                if (!this.__loaded) {
                     this.__loaded = true;
                     this.loaded.emit();
-                }
-                else{
+                } else {
                     this.updated.emit();
                 }
             }
@@ -112,22 +156,21 @@ class FileImage2D extends Image2D {
             name: this.__name,
             url
         });
-
     }
 
-    getName(){
+    getName() {
         return this.__name;
     }
 
-    getUrl(){
+    getUrl() {
         return this.__url;
     }
 
-    isHDR(){
+    isHDR() {
         return this.__isHDR;
     }
-    
-    isStream(){
+
+    isStream() {
         return false;
     }
 
@@ -135,9 +178,9 @@ class FileImage2D extends Image2D {
         return this.__loaded;
     }
 
-    getParams(){
+    getParams() {
         let params = super.getParams();
-        if(this.__loaded)
+        if (this.__loaded)
             params['data'] = this.__data;
         return params;
     }

@@ -11,7 +11,7 @@ class UnpackHDRShader extends Shader {
     
     constructor() {
         super();
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenQuadShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('UnpackHDRShader.vertexShader', `
 precision highp float;
 
 <%include file="utils/quadVertexFromID.glsl"/>
