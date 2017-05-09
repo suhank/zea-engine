@@ -28,7 +28,8 @@ class Camera extends TreeItem {
         this.orbitRate = isMobileDevice() ? -0.002 : 0.01;
         this.dollySpeed = 0.02;
         this.mouseWheelDollySpeed = 0.002;
-        this.__manipulationState = 'orbit';
+        this.__defaultManipulationState = 'orbit';
+        this.__manipulationState = this.__defaultManipulationState;
         this.__mouseDragDelta = new Vec2();
         this.__keyboardMovement = false;
         this.__keysPressed = [];
@@ -96,11 +97,45 @@ class Camera extends TreeItem {
         this.viewMatChanged.emit(this.__globalXfo);
     }
 
+    setDefaultManipMode(mode) {
+        this.__defaultManipulationState = mode;
+    }
+
     setPositionAndTarget(position, target) {
         this.focalDistance = position.distanceTo(target);
         let xfo = new Xfo();
         xfo.setLookAt(position, target, new Vec3(0.0, 1.0, 0.0));
         this.globalXfo = xfo;
+    }
+
+    look(mouseDelta, viewport) {
+        if (this.__keyboardMovement) {
+            this.__mouseDownCameraXfo = this.__globalXfo.clone();
+            this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
+            let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
+            this.__mouseDownCameraTarget = this.__globalXfo.tr.add(targetOffset);
+        }
+
+        let globalXfo = this.__mouseDownCameraXfo.clone();
+
+        // Orbit
+        let orbit = new Quat();
+        orbit.rotateY(mouseDelta.x * -this.orbitRate);
+        // globalXfo.ori.multiplyInPlace(orbit);
+        globalXfo.ori = orbit.multiply(globalXfo.ori);
+
+        // Pitch
+        let pitch = new Quat();
+        pitch.rotateX(mouseDelta.y * -this.orbitRate);
+        globalXfo.ori.multiplyInPlace(pitch);
+
+        if (this.__keyboardMovement) {
+            // Avoid generating a signal because we have an animation frame occuring.
+            // see: onKeyPressed
+            this.__globalXfo = globalXfo;
+            this.__viewMatrix = globalXfo.inverse().toMat4();
+        } else
+            this.globalXfo = globalXfo;
     }
 
     orbit(mouseDelta, viewport) {
@@ -114,15 +149,15 @@ class Camera extends TreeItem {
         let globalXfo = this.__mouseDownCameraXfo.clone();
 
         // Orbit
-        let orbit_y = new Quat();
-        orbit_y.rotateY(mouseDelta.x * -this.orbitRate);
-        // globalXfo.ori.multiplyInPlace(orbit_y);
-        globalXfo.ori = orbit_y.multiply(globalXfo.ori);
+        let orbit = new Quat();
+        orbit.rotateY(mouseDelta.x * -this.orbitRate);
+        // globalXfo.ori.multiplyInPlace(orbit);
+        globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
-        let orbit_x = new Quat();
-        orbit_x.rotateX(mouseDelta.y * -this.orbitRate);
-        globalXfo.ori.multiplyInPlace(orbit_x);
+        let pitch = new Quat();
+        pitch.rotateX(mouseDelta.y * -this.orbitRate);
+        globalXfo.ori.multiplyInPlace(pitch);
 
         globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(this.__focalDistance));
 
@@ -191,7 +226,7 @@ class Camera extends TreeItem {
         } else if (event.ctrlKey && event.altKey) {
             this.__manipulationState = 'dolly';
         } else {
-            this.__manipulationState = 'orbit';
+            this.__manipulationState = this.__defaultManipulationState;
         }
     }
 
@@ -214,15 +249,14 @@ class Camera extends TreeItem {
         }
         switch (this.__manipulationState) {
             case 'orbit':
-                {
-                    this.orbit(this.__mouseDragDelta, viewport);
-                    break;
-                }
+                this.orbit(this.__mouseDragDelta, viewport);
+                break;
+            case 'look':
+                this.look(this.__mouseDragDelta, viewport);
+                break;
             case 'pan':
-                {
-                    this.pan(this.__mouseDragDelta, viewport);
-                    break;
-                }
+                this.pan(this.__mouseDragDelta, viewport);
+                break;
             case 'dolly':
                 this.dolly(this.__mouseDragDelta, viewport);
                 break;

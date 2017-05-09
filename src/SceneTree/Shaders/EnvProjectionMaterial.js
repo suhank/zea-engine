@@ -52,16 +52,12 @@ precision highp float;
 <%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
-uniform float focus;
-
-#define ENABLE_INLINE_GAMMACORRECTION
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-uniform float exposure;
-#endif
-
 uniform color _env;
 uniform sampler2D _envTex;
 uniform bool _envTexConnected;
+
+uniform float _gamma;
+uniform float _exposure;
 
 /* VS Outputs */
 varying vec3 v_worldDir;
@@ -73,13 +69,13 @@ void main(void) {
     vec4 texel = texture2D(_envTex, uv);
     gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
-#endif
+    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * _exposure, _gamma);
 }
 `);
         this.addParameter('env', new Color(1.0, 1.0, 0.5));
         this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
+        this.addParameter('exposure', 1.0);
+        this.addParameter('gamma', 2.2);
         this.finalize();
     }
 };

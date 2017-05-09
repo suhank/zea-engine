@@ -95,7 +95,9 @@ class GLTexture2D extends RefCounted {
 
         // Load the image into the GPU for rendering.
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
-        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
+
+        // This parameter caused all images to be blank. Flipping in the pixel shader instead(by default)
+        // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[this.filter]);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[this.filter]);

@@ -284,12 +284,6 @@ class GLViewport {
                 profileJSON: {}
             };
 
-            let gl = this.__renderer.gl;
-            gl.enable(gl.CULL_FACE);
-            gl.enable(gl.DEPTH_TEST);
-            gl.depthFunc(gl.LEQUAL);
-            gl.depthMask(true);
-
             this.__renderer.getGeomDataPass().draw(renderstate);
             // this.__gizmoPass.drawDataPass(renderstate);
         }

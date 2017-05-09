@@ -17,14 +17,13 @@ import {
 
 
 class HDRImage2D extends Image2D {
-    constructor(name, url, resourceLoader, isStream) {
+    constructor(name, resourceName, resourceLoader, isStream) {
         super({
             format: 'FLOAT',
             channels: 'RGB'
         });
 
         this.__name = name;
-        this.__url = url;
         this.__resourceLoader = resourceLoader;
         this.__stream = isStream;
         this.__loaded = false;
@@ -33,8 +32,8 @@ class HDRImage2D extends Image2D {
         this.loaded = new Signal();
         this.updated = new Signal();
 
-        if(url){
-            this.loadURL(url);
+        if(resourceName){
+            this.loadURL(resourceName);
         }
     }
 

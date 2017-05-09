@@ -31,6 +31,7 @@ class Image2D extends RefCounted {
             width:this.width,
             height:this.height,
             wrap:this.wrap,
+            flipY:this.flipY,
             mipMapped:this.mipMapped
         }
     }
