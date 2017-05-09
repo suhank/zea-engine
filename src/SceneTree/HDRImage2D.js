@@ -103,8 +103,10 @@ class HDRImage2D extends Image2D {
         let params = super.getParams();
         if(this.__loaded){
             params.key = this.__currKey;
-            params.ldr = this.__data[this.__currKey].ldr;
-            params.cdm = this.__data[this.__currKey].cdm;
+            params.data = {
+                ldr: this.__data[this.__currKey].ldr,
+                cdm: this.__data[this.__currKey].cdm
+            };
         }
         return params;
     }

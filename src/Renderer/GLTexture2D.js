@@ -26,10 +26,16 @@ class GLTexture2D extends RefCounted {
                 this.__texture = params;
                 if (this.__texture.isLoaded()) {
                     this.configure(this.__texture.getParams());
+                    this.__texture.updated.connect((data) => {
+                        this.bufferData(data);
+                    }, this);
                 }
                 else {
                     this.__texture.loaded.connect(() => {
                         this.configure(this.__texture.getParams());
+                        this.__texture.updated.connect((data) => {
+                            this.bufferData(data);
+                        }, this);
                     }, this);
                 }
                 this.__texture.destructing.connect(() => {
@@ -112,9 +118,9 @@ class GLTexture2D extends RefCounted {
         let gl = this.__gl;
         if(bind)
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
-        let channels = (typeof this.channels) == "string" ? gl[this.channels] : this.channels;
+        let channels = gl[this.channels];
         if (data != undefined) {
-            if (data instanceof Image) {
+            if (data instanceof Image || data instanceof HTMLVideoElement) {
                 gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, this.__format, data);
             }
             else {

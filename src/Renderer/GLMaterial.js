@@ -66,7 +66,7 @@ class GLMaterial {
                 continue;
 
             let gltexture;
-            if (texture instanceof HDRImage2D)
+            if (texture instanceof HDRImage2D || texture.isHDR())
                 gltexture = new GLHDRImage(this.__gl, texture);
             else
                 gltexture = new GLTexture2D(this.__gl, texture);

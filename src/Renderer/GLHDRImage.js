@@ -44,8 +44,8 @@ class GLHDRImage extends GLTexture2D {
 
         let gl = this.__gl;
         
-        let ldr = hdrImageParams.ldr;
-        let cdm = hdrImageParams.cdm;
+        let ldr = hdrImageParams.data.ldr;
+        let cdm = hdrImageParams.data.cdm;
 
         if(!this.__fbo){
 
