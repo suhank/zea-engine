@@ -49,11 +49,9 @@ class GLLDRAlphaImage extends GLTexture2D {
 
         if(!this.__fbo){
 
-            // Note: iOS devices create FLOAT Fbox.
-            // If we want better quality, we could unpack the texture in JavaScript. 
             this.configure({
                 channels: 'RGBA',
-                format: (isIOSDevice() ? 'UNSIGNED_BYTE' : 'FLOAT'),
+                format: 'UNSIGNED_BYTE',
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'LINEAR',
@@ -73,10 +71,10 @@ class GLLDRAlphaImage extends GLTexture2D {
                 data: ldr
             });
             this.__srcAlphaTex = new GLTexture2D(gl, {
-                channels: 'ALPHA',
+                channels: 'RGB',
                 format: 'UNSIGNED_BYTE',
-                width: ldr.width/*8*/,
-                height: ldr.height/*8*/,
+                width: ldr.width,
+                height: ldr.height,
                 filter: 'NEAREST',
                 mipMapped: false,
                 wrap: 'CLAMP_TO_EDGE',

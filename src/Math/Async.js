@@ -1,7 +1,7 @@
 
 import {
     Signal
-} from '../Math';
+} from './Signal.js';
 
 class Async {
     constructor() {

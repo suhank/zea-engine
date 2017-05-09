@@ -71,18 +71,22 @@ class Material extends Shader {
                         textureDisconnected.emit(name);
                     }
                     texture.addRef(this);
-                    if(!texture.isLoaded()){
-                        texture.loaded.connect(()=>{
-                            props['_'+name+'TexConnected'] = true;
-                            props['_'+name+'Tex'] = texture;
-                            textureConnected.emit(name);
-                        });
-                    }
-                    else{
-                        props['_'+name+'TexConnected'] = true;
-                        props['_'+name+'Tex'] = texture;
-                        textureConnected.emit(name);
-                    }
+                    // if(!texture.isLoaded()){
+                    //     texture.loaded.connect(()=>{
+                    //         props['_'+name+'TexConnected'] = true;
+                    //         props['_'+name+'Tex'] = texture;
+                    //         textureConnected.emit(name);
+                    //     });
+                    // }
+                    // else{
+                    //     props['_'+name+'TexConnected'] = true;
+                    //     props['_'+name+'Tex'] = texture;
+                    //     textureConnected.emit(name);
+                    // }
+                    
+                    props['_'+name+'TexConnected'] = true;
+                    props['_'+name+'Tex'] = texture;
+                    textureConnected.emit(name);
                 }
                 else{
                     if (props['_'+name+'TexConnected']){

@@ -21,6 +21,9 @@ import {
     GLTexture2D
 } from './GLTexture2D.js';
 import {
+    GLLDRAlphaImage
+} from './GLLDRAlphaImage.js';
+import {
     GLHDRImage
 } from './GLHDRImage.js';
 
@@ -55,22 +58,39 @@ class GLMaterial {
     }
 
     isTransparent(){
-        return ('opacity' in this.__material && (this.__material.opacity < 0.99 || this.__material.opacity instanceof Image2D));
+        if ('opacity' in this.__material && (this.__material.opacity < 0.99 || this.__material.opacity instanceof Image2D))
+            return true;
+        if(this.__material.baseColor && this.__material.baseColor.hasAlpha && this.__material.baseColor.hasAlpha())
+            return true;
+        return false;
     }
 
     updateGLTextures() {
-        let textures = this.__material.textures;
+        const attachTexture = (texName, texture)=>{
+            const genGLTex = () => {
+                let gltexture;
+                if (texture instanceof HDRImage2D || texture.isHDR())
+                    gltexture = new GLHDRImage(this.__gl, texture);
+                else if (texture.hasAlpha())
+                    gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                else
+                    gltexture = new GLTexture2D(this.__gl, texture);
+                this.gltextures[texName] = gltexture;
+            }
+            if(!texture.isLoaded()){
+                texture.loaded.connect(()=>{
+                    genGLTex();
+                });
+            }
+            else{
+                genGLTex();
+            }
+        }
+        const textures = this.__material.textures;
         for (let texName in textures) {
-            let texture = textures[texName];
             if (texName in this.gltextures && this.gltextures[texName].getTexture() == texture)
                 continue;
-
-            let gltexture;
-            if (texture instanceof HDRImage2D || texture.isHDR())
-                gltexture = new GLHDRImage(this.__gl, texture);
-            else
-                gltexture = new GLTexture2D(this.__gl, texture);
-            this.gltextures[texName] = gltexture;
+            attachTexture(texName, textures[texName]);
         }
         this.updated.emit();
     }

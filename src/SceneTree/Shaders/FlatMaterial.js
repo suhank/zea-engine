@@ -96,7 +96,7 @@ void main(void) {
     float opacity = _opacity;
 #else
     vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_texCoords);
-    float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, v_texCoords);
+    float opacity       = baseColor.a;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, v_texCoords);
 #endif
 
 

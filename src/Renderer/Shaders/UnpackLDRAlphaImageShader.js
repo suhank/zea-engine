@@ -31,8 +31,12 @@ varying vec2 v_texCoord;
 uniform sampler2D ldrSampler;
 uniform sampler2D alphaSampler;
 
+float luminanceFromRGB(vec3 rgb) {
+    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
+}
+
 void main(void) {
-    gl_FragColor = vec4(texture2D(ldrSampler, texCoord).rgb, texture2D(alphaSampler, texCoord).a);
+    gl_FragColor = vec4(texture2D(ldrSampler, v_texCoord).rgb, luminanceFromRGB(texture2D(alphaSampler, v_texCoord).rgb));
 }
 
 `);

@@ -1,5 +1,6 @@
 import {
-    Signal
+    Signal,
+    Async
 } from '../Math';
 import {
     sgFactory
@@ -83,25 +84,26 @@ class FileImage2D extends Image2D {
     __loadLDRAlpha(url) {
         let worker = new ResourceLoaderWorker();
         worker.onmessage = (event) => {
+            worker.terminate();
+
             let data = event.data;
             let ldr, alpha;
             for (let name in data.entries) {
                 if (name.endsWith('.jpg'))
                     ldr = data.entries[name];
-                else if (name.endsWith('.bin'))
+                else if (name.endsWith('.png'))
                     alpha = data.entries[name];
             }
 
             /////////////////////////////////
             // Parse the data.
-            let blob = new Blob([ldr.buffer]);
-            let ldrPic = new Image();
-            ldrPic.onload = () => {
+            let async = new Async();
+            async.ready.connect(() => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
                 this.__data = {
                     ldr: ldrPic,
-                    alpha: alpha
+                    alpha: alphaPic
                 }
                 if (!this.__loaded) {
                     this.__loaded = true;
@@ -109,9 +111,17 @@ class FileImage2D extends Image2D {
                 } else {
                     this.updated.emit();
                 }
-            }
-            ldrPic.src = URL.createObjectURL(blob);
-            worker.terminate();
+            });
+            async.incAsyncCount(2);
+            
+            let ldrPic = new Image();
+            ldrPic.onload = async.decAsyncCount;
+            ldrPic.src = URL.createObjectURL(new Blob([ldr.buffer]));
+
+            let alphaPic = new Image();
+            alphaPic.onload = async.decAsyncCount;
+            alphaPic.src = URL.createObjectURL(new Blob([alpha.buffer]));
+
         };
         worker.postMessage({
             name: this.__name,
@@ -122,6 +132,8 @@ class FileImage2D extends Image2D {
     __loadVLH(url) {
         let worker = new ResourceLoaderWorker();
         worker.onmessage = (event) => {
+            worker.terminate();
+
             let data = event.data;
             let ldr, cdm;
             for (let name in data.entries) {
@@ -150,7 +162,6 @@ class FileImage2D extends Image2D {
                 }
             }
             ldrPic.src = URL.createObjectURL(blob);
-            worker.terminate();
         };
         worker.postMessage({
             name: this.__name,
@@ -168,6 +179,10 @@ class FileImage2D extends Image2D {
 
     isHDR() {
         return this.__isHDR;
+    }
+
+    hasAlpha() {
+        return this.__hasAlpha;
     }
 
     isStream() {
