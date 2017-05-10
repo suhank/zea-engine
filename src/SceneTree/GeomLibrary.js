@@ -1,7 +1,10 @@
 import {
-    isMobileDevice,
-    Signal
+    Signal,
+    isMobileDevice
 } from '../Math';
+import {
+    Mesh
+} from './Geometry/Mesh.js';
 import {
     BinReader
 } from './BinReader.js';
@@ -78,18 +81,17 @@ class GeomLibrary {
             let bufferSlice;
             let bufferSlice_start = toc[offset];
             let bufferSlice_end;
-            if(offset+numGeomsPerWorkload >= numGeoms){
+            if (offset + numGeomsPerWorkload >= numGeoms) {
                 geomsRange = [offset, numGeoms];
                 bufferSlice_end = buffer.byteLength;
                 // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start);
-            }
-            else {
-                geomsRange = [offset, offset+numGeomsPerWorkload];
+            } else {
+                geomsRange = [offset, offset + numGeomsPerWorkload];
                 bufferSlice_end = toc[geomsRange[1]];
                 // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start + " end:" + bufferSlice_end);
             }
             bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
-            
+
             let worker = this.__constructWorker();
             worker.postMessage({
                 toc,
@@ -146,7 +148,7 @@ class GeomLibrary {
     }
 
 };
-
 export {
     GeomLibrary
 };
+// GeomLibrary;

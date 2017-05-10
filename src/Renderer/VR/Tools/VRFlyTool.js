@@ -2,7 +2,9 @@ import {
     Vec3,
     Xfo
 } from '../../../Math';
-import { VRTool } from '../VRTool.js'
+import {
+    VRTool
+} from '../VRTool.js'
 
 class VRFlyTool extends VRTool {
     constructor(vrStage, vrHead, vrControllers) {
@@ -11,14 +13,13 @@ class VRFlyTool extends VRTool {
         this.__vrStage = vrStage;
         this.__vrHead = vrHead;
         this.__vrControllers = vrControllers;
-        this.__flySpeed = 2/60;
+        this.__flySpeed = 2 / 60;
     }
 
     startAction() {
-        if(this.__vrControllers[0].isButtonPressed()){
+        if (this.__vrControllers[0].isButtonPressed()) {
             this.__activeController = this.__vrControllers[0];
-        }
-        else if(this.__vrControllers[1].isButtonPressed()){
+        } else if (this.__vrControllers[1].isButtonPressed()) {
             this.__activeController = this.__vrControllers[1];
         }
     }
@@ -42,3 +43,4 @@ class VRFlyTool extends VRTool {
 export {
     VRFlyTool
 };
+//export default VRFlyTool;

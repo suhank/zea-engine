@@ -1,11 +1,7 @@
-
+import { Attribute } from './Attribute.js';
 import {
-    AttrValue,
     Float32
 } from '../../Math';
-import {
-    Attribute
-} from './Attribute.js';
 
 
 class VertexAttribute extends Attribute {
@@ -220,3 +216,4 @@ class VertexAttribute extends Attribute {
 export {
     VertexAttribute
 };
+//export default VertexAttribute;

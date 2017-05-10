@@ -1,7 +1,4 @@
 import {
-    Vec3,
-    EulerAngles,
-    Quat,
     Xfo,
     Color,
     Signal
@@ -17,7 +14,7 @@ import {
 
 class UserAvatar {
 
-    constructor(id, data, parentTreeItem, scaleFactor=1.0, visible=true, commonResources) {
+    constructor(id, data, parentTreeItem, scaleFactor = 1.0, visible = true, commonResources) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
 
@@ -31,34 +28,33 @@ class UserAvatar {
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
 
         this.__treeItem = new TreeItem(id);
-        this.__material = new FlatMaterial('user'+id+'Material');
+        this.__material = new FlatMaterial('user' + id + 'Material');
         this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
         this.setMouseAndCameraRepresentation();
 
         this.__visible = visible;
-        if(this.__visible){
+        if (this.__visible) {
             this.__parentTreeItem.addChild(this.__treeItem);
         }
     }
 
-    setVisibility(visible){
-        if(visible && !this.__visible){
+    setVisibility(visible) {
+        if (visible && !this.__visible) {
             this.__parentTreeItem.addChild(this.__treeItem);
-        }
-        else if(!visible && this.__visible){
+        } else if (!visible && this.__visible) {
             this.__parentTreeItem.removeChildByHandle(this.__treeItem, false);
         }
         this.__visible = visible;
     }
 
-    pointerMoved(data){
+    pointerMoved(data) {
         // TODO: show a pointer beam.
     }
 
     setMouseAndCameraRepresentation() {
         this.__treeItem.removeAllChildren();
         this.__treeItem.localXfo = new Xfo();
-        let shape = new Cuboid('Camera', 0.5*this.__avatarScale, 0.5*this.__avatarScale, 0.7*this.__avatarScale);
+        let shape = new Cuboid('Camera', 0.5 * this.__avatarScale, 0.5 * this.__avatarScale, 0.7 * this.__avatarScale);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
         this.__currentViewMode = 'MouseAndKeyboard';
@@ -157,3 +153,4 @@ class UserAvatar {
 export {
     UserAvatar
 };
+//export default UserAvatar;

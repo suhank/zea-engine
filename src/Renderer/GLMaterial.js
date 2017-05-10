@@ -6,26 +6,15 @@ import {
     Vec3,
     Vec4,
     Color,
-    Mat3,
     Mat4,
     Signal
 } from '../Math';
 import {
-    Image2D,
-    HDRImage2D
+    Image2D
 } from '../SceneTree';
-import '../SceneTree/Material.js';
-import '../SceneTree';
-
 import {
     GLTexture2D
 } from './GLTexture2D.js';
-import {
-    GLLDRAlphaImage
-} from './GLLDRAlphaImage.js';
-import {
-    GLHDRImage
-} from './GLHDRImage.js';
 
 class GLMaterial {
     constructor(gl, material) {
@@ -48,7 +37,7 @@ class GLMaterial {
         }, this);
 
         this.gltextures = {};
-        if(this.__material){
+        if (this.__material) {
             this.updateGLTextures();
         }
     }
@@ -57,16 +46,16 @@ class GLMaterial {
         return this.__material;
     }
 
-    isTransparent(){
+    isTransparent() {
         if ('opacity' in this.__material && (this.__material.opacity < 0.99 || this.__material.opacity instanceof Image2D))
             return true;
-        if(this.__material.baseColor && this.__material.baseColor.hasAlpha && this.__material.baseColor.hasAlpha())
+        if (this.__material.baseColor && this.__material.baseColor.hasAlpha && this.__material.baseColor.hasAlpha())
             return true;
         return false;
     }
 
     updateGLTextures() {
-        const attachTexture = (texName, texture)=>{
+        const attachTexture = (texName, texture) => {
             const genGLTex = () => {
                 let gltexture;
                 if (texture instanceof HDRImage2D || texture.isHDR())
@@ -77,12 +66,11 @@ class GLMaterial {
                     gltexture = new GLTexture2D(this.__gl, texture);
                 this.gltextures[texName] = gltexture;
             }
-            if(!texture.isLoaded()){
-                texture.loaded.connect(()=>{
+            if (!texture.isLoaded()) {
+                texture.loaded.connect(() => {
                     genGLTex();
                 });
-            }
-            else{
+            } else {
                 genGLTex();
             }
         }
@@ -165,3 +153,4 @@ class GLMaterial {
 export {
     GLMaterial
 };
+// export default GLMaterial;

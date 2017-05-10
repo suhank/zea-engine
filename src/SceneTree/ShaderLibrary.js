@@ -2,19 +2,15 @@ import {
     SInt32,
     UInt32,
     Float32,
+    hashStr,
     Vec2,
     Vec3,
     Vec4,
-    Color,
     Mat3,
     Mat4,
-    hashStr
+    Color
 } from '../Math';
-
-import {
-    Image2D
-} from './Image2D.js';
-
+import { Image2D } from './Image2D.js';
 
 let glslTypes = {
     'bool': Boolean,
@@ -264,7 +260,7 @@ class ShaderLibrary {
 }
 let shaderLibrary = new ShaderLibrary();
 
-
 export {
     shaderLibrary
 };
+// shaderLibrary;

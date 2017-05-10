@@ -1,10 +1,5 @@
-
-import {
-    shaderLibrary
-} from '../../SceneTree/ShaderLibrary.js';
-import {
-    Shader
-} from '../../SceneTree/Shader.js';
+import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
+import { Shader }  from '../../SceneTree/Shader';
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
@@ -50,6 +45,7 @@ void main(void) {
 export {
     WireShader
 };
+//export default WireShader;
 
 
 

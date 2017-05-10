@@ -1,16 +1,7 @@
-import {
-    Color
-} from '../../Math';
-import {
-    sgFactory
-} from '../SGFactory.js';
-import {
-    shaderLibrary
-} from '../ShaderLibrary.js';
-import {
-    Material
-} from '../Material.js';
-
+import { Color } from '../../Math/Color';
+import { sgFactory } from '../SGFactory.js';
+import { shaderLibrary } from '../ShaderLibrary.js';
+import { Material } from '../Material.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
@@ -140,7 +131,7 @@ void main(void) {
 };
 
 sgFactory.registerClass('FlatMaterial', FlatMaterial);
-
 export {
     FlatMaterial
 };
+// FlatMaterial;

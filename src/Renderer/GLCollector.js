@@ -1,15 +1,13 @@
+
 import {
-    Vec3,
     Vec4,
     Signal
 } from '../Math';
 import {
-    AssetItem,
     GeomItem,
     Points,
     Lines,
     Mesh,
-    MeshProxy,
     BillboardItem
 } from '../SceneTree';
 import {
@@ -33,10 +31,6 @@ import {
 import {
     GLDrawItemSet
 } from './GLDrawItemSet.js';
-
-import {
-    GLLightmap
-} from './GLLightmap.js';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
@@ -122,15 +116,15 @@ class GLCollector {
 
     getRenderer(){
         return this.__renderer;
-    }
+    };
 
     newItemsReadyForLoading() {
         return this.__newItemIndices.length > 0;
-    }
+    };
 
     getGLShaderMaterials() {
         return this.__glshadermaterials;
-    }
+    };
 
     getShaderMaterials(material) {
         if (!material.hash)
@@ -153,7 +147,7 @@ class GLCollector {
         material.setMetadata('glshaderMaterials', glshaderMaterials);
 
         return glshaderMaterials;
-    }
+    };
 
     addMaterial(material) {
         let glmaterialDrawItemSets = material.getMetadata('glmaterialDrawItemSets');
@@ -176,7 +170,7 @@ class GLCollector {
         }, this);
 
         return glmaterialDrawItemSets;
-    }
+    };
 
 
     addGeom(geom) {
@@ -196,7 +190,7 @@ class GLCollector {
         geom.setMetadata('glgeom', glgeom);
         this.__geoms.push(glgeom);
         return glgeom;
-    }
+    };
 
     addGeomItem(geomItem) {
         let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
@@ -249,7 +243,7 @@ class GLCollector {
         this.__renderer.requestRedraw();
 
         return gldrawItem;
-    }
+    };
 
     addTreeItem(treeItem) {
 
@@ -302,7 +296,7 @@ class GLCollector {
 
         this.renderTreeUpdated.emit();
         this.__renderer.requestRedraw();
-    }
+    };
 
     removeMaterial(material) {
         let glshaderMaterials = this.__glshadermaterials[material.hash];
@@ -313,7 +307,7 @@ class GLCollector {
 
         let glmaterialDrawItemSets = material.getMetadata('glmaterialDrawItemSets');
         glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
-    }
+    };
 
     removeGLGeom(geomItemMapping, materialGeomMapping) {
         let index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping);
@@ -323,7 +317,7 @@ class GLCollector {
         // if(materialGeomMapping.geomItemMappings.length == 0 && !this.__explicitShader){
         //     this.removeMaterialGeomMapping(materialGeomMapping.glmaterial);
         // }
-    }
+    };
 
     addGizmo(gizmo) {
         // let flags = 2;
@@ -336,7 +330,7 @@ class GLCollector {
         this.__gizmoDataPass.addDrawItem(gizmo.getProxyItem());
 
         this.__gizmos.push(gizmo);
-    }
+    };
 
 
     //////////////////////////////////////////////////////////
@@ -346,7 +340,7 @@ class GLCollector {
         if (id >= this.__drawItems.length)
             throw ("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length-1));
         return this.__drawItems[id];
-    }
+    };
 
     //////////////////////////////////////////////////
     // Optimization
@@ -369,7 +363,7 @@ class GLCollector {
             flags = 1;
         let materialId = 0;
         col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, flags);
-    }
+    };
     
     finalize() {
         if(this.__newItemIndices.length == 0)
@@ -415,7 +409,7 @@ class GLCollector {
 
         this.__newItemIndices = [];
         this.renderTreeUpdated.emit();
-    }
+    };
 
     __updateItemInstanceData(index, gldrawItem){
         if(!this.__transformsTexture)
@@ -442,7 +436,7 @@ class GLCollector {
         let floatOffset = index * stride;
         for(let i=0; i<stride; i++)
             this.__transformsDataArray[floatOffset + i] = dataArray[i];
-    }
+    };
 
     bind(renderstate) {
         let gl = this.__renderer.gl;
@@ -452,7 +446,7 @@ class GLCollector {
             gl.uniform1i(unifs.instancesTextureSize.location, this.__transformsTexture.width);
         }
         return true;
-    }
+    };
 
 };
 
@@ -461,3 +455,4 @@ export {
     GLMaterialDrawItemSets,
     GLCollector
 };
+

@@ -1,10 +1,6 @@
-import {
-    Vec2,
-    Vec3
-} from '../../../Math';
-import {
-    Mesh
-} from '../Mesh.js';
+import { Vec2 } from '../../../Math/Vec2';
+import { Vec3 } from '../../../Math/Vec3';
+import { Mesh } from '../Mesh.js';
 
 
 class Sphere extends Mesh {
@@ -174,3 +170,4 @@ class Sphere extends Mesh {
 export {
     Sphere
 };
+//export default Sphere;

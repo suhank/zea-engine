@@ -1,16 +1,5 @@
-import {
-    Color,
-    Signal
-} from '../Math';
-import {
-    Material
-} from './Material.js';
-import {
-    BinReader
-} from './BinReader.js';
-import {
-    sgFactory
-} from './SGFactory.js';
+import { Signal } from '../Math/Signal';
+import { sgFactory } from './SGFactory.js';
 
 class MaterialLibrary {
     constructor() {
@@ -119,8 +108,8 @@ class MaterialLibrary {
         return JSON.stringify(this.toJSON(), null, 2)
     }
 };
-
 export {
     MaterialLibrary
 };
+// MaterialLibrary;
 

@@ -1,22 +1,10 @@
-import {
-    Signal
-} from '../../Math';
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
-import {
-    GLPass
-} from '../GLPass.js';
-import {
-    GLTexture2D
-} from '../GLTexture2D.js';
-import {
-    GLShader
-} from '../GLShader.js';
-import {
-    generateShaderGeomBinding
-} from '../GeomShaderBinding.js';
+import { Signal } from '../../Math/Signal';
+import { shaderLibrary } from '../../SceneTree/ShaderLibrary';
+import { Shader } from '../../SceneTree/Shader';
+import { GLPass } from '../GLPass.js';
+import { GLTexture2D } from '../GLTexture2D.js';
+import { GLShader } from '../GLShader.js';
+import { generateShaderGeomBinding } from '../GeomShaderBinding.js';
 
 import '../../SceneTree/Shaders/GLSL/glslxfo.js';
 
@@ -159,3 +147,4 @@ class GLAnalyticsPass {
 export {
     GLAnalyticsPass
 };
+// export default GLAnalyticsPass;

@@ -1,16 +1,7 @@
-import {
-    GLPass
-} from '../GLPass.js';
-import {
-    GLShader
-} from '../GLShader.js';
-import {
-    GizmoShader,
-    GizmoDataShader
-} from '../Shaders/GizmoShader.js';
-import {
-    GLGeomDataPass
-} from './GLGeomDataPass.js';
+import { GLPass } from '../GLPass.js';
+import { GLShader } from '../GLShader.js';
+import { GizmoShader, GizmoDataShader } from '../Shaders/GizmoShader.js';
+import { GLGeomDataPass } from './GLGeomDataPass.js';
 
 
 class GLGizmoDataPass extends GLGeomDataPass {
@@ -19,14 +10,13 @@ class GLGizmoDataPass extends GLGeomDataPass {
         super(gl, glshader);
 
         this.setExplicitShader(glshader);
-    }
-
+    };
 
     filter(drawItem) {
         if(!super.filter(drawItem))
             return false;
         return true;
-    }
+    };
 
     draw(renderstate) {
 
@@ -43,7 +33,7 @@ class GLGizmoDataPass extends GLGeomDataPass {
         this.__gl.depthFunc(this.__gl.LESS);
 
         super.draw(renderstate);
-    }
+    };
 };
 
 class GizmoPass extends GLPass {
@@ -56,11 +46,11 @@ class GizmoPass extends GLPass {
         this.__gizmoDataPass = new GLGizmoDataPass(this.__gl);
         this.__gizmos = [];
         this.__gizmos.push(undefined); // Skip using the 0 slot as an id of 0 can be a problem. 
-    }
+    };
 
     drawDataPass(renderstate) {
         this.__gizmoDataPass.draw(renderstate);
-    }
+    };
 
     addGizmo(gizmo) {
         let flags = 2;
@@ -73,11 +63,11 @@ class GizmoPass extends GLPass {
         this.__gizmoDataPass.addDrawItem(gizmo.getProxyItem());
 
         this.__gizmos.push(gizmo);
-    }
+    };
 
     getGizmo(id) {
         return this.__gizmos[id];
-    }
+    };
 
     bindDrawItem(renderstate, drawItem) {
         if (!super.bindDrawItem(renderstate, drawItem))
@@ -89,10 +79,9 @@ class GizmoPass extends GLPass {
         }
 
         return true;
-    }
+    };
 
     draw(renderstate) {
-
         this.__explicitShader.bind(renderstate);
         let unifs = renderstate['unifs'];
         this.__gl.uniform1i(unifs['isOrthographic']['location'], renderstate['isOrthographic']);
@@ -109,9 +98,10 @@ class GizmoPass extends GLPass {
         this.__gl.depthFunc(this.__gl.LESS);
 
         super.draw(renderstate);
-    }
+    };
 };
 
 export {
     GizmoPass
 };
+// export default GizmoPass;

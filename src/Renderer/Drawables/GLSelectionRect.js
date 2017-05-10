@@ -1,21 +1,11 @@
-
-import {
-    Rect,
-    GeomItem
-} from '../../SceneTree';
-
-import {
-    GLLines
-} from '../GLLines.js';
-
-import {
-    GLDrawItem
-} from '../GLDrawItem.js';
+import { Rect } from '../../SceneTree/Geometry/Shapes/Rect';
+import { GLLines } from '../GLLines.js';
+import { GLDrawItem } from '../GLDrawItem.js';
+import { GeomItem } from '../../SceneTree/GeomItem';
 
 class GLSelectionRect extends GLDrawItem {
     constructor(gl) {
-
-        let selectionRect = new Rect('selectionRect', 0.5, 0.5);
+       let selectionRect = new Rect('selectionRect', 0.5, 0.5);
         let selectionRectGeomItem = new GeomItem('selectionRect', selectionRect);
         selectionRectGeomItem.setVisible(false);
 
@@ -27,25 +17,26 @@ class GLSelectionRect extends GLDrawItem {
 
     getVisible(){
         return this.__selectionRectGeomItem.getVisible();
-    }
+    };
 
     setVisible(val){
         this.__selectionRectGeomItem.setVisible(val);
-    }
+    };
 
     get globalXfo(){
         return this.__selectionRectGeomItem.globalXfo;
-    }
+    };
 
     set globalXfo(val){
         this.__selectionRectGeomItem.globalXfo = val;
-    }
+    };
 
     get globalXfoChanged(){
         return this.__selectionRectGeomItem.globalXfoChanged;
-    }
+    };
 };
 
 export {
     GLSelectionRect
 };
+// export default GLSelectionRect;

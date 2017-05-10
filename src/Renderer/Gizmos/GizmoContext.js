@@ -1,22 +1,7 @@
-import {
-    Color,
-    Vec3,
-    Mat3,
-    Quat,
-    Xfo
-} from '../../Math';
-import {
-    TreeItem
-} from '../../SceneTree';
-import {
-    LinearTranslationGizmo
-} from './LinearTranslationGizmo.js';
-import {
-    PlanarTranslationGizmo
-} from './PlanarTranslationGizmo.js';
-import {
-    AxialRotationGizmo
-} from './AxialRotationGizmo.js';
+import { TreeItem } from '../../SceneTree/TreeItem';
+import { LinearTranslationGizmo } from './LinearTranslationGizmo.js';
+import { PlanarTranslationGizmo } from './PlanarTranslationGizmo.js';
+import { AxialRotationGizmo } from './AxialRotationGizmo.js';
 
 class GizmoContext {
     constructor(renderer) {
@@ -190,3 +175,4 @@ class GizmoContext {
 export {
     GizmoContext
 };
+// export default GizmoContext;

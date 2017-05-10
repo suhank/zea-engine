@@ -1,13 +1,4 @@
-import {
-    Color
-} from '../../Math';
-import {
-    GeomItem
-} from '../../SceneTree';
-
-import {
-    GLDrawItem
-} from '../GLDrawItem.js';
+import { Color } from '../../Math/Color';
 
 class Gizmo {
     constructor(color, constantSizeOnScreen) {
@@ -61,12 +52,13 @@ class Gizmo {
         for (let drawItem of this.__drawItems){
             drawItem.color = this.__hilightColor;
         }
-    }
+    };
+    
     unhighlight(){
         for (let drawItem of this.__drawItems){
             drawItem.color = this.__color;
         }
-    }
+    };
 
     onDragStart(event, mousePos, viewport) {}
 
@@ -79,3 +71,4 @@ class Gizmo {
 export {
     Gizmo
 };
+// export default Gizmo;

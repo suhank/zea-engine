@@ -1,13 +1,7 @@
-import {
-    Color,
-    Signal
-} from '../Math';
-import {
-    Image2D
-} from './Image2D.js';
-import {
-    Shader
-} from './Shader.js';
+import { Color } from '../Math/Color';
+import { Signal } from '../Math/Signal';
+import { Image2D } from './Image2D.js';
+import { Shader } from './Shader.js';
 
 class Material extends Shader {
     constructor(name) {
@@ -178,7 +172,7 @@ class Material extends Shader {
     }
 
 };
-
 export {
     Material
 };
+// Material;

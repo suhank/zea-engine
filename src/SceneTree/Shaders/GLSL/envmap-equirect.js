@@ -1,6 +1,4 @@
-import {
-    shaderLibrary
-} from '../../ShaderLibrary.js';
+import { shaderLibrary } from '../../ShaderLibrary.js';
 
 shaderLibrary.setShaderModule('pragmatic-pbr/envmap-equirect.glsl', `
 

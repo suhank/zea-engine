@@ -1,21 +1,17 @@
 import {
-    isMobileDevice,
-    Async,
-    Signal
+    Signal,
+    isMobileDevice
 } from '../Math';
 import {
     AssetItem
 } from './AssetItem.js';
-
+import {
+    BinReader
+} from './BinReader.js';
 import {
     loadTextfile,
     loadBinfile
 } from './Utils.js';
-
-import {
-    BinReader
-} from './BinReader.js';
-
 
 class BinAsset extends AssetItem {
     constructor(name, resourceLoader) {
@@ -27,14 +23,14 @@ class BinAsset extends AssetItem {
     //////////////////////////////////////////
     // Persistence
 
-    readBinaryBuffer(buffer){
+    readBinaryBuffer(buffer) {
         return this.readBinary(new BinReader(buffer, 0, isMobileDevice()));
     }
 
     loadURL(filePath) {
 
         let numGeomsFiles = 1;
-        this.__resourceLoader.loadResources(filePath, 
+        this.__resourceLoader.loadResources(filePath,
             (path, entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
@@ -42,16 +38,16 @@ class BinAsset extends AssetItem {
             });
 
         let geomFileID = 0;
-        let loadGeomsfile = (geomsResourceName)=>{
-            this.__resourceLoader.loadResources(geomsResourceName, 
+        let loadGeomsfile = (geomsResourceName) => {
+            this.__resourceLoader.loadResources(geomsResourceName,
                 (path, entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
                     this.__geoms.readBinaryBuffer(geomsData.buffer);
                     geomFileID++;
-                    if(geomFileID < numGeomsFiles) {
+                    if (geomFileID < numGeomsFiles) {
                         let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
-                        if(this.__resourceLoader.resourceAvailable(nextGeomFileName))
-                           loadGeomsfile(nextGeomFileName);
+                        if (this.__resourceLoader.resourceAvailable(nextGeomFileName))
+                            loadGeomsfile(nextGeomFileName);
                     }
                 },
                 () => {
@@ -65,6 +61,7 @@ class BinAsset extends AssetItem {
     }
 };
 
+// export default BinAsset;
 export {
     BinAsset
 };

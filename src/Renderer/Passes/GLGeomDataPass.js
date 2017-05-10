@@ -4,16 +4,9 @@ import {
 import {
     GLShader
 } from '../GLShader.js';
-
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
-import {
-    GLShaderMaterials
-} from '../GLCollector.js';
-import {
-    Lines
-} from '../../SceneTree';
 
 class GLGeomDataPass extends GLPass {
     constructor(gl, collector) {
@@ -42,7 +35,7 @@ class GLGeomDataPass extends GLPass {
                 let material = glmaterialDrawItemSet.getGLMaterial().getMaterial();
                 if (material.nonSelectable === true)
                     continue;
-                if(!glshaderMaterials){
+                if (!glshaderMaterials) {
                     glshaderMaterials = new GLShaderMaterials(allglshaderMaterials[glshaderkey].getGLShader());
                     this.__glshadermaterials.push(glshaderMaterials);
                 }
@@ -51,10 +44,10 @@ class GLGeomDataPass extends GLPass {
         }
     }
 
-    bindShader(renderstate, glshader){
+    bindShader(renderstate, glshader) {
         return true;
     }
-    bindMaterial(renderstate, glshader){
+    bindMaterial(renderstate, glshader) {
         return true;
     }
     draw(renderstate) {
@@ -78,3 +71,4 @@ class GLGeomDataPass extends GLPass {
 export {
     GLGeomDataPass
 };
+// export default GLGeomDataPass;

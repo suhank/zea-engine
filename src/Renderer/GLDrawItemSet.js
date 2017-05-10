@@ -1,12 +1,4 @@
-import {
-    Color,
-    Signal
-} from '../Math';
 import '../SceneTree/GeomItem.js';
-
-import {
-    GeomShaderBinding
-} from './GeomShaderBinding.js';
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLDrawItemSet {
@@ -284,3 +276,4 @@ class GLDrawItemSet {
 export {
     GLDrawItemSet
 };
+// export default GLDrawItemSet;

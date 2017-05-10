@@ -1,7 +1,5 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import { shaderLibrary } from '../../SceneTree/ShaderLibrary';
+import { Shader } from '../../SceneTree/Shader';
 
 import './utils/quadVertexFromID.js';
 import './utils/unpackHDR.js';
@@ -86,7 +84,8 @@ void main(void) {
 
 
 export {
-    UnpackHDRShader,
-    UnpackAndMixHDRShader
+    UnpackAndMixHDRShader,
+    UnpackHDRShader
 };
+
 

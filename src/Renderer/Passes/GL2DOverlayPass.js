@@ -22,3 +22,4 @@ class GL2DOverlayPass extends GLPass {
 export {
     GL2DOverlayPass
 };
+// export default GL2DOverlayPass;

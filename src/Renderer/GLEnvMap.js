@@ -1,12 +1,6 @@
-import {
-    GLHDRImage
-} from './GLHDRImage.js';
-import {
-    GLProbe
-} from './GLProbe.js';
-import {
-    ImagePyramid
-} from './ImagePyramid.js';
+import { GLHDRImage } from './GLHDRImage.js';
+import { GLProbe } from './GLProbe.js';
+import { ImagePyramid } from './ImagePyramid.js';
 
 class GLEnvMap extends GLProbe {
     constructor(renderer, envMap) {
@@ -104,3 +98,4 @@ class GLEnvMap extends GLProbe {
 export {
     GLEnvMap
 };
+// export default GLEnvMap;

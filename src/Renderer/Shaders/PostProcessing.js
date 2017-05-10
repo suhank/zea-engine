@@ -1,7 +1,5 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
+import { Shader }  from '../../SceneTree/Shader';
 
 import './pragmatic-pbr/exposure.js';
 import './pragmatic-pbr/tonemap-filmic.js';
@@ -104,4 +102,5 @@ void main(void) {
 export {
     PostProcessing
 };
+//export default PostProcessing;
 

@@ -1,12 +1,8 @@
 import {
     JSON_stringify_fixedPrecision
 } from './Common.js';
-import {
-    Vec2
-} from './Vec2.js';
-import {
-    typeRegistry
-} from './TypeRegistry.js';
+import { Vec2 } from './Vec2.js';
+import { typeRegistry } from './TypeRegistry.js';
 
 
 class Rect2 {
@@ -99,3 +95,4 @@ typeRegistry.registerType('Rect2', Rect2);
 export {
     Rect2
 };
+// export default Rect2;

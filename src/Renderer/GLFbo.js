@@ -170,3 +170,4 @@ class GLFbo {
 export {
     GLFbo
 };
+// export default GLFbo;

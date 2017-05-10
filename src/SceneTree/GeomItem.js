@@ -1,21 +1,19 @@
 import {
+    Signal,
     Vec2,
-    Color,
-    Mat4,
-    Xfo,
-    Signal
+    Xfo
 } from '../Math';
 import {
-    TreeItem,
-    LOADFLAGS_SKIP_MATERIALS,
-    LOADFLAGS_SKIP_GEOMETRIES
-} from './TreeItem.js';
-import {
-    Mesh
-} from './Geometry/Mesh.js';
+    TreeItem
+} from './TreeItem';
 import {
     sgFactory
 } from './SGFactory.js';
+
+import {
+    LOADFLAGS_SKIP_MATERIALS,
+    LOADFLAGS_SKIP_GEOMETRIES
+} from './TreeItem.js';
 
 class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
@@ -31,9 +29,9 @@ class GeomItem extends TreeItem {
         this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
 
-        if(geom)
+        if (geom)
             this.setGeom(geom);
-        if(material)
+        if (material)
             this.setMaterial(material);
     }
 
@@ -41,20 +39,19 @@ class GeomItem extends TreeItem {
         super.destroy();
     }
 
-    clone(){
+    clone() {
         let cloned = new GeomItem();
         this.copyTo(cloned);
         return cloned;
     }
-    copyTo(cloned){
+    copyTo(cloned) {
         super.copyTo(cloned);
         cloned.setGeomOffsetXfo(this.__geomOffsetXfo);
 
         if (this.__geom) {
             cloned.setGeom(this.__geom);
-        }
-        else{
-            this.geomAssigned.connect(()=>{
+        } else {
+            this.geomAssigned.connect(() => {
                 cloned.setGeom(this.__geom);
             });
         }
@@ -104,7 +101,7 @@ class GeomItem extends TreeItem {
 
     updateBoundingBox() {
         this.__boundingBox.reset();
-        if(this.__geom){
+        if (this.__geom) {
             this.__boundingBox.addBox3(this.__geom.boundingBox, this.getGeomXfo());
         }
         this.__boundingBoxDirty = false;
@@ -188,17 +185,18 @@ class GeomItem extends TreeItem {
     fromJSON(json, flags, materialLibrary, geomLibrary) {
         super.fromJSON(json, flags, materialLibrary, geomLibrary);
 
-        if ((flags&LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json){
-            this.setGeom(geomLibrary.getGeom(json.geomIndex));
+        if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
+            this.geom = geomLibrary.getGeom(json.geomIndex);
         }
-        
-        if ('geomOffsetXfo' in json){
+
+        if ('geomOffsetXfo' in json) {
             this.__geomOffsetXfo.fromJSON(json.geomOffsetXfo);
         }
 
-        if ((flags&LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json){
-            this.setMaterial(materialLibrary.getMaterial(json.materialName));
-            if(!this.material){
+
+        if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
+            this.material = materialLibrary.getMaterial(json.materialName);
+            if (!this.material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
                 this.setMaterial(materialLibrary.getMaterial('DefaultMaterial'));
             }
@@ -208,19 +206,18 @@ class GeomItem extends TreeItem {
         this.__boundingBoxDirty = true;
         return json
     }
-    
-    readBinary(reader, flags, materialLibrary, geomLibrary){
+
+    readBinary(reader, flags, materialLibrary, geomLibrary) {
         super.readBinary(reader, flags);
 
         let itemflags = reader.loadUInt8();
         let geomIndex = reader.loadUInt32();
         let geom = geomLibrary.getGeom(geomIndex);
-        if(geom){
+        if (geom) {
             this.setGeom(geom);
-        }
-        else{
-            let onGeomLoaded = (range)=>{
-                if(geomIndex >= range[0] && geomIndex < range[1]){
+        } else {
+            let onGeomLoaded = (range) => {
+                if (geomIndex >= range[0] && geomIndex < range[1]) {
                     this.setGeom(geomLibrary.getGeom(geomIndex));
                     geomLibrary.loaded.disconnect(onGeomLoaded, this);
                 }
@@ -230,18 +227,18 @@ class GeomItem extends TreeItem {
 
         //this.setVisibility(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
-        const geomOffsetXfoFlag = 1<<2;
-        if (itemflags&geomOffsetXfoFlag){
+        const geomOffsetXfoFlag = 1 << 2;
+        if (itemflags & geomOffsetXfoFlag) {
             this.__geomOffsetXfo.tr = reader.loadFloat32Vec3();
             this.__geomOffsetXfo.ori = reader.loadFloat32Quat();
             this.__geomOffsetXfo.sc = reader.loadFloat32Vec3();
         }
 
-        const materialFlag = 1<<3;
-        if (itemflags&materialFlag){
+        const materialFlag = 1 << 3;
+        if (itemflags & materialFlag) {
             let materialName = reader.loadStr();
             let material = materialLibrary.getMaterial(materialName);
-            if(!material){
+            if (!material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
                 material = materialLibrary.getMaterial('DefaultMaterial');
             }

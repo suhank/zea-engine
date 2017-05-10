@@ -1,18 +1,8 @@
-import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
-    UnpackAndMixHDRShader
-} from './Shaders/UnpackHDRShader.js';
-import {
-    GLFbo
-} from './GLFbo.js';
-import {
-    generateShaderGeomBinding,
-} from './GeomShaderBinding.js';
+import { GLShader } from './GLShader.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { UnpackAndMixHDRShader } from './Shaders/UnpackHDRShader.js';
+import { GLFbo } from './GLFbo.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 class GLHDRImageMixer extends GLTexture2D {
     constructor(gl, hdrImageMixer) {
@@ -162,3 +152,4 @@ class GLHDRImageMixer extends GLTexture2D {
 export {
     GLHDRImageMixer
 };
+// export default GLHDRImageMixer;

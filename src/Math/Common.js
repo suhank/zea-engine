@@ -40,7 +40,7 @@ let JSON_stringify_fixedPrecision = function(val, space = 0, precision = 5) {
     }, space)
 }
 
-function getRandomInt(min, max) {
+Math.randomInt = function(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min)) + min;
@@ -52,7 +52,6 @@ export {
     UInt32,
     Float32,
     hashStr,
-    JSON_stringify_fixedPrecision,
-    getRandomInt
+    JSON_stringify_fixedPrecision
 };
 

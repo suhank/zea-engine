@@ -1,7 +1,5 @@
-import {
-    shaderLibrary,
-    Shader
-} from '../../SceneTree';
+import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
+import { Shader }  from '../../SceneTree/Shader';
 
 class GizmoShader extends Shader {
 
@@ -118,6 +116,6 @@ void main(void) {
 
 
 export {
-    GizmoShader,
-    GizmoDataShader
+    GizmoDataShader,
+    GizmoShader
 };

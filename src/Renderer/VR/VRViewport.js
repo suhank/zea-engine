@@ -1,16 +1,15 @@
 import {
-    isMobileDevice,
     Vec2,
     Vec3,
     Quat,
     Mat4,
     Xfo,
     Color,
-    Signal
+    Signal,
+    isMobileDevice
 } from '../../Math';
 import {
-    TreeItem,
-    BinAsset
+    TreeItem
 } from '../../SceneTree';
 import {
     GLFbo
@@ -25,12 +24,17 @@ import {
     VRController
 } from './VRController.js'
 import {
-    VRToolMoveStage,
-    VRToolHoldObjects,
-    VRMarkerpenTool,
+    VRToolMoveStage
+} from './Tools/VRToolMoveStage.js'
+import {
+    VRToolHoldObjects
+} from './Tools/VRToolHoldObjects.js'
+import {
+    VRMarkerpenTool
+} from './Tools/VRMarkerpenTool.js'
+import {
     VRFlyTool
-} from './Tools'
-
+} from './Tools/VRFlyTool.js'
 
 class VRViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
@@ -308,28 +312,28 @@ class VRViewport {
     startPresenting() {
         //if (this.__vrDisplay.capabilities.canPresent) {
 
-            this.__stageTreeItem.setVisible(true);
+        this.__stageTreeItem.setVisible(true);
 
-            if (isMobileDevice()) {
-                let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
-                let yaxis = xfo.ori.getYaxis();
-                let up = new Vec3(0, 1, 0);
-                let angle = yaxis.angleTo(up);
-                if (angle > 0.0001) {
-                    let axis = yaxis.cross(up);
-                    let align = new Quat();
-                    align.setFromAxisAndAngle(axis, angle);
-                    xfo.ori = align.multiply(xfo.ori);
-                }
-                //    xfo.tr.y = 0;
-                //}
-                this.setXfo(xfo);
+        if (isMobileDevice()) {
+            let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
+            let yaxis = xfo.ori.getYaxis();
+            let up = new Vec3(0, 1, 0);
+            let angle = yaxis.angleTo(up);
+            if (angle > 0.0001) {
+                let axis = yaxis.cross(up);
+                let align = new Quat();
+                align.setFromAxisAndAngle(axis, angle);
+                xfo.ori = align.multiply(xfo.ori);
             }
-            this.__vrDisplay.requestPresent([{
-                source: this.__renderer.getGLCanvas()
-            }]).then(function() {}, function() {
-                console.warn("requestPresent failed.");
-            });
+            //    xfo.tr.y = 0;
+            //}
+            this.setXfo(xfo);
+        }
+        this.__vrDisplay.requestPresent([{
+            source: this.__renderer.getGLCanvas()
+        }]).then(function() {}, function() {
+            console.warn("requestPresent failed.");
+        });
         // } else {
         //     console.warn("VRViewport does not support presenting.");
         // }
@@ -530,3 +534,4 @@ class VRViewport {
 export {
     VRViewport
 };
+//export default VRViewport;

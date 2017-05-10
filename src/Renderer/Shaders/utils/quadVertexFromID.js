@@ -1,6 +1,4 @@
-import {
-    shaderLibrary
-} from '../../../SceneTree';
+import { shaderLibrary } from '../../../SceneTree';
 
 shaderLibrary.setShaderModule('utils/quadVertexFromID.glsl', `
 

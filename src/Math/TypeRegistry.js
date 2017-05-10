@@ -17,3 +17,4 @@ let typeRegistry = new TypeRegistry();
 export {
     typeRegistry
 };
+// export default typeRegistry;

@@ -1,29 +1,7 @@
-import {
-    Vec2,
-    Async,
-    Signal
-} from '../Math';
-
-import {
-    Image2D
-} from './Image2D.js';
-import {
-    HDRImage2D
-} from './HDRImage2D.js';
-
-import {
-    loadBinfile
-} from './Utils.js';
-
-import {
-    parseHdr
-} from '../external/parse-hdr.js';
-
-// # ifdef BUILD_RELEASE
-// import {
-//     Unpack
-// } from '../external/Unpack.js';
-// # endif
+import { Async } from '../Math/Async';
+import { Signal } from '../Math/Signal';
+import { Image2D } from './Image2D.js';
+import { HDRImage2D } from './HDRImage2D.js';
 
 class HDRImageMixer extends Image2D {
     constructor(name, stream = true) {
@@ -112,3 +90,4 @@ class HDRImageMixer extends Image2D {
 export {
     HDRImageMixer
 };
+//export default HDRImageMixer;

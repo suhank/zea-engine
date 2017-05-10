@@ -227,6 +227,8 @@ class FileImage2D extends Image2D {
 
 sgFactory.registerClass('FileImage2D', FileImage2D);
 
+
 export {
     FileImage2D
 };
+//export default FileImage2D;

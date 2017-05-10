@@ -1,28 +1,11 @@
-import {
-    Vec2,
-    Vec3,
-    Color,
-    Signal,
-    getRandomInt
-} from '../Math';
-import {
-    getFileFolder
-} from './Utils.js';
-import {
-    Mesh
-} from './Geometry/Mesh.js';
-import {
-    GeomItem
-} from './GeomItem.js';
-import {
-    AssetItem
-} from './AssetItem.js';
-import {
-    loadTextfile
-} from './Utils.js';
-import {
-    StandardMaterial
-} from './Shaders/StandardMaterial.js';
+import { Vec2 } from '../Math/Vec2';
+import { Vec3 } from '../Math/Vec3';
+import { Signal } from '../Math/Signal';
+import { GeomItem } from './GeomItem';
+import { AssetItem } from './AssetItem';
+import { Mesh } from './Geometry/Mesh.js';
+import { loadTextfile, getFileFolder } from './Utils.js';
+import { StandardMaterial } from './Shaders/StandardMaterial.js';
 
 
 class ObjAsset extends AssetItem {
@@ -363,7 +346,7 @@ class ObjAsset extends AssetItem {
         this.addChild(geomItem);
     }
 };
-
 export {
     ObjAsset
 };
+// ObjAsset;

@@ -1,32 +1,16 @@
-import {
-    Vec2,
-    Vec4,
-    Rect2,
-    BinTreeNode,
-    BinTreeRect,
-    BinTreeRectBorder,
-    Async
-} from '../Math';
-
-import {
-    Image2D,
-    Shader,
-    shaderLibrary
-} from '../SceneTree';
-
-import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
-    GLFbo
-} from './GLFbo.js';
-
-import {
-    generateShaderGeomBinding,
-} from './GeomShaderBinding.js';
+import { Vec2 } from '../Math/Vec2';
+import { Vec4 } from '../Math/Vec4';
+import { Rect2 } from '../Math/Rect2';
+import { BinTreeNode } from '../Math/BinTreeNode';
+import { Async } from '../Math/Async';
+import { BinTreeRect , BinTreeRectBorder} from '../Math/BinTreeNode';
+import { Image2D } from '../SceneTree/Image2D';
+import { Shader } from '../SceneTree/Shader';
+import { shaderLibrary } from '../SceneTree/ShaderLibrary';
+import { GLShader } from './GLShader.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { GLFbo } from './GLFbo.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 
 class AtlasLayoutShader extends Shader {
@@ -335,3 +319,4 @@ class ImageAtlas extends GLTexture2D {
 export {
     ImageAtlas
 };
+// export default ImageAtlas;

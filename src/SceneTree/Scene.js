@@ -1,6 +1,6 @@
 import {
-    JSON_stringify_fixedPrecision,
-    Signal
+    Signal,
+    JSON_stringify_fixedPrecision
 } from '../Math';
 import {
     TreeItem
@@ -11,12 +11,6 @@ import {
 import {
     GeomItem
 } from './GeomItem.js';
-import {
-    BinAsset
-} from './BinAsset.js';
-import {
-    Camera
-} from './Camera.js';
 import {
     SelectionManager
 } from './SelectionManager.js';
@@ -115,96 +109,6 @@ class Scene {
         return this.__selectionManager;
     }
 
-    // launchThreadPool(){
-
-    //     var blob = new Blob([computeNormalsMessage]);
-    //     var blobURL = window.URL.createObjectURL(blob);
-
-    //     // Using https://eligrey.com/blog/cpu-core-estimation-with-javascript/
-    //     this.__computeNormalsWorkers = [];
-    //     for(let i=0; i<navigator.hardwareConcurrency-1; i++){
-    //         let worker = new Worker(blobURL);
-    //         worker.id = i;
-    //         worker.postMessage({'msg':'init', 'threadId': i });
-    //         this.__computeNormalsWorkers.push(worker);
-    //     }
-
-    // }
-
-    // computeNormals() {
-    //     let sceneRoot = this.__root;
-    //     let computeNormalsWorkers = this.__computeNormalsWorkers;
-    //     return new Promise(
-    //         // The resolver function is called with the ability to resolve or
-    //         // reject the promise
-    //         function(resolve, reject) {
-
-    //             let meshes = [];
-    //             let collectMeshes = function(treeItem) {
-    //                 for (let childItem of treeItem.getChildren())
-    //                     collectMeshes(childItem);
-    //                 if (treeItem instanceof GeomItem) {
-    //                     let geom = treeItem.getGeom();
-    //                     if (geom instanceof Mesh && meshes.indexOf(geom) == -1 )
-    //                         meshes.push(geom);
-    //                 }
-    //             }
-    //             collectMeshes(sceneRoot);
-
-
-    //             let asyncCount = computeNormalsWorkers.length;
-    //             let start = performance.now();
-    //             let async = true;
-    //             if(!async){
-    //                 for(let i=0; i<meshes.length; i++){
-    //                     meshes[i].computeVertexNormals();
-    //                 };
-    //                 console.log("computeNormals:" + (performance.now() - start).toFixed(1));
-    //                 resolve();
-    //                 return;
-    //             }
-
-    //             let computeNormalsDone = function(){
-    //                 asyncCount--;
-    //                 if(asyncCount == 0){
-    //                     console.log("computeNormals:" + (performance.now() - start).toFixed(1));
-    //                     resolve();
-    //                 }
-    //             }
-    //             let remaining = meshes.length;
-    //             let computeNormals = function(index, worker){
-    //                 let mesh = meshes[index];
-    //                 if(mesh.faceCount == 0){
-    //                     remaining--;
-    //                     computeNormals(remaining, worker);
-    //                 }
-    //                 let startMesh = performance.now();
-    //                 worker.onmessage = function(e) {
-    //                     let meshData = e.data.meshData;
-    //                     mesh.fromJSON(meshData);
-    //                     // console.log(index + " round Trip time:" + (performance.now() - startMesh).toFixed(1) + " faceCount:" + mesh.getNumFaces() + " computeTime:" + e.data.computeTime.toFixed(1));
-    //                     if(remaining > 0){
-    //                         remaining--;
-    //                         computeNormals(remaining, worker);
-    //                     }
-    //                     else{
-    //                         // worker.postMessage({'msg':'logTime'} );
-    //                         computeNormalsDone();
-    //                     }
-    //                 };
-    //                 let meshData = mesh.getTransferableData( {'attrList':['positions']});
-    //                 worker.postMessage({ 'msg':'compute', 'meshData': meshData[0] }, meshData[1]);
-    //             }
-
-    //             for(let i=0; i<computeNormalsWorkers.length; i++){
-    //                 remaining--;
-    //                 computeNormals(remaining, computeNormalsWorkers[i]);
-    //             };
-    //         }
-    //     );
-
-    // }
-
     fromJSON(json) {
 
     }
@@ -221,6 +125,7 @@ class Scene {
     }
 };
 
+// export default Scene;
 export {
     Scene
 };

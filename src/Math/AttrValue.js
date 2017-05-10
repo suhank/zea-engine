@@ -3,7 +3,7 @@ import {
 } from './Common.js';
 
 // A base class for values that can be stored in vertex attributes.
-// Note: these values use Float32Array values to store thier data, 
+// Note: these values use Float32Array values to store their data,
 // and we can create references to values in attributes using 
 class AttrValue {
 
@@ -33,6 +33,8 @@ class AttrValue {
     }
 };
 
+
 export {
     AttrValue
 };
+// export default AttrValue;

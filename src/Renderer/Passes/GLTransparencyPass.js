@@ -1,16 +1,6 @@
-import {
-    Vec3,
-    Mat4
-} from '../../Math';
-import {
-    GLPass
-} from '../GLPass.js';
-import {
-    GLShaderMaterials
-} from '../GLCollector.js';
-import {
-    Image2D
-} from '../../SceneTree/Image2D.js';
+import { Vec3 } from '../../Math/Vec3';
+import { GLPass } from '../GLPass.js';
+import { GLShaderMaterials } from '../GLCollector.js';
 
 class GLTransparencyPass extends GLPass {
     constructor(gl, collector) {
@@ -52,6 +42,8 @@ class GLTransparencyPass extends GLPass {
     }
 };
 
+
 export {
     GLTransparencyPass
 };
+// export default GLTransparencyPass;

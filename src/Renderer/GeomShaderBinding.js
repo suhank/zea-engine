@@ -148,3 +148,4 @@ function generateShaderGeomBinding(gl, shaderAttrs, glattrbuffers, indexBuffer, 
 export {
     generateShaderGeomBinding
 };
+// export default generateShaderGeomBinding;

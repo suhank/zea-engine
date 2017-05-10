@@ -1,9 +1,5 @@
-import {
-    AttrValue
-} from './AttrValue.js';
-import {
-    typeRegistry
-} from './TypeRegistry.js';
+import { AttrValue } from './AttrValue.js';
+import { typeRegistry } from './TypeRegistry.js';
 
 class Color extends AttrValue {
     constructor(r = 0, g = 0, b = 0, a = 1.0) {
@@ -280,3 +276,4 @@ typeRegistry.registerType('Color', Color);
 export {
     Color
 };
+// export default Color;

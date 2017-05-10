@@ -1,14 +1,4 @@
-import {
-    Vec2,
-    Vec3,
-    Signal
-} from '../../Math';
-
-import {
-    Attribute
-} from './Attribute.js';
-
-import './VertexAttribute.js';
+import { Vec3 } from '../../Math/Vec3';
 
 
 /////////////////////////////

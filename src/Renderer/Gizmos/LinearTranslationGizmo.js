@@ -1,24 +1,11 @@
-import {
-    Vec3,
-    Color,
-    Mat4,
-    Ray
-} from '../../Math';
-import {
-    Cuboid,
-    Cone,
-    TreeItem,
-    GeomItem
-} from '../../SceneTree';
-import {
-    GLMesh
-} from '../GLMesh.js';
-import {
-    GLDrawItem
-} from '../GLDrawItem.js';
-import {
-    Gizmo
-} from './Gizmo.js';
+import { Vec3 } from '../../Math/Vec3';
+import { Cuboid } from '../../SceneTree/Geometry/Shapes/Cuboid';
+import { Cone } from '../../SceneTree/Geometry/Shapes/Cone';
+import { TreeItem } from '../../SceneTree/TreeItem';
+import { GeomItem } from '../../SceneTree/GeomItem';
+import { GLMesh } from '../GLMesh.js';
+import { GLDrawItem } from '../GLDrawItem.js';
+import { Gizmo } from './Gizmo.js';
 
 class LinearTranslationGizmo extends Gizmo {
     constructor(gl, context, name, color, xfo) {
@@ -59,7 +46,7 @@ class LinearTranslationGizmo extends Gizmo {
 
         // this.__addDrawItem(proxyGeomglDrawItem);
         this.__setProxyItem(proxyGeomglDrawItem);
-    }
+    };
 
     onDragStart(event, mousePos, viewport) {
 
@@ -68,7 +55,7 @@ class LinearTranslationGizmo extends Gizmo {
 
         this.mouseDownDist = this.manipRay.intersectRayVector(mouseRay)[0];
         this.__context.beginManipulation();
-    }
+    };
 
     onDrag(event, mousePos, viewport) {
         let mouseRay = viewport.calcRayFromScreenPos(mousePos);
@@ -76,14 +63,15 @@ class LinearTranslationGizmo extends Gizmo {
         let dist = this.manipRay.intersectRayVector(mouseRay)[0];
         let delta = (dist - this.mouseDownDist);
         this.__context.translate(this.manipRay.dir.scale(delta));
-    }
+    };
 
     onDragEnd(event, mousePos, viewport) {
         this.__context.endManipulation();
-    }
+    };
 
 };
 
 export {
     LinearTranslationGizmo
 };
+// export default LinearTranslationGizmo;

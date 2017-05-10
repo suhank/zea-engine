@@ -13,7 +13,7 @@ class BinReader {
         this.__isMobileDevice = isMobileDevice;
     }
 
-    seek(pos){
+    seek(pos) {
         this.__byteOffset = pos;
     }
 
@@ -76,7 +76,7 @@ class BinReader {
     loadUInt16Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
-        if(size == 0)
+        if (size == 0)
             return new Uint16Array();
         this.readPadd(2);
         let result;
@@ -97,7 +97,7 @@ class BinReader {
     loadUInt32Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
-        if(size == 0)
+        if (size == 0)
             return new Uint32Array();
         this.readPadd(4);
         let result;
@@ -118,7 +118,7 @@ class BinReader {
     loadFloat32Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
-        if(size == 0)
+        if (size == 0)
             return new Float32Array();
         this.readPadd(4);
         let result;
@@ -199,7 +199,7 @@ class BinReader {
         let r = this.loadUInt8();
         let g = this.loadUInt8();
         let b = this.loadUInt8();
-        return new Color(r/255, g/255, b/255);
+        return new Color(r / 255, g / 255, b / 255);
     }
 
     loadRGBAUInt8Color() {
@@ -208,27 +208,16 @@ class BinReader {
         let g = this.loadUInt8();
         let b = this.loadUInt8();
         let a = this.loadUInt8();
-        return new Color(r/255, g/255, b/255, a/255);
+        return new Color(r / 255, g / 255, b / 255, a / 255);
     }
 
-    readPadd(stride){
+    readPadd(stride) {
         let padd = this.__byteOffset % stride;
         if (padd != 0)
             this.__byteOffset += stride - padd;
     }
 
-    toJSON() {
-        return {
-            "pos": this.__byteOffset,
-            "length": this.__data.byteLength
-        };
-    }
-
-    toString() {
-        return JSON.stringify(this.toJSON(), null, 2)
-    }
-
-}
+};
 
 export {
     BinReader

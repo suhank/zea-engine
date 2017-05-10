@@ -1,20 +1,8 @@
-import {
-    Vec2
-} from '../Math';
-import {
-    TreeItem,
-    LOADFLAGS_SKIP_MATERIALS
-} from './TreeItem.js';
-
-import {
-    GeomLibrary
-} from './GeomLibrary.js';
-import {
-    GeomItem
-} from './GeomItem.js';
-import {
-    MaterialLibrary
-} from './MaterialLibrary.js';
+import { Vec2 } from '../Math/Vec2';
+import { TreeItem, LOADFLAGS_SKIP_MATERIALS } from './TreeItem.js';
+import { GeomLibrary } from './GeomLibrary.js';
+import { GeomItem } from './GeomItem.js';
+import { MaterialLibrary } from './MaterialLibrary.js';
 
 class Lightmap {
     constructor(name = undefined) {
@@ -104,7 +92,7 @@ class AssetItem extends TreeItem {
             for (let childItem of treeItem.getChildren()) {
                 traverse(childItem);
             }
-        }
+        };
         traverse(this);
     }
 
@@ -113,4 +101,5 @@ class AssetItem extends TreeItem {
 export {
     AssetItem
 };
+//export default AssetItem;
 

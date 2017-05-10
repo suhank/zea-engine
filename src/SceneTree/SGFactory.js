@@ -1,7 +1,3 @@
-import {
-    Signal
-} from '../Math';
-
 class SGFactory {
     constructor() {
         this.__registeredClasses = {};
@@ -28,8 +24,8 @@ class SGFactory {
 };
 
 let sgFactory = new SGFactory();
-
 export {
     sgFactory
 };
+// sgFactory;
 

@@ -1,9 +1,5 @@
-import {
-    Vec3
-} from '../Math';
-import {
-    GLGeom
-} from './GLGeom.js';
+import { Vec3 } from '../Math/Vec3';
+import { GLGeom } from './GLGeom.js';
 import '../SceneTree/Geometry/Mesh.js';
 
 class GLMesh extends GLGeom {
@@ -209,3 +205,4 @@ class GLMesh extends GLGeom {
 export {
     GLMesh
 };
+// export default GLMesh;

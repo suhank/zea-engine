@@ -8,11 +8,11 @@ import {
     onResize
 } from '../external/webgl-utils.js';
 import {
-    loadBinfile,
     GeomItem,
     Lines,
     Mesh,
     Grid,
+    loadBinfile,
     LinesMaterial
 } from '../SceneTree';
 import {
@@ -54,15 +54,9 @@ import {
 import {
     SessionClient
 } from './SessionClient.js';
-
 import {
     VRViewport
 } from './VR/VRViewport.js';
-
-
-import {
-    Unpack
-} from '../external/Unpack.js';
 
 
 let activeGLRenderer = undefined;
@@ -720,6 +714,8 @@ class GLRenderer {
     }
 };
 
+
 export {
     GLRenderer
 };
+// export default GLRenderer;

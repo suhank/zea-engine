@@ -1,23 +1,17 @@
-import {
-    Color,
+import { 
     Mat4,
-    Xfo
+    Xfo,
+    Color 
 } from '../../Math';
-import {
+import { 
     Cuboid,
     TreeItem,
     GeomItem,
-    FlatMaterial
+    FlatMaterial 
 } from '../../SceneTree';
-import {
-    GLMesh
-} from '../GLMesh.js';
-import {
-    GLDrawItem
-} from '../GLDrawItem.js';
-import {
-    Gizmo
-} from '../Gizmos/Gizmo.js';
+import { GLMesh } from '../GLMesh.js';
+import { GLDrawItem } from '../GLDrawItem.js';
+import { Gizmo } from '../Gizmos/Gizmo.js';
 
 class VRHead extends Gizmo {
     constructor(gl, stageTreeItem) {
@@ -90,3 +84,4 @@ class VRHead extends Gizmo {
 export {
     VRHead
 };
+//export default VRHead;

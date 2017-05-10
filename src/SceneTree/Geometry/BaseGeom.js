@@ -1,18 +1,9 @@
-import {
-    Vec3,
-    Box3,
-    Signal,
-    typeRegistry
-} from '../../Math';
-
-import {
-    RefCounted
-} from '../RefCounted.js';
-
-import './Attribute.js';
-import {
-    VertexAttribute
-} from './VertexAttribute.js';
+import { Vec3 } from '../../Math/Vec3';
+import { Box3 } from '../../Math/Box3';
+import { Signal } from '../../Math/Signal';
+import { typeRegistry } from '../../Math/TypeRegistry';
+import { RefCounted } from '../RefCounted.js';
+import { VertexAttribute } from './VertexAttribute.js';
 
 class BaseGeom extends RefCounted {
     constructor(name) {
@@ -291,7 +282,7 @@ class BaseGeom extends RefCounted {
         return JSON.stringify(this.toJSON(), null, 2)
     }
 };
-
 export {
     BaseGeom
 };
+// BaseGeom;

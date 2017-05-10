@@ -1,22 +1,12 @@
-import {
-    Mesh
-} from '../../SceneTree';
-import {
-    GLMesh
-} from '../GLMesh.js';
-import {
-    NormalsShader
-} from '../Shaders/NormalsShader.js';
-import {
-    GLPass
-} from '../GLPass.js';
+import { Mesh } from '../../SceneTree/Geometry/Mesh';
+import { GLMesh } from '../GLMesh.js';
+import { NormalsShader } from '../Shaders/NormalsShader.js';
+import { GLPass } from '../GLPass.js';
 import {
     GLShaderMaterials,
     GLMaterialDrawItemSets
 } from '../GLCollector.js';
-import {
-    GLShader
-} from '../GLShader.js';
+import { GLShader } from '../GLShader.js';
 
 class GLNormalsPass extends GLPass {
     constructor(gl, collector) {
@@ -122,3 +112,4 @@ class GLNormalsPass extends GLPass {
 export {
     GLNormalsPass
 };
+// export default GLNormalsPass;

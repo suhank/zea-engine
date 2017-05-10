@@ -1,22 +1,11 @@
+import { Vec2 } from '../../Math/Vec2';
+import { Xfo } from '../../Math/Xfo';
+import { BaseGeom } from './BaseGeom.js';
+import { Attribute } from './Attribute.js';
+
 import {
     Float32,
-    Vec2,
-    Vec3,
-    Quat,
-    Mat4,
-    Xfo,
-    Signal
 } from '../../Math';
-
-import {
-    BaseGeom
-} from './BaseGeom.js';
-
-import {
-    Attribute
-} from './Attribute.js';
-
-import './VertexAttribute.js';
 
 import {
     genTopologyInfo,
@@ -564,3 +553,4 @@ class Mesh extends BaseGeom {
 export {
     Mesh
 };
+//export default Mesh;

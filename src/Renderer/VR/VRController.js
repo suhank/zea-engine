@@ -1,19 +1,26 @@
 import {
-    isMobileDevice,
-    EulerAngles,
     Quat,
-    Vec3,
+    EulerAngles,
     Xfo,
     Color,
-    Signal
+    Signal,
+    isMobileDevice,
 } from '../../Math';
 import {
-    Cuboid,
-    Sphere,
-    TreeItem,
-    GeomItem,
+    Cuboid
+} from '../../SceneTree/Geometry/Shapes/Cuboid';
+import {
+    Sphere
+} from '../../SceneTree/Geometry/Shapes/Sphere';
+import {
+    TreeItem
+} from '../../SceneTree/TreeItem';
+import {
+    GeomItem
+} from '../../SceneTree/GeomItem';
+import {
     FlatMaterial
-} from '../../SceneTree';
+} from '../../SceneTree/Shaders/FlatMaterial';
 import {
     GLMesh
 } from '../GLMesh.js';
