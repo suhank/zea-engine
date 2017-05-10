@@ -65,7 +65,7 @@ class Camera extends TreeItem {
     set focalDistance(dist) {
         this.__focalDistance = dist;
         this.__near = this.__focalDistance * 0.01;
-        this.__far = this.__focalDistance * 100.0;
+        this.__far = this.__focalDistance * 200.0;
         this.clippingRangesChanged.emit();
     }
 
@@ -120,13 +120,13 @@ class Camera extends TreeItem {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(mouseDelta.x * -this.orbitRate);
+        orbit.rotateY(mouseDelta.x * this.orbitRate * 0.12);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
         let pitch = new Quat();
-        pitch.rotateX(mouseDelta.y * -this.orbitRate);
+        pitch.rotateX(mouseDelta.y * this.orbitRate * 0.12);
         globalXfo.ori.multiplyInPlace(pitch);
 
         if (this.__keyboardMovement) {
@@ -270,7 +270,8 @@ class Camera extends TreeItem {
     onWheel(event) {
         let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
         this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(zoomDist));
-        this.focalDistance = this.__focalDistance + zoomDist;
+        if(this.__defaultManipulationState == 'orbit')
+            this.focalDistance = this.__focalDistance + zoomDist;
         this.globalXfo = this.__globalXfo;
     }
 

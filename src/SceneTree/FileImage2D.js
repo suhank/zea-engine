@@ -22,6 +22,14 @@ class FileImage2D extends Image2D {
         this.__loaded = false;
 
         this.loaded = new Signal();
+
+        if (url)
+            this.loadURL(url);
+    }
+
+    loadURL(url) {
+
+
         if (url.endsWith('.jpg') || url.endsWith('.png')) {
             this.__loadLDRImage(url);
         } else if (url.endsWith('.mp4') || url.endsWith('.ogg')) {
@@ -66,12 +74,20 @@ class FileImage2D extends Image2D {
             this.__loaded = true;
             this.loaded.emit(domElement);
 
+            let prevFrame = 0;
+            let frameRate = 29.97;
             let timerCallback = () => {
                 if (domElement.paused || domElement.ended) {
                     return;
                 }
-                this.updated.emit(domElement);
-                setTimeout(timerCallback, 0);
+                // Check to see if the video has progressed to the next frame. 
+                // If so, then we emit and update, which will cause a redraw.
+                let currentFrame = Math.floor(domElement.currentTime * frameRate);
+                if (prevFrame != currentFrame) {
+                    this.updated.emit(domElement);
+                    prevFrame = currentFrame;
+                }
+                setTimeout(timerCallback, 20); // Sample at 50fps.
             };
             timerCallback();
 
@@ -113,7 +129,7 @@ class FileImage2D extends Image2D {
                 }
             });
             async.incAsyncCount(2);
-            
+
             let ldrPic = new Image();
             ldrPic.onload = async.decAsyncCount;
             ldrPic.src = URL.createObjectURL(new Blob([ldr.buffer]));

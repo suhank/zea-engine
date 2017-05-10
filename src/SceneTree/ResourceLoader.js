@@ -28,8 +28,10 @@ class ResourceLoader {
         for(let part of parts){
             if(part in curr)
                 curr = curr[part];
-            else
+            else{
+                console.error("Unable to resolve URL:" + filePath);
                 return null;
+            }
         }
         return curr;
     }

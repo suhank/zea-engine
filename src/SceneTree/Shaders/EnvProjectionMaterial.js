@@ -10,6 +10,7 @@ import {
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
 import '../../SceneTree/Shaders/GLSL/envmap-equirect.js';
+import '../../SceneTree/Shaders/GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
 class EnvProjectionMaterial extends Material {
@@ -48,7 +49,7 @@ void main()
 precision highp float;
 
 <%include file="glslutils.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
@@ -65,7 +66,7 @@ varying vec2 v_texCoord;
 
 void main(void) {
 
-    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+    vec2 uv = normalToUvRectOct(normalize(v_worldDir));
     vec4 texel = texture2D(_envTex, uv);
     gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
 

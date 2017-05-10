@@ -47,67 +47,54 @@ class Material extends Shader {
     }
 
     addParameter(name, defaultValue, texturable=true) {
-        let props = this.__props;
-        let updated = this.updated;
-        let textureConnected = this.textureConnected;
-        let textureDisconnected = this.textureDisconnected;
-        let parameterChanged = this.parameterChanged;
-        props['_'+name] = defaultValue;
-        props['_'+name+'Tex'] = undefined;
-        props['_'+name+'TexConnected'] = false;
+        this.__props['_'+name] = defaultValue;
+        this.__props['_'+name+'Tex'] = undefined;
+        this.__props['_'+name+'TexConnected'] = false;
         let get, set;
         if(texturable){
             get = ()=>{ 
-                    if(props['_'+name+'TexConnected'])
-                        return props['_'+name+'Tex'];
+                    if(this.__props['_'+name+'TexConnected'])
+                        return this.__props['_'+name+'Tex'];
                     else
-                        return props['_'+name];
+                        return this.__props['_'+name];
                 };
             set = (val)=>{
                 if (val instanceof Image2D){
                     let texture = val;
-                    if (props['_'+name+'TexConnected'] && props['_'+name+'Tex'] === texture){
-                        props['_'+name+'Tex'].removeRef(this);
-                        textureDisconnected.emit(name);
+                    if (this.__props['_'+name+'TexConnected'] && this.__props['_'+name+'Tex'] === texture){
+                        this.__props['_'+name+'Tex'].removeRef(this);
+                        this.textureDisconnected.emit(name);
                     }
                     texture.addRef(this);
-                    // if(!texture.isLoaded()){
-                    //     texture.loaded.connect(()=>{
-                    //         props['_'+name+'TexConnected'] = true;
-                    //         props['_'+name+'Tex'] = texture;
-                    //         textureConnected.emit(name);
-                    //     });
-                    // }
-                    // else{
-                    //     props['_'+name+'TexConnected'] = true;
-                    //     props['_'+name+'Tex'] = texture;
-                    //     textureConnected.emit(name);
-                    // }
-                    
-                    props['_'+name+'TexConnected'] = true;
-                    props['_'+name+'Tex'] = texture;
-                    textureConnected.emit(name);
+                    this.__props['_'+name+'TexConnected'] = true;
+                    this.__props['_'+name+'Tex'] = texture;
+                    texture.updated.connect(()=>{
+                        this.__props['_'+name+'TexConnected'] = true;
+                        this.__props['_'+name+'Tex'] = texture;
+                        this.updated.emit();
+                    });
+                    this.textureConnected.emit(name);
                 }
                 else{
-                    if (props['_'+name+'TexConnected']){
-                        props['_'+name+'Tex'].removeRef(this);
-                        textureDisconnected.emit(name);
+                    if (this.__props['_'+name+'TexConnected']){
+                        this.__props['_'+name+'Tex'].removeRef(this);
+                        this.textureDisconnected.emit(name);
+                        this.updated.emit();
                     }
-                    props['_'+name+'TexConnected'] = false;
-                    props['_'+name] = val;
-                    updated.emit();
+                    this.__props['_'+name+'TexConnected'] = false;
+                    this.__props['_'+name] = val;
                 }
-                parameterChanged.emit(name, val);
+                this.updated.emit();
             };
         }
         else{
             get = ()=>{ 
-                    return props['_'+name];
+                    return this.__props['_'+name];
                 };
             set = (val)=>{
-                props['_'+name] = val;
+                this.__props['_'+name] = val;
                 updated.emit();
-                parameterChanged.emit(name, val);
+                this.updated.emit();
             };
         }
         Object.defineProperty(this, name, {
