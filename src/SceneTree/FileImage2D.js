@@ -28,16 +28,24 @@ class FileImage2D extends Image2D {
     }
 
     loadURL(url) {
-
-
-        if (url.endsWith('.jpg') || url.endsWith('.png')) {
+        let getExt = (str)=>{
+            let p = str.split('/');
+            let last = p[p.length-1];
+            let suffixSt = last.indexOf('.')
+            if(suffixSt != -1)
+                return last.substring(suffixSt)
+        }
+        let ext = getExt(url);
+        if(!ext)
+            ext = getExt(this.__name);
+        if (ext == '.jpg' || ext == '.png') {
             this.__loadLDRImage(url);
-        } else if (url.endsWith('.mp4') || url.endsWith('.ogg')) {
+        } else if (ext == '.mp4' || ext == '.ogg') {
             this.__loadLDRVideo(url);
-        } else if (url.endsWith('.ldralpha')) {
+        } else if (ext == '.ldralpha') {
             this.__hasAlpha = true;
             this.__loadLDRAlpha(url);
-        } else if (url.endsWith('.vlh')) {
+        } else if (ext == '.vlh') {
             this.__isHDR = true;
             this.__loadVLH(url);
         } else {
@@ -48,6 +56,7 @@ class FileImage2D extends Image2D {
     __loadLDRImage(url) {
 
         let domElement = new Image();
+        domElement.crossOrigin='anonymous';
         domElement.onload = () => {
             this.width = domElement.width;
             this.height = domElement.height;
@@ -64,6 +73,7 @@ class FileImage2D extends Image2D {
         // TODO - confirm its necessary to add to DOM
         domElement.style.display = 'none';
         domElement.preload = 'auto';
+        domElement.crossOrigin='anonymous';
         // domElement.crossorigin = true;
         document.body.appendChild(domElement);
         domElement.addEventListener('loadedmetadata', () => {
