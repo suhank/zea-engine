@@ -8,6 +8,7 @@ import {
     Points,
     Lines,
     Mesh,
+    MeshProxy,
     BillboardItem
 } from '../SceneTree';
 import {

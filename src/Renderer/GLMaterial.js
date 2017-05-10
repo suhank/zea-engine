@@ -10,11 +10,18 @@ import {
     Signal
 } from '../Math';
 import {
-    Image2D
+    Image2D,
+    HDRImage2D
 } from '../SceneTree';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
+import {
+    GLLDRAlphaImage
+} from './GLLDRAlphaImage.js';
+import {
+    GLHDRImage
+} from './GLHDRImage.js';
 
 class GLMaterial {
     constructor(gl, material) {

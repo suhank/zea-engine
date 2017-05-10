@@ -7,6 +7,9 @@ import {
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
+import {
+    GLShaderMaterials
+} from '../GLCollector.js';
 
 class GLGeomDataPass extends GLPass {
     constructor(gl, collector) {
