@@ -14,9 +14,6 @@
         
         <script type="text/javascript">
 
-// Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) { 
-
     let loadBinMesh = (url)=>{
         let div = addCanvas(800, 600);
         let asset =  new Visualive.BinAsset();
@@ -48,11 +45,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-    setTimeout(function(){ 
     loadBinMesh("Assets/GlassWindow");
 
-    }, 1000);
-});
         </script> 
     </body>
 </html>

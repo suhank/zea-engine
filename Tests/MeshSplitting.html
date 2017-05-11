@@ -15,9 +15,6 @@
         
         <script type="text/javascript">
 
-// Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) { 
-
     let loadBinMesh = (url, normalsLength=0.2)=>{
         let domElement = addCanvas();
         let asset =  new Visualive.BinAsset();
@@ -45,18 +42,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
             renderer.resumeDrawing();
         });
     }
-
-    setTimeout(function(){ 
-
     //loadBinMesh("Assets/FuzedBoxes", 20.0);
     loadBinMesh("Assets/FuzedTeapots", 0.0);
     // loadBinMesh("Assets/MultiMaterialIDs", 20.0);
     //loadBinMesh("Assets/MultiMaterialIDs2", 20.0);
     // loadBinMesh("Assets/MultiMaterialIDs3", 20.0);
 
-
-    }, 1000);
-});
         </script> 
     </body>
 </html>

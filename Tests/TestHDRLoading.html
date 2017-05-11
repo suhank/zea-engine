@@ -15,22 +15,6 @@
         
         <script type="text/javascript">
 
-// Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) {
-
-    let generateTree = (filePath, resources)=>{
-        let parts = filePath.split('/');
-        let curr = resources;
-        for(let i=0; i<parts.length-1; i++){
-            let part = parts[i];
-            if(!(part in curr)){
-                curr[part] = {};
-                curr = curr[part];
-            }
-        }
-        curr[parts[parts.length-1]] = window.location.origin+'/Tests/'+filePath;
-    }
-    
     let loadEnv = (url)=>{
         let resources = generateResourcesDict([url]);
 
@@ -49,8 +33,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
             let gui = addGUI(div);
             renderer.addGUI(gui);
         });
-
-
     }
 
     loadEnv("Assets/night_free_Ref.vlh");
@@ -60,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     loadEnv("Assets/HDR_029_Sky_Cloudy_Ref.vlh");
 
 
-});
         </script> 
     </body>
 </html>
