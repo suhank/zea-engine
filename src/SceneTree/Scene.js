@@ -6,6 +6,9 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
+    BinAsset
+} from './BinAsset.js';
+import {
     Sphere
 } from './Geometry/Shapes/Sphere.js';
 import {
@@ -31,22 +34,22 @@ class Scene {
 
         this.commonResourcesLoaded = new Signal(true);
 
-        // if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
-        //     this.__resourceLoader.loadResources('commonResources/Resources.vlr',
-        //         (path, entries) => {
+        if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
+            this.__resourceLoader.loadResources('commonResources/Resources.vlr',
+                (path, entries) => {
 
-        //             let viveAsset = new BinAsset("ViveResources");
-        //             viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
-        //             viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive.geoms'].buffer);
-        //             viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-        //             entries['viveAsset'] = viveAsset;
+                    let viveAsset = new BinAsset("ViveResources");
+                    viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');
+                    viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive0.geoms'].buffer);
+                    viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+                    entries['viveAsset'] = viveAsset;
 
-        //             let sphere = new Sphere('VRControllerTip', 0.015);
-        //             entries['VRControllerTip'] = sphere;
+                    let sphere = new Sphere('VRControllerTip', 0.015);
+                    entries['VRControllerTip'] = sphere;
 
-        //             this.commonResourcesLoaded.emit(entries);
-        //         });
-        // }
+                    this.commonResourcesLoaded.emit(entries);
+                });
+        }
     }
 
     getRoot() {
