@@ -15,9 +15,6 @@
         
         <script type="text/javascript">
 
-// Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) { 
-
     let loadBinMesh = (url, resetXforms=true, normalsLength=0.2)=>{
         let domElement = addCanvas();
         let asset =  new Visualive.BinAsset();
@@ -57,7 +54,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    setTimeout(function(){ 
     loadBinMesh("Assets/FuzzyGeomComparison", false, 0.0);
     //loadBinMesh("Assets/FuzzyGeomComparison2");
     //loadBinMesh("Assets/FuzzyGeomComparison3", false, 0.0);
@@ -68,8 +64,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //loadBinMesh("Assets/NormalMatrixTest");
 
 
-    }, 1000);
-});
         </script> 
     </body>
 </html>

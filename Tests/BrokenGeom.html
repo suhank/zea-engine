@@ -14,9 +14,6 @@
         
         <script type="text/javascript">
 
-// Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) { 
-
     let loadBinMesh = (url)=>{
         let div = addCanvas(800, 600);
         let asset =  new Visualive.BinAsset();
@@ -48,11 +45,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-    setTimeout(function(){ 
-        loadBinMesh("Assets/BrokenGeom");
-    }, 100);
-
-});
+    loadBinMesh("Assets/BrokenGeom");
         </script> 
     </body>
 </html>

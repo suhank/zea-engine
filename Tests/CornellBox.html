@@ -13,10 +13,7 @@
         <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         
-        <script type="text/javascript">
-
-// Note: launch Chrome with  --allow-file-access-from-files
-document.addEventListener("DOMContentLoaded", function(event) { 
+        <script type="text/javascript"> 
 
     let loadBinMesh = (url, lightmapName)=>{
         let domElement = addCanvas();
@@ -57,14 +54,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
         });
     }
 
-    setTimeout(function(){ 
     // loadBinMesh("Assets/boxe", "HDR_041_Path_Ref");
     // loadBinMesh("Assets/boxes", "HDR_041_Path_Ref");
     // loadBinMesh("Assets/sphere", "HDR_041_Path_Ref");
     loadBinMesh("Assets/CornellBox", "HDR_041_Path_Ref");
 
-    }, 1000);
-});
         </script> 
     </body>
 </html>

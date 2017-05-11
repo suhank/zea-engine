@@ -14,14 +14,12 @@
         <script src="../lib/Visualive-dev.js"></script>
         
         <script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", function(event) { 
     
     let div = addCanvas();
     let env = "Assets/HDR_041_Path_Ref.vlh";
     /////////////////////////////////////
     // Scene
-    let scene = new Visualive.Scene(generateResourcesDict('/Tests/', [env]));
+    let scene = new Visualive.Scene(generateResourcesDict([env]));
 
     let layer0Material = new Visualive.EnvProjectionMaterial('layer0');
     layer0Material.env = new Visualive.HDRImage2D('envMap', env, scene.getResourceLoader());
@@ -65,7 +63,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     renderer.resumeDrawing();
 
-});
         </script> 
     </body>
 </html>

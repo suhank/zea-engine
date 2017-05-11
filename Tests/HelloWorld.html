@@ -11,21 +11,14 @@
         <script src="../external/helpers.js"></script>
         <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
-        <script src="../../../lib/VisualiveUI-dev.js"></script>
+        <script src="./libs/MaterialUITest.js"></script>
         <script src="index.js"></script>
         <script type="text/javascript">
 
-document.addEventListener("DOMContentLoaded", function(event) { 
-    setTimeout(()=>{
         let div = addCanvas();
-        let resources = {
-            commonResources: {
-                'Resources.vlr': window.location.origin+'/Resources/Resources.vlr'
-            }
-        };
+        let resources = generateResourcesDict();
         init(div, resources);
-    }, 1000);
-});
+        
         </script> 
     </body>
 </html>
