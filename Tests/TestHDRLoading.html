@@ -32,12 +32,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     
     let loadEnv = (url)=>{
-        let resources = {
-            commonResources: {
-                'Resources.vlr': window.location.origin+'/Resources/Resources.vlr'
-            }
-        };
-        generateTree(url, resources);
+        let resources = generateResourcesDict([url]);
 
         let scene = new Visualive.Scene(resources);
         let envMap =  new Visualive.HDRImage2D('envMap', url, scene.getResourceLoader());

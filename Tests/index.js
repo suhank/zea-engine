@@ -14,5 +14,18 @@ var init = function(domElement, resources) {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,1.7,2), new Visualive.Vec3(0,1,0));
     renderer.resumeDrawing();
 
-    VisualiveUI.render(domElement);
+    // let uiContainer = document.createElement('div');
+    // domElement.appendChild(uiContainer);
+    // uiContainer.style.width = '100%';
+    // uiContainer.style.height = '100%';
+    // uiContainer.style.position = 'absolute';
+    // uiContainer.style.top = 0;
+    // uiContainer.style.left = 0;
+    // uiContainer.style['pointer-events'] = 'none';
+
+    // let ui = MaterialUITest.renderUI(uiContainer);
+    // let pb = ui.showProgressBar(ResourceLoader.onupdate);
+    // let canvas = pb.renderCanvas();
+
+
 };

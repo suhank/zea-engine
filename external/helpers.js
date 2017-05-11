@@ -16,7 +16,7 @@ let addGUI = function(div, options) {
 
 let addCanvas = function(width, height) {
     let resizeDiv = document.createElement("div");
-    resizeDiv.id = 'sapphireHolder';
+    resizeDiv.id = 'visualive';
     if (width == undefined) {
         resizeDiv.style.width = '100%';
         resizeDiv.style.height = '100%';
@@ -27,7 +27,6 @@ let addCanvas = function(width, height) {
         resizeDiv.style.position = 'relative';
         resizeDiv.style.width = width + 'px';
         resizeDiv.style.height = height + 'px';
-        // $(resizeDiv).resizable();
     }
     document.body.appendChild(resizeDiv);
     if (width !== undefined) {
@@ -37,12 +36,17 @@ let addCanvas = function(width, height) {
 }
 
 
-let generateResourcesDict = (relOffset, list=[])=>{
+let generateResourcesDict = (list=[])=>{
     let resources = {
         commonResources: {
             'Resources.vlr': window.location.origin+'/Resources/Resources.vlr'
         }
     };
+    let rootURL = window.location.href.split('#')[0];
+    if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
+        rootURL = rootURL.substring(0, rootURL.lastIndexOf('/'));
+    }
+    rootURL = rootURL + '/';
     for(let item of list){
         let parts = item.split('/');
         let curr = resources;
@@ -53,7 +57,7 @@ let generateResourcesDict = (relOffset, list=[])=>{
                 curr = curr[part];
             }
         }
-        curr[parts[parts.length-1]] = window.location.origin+relOffset+item;
+        curr[parts[parts.length-1]] = rootURL+item;
     }
     return resources;
 }
