@@ -103,7 +103,7 @@ class MaterialLibrary {
             for (let i=0; i< numMaterials; i++) {
                 let type = reader.loadStr();
                 let name = reader.loadStr();
-                console.log("Material:" + name);
+                // console.log("Material:" + name);
                 let material = sgFactory.constructClass(this.__forceMaterialType ? this.__forceMaterialType : type);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags);

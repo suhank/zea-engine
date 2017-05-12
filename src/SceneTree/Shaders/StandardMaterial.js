@@ -141,8 +141,11 @@ uniform float exposure;
 #endif
 
 uniform mat4 cameraMatrix;
+
+#ifdef ENABLE_CROSS_SECTIONS
 uniform float planeDist;
 uniform float planeAngle;
+#endif
 
 uniform color _baseColor;
 uniform float _emissiveStrength;

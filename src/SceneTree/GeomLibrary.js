@@ -21,15 +21,9 @@ let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker
 
 class GeomLibrary {
     constructor() {
-        this.loaded = new Signal();
+        this.rangeLoaded = new Signal();
+        this.loaded = new Signal(true);
         this.geoms = [];
-
-        // this.workers = [];
-        // let logicalProcessors = window.navigator.hardwareConcurrency;
-        // for (let i = 0; i < logicalProcessors; i++) {
-        //     this.workers[i] = this.__constructWorker();
-        // }
-        // this.__mostResentlyHired = 0;
     }
 
     __constructWorker() {
@@ -42,7 +36,7 @@ class GeomLibrary {
     }
 
     getNumGeoms() {
-        return this.geoms.length;
+        return this.__numGeoms;
     }
 
     getGeom(index) {
@@ -69,20 +63,21 @@ class GeomLibrary {
 
     readBinaryBuffer(buffer) {
         let reader = new BinReader(buffer, 0, isMobileDevice());
-        let numGeoms = reader.loadUInt32();
+        this.__numGeoms = reader.loadUInt32();
+        this.__loaded = 0;
         let geomIndexOffset = reader.loadUInt32();
-        let toc = reader.loadUInt32Array(numGeoms);
+        let toc = reader.loadUInt32Array(this.__numGeoms);
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
-        let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
+        let numGeomsPerWorkload = Math.max(1, Math.floor((this.__numGeoms / window.navigator.hardwareConcurrency) + 1));
         let offset = 0;
-        while (offset < numGeoms) {
+        while (offset < this.__numGeoms) {
             let geomsRange;
             let bufferSlice;
             let bufferSlice_start = toc[offset];
             let bufferSlice_end;
-            if (offset + numGeomsPerWorkload >= numGeoms) {
-                geomsRange = [offset, numGeoms];
+            if (offset + numGeomsPerWorkload >= this.__numGeoms) {
+                geomsRange = [offset, this.__numGeoms];
                 bufferSlice_end = buffer.byteLength;
                 // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start);
             } else {
@@ -134,7 +129,11 @@ class GeomLibrary {
             }
             this.geoms[offset + i] = proxy;
         }
-        this.loaded.emit(storedRange);
+        this.rangeLoaded.emit(storedRange);
+
+        this.__loaded += storedRange[1] - storedRange[0];
+        if(this.__loaded == this.__numGeoms)
+            this.loaded.emit();
     }
 
     toJSON() {

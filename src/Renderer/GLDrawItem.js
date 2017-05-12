@@ -115,19 +115,6 @@ class GLDrawItem {
             gl.uniform1i(unifs.transformIndex.location, this.__id);
         }
 
-        // We need to support multiple lightmaps, and so we need to switch lightmaps between objects. 
-        if ('lightmaps' in renderstate && 'lightmap' in unifs) {
-            if (renderstate.boundLightmap != this.__lightmapName) {
-                let gllightmap = renderstate.lightmaps[this.__lightmapName];
-                if (gllightmap && gllightmap.isLoaded()) {
-                    gllightmap.bind(renderstate, unifs.lightmap.location);
-                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.getSize());
-                    renderstate.boundLightmap = this.__lightmapName;
-                } else {
-                    // TODO: disable lightmaps here. (should never need to happen)
-                }
-            }
-        }
 
         return true;
     }

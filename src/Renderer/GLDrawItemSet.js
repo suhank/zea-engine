@@ -225,6 +225,19 @@ class GLDrawItemSet {
         let gl = this.__gl;
         let unifs = renderstate.unifs;
 
+        if ('lightmaps' in renderstate && 'lightmap' in unifs) {
+            if (renderstate.boundLightmap != this.__lightmapName) {
+                let gllightmap = renderstate.lightmaps[this.__lightmapName];
+                if (gllightmap && gllightmap.isLoaded()) {
+                    gllightmap.bind(renderstate, unifs.lightmap.location);
+                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.getSize());
+                    renderstate.boundLightmap = this.__lightmapName;
+                } else {
+                    // TODO: disable lightmaps here. (should never need to happen)
+                }
+            }
+        }
+
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {
@@ -252,19 +265,6 @@ class GLDrawItemSet {
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
             gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
-        }
-
-        if ('lightmaps' in renderstate && 'lightmap' in unifs) {
-            if (renderstate.boundLightmap != this.__lightmapName) {
-                let gllightmap = renderstate.lightmaps[this.__lightmapName];
-                if (gllightmap && gllightmap.isLoaded()) {
-                    gllightmap.bind(renderstate, unifs.lightmap.location);
-                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.getSize());
-                    renderstate.boundLightmap = this.__lightmapName;
-                } else {
-                    // TODO: disable lightmaps here. (should never need to happen)
-                }
-            }
         }
 
         glgeom.drawInstanced(this.__drawCount);

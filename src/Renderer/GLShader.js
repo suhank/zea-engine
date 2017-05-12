@@ -194,9 +194,13 @@ class GLShader {
         gl.useProgram(shaderProgramHdl);
         renderstate.shaderkey = this.__hash;
         renderstate.boundTextures = 0;
+        renderstate.boundLightmap = undefined;
 
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;
+
+        if(this.__shader.bind)
+            this.__shader.bind(gl, renderstate);
 
         let unifs = shaderCompilationResult.unifs;
         if ('viewMatrix' in unifs)
@@ -213,6 +217,11 @@ class GLShader {
             gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
 
         return true;
+    }
+    
+    unbind(renderstate) {
+        if(this.__shader.unbind)
+            this.__shader.unbind(this.__gl, renderstate);
     }
 
     destroy(){

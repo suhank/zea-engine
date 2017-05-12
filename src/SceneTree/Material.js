@@ -103,6 +103,14 @@ class Material extends Shader {
         return this.__props[name];
     }
 
+    isTransparent() {
+        if ('opacity' in this && (this.opacity < 0.99 || this.opacity instanceof Image2D))
+            return true;
+        if (this.baseColor && this.baseColor.hasAlpha && this.baseColor.hasAlpha())
+            return true;
+        return false;
+    }
+
     //////////////////////////////////////////
     // Persistence
 

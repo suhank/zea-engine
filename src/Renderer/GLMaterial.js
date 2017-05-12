@@ -54,11 +54,7 @@ class GLMaterial {
     }
 
     isTransparent() {
-        if ('opacity' in this.__material && (this.__material.opacity < 0.99 || this.__material.opacity instanceof Image2D))
-            return true;
-        if (this.__material.baseColor && this.__material.baseColor.hasAlpha && this.__material.baseColor.hasAlpha())
-            return true;
-        return false;
+        return this.__material.isTransparent();
     }
 
     updateGLTextures() {

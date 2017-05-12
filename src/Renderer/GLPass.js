@@ -51,7 +51,8 @@ class GLPass {
         // renderstate.profileJSON[this.constructor.name] = passProfile;
 
         for (let glshaderMaterials of this.__glshadermaterials) {
-            if(this.bindShader(renderstate, glshaderMaterials.getGLShader())){
+            let glshader = glshaderMaterials.getGLShader();
+            if(this.bindShader(renderstate, glshader)){
                 let glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
                 for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
                     // let materialProfile = [];
@@ -66,6 +67,7 @@ class GLPass {
                     // passProfile.push(materialProfile);
                 }
             }
+            glshader.unbind(renderstate);
         }
     }
 

@@ -219,10 +219,10 @@ class GeomItem extends TreeItem {
             let onGeomLoaded = (range) => {
                 if (geomIndex >= range[0] && geomIndex < range[1]) {
                     this.setGeom(geomLibrary.getGeom(geomIndex));
-                    geomLibrary.loaded.disconnect(onGeomLoaded, this);
+                    geomLibrary.rangeLoaded.disconnect(onGeomLoaded, this);
                 }
             }
-            geomLibrary.loaded.connect(onGeomLoaded, this);
+            geomLibrary.rangeLoaded.connect(onGeomLoaded, this);
         }
 
         //this.setVisibility(j.visibility);
