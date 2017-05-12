@@ -1,9 +1,9 @@
 import {
-    Vec2
-} from '../../Math/Vec2';
-import {
+    Float32,
+    Vec2,
+    Vec3,
     Xfo
-} from '../../Math/Xfo';
+} from '../../Math';
 import {
     BaseGeom
 } from './BaseGeom.js';
@@ -11,9 +11,6 @@ import {
     Attribute
 } from './Attribute.js';
 
-import {
-    Float32,
-} from '../../Math';
 
 
 class Mesh extends BaseGeom {

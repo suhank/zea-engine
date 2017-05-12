@@ -38,6 +38,14 @@ class MaterialLibrary {
         return this.__materials[name];
     }
 
+    modifyMaterials(materialNames, params){
+        for(let name of materialNames){
+            let material = this.__materials[name];
+            for(let name in params){
+                material[name] = params[name];
+            }
+        }
+    }
     //////////////////////////////////////////
     // Persistence
 

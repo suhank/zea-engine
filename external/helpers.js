@@ -39,7 +39,9 @@ let addCanvas = function(width, height) {
 let generateResourcesDict = (list=[])=>{
     let resources = {
         commonResources: {
-            'Resources.vlr': window.location.origin+'/Resources/Resources.vlr'
+            'Resources.vlr': window.location.origin+'/Resources/Resources.vlr',
+            'Dome.vlatree': window.location.origin+'/Resources/Dome.vlatree',
+            'Dome0.vlageoms': window.location.origin+'/Resources/Dome0.vlageoms'
         }
     };
     let rootURL = window.location.href.split('#')[0];
