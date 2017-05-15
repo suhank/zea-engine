@@ -208,7 +208,7 @@ class GeomItem extends TreeItem {
     }
 
     readBinary(reader, flags, materialLibrary, geomLibrary) {
-        super.readBinary(reader, flags);
+        super.readBinary(reader, flags, materialLibrary, geomLibrary);
 
         let itemflags = reader.loadUInt8();
         let geomIndex = reader.loadUInt32();

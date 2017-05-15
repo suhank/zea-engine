@@ -1,11 +1,14 @@
-import { TreeItem } from '../../SceneTree/TreeItem';
-import { Lines } from '../../SceneTree/Geometry/Lines';
-import { FatLinesMaterial } from '../../SceneTree/Shaders/FatLinesMaterial';
+import {
+    Lines,
+    TreeItem,
+    GeomItem,
+    FatLinesMaterial
+} from '../../SceneTree';
 
 class MarkerpenTool {
     constructor(name) {
         this.__name = name;
-        this.__treeItem = new TreeItem(name+'MarkerpenTool');
+        this.__treeItem = new TreeItem(name + 'MarkerpenTool');
         this.__strokeCount = 0;
 
         this.__strokes = {};
@@ -16,15 +19,15 @@ class MarkerpenTool {
         // this.strokeSegmentAdded = new Signal();
     }
 
-    getTreeItem(){
+    getTreeItem() {
         return this.__treeItem;
     }
 
     startStroke(xfo, color, thickness, id) {
         this.__strokeCount++;
         let replayMode = true;
-        if(!id){
-            id = 'Stroke'+this.__strokeCount;
+        if (!id) {
+            id = 'Stroke' + this.__strokeCount;
             replayMode = false;
         }
 
@@ -33,7 +36,7 @@ class MarkerpenTool {
         let used = 0;
         let vertexCount = 100;
         lineGeom.setNumVertices(vertexCount);
-        lineGeom.setNumSegments(vertexCount-1);
+        lineGeom.setNumSegments(vertexCount - 1);
         lineGeom.vertices.setValue(used, xfo.tr);
 
         lineGeom.lineThickness = thickness;
@@ -66,20 +69,20 @@ class MarkerpenTool {
         return id;
     }
 
-    endStroke(id=undefined) {
+    endStroke(id = undefined) {
         let replayMode = true;
-        if(!id){
-            id = 'Stroke'+this.__strokeCount;
+        if (!id) {
+            id = 'Stroke' + this.__strokeCount;
             replayMode = false;
         }
 
         return id;
     }
 
-    addSegmentToStroke(xfo, id=undefined) {
+    addSegmentToStroke(xfo, id = undefined) {
         let replayMode = true;
-        if(!id){
-            id = 'Stroke'+this.__strokeCount;
+        if (!id) {
+            id = 'Stroke' + this.__strokeCount;
             replayMode = false;
         }
         let stroke = this.__strokes[id];
@@ -87,25 +90,28 @@ class MarkerpenTool {
         stroke.used++;
 
         let realloc = false;
-        if(stroke.used >= lineGeom.getNumSegments()){
+        if (stroke.used >= lineGeom.getNumSegments()) {
             stroke.vertexCount = stroke.vertexCount + 100;
             lineGeom.setNumVertices(stroke.vertexCount);
-            lineGeom.setNumSegments(stroke.vertexCount-1);
+            lineGeom.setNumSegments(stroke.vertexCount - 1);
             realloc = true;
         }
 
         lineGeom.vertices.setValue(stroke.used, xfo.tr);
-        lineGeom.setSegment(stroke.used-1, stroke.used-1, stroke.used);
+        lineGeom.setSegment(stroke.used - 1, stroke.used - 1, stroke.used);
 
-        if(realloc){
-            lineGeom.geomDataTopologyChanged.emit({'indicesChanged':true});
-        }
-        else{
-            lineGeom.geomDataChanged.emit({'indicesChanged':true});
+        if (realloc) {
+            lineGeom.geomDataTopologyChanged.emit({
+                'indicesChanged': true
+            });
+        } else {
+            lineGeom.geomDataChanged.emit({
+                'indicesChanged': true
+            });
         }
         lineGeom.__strokeCount = stroke.used;
 
-         
+
         // if(!stroke.replayMode){
         //     this.strokeSegmentAdded.emit({
         //         type: 'strokeSegmentAdded',
@@ -131,13 +137,13 @@ class MarkerpenTool {
     //     lineGeom.geomDataChanged.emit({'indicesChanged':true});
     // }
 
-    clear(){
+    clear() {
         this.__strokeCount = 0;
         this.__strokes = {};
         this.__treeItem.removeAllChildren();
     };
 
-    destroy(){
+    destroy() {
         this.__treeItem.parentItem.removeChildByHandle(this.__treeItem);
         this.__treeItem = null;
     };

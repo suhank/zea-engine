@@ -25,6 +25,7 @@ attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform vec3 _projectionCenter;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
@@ -35,6 +36,7 @@ uniform vec2 lightmapSize;
 
 /* VS Outputs */
 varying vec2 v_lightmapCoord;
+varying vec3 v_worldDir;
 
 void main(void) {
 
@@ -45,24 +47,34 @@ void main(void) {
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position     = modelViewProjectionMatrix * pos;
 
+    vec4 worldPos = modelMatrix * pos;
+    v_worldDir = worldPos.xyz - _projectionCenter;
+
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 }
 `);
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.fragmentShader', `
 precision highp float;
 
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif
 
 /* VS Outputs */
 varying vec2 v_lightmapCoord;
+varying vec3 v_worldDir;
 
 uniform sampler2D lightmap;
+uniform float _shadowMultiplier;
+uniform float _gamma;
+uniform float _exposure;
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-uniform float exposure;
-#endif
+uniform color _env;
+uniform sampler2D _envTex;
+uniform bool _envTexConnected;
+
 
 float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
@@ -70,32 +82,37 @@ float luminanceFromRGB(vec3 rgb) {
 
 void main(void) {
 
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-    gl_FragColor.rgb = irradiance * 0.25;
-    gl_FragColor.a = 1.0;
+    vec2 uv = normalToUvRectOct(normalize(v_worldDir));
+    vec4 env = texture2D(_envTex, uv);
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
-#endif
+    gl_FragColor = vec4(env.rgb/env.a, 1.0);
+
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
+    gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, clamp(luminanceFromRGB(irradiance), 0.0, 1.0));
+
+    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * _exposure, _gamma);
 
 }
 `);
+        this.addParameter('env', new Color(1.0, 1.0, 0.5));
+        this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
+        this.addParameter('shadowMultiplier', 1.0);
         this.addParameter('exposure', 1.0);
         this.addParameter('gamma', 2.2);
         this.finalize();
     }
 
     isTransparent() {
-        return true;
+        return false;
     }
 
-    bind(gl, renderstate) {
-        gl.blendFunc(gl.DST_COLOR, gl.ZERO);
-    }
+    // bind(gl, renderstate) {
+    //     gl.blendFunc(gl.DST_COLOR, gl.ZERO);
+    // }
 
-    unbind(gl, renderstate){
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    }
+    // unbind(gl, renderstate){
+    //     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    // }
 };
 
 

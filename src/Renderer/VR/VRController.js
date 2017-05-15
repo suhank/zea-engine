@@ -1,4 +1,5 @@
 import {
+    Vec3,
     Quat,
     EulerAngles,
     Xfo,

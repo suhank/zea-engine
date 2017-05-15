@@ -41,6 +41,10 @@ class MaterialLibrary {
     modifyMaterials(materialNames, params){
         for(let name of materialNames){
             let material = this.__materials[name];
+            if(!material){
+                console.warn("Material not found:" + name);
+                continue;
+            }
             for(let name in params){
                 material[name] = params[name];
             }

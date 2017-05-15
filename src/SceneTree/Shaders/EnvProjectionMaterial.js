@@ -35,12 +35,13 @@ varying vec3 v_worldDir;
  
 void main()
 {
+    vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
-    gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
+    gl_Position = modelViewProjectionMatrix * pos;
 
-    vec4 worldPos = modelMatrix * vec4(positions, 1.0);
+    vec4 worldPos = modelMatrix * pos;
     v_worldDir = worldPos.xyz - _projectionCenter;
 }
 
@@ -50,7 +51,6 @@ precision highp float;
 
 <%include file="glslutils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
-<%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
 uniform color _env;

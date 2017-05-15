@@ -16,6 +16,7 @@ class HDRImage2D extends Image2D {
         this.__resourceLoader = resourceLoader;
         this.__stream = isStream;
         this.__loaded = false;
+        this.exposure = 1.0;
         this.__data = {};
 
         this.loaded = new Signal();
