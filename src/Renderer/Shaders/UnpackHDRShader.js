@@ -30,12 +30,13 @@ precision highp float;
 varying vec2 v_texCoord;
 uniform sampler2D ldrSampler;
 uniform sampler2D cdmSampler;
+uniform float exposure;
 
 <%include file="utils/unpackHDR.glsl"/>
 
 void main(void) {
     vec3 color = decodeHDR(ldrSampler, cdmSampler, v_texCoord);
-    gl_FragColor = vec4(color, 1.0);
+    gl_FragColor = vec4(color * exposure, 1.0);
 }
 
 `);
