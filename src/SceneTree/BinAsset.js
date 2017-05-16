@@ -34,21 +34,25 @@ class BinAsset extends AssetItem {
             (path, entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
+                loadNextGeomFile();
                 this.loaded.emit();
             });
 
         let geomFileID = 0;
+        let loadNextGeomFile = ()=>{
+            if (geomFileID < numGeomsFiles) {
+                let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
+                if (this.__resourceLoader.resourceAvailable(nextGeomFileName))
+                    loadGeomsfile(nextGeomFileName);
+            }
+        }
         let loadGeomsfile = (geomsResourceName) => {
             this.__resourceLoader.loadResources(geomsResourceName,
                 (path, entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
                     this.__geoms.readBinaryBuffer(geomsData.buffer);
                     geomFileID++;
-                    if (geomFileID < numGeomsFiles) {
-                        let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
-                        if (this.__resourceLoader.resourceAvailable(nextGeomFileName))
-                            loadGeomsfile(nextGeomFileName);
-                    }
+                    loadNextGeomFile();
                 },
                 () => {
 

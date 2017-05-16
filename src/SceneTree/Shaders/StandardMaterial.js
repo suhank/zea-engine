@@ -240,21 +240,34 @@ void main(void) {
     }
 #endif
 
-#ifndef ENABLE_LIGHTMAPS
-    // Hacky simple irradiance. 
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 normal = mat3(cameraMatrix) * v_viewNormal;
-    float ndotv = dot(normalize(normal), normalize(viewVector));
-    if(ndotv < 0.0){
+
+    vec3 albedoLinear = baseColor.rgb;  
+
+    vec3 viewNormal = normalize(v_viewNormal);
+    //vec3 surfacePos = -v_viewPos.xyz;
+
+#ifdef ENABLE_TEXTURES
+    if(_normalTexConnected){
+        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
+        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
+    }
+#endif
+
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    float NdotV = dot(normal, normalize(viewVector));
+    if(NdotV < 0.0){
         normal = -normal;
-        ndotv = dot(normalize(normal), normalize(viewVector));
+        NdotV = dot(normalize(normal), normalize(viewVector));
 
         // Note: these 2 lines can be used to debug inverted meshes.
-        //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-        //ndotv = 1.0;
+        baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+        NdotV = 1.0;
     }
-    vec3 irradiance = vec3(ndotv);
 
+#ifndef ENABLE_LIGHTMAPS
+    // Hacky simple irradiance. 
+    vec3 irradiance = vec3(NdotV);
 #else
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 #endif
@@ -282,22 +295,6 @@ void main(void) {
     vec3 diffuseReflectance = baseColor.rgb * irradiance;
     gl_FragColor = vec4(diffuseReflectance + (emission * baseColor.rgb), 1);
 #else
-
-    vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos.xyz;
-
-#ifdef ENABLE_TEXTURES
-    if(_normalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
-        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
-    }
-#endif
-
-    vec3 albedoLinear = baseColor.rgb;  
-
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    float NdotV = dot(normal, normalize(viewVector));
 
     // -------------------------- Diffuse Reflectance --------------------------
 
