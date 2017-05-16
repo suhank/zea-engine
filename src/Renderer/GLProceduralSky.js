@@ -15,13 +15,12 @@ import { hammersley } from '../Math/Hammersley';
 // // https://threejs.org/examples/?q=sky#webgl_shaders_sky
 // import './Shaders/zz85/sky.js';
 // https://threejs.org/examples/?q=sky#webgl_shaders_sky
+import '../SceneTree/Shaders/GLSL/constants.js';
 import '../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import './Shaders/wwwtyro/glsl-atmosphere.js';
 
 // https://github.com/wwwtyro/glsl-atmosphere
 shaderLibrary.setShaderModule('sunAndSky.glsl', `
-
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 
 // https://github.com/wwwtyro/glsl-atmosphere
 <%include file="wwwtyro/glsl-atmosphere.glsl"/>
@@ -171,6 +170,7 @@ uniform mat4 cameraMatrix;
 varying vec2 v_texCoord;
 varying vec4 v_viewPos;
 
+<%include file="math/constants.glsl"/>
 <%include file="sunAndSky.glsl"/>
 
 void main() {
@@ -207,16 +207,12 @@ precision highp float;
 
 varying vec2 v_texCoord;
 
+<%include file="math/constants.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="sunAndSky.glsl"/>
 
-vec3 dirFromLatLongUVs(vec2 uv){
-    float theta = PI*((uv.x * 2.0)-1.0);
-    float phi = PI*uv.y;
-    return vec3(sin(phi)*sin(theta), cos(phi), -sin(phi)*cos(theta));
-}
-
 void main() {
-    vec3 viewVector = dirFromLatLongUVs(v_texCoord.x, v_texCoord.y);
+    vec3 viewVector = uvToNormalSphOct(v_texCoord);
     vec3 color = sunAndSky(viewVector);
     gl_FragColor = vec4(color, 1);
 }

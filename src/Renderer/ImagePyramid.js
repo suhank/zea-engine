@@ -1,25 +1,41 @@
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLFbo } from './GLFbo.js';
-import { GLShader } from './GLShader.js';
-import { ImageAtlas } from './ImageAtlas.js';
-import { Vec2 } from '../Math/Vec2';
-import { Rect2 } from '../Math/Rect2';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import {
+    Vec2,
+    Rect2
+} from '../Math';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    GLFbo
+} from './GLFbo.js';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    ImageAtlas
+} from './ImageAtlas.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
-let Math_log2 = function(value){
-    // IE11 doesn't support Math.log2
-    return Math.log2( value )
-    //return Math.log( value ) / Math.log( 2 ) - 2;
-};
-
-import { Shader } from '../SceneTree/Shader'
-import { shaderLibrary } from '../SceneTree/ShaderLibrary'
+import {
+    Shader
+} from '../SceneTree/Shader'
+import {
+    shaderLibrary
+} from '../SceneTree/ShaderLibrary'
 
 import '../SceneTree/Shaders/GLSL/ImagePyramid.js';
 
+let Math_log2 = function(value) {
+    // IE11 doesn't support Math.log2.
+    return Math.log2(value)
+        //return Math.log( value ) / Math.log( 2 ) - 2;
+};
+
 
 // class PyramidShader extends Shader {
-    
+
 //     constructor(name) {
 //         super();
 //         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PyramidShader.vertexShader', `
@@ -31,7 +47,7 @@ import '../SceneTree/Shaders/GLSL/ImagePyramid.js';
 
 // /* VS Outputs */
 // varying vec2 v_texCoord;
- 
+
 // void main()
 // {
 //     vec2 position = getQuadVertexPositionFromID();
@@ -75,7 +91,7 @@ import '../SceneTree/Shaders/GLSL/ImagePyramid.js';
 // };
 
 class ImagePyramid extends ImageAtlas {
-    constructor(gl, name, srcGLTex, destroySrcImage=true, minTileSize=16) {
+    constructor(gl, name, srcGLTex, destroySrcImage = true, minTileSize = 16) {
         super(gl, name);
 
         this.__srcGLTex = srcGLTex;
@@ -87,8 +103,7 @@ class ImagePyramid extends ImageAtlas {
         if (this.__srcGLTex.isLoaded()) {
             this.generateAtlasLayout(minTileSize);
             this.renderAtlas(destroySrcImage);
-        }
-        else{
+        } else {
             this.__srcGLTex.updated.connect(() => {
                 this.generateAtlasLayout(minTileSize);
                 this.renderAtlas(destroySrcImage);
@@ -110,7 +125,7 @@ class ImagePyramid extends ImageAtlas {
         let numLevels = Math_log2(this.size) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
         for (let i = numLevels; i >= 0; --i) {
             let size = Math.pow(2, i);
-            if(size < minTileSize)
+            if (size < minTileSize)
                 break;
             // Create a target texture for this level of the pyramid.
             // and then render to it using the base level as a source image.
@@ -129,20 +144,20 @@ class ImagePyramid extends ImageAtlas {
         super.generateAtlasLayout();
     }
 
-    renderAtlas(cleanup=true) {
+    renderAtlas(cleanup = true) {
         let gl = this.__gl;
         let renderstate = {};
         gl.screenQuad.bindShader(renderstate);
 
         for (let i = 0; i < this.__fbos.length; i++) {
             this.__fbos[i].bindAndClear();
-            gl.screenQuad.draw(renderstate, this.getSubImage(i));// Note: we are binding the previous image. (we have 1 more images than fbos.)
+            gl.screenQuad.draw(renderstate, this.getSubImage(i)); // Note: we are binding the previous image. (we have 1 more images than fbos.)
         }
 
         super.renderAtlas(cleanup);
     }
 
-    destroy(){
+    destroy() {
         super.destroy();
         for (let fbo of this.__fbos) {
             fbo.destroy();

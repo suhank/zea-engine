@@ -1,13 +1,33 @@
-import { GLShader } from './GLShader.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLHDRImage } from './GLHDRImage.js';
-import { ImageAtlas } from './ImageAtlas.js';
-import { ConvolverShader } from './Shaders/ConvolverShader.js';
-import { EnvMapShader } from './Shaders/EnvMapShader.js';
-import { GLFbo } from './GLFbo.js';
-import { ImagePyramid } from './ImagePyramid.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
-import { Vec3 } from '../Math/Vec3';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    GLHDRImage
+} from './GLHDRImage.js';
+import {
+    ImageAtlas
+} from './ImageAtlas.js';
+import {
+    ConvolverShader
+} from './Shaders/ConvolverShader.js';
+import {
+    EnvMapShader
+} from './Shaders/EnvMapShader.js';
+import {
+    GLFbo
+} from './GLFbo.js';
+import {
+    ImagePyramid
+} from './ImagePyramid.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
+import {
+    Vec3
+} from '../Math/Vec3';
 
 import {
     hammersley
@@ -20,23 +40,23 @@ class GLProbe extends ImageAtlas {
 
         if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
-        
+
         this.__convolved = false;
         this.__fbos = [];
     }
 
     generateHammersleySamples(numSamples) {
         let gl = this.__gl;
-        if(!gl['Hammersley'+numSamples]){
+        if (!gl['Hammersley' + numSamples]) {
 
-            let dataArray = new Float32Array(numSamples*3);
-            for (let i=0; i<numSamples; i++) {
+            let dataArray = new Float32Array(numSamples * 3);
+            for (let i = 0; i < numSamples; i++) {
                 let Xi = hammersley(i, numSamples);
                 let offset = i * 3;
-                dataArray[offset+0] = Xi[0];
-                dataArray[offset+1] = Xi[1];
+                dataArray[offset + 0] = Xi[0];
+                dataArray[offset + 1] = Xi[1];
             }
-            gl['Hammersley'+numSamples] = new GLTexture2D(gl, {
+            gl['Hammersley' + numSamples] = new GLTexture2D(gl, {
                 channels: 'RGB',
                 format: 'FLOAT',
                 width: numSamples,
@@ -47,19 +67,19 @@ class GLProbe extends ImageAtlas {
                 mipMapped: false
             });
         }
-        return gl['Hammersley'+numSamples];
+        return gl['Hammersley' + numSamples];
     }
 
     convolveEnvMap(srcGLTex) {
         let gl = this.__gl;
 
         // Compile and bind the convolver shader.
-        let numSamples = 1024; 
+        let numSamples = 1024;
         // let numSamples = 64;
         let hammersleyTexture = this.generateHammersleySamples(numSamples);
 
-        if(!this.__convolved){
-            if(!this.__imagePyramid){
+        if (!this.__convolved) {
+            if (!this.__imagePyramid) {
                 this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
                 this.__imagePyramid.updated.connect(() => {
                     this.convolveEnvMap(srcGLTex);
@@ -70,7 +90,7 @@ class GLProbe extends ImageAtlas {
 
             let currRez = [srcGLTex.width / 2, srcGLTex.height / 2];
 
-            let levels = 6;//this.__imagePyramid.numSubImages();
+            let levels = 6; //this.__imagePyramid.numSubImages();
             for (let i = 0; i < levels; i++) {
                 let level = new GLTexture2D(gl, {
                     channels: 'RGBA',
@@ -92,7 +112,7 @@ class GLProbe extends ImageAtlas {
 
             this.__convolverShader = new GLShader(gl, new ConvolverShader());
             let covolverShaderComp = this.__convolverShader.compileForTarget('GLProbe', {
-                repl:{
+                repl: {
                     "NUM_SAMPLES": numSamples
                 }
             });
@@ -111,7 +131,7 @@ class GLProbe extends ImageAtlas {
             // });
             // this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-            
+
             this.__envMapShader = new GLShader(gl, new EnvMapShader());
             let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
             this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
@@ -123,15 +143,20 @@ class GLProbe extends ImageAtlas {
             let renderstate = {};
             this.__convolverShader.bind(renderstate, 'GLProbe');
             this.__covolverShaderBinding.bind(renderstate);
-
-            // Set the roughness.
             let unifs = renderstate.unifs;
-            // let roughness = (i+1)/this.__fbos.length;
-            // gl.uniform1f(unifs.roughness.location, roughness);
 
             // Note: we should not need to bind the texture every iteration. 
             this.__imagePyramid.bind(renderstate);
-            // hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
+            if ('hammersleyMap' in unifs){
+                hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
+            }
+
+            // Set the roughness.
+            if ('roughness' in unifs){
+                let roughness = i/(this.__fbos.length-1);
+                gl.uniform1f(unifs.roughness.location, roughness);
+            }
+
 
             gl.drawQuad();
         }
@@ -143,7 +168,7 @@ class GLProbe extends ImageAtlas {
 
     // TODO: we shouldn't template the shaders to use an env map.
     // These values need to be passed in as uniforms.
-    getShaderPreprocessorDirectives(){
+    getShaderPreprocessorDirectives() {
         return {
             "ATLAS_NAME": "EnvMap",
             "EnvMap_COUNT": this.numSubImages(),
@@ -151,13 +176,13 @@ class GLProbe extends ImageAtlas {
         }
     }
 
-    bindforReading(renderstate, location){
+    bindforReading(renderstate, location) {
         //this.__imagePyramid.getSubImage(3).bind(renderstate, location);
-        if(this.__convolved)
+        if (this.__convolved)
             this.bind(renderstate, location);
     }
 
-    destroy(){
+    destroy() {
         super.destroy();
         this.__convolverShader.destroy();
 

@@ -23,6 +23,8 @@ class ResourceLoader {
     }
 
     resolveURL(filePath) {
+        if(!this.__resources)
+            console.error("Resources dict not provided");
         let parts = filePath.split('/');
         let curr = this.__resources;
         for(let part of parts){

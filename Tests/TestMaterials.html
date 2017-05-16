@@ -17,10 +17,9 @@
  
 
     let domElement = addCanvas();
-    let envMapURL = "Assets/hdri_sky_02_sample.vlh";
 
-    let scene = new Visualive.Scene();
-    let envMap =  new Visualive.HDRImage2D('env', envMapURL, true);
+    let scene = new Visualive.Scene(generateResourcesDict(["Assets/hdri_sky_02_sample.vlh"]));
+    let envMap =  new Visualive.HDRImage2D('env', "Assets/hdri_sky_02_sample.vlh", scene.getResourceLoader());
     scene.setEnvMap(envMap);
 
     let addMeshShape = (shape, pos, mat)=>{

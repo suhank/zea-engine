@@ -2,6 +2,7 @@ import { Color } from '../../Math/Color';
 import { sgFactory } from '../SGFactory.js';
 import { shaderLibrary } from '../ShaderLibrary.js';
 import { Material } from '../Material.js';
+import './GLSL/constants.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/GGX_Specular.js';
@@ -100,6 +101,7 @@ void main(void) {
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardMaterial.fragmentShader', `
 precision highp float;
 
+<%include file="math/constants.glsl"/>
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif

@@ -82,7 +82,7 @@ float luminanceFromRGB(vec3 rgb) {
 
 void main(void) {
 
-    vec2 uv = normalToUvRectOct(normalize(v_worldDir));
+    vec2 uv = normalToUvSphOct(normalize(v_worldDir));
     vec4 env = texture2D(_envTex, uv);
 
     gl_FragColor = vec4(env.rgb/env.a, 1.0);

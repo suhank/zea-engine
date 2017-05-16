@@ -59,18 +59,22 @@ void main(void) {
 
     // Wrap X coords
     if(pixelCoord.x < 0.0){
-        uv.x = uv.x + 1.0;
+        uv.x += 1.0/textureDim.x;
+        uv.y = 1.0 - uv.y;
     }
     else if(pixelCoord.x > textureDim.x){
-        uv.x = uv.x - 1.0;
+        uv.x -= 1.0/textureDim.x;
+        uv.y = 1.0 - uv.y;
     }
 
-    // Clamp Y coords
+    // Wrap Y coords
     if(pixelCoord.y < 0.0){
-        uv.y = 0.0;
+        uv.y += 1.0/textureDim.y;
+        uv.x = 1.0 - uv.x;
     }
     else if(pixelCoord.y > textureDim.y){
-        uv.y = 1.0;
+        uv.y -= 1.0/textureDim.y;
+        uv.x = 1.0 - uv.x;
     }
 
     vec4 texel = texture2D(texture, uv);
@@ -288,7 +292,10 @@ class ImageAtlas extends GLTexture2D {
         let structName = 'atlas' + this.__name;
 
         let unifs = renderstate.unifs;
-        super.bind(renderstate, location ? location : unifs[structName+'.image'].location);
+        if(location)
+            super.bind(renderstate, location);
+        else if(unifs[structName+'.image'])
+            super.bind(renderstate, unifs[structName+'.image'].location);
 
         let atlasLayoutUnifName = structName+'.layout';
         if(atlasLayoutUnifName in unifs)

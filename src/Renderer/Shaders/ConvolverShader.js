@@ -26,9 +26,10 @@ void main()
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('ConvolverShader.fragmentShader', `
 precision highp float;
 
+<%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 
 uniform float roughness;
 varying vec2 v_texCoord;
@@ -63,7 +64,8 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
     return H;
 }
 
-
+// TODO: use tobias's code. The guy clearly knows what he's doing...
+// https://github.com/thefranke/dirtchamber/blob/master/shader/importance.hlsl
 // Compute a LOD level for filtered importance sampling.
 // From GPU Gems 3: GPU-Based Importance Sampling.
 //float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int hh)
@@ -74,12 +76,13 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
 uniform ImageAtlas atlasEnvMap;
 
 void main(void) {
-    vec3 N = dirFromLatLongUVs(v_texCoord.x, v_texCoord.y);
+    vec3 N = uvToNormalSphOct(v_texCoord);
 
-    if(true){
-        vec2 uv = latLongUVsFromDir(N);
-        //gl_FragColor = sampleImagePyramid(uv, roughness, atlasEnvMap);
-        gl_FragColor = sampleSubImage(uv, 0, atlasEnvMap);
+    if(false){
+        vec2 uv = normalToUvSphOct(N);
+        //gl_FragColor = vec4(uv.x, uv.y, 0.0, 1.0);
+        gl_FragColor = sampleImagePyramid(uv, roughness, atlasEnvMap);
+        //gl_FragColor = sampleSubImage(uv, 0, atlasEnvMap);
         //gl_FragColor = texture2D(atlasEnvMap, uv);
     }
     else{
@@ -95,7 +98,10 @@ void main(void) {
             vec3 V = normalize(vecSpace * H);
             float VdotN = dot(V, N);
 
-            vec2 uv = latLongUVsFromDir(V);
+            vec2 uv = normalToUvSphOct(V);
+            // float pdf = D_ggx(a, NoH) * NoH / (4 * VoH);
+            // float lod = compute_lod(H, );
+
             color += sampleImagePyramid(uv, 0.0, atlasEnvMap) * VdotN;
             weight += VdotN;
         }

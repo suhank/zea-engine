@@ -9,7 +9,6 @@ import {
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
-import '../../SceneTree/Shaders/GLSL/envmap-equirect.js';
 import '../../SceneTree/Shaders/GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
@@ -66,7 +65,7 @@ varying vec2 v_texCoord;
 
 void main(void) {
 
-    vec2 uv = normalToUvRectOct(normalize(v_worldDir));
+    vec2 uv = normalToUvSphOct(normalize(v_worldDir));
     vec4 texel = texture2D(_envTex, uv);
     gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
 

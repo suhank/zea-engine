@@ -5,51 +5,20 @@ import {
 // https://gist.github.com/pyalot/cc7c3e5f144fb825d626
 shaderLibrary.setShaderModule('pragmatic-pbr/envmap-octahedral.glsl', `
 
-const float PI = 3.1415926;
 #define sectorize(value) step(0.0, (value))*2.0-1.0
 #define sum(value) dot(clamp((value), 1.0, 1.0), (value))
-#define PI 3.141592653589793
 
-vec2 normalToUvRectOct(vec3 normal){
-    normal /= sum(abs(normal));
-    if(normal.y > 0.0){
-        return normal.xz*0.5+0.5;
-    }
-    else{
-        vec2 suv = sectorize(normal.xz);
-        vec2 uv = suv-suv*abs(normal.zx);
-        return uv*0.5+0.5;
-    }
-}
 
-vec3 uvToNormalRectOct(vec2 uv){
-    uv = uv*2.0-1.0;
-    vec2 auv = abs(uv);
-    vec2 suv = sectorize(uv);
-    float l = sum(auv);
-
-    if(l > 1.0){
-        uv = (1.0-auv.ts)*suv;
-    }
-
-    return normalize(vec3(uv.s,1.0-l,uv.t));
-}
-
-#define highdef 1
 vec2 normalToUvSphOct(vec3 normal){
+    normal = normalize(normal);
     vec3 aNorm = abs(normal);
     vec3 sNorm = sectorize(normal);
 
-    #if highdef
-        vec2 dir = aNorm.xz;
-        float orient = atan(dir.x, max(dir.y,0.0000000000000001))/(PI*0.5);
+    vec2 dir = max(aNorm.xz, 1e-20);
+    float orient = atan(dir.x, dir.y)/HalfPI;
 
-        dir = vec2(aNorm.y, length(aNorm.xz));
-        float pitch = atan(dir.y, dir.x)/(PI*0.5);
-    #else
-        float orient = acos(normalize(aNorm.xz).y)/(PI*0.5);
-        float pitch = acos(aNorm.y)/(PI*0.5);
-    #endif
+    dir = max(vec2(aNorm.y, length(aNorm.xz)), 1e-20);
+    float pitch = atan(dir.y, dir.x)/HalfPI;
 
     vec2 uv = vec2(sNorm.x*orient, sNorm.z*(1.0-orient))*pitch;
 
@@ -59,26 +28,34 @@ vec2 normalToUvSphOct(vec3 normal){
     return uv*0.5+0.5;
 }
 
+
 vec3 uvToNormalSphOct(vec2 uv){
     uv = uv*2.0-1.0;
     vec2 suv = sectorize(uv);
-    float pitch = sum(abs(uv))*PI*0.5;
-    
-    if(sum(abs(uv)) > 1.0){
+    float sabsuv =  sum(abs(uv));
+    float pitch = sabsuv*HalfPI;
+
+    if (pitch <= 0.0) {
+        return vec3(0.0, 1.0, 0.0);
+    }
+    if (abs(pitch - PI) < 0.000001) {
+        return vec3(0.0, -1.0, 0.0);
+    }
+    if(sabsuv > 1.0){
         uv = (1.0-abs(uv.ts))*suv;
-    }   
-    
-    float orient = (abs(uv.s)/sum(abs(uv)))*PI*0.5;
+    }
+
+    float orient = (abs(uv.s)/sabsuv)*HalfPI;
     float sOrient = sin(orient);
     float cOrient = cos(orient);
     float sPitch = sin(pitch);
     float cPitch = cos(pitch);
-    
+
     return vec3(
         sOrient*suv.s*sPitch,
         cPitch,
         cOrient*suv.t*sPitch
-    );  
+    );
 }
 
 `);

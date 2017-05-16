@@ -2,8 +2,6 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 
 shaderLibrary.setShaderModule('pragmatic-pbr/envmap-equirect.glsl', `
 
-const float PI = 3.1415926;
-#define TwoPI (2.0 * PI)
 
 /**
  

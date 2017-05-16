@@ -1,17 +1,17 @@
 import { shaderLibrary } from '../../ShaderLibrary.js';
 import './ImagePyramid.js';
-import './envmap-equirect.js';
+import './envmap-octahedral.js';
 
 shaderLibrary.setShaderModule('GGX_Specular.glsl', `
 
 
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 
 uniform ImageAtlas atlasEnvMap;
 
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramid(latLongUVsFromDir(dir), roughness, atlasEnvMap).rgb;
+    return sampleImagePyramid(normalToUvSphOct(dir), roughness, atlasEnvMap).rgb;
 }
 
 

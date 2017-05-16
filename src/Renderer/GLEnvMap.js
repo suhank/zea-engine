@@ -63,8 +63,8 @@ class GLEnvMap extends GLProbe {
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
                 //screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex);
-                //screenQuad.draw(renderstate, this.__srcGLTex);
-                //screenQuad.draw(renderstate, this.__imagePyramid);
+                // screenQuad.draw(renderstate, this.__srcGLTex);
+                // screenQuad.draw(renderstate, this.__imagePyramid);
                 screenQuad.draw(renderstate, this);
             } else {
                 ///////////////////

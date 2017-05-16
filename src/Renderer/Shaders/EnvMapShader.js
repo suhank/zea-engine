@@ -3,7 +3,7 @@ import { Shader }  from '../../SceneTree/Shader';
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
-import '../../SceneTree/Shaders/GLSL/envmap-equirect.js';
+import '../../SceneTree/Shaders/GLSL/envmap-octahedral.js';
 import './utils/quadVertexFromID.js';
 
 class EnvMapShader extends Shader {
@@ -47,8 +47,9 @@ void main()
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('EnvMapShader.fragmentShader', `
 precision highp float;
 
+<%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
-<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 
@@ -67,7 +68,7 @@ varying vec2 v_texCoord;
 
 void main(void) {
 
-    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+    vec2 uv = normalToUvSphOct(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
         vec4 texel = texture2D(atlasEnvMap.image, uv);
