@@ -88,7 +88,7 @@ class GLMaterial {
 
     bind(renderstate) {
 
-        console.log("Material:" + this.__material.name);
+        // console.log("Material:" + this.__material.name);
         this.__boundTexturesBeforeMaterial = renderstate['boundTextures'];
         let gl = this.__gl;
         let unifs = renderstate['unifs'];
@@ -97,7 +97,7 @@ class GLMaterial {
             let value = this.__material.getParameter(unifName);
             if (value == undefined)
                 continue;
-            console.log("Param:" + unifName + " value:" + value);
+            // console.log("Param:" + unifName + " value:" + value);
             // let checkType = function(expectedType){
             //     if (expectedType != unif['type']) {
             //         let valueType = value.constructor.name;

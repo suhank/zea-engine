@@ -30,7 +30,7 @@
     for(let i=0; i<10; i++){
         for(let j=0; j<10; j++){
             let material = new Visualive.StandardMaterial('ground');
-            material.baseColor = new Visualive.Color(0.6, 0.6, 0.6);
+            material.baseColor = new Visualive.Color(0.6, 0.0, 0.0);
             material.roughness = i/9;
             material.metallic = j/9;
             if(j < 6)
@@ -42,7 +42,7 @@
     }
     
     let renderer = new Visualive.GLVisualiveRenderer(domElement);
-    renderer.exposure = 1.5;
+    renderer.exposure = 1.0;
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
     
     envMap.loaded.connect(() => {

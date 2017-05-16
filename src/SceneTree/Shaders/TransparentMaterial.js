@@ -92,6 +92,7 @@ uniform color _baseColor;
 uniform float _opacity;
 
 #ifdef ENABLE_SPECULAR
+<%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 uniform float _roughness;
