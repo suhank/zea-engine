@@ -29,6 +29,15 @@ class Material extends Shader {
         }
     }
 
+    copyFrom(srcMaterial){
+        for (let propName in this.__props) {
+            let prop = this.__props[propName];
+            let srcProp = srcMaterial.getParameter(propName)
+            if (srcProp != undefined)
+                this.__props[propName] = srcProp;
+        }
+    }
+
 
     get textures() {
         let textures = {};
@@ -42,10 +51,10 @@ class Material extends Shader {
 
     addParameter(name, defaultValue, texturable=true) {
         this.__props['_'+name] = defaultValue;
-        this.__props['_'+name+'Tex'] = undefined;
-        this.__props['_'+name+'TexConnected'] = false;
         let get, set;
         if(texturable){
+            this.__props['_'+name+'Tex'] = undefined;
+            this.__props['_'+name+'TexConnected'] = false;
             get = ()=>{ 
                     if(this.__props['_'+name+'TexConnected'])
                         return this.__props['_'+name+'Tex'];
@@ -87,7 +96,6 @@ class Material extends Shader {
                 };
             set = (val)=>{
                 this.__props['_'+name] = val;
-                updated.emit();
                 this.updated.emit();
             };
         }

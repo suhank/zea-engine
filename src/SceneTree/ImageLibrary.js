@@ -10,12 +10,13 @@ import {
 ///////////////////////////////////
 // ImageLibrary
 class ImageLibrary {
-    constructor(url) {
+    constructor(resourceName, resourceLoader) {
+        this.__resourceLoader = resourceLoader;
         this.__images = {};
         this.__async = new Async();
         this.loaded = new Signal();
-        if (url)
-            this.loadURL(url);
+        if (resourceName)
+            this.loadURL(resourceName);
     }
 
     hasImage(name) {
@@ -33,10 +34,10 @@ class ImageLibrary {
         return names;
     }
 
-    loadURL(fileUrl) {
-        this.__resourceLoader.loadResources(filePath,
+    loadURL(resourceName) {
+        this.__resourceLoader.loadResources(resourceName,
             (path, entries) => {
-                for (let name of entries) {
+                for (let name in entries) {
                     if (name.endsWith('.png') || name.endsWith('.jpg')) {
                         let data = entries[name];
                         let url = URL.createObjectURL(new Blob([data.buffer]));
