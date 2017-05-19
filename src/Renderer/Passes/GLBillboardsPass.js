@@ -167,6 +167,9 @@ class GLBillboardsPass extends GLPass {
 
     draw(renderstate) {
 
+        if (this.__atlasNeedsUpdating)
+            this.__updateBillboards();
+        
         if (!this.__instancesTexture)
             return;
 

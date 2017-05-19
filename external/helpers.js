@@ -41,7 +41,8 @@ let generateResourcesDict = (list=[])=>{
         commonResources: {
             'Resources.vlr': window.location.origin+'/Resources/Resources.vlr',
             'Dome.vlatree': window.location.origin+'/Resources/Dome.vlatree',
-            'Dome0.vlageoms': window.location.origin+'/Resources/Dome0.vlageoms'
+            'Dome0.vlageoms': window.location.origin+'/Resources/Dome0.vlageoms',
+            'FlakesNormalMap.png': window.location.origin+'/Resources/FlakesNormalMap.png'
         }
     };
     let rootURL = window.location.href.split('#')[0];

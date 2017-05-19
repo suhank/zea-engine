@@ -10,4 +10,5 @@ export * from './LinesMaterial.js';
 export * from './FatLinesMaterial.js';
 export * from './EnvProjectionMaterial.js';
 export * from './LightmapCatcherMaterial.js';
+export * from './LayeredCarPaintMaterial.js';
 
