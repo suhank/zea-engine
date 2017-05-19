@@ -9,22 +9,23 @@ import {
     Image2D
 } from './Image2D.js';
 
-let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
+// let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(name, url) {
+    constructor(name, resourceLoader) {
         super();
 
         this.__name = name;
-        this.__url = url ? url : name;
+        this.__resourceLoader = resourceLoader;
         this.__isHDR = false;
         this.__hasAlpha = false;
         this.__loaded = false;
 
         this.loaded = new Signal();
 
-        if (url)
-            this.loadURL(url);
+        if (this.__resourceLoader.resourceAvailable(name)){
+            this.loadURL(this.__resourceLoader.resolveURL(name));
+        }
     }
 
     loadURL(url) {
@@ -35,9 +36,7 @@ class FileImage2D extends Image2D {
             if(suffixSt != -1)
                 return last.substring(suffixSt)
         }
-        let ext = getExt(url);
-        if(!ext)
-            ext = getExt(this.__name);
+        let ext = getExt(this.__name);
         if (ext == '.jpg' || ext == '.png') {
             this.__loadLDRImage(url);
         } else if (ext == '.mp4' || ext == '.ogg') {
@@ -107,66 +106,62 @@ class FileImage2D extends Image2D {
         domElement.play();
     }
 
-    __loadLDRAlpha(url) {
-        let worker = new ResourceLoaderWorker();
-        worker.onmessage = (event) => {
-            worker.terminate();
+    // __loadLDRAlpha(url) {
+    //     let worker = new ResourceLoaderWorker();
+    //     worker.onmessage = (event) => {
+    //         worker.terminate();
 
-            let data = event.data;
-            let ldr, alpha;
-            for (let name in data.entries) {
-                if (name.endsWith('.jpg'))
-                    ldr = data.entries[name];
-                else if (name.endsWith('.png'))
-                    alpha = data.entries[name];
-            }
+    //         let data = event.data;
+    //         let ldr, alpha;
+    //         for (let name in data.entries) {
+    //             if (name.endsWith('.jpg'))
+    //                 ldr = data.entries[name];
+    //             else if (name.endsWith('.png'))
+    //                 alpha = data.entries[name];
+    //         }
 
-            /////////////////////////////////
-            // Parse the data.
-            let async = new Async();
-            async.ready.connect(() => {
-                this.width = ldrPic.width;
-                this.height = ldrPic.height;
-                this.__data = {
-                    ldr: ldrPic,
-                    alpha: alphaPic
-                }
-                if (!this.__loaded) {
-                    this.__loaded = true;
-                    this.loaded.emit();
-                } else {
-                    this.updated.emit();
-                }
-            });
-            async.incAsyncCount(2);
+    //         /////////////////////////////////
+    //         // Parse the data.
+    //         let async = new Async();
+    //         async.ready.connect(() => {
+    //             this.width = ldrPic.width;
+    //             this.height = ldrPic.height;
+    //             this.__data = {
+    //                 ldr: ldrPic,
+    //                 alpha: alphaPic
+    //             }
+    //             if (!this.__loaded) {
+    //                 this.__loaded = true;
+    //                 this.loaded.emit();
+    //             } else {
+    //                 this.updated.emit();
+    //             }
+    //         });
+    //         async.incAsyncCount(2);
 
-            let ldrPic = new Image();
-            ldrPic.onload = async.decAsyncCount;
-            ldrPic.src = URL.createObjectURL(new Blob([ldr.buffer]));
+    //         let ldrPic = new Image();
+    //         ldrPic.onload = async.decAsyncCount;
+    //         ldrPic.src = URL.createObjectURL(new Blob([ldr.buffer]));
 
-            let alphaPic = new Image();
-            alphaPic.onload = async.decAsyncCount;
-            alphaPic.src = URL.createObjectURL(new Blob([alpha.buffer]));
+    //         let alphaPic = new Image();
+    //         alphaPic.onload = async.decAsyncCount;
+    //         alphaPic.src = URL.createObjectURL(new Blob([alpha.buffer]));
 
-        };
-        worker.postMessage({
-            name: this.__name,
-            url
-        });
-    }
+    //     };
+    //     worker.postMessage({
+    //         name: this.__name,
+    //         url
+    //     });
+    // }
 
     __loadVLH(url) {
-        let worker = new ResourceLoaderWorker();
-        worker.onmessage = (event) => {
-            worker.terminate();
-
-            let data = event.data;
+        this.__resourceLoader.loadResource(this.__name, (entries)=>{
             let ldr, cdm;
-            for (let name in data.entries) {
+            for (let name in entries) {
                 if (name.endsWith('.jpg'))
-                    ldr = data.entries[name];
+                    ldr = entries[name];
                 else if (name.endsWith('.bin'))
-                    cdm = data.entries[name];
+                    cdm = entries[name];
             }
 
             /////////////////////////////////
@@ -188,10 +183,6 @@ class FileImage2D extends Image2D {
                 }
             }
             ldrPic.src = URL.createObjectURL(blob);
-        };
-        worker.postMessage({
-            name: this.__name,
-            url
         });
     }
 

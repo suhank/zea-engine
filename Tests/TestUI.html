@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test UI</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+        <script src="../external/dat.gui.js"></script>
+        <script src="../external/stats.min.js"></script>
+        <script src="../external/helpers.js"></script>
+        <script src="../external/Unpack.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/VisualiveUI-dev.js"></script>
+        <script src="index.js"></script>
+        <script type="text/javascript">
+
+var init = function(domElement, resources) { 
+    let scene = new Visualive.Scene(resources);
+    scene.setEnvMap(new Visualive.FileImage2D('Assets/pisa.vlh', scene.getResourceLoader()));
+
+    let renderer  = new Visualive.GLVisualiveRenderer(domElement);
+    renderer.setScene(scene);
+    renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,1.7,2), new Visualive.Vec3(0,1,0));
+    renderer.resumeDrawing();
+    
+
+
+    let ui = VisualiveUI.renderComponent(domElement, resources, {
+        progressIncremented: scene.getResourceLoader().progressIncremented
+    }, VisualiveUI.Main);
+
+};
+
+let div = addCanvas();
+let resources = generateResourcesDict(['Assets/pisa.vlh']);
+init(div, resources);
+        
+        </script> 
+    </body>
+</html>

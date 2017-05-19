@@ -1,11 +1,11 @@
-import { Async } from '../Math/Async';
-import { Signal } from '../Math/Signal';
-import { FileImage2D } from './FileImage2D.js';
-
 import {
-    loadTextfile,
-    loadBinfile
-} from './Utils.js';
+    Async,
+    Signal
+} from '../Math';
+import {
+    FileImage2D
+} from './FileImage2D.js';
+
 
 ///////////////////////////////////
 // ImageLibrary
@@ -34,8 +34,8 @@ class ImageLibrary {
     }
 
     loadURL(fileUrl) {
-        this.__resourceLoader.loadResources(filePath,
-            (path, entries) => {
+        this.__resourceLoader.loadResource(filePath,
+            (entries) => {
                 for (let name of entries) {
                     if (name.endsWith('.png') || name.endsWith('.jpg')) {
                         let data = entries[name];

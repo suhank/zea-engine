@@ -1,9 +1,5 @@
-import { Signal } from '../Math/Signal';
+import { Signal } from '../Math';
 import { Image2D } from './Image2D.js';
-
-import {
-    loadBinfile
-} from './Utils.js';
 
 class HDRImage2D extends Image2D {
     constructor(name, resourceName, resourceLoader, isStream) {
@@ -42,8 +38,8 @@ class HDRImage2D extends Image2D {
             return;
         }
 
-        this.__resourceLoader.loadResources(filePath, 
-            (path, entries) => {
+        this.__resourceLoader.loadResource(filePath, 
+            (entries) => {
                 let ldr, cdm;
                 for(let name in entries){
                     if(name.endsWith('.jpg'))

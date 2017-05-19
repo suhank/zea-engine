@@ -35,8 +35,8 @@ class Scene {
         this.commonResourcesLoaded = new Signal(true);
 
         if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
-            this.__resourceLoader.loadResources('commonResources/Resources.vlr',
-                (path, entries) => {
+            this.__resourceLoader.loadResource('commonResources/Resources.vlr',
+                (entries) => {
 
                     let viveAsset = new BinAsset("ViveResources");
                     viveAsset.getMaterialLibary().forceMaterialType('FlatMaterial');

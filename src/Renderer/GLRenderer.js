@@ -12,7 +12,6 @@ import {
     Lines,
     Mesh,
     Grid,
-    loadBinfile,
     LinesMaterial
 } from '../SceneTree';
 import {
@@ -131,17 +130,17 @@ class GLRenderer {
         this.__vrViewport = undefined;
         this.mirrorVRisplayToViewport = true;
 
-        this.__stats = new Stats();
-        this.__stats.dom.style.position = 'absolute';
-        this.__stats.dom.style.top = 0;
-        this.__stats.dom.style.left = 0;
-        this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        this.__stats.dom.style.visibility = "hidden"
-        canvasDiv.appendChild(this.__stats.dom);
-        if (options.displayStats) {
-            this.__stats.dom.style.visibility = "visible";
-            this.__displayStats = true;
-        }
+        // this.__stats = new Stats();
+        // this.__stats.dom.style.position = 'absolute';
+        // this.__stats.dom.style.top = 0;
+        // this.__stats.dom.style.left = 0;
+        // this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        // this.__stats.dom.style.visibility = "hidden"
+        // canvasDiv.appendChild(this.__stats.dom);
+        // if (options.displayStats) {
+        //     this.__stats.dom.style.visibility = "visible";
+        //     this.__displayStats = true;
+        // }
 
 
     }
@@ -232,32 +231,6 @@ class GLRenderer {
                 this.__setupVRViewport();
 
             this.sessionClient = new SessionClient(this, entries);
-
-            //if (options.displayLogo)
-            {
-                let logo = new Image();
-                logo.src = URL.createObjectURL(new Blob([entries['LogoSmall.png'].buffer]));
-                logo.style.position = 'absolute';
-                logo.style.top = '10px';
-                logo.style.left = '10px';
-                this.__glcanvasDiv.appendChild(logo);
-            }
-
-            // if (options.displayLoading && this.__drawSuspensionLevel > 0) {
-            //     let loadingDiv = document.createElement("div");
-            //     loadingDiv.style.position = 'absolute';
-            //     loadingDiv.style.top = '50%';
-            //     loadingDiv.style.left = '50%';
-            //     let loading = new Image();
-            //     loading.src = URL.createObjectURL(new Blob([entries['loading.gif'].buffer]));
-            //     loading.style.width = '20%';
-            //     loading.style.height = '20%';
-            //     loading.style.transform = 'translate(-50%, -50%)';
-            //     loadingDiv.appendChild(loading);
-            //     this.__glcanvasDiv.appendChild(loadingDiv);
-            //     this.__loadingImg = loadingDiv;
-            // }
-
         });
 
         this.sceneSet.emit(this.__scene);

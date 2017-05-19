@@ -42,7 +42,7 @@ class ObjAsset extends AssetItem {
 
     loadURL(url) {
         this.__incrementLoadCounter();
-        loadTextfile(url, this.parseObjData, undefined, this);
+        loadTextfile(url, this.parseObjData.bind(this));
     }
 
     // loadFile(filePath) {
@@ -115,7 +115,7 @@ class ObjAsset extends AssetItem {
         this.__decrementLoadCounter();
     }
 
-    parseObjData(filePath, fileData) {
+    parseObjData(fileData) {
 
         //performance.mark("parseObjData");
 
@@ -177,9 +177,7 @@ class ObjAsset extends AssetItem {
                     let fileFolder = getFileFolder(filePath);
                     loadTextfile(
                         fileFolder + elements[0],
-                        this.parseMtlData,
-                        undefined,
-                        this
+                        this.parseMtlData.bind(this)
                     );
                     break;
                 case 'o':

@@ -8,10 +8,6 @@ import {
 import {
     BinReader
 } from './BinReader.js';
-import {
-    loadTextfile,
-    loadBinfile
-} from './Utils.js';
 
 class BinAsset extends AssetItem {
     constructor(name, resourceLoader) {
@@ -30,8 +26,8 @@ class BinAsset extends AssetItem {
     loadURL(filePath) {
 
         let numGeomsFiles = 1;
-        this.__resourceLoader.loadResources(filePath,
-            (path, entries) => {
+        this.__resourceLoader.loadResource(filePath,
+            (entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
                 loadNextGeomFile();
@@ -47,7 +43,7 @@ class BinAsset extends AssetItem {
             }
         }
         let loadGeomsfile = (geomsResourceName) => {
-            this.__resourceLoader.loadResources(geomsResourceName,
+            this.__resourceLoader.loadResource(geomsResourceName,
                 (path, entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
                     this.__geoms.readBinaryBuffer(geomsData.buffer);

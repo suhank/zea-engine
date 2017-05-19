@@ -7,10 +7,11 @@ import {
 } from '../external/Unpack.js';
 
 self.onmessage = function(event) {
-    loadBinfile(event.data.url, (url, data) => {
+    loadBinfile(event.data.url, (data) => {
         let unpack = new Unpack(data);
         let entries = unpack.getEntries();
         let result = {
+            type: 'finished',
             name: event.data.name,
             url: event.data.url,
             entries: {}
@@ -30,7 +31,15 @@ self.onmessage = function(event) {
         }
 
         self.postMessage(result, transferables);
-    }, (statusText, url) => {
-        console.warn("Unable to Load URL:"+ url);
+    }, (statusText) => {
+        console.warn("Unable to Load URL:"+ event.data.url);
+    }, (total, loaded) => {
+        self.postMessage({
+            type: 'progress',
+            name: event.data.name,
+            url: event.data.url,
+            total,
+            loaded
+        });
     });
 }

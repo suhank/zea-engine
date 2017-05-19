@@ -51,13 +51,12 @@ class GeomLibrary {
         let onLoad = this.loadBin;
         loadBinfile(
             fileUrl,
-            function(fileUrl, data) {
+            (data)=>{
                 this.loadBin(data);
             },
-            function(statusText) {
+            (statusText)=>{
                 console.warn(statusText);
-            },
-            this
+            }
         );
     }
 

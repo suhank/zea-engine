@@ -2,56 +2,66 @@ let getFileFolder = function(filePath) {
     return filePath.substring(0, filePath.lastIndexOf("/")) + '/';
 }
 
-let loadfile = function(url, responseType, onSucceed, onFail) {
+let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
     let xhr = new XMLHttpRequest();
     xhr.responseType = responseType;
     try {
-        xhr.open("GET", url, true);
-        xhr.ontimeout = function() {
+        xhr.addEventListener("timeout", function(event) {
             console.error("The request for " + url + " timed out.");
-        };
-        xhr.onerror = function() {
+        });
+        xhr.addEventListener("error", function(event) {
+            console.error("xhr.error xhr.readyState:" + xhr.readyState);
             onFail(xhr.statusText);
-        }
-        xhr.onload = function() {
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200 || xhr.status == 0) { // Note: .status == 0 for local files. 
-                    onSucceed(xhr);
-                } else {
-                    onFail(xhr.statusText);
-                }
-            }
-        };
-        xhr.send(null);
+        });
+        xhr.addEventListener("abort", function(event) {
+            console.error("xhr.abort xhr.readyState:" + xhr.readyState);
+            onFail(xhr.statusText);
+        });
+        xhr.addEventListener("loadend", function(event) {
+            onSucceed(xhr);
+        });
+        xhr.open("GET", url, true);
+        xhr.send();
+        // xhr.open();
     } catch (err) {
         onFail(err);
     }
 }
 
 
-let loadTextfile = function(url, onSucceed, onFail = undefined, scope = undefined) {
-    loadfile(url, 'text', function(xhr) {
-            onSucceed.call(scope, url, xhr.responseText);
+let loadTextfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+    loadfile(url, 'text',
+        (xhr) => {
+            onSucceed(xhr.responseText);
         },
-        function(statusText) {
+        (statusText) => {
             if (onFail != undefined)
-                onFail.call(scope, statusText, url);
-            else{
-                console.error("File not found:" + url);
+                onFail(statusText);
+            else {
+                console.error("Unable to XHR File:" + url);
             }
+        },
+        (total, loaded) => {
+            if (onProgress != undefined)
+                onProgress(total, loaded);
         });
 }
 
-let loadBinfile = function(url, onSucceed, onFail = undefined, scope = undefined) {
-    loadfile(url, 'arraybuffer', function(xhr) {
-            onSucceed.call(scope, url, xhr.response);
+let loadBinfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+    loadfile(url, 'arraybuffer',
+        (xhr) => {
+            onSucceed(xhr.response);
         },
-        function(statusText) {
+        (statusText) => {
             if (onFail != undefined)
-                onFail.call(scope, statusText, url);
-            else{
-                console.error("File not found:" + url);
+                onFail(statusText);
+            else {
+                console.error("Unable to XHR File:" + url);
             }
+        },
+        (total, loaded) => {
+            if (onProgress != undefined)
+                onProgress(total, loaded);
         });
 }
 
