@@ -209,6 +209,7 @@ class VRViewport {
         this.__stageXfo = xfo;
         this.__stageTreeItem.globalXfo = xfo;
         this.__stageMatrix = xfo.inverse().toMat4();
+        // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
         this.__stageScale = xfo.sc.x;
     }
 
@@ -481,6 +482,14 @@ class VRViewport {
         if (!this.__projectionMatriciesUpdated) {
             this.__leftProjectionMatrix.setDataArray(this.__frameData.leftProjectionMatrix);
             this.__rightProjectionMatrix.setDataArray(this.__frameData.rightProjectionMatrix);
+            // if (this.__vrDisplay.stageParameters) {
+            //     this.__sittingToStandingMatrix.setDataArray(this.__vrDisplay.stageParameters.sittingToStandingTransform);
+            // } else {
+            //     this.__standingMatrix.setIdentify();
+            //     let PLAYER_HEIGHT = 1.65;
+            //     this.__sittingToStandingMatrix.translation.set(0, PLAYER_HEIGHT, 0);
+            // }
+            // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
             this.__projectionMatriciesUpdated = true;
         }
 
@@ -488,15 +497,6 @@ class VRViewport {
         this.updateHeadAndControllers();
         this.bindAndClear(renderstate);
 
-        // if (this.__vrDisplay.stageParameters) {
-        //     this.__standingMatrix.setDataArray(this.__vrDisplay.stageParameters.sittingToStandingTransform);
-        //     this.__standingMatrix.multiplyInPlace(this.__stageMatrix);
-        // } else {
-        //     this.__standingMatrix.setIdentify();
-        //     let PLAYER_HEIGHT = 1.65;
-        //     this.__standingMatrix.translation.set(0, PLAYER_HEIGHT, 0);
-        // }
-        // this.__standingViewMatrix = this.__standingMatrix.inverse();
 
         renderstate['viewport'] = this;
         // renderstate['cameraMatrix'] = this.__standingMatrix;

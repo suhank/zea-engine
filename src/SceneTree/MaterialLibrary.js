@@ -22,8 +22,8 @@ class MaterialLibrary {
         return this.__materials;
     }
 
-    forceMaterialType(materialType) {
-        this.__forceMaterialType = materialType;
+    setMaterialTypeMapping(materialTypeMapping) {
+        this.__materialTypeMapping = materialTypeMapping;
     }
     
     hasMaterial(name){
@@ -107,11 +107,25 @@ class MaterialLibrary {
             for (let i=0; i< numMaterials; i++) {
                 let type = reader.loadStr();
                 let name = reader.loadStr();
-                // console.log("Material:" + name);
-                let material = sgFactory.constructClass(this.__forceMaterialType ? this.__forceMaterialType : type);
+                console.log("Material:" + name);
+                let material = sgFactory.constructClass(type);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags);
-                this.__materials[name] = material;
+
+                if (this.__materialTypeMapping && ('*' in this.__materialTypeMapping || name in this.__materialTypeMapping)) {
+                    let remappedMaterial;
+                    if (name in this.__materialTypeMapping) 
+                        remappedMaterial = sgFactory.constructClass(this.__materialTypeMapping[name]);
+                    else if ('*' in this.__materialTypeMapping) 
+                        remappedMaterial = sgFactory.constructClass(this.__materialTypeMapping['*']);
+
+                    remappedMaterial.copyFrom(material)
+                    this.__materials[name] = remappedMaterial;
+                }
+                else{
+                    this.__materials[name] = material;
+                }
+
             }
         }
     }

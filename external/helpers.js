@@ -42,7 +42,8 @@ let generateResourcesDict = (list=[])=>{
             'Resources.vlr': window.location.origin+'/Resources/Resources.vlr',
             'Dome.vlatree': window.location.origin+'/Resources/Dome.vlatree',
             'Dome0.vlageoms': window.location.origin+'/Resources/Dome0.vlageoms',
-            'LogoSmall.png': window.location.origin+'/Resources/LogoSmall.png'
+            'LogoSmall.png': window.location.origin+'/Resources/LogoSmall.png',
+            'FlakesNormalMap.png': window.location.origin+'/Resources/FlakesNormalMap.png'
         }
     };
     let rootURL = window.location.href.split('#')[0];
