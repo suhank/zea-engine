@@ -69,13 +69,14 @@ varying vec3 v_worldDir;
 
 uniform sampler2D lightmap;
 uniform float _shadowMultiplier;
-uniform float _gamma;
-uniform float _exposure;
 
 uniform color _env;
 uniform sampler2D _envTex;
 uniform bool _envTexConnected;
 
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+uniform float exposure;
+#endif
 
 float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
@@ -85,21 +86,20 @@ void main(void) {
 
     vec2 uv = normalToUvSphOct(normalize(v_worldDir));
     vec4 env = texture2D(_envTex, uv);
-
     gl_FragColor = vec4(env.rgb/env.a, 1.0);
 
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
     gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, clamp(luminanceFromRGB(irradiance), 0.0, 1.0));
 
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * _exposure, _gamma);
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+#endif
 
 }
 `);
         this.addParameter('env', new Color(1.0, 1.0, 0.5));
         this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
         this.addParameter('shadowMultiplier', 1.0);
-        this.addParameter('exposure', 1.0);
-        this.addParameter('gamma', 2.2);
         this.finalize();
     }
 

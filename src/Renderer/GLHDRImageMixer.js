@@ -60,7 +60,7 @@ class GLHDRImageMixer extends GLTexture2D {
         for(let i=0; i<subImages.length; i++){
             let subImageParams = subImages[i].getParams();
             if(this.__srcTextures.length <= i){
-                let ldr = subImageParams.ldr;
+                let ldr = subImageParams.data.ldr;
                 let ldrTex = new GLTexture2D(gl, {
                         channels: 'RGB',
                         format: 'UNSIGNED_BYTE',
@@ -79,7 +79,7 @@ class GLHDRImageMixer extends GLTexture2D {
                         filter: 'NEAREST',
                         mipMapped: false,
                         wrap: 'CLAMP_TO_EDGE',
-                        data: subImageParams.cdm
+                        data: subImageParams.data.cdm
                     });
                 this.__srcTextures[i] = { ldrTex, cdmTex };
             }
