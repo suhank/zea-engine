@@ -36,6 +36,7 @@
     let GeomItem = Visualive.GeomItem;
     let GLSimpleRenderer = Visualive.GLSimpleRenderer;
 
+    let resources = generateResourcesDict(["Assets/Texture.png"]);
 
     let TestRenderTriangle = function() {
         let div = addCanvas(350, 256);
@@ -57,7 +58,7 @@
         let material = new StandardMaterial();
         let geomItem = new GeomItem('geomItem', triangle, material);
 
-        let scene = new Scene();
+        let scene = new Scene(resources);
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);
@@ -87,7 +88,7 @@
         let material = new StandardMaterial();
         let geomItem = new GeomItem('geomItem', quad, material);
 
-        let scene = new Scene();
+        let scene = new Scene(resources);
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);
@@ -102,7 +103,7 @@
         let material = new StandardMaterial('mat0');
         let geomItem = new GeomItem('geomItem', quad, material);
 
-        let scene = new Scene();
+        let scene = new Scene(resources);
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);
@@ -112,6 +113,7 @@
     }
     let TestRenderUVSeam = function() {
         let div = addCanvas(350, 256);
+        let scene = new Scene(resources);
         // Test generating a UV seam in a simply plane..
 
         let quad = new Plane('quad', 1, 2, 1, 2);
@@ -128,11 +130,10 @@
         texCoords.setFaceVertexValue(1, 3, new Vec2(0, 1), true);
 
         let material = new StandardMaterial('mat0');
-        let texture = new FileImage2D('tex', "Assets/Texture.png");
+        let texture = new FileImage2D("Assets/Texture.png", scene.getResourceLoader());
         let geomItem = new GeomItem('geomItem', quad, material);
         material.baseColor = texture;
 
-        let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);
@@ -143,6 +144,7 @@
 
     let TestRenderUVAndNormalSeam = function() {
         let div = addCanvas(350, 256);
+        let scene = new Scene(resources);
         // Test generating a UV seam in a simply plane..
 
         let quad = new Plane('quad', 1, 2, 1, 2);
@@ -166,9 +168,8 @@
 
         let material = new StandardMaterial('mat0');
         let geomItem = new GeomItem('geomItem', quad, material);
-        material.baseColor = new FileImage2D('tex', "Assets/Texture.png");
+        material.baseColor = new FileImage2D("Assets/Texture.png", scene.getResourceLoader());
 
-        let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);
@@ -185,7 +186,7 @@
         let material = new StandardMaterial('mat0');
         let geomItem = new GeomItem('geomItem', cuboid, material);
 
-        let scene = new Scene();
+        let scene = new Scene(resources);
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);
@@ -195,15 +196,15 @@
     }
     let TestRenderTexturedCuboid = function() {
         let div = addCanvas(350, 256);
+        let scene = new Scene(resources);
 
         let cuboid = new Cuboid('myCuboid', 2, 3, 4);
         let material = new StandardMaterial();
-        let texture = new FileImage2D('tex', "Assets/Texture.png");
+        let texture = new FileImage2D("Assets/Texture.png", scene.getResourceLoader());
         let geomItem = new GeomItem('geomItem', cuboid, material);
 
         material.baseColor = texture;
 
-        let scene = new Scene();
         scene.getRoot().addChild(geomItem);
 
         let renderer = new GLSimpleRenderer(div);

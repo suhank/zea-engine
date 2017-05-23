@@ -10,6 +10,8 @@ class GLDrawItem {
         this.__glGeom = glGeom;
         this.__id = id;
         this.__flags = flags;
+        this.visible = true; 
+        this.__culled = false;
 
         this.__color = geomItem.color ? geomItem.color : new Color(1,0,0,1);
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
@@ -31,13 +33,14 @@ class GLDrawItem {
         this.transformChanged = new Signal();
         this.updated = new Signal();
         this.destructing = new Signal();
+        this.visibilityChanged = new Signal();
 
         this.__geomItem.globalXfoChanged.connect(() => {
             let geomXfo = this.__geomItem.getGeomXfo();
             this.__inverted = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
             this.transformChanged.emit();
         }, this);
-        this.__geomItem.visibilityChanged.connect(this.updated.emit, this.updated);
+        this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
 
         this.__geomItem.selectionChanged.connect((val) => {
             if(val)
@@ -102,6 +105,20 @@ class GLDrawItem {
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
         // Note: not connnected
         //this.updated.emit();
+    }
+
+    __updateVisibility(geomVisible){
+        let visible = geomVisible && !this.__culled;
+        if(this.visible != visible){
+            this.visible = visible;
+            this.visibilityChanged.emit(visible);
+            this.updated.emit();
+        }
+    }
+
+    setCullState(culled){
+        this.__culled = culled;
+        this.__updateVisibility(this.__geomItem.getVisible());
     }
 
     bind(renderstate) {

@@ -17,7 +17,7 @@
 
 var init = function(domElement, resources) { 
     let scene = new Visualive.Scene(resources);
-    scene.setEnvMap(new Visualive.FileImage2D('Assets/pisa.vlh', scene.getResourceLoader()));
+    // scene.setEnvMap(new Visualive.FileImage2D('Assets/pisa.vlh', scene.getResourceLoader()));
 
     let renderer  = new Visualive.GLVisualiveRenderer(domElement);
     renderer.setScene(scene);
@@ -25,11 +25,17 @@ var init = function(domElement, resources) {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,1.7,2), new Visualive.Vec3(0,1,0));
     renderer.resumeDrawing();
     
+    renderer.vrViewportSetup.connect((vrViewport)=>{
+        vrViewport.showInHandUI.connect((vrController)=>{
 
+        });
+    });
 
     let ui = VisualiveUI.renderComponent(domElement, resources, {
         progressIncremented: scene.getResourceLoader().progressIncremented
     }, VisualiveUI.Main);
+
+    let vrui = VisualiveUI.renderOffscreenComponent(domElement, resources, {}, VisualiveUI.VRInterface);
 
 };
 

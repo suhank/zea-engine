@@ -15,18 +15,25 @@
         <script type="text/javascript">
 
     let div = addCanvas();
-    let scene = new Visualive.Scene();
+    let resources = generateResourcesDict([]);
+    let scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.StandardMaterial('mat');
     standardMaterial.baseColor = new Visualive.Color(89 / 255, 182 / 255, 92 / 255);
     standardMaterial.roughness = 1.0;
     standardMaterial.metallic = 0.0;
 
+    let addGeomItem = (shape, row, count, i)=>{
+        let geomItem = new Visualive.GeomItem(shape.name+'Item'+i, shape, standardMaterial);
+        geomItem.localXfo.tr.set(i * 3, row * 3, 0);
+        scene.getRoot().addChild(geomItem);
+        setInterval(function(){ 
+            geomItem.setVisible(!geomItem.getVisible());
+        }, (row*100) + (i*500));
+    }
     let addMeshShape = (shape, row, count)=>{
         for(let i=0; i<count; i++){
-            let geomItem = new Visualive.GeomItem(shape.name+'Item'+i, shape, standardMaterial);
-            geomItem.localXfo.tr.set(i * 3, row * 3, 0);
-            scene.getRoot().addChild(geomItem);
+            addGeomItem(shape, row, count, i);
         }
     }
 

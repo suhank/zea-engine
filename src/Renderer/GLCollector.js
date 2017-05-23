@@ -233,8 +233,7 @@ class GLCollector {
 
         let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
         if (!drawItemSet) {
-            drawItemSet = new GLDrawItemSet(this.__renderer.gl);
-            drawItemSet.addGLGeom(glgeom);
+            drawItemSet = new GLDrawItemSet(this.__renderer.gl, glgeom);
             glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
         }
 
