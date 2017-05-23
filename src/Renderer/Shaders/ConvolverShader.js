@@ -80,8 +80,8 @@ void main(void) {
 
     if(false){
         vec2 uv = normalToUvSphOct(N);
-        //gl_FragColor = vec4(uv.x, uv.y, 0.0, 1.0);
-        gl_FragColor = sampleImagePyramid(uv, roughness, atlasEnvMap);
+        gl_FragColor = vec4(uv.x, uv.y, 0.0, 1.0);
+        //gl_FragColor = sampleImagePyramid(uv, roughness, atlasEnvMap);
         //gl_FragColor = sampleSubImage(uv, 0, atlasEnvMap);
         //gl_FragColor = texture2D(atlasEnvMap, uv);
     }
@@ -102,7 +102,7 @@ void main(void) {
             // float pdf = D_ggx(a, NoH) * NoH / (4 * VoH);
             // float lod = compute_lod(H, );
 
-            color += sampleImagePyramid(uv, 0.0, atlasEnvMap) * VdotN;
+            color += sampleImagePyramid(uv, 0.0, atlasEnvMap.layout, atlasEnvMap.image, atlasEnvMap.desc) * VdotN;
             weight += VdotN;
         }
         color /= float(weight);

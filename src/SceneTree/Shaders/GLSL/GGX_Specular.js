@@ -11,7 +11,7 @@ shaderLibrary.setShaderModule('GGX_Specular.glsl', `
 uniform ImageAtlas atlasEnvMap;
 
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramid(normalToUvSphOct(dir), roughness, atlasEnvMap).rgb;
+    return sampleImagePyramid(normalToUvSphOct(dir), roughness, atlasEnvMap.layout, atlasEnvMap.image, atlasEnvMap.desc).rgb;
 }
 
 

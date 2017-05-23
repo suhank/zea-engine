@@ -76,6 +76,9 @@ class GLShader {
                     vertexShaderGLSL = preproc.defines + vertexShaderGLSL;
             }
             let vertexShader = this.compileShaderStage(gl, vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', preproc);
+            if (!vertexShader) {
+                return false;
+            }
             gl.attachShader(shaderProgramHdl, vertexShader);
         }
         let fragmentShaderGLSL = this.__shader.fragmentShader;
@@ -89,6 +92,9 @@ class GLShader {
                     fragmentShaderGLSL = preproc.defines + fragmentShaderGLSL;
             }
             let fragmentShader = this.compileShaderStage(gl, fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', preproc);
+            if (!fragmentShader) {
+                return false;
+            }
             gl.attachShader(shaderProgramHdl, fragmentShader);
         }
         gl.linkProgram(shaderProgramHdl);
