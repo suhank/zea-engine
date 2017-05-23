@@ -71,6 +71,12 @@ class VRViewport {
 
         //////////////////////////////////////////////
         // Xfos
+        this.__uivisibile = true;
+        this.showInHandUI = new Signal();
+        this.hideInHandUI = new Signal();
+
+        //////////////////////////////////////////////
+        // Xfos
         this.__stageXfo = new Xfo();
         // this.__standingMatrix = new Mat4();
         this.__stageMatrix = new Mat4();
@@ -147,7 +153,7 @@ class VRViewport {
         if (isMobileDevice()) {
             this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
 
-            this.activateTool('FlyTool');
+            this.selectTool('FlyTool');
         } else {
             this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
             this.__vrTools['VRToolHoldObjects'] = new VRToolHoldObjects(this, this.__vrhead, this.__vrControllers);
@@ -168,9 +174,9 @@ class VRViewport {
                 this.actionOccuring.emit(data);
             }, this);
 
-            this.activateTool('VRToolMoveStage');
+            this.selectTool('VRToolMoveStage');
             this.__currentToolIndex = 0;
-            //this.activateTool('VRToolHoldObjects');
+            //this.selectTool('VRToolHoldObjects');
         }
 
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
@@ -428,8 +434,18 @@ class VRViewport {
                             if (this.__currentToolIndex < 0)
                                 this.__currentToolIndex = this.__vrToolNames.length - 1;
                         }
-                        this.activateTool(this.__vrToolNames[this.__currentToolIndex]);
+                        this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
                     }, this);
+                    vrController.showInHandUI.connect(()=>{
+                        this.showInHandUI.emit(vrController);
+                        this.__currentTool.deactivateTool();
+                        this.__uivisibile = true;
+                    });
+                    vrController.hideInHandUI.connect(()=>{
+                        this.hideInHandUI.emit();
+                        this.__currentTool.activateTool();
+                        this.__uivisibile = false;
+                    });
                     this.__vrControllers[id] = vrController;
                     this.controllerAdded.emit(id, vrController);
                 }
@@ -439,7 +455,7 @@ class VRViewport {
             }
         }
 
-        if (this.__currentTool) {
+        if (this.__currentTool && !this.__uivisibile) {
             this.__currentTool.evalTool();
         }
 

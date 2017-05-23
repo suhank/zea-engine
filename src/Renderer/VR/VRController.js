@@ -8,20 +8,11 @@ import {
     isMobileDevice,
 } from '../../Math';
 import {
-    Cuboid
-} from '../../SceneTree/Geometry/Shapes/Cuboid';
-import {
-    Sphere
-} from '../../SceneTree/Geometry/Shapes/Sphere';
-import {
-    TreeItem
-} from '../../SceneTree/TreeItem';
-import {
-    GeomItem
-} from '../../SceneTree/GeomItem';
-import {
+    Plane,
+    GeomItem,
+    TreeItem,
     FlatMaterial
-} from '../../SceneTree/Shaders/FlatMaterial';
+} from '../../SceneTree';
 import {
     GLMesh
 } from '../GLMesh.js';
@@ -63,13 +54,29 @@ class VRController extends Gizmo {
             sphereGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
             sphereGeomItem.selectable = false;
             this.__treeItem.addChild(sphereGeomItem);
-
         });
 
         this.__touchpadPressed = false;
         this.touchpadTouched = new Signal();
         this.buttonPressed = new Signal();
         this.buttonReleased = new Signal();
+
+        ///////////////////////////////////
+        // UI
+        this.showInHandUI = new Signal();
+        this.hideInHandUI = new Signal();
+        this.__uivisibile = false;
+
+        this.__uimat = new FlatMaterial('uimat');
+        this.__uimat.baseColor = new Color(.2, .2, .2);
+
+        let uiGeomItem = new GeomItem('VRControllerUI', new Plane(), this.__mat);
+        this.__uiGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
+        this.__uiGeomItem.selectable = false;
+        this.__treeItem.addChild(this.__uiGeomItem);
+
+        ///////////////////////////////////
+        // Xfo
 
         this.__xfo = new Xfo();
         this.__isDaydramController = isMobileDevice();
@@ -100,11 +107,25 @@ class VRController extends Gizmo {
             return;
         this.__treeItem.localXfo = this.__xfo;
 
-        // let controllerYAxis = this.__treeItem.globalXfo.ori.getYaxis();
-        // let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
-        // vecToHead.normalizeInPlace();
-        // let angle = controllerYAxis.angleTo(vecToHead);
-        // console.log("angle:" + angle);
+        ////////////////////////////////////////////
+        let controllerZAxis = this.__treeItem.globalXfo.ori.getZaxis();
+        let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
+        vecToHead.normalizeInPlace();
+        let angle = controllerYAxis.angleTo(vecToHead);
+        console.log("angle:" + angle);
+        if(angle < 1.0){
+            if(!this.__uivisibile){
+                this.showInHandUI.emit();
+                this.__uivisibile = true;
+            }
+
+        }
+        else{
+            if(this.__uivisibile){
+                this.hideInHandUI.emit();
+                this.__uivisibile = false;
+            }
+        }
 
 
         this.__touchpadValue = gamepad.axes;
