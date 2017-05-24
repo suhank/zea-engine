@@ -75,7 +75,7 @@ void main(void) {
         gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
     }
     else{
-        gl_FragColor = vec4(sampleImagePyramid(uv, focus, atlasEnvMap).rgb, 1.0);
+        gl_FragColor = vec4(sampleImagePyramid(uv, focus, atlasEnvMap.layout, atlasEnvMap.image, atlasEnvMap.desc).rgb, 1.0);
     }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

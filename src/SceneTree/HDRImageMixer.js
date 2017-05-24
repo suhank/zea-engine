@@ -4,7 +4,7 @@ import { Image2D } from './Image2D.js';
 import { HDRImage2D } from './HDRImage2D.js';
 
 class HDRImageMixer extends Image2D {
-    constructor(name, stream = true) {
+    constructor(name, resourceLoader, stream = true) {
         super({
             format: 'FLOAT',
             channels: 'RGB'
@@ -15,6 +15,7 @@ class HDRImageMixer extends Image2D {
         this.__loaded = false;
         this.__subImages = [];
         this.__weights = [];
+        this.__resourceLoader = resourceLoader;
 
         this.loaded = new Signal();
         this.updated = new Signal();
@@ -43,7 +44,7 @@ class HDRImageMixer extends Image2D {
             }
         }, this);
         for(let fileUrl of urls){
-            let subImage = new HDRImage2D(name, fileUrl);
+            let subImage = new HDRImage2D(this.__name+this.__subImages.length, fileUrl, this.__resourceLoader);
             subImage.loaded.connect(async.decAsyncCount, async);
             subImage.updated.connect(this.updated.emit, this.updated);
             this.__subImages.push(subImage);

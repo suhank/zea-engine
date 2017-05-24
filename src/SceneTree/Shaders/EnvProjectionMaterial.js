@@ -51,14 +51,17 @@ precision highp float;
 <%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+#ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
+#endif
 
 uniform color _env;
 uniform sampler2D _envTex;
 uniform bool _envTexConnected;
 
-uniform float _gamma;
-uniform float _exposure;
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+uniform float exposure;
+#endif
 
 /* VS Outputs */
 varying vec3 v_worldDir;
@@ -67,16 +70,16 @@ varying vec2 v_texCoord;
 void main(void) {
 
     vec2 uv = normalToUvSphOct(normalize(v_worldDir));
-    vec4 texel = texture2D(_envTex, uv);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+    vec4 env = texture2D(_envTex, uv);
+    gl_FragColor = vec4(env.rgb/env.a, 1.0);
 
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * _exposure, _gamma);
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+#endif
 }
 `);
         this.addParameter('env', new Color(1.0, 1.0, 0.5));
         this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
-        this.addParameter('exposure', 1.0);
-        this.addParameter('gamma', 2.2);
         this.finalize();
     }
 };
