@@ -54,7 +54,7 @@ class TreeItem {
     }
     copyTo(cloned){
         cloned.name = this.__name;
-        cloned.localXfo = this.__localXfo;
+        cloned.localXfo = this.__localXfo.clone();
         for(let childItem of this.__childItems)
             cloned.addChild(childItem.clone());
     }

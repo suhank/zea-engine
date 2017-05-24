@@ -77,7 +77,7 @@ class GLDrawItemSet {
     // drawing. 
     updateInstanceIDsBuffer() {
         if(this.__instancedIdsBuffer && this.__gldrawItems.length != this.__instancedIdsArray.length){
-            this.__gl.deleteData(this.__instancedIdsBuffer);
+            this.__gl.deleteBuffer(this.__instancedIdsBuffer);
             this.__instancedIdsBuffer = null;
         }
         if(!this.__instancedIdsBuffer){

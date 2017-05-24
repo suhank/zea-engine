@@ -39,15 +39,14 @@ varying vec3 v_viewNormal;
 
 void main(void) {
 
-    vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    vec4 viewPos    = modelViewMatrix * pos;
+    vec4 viewPos    = modelViewMatrix * vec4(positions, 1.);
+    gl_Position = projectionMatrix * viewPos;
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
-    gl_Position = projectionMatrix * v_viewPos;
 }
 `);
 
@@ -64,7 +63,7 @@ precision highp float;
 uniform mat4 cameraMatrix;
 
 uniform color _baseColor;
-//uniform float _opacity;
+uniform float _opacity;
 
 /* VS Outputs */
 varying vec4 v_viewPos;
@@ -73,7 +72,7 @@ varying vec3 v_viewNormal;
 void main(void) {
 
     vec4 baseColor = toLinear(_baseColor);
-    //float opacity = _opacity;
+    float opacity = _opacity;
 
     // Hacky simple irradiance. 
     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
@@ -87,7 +86,7 @@ void main(void) {
         //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
-    gl_FragColor = vec4(ndotv * baseColor.rgb, 1.0);
+    gl_FragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb);

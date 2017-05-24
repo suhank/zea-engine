@@ -505,10 +505,7 @@ class VRViewport {
             }
         }
 
-        if(this.__uivisibile > 0)
-
-        }
-        else if (this.__currentTool) {
+        if(this.__uivisibile == 0 && this.__currentTool) {
             this.__currentTool.evalTool();
         }
 
