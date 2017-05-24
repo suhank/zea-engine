@@ -252,8 +252,9 @@ class GLCollector {
             if (!treeItem.getMetadata('gldrawItem')) {
                 if (treeItem.getMaterial() == undefined) {
                     console.warn ("Scene item :" + treeItem.path + " has no material");
+                    // TODO: listen for when the material is assigned.(like geoms below)
                 }
-                if (treeItem.getGeom() == undefined) {
+                else if (treeItem.getGeom() == undefined) {
                     // we will add this geomitem once it recieves its geom.
                     treeItem.geomAssigned.connect(()=>{
                         this.addGeomItem(treeItem);

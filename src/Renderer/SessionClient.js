@@ -184,7 +184,7 @@ class SessionClient {
             sessionID = generateSessionID();
             // sessionStorage.setItem('sessionID', sessionID);
         }
-        console.log("Vars projectID:" + projectID + " sessionID:" + sessionID);
+        console.log("Vars projectID:" + projectID + " sessionID:" + sessionID + " userID:" + myId);
 
         ////////////////////////////////////////
         // Register listeners with the scene and renderer
