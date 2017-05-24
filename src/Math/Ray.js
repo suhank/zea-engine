@@ -73,11 +73,12 @@ class Ray {
         return [this_t, ray_t];
     }
 
-    // Returns the 1 ray param represetning the intersectoin of this ray against the plane defined by the given ray.
-    intersectRayPlane(ray) {
-        let w = this.start.subtract(ray.start);
-        let D = ray.dir.dot(this.dir);
-        let N = -ray.dir.dot(w);
+    // Returns the 1 ray param representing the intersectoin 
+    // of this ray against the plane defined by the given ray.
+    intersectRayPlane(plane) {
+        let w = this.start.subtract(plane.start);
+        let D = plane.dir.dot(this.dir);
+        let N = -plane.dir.dot(w);
 
         if (Math.abs(D) < Number.PRECISION) {
             // segment is parallel to plane

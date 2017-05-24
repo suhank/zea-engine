@@ -5,6 +5,7 @@ import {
     Mat4,
     Xfo,
     Color,
+    Ray,
     Signal,
     isMobileDevice
 } from '../../Math';
@@ -71,9 +72,10 @@ class VRViewport {
 
         //////////////////////////////////////////////
         // Xfos
-        this.__uivisibile = true;
+        this.__uivisibile = 0;
         this.showInHandUI = new Signal();
         this.hideInHandUI = new Signal();
+        this.pointerEvent = new Signal();
 
         //////////////////////////////////////////////
         // Xfos
@@ -436,16 +438,64 @@ class VRViewport {
                         }
                         this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
                     }, this);
+
                     vrController.showInHandUI.connect(()=>{
-                        this.showInHandUI.emit(vrController);
                         this.__currentTool.deactivateTool();
-                        this.__uivisibile = true;
+                        this.__uivisibile++;
+                        for (let controller of this.__vrControllers) {
+                            if(controller != vrController)
+                                controller.showPointer();
+                        }
+                        this.showInHandUI.emit(id, vrController);
                     });
                     vrController.hideInHandUI.connect(()=>{
-                        this.hideInHandUI.emit();
                         this.__currentTool.activateTool();
-                        this.__uivisibile = false;
+                        this.__uivisibile--;
+                        if(this.__uivisibile > 0)// switch to pointer mode.
+                            vrController.showPointer();
+                        this.hideInHandUI.emit(id, vrController);
                     });
+
+        
+                    let sendEventToVisibleUIs = (xfo, eventName)=>{
+                        let yvec = xfo.ori.getYaxis();
+                        let ray = new Ray(xfo.tr, yvec);
+                        for (let controller of this.__vrControllers) {
+                            if(controller.uivisibile){
+                                let planeItem = controller.getUIPlaneItem();
+                                let planeXfo = planeItem.globalXfo;
+                                let plane = new Ray(planeXfo.tr, planeXfo.ori.getZaxis());
+                                let res = ray.intersectRayPlane(plane);
+                                if(res <= 0)
+                                    return;
+                                let hitPos = xfo.tr.add(yvec.scale(res));
+                                let dim = controller.getUIDimensions();
+                                let pointerX = hitPos.dot(planeXfo.ori.getXaxis()) * dim.width;
+                                let pointerY = hitPos.dot(planeXfo.ori.getYaxis()) * dim.height;
+                                this.pointerEvent.emit(controller, eventName, { pointerX, pointerY });
+                            }
+                        }
+                    }
+                    vrController.buttonPressed.connect(() => {
+                        if(!vrController.pointerVisible)
+                            return;
+                        let xfo = controllerYAxis = vrController.getTipGlobalXfo();
+                        sendEventToVisibleUIs(xfo, 'mousepressed');
+                    }, this);
+
+                    vrController.buttonReleased.connect(() => {
+                        if(!vrController.pointerVisible)
+                            return;
+                        let xfo = controllerYAxis = vrController.getTipGlobalXfo();
+                        sendEventToVisibleUIs(xfo, 'mousereleased');
+                    }, this);
+
+                    vrController.controllerMoved.connect((xfo) => {
+                        if(!vrController.pointerVisible)
+                            return;
+                        sendEventToVisibleUIs(xfo, 'mousemoved');
+                    }, this);
+
                     this.__vrControllers[id] = vrController;
                     this.controllerAdded.emit(id, vrController);
                 }
@@ -455,7 +505,10 @@ class VRViewport {
             }
         }
 
-        if (this.__currentTool && !this.__uivisibile) {
+        if(this.__uivisibile > 0)
+
+        }
+        else if (this.__currentTool) {
             this.__currentTool.evalTool();
         }
 

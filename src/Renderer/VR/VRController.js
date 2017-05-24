@@ -65,15 +65,36 @@ class VRController extends Gizmo {
         // UI
         this.showInHandUI = new Signal();
         this.hideInHandUI = new Signal();
-        this.__uivisibile = false;
+        this.controllerMoved = new Signal();
+        this.uivisibile = false;
 
         this.__uimat = new FlatMaterial('uimat');
         this.__uimat.baseColor = new Color(.2, .2, .2);
 
-        let uiGeomItem = new GeomItem('VRControllerUI', new Plane(), this.__mat);
+        this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), this.__uimat);
         this.__uiGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
+        this.__uiGeomItem.setVisible(false);
         this.__uiGeomItem.selectable = false;
         this.__treeItem.addChild(this.__uiGeomItem);
+
+
+        let pointermat = new FlatMaterial('pointermat');
+        this.__uiimage =  new DataImage2D();
+        pointermat.baseColor = this.__uiimage;
+
+        let line = new Lines('pointer');
+        line.setNumSegments(1);
+        line.setSegment(0, 0, 1);
+        line.getVertex(0).set(0.0, 0.0, 0.0);
+        line.getVertex(1).set(0.0, 1.0, 0.0);
+        line.setBoundingBoxDirty();
+
+        this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
+        this.__uiPointerItem.localXfo.tr.set(0.0, -0.01, -0.02);
+        this.__uiPointerItem.setVisible(false);
+        this.__uiPointerItem.selectable = false;
+        this.__treeItem.addChild(this.__uiPointerItem);
+        this.pointerVisible = false;
 
         ///////////////////////////////////
         // Xfo
@@ -82,6 +103,10 @@ class VRController extends Gizmo {
         this.__isDaydramController = isMobileDevice();
 
         // this.setVisible(true);
+    }
+
+    getID() {
+        return this.__index;
     }
 
     getTreeItem() {
@@ -113,18 +138,24 @@ class VRController extends Gizmo {
         vecToHead.normalizeInPlace();
         let angle = controllerYAxis.angleTo(vecToHead);
         console.log("angle:" + angle);
-        if(angle < 1.0){
-            if(!this.__uivisibile){
+        if (angle < 1.0) {
+            if (!this.uivisibile) {
+                this.uivisibile = true;
+                this.__uiGeomItem.setVisible(true);
+                if (this.pointerVisible)
+                    this.hidePointer();
                 this.showInHandUI.emit();
-                this.__uivisibile = true;
             }
 
-        }
-        else{
-            if(this.__uivisibile){
+        } else {
+            if (this.uivisibile) {
                 this.hideInHandUI.emit();
-                this.__uivisibile = false;
+                this.uivisibile = false;
+                this.__uiGeomItem.setVisible(false);
             }
+        }
+        if (this.pointerVisible) {
+            this.controllerMoved.emit(this.__treeItem.globalXfo);
         }
 
 
@@ -183,6 +214,33 @@ class VRController extends Gizmo {
 
     getTipGlobalXfo() {
         return this.__treeItem.globalXfo;
+    }
+
+    //////////////////////////////////
+    // UI
+    getUIPlaneItem() {
+        return this.__uiGeomItem;
+    }
+    showPointer() {
+        this.__uiPointerItem.setVisible(true);
+        this.pointerVisible = true;
+    }
+    hidePointer() {
+        this.__uiPointerItem.setVisible(false);
+        this.pointerVisible = false;
+    }
+    setUIDimensions(dims) {
+        this.__dims = dims;
+        let dpm = 0.001;//dots-per-meter (1 each mm)
+        this.__uiGeomItem.localXfo.sc.set(dims.width*dpm, 1.0, dims.height*dpm);
+    }
+
+    getUIDimensions() {
+        return this.__dims;
+    }
+
+    setUIPixelData(pixels) {
+        this.__uiimage.setData(pixels);
     }
 };
 
