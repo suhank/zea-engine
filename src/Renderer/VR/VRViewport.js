@@ -464,51 +464,51 @@ class VRViewport {
                     });
 
         
-                    let sendEventToVisibleUIs = (xfo, eventName)=>{
+                    let sendEventToVisibleUIs = (xfo, eventName, args)=>{
                         let pointervec = xfo.ori.getZaxis().negate();
                         let ray = new Ray(xfo.tr, pointervec);
                         for (let controller of this.__vrControllers) {
                             if(controller.uivisibile){
-                                let planeItem = controller.getUIPlaneItem();
-                                let planeXfo = planeItem.getGeomXfo();
+                                let planeXfo = controller.getUIPlaneXfo();
                                 let plane = new Ray(planeXfo.tr, planeXfo.ori.getZaxis());
                                 let res = ray.intersectRayPlane(plane);
                                 if(res <= 0){
-                                    // vrController.setPointerLength(1.0);
+                                    vrController.setPointerLength(1.0);
                                     return;
                                 }
-                                let hitOffset = xfo.tr.add(pointervec.scale(res)).subtract(planeXfo.tr);
+                                let hitOffset = xfo.tr.add(pointervec.scale(res)).subtract(plane.start);
+                                let x = hitOffset.dot(planeXfo.ori.getXaxis()) / planeXfo.sc.x;
+                                let y = hitOffset.dot(planeXfo.ori.getYaxis()) / planeXfo.sc.y;
+                                if(Math.abs(x) > 0.5 || Math.abs(y) > 0.5){
+                                    vrController.setPointerLength(1.0);
+                                    return;
+                                }
+                                vrController.setPointerLength(res);
                                 let dim = controller.getUIDimensions();
-                                let x = hitOffset.dot(planeXfo.ori.getXaxis());// / planeXfo.sc.x;
-                                let y = hitOffset.dot(planeXfo.ori.getYaxis());// / planeXfo.sc.y;
-                                console.log("x:" + x + " y:" + y);
-                                // if(Math.abs(x) > 1.0 || Math.abs(y) > 1.0){
-                                //     vrController.setPointerLength(1.0);
-                                //     return;
-                                // }
-                                // vrController.setPointerLength(res);
-                                // this.pointerEvent.emit(controller, eventName, { pointerX: x * dim.width, pointerY: y * dim.height });
+                                args.clientX = Math.round((x * dim.width) + (dim.width / 2));
+                                args.clientY = Math.round((y * -dim.height) + (dim.height / 2));
+                                this.pointerEvent.emit(controller, eventName, args);
                             }
                         }
                     }
                     vrController.buttonPressed.connect(() => {
                         if(!vrController.pointerVisible)
                             return;
-                        let xfo = controllerYAxis = vrController.getPointerXfo();
-                        sendEventToVisibleUIs(xfo, 'mousepressed');
+                        let xfo = vrController.getPointerXfo();
+                        sendEventToVisibleUIs(xfo, 'mousedown', { button:0 });
                     }, this);
 
                     vrController.buttonReleased.connect(() => {
                         if(!vrController.pointerVisible)
                             return;
-                        let xfo = controllerYAxis = vrController.getPointerXfo();
-                        sendEventToVisibleUIs(xfo, 'mousereleased');
+                        let xfo = vrController.getPointerXfo();
+                        sendEventToVisibleUIs(xfo, 'mouseup', { button:0 });
                     }, this);
 
                     vrController.controllerMoved.connect((xfo) => {
                         if(!vrController.pointerVisible)
                             return;
-                        sendEventToVisibleUIs(xfo, 'mousemoved');
+                        sendEventToVisibleUIs(xfo, 'mousemove', { });
                     }, this);
 
                     this.__vrControllers[id] = vrController;

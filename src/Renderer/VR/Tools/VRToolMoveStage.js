@@ -50,11 +50,11 @@ class VRToolMoveStage extends VRTool {
     initAction() {
         this.__activeController = undefined;
         if(this.__pressedButtons == 1) {
-            if(this.__vrControllers[0].isButtonPressed()){
-                this.__activeController = this.__vrControllers[0];
-            }
-            else if(this.__vrControllers[1].isButtonPressed()){
-                this.__activeController = this.__vrControllers[1];
+            for(let controller of this.__vrControllers){
+                if(controller.isButtonPressed()){
+                    this.__activeController = controller;
+                    break;
+                }
             }
             this.__grabPos = this.__activeController.getTipXfo().tr.clone();
             this.__stageXfo__GrabStart = this.__vrStage.getXfo().clone();

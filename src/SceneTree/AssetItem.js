@@ -4,22 +4,6 @@ import { GeomLibrary } from './GeomLibrary.js';
 import { GeomItem } from './GeomItem.js';
 import { MaterialLibrary } from './MaterialLibrary.js';
 
-class Lightmap {
-    constructor(name = undefined) {
-        this.__name = name ? name : 'Default';
-        this.__texelSize = 0;
-        this.__atlasSize = new Vec2();
-    }
-
-    getSize(){
-        return this.__atlasSize;
-    }
-
-    fromJSON(j, flags=0) {
-        this.__texelSize = j["texelSize"];
-        this.__atlasSize.fromJSON(j["atlasSize"]);
-    }
-};
 
 class AssetItem extends TreeItem {
     constructor(name = undefined) {
@@ -27,7 +11,6 @@ class AssetItem extends TreeItem {
         this.__geoms = new GeomLibrary();
         this.__materials = new MaterialLibrary();
 
-        this.__lightmap = new Lightmap();
         this.lightmapName = 'Default';
     }
 
@@ -39,12 +22,6 @@ class AssetItem extends TreeItem {
         return this.__materials;
     }
 
-    //////////////////////////////////////////
-    // Lightmaps
-
-    getLightmap(){
-        return this.__lightmap;
-    }
 
     //////////////////////////////////////////
     // Persistence

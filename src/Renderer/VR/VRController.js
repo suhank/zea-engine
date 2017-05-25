@@ -228,8 +228,8 @@ class VRController extends Gizmo {
 
     //////////////////////////////////
     // UI
-    getUIPlaneItem() {
-        return this.__uiGeomItem;
+    getUIPlaneXfo() {
+        return this.__uiGeomItem.getGeomXfo();
     }
     showPointer() {
         if(this.__sphereGeomItem)
@@ -244,7 +244,7 @@ class VRController extends Gizmo {
         this.pointerVisible = false;
     }
     setPointerLength(length) {
-        this.__uiPointerItem.localXfo.tr.set(1, 1, length);
+        this.__uiPointerItem.localXfo.sc.set(1, 1, length);
     }
 
     getUIDimensions() {
@@ -263,7 +263,7 @@ class VRController extends Gizmo {
     }
 
     getPointerXfo() {
-        return this.__treeItem.globalXfo;
+        return this.__uiPointerItem.getGeomXfo();
     }
 
 };

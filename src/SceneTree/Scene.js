@@ -9,6 +9,9 @@ import {
     BinAsset
 } from './BinAsset.js';
 import {
+    FileImage2D
+} from './FileImage2D.js';
+import {
     Sphere
 } from './Geometry/Shapes/Sphere.js';
 import {
@@ -21,6 +24,22 @@ import {
     ResourceLoader
 } from './ResourceLoader.js';
 
+
+class Lightmap {
+    constructor(lightmapName, atlasSize, resourceLoader) {
+        this.atlasSize = atlasSize;
+        this.image = new FileImage2D(lightmapName, resourceLoader);
+    }
+
+    loadResource(resourceName){
+        this.image.loadResource(resourceName);
+    }
+
+    fromJSON(j, flags=0) {
+        this.__texelSize = j["texelSize"];
+        this.__atlasSize.fromJSON(j["atlasSize"]);
+    }
+};
 
 class Scene {
     constructor(resources) {
@@ -108,5 +127,6 @@ class Scene {
 
 // export default Scene;
 export {
-    Scene
+    Scene,
+    Lightmap
 };
