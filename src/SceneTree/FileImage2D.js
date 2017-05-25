@@ -24,10 +24,14 @@ class FileImage2D extends Image2D {
         this.loaded = new Signal();
 
         if (this.__resourceLoader.resourceAvailable(name)){
-            this.loadURL(this.__resourceLoader.resolveURL(name));
+            this.loadResource(name);
         }
     }
 
+    loadResource(resourceName) {
+        this.loadURL(this.__resourceLoader.resolveURL(resourceName));
+    }
+    
     loadURL(url) {
         let getExt = (str)=>{
             let p = str.split('/');
@@ -93,7 +97,7 @@ class FileImage2D extends Image2D {
                 // If so, then we emit and update, which will cause a redraw.
                 let currentFrame = Math.floor(domElement.currentTime * frameRate);
                 if (prevFrame != currentFrame) {
-                    this.updated.emit(domElement);
+                    this.updated.emit();
                     prevFrame = currentFrame;
                 }
                 setTimeout(timerCallback, 20); // Sample at 50fps.

@@ -19,6 +19,10 @@ class DataImage2D extends Image2D {
         this.__isHDR = false;
         this.__hasAlpha = false;
         this.__loaded = false;
+
+        this.__data = new Uint8Array(4);
+        this.width = 1;
+        this.height = 1;
     }
     getName() {
         return this.__name;
@@ -34,14 +38,15 @@ class DataImage2D extends Image2D {
         return false;
     }
 
-    setData(data){
+    setData(width, height, data){
+        this.width = width;
+        this.height = height;
         this.__data = data;
         this.updated.emit();
     }
     getParams() {
         let params = super.getParams();
-        if (this.__loaded)
-            params['data'] = this.__data;
+        params['data'] = this.__data;
         return params;
     }
 };

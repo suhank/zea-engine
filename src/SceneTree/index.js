@@ -15,6 +15,7 @@ export * from './GeomLibrary.js';
 export * from './ShaderLibrary.js';
 export * from './Shader.js';
 export * from './Image2D.js';
+export * from './DataImage2D.js';
 export * from './FileImage2D.js';
 export * from './HDRImage2D.js';
 export * from './HDRImageMixer.js';

@@ -15,21 +15,25 @@ class GLTexture2D extends RefCounted {
         this.height = 0;
         this.__loaded = false;
         this.__bound = false;
+        let imageUpdated = ()=>{
+            // this.bufferData(data);
+            let params = this.__texture.getParams();
+            let width = params['width'];
+            let height = params['height'];
+            let data = params['data'];
+            this.resize(width, height, data, true, true);
+        }
         if (params != undefined){
             if (params instanceof Image2D){
                 this.__texture = params;
                 if (this.__texture.isLoaded()) {
                     this.configure(this.__texture.getParams());
-                    this.__texture.updated.connect((data) => {
-                        this.bufferData(data);
-                    }, this);
+                    this.__texture.updated.connect(imageUpdated);
                 }
                 else {
                     this.__texture.loaded.connect(() => {
                         this.configure(this.__texture.getParams());
-                        this.__texture.updated.connect((data) => {
-                            this.bufferData(data);
-                        }, this);
+                        this.__texture.updated.connect(imageUpdated);
                     }, this);
                 }
                 this.__texture.destructing.connect(() => {

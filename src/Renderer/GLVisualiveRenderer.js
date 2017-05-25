@@ -102,19 +102,23 @@ class GLVisualiveRenderer extends GLRenderer {
             }
             this.__glEnvMap.updated.connect((data) => {
                 this.requestRedraw();
-            }, this);
+            });
         }
         let lightMaps = scene.getLightMaps();
         for (let name in lightMaps) {
+            let lightmap = lightMaps[name];
             let gllightmap;
-            if (lightMaps[name] instanceof HDRImageMixer)
-                gllightmap = new GLHDRImageMixer(this.__gl, lightMaps[name]);
+            if (lightmap.image instanceof HDRImageMixer)
+                gllightmap = new GLHDRImageMixer(this.__gl, lightmap.image);
             else
-                gllightmap = new GLHDRImage(this.__gl, lightMaps[name]);
+                gllightmap = new GLHDRImage(this.__gl, lightmap.image);
             gllightmap.updated.connect((data) => {
                 this.requestRedraw();
-            }, this);
-            this.__glLightmaps[name] = gllightmap;
+            });
+            this.__glLightmaps[name] = {
+                atlasSize: lightmap.atlasSize,
+                glimage: gllightmap
+            };
         }
     }
 

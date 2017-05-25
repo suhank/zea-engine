@@ -15,7 +15,7 @@ class GLDepthPass extends GLPass {
         let glshader = new GLShader(gl, shader);
         this.setExplicitShader(glshader);
 
-        glshader.updated.connect(this.updated.emit, this.updated);
+        glshader.updated.connect(this.updated.emit);
 
         this.__volSize = volSize;
         this.__dir = new Vec3();

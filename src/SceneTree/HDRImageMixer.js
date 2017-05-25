@@ -45,8 +45,8 @@ class HDRImageMixer extends Image2D {
         }, this);
         for(let fileUrl of urls){
             let subImage = new HDRImage2D(this.__name+this.__subImages.length, fileUrl, this.__resourceLoader);
-            subImage.loaded.connect(async.decAsyncCount, async);
-            subImage.updated.connect(this.updated.emit, this.updated);
+            subImage.loaded.connect(async.decAsyncCount);
+            subImage.updated.connect(this.updated.emit);
             this.__subImages.push(subImage);
             this.__weights.push(1.0);
         }

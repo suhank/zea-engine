@@ -8,10 +8,12 @@ import {
     isMobileDevice,
 } from '../../Math';
 import {
+    Lines,
     Plane,
     GeomItem,
     TreeItem,
-    FlatMaterial
+    FlatMaterial,
+    DataImage2D
 } from '../../SceneTree';
 import {
     GLMesh
@@ -30,6 +32,10 @@ class VRController extends Gizmo {
         this.__vrstage = vrstage;
         this.__index = index;
         this.__treeItem = new TreeItem('VRController:' + index);
+        // Controller coordinate system
+        // X = Horizontal.
+        // Y = Up.
+        // Z = Towards handle base.
 
         this.__mat = new FlatMaterial('mat1');
         this.__mat.baseColor = new Color(.2, .2, .2);
@@ -50,10 +56,9 @@ class VRController extends Gizmo {
             this.__treeItem.addChild(controllerTree);
 
             let sphere = entries['VRControllerTip'];
-            let sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
-            sphereGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
-            sphereGeomItem.selectable = false;
-            this.__treeItem.addChild(sphereGeomItem);
+            this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
+            this.__sphereGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
+            this.__treeItem.addChild(this.__sphereGeomItem);
         });
 
         this.__touchpadPressed = false;
@@ -68,31 +73,37 @@ class VRController extends Gizmo {
         this.controllerMoved = new Signal();
         this.uivisibile = false;
 
-        this.__uimat = new FlatMaterial('uimat');
-        this.__uimat.baseColor = new Color(.2, .2, .2);
+        let uimat = new FlatMaterial('uimat');
+        this.__uiimage =  new DataImage2D();
+        uimat.baseColor = this.__uiimage;
 
-        this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), this.__uimat);
-        this.__uiGeomItem.localXfo.tr.set(0.0, -0.01, -0.02);
+        this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
+        this.__uiGeomItem.localXfo.tr.set(0.0, -0.07, 0.05); 
+        this.__uiGeomItem.localXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
+        this.__uiGeomItemGeomXfo = new Xfo();
+        this.__uiGeomItemGeomXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), -Math.PI);
+        this.__uiGeomItemGeomXfo.sc.set(0.3, 0.2, 1.0);
+        this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
+        this.__dims = { width: 200, height: 300 };
         this.__uiGeomItem.setVisible(false);
-        this.__uiGeomItem.selectable = false;
         this.__treeItem.addChild(this.__uiGeomItem);
 
 
         let pointermat = new FlatMaterial('pointermat');
-        this.__uiimage =  new DataImage2D();
-        pointermat.baseColor = this.__uiimage;
+        pointermat.baseColor = new Color(1.2, 0, 0);
 
         let line = new Lines('pointer');
+        line.setNumVertices(2);
         line.setNumSegments(1);
         line.setSegment(0, 0, 1);
         line.getVertex(0).set(0.0, 0.0, 0.0);
-        line.getVertex(1).set(0.0, 1.0, 0.0);
+        line.getVertex(1).set(0.0, 0.0, -1.0);
         line.setBoundingBoxDirty();
 
         this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
-        this.__uiPointerItem.localXfo.tr.set(0.0, -0.01, -0.02);
+        this.__uiPointerItem.localXfo.tr.set(0.0, -0.08, -0.04);
+        this.__uiPointerItem.localXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
         this.__uiPointerItem.setVisible(false);
-        this.__uiPointerItem.selectable = false;
         this.__treeItem.addChild(this.__uiPointerItem);
         this.pointerVisible = false;
 
@@ -133,11 +144,10 @@ class VRController extends Gizmo {
         this.__treeItem.localXfo = this.__xfo;
 
         ////////////////////////////////////////////
-        let controllerZAxis = this.__treeItem.globalXfo.ori.getZaxis();
+        let controllerUpVec = this.__treeItem.globalXfo.ori.getYaxis();
         let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
         vecToHead.normalizeInPlace();
-        let angle = controllerYAxis.angleTo(vecToHead);
-        console.log("angle:" + angle);
+        let angle = controllerUpVec.angleTo(vecToHead);
         if (angle < 1.0) {
             if (!this.uivisibile) {
                 this.uivisibile = true;
@@ -155,7 +165,7 @@ class VRController extends Gizmo {
             }
         }
         if (this.pointerVisible) {
-            this.controllerMoved.emit(this.__treeItem.globalXfo);
+            this.controllerMoved.emit(this.getPointerXfo());
         }
 
 
@@ -222,26 +232,40 @@ class VRController extends Gizmo {
         return this.__uiGeomItem;
     }
     showPointer() {
+        if(this.__sphereGeomItem)
+            this.__sphereGeomItem.setVisible(false);
         this.__uiPointerItem.setVisible(true);
         this.pointerVisible = true;
     }
     hidePointer() {
+        if(this.__sphereGeomItem)
+            this.__sphereGeomItem.setVisible(true);
         this.__uiPointerItem.setVisible(false);
         this.pointerVisible = false;
     }
-    setUIDimensions(dims) {
-        this.__dims = dims;
-        let dpm = 0.001;//dots-per-meter (1 each mm)
-        this.__uiGeomItem.localXfo.sc.set(dims.width*dpm, 1.0, dims.height*dpm);
+    setPointerLength(length) {
+        this.__uiPointerItem.localXfo.tr.set(1, 1, length);
     }
 
     getUIDimensions() {
         return this.__dims;
     }
 
-    setUIPixelData(pixels) {
-        this.__uiimage.setData(pixels);
+    setUIPixelData(width, height, pixels) {
+        this.__dims = {
+            width,
+            height
+        };
+        let dpm = 0.0005;//dots-per-meter (1 each 1/2mm)
+        this.__uiGeomItemGeomXfo.sc.set(width*dpm, height*dpm, 1.0);
+        this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
+        this.__uiimage.setData(width, height, pixels);
     }
+
+    getPointerXfo() {
+        return this.__treeItem.globalXfo;
+    }
+
 };
 
 export {

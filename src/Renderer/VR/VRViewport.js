@@ -406,7 +406,7 @@ class VRViewport {
     ////////////////////////////
     // Controllers
 
-    activateTool(name) {
+    selectTool(name) {
         console.log("activateTool:" + name + " this.__currentTool:" + (this.__currentTool ? this.__currentTool.constructor.name : ""));
         if (this.__currentTool != this.__vrTools[name]) {
             this.__currentTool = this.__vrTools[name];
@@ -443,7 +443,7 @@ class VRViewport {
                         this.__currentTool.deactivateTool();
                         this.__uivisibile++;
                         for (let controller of this.__vrControllers) {
-                            if(controller != vrController)
+                            if(controller != vrController && !controller.uivisibile)
                                 controller.showPointer();
                         }
                         this.showInHandUI.emit(id, vrController);
@@ -453,40 +453,55 @@ class VRViewport {
                         this.__uivisibile--;
                         if(this.__uivisibile > 0)// switch to pointer mode.
                             vrController.showPointer();
+                        else{
+                            // Hide all pointers
+                            for (let controller of this.__vrControllers) {
+                                if(controller != vrController)
+                                    controller.hidePointer();
+                            }
+                        }
                         this.hideInHandUI.emit(id, vrController);
                     });
 
         
                     let sendEventToVisibleUIs = (xfo, eventName)=>{
-                        let yvec = xfo.ori.getYaxis();
-                        let ray = new Ray(xfo.tr, yvec);
+                        let pointervec = xfo.ori.getZaxis().negate();
+                        let ray = new Ray(xfo.tr, pointervec);
                         for (let controller of this.__vrControllers) {
                             if(controller.uivisibile){
                                 let planeItem = controller.getUIPlaneItem();
-                                let planeXfo = planeItem.globalXfo;
+                                let planeXfo = planeItem.getGeomXfo();
                                 let plane = new Ray(planeXfo.tr, planeXfo.ori.getZaxis());
                                 let res = ray.intersectRayPlane(plane);
-                                if(res <= 0)
+                                if(res <= 0){
+                                    // vrController.setPointerLength(1.0);
                                     return;
-                                let hitPos = xfo.tr.add(yvec.scale(res));
+                                }
+                                let hitOffset = xfo.tr.add(pointervec.scale(res)).subtract(planeXfo.tr);
                                 let dim = controller.getUIDimensions();
-                                let pointerX = hitPos.dot(planeXfo.ori.getXaxis()) * dim.width;
-                                let pointerY = hitPos.dot(planeXfo.ori.getYaxis()) * dim.height;
-                                this.pointerEvent.emit(controller, eventName, { pointerX, pointerY });
+                                let x = hitOffset.dot(planeXfo.ori.getXaxis());// / planeXfo.sc.x;
+                                let y = hitOffset.dot(planeXfo.ori.getYaxis());// / planeXfo.sc.y;
+                                console.log("x:" + x + " y:" + y);
+                                // if(Math.abs(x) > 1.0 || Math.abs(y) > 1.0){
+                                //     vrController.setPointerLength(1.0);
+                                //     return;
+                                // }
+                                // vrController.setPointerLength(res);
+                                // this.pointerEvent.emit(controller, eventName, { pointerX: x * dim.width, pointerY: y * dim.height });
                             }
                         }
                     }
                     vrController.buttonPressed.connect(() => {
                         if(!vrController.pointerVisible)
                             return;
-                        let xfo = controllerYAxis = vrController.getTipGlobalXfo();
+                        let xfo = controllerYAxis = vrController.getPointerXfo();
                         sendEventToVisibleUIs(xfo, 'mousepressed');
                     }, this);
 
                     vrController.buttonReleased.connect(() => {
                         if(!vrController.pointerVisible)
                             return;
-                        let xfo = controllerYAxis = vrController.getTipGlobalXfo();
+                        let xfo = controllerYAxis = vrController.getPointerXfo();
                         sendEventToVisibleUIs(xfo, 'mousereleased');
                     }, this);
 
@@ -508,7 +523,6 @@ class VRViewport {
         if(this.__uivisibile == 0 && this.__currentTool) {
             this.__currentTool.evalTool();
         }
-
 
         /////////////////////////
         // Emit a signal for the shared session.

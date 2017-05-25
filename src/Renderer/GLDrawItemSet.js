@@ -121,9 +121,9 @@ class GLDrawItemSet {
         if ('lightmaps' in renderstate && 'lightmap' in unifs) {
             if (renderstate.boundLightmap != this.__lightmapName) {
                 let gllightmap = renderstate.lightmaps[this.__lightmapName];
-                if (gllightmap && gllightmap.isLoaded()) {
-                    gllightmap.bind(renderstate, unifs.lightmap.location);
-                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.getSize());
+                if (gllightmap && gllightmap.glimage.isLoaded()) {
+                    gllightmap.glimage.bind(renderstate, unifs.lightmap.location);
+                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize);
                     renderstate.boundLightmap = this.__lightmapName;
                 } else {
                     // TODO: disable lightmaps here. (should never need to happen)
