@@ -168,7 +168,7 @@ class GLCollector {
 
         material.destructing.connect(() => {
             this.removeMaterial(material);
-        }, this);
+        });
 
         return glmaterialDrawItemSets;
     };
@@ -225,11 +225,11 @@ class GLCollector {
         // and so cannot be moved.
         gldrawItem.destructing.connect(() => {
             this.removeDrawItem(gldrawItem);
-        }, this);
+        });
 
         gldrawItem.transformChanged.connect(() => {
             this.__updateItemInstanceData(index, gldrawItem);
-        }, this);
+        });
 
         let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
         if (!drawItemSet) {
