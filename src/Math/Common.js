@@ -46,6 +46,10 @@ Math.randomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+Math.clamp = function(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
 
 export {
     SInt32,

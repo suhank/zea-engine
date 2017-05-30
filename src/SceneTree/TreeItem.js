@@ -145,6 +145,7 @@ class TreeItem {
 
     set localXfo(xfo) {
         this.__localXfo = xfo;
+        this.localXfoChanged.emit(this.__localXfo);
         this.updateGlobalXfo();
     }
 

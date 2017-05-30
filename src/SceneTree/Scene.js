@@ -36,8 +36,22 @@ class Lightmap {
     }
 
     fromJSON(j, flags=0) {
-        this.__texelSize = j["texelSize"];
-        this.__atlasSize.fromJSON(j["atlasSize"]);
+        this.__atlasSize = j["atlasSize"];
+    }
+};
+
+class LightmapMixer {
+    constructor(lightmapName, atlasSize, resourceLoader) {
+        this.atlasSize = atlasSize;
+        throw("TODO");
+    }
+
+    loadResource(resourceName){
+        this.image.loadResource(resourceName);
+    }
+
+    fromJSON(j, flags=0) {
+        this.__atlasSize = j["atlasSize"];
     }
 };
 
@@ -94,6 +108,9 @@ class Scene {
     }
 
     setLightMap(name, lightmap) {
+        if(!(lightmap instanceof Lightmap || lightmap instanceof LightmapMixer)) {
+            console.error("Object passed is not a Lightmap:" + lightmap.constructor.name);
+        }
         this.__lightmaps[name] = lightmap;
     }
 
@@ -128,5 +145,6 @@ class Scene {
 // export default Scene;
 export {
     Scene,
-    Lightmap
+    Lightmap,
+    LightmapMixer
 };

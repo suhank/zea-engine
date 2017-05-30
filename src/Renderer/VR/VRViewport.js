@@ -464,7 +464,7 @@ class VRViewport {
                     });
 
         
-                    let sendEventToVisibleUIs = (xfo, eventName, args)=>{
+                    let sendEventToVisibleUIs = (xfo, eventNames, args)=>{
                         let pointervec = xfo.ori.getZaxis().negate();
                         let ray = new Ray(xfo.tr, pointervec);
                         for (let controller of this.__vrControllers) {
@@ -487,7 +487,9 @@ class VRViewport {
                                 let dim = controller.getUIDimensions();
                                 args.clientX = Math.round((x * dim.width) + (dim.width / 2));
                                 args.clientY = Math.round((y * -dim.height) + (dim.height / 2));
-                                this.pointerEvent.emit(controller, eventName, args);
+                                for(let e of eventNames){
+                                    this.pointerEvent.emit(controller, e, args);
+                                }
                             }
                         }
                     }
@@ -495,20 +497,20 @@ class VRViewport {
                         if(!vrController.pointerVisible)
                             return;
                         let xfo = vrController.getPointerXfo();
-                        sendEventToVisibleUIs(xfo, 'mousedown', { button:0 });
+                        sendEventToVisibleUIs(xfo, ['mousedown'], { button:0 });
                     }, this);
 
                     vrController.buttonReleased.connect(() => {
                         if(!vrController.pointerVisible)
                             return;
                         let xfo = vrController.getPointerXfo();
-                        sendEventToVisibleUIs(xfo, 'mouseup', { button:0 });
+                        sendEventToVisibleUIs(xfo, ['mouseup', 'click'], { button:0 });
                     }, this);
 
                     vrController.controllerMoved.connect((xfo) => {
                         if(!vrController.pointerVisible)
                             return;
-                        sendEventToVisibleUIs(xfo, 'mousemove', { });
+                        sendEventToVisibleUIs(xfo, ['mousemove'], { });
                     }, this);
 
                     this.__vrControllers[id] = vrController;

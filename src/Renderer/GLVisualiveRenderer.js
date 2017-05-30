@@ -1,7 +1,11 @@
 import { isMobileDevice } from '../Math';
-import { HDRImage2D } from '../SceneTree/HDRImage2D';
-import { HDRImageMixer } from '../SceneTree/HDRImageMixer';
-import { ProceduralSky } from '../SceneTree/ProceduralSky';
+import { 
+    HDRImage2D,
+    HDRImageMixer, 
+    ProceduralSky,
+    Lightmap,
+    LightmapMixer
+} from '../SceneTree';
 import { GLHDRImage } from './GLHDRImage.js';
 import { GLHDRImageMixer } from './GLHDRImageMixer.js';
 import { GLEnvMap } from './GLEnvMap.js';
@@ -108,7 +112,7 @@ class GLVisualiveRenderer extends GLRenderer {
         for (let name in lightMaps) {
             let lightmap = lightMaps[name];
             let gllightmap;
-            if (lightmap.image instanceof HDRImageMixer)
+            if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLHDRImageMixer(this.__gl, lightmap.image);
             else
                 gllightmap = new GLHDRImage(this.__gl, lightmap.image);
