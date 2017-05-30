@@ -98,6 +98,8 @@ class GLDrawItemSet {
         let gl = this.__gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.__instancedIdsArray, gl.STATIC_DRAW);
+
+        this.__instancedIdsBufferDirty = false;
     }
 
     getDrawCount() {

@@ -16,7 +16,7 @@ class ImageLibrary {
         this.__async = new Async();
         this.loaded = new Signal();
         if (resourceName)
-            this.loadURL(resourceName);
+            this.loadResource(resourceName);
     }
 
     hasImage(name) {
@@ -34,14 +34,15 @@ class ImageLibrary {
         return names;
     }
 
-    loadURL(resourceName) {
-        this.__resourceLoader.loadResources(resourceName,
+    loadResource(resourceName) {
+        this.__resourceLoader.loadResource(resourceName,
             (entries) => {
                 for (let name in entries) {
                     if (name.endsWith('.png') || name.endsWith('.jpg')) {
                         let data = entries[name];
                         let url = URL.createObjectURL(new Blob([data.buffer]));
-                        let image = new FileImage2D(name, url);
+                        this.__resourceLoader.addResourceURL(name, url)
+                        let image = new FileImage2D(name, this.__resourceLoader);
                         this.__async.incAsyncCount();
                         image.loaded.connect(this.__async.decAsyncCount, this.__async);
                         this.__images[name] = image;

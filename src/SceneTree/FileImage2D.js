@@ -12,10 +12,10 @@ import {
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(name, resourceLoader) {
+    constructor(resourceName, resourceLoader) {
         super();
 
-        this.__name = name;
+        this.__resourceName = resourceName;
         this.__resourceLoader = resourceLoader;
         this.__isHDR = false;
         this.__hasAlpha = false;
@@ -23,16 +23,17 @@ class FileImage2D extends Image2D {
 
         this.loaded = new Signal();
 
-        if (this.__resourceLoader.resourceAvailable(this.__name)){
-            this.loadResource(this.__name);
+        if (this.__resourceLoader.resourceAvailable(this.__resourceName)){
+            this.loadResource(this.__resourceName);
         }
     }
 
     loadResource(resourceName) {
-        this.loadURL(this.__resourceLoader.resolveURL(resourceName));
+        this.__resourceName = resourceName;
+        this.__load();
     }
     
-    loadURL(url) {
+    __load() {
         let getExt = (str)=>{
             let p = str.split('/');
             let last = p[p.length-1];
@@ -40,23 +41,23 @@ class FileImage2D extends Image2D {
             if(suffixSt != -1)
                 return last.substring(suffixSt)
         }
-        let ext = getExt(this.__name);
+        let ext = getExt(this.__resourceName);
         if (ext == '.jpg' || ext == '.png') {
-            this.__loadLDRImage(url);
+            this.__loadLDRImage();
         } else if (ext == '.mp4' || ext == '.ogg') {
-            this.__loadLDRVideo(url);
+            this.__loadLDRVideo();
         } else if (ext == '.ldralpha') {
             this.__hasAlpha = true;
-            this.__loadLDRAlpha(url);
+            this.__loadLDRAlpha();
         } else if (ext == '.vlh') {
             this.__isHDR = true;
-            this.__loadVLH(url);
+            this.__loadVLH();
         } else {
             throw ("Unsupported file type:" + url);
         }
     }
 
-    __loadLDRImage(url) {
+    __loadLDRImage() {
 
         let domElement = new Image();
         domElement.crossOrigin='anonymous';
@@ -67,10 +68,10 @@ class FileImage2D extends Image2D {
             this.__loaded = true;
             this.loaded.emit();
         };
-        domElement.src = this.__url;
+        domElement.src = this.__resourceLoader.resolveURL(this.__resourceName);
     }
 
-    __loadLDRVideo(url) {
+    __loadLDRVideo() {
 
         let domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
@@ -105,12 +106,12 @@ class FileImage2D extends Image2D {
             timerCallback();
 
         }, false);
-        domElement.src = url;
+        domElement.src = this.__resourceLoader.resolveURL(this.__resourceName);
         //domElement.load();
         domElement.play();
     }
 
-    // __loadLDRAlpha(url) {
+    // __loadLDRAlpha() {
     //     let worker = new ResourceLoaderWorker();
     //     worker.onmessage = (event) => {
     //         worker.terminate();
@@ -153,13 +154,13 @@ class FileImage2D extends Image2D {
 
     //     };
     //     worker.postMessage({
-    //         name: this.__name,
+    //         name: this.__resourceName,
     //         url
     //     });
     // }
 
-    __loadVLH(url) {
-        this.__resourceLoader.loadResource(this.__name, (entries)=>{
+    __loadVLH() {
+        this.__resourceLoader.loadResource(this.__resourceName, (entries)=>{
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -190,12 +191,8 @@ class FileImage2D extends Image2D {
         });
     }
 
-    getName() {
-        return this.__name;
-    }
-
-    getUrl() {
-        return this.__url;
+    getResourceName() {
+        return this.__resourceName;
     }
 
     isHDR() {

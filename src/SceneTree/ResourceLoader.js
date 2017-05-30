@@ -18,6 +18,23 @@ class ResourceLoader {
         this.__doneWork = 0;
     }
 
+    addResourceURL(name, url) {
+
+        let parts = name.split('/');
+        parts.pop();
+        let curr = this.__resources;
+        for(let part of parts){
+            if(part in curr)
+                curr = curr[part];
+            else{
+                let dir = {};
+                curr[part] = dir;
+                curr = dir;
+            }
+        }
+        curr[name] = url;
+    }
+
     __constructWorker() {
         let worker = new ResourceLoaderWorker();
         worker.onmessage = (event) => {
