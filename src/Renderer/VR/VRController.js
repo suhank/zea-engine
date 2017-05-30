@@ -144,6 +144,7 @@ class VRController extends Gizmo {
         this.__treeItem.localXfo = this.__xfo;
 
         ////////////////////////////////////////////
+        /*
         let controllerUpVec = this.__treeItem.globalXfo.ori.getYaxis();
         let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
         vecToHead.normalizeInPlace();
@@ -167,6 +168,7 @@ class VRController extends Gizmo {
         if (this.pointerVisible) {
             this.controllerMoved.emit(this.getPointerXfo());
         }
+        */
 
 
         this.__touchpadValue = gamepad.axes;
