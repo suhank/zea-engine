@@ -20,9 +20,10 @@ let addCanvas = function(width, height) {
     if (width == undefined) {
         resizeDiv.style.width = '100%';
         resizeDiv.style.height = '100%';
-        resizeDiv.style.position = 'absolute';
+        resizeDiv.style.position = 'fixed';
         resizeDiv.style.top = 0;
         resizeDiv.style.left = 0;
+        resizeDiv.style.overflow = 'hidden';
     } else {
         resizeDiv.style.position = 'relative';
         resizeDiv.style.width = width + 'px';
