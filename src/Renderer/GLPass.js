@@ -63,7 +63,7 @@ class GLPass {
                             gldrawitemset.draw(renderstate);
                         }
                     }
-                    renderstate.materialCount++;
+                    // renderstate.materialCount++;
                     // passProfile.push(materialProfile);
                 }
             }

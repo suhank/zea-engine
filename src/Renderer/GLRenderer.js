@@ -130,17 +130,17 @@ class GLRenderer {
         this.__vrViewport = undefined;
         this.mirrorVRisplayToViewport = true;
 
-        // this.__stats = new Stats();
-        // this.__stats.dom.style.position = 'absolute';
-        // this.__stats.dom.style.top = 0;
-        // this.__stats.dom.style.left = 0;
-        // this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        // this.__stats.dom.style.visibility = "hidden"
-        // canvasDiv.appendChild(this.__stats.dom);
-        // if (options.displayStats) {
-        //     this.__stats.dom.style.visibility = "visible";
-        //     this.__displayStats = true;
-        // }
+        this.__stats = new Stats();
+        this.__stats.dom.style.position = 'absolute';
+        this.__stats.dom.style.top = 0;
+        this.__stats.dom.style.left = 0;
+        this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        this.__stats.dom.style.visibility = "hidden"
+        canvasDiv.appendChild(this.__stats.dom);
+        if (options.displayStats) {
+            this.__stats.dom.style.visibility = "visible";
+            this.__displayStats = true;
+        }
 
 
     }
@@ -663,7 +663,7 @@ class GLRenderer {
 
         if (this.__displayStats) {
             // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-            console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
+            // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
         }
     }
 

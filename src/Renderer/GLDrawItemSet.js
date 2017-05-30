@@ -137,8 +137,8 @@ class GLDrawItemSet {
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {
             // return;
-            renderstate.drawCalls++;
-            renderstate.drawCount+=this.__drawCount;
+            // renderstate.drawCalls++;
+            // renderstate.drawCount+=this.__drawCount;
             if (this.__gldrawItems[this.__lastVisible].bind(renderstate)) {
                 // Specify an non-instanced draw to the shader
                 gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
@@ -147,8 +147,8 @@ class GLDrawItemSet {
             return;
         }
 
-        renderstate.drawCalls++;
-        renderstate.drawCount+=this.__drawCount;
+        // renderstate.drawCalls++;
+        // renderstate.drawCount+=this.__drawCount;
 
 
         // Specify an instanced draw to the shader so it knows how
