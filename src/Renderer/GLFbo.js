@@ -9,7 +9,11 @@ class GLFbo {
         this.__createDepthTexture = createDepthTexture;
         this.__clearColor = [0, 0, 0, 1];
         this.__depthTexture = undefined;
-        this.__colorTexture.resized.connect(this.resize.bind(this));
+
+        this.setup = this.setup.bind(this);
+        this.resize = this.resize.bind(this);
+
+        this.__colorTexture.resized.connect(this.resize);
 
         this.setup();
 
@@ -163,7 +167,7 @@ class GLFbo {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.deleteFramebuffer(this.__fbo);
         this.__fbo = null;
-        this.__colorTexture.resized.disconnect(this.resize, this);
+        this.__colorTexture.resized.disconnect(this.resize);
     }
 };
 
