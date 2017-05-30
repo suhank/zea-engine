@@ -2,7 +2,7 @@ import { Signal } from '../Math';
 import { Image2D } from './Image2D.js';
 
 class HDRImage2D extends Image2D {
-    constructor(name, resourceName, resourceLoader, isStream) {
+    constructor(name, resourceLoader, isStream) {
         super({
             format: 'FLOAT',
             channels: 'RGB'
@@ -18,9 +18,8 @@ class HDRImage2D extends Image2D {
         this.loaded = new Signal();
         this.updated = new Signal();
 
-        if(resourceName){
-            this.loadURL(resourceName);
-        }
+        if (this.__resourceLoader.resourceAvailable(this.__name))
+            this.loadURL(this.__name);
     }
 
     isLoaded() {

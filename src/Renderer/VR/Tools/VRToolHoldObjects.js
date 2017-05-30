@@ -174,6 +174,9 @@ class VRToolHoldObjects extends VRTool {
             let vec0 = xfo1.tr.subtract(xfo0.tr);
             vec0.normalizeInPlace();
             let vec1 = grabXfo.ori.getXaxis();
+            if(vec0.dot(vec1) < 0.0)
+                vec0 = vec0.negate();
+            
             let angle = vec0.angleTo(vec1);
             if(angle > 0){
                 let axis = vec1.cross(vec0);

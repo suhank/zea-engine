@@ -23,8 +23,8 @@ class FileImage2D extends Image2D {
 
         this.loaded = new Signal();
 
-        if (this.__resourceLoader.resourceAvailable(name)){
-            this.loadResource(name);
+        if (this.__resourceLoader.resourceAvailable(this.__name)){
+            this.loadResource(this.__name);
         }
     }
 
