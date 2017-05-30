@@ -130,6 +130,10 @@ class GLRenderer {
         this.__vrViewport = undefined;
         this.mirrorVRisplayToViewport = true;
 
+
+        // Function Bindings.
+        this.requestRedraw = this.requestRedraw.bind(this);
+
         this.__stats = new Stats();
         this.__stats.dom.style.position = 'absolute';
         this.__stats.dom.style.top = 0;

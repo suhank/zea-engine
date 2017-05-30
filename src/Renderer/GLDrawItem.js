@@ -39,7 +39,7 @@ class GLDrawItem {
             let geomXfo = this.__geomItem.getGeomXfo();
             this.__inverted = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
             this.transformChanged.emit();
-        }, this);
+        });
         this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
 
         this.__geomItem.selectionChanged.connect((val) => {
@@ -47,18 +47,18 @@ class GLDrawItem {
                 this.highlight();
             else
                 this.unhighlight();
-        }, this);
+        });
 
         this.__glGeom.updated.connect(() => {
             this.updated.emit();
-        }, this);
+        });
 
         this.__geomItem.destructing.connect(() => {
             // Note: it is possible for several draw items to reference the same
             // GLGeom, so we should be maintaining a ref count, and only destroying 
             // when the last ref is removed.
             this.destroy();
-        }, this);
+        });
     }
 
     getGeomItem() {

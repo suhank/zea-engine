@@ -9,7 +9,7 @@ class GLFbo {
         this.__createDepthTexture = createDepthTexture;
         this.__clearColor = [0, 0, 0, 1];
         this.__depthTexture = undefined;
-        this.__colorTexture.resized.connect(this.resize, this);
+        this.__colorTexture.resized.connect(this.resize.bind(this));
 
         this.setup();
 

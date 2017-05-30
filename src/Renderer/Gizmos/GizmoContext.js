@@ -59,7 +59,7 @@ class GizmoContext {
             }
             else
                 this.hideGizmos();
-        }, this);
+        });
     }
 
     showGizmos() {
