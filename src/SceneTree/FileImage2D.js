@@ -12,19 +12,18 @@ import {
 let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(name, url) {
+    constructor(name, resourceLoader) {
         super();
 
         this.__name = name;
-        this.__url = url ? url : name;
         this.__isHDR = false;
         this.__hasAlpha = false;
         this.__loaded = false;
 
         this.loaded = new Signal();
 
-        if (url)
-            this.loadURL(url);
+        if (resourceLoader.resourceAvailable(this.__name))
+            this.loadURL(resourceLoader.resolveURL(this.__name));
     }
 
     loadURL(url) {
