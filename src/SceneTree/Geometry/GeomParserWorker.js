@@ -12,7 +12,7 @@ import {
 } from '../BinReader.js';
 
 
-let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice) => {
+let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice) => {
     let geomDatas = [];
     let offset = toc[geomsRange[0]];
     // console.log("offset:" +  offset);
@@ -52,6 +52,7 @@ let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, buffer
     }
 
     self.postMessage({
+        key,
         geomIndexOffset,
         geomsRange,
         geomDatas
@@ -59,5 +60,5 @@ let parseGeomsBinary = (toc, geomIndexOffset, geomsRange, isMobileDevice, buffer
 }
 
 self.onmessage = function(event) {
-    parseGeomsBinary(event.data.toc, event.data.geomIndexOffset, event.data.geomsRange, event.data.isMobileDevice, event.data.bufferSlice);
+    parseGeomsBinary(event.data.key, event.data.toc, event.data.geomIndexOffset, event.data.geomsRange, event.data.isMobileDevice, event.data.bufferSlice);
 }

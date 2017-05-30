@@ -67,15 +67,16 @@ class Scene {
 
         this.commonResourcesLoaded = new Signal(true);
 
-        if (this.__resourceLoader.resourceAvailable('commonResources/Resources.vlr')) {
-            this.__resourceLoader.loadResource('commonResources/Resources.vlr',
+        let resourceName = 'commonResources/Resources.vlr';
+        if (this.__resourceLoader.resourceAvailable(resourceName)) {
+            this.__resourceLoader.loadResource(resourceName,
                 (entries) => {
 
                     let viveAsset = new BinAsset("ViveResources");
                     let materialTypeMapping = {};
                     materialTypeMapping['*'] = 'SimpleMaterial';
                     viveAsset.getMaterialLibary().setMaterialTypeMapping(materialTypeMapping);
-                    viveAsset.getGeometryLibary().readBinaryBuffer(entries['Vive0.geoms'].buffer);
+                    viveAsset.getGeometryLibary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
                     viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
                     entries['viveAsset'] = viveAsset;
 

@@ -65,16 +65,23 @@ class ResourceLoader {
         return this.resolveURL(filePath) != null;
     }
 
-    __addWork(amount){
+    // Add work to the total work pile... We never know how big the pile will get.
+    addWork(amount){
         this.__totalWork += amount;
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
     }
-    __addWorkDone(amount){
+
+    //Add work to the 'done' pile. The done pile should eventually match the total pile.
+    addWorkDone(amount){
         this.__doneWork += amount;
+        // console.log("addWorkDone:" + amount + " done:" + this.__doneWork + " totol:" + this.__totalWork);
+        // if(this.__doneWork == this.__totalWork){
+        //     console.log("===========DOOOONE=================");
+        // }
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
     }
 
-    loadResource(filePath, callback) {
+    loadResource(filePath, callback, addLoadWork=true) {
         if(!(filePath in this.__callbacks))
             this.__callbacks[filePath] = [];
         this.__callbacks[filePath].push(callback);
@@ -84,7 +91,15 @@ class ResourceLoader {
             console.error("Invalid filePath:'"+ filePath + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
-        this.__addWork(2000);// Add work in 2 chunkes of 1000. Loading + parsing.
+        if(addLoadWork){ 
+            this.addWork(2);// Add work in 2 chunks. Loading + parsing.
+        }
+        else{
+            // the work for loading and parsing the work is already registered..
+            // See BinAsset. It knows that it will load a sequwnce of files
+            // and has already registered this work once is determined the 
+            // toal number of files in the stream.
+        }
 
         let worker = this.__constructWorker();
         worker.postMessage({
@@ -95,12 +110,13 @@ class ResourceLoader {
 
     __onFinishedReceiveFileData(fileData) {
         let name = fileData.name;
-        this.__addWorkDone(1000);
+        this.addWorkDone(1); // loading done...
         for(let callback of this.__callbacks[name]){
             callback(fileData.entries);
         }
         this.loaded.emit(name);
-        this.__addWorkDone(1000);
+        this.addWorkDone(1); // parsing done...
+
 
         delete this.__loading[name];
     }

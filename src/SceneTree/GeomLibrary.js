@@ -22,14 +22,24 @@ let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker
 class GeomLibrary {
     constructor() {
         this.rangeLoaded = new Signal();
+        this.streamFileParsed = new Signal();
         this.loaded = new Signal(true);
+        this.__loaded = 0;
+        this.__numGeoms = 0;
         this.geoms = [];
+
+        this.__streamInfos = {};
     }
 
     __constructWorker() {
         let worker = new GeomParserWorker();
         worker.onmessage = (event) => {
-            this.__revieveGeomDatas(event.data.geomDatas, event.data.geomIndexOffset, event.data.geomsRange);
+            this.__revieveGeomDatas(
+                event.data.key, 
+                event.data.geomDatas, 
+                event.data.geomIndexOffset, 
+                event.data.geomsRange
+                );
             worker.terminate();
         };
         return worker;
@@ -60,23 +70,22 @@ class GeomLibrary {
         );
     }
 
-    readBinaryBuffer(buffer) {
+    readBinaryBuffer(key, buffer) {
         let reader = new BinReader(buffer, 0, isMobileDevice());
-        this.__numGeoms = reader.loadUInt32();
-        this.__loaded = 0;
+        let numGeoms = reader.loadUInt32();
         let geomIndexOffset = reader.loadUInt32();
-        let toc = reader.loadUInt32Array(this.__numGeoms);
+        let toc = reader.loadUInt32Array(numGeoms);
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
-        let numGeomsPerWorkload = Math.max(1, Math.floor((this.__numGeoms / window.navigator.hardwareConcurrency) + 1));
+        let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
         let offset = 0;
-        while (offset < this.__numGeoms) {
+        while (offset < numGeoms) {
             let geomsRange;
             let bufferSlice;
             let bufferSlice_start = toc[offset];
             let bufferSlice_end;
-            if (offset + numGeomsPerWorkload >= this.__numGeoms) {
-                geomsRange = [offset, this.__numGeoms];
+            if (offset + numGeomsPerWorkload >= numGeoms) {
+                geomsRange = [offset, numGeoms];
                 bufferSlice_end = buffer.byteLength;
                 // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start);
             } else {
@@ -88,6 +97,7 @@ class GeomLibrary {
 
             let worker = this.__constructWorker();
             worker.postMessage({
+                key,
                 toc,
                 geomIndexOffset,
                 geomsRange,
@@ -98,10 +108,15 @@ class GeomLibrary {
 
             offset += numGeomsPerWorkload;
         }
-
+        this.__numGeoms += numGeoms;
+        this.__streamInfos[key] = {
+            total:numGeoms,
+            done: 0
+        };
+        return numGeoms;
     }
 
-    __revieveGeomDatas(geomDatas, geomIndexOffset, geomsRange) {
+    __revieveGeomDatas(key, geomDatas, geomIndexOffset, geomsRange) {
 
         // We are storing a subset of the geoms from a binary file
         // which is a subset of the geoms in an asset.
@@ -130,7 +145,18 @@ class GeomLibrary {
         }
         this.rangeLoaded.emit(storedRange);
 
-        this.__loaded += storedRange[1] - storedRange[0];
+        let loaded = storedRange[1] - storedRange[0];
+
+        // Each file in the stream has its own counter for the number of 
+        // geoms, and once each stream file finishes parsing, we fire a signal.
+        let streamInfo = this.__streamInfos[key];
+        streamInfo.done += loaded;
+        if(streamInfo.done == streamInfo.total)
+            this.streamFileParsed.emit(1);
+
+        // Once all the geoms from all the files are loaded and parsed
+        // fire the loaded signal.
+        this.__loaded += loaded;
         if(this.__loaded == this.__numGeoms)
             this.loaded.emit();
     }
