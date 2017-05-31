@@ -7,9 +7,7 @@ import {
 } from '../external/Unpack.js';
 
 let ResourceLoaderWorker_onmessage = function(req, onLoaded, onDone) {
-    console.log("loadBinfile:" + req.url);
     loadBinfile(req.url, (data) => {
-        console.log("data:");
         onLoaded();
         let unpack = new Unpack(data);
         let entries = unpack.getEntries();
@@ -33,24 +31,22 @@ let ResourceLoaderWorker_onmessage = function(req, onLoaded, onDone) {
             }
         }
 
-        console.log("postMessage:" + result);
         onDone(result, transferables);
     }, (statusText) => {
         console.warn("Unable to Load URL:"+ req.url);
     });
 }
-// self.onmessage = function(event){
-//     ResourceLoaderWorker_onmessage(event.data, 
-//     ()=>{
-//         self.postMessage({
-//             type:'loaded'
-//         });
-//     },
-//     (result, transferables)=>{
-//         self.postMessage(result, transferables);
-//     });
-// }
-
-export {
-    ResourceLoaderWorker_onmessage
-};
+self.onmessage = function(event){
+    ResourceLoaderWorker_onmessage(event.data, 
+    ()=>{
+        self.postMessage({
+            type:'loaded'
+        });
+    },
+    (result, transferables)=>{
+        self.postMessage(result, transferables);
+    });
+}
+// export {
+//     ResourceLoaderWorker_onmessage
+// };

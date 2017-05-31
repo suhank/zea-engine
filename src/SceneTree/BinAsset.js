@@ -26,7 +26,7 @@ class BinAsset extends AssetItem {
     loadURL(filePath) {
 
         let numGeomsFiles = 1;
-        this.__resourceLoader.addWork(3); // first geom file (load + parse + extra)
+        this.__resourceLoader.addWork(4); // first geom file (load + parse + extra)
 
         // Load the tree file. This file contains
         // the scene tree of the asset, and also
@@ -37,7 +37,7 @@ class BinAsset extends AssetItem {
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
                 // add the work for the rest of the geom files....
                 // (load + parse)
-                this.__resourceLoader.addWork((numGeomsFiles-1) * 3); 
+                this.__resourceLoader.addWork((numGeomsFiles-1) * 4); 
                 loadNextGeomFile();
                 this.loaded.emit();
             });

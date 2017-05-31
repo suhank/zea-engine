@@ -4,12 +4,11 @@ import {
     Signal
 } from '../Math';
 
-// let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
-
+let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 // For synchronous loading, uncomment these lines.
-import {
-    ResourceLoaderWorker_onmessage
-} from './ResourceLoaderWorker.js';
+// import {
+//     ResourceLoaderWorker_onmessage
+// } from './ResourceLoaderWorker.js';
 
 
 class ResourceLoader {
@@ -92,7 +91,6 @@ class ResourceLoader {
     }
 
     loadResource(name, callback, addLoadWork=true) {
-        console.log("loadResource:" + name);
         if(!(name in this.__callbacks))
             this.__callbacks[name] = [];
         this.__callbacks[name].push(callback);
@@ -112,22 +110,22 @@ class ResourceLoader {
             // toal number of files in the stream.
         }
 
-        // let worker = this.__constructWorker();
-        // worker.postMessage({
-        //     name,
-        //     url
-        // });
-
-        // For synchronous loading, uncomment these lines.
-        ResourceLoaderWorker_onmessage({
+        let worker = this.__constructWorker();
+        worker.postMessage({
             name,
             url
-        },()=>{
-            this.addWorkDone(1); // loading done...
-        }, (result, transferables)=>{
-            if(result.type == 'finished')
-                this.__onFinishedReceiveFileData(result);
         });
+
+        // For synchronous loading, uncomment these lines.
+        // ResourceLoaderWorker_onmessage({
+        //     name,
+        //     url
+        // },()=>{
+        //     this.addWorkDone(1); // loading done...
+        // }, (result, transferables)=>{
+        //     if(result.type == 'finished')
+        //         this.__onFinishedReceiveFileData(result);
+        // });
     }
 
     __onFinishedReceiveFileData(fileData) {
