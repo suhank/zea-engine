@@ -94,6 +94,7 @@ class GLRenderer {
         this.__activeViewport = undefined;
         this.__continuousDrawing = false;
         this.__redrawRequested = false;
+        this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
 
         this.__collector = new GLCollector(this);
 
@@ -230,7 +231,7 @@ class GLRenderer {
 
         scene.commonResourcesLoaded.connect((entries) => {
 
-            if (navigator.getVRDisplays)
+            if (this.supportsVR())
                 this.__setupVRViewport();
 
             this.sessionClient = new SessionClient(this, entries);
@@ -561,7 +562,7 @@ class GLRenderer {
     // VR Setup
 
     supportsVR() {
-        return navigator.getVRDisplays != null;
+        return this.__supportVR && navigator.getVRDisplays != null;
     }
 
     __setupVRViewport() {
