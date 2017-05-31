@@ -67,25 +67,25 @@ class Scene {
 
         this.commonResourcesLoaded = new Signal(true);
 
-        // let resourceName = 'commonResources/Resources.vlr';
-        // if (this.__resourceLoader.resourceAvailable(resourceName)) {
-        //     this.__resourceLoader.loadResource(resourceName,
-        //         (entries) => {
+        let resourceName = 'commonResources/Resources.vlr';
+        if (this.__resourceLoader.resourceAvailable(resourceName)) {
+            this.__resourceLoader.loadResource(resourceName,
+                (entries) => {
 
-        //             let viveAsset = new BinAsset("ViveResources");
-        //             let materialTypeMapping = {};
-        //             materialTypeMapping['*'] = 'SimpleMaterial';
-        //             viveAsset.getMaterialLibary().setMaterialTypeMapping(materialTypeMapping);
-        //             viveAsset.getGeometryLibary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
-        //             viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-        //             entries['viveAsset'] = viveAsset;
+                    let viveAsset = new BinAsset("ViveResources");
+                    let materialTypeMapping = {};
+                    materialTypeMapping['*'] = 'SimpleMaterial';
+                    viveAsset.getMaterialLibary().setMaterialTypeMapping(materialTypeMapping);
+                    viveAsset.getGeometryLibary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
+                    viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+                    entries['viveAsset'] = viveAsset;
 
-        //             let sphere = new Sphere('VRControllerTip', 0.015);
-        //             entries['VRControllerTip'] = sphere;
+                    let sphere = new Sphere('VRControllerTip', 0.015);
+                    entries['VRControllerTip'] = sphere;
 
-        //             this.commonResourcesLoaded.emit(entries);
-        //         });
-        // }
+                    this.commonResourcesLoaded.emit(entries);
+                });
+        }
     }
 
     getRoot() {
