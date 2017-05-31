@@ -101,18 +101,18 @@ class VRViewport {
             }
         }
 
-        this.__vrPresentButton = document.createElement('button');
-        this.__vrPresentButton.style.position = 'fixed';
-        this.__vrPresentButton.style.right = '20px';
-        this.__vrPresentButton.style.bottom = '20px';
-        this.__vrPresentButton.style.padding = '20px';
-        this.__vrPresentButton.innerText = 'Enter VR';
-        renderer.getDiv().appendChild(this.__vrPresentButton);
+        // this.__vrPresentButton = document.createElement('button');
+        // this.__vrPresentButton.style.position = 'fixed';
+        // this.__vrPresentButton.style.right = '20px';
+        // this.__vrPresentButton.style.bottom = '20px';
+        // this.__vrPresentButton.style.padding = '20px';
+        // this.__vrPresentButton.innerText = 'Enter VR';
+        // renderer.getDiv().appendChild(this.__vrPresentButton);
 
-        let _this = this;
-        this.__vrPresentButton.addEventListener('click', function() {
-            _this.togglePresenting();
-        });
+        // let _this = this;
+        // this.__vrPresentButton.addEventListener('click', function() {
+        //     _this.togglePresenting();
+        // });
 
         //////////////////////////////////////////////
         // Events

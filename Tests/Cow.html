@@ -11,6 +11,7 @@
         <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/VisualiveUI-dev.js"></script>
         
         <script type="text/javascript">
 
@@ -77,10 +78,13 @@
     objAsset.loaded.connect(function() {
         // scene.generateIrradianceMapCoords();
         renderer.frameAll();
-        renderer.resumeDrawing();
         // Visualive.profilerReporter.generateReport();
     });
     objAsset.loadURL(scene.getResourceLoader().resolveURL("/Assets/cow.obj"));
+
+
+    let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
+    renderer.resumeDrawing();
 
         </script> 
     </body>

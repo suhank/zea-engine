@@ -134,18 +134,17 @@ class GLRenderer {
         // Function Bindings.
         this.requestRedraw = this.requestRedraw.bind(this);
 
-        this.__stats = new Stats();
-        this.__stats.dom.style.position = 'absolute';
-        this.__stats.dom.style.top = 0;
-        this.__stats.dom.style.left = 0;
-        this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        this.__stats.dom.style.visibility = "hidden"
-        canvasDiv.appendChild(this.__stats.dom);
-        if (options.displayStats) {
-            this.__stats.dom.style.visibility = "visible";
-            this.__displayStats = true;
-        }
-
+        // this.__stats = new Stats();
+        // this.__stats.dom.style.position = 'absolute';
+        // this.__stats.dom.style.top = 0;
+        // this.__stats.dom.style.left = 0;
+        // this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+        // this.__stats.dom.style.visibility = "hidden"
+        // canvasDiv.appendChild(this.__stats.dom);
+        // if (options.displayStats) {
+        //     this.__stats.dom.style.visibility = "visible";
+        //     this.__displayStats = true;
+        // }
 
     }
 
@@ -364,9 +363,8 @@ class GLRenderer {
         this.__glcanvasDiv = canvasDiv;
         this.__glcanvasDiv.appendChild(this.__glcanvas);
 
-        let _this = this;
-        onResize(canvasDiv, function(event) {
-            _this.__onResize();
+        onResize(canvasDiv, (event)=>{
+            this.__onResize();
         });
         this.__onResize();
 
@@ -380,23 +378,23 @@ class GLRenderer {
         this.__screenQuad = this.__gl.screenQuad;
 
         // Setup event handlers
-        this.__glcanvas.onmouseenter = function(event) {
+        this.__glcanvas.addEventListener('mouseenter', (event)=>{
             if (!mouseIsDown) {
-                activeGLRenderer = _this;
+                activeGLRenderer = this;
                 // TODO: Check mouse pos.
                 activeGLRenderer.activateViewportAtPos(event.offsetX, event.offsetY);
                 mouseLeft = false;
             }
-        }
-        this.__glcanvas.onmouseleave = function(event) {
+        });
+        this.__glcanvas.addEventListener('mouseleave', (event)=>{
             if (!mouseIsDown) {
                 activeGLRenderer = undefined;
             } else {
                 mouseLeft = true;
             }
-        }
+        });
 
-        document.onmousedown = function(event) {
+        document.addEventListener('mousedown', (event)=>{
             if (!activeGLRenderer)
                 return;
             mouseIsDown = true;
@@ -408,8 +406,8 @@ class GLRenderer {
             }
             mouseLeft = false;
             return false;
-        };
-        document.onmouseup = function(event) {
+        });
+        document.addEventListener('mouseup', (event)=>{
             if (!activeGLRenderer)
                 return;
             // if(mouseIsDown && mouseMoveDist < 0.01)
@@ -424,8 +422,19 @@ class GLRenderer {
             if (mouseLeft)
                 activeGLRenderer = undefined;
             return false;
-        };
-        document.onmousemove = function(event) {
+        });
+
+
+        // document.addEventListener('dblclick', (event)=>{
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        // });
+        // document.addEventListener('click', (event)=>{
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        // });
+
+        document.addEventListener('mousemove', (event)=>{
             if (!activeGLRenderer)
                 return;
             if (!mouseIsDown)
@@ -438,46 +447,46 @@ class GLRenderer {
                 event.stopPropagation();
             }
             return false;
-        };
-        document.onkeypress = function(event) {
+        });
+        document.addEventListener('keypress', (event)=>{
             if (!activeGLRenderer)
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
             let vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyPressed(key)) {
-                _this.onKeyPressed(key);
+                this.onKeyPressed(key);
             }
-        };
-        document.onkeydown = function(event) {
+        });
+        document.addEventListener('keydown', (event)=>{
             if (!activeGLRenderer)
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
             let vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyDown(key)) {
-                _this.onKeyDown(key);
+                this.onKeyDown(key);
             }
-        };
-        document.onkeyup = function(event) {
+        });
+        document.addEventListener('keyup', (event)=>{
             if (!activeGLRenderer)
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
             let vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyUp(key)) {
-                _this.onKeyUp(key);
+                this.onKeyUp(key);
             }
-        };
+        });
 
         this.__glcanvas.addEventListener("touchstart", (event) => {
-            _this.getViewport().onTouchStart(event);
+            this.getViewport().onTouchStart(event);
         }, false);
         this.__glcanvas.addEventListener("touchmove", (event) => {
-            _this.getViewport().onTouchMove(event);
+            this.getViewport().onTouchMove(event);
         }, false);
         this.__glcanvas.addEventListener("touchend", (event) => {
-            _this.getViewport().onTouchEnd(event);
+            this.getViewport().onTouchEnd(event);
         }, false);
         this.__glcanvas.addEventListener("touchcancel", (event) => {
-            _this.getViewport().onTouchCancel(event);
+            this.getViewport().onTouchCancel(event);
         }, false);
     }
 

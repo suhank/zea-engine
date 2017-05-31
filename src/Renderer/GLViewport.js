@@ -198,6 +198,9 @@ class GLViewport {
         let cameraMat = this.getCameraMatrix();
 
         let projInv = this.__projectionMatrix.inverse();
+        if(projInv == null)// Sometimes this happens, not sure why...
+            return null;
+
         let rayStart, rayDirection;
         if (!this.__camera.isOrthographic) {
             rayStart = cameraMat.translation;
@@ -348,6 +351,8 @@ class GLViewport {
             if (event.shiftKey) {
                 this.__manipMode = 'marker-tool';
                 let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
+                if(ray == null)
+                    return;
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                 let thickness = this.__camera.focalDistance * 0.002;
@@ -384,7 +389,13 @@ class GLViewport {
                 this.__manipMode = 'camera-manipulation';
                 this.__camera.onDragStart(event, this.__mouseDownPos, this);
             }
-        }/* else if (event.button == 2) {
+        } else if (event.button == 2) {
+
+            // Default to camera manipulation
+            this.__manipMode = 'camera-manipulation';
+            this.__camera.onDragStart(event, this.__mouseDownPos, this);
+
+            /*
             if (event.shiftKey) {
                 if (this.__geomDataBufferFbo) {
                     this.__manipMode = 'add-selection';
@@ -396,8 +407,8 @@ class GLViewport {
             } else {
                 this.__manipMode = 'new-selection';
             }
-        }
         */
+        }
         return false;
     }
 
@@ -533,6 +544,8 @@ class GLViewport {
 
                     let mousePos = this.__eventMousePos(event);
                     let ray = this.calcRayFromScreenPos(mousePos);
+                    if(ray == null)
+                        return;
                     this.mouseMoved.emit(event, mousePos, ray);
                 }
                 break;
@@ -570,6 +583,8 @@ class GLViewport {
             case 'marker-tool':
                 {
                     let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
+                    if(ray == null)
+                        return;
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                     // this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
@@ -585,10 +600,6 @@ class GLViewport {
         }
 
         return false;
-    }
-
-    mouseClick(event) {
-        // click action
     }
 
     onKeyPressed(key) {

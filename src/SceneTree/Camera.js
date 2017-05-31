@@ -215,7 +215,7 @@ class Camera extends TreeItem {
     onDragStart(event, mouseDownPos, viewport) {
         this.initDrag(mouseDownPos);
 
-        if (event.altKey) {
+        if (event.altKey || event.button == 2) {
             this.__manipulationState = 'pan';
         } else if (event.ctrlKey && event.altKey) {
             this.__manipulationState = 'dolly';
