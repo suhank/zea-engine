@@ -166,14 +166,14 @@ class ShaderLibrary {
                         }
                     default:
                         {
-                            console.warn("Unhandled line:" + line);
+                            console.warn("Error while parsing :" + shaderName + " \nUnhandled line:" + line);
                             continue;
                         }
                 }
             } else {
                 let parseAttr= (parts, instanced)=>{
                     if (!(parts[1] in glslTypes))
-                        throw ("Type not recognized:" + parts[1]);
+                        throw ("Error while parsing :" + shaderName + " \nType not recognized:" + parts[1]);
                     let name = parts[2].slice(0, parts[2].length - 1);
                     result.attributes[name] = {
                         type: glslTypes[parts[1]],
@@ -218,7 +218,7 @@ class ShaderLibrary {
                 } else if (trimmedline.startsWith('uniform')) {
                     let parts = trimmedline.split(WHITESPACE_RE);
                     if (!(parts[1] in glslTypes))
-                        throw ("Type not recognized:" + parts[1]);
+                        throw ("Error while parsing :" + shaderName + " \nType not recognized:" + parts[1]);
                     let name = parts[2].slice(0, parts[2].length - 1);
                     result.uniforms[name] = glslTypes[parts[1]];
                     // console.log('uniform:' + name + ":" + parts[1]);

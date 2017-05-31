@@ -4,7 +4,13 @@ import {
     Signal
 } from '../Math';
 
-let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
+// let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
+
+// For synchronous loading, uncomment these lines.
+import {
+    ResourceLoaderWorker_onmessage
+} from './ResourceLoaderWorker.js';
+
 
 class ResourceLoader {
     constructor(resources) {
@@ -38,9 +44,13 @@ class ResourceLoader {
     __constructWorker() {
         let worker = new ResourceLoaderWorker();
         worker.onmessage = (event) => {
-            worker.terminate();
-            if(event.data.type == 'finished')
+            if(event.data.type == 'loaded') {
+                this.addWorkDone(1); // loading done...
+            }
+            if(event.data.type == 'finished') {
+                worker.terminate();
                 this.__onFinishedReceiveFileData(event.data);
+            }
         };
         return worker;
     }
@@ -81,18 +91,19 @@ class ResourceLoader {
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
     }
 
-    loadResource(filePath, callback, addLoadWork=true) {
-        if(!(filePath in this.__callbacks))
-            this.__callbacks[filePath] = [];
-        this.__callbacks[filePath].push(callback);
+    loadResource(name, callback, addLoadWork=true) {
+        console.log("loadResource:" + name);
+        if(!(name in this.__callbacks))
+            this.__callbacks[name] = [];
+        this.__callbacks[name].push(callback);
 
-        let url = this.resolveURL(filePath);
+        let url = this.resolveURL(name);
         if(!url){
-            console.error("Invalid filePath:'"+ filePath + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+            console.error("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
         if(addLoadWork){ 
-            this.addWork(2);// Add work in 2 chunks. Loading + parsing.
+            this.addWork(3);// Add work in 2 chunks. Loading, unpacking, parsing.
         }
         else{
             // the work for loading and parsing the work is already registered..
@@ -101,16 +112,27 @@ class ResourceLoader {
             // toal number of files in the stream.
         }
 
-        let worker = this.__constructWorker();
-        worker.postMessage({
-            name: filePath,
+        // let worker = this.__constructWorker();
+        // worker.postMessage({
+        //     name,
+        //     url
+        // });
+
+        // For synchronous loading, uncomment these lines.
+        ResourceLoaderWorker_onmessage({
+            name,
             url
+        },()=>{
+            this.addWorkDone(1); // loading done...
+        }, (result, transferables)=>{
+            if(result.type == 'finished')
+                this.__onFinishedReceiveFileData(result);
         });
     }
 
     __onFinishedReceiveFileData(fileData) {
         let name = fileData.name;
-        this.addWorkDone(1); // loading done...
+        this.addWorkDone(1); // unpacking done...
         for(let callback of this.__callbacks[name]){
             callback(fileData.entries);
         }

@@ -1,11 +1,25 @@
-import { Vec2 } from '../Math/Vec2';
-import { Vec3 } from '../Math/Vec3';
-import { Signal } from '../Math/Signal';
-import { GeomItem } from './GeomItem';
-import { AssetItem } from './AssetItem';
-import { Mesh } from './Geometry/Mesh.js';
-import { loadTextfile, getFileFolder } from './Utils.js';
-import { StandardMaterial } from './Shaders/StandardMaterial.js';
+import {
+    Vec2,
+    Vec3,
+    Color,
+    Signal
+} from '../Math';
+import {
+    GeomItem
+} from './GeomItem';
+import {
+    AssetItem
+} from './AssetItem';
+import {
+    Mesh
+} from './Geometry/Mesh.js';
+import {
+    loadTextfile,
+    getFileFolder
+} from './Utils.js';
+import {
+    StandardMaterial
+} from './Shaders/StandardMaterial.js';
 
 
 class ObjAsset extends AssetItem {
@@ -251,7 +265,7 @@ class ObjAsset extends AssetItem {
             }
         }
 
-        
+
         this.__decrementLoadCounter();
     }
 
@@ -331,10 +345,14 @@ class ObjAsset extends AssetItem {
 
         if (geomData.material != undefined && geomData.material in this.__materials) {
             geomItem.setMaterial(this.__materials[geomData.material]);
-        } else if (this.__defaultMaterial) {
-            geomItem.setMaterial(this.__defaultMaterial);
-        } else {
-            let material = new StandardMaterial(geomName + 'mat');
+        } else{
+
+            let material;
+            if (this.__defaultMaterial) {
+                material = new this.__defaultMaterial(geomName + 'mat');
+            } else {
+                material = new StandardMaterial(geomName + 'mat');
+            }
             material.baseColor = Color.random(0.5);
             material.roughness = 0.2;
             material.reflectance = 0.2;

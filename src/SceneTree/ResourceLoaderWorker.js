@@ -6,14 +6,17 @@ import {
     Unpack
 } from '../external/Unpack.js';
 
-self.onmessage = function(event) {
-    loadBinfile(event.data.url, (data) => {
+let ResourceLoaderWorker_onmessage = function(req, onLoaded, onDone) {
+    console.log("loadBinfile:" + req.url);
+    loadBinfile(req.url, (data) => {
+        console.log("data:");
+        onLoaded();
         let unpack = new Unpack(data);
         let entries = unpack.getEntries();
         let result = {
             type: 'finished',
-            name: event.data.name,
-            url: event.data.url,
+            name: req.name,
+            url: req.url,
             entries: {}
         };
         let transferables = [];
@@ -30,16 +33,24 @@ self.onmessage = function(event) {
             }
         }
 
-        self.postMessage(result, transferables);
+        console.log("postMessage:" + result);
+        onDone(result, transferables);
     }, (statusText) => {
-        console.warn("Unable to Load URL:"+ event.data.url);
-    }, (total, loaded) => {
-        self.postMessage({
-            type: 'progress',
-            name: event.data.name,
-            url: event.data.url,
-            total,
-            loaded
-        });
+        console.warn("Unable to Load URL:"+ req.url);
     });
 }
+// self.onmessage = function(event){
+//     ResourceLoaderWorker_onmessage(event.data, 
+//     ()=>{
+//         self.postMessage({
+//             type:'loaded'
+//         });
+//     },
+//     (result, transferables)=>{
+//         self.postMessage(result, transferables);
+//     });
+// }
+
+export {
+    ResourceLoaderWorker_onmessage
+};

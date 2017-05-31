@@ -12,13 +12,20 @@
         <script src="../external/helpers.js"></script>
         <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/VisualiveUI-dev.js"></script>
         
         <script type="text/javascript">
 
-    let scene = new Visualive.Scene();
+    let Trapeze2 = 'Assets/VerticalDoubleMaleTrapeze2.png';
+    let SolorFloorPerformer = 'Assets/SolorFloorPerformer.png';
+    let resources = generateResourcesDict([
+            Trapeze2,
+            SolorFloorPerformer
+        ]);
+    let scene = new Visualive.Scene(resources);
 
     {
-        let billboard1 = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D('../Resources/People/VerticalDoubleMaleTrapeze2.png'));
+        let billboard1 = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D(Trapeze2, scene.getResourceLoader()));
         let xfo1 = new Visualive.Xfo();
         xfo1.tr.set( -1, 0, 1 );
         billboard1.localXfo = xfo1;
@@ -27,7 +34,7 @@
     }
 
     {
-        let billboard0 = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D('../Resources/People/SolorFloorPerformer.png'));
+        let billboard0 = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D(SolorFloorPerformer, scene.getResourceLoader()));
         let xfo0 = new Visualive.Xfo();
         xfo0.tr.set( 1, 0, 0 );
         xfo0.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
@@ -36,11 +43,12 @@
         scene.getRoot().addChild(billboard0);
     }
 
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas(), { resources:'../Resources/Resources.vlr' });
+    let renderer = new Visualive.GLSimpleRenderer(addCanvas());
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
 
     renderer.setScene(scene);
+    let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 
         </script> 

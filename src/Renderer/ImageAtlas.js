@@ -294,14 +294,14 @@ class ImageAtlas extends GLTexture2D {
         let unifs = renderstate.unifs;
         if(location)
             super.bind(renderstate, location);
-        else if(unifs[structName+'.image'])
-            super.bind(renderstate, unifs[structName+'.image'].location);
+        else if(unifs[structName+'_image'])
+            super.bind(renderstate, unifs[structName+'_image'].location);
 
-        let atlasLayoutUnifName = structName+'.layout';
+        let atlasLayoutUnifName = structName+'_layout';
         if(atlasLayoutUnifName in unifs)
             this.__atlasLayoutTexture.bind(renderstate, unifs[atlasLayoutUnifName].location);
 
-        let atlasDescUnifName = structName+'.desc';
+        let atlasDescUnifName = structName+'_desc';
         if(atlasDescUnifName in unifs)
             this.__gl.uniform4f(unifs[atlasDescUnifName].location, this.width, this.height, this.__layout.length, 0.0);
     }

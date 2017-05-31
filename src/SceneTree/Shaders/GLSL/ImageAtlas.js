@@ -25,11 +25,11 @@ shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 
 // Note: On mobile, I can't seem to pass around a stuct containing sampler2D.
 // I have to unpack the struct and pass its members. :(
-struct ImageAtlas {
-    sampler2D layout;
-    sampler2D image;
-    vec4 desc;
-};
+// struct ImageAtlas {
+//     sampler2D layout;
+//     sampler2D image;
+//     vec4 desc;
+// };
 
 // vec4 getSubImageLayout(int imageId, in ImageAtlas atlas){
 //     return texelFetch1D(atlas.layout, int(atlas.desc.z), imageId);

@@ -73,7 +73,10 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
  //   return max(0.0, 0.5*log2((ww*hh)/float(num_samples)) - 0.5*log2(pdf));
 //}
 
-uniform ImageAtlas atlasEnvMap;
+// uniform ImageAtlas atlasEnvMap;
+uniform sampler2D atlasEnvMap_layout;
+uniform vec4 atlasEnvMap_desc;
+uniform sampler2D atlasEnvMap_image;
 
 void main(void) {
     vec3 N = uvToNormalSphOct(v_texCoord);
@@ -102,7 +105,7 @@ void main(void) {
             // float pdf = D_ggx(a, NoH) * NoH / (4 * VoH);
             // float lod = compute_lod(H, );
 
-            color += sampleImagePyramid(uv, 0.0, atlasEnvMap.layout, atlasEnvMap.image, atlasEnvMap.desc) * VdotN;
+            color += sampleImagePyramid(uv, 0.0, atlasEnvMap_layout, atlasEnvMap_image, atlasEnvMap_desc) * VdotN;
             weight += VdotN;
         }
         color /= float(weight);

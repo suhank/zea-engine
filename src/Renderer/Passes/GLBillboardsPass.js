@@ -30,7 +30,7 @@ class GLBillboardsPass extends GLPass {
     /////////////////////////////////////
     // Bind to Render Tree
     
-  filterRenderTree() {
+    filterRenderTree() {
     }
 
     addBillboard(billboard) {

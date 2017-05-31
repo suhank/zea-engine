@@ -21,7 +21,9 @@ instancedattribute float instancedIds;    // instanced attribute..
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-uniform ImageAtlas atlasBillboards;
+//uniform ImageAtlas atlasBillboards;
+uniform sampler2D atlasBillboards_layout;
+uniform vec4 atlasBillboards_desc;
 
 
 uniform sampler2D instancesTexture;
@@ -68,13 +70,13 @@ void main(void) {
 
     v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
     v_gradient = v_texCoord;
-    vec4 layoutData = texelFetch1D(atlasBillboards.layout, int(atlasBillboards.desc.z), int(billboardData.z));
+    vec4 layoutData = texelFetch1D(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
     v_texCoord *= layoutData.zw;
     v_texCoord += layoutData.xy;
 
     float scl = billboardData.x;
-    float width = layoutData.z * atlasBillboards.desc.x * scl;
-    float height = layoutData.w * atlasBillboards.desc.y * scl;
+    float width = layoutData.z * atlasBillboards_desc.x * scl;
+    float height = layoutData.w * atlasBillboards_desc.y * scl;
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
 
     v_tint = getTintColor(instanceID);
@@ -88,7 +90,8 @@ precision highp float;
 <%include file="utils/imageAtlas.glsl"/>
 
 
-uniform ImageAtlas atlasBillboards;
+//uniform ImageAtlas atlasBillboards;
+uniform sampler2D atlasBillboards_image;
 
 
 /* VS Outputs */
@@ -97,7 +100,7 @@ varying vec2 v_gradient;
 varying vec4 v_tint;
 
 void main(void) {
-    vec4 color = texture2D(atlasBillboards.image, v_texCoord);
+    vec4 color = texture2D(atlasBillboards_image, v_texCoord);
     if(color.r > 0.95)
         discard;
     gl_FragColor = v_tint * (1.0-color.r);
