@@ -59,8 +59,8 @@ let generateResourcesDict = (list=[])=>{
             let part = parts[i];
             if(!(part in curr)){
                 curr[part] = {};
-                curr = curr[part];
             }
+            curr = curr[part];
         }
         curr[parts[parts.length-1]] = rootURL+item;
     }
