@@ -30,11 +30,7 @@ uniform mat4 projectionMatrix;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 
-#ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
-#elseif ENABLE_CROSS_SECTIONS
-varying vec3 v_worldPos;
-#endif
 /* VS Outputs */
 
 void main(void) {
@@ -50,11 +46,7 @@ void main(void) {
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
     // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
 
-#ifdef ENABLE_TEXTURES
     v_worldPos      = (modelMatrix * pos).xyz;
-#elseif ENABLE_CROSS_SECTIONS
-    v_worldPos      = (modelMatrix * pos).xyz;
-#endif
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
@@ -73,11 +65,7 @@ precision highp float;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 
-#ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
-#elseif ENABLE_CROSS_SECTIONS
-varying vec3 v_worldPos;
-#endif
 /* VS Outputs */
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

@@ -290,11 +290,15 @@ class GLRenderer {
     }
 
     activateViewportAtPos(offsetX, offsetY) {
+        if (this.__vrViewport && this.__vrViewport.isPresenting()) 
+            return this.__vrViewport;
         this.__activeViewport = this.getViewportAtPos(offsetX, offsetY);
         return this.__activeViewport;
     }
 
     getActiveViewport() {
+        if (this.__vrViewport && this.__vrViewport.isPresenting()) 
+            return this.__vrViewport;
         return this.__activeViewport;
     }
 

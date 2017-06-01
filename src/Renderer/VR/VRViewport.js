@@ -101,19 +101,6 @@ class VRViewport {
             }
         }
 
-        // this.__vrPresentButton = document.createElement('button');
-        // this.__vrPresentButton.style.position = 'fixed';
-        // this.__vrPresentButton.style.right = '20px';
-        // this.__vrPresentButton.style.bottom = '20px';
-        // this.__vrPresentButton.style.padding = '20px';
-        // this.__vrPresentButton.innerText = 'Enter VR';
-        // renderer.getDiv().appendChild(this.__vrPresentButton);
-
-        // let _this = this;
-        // this.__vrPresentButton.addEventListener('click', function() {
-        //     _this.togglePresenting();
-        // });
-
         //////////////////////////////////////////////
         // Events
         let vrViewport = this;
@@ -140,6 +127,7 @@ class VRViewport {
         // i.e. when a user switches to VR mode, the signals 
         // simply emit the new VR data.
         this.viewChanged = new Signal();
+        this.presentingChanged = new Signal();
         this.pointerMoved = new Signal();
 
         // Stroke Signals
@@ -371,8 +359,6 @@ class VRViewport {
 
     __onVRPresentChange() {
         if (this.__vrDisplay.isPresenting) {
-
-
             let leftEye = this.__vrDisplay.getEyeParameters("left");
             let rightEye = this.__vrDisplay.getEyeParameters("right");
             this.__hmdCanvasSize = [
@@ -383,24 +369,52 @@ class VRViewport {
             for (let vrController of this.__vrControllers)
                 vrController.setVisible(true);
 
-            if (this.__vrDisplay.capabilities.hasExternalDisplay) {
-                this.__vrPresentButton.innerText = 'Exit VR';
-            }
-
             this.startContinuousDrawing();
+
+            this.presentingChanged.emit(true);
         } else {
 
             this.__vrhead.setVisible(false);
             for (let vrController of this.__vrControllers)
                 vrController.setVisible(false);
 
-            if (this.__vrDisplay.capabilities.hasExternalDisplay) {
-                this.__vrPresentButton.innerText = 'Enter VR';
-            }
             this.stopContinuousDrawing();
+
+            this.presentingChanged.emit(false);
         }
 
         this.__renderer.__onResize();
+    }
+
+    ////////////////////////////
+    // Events
+    onMouseDown(event) {
+        return false;
+    }
+    onMouseUp(event) {
+        return false;
+    }
+    onMouseMove(event) {
+        return false;
+    }
+
+    onKeyPressed(key) {
+        switch (key) {
+            case "":
+                if (this.__vrDisplay.isPresenting)
+                    this.stopPresenting();
+                return true;
+        }
+        return false;
+    }
+
+    onKeyDown(key) {
+        return false;
+    }
+
+    onKeyUp(key) {
+        console.log(key);
+        return false;
     }
 
     ////////////////////////////

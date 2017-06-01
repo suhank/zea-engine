@@ -49,6 +49,11 @@ class GeomLibrary {
         return worker;
     }
 
+    __terminateWorkers() {
+        for(let worker of this.__workers)
+            worker.terminate();
+    }
+
     getNumGeoms() {
         return this.__numGeoms;
     }
@@ -160,8 +165,10 @@ class GeomLibrary {
         // Once all the geoms from all the files are loaded and parsed
         // fire the loaded signal.
         this.__loaded += loaded;
-        if(this.__loaded == this.__numGeoms)
+        if(this.__loaded == this.__numGeoms){
+            this.__terminateWorkers();
             this.loaded.emit();
+        }
     }
 
     toJSON() {

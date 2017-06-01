@@ -17,12 +17,9 @@ class LayeredCarPaintMaterial extends Material {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LayeredCarPaintMaterial.vertexShader', `
 precision highp float;
 
-
 attribute vec3 positions;
 attribute vec3 normals;
-// #ifdef ENABLE_LIGHTMAPS
 attribute vec2 lightmapCoords;
-// #endif
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
@@ -31,31 +28,18 @@ uniform mat4 projectionMatrix;
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-// #ifdef ENABLE_LIGHTMAPS
 attribute float clusterIDs;
 uniform vec2 lightmapSize;
-// #endif
 
 /* VS Outputs */
-// #ifndef ENABLE_LIGHTMAPS
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
-// #else
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
 varying vec4 v_geomItemData;
 #endif
-// #endif
-// #ifdef ENABLE_SPECULAR
-// varying vec4 v_viewPos;
-// varying vec3 v_viewNormal;
-// #endif
-#ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
-#elseif ENABLE_CROSS_SECTIONS
-varying vec3 v_worldPos;
-#endif
 /* VS Outputs */
 
 void main(void) {
@@ -68,11 +52,7 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
-// #ifndef ENABLE_LIGHTMAPS
-//     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-//     v_viewPos       = -viewPos;
-//     v_viewNormal    = normalMatrix * normals;
-// #else
+
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
@@ -81,7 +61,6 @@ void main(void) {
     v_clusterID = clusterIDs;
     v_geomItemData = geomItemData;
 #endif
-// #endif
 
 #ifdef ENABLE_TEXTURES
     v_worldPos      = (modelMatrix * pos).xyz;
@@ -89,11 +68,9 @@ void main(void) {
     v_worldPos      = (modelMatrix * pos).xyz;
 #endif
 
-// #ifdef ENABLE_SPECULAR
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
-// #endif
 }
 `);
 
@@ -114,11 +91,7 @@ varying vec2 v_lightmapCoord;
 varying float v_clusterID;
 varying vec4 v_geomItemData;
 #endif
-#ifdef ENABLE_TEXTURES
 varying vec3 v_worldPos;
-#elseif ENABLE_CROSS_SECTIONS
-varying vec3 v_worldPos;
-#endif
 /* VS Outputs */
 
 
