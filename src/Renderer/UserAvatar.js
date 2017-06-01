@@ -55,7 +55,7 @@ class UserAvatar {
     setMouseAndCameraRepresentation() {
         this.__treeItem.removeAllChildren();
         this.__treeItem.localXfo = new Xfo();
-        let shape = new Cuboid('Camera', 0.5 * this.__avatarScale, 0.5 * this.__avatarScale, 0.7 * this.__avatarScale);
+        let shape = new Cuboid('Camera', 0.2 * this.__avatarScale, 0.2 * this.__avatarScale, 0.4 * this.__avatarScale);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
         this.__currentViewMode = 'MouseAndKeyboard';

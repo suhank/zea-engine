@@ -29,6 +29,11 @@ class GeomLibrary {
         this.geoms = [];
 
         this.__streamInfos = {};
+
+        this.__workers = [];
+        for(let i=0; i<3; i++)
+            this.__workers.push(this.__constructWorker());
+        this.__nextWorker = 0;
     }
 
     __constructWorker() {
@@ -40,7 +45,6 @@ class GeomLibrary {
                 event.data.geomIndexOffset, 
                 event.data.geomsRange
                 );
-            worker.terminate();
         };
         return worker;
     }
@@ -95,8 +99,7 @@ class GeomLibrary {
             }
             bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
 
-            let worker = this.__constructWorker();
-            worker.postMessage({
+            this.__workers[this.__nextWorker].postMessage({
                 key,
                 toc,
                 geomIndexOffset,
@@ -104,7 +107,7 @@ class GeomLibrary {
                 isMobileDevice: reader.isMobileDevice,
                 bufferSlice,
             }, [bufferSlice]);
-            // this.__mostResentlyHired = (this.__mostResentlyHired + 1) % this.workers.length;
+            this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
 
             offset += numGeomsPerWorkload;
         }

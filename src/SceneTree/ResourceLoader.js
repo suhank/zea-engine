@@ -21,6 +21,11 @@ class ResourceLoader {
         this.__loading = {};
         this.__totalWork = 0;
         this.__doneWork = 0;
+
+        this.__workers = [];
+        for(let i=0; i<3; i++)
+            this.__workers.push(this.__constructWorker());
+        this.__nextWorker = 0;
     }
 
     addResourceURL(name, url) {
@@ -47,7 +52,7 @@ class ResourceLoader {
                 this.addWorkDone(1); // loading done...
             }
             if(event.data.type == 'finished') {
-                worker.terminate();
+                //worker.terminate();
                 this.__onFinishedReceiveFileData(event.data);
             }
         };
@@ -110,11 +115,12 @@ class ResourceLoader {
             // toal number of files in the stream.
         }
 
-        let worker = this.__constructWorker();
-        worker.postMessage({
+        // let worker = this.__constructWorker();
+        this.__workers[this.__nextWorker].postMessage({
             name,
             url
         });
+        this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
 
         // For synchronous loading, uncomment these lines.
         // ResourceLoaderWorker_onmessage({
