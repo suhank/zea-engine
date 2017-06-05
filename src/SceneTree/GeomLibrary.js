@@ -18,6 +18,9 @@ import {
 } from './Geometry/GeomProxies.js';
 
 let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
+// import {
+//     parseGeomsBinary
+// } from './Geometry/parseGeomsBinary.js';
 
 class GeomLibrary {
     constructor() {
@@ -87,6 +90,13 @@ class GeomLibrary {
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
         let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
+
+        this.__numGeoms += numGeoms;
+        this.__streamInfos[key] = {
+            total:numGeoms,
+            done: 0
+        };
+
         let offset = 0;
         while (offset < numGeoms) {
             let geomsRange;
@@ -103,7 +113,10 @@ class GeomLibrary {
                 // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start + " end:" + bufferSlice_end);
             }
             bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
+            offset += numGeomsPerWorkload;
 
+            //////////////////////////////////////////////
+            // multiThreadedParsing
             this.__workers[this.__nextWorker].postMessage({
                 key,
                 toc,
@@ -113,14 +126,26 @@ class GeomLibrary {
                 bufferSlice,
             }, [bufferSlice]);
             this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
+            //////////////////////////////////////////////
+            // Single Threaded Parsing
+            // parseGeomsBinary(
+            //     key,
+            //     toc,
+            //     geomIndexOffset,
+            //     geomsRange,
+            //     reader.isMobileDevice,
+            //     bufferSlice,
+            //     (data, transferables)=>{
+            //         this.__revieveGeomDatas(
+            //             data.key, 
+            //             data.geomDatas, 
+            //             data.geomIndexOffset, 
+            //             data.geomsRange
+            //             );
+            //     });
 
-            offset += numGeomsPerWorkload;
+
         }
-        this.__numGeoms += numGeoms;
-        this.__streamInfos[key] = {
-            total:numGeoms,
-            done: 0
-        };
         return numGeoms;
     }
 

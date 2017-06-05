@@ -29,6 +29,7 @@ class GLMesh extends GLGeom {
             this.__indexDataType = this.__gl.UNSIGNED_INT;
 
         this.__numTriangles = indices.length / 3;
+        this.__numRenderVerts = geomBuffers.numRenderVerts;
 
         let gl = this.__gl;
         this.__indexBuffer = gl.createBuffer();
@@ -64,7 +65,7 @@ class GLMesh extends GLGeom {
     }
 
     getNumSplitVerts(){
-        return this.__totalNumVertices;
+        return this.__numRenderVerts;
     }
 
     //////////////////////////////////

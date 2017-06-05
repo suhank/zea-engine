@@ -282,8 +282,7 @@ class Mesh extends BaseGeom {
         let vertices = this.vertices;
         let faceNormals = this.getFaceAttribute("normals");
         this.edgeVecs = [];
-        this.edgeFlags = new Uint32Array(this.numEdges);
-        this.edgeAngles = new Float32Array();
+        this.edgeAngles = new Float32Array(this.numEdges);
         for (let i = 0; i < this.edgeFaces.length; i += 2) {
 
             let v0 = this.edgeVerts[i];
@@ -296,25 +295,21 @@ class Mesh extends BaseGeom {
             let p1 = this.edgeFaces[i + 1];
             if (p0 == -1 || p1 == -1) {
                 // Flag the edge as a border edge....
-                this.edgeFlags[i / 2] = 2;
+                this.edgeAngles[i / 2] = Math.PI * 2.0;
                 continue;
             }
 
             let n0 = faceNormals.getValueRef(p0);
             let n1 = faceNormals.getValueRef(p1);
-            this.edgeAngles[i] = n0.angleTo(n1);
+            this.edgeAngles[i / 2] = n0.angleTo(n1);
         }
     }
 
     computeVertexNormals(hardAngle = 1.0 /*radians*/ ) {
-
-        if (this.vertexEdges == undefined)
-            this.genTopologyInfo();
-
-        if (!this.hasFaceAttribute('normals'))
-            this.computeFaceNormals();
+        // console.log("computeVertexNormals");
 
         this.generateEdgeFlags();
+
 
         let vertices = this.vertices;
         let faceNormals = this.getFaceAttribute('normals');
@@ -362,55 +357,55 @@ class Mesh extends BaseGeom {
 
             // Groups of faces having a smooth normal at the current vertex.
             let faceGroups = [];
-            let addFaceToGroup = (facegon) => {
+            let addFaceToGroup = (face) => {
                 let inGroup = false;
                 for (let faceGroup of faceGroups) {
-                    inGroup = faceGroup.indexOf(facegon) != -1;
+                    inGroup = faceGroup.indexOf(face) != -1;
                     if (inGroup)
                         break;
                 }
                 if (!inGroup)
-                    faceGroups.push([facegon]);
+                    faceGroups.push([face]);
             }
             let smooth = true;
             for (let e of edges) {
-                let p0 = this.edgeFaces[e * 2];
-                let p1 = this.edgeFaces[(e * 2) + 1];
-                if (this.edgeAngles[e] < hardAngle) {
+                let f0 = this.edgeFaces[e * 2];
+                let f1 = this.edgeFaces[(e * 2) + 1];
+                if (f0 != -1 && f1 == -1 && this.edgeAngles[e] < hardAngle) {
                     // This is a smooth edge... Add both faces to the same group.
                     let addedtoGroup = false;
-                    let p0groupIndex = -1;
-                    let p1groupIndex = -1;
+                    let f0groupIndex = -1;
+                    let f1groupIndex = -1;
                     for (let groupIndex = 0; groupIndex < faceGroups.length; groupIndex++) {
-                        if (p0groupIndex == -1 && faceGroups[groupIndex].indexOf(p0) != -1)
-                            p0groupIndex = groupIndex;
-                        if (p1groupIndex == -1 && faceGroups[groupIndex].indexOf(p1) != -1)
-                            p1groupIndex = groupIndex;
+                        if (f0groupIndex == -1 && faceGroups[groupIndex].indexOf(f0) != -1)
+                            f0groupIndex = groupIndex;
+                        if (f1groupIndex == -1 && faceGroups[groupIndex].indexOf(f1) != -1)
+                            f1groupIndex = groupIndex;
                     }
-                    if (p0groupIndex == -1 && p1groupIndex == -1) {
-                        faceGroups.push([p0, p1]);
-                    } else if (p0groupIndex != -1 && p1groupIndex != -1) {
-                        if (p0groupIndex != p1groupIndex) {
+                    if (f0groupIndex == -1 && f1groupIndex == -1) {
+                        faceGroups.push([f0, f1]);
+                    } else if (f0groupIndex != -1 && f1groupIndex != -1) {
+                        if (f0groupIndex != f1groupIndex) {
                             // Merge the 2 groups that the smooth edge joins.
-                            faceGroups[p0groupIndex] = faceGroups[p0groupIndex].concat(faceGroups[p1groupIndex]);
-                            faceGroups.splice(p1groupIndex, 1);
+                            faceGroups[f0groupIndex] = faceGroups[f0groupIndex].concat(faceGroups[f1groupIndex]);
+                            faceGroups.splice(f1groupIndex, 1);
                         }
                     } else {
-                        if (p0groupIndex == -1) {
-                            faceGroups[p1groupIndex].push(p0);
+                        if (f0groupIndex == -1) {
+                            faceGroups[f1groupIndex].push(f0);
                         }
-                        if (p1groupIndex == -1) {
-                            faceGroups[p0groupIndex].push(p1);
+                        if (f1groupIndex == -1) {
+                            faceGroups[f0groupIndex].push(f1);
                         }
                     }
                     continue;
                 }
                 smooth = false;
                 // This is a hard edge or a border edge... Add faces separately group.
-                if (p0 != -1)
-                    addFaceToGroup(p0);
-                if (p1 != -1)
-                    addFaceToGroup(p1);
+                if (f0 != -1)
+                    addFaceToGroup(f0);
+                if (f1 != -1)
+                    addFaceToGroup(f1);
             }
 
             // Sort the groups to have the biggest group first.
@@ -581,6 +576,7 @@ class Mesh extends BaseGeom {
 
         return {
             numVertices: this.numVertices(),
+            numRenderVerts: totalNumVertices,
             indices,
             attrBuffers
         };
@@ -594,149 +590,6 @@ class Mesh extends BaseGeom {
 
     //////////////////////////////////////////
     // Persistence
-
-    /*
-        loadBin(reader) {
-
-            this.name = reader.loadStr();
-            this.__boundingBox.set(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
-
-            let normalsAttr = this.addVertexAttribute('normals', Vec3);
-            let lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
-            let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
-
-            let numVertices = reader.loadUInt32();
-            this.setNumVertices(numVertices);
-
-            let faceCounts_8bit = reader.loadUInt32Array();
-            this.setFaceCounts(faceCounts_8bit);
-
-            let numClusters = reader.loadUInt32();
-            let clustersData = [];
-            for (let i = 0; i < numClusters; i++) {
-                let numVerts = reader.loadUInt32();
-                let texelSize = reader.loadFloat32();
-                let positions = reader.loadUInt16Array(numVerts * 3);
-                let normals = reader.loadUInt8Array(numVerts * 2);
-                let faceVertexCounts = reader.loadUInt8Array();
-                let numFaceVerts = 0;
-                for (let c of faceVertexCounts)
-                    numFaceVerts += 3 + c;
-                let faceVertexIndices = reader.loadUInt8Array(numFaceVerts);
-                clustersData.push({
-                    numVerts,
-                    texelSize,
-                    positions,
-                    normals,
-                    numFaceVerts,
-                    faceVertexCounts,
-                    faceVertexIndices
-                });
-            }
-
-            let numClusterInstances = reader.loadUInt32();
-            let vertices = this.vertices;
-            let voffset = 0;
-            let foffset = 0;
-            let fvoffset = 0;
-            for (let i = 0; i < numClusterInstances; i++) {
-                let id = reader.loadUInt32();
-                let mat4 = new Mat4();
-                mat4.setFromMat3x4Array(reader.loadFloat32Array(12));
-                let uvAtlasPos = new Vec2(reader.loadFloat32Array(2));
-                let clusterId = reader.loadUInt32();
-
-                let sclX = mat4.xAxis.length();
-                let sclY = mat4.yAxis.length();
-                let sclZ = mat4.zAxis.length();
-
-                let normalMatrix;
-                let normalQuat;
-                if(true)
-                {
-                    normalMatrix = mat4.toMat3();
-                    normalMatrix.xAxis.normalizeInPlace();
-                    normalMatrix.zAxis.normalizeInPlace();
-                    let xaxis = normalMatrix.xAxis;
-                    let zaxis = normalMatrix.zAxis;
-                    let yaxis = zaxis.cross(xaxis);
-                    yaxis.normalizeInPlace();
-                    normalMatrix.yAxis = yaxis;
-                    normalMatrix.transposeInPlace();
-                }
-                else //if(false)
-                {
-                    normalMatrix = mat4.clone();
-                    // Note: cluster transforms often cannot be inverted due to zero scaling
-                    // on the axis.
-                    if(sclY < 0.0001)
-                        normalMatrix.yAxis = normalMatrix.zAxis.cross(normalMatrix.xAxis).normalize();
-                    if(!normalMatrix.invertInPlace())
-                        continue;
-                    normalMatrix.transposeInPlace();
-                }
-
-
-                let clusterData = clustersData[clusterId];
-                let scaleFactor = (1 << 16)-1;
-                for (let j = 0; j < clusterData.numVerts; j++) {
-                    let pos_x =  clusterData.positions[(j * 3) + 0] / scaleFactor;
-                    let pos_y =  clusterData.positions[(j * 3) + 1] / scaleFactor;
-                    let pos_z =  clusterData.positions[(j * 3) + 2] / scaleFactor;
-                    let pos = new Vec3(pos_x, pos_y, pos_z);
-                    vertices.setValue(voffset + j, mat4.transformVec3(pos));
-
-                    // Note: 127 represents 0.5, so our range of values is actualluy 0..124
-                    let normal_x =  clusterData.normals[(j * 2) + 0] / 254.0;
-                    let normal_z =  clusterData.normals[(j * 2) + 1] / 254.0;
-
-                    // Decompress the scalar value
-                    normal_x = (normal_x - 0.5) * 2.0;
-                    normal_z = (normal_z - 0.5) * 2.0;
-                    
-                    // const EXPONENT = 3.0;
-                    // normal_x = Math.pow(normal_x, EXPONENT);
-                    // normal_z = Math.pow(normal_z, EXPONENT);
-                    normal_x = normal_x * Math.HALF_PI;
-                    normal_z = normal_z * Math.HALF_PI;
-                    let normal = new Vec3(
-                        Math.sin(normal_x),
-                        Math.cos(normal_x),
-                        Math.sin(normal_z)
-                        );
-                    normal = normalMatrix.transformVec3(normal);
-                    normal.normalizeInPlace();
-                    normalsAttr.setValue(voffset + j, normal);
-
-                    let texCoord = new Vec2( (pos_x * sclX) / clusterData.texelSize, (pos_z * sclZ) / clusterData.texelSize);
-                    lightmapCoordsAttr.setValue(voffset + j, texCoord.add(uvAtlasPos));
-
-                    // for debugging.
-                    clusterIDsAttr.setFloat32Value(voffset + j, clusterId);
-                }
-
-                let numFaceVertexIndices = clusterData.faceVertexIndices.length;
-                for (let j = 0; j < numFaceVertexIndices; j++) {
-                    this.__faceVertexIndices[fvoffset + j] = voffset + clusterData.faceVertexIndices[j];
-                }
-                
-                let numClusterFaces = clusterData.faceVertexCounts.length;
-                for (let j = 0; j < numClusterFaces; j++) {
-                    let faceVertexCount = clusterData.faceVertexCounts[j];
-                    this.__faceVertexCounts[foffset+j] = faceVertexCount;
-                    this.__faceOffsets[foffset+j] = fvoffset;
-                    fvoffset += 3 + faceVertexCount;
-                }
-
-
-                voffset += clusterData.numVerts;
-                foffset += numClusterFaces;
-            }
-
-            // this.computeVertexNormals();
-            this.geomDataChanged.emit();
-        }
-    */
 
     readBinary(reader) {
         super.loadBaseGeomBinary(reader);

@@ -75,12 +75,12 @@ void main(void) {
     float opacity = _opacity;
 
     // Hacky simple irradiance. 
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 normal = mat3(cameraMatrix) * v_viewNormal;
-    float ndotv = dot(normalize(normal), normalize(viewVector));
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 normal = normalize(mat3(cameraMatrix) * v_viewNormal);
+    float ndotv = dot(normal, viewVector);
     if(ndotv < 0.0){
         normal = -normal;
-        ndotv = dot(normalize(normal), normalize(viewVector));
+        ndotv = dot(normal, viewVector);
 
         // Note: these 2 lines can be used to debug inverted meshes.
         //baseColor = vec4(1.0, 0.0, 0.0, 1.0);

@@ -4,7 +4,8 @@ import {
 } from '../../Math';
 import {
     shaderLibrary,
-    Material
+    Material,
+    Image2D
 } from '../../SceneTree';
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
@@ -85,26 +86,31 @@ float luminanceFromRGB(vec3 rgb) {
 void main(void) {
 
     vec2 uv = normalToUvSphOct(normalize(v_worldDir));
-    vec4 env = texture2D(_envTex, uv);
-    gl_FragColor = vec4(env.rgb/env.a, 1.0);
-
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
-    gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, clamp(luminanceFromRGB(irradiance), 0.0, 1.0));
-
+    float irradianceLum = clamp(luminanceFromRGB(irradiance), 0.0, 1.0);
+    if(_envTexConnected) {
+        vec4 env = texture2D(_envTex, uv);
+        gl_FragColor = vec4(env.rgb/env.a, 1.0);
+        gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, irradianceLum);
+    }
+    else {
+        gl_FragColor = _env * irradianceLum;
+        gl_FragColor.a = 1.0;
+    }
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
 #endif
 
 }
 `);
-        this.addParameter('env', new Color(1.0, 1.0, 0.5));
+        this.addParameter('env', new Color(0.7, 0.7, 0.95));
         this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
         this.addParameter('shadowMultiplier', 1.0);
         this.finalize();
     }
 
     isTransparent() {
-        return false;
+        return !(this.env instanceof Image2D);
     }
 
     // bind(gl, renderstate) {
