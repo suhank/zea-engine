@@ -2,7 +2,8 @@ import { Signal } from '../Math/Signal';
 import { sgFactory } from './SGFactory.js';
 
 class MaterialLibrary {
-    constructor() {
+    constructor(resourceLoader) {
+        this.__resourceLoader = resourceLoader;
         this.loaded = new Signal();
         this.__textures = {};
         this.__materials = {};
@@ -96,10 +97,9 @@ class MaterialLibrary {
         let numTextures = reader.loadUInt32();
         for (let i=0; i< numTextures; i++) {
             let type = reader.loadStr();
-            let name = reader.loadStr();
-            let texture = sgFactory.constructClass(type);
+            let texture = sgFactory.constructClass(type, undefined, this.__resourceLoader);
             texture.readBinary(reader, flags);
-            this.__textures[name] = texture;
+            this.__textures[texture.name] = texture;
         }
         let numMaterials = reader.loadUInt32();
         if(numMaterials > 0){
@@ -107,10 +107,10 @@ class MaterialLibrary {
             for (let i=0; i< numMaterials; i++) {
                 let type = reader.loadStr();
                 let name = reader.loadStr();
-                // console.log("Material:" + name);
+                console.log("Material:" + name);
                 let material = sgFactory.constructClass(type);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                material.readBinary(reader, flags);
+                material.readBinary(reader, flags, this.__textures);
 
                 if (this.__materialTypeMapping && ('*' in this.__materialTypeMapping || name in this.__materialTypeMapping)) {
                     let remappedMaterial;

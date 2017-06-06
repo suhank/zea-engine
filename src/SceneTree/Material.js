@@ -145,29 +145,31 @@ class Material extends Shader {
         }
     }
 
-    readBinary(reader, flags){
+    readBinary(reader, flags, textureLibrary){
         // super.readBinary(reader, flags);
         let type = reader.loadStr();
         this.name = reader.loadStr();
 
         let numParams = reader.loadUInt32();
-        let props = this.__props;
         for(let i=0; i<numParams; i++){
-            let propName = '_'+reader.loadStr();
-            if(propName in props){
-                if(props[propName] instanceof Color){
-                    props[propName] = reader.loadRGBAFloat32Color();
-                    // If the value is in linear space, then we should convert it to gamma space.
-                    props[propName].applyGamma(2.2);
-                }
-                else{
-                    props[propName] = reader.loadFloat32();
-                }
+            let paramName = reader.loadStr();
+            let paramType = reader.loadStr();
+            let value;
+            if(paramType == "MaterialColorParam"){
+                value = reader.loadRGBAFloat32Color();
+                // If the value is in linear space, then we should convert it to gamma space.
+                value.applyGamma(2.2);
             }
             else{
-                // Make sure to load the data, ()
-                let value = reader.loadFloat32();
-                //console.log("Unhandled param:" + propName + ":" + value);
+                value = reader.loadFloat32();
+            }
+            let textureName = reader.loadStr();
+            if('_'+paramName in this.__props){
+                this.__props['_'+paramName] = value;
+                if(textureName != ''){
+                    this.__props['_'+paramName+'Tex'] = textureLibrary[textureName];
+                    this.__props['_'+name+'TexConnected'] = true;
+                }
             }
         }
     }
