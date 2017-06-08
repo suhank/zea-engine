@@ -26,6 +26,10 @@ class FileImage2D extends Image2D {
             this.loadResource(resourcePath);
     }
 
+    get resourcePath(){
+        return this.__resourcePath;
+    }
+
     loadResource(resourcePath) {
         this.__resourcePath = resourcePath;
         if (!this.__resourceLoader.resourceAvailable(this.__resourcePath))
@@ -177,6 +181,7 @@ class FileImage2D extends Image2D {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
+                console.log(this.__resourcePath + ": [" + this.width + ", " + this.height+"]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm

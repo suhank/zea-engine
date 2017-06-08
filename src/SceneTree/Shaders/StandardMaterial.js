@@ -58,7 +58,9 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
+#ifdef ENABLE_TEXTURES
     v_textureCoord  = textureCoords;
+#endif
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
@@ -151,9 +153,9 @@ uniform bool _normalTexConnected;
 uniform float _normalScale;
 
 
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoords) {
+vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected)
-        return toLinear(texture2D(tex, texCoords));
+        return toLinear(texture2D(tex, texCoord));
     else
         return toLinear(value);
 }
@@ -162,9 +164,9 @@ float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
 
-float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoords) {
+float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected)
-        return luminanceFromRGB(texture2D(tex, texCoords).rgb);
+        return luminanceFromRGB(texture2D(tex, texCoord).rgb);
     else
         return value;
 }
@@ -184,8 +186,8 @@ void main(void) {
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
-    // vec2 texCoords      = v_worldPos.xz * 0.2;
-    vec2 texCoord       = v_textureCoord;
+    // vec2 texCoord      = v_worldPos.xz * 0.2;
+    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
     //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
     float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
@@ -217,7 +219,7 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
     if(_normalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
+        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif
@@ -239,7 +241,8 @@ void main(void) {
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        //vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
         float total = floor(coord_texelSpace.x) +
                       floor(coord_texelSpace.y);
                       

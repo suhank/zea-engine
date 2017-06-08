@@ -19,8 +19,6 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
-        console.log("GeomItem:" + name);
-
         this.__lightmap = "Default"; // the lightmap that the geom uses.
         this.__lightmapCoordsOffset = new Vec2();
         this.__geomOffsetXfo = new Xfo();

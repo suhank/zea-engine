@@ -228,6 +228,10 @@ class Vec2 extends AttrValue {
         return new Vec2(buffer, offset * 4); // 4 bytes per 32bit float
     }
 
+    static createFromFloat32Array(array) {
+        return new Vec2(array);
+    }
+    
     static numFloat32Elements() {
         return 2;
     }
