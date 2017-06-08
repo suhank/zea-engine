@@ -55,6 +55,7 @@ class FileImage2D extends Image2D {
     }
 
     __loadLDRImage() {
+        this.__resourceLoader.addWork(1);
 
         let domElement = new Image();
         domElement.crossOrigin='anonymous';
@@ -63,12 +64,14 @@ class FileImage2D extends Image2D {
             this.height = domElement.height;
             this.__data = domElement;
             this.__loaded = true;
+            this.__resourceLoader.addWorkDone(1);
             this.loaded.emit();
         };
         domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
     }
 
     __loadLDRVideo() {
+        this.__resourceLoader.addWork(1);
 
         let domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
@@ -83,6 +86,7 @@ class FileImage2D extends Image2D {
             this.height = domElement.videoWidth;
             this.__data = domElement;
             this.__loaded = true;
+            this.__resourceLoader.addWorkDone(1);
             this.loaded.emit(domElement);
 
             let prevFrame = 0;

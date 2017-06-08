@@ -132,6 +132,11 @@ class Vec2 extends AttrValue {
         );
     }
 
+    multiplyInPlace(vec2) {
+        this.x *= vec2.x;
+        this.y *= vec2.y;
+    }
+
     /**
      * Calculates the length of a vec2
      *

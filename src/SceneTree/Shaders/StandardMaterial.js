@@ -19,6 +19,9 @@ precision highp float;
 
 attribute vec3 positions;
 attribute vec3 normals;
+#ifdef ENABLE_TEXTURES
+attribute vec2 textureCoords;
+#endif
 attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
@@ -34,6 +37,9 @@ uniform vec2 lightmapSize;
 /* VS Outputs */
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
+#ifdef ENABLE_TEXTURES
+varying vec2 v_textureCoord;
+#endif
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
@@ -52,6 +58,7 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
+    v_textureCoord  = textureCoords;
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
@@ -80,6 +87,9 @@ precision highp float;
 /* VS Outputs */
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
+#ifdef ENABLE_TEXTURES
+varying vec2 v_textureCoord;
+#endif
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
@@ -174,13 +184,14 @@ void main(void) {
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
-    vec2 texCoords      = v_worldPos.xz * 0.2;
-    vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoords).rgb;
-    //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
-    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoords);
-    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
-    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
-    float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoords);
+    // vec2 texCoords      = v_worldPos.xz * 0.2;
+    vec2 texCoord       = v_textureCoord;
+    vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
+    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
+    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
+    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+    float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoord);
 #endif
 
 

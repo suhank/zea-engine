@@ -525,7 +525,6 @@ class Mesh extends BaseGeom {
         let splitIndices = {};
         let splitCount = 0;
         for (let [attrName, attr] of this.__vertexAttributes) {
-
             let attrSplits = attr.getSplits();
             for (let polygon in attrSplits) {
                 if (!(polygon in splitIndices))
