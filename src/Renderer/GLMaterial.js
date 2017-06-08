@@ -99,7 +99,7 @@ class GLMaterial {
                 continue;
             // console.log("Param:" + paramName + " value:" + value);
 
-            if(param.texture != undefined){
+            if(param.texture instanceof Image2D){
                 let gltexture = this.gltextures[paramName];
                 if (gltexture){
                     gltexture.bind(renderstate, unifs['_'+paramName+'Tex'].location);

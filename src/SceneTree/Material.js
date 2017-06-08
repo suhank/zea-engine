@@ -59,47 +59,46 @@ class Material extends Shader {
     }
 
     addParameter(paramName, defaultValue, texturable=true) {
-        this.__params[paramName] = new MaterialParam(defaultValue);
+        let param = new MaterialParam(defaultValue);
         let get, set;
         if(texturable){
             get = ()=>{ 
-                    if(this.__params[paramName].texture != undefined)
-                        return this.__params[paramName].texture;
+                    if(param.texture != undefined)
+                        return param.texture;
                     else
-                        return this.__params[paramName].value;
+                        return param.value;
                 };
             set = (value)=>{
                 if (value instanceof Image2D){
-                    if(this.__params[paramName].texture != undefined && this.__params[paramName].texture !== value) {
-                        this.__params[paramName].texture.removeRef(this);
+                    if(param.texture != undefined && param.texture !== value) {
+                        param.texture.removeRef(this);
                         this.textureDisconnected.emit(paramName);
                     }
-                    texture.addRef(this);
-                    this.__params[paramName].texture = value;
-                    texture.updated.connect(()=>{
-                        this.__params[paramName].texture = value;
+                    param.texture = value;
+                    param.texture.addRef(this);
+                    param.texture.updated.connect(()=>{
                         this.updated.emit();
                     });
                     this.textureConnected.emit(paramName);
                 }
                 else{
-                    if(this.__params[paramName].texture != undefined) {
-                        this.__params[paramName].texture.removeRef(this);
+                    if(param.texture != undefined) {
+                        param.texture.removeRef(this);
+                        param.texture = undefined;
                         this.textureDisconnected.emit(paramName);
                         this.updated.emit();
                     }
-                    this.__params[paramName].texture = undefined;
-                    this.__params[paramName].value = value;
+                    param.value = value;
                 }
                 this.updated.emit();
             };
         }
         else{
             get = ()=>{ 
-                    return this.__params[paramName].value;
+                    return param.value;
                 };
-            set = (val)=>{
-                this.__params[paramName].value = value;
+            set = (value)=>{
+                param.value = value;
                 this.updated.emit();
             };
         }
@@ -109,6 +108,7 @@ class Material extends Shader {
             'get': get,
             'set': set
         });
+        this.__params[paramName] = param;
     }
 
     getParameters() {

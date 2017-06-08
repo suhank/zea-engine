@@ -35,8 +35,10 @@ class FileImage2D extends Image2D {
 
     loadResource(resourcePath) {
         this.__resourcePath = resourcePath;
-        if (!this.__resourceLoader.resourceAvailable(this.__resourcePath))
+        if (!this.__resourceLoader.resourceAvailable(this.__resourcePath)){
             console.error("Resource unavailable:" + this.__resourcePath);
+            return;
+        }
 
         let getExt = (str)=>{
             let p = str.split('/');

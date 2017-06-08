@@ -71,11 +71,7 @@ void main(void) {
     v_geomItemData = geomItemData;
 #endif
 
-#ifdef ENABLE_TEXTURES
     v_worldPos      = (modelMatrix * pos).xyz;
-#elseif ENABLE_CROSS_SECTIONS
-    v_worldPos      = (modelMatrix * pos).xyz;
-#endif
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
@@ -125,9 +121,9 @@ uniform float planeDist;
 uniform float planeAngle;
 #endif
 
-uniform color _paintColor1;
-uniform color _paintColor2;
-uniform color _paintColor3;
+uniform color _baseColor;
+uniform color _baseColor2;
+uniform color _baseColor3;
 uniform color _flakesColor;
 
 uniform float _microflakePerturbation;
@@ -223,9 +219,9 @@ vec3 sampleNormalMap( sampler2D texture, vec2 texcoord )
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec3 paintColor1      = toLinear(_paintColor1.rgb);
-    vec3 paintColor2      = toLinear(_paintColor2.rgb);
-    vec3 paintColor3      = toLinear(_paintColor3.rgb);
+    vec3 baseColor1      = toLinear(_baseColor.rgb);
+    vec3 baseColor2      = toLinear(_baseColor2.rgb);
+    vec3 baseColor3      = toLinear(_baseColor3.rgb);
 
 #ifdef ENABLE_SPECULAR
     float roughness     = _roughness;
@@ -238,9 +234,9 @@ void main(void) {
     // vec2 texCoord      = v_worldPos.xz * 0.2;
 
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 paintColor1    = getColorParamValue(_paintColor1, _paintColor1Tex, _paintColor1TexConnected, texCoord);
-    vec3 paintColor2    = getColorParamValue(_paintColor2, _paintColor2Tex, _paintColor2TexConnected, texCoord);
-    vec3 paintColor3    = getColorParamValue(_paintColor3, _paintColor3Tex, _paintColor3TexConnected, texCoord);
+    vec3 baseColor1    = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    vec3 baseColor2    = baseColor1;//toLinear(_baseColor2.rgb);
+    vec3 baseColor3    = baseColor1;//toLinear(_baseColor3.rgb);
     float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
     float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
     float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
@@ -303,9 +299,9 @@ void main(void) {
     float  fresnel2 = clamp(dot( -viewVector, vNp2 ), 0.0, 1.0);
 
     float fresnel1Sq = fresnel1 * fresnel1;
-    vec3 baseColor =   fresnel1 * paintColor1  + 
-                        fresnel1Sq * paintColor2 +
-                        fresnel1Sq * fresnel1Sq * paintColor3 +
+    vec3 baseColor =   fresnel1 * baseColor1  + 
+                        fresnel1Sq * baseColor2 +
+                        fresnel1Sq * fresnel1Sq * baseColor3 +
                         pow( fresnel2, 16.0 ) * _flakesColor.rgb;
 
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
@@ -395,9 +391,9 @@ void main(void) {
 }
 `);
 
-        this.addParameter('paintColor1', new Color(1.0, 0.0, 0.0));
-        this.addParameter('paintColor2', new Color(1.0, 0.0, 0.0));
-        this.addParameter('paintColor3', new Color(1.0, 0.0, 0.0));
+        this.addParameter('baseColor', new Color(1.0, 0.0, 0.0));
+        this.addParameter('baseColor2', new Color(1.0, 0.0, 0.0));
+        this.addParameter('baseColor3', new Color(1.0, 0.0, 0.0));
         this.addParameter('flakesColor', new Color(1.0, 1.0, 1.0));
         this.addParameter('flakesNormal', new Color(0.0, 0.0, 0.0));
         this.addParameter('flakesScale', 0.1, false);
