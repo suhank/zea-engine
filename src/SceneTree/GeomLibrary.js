@@ -17,10 +17,10 @@ import {
     MeshProxy,
 } from './Geometry/GeomProxies.js';
 
-let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
-// import {
-//     parseGeomsBinary
-// } from './Geometry/parseGeomsBinary.js';
+// let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
+import {
+    parseGeomsBinary
+} from './Geometry/parseGeomsBinary.js';
 
 class GeomLibrary {
     constructor() {
@@ -33,10 +33,10 @@ class GeomLibrary {
 
         this.__streamInfos = {};
 
-        this.__workers = [];
-        for(let i=0; i<3; i++)
-            this.__workers.push(this.__constructWorker());
-        this.__nextWorker = 0;
+        // this.__workers = [];
+        // for(let i=0; i<3; i++)
+        //     this.__workers.push(this.__constructWorker());
+        // this.__nextWorker = 0;
     }
 
     __constructWorker() {
@@ -53,8 +53,8 @@ class GeomLibrary {
     }
 
     __terminateWorkers() {
-        for(let worker of this.__workers)
-            worker.terminate();
+        // for(let worker of this.__workers)
+        //     worker.terminate();
     }
 
     getNumGeoms() {
@@ -116,33 +116,33 @@ class GeomLibrary {
             offset += numGeomsPerWorkload;
 
             //////////////////////////////////////////////
-            // multiThreadedParsing
-            this.__workers[this.__nextWorker].postMessage({
-                key,
-                toc,
-                geomIndexOffset,
-                geomsRange,
-                isMobileDevice: reader.isMobileDevice,
-                bufferSlice,
-            }, [bufferSlice]);
-            this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
-            //////////////////////////////////////////////
-            // Single Threaded Parsing
-            // parseGeomsBinary(
+            // Multi Threaded Parsing
+            // this.__workers[this.__nextWorker].postMessage({
             //     key,
             //     toc,
             //     geomIndexOffset,
             //     geomsRange,
-            //     reader.isMobileDevice,
+            //     isMobileDevice: reader.isMobileDevice,
             //     bufferSlice,
-            //     (data, transferables)=>{
-            //         this.__revieveGeomDatas(
-            //             data.key, 
-            //             data.geomDatas, 
-            //             data.geomIndexOffset, 
-            //             data.geomsRange
-            //             );
-            //     });
+            // }, [bufferSlice]);
+            // this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
+            //////////////////////////////////////////////
+            // Main Threaded Parsing
+            parseGeomsBinary(
+                key,
+                toc,
+                geomIndexOffset,
+                geomsRange,
+                reader.isMobileDevice,
+                bufferSlice,
+                (data, transferables)=>{
+                    this.__revieveGeomDatas(
+                        data.key, 
+                        data.geomDatas, 
+                        data.geomIndexOffset, 
+                        data.geomsRange
+                        );
+                });
 
 
         }

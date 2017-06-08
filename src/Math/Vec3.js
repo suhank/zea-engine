@@ -350,7 +350,6 @@ class Vec3 extends AttrValue {
         return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
     }
 
-
     static createFromFloat32Array(array) {
         return new Vec3(array);
     }

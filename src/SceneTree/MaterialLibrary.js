@@ -2,8 +2,8 @@ import { Signal } from '../Math/Signal';
 import { sgFactory } from './SGFactory.js';
 
 class MaterialLibrary {
-    constructor() {
-        this.loaded = new Signal();
+    constructor(resourceLoader) {
+        this.__resourceLoader = resourceLoader;
         this.__textures = {};
         this.__materials = {};
 
@@ -13,6 +13,8 @@ class MaterialLibrary {
         material.roughness = 0.2;
         material.reflectance = 0.2;
         this.__materials['Default'] = material;
+
+        this.loaded = new Signal();
     }
 
     get numMaterials(){
@@ -96,10 +98,9 @@ class MaterialLibrary {
         let numTextures = reader.loadUInt32();
         for (let i=0; i< numTextures; i++) {
             let type = reader.loadStr();
-            let name = reader.loadStr();
-            let texture = sgFactory.constructClass(type);
+            let texture = sgFactory.constructClass(type, undefined, this.__resourceLoader);
             texture.readBinary(reader, flags);
-            this.__textures[name] = texture;
+            this.__textures[texture.name] = texture;
         }
         let numMaterials = reader.loadUInt32();
         if(numMaterials > 0){
@@ -108,9 +109,9 @@ class MaterialLibrary {
                 let type = reader.loadStr();
                 let name = reader.loadStr();
                 // console.log("Material:" + name);
-                let material = sgFactory.constructClass(type);
+                let material = sgFactory.constructClass(type, name);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                material.readBinary(reader, flags);
+                material.readBinary(reader, flags, this.__textures);
 
                 if (this.__materialTypeMapping && ('*' in this.__materialTypeMapping || name in this.__materialTypeMapping)) {
                     let remappedMaterial;
@@ -118,6 +119,9 @@ class MaterialLibrary {
                         remappedMaterial = sgFactory.constructClass(this.__materialTypeMapping[name]);
                     else if ('*' in this.__materialTypeMapping) 
                         remappedMaterial = sgFactory.constructClass(this.__materialTypeMapping['*']);
+
+                    if(!remappedMaterial)
+                        continue;
 
                     remappedMaterial.copyFrom(material)
                     this.__materials[name] = remappedMaterial;
@@ -128,6 +132,8 @@ class MaterialLibrary {
 
             }
         }
+
+        this.loaded.emit();
     }
 
     toString() {

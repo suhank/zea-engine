@@ -1,6 +1,7 @@
 import {
     Signal,
-    Async
+    Async,
+    Color
 } from '../Math';
 import {
     sgFactory
@@ -12,28 +13,33 @@ import {
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(resourceName, resourceLoader) {
+    constructor(resourcePath, resourceLoader) {
         super();
 
-        this.__resourceName = resourceName;
         this.__resourceLoader = resourceLoader;
         this.__isHDR = false;
         this.__hasAlpha = false;
         this.__loaded = false;
+        this.__hdrexposure = 1.0;
+        this.__hdrtint = new Color(1,1,1,1);
 
         this.loaded = new Signal();
 
-        if (this.__resourceLoader.resourceAvailable(this.__resourceName)){
-            this.loadResource(this.__resourceName);
-        }
+        if(resourcePath)
+            this.loadResource(resourcePath);
     }
 
-    loadResource(resourceName) {
-        this.__resourceName = resourceName;
-        this.__load();
+    get resourcePath(){
+        return this.__resourcePath;
     }
-    
-    __load() {
+
+    loadResource(resourcePath) {
+        this.__resourcePath = resourcePath;
+        if (!this.__resourceLoader.resourceAvailable(this.__resourcePath)){
+            console.error("Resource unavailable:" + this.__resourcePath);
+            return;
+        }
+
         let getExt = (str)=>{
             let p = str.split('/');
             let last = p[p.length-1];
@@ -41,7 +47,7 @@ class FileImage2D extends Image2D {
             if(suffixSt != -1)
                 return last.substring(suffixSt)
         }
-        let ext = getExt(this.__resourceName);
+        let ext = getExt(this.__resourcePath);
         if (ext == '.jpg' || ext == '.png') {
             this.__loadLDRImage();
         } else if (ext == '.mp4' || ext == '.ogg') {
@@ -58,6 +64,7 @@ class FileImage2D extends Image2D {
     }
 
     __loadLDRImage() {
+        this.__resourceLoader.addWork(1);
 
         let domElement = new Image();
         domElement.crossOrigin='anonymous';
@@ -66,12 +73,14 @@ class FileImage2D extends Image2D {
             this.height = domElement.height;
             this.__data = domElement;
             this.__loaded = true;
+            this.__resourceLoader.addWorkDone(1);
             this.loaded.emit();
         };
-        domElement.src = this.__resourceLoader.resolveURL(this.__resourceName);
+        domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
     }
 
     __loadLDRVideo() {
+        this.__resourceLoader.addWork(1);
 
         let domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
@@ -86,6 +95,7 @@ class FileImage2D extends Image2D {
             this.height = domElement.videoWidth;
             this.__data = domElement;
             this.__loaded = true;
+            this.__resourceLoader.addWorkDone(1);
             this.loaded.emit(domElement);
 
             let prevFrame = 0;
@@ -106,7 +116,7 @@ class FileImage2D extends Image2D {
             timerCallback();
 
         }, false);
-        domElement.src = this.__resourceLoader.resolveURL(this.__resourceName);
+        domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
         //domElement.load();
         domElement.play();
     }
@@ -154,13 +164,13 @@ class FileImage2D extends Image2D {
 
     //     };
     //     worker.postMessage({
-    //         name: this.__resourceName,
+    //         name: this.__resourcePath,
     //         url
     //     });
     // }
 
     __loadVLH() {
-        this.__resourceLoader.loadResource(this.__resourceName, (entries)=>{
+        this.__resourceLoader.loadResource(this.__resourcePath, (entries)=>{
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -176,6 +186,7 @@ class FileImage2D extends Image2D {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
+                console.log(this.__resourcePath + ": [" + this.width + ", " + this.height+"]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm
@@ -191,8 +202,8 @@ class FileImage2D extends Image2D {
         });
     }
 
-    getResourceName() {
-        return this.__resourceName;
+    getResourcePath() {
+        return this.__resourcePath;
     }
 
     isHDR() {
@@ -218,6 +229,19 @@ class FileImage2D extends Image2D {
         return params;
     }
 
+    setHDRExposure(hdrexposure){
+        this.__hdrexposure = hdrexposure;
+    }
+    getHDRExposure(){
+        return this.__hdrexposure;
+    }
+    setHDRTint(hdrtint){
+        this.__hdrtint = hdrtint;
+    }
+    getHDRTint(){
+        return this.__hdrtint;
+    }
+    
     fromJSON(json) {
 
     }
@@ -225,9 +249,16 @@ class FileImage2D extends Image2D {
     toJSON(json) {
 
     }
+
+    readBinary(reader, flags, textureLibrary){
+        // super.readBinary(reader, flags);
+        this.name = reader.loadStr();
+        this.loadResource(reader.loadStr());
+    }
 };
 
 sgFactory.registerClass('FileImage2D', FileImage2D);
+sgFactory.registerClass('FileImage', FileImage2D);
 
 
 export {

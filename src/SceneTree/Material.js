@@ -3,10 +3,19 @@ import { Signal } from '../Math/Signal';
 import { Image2D } from './Image2D.js';
 import { Shader } from './Shader.js';
 
+
+class MaterialParam {
+    constructor(value) {
+        this.value = value;
+        this.texture = undefined;
+    }
+};
+
+
 class Material extends Shader {
     constructor(name) {
         super(name);
-        this.__props = {};
+        this.__params = {};
 
         this.__metaData = new Map();
 
@@ -22,93 +31,92 @@ class Material extends Shader {
     }
 
     removeAllTextures() {
-        for (let propName in this.__props) {
-            let prop = this.__props[propName];
-            if (prop instanceof Image2D)
-                prop.removeRef(this);
+        for (let paramName in this.__params) {
+            if(this.__params[paramName].texture != undefined){
+                this.__params[paramName].texture.removeRef(this);
+                this.__params[paramName].texture = undefined;
+            }
         }
     }
 
     copyFrom(srcMaterial){
-        for (let propName in this.__props) {
-            let prop = this.__props[propName];
-            let srcProp = srcMaterial.getParameter(propName)
-            if (srcProp != undefined)
-                this.__props[propName] = srcProp;
+        for (let paramName in this.__params) {
+            let prop = this.__params[paramName];
+            let srcParam = srcMaterial.getParameter(paramName)
+            if (srcParam != undefined)
+                this.__params[paramName] = srcParam;
         }
     }
 
 
     get textures() {
         let textures = {};
-        for (let propName in this.__props) {
-            let prop = this.__props[propName];
-            if (prop instanceof Image2D)
-                textures[propName] = prop
+        for (let paramName in this.__params) {
+            if(this.__params[paramName].texture != undefined)
+                textures[paramName] = this.__params[paramName].texture;
         }
         return textures;
     }
 
-    addParameter(name, defaultValue, texturable=true) {
-        this.__props['_'+name] = defaultValue;
+    addParameter(paramName, defaultValue, texturable=true) {
+        let param = new MaterialParam(defaultValue);
         let get, set;
         if(texturable){
-            this.__props['_'+name+'Tex'] = undefined;
-            this.__props['_'+name+'TexConnected'] = false;
             get = ()=>{ 
-                    if(this.__props['_'+name+'TexConnected'])
-                        return this.__props['_'+name+'Tex'];
+                    if(param.texture != undefined)
+                        return param.texture;
                     else
-                        return this.__props['_'+name];
+                        return param.value;
                 };
-            set = (val)=>{
-                if (val instanceof Image2D){
-                    let texture = val;
-                    if (this.__props['_'+name+'TexConnected'] && this.__props['_'+name+'Tex'] === texture){
-                        this.__props['_'+name+'Tex'].removeRef(this);
-                        this.textureDisconnected.emit(name);
+            set = (value)=>{
+                if (value instanceof Image2D){
+                    if(param.texture != undefined && param.texture !== value) {
+                        param.texture.removeRef(this);
+                        this.textureDisconnected.emit(paramName);
                     }
-                    texture.addRef(this);
-                    this.__props['_'+name+'TexConnected'] = true;
-                    this.__props['_'+name+'Tex'] = texture;
-                    texture.updated.connect(()=>{
-                        this.__props['_'+name+'TexConnected'] = true;
-                        this.__props['_'+name+'Tex'] = texture;
+                    param.texture = value;
+                    param.texture.addRef(this);
+                    param.texture.updated.connect(()=>{
                         this.updated.emit();
                     });
-                    this.textureConnected.emit(name);
+                    this.textureConnected.emit(paramName);
                 }
                 else{
-                    if (this.__props['_'+name+'TexConnected']){
-                        this.__props['_'+name+'Tex'].removeRef(this);
-                        this.textureDisconnected.emit(name);
+                    if(param.texture != undefined) {
+                        param.texture.removeRef(this);
+                        param.texture = undefined;
+                        this.textureDisconnected.emit(paramName);
                         this.updated.emit();
                     }
-                    this.__props['_'+name+'TexConnected'] = false;
-                    this.__props['_'+name] = val;
+                    param.value = value;
                 }
                 this.updated.emit();
             };
         }
         else{
             get = ()=>{ 
-                    return this.__props['_'+name];
+                    return param.value;
                 };
-            set = (val)=>{
-                this.__props['_'+name] = val;
+            set = (value)=>{
+                param.value = value;
                 this.updated.emit();
             };
         }
-        Object.defineProperty(this, name, {
+        Object.defineProperty(this, paramName, {
             'configurable': false,
             'enumerable': true,
             'get': get,
             'set': set
         });
+        this.__params[paramName] = param;
     }
 
-    getParameter(name) {
-        return this.__props[name];
+    getParameters() {
+        return this.__params;
+    }
+
+    getParameter(paramName) {
+        return this.__params[paramName];
     }
 
     isTransparent() {
@@ -132,42 +140,46 @@ class Material extends Shader {
 
     fromJSON(json) {
         this.__name = json.name;
-        let props = this.__props;
+        let props = this.__params;
         for(let key in json){
-            let propName = '_'+key;
-            if(propName in props){
-                if(props[propName] instanceof Color)
-                    props[propName].fromJSON(json[key]);
+            let paramName = '_'+key;
+            if(paramName in props){
+                if(props[paramName] instanceof Color)
+                    props[paramName].fromJSON(json[key]);
                 else{
-                    props[propName] = json[key];
+                    props[paramName] = json[key];
                 }
             }
         }
     }
 
-    readBinary(reader, flags){
+    readBinary(reader, flags, textureLibrary){
         // super.readBinary(reader, flags);
         let type = reader.loadStr();
         this.name = reader.loadStr();
 
         let numParams = reader.loadUInt32();
-        let props = this.__props;
         for(let i=0; i<numParams; i++){
-            let propName = '_'+reader.loadStr();
-            if(propName in props){
-                if(props[propName] instanceof Color){
-                    props[propName] = reader.loadRGBAFloat32Color();
-                    // If the value is in linear space, then we should convert it to gamma space.
-                    props[propName].applyGamma(2.2);
-                }
-                else{
-                    props[propName] = reader.loadFloat32();
-                }
+            let paramName = reader.loadStr();
+            let paramType = reader.loadStr();
+            let value;
+            if(paramType == "MaterialColorParam"){
+                value = reader.loadRGBAFloat32Color();
+                // If the value is in linear space, then we should convert it to gamma space.
+                // Note: !! this should always be done in preprocessing...
+                ///value.applyGamma(2.2);
             }
             else{
-                // Make sure to load the data, ()
-                let value = reader.loadFloat32();
-                //console.log("Unhandled param:" + propName + ":" + value);
+                value = reader.loadFloat32();
+            }
+            let textureName = reader.loadStr();
+            if(paramName in this.__params){
+                this.__params[paramName].value = value;
+                // console.log(paramName +":" + value);
+                if(textureName != ''){
+                    // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
+                    this.__params[paramName].texture = textureLibrary[textureName];
+                }
             }
         }
     }

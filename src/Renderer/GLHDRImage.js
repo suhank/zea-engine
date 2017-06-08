@@ -92,7 +92,8 @@ class GLHDRImage extends GLTexture2D {
         this.__srcLDRTex.bind(renderstate, unifs.ldrSampler.location);
         this.__srcCDMTex.bind(renderstate, unifs.cdmSampler.location);
 
-        gl.uniform1f(unifs['exposure'].location, this.__hdrImage.exposure != undefined ? this.__hdrImage.exposure : 1.0);
+        gl.uniform1f(unifs.exposure.location, this.__hdrImage.getHDRExposure());
+        gl.uniform4fv(unifs.tint.location, this.__hdrImage.getHDRTint().asArray());
         gl.drawQuad();
 
         // // Debug a block of pixels.

@@ -3,10 +3,17 @@ import {
     Vec3
 } from '../../Math';
 import {
-    shaderLibrary,
-    Material,
+    Material
+} from '../Material.js';
+import {
     Image2D
-} from '../../SceneTree';
+} from '../Image2D.js';
+import {
+    sgFactory
+} from '../SGFactory.js';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
 
 import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
 import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
@@ -122,6 +129,7 @@ void main(void) {
     // }
 };
 
+sgFactory.registerClass('LightmapCatcherMaterial', LightmapCatcherMaterial);
 
 export {
     LightmapCatcherMaterial

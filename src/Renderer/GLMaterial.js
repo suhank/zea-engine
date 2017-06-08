@@ -92,57 +92,55 @@ class GLMaterial {
         this.__boundTexturesBeforeMaterial = renderstate['boundTextures'];
         let gl = this.__gl;
         let unifs = renderstate['unifs'];
-        for (let unifName in unifs) {
-            let unif = unifs[unifName];
-            let value = this.__material.getParameter(unifName);
-            if (value == undefined)
+        let params = this.__material.getParameters();
+        for (let [paramName, param] of Object.entries(params)) {
+            let unif = unifs['_'+paramName];
+            if (unif == undefined)
                 continue;
-            // console.log("Param:" + unifName + " value:" + value);
-            // let checkType = function(expectedType){
-            //     if (expectedType != unif['type']) {
-            //         let valueType = value.constructor.name;
-            //         let expectedType = ((unif['type'] != undefined) ? unif['type'].name : "Unknown");
-            //         throw("Invalid type for uniform:" + unifName + " valueType:" + valueType + " expected:" + expectedType);
-            //     }
-            // }
+            // console.log("Param:" + paramName + " value:" + value);
+
+            if(param.texture instanceof Image2D){
+                let gltexture = this.gltextures[paramName];
+                if (gltexture){
+                    gltexture.bind(renderstate, unifs['_'+paramName+'Tex'].location);
+                    gl.uniform1i(unifs['_'+paramName+'TexConnected'].location, 1);
+                    continue;
+                }
+            }
+
             switch (unif['type']) {
-                case Boolean:
-                    // gl.uniform1ui(unif['location'], value);// WebGL 2
-                    gl.uniform1i(unif['location'], value);
-                    break;
-                case UInt32:
-                    // gl.uniform1ui(unif['location'], value);// WebGL 2
-                    gl.uniform1i(unif['location'], value);
-                    break;
-                case SInt32:
-                    // gl.uniform1si(unif['location'], value);// WebGL 2
-                    gl.uniform1i(unif['location'], value);
-                    break;
-                case Float32:
-                    gl.uniform1f(unif['location'], value);
-                    break;
-                case Vec2:
-                    gl.uniform2fv(unif['location'], value.asArray());
-                    break;
-                case Vec3:
-                    gl.uniform3fv(unif['location'], value.asArray());
-                    break;
-                case Vec4:
-                case Color:
-                    gl.uniform4fv(unif['location'], value.asArray());
-                    break;
-                case Mat4:
-                    gl.uniformMatrix4fv(unif['location'], false, value.asArray());
-                    break;
-                case Image2D:
-                    let gltexture = this.gltextures[unifName];
-                    if (gltexture)
-                        gltexture.bind(renderstate, unif['location']);
-                    break;
-                default:
-                    {
-                        console.warn("Uniform :" + unifName + " has unhandled data type:" + unif['type']);
-                    }
+            case Boolean:
+                // gl.uniform1ui(unif.location, param.value);// WebGL 2
+                gl.uniform1i(unif.location, param.value);
+                break;
+            case UInt32:
+                // gl.uniform1ui(unif.location, param.value);// WebGL 2
+                gl.uniform1i(unif.location, param.value);
+                break;
+            case SInt32:
+                // gl.uniform1si(unif.location, param.value);// WebGL 2
+                gl.uniform1i(unif.location, param.value);
+                break;
+            case Float32:
+                gl.uniform1f(unif.location, param.value);
+                break;
+            case Vec2:
+                gl.uniform2fv(unif.location, param.value.asArray());
+                break;
+            case Vec3:
+                gl.uniform3fv(unif.location, param.value.asArray());
+                break;
+            case Vec4:
+            case Color:
+                gl.uniform4fv(unif.location, param.value.asArray());
+                break;
+            case Mat4:
+                gl.uniformMatrix4fv(unif.location, false, param.value.asArray());
+                break;
+            default:
+                {
+                    console.warn("Param :" + paramName + " has unhandled data type:" + unif['type']);
+                }
             }
         }
         return true;

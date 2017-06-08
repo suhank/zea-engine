@@ -59,9 +59,8 @@ class GLNormalsPass extends GLPass {
     }
 
     draw(renderstate) {
-        if(this.__count == 0){
+        if(this.__glshadermaterials.length == 0)
             return;
-        }
 
         let gl = this.__gl;
 

@@ -9,22 +9,8 @@ class VertexAttribute extends Attribute {
         super(dataType, expectedSize, defaultScalarValue)
         this.__geom = geom // TODO: WeakRef??
 
-        // In polygon meshes, often the number of attribute values (e.g. uvs, normals),
-        // is more than the number of vertices. This is because often we have attribute seams.
-        // seams occur when we have a discontinuity of and attributes values over a mesh.
-        // UV seams occur when neighboring faces have different UV values but share vertex positions.
-        // e.g. a Sphere normally has a UV seam down one side due to the way the mesh was unwrapped into 2d coordinates.
-        // Normal seams occur when hard edges are create on a mesh. This might happen when Normals are automatically generated.
-        // an angle threshold will cause neighboring face vertices to have different normal values. 
-
-        // Splits stores a value{face}{facevertex} mapping of split values.
-        // the splits represent the delta between the base vertex set(positions)
-        // and this attribute. Note: this means the positions attribute should _never_
-        // split.
-        // Note: facevertex is the index of the vertex in the face. e.g. 0, 1, 2 (triangles), or 0..3 for quads.
         this.__splits = {};
         this.__splitValues = [];
-        // this.__splitValues = new Attribute();
     }
 
     getFaceVertexValueRef(face, facevertex) {

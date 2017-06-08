@@ -22,6 +22,24 @@ class Box2 {
         }
     }
 
+
+    set(p0, p1) {
+        this.p0 = p0;
+        this.p1 = p1;
+    }
+
+    reset() {
+        this.p0.x = Number.POSITIVE_INFINITY;
+        this.p1.x = Number.NEGATIVE_INFINITY;
+        this.p0.y = Number.POSITIVE_INFINITY;
+        this.p1.y = Number.NEGATIVE_INFINITY;
+    }
+
+    isValid() {
+        return this.p0.x != Number.POSITIVE_INFINITY && this.p1.x != Number.NEGATIVE_INFINITY &&
+            this.p0.y != Number.POSITIVE_INFINITY && this.p1.y != Number.NEGATIVE_INFINITY;
+    }
+
     addPoint(point) {
         if (this.p0.x == Number.POSITIVE_INFINITY || point.x < this.p0.x)
             this.p0.x = point.x;
@@ -35,6 +53,9 @@ class Box2 {
     }
 
     size() {
+        return this.p1.subtract(this.p0);
+    }
+    diagonal() {
         return this.p1.subtract(this.p0);
     }
 
