@@ -19,6 +19,9 @@ precision highp float;
 
 attribute vec3 positions;
 attribute vec3 normals;
+#ifdef ENABLE_TEXTURES
+attribute vec2 textureCoords;
+#endif
 attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
@@ -34,6 +37,9 @@ uniform vec2 lightmapSize;
 /* VS Outputs */
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
+#ifdef ENABLE_TEXTURES
+varying vec2 v_textureCoord;
+#endif
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
@@ -53,6 +59,9 @@ void main(void) {
     gl_Position     = projectionMatrix * viewPos;
 
 
+#ifdef ENABLE_TEXTURES
+    v_textureCoord  = textureCoords;
+#endif
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
@@ -86,6 +95,9 @@ precision highp float;
 /* VS Outputs */
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
+#ifdef ENABLE_TEXTURES
+varying vec2 v_textureCoord;
+#endif
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
@@ -149,9 +161,9 @@ uniform bool _normalTexConnected;
 uniform float _normalScale;
 
 
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoords) {
+vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected)
-        return toLinear(texture2D(tex, texCoords));
+        return toLinear(texture2D(tex, texCoord));
     else
         return toLinear(value);
 }
@@ -160,9 +172,9 @@ float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
 
-float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoords) {
+float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected)
-        return luminanceFromRGB(texture2D(tex, texCoords).rgb);
+        return luminanceFromRGB(texture2D(tex, texCoord).rgb);
     else
         return value;
 }
@@ -223,13 +235,15 @@ void main(void) {
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
-    vec2 texCoords      = v_worldPos.xz * 0.2;
-    vec3 paintColor1      = getColorParamValue(_paintColor1, _paintColor1Tex, _paintColor1TexConnected, texCoords);
-    vec3 paintColor2      = getColorParamValue(_paintColor2, _paintColor2Tex, _paintColor2TexConnected, texCoords);
-    vec3 paintColor3      = getColorParamValue(_paintColor3, _paintColor3Tex, _paintColor3TexConnected, texCoords);
-    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoords);
-    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoords);
-    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
+    // vec2 texCoord      = v_worldPos.xz * 0.2;
+
+    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
+    vec3 paintColor1    = getColorParamValue(_paintColor1, _paintColor1Tex, _paintColor1TexConnected, texCoord);
+    vec3 paintColor2    = getColorParamValue(_paintColor2, _paintColor2Tex, _paintColor2TexConnected, texCoord);
+    vec3 paintColor3    = getColorParamValue(_paintColor3, _paintColor3Tex, _paintColor3TexConnected, texCoord);
+    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
+    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
+    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
 #endif
 
 
@@ -257,7 +271,7 @@ void main(void) {
 #ifdef ENABLE_TEXTURES
     if(_normalTexConnected){
 
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
+        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif

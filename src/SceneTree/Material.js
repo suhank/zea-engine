@@ -175,11 +175,10 @@ class Material extends Shader {
             let textureName = reader.loadStr();
             if(paramName in this.__params){
                 this.__params[paramName].value = value;
-                console.log(paramName +":" + value);
+                // console.log(paramName +":" + value);
                 if(textureName != ''){
-                    console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
-                    //if(paramName == 'baseColor')
-                        this.__params[paramName].texture = textureLibrary[textureName];
+                    // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
+                    this.__params[paramName].texture = textureLibrary[textureName];
                 }
             }
         }

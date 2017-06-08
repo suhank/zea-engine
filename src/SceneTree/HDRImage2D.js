@@ -12,7 +12,8 @@ class HDRImage2D extends Image2D {
         this.__resourceLoader = resourceLoader;
         this.__stream = isStream;
         this.__loaded = false;
-        this.exposure = 1.0;
+        this.__hdrexposure = 1.0;
+        this.__hdrtint = new Color(1,1,1,1);
         this.__data = {};
 
         this.loaded = new Signal();
@@ -94,6 +95,19 @@ class HDRImage2D extends Image2D {
             };
         }
         return params;
+    }
+
+    setHDRExposure(hdrexposure){
+        this.__hdrexposure = hdrexposure;
+    }
+    getHDRExposure(){
+        return this.__hdrexposure;
+    }
+    setHDRTint(hdrtint){
+        this.__hdrtint = hdrtint;
+    }
+    getHDRTint(){
+        return this.__hdrtint;
     }
 
     fromJSON(json) {

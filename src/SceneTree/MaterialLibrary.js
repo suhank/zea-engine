@@ -4,7 +4,6 @@ import { sgFactory } from './SGFactory.js';
 class MaterialLibrary {
     constructor(resourceLoader) {
         this.__resourceLoader = resourceLoader;
-        this.loaded = new Signal();
         this.__textures = {};
         this.__materials = {};
 
@@ -14,6 +13,8 @@ class MaterialLibrary {
         material.roughness = 0.2;
         material.reflectance = 0.2;
         this.__materials['Default'] = material;
+
+        this.loaded = new Signal();
     }
 
     get numMaterials(){
@@ -107,7 +108,7 @@ class MaterialLibrary {
             for (let i=0; i< numMaterials; i++) {
                 let type = reader.loadStr();
                 let name = reader.loadStr();
-                console.log("Material:" + name);
+                // console.log("Material:" + name);
                 let material = sgFactory.constructClass(type);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags, this.__textures);
@@ -119,6 +120,9 @@ class MaterialLibrary {
                     else if ('*' in this.__materialTypeMapping) 
                         remappedMaterial = sgFactory.constructClass(this.__materialTypeMapping['*']);
 
+                    if(!remappedMaterial)
+                        continue;
+
                     remappedMaterial.copyFrom(material)
                     this.__materials[name] = remappedMaterial;
                 }
@@ -128,6 +132,8 @@ class MaterialLibrary {
 
             }
         }
+
+        this.loaded.emit();
     }
 
     toString() {

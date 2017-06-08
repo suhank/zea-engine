@@ -1,6 +1,7 @@
 import {
     Signal,
-    Async
+    Async,
+    Color
 } from '../Math';
 import {
     sgFactory
@@ -19,6 +20,8 @@ class FileImage2D extends Image2D {
         this.__isHDR = false;
         this.__hasAlpha = false;
         this.__loaded = false;
+        this.__hdrexposure = 1.0;
+        this.__hdrtint = new Color(1,1,1,1);
 
         this.loaded = new Signal();
 
@@ -224,6 +227,19 @@ class FileImage2D extends Image2D {
         return params;
     }
 
+    setHDRExposure(hdrexposure){
+        this.__hdrexposure = hdrexposure;
+    }
+    getHDRExposure(){
+        return this.__hdrexposure;
+    }
+    setHDRTint(hdrtint){
+        this.__hdrtint = hdrtint;
+    }
+    getHDRTint(){
+        return this.__hdrtint;
+    }
+    
     fromJSON(json) {
 
     }
