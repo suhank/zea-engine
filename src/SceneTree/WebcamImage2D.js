@@ -13,11 +13,13 @@ import {
 
 class WebcamImage2D extends Image2D {
     constructor(width = 1280, height = 720, rearCamera = false) {
-        super(params = {});
-        this.__initWebcam();
+        super();
+        this.__loaded = false;
+        this.loaded = new Signal();
+        this.__initWebcam(width, height, rearCamera);
     }
 
-    __initWebcam(){
+    __initWebcam(width = 1280, height = 720, rearCamera = false){
 
         let facingMode;
         if (rearCamera) {
@@ -48,16 +50,14 @@ class WebcamImage2D extends Image2D {
                 }
             })
             .then((mediaStream)=>{
-                var video = document.querySelector('video');
-                video.srcObject = mediaStream;
-                video.onloadedmetadata = (e)=>{
-                    video.play();
+                domElement.srcObject = mediaStream;
+                domElement.onloadedmetadata = (e)=>{
+                    domElement.play();
 
                     this.width = domElement.videoHeight;
                     this.height = domElement.videoWidth;
                     this.__data = domElement;
                     this.__loaded = true;
-                    this.loaded.emit(domElement);
 
                     let prevFrame = 0;
                     let frameRate = 60;
@@ -85,7 +85,7 @@ class WebcamImage2D extends Image2D {
     }
 
     isLoaded() {
-        return true;
+        return this.__loaded;
     }
 
     getParams() {
@@ -117,7 +117,9 @@ class WebcamImage2D extends Image2D {
 
 };
 
+sgFactory.registerClass('WebcamImage2D', WebcamImage2D);
+
+
 export {
     WebcamImage2D
 };
-//export default WebcamImage2D;
