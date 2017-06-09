@@ -40,15 +40,20 @@ class MaterialLibrary {
         return this.__materials[name];
     }
 
-    modifyMaterials(materialNames, params){
+    modifyMaterials(materialNames, paramValues){
         for(let name of materialNames){
             let material = this.__materials[name];
             if(!material){
                 console.warn("Material not found:" + name);
                 continue;
             }
-            for(let name in params){
-                material[name] = params[name];
+            for(let paramName in paramValues){
+                let param = material.getParameter(paramName);
+                if(!param){
+                    console.warn("Param not found:" + paramName);
+                    continue;
+                }
+                param.setValue(paramValues[paramName]);
             }
         }
     }

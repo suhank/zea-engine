@@ -8,6 +8,39 @@ class MaterialParam {
     constructor(value) {
         this.value = value;
         this.texture = undefined;
+        this.textureConnected = new Signal();
+        this.textureDisconnected = new Signal();
+        this.parameterChanged = new Signal();
+    }
+
+    getValue() {
+        if(this.texture != undefined)
+            return this.texture;
+        else
+            return this.value;
+    }
+    setValue(value) {
+        if (value instanceof Image2D){
+            if(this.texture != undefined && this.texture !== value) {
+                this.texture.removeRef(this);
+                this.textureDisconnected.emit(this);
+            }
+            this.texture = value;
+            this.texture.addRef(this);
+            this.texture.updated.connect(()=>{
+                this.parameterChanged.emit();
+            });
+            this.textureConnected.emit(this);
+        }
+        else{
+            if(this.texture != undefined) {
+                this.texture.removeRef(this);
+                this.texture = undefined;
+                this.textureDisconnected.emit(this);
+            }
+            this.value = value;
+        }
+        this.parameterChanged.emit();
     }
 };
 
@@ -21,7 +54,6 @@ class Material extends Shader {
 
         this.textureConnected = new Signal();
         this.textureDisconnected = new Signal();
-        this.parameterChanged = new Signal();
         this.destructing = new Signal();
     }
     
@@ -60,54 +92,23 @@ class Material extends Shader {
 
     addParameter(paramName, defaultValue, texturable=true) {
         let param = new MaterialParam(defaultValue);
-        let get, set;
-        if(texturable){
-            get = ()=>{ 
-                    if(param.texture != undefined)
-                        return param.texture;
-                    else
-                        return param.value;
-                };
-            set = (value)=>{
-                if (value instanceof Image2D){
-                    if(param.texture != undefined && param.texture !== value) {
-                        param.texture.removeRef(this);
-                        this.textureDisconnected.emit(paramName);
-                    }
-                    param.texture = value;
-                    param.texture.addRef(this);
-                    param.texture.updated.connect(()=>{
-                        this.updated.emit();
-                    });
-                    this.textureConnected.emit(paramName);
-                }
-                else{
-                    if(param.texture != undefined) {
-                        param.texture.removeRef(this);
-                        param.texture = undefined;
-                        this.textureDisconnected.emit(paramName);
-                        this.updated.emit();
-                    }
-                    param.value = value;
-                }
-                this.updated.emit();
-            };
-        }
-        else{
-            get = ()=>{ 
-                    return param.value;
-                };
-            set = (value)=>{
-                param.value = value;
-                this.updated.emit();
-            };
-        }
+        let get = ()=>{ 
+            return param.getValue();
+        };
+        let set = (value)=>{
+            param.setValue(value);
+            this.updated.emit();
+        };
         Object.defineProperty(this, paramName, {
             'configurable': false,
             'enumerable': true,
             'get': get,
             'set': set
         });
+
+        param.textureConnected.connect(this.textureConnected.emit);
+        param.textureDisconnected.connect(this.textureDisconnected.emit);
+        param.parameterChanged.connect(this.updated.emit);
         this.__params[paramName] = param;
     }
 

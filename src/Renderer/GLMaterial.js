@@ -97,20 +97,22 @@ class GLMaterial {
         let unifs = renderstate['unifs'];
         let params = this.__material.getParameters();
         for (let [paramName, param] of Object.entries(params)) {
-            let unif = unifs['_'+paramName];
-            if (unif == undefined)
-                continue;
-            // console.log("Param:" + paramName + " value:" + value);
 
             if(param.texture instanceof Image2D){
                 let gltexture = this.gltextures[paramName];
-                if (gltexture){
-                    gltexture.bind(renderstate, unifs['_'+paramName+'Tex'].location);
-                    gl.uniform1i(unifs['_'+paramName+'TexConnected'].location, 1);
+                let textureUnif = unifs['_'+paramName+'Tex'];
+                if (gltexture && textureUnif){
+                    gltexture.bind(renderstate, textureUnif.location);
+                    let textureConnctedUnif = unifs['_'+paramName+'TexConnected'];
+                    if (textureConnctedUnif){
+                        gl.uniform1i(textureConnctedUnif.location, 1);
+                    }
                     continue;
                 }
             }
-
+            let unif = unifs['_'+paramName];
+            if (unif == undefined)
+                continue;
             switch (unif['type']) {
             case Boolean:
                 // gl.uniform1ui(unif.location, param.value);// WebGL 2
