@@ -72,7 +72,6 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
@@ -234,9 +233,9 @@ void main(void) {
     // vec2 texCoord      = v_worldPos.xz * 0.2;
 
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 baseColor1    = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    vec3 baseColor2    = baseColor1;//toLinear(_baseColor2.rgb);
-    vec3 baseColor3    = baseColor1;//toLinear(_baseColor3.rgb);
+    vec3 baseColor1     = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    vec3 baseColor2     = baseColor1;//toLinear(_baseColor2.rgb);
+    vec3 baseColor3     = toLinear(_baseColor3.rgb);
     float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
     float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
     float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
@@ -260,8 +259,11 @@ void main(void) {
 #endif 
 
     vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos.xyz;
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 surfacePos = -v_viewPos.xyz;
+
+    // The vector from the camera to the surface point.
+    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
+    vec3 viewDir = normalize(viewVector);
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
 
 #ifdef ENABLE_TEXTURES
@@ -273,36 +275,38 @@ void main(void) {
 #endif
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 
-    ////////////////////////////////////////////////////////////////////////
-    // http://www.chrisoat.com/papers/Oat-Tatarchuk-Isidoro-Layered_Car_Paint_Shader_Print.pdf
-
-    mat3 TBN = cotangent_frame( normal, -viewVector, v_lightmapCoord );
-    vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
-
-    float NdotV = dot(normal, viewVector);
+    float NdotV = dot(normal, viewDir);
     if(NdotV < 0.0){
-        flakesNormal = -flakesNormal;
         normal = -normal;
-        NdotV = dot(normal, viewVector);
+        NdotV = dot(normal, viewDir);
 
         // Note: these 2 lines can be used to debug inverted meshes.
         //baseColor = vec3(1.0, 0.0, 0.0);
         //NdotV = 1.0;
     }
 
+    ////////////////////////////////////////////////////////////////////////
+    // http://www.chrisoat.com/papers/Oat-Tatarchuk-Isidoro-Layered_Car_Paint_Shader_Print.pdf
 
-    vec3 vNp1 = _microflakePerturbationA * flakesNormal;// + _normalPerturbation * normal;
-    vec3 vNp2 = _microflakePerturbation * ( flakesNormal + normal ) ;
+    mat3 TBN = cotangent_frame( normal, surfacePos, v_lightmapCoord );
 
-    //float fresnel = dot( -viewVector, normal );
-    float  fresnel1 = clamp(dot( -viewVector, vNp1 ), 0.0, 1.0);
-    float  fresnel2 = clamp(dot( -viewVector, vNp2 ), 0.0, 1.0);
+    vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
+
+
+    vec3 vNp1 = normalize(mix(normal, flakesNormal, _microflakePerturbationA));
+    vec3 vNp2 = normalize(mix(normal, flakesNormal, _microflakePerturbation));
+
+    //float fresnel = NdotV;
+    float  fresnel1 = clamp(dot( viewDir, vNp1 ), 0.0, 1.0);
+    float  fresnel2 = clamp(dot( viewDir, vNp2 ), 0.0, 1.0);
 
     float fresnel1Sq = fresnel1 * fresnel1;
-    vec3 baseColor =   fresnel1 * baseColor1  + 
+    vec3 baseColor =   fresnel1 * baseColor3  + 
                         fresnel1Sq * baseColor2 +
-                        fresnel1Sq * fresnel1Sq * baseColor3 +
-                        pow( fresnel2, 16.0 ) * _flakesColor.rgb;
+                        fresnel1Sq * fresnel1Sq * baseColor1;/* +
+                        pow( fresnel2, 16.0 ) * _flakesColor.rgb;*/
+
+    //baseColor = fresnel1Sq * baseColor1;
 
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
@@ -349,12 +353,12 @@ void main(void) {
 
     // -------------------------- Specular Reflactance --------------------------
     // vec3 ks = vec3(0.0);
-    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, F0, ks );
+    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewDir, roughness, F0, ks );
     // vec3 kd = (vec3(1.0) - ks) * vec3(1.0 - metallic);    
 
     float schlickFresnel = reflectance + pow((1.0-reflectance)*(1.0-NdotV), 5.0);
 
-    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, schlickFresnel);
+    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewDir, roughness, schlickFresnel);
 
 
     // -------------------------- Specular Occlusion --------------------------
@@ -379,8 +383,8 @@ void main(void) {
     // Energy conservation already taken into account in both the diffuse and specular reflectance
     vec3 radiance = diffuseReflectance + specularReflectance;    
 
-    // gl_FragColor = vec4( kd * diffuse + /*ks */ specular, 1);
     gl_FragColor = vec4(radiance, 1);
+    //gl_FragColor = vec4(baseColor, 1);
 
 #endif
 
