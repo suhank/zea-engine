@@ -1,13 +1,6 @@
 import {
-    Vec2,
-    Vec3,
-    Quat,
-    Mat4,
-    Xfo,
     Color,
-    Ray,
-    Signal,
-    isMobileDevice
+    Signal
 } from '../Math';
 import {
     HDRImage2D,
@@ -23,7 +16,9 @@ import {
 class BaseViewport {
     constructor(renderer) {
         this.__renderer = renderer;
+        this.__backgroundColor = new Color(0.4, 0.4, 0.4);
         this.__fbo = undefined;
+        this.updated = new Signal();
     }
 
     getRenderer() {
@@ -43,7 +38,7 @@ class BaseViewport {
     }
     
     getBackground() {
-        return this.__background;
+        return this.__backgroundTexture ? this.__backgroundTexture : this.__backgroundColor;
     }
 
     setBackground(background) {
@@ -61,7 +56,7 @@ class BaseViewport {
                     this.__backgroundGLTexture = new GLTexture2D(gl, background);
             }
         }
-        else{
+        else if (background instanceof Color){
              if(this.__backgroundGLTexture) {
                 this.__backgroundGLTexture.destroy();
                 this.__backgroundGLTexture = undefined;
@@ -71,6 +66,9 @@ class BaseViewport {
             if (this.__fbo) {
                 this.__fbo.setClearColor(this.__backgroundColor.asArray());
             }
+        }
+        else{
+            console.warn("Invalid background:" + background);
         }
         this.updated.emit();
     }
@@ -101,10 +99,10 @@ class BaseViewport {
     // Fbo
 
     bindAndClear(renderstate) {
-        let gl = this.__renderer.gl;
         if (this.__fbo)
             this.__fbo.bindAndClear(renderstate);
         else {
+            let gl = this.__renderer.gl;
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.viewport(this.x, this.y, this.__width, this.__height);
             // Only sissor if multiple viewports are setup.
@@ -115,12 +113,14 @@ class BaseViewport {
             gl.colorMask(true, true, true, true);
             gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         }
-        if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            let screenQuad = gl.screenQuad;
-            screenQuad.bindShader(renderstate);
-            gl.depthMask(false);
-            screenQuad.draw(renderstate, this.__backgroundGLTexture, [0.0, 0.0], [1.0, -1.0]);
-        }
+    }
+
+    drawBackground(renderstate, pos=[0,0], size=[1,-1]) {
+        let gl = this.__renderer.gl;
+        let screenQuad = gl.screenQuad;
+        screenQuad.bindShader(renderstate);
+        gl.depthMask(false);
+        screenQuad.draw(renderstate, this.__backgroundGLTexture, pos, size);
     }
 
 

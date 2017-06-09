@@ -123,7 +123,6 @@ class VRViewport extends BaseViewport {
         window.addEventListener('vrdisplayactivate', vrdisplayactivate, false);
         window.addEventListener('vrdisplaydeactivate', vrdisplaydeactivate, false);
 
-        this.updated = new Signal();
         this.resized = new Signal();
 
         // Signals to abstract the user view. 
@@ -555,6 +554,11 @@ class VRViewport extends BaseViewport {
         this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
         renderstate['viewMatrix'] = this.__leftViewMatrix;
         renderstate['projectionMatrix'] = this.__leftProjectionMatrix;
+
+        if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+            this.drawBackground(renderstate);
+        }
+
         this.__renderer.drawScene(renderstate);
 
         gl.viewport(width * 0.5, 0, width * 0.5, height);
@@ -562,6 +566,11 @@ class VRViewport extends BaseViewport {
         this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
         renderstate['viewMatrix'] = this.__rightViewMatrix;
         renderstate['projectionMatrix'] = this.__rightProjectionMatrix;
+
+        if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+            this.drawBackground(renderstate);
+        }
+
         this.__renderer.drawScene(renderstate);
 
         this.__vrDisplay.submitFrame();

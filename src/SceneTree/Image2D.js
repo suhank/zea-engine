@@ -32,10 +32,6 @@ class Image2D extends RefCounted {
     isStream() {
         return false;
     }
-
-    isLoaded() {
-        return this.__loaded;
-    }
     
     getMapping() {
         return this.__mapping;

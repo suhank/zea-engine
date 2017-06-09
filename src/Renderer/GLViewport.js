@@ -23,7 +23,6 @@ class GLViewport extends BaseViewport {
     constructor(renderer, name, width, height) {
         super(renderer);
         this.__name = name;
-        this.__backgroundColor = new Color(0.4, 0.4, 0.4);
         this.__projectionMatrix = new Mat4();
         this.__frustumDim = new Vec2();
 
@@ -45,7 +44,6 @@ class GLViewport extends BaseViewport {
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
         // this.__overlayPass.addDrawItem(this.__selectionRect);
 
-        this.updated = new Signal();
         this.resized = new Signal();
         this.keyPressed = new Signal();
         this.mouseMoved = new Signal();
@@ -704,6 +702,9 @@ class GLViewport extends BaseViewport {
     // Rendering
     draw(renderstate) {
         this.bindAndClear(renderstate);
+        if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+            this.drawBackground(renderstate);
+        }
 
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();

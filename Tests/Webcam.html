@@ -25,19 +25,25 @@
     let material = new Visualive.FlatMaterial('wecam');
     material.baseColor = webcamimage;
 
-    let addMeshShape = (shape, pos)=>{
-        let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, material);
-        geomItem.localXfo.tr = pos;
-        scene.getRoot().addChild(geomItem);
-    }
+    let plane = new Visualive.Plane('Plane', 2.0, 1.5);
 
-    addMeshShape(new Visualive.Plane('Plane', 2.0, 1.5), new Visualive.Vec3(0, 1, 0));
+    let geomItem = new Visualive.GeomItem('PlaneItem', plane, material);
+    geomItem.localXfo.tr =  new Visualive.Vec3(0, 1, 0);
+    scene.getRoot().addChild(geomItem);
 
 
     let renderer = new Visualive.GLSimpleRenderer(addCanvas());
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().setBackground(webcamimage);
+    // renderer.getViewport().setBackground(webcamimage);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,1,0));
+
+    renderer.vrViewportSetup.connect((vrvp)=>{
+        let geomItem = new Visualive.GeomItem('BG', plane, material);
+        geomItem.localXfo.sc.set(8, 8, 1);
+        geomItem.localXfo.tr.set(0, -4, -8);
+        // geomItem.localXfo.ori.rotateX(-0.15);
+        vrvp.getVRHead().getTreeItem().addChild(geomItem);
+    })
 
     renderer.setScene(scene);
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
