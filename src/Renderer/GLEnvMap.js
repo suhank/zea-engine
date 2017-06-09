@@ -46,14 +46,6 @@ class GLEnvMap extends GLProbe {
         gui.add(this, 'backgroundFocus', 0.0, 1.0);
     }
 
-    getShaderPreprocessorDirectives() {
-        return {
-            "ATLAS_NAME": "EnvMap",
-            "EnvMap_COUNT": this.numSubImages(),
-            "EnvMap_LAYOUT": this.getLayoutFn()
-        }
-    }
-
     draw(renderstate) {
         if (this.__envMap.isLoaded()) {
 

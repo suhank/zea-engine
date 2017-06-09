@@ -89,25 +89,29 @@ class GLVisualiveRenderer extends GLRenderer {
         return this.__shaderDirectives;
     }
 
+    __bindEnvMap(env) {
+        if (env instanceof ProceduralSky) {
+            this.__glEnvMap = new GLProceduralSky(this.__gl, env);
+        }
+        else if (env instanceof HDRImage2D || env.isHDR()) {
+            this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR\n';
+            this.__glEnvMap = new GLEnvMap(this, env);
+        } else {
+            console.warn("Unsupported EnvMap:" + env);
+        }
+        this.__glEnvMap.updated.connect((data) => {
+            this.requestRedraw();
+        }); 
+    }
+
     setScene(scene) {
         super.setScene(scene);
 
         if (scene.getEnvMap() != undefined) {
-            let env = scene.getEnvMap();
-            if (env instanceof ProceduralSky) {
-                this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-            }
-            else if (env instanceof HDRImage2D || env.isHDR()) {
-                this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR\n';
-                this.__glEnvMap = new GLEnvMap(this, env);
-                this.__shaderDirectives.repl = this.__glEnvMap.getShaderPreprocessorDirectives();
-            } else {
-                console.warn("Unsupported EnvMap:" + env);
-            }
-            this.__glEnvMap.updated.connect((data) => {
-                this.requestRedraw();
-            });
+            this.__bindEnvMap(scene.getEnvMap());       
         }
+        this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
+
         let lightMaps = scene.getLightMaps();
         for (let name in lightMaps) {
             let lightmap = lightMaps[name];
@@ -252,7 +256,6 @@ class GLVisualiveRenderer extends GLRenderer {
     }
 
     addGUI(gui) {
-        let _this = this;
         gui.add(this, 'exposure', this.__exposureRange[0], this.__exposureRange[1]);
         // gui.add(this, 'tonemap', 0, 1);
         // gui.add(this, 'gamma', 0, 5.0);

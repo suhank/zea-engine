@@ -13,8 +13,8 @@ import {
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(resourcePath, resourceLoader) {
-        super();
+    constructor(resourcePath, resourceLoader, params) {
+        super(params);
 
         this.__resourceLoader = resourceLoader;
         this.__isHDR = false;

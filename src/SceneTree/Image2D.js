@@ -11,6 +11,7 @@ class Image2D extends RefCounted {
         this.filter = 'filter' in params ? params['filter'] : "LINEAR";
         this.wrap = 'wrap' in params ? params['wrap'] : "CLAMP_TO_EDGE";
         this.flipY = 'flipY' in params ? params['flipY'] : true;
+        this.__mapping = 'mapping' in params ? params['mapping'] : 'UV';
         this.mipMapped = false;
         
         this.updated = new Signal();
@@ -18,6 +19,30 @@ class Image2D extends RefCounted {
 
     isLoaded() {
         return true;
+    }
+
+    isHDR() {
+        return false;
+    }
+
+    hasAlpha() {
+        return false;
+    }
+
+    isStream() {
+        return false;
+    }
+
+    isLoaded() {
+        return this.__loaded;
+    }
+    
+    getMapping() {
+        return this.__mapping;
+    }
+
+    setMapping(mapping) {
+        this.__mapping = mapping;
     }
 
     getParams(){

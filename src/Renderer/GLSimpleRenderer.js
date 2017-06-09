@@ -1,5 +1,7 @@
-import { Color } from '../Math/Color';
-import { Mat4 } from '../Math/Mat4';
+import {
+    Color,
+    Mat4,
+} from '../Math';
 import { GLRenderer } from './GLRenderer.js';
 import { GLForwardPass } from './Passes/GLForwardPass.js';
 import { GLTransparencyPass } from './Passes/GLTransparencyPass.js';

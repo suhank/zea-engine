@@ -61,12 +61,15 @@ class GLMaterial {
         const attachTexture = (texName, texture) => {
             const genGLTex = () => {
                 let gltexture;
-                if (texture instanceof HDRImage2D || texture.isHDR())
+                if (texture instanceof HDRImage2D || texture.isHDR()){
                     gltexture = new GLHDRImage(this.__gl, texture);
-                else if (texture.hasAlpha())
+                }
+                else if (texture.hasAlpha()){
                     gltexture = new GLLDRAlphaImage(this.__gl, texture);
-                else
+                }
+                else{
                     gltexture = new GLTexture2D(this.__gl, texture);
+                }
                 this.gltextures[texName] = gltexture;
             }
             if (!texture.isLoaded()) {

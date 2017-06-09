@@ -13,6 +13,9 @@ import {
     TreeItem
 } from '../../SceneTree';
 import {
+    BaseViewport
+} from '../BaseViewport.js';
+import {
     GLFbo
 } from '../GLFbo.js';
 import {
@@ -37,9 +40,9 @@ import {
     VRFlyTool
 } from './Tools/VRFlyTool.js'
 
-class VRViewport {
+class VRViewport extends BaseViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
-        this.__renderer = renderer;
+        super(renderer);
         this.__vrDisplay = vrDisplay;
 
         //////////////////////////////////////////////
@@ -55,7 +58,7 @@ class VRViewport {
 
         //////////////////////////////////////////////
         // Tree
-        this.__bgColor = renderer.getViewport().getBackgroundColor();
+        this.setBackground(renderer.getViewport().getBackground());
         this.__frameData = new VRFrameData();
 
         this.__stageTreeItem = new TreeItem('VRStage');
@@ -174,10 +177,6 @@ class VRViewport {
 
     }
 
-    getRenderer() {
-        return this.__renderer;
-    }
-
     getName() {
         return this.__name;
     }
@@ -209,10 +208,6 @@ class VRViewport {
         this.__stageScale = xfo.sc.x;
     }
 
-    getRenderer() {
-        return this.__renderer;
-    }
-
     resize(width, height) {
         this.__canvasWidth = width;
         this.__canvasHeight = height;
@@ -227,41 +222,6 @@ class VRViewport {
             this.__fbo.resize();
         }
         this.resized.emit();
-    }
-
-    getBackgroundColor() {
-        return this.__bgColor;
-    }
-
-    setBackgroundColor(color) {
-        this.__bgColor = color;
-        if (this.__fbo) {
-            this.__fbo.setClearColor(this.__bgColor.asArray());
-        }
-        this.updated.emit();
-    }
-
-
-    ////////////////////////////
-    // Fbo
-
-    getFbo() {
-        return this.__fbo;
-    }
-
-    createOffscreenFbo() {
-        let targetWidth = this.__width;
-        let targetHeight = this.__height;
-
-        let gl = this.__renderer.gl;
-        this.__fwBuffer = new GLTexture2D(gl, {
-            format: 'FLOAT',
-            channels: 'RGB',
-            width: targetWidth,
-            height: targetHeight
-        });
-        this.__fbo = new GLFbo(gl, this.__fwBuffer, true);
-        this.__fbo.setClearColor(this.__bgColor.asArray());
     }
 
     ////////////////////////////
@@ -553,18 +513,6 @@ class VRViewport {
             });
         }
         this.viewChanged.emit(data);
-    }
-
-    bindAndClear(renderstate) {
-        if (this.__fbo)
-            this.__fbo.bindAndClear(renderstate);
-        else {
-            let gl = this.__renderer.gl;
-            // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.clearColor(...this.__bgColor.asArray());
-            gl.colorMask(true, true, true, true);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        }
     }
 
     draw(renderstate) {

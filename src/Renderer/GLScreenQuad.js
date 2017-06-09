@@ -27,10 +27,12 @@ class GLScreenQuad {
         texture.bind(renderstate, unifs.texture.location);
 
         let gl = this.__gl;
-        if ('pos' in unifs)
+        if ('pos' in unifs){
             this.__gl.uniform2fv(unifs.pos.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
-        if ('size' in unifs)
+        }
+        if ('size' in unifs){
             this.__gl.uniform2fv(unifs.size.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
+        }
         // if ('flipY' in unifs)
         //     this.__gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);
 

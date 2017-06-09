@@ -20,7 +20,7 @@
         let resources = generateResourcesDict([envMapName]);
 
         let scene = new Visualive.Scene(resources);
-        let envMap =  new Visualive.HDRImage2D(envMapName, scene.getResourceLoader());
+        let envMap =  new Visualive.FileImage2D(envMapName, scene.getResourceLoader(), { mapping: 'env'});
         scene.setEnvMap(envMap);
 
         let div = addCanvas(800, 600);
@@ -36,10 +36,10 @@
         renderer.resumeDrawing();
     }
 
-    loadEnv("Assets/night_free_Ref.vlh");
+    // loadEnv("Assets/night_free_Ref.vlh");
     // loadEnv("Assets/pisa.vlh");
     // loadEnv("Assets/hdri_sky_02_sample.vlh");
-    // loadEnv("Assets/HDR_041_Path_Ref.vlh");
+    loadEnv("Assets/HDR_041_Path_Ref.vlh");
     // loadEnv("Assets/HDR_029_Sky_Cloudy_Ref.vlh");
 
 

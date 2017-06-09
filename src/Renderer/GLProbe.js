@@ -118,20 +118,6 @@ class GLProbe extends ImageAtlas {
             });
             this.__covolverShaderBinding = generateShaderGeomBinding(gl, covolverShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-
-            // this.__envMapShader = new GLShader(gl, new EnvMapShader());
-            // let rendererpreproc = this.__renderer.getShaderPreprocessorDirectives();
-            // let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', {
-            //     defines: rendererpreproc.defines,
-            //     repl:{
-            //         "ATLAS_NAME": "EnvMap",
-            //         "EnvMap_COUNT": this.__imagePyramid.numSubImages(),
-            //         "EnvMap_LAYOUT": this.__imagePyramid.getLayoutFn()
-            //     }
-            // });
-            // this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
-
-
             this.__envMapShader = new GLShader(gl, new EnvMapShader());
             let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
             this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
@@ -164,16 +150,6 @@ class GLProbe extends ImageAtlas {
         this.__convolved = true;
 
         this.renderAtlas(false);
-    }
-
-    // TODO: we shouldn't template the shaders to use an env map.
-    // These values need to be passed in as uniforms.
-    getShaderPreprocessorDirectives() {
-        return {
-            "ATLAS_NAME": "EnvMap",
-            "EnvMap_COUNT": this.numSubImages(),
-            "EnvMap_LAYOUT": this.getLayoutFn()
-        }
     }
 
     bindforReading(renderstate, location) {

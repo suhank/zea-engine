@@ -65,6 +65,7 @@ class Scene {
         this.__selectionManager = new SelectionManager();
         this.__resourceLoader = new ResourceLoader(resources);
 
+        this.envMapChanged = new Signal();
         this.commonResourcesLoaded = new Signal(true);
 
         // let resourceName = 'commonResources/Resources.vlr';
@@ -102,6 +103,7 @@ class Scene {
 
     setEnvMap(envMap) {
         this.__envMap = envMap;
+        this.envMapChanged.emit(this.__envMap);
     }
 
     getLightMap(name) {

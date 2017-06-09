@@ -290,14 +290,14 @@ class GLRenderer {
     }
 
     activateViewportAtPos(offsetX, offsetY) {
-        if (this.__vrViewport && this.__vrViewport.isPresenting()) 
+        if (this.__vrViewport && this.__vrViewport.isPresenting())
             return this.__vrViewport;
         this.__activeViewport = this.getViewportAtPos(offsetX, offsetY);
         return this.__activeViewport;
     }
 
     getActiveViewport() {
-        if (this.__vrViewport && this.__vrViewport.isPresenting()) 
+        if (this.__vrViewport && this.__vrViewport.isPresenting())
             return this.__vrViewport;
         return this.__activeViewport;
     }
@@ -368,7 +368,7 @@ class GLRenderer {
         this.__glcanvasDiv = canvasDiv;
         this.__glcanvasDiv.appendChild(this.__glcanvas);
 
-        onResize(canvasDiv, (event)=>{
+        onResize(canvasDiv, (event) => {
             this.__onResize();
         });
         this.__onResize();
@@ -383,7 +383,7 @@ class GLRenderer {
         this.__screenQuad = this.__gl.screenQuad;
 
         // Setup event handlers
-        this.__glcanvas.addEventListener('mouseenter', (event)=>{
+        this.__glcanvas.addEventListener('mouseenter', (event) => {
             if (!mouseIsDown) {
                 activeGLRenderer = this;
                 // TODO: Check mouse pos.
@@ -391,7 +391,7 @@ class GLRenderer {
                 mouseLeft = false;
             }
         });
-        this.__glcanvas.addEventListener('mouseleave', (event)=>{
+        this.__glcanvas.addEventListener('mouseleave', (event) => {
             if (!mouseIsDown) {
                 activeGLRenderer = undefined;
             } else {
@@ -399,7 +399,7 @@ class GLRenderer {
             }
         });
 
-        document.addEventListener('mousedown', (event)=>{
+        document.addEventListener('mousedown', (event) => {
             if (!activeGLRenderer)
                 return;
             mouseIsDown = true;
@@ -412,7 +412,7 @@ class GLRenderer {
             mouseLeft = false;
             return false;
         });
-        document.addEventListener('mouseup', (event)=>{
+        document.addEventListener('mouseup', (event) => {
             if (!activeGLRenderer)
                 return;
             // if(mouseIsDown && mouseMoveDist < 0.01)
@@ -439,7 +439,7 @@ class GLRenderer {
         //     event.stopPropagation();
         // });
 
-        document.addEventListener('mousemove', (event)=>{
+        document.addEventListener('mousemove', (event) => {
             if (!activeGLRenderer)
                 return;
             if (!mouseIsDown)
@@ -453,7 +453,7 @@ class GLRenderer {
             }
             return false;
         });
-        document.addEventListener('keypress', (event)=>{
+        document.addEventListener('keypress', (event) => {
             if (!activeGLRenderer)
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
@@ -462,7 +462,7 @@ class GLRenderer {
                 this.onKeyPressed(key);
             }
         });
-        document.addEventListener('keydown', (event)=>{
+        document.addEventListener('keydown', (event) => {
             if (!activeGLRenderer)
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
@@ -471,7 +471,7 @@ class GLRenderer {
                 this.onKeyDown(key);
             }
         });
-        document.addEventListener('keyup', (event)=>{
+        document.addEventListener('keyup', (event) => {
             if (!activeGLRenderer)
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();

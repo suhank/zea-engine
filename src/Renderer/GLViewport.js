@@ -1,21 +1,29 @@
-import { Vec2 } from '../Math/Vec2';
-import { Vec3 } from '../Math/Vec3';
-import { Ray } from '../Math/Ray';
-import { Mat4 } from '../Math/Mat4';
-import { Color } from '../Math/Color';
-import { Signal } from '../Math/Signal';
-import { Camera } from '../SceneTree/Camera';
-import { MarkerpenTool } from '../SceneTree/Tools/MarkerpenTool';
+import {
+    Vec2,
+    Vec3,
+    Ray,
+    Color,
+    Mat4,
+    Signal
+} from '../Math';
+import {
+    Image2D,
+    HDRImage2D,
+    Camera
+} from '../SceneTree';
+import {
+    BaseViewport
+} from './BaseViewport.js';
 import { GLFbo } from './GLFbo.js';
 import { GL2DOverlayPass } from './Passes/GL2DOverlayPass.js';
 import { GLTexture2D } from './GLTexture2D.js';
 import { GLSelectionRect } from './Drawables/GLSelectionRect.js';
 
-class GLViewport {
+class GLViewport extends BaseViewport {
     constructor(renderer, name, width, height) {
-        this.__renderer = renderer;
+        super(renderer);
         this.__name = name;
-        this.__bgColor = new Color(0.4, 0.4, 0.4);
+        this.__backgroundColor = new Color(0.4, 0.4, 0.4);
         this.__projectionMatrix = new Mat4();
         this.__frustumDim = new Vec2();
 
@@ -117,15 +125,6 @@ class GLViewport {
         this.resized.emit();
     }
 
-    getBackgroundColor() {
-        return this.__bgColor;
-    }
-
-    setBackgroundColor(color) {
-        this.__bgColor = color;
-        this.updated.emit();
-    }
-
     getCamera() {
         return this.__camera
     }
@@ -220,26 +219,7 @@ class GLViewport {
     }
 
     ////////////////////////////
-    // Fbo
-
-    getFbo() {
-        return this.__fbo;
-    }
-
-    createOffscreenFbo() {
-        let targetWidth = this.__width;
-        let targetHeight = this.__height;
-
-        let gl = this.__renderer.gl;
-        this.__fwBuffer = new GLTexture2D(gl, {
-            format: 'FLOAT',
-            channels: 'RGB',
-            width: targetWidth,
-            height: targetHeight
-        });
-        this.__fbo = new GLFbo(gl, this.__fwBuffer, true);
-        this.__fbo.setClearColor(this.__bgColor.asArray());
-    }
+    // GeomData
 
     createGeomDataFbo() {
         let gl = this.__renderer.gl;
@@ -722,23 +702,6 @@ class GLViewport {
 
     ////////////////////////////
     // Rendering
-
-    bindAndClear(renderstate) {
-        if (this.__fbo)
-            this.__fbo.bindAndClear(renderstate);
-        else {
-            let gl = this.__renderer.gl;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(this.x, this.y, this.__width, this.__height);
-            // Only sissor if multiple viewports are setup.
-            // gl.enable(gl.SCISSOR_TEST);
-            // gl.scissor(this.x, this.y, this.__width, this.__height);
-            gl.clearColor(...this.__bgColor.asArray());
-            gl.colorMask(true, true, true, true);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        }
-    }
-
     draw(renderstate) {
         this.bindAndClear(renderstate);
 
