@@ -255,6 +255,9 @@ void main(void) {
         return true;
     }
 
+    bind(gl, renderstate) {
+        return (renderstate.pass == 'ADD');
+    }
 };
 
 sgFactory.registerClass('TransparentSurfaceShader', TransparentSurfaceShader);

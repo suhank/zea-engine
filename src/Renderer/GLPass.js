@@ -33,8 +33,7 @@ class GLPass {
     // Rendering
 
     bindShader(renderstate, glshader){
-        let opts = this.__collector.getRenderer().getShaderPreprocessorDirectives();
-        if(!glshader.bind(renderstate, this.constructor.name, opts))
+        if(!glshader.bind(renderstate, this.constructor.name))
             return false;
         if(!this.__collector.bind(renderstate))
             return false;

@@ -263,9 +263,14 @@ class GLShader {
         return shaderCompilationResult.attrs;
     }
 
-    bind(renderstate, key, preproc) {
+    bind(renderstate, key) {
         let gl = this.__gl;
-        let shaderCompilationResult = this.compileForTarget(key ? key : this.__shader.constructor.name, preproc);
+
+        if(!this.__shader.bind(gl, renderstate)){
+            return false;
+        }
+
+        let shaderCompilationResult = this.compileForTarget(key ? key : this.__shader.constructor.name, renderstate.shaderopts);
         if (shaderCompilationResult === false) {
             console.warn(this.__shader.constructor.name + " is not compiled for " + key);
             return false;

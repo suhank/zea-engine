@@ -19,7 +19,7 @@ import './GLSL/envmap-equirect.js';
 import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
-class LightmapCatcherShader extends Shader {
+class ShadowCatcherShader extends Shader {
     
     constructor() {
         super();
@@ -59,7 +59,7 @@ void main(void) {
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 }
 `);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('ShadowCatcherShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -90,18 +90,18 @@ float luminanceFromRGB(vec3 rgb) {
 
 void main(void) {
 
-    vec2 uv = normalToUvSphOct(normalize(v_worldDir));
+    vec4 env = _env;
+    if(_envTexConnected) {
+        vec2 uv = normalToUvSphOct(normalize(v_worldDir));
+        env = texture2D(_envTex, uv);
+    }
+
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
     float irradianceLum = clamp(luminanceFromRGB(irradiance), 0.0, 1.0);
-    if(_envTexConnected) {
-        vec4 env = texture2D(_envTex, uv);
-        gl_FragColor = vec4(env.rgb/env.a, 1.0);
-        gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, irradianceLum);
-    }
-    else {
-        gl_FragColor = _env * irradianceLum;
-        gl_FragColor.a = 1.0;
-    }
+
+    gl_FragColor = vec4(env.rgb/env.a, 1.0);
+    gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, irradianceLum);
+
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
 #endif
@@ -114,20 +114,66 @@ void main(void) {
         this.finalize();
     }
 
-    isTransparent() {
-        return !(this.env instanceof Image2D);
+    bind(gl, renderstate) {
+        return (renderstate.pass == 'ADD');
     }
-
-    // bind(gl, renderstate) {
-    //     gl.blendFunc(gl.DST_COLOR, gl.ZERO);
-    // }
-
-    // unbind(gl, renderstate){
-    //     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    // }
 };
 
-sgFactory.registerClass('LightmapCatcherShader', LightmapCatcherShader);
+sgFactory.registerClass('ShadowCatcherShader', ShadowCatcherShader);
+
+
+class FloatingShadowCatcherShader extends ShadowCatcherShader {
+    
+    constructor() {
+        super();
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FloatingShadowCatcherShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+#endif
+
+/* VS Outputs */
+varying vec2 v_lightmapCoord;
+varying vec3 v_worldDir;
+
+uniform sampler2D lightmap;
+uniform float _shadowMultiplier;
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+uniform float exposure;
+#endif
+
+void main(void) {
+
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
+
+    // This material works by multiplying the image buffer values by the luminance in the lightmap.
+    // 
+    gl_FragColor.rgb = pow(irradiance, vec3(1.0/_shadowMultiplier));
+    gl_FragColor.a = 1.0;
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+#endif
+
+}
+`);
+    }
+
+    isTransparent() {
+        return true;
+    }
+
+    bind(gl, renderstate) {
+        return (renderstate.pass == 'MULTIPLY');
+    }
+};
+
+sgFactory.registerClass('FloatingShadowCatcherShader', FloatingShadowCatcherShader);
 
 export {
     LightmapCatcherShader

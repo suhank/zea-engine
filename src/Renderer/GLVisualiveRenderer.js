@@ -291,6 +291,8 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__screenQuad.draw(renderstate, displayDebugTexture);
         } else {
 
+            this.__renderstate.shaderopts = this.__collector.getRenderer().getShaderPreprocessorDirectives();
+
             viewport.draw(this.__renderstate);
             /*
                         /////////////////////////////////////

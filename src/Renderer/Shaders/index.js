@@ -10,7 +10,7 @@ export * from './FlatSurfaceShader.js';
 export * from './GizmoShader.js';
 export * from './IrradianceMapShaders.js';
 export * from './LayeredCarPaintShader.js';
-export * from './LightmapCatcherShader.js';
+export * from './ShadowCatcherShader.js';
 export * from './LinesShader.js';
 export * from './NormalsShader.js';
 export * from './PointsShader.js';

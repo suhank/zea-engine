@@ -124,28 +124,8 @@ class Shader extends RefCounted {
         return this.__hash;
     }
 
-    fromJSON(json) {
-
-    }
-
-    toJSON(json) {
-        let result = {
-            "vertexShader": this.tree['vertexShader'],
-            "fragmentShader": this.tree['fragmentShader'],
-            "attributes": {},
-            "uniforms": {}
-        }
-        let attributes = this.getAttributes();
-        let uniforms = this.getUniforms();
-        for (let name in attributes)
-            result["attributes"][name] = attributes[name].name;
-        for (let name in uniforms)
-            result["uniforms"][name] = uniforms[name].name;
-        return result;
-    }
-
-    toString() {
-        return JSON.stringify(this.toJSON(), null, 2);
+    bind(gl, renderstate) {
+        return true;
     }
 }
 
