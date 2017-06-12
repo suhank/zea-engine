@@ -35,6 +35,7 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
     let unif = renderstate.unifs['_'+param.name];
     if (unif == undefined)
         return;
+    // console.log("bindParam:"+param.name + ":" + param.value);
     switch (unif['type']) {
     case Boolean:
         // gl.uniform1ui(unif.location, param.value);// WebGL 2

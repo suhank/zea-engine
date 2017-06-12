@@ -1,5 +1,10 @@
-import { Signal } from '../Math';
-import { Image2D } from './Image2D.js';
+import {
+    Color,
+    Signal
+} from '../Math';
+import {
+    Image2D
+} from './Image2D.js';
 
 class HDRImage2D extends Image2D {
     constructor(name, resourceLoader, isStream) {
@@ -13,7 +18,7 @@ class HDRImage2D extends Image2D {
         this.__stream = isStream;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
-        this.__hdrtint = new Color(1,1,1,1);
+        this.__hdrtint = new Color(1, 1, 1, 1);
         this.__data = {};
 
         this.loaded = new Signal();
@@ -30,21 +35,21 @@ class HDRImage2D extends Image2D {
     isStream() {
         return this.__stream;
     }
-    
+
     loadURL(filePath) {
-        if(filePath in this.__data){
+        if (filePath in this.__data) {
             this.__currKey = filePath;
             this.updated.emit();
             return;
         }
 
-        this.__resourceLoader.loadResource(filePath, 
+        this.__resourceLoader.loadResource(filePath,
             (entries) => {
                 let ldr, cdm;
-                for(let name in entries){
-                    if(name.endsWith('.jpg'))
+                for (let name in entries) {
+                    if (name.endsWith('.jpg'))
                         ldr = entries[name];
-                    else if(name.endsWith('.bin'))
+                    else if (name.endsWith('.bin'))
                         cdm = entries[name];
                 }
 
@@ -53,7 +58,7 @@ class HDRImage2D extends Image2D {
                 let blob = new Blob([ldr.buffer]);
                 let _this = this;
                 let ldrPic = new Image();
-                ldrPic.onload = function () {
+                ldrPic.onload = function() {
                     _this.__setLoadedData(filePath, ldrPic, cdm);
                 }
                 ldrPic.src = URL.createObjectURL(blob);
@@ -62,18 +67,17 @@ class HDRImage2D extends Image2D {
     }
 
     __setLoadedData(filePath, ldr, cdm) {
-        this.width =  ldr.width;
-        this.height =  ldr.height;
+        this.width = ldr.width;
+        this.height = ldr.height;
         this.__data[filePath] = {
             'ldr': ldr,
             'cdm': cdm
         }
         this.__currKey = filePath;
-        if(!this.__loaded){
+        if (!this.__loaded) {
             this.__loaded = true;
             this.loaded.emit();
-        }
-        else{
+        } else {
             this.updated.emit();
         }
 
@@ -81,13 +85,13 @@ class HDRImage2D extends Image2D {
     }
 
 
-    getData(){
+    getData() {
         return this.__hdrInfo.data;
     }
 
-    getParams(){
+    getParams() {
         let params = super.getParams();
-        if(this.__loaded){
+        if (this.__loaded) {
             params.key = this.__currKey;
             params.data = {
                 ldr: this.__data[this.__currKey].ldr,
@@ -97,16 +101,16 @@ class HDRImage2D extends Image2D {
         return params;
     }
 
-    setHDRExposure(hdrexposure){
+    setHDRExposure(hdrexposure) {
         this.__hdrexposure = hdrexposure;
     }
-    getHDRExposure(){
+    getHDRExposure() {
         return this.__hdrexposure;
     }
-    setHDRTint(hdrtint){
+    setHDRTint(hdrtint) {
         this.__hdrtint = hdrtint;
     }
-    getHDRTint(){
+    getHDRTint() {
         return this.__hdrtint;
     }
 

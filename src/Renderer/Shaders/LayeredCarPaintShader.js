@@ -14,6 +14,7 @@ import './GLSL/constants.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/GGX_Specular.js';
+import './GLSL/PBRSurface.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 import './GLSL/ImagePyramid.js';
@@ -129,18 +130,15 @@ uniform float planeAngle;
 #endif
 
 uniform color _baseColor;
-uniform color _baseColor2;
-uniform color _baseColor3;
-uniform color _flakesColor;
-
 uniform float _microflakePerturbation;
-uniform float _microflakePerturbationA;
 uniform sampler2D _flakesNormalTex;
 uniform float _flakesScale;
 
 #ifdef ENABLE_SPECULAR
 <%include file="glslutils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
+<%include file="PBRSurfaceRadiance.glsl"/>
+
 uniform float _roughness;
 uniform float _metallic;
 uniform float _reflectance;
@@ -158,11 +156,6 @@ uniform bool _metallicTexConnected;
 
 uniform sampler2D _reflectanceTex;
 uniform bool _reflectanceTexConnected;
-
-uniform sampler2D _normalTex;
-uniform bool _normalTexConnected;
-uniform float _normalScale;
-
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected)
@@ -225,46 +218,46 @@ vec3 sampleNormalMap( sampler2D texture, vec2 texcoord )
 
 void main(void) {
 
+    MaterialParams material;
+
 #ifndef ENABLE_TEXTURES
-    vec3 baseColor1      = toLinear(_baseColor.rgb);
-    vec3 baseColor2      = toLinear(_baseColor2.rgb);
-    vec3 baseColor3      = toLinear(_baseColor3.rgb);
+    material.baseColor      = toLinear(_baseColor).rgb;
 
 #ifdef ENABLE_SPECULAR
-    float roughness     = _roughness;
-    float metallic      = _metallic;
-    float reflectance   = _reflectance;
+    material.roughness      = _roughness;
+    material.metallic       = _metallic;
+    material.reflectance    = _reflectance;
 #endif
 
 #else
-    // Planar YZ projection for texturing, repeating every meter.
-    // vec2 texCoord      = v_worldPos.xz * 0.2;
-
-    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 baseColor1     = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    vec3 baseColor2     = baseColor1;//toLinear(_baseColor2.rgb);
-    vec3 baseColor3     = toLinear(_baseColor3.rgb);
-    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
-    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
-    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+    vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
+    material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    material.roughness      = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
+    material.metallic       = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
+    material.reflectance    = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
 #endif
 
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
+ 
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
+    if(debugLightmapTexelSize)
+    {
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
+        float total = floor(coord_texelSpace.x) +
+                      floor(coord_texelSpace.y);
+                      
+        vec3 clustercolor = getDebugColor(v_clusterID);
 
-#ifdef ENABLE_CROSS_SECTIONS
-    // Only do cross sections on opaque surfaces. 
-    vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
-    vec3 planePos = planeNormal * planeDist;
-    vec3 planeDir = v_worldPos - planePos;
-    float planeOffset = dot(planeDir, planeNormal);
-    if(planeOffset < 0.0){
-        discard;
-        return;
+        if(mod(total,2.0)==0.0){
+            material.baseColor = clustercolor;
+            irradiance = vec3(1.0);
+        }
+        else{
+            material.baseColor = material.baseColor * 1.5;
+        }
     }
-    if(!gl_FrontFacing){
-        discard;
-        return;
-    }
-#endif 
+#endif
 
     vec3 viewNormal = normalize(v_viewNormal);
     vec3 surfacePos = -v_viewPos.xyz;
@@ -274,127 +267,39 @@ void main(void) {
     vec3 viewDir = normalize(viewVector);
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
 
-#ifdef ENABLE_TEXTURES
-    if(_normalTexConnected){
-
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
-        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
-    }
-#endif
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-
     float NdotV = dot(normal, viewDir);
     if(NdotV < 0.0){
         normal = -normal;
         NdotV = dot(normal, viewDir);
-
-        // Note: these 2 lines can be used to debug inverted meshes.
-        //baseColor = vec3(1.0, 0.0, 0.0);
-        //NdotV = 1.0;
     }
-
-    ////////////////////////////////////////////////////////////////////////
-    // http://www.chrisoat.com/papers/Oat-Tatarchuk-Isidoro-Layered_Car_Paint_Shader_Print.pdf
-
-    mat3 TBN = cotangent_frame( normal, surfacePos, v_lightmapCoord );
-
-    vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
-
-
-    vec3 vNp1 = normalize(mix(normal, flakesNormal, _microflakePerturbationA));
-    vec3 vNp2 = normalize(mix(normal, flakesNormal, _microflakePerturbation));
-
-    //float fresnel = NdotV;
-    float  fresnel1 = clamp(dot( viewDir, vNp1 ), 0.0, 1.0);
-    float  fresnel2 = clamp(dot( viewDir, vNp2 ), 0.0, 1.0);
-
-    float fresnel1Sq = fresnel1 * fresnel1;
-    vec3 baseColor =   fresnel1 * baseColor3  + 
-                        fresnel1Sq * baseColor2 +
-                        fresnel1Sq * fresnel1Sq * baseColor1;/* +
-                        pow( fresnel2, 16.0 ) * _flakesColor.rgb;*/
-
-    //baseColor = fresnel1Sq * baseColor1;
-
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    if(debugLightmapTexelSize)
-    {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
-        float total = floor(coord_texelSpace.x) +
-                      floor(coord_texelSpace.y);
-                      
-        vec3 clustercolor = getDebugColor(v_clusterID);
-
-        if(mod(total,2.0)==0.0){
-            baseColor = clustercolor;
-            irradiance = vec3(1.0);
-        }
-        else
-            baseColor = baseColor * 1.5;
-
-    }
-#endif
 
 #ifndef ENABLE_SPECULAR
-    vec3 diffuseReflectance = baseColor * irradiance;
-    gl_FragColor = vec4(diffuseReflectance, 1);
+    vec3 radiance = material.baseColor * irradiance;
 #else
-
-    // -------------------------- Diffuse Reflectance --------------------------
-
-    vec3 diffuseReflectance = baseColor * irradiance;
-
-    // From the Disney dielectric BRDF    
-    // Need to check if this is useful for us but the implementation works based on their paper
-    diffuseReflectance = (diffuseReflectance / PI);
-    // diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 2.5, roughness), pow(1.0 - NdotV, 5.0)));
-    diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 1.0, roughness), pow(1.0 - NdotV, 5.0)));
+    mat3 TBN = cotangent_frame( normal, surfacePos, v_lightmapCoord );
+    vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
+    flakesNormal = normalize(mix(normal, flakesNormal, _microflakePerturbation));
 
 
-    // -------------------------- Color at normal incidence --------------------------
-    
-    // Need to use 'reflectance' here instead of 'ior'
-    //vec3 F0 = vec3(abs((1.0 - ior) / (1.0 + ior)));    
-    //F0 = F0 * F0;
-    //F0 = mix(F0, baseColor, metallic);      
+    MaterialParams baseMaterial = material;
+    baseMaterial.metallic = 0.85;
+    baseMaterial.roughness = 0.3;
+    baseMaterial.reflectance = 0.7;
+    vec3 baseRadiance = pbrSurfaceRadiance(baseMaterial, irradiance, flakesNormal, viewVector);
 
+    MaterialParams glossMaterial = material;
+    glossMaterial.baseColor = baseRadiance;
+    glossMaterial.metallic = 0.0;
+    glossMaterial.roughness = 0.0;
+    glossMaterial.reflectance = 0.01;
 
-    // -------------------------- Specular Reflactance --------------------------
-    // vec3 ks = vec3(0.0);
-    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewDir, roughness, F0, ks );
-    // vec3 kd = (vec3(1.0) - ks) * vec3(1.0 - metallic);    
+    //vec3 radiance = pbrSurfaceRadiance(glossMaterial, vec3(1.0), normal, viewVector);
 
-    float schlickFresnel = reflectance + pow((1.0-reflectance)*(1.0-NdotV), 5.0);
-
-    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewDir, roughness, schlickFresnel);
-
-
-    // -------------------------- Specular Occlusion --------------------------
-    // Fast and quick way of reducing specular reflection in areas that are less exposed to the environment
-    // A better approch is to try screen space specular occlusion but need to check performance and feasibility in webGL
-    float specularOcclusion = clamp(length(irradiance), 0.01, 1.0);    
-    specularReflectance = (specularReflectance * specularOcclusion);  
-      
-
-    // -------------------------- Metallic --------------------------
-    // We need to do few things given a higher > 0 metallic value
-    //      1. tint specular reflectance by the albedo color (not at grazing angles)
-    //      2. almost elliminate all diffuse reflactance (in reality metals have some diffuse due to layering (i.e. dust, prints, etc.))
-    //      3. set "specular" artistic value to metallic range (0.6 - 0.85)
-
-    specularReflectance = mix(specularReflectance, specularReflectance * baseColor, metallic);
-    diffuseReflectance = mix(diffuseReflectance, vec3(0.0,0.0,0.0), metallic); // Leaveing at pure black for now but always need some %3 diffuse left for imperfection of pulished pure metal
-    // Would be best to compute reflectace internally and set here to 0.6-0.85 for metals
-   
-
-    // -------------------------- Final color --------------------------
-    // Energy conservation already taken into account in both the diffuse and specular reflectance
-    vec3 radiance = diffuseReflectance + specularReflectance;    
-
-    gl_FragColor = vec4(radiance, 1);
-    //gl_FragColor = vec4(baseColor, 1);
+    vec4 gloss = pbrSpecularReflectance(glossMaterial, normal, viewVector);
+    vec3 radiance = mix(baseRadiance, gloss.rgb, gloss.a);
 
 #endif
+    gl_FragColor = vec4(radiance, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
@@ -404,15 +309,7 @@ void main(void) {
 `);
 
         this.addParameter('baseColor', new Color(1.0, 0.0, 0.0));
-        this.addParameter('baseColor2', new Color(1.0, 0.0, 0.0));
-        this.addParameter('baseColor3', new Color(1.0, 0.0, 0.0));
-        this.addParameter('flakesColor', new Color(1.0, 1.0, 1.0));
         this.addParameter('flakesNormal', new Color(0.0, 0.0, 0.0));
-        this.addParameter('flakesScale', 0.1, false);
-        //this.addParameter('normalPerturbation', 0.1, false);
-        this.addParameter('microflakePerturbationA', 0.1, false);
-        this.addParameter('microflakePerturbation', 0.48, false);
-
         this.addParameter('metallic', 0.9);
         this.addParameter('roughness', 0.05);
 
@@ -421,6 +318,10 @@ void main(void) {
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
         this.addParameter('reflectance', 0.85);
+
+        this.addParameter('flakesScale', 0.1);
+        this.addParameter('microflakePerturbation', 0.1);
+
         this.finalize();
     }
 };

@@ -15,6 +15,7 @@ import './GLSL/constants.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/GGX_Specular.js';
+import './GLSL/PBRSurface.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 import './GLSL/ImagePyramid.js';
@@ -136,6 +137,7 @@ uniform float _emissiveStrength;
 #ifdef ENABLE_SPECULAR
 <%include file="glslutils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
+<%include file="PBRSurfaceRadiance.glsl"/>
 uniform float _roughness;
 uniform float _metallic;
 uniform float _reflectance;
@@ -183,28 +185,31 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 
 void main(void) {
 
+    MaterialParams material;
+
 #ifndef ENABLE_TEXTURES
-    vec3 baseColor      = toLinear(_baseColor).rgb;
+    material.baseColor      = toLinear(_baseColor).rgb;
     float emission      = _emissiveStrength;
 
 #ifdef ENABLE_SPECULAR
-    float roughness     = _roughness;
-    float metallic      = _metallic;
-    float reflectance   = _reflectance;
+    material.roughness     = _roughness;
+    material.metallic      = _metallic;
+    material.reflectance   = _reflectance;
 #endif
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord      = v_worldPos.xz * 0.2;
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
     //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
-    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
-    float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
-    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+    material.roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
+    material.metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
+    material.reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
     float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoord);
 #endif
 
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 
 #ifdef ENABLE_CROSS_SECTIONS
     // Only do cross sections on opaque surfaces. 
@@ -221,6 +226,25 @@ void main(void) {
         return;
     }
 #endif
+#ifdef ENABLE_DEBUGGING_LIGHTMAPS
+    if(debugLightmapTexelSize)
+    {
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
+        float total = floor(coord_texelSpace.x) +
+                      floor(coord_texelSpace.y);
+                      
+        vec3 clustercolor = getDebugColor(v_clusterID);
+
+        if(mod(total,2.0)==0.0){
+            material.baseColor = clustercolor;
+            irradiance = vec3(1.0);
+        }
+        else{
+            material.baseColor = material.baseColor * 1.5;
+        }
+    }
+#endif
 
 
     vec3 viewNormal = normalize(v_viewNormal);
@@ -235,98 +259,18 @@ void main(void) {
 
     vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    float NdotV = dot(normal, viewVector);
-    if(NdotV < 0.0){
+    if(dot(normal, viewVector) < 0.0){
         normal = -normal;
-        NdotV = dot(normal, viewVector);
-
-        // Note: these 2 lines can be used to debug inverted meshes.
-        //baseColor = vec3(1.0, 0.0, 0.0);
-        //NdotV = 1.0;
+        // Note: this line can be used to debug inverted meshes.
+        //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
-
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
-
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    if(debugLightmapTexelSize)
-    {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
-        //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
-        float total = floor(coord_texelSpace.x) +
-                      floor(coord_texelSpace.y);
-                      
-        vec3 clustercolor = getDebugColor(v_clusterID);
-
-        if(mod(total,2.0)==0.0){
-            baseColor = clustercolor;
-            irradiance = vec3(1.0);
-        }
-        else
-            baseColor = baseColor * 1.5;
-
-    }
-#endif
 
 #ifndef ENABLE_SPECULAR
-    vec3 diffuseReflectance = baseColor * irradiance;
-    gl_FragColor = vec4(diffuseReflectance + (emission * baseColor), 1);
+    vec3 radiance = material.baseColor * irradiance;
 #else
-
-    // -------------------------- Diffuse Reflectance --------------------------
-
-    vec3 diffuseReflectance = baseColor * irradiance;
-
-    // From the Disney dielectric BRDF    
-    // Need to check if this is useful for us but the implementation works based on their paper
-    diffuseReflectance = (diffuseReflectance / PI);
-    // diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 2.5, roughness), pow(1.0 - NdotV, 5.0)));
-    diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 1.0, roughness), pow(1.0 - NdotV, 5.0)));
-
-
-    // -------------------------- Color at normal incidence --------------------------
-    
-    // Need to use 'reflectance' here instead of 'ior'
-    //vec3 F0 = vec3(abs((1.0 - ior) / (1.0 + ior)));    
-    //F0 = F0 * F0;
-    //F0 = mix(F0, baseColor, metallic);      
-
-
-    // -------------------------- Specular Reflactance --------------------------
-    // vec3 ks = vec3(0.0);
-    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, F0, ks );
-    // vec3 kd = (vec3(1.0) - ks) * vec3(1.0 - metallic);    
-
-    float schlickFresnel = reflectance + pow((1.0-reflectance)*(1.0-NdotV), 5.0);
-
-    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, schlickFresnel);
-
-
-    // -------------------------- Specular Occlusion --------------------------
-    // Fast and quick way of reducing specular reflection in areas that are less exposed to the environment
-    // A better approch is to try screen space specular occlusion but need to check performance and feasibility in webGL
-    float specularOcclusion = clamp(length(irradiance), 0.01, 1.0);    
-    specularReflectance = (specularReflectance * specularOcclusion);  
-      
-
-    // -------------------------- Metallic --------------------------
-    // We need to do few things given a higher > 0 metallic value
-    //      1. tint specular reflectance by the albedo color (not at grazing angles)
-    //      2. almost elliminate all diffuse reflactance (in reality metals have some diffuse due to layering (i.e. dust, prints, etc.))
-    //      3. set "specular" artistic value to metallic range (0.6 - 0.85)
-
-    specularReflectance = mix(specularReflectance, specularReflectance * baseColor, metallic);
-    diffuseReflectance = mix(diffuseReflectance, vec3(0.0,0.0,0.0), metallic); // Leaveing at pure black for now but always need some %3 diffuse left for imperfection of pulished pure metal
-    // Would be best to compute reflectace internally and set here to 0.6-0.85 for metals
-   
-
-    // -------------------------- Final color --------------------------
-    // Energy conservation already taken into account in both the diffuse and specular reflectance
-    vec3 radiance = diffuseReflectance + specularReflectance;    
-
-    // gl_FragColor = vec4( kd * diffuse + /*ks */ specular, 1);
-    gl_FragColor = vec4(radiance + (emission * baseColor), 1);
-
+    vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
 #endif
+    gl_FragColor = vec4(radiance + (emission * material.baseColor), 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
