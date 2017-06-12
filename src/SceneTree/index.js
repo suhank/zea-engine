@@ -30,5 +30,4 @@ export * from './Scene.js';
 export * from './BinAsset.js';
 export * from './ObjAsset.js';
 
-export * from './Shaders';
 export * from './Tools';
