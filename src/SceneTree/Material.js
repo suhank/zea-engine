@@ -168,7 +168,7 @@ class Material extends Shader {
                 value = reader.loadRGBAFloat32Color();
                 // If the value is in linear space, then we should convert it to gamma space.
                 // Note: !! this should always be done in preprocessing...
-                ///value.applyGamma(2.2);
+                value.applyGamma(2.2);
             }
             else{
                 value = reader.loadFloat32();

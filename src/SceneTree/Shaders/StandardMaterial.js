@@ -241,8 +241,8 @@ void main(void) {
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
-        //vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
-        vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
         float total = floor(coord_texelSpace.x) +
                       floor(coord_texelSpace.y);
                       

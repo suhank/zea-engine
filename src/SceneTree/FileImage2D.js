@@ -77,6 +77,7 @@ class FileImage2D extends Image2D {
             this.loaded.emit();
         };
         domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
+        console.log(domElement.src);
     }
 
     __loadLDRVideo() {
@@ -253,7 +254,9 @@ class FileImage2D extends Image2D {
     readBinary(reader, flags, textureLibrary){
         // super.readBinary(reader, flags);
         this.name = reader.loadStr();
-        this.loadResource(reader.loadStr());
+        let resourcePath = reader.loadStr();
+        if(typeof resourcePath === 'string' && resourcePath != "")
+            this.loadResource(resourcePath);
     }
 };
 
