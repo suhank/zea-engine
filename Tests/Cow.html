@@ -29,7 +29,7 @@
 
     /////////////////////////////////////
     // Ground Plane
-    let groundMaterial = new Visualive.SimpleMaterial('ground');
+    let groundMaterial = new Visualive.Material('ground', 'SimpleSurfaceShader');
     groundMaterial.baseColor = new Visualive.Color(89 / 255, 182 / 255, 92 / 255);
     groundMaterial.roughness = 1.0;
     groundMaterial.metallic = 0.0;
@@ -72,7 +72,7 @@
     objAsset.splitGroupsIntoObjects = false;
     objAsset.loadMtlFile = false;
     objAsset.localXfo.tr.set(0, 3.55, 0);
-    // objAsset.defaultMaterial = Visualive.SimpleMaterial;
+    objAsset.defaultShader ='SimpleSurfaceShader';
     scene.getRoot().addChild(objAsset);
 
     objAsset.loaded.connect(function() {

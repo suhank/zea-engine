@@ -12,17 +12,10 @@ class GLForwardPass extends GLPass {
         let allglshaderMaterials = this.__collector.getGLShaderMaterials();
         this.__glshadermaterials = [];
         for (let glshaderkey in allglshaderMaterials) {
-            let glshaderMaterials = null;
-            let glmaterialDrawItemSets = allglshaderMaterials[glshaderkey].getMaterialDrawItemSets();
-            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                if (glmaterialDrawItemSet.getGLMaterial().isTransparent())
-                    continue;
-                if(!glshaderMaterials){
-                    glshaderMaterials = new GLShaderMaterials(allglshaderMaterials[glshaderkey].getGLShader());
-                    this.__glshadermaterials.push(glshaderMaterials);
-                }
-                glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSet);
-            }
+            let glshaderMaterials = allglshaderMaterials[glshaderkey];
+            if (glshaderMaterials.getGLShader().isTransparent())
+                continue;
+            this.__glshadermaterials.push(glshaderMaterials);
         }
     }
 

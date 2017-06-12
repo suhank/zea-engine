@@ -2,7 +2,7 @@ import {
     Lines,
     TreeItem,
     GeomItem,
-    FatLinesMaterial
+    Material
 } from '../../SceneTree';
 
 class MarkerpenTool {
@@ -40,8 +40,8 @@ class MarkerpenTool {
         lineGeom.vertices.setValue(used, xfo.tr);
 
         lineGeom.lineThickness = thickness;
-        let material = new FatLinesMaterial('stroke');
-        material.color = color;
+        let material = new Material('stroke', 'FatLinesMaterial');
+        material.addParameter('color', color);
 
 
         let geomItem = new GeomItem(id, lineGeom, material);

@@ -20,12 +20,12 @@ import {
 
 import {
     Shader
-} from '../SceneTree/Shader'
+} from './Shader'
 import {
     shaderLibrary
-} from '../SceneTree/ShaderLibrary'
+} from './ShaderLibrary'
 
-import '../SceneTree/Shaders/GLSL/ImagePyramid.js';
+import './Shaders/GLSL/ImagePyramid.js';
 
 let Math_log2 = function(value) {
     // IE11 doesn't support Math.log2.

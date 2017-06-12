@@ -1,14 +1,14 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary.js';
-import { Shader } from '../../SceneTree/Shader.js';
+import { shaderLibrary }  from '../ShaderLibrary.js';
+import { Shader } from '../Shader.js';
 
-import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
+import './GLSL/stack-gl/inverse.js';
+import './GLSL/stack-gl/transpose.js';
 
 class BillboardShader extends Shader {
     
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PointsMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('BillboardShader.vertexShader', `
 precision highp float;
 
 instancedattribute float instancedIds;    // instanced attribute..
@@ -113,7 +113,6 @@ void main(void) {
 export {
     BillboardShader
 };
-// export default BillboardShader;
 
 
 

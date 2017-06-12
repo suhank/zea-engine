@@ -1,10 +1,10 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import { shaderLibrary }  from '../ShaderLibrary';
+import { Shader }  from '../Shader';
 
-import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
-import '../../SceneTree/Shaders/GLSL/envmap-octahedral.js';
-import './utils/quadVertexFromID.js';
+import './GLSL/stack-gl/inverse.js';
+import './GLSL/stack-gl/transpose.js';
+import './GLSL/envmap-octahedral.js';
+import './GLSL/utils/quadVertexFromID.js';
 
 class EnvMapShader extends Shader {
     
@@ -90,9 +90,7 @@ void main(void) {
     }
 };
 
-
 export {
     EnvMapShader
 };
-//export default EnvMapShader;
 

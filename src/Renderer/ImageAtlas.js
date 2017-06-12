@@ -5,8 +5,8 @@ import { BinTreeNode } from '../Math/BinTreeNode';
 import { Async } from '../Math/Async';
 import { BinTreeRect , BinTreeRectBorder} from '../Math/BinTreeNode';
 import { Image2D } from '../SceneTree/Image2D';
-import { Shader } from '../SceneTree/Shader';
-import { shaderLibrary } from '../SceneTree/ShaderLibrary';
+import { Shader } from './Shader';
+import { shaderLibrary } from './ShaderLibrary';
 import { GLShader } from './GLShader.js';
 import { GLTexture2D } from './GLTexture2D.js';
 import { GLFbo } from './GLFbo.js';
@@ -86,7 +86,7 @@ void main(void) {
 };
 
 
-import '../SceneTree/Shaders/GLSL/ImageAtlas.js';
+import './Shaders/GLSL/ImageAtlas.js';
 
 
 class ImageAtlas extends GLTexture2D {

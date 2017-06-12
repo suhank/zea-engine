@@ -1,18 +1,13 @@
 import {
-    SInt32,
-    UInt32,
-    Float32,
-    Vec2,
-    Vec3,
-    Vec4,
-    Color,
-    Mat4,
     Signal
 } from '../Math';
 import {
     Image2D,
     HDRImage2D
 } from '../SceneTree';
+import {
+    bindParam
+} from './GLShader.js';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
@@ -24,9 +19,10 @@ import {
 } from './GLHDRImage.js';
 
 class GLMaterial {
-    constructor(gl, material) {
+    constructor(gl, material, glshader) {
         this.__gl = gl;
         this.__material = material;
+        this.__glshader = glshader;
 
         this.updated = new Signal();
         this.destructing = new Signal();
@@ -51,10 +47,6 @@ class GLMaterial {
 
     getMaterial() {
         return this.__material;
-    }
-
-    isTransparent() {
-        return this.__material.isTransparent();
     }
 
     updateGLTextures() {
@@ -92,61 +84,11 @@ class GLMaterial {
     bind(renderstate) {
 
         // console.log("Material:" + this.__material.name);
-        this.__boundTexturesBeforeMaterial = renderstate['boundTextures'];
+        this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
         let gl = this.__gl;
-        let unifs = renderstate['unifs'];
         let params = this.__material.getParameters();
         for (let [paramName, param] of Object.entries(params)) {
-
-            if(param.texture instanceof Image2D){
-                let gltexture = this.gltextures[paramName];
-                let textureUnif = unifs['_'+paramName+'Tex'];
-                if (gltexture && textureUnif){
-                    gltexture.bind(renderstate, textureUnif.location);
-                    let textureConnctedUnif = unifs['_'+paramName+'TexConnected'];
-                    if (textureConnctedUnif){
-                        gl.uniform1i(textureConnctedUnif.location, 1);
-                    }
-                    continue;
-                }
-            }
-            let unif = unifs['_'+paramName];
-            if (unif == undefined)
-                continue;
-            switch (unif['type']) {
-            case Boolean:
-                // gl.uniform1ui(unif.location, param.value);// WebGL 2
-                gl.uniform1i(unif.location, param.value);
-                break;
-            case UInt32:
-                // gl.uniform1ui(unif.location, param.value);// WebGL 2
-                gl.uniform1i(unif.location, param.value);
-                break;
-            case SInt32:
-                // gl.uniform1si(unif.location, param.value);// WebGL 2
-                gl.uniform1i(unif.location, param.value);
-                break;
-            case Float32:
-                gl.uniform1f(unif.location, param.value);
-                break;
-            case Vec2:
-                gl.uniform2fv(unif.location, param.value.asArray());
-                break;
-            case Vec3:
-                gl.uniform3fv(unif.location, param.value.asArray());
-                break;
-            case Vec4:
-            case Color:
-                gl.uniform4fv(unif.location, param.value.asArray());
-                break;
-            case Mat4:
-                gl.uniformMatrix4fv(unif.location, false, param.value.asArray());
-                break;
-            default:
-                {
-                    console.warn("Param :" + paramName + " has unhandled data type:" + unif['type']);
-                }
-            }
+            bindParam(gl, param, renderstate, this.gltextures);
         }
         return true;
     }
@@ -154,7 +96,7 @@ class GLMaterial {
     unbind(renderstate) {
         // Enable texture units to be re-used by resetting the count back
         // to what it was. 
-        renderstate['boundTextures'] = this.__boundTexturesBeforeMaterial;
+        renderstate.boundTextures = this.__boundTexturesBeforeMaterial;
     }
 };
 

@@ -12,7 +12,7 @@ import {
     Plane,
     GeomItem,
     TreeItem,
-    FlatMaterial,
+    Material,
     DataImage2D
 } from '../../SceneTree';
 import {
@@ -37,8 +37,8 @@ class VRController extends Gizmo {
         // Y = Up.
         // Z = Towards handle base.
 
-        this.__mat = new FlatMaterial('mat1');
-        this.__mat.baseColor = new Color(.2, .2, .2);
+        this.__mat = new Material('mat1', 'FlatSurfaceShader');
+        this.__mat.addParameter('baseColor', new Color(.2, .2, .2));
 
         /*
         Material:HandleMaterial
@@ -73,9 +73,9 @@ class VRController extends Gizmo {
         this.controllerMoved = new Signal();
         this.uivisibile = false;
 
-        let uimat = new FlatMaterial('uimat');
+        let uimat = new Material('uimat', 'FlatSurfaceShader');
         this.__uiimage =  new DataImage2D();
-        uimat.baseColor = this.__uiimage;
+        uimat.addParameter('baseColor', this.__uiimage);
 
         this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
         this.__uiGeomItem.localXfo.tr.set(0.0, -0.07, 0.05); 
@@ -89,8 +89,8 @@ class VRController extends Gizmo {
         this.__treeItem.addChild(this.__uiGeomItem);
 
 
-        let pointermat = new FlatMaterial('pointermat');
-        pointermat.baseColor = new Color(1.2, 0, 0);
+        let pointermat = new Material('pointermat', 'FlatSurfaceShader');
+        pointermat.addParameter('baseColor', new Color(1.2, 0, 0));
 
         let line = new Lines('pointer');
         line.setNumVertices(2);

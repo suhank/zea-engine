@@ -1,16 +1,17 @@
 import { Color } from '../Math/Color';
 import { Signal } from '../Math/Signal';
 import { Image2D } from './Image2D.js';
-import { Shader } from './Shader.js';
-
+import { RefCounted } from './RefCounted';
 
 class MaterialParam {
-    constructor(value) {
-        this.value = value;
+    constructor(name, value) {
+        this.name = name;
         this.texture = undefined;
         this.textureConnected = new Signal();
         this.textureDisconnected = new Signal();
         this.parameterChanged = new Signal();
+
+        this.setValue(value);
     }
 
     getValue() {
@@ -45,18 +46,35 @@ class MaterialParam {
 };
 
 
-class Material extends Shader {
-    constructor(name) {
-        super(name);
+class Material extends RefCounted {
+    constructor(name, shaderName) {
+        super();
+        if (name == undefined)
+            this.name = this.constructor.name;
+        else
+            this.name = name;
+        this.__shaderName = shaderName;
         this.__params = {};
 
         this.__metaData = new Map();
 
+        this.updated = new Signal();
         this.textureConnected = new Signal();
         this.textureDisconnected = new Signal();
+        this.shaderNameChanged = new Signal();
         this.destructing = new Signal();
     }
+
+    getShaderName(){
+        return this.__shaderName;
+    }
     
+
+    setShaderName(shaderName){
+        this.__shaderName = shaderName;
+        this.shaderNameChanged.emit(this.__shaderName);
+    }
+
     destroy() {
         this.removeAllTextures();
         super.destroy();
@@ -91,7 +109,7 @@ class Material extends Shader {
     }
 
     addParameter(paramName, defaultValue, texturable=true) {
-        let param = new MaterialParam(defaultValue);
+        let param = new MaterialParam(paramName, defaultValue);
         let get = ()=>{ 
             return param.getValue();
         };
@@ -110,6 +128,8 @@ class Material extends Shader {
         param.textureDisconnected.connect(this.textureDisconnected.emit);
         param.parameterChanged.connect(this.updated.emit);
         this.__params[paramName] = param;
+
+        return param;
     }
 
     getParameters() {
@@ -143,14 +163,15 @@ class Material extends Shader {
         this.__name = json.name;
         let props = this.__params;
         for(let key in json){
-            let paramName = '_'+key;
-            if(paramName in props){
-                if(props[paramName] instanceof Color)
-                    props[paramName].fromJSON(json[key]);
-                else{
-                    props[paramName] = json[key];
-                }
+            let value;
+            if(json[key] instanceof Object){
+                value = new Color();
+                value.fromJSON(json[key]);
             }
+            else{
+                value = json[key];
+            }
+            this.addParameter(paramName, value);
         }
     }
 
@@ -173,14 +194,12 @@ class Material extends Shader {
             else{
                 value = reader.loadFloat32();
             }
+            let param = this.addParameter(paramName, value);
             let textureName = reader.loadStr();
-            if(paramName in this.__params){
-                this.__params[paramName].value = value;
-                // console.log(paramName +":" + value);
-                if(textureName != ''){
-                    // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
-                    this.__params[paramName].texture = textureLibrary[textureName];
-                }
+            // console.log(paramName +":" + value);
+            if(textureName != ''){
+                // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
+                param.texture = textureLibrary[textureName];
             }
         }
     }
@@ -202,6 +221,7 @@ class Material extends Shader {
 
 };
 export {
+    MaterialParam,
     Material
 };
 // Material;

@@ -1,8 +1,12 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import {
+    shaderLibrary
+} from '../ShaderLibrary';
+import {
+    Shader
+} from '../Shader';
 
 class DepthMapShader extends Shader {
-    
+
     constructor() {
         super();
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('DepthMapShader.vertexShader', `
@@ -53,5 +57,3 @@ void main(void) {
 export {
     DepthMapShader
 };
-//export default DepthMapShader;
-

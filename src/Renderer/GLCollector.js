@@ -9,7 +9,8 @@ import {
     Lines,
     Mesh,
     MeshProxy,
-    BillboardItem
+    BillboardItem,
+    sgFactory
 } from '../SceneTree';
 import {
     GLPoints
@@ -128,24 +129,24 @@ class GLCollector {
     };
 
     getShaderMaterials(material) {
-        if (!material.hash)
-            throw ("Material was not finalized:" + material.constructor.name);
 
-        let glshaderMaterials = material.getMetadata('glshaderMaterials');
-        if (glshaderMaterials) {
-            return glshaderMaterials;
-        }
+        // let glshaderMaterials = material.getMetadata('glshaderMaterials');
+        // if (glshaderMaterials) {
+        //     return glshaderMaterials;
+        // }
 
-        // Materails include glsl shader code. We generate a GLShader the 
-        // handles compiling the shader, and a GLMaterail that binds parameter values. 
-        if (material.hash in this.__glshadermaterials) {
-            glshaderMaterials = this.__glshadermaterials[material.hash];
+        let glshaderMaterials;
+        if (material.getShaderName() in this.__glshadermaterials) {
+           glshaderMaterials = this.__glshadermaterials[material.getShaderName()];
         } else {
-            glshaderMaterials = new GLShaderMaterials(new GLShader(this.__renderer.gl, material));
-            this.__glshadermaterials[material.hash] = glshaderMaterials;
+            let shader = sgFactory.constructClass(material.getShaderName());
+            if(!shader)
+                return;
+            glshaderMaterials = new GLShaderMaterials(new GLShader(this.__renderer.gl, shader));
+            this.__glshadermaterials[material.getShaderName()] = glshaderMaterials;
         }
 
-        material.setMetadata('glshaderMaterials', glshaderMaterials);
+        // material.setMetadata('glshaderMaterials', glshaderMaterials);
 
         return glshaderMaterials;
     };
@@ -157,14 +158,21 @@ class GLCollector {
         }
 
         let glshaderMaterials = this.getShaderMaterials(material);
+        if(!glshaderMaterials)
+            return;
 
-        let glmaterial = new GLMaterial(this.__renderer.gl, material);
+        let glmaterial = new GLMaterial(this.__renderer.gl, material, glshaderMaterials.getGLShader());
         glmaterial.updated.connect(this.__renderer.requestRedraw, this.__renderer);
 
         glmaterialDrawItemSets = new GLMaterialDrawItemSets(glmaterial);
         glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSets);
 
         material.setMetadata('glmaterialDrawItemSets', glmaterialDrawItemSets);
+
+        material.shaderNameChanged.connect(() => {
+            glshaderMaterials.removeMaterial(material);
+            glshaderMaterials = this.getShaderMaterials(material);
+        });
 
         material.destructing.connect(() => {
             this.removeMaterial(material);
@@ -195,6 +203,8 @@ class GLCollector {
 
     addGeomItem(geomItem) {
         let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
+        if(!glmaterialDrawItemSets)
+            return;
         let glgeom = this.addGeom(geomItem.getGeom());
 
 
@@ -231,16 +241,23 @@ class GLCollector {
             this.__updateItemInstanceData(index, gldrawItem);
         });
 
-        let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
-        if (!drawItemSet) {
-            drawItemSet = new GLDrawItemSet(this.__renderer.gl, glgeom);
-            glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
+        let addDrawItemToGLMaterialDrawItemSet = ()=>{
+            let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
+            if (!drawItemSet) {
+                drawItemSet = new GLDrawItemSet(this.__renderer.gl, glgeom);
+                glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
+            }
+            drawItemSet.addDrawItem(gldrawItem);
+
+            // Note: before the renderer is disabled, this is a  no-op.
+            this.__renderer.requestRedraw();
         }
+        addDrawItemToGLMaterialDrawItemSet();
 
-        drawItemSet.addDrawItem(gldrawItem);
-
-        // Note: before the renderer is disabled, this is a  no-op.
-        this.__renderer.requestRedraw();
+        geomItem.materialAssigned.connect(()=>{
+            glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
+            addDrawItemToGLMaterialDrawItemSet();
+        })
 
         return gldrawItem;
     };

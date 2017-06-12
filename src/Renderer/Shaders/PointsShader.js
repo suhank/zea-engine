@@ -1,11 +1,18 @@
-import { shaderLibrary } from '../../SceneTree/ShaderLibrary';
-import { Shader } from '../../SceneTree/Shader';
+import {
+    sgFactory
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary';
+import {
+    Shader
+} from '../Shader';
 
-import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
+import './GLSL/stack-gl/inverse.js';
+import './GLSL/stack-gl/transpose.js';
 
 class PointsShader extends Shader {
-    
+
     constructor(name) {
         super(name);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PointsShader.vertexShader', `
@@ -40,10 +47,7 @@ void main(void) {
     }
 };
 
+sgFactory.registerClass('PointsShader', PointsShader);
 export {
     PointsShader
 };
-//export default PointsShader;
-
-
-

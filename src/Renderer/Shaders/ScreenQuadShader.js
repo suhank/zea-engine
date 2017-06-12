@@ -1,7 +1,7 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import { shaderLibrary }  from '../ShaderLibrary';
+import { Shader }  from '../Shader';
 
-import './utils/quadVertexFromID.js';
+import './GLSL/utils/quadVertexFromID.js';
 
 class ScreenQuadShader extends Shader {
     

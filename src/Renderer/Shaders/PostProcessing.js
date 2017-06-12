@@ -1,11 +1,11 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import { shaderLibrary }  from '../ShaderLibrary';
+import { Shader }  from '../Shader';
 
-import './pragmatic-pbr/exposure.js';
-import './pragmatic-pbr/tonemap-filmic.js';
-import './mattdesl/fxaa.js';
-import './utils/quadVertexFromID.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/gamma.js';
+import './GLSL/pragmatic-pbr/exposure.js';
+import './GLSL/pragmatic-pbr/tonemap-filmic.js';
+import './GLSL/mattdesl/fxaa.js';
+import './GLSL/utils/quadVertexFromID.js';
+import './GLSL/stack-gl/gamma.js';
 
 class PostProcessing extends Shader {
     

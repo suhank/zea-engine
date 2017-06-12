@@ -1,18 +1,27 @@
-import { Color } from '../../Math/Color';
-import { sgFactory } from '../SGFactory.js';
-import { shaderLibrary } from '../ShaderLibrary.js';
-import { Material } from '../Material.js';
+import {
+    Color
+} from '../../Math';
+import {
+    sgFactory,
+    Image2D
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
+import {
+    Shader
+} from '../Shader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/GGX_Specular.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 
-class TransparentMaterial extends Material {
-    
+class TransparentSurfaceShader extends Shader {
+
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('TransparentMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('TransparentSurfaceShader.vertexShader', `
 precision highp float;
 
 
@@ -54,7 +63,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('TransparentMaterial.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('TransparentSurfaceShader.fragmentShader', `
 precision highp float;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -233,7 +242,7 @@ void main(void) {
         this.addParameter('roughness', 0.85);
         this.addParameter('normal', new Color(0.0, 0.0, 0.0));
         this.addParameter('texCoordScale', 1.0, false);
-        
+
         // F0 = reflectance and is a physical property of materials
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
@@ -241,10 +250,14 @@ void main(void) {
         this.addParameter('reflectance', 0.0001);
         this.finalize();
     }
+
+    isTransparent() {
+        return true;
+    }
+
 };
 
-sgFactory.registerClass('TransparentMaterial', TransparentMaterial);
+sgFactory.registerClass('TransparentSurfaceShader', TransparentSurfaceShader);
 export {
-    TransparentMaterial
+    TransparentSurfaceShader
 };
-// TransparentMaterial;

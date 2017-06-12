@@ -1,5 +1,77 @@
-import { Signal } from '../Math/Signal';
-import { shaderLibrary } from '../SceneTree/ShaderLibrary';
+import {
+    SInt32,
+    UInt32,
+    Float32,
+    Vec2,
+    Vec3,
+    Vec4,
+    Color,
+    Mat4,
+    Signal
+} from '../Math';
+import {
+    shaderLibrary
+} from './ShaderLibrary';
+import {
+    Image2D,
+    HDRImage2D
+} from '../SceneTree';
+
+
+let bindParam = (gl, param, renderstate, gltextures={})=>{
+
+    if(param.texture instanceof Image2D){
+        let gltexture = gltextures[param.name];
+        let textureUnif = renderstate.unifs['_'+param.name+'Tex'];
+        if (gltexture && textureUnif){
+            gltexture.bind(renderstate, textureUnif.location);
+            let textureConnctedUnif = renderstate.unifs['_'+param.name+'TexConnected'];
+            if (textureConnctedUnif){
+                gl.uniform1i(textureConnctedUnif.location, 1);
+            }
+            return;
+        }
+    }
+    let unif = renderstate.unifs['_'+param.name];
+    if (unif == undefined)
+        return;
+    switch (unif['type']) {
+    case Boolean:
+        // gl.uniform1ui(unif.location, param.value);// WebGL 2
+        gl.uniform1i(unif.location, param.value);
+        break;
+    case UInt32:
+        // gl.uniform1ui(unif.location, param.value);// WebGL 2
+        gl.uniform1i(unif.location, param.value);
+        break;
+    case SInt32:
+        // gl.uniform1si(unif.location, param.value);// WebGL 2
+        gl.uniform1i(unif.location, param.value);
+        break;
+    case Float32:
+        gl.uniform1f(unif.location, param.value);
+        break;
+    case Vec2:
+        gl.uniform2fv(unif.location, param.value.asArray());
+        break;
+    case Vec3:
+        gl.uniform3fv(unif.location, param.value.asArray());
+        break;
+    case Vec4:
+    case Color:
+        gl.uniform4fv(unif.location, param.value.asArray());
+        break;
+    case Mat4:
+        gl.uniformMatrix4fv(unif.location, false, param.value.asArray());
+        break;
+    default:
+        {
+            console.warn("Param :" + param.name + " has unhandled data type:" + unif['type']);
+            return;
+        }
+    }
+    return;
+}
 
 class GLShader {
     constructor(gl, shader) {
@@ -12,6 +84,10 @@ class GLShader {
         this.__shaderProgramHdls = {};
 
         this.updated = new Signal();
+    }
+
+    isTransparent() {
+        return this.__shader.isTransparent();
     }
 
     compileShaderStage(gl, glsl, stageID, name) {
@@ -43,11 +119,11 @@ class GLShader {
                     if (!isNaN(lineNum)) {
                         // find the line where this error occured and display it. 
                         let buggyLines = [];
-                        for(let j=-3; j<3; j++){
-                            if(j==0)
-                                buggyLines.push(">>>"+shaderLibrary.getLine(shaderName, lineNum));
+                        for (let j = -3; j < 3; j++) {
+                            if (j == 0)
+                                buggyLines.push(">>>" + shaderLibrary.getLine(shaderName, lineNum));
                             else
-                                buggyLines.push(shaderLibrary.getLine(shaderName, lineNum+j))
+                                buggyLines.push(shaderLibrary.getLine(shaderName, lineNum + j))
                         }
                         errors[i] = parts.join(':\n') + buggyLines.join('\n');
                     }
@@ -67,9 +143,9 @@ class GLShader {
         let shaderProgramHdl = gl.createProgram();
         let vertexShaderGLSL = this.__shader.vertexShader;
         if (vertexShaderGLSL != undefined) {
-            if (preproc){
-                if (preproc.repl){
-                    for(let key in preproc.repl)
+            if (preproc) {
+                if (preproc.repl) {
+                    for (let key in preproc.repl)
                         vertexShaderGLSL = vertexShaderGLSL.replaceAll(key, preproc.repl[key]);
                 }
                 if (preproc.defines)
@@ -83,9 +159,9 @@ class GLShader {
         }
         let fragmentShaderGLSL = this.__shader.fragmentShader;
         if (fragmentShaderGLSL != undefined) {
-            if (preproc){
-                if (preproc.repl){
-                    for(let key in preproc.repl)
+            if (preproc) {
+                if (preproc.repl) {
+                    for (let key in preproc.repl)
                         fragmentShaderGLSL = fragmentShaderGLSL.replaceAll(key, preproc.repl[key]);
                 }
                 if (preproc.defines)
@@ -132,9 +208,9 @@ class GLShader {
         let unifs = this.__shader.getUniforms();
         for (let uniformName in unifs) {
             let unifType = unifs[uniformName];
-            if(unifType instanceof Array){
-                for(let member of unifType){
-                    let structMemberName = uniformName+'.'+member.name;
+            if (unifType instanceof Array) {
+                for (let member of unifType) {
+                    let structMemberName = uniformName + '.' + member.name;
                     let location = gl.getUniformLocation(shaderProgramHdl, structMemberName);
                     if (location == undefined) {
                         // console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
@@ -146,9 +222,9 @@ class GLShader {
                     };
                 }
             }
-            if (preproc){
-                if (preproc.repl){
-                    for(let key in preproc.repl)
+            if (preproc) {
+                if (preproc.repl) {
+                    for (let key in preproc.repl)
                         uniformName = uniformName.replace(key, preproc.repl[key]);
                 }
             }
@@ -166,7 +242,7 @@ class GLShader {
         return result;
     }
 
-    compileForTarget(key, preproc){
+    compileForTarget(key, preproc) {
         let shaderCompilationResult = this.__shaderProgramHdls[key];
         if (!shaderCompilationResult) {
             if (shaderCompilationResult !== false) {
@@ -205,7 +281,7 @@ class GLShader {
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;
 
-        if(this.__shader.bind)
+        if (this.__shader.bind)
             this.__shader.bind(gl, renderstate);
 
         let unifs = shaderCompilationResult.unifs;
@@ -222,17 +298,23 @@ class GLShader {
         if ('exposure' in unifs)
             gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
 
+        // Bind the default params.
+        let params = this.__shader.getParameters();
+        for (let [paramName, param] of Object.entries(params)) {
+            bindParam(gl, param, renderstate);
+        }
+
         return true;
     }
-    
+
     unbind(renderstate) {
-        if(this.__shader.unbind)
+        if (this.__shader.unbind)
             this.__shader.unbind(this.__gl, renderstate);
     }
 
-    destroy(){
+    destroy() {
         let gl = this.__gl;
-        for(let key in this.__shaderProgramHdls){
+        for (let key in this.__shaderProgramHdls) {
             let shaderCompilationResult = this.__shaderProgramHdls[key];
             gl.deleteProgram(shaderCompilationResult.shaderProgramHdl);
         }
@@ -241,6 +323,7 @@ class GLShader {
 };
 
 export {
-    GLShader
+    GLShader,
+    bindParam
 };
 // export default GLShader;

@@ -3,20 +3,25 @@ import {
     Vec3
 } from '../../Math';
 import {
-    shaderLibrary,
-    Material
+    sgFactory
 } from '../../SceneTree';
+import {
+    Shader
+} from '../Shader.js';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
 
-import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
-import '../../SceneTree/Shaders/GLSL/envmap-octahedral.js';
+import './GLSL/stack-gl/inverse.js';
+import './GLSL/stack-gl/transpose.js';
+import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
-class EnvProjectionMaterial extends Material {
-    
+class EnvProjectionShader extends Shader {
+
     constructor() {
         super();
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;    //(location = 0)
@@ -85,7 +90,7 @@ void main(void) {
 };
 
 
+sgFactory.registerClass('EnvProjectionShader', EnvProjectionShader);
 export {
-    EnvProjectionMaterial
+    EnvProjectionShader
 };
-

@@ -1,8 +1,9 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import { shaderLibrary }  from '../ShaderLibrary';
+import { Shader }  from '../Shader';
 
-import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
+import './GLSL/stack-gl/inverse.js';
+import './GLSL/stack-gl/transpose.js';
+import './GLSL/modelMatrix.js';
 
 class GeomDataShader extends Shader {
     
@@ -50,4 +51,3 @@ void main(void) {
 export {
     GeomDataShader
 };
-//export default GeomDataShader;

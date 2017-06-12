@@ -1,6 +1,7 @@
 import {
     Vec3,
     Xfo,
+    Color,
     Signal
 } from '../Math';
 import {
@@ -12,7 +13,7 @@ import {
     Lines,
     Mesh,
     Grid,
-    LinesMaterial
+    Material
 } from '../SceneTree';
 import {
     GLScreenQuad
@@ -167,8 +168,8 @@ class GLRenderer {
     }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
-        let gridMaterial = new LinesMaterial('gridMaterial');
-        gridMaterial.color = gridColor;
+        let gridMaterial = new Material('gridMaterial', 'LinesShader');
+        gridMaterial.addParameter('color', gridColor);
         let grid = new Grid('Grid', gridSize, gridSize, resolution, resolution, true);
         // grid.lineThickness = lineThickness;
         this.__gridItem = new GeomItem('GridItem', grid, gridMaterial);
@@ -182,13 +183,13 @@ class GLRenderer {
         axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
         // axisLine.lineThickness = lineThickness * 10.0;
 
-        let gridXAxisMaterial = new LinesMaterial('gridXAxisMaterial');
-        gridXAxisMaterial.color.set(gridColor.luminance(), 0, 0);
+        let gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
+        gridXAxisMaterial.addParameter('color', new Color(gridColor.luminance(), 0, 0));
         this.__xAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial);
         this.__collector.addGeomItem(this.__xAxisLineItem);
 
-        let gridZAxisMaterial = new LinesMaterial('gridZAxisMaterial');
-        gridZAxisMaterial.color.set(0, 0, gridColor.luminance());
+        let gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
+        gridZAxisMaterial.addParameter('color', new Color(0, 0, gridColor.luminance()));
         let geomOffset = new Xfo();
         geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI * 0.5);
         this.__zAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridZAxisMaterial);

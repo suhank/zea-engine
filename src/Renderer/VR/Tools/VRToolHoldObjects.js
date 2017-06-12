@@ -7,7 +7,7 @@ import {
 import {
     Cuboid,
     GeomItem,
-    FlatMaterial
+    Material
 } from '../../../SceneTree';
 
 import {
@@ -30,7 +30,7 @@ class VRToolHoldObjects extends VRTool {
 
         this.__color = new Color(0, 1, 0);
         // this.__SelVolume = new Cuboid('SelVolume', 0.06, 0.06, 0.06);
-        // this.__mat = new FlatMaterial('mat0');
+        // this.__mat = new Material('mat0', 'FlatSurfaceShader');
         // this.__mat.baseColor = new Color(1, 0, 0);
 
         this.__projMatrix = new Mat4();

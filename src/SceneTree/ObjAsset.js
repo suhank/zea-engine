@@ -18,8 +18,8 @@ import {
     getFileFolder
 } from './Utils.js';
 import {
-    StandardMaterial
-} from './Shaders/StandardMaterial.js';
+    Material
+} from './Material.js';
 
 
 class ObjAsset extends AssetItem {
@@ -36,12 +36,12 @@ class ObjAsset extends AssetItem {
         this.loaded = new Signal();
     }
 
-    set defaultMaterial(defaultMaterial) {
-        this.__defaultMaterial = defaultMaterial;
+    set defaultShader(defaultShader) {
+        this.__defaultShader = defaultShader;
     }
 
-    get defaultMaterial() {
-        return this.__defaultMaterial;
+    get defaultShader() {
+        return this.__defaultShader;
     }
 
     __incrementLoadCounter() {
@@ -95,32 +95,33 @@ class ObjAsset extends AssetItem {
             let key = elements.shift();
             switch (key) {
                 case 'newmtl':
-                    material = new StandardMaterial(elements[0]);
+                    material = new Material(elements[0]);
                     this.__materials[elements[0]] = material;
                     break;
                 case 'Kd':
-                    material.baseColor = parseColor(elements);
+                    material.addParameter('baseColor', parseColor(elements));
                     break;
                 case 'map_Kd':
-                    material.baseColor = parseMap(elements);
+                    material.addParameter('baseColor', parseMap(elements));
                     break;
                 case 'Ks':
                     let specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0;
                     material.roughness = 1.0 - specular;
-                    material.reflectance = specular;
+                    material.addParameter('roughness', 1.0 - specular);
+                    material.addParameter('reflectance', specular);
                     break;
                 case 'map_Ks':
-                    material.roughness = parseMap(elements /*flags=TEXTURE_INVERT*/ );
-                    material.reflectance = 0.2;
+                    material.addParameter('roughness', parseMap(elements /*flags=TEXTURE_INVERT*/ ));
+                    material.addParameter('reflectance', 0.2);
                     break;
                 case 'd':
-                    material.alpha = parseFloat(elements[0]);
+                    material.addParameter('alpha',  parseFloat(elements[0]));
                     break;
                 case 'map_d':
-                    material.alpha = parseMap(elements);
+                    material.addParameter('alpha',  parseFloat(elements));
                     break;
                 case 'map_bump':
-                    material.normal = parseMap(elements /*flags=BUMP_TO_NORMAL*/ );
+                    material.addParameter('normal',  parseMap(elements /*flags=BUMP_TO_NORMAL*/ ));
                     break;
                 default:
                     // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
@@ -347,15 +348,10 @@ class ObjAsset extends AssetItem {
             geomItem.setMaterial(this.__materials[geomData.material]);
         } else{
 
-            let material;
-            if (this.__defaultMaterial) {
-                material = new this.__defaultMaterial(geomName + 'mat');
-            } else {
-                material = new StandardMaterial(geomName + 'mat');
-            }
-            material.baseColor = Color.random(0.5);
-            material.roughness = 0.2;
-            material.reflectance = 0.2;
+            let material = new Material(geomName + 'mat', this.__defaultShader ? this.__defaultShader : 'StandardSurfaceShader');
+            material.addParameter('baseColor', Color.random(0.5));
+            material.addParameter('roughness', 0.2);
+            material.addParameter('reflectance', 0.2);
             geomItem.setMaterial(material);
         }
 

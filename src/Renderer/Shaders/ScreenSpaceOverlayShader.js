@@ -1,8 +1,15 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
+import {
+    sgFactory
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary';
+import {
+    Shader
+} from '../Shader';
 
 class ScreenSpaceOverlayShader extends Shader {
-    
+
     constructor(name) {
         super();
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenSpaceOverlayShader.vertexShader', `
@@ -33,9 +40,7 @@ void main(void) {
     }
 };
 
-
+sgFactory.registerClass('ScreenSpaceOverlayShader', ScreenSpaceOverlayShader);
 export {
     ScreenSpaceOverlayShader
 };
-//export default ScreenSpaceOverlayShader;
-

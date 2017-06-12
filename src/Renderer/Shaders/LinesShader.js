@@ -1,14 +1,23 @@
-import { Color } from '../../Math/Color';
-import { shaderLibrary } from '../ShaderLibrary.js';
-import { Material } from '../Material.js';
+import {
+    Color
+} from '../../Math';
+import {
+    sgFactory
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
+import {
+    Shader
+} from '../Shader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
-class LinesMaterial extends Material {
+class LinesShader extends Shader {
 
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LinesMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LinesShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -28,7 +37,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LinesMaterial.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LinesShader.fragmentShader', `
 precision highp float;
 
 uniform color _color;
@@ -42,7 +51,8 @@ void main(void) {
         this.finalize();
     }
 };
+
+sgFactory.registerClass('LinesShader', LinesShader);
 export {
-    LinesMaterial
+    LinesShader
 };
-// LinesMaterial;

@@ -9,7 +9,7 @@ import {
     Sphere,
     TreeItem,
     GeomItem,
-    FlatMaterial,
+    Material,
     MarkerpenTool
 } from '../SceneTree';
 
@@ -29,8 +29,8 @@ class UserAvatar {
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
 
         this.__treeItem = new TreeItem(id);
-        this.__material = new FlatMaterial('user' + id + 'Material');
-        this.__material.baseColor = new Color(data.color.r, data.color.g, data.color.b);
+        this.__material = new Material('user' + id + 'Material', 'FlatSurfaceShader');
+        this.__material.addParameter('baseColor', new Color(data.color.r, data.color.g, data.color.b));
         this.setMouseAndCameraRepresentation();
 
         this.__visible = visible;

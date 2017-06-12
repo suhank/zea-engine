@@ -1,7 +1,16 @@
-import { Color } from '../../Math/Color';
-import { sgFactory } from '../SGFactory.js';
-import { shaderLibrary } from '../ShaderLibrary.js';
-import { Material } from '../Material.js';
+import {
+    Color
+} from '../../Math';
+import {
+    sgFactory
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
+import {
+    Shader
+} from '../Shader.js';
+
 import './GLSL/constants.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
@@ -10,11 +19,11 @@ import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 import './GLSL/ImagePyramid.js';
 
-class LayeredCarPaintMaterial extends Material {
-    
+class StandardSurfaceShader extends Shader {
+
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LayeredCarPaintMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardSurfaceShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -58,7 +67,6 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
-
 #ifdef ENABLE_TEXTURES
     v_textureCoord  = textureCoords;
 #endif
@@ -72,14 +80,14 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
+
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LayeredCarPaintMaterial.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardSurfaceShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -102,12 +110,14 @@ varying vec3 v_worldPos;
 /* VS Outputs */
 
 
+// #ifdef ENABLE_LIGHTMAPS
 uniform sampler2D lightmap;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 <%include file="debugColors.glsl"/>
 uniform vec2 lightmapSize;
 uniform bool debugLightmapTexelSize;
 #endif
+// #endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -121,14 +131,7 @@ uniform float planeAngle;
 #endif
 
 uniform color _baseColor;
-uniform color _baseColor2;
-uniform color _baseColor3;
-uniform color _flakesColor;
-
-uniform float _microflakePerturbation;
-uniform float _microflakePerturbationA;
-uniform sampler2D _flakesNormalTex;
-uniform float _flakesScale;
+uniform float _emissiveStrength;
 
 #ifdef ENABLE_SPECULAR
 <%include file="glslutils.glsl"/>
@@ -150,6 +153,9 @@ uniform bool _metallicTexConnected;
 
 uniform sampler2D _reflectanceTex;
 uniform bool _reflectanceTexConnected;
+
+uniform sampler2D _emissiveStrengthTex;
+uniform bool _emissiveStrengthTexConnected;
 
 uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
@@ -175,52 +181,11 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 }
 #endif
 
-// Followup: Normal Mapping Without Precomputed Tangents
-// http://www.thetenthplanet.de/archives/1180
-mat3 cotangent_frame( vec3 normal, vec3 position, vec2 uv )
-{
-    // get edge vectors of the pixel triangle
-    vec3 dp1 = dFdx( position );
-    vec3 dp2 = dFdy( position );
-    vec2 duv1 = dFdx( uv );
-    vec2 duv2 = dFdy( uv );
- 
-    // solve the linear system
-    vec3 dp2perp = cross( dp2, normal );
-    vec3 dp1perp = cross( normal, dp1 );
-    vec3 tangent = dp2perp * duv1.x + dp1perp * duv2.x;
-    vec3 bitangent = dp2perp * duv1.y + dp1perp * duv2.y;
- 
-    // construct a scale-invariant frame 
-    float invmax = inversesqrt( max( dot(tangent,tangent), dot(bitangent,bitangent) ) );
-    return mat3( tangent * invmax, bitangent * invmax, normal );
-}
-
-#define WITH_NORMALMAP_UNSIGNED 1
-
-vec3 sampleNormalMap( sampler2D texture, vec2 texcoord )
-{
-    // assume normal, the interpolated vertex normal and 
-    // viewVec, the view vector (vertex to eye)
-    vec3 map = texture2D( texture, texcoord ).xyz;
-#ifdef WITH_NORMALMAP_UNSIGNED
-    map = map * 255./127. - 128./127.;
-#endif
-#ifdef WITH_NORMALMAP_2CHANNEL
-    map.z = sqrt( 1. - dot( map.xy, map.xy ) );
-#endif
-#ifdef WITH_NORMALMAP_GREEN_UP
-    map.y = -map.y;
-#endif
-    return map;
-}
-
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec3 baseColor1      = toLinear(_baseColor.rgb);
-    vec3 baseColor2      = toLinear(_baseColor2.rgb);
-    vec3 baseColor3      = toLinear(_baseColor3.rgb);
+    vec3 baseColor      = toLinear(_baseColor).rgb;
+    float emission      = _emissiveStrength;
 
 #ifdef ENABLE_SPECULAR
     float roughness     = _roughness;
@@ -231,14 +196,13 @@ void main(void) {
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord      = v_worldPos.xz * 0.2;
-
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 baseColor1     = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    vec3 baseColor2     = baseColor1;//toLinear(_baseColor2.rgb);
-    vec3 baseColor3     = toLinear(_baseColor3.rgb);
+    vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
     float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
     float metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
     float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+    float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoord);
 #endif
 
 
@@ -256,62 +220,38 @@ void main(void) {
         discard;
         return;
     }
-#endif 
+#endif
+
 
     vec3 viewNormal = normalize(v_viewNormal);
-    vec3 surfacePos = -v_viewPos.xyz;
-
-    // The vector from the camera to the surface point.
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 viewDir = normalize(viewVector);
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    //vec3 surfacePos = -v_viewPos.xyz;
 
 #ifdef ENABLE_TEXTURES
     if(_normalTexConnected){
-
         vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 
-    float NdotV = dot(normal, viewDir);
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    float NdotV = dot(normal, viewVector);
     if(NdotV < 0.0){
         normal = -normal;
-        NdotV = dot(normal, viewDir);
+        NdotV = dot(normal, viewVector);
 
         // Note: these 2 lines can be used to debug inverted meshes.
         //baseColor = vec3(1.0, 0.0, 0.0);
         //NdotV = 1.0;
     }
 
-    ////////////////////////////////////////////////////////////////////////
-    // http://www.chrisoat.com/papers/Oat-Tatarchuk-Isidoro-Layered_Car_Paint_Shader_Print.pdf
-
-    mat3 TBN = cotangent_frame( normal, surfacePos, v_lightmapCoord );
-
-    vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
-
-
-    vec3 vNp1 = normalize(mix(normal, flakesNormal, _microflakePerturbationA));
-    vec3 vNp2 = normalize(mix(normal, flakesNormal, _microflakePerturbation));
-
-    //float fresnel = NdotV;
-    float  fresnel1 = clamp(dot( viewDir, vNp1 ), 0.0, 1.0);
-    float  fresnel2 = clamp(dot( viewDir, vNp2 ), 0.0, 1.0);
-
-    float fresnel1Sq = fresnel1 * fresnel1;
-    vec3 baseColor =   fresnel1 * baseColor3  + 
-                        fresnel1Sq * baseColor2 +
-                        fresnel1Sq * fresnel1Sq * baseColor1;/* +
-                        pow( fresnel2, 16.0 ) * _flakesColor.rgb;*/
-
-    //baseColor = fresnel1Sq * baseColor1;
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
 
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
         vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
         float total = floor(coord_texelSpace.x) +
                       floor(coord_texelSpace.y);
                       
@@ -329,7 +269,7 @@ void main(void) {
 
 #ifndef ENABLE_SPECULAR
     vec3 diffuseReflectance = baseColor * irradiance;
-    gl_FragColor = vec4(diffuseReflectance, 1);
+    gl_FragColor = vec4(diffuseReflectance + (emission * baseColor), 1);
 #else
 
     // -------------------------- Diffuse Reflectance --------------------------
@@ -353,12 +293,12 @@ void main(void) {
 
     // -------------------------- Specular Reflactance --------------------------
     // vec3 ks = vec3(0.0);
-    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewDir, roughness, F0, ks );
+    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, F0, ks );
     // vec3 kd = (vec3(1.0) - ks) * vec3(1.0 - metallic);    
 
     float schlickFresnel = reflectance + pow((1.0-reflectance)*(1.0-NdotV), 5.0);
 
-    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewDir, roughness, schlickFresnel);
+    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, schlickFresnel);
 
 
     // -------------------------- Specular Occlusion --------------------------
@@ -383,8 +323,8 @@ void main(void) {
     // Energy conservation already taken into account in both the diffuse and specular reflectance
     vec3 radiance = diffuseReflectance + specularReflectance;    
 
-    gl_FragColor = vec4(radiance, 1);
-    //gl_FragColor = vec4(baseColor, 1);
+    // gl_FragColor = vec4( kd * diffuse + /*ks */ specular, 1);
+    gl_FragColor = vec4(radiance + (emission * baseColor), 1);
 
 #endif
 
@@ -395,29 +335,23 @@ void main(void) {
 }
 `);
 
-        this.addParameter('baseColor', new Color(1.0, 0.0, 0.0));
-        this.addParameter('baseColor2', new Color(1.0, 0.0, 0.0));
-        this.addParameter('baseColor3', new Color(1.0, 0.0, 0.0));
-        this.addParameter('flakesColor', new Color(1.0, 1.0, 1.0));
-        this.addParameter('flakesNormal', new Color(0.0, 0.0, 0.0));
-        this.addParameter('flakesScale', 0.1, false);
-        //this.addParameter('normalPerturbation', 0.1, false);
-        this.addParameter('microflakePerturbationA', 0.1, false);
-        this.addParameter('microflakePerturbation', 0.48, false);
+        this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
+        this.addParameter('emissiveStrength', 0.0);
+        this.addParameter('metallic', 0.0);
+        this.addParameter('roughness', 0.85);
+        this.addParameter('normal', new Color(0.0, 0.0, 0.0));
+        this.addParameter('texCoordScale', 1.0, false);
 
-        this.addParameter('metallic', 0.9);
-        this.addParameter('roughness', 0.05);
-        
         // F0 = reflectance and is a physical property of materials
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
-        this.addParameter('reflectance', 0.85);
+        this.addParameter('reflectance', 0.0001);
         this.finalize();
     }
 };
 
-sgFactory.registerClass('LayeredCarPaintMaterial', LayeredCarPaintMaterial);
+sgFactory.registerClass('StandardSurfaceShader', StandardSurfaceShader);
 export {
-    LayeredCarPaintMaterial
+    StandardSurfaceShader
 };

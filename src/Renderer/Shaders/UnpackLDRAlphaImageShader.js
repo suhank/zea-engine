@@ -1,9 +1,11 @@
 import {
-    shaderLibrary,
     Shader
-} from '../../SceneTree';
+} from '../Shader';
+import {
+    shaderLibrary
+} from '../ShaderLibrary';
 
-import './utils/quadVertexFromID.js';
+import './GLSL/utils/quadVertexFromID.js';
 
 class UnpackLDRAlphaImageShader extends Shader {
     

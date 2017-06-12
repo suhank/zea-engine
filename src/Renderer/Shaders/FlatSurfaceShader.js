@@ -1,17 +1,25 @@
-import { Color } from '../../Math/Color';
-import { sgFactory } from '../SGFactory.js';
-import { shaderLibrary } from '../ShaderLibrary.js';
-import { Material } from '../Material.js';
+import {
+    Color
+} from '../../Math/Color';
+import {
+    sgFactory
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
+import {
+    Shader
+} from '../Shader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
-class FlatMaterial extends Material {
-    
+class FlatSurfaceShader extends Shader {
+
     constructor(name) {
         super(name);
 
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.vertexShader', `
 precision highp float;
 #define ENABLE_TEXTURES
 
@@ -45,7 +53,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FlatMaterial.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.fragmentShader', `
 #extension GL_OES_standard_derivatives : enable
 precision highp float;
 #define ENABLE_TEXTURES
@@ -130,8 +138,7 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('FlatMaterial', FlatMaterial);
+sgFactory.registerClass('FlatSurfaceShader', FlatSurfaceShader);
 export {
-    FlatMaterial
+    FlatSurfaceShader
 };
-// FlatMaterial;

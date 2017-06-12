@@ -3,24 +3,24 @@ import {
 } from '../../Math';
 import {
     sgFactory
-} from '../SGFactory.js';
+} from '../../SceneTree';
 import {
     shaderLibrary
 } from '../ShaderLibrary.js';
 import {
-    Material
-} from '../Material.js';
+    Shader
+} from '../Shader.js';
 
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
-class SimpleMaterial extends Material {
+class SimpleSurfaceShader extends Shader {
     
     constructor(name) {
         super(name);
 
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SimpleMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SimpleSurfaceShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -60,7 +60,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SimpleMaterial.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SimpleSurfaceShader.fragmentShader', `
 #extension GL_OES_standard_derivatives : enable
 precision highp float;
 
@@ -148,8 +148,7 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('SimpleMaterial', SimpleMaterial);
-
+sgFactory.registerClass('SimpleSurfaceShader', SimpleSurfaceShader);
 export {
-    SimpleMaterial
+    SimpleSurfaceShader
 };

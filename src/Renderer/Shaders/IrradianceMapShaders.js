@@ -1,7 +1,7 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
-import { Shader }  from '../../SceneTree/Shader';
-import '../../SceneTree/Shaders/GLSL/Florian/Lookup.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/diffuse-lambert.js';
+import { shaderLibrary }  from '../ShaderLibrary';
+import { Shader }  from '../Shader';
+import './GLSL/Florian/Lookup.js';
+import './GLSL/stack-gl/diffuse-lambert.js';
 
 class IrradianceMapAccumulate extends Shader {
     

@@ -1,14 +1,23 @@
-import { Color } from '../../Math/Color';
-import { shaderLibrary } from '../ShaderLibrary.js';
-import { Material } from '../Material.js';
+import {
+    Color
+} from '../../Math';
+import {
+    sgFactory
+} from '../../SceneTree';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
+import {
+    Shader
+} from '../Shader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
-class FatLinesMaterial extends Material {
+class FatLinesShader extends Shader {
 
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FatLinesMaterial.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FatLinesShader.vertexShader', `
 precision highp float;
 
 instancedattribute vec2 segmentIndices;
@@ -119,7 +128,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FatLinesMaterial.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FatLinesShader.fragmentShader', `
 precision highp float;
 
 /* VS Outputs */
@@ -154,7 +163,7 @@ void main(void) {
         this.finalize();
     }
 };
+sgFactory.registerClass('FatLinesShader', FatLinesShader);
 export {
-    FatLinesMaterial
+    FatLinesShader
 };
-// FatLinesMaterial;

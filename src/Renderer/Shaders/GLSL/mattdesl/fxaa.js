@@ -1,4 +1,4 @@
-import { shaderLibrary } from '../../../SceneTree/ShaderLibrary';
+import { shaderLibrary } from '../../../ShaderLibrary';
 
 shaderLibrary.setShaderModule('mattdesl/fxaa-texcoords.glsl', `
 //To save 9 dependent texture reads, you can compute

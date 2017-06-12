@@ -7,7 +7,7 @@ import {
     Cuboid,
     TreeItem,
     GeomItem,
-    FlatMaterial 
+    Material 
 } from '../../SceneTree';
 import { GLMesh } from '../GLMesh.js';
 import { GLDrawItem } from '../GLDrawItem.js';
@@ -23,9 +23,9 @@ class VRHead extends Gizmo {
         // // Head faces Z axis....
         // let geom = new Cuboid('VRHead', 0.16, 0.24, 0.2);
 
-        // let mat0 = new FlatMaterial('mat0');
+        // let mat0 = new GeomItem('mat0', 'FlatSurfaceShader');
         // mat0.baseColor = new Color(0, 0, 1);
-        // let mat1 = new FlatMaterial('mat1');
+        // let mat1 = new GeomItem('mat1', 'FlatSurfaceShader');
         // mat1.baseColor = new Color(1, 1, 0);
 
         // this.__geomItem0 = new GeomItem('VRHead', geom, mat0);

@@ -10,7 +10,7 @@ import {
     Mat4,
     Color
 } from '../Math';
-import { Image2D } from './Image2D.js';
+import { Image2D } from '../SceneTree/Image2D.js';
 
 let glslTypes = {
     'bool': Boolean,

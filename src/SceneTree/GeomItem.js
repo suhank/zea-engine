@@ -26,6 +26,7 @@ class GeomItem extends TreeItem {
 
         this.__selectable = true;
         this.__selected = false;
+        this.materialAssigned = new Signal();
         this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
 
@@ -97,6 +98,7 @@ class GeomItem extends TreeItem {
 
     setMaterial(material) {
         this.__material = material;
+        this.materialAssigned.emit(this.__material);
     }
 
     updateBoundingBox() {

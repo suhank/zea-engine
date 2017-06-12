@@ -1,4 +1,4 @@
-import { shaderLibrary } from '../../../SceneTree';
+import { shaderLibrary } from '../../../ShaderLibrary.js';
 
 // https://github.com/wwwtyro/glsl-atmosphere
 shaderLibrary.setShaderModule('wwwtyro/glsl-atmosphere.glsl', `

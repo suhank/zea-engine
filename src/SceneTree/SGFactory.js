@@ -4,6 +4,7 @@ class SGFactory {
     }
 
     registerClass(name, cls){
+        console.log("registerClass:" + name);
         this.__registeredClasses[name] = cls;
     }
 

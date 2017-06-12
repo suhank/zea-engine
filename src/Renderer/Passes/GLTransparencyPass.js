@@ -17,17 +17,10 @@ class GLTransparencyPass extends GLPass {
         let allglshaderMaterials = this.__collector.getGLShaderMaterials();
         this.__glshadermaterials = [];
         for (let glshaderkey in allglshaderMaterials) {
-            let glshaderMaterials = null;
-            let glmaterialDrawItemSets = allglshaderMaterials[glshaderkey].getMaterialDrawItemSets();
-            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                if (!glmaterialDrawItemSet.getGLMaterial().isTransparent())
-                    continue;
-                if(!glshaderMaterials){
-                    glshaderMaterials = new GLShaderMaterials(allglshaderMaterials[glshaderkey].getGLShader());
-                    this.__glshadermaterials.push(glshaderMaterials);
-                }
-                glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSet);
-            }
+            let glshaderMaterials = allglshaderMaterials[glshaderkey];
+            if (!glshaderMaterials.getGLShader().isTransparent())
+                continue;
+            this.__glshadermaterials.push(glshaderMaterials);
         }
     }
 
@@ -36,9 +29,8 @@ class GLTransparencyPass extends GLPass {
 
         gl.enable(gl.BLEND);
         gl.blendEquation(gl.FUNC_ADD);
-        // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-        // gl.blendFunc(gl.SRC_ALPHA, gl.DST_COLOR);
-        gl.blendFunc(gl.DST_COLOR, gl.ZERO);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+        // gl.blendFunc(gl.DST_COLOR, gl.ZERO);// For multiply, select this.
 
         super.draw(renderstate);
 

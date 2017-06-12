@@ -1,4 +1,4 @@
-import { shaderLibrary }  from '../../SceneTree/ShaderLibrary';
+import { shaderLibrary }  from '../ShaderLibrary';
 
 shaderLibrary.setShaderModule('pragmatic-pbr/tonemap-reinhard.glsl', `
 

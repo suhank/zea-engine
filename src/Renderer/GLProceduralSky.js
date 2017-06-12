@@ -1,7 +1,7 @@
 import { Signal } from '../Math/Signal';
 import { Vec3 } from '../Math/Vec3';
-import { Shader } from '../SceneTree/Shader';
-import { shaderLibrary } from '../SceneTree/ShaderLibrary'
+import { Shader } from './Shader';
+import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js';
 import { GLTexture2D } from './GLTexture2D.js';
 import { GLHDRImage } from './GLHDRImage.js';
@@ -15,9 +15,9 @@ import { hammersley } from '../Math/Hammersley';
 // // https://threejs.org/examples/?q=sky#webgl_shaders_sky
 // import './Shaders/zz85/sky.js';
 // https://threejs.org/examples/?q=sky#webgl_shaders_sky
-import '../SceneTree/Shaders/GLSL/constants.js';
-import '../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import './Shaders/wwwtyro/glsl-atmosphere.js';
+import './Shaders/GLSL/constants.js';
+import './Shaders/GLSL/stack-gl/inverse.js';
+import './Shaders/GLSL/wwwtyro/glsl-atmosphere.js';
 
 // https://github.com/wwwtyro/glsl-atmosphere
 shaderLibrary.setShaderModule('sunAndSky.glsl', `

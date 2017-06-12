@@ -1,8 +1,9 @@
-import { shaderLibrary, Shader }  from '../../SceneTree';
+import { Shader }  from '../../Shader.js';
+import { shaderLibrary, Shader }  from '../../ShaderLibrary.js';
 
-import '../../SceneTree/Shaders/GLSL/stack-gl/inverse.js';
-import '../../SceneTree/Shaders/GLSL/stack-gl/transpose.js';
-import '../../SceneTree/Shaders/GLSL/Florian/Lookup.js';
+import './GLSL/stack-gl/inverse.js';
+import './GLSL/stack-gl/transpose.js';
+import './GLSL/Florian/Lookup.js';
 
 class OctaHedralEnvMapShader extends Shader {
     
