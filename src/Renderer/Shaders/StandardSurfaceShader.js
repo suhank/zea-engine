@@ -165,10 +165,12 @@ uniform float _normalScale;
 
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected)
+    if(_texConnected){
+        // TODO: Use SRGB textures.
         return toLinear(texture2D(tex, texCoord));
+    }
     else
-        return toLinear(value);
+        return value;
 }
 
 float luminanceFromRGB(vec3 rgb) {
@@ -188,7 +190,7 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = toLinear(_baseColor).rgb;
+    material.baseColor      = _baseColor.rgb;
     float emission      = _emissiveStrength;
 
 #ifdef ENABLE_SPECULAR
