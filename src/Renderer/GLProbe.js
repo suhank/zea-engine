@@ -14,9 +14,6 @@ import {
     ConvolverShader
 } from './Shaders/ConvolverShader.js';
 import {
-    EnvMapShader
-} from './Shaders/EnvMapShader.js';
-import {
     GLFbo
 } from './GLFbo.js';
 import {
@@ -118,9 +115,6 @@ class GLProbe extends ImageAtlas {
             });
             this.__covolverShaderBinding = generateShaderGeomBinding(gl, covolverShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-            this.__envMapShader = new GLShader(gl, new EnvMapShader());
-            let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
-            this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 
         for (let i = 0; i < this.__fbos.length; i++) {
@@ -133,13 +127,13 @@ class GLProbe extends ImageAtlas {
 
             // Note: we should not need to bind the texture every iteration. 
             this.__imagePyramid.bind(renderstate);
-            if ('hammersleyMap' in unifs){
+            if ('hammersleyMap' in unifs) {
                 hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
             }
 
             // Set the roughness.
-            if ('roughness' in unifs){
-                let roughness = i/(this.__fbos.length-1);
+            if ('roughness' in unifs) {
+                let roughness = i / (this.__fbos.length - 1);
                 gl.uniform1f(unifs.roughness.location, roughness);
             }
 

@@ -1,6 +1,19 @@
-import { GLHDRImage } from './GLHDRImage.js';
-import { GLProbe } from './GLProbe.js';
-import { ImagePyramid } from './ImagePyramid.js';
+
+import {
+    GLProbe
+} from './GLProbe.js';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    GLHDRImage
+} from './GLHDRImage.js';
+import {
+    EnvMapShader
+} from './Shaders/EnvMapShader.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
 class GLEnvMap extends GLProbe {
     constructor(renderer, envMap) {
@@ -15,6 +28,11 @@ class GLEnvMap extends GLProbe {
 
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
         this.__srcGLTex = srcGLTex; // for debugging
+
+        this.__envMapShader = new GLShader(gl, new EnvMapShader());
+        let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
+        this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+
 
         srcGLTex.updated.connect(() => {
             this.convolveEnvMap(srcGLTex);

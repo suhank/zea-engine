@@ -60,11 +60,16 @@ class Scene {
 
         this.cameras = [];
         this.__root = new TreeItem("root");
+
+        // Env map used for background and reflections.
         this.__envMap = undefined;
+        // Background map used only for backgrounds. Overrides env map.
+        this.__backgroundMap = undefined;
         this.__lightmaps = {};
         this.__selectionManager = new SelectionManager();
         this.__resourceLoader = new ResourceLoader(resources);
 
+        this.backgroundMapChanged = new Signal();
         this.envMapChanged = new Signal();
         this.commonResourcesLoaded = new Signal(true);
 
@@ -104,6 +109,15 @@ class Scene {
     setEnvMap(envMap) {
         this.__envMap = envMap;
         this.envMapChanged.emit(this.__envMap);
+    }
+
+    getBackgroundMap() {
+        return this.__backgroundMap;
+    }
+
+    setBackgroundMap(backgroundMap) {
+        this.__backgroundMap = backgroundMap;
+        this.backgroundMapChanged.emit(this.__backgroundMap);
     }
 
     getLightMap(name) {

@@ -92,7 +92,7 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texC
     if(_texConnected)
         return toLinear(texture2D(tex, texCoord));
     else
-        return toLinear(value);
+        return value;
 }
 
 float luminanceFromRGB(vec3 rgb) {
@@ -112,7 +112,7 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec3 baseColor      = toLinear(_baseColor).rgb;
+    vec3 baseColor      = _baseColor.rgb;
     float opacity = _opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);

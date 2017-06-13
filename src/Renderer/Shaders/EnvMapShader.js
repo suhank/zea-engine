@@ -4,6 +4,7 @@ import { Shader }  from '../Shader';
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/envmap-octahedral.js';
+import './GLSL/envmap-equirect.js';
 import './GLSL/utils/quadVertexFromID.js';
 
 class EnvMapShader extends Shader {
@@ -90,7 +91,52 @@ void main(void) {
     }
 };
 
+class LatLongBackgroundShader extends EnvMapShader {
+    
+    constructor() {
+        super();
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongBackgroundShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+
+#define ENABLE_INLINE_GAMMACORRECTION
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+uniform float exposure;
+#endif
+
+uniform sampler2D latLongBackgroundImage;
+
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
+void main(void) {
+
+    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+    // Use these lines to debug the src GL image.
+    vec4 texel = texture2D(latLongBackgroundImage, uv);
+    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+
+    // Assuming a simple RGB image in gamma space for now.
+    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+#endif
+}
+`);
+        this.finalize();
+    }
+};
+
+
 export {
-    EnvMapShader
+    EnvMapShader,
+    LatLongBackgroundShader
 };
 

@@ -1,26 +1,64 @@
-import { isMobileDevice } from '../Math';
-import { 
+import {
+    isMobileDevice
+} from '../Math';
+import {
     HDRImage2D,
-    HDRImageMixer, 
+    HDRImageMixer,
     ProceduralSky,
     Lightmap,
     LightmapMixer
 } from '../SceneTree';
-import { GLHDRImage } from './GLHDRImage.js';
-import { GLHDRImageMixer } from './GLHDRImageMixer.js';
-import { GLEnvMap } from './GLEnvMap.js';
-import { GLProceduralSky }  from './GLProceduralSky.js';
-import { GLShader } from './GLShader.js';
-import { GLForwardPass } from './Passes/GLForwardPass.js';
-import { GLTransparencyPass } from './Passes/GLTransparencyPass.js';
-import { GLHardEdgesPass } from './Passes/GLHardEdgesPass.js';
-import { GLMeshPointsPass } from './Passes/GLMeshPointsPass.js';
-import { GLGeomDataPass } from './Passes/GLGeomDataPass.js';
-import { GLBillboardsPass } from './Passes/GLBillboardsPass.js';
-import { GLRenderer } from './GLRenderer.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLScreenQuad } from './GLScreenQuad.js';
-import { PostProcessing } from './Shaders/PostProcessing.js';
+import {
+    GLHDRImage
+} from './GLHDRImage.js';
+import {
+    GLHDRImageMixer
+} from './GLHDRImageMixer.js';
+import {
+    GLEnvMap
+} from './GLEnvMap.js';
+import {
+    GLProceduralSky
+} from './GLProceduralSky.js';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    GLForwardPass
+} from './Passes/GLForwardPass.js';
+import {
+    GLTransparencyPass
+} from './Passes/GLTransparencyPass.js';
+import {
+    GLHardEdgesPass
+} from './Passes/GLHardEdgesPass.js';
+import {
+    GLMeshPointsPass
+} from './Passes/GLMeshPointsPass.js';
+import {
+    GLGeomDataPass
+} from './Passes/GLGeomDataPass.js';
+import {
+    GLBillboardsPass
+} from './Passes/GLBillboardsPass.js';
+import {
+    GLRenderer
+} from './GLRenderer.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    GLScreenQuad
+} from './GLScreenQuad.js';
+import {
+    PostProcessing
+} from './Shaders/PostProcessing.js';
+import {
+    LatLongBackgroundShader
+} from './Shaders/EnvMapShader.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
 class GLVisualiveRenderer extends GLRenderer {
     constructor(canvasDiv, options = {}) {
@@ -39,6 +77,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__antialiase = false;
 
         this.__glEnvMap = undefined;
+        this.__glBackgroundMap = undefined;
         this.__glLightmaps = {};
         this.__displayEnvironment = true;
         this.__debugMode = 0;
@@ -57,7 +96,8 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__drawEdges = false;
         this.__drawPoints = false;
 
-        this.__glshaderScreenPostProcess = new GLShader(this.__gl, new PostProcessing());
+        let gl = this.__gl;
+        this.__glshaderScreenPostProcess = new GLShader(gl, new PostProcessing());
 
         this.__debugTextures = [undefined];
         // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
@@ -71,13 +111,13 @@ class GLVisualiveRenderer extends GLRenderer {
 `
         };
 
-        if(!options.disableLightmaps)
+        if (!options.disableLightmaps)
             this.__shaderDirectives.defines += '\n#define ENABLE_LIGHTMAPS';
 
         if (!isMobileDevice()) {
             // if(!options.disableSpecular)
             //     this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
-            if(options.enableTextures)
+            if (options.enableTextures)
                 this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
             this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS\n';
         }
@@ -92,8 +132,7 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        }
-        else if (env instanceof HDRImage2D || env.isHDR()) {
+        } else if (env instanceof HDRImage2D || env.isHDR()) {
             this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR\n';
             this.__glEnvMap = new GLEnvMap(this, env);
         } else {
@@ -101,14 +140,33 @@ class GLVisualiveRenderer extends GLRenderer {
         }
         this.__glEnvMap.updated.connect((data) => {
             this.requestRedraw();
-        }); 
+        });
     }
 
     setScene(scene) {
         super.setScene(scene);
 
         if (scene.getEnvMap() != undefined) {
-            this.__bindEnvMap(scene.getEnvMap());       
+            this.__bindEnvMap(scene.getEnvMap());
+        }
+        this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
+
+        if (scene.getBackgroundMap() != undefined) {
+            let gl = this.__gl;
+            let backgroundMap = scene.getBackgroundMap();
+            if (backgroundMap instanceof HDRImage2D || backgroundMap.isHDR()) {
+                this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
+            }
+            else {
+                this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
+            }
+            if (!this.__backgroundMapShader) {
+                if (!gl.__quadVertexIdsBuffer)
+                    gl.setupInstancedQuad();
+                this.__backgroundMapShader = new GLShader(gl, new LatLongBackgroundShader());
+                let shaderComp = this.__backgroundMapShader.compileForTarget();
+                this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+            }
         }
         this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
@@ -270,8 +328,22 @@ class GLVisualiveRenderer extends GLRenderer {
     ////////////////////////////
     // Rendering
 
-    drawEnv(renderstate) {
-        if (this.__glEnvMap != undefined) {
+    drawBackground(renderstate) {
+
+        if (this.__glBackgroundMap) {
+            if(!this.__glBackgroundMap.isLoaded())
+                return;
+            let gl = this.__gl;
+            gl.depthMask(false);
+            this.__backgroundMapShader.bind(renderstate);
+            let unifs = renderstate.unifs;
+            this.__glBackgroundMap.bind(renderstate);
+            if ('exposure' in unifs)
+                gl.uniform1f(unifs.exposure.location, renderstate.exposure);
+            this.__backgroundMapShaderBinding.bind(renderstate);
+            gl.drawQuad();
+        }
+        else if (this.__glEnvMap) {
             this.__glEnvMap.draw(renderstate);
         }
     }
@@ -337,7 +409,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.exposure = Math.pow(2, this.__exposure);
 
         if (this.__displayEnvironment)
-            this.drawEnv(renderstate);
+            this.drawBackground(renderstate);
 
         super.drawScene(renderstate);
 
@@ -384,9 +456,9 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__stats.end();
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
         this.redrawOccured.emit();
-        
+
         // New Items may have been added during the pause.
-        if(this.__redrawGeomDataFbos)
+        if (this.__redrawGeomDataFbos)
             this.renderGeomDataFbos();
     }
 
