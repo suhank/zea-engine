@@ -92,6 +92,11 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
+
+<%include file="glslutils.glsl"/>
+<%include file="GGX_Specular.glsl"/>
+<%include file="PBRSurfaceRadiance.glsl"/>
+
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif
@@ -134,10 +139,8 @@ uniform float planeAngle;
 uniform color _baseColor;
 uniform float _emissiveStrength;
 
+
 #ifdef ENABLE_SPECULAR
-<%include file="glslutils.glsl"/>
-<%include file="GGX_Specular.glsl"/>
-<%include file="PBRSurfaceRadiance.glsl"/>
 uniform float _roughness;
 uniform float _metallic;
 uniform float _reflectance;
