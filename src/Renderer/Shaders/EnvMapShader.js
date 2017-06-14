@@ -1,5 +1,5 @@
 import { shaderLibrary }  from '../ShaderLibrary';
-import { Shader }  from '../Shader';
+import { GLShader }  from '../GLShader.js';
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
@@ -7,7 +7,7 @@ import './GLSL/envmap-octahedral.js';
 import './GLSL/envmap-equirect.js';
 import './GLSL/utils/quadVertexFromID.js';
 
-class EnvMapShader extends Shader {
+class EnvMapShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvMapShader.vertexShader', `

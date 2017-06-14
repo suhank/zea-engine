@@ -1,11 +1,11 @@
-import { shaderLibrary } from '../ShaderLibrary';
-import { Shader } from '../Shader';
+import { shaderLibrary } from '../ShaderLibrary.js';
+import { GLShader } from '../GLShader.js';
 
 import './GLSL/utils/quadVertexFromID.js';
 import './GLSL/utils/unpackHDR.js';
 
 
-class UnpackHDRShader extends Shader {
+class UnpackHDRShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('UnpackHDRShader.vertexShader', `

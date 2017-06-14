@@ -1,6 +1,5 @@
 import { Signal } from '../Math/Signal';
 import { Vec3 } from '../Math/Vec3';
-import { Shader } from './Shader';
 import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js';
 import { GLTexture2D } from './GLTexture2D.js';
@@ -137,7 +136,7 @@ vec3 sunAndSky(vec3 viewVector){
 }
 `);
 
-class SkyShader extends Shader {
+class SkyShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `
@@ -183,7 +182,7 @@ void main() {
 };
 
 
-class SkyDomeShader extends Shader {
+class SkyDomeShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `

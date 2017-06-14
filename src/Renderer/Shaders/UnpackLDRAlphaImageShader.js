@@ -1,13 +1,13 @@
 import {
-    Shader
-} from '../Shader';
+    GLShader
+} from '../GLShader.js';
 import {
     shaderLibrary
 } from '../ShaderLibrary';
 
 import './GLSL/utils/quadVertexFromID.js';
 
-class UnpackLDRAlphaImageShader extends Shader {
+class UnpackLDRAlphaImageShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('UnpackLDRAlphaImageShader.vertexShader', `

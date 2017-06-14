@@ -1,9 +1,9 @@
 import { shaderLibrary }  from '../ShaderLibrary';
-import { Shader }  from '../Shader';
+import { GLShader }  from '../GLShader.js';
 import './GLSL/Florian/Lookup.js';
 import './GLSL/stack-gl/diffuse-lambert.js';
 
-class IrradianceMapAccumulate extends Shader {
+class IrradianceMapAccumulate extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('IrradianceMapAccumulate.vertexShader', `
@@ -138,7 +138,7 @@ void main(void) {
     }
 };
 
-class IrradianceMapPostProcess extends Shader {
+class IrradianceMapPostProcess extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('IrradianceMapPostProcess.vertexShader', `

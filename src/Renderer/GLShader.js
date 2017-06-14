@@ -12,7 +12,8 @@ import {
 import {
     RefCounted,
     Image2D,
-    HDRImage2D
+    HDRImage2D,
+    MaterialParam
 } from '../SceneTree';
 import {
     shaderLibrary
@@ -82,13 +83,71 @@ class GLShader extends RefCounted {
     constructor(gl) {
         super();
         this.__gl = gl;
+        this.__shaderStages = {
+            'VERTEX_SHADER': {
+                'glsl': "",
+                'lines': 0,
+                'uniforms': {},
+                'attributes': {}
+            },
+            'FRAGMENT_SHADER': {
+                'glsl': "",
+                'lines': 0,
+                'uniforms': {},
+                'attributes': {}
+            }
+        };
+
+        this.__params = [];
         this.__shaderProgramHdls = {};
         this.updated = new Signal();
     }
 
 
-    compileShaderStage(gl, glsl, stageID, name) {
-        // console.log("compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
+    isTransparent() {
+        return false;
+    }
+
+    //////////////////////
+    // 
+
+    addParameter(paramName, defaultValue, texturable = true) {
+        let param = new MaterialParam(paramName, defaultValue);
+        let get = () => {
+            return param.getValue();
+        };
+        let set = (value) => {
+            param.setValue(value);
+            this.updated.emit();
+        };
+        Object.defineProperty(this, paramName, {
+            'configurable': false,
+            'enumerable': true,
+            'get': get,
+            'set': set
+        });
+
+        // param.textureConnected.connect(this.textureConnected.emit);
+        // param.textureDisconnected.connect(this.textureDisconnected.emit);
+        // param.parameterChanged.connect(this.updated.emit);
+        this.__params[paramName] = param;
+    }
+
+    getParameters() {
+        return this.__params;
+    }
+
+    getParameter(index) {
+        return this.__params[index];
+    }
+
+
+    ///////////////////////////////////
+    // Compilation
+
+    __compileShaderStage(glsl, stageID, name) {
+        let gl = this.__gl;
+        // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
         let shaderHdl = gl.createShader(stageID);
         gl.shaderSource(shaderHdl, glsl);
 
@@ -138,7 +197,7 @@ class GLShader extends RefCounted {
         let gl = this.__gl;
         this.__shaderCompilationAttempted = true;
         let shaderProgramHdl = gl.createProgram();
-        let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'];
+        let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl;
         if (vertexShaderGLSL != undefined) {
             if (preproc) {
                 if (preproc.repl) {
@@ -148,13 +207,13 @@ class GLShader extends RefCounted {
                 if (preproc.defines)
                     vertexShaderGLSL = preproc.defines + vertexShaderGLSL;
             }
-            let vertexShader = this.compileShaderStage(gl, vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', preproc);
+            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', preproc);
             if (!vertexShader) {
                 return false;
             }
             gl.attachShader(shaderProgramHdl, vertexShader);
         }
-        let fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'];
+        let fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
         if (fragmentShaderGLSL != undefined) {
             if (preproc) {
                 if (preproc.repl) {
@@ -164,7 +223,7 @@ class GLShader extends RefCounted {
                 if (preproc.defines)
                     fragmentShaderGLSL = preproc.defines + fragmentShaderGLSL;
             }
-            let fragmentShader = this.compileShaderStage(gl, fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', preproc);
+            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', preproc);
             if (!fragmentShader) {
                 return false;
             }
@@ -240,6 +299,36 @@ class GLShader extends RefCounted {
         return result;
     }
 
+    getAttributes() {
+        let attributes = {};
+        for (let stageName in this.__shaderStages) {
+            let shaderStageBlock = this.__shaderStages[stageName];
+            for (let attrName in shaderStageBlock['attributes'])
+                attributes[attrName] = shaderStageBlock['attributes'][attrName];
+        }
+        return attributes;
+    }
+
+    getUniforms() {
+        let uniforms = {};
+        for (let stageName in this.__shaderStages) {
+            let shaderStageBlock = this.__shaderStages[stageName];
+            for (let unifName in shaderStageBlock['uniforms'])
+                uniforms[unifName] = shaderStageBlock['uniforms'][unifName];
+        }
+        return uniforms;
+    }
+
+    finalize() {
+        // let hash = 0;
+        // for (let stageName in this.__shaderStages) {
+        //     let shaderStageBlock = this.__shaderStages[stageName];
+        //     hash = ((hash << 5) - hash) + hashStr(shaderStageBlock['glsl']);
+        // }
+        // this.__hash = Math.abs(hash);
+    }
+
+
     compileForTarget(key, preproc) {
         let shaderCompilationResult = this.__shaderProgramHdls[key];
         if (!shaderCompilationResult) {
@@ -251,15 +340,6 @@ class GLShader extends RefCounted {
         return shaderCompilationResult;
     }
 
-    getUniformLocations(key) {
-        let shaderCompilationResult = this.__shaderProgramHdls[key];
-        return shaderCompilationResult.unifs;
-    }
-
-    getAttributeLocations(key) {
-        let shaderCompilationResult = this.__shaderProgramHdls[key];
-        return shaderCompilationResult.attrs;
-    }
 
     bind(renderstate, key) {
         let gl = this.__gl;

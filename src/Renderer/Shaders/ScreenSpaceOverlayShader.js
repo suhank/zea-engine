@@ -5,10 +5,10 @@ import {
     shaderLibrary
 } from '../ShaderLibrary';
 import {
-    Shader
-} from '../Shader';
+    GLShader
+} from '../GLShader.js';
 
-class ScreenSpaceOverlayShader extends Shader {
+class ScreenSpaceOverlayShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenSpaceOverlayShader.vertexShader', `

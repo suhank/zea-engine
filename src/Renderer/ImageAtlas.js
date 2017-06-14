@@ -5,7 +5,6 @@ import { BinTreeNode } from '../Math/BinTreeNode';
 import { Async } from '../Math/Async';
 import { BinTreeRect , BinTreeRectBorder} from '../Math/BinTreeNode';
 import { Image2D } from '../SceneTree/Image2D';
-import { Shader } from './Shader';
 import { shaderLibrary } from './ShaderLibrary';
 import { GLShader } from './GLShader.js';
 import { GLTexture2D } from './GLTexture2D.js';
@@ -13,7 +12,7 @@ import { GLFbo } from './GLFbo.js';
 import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 
-class AtlasLayoutShader extends Shader {
+class AtlasLayoutShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('AtlasLayoutShader.vertexShader', `

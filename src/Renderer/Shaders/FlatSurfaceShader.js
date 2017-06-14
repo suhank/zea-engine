@@ -8,13 +8,13 @@ import {
     shaderLibrary
 } from '../ShaderLibrary.js';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
-class FlatSurfaceShader extends Shader {
+class FlatSurfaceShader extends GLShader {
     constructor(gl) {
         super(gl);
 

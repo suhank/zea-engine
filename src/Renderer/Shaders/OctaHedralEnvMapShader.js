@@ -1,11 +1,11 @@
-import { Shader }  from '../../Shader.js';
-import { shaderLibrary, Shader }  from '../../ShaderLibrary.js';
+import { GLShader }  from '../../GLShader.js';
+import { shaderLibrary }  from '../../ShaderLibrary.js';
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/Florian/Lookup.js';
 
-class OctaHedralEnvMapShader extends Shader {
+class OctaHedralEnvMapShader extends GLShader {
     constructor(name) {
         super(name);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('OctaHedralEnvMapShader.vertexShader', `

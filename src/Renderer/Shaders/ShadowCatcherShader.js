@@ -7,8 +7,8 @@ import {
     Image2D
 } from '../../SceneTree';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 import {
     shaderLibrary
 } from '../ShaderLibrary.js';
@@ -19,7 +19,7 @@ import './GLSL/envmap-equirect.js';
 import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
-class ShadowCatcherShader extends Shader {
+class ShadowCatcherShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatShader.vertexShader', `

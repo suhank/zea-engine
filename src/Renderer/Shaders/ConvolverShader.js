@@ -1,10 +1,10 @@
 import { shaderLibrary }  from '../ShaderLibrary';
-import { Shader }  from '../Shader';
+import { GLShader }  from '../GLShader.js';
 import { ScreenQuadShader } from './ScreenQuadShader.js'
 import './GLSL/utils/quadVertexFromID.js';
 
 
-class ConvolverShader extends Shader {
+class ConvolverShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenQuadShader.vertexShader', `

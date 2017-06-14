@@ -1,14 +1,25 @@
-import { Signal } from '../../Math';
-import { shaderLibrary } from '../ShaderLibrary';
-import { Shader } from '../Shader';
-import { GLPass } from '../GLPass.js';
-import { GLTexture2D } from '../GLTexture2D.js';
-import { GLShader } from '../GLShader.js';
-import { generateShaderGeomBinding } from '../GeomShaderBinding.js';
+import {
+    Signal
+} from '../../Math';
+import {
+    shaderLibrary
+} from '../ShaderLibrary';
+import {
+    GLPass
+} from '../GLPass.js';
+import {
+    GLTexture2D
+} from '../GLTexture2D.js';
+import {
+    GLShader
+} from '../GLShader.js';
+import {
+    generateShaderGeomBinding
+} from '../GeomShaderBinding.js';
 
 import '../Shaders/GLSL/glslxfo.js';
 
-class GLAnalyticsShader extends Shader {
+class GLAnalyticsShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GLAnalyticsShader.vertexShader', `
@@ -85,7 +96,7 @@ class GLAnalyticsPass {
             mipMapped: false
         });
 
-        let indexArray = new Float32Array(this.numDrawItems*2);
+        let indexArray = new Float32Array(this.numDrawItems * 2);
         for (let i = 0; i < this.numDrawItems; i++) {
             indexArray[(i * 2) + 0] = i;
             indexArray[(i * 2) + 1] = i;

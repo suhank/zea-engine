@@ -1,10 +1,10 @@
 import { shaderLibrary }  from '../ShaderLibrary';
-import { Shader }  from '../Shader';
+import { GLShader }  from '../GLShader.js';
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 
-class NormalsShader extends Shader {
+class NormalsShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('NormalsShader.vertexShader', `

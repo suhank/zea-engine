@@ -1,5 +1,5 @@
 import { shaderLibrary }  from '../ShaderLibrary';
-import { Shader }  from '../Shader';
+import { GLShader }  from '../GLShader.js';
 
 import './GLSL/pragmatic-pbr/exposure.js';
 import './GLSL/pragmatic-pbr/tonemap-filmic.js';
@@ -7,7 +7,7 @@ import './GLSL/mattdesl/fxaa.js';
 import './GLSL/utils/quadVertexFromID.js';
 import './GLSL/stack-gl/gamma.js';
 
-class PostProcessing extends Shader {
+class PostProcessing extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PostProcessing.vertexShader', `

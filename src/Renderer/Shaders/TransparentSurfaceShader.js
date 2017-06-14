@@ -9,15 +9,15 @@ import {
     shaderLibrary
 } from '../ShaderLibrary.js';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/GGX_Specular.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 
-class TransparentSurfaceShader extends Shader {
+class TransparentSurfaceShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('TransparentSurfaceShader.vertexShader', `

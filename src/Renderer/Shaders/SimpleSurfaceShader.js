@@ -8,14 +8,14 @@ import {
     shaderLibrary
 } from '../ShaderLibrary.js';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
-class SimpleSurfaceShader extends Shader {
+class SimpleSurfaceShader extends GLShader {
     constructor(name) {
         super(name);
 

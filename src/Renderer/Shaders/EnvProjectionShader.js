@@ -6,8 +6,8 @@ import {
     sgFactory
 } from '../../SceneTree';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 import {
     shaderLibrary
 } from '../ShaderLibrary.js';
@@ -17,7 +17,7 @@ import './GLSL/stack-gl/transpose.js';
 import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
-class EnvProjectionShader extends Shader {
+class EnvProjectionShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.vertexShader', `

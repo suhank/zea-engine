@@ -1,10 +1,14 @@
-import { shaderLibrary }  from '../ShaderLibrary.js';
-import { Shader } from '../Shader.js';
+import {
+    shaderLibrary
+} from '../ShaderLibrary.js';
+import {
+    GLShader
+} from '../GLShader.js';
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 
-class BillboardShader extends Shader {
+class BillboardShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('BillboardShader.vertexShader', `
@@ -112,6 +116,3 @@ void main(void) {
 export {
     BillboardShader
 };
-
-
-

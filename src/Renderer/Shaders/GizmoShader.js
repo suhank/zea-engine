@@ -1,7 +1,7 @@
 import { shaderLibrary }  from '../ShaderLibrary';
-import { Shader }  from '../Shader';
+import { GLShader }  from '../GLShader.js';
 
-class GizmoShader extends Shader {
+class GizmoShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('WireShader.vertexShader', `
@@ -57,7 +57,7 @@ void main(void) {
     }
 };
 
-class GizmoDataShader extends Shader {
+class GizmoDataShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GizmoDataShader.vertexShader', `

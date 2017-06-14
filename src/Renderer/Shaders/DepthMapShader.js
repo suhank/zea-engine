@@ -2,10 +2,10 @@ import {
     shaderLibrary
 } from '../ShaderLibrary';
 import {
-    Shader
-} from '../Shader';
+    GLShader
+} from '../GLShader.js';
 
-class DepthMapShader extends Shader {
+class DepthMapShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('DepthMapShader.vertexShader', `

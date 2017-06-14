@@ -17,10 +17,6 @@ import {
 import {
     generateShaderGeomBinding
 } from './GeomShaderBinding.js';
-
-import {
-    Shader
-} from './Shader'
 import {
     shaderLibrary
 } from './ShaderLibrary'
@@ -34,7 +30,7 @@ let Math_log2 = function(value) {
 };
 
 
-// class PyramidShader extends Shader {
+// class PyramidShader extends GLShader {
 
 //     constructor(gl) {
 //         super(gl);

@@ -8,8 +8,8 @@ import {
     shaderLibrary
 } from '../ShaderLibrary.js';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 
 import './GLSL/constants.js';
 import './GLSL/stack-gl/transpose.js';
@@ -20,7 +20,7 @@ import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 import './GLSL/ImagePyramid.js';
 
-class StandardSurfaceShader extends Shader {
+class StandardSurfaceShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardSurfaceShader.vertexShader', `

@@ -8,12 +8,12 @@ import {
     shaderLibrary
 } from '../ShaderLibrary.js';
 import {
-    Shader
-} from '../Shader.js';
+    GLShader
+} from '../GLShader.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
-class LinesShader extends Shader {
+class LinesShader extends GLShader {
     constructor(gl) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LinesShader.vertexShader', `
