@@ -68,7 +68,6 @@ void main(void) {
     vec4 billboardData = getInstanceData(instanceID);
     vec2 quadVertex = getQuadVertexPositionFromID();
 
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
 
     v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
@@ -78,9 +77,18 @@ void main(void) {
     v_texCoord += layoutData.xy;
 
     float scl = billboardData.x;
-    float width = layoutData.z * atlasBillboards_desc.x * scl;
-    float height = layoutData.w * atlasBillboards_desc.y * scl;
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    float width = layoutData.z * atlasBillboards_desc.x * scl * 0.002;
+    float height = layoutData.w * atlasBillboards_desc.y * scl * 0.002;
+    bool alignedToCamera = billboardData.y > 0.5;
+    if(alignedToCamera){
+        gl_Position = (viewMatrix * modelMatrix) * vec4(0.0, 0.0, 0.0, 1.0);
+        gl_Position += vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 0.0);
+        gl_Position = projectionMatrix * gl_Position;
+    }
+    else{
+        mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+        gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    }
 
     v_tint = getTintColor(instanceID);
 }
@@ -107,7 +115,7 @@ void main(void) {
     if(color.r > 0.95)
         discard;
     gl_FragColor = v_tint * (1.0-color.r);
-    gl_FragColor.rgb = gl_FragColor.rgb * (1.25 - v_gradient.y);
+    // gl_FragColor.rgb = gl_FragColor.rgb * (1.25 - v_gradient.y);
 }
 `);
     }

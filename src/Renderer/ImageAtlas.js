@@ -157,7 +157,7 @@ class ImageAtlas extends GLTexture2D {
             let node = tree.insert(rectSize, closestFit);
             if (node == undefined) {
                 if (!closestFit.node)
-                    throw ("Error packing env map hierarchy:" + result);
+                    throw ("Error packing image atlas:" + result);
                 // we failed to find a space big enought tof our cluster, 
                 // but we found a good candidate node bordering a movable border.
                 // we move the border(thereby growing the size of the map), and
@@ -177,7 +177,7 @@ class ImageAtlas extends GLTexture2D {
         let width = tree.rect.right.value;
         let height = tree.rect.top.value;
 
-        // console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
+        console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
         // Note: only RGBA Float textures can be rendered to on Firefox.(Not RGB)
         this.configure({
@@ -259,32 +259,6 @@ class ImageAtlas extends GLTexture2D {
 
         this.updated.emit();
     }
-
-    getLayoutFn() {
-        let layout = [];
-        for (let j = 0; j < this.__subImages.length; j++) {
-            layout.push("     if(imageId==" + j + ") return vec4(" + this.__layout[j].pos.x + ", " + this.__layout[j].pos.y + ", " + this.__layout[j].size.x + ", " + this.__layout[j].size.y + ");");
-        }
-        // Default to the entire atlas.
-        layout.push("     return vec4(0,0," + this.width + ", " + this.height + ")");
-        return layout.join('\n');
-    }
-
-    getImageLayoutData(index) {
-        return this.__layout[index];
-    }
-
-    getLayoutData() {
-        let layout = [];
-        for (let j = 0; j < this.__subImages.length; j++) {
-            layout.push(this.__layout[j].pos.x);
-            layout.push(this.__layout[j].pos.y);
-            layout.push(this.__layout[j].size.x);
-            layout.push(this.__layout[j].size.y);
-        }
-        return layout;
-    }
-
 
     bind(renderstate, location) {
         let structName = 'atlas' + this.__name;

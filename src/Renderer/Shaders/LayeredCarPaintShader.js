@@ -138,23 +138,18 @@ uniform float _flakesScale;
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
 
-uniform float _roughness;
-uniform float _metallic;
-uniform float _reflectance;
+uniform float _baseRoughness;
+uniform float _baseMetallic;
+uniform float _baseReflectance;
+uniform float _glossRoughness;
+uniform float _glossMetallic;
+uniform float _glossReflectance;
+
 #endif
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
-
-uniform sampler2D _roughnessTex;
-uniform bool _roughnessTexConnected;
-
-uniform sampler2D _metallicTex;
-uniform bool _metallicTexConnected;
-
-uniform sampler2D _reflectanceTex;
-uniform bool _reflectanceTexConnected;
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected)
@@ -163,16 +158,6 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texC
         return toLinear(value);
 }
 
-float luminanceFromRGB(vec3 rgb) {
-    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
-}
-
-float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected)
-        return luminanceFromRGB(texture2D(tex, texCoord).rgb);
-    else
-        return value;
-}
 #endif
 
 // Followup: Normal Mapping Without Precomputed Tangents
@@ -221,19 +206,15 @@ void main(void) {
 
 #ifndef ENABLE_TEXTURES
     material.baseColor      = toLinear(_baseColor).rgb;
-
-#ifdef ENABLE_SPECULAR
-    material.roughness      = _roughness;
-    material.metallic       = _metallic;
-    material.reflectance    = _reflectance;
-#endif
-
 #else
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    material.roughness      = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
-    material.metallic       = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
-    material.reflectance    = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+#endif
+
+#ifdef ENABLE_SPECULAR
+    material.roughness      = _baseRoughness;
+    material.metallic       = _baseMetallic;
+    material.reflectance    = _baseReflectance;
 #endif
 
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
@@ -281,21 +262,19 @@ void main(void) {
 
 
     MaterialParams baseMaterial = material;
-    baseMaterial.metallic = 0.85;
-    baseMaterial.roughness = 0.3;
-    baseMaterial.reflectance = 0.7;
     vec3 baseRadiance = pbrSurfaceRadiance(baseMaterial, irradiance, flakesNormal, viewVector);
 
     MaterialParams glossMaterial = material;
-    glossMaterial.baseColor = baseRadiance;
-    glossMaterial.metallic = 0.0;
-    glossMaterial.roughness = 0.0;
-    glossMaterial.reflectance = 0.01;
+    glossMaterial.baseColor      = baseRadiance;
+    glossMaterial.roughness      = _glossRoughness;
+    glossMaterial.metallic       = _glossMetallic;
+    glossMaterial.reflectance    = _glossReflectance;
 
     //vec3 radiance = pbrSurfaceRadiance(glossMaterial, vec3(1.0), normal, viewVector);
 
     vec4 gloss = pbrSpecularReflectance(glossMaterial, normal, viewVector);
     vec3 radiance = mix(baseRadiance, gloss.rgb, gloss.a);
+    //vec3 radiance = baseRadiance;
 
 #endif
     gl_FragColor = vec4(radiance, 1.0);
@@ -307,17 +286,20 @@ void main(void) {
 }
 `);
 
-        this.addParameter('baseColor', new Color(1.0, 0.0, 0.0));
-        this.addParameter('flakesNormal', new Color(0.0, 0.0, 0.0));
-        this.addParameter('metallic', 0.9);
-        this.addParameter('roughness', 0.05);
-
         // F0 = reflectance and is a physical property of materials
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
-        this.addParameter('reflectance', 0.85);
 
+        this.addParameter('baseColor', new Color(1.0, 0.0, 0.0));
+        this.addParameter('baseMetallic', 0.0);
+        this.addParameter('baseRoughness', 0.35);
+        this.addParameter('baseReflectance', 0.03);
+        this.addParameter('glossMetallic', 0.0);
+        this.addParameter('glossRoughness', 0.35);
+        this.addParameter('glossReflectance', 0.03);
+
+        this.addParameter('flakesNormal', new Color(0.0, 0.0, 0.0));
         this.addParameter('flakesScale', 0.1);
         this.addParameter('microflakePerturbation', 0.1);
 

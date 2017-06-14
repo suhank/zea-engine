@@ -59,7 +59,7 @@ class FileImage2D extends Image2D {
             this.__isHDR = true;
             this.__loadVLH();
         } else {
-            throw ("Unsupported file type:" + url);
+            throw ("Unsupported file type. Check the ext:" + this.__resourcePath);
         }
     }
 
@@ -77,7 +77,6 @@ class FileImage2D extends Image2D {
             this.loaded.emit();
         };
         domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
-        console.log(domElement.src);
     }
 
     __loadLDRVideo() {

@@ -330,6 +330,9 @@ class GLShader extends RefCounted {
 
 
     compileForTarget(key, preproc) {
+        if(!key){
+            key = this.constructor.name;
+        }
         let shaderCompilationResult = this.__shaderProgramHdls[key];
         if (!shaderCompilationResult) {
             if (shaderCompilationResult !== false) {
@@ -344,7 +347,7 @@ class GLShader extends RefCounted {
     bind(renderstate, key) {
         let gl = this.__gl;
 
-        let shaderCompilationResult = this.compileForTarget(key ? key : this.constructor.name, renderstate.shaderopts);
+        let shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts);
         if (shaderCompilationResult === false) {
             console.warn(this.constructor.name + " is not compiled for " + key);
             return false;

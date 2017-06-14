@@ -22,6 +22,7 @@ import './GLSL/modelMatrix.js';
 class ShadowCatcherShader extends GLShader {
     constructor(gl) {
         super(gl);
+        this.__passName = 'ADD';
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatShader.vertexShader', `
 precision highp float;
 
@@ -114,7 +115,7 @@ void main(void) {
     }
 
     bind(renderstate, key) {
-        if (renderstate.pass != 'ADD')
+        if (renderstate.pass != this.__passName)
             return false;
         return super.bind(renderstate, key);
     }
@@ -124,9 +125,9 @@ sgFactory.registerClass('ShadowCatcherShader', ShadowCatcherShader);
 
 
 class FloatingShadowCatcherShader extends ShadowCatcherShader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
+        this.__passName = 'MULTIPLY';
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FloatingShadowCatcherShader.fragmentShader', `
 precision highp float;
 
@@ -167,12 +168,6 @@ void main(void) {
 
     isTransparent() {
         return true;
-    }
-
-    bind(renderstate, key) {
-        if (renderstate.pass != 'MULTIPLY')
-            return false;
-        return super.bind(renderstate, key);
     }
 };
 

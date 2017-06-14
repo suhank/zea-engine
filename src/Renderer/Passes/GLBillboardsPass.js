@@ -1,11 +1,27 @@
-import { Vec3 } from '../../Math/Vec3';
-import { Vec4 } from '../../Math/Vec4';
-import { BillboardShader } from '../Shaders/BillboardShader.js';
-import { GLPass } from '../GLPass.js';
-import { GLShader } from '../GLShader.js';
-import { ImageAtlas } from '../ImageAtlas.js';
-import { GLTexture2D } from '../GLTexture2D.js';
-import { generateShaderGeomBinding } from '../GeomShaderBinding.js';
+import {
+    Vec3
+} from '../../Math/Vec3';
+import {
+    Vec4
+} from '../../Math/Vec4';
+import {
+    BillboardShader
+} from '../Shaders/BillboardShader.js';
+import {
+    GLPass
+} from '../GLPass.js';
+import {
+    GLShader
+} from '../GLShader.js';
+import {
+    ImageAtlas
+} from '../ImageAtlas.js';
+import {
+    GLTexture2D
+} from '../GLTexture2D.js';
+import {
+    generateShaderGeomBinding
+} from '../GeomShaderBinding.js';
 
 class GLBillboardsPass extends GLPass {
     constructor(gl, collector) {
@@ -18,7 +34,7 @@ class GLBillboardsPass extends GLPass {
         this.__billboards = [];
         this.__closestBillboard = 0.0;
         this.__atlasNeedsUpdating = false;
-        this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE', [1,1,1,0]);
+        this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
         this.__glshader = new BillboardShader(gl);
 
         this.__collector.billboardDiscovered.connect(this.addBillboard, this);
@@ -26,12 +42,11 @@ class GLBillboardsPass extends GLPass {
 
         this.__prevSortCameraPos = new Vec3();
     }
-    
+
     /////////////////////////////////////
     // Bind to Render Tree
-    
-    filterRenderTree() {
-    }
+
+    filterRenderTree() {}
 
     addBillboard(billboard) {
 
@@ -70,7 +85,7 @@ class GLBillboardsPass extends GLPass {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        col3.set(billboardData.billboard.scale, 1.0, billboardData.imageIndex, 0.0);
+        col3.set(billboardData.billboard.scale, billboardData.billboard.alignedToCamera ? 1.0 : 0.0, billboardData.imageIndex, 0.0);
 
         let col4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
         let color = billboardData.billboard.color;
@@ -151,7 +166,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     sort(cameraPos) {
-        for (let billboardData of this.__billboards){
+        for (let billboardData of this.__billboards) {
             billboardData.dist = billboardData.billboard.globalXfo.tr.distanceTo(cameraPos);
         }
         this.__billboards.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
@@ -169,7 +184,7 @@ class GLBillboardsPass extends GLPass {
 
         if (this.__atlasNeedsUpdating)
             this.__updateBillboards();
-        
+
         if (!this.__instancesTexture)
             return;
 

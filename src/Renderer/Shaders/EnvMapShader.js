@@ -91,9 +91,8 @@ void main(void) {
 };
 
 class LatLongBackgroundShader extends EnvMapShader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongBackgroundShader.fragmentShader', `
 precision highp float;
 
