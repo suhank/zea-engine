@@ -80,7 +80,7 @@ class GLLDRAlphaImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE',
                 data: alpha
             });
-            this.__unpackLDRAlphaShader = new GLShader(gl, new UnpackLDRAlphaImageShader());
+            this.__unpackLDRAlphaShader = new UnpackLDRAlphaImageShader(gl);
             let shaderComp = this.__unpackLDRAlphaShader.compileForTarget();
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }

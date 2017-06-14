@@ -8,7 +8,7 @@ class GLHardEdgesPass extends GLPass {
     constructor(gl) {
         super(gl);
 
-        let glshader = new GLShader(gl, new WireShader());
+        let glshader = new WireShader(gl);
         this.setExplicitShader(glshader);
 
         this.__lineWidth = 2.0;

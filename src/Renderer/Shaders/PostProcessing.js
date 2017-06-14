@@ -8,9 +8,8 @@ import './GLSL/utils/quadVertexFromID.js';
 import './GLSL/stack-gl/gamma.js';
 
 class PostProcessing extends Shader {
-    
-    constructor(name) {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PostProcessing.vertexShader', `
 precision highp float;
 

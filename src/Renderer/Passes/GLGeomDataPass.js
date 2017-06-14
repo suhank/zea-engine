@@ -15,7 +15,7 @@ class GLGeomDataPass extends GLPass {
     constructor(gl, collector) {
         super(gl, collector);
 
-        this.__glshader = new GLShader(gl, new GeomDataShader());
+        this.__glshader = new GeomDataShader(gl);
     }
 
     /////////////////////////////////////

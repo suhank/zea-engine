@@ -11,11 +11,10 @@ class GLDepthPass extends GLPass {
         super(gl);
 
         this.__ext_std_derivatives = gl.getExtension("OES_standard_derivatives");
-        let shader = new DepthMapShader();
-        let glshader = new GLShader(gl, shader);
-        this.setExplicitShader(glshader);
+        let shader = new DepthMapShader(gl);
+        this.setExplicitShader(shader);
 
-        glshader.updated.connect(this.updated.emit);
+        shader.updated.connect(this.updated.emit);
 
         this.__volSize = volSize;
         this.__dir = new Vec3();

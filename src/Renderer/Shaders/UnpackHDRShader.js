@@ -6,9 +6,8 @@ import './GLSL/utils/unpackHDR.js';
 
 
 class UnpackHDRShader extends Shader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('UnpackHDRShader.vertexShader', `
 precision highp float;
 

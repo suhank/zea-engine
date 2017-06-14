@@ -15,9 +15,8 @@ import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
 class FlatSurfaceShader extends Shader {
-
-    constructor(name) {
-        super(name);
+    constructor(gl) {
+        super(gl);
 
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.vertexShader', `
 precision highp float;

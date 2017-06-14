@@ -18,9 +18,8 @@ import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
 class EnvProjectionShader extends Shader {
-
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.vertexShader', `
 precision highp float;
 

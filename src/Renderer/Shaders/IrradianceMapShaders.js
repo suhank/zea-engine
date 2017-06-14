@@ -4,9 +4,8 @@ import './GLSL/Florian/Lookup.js';
 import './GLSL/stack-gl/diffuse-lambert.js';
 
 class IrradianceMapAccumulate extends Shader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('IrradianceMapAccumulate.vertexShader', `
 precision highp float;
 
@@ -140,9 +139,8 @@ void main(void) {
 };
 
 class IrradianceMapPostProcess extends Shader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('IrradianceMapPostProcess.vertexShader', `
 precision highp float;
 

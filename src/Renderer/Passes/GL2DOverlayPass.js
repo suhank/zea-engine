@@ -6,7 +6,7 @@ class GL2DOverlayPass extends GLPass {
     constructor(gl) {
         super(gl);
 
-        let glshader = new GLShader(gl, new ScreenSpaceOverlayShader());
+        let glshader = new ScreenSpaceOverlayShader(gl);
         this.setExplicitShader(glshader);
     }
 

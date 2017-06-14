@@ -5,9 +5,8 @@ import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 
 class NormalsShader extends Shader {
-    
-    constructor(name) {
-        super(name);
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('NormalsShader.vertexShader', `
 precision highp float;
 

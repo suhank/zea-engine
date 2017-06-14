@@ -6,9 +6,8 @@ import {
 } from '../Shader';
 
 class DepthMapShader extends Shader {
-
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('DepthMapShader.vertexShader', `
 precision highp float;
 

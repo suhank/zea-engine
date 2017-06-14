@@ -72,7 +72,7 @@ class GLHDRImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE',
                 data: cdm
             });
-            this.__unpackHDRShader = new GLShader(gl, new UnpackHDRShader());
+            this.__unpackHDRShader = new UnpackHDRShader(gl);
             let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }

@@ -14,9 +14,8 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 
 class AtlasLayoutShader extends Shader {
-
-    constructor(name) {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('AtlasLayoutShader.vertexShader', `
 
 precision highp float;
@@ -198,7 +197,7 @@ class ImageAtlas extends GLTexture2D {
             gl.setupInstancedQuad();
 
         if (!gl.__atlasLayoutShader) {
-            gl.__atlasLayoutShader = new GLShader(gl, new AtlasLayoutShader());
+            gl.__atlasLayoutShader = new AtlasLayoutShader(gl);
             let shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas');
             gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }

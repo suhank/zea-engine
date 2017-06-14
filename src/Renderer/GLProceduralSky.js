@@ -138,8 +138,8 @@ vec3 sunAndSky(vec3 viewVector){
 `);
 
 class SkyShader extends Shader {
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `
 precision highp float;
 
@@ -184,8 +184,8 @@ void main() {
 
 
 class SkyDomeShader extends Shader {
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SkyShader.vertexShader', `
 precision highp float;
 
@@ -239,11 +239,11 @@ class GLProceduralSky extends GLProbe {
 
         // this.convolveEnvMap(srcGLTex);
 
-        this.__skyShader = new GLShader(gl, new SkyShader());
+        this.__skyShader = new SkyShader(gl);
         let skyShaderShaderComp = this.__skyShader.compileForTarget('GLProceduralSky');
         this.__skyShaderBinding = generateShaderGeomBinding(gl, skyShaderShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-        this.__skyDomeShader = new GLShader(gl, new SkyDomeShader());
+        this.__skyDomeShader = new SkyDomeShader(gl);
         let skyDomeShaderComp = this.__skyDomeShader.compileForTarget('GLProceduralSky');
         this.__skyDomeShaderBinding = generateShaderGeomBinding(gl, skyDomeShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 

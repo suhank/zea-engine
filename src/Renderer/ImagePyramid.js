@@ -36,8 +36,8 @@ let Math_log2 = function(value) {
 
 // class PyramidShader extends Shader {
 
-//     constructor(name) {
-//         super();
+//     constructor(gl) {
+//         super(gl);
 //         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('PyramidShader.vertexShader', `
 
 // <%include file="utils/quadVertexFromID.glsl"/>

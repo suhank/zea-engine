@@ -10,13 +10,13 @@ import {
     Signal
 } from '../Math';
 import {
-    shaderLibrary
-} from './ShaderLibrary';
-import {
+    RefCounted,
     Image2D,
     HDRImage2D
 } from '../SceneTree';
-
+import {
+    shaderLibrary
+} from './ShaderLibrary.js';
 
 let bindParam = (gl, param, renderstate, gltextures={})=>{
 
@@ -78,25 +78,17 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
     return;
 }
 
-class GLShader {
-    constructor(gl, shader) {
+class GLShader extends RefCounted {
+    constructor(gl) {
+        super();
         this.__gl = gl;
-        this.__shader = shader;
-        // This instance of GLShader is only for this hash of the GLSL
-        // code. If the code changes, then we generate a new GLShader.
-        this.__hash = shader.hash;
-
         this.__shaderProgramHdls = {};
-
         this.updated = new Signal();
     }
 
-    isTransparent() {
-        return this.__shader.isTransparent();
-    }
 
     compileShaderStage(gl, glsl, stageID, name) {
-        // console.log("compileShaderStage:" + this.__shader.name+"."+name + " glsl:\n" + glsl);
+        // console.log("compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
         let shaderHdl = gl.createShader(stageID);
         gl.shaderSource(shaderHdl, glsl);
 
@@ -105,7 +97,7 @@ class GLShader {
 
         // See if it compiled successfully
         if (!gl.getShaderParameter(shaderHdl, gl.COMPILE_STATUS)) {
-            console.log("Errors in :" + this.__shader.constructor.name);
+            console.log("Errors in :" + this.constructor.name);
             let errors = gl.getShaderInfoLog(shaderHdl).split('\n');
             for (let i in errors) {
                 if (errors[i].startsWith("'")) {
@@ -135,18 +127,18 @@ class GLShader {
                 }
                 console.log(errors[i]);
             }
-            console.warn("An error occurred compiling the shader '" + this.__shader.constructor.name + "." + name + "': \n\n" + errors.join('\n'));
+            console.warn("An error occurred compiling the shader '" + this.constructor.name + "." + name + "': \n\n" + errors.join('\n'));
             console.warn(glsl);
             return null;
         }
         return shaderHdl;
     }
 
-    createProgram(preproc) {
+    __createProgram(preproc) {
         let gl = this.__gl;
         this.__shaderCompilationAttempted = true;
         let shaderProgramHdl = gl.createProgram();
-        let vertexShaderGLSL = this.__shader.vertexShader;
+        let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'];
         if (vertexShaderGLSL != undefined) {
             if (preproc) {
                 if (preproc.repl) {
@@ -162,7 +154,7 @@ class GLShader {
             }
             gl.attachShader(shaderProgramHdl, vertexShader);
         }
-        let fragmentShaderGLSL = this.__shader.fragmentShader;
+        let fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'];
         if (fragmentShaderGLSL != undefined) {
             if (preproc) {
                 if (preproc.repl) {
@@ -186,13 +178,14 @@ class GLShader {
             return false;
         }
 
-        let result = this.extractAttributeAndUniformLocations(gl, shaderProgramHdl, preproc);
+        let result = this.__extractAttributeAndUniformLocations(shaderProgramHdl, preproc);
         result.shaderProgramHdl = shaderProgramHdl;
         return result;
     }
 
-    extractAttributeAndUniformLocations(gl, shaderProgramHdl, preproc) {
-        let attrs = this.__shader.getAttributes();
+    __extractAttributeAndUniformLocations(shaderProgramHdl, preproc) {
+        let gl = this.__gl;
+        let attrs = this.getAttributes();
         let result = {
             'attrs': {},
             'unifs': {}
@@ -210,7 +203,7 @@ class GLShader {
                 instanced: attrDesc.instanced
             };
         }
-        let unifs = this.__shader.getUniforms();
+        let unifs = this.getUniforms();
         for (let uniformName in unifs) {
             let unifType = unifs[uniformName];
             if (unifType instanceof Array) {
@@ -218,7 +211,7 @@ class GLShader {
                     let structMemberName = uniformName + '.' + member.name;
                     let location = gl.getUniformLocation(shaderProgramHdl, structMemberName);
                     if (location == undefined) {
-                        // console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
+                        // console.warn(this.constructor.name + " uniform not found:" + uniformName);
                         continue;
                     }
                     result.unifs[structMemberName] = {
@@ -236,7 +229,7 @@ class GLShader {
 
             let location = gl.getUniformLocation(shaderProgramHdl, uniformName);
             if (location == undefined) {
-                // console.warn(this.__shader.constructor.name + " uniform not found:" + uniformName);
+                // console.warn(this.constructor.name + " uniform not found:" + uniformName);
                 continue;
             }
             result.unifs[uniformName] = {
@@ -251,7 +244,7 @@ class GLShader {
         let shaderCompilationResult = this.__shaderProgramHdls[key];
         if (!shaderCompilationResult) {
             if (shaderCompilationResult !== false) {
-                shaderCompilationResult = this.createProgram(preproc);
+                shaderCompilationResult = this.__createProgram(preproc);
                 this.__shaderProgramHdls[key] = shaderCompilationResult;
             }
         }
@@ -271,13 +264,9 @@ class GLShader {
     bind(renderstate, key) {
         let gl = this.__gl;
 
-        if(!this.__shader.bind(gl, renderstate)){
-            return false;
-        }
-
-        let shaderCompilationResult = this.compileForTarget(key ? key : this.__shader.constructor.name, renderstate.shaderopts);
+        let shaderCompilationResult = this.compileForTarget(key ? key : this.constructor.name, renderstate.shaderopts);
         if (shaderCompilationResult === false) {
-            console.warn(this.__shader.constructor.name + " is not compiled for " + key);
+            console.warn(this.constructor.name + " is not compiled for " + key);
             return false;
         }
 
@@ -290,9 +279,6 @@ class GLShader {
 
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;
-
-        if (this.__shader.bind)
-            this.__shader.bind(gl, renderstate);
 
         let unifs = shaderCompilationResult.unifs;
         if ('viewMatrix' in unifs)
@@ -309,7 +295,7 @@ class GLShader {
             gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
 
         // Bind the default params.
-        let params = this.__shader.getParameters();
+        let params = this.getParameters();
         for (let [paramName, param] of Object.entries(params)) {
             bindParam(gl, param, renderstate);
         }
@@ -318,8 +304,7 @@ class GLShader {
     }
 
     unbind(renderstate) {
-        if (this.__shader.unbind)
-            this.__shader.unbind(this.__gl, renderstate);
+        return true;
     }
 
     destroy() {

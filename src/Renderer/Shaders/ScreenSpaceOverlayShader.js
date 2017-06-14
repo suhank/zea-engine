@@ -9,9 +9,8 @@ import {
 } from '../Shader';
 
 class ScreenSpaceOverlayShader extends Shader {
-
-    constructor(name) {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenSpaceOverlayShader.vertexShader', `
 precision highp float;
 

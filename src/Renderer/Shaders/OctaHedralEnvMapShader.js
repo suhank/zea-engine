@@ -6,7 +6,6 @@ import './GLSL/stack-gl/transpose.js';
 import './GLSL/Florian/Lookup.js';
 
 class OctaHedralEnvMapShader extends Shader {
-    
     constructor(name) {
         super(name);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('OctaHedralEnvMapShader.vertexShader', `

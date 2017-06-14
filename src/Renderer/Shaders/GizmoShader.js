@@ -2,9 +2,8 @@ import { shaderLibrary }  from '../ShaderLibrary';
 import { Shader }  from '../Shader';
 
 class GizmoShader extends Shader {
-
-    constructor(name) {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('WireShader.vertexShader', `
 precision highp float;
 
@@ -59,9 +58,8 @@ void main(void) {
 };
 
 class GizmoDataShader extends Shader {
-    
-    constructor(name) {
-        super(name);
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GizmoDataShader.vertexShader', `
 precision highp float;
 

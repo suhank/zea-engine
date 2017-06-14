@@ -20,9 +20,8 @@ import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
 class ShadowCatcherShader extends Shader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatShader.vertexShader', `
 precision highp float;
 
@@ -114,8 +113,10 @@ void main(void) {
         this.finalize();
     }
 
-    bind(gl, renderstate) {
-        return (renderstate.pass == 'ADD');
+    bind(renderstate, key) {
+        if (renderstate.pass != 'ADD')
+            return false;
+        return super.bind(renderstate, key);
     }
 };
 
@@ -168,8 +169,10 @@ void main(void) {
         return true;
     }
 
-    bind(gl, renderstate) {
-        return (renderstate.pass == 'MULTIPLY');
+    bind(renderstate, key) {
+        if (renderstate.pass != 'MULTIPLY')
+            return false;
+        return super.bind(renderstate, key);
     }
 };
 

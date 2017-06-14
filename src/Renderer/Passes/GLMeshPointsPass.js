@@ -7,7 +7,7 @@ class GLMeshPointsPass extends GLPass {
     constructor(gl, collector) {
         super(gl, collector);
 
-        let glshader = new GLShader(gl, new PointsShader());
+        let glshader = new PointsShader(gl);
         this.setExplicitShader(glshader);
 
         this.pointSize = 3.0;

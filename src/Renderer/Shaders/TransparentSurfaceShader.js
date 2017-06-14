@@ -18,9 +18,8 @@ import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 
 class TransparentSurfaceShader extends Shader {
-
-    constructor(name) {
-        super(name);
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('TransparentSurfaceShader.vertexShader', `
 precision highp float;
 
@@ -255,8 +254,10 @@ void main(void) {
         return true;
     }
 
-    bind(gl, renderstate) {
-        return (renderstate.pass == 'ADD');
+    bind(renderstate, key) {
+        if (renderstate.pass != 'ADD')
+            return false;
+        return super.bind(renderstate, key);
     }
 };
 

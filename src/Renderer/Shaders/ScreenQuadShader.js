@@ -4,9 +4,8 @@ import { Shader }  from '../Shader';
 import './GLSL/utils/quadVertexFromID.js';
 
 class ScreenQuadShader extends Shader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenQuadShader.vertexShader', `
 precision highp float;
 

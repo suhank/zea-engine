@@ -20,9 +20,8 @@ import './GLSL/debugColors.js';
 import './GLSL/ImagePyramid.js';
 
 class LayeredCarPaintShader extends Shader {
-
-    constructor(name) {
-        super(name);
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LayeredCarPaintShader.vertexShader', `
 precision highp float;
 

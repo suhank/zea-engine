@@ -8,7 +8,7 @@ class GLHDRImageMixer extends GLTexture2D {
     constructor(gl, hdrImageMixer) {
         super(gl);
 
-        this.__decompAndMixShader = new GLShader(gl, new UnpackAndMixHDRShader());
+        this.__decompAndMixShader = new UnpackAndMixHDRShader(gl);
         let shaderComp = this.__decompAndMixShader.compileForTarget('GLHDRImageMixer');
         this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 

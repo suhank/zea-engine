@@ -15,7 +15,7 @@ class GLNormalsPass extends GLPass {
         this.normalColor = [.2, 1, .4, 0.75];
         this.normalLength = 0.03;
 
-        this.__glshader = new GLShader(gl, new NormalsShader());
+        this.__glshader = new NormalsShader(gl);
 
         // let updateNormalsLength = (scene)=>{
         //     let sceneSize = this.__renderer.scene.boundingBox.size();

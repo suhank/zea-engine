@@ -29,7 +29,7 @@ class GLEnvMap extends GLProbe {
         let srcGLTex = new GLHDRImage(gl, this.__envMap);
         this.__srcGLTex = srcGLTex; // for debugging
 
-        this.__envMapShader = new GLShader(gl, new EnvMapShader());
+        this.__envMapShader = new EnvMapShader(gl);
         let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
         this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 

@@ -19,7 +19,7 @@ class GLBillboardsPass extends GLPass {
         this.__closestBillboard = 0.0;
         this.__atlasNeedsUpdating = false;
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE', [1,1,1,0]);
-        this.__glshader = new GLShader(gl, new BillboardShader(gl));
+        this.__glshader = new BillboardShader(gl);
 
         this.__collector.billboardDiscovered.connect(this.addBillboard, this);
         this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);

@@ -11,7 +11,7 @@ class GLScreenQuad {
         this.__pos = [0.0, 0.0];
         this.__size = [1.0, 1.0];
         this.flipY = true;
-        this.__glshader = new GLShader(gl, new ScreenQuadShader());
+        this.__glshader = new ScreenQuadShader(gl);
 
         if (!gl.__quadVertexIdsBuffer) 
             gl.setupInstancedQuad();

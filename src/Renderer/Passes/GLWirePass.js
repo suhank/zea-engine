@@ -7,7 +7,7 @@ class GLWirePass extends GLPass {
     constructor(gl) {
         super(gl);
 
-        let glshader = new GLShader(gl, new WireShader());
+        let glshader = new WireShader(gl);
         this.setExplicitShader(glshader);
 
         this.lineWidth = 1.0;

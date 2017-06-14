@@ -139,10 +139,10 @@ class GLCollector {
         if (material.getShaderName() in this.__glshadermaterials) {
            glshaderMaterials = this.__glshadermaterials[material.getShaderName()];
         } else {
-            let shader = sgFactory.constructClass(material.getShaderName());
+            let shader = sgFactory.constructClass(material.getShaderName(), this.__renderer.gl);
             if(!shader)
                 return;
-            glshaderMaterials = new GLShaderMaterials(new GLShader(this.__renderer.gl, shader));
+            glshaderMaterials = new GLShaderMaterials(shader);
             this.__glshadermaterials[material.getShaderName()] = glshaderMaterials;
         }
 

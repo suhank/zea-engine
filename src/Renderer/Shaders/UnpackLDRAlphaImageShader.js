@@ -8,9 +8,8 @@ import {
 import './GLSL/utils/quadVertexFromID.js';
 
 class UnpackLDRAlphaImageShader extends Shader {
-    
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('UnpackLDRAlphaImageShader.vertexShader', `
 precision highp float;
 

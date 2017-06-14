@@ -16,7 +16,6 @@ import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
 class SimpleSurfaceShader extends Shader {
-    
     constructor(name) {
         super(name);
 

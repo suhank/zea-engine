@@ -14,9 +14,8 @@ import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
 class LinesShader extends Shader {
-
-    constructor(name) {
-        super(name);
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('LinesShader.vertexShader', `
 precision highp float;
 

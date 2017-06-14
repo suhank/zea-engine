@@ -97,7 +97,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__drawPoints = false;
 
         let gl = this.__gl;
-        this.__glshaderScreenPostProcess = new GLShader(gl, new PostProcessing());
+        this.__glshaderScreenPostProcess = new PostProcessing(gl);
 
         this.__debugTextures = [undefined];
         // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
@@ -163,7 +163,7 @@ class GLVisualiveRenderer extends GLRenderer {
             if (!this.__backgroundMapShader) {
                 if (!gl.__quadVertexIdsBuffer)
                     gl.setupInstancedQuad();
-                this.__backgroundMapShader = new GLShader(gl, new LatLongBackgroundShader());
+                this.__backgroundMapShader = new LatLongBackgroundShader(gl);
                 let shaderComp = this.__backgroundMapShader.compileForTarget();
                 this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
             }

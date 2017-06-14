@@ -7,20 +7,20 @@ import {
     MaterialParam,
     sgFactory
 } from '../SceneTree';
+import {
+    GLShader
+} from './GLShader.js';
 
 ///////////////////////////////////
 // Shader
 
-class Shader extends RefCounted {
-    constructor(name, filePath) {
-        super();
+class Shader extends GLShader {
+    constructor(gl, name) {
+        super(gl);
         if (name == undefined)
             this.name = this.constructor.name;
         else
             this.name = name;
-        // console.log("Shader:" + this.name);
-
-        this.updated = new Signal();
 
         this.__shaderStages = {
             'VERTEX_SHADER': {
@@ -46,14 +46,6 @@ class Shader extends RefCounted {
 
     get loaded() {
         return true;
-    }
-
-    get vertexShader() {
-        return this.__shaderStages['VERTEX_SHADER'].glsl;
-    }
-
-    get fragmentShader() {
-        return this.__shaderStages['FRAGMENT_SHADER'].glsl;
     }
 
     //////////////////////
@@ -112,20 +104,20 @@ class Shader extends RefCounted {
     }
 
     finalize() {
-        let hash = 0;
-        for (let stageName in this.__shaderStages) {
-            let shaderStageBlock = this.__shaderStages[stageName];
-            hash = ((hash << 5) - hash) + hashStr(shaderStageBlock['glsl']);
-        }
-        this.__hash = Math.abs(hash);
+        // let hash = 0;
+        // for (let stageName in this.__shaderStages) {
+        //     let shaderStageBlock = this.__shaderStages[stageName];
+        //     hash = ((hash << 5) - hash) + hashStr(shaderStageBlock['glsl']);
+        // }
+        // this.__hash = Math.abs(hash);
     }
 
     get hash() {
         return this.__hash;
     }
 
-    bind(gl, renderstate) {
-        return true;
+    bind(renderstate, key) {
+        return super.bind(renderstate, key);
     }
 }
 

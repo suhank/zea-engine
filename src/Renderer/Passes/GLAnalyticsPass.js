@@ -9,9 +9,8 @@ import { generateShaderGeomBinding } from '../GeomShaderBinding.js';
 import '../Shaders/GLSL/glslxfo.js';
 
 class GLAnalyticsShader extends Shader {
-
-    constructor() {
-        super();
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GLAnalyticsShader.vertexShader', `
 precision highp float;
 
@@ -109,7 +108,7 @@ class GLAnalyticsPass {
             gl.setupLineSegAttrBuffers();
         }
 
-        this.__glshader = new GLShader(gl, new GLAnalyticsShader());
+        this.__glshader = new GLAnalyticsShader(gl);
         let shaderComp = this.__glshader.compileForTarget('GLAnalyticsPass');
         this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, this.__glattrbuffers, null, gl.__linesegattrbuffers);
 

@@ -6,7 +6,7 @@ import { GLGeomDataPass } from './GLGeomDataPass.js';
 
 class GLGizmoDataPass extends GLGeomDataPass {
     constructor(gl) {
-        let glshader = new GLShader(gl, new GizmoDataShader());
+        let glshader = new GizmoDataShader(gl);
         super(gl, glshader);
 
         this.setExplicitShader(glshader);
@@ -40,7 +40,7 @@ class GizmoPass extends GLPass {
     constructor(gl, collector) {
         super(gl, collector);
 
-        this__glshader = new GLShader(gl, new GizmoShader());
+        this__glshader = new GizmoShader(gl);
         this.setExplicitShader(glshader);
 
         this.__gizmoDataPass = new GLGizmoDataPass(this.__gl);
