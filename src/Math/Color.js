@@ -163,7 +163,25 @@ class Color extends AttrValue {
             Math.pow(this.r, gamma),
             Math.pow(this.g, gamma),
             Math.pow(this.b, gamma),
-            Math.pow(this.a, gamma)
+            this.a
+        );
+    }
+
+    toLinear(gamma=2.2) {
+        return new Color(
+            Math.pow(this.r, gamma),
+            Math.pow(this.g, gamma),
+            Math.pow(this.b, gamma),
+            this.a
+        );
+    }
+
+    toGamma(gamma=2.2) {
+        return new Color(
+            Math.pow(this.r, 1.0/gamma),
+            Math.pow(this.g, 1.0/gamma),
+            Math.pow(this.b, 1.0/gamma),
+            this.a
         );
     }
 

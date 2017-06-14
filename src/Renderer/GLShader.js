@@ -23,7 +23,7 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
     if(param.texture instanceof Image2D){
         let gltexture = gltextures[param.name];
         let textureUnif = renderstate.unifs['_'+param.name+'Tex'];
-        if (gltexture && textureUnif){
+        if (gltexture && gltexture.isLoaded() && textureUnif){
             gltexture.bind(renderstate, textureUnif.location);
             let textureConnctedUnif = renderstate.unifs['_'+param.name+'TexConnected'];
             if (textureConnctedUnif){
@@ -35,6 +35,10 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
     let unif = renderstate.unifs['_'+param.name];
     if (unif == undefined)
         return;
+    let textureConnctedUnif = renderstate.unifs['_'+param.name+'TexConnected'];
+    if (textureConnctedUnif){
+        gl.uniform1i(textureConnctedUnif.location, 0);
+    }
     // console.log("bindParam:"+param.name + ":" + param.value);
     switch (unif['type']) {
     case Boolean:
