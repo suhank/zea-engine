@@ -37,7 +37,13 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
             default:
                 throw ("Unsupported Geom type:" + className);
         }
-        geom.readBinary(geomReader);
+        try {
+            geom.readBinary(geomReader);
+        } catch(e) {
+            console.warn("Error loading:" + geom.name + "\n:" + e);
+            geomDatas.push({});
+            continue;
+        }
 
         let geomBuffers = geom.genBuffers();
         if (geomBuffers.indices)

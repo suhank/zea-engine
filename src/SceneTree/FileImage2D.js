@@ -13,7 +13,7 @@ import {
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(resourcePath, resourceLoader, params) {
+    constructor(resourcePath, resourceLoader, params={}) {
         super(params);
 
         this.__resourceLoader = resourceLoader;
@@ -22,10 +22,11 @@ class FileImage2D extends Image2D {
         this.__loaded = false;
         this.__hdrexposure = 1.0;
         this.__hdrtint = new Color(1,1,1,1);
+        this.__stream = 'stream' in params ? params['stream'] : false;
 
         this.loaded = new Signal();
 
-        if(resourcePath)
+        if(resourcePath && resourcePath != '')
             this.loadResource(resourcePath);
     }
 
@@ -34,36 +35,36 @@ class FileImage2D extends Image2D {
     }
 
     loadResource(resourcePath) {
-        this.__resourcePath = resourcePath;
-        if (!this.__resourceLoader.resourceAvailable(this.__resourcePath)){
-            console.error("Resource unavailable:" + this.__resourcePath);
+        if (!this.__resourceLoader.resourceAvailable(resourcePath)){
+            console.error("Resource unavailable:" + resourcePath);
             return;
         }
 
         let getExt = (str)=>{
             let p = str.split('/');
             let last = p[p.length-1];
-            let suffixSt = last.indexOf('.')
+            let suffixSt = last.lastIndexOf('.')
             if(suffixSt != -1)
                 return last.substring(suffixSt)
         }
-        let ext = getExt(this.__resourcePath);
+        let ext = getExt(resourcePath);
         if (ext == '.jpg' || ext == '.png') {
-            this.__loadLDRImage();
+            this.__loadLDRImage(resourcePath);
         } else if (ext == '.mp4' || ext == '.ogg') {
-            this.__loadLDRVideo();
+            this.__loadLDRVideo(resourcePath);
         } else if (ext == '.ldralpha') {
             this.__hasAlpha = true;
-            this.__loadLDRAlpha();
+            this.__loadLDRAlpha(resourcePath);
         } else if (ext == '.vlh') {
             this.__isHDR = true;
-            this.__loadVLH();
+            this.__loadVLH(resourcePath);
         } else {
-            throw ("Unsupported file type. Check the ext:" + this.__resourcePath);
+            throw ("Unsupported file type. Check the ext:" + resourcePath);
         }
+        this.__resourcePath = resourcePath;
     }
 
-    __loadLDRImage() {
+    __loadLDRImage(resourcePath) {
         this.__resourceLoader.addWork(1);
 
         let domElement = new Image();
@@ -76,10 +77,10 @@ class FileImage2D extends Image2D {
             this.__resourceLoader.addWorkDone(1);
             this.loaded.emit();
         };
-        domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
+        domElement.src = this.__resourceLoader.resolveURL(resourcePath);
     }
 
-    __loadLDRVideo() {
+    __loadLDRVideo(resourcePath) {
         this.__resourceLoader.addWork(1);
 
         let domElement = document.createElement('video');
@@ -116,12 +117,12 @@ class FileImage2D extends Image2D {
             timerCallback();
 
         }, false);
-        domElement.src = this.__resourceLoader.resolveURL(this.__resourcePath);
+        domElement.src = this.__resourceLoader.resolveURL(resourcePath);
         //domElement.load();
         domElement.play();
     }
 
-    // __loadLDRAlpha() {
+    // __loadLDRAlpha(resourcePath) {
     //     let worker = new ResourceLoaderWorker();
     //     worker.onmessage = (event) => {
     //         worker.terminate();
@@ -164,13 +165,13 @@ class FileImage2D extends Image2D {
 
     //     };
     //     worker.postMessage({
-    //         name: this.__resourcePath,
+    //         name: resourcePath,
     //         url
     //     });
     // }
 
-    __loadVLH() {
-        this.__resourceLoader.loadResource(this.__resourcePath, (entries)=>{
+    __loadVLH(resourcePath) {
+        this.__resourceLoader.loadResource(resourcePath, (entries)=>{
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -186,7 +187,7 @@ class FileImage2D extends Image2D {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
-                console.log(this.__resourcePath + ": [" + this.width + ", " + this.height+"]");
+                console.log(resourcePath + ": [" + this.width + ", " + this.height+"]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm

@@ -44,48 +44,7 @@ void main(void) {
 };
 
 
-class UnpackAndMixHDRShader extends UnpackHDRShader {
-    
-    constructor() {
-        super();
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('UnpackAndMixHDRShader.fragmentShader', `
-precision highp float;
-
-varying vec2 v_texCoord;
-
-uniform sampler2D ldrSampler0;
-uniform sampler2D cdmSampler0;
-uniform float weight0;
-
-uniform sampler2D ldrSampler1;
-uniform sampler2D cdmSampler1;
-uniform float weight1;
-
-#ifdef UNPACK_SRC2
-uniform sampler2D ldrSampler2;
-uniform sampler2D cdmSampler2;
-uniform float weight2;
-#endif
-
-<%include file="utils/unpackHDR.glsl"/>
-
-void main(void) {
-    gl_FragColor = vec4(0.0);
-    gl_FragColor += vec4(decodeHDR(ldrSampler0, cdmSampler0, v_texCoord) * weight0, 1.0);
-    gl_FragColor += vec4(decodeHDR(ldrSampler1, cdmSampler1, v_texCoord) * weight1, 1.0);
-
-#ifdef UNPACK_SRC2
-    gl_FragColor += vec4(decodeHDR(ldrSampler2, cdmSampler2, v_texCoord) * weight2, 1.0);
-#endif
-}
-
-`);
-    }
-};
-
-
 export {
-    UnpackAndMixHDRShader,
     UnpackHDRShader
 };
 

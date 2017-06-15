@@ -18,9 +18,9 @@ import {
 } from './Geometry/GeomProxies.js';
 
 let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
-// import {
-//     parseGeomsBinary
-// } from './Geometry/parseGeomsBinary.js';
+import {
+    parseGeomsBinary
+} from './Geometry/parseGeomsBinary.js';
 
 class GeomLibrary {
     constructor() {
@@ -117,32 +117,32 @@ class GeomLibrary {
 
             //////////////////////////////////////////////
             // Multi Threaded Parsing
-            this.__workers[this.__nextWorker].postMessage({
-                key,
-                toc,
-                geomIndexOffset,
-                geomsRange,
-                isMobileDevice: reader.isMobileDevice,
-                bufferSlice,
-            }, [bufferSlice]);
-            this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
-            //////////////////////////////////////////////
-            // Main Threaded Parsing
-            // parseGeomsBinary(
+            // this.__workers[this.__nextWorker].postMessage({
             //     key,
             //     toc,
             //     geomIndexOffset,
             //     geomsRange,
-            //     reader.isMobileDevice,
+            //     isMobileDevice: reader.isMobileDevice,
             //     bufferSlice,
-            //     (data, transferables)=>{
-            //         this.__revieveGeomDatas(
-            //             data.key, 
-            //             data.geomDatas, 
-            //             data.geomIndexOffset, 
-            //             data.geomsRange
-            //             );
-            //     });
+            // }, [bufferSlice]);
+            // this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
+            //////////////////////////////////////////////
+            // Main Threaded Parsing
+            parseGeomsBinary(
+                key,
+                toc,
+                geomIndexOffset,
+                geomsRange,
+                reader.isMobileDevice,
+                bufferSlice,
+                (data, transferables)=>{
+                    this.__revieveGeomDatas(
+                        data.key, 
+                        data.geomDatas, 
+                        data.geomIndexOffset, 
+                        data.geomsRange
+                        );
+                });
 
 
         }
@@ -160,6 +160,8 @@ class GeomLibrary {
 
         for (let i = 0; i < geomDatas.length; i++) {
             let geomData = geomDatas[i];
+            if(!geomData.type)
+                continue;
             let proxy;
             switch (geomData.type) {
                 case 'Points':

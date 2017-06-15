@@ -7,6 +7,7 @@ class GLTexture2D extends RefCounted {
         super();
         this.__gl = gl;
 
+        this.ready = new Signal(true);
         this.updated = new Signal();
         this.resized = new Signal();
         
@@ -109,7 +110,10 @@ class GLTexture2D extends RefCounted {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap]);
 
         this.resize(width, height, data, false, false);
-        this.__loaded = true;
+        if(!this.__loaded) {
+            this.ready.emit();
+            this.__loaded = true;
+        }
     }
 
     bufferData(data, bind=true, emit=true){

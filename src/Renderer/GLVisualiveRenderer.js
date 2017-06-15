@@ -12,8 +12,8 @@ import {
     GLHDRImage
 } from './GLHDRImage.js';
 import {
-    GLHDRImageMixer
-} from './GLHDRImageMixer.js';
+    GLLightmapMixer
+} from './GLLightmapMixer.js';
 import {
     GLEnvMap
 } from './GLEnvMap.js';
@@ -137,6 +137,7 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__glEnvMap = new GLEnvMap(this, env);
         } else {
             console.warn("Unsupported EnvMap:" + env);
+            return;
         }
         this.__glEnvMap.updated.connect((data) => {
             this.requestRedraw();
@@ -175,7 +176,7 @@ class GLVisualiveRenderer extends GLRenderer {
             let lightmap = lightMaps[name];
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
-                gllightmap = new GLHDRImageMixer(this.__gl, lightmap.image);
+                gllightmap = new GLLightmapMixer(this.__gl, lightmap);
             else
                 gllightmap = new GLHDRImage(this.__gl, lightmap.image);
             gllightmap.updated.connect((data) => {
