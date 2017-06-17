@@ -125,7 +125,7 @@ class GeomLibrary {
                 isMobileDevice: reader.isMobileDevice,
                 bufferSlice,
             }, [bufferSlice]);
-            this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
+            this.__nextWorker = (this.__nextWorker+1) % this.__workers.length;
             //////////////////////////////////////////////
             // Main Threaded Parsing
             // parseGeomsBinary(

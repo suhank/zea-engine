@@ -1,8 +1,19 @@
-import { Color } from '../Math/Color';
-import { typeRegistry } from '../Math/TypeRegistry'
-import { TreeItem } from '../SceneTree/TreeItem';
-import { UserAvatar } from './UserAvatar';
-import { GLAnalyticsPass } from './Passes/GLAnalyticsPass.js';
+import {
+    Color,
+    Signal
+} from '../Math';
+import {
+    typeRegistry
+} from '../Math/TypeRegistry'
+import {
+    TreeItem
+} from '../SceneTree/TreeItem';
+import {
+    UserAvatar
+} from './UserAvatar';
+import {
+    GLAnalyticsPass
+} from './Passes/GLAnalyticsPass.js';
 
 let getUrlVars = () => {
     let url = window.location.href,
@@ -19,10 +30,17 @@ let getUrlVars = () => {
         hash = hashes[i].split('=');
         args[hash[0]] = hash[1];
     }
-    if(projectID == "")
+    if (projectID == "")
         projectID = "SharedSession";
 
     let isSecureConnection = url.startsWith('https');
+
+    if (parts.length > 1) {
+        // trim off the decorations. 
+        // This is so that users don't bookmark session URLs.
+        window.location.replace(parts[0] + '#');
+    }
+
     return {
         projectID,
         isSecureConnection,
@@ -54,7 +72,7 @@ let generateSessionID = () => {
         'view'
     ];
     let sessionID = words[random(0, 6)] + words[random(0, 6)].toUpperCase() + words[random(0, 6)];
-    window.location.replace('#id=' + sessionID);
+    // window.location.replace('#id=' + sessionID);
     // window.history.pushState("Session", "Title", window.location+'?id=' + sessionID);
     return sessionID;
 }
@@ -62,13 +80,13 @@ let generateSessionID = () => {
 let getLocationData = (callback) => {
     function createElements(elements) {
         // Assuming you get an array of objects.
-        if(typeof elements == 'string')
+        if (typeof elements == 'string')
             callback(JSON.parse(elements));
     }
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (this.readyState == 4) {
-          createElements(this.responseText);
+            createElements(this.responseText);
         }
     }
     xhr.onload = createElements;
@@ -106,6 +124,14 @@ class SessionClient {
         let replayData = null;
         let updatingTreeXfos = false;
 
+        ///////////////////////////
+        // Signals.
+        this.sessionModeChanged = new Signal();
+        this.sessionTimeChanged = new Signal();
+
+        ////////////////////////////
+
+
         let avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
         renderer.getCollector().addTreeItem(avatarsTreeRoot);
 
@@ -114,17 +140,15 @@ class SessionClient {
                 value.fromJSON(data[key]);
                 data[key] = value;
             }
-            for(let key in data){
+            for (let key in data) {
                 let dataValue = data[key];
                 let className = dataValue.className;
-                if(className){
+                if (className) {
                     let dataType = typeRegistry.getType(className);
                     fromJSON(key, dataType.create());
-                }
-                else if(Array.isArray(dataValue)) {
+                } else if (Array.isArray(dataValue)) {
                     convertValuesFromJSON(dataValue);
-                }
-                else if(typeof dataValue === "object") {
+                } else if (typeof dataValue === "object") {
                     convertValuesFromJSON(dataValue);
                 }
             }
@@ -132,16 +156,14 @@ class SessionClient {
 
 
         let convertValuesToJSON = (data) => {
-            for(let key in data){
+            for (let key in data) {
                 let value = data[key];
-                if(value.toJSON){
+                if (value.toJSON) {
                     data[key] = value.toJSON();
                     data[key].className = value.constructor.name;
-                }
-                else if(Array.isArray(value)) {
+                } else if (Array.isArray(value)) {
                     convertValuesToJSON(value);
-                }
-                else if(typeof value === "object") {
+                } else if (typeof value === "object") {
                     convertValuesToJSON(value);
                 }
             }
@@ -151,10 +173,9 @@ class SessionClient {
         // TODO: Integrate with app login, so we can track users
         // by thier profile.
         let clientData = JSON.parse(localStorage.getItem('clientData'));
-        if(clientData) {
+        if (clientData) {
             convertValuesFromJSON(clientData);
-        }
-        else {
+        } else {
             clientData = {
                 id: guid(),
                 color: randomAvatarColor()
@@ -178,21 +199,29 @@ class SessionClient {
         let projectID = urlVars.projectID;
 
         // https://developer.mozilla.org/en/docs/Web/API/Window/sessionStorage
+        // Check to see if we are joining a new session.
         let sessionID = urlVars.args['id'];
-        // let sessionID = sessionStorage.getItem('sessionID');
+        if (!sessionID) {
+            // Else check to see if we are already in a session.
+            sessionID = sessionStorage.getItem('sessionID');
+        }
         if (!sessionID) {
             sessionID = generateSessionID();
-            // sessionStorage.setItem('sessionID', sessionID);
+            sessionStorage.setItem('sessionID', sessionID);
         }
         console.log("Vars projectID:" + projectID + " sessionID:" + sessionID + " userID:" + myId);
+
+        this.getDecoratedURL = () => {
+            return window.location + ('#id=' + sessionID);
+        }
 
         ////////////////////////////////////////
         // Register listeners with the scene and renderer
         renderer.getCollector().itemTransformChanged.connect(function(treeItem) {
-            if(!updatingTreeXfos){
+            if (!updatingTreeXfos) {
                 let path = treeItem.getPath();
                 // Only propagate changes to the scene tree..
-                if(path.startsWith('root')){
+                if (path.startsWith('root')) {
                     let xfo = treeItem.globalXfo;
                     if (socketOpen) {
                         sendMessage({
@@ -230,7 +259,7 @@ class SessionClient {
         });
 
         renderer.actionStarted.connect((msg) => {
-            if(msg.type == 'strokeStarted') {
+            if (msg.type == 'strokeStarted') {
                 let myMarker = connectedUsers[myId].userMarker;
                 let data = msg.data;
                 data.color.fromJSON(clientData.color);
@@ -240,7 +269,7 @@ class SessionClient {
                 sendMessage(msg);
         });
         renderer.actionOccuring.connect((msg) => {
-            if(msg.type == 'strokeSegmentAdded') {
+            if (msg.type == 'strokeSegmentAdded') {
                 let myMarker = connectedUsers[myId].userMarker;
                 let data = msg.data;
                 data.id = myMarker.addSegmentToStroke(data.xfo);
@@ -249,7 +278,7 @@ class SessionClient {
                 sendMessage(msg);
         });
         renderer.actionEnded.connect((msg) => {
-            if(msg.type == 'strokeEnded') {
+            if (msg.type == 'strokeEnded') {
                 let myMarker = connectedUsers[myId].userMarker;
                 msg.data = {
                     id: myMarker.endStroke()
@@ -267,8 +296,8 @@ class SessionClient {
         let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
 
         let sendMessage = (message) => {
-            if(socketOpen){
-                if(message)
+            if (socketOpen) {
+                if (message)
                     convertValuesToJSON(message);
                 ws.send(JSON.stringify(message));
             }
@@ -460,124 +489,7 @@ class SessionClient {
         }
 
         ////////////////////////////////////////////////////////
-        if(false) {
-
-            //let generateRecordingUI = () => {
-            let div = renderer.getDiv();
-
-            // <div class="controlsContainer">
-            //     <div>
-            //         <select id="recSelector">
-            //             <option value="new">New recording</option>
-            //         </select>
-            //     </div>
-            //     <div class="icon" id="rec"><img src="rec.svg" alt=""></div>
-            //     <div class="icon" id="play"><img src="playArrow.svg" alt=""></div>
-            // </div>
-            let controlsContainer = document.createElement('div');
-            controlsContainer.setAttribute('class', 'controlsContainer');
-            controlsContainer.style.position = 'fixed';
-            controlsContainer.style.left = '20px';
-            controlsContainer.style.bottom = '20px';
-            controlsContainer.style.padding = '6px';
-
-            // let recSelectorDiv = document.createElement('div');
-            // controlsContainer.appendChild(recSelectorDiv);
-            // let recSelector = document.createElement('select');
-            // recSelector.class = "controlsContainer";
-            // recSelectorDiv.appendChild(recSelector);
-            // let newRecOption = document.createElement('option');
-            // newRecOption.value = "new";
-            // newRecOption.innerText = "New recording";
-            // recSelector.appendChild(newRecOption);
-
-            let clearButton = document.createElement('button');
-            // clearButton.class = "icon";
-            // clearButton.style.position = 'fixed';
-            // clearButton.style.right = '20px';
-            // clearButton.style.bottom = '20px';
-            // clearButton.style.padding = '20px';
-            clearButton.innerText = 'Clear';
-            controlsContainer.appendChild(clearButton);
-
-            let recButton = document.createElement('button');
-            // recButton.class = "icon";
-            // recButton.style.position = 'fixed';
-            // recButton.style.right = '20px';
-            // recButton.style.bottom = '20px';
-            // recButton.style.padding = '20px';
-            recButton.innerText = 'Record';
-            controlsContainer.appendChild(recButton);
-
-            let playButton = document.createElement('button');
-            // playButton.class = "icon";
-            // playButton.style.position = 'fixed';
-            // playButton.style.right = '20px';
-            // playButton.style.bottom = '20px';
-            // playButton.style.padding = '20px';
-            playButton.innerText = 'Play';
-            controlsContainer.appendChild(playButton);
-
-            div.appendChild(controlsContainer);
-
-            //<input id="timeline" type="range" min="0" max="100" step="0.1" value="0" style="width: 600px" />
-            let timeline = document.createElement('input');
-            timeline.setAttribute('id', 'timeline');
-            timeline.setAttribute('type', 'range');
-            timeline.setAttribute('min', '0');
-            timeline.setAttribute('max', '100');
-            timeline.setAttribute('step', '0.1');
-            timeline.setAttribute('value', "0");
-            let rhsSpace = 360;
-            let resizeTimeline = () => {
-                timeline.style.width = (div.clientWidth - rhsSpace) + 'px';
-            }
-            renderer.vrViewportSetup.connect(() => {
-                rhsSpace = 480;
-                resizeTimeline();
-            });
-            renderer.resized.connect((width, height) => {
-                resizeTimeline();
-            })
-            resizeTimeline();
-            div.appendChild(timeline);
-
-            timeline.style.display = 'none';
-            playButton.style.display = 'none';
-
-            clearButton.onclick = function(event) {
-                event.preventDefault();
-                if (socketOpen) {
-                    sendMessage({
-                        type: 'clearRecording',
-                    });
-                }
-            };
-
-            recButton.onclick = function(event) {
-                event.preventDefault();
-
-                if (socketOpen) {
-                    if (!actualRecording) {
-                        sendMessage({
-                            type: 'startRecording',
-                        });
-                        recButton.innerText = 'Stop Recording';
-                    } else {
-                        recButton.innerText = 'Record';
-                        sendMessage({
-                            type: 'stopRecording',
-                        });
-                    }
-                }
-            };
-
-            timeline.addEventListener('input', function(event) {
-                if (replayData) {
-                    travelTime(timeline.value);
-                }
-            });
-
+        if (true) {
             ////////////////////////////////////////
             // Playback
             let playWait = false;
@@ -595,7 +507,7 @@ class SessionClient {
             window.requestAnimationFrame = requestAnimationFrame;
 
             // After joining, or finishing a recording
-            // we recieve the reording data from the server.
+            // we recieve the recording data from the server.
             listeners.replayData = function(message) {
                 replayData = message.data;
                 playButton.style.display = 'block';
@@ -606,111 +518,10 @@ class SessionClient {
                 }
             };
 
-            function play() {
-                duration = new Date(replayData.stopTime) - new Date(replayData.startTime);
-                rate = duration / 100;
-                playWait = false;
-                isPlaying = true;
-                start = Date.now();
-                // requestId = requestAnimationFrame(step);
-                renderer.redrawOccured.connect(step);
-                renderer.startContinuousDrawing();
+            this.getRecordingDuration = () => {
+                return new Date(replayData.stopTime) - new Date(replayData.startTime);
             }
 
-            function stop() {
-                // start = null;
-                // duration = null;
-                isPlaying = false;
-                // stateByTime(0);
-                // timeline.value = 0;
-                // window.cancelAnimationFrame(requestId);
-                renderer.stopContinuousDrawing();
-                renderer.redrawOccured.disconnect(step);
-            }
-
-            function step() {
-                let actualMS = Date.now() - start;
-                if (actualMS < duration) {
-                    stateByTime(actualMS);
-                    timeline.value = actualMS / rate;
-                    // requestId = requestAnimationFrame(step);
-                } else {
-                    stop();
-                }
-            }
-
-
-            playButton.onclick = function(event) {
-                event.preventDefault();
-
-                if (!playWait && !isPlaying) {
-                    // if (replayData && replayData.id == recSelector.value) {
-                    playButton.innerText = 'Stop';
-                    play();
-                    // } else {
-                    //     playWait = true;
-                    //     sendMessage({
-                    //         type: 'requestReplay',
-                    //         data: {
-                    //             id: recSelector.value
-                    //         }
-                    //     });
-                    // }
-                    return;
-                }
-
-                if (isPlaying) {
-                    playButton.innerText = 'Play';
-                    stop();
-                }
-            };
-
-
-            // recSelector.onchange = function(event) {
-            //     if (recSelector.value == 'new') {
-            //         timeline.style.display = 'none';
-            //         playButton.style.display = 'none';
-            //     } else {
-            //         sendMessage({
-            //             type: 'requestReplay',
-            //             data: {
-            //                 id: recSelector.value
-            //             }
-            //         });
-            //     }
-            // };
-
-            ///////////////////////////////////////////////////////
-
-
-            // let updateAvatars = (data) => {
-            //     // let text = 'Clients: <br />';
-
-            //     Object.keys(data.clients).forEach(function(key) {
-            //         let client = data.clients[key];
-            //         // text += '- ' + (key == myId ? 'me' : key) + ': position [x:' + client.position.x + ', y:' + client.position.y + '] <br />'
-
-            //         if (key != myId) {
-            //             if (!connectedUsers[key]) {
-            //                 onUserConnected(key, client.color);
-            //             }
-
-            //             if (client) {
-            //                 onUserViewChange(key, client)
-            //             }
-            //         }
-            //     });
-
-            //     // clientsList.innerHTML = text;
-            // }
-
-
-            let travelTime = (percent) => {
-                const duration = new Date(replayData.duration);
-                const rate = duration / 100;
-                const timeSet = percent * rate;
-                stateByTime(timeSet);
-            }
 
             let resetState = () => {
                 Object.keys(connectedUsers).forEach(function(key) {
@@ -719,8 +530,14 @@ class SessionClient {
                 });
             }
 
-            let stateByTime = (time) => {
+            this.setSessionTime = (time) => {
                 // console.log("stateByTime:" + time);
+
+                if(isPlaying) {
+                    this.stopPlaying();
+                    isPlaying = false;
+                }
+
                 const initState = {};
 
                 if (time < lastTime) {
@@ -745,6 +562,33 @@ class SessionClient {
 
                 lastTime = time;
             }
+
+            this.startPlaying = ()=>{
+                duration = new Date(replayData.stopTime) - new Date(replayData.startTime);
+                rate = duration / 100;
+                playWait = false;
+                isPlaying = true;
+                start = Date.now();
+                renderer.redrawOccured.connect(step);
+                renderer.startContinuousDrawing();
+            }
+
+            this.stopPlaying = ()=>{
+                isPlaying = false;
+                renderer.stopContinuousDrawing();
+                renderer.redrawOccured.disconnect(step);
+            }
+
+            // function step() {
+            //     let actualMS = Date.now() - start;
+            //     if (actualMS < duration) {
+            //         stateByTime(actualMS);
+            //         timeline.value = actualMS / rate;
+            //     } else {
+            //         stopPlaying();
+            //     }
+            // }
+
         }
 
 
@@ -753,10 +597,10 @@ class SessionClient {
         let analyticsPass = undefined;
         let onAnalyticsDataRecieved = (data) => {
             function _base64ToArrayBuffer(base64) {
-                var binary_string =  window.atob(base64);
+                var binary_string = window.atob(base64);
                 var len = binary_string.length;
-                var bytes = new Uint8Array( len );
-                for (var i = 0; i < len; i++)        {
+                var bytes = new Uint8Array(len);
+                for (var i = 0; i < len; i++) {
                     bytes[i] = binary_string.charCodeAt(i);
                 }
                 return bytes.buffer;
@@ -778,8 +622,8 @@ class SessionClient {
             analyticsPass.destroy();
         }
 
-        this.toggleAnalytics = ()=>{
-            if(!analyticsPass)
+        this.toggleAnalytics = () => {
+            if (!analyticsPass)
                 requestAnalytics();
             else
                 removeAnalytics();

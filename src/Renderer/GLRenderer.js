@@ -96,6 +96,7 @@ class GLRenderer {
         this.__continuousDrawing = false;
         this.__redrawRequested = false;
         this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
+        this.__supportSessions = options.supportSessions !== undefined ? options.supportSessions : true;
 
         this.__collector = new GLCollector(this);
 
@@ -106,6 +107,7 @@ class GLRenderer {
         this.keyPressed = new Signal();
         this.sceneSet = new Signal(true);
         this.vrViewportSetup = new Signal(true);
+        this.sessionClientSetup = new Signal(true);
 
         // Signals to abstract the user view. 
         // i.e. when a user switches to VR mode, the signals 
@@ -235,7 +237,10 @@ class GLRenderer {
             if (this.supportsVR())
                 this.__setupVRViewport();
 
-            this.sessionClient = new SessionClient(this, entries);
+            if(this.__supportSessions){
+                this.sessionClient = new SessionClient(this, entries);
+                this.sessionClientSetup.emit(this.sessionClient);
+            }
         });
 
         this.sceneSet.emit(this.__scene);
@@ -517,6 +522,7 @@ class GLRenderer {
                     return true;
             }
         }
+        this.keyPressed.emit(key);
     }
     onKeyDown(key) {
 

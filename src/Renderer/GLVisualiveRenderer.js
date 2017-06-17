@@ -236,6 +236,9 @@ class GLVisualiveRenderer extends GLRenderer {
             default:
                 super.onKeyPressed(key);
         }
+        // Note: emit the signal, even if the event is handled.
+        // This enables extra special handling in custom code.
+        this.keyPressed.emit(key);
         this.requestRedraw();
     }
 
