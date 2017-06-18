@@ -1,7 +1,8 @@
 import {
     Color
-} from '../../Math/Color';
+} from '../../Math';
 import {
+    FileImage2D,
     sgFactory
 } from '../../SceneTree';
 import {
@@ -129,6 +130,9 @@ uniform float planeAngle;
 #endif
 
 uniform color _baseColor;
+uniform color _midColorTint;
+uniform float _midColorTintReflectance;
+
 uniform float _microflakePerturbation;
 uniform sampler2D _flakesNormalTex;
 uniform float _flakesScale;
@@ -256,23 +260,19 @@ void main(void) {
 #ifndef ENABLE_SPECULAR
     vec3 radiance = material.baseColor * irradiance;
 #else
+    
+    // Mix the base color to give a multi-layered paint look.
+    material.baseColor      = mix(material.baseColor, material.baseColor * _midColorTint.rgb, (1.0-NdotV));
+
     mat3 TBN = cotangent_frame( normal, surfacePos, v_lightmapCoord );
     vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
     flakesNormal = normalize(mix(normal, flakesNormal, _microflakePerturbation));
 
+    vec3 baseRadiance = pbrSurfaceRadiance(material, irradiance, flakesNormal, viewVector);
 
-    MaterialParams baseMaterial = material;
-    vec3 baseRadiance = pbrSurfaceRadiance(baseMaterial, irradiance, flakesNormal, viewVector);
-
-    MaterialParams glossMaterial = material;
-    glossMaterial.baseColor      = baseRadiance;
-    glossMaterial.roughness      = _glossRoughness;
-    glossMaterial.metallic       = _glossMetallic;
-    glossMaterial.reflectance    = _glossReflectance;
-
-    //vec3 radiance = pbrSurfaceRadiance(glossMaterial, vec3(1.0), normal, viewVector);
-
-    vec4 gloss = pbrSpecularReflectance(glossMaterial, normal, viewVector);
+    material.roughness      = _glossRoughness;
+    material.reflectance    = _glossReflectance;
+    vec4 gloss = pbrSpecularReflectance(material, normal, viewVector);
     vec3 radiance = mix(baseRadiance, gloss.rgb, gloss.a);
     //vec3 radiance = baseRadiance;
 
@@ -295,11 +295,17 @@ void main(void) {
         this.addParameter('baseMetallic', 0.0);
         this.addParameter('baseRoughness', 0.35);
         this.addParameter('baseReflectance', 0.03);
+        this.addParameter('midColorTint', new Color(1.0, 1.0, 1.0));
+        this.addParameter('midColorTintReflectance', 0.03);
         this.addParameter('glossMetallic', 0.0);
         this.addParameter('glossRoughness', 0.35);
         this.addParameter('glossReflectance', 0.03);
 
-        this.addParameter('flakesNormal', new Color(0.0, 0.0, 0.0));
+
+        let flakesNormal = new FileImage2D('commonResources/FlakesNormalMap.png', this.__gl.renderer.getScene().getResourceLoader());
+        flakesNormal.wrap = 'REPEAT';
+        flakesNormal.mipMapped = true;
+        this.addParameter('flakesNormal', flakesNormal);
         this.addParameter('flakesScale', 0.1);
         this.addParameter('microflakePerturbation', 0.1);
 

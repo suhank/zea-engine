@@ -382,6 +382,7 @@ class GLRenderer {
         webglOptions.preserveDrawingBuffer = true;
         webglOptions.alpha = true;
         this.__gl = setupWebGL(this.__glcanvas, webglOptions);
+        this.__gl.renderer = this;
 
         this.__isFragDepthAvailable = this.__gl.getExtension("EXT_frag_depth");
 
