@@ -88,17 +88,17 @@ class TreeItem {
 
     traversePath(pathParts, index){
 
-        let child = this.getChildByName(pathParts[index]);
-        if (child == undefined)
+        let childItem = this.getChildByName(pathParts[index]);
+        if (childItem == undefined)
         {
             //report("Unable to resolve path '"+"/".join(pathParts)+"' after:"+this.getName());
             throw("No child called :" + pathParts[index]);
             return nullptr;
         }
         if (pathParts.length == index + 1)
-            return child;
+            return childItem;
         else
-            return child.traversePath(pathParts, index + 1);
+            return childItem.traversePath(pathParts, index + 1);
     }
 
     resolvePath(path)
@@ -234,21 +234,22 @@ class TreeItem {
         return this.__childItems.length;
     }
 
-    addChild(child, checkCollisions=true) {
-        if (checkCollisions && this.getChildByName(child.name) !== null)
-            throw "Item '" + child.name + "' is already a child of :" + this.path;
-        this.__childItems.push(child);
-        child.parentItem = this;
+    addChild(childItem, checkCollisions=true) {
+        if (checkCollisions && this.getChildByName(childItem.name) !== null)
+            throw "Item '" + childItem.name + "' is already a child of :" + this.path;
+        childItem.setVisible(this.__visible);
+        this.__childItems.push(childItem);
+        childItem.parentItem = this;
 
-        child.boundingBoxChanged.connect(() => {
+        childItem.boundingBoxChanged.connect(() => {
             this.setBoundingBoxDirty();
         }, this);
-        child.visibilityChanged.connect(() => {
+        childItem.visibilityChanged.connect(() => {
             this.setBoundingBoxDirty();
         }, this);
 
         this.__boundingBoxDirty = true;
-        this.childAdded.emit(child);
+        this.childAdded.emit(childItem);
     }
 
 

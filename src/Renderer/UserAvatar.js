@@ -29,23 +29,16 @@ class UserAvatar {
         this.__parentTreeItem.addChild(this.userMarker.getTreeItem());
 
         this.__treeItem = new TreeItem(id);
+        this.__treeItem.setVisible(visible);
         this.__material = new Material('user' + id + 'Material', 'FlatSurfaceShader');
         this.__material.addParameter('baseColor', new Color(data.color.r, data.color.g, data.color.b));
         this.setMouseAndCameraRepresentation();
 
-        this.__visible = visible;
-        if (this.__visible) {
-            this.__parentTreeItem.addChild(this.__treeItem);
-        }
+        this.__parentTreeItem.addChild(this.__treeItem);
     }
 
     setVisibility(visible) {
-        if (visible && !this.__visible) {
-            this.__parentTreeItem.addChild(this.__treeItem);
-        } else if (!visible && this.__visible) {
-            this.__parentTreeItem.removeChildByHandle(this.__treeItem, false);
-        }
-        this.__visible = visible;
+        this.__treeItem.setVisible(visible);
     }
 
     pointerMoved(data) {

@@ -108,6 +108,41 @@ let randomAvatarColor = () => {
     return avatarColors[random(0, avatarColors.length)];
 }
 
+let convertValuesFromJSON = (data) => {
+    let fromJSON = (key, value) => {
+        value.fromJSON(data[key]);
+        data[key] = value;
+    }
+    for (let key in data) {
+        let dataValue = data[key];
+        let className = dataValue.className;
+        if (className) {
+            let dataType = typeRegistry.getType(className);
+            fromJSON(key, dataType.create());
+        } else if (Array.isArray(dataValue)) {
+            convertValuesFromJSON(dataValue);
+        } else if (typeof dataValue === "object") {
+            convertValuesFromJSON(dataValue);
+        }
+    }
+}
+
+
+let convertValuesToJSON = (data) => {
+    for (let key in data) {
+        let value = data[key];
+        if (value.toJSON) {
+            data[key] = value.toJSON();
+            data[key].className = value.constructor.name;
+        } else if (Array.isArray(value)) {
+            convertValuesToJSON(value);
+        } else if (typeof value === "object") {
+            convertValuesToJSON(value);
+        }
+    }
+}
+
+
 class SessionClient {
 
     constructor(renderer, commonResources) {
@@ -115,59 +150,15 @@ class SessionClient {
 
         this.scaleFactor = 1.0;
 
-        let listeners = {};
-        let linesCount = 0;
-        let connectedUsers = {};
-        let lastTime = 0;
-        let lastEvent = 0;
-        let actualRecording = null;
-        let replayData = null;
-        let updatingTreeXfos = false;
-
         ///////////////////////////
         // Signals.
-        this.sessionModeChanged = new Signal();
+        this.playbackModeChanged = new Signal();
+        this.playStateChanged = new Signal();
+        // this.sessionModeChanged = new Signal();
         this.sessionTimeChanged = new Signal();
+        this.replayDataRecieved = new Signal();
 
         ////////////////////////////
-
-
-        let avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
-        renderer.getCollector().addTreeItem(avatarsTreeRoot);
-
-        let convertValuesFromJSON = (data) => {
-            let fromJSON = (key, value) => {
-                value.fromJSON(data[key]);
-                data[key] = value;
-            }
-            for (let key in data) {
-                let dataValue = data[key];
-                let className = dataValue.className;
-                if (className) {
-                    let dataType = typeRegistry.getType(className);
-                    fromJSON(key, dataType.create());
-                } else if (Array.isArray(dataValue)) {
-                    convertValuesFromJSON(dataValue);
-                } else if (typeof dataValue === "object") {
-                    convertValuesFromJSON(dataValue);
-                }
-            }
-        }
-
-
-        let convertValuesToJSON = (data) => {
-            for (let key in data) {
-                let value = data[key];
-                if (value.toJSON) {
-                    data[key] = value.toJSON();
-                    data[key].className = value.constructor.name;
-                } else if (Array.isArray(value)) {
-                    convertValuesToJSON(value);
-                } else if (typeof value === "object") {
-                    convertValuesToJSON(value);
-                }
-            }
-        }
 
         // Client IDs need to be persistent.
         // TODO: Integrate with app login, so we can track users
@@ -180,7 +171,7 @@ class SessionClient {
                 id: guid(),
                 color: randomAvatarColor()
             };
-            getLocationData(function(data) {
+            getLocationData((data) => {
                 clientData.location = data;
                 localStorage.setItem('clientData', JSON.stringify(clientData));
                 sendMessage({
@@ -191,9 +182,6 @@ class SessionClient {
         }
         let myId = clientData.id;
 
-        // Add an avatar for us. 
-        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false, commonResources);
-        connectedUsers[myId] = myAvatar;
 
         let urlVars = getUrlVars();
         let projectID = urlVars.projectID;
@@ -215,9 +203,68 @@ class SessionClient {
             return window.location + ('#id=' + sessionID);
         }
 
-        ////////////////////////////////////////
-        // Register listeners with the scene and renderer
-        renderer.getCollector().itemTransformChanged.connect(function(treeItem) {
+
+        //////////////////////////////////////
+        // Add an avatar for us.
+        let connectedUsers = {};
+        let avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
+        renderer.getCollector().addTreeItem(avatarsTreeRoot);
+
+        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false, commonResources);
+        connectedUsers[myId] = myAvatar;
+
+        //////////////////////////////////////
+        // Websocket setup
+        let listeners = {};
+        let updatingTreeXfos = false;
+        let playbackMode = false;
+        let socketOpen = false;
+
+        let ws = new WebSocket("ws://localhost:8000", "protocolOne");
+        // let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
+
+        let sendMessage = (message) => {
+            if (socketOpen) {
+                if (message)
+                    convertValuesToJSON(message);
+                ws.send(JSON.stringify(message));
+            }
+        }
+
+        ws.onopen = (event) => {
+            socketOpen = true;
+            sendMessage({
+                type: 'join',
+                clientData: clientData,
+                projectID: projectID,
+                sessionID: sessionID
+            });
+        };
+        ws.onerror = (event) => {
+            console.log("Websocket Error:" + event);
+        };
+        ws.onclose = (event) => {
+            socketOpen = false;
+            console.log("Websocket closed.")
+        };
+        ws.onmessage = (message) => {
+            let jsonData = JSON.parse(message.data);
+
+            convertValuesFromJSON(jsonData.data);
+            // console.log("onmessage:" + jsonData.type + " client:" + jsonData.client);
+            if (listeners[jsonData.type]) {
+                listeners[jsonData.type](jsonData.client, jsonData.data);
+            }
+        };
+
+        ////////////////////////////////////
+        // Sending Messages
+
+
+        renderer.getCollector().itemTransformChanged.connect((treeItem) => {
+            if (playbackMode) {
+                return
+            }
             if (!updatingTreeXfos) {
                 let path = treeItem.getPath();
                 // Only propagate changes to the scene tree..
@@ -236,7 +283,10 @@ class SessionClient {
             }
         });
 
-        renderer.viewChanged.connect(function(data) {
+        renderer.viewChanged.connect((data) => {
+            if (playbackMode) {
+                return
+            }
             // convert the data type to raw json and send to the server.
             if (socketOpen) {
                 sendMessage({
@@ -246,10 +296,11 @@ class SessionClient {
             }
         });
 
-        renderer.pointerMoved.connect(function(data) {
+        renderer.pointerMoved.connect((data) => {
+            if (playbackMode) {
+                return
+            }
             // convert the data type to raw json and send to the server.
-            // console.log("mousePos:", mousePos.toJSON());
-            // console.log("ray:", ray.toJSON());
             if (socketOpen) {
                 sendMessage({
                     type: 'pointerMoved',
@@ -259,6 +310,9 @@ class SessionClient {
         });
 
         renderer.actionStarted.connect((msg) => {
+            if (playbackMode) {
+                return
+            }
             if (msg.type == 'strokeStarted') {
                 let myMarker = connectedUsers[myId].userMarker;
                 let data = msg.data;
@@ -269,6 +323,9 @@ class SessionClient {
                 sendMessage(msg);
         });
         renderer.actionOccuring.connect((msg) => {
+            if (playbackMode) {
+                return
+            }
             if (msg.type == 'strokeSegmentAdded') {
                 let myMarker = connectedUsers[myId].userMarker;
                 let data = msg.data;
@@ -278,6 +335,9 @@ class SessionClient {
                 sendMessage(msg);
         });
         renderer.actionEnded.connect((msg) => {
+            if (playbackMode) {
+                return
+            }
             if (msg.type == 'strokeEnded') {
                 let myMarker = connectedUsers[myId].userMarker;
                 msg.data = {
@@ -288,139 +348,9 @@ class SessionClient {
                 sendMessage(msg);
         });
 
-        //////////////////////////////////////
-        // Websocket setup
 
-        let socketOpen = false;
-        // let ws = new WebSocket("ws://localhost:5000", "protocolOne");
-        let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
-
-        let sendMessage = (message) => {
-            if (socketOpen) {
-                if (message)
-                    convertValuesToJSON(message);
-                ws.send(JSON.stringify(message));
-            }
-        }
-
-        ws.onopen = function(event) {
-            socketOpen = true;
-            sendMessage({
-                type: 'join',
-                clientData: clientData,
-                projectID: projectID,
-                sessionID: sessionID
-            });
-            // generateRecordingUI();
-        };
-        ws.onerror = function(event) {
-            console.log("Websocket Error:" + event);
-        };
-        ws.onclose = function(event) {
-            socketOpen = false;
-            console.log("Websocket closed.")
-        };
-        ws.onmessage = function(message) {
-            let jsonData = JSON.parse(message.data);
-
-            convertValuesFromJSON(jsonData.data);
-            // console.log("onmessage:" + jsonData.type + " client:" + jsonData.client);
-            if (listeners[jsonData.type]) {
-                listeners[jsonData.type](jsonData.client, jsonData.data);
-            }
-        };
-
-        // const clientsList = document.createElement('div');
-        // clientsList.style.position = 'fixed';
-        // clientsList.style.left = '20px';
-        // clientsList.style.bottom = '20px';
-        // clientsList.style.padding = '20px';
-        // clientsList.style.backgroundColor = 'silver';
-        // div.appendChild(clientsList);
-
-        listeners.sessionUpdate = function(client, data) {
-            for (let clientData of data.clients) {
-                if (clientData.id != myId) {
-                    onUserConnected(clientData.id, clientData);
-                }
-            }
-            // Note: this method updates a newly connected user
-            // to the current state of the session. We really only
-            // need the latest head positions, and all the line drawing.
-            // TODO: Optimize this later once sessions get long.
-            // Note: if a user re-joins a session they were previously
-            for (let eventData of data.events) {
-                handleEvent(eventData.event);
-            }
-        };
-
-        listeners.replayState = function(client, data) {
-            replayData = data;
-        };
-
-        listeners.clientDisconnect = function(client, data) {
-            onUserDisconnected(client);
-        };
-
-        // Updates the state of the connected user avatars.
-        // listeners.updateState = function(message) {
-        //     updateAvatars(message.data);
-        // };
-
-
-        listeners.joinClient = function(client, data) {
-            if (!connectedUsers[client]) {
-                onUserConnected(client, data);
-            }
-        };
-
-        listeners.viewChanged = function(client, data) {
-            onUserViewChange(client, data);
-        };
-
-        listeners.strokeStarted = function(client, data) {
-            onUserStrokeStarted(client, data);
-        };
-
-        listeners.strokeSegmentAdded = function(client, data) {
-            onUserStrokeSegmentAdded(client, data);
-        };
-
-        listeners.clearRecording = function(client, data) {
-            clearButton.disabled = true;
-            timeline.style.display = 'none';
-            playButton.style.display = 'none';
-            for (let clientId in connectedUsers) {
-                let userMarker = connectedUsers[clientId].userMarker;
-                userMarker.clear();
-            }
-        };
-
-        listeners.startRecording = function(client, data) {
-            clearButton.disabled = true;
-            timeline.style.display = 'none';
-            playButton.style.display = 'none';
-        };
-
-        listeners.stopRecording = function(client, data) {
-            clearButton.disabled = false;
-            // recSelector.value = data.id;
-            timeline.style.display = 'block';
-            playButton.style.display = 'block';
-        };
-
-        listeners.projectAnalytics = function(client, data) {
-            onAnalyticsDataRecieved(data);
-        }
-
-        listeners.treeItemGlobalXfoChanged = function(client, data) {
-            updatingTreeXfos = true;
-            let resolvedItem = renderer.getScene().getRoot().resolvePath(data.path);
-            resolvedItem.globalXfo = data.xfo;
-            updatingTreeXfos = false;
-        }
-
-        ////////////////////////////////////////
+        ////////////////////////////////////
+        // Recieving Messages
 
         let handleEvent = (event) => {
 
@@ -449,6 +379,63 @@ class SessionClient {
                     break;
 
             }
+        }
+
+        listeners.sessionUpdate = (client, data) => {
+            // for (let clientData of data.clients) {
+            //     if (clientData.id != myId) {
+            //         onUserConnected(clientData.id, clientData);
+            //     }
+            // }
+            // Note: this method updates a newly connected user
+            // to the current state of the session. We really only
+            // need the latest head positions, and all the line drawing.
+            // TODO: Optimize this later once sessions get long.
+            // Note: if a user re-joins a session they were previously
+            for (let eventData of data.events) {
+                handleEvent(eventData.event);
+            }
+        };
+
+        listeners.joinClient = (client, data) => {
+            if (!connectedUsers[client]) {
+                onUserConnected(client, data);
+            }
+        };
+
+        listeners.clientDisconnect = (client, data) => {
+            onUserDisconnected(client);
+        };
+
+        listeners.viewChanged = (client, data) => {
+            onUserViewChange(client, data);
+        };
+
+        listeners.strokeStarted = (client, data) => {
+            onUserStrokeStarted(client, data);
+        };
+
+        listeners.strokeSegmentAdded = (client, data) => {
+            onUserStrokeSegmentAdded(client, data);
+        };
+
+        listeners.startRecording = (client, data) => {
+            this.sessionModeChanged.emit(1);
+        };
+
+        listeners.endRecording = (client, data) => {
+            this.sessionModeChanged.emit(2);
+        };
+
+        listeners.projectAnalytics = (client, data) => {
+            onAnalyticsDataRecieved(data);
+        }
+
+        listeners.treeItemGlobalXfoChanged = (client, data) => {
+            updatingTreeXfos = true;
+            let resolvedItem = renderer.getScene().getRoot().resolvePath(data.path);
+            resolvedItem.globalXfo = data.xfo;
+            updatingTreeXfos = false;
         }
 
         ////////////////////////////////////////////////////////
@@ -489,108 +476,145 @@ class SessionClient {
         }
 
         ////////////////////////////////////////////////////////
-        if (true) {
-            ////////////////////////////////////////
-            // Playback
-            let playWait = false;
-            let actualReplay = null;
-            let requestId = null;
-            let start = null;
-            let duration = null;
-            let rate = null;
-            let isPlaying = false;
+        // Playback
+        let isPlaying = false;
+        let sessionTime = 0;
+        let prevEventId = 0;
+        let actualRecording = null;
+        let replayData = null;
 
+        // After joining, or finishing a recording
+        // we recieve the recording data from the server.
+        listeners.replayData = (client, data) => {
+            replayData = data;
+            console.log('replayDataRecieved:' + replayData);
+            this.replayDataRecieved.emit(replayData, playbackMode);
+        };
 
-            let requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
-                window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
-
-            window.requestAnimationFrame = requestAnimationFrame;
-
-            // After joining, or finishing a recording
-            // we recieve the recording data from the server.
-            listeners.replayData = function(message) {
-                replayData = message.data;
-                playButton.style.display = 'block';
-                timeline.style.display = 'block';
-                timeline.value = 0;
-                if (playWait) {
-                    play();
-                }
-            };
-
-            this.getRecordingDuration = () => {
-                return new Date(replayData.stopTime) - new Date(replayData.startTime);
-            }
-
-
-            let resetState = () => {
-                Object.keys(connectedUsers).forEach(function(key) {
-                    connectedUsers[key].userMarker.destroy();
-                    onUserDisconnected(key);
-                });
-            }
-
-            this.setSessionTime = (time) => {
-                // console.log("stateByTime:" + time);
-
-                if(isPlaying) {
-                    this.stopPlaying();
-                    isPlaying = false;
-                }
-
-                const initState = {};
-
-                if (time < lastTime) {
-                    lastTime = 0;
-                    lastEvent = 0;
-                    resetState();
-                }
-
-                for (lastEvent; lastEvent < replayData.events.length; lastEvent++) {
-                    const currentEvent = replayData.events[lastEvent];
-                    const actualTime = new Date(currentEvent.timestamp);
-                    if (actualTime > time) {
-                        break;
-                    }
-
-                    // if (!connectedUsers[currentEvent.client]) {
-                    //     onUserConnected(currentEvent.client, replayData.clients[currentEvent.client].color);
-                    // }
-
-                    handleEvent(currentEvent.event);
-                }
-
-                lastTime = time;
-            }
-
-            this.startPlaying = ()=>{
-                duration = new Date(replayData.stopTime) - new Date(replayData.startTime);
-                rate = duration / 100;
-                playWait = false;
-                isPlaying = true;
-                start = Date.now();
-                renderer.redrawOccured.connect(step);
-                renderer.startContinuousDrawing();
-            }
-
-            this.stopPlaying = ()=>{
-                isPlaying = false;
-                renderer.stopContinuousDrawing();
-                renderer.redrawOccured.disconnect(step);
-            }
-
-            // function step() {
-            //     let actualMS = Date.now() - start;
-            //     if (actualMS < duration) {
-            //         stateByTime(actualMS);
-            //         timeline.value = actualMS / rate;
-            //     } else {
-            //         stopPlaying();
-            //     }
-            // }
-
+        let resetState = () => {
+            prevEventId = 0;
+            // TODO: moved geoms myst be rest to starting positions.
+            Object.keys(connectedUsers).forEach((key) => {
+                connectedUsers[key].userMarker.clear();
+                // onUserDisconnected(key);
+            });
         }
 
+        this.newSession = () => {
+
+            // Keep users, but reset all changes.
+            // TODO: moved geoms myst be rest to starting positions.
+            Object.keys(connectedUsers).forEach((key) => {
+                connectedUsers[key].userMarker.clear();
+            });
+
+            sessionID = generateSessionID();
+            sessionStorage.setItem('sessionID', sessionID);
+            sendMessage({
+                type: 'join',
+                clientData: clientData,
+                projectID: projectID,
+                sessionID: sessionID
+            });
+
+            playbackMode = false;
+            this.playbackModeChanged.emit(playbackMode);
+        }
+
+        // this.startRecording = () => {
+        //     sendMessage({
+        //         type: 'startRecording'
+        //     });
+        // }
+
+        // this.endRecording = () => {
+        //     sendMessage({
+        //         type: 'endRecording'
+        //     });
+        // }
+
+        this.setPlaybackMode = (mode) => {
+            playbackMode = mode;
+            if (playbackMode) {
+                myAvatar.setVisibility(true);
+                sessionTime = 0;
+                resetState();
+                sendMessage({
+                    type: 'getPlaybackData'
+                });
+            } else {
+                myAvatar.setVisibility(false);
+                this.playbackModeChanged.emit(playbackMode);
+            }
+        }
+
+
+        let advanceState = () => {
+            // If playing has progressed passed the end of the recoded data, just return
+            if (sessionTime >= replayData.duration) {
+                return;
+            }
+            if (sessionTime < replayData.events[prevEventId].timestamp) {
+                resetState();
+            }
+            while (prevEventId < replayData.events.length - 1) {
+                const currentEvent = replayData.events[prevEventId];
+                const eventTime = new Date(currentEvent.timestamp);
+                if (eventTime > sessionTime || prevEventId == replayData.events.length - 1) {
+                    break;
+                }
+
+                // if (!connectedUsers[currentEvent.client]) {
+                //     onUserConnected(currentEvent.client, replayData.clients[currentEvent.client].color);
+                // }
+
+                handleEvent(currentEvent.event);
+                prevEventId++
+            }
+        }
+
+        this.setSessionTime = (time) => {
+            console.log("setSessionTime:" + time);
+            if (isPlaying) {
+                this.stopPlaying();
+                isPlaying = false;
+            }
+
+            sessionTime = time;
+            advanceState();
+            this.sessionTimeChanged.emit(sessionTime);
+        }
+
+        let prevT;
+        let incrementTime = () => {
+            let now = Date.now();
+            sessionTime += (now - prevT);
+            console.log("incrementTime:" + sessionTime);
+            advanceState();
+            this.sessionTimeChanged.emit(sessionTime);
+            if (sessionTime >= replayData.duration) {
+                this.stopPlaying();
+            }
+            prevT = now;
+        }
+        this.startPlaying = () => {
+            console.log("startPlaying")
+            isPlaying = true;
+            prevT = Date.now();
+            renderer.redrawOccured.connect(incrementTime);
+            renderer.startContinuousDrawing();
+        }
+
+        this.isPlaying = () => {
+            return isPlaying;
+        }
+
+        this.stopPlaying = () => {
+            console.log("startPlaying")
+            isPlaying = false;
+            renderer.stopContinuousDrawing();
+            renderer.redrawOccured.disconnect(incrementTime);
+        }
 
         /////////////////////////////////////////////////
         // Analytics Display
@@ -635,4 +659,3 @@ class SessionClient {
 export {
     SessionClient
 };
-// export default SessionClient;

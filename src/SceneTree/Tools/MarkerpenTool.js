@@ -40,7 +40,7 @@ class MarkerpenTool {
         lineGeom.vertices.setValue(used, xfo.tr);
 
         lineGeom.lineThickness = thickness;
-        let material = new Material('stroke', 'FatLinesMaterial');
+        let material = new Material('stroke', 'FatLinesShader');
         material.addParameter('color', color);
 
 
