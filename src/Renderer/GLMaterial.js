@@ -72,7 +72,7 @@ class GLMaterial {
                 genGLTex();
             }
         }
-        const textures = this.__material.textures;
+        const textures = this.__material.getParamTextures();
         for (let texName in textures) {
             if (texName in this.gltextures && this.gltextures[texName].getTexture() == texture)
                 continue;

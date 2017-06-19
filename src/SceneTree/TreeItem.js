@@ -19,6 +19,7 @@ class TreeItem {
         this.__globalXfo = new Xfo();
         this.__boundingBox = new Box3();
         this.__boundingBoxDirty = true;
+        this.__inheritedVisiblity = true;
         this.__visible = true;
 
         // this.__private = new WeakMap(); // Not sure if this is necessary.
@@ -140,20 +141,29 @@ class TreeItem {
     // Global Matrix
 
     get localXfo() {
+        return this.getLocalXfo();
+    }
+    set localXfo(xfo) {
+        this.setLocalXfo(xfo);
+    }
+    get globalXfo() {
+        return this.getGlobalXfo();
+    }
+    set globalXfo(xfo) {
+        this.setGlobalXfo(xfo);
+    }
+    getLocalXfo() {
         return this.__localXfo;
     }
-
-    set localXfo(xfo) {
+    setLocalXfo(xfo) {
         this.__localXfo = xfo;
         this.localXfoChanged.emit(this.__localXfo);
         this.updateGlobalXfo();
     }
-
-    get globalXfo() {
+    getGlobalXfo() {
         return this.__globalXfo;
     }
-
-    set globalXfo(xfo) {
+    setGlobalXfo(xfo) {
         let parentItem = this.parentItem;
         if (parentItem !== undefined)
             this.__localXfo = parentItem.globalXfo.inverse().multiply(xfo);
@@ -185,15 +195,32 @@ class TreeItem {
     // Visibility
 
     getVisible() {
-        return this.__visible;
+        return this.__inheritedVisiblity && this.__visible;
     }
 
     setVisible(val) {
         if (this.__visible != val) {
+            let prev = this.getVisible();
             this.__visible = val;
-            for (let childItem of this.__childItems)
-                childItem.setVisible(val);
-            this.visibilityChanged.emit(val);
+            let visibile = this.getVisible();
+            if(prev != visibile) {
+                for (let childItem of this.__childItems)
+                    childItem.setInheritedVisiblity(visibile);
+                this.visibilityChanged.emit(visibile);
+            }
+        }
+    }
+
+    setInheritedVisiblity(val) {
+        if (this.__inheritedVisiblity != val) {
+            let prev = this.getVisible();
+            this.__inheritedVisiblity = val;
+            let visibile = this.getVisible();
+            if(prev != visibile) {
+                for (let childItem of this.__childItems)
+                    childItem.setInheritedVisiblity(visibile);
+                this.visibilityChanged.emit(visibile);
+            }
         }
     }
 
@@ -237,7 +264,7 @@ class TreeItem {
     addChild(childItem, checkCollisions=true) {
         if (checkCollisions && this.getChildByName(childItem.name) !== null)
             throw "Item '" + childItem.name + "' is already a child of :" + this.path;
-        childItem.setVisible(this.__visible);
+        childItem.setInheritedVisiblity(this.getVisible());
         this.__childItems.push(childItem);
         childItem.parentItem = this;
 

@@ -61,21 +61,21 @@ function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4();;
 }
 
-let generateSessionID = () => {
-    let words = [
-        'sun',
-        'sky',
-        'cow',
-        'six',
-        'sir',
-        'tag',
-        'view'
-    ];
-    let sessionID = words[random(0, 6)] + words[random(0, 6)].toUpperCase() + words[random(0, 6)];
-    // window.location.replace('#id=' + sessionID);
-    // window.history.pushState("Session", "Title", window.location+'?id=' + sessionID);
-    return sessionID;
-}
+// let generateSessionID = () => {
+//     let words = [
+//         'sun',
+//         'sky',
+//         'cow',
+//         'six',
+//         'sir',
+//         'tag',
+//         'view'
+//     ];
+//     let sessionID = words[random(0, 6)] + words[random(0, 6)].toUpperCase() + words[random(0, 6)];
+//     // window.location.replace('#id=' + sessionID);
+//     // window.history.pushState("Session", "Title", window.location+'?id=' + sessionID);
+//     return sessionID;
+// }
 
 let getLocationData = (callback) => {
     function createElements(elements) {
@@ -163,7 +163,7 @@ class SessionClient {
         // Client IDs need to be persistent.
         // TODO: Integrate with app login, so we can track users
         // by thier profile.
-        let clientData = JSON.parse(localStorage.getItem('clientData'));
+        let clientData;// = JSON.parse(localStorage.getItem('clientData'));
         if (clientData) {
             convertValuesFromJSON(clientData);
         } else {
@@ -191,10 +191,10 @@ class SessionClient {
         let sessionID = urlVars.args['id'];
         if (!sessionID) {
             // Else check to see if we are already in a session.
-            sessionID = sessionStorage.getItem('sessionID');
+            //sessionID = sessionStorage.getItem('sessionID');
         }
         if (!sessionID) {
-            sessionID = generateSessionID();
+            sessionID = guid();
             sessionStorage.setItem('sessionID', sessionID);
         }
         console.log("Vars projectID:" + projectID + " sessionID:" + sessionID + " userID:" + myId);
@@ -223,6 +223,22 @@ class SessionClient {
         let ws = new WebSocket("ws://localhost:8000", "protocolOne");
         // let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
 
+        let joinSession = ()=>{
+            sendMessage({
+                type: 'join',
+                clientData: clientData,
+                projectID: projectID,
+                sessionID: sessionID
+            });
+            sendMessage({
+                type: 'viewChanged',
+                data: {
+                    interfaceType: 'MouseAndKeyboard',
+                    viewXfo: renderer.getViewport().getCamera().getGlobalXfo()
+                }
+            });
+        }
+
         let sendMessage = (message) => {
             if (socketOpen) {
                 if (message)
@@ -233,12 +249,7 @@ class SessionClient {
 
         ws.onopen = (event) => {
             socketOpen = true;
-            sendMessage({
-                type: 'join',
-                clientData: clientData,
-                projectID: projectID,
-                sessionID: sessionID
-            });
+            joinSession();
         };
         ws.onerror = (event) => {
             console.log("Websocket Error:" + event);
@@ -487,8 +498,9 @@ class SessionClient {
         // we recieve the recording data from the server.
         listeners.replayData = (client, data) => {
             replayData = data;
-            console.log('replayDataRecieved:' + replayData);
+            // console.log('replayDataRecieved:' + replayData);
             this.replayDataRecieved.emit(replayData, playbackMode);
+            this.setSessionTime(0);
         };
 
         let resetState = () => {
@@ -510,13 +522,7 @@ class SessionClient {
 
             sessionID = generateSessionID();
             sessionStorage.setItem('sessionID', sessionID);
-            sendMessage({
-                type: 'join',
-                clientData: clientData,
-                projectID: projectID,
-                sessionID: sessionID
-            });
-
+            joinSession();
             playbackMode = false;
             this.playbackModeChanged.emit(playbackMode);
         }
@@ -540,10 +546,16 @@ class SessionClient {
                 sessionTime = 0;
                 resetState();
                 sendMessage({
-                    type: 'getPlaybackData'
+                    type: 'leaveSession'
+                });
+                sendMessage({
+                    type: 'getPlaybackData',
+                    projectID,
+                    sessionID
                 });
             } else {
                 myAvatar.setVisibility(false);
+                joinSession();
                 this.playbackModeChanged.emit(playbackMode);
             }
         }
@@ -574,7 +586,7 @@ class SessionClient {
         }
 
         this.setSessionTime = (time) => {
-            console.log("setSessionTime:" + time);
+            // console.log("setSessionTime:" + time);
             if (isPlaying) {
                 this.stopPlaying();
                 isPlaying = false;
@@ -589,7 +601,6 @@ class SessionClient {
         let incrementTime = () => {
             let now = Date.now();
             sessionTime += (now - prevT);
-            console.log("incrementTime:" + sessionTime);
             advanceState();
             this.sessionTimeChanged.emit(sessionTime);
             if (sessionTime >= replayData.duration) {
@@ -598,7 +609,7 @@ class SessionClient {
             prevT = now;
         }
         this.startPlaying = () => {
-            console.log("startPlaying")
+            // console.log("startPlaying");
             isPlaying = true;
             prevT = Date.now();
             renderer.redrawOccured.connect(incrementTime);
@@ -610,7 +621,7 @@ class SessionClient {
         }
 
         this.stopPlaying = () => {
-            console.log("startPlaying")
+            // console.log("stopPlaying");
             isPlaying = false;
             renderer.stopContinuousDrawing();
             renderer.redrawOccured.disconnect(incrementTime);
@@ -638,7 +649,7 @@ class SessionClient {
         let requestAnalytics = () => {
             sendMessage({
                 type: 'getProjectAnalytics',
-                projectID: projectID
+                projectID
             });
         }
         let removeAnalytics = () => {

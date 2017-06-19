@@ -10,7 +10,7 @@ class GLDrawItemSet {
         this.__instancedIdsBuffer = null;
         this.__instancedIdsBufferDirty = true;
         this.__drawCount = 0;// The number of visible drawn geoms.
-        this.__inverted = false;
+        // this.__inverted = false;
         this.__lightmapName = undefined;
 
         this.__shaderBindings = {};
@@ -24,9 +24,9 @@ class GLDrawItemSet {
         return this.__gldrawItems[index];
     }
 
-    isInverted() {
-        return this.__inverted;
-    }
+    // isInverted() {
+    //     return this.__inverted;
+    // }
 
     getLightmapName() {
         return this.__lightmapName;
@@ -39,7 +39,7 @@ class GLDrawItemSet {
             this.__drawCount++;
 
         if (this.__gldrawItems.length == 1) {
-            this.__inverted = gldrawItem.isInverted();
+            // this.__inverted = gldrawItem.isInverted();
             this.__lightmapName = gldrawItem.getGeomItem().getLightmap();
         }
 

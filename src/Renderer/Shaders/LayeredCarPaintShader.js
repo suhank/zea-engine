@@ -159,7 +159,7 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texC
     if(_texConnected)
         return toLinear(texture2D(tex, texCoord));
     else
-        return toLinear(value);
+        return value;
 }
 
 #endif
@@ -209,7 +209,7 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = toLinear(_baseColor).rgb;
+    material.baseColor      = _baseColor.rgb;
 #else
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;

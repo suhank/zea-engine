@@ -30,7 +30,7 @@ class UserAvatar {
 
         this.__treeItem = new TreeItem(id);
         this.__treeItem.setVisible(visible);
-        this.__material = new Material('user' + id + 'Material', 'FlatSurfaceShader');
+        this.__material = new Material('user' + id + 'Material', 'SimpleSurfaceShader');
         this.__material.addParameter('baseColor', new Color(data.color.r, data.color.g, data.color.b));
         this.setMouseAndCameraRepresentation();
 
@@ -47,7 +47,6 @@ class UserAvatar {
 
     setMouseAndCameraRepresentation() {
         this.__treeItem.removeAllChildren();
-        this.__treeItem.localXfo = new Xfo();
         let shape = new Cuboid('Camera', 0.2 * this.__avatarScale, 0.2 * this.__avatarScale, 0.4 * this.__avatarScale);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
@@ -57,7 +56,6 @@ class UserAvatar {
 
     setTabletAndFingerRepresentation() {
         this.__treeItem.removeAllChildren();
-        this.__treeItem.localXfo = new Xfo();
         let shape = new Cuboid('Camera', 0.1, 0.1, 0.2);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
@@ -88,9 +86,7 @@ class UserAvatar {
 
                 this.__controllers.push(controllerTree);
             }
-            const controllerXfo = new Xfo();
-            controllerXfo.fromJSON(data.controllers[i].xfo);
-            this.__controllers[i].localXfo = controllerXfo;
+            this.__controllers[i].setLocalXfo(data.controllers[i].xfo);
         }
         // Remove any controllers that have turned off
         for (let i = data.controllers.length; i < this.__controllers.length; i++) {
@@ -106,9 +102,7 @@ class UserAvatar {
                     if (this.__currentViewMode !== 'MouseAndKeyboard') {
                         this.setMouseAndCameraRepresentation(data);
                     }
-                    const viewXfo = new Xfo();
-                    viewXfo.fromJSON(data.viewXfo);
-                    this.__treeItem.getChild(0).localXfo = viewXfo;
+                    this.__treeItem.getChild(0).setLocalXfo(data.viewXfo);
                 }
                 break;
             case 'TabletAndFinger':
@@ -123,7 +117,7 @@ class UserAvatar {
                         this.setViveRepresentation(data);
                     }
 
-                    this.__treeItem.getChild(0).localXfo = data.viewXfo;
+                    this.__treeItem.getChild(0).setLocalXfo(data.viewXfo);
                     if(data.controllers)
                         this.updateViveControllers(data);
                 }

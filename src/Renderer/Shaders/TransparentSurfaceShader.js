@@ -121,7 +121,7 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texC
     if(_texConnected)
         return toLinear(texture2D(tex, texCoords));
     else
-        return toLinear(value);
+        return value;
 }
 
 float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoords) {
@@ -135,7 +135,7 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor      = toLinear(_baseColor);
+    vec4 baseColor      = _baseColor;
     float opacity       = _opacity;
 
 #ifdef ENABLE_SPECULAR

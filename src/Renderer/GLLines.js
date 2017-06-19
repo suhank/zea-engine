@@ -1,7 +1,15 @@
-import { Vec3 } from '../Math/Vec3';
-import { GLGeom } from './GLGeom.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
-import { GLTexture2D } from './GLTexture2D.js';
+import {
+    Vec3
+} from '../Math/Vec3';
+import {
+    GLGeom
+} from './GLGeom.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
 
 class GLLines extends GLGeom {
     constructor(gl, lines) {
@@ -14,6 +22,7 @@ class GLLines extends GLGeom {
 
     genBuffers() {
         super.genBuffers();
+
 
         let gl = this.__gl;
         let geomBuffers = this.__geom.genBuffers();
@@ -28,26 +37,26 @@ class GLLines extends GLGeom {
 
             this.__drawCount = indices.length / 2;
 
-            let positions = geomBuffers.attrBuffers.positions;
-            let lineThickness = geomBuffers.attrBuffers.lineThickness;
+            let vertexAttributes = this.__geom.getVertexAttributes();
+            let positions = vertexAttributes.positions;
+            let lineThickness = vertexAttributes.lineThickness;
 
             let stride = 4; // The number of floats per draw item.
-            let size = positions.length * stride; // each 
-            let dataArray = new Float32Array(size);
+            let dataArray = new Float32Array(positions.length * stride);
             for (let i = 0; i < positions.length; i++) {
                 let pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
                 pos.setFromOther(positions.getValueRef(i));
 
                 // The thickness of the line.
-                if(lineThickness)
-                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i); 
+                if (lineThickness)
+                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i);
                 else
                     dataArray[(i * 4) + 3] = 1.0;
             }
             this.__positionsTexture = new GLTexture2D(gl, {
                 channels: 'RGBA',
                 format: 'FLOAT',
-                width: size / 4,
+                width: positions.length,
                 /*each pixel has 4 floats*/
                 height: 1,
                 filter: 'NEAREST',
@@ -57,12 +66,12 @@ class GLLines extends GLGeom {
             });
 
             let indexArray = new Float32Array(indices.length);
-            for (let i = 0; i < indices.length; i++){
+            for (let i = 0; i < indices.length; i++) {
                 let seqentialIndex;
-                if(i % 2 == 0)
-                    seqentialIndex = (i > 0) && (indices[i] == indices[i-1]);
+                if (i % 2 == 0)
+                    seqentialIndex = (i > 0) && (indices[i] == indices[i - 1]);
                 else
-                    seqentialIndex = (i < indices.length-1) && (indices[i] == indices[i+1]);
+                    seqentialIndex = (i < indices.length - 1) && (indices[i] == indices[i + 1]);
                 indexArray[i] = (seqentialIndex ? 1 : 0) + (indices[i] * 2);
             }
             let indexBuffer = gl.createBuffer();
@@ -117,32 +126,32 @@ class GLLines extends GLGeom {
             let lineThickness = vertexAttributes.lineThickness;
 
             let stride = 4; // The number of floats per draw item.
-            let size = positions.length * stride; // each 
-            let dataArray = new Float32Array(size);
+            let dataArray = new Float32Array(positions.length * stride);
             for (let i = 0; i < positions.length; i++) {
                 let pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
                 pos.setFromOther(positions.getValueRef(i));
 
                 // The thickness of the line.
-                if(lineThickness)
-                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i); 
+                if (lineThickness)
+                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i);
                 else
                     dataArray[(i * 4) + 3] = 1.0;
             }
-            this.__positionsTexture.resize(size / 4, 1, dataArray);
+
+            this.__positionsTexture.resize(positions.length, 1, dataArray);
 
             let indexArray = new Float32Array(indices.length);
-            for (let i = 0; i < indices.length; i++){
+            for (let i = 0; i < indices.length; i++) {
                 let seqentialIndex;
-                if(i % 2 == 0)
-                    seqentialIndex = (i > 0) && (indices[i] == indices[i-1]);
+                if (i % 2 == 0)
+                    seqentialIndex = (i > 0) && (indices[i] == indices[i - 1]);
                 else
-                    seqentialIndex = (i < indices.length-1) && (indices[i] == indices[i+1]);
+                    seqentialIndex = (i < indices.length - 1) && (indices[i] == indices[i + 1]);
                 indexArray[i] = (seqentialIndex ? 1 : 0) + (indices[i] * 2);
             }
+
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers.segmentIndices.buffer);
             gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
-            
 
         } else {
 
@@ -150,7 +159,7 @@ class GLLines extends GLGeom {
 
             if (opts.indicesChanged) {
                 let indices = this.__geom.getIndices();
-                if(this.__numSegIndices != indices.length){
+                if (this.__numSegIndices != indices.length) {
                     gl.deleteBuffer(this.__indexBuffer);
                     this.__indexBuffer = gl.createBuffer();
                 }
@@ -164,7 +173,7 @@ class GLLines extends GLGeom {
             for (let attrName in geomBuffers.attrBuffers) {
                 let attrData = geomBuffers.attrBuffers[attrName];
                 let glattr = this.__glattrbuffers[attrName];
-                if(numVertsChanged){
+                if (numVertsChanged) {
                     gl.deleteBuffer(glattr.buffer);
                     glattr.buffer = gl.createBuffer();
                 }
@@ -172,7 +181,7 @@ class GLLines extends GLGeom {
                 gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
                 gl.bufferData(gl.ARRAY_BUFFER, attr.data, gl.STATIC_DRAW);
             }
-            
+
             // Cache the size so we know later if it changed (see below)
             this.__numVertices = geomBuffers.numVertices;
             this.__numSegIndices = indices.length;
@@ -195,7 +204,7 @@ class GLLines extends GLGeom {
             let usePositionsTexture = true;
             if (usePositionsTexture) {
                 let unifs = renderstate.unifs;
-                if(unifs.positionsTexture){
+                if (unifs.positionsTexture) {
                     this.__positionsTexture.bind(renderstate, unifs.positionsTexture.location);
                     gl.uniform1i(unifs.positionsTextureSize.location, this.__positionsTexture.width);
                 }
@@ -224,7 +233,7 @@ class GLLines extends GLGeom {
         let gl = this.__gl;
         if (this.fatLines) {
             gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
-        } else{
+        } else {
             this.__gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__gl.UNSIGNED_INT, 0);
         }
     }

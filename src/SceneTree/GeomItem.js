@@ -26,6 +26,7 @@ class GeomItem extends TreeItem {
 
         this.__selectable = true;
         this.__selected = false;
+        this.geomXfoChanged = new Signal();
         this.materialAssigned = new Signal();
         this.geomAssigned = new Signal();
         this.selectionChanged = new Signal();
@@ -83,12 +84,15 @@ class GeomItem extends TreeItem {
     }
 
     get globalXfo() {
-        return super.globalXfo;
+        return super.getGlobalXfo();
     }
-
     set globalXfo(xfo) {
-        super.globalXfo = xfo;
+        this.setGlobalXfo(xfo);
+    }
+    setGlobalXfo(xfo) {
+        super.setGlobalXfo(xfo);
         this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.geomXfoChanged.emit(this.__geomXfo);
     }
 
 
@@ -134,12 +138,14 @@ class GeomItem extends TreeItem {
 
     setGeomOffsetXfo(xfo) {
         this.__geomOffsetXfo = xfo;
-        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo)
+        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.geomXfoChanged.emit(this.__geomXfo);
     }
 
     updateGlobalXfo() {
         super.updateGlobalXfo();
-        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo)
+        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.geomXfoChanged.emit(this.__geomXfo);
     }
 
     getGeomXfo() {

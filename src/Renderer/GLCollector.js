@@ -377,8 +377,8 @@ class GLCollector {
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
         let flags = 0;
-        if(gldrawItem.isInverted())
-            flags = 1;
+        // if(gldrawItem.isInverted())
+        //     flags = 1;
         let materialId = 0;
         col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, flags);
     };

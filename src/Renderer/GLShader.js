@@ -18,6 +18,9 @@ import {
 import {
     shaderLibrary
 } from './ShaderLibrary.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
 
 let bindParam = (gl, param, renderstate, gltextures={})=>{
 
@@ -25,6 +28,7 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
         let gltexture = gltextures[param.name];
         let textureUnif = renderstate.unifs['_'+param.name+'Tex'];
         if (gltexture && gltexture.isLoaded() && textureUnif){
+            // console.log("bindParam:"+param.name + ": gltexture" );
             gltexture.bind(renderstate, textureUnif.location);
             let textureConnctedUnif = renderstate.unifs['_'+param.name+'TexConnected'];
             if (textureConnctedUnif){
@@ -100,6 +104,7 @@ class GLShader extends RefCounted {
 
         this.__params = [];
         this.__shaderProgramHdls = {};
+        this.__gltextures = {};
         this.updated = new Signal();
     }
 
@@ -326,6 +331,36 @@ class GLShader extends RefCounted {
         //     hash = ((hash << 5) - hash) + hashStr(shaderStageBlock['glsl']);
         // }
         // this.__hash = Math.abs(hash);
+
+        const attachTexture = (paramName, texture) => {
+            const genGLTex = () => {
+                let gltexture;
+                if (texture instanceof HDRImage2D || texture.isHDR()){
+                    gltexture = new GLHDRImage(this.__gl, texture);
+                }
+                else if (texture.hasAlpha()){
+                    gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                }
+                else{
+                    gltexture = new GLTexture2D(this.__gl, texture);
+                }
+                this.__gltextures[paramName] = gltexture;
+            }
+            if (!texture.isLoaded()) {
+                texture.loaded.connect(() => {
+                    genGLTex();
+                });
+            } else {
+                genGLTex();
+            }
+        }
+        for (let paramName in this.__params) {
+            if(this.__params[paramName].texture != undefined) {
+                if (paramName in this.__gltextures && this.__gltextures[paramName].getTexture() == texture)
+                    continue;
+                attachTexture(paramName, this.__params[paramName].texture);
+            }
+        }
     }
 
 
@@ -380,7 +415,7 @@ class GLShader extends RefCounted {
         // Bind the default params.
         let params = this.getParameters();
         for (let [paramName, param] of Object.entries(params)) {
-            bindParam(gl, param, renderstate);
+            bindParam(gl, param, renderstate, this.__gltextures);
         }
 
         return true;

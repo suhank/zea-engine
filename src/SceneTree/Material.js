@@ -99,7 +99,7 @@ class Material extends RefCounted {
     }
 
 
-    get textures() {
+    getParamTextures() {
         let textures = {};
         for (let paramName in this.__params) {
             if(this.__params[paramName].texture != undefined)

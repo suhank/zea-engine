@@ -84,13 +84,13 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texC
     if(_texConnected)
         return toLinear(texture2D(tex, texCoords));
     else
-        return toLinear(value);
+        return value;
 }
 
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor = _baseColor;//toLinear(_baseColor);
+    vec4 baseColor = _baseColor;
     float opacity = _opacity;
 #else
     vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_texCoords);

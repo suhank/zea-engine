@@ -10,7 +10,7 @@ class GLDrawItem {
         this.__glGeom = glGeom;
         this.__id = id;
         this.__flags = flags;
-        this.visible = true; 
+        this.visible = this.__geomItem.getVisible(); 
         this.__culled = false;
 
         this.__color = geomItem.color ? geomItem.color : new Color(1,0,0,1);
@@ -20,14 +20,14 @@ class GLDrawItem {
         let geomXfo = this.__geomItem.getGeomXfo();
         // Geometry is inverted if one scale value is negative and the rest is positive
         // or all values are negative.
-        this.__inverted = (
-            (geomXfo.sc.x < 0.0 && geomXfo.sc.y > 0.0 && geomXfo.sc.z > 0.0) || 
-            (geomXfo.sc.y < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.z > 0.0) || 
-            (geomXfo.sc.z < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.y > 0.0) ||
-            (geomXfo.sc.x > 0.0 && geomXfo.sc.y < 0.0 && geomXfo.sc.z < 0.0) || 
-            (geomXfo.sc.y > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.z < 0.0) || 
-            (geomXfo.sc.z > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.y < 0.0)
-            );
+        // this.__inverted = (
+        //     (geomXfo.sc.x < 0.0 && geomXfo.sc.y > 0.0 && geomXfo.sc.z > 0.0) || 
+        //     (geomXfo.sc.y < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.z > 0.0) || 
+        //     (geomXfo.sc.z < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.y > 0.0) ||
+        //     (geomXfo.sc.x > 0.0 && geomXfo.sc.y < 0.0 && geomXfo.sc.z < 0.0) || 
+        //     (geomXfo.sc.y > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.z < 0.0) || 
+        //     (geomXfo.sc.z > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.y < 0.0)
+        //     );
         this.__assignedPasses = [];
 
         this.transformChanged = new Signal();
@@ -35,9 +35,8 @@ class GLDrawItem {
         this.destructing = new Signal();
         this.visibilityChanged = new Signal();
 
-        this.__geomItem.globalXfoChanged.connect(() => {
-            let geomXfo = this.__geomItem.getGeomXfo();
-            this.__inverted = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
+        this.__geomItem.geomXfoChanged.connect((geomXfo) => {
+            //this.__inverted = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
             this.transformChanged.emit();
         });
         this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
@@ -73,9 +72,9 @@ class GLDrawItem {
         return this.__geomItem.getVisible();
     }
 
-    isInverted(){
-        return this.__inverted;
-    }
+    // isInverted(){
+    //     return this.__inverted;
+    // }
 
     // TODO: this system isn't super nice.
     // Maybe all GeomItems should be assigned a color. (Currently only GizmoITem has a color)
