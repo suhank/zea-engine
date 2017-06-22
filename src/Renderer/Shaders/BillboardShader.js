@@ -71,7 +71,7 @@ void main(void) {
 
 
     v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
-    v_gradient = v_texCoord;
+    v_gradient = v_texCoord * billboardData.w;
     vec4 layoutData = texelFetch1D(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
     v_texCoord *= layoutData.zw;
     v_texCoord += layoutData.xy;
@@ -115,7 +115,7 @@ void main(void) {
     if(color.r > 0.95)
         discard;
     gl_FragColor = v_tint * (1.0-color.r);
-    // gl_FragColor.rgb = gl_FragColor.rgb * (1.25 - v_gradient.y);
+    gl_FragColor.rgb = gl_FragColor.rgb * (1.0 - v_gradient.y);
 }
 `);
     }

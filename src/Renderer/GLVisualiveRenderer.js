@@ -195,7 +195,7 @@ class GLVisualiveRenderer extends GLRenderer {
         return vp;
     }
 
-    onKeyPressed(key) {
+    onKeyPressed(key, event) {
         switch (key) {
             case '[':
                 this.__debugMode--;
@@ -233,13 +233,8 @@ class GLVisualiveRenderer extends GLRenderer {
                 else
                     this.toggleContinuousDrawing();
                 break;
-            default:
-                super.onKeyPressed(key);
         }
-        // Note: emit the signal, even if the event is handled.
-        // This enables extra special handling in custom code.
-        this.keyPressed.emit(key);
-        this.requestRedraw();
+        super.onKeyPressed(key, event);
     }
 
     ////////////////////////////
@@ -443,6 +438,7 @@ class GLVisualiveRenderer extends GLRenderer {
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
                     if (this.__stats)
                         this.__stats.end();
+                    this.redrawOccured.emit();
                     return;
                 }
             }

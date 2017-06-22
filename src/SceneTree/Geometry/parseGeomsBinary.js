@@ -22,7 +22,9 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
     for (let i = geomsRange[0]; i < geomsRange[1]; i++) {
         let geomReader = new BinReader(bufferSlice, toc[i] - offset, isMobileDevice);
         let className = geomReader.loadStr();
-        // console.log(i + ":" + offset + ".className:" +  className + " pos:" + (toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
+        let pos = geomReader.pos();
+        // let name = geomReader.loadStr();
+        // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
         let geom;
         switch (className) {
             case 'Points':
@@ -38,6 +40,7 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
                 throw ("Unsupported Geom type:" + className);
         }
         try {
+            geomReader.seek(pos); // Reset the pointer to the start of the item data.
             geom.readBinary(geomReader);
         } catch(e) {
             console.warn("Error loading:" + geom.name + "\n:" + e);

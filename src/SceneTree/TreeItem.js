@@ -166,7 +166,7 @@ class TreeItem {
     setGlobalXfo(xfo) {
         let parentItem = this.parentItem;
         if (parentItem !== undefined)
-            this.__localXfo = parentItem.globalXfo.inverse().multiply(xfo);
+            this.__localXfo = parentItem.getGlobalXfo().inverse().multiply(xfo);
         else
             this.__localXfo = xfo;
         this.__globalXfo = xfo;
@@ -182,7 +182,7 @@ class TreeItem {
     updateGlobalXfo() {
         let parentItem = this.parentItem;
         if (parentItem !== undefined)
-            this.__globalXfo = parentItem.globalXfo.multiply(this.__localXfo);
+            this.__globalXfo = parentItem.getGlobalXfo().multiply(this.__localXfo);
         else
             this.__globalXfo = this.__localXfo;
         this.globalXfoChanged.emit(this.__globalXfo);

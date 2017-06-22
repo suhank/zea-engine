@@ -2,9 +2,11 @@ import {
     Vec3,
     Xfo,
     Color,
+    EulerAngles,
     Signal
 } from '../Math';
 import {
+    Cone,
     Cuboid,
     Sphere,
     TreeItem,
@@ -45,17 +47,34 @@ class UserAvatar {
         // TODO: show a pointer beam.
     }
 
+    __switchReprentationTree(treeItem) {
+        if (this.__currentTree) {
+            this.__currentTree.setVisible(false);
+        }
+        this.__currentTree = treeItem;
+        this.__currentTree.setVisible(true);
+    }
+
     setMouseAndCameraRepresentation() {
-        this.__treeItem.removeAllChildren();
-        let shape = new Cuboid('Camera', 0.2 * this.__avatarScale, 0.2 * this.__avatarScale, 0.4 * this.__avatarScale);
-        let geomItem = new GeomItem(this.__id, shape, this.__material);
-        this.__treeItem.addChild(geomItem);
+        if (!this.__mouseAndKeyboardTree) {
+
+            //let shape = new Cuboid('Camera', 0.2 * this.__avatarScale, 0.2 * this.__avatarScale, 0.4 * this.__avatarScale);
+            let shape = new Cone('Camera', 0.4 * this.__avatarScale, 0.6, 4, true);
+            shape.computeVertexNormals();
+            let geomItem = new GeomItem(this.__id, shape, this.__material);
+            let geomXfo = new Xfo();
+            geomXfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, Math.PI * 0.25, 0.0));
+            geomItem.setGeomOffsetXfo(geomXfo);
+            this.__mouseAndKeyboardTree = new TreeItem("MouseAndCameraRepresentation");
+            this.__mouseAndKeyboardTree.addChild(geomItem);
+            this.__treeItem.addChild(this.__mouseAndKeyboardTree);
+        }
         this.__currentViewMode = 'MouseAndKeyboard';
-        this.__controllers = [];
+        this.__switchReprentationTree(this.__mouseAndKeyboardTree);
     }
 
     setTabletAndFingerRepresentation() {
-        this.__treeItem.removeAllChildren();
+        // this.__treeItem.removeAllChildren();
         let shape = new Cuboid('Camera', 0.1, 0.1, 0.2);
         let geomItem = new GeomItem(this.__id, shape, this.__material);
         this.__treeItem.addChild(geomItem);
@@ -64,13 +83,18 @@ class UserAvatar {
     }
 
     setViveRepresentation() {
-        this.__treeItem.removeAllChildren();
+        if (!this.__viveTree) {
+            let hmdTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_HMD').clone();
+            hmdTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+            let treeItem = new TreeItem("hmdHolder");
+            treeItem.addChild(hmdTree);
 
-        let hmdTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_HMD').clone();
-        hmdTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
-        let treeItem = new TreeItem("hmdHolder");
-        treeItem.addChild(hmdTree);
-        this.__treeItem.addChild(treeItem);
+            this.__viveTree = new TreeItem("ViveRepresentation");
+            this.__viveTree.addChild(treeItem);
+            this.__treeItem.addChild(this.__viveTree);
+        }
+        // this.__treeItem.addChild(treeItem);
+        this.__switchReprentationTree(this.__viveTree);
         this.__currentViewMode = 'Vive';
     }
 
@@ -82,17 +106,21 @@ class UserAvatar {
                 controllerTree.name = 'Handle' + i;
                 controllerTree.localXfo.tr.set(0, -0.035, 0.01);
                 controllerTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
-                this.__treeItem.addChild(controllerTree);
+                let treeItem = new TreeItem("handleHolder" + i);
+                treeItem.addChild(controllerTree);
+                this.__viveTree.addChild(treeItem);
 
-                this.__controllers.push(controllerTree);
+                this.__controllers.push(treeItem);
             }
+            this.__controllers[i].setVisible(true);
             this.__controllers[i].setLocalXfo(data.controllers[i].xfo);
         }
-        // Remove any controllers that have turned off
-        for (let i = data.controllers.length; i < this.__controllers.length; i++) {
-            this.__treeItem.removeChildByHandle(this.__controllers[i]);
+        // Hide any controllers that have turned off
+        if (this.__controllers.length > data.controllers.length) {
+            for (let i = data.controllers.length; i < this.__controllers.length; i++) {
+                this.__controllers[i].setVisible(false);
+            }
         }
-        this.__controllers.length = data.controllers.length;
     }
 
     onViewChange(data) {
@@ -102,7 +130,7 @@ class UserAvatar {
                     if (this.__currentViewMode !== 'MouseAndKeyboard') {
                         this.setMouseAndCameraRepresentation(data);
                     }
-                    this.__treeItem.getChild(0).setLocalXfo(data.viewXfo);
+                    this.__mouseAndKeyboardTree.getChild(0).setLocalXfo(data.viewXfo);
                 }
                 break;
             case 'TabletAndFinger':
@@ -117,8 +145,8 @@ class UserAvatar {
                         this.setViveRepresentation(data);
                     }
 
-                    this.__treeItem.getChild(0).setLocalXfo(data.viewXfo);
-                    if(data.controllers)
+                    this.__viveTree.getChild(0).setLocalXfo(data.viewXfo);
+                    if (data.controllers)
                         this.updateViveControllers(data);
                 }
 

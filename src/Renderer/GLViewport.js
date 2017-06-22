@@ -580,8 +580,8 @@ class GLViewport extends BaseViewport {
         return false;
     }
 
-    onKeyPressed(key) {
-        if (this.__camera.onKeyPressed(key))
+    onKeyPressed(key, event) {
+        if (this.__camera.onKeyPressed(key, event))
             return true;
         switch (key) {
             case 'f':
@@ -594,14 +594,14 @@ class GLViewport extends BaseViewport {
         }
         return false;
     }
-    onKeyDown(key) {
-        if (this.__camera.onKeyDown(key))
+    onKeyDown(key, event) {
+        if (this.__camera.onKeyDown(key, event))
             return true;
         return false;
     }
 
-    onKeyUp(key) {
-        if (this.__camera.onKeyUp(key))
+    onKeyUp(key, event) {
+        if (this.__camera.onKeyUp(key, event))
             return true;
         return false;
     }

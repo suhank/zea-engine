@@ -17,6 +17,7 @@ class ResourceLoader {
         this.__callbacks = {};
         this.loaded = new Signal();
         this.progressIncremented = new Signal();
+        this.allResourcesLoaded = new Signal(true);
 
         this.__loading = {};
         this.__totalWork = 0;
@@ -93,6 +94,9 @@ class ResourceLoader {
         //     console.log("===========DOOOONE=================");
         // }
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
+        if(this.__doneWork == this.__totalWork) {
+            this.allResourcesLoaded.emit();
+        }
     }
 
     loadResource(name, callback, addLoadWork=true) {

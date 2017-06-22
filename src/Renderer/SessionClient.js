@@ -142,6 +142,31 @@ let convertValuesToJSON = (data) => {
     }
 }
 
+let downloadData = function(file_name, mime_type, text) {
+    // Anything but IE works here
+    if (undefined === window.navigator.msSaveOrOpenBlob) {
+        var e = document.createElement('a');
+        var href = 'data:' + mime_type + ';charset=utf-8,' + encodeURIComponent(text);
+        e.setAttribute('href', href);
+        e.setAttribute('download', file_name);
+        document.body.appendChild(e);
+        e.click();
+        document.body.removeChild(e);
+    }
+    // IE-specific code
+    else {
+        var charCodeArr = new Array(text.length);
+        for (var i = 0; i < text.length; ++i) {
+            var charCode = text.charCodeAt(i);
+            charCodeArr[i] = charCode;
+        }
+        var blob = new Blob([new Uint8Array(charCodeArr)], {
+            type: mime_type
+        });
+        window.navigator.msSaveOrOpenBlob(blob, file_name);
+    }
+}
+
 
 class SessionClient {
 
@@ -163,7 +188,7 @@ class SessionClient {
         // Client IDs need to be persistent.
         // TODO: Integrate with app login, so we can track users
         // by thier profile.
-        let clientData;// = JSON.parse(localStorage.getItem('clientData'));
+        let clientData; // = JSON.parse(localStorage.getItem('clientData'));
         if (clientData) {
             convertValuesFromJSON(clientData);
         } else {
@@ -223,7 +248,7 @@ class SessionClient {
         let ws = new WebSocket("ws://localhost:8000", "protocolOne");
         // let ws = new WebSocket("wss://ws.visualive.io/", "protocolOne");
 
-        let joinSession = ()=>{
+        let joinSession = () => {
             sendMessage({
                 type: 'join',
                 clientData: clientData,
@@ -248,8 +273,10 @@ class SessionClient {
         }
 
         ws.onopen = (event) => {
-            socketOpen = true;
-            joinSession();
+            renderer.getScene().getResourceLoader().allResourcesLoaded.connect(()=>{
+                socketOpen = true;
+                joinSession();
+            });
         };
         ws.onerror = (event) => {
             console.log("Websocket Error:" + event);
@@ -560,29 +587,29 @@ class SessionClient {
             }
         }
 
-
+        let prevSessionTime = 0;
         let advanceState = () => {
             // If playing has progressed passed the end of the recoded data, just return
             if (sessionTime >= replayData.duration) {
                 return;
             }
-            if (sessionTime < replayData.events[prevEventId].timestamp) {
+            if (sessionTime < prevSessionTime) {
                 resetState();
             }
             while (prevEventId < replayData.events.length - 1) {
-                const currentEvent = replayData.events[prevEventId];
-                const eventTime = new Date(currentEvent.timestamp);
-                if (eventTime > sessionTime || prevEventId == replayData.events.length - 1) {
+                const eventData = replayData.events[prevEventId];
+                if (sessionTime < eventData.timestamp || prevEventId == replayData.events.length - 1) {
                     break;
                 }
 
-                // if (!connectedUsers[currentEvent.client]) {
-                //     onUserConnected(currentEvent.client, replayData.clients[currentEvent.client].color);
+                // if (!connectedUsers[eventData.client]) {
+                //     onUserConnected(eventData.client, replayData.clients[eventData.client].color);
                 // }
 
-                handleEvent(currentEvent.event);
+                handleEvent(eventData.event);
                 prevEventId++
             }
+            prevSessionTime = sessionTime;
         }
 
         this.setSessionTime = (time) => {
@@ -627,6 +654,16 @@ class SessionClient {
             renderer.redrawOccured.disconnect(incrementTime);
         }
 
+        this.loadSessionRecording = (resourcePath) => {
+            renderer.getScene().getResourceLoader().loadResource(resourcePath, (data)=>{
+                this.setPlaybackMode(true);
+                replayData = data;
+                // console.log('replayDataRecieved:' + replayData);
+                this.replayDataRecieved.emit(replayData, playbackMode);
+                this.setSessionTime(0);
+            })
+        }
+
         /////////////////////////////////////////////////
         // Analytics Display
         let analyticsPass = undefined;
@@ -663,6 +700,20 @@ class SessionClient {
             else
                 removeAnalytics();
         };
+
+        /////////////////////////////////////////////////
+        // Hotkeys
+
+        renderer.keyPressed.connect((key) => {
+            switch (key) {
+                case '?':
+                    this.toggleAnalytics();
+                    return true;
+                case '<':
+                    downloadData(sessionID + '.json', 'text/plain', JSON.stringify(replayData));
+                    return true;
+            }
+        });
     }
 
 };

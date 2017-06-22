@@ -465,8 +465,8 @@ class GLRenderer {
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
             let vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyPressed(key)) {
-                this.onKeyPressed(key);
+            if (!vp || !vp.onKeyPressed(key, event)) {
+                this.onKeyPressed(key, event);
             }
         });
         document.addEventListener('keydown', (event) => {
@@ -474,8 +474,8 @@ class GLRenderer {
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
             let vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyDown(key)) {
-                this.onKeyDown(key);
+            if (!vp || !vp.onKeyDown(key, event)) {
+                this.onKeyDown(key, event);
             }
         });
         document.addEventListener('keyup', (event) => {
@@ -483,8 +483,8 @@ class GLRenderer {
                 return;
             let key = String.fromCharCode(event.keyCode).toLowerCase();
             let vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyUp(key)) {
-                this.onKeyUp(key);
+            if (!vp || !vp.onKeyUp(key, event)) {
+                this.onKeyUp(key, event);
             }
         });
 
@@ -510,7 +510,8 @@ class GLRenderer {
         return this.__screenQuad;
     }
 
-    onKeyPressed(key) {
+    onKeyPressed(key, event) {
+        this.keyPressed.emit(key, event);
 
         // If running in electron, avoid handling hotkeys..
         if (window.process === undefined || process.browser == true) {
@@ -518,17 +519,15 @@ class GLRenderer {
                 case '>':
                     this.toggleStats();
                     return true;
-                case '?':
-                    this.sessionClient.toggleAnalytics();
-                    return true;
             }
         }
-        this.keyPressed.emit(key);
+        this.requestRedraw();
     }
-    onKeyDown(key) {
+
+    onKeyDown(key, event) {
 
     }
-    onKeyUp(key) {
+    onKeyUp(key, event) {
 
     }
 

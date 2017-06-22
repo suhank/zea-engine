@@ -38,7 +38,7 @@ class GLSimpleRenderer extends GLRenderer {
     ///////////////////////////////////
     // Events
 
-    onKeyPressed(key) {
+    onKeyPressed(key, event) {
         switch (key) {
             case 'f':
                 let selection = scene.getSelectionManager().selection;

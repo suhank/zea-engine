@@ -135,13 +135,13 @@ class BaseViewport {
     onMouseMove(event) {
         return false;
     }
-    onKeyPressed(key) {
+    onKeyPressed(key, event) {
         return false;
     }
-    onKeyDown(key) {
+    onKeyDown(key, event) {
         return false;
     }
-    onKeyUp(key) {
+    onKeyUp(key, event) {
         return false;
     }
 

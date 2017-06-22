@@ -275,6 +275,7 @@ void main(void) {
     vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
 #endif
     gl_FragColor = vec4(radiance + (emission * material.baseColor), 1.0);
+    //gl_FragColor = vec4(material.baseColor * irradiance, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
