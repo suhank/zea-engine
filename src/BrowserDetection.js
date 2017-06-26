@@ -85,15 +85,11 @@ function getBrowserDetails() {
         userAgent: navigator.userAgent
     };
 }
-function getBrowserName() {
-    return getBrowserDetails().browserName;
-}
-
 
 function isWebGLSupported() {
     let canvas = document.createElement('canvas');
     let context = create3DContext(canvas);
-    return false; //context != undefined;
+    return context != undefined;
 }
 
 function getSystemDesc() {

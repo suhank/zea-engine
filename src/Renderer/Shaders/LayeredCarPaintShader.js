@@ -112,9 +112,9 @@ varying vec3 v_worldPos;
 
 
 uniform sampler2D lightmap;
+uniform vec2 lightmapSize;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 <%include file="debugColors.glsl"/>
-uniform vec2 lightmapSize;
 uniform bool debugLightmapTexelSize;
 #endif
 

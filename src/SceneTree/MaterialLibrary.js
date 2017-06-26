@@ -1,4 +1,7 @@
 import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
     Signal,
     Color
 } from '../Math';
@@ -22,6 +25,9 @@ class MaterialLibrary {
         material.addParameter('reflectance', 0.2);
         this.__materials['Default'] = material;
 
+        this.lod = 0;
+        if(isMobileDevice())
+            this.lod = 1;
         this.loaded = new Signal();
     }
 
@@ -109,14 +115,14 @@ class MaterialLibrary {
     }
 
 
-    readBinary(reader, flags) {
+    readBinary(reader, flags=0) {
         this.name = reader.loadStr();
 
         let numTextures = reader.loadUInt32();
         for (let i = 0; i < numTextures; i++) {
             let type = reader.loadStr();
             let texture = sgFactory.constructClass(type, undefined, this.__resourceLoader);
-            texture.readBinary(reader, flags);
+            texture.readBinary(reader, flags, this.lod);
             this.__textures[texture.name] = texture;
         }
         let numMaterials = reader.loadUInt32();

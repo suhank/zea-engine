@@ -13,7 +13,7 @@ import {
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
 class FileImage2D extends Image2D {
-    constructor(resourcePath, resourceLoader, params={}) {
+    constructor(resourcePath, resourceLoader, params = {}) {
         super(params);
 
         this.__resourceLoader = resourceLoader;
@@ -21,30 +21,30 @@ class FileImage2D extends Image2D {
         this.__hasAlpha = false;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
-        this.__hdrtint = new Color(1,1,1,1);
+        this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
         this.loaded = new Signal();
 
-        if(resourcePath && resourcePath != '')
+        if (resourcePath && resourcePath != '')
             this.loadResource(resourcePath);
     }
 
-    get resourcePath(){
+    get resourcePath() {
         return this.__resourcePath;
     }
 
     loadResource(resourcePath) {
-        if (!this.__resourceLoader.resourceAvailable(resourcePath)){
+        if (!this.__resourceLoader.resourceAvailable(resourcePath)) {
             console.error("Resource unavailable:" + resourcePath);
             return;
         }
 
-        let getExt = (str)=>{
+        let getExt = (str) => {
             let p = str.split('/');
-            let last = p[p.length-1];
+            let last = p[p.length - 1];
             let suffixSt = last.lastIndexOf('.')
-            if(suffixSt != -1)
+            if (suffixSt != -1)
                 return last.substring(suffixSt)
         }
         let ext = getExt(resourcePath);
@@ -68,7 +68,7 @@ class FileImage2D extends Image2D {
         this.__resourceLoader.addWork(1);
 
         let domElement = new Image();
-        domElement.crossOrigin='anonymous';
+        domElement.crossOrigin = 'anonymous';
         domElement.onload = () => {
             this.width = domElement.width;
             this.height = domElement.height;
@@ -87,7 +87,7 @@ class FileImage2D extends Image2D {
         // TODO - confirm its necessary to add to DOM
         domElement.style.display = 'none';
         domElement.preload = 'auto';
-        domElement.crossOrigin='anonymous';
+        domElement.crossOrigin = 'anonymous';
         // domElement.crossorigin = true;
         document.body.appendChild(domElement);
         domElement.addEventListener('loadedmetadata', () => {
@@ -171,7 +171,7 @@ class FileImage2D extends Image2D {
     // }
 
     __loadVLH(resourcePath) {
-        this.__resourceLoader.loadResource(resourcePath, (entries)=>{
+        this.__resourceLoader.loadResource(resourcePath, (entries) => {
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -187,7 +187,7 @@ class FileImage2D extends Image2D {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
-                console.log(resourcePath + ": [" + this.width + ", " + this.height+"]");
+                console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm
@@ -230,19 +230,19 @@ class FileImage2D extends Image2D {
         return params;
     }
 
-    setHDRExposure(hdrexposure){
+    setHDRExposure(hdrexposure) {
         this.__hdrexposure = hdrexposure;
     }
-    getHDRExposure(){
+    getHDRExposure() {
         return this.__hdrexposure;
     }
-    setHDRTint(hdrtint){
+    setHDRTint(hdrtint) {
         this.__hdrtint = hdrtint;
     }
-    getHDRTint(){
+    getHDRTint() {
         return this.__hdrtint;
     }
-    
+
     fromJSON(json) {
 
     }
@@ -251,12 +251,23 @@ class FileImage2D extends Image2D {
 
     }
 
-    readBinary(reader, flags, textureLibrary){
+    readBinary(reader, flags, lod) {
         // super.readBinary(reader, flags);
         this.name = reader.loadStr();
         let resourcePath = reader.loadStr();
-        if(typeof resourcePath === 'string' && resourcePath != "")
+        if (typeof resourcePath === 'string' && resourcePath != "") {
+            if (lod > 0) {
+                let suffixSt = resourcePath.lastIndexOf('.')
+                if (suffixSt != -1){
+                    let lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
+                    if (this.__resourceLoader.resourceAvailable(lodPath)) {
+                        resourcePath = lodPath;
+                    }
+                }
+            }
             this.loadResource(resourcePath);
+            
+        }
     }
 };
 

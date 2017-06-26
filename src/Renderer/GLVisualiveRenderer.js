@@ -113,16 +113,16 @@ class GLVisualiveRenderer extends GLRenderer {
 
         if (!options.disableLightmaps)
             this.__shaderDirectives.defines += '\n#define ENABLE_LIGHTMAPS';
+        if (options.enableTextures)
+            this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
+        if (options.enableCrossSections)
+            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS'
 
         if (!isMobileDevice()) {
             // if(!options.disableSpecular)
             //     this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
-            if (options.enableTextures)
-                this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
             this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS\n';
         }
-        if (options.enableCrossSections)
-            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS'
     }
 
     getShaderPreprocessorDirectives() {
