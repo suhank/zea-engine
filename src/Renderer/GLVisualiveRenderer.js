@@ -1,6 +1,6 @@
 import {
     isMobileDevice
-} from '../Math';
+} from '../BrowserDetection.js';
 import {
     HDRImage2D,
     HDRImageMixer,

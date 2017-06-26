@@ -1,12 +1,19 @@
-import { Vec2 } from '../Math/Vec2';
-import { Vec3 } from '../Math/Vec3';
-import { Quat } from '../Math/Quat';
-import { Mat4 } from '../Math/Mat4';
-import { Xfo } from '../Math/Xfo';
-import { Signal } from '../Math/Signal';
-import { Box3 } from '../Math/Box3';
-import { TreeItem } from './TreeItem.js';
-import { isMobileDevice } from '../Math';
+
+import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
+    Vec2,
+    Vec3,
+    Quat,
+    Mat4,
+    Box3,
+    Xfo,
+    Signal
+} from '../Math';
+import {
+    TreeItem
+} from './TreeItem.js';
 
 class Camera extends TreeItem {
     constructor(name = undefined) {
@@ -264,7 +271,7 @@ class Camera extends TreeItem {
     onWheel(event) {
         let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
         this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(zoomDist));
-        if(this.__defaultManipulationState == 'orbit')
+        if (this.__defaultManipulationState == 'orbit')
             this.focalDistance = this.__focalDistance + zoomDist;
         this.globalXfo = this.__globalXfo;
     }

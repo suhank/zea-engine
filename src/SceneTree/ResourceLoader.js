@@ -1,5 +1,7 @@
 import {
-    isMobileDevice,
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
     Async,
     Signal
 } from '../Math';

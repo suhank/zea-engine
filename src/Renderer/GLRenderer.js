@@ -5,9 +5,11 @@ import {
     Signal
 } from '../Math';
 import {
-    setupWebGL,
-    onResize
+    create3DContext
 } from '../external/webgl-utils.js';
+import {
+    onResize
+} from '../external/onResize.js';
 import {
     GeomItem,
     Lines,
@@ -381,7 +383,7 @@ class GLRenderer {
 
         webglOptions.preserveDrawingBuffer = true;
         webglOptions.alpha = true;
-        this.__gl = setupWebGL(this.__glcanvas, webglOptions);
+        this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 
         this.__isFragDepthAvailable = this.__gl.getExtension("EXT_frag_depth");

@@ -1,11 +1,21 @@
 import {
     isIOSDevice
-} from '../Math';
-import { GLShader } from './GLShader.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+} from '../BrowserDetection.js';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    UnpackHDRShader
+} from './Shaders/UnpackHDRShader.js';
+import {
+    GLFbo
+} from './GLFbo.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
 class GLHDRImage extends GLTexture2D {
     constructor(gl, hdrImage) {
@@ -17,8 +27,7 @@ class GLHDRImage extends GLTexture2D {
         }, this);
         if (this.__hdrImage.isLoaded()) {
             this.__unpackHDRImage(this.__hdrImage.getParams());
-        }
-        else{
+        } else {
             this.__hdrImage.loaded.connect(() => {
                 this.__unpackHDRImage(this.__hdrImage.getParams());
             }, this);
@@ -30,14 +39,14 @@ class GLHDRImage extends GLTexture2D {
 
     }
 
-    __unpackHDRImage(hdrImageParams){
+    __unpackHDRImage(hdrImageParams) {
 
         let gl = this.__gl;
-        
+
         let ldr = hdrImageParams.data.ldr;
         let cdm = hdrImageParams.data.cdm;
 
-        if(!this.__fbo){
+        if (!this.__fbo) {
 
             // Note: iOS devices create FLOAT Fbox.
             // If we want better quality, we could unpack the texture in JavaScript. 
@@ -50,8 +59,8 @@ class GLHDRImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE'
             });
             this.__fbo = new GLFbo(gl, this);
-            this.__fbo.setClearColor([0,0,0,0]);
-            
+            this.__fbo.setClearColor([0, 0, 0, 0]);
+
             this.__srcLDRTex = new GLTexture2D(gl, {
                 channels: 'RGB',
                 format: 'UNSIGNED_BYTE',
@@ -65,8 +74,8 @@ class GLHDRImage extends GLTexture2D {
             this.__srcCDMTex = new GLTexture2D(gl, {
                 channels: 'ALPHA',
                 format: 'UNSIGNED_BYTE',
-                width: ldr.width/*8*/,
-                height: ldr.height/*8*/,
+                width: ldr.width /*8*/ ,
+                height: ldr.height /*8*/ ,
                 filter: 'NEAREST',
                 mipMapped: false,
                 wrap: 'CLAMP_TO_EDGE',
@@ -75,8 +84,7 @@ class GLHDRImage extends GLTexture2D {
             this.__unpackHDRShader = new UnpackHDRShader(gl);
             let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
-        }
-        else{
+        } else {
             this.__srcLDRTex.bufferData(ldr);
             this.__srcCDMTex.bufferData(cdm);
         }
@@ -107,7 +115,7 @@ class GLHDRImage extends GLTexture2D {
 
         this.__fbo.unbind();
 
-        if(!this.__hdrImage.isStream()){
+        if (!this.__hdrImage.isStream()) {
             this.__fbo.destroy();
             this.__srcLDRTex.destroy();
             this.__srcCDMTex.destroy();
@@ -119,16 +127,16 @@ class GLHDRImage extends GLTexture2D {
         this.updated.emit();
     }
 
-    destroy(){
+    destroy() {
         super.destroy();
-        if(this.__fbo){
+        if (this.__fbo) {
             this.__fbo.destroy();
             this.__srcLDRTex.destroy();
             this.__srcCDMTex.destroy();
         }
-        if(this.__unpackHDRShader)
+        if (this.__unpackHDRShader)
             this.__unpackHDRShader.destroy();
-        if(this.__shaderBinding)
+        if (this.__shaderBinding)
             this.__shaderBinding.destroy();
 
         this.__hdrImage.loaded.disconnectScope(this);

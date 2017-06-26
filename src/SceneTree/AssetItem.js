@@ -1,6 +1,9 @@
+
+import {
+    isMobileDevice
+} from '../BrowserDetection.js';
 import {
     Signal,
-    isMobileDevice,
     Vec2
 } from '../Math';
 import {

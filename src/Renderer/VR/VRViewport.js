@@ -1,4 +1,7 @@
 import {
+    isMobileDevice
+} from '../../BrowserDetection.js';
+import {
     Vec2,
     Vec3,
     Quat,
@@ -6,8 +9,7 @@ import {
     Xfo,
     Color,
     Ray,
-    Signal,
-    isMobileDevice
+    Signal
 } from '../../Math';
 import {
     TreeItem

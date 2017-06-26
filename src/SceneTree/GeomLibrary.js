@@ -1,6 +1,9 @@
+
 import {
-    Signal,
     isMobileDevice
+} from '../BrowserDetection.js';
+import {
+    Signal
 } from '../Math';
 import {
     Mesh

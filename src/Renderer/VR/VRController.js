@@ -1,11 +1,13 @@
 import {
+    isMobileDevice
+} from '../../BrowserDetection.js';
+import {
     Vec3,
     Quat,
     EulerAngles,
     Xfo,
     Color,
-    Signal,
-    isMobileDevice,
+    Signal
 } from '../../Math';
 import {
     Lines,
