@@ -103,7 +103,7 @@ class ResourceLoader {
         this.__initCategory(name);
         this.__totalWork += amount;
         this.__workCategories[name].totalWork += amount;
-        console.log("addWork:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
+        // console.log("addWork:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
     }
 
@@ -111,7 +111,7 @@ class ResourceLoader {
     addWorkDone(name, amount){
         this.__doneWork += amount;
         this.__workCategories[name].doneWork += amount;
-        console.log("addWorkDone:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
+        // console.log("addWorkDone:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
         // if(this.__doneWork == this.__totalWork){
         //     console.log("===========DOOOONE=================");
         // }

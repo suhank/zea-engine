@@ -58,6 +58,7 @@ class GeomLibrary {
     __terminateWorkers() {
         for (let worker of this.__workers)
             worker.terminate();
+        this.__workers = [];
     }
 
     setExpectedNumGeoms(expectedNumGeoms) {
@@ -93,20 +94,24 @@ class GeomLibrary {
         let reader = new BinReader(buffer, 0, isMobileDevice());
         let numGeoms = reader.loadUInt32();
         let geomIndexOffset = reader.loadUInt32();
+        this.__streamInfos[key] = {
+            total: numGeoms,
+            done: 0
+        };
+        this.__numGeoms += numGeoms;
+        if(numGeoms == 0) {
+            this.__revieveGeomDatas(key, [], geomIndexOffset, [0,0]);
+            return numGeoms;
+        }
+        if (this.__expectedNumGeoms == 0) {
+            this.__expectedNumGeoms = this.__numGeoms;
+        }
+
         let toc = reader.loadUInt32Array(numGeoms);
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
         let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
 
-        this.__numGeoms += numGeoms;
-        if (this.__expectedNumGeoms == 0) {
-            this.__expectedNumGeoms = this.__numGeoms;
-        }
-
-        this.__streamInfos[key] = {
-            total: numGeoms,
-            done: 0
-        };
 
         let offset = 0;
         while (offset < numGeoms) {
@@ -197,15 +202,19 @@ class GeomLibrary {
         // geoms, and once each stream file finishes parsing, we fire a signal.
         let streamInfo = this.__streamInfos[key];
         streamInfo.done += loaded;
-        if (streamInfo.done == streamInfo.total)
+        // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
+        if (streamInfo.done == streamInfo.total){
             this.streamFileParsed.emit(1);
+        }
 
         // Once all the geoms from all the files are loaded and parsed
         // fire the loaded signal.
         this.__loaded += loaded;
         if (this.__loaded == this.__expectedNumGeoms) {
-            this.__terminateWorkers();
-            this.loaded.emit();
+            if(this.__workers.length > 0){
+                this.__terminateWorkers();
+                this.loaded.emit();
+            }
         }
     }
 

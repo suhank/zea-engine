@@ -86,7 +86,7 @@ class AssetItem extends TreeItem {
     loadURL(resourcePath) {
 
         let numGeomsFiles = 1;
-        this.__resourceLoader.addWork(resourcePath, 4); // first geom file (load + parse + extra)
+        this.__resourceLoader.addWork(resourcePath+'geoms', 3); // first geom file (load + parse + extra)
 
         // Load the tree file. This file contains
         // the scene tree of the asset, and also
@@ -101,7 +101,7 @@ class AssetItem extends TreeItem {
                 this.__geomLibrary.setExpectedNumGeoms(numGeoms);
                 // add the work for the rest of the geom files....
                 // (load + parse)
-                this.__resourceLoader.addWork(resourcePath, (numGeomsFiles - 1) * 4);
+                this.__resourceLoader.addWork(resourcePath+'geoms', (numGeomsFiles - 1) * 3);
                 loadNextGeomFile();
                 this.loaded.emit();
             });
@@ -124,7 +124,7 @@ class AssetItem extends TreeItem {
                     this.__geomLibrary.readBinaryBuffer(geomsResourceName, geomsData.buffer);
                     loadNextGeomFile();
                 },
-                false);
+                false); // <----
             // Note: Don't add load work as we already pre-added it at the begining
             // and after the Tree file was loaded...
         }
@@ -137,7 +137,7 @@ class AssetItem extends TreeItem {
         // signal. This is fired every time a file in the stream is finshed parsing.
         this.__geomLibrary.streamFileParsed.connect((fraction) => {
             // A chunk of geoms are now parsed, so update the resource loader.
-            this.__resourceLoader.addWorkDone(resourcePath, fraction);
+            this.__resourceLoader.addWorkDone(resourcePath+'geoms', fraction);
         })
     }
 };
