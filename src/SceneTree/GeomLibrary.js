@@ -1,4 +1,3 @@
-
 import {
     isMobileDevice
 } from '../BrowserDetection.js';
@@ -31,13 +30,14 @@ class GeomLibrary {
         this.streamFileParsed = new Signal();
         this.loaded = new Signal(true);
         this.__loaded = 0;
+        this.__expectedNumGeoms = 0;
         this.__numGeoms = 0;
         this.geoms = [];
 
         this.__streamInfos = {};
 
         this.__workers = [];
-        for(let i=0; i<3; i++)
+        for (let i = 0; i < 3; i++)
             this.__workers.push(this.__constructWorker());
         this.__nextWorker = 0;
     }
@@ -46,18 +46,22 @@ class GeomLibrary {
         let worker = new GeomParserWorker();
         worker.onmessage = (event) => {
             this.__revieveGeomDatas(
-                event.data.key, 
-                event.data.geomDatas, 
-                event.data.geomIndexOffset, 
+                event.data.key,
+                event.data.geomDatas,
+                event.data.geomIndexOffset,
                 event.data.geomsRange
-                );
+            );
         };
         return worker;
     }
 
     __terminateWorkers() {
-        // for(let worker of this.__workers)
-        //     worker.terminate();
+        for (let worker of this.__workers)
+            worker.terminate();
+    }
+
+    setExpectedNumGeoms(expectedNumGeoms) {
+        this.__expectedNumGeoms = expectedNumGeoms;
     }
 
     getNumGeoms() {
@@ -76,10 +80,10 @@ class GeomLibrary {
         let onLoad = this.loadBin;
         loadBinfile(
             fileUrl,
-            (data)=>{
+            (data) => {
                 this.loadBin(data);
             },
-            (statusText)=>{
+            (statusText) => {
                 console.warn(statusText);
             }
         );
@@ -95,8 +99,12 @@ class GeomLibrary {
         let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
 
         this.__numGeoms += numGeoms;
+        if (this.__expectedNumGeoms == 0) {
+            this.__expectedNumGeoms = this.__numGeoms;
+        }
+
         this.__streamInfos[key] = {
-            total:numGeoms,
+            total: numGeoms,
             done: 0
         };
 
@@ -128,7 +136,7 @@ class GeomLibrary {
                 isMobileDevice: reader.isMobileDevice,
                 bufferSlice,
             }, [bufferSlice]);
-            this.__nextWorker = (this.__nextWorker+1) % this.__workers.length;
+            this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length;
             //////////////////////////////////////////////
             // Main Threaded Parsing
             // parseGeomsBinary(
@@ -163,7 +171,7 @@ class GeomLibrary {
 
         for (let i = 0; i < geomDatas.length; i++) {
             let geomData = geomDatas[i];
-            if(!geomData.type)
+            if (!geomData.type)
                 continue;
             let proxy;
             switch (geomData.type) {
@@ -189,13 +197,13 @@ class GeomLibrary {
         // geoms, and once each stream file finishes parsing, we fire a signal.
         let streamInfo = this.__streamInfos[key];
         streamInfo.done += loaded;
-        if(streamInfo.done == streamInfo.total)
+        if (streamInfo.done == streamInfo.total)
             this.streamFileParsed.emit(1);
 
         // Once all the geoms from all the files are loaded and parsed
         // fire the loaded signal.
         this.__loaded += loaded;
-        if(this.__loaded == this.__numGeoms){
+        if (this.__loaded == this.__expectedNumGeoms) {
             this.__terminateWorkers();
             this.loaded.emit();
         }

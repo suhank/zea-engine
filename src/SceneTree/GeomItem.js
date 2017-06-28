@@ -19,7 +19,7 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
-        this.__lightmap = "Default"; // the lightmap that the geom uses.
+        this.__lightmapName = "Default"; // the lightmap that the geom uses.
         this.__lightmapCoordsOffset = new Vec2();
         this.__geomOffsetXfo = new Xfo();
         this.__geomXfo = new Xfo();
@@ -60,7 +60,7 @@ class GeomItem extends TreeItem {
 
         cloned.setMaterial(this.__material);
 
-        cloned.__lightmap = this.__lightmap;
+        cloned.__lightmapName = this.__lightmapName;
         cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
         cloned.__selectable = this.__selectable;
     }
@@ -155,20 +155,12 @@ class GeomItem extends TreeItem {
     /////////////////////////////
     // Lightmaps
 
-    getLightmap() {
-        return this.__lightmap;
-    }
-
-    setLightmap(lightmap) {
-        this.__lightmap = lightmap;
+    getLightmapName() {
+        return this.__lightmapName;
     }
 
     getLightmapCoordsOffset() {
         return this.__lightmapCoordsOffset;
-    }
-
-    setLightmapCoordsOffset(offset) {
-        this.__lightmapCoordsOffset = offset;
     }
 
     // The root asset item pushes its offset to the geom items in the
@@ -190,10 +182,11 @@ class GeomItem extends TreeItem {
         return json
     }
 
-    fromJSON(json, flags, materialLibrary, geomLibrary) {
-        super.fromJSON(json, flags, materialLibrary, geomLibrary);
+    fromJSON(json, flags, asset) {
+        super.fromJSON(json, flags, asset);
 
         if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
+            let geomLibrary = asset.getGeometryLibrary();
             this.geom = geomLibrary.getGeom(json.geomIndex);
         }
 
@@ -203,6 +196,7 @@ class GeomItem extends TreeItem {
 
 
         if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
+            let materialLibrary = asset.getMaterialLibrary();
             this.material = materialLibrary.getMaterial(json.materialName);
             if (!this.material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
@@ -215,11 +209,14 @@ class GeomItem extends TreeItem {
         return json
     }
 
-    readBinary(reader, flags, materialLibrary, geomLibrary) {
-        super.readBinary(reader, flags, materialLibrary, geomLibrary);
+    readBinary(reader, flags, asset) {
+        super.readBinary(reader, flags, asset);
+
+        this.__lightmapName = asset.getName();
 
         let itemflags = reader.loadUInt8();
         let geomIndex = reader.loadUInt32();
+        let geomLibrary = asset.getGeometryLibrary();
         let geom = geomLibrary.getGeom(geomIndex);
         if (geom) {
             this.setGeom(geom);
@@ -244,6 +241,7 @@ class GeomItem extends TreeItem {
 
         const materialFlag = 1 << 3;
         if (itemflags & materialFlag) {
+            let materialLibrary = asset.getMaterialLibrary();
             let materialName = reader.loadStr();
             let material = materialLibrary.getMaterial(materialName);
             if (!material) {

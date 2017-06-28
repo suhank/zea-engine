@@ -144,7 +144,7 @@ class MarkerpenTool {
     };
 
     destroy() {
-        this.__treeItem.parentItem.removeChildByHandle(this.__treeItem);
+        this.__treeItem.getParentItem().removeChildByHandle(this.__treeItem);
         this.__treeItem = null;
     };
 };

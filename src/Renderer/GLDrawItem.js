@@ -15,7 +15,7 @@ class GLDrawItem {
 
         this.__color = geomItem.color ? geomItem.color : new Color(1,0,0,1);
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
-        this.__lightmapName = geomItem.getLightmap();
+        this.__lightmapName = geomItem.getLightmapName();
 
         let geomXfo = this.__geomItem.getGeomXfo();
         // Geometry is inverted if one scale value is negative and the rest is positive

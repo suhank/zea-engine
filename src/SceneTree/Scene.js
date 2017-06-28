@@ -121,6 +121,7 @@ class Scene {
 
         this.cameras = [];
         this.__root = new TreeItem("root");
+        this.__assets = [];
 
         // Env map used for background and reflections.
         this.__envMap = undefined;
@@ -142,8 +143,8 @@ class Scene {
                     let viveAsset = new BinAsset("ViveResources");
                     let materialTypeMapping = {};
                     materialTypeMapping['*'] = 'SimpleMaterial';
-                    viveAsset.getMaterialLibary().setMaterialTypeMapping(materialTypeMapping);
-                    viveAsset.getGeometryLibary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
+                    viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);
+                    viveAsset.getGeometryLibrary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
                     viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
                     entries['viveAsset'] = viveAsset;
 
@@ -202,6 +203,15 @@ class Scene {
 
     getSelectionManager() {
         return this.__selectionManager;
+    }
+
+    addAsset(asset){
+        this.__assets.push(asset);
+        this.__root.addChild(asset);
+    }
+
+    getAssets() { 
+        return this.__assets;
     }
 
     fromJSON(json) {

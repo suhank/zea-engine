@@ -145,9 +145,7 @@ class MaterialLibrary {
                     shaderName = 'TransparentSurfaceShader';
                 }
 
-
-
-                console.log("Material:" + name);
+                // console.log("Material:" + name);
                 let material = new Material(name, shaderName);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags, this.__textures);

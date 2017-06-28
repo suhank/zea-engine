@@ -40,7 +40,7 @@ class GLDrawItemSet {
 
         if (this.__gldrawItems.length == 1) {
             // this.__inverted = gldrawItem.isInverted();
-            this.__lightmapName = gldrawItem.getGeomItem().getLightmap();
+            this.__lightmapName = gldrawItem.getGeomItem().getLightmapName();
         }
 
         gldrawItem.visibilityChanged.connect((visible)=>{
@@ -135,12 +135,12 @@ class GLDrawItemSet {
 
         this.__glgeom.bind(renderstate);
 
+        renderstate.drawCalls++;
+        renderstate.drawCount+=this.__drawCount;
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {
             // return;
-            // renderstate.drawCalls++;
-            // renderstate.drawCount+=this.__drawCount;
             if (this.__gldrawItems[this.__lastVisible].bind(renderstate)) {
                 // Specify an non-instanced draw to the shader
                 gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
@@ -148,9 +148,7 @@ class GLDrawItemSet {
             }
             return;
         }
-
-        // renderstate.drawCalls++;
-        // renderstate.drawCount+=this.__drawCount;
+        // return;
 
 
         // Specify an instanced draw to the shader so it knows how

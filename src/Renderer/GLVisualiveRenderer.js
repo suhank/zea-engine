@@ -454,7 +454,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
         if (this.__stats)
             this.__stats.end();
-        // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+        // console.log("Draw Calls:" + this.__renderstate.drawCalls + " Draw Count:" + this.__renderstate.drawCount);
         this.redrawOccured.emit();
 
         // New Items may have been added during the pause.

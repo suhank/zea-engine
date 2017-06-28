@@ -28,7 +28,7 @@ class AssetItem extends TreeItem {
         super(name, resourceLoader);
         this.__name = name;
         this.__resourceLoader = resourceLoader;
-        this.__geoms = new GeomLibrary();
+        this.__geomLibrary = new GeomLibrary();
         this.__materials = new MaterialLibrary(this.__resourceLoader);
 
         this.lightmapName = 'Default';
@@ -36,48 +36,33 @@ class AssetItem extends TreeItem {
         this.loaded = new Signal();
     }
 
-    getGeometryLibary() {
-        return this.__geoms;
+    getGeometryLibrary() {
+        return this.__geomLibrary;
     }
 
-    getMaterialLibary() {
+    getMaterialLibrary() {
         return this.__materials;
-    }
-
-    __propagateLightmapOffset() {
-        let lightmapCoordsOffset = this.lightmapCoordsOffset;
-        let lightmapName = this.lightmapName;
-        let traverse = (treeItem) => {
-            if (treeItem instanceof GeomItem) {
-                treeItem.applyAssetLightmapSettings(lightmapName, lightmapCoordsOffset);
-            }
-            // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
-            for (let childItem of treeItem.getChildren()) {
-                traverse(childItem);
-            }
-        };
-        traverse(this);
     }
 
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
-        let j = super.toJSON(flags);
-        j['materialLibrary'] = this.__materials.toJSON(flags);
-        return j;
-    }
+    // toJSON(flags = 0) {
+    //     let j = super.toJSON(flags);
+    //     j['materialLibrary'] = this.__materials.toJSON(flags);
+    //     return j;
+    // }
 
-    fromJSON(j, flags = 0) {
-        if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0)
-            this.__materials.fromJSON(j['materialLibrary'], flags);
-        super.fromJSON(j, flags, this.__materials, this.__geoms);
+    // fromJSON(j, flags = 0) {
+    //     if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0)
+    //         this.__materials.fromJSON(j['materialLibrary'], flags);
+    //     super.fromJSON(j, flags, this);
 
-        // Note: the Scene owns the lightmaps. 
-        // An AssetInstance might have a Lightmap name and an offset value. 
-        //this.__lightmap.fromJSON(j);
-        //this.__propagateLightmap();
-    }
+    //     // Note: the Scene owns the lightmaps. 
+    //     // An AssetInstance might have a Lightmap name and an offset value. 
+    //     //this.__lightmap.fromJSON(j);
+    //     //this.__propagateLightmap();
+    // }
 
 
     readBinary(reader, flags) {
@@ -85,34 +70,38 @@ class AssetItem extends TreeItem {
 
         this.__materials.readBinary(reader, flags);
 
-        super.readBinary(reader, flags, this.__materials, this.__geoms);
+        super.readBinary(reader, flags, this);
 
         this.lightmapCoordsOffset = reader.loadFloat32Vec2();
-        this.lightmapName = reader.loadStr();
-
-        //this.__propagateLightmapOffset();
-        return numGeomsFiles;
+        let numGeoms = 0;
+        if(reader.remainingByteLength == 4)
+            numGeoms = reader.loadUInt32();
+        return [numGeomsFiles, numGeoms];
     }
 
     readBinaryBuffer(buffer) {
         return this.readBinary(new BinReader(buffer, 0, isMobileDevice()));
     }
 
-    loadURL(filePath) {
+    loadURL(resourcePath) {
 
         let numGeomsFiles = 1;
-        this.__resourceLoader.addWork(4); // first geom file (load + parse + extra)
+        this.__resourceLoader.addWork(resourcePath, 4); // first geom file (load + parse + extra)
 
         // Load the tree file. This file contains
         // the scene tree of the asset, and also
         // tells us how many geom files will need to be loaded.
-        this.__resourceLoader.loadResource(filePath,
+        this.__resourceLoader.loadResource(resourcePath,
             (entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
-                numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
+                let res = this.readBinaryBuffer(treeData.buffer);
+                numGeomsFiles = res[0];
+                let numGeoms = res[1];
+                console.log("Asset:" +this.name + " numGeomsFiles:" + numGeomsFiles + " numGeoms:" + numGeoms);
+                this.__geomLibrary.setExpectedNumGeoms(numGeoms);
                 // add the work for the rest of the geom files....
                 // (load + parse)
-                this.__resourceLoader.addWork((numGeomsFiles - 1) * 4);
+                this.__resourceLoader.addWork(resourcePath, (numGeomsFiles - 1) * 4);
                 loadNextGeomFile();
                 this.loaded.emit();
             });
@@ -122,7 +111,7 @@ class AssetItem extends TreeItem {
         let geomFileID = 0;
         let loadNextGeomFile = () => {
             if (geomFileID < numGeomsFiles) {
-                let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
+                let nextGeomFileName = resourcePath.split('.')[0] + geomFileID + '.vlageoms';
                 if (this.__resourceLoader.resourceAvailable(nextGeomFileName))
                     loadGeomsfile(nextGeomFileName);
             }
@@ -132,7 +121,7 @@ class AssetItem extends TreeItem {
             this.__resourceLoader.loadResource(geomsResourceName,
                 (entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
-                    this.__geoms.readBinaryBuffer(geomsResourceName, geomsData.buffer);
+                    this.__geomLibrary.readBinaryBuffer(geomsResourceName, geomsData.buffer);
                     loadNextGeomFile();
                 },
                 false);
@@ -140,15 +129,15 @@ class AssetItem extends TreeItem {
             // and after the Tree file was loaded...
         }
 
-        let geomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
+        let geomFileName = resourcePath.split('.')[0] + geomFileID + '.vlageoms';
         loadGeomsfile(geomFileName);
 
         // To enture tha the resource loader konws when 
         // parsing is done, we listen to the GeomLibrary streamFileLoaded
         // signal. This is fired every time a file in the stream is finshed parsing.
-        this.__geoms.streamFileParsed.connect((fraction) => {
+        this.__geomLibrary.streamFileParsed.connect((fraction) => {
             // A chunk of geoms are now parsed, so update the resource loader.
-            this.__resourceLoader.addWorkDone(fraction);
+            this.__resourceLoader.addWorkDone(resourcePath, fraction);
         })
     }
 };

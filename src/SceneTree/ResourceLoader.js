@@ -16,18 +16,19 @@ let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.
 class ResourceLoader {
     constructor(resources) {
         this.__resources = resources;
-        this.__callbacks = {};
         this.loaded = new Signal();
         this.progressIncremented = new Signal();
         this.allResourcesLoaded = new Signal(true);
 
-        this.__loading = {};
         this.__totalWork = 0;
+        this.__totalWorkByCategory = {};
         this.__doneWork = 0;
+        this.__doneWorkByCategory = {};
+        this.__callbacks = {};
+        this.__workCategories = {};
 
         this.__workers = [];
-        for(let i=0; i<3; i++)
-            this.__workers.push(this.__constructWorker());
+        this.__constructWorkers();
         this.__nextWorker = 0;
     }
 
@@ -48,18 +49,28 @@ class ResourceLoader {
         curr[name] = url;
     }
 
-    __constructWorker() {
-        let worker = new ResourceLoaderWorker();
-        worker.onmessage = (event) => {
-            if(event.data.type == 'loaded') {
-                this.addWorkDone(1); // loading done...
-            }
-            if(event.data.type == 'finished') {
-                //worker.terminate();
-                this.__onFinishedReceiveFileData(event.data);
-            }
-        };
-        return worker;
+    __constructWorkers() {
+        let __constructWorker = ()=>{
+            let worker = new ResourceLoaderWorker();
+            worker.onmessage = (event) => {
+                // if(event.data.type == 'loaded') {
+                //     this.addWorkDone(1); // loading done...
+                // }
+                if(event.data.type == 'finished') {
+                    this.__onFinishedReceiveFileData(event.data);
+                }
+            };
+            return worker;
+        }
+        for(let i=0; i<3; i++){
+            this.__workers.push(__constructWorker());
+        }
+    }
+
+    __terminateWorkers() {
+        for (let worker of this.__workers)
+            worker.terminate();
+        this.__workers = [];
     }
 
     resolveURL(filePath) {
@@ -82,29 +93,49 @@ class ResourceLoader {
         return this.resolveURL(filePath) != null;
     }
 
+    __initCategory(name){
+        if(!(name in this.__workCategories))
+            this.__workCategories[name] = { callbacks:[], totalWork:0, doneWork:0 };
+    }
+
     // Add work to the total work pile... We never know how big the pile will get.
-    addWork(amount){
+    addWork(name, amount){
+        this.__initCategory(name);
         this.__totalWork += amount;
+        this.__workCategories[name].totalWork += amount;
+        console.log("addWork:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
     }
 
     //Add work to the 'done' pile. The done pile should eventually match the total pile.
-    addWorkDone(amount){
+    addWorkDone(name, amount){
         this.__doneWork += amount;
-        // console.log("addWorkDone:" + amount + " done:" + this.__doneWork + " totol:" + this.__totalWork);
+        this.__workCategories[name].doneWork += amount;
+        console.log("addWorkDone:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
         // if(this.__doneWork == this.__totalWork){
         //     console.log("===========DOOOONE=================");
         // }
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
+        if(this.__doneWork > this.__totalWork) {
+            throw("Mismatch between worko loaded and work done.")
+        }
         if(this.__doneWork == this.__totalWork) {
             this.allResourcesLoaded.emit();
         }
     }
 
     loadResource(name, callback, addLoadWork=true) {
+        this.__initCategory(name);
+        this.__workCategories[name].callbacks.push(callback);
+
         if(!(name in this.__callbacks))
             this.__callbacks[name] = [];
         this.__callbacks[name].push(callback);
+
+        // If the loader was suspended, resume. 
+        if(this.__workers.length == 0){
+            this.__constructWorkers();
+        }
 
         let url = this.resolveURL(name);
         if(!url){
@@ -112,7 +143,7 @@ class ResourceLoader {
         }
 
         if(addLoadWork){ 
-            this.addWork(3);// Add work in 2 chunks. Loading, unpacking, parsing.
+            this.addWork(name, 2);// Add work in 2 chunks. Loading, parsing.
         }
         else{
             // the work for loading and parsing the work is already registered..
@@ -121,7 +152,6 @@ class ResourceLoader {
             // toal number of files in the stream.
         }
 
-        // let worker = this.__constructWorker();
         this.__workers[this.__nextWorker].postMessage({
             name,
             url
@@ -142,15 +172,17 @@ class ResourceLoader {
 
     __onFinishedReceiveFileData(fileData) {
         let name = fileData.name;
-        this.addWorkDone(1); // unpacking done...
+        this.addWorkDone(name, 1); // unpacking done...
         for(let callback of this.__callbacks[name]){
             callback(fileData.entries);
         }
         this.loaded.emit(name);
-        this.addWorkDone(1); // parsing done...
+        this.addWorkDone(name, 1); // parsing done...
 
+    }
 
-        delete this.__loading[name];
+    suspend() { 
+        this.__terminateWorkers();
     }
 
 };

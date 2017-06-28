@@ -25,6 +25,15 @@ class BinReader {
         return this.__data;
     }
 
+    get byteLength() {
+        return this.__dataView.byteLength;
+    }
+
+
+    get remainingByteLength() {
+        return this.__dataView.byteLength - this.__byteOffset;
+    }
+
     pos() {
         return this.__byteOffset;
     }

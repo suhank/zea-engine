@@ -63,14 +63,19 @@ class TreeItem {
     //////////////////////////////////////////
     // Name and Path
 
-    get name() {
+    getName(){
         return this.__name;
     }
-
-    set name(name) {
+    setName(name){
         this.__name = name;
         this.__updatePath();
         this.nameChanged.emit(name);
+    }
+    get name() {
+        return this.getName();
+    }
+    set name(name) {
+        this.setName(name);
     }
 
     __updatePath() {
@@ -122,12 +127,12 @@ class TreeItem {
     //////////////////////////////////////////
     // Parent Item
 
-    get parentItem() {
+    getParentItem() {
         // return this.__private.get('parentItem');
         return this.__parentItem;
     }
 
-    set parentItem(parentItem) {
+    setParentItem(parentItem) {
         // this.__private.set(parentItem, parentItem);
         this.__parentItem = parentItem;
         this.__updatePath();
@@ -135,6 +140,15 @@ class TreeItem {
 
         // Notify:
         this.parentChanged.emit();
+    }
+
+    get parentItem() {
+        // return this.__private.get('parentItem');
+        return this.getParentItem();
+    }
+
+    set parentItem(parentItem) {
+        this.setParentItem(parentItem);
     }
 
     //////////////////////////////////////////
@@ -164,7 +178,7 @@ class TreeItem {
         return this.__globalXfo;
     }
     setGlobalXfo(xfo) {
-        let parentItem = this.parentItem;
+        let parentItem = this.getParentItem();
         if (parentItem !== undefined)
             this.__localXfo = parentItem.getGlobalXfo().inverse().multiply(xfo);
         else
@@ -180,7 +194,7 @@ class TreeItem {
     }
 
     updateGlobalXfo() {
-        let parentItem = this.parentItem;
+        let parentItem = this.getParentItem();
         if (parentItem !== undefined)
             this.__globalXfo = parentItem.getGlobalXfo().multiply(this.__localXfo);
         else
@@ -266,7 +280,7 @@ class TreeItem {
             throw "Item '" + childItem.name + "' is already a child of :" + this.path;
         childItem.setInheritedVisiblity(this.getVisible());
         this.__childItems.push(childItem);
-        childItem.parentItem = this;
+        childItem.setParentItem(this);
 
         childItem.boundingBoxChanged.connect(() => {
             this.setBoundingBoxDirty();
@@ -350,7 +364,7 @@ class TreeItem {
         }
     }
 
-    fromJSON(j, flags, materialLibrary, geomLibrary) {
+    fromJSON(j, flags, asset) {
         this.__name = j.name;
 
         //this.setVisibility(j.visibility);
@@ -378,13 +392,13 @@ class TreeItem {
                 if(flags&LOADFLAGS_ASSETTREE_UPDATE){
                     childItem = this.getChildByName(childName);
                     if(childItem){
-                        childItem.fromJSON(childJson, flags, materialLibrary, geomLibrary);
+                        childItem.fromJSON(childJson, flags, asset);
                     }
                 }
                 else{
                     childItem = sgFactory.constructClass(childType);
                     if(childItem){
-                        childItem.fromJSON(childJson, flags, materialLibrary, geomLibrary);
+                        childItem.fromJSON(childJson, flags, asset);
                         this.addChild(childItem, false);
                     }
                 }
@@ -402,7 +416,7 @@ class TreeItem {
         }
     }
 
-    readBinary(reader, flags, materialLibrary, geomLibrary){
+    readBinary(reader, flags, asset){
 
         let type = reader.loadStr();
         this.name = reader.loadStr();
@@ -448,7 +462,7 @@ class TreeItem {
                 if(!childItem)
                     continue;
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                childItem.readBinary(reader, flags, materialLibrary, geomLibrary);
+                childItem.readBinary(reader, flags, asset);
                 this.addChild(childItem, false);
 
                 if(printProgress){

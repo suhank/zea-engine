@@ -37,7 +37,7 @@ let addCanvas = function(width, height) {
 }
 
 
-let generateResourcesDict = (list=[])=>{
+let generateResourcesDict = (list=[], assetDescs=[])=>{
     let resources = {
         commonResources: {
             'Resources.vlr': window.location.origin+'/Resources/Resources.vlr',
@@ -52,7 +52,7 @@ let generateResourcesDict = (list=[])=>{
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/'));
     }
     rootURL = rootURL + '/';
-    for(let item of list){
+    let generatePath = (item)=>{
         let parts = item.split('/');
         let curr = resources;
         for(let i=0; i<parts.length-1; i++){
@@ -63,6 +63,17 @@ let generateResourcesDict = (list=[])=>{
             curr = curr[part];
         }
         curr[parts[parts.length-1]] = rootURL+item;
+    }
+    for(let item of list){
+        generatePath(item);
+    }
+    for(let assetDesc of assetDescs){
+        generatePath(assetDesc[0] + ".vlatree");
+        for(let i=0; i<assetDesc[1]; i++)
+            generatePath(assetDesc[0] + i + ".vlageoms");
+        generatePath(assetDesc[0] + "_Lightmap.vlh");
+        for(let i=1; i<3; i++)
+            generatePath(assetDesc[0] + "_Lightmap"+i+".vlh");
     }
     return resources;
 }
