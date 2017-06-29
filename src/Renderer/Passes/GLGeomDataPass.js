@@ -32,7 +32,7 @@ class GLGeomDataPass extends GLPass {
             for (let srcglmaterialDrawItemSet of srcglmaterialDrawItemSets) {
                 let srcdrawItemSets = srcglmaterialDrawItemSet.getDrawItemSets();
                 for (let drawItemSet of srcdrawItemSets) {
-                    if(drawItemSet.getGLDrawItem(0).getGeomItem().getSelectable()) {
+                    if(drawItemSet.getGLDrawItemCount() > 0 && drawItemSet.getGLDrawItem(0).getGeomItem().getSelectable()) {
                         glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
                     }
                 }

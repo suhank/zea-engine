@@ -296,8 +296,8 @@ class GLCollector {
             treeItem.destructing.disconnectScope(this);
         });
 
-        treeItem.globalXfoChanged.connect(() => {
-            this.itemTransformChanged.emit(treeItem);
+        treeItem.globalXfoChanged.connect((newXfo, prevXfo) => {
+            this.itemTransformChanged.emit(treeItem, prevXfo);
         });
     }
 

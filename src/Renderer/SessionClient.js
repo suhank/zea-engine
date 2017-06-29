@@ -216,7 +216,7 @@ class SessionClient {
         let sessionID = urlVars.args['id'];
         if (!sessionID) {
             // Else check to see if we are already in a session.
-            //sessionID = sessionStorage.getItem('sessionID');
+            sessionID = sessionStorage.getItem('sessionID');
         }
         if (!sessionID) {
             sessionID = guid();
@@ -299,8 +299,9 @@ class SessionClient {
         ////////////////////////////////////
         // Sending Messages
 
+        let resetXfos = {};
 
-        renderer.getCollector().itemTransformChanged.connect((treeItem) => {
+        renderer.getCollector().itemTransformChanged.connect((treeItem, prevXfo) => {
             if (playbackMode) {
                 return
             }
@@ -308,6 +309,16 @@ class SessionClient {
                 let path = treeItem.getPath();
                 // Only propagate changes to the scene tree..
                 if (path.startsWith('root')) {
+                    if(!resetXfos[path]) {
+                        resetXfos[path] = prevXfo;
+                        sendMessage({
+                            type: 'resetTreeItemGlobalXfo',
+                            data: {
+                                path,
+                                xfo: prevXfo
+                            }
+                        });
+                    }
                     let xfo = treeItem.globalXfo;
                     if (socketOpen) {
                         sendMessage({
@@ -405,16 +416,20 @@ class SessionClient {
                     }
                     break;
                 case 'viewChanged':
-                    onUserViewChange(event.client, event.data);
+                    listeners.viewChanged(event.client, event.data);
                     break;
                 case 'pointerMoved':
                     onUserPointerMoved(event.client, event.data);
                     break;
                 case 'strokeStarted':
-                    onUserStrokeStarted(event.client, event.data);
+                    listeners.strokeStarted(event.client, event.data);
                     break;
                 case 'strokeSegmentAdded':
-                    onUserStrokeSegmentAdded(event.client, event.data);
+                    listeners.strokeSegmentAdded(event.client, event.data);
+                    break;
+                case 'resetTreeItemGlobalXfo':
+                case 'treeItemGlobalXfoChanged':
+                    listeners.treeItemGlobalXfoChanged(event.data);
                     break;
 
             }
@@ -447,15 +462,18 @@ class SessionClient {
         };
 
         listeners.viewChanged = (client, data) => {
-            onUserViewChange(client, data);
+            connectedUsers[client].onViewChange(data);
+            renderer.requestRedraw();
         };
 
         listeners.strokeStarted = (client, data) => {
-            onUserStrokeStarted(client, data);
+            let userMarker = connectedUsers[client].userMarker;
+            userMarker.startStroke(data.xfo, data.color, data.thickness, data.id);
         };
 
         listeners.strokeSegmentAdded = (client, data) => {
-            onUserStrokeSegmentAdded(client, data);
+            let userMarker = connectedUsers[client].userMarker;
+            userMarker.addSegmentToStroke(data.xfo, data.id);
         };
 
         listeners.startRecording = (client, data) => {
@@ -466,15 +484,16 @@ class SessionClient {
             this.sessionModeChanged.emit(2);
         };
 
-        listeners.projectAnalytics = (client, data) => {
-            onAnalyticsDataRecieved(data);
-        }
-
-        listeners.treeItemGlobalXfoChanged = (client, data) => {
+        listeners.treeItemGlobalXfoChanged = (data) => {
             updatingTreeXfos = true;
             let resolvedItem = renderer.getScene().getRoot().resolvePath(data.path);
             resolvedItem.globalXfo = data.xfo;
             updatingTreeXfos = false;
+        }
+
+
+        listeners.projectAnalytics = (client, data) => {
+            onAnalyticsDataRecieved(data);
         }
 
         ////////////////////////////////////////////////////////
@@ -495,24 +514,11 @@ class SessionClient {
             }
         };
 
-        let onUserViewChange = (client, data) => {
-            connectedUsers[client].onViewChange(data);
-            renderer.requestRedraw();
-        };
         let onUserPointerMoved = (client, data) => {
             connectedUsers[client].pointerMoved(data);
             renderer.requestRedraw();
         };
 
-        let onUserStrokeStarted = (client, data) => {
-            let userMarker = connectedUsers[client].userMarker;
-            userMarker.startStroke(data.xfo, data.color, data.thickness, data.id);
-        };
-
-        let onUserStrokeSegmentAdded = (client, data) => {
-            let userMarker = connectedUsers[client].userMarker;
-            userMarker.addSegmentToStroke(data.xfo, data.id);
-        }
 
         ////////////////////////////////////////////////////////
         // Playback
@@ -548,7 +554,7 @@ class SessionClient {
                 connectedUsers[key].userMarker.clear();
             });
 
-            sessionID = generateSessionID();
+            sessionID = guid();
             sessionStorage.setItem('sessionID', sessionID);
             joinSession();
             playbackMode = false;

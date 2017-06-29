@@ -20,6 +20,10 @@ class GLDrawItemSet {
         return this.__glgeom;
     }
 
+    getGLDrawItemCount() {
+        return this.__gldrawItems.length;
+    }
+
     getGLDrawItem(index) {
         return this.__gldrawItems[index];
     }
