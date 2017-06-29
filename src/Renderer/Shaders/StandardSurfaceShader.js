@@ -115,14 +115,12 @@ varying vec3 v_worldPos;
 /* VS Outputs */
 
 
-// #ifdef ENABLE_LIGHTMAPS
 uniform sampler2D lightmap;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 <%include file="debugColors.glsl"/>
 uniform vec2 lightmapSize;
 uniform bool debugLightmapTexelSize;
 #endif
-// #endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -240,6 +238,8 @@ void main(void) {
                       
         vec3 clustercolor = getDebugColor(v_clusterID);
 
+        material.metallic = 0.0;
+        material.reflectance = 0.0;
         if(mod(total,2.0)==0.0){
             material.baseColor = clustercolor;
             irradiance = vec3(1.0);
@@ -249,7 +249,6 @@ void main(void) {
         }
     }
 #endif
-
 
     vec3 viewNormal = normalize(v_viewNormal);
     //vec3 surfacePos = -v_viewPos.xyz;
@@ -268,6 +267,8 @@ void main(void) {
         // Note: this line can be used to debug inverted meshes.
         //material.baseColor = vec3(1.0, 0.0, 0.0);
     }
+
+    //irradiance = vec3(dot(normal, viewVector));
 
 #ifndef ENABLE_SPECULAR
     vec3 radiance = material.baseColor * irradiance;

@@ -40,6 +40,7 @@ self.onmessage = function(event){
     ResourceLoaderWorker_onmessage(event.data, 
     ()=>{
         self.postMessage({
+            name: event.data.name,
             type:'loaded'
         });
     },

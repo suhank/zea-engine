@@ -142,7 +142,7 @@ class Scene {
 
                     let viveAsset = new BinAsset("ViveResources");
                     let materialTypeMapping = {};
-                    materialTypeMapping['*'] = 'SimpleMaterial';
+                    materialTypeMapping['*'] = 'SimpleSurfaceShader';
                     viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);
                     viveAsset.getGeometryLibrary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
                     viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);

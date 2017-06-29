@@ -53,10 +53,10 @@ class ResourceLoader {
         let __constructWorker = ()=>{
             let worker = new ResourceLoaderWorker();
             worker.onmessage = (event) => {
-                // if(event.data.type == 'loaded') {
-                //     this.addWorkDone(1); // loading done...
-                // }
-                if(event.data.type == 'finished') {
+                if(event.data.type == 'loaded') {
+                    this.addWorkDone(event.data.name, 1); // loading done...
+                }
+                else if(event.data.type == 'finished') {
                     this.__onFinishedReceiveFileData(event.data);
                 }
             };
@@ -117,7 +117,7 @@ class ResourceLoader {
         // }
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
         if(this.__doneWork > this.__totalWork) {
-            throw("Mismatch between worko loaded and work done.")
+            throw("Mismatch between work loaded and work done.")
         }
         if(this.__doneWork == this.__totalWork) {
             this.allResourcesLoaded.emit();
@@ -143,7 +143,7 @@ class ResourceLoader {
         }
 
         if(addLoadWork){ 
-            this.addWork(name, 2);// Add work in 2 chunks. Loading, parsing.
+            this.addWork(name, 3);// Add work in 2 chunks. Loading, unpacking, parsing.
         }
         else{
             // the work for loading and parsing the work is already registered..

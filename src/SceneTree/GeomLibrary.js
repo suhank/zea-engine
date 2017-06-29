@@ -25,7 +25,8 @@ let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker
 // } from './Geometry/parseGeomsBinary.js';
 
 class GeomLibrary {
-    constructor() {
+    constructor(name) {
+        this.__name = name;
         this.rangeLoaded = new Signal();
         this.streamFileParsed = new Signal();
         this.loaded = new Signal(true);
@@ -45,7 +46,7 @@ class GeomLibrary {
     __constructWorker() {
         let worker = new GeomParserWorker();
         worker.onmessage = (event) => {
-            this.__revieveGeomDatas(
+            this.__recieveGeomDatas(
                 event.data.key,
                 event.data.geomDatas,
                 event.data.geomIndexOffset,
@@ -100,7 +101,7 @@ class GeomLibrary {
         };
         this.__numGeoms += numGeoms;
         if(numGeoms == 0) {
-            this.__revieveGeomDatas(key, [], geomIndexOffset, [0,0]);
+            this.streamFileParsed.emit(1);
             return numGeoms;
         }
         if (this.__expectedNumGeoms == 0) {
@@ -152,7 +153,7 @@ class GeomLibrary {
             //     reader.isMobileDevice,
             //     bufferSlice,
             //     (data, transferables)=>{
-            //         this.__revieveGeomDatas(
+            //         this.__recieveGeomDatas(
             //             data.key, 
             //             data.geomDatas, 
             //             data.geomIndexOffset, 
@@ -165,7 +166,7 @@ class GeomLibrary {
         return numGeoms;
     }
 
-    __revieveGeomDatas(key, geomDatas, geomIndexOffset, geomsRange) {
+    __recieveGeomDatas(key, geomDatas, geomIndexOffset, geomsRange) {
 
         // We are storing a subset of the geoms from a binary file
         // which is a subset of the geoms in an asset.

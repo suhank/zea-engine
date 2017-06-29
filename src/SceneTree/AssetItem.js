@@ -28,7 +28,7 @@ class AssetItem extends TreeItem {
         super(name, resourceLoader);
         this.__name = name;
         this.__resourceLoader = resourceLoader;
-        this.__geomLibrary = new GeomLibrary();
+        this.__geomLibrary = new GeomLibrary(this.__name);
         this.__materials = new MaterialLibrary(this.__resourceLoader);
 
         this.lightmapName = 'Default';
@@ -86,7 +86,7 @@ class AssetItem extends TreeItem {
     loadURL(resourcePath) {
 
         let numGeomsFiles = 1;
-        this.__resourceLoader.addWork(resourcePath+'geoms', 3); // first geom file (load + parse + extra)
+        this.__resourceLoader.addWork(resourcePath+'geoms', 4); // first geom file (load + parse + extra)
 
         // Load the tree file. This file contains
         // the scene tree of the asset, and also
@@ -101,7 +101,7 @@ class AssetItem extends TreeItem {
                 this.__geomLibrary.setExpectedNumGeoms(numGeoms);
                 // add the work for the rest of the geom files....
                 // (load + parse)
-                this.__resourceLoader.addWork(resourcePath+'geoms', (numGeomsFiles - 1) * 3);
+                this.__resourceLoader.addWork(resourcePath+'geoms', (numGeomsFiles - 1) * 4);
                 loadNextGeomFile();
                 this.loaded.emit();
             });

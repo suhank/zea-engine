@@ -135,8 +135,8 @@ class GLDrawItemSet {
 
         this.__glgeom.bind(renderstate);
 
-        renderstate.drawCalls++;
-        renderstate.drawCount+=this.__drawCount;
+        // renderstate.drawCalls++;
+        // renderstate.drawCount+=this.__drawCount;
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
         if (this.__drawCount == 1) {
