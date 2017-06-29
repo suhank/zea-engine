@@ -18,7 +18,7 @@
     let resources = generateResourcesDict();
     let scene = new Visualive.Scene(resources);
 
-    let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
+    let standardMaterial = new Visualive.Material('surfaces', 'StandardSurfaceShader');
     standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
     standardMaterial.addParameter('roughness', 1.0);
     standardMaterial.addParameter('metallic', 0.0);

@@ -76,6 +76,7 @@ varying vec3 v_viewNormal;
 varying vec3 v_worldPos;
 /* VS Outputs */
 
+
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif
@@ -91,12 +92,13 @@ uniform float _opacity;
 <%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
+<%include file="PBRSurfaceRadiance.glsl"/>
 uniform float _roughness;
 uniform float _metallic;
 uniform float _reflectance;
 #endif
 
-#ifdef ENABLE_TEXTURES
+#ifdef __ENABLE_TEXTURES
 uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
 
@@ -134,26 +136,6 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 
 void main(void) {
 
-#ifndef ENABLE_TEXTURES
-    vec4 baseColor      = _baseColor;
-    float opacity       = _opacity;
-
-#ifdef ENABLE_SPECULAR
-    float roughness     = _roughness;
-    float metallic      = _metallic;
-    float reflectance   = _reflectance;
-#endif
-
-#else
-    // Planar YZ projection for texturing, repeating every meter.
-    vec2 texCoords      = v_worldPos.xz * 0.2;
-    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoords);
-    float opacity       = getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
-    float roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoords);
-    float reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoords);
-#endif
-
-
 #ifdef ENABLE_CROSS_SECTIONS
     // Only do cross sections on opaque surfaces. 
     vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
@@ -170,62 +152,55 @@ void main(void) {
     }
 #endif
 
-    // Hacky simple irradiance. 
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    vec3 normal = mat3(cameraMatrix) * v_viewNormal;
-    float NdotV = dot(normalize(normal), normalize(viewVector));
-    vec3 irradiance;
-    if(NdotV < 0.0){
-        normal = -normal;
-        NdotV = dot(normalize(normal), normalize(viewVector));
+    MaterialParams material;
 
-        // Note: these 2 lines can be used to debug inverted meshes.
-        baseColor = vec4(1.0, 0.0, 0.0, 1.0);
-        irradiance = vec3(1.0, 1.0, 1.0);
-    }
-    //else{
-        irradiance = vec3(NdotV);
-    //}
+#ifndef __ENABLE_TEXTURES
+    material.baseColor      = _baseColor.rgb;
+    float opacity           = _opacity;
+
+#ifdef ENABLE_SPECULAR
+    material.roughness      = _roughness;
+    material.metallic       = _metallic;
+    material.reflectance    = _reflectance;
+#endif
+
+#else
+    // Planar YZ projection for texturing, repeating every meter.
+    // vec2 texCoord        = v_worldPos.xz * 0.2;
+    vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
+    material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    material.roughness      = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
+    material.metallic       = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
+    material.reflectance    = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+
+    float opacity           = getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
+#endif
 
 #ifndef ENABLE_SPECULAR
-    // I'm not sure why we must reduce the irradiance here.
-    // If not, the scene is far to bright. 
-    gl_FragColor = vec4(baseColor.rgb, opacity);
+    gl_FragColor = vec4(material.baseColor.rgb, opacity);
 #else
 
     vec3 viewNormal = normalize(v_viewNormal);
     //vec3 surfacePos = -v_viewPos.xyz;
 
-#ifdef ENABLE_TEXTURES
+#ifdef __ENABLE_TEXTURES
     if(_normalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoords).rgb * 2.0 - 1.0);
+        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif
 
-    vec3 albedoLinear = baseColor.rgb;  
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    if(dot(normal, viewVector) < 0.0){
+        normal = -normal;
+        // Note: this line can be used to debug inverted meshes.
+        //material.baseColor = vec3(1.0, 0.0, 0.0);
+    }
 
-    // -------------------------- Specular Reflactance --------------------------
-    // vec3 ks = vec3(0.0);
-    // vec3 specular = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, F0, ks );
-    // vec3 kd = (vec3(1.0) - ks) * vec3(1.0 - metallic);    
+    vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
 
-    float schlickFresnel = reflectance + pow((1.0-reflectance)*(1.0-NdotV), 5.0);
-
-    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewVector, roughness, schlickFresnel);
-
-
-    // -------------------------- Specular Occlusion --------------------------
-    // Fast and quick way of reducing specular reflection in areas that are less exposed to the environment
-    // A better approch is to try screen space specular occlusion but need to check performance and feasibility in webGL
-    float specularOcclusion = clamp(length(irradiance), 0.01, 1.0);    
-    specularReflectance = (specularReflectance * specularOcclusion);  
-      
-    // Would be best to compute reflectace internally and set here to 0.6-0.85 for metals
-   
-    // gl_FragColor = vec4( kd * diffuse + /*ks */ specular, 1);
-    gl_FragColor = vec4(specularReflectance, opacity);
-
+    gl_FragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
 
 #endif
 

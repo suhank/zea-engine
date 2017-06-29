@@ -83,7 +83,7 @@ class VAOGeomShaderBinding {
             if (!glattrbuffer) {
                 glattrbuffer = extrAttrBuffers ? extrAttrBuffers[attrName] : undefined;
                 if (!glattrbuffer) {
-                    // console.warn("glattrbuffer missing:" + attrName);
+                    // console.warn("glattrbuffer missing:" + attrName + " location:" + location);
                     if (attrName != 'instancedIds' || !instancedIdsBuffer)
                         gl.disableVertexAttribArray(location);
                     continue;

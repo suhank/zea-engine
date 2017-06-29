@@ -391,7 +391,7 @@ class GLShader extends RefCounted {
         let shaderProgramHdl = shaderCompilationResult.shaderProgramHdl;
 
         gl.useProgram(shaderProgramHdl);
-        renderstate.shaderkey = this.__hash;
+        renderstate.shaderkey = this.constructor.name;
         renderstate.boundTextures = 0;
         renderstate.boundLightmap = undefined;
 

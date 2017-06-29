@@ -126,9 +126,15 @@ class GLDrawItemSet {
                 if (gllightmap && gllightmap.glimage.isLoaded()) {
                     gllightmap.glimage.bind(renderstate, unifs.lightmap.location);
                     gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize);
+                    if(unifs.lightmapConnected){
+                        gl.uniform1i(unifs.lightmapConnected.location, true);
+                    }
                     renderstate.boundLightmap = this.__lightmapName;
                 } else {
-                    // TODO: disable lightmaps here. (should never need to happen)
+                    // disable lightmaps. Revert to default lighting.
+                    if(unifs.lightmapConnected){
+                        gl.uniform1i(unifs.lightmapConnected.location, false);
+                    }
                 }
             }
         }

@@ -116,6 +116,7 @@ varying vec3 v_worldPos;
 
 
 uniform sampler2D lightmap;
+uniform bool lightmapConnected;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 <%include file="debugColors.glsl"/>
 uniform vec2 lightmapSize;
@@ -187,6 +188,22 @@ float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec
 
 void main(void) {
 
+#ifdef ENABLE_CROSS_SECTIONS
+    // Only do cross sections on opaque surfaces. 
+    vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
+    vec3 planePos = planeNormal * planeDist;
+    vec3 planeDir = v_worldPos - planePos;
+    float planeOffset = dot(planeDir, planeNormal);
+    if(planeOffset < 0.0){
+        discard;
+        return;
+    }
+    if(!gl_FrontFacing){
+        discard;
+        return;
+    }
+#endif
+
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
@@ -211,23 +228,32 @@ void main(void) {
     float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoord);
 #endif
 
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
+    vec3 viewNormal = normalize(v_viewNormal);
+    //vec3 surfacePos = -v_viewPos.xyz;
 
-#ifdef ENABLE_CROSS_SECTIONS
-    // Only do cross sections on opaque surfaces. 
-    vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
-    vec3 planePos = planeNormal * planeDist;
-    vec3 planeDir = v_worldPos - planePos;
-    float planeOffset = dot(planeDir, planeNormal);
-    if(planeOffset < 0.0){
-        discard;
-        return;
-    }
-    if(!gl_FrontFacing){
-        discard;
-        return;
+#ifdef ENABLE_TEXTURES
+    if(_normalTexConnected){
+        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
+        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif
+
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
+    if(dot(normal, viewVector) < 0.0){
+        normal = -normal;
+        // Note: this line can be used to debug inverted meshes.
+        //material.baseColor = vec3(1.0, 0.0, 0.0);
+    }
+
+    vec3 irradiance;
+    if(lightmapConnected){
+        irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
+    }
+    else{
+        irradiance = vec3(dot(normal, viewVector));
+    }
+
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
@@ -249,26 +275,6 @@ void main(void) {
         }
     }
 #endif
-
-    vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos.xyz;
-
-#ifdef ENABLE_TEXTURES
-    if(_normalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
-        viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
-    }
-#endif
-
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
-    vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
-    if(dot(normal, viewVector) < 0.0){
-        normal = -normal;
-        // Note: this line can be used to debug inverted meshes.
-        //material.baseColor = vec3(1.0, 0.0, 0.0);
-    }
-
-    //irradiance = vec3(dot(normal, viewVector));
 
 #ifndef ENABLE_SPECULAR
     vec3 radiance = material.baseColor * irradiance;
