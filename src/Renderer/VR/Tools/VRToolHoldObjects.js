@@ -34,7 +34,7 @@ class VRToolHoldObjects extends VRTool {
         // this.__mat.baseColor = new Color(1, 0, 0);
 
         this.__projMatrix = new Mat4();
-        this.__projMatrix.setOrthographicMatrix(-0.03, 0.03, -0.03, 0.03, 0.06, 0.0);
+        this.__projMatrix.setOrthographicMatrix(-0.015, 0.015, -0.015, 0.015, 0.0, 0.03);
         this.createGeomDataFbo();
 
         this.__pressedButtonCount = 0;
@@ -49,7 +49,7 @@ class VRToolHoldObjects extends VRTool {
 
             // let geomItem = new GeomItem('SelVolume', this.__SelVolume, this.__mat);
             // geomItem.localXfo.tr.set(0.0, 0, -0.03);
-            // geomItem.selectable = false;
+            // geomItem.setSelectable(false);
             // vrController.getTreeItem().addChild(geomItem);
 
             vrController.buttonPressed.connect(() => {

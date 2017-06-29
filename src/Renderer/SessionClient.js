@@ -233,6 +233,7 @@ class SessionClient {
         // Add an avatar for us.
         let connectedUsers = {};
         let avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
+        avatarsTreeRoot.setSelectable(false);
         renderer.getCollector().addTreeItem(avatarsTreeRoot);
 
         let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false, commonResources);

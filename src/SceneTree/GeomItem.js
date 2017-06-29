@@ -24,12 +24,9 @@ class GeomItem extends TreeItem {
         this.__geomOffsetXfo = new Xfo();
         this.__geomXfo = new Xfo();
 
-        this.__selectable = true;
-        this.__selected = false;
         this.geomXfoChanged = new Signal();
         this.materialAssigned = new Signal();
         this.geomAssigned = new Signal();
-        this.selectionChanged = new Signal();
 
         if (geom)
             this.setGeom(geom);
@@ -62,7 +59,6 @@ class GeomItem extends TreeItem {
 
         cloned.__lightmapName = this.__lightmapName;
         cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
-        cloned.__selectable = this.__selectable;
     }
 
     //////////////////////////////////////////
@@ -113,24 +109,24 @@ class GeomItem extends TreeItem {
         this.__boundingBoxDirty = false;
     }
 
-    get selectable() {
-        return this.__selectable;
-    }
+    // get selectable() {
+    //     return this.__selectable;
+    // }
 
-    set selectable(sel) {
-        this.__selectable = sel;
-    }
+    // set selectable(sel) {
+    //     this.__selectable = sel;
+    // }
 
-    get selected() {
-        return this.__selected;
-    }
+    // get selected() {
+    //     return this.__selected;
+    // }
 
-    set selected(sel) {
-        if (this.__selected != sel) {
-            this.__selected = sel;
-            this.selectionChanged.emit(this.__selected);
-        }
-    }
+    // set selected(sel) {
+    //     if (this.__selected != sel) {
+    //         this.__selected = sel;
+    //         this.selectionChanged.emit(this.__selected);
+    //     }
+    // }
 
     getGeomOffsetXfo() {
         return this.__geomOffsetXfo;

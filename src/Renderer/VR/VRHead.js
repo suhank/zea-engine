@@ -29,9 +29,9 @@ class VRHead extends Gizmo {
         // mat1.baseColor = new Color(1, 1, 0);
 
         // this.__geomItem0 = new GeomItem('VRHead', geom, mat0);
-        // this.__geomItem0.selectable = false;
+        // this.__geomItem0.setSelectable(false);
         // this.__geomItem1 = new GeomItem('VRHead', geom, mat1);
-        // this.__geomItem1.selectable = false;
+        // this.__geomItem1.setSelectable(false);
 
         // let xfo = new Xfo();
         // xfo.sc.set(1.2, 0.3, 0.6);

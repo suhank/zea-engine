@@ -48,6 +48,10 @@ class GLMaterial {
     getMaterial() {
         return this.__material;
     }
+    
+    getShader() {
+        return this.__glshader;
+    }
 
     updateGLTextures() {
         const attachTexture = (texName, texture) => {

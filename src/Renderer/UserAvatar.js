@@ -32,11 +32,13 @@ class UserAvatar {
 
         this.__treeItem = new TreeItem(id);
         this.__treeItem.setVisible(visible);
+        
         this.__material = new Material('user' + id + 'Material', 'SimpleSurfaceShader');
         this.__material.addParameter('baseColor', new Color(data.color.r, data.color.g, data.color.b));
         this.setMouseAndCameraRepresentation();
 
         this.__parentTreeItem.addChild(this.__treeItem);
+        this.__treeItem.setSelectable(false);
     }
 
     setVisibility(visible) {

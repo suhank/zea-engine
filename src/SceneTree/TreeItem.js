@@ -19,8 +19,10 @@ class TreeItem {
         this.__globalXfo = new Xfo();
         this.__boundingBox = new Box3();
         this.__boundingBoxDirty = true;
-        this.__inheritedVisiblity = true;
         this.__visible = true;
+        this.__inheritedVisiblity = true;
+        this.__selectable = true;
+        this.__selected = false;
 
         // this.__private = new WeakMap(); // Not sure if this is necessary.
         this.__parentItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
@@ -36,6 +38,7 @@ class TreeItem {
         this.childRemoved = new Signal();
         this.visibilityChanged = new Signal();
         this.boundingBoxChanged = new Signal();
+        this.selectedChanged = new Signal();
         this.destructing = new Signal();
 
         this.treeItemGlobalXfoChanged = new Signal();
@@ -56,6 +59,8 @@ class TreeItem {
     copyTo(cloned){
         cloned.name = this.__name;
         cloned.localXfo = this.__localXfo.clone();
+        cloned.__visible = this.__visible;
+        cloned.__selectable = this.__selectable;
         for(let childItem of this.__childItems)
             cloned.addChild(childItem.clone());
     }
@@ -238,6 +243,31 @@ class TreeItem {
         }
     }
 
+    //////////////////////////////////////////
+    // Selectability and Selection
+
+    getSelectable() {
+        return this.__selectable;
+    }
+
+    setSelectable(val, propagateToChildren=true) {
+        if (this.__selectable != val || propagateToChildren) {
+            this.__selectable = val;
+            for (let childItem of this.__childItems)
+                childItem.setSelectable(this.__selectable, propagateToChildren);
+        }
+    }
+
+    getSelected() {
+        return this.__selected;
+    }
+
+    setSelected(sel) {
+        if (this.__selected != sel) {
+            this.__selected = sel;
+            this.selectionChanged.emit(this.__selected);
+        }
+    }
 
     //////////////////////////////////////////
     // BoundingBox
@@ -279,6 +309,7 @@ class TreeItem {
         if (checkCollisions && this.getChildByName(childItem.name) !== null)
             throw "Item '" + childItem.name + "' is already a child of :" + this.path;
         childItem.setInheritedVisiblity(this.getVisible());
+        childItem.setSelectable(this.getSelectable(), true);
         this.__childItems.push(childItem);
         childItem.setParentItem(this);
 

@@ -8,7 +8,8 @@ import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
 import {
-    GLShaderMaterials
+    GLShaderMaterials,
+    GLMaterialDrawItemSets
 } from '../GLCollector.js';
 
 class GLGeomDataPass extends GLPass {
@@ -20,31 +21,25 @@ class GLGeomDataPass extends GLPass {
 
     /////////////////////////////////////
     // Bind to Render Tree
-    // filterRenderTree() {
-    //     let allglshaderMaterials = this.__collector.getGLShaderMaterials();
-    //     this.__glshadermaterials = [];
-    //     for (let glshaderkey in allglshaderMaterials) {
-    //         this.__glshadermaterials.push(allglshaderMaterials[glshaderkey]);
-    //     }
-    // }
-
     filterRenderTree() {
-        let allglshaderMaterials = this.__collector.getGLShaderMaterials();
-        this.__glshadermaterials = [];
-        for (let glshaderkey in allglshaderMaterials) {
-            let glshaderMaterials = null;
-            let glmaterialDrawItemSets = allglshaderMaterials[glshaderkey].getMaterialDrawItemSets();
-            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                let material = glmaterialDrawItemSet.getGLMaterial().getMaterial();
-                if (material.nonSelectable === true)
-                    continue;
-                if (!glshaderMaterials) {
-                    glshaderMaterials = new GLShaderMaterials(allglshaderMaterials[glshaderkey].getGLShader());
-                    this.__glshadermaterials.push(glshaderMaterials);
+        let glshaderMaterials = new GLShaderMaterials(this.__glshader);
+        let glmaterialDrawItemSets = new GLMaterialDrawItemSets();
+        glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSets);
+
+        let srcglshaderMaterials = this.__collector.getGLShaderMaterials();
+        for (let glshaderkey in srcglshaderMaterials) {
+            let srcglmaterialDrawItemSets = srcglshaderMaterials[glshaderkey].getMaterialDrawItemSets();
+            for (let srcglmaterialDrawItemSet of srcglmaterialDrawItemSets) {
+                let srcdrawItemSets = srcglmaterialDrawItemSet.getDrawItemSets();
+                for (let drawItemSet of srcdrawItemSets) {
+                    if(drawItemSet.getGLDrawItem(0).getGeomItem().getSelectable()) {
+                        glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
+                    }
                 }
-                glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSet);
             }
         }
+
+        this.__glshadermaterials = [glshaderMaterials];
     }
 
     bindShader(renderstate, glshader) {
@@ -55,11 +50,8 @@ class GLGeomDataPass extends GLPass {
     }
     draw(renderstate) {
         let gl = this.__gl;
-        // TODO: we need to provide a tool to quickly flip faces
-        // and save out a new JSON file. Then we can render only one side
-        //gl.enable(gl.CULL_FACE);
         gl.disable(gl.CULL_FACE);
-        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 

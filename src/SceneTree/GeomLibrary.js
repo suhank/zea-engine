@@ -212,6 +212,7 @@ class GeomLibrary {
         // fire the loaded signal.
         this.__loaded += loaded;
         if (this.__loaded == this.__expectedNumGeoms) {
+            // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
             if(this.__workers.length > 0){
                 this.__terminateWorkers();
                 this.loaded.emit();

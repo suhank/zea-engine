@@ -57,11 +57,7 @@ void main(void) {
 precision highp float;
 #define ENABLE_TEXTURES
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-
 <%include file="stack-gl/gamma.glsl"/>
-
-#endif
 
 uniform mat4 cameraMatrix;
 

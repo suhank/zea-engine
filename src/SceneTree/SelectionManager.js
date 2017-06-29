@@ -13,16 +13,16 @@ class SelectionManager {
     selectGeom(geomItem, replaceSelection = true) {
         if (replaceSelection)
             this.clearSelection(false);
-        else if (geomItem.selected)
+        else if (geomItem.getSelected())
             return;
-        geomItem.selected = true;
+        geomItem.setSelected(true);
         this.__selection.add(geomItem);
         this.selectionChanged.emit(this.__selection);
     }
 
     deselectGeom(geomItem) {
-        if (geomItem.selected) {
-            geomItem.selected = false;
+        if (geomItem.getSelected()) {
+            geomItem.setSelected(false);
             this.__selection.delete(geomItem);
             this.selectionChanged.emit(this.__selection);
         }
@@ -36,8 +36,8 @@ class SelectionManager {
         if (replaceSelection)
             changed = this.clearSelection(false);
         for (let geomItem of selectionSet) {
-            if (!geomItem.selected) {
-                geomItem.selected = true;
+            if (!geomItem.getSelected()) {
+                geomItem.setSelected(true);
                 this.__selection.add(geomItem);
                 changed = true;
             }
@@ -49,8 +49,8 @@ class SelectionManager {
     deselectGeoms(selectionSet) {
         let changed = false;
         for (let geomItem of selectionSet) {
-            if (geomItem.selected) {
-                geomItem.selected = false;
+            if (geomItem.getSelected()) {
+                geomItem.setSelected(false);
                 this.__selection.delete(geomItem);
                 changed = true;
             }
@@ -63,7 +63,7 @@ class SelectionManager {
         if(this.__selection.size == 0)
             return false;
         for (let geomItem of this.__selection)
-            geomItem.selected = false;
+            geomItem.setSelected(false);
         this.__selection.clear();
         if (emitSignal)
             this.selectionChanged.emit(this.__selection);

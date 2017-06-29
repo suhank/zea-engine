@@ -52,7 +52,7 @@ class Lightmap extends RefCounted {
     }
 
     fromJSON(j, flags = 0) {
-        this.__atlasSize = j["atlasSize"];
+        this.__atlasSize = j.atlasSize;
     }
 };
 
@@ -112,7 +112,7 @@ class LightmapMixer extends RefCounted {
     }
 
     fromJSON(j, flags = 0) {
-        this.__atlasSize = j["atlasSize"];
+        this.__atlasSize = j['atlasSize'];
     }
 };
 
@@ -120,7 +120,7 @@ class Scene {
     constructor(resources) {
 
         this.cameras = [];
-        this.__root = new TreeItem("root");
+        this.__root = new TreeItem('root');
         this.__assets = [];
 
         // Env map used for background and reflections.
@@ -140,12 +140,13 @@ class Scene {
             this.__resourceLoader.loadResource(resourceName,
                 (entries) => {
 
-                    let viveAsset = new BinAsset("ViveResources");
+                    let viveAsset = new BinAsset('ViveResources');
                     let materialTypeMapping = {};
                     materialTypeMapping['*'] = 'SimpleSurfaceShader';
                     viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);
                     viveAsset.getGeometryLibrary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
                     viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+                    viveAsset.setSelectable(false, true);
                     entries['viveAsset'] = viveAsset;
 
                     let sphere = new Sphere('VRControllerTip', 0.015);

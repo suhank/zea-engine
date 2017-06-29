@@ -64,6 +64,7 @@ class VRViewport extends BaseViewport {
         this.__frameData = new VRFrameData();
 
         this.__stageTreeItem = new TreeItem('VRStage');
+        this.__stageTreeItem.setSelectable(false);
         this.__stageTreeItem.setVisible(false);
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
 

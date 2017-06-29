@@ -7,41 +7,45 @@
     </head>
     <body text-align: left;>
 
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
-        
+        <script src="../lib/VisualiveUI-dev.js"></script>
         <script type="text/javascript">
 
-document.addEventListener("DOMContentLoaded", function(event) { 
-    
-    let div = addCanvas();
-    let gui = addGUI(div);
-    /////////////////////////////////////
-    // Scene
-    let scene = new Visualive.Scene();
-
-    /////////////////////////////////////
-    // Renderer
-    
-    let renderer = new Visualive.GLSimpleRenderer(div);
-    // let renderer = new Visualive.GLVisualiveRenderer(div);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
-    let vrViewport = renderer.getVRViewport();
-    if(vrViewport){
-        vrViewport.setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
-    }
-
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1.2, 1), new Visualive.Vec3(0, 0.1, 0));
-    renderer.mirrorVRisplayToViewport = false;
-    renderer.setScene(scene);
+let div = addCanvas();
+let resources = generateResourcesDict();
 
 
-    renderer.resumeDrawing();
+let scene = new Visualive.Scene(resources);
 
-});
+let addMeshShape = (name, shape, pos, color)=>{
+    let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
+    standardMaterial.addParameter('baseColor', color);
+    let geomItem = new Visualive.GeomItem(name, shape, standardMaterial);
+    geomItem.localXfo.tr = pos;
+    scene.getRoot().addChild(geomItem);
+}
+
+let plane = new Visualive.Plane('Plane', 1.0, 0.5)
+
+addMeshShape('p0', plane, new Visualive.Vec3(0, 0.3, 0), new Visualive.Color(.2, .6, .3));
+addMeshShape('p1', plane, new Visualive.Vec3(0, 0.3, 0.01), new Visualive.Color(.6, .2, .3));
+
+
+let renderer;
+if(Visualive.isMobileDevice()){
+    renderer = new Visualive.GLSimpleRenderer(div);
+}
+else{
+    renderer = new Visualive.GLVisualiveRenderer(div);
+}
+renderer.setScene(scene);
+renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);
+renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3( 1, 1.0,1), new Visualive.Vec3(0,.5,0));
+renderer.resumeDrawing();
+
+let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
+
         </script> 
     </body>
 </html>

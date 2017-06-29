@@ -15,12 +15,13 @@
         <script type="text/javascript">
 
     let div = addCanvas();
-    let scene = new Visualive.Scene();
+    let resources = generateResourcesDict();
+    let scene = new Visualive.Scene(resources);
 
-    let standardMaterial = new Visualive.StandardMaterial('ground');
-    standardMaterial.baseColor = new Visualive.Color(89 / 255, 182 / 255, 92 / 255);
-    standardMaterial.roughness = 1.0;
-    standardMaterial.metallic = 0.0;
+    let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
+    standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    standardMaterial.addParameter('roughness', 1.0);
+    standardMaterial.addParameter('metallic', 0.0);
 
     let addMeshShape = (shape, pos)=>{
         let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, standardMaterial);
@@ -35,8 +36,8 @@
     addMeshShape(new Visualive.Torus('Torus', 0.4, 1.3), new Visualive.Vec3(6, 0, 0));
     addMeshShape(new Visualive.Sphere('Sphere', 1.4, 13), new Visualive.Vec3(9, 0, 0));
 
-    let linesMaterial = new Visualive.FatLinesMaterial('FatLinesMaterial');
-    linesMaterial.color = new Visualive.Color(1.0, 0.3, .4);
+    let linesMaterial = new Visualive.Material('lines', 'FatLinesShader');
+    linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
 
     let addLinesShape = (shape, pos)=>{
         shape.lineThickness = 0.05;

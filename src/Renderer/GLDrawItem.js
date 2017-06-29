@@ -41,7 +41,7 @@ class GLDrawItem {
         });
         this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
 
-        this.__geomItem.selectionChanged.connect((val) => {
+        this.__geomItem.selectedChanged.connect((val) => {
             if(val)
                 this.highlight();
             else
@@ -139,7 +139,7 @@ class GLDrawItem {
     destroy() {
         this.__geomItem.visibilityChanged.disconnectScope(this);
         this.__geomItem.globalXfoChanged.disconnectScope(this);
-        this.__geomItem.selectionChanged.disconnectScope(this);
+        this.__geomItem.selectedChanged.disconnectScope(this);
         this.__geomItem.destructing.disconnectScope(this);
         this.destructing.emit(this);
     }

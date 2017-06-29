@@ -11,6 +11,7 @@ import {
     onResize
 } from '../external/onResize.js';
 import {
+    TreeItem,
     GeomItem,
     Lines,
     Mesh,
@@ -172,12 +173,13 @@ class GLRenderer {
     }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
+        this.__gridTreeItem = new TreeItem('GridTreeItem');
+
         let gridMaterial = new Material('gridMaterial', 'LinesShader');
         gridMaterial.addParameter('color', gridColor);
         let grid = new Grid('Grid', gridSize, gridSize, resolution, resolution, true);
         // grid.lineThickness = lineThickness;
-        this.__gridItem = new GeomItem('GridItem', grid, gridMaterial);
-        this.__collector.addGeomItem(this.__gridItem);
+        this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 
         let axisLine = new Lines('axisLine');
         axisLine.setNumVertices(2);
@@ -189,16 +191,18 @@ class GLRenderer {
 
         let gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
         gridXAxisMaterial.addParameter('color', new Color(gridColor.luminance(), 0, 0));
-        this.__xAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial);
-        this.__collector.addGeomItem(this.__xAxisLineItem);
+        this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
 
         let gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
         gridZAxisMaterial.addParameter('color', new Color(0, 0, gridColor.luminance()));
         let geomOffset = new Xfo();
         geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI * 0.5);
-        this.__zAxisLineItem = new GeomItem('xAxisLineItem', axisLine, gridZAxisMaterial);
-        this.__zAxisLineItem.setGeomOffsetXfo(geomOffset);
-        this.__collector.addGeomItem(this.__zAxisLineItem);
+        let zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
+        zAxisLineItem.setGeomOffsetXfo(geomOffset);
+        this.__gridTreeItem.addChild(zAxisLineItem);
+
+        this.__gridTreeItem.setSelectable(false, true);
+        this.__collector.addTreeItem(this.__gridTreeItem);
     }
 
     toggleDrawGrid() {
