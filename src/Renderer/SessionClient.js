@@ -524,7 +524,7 @@ class SessionClient {
         // Playback
         let isPlaying = false;
         let sessionTime = 0;
-        let prevEventId = 0;
+        let currEventId = 0;
         let actualRecording = null;
         let replayData = null;
 
@@ -538,7 +538,11 @@ class SessionClient {
         };
 
         let resetState = () => {
-            prevEventId = 0;
+            console.log("resetState");
+            currEventId = 0;
+            changedGlobalXfos = {};
+            userData = {};
+
             // TODO: moved geoms myst be rest to starting positions.
             Object.keys(connectedUsers).forEach((key) => {
                 connectedUsers[key].userMarker.clear();
@@ -556,9 +560,7 @@ class SessionClient {
 
             sessionID = guid();
             sessionStorage.setItem('sessionID', sessionID);
-            joinSession();
-            playbackMode = false;
-            this.playbackModeChanged.emit(playbackMode);
+            this.setPlaybackMode(false);
         }
 
         // this.startRecording = () => {
@@ -577,7 +579,6 @@ class SessionClient {
             playbackMode = mode;
             if (playbackMode) {
                 myAvatar.setVisibility(true);
-                sessionTime = 0;
                 resetState();
                 sendMessage({
                     type: 'leaveSession'
@@ -595,6 +596,8 @@ class SessionClient {
         }
 
         let prevSessionTime = 0;
+        let changedGlobalXfos = {};
+        let userData = {};
         let advanceState = () => {
             // If playing has progressed passed the end of the recoded data, just return
             if (sessionTime >= replayData.duration) {
@@ -602,10 +605,26 @@ class SessionClient {
             }
             if (sessionTime < prevSessionTime) {
                 resetState();
+                return;
             }
-            while (prevEventId < replayData.events.length - 1) {
-                const eventData = replayData.events[prevEventId];
-                if (sessionTime < eventData.timestamp || prevEventId == replayData.events.length - 1) {
+            // while (currEventId < replayData.events.length - 1) {
+            //     const eventData = replayData.events[currEventId];
+            //     if (sessionTime < eventData.timestamp || currEventId == replayData.events.length - 1) {
+            //         break;
+            //     }
+
+            //     // if (!connectedUsers[eventData.client]) {
+            //     //     onUserConnected(eventData.client, replayData.clients[eventData.client].color);
+            //     // }
+
+            //     handleEvent(eventData.event);
+            //     currEventId++
+            // }
+
+
+            while (currEventId < replayData.events.length - 1) {
+                const eventData = replayData.events[currEventId];
+                if (sessionTime < eventData.timestamp || currEventId == replayData.events.length - 1) {
                     break;
                 }
 
@@ -613,9 +632,60 @@ class SessionClient {
                 //     onUserConnected(eventData.client, replayData.clients[eventData.client].color);
                 // }
 
-                handleEvent(eventData.event);
-                prevEventId++
+                let event = eventData.event;
+                console.log(event.type);
+                switch (event.type) {
+                    case 'joinClient':
+                        if (!userData[event.client]) {
+                            userData[event.client] = { clientData: event.data } ;
+                        }
+                        break;
+                    case 'clientDisconnect':
+                        if (connectedUsers[event.client]) {
+                            // onUserDisconnected(event.client);
+                            delete userData[event.client]
+                        }
+                        break;
+                    case 'viewChanged':
+                        userData[event.client].view = event.data;
+                        break;
+                    case 'pointerMoved':
+                        userData[event.client].pointer = event.data;
+                        break;
+                    case 'strokeStarted':
+                        listeners.strokeStarted(event.client, event.data);
+                        break;
+                    case 'strokeSegmentAdded':
+                        listeners.strokeSegmentAdded(event.client, event.data);
+                        break;
+                    case 'resetTreeItemGlobalXfo':
+                    case 'treeItemGlobalXfoChanged':
+                        changedGlobalXfos[event.data.path] = event.data.xfo;
+                        break;
+
+                }
+                currEventId++
             }
+
+            for(let clientId in userData){
+                if (!connectedUsers[clientId]) {
+                    onUserConnected(clientId, userData[clientId].clientData);
+                }
+                if(userData[clientId].view){
+                    listeners.viewChanged(clientId, userData[clientId].view);
+                }
+                // if(userData[clientId].pointer){
+                //     listeners.pointerMoved(clientId, userData[clientId].pointer);
+                // }
+            }
+
+            updatingTreeXfos = true;
+            for(let path in changedGlobalXfos){
+                let resolvedItem = renderer.getScene().getRoot().resolvePath(path);
+                resolvedItem.globalXfo = changedGlobalXfos[path];
+            }
+            updatingTreeXfos = false;
+
             prevSessionTime = sessionTime;
         }
 

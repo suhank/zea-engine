@@ -256,7 +256,7 @@ class FileImage2D extends Image2D {
         this.name = reader.loadStr();
         let resourcePath = reader.loadStr();
         if (typeof resourcePath === 'string' && resourcePath != "") {
-            if (lod > 0) {
+            if (lod >= 0) {
                 let suffixSt = resourcePath.lastIndexOf('.')
                 if (suffixSt != -1){
                     let lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);

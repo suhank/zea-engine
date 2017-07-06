@@ -116,7 +116,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (options.enableTextures)
             this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
         if (options.enableCrossSections)
-            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS'
+            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS';
 
         if (!isMobileDevice()) {
             // if(!options.disableSpecular)
@@ -362,7 +362,6 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__screenQuad.draw(renderstate, displayDebugTexture);
         } else {
 
-            this.__renderstate.shaderopts = this.__collector.getRenderer().getShaderPreprocessorDirectives();
 
             viewport.draw(this.__renderstate);
             /*
@@ -406,6 +405,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.planeDist = this.__planeDist;
         renderstate.planeAngle = this.__planeAngle;
         renderstate.exposure = Math.pow(2, this.__exposure);
+        renderstate.shaderopts = this.getShaderPreprocessorDirectives();
 
         if (this.__displayEnvironment)
             this.drawBackground(renderstate);

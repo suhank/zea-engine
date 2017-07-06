@@ -36,6 +36,8 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
             }
             return;
         }
+        if(!param.value)
+            return;
     }
     let unif = renderstate.unifs['_'+param.name];
     if (unif == undefined)

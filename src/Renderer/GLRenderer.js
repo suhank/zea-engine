@@ -386,7 +386,8 @@ class GLRenderer {
         this.__onResize();
 
         webglOptions.preserveDrawingBuffer = true;
-        webglOptions.alpha = true;
+        webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false;
+        webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false;
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 

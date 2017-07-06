@@ -114,8 +114,10 @@ void main(void) {
     vec4 color = texture2D(atlasBillboards_image, v_texCoord);
     if(color.r > 0.95)
         discard;
-    gl_FragColor = v_tint * (1.0-color.r);
-    gl_FragColor.rgb = gl_FragColor.rgb * (1.0 - v_gradient.y);
+    // TODO: for colors images on billbaords, we need to separate the
+    // alpah value into an alpha channel, (and maybe the code here can select .a or luminance)
+    gl_FragColor.rgb = v_tint.rgb * (1.0 - v_gradient.y);
+    gl_FragColor.a = (1.0-color.r);
 }
 `);
     }

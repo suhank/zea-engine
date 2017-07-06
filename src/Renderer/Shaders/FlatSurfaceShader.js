@@ -20,7 +20,6 @@ class FlatSurfaceShader extends GLShader {
 
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.vertexShader', `
 precision highp float;
-#define ENABLE_TEXTURES
 
 attribute vec3 positions;
 #ifdef ENABLE_TEXTURES
@@ -55,7 +54,6 @@ void main(void) {
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.fragmentShader', `
 #extension GL_OES_standard_derivatives : enable
 precision highp float;
-#define ENABLE_TEXTURES
 
 <%include file="stack-gl/gamma.glsl"/>
 

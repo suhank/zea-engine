@@ -251,7 +251,12 @@ void main(void) {
         irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
     }
     else{
+#ifndef ENABLE_SPECULAR
+        irradiance = sampleEnvMap(normal, 1.0);
+#else
         irradiance = vec3(dot(normal, viewVector));
+#endif
+        
     }
 
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS

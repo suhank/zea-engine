@@ -32,10 +32,10 @@ class ResourceLoader {
         this.__nextWorker = 0;
     }
 
-    addResourceURL(name, url) {
+    addResourceURL(resourcePath, url) {
 
-        let parts = name.split('/');
-        parts.pop();
+        let parts = resourcePath.split('/');
+        let filename = parts.pop();
         let curr = this.__resources;
         for(let part of parts){
             if(part in curr)
@@ -46,7 +46,7 @@ class ResourceLoader {
                 curr = dir;
             }
         }
-        curr[name] = url;
+        curr[filename] = url;
     }
 
     __constructWorkers() {
@@ -82,7 +82,7 @@ class ResourceLoader {
             if(part in curr)
                 curr = curr[part];
             else{
-                console.error("Unable to resolve URL:" + filePath);
+                console.warn("Unable to resolve URL:" + filePath);
                 return null;
             }
         }

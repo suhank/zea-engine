@@ -26,13 +26,19 @@ class GLSimpleRenderer extends GLRenderer {
         // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
         this.addPass(new GLBillboardsPass(this.__gl, this.__collector));
         this.__debugLightmaps = false;
+
+        this.__shaderDirectives = {
+            defines: `\n#define ENABLE_INLINE_GAMMACORRECTION\n`
+        };
+
+        if (options.enableTextures)
+            this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
+        if (options.enableCrossSections)
+            this.__shaderDirectives.defines += '\n#define ENABLE_CROSS_SECTIONS';
     }
 
     getShaderPreprocessorDirectives() {
-        // return '#define ENABLE_LIGHTMAPS\n\n';
-        return {
-            defines:'#define ENABLE_INLINE_GAMMACORRECTION\n'
-        };
+        return this.__shaderDirectives;
     }
     
     ///////////////////////////////////
@@ -77,6 +83,7 @@ class GLSimpleRenderer extends GLRenderer {
     drawScene(renderstate, vrView = false) {
 
         renderstate.debugLightmaps = this.__debugLightmaps;
+        renderstate.shaderopts = this.getShaderPreprocessorDirectives();
 
         super.drawScene(renderstate);
 

@@ -217,8 +217,8 @@ class GLBillboardsPass extends GLPass {
         }
 
 
-        gl.enable(gl.BLEND);
         gl.disable(gl.CULL_FACE);
+        gl.enable(gl.BLEND);
         gl.blendEquation(gl.FUNC_ADD);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
