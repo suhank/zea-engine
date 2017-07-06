@@ -1,34 +1,9 @@
+
 import {
-    SInt32,
-    UInt32,
-    Float32,
-    hashStr,
-    Vec2,
-    Vec3,
-    Vec4,
-    Mat3,
-    Mat4,
-    Color
+    hashStr
 } from '../Math';
-import { Image2D } from '../SceneTree/Image2D.js';
+import { glslTypes } from './GLSLConstants.js';
 
-let glslTypes = {
-    'bool': Boolean,
-    'int': SInt32,
-    'uint': UInt32,
-    'float': Float32,
-    'vec2': Vec2,
-    'vec3': Vec3,
-    'vec4': Vec4,
-    'ivec2': Vec2,
-    'color': Color,
-    'mat3': Mat3,
-    'mat4': Mat4,
-    'sampler2D': Image2D
-}
-
-///////////////////////////////////
-// ShaderLibrary
 class ShaderLibrary {
     constructor() {
         this.__shaderModules = {};
@@ -258,9 +233,8 @@ class ShaderLibrary {
         return this.__hashToName[has];
     }
 }
-let shaderLibrary = new ShaderLibrary();
+const shaderLibrary = new ShaderLibrary();
 
 export {
     shaderLibrary
 };
-// shaderLibrary;
