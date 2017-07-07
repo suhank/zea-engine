@@ -172,8 +172,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
         let lightMaps = scene.getLightMaps();
-        for (let name in lightMaps) {
-            let lightmap = lightMaps[name];
+        let addLightmap = (name, lightmap)=>{
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLLightmapMixer(this.__gl, lightmap);
@@ -187,6 +186,10 @@ class GLVisualiveRenderer extends GLRenderer {
                 glimage: gllightmap
             };
         }
+        for (let name in lightMaps) {
+            addLightmap(name, lightMaps[name]);
+        }
+        scene.lightmapAdded.connect(addLightmap);
     }
 
     addViewport(name) {

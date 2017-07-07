@@ -7,6 +7,7 @@ import {
 } from '../Math';
 
 let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
+let FreeMemWorker = require("worker-loader?inline!./FreeMemWorker.js");
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
@@ -18,7 +19,7 @@ class ResourceLoader {
         this.__resources = resources;
         this.loaded = new Signal();
         this.progressIncremented = new Signal();
-        this.allResourcesLoaded = new Signal(true);
+        this.allResourcesLoaded = new Signal();
 
         this.__totalWork = 0;
         this.__totalWorkByCategory = {};
@@ -30,6 +31,14 @@ class ResourceLoader {
         this.__workers = [];
         this.__constructWorkers();
         this.__nextWorker = 0;
+    }
+
+    freeData(buffer){
+        // Note: Explicitly transfer data to a web worker and then 
+        // terminate the worker. (hacky way to free TypedArray memory explicitly)
+        let worker = new FreeMemWorker();
+        worker.postMessage(buffer, [buffer]);
+        worker.terminate();
     }
 
     addResourceURL(resourcePath, url) {
@@ -82,7 +91,7 @@ class ResourceLoader {
             if(part in curr)
                 curr = curr[part];
             else{
-                console.warn("Unable to resolve URL:" + filePath);
+                // console.warn("Unable to resolve URL:" + filePath);
                 return null;
             }
         }

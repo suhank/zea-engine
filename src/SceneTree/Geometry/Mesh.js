@@ -631,42 +631,44 @@ class Mesh extends BaseGeom {
         /////////////////////////////////////
         // Clusters
         const numClusters = reader.loadUInt32();
-        const positionsAttr = this.vertices;
-        const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
-        // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
-        for (let i = 0; i < numClusters; i++) {
-            let xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat());
-            const coordsScale = reader.loadFloat32();
-            let offset = reader.loadFloat32Vec2();
-            let offsetRange = reader.loadSInt32Vec2();
-            let bytes = reader.loadUInt8();
-            let clusterFaceIndiceDeltas;
-            if (bytes == 1)
-                clusterFaceIndiceDeltas = reader.loadUInt8Array();
-            else if (bytes == 2)
-                clusterFaceIndiceDeltas = reader.loadUInt16Array();
-            else
-                clusterFaceIndiceDeltas = reader.loadUInt32Array();
-            let prevFace = 0;
-            for (let delta of clusterFaceIndiceDeltas) {
-                let face = delta + offsetRange.x;
-                face += prevFace;
-                prevFace = face;
-                let vertexIndices = this.getFaceVertexIndices(face);
-                for (let vertexIndex of vertexIndices) {
-                    let pos = positionsAttr.getValueRef(vertexIndex);
-                    let tmp = xfo.transformVec3(pos);
-                    let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
-                    lightmapCoord.scaleInPlace(coordsScale);
-                    lightmapCoord.addInPlace(offset);
-                    lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord);
+        if(numClusters > 0) {
+            const positionsAttr = this.vertices;
+            const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
+            // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);
+            for (let i = 0; i < numClusters; i++) {
+                let xfo = new Xfo(reader.loadFloat32Vec3(), reader.loadFloat32Quat());
+                const coordsScale = reader.loadFloat32();
+                let offset = reader.loadFloat32Vec2();
+                let offsetRange = reader.loadSInt32Vec2();
+                let bytes = reader.loadUInt8();
+                let clusterFaceIndiceDeltas;
+                if (bytes == 1)
+                    clusterFaceIndiceDeltas = reader.loadUInt8Array();
+                else if (bytes == 2)
+                    clusterFaceIndiceDeltas = reader.loadUInt16Array();
+                else
+                    clusterFaceIndiceDeltas = reader.loadUInt32Array();
+                let prevFace = 0;
+                for (let delta of clusterFaceIndiceDeltas) {
+                    let face = delta + offsetRange.x;
+                    face += prevFace;
+                    prevFace = face;
+                    let vertexIndices = this.getFaceVertexIndices(face);
+                    for (let vertexIndex of vertexIndices) {
+                        let pos = positionsAttr.getValueRef(vertexIndex);
+                        let tmp = xfo.transformVec3(pos);
+                        let lightmapCoord = new Vec2(tmp.x, tmp.z); // Discard y, use x,z
+                        lightmapCoord.scaleInPlace(coordsScale);
+                        lightmapCoord.addInPlace(offset);
+                        lightmapCoordsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, lightmapCoord);
 
-                    // for debugging.
-                    // clusterIDsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, i);
+                        // for debugging.
+                        // clusterIDsAttr.setFaceVertexValue_ByVertexIndex(face, vertexIndex, i);
+                    }
                 }
-            }
 
-            // Now compute the Uvs for the vertices.
+                // Now compute the Uvs for the vertices.
+            }
         }
 
 

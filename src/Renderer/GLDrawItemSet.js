@@ -129,7 +129,7 @@ class GLDrawItemSet {
                 let gllightmap = renderstate.lightmaps[this.__lightmapName];
                 if (gllightmap && gllightmap.glimage.isLoaded()) {
                     gllightmap.glimage.bind(renderstate, unifs.lightmap.location);
-                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize);
+                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray());
                     if(unifs.lightmapConnected){
                         gl.uniform1i(unifs.lightmapConnected.location, true);
                     }

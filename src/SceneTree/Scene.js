@@ -43,6 +43,7 @@ class Scene {
 
         this.backgroundMapChanged = new Signal();
         this.envMapChanged = new Signal();
+        this.lightmapAdded = new Signal();
         this.commonResourcesLoaded = new Signal(true);
 
         let resourceName = 'commonResources/Resources.vlr';
@@ -75,6 +76,10 @@ class Scene {
         return this.__resourceLoader;
     }
 
+    getSelectionManager() {
+        return this.__selectionManager;
+    }
+
     getEnvMap() {
         return this.__envMap;
     }
@@ -93,6 +98,21 @@ class Scene {
         this.backgroundMapChanged.emit(this.__backgroundMap);
     }
 
+    getCamera(index = 0) {
+        return this.cameras[index];
+    }
+
+    //////////////////////////////////
+    // Lightmaps
+
+    getLightMapLOD() {
+        return this.__lightmapLOD;
+    }
+
+    setLightMapLOD(lod) {
+        this.__lightmapLOD = lod;
+    }
+
     getLightMap(name) {
         return this.__lightmaps[name];
     }
@@ -102,25 +122,22 @@ class Scene {
             console.error("Object passed is not a Lightmap:" + lightmap.constructor.name);
         }
         this.__lightmaps[name] = lightmap;
+        this.lightmapAdded.emit(name, lightmap);
     }
 
     getLightMaps() {
         return this.__lightmaps;
     }
 
-    getCamera(index = 0) {
-        return this.cameras[index];
-    }
-
-    getSelectionManager() {
-        return this.__selectionManager;
-    }
-
     addAsset(asset){
         asset.loaded.connect(()=>{
-            let lightmapName = asset.getName() + "_" + this.__envMap.getName() + "_Lightmap"+this.__lightmapLOD+".vlh"
-            let lightmap = new Visualive.Lightmap(lightmapName, asset.getLightmapSize(), this.__resourceLoader);
-            this.setLightMap(asset.getName(), lightmap);
+            if(this.__envMap) {
+                let lightmapName = asset.getName() + "_" + this.__envMap.getName() + "_Lightmap"+this.__lightmapLOD+".vlh";
+                if(!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapName)) {
+                    let lightmap = new Visualive.Lightmap(lightmapName, asset.getLightmapSize(), this.__resourceLoader);
+                    this.setLightMap(asset.getName(), lightmap);
+                }
+            }
         });
         this.__assets.push(asset);
         this.__root.addChild(asset);
@@ -129,6 +146,9 @@ class Scene {
     getAssets() { 
         return this.__assets;
     }
+
+    ///////////////////////////////////////
+    // Persistence
 
     fromJSON(json) {
 

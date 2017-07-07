@@ -170,6 +170,7 @@ class VertexAttribute extends Attribute {
         let splitIndices = reader.loadUInt32Array();
         if(splitIndices.length == 0)
             return;
+        console.log("loadSplitValues:" + splitIndices.length );
         let offset = 0;
         let numSplitValues = 0;
         while (true) {

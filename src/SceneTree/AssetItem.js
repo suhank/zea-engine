@@ -101,6 +101,7 @@ class AssetItem extends TreeItem {
             (entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
+                this.__resourceLoader.freeData(treeData.buffer);
                 console.log("Asset:" +this.name + " numGeomsFiles:" + numGeomsFiles);
                 // add the work for the rest of the geom files....
                 // (load + parse)
@@ -124,6 +125,7 @@ class AssetItem extends TreeItem {
                 (entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
                     this.__geomLibrary.readBinaryBuffer(geomsResourceName, geomsData.buffer);
+                    this.__resourceLoader.freeData(geomsData.buffer);
                     loadNextGeomFile();
                 },
                 false); // <----

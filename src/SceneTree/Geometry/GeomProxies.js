@@ -5,6 +5,8 @@ import {
     RefCounted
 } from '../RefCounted.js';
 
+let FreeMemWorker = require("worker-loader?inline!../FreeMemWorker.js");
+
 class BaseProxy extends RefCounted {
     constructor(data) {
         super();
@@ -22,6 +24,18 @@ class BaseProxy extends RefCounted {
         return this.__buffers;
     }
     freeData(){
+
+        // Note: Explicitly transfer data to a web worker and then 
+        // terminate the worker. (hacky way to free TypedArray memory explicitly)
+        let transferables = [this.__buffers.indices.buffer];
+        for (let attrName in this.__buffers.attrBuffers) {
+            let attrData = this.__buffers.attrBuffers[attrName];
+            transferables.push(attrData.values.buffer);
+        }
+        let worker = new FreeMemWorker();
+        worker.postMessage(this.__buffers, transferables);
+        worker.terminate();
+
         this.__buffers = undefined;
     }
 
