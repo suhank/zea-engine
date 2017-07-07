@@ -30,6 +30,17 @@ class FileImage2D extends Image2D {
             this.loadResource(resourcePath);
     }
 
+    getName(){
+        let getName = (str) => {
+            let p = str.split('/');
+            let last = p[p.length - 1];
+            let suffixSt = last.lastIndexOf('.')
+            if (suffixSt != -1)
+                return last.substring(0, suffixSt)
+        }
+        return getName(this.__resourcePath);
+    }
+
     get resourcePath() {
         return this.__resourcePath;
     }

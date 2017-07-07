@@ -30,10 +30,11 @@ class AssetItem extends TreeItem {
         this.__resourceLoader = resourceLoader;
         this.__geomLibrary = new GeomLibrary(this.__name);
         this.__materials = new MaterialLibrary(this.__resourceLoader);
+        this.__lightmapSize = new Vec2();
 
         this.lightmapName = 'Default';
         
-        this.loaded = new Signal();
+        this.loaded = new Signal(true);
     }
 
     getGeometryLibrary() {
@@ -42,6 +43,10 @@ class AssetItem extends TreeItem {
 
     getMaterialLibrary() {
         return this.__materials;
+    }
+
+    getLightmapSize() {
+        return this.__lightmapSize;
     }
 
     //////////////////////////////////////////
@@ -72,11 +77,12 @@ class AssetItem extends TreeItem {
 
         super.readBinary(reader, flags, this);
 
-        this.lightmapCoordsOffset = reader.loadFloat32Vec2();
-        let numGeoms = 0;
-        if(reader.remainingByteLength == 4)
-            numGeoms = reader.loadUInt32();
-        return [numGeomsFiles, numGeoms];
+        this.__lightmapSize = reader.loadFloat32Vec2();
+        if(reader.remainingByteLength == 4){
+            this.__geomLibrary.setExpectedNumGeoms(reader.loadUInt32());
+        }
+        this.loaded.emit();
+        return numGeomsFiles;
     }
 
     readBinaryBuffer(buffer) {
@@ -94,16 +100,12 @@ class AssetItem extends TreeItem {
         this.__resourceLoader.loadResource(resourcePath,
             (entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
-                let res = this.readBinaryBuffer(treeData.buffer);
-                numGeomsFiles = res[0];
-                let numGeoms = res[1];
-                console.log("Asset:" +this.name + " numGeomsFiles:" + numGeomsFiles + " numGeoms:" + numGeoms);
-                this.__geomLibrary.setExpectedNumGeoms(numGeoms);
+                numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
+                console.log("Asset:" +this.name + " numGeomsFiles:" + numGeomsFiles);
                 // add the work for the rest of the geom files....
                 // (load + parse)
                 this.__resourceLoader.addWork(resourcePath+'geoms', (numGeomsFiles - 1) * 4);
                 loadNextGeomFile();
-                this.loaded.emit();
             });
 
         // Now load the geom files in sequence, parsing and loading
