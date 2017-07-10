@@ -389,7 +389,10 @@ class GLCollector {
 
         let gl = this.__renderer.gl;
         let stride = 4; // The number of pixels per draw item.
-        let size = Math.sqrt(this.__drawItems.length * stride);
+        let size = Math.round(Math.sqrt(this.__drawItems.length * stride) + 0.5);
+        // Only support power 2 textures. Else we get strange corruption on some GPUs
+        // in some scenes.
+        size = Math.nextPow2(size);
         // Size should be a multiple of 4 pixels, so each geom item is always contiguous
         // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
         if((size % 4) != 0)

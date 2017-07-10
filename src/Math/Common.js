@@ -51,6 +51,20 @@ Math.clamp = function(value, min, max) {
 }
 
 
+Math.nearestPow2 = function( value ){
+  return Math.pow( 2, Math.round( Math.log( value ) / Math.log( 2 ) ) ); 
+}
+
+Math.nextPow2 = function( value ) {
+    let  exp  =  0 ;
+    while ( value > 0 ) {
+        exp++;
+        value  =  value  >>  1 ;
+    }
+    return  (1 << exp);
+}
+
+
 export {
     SInt32,
     UInt32,

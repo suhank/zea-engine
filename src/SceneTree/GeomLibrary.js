@@ -123,11 +123,9 @@ class GeomLibrary {
             if (offset + numGeomsPerWorkload >= numGeoms) {
                 geomsRange = [offset, numGeoms];
                 bufferSlice_end = buffer.byteLength;
-                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start);
             } else {
                 geomsRange = [offset, offset + numGeomsPerWorkload];
                 bufferSlice_end = toc[geomsRange[1]];
-                // console.log("core:" +this.__mostResentlyHired + " geomsRange:" + geomsRange + " start:" +bufferSlice_start + " end:" + bufferSlice_end);
             }
             bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
             offset += numGeomsPerWorkload;
