@@ -92,6 +92,9 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="GGX_Specular.glsl"/>
+<%include file="PBRSurfaceRadiance.glsl"/>
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif
@@ -138,9 +141,6 @@ uniform sampler2D _flakesNormalTex;
 uniform float _flakesScale;
 
 #ifdef ENABLE_SPECULAR
-<%include file="glslutils.glsl"/>
-<%include file="GGX_Specular.glsl"/>
-<%include file="PBRSurfaceRadiance.glsl"/>
 
 uniform float _baseRoughness;
 uniform float _baseMetallic;
@@ -150,6 +150,7 @@ uniform float _glossMetallic;
 uniform float _glossReflectance;
 
 #endif
+
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D _baseColorTex;

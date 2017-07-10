@@ -148,6 +148,7 @@ uniform float _reflectance;
 uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
 
+#ifdef ENABLE_SPECULAR
 uniform sampler2D _roughnessTex;
 uniform bool _roughnessTexConnected;
 
@@ -157,13 +158,13 @@ uniform bool _metallicTexConnected;
 uniform sampler2D _reflectanceTex;
 uniform bool _reflectanceTexConnected;
 
-uniform sampler2D _emissiveStrengthTex;
-uniform bool _emissiveStrengthTexConnected;
-
 uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
 uniform float _normalScale;
+#endif
 
+uniform sampler2D _emissiveStrengthTex;
+uniform bool _emissiveStrengthTexConnected;
 
 vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
     if(_texConnected){
@@ -222,9 +223,12 @@ void main(void) {
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
     //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
+
+#ifdef ENABLE_SPECULAR
     material.roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
     material.metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
     material.reflectance   = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+#endif
     float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoord);
 #endif
 
@@ -232,10 +236,12 @@ void main(void) {
     //vec3 surfacePos = -v_viewPos.xyz;
 
 #ifdef ENABLE_TEXTURES
+#ifdef ENABLE_SPECULAR
     if(_normalTexConnected){
         vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
+#endif
 #endif
 
     vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
