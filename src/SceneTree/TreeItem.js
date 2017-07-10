@@ -481,16 +481,7 @@ class TreeItem {
             for (let i=0; i< numChildren; i++) {
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 let childType = reader.loadStr();
-                let childName = reader.loadStr();
-                if(type == 'FbxAsset'){
-                    if(childName.startsWith('Doors')){
-                        // Note: in the Cirque Stage demo, the doors caused corruption in the scene
-                        // Not sure why.
-                        console.log("Skipping:" + childName);
-                        continue;
-                    }
-                } 
-
+                // let childName = reader.loadStr();
                 let childItem = sgFactory.constructClass(childType);
                 if(!childItem)
                     continue;
