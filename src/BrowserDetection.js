@@ -86,23 +86,69 @@ function getBrowserDetails() {
     };
 }
 
-function isWebGLSupported() {
+function getGPUDesc() {
     let canvas = document.createElement('canvas');
     let context = create3DContext(canvas);
-    return context != undefined;
+    if(context == undefined)
+        return;
+
+    var debugInfo = context.getExtension('WEBGL_debug_renderer_info');
+    var vendor = context.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+    var renderer = context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    var gpuVendor;
+    if (renderer.match(/NVIDIA/i)) {
+        gpuVendor = "NVidia";
+    }
+    else if (renderer.match(/AMD/i)) {
+        gpuVendor = "AMD";
+    }
+    else if (renderer.match(/Intel/i)) {
+        gpuVendor = "Intel";
+    }
+
+    return {
+        vendor,
+        renderer,
+        gpuVendor
+    }
+}
+
+function isWebGLSupported() {
+
+    return getGPUDesc() != undefined;
 }
 
 function getSystemDesc() {
+    let isMobile = isMobileDevice()
     let browserDetails = getBrowserDetails();
+    let gpuDesc = getGPUDesc();
+
+    // We divide devices into 3 categories.
+    // 0: low end, we dial everything down as much as possible
+    // 1: mid-range, Enb maps and Textures go to mid-lods. 
+    //    Typically these devices are laptops, so the textures can't be too blurry
+    // 2: High-end: turn up as much as needed.
+    let deviceCategory;
+    if (isMobile) {
+        deviceCategory = 0;
+    } else  if (gpuDesc.gpuVendor == 'Intel' || browserDetails.browserName != 'Chrome') {
+        deviceCategory = 1;
+    }
+    else{
+        deviceCategory = 2;
+    }
+    
     return {
-        isMobileDevice: isMobileDevice(),
+        isMobileDevice: isMobile,
         isIOSDevice: isIOSDevice(),
         browserName: browserDetails.browserName,
         fullVersion: browserDetails.fullVersion,
         majorVersion: browserDetails.majorVersion,
         appName: browserDetails.appName,
         userAgent: browserDetails.userAgent,
-        webGLSupported: isWebGLSupported()
+        webGLSupported: (browserDetails != undefined),
+        gpuDesc,
+        deviceCategory
     }
 }
 

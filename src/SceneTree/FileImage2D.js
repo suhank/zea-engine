@@ -31,14 +31,22 @@ class FileImage2D extends Image2D {
     }
 
     getName(){
+        if(!this.__resourcePath || this.__resourcePath == '')
+            return "FileImageNoResource";
         let getName = (str) => {
             let p = str.split('/');
             let last = p[p.length - 1];
-            let suffixSt = last.lastIndexOf('.')
+            let suffixSt = last.lastIndexOf('.');
             if (suffixSt != -1){
-                // Note: ALL image names have an LOD specifier at the end.
-                // remove that off when retrieving the name.
-                return last.substring(0, suffixSt-1);
+                let decorator = last.substring(suffixSt-1, suffixSt);
+                if(!isNaN(decorator)) {
+                    // Note: ALL image names have an LOD specifier at the end.
+                    // remove that off when retrieving the name.
+                    return last.substring(0, suffixSt-1);
+                }
+                else{
+                    return last.substring(0, suffixSt);
+                }
             }
         }
         return getName(this.__resourcePath);
@@ -241,7 +249,6 @@ class FileImage2D extends Image2D {
         let params = super.getParams();
         if (this.__loaded){
             params['data'] = this.__data;
-            this.__data = undefined;// Release the memory once used.
         }
         return params;
     }
