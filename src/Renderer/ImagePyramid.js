@@ -118,7 +118,7 @@ class ImagePyramid extends ImageAtlas {
         let aspectRatio = this.__srcGLTex.width / this.__srcGLTex.height;
 
         this.addSubImage(this.__srcGLTex);
-        let numLevels = Math_log2(this.size) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
+        let numLevels = Math.round(Math_log2(this.size)) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
         for (let i = numLevels; i >= 0; --i) {
             let size = Math.pow(2, i);
             if (size < minTileSize)
@@ -126,8 +126,8 @@ class ImagePyramid extends ImageAtlas {
             // Create a target texture for this level of the pyramid.
             // and then render to it using the base level as a source image.
             let level = new GLTexture2D(gl, {
-                channels: this.__srcGLTex.channels,
-                format: this.__srcGLTex.format,
+                channels: this.__srcGLTex.getChannels(),
+                format: this.__srcGLTex.getFormat(),
                 width: size * aspectRatio,
                 height: size,
                 filter: 'LINEAR',

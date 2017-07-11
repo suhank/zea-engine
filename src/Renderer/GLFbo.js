@@ -29,15 +29,15 @@ class GLFbo {
         this.__fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
-        if (this.__colorTexture.format == 'FLOAT') {
+        if (this.__colorTexture.getFormat() == 'FLOAT') {
             if(gl.__ext_float){
-                if (this.__colorTexture.filter == 'LINEAR') {
+                if (this.__colorTexture.getFilter() == 'LINEAR') {
                     if (!gl.__ext_float_linear)
                         throw ("Unable to use filtering on floating point textures");
                 }
             }
             else if(gl.__ext_half_float){
-                if (this.__colorTexture.filter == 'LINEAR') {
+                if (this.__colorTexture.getFilter() == 'LINEAR') {
                     if (!gl.__ext_texture_half_float_linear)
                         throw ("Unable to use filtering on half-floating point textures");
                 }

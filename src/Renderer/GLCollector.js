@@ -397,6 +397,7 @@ class GLCollector {
         // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
         if((size % 4) != 0)
             size += 4 - (size % 4);
+
         // Re-allocate a new array once we hit the limit of the old one.
         let arraySize = (size * size) * 4; /*each pixel has 4 floats*/
         if(!this.__transformsDataArray || arraySize != this.__transformsDataArray.length){

@@ -58,6 +58,22 @@ class GLTexture2D extends RefCounted {
         return this.__texture;
     }
 
+    getFormat(){
+        return this.__format;
+    }
+    getChannels(){
+        return this.__channels;
+    }
+    getFilter(){
+        return this.__filter;
+    }
+    getWrap(){
+        return this.__wrap;
+    }
+    getMipMapped(){
+        return this.__mipMapped;
+    }
+
     configure(params, emit = true) {
 
         if (!('channels' in params) || !('width' in params) || !('height' in params))
@@ -67,27 +83,29 @@ class GLTexture2D extends RefCounted {
         let height = params['height'];
         let data = params['data'];
 
+
         let gl = this.__gl;
         let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
         if (width <= 0 || width > maxSize || height <= 0 || height > maxSize) {
             throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
         }
 
-        this.channels = params['channels'];
-        this.format = params['format'];
-        this.filter = ('filter' in params) ? params['filter'] : 'LINEAR';
-        let wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
-        let flipY = ('flipY' in params) ? params['flipY'] : false;
-        this.mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
+        this.width = width;
+        this.height = height;
+        this.__channels = params['channels'];
+        this.__format = params['format'];
+        this.__filter = ('filter' in params) ? params['filter'] : 'LINEAR';
+        this.__wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
+        this.__flipY = ('flipY' in params) ? params['flipY'] : false;
+        this.__mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
 
-        this.__format = gl[this.format];
-        // if (this.format == 'FLOAT') {
+        // if (this.__format == 'FLOAT') {
         //     if (gl.__ext_float){
         //         if (!gl.__ext_float_linear)
         //             throw ("OES_texture_float_linear is not available");
         //     }
         // }
-        // // else if (this.format == 'HALF_FLOAT') {
+        // // else if (this.__format == 'HALF_FLOAT') {
         // //     if(gl.__ext_half_float){
         // //         this.__format = gl.__ext_half_float.HALF_FLOAT_OES;    
         // //         if (!gl.__ext_texture_half_float_linear)
@@ -97,10 +115,22 @@ class GLTexture2D extends RefCounted {
         // //         throw ("OES_texture_half_float is not available");
 
         // // } 
-        // else if (this.format == 'sRGB') {
+        // else if (this.__format == 'sRGB') {
         //     if (!gl.__ext_sRGB)
         //         throw ("EXT_sRGB is not available");
         // }
+
+        this.__updateGLTexParams();
+        this.bufferData(data, false, false);
+        if (!this.__loaded) {
+            this.ready.emit();
+            this.__loaded = true;
+        }
+
+    }
+
+    __updateGLTexParams() {
+        let gl = this.__gl;
 
         // Load the image into the GPU for rendering.
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
@@ -108,38 +138,33 @@ class GLTexture2D extends RefCounted {
         // This parameter caused all images to be blank. Flipping in the pixel shader instead(by default)
         // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[this.filter]);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[this.filter]);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[wrap]);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[wrap]);
-
-        this.resize(width, height, data, false, false);
-        if (!this.__loaded) {
-            this.ready.emit();
-            this.__loaded = true;
-        }
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[this.__filter]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[this.__filter]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[this.__wrap]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[this.__wrap]);
     }
 
     bufferData(data, bind = true, emit = true) {
         let gl = this.__gl;
         if (bind)
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
-        let channels = gl[this.channels];
+        let channels = gl[this.__channels];
+        let format = gl[this.__format];
         if (data != undefined) {
             if (data instanceof Image || data instanceof HTMLVideoElement) {
-                gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, this.__format, data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, format, data);
             } else {
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
-                //console.log(this.width + "x"+ this.height+ ":" + data.length + " channels:" + this.channels + " format:" + this.format);
-                gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, this.__format, data);
+                //console.log(this.width + "x"+ this.height+ ":" + data.length + " channels:" + this.__channels + " format:" + this.__format);
+                gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, format, data);
             }
 
-            if (this.mipMapped) {
+            if (this.__mipMapped) {
                 gl.generateMipmap(gl.TEXTURE_2D);
             }
         } else {
-            gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, this.__format, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, format, null);
         }
 
         if (emit) {
@@ -151,12 +176,18 @@ class GLTexture2D extends RefCounted {
         let gl = this.__gl;
         let sizeChanged = this.width != width || this.height != height;
         if (sizeChanged) {
-            this.width = width;
-            this.height = height;
             let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
-            if (this.width < 0 || this.width > maxSize || this.height < 0 || this.height > maxSize) {
+            if (width < 0 || width > maxSize || height < 0 || height > maxSize) {
                 throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
             }
+
+            this.width = width;
+            this.height = height;
+
+            this.__gl.deleteTexture(this.__gltex);
+            this.__gltex = this.__gl.createTexture();
+            this.__updateGLTexParams();
+            bind = false;
         }
         if (bind) {
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
