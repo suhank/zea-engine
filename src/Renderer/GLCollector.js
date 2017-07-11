@@ -267,7 +267,7 @@ class GLCollector {
         if (treeItem instanceof GeomItem) {
             if (!treeItem.getMetadata('gldrawItem')) {
                 if (treeItem.getMaterial() == undefined) {
-                    console.warn ("Scene item :" + treeItem.path + " has no material");
+                    console.warn ("Scene item :" + treeItem.getPath() + " has no material");
                     // TODO: listen for when the material is assigned.(like geoms below)
                 }
                 else if (treeItem.getGeom() == undefined) {

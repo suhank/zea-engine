@@ -34,6 +34,9 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
                 geom = new Lines();
                 break;
             case 'Mesh':
+            case 'Plane': // TODO: Support procedural shape params
+            case 'Sphere':
+            case 'Cone':
                 geom = new Mesh();
                 break;
             default:

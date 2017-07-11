@@ -186,6 +186,9 @@ class GeomLibrary {
                     proxy = new LinesProxy(geomData);
                     break;
                 case 'Mesh':
+                case 'Plane': // TODO: Support procedural shape params
+                case 'Sphere':
+                case 'Cone':
                     proxy = new MeshProxy(geomData);
                     break;
                 default:
