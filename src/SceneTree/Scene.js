@@ -147,6 +147,28 @@ class Scene {
         return this.__assets;
     }
 
+
+    ///////////////////////////////////////
+    // Time
+
+    getSceneTime() {
+        return this.__sceneTime;
+    }
+
+    setSceneTime(sceneTime) {
+        this.__sceneTime = sceneTime;
+        this.sceneTimeChanged.emit(this.__sceneTime);
+    }
+
+    getSceneDuration() {
+        return this.__sceneDuration;
+    }
+
+    setSceneDuration(sceneDuration) {
+        this.__sceneDuration = sceneDuration;
+        this.sceneDurationChanged.emit(this.__sceneDuration);
+    }
+
     ///////////////////////////////////////
     // Persistence
 

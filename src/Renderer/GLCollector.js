@@ -9,7 +9,6 @@ import {
     Lines,
     Mesh,
     MeshProxy,
-    BillboardItem,
     sgFactory
 } from '../SceneTree';
 import {
@@ -106,6 +105,29 @@ class GLCollector {
 
         this.__newItemIndices = [];
 
+        this.__sceneItemFilters = [];
+        this.__sceneItemFilters.push((treeItem) => {
+            if (treeItem instanceof GeomItem) {
+                if (!treeItem.getMetadata('gldrawItem')) {
+                    if (treeItem.getMaterial() == undefined) {
+                        console.warn ("Scene item :" + treeItem.getPath() + " has no material");
+                        // TODO: listen for when the material is assigned.(like geoms below)
+                    }
+                    else if (treeItem.getGeom() == undefined) {
+                        // we will add this geomitem once it recieves its geom.
+                        treeItem.geomAssigned.connect(()=>{
+                            this.addGeomItem(treeItem);
+                        })
+                    }
+                    else{
+                        this.addGeomItem(treeItem);
+                    }
+                }
+                return true;
+            }
+            return false;
+        });
+
         // Un-Optimized Render Tree
         // Structured like so for efficient render traversial.
         // {GLShaders}[GLMaterials][GLGeoms][GLDrawItems]
@@ -119,6 +141,11 @@ class GLCollector {
     getRenderer(){
         return this.__renderer;
     };
+
+    registerSceneItemFilter(fn) {
+        // insert at the beginning so it is called first.
+        this.__sceneItemFilters.splice(0, 0, fn);
+    }
 
     newItemsReadyForLoading() {
         return this.__newItemIndices.length > 0;
@@ -264,25 +291,14 @@ class GLCollector {
 
     addTreeItem(treeItem) {
 
-        if (treeItem instanceof GeomItem) {
-            if (!treeItem.getMetadata('gldrawItem')) {
-                if (treeItem.getMaterial() == undefined) {
-                    console.warn ("Scene item :" + treeItem.getPath() + " has no material");
-                    // TODO: listen for when the material is assigned.(like geoms below)
-                }
-                else if (treeItem.getGeom() == undefined) {
-                    // we will add this geomitem once it recieves its geom.
-                    treeItem.geomAssigned.connect(()=>{
-                        this.addGeomItem(treeItem);
-                    })
-                }
-                else{
-                    this.addGeomItem(treeItem);
-                }
+        for (let fn of this.__sceneItemFilters) {
+            let rargs = { continueInSubTree: true };
+            let handled = fn(treeItem, rargs);
+            if (handled) {
+                if (!rargs.continueInSubTree)
+                    return;
+                break;
             }
-        }
-        else if (treeItem instanceof BillboardItem) {
-            this.billboardDiscovered.emit(treeItem);
         }
 
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)

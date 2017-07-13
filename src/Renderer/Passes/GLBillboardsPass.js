@@ -1,9 +1,10 @@
 import {
-    Vec3
-} from '../../Math/Vec3';
-import {
+    Vec3, 
     Vec4
-} from '../../Math/Vec4';
+} from '../../Math';
+import {
+    BillboardItem
+} from '../../SceneTree';
 import {
     BillboardShader
 } from '../Shaders/BillboardShader.js';
@@ -37,10 +38,17 @@ class GLBillboardsPass extends GLPass {
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
         this.__glshader = new BillboardShader(gl);
 
-        this.__collector.billboardDiscovered.connect(this.addBillboard, this);
         this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);
 
         this.__prevSortCameraPos = new Vec3();
+
+
+        collector.registerSceneItemFilter((treeItem, rargs)=>{
+            if(treeItem instanceof BillboardItem) {
+                this.addBillboard(treeItem);
+                return true;
+            }
+        });
     }
 
     /////////////////////////////////////

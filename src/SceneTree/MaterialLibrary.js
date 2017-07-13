@@ -55,39 +55,37 @@ class MaterialLibrary {
     }
 
     modifyMaterials(materialNames, paramValues, shaderName = undefined) {
-            for (let materialName of materialNames) {
-                let material = this.__materials[materialName];
-                if (!material) {
-                    console.warn("Material not found:" + materialName);
-                    continue;
-                }
-                for (let paramName in paramValues) {
-                    let param = material.getParameter(paramName);
-                    if (param) {
-                        param.setValue(paramValues[paramName]);
-                    } else {
-                        material.addParameter(paramName, paramValues[paramName]);
-                    }
-                }
-                if (shaderName)
-                    material.setShaderName(shaderName);
+        for (let materialName of materialNames) {
+            let material = this.__materials[materialName];
+            if (!material) {
+                console.warn("Material not found:" + materialName);
+                continue;
             }
+            for (let paramName in paramValues) {
+                let param = material.getParameter(paramName);
+                if (param) {
+                    param.setValue(paramValues[paramName]);
+                } else {
+                    material.addParameter(paramName, paramValues[paramName]);
+                }
+            }
+            if (shaderName)
+                material.setShaderName(shaderName);
         }
-        //////////////////////////////////////////
-        // Persistence
+    }
+    //////////////////////////////////////////
+    // Persistence
 
     load(filePath) {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", filePath, true);
-        xhr.ontimeout = function() {
+        xhr.ontimeout = ()=>{
             console.error("The request for " + filePath + " timed out.");
         };
-        let _this = this;
-        xhr.onload = function() {
+        xhr.onload = ()=>{
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
-                    _this.fromJSON.call(_this, JSON.parse(xhr.responseText));
-                    onLoadDone.call(_this);
+                    this.fromJSON(JSON.parse(xhr.responseText));
                 } else {
                     console.warn(xhr.statusText);
                 }

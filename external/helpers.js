@@ -54,6 +54,8 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     rootURL = rootURL + '/';
     let generatePath = (item)=>{
         let parts = item.split('/');
+        if(parts[0] == '.')
+            parts.shift();
         let curr = resources;
         for(let i=0; i<parts.length-1; i++){
             let part = parts[i];

@@ -63,6 +63,9 @@ Math.nextPow2 = function( value ) {
     }
     return  (1 << exp);
 }
+Math.fract = function( value ) {
+    return value % Math.floor(value)
+}
 
 
 export {

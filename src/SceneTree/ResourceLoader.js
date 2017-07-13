@@ -45,6 +45,8 @@ class ResourceLoader {
 
         let parts = resourcePath.split('/');
         let filename = parts.pop();
+        if(parts[0] == '.' && this.__resources['.'] == undefined)
+            parts.shift();
         let curr = this.__resources;
         for(let part of parts){
             if(part in curr)
@@ -86,6 +88,8 @@ class ResourceLoader {
         if(!this.__resources)
             console.error("Resources dict not provided");
         let parts = filePath.split('/');
+        if(parts[0] == '.' && this.__resources['.'] == undefined)
+            parts.shift();
         let curr = this.__resources;
         for(let part of parts){
             if(part in curr)

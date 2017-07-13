@@ -30,7 +30,7 @@ class AssetItem extends TreeItem {
         this.__resourceLoader = resourceLoader;
         this.__geomLibrary = new GeomLibrary(this.__name);
         this.__materials = new MaterialLibrary(this.__resourceLoader);
-        this.__lightmapSize = new Vec2();
+        this.__atlasSize = new Vec2();
 
         this.lightmapName = 'Default';
         
@@ -46,7 +46,11 @@ class AssetItem extends TreeItem {
     }
 
     getLightmapSize() {
-        return this.__lightmapSize;
+        return this.__atlasSize;
+    }
+    // Note: the atlas can be used for more than just lightmaps.
+    getAtlasSize() {
+        return this.__atlasSize;
     }
 
     //////////////////////////////////////////
@@ -77,7 +81,7 @@ class AssetItem extends TreeItem {
 
         super.readBinary(reader, flags, this);
 
-        this.__lightmapSize = reader.loadFloat32Vec2();
+        this.__atlasSize = reader.loadFloat32Vec2();
         if(reader.remainingByteLength == 4){
             this.__geomLibrary.setExpectedNumGeoms(reader.loadUInt32());
         }
