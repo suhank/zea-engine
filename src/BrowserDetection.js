@@ -19,7 +19,7 @@ function isMobileDevice() {
         navigator.userAgent.match(/Windows Phone/i)) != null;
 }
 
-function getBrowserDetails() {
+function getBrowserDesc() {
     let nVer = navigator.appVersion;
     let nAgt = navigator.userAgent;
     let browserName = navigator.appName;
@@ -120,7 +120,7 @@ function isWebGLSupported() {
 
 function getSystemDesc() {
     let isMobile = isMobileDevice()
-    let browserDetails = getBrowserDetails();
+    let browserDesc = getBrowserDesc();
     let gpuDesc = getGPUDesc();
 
     // We divide devices into 3 categories.
@@ -131,7 +131,7 @@ function getSystemDesc() {
     let deviceCategory;
     if (isMobile) {
         deviceCategory = 0;
-    } else  if (gpuDesc.gpuVendor == 'Intel' || browserDetails.browserName != 'Chrome') {
+    } else  if (gpuDesc.gpuVendor == 'Intel' || browserDesc.browserName != 'Chrome') {
         deviceCategory = 1;
     }
     else{
@@ -141,12 +141,12 @@ function getSystemDesc() {
     return {
         isMobileDevice: isMobile,
         isIOSDevice: isIOSDevice(),
-        browserName: browserDetails.browserName,
-        fullVersion: browserDetails.fullVersion,
-        majorVersion: browserDetails.majorVersion,
-        appName: browserDetails.appName,
-        userAgent: browserDetails.userAgent,
-        webGLSupported: (browserDetails != undefined),
+        browserName: browserDesc.browserName,
+        fullVersion: browserDesc.fullVersion,
+        majorVersion: browserDesc.majorVersion,
+        appName: browserDesc.appName,
+        userAgent: browserDesc.userAgent,
+        webGLSupported: (browserDesc != undefined),
         gpuDesc,
         deviceCategory
     }
@@ -155,6 +155,6 @@ function getSystemDesc() {
 export {
     isIOSDevice,
     isMobileDevice,
-    getBrowserDetails,
+    getBrowserDesc,
     getSystemDesc
 };
