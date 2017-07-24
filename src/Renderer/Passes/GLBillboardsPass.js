@@ -37,6 +37,9 @@ class GLBillboardsPass extends GLPass {
         this.__atlasNeedsUpdating = false;
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGB', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
         this.__glshader = new BillboardShader(gl);
+        let shaderComp = this.__glshader.compileForTarget();
+        this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+
 
         this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);
 
@@ -139,10 +142,6 @@ class GLBillboardsPass extends GLPass {
             this.__instancedIdsBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
-
-
-            let shaderComp = this.__glshader.compileForTarget();
-            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
             this.__atlasNeedsUpdating = false;
         }.bind(this);

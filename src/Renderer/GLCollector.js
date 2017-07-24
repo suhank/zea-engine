@@ -404,18 +404,19 @@ class GLCollector {
             return;
 
         let gl = this.__renderer.gl;
-        let stride = 4; // The number of pixels per draw item.
+        let pixelsPerItem = 4; // The number of RGBA pixels per draw item.
+        let stride = pixelsPerItem * 4; // The number of floats per draw item.
         let size = Math.round(Math.sqrt(this.__drawItems.length * stride) + 0.5);
         // Only support power 2 textures. Else we get strange corruption on some GPUs
         // in some scenes.
         size = Math.nextPow2(size);
-        // Size should be a multiple of 4 pixels, so each geom item is always contiguous
+        // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
         // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
-        if((size % 4) != 0)
-            size += 4 - (size % 4);
+        if((size % pixelsPerItem) != 0)
+            size += pixelsPerItem - (size % pixelsPerItem);
 
         // Re-allocate a new array once we hit the limit of the old one.
-        let arraySize = (size * size) * 4; /*each pixel has 4 floats*/
+        let arraySize = (size * size) * pixelsPerItem;
         if(!this.__transformsDataArray || arraySize != this.__transformsDataArray.length){
             this.__transformsDataArray = new Float32Array(arraySize);
             this.__transformsDataArrayHighWaterMark = 0;
@@ -457,16 +458,17 @@ class GLCollector {
             return;
 
         let gl = this.__renderer.gl;
-        let stride = 16; // The number of floats per draw item.
+        let pixelsPerItem = 4; // The number of RGBA pixels per draw item.
+        let stride = pixelsPerItem * 4; // The number of floats per draw item.
         let dataArray = new Float32Array(stride);
         this.__populateTransformDataArray(gldrawItem, 0, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
         let size = this.__transformsTexture.width;
 
-        let xoffset = (index * 4) % size;
-        let yoffset = Math.floor((index * 4) / size);
-        let width = stride/4;
+        let xoffset = (index * pixelsPerItem) % size;
+        let yoffset = Math.floor((index * pixelsPerItem) / size);
+        let width = pixelsPerItem;
         let height = 1;
         
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);

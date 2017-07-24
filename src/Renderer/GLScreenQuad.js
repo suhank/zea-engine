@@ -28,16 +28,16 @@ class GLScreenQuad {
 
         let gl = this.__gl;
         if ('pos' in unifs){
-            this.__gl.uniform2fv(unifs.pos.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
+            gl.uniform2fv(unifs.pos.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
         }
         if ('size' in unifs){
-            this.__gl.uniform2fv(unifs.size.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
+            gl.uniform2fv(unifs.size.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
         }
         // if ('flipY' in unifs)
-        //     this.__gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);
+        //     gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);
 
         // if ('textureDim' in unifs)
-        //     this.__gl.uniform2fv(unifs.textureDim.location, [texture.width, texture.height]);
+        //     gl.uniform2fv(unifs.textureDim.location, [texture.width, texture.height]);
 
         this.__quadBinding.bind(renderstate);
     }

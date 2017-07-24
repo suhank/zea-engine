@@ -113,7 +113,7 @@ class GLDrawItemSet {
     //////////////////////////////////////
     // Drawing
 
-    draw(renderstate) {
+    draw(renderstate, extrAttrBuffers) {
         if (this.__drawCount == 0) {
             return;
         }
@@ -143,7 +143,7 @@ class GLDrawItemSet {
             }
         }
 
-        this.__glgeom.bind(renderstate);
+        this.__glgeom.bind(renderstate, extrAttrBuffers);
 
         // renderstate.drawCalls++;
         // renderstate.drawCount+=this.__drawCount;
@@ -153,7 +153,10 @@ class GLDrawItemSet {
             // return;
             if (this.__gldrawItems[this.__lastVisible].bind(renderstate)) {
                 // Specify an non-instanced draw to the shader
-                gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
+                if(renderstate.unifs.instancedDraw) {
+                    gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
+                    gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
+                }
                 this.__glgeom.draw();
             }
             return;

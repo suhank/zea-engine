@@ -7,7 +7,7 @@ class GLFbo {
         this.__gl = gl;
         this.__colorTexture = colorTexture;
         this.__createDepthTexture = createDepthTexture;
-        this.__clearColor = [0, 0, 0, 1];
+        this.__clearColor = [0, 0, 0, 0];
         this.__depthTexture = undefined;
 
         this.setup = this.setup.bind(this);
@@ -23,6 +23,25 @@ class GLFbo {
         this.__clearColor = clearColor;
     }
 
+    getWidth() {
+        return this.__colorTexture.width;
+    }
+
+    getHeight() {
+        return this.__colorTexture.height;
+    }
+
+    getSize(){
+        return [this.__colorTexture.width, this.__colorTexture.height];
+    }
+
+    getColorTexture() {
+        return this.__colorTexture;
+    }
+    
+    getDepthTextureGL() {
+        return this.__depthTexture;
+    }
     get width() {
         return this.__colorTexture.width;
     }
@@ -38,7 +57,6 @@ class GLFbo {
     get colorTexture() {
         return this.__colorTexture;
     }
-
     get depthTextureGL() {
         return this.__depthTexture;
     }

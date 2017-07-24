@@ -50,14 +50,14 @@ class GLGeom {
     ///////////////////////////////////////
     // Binding
 
-    bind(renderstate, extrAttrBuffers, transformIds) {
+    bind(renderstate, extrAttrBuffers) {
         if(this.__destroyed)
             throw("Error binding a destroyed geom");
 
         let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
         if (!shaderBinding) {
             let gl = this.__gl;
-            shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer, extrAttrBuffers, transformIds);
+            shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer, extrAttrBuffers);
             this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
         }
         return shaderBinding.bind(renderstate);

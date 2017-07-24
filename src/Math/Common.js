@@ -64,6 +64,15 @@ Math.nextPow2 = function( value ) {
     return  (1 << exp);
 }
 Math.fract = function( value ) {
+    if(value == 0)
+        return 0;
+    if(value < 0) {
+        if(value > -1.0)
+            return -value;
+      return -value % Math.floor(-value)  
+    }
+    if(value < 1.0)
+        return value;
     return value % Math.floor(value)
 }
 

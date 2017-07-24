@@ -9,7 +9,7 @@ vec4 texelFetch1D(sampler2D texture, int textureSize, int index) {
 vec4 texelFetch(sampler2D texture, int textureSize, int index) {
     float x = mod(float(index), float(textureSize));
     float y = float(index / textureSize);
-    vec2 texCoord = vec2((float(x)+0.5)/float(textureSize), (float(y)+0.5)/float(textureSize));
+    vec2 texCoord = vec2((x+0.5)/float(textureSize), (y+0.5)/float(textureSize));
     return texture2D(texture, texCoord);
 }
 
