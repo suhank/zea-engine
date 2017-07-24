@@ -36,6 +36,7 @@ class GeomLibrary {
         this.geoms = [];
 
         this.__streamInfos = {};
+        this.__genBuffersOpts = {};
 
         this.__workers = [];
         for (let i = 0; i < 3; i++)
@@ -60,6 +61,10 @@ class GeomLibrary {
         for (let worker of this.__workers)
             worker.terminate();
         this.__workers = [];
+    }
+
+    setGenBufferOption(key, value) {
+        this.__genBuffersOpts[key] = value;
     }
 
     setExpectedNumGeoms(expectedNumGeoms) {
@@ -139,6 +144,7 @@ class GeomLibrary {
                 geomsRange,
                 isMobileDevice: reader.isMobileDevice,
                 bufferSlice,
+                genBuffersOpts: this.__genBuffersOpts,
             }, [bufferSlice]);
             this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length;
             //////////////////////////////////////////////
@@ -150,6 +156,7 @@ class GeomLibrary {
             //     geomsRange,
             //     reader.isMobileDevice,
             //     bufferSlice,
+            //     this.__genBuffersOpts,
             //     (data, transferables)=>{
             //         this.__recieveGeomDatas(
             //             data.key, 

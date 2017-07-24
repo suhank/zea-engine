@@ -126,7 +126,7 @@ class BaseGeom extends RefCounted {
     // Memory
 
 
-    genBuffers() {
+    genBuffers(opts) {
         let attrBuffers = {};
         for (let [attrName, attr] of this.__vertexAttributes) {
             attrBuffers[attrName] = {
@@ -319,14 +319,6 @@ class BaseGeom extends RefCounted {
             }
             attr.fromJSON(attrJSON);
         }
-    }
-
-    getTransferableData(opts) {
-        let geomData = this.toJSON(opts);
-        let transferables = [];
-        for (let name in geomData.vertexAttributes)
-            transferables.push(geomData.vertexAttributes[name].data.buffer);
-        return [geomData, transferables];
     }
 
     toString() {

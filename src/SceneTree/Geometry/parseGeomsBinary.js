@@ -14,7 +14,7 @@ import {
     parseGeomsBinary
 } from './parseGeomsBinary.js';
 
-let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, callback) => {
+let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, callback) => {
     let geomDatas = [];
     let offset = toc[geomsRange[0]];
     // console.log("offset:" +  offset);
@@ -51,11 +51,15 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
             continue;
         }
 
-        let geomBuffers = geom.genBuffers();
+        let geomBuffers = geom.genBuffers(genBuffersOpts);
         if (geomBuffers.indices)
             transferables.push(geomBuffers.indices.buffer);
         for (let name in geomBuffers.attrBuffers)
             transferables.push(geomBuffers.attrBuffers[name].values.buffer);
+
+        if(geomBuffers.vertexNeighbors){
+            transferables.push(geomBuffers.vertexNeighbors.buffer);
+        }
 
         geomDatas.push({
             name: geom.name,

@@ -310,14 +310,9 @@ class Mesh extends BaseGeom {
 
         this.generateEdgeFlags();
 
-
         let vertices = this.vertices;
         let faceNormals = this.getFaceAttribute('normals');
         let normalsAttr = this.addVertexAttribute('normals', Vec3);
-
-        let compute_normals_start = performance.now();
-        // let iter_edges_total = 0;
-        // let set_normal_total = 0;
 
         // these methods are faster versions than using the methods
         // provided on the attributes. We cache values and use hard coded constants.
@@ -431,11 +426,6 @@ class Mesh extends BaseGeom {
             }
         }
 
-        // console.log("==Compute Normals: " + (performance.now() - compute_normals_start) + " ==");
-        // console.log("==Compute Nomals timings: " + this.vertexEdges.length + " ==");
-        // console.log("iter_edges_total : " + iter_edges_total);
-        // console.log("set_normal_total : " + set_normal_total);
-
         return normalsAttr;
     }
 
@@ -514,7 +504,7 @@ class Mesh extends BaseGeom {
     // Memory
 
 
-    genBuffers() {
+    genBuffers(opts) {
 
         // Compute the normals on demand. 
         // if (!('normals' in this.__vertexAttributes)) {
@@ -573,13 +563,100 @@ class Mesh extends BaseGeom {
             };
         }
 
-        return {
+        let result = {
             numVertices: this.numVertices(),
             numRenderVerts: totalNumVertices,
             indices,
             attrBuffers
         };
 
+        if(opts && opts.includeVertexNeighbors) {
+            if (this.vertexEdges == undefined)
+                this.genTopologyInfo();
+
+            let count = 0;
+            for (let i = 0; i < this.vertexEdges.length; i++) {
+                // If this face indexing doesn't start at 0, then the vertexEdges don't either. 
+                if (this.vertexEdges[i])
+                    count += this.vertexEdges[i].length;
+            }
+            let vertexNeighbors = new Uint32Array(this.vertexEdges.length * 2 + count);
+
+            let offset = 0;
+            for (let i = 0; i < this.vertexEdges.length; i++) {
+                if (this.vertexEdges[i] == undefined)
+                    continue;
+                vertexNeighbors[i * 2] = this.vertexEdges.length * 2 + offset;
+                vertexNeighbors[i * 2 + 1] = this.vertexEdges[i].length;
+                offset += this.vertexEdges[i].length;
+            }
+
+            offset = this.vertexEdges.length * 2;
+            for (let i = 0; i < this.vertexEdges.length; i++) {
+                if (this.vertexEdges[i] == undefined)
+                    continue;
+                let edges = this.vertexEdges[i];
+                // Build a sorted list of faces based on a fan around
+                // the vertex.
+                let vertexFaces = [];
+                let fanEdges = [];
+                for (let e of edges) {
+                    let f0 = this.edgeFaces[e * 2];
+                    let f1 = this.edgeFaces[(e * 2) + 1];
+                    let v0 = this.edgeVerts[e * 2];
+                    let v1 = this.edgeVerts[(e * 2) + 1];
+                    if(vertexFaces.indexOf(f0) != -1) {
+                        if(vertexFaces.indexOf(f1) == -1) {
+                            if(v0 == i){
+                                vertexFaces.splice(vertexFaces.indexOf(f1), 0)
+                            }
+                            else if(v1 == i){
+                                vertexFaces.splice(vertexFaces.indexOf(f1)+1, 0)
+                            }
+                        }
+                        else{
+                            // check that f1 immedietly 
+                        }
+                    }
+                    else{
+                        if(vertexFaces.indexOf(f1) == -1) {
+                            if(v0 == i){
+                                vertexFaces.push(f0);
+                                vertexFaces.push(f1);
+                            }
+                            else if(v1 == i){
+                                vertexFaces.push(f1);
+                                vertexFaces.push(f0);
+                            }
+                            fanEdges.push(e);
+                        }
+                        else{
+                            // check that f1 immedietly 
+                        }
+                    }
+                }
+
+
+                for (let e of fanEdges) {
+                    let v0 = this.edgeVerts[e * 2];
+                    let v1 = this.edgeVerts[(e * 2) + 1];
+                    if(v0 == i)
+                        vertexNeighbors[offset] = v1;
+                    else if(v1 == i)
+                        vertexNeighbors[offset] = v0;
+                    else {
+                        throw("Invalid topology");
+                    }
+                    offset++;
+                }
+            }
+
+            result.vertexNeighbors = vertexNeighbors;
+
+        }
+
+
+        return result;
     }
 
     freeData() {
@@ -690,12 +767,7 @@ class Mesh extends BaseGeom {
         this.__faceVertexIndices = json['faceVertexIndices'];
     }
 
-    getTransferableData(opts) {
-        let meshData = super.getTransferableData(opts);
-        meshData[1].push(this.__faceCounts.buffer);
-        meshData[1].push(this.__faceVertexIndices.buffer);
-        return meshData;
-    }
+
 };
 
 export {
