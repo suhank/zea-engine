@@ -570,7 +570,7 @@ class Mesh extends BaseGeom {
             attrBuffers
         };
 
-        if(opts && opts.includeVertexNeighbors) {
+        if (opts && opts.includeVertexNeighbors) {
             if (this.vertexEdges == undefined)
                 this.genTopologyInfo();
 
@@ -580,75 +580,166 @@ class Mesh extends BaseGeom {
                 if (this.vertexEdges[i])
                     count += this.vertexEdges[i].length;
             }
+            // The array will be structured as a start+offset for each vertex, followed
+            // by a 2d array of neighbor indices.
             let vertexNeighbors = new Uint32Array(this.vertexEdges.length * 2 + count);
 
-            let offset = 0;
-            for (let i = 0; i < this.vertexEdges.length; i++) {
-                if (this.vertexEdges[i] == undefined)
-                    continue;
-                vertexNeighbors[i * 2] = this.vertexEdges.length * 2 + offset;
-                vertexNeighbors[i * 2 + 1] = this.vertexEdges[i].length;
-                offset += this.vertexEdges[i].length;
-            }
-
-            offset = this.vertexEdges.length * 2;
+            // Populate the start and offset values.
+            let offset = this.vertexEdges.length * 2;
             for (let i = 0; i < this.vertexEdges.length; i++) {
                 if (this.vertexEdges[i] == undefined)
                     continue;
                 let edges = this.vertexEdges[i];
+                vertexNeighbors[i * 2] = offset;
+                vertexNeighbors[i * 2 + 1] = edges.length;
+
                 // Build a sorted list of faces based on a fan around
-                // the vertex.
-                let vertexFaces = [];
+                // the vertex. 
                 let fanEdges = [];
                 for (let e of edges) {
+                    let v0 = this.edgeVerts[e * 2];
+                    let v1 = this.edgeVerts[(e * 2) + 1];
                     let f0 = this.edgeFaces[e * 2];
                     let f1 = this.edgeFaces[(e * 2) + 1];
-                    let v0 = this.edgeVerts[e * 2];
-                    let v1 = this.edgeVerts[(e * 2) + 1];
-                    if(vertexFaces.indexOf(f0) != -1) {
-                        if(vertexFaces.indexOf(f1) == -1) {
-                            if(v0 == i){
-                                vertexFaces.splice(vertexFaces.indexOf(f1), 0)
-                            }
-                            else if(v1 == i){
-                                vertexFaces.splice(vertexFaces.indexOf(f1)+1, 0)
-                            }
-                        }
-                        else{
-                            // check that f1 immedietly 
-                        }
+                    if (v0 == i) {
+                        neigVert = v1;
+                    } else if (v1 == i) {
+                        neigVert = v0;
+                        // swap the faces
+                        let tmp = f0;
+                        f0 = f1;
+                        f1 = tmp;
+                    } else {
+                        throw ("Invalid topology");
                     }
-                    else{
-                        if(vertexFaces.indexOf(f1) == -1) {
-                            if(v0 == i){
-                                vertexFaces.push(f0);
-                                vertexFaces.push(f1);
-                            }
-                            else if(v1 == i){
-                                vertexFaces.push(f1);
-                                vertexFaces.push(f0);
-                            }
-                            fanEdges.push(e);
+                    fanEdges.push([f0, f1, neigVert]);
+                }
+                for (let i = 0; i < fanEdges.length; i++) {
+                    let feA = fanEdges[i];
+                    for (let j = 0; j < i; j++) {
+                        let feB = fanEdges[j];
+                        if (feA[0] != -1 && feA[0] == feB[1]) {
+                            vertexFaces.splice(j, 0, feA);
+                            vertexFaces.splice(i, 1);
+                            continue;
                         }
-                        else{
-                            // check that f1 immedietly 
+                        if (feA[1] != -1 && feA[1] == feB[0]) {
+                            vertexFaces.splice(j + 1, 0, feA);
+                            vertexFaces.splice(i, 1);
+                            continue;
                         }
                     }
                 }
-
-
-                for (let e of fanEdges) {
-                    let v0 = this.edgeVerts[e * 2];
-                    let v1 = this.edgeVerts[(e * 2) + 1];
-                    if(v0 == i)
-                        vertexNeighbors[offset] = v1;
-                    else if(v1 == i)
-                        vertexNeighbors[offset] = v0;
-                    else {
-                        throw("Invalid topology");
+                // now check that the faces all build a fan. Maybe starting and ending with -1
+                if(fanEdges[0][0] == -1 || fanEdges[fanEdges.length-1][1] == -1){
+                    if(fanEdges[0][0] != -1 || fanEdges[fanEdges.length-1][1] != -1){
+                        throw ("If fan starts with -1, it must also end with -1");
                     }
+                }
+                for (let i = 0; i < fanEdges.length; i++) {
+                    let fe = fanEdges[i];
+                    if(fe[0] == -1 || fe[1] == -1){
+                        if(i != 0 || i != fanEdges.length-1){
+                            throw ("-1 only allowed at the beginning and end of a fan.");
+                        }
+                        continue;
+                    }
+                    if (fe[0] != fanEdges[i > 0 i-1 : fanEdges.length-1][1]) {
+                        throw ("Faces are not sequential");
+                    }
+                    if (fe[1] != fanEdges[(i+1)%fanEdges.length][1]) {
+                        throw ("Faces are not sequential");
+                    }
+                }
+                for (let fe of fanEdges) {
+                    vertexNeighbors[offset] = fe[2];
                     offset++;
                 }
+
+                // Build a sorted list of faces based on a fan around
+                // the vertex. 
+                // let vertexFaces = [];
+                // let fanEdges = [];
+                // for (let e of edges) {
+                //     let v0 = this.edgeVerts[e * 2];
+                //     let v1 = this.edgeVerts[(e * 2) + 1];
+                //     let f0 = this.edgeFaces[e * 2];
+                //     let f1 = this.edgeFaces[(e * 2) + 1];
+                //     let neigVert;
+                //     if (v0 == i) {
+                //         neigVert = v1;
+                //     } else if (v1 == i) {
+                //         neigVert = v0;
+                //         // swap the faces
+                //         let tmp = f0;
+                //         f0 = f1;
+                //         f1 = tmp;
+                //     } else {
+                //         throw ("Invalid topology");
+                //     }
+                //     let f0index = vertexFaces.indexOf(f0);
+                //     let f1index = vertexFaces.indexOf(f1);
+                //     if (f0 != -1) {
+                //         if (f0index != -1) {
+                //             if (f1 != -1) {
+                //                 vertexFaces.splice(f0index, 0, f0);
+                //                 if (vertexFaces[f0index + 1] != f1) {
+                //                     if (f1index != -1)
+                //                         throw ("Invalid topology.");
+                //                     vertexFaces.splice(f0index + 1, 0, f1);
+                //                 }
+                //             }
+                //             fanEdges.splice(f0index, 0, e);
+                //         } else {
+                //             if (f1index == -1) {
+                //                 vertexFaces.push(f0);
+                //                 vertexFaces.push(f1);
+                //             } else {
+                //                 vertexFaces.splice(f0index, 0, f0);
+                //             }
+                //             fanEdges.push(e);
+                //         }
+                //         continue;
+                //     }
+                //     if (f1 != -1) {
+                //         if (f1index != -1) {
+                //             if (vertexFaces[f1index - 1] != f0) {
+                //                 if (f0index != -1)
+                //                     throw ("Invalid topology.");
+                //                 vertexFaces.splice(f0index, 0, f0);
+                //             }
+                //             vertexFaces.splice(f1index, 0, f1);
+                //             fanEdges.splice(f1index, 0, e);
+                //         } else {
+                //             if (f0index == -1) {
+                //                 vertexFaces.push(f0);
+                //                 vertexFaces.push(f1);
+                //             } else {
+                //                 vertexFaces.splice(f0index, 0, f0);
+                //             }
+                //             vertexFaces.push(f0);
+                //             vertexFaces.push(f1);
+                //             fanEdges.push(e);
+                //         }
+                //         continue;
+                //     }
+                //     throw ("Invalid topology. An edge must have at least one face");
+                // }
+
+
+                // for (let e of fanEdges) {
+                //     let v0 = this.edgeVerts[e * 2];
+                //     let v1 = this.edgeVerts[(e * 2) + 1];
+                //     if (v0 == i)
+                //         vertexNeighbors[offset] = v1;
+                //     else if (v1 == i)
+                //         vertexNeighbors[offset] = v0;
+                //     else {
+                //         throw ("Invalid topology");
+                //     }
+                //     offset++;
+                // }
+                // offset += this.vertexEdges[i].length;
             }
 
             result.vertexNeighbors = vertexNeighbors;
@@ -708,7 +799,7 @@ class Mesh extends BaseGeom {
         /////////////////////////////////////
         // Clusters
         const numClusters = reader.loadUInt32();
-        if(numClusters > 0) {
+        if (numClusters > 0) {
             const positionsAttr = this.vertices;
             const lightmapCoordsAttr = this.addVertexAttribute('lightmapCoords', Vec2);
             // let clusterIDsAttr = this.addVertexAttribute('clusterIDs', Float32);

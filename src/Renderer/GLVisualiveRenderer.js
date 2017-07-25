@@ -152,6 +152,9 @@ class GLVisualiveRenderer extends GLRenderer {
         }
         this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
+        // Note: The difference bween an EnvMap and a BackgroundMap, is that
+        // An EnvMap must be HDR, and can be convolved for reflections.
+        // A Background map can be simply an image.
         if (scene.getBackgroundMap() != undefined) {
             let gl = this.__gl;
             let backgroundMap = scene.getBackgroundMap();
