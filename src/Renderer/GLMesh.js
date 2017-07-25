@@ -55,8 +55,7 @@ class GLMesh extends GLGeom {
             };
         }
         
-        this.__geom.freeData();
-
+        this.__geom.freeBuffers();
     }
 
 

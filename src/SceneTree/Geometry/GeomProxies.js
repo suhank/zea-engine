@@ -23,20 +23,30 @@ class BaseProxy extends RefCounted {
     genBuffers() {
         return this.__buffers;
     }
-    freeData(){
+
+    freeBuffers(){
 
         // Note: Explicitly transfer data to a web worker and then 
         // terminate the worker. (hacky way to free TypedArray memory explicitly)
-        let transferables = [this.__buffers.indices.buffer];
-        for (let attrName in this.__buffers.attrBuffers) {
-            let attrData = this.__buffers.attrBuffers[attrName];
-            transferables.push(attrData.values.buffer);
+        let freeData = { attrBuffers:{} };
+        let transferables = [];
+        if(this.__buffers.indices){
+            transferables.push(this.__buffers.indices.buffer);
+            freeData.indices = this.__buffers.indices;
+            delete this.__buffers.indices;
+        }
+        if(this.__buffers.attrBuffers){
+            for (let attrName in this.__buffers.attrBuffers) {
+                let attrData = this.__buffers.attrBuffers[attrName];
+                freeData.attrBuffers[attrName] = this.__buffers.attrBuffers[attrName];
+                transferables.push(attrData.values.buffer);
+                delete this.__buffers.attrBuffers[attrName];
+            }
+            delete this.__buffers.attrBuffers;
         }
         let worker = new FreeMemWorker();
-        worker.postMessage(this.__buffers, transferables);
+        worker.postMessage(freeData, transferables);
         worker.terminate();
-
-        this.__buffers = undefined;
     }
 
     //////////////////////////////////////////

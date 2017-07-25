@@ -142,11 +142,12 @@ class BaseGeom extends RefCounted {
         };
     }
 
-    freeData() {
+    freeBuffers() {
         // Before destroying all our data, 
         // make sure the bbox is up to date.
         if (this.__boundingBoxDirty)
             this.updateBoundingBox();
+        // TODO: push the data to a worker thread and terminate like in MeshProxy. 
         this.__vertexAttributes = new Map();
     }
 
