@@ -3,8 +3,8 @@ import {
 } from './Signal.js';
 
 class Async {
-    constructor() {
-        this.__asyncCount = 0;
+    constructor(asyncCount=0) {
+        this.__asyncCount = asyncCount;
         this.ready = new Signal(true);
 
         this.incAsyncCount = function(count=1) {
