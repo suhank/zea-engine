@@ -16,24 +16,19 @@ class DataImage2D extends Image2D {
         super();
 
         this.__name = name;
-        this.__isHDR = false;
-        this.__hasAlpha = false;
+        this.channels = 'RGBA';
+        this.format = 'UNSIGNED_BYTE';
         this.__loaded = false;
 
         this.__data = new Uint8Array(4);
         this.width = 1;
         this.height = 1;
     }
+    
     getName() {
         return this.__name;
     }
-    isHDR() {
-        return this.__isHDR;
-    }
 
-    hasAlpha() {
-        return this.__hasAlpha;
-    }
     isStream() {
         return false;
     }
@@ -44,6 +39,7 @@ class DataImage2D extends Image2D {
         this.__data = data;
         this.updated.emit();
     }
+
     getParams() {
         let params = super.getParams();
         params['data'] = this.__data;

@@ -4,10 +4,10 @@ import  { RefCounted } from './RefCounted.js';
 class Image2D extends RefCounted {
     constructor(params={}) {
         super();
-        this.width = 'width' in params ? params['width'] : 0;
-        this.height = 'height' in params ? params['height'] : 0;
-        this.channels = 'channels' in params ? params['channels'] : "RGBA";
-        this.format = 'format' in params ? params['format'] : "UNSIGNED_BYTE";
+        this.width = 0;
+        this.height = 0;
+        this.channels = 'RGB';
+        this.format = 'UNSIGNED_BYTE';
         this.filter = 'filter' in params ? params['filter'] : "LINEAR";
         this.wrap = 'wrap' in params ? params['wrap'] : "CLAMP_TO_EDGE";
         this.flipY = 'flipY' in params ? params['flipY'] : true;
@@ -19,14 +19,6 @@ class Image2D extends RefCounted {
 
     isLoaded() {
         return true;
-    }
-
-    isHDR() {
-        return false;
-    }
-
-    hasAlpha() {
-        return false;
     }
 
     isStream() {

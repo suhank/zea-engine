@@ -290,8 +290,8 @@ class VRViewport extends BaseViewport {
         }
         this.__vrDisplay.requestPresent([{
             source: this.__renderer.getGLCanvas()
-        }]).then(function() {}, function() {
-            console.warn("requestPresent failed.");
+        }]).then(function() {}, function(e) {
+            console.warn("requestPresent failed:" + e);
         });
         // } else {
         //     console.warn("VRViewport does not support presenting.");

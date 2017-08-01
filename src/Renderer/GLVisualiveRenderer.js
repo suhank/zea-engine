@@ -132,7 +132,7 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        } else if (env instanceof HDRImage2D || env.isHDR()) {
+        } else if (env instanceof HDRImage2D || env.format === "FLOAT") {
             this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR\n';
             this.__glEnvMap = new GLEnvMap(this, env);
         } else {
@@ -158,7 +158,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (scene.getBackgroundMap() != undefined) {
             let gl = this.__gl;
             let backgroundMap = scene.getBackgroundMap();
-            if (backgroundMap instanceof HDRImage2D || backgroundMap.isHDR()) {
+            if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
                 this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
             }
             else {

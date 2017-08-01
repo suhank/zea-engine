@@ -91,29 +91,6 @@ void main(void) {
     float opacity       = baseColor.a;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, v_texCoords);
 #endif
 
-
-    // vec3 viewNormal = normalize(cross(dFdy(v_viewPos.xyz), dFdx(v_viewPos.xyz)));
-
-    // int debugLevel = 0;
-    // if(debugLevel == 0){
-    //     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    //     vec3 worldNormal = mat3(cameraMatrix) * viewNormal;
-    //     float NdotV = dot(normalize(worldNormal),normalize(viewVector));
-
-    //     vec4 color = baseColor * NdotV;
-    //     gl_FragColor = vec4(color.rgb, opacity);
-    // }
-    // else if(debugLevel == 1){
-    //     // Display the world normal
-    //     vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
-    //     vec3 worldNormal = mat3(cameraMatrix) * viewNormal;
-    //     gl_FragColor = vec4(worldNormal, opacity);
-    // }
-    // else{
-    //     vec3 wsnormal = mat3(cameraMatrix) * viewNormal;
-    //     vec4 color = vec4(abs(wsnormal.x), abs(wsnormal.y), abs(wsnormal.z), 1.0) * abs(viewNormal.z);
-    //     gl_FragColor = vec4(color.rgb, opacity);
-    // }
     gl_FragColor = vec4(baseColor.rgb, opacity);
 
 

@@ -55,7 +55,7 @@ class GLLightmapMixer extends GLTexture2D {
         const genGLTex = (index) => {
             let image = this.__lightmapMixer.getSubImage(index);
             let gltexture;
-            if (image instanceof HDRImage2D || image.isHDR()) {
+            if (image instanceof HDRImage2D || image.format === "FLOAT") {
                 gltexture = new GLHDRImage(gl, image);
             } else {
                 gltexture = new GLTexture2D(gl, image);

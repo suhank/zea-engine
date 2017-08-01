@@ -35,7 +35,7 @@ class GLTransparencyPass extends GLPass {
         gl.blendFunc(gl.DST_COLOR, gl.ZERO);// For multiply, select this.
         super.draw(renderstate);
 
-        renderstate.pass ='ADD';
+        renderstate.pass = 'ADD';
         // renderstate.defines = defines + '\n#define TRANSP_ADD';
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
         super.draw(renderstate);

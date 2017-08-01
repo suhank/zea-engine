@@ -17,7 +17,6 @@ class FileImage2D extends Image2D {
         super(params);
 
         this.__resourceLoader = resourceLoader;
-        this.__isHDR = false;
         this.__hasAlpha = false;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
@@ -67,18 +66,16 @@ class FileImage2D extends Image2D {
             let last = p[p.length - 1];
             let suffixSt = last.lastIndexOf('.')
             if (suffixSt != -1)
-                return last.substring(suffixSt)
+                return last.substring(suffixSt).toLowerCase()
         }
         let ext = getExt(resourcePath);
         if (ext == '.jpg' || ext == '.png') {
-            this.__loadLDRImage(resourcePath);
+            this.__loadLDRImage(resourcePath, ext);
         } else if (ext == '.mp4' || ext == '.ogg') {
             this.__loadLDRVideo(resourcePath);
         } else if (ext == '.ldralpha') {
-            this.__hasAlpha = true;
             this.__loadLDRAlpha(resourcePath);
         } else if (ext == '.vlh') {
-            this.__isHDR = true;
             this.__loadVLH(resourcePath);
         } else {
             throw ("Unsupported file type. Check the ext:" + resourcePath);
@@ -86,7 +83,14 @@ class FileImage2D extends Image2D {
         this.__resourcePath = resourcePath;
     }
 
-    __loadLDRImage(resourcePath) {
+    __loadLDRImage(resourcePath, ext) {
+        if (ext == '.jpg'){
+            this.channels = 'RGB';
+        }
+        else if(ext == '.png') {
+            this.channels = 'RGBA';
+        }
+        this.format = 'UNSIGNED_BYTE';
         this.__resourceLoader.addWork(resourcePath, 1);
 
         let domElement = new Image();
@@ -103,6 +107,8 @@ class FileImage2D extends Image2D {
     }
 
     __loadLDRVideo(resourcePath) {
+        this.channels = 'RGB';
+        this.format = 'UNSIGNED_BYTE';
         this.__resourceLoader.addWork(resourcePath, 1);
 
         let domElement = document.createElement('video');
@@ -145,6 +151,7 @@ class FileImage2D extends Image2D {
     }
 
     // __loadLDRAlpha(resourcePath) {
+            // this.__hasAlpha = true;
     //     let worker = new ResourceLoaderWorker();
     //     worker.onmessage = (event) => {
     //         worker.terminate();
@@ -193,6 +200,7 @@ class FileImage2D extends Image2D {
     // }
 
     __loadVLH(resourcePath) {
+        this.format = 'FLOAT';
         this.__resourceLoader.loadResource(resourcePath, (entries) => {
             let ldr, cdm;
             for (let name in entries) {
@@ -227,10 +235,6 @@ class FileImage2D extends Image2D {
 
     getResourcePath() {
         return this.__resourcePath;
-    }
-
-    isHDR() {
-        return this.__isHDR;
     }
 
     hasAlpha() {

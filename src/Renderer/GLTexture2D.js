@@ -156,7 +156,16 @@ class GLTexture2D extends RefCounted {
             } else {
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
-                //console.log(this.width + "x"+ this.height+ ":" + data.length + " channels:" + this.__channels + " format:" + this.__format);
+                let numPixels = this.width * this.height;
+                let numChannels;
+                switch(this.__channels) {
+                    case 'ALPHA': numChannels = 1; break;
+                    case 'RGB': numChannels = 3; break;
+                    case 'RGBA': numChannels = 4; break;
+                }
+                if(data.length != numPixels * numChannels) {
+                    console.warn("Invalid data for Image width:" + this.width + " height:"+ this.height + " channels:" + this.__channels + " format:" + this.__format  + " Data Length:" + data.length  + " Expected:" + (numPixels * numChannels) );
+                }
                 gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, format, data);
             }
 

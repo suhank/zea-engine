@@ -14,10 +14,18 @@ import {
 import {
     BaseViewport
 } from './BaseViewport.js';
-import { GLFbo } from './GLFbo.js';
-import { GL2DOverlayPass } from './Passes/GL2DOverlayPass.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLSelectionRect } from './Drawables/GLSelectionRect.js';
+import {
+    GLFbo
+} from './GLFbo.js';
+import {
+    GL2DOverlayPass
+} from './Passes/GL2DOverlayPass.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    GLSelectionRect
+} from './Drawables/GLSelectionRect.js';
 
 class GLViewport extends BaseViewport {
     constructor(renderer, name, width, height) {
@@ -195,7 +203,7 @@ class GLViewport extends BaseViewport {
         let cameraMat = this.getCameraMatrix();
 
         let projInv = this.__projectionMatrix.inverse();
-        if(projInv == null)// Sometimes this happens, not sure why...
+        if (projInv == null) // Sometimes this happens, not sure why...
             return null;
 
         let rayStart, rayDirection;
@@ -314,11 +322,11 @@ class GLViewport extends BaseViewport {
     // Events
 
 
-    __eventMousePos(event){
+    __eventMousePos(event) {
         return new Vec2(
-            (event.offsetX * window.devicePixelRatio) - this.getPosX(), 
+            (event.offsetX * window.devicePixelRatio) - this.getPosX(),
             (event.offsetY * window.devicePixelRatio) - this.getPosY()
-            );
+        );
     }
 
     onMouseDown(event) {
@@ -329,7 +337,7 @@ class GLViewport extends BaseViewport {
             if (event.shiftKey) {
                 this.__manipMode = 'marker-tool';
                 let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
-                if(ray == null)
+                if (ray == null)
                     return;
                 let xfo = this.__camera.globalXfo.clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
@@ -341,7 +349,7 @@ class GLViewport extends BaseViewport {
                     type: 'strokeStarted',
                     data: {
                         xfo: xfo,
-                        color:  this.__markerPenColor,
+                        color: this.__markerPenColor,
                         thickness: thickness
                     }
                 });
@@ -522,7 +530,7 @@ class GLViewport extends BaseViewport {
 
                     let mousePos = this.__eventMousePos(event);
                     let ray = this.calcRayFromScreenPos(mousePos);
-                    if(ray == null)
+                    if (ray == null)
                         return;
                     this.mouseMoved.emit(event, mousePos, ray);
                 }
@@ -561,7 +569,7 @@ class GLViewport extends BaseViewport {
             case 'marker-tool':
                 {
                     let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
-                    if(ray == null)
+                    if (ray == null)
                         return;
                     let xfo = this.__camera.globalXfo.clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
@@ -569,8 +577,8 @@ class GLViewport extends BaseViewport {
                     this.actionOccuring.emit({
                         type: 'strokeSegmentAdded',
                         data: {
-                          id: this.__currStrokeID,
-                          xfo: xfo
+                            id: this.__currStrokeID,
+                            xfo: xfo
                         }
                     });
                 }
@@ -629,7 +637,7 @@ class GLViewport extends BaseViewport {
         event.preventDefault();
         event.stopPropagation();
 
-        if(Object.keys(this.__ongoingTouches).length == 0)
+        if (Object.keys(this.__ongoingTouches).length == 0)
             this.__manipMode = undefined;
 
         let touches = event.changedTouches;
@@ -643,14 +651,20 @@ class GLViewport extends BaseViewport {
         event.preventDefault();
         event.stopPropagation();
         // console.log("this.__manipMode:" + this.__manipMode);
-            
+
         let touches = event.changedTouches;
         if (touches.length == 1 && this.__manipMode != "panAndZoom") {
             let touch = touches[0];
             let touchPos = new Vec2(touch.pageX, touch.pageY);
             let touchData = this.__ongoingTouches[touch.identifier];
             let dragVec = touchData.pos.subtract(touchPos);
-            this.__camera.orbit(dragVec, this);
+            if (this.__camera.getDefaultManipMode() == 'look') {
+                // TODO: scale panning here.
+                dragVec.scaleInPlace(6.0);
+                this.__camera.look(dragVec, this);
+            } else {
+                this.__camera.orbit(dragVec, this);
+            }
         } else if (touches.length == 2) {
             let touch0 = touches[0];
             let touchData0 = this.__ongoingTouches[touch0.identifier];
@@ -702,7 +716,7 @@ class GLViewport extends BaseViewport {
     // Rendering
     draw(renderstate) {
         this.bindAndClear(renderstate);
-        if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);
         }
 

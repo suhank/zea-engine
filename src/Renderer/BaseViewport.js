@@ -44,7 +44,7 @@ class BaseViewport {
     setBackground(background) {
         let gl = this.__renderer.gl;
         if (background instanceof Image2D){
-            if (background.isHDR()){
+            if (background.format === "FLOAT"){
                 this.__backgroundTexture = background;
                 this.__backgroundGLTexture = new GLHDRImage(gl, background);
             }

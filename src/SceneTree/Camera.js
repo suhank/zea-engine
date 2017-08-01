@@ -98,6 +98,10 @@ class Camera extends TreeItem {
         this.viewMatChanged.emit(this.__globalXfo);
     }
 
+    getDefaultManipMode() {
+        return this.__defaultManipulationState;
+    }
+
     setDefaultManipMode(mode) {
         this.__defaultManipulationState = mode;
     }

@@ -238,17 +238,14 @@ class GLRenderer {
 
         this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
 
-        scene.commonResourcesLoaded.connect((entries) => {
+        if (this.supportsVR())
+            this.__setupVRViewport();
 
-            if (this.supportsVR())
-                this.__setupVRViewport();
-
-            if(this.__supportSessions){
-                this.sessionClient = new SessionClient(this, entries);
-                this.sessionClientSetup.emit(this.sessionClient);
-            }
-        });
-
+        // if(this.__supportSessions){
+        //     this.sessionClient = new SessionClient(this, entries);
+        //     this.sessionClientSetup.emit(this.sessionClient);
+        // }
+        
         this.sceneSet.emit(this.__scene);
     }
 
@@ -625,14 +622,12 @@ class GLRenderer {
         if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
             return;
 
-        let renderer = this;
-
-        function onAnimationFrame() {
-            if (renderer.isContinuouslyDrawing()) {
-                if (!renderer.getVRViewport() || !renderer.getVRViewport().isContinuouslyDrawing())
+        let onAnimationFrame = ()=>{
+            if (this.__continuousDrawing) {
+                if (!this.getVRViewport() || !this.getVRViewport().isContinuouslyDrawing())
                     window.requestAnimationFrame(onAnimationFrame);
             }
-            renderer.draw();
+            this.draw();
         }
 
         this.__continuousDrawing = true;

@@ -46,26 +46,35 @@ class Scene {
         this.lightmapAdded = new Signal();
         this.commonResourcesLoaded = new Signal(true);
 
-        let resourceName = 'commonResources/Resources.vlr';
-        if (this.__resourceLoader.resourceAvailable(resourceName)) {
-            this.__resourceLoader.loadResource(resourceName,
-                (entries) => {
+        /////////////////////////////
+        // Time
+        this.__sceneTime = 0.0; 
+        this.__sceneDuration = 10.0;
+        this.__playing = false;
 
-                    let viveAsset = new BinAsset('ViveResources');
-                    let materialTypeMapping = {};
-                    materialTypeMapping['*'] = 'SimpleSurfaceShader';
-                    viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);
-                    viveAsset.getGeometryLibrary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
-                    viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-                    viveAsset.setSelectable(false, true);
-                    entries['viveAsset'] = viveAsset;
+        this.sceneTimeChanged = new Signal();
+        this.sceneDurationChanged = new Signal();
 
-                    let sphere = new Sphere('VRControllerTip', 0.015);
-                    entries['VRControllerTip'] = sphere;
+        // let resourceName = 'commonResources/Resources.vlr';
+        // if (this.__resourceLoader.resourceAvailable(resourceName)) {
+        //     this.__resourceLoader.loadResource(resourceName,
+        //         (entries) => {
 
-                    this.commonResourcesLoaded.emit(entries);
-                });
-        }
+        //             let viveAsset = new BinAsset('ViveResources');
+        //             let materialTypeMapping = {};
+        //             materialTypeMapping['*'] = 'SimpleSurfaceShader';
+        //             viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);
+        //             viveAsset.getGeometryLibrary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
+        //             viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
+        //             viveAsset.setSelectable(false, true);
+        //             entries['viveAsset'] = viveAsset;
+
+        //             let sphere = new Sphere('VRControllerTip', 0.015);
+        //             entries['VRControllerTip'] = sphere;
+
+        //             this.commonResourcesLoaded.emit(entries);
+        //         });
+        // }
     }
 
     getRoot() {
@@ -155,9 +164,11 @@ class Scene {
         return this.__sceneTime;
     }
 
-    setSceneTime(sceneTime) {
+    setSceneTime(sceneTime, stopPlaying=true) {
         this.__sceneTime = sceneTime;
         this.sceneTimeChanged.emit(this.__sceneTime);
+        if(stopPlaying)
+            this.__playing = false;
     }
 
     getSceneDuration() {
@@ -168,6 +179,27 @@ class Scene {
         this.__sceneDuration = sceneDuration;
         this.sceneDurationChanged.emit(this.__sceneDuration);
     }
+
+    startPlaying(sceneTime) {
+        let prev = Date.now();
+        let onAnimationFrame = ()=>{
+            let now = Date.now();
+            let newTime = this.__sceneTime + ((now - prev) / 1000);
+            if(newTime > this.__sceneDuration){
+                // newTime = 0;
+                this.__playing = false;
+            }
+            if (this.__playing) {
+                window.requestAnimationFrame(onAnimationFrame);
+            }
+            this.setSceneTime(newTime, false);
+            prev = now;
+        }
+
+        this.__playing = true;
+        window.requestAnimationFrame(onAnimationFrame);
+    }
+
 
     ///////////////////////////////////////
     // Persistence
