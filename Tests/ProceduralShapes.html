@@ -18,7 +18,7 @@
     let resources = generateResourcesDict();
     let scene = new Visualive.Scene(resources);
 
-    let standardMaterial = new Visualive.Material('surfaces', 'StandardSurfaceShader');
+    let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
     standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
     standardMaterial.addParameter('roughness', 1.0);
     standardMaterial.addParameter('metallic', 0.0);
@@ -29,7 +29,7 @@
         scene.getRoot().addChild(geomItem);
     }
 
-    addMeshShape(new Visualive.Plane('Plane', 2.0, 1.5), new Visualive.Vec3(-6, 0, 0));
+    addMeshShape(new Visualive.Plane('Plane', 2.0, 1.5, 22, 22), new Visualive.Vec3(-6, 0, 0));
     addMeshShape(new Visualive.Cuboid('Cuboid', 1.5, 2.0, 1.0), new Visualive.Vec3(-3, 0, 0));
     addMeshShape(new Visualive.Cone('Cone', 1.2, 4.0), new Visualive.Vec3(0, 0, 0));
     addMeshShape(new Visualive.Cylinder('Cylinder', 1.2, 4.0, 32, 2, true), new Visualive.Vec3(3, 0, 0));

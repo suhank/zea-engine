@@ -44,12 +44,12 @@ class Plane extends Mesh {
         this.setFaceCounts([0, this.__xDivisions * this.__yDivisions]);
 
         let quadId = 0;
-        for (let i = 0; i < this.__xDivisions; i++) {
-            for (let j = 0; j < this.__yDivisions; j++) {
-                let v0 = ((this.__yDivisions + 1) * (i + 1)) + j;
-                let v1 = ((this.__yDivisions + 1) * (i + 1)) + (j + 1);
-                let v2 = ((this.__yDivisions + 1) * i) + (j + 1);
-                let v3 = ((this.__yDivisions + 1) * i) + j;
+        for (let i = 0; i < this.__yDivisions; i++) {
+            for (let j = 0; j < this.__xDivisions; j++) {
+                let v0 = ((this.__xDivisions + 1) * (i + 1)) + j;
+                let v1 = ((this.__xDivisions + 1) * (i + 1)) + (j + 1);
+                let v2 = ((this.__xDivisions + 1) * i) + (j + 1);
+                let v3 = ((this.__xDivisions + 1) * i) + j;
                 this.setFaceVertexIndices(quadId, v0, v1, v2, v3);
                 quadId = quadId + 1;
             }
@@ -57,8 +57,8 @@ class Plane extends Mesh {
 
         let voff = 0;
         let normals = this.getVertexAttribute('normals');
-        for (let i = 0; i <= this.__xDivisions; i++) {
-            for (let j = 0; j <= this.__yDivisions; j++) {
+        for (let i = 0; i <= this.__yDivisions; i++) {
+            for (let j = 0; j <= this.__xDivisions; j++) {
                 normals.getValueRef(voff).set(0, 0, 1);
                 voff++;
             }
@@ -66,10 +66,10 @@ class Plane extends Mesh {
 
         voff = 0;
         let texCoords = this.getVertexAttribute('texCoords');
-        for (let i = 0; i <= this.__xDivisions; i++) {
-            let x = i / this.__xDivisions;
-            for (let j = 0; j <= this.__yDivisions; j++) {
-                let y = j / this.__yDivisions;
+        for (let i = 0; i <= this.__yDivisions; i++) {
+            let y = i / this.__yDivisions;
+            for (let j = 0; j <= this.__xDivisions; j++) {
+                let x = j / this.__xDivisions;
                 texCoords.getValueRef(voff).set(x, y);
                 voff++;
             }

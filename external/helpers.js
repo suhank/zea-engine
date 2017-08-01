@@ -39,7 +39,7 @@ let addCanvas = function(width, height) {
 
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
-        commonResources: {
+        VisualiveEngine: {
             'Resources.vlr': window.location.origin+'/Resources/Resources.vlr',
             'Dome.vlatree': window.location.origin+'/Resources/Dome.vlatree',
             'Dome0.vlageoms': window.location.origin+'/Resources/Dome0.vlageoms',
@@ -48,6 +48,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
         }
     };
     let rootURL = window.location.href.split('#')[0];
+    rootURL = rootURL.split('?')[0];
     if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/'));
     }

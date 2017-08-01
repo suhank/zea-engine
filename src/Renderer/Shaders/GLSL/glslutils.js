@@ -3,7 +3,10 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 shaderLibrary.setShaderModule('glslutils.glsl', `
 
 vec2 pixelIndexToUV(int index, int textureSize){
-    return vec2((mod(float(index), float(textureSize))+0.5)/float(textureSize), (float(index / textureSize)+0.5)/float(textureSize));
+	float flTexSize = float(textureSize);
+	float x = (floor(mod(float(index), flTexSize))+0.5)/flTexSize;
+	float y = (floor(float(index / textureSize))+0.5)/flTexSize;
+    return vec2(x, y);
 }
 
 int uvToPixelIndex(vec2 uv, int textureSize){
