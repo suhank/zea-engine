@@ -15,7 +15,7 @@ plugins.push(
 module.exports = {
   entry: './src/index.js',
   output: {
-  	filename: `${libraryName}-${package_json.version}.min.js`,
+  	filename: `${libraryName}.min.js`,
     path: path.resolve(__dirname, 'lib'),
     library: libraryName
   },
