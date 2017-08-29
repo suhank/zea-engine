@@ -688,10 +688,10 @@ class GLRenderer {
                 pass.draw(renderstate);
         }
 
-        if (this.__displayStats) {
+        // if (this.__displayStats) {
             // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
             // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
-        }
+        // }
     }
 
     draw() {

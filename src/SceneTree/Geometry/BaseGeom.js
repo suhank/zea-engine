@@ -23,7 +23,7 @@ class BaseGeom extends RefCounted {
         this.__metaData = new Map();
         this.addVertexAttribute('positions', Vec3, 0.0);
 
-        this.boundingBoxChanged = new Signal();
+        this.boundingBoxDirtied = new Signal();
         this.geomDataChanged = new Signal();
         this.geomDataTopologyChanged = new Signal();
     }
@@ -94,7 +94,7 @@ class BaseGeom extends RefCounted {
 
     setBoundingBoxDirty() {
         this.__boundingBoxDirty = true;
-        this.boundingBoxChanged.emit();
+        this.boundingBoxDirtied.emit();
     }
 
     updateBoundingBox() {

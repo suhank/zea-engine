@@ -85,7 +85,7 @@ class GLNormalsPass extends GLPass {
             for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
                 let gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                 for (let gldrawitemset of gldrawitemsets) {
-                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
+                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeometry().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
                     // renderstate.drawCalls++;
                     if(gldrawitemset.getDrawCount() > 0){
                         let glgeom = gldrawitemset.getGLGeom();

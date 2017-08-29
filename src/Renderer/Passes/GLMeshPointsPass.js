@@ -18,7 +18,7 @@ class GLMeshPointsPass extends GLPass {
     filter(drawItem) {
         if(!super.filter(drawItem))
             return false;
-        let geom = drawItem.geomItem.getGeom();
+        let geom = drawItem.geomItem.getGeometry();
         return (geom instanceof Mesh);
     }
 

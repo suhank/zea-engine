@@ -29,7 +29,7 @@ class GeomItem extends TreeItem {
         this.geomAssigned = new Signal();
 
         if (geom)
-            this.setGeom(geom);
+            this.setGeometry(geom);
         if (material)
             this.setMaterial(material);
     }
@@ -48,10 +48,10 @@ class GeomItem extends TreeItem {
         cloned.setGeomOffsetXfo(this.__geomOffsetXfo);
 
         if (this.__geom) {
-            cloned.setGeom(this.__geom);
+            cloned.setGeometry(this.__geom);
         } else {
             this.geomAssigned.connect(() => {
-                cloned.setGeom(this.__geom);
+                cloned.setGeometry(this.__geom);
             });
         }
 
@@ -69,21 +69,27 @@ class GeomItem extends TreeItem {
     }
 
     setGeometry(geom) {
-        this.__geom = geom;
-        if (this.__geom) {
-            this.__geom.boundingBoxChanged.connect(() => {
-                this.__boundingBoxDirty = true;
-                this.boundingBoxChanged.emit();
-            }, this);
-            this.geomAssigned.emit();
+        if(this.__geom !== geom){
+            if(this.__geom){
+                this.__geom.removeRef(this);
+                this.__geom.boundingBoxDirtied.disconnect(this.setBoundingBoxDirty, this);
+            }
+            this.__geom = geom;
+            if(this.__geom){
+                this.__geom.addRef(this);
+                this.__geom.boundingBoxDirtied.connect(this.setBoundingBoxDirty, this);
+            }
+            this.geomAssigned.emit(this.__geom);
         }
     }
 
     getGeom() {
+        console.warn(("getGeom is deprectated. Please use 'getGeometry'"));
         return this.getGeometry();
     }
 
     setGeom(geom) {
+        console.warn(("setGeom is deprectated. Please use 'setGeometry'"));
         return this.setGeometry(geom);
     }
 
@@ -105,8 +111,16 @@ class GeomItem extends TreeItem {
     }
 
     setMaterial(material) {
-        this.__material = material;
-        this.materialAssigned.emit(this.__material);
+        if(this.__material !== material){
+            if(this.__material){
+                this.__material.removeRef(this);
+            }
+            this.__material = material;
+            if(this.__material){
+                this.__material.addRef(this);
+            }
+            this.materialAssigned.emit(this.__material);
+        }
     }
 
     updateBoundingBox() {
@@ -223,11 +237,11 @@ class GeomItem extends TreeItem {
         let geomLibrary = asset.getGeometryLibrary();
         let geom = geomLibrary.getGeom(geomIndex);
         if (geom) {
-            this.setGeom(geom);
+            this.setGeometry(geom);
         } else {
             let onGeomLoaded = (range) => {
                 if (geomIndex >= range[0] && geomIndex < range[1]) {
-                    this.setGeom(geomLibrary.getGeom(geomIndex));
+                    this.setGeometry(geomLibrary.getGeom(geomIndex));
                     geomLibrary.rangeLoaded.disconnectID(connid);
                 }
             }

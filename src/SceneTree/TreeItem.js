@@ -37,7 +37,7 @@ class TreeItem {
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
         this.visibilityChanged = new Signal();
-        this.boundingBoxChanged = new Signal();
+        this.boundingBoxDirtied = new Signal();
         this.selectedChanged = new Signal();
         this.destructing = new Signal();
 
@@ -290,7 +290,7 @@ class TreeItem {
 
     setBoundingBoxDirty() {
         this.__boundingBoxDirty = true;
-        this.boundingBoxChanged.emit();
+        this.boundingBoxDirtied.emit();
     }
 
     updateBoundingBox() {
@@ -323,7 +323,7 @@ class TreeItem {
         this.__childItems.push(childItem);
         childItem.setParentItem(this);
 
-        childItem.boundingBoxChanged.connect(() => {
+        childItem.boundingBoxDirtied.connect(() => {
             this.setBoundingBoxDirty();
         }, this);
         childItem.visibilityChanged.connect(() => {
