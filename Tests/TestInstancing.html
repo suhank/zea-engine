@@ -18,10 +18,10 @@
     let resources = generateResourcesDict([]);
     let scene = new Visualive.Scene(resources);
 
-    let standardMaterial = new Visualive.StandardMaterial('mat');
-    standardMaterial.baseColor = new Visualive.Color(89 / 255, 182 / 255, 92 / 255);
-    standardMaterial.roughness = 1.0;
-    standardMaterial.metallic = 0.0;
+    let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
+    standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    standardMaterial.addParameter('roughness', 1.0);
+    standardMaterial.addParameter('metallic', 0.0);
 
     let addGeomItem = (shape, row, count, i)=>{
         let geomItem = new Visualive.GeomItem(shape.name+'Item'+i, shape, standardMaterial);
@@ -45,8 +45,8 @@
     addMeshShape(new Visualive.Cylinder('Cylinder', 1.2, 4.0, 32, 2, true), -2, 8 );
     addMeshShape(new Visualive.Torus('Torus', 0.4, 1.3), -3, 4 );
 
-    let linesMaterial = new Visualive.LinesMaterial('LinesMaterial');
-    linesMaterial.color = new Visualive.Color(1.0, 0.3, .4);
+    let linesMaterial = new Visualive.Material('lines', 'LinesShader');
+    linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
 
     let addLinesShape = (shape, pos)=>{
         // shape.lineThickness = 0.05;

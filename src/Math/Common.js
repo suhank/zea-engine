@@ -41,37 +41,47 @@ let JSON_stringify_fixedPrecision = function(val, space = 0, precision = 5) {
 }
 
 Math.randomInt = function(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
+
+
+Math.lerp  = (a, b, t) => {
+    return a + t * (b - a);
+}
+
 
 Math.clamp = function(value, min, max) {
-  return Math.min(Math.max(value, min), max);
+    return Math.min(Math.max(value, min), max);
 }
 
 
-Math.nearestPow2 = function( value ){
-  return Math.pow( 2, Math.round( Math.log( value ) / Math.log( 2 ) ) ); 
+Math.nearestPow2 = function(value) {
+    return Math.pow(2, Math.round(Math.log(value) / Math.log(2)));
 }
 
-Math.nextPow2 = function( value ) {
-    let  exp  =  0 ;
-    while ( value > 0 ) {
+Math.nearestPow10 = function(value) {
+    return Math.pow(10, Math.round(Math.log10(value) / Math.log10(10)));
+}
+
+Math.nextPow2 = function(value) {
+    let exp = 0;
+    while (value > 0) {
         exp++;
-        value  =  value  >>  1 ;
+        value = value >> 1;
     }
-    return  (1 << exp);
+    return (1 << exp);
 }
-Math.fract = function( value ) {
-    if(value == 0)
+Math.fract = function(value) {
+    if (value == 0)
         return 0;
-    if(value < 0) {
-        if(value > -1.0)
+    if (value < 0) {
+        if (value > -1.0)
             return -value;
-      return -value % Math.floor(-value)  
+        return -value % Math.floor(-value)
     }
-    if(value < 1.0)
+    if (value < 1.0)
         return value;
     return value % Math.floor(value)
 }
@@ -84,4 +94,3 @@ export {
     hashStr,
     JSON_stringify_fixedPrecision
 };
-

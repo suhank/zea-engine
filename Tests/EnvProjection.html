@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>VR Polyfill</title>
+        <title>Env Projection</title>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     </head>
     <body text-align: left;>
@@ -21,8 +21,8 @@
     // Scene
     let scene = new Visualive.Scene(generateResourcesDict([env]));
 
-    let layer0Material = new Visualive.EnvProjectionMaterial('layer0');
-    layer0Material.env = new Visualive.HDRImage2D('envMap', env, scene.getResourceLoader());
+    let layer0Material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
+    layer0Material.addParameter('env', new Visualive.FileImage2D(env, scene.getResourceLoader()));
 
     let offset = 0;
     let addMeshShape = (shape)=>{
@@ -48,10 +48,10 @@
     let renderer = new Visualive.GLSimpleRenderer(div);
     // let renderer = new Visualive.GLVisualiveRenderer(div);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
+    renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();
     if(vrViewport){
-        vrViewport.setBackgroundColor(new Visualive.Color(0.94, 0.94, 0.94));
+        vrViewport.setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     }
 
 

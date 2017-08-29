@@ -57,10 +57,20 @@ class Quat extends AttrValue {
             this.__data = new Float32Array(buffer, byteOffset, 4);
         } else {
             this.__data = new Float32Array(4);
-            this.__data[0] = x;
-            this.__data[1] = y;
-            this.__data[2] = z;
-            this.__data[3] = w;
+            if (typeof x === 'object') {
+                this.__data[0] = 0;
+                this.__data[1] = 0;
+                this.__data[2] = 0;
+                this.__data[3] = 1;
+                for(let key in x) {
+                    this[key].call(this, x[key]);
+                }
+            } else {
+                this.__data[0] = x;
+                this.__data[1] = y;
+                this.__data[2] = z;
+                this.__data[3] = w;
+            }
         }
     }
 

@@ -8,9 +8,7 @@
     <body text-align: left;>
 
         <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
-        <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         <script src="../lib/VisualiveUI-dev.js"></script>
         
@@ -30,6 +28,7 @@
         bgMap.loaded.connect(() => {
             let gui = addGUI(div);
             renderer.addGUI(gui);
+            renderer.requestRedraw();
         });
 
         let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main);

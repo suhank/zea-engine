@@ -30,9 +30,9 @@
     /////////////////////////////////////
     // Ground Plane
     let groundMaterial = new Visualive.Material('ground', 'SimpleSurfaceShader');
-    groundMaterial.baseColor = new Visualive.Color(89 / 255, 182 / 255, 92 / 255);
-    groundMaterial.roughness = 1.0;
-    groundMaterial.metallic = 0.0;
+    groundMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    groundMaterial.addParameter('roughness', 1.0);
+    groundMaterial.addParameter('metallic', 0.0);
     // let f1 = gui.addFolder('Ground');
     // let paramHolder0 = {};
     // Object.defineProperty(paramHolder0, 'baseColor', {

@@ -7,10 +7,7 @@
     </head>
     <body text-align: left;>
 
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
-        <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         
         <script type="text/javascript">
@@ -19,7 +16,7 @@
     let domElement = addCanvas();
 
     let scene = new Visualive.Scene(generateResourcesDict(["Assets/hdri_sky_02_sample.vlh"]));
-    let envMap =  new Visualive.HDRImage2D('env', "Assets/hdri_sky_02_sample.vlh", scene.getResourceLoader());
+    let envMap =  new Visualive.FileImage2D("Assets/hdri_sky_02_sample.vlh", scene.getResourceLoader());
     scene.setEnvMap(envMap);
 
     let addMeshShape = (shape, pos, mat)=>{
@@ -29,14 +26,14 @@
     }
     for(let i=0; i<10; i++){
         for(let j=0; j<10; j++){
-            let material = new Visualive.StandardMaterial('ground');
-            material.baseColor = new Visualive.Color(0.6, 0.0, 0.0);
-            material.roughness = i/9;
-            material.metallic = j/9;
+            let material = new Visualive.Material('surfaces', 'StandardSurfaceShader');
+            material.addParameter('baseColor', new Visualive.Color(0.6, 0.0, 0.0));
+            material.addParameter('roughness', i/9);
+            material.addParameter('metallic', j/9);
             if(j < 6)
-                material.reflectance = 0.02;
+                material.addParameter('reflectance', 0.02);
             else
-                material.reflectance = 0.5;
+                material.addParameter('reflectance', 0.5);
             addMeshShape(new Visualive.Sphere('Sphere'+i+"-"+j, 1.4, 40), new Visualive.Vec3(i*3.4, 0, j*3.4), material);
         }
     }
@@ -45,16 +42,11 @@
     renderer.exposure = 1.0;
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
     
-    envMap.loaded.connect(() => {
+    renderer.setScene(scene);
+    renderer.frameAll();
 
-        renderer.setScene(scene);
-        renderer.frameAll();
+    renderer.resumeDrawing();
 
-        let gui = addGUI(domElement);
-        renderer.addGUI(gui);
-    
-        renderer.resumeDrawing();
-    });
 
         </script> 
     </body>

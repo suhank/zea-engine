@@ -7,10 +7,7 @@
     </head>
     <body text-align: left;>
 
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
-        <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         <script src="../lib/VisualiveUI-dev.js"></script>
         
@@ -22,13 +19,13 @@
     let scene = new Visualive.Scene(resources);
     let webcamimage = new Visualive.WebcamImage2D(640, 480, true);
 
-    let material = new Visualive.FlatMaterial('wecam');
-    material.baseColor = webcamimage;
+    let material = new Visualive.Material('wecam', 'SimpleSurfaceShader');
+    material.addParameter('baseColor', webcamimage);
 
     let plane = new Visualive.Plane('Plane', 2.0, 1.5);
 
     let geomItem = new Visualive.GeomItem('PlaneItem', plane, material);
-    geomItem.localXfo.tr =  new Visualive.Vec3(0, 1, 0);
+    geomItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,1,0)));
     scene.getRoot().addChild(geomItem);
 
 

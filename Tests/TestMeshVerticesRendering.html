@@ -13,8 +13,7 @@
         <script src="../lib/Visualive-dev.js"></script>
         
         <script type="text/javascript">
-
-document.addEventListener("DOMContentLoaded", function(event) { 
+ 
     let div = addCanvas();
     let scene = new Visualive.Scene();
     let objAsset = new Visualive.ObjAsset('obj');
@@ -35,8 +34,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
     objAsset.loaded.connect(onLoaded);
     objAsset.loadURL("/Tests/Assets/cow.obj");
-
-});
+    
         </script> 
         <br>
     </body>

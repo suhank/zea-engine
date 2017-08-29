@@ -31,7 +31,7 @@ let TestRenderLines = function() {
 
     lines.lineThickness = 0.1;
 
-    let material = new Visualive.FatLinesMaterial();
+    let material = new Visualive.Material('material', 'FatLinesShader');
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);
     let scene = new Visualive.Scene();
     scene.getRoot().addChild(geomItem);
@@ -52,7 +52,7 @@ let TestRenderCircle = function() {
     for(let i=0; i<lineThickness.length; i++)
         lineThickness.setFloat32Value(i, /*(i/lineThickness.length) */ 3.6);
 
-    let material = new Visualive.FatLinesMaterial();
+    let material = new Visualive.Material('material', 'FatLinesShader');
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);
     let scene = new Visualive.Scene();
     scene.getRoot().addChild(geomItem);
