@@ -64,11 +64,11 @@ class GeomItem extends TreeItem {
     //////////////////////////////////////////
     // Geom
 
-    getGeom() {
+    getGeometry() {
         return this.__geom;
     }
 
-    setGeom(geom) {
+    setGeometry(geom) {
         this.__geom = geom;
         if (this.__geom) {
             this.__geom.boundingBoxChanged.connect(() => {
@@ -77,6 +77,14 @@ class GeomItem extends TreeItem {
             }, this);
             this.geomAssigned.emit();
         }
+    }
+
+    getGeom() {
+        return this.getGeometry();
+    }
+
+    setGeom(geom) {
+        return this.setGeometry(geom);
     }
 
     get globalXfo() {

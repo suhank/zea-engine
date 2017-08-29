@@ -14,6 +14,7 @@ import {
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
+import './GLSL/envmap-equirect.js';
 import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
@@ -49,7 +50,18 @@ void main()
 }
 
 `);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.fragmentShader', `
+
+        this.addParameter('env', new Color(1.0, 1.0, 0.5));
+        this.addParameter('linearSpaceImage', true);
+        this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
+        this.finalize();
+    }
+};
+
+class OctahedralEnvProjectionShader extends EnvProjectionShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctahedralEnvProjectionShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -62,6 +74,7 @@ precision highp float;
 uniform color _env;
 uniform sampler2D _envTex;
 uniform bool _envTexConnected;
+uniform bool _linearSpaceImage;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -78,18 +91,71 @@ void main(void) {
     gl_FragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    if(_linearSpaceImage) {
+        gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    }
+    else {
+        gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    }
 #endif
 }
 `);
-        this.addParameter('env', new Color(1.0, 1.0, 0.5));
-        this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
+        this.finalize();
+    }
+};
+
+sgFactory.registerClass('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader);
+
+class LatLongEnvProjectionShader extends EnvProjectionShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongEnvProjectionShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+#endif
+
+uniform color _env;
+uniform sampler2D _envTex;
+uniform bool _envTexConnected;
+uniform bool _linearSpaceImage;
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+uniform float exposure;
+#endif
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
+void main(void) {
+
+    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+    vec4 env = texture2D(_envTex, uv);
+    gl_FragColor = vec4(env.rgb/env.a, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    if(_linearSpaceImage) {
+        gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    }
+    else {
+        gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    }
+#endif
+}
+`);
         this.finalize();
     }
 };
 
 
-sgFactory.registerClass('EnvProjectionShader', EnvProjectionShader);
+sgFactory.registerClass('LatLongEnvProjectionShader', LatLongEnvProjectionShader);
 export {
-    EnvProjectionShader
+    EnvProjectionShader,
+    OctahedralEnvProjectionShader,
+    LatLongEnvProjectionShader
 };

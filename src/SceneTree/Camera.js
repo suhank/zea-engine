@@ -40,6 +40,7 @@ class Camera extends TreeItem {
 
         this.viewMatChanged = new Signal();
         this.clippingRangesChanged = new Signal();
+        this.projectionParamChanged = new Signal();
 
         // Initial viewing coords of a person standing 3 meters away from the
         // center of the stage looking at something 1 meter off the ground.
@@ -47,55 +48,111 @@ class Camera extends TreeItem {
 
     }
 
+    //////////////////////////////////////////////
+    // Deprectated property getters/setters.
+
     get near() {
-        return this.__near;
+        return this.getNear();
     }
 
     get far() {
-        return this.__far;
+        return this.getFar();
     }
 
     get fov() {
-        return this.__fov;
+        return this.getFov();
     }
 
     get focalDistance() {
-        return this.__focalDistance;
+        return this.getFocalDistance();
     }
 
     set focalDistance(dist) {
+        this.setFocalDistance(dist);
+    }
+
+    get isOrthographic() {
+        return this.getIsOrthographic();
+    }
+
+    get viewMatrix() {
+        return this.getViewMatrix();
+    }
+
+    get globalXfo() {
+        return this.getGlobalXfo();
+    }
+
+    set globalXfo(xfo) {
+        this.setGlobalXfo(xfo);
+    }
+
+    get localXfo() {
+        return this.getLocalXfo();
+    }
+
+    set localXfo(xfo) {
+        this.setLocalXfo(xfo);
+    }
+
+    //////////////////////////////////////////////
+    // getters/setters.
+
+    getNear() {
+        return this.__near;
+    }
+
+    setNear(value) {
+        this.__near = value;
+        this.projectionParamChanged.emit();
+    }
+
+    getFar() {
+        return this.__far;
+    }
+
+    setFar(value) {
+        this.__far = value;
+        this.projectionParamChanged.emit();
+    }
+
+    getFov() {
+        return this.__fov;
+    }
+
+    getFocalDistance() {
+        return this.__focalDistance;
+    }
+
+    setFocalDistance(dist) {
         this.__focalDistance = dist;
         this.__near = this.__focalDistance * 0.01;
         this.__far = this.__focalDistance * 200.0;
         this.clippingRangesChanged.emit();
     }
 
-    get isOrthographic() {
+    getIsOrthographic() {
         return this.__isOrthographic;
     }
 
-    get viewMatrix() {
+    getViewMatrix() {
         return this.__viewMatrix;
     }
 
-    get globalXfo() {
-        return this.__globalXfo;
-    }
-
-    set globalXfo(xfo) {
-        super.globalXfo = xfo;
+    setGlobalXfo(xfo) {
+        super.setGlobalXfo(xfo);
         this.__viewMatrix = xfo.inverse().toMat4();
-        this.viewMatChanged.emit(this.__globalXfo);
+        this.viewMatChanged.emit(this.__viewMatrix, this.__globalXfo);
     }
 
-    get localXfo() {
-        return super.localXfo;
+    getLocalXfo() {
+        return super.getLocalXfo();
     }
 
-    set localXfo(xfo) {
-        super.localXfo = xfo;
+    setLocalXfo(xfo) {
+        super.setLocalXfo(xfo);
         this.__viewMatrix = this.__globalXfo.inverse().toMat4();
-        this.viewMatChanged.emit(this.__globalXfo);
+        this.viewMatChanged.emit(this.__viewMatrix, this.__globalXfo);
     }
 
     getDefaultManipMode() {
@@ -371,9 +428,9 @@ class Camera extends TreeItem {
         let newTarget = boundingBox.center();
 
         let transformedBBox = new Box3();
-        let mat3 = this.__globalXfo.toMat4();
-        mat3.translation.set(0, 0, 0);
-        transformedBBox.addBox3(boundingBox, mat3);
+        let mat4 = this.__globalXfo.toMat4();
+        mat4.translation.set(0, 0, 0);
+        transformedBBox.addBox3(boundingBox, mat4);
         let boundingBoxSize = transformedBBox.size();
         let boundingBoxRad = (boundingBoxSize.x + boundingBoxSize.z) * 0.25;
 

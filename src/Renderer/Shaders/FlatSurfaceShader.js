@@ -60,7 +60,6 @@ precision highp float;
 uniform mat4 cameraMatrix;
 
 uniform color _baseColor;
-uniform float _opacity;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D _baseColorTex;
@@ -85,13 +84,11 @@ void main(void) {
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = _baseColor;
-    float opacity = _opacity;
 #else
     vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_texCoords);
-    float opacity       = baseColor.a;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, v_texCoords);
 #endif
 
-    gl_FragColor = vec4(baseColor.rgb, opacity);
+    gl_FragColor = baseColor;
 
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -102,7 +99,6 @@ void main(void) {
 `);
 
         this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
-        this.addParameter('opacity', 1.0);
         this.nonSelectable = true;
         this.finalize();
     }

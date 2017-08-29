@@ -54,7 +54,7 @@ import {
     PostProcessing
 } from './Shaders/PostProcessing.js';
 import {
-    LatLongBackgroundShader
+    LatLongEnvMapShader
 } from './Shaders/EnvMapShader.js';
 import {
     generateShaderGeomBinding
@@ -167,7 +167,7 @@ class GLVisualiveRenderer extends GLRenderer {
             if (!this.__backgroundMapShader) {
                 if (!gl.__quadVertexIdsBuffer)
                     gl.setupInstancedQuad();
-                this.__backgroundMapShader = new LatLongBackgroundShader(gl);
+                this.__backgroundMapShader = new LatLongEnvMapShader(gl);
                 let shaderComp = this.__backgroundMapShader.compileForTarget();
                 this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
             }

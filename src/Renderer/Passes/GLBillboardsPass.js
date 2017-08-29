@@ -139,8 +139,8 @@ class GLBillboardsPass extends GLPass {
 
             // Note: When the camera moves, this array is sorted and re-upload.
             this.__indexArray = new Float32Array(this.__billboards.length);
-            this.__instancedIdsBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+            this.__instanceIdsBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
 
             this.__atlasNeedsUpdating = false;
@@ -182,7 +182,7 @@ class GLBillboardsPass extends GLPass {
             this.__indexArray[i] = this.__billboards[i].index;
         }
         let gl = this.__gl;
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
     }
 
@@ -215,9 +215,9 @@ class GLBillboardsPass extends GLPass {
         this.__atlas.bind(renderstate);
 
         {
-            // The instanced transform ids are bound as an instanced attribute.
-            let location = renderstate.attrs.instancedIds.location;
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
+            // The instance transform ids are bound as an instanced attribute.
+            let location = renderstate.attrs.instanceIds.location;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
             gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced

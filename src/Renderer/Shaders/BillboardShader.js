@@ -14,7 +14,7 @@ class BillboardShader extends GLShader {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('BillboardShader.vertexShader', `
 precision highp float;
 
-instancedattribute float instancedIds;    // instanced attribute..
+instancedattribute float instanceIds;
 
 <%include file="glslutils.glsl"/>
 <%include file="utils/quadVertexFromID.glsl"/>
@@ -62,7 +62,7 @@ varying vec2 v_gradient;
 varying vec4 v_tint;
 
 void main(void) {
-    int instanceID = int(instancedIds);
+    int instanceID = int(instanceIds);
 
     mat4 modelMatrix = getModelMatrix(instanceID);
     vec4 billboardData = getInstanceData(instanceID);

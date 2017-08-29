@@ -30,7 +30,12 @@ class GLTransparencyPass extends GLPass {
         gl.enable(gl.BLEND);
         gl.blendEquation(gl.FUNC_ADD);
         // let defines = renderstate.defines;
-
+        // Complext transparent surfaces require mutiple passes.
+        // First the multiply pass tints the background color, simulating
+        // light passing through the surface, and then the add layer
+        // adds new color to the backbuffer to simulate light bouncing off
+        // the surface.
+        
         renderstate.pass ='MULTIPLY';
         gl.blendFunc(gl.DST_COLOR, gl.ZERO);// For multiply, select this.
         super.draw(renderstate);

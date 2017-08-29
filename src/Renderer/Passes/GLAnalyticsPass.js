@@ -25,7 +25,7 @@ class GLAnalyticsShader extends GLShader {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GLAnalyticsShader.vertexShader', `
 precision highp float;
 
-instancedattribute vec2 ids;
+instancedattribute float instanceIds;
 attribute vec2 vertexIDs;
 
 uniform mat4 viewMatrix;
@@ -42,7 +42,7 @@ uniform int analyticsTextureSize;
 varying float v_weight;
 
 void main(void) {
-    Xfo xfo = getXfo(analyticsTexture, analyticsTextureSize, int(ids.x));
+    Xfo xfo = getXfo(analyticsTexture, analyticsTextureSize, int(instanceIds));
     mat4 viewProjectionMatrix = projectionMatrix * viewMatrix;
     if(vertexIDs.x == 0.0){
         vec3 p0 = xfo.tr;
@@ -96,21 +96,20 @@ class GLAnalyticsPass {
             mipMapped: false
         });
 
-        let indexArray = new Float32Array(this.numDrawItems * 2);
+        let instanceIdsArray = new Float32Array(this.numDrawItems);
         for (let i = 0; i < this.numDrawItems; i++) {
-            indexArray[(i * 2) + 0] = i;
-            indexArray[(i * 2) + 1] = i;
+            instanceIdsArray[i] = i;
         }
-        this.__indexBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__indexBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+        let instanceIdsBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, instanceIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, instanceIdsArray, gl.STATIC_DRAW);
 
         this.__glattrbuffers = {
-            ids: {
-                buffer: this.__indexBuffer,
+            instanceIds: {
+                buffer: instanceIdsBuffer,
                 instanced: true,
-                dimension: 2,
-                count: indexArray.length / 2
+                dimension: 1,
+                count: instanceIdsArray.length
             }
         };
 
@@ -145,6 +144,15 @@ class GLAnalyticsPass {
         gl.uniform1i(unifs.analyticsTextureSize.location, this.analyticsTexture.width);
 
         this.__shaderBinding.bind(renderstate);
+        
+        {
+            // The instance transform ids are bound as an instanced attribute.
+            let location = renderstate.attrs.instanceIds.location;
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
+            gl.enableVertexAttribArray(location);
+            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
+            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+        }
 
         gl.__ext_Inst.drawArraysInstancedANGLE(gl.LINES, 0, 2, this.numDrawItems);
     }

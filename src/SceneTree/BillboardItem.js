@@ -5,7 +5,7 @@ class BillboardItem extends TreeItem {
     constructor(name, image2d) {
         super(name);
         this.image2d = image2d;
-        this.scale = 0.01;
+        this.scale = 0.01;// Mapping of image pixels to scene units..
         this.gradient = 0.0;
         this.color = Color.random(0.2);
         this.alignedToCamera = false;

@@ -10,7 +10,7 @@ import './GLSL/utils/quadVertexFromID.js';
 class EnvMapShader extends GLShader {
     constructor(gl) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvMapShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('OctahedralEnvMapShader.vertexShader', `
 precision highp float;
 
 <%include file="utils/quadVertexFromID.glsl"/>
@@ -44,7 +44,14 @@ void main()
 }
 
 `);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('EnvMapShader.fragmentShader', `
+    }
+};
+
+
+class OctahedralEnvMapShader extends EnvMapShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctahedralEnvMapShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -90,10 +97,11 @@ void main(void) {
     }
 };
 
-class LatLongBackgroundShader extends EnvMapShader {
+
+class LatLongEnvMapShader extends EnvMapShader {
     constructor(gl) {
         super(gl);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongBackgroundShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongEnvMapShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -135,6 +143,7 @@ void main(void) {
 
 export {
     EnvMapShader,
-    LatLongBackgroundShader
+    OctahedralEnvMapShader,
+    LatLongEnvMapShader
 };
 

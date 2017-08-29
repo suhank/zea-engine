@@ -77,9 +77,11 @@ class TreeItem {
         this.nameChanged.emit(name);
     }
     get name() {
+        console.warn(("getter is deprectated. Please use 'getName'"));
         return this.getName();
     }
     set name(name) {
+        console.warn(("setter is deprectated. Please use 'setName'"));
         this.setName(name);
     }
 
@@ -148,11 +150,13 @@ class TreeItem {
     }
 
     get parentItem() {
+        console.warn(("getter is deprectated. Please use 'getParentItem'"));
         // return this.__private.get('parentItem');
         return this.getParentItem();
     }
 
     set parentItem(parentItem) {
+        console.warn(("setter is deprectated. Please use 'setParentItem'"));
         this.setParentItem(parentItem);
     }
 
@@ -160,15 +164,19 @@ class TreeItem {
     // Global Matrix
 
     get localXfo() {
+        console.warn(("getter is deprectated. Please use 'getLocalXfo'"));
         return this.getLocalXfo();
     }
     set localXfo(xfo) {
+        console.warn(("setter is deprectated. Please use 'setLocalXfo'"));
         this.setLocalXfo(xfo);
     }
     get globalXfo() {
+        console.warn(("getter is deprectated. Please use 'getGlobalXfo'"));
         return this.getGlobalXfo();
     }
     set globalXfo(xfo) {
+        console.warn(("setter is deprectated. Please use 'setGlobalXfo'"));
         this.setGlobalXfo(xfo);
     }
     getLocalXfo() {
@@ -308,8 +316,8 @@ class TreeItem {
     }
 
     addChild(childItem, checkCollisions=true) {
-        if (checkCollisions && this.getChildByName(childItem.name) !== null)
-            throw "Item '" + childItem.name + "' is already a child of :" + this.path;
+        if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
+            throw "Item '" + childItem.getName() + "' is already a child of :" + this.path;
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
         this.__childItems.push(childItem);
@@ -333,7 +341,7 @@ class TreeItem {
 
     getChildByName(name) {
         for (let childItem of this.__childItems)
-            if (childItem != null && childItem.name == name)
+            if (childItem != null && childItem.getName() == name)
                 return childItem;
         return null;
     }
@@ -349,7 +357,7 @@ class TreeItem {
     removeChildByHandle(childItem, destroy = true) {
         let index = this.__childItems.indexOf(childItem);
         if(index == -1)
-            throw("Error in removeChildByHandle. Child not found:" + childItem.name);
+            throw("Error in removeChildByHandle. Child not found:" + childItem.getName());
         return this.removeChild(index, destroy);
     }
 
