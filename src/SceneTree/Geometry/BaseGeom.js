@@ -14,9 +14,8 @@ import {
 } from './VertexAttribute.js';
 
 class BaseGeom extends RefCounted {
-    constructor(name) {
+    constructor() {
         super();
-        this.name = name;
         this.__boundingBox = new Box3();
         this.__boundingBoxDirty = true;
         this.__vertexAttributes = new Map();
@@ -26,6 +25,10 @@ class BaseGeom extends RefCounted {
         this.boundingBoxDirtied = new Signal();
         this.geomDataChanged = new Signal();
         this.geomDataTopologyChanged = new Signal();
+    }
+
+    setDebugName(name) {
+        this.__name = name;
     }
 
     destroy() {

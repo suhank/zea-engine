@@ -3,8 +3,8 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
 
 class Torus extends Mesh {
-    constructor(name, innerRadius = 0.5, outerRadius = 1.0, detail = 32) {
-        super(name);
+    constructor(innerRadius = 0.5, outerRadius = 1.0, detail = 32) {
+        super();
 
         this.__innerRadius = innerRadius;
         this.__outerRadius = outerRadius;

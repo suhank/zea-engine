@@ -4,8 +4,8 @@ import { Mesh } from '../Mesh.js';
 
 
 class Sphere extends Mesh {
-    constructor(name, radius = 1.0, sides = 12, loops = 12) {
-        super(name);
+    constructor(radius = 1.0, sides = 12, loops = 12) {
+        super();
 
         this.__radius = radius;
         this.__sides = (sides >= 3) ? sides : 3;

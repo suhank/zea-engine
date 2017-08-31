@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     groundMaterial.addParameter('roughness', 1.0);
     groundMaterial.addParameter('metallic', 0.0);
 
-    let quad = new Visualive.Plane('quad', 20, 20);
+    let quad = new Visualive.Plane(20, 20);
     let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
     groundPlaneItem.localXfo.ori.rotateX(Math.PI * -0.5);
     groundPlaneItem.irradianceMap = 'Environment';

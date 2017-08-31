@@ -25,18 +25,17 @@
     layer0Material.addParameter('env', new Visualive.FileImage2D(env, scene.getResourceLoader()));
 
     let offset = 0;
-    let addMeshShape = (shape)=>{
-        let geomItem = new Visualive.GeomItem(shape.name+'Item' + offset, shape, layer0Material);
+    let addMeshShape = (name, shape)=>{
+        let geomItem = new Visualive.GeomItem(name + (offset++), shape, layer0Material);
         scene.getRoot().addChild(geomItem);
-        offset++
         return geomItem;
     }
 
-    let geomItem0 = addMeshShape(new Visualive.Plane('Plane', 50.0, 50.0));
+    let geomItem0 = addMeshShape('Plane', new Visualive.Plane(50.0, 50.0));
     geomItem0.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1, 0, 0), Math.PI * 0.5);
     geomItem0.updateGlobalXfo();
 
-    let geomItem2 = addMeshShape(new Visualive.Plane('Plane', 5.0, 3.0));
+    let geomItem2 = addMeshShape('Plane', new Visualive.Plane(5.0, 3.0));
     geomItem2.localXfo.tr.set(0, 1, 2);
     // geomItem2.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
     geomItem2.updateGlobalXfo();

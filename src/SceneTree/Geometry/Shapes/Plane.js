@@ -3,8 +3,8 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
 
 class Plane extends Mesh {
-    constructor(name, x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1) {
-        super(name);
+    constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1) {
+        super();
 
         this.__x = x;
         this.__y = y;

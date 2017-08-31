@@ -3,8 +3,8 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
 
 class Cone extends Mesh {
-    constructor(name, radius = 0.5, height = 1.0, detail = 32, cap = true) {
-        super(name);
+    constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
+        super();
 
         this.__radius = radius;
         this.__height = height;

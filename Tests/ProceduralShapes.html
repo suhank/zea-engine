@@ -29,12 +29,12 @@
         scene.getRoot().addChild(geomItem);
     }
 
-    addMeshShape(new Visualive.Plane('Plane', 2.0, 1.5, 22, 22), new Visualive.Vec3(-6, 0, 0));
-    addMeshShape(new Visualive.Cuboid('Cuboid', 1.5, 2.0, 1.0), new Visualive.Vec3(-3, 0, 0));
-    addMeshShape(new Visualive.Cone('Cone', 1.2, 4.0), new Visualive.Vec3(0, 0, 0));
-    addMeshShape(new Visualive.Cylinder('Cylinder', 1.2, 4.0, 32, 2, true), new Visualive.Vec3(3, 0, 0));
-    addMeshShape(new Visualive.Torus('Torus', 0.4, 1.3), new Visualive.Vec3(6, 0, 0));
-    addMeshShape(new Visualive.Sphere('Sphere', 1.4, 13), new Visualive.Vec3(9, 0, 0));
+    addMeshShape(new Visualive.Plane(2.0, 1.5, 22, 22), new Visualive.Vec3(-6, 0, 0));
+    addMeshShape(new Visualive.Cuboid(1.5, 2.0, 1.0), new Visualive.Vec3(-3, 0, 0));
+    addMeshShape(new Visualive.Cone(1.2, 4.0), new Visualive.Vec3(0, 0, 0));
+    addMeshShape(new Visualive.Cylinder(1.2, 4.0, 32, 2, true), new Visualive.Vec3(3, 0, 0));
+    addMeshShape(new Visualive.Torus(0.4, 1.3), new Visualive.Vec3(6, 0, 0));
+    addMeshShape(new Visualive.Sphere(1.4, 13), new Visualive.Vec3(9, 0, 0));
 
     let linesMaterial = new Visualive.Material('lines', 'FatLinesShader');
     linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));

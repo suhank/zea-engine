@@ -49,9 +49,9 @@
     // f1.add(groundMaterial, 'metallic', 0, 1);
     // f1.add(groundMaterial, 'reflectance', 0.0, 1); 
 
-    let quad = new Visualive.Plane('quad', 20, 20);
+    let quad = new Visualive.Plane(20, 20);
     let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
-    groundPlaneItem.localXfo.ori.rotateX(Math.PI * -0.5);
+    groundPlaneItem.getLocalXfo().ori.rotateX(Math.PI * -0.5);
     groundPlaneItem.irradianceMap = 'Environment';
     scene.getRoot().addChild(groundPlaneItem);
 
@@ -71,7 +71,7 @@
     objAsset.splitObjects = false;
     objAsset.splitGroupsIntoObjects = false;
     objAsset.loadMtlFile = false;
-    objAsset.localXfo.tr.set(0, 3.55, 0);
+    objAsset.getLocalXfo().tr.set(0, 3.55, 0);
     objAsset.defaultShader ='SimpleSurfaceShader';
     scene.getRoot().addChild(objAsset);
 

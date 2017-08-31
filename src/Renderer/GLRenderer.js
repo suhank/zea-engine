@@ -177,7 +177,7 @@ class GLRenderer {
 
         let gridMaterial = new Material('gridMaterial', 'LinesShader');
         gridMaterial.addParameter('color', gridColor);
-        let grid = new Grid('Grid', gridSize, gridSize, resolution, resolution, true);
+        let grid = new Grid(gridSize, gridSize, resolution, resolution, true);
         // grid.lineThickness = lineThickness;
         this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 

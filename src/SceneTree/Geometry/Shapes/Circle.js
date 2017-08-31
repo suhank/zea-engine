@@ -1,8 +1,8 @@
 import { Lines } from '../Lines.js';
 
 class Circle extends Lines {
-    constructor(name, radius = 1.0, numSegments=32) {
-        super(name);
+    constructor(radius = 1.0, numSegments=32) {
+        super();
 
         this.__radius = radius;
         this.__numSegments = numSegments;

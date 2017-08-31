@@ -167,7 +167,7 @@ class ObjAsset extends AssetItem {
             };
             _this.geomDatas[name] = currGeom;
         };
-        newGeom(this.name);
+        newGeom(this.getName());
 
         let stop = false;
         // let numPolys = 0;
@@ -342,7 +342,7 @@ class ObjAsset extends AssetItem {
         // transform gizmo becomes centered on each geom(for testing)
         let delta = mesh.boundingBox.center();
         mesh.moveVertices(delta.negate());
-        geomItem.localXfo.tr.addInPlace(delta);
+        geomItem.getLocalXfo().tr.addInPlace(delta);
 
         if (geomData.material != undefined && geomData.material in this.__materials) {
             geomItem.setMaterial(this.__materials[geomData.material]);

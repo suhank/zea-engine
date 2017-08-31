@@ -22,7 +22,7 @@
     let material = new Visualive.Material('wecam', 'SimpleSurfaceShader');
     material.addParameter('baseColor', webcamimage);
 
-    let plane = new Visualive.Plane('Plane', 2.0, 1.5);
+    let plane = new Visualive.Plane(2.0, 1.5);
 
     let geomItem = new Visualive.GeomItem('PlaneItem', plane, material);
     geomItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,1,0)));

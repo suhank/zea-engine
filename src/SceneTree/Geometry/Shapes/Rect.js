@@ -1,8 +1,8 @@
 import { Lines } from '../Lines.js';
 
 class Rect extends Lines {
-    constructor(name, x = 1.0, y = 1.0) {
-        super(name);
+    constructor(x = 1.0, y = 1.0) {
+        super();
 
         this.__x = x;
         this.__y = y;

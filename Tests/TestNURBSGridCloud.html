@@ -7,8 +7,6 @@
     </head>
     <body text-align: left;>
 
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         
@@ -19,12 +17,6 @@
     let scene = new Visualive.Scene(resources);
 
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
-    renderer.setScene(scene);
-    renderer.frameAll();
-    renderer.resumeDrawing();
-
     let size = 2;
     let quads = {};
     // Note: Quads never seemed to be longer than 32 segements. (if regularly tesselated.)
@@ -33,7 +25,7 @@
         for(let j=i; j<maxQuadSize; j++) {
             let x = Math.pow(2, i);
             let y = Math.pow(2, j);
-            quads[x+'-'+y] = new Visualive.Plane('Quad'+x+'-'+y, x*0.1, y*0.1, x, y);
+            quads[x+'-'+y] = new Visualive.Plane(x*0.1, y*0.1, x, y);
         }
     }
 
@@ -67,51 +59,55 @@
     // CARROSSERIE: Geoms: 395 Surfaces: 48960
     
     function getNumSurfacesQuadSize(pct) {
-      let min = 8464;
-      let max = 48960;
+      let min = 400;//0;
+      let max = 1600;//0;
       let r = Math.pow(pct, 3);
       return Math.floor(r * (max - min)) + min; //The maximum is inclusive and the minimum is inclusive 
     }
 
+    let total = 0;
+    for(let i=2; i<17; i++) {
+        let count = getNumSurfacesQuadSize((i/16));//getRandomIntInclusive(10, 10000);
+        console.log((i/16)*100 + '% :' +  count);
 
-    for(let i=2; i<14; i++) {
-        setTimeout(function(){ 
-            let count = getNumSurfacesQuadSize((i/16));//getRandomIntInclusive(10, 10000);
-            console.log((i/16)*100 + '% :' +  count);
+        let material = new Visualive.Material('material', 'SimpleSurfaceShader');
+        material.addParameter('baseColor', Visualive.Color.random());
 
-            let material = new Visualive.Material('material', 'SimpleSurfaceShader');
-            material.addParameter('baseColor', Visualive.Color.random());
+        let treeItem = new Visualive.TreeItem('Tree'+i);
+        treeItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i*5+((Math.random()-0.5) * 20), (Math.random()-0.5) * 10, (Math.random()-0.5) * 10)));
 
-            let treeItem = new Visualive.TreeItem('Tree'+i);
-            treeItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i*5+((Math.random()-0.5) * 20), (Math.random()-0.5) * 10, (Math.random()-0.5) * 10)));
+        let addGeomItem = (shape, xfo, index, material)=>{
+            let geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
+            geomItem.setLocalXfo(xfo);
+            treeItem.addChild(geomItem, false);
+        }
 
-            let addGeomItem = (shape, xfo, index, material)=>{
-                let geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
-                geomItem.setLocalXfo(xfo);
-                treeItem.addChild(geomItem, false);
-            }
+        for(let j=0; j<count; j++) {
+            let xi = getRandomQuadSize(2);
+            let yi = getRandomQuadSize(xi);
+            let quadName = Math.pow(2, xi)+'-'+Math.pow(2, yi);
 
-            for(let j=0; j<count; j++) {
-                let xi = getRandomQuadSize(2);
-                let yi = getRandomQuadSize(xi);
-                let quadName = Math.pow(2, xi)+'-'+Math.pow(2, yi);
+            let tr = new Visualive.Vec3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
+            tr.scaleInPlace(20);
+            let xfo = new Visualive.Xfo(tr);
+            xfo.ori.setFromDirectionAndUpvector(tr.normalize(), up);
+            addGeomItem(quads[quadName], xfo, j, material)
+        }
+        scene.getRoot().addChild(treeItem, false);
 
-                let tr = new Visualive.Vec3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
-                tr.scaleInPlace(20);
-                let xfo = new Visualive.Xfo(tr);
-                xfo.ori.setFromDirectionAndUpvector(tr.normalize(), up);
-                addGeomItem(quads[quadName], xfo, j, material)
-            }
-            scene.getRoot().addChild(treeItem, false);
-         }, 10);
+        total += count;
     }
 
-    let total = 0;
     for(let name in quads) {
         console.log("Refs:" + name + ":" + quads[name].numRefs());
-        total += quads[name].numRefs();
     }
     console.log("total:" + total);
+
+    let renderer = new Visualive.GLSimpleRenderer(div);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
+    renderer.setScene(scene);
+    renderer.frameAll();
+    renderer.resumeDrawing();
 
 
         </script> 

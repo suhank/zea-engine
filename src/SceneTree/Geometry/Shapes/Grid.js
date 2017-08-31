@@ -3,8 +3,8 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Lines } from '../Lines.js';
 
 class Grid extends Lines {
-    constructor(name, x = 1.0, z = 1.0, xDivisions = 10, zDivisions = 10, skipCenterLines=false) {
-        super(name);
+    constructor(x = 1.0, z = 1.0, xDivisions = 10, zDivisions = 10, skipCenterLines=false) {
+        super();
 
         this.__x = x;
         this.__z = z;

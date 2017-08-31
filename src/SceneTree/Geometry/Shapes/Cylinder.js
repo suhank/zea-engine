@@ -4,8 +4,8 @@ import { Mesh } from '../Mesh.js';
 
 
 class Cylinder extends Mesh {
-    constructor(name, radius = 0.5, height = 1.0, sides = 32, loops = 2, cap = true) {
-        super(name);
+    constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, cap = true) {
+        super();
 
         this.__radius = radius;
         this.__height = height;

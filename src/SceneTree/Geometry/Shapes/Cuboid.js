@@ -2,8 +2,8 @@ import { Vec2 } from '../../../Math/Vec2';
 import { Mesh } from '../Mesh.js';
 
 class Cuboid extends Mesh {
-    constructor(name, x = 1.0, y = 1.0, z = 1.0) {
-        super(name);
+    constructor(x = 1.0, y = 1.0, z = 1.0) {
+        super();
 
         this.__x = x;
         this.__y = y;

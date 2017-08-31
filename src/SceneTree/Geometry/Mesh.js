@@ -14,8 +14,8 @@ import {
 
 
 class Mesh extends BaseGeom {
-    constructor(name) {
-        super(name);
+    constructor() {
+        super();
         this.init();
     }
 
