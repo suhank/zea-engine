@@ -41,7 +41,7 @@ class GLBillboardsPass extends GLPass {
         this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
 
-        this.__collector.renderTreeUpdated.connect(this.__updateBillboards, this);
+        this.__collector.renderTreeUpdated.connect(()=> this.__updateBillboards());
 
         this.__prevSortCameraPos = new Vec3();
 

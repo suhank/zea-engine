@@ -10,16 +10,11 @@ class GLPass {
         
         this.updated = new Signal();
 
-        this.__collector.renderTreeUpdated.connect(this.filterRenderTree, this);
+        this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
     }
 
     toggleEnabled(){
         this.enabled = !this.enabled;
-    }
-
-    filter(drawItem) {
-        // Aonly allow a draw item to be assigned to a pass once...
-        return (drawItem.__assignedPasses.indexOf(this) == -1);
     }
 
     /////////////////////////////////////

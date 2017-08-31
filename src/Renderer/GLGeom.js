@@ -14,22 +14,22 @@ class GLGeom {
         this.destructing = new Signal();
         this.updated = new Signal();
 
-        let updateBuffers = function(opts) {
+        let updateBuffers = (opts)=>{
             this.updateBuffers(opts);
             this.updated.emit();
         }
-        this.__geom.geomDataChanged.connect(updateBuffers, this);
+        this.__geom.geomDataChanged.connect(updateBuffers);
 
-        let regenBuffers = function(opts) {
+        let regenBuffers = (opts)=>{
             this.clearShaderBindings();
             this.updateBuffers(opts);
             this.updated.emit();
         }
-        this.__geom.geomDataTopologyChanged.connect(regenBuffers, this);
+        this.__geom.geomDataTopologyChanged.connect(regenBuffers);
         
         this.__geom.destructing.connect(() => {
             this.destroy();
-        }, this);
+        });
     }
 
     getGeom() {

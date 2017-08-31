@@ -62,7 +62,7 @@ class GeomItem extends TreeItem {
     }
 
     //////////////////////////////////////////
-    // Geom
+    // Geometry
 
     getGeometry() {
         return this.__geom;
@@ -72,12 +72,12 @@ class GeomItem extends TreeItem {
         if(this.__geom !== geom){
             if(this.__geom){
                 this.__geom.removeRef(this);
-                this.__geom.boundingBoxDirtied.disconnect(this.setBoundingBoxDirty, this);
+                this.__geom.boundingBoxDirtied.disconnect(this.setBoundingBoxDirty.bind(this));
             }
             this.__geom = geom;
             if(this.__geom){
                 this.__geom.addRef(this);
-                this.__geom.boundingBoxDirtied.connect(this.setBoundingBoxDirty, this);
+                this.__geom.boundingBoxDirtied.connect(this.setBoundingBoxDirty.bind(this));
             }
             this.geomAssigned.emit(this.__geom);
         }
@@ -91,18 +91,6 @@ class GeomItem extends TreeItem {
     setGeom(geom) {
         console.warn(("setGeom is deprectated. Please use 'setGeometry'"));
         return this.setGeometry(geom);
-    }
-
-    get globalXfo() {
-        return super.getGlobalXfo();
-    }
-    set globalXfo(xfo) {
-        this.setGlobalXfo(xfo);
-    }
-    setGlobalXfo(xfo) {
-        super.setGlobalXfo(xfo);
-        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
-        this.geomXfoChanged.emit(this.__geomXfo);
     }
 
 
@@ -131,24 +119,20 @@ class GeomItem extends TreeItem {
         this.__boundingBoxDirty = false;
     }
 
-    // get selectable() {
-    //     return this.__selectable;
-    // }
-
-    // set selectable(sel) {
-    //     this.__selectable = sel;
-    // }
-
-    // get selected() {
-    //     return this.__selected;
-    // }
-
-    // set selected(sel) {
-    //     if (this.__selected != sel) {
-    //         this.__selected = sel;
-    //         this.selectionChanged.emit(this.__selected);
-    //     }
-    // }
+    //////////////////////////////////////////
+    // Xfos
+    
+    get globalXfo() {
+        return super.getGlobalXfo();
+    }
+    set globalXfo(xfo) {
+        this.setGlobalXfo(xfo);
+    }
+    setGlobalXfo(xfo) {
+        super.setGlobalXfo(xfo);
+        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.geomXfoChanged.emit(this.__geomXfo);
+    }
 
     getGeomOffsetXfo() {
         return this.__geomOffsetXfo;
@@ -169,6 +153,29 @@ class GeomItem extends TreeItem {
     getGeomXfo() {
         return this.__geomXfo;
     }
+
+    //////////////////////////////////////////
+    // Selection
+
+    // get selectable() {
+    //     return this.__selectable;
+    // }
+
+    // set selectable(sel) {
+    //     this.__selectable = sel;
+    // }
+
+    // get selected() {
+    //     return this.__selected;
+    // }
+
+    // set selected(sel) {
+    //     if (this.__selected != sel) {
+    //         this.__selected = sel;
+    //         this.selectionChanged.emit(this.__selected);
+    //     }
+    // }
+
 
     /////////////////////////////
     // Lightmaps

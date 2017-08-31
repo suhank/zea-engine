@@ -253,7 +253,7 @@ class GLRenderer {
         let vp = new GLViewport(this, name, this.getWidth(), this.getHeight());
         vp.updated.connect(() => {
             this.requestRedraw();
-        }, this);
+        });
 
         // if(this.__geomDataPass){
         //     vp.createGeomDataFbo();
@@ -261,22 +261,22 @@ class GLRenderer {
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
-        }, this);
+        });
         vp.mouseMoved.connect((event, mousePos, ray) => {
             this.pointerMoved.emit({
                 mousePos: mousePos,
                 ray: ray
             });
-        }, this);
+        });
         vp.actionStarted.connect((data) => {
             this.actionStarted.emit(data);
-        }, this);
+        });
         vp.actionEnded.connect((data) => {
             this.actionEnded.emit(data);
-        }, this);
+        });
         vp.actionOccuring.connect((data) => {
             this.actionOccuring.emit(data);
-        }, this);
+        });
 
         this.__viewports.push(vp);
         return vp;
@@ -553,7 +553,7 @@ class GLRenderer {
         //     if (drawItem && pass.filter(drawItem.geomItem))
         //         pass.addDrawItem(drawItem);
         // }
-        pass.updated.connect(this.requestRedraw, this);
+        pass.updated.connect(this.requestRedraw);
         this.__passes.push(pass);
         this.requestRedraw();
         return this.__passes.length - 1;

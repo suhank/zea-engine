@@ -189,7 +189,7 @@ class GLCollector {
             return;
 
         let glmaterial = new GLMaterial(this.__renderer.gl, material, glshaderMaterials.getGLShader());
-        glmaterial.updated.connect(this.__renderer.requestRedraw, this.__renderer);
+        glmaterial.updated.connect(()=> this.__renderer.requestRedraw);
 
         glmaterialDrawItemSets = new GLMaterialDrawItemSets(glmaterial);
         glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSets);
@@ -252,7 +252,7 @@ class GLCollector {
         let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
-        gldrawItem.updated.connect(this.__renderer.requestRedraw, this.__renderer);
+        gldrawItem.updated.connect(()=> this.__renderer.requestRedraw());
 
         this.__drawItems[index] = gldrawItem;
 
@@ -306,9 +306,9 @@ class GLCollector {
             this.addTreeItem(childItem);
         }
 
-        treeItem.childAdded.connect(this.__childAdded, this);
+        treeItem.childAdded.connect(this.__childAdded.bind(this));
         treeItem.destructing.connect(() => {
-            treeItem.childAdded.disconnect(this.__childAdded, this);
+            treeItem.childAdded.disconnect(this.__childAdded.bind(this));
             treeItem.destructing.disconnectScope(this);
         });
 

@@ -36,18 +36,18 @@ class GLEnvMap extends GLProbe {
 
         srcGLTex.updated.connect(() => {
             this.convolveEnvMap(srcGLTex);
-        }, this);
+        });
         if (this.__envMap.isLoaded()) {
             this.convolveEnvMap(srcGLTex);
         } else {
             this.__envMap.loaded.connect(() => {
                 this.convolveEnvMap(srcGLTex);
-            }, this);
+            });
         }
         srcGLTex.destructing.connect(() => {
             console.log(this.__hdrImage.name + " destructing");
             this.destroy();
-        }, this);
+        });
 
     }
 

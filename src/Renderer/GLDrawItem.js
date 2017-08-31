@@ -17,26 +17,12 @@ class GLDrawItem {
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
         this.__lightmapName = geomItem.getLightmapName();
 
-        let geomXfo = this.__geomItem.getGeomXfo();
-        // Geometry is inverted if one scale value is negative and the rest is positive
-        // or all values are negative.
-        // this.__inverted = (
-        //     (geomXfo.sc.x < 0.0 && geomXfo.sc.y > 0.0 && geomXfo.sc.z > 0.0) || 
-        //     (geomXfo.sc.y < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.z > 0.0) || 
-        //     (geomXfo.sc.z < 0.0 && geomXfo.sc.x > 0.0 && geomXfo.sc.y > 0.0) ||
-        //     (geomXfo.sc.x > 0.0 && geomXfo.sc.y < 0.0 && geomXfo.sc.z < 0.0) || 
-        //     (geomXfo.sc.y > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.z < 0.0) || 
-        //     (geomXfo.sc.z > 0.0 && geomXfo.sc.x < 0.0 && geomXfo.sc.y < 0.0)
-        //     );
-        this.__assignedPasses = [];
-
         this.transformChanged = new Signal();
         this.updated = new Signal();
         this.destructing = new Signal();
         this.visibilityChanged = new Signal();
 
         this.__geomItem.geomXfoChanged.connect((geomXfo) => {
-            //this.__inverted = (geomXfo.sc.x < 0.0 || geomXfo.sc.y < 0.0 || geomXfo.sc.z < 0.0);
             this.transformChanged.emit();
         });
         this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));

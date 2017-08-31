@@ -30,14 +30,14 @@ class GLMaterial {
         // emit a notification telling the renderer to redraw.
         this.__material.updated.connect(() => {
             this.updated.emit();
-        }, this);
+        });
         this.__material.textureConnected.connect(() => {
             this.updateGLTextures(gl);
-        }, this);
+        });
 
         this.__material.destructing.connect(() => {
             this.destructing.emit(this); // Note: propagate this signal so the GLPass can remove the item.
-        }, this);
+        });
 
         this.gltextures = {};
         if (this.__material) {

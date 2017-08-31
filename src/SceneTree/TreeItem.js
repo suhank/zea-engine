@@ -217,7 +217,6 @@ class TreeItem {
         this.globalXfoChanged.emit(this.__globalXfo, prevXfo);
         for (let childItem of this.__childItems)
             childItem.updateGlobalXfo();
-
     }
 
     //////////////////////////////////////////
@@ -325,10 +324,10 @@ class TreeItem {
 
         childItem.boundingBoxDirtied.connect(() => {
             this.setBoundingBoxDirty();
-        }, this);
+        });
         childItem.visibilityChanged.connect(() => {
             this.setBoundingBoxDirty();
-        }, this);
+        });
 
         this.__boundingBoxDirty = true;
         this.childAdded.emit(childItem);
