@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test NURBS Quad Clouds</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        
+        <script type="text/javascript">
+
+    let div = addCanvas();
+    let resources = generateResourcesDict([]);
+    let scene = new Visualive.Scene(resources);
+
+    let asset = new Visualive.AssetItem('explodedParts');
+
+    let bigSphere = new Visualive.Sphere(3.0);
+    let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
+    bigSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 1.0, 0.0));
+    let bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
+    asset.addChild(bigSphereItem, false);
+    
+    let middleSphere = new Visualive.Sphere(2.5);
+    let middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
+    middleSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 0.0, 1.0));
+    let middleSphereItem = new Visualive.GeomItem('middleSphere', middleSphere, middleSphereMaterial);
+    asset.addChild(middleSphereItem, false);
+
+    let littleSphere = new Visualive.Sphere(2.0);
+    let littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
+    littleSphereMaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.0, 0.0));
+    let littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
+    asset.addChild(littleSphereItem, false);
+
+    let bolt = new Visualive.Cuboid(.25, .25, .25);
+    let boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
+    boltmaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.5, 0.0));
+
+
+    let index = 0;
+    let addBolt = (pos)=> {
+        let geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
+        geomItem.setLocalXfo(new Visualive.Xfo(pos));
+        asset.addChild(geomItem, false);
+    }
+    addBolt(new Visualive.Vec3(1.6, 1.6, 1.9));
+    addBolt(new Visualive.Vec3(1.6, -1.6, 1.9));
+    addBolt(new Visualive.Vec3(-1.6, 1.6, 1.9));
+    addBolt(new Visualive.Vec3(-1.6, -1.6, 1.9));
+
+    let op = new Visualive.ExplodePartsOperator(asset);
+    op.connectParts([['./bolt0', './bolt1', './bolt2', './bolt3'], './bigSphere', './middleSphere']);
+    op.setExplodeDist(20.0);
+
+    scene.addAsset(asset);
+
+    let renderer = new Visualive.GLSimpleRenderer(div);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-15, 2, 15), new Visualive.Vec3(0, 0, 9));
+    renderer.setScene(scene);
+    // renderer.frameAll();
+    renderer.resumeDrawing();
+
+    let explodedAmount = 0;
+    let timerCallback = () => {
+        // Check to see if the video has progressed to the next frame. 
+        // If so, then we emit and update, which will cause a redraw.
+        explodedAmount += 0.005;
+        op.setExplodeValue(explodedAmount);
+        renderer.requestRedraw();
+        if (explodedAmount < 1.0) {
+            setTimeout(timerCallback, 20); // Sample at 50fps.
+        }
+    };
+    setTimeout(()=>timerCallback(), 1000); // half second delay
+    ;
+
+
+        </script> 
+    </body>
+</html>

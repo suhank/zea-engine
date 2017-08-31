@@ -29,4 +29,6 @@ export * from './Scene.js';
 export * from './BinAsset.js';
 export * from './ObjAsset.js';
 
+export * from './Operators';
+
 export * from './Tools';
