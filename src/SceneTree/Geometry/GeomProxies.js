@@ -16,7 +16,7 @@ class BaseProxy extends RefCounted {
 
         this.__metaData = new Map();
 
-        this.boundingBoxChanged = new Signal();
+        this.boundingBoxDirtied = new Signal();
         this.geomDataChanged = new Signal();
         this.geomDataTopologyChanged = new Signal();
     }

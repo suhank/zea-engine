@@ -14,6 +14,7 @@ import {
 import './GLSL/constants.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
+import './GLSL/materialparams.js';
 import './GLSL/GGX_Specular.js';
 import './GLSL/PBRSurface.js';
 import './GLSL/modelMatrix.js';
@@ -91,14 +92,11 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
+<%include file="stack-gl/gamma.glsl"/>
+<%include file="materialparams.glsl"/>
 
-<%include file="glslutils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-<%include file="stack-gl/gamma.glsl"/>
-#endif
 
 /* VS Outputs */
 varying vec4 v_viewPos;
@@ -166,25 +164,7 @@ uniform float _normalScale;
 uniform sampler2D _emissiveStrengthTex;
 uniform bool _emissiveStrengthTexConnected;
 
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected){
-        // TODO: Use SRGB textures.
-        return toLinear(texture2D(tex, texCoord));
-    }
-    else
-        return value;
-}
 
-float luminanceFromRGB(vec3 rgb) {
-    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
-}
-
-float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected)
-        return luminanceFromRGB(texture2D(tex, texCoord).rgb);
-    else
-        return value;
-}
 #endif
 
 void main(void) {
@@ -222,7 +202,6 @@ void main(void) {
     // vec2 texCoord      = v_worldPos.xz * 0.2;
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    //float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
 
 #ifdef ENABLE_SPECULAR
     material.roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);

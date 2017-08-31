@@ -14,6 +14,7 @@ import {
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
+import './GLSL/materialparams.js';
 
 class SimpleSurfaceShader extends GLShader {
     constructor(name) {
@@ -63,9 +64,8 @@ void main(void) {
 #extension GL_OES_standard_derivatives : enable
 precision highp float;
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
-#endif
+<%include file="materialparams.glsl"/>
 
 /* VS Outputs */
 varying vec4 v_viewPos;
@@ -76,9 +76,13 @@ varying vec2 v_textureCoord;
 
 uniform mat4 cameraMatrix;
 
+#ifdef ENABLE_CROSS_SECTIONS
+uniform float planeDist;
+uniform float planeAngle;
+#endif
+
 uniform color _baseColor;
 uniform float _opacity;
-
 
 #ifdef ENABLE_TEXTURES
 
@@ -87,28 +91,26 @@ uniform bool _baseColorTexConnected;
 uniform sampler2D _opacityTex;
 uniform bool _opacityTexConnected;
 
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected)
-        return toLinear(texture2D(tex, texCoord));
-    else
-        return value;
-}
-
-float luminanceFromRGB(vec3 rgb) {
-    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
-}
-
-float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected)
-        return luminanceFromRGB(texture2D(tex, texCoord).rgb);
-    else
-        return value;
-}
-
 #endif
 
 
 void main(void) {
+
+#ifdef ENABLE_CROSS_SECTIONS
+    // Only do cross sections on opaque surfaces. 
+    vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
+    vec3 planePos = planeNormal * planeDist;
+    vec3 planeDir = v_worldPos - planePos;
+    float planeOffset = dot(planeDir, planeNormal);
+    if(planeOffset < 0.0){
+        discard;
+        return;
+    }
+    if(!gl_FrontFacing){
+        discard;
+        return;
+    }
+#endif
 
 #ifndef ENABLE_TEXTURES
     vec3 baseColor      = _baseColor.rgb;
@@ -116,7 +118,7 @@ void main(void) {
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    float opacity       = _opacity;//getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
 #endif
 
     // Hacky simple irradiance. 

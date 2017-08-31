@@ -57,8 +57,8 @@ class TreeItem {
         return cloned;
     }
     copyTo(cloned){
-        cloned.name = this.__name;
-        cloned.localXfo = this.__localXfo.clone();
+        cloned.setName(this.__name);
+        cloned.setLocalXfo(this.__localXfo.clone());
         cloned.__visible = this.__visible;
         cloned.__selectable = this.__selectable;
         for(let childItem of this.__childItems)
@@ -461,7 +461,7 @@ class TreeItem {
     readBinary(reader, flags, asset){
 
         let type = reader.loadStr();
-        this.name = reader.loadStr();
+        this.setName(reader.loadStr());
         let itemflags = reader.loadUInt8();
 
         const visibilityFlag = 1<<1;
@@ -471,9 +471,9 @@ class TreeItem {
         // Note: to save space, some values are skipped if they are identity values 
         const localXfoFlag = 1<<2;
         if (itemflags&localXfoFlag){
-            this.localXfo.tr = reader.loadFloat32Vec3();
-            this.localXfo.ori = reader.loadFloat32Quat();
-            this.localXfo.sc.set(reader.loadFloat32());
+            this.__localXfo.tr = reader.loadFloat32Vec3();
+            this.__localXfo.ori = reader.loadFloat32Quat();
+            this.__localXfo.sc.set(reader.loadFloat32());
         }
 
         const bboxFlag = 1<<3;

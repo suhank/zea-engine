@@ -22,5 +22,4 @@ vec4 texelFetch(sampler2D texture, int textureSize, int index) {
     return texture2D(texture, texCoord);
 }
 
-
 `);

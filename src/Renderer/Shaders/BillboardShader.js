@@ -7,6 +7,7 @@ import {
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
+import './GLSL/materialparams.js';
 
 class BillboardShader extends GLShader {
     constructor(gl) {
@@ -97,7 +98,9 @@ void main(void) {
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('BillboardShader.fragmentShader', `
 precision highp float;
 
+<%include file="stack-gl/gamma.glsl"/>
 <%include file="glslutils.glsl"/>
+<%include file="materialparams.glsl"/>
 <%include file="utils/imageAtlas.glsl"/>
 
 

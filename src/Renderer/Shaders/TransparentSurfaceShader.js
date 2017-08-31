@@ -68,6 +68,7 @@ precision highp float;
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif
+<%include file="glslutils.glsl"/>
 
 /* VS Outputs */
 varying vec4 v_viewPos;
@@ -115,23 +116,7 @@ uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
 uniform float _normalScale;
 
-float luminanceFromRGB(vec3 rgb) {
-    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
-}
 
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoords) {
-    if(_texConnected)
-        return toLinear(texture2D(tex, texCoords));
-    else
-        return value;
-}
-
-float getLuminanceParamValue(float value, sampler2D tex, bool _texConnected, vec2 texCoords) {
-    if(_texConnected)
-        return luminanceFromRGB(texture2D(tex, texCoords).rgb);
-    else
-        return value;
-}
 #endif
 
 void main(void) {
