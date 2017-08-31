@@ -52,46 +52,57 @@ class Camera extends TreeItem {
     // Deprectated property getters/setters.
 
     get near() {
+        console.warn(("near is deprectated. Please use 'getNear'"));
         return this.getNear();
     }
 
     get far() {
+        console.warn(("far is deprectated. Please use 'getFar'"));
         return this.getFar();
     }
 
     get fov() {
+        console.warn(("fov is deprectated. Please use 'getFov'"));
         return this.getFov();
     }
 
     get focalDistance() {
+        console.warn(("focalDistance is deprectated. Please use 'getFocalDistance'"));
         return this.getFocalDistance();
     }
 
     set focalDistance(dist) {
+        console.warn(("focalDistance is deprectated. Please use 'getFocalDistance'"));
         this.setFocalDistance(dist);
     }
 
     get isOrthographic() {
+        console.warn(("get isOrthographic is deprectated. Please use 'getIsOrthographic'"));
         return this.getIsOrthographic();
     }
 
     get viewMatrix() {
+        console.warn(("get viewMatrix is deprectated. Please use 'getViewMatrix'"));
         return this.getViewMatrix();
     }
 
     get globalXfo() {
+        console.warn(("get localXfo is deprectated. Please use 'getLocalXfo'"));
         return this.getGlobalXfo();
     }
 
     set globalXfo(xfo) {
+        console.warn(("set globalXfo is deprectated. Please use 'setGlobalXfo'"));
         this.setGlobalXfo(xfo);
     }
 
     get localXfo() {
+        console.warn(("set localXfo is deprectated. Please use 'getLocalXfo'"));
         return this.getLocalXfo();
     }
 
     set localXfo(xfo) {
+        console.warn(("set localXfo is deprectated. Please use 'setLocalXfo'"));
         this.setLocalXfo(xfo);
     }
 
@@ -164,10 +175,10 @@ class Camera extends TreeItem {
     }
 
     setPositionAndTarget(position, target) {
-        this.focalDistance = position.distanceTo(target);
+        this.setFocalDistance(position.distanceTo(target));
         let xfo = new Xfo();
         xfo.setLookAt(position, target, new Vec3(0.0, 1.0, 0.0));
-        this.globalXfo = xfo;
+        this.setGlobalXfo(xfo);
     }
 
     look(mouseDelta, viewport) {
@@ -196,8 +207,9 @@ class Camera extends TreeItem {
             // see: onKeyPressed
             this.__globalXfo = globalXfo;
             this.__viewMatrix = globalXfo.inverse().toMat4();
-        } else
-            this.globalXfo = globalXfo;
+        } else {
+            this.setGlobalXfo(globalXfo);
+        }
     }
 
     orbit(mouseDelta, viewport) {
@@ -228,8 +240,9 @@ class Camera extends TreeItem {
             // see: onKeyPressed
             this.__globalXfo = globalXfo;
             this.__viewMatrix = globalXfo.inverse().toMat4();
-        } else
-            this.globalXfo = globalXfo;
+        } else {
+            this.setGlobalXfo(globalXfo);
+        }
     }
 
     pan(mouseDelta, viewport) {
@@ -242,14 +255,14 @@ class Camera extends TreeItem {
         delta.tr = xAxis.scale(-(mouseDelta.x / viewport.getWidth()) * cameraPlaneWidth)
         delta.tr.addInPlace(yAxis.scale((mouseDelta.y / viewport.getHeight()) * cameraPlaneHeight));
 
-        this.globalXfo = this.__mouseDownCameraXfo.multiply(delta);
+        this.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     dolly(mouseDelta, viewport) {
         let dollyDist = mouseDelta.x * this.dollySpeed;
         let delta = new Xfo();
         delta.tr.set(0, 0, dollyDist);
-        this.globalXfo = this.__mouseDownCameraXfo.multiply(delta);
+        this.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     panAndZoom(panDelta, dragDist, viewport) {
@@ -267,7 +280,7 @@ class Camera extends TreeItem {
         let zoomDist = dragDist * this.__focalDistance;
         this.focalDistance = this.__mouseDownFocalDist + zoomDist;
         delta.tr.z += zoomDist;
-        this.globalXfo = this.__mouseDownCameraXfo.multiply(delta);
+        this.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     initDrag(mouseDownPos) {
@@ -333,14 +346,14 @@ class Camera extends TreeItem {
         let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
         this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(zoomDist));
         if (this.__defaultManipulationState == 'orbit')
-            this.focalDistance = this.__focalDistance + zoomDist;
-        this.globalXfo = this.__globalXfo;
+            this.setFocalDistance( this.__focalDistance + zoomDist);
+        this.setGlobalXfo(this.__globalXfo);
     }
 
     __integrateVelocityChange(velChange) {
         let delta = new Xfo();
         delta.tr = this.__velocity.normalize().scale(this.__maxVel);
-        this.globalXfo = this.__globalXfo.multiply(delta);
+        this.setGlobalXfo(this.__globalXfo.multiply(delta));
     }
 
     onKeyPressed(key) {
@@ -447,8 +460,8 @@ class Camera extends TreeItem {
         let globalXfo = this.__globalXfo.clone();
         globalXfo.tr.addInPlace(pan);
         globalXfo.tr.addInPlace(dolly);
-        this.globalXfo = globalXfo;
-        this.focalDistance = newFocalDistance;
+        this.setGlobalXfo(globalXfo);
+        this.setFocalDistance(newFocalDistance);
     }
 
     updateProjectionMatrix(mat, aspect) {

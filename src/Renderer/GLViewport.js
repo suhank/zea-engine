@@ -161,11 +161,11 @@ class GLViewport extends BaseViewport {
     }
 
     getCameraMatrix() {
-        return this.__camera.globalXfo.toMat4();
+        return this.__camera.getGlobalXfo().toMat4();
     }
 
     getViewMatrix() {
-        return this.__camera.viewMatrix;
+        return this.__camera.getViewMatrix();
     }
 
     getProjectionMatrix() {
@@ -176,7 +176,7 @@ class GLViewport extends BaseViewport {
         let aspect = this.__width / this.__height;
         this.__camera.updateProjectionMatrix(this.__projectionMatrix, aspect);
 
-        let frustumH = (Math.tan(this.__camera.fov / 2.0) * this.__camera.near) * 2.0;
+        let frustumH = (Math.tan(this.__camera.getFov() / 2.0) * this.__camera.getNear()) * 2.0;
         let frustumW = frustumH * aspect;
         this.__frustumDim.set(frustumW, frustumH);
     }
@@ -211,7 +211,7 @@ class GLViewport extends BaseViewport {
             return null;
 
         let rayStart, rayDirection;
-        if (!this.__camera.isOrthographic) {
+        if (!this.__camera.getIsOrthographic()) {
             rayStart = cameraMat.translation;
             // Get the projected window coordinate on the near plane
             // See http://www.songho.ca/opengl/gl_projectionmatrix.html
@@ -343,7 +343,7 @@ class GLViewport extends BaseViewport {
                 let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
                 if (ray == null)
                     return;
-                let xfo = this.__camera.globalXfo.clone();
+                let xfo = this.__camera.getGlobalXfo().clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                 let thickness = this.__camera.focalDistance * 0.002;
                 // this.__markerLineId = this.__markerPen.startStroke(xfo, this.__markerPenColor, thickness);
@@ -575,7 +575,7 @@ class GLViewport extends BaseViewport {
                     let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
                     if (ray == null)
                         return;
-                    let xfo = this.__camera.globalXfo.clone();
+                    let xfo = this.__camera.getGlobalXfo().clone();
                     xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                     // this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
                     this.actionOccuring.emit({
@@ -727,10 +727,10 @@ class GLViewport extends BaseViewport {
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();
         renderstate.projectionMatrix = this.getProjectionMatrix();
-        renderstate.isOrthographic = this.__camera.isOrthographic;
-        renderstate.fovY = this.__camera.fov;
-        renderstate.nearDist = this.__camera.near;
-        renderstate.farDist = this.__camera.far;
+        renderstate.isOrthographic = this.__camera.getIsOrthographic();
+        renderstate.fovY = this.__camera.getFov();
+        renderstate.nearDist = this.__camera.getNear();
+        renderstate.farDist = this.__camera.getFar();
         renderstate.viewportFrustumSize = this.__frustumDim;
         renderstate.viewScale = 1.0;
 
