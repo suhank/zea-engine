@@ -86,7 +86,7 @@ class ResourceLoader {
 
     resolveURL(filePath) {
         if(!this.__resources)
-            console.error("Resources dict not provided");
+            throw("Resources dict not provided");
         let parts = filePath.split('/');
         if(parts[0] == '.' && this.__resources['.'] == undefined)
             parts.shift();
@@ -152,7 +152,7 @@ class ResourceLoader {
 
         let url = this.resolveURL(name);
         if(!url){
-            console.error("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+            throw("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
         if(addLoadWork){ 

@@ -128,7 +128,7 @@ class Scene {
 
     setLightMap(name, lightmap) {
         if (!(lightmap instanceof Lightmap || lightmap instanceof LightmapMixer)) {
-            console.error("Object passed is not a Lightmap:" + lightmap.constructor.name);
+            throw("Object passed is not a Lightmap:" + lightmap.constructor.name);
         }
         this.__lightmaps[name] = lightmap;
         this.lightmapAdded.emit(name, lightmap);

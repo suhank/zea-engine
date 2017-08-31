@@ -7,14 +7,14 @@ let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
     xhr.responseType = responseType;
     try {
         xhr.addEventListener("timeout", function(event) {
-            console.error("The request for " + url + " timed out.");
+            throw("The request for " + url + " timed out.");
         });
         xhr.addEventListener("error", function(event) {
-            console.error("xhr.error xhr.readyState:" + xhr.readyState);
+            throw("xhr.error xhr.readyState:" + xhr.readyState);
             onFail(xhr.statusText);
         });
         xhr.addEventListener("abort", function(event) {
-            console.error("xhr.abort xhr.readyState:" + xhr.readyState);
+            throw("xhr.abort xhr.readyState:" + xhr.readyState);
             onFail(xhr.statusText);
         });
         xhr.addEventListener("loadend", function(event) {
@@ -38,7 +38,7 @@ let loadTextfile = function(url, onSucceed, onFail = undefined, onProgress = und
             if (onFail != undefined)
                 onFail(statusText);
             else {
-                console.error("Unable to XHR File:" + url);
+                throw("Unable to XHR File:" + url);
             }
         },
         (total, loaded) => {
@@ -56,7 +56,7 @@ let loadBinfile = function(url, onSucceed, onFail = undefined, onProgress = unde
             if (onFail != undefined)
                 onFail(statusText);
             else {
-                console.error("Unable to XHR File:" + url);
+                throw("Unable to XHR File:" + url);
             }
         },
         (total, loaded) => {

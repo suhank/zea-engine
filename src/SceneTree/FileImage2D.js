@@ -57,7 +57,7 @@ class FileImage2D extends Image2D {
 
     loadResource(resourcePath) {
         if (!this.__resourceLoader.resourceAvailable(resourcePath)) {
-            console.error("Resource unavailable:" + resourcePath);
+            throw("Resource unavailable:" + resourcePath);
             return;
         }
 

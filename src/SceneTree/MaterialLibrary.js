@@ -80,7 +80,7 @@ class MaterialLibrary {
         let xhr = new XMLHttpRequest();
         xhr.open("GET", filePath, true);
         xhr.ontimeout = ()=>{
-            console.error("The request for " + filePath + " timed out.");
+            throw("The request for " + filePath + " timed out.");
         };
         xhr.onload = ()=>{
             if (xhr.readyState === 4) {

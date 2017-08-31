@@ -316,7 +316,9 @@ class TreeItem {
 
     addChild(childItem, checkCollisions=true) {
         if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
-            throw "Item '" + childItem.getName() + "' is already a child of :" + this.path;
+            throw ("Item '" + childItem.getName() + "' is already a child of :" + this.path);
+        if(!(childItem instanceof TreeItem))
+            throw ("Object is is not a tree item :" + childItem.constructor.name);
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
         this.__childItems.push(childItem);

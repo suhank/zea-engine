@@ -49,7 +49,7 @@ class Signal {
 
 
     disconnectScope(scope = this) {
-        console.error("disconnectScope is deprecated.");
+        throw("disconnectScope is deprecated.");
         // let ids = [];
         // this.__slots.forEach(function (item, key) {
         //     if (item["scope"] === scope) {
