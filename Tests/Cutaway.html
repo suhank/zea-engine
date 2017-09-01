@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test NURBS Quad Clouds</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        
+        <script type="text/javascript">
+
+    let div = addCanvas();
+    let resources = generateResourcesDict([]);
+    let scene = new Visualive.Scene(resources);
+
+    let asset = new Visualive.AssetItem('explodedParts');
+
+    let bigSphere = new Visualive.Sphere(3.0);
+    let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleCutawaySurfaceShader');
+    bigSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 1.0, 0.0));
+    bigSphereMaterial.addParameter('planeDist', 0.0);
+    let bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
+    asset.addChild(bigSphereItem, false);
+    
+    let littleSphere = new Visualive.Sphere(2.0);
+    let littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
+    littleSphereMaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.0, 0.0));
+    let littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
+    asset.addChild(littleSphereItem, false);
+
+    scene.addAsset(asset);
+
+    let renderer = new Visualive.GLSimpleRenderer(div, { enableCrossSections:true });
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-8, 2, 8), new Visualive.Vec3(0, 0, 0));
+    renderer.setScene(scene);
+    // renderer.frameAll();
+    renderer.resumeDrawing();
+
+    // let cutAmount = 0;
+    // let timerCallback = () => {
+    //     // Check to see if the video has progressed to the next frame. 
+    //     // If so, then we emit and update, which will cause a redraw.
+    //     cutAmount += 0.005;
+    //     op.setExplodeValue(cutAmount);
+    //     renderer.requestRedraw();
+    //     if (cutAmount < 1.0) {
+    //         setTimeout(timerCallback, 20); // Sample at 50fps.
+    //     }
+    // };
+    // setTimeout(()=>timerCallback(), 1000); // half second delay
+    // ;
+
+
+        </script> 
+    </body>
+</html>
