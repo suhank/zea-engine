@@ -16,19 +16,39 @@ class Plane extends Mesh {
     }
 
     get x() {
-        return this.__x
+        console.warn(("getter is deprectated. Please use 'getX'"));
+        return this.getX();
     }
 
     set x(val) {
+        console.warn(("getter is deprectated. Please use 'setX'"));
+        this.setX(val);
+    }
+
+    get y() {
+        console.warn(("getter is deprectated. Please use 'getY'"));
+        return this.getY();
+    }
+
+    set y(val) {
+        console.warn(("getter is deprectated. Please use 'setY'"));
+        this.setY(val);
+    }
+
+    getX() {
+        return this.__x
+    }
+
+    setX(val) {
         this.__x = val;
         this.__resize();
     }
 
-    get y() {
+    getY() {
         return this.__y
     }
 
-    set y(val) {
+    setY(val) {
         this.__y = val;
         this.__resize();
     }
@@ -80,10 +100,10 @@ class Plane extends Mesh {
 
     __resize() {
         let voff = 0;
-        for (let i = 0; i <= this.__xDivisions; i++) {
-            let x = ((i / this.__xDivisions) - 0.5) * this.__x;
-            for (let j = 0; j <= this.__yDivisions; j++) {
-                let y = ((j / this.__yDivisions) - 0.5) * this.__y;
+        for (let i = 0; i <= this.__yDivisions; i++) {
+            let y = ((i / this.__yDivisions) - 0.5) * this.__y;
+            for (let j = 0; j <= this.__xDivisions; j++) {
+                let x = ((j / this.__xDivisions) - 0.5) * this.__x;
                 this.getVertex(voff).set(x, y, 0.0);
                 voff++;
             }
