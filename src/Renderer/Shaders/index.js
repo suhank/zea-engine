@@ -19,8 +19,11 @@ export * from './PostProcessing.js';
 export * from './ScreenQuadShader.js';
 export * from './ScreenSpaceOverlayShader.js';
 export * from './SimpleSurfaceShader.js';
+export * from './SimpleCutawaySurfaceShader.js';
 export * from './StandardSurfaceShader.js';
 export * from './TransparentSurfaceShader.js';
+
+
 export * from './UnpackHDRShader.js';
 export * from './UnpackLDRAlphaImageShader.js';
 export * from './WireShader.js';

@@ -121,22 +121,6 @@ uniform float _normalScale;
 
 void main(void) {
 
-#ifdef ENABLE_CROSS_SECTIONS
-    // Only do cross sections on opaque surfaces. 
-    vec3 planeNormal = vec3(cos(planeAngle),0,sin(planeAngle));
-    vec3 planePos = planeNormal * planeDist;
-    vec3 planeDir = v_worldPos - planePos;
-    float planeOffset = dot(planeDir, planeNormal);
-    if(planeOffset < 0.0){
-        discard;
-        return;
-    }
-    if(!gl_FrontFacing){
-        discard;
-        return;
-    }
-#endif
-
     MaterialParams material;
 
 #ifndef __ENABLE_TEXTURES

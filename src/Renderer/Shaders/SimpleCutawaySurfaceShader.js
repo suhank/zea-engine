@@ -1,4 +1,5 @@
 import {
+    Vec3,
     Color
 } from '../../Math';
 import {
@@ -15,12 +16,13 @@ import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/materialparams.js';
+import './GLSL/cutaways.js';
 
-class SimpleSurfaceShader extends GLShader {
+class SimpleCutawaySurfaceShader extends GLShader {
     constructor(name) {
         super(name);
 
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SimpleSurfaceShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SimpleCutawaySurfaceShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -37,6 +39,7 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
+varying vec3 v_worldPos;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
@@ -47,10 +50,13 @@ void main(void) {
 
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    vec4 viewPos    = modelViewMatrix * vec4(positions, 1.);
+
+    vec4 pos = vec4(positions, 1.);
+    vec4 viewPos    = modelViewMatrix * pos;
     gl_Position = projectionMatrix * viewPos;
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    v_worldPos      = (modelMatrix * pos).xyz;
     v_viewPos       = -viewPos;
     v_viewNormal    = normalMatrix * normals;
 
@@ -60,14 +66,19 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SimpleSurfaceShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SimpleCutawaySurfaceShader.fragmentShader', `
 #extension GL_OES_standard_derivatives : enable
+#ifdef GL_EXT_frag_depth
+#extension GL_EXT_frag_depth : enable
+#endif
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
+<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
+varying vec3 v_worldPos;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
@@ -75,6 +86,7 @@ varying vec2 v_textureCoord;
 #endif
 
 uniform mat4 cameraMatrix;
+
 
 uniform color _baseColor;
 uniform float _opacity;
@@ -91,13 +103,16 @@ uniform bool _opacityTexConnected;
 
 void main(void) {
 
+    // Cutaways
+    if(cutaway(v_worldPos))
+        return;
 
 #ifndef ENABLE_TEXTURES
-    vec3 baseColor      = _baseColor.rgb;
-    float opacity = _opacity;
+    vec4 baseColor      = _baseColor;
+    float opacity       = baseColor.a * _opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
     float opacity       = baseColor.a * getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
 #endif
 
@@ -113,7 +128,7 @@ void main(void) {
         //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
-    gl_FragColor = vec4(ndotv * baseColor, opacity);
+    gl_FragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb);
@@ -124,12 +139,13 @@ void main(void) {
 
         this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
         this.addParameter('opacity', 1.0);
-        this.nonSelectable = true;
+        this.addParameter('planeNormal', new Vec3(1.0, 0.0, 0.0), false);
+        this.addParameter('planeDist', 0.0, false);
         this.finalize();
     }
 };
 
-sgFactory.registerClass('SimpleSurfaceShader', SimpleSurfaceShader);
+sgFactory.registerClass('SimpleCutawaySurfaceShader', SimpleCutawaySurfaceShader);
 export {
-    SimpleSurfaceShader
+    SimpleCutawaySurfaceShader
 };
