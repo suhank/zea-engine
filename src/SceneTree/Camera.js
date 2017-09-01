@@ -434,34 +434,36 @@ class Camera extends TreeItem {
 
         if (!boundingBox.isValid())
             return;
-
         let cameraZaxis = this.__globalXfo.ori.getZaxis();
         let targetOffset = cameraZaxis.scale(-this.__focalDistance);
         let currTarget = this.__globalXfo.tr.add(targetOffset);
         let newTarget = boundingBox.center();
 
-        let transformedBBox = new Box3();
-        let mat4 = this.__globalXfo.toMat4();
-        mat4.translation.set(0, 0, 0);
-        transformedBBox.addBox3(boundingBox, mat4);
-        let boundingBoxSize = transformedBBox.size();
-        let boundingBoxRad = (boundingBoxSize.x + boundingBoxSize.z) * 0.25;
-
-        let cameraPlaneHeight = 2.0 * this.__focalDistance * Math.tan(0.5 * this.__fov);
-        let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
-
-        let newFocalDistanceX = ((boundingBoxRad * 2.0) / cameraPlaneWidth) * this.__focalDistance * 1.2;
-        let newFocalDistanceY = (boundingBoxSize.y / cameraPlaneHeight) * this.__focalDistance * 1.2;
-        let newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY);
-
         let pan = newTarget.subtract(currTarget);
-        let dolly = cameraZaxis.scale(newFocalDistance - this.__focalDistance);
-
         let globalXfo = this.__globalXfo.clone();
         globalXfo.tr.addInPlace(pan);
-        globalXfo.tr.addInPlace(dolly);
-        this.setGlobalXfo(globalXfo);
+
+        // Transform the bounding box into camera space.
+        let transformedBBox = new Box3();
+        transformedBBox.addBox3(boundingBox, globalXfo.inverse());
+        let camSpaceTarget = transformedBBox.center();
+
+        let fovY = this.__fov;
+        let fovX = this.__fov * (viewport.getWidth() / viewport.getHeight());
+
+        let camSpaceBBoxDepth = (transformedBBox.p0.z - transformedBBox.p1.z) * 0.5;
+        // p1 is the closest corner of the transformed bbox.
+        let p = transformedBBox.p1;
+        let newFocalDistanceX = (Math.abs(p.x) / Math.tan(0.5 * fovX)) * 1.2;
+        let newFocalDistanceY = (Math.abs(p.y) / Math.tan(0.5 * fovY)) * 1.2;
+        let newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) - camSpaceBBoxDepth;
+
+        let dollyDist = newFocalDistance - this.__focalDistance;
+        globalXfo.tr.addInPlace(cameraZaxis.scale(dollyDist));
+
         this.setFocalDistance(newFocalDistance);
+        this.setGlobalXfo(globalXfo);
+        
     }
 
     updateProjectionMatrix(mat, aspect) {
