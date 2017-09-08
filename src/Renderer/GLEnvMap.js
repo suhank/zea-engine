@@ -45,7 +45,7 @@ class GLEnvMap extends GLProbe {
             });
         }
         srcGLTex.destructing.connect(() => {
-            console.log(this.__hdrImage.name + " destructing");
+            console.log(this.__hdrImage.getName() + " destructing");
             this.destroy();
         });
 

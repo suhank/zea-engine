@@ -13,7 +13,8 @@ import {
     RefCounted,
     Image2D,
     HDRImage2D,
-    MaterialParam
+    makeParameter,
+    makeParameterTexturable
 } from '../SceneTree';
 import {
     shaderLibrary
@@ -24,61 +25,61 @@ import {
 
 let bindParam = (gl, param, renderstate, gltextures={})=>{
 
-    if(param.texture instanceof Image2D){
-        let gltexture = gltextures[param.name];
-        let textureUnif = renderstate.unifs['_'+param.name+'Tex'];
+    let name =  param.getName();
+    let value =  param.getValue();
+    if(value instanceof Image2D){
+        let gltexture = gltextures[name];
+        let textureUnif = renderstate.unifs['_'+name+'Tex'];
         if (gltexture && gltexture.isLoaded() && textureUnif){
-            // console.log("bindParam:"+param.name + ": gltexture" );
+            // console.log("bindParam:"+name + ": gltexture" );
             gltexture.bind(renderstate, textureUnif.location);
-            let textureConnctedUnif = renderstate.unifs['_'+param.name+'TexConnected'];
+            let textureConnctedUnif = renderstate.unifs['_'+name+'TexConnected'];
             if (textureConnctedUnif){
                 gl.uniform1i(textureConnctedUnif.location, 1);
             }
             return;
         }
-        if(!param.value)
-            return;
+        return;
     }
-    let unif = renderstate.unifs['_'+param.name];
+    let unif = renderstate.unifs['_'+name];
     if (unif == undefined)
         return;
-    let textureConnctedUnif = renderstate.unifs['_'+param.name+'TexConnected'];
+    let textureConnctedUnif = renderstate.unifs['_'+name+'TexConnected'];
     if (textureConnctedUnif){
         gl.uniform1i(textureConnctedUnif.location, 0);
     }
-    // console.log("bindParam:"+param.name + ":" + param.value);
     switch (unif['type']) {
     case Boolean:
-        // gl.uniform1ui(unif.location, param.value);// WebGL 2
-        gl.uniform1i(unif.location, param.value);
+        // gl.uniform1ui(unif.location, value);// WebGL 2
+        gl.uniform1i(unif.location, value);
         break;
     case UInt32:
-        // gl.uniform1ui(unif.location, param.value);// WebGL 2
-        gl.uniform1i(unif.location, param.value);
+        // gl.uniform1ui(unif.location, value);// WebGL 2
+        gl.uniform1i(unif.location, value);
         break;
     case SInt32:
-        // gl.uniform1si(unif.location, param.value);// WebGL 2
-        gl.uniform1i(unif.location, param.value);
+        // gl.uniform1si(unif.location, value);// WebGL 2
+        gl.uniform1i(unif.location, value);
         break;
     case Float32:
-        gl.uniform1f(unif.location, param.value);
+        gl.uniform1f(unif.location, value);
         break;
     case Vec2:
-        gl.uniform2fv(unif.location, param.value.asArray());
+        gl.uniform2fv(unif.location, value.asArray());
         break;
     case Vec3:
-        gl.uniform3fv(unif.location, param.value.asArray());
+        gl.uniform3fv(unif.location, value.asArray());
         break;
     case Vec4:
     case Color:
-        gl.uniform4fv(unif.location, param.value.asArray());
+        gl.uniform4fv(unif.location, value.asArray());
         break;
     case Mat4:
-        gl.uniformMatrix4fv(unif.location, false, param.value.asArray());
+        gl.uniformMatrix4fv(unif.location, false, value.asArray());
         break;
     default:
         {
-            console.warn("Param :" + param.name + " has unhandled data type:" + unif['type']);
+            console.warn("Param :" + name + " has unhandled data type:" + unif['type']);
             return;
         }
     }
@@ -119,25 +120,20 @@ class GLShader extends RefCounted {
     // 
 
     addParameter(paramName, defaultValue, texturable = true) {
-        let param = new MaterialParam(paramName, defaultValue);
-        let get = () => {
-            return param.getValue();
-        };
-        let set = (value) => {
-            param.setValue(value);
-            this.updated.emit();
-        };
-        Object.defineProperty(this, paramName, {
-            'configurable': false,
-            'enumerable': true,
-            'get': get,
-            'set': set
-        });
+        let param = makeParameter(paramName, defaultValue);
+        this.addParameterInstance(param);
+        return param;
+    }
 
-        // param.textureConnected.connect(this.textureConnected.emit);
-        // param.textureDisconnected.connect(this.textureDisconnected.emit);
-        // param.parameterChanged.connect(this.updated.emit);
-        this.__params[paramName] = param;
+    addParameterInstance(param, texturable = true) {
+        if(texturable) {
+            makeParameterTexturable(param);
+            // Note: GLShader does not have textureConnected signal etc..
+            // param.textureConnected.connect(this.textureConnected.emit);
+            // param.textureDisconnected.connect(this.textureDisconnected.emit);
+            // param.valueChanged.connect(this.updated.emit);
+        }
+        this.__params[param.getName()] = param;
     }
 
     getParameters() {
@@ -357,10 +353,12 @@ class GLShader extends RefCounted {
             }
         }
         for (let paramName in this.__params) {
-            if(this.__params[paramName].texture != undefined) {
-                if (paramName in this.__gltextures && this.__gltextures[paramName].getTexture() == texture)
+            let param = this.__params[paramName];
+            let value =  param.getValue();
+            if(value instanceof Image2D){
+                if (paramName in this.__gltextures && this.__gltextures[paramName].getTexture() == value)
                     continue;
-                attachTexture(paramName, this.__params[paramName].texture);
+                attachTexture(paramName, value);
             }
         }
     }

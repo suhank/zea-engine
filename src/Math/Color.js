@@ -287,6 +287,10 @@ class Color extends AttrValue {
         this.a = j.a;
     }
 
+    toCSSString() {
+        return 'rgba('+Math.round(this.r * 255)+', '+Math.round(this.g * 255)+', '+Math.round(this.b * 255)+', '+this.a + ')';
+    }
+
 };
 
 typeRegistry.registerType('Color', Color);

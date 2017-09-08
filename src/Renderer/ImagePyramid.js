@@ -95,7 +95,7 @@ class ImagePyramid extends ImageAtlas {
 
         srcGLTex.updated.connect(() => {
             this.renderAtlas(destroySrcImage);
-        }, this);
+        });
         if (this.__srcGLTex.isLoaded()) {
             this.generateAtlasLayout(minTileSize);
             this.renderAtlas(destroySrcImage);
@@ -103,12 +103,12 @@ class ImagePyramid extends ImageAtlas {
             this.__srcGLTex.updated.connect(() => {
                 this.generateAtlasLayout(minTileSize);
                 this.renderAtlas(destroySrcImage);
-            }, this);
+            });
         }
         srcGLTex.destructing.connect(() => {
             console.log(this.__srcGLTex.name + " ImagePyramid destructing");
             this.destroy();
-        }, this);
+        });
     }
 
     generateAtlasLayout(minTileSize) {

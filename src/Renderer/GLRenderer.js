@@ -657,11 +657,10 @@ class GLRenderer {
         // If a redraw has already been requested, then simply return and wait.
         if (this.__redrawRequested || this.__continuousDrawing)
             return false;
-        let renderer = this;
 
-        function onAnimationFrame() {
-            renderer.__redrawRequested = false;
-            renderer.draw();
+        let onAnimationFrame = () => {
+            this.__redrawRequested = false;
+            this.draw();
         }
         window.requestAnimationFrame(onAnimationFrame);
         this.__redrawRequested = true;

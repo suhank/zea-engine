@@ -78,7 +78,10 @@ class Signal {
                 console.warn("Toggled signals should only be fired once.");
         }
         this.__slots.forEach(function (fn) {
-            fn(...data);
+            // Skip disconnected slots.
+            if(fn){
+                fn(...data);
+            }
         });
     }
 };

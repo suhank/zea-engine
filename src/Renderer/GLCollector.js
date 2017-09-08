@@ -189,7 +189,9 @@ class GLCollector {
             return;
 
         let glmaterial = new GLMaterial(this.__renderer.gl, material, glshaderMaterials.getGLShader());
-        glmaterial.updated.connect(()=> this.__renderer.requestRedraw);
+        glmaterial.updated.connect(()=>{
+           this.__renderer.requestRedraw(); 
+        });
 
         glmaterialDrawItemSets = new GLMaterialDrawItemSets(glmaterial);
         glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSets);
@@ -252,7 +254,9 @@ class GLCollector {
         let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
-        gldrawItem.updated.connect(()=> this.__renderer.requestRedraw());
+        gldrawItem.updated.connect(()=> {
+            this.__renderer.requestRedraw();
+        });
 
         this.__drawItems[index] = gldrawItem;
 
@@ -262,10 +266,12 @@ class GLCollector {
         // and so cannot be moved.
         gldrawItem.destructing.connect(() => {
             this.removeDrawItem(gldrawItem);
+            this.__renderer.requestRedraw()
         });
 
         gldrawItem.transformChanged.connect(() => {
             this.__updateItemInstanceData(index, gldrawItem);
+            this.__renderer.requestRedraw()
         });
 
         let addDrawItemToGLMaterialDrawItemSet = ()=>{

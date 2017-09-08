@@ -80,7 +80,7 @@ class GLProbe extends ImageAtlas {
                 this.__imagePyramid = new ImagePyramid(gl, 'EnvMap', srcGLTex, false);
                 this.__imagePyramid.updated.connect(() => {
                     this.convolveEnvMap(srcGLTex);
-                }, this);
+                });
             }
 
             this.addSubImage(srcGLTex);

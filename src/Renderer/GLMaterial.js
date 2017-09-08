@@ -67,6 +67,7 @@ class GLMaterial {
                     gltexture = new GLTexture2D(this.__gl, texture);
                 }
                 this.gltextures[texName] = gltexture;
+                this.updated.emit();
             }
             if (!texture.isLoaded()) {
                 texture.loaded.connect(() => {

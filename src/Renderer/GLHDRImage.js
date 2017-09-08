@@ -24,18 +24,18 @@ class GLHDRImage extends GLTexture2D {
         this.__hdrImage = hdrImage;
         this.__hdrImage.updated.connect(() => {
             this.__unpackHDRImage(this.__hdrImage.getParams());
-        }, this);
+        });
         if (this.__hdrImage.isLoaded()) {
             this.__unpackHDRImage(this.__hdrImage.getParams());
         } else {
             this.__hdrImage.loaded.connect(() => {
                 this.__unpackHDRImage(this.__hdrImage.getParams());
-            }, this);
+            });
         }
         this.__hdrImage.destructing.connect(() => {
             console.log(this.__hdrImage.name + " destructing");
             this.destroy();
-        }, this);
+        });
 
     }
 

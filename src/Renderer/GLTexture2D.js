@@ -40,12 +40,12 @@ class GLTexture2D extends RefCounted {
                     this.__texture.loaded.connect(() => {
                         this.configure(this.__texture.getParams());
                         this.__texture.updated.connect(imageUpdated);
-                    }, this);
+                    });
                 }
                 this.__texture.destructing.connect(() => {
                     console.log(this.__texture.name + " destructing");
                     this.destroy();
-                }, this);
+                });
             } else
                 this.configure(params);
         }
