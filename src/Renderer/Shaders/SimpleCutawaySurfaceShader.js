@@ -40,7 +40,7 @@ uniform mat4 projectionMatrix;
 
 /* VS Outputs */
 varying vec3 v_worldPos;
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -57,7 +57,7 @@ void main(void) {
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_viewPos       = -viewPos;
+    v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
@@ -73,18 +73,18 @@ void main(void) {
 #endif
 precision highp float;
 
-<%include file="stack-gl/gamma.glsl"/>
-<%include file="materialparams.glsl"/>
-<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
 varying vec3 v_worldPos;
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
 
+
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
 
 
@@ -101,10 +101,14 @@ uniform bool _opacityTexConnected;
 #endif
 
 
+<%include file="stack-gl/gamma.glsl"/>
+<%include file="materialparams.glsl"/>
+<%include file="cutaways.glsl"/>
+
 void main(void) {
 
     // Cutaways
-    if(cutaway(v_worldPos))
+    if(cutaway())
         return;
 
 #ifndef ENABLE_TEXTURES
@@ -117,7 +121,7 @@ void main(void) {
 #endif
 
     // Hacky simple irradiance. 
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     vec3 normal = normalize(mat3(cameraMatrix) * v_viewNormal);
     float ndotv = dot(normal, viewVector);
     if(ndotv < 0.0){
@@ -138,8 +142,9 @@ void main(void) {
 `);
 
         this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
+        this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
         this.addParameter('opacity', 1.0);
-        this.addParameter('planeNormal', new Vec3(1.0, 0.0, 0.0), false);
+        this.addParameter('planeNormal', new Vec3(0.0, 0.0, 1.0), false);
         this.addParameter('planeDist', 0.0, false);
         this.finalize();
     }

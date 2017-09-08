@@ -30,7 +30,6 @@ class ObjAsset extends AssetItem {
         this.splitGroupsIntoObjects = false;
         this.loadMtlFile = true;
         this.unitsConversion = 1.0;
-        this.__materials = {};
 
         this.__loadCounter = 0;
         this.loaded = new Signal();
@@ -96,7 +95,7 @@ class ObjAsset extends AssetItem {
             switch (key) {
                 case 'newmtl':
                     material = new Material(elements[0]);
-                    this.__materials[elements[0]] = material;
+                    this.__materials.addMaterial(material);
                     break;
                 case 'Kd':
                     material.addParameter('baseColor', parseColor(elements));
@@ -200,7 +199,7 @@ class ObjAsset extends AssetItem {
                         newGeom(elements[0]);
                     break;
                 case 'usemtl':
-                    currGeom.setMaterial(elements[0]);
+                    currGeom.material = elements[0];
                     break;
                 case 'g':
                     if (this.splitGroupsIntoObjects)
@@ -344,14 +343,15 @@ class ObjAsset extends AssetItem {
         mesh.moveVertices(delta.negate());
         geomItem.getLocalXfo().tr.addInPlace(delta);
 
-        if (geomData.material != undefined && geomData.material in this.__materials) {
-            geomItem.setMaterial(this.__materials[geomData.material]);
+        if (geomData.material != undefined && this.__materials.getMaterial(geomData.material)) {
+            geomItem.setMaterial(this.__materials.getMaterial(geomData.material));
         } else{
 
             let material = new Material(geomName + 'mat', this.__defaultShader ? this.__defaultShader : 'StandardSurfaceShader');
             material.addParameter('baseColor', Color.random(0.5));
             material.addParameter('roughness', 0.2);
             material.addParameter('reflectance', 0.2);
+            this.__materials.addMaterial(material)
             geomItem.setMaterial(material);
         }
 

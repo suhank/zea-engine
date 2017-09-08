@@ -1,49 +1,149 @@
-import { Color } from '../Math/Color';
-import { Signal } from '../Math/Signal';
-import { Image2D } from './Image2D.js';
-import { RefCounted } from './RefCounted';
+import {
+    Vec2,
+    Vec3,
+    Color,
+    Signal
+} from '../Math';
+import {
+    Image2D
+} from './Image2D.js';
+import {
+    RefCounted
+} from './RefCounted.js';
+import {
+    Parameter,
+    NumberParameter,
+    Vec2Parameter,
+    Vec3Parameter,
+    ColorParameter
+} from './Parameters';
 
-class MaterialParam {
-    constructor(name, value) {
-        this.name = name;
-        this.texture = undefined;
-        this.textureConnected = new Signal();
-        this.textureDisconnected = new Signal();
-        this.parameterChanged = new Signal();
 
-        this.setValue(value);
+let makeParameter = (paramName, defaultValue, texturable)=>{
+    function isNumeric(n) {
+      return !isNaN(parseFloat(n)) && isFinite(n);
     }
+    let param;
+    if(isNumeric(defaultValue)){
+        param = new NumberParameter(paramName, defaultValue);
+    }
+    else if(defaultValue instanceof Vec2){
+        param = new Vec2Parameter(paramName, defaultValue);
+    }
+    else if(defaultValue instanceof Vec3){
+        param = new Vec3Parameter(paramName, defaultValue);
+    }
+    else if(defaultValue instanceof Color || defaultValue instanceof Image2D){
+        param = new ColorParameter(paramName, defaultValue);
+    }
+    else{
+        param = new Parameter(paramName, defaultValue);
+    }
+    // if(texturable) {
+    //     makeParameterTexturable(param);
+    // }
+    return param;
+}
 
-    getValue() {
-        if(this.texture != undefined)
-            return this.texture;
+
+let makeParameterTexturable = (parameter)=>{
+    let image = undefined;
+    parameter.textureConnected = new Signal();
+    parameter.textureDisconnected = new Signal();
+
+    let basegetValue = parameter.getValue;
+    parameter.getValue = ()=>{
+        if (image != undefined)
+            return image;
         else
-            return this.value;
+            return basegetValue();
     }
-    setValue(value) {
-        if (value instanceof Image2D){
-            if(this.texture != undefined && this.texture !== value) {
-                this.texture.removeRef(this);
-                this.textureDisconnected.emit(this);
+    parameter.getImage = ()=>{
+        return image;
+    }
+
+    parameter.setImage = (value)=>{
+        if (value) {
+            if (image != undefined && image !== value) {
+                image.removeRef(parameter);
+                parameter.textureDisconnected.emit();
             }
-            this.texture = value;
-            this.texture.addRef(this);
-            this.texture.updated.connect(()=>{
-                this.parameterChanged.emit();
+            image = value;
+            image.addRef(parameter);
+            image.updated.connect(() => {
+                parameter.valueChanged.emit(image);
             });
-            this.textureConnected.emit(this);
-        }
-        else{
-            if(this.texture != undefined) {
-                this.texture.removeRef(this);
-                this.texture = undefined;
-                this.textureDisconnected.emit(this);
+            parameter.textureConnected.emit();
+            parameter.valueChanged.emit(image);
+        } else {
+            if (image != undefined) {
+                image.removeRef(parameter);
+                image = undefined;
+                parameter.textureDisconnected.emit();
             }
-            this.value = value;
         }
-        this.parameterChanged.emit();
     }
+
+    let basesetValue = parameter.setValue;
+    parameter.setValue = (value)=>{
+        parameter.setImage();
+        if (value instanceof Image2D) {
+            parameter.setImage(value);
+        } else {
+            if (image != undefined) {
+                parameter.setImage(value);
+            }
+            basesetValue(value);
+        }
+    }
+
+    // Invoke the setter so if the value is a texture, the parmater is updated.
+    parameter.setValue(basegetValue());
 };
+
+// class MaterialParameter extends Parameter {
+//     constructor(name, value) {
+//         super(name, value)
+//         this.name = name;
+//         this.__texture = undefined;
+//         this.textureConnected = new Signal();
+//         this.textureDisconnected = new Signal();
+//         this.valueChanged = new Signal();
+
+//         // Invoke the setter so if the value is a texture, the parmater is updated.
+//         this.setValue(value);
+//     }
+
+//     getValue() {
+//         if (this.__texture != undefined)
+//             return this.__texture;
+//         else
+//             return this.__value;
+//     }
+
+//     setValue(value) {
+//         if (value instanceof Image2D) {
+//             if (this.__texture != undefined && this.__texture !== value) {
+//                 this.__texture.removeRef(this);
+//                 this.textureDisconnected.emit(this);
+//             }
+//             this.__texture.addRef(this);
+//             this.__texture.updated.connect(() => {
+//                 this.valueChanged.emit(this.__texture);
+//             });
+//             this.textureConnected.emit(this);
+//             this.__texture = value;
+//         } else {
+//             if (this.__texture != undefined) {
+//                 this.__texture.removeRef(this);
+//                 this.__texture = undefined;
+//                 this.textureDisconnected.emit(this);
+//             }
+//             this.__value = value;
+//         }
+//         this.valueChanged.emit(value);
+//     }
+// };
 
 
 class Material extends RefCounted {
@@ -65,12 +165,12 @@ class Material extends RefCounted {
         this.destructing = new Signal();
     }
 
-    getShaderName(){
+    getShaderName() {
         return this.__shaderName;
     }
-    
 
-    setShaderName(shaderName){
+
+    setShaderName(shaderName) {
         this.__shaderName = shaderName;
         this.shaderNameChanged.emit(this.__shaderName);
     }
@@ -82,14 +182,14 @@ class Material extends RefCounted {
 
     removeAllTextures() {
         for (let paramName in this.__params) {
-            if(this.__params[paramName].texture != undefined){
-                this.__params[paramName].texture.removeRef(this);
-                this.__params[paramName].texture = undefined;
+            if (this.__params[paramName].getImage()) {
+                this.__params[paramName].getImage().removeRef(this);
+                this.__params[paramName].setImage(undefined);
             }
         }
     }
 
-    copyFrom(srcMaterial){
+    copyFrom(srcMaterial) {
         for (let paramName in this.__params) {
             let prop = this.__params[paramName];
             let srcParam = srcMaterial.getParameter(paramName)
@@ -102,34 +202,26 @@ class Material extends RefCounted {
     getParamTextures() {
         let textures = {};
         for (let paramName in this.__params) {
-            if(this.__params[paramName].texture != undefined)
-                textures[paramName] = this.__params[paramName].texture;
+            if (this.__params[paramName].getImage())
+                textures[paramName] = this.__params[paramName].getImage();
         }
         return textures;
     }
 
-    addParameter(paramName, defaultValue, texturable=true) {
-        let param = new MaterialParam(paramName, defaultValue);
-        let get = ()=>{ 
-            return param.getValue();
-        };
-        let set = (value)=>{
-            param.setValue(value);
-            this.updated.emit();
-        };
-        Object.defineProperty(this, paramName, {
-            'configurable': false,
-            'enumerable': true,
-            'get': get,
-            'set': set
-        });
-
-        param.textureConnected.connect(this.textureConnected.emit);
-        param.textureDisconnected.connect(this.textureDisconnected.emit);
-        param.parameterChanged.connect(this.updated.emit);
-        this.__params[paramName] = param;
-
+    addParameter(paramName, defaultValue, texturable = true) {
+        let param = makeParameter(paramName, defaultValue);
+        this.addParameterInstance(param);
         return param;
+    }
+
+    addParameterInstance(param, texturable = true) {
+        if(texturable) {
+            makeParameterTexturable(param);
+            param.textureConnected.connect(this.textureConnected.emit);
+            param.textureDisconnected.connect(this.textureDisconnected.emit);
+            param.valueChanged.connect(this.updated.emit);
+        }
+        this.__params[param.getName()] = param;
     }
 
     getParameters() {
@@ -141,9 +233,11 @@ class Material extends RefCounted {
     }
 
     isTransparent() {
-        if ('opacity' in this && (this.opacity < 0.99 || this.opacity instanceof Image2D))
+        let opacity = this.getParameter('opacity');
+        if (opacity && (opacity.getValue() < 0.99 || opacity.getImage()))
             return true;
-        if (this.baseColor && this.baseColor.hasAlpha && this.baseColor.hasAlpha())
+        let baseColor = this.getParameter('baseColor');
+        if (baseColor && baseColor.getImage() && baseColor.getImage().hasAlpha())
             return true;
         return false;
     }
@@ -162,48 +256,46 @@ class Material extends RefCounted {
     fromJSON(json) {
         this.__name = json.name;
         let props = this.__params;
-        for(let key in json){
+        for (let key in json) {
             let value;
-            if(json[key] instanceof Object){
+            if (json[key] instanceof Object) {
                 value = new Color();
                 value.fromJSON(json[key]);
-            }
-            else{
+            } else {
                 value = json[key];
             }
             this.addParameter(paramName, value);
         }
     }
 
-    readBinary(reader, flags, textureLibrary){
+    readBinary(reader, flags, textureLibrary) {
         // super.readBinary(reader, flags);
         let type = reader.loadStr();
         this.name = reader.loadStr();
 
         let numParams = reader.loadUInt32();
-        for(let i=0; i<numParams; i++){
+        for (let i = 0; i < numParams; i++) {
             let paramName = reader.loadStr();
             let paramType = reader.loadStr();
             let value;
-            if(paramType == "MaterialColorParam"){
+            if (paramType == "MaterialColorParam") {
                 value = reader.loadRGBAFloat32Color();
                 // If the value is in linear space, then we should convert it to gamma space.
                 // Note: !! this should always be done in preprocessing...
                 value.applyGamma(2.2);
-            }
-            else{
+            } else {
                 value = reader.loadFloat32();
             }
             let param = this.addParameter(paramName, value);
             let textureName = reader.loadStr();
             // console.log(paramName +":" + value);
-            if(textureName != ''){
+            if (textureName != '') {
                 // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
-                param.texture = textureLibrary[textureName];
+                param.setValue(textureLibrary[textureName]);
             }
         }
     }
-    
+
     //////////////////////////////////////////
     // Metadata
 
@@ -221,7 +313,8 @@ class Material extends RefCounted {
 
 };
 export {
-    MaterialParam,
+    makeParameter,
+    makeParameterTexturable,
     Material
 };
 // Material;

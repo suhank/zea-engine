@@ -4,7 +4,9 @@ export * from './RefCounted.js';
 export * from './Utils.js';
 export * from './SGFactory.js';
 
+export * from './Parameters';
 export * from './Geometry';
+
 export * from './TreeItem.js';
 export * from './GeomItem.js';
 export * from './GizmoItem.js';
