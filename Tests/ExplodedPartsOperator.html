@@ -9,26 +9,39 @@
 
         <script src="../external/helpers.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/VisualiveUI-dev.js"></script>
         
         <script type="text/javascript">
 
     let div = addCanvas();
-    let resources = generateResourcesDict([]);
+    let resources = generateResourcesDict(["/Assets/ExplodePartA.obj", "/Assets/ExplodePartB.obj"]);
     let scene = new Visualive.Scene(resources);
 
-    let asset = new Visualive.AssetItem('explodedParts');
+    let asset = new Visualive.TreeItem('parts');
 
-    let bigSphere = new Visualive.Sphere(3.0);
-    let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
-    bigSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 1.0, 0.0));
-    let bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
-    asset.addChild(bigSphereItem, false);
-    
     let middleSphere = new Visualive.Sphere(2.5);
     let middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
     middleSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 0.0, 1.0));
-    let middleSphereItem = new Visualive.GeomItem('middleSphere', middleSphere, middleSphereMaterial);
-    asset.addChild(middleSphereItem, false);
+    {
+        let middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
+        middleSphereItem.getLocalXfo().tr.set(0, 3.5, 3.5);
+        asset.addChild(middleSphereItem, false);
+    }
+    {
+        let middleSphereItem = new Visualive.GeomItem('middleSphere2', middleSphere, middleSphereMaterial);
+        middleSphereItem.getLocalXfo().tr.set(0, 3.5, -3.5);
+        asset.addChild(middleSphereItem, false);
+    }
+    {
+        let middleSphereItem = new Visualive.GeomItem('middleSphere3', middleSphere, middleSphereMaterial);
+        middleSphereItem.getLocalXfo().tr.set(0, -3.5, 3.5);
+        asset.addChild(middleSphereItem, false);
+    }
+    {
+        let middleSphereItem = new Visualive.GeomItem('middleSphere4', middleSphere, middleSphereMaterial);
+        middleSphereItem.getLocalXfo().tr.set(0, -3.5, -3.5);
+        asset.addChild(middleSphereItem, false);
+    }
 
     let littleSphere = new Visualive.Sphere(2.0);
     let littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
@@ -36,10 +49,9 @@
     let littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
     asset.addChild(littleSphereItem, false);
 
-    let bolt = new Visualive.Cuboid(.25, .25, .25);
+    let bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
     let boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
     boltmaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.5, 0.0));
-
 
     let index = 0;
     let addBolt = (pos)=> {
@@ -47,37 +59,93 @@
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         asset.addChild(geomItem, false);
     }
-    addBolt(new Visualive.Vec3(1.6, 1.6, 1.9));
-    addBolt(new Visualive.Vec3(1.6, -1.6, 1.9));
-    addBolt(new Visualive.Vec3(-1.6, 1.6, 1.9));
-    addBolt(new Visualive.Vec3(-1.6, -1.6, 1.9));
+    addBolt(new Visualive.Vec3(6.6, 5.2, 5.2));
+    addBolt(new Visualive.Vec3(6.6, 5.2, -5.2));
+    addBolt(new Visualive.Vec3(6.6, -5.2, 5.2));
+    addBolt(new Visualive.Vec3(6.6, -5.2, -5.2));
 
-    let op = new Visualive.ExplodePartsOperator(asset);
-    op.connectParts([['./bolt0', './bolt1', './bolt2', './bolt3'], './bigSphere', './middleSphere']);
-    op.setExplodeDist(20.0);
+    scene.getRoot().addChild(asset);
+    /////////////////////////////////////
+    // Obj Asset
+    {
 
-    scene.addAsset(asset);
+        let objAsset = new Visualive.ObjAsset('PartA');
+        objAsset.splitObjects = false;
+        objAsset.splitGroupsIntoObjects = false;
+        objAsset.loadMtlFile = false;
+        objAsset.defaultShader ='SimpleSurfaceShader';
+        scene.getRoot().addChild(objAsset);
+        objAsset.loadURL(scene.getResourceLoader().resolveURL("/Assets/ExplodePartA.obj"));
+
+    }
+    let op = new Visualive.ExplodePartsOperator(scene.getRoot());
+    op.setExplodeDist(30.0);
+    {
+        let objAsset = new Visualive.ObjAsset('PartB');
+        objAsset.splitObjects = false;
+        objAsset.splitGroupsIntoObjects = false;
+        objAsset.loadMtlFile = false;
+        objAsset.defaultShader ='SimpleSurfaceShader';
+        scene.getRoot().addChild(objAsset);
+
+        objAsset.loaded.connect(function() {
+
+            op.connectParts([['./parts/bolt0', './parts/bolt1', './parts/bolt2', './parts/bolt3'], './PartB/PartB', 
+                [
+                './parts/middleSphere1',
+                './parts/middleSphere2',
+                './parts/middleSphere3',
+                './parts/middleSphere4'
+                ]
+                ]);
+
+            let explodedAmount = 0;
+            let animatingValue = false;
+            let timeoutId;
+            let timerCallback = () => {
+                // Check to see if the video has progressed to the next frame. 
+                // If so, then we emit and update, which will cause a redraw.
+                animatingValue = true;
+                explodedAmount += 0.005;
+                op.getParameter('Explode').setValue(explodedAmount);
+                renderer.requestRedraw();
+                if (explodedAmount < 1.0) {
+                    timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
+                }
+                animatingValue = false;
+            };
+            timeoutId = setTimeout(timerCallback, 1000); // half second delay
+            op.getParameter('Explode').valueChanged.connect(()=>{
+                if(!animatingValue) {
+                    clearTimeout(timeoutId);
+                }
+            });
+            
+            renderer.resumeDrawing();
+        });
+        objAsset.loadURL(scene.getResourceLoader().resolveURL("/Assets/ExplodePartB.obj"));
+    }
+
+
+
 
     let renderer = new Visualive.GLSimpleRenderer(div);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-15, 2, 15), new Visualive.Vec3(0, 0, 9));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 20, 35), new Visualive.Vec3(12, 0, 0));
     renderer.setScene(scene);
-    // renderer.frameAll();
-    renderer.resumeDrawing();
 
-    let explodedAmount = 0;
-    let timerCallback = () => {
-        // Check to see if the video has progressed to the next frame. 
-        // If so, then we emit and update, which will cause a redraw.
-        explodedAmount += 0.005;
-        op.setExplodeValue(explodedAmount);
-        renderer.requestRedraw();
-        if (explodedAmount < 1.0) {
-            setTimeout(timerCallback, 20); // Sample at 50fps.
-        }
-    };
-    setTimeout(()=>timerCallback(), 1000); // half second delay
-    ;
+    //////////////////////////////////
+    // Setup the UI
 
+    let sliderController = new Visualive.SliderController(op.getParameter('Explode'));
+
+    let widgetPanel = new Visualive.UIWidgetPanel();
+    widgetPanel.addWidgetController(sliderController);
+
+    let uicontroller = new Visualive.UIController();
+    uicontroller.addWidgetPanel(widgetPanel);
+
+
+    VisualiveUI.renderUI(renderer, uicontroller);
 
         </script> 
     </body>

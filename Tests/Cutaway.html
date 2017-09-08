@@ -2,56 +2,94 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>Test NURBS Quad Clouds</title>
+        <title>Test Cutaways</title>
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     </head>
     <body text-align: left;>
 
         <script src="../external/helpers.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/VisualiveUI-dev.js"></script>
         
         <script type="text/javascript">
 
     let div = addCanvas();
-    let resources = generateResourcesDict([]);
+    let resources = generateResourcesDict(["/Assets/CutawayAndExplode.obj"]);
     let scene = new Visualive.Scene(resources);
 
-    let asset = new Visualive.AssetItem('explodedParts');
+    let asset = new Visualive.AssetItem('asset');
 
-    let bigSphere = new Visualive.Sphere(3.0);
-    let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleCutawaySurfaceShader');
+    let bigSphere = new Visualive.Sphere(8.0, 32, 32);
+    let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
     bigSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 1.0, 0.0));
-    bigSphereMaterial.addParameter('planeDist', 0.0);
     let bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
     asset.addChild(bigSphereItem, false);
-    
-    let littleSphere = new Visualive.Sphere(2.0);
-    let littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
-    littleSphereMaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.0, 0.0));
-    let littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
-    asset.addChild(littleSphereItem, false);
-
     scene.addAsset(asset);
 
-    let renderer = new Visualive.GLSimpleRenderer(div, { enableCrossSections:true });
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-8, 2, 8), new Visualive.Vec3(0, 0, 0));
-    renderer.setScene(scene);
-    // renderer.frameAll();
-    renderer.resumeDrawing();
+    /////////////////////////////////////
+    // Obj Asset
+    let objAsset = new Visualive.ObjAsset('obj');
+    objAsset.splitObjects = false;
+    objAsset.splitGroupsIntoObjects = false;
+    objAsset.loadMtlFile = false;
+    objAsset.defaultShader ='SimpleCutawaySurfaceShader';
+    scene.getRoot().addChild(objAsset);
 
-    // let cutAmount = 0;
-    // let timerCallback = () => {
-    //     // Check to see if the video has progressed to the next frame. 
-    //     // If so, then we emit and update, which will cause a redraw.
-    //     cutAmount += 0.005;
-    //     op.setExplodeValue(cutAmount);
-    //     renderer.requestRedraw();
-    //     if (cutAmount < 1.0) {
-    //         setTimeout(timerCallback, 20); // Sample at 50fps.
-    //     }
-    // };
-    // setTimeout(()=>timerCallback(), 1000); // half second delay
-    // ;
+    let cutAmount = -10.0;
+    let cutparam = new Visualive.NumberParameter('planeDist', cutAmount, [-10, 10]);
+
+    objAsset.loaded.connect(function() {
+        renderer.frameAll();
+        renderer.resumeDrawing();
+        for(let key in objAsset.getMaterialLibrary().materials){
+            let material = objAsset.getMaterialLibrary().materials[key];
+            material.addParameterInstance(cutparam);
+        }
+
+        let animatingValue = false;
+        let timeoutId;
+        let timerCallback = () => {
+            // Check to see if the video has progressed to the next frame. 
+            // If so, then we emit and update, which will cause a redraw.
+            animatingValue = true;
+            cutAmount += 0.05;
+            cutparam.setValue(cutAmount);
+            renderer.requestRedraw();
+            if (cutAmount < 10.0) {
+                timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
+            }
+            animatingValue = false;
+        };
+        timeoutId = setTimeout(timerCallback, 1000); // half second delay
+        cutparam.valueChanged.connect(()=>{
+            if(!animatingValue) {
+                clearTimeout(timeoutId);
+            }
+        });
+
+
+    });
+    objAsset.loadURL(scene.getResourceLoader().resolveURL("/Assets/CutawayAndExplode.obj"));
+
+
+    let renderer = new Visualive.GLSimpleRenderer(div, { enableCrossSections:true });
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, 2, -8), new Visualive.Vec3(0, 0, 0));
+    renderer.setScene(scene);
+
+
+    //////////////////////////////////
+    // Setup the UI
+
+    let sliderController = new Visualive.SliderController(cutparam);
+
+    let widgetPanel = new Visualive.UIWidgetPanel();
+    widgetPanel.addWidgetController(sliderController);
+
+    let uicontroller = new Visualive.UIController();
+    uicontroller.addWidgetPanel(widgetPanel);
+
+
+    VisualiveUI.renderUI(renderer, uicontroller);
 
 
         </script> 

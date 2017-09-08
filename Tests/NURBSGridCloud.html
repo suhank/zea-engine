@@ -59,8 +59,8 @@
     // CARROSSERIE: Geoms: 395 Surfaces: 48960
     
     function getNumSurfacesQuadSize(pct) {
-      let min = 400;//0;
-      let max = 1600;//0;
+      let min = 5000;
+      let max = 17000;
       let r = Math.pow(pct, 3);
       return Math.floor(r * (max - min)) + min; //The maximum is inclusive and the minimum is inclusive 
     }

@@ -2,12 +2,15 @@
 import {
     Operator
 } from './Operator.js';
+import {
+    NumberParameter
+} from '../Parameters/NumberParameter.js';
 
 class ExplodePartsOperator extends Operator {
-    constructor(assetItem) {
-        super(assetItem);
+    constructor(ownerItem) {
+        super(ownerItem);
 
-        this.__explodeValue = 0.0;
+        this.__paramSet.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
         this.__parts = [];
         this.__resolvedParts = [];
         this.__dist = 1.0;
@@ -28,28 +31,24 @@ class ExplodePartsOperator extends Operator {
                 partGroup = [partGroup];
             }
             for(let path of partGroup) {
-                let treeItem = this.__assetItem.resolvePath(path);
+                let treeItem = this.__ownerItem.resolvePath(path);
                 if(treeItem) {
                     this.__resolvedParts[offset] = treeItem
                     this.__parts[offset] = {
                         stage: i,
                         initialXfo: treeItem.getGlobalXfo().clone(),
-                        dir: new Visualive.Vec3(0, 0, 1)
+                        dir: new Visualive.Vec3(1, 0, 0)
                     };
                     offset++;
                 }
             }
         }
     }
-
-    setExplodeValue(explodeValue) {
-        this.__explodeValue = explodeValue;
-        this.evaluate();
-    }
-
     evaluate(){
 
-        let smoothStep = ( edge0, edge1, x)=>{
+        let explode = this.__paramSet.getParameter('Explode').getValue();
+
+        let smoothStep = (edge0, edge1, x)=>{
             let t = Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
             return t * t * (3.0 - 2.0 * t);
         }
@@ -62,7 +61,7 @@ class ExplodePartsOperator extends Operator {
             let part = this.__parts[i];
             let edge0 = part.stage / (this.__stages+1);
             let edge1 = (part.stage + 2) / (this.__stages+1);
-            let dist = this.__dist * smoothStep(edge0, edge1, this.__explodeValue);
+            let dist = this.__dist * smoothStep(edge0, edge1, explode);
 
             let globalXfo = part.initialXfo.clone();
             globalXfo.tr.addInPlace(part.dir.scale(dist));
