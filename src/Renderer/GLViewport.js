@@ -328,8 +328,8 @@ class GLViewport extends BaseViewport {
 
     __eventMousePos(event) {
         return new Vec2(
-            (event.offsetX * window.devicePixelRatio) - this.getPosX(),
-            (event.offsetY * window.devicePixelRatio) - this.getPosY()
+            (event.rendererX * window.devicePixelRatio) - this.getPosX(),
+            (event.rendererY * window.devicePixelRatio) - this.getPosY()
         );
     }
 

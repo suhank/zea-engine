@@ -113,6 +113,21 @@ class GLDrawItemSet {
     //////////////////////////////////////
     // Drawing
 
+    drawSingle(renderstate, extrAttrBuffers, index = 0) {
+
+        let gl = this.__gl;
+        let unifs = renderstate.unifs;
+        this.__glgeom.bind(renderstate, extrAttrBuffers);
+        if (this.__gldrawItems[index].bind(renderstate)) {
+            // Specify an non-instanced draw to the shader
+            if(renderstate.unifs.instancedDraw) {
+                gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
+                gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
+            }
+            this.__glgeom.draw();
+        }
+    }
+
     draw(renderstate, extrAttrBuffers) {
         if (this.__drawCount == 0) {
             return;

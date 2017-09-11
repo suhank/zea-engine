@@ -377,7 +377,7 @@ class Vec3 extends AttrValue {
     }
     
     toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON())
+        return JSON_stringify_fixedPrecision(this.toJSON());
     }
 };
 
