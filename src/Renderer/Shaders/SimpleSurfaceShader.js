@@ -40,7 +40,7 @@ uniform mat4 projectionMatrix;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
-varying vec2 v_textureCoord;
+varying vec2 v_texCoords;
 #endif
 
 void main(void) {
@@ -55,7 +55,7 @@ void main(void) {
     v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
-    v_textureCoord  = textureCoords;
+    v_texCoords  = textureCoords;
 #endif
 }
 `);
@@ -71,7 +71,7 @@ precision highp float;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
-varying vec2 v_textureCoord;
+varying vec2 v_texCoords;
 #endif
 
 uniform mat4 cameraMatrix;
@@ -93,11 +93,11 @@ void main(void) {
 
 
 #ifndef ENABLE_TEXTURES
-    vec3 baseColor      = _baseColor.rgb;
-    float opacity = _opacity;
+    vec4 baseColor      = _baseColor;
+    float opacity       = baseColor.a * _opacity;
 #else
-    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec3 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    vec2 texCoord       = vec2(v_texCoords.x, 1.0 - v_texCoords.y);
+    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord);
     float opacity       = baseColor.a * getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
 #endif
 
@@ -113,7 +113,7 @@ void main(void) {
         //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
-    gl_FragColor = vec4(ndotv * baseColor, opacity);
+    gl_FragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     gl_FragColor.rgb = toGamma(gl_FragColor.rgb);

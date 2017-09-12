@@ -7,23 +7,21 @@
     </head>
     <body text-align: left;>
 
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
-        <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         
         <script type="text/javascript">
 
     let loadBinMesh = (url, lightmapName)=>{
         let domElement = addCanvas();
-        let asset =  new Visualive.BinAsset();
+        let scene = new Visualive.Scene();
+
+        let asset =  new Visualive.BinAsset('BinAsset', scene.getResourceLoader());
         asset.loadURL(url+'.vla');
 
-        let scene = new Visualive.Scene();
-        let envMap =  new Visualive.HDRImage2D('pisa', url+'_'+lightmapName+'_Env.vlh');
+        let envMap =  new Visualive.FileImage2D(url+'_'+lightmapName+'_Env.vlh', scene.getResourceLoader());
         scene.setEnvMap(envMap);
-        let lightmap =  new Visualive.HDRImage2D('lightmap', url+'_'+lightmapName+'_Lightmap.vlh');
+        let lightmap =  new Visualive.FileImage2D(url+'_'+lightmapName+'_Lightmap.vlh', scene.getResourceLoader());
         scene.setLightMap('Default', lightmap);
 
         let renderer = new Visualive.GLVisualiveRenderer(domElement, true);
@@ -49,7 +47,7 @@
 
     }
 
-    loadBinMesh("Assets/Instancing", "pisa");//"");
+    loadBinMesh(generateResourcesDict(["Assets/Instancing", "pisa"]);//"");
         </script> 
     </body>
 </html>

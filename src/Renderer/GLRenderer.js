@@ -178,7 +178,6 @@ class GLRenderer {
         let gridMaterial = new Material('gridMaterial', 'LinesShader');
         gridMaterial.addParameter('color', gridColor);
         let grid = new Grid(gridSize, gridSize, resolution, resolution, true);
-        // grid.lineThickness = lineThickness;
         this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 
         let axisLine = new Lines('axisLine');
@@ -187,7 +186,6 @@ class GLRenderer {
         axisLine.setSegment(0, 0, 1);
         axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
         axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
-        // axisLine.lineThickness = lineThickness * 10.0;
 
         let gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
         gridXAxisMaterial.addParameter('color', new Color(gridColor.luminance(), 0, 0));

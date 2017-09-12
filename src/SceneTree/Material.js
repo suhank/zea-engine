@@ -63,21 +63,28 @@ let makeParameterTexturable = (parameter)=>{
     }
 
     parameter.setImage = (value)=>{
+        let imageUpdated = ()=>{
+            parameter.valueChanged.emit(image);
+        }
+        let disconnectImage = ()=>{
+            image.removeRef(parameter);
+            image.loaded.disconnect(imageUpdated);
+            image.updated.disconnect(imageUpdated);
+            parameter.textureDisconnected.emit();
+        }
         if (value) {
             if (image != undefined && image !== value) {
-                image.removeRef(parameter);
-                parameter.textureDisconnected.emit();
+                disconnectImage();
             }
             image = value;
             image.addRef(parameter);
-            image.updated.connect(() => {
-                parameter.valueChanged.emit(image);
-            });
+            image.loaded.connect(imageUpdated);
+            image.updated.connect(imageUpdated);
             parameter.textureConnected.emit();
             parameter.valueChanged.emit(image);
         } else {
             if (image != undefined) {
-                image.removeRef(parameter);
+                disconnectImage();
                 image = undefined;
                 parameter.textureDisconnected.emit();
             }

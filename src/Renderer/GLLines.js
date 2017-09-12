@@ -16,7 +16,7 @@ class GLLines extends GLGeom {
         super(gl, lines);
 
 
-        this.fatLines = lines.lineThickness > 0;
+        this.fatLines = lines.lineThickness > 0 || this.__geom.getVertexAttributes().lineThickness != undefined;
         this.genBuffers();
     }
 
@@ -39,7 +39,7 @@ class GLLines extends GLGeom {
 
             let vertexAttributes = this.__geom.getVertexAttributes();
             let positions = vertexAttributes.positions;
-            let lineThickness = vertexAttributes.lineThickness;
+            let lineThicknessAttr = vertexAttributes.lineThickness;
 
             let stride = 4; // The number of floats per draw item.
             let dataArray = new Float32Array(positions.length * stride);
@@ -48,10 +48,10 @@ class GLLines extends GLGeom {
                 pos.setFromOther(positions.getValueRef(i));
 
                 // The thickness of the line.
-                if (lineThickness)
-                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i);
+                if (lineThicknessAttr)
+                    dataArray[(i * 4) + 3] = lineThicknessAttr.getFloat32Value(i);
                 else
-                    dataArray[(i * 4) + 3] = 1.0;
+                    dataArray[(i * 4) + 3] = this.__geom.lineThickness;
             }
             this.__positionsTexture = new GLTexture2D(gl, {
                 channels: 'RGBA',
@@ -123,7 +123,7 @@ class GLLines extends GLGeom {
             let vertexAttributes = this.__geom.getVertexAttributes();
 
             let positions = vertexAttributes.positions;
-            let lineThickness = vertexAttributes.lineThickness;
+            let lineThicknessAttr = vertexAttributes.lineThickness;
 
             let stride = 4; // The number of floats per draw item.
             let dataArray = new Float32Array(positions.length * stride);
@@ -132,10 +132,10 @@ class GLLines extends GLGeom {
                 pos.setFromOther(positions.getValueRef(i));
 
                 // The thickness of the line.
-                if (lineThickness)
-                    dataArray[(i * 4) + 3] = lineThickness.getFloat32Value(i);
+                if (lineThicknessAttr)
+                    dataArray[(i * 4) + 3] = lineThicknessAttr.getFloat32Value(i);
                 else
-                    dataArray[(i * 4) + 3] = 1.0;
+                    dataArray[(i * 4) + 3] = this.__geom.lineThickness;
             }
 
             this.__positionsTexture.resize(positions.length, 1, dataArray);
@@ -211,7 +211,7 @@ class GLLines extends GLGeom {
             }
 
             let unifs = renderstate.unifs;
-            gl.uniform1f(unifs._lineThickness.location, this.__geom.lineThickness * renderstate.viewScale);
+            gl.uniform1f(unifs._lineThickness.location, (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0)  * renderstate.viewScale);
             return true;
         } else {
             return super.bind(renderstate, transformIds);

@@ -24,9 +24,9 @@ import {
 } from './GLTexture2D.js';
 
 let bindParam = (gl, param, renderstate, gltextures={})=>{
-
     let name =  param.getName();
     let value =  param.getValue();
+    // console.log("bindParam:" + name + ":" + value);
     if(value instanceof Image2D){
         let gltexture = gltextures[name];
         let textureUnif = renderstate.unifs['_'+name+'Tex'];

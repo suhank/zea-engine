@@ -29,7 +29,10 @@ let TestRenderLines = function() {
     lines.setSegment(1,1,2);
     lines.setSegment(2,2,0);
 
-    lines.lineThickness = 0.1;
+    lines.lineThickness = 0.4;
+    // let lineThickness = lines.addVertexAttribute('lineThickness', Visualive.Float32);
+    // for(let i=0; i<lineThickness.length; i++)
+    //     lineThickness.setFloat32Value(i, /*(i/lineThickness.length) */ 0.6);
 
     let material = new Visualive.Material('material', 'FatLinesShader');
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);
@@ -45,12 +48,12 @@ let TestRenderLines = function() {
 let TestRenderCircle = function() {
     let div = addCanvas(350, 256);
 
-    let lines = new Visualive.Circle('lines', 2.0, 8);
-    lines.lineThickness = 0.1;
+    let lines = new Visualive.Circle(2.0, 8);
 
+    // lines.lineThickness = 0.4;
     let lineThickness = lines.addVertexAttribute('lineThickness', Visualive.Float32);
     for(let i=0; i<lineThickness.length; i++)
-        lineThickness.setFloat32Value(i, /*(i/lineThickness.length) */ 3.6);
+        lineThickness.setFloat32Value(i, (i/lineThickness.length) * 0.4);
 
     let material = new Visualive.Material('material', 'FatLinesShader');
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);
