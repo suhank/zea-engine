@@ -116,6 +116,10 @@ class GLShader extends RefCounted {
         return false;
     }
 
+    isOverlay() {
+        return false;
+    }
+
     //////////////////////
     // 
 
@@ -273,7 +277,7 @@ class GLShader extends RefCounted {
                     let structMemberName = uniformName + '.' + member.name;
                     let location = gl.getUniformLocation(shaderProgramHdl, structMemberName);
                     if (location == undefined) {
-                        // console.warn(this.constructor.name + " uniform not found:" + uniformName);
+                        console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
                         continue;
                     }
                     result.unifs[structMemberName] = {
@@ -291,7 +295,7 @@ class GLShader extends RefCounted {
 
             let location = gl.getUniformLocation(shaderProgramHdl, uniformName);
             if (location == undefined) {
-                // console.warn(this.constructor.name + " uniform not found:" + uniformName);
+                console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
                 continue;
             }
             result.unifs[uniformName] = {
@@ -399,18 +403,25 @@ class GLShader extends RefCounted {
         renderstate.attrs = shaderCompilationResult.attrs;
 
         let unifs = shaderCompilationResult.unifs;
-        if ('viewMatrix' in unifs)
+        if ('viewMatrix' in unifs){
             gl.uniformMatrix4fv(unifs.viewMatrix.location, false, renderstate.viewMatrix.asArray());
-        if ('cameraMatrix' in unifs)
+        }
+        if ('cameraMatrix' in unifs){
             gl.uniformMatrix4fv(unifs.cameraMatrix.location, false, renderstate.cameraMatrix.asArray());
-        if ('projectionMatrix' in unifs)
+        }
+        if ('projectionMatrix' in unifs){
             gl.uniformMatrix4fv(unifs.projectionMatrix.location, false, renderstate.projectionMatrix.asArray());
-
+        }
         if ('atlasEnvMap_image' in unifs && renderstate.envMap != undefined) {
             renderstate.envMap.bindforReading(renderstate);
         }
-        if ('exposure' in unifs)
+        if ('exposure' in unifs){
             gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
+        }
+        if ('eye' in unifs){
+            // Left or right eye, when rendering sterio VR.
+            gl.uniform1i(unifs.eye.location, renderstate.eye);
+        }
 
         // Bind the default params.
         let params = this.getParameters();
@@ -424,6 +435,10 @@ class GLShader extends RefCounted {
     unbind(renderstate) {
         return true;
     }
+
+
+    ///////////////////////////////////
+    // Destroy
 
     destroy() {
         let gl = this.__gl;

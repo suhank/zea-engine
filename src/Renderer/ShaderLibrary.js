@@ -64,6 +64,14 @@ class ShaderLibrary {
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
             let trimmedline = line.trim();
+            if(trimmedline.startsWith('//') || trimmedline.startsWith('*')){
+                result.glsl = result.glsl + line + '\n';
+                result.numLines++;
+                continue;
+            }
+            if(trimmedline.indexOf('//') != -1) {
+                trimmedline = trimmedline.slice(0, trimmedline.indexOf('//')).trim();
+            }
 
             if (trimmedline.startsWith('<%') || trimmedline.startsWith('</%')) {
 

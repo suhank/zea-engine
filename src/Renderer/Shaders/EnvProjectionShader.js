@@ -71,9 +71,7 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 #endif
 
-uniform color _env;
 uniform sampler2D _envTex;
-uniform bool _envTexConnected;
 uniform bool _linearSpaceImage;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -119,9 +117,7 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 #endif
 
-uniform color _env;
 uniform sampler2D _envTex;
-uniform bool _envTexConnected;
 uniform bool _linearSpaceImage;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

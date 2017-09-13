@@ -1,13 +1,22 @@
 import { GLPass } from '../GLPass.js';
-import { GLShader } from '../GLShader.js';
-import { ScreenSpaceOverlayShader } from '../Shaders/ScreenSpaceOverlayShader.js';
 
 class GL2DOverlayPass extends GLPass {
-    constructor(gl) {
-        super(gl);
+    constructor(gl, collector) {
+        super(gl, collector);
 
-        let glshader = new ScreenSpaceOverlayShader(gl);
-        this.setExplicitShader(glshader);
+    }
+
+    /////////////////////////////////////
+    // Bind to Render Tree
+    filterRenderTree() {
+        let allglshaderMaterials = this.__collector.getGLShaderMaterials();
+        this.__glshadermaterials = [];
+        for (let glshaderkey in allglshaderMaterials) {
+            let glshaderMaterials = allglshaderMaterials[glshaderkey];
+            if (!glshaderMaterials.getGLShader().isOverlay())
+                continue;
+            this.__glshadermaterials.push(glshaderMaterials);
+        }
     }
 
     draw(renderstate) {
@@ -16,6 +25,9 @@ class GL2DOverlayPass extends GLPass {
 
         // Now draw all the geometries as normal....
         super.draw(renderstate);
+
+        this.__gl.enable(this.__gl.CULL_FACE);
+        this.__gl.enable(this.__gl.DEPTH_TEST);
     }
 };
 

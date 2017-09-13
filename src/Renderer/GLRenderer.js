@@ -25,11 +25,20 @@ import {
     GLCollector
 } from './GLCollector.js';
 import {
+    GLGeomDataPass
+} from './Passes/GLGeomDataPass.js';
+import {
+    GL2DOverlayPass
+} from './Passes/GL2DOverlayPass.js';
+import {
     GLForwardPass
 } from './Passes/GLForwardPass.js';
 import {
-    GLGeomDataPass
-} from './Passes/GLGeomDataPass.js';
+    GLTransparencyPass
+} from './Passes/GLTransparencyPass.js';
+import {
+    GLBillboardsPass
+} from './Passes/GLBillboardsPass.js';
 import {
     GizmoPass
 } from './Passes/GizmoPass.js';
@@ -132,7 +141,13 @@ class GLRenderer {
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
+        this.addPass(new GL2DOverlayPass(this.__gl, this.__collector));
+        this.addPass(new GLForwardPass(this.__gl, this.__collector));
+        this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
+        this.addPass(new GLBillboardsPass(this.__gl, this.__collector));
+
         this.addViewport('main');
+
 
         this.__vrViewport = undefined;
         this.mirrorVRisplayToViewport = true;

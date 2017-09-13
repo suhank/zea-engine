@@ -17,7 +17,6 @@ export * from './NormalsShader.js';
 export * from './PointsShader.js';
 export * from './PostProcessing.js';
 export * from './ScreenQuadShader.js';
-export * from './ScreenSpaceOverlayShader.js';
 export * from './SimpleSurfaceShader.js';
 export * from './SimpleCutawaySurfaceShader.js';
 export * from './StandardSurfaceShader.js';

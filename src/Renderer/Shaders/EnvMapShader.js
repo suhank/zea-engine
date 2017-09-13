@@ -10,7 +10,7 @@ import './GLSL/utils/quadVertexFromID.js';
 class EnvMapShader extends GLShader {
     constructor(gl) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('OctahedralEnvMapShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvMapShader.vertexShader', `
 precision highp float;
 
 <%include file="utils/quadVertexFromID.glsl"/>
@@ -28,6 +28,7 @@ varying vec2 v_texCoord;
 void main()
 {
     vec2 position = getQuadVertexPositionFromID() * 2.0;
+    v_texCoord = position + 0.5;
 
     mat4 inverseProjection = inverse(projectionMatrix);
     mat3 inverseModelview = transpose(mat3(viewMatrix));
@@ -38,7 +39,6 @@ void main()
     //transfrom from the view space back to the world space
     //and use it as a sampling vector
     v_worldDir = inverseModelview * unprojected;
-    v_texCoord = (position*0.5)+0.5;
 
     gl_Position = vec4(position, 0, 1);
 }
@@ -114,7 +114,7 @@ precision highp float;
 uniform float exposure;
 #endif
 
-uniform sampler2D latLongBackgroundImage;
+uniform sampler2D backgroundImage;
 
 
 /* VS Outputs */
@@ -124,8 +124,8 @@ varying vec2 v_texCoord;
 void main(void) {
 
     vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
-    // Use these lines to debug the src GL image.
-    vec4 texel = texture2D(latLongBackgroundImage, uv);
+
+    vec4 texel = texture2D(backgroundImage, uv);
     gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -141,9 +141,59 @@ void main(void) {
 };
 
 
+class SterioLatLongEnvMapShader extends EnvMapShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SterioLatLongEnvMapShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+
+#define ENABLE_INLINE_GAMMACORRECTION
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+uniform float exposure;
+#endif
+
+uniform int eye;// L = 0, R = 1;
+
+uniform sampler2D backgroundImage;
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
+void main(void) {
+
+    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
+    uv.y *= 0.5;
+    if(eye == 1){
+        uv.y += 0.5;
+    }
+
+    vec4 texel = texture2D(backgroundImage, uv);
+    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+
+    // Assuming a simple RGB image in gamma space for now.
+    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+#endif
+
+}
+`);
+        this.finalize();
+    }
+};
+
+
 export {
     EnvMapShader,
     OctahedralEnvMapShader,
-    LatLongEnvMapShader
+    LatLongEnvMapShader,
+    SterioLatLongEnvMapShader
 };
 

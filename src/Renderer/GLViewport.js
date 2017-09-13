@@ -706,6 +706,7 @@ class GLViewport extends BaseViewport {
             this.__endTouch(touches[i]);
         }
     }
+
     onTouchCancel(event) {
         event.preventDefault();
         console.log("touchcancel.");
@@ -720,9 +721,6 @@ class GLViewport extends BaseViewport {
     // Rendering
     draw(renderstate) {
         this.bindAndClear(renderstate);
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
 
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();
@@ -733,7 +731,11 @@ class GLViewport extends BaseViewport {
         renderstate.farDist = this.__camera.getFar();
         renderstate.viewportFrustumSize = this.__frustumDim;
         renderstate.viewScale = 1.0;
+        renderstate.eye = 0;//'L';
 
+        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+            this.drawBackground(renderstate);
+        }
         this.__renderer.drawScene(renderstate, false);
     }
 
@@ -742,7 +744,7 @@ class GLViewport extends BaseViewport {
         this.__overlayPass.draw(renderstate);
     }
 };
+
 export {
     GLViewport
 };
-// GLViewport;

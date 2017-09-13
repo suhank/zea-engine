@@ -54,7 +54,7 @@ import {
     PostProcessing
 } from './Shaders/PostProcessing.js';
 import {
-    LatLongEnvMapShader
+    OctahedralEnvMapShader, LatLongEnvMapShader, SterioLatLongEnvMapShader
 } from './Shaders/EnvMapShader.js';
 import {
     generateShaderGeomBinding
@@ -85,13 +85,10 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__planeDist = 0.0;
         this.__planeAngle = 0.0;
 
-        this.addPass(new GLForwardPass(this.__gl, this.__collector));
-        this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
         // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
         // this.addPass(new GLWirePass(this.__gl, this.__collector));
         // this.__edgesPass = new GLHardEdgesPass(this.__gl, this.__collector);
         // this.__pointsPass = new GLMeshPointsPass(this.__gl, this.__collector);
-        this.addPass(new GLBillboardsPass(this.__gl, this.__collector));
 
         this.__drawEdges = false;
         this.__drawPoints = false;
@@ -165,7 +162,20 @@ class GLVisualiveRenderer extends GLRenderer {
             if (!this.__backgroundMapShader) {
                 if (!gl.__quadVertexIdsBuffer)
                     gl.setupInstancedQuad();
-                this.__backgroundMapShader = new LatLongEnvMapShader(gl);
+                switch(backgroundMap.getMapping()) {
+                    case 'octahedral':
+                        this.__backgroundMapShader = new OctahedralEnvMapShader(gl);
+                        break;
+                    case 'latlong':
+                        this.__backgroundMapShader = new LatLongEnvMapShader(gl);
+                        break;
+                    case 'steriolatlong':
+                        this.__backgroundMapShader = new SterioLatLongEnvMapShader(gl);
+                        break;
+                    default:
+                        this.__backgroundMapShader = new LatLongEnvMapShader(gl);
+                        break;
+                }
                 let shaderComp = this.__backgroundMapShader.compileForTarget();
                 this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
             }
@@ -340,9 +350,7 @@ class GLVisualiveRenderer extends GLRenderer {
             gl.depthMask(false);
             this.__backgroundMapShader.bind(renderstate);
             let unifs = renderstate.unifs;
-            this.__glBackgroundMap.bind(renderstate);
-            if ('exposure' in unifs)
-                gl.uniform1f(unifs.exposure.location, renderstate.exposure);
+            this.__glBackgroundMap.bind(renderstate, unifs.backgroundImage.location);
             this.__backgroundMapShaderBinding.bind(renderstate);
             gl.drawQuad();
         }

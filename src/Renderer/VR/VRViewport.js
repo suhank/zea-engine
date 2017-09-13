@@ -544,9 +544,9 @@ class VRViewport extends BaseViewport {
         this.bindAndClear(renderstate);
 
 
-        renderstate['viewport'] = this;
-        // renderstate['cameraMatrix'] = this.__standingMatrix;
-        renderstate['viewScale'] = 1.0 / this.__stageScale;
+        renderstate.viewport = this;
+        // renderstate.cameraMatrix = this.__standingMatrix;
+        renderstate.viewScale = 1.0 / this.__stageScale;
 
         let width = this.__hmdCanvasSize[0];
         let height = this.__hmdCanvasSize[1];
@@ -555,8 +555,9 @@ class VRViewport extends BaseViewport {
         gl.viewport(0, 0, width * 0.5, height);
         this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
         this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
-        renderstate['viewMatrix'] = this.__leftViewMatrix;
-        renderstate['projectionMatrix'] = this.__leftProjectionMatrix;
+        renderstate.viewMatrix = this.__leftViewMatrix;
+        renderstate.projectionMatrix = this.__leftProjectionMatrix;
+        renderstate.eye = 0;//'L';
 
         if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);
@@ -567,8 +568,9 @@ class VRViewport extends BaseViewport {
         gl.viewport(width * 0.5, 0, width * 0.5, height);
         this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
         this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
-        renderstate['viewMatrix'] = this.__rightViewMatrix;
-        renderstate['projectionMatrix'] = this.__rightProjectionMatrix;
+        renderstate.viewMatrix = this.__rightViewMatrix;
+        renderstate.projectionMatrix = this.__rightProjectionMatrix;
+        renderstate.eye = 1;//'R';
 
         if(this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);
