@@ -198,8 +198,8 @@ class TreeItem {
             this.__localXfo = xfo;
         let prevXfo = this.__globalXfo;
         this.__globalXfo = xfo;
-        this.globalXfoChanged.emit(this.__globalXfo, prevXfo);
 
+        this.globalXfoChanged.emit(this.__globalXfo, prevXfo);
         this.setBoundingBoxDirty();
 
         // TODO: should we be updating here, or waiting till the global mat is needed??
@@ -214,7 +214,10 @@ class TreeItem {
             this.__globalXfo = parentItem.getGlobalXfo().multiply(this.__localXfo);
         else
             this.__globalXfo = this.__localXfo;
+
         this.globalXfoChanged.emit(this.__globalXfo, prevXfo);
+        this.setBoundingBoxDirty();
+
         for (let childItem of this.__childItems)
             childItem.updateGlobalXfo();
     }
