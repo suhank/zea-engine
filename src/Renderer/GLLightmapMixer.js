@@ -71,22 +71,22 @@ class GLLightmapMixer extends GLTexture2D {
 
         this.__lightmapMixer.lightmapAdded.connect((index) => {
             genGLTex(index);
-        }, this);
+        });
         
         async.ready.connect(this.__renderTgtImage.bind(this));
         async.decAsyncCount();
 
         this.__lightmapMixer.lightmapResourceChanged.connect(() => {
             this.__renderTgtImage();
-        }, this);
+        });
         this.__lightmapMixer.lightmapWeightChanged.connect(() => {
             this.__renderTgtImage();
-        }, this);
+        });
 
         this.__lightmapMixer.destructing.connect(() => {
             console.log(this.__lightmapMixer.name + " destructing");
             this.destroy();
-        }, this);
+        });
 
     }
 

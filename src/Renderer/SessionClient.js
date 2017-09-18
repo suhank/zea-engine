@@ -319,7 +319,7 @@ class SessionClient {
                             }
                         });
                     }
-                    let xfo = treeItem.globalXfo;
+                    let xfo = treeItem.getGlobalXfo();
                     if (socketOpen) {
                         sendMessage({
                             type: 'treeItemGlobalXfoChanged',
@@ -487,7 +487,7 @@ class SessionClient {
         listeners.treeItemGlobalXfoChanged = (data) => {
             updatingTreeXfos = true;
             let resolvedItem = renderer.getScene().getRoot().resolvePath(data.path);
-            resolvedItem.globalXfo = data.xfo;
+            resolvedItem.setGlobalXfo(data.xfo);
             updatingTreeXfos = false;
         }
 
@@ -682,7 +682,7 @@ class SessionClient {
             updatingTreeXfos = true;
             for(let path in changedGlobalXfos){
                 let resolvedItem = renderer.getScene().getRoot().resolvePath(path);
-                resolvedItem.globalXfo = changedGlobalXfos[path];
+                resolvedItem.setGlobalXfo(changedGlobalXfos[path]);
             }
             updatingTreeXfos = false;
 

@@ -30,14 +30,14 @@ class VRMarkerpenTool extends VRTool {
                     return;
                 this.__pressedButtons++;
                 this.startAction();
-            }, this);
+            });
 
             vrController.buttonReleased.connect(() => {
                 if(!this.__active)
                     return;
                 this.__pressedButtons--;
                 this.endAction();
-            }, this);
+            });
 
             if(this.__active)
                 vrController.setTipColor(this.__color);

@@ -13,7 +13,7 @@ class PlanarTranslationGizmo extends Gizmo {
 
         this.__context = context;
         this.__treeItem = new TreeItem('PlanarTranslationGizmo'+name);
-        this.__treeItem.localXfo = xfo;
+        this.__treeItem.setLocalXfo(xfo);
         context.treeItem.addChild(this.__treeItem);
 
         let geom = new Cuboid('tail', 0.2, 0.02, 0.2);
@@ -31,7 +31,7 @@ class PlanarTranslationGizmo extends Gizmo {
 
     onDragStart(event, mousePos, viewport) {
 
-        this.manipRay = new Ray(this.__treeItem.globalXfo.tr, this.__treeItem.globalXfo.ori.getYaxis());
+        this.manipRay = new Ray(this.__treeItem.getGlobalXfo().tr, this.__treeItem.getGlobalXfo().ori.getYaxis());
         let mouseRay = viewport.calcRayFromScreenPos(mousePos);
 
         let dist = mouseRay.intersectRayPlane(this.manipRay);

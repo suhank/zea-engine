@@ -1,5 +1,7 @@
 
 
+export * from './GLSL';
+
 export * from './BillboardShader.js';
 export * from './ConvolverShader.js';
 export * from './DepthMapShader.js';

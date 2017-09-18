@@ -13,7 +13,7 @@ class LinearTranslationGizmo extends Gizmo {
 
         this.__context = context;
         this.__treeItem = new TreeItem('LinearTranslationGizmo'+name);
-        this.__treeItem.localXfo = xfo;
+        this.__treeItem.setLocalXfo(xfo);
         context.treeItem.addChild(this.__treeItem);
 
         let tailGeom = new Cuboid('tail', 0.02, 1.0, 0.02);
@@ -50,7 +50,7 @@ class LinearTranslationGizmo extends Gizmo {
 
     onDragStart(event, mousePos, viewport) {
 
-        this.manipRay = new Ray(this.__treeItem.globalXfo.tr, this.__treeItem.globalXfo.ori.getYaxis());
+        this.manipRay = new Ray(this.__treeItem.getGlobalXfo().tr, this.__treeItem.getGlobalXfo().ori.getYaxis());
         let mouseRay = viewport.calcRayFromScreenPos(mousePos);
 
         this.mouseDownDist = this.manipRay.intersectRayVector(mouseRay)[0];

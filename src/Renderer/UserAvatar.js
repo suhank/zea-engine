@@ -87,7 +87,7 @@ class UserAvatar {
     setViveRepresentation() {
         if (!this.__viveTree) {
             let hmdTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_HMD').clone();
-            hmdTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+            hmdTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
             let treeItem = new TreeItem("hmdHolder");
             treeItem.addChild(hmdTree);
 
@@ -106,8 +106,8 @@ class UserAvatar {
 
                 let controllerTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
                 controllerTree.name = 'Handle' + i;
-                controllerTree.localXfo.tr.set(0, -0.035, 0.01);
-                controllerTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
+                controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
                 let treeItem = new TreeItem("handleHolder" + i);
                 treeItem.addChild(controllerTree);
                 this.__viveTree.addChild(treeItem);

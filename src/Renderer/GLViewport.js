@@ -488,7 +488,7 @@ class GLViewport extends BaseViewport {
             if (rectWidth == 0 || rectHeight == 0)
                 return;
 
-            let xfo = this.__selectionRect.globalXfo;
+            let xfo = this.__selectionRect.getGlobalXfo();
             xfo.sc.x = (rectWidth / this.__width) * 2.0;
             xfo.sc.y = (rectHeight / this.__height) * 2.0;
             xfo.tr.x = (tl.x / this.__width) + (xfo.sc.x * 0.25);

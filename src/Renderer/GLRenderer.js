@@ -615,16 +615,16 @@ class GLRenderer {
 
                 vrvp.viewChanged.connect((data) => {
                     this.viewChanged.emit(data);
-                }, this);
+                });
                 vrvp.actionStarted.connect((data) => {
                     this.actionStarted.emit(data);
-                }, this);
+                });
                 vrvp.actionEnded.connect((data) => {
                     this.actionEnded.emit(data);
-                }, this);
+                });
                 vrvp.actionOccuring.connect((data) => {
                     this.actionOccuring.emit(data);
-                }, this);
+                });
 
                 this.__vrViewport = vrvp;
                 this.vrViewportSetup.emit(vrvp);

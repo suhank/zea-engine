@@ -78,7 +78,7 @@ class GizmoContext {
         let selection = this.__selectionManager.selection;
 
         if (selection.size == 1){
-            this.treeItem.globalXfo = selection.values().next().value.globalXfo;
+            this.treeItem.globalXfo = selection.values().next().value.getGlobalXfo();
         }
         else {
             let xAxis = new Vec3();
@@ -87,11 +87,11 @@ class GizmoContext {
             let pos = new Vec3();
             let count = 0;
             for (let geomItem of selection) {
-                let mat3 = geomItem.globalXfo.ori.toMat3();
+                let mat3 = geomItem.getGlobalXfo().ori.toMat3();
                 xAxis.addInPlace(mat3.xAxis);
                 yAxis.addInPlace(mat3.yAxis);
                 zAxis.addInPlace(mat3.zAxis);
-                pos.addInPlace(geomItem.globalXfo.tr);
+                pos.addInPlace(geomItem.getGlobalXfo().tr);
                 count++;
             }
             let mat3 = new Mat3();
@@ -110,9 +110,9 @@ class GizmoContext {
     beginManipulation() {
         this.__initialXfos = [];
         for (let geomItem of this.__selectionManager.selection) {
-            this.__initialXfos.push(geomItem.globalXfo.clone());
+            this.__initialXfos.push(geomItem.getGlobalXfo().clone());
         }
-        this.__initialContextXfo = this.treeItem.globalXfo.clone();
+        this.__initialContextXfo = this.treeItem.getGlobalXfo().clone();
     }
 
     endManipulation() {}

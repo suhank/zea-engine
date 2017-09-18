@@ -161,13 +161,13 @@ class VRViewport extends BaseViewport {
             let markerpenTool = this.__vrTools['Markerpen'];
             markerpenTool.strokeStarted.connect((data) => {
                 this.actionStarted.emit(data);
-            }, this);
+            });
             markerpenTool.strokeEnded.connect((data) => {
                 this.actionEnded.emit(data);
-            }, this);
+            });
             markerpenTool.strokeSegmentAdded.connect((data) => {
                 this.actionOccuring.emit(data);
-            }, this);
+            });
 
             this.selectTool('VRToolMoveStage');
             this.__currentToolIndex = 0;
@@ -199,12 +199,12 @@ class VRViewport extends BaseViewport {
 
     getXfo() {
         return this.__stageXfo;
-        // return this.__stageTreeItem.globalXfo;
+        // return this.__stageTreeItem.getGlobalXfo();
     }
 
     setXfo(xfo) {
         this.__stageXfo = xfo;
-        this.__stageTreeItem.globalXfo = xfo;
+        this.__stageTreeItem.setGlobalXfo(xfo);
         this.__stageMatrix = xfo.inverse().toMat4();
         // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
         this.__stageScale = xfo.sc.x;
@@ -274,7 +274,7 @@ class VRViewport extends BaseViewport {
         this.__stageTreeItem.setVisible(true);
 
         if (isMobileDevice()) {
-            let xfo = this.__renderer.getViewport().getCamera().globalXfo.clone();
+            let xfo = this.__renderer.getViewport().getCamera().getGlobalXfo().clone();
             let yaxis = xfo.ori.getYaxis();
             let up = new Vec3(0, 1, 0);
             let angle = yaxis.angleTo(up);
@@ -413,7 +413,7 @@ class VRViewport extends BaseViewport {
                                 this.__currentToolIndex = this.__vrToolNames.length - 1;
                         }
                         this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
-                    }, this);
+                    });
 
                     vrController.showInHandUI.connect(()=>{
                         this.__currentTool.deactivateTool();
@@ -474,20 +474,20 @@ class VRViewport extends BaseViewport {
                             return;
                         let xfo = vrController.getPointerXfo();
                         sendEventToVisibleUIs(xfo, ['mousedown'], { button:0 });
-                    }, this);
+                    });
 
                     vrController.buttonReleased.connect(() => {
                         if(!vrController.pointerVisible)
                             return;
                         let xfo = vrController.getPointerXfo();
                         sendEventToVisibleUIs(xfo, ['mouseup', 'click'], { button:0 });
-                    }, this);
+                    });
 
                     vrController.controllerMoved.connect((xfo) => {
                         if(!vrController.pointerVisible)
                             return;
                         sendEventToVisibleUIs(xfo, ['mousemove'], { });
-                    }, this);
+                    });
 
                     this.__vrControllers[id] = vrController;
                     this.controllerAdded.emit(id, vrController);

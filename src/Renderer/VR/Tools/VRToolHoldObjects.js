@@ -48,7 +48,7 @@ class VRToolHoldObjects extends VRTool {
         let bindController = (id, vrController) => {
 
             // let geomItem = new GeomItem('SelVolume', this.__SelVolume, this.__mat);
-            // geomItem.localXfo.tr.set(0.0, 0, -0.03);
+            // geomItem.getLocalXfo().tr.set(0.0, 0, -0.03);
             // geomItem.setSelectable(false);
             // vrController.getTreeItem().addChild(geomItem);
 
@@ -73,7 +73,7 @@ class VRToolHoldObjects extends VRTool {
                     }
                     this.initAction();
                 }
-            }, this);
+            });
 
             vrController.buttonReleased.connect(() => {
                 if(!this.__active)
@@ -90,7 +90,7 @@ class VRToolHoldObjects extends VRTool {
                     this.__heldGeomItemIds[id] = undefined;
                     this.initAction();
                 }
-            }, this);
+            });
 
             if(this.__active)
                 vrController.setTipColor(this.__color);
@@ -196,7 +196,7 @@ class VRToolHoldObjects extends VRTool {
             if(!heldGeom)
                 continue;
             let grabXfo = this.computeGrabXfo(this.__heldGeomItemRefs[i]);
-            this.__heldGeomItemOffsets[i] = grabXfo.inverse().multiply(heldGeom.globalXfo);
+            this.__heldGeomItemOffsets[i] = grabXfo.inverse().multiply(heldGeom.getGlobalXfo());
         }
     }
 
@@ -207,7 +207,7 @@ class VRToolHoldObjects extends VRTool {
             if(!heldGeom)
                 continue;
             let grabXfo = this.computeGrabXfo(this.__heldGeomItemRefs[i]);
-            heldGeom.globalXfo = grabXfo.multiply(this.__heldGeomItemOffsets[i]);
+            heldGeom.setGlobalXfo(grabXfo.multiply(this.__heldGeomItemOffsets[i]));
         }
     }
 

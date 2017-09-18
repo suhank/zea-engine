@@ -58,13 +58,13 @@ class VRController extends Gizmo {
             vrstage.getTreeItem().addChild(this.__treeItem);
             vrstage.getRenderer().getScene().commonResourcesLoaded.connect((entries) => {
                 let controllerTree = entries['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
-                controllerTree.localXfo.tr.set(0, -0.035, 0.01);
-                controllerTree.localXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
+                controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
                 this.__treeItem.addChild(controllerTree);
 
                 let sphere = entries['VRControllerTip'];
                 this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
-                this.__sphereGeomItem.localXfo.tr.set(0.0, -0.01, -0.015);
+                this.__sphereGeomItem.getLocalXfo().tr.set(0.0, -0.01, -0.015);
                 this.__treeItem.addChild(this.__sphereGeomItem);
             });
 
@@ -73,8 +73,8 @@ class VRController extends Gizmo {
             uimat.addParameter('baseColor', this.__uiimage);
 
             this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
-            this.__uiGeomItem.localXfo.tr.set(0.0, -0.07, 0.05); 
-            this.__uiGeomItem.localXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
+            this.__uiGeomItem.getLocalXfo().tr.set(0.0, -0.07, 0.05); 
+            this.__uiGeomItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
             this.__uiGeomItemGeomXfo = new Xfo();
             this.__uiGeomItemGeomXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), -Math.PI);
             this.__uiGeomItemGeomXfo.sc.set(0.3, 0.2, 1.0);
@@ -95,8 +95,8 @@ class VRController extends Gizmo {
             line.setBoundingBoxDirty();
 
             this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
-            this.__uiPointerItem.localXfo.tr.set(0.0, -0.08, -0.04);
-            this.__uiPointerItem.localXfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
+            this.__uiPointerItem.getLocalXfo().tr.set(0.0, -0.08, -0.04);
+            this.__uiPointerItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
             this.__uiPointerItem.setVisible(false);
             this.__treeItem.addChild(this.__uiPointerItem);
 
@@ -148,12 +148,12 @@ class VRController extends Gizmo {
 
         if (!this.__treeItem)
             return;
-        this.__treeItem.localXfo = this.__xfo;
+        this.__treeItem.setLocalXfo(this.__xfo);
 
         ////////////////////////////////////////////
         /*
-        let controllerUpVec = this.__treeItem.globalXfo.ori.getYaxis();
-        let vecToHead = this.__treeItem.globalXfo.tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
+        let controllerUpVec = this.__treeItem.getGlobalXfo().ori.getYaxis();
+        let vecToHead = this.__treeItem.getGlobalXfo().tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
         vecToHead.normalizeInPlace();
         let angle = controllerUpVec.angleTo(vecToHead);
         if (angle < 1.0) {
@@ -232,7 +232,7 @@ class VRController extends Gizmo {
     }
 
     getTipGlobalXfo() {
-        return this.__treeItem.globalXfo;
+        return this.__treeItem.getGlobalXfo();
     }
 
     //////////////////////////////////
@@ -253,7 +253,7 @@ class VRController extends Gizmo {
         this.pointerVisible = false;
     }
     setPointerLength(length) {
-        this.__uiPointerItem.localXfo.sc.set(1, 1, length);
+        this.__uiPointerItem.getLocalXfo().sc.set(1, 1, length);
     }
 
     getUIDimensions() {

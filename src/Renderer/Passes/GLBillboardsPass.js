@@ -72,20 +72,20 @@ class GLBillboardsPass extends GLPass {
             this.__updateBillboard(index);
         });
 
-        billboard.destructing.connect(this.removeBillboardItem, this);
+        billboard.destructing.connect(this.removeBillboardItem.bind(this));
         this.__atlasNeedsUpdating = true;
     }
 
     removeBillboardItem(billboard) {
         let index = this.__billboards.indexOf(billboard);
-        billboard.destructing.disconnect(this.removeBillboardItem, this);
+        billboard.destructing.disconnect(this.removeBillboardItem.bind(this));
         this.__billboards.splice(index, 1);
         this.__atlasNeedsUpdating = true;
     }
 
 
     __populateBillboardDataArray(billboardData, index, dataArray) {
-        let mat4 = billboardData.billboard.globalXfo.toMat4();
+        let mat4 = billboardData.billboard.getGlobalXfo().toMat4();
 
         let stride = 24; // The number of floats per draw item.
         let offset = index * stride;
@@ -174,7 +174,7 @@ class GLBillboardsPass extends GLPass {
 
     sort(cameraPos) {
         for (let billboardData of this.__billboards) {
-            billboardData.dist = billboardData.billboard.globalXfo.tr.distanceTo(cameraPos);
+            billboardData.dist = billboardData.billboard.getGlobalXfo().tr.distanceTo(cameraPos);
         }
         this.__billboards.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
 

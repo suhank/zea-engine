@@ -24,7 +24,7 @@ class GLSelectionRect extends GLDrawItem {
     };
 
     get globalXfo(){
-        return this.__selectionRectGeomItem.globalXfo;
+        return this.__selectionRectGeomItem.getGlobalXfo();
     };
 
     set globalXfo(val){

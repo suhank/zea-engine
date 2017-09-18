@@ -21,14 +21,14 @@ class VRToolMoveStage extends VRTool {
                     return;
                 this.__pressedButtons++;
                 this.initAction();
-            }, this);
+            });
 
             vrController.buttonReleased.connect(() => {
                 if(!this.__active)
                     return;
                 this.__pressedButtons--;
                 this.initAction();
-            }, this);
+            });
 
             if(this.__active)
                 vrController.setTipColor(this.__color);
