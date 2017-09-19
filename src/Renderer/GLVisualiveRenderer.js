@@ -54,7 +54,11 @@ import {
     PostProcessing
 } from './Shaders/PostProcessing.js';
 import {
-    OctahedralEnvMapShader, LatLongEnvMapShader, SterioLatLongEnvMapShader
+    OctahedralEnvMapShader,
+    LatLongEnvMapShader,
+    SterioLatLongEnvMapShader,
+    DualFishEyeEnvMapShader,
+    DualFishEyeToLatLongBackgroundShader
 } from './Shaders/EnvMapShader.js';
 import {
     generateShaderGeomBinding
@@ -155,14 +159,13 @@ class GLVisualiveRenderer extends GLRenderer {
             let backgroundMap = scene.getBackgroundMap();
             if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
                 this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
-            }
-            else {
+            } else {
                 this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
             }
             if (!this.__backgroundMapShader) {
                 if (!gl.__quadVertexIdsBuffer)
                     gl.setupInstancedQuad();
-                switch(backgroundMap.getMapping()) {
+                switch (backgroundMap.getMapping()) {
                     case 'octahedral':
                         this.__backgroundMapShader = new OctahedralEnvMapShader(gl);
                         break;
@@ -171,6 +174,9 @@ class GLVisualiveRenderer extends GLRenderer {
                         break;
                     case 'steriolatlong':
                         this.__backgroundMapShader = new SterioLatLongEnvMapShader(gl);
+                        break;
+                    case 'dualfisheye':
+                        this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(gl);
                         break;
                     default:
                         this.__backgroundMapShader = new LatLongEnvMapShader(gl);
@@ -183,7 +189,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
         let lightMaps = scene.getLightMaps();
-        let addLightmap = (name, lightmap)=>{
+        let addLightmap = (name, lightmap) => {
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLLightmapMixer(this.__gl, lightmap);
@@ -344,7 +350,7 @@ class GLVisualiveRenderer extends GLRenderer {
     drawBackground(renderstate) {
 
         if (this.__glBackgroundMap) {
-            if(!this.__glBackgroundMap.isLoaded())
+            if (!this.__glBackgroundMap.isLoaded())
                 return;
             let gl = this.__gl;
             gl.depthMask(false);
@@ -353,8 +359,7 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__glBackgroundMap.bind(renderstate, unifs.backgroundImage.location);
             this.__backgroundMapShaderBinding.bind(renderstate);
             gl.drawQuad();
-        }
-        else if (this.__glEnvMap) {
+        } else if (this.__glEnvMap) {
             this.__glEnvMap.draw(renderstate);
         }
     }

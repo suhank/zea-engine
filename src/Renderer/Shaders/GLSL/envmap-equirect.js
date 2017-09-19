@@ -3,35 +3,13 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 shaderLibrary.setShaderModule('pragmatic-pbr/envmap-equirect.glsl', `
 
 
-/**
- 
- Samples equirectangular (lat/long) panorama environment map
- * @param  {sampler2D} envMap - equirectangular (lat/long) panorama texture
- * @param  {vec3} dir - normal in the world coordinate space
- * @param  {float} - flipEnvMap    -1.0 for left handed coorinate system oriented texture (usual case)
- *                                  1.0 for right handed coorinate system oriented texture
- * @return {vec2} equirectangular texture coordinate-
- * @description Based on http://http.developer.nvidia.com/GPUGems/gpugems_ch17.html and http://gl.ict.usc.edu/Data/HighResProbes/
- */
-vec2 latLongUVsFromDir(vec3 dir, float flipEnvMap) {
-  //I assume envMap texture has been flipped the WebGL way (pixel 0,0 is a the bottom)
-  //therefore we flip dir.y as acos(1) = 0
-  //float phi = acos(dir.y);
-  //float theta = atan(dir.x, -dir.z) + PI;
-  //return vec2(1.0 - (theta / TwoPI), phi / PI);
-
-
+vec2 latLongUVsFromDir(vec3 dir) {
   // Math function taken from...
   // http://gl.ict.usc.edu/Data/HighResProbes/
   // Note: Scaling from u=[0,2], v=[0,1] to u=[0,1], v=[0,1]
   float phi = acos(dir.y);
   float theta = atan(dir.x, -dir.z);
   return vec2((1.0 + theta / PI) / 2.0, phi / PI);
-}
-
-vec2 latLongUVsFromDir(vec3 dir) {
-    //-1.0 for left handed coordinate system oriented texture (usual case)
-    return latLongUVsFromDir(dir, -1.0);
 }
 
 // Note: when u == 0.5 z = 1.0

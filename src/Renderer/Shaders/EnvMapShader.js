@@ -5,6 +5,7 @@ import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/envmap-octahedral.js';
 import './GLSL/envmap-equirect.js';
+import './GLSL/envmap-dualfisheye.js';
 import './GLSL/utils/quadVertexFromID.js';
 
 class EnvMapShader extends GLShader {
@@ -28,7 +29,7 @@ varying vec2 v_texCoord;
 void main()
 {
     vec2 position = getQuadVertexPositionFromID() * 2.0;
-    v_texCoord = position + 0.5;
+    v_texCoord = position * 0.5 + 0.5;
 
     mat4 inverseProjection = inverse(projectionMatrix);
     mat3 inverseModelview = transpose(mat3(viewMatrix));
@@ -190,10 +191,99 @@ void main(void) {
 };
 
 
+class DualFishEyeEnvMapShader extends EnvMapShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('DualFishEyeEnvMapShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
+
+#define ENABLE_INLINE_GAMMACORRECTION
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+uniform float exposure;
+#endif
+
+uniform sampler2D backgroundImage;
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
+void main(void) {
+
+    vec2 uv = dualfisheyeUVsFromDir(normalize(v_worldDir));
+
+    vec4 texel = texture2D(backgroundImage, uv);
+    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+
+    // Assuming a simple RGB image in gamma space for now.
+    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+#endif
+
+}
+`);
+        this.finalize();
+    }
+};
+
+
+
+class DualFishEyeToLatLongBackgroundShader extends EnvMapShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('DualFishEyeEnvMapShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+<%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
+
+#define ENABLE_INLINE_GAMMACORRECTION
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+uniform float exposure;
+#endif
+
+uniform sampler2D backgroundImage;
+
+/* VS Outputs */
+varying vec3 v_worldDir;
+varying vec2 v_texCoord;
+
+void main(void) {
+
+    vec2 uv = dualfisheyeUVsFromDir(dirFromLatLongUVs(v_texCoord.x, v_texCoord.y));
+    vec4 texel = texture2D(backgroundImage, uv);
+    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+
+    // Assuming a simple RGB image in gamma space for now.
+    // gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+#endif
+
+}
+`);
+        this.finalize();
+    }
+};
+
+
 export {
     EnvMapShader,
     OctahedralEnvMapShader,
     LatLongEnvMapShader,
-    SterioLatLongEnvMapShader
+    SterioLatLongEnvMapShader,
+    DualFishEyeEnvMapShader,
+    DualFishEyeToLatLongBackgroundShader
 };
 

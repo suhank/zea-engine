@@ -11,7 +11,6 @@ export * from './FatLinesShader.js';
 export * from './FlatSurfaceShader.js';
 export * from './FlatAlphaSurfaceShader.js';
 export * from './GizmoShader.js';
-export * from './IrradianceMapShaders.js';
 export * from './LayeredCarPaintShader.js';
 export * from './ShadowCatcherShader.js';
 export * from './LinesShader.js';
