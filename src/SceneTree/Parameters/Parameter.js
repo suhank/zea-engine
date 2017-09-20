@@ -2,10 +2,9 @@ import {
     Signal
 } from '../../Math';
 
-class Parameter {
-    constructor(name, value, dataType) {
+class BaseParameter {
+    constructor(name, dataType) {
         this.__name = name;
-        this.__value = value;
         this.__dataType = dataType;
         this.valueChanged = new Signal();
         this.nameChanged = new Signal();
@@ -14,8 +13,6 @@ class Parameter {
         this.setName = this.setName.bind(this);
         this.getValue = this.getValue.bind(this);
         this.setValue = this.setValue.bind(this);
-
-        this.setValue(value);
     }
 
     getName() {
@@ -26,6 +23,50 @@ class Parameter {
         let prevName = this.__name;
         this.__name = name;
         this.nameChanged.emit(this.__name, prevName);
+    }
+
+    getValue() {
+        // TODO
+    }
+
+    setValue(value) {
+        // TODO
+    }
+};
+
+
+
+class GetterSetterParameter extends BaseParameter {
+    constructor(name, getter, setter, dataType) {
+        super(name, dataType);
+        this.__name = name;
+    }
+
+    getName() {
+        return this.__name;
+    }
+
+    setName(name) {
+        let prevName = this.__name;
+        this.__name = name;
+        this.nameChanged.emit(this.__name, prevName);
+    }
+
+    getValue() {
+        return this.__getter();
+    }
+
+    setValue(value) {
+        this.__setter(value);
+        this.valueChanged.emit(this.__value);
+    }
+};
+
+
+class Parameter extends BaseParameter {
+    constructor(name, value, dataType) {
+        super(name, dataType);
+        this.__value = value;
     }
 
     getValue() {
@@ -40,5 +81,6 @@ class Parameter {
 
 
 export {
+    GetterSetterParameter,
     Parameter
 };

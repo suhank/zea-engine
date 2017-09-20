@@ -25,7 +25,7 @@ class GLSimpleRenderer extends GLRenderer {
             defines: `\n#define ENABLE_INLINE_GAMMACORRECTION\n`
         };
 
-        if (options.enableTextures)
+        if (!options.disableTextures)
             this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
     }
 

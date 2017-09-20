@@ -115,7 +115,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
         if (!options.disableLightmaps)
             this.__shaderDirectives.defines += '\n#define ENABLE_LIGHTMAPS';
-        if (options.enableTextures == undefined || options.enableTextures == true)
+        if (!options.disableTextures)
             this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
 
         if (!isMobileDevice()) {

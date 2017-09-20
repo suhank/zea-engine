@@ -46,25 +46,29 @@ class GLImageStream extends GLTexture2D {
         super(gl, params);
 
         this.__streamImage = params;
-        this.__streamImage.streamAtlasImageIndexChanged.connect(this.updated.emit);
+        this.__descParam = this.__streamImage.getParamSet().getParameter('StreamAtlasDesc');
+        this.__indexParam = this.__streamImage.getParamSet().getParameter('StreamAtlasIndex');
+         this.__indexParam.valueChanged.connect(this.updated.emit);
     }
 
     bindTexture(renderstate, unifName) {
 
-        super.bindTexture(renderstate, unifName);
+        if(!super.bindTexture(renderstate, unifName)){
+            return false;
+        }
 
         let textureDescUnif = renderstate.unifs[unifName+'Desc'];
         if (textureDescUnif){
-            this.__gl.uniform4f(textureDescUnif.location, ...this.__streamImage.getStreamAtlasImageDesc().asArray());
+            this.__gl.uniform4f(textureDescUnif.location, ...this.__descParam.getValue().asArray());
         }
 
         
         let textureIndexUnif = renderstate.unifs[unifName+'Index'];
         if (textureIndexUnif){
-            this.__gl.uniform1i(textureIndexUnif.location, this.__streamImage.getStreamAtlasImageIndex());
+            this.__gl.uniform1i(textureIndexUnif.location, this.__indexParam.getValue());
         }
 
-
+        return true;
     }
 
 };

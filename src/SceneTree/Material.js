@@ -52,8 +52,8 @@ let makeParameterTexturable = (parameter)=>{
     parameter.textureDisconnected = new Signal();
 
     let basegetValue = parameter.getValue;
-    parameter.getValue = ()=>{
-        if (image != undefined)
+    parameter.getValue = (getTexIfAvailable=true)=>{
+        if (getTexIfAvailable && image != undefined)
             return image;
         else
             return basegetValue();

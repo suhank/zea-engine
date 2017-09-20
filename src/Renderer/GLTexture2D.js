@@ -221,23 +221,29 @@ class GLTexture2D extends RefCounted {
 
     bindTexture(renderstate, unifName) {
         if (!this.__loaded) {
-            return;
+            return false;
         }
         if (!this.__gltex) {
             throw ("Unable to bind non-initialized or deleted texture.");
         }
+        let unif = renderstate.unifs[unifName];
+        if(!unif) {
+            return false;
+        }
+
         let unit = renderstate['boundTextures']++;
         let texId = this.__gl.TEXTURE0 + unit;
         let gl = this.__gl;
         gl.activeTexture(texId);
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
-        gl.uniform1i(renderstate.unifs[unifName].location, unit);
-
+        gl.uniform1i(unif.location, unit);
 
         let textureConnctedUnif = renderstate.unifs[unifName+'Connected'];
         if (textureConnctedUnif){
             gl.uniform1i(textureConnctedUnif.location, 1);
         }
+
+        return true;
     }
 
     destroy() {

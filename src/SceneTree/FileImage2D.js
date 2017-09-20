@@ -1,6 +1,7 @@
 import {
     Signal,
     Async,
+    Vec4,
     Color
 } from '../Math';
 import {
@@ -19,6 +20,13 @@ import {
 import {
     GIF
 } from '../external/gifuct-js.js';
+
+import {
+    Parameter,
+    NumberParameter,
+    Vec4Parameter,
+    ParameterSet
+} from './Parameters';
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
@@ -249,6 +257,12 @@ class FileImage2D extends Image2D {
         this.format = 'UNSIGNED_BYTE';
         this.__streamAtlas = true;
 
+        // this.__streamAtlasDesc = new Vec4();
+        this.__paramSet.addParameter(new Vec4Parameter('StreamAtlasDesc', new Vec4()));
+        this.__paramSet.addParameter(new NumberParameter('StreamAtlasIndex', 0));
+        this.__paramSet.getParameter('StreamAtlasIndex').setRange([0, 1]);
+        
+
         let url = this.__resourceLoader.resolveURL(resourcePath);
         this.__resourceLoader.addWork(resourcePath, 1);
 
@@ -319,9 +333,11 @@ class FileImage2D extends Image2D {
             this.width = atlasCanvas.width;
             this.height = atlasCanvas.height;
 
-            this.__streamAtlasDesc.x = atlasSize.x;
-            this.__streamAtlasDesc.y = atlasSize.y;
-            this.__streamAtlasDesc.z = frames.length;
+            // this.__streamAtlasDesc.x = atlasSize.x;
+            // this.__streamAtlasDesc.y = atlasSize.y;
+            // this.__streamAtlasDesc.z = frames.length;
+            this.__paramSet.getParameter('StreamAtlasDesc').setValue(new Vec4(atlasSize.x, atlasSize.y, 0, 0));
+            this.__paramSet.getParameter('StreamAtlasIndex').setRange([0, frames.length]);
 
             this.__data = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);;
             this.__loaded = true;

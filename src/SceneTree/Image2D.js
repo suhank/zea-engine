@@ -6,6 +6,12 @@ import {
     RefCounted
 } from './RefCounted.js';
 
+import {
+    Parameter,
+    NumberParameter,
+    ParameterSet
+} from './Parameters';
+
 class Image2D extends RefCounted {
     constructor(params = {}) {
         super();
@@ -22,10 +28,11 @@ class Image2D extends RefCounted {
 
         this.updated = new Signal();
 
-        this.__streamAtlas = false;
-        this.__streamAtlasDesc = new Vec4();
-        this.__streamAtlasImageIndex = 0;
-        this.streamAtlasImageIndexChanged = new Signal();
+        this.__paramSet = new ParameterSet();
+        // this.__streamAtlas = false;
+        // this.__streamAtlasDesc = new Vec4();
+        // this.__streamAtlasImageIndex = 0;
+        // this.streamAtlasImageIndexChanged = new Signal();
     }
 
     isLoaded() {
@@ -48,18 +55,22 @@ class Image2D extends RefCounted {
         return this.__streamAtlas;
     }
 
-    getStreamAtlasImageDesc() {
-        return this.__streamAtlasDesc;
+    getParamSet() {
+        return this.__paramSet;
     }
 
-    getStreamAtlasImageIndex() {
-        return this.__streamAtlasImageIndex;
-    }
+    // getStreamAtlasImageDesc() {
+    //     return this.__streamAtlasDesc;
+    // }
 
-    setStreamAtlasImageIndex(index) {
-        this.__streamAtlasImageIndex = index;
-        this.streamAtlasImageIndexChanged.emit(this.__streamAtlasImageIndex);
-    }
+    // getStreamAtlasImageIndex() {
+    //     return this.__streamAtlasImageIndex;
+    // }
+
+    // setStreamAtlasImageIndex(index) {
+    //     this.__streamAtlasImageIndex = index;
+    //     this.streamAtlasImageIndexChanged.emit(this.__streamAtlasImageIndex);
+    // }
 
     getParams() {
         return {

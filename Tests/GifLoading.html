@@ -146,21 +146,38 @@ Visualive.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
         renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5,2,5), new Visualive.Vec3(0,2,0));
         renderer.setScene(scene);
-        // bgMap.loaded.connect(() => {
-        //     // let gui = addGUI(div);
-        //     // renderer.addGUI(gui);
-        //     renderer.requestRedraw();
-        // });
 
         let frame = 0;
+        let param = image.getParamSet().getParameter('StreamAtlasIndex');
+        let incrementingValue = false;
         let incrementFrame = () => {
             frame++;
-            image.setStreamAtlasImageIndex(frame % image.getStreamAtlasImageDesc().z);
+            incrementingValue = true;
+            param.setValue(frame % param.getRange()[1]);
+            incrementingValue = false;
         }
         let id = setInterval(incrementFrame, 50);
+        param.valueChanged.connect(()=>{
+            if(!incrementingValue) {
+                clearInterval(id);
+            }
+        });
 
-        let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main);
         renderer.resumeDrawing();
+
+
+        //////////////////////////////////
+        // Setup the UI
+
+        let sliderController = new Visualive.SliderController(param);
+
+        let widgetPanel = new Visualive.UIWidgetPanel();
+        widgetPanel.addWidgetController(sliderController);
+
+        let uicontroller = new Visualive.UIController();
+        uicontroller.addWidgetPanel(widgetPanel);
+
+        VisualiveUI.renderUI(renderer, uicontroller);
     }
 
     // loadBG("Assets/Progress.gif");

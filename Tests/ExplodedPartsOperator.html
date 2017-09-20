@@ -102,12 +102,13 @@
             let explodedAmount = 0;
             let animatingValue = false;
             let timeoutId;
+            let param = op.getParameter('Explode');
             let timerCallback = () => {
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
                 animatingValue = true;
                 explodedAmount += 0.005;
-                op.getParameter('Explode').setValue(explodedAmount);
+                param.setValue(explodedAmount);
                 renderer.requestRedraw();
                 if (explodedAmount < 1.0) {
                     timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
@@ -115,7 +116,7 @@
                 animatingValue = false;
             };
             timeoutId = setTimeout(timerCallback, 1000); // half second delay
-            op.getParameter('Explode').valueChanged.connect(()=>{
+            param.valueChanged.connect(()=>{
                 if(!animatingValue) {
                     clearTimeout(timeoutId);
                 }

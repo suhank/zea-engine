@@ -17,7 +17,7 @@ class NumberParameter extends Parameter {
         return this.__range;
     }
 
-    setRange(range) {
+    setRange(range) {// Should be an array [0, 20]
         this.__range = range;
         this.rangeChanged.emit();
     }

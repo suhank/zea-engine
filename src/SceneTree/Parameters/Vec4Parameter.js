@@ -5,13 +5,13 @@ import {
     Parameter
 } from './Parameter.js';
 
-class ColorParameter extends Parameter {
+class Vec4Parameter extends Parameter {
     constructor(name, value) {
-        super(name, value, 'Color');
+        super(name, value, 'Vec3');
     }
 };
 
 
 export {
-    ColorParameter
+    Vec4Parameter
 };

@@ -25,26 +25,24 @@ import {
 
 let bindParam = (gl, param, renderstate, gltextures={})=>{
     let name =  param.getName();
-    let value =  param.getValue();
-    let unifName = '_'+name;
     // console.log("bindParam:" + name + ":" + value);
-    if(value instanceof Image2D){
+    if(param.getImage()){
         let gltexture = gltextures[name];
-        let textureUnifName = unifName+'Tex';
-        if (gltexture && gltexture.isLoaded() && renderstate.unifs[textureUnifName]){
-            // console.log("bindParam:"+name + ": gltexture" );
-            gltexture.bindTexture(renderstate, textureUnifName);
+        if (gltexture && gltexture.bindTexture(renderstate, '_'+name+'Tex')){
             return;
         }
+        // If the texture didn't bind, then let the regular value be bound...continue into the rest of the function.
         return;
     }
+    let unifName = '_'+name;
     let unif = renderstate.unifs[unifName];
     if (unif == undefined)
         return;
-    let textureConnctedUnif = renderstate.unifs['_'+name+'TexConnected'];
-    if (textureConnctedUnif){
-        gl.uniform1i(textureConnctedUnif.location, 0);
-    }
+    let value =  param.getValue(false);
+    // let textureConnctedUnif = renderstate.unifs[unifName+'TexConnected'];
+    // if (textureConnctedUnif){
+    //     gl.uniform1i(textureConnctedUnif.location, 0);
+    // }
     switch (unif['type']) {
     case Boolean:
         // gl.uniform1ui(unif.location, value);// WebGL 2
