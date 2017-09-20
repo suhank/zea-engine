@@ -17,6 +17,9 @@ import {
 import {
     GLHDRImage
 } from './GLHDRImage.js';
+import {
+    GLImageStream
+} from './GLImageStream.js';
 
 class GLMaterial {
     constructor(gl, material, glshader) {
@@ -60,12 +63,16 @@ class GLMaterial {
                 if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
                     gltexture = new GLHDRImage(this.__gl, texture);
                 }
-                else if (texture.hasAlpha()){
-                    gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                else if (texture.isStreamAtlas()){
+                    gltexture = new GLImageStream(this.__gl, texture);
                 }
+                // else if (texture.hasAlpha()){
+                //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                // }
                 else{
                     gltexture = new GLTexture2D(this.__gl, texture);
                 }
+                gltexture.updated.connect(this.updated.emit);
                 this.gltextures[texName] = gltexture;
                 this.updated.emit();
             }

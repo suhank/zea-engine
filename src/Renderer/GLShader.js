@@ -26,22 +26,19 @@ import {
 let bindParam = (gl, param, renderstate, gltextures={})=>{
     let name =  param.getName();
     let value =  param.getValue();
+    let unifName = '_'+name;
     // console.log("bindParam:" + name + ":" + value);
     if(value instanceof Image2D){
         let gltexture = gltextures[name];
-        let textureUnif = renderstate.unifs['_'+name+'Tex'];
-        if (gltexture && gltexture.isLoaded() && textureUnif){
+        let textureUnifName = unifName+'Tex';
+        if (gltexture && gltexture.isLoaded() && renderstate.unifs[textureUnifName]){
             // console.log("bindParam:"+name + ": gltexture" );
-            gltexture.bind(renderstate, textureUnif.location);
-            let textureConnctedUnif = renderstate.unifs['_'+name+'TexConnected'];
-            if (textureConnctedUnif){
-                gl.uniform1i(textureConnctedUnif.location, 1);
-            }
+            gltexture.bindTexture(renderstate, textureUnifName);
             return;
         }
         return;
     }
-    let unif = renderstate.unifs['_'+name];
+    let unif = renderstate.unifs[unifName];
     if (unif == undefined)
         return;
     let textureConnctedUnif = renderstate.unifs['_'+name+'TexConnected'];
@@ -340,12 +337,16 @@ class GLShader extends RefCounted {
                 if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
                     gltexture = new GLHDRImage(this.__gl, texture);
                 }
-                else if (texture.hasAlpha()){
-                    gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                else if (texture.isStreamAtlas()){
+                    gltexture = new GLImageStream(this.__gl, texture);
                 }
+                // else if (texture.hasAlpha()){
+                //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                // }
                 else{
                     gltexture = new GLTexture2D(this.__gl, texture);
                 }
+                gltexture.updated.connect(this.updated.emit);
                 this.__gltextures[paramName] = gltexture;
             }
             if (!texture.isLoaded()) {

@@ -488,7 +488,7 @@ class GLCollector {
         let gl = this.__renderer.gl;
         let unifs = renderstate.unifs;
         if(unifs.instancesTexture){
-            this.__transformsTexture.bind(renderstate, unifs.instancesTexture.location);
+            this.__transformsTexture.bindTexture(renderstate, 'instancesTexture');
             gl.uniform1i(unifs.instancesTextureSize.location, this.__transformsTexture.width);
         }
         return true;

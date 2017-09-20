@@ -98,6 +98,7 @@ precision highp float;
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif
+<%include file="materialparams.glsl"/>
 
 /* VS Outputs */
 varying vec4 v_viewPos;
@@ -146,17 +147,10 @@ uniform float _glossReflectance;
 
 #endif
 
-
 #ifdef ENABLE_TEXTURES
+
 uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
-
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoord) {
-    if(_texConnected)
-        return toLinear(texture2D(tex, texCoord));
-    else
-        return value;
-}
 
 #endif
 

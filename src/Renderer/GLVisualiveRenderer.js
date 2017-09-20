@@ -54,6 +54,7 @@ import {
     PostProcessing
 } from './Shaders/PostProcessing.js';
 import {
+    BackgroundImageShader,
     OctahedralEnvMapShader,
     LatLongEnvMapShader,
     SterioLatLongEnvMapShader,
@@ -114,7 +115,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
         if (!options.disableLightmaps)
             this.__shaderDirectives.defines += '\n#define ENABLE_LIGHTMAPS';
-        if (options.enableTextures)
+        if (options.enableTextures == undefined || options.enableTextures == true)
             this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
 
         if (!isMobileDevice()) {
@@ -178,8 +179,9 @@ class GLVisualiveRenderer extends GLRenderer {
                     case 'dualfisheye':
                         this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(gl);
                         break;
+                    case 'uv':
                     default:
-                        this.__backgroundMapShader = new LatLongEnvMapShader(gl);
+                        this.__backgroundMapShader = new BackgroundImageShader(gl);
                         break;
                 }
                 let shaderComp = this.__backgroundMapShader.compileForTarget();

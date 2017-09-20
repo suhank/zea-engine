@@ -49,6 +49,46 @@ void main()
 };
 
 
+class BackgroundImageShader extends EnvMapShader {
+    constructor(gl) {
+        super(gl);
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongEnvMapShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+<%include file="glslutils.glsl"/>
+<%include file="pragmatic-pbr/envmap-equirect.glsl"/>
+
+#define ENABLE_INLINE_GAMMACORRECTION
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+<%include file="stack-gl/gamma.glsl"/>
+uniform float exposure;
+#endif
+
+uniform sampler2D backgroundImage;
+
+
+/* VS Outputs */
+varying vec2 v_texCoord;
+
+void main(void) {
+
+    vec4 texel = texture2D(backgroundImage, v_texCoord);
+    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+
+    // Assuming a simple RGB image in gamma space for now.
+    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+#endif
+}
+`);
+        this.finalize();
+    }
+};
+
+
 class OctahedralEnvMapShader extends EnvMapShader {
     constructor(gl) {
         super(gl);
@@ -280,6 +320,7 @@ void main(void) {
 
 export {
     EnvMapShader,
+    BackgroundImageShader,
     OctahedralEnvMapShader,
     LatLongEnvMapShader,
     SterioLatLongEnvMapShader,

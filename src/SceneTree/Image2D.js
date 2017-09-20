@@ -1,8 +1,13 @@
-import  { Signal } from '../Math/Signal';
-import  { RefCounted } from './RefCounted.js';
+import {
+    Vec4,
+    Signal
+} from '../Math';
+import {
+    RefCounted
+} from './RefCounted.js';
 
 class Image2D extends RefCounted {
-    constructor(params={}) {
+    constructor(params = {}) {
         super();
         this.width = 0;
         this.height = 0;
@@ -11,20 +16,22 @@ class Image2D extends RefCounted {
         this.filter = 'filter' in params ? params['filter'] : "LINEAR";
         this.wrap = 'wrap' in params ? params['wrap'] : "CLAMP_TO_EDGE";
         this.flipY = 'flipY' in params ? params['flipY'] : true;
-        this.__mapping = 'mapping' in params ? params['mapping'] : 'UV';
+        this.__mapping = 'mapping' in params ? params['mapping'] : 'uv';
+
         this.mipMapped = false;
-        
+
         this.updated = new Signal();
+
+        this.__streamAtlas = false;
+        this.__streamAtlasDesc = new Vec4();
+        this.__streamAtlasImageIndex = 0;
+        this.streamAtlasImageIndexChanged = new Signal();
     }
 
     isLoaded() {
         return true;
     }
 
-    isStream() {
-        return false;
-    }
-    
     getMapping() {
         return this.__mapping;
     }
@@ -33,15 +40,36 @@ class Image2D extends RefCounted {
         this.__mapping = mapping;
     }
 
-    getParams(){
+    isStream() {
+        return false;
+    }
+
+    isStreamAtlas() {
+        return this.__streamAtlas;
+    }
+
+    getStreamAtlasImageDesc() {
+        return this.__streamAtlasDesc;
+    }
+
+    getStreamAtlasImageIndex() {
+        return this.__streamAtlasImageIndex;
+    }
+
+    setStreamAtlasImageIndex(index) {
+        this.__streamAtlasImageIndex = index;
+        this.streamAtlasImageIndexChanged.emit(this.__streamAtlasImageIndex);
+    }
+
+    getParams() {
         return {
             format: this.format,
             channels: this.channels,
-            width:this.width,
-            height:this.height,
-            wrap:this.wrap,
-            flipY:this.flipY,
-            mipMapped:this.mipMapped
+            width: this.width,
+            height: this.height,
+            wrap: this.wrap,
+            flipY: this.flipY,
+            mipMapped: this.mipMapped
         }
     }
 

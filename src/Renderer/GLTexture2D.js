@@ -151,7 +151,7 @@ class GLTexture2D extends RefCounted {
         let channels = gl[this.__channels];
         let format = gl[this.__format];
         if (data != undefined) {
-            if (data instanceof Image || data instanceof HTMLVideoElement) {
+            if (data instanceof Image || data instanceof ImageData || data instanceof HTMLVideoElement) {
                 gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, format, data);
             } else {
                 // Note: data images must have an even size width/height to load correctly. 
@@ -219,7 +219,7 @@ class GLTexture2D extends RefCounted {
         return this.__gltex;
     }
 
-    bind(renderstate, location) {
+    bindTexture(renderstate, unifName) {
         if (!this.__loaded) {
             return;
         }
@@ -231,7 +231,13 @@ class GLTexture2D extends RefCounted {
         let gl = this.__gl;
         gl.activeTexture(texId);
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
-        gl.uniform1i(location, unit);
+        gl.uniform1i(renderstate.unifs[unifName].location, unit);
+
+
+        let textureConnctedUnif = renderstate.unifs[unifName+'Connected'];
+        if (textureConnctedUnif){
+            gl.uniform1i(textureConnctedUnif.location, 1);
+        }
     }
 
     destroy() {

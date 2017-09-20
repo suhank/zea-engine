@@ -4,11 +4,21 @@ import {
     Color
 } from '../Math';
 import {
+    loadBinfile
+} from './Utils.js';
+import {
     sgFactory
 } from './SGFactory.js';
 import {
     Image2D
 } from './Image2D.js';
+import {
+    Image2D
+} from './Image2D.js';
+
+import {
+    GIF
+} from '../external/gifuct-js.js';
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
@@ -17,7 +27,6 @@ class FileImage2D extends Image2D {
         super(params);
 
         this.__resourceLoader = resourceLoader;
-        this.__hasAlpha = false;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
@@ -29,21 +38,20 @@ class FileImage2D extends Image2D {
             this.loadResource(resourcePath);
     }
 
-    getName(){
-        if(!this.__resourcePath || this.__resourcePath == '')
+    getName() {
+        if (!this.__resourcePath || this.__resourcePath == '')
             return "FileImageNoResource";
         let getName = (str) => {
             let p = str.split('/');
             let last = p[p.length - 1];
             let suffixSt = last.lastIndexOf('.');
-            if (suffixSt != -1){
-                let decorator = last.substring(suffixSt-1, suffixSt);
-                if(!isNaN(decorator)) {
+            if (suffixSt != -1) {
+                let decorator = last.substring(suffixSt - 1, suffixSt);
+                if (!isNaN(decorator)) {
                     // Note: ALL image names have an LOD specifier at the end.
                     // remove that off when retrieving the name.
-                    return last.substring(0, suffixSt-1);
-                }
-                else{
+                    return last.substring(0, suffixSt - 1);
+                } else {
                     return last.substring(0, suffixSt);
                 }
             }
@@ -57,7 +65,7 @@ class FileImage2D extends Image2D {
 
     loadResource(resourcePath) {
         if (!this.__resourceLoader.resourceAvailable(resourcePath)) {
-            throw("Resource unavailable:" + resourcePath);
+            throw ("Resource unavailable:" + resourcePath);
             return;
         }
 
@@ -77,6 +85,8 @@ class FileImage2D extends Image2D {
             this.__loadLDRAlpha(resourcePath);
         } else if (ext == '.vlh') {
             this.__loadVLH(resourcePath);
+        } else if (ext == '.gif') {
+            this.__loadGIF(resourcePath);
         } else {
             throw ("Unsupported file type. Check the ext:" + resourcePath);
         }
@@ -84,10 +94,9 @@ class FileImage2D extends Image2D {
     }
 
     __loadLDRImage(resourcePath, ext) {
-        if (ext == '.jpg'){
+        if (ext == '.jpg') {
             this.channels = 'RGB';
-        }
-        else if(ext == '.png') {
+        } else if (ext == '.png') {
             this.channels = 'RGBA';
         }
         this.format = 'UNSIGNED_BYTE';
@@ -151,7 +160,6 @@ class FileImage2D extends Image2D {
     }
 
     // __loadLDRAlpha(resourcePath) {
-            // this.__hasAlpha = true;
     //     let worker = new ResourceLoaderWorker();
     //     worker.onmessage = (event) => {
     //         worker.terminate();
@@ -201,6 +209,7 @@ class FileImage2D extends Image2D {
 
     __loadVLH(resourcePath) {
         this.format = 'FLOAT';
+
         this.__resourceLoader.loadResource(resourcePath, (entries) => {
             let ldr, cdm;
             for (let name in entries) {
@@ -233,12 +242,100 @@ class FileImage2D extends Image2D {
         });
     }
 
-    getResourcePath() {
-        return this.__resourcePath;
+
+    __loadGIF(resourcePath) {
+
+        this.channels = 'RGBA';
+        this.format = 'UNSIGNED_BYTE';
+        this.__streamAtlas = true;
+
+        let url = this.__resourceLoader.resolveURL(resourcePath);
+        this.__resourceLoader.addWork(resourcePath, 1);
+
+        loadBinfile(url, (data) => {
+
+            // Decompressing using: https://github.com/matt-way/gifuct-js
+            let gif = new GIF(data);
+            let frames = gif.decompressFrames(true);
+            // do something with the frame data
+
+
+            let sideLength = Math.sqrt(frames.length);
+            let atlasSize = new Visualive.Vec2(sideLength, sideLength);
+            if(Math.fract(sideLength) > 0.0) {
+                atlasSize.x = Math.floor(atlasSize.x + 1);
+                if(Math.fract(sideLength) > 0.5) {
+                    atlasSize.y = Math.floor(atlasSize.y + 1);
+                }
+                else{
+                    atlasSize.y = Math.floor(atlasSize.y);
+                }
+            }
+
+
+            let width = frames[0].dims.width;
+            let height = frames[0].dims.height;
+
+            // gif patch canvas
+            let tempCanvas = document.createElement('canvas');
+            let tempCtx = tempCanvas.getContext('2d');
+            // full gif canvas
+            let gifCanvas = document.createElement('canvas');
+            let gifCtx = gifCanvas.getContext('2d');
+
+            gifCanvas.width = width;
+            gifCanvas.height = height;
+
+            // The atlas for all the frames.
+            let atlasCanvas = document.createElement('canvas');
+            let atlasCtx = atlasCanvas.getContext('2d');
+            atlasCanvas.width = atlasSize.x * width;
+            atlasCanvas.height = atlasSize.y * height;
+
+            let frameImageData;
+            let renderFrame = (frame, index)=>{
+                var dims = frame.dims;
+                
+                if(!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height){
+                    tempCanvas.width = dims.width;
+                    tempCanvas.height = dims.height;
+                    frameImageData = tempCtx.createImageData(dims.width, dims.height);  
+                }
+                
+                // set the patch data as an override
+                frameImageData.data.set(frame.patch);
+
+                // draw the patch back over the canvas
+                tempCtx.putImageData(frameImageData, 0, 0);
+                gifCtx.drawImage(tempCanvas, dims.left, dims.top);
+                atlasCtx.drawImage(gifCanvas, (index%atlasSize.x) * width, Math.floor(index/atlasSize.x) * height);
+            }
+
+            for(let i =0; i<frames.length; i++) {
+                // console.log(frame);
+                renderFrame(frames[i], i);
+            }
+
+            this.width = atlasCanvas.width;
+            this.height = atlasCanvas.height;
+
+            this.__streamAtlasDesc.x = atlasSize.x;
+            this.__streamAtlasDesc.y = atlasSize.y;
+            this.__streamAtlasDesc.z = frames.length;
+
+            this.__data = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);;
+            this.__loaded = true;
+            this.__resourceLoader.addWorkDone(resourcePath, 1);
+            this.loaded.emit();
+
+        }, (statusText) => {
+            console.warn("Unable to Load URL:"+ req.url);
+        });
+
     }
 
-    hasAlpha() {
-        return this.__hasAlpha;
+    getResourcePath() {
+        return this.__resourcePath;
     }
 
     isStream() {
@@ -251,7 +348,7 @@ class FileImage2D extends Image2D {
 
     getParams() {
         let params = super.getParams();
-        if (this.__loaded){
+        if (this.__loaded) {
             params['data'] = this.__data;
         }
         return params;
@@ -285,7 +382,7 @@ class FileImage2D extends Image2D {
         if (typeof resourcePath === 'string' && resourcePath != "") {
             if (lod >= 0) {
                 let suffixSt = resourcePath.lastIndexOf('.')
-                if (suffixSt != -1){
+                if (suffixSt != -1) {
                     let lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
                     if (this.__resourceLoader.resourceAvailable(lodPath)) {
                         resourcePath = lodPath;
@@ -293,7 +390,7 @@ class FileImage2D extends Image2D {
                 }
             }
             this.loadResource(resourcePath);
-            
+
         }
     }
 };

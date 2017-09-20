@@ -56,8 +56,7 @@ void main(void) {
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
-
-uniform mat4 cameraMatrix;
+<%include file="materialparams.glsl"/>
 
 uniform color _baseColor;
 
@@ -66,19 +65,12 @@ uniform sampler2D _baseColorTex;
 uniform bool _baseColorTexConnected;
 #endif
 
-
 /* VS Outputs */
 varying vec4 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_texCoords;
 #endif
 
-vec4 getColorParamValue(vec4 value, sampler2D tex, bool _texConnected, vec2 texCoords) {
-    if(_texConnected)
-        return toLinear(texture2D(tex, texCoords));
-    else
-        return value;
-}
 
 void main(void) {
 

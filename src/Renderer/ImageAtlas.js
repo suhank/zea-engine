@@ -1,15 +1,40 @@
-import { Vec2 } from '../Math/Vec2';
-import { Vec4 } from '../Math/Vec4';
-import { Rect2 } from '../Math/Rect2';
-import { BinTreeNode } from '../Math/BinTreeNode';
-import { Async } from '../Math/Async';
-import { BinTreeRect , BinTreeRectBorder} from '../Math/BinTreeNode';
-import { Image2D } from '../SceneTree/Image2D';
-import { shaderLibrary } from './ShaderLibrary';
-import { GLShader } from './GLShader.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import {
+    Vec2
+} from '../Math/Vec2';
+import {
+    Vec4
+} from '../Math/Vec4';
+import {
+    Rect2
+} from '../Math/Rect2';
+import {
+    BinTreeNode
+} from '../Math/BinTreeNode';
+import {
+    Async
+} from '../Math/Async';
+import {
+    BinTreeRect,
+    BinTreeRectBorder
+} from '../Math/BinTreeNode';
+import {
+    Image2D
+} from '../SceneTree/Image2D';
+import {
+    shaderLibrary
+} from './ShaderLibrary';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    GLFbo
+} from './GLFbo.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
 
 class AtlasLayoutShader extends GLShader {
@@ -88,7 +113,7 @@ import './Shaders/GLSL/ImageAtlas.js';
 
 
 class ImageAtlas extends GLTexture2D {
-    constructor(gl, name, channels = 'RGBA', format = 'FLOAT', clearColor=[0,0,0,0]) {
+    constructor(gl, name, channels = 'RGBA', format = 'FLOAT', clearColor = [0, 0, 0, 0]) {
         super(gl);
         this.__name = name;
         this.__channels = channels;
@@ -100,18 +125,18 @@ class ImageAtlas extends GLTexture2D {
         this.loaded = this.__async.ready;
     }
 
-    isLoaded(){
+    isLoaded() {
         return this.__async.count == 0;
     }
 
-    getMainImage(){
+    getMainImage() {
         return this.super;
     }
 
     addSubImage(subImage) {
         if (subImage instanceof Image2D) {
             this.__subImages.push(new GLTexture2D(this.__gl, subImage));
-            if (!subImage.isLoaded()){
+            if (!subImage.isLoaded()) {
                 this.__async.incAsyncCount();
                 subImage.loaded.connect(this.__async.decAsyncCount);
             }
@@ -126,7 +151,7 @@ class ImageAtlas extends GLTexture2D {
     }
 
     numSubImages() {
-        if(this.__layout)
+        if (this.__layout)
             return this.__layout.length;
         return this.__subImages.length;
     }
@@ -168,8 +193,8 @@ class ImageAtlas extends GLTexture2D {
                 pos: new Vec2(node.rect.pos.x + border, node.rect.pos.y + border),
                 size: new Vec2(rectSize.x - (border * 2), rectSize.y - (border * 2)),
                 boundingRect: {
-                   pos: node.rect.pos,
-                   size: rectSize
+                    pos: node.rect.pos,
+                    size: rectSize
                 }
             });
         }
@@ -229,10 +254,10 @@ class ImageAtlas extends GLTexture2D {
     }
 
     renderAtlas(cleanup = true) {
-        if(this.__layoutNeedsRegeneration){
+        if (this.__layoutNeedsRegeneration) {
             this.generateAtlasLayout();
         }
-        if(!this.__fbo)
+        if (!this.__fbo)
             return;
         this.__fbo.bindAndClear();
 
@@ -264,17 +289,18 @@ class ImageAtlas extends GLTexture2D {
         let structName = 'atlas' + this.__name;
 
         let unifs = renderstate.unifs;
-        if(location)
+        if (location) {
             super.bind(renderstate, location);
-        else if(unifs[structName+'_image'])
-            super.bind(renderstate, unifs[structName+'_image'].location);
+        } else if (unifs[structName + '_image']) {
+            super.bind(renderstate, unifs[structName + '_image'].location);
+        }
 
-        let atlasLayoutUnifName = structName+'_layout';
-        if(atlasLayoutUnifName in unifs)
+        let atlasLayoutUnifName = structName + '_layout';
+        if (atlasLayoutUnifName in unifs)
             this.__atlasLayoutTexture.bind(renderstate, unifs[atlasLayoutUnifName].location);
 
-        let atlasDescUnifName = structName+'_desc';
-        if(atlasDescUnifName in unifs)
+        let atlasDescUnifName = structName + '_desc';
+        if (atlasDescUnifName in unifs)
             this.__gl.uniform4f(unifs[atlasDescUnifName].location, this.width, this.height, this.__layout.length, 0.0);
     }
 

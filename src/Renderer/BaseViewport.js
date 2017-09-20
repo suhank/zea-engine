@@ -50,10 +50,10 @@ class BaseViewport {
             }
             else{
                 this.__backgroundTexture = background;
-                if (background.hasAlpha())
-                    this.__backgroundGLTexture = new GLLDRAlphaImage(gl, background);
-                else
-                    this.__backgroundGLTexture = new GLTexture2D(gl, background);
+                // if (background.channels == 'RGBA')
+                //     this.__backgroundGLTexture = new GLLDRAlphaImage(gl, background);
+                // else
+                this.__backgroundGLTexture = new GLTexture2D(gl, background);
             }
         }
         else if (background instanceof Color){
