@@ -1,6 +1,6 @@
 
-// TODO: Move me to 'Common'
 export * from './RefCounted.js';
+export * from './BaseItem.js';
 export * from './Utils.js';
 export * from './SGFactory.js';
 

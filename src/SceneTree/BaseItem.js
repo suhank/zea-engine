@@ -1,0 +1,226 @@
+import {
+    Vec2,
+    Vec3,
+    Color,
+    Signal
+} from '../Math';
+import {
+    sgFactory
+} from './SGFactory.js';
+
+import {
+    RefCounted
+} from './RefCounted.js';
+import {
+    Parameter,
+    NumberParameter,
+    Vec2Parameter,
+    Vec3Parameter,
+    ColorParameter
+} from './Parameters';
+
+
+class BaseItem  extends RefCounted {
+    constructor(name) {
+        super();
+        if (this.constructor.name == 'BaseItem') {
+            throw ("BaseItem should not be instantiated directly.");
+        }
+        if (name == undefined)
+            name = this.constructor.name;
+        this.__name = name;
+        this.__path = [name];
+        this.__parentItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
+
+        this.__params = [];
+        this.__paramMapping = {};
+
+        this.__metaData = new Map();
+
+        this.nameChanged = new Signal();
+        this.parentChanged = new Signal();
+        this.parameterAdded = new Signal();
+        this.parameterRemoved = new Signal();
+        this.parameterValueChanged = new Signal();
+        this.parameterNameChanged = new Signal();
+
+
+    }
+
+    destroy() {
+        super.destroy();
+    }
+
+    clone() {
+        throw (this.constructor.name + " does not implment its clone method");
+    }
+
+    copyTo(cloned) {
+        cloned.setName(this.__name);
+        cloned.setLocalXfo(this.__localXfo.clone());
+        cloned.__visible = this.__visible;
+        cloned.__selectable = this.__selectable;
+        for (let childItem of this.__childItems)
+            cloned.addChild(childItem.clone());
+    }
+
+    //////////////////////////////////////////
+    // Name and Path
+
+    getName() {
+        return this.__name;
+    }
+
+    setName(name) {
+        this.__name = name;
+        this.__updatePath();
+        this.nameChanged.emit(name);
+    }
+
+    __updatePath() {
+        if (this.__parentItem == undefined)
+            this.__path = [this.__name];
+        else{
+            this.__path = this.__parentItem.getPath().slice().push(this.__name);
+        }
+    }
+
+    getPath() {
+        return this.__path;
+    }
+
+
+    //////////////////////////////////////////
+    // Path Traversial
+
+    resolvePath(path, index) {
+        if (path[index] == this.__name) {
+            return this;
+        }
+        let parts = path[index].split(':');
+        if (parts[0] != this.__name) {
+            throw("Invalid path:" + path);
+        }
+        return this.getParameter(parts[2]);
+    }
+
+
+    //////////////////////////////////////////
+    // Parent Item
+
+    getParentItem() {
+        // return this.__private.get('parentItem');
+        return this.__parentItem;
+    }
+
+    setParentItem(parentItem) {
+        // this.__private.set(parentItem, parentItem);
+        this.__parentItem = parentItem;
+        this.__updatePath();
+
+        // Notify:
+        this.parentChanged.emit();
+    }
+
+    get parentItem() {
+        console.warn(("getter is deprectated. Please use 'getParentItem'"));
+        // return this.__private.get('parentItem');
+        return this.getParentItem();
+    }
+
+    set parentItem(parentItem) {
+        console.warn(("setter is deprectated. Please use 'setParentItem'"));
+        this.setParentItem(parentItem);
+    }
+    //////////////////////////////////////////
+    // Params
+
+    getParameters() { 
+        return this.__params; 
+    } 
+
+    getParameterByIndex(index) {
+        return this.__params[index];
+    }
+
+    getParameter(paramName) {
+        return this.__params[this.__paramMapping[paramName]];
+    }
+
+    addParameter(paramName, defaultValue) {
+
+        let param;
+        if (Number.isNumeric(defaultValue)) {
+            param = new NumberParameter(paramName, defaultValue);
+        } else if (defaultValue instanceof Vec2) {
+            param = new Vec2Parameter(paramName, defaultValue);
+        } else if (defaultValue instanceof Vec3) {
+            param = new Vec3Parameter(paramName, defaultValue);
+        } else if (defaultValue instanceof Color) {
+            param = new ColorParameter(paramName, defaultValue);
+        } else {
+            param = new Parameter(paramName, defaultValue);
+        }
+        this.addParameterInstance(param);
+        return param;
+    }
+
+    addParameterInstance(param) {
+        param.valueChanged.connect((value)=>this.parameterValueChanged.emit(param.getName(), value));
+        param.nameChanged.connect((newName, oldName)=> {
+            let index = this.__paramMapping[oldName];
+            delete this.__paramMapping[oldName];
+            this.__paramMapping[newName] = index;
+            this.parameterNameChanged.emit(newName, oldName);
+        });
+        this.__params.push(param)
+        this.__paramMapping[param.getName()] = this.__params.length - 1;
+        this.parameterAdded.emit();
+    }
+
+    //////////////////////////////////////////
+    // Metadata
+
+    getMetadata(key) {
+        return this.__metaData.get(key)
+    }
+
+    hasMetadata(key) {
+        return this.__metaData.has(key)
+    }
+
+    setMetadata(key, metaData) {
+        this.__metaData.set(key, metaData);
+    }
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+
+    toJSON(flags = 0) {
+        let childItemsJSON = [];
+        for (let childItem of this.__childItems)
+            childItemsJSON.push(childItem.toJSON())
+        return {
+            "name": this.__name
+        }
+    }
+
+    fromJSON(j, flags, asset) {
+        this.__name = j.name;
+    }
+
+    readBinary(reader, flags, asset) {
+        let type = reader.loadStr();
+        this.setName(reader.loadStr());
+    }
+
+    toString() {
+        return JSON.stringify(this.toJSON(), null, 2)
+    }
+};
+
+export {
+    BaseItem
+};

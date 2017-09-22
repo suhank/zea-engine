@@ -2,6 +2,9 @@ import { Signal } from '../Math/Signal';
 
 class RefCounted {
     constructor() {
+        if (this.constructor.name == 'RefCounted') {
+            throw ("RefCounted should not be instantiated directly.");
+        }
         this.__refs = [];
         this.destructing = new Signal();
     };

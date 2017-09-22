@@ -1,20 +1,26 @@
-import { Xfo } from '../Math/Xfo';
-import { Box3 } from '../Math/Box3';
-import { Signal } from '../Math/Signal';
-import { sgFactory } from './SGFactory.js';
+import {
+    Xfo,
+    Box3,
+    Signal
+} from '../Math';
+import {
+    sgFactory
+} from './SGFactory.js';
+import {
+    BaseItem
+} from './BaseItem.js';
 
 
 // Defines used to explicity specify types for WebGL.
-const LOADFLAGS_SKIP_CHILDREN   = 1 << 0;
-const LOADFLAGS_SKIP_MATERIALS  = 1 << 2;
-const LOADFLAGS_SKIP_GEOMETRIES  = 1 << 3;
-const LOADFLAGS_ASSETTREE_UPDATE  = 1 << 4;
+const LOADFLAGS_SKIP_CHILDREN = 1 << 0;
+const LOADFLAGS_SKIP_MATERIALS = 1 << 2;
+const LOADFLAGS_SKIP_GEOMETRIES = 1 << 3;
+const LOADFLAGS_ASSETTREE_UPDATE = 1 << 4;
 
-class TreeItem {
+class TreeItem extends BaseItem {
     constructor(name) {
-        if (name == undefined)
-            name = this.constructor.name;
-        this.__name = name;
+        super(name)
+
         this.__localXfo = new Xfo();
         this.__globalXfo = new Xfo();
         this.__boundingBox = new Box3();
@@ -24,26 +30,17 @@ class TreeItem {
         this.__selectable = true;
         this.__selected = false;
 
-        // this.__private = new WeakMap(); // Not sure if this is necessary.
-        this.__parentItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
         this.__childItems = [];
 
-        this.__metaData = new Map();
-
-        this.nameChanged = new Signal();
         this.localXfoChanged = new Signal();
         this.globalXfoChanged = new Signal();
-        this.parentChanged = new Signal();
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
         this.visibilityChanged = new Signal();
         this.boundingBoxDirtied = new Signal();
         this.selectedChanged = new Signal();
-        this.destructing = new Signal();
 
         this.treeItemGlobalXfoChanged = new Signal();
-
-        this.__updatePath();
     }
 
     destroy() {
@@ -51,113 +48,60 @@ class TreeItem {
         this.destructing.emit();
     }
 
-    clone(){
+    clone() {
         let cloned = new TreeItem();
         this.copyTo(cloned);
         return cloned;
     }
-    copyTo(cloned){
+    copyTo(cloned) {
         cloned.setName(this.__name);
         cloned.setLocalXfo(this.__localXfo.clone());
         cloned.__visible = this.__visible;
         cloned.__selectable = this.__selectable;
-        for(let childItem of this.__childItems)
+        for (let childItem of this.__childItems)
             cloned.addChild(childItem.clone());
     }
 
     //////////////////////////////////////////
-    // Name and Path
+    // Path Traversial
 
-    getName(){
-        return this.__name;
-    }
-    setName(name){
-        this.__name = name;
-        this.__updatePath();
-        this.nameChanged.emit(name);
-    }
-    get name() {
-        console.warn(("getter is deprectated. Please use 'getName'"));
-        return this.getName();
-    }
-    set name(name) {
-        console.warn(("setter is deprectated. Please use 'setName'"));
-        this.setName(name);
-    }
+    resolvePath(path, index=0) {
+        if (path.length == 0) {
+            throw("Invalid path:" + path);
+        }
+        if (path.length-1 == index){
+            let parts = path[index].split(':');
+            if (parts[0] == this.__name) {
+                return this;
+            }
+            return super.resolvePath(path, index);
+        }
 
-    __updatePath() {
-        if (this.__parentItem == undefined)
-            this.__path = this.__name;
-        else
-            this.__path = this.__parentItem.getPath() + '/' + this.__name;
-
-        for (let childItem of this.__childItems)
-            childItem.__updatePath();
-    }
-
-    getPath() {
-        return this.__path;
-    }
-
-    traversePath(pathParts, index){
-
-        let childItem = this.getChildByName(pathParts[index]);
-        if (childItem == undefined)
-        {
-            //report("Unable to resolve path '"+"/".join(pathParts)+"' after:"+this.getName());
-            throw("No child called :" + pathParts[index]);
+        let childItem = this.getChildByName(path[index]);
+        if (childItem == undefined) {
+            //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
+            throw ("No child called :" + path[index]);
             return nullptr;
         }
-        if (pathParts.length == index + 1)
+        if (path.length == index + 1)
             return childItem;
         else
-            return childItem.traversePath(pathParts, index + 1);
-    }
-
-    resolvePath(path)
-    {
-        // the path is relative to this item, and does not include the item in the path
-        // the item name.
-        if (path == "")
-            return this;
-        let pathParts = path.split('/');
-        if (pathParts.length == 0){
-            console.warn("Invalid path:" + path);
-            return undefined;
-        }
-        if (pathParts.length == 1 && pathParts[0] == this.__name){
-            return this;
-        }
-        return this.traversePath( pathParts, 1 );
+            return childItem.traversePath(path, index + 1);
     }
 
     //////////////////////////////////////////
     // Parent Item
 
-    getParentItem() {
-        // return this.__private.get('parentItem');
-        return this.__parentItem;
-    }
-
     setParentItem(parentItem) {
         // this.__private.set(parentItem, parentItem);
-        this.__parentItem = parentItem;
-        this.__updatePath();
+        super.setParentItem(parentItem);
         this.updateGlobalXfo();
-
-        // Notify:
-        this.parentChanged.emit();
     }
 
-    get parentItem() {
-        console.warn(("getter is deprectated. Please use 'getParentItem'"));
-        // return this.__private.get('parentItem');
-        return this.getParentItem();
-    }
-
-    set parentItem(parentItem) {
-        console.warn(("setter is deprectated. Please use 'setParentItem'"));
-        this.setParentItem(parentItem);
+    __updatePath() {
+        super.__updatePath();
+        for (let childItem of this.__childItems)
+            childItem.__updatePath();
     }
 
     //////////////////////////////////////////
@@ -234,7 +178,7 @@ class TreeItem {
             let prev = this.getVisible();
             this.__visible = val;
             let visibile = this.getVisible();
-            if(prev != visibile) {
+            if (prev != visibile) {
                 for (let childItem of this.__childItems)
                     childItem.setInheritedVisiblity(visibile);
                 this.visibilityChanged.emit(visibile);
@@ -247,7 +191,7 @@ class TreeItem {
             let prev = this.getVisible();
             this.__inheritedVisiblity = val;
             let visibile = this.getVisible();
-            if(prev != visibile) {
+            if (prev != visibile) {
                 for (let childItem of this.__childItems)
                     childItem.setInheritedVisiblity(visibile);
                 this.visibilityChanged.emit(visibile);
@@ -262,7 +206,7 @@ class TreeItem {
         return this.__selectable;
     }
 
-    setSelectable(val, propagateToChildren=true) {
+    setSelectable(val, propagateToChildren = true) {
         if (this.__selectable != val || propagateToChildren) {
             this.__selectable = val;
             for (let childItem of this.__childItems)
@@ -317,10 +261,10 @@ class TreeItem {
         return this.__childItems.length;
     }
 
-    addChild(childItem, checkCollisions=true) {
+    addChild(childItem, checkCollisions = true) {
         if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
             throw ("Item '" + childItem.getName() + "' is already a child of :" + this.path);
-        if(!(childItem instanceof TreeItem))
+        if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
@@ -360,8 +304,8 @@ class TreeItem {
 
     removeChildByHandle(childItem, destroy = true) {
         let index = this.__childItems.indexOf(childItem);
-        if(index == -1)
-            throw("Error in removeChildByHandle. Child not found:" + childItem.getName());
+        if (index == -1)
+            throw ("Error in removeChildByHandle. Child not found:" + childItem.getName());
         return this.removeChild(index, destroy);
     }
 
@@ -376,41 +320,24 @@ class TreeItem {
     indexOfChild(childItem) {
         return this.__childItems.indexOf(childItem);
     }
-    
-    //////////////////////////////////////////
-    // Metadata
-
-    getMetadata(key) {
-        return this.__metaData.get(key)
-    }
-
-    hasMetadata(key) {
-        return this.__metaData.has(key)
-    }
-
-    setMetadata(key, metaData) {
-        this.__metaData.set(key, metaData);
-    }
-
 
     //////////////////////////////////////////
     // Persistence
 
 
     toJSON(flags = 0) {
+        let j = super.toJSON(flags);
         let childItemsJSON = [];
         for (let childItem of this.__childItems)
             childItemsJSON.push(childItem.toJSON())
-        return {
-            "name": this.__name,
-            "localXfo": this.__localXfo.toJSON(),
-            "bbox": this.__boundingBox.toJSON(),
-            "childItems": childItemsJSON
-        }
+        j.localXfo = this.__localXfo.toJSON();
+        j.bbox = this.__boundingBox.toJSON();
+        j.childItems = childItemsJSON;
+        return j;
     }
 
     fromJSON(j, flags, asset) {
-        this.__name = j.name;
+        super.fromJSON(j, flags);
 
         //this.setVisibility(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
@@ -420,11 +347,11 @@ class TreeItem {
         if ('bbox' in j)
             this.boundingBox.fromJSON(j.bbox);
 
-        if ((flags&LOADFLAGS_SKIP_CHILDREN) == 0 && 'children' in j && j.children != null) {
+        if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && 'children' in j && j.children != null) {
             let childrenJson = j.children;
             let printProgress = childrenJson.length > 10000;
             let progress = 0;
-            let i=0;
+            let i = 0;
             for (let childJson of childrenJson) {
                 let childType = childJson.type;
                 let childName = childJson.name;
@@ -434,25 +361,24 @@ class TreeItem {
                 // the tree. Now we find existing items and load deltas.
                 // Note2: This becomes a bit slow on huge trees.
                 let childItem;
-                if(flags&LOADFLAGS_ASSETTREE_UPDATE){
+                if (flags & LOADFLAGS_ASSETTREE_UPDATE) {
                     childItem = this.getChildByName(childName);
-                    if(childItem){
+                    if (childItem) {
                         childItem.fromJSON(childJson, flags, asset);
                     }
-                }
-                else{
+                } else {
                     childItem = sgFactory.constructClass(childType);
-                    if(childItem){
+                    if (childItem) {
                         childItem.fromJSON(childJson, flags, asset);
                         this.addChild(childItem, false);
                     }
                 }
 
-                if(printProgress){
+                if (printProgress) {
                     // Avoid printing too much as it slows things down.
                     i++;
                     let curr = Math.round((i / childrenJson.length) * 100);
-                    if(curr != progress){
+                    if (curr != progress) {
                         progress = curr;
                         console.log("Loading " + this.__name + ": " + String(progress + "%"));
                     }
@@ -461,62 +387,55 @@ class TreeItem {
         }
     }
 
-    readBinary(reader, flags, asset){
+    readBinary(reader, flags, asset) {
+        super.readBinary(reader, flags);
 
-        let type = reader.loadStr();
-        this.setName(reader.loadStr());
         let itemflags = reader.loadUInt8();
 
-        const visibilityFlag = 1<<1;
+        const visibilityFlag = 1 << 1;
         // this.setVisibility(itemflags&visibilityFlag);
 
         //this.setVisibility(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
-        const localXfoFlag = 1<<2;
-        if (itemflags&localXfoFlag){
+        const localXfoFlag = 1 << 2;
+        if (itemflags & localXfoFlag) {
             this.__localXfo.tr = reader.loadFloat32Vec3();
             this.__localXfo.ori = reader.loadFloat32Quat();
             this.__localXfo.sc.set(reader.loadFloat32());
         }
 
-        const bboxFlag = 1<<3;
-        if (itemflags&bboxFlag)
+        const bboxFlag = 1 << 3;
+        if (itemflags & bboxFlag)
             this.__boundingBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
 
         let numChildren = reader.loadUInt32();
-        if (/*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
+        if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
 
             let toc = reader.loadUInt32Array(numChildren);
 
             let printProgress = numChildren > 10000;
             let progress = 0;
-            for (let i=0; i< numChildren; i++) {
+            for (let i = 0; i < numChildren; i++) {
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 let childType = reader.loadStr();
                 // let childName = reader.loadStr();
                 let childItem = sgFactory.constructClass(childType);
-                if(!childItem)
+                if (!childItem)
                     continue;
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 childItem.readBinary(reader, flags, asset);
                 this.addChild(childItem, false);
 
-                if(printProgress){
+                if (printProgress) {
                     // Avoid printing too much as it slows things down.
                     let curr = Math.round((i / numChildren) * 100);
-                    if(curr != progress){
+                    if (curr != progress) {
                         progress = curr;
                         console.log("Loading " + this.__name + ": " + String(progress + "%"));
                     }
                 }
             }
         }
-    }
-
-
-
-    toString() {
-        return JSON.stringify(this.toJSON(), null, 2)
     }
 };
 
@@ -530,4 +449,3 @@ export {
 export {
     TreeItem
 };
-// TreeItem;

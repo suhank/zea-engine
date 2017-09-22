@@ -10,10 +10,9 @@ import {
     Signal
 } from '../Math';
 import {
-    RefCounted,
+    BaseItem,
     Image2D,
     HDRImage2D,
-    makeParameter,
     makeParameterTexturable
 } from '../SceneTree';
 import {
@@ -81,7 +80,7 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
     return;
 }
 
-class GLShader extends RefCounted {
+class GLShader extends BaseItem {
     constructor(gl) {
         super();
         this.__gl = gl;
@@ -100,7 +99,6 @@ class GLShader extends RefCounted {
             }
         };
 
-        this.__params = [];
         this.__shaderProgramHdls = {};
         this.__gltextures = {};
         this.updated = new Signal();
@@ -115,34 +113,43 @@ class GLShader extends RefCounted {
         return false;
     }
 
-    //////////////////////
-    // 
+    ///////////////////////////////
+    // Parameters
 
-    addParameter(paramName, defaultValue, texturable = true) {
-        let param = makeParameter(paramName, defaultValue);
-        this.addParameterInstance(param);
+    getParamTextures() {
+        let textures = {};
+        for (let param of this.__params) {
+            if (param.getImage())
+                textures[param.getName()] = param.getImage();
+        }
+        return textures;
+    }
+
+    __makeParameterTexturable(param) {
+        makeParameterTexturable(param);
+        // param.textureConnected.connect(this.textureConnected.emit);
+        // param.textureDisconnected.connect(this.textureDisconnected.emit);
+        param.valueChanged.connect(this.updated.emit);
+    }
+
+    addParameter(paramName, defaultValue) {
+        let image;
+        if (defaultValue instanceof Image2D) {
+            image = defaultValue;
+            defaultValue = new Color();
+        }
+        let param = super.addParameter(paramName, defaultValue);
+        this.__makeParameterTexturable(param);
+        if (image) {
+            param.setImage(image)
+        }
         return param;
     }
 
-    addParameterInstance(param, texturable = true) {
-        if(texturable) {
-            makeParameterTexturable(param);
-            // Note: GLShader does not have textureConnected signal etc..
-            // param.textureConnected.connect(this.textureConnected.emit);
-            // param.textureDisconnected.connect(this.textureDisconnected.emit);
-            // param.valueChanged.connect(this.updated.emit);
-        }
-        this.__params[param.getName()] = param;
+    addParameterInstance(param) {
+        super.addParameterInstance(param);
+        this.__makeParameterTexturable(param);
     }
-
-    getParameters() {
-        return this.__params;
-    }
-
-    getParameter(index) {
-        return this.__params[index];
-    }
-
 
     ///////////////////////////////////
     // Compilation

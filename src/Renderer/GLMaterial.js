@@ -2,6 +2,7 @@ import {
     Signal
 } from '../Math';
 import {
+    BaseItem,
     Image2D,
     HDRImage2D
 } from '../SceneTree';
@@ -21,8 +22,9 @@ import {
     GLImageStream
 } from './GLImageStream.js';
 
-class GLMaterial {
+class GLMaterial extends BaseItem {
     constructor(gl, material, glshader) {
+        super(name);
         this.__gl = gl;
         this.__material = material;
         this.__glshader = glshader;
