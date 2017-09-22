@@ -433,7 +433,7 @@ class Camera extends TreeItem {
     frameView(viewport, treeItems) {
         let boundingBox = new Box3();
         for (let treeItem of treeItems)
-            boundingBox.addBox3(treeItem.boundingBox);
+            boundingBox.addBox3(treeItem.getBoundingBox());
 
         if (!boundingBox.isValid())
             return;

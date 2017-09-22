@@ -21,20 +21,17 @@ class TreeItem extends BaseItem {
     constructor(name) {
         super(name)
 
-        this.__boundingBox = new Box3();
         this.__boundingBoxDirty = true;
-        this.__visible = true;
         this.__inheritedVisiblity = true;
         this.__selectable = true;
-        this.__selected = false;
 
         this.__childItems = [];
 
-        // this.__visibleParam = this.addParameter('visible', new Xfo());
-        // this.__selectedParam = this.addParameter('selected', new Xfo());
+        this.__visibleParam = this.addParameter('visible', true);
+        this.__selectedParam = this.addParameter('selected', false);
         this.__localXfoParam = this.addParameter('localXfo', new Xfo());
         this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
-        // this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
+        this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
 
         let settingLocalXfo = false;
         this.__localXfoParam.valueChanged.connect(()=>{
@@ -58,14 +55,14 @@ class TreeItem extends BaseItem {
             }
         });
 
+        this.visibilityChanged = this.__visibleParam.valueChanged;
+        this.selectedChanged = this.__selectedParam.valueChanged;
         this.localXfoChanged = this.__localXfoParam.valueChanged;
         this.globalXfoChanged = this.__globalXfoParam.valueChanged;
 
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
-        this.visibilityChanged = new Signal();
         this.boundingBoxDirtied = new Signal();
-        this.selectedChanged = new Signal();
 
         this.treeItemGlobalXfoChanged = new Signal();
     }
@@ -83,7 +80,7 @@ class TreeItem extends BaseItem {
 
     copyTo(cloned) {
         super.copyTo(cloned);
-        cloned.__visible = this.__visible;
+        // cloned.__visible = this.__visible;
         cloned.__selectable = this.__selectable;
         for (let childItem of this.__childItems)
             cloned.addChild(childItem.clone());
@@ -185,13 +182,13 @@ class TreeItem extends BaseItem {
     // Visibility
 
     getVisible() {
-        return this.__inheritedVisiblity && this.__visible;
+        return this.__inheritedVisiblity && this.__visibleParam.getValue();
     }
 
     setVisible(val) {
-        if (this.__visible != val) {
+        if (this.__visibleParam.getValue() != val) {
             let prev = this.getVisible();
-            this.__visible = val;
+            this.__visibleParam.setValue(val);
             let visibile = this.getVisible();
             if (prev != visibile) {
                 for (let childItem of this.__childItems)
@@ -230,13 +227,12 @@ class TreeItem extends BaseItem {
     }
 
     getSelected() {
-        return this.__selected;
+        return this.__selectedParam.getValue();
     }
 
     setSelected(sel) {
-        if (this.__selected != sel) {
-            this.__selected = sel;
-            this.selectionChanged.emit(this.__selected);
+        if (this.__selectedParam.getValue() != sel) {
+            this.__selectedParam.setValue(sel);
         }
     }
 
@@ -244,9 +240,14 @@ class TreeItem extends BaseItem {
     // BoundingBox
 
     get boundingBox() {
+        console.warn(("getter is deprectated. Please use 'getBoundingBox'"));
+        return this.getBoundingBox();
+    }
+
+    getBoundingBox() {
         if (this.__boundingBoxDirty)
             this.updateBoundingBox();
-        return this.__boundingBox;
+        return this.__boundingBoxParam.getValue();
     }
 
     setBoundingBoxDirty() {
@@ -255,13 +256,13 @@ class TreeItem extends BaseItem {
     }
 
     updateBoundingBox() {
-        let bbox = new Box3();
+        let bbox = this.__boundingBoxParam.getValue();
+        bbox.reset();
         for (let childItem of this.__childItems) {
             if (childItem.getVisible())
-                bbox.addBox3(childItem.boundingBox);
+                bbox.addBox3(childItem.getBoundingBox());
         }
-        // TODO: transforme the bounding box by the global matrix.
-        this.__boundingBox = bbox;
+        this.__boundingBoxParam.setValue(bbox);
         this.__boundingBoxDirty = false;
     }
 
@@ -345,7 +346,6 @@ class TreeItem extends BaseItem {
         let childItemsJSON = [];
         for (let childItem of this.__childItems)
             childItemsJSON.push(childItem.toJSON());
-        j.bbox = this.__boundingBox.toJSON();
         j.childItems = childItemsJSON;
         return j;
     }
@@ -353,8 +353,11 @@ class TreeItem extends BaseItem {
     fromJSON(j, flags, asset) {
         super.fromJSON(j, flags);
 
-        if ('bbox' in j)
-            this.boundingBox.fromJSON(j.bbox);
+        // if ('bbox' in j){
+        //     let box = new Box3();
+        //     box.fromJSON(j.bbox);
+        //     this.__boundingBoxParam.setValue(box);
+        // }
 
         if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && 'children' in j && j.children != null) {
             let childrenJson = j.children;
@@ -417,7 +420,7 @@ class TreeItem extends BaseItem {
 
         const bboxFlag = 1 << 3;
         if (itemflags & bboxFlag)
-            this.__boundingBox = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
+            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()));
 
         let numChildren = reader.loadUInt32();
         if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
