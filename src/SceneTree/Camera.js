@@ -153,7 +153,7 @@ class Camera extends TreeItem {
     setGlobalXfo(xfo) {
         super.setGlobalXfo(xfo);
         this.__viewMatrix = xfo.inverse().toMat4();
-        this.viewMatChanged.emit(this.__viewMatrix, this.__globalXfo);
+        this.viewMatChanged.emit(this.__viewMatrix, this.getGlobalXfo());
     }
 
     getLocalXfo() {
@@ -162,8 +162,8 @@ class Camera extends TreeItem {
 
     setLocalXfo(xfo) {
         super.setLocalXfo(xfo);
-        this.__viewMatrix = this.__globalXfo.inverse().toMat4();
-        this.viewMatChanged.emit(this.__viewMatrix, this.__globalXfo);
+        this.__viewMatrix = this.getGlobalXfo().inverse().toMat4();
+        this.viewMatChanged.emit(this.__viewMatrix, this.getGlobalXfo());
     }
 
     getDefaultManipMode() {
@@ -183,10 +183,11 @@ class Camera extends TreeItem {
 
     look(mouseDelta, viewport) {
         if (this.__keyboardMovement) {
-            this.__mouseDownCameraXfo = this.__globalXfo.clone();
-            this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
+            let globalXfo = this.getGlobalXfo();
+            this.__mouseDownCameraXfo = globalXfo.clone();
+            this.__mouseDownZaxis = globalXfo.ori.getZaxis();
             let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
-            this.__mouseDownCameraTarget = this.__globalXfo.tr.add(targetOffset);
+            this.__mouseDownCameraTarget = globalXfo.tr.add(targetOffset);
         }
 
         let globalXfo = this.__mouseDownCameraXfo.clone();
@@ -205,7 +206,7 @@ class Camera extends TreeItem {
         if (this.__keyboardMovement) {
             // Avoid generating a signal because we have an animation frame occuring.
             // see: onKeyPressed
-            this.__globalXfo = globalXfo;
+            this.setGlobalXfo(globalXfo);
             this.__viewMatrix = globalXfo.inverse().toMat4();
         } else {
             this.setGlobalXfo(globalXfo);
@@ -214,10 +215,11 @@ class Camera extends TreeItem {
 
     orbit(mouseDelta, viewport) {
         if (this.__keyboardMovement) {
-            this.__mouseDownCameraXfo = this.__globalXfo.clone();
-            this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
+            let globalXfo = this.getGlobalXfo();
+            this.__mouseDownCameraXfo = globalXfo.clone();
+            this.__mouseDownZaxis = globalXfo.ori.getZaxis();
             let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
-            this.__mouseDownCameraTarget = this.__globalXfo.tr.add(targetOffset);
+            this.__mouseDownCameraTarget = globalXfo.tr.add(targetOffset);
         }
 
         let globalXfo = this.__mouseDownCameraXfo.clone();
@@ -238,7 +240,7 @@ class Camera extends TreeItem {
         if (this.__keyboardMovement) {
             // Avoid generating a signal because we have an animation frame occuring.
             // see: onKeyPressed
-            this.__globalXfo = globalXfo;
+            this.setGlobalXfo(globalXfo);
             this.__viewMatrix = globalXfo.inverse().toMat4();
         } else {
             this.setGlobalXfo(globalXfo);
@@ -286,10 +288,10 @@ class Camera extends TreeItem {
     initDrag(mouseDownPos) {
         this.__mouseDownPos = mouseDownPos;
         this.__mouseDragDelta.set(0, 0);
-        this.__mouseDownCameraXfo = this.__globalXfo.clone();
-        this.__mouseDownZaxis = this.__globalXfo.ori.getZaxis();
+        this.__mouseDownCameraXfo = this.getGlobalXfo().clone();
+        this.__mouseDownZaxis = this.getGlobalXfo().ori.getZaxis();
         let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
-        this.__mouseDownCameraTarget = this.__globalXfo.tr.add(targetOffset);
+        this.__mouseDownCameraTarget = this.getGlobalXfo().tr.add(targetOffset);
         this.__mouseDownFocalDist = this.__focalDistance;
     }
 
@@ -344,16 +346,17 @@ class Camera extends TreeItem {
 
     onWheel(event) {
         let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
-        this.__globalXfo.tr.addInPlace(this.__globalXfo.ori.getZaxis().scale(zoomDist));
+        let xfo = this.getGlobalXfo();
+        xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist));
         if (this.__defaultManipulationState == 'orbit')
             this.setFocalDistance( this.__focalDistance + zoomDist);
-        this.setGlobalXfo(this.__globalXfo);
+        this.setGlobalXfo(xfo);
     }
 
     __integrateVelocityChange(velChange) {
         let delta = new Xfo();
         delta.tr = this.__velocity.normalize().scale(this.__maxVel);
-        this.setGlobalXfo(this.__globalXfo.multiply(delta));
+        this.setGlobalXfo(this.getGlobalXfo().multiply(delta));
     }
 
     onKeyPressed(key) {
@@ -434,13 +437,13 @@ class Camera extends TreeItem {
 
         if (!boundingBox.isValid())
             return;
-        let cameraZaxis = this.__globalXfo.ori.getZaxis();
+        let globalXfo = this.getGlobalXfo().clone();
+        let cameraZaxis = globalXfo.ori.getZaxis();
         let targetOffset = cameraZaxis.scale(-this.__focalDistance);
-        let currTarget = this.__globalXfo.tr.add(targetOffset);
+        let currTarget = globalXfo.tr.add(targetOffset);
         let newTarget = boundingBox.center();
 
         let pan = newTarget.subtract(currTarget);
-        let globalXfo = this.__globalXfo.clone();
         globalXfo.tr.addInPlace(pan);
 
         // Transform the bounding box into camera space.

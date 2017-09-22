@@ -107,7 +107,7 @@ class GeomSetItem extends TreeItem {
     setGlobalXfo(xfo) {
         super.setGlobalXfo(xfo);
         this.__geoms.forEach((subgeom)=>{
-            subgeom.geomXfo = this.__globalXfo.multiply(subgeom.geomOffsetXfo);
+            subgeom.geomXfo = this.getGlobalXfo().multiply(subgeom.geomOffsetXfo);
         });
         this.geomXfosChanged.emit(this.__geomXfo);
     }
@@ -118,14 +118,14 @@ class GeomSetItem extends TreeItem {
 
     setGeomOffsetXfo(index, xfo) {
         this.__geoms[index].geomOffsetXfo = xfo;
-        this.__geoms[index].geomXfo = this.__globalXfo.multiply(xfo);
+        this.__geoms[index].geomXfo = this.getGlobalXfo().multiply(xfo);
         this.geomXfosChanged.emit(index);
     }
 
     updateGlobalXfo() {
         super.updateGlobalXfo();
         this.__geoms.forEach((subgeom)=>{
-            subgeom.geomXfo = this.__globalXfo.multiply(subgeom.geomOffsetXfo);
+            subgeom.geomXfo = this.getGlobalXfo().multiply(subgeom.geomOffsetXfo);
         });
         this.geomXfosChanged.emit();
     }

@@ -21,8 +21,6 @@ class TreeItem extends BaseItem {
     constructor(name) {
         super(name)
 
-        this.__localXfo = new Xfo();
-        this.__globalXfo = new Xfo();
         this.__boundingBox = new Box3();
         this.__boundingBoxDirty = true;
         this.__visible = true;
@@ -32,8 +30,37 @@ class TreeItem extends BaseItem {
 
         this.__childItems = [];
 
-        this.localXfoChanged = new Signal();
-        this.globalXfoChanged = new Signal();
+        // this.__visibleParam = this.addParameter('visible', new Xfo());
+        // this.__selectedParam = this.addParameter('selected', new Xfo());
+        this.__localXfoParam = this.addParameter('localXfo', new Xfo());
+        this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
+        // this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
+
+        let settingLocalXfo = false;
+        this.__localXfoParam.valueChanged.connect(()=>{
+            if(!settingLocalXfo){
+                this.updateGlobalXfo();
+            }
+        });
+        this.__globalXfoParam.valueChanged.connect((newXfo, prevXfo)=>{
+            if(!this.__updatingGlobal){
+                settingLocalXfo = true;
+                let parentItem = this.getParentItem();
+                if (parentItem !== undefined)
+                    this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(newXfo));
+                else
+                    this.__localXfoParam.setValue(newXfo);
+                settingLocalXfo = true;
+
+                // TODO: should we be updating here, or waiting till the global mat is needed??
+                for (let childItem of this.__childItems)
+                    childItem.updateGlobalXfo();
+            }
+        });
+
+        this.localXfoChanged = this.__localXfoParam.valueChanged;
+        this.globalXfoChanged = this.__globalXfoParam.valueChanged;
+
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
         this.visibilityChanged = new Signal();
@@ -45,7 +72,7 @@ class TreeItem extends BaseItem {
 
     destroy() {
         this.removeAllChildren();
-        this.destructing.emit();
+        super.destroy();
     }
 
     clone() {
@@ -53,9 +80,9 @@ class TreeItem extends BaseItem {
         this.copyTo(cloned);
         return cloned;
     }
+
     copyTo(cloned) {
-        cloned.setName(this.__name);
-        cloned.setLocalXfo(this.__localXfo.clone());
+        super.copyTo(cloned);
         cloned.__visible = this.__visible;
         cloned.__selectable = this.__selectable;
         for (let childItem of this.__childItems)
@@ -66,6 +93,8 @@ class TreeItem extends BaseItem {
     // Path Traversial
 
     resolvePath(path, index=0) {
+        if(typeof path == 'string')
+            path = path.split('/');
         if (path.length == 0) {
             throw("Invalid path:" + path);
         }
@@ -77,16 +106,16 @@ class TreeItem extends BaseItem {
             return super.resolvePath(path, index);
         }
 
-        let childItem = this.getChildByName(path[index]);
+        let childItem = this.getChildByName(path[index+1]);
         if (childItem == undefined) {
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            throw ("No child called :" + path[index]);
+            throw ("No child called :" + path[index+1]);
             return nullptr;
         }
         if (path.length == index + 1)
             return childItem;
         else
-            return childItem.traversePath(path, index + 1);
+            return childItem.resolvePath(path, index + 1);
     }
 
     //////////////////////////////////////////
@@ -124,46 +153,32 @@ class TreeItem extends BaseItem {
         this.setGlobalXfo(xfo);
     }
     getLocalXfo() {
-        return this.__localXfo;
+        return this.__localXfoParam.getValue();
     }
     setLocalXfo(xfo) {
-        this.__localXfo = xfo;
-        this.localXfoChanged.emit(this.__localXfo);
-        this.updateGlobalXfo();
+        this.__localXfoParam.setValue(xfo);
     }
     getGlobalXfo() {
-        return this.__globalXfo;
+        return this.__globalXfoParam.getValue();;
     }
     setGlobalXfo(xfo) {
-        let parentItem = this.getParentItem();
-        if (parentItem !== undefined)
-            this.__localXfo = parentItem.getGlobalXfo().inverse().multiply(xfo);
-        else
-            this.__localXfo = xfo;
-        let prevXfo = this.__globalXfo;
-        this.__globalXfo = xfo;
-
-        this.globalXfoChanged.emit(this.__globalXfo, prevXfo);
-        this.setBoundingBoxDirty();
-
-        // TODO: should we be updating here, or waiting till the global mat is needed??
-        for (let childItem of this.__childItems)
-            childItem.updateGlobalXfo();
+        this.__globalXfoParam.setValue(xfo);
     }
 
     updateGlobalXfo() {
-        let prevXfo = this.__globalXfo;
+        this.__updatingGlobal = true;
+        let prevXfo = this.__globalXfoParam.getValue();
         let parentItem = this.getParentItem();
         if (parentItem !== undefined)
-            this.__globalXfo = parentItem.getGlobalXfo().multiply(this.__localXfo);
+            this.__globalXfoParam.setValue(parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue()));
         else
-            this.__globalXfo = this.__localXfo;
+            this.__globalXfoParam.setValue(this.__localXfoParam.getValue());
 
-        this.globalXfoChanged.emit(this.__globalXfo, prevXfo);
         this.setBoundingBoxDirty();
 
         for (let childItem of this.__childItems)
             childItem.updateGlobalXfo();
+        this.__updatingGlobal = false;
     }
 
     //////////////////////////////////////////
@@ -329,8 +344,7 @@ class TreeItem extends BaseItem {
         let j = super.toJSON(flags);
         let childItemsJSON = [];
         for (let childItem of this.__childItems)
-            childItemsJSON.push(childItem.toJSON())
-        j.localXfo = this.__localXfo.toJSON();
+            childItemsJSON.push(childItem.toJSON());
         j.bbox = this.__boundingBox.toJSON();
         j.childItems = childItemsJSON;
         return j;
@@ -338,11 +352,6 @@ class TreeItem extends BaseItem {
 
     fromJSON(j, flags, asset) {
         super.fromJSON(j, flags);
-
-        //this.setVisibility(j.visibility);
-        // Note: to save space, some values are skipped if they are identity values 
-        if ('localXfo' in j)
-            this.localXfo.fromJSON(j.localXfo);
 
         if ('bbox' in j)
             this.boundingBox.fromJSON(j.bbox);
@@ -399,9 +408,11 @@ class TreeItem extends BaseItem {
         // Note: to save space, some values are skipped if they are identity values 
         const localXfoFlag = 1 << 2;
         if (itemflags & localXfoFlag) {
-            this.__localXfo.tr = reader.loadFloat32Vec3();
-            this.__localXfo.ori = reader.loadFloat32Quat();
-            this.__localXfo.sc.set(reader.loadFloat32());
+            let xfo = new Xfo();
+            xfo.tr = reader.loadFloat32Vec3();
+            xfo.ori = reader.loadFloat32Quat();
+            xfo.sc.set(reader.loadFloat32());
+            this.setLocalXfo(xfo);
         }
 
         const bboxFlag = 1 << 3;

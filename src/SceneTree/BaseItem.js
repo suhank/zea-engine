@@ -57,11 +57,9 @@ class BaseItem  extends RefCounted {
 
     copyTo(cloned) {
         cloned.setName(this.__name);
-        cloned.setLocalXfo(this.__localXfo.clone());
-        cloned.__visible = this.__visible;
-        cloned.__selectable = this.__selectable;
-        for (let childItem of this.__childItems)
-            cloned.addChild(childItem.clone());
+        for(let param of this.__params) {
+            cloned.addParameterInstance(param.clone());
+        }
     }
 
     //////////////////////////////////////////
@@ -81,7 +79,8 @@ class BaseItem  extends RefCounted {
         if (this.__parentItem == undefined)
             this.__path = [this.__name];
         else{
-            this.__path = this.__parentItem.getPath().slice().push(this.__name);
+            this.__path = this.__parentItem.getPath().slice();
+            this.__path.push(this.__name);
         }
     }
 
@@ -199,11 +198,12 @@ class BaseItem  extends RefCounted {
 
 
     toJSON(flags = 0) {
-        let childItemsJSON = [];
-        for (let childItem of this.__childItems)
-            childItemsJSON.push(childItem.toJSON())
+        let paramsJSON = [];
+        for (let param of this.__params)
+            paramsJSON.push(param.toJSON())
         return {
-            "name": this.__name
+            "name": this.__name,
+            "params": paramsJSON,
         }
     }
 

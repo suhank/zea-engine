@@ -57,8 +57,9 @@ class GetterSetterParameter extends BaseParameter {
     }
 
     setValue(value) {
+        let prevValue = this.__getter();
         this.__setter(value);
-        this.valueChanged.emit(this.__value);
+        this.valueChanged.emit(this.__value, prevValue);
     }
 };
 
@@ -74,8 +75,9 @@ class Parameter extends BaseParameter {
     }
 
     setValue(value) {
+        let prevValue = this.__value;
         this.__value = value;
-        this.valueChanged.emit(this.__value);
+        this.valueChanged.emit(this.__value, prevValue);
     }
 };
 

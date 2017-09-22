@@ -130,7 +130,7 @@ class GeomItem extends TreeItem {
     }
     setGlobalXfo(xfo) {
         super.setGlobalXfo(xfo);
-        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
         this.geomXfoChanged.emit(this.__geomXfo);
     }
 
@@ -140,13 +140,13 @@ class GeomItem extends TreeItem {
 
     setGeomOffsetXfo(xfo) {
         this.__geomOffsetXfo = xfo;
-        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
         this.geomXfoChanged.emit(this.__geomXfo);
     }
 
     updateGlobalXfo() {
         super.updateGlobalXfo();
-        this.__geomXfo = this.__globalXfo.multiply(this.__geomOffsetXfo);
+        this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
         this.geomXfoChanged.emit(this.__geomXfo);
     }
 
