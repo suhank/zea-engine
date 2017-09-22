@@ -58,11 +58,11 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 <%include file="utils/ImageStream.glsl"/>
 
-uniform color _baseColor;
+// uniform color _baseColor;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D _baseColorTex;
-uniform bool _baseColorTexConnected;
+// uniform bool _baseColorTexConnected;
 uniform vec4 _baseColorTexDesc;
 uniform int _baseColorTexIndex;
 #endif

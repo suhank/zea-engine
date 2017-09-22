@@ -26,13 +26,13 @@ import {
 let bindParam = (gl, param, renderstate, gltextures={})=>{
     let name =  param.getName();
     // console.log("bindParam:" + name + ":" + value);
-    if(param.getImage()){
+    if(param.getValue() instanceof Image2D){
         let gltexture = gltextures[name];
         if (gltexture && gltexture.bindTexture(renderstate, '_'+name+'Tex')){
             return;
         }
         // If the texture didn't bind, then let the regular value be bound...continue into the rest of the function.
-        return;
+        // return;
     }
     let unifName = '_'+name;
     let unif = renderstate.unifs[unifName];

@@ -256,8 +256,8 @@ class GLViewport extends BaseViewport {
                 viewMatrix: this.getViewMatrix(),
                 cameraMatrix: this.getCameraMatrix(),
                 projectionMatrix: this.getProjectionMatrix(),
-                isOrthographic: this.__camera.isOrthographic,
-                fovY: this.__camera.fov,
+                isOrthographic: this.__camera.getIsOrthographic(),
+                fovY: this.__camera.getFov(),
                 viewportFrustumSize: this.__frustumDim,
                 drawCalls: 0,
                 drawCount: 0,
@@ -346,7 +346,6 @@ class GLViewport extends BaseViewport {
                 let xfo = this.__camera.getGlobalXfo().clone();
                 xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
                 let thickness = this.__camera.focalDistance * 0.002;
-                // this.__markerLineId = this.__markerPen.startStroke(xfo, this.__markerPenColor, thickness);
 
                 this.__currStrokeID++;
                 this.actionStarted.emit({
@@ -366,7 +365,7 @@ class GLViewport extends BaseViewport {
                         // Check to see if we mouse-downed on a gizmo.
                         // If so, start a gizmo manipulation
                         let geomItem = drawItem.getGeomItem();
-                        console.log(geomItem.name + " Material:" + geomItem.getMaterial().name);
+                        console.log(geomItem.getPath() + " Material:" + geomItem.getMaterial().name);
                         // if(isGizmo)
                         //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
                         //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);

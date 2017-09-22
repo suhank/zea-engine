@@ -19,24 +19,22 @@ import {
 } from './Parameters';
 
 
-let makeParameter = (paramName, defaultValue, texturable)=>{
+let makeParameter = (paramName, defaultValue, texturable) => {
     function isNumeric(n) {
-      return !isNaN(parseFloat(n)) && isFinite(n);
+        return !isNaN(parseFloat(n)) && isFinite(n);
     }
     let param;
-    if(isNumeric(defaultValue)){
+    if (isNumeric(defaultValue)) {
         param = new NumberParameter(paramName, defaultValue);
-    }
-    else if(defaultValue instanceof Vec2){
+    } else if (defaultValue instanceof Vec2) {
         param = new Vec2Parameter(paramName, defaultValue);
-    }
-    else if(defaultValue instanceof Vec3){
+    } else if (defaultValue instanceof Vec3) {
         param = new Vec3Parameter(paramName, defaultValue);
-    }
-    else if(defaultValue instanceof Color || defaultValue instanceof Image2D){
+    } else if (defaultValue instanceof Color || defaultValue instanceof Image2D) {
+        if (defaultValue instanceof Image2D)
+            throw ("Please add basi param and thne set value to texture.")
         param = new ColorParameter(paramName, defaultValue);
-    }
-    else{
+    } else {
         param = new Parameter(paramName, defaultValue);
     }
     // if(texturable) {
@@ -46,27 +44,27 @@ let makeParameter = (paramName, defaultValue, texturable)=>{
 }
 
 
-let makeParameterTexturable = (parameter)=>{
+let makeParameterTexturable = (parameter) => {
     let image = undefined;
     parameter.textureConnected = new Signal();
     parameter.textureDisconnected = new Signal();
 
     let basegetValue = parameter.getValue;
-    parameter.getValue = (getTexIfAvailable=true)=>{
+    parameter.getValue = (getTexIfAvailable = true) => {
         if (getTexIfAvailable && image != undefined)
             return image;
         else
             return basegetValue();
     }
-    parameter.getImage = ()=>{
+    parameter.getImage = () => {
         return image;
     }
 
-    parameter.setImage = (value)=>{
-        let imageUpdated = ()=>{
+    parameter.setImage = (value) => {
+        let imageUpdated = () => {
             parameter.valueChanged.emit(image);
         }
-        let disconnectImage = ()=>{
+        let disconnectImage = () => {
             image.removeRef(parameter);
             image.loaded.disconnect(imageUpdated);
             image.updated.disconnect(imageUpdated);
@@ -92,7 +90,7 @@ let makeParameterTexturable = (parameter)=>{
     }
 
     let basesetValue = parameter.setValue;
-    parameter.setValue = (value)=>{
+    parameter.setValue = (value) => {
         parameter.setImage();
         if (value instanceof Image2D) {
             parameter.setImage(value);
@@ -216,13 +214,21 @@ class Material extends RefCounted {
     }
 
     addParameter(paramName, defaultValue, texturable = true) {
+        let image;
+        if (defaultValue instanceof Image2D) {
+            image = defaultValue;
+            defaultValue = new Color();
+        }
         let param = makeParameter(paramName, defaultValue);
-        this.addParameterInstance(param);
+        this.addParameterInstance(param, true);
+        if (image) {
+            param.setImage(image)
+        }
         return param;
     }
 
     addParameterInstance(param, texturable = true) {
-        if(texturable) {
+        if (texturable) {
             makeParameterTexturable(param);
             param.textureConnected.connect(this.textureConnected.emit);
             param.textureDisconnected.connect(this.textureDisconnected.emit);

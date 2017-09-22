@@ -268,9 +268,9 @@ class GLRenderer {
             this.requestRedraw();
         });
 
-        // if(this.__geomDataPass){
-        //     vp.createGeomDataFbo();
-        // }
+        if(this.__geomDataPass){
+            vp.createGeomDataFbo();
+        }
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
