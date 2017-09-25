@@ -112,10 +112,12 @@ class GeomItem extends TreeItem {
     }
 
     updateBoundingBox() {
-        this.__boundingBox.reset();
+        let bbox = this.__boundingBoxParam.getValue();
+        bbox.reset();
         if (this.__geom) {
-            this.__boundingBox.addBox3(this.__geom.boundingBox, this.getGeomXfo());
+            bbox.addBox3(this.__geom.boundingBox, this.getGeomXfo());
         }
+        this.__boundingBoxParam.setValue(bbox);
         this.__boundingBoxDirty = false;
     }
 
