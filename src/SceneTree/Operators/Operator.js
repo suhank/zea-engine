@@ -3,24 +3,23 @@ import {
     Operator
 } from './Operator.js';
 import {
-    ParameterSet
-} from '../Parameters/ParameterSet.js';
+    BaseItem
+} from '../BaseItem.js';
 
-class Operator  {
+class Operator extends BaseItem {
     constructor(ownerItem) {
+        super();
         this.__ownerItem = ownerItem;
-        this.__paramSet = new ParameterSet('params');
-        this.__paramSet.parameterValueChanged.connect(()=> this.evaluate());
-    }
-    
-    getParameterByIndex(index) {
-        return this.__paramSet.getParameterByIndex(index);
-    }
-    
-    getParameter(name) {
-        return this.__paramSet.getParameter(name);
-    }
 
+        this.__evalRequested = true;
+        this.parameterValueChanged.connect(()=> {
+            window.requestAnimationFrame(() => {
+                this.__evalRequested = false;
+                this.evaluate();
+            });
+            this.__evalRequested = true;
+        });
+    }
 
     evaluate(){
         throw("Not yet implemented");

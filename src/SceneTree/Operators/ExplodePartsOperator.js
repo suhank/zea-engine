@@ -10,7 +10,7 @@ class ExplodePartsOperator extends Operator {
     constructor(ownerItem) {
         super(ownerItem);
 
-        this.__paramSet.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
+        this.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
         this.__parts = [];
         this.__resolvedParts = [];
         this.__dist = 1.0;
@@ -46,7 +46,7 @@ class ExplodePartsOperator extends Operator {
     }
     evaluate(){
 
-        let explode = this.__paramSet.getParameter('Explode').getValue();
+        let explode = this.getParameter('Explode').getValue();
 
         let smoothStep = (edge0, edge1, x)=>{
             let t = Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);

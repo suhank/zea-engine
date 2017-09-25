@@ -46,8 +46,8 @@ class GLImageStream extends GLTexture2D {
         super(gl, params);
 
         this.__streamImage = params;
-        this.__descParam = this.__streamImage.getParamSet().getParameter('StreamAtlasDesc');
-        this.__indexParam = this.__streamImage.getParamSet().getParameter('StreamAtlasIndex');
+        this.__descParam = this.__streamImage.getParameter('StreamAtlasDesc');
+        this.__indexParam = this.__streamImage.getParameter('StreamAtlasIndex');
          this.__indexParam.valueChanged.connect(this.updated.emit);
     }
 

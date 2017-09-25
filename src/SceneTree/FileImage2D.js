@@ -258,9 +258,9 @@ class FileImage2D extends Image2D {
         this.__streamAtlas = true;
 
         // this.__streamAtlasDesc = new Vec4();
-        this.__paramSet.addParameter(new Vec4Parameter('StreamAtlasDesc', new Vec4()));
-        this.__paramSet.addParameter(new NumberParameter('StreamAtlasIndex', 0));
-        this.__paramSet.getParameter('StreamAtlasIndex').setRange([0, 1]);
+        this.addParameter(new Vec4Parameter('StreamAtlasDesc', new Vec4()));
+        this.addParameter(new NumberParameter('StreamAtlasIndex', 0));
+        this.getParameter('StreamAtlasIndex').setRange([0, 1]);
         
 
         let url = this.__resourceLoader.resolveURL(resourcePath);
@@ -336,8 +336,8 @@ class FileImage2D extends Image2D {
             // this.__streamAtlasDesc.x = atlasSize.x;
             // this.__streamAtlasDesc.y = atlasSize.y;
             // this.__streamAtlasDesc.z = frames.length;
-            this.__paramSet.getParameter('StreamAtlasDesc').setValue(new Vec4(atlasSize.x, atlasSize.y, 0, 0));
-            this.__paramSet.getParameter('StreamAtlasIndex').setRange([0, frames.length]);
+            this.getParameter('StreamAtlasDesc').setValue(new Vec4(atlasSize.x, atlasSize.y, 0, 0));
+            this.getParameter('StreamAtlasIndex').setRange([0, frames.length]);
 
             this.__data = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);;
             this.__loaded = true;

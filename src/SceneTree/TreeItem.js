@@ -60,6 +60,7 @@ class TreeItem extends BaseItem {
         this.localXfoChanged = this.__localXfoParam.valueChanged;
         this.globalXfoChanged = this.__globalXfoParam.valueChanged;
 
+        this.parentChanged = this.ownerChanged;
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
         this.boundingBoxDirtied = new Signal();
@@ -84,6 +85,41 @@ class TreeItem extends BaseItem {
         cloned.__selectable = this.__selectable;
         for (let childItem of this.__childItems)
             cloned.addChild(childItem.clone());
+    }
+
+
+    //////////////////////////////////////////
+    // Parent Item
+
+    setOwnerItem(parentItem) {
+        // this.__private.set(parentItem, parentItem);
+        super.setOwnerItem(parentItem);
+        this.updateGlobalXfo();
+    }
+
+    __updatePath() {
+        super.__updatePath();
+        for (let childItem of this.__childItems)
+            childItem.__updatePath();
+    }
+
+    getParentItem() {
+        return this.getOwnerItem();
+    }
+
+    setParentItem(parentItem) {
+        this.setOwnerItem(parentItem);
+    }
+
+    get parentItem() {
+        console.warn(("getter is deprectated. Please use 'getParentItem'"));
+        // return this.__private.get('parentItem');
+        return this.getParentItem();
+    }
+
+    set parentItem(parentItem) {
+        console.warn(("setter is deprectated. Please use 'setParentItem'"));
+        this.setParentItem(parentItem);
     }
 
     //////////////////////////////////////////
@@ -113,21 +149,6 @@ class TreeItem extends BaseItem {
             return childItem;
         else
             return childItem.resolvePath(path, index + 1);
-    }
-
-    //////////////////////////////////////////
-    // Parent Item
-
-    setParentItem(parentItem) {
-        // this.__private.set(parentItem, parentItem);
-        super.setParentItem(parentItem);
-        this.updateGlobalXfo();
-    }
-
-    __updatePath() {
-        super.__updatePath();
-        for (let childItem of this.__childItems)
-            childItem.__updatePath();
     }
 
     //////////////////////////////////////////

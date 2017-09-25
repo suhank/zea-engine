@@ -30,7 +30,7 @@ class BaseItem  extends RefCounted {
             name = this.constructor.name;
         this.__name = name;
         this.__path = [name];
-        this.__parentItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
+        this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
 
         this.__params = [];
         this.__paramMapping = {};
@@ -38,7 +38,7 @@ class BaseItem  extends RefCounted {
         this.__metaData = new Map();
 
         this.nameChanged = new Signal();
-        this.parentChanged = new Signal();
+        this.ownerChanged = new Signal();
         this.parameterAdded = new Signal();
         this.parameterRemoved = new Signal();
         this.parameterValueChanged = new Signal();
@@ -76,10 +76,10 @@ class BaseItem  extends RefCounted {
     }
 
     __updatePath() {
-        if (this.__parentItem == undefined)
+        if (this.__ownerItem == undefined)
             this.__path = [this.__name];
         else{
-            this.__path = this.__parentItem.getPath().slice();
+            this.__path = this.__ownerItem.getPath().slice();
             this.__path.push(this.__name);
         }
     }
@@ -105,32 +105,22 @@ class BaseItem  extends RefCounted {
 
 
     //////////////////////////////////////////
-    // Parent Item
+    // Owner Item
 
-    getParentItem() {
-        // return this.__private.get('parentItem');
-        return this.__parentItem;
+    getOwnerItem() {
+        // return this.__private.get('ownerItem');
+        return this.__ownerItem;
     }
 
-    setParentItem(parentItem) {
-        // this.__private.set(parentItem, parentItem);
-        this.__parentItem = parentItem;
+    setOwnerItem(ownerItem) {
+        // this.__private.set(ownerItem, ownerItem);
+        this.__ownerItem = ownerItem;
         this.__updatePath();
 
         // Notify:
-        this.parentChanged.emit();
+        this.ownerChanged.emit();
     }
 
-    get parentItem() {
-        console.warn(("getter is deprectated. Please use 'getParentItem'"));
-        // return this.__private.get('parentItem');
-        return this.getParentItem();
-    }
-
-    set parentItem(parentItem) {
-        console.warn(("setter is deprectated. Please use 'setParentItem'"));
-        this.setParentItem(parentItem);
-    }
     //////////////////////////////////////////
     // Params
 
@@ -147,6 +137,9 @@ class BaseItem  extends RefCounted {
     }
 
     addParameter(paramName, defaultValue) {
+        if(paramName instanceof Parameter) {
+            return this.addParameterInstance(paramName);
+        }
 
         let param;
         if (Number.isNumeric(defaultValue)) {

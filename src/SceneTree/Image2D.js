@@ -3,8 +3,8 @@ import {
     Signal
 } from '../Math';
 import {
-    RefCounted
-} from './RefCounted.js';
+    BaseItem
+} from './BaseItem.js';
 
 import {
     Parameter,
@@ -12,7 +12,7 @@ import {
     ParameterSet
 } from './Parameters';
 
-class Image2D extends RefCounted {
+class Image2D extends BaseItem {
     constructor(params = {}) {
         super();
         this.width = 0;
@@ -27,12 +27,6 @@ class Image2D extends RefCounted {
         this.mipMapped = false;
 
         this.updated = new Signal();
-
-        this.__paramSet = new ParameterSet();
-        // this.__streamAtlas = false;
-        // this.__streamAtlasDesc = new Vec4();
-        // this.__streamAtlasImageIndex = 0;
-        // this.streamAtlasImageIndexChanged = new Signal();
     }
 
     isLoaded() {
@@ -53,10 +47,6 @@ class Image2D extends RefCounted {
 
     isStreamAtlas() {
         return this.__streamAtlas;
-    }
-
-    getParamSet() {
-        return this.__paramSet;
     }
 
     // getStreamAtlasImageDesc() {

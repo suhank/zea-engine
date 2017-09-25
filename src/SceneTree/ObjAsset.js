@@ -1,6 +1,7 @@
 import {
     Vec2,
     Vec3,
+    Xfo,
     Color,
     Signal
 } from '../Math';
@@ -341,7 +342,7 @@ class ObjAsset extends AssetItem {
         // transform gizmo becomes centered on each geom(for testing)
         let delta = mesh.boundingBox.center();
         mesh.moveVertices(delta.negate());
-        geomItem.getLocalXfo().tr.addInPlace(delta);
+        geomItem.setLocalXfo(new Xfo(delta));
 
         if (geomData.material != undefined && this.__materials.getMaterial(geomData.material)) {
             geomItem.setMaterial(this.__materials.getMaterial(geomData.material));
