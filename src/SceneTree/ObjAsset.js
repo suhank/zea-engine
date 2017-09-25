@@ -24,24 +24,27 @@ import {
 
 
 class ObjAsset extends AssetItem {
-    constructor(name) {
-        super(name);
+    constructor(name, resourceLoader) {
+        super(name, resourceLoader);
 
-        this.splitObjects = false;
-        this.splitGroupsIntoObjects = false;
-        this.loadMtlFile = true;
-        this.unitsConversion = 1.0;
+        this.addParameter('splitObjects', false);
+        this.addParameter('splitGroupsIntoObjects', false);
+        this.addParameter('loadMtlFile', false);
+        this.addParameter('unitsConversion', 1.0);
+        this.addParameter('defaultShader', "");
+
+
+        this.getParameter('FilePath').valueChanged.connect(()=>{
+            let filePath = this.getParameter('FilePath').getValue()
+            let url = this.getParameter('FilePath').getURL();
+            this.__incrementLoadCounter();
+            loadTextfile(url, (fileData)=>{
+                 this.parseObjData(filePath, fileData);  
+            });
+        });
 
         this.__loadCounter = 0;
         this.loaded = new Signal();
-    }
-
-    set defaultShader(defaultShader) {
-        this.__defaultShader = defaultShader;
-    }
-
-    get defaultShader() {
-        return this.__defaultShader;
     }
 
     __incrementLoadCounter() {
@@ -53,20 +56,6 @@ class ObjAsset extends AssetItem {
         if (this.__loadCounter == 0)
             this.buildChildItems();
     }
-
-    loadURL(url) {
-        this.__incrementLoadCounter();
-        loadTextfile(url, this.parseObjData.bind(this));
-    }
-
-    // loadFile(filePath) {
-    //     this.__incrementLoadCounter();
-    //     let fs = require('fs');
-    //     fs.readFile(filePath, 'utf8', (err, contents) => {
-    //         this.parseObjData(filePath, contents);
-    //     });
-    // }
-
 
     parseMtlData(filePath, fileData) {
         let lines = fileData.split('\n');
@@ -80,7 +69,7 @@ class ObjAsset extends AssetItem {
                 throw ("Unable to parse a color from the following parts:" + elements.join('_'));
         }
 
-        let parseMap = function(elements) {
+        let parseMap = (elements)=>{
             let fileFolder = getFileFolder(filePath);
             return new FileImage2D(elements[0], fileFolder + elements[0]);
         }
@@ -130,7 +119,7 @@ class ObjAsset extends AssetItem {
         this.__decrementLoadCounter();
     }
 
-    parseObjData(fileData) {
+    parseObjData(filePath, fileData) {
 
         //performance.mark("parseObjData");
 
@@ -142,12 +131,11 @@ class ObjAsset extends AssetItem {
         this.normals = new Array();
         this.textureCoords = new Array();
 
-        let _this = this;
         this.geomDatas = {};
         let currGeom = undefined;
-        let newGeom = function(name) {
+        let newGeom = (name)=>{
             let suffix = 0;
-            while (name in _this.geomDatas) {
+            while (name in this.geomDatas) {
                 suffix++;
                 name = name + String(suffix);
             }
@@ -165,9 +153,13 @@ class ObjAsset extends AssetItem {
                 "numQuads": 0,
                 "material": undefined
             };
-            _this.geomDatas[name] = currGeom;
+            this.geomDatas[name] = currGeom;
         };
         newGeom(this.getName());
+
+        let loadMtlFile = this.getParameter('loadMtlFile').getValue();
+        let splitObjects = this.getParameter('splitObjects').getValue();
+        let splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue();
 
         let stop = false;
         // let numPolys = 0;
@@ -185,7 +177,7 @@ class ObjAsset extends AssetItem {
                     // ignore shading groups
                     continue;
                 case 'mtllib':
-                    if (!this.loadMtlFile)
+                    if (!loadMtlFile)
                         continue;
                     // Load and parse the mat lib.
                     this.__incrementLoadCounter();
@@ -196,14 +188,14 @@ class ObjAsset extends AssetItem {
                     );
                     break;
                 case 'o':
-                    if (this.splitObjects)
+                    if (splitObjects)
                         newGeom(elements[0]);
                     break;
                 case 'usemtl':
                     currGeom.material = elements[0];
                     break;
                 case 'g':
-                    if (this.splitGroupsIntoObjects)
+                    if (splitGroupsIntoObjects)
                         newGeom(elements.join('_'));
                     break;
                 case 'v':
@@ -290,13 +282,14 @@ class ObjAsset extends AssetItem {
         mesh.setFaceCounts([geomData.numTris, geomData.numQuads]);
         mesh.setNumVertices(numVertices);
         let positionsAttr = mesh.getVertexAttribute('positions');
+        let unitsConversion = this.getParameter('unitsConversion').getValue();
 
         for (let vsrc in geomData.verticesRemapping) {
             let vtgt = geomData.verticesRemapping[vsrc];
             positionsAttr.getValueRef(vtgt).set(
-                this.vertices[vsrc][0] * this.unitsConversion,
-                this.vertices[vsrc][1] * this.unitsConversion,
-                this.vertices[vsrc][2] * this.unitsConversion
+                this.vertices[vsrc][0] * unitsConversion,
+                this.vertices[vsrc][1] * unitsConversion,
+                this.vertices[vsrc][2] * unitsConversion
             );
         }
 
@@ -348,7 +341,8 @@ class ObjAsset extends AssetItem {
             geomItem.setMaterial(this.__materials.getMaterial(geomData.material));
         } else{
 
-            let material = new Material(geomName + 'mat', this.__defaultShader ? this.__defaultShader : 'StandardSurfaceShader');
+            let defaultShader = this.getParameter('defaultShader').getValue();
+            let material = new Material(geomName + 'mat', defaultShader != "" ? defaultShader : 'StandardSurfaceShader');
             material.addParameter('baseColor', Color.random(0.5));
             material.addParameter('roughness', 0.2);
             material.addParameter('reflectance', 0.2);

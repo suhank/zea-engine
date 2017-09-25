@@ -7,6 +7,9 @@ import {
     Vec2
 } from '../Math';
 import {
+    FilePathParameter
+} from './Parameters';
+import {
     TreeItem,
     LOADFLAGS_SKIP_MATERIALS
 } from './TreeItem.js';
@@ -32,6 +35,7 @@ class AssetItem extends TreeItem {
         this.__materials = new MaterialLibrary(this.__resourceLoader);
         this.__atlasSize = new Vec2();
 
+        this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
         this.lightmapName = 'Default';
         
         this.loaded = new Signal(true);

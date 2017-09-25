@@ -20,7 +20,7 @@ import {
 } from './Parameters';
 
 
-class BaseItem  extends RefCounted {
+class BaseItem extends RefCounted {
     constructor(name) {
         super();
         if (this.constructor.name == 'BaseItem') {
@@ -57,7 +57,7 @@ class BaseItem  extends RefCounted {
 
     copyTo(cloned) {
         cloned.setName(this.__name);
-        for(let param of this.__params) {
+        for (let param of this.__params) {
             cloned.addParameterInstance(param.clone());
         }
     }
@@ -78,7 +78,7 @@ class BaseItem  extends RefCounted {
     __updatePath() {
         if (this.__ownerItem == undefined)
             this.__path = [this.__name];
-        else{
+        else {
             this.__path = this.__ownerItem.getPath().slice();
             this.__path.push(this.__name);
         }
@@ -98,7 +98,7 @@ class BaseItem  extends RefCounted {
         }
         let parts = path[index].split(':');
         if (parts[0] != this.__name) {
-            throw("Invalid path:" + path);
+            throw ("Invalid path:" + path);
         }
         return this.getParameter(parts[2]);
     }
@@ -124,9 +124,9 @@ class BaseItem  extends RefCounted {
     //////////////////////////////////////////
     // Params
 
-    getParameters() { 
-        return this.__params; 
-    } 
+    getParameters() {
+        return this.__params;
+    }
 
     getParameterByIndex(index) {
         return this.__params[index];
@@ -137,12 +137,14 @@ class BaseItem  extends RefCounted {
     }
 
     addParameter(paramName, defaultValue) {
-        if(paramName instanceof Parameter) {
+        if (paramName instanceof Parameter) {
             return this.addParameterInstance(paramName);
         }
 
         let param;
-        if (Number.isNumeric(defaultValue)) {
+        if (typeof defaultValue == 'string') {
+            param = new Parameter(paramName, defaultValue, 'String');
+        } else if (Number.isNumeric(defaultValue)) {
             param = new NumberParameter(paramName, defaultValue);
         } else if (defaultValue instanceof Vec2) {
             param = new Vec2Parameter(paramName, defaultValue);
@@ -158,8 +160,8 @@ class BaseItem  extends RefCounted {
     }
 
     addParameterInstance(param) {
-        param.valueChanged.connect((value)=>this.parameterValueChanged.emit(param.getName(), value));
-        param.nameChanged.connect((newName, oldName)=> {
+        param.valueChanged.connect((value) => this.parameterValueChanged.emit(param.getName(), value));
+        param.nameChanged.connect((newName, oldName) => {
             let index = this.__paramMapping[oldName];
             delete this.__paramMapping[oldName];
             this.__paramMapping[newName] = index;
