@@ -170,6 +170,7 @@ class BaseItem extends RefCounted {
         this.__params.push(param)
         this.__paramMapping[param.getName()] = this.__params.length - 1;
         this.parameterAdded.emit();
+        return param;
     }
 
     //////////////////////////////////////////

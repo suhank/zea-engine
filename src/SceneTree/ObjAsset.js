@@ -3,7 +3,8 @@ import {
     Vec3,
     Xfo,
     Color,
-    Signal
+    Signal,
+    Async
 } from '../Math';
 import {
     GeomItem
@@ -33,28 +34,16 @@ class ObjAsset extends AssetItem {
         this.addParameter('unitsConversion', 1.0);
         this.addParameter('defaultShader', "");
 
-
-        this.getParameter('FilePath').valueChanged.connect(()=>{
-            let filePath = this.getParameter('FilePath').getValue()
-            let url = this.getParameter('FilePath').getURL();
-            this.__incrementLoadCounter();
-            loadTextfile(url, (fileData)=>{
-                 this.parseObjData(filePath, fileData);  
-            });
-        });
-
-        this.__loadCounter = 0;
         this.loaded = new Signal();
     }
 
-    __incrementLoadCounter() {
-        this.__loadCounter++;
-    }
-
-    __decrementLoadCounter() {
-        this.__loadCounter--;
-        if (this.__loadCounter == 0)
-            this.buildChildItems();
+    __loadURL(url, filePath){
+        this.__resourceLoader.addWork(this.getName(), 2);
+        loadTextfile(url, (fileData)=>{
+            this.__resourceLoader.addWorkDone(this.getName(), 1);
+             this.parseObjData(filePath, fileData);
+            this.__resourceLoader.addWorkDone(this.getName(), 1);
+        });
     }
 
     parseMtlData(filePath, fileData) {
@@ -116,7 +105,6 @@ class ObjAsset extends AssetItem {
                     // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
             }
         }
-        this.__decrementLoadCounter();
     }
 
     parseObjData(filePath, fileData) {
@@ -126,6 +114,11 @@ class ObjAsset extends AssetItem {
         // array of lines separated by the newline
         let lines = fileData.split('\n');
         let WHITESPACE_RE = /\s+/;
+        let async = new Async();
+        async.incAsyncCount();
+        async.ready.connect(()=>{
+            this.buildChildItems(); 
+        });
 
         this.vertices = new Array();
         this.normals = new Array();
@@ -180,11 +173,17 @@ class ObjAsset extends AssetItem {
                     if (!loadMtlFile)
                         continue;
                     // Load and parse the mat lib.
-                    this.__incrementLoadCounter();
+                    async.incAsyncCount();
+                    this.__resourceLoader.addWork(this.getName(), 2);
                     let fileFolder = getFileFolder(filePath);
                     loadTextfile(
                         fileFolder + elements[0],
-                        this.parseMtlData.bind(this)
+                        ()=>{
+                            this.__resourceLoader.addWorkDone(this.getName(), 1);
+                            this.parseMtlData(filePath, fileData);
+                            async.decAsyncCount();
+                            this.__resourceLoader.addWorkDone(this.getName(), 1);
+                        }
                     );
                     break;
                 case 'o':
@@ -258,8 +257,7 @@ class ObjAsset extends AssetItem {
             }
         }
 
-
-        this.__decrementLoadCounter();
+        async.decAsyncCount();
     }
 
     buildChildItems() {

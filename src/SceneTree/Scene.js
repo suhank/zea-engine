@@ -6,8 +6,8 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
-    BinAsset
-} from './BinAsset.js';
+    VLAAsset
+} from './VLAAsset.js';
 import {
     Sphere
 } from './Geometry/Shapes/Sphere.js';
@@ -60,7 +60,7 @@ class Scene {
         //     this.__resourceLoader.loadResource(resourceName,
         //         (entries) => {
 
-        //             let viveAsset = new BinAsset('ViveResources');
+        //             let viveAsset = new VLAAsset('ViveResources');
         //             let materialTypeMapping = {};
         //             materialTypeMapping['*'] = 'SimpleSurfaceShader';
         //             viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);

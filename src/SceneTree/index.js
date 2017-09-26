@@ -28,7 +28,7 @@ export * from './ProceduralSky.js';
 
 export * from './Scene.js';
 
-export * from './BinAsset.js';
+export * from './VLAAsset.js';
 export * from './ObjAsset.js';
 
 export * from './Operators';
