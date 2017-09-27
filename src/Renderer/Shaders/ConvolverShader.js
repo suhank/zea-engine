@@ -69,13 +69,12 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
 // From GPU Gems 3: GPU-Based Importance Sampling.
 //float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int hh)
 //{
- //   return max(0.0, 0.5*log2((ww*hh)/float(num_samples)) - 0.5*log2(pdf));
+//   return max(0.0, 0.5*log2((ww*hh)/float(num_samples)) - 0.5*log2(pdf));
 //}
 
-// uniform ImageAtlas atlasEnvMap;
-uniform sampler2D atlasEnvMap_layout;
-uniform vec4 atlasEnvMap_desc;
-uniform sampler2D atlasEnvMap_image;
+uniform sampler2D   envMap;
+uniform sampler2D   envMap_layout;
+uniform vec4        envMap_desc;
 
 void main(void) {
     vec3 N = uvToNormalSphOct(v_texCoord);
@@ -83,9 +82,9 @@ void main(void) {
     if(false){
         vec2 uv = normalToUvSphOct(N);
         gl_FragColor = vec4(uv.x, uv.y, 0.0, 1.0);
-        //gl_FragColor = sampleImagePyramid(uv, roughness, atlasEnvMap);
-        //gl_FragColor = sampleSubImage(uv, 0, atlasEnvMap);
-        //gl_FragColor = texture2D(atlasEnvMap, uv);
+        //gl_FragColor = sampleImagePyramid(uv, roughness, envMap);
+        //gl_FragColor = sampleSubImage(uv, 0, envMap);
+        //gl_FragColor = texture2D(envMap, uv);
     }
     else{
         const int numSamples = NUM_SAMPLES;
@@ -104,7 +103,7 @@ void main(void) {
             // float pdf = D_ggx(a, NoH) * NoH / (4 * VoH);
             // float lod = compute_lod(H, );
 
-            color += sampleImagePyramid(uv, 0.0, atlasEnvMap_layout, atlasEnvMap_image, atlasEnvMap_desc) * VdotN;
+            color += sampleImagePyramid(uv, 0.0, envMap_layout, envMap, envMap_desc) * VdotN;
             weight += VdotN;
         }
         color /= float(weight);

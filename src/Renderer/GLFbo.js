@@ -152,10 +152,10 @@ class GLFbo {
 
     }
 
-    bind(renderstate, viewportScaleFactor = 1.0) {
+    bind(renderstate) {
         let gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
-        gl.viewport(0, 0, this.width * viewportScaleFactor, this.height * viewportScaleFactor); // Match the viewport to the texture size
+        gl.viewport(0, 0, this.width, this.height); // Match the viewport to the texture size
     }
 
     clear() {
@@ -169,8 +169,8 @@ class GLFbo {
         }
     }
 
-    bindAndClear(renderstate, viewportScaleFactor = 1.0) {
-        this.bind(renderstate, viewportScaleFactor);
+    bindAndClear(renderstate) {
+        this.bind(renderstate);
         this.clear(renderstate);
     }
 

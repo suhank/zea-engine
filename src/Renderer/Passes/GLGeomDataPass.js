@@ -66,4 +66,3 @@ class GLGeomDataPass extends GLPass {
 export {
     GLGeomDataPass
 };
-// export default GLGeomDataPass;

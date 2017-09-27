@@ -107,33 +107,25 @@ class GLVisualiveRenderer extends GLRenderer {
         //     this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
         // }
 
-        this.__shaderDirectives = {
-            defines: `
-#define ENABLE_INLINE_GAMMACORRECTION
-`
-        };
+        this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION');
 
         if (!options.disableLightmaps)
-            this.__shaderDirectives.defines += '\n#define ENABLE_LIGHTMAPS';
+            this.addShaderPreprocessorDirective('ENABLE_LIGHTMAPS');
         if (!options.disableTextures)
-            this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
+            this.addShaderPreprocessorDirective('ENABLE_TEXTURES');
 
         if (!isMobileDevice()) {
-            // if(!options.disableSpecular)
-            //     this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR';
-            this.__shaderDirectives.defines += '\n#define ENABLE_DEBUGGING_LIGHTMAPS\n';
+            if(!options.disableSpecular)
+                this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
+            this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
         }
-    }
-
-    getShaderPreprocessorDirectives() {
-        return this.__shaderDirectives;
     }
 
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
         } else if (env instanceof HDRImage2D || env.format === "FLOAT") {
-            this.__shaderDirectives.defines += '\n#define ENABLE_SPECULAR\n';
+            this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
             this.__glEnvMap = new GLEnvMap(this, env);
         } else {
             console.warn("Unsupported EnvMap:" + env);
@@ -424,7 +416,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.planeDist = this.__planeDist;
         renderstate.planeAngle = this.__planeAngle;
         renderstate.exposure = Math.pow(2, this.__exposure);
-        renderstate.shaderopts = this.getShaderPreprocessorDirectives();
+        renderstate.shaderopts = this.__preproc;
 
         if (this.__displayEnvironment)
             this.drawBackground(renderstate);

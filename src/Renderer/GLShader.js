@@ -25,9 +25,10 @@ import {
 let bindParam = (gl, param, renderstate, gltextures={})=>{
     let name =  param.getName();
     // console.log("bindParam:" + name + ":" + value);
-    if(param.getValue() instanceof Image2D){
+    if(param.getValue() instanceof Image2D ){
         let gltexture = gltextures[name];
-        if (gltexture && gltexture.bindTexture(renderstate, '_'+name+'Tex')){
+        let unif = renderstate.unifs['_'+name+'Tex'];
+        if (gltexture && unif && gltexture.bindToUniform(renderstate, unif)){
             return;
         }
         // If the texture didn't bind, then let the regular value be bound...continue into the rest of the function.
@@ -178,6 +179,8 @@ class GLShader extends BaseItem {
                 if (parts.length >= 2) {
                     let shaderHash = parts[1].trim();
                     let shaderName = shaderLibrary.getShaderNameFromHash(shaderHash);
+                    if(!shaderName)
+                        continue;
                     parts[1] = shaderName;
                     errors[i] = parts.join(':');
                     let lineNum = parseInt(parts[2]); // TODO check against ATI and intel cards
@@ -216,7 +219,7 @@ class GLShader extends BaseItem {
                 if (preproc.defines)
                     vertexShaderGLSL = preproc.defines + vertexShaderGLSL;
             }
-            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', preproc);
+            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader');
             if (!vertexShader) {
                 return false;
             }
@@ -232,7 +235,7 @@ class GLShader extends BaseItem {
                 if (preproc.defines)
                     fragmentShaderGLSL = preproc.defines + fragmentShaderGLSL;
             }
-            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', preproc);
+            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader');
             if (!fragmentShader) {
                 return false;
             }
@@ -266,6 +269,7 @@ class GLShader extends BaseItem {
             }
             let attrDesc = attrs[attrName];
             result.attrs[attrName] = {
+                name: attrName,
                 location: location,
                 type: attrDesc.type,
                 instanced: attrDesc.instanced
@@ -283,6 +287,7 @@ class GLShader extends BaseItem {
                         continue;
                     }
                     result.unifs[structMemberName] = {
+                        name: structMemberName,
                         location: location,
                         type: member.type
                     };
@@ -301,6 +306,7 @@ class GLShader extends BaseItem {
                 continue;
             }
             result.unifs[uniformName] = {
+                name: uniformName,
                 location: location,
                 type: unifType
             };
@@ -409,24 +415,42 @@ class GLShader extends BaseItem {
         renderstate.attrs = shaderCompilationResult.attrs;
 
         let unifs = shaderCompilationResult.unifs;
-        if ('viewMatrix' in unifs){
-            gl.uniformMatrix4fv(unifs.viewMatrix.location, false, renderstate.viewMatrix.asArray());
+        {
+            let unif = unifs.viewMatrix;
+            if (unif){
+                gl.uniformMatrix4fv(unif.location, false, renderstate.viewMatrix.asArray());
+            }
         }
-        if ('cameraMatrix' in unifs){
-            gl.uniformMatrix4fv(unifs.cameraMatrix.location, false, renderstate.cameraMatrix.asArray());
+        {
+            let unif = unifs.cameraMatrix;
+            if (unif){
+                gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+            }
         }
-        if ('projectionMatrix' in unifs){
-            gl.uniformMatrix4fv(unifs.projectionMatrix.location, false, renderstate.projectionMatrix.asArray());
+        {
+            let unif = unifs.projectionMatrix;
+            if (unif){
+                gl.uniformMatrix4fv(unif.location, false, renderstate.projectionMatrix.asArray());
+            }
         }
-        if ('atlasEnvMap_image' in unifs && renderstate.envMap != undefined) {
-            renderstate.envMap.bindforReading(renderstate);
+        {
+            let unif = unifs.envMap;
+            if (unif && renderstate.envMap != undefined) {
+                renderstate.envMap.bindToUniform(renderstate, unif);
+            }
         }
-        if ('exposure' in unifs){
-            gl.uniform1f(unifs.exposure.location, renderstate.exposure ? renderstate.exposure : 1.0);
+        {
+            let unif = unifs.exposure;
+            if (unif){
+                gl.uniform1f(unif.location, renderstate.exposure ? renderstate.exposure : 1.0);
+            }
         }
-        if ('eye' in unifs){
-            // Left or right eye, when rendering sterio VR.
-            gl.uniform1i(unifs.eye.location, renderstate.eye);
+        {
+            let unif = unifs.eye;
+            if (unif){
+                // Left or right eye, when rendering sterio VR.
+                gl.uniform1i(unif.location, renderstate.eye);
+            }
         }
 
         // Bind the default params.

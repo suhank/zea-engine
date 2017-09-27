@@ -51,19 +51,19 @@ class GLImageStream extends GLTexture2D {
          this.__indexParam.valueChanged.connect(this.updated.emit);
     }
 
-    bindTexture(renderstate, unifName) {
+    bindToUniform(renderstate, unif) {
 
-        if(!super.bindTexture(renderstate, unifName)){
+        if(!super.bindToUniform(renderstate, unif)){
             return false;
         }
 
-        let textureDescUnif = renderstate.unifs[unifName+'Desc'];
+        let textureDescUnif = renderstate.unifs[unif.name+'Desc'];
         if (textureDescUnif){
             this.__gl.uniform4f(textureDescUnif.location, ...this.__descParam.getValue().asArray());
         }
 
         
-        let textureIndexUnif = renderstate.unifs[unifName+'Index'];
+        let textureIndexUnif = renderstate.unifs[unif.name+'Index'];
         if (textureIndexUnif){
             this.__gl.uniform1i(textureIndexUnif.location, this.__indexParam.getValue());
         }

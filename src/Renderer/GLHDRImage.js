@@ -97,8 +97,8 @@ class GLHDRImage extends GLTexture2D {
 
 
         let unifs = renderstate.unifs;
-        this.__srcLDRTex.bind(renderstate, unifs.ldrSampler.location);
-        this.__srcCDMTex.bind(renderstate, unifs.cdmSampler.location);
+        this.__srcLDRTex.bindToUniform(renderstate, unifs.ldrSampler);
+        this.__srcCDMTex.bindToUniform(renderstate, unifs.cdmSampler);
 
         gl.uniform1f(unifs.exposure.location, this.__hdrImage.getHDRExposure());
         gl.uniform4fv(unifs.tint.location, this.__hdrImage.getHDRTint().asArray());

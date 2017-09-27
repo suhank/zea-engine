@@ -46,7 +46,6 @@ class GLViewport extends BaseViewport {
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFbo = undefined;
-        this.__geomDataBufferFboRezScale = 1.0;
 
         // this.__selectionRect = new GLSelectionRect(this.__renderer.gl);
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
@@ -123,8 +122,7 @@ class GLViewport extends BaseViewport {
             this.__fbo.resize();
         }
         if (this.__geomDataBufferFbo) {
-            let scl = this.__geomDataBufferFboRezScale;
-            this.__geomDataBuffer.resize(this.__width * scl, this.__height * scl);
+            this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
         }
 
@@ -144,10 +142,10 @@ class GLViewport extends BaseViewport {
                 viewXfo: globalXfo
             });
         });
-        this.__camera.clippingRangesChanged.connect(()=>{
-            this.__updateProjectionMatrix();
-            this.updated.emit();
-        });
+        // this.__camera.clippingRangesChanged.connect(()=>{
+        //     this.__updateProjectionMatrix();
+        //     this.updated.emit();
+        // });
         this.__camera.projectionParamChanged.connect(()=>{
             this.__updateProjectionMatrix();
             this.updated.emit();
@@ -233,12 +231,11 @@ class GLViewport extends BaseViewport {
 
     createGeomDataFbo() {
         let gl = this.__renderer.gl;
-        let scl = this.__geomDataBufferFboRezScale;
         this.__geomDataBuffer = new GLTexture2D(gl, {
             format: 'FLOAT',
             channels: 'RGBA',
-            width: this.__width <= 1 ? 1 : this.__width * scl,
-            height: this.__height <= 1 ? 1 : this.__height * scl,
+            width: this.__width <= 1 ? 1 : this.__width,
+            height: this.__height <= 1 ? 1 : this.__height,
         });
         this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
         this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
@@ -276,9 +273,8 @@ class GLViewport extends BaseViewport {
             // Allocate a 1 pixel block.
             let pixels = new Float32Array(4);
 
-            let scl = this.__geomDataBufferFboRezScale;
             this.__geomDataBufferFbo.bind();
-            gl.readPixels(screenPos.x * scl, (this.__height - screenPos.y) * scl, 1, 1, gl.RGBA, gl.FLOAT, pixels);
+            gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             // if (pixels[0] == 0)
             //     return undefined;
@@ -296,11 +292,10 @@ class GLViewport extends BaseViewport {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a pixel block.
-            let scl = this.__geomDataBufferFboRezScale;
-            let rectBottom = (this.__height - br.y) * scl;
-            let rectLeft = tl.x * scl;
-            let rectWidth = (br.x - tl.x) * scl;
-            let rectHeight = (br.y - tl.y) * scl;
+            let rectBottom = (this.__height - br.y);
+            let rectLeft = tl.x;
+            let rectWidth = (br.x - tl.x);
+            let rectHeight = (br.y - tl.y);
             let numPixels = rectWidth * rectHeight;
             let pixels = new Uint8Array(4 * numPixels);
 
@@ -365,7 +360,7 @@ class GLViewport extends BaseViewport {
                         // Check to see if we mouse-downed on a gizmo.
                         // If so, start a gizmo manipulation
                         let geomItem = drawItem.getGeomItem();
-                        console.log(geomItem.getPath() + " Material:" + geomItem.getMaterial().name);
+                        console.log(geomItem.getPath());// + " Material:" + geomItem.getMaterial().name);
                         // if(isGizmo)
                         //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
                         //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);

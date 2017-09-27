@@ -24,14 +24,20 @@ class GLScreenQuad {
 
     bind(renderstate, texture, pos = undefined, size = undefined) {
         let unifs = renderstate.unifs;
-        texture.bind(renderstate, unifs.texture.location);
+        texture.bindToUniform(renderstate, renderstate.unifs.texture);
 
         let gl = this.__gl;
-        if ('pos' in unifs){
-            gl.uniform2fv(unifs.pos.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
+        {
+            let unif = unifs.pos;
+            if (unif){
+                gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
+            }
         }
-        if ('size' in unifs){
-            gl.uniform2fv(unifs.size.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
+        {
+            let unif = unifs.size;
+            if (unif){
+                gl.uniform2fv(unif.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
+            }
         }
         // if ('flipY' in unifs)
         //     gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);

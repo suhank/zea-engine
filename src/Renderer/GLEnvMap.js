@@ -80,14 +80,20 @@ class GLEnvMap extends GLProbe {
                 ///////////////////
                 this.__envMapShader.bind(renderstate, 'GLEnvMap');
                 let unifs = renderstate.unifs;
-                // this.__srcGLTex.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
-                //this.__imagePyramid.bind(renderstate, renderstate.unifs.atlasEnvMap.location);
-                this.bind(renderstate);
+                // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
+                //this.__imagePyramid.bind(renderstate, renderstate.unifs.envMap.location);
+                this.bindToUniform(renderstate, unifs.envMap);
 
-                if ('focus' in unifs)
-                    gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
-                if ('exposure' in unifs)
-                    gl.uniform1f(unifs.exposure.location, renderstate.exposure);
+                {
+                    let unif = unifs.focus;
+                    if (unif)
+                        gl.uniform1f(unif.location, this.__backgroundFocus);
+                }
+                {
+                    let unif = unifs.exposure;
+                    if (unif)
+                        gl.uniform1f(unif.location, renderstate.exposure);
+                }
 
                 this.__envMapShaderBinding.bind(renderstate);
 

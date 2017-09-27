@@ -74,8 +74,9 @@ class Signal {
                 this.__toggled = true;
                 this.__data = data;
             }
-            else
-                console.warn("Toggled signals should only be fired once.");
+            else{
+                console.warn("Toggled signals should only be fired once, or untoggled before re-firing..");
+            }
         }
         this.__slots.forEach(function (fn) {
             // Skip disconnected slots.
@@ -83,6 +84,12 @@ class Signal {
                 fn(...data);
             }
         });
+    }
+
+    untoggle() {
+        // When a toggled action needs to be re-applied, we should untoggle first.
+        this.__toggled = false;
+        this.__data = undefined;
     }
 };
 

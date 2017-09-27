@@ -105,7 +105,7 @@ precision highp float;
 
 
 //uniform ImageAtlas atlasBillboards;
-uniform sampler2D atlasBillboards_image;
+uniform sampler2D atlasBillboards;
 
 
 /* VS Outputs */
@@ -114,7 +114,7 @@ varying vec2 v_gradient;
 varying vec4 v_tint;
 
 void main(void) {
-    vec4 color = texture2D(atlasBillboards_image, v_texCoord);
+    vec4 color = texture2D(atlasBillboards, v_texCoord);
     if(color.r > 0.95)
         discard;
     // TODO: for colors images on billbaords, we need to separate the

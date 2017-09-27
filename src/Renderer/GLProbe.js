@@ -126,9 +126,9 @@ class GLProbe extends ImageAtlas {
             let unifs = renderstate.unifs;
 
             // Note: we should not need to bind the texture every iteration. 
-            this.__imagePyramid.bind(renderstate);
+            this.__imagePyramid.bindToUniform(renderstate, unifs.envMap);
             if ('hammersleyMap' in unifs) {
-                hammersleyTexture.bind(renderstate, unifs.hammersleyMap.location);
+                hammersleyTexture.bindToUniform(renderstate, unifs.hammersleyMap);
             }
 
             // Set the roughness.
@@ -146,10 +146,10 @@ class GLProbe extends ImageAtlas {
         this.renderAtlas(false);
     }
 
-    bindforReading(renderstate, location) {
-        //this.__imagePyramid.getSubImage(3).bind(renderstate, location);
+    bindToUniform(renderstate, unif) {
+        //this.__imagePyramid.getSubImage(3).bind(renderstate, unif);
         if (this.__convolved)
-            this.bind(renderstate, location);
+            super.bindToUniform(renderstate, unif);
     }
 
     destroy() {

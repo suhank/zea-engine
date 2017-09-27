@@ -168,6 +168,20 @@ class GLRenderer {
         //     this.__displayStats = true;
         // }
 
+        this.__shaderDirectives = {};
+        this.__preproc = { };
+    }
+
+    addShaderPreprocessorDirective(name, value) {
+        if(value)
+            this.__shaderDirectives[name] = '#define ' + name + " = " + value;
+        else 
+            this.__shaderDirectives[name] = '#define ' + name;
+        let directives = [];
+        for(let key in this.__shaderDirectives) {
+            directives.push(this.__shaderDirectives[key]);
+        }
+        this.__preproc.defines = directives.join('\n')+'\n';
     }
 
 

@@ -271,7 +271,7 @@ class ImageAtlas extends GLTexture2D {
         for (let j = 0; j < this.__subImages.length; j++) {
             let image = this.__subImages[j];
             let item = this.__layout[j];
-            image.bind(renderstate, unifs.texture.location);
+            image.bindToUniform(renderstate, unifs.texture);
             gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
@@ -285,23 +285,18 @@ class ImageAtlas extends GLTexture2D {
         this.updated.emit();
     }
 
-    bind(renderstate, location) {
-        let structName = 'atlas' + this.__name;
+    bindToUniform(renderstate, unif) {
+
+        super.bindToUniform(renderstate, unif);
 
         let unifs = renderstate.unifs;
-        if (location) {
-            super.bind(renderstate, location);
-        } else if (unifs[structName + '_image']) {
-            super.bind(renderstate, unifs[structName + '_image'].location);
-        }
+        let atlasLayoutUnif = unifs[unif.name + '_layout'];
+        if (atlasLayoutUnif)
+            this.__atlasLayoutTexture.bindToUniform(renderstate, atlasLayoutUnif);
 
-        let atlasLayoutUnifName = structName + '_layout';
-        if (atlasLayoutUnifName in unifs)
-            this.__atlasLayoutTexture.bind(renderstate, unifs[atlasLayoutUnifName].location);
-
-        let atlasDescUnifName = structName + '_desc';
-        if (atlasDescUnifName in unifs)
-            this.__gl.uniform4f(unifs[atlasDescUnifName].location, this.width, this.height, this.__layout.length, 0.0);
+        let atlasDescUnif = unifs[unif.name + '_desc'];
+        if (atlasDescUnif)
+            this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__layout.length, 0.0);
     }
 
     cleanup() {

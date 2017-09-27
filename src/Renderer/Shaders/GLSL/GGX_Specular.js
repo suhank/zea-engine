@@ -8,14 +8,14 @@ shaderLibrary.setShaderModule('GGX_Specular.glsl', `
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 
-// uniform ImageAtlas atlasEnvMap;
-uniform sampler2D atlasEnvMap_layout;
-uniform vec4 atlasEnvMap_desc;
-uniform sampler2D atlasEnvMap_image;
+// uniform ImageAtlas envMap;
+uniform sampler2D   envMap;
+uniform sampler2D   envMap_layout;
+uniform vec4        envMap_desc;
 
 
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramid(normalToUvSphOct(dir), roughness, atlasEnvMap_layout, atlasEnvMap_image, atlasEnvMap_desc).rgb;
+    return sampleImagePyramid(normalToUvSphOct(dir), roughness, envMap_layout, envMap, envMap_desc).rgb;
 }
 
 

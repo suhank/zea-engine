@@ -219,16 +219,17 @@ class GLTexture2D extends RefCounted {
         return this.__gltex;
     }
 
-    bindTexture(renderstate, unifName) {
+    bind(renderstate, unif) {
+        console.warn("'bind' is deprecated. Please use 'bindToUniform'");
+        return this.bindToUniform(renderstate, unif);
+    }
+
+    bindToUniform(renderstate, unif) {
         if (!this.__loaded) {
             return false;
         }
         if (!this.__gltex) {
             throw ("Unable to bind non-initialized or deleted texture.");
-        }
-        let unif = renderstate.unifs[unifName];
-        if(!unif) {
-            return false;
         }
 
         let unit = renderstate['boundTextures']++;
@@ -238,12 +239,10 @@ class GLTexture2D extends RefCounted {
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         gl.uniform1i(unif.location, unit);
 
-        let textureConnctedUnif = renderstate.unifs[unifName+'Connected'];
+        let textureConnctedUnif = renderstate.unifs[unif.name+'Connected'];
         if (textureConnctedUnif){
             gl.uniform1i(textureConnctedUnif.location, 1);
         }
-
-        return true;
     }
 
     destroy() {

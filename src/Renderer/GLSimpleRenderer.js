@@ -21,17 +21,11 @@ class GLSimpleRenderer extends GLRenderer {
         // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
         this.__debugLightmaps = false;
 
-        this.__shaderDirectives = {
-            defines: `\n#define ENABLE_INLINE_GAMMACORRECTION\n`
-        };
-
+        this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION');
         if (!options.disableTextures)
-            this.__shaderDirectives.defines += '\n#define ENABLE_TEXTURES';
+            this.addShaderPreprocessorDirective('ENABLE_TEXTURES');
     }
 
-    getShaderPreprocessorDirectives() {
-        return this.__shaderDirectives;
-    }
     
     ///////////////////////////////////
     // Events
@@ -75,7 +69,7 @@ class GLSimpleRenderer extends GLRenderer {
     drawScene(renderstate, vrView = false) {
 
         renderstate.debugLightmaps = this.__debugLightmaps;
-        renderstate.shaderopts = this.getShaderPreprocessorDirectives();
+        renderstate.shaderopts = this.__preproc;
 
         super.drawScene(renderstate);
 
