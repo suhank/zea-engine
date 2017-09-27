@@ -20,7 +20,7 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 
-varying vec3 v_geomData;
+varying vec4 v_geomData;
 
 void main(void) {
     mat4 modelMatrix = getModelMatrix();
@@ -38,10 +38,10 @@ void main(void) {
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('GeomDataShader.fragmentShader', `
 precision highp float;
 
-varying vec3 v_geomData;
+varying vec4 v_geomData;
 
 void main(void) {
-    gl_FragColor = vec4(v_geomData, 1.0);
+    gl_FragColor = v_geomData;
 }
 `);
     }

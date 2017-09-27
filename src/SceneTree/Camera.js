@@ -20,15 +20,16 @@ class Camera extends TreeItem {
         if (name == undefined)
             name = "Camera";
         super(name);
-        this.__isOrthographic = false;
-        this.__fov = 1.0; // Radians
-        this.__far = 1000.0; // meters
-        this.__near = 0.1;
-        this.__focalDistance = 5.0;
-        this.__viewMatrix = new Mat4();
-        this.orbitRate = isMobileDevice() ? -0.002 : 0.01;
-        this.dollySpeed = 0.02;
-        this.mouseWheelDollySpeed = 0.002;
+
+        this.__isOrthographicParam = this.addParameter('isOrthographic', 1.0);
+        this.__fovParam = this.addParameter('fov', 1.0);
+        this.__nearParam = this.addParameter('near', 0.1);
+        this.__farParam = this.addParameter('far', 1000.0);
+        this.__focalDistanceParam = this.addParameter('focalDistance', 5.0);
+        this.__orbitRateParam = this.addParameter('orbitRate', isMobileDevice() ? -0.002 : 0.01);
+        this.__dollySpeedParam = this.addParameter('dollySpeed', 0.02);
+        this.__mouseWheelDollySpeedParam = this.addParameter('mouseWheelDollySpeed', 0.002);
+
         this.__defaultManipulationState = 'orbit';
         this.__manipulationState = this.__defaultManipulationState;
         this.__mouseDragDelta = new Vec2();
@@ -39,8 +40,13 @@ class Camera extends TreeItem {
         this.__velocity = new Vec3();
 
         this.viewMatChanged = new Signal();
-        this.clippingRangesChanged = new Signal();
         this.projectionParamChanged = new Signal();
+
+
+        this.__isOrthographicParam.valueChanged.connect(this.projectionParamChanged.emit);
+        this.__fovParam.valueChanged.connect(this.projectionParamChanged.emit);
+        this.__nearParam.valueChanged.connect(this.projectionParamChanged.emit);
+        this.__farParam.valueChanged.connect(this.projectionParamChanged.emit);
 
         // Initial viewing coords of a person standing 3 meters away from the
         // center of the stage looking at something 1 meter off the ground.
@@ -110,40 +116,37 @@ class Camera extends TreeItem {
     // getters/setters.
 
     getNear() {
-        return this.__near;
+        return this.__nearParam.getValue();
     }
 
     setNear(value) {
-        this.__near = value;
-        this.projectionParamChanged.emit();
+        this.__nearParam.setValue(value);
     }
 
     getFar() {
-        return this.__far;
+        return this.__farParam.getValue();
     }
 
     setFar(value) {
-        this.__far = value;
-        this.projectionParamChanged.emit();
+        this.__farParam.setValue(value);
     }
 
     getFov() {
-        return this.__fov;
+        return this.__fovParam.getValue();
     }
 
     getFocalDistance() {
-        return this.__focalDistance;
+        return this.__focalDistanceParam.getValue();
     }
 
     setFocalDistance(dist) {
-        this.__focalDistance = dist;
-        this.__near = this.__focalDistance * 0.01;
-        this.__far = this.__focalDistance * 200.0;
-        this.clippingRangesChanged.emit();
+        this.__focalDistanceParam.setValue(dist);
+        this.__nearParam.setValue(dist * 0.01);
+        this.__farParam.setValue(dist * 200.0);
     }
 
     getIsOrthographic() {
-        return this.__isOrthographic;
+        return this.__isOrthographicParam.getValue();
     }
 
     getViewMatrix() {
@@ -181,12 +184,24 @@ class Camera extends TreeItem {
         this.setGlobalXfo(xfo);
     }
 
+    getTargetPostion() {
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let xfo = this.getGlobalXfo();
+        let target = xfo.ori.getZaxis();
+        target.scaleInPlace(-focalDistance);
+        target.addInPlace(xfo.tr);
+        return target;
+    }
+
     look(mouseDelta, viewport) {
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let orbitRate = this.__orbitRateParam.getValue();
+
         if (this.__keyboardMovement) {
             let globalXfo = this.getGlobalXfo();
             this.__mouseDownCameraXfo = globalXfo.clone();
             this.__mouseDownZaxis = globalXfo.ori.getZaxis();
-            let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
+            let targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
             this.__mouseDownCameraTarget = globalXfo.tr.add(targetOffset);
         }
 
@@ -194,13 +209,13 @@ class Camera extends TreeItem {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(mouseDelta.x * this.orbitRate * 0.12);
+        orbit.rotateY(mouseDelta.x * orbitRate * 0.12);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
         let pitch = new Quat();
-        pitch.rotateX(mouseDelta.y * this.orbitRate * 0.12);
+        pitch.rotateX(mouseDelta.y * orbitRate * 0.12);
         globalXfo.ori.multiplyInPlace(pitch);
 
         if (this.__keyboardMovement) {
@@ -214,11 +229,14 @@ class Camera extends TreeItem {
     }
 
     orbit(mouseDelta, viewport) {
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let orbitRate = this.__orbitRateParam.getValue();
+
         if (this.__keyboardMovement) {
             let globalXfo = this.getGlobalXfo();
             this.__mouseDownCameraXfo = globalXfo.clone();
             this.__mouseDownZaxis = globalXfo.ori.getZaxis();
-            let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
+            let targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
             this.__mouseDownCameraTarget = globalXfo.tr.add(targetOffset);
         }
 
@@ -226,16 +244,16 @@ class Camera extends TreeItem {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(mouseDelta.x * -this.orbitRate);
+        orbit.rotateY(mouseDelta.x * -orbitRate);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
         let pitch = new Quat();
-        pitch.rotateX(mouseDelta.y * -this.orbitRate);
+        pitch.rotateX(mouseDelta.y * -orbitRate);
         globalXfo.ori.multiplyInPlace(pitch);
 
-        globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(this.__focalDistance));
+        globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance));
 
         if (this.__keyboardMovement) {
             // Avoid generating a signal because we have an animation frame occuring.
@@ -248,10 +266,12 @@ class Camera extends TreeItem {
     }
 
     pan(mouseDelta, viewport) {
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let fovY = this.__fovParam.getValue();
         let xAxis = new Vec3(1, 0, 0);
         let yAxis = new Vec3(0, 1, 0);
 
-        let cameraPlaneHeight = 2.0 * this.__focalDistance * Math.tan(0.5 * this.__fov);
+        let cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
         let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
         let delta = new Xfo();
         delta.tr = xAxis.scale(-(mouseDelta.x / viewport.getWidth()) * cameraPlaneWidth)
@@ -261,38 +281,41 @@ class Camera extends TreeItem {
     }
 
     dolly(mouseDelta, viewport) {
-        let dollyDist = mouseDelta.x * this.dollySpeed;
+        let dollyDist = mouseDelta.x * this.__dollySpeedParam.getValue();
         let delta = new Xfo();
         delta.tr.set(0, 0, dollyDist);
         this.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     panAndZoom(panDelta, dragDist, viewport) {
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let fovY = this.__fovParam.getValue();
 
         let xAxis = new Vec3(1, 0, 0);
         let yAxis = new Vec3(0, 1, 0);
 
-        let cameraPlaneHeight = 2.0 * this.__focalDistance * Math.tan(0.5 * this.__fov);
+        let cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
         let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
         let delta = new Xfo();
         delta.tr = xAxis.scale(-(panDelta.x / viewport.getWidth()) * cameraPlaneWidth)
         delta.tr.addInPlace(yAxis.scale((panDelta.y / viewport.getHeight()) * cameraPlaneHeight));
 
 
-        let zoomDist = dragDist * this.__focalDistance;
+        let zoomDist = dragDist * focalDistance;
         this.focalDistance = this.__mouseDownFocalDist + zoomDist;
         delta.tr.z += zoomDist;
         this.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     initDrag(mouseDownPos) {
+        let focalDistance = this.__focalDistanceParam.getValue();
         this.__mouseDownPos = mouseDownPos;
         this.__mouseDragDelta.set(0, 0);
         this.__mouseDownCameraXfo = this.getGlobalXfo().clone();
         this.__mouseDownZaxis = this.getGlobalXfo().ori.getZaxis();
-        let targetOffset = this.__mouseDownZaxis.scale(-this.__focalDistance);
+        let targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
         this.__mouseDownCameraTarget = this.getGlobalXfo().tr.add(targetOffset);
-        this.__mouseDownFocalDist = this.__focalDistance;
+        this.__mouseDownFocalDist = focalDistance;
     }
 
     onDragStart(event, mouseDownPos, viewport) {
@@ -345,11 +368,13 @@ class Camera extends TreeItem {
     }
 
     onWheel(event) {
-        let zoomDist = event.deltaY * this.mouseWheelDollySpeed * this.__focalDistance;
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
+        let zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance;
         let xfo = this.getGlobalXfo();
         xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist));
         if (this.__defaultManipulationState == 'orbit')
-            this.setFocalDistance( this.__focalDistance + zoomDist);
+            this.__focalDistanceParam.setValue( focalDistance + zoomDist);
         this.setGlobalXfo(xfo);
     }
 
@@ -437,9 +462,12 @@ class Camera extends TreeItem {
 
         if (!boundingBox.isValid())
             return;
+        let focalDistance = this.__focalDistanceParam.getValue();
+        let fovY = this.__fovParam.getValue();
+
         let globalXfo = this.getGlobalXfo().clone();
         let cameraZaxis = globalXfo.ori.getZaxis();
-        let targetOffset = cameraZaxis.scale(-this.__focalDistance);
+        let targetOffset = cameraZaxis.scale(-focalDistance);
         let currTarget = globalXfo.tr.add(targetOffset);
         let newTarget = boundingBox.center();
 
@@ -451,8 +479,7 @@ class Camera extends TreeItem {
         transformedBBox.addBox3(boundingBox, globalXfo.inverse());
         let camSpaceTarget = transformedBBox.center();
 
-        let fovY = this.__fov;
-        let fovX = this.__fov * (viewport.getWidth() / viewport.getHeight());
+        let fovX = fovY * (viewport.getWidth() / viewport.getHeight());
 
         let camSpaceBBoxDepth = (transformedBBox.p0.z - transformedBBox.p1.z) * 0.5;
         // p1 is the closest corner of the transformed bbox.
@@ -461,7 +488,7 @@ class Camera extends TreeItem {
         let newFocalDistanceY = (Math.abs(p.y) / Math.tan(0.5 * fovY)) * 1.2;
         let newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) - camSpaceBBoxDepth;
 
-        let dollyDist = newFocalDistance - this.__focalDistance;
+        let dollyDist = newFocalDistance - focalDistance;
         globalXfo.tr.addInPlace(cameraZaxis.scale(dollyDist));
 
         this.setFocalDistance(newFocalDistance);
@@ -470,7 +497,12 @@ class Camera extends TreeItem {
     }
 
     updateProjectionMatrix(mat, aspect) {
-        mat.setPerspectiveMatrix(this.__fov, aspect, this.__near, this.__far);
+        let isOrthographic = this.__isOrthographicParam.getValue();
+        let fov = this.__fovParam.getValue();
+        let near = this.__nearParam.getValue();
+        let far = this.__farParam.getValue();
+        let focalDistance = this.__focalDistanceParam.getValue();
+        mat.setPerspectiveMatrix(fov, aspect, near, far);
     }
 };
 

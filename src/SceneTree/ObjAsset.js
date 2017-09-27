@@ -33,8 +33,6 @@ class ObjAsset extends AssetItem {
         this.addParameter('loadMtlFile', false);
         this.addParameter('unitsConversion', 1.0);
         this.addParameter('defaultShader', "");
-
-        this.loaded = new Signal();
     }
 
     __loadURL(url, filePath){

@@ -60,6 +60,12 @@ void main(void) {
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 
+    if(dot(v_viewNormal, v_viewPos) > 0.0) {
+
+        // Move backfaces towards the camera to fix issues with zfighting of backfaces and frontfaces.
+        gl_Position.z += 0.000003 / gl_Position.w;
+    }
+
 #ifdef ENABLE_TEXTURES
     v_texCoords  = textureCoords;
 #endif

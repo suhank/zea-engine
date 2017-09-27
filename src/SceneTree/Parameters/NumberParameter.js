@@ -10,6 +10,9 @@ class NumberParameter extends Parameter {
         super(name, value, 'Number');
         // The value might not have a range.
         this.__range = range;
+        this.__axis = 'x';
+        this.__step = 0.01;
+        
         this.rangeChanged = new Signal();
     }
 
@@ -22,6 +25,13 @@ class NumberParameter extends Parameter {
         this.rangeChanged.emit();
     }
 
+    getStep() {
+        return this.__step;
+    }
+
+    setStep(step) {
+        this.__step = step;
+    }
 };
 
 

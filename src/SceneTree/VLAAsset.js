@@ -1,5 +1,9 @@
 
 import {
+    Signal,
+    Async
+} from '../Math';
+import {
     isMobileDevice
 } from '../BrowserDetection.js';
 import {
@@ -15,6 +19,7 @@ import {
 class VLAAsset extends AssetItem {
     constructor(name, resourceLoader) {
         super(name, resourceLoader);
+        this.allPartsLoaded = new Signal();
     }
 
     readBinary(reader, flags) {
@@ -37,6 +42,11 @@ class VLAAsset extends AssetItem {
     }
 
     __loadURL(url, filePath){
+        let async = new Async();
+        async.incAsyncCount(2);
+        async.ready.connect(()=>{
+            this.allPartsLoaded.emit(); 
+        });
 
         let numGeomsFiles = 1;
         this.__resourceLoader.addWork(filePath+'geoms', 4); // first geom file (load + parse + extra)
@@ -54,6 +64,8 @@ class VLAAsset extends AssetItem {
                 // (load + parse)
                 this.__resourceLoader.addWork(filePath+'geoms', (numGeomsFiles - 1) * 4);
                 loadNextGeomFile();
+
+                async.decAsyncCount();
             });
 
         // Now load the geom files in sequence, parsing and loading
@@ -83,13 +95,16 @@ class VLAAsset extends AssetItem {
         let geomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
         loadGeomsfile(geomFileName);
 
-        // To enture tha the resource loader konws when 
+        // To ensure that the resource loader knows when 
         // parsing is done, we listen to the GeomLibrary streamFileLoaded
         // signal. This is fired every time a file in the stream is finshed parsing.
         this.__geomLibrary.streamFileParsed.connect((fraction) => {
             // A chunk of geoms are now parsed, so update the resource loader.
             this.__resourceLoader.addWorkDone(filePath+'geoms', fraction);
-        })
+        });
+        this.__geomLibrary.loaded.connect(() => {
+            async.decAsyncCount();
+        });
     }
 };
 

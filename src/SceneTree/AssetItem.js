@@ -28,8 +28,9 @@ class AssetItem extends TreeItem {
 
         let fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
         fileParam.valueChanged.connect(()=>{
-            let filePath = this.getParameter('FilePath').getValue()
-            let url = this.getParameter('FilePath').getURL();
+            this.loaded.untoggle();
+            let filePath = fileParam.getValue()
+            let url = fileParam.getURL();
             this.__loadURL(url, filePath);
         });
 

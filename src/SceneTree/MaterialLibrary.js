@@ -55,12 +55,7 @@ class MaterialLibrary {
     }
 
     modifyMaterials(materialNames, paramValues, shaderName = undefined) {
-        for (let materialName of materialNames) {
-            let material = this.__materials[materialName];
-            if (!material) {
-                console.warn("Material not found:" + materialName);
-                continue;
-            }
+        let modifyMaterial = (material) => {
             for (let paramName in paramValues) {
                 let param = material.getParameter(paramName);
                 if (param) {
@@ -71,6 +66,21 @@ class MaterialLibrary {
             }
             if (shaderName)
                 material.setShaderName(shaderName);
+        }
+
+        for (let materialName of materialNames) {
+            if(materialName == "*") {
+                for(let name in this.__materials) {
+                    modifyMaterial(this.__materials[name]);
+                }
+                continue;
+            }
+            let material = this.__materials[materialName];
+            if (!material) {
+                console.warn("Material not found:" + materialName);
+                continue;
+            }
+            modifyMaterial(material);
         }
     }
     //////////////////////////////////////////

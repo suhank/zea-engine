@@ -142,8 +142,8 @@ class TreeItem extends BaseItem {
         let childItem = this.getChildByName(path[index+1]);
         if (childItem == undefined) {
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            throw ("No child called :" + path[index+1]);
-            return nullptr;
+            console.warn("No child called :" + path[index+1]);
+            return null;
         }
         if (path.length == index + 1)
             return childItem;
