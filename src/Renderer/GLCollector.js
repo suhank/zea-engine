@@ -103,7 +103,7 @@ class GLCollector {
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
 
-        this.__newItemIndices = [];
+        this.__dirtyItemIndices = [];
 
         this.__sceneItemFilters = [];
         this.__sceneItemFilters.push((treeItem) => {
@@ -146,10 +146,6 @@ class GLCollector {
         // insert at the beginning so it is called first.
         this.__sceneItemFilters.splice(0, 0, fn);
     }
-
-    newItemsReadyForLoading() {
-        return this.__newItemIndices.length > 0;
-    };
 
     getGLShaderMaterials() {
         return this.__glshadermaterials;
@@ -249,7 +245,7 @@ class GLCollector {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
         }
-        this.__newItemIndices.push(index);
+        this.__dirtyItemIndices.push(index);
 
         let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
@@ -266,12 +262,13 @@ class GLCollector {
         // and so cannot be moved.
         gldrawItem.destructing.connect(() => {
             this.removeDrawItem(gldrawItem);
-            this.__renderer.requestRedraw()
+            this.__renderer.requestRedraw();
         });
 
         gldrawItem.transformChanged.connect(() => {
-            this.__updateItemInstanceData(index, gldrawItem);
-            this.__renderer.requestRedraw()
+            this.__dirtyItemIndices.push(index);
+            // this.__updateItemInstanceData(index, gldrawItem);
+            this.__renderer.requestRedraw();
         });
 
         let addDrawItemToGLMaterialDrawItemSet = ()=>{
@@ -404,9 +401,13 @@ class GLCollector {
         let materialId = 0;
         col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, flags);
     };
+
+    newItemsReadyForLoading() {
+        return this.__dirtyItemIndices.length > 0;
+    };
     
     finalize() {
-        if(this.__newItemIndices.length == 0)
+        if(this.__dirtyItemIndices.length == 0)
             return;
 
         let gl = this.__renderer.gl;
@@ -421,21 +422,6 @@ class GLCollector {
         if((size % pixelsPerItem) != 0)
             size += pixelsPerItem - (size % pixelsPerItem);
 
-        // Re-allocate a new array once we hit the limit of the old one.
-        let arraySize = (size * size) * pixelsPerItem;
-        if(!this.__transformsDataArray || arraySize != this.__transformsDataArray.length){
-            this.__transformsDataArray = new Float32Array(arraySize);
-            this.__transformsDataArrayHighWaterMark = 0;
-        }
-        for (let i=this.__transformsDataArrayHighWaterMark; i<this.__drawItems.length; i++) {
-            let gldrawItem = this.__drawItems[i];
-            // When an item is deleted, we allocate its index to the free list
-            // and null this item in the array. skip over null items.
-            if(!gldrawItem)
-                continue;
-            this.__populateTransformDataArray(gldrawItem, i, this.__transformsDataArray);
-        }
-        this.__transformsDataArrayHighWaterMark = this.__drawItems.length;
         if(!this.__transformsTexture){
             this.__transformsTexture = new GLTexture2D(gl, {
                 channels: 'RGBA',
@@ -444,45 +430,95 @@ class GLCollector {
                 height: size,
                 filter: 'NEAREST',
                 wrap: 'CLAMP_TO_EDGE',
-                data: this.__transformsDataArray,
                 mipMapped: false
             });
         }
-        else{
-            this.__transformsTexture.resize(size, size, this.__transformsDataArray);
+        else if(this.__transformsTexture.width != size){
+            this.__transformsTexture.resize(size, size);
         }
 
-        this.__newItemIndices = [];
+        // Re-allocate a new array once we hit the limit of the old one.
+        // let arraySize = (size * size) * pixelsPerItem;
+        // let reuploadAllData = false;
+        // if(!this.__transformsDataArray || arraySize != this.__transformsDataArray.length){
+        //     this.__transformsDataArray = new Float32Array(arraySize);
+        //     // this.__transformsDataArrayHighWaterMark = 0;
+        //     // this.__dirtyItemIndices = Array(arraySize).fill().map((v,i)=>i);
+        //     reuploadAllData = true;
+
+        // }
+
+        gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
+
+        // for (let i=this.__transformsDataArrayHighWaterMark; i<this.__drawItems.length; i++) {
+        for (let i=this.__dirtyItemIndices; i<this.__dirtyItemIndices.length; i++) {
+            const index = this.__dirtyItemIndices[i];
+            const gldrawItem = this.__drawItems[index];
+            // When an item is deleted, we allocate its index to the free list
+            // and null this item in the array. skip over null items.
+            if(!gldrawItem)
+                continue;
+
+            const pixelsPerItem = 4; // The number of RGBA pixels per draw item.
+            const stride = pixelsPerItem * 4; // The number of floats per draw item.
+            const dataArray = new Float32Array(stride);
+            this.__populateTransformDataArray(gldrawItem, i, 0, dataArray);
+
+            const xoffset = (index * pixelsPerItem) % size;
+            const yoffset = Math.floor((index * pixelsPerItem) / size);
+            const width = pixelsPerItem;
+            const height = 1;
+            
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
+        }
+        // // this.__transformsDataArrayHighWaterMark = this.__drawItems.length;
+        // if(!this.__transformsTexture){
+        //     this.__transformsTexture = new GLTexture2D(gl, {
+        //         channels: 'RGBA',
+        //         format: 'FLOAT',
+        //         width: size,
+        //         height: size,
+        //         filter: 'NEAREST',
+        //         wrap: 'CLAMP_TO_EDGE',
+        //         data: this.__transformsDataArray,
+        //         mipMapped: false
+        //     });
+        // }
+        // else{
+        //     this.__transformsTexture.resize(size, size, this.__transformsDataArray);
+        // }
+
+        this.__dirtyItemIndices = [];
         this.renderTreeUpdated.emit();
     };
 
-    __updateItemInstanceData(index, gldrawItem){
-        if(!this.__transformsTexture)
-            return;
-        // There are items ready to be finalized
-        if(this.__newItemIndices.indexOf(index) != -1)
-            return;
+    // __updateItemInstanceData(index, gldrawItem){
+    //     if(!this.__transformsTexture)
+    //         return;
+    //     // There are items ready to be finalized
+    //     if(this.__dirtyItemIndices.indexOf(index) != -1)
+    //         return;
 
-        let gl = this.__renderer.gl;
-        let pixelsPerItem = 4; // The number of RGBA pixels per draw item.
-        let stride = pixelsPerItem * 4; // The number of floats per draw item.
-        let dataArray = new Float32Array(stride);
-        this.__populateTransformDataArray(gldrawItem, 0, dataArray);
+    //     let gl = this.__renderer.gl;
+    //     let pixelsPerItem = 4; // The number of RGBA pixels per draw item.
+    //     let stride = pixelsPerItem * 4; // The number of floats per draw item.
+    //     let dataArray = new Float32Array(stride);
+    //     this.__populateTransformDataArray(gldrawItem, 0, dataArray);
 
-        gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
-        let size = this.__transformsTexture.width;
+    //     gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
+    //     let size = this.__transformsTexture.width;
 
-        let xoffset = (index * pixelsPerItem) % size;
-        let yoffset = Math.floor((index * pixelsPerItem) / size);
-        let width = pixelsPerItem;
-        let height = 1;
+    //     let xoffset = (index * pixelsPerItem) % size;
+    //     let yoffset = Math.floor((index * pixelsPerItem) / size);
+    //     let width = pixelsPerItem;
+    //     let height = 1;
         
-        gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
+    //     gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
 
-        let floatOffset = index * stride;
-        for(let i=0; i<stride; i++)
-            this.__transformsDataArray[floatOffset + i] = dataArray[i];
-    };
+    //     let floatOffset = index * stride;
+    //     for(let i=0; i<stride; i++)
+    //         this.__transformsDataArray[floatOffset + i] = dataArray[i];
+    // };
 
     bind(renderstate) {
         let gl = this.__renderer.gl;

@@ -33,27 +33,41 @@ class TreeItem extends BaseItem {
         this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
         this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
 
-        let settingLocalXfo = false;
-        this.__localXfoParam.valueChanged.connect(()=>{
-            if(!settingLocalXfo){
-                this.updateGlobalXfo();
-            }
-        });
-        this.__globalXfoParam.valueChanged.connect((newXfo, prevXfo)=>{
-            if(!this.__updatingGlobal){
-                settingLocalXfo = true;
-                let parentItem = this.getParentItem();
-                if (parentItem !== undefined)
-                    this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(newXfo));
-                else
-                    this.__localXfoParam.setValue(newXfo);
-                settingLocalXfo = true;
+        // let settingLocalXfo = false;
+        // this.__localXfoParam.valueChanged.connect(()=>{
+        //     if(!settingLocalXfo){
+        //         this.updateGlobalXfo();
+        //     }
+        // });
+        // this.__globalXfoParam.valueChanged.connect(()=>{
+        //     if(!this.__updatingGlobal){
+        //         settingLocalXfo = true;
+        //         let globalXfo = this.__globalXfoParam.getValue();
+        //         let parentItem = this.getParentItem();
+        //         if (parentItem !== undefined)
+        //             this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(globalXfo));
+        //         else
+        //             this.__localXfoParam.setValue(globalXfo);
+        //         settingLocalXfo = true;
 
-                // TODO: should we be updating here, or waiting till the global mat is needed??
-                for (let childItem of this.__childItems)
-                    childItem.updateGlobalXfo();
+        //         // TODO: should we be updating here, or waiting till the global mat is needed??
+        //         for (let childItem of this.__childItems)
+        //             childItem.updateGlobalXfo();
+        //     }
+        // });
+
+
+        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty.bind(this));
+        this.__globalXfoParam.valueChanged.connect((changeType)=>{
+            if(changeType == 0){
+                this._setLocalXfoDirty();
+                this._setBoundingBoxDirty();
             }
         });
+        this._cleanLocalXfo = this._cleanLocalXfo.bind(this);
+        this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
+        this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
+
 
         this.visibilityChanged = this.__visibleParam.valueChanged;
         this.selectedChanged = this.__selectedParam.valueChanged;
@@ -92,9 +106,19 @@ class TreeItem extends BaseItem {
     // Parent Item
 
     setOwnerItem(parentItem) {
+        if(this.__ownerItem) {
+            this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty.bind(this));
+        }
+
         // this.__private.set(parentItem, parentItem);
         super.setOwnerItem(parentItem);
-        this.updateGlobalXfo();
+        // this.updateGlobalXfo();
+
+        this._setGlobalXfoDirty();
+        if(this.__ownerItem) {
+            this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty.bind(this));
+        }
+        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty.bind(this));
     }
 
     __updatePath() {
@@ -181,22 +205,49 @@ class TreeItem extends BaseItem {
     }
     setGlobalXfo(xfo) {
         this.__globalXfoParam.setValue(xfo);
+        this._setLocalXfoDirty();
     }
 
-    updateGlobalXfo() {
-        this.__updatingGlobal = true;
-        let prevXfo = this.__globalXfoParam.getValue();
+    // updateGlobalXfo() {
+    //     this.__updatingGlobal = true;
+    //     let parentItem = this.getParentItem();
+    //     if (parentItem !== undefined)
+    //         this.__globalXfoParam.setValue(parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue()));
+    //     else
+    //         this.__globalXfoParam.setValue(this.__localXfoParam.getValue());
+
+    //     this.setBoundingBoxDirty();
+
+    //     for (let childItem of this.__childItems)
+    //         childItem.updateGlobalXfo();
+    //     this.__updatingGlobal = false;
+    // }
+
+
+    _cleanLocalXfo(prevValue) {
+        let globalXfo = this.__globalXfoParam.getValue();
         let parentItem = this.getParentItem();
         if (parentItem !== undefined)
-            this.__globalXfoParam.setValue(parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue()));
+            return parentItem.getGlobalXfo().inverse().multiply(globalXfo);
         else
-            this.__globalXfoParam.setValue(this.__localXfoParam.getValue());
+            return globalXfo;
+    }
 
-        this.setBoundingBoxDirty();
+    _setLocalXfoDirty() {
+        this.__localXfoParam.setDirty(this._cleanLocalXfo);
+    }
 
-        for (let childItem of this.__childItems)
-            childItem.updateGlobalXfo();
-        this.__updatingGlobal = false;
+    _cleanGlobalXfo(prevValue) {
+        let parentItem = this.getParentItem();
+        if (parentItem !== undefined)
+            return parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue());
+        else
+            return this.__localXfoParam.getValue();
+    }
+
+    _setGlobalXfoDirty() {
+        this.__globalXfoParam.setDirty(this._cleanGlobalXfo);
+        this._setBoundingBoxDirty();
     }
 
     //////////////////////////////////////////
@@ -266,25 +317,23 @@ class TreeItem extends BaseItem {
     }
 
     getBoundingBox() {
-        if (this.__boundingBoxDirty)
-            this.updateBoundingBox();
+        // if (this.__boundingBoxDirty)
+        //     this.updateBoundingBox();
         return this.__boundingBoxParam.getValue();
     }
 
-    setBoundingBoxDirty() {
-        this.__boundingBoxDirty = true;
+    _setBoundingBoxDirty() {
+        this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
         this.boundingBoxDirtied.emit();
     }
 
-    updateBoundingBox() {
-        let bbox = this.__boundingBoxParam.getValue();
+    _cleanBoundingBox(bbox) {
         bbox.reset();
         for (let childItem of this.__childItems) {
             if (childItem.getVisible())
                 bbox.addBox3(childItem.getBoundingBox());
         }
-        this.__boundingBoxParam.setValue(bbox);
-        this.__boundingBoxDirty = false;
+        return bbox;
     }
 
     //////////////////////////////////////////
@@ -309,10 +358,10 @@ class TreeItem extends BaseItem {
         childItem.setParentItem(this);
 
         childItem.boundingBoxDirtied.connect(() => {
-            this.setBoundingBoxDirty();
+            this._setBoundingBoxDirty();
         });
         childItem.visibilityChanged.connect(() => {
-            this.setBoundingBoxDirty();
+            this._setBoundingBoxDirty();
         });
 
         this.__boundingBoxDirty = true;

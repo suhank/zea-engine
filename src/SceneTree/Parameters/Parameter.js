@@ -13,6 +13,8 @@ class BaseParameter {
         this.setName = this.setName.bind(this);
         this.getValue = this.getValue.bind(this);
         this.setValue = this.setValue.bind(this);
+
+        this.__cleanerFn = undefined;
     }
 
     getName() {
@@ -31,6 +33,18 @@ class BaseParameter {
 
     setValue(value) {
         // TODO
+    }
+
+    setDirty(cleanerFn) {
+        // If already dirty, simply return.
+        if(this.__cleanerFn === cleanerFn)
+            return false;
+
+        if(!cleanerFn || (this.__cleanerFn &&  this.__cleanerFn !== cleanerFn)) {
+            throw("Error setting cleaner Fn. Can only have one cleaner bound.");
+        }
+        this.__cleanerFn = cleanerFn;
+        this.valueChanged.emit(1); // 1 = changed via cleaner fn
     }
 };
 
@@ -59,8 +73,9 @@ class GetterSetterParameter extends BaseParameter {
     setValue(value) {
         let prevValue = this.__getter();
         this.__setter(value);
-        this.valueChanged.emit(this.__value, prevValue);
+        this.valueChanged.emit(0); // 0 = changed via set value.
     }
+
 };
 
 
@@ -71,13 +86,17 @@ class Parameter extends BaseParameter {
     }
 
     getValue() {
+        if(this.__cleanerFn) {
+            this.__value = this.__cleanerFn(this.__value);
+            this.__cleanerFn = undefined;
+        }
         return this.__value;
     }
 
     setValue(value) {
         let prevValue = this.__value;
         this.__value = value;
-        this.valueChanged.emit(this.__value, prevValue);
+        this.valueChanged.emit();
     }
 };
 

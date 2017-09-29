@@ -19,12 +19,15 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
-        this.__lightmapName = "Default"; // the lightmap that the geom uses.
-        this.__lightmapCoordsOffset = new Vec2();
-        this.__geomOffsetXfo = new Xfo();
-        this.__geomXfo = new Xfo();
+        // this.__lightmapName = "Default"; // the lightmap that the geom uses.
+        // this.__lightmapCoordsOffset = new Vec2();
+        // this.__geomOffsetXfo = new Xfo();
+        // this.__geomXfo = new Xfo();
+        this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
+        this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
+        this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
 
-        this.geomXfoChanged = new Signal();
+        this.geomXfoChanged = this.__geomXfoParam.valueChanged;
         this.materialAssigned = new Signal();
         this.geomAssigned = new Signal();
 
@@ -43,6 +46,7 @@ class GeomItem extends TreeItem {
         this.copyTo(cloned);
         return cloned;
     }
+
     copyTo(cloned) {
         super.copyTo(cloned);
         cloned.setGeomOffsetXfo(this.__geomOffsetXfo);
@@ -55,7 +59,7 @@ class GeomItem extends TreeItem {
             });
         }
 
-        cloned.setMaterial(this.__material);
+        cloned.setMaterial(this.__material);// clone?
 
         cloned.__lightmapName = this.__lightmapName;
         cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
@@ -72,12 +76,12 @@ class GeomItem extends TreeItem {
         if(this.__geom !== geom){
             if(this.__geom){
                 this.__geom.removeRef(this);
-                this.__geom.boundingBoxDirtied.disconnect(this.setBoundingBoxDirty.bind(this));
+                this.__geom.boundingBoxDirtied.disconnect(this._setBoundingBoxDirty.bind(this));
             }
             this.__geom = geom;
             if(this.__geom){
                 this.__geom.addRef(this);
-                this.__geom.boundingBoxDirtied.connect(this.setBoundingBoxDirty.bind(this));
+                this.__geom.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
             }
             this.geomAssigned.emit(this.__geom);
         }
@@ -111,14 +115,12 @@ class GeomItem extends TreeItem {
         }
     }
 
-    updateBoundingBox() {
-        let bbox = this.__boundingBoxParam.getValue();
-        bbox.reset();
+    _cleanBoundingBox(bbox) {
+        bbox = super._cleanBoundingBox(bbox);
         if (this.__geom) {
             bbox.addBox3(this.__geom.boundingBox, this.getGeomXfo());
         }
-        this.__boundingBoxParam.setValue(bbox);
-        this.__boundingBoxDirty = false;
+        return bbox;
     }
 
     //////////////////////////////////////////
