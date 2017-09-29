@@ -47,6 +47,10 @@ class BaseParameter {
         this.__cleanerFn = cleanerFn;
         this.valueChanged.emit(1); // 1 = changed via cleaner fn
     }
+
+    isDirty() {
+        return this.__cleanerFn !== undefined;
+    }
 };
 
 
@@ -94,7 +98,14 @@ class Parameter extends BaseParameter {
         return this.__value;
     }
 
-    setValue(value) {
+    setValue(value, clearCleaner=false) {
+        if(this.__cleanerFn) {
+            if(clearCleaner){
+                this.__cleanerFn = undefined;
+            }
+            // else
+            //     console.warn("Error setting value when cleaner is assigned ");
+        }
         let prevValue = this.__value;
         this.__value = value;
         this.valueChanged.emit();

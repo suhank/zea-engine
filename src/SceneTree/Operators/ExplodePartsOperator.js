@@ -28,7 +28,8 @@ class ExplodePartsOperator extends Operator {
     connectParts(partGroups) {
         // e.g. [['.a/b/c'], [./foo]]
         this.__stages = partGroups.length;
-        let offset = 0;
+        this.__parts = [];
+        this.__resolvedParts = [];
         for(let i=0; i<partGroups.length; i++) {
             let partGroup = partGroups[i];
             if(!partGroup){
@@ -40,12 +41,12 @@ class ExplodePartsOperator extends Operator {
             for(let path of partGroup) {
                 let treeItem = this.__ownerItem.resolvePath(path);
                 if(treeItem) {
-                    this.__resolvedParts[offset] = treeItem
-                    this.__parts[offset] = {
+                    this.__resolvedParts.push(treeItem);
+                    this.__parts.push({
                         stage: i,
                         initialXfo: treeItem.getGlobalXfo().clone()
-                    };
-                    offset++;
+                    });
+                    this.__outputs.push(treeItem.getParameter('globalXfo'));
                 }
             }
         }
@@ -77,7 +78,7 @@ class ExplodePartsOperator extends Operator {
             let globalXfo = part.initialXfo.clone();
             globalXfo.tr.addInPlace(explodeDir.scale(dist));
 
-            resolvedPart.setGlobalXfo(globalXfo);
+            this.__outputs[i].setValue(globalXfo, true);// Note: Clear the cleaner op on all outputs.
         }
     }
 };

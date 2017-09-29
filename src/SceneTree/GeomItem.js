@@ -233,9 +233,9 @@ class GeomItem extends TreeItem {
         // Note: to save space, some values are skipped if they are identity values 
         const geomOffsetXfoFlag = 1 << 2;
         if (itemflags & geomOffsetXfoFlag) {
-            this.__geomOffsetXfo.tr = reader.loadFloat32Vec3();
-            this.__geomOffsetXfo.ori = reader.loadFloat32Quat();
-            this.__geomOffsetXfo.sc = reader.loadFloat32Vec3();
+            this.__geomOffsetXfoParam.setValue(new Xfo( reader.loadFloat32Vec3(),
+                                                        reader.loadFloat32Quat(),
+                                                        reader.loadFloat32Vec3()))
         }
 
         const materialFlag = 1 << 3;

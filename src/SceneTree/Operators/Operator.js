@@ -11,13 +11,19 @@ class Operator extends BaseItem {
         super();
         this.__ownerItem = ownerItem;
 
-        this.__evalRequested = true;
+        this.__outputs = [];
         this.parameterValueChanged.connect(()=> {
-            window.requestAnimationFrame(() => {
-                this.__evalRequested = false;
-                this.evaluate();
-            });
-            this.__evalRequested = true;
+            // For each output, install a function to evalate the operator
+            // Note: when the operator evaluates, it will remove the cleaners
+            // on all outputs. This means that after the first operator to 
+            // cause an evaluation, all outputs are considered clean.
+            this.__outputs.forEach((param)=> {
+                let evalOutput = (value)=>{
+                    this.evaluate();
+                    return param.getValue();
+                };
+                param.setDirty(evalOutput) 
+            })
         });
     }
 
