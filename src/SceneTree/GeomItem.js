@@ -26,6 +26,12 @@ class GeomItem extends TreeItem {
         this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
         this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
+        this.__globalXfoParam.valueChanged.connect((changeType)=>{
+            this._setGeomXfoDirty();
+        });
+        this.__geomOffsetXfoParam.valueChanged.connect((changeType)=>{
+            this._setGeomXfoDirty();
+        });
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
         this.materialAssigned = new Signal();
@@ -139,23 +145,32 @@ class GeomItem extends TreeItem {
     }
 
     getGeomOffsetXfo() {
-        return this.__geomOffsetXfo;
+        return this.__geomOffsetXfoParam.getValue();
     }
 
     setGeomOffsetXfo(xfo) {
-        this.__geomOffsetXfo = xfo;
-        this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-        this.geomXfoChanged.emit(this.__geomXfo);
+        this.__geomOffsetXfoParam.setValue(xfo);
+        // this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
+        // this.geomXfoChanged.emit(this.__geomXfo);
     }
 
-    updateGlobalXfo() {
-        super.updateGlobalXfo();
-        this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-        this.geomXfoChanged.emit(this.__geomXfo);
+    // updateGlobalXfo() {
+    //     super.updateGlobalXfo();
+    //     this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
+    //     this.geomXfoChanged.emit(this.__geomXfo);
+    // }
+
+    _cleanGeomXfo(xfo) {
+        return this.getGlobalXfo().multiply(this.__geomOffsetXfo);
+    }
+
+    _setGeomXfoDirty() {
+        this.__geomXfoParam.setDirty(this._cleanGeomXfo);
+        this.boundingBoxDirtied.emit();
     }
 
     getGeomXfo() {
-        return this.__geomXfo;
+        this.__geomXfoParam.getValue();
     }
 
     //////////////////////////////////////////

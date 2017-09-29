@@ -164,7 +164,7 @@ class Camera extends TreeItem {
     setGlobalXfo(xfo) {
         super.setGlobalXfo(xfo);
         this.__viewMatrix = xfo.inverse().toMat4();
-        this.viewMatChanged.emit(this.__viewMatrix, this.getGlobalXfo());
+        this.viewMatChanged.emit(this.__viewMatrix, xfo);
     }
 
     getLocalXfo() {

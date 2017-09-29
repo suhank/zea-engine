@@ -205,7 +205,13 @@ class TreeItem extends BaseItem {
     }
     setGlobalXfo(xfo) {
         this.__globalXfoParam.setValue(xfo);
-        this._setLocalXfoDirty();
+        // this._setLocalXfoDirty();
+
+        let parentItem = this.getParentItem();
+        if (parentItem !== undefined)
+            this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(xfo));
+        else
+            this.__localXfoParam.setValue(xfo);
     }
 
     // updateGlobalXfo() {

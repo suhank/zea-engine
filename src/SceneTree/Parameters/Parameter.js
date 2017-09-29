@@ -50,33 +50,33 @@ class BaseParameter {
 
 
 
-class GetterSetterParameter extends BaseParameter {
-    constructor(name, getter, setter, dataType) {
-        super(name, dataType);
-        this.__name = name;
-    }
+// class GetterSetterParameter extends BaseParameter {
+//     constructor(name, getter, setter, dataType) {
+//         super(name, dataType);
+//         this.__name = name;
+//     }
 
-    getName() {
-        return this.__name;
-    }
+//     getName() {
+//         return this.__name;
+//     }
 
-    setName(name) {
-        let prevName = this.__name;
-        this.__name = name;
-        this.nameChanged.emit(this.__name, prevName);
-    }
+//     setName(name) {
+//         let prevName = this.__name;
+//         this.__name = name;
+//         this.nameChanged.emit(this.__name, prevName);
+//     }
 
-    getValue() {
-        return this.__getter();
-    }
+//     getValue() {
+//         return this.__getter();
+//     }
 
-    setValue(value) {
-        let prevValue = this.__getter();
-        this.__setter(value);
-        this.valueChanged.emit(0); // 0 = changed via set value.
-    }
+//     setValue(value) {
+//         let prevValue = this.__getter();
+//         this.__setter(value);
+//         this.valueChanged.emit(0); // 0 = changed via set value.
+//     }
 
-};
+// };
 
 
 class Parameter extends BaseParameter {
@@ -102,6 +102,5 @@ class Parameter extends BaseParameter {
 
 
 export {
-    GetterSetterParameter,
     Parameter
 };
