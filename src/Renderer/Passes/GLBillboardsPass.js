@@ -209,10 +209,10 @@ class GLBillboardsPass extends GLPass {
         this.__shaderBinding.bind(renderstate);
 
         let unifs = renderstate.unifs;
-        this.__instancesTexture.bind(renderstate, unifs.instancesTexture.location);
+        this.__instancesTexture.bindToUniform(renderstate, unifs.instancesTexture);
         gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
 
-        this.__atlas.bind(renderstate);
+        this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 
         {
             // The instance transform ids are bound as an instanced attribute.

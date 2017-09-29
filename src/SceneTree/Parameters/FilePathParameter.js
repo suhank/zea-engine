@@ -8,6 +8,8 @@ import {
 class FilePathParameter extends Parameter {
     constructor(name, resourceLoader) {
         super(name, '', 'FilePath');
+        if(!resourceLoader)
+            throw("Resource Loader not provided to FilePathParameter");
         this.__resourceLoader = resourceLoader;
 
         this.__url;

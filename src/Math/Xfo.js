@@ -15,6 +15,11 @@ class Xfo {
         }
         if (tr instanceof Vec3) {
             this.tr = tr;
+        } else if (tr instanceof Quat && ori == undefined && sc == undefined) {
+            this.tr = new Vec3();
+            this.ori = tr;// Xfo constructor with just a Quat.
+            this.sc = new Vec3(1, 1, 1);
+            return;
         } else {
             this.tr = new Vec3();
         }

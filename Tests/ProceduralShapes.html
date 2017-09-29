@@ -6,9 +6,7 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
     </head>
     <body text-align: left;>
-
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
+        
         <script src="../external/helpers.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         
@@ -23,31 +21,31 @@
     standardMaterial.addParameter('roughness', 1.0);
     standardMaterial.addParameter('metallic', 0.0);
 
-    let addMeshShape = (shape, pos)=>{
-        let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, standardMaterial);
-        geomItem.localXfo.tr = pos;
+    let addMeshShape = (name, shape, pos)=>{
+        let geomItem = new Visualive.GeomItem(name+'Item', shape, standardMaterial);
+        geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
 
-    addMeshShape(new Visualive.Plane(2.0, 1.5, 22, 22), new Visualive.Vec3(-6, 0, 0));
-    addMeshShape(new Visualive.Cuboid(1.5, 2.0, 1.0), new Visualive.Vec3(-3, 0, 0));
-    addMeshShape(new Visualive.Cone(1.2, 4.0), new Visualive.Vec3(0, 0, 0));
-    addMeshShape(new Visualive.Cylinder(1.2, 4.0, 32, 2, true), new Visualive.Vec3(3, 0, 0));
-    addMeshShape(new Visualive.Torus(0.4, 1.3), new Visualive.Vec3(6, 0, 0));
-    addMeshShape(new Visualive.Sphere(1.4, 13), new Visualive.Vec3(9, 0, 0));
+    addMeshShape('Plane', new Visualive.Plane(2.0, 1.5, 22, 22), new Visualive.Vec3(-6, 0, 0));
+    addMeshShape('Cuboid', new Visualive.Cuboid(1.5, 2.0, 1.0), new Visualive.Vec3(-3, 0, 0));
+    addMeshShape('Cone', new Visualive.Cone(1.2, 4.0), new Visualive.Vec3(0, 0, 0));
+    addMeshShape('Cylinder', new Visualive.Cylinder(1.2, 4.0, 32, 2, true), new Visualive.Vec3(3, 0, 0));
+    addMeshShape('Torus', new Visualive.Torus(0.4, 1.3), new Visualive.Vec3(6, 0, 0));
+    addMeshShape('Sphere', new Visualive.Sphere(1.4, 13), new Visualive.Vec3(9, 0, 0));
 
     let linesMaterial = new Visualive.Material('lines', 'FatLinesShader');
     linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
 
-    let addLinesShape = (shape, pos)=>{
+    let addLinesShape = (name, shape, pos)=>{
         shape.lineThickness = 0.05;
-        let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, linesMaterial);
-        geomItem.localXfo.tr = pos;
+        let geomItem = new Visualive.GeomItem(name+'Item', shape, linesMaterial);
+        geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
 
-    addLinesShape(new Visualive.Circle(2.2, 12), new Visualive.Vec3(-6, 0, 6));
-    addLinesShape(new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 0, 6));
+    addLinesShape('Circle', new Visualive.Circle(2.2, 12), new Visualive.Vec3(-6, 0, 6));
+    addLinesShape('Rect', new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 0, 6));
 
 
     let renderer = new Visualive.GLSimpleRenderer(div);

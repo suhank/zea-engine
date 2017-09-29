@@ -7,10 +7,7 @@
     </head>
     <body text-align: left;>
 
-        <script src="../external/dat.gui.js"></script>
-        <script src="../external/stats.min.js"></script>
         <script src="../external/helpers.js"></script>
-        <script src="../external/Unpack.js"></script>
         <script src="../lib/Visualive-dev.js"></script>
         <script src="../lib/VisualiveUI-dev.js"></script>
         
@@ -26,9 +23,9 @@
 
     {
         let billboard = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D(Trapeze2, scene.getResourceLoader()));
-        let xfo1 = new Visualive.Xfo();
-        xfo1.tr.set( -1, 0, 1 );
-        billboard.localXfo = xfo1;
+        let xfo = new Visualive.Xfo();
+        xfo.tr.set( -1, 0, 1 );
+        billboard.setLocalXfo(xfo);
         billboard.scale = 2.5;
         billboard.gradient = 0.75;
         billboard.alignedToCamera = false;
@@ -37,10 +34,10 @@
 
     {
         let billboard = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D(SolorFloorPerformer, scene.getResourceLoader()));
-        let xfo0 = new Visualive.Xfo();
-        xfo0.tr.set( 1, 0, 0 );
-        xfo0.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
-        billboard.localXfo = xfo0; 
+        let xfo = new Visualive.Xfo();
+        xfo.tr.set( 1, 0, 0 );
+        xfo.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
+        billboard.setLocalXfo(xfo); 
         billboard.scale = 2.5;
         billboard.gradient = 1.0;
         billboard.alignedToCamera = false;
@@ -49,7 +46,7 @@
 
     let renderer = new Visualive.GLSimpleRenderer(addCanvas());
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5,4,3), new Visualive.Vec3(0,0,0));
 
     renderer.setScene(scene);
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);

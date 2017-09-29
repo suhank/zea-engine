@@ -205,7 +205,7 @@ class GLLines extends GLGeom {
             if (usePositionsTexture) {
                 let unifs = renderstate.unifs;
                 if (unifs.positionsTexture) {
-                    this.__positionsTexture.bind(renderstate, unifs.positionsTexture.location);
+                    this.__positionsTexture.bindToUniform(renderstate, unifs.positionsTexture);
                     gl.uniform1i(unifs.positionsTextureSize.location, this.__positionsTexture.width);
                 }
             }

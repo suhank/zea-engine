@@ -346,7 +346,7 @@ class GLVisualiveRenderer extends GLRenderer {
             gl.depthMask(false);
             this.__backgroundMapShader.bind(renderstate);
             let unifs = renderstate.unifs;
-            this.__glBackgroundMap.bind(renderstate, unifs.backgroundImage.location);
+            this.__glBackgroundMap.bindToUniform(renderstate, unifs.backgroundImage);
             this.__backgroundMapShaderBinding.bind(renderstate);
             gl.drawQuad();
         } else if (this.__glEnvMap) {

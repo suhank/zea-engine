@@ -63,7 +63,11 @@ class Quat extends AttrValue {
                 this.__data[2] = 0;
                 this.__data[3] = 1;
                 for(let key in x) {
-                    this[key].call(this, x[key]);
+                    if(Array.isArray(x[key]))
+                        this[key].call(this, ...x[key]);
+                    else
+                        this[key].call(this, x[key] );
+
                 }
             } else {
                 this.__data[0] = x;
