@@ -121,14 +121,11 @@ class TreeItem extends BaseItem {
     }
 
     get parentItem() {
-        console.warn(("getter is deprectated. Please use 'getParentItem'"));
-        // return this.__private.get('parentItem');
-        return this.getParentItem();
+        throw(("getter is deprectated. Please use 'getParentItem'"));
     }
 
     set parentItem(parentItem) {
-        console.warn(("setter is deprectated. Please use 'setParentItem'"));
-        this.setParentItem(parentItem);
+        throw(("setter is deprectated. Please use 'setParentItem'"));
     }
 
     //////////////////////////////////////////
@@ -164,30 +161,30 @@ class TreeItem extends BaseItem {
     // Global Matrix
 
     get localXfo() {
-        console.warn(("getter is deprectated. Please use 'getLocalXfo'"));
-        return this.getLocalXfo();
+        throw(("getter is deprectated. Please use 'getLocalXfo'"));
     }
     set localXfo(xfo) {
-        console.warn(("setter is deprectated. Please use 'setLocalXfo'"));
-        this.setLocalXfo(xfo);
+        throw(("setter is deprectated. Please use 'setLocalXfo'"));
     }
     get globalXfo() {
-        console.warn(("getter is deprectated. Please use 'getGlobalXfo'"));
-        return this.getGlobalXfo();
+        throw(("getter is deprectated. Please use 'getGlobalXfo'"));
     }
     set globalXfo(xfo) {
-        console.warn(("setter is deprectated. Please use 'setGlobalXfo'"));
-        this.setGlobalXfo(xfo);
+        throw(("setter is deprectated. Please use 'setGlobalXfo'"));
     }
+
     getLocalXfo() {
         return this.__localXfoParam.getValue();
     }
+
     setLocalXfo(xfo) {
         this.__localXfoParam.setValue(xfo);
     }
+
     getGlobalXfo() {
         return this.__globalXfoParam.getValue();;
     }
+
     setGlobalXfo(xfo) {
         this.__globalXfoParam.setValue(xfo);
     }

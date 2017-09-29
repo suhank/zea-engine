@@ -132,60 +132,17 @@ class GeomItem extends TreeItem {
     //////////////////////////////////////////
     // Xfos
     
-    get globalXfo() {
-        return super.getGlobalXfo();
-    }
-    set globalXfo(xfo) {
-        this.setGlobalXfo(xfo);
-    }
-    setGlobalXfo(xfo) {
-        super.setGlobalXfo(xfo);
-        // this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-        // this.geomXfoChanged.emit(this.__geomXfo);
-    }
-
     getGeomOffsetXfo() {
         return this.__geomOffsetXfoParam.getValue();
     }
 
     setGeomOffsetXfo(xfo) {
         this.__geomOffsetXfoParam.setValue(xfo);
-        // this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-        // this.geomXfoChanged.emit(this.__geomXfo);
     }
-
-    // updateGlobalXfo() {
-    //     super.updateGlobalXfo();
-    //     this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-    //     this.geomXfoChanged.emit(this.__geomXfo);
-    // }
-
 
     getGeomXfo() {
         return this.__geomXfoParam.getValue();
     }
-
-    //////////////////////////////////////////
-    // Selection
-
-    // get selectable() {
-    //     return this.__selectable;
-    // }
-
-    // set selectable(sel) {
-    //     this.__selectable = sel;
-    // }
-
-    // get selected() {
-    //     return this.__selected;
-    // }
-
-    // set selected(sel) {
-    //     if (this.__selected != sel) {
-    //         this.__selected = sel;
-    //         this.selectionChanged.emit(this.__selected);
-    //     }
-    // }
 
 
     /////////////////////////////

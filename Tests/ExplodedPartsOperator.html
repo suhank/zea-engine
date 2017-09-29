@@ -78,8 +78,8 @@
         scene.getRoot().addChild(objAsset);
 
     }
-    // let op = new Visualive.ExplodePartsOperator(scene.getRoot());
-    // op.setExplodeDist(30.0);
+    let op = new Visualive.ExplodePartsOperator(scene.getRoot());
+    op.getParameter('Dist').setValue(30.0);
     {
         let objAsset = new Visualive.ObjAsset('PartB', scene.getResourceLoader());
         objAsset.getParameter('splitObjects').setValue(false);
@@ -89,42 +89,49 @@
         objAsset.getParameter('FilePath').setValue("/Assets/ExplodePartB.obj");
         scene.getRoot().addChild(objAsset);
 
-        // objAsset.loaded.connect(function() {
+        objAsset.loaded.connect(function() {
 
-        //     // op.connectParts([['./parts/bolt0', './parts/bolt1', './parts/bolt2', './parts/bolt3'], './PartB/PartB', 
-        //     //     [
-        //     //     './parts/middleSphere1',
-        //     //     './parts/middleSphere2',
-        //     //     './parts/middleSphere3',
-        //     //     './parts/middleSphere4'
-        //     //     ]
-        //     //     ]);
+            op.connectParts([
+                [
+                    ['.', 'parts', 'bolt0'],
+                    ['.', 'parts', 'bolt1'],
+                    ['.', 'parts', 'bolt2'],
+                    ['.', 'parts', 'bolt3'],
+                    ['.', 'PartB', 'PartB'], 
+                ],
+                [
+                    ['.', 'parts', 'middleSphere1'],
+                    ['.', 'parts', 'middleSphere2'],
+                    ['.', 'parts', 'middleSphere3'],
+                    ['.', 'parts', 'middleSphere4']
+                ]
+                ]);
 
-        //     let explodedAmount = 0;
-        //     let animatingValue = false;
-        //     let timeoutId;
-        //     let param = op.getParameter('Explode');
-        //     let timerCallback = () => {
-        //         // Check to see if the video has progressed to the next frame. 
-        //         // If so, then we emit and update, which will cause a redraw.
-        //         animatingValue = true;
-        //         explodedAmount += 0.005;
-        //         param.setValue(explodedAmount);
-        //         renderer.requestRedraw();
-        //         if (explodedAmount < 1.0) {
-        //             timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
-        //         }
-        //         animatingValue = false;
-        //     };
-        //     timeoutId = setTimeout(timerCallback, 1000); // half second delay
-        //     param.valueChanged.connect(()=>{
-        //         if(!animatingValue) {
-        //             clearTimeout(timeoutId);
-        //         }
-        //     });
+            let explodedAmount = 0;
+            let animatingValue = false;
+            let timeoutId;
+            let param = op.getParameter('Explode');
+            let timerCallback = () => {
+                // Check to see if the video has progressed to the next frame. 
+                // If so, then we emit and update, which will cause a redraw.
+                animatingValue = true;
+                explodedAmount += 0.005;
+                op.getParameter('Explode').setValue(explodedAmount);
+                renderer.requestRedraw();
+                if (explodedAmount < 1.0) {
+                    timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
+                }
+                animatingValue = false;
+            };
+            timeoutId = setTimeout(timerCallback, 1000); // half second delay
+            param.valueChanged.connect(()=>{
+                if(!animatingValue) {
+                    clearTimeout(timeoutId);
+                }
+            });
             
-        //     renderer.resumeDrawing();
-        // });
+            renderer.resumeDrawing();
+        });
     }
 
 
@@ -138,16 +145,16 @@
     //////////////////////////////////
     // Setup the UI
 
-    // let sliderController = new Visualive.SliderController(op.getParameter('Explode'));
+    let sliderController = new Visualive.SliderController(op.getParameter('Explode'));
 
-    // let widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController);
+    let widgetPanel = new Visualive.UIWidgetPanel();
+    widgetPanel.addWidgetController(sliderController);
 
-    // let uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
+    let uicontroller = new Visualive.UIController();
+    uicontroller.addWidgetPanel(widgetPanel);
 
 
-    // VisualiveUI.renderUI(renderer, uicontroller);
+    VisualiveUI.renderUI(renderer, uicontroller);
 
         </script> 
     </body>
