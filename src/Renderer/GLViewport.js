@@ -101,11 +101,11 @@ class GLViewport extends BaseViewport {
 
     setCamera(camera) {
         this.__camera = camera;
-        this.__camera.viewMatChanged.connect((viewMat, globalXfo)=>{
+        this.__camera.viewMatChanged.connect(()=>{
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'MouseAndKeyboard',
-                viewXfo: globalXfo
+                viewXfo: this.__camera.getGlobalXfo()
             });
         });
         // this.__camera.clippingRangesChanged.connect(()=>{

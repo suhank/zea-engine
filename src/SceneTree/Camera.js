@@ -21,6 +21,14 @@ class Camera extends TreeItem {
             name = "Camera";
         super(name);
 
+        this.__defaultManipulationState = 'orbit';
+        this.__manipulationState = this.__defaultManipulationState;
+        this.__mouseDragDelta = new Vec2();
+        this.__keyboardMovement = false;
+        this.__keysPressed = [];
+        this.__maxVel = 0.05;
+        this.__velocity = new Vec3();
+
         this.__isOrthographicParam = this.addParameter('isOrthographic', 1.0);
         this.__fovParam = this.addParameter('fov', 1.0);
         this.__nearParam = this.addParameter('near', 0.1);
@@ -30,19 +38,16 @@ class Camera extends TreeItem {
         this.__dollySpeedParam = this.addParameter('dollySpeed', 0.02);
         this.__mouseWheelDollySpeedParam = this.addParameter('mouseWheelDollySpeed', 0.002);
 
-        this.__defaultManipulationState = 'orbit';
-        this.__manipulationState = this.__defaultManipulationState;
-        this.__mouseDragDelta = new Vec2();
-        this.__keyboardMovement = false;
-        this.__keysPressed = [];
+        this.__viewMatParam = this.addParameter('viewMat', new Mat4());
+        let _cleanViewMat = (xfo)=>{
+            return this.__globalXfoParam.getValue().inverse().toMat4();
+        }
+        this.__globalXfoParam.valueChanged.connect((changeType)=>{
+            this.__viewMatParam.setDirty(_cleanViewMat);
+        });
 
-        this.__maxVel = 0.05;
-        this.__velocity = new Vec3();
-
-        this.viewMatChanged = new Signal();
+        this.viewMatChanged = this.__viewMatParam.valueChanged;
         this.projectionParamChanged = new Signal();
-
-
         this.__isOrthographicParam.valueChanged.connect(this.projectionParamChanged.emit);
         this.__fovParam.valueChanged.connect(this.projectionParamChanged.emit);
         this.__nearParam.valueChanged.connect(this.projectionParamChanged.emit);
@@ -51,7 +56,6 @@ class Camera extends TreeItem {
         // Initial viewing coords of a person standing 3 meters away from the
         // center of the stage looking at something 1 meter off the ground.
         this.setPositionAndTarget(new Vec3(3, 1.75, 3), new Vec3(0, 1, 0));
-
     }
 
     //////////////////////////////////////////////
@@ -158,23 +162,7 @@ class Camera extends TreeItem {
     }
 
     getViewMatrix() {
-        return this.__viewMatrix;
-    }
-
-    setGlobalXfo(xfo) {
-        super.setGlobalXfo(xfo);
-        this.__viewMatrix = xfo.inverse().toMat4();
-        this.viewMatChanged.emit(this.__viewMatrix, xfo);
-    }
-
-    getLocalXfo() {
-        return super.getLocalXfo();
-    }
-
-    setLocalXfo(xfo) {
-        super.setLocalXfo(xfo);
-        this.__viewMatrix = this.getGlobalXfo().inverse().toMat4();
-        this.viewMatChanged.emit(this.__viewMatrix, this.getGlobalXfo());
+        return this.__viewMatParam.getValue();
     }
 
     getDefaultManipMode() {
@@ -227,10 +215,10 @@ class Camera extends TreeItem {
         globalXfo.ori.multiplyInPlace(pitch);
 
         if (this.__keyboardMovement) {
+            // TODO: debug this potential regression. we now use the generic method which emits a signal.
             // Avoid generating a signal because we have an animation frame occuring.
             // see: onKeyPressed
             this.setGlobalXfo(globalXfo);
-            this.__viewMatrix = globalXfo.inverse().toMat4();
         } else {
             this.setGlobalXfo(globalXfo);
         }
@@ -264,10 +252,10 @@ class Camera extends TreeItem {
         globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance));
 
         if (this.__keyboardMovement) {
+            // TODO: debug this potential regression. we now use the generic method which emits a signal.
             // Avoid generating a signal because we have an animation frame occuring.
             // see: onKeyPressed
             this.setGlobalXfo(globalXfo);
-            this.__viewMatrix = globalXfo.inverse().toMat4();
         } else {
             this.setGlobalXfo(globalXfo);
         }

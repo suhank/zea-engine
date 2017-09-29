@@ -32,38 +32,25 @@ class TreeItem extends BaseItem {
         this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
         this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
 
-        // let settingLocalXfo = false;
-        // this.__localXfoParam.valueChanged.connect(()=>{
-        //     if(!settingLocalXfo){
-        //         this.updateGlobalXfo();
-        //     }
-        // });
-        // this.__globalXfoParam.valueChanged.connect(()=>{
-        //     if(!this.__updatingGlobal){
-        //         settingLocalXfo = true;
-        //         let globalXfo = this.__globalXfoParam.getValue();
-        //         let parentItem = this.getParentItem();
-        //         if (parentItem !== undefined)
-        //             this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(globalXfo));
-        //         else
-        //             this.__localXfoParam.setValue(globalXfo);
-        //         settingLocalXfo = true;
-
-        //         // TODO: should we be updating here, or waiting till the global mat is needed??
-        //         for (let childItem of this.__childItems)
-        //             childItem.updateGlobalXfo();
-        //     }
-        // });
-
-
         this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty.bind(this));
+
+        let _cleanLocalXfo = (prevValue)=>{
+            let globalXfo = this.__globalXfoParam.getValue();
+            if (this.__ownerItem !== undefined)
+                return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo);
+            else
+                return globalXfo;
+        }
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
             if(changeType == 0){
-                this._setLocalXfoDirty();
-                this._setBoundingBoxDirty();
+                // Note: both global and local cannot be dirty at the same time
+                // because we need one clean to compute the other. If the global
+                // Xfo is explicitly set, then it is now clean, so we can make local
+                // dirty. 
+                this.__localXfoParam.setDirty(_cleanLocalXfo);
             }
+            this._setBoundingBoxDirty();
         });
-        this._cleanLocalXfo = this._cleanLocalXfo.bind(this);
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
         this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
 
@@ -77,7 +64,6 @@ class TreeItem extends BaseItem {
         this.parentChanged = this.ownerChanged;
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
-        // this.boundingBoxDirtied = new Signal();
 
         this.treeItemGlobalXfoChanged = new Signal();
     }
@@ -112,7 +98,6 @@ class TreeItem extends BaseItem {
 
         // this.__private.set(parentItem, parentItem);
         super.setOwnerItem(parentItem);
-        // this.updateGlobalXfo();
 
         this._setGlobalXfoDirty();
         if(this.__ownerItem) {
@@ -205,42 +190,6 @@ class TreeItem extends BaseItem {
     }
     setGlobalXfo(xfo) {
         this.__globalXfoParam.setValue(xfo);
-        // this._setLocalXfoDirty();
-
-        // let parentItem = this.getParentItem();
-        // if (parentItem !== undefined)
-        //     this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(xfo));
-        // else
-        //     this.__localXfoParam.setValue(xfo);
-    }
-
-    // updateGlobalXfo() {
-    //     this.__updatingGlobal = true;
-    //     let parentItem = this.getParentItem();
-    //     if (parentItem !== undefined)
-    //         this.__globalXfoParam.setValue(parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue()));
-    //     else
-    //         this.__globalXfoParam.setValue(this.__localXfoParam.getValue());
-
-    //     this.setBoundingBoxDirty();
-
-    //     for (let childItem of this.__childItems)
-    //         childItem.updateGlobalXfo();
-    //     this.__updatingGlobal = false;
-    // }
-
-
-    _cleanLocalXfo(prevValue) {
-        let globalXfo = this.__globalXfoParam.getValue();
-        let parentItem = this.getParentItem();
-        if (parentItem !== undefined)
-            return parentItem.getGlobalXfo().inverse().multiply(globalXfo);
-        else
-            return globalXfo;
-    }
-
-    _setLocalXfoDirty() {
-        this.__localXfoParam.setDirty(this._cleanLocalXfo);
     }
 
     _cleanGlobalXfo(prevValue) {
@@ -253,7 +202,6 @@ class TreeItem extends BaseItem {
 
     _setGlobalXfoDirty() {
         this.__globalXfoParam.setDirty(this._cleanGlobalXfo);
-        // this._setBoundingBoxDirty();
     }
 
     //////////////////////////////////////////
@@ -326,10 +274,6 @@ class TreeItem extends BaseItem {
         return this.__boundingBoxParam.getValue();
     }
 
-    _setBoundingBoxDirty() {
-        this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
-    }
-
     _cleanBoundingBox(bbox) {
         bbox.reset();
         for (let childItem of this.__childItems) {
@@ -337,6 +281,10 @@ class TreeItem extends BaseItem {
                 bbox.addBox3(childItem.getBoundingBox());
         }
         return bbox;
+    }
+
+    _setBoundingBoxDirty() {
+        this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
     }
 
     //////////////////////////////////////////

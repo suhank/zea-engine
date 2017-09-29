@@ -19,10 +19,6 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
-        // this.__lightmapName = "Default"; // the lightmap that the geom uses.
-        // this.__lightmapCoordsOffset = new Vec2();
-        // this.__geomOffsetXfo = new Xfo();
-        // this.__geomXfo = new Xfo();
         this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
         this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
@@ -30,19 +26,12 @@ class GeomItem extends TreeItem {
         let _cleanGeomXfo = (xfo)=>{
             return this.getGlobalXfo().multiply(this.__geomOffsetXfoParam.getValue());
         }
-
-        let _setGeomXfoDirty = ()=>{
-            this.__geomXfoParam.setDirty(_cleanGeomXfo);
-            // this.boundingBoxDirtied.emit();
-        }
-
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            _setGeomXfoDirty();
+            this.__geomXfoParam.setDirty(_cleanGeomXfo);
         });
         this.__geomOffsetXfoParam.valueChanged.connect((changeType)=>{
-            _setGeomXfoDirty();
+            this.__geomXfoParam.setDirty(_cleanGeomXfo);
         });
-        _setGeomXfoDirty();
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
         this.materialAssigned = new Signal();
@@ -79,7 +68,6 @@ class GeomItem extends TreeItem {
         cloned.setMaterial(this.__material);// clone?
 
         cloned.__lightmapName = this.__lightmapName;
-        // cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
     }
 
     //////////////////////////////////////////
