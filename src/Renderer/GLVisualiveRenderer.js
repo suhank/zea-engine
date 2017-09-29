@@ -51,9 +51,6 @@ import {
     GLScreenQuad
 } from './GLScreenQuad.js';
 import {
-    PostProcessing
-} from './Shaders/PostProcessing.js';
-import {
     BackgroundImageShader,
     OctahedralEnvMapShader,
     LatLongEnvMapShader,
@@ -99,7 +96,6 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__drawPoints = false;
 
         let gl = this.__gl;
-        this.__glshaderScreenPostProcess = new PostProcessing(gl);
 
         this.__debugTextures = [undefined];
         // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
@@ -361,46 +357,20 @@ class GLVisualiveRenderer extends GLRenderer {
     drawVP(viewport) {
         /////////////////////////////////////
         // Debugging 
-
+        let gl = this.__gl;
         if (this.__debugMode > 0) {
             // Bind the default framebuffer
-            this.__gl.bindFramebuffer(this.__gl.FRAMEBUFFER, null);
-            this.__gl.viewport(0, 0, this.getWidth(), this.getHeight());
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0, 0, this.getWidth(), this.getHeight());
 
             let displayDebugTexture = this.__debugTextures[this.__debugMode];
             let renderstate = {};
-            this.__screenQuad.bindShader(renderstate);
-            this.__screenQuad.draw(renderstate, displayDebugTexture);
+            gl.screenQuad.bindShader(renderstate);
+            gl.screenQuad.draw(renderstate, displayDebugTexture);
         } else {
 
 
             viewport.draw(this.__renderstate);
-            /*
-                        /////////////////////////////////////
-                        // Post processing.
-
-                        // Bind the default framebuffer
-                        let gl = this.__gl;
-                        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                        gl.viewport(0, 0, this.getWidth(), this.getHeight());
-
-                        this.__glshaderScreenPostProcess.bind(this.__renderstate);
-
-                        let unifs = this.__renderstate.unifs;
-                        let fbo = viewport.getFbo();
-                        if ('antialiase' in unifs)
-                            gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-                        if ('textureSize' in unifs)
-                            gl.uniform2fv(unifs.textureSize.location, fbo.size);
-                        if ('gamma' in unifs)
-                            gl.uniform1f(unifs.gamma.location, this.__gamma);
-                        if ('exposure' in unifs)
-                            gl.uniform1f(unifs.exposure.location, this.__exposure);
-                        if ('tonemap' in unifs)
-                            gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-                        this.__screenQuad.draw(this.__renderstate, fbo.colorTexture);
-            */
 
             // this.__gizmoPass.draw(this.__renderstate);
             // viewport.drawOverlays(this.__renderstate);
@@ -438,17 +408,15 @@ class GLVisualiveRenderer extends GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        if (this.__stats)
-            this.__stats.begin();
+
+        let gl = this.__gl;
 
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()) {
                 this.__vrViewport.draw(this.__renderstate);
                 if (this.mirrorVRisplayToViewport) {
-                    this.__gl.viewport(0, 0, this.getWidth(), this.getHeight());
-                    this.__gl.disable(this.__gl.SCISSOR_TEST);
-                    if (this.__stats)
-                        this.__stats.end();
+                    gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+                    gl.disable(gl.SCISSOR_TEST);
                     this.redrawOccured.emit();
                     return;
                 }
@@ -463,8 +431,9 @@ class GLVisualiveRenderer extends GLRenderer {
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        if (this.__stats)
-            this.__stats.end();
+        gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+        // gl.disable(gl.SCISSOR_TEST);
+
         // console.log("Draw Calls:" + this.__renderstate.drawCalls + " Draw Count:" + this.__renderstate.drawCount);
         this.redrawOccured.emit();
 

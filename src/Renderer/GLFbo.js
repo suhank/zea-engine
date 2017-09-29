@@ -114,15 +114,19 @@ class GLFbo {
 
     }
 
+    // Triggered Automatically when the texture reizes.
     resize() {
-        //gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
-        // gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+        let gl = this.__gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+
+        // The coolor texture is destoryed and re-created when it is resized,
+        // so we must re-bind it here..
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
         if (this.__depthTexture) {
-            let gl = this.__gl;
             gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture);
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
         }
-        //this.__checkFramebuffer();
+        this.__checkFramebuffer();
         //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 

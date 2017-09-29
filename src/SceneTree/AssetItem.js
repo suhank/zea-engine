@@ -37,6 +37,10 @@ class AssetItem extends TreeItem {
         this.loaded = new Signal(true);
     }
 
+    __loadURL(url, filePath) {
+        console.error("TODO: Implement me... url:" +url);
+    }
+
     getGeometryLibrary() {
         return this.__geomLibrary;
     }

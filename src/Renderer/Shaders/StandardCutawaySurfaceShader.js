@@ -20,11 +20,12 @@ import './GLSL/PBRSurface.js';
 import './GLSL/modelMatrix.js';
 import './GLSL/debugColors.js';
 import './GLSL/ImagePyramid.js';
+import './GLSL/cutaways.js';
 
-class StandardSurfaceShader extends GLShader {
+class StandardCutawaySurfaceShader extends GLShader {
     constructor(gl) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardSurfaceShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardCutawaySurfaceShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -85,10 +86,18 @@ void main(void) {
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
+
+
+    if(dot(v_viewNormal, v_viewPos) > 0.0) {
+
+        // Move backfaces towards the camera to fix issues with zfighting of backfaces and frontfaces.
+        gl_Position.z += 0.000003 / gl_Position.w;
+    }
+
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardSurfaceShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardCutawaySurfaceShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -98,6 +107,7 @@ precision highp float;
 
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
+<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
 varying vec3 v_viewPos;
@@ -164,6 +174,10 @@ uniform bool _emissiveStrengthTexConnected;
 #endif
 
 void main(void) {
+
+    // Cutaways
+    if(cutaway(v_worldPos))
+        return;
 
 
     MaterialParams material;
@@ -278,7 +292,7 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('StandardSurfaceShader', StandardSurfaceShader);
+sgFactory.registerClass('StandardCutawaySurfaceShader', StandardCutawaySurfaceShader);
 export {
-    StandardSurfaceShader
+    StandardCutawaySurfaceShader
 };

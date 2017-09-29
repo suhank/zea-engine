@@ -153,7 +153,8 @@ class Material extends BaseItem {
             defaultValue = new Color();
         }
         let param = super.addParameter(paramName, defaultValue);
-        this.__makeParameterTexturable(param);
+        if(!param.setImage)
+            this.__makeParameterTexturable(param);
         if (image) {
             param.setImage(image)
         }
@@ -163,6 +164,7 @@ class Material extends BaseItem {
     addParameterInstance(param) {
         super.addParameterInstance(param);
         this.__makeParameterTexturable(param);
+        return param;
     }
 
     isTransparent() {

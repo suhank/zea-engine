@@ -82,8 +82,6 @@ class GLSimpleRenderer extends GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        if(this.__stats)
-            this.__stats.begin();
 
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()){
@@ -91,8 +89,6 @@ class GLSimpleRenderer extends GLRenderer {
                 if(this.mirrorVRisplayToViewport){
                     this.__gl.viewport(0, 0, this.getWidth(), this.getHeight());
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
-                    if(this.__stats)
-                        this.__stats.end();
                     this.redrawOccured.emit();
                     return;
                 }
@@ -107,9 +103,6 @@ class GLSimpleRenderer extends GLRenderer {
         for (let vp of this.__viewports)
             this.drawVP(vp);
 
-        if(this.__stats)
-            this.__stats.end();
-        
         this.redrawOccured.emit();
         
         // New Items may have been added during the pause.

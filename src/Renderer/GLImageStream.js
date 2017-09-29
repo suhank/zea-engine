@@ -53,7 +53,7 @@ class GLImageStream extends GLTexture2D {
 
     bindToUniform(renderstate, unif) {
 
-        if(!super.bindToUniform(renderstate, unif)){
+        if(!super.bindToUniform(renderstate, unif, 2)){
             return false;
         }
 

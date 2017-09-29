@@ -1,4 +1,10 @@
 const DEGTORAD = Math.PI / 180;
+Math.HALF_PI = Math.PI * 0.5;
+// Defines used to explicity specify types for WebGL.
+const UInt32 = 1;
+const SInt32 = 2;
+const Float32 = 3;
+
 Math.radToDeg = function(rad) {
     return rad / DEGTORAD;
 }
@@ -10,17 +16,12 @@ Number.isNumeric = (n) => {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
 
-// Defines used to explicity specify types for WebGL.
-const UInt32 = 1;
-const SInt32 = 2;
-const Float32 = 3;
 
 String.prototype.replaceAll = function(search, replacement) {
     var target = this;
     return target.replace(new RegExp(search, 'g'), replacement);
 };
 
-Math.HALF_PI = Math.PI * 0.5;
 
 let hashStr = function(str) {
     var hash = 0,
@@ -34,6 +35,43 @@ let hashStr = function(str) {
     return Math.abs(hash);
 };
 
+String.prototype.hash = ()=>{
+    return hashStr(this);
+}
+
+
+//trimming space from both side of the string
+String.prototype.trim = function() {
+    return this.replace(/^\s+|\s+$/g,"");
+}
+ 
+//trimming space from left side of the string
+String.prototype.ltrim = function() {
+    return this.replace(/^\s+/,"");
+}
+ 
+//trimming space from right side of the string
+String.prototype.rtrim = function() {
+    return this.replace(/\s+$/,"");
+}
+
+//pads left
+String.prototype.lpad = function(padString, length) {
+    var str = this;
+    while (str.length < length)
+        str = padString + str;
+    return str;
+}
+ 
+//pads right
+String.prototype.rpad = function(padString, length) {
+    var str = this;
+    while (str.length < length)
+        str = str + padString;
+    return str;
+}
+
+
 let JSON_stringify_fixedPrecision = function(val, space = 0, precision = 5) {
     return JSON.stringify(val, function(key, val) {
         return val ? (val.toFixed ? Number(val.toFixed(precision)) : val) : val;
@@ -46,11 +84,9 @@ Math.randomInt = function(min, max) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-
 Math.lerp  = (a, b, t) => {
     return a + t * (b - a);
 }
-
 
 Math.clamp = function(value, min, max) {
     return Math.min(Math.max(value, min), max);

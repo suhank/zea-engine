@@ -156,18 +156,6 @@ class GLRenderer {
         // Function Bindings.
         this.requestRedraw = this.requestRedraw.bind(this);
 
-        // this.__stats = new Stats();
-        // this.__stats.dom.style.position = 'absolute';
-        // this.__stats.dom.style.top = 0;
-        // this.__stats.dom.style.left = 0;
-        // this.__stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-        // this.__stats.dom.style.visibility = "hidden"
-        // canvasDiv.appendChild(this.__stats.dom);
-        // if (options.displayStats) {
-        //     this.__stats.dom.style.visibility = "visible";
-        //     this.__displayStats = true;
-        // }
-
         this.__shaderDirectives = {};
         this.__preproc = { };
     }
@@ -235,18 +223,6 @@ class GLRenderer {
     toggleDrawGrid() {
         this.__gridItem.visible = !this.__gridItem.visible;
         this.requestRedraw();
-    }
-
-    toggleStats() {
-        if (this.__stats) {
-            if (this.__displayStats) {
-                this.__stats.dom.style.visibility = "hidden";
-                this.__displayStats = false;
-            } else {
-                this.__stats.dom.style.visibility = "visible";
-                this.__displayStats = true;
-            }
-        }
     }
 
     ////////////////////////////////////////
@@ -364,6 +340,10 @@ class GLRenderer {
     // Renderer Setup
 
     get gl() {
+        return this.__gl;
+    }
+
+    getGL() {
         return this.__gl;
     }
 
@@ -738,14 +718,9 @@ class GLRenderer {
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
-        if (this.__stats)
-            this.__stats.begin();
 
         for (let vp of this.__viewports)
             this.drawVP(vp);
-
-        if (this.__stats)
-            this.__stats.end();
 
         this.redrawOccured.emit();
 

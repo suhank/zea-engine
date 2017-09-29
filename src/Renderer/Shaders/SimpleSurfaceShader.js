@@ -40,7 +40,7 @@ uniform mat4 projectionMatrix;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
-varying vec2 v_texCoords;
+varying vec2 v_textureCoord;
 #endif
 
 void main(void) {
@@ -55,7 +55,7 @@ void main(void) {
     v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
-    v_texCoords  = textureCoords;
+    v_textureCoord  = textureCoords;
 #endif
 }
 `);
@@ -71,7 +71,7 @@ precision highp float;
 varying vec4 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
-varying vec2 v_texCoords;
+varying vec2 v_textureCoord;
 #endif
 
 uniform mat4 cameraMatrix;
@@ -96,7 +96,7 @@ void main(void) {
     vec4 baseColor      = _baseColor;
     float opacity       = baseColor.a * _opacity;
 #else
-    vec2 texCoord       = vec2(v_texCoords.x, 1.0 - v_texCoords.y);
+    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
     vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord);
     float opacity       = baseColor.a * getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
 #endif

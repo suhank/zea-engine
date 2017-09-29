@@ -26,6 +26,9 @@ import {
 import {
     GLSelectionRect
 } from './Drawables/GLSelectionRect.js';
+import {
+    PostProcessing
+} from './Shaders/PostProcessing.js';
 
 class GLViewport extends BaseViewport {
     constructor(renderer, name, width, height) {
@@ -37,6 +40,12 @@ class GLViewport extends BaseViewport {
         // Layout coords, x:[0..1], y:[0..1]
         this.__bl = new Vec2(0, 0);
         this.__tr = new Vec2(1, 1);
+
+        this.__exposure = 0.0;
+        this.__exposureRange = [-5, 10];
+        this.__tonemap = true;
+        this.__gamma = 2.2;
+        this.__antialiase = false;
 
         this.__manipMode = 'highlighting';
         this.__mouseOverGizmo = undefined;
@@ -51,7 +60,6 @@ class GLViewport extends BaseViewport {
         // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
         // this.__overlayPass.addDrawItem(this.__selectionRect);
 
-        this.resized = new Signal();
         this.keyPressed = new Signal();
         this.mouseMoved = new Signal();
 
@@ -68,65 +76,23 @@ class GLViewport extends BaseViewport {
 
         this.__markerPenColor = new Color(1, 0, 0);
 
+        this.__glshaderScreenPostProcess = new PostProcessing(renderer.getGL());
+
         this.setCamera(new Camera('Default'));
 
         this.resize(width, height);
-    }
-
-    getName() {
-        return this.__name;
-    }
-
-    getBl() {
-        return this.__bl;
-    }
-    setBl(bl) {
-        this.__bl = bl;
-        this.resize(this.__canvasWidth, this.__canvasHeight);
-    }
-
-    getTr() {
-        return this.__tr;
-    }
-    setTr(tr) {
-        this.__tr = tr;
-        this.resize(this.__canvasWidth, this.__canvasHeight);
-    }
-
-    getPosX() {
-        return this.__x;
-    }
-    getPosY() {
-        return this.__y;
-    }
-    getWidth() {
-        return this.__width;
-    }
-    getHeight() {
-        return this.__height;
+        // this.createOffscreenFbo();
     }
 
     resize(width, height) {
-        this.__canvasWidth = width;
-        this.__canvasHeight = height;
-        this.__x = (this.__canvasWidth * this.__bl.x);
-        this.__y = (this.__canvasWidth * this.__bl.y);
-        this.__width = (this.__canvasWidth * this.__tr.x) - (this.__canvasWidth * this.__bl.x);
-        this.__height = (this.__canvasHeight * this.__tr.y) - (this.__canvasHeight * this.__bl.y);
-
+        super.resize(width, height);
         if (this.__camera)
             this.__updateProjectionMatrix();
 
-        if (this.__fbo) {
-            this.__fwBuffer.resize(this.__width, this.__height);
-            this.__fbo.resize();
-        }
         if (this.__geomDataBufferFbo) {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
         }
-
-        this.resized.emit();
     }
 
     getCamera() {
@@ -725,12 +691,39 @@ class GLViewport extends BaseViewport {
         renderstate.farDist = this.__camera.getFar();
         renderstate.viewportFrustumSize = this.__frustumDim;
         renderstate.viewScale = 1.0;
-        renderstate.eye = 0;//'L';
+        renderstate.eye = 0;// 0==Left, 1==Right;
 
         if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);
         }
         this.__renderer.drawScene(renderstate, false);
+
+
+        /////////////////////////////////////
+        // Post processing.
+        if (this.__fbo) {
+            let gl = this.__renderer.getGL();
+
+            // Bind the default framebuffer
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+            // this.__glshaderScreenPostProcess.bind(renderstate);
+
+            // let unifs = renderstate.unifs;
+            // if ('antialiase' in unifs)
+            //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+            // if ('textureSize' in unifs)
+            //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+            // if ('gamma' in unifs)
+            //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+            // if ('exposure' in unifs)
+            //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+            // if ('tonemap' in unifs)
+            //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+
+            gl.screenQuad.bindShader(renderstate);
+            gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+        }
     }
 
     // After post-processing, the overlays are rendered.

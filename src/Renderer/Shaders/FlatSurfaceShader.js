@@ -35,7 +35,7 @@ uniform mat4 projectionMatrix;
 /* VS Outputs */
 varying vec4 v_viewPos;
 #ifdef ENABLE_TEXTURES
-varying vec2 v_texCoords;
+varying vec2 v_textureCoord;
 #endif
 
 
@@ -46,8 +46,8 @@ void main(void) {
     v_viewPos = (modelViewMatrix * vec4(positions, 1.0));
     gl_Position = projectionMatrix * v_viewPos;
 
-    v_texCoords = texCoords;
-    v_texCoords.y = 1.0 - v_texCoords.y;// Flip y
+    v_textureCoord = texCoords;
+    v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 }
 `);
 
@@ -68,7 +68,7 @@ uniform bool _baseColorTexConnected;
 /* VS Outputs */
 varying vec4 v_viewPos;
 #ifdef ENABLE_TEXTURES
-varying vec2 v_texCoords;
+varying vec2 v_textureCoord;
 #endif
 
 
@@ -77,7 +77,7 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = _baseColor;
 #else
-    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_texCoords);
+    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_textureCoord);
 #endif
 
     gl_FragColor = baseColor;

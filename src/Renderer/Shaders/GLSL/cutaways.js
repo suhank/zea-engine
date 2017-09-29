@@ -34,10 +34,10 @@ float intersectRayPlane(Ray ray, Ray plane) {
     return sI;
 }
 
-bool cutaway() {
+bool cutaway(vec3 worldPos) {
 
     vec3 planePos = _planeNormal * _planeDist;
-    vec3 planeDir = v_worldPos - planePos;
+    vec3 planeDir = worldPos - planePos;
     float planeOffset = dot(planeDir, _planeNormal);
     if(planeOffset < 0.0){
         discard;

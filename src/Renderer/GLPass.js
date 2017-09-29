@@ -39,6 +39,10 @@ class GLPass {
         return glmaterial.bind(renderstate);
     }
 
+    drawItemSet(renderstate, gldrawitemset) {
+        gldrawitemset.draw(renderstate);  
+    }
+
     draw(renderstate) {
         let gl = this.__gl;
         // let passProfile = [];
@@ -54,7 +58,7 @@ class GLPass {
                         let gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                         for (let gldrawitemset of gldrawitemsets) {
                             // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
-                            gldrawitemset.draw(renderstate);
+                            this.drawItemSet(renderstate, gldrawitemset);
                         }
                     }
                     renderstate.materialCount++;

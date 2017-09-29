@@ -12,6 +12,9 @@ import {
 import {
     GLTexture2D
 } from './GLTexture2D.js';
+import {
+    GLFbo
+} from './GLFbo.js';
 
 class BaseViewport {
     constructor(renderer) {
@@ -19,6 +22,7 @@ class BaseViewport {
         this.__backgroundColor = new Color(0.4, 0.4, 0.4);
         this.__fbo = undefined;
         this.updated = new Signal();
+        this.resized = new Signal();
     }
 
     getRenderer() {
@@ -29,6 +33,28 @@ class BaseViewport {
         return this.__name;
     }
 
+    getBl() {
+        return this.__bl;
+    }
+    setBl(bl) {
+        this.__bl = bl;
+        this.resize(this.__canvasWidth, this.__canvasHeight);
+    }
+
+    getTr() {
+        return this.__tr;
+    }
+    setTr(tr) {
+        this.__tr = tr;
+        this.resize(this.__canvasWidth, this.__canvasHeight);
+    }
+
+    getPosX() {
+        return this.__x;
+    }
+    getPosY() {
+        return this.__y;
+    }
     getWidth() {
         return this.__width;
     }
@@ -70,6 +96,29 @@ class BaseViewport {
         this.updated.emit();
     }
 
+    resize(width, height) {
+        this.__canvasWidth = width;
+        this.__canvasHeight = height;
+        this.__x = (this.__canvasWidth * this.__bl.x);
+        this.__y = (this.__canvasWidth * this.__bl.y);
+        this.__width = (this.__canvasWidth * this.__tr.x) - (this.__canvasWidth * this.__bl.x);
+        this.__height = (this.__canvasHeight * this.__tr.y) - (this.__canvasHeight * this.__bl.y);
+
+        if (this.__camera)
+            this.__updateProjectionMatrix();
+
+        if (this.__fbo) {
+            this.__fbo.colorTexture.resize(this.__width, this.__height);
+            this.__fbo.resize();
+        }
+        if (this.__geomDataBufferFbo) {
+            this.__geomDataBuffer.resize(this.__width, this.__height);
+            this.__geomDataBufferFbo.resize();
+        }
+
+        this.resized.emit();
+    }
+
     ////////////////////////////
     // Fbo
 
@@ -77,31 +126,31 @@ class BaseViewport {
         return this.__fbo;
     }
 
-    createOffscreenFbo() {
+    createOffscreenFbo(channels='RGB') {
         let targetWidth = this.__width;
         let targetHeight = this.__height;
 
         let gl = this.__renderer.gl;
         this.__fwBuffer = new GLTexture2D(gl, {
             format: 'FLOAT',
-            channels: 'RGB',
+            channels,
             width: targetWidth,
             height: targetHeight
         });
         this.__fbo = new GLFbo(gl, this.__fwBuffer, true);
-        this.__fbo.setClearColor(this.__background.asArray());
+        this.__fbo.setClearColor(this.__backgroundColor.asArray());
     }
 
     ////////////////////////////
     // Fbo
 
     bindAndClear(renderstate) {
+        let gl = this.__renderer.gl;
         if (this.__fbo)
             this.__fbo.bindAndClear(renderstate);
         else {
-            let gl = this.__renderer.gl;
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(this.x, this.y, this.__width, this.__height);
+            gl.viewport(this.__x, this.__y, this.__width, this.__height);
             // Only sissor if multiple viewports are setup.
             // gl.enable(gl.SCISSOR_TEST);
             // gl.scissor(this.x, this.y, this.__width, this.__height);

@@ -7,8 +7,8 @@ class UIWidgetController {
     constructor(parameter) {
         this.__parameter = parameter;
         this.valueChanged = new Signal();
-        this.__parameter.valueChanged.connect((value)=>{
-            this.valueChanged.emit(value);
+        this.__parameter.valueChanged.connect(()=>{
+            this.valueChanged.emit(this.__parameter.getValue());
         });
 
         this.__label = this.__parameter.getName();

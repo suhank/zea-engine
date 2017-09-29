@@ -21,6 +21,7 @@ export * from './ScreenQuadShader.js';
 export * from './SimpleSurfaceShader.js';
 export * from './SimpleCutawaySurfaceShader.js';
 export * from './StandardSurfaceShader.js';
+export * from './StandardCutawaySurfaceShader.js';
 export * from './TransparentSurfaceShader.js';
 
 

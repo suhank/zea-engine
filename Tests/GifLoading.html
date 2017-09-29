@@ -148,7 +148,7 @@ Visualive.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
         renderer.setScene(scene);
 
         let frame = 0;
-        let param = image.getParamSet().getParameter('StreamAtlasIndex');
+        let param = image.getParameter('StreamAtlasIndex');
         let incrementingValue = false;
         let incrementFrame = () => {
             frame++;

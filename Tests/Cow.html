@@ -23,9 +23,6 @@
     // Scene
     let scene = new Visualive.Scene(resources);
 
-    // scene.envMap = new Visualive.EnvMapOctahedral('envMap', '/Tests/Assets/envs/test.env');
-    // scene.addIrradianceMap('Environment', 0.02); // 2cm texels
-    // scene.envMap.addGUI(gui);
 
     /////////////////////////////////////
     // Ground Plane
@@ -33,26 +30,9 @@
     groundMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
     groundMaterial.addParameter('roughness', 1.0);
     groundMaterial.addParameter('metallic', 0.0);
-    // let f1 = gui.addFolder('Ground');
-    // let paramHolder0 = {};
-    // Object.defineProperty(paramHolder0, 'baseColor', {
-    //     'get': () => {
-    //         return groundMaterial.baseColor.getAsRGBArray();
-    //     },
-    //     'set': (val) => {
-    //         groundMaterial.baseColor.setFromRGBArray(val);
-    //         groundMaterial.updated.emit();
-    //     }
-    // });
-    // f1.addColor(paramHolder0, 'baseColor');
-    // f1.add(groundMaterial, 'roughness', 0, 1);
-    // f1.add(groundMaterial, 'metallic', 0, 1);
-    // f1.add(groundMaterial, 'reflectance', 0.0, 1); 
-
     let quad = new Visualive.Plane(20, 20);
     let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
     groundPlaneItem.getLocalXfo().ori.rotateX(Math.PI * -0.5);
-    groundPlaneItem.irradianceMap = 'Environment';
     scene.getRoot().addChild(groundPlaneItem);
 
     /////////////////////////////////////
@@ -67,20 +47,19 @@
 
     /////////////////////////////////////
     // Obj Asset
-    let objAsset = new Visualive.ObjAsset('obj');
-    objAsset.splitObjects = false;
-    objAsset.splitGroupsIntoObjects = false;
-    objAsset.loadMtlFile = false;
+    let objAsset = new Visualive.ObjAsset('obj', scene.getResourceLoader());
+    objAsset.getParameter('splitObjects').setValue(true);
+    objAsset.getParameter('splitGroupsIntoObjects').setValue(true);
+    objAsset.getParameter('loadMtlFile').setValue(false);
+    objAsset.getParameter('unitsConversion').setValue(1.0);
+    objAsset.getParameter('defaultShader').setValue("SimpleSurfaceShader");
     objAsset.getLocalXfo().tr.set(0, 3.55, 0);
-    objAsset.defaultShader ='SimpleSurfaceShader';
     scene.getRoot().addChild(objAsset);
 
     objAsset.loaded.connect(function() {
-        // scene.generateIrradianceMapCoords();
         renderer.frameAll();
-        // Visualive.profilerReporter.generateReport();
     });
-    objAsset.loadURL(scene.getResourceLoader().resolveURL("/Assets/cow.obj"));
+    objAsset.getParameter('FilePath').setValue("/Assets/cow.obj");
 
 
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);

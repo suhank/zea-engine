@@ -204,7 +204,7 @@ class GLTexture2D extends RefCounted {
 
         this.bufferData(data, false, false);
         if (sizeChanged) {
-            this.resized.emit();
+            this.resized.emit(width, height);
         }
         if (emit) {
             this.updated.emit();
@@ -224,7 +224,7 @@ class GLTexture2D extends RefCounted {
         return this.bindToUniform(renderstate, unif);
     }
 
-    bindToUniform(renderstate, unif) {
+    bindToUniform(renderstate, unif, type=1) {
         if (!this.__loaded) {
             return false;
         }
@@ -241,8 +241,10 @@ class GLTexture2D extends RefCounted {
 
         let textureConnctedUnif = renderstate.unifs[unif.name+'Connected'];
         if (textureConnctedUnif){
-            gl.uniform1i(textureConnctedUnif.location, 1);
+            gl.uniform1i(textureConnctedUnif.location, type);
         }
+
+        return true;
     }
 
     destroy() {

@@ -135,6 +135,10 @@ class Camera extends TreeItem {
         return this.__fovParam.getValue();
     }
 
+    setFov(value) {
+        this.__fovParam.setValue(value);
+    }
+
     getFocalDistance() {
         return this.__focalDistanceParam.getValue();
     }
@@ -147,6 +151,10 @@ class Camera extends TreeItem {
 
     getIsOrthographic() {
         return this.__isOrthographicParam.getValue();
+    }
+
+    setIsOrthographic(value) {
+        this.__isOrthographicParam.setValue(value);
     }
 
     getViewMatrix() {

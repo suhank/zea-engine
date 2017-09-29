@@ -11,7 +11,8 @@ class FilePathParameter extends Parameter {
         this.__resourceLoader = resourceLoader;
 
         this.__url;
-        this.valueChanged.connect((value)=>{
+        this.valueChanged.connect(()=>{
+            let value = this.getValue();
             if (!this.__resourceLoader.resourceAvailable(value)) {
                 console.warn("Resource unavailable:" + value);
                 return;

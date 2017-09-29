@@ -140,6 +140,9 @@ class BaseItem extends RefCounted {
         if (paramName instanceof Parameter) {
             return this.addParameterInstance(paramName);
         }
+        if (defaultValue instanceof Parameter) {
+            return this.addParameterInstance(defaultValue);
+        }
 
         let param;
         if (typeof defaultValue == 'string') {
@@ -160,7 +163,7 @@ class BaseItem extends RefCounted {
     }
 
     addParameterInstance(param) {
-        param.valueChanged.connect((value) => this.parameterValueChanged.emit(param.getName(), value));
+        param.valueChanged.connect(() => this.parameterValueChanged.emit(param.getName()));
         param.nameChanged.connect((newName, oldName) => {
             let index = this.__paramMapping[oldName];
             delete this.__paramMapping[oldName];
