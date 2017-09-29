@@ -7,7 +7,6 @@ import { glslTypes } from './GLSLConstants.js';
 class ShaderLibrary {
     constructor() {
         this.__shaderModules = {};
-        this.__hashToName = {};
     }
 
     hasShaderModule(shaderName) {
@@ -52,7 +51,7 @@ class ShaderLibrary {
         let lines = glsl.split('\n');
 
         let result = {
-            glsl: "#line 0 " + shaderNameHash + " //starting:" + shaderName +"\n",
+            glsl: " //starting:" + shaderName +"\n",
             lines: lines,
             numLines: 0,
             includeMetaData: [],
@@ -114,7 +113,7 @@ class ShaderLibrary {
 
                             // Remove the first line of GLSL, and replace it with the line tag.
                             includedGLSL = includedGLSL.substring(includedGLSL.indexOf('\n')+1);
-                            result.glsl = result.glsl + "#line 0 " + includedModuleHash + " //including:" + elements.attributes.file +"\n";
+                            result.glsl = result.glsl + " //including:" + elements.attributes.file +"\n";
 
                             let repl = {};
                             for(let key in elements.attributes){
@@ -129,7 +128,7 @@ class ShaderLibrary {
                             result.includeMetaData.push({ src: result.numLines, tgt: i, length:shaderModule.numLines, key: includeFile });
 
                             // Add line number tag to GLSL so that the GLSL error messages have the correct file name and line number.
-                            result.glsl = result.glsl + "#line " + (i-result.includeMetaData.length) + " " + shaderNameHash + " //continuing:" + shaderName +"\n";
+                            result.glsl = result.glsl + " //continuing:" + shaderName +"\n";
                             result.numLines += shaderModule.numLines + 1;
 
                             for (let name in shaderModule.attributes) {
@@ -220,26 +219,11 @@ class ShaderLibrary {
             }
         }
 
-        this.__hashToName[shaderNameHash] = shaderName;
         this.__shaderModules[shaderName] = result;
 
         return result;
     }
 
-    getLine(shaderName, lineNum) {
-        let shaderModule = this.getShaderModule(shaderName);
-        // for(let includeMetaData of shaderModule.includeMetaData){
-        //     if( lineNum < includeMetaData.src + includeMetaData.length ){
-        //         return this.getLine(includeMetaData.key, lineNum - includeMetaData.src );
-        //     }
-        //     lineNum -= includeMetaData.length;
-        // }
-        return shaderModule.lines[lineNum];
-    }
-
-    getShaderNameFromHash(has) {
-        return this.__hashToName[has];
-    }
 }
 const shaderLibrary = new ShaderLibrary();
 

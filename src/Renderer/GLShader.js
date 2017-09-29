@@ -24,7 +24,7 @@ import {
 
 let bindParam = (gl, param, renderstate, gltextures={})=>{
     let name =  param.getName();
-    // console.log("bindParam:" + name + ":" + value);
+    // console.log("bindParam:" + name);
     if(param.getValue() instanceof Image2D ){
         let gltexture = gltextures[name];
         let unif = renderstate.unifs['_'+name+'Tex'];
@@ -34,15 +34,19 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
         // If the texture didn't bind, then let the regular value be bound...continue into the rest of the function.
         // return;
     }
-    let unifName = '_'+name;
-    let unif = renderstate.unifs[unifName];
+
+    let unif = renderstate.unifs['_'+name];
     if (unif == undefined)
         return;
+
+    // Note: we must set the texConnected value to 0 here so texutres bound for one
+    // Material do not stay bound for subsequent materials.
+    let textureConnctedUnif = renderstate.unifs[unif.name+'TexConnected'];
+    if (textureConnctedUnif){
+        gl.uniform1i(textureConnctedUnif.location, 0);
+    }
+
     let value =  param.getValue(false);
-    // let textureConnctedUnif = renderstate.unifs[unifName+'TexConnected'];
-    // if (textureConnctedUnif){
-    //     gl.uniform1i(textureConnctedUnif.location, 0);
-    // }
     switch (unif['type']) {
     case Boolean:
         // gl.uniform1ui(unif.location, value);// WebGL 2
@@ -168,6 +172,7 @@ class GLShader extends BaseItem {
         if (!gl.getShaderParameter(shaderHdl, gl.COMPILE_STATUS)) {
             console.log("Errors in :" + this.constructor.name);
             let errors = gl.getShaderInfoLog(shaderHdl).split('\n');
+            let errorLines = {};
             for (let i in errors) {
                 if (errors[i].startsWith("'")) {
                     errors[i - 1] = errors[i - 1] + errors[i];
@@ -177,29 +182,23 @@ class GLShader extends BaseItem {
                 }
                 let parts = errors[i].split(':');
                 if (parts.length >= 2) {
-                    let shaderHash = parts[1].trim();
-                    let shaderName = shaderLibrary.getShaderNameFromHash(shaderHash);
-                    if(!shaderName)
-                        continue;
-                    parts[1] = shaderName;
-                    errors[i] = parts.join(':');
                     let lineNum = parseInt(parts[2]); // TODO check against ATI and intel cards
                     if (!isNaN(lineNum)) {
-                        // find the line where this error occured and display it. 
-                        let buggyLines = [];
-                        for (let j = -3; j < 3; j++) {
-                            if (j == 0)
-                                buggyLines.push(">>>" + shaderLibrary.getLine(shaderName, lineNum));
-                            else
-                                buggyLines.push(shaderLibrary.getLine(shaderName, lineNum + j))
-                        }
-                        errors[i] = parts.join(':\n') + buggyLines.join('\n');
+                        errorLines[lineNum] = errors[i];
                     }
                 }
-                console.log(errors[i]);
             }
-            console.warn("An error occurred compiling the shader '" + this.constructor.name + "." + name + "': \n\n" + errors.join('\n'));
-            console.warn(glsl);
+            let numberedLinesWithErrors = [];
+            let lines = glsl.split('\n');
+            for(let i = 0; i<lines.length; i++) {
+                numberedLinesWithErrors.push(((i+1) + ":").lpad(' ', 3) + lines[i]);
+                if((i+1) in errorLines) {
+                    let error = errorLines[(i+1)];
+                    numberedLinesWithErrors.push(error);
+                    numberedLinesWithErrors.push('-'.lpad('-', error.length));
+                }
+            }
+            console.warn("An error occurred compiling the shader '" + this.constructor.name + "." + name + "': \n\n" + errors.join('\n') + "\n\n" + numberedLinesWithErrors.join('\n'));
             return null;
         }
         return shaderHdl;
