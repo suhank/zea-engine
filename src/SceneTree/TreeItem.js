@@ -21,7 +21,6 @@ class TreeItem extends BaseItem {
     constructor(name) {
         super(name)
 
-        this.__boundingBoxDirty = true;
         this.__inheritedVisiblity = true;
         this.__selectable = true;
 
@@ -73,11 +72,12 @@ class TreeItem extends BaseItem {
         this.selectedChanged = this.__selectedParam.valueChanged;
         this.localXfoChanged = this.__localXfoParam.valueChanged;
         this.globalXfoChanged = this.__globalXfoParam.valueChanged;
+        this.boundingChanged = this.__boundingBoxParam.valueChanged;
 
         this.parentChanged = this.ownerChanged;
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
-        this.boundingBoxDirtied = new Signal();
+        // this.boundingBoxDirtied = new Signal();
 
         this.treeItemGlobalXfoChanged = new Signal();
     }
@@ -207,11 +207,11 @@ class TreeItem extends BaseItem {
         this.__globalXfoParam.setValue(xfo);
         // this._setLocalXfoDirty();
 
-        let parentItem = this.getParentItem();
-        if (parentItem !== undefined)
-            this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(xfo));
-        else
-            this.__localXfoParam.setValue(xfo);
+        // let parentItem = this.getParentItem();
+        // if (parentItem !== undefined)
+        //     this.__localXfoParam.setValue(parentItem.getGlobalXfo().inverse().multiply(xfo));
+        // else
+        //     this.__localXfoParam.setValue(xfo);
     }
 
     // updateGlobalXfo() {
@@ -253,7 +253,7 @@ class TreeItem extends BaseItem {
 
     _setGlobalXfoDirty() {
         this.__globalXfoParam.setDirty(this._cleanGlobalXfo);
-        this._setBoundingBoxDirty();
+        // this._setBoundingBoxDirty();
     }
 
     //////////////////////////////////////////
@@ -323,14 +323,11 @@ class TreeItem extends BaseItem {
     }
 
     getBoundingBox() {
-        // if (this.__boundingBoxDirty)
-        //     this.updateBoundingBox();
         return this.__boundingBoxParam.getValue();
     }
 
     _setBoundingBoxDirty() {
         this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
-        this.boundingBoxDirtied.emit();
     }
 
     _cleanBoundingBox(bbox) {
@@ -363,14 +360,14 @@ class TreeItem extends BaseItem {
         this.__childItems.push(childItem);
         childItem.setParentItem(this);
 
-        childItem.boundingBoxDirtied.connect(() => {
+        childItem.boundingChanged.connect(() => {
             this._setBoundingBoxDirty();
         });
         childItem.visibilityChanged.connect(() => {
             this._setBoundingBoxDirty();
         });
 
-        this.__boundingBoxDirty = true;
+        this._setBoundingBoxDirty();
         this.childAdded.emit(childItem);
     }
 
@@ -391,7 +388,7 @@ class TreeItem extends BaseItem {
         this.__childItems.splice(index, 1);
         if (destroy)
             childItem.destroy();
-        this.__boundingBoxDirty = true;
+        this._setBoundingBoxDirty();
     }
 
     removeChildByHandle(childItem, destroy = true) {
@@ -406,7 +403,7 @@ class TreeItem extends BaseItem {
             for (let childItem of this.__childItems)
                 childItem.destroy();
         this.__childItems = [];
-        this.__boundingBoxDirty = true;
+        this._setBoundingBoxDirty();
     }
 
     indexOfChild(childItem) {

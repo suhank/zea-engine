@@ -37,8 +37,9 @@ class BaseParameter {
 
     setDirty(cleanerFn) {
         // If already dirty, simply return.
-        if(this.__cleanerFn === cleanerFn)
+        if(this.__cleanerFn === cleanerFn){
             return false;
+        }
 
         if(!cleanerFn || (this.__cleanerFn &&  this.__cleanerFn !== cleanerFn)) {
             throw("Error setting cleaner Fn. Can only have one cleaner bound.");

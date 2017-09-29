@@ -26,12 +26,23 @@ class GeomItem extends TreeItem {
         this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
         this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
+
+        let _cleanGeomXfo = (xfo)=>{
+            return this.getGlobalXfo().multiply(this.__geomOffsetXfoParam.getValue());
+        }
+
+        let _setGeomXfoDirty = ()=>{
+            this.__geomXfoParam.setDirty(_cleanGeomXfo);
+            // this.boundingBoxDirtied.emit();
+        }
+
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            this._setGeomXfoDirty();
+            _setGeomXfoDirty();
         });
         this.__geomOffsetXfoParam.valueChanged.connect((changeType)=>{
-            this._setGeomXfoDirty();
+            _setGeomXfoDirty();
         });
+        _setGeomXfoDirty();
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
         this.materialAssigned = new Signal();
@@ -68,7 +79,7 @@ class GeomItem extends TreeItem {
         cloned.setMaterial(this.__material);// clone?
 
         cloned.__lightmapName = this.__lightmapName;
-        cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
+        // cloned.__lightmapCoordsOffset = this.__lightmapCoordsOffset;
     }
 
     //////////////////////////////////////////
@@ -89,6 +100,7 @@ class GeomItem extends TreeItem {
                 this.__geom.addRef(this);
                 this.__geom.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
             }
+            this._setBoundingBoxDirty();
             this.geomAssigned.emit(this.__geom);
         }
     }
@@ -140,8 +152,8 @@ class GeomItem extends TreeItem {
     }
     setGlobalXfo(xfo) {
         super.setGlobalXfo(xfo);
-        this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-        this.geomXfoChanged.emit(this.__geomXfo);
+        // this.__geomXfo = this.getGlobalXfo().multiply(this.__geomOffsetXfo);
+        // this.geomXfoChanged.emit(this.__geomXfo);
     }
 
     getGeomOffsetXfo() {
@@ -160,17 +172,9 @@ class GeomItem extends TreeItem {
     //     this.geomXfoChanged.emit(this.__geomXfo);
     // }
 
-    _cleanGeomXfo(xfo) {
-        return this.getGlobalXfo().multiply(this.__geomOffsetXfo);
-    }
-
-    _setGeomXfoDirty() {
-        this.__geomXfoParam.setDirty(this._cleanGeomXfo);
-        this.boundingBoxDirtied.emit();
-    }
 
     getGeomXfo() {
-        this.__geomXfoParam.getValue();
+        return this.__geomXfoParam.getValue();
     }
 
     //////////////////////////////////////////
@@ -204,14 +208,16 @@ class GeomItem extends TreeItem {
     }
 
     getLightmapCoordsOffset() {
-        return this.__lightmapCoordsOffset;
+        return this.__lightmapCoordsParam.getValue();
     }
 
     // The root asset item pushes its offset to the geom items in the
     // tree. This offsets the light cooords for each geom.
     applyAssetLightmapSettings(lightmapName, offset) {
         this.__lightmap = lightmapName;
-        this.__lightmapCoordsOffset.addInPlace(offset);
+        let coords = this.__lightmapCoordsParam.getValue();
+        coords.addInPlace(offset);
+        this.__lightmapCoordsParam.setValue(coords);
     }
 
     /////////////////////////////
@@ -235,7 +241,9 @@ class GeomItem extends TreeItem {
         }
 
         if ('geomOffsetXfo' in json) {
-            this.__geomOffsetXfo.fromJSON(json.geomOffsetXfo);
+            let xfo = new Xfo();
+            xfo.fromJSON(json.geomOffsetXfo);
+            this.__geomOffsetXfoParam.setValue(xfo);
         }
 
 
@@ -248,8 +256,10 @@ class GeomItem extends TreeItem {
             }
         }
 
-        this.__lightmapCoordsOffset.fromJSON(json.lightmapCoordsOffset);
-        this.__boundingBoxDirty = true;
+        let coords = new Vec2();
+        coords.fromJSON(json.lightmapCoordsOffset);
+        this.__lightmapCoordsParam.setValue(coords);
+        this._setBoundingBoxDirty();
         return json
     }
 
@@ -295,7 +305,7 @@ class GeomItem extends TreeItem {
             this.setMaterial(material);
         }
 
-        this.__lightmapCoordsOffset = reader.loadFloat32Vec2();
+        this.__lightmapCoordsParam.setValue(reader.loadFloat32Vec2());
     }
 
 
