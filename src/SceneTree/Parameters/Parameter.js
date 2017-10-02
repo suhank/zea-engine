@@ -92,8 +92,12 @@ class Parameter extends BaseParameter {
 
     getValue() {
         if(this.__cleanerFn) {
-            this.__value = this.__cleanerFn(this.__value);
+            // Clean the param before we start evaluating the connected op.
+            // this is so that operators can read from the current value
+            // to compute the next.
+            let fn = this.__cleanerFn;
             this.__cleanerFn = undefined;
+            this.__value = fn(this.__value);
         }
         return this.__value;
     }

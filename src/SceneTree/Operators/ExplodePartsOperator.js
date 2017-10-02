@@ -20,16 +20,15 @@ class ExplodePartsOperator extends Operator {
         this.addParameter(new Parameter('Cascading', true, 'Boolean'));
         this.addParameter(new Parameter('Dir', new Vec3(1, 0, 0), 'Vec3'));
         this.__parts = [];
-        this.__resolvedParts = [];
         this.__stages = 2;
     }
 
 
     connectParts(partGroups) {
         // e.g. [['.a/b/c'], [./foo]]
+        this.__partGroups = partGroups;
         this.__stages = partGroups.length;
         this.__parts = [];
-        this.__resolvedParts = [];
         for(let i=0; i<partGroups.length; i++) {
             let partGroup = partGroups[i];
             if(!partGroup){
@@ -41,7 +40,6 @@ class ExplodePartsOperator extends Operator {
             for(let path of partGroup) {
                 let treeItem = this.__ownerItem.resolvePath(path);
                 if(treeItem) {
-                    this.__resolvedParts.push(treeItem);
                     this.__parts.push({
                         stage: i,
                         initialXfo: treeItem.getGlobalXfo().clone()
@@ -59,11 +57,6 @@ class ExplodePartsOperator extends Operator {
         let explodeDir = this.getParameter('Dir').getValue();
 
         for(let i=0; i<this.__parts.length; i++) {
-            let resolvedPart = this.__resolvedParts[i];
-            if(!resolvedPart){
-                continue;
-            }
-
             let part = this.__parts[i];
             let dist;
             if(cascading) {

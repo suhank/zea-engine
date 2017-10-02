@@ -22,7 +22,8 @@ class Operator extends BaseItem {
                     this.evaluate();
                     return param.getValue();
                 };
-                param.setDirty(evalOutput) 
+                if(!param.isDirty())
+                    param.setDirty(evalOutput);
             })
         });
     }

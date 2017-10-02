@@ -40,6 +40,10 @@ class UIWidgetController {
         this.__enabled = enabled;
     }
 
+    getValue(){
+        return this.__parameter.getValue();
+    }
+
     setValue(value, mode = 0) {
         switch (mode) {
             case 0:

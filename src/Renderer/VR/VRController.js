@@ -137,7 +137,7 @@ class VRController extends Gizmo {
     }
 
     setTipColor(val) {
-        this.__mat.baseColor.setFromOther(val);
+        this.__mat.getParameter('baseColor').setValue(val);
     }
 
     update(gamepad) {

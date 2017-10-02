@@ -81,7 +81,10 @@ class MaterialLibrary {
     }
 
     setMaterialTypeMapping(materialTypeMapping) {
-        this.__materialTypeMapping = materialTypeMapping;
+        if(!this.__materialTypeMapping)
+            this.__materialTypeMapping = {};
+        for(let key in materialTypeMapping)
+            this.__materialTypeMapping[key] = materialTypeMapping[key];
     }
 
     hasMaterial(name) {

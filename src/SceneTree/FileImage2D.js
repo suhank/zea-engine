@@ -40,8 +40,6 @@ class FileImage2D extends Image2D {
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
-        this.loaded = new Signal();
-
         if (resourcePath && resourcePath != '')
             this.loadResource(resourcePath);
     }

@@ -506,12 +506,12 @@ class VRViewport extends BaseViewport {
         // Emit a signal for the shared session.
         let data = {
             interfaceType: 'Vive',
-            viewXfo: this.__vrhead.getTreeItem().globalXfo,
+            viewXfo: this.__vrhead.getTreeItem().getGlobalXfo(),
             controllers: []
         }
         for (let controller of this.__vrControllers) {
             data.controllers.push({
-                xfo: controller.getTreeItem().globalXfo
+                xfo: controller.getTreeItem().getGlobalXfo()
             });
         }
         this.viewChanged.emit(data);

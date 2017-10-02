@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Exploded Parts Operator</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+
+        <script src="../external/helpers.js"></script>
+        <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/VisualiveUI-dev.js"></script>
+        
+        <script type="text/javascript">
+
+    let div = addCanvas();
+    let resources = generateResourcesDict([]);
+    let scene = new Visualive.Scene(resources);
+
+    let asset = new Visualive.TreeItem('gears');
+    scene.getRoot().addChild(asset);
+
+    let index = 0;
+    let gearBindings = [];
+    let addGear = (pos, radius, teeth, axis, color)=> {
+        let gearGeom = new Visualive.Cylinder(radius, 0.2, teeth);
+        let gearmaterial = new Visualive.Material('gearmaterial', 'SimpleSurfaceShader');
+        gearmaterial.addParameter('baseColor', color);
+        let geomItem = new Visualive.GeomItem('gear'+(index++), gearGeom, gearmaterial);
+        let xfo = new Visualive.Xfo();
+        xfo.tr = pos;
+        // xfo.ori.setFromDirectionAndUpvector(axis, new Visualive.Vec3(1, 0, 0));
+        geomItem.setLocalXfo(xfo);
+        asset.addChild(geomItem);
+
+        gearBindings.push({ path: geomItem.getPath(), teeth, axis});
+    }
+    addGear(new Visualive.Vec3(0, 0, 0), 2.5, 12, new Visualive.Vec3(0, 1, 0), new Visualive.Color(1.0, 0.0, 0.0));
+    addGear(new Visualive.Vec3(3.5, 0, 0), 1.2, 8, new Visualive.Vec3(0, 1, 0), new Visualive.Color(0.0, 0.0, 1.0));
+    addGear(new Visualive.Vec3(3.5, 0, 1.6), 0.6, 5, new Visualive.Vec3(0, 1, 0), new Visualive.Color(1.0, 1.0, 0.0));
+
+
+    let op = new Visualive.GearsOperator(scene.getRoot());
+    let revolutionsParam = op.getParameter('Revolutions');
+    revolutionsParam.setRange([0, 0.5]);
+    // let rpmParam = op.getParameter('RPM');
+    // rpmParam.setValue(12.0);
+    // rpmParam.setRange([0, 60]);
+    op.connectParts(gearBindings);
+
+
+
+    let renderer = new Visualive.GLSimpleRenderer(div);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 10, 15), new Visualive.Vec3(0, 0, 0));
+    renderer.setScene(scene);
+    renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
+    renderer.resumeDrawing();
+
+    //////////////////////////////////
+    // Setup the UI
+    let widgetPanel = new Visualive.UIWidgetPanel();
+
+    let sliderController = new Visualive.SliderController(revolutionsParam);
+    widgetPanel.addWidgetController(sliderController);
+
+    let uicontroller = new Visualive.UIController();
+    uicontroller.addWidgetPanel(widgetPanel);
+
+
+    VisualiveUI.renderUI(renderer, uicontroller);
+
+        </script> 
+    </body>
+</html>

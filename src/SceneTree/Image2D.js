@@ -27,6 +27,10 @@ class Image2D extends BaseItem {
         this.mipMapped = false;
 
         this.updated = new Signal();
+
+        // Note: many parts of the code assume a 'loaded' signal.
+        // We should probably deprecate and use only 'updated'.
+        this.loaded = new Signal();
     }
 
     isLoaded() {

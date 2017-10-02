@@ -154,7 +154,7 @@ uniform bool _reflectanceTexConnected;
 
 uniform sampler2D _normalTex;
 uniform bool _normalTexConnected;
-uniform float _normalScale;
+// uniform float _normalScale;
 #endif
 
 uniform sampler2D _emissiveStrengthTex;
