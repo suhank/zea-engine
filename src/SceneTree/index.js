@@ -18,6 +18,7 @@ export * from './GeomLibrary.js';
 export * from './Material.js';
 export * from './Image2D.js';
 export * from './DataImage2D.js';
+export * from './Label.js';
 export * from './FileImage2D.js';
 export * from './WebcamImage2D.js';
 export * from './HDRImage2D.js';

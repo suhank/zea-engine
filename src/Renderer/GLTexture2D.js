@@ -98,6 +98,7 @@ class GLTexture2D extends RefCounted {
         this.__wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
         this.__flipY = ('flipY' in params) ? params['flipY'] : false;
         this.__mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
+        this.flags = ('flags' in params) ? params['flags'] : 0;
 
         // if (this.__format == 'FLOAT') {
         //     if (gl.__ext_float){

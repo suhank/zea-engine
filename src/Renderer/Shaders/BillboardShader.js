@@ -25,10 +25,8 @@ instancedattribute float instanceIds;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
-//uniform ImageAtlas atlasBillboards;
 uniform sampler2D atlasBillboards_layout;
 uniform vec4 atlasBillboards_desc;
-
 
 uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
@@ -104,7 +102,6 @@ precision highp float;
 <%include file="utils/imageAtlas.glsl"/>
 
 
-//uniform ImageAtlas atlasBillboards;
 uniform sampler2D atlasBillboards;
 
 
@@ -115,12 +112,14 @@ varying vec4 v_tint;
 
 void main(void) {
     vec4 color = texture2D(atlasBillboards, v_texCoord);
-    if(color.r > 0.95)
-        discard;
+    // if(color.r > 0.95)
+    //     discard;
     // TODO: for colors images on billbaords, we need to separate the
     // alpah value into an alpha channel, (and maybe the code here can select .a or luminance)
-    gl_FragColor.rgb = v_tint.rgb * (1.0 - v_gradient.y);
-    gl_FragColor.a = (1.0-color.r);
+    // gl_FragColor.rgb = v_tint.rgb * (1.0 - v_gradient.y);
+    // gl_FragColor.a = color.r;//(1.0-color.r);
+
+    gl_FragColor = color;
 }
 `);
     }

@@ -72,9 +72,15 @@ precision highp float;
 
 uniform sampler2D texture;
 uniform vec2 textureDim;
+uniform int flags;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
+
+float luminanceFromRGB(vec3 rgb) {
+    return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
+}
+
 
 void main(void) {
     vec2 pixelCoord = v_texCoord*textureDim;
@@ -101,7 +107,19 @@ void main(void) {
     }
 
     vec4 texel = texture2D(texture, uv);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1);
+    // TODO: check why we pre-multiply alphas here.
+    // gl_FragColor = vec4(texel.rgb/texel.a, texel.a);
+
+    if(flags == 2) {
+        gl_FragColor = vec4(texel.rgb, luminanceFromRGB(texel.rgb));
+    }
+    else if(flags == 4) {
+        gl_FragColor = vec4(texel.rgb, 1.0-luminanceFromRGB(texel.rgb));
+    }
+    else {
+        gl_FragColor = texel;
+    }
+
 }
 
 `);
@@ -275,6 +293,7 @@ class ImageAtlas extends GLTexture2D {
             gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
+            gl.uniform1i(unifs.flags.location, image.flags);
             gl.drawQuad();
         }
 

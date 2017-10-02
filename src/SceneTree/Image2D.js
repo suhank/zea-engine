@@ -26,6 +26,9 @@ class Image2D extends BaseItem {
 
         this.mipMapped = false;
 
+        // Used to create alpha mapped images from black and white.
+        this.flags = 0;
+
         this.updated = new Signal();
 
         // Note: many parts of the code assume a 'loaded' signal.
@@ -74,7 +77,8 @@ class Image2D extends BaseItem {
             height: this.height,
             wrap: this.wrap,
             flipY: this.flipY,
-            mipMapped: this.mipMapped
+            mipMapped: this.mipMapped,
+            flags: this.flags
         }
     }
 

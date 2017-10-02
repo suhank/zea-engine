@@ -22,18 +22,23 @@
     let scene = new Visualive.Scene(resources);
 
     {
-        let billboard = new Visualive.BillboardItem('billboard1', new Visualive.FileImage2D(Trapeze2, scene.getResourceLoader()));
+        let image = new Visualive.FileImage2D(Trapeze2, scene.getResourceLoader());
+        image.flags = 4;
+        let billboard = new Visualive.BillboardItem('billboard1', image);
         let xfo = new Visualive.Xfo();
         xfo.tr.set( -1, 0, 1 );
         billboard.setLocalXfo(xfo);
         billboard.scale = 2.5;
         billboard.gradient = 0.75;
         billboard.alignedToCamera = false;
+        billboard.flags = 4;
         scene.getRoot().addChild(billboard);
     }
 
-    {
-        let billboard = new Visualive.BillboardItem('billboard0', new Visualive.FileImage2D(SolorFloorPerformer, scene.getResourceLoader()));
+    {   
+        let image =  new Visualive.FileImage2D(SolorFloorPerformer, scene.getResourceLoader());
+        image.flags = 4;
+        let billboard = new Visualive.BillboardItem('billboard0', image);
         let xfo = new Visualive.Xfo();
         xfo.tr.set( 1, 0, 0 );
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);

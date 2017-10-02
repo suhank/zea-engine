@@ -74,7 +74,7 @@ class VRController extends Gizmo {
             }
 
             let uimat = new Material('uimat', 'FlatSurfaceShader');
-            this.__uiimage =  new DataImage2D();
+            this.__uiimage = new DataImage2D();
             uimat.addParameter('baseColor', this.__uiimage);
 
             this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);

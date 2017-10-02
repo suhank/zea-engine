@@ -337,7 +337,7 @@ class FileImage2D extends Image2D {
             this.getParameter('StreamAtlasDesc').setValue(new Vec4(atlasSize.x, atlasSize.y, 0, 0));
             this.getParameter('StreamAtlasIndex').setRange([0, frames.length]);
 
-            this.__data = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);;
+            this.__data = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
             this.__loaded = true;
             this.__resourceLoader.addWorkDone(resourcePath, 1);
             this.loaded.emit();

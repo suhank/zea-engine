@@ -20,7 +20,7 @@ class DataImage2D extends Image2D {
         this.format = 'UNSIGNED_BYTE';
         this.__loaded = false;
 
-        this.__data = new Uint8Array(4);
+        // this.__data = new Uint8Array(4);
         this.width = 1;
         this.height = 1;
     }

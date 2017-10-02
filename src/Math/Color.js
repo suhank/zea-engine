@@ -144,6 +144,16 @@ class Color extends AttrValue {
         
         this.setFromRGB(rgb.r, rgb.g, rgb.b);
     }
+
+    
+    toHex() {
+        function componentToHex(c) {
+            let int = Math.round(c*255);
+            var hex = int.toString(16);
+            return hex.length == 1 ? "0" + hex : hex;
+        }
+        return "#" + componentToHex(this.r) + componentToHex(this.g) + componentToHex(this.b);
+    }
     /////////////////////////////////////////
 
 
