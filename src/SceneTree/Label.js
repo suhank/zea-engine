@@ -79,20 +79,22 @@ class Label  extends DataImage2D {
         super(text);
 
         this.text = text;
-        this.color = new Color(1.0,1.0,1.0);
+        this.fontColor = new Color(1.0,1.0,1.0);
         this.font = "Calibri";
         this.textAlign = "left";
         this.fontSize = 22;
-        // this.left = 0;
-        this.border = 1;
-        this.margin = 1;
-        this.borderRadius = 10;
-        this.outline = false;
-        this.outlineColor = new Color(0.8, 0.2, 0.2, 1.0);
-        this.filleOutline = false;
-        this.strokeOutline = true;
         this.fillText = true;
-        this.fillBackboard = true;
+        // this.left = 0;
+        this.borderWidth = 1;
+        this.margin = this.fontSize * 0.5;
+        this.borderRadius = this.fontSize * 0.5;
+        this.outline = false;
+        this.outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
+
+        this.background = true;
+        this.backgroundColor = this.outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
+        this.fillBackground = true;
+        this.strokeBackgroundOutline = true;
 
 
         this.__canvasElem = document.createElement('canvas');
@@ -106,52 +108,40 @@ class Label  extends DataImage2D {
         let ctx2d = this.__canvasElem.getContext('2d', {
             'alpha': true
         });
-        ctx2d.globalAlpha = 0.0;
 
-        // finally query the various pixel ratios
-        let devicePixelRatio = window.devicePixelRatio || 1;
-        let backingStoreRatio = ctx2d.webkitBackingStorePixelRatio ||
-                            ctx2d.mozBackingStorePixelRatio ||
-                            ctx2d.msBackingStorePixelRatio ||
-                            ctx2d.oBackingStorePixelRatio ||
-                            ctx2d.backingStorePixelRatio || 1;
-
-        let ratio = devicePixelRatio / backingStoreRatio;
+        // let ratio = devicePixelRatio / backingStoreRatio;
+        let margin = this.margin + this.borderWidth;
 
         ctx2d.font = this.fontSize + 'px ' + this.font;
-        this.width = (ctx2d.measureText(this.text).width + (this.border * 2));// * ratio;
-        this.height = (parseInt(this.fontSize) + (this.border * 2));// * ratio;
-        console.log("this.width:" + this.width + " this.height:" + this.height )
+        this.width = (ctx2d.measureText(this.text).width + (margin * 2));
+        this.height = (parseInt(this.fontSize) + (margin * 2));
         ctx2d.canvas.width = this.width;
         ctx2d.canvas.height = this.height;
 
-        ctx2d.clearRect(0, 0, this.width, this.height);
+        // ctx2d.clearRect(0, 0, this.width, this.height);
         ctx2d.fillStyle = "rgba(0, 0, 0, 0.0)";
         ctx2d.fillRect(0, 0, this.width, this.height);
 
-        if (this.fillBackboard) {
+        if (this.background) {
             ctx2d.fillStyle = this.outlineColor.toHex();
-            ctx2d.strokeStyle = this.outlineColor.lerp(new Color(1, 1, 1, 1), 0.5).toHex();
-            if (this.strokeOutline)
-                roundRect(ctx2d, this.border, this.border, this.width - (this.border*2), this.height - (this.border*2), this.borderRadius, true, this.strokeOutline);
-            else
-                roundRect(ctx2d, 0, 0, this.width, this.height, this.borderRadius, true, this.strokeOutline);
+            ctx2d.strokeStyle = this.backgroundColor.toHex();
+            roundRect(ctx2d, this.borderWidth, this.borderWidth, this.width - (this.borderWidth*2), this.height - (this.borderWidth*2), this.borderRadius, this.fillBackground, this.strokeOutline);
         }
 
         ctx2d.font = this.fontSize + 'px ' + this.font;
         ctx2d.textAlign = this.textAlign;
-        ctx2d.fillStyle = this.color.toHex();
+        ctx2d.fillStyle = this.fontColor.toHex();
         ctx2d.textBaseline = "hanging";
-        ctx2d.fillText(this.text, this.border, this.border);
+        console.log(margin);
+        ctx2d.fillText(this.text, margin, margin);
         
-        // if (this.outline) {
-        //     ctx2d.strokeStyle = this.outlineColor.toHex();
-        //     ctx2d.lineWidth = 1.5;
-        //     ctx2d.strokeText(this.text, this.border, this.border);
-        // }
+        if (this.outline) {
+            ctx2d.strokeStyle = this.outlineColor.toHex();
+            ctx2d.lineWidth = 1.5;
+            ctx2d.strokeText(this.text, margin, margin);
+        }
 
         this.__data = ctx2d.getImageData(0, 0, this.width, this.height);
-        console.log(this.__data.data[3])
         this.__loaded = true;
         this.loaded.emit();
     }

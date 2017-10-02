@@ -20,6 +20,9 @@
     let asset = new Visualive.TreeItem('labels');
     scene.getRoot().addChild(asset);
 
+    let linesMaterial = new Visualive.Material('LabelLinesMaterial', 'LinesShader');
+    linesMaterial.addParameter('color', new Visualive.Color(.7, .7, .7));
+
     let index = 0;
     let addLabel = (basePose, pos, color, text)=> {
         let label = new Visualive.Label(text);
@@ -32,15 +35,25 @@
         billboard.color = color;
         billboard.alignedToCamera = true;
         scene.getRoot().addChild(billboard);
+
+
+        let line = new Visualive.Lines();
+        line.setNumVertices(2);
+        line.setNumSegments(1);
+        line.setSegment(0, 0, 1);
+        line.setVertex(1, basePose.subtract(pos));
+        let lineItem = new Visualive.GeomItem('Line', line, linesMaterial);
+
+        billboard.addChild(lineItem);
+
         index++;
     }
-    addLabel(new Visualive.Vec3(0, 0, 0), new Visualive.Vec3(0, 1, 0), new Visualive.Color(0, 1, 0), "Label Text can be long and have spaces");
-    // addLabel(new Visualive.Vec3(0, 0, 0), new Visualive.Vec3(3.5, 10, 0), 1.2, 8, "Label Text can be long and have spaces");
-    // addLabel(new Visualive.Vec3(0, 0, 0), new Visualive.Vec3(3.5, 10, 1.6), 0.6, 5, "Label Text can be long and have spaces");
+    addLabel(new Visualive.Vec3(1, 0, 0), new Visualive.Vec3(1, 1, 1), new Visualive.Color(0, 1, 0), "Short Text...");
+    addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-3, 1, -2), new Visualive.Color(1, 1, 0), "Label Text can be long and have spaces");
 
 
     let renderer = new Visualive.GLSimpleRenderer(div);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 10, 15), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(10, 6, 12), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
     renderer.resumeDrawing();
