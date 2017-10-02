@@ -16,6 +16,13 @@ class NumberParameter extends Parameter {
         this.rangeChanged = new Signal();
     }
 
+    getValue() {
+        if(this.__range) {
+            return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
+        }
+        return super.getValue();
+    }
+
     getRange() {
         return this.__range;
     }

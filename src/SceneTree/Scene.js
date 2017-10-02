@@ -55,26 +55,10 @@ class Scene {
         this.sceneTimeChanged = new Signal();
         this.sceneDurationChanged = new Signal();
 
-        // let resourceName = 'commonResources/Resources.vlr';
-        // if (this.__resourceLoader.resourceAvailable(resourceName)) {
-        //     this.__resourceLoader.loadResource(resourceName,
-        //         (entries) => {
-
-        //             let viveAsset = new VLAAsset('ViveResources');
-        //             let materialTypeMapping = {};
-        //             materialTypeMapping['*'] = 'SimpleSurfaceShader';
-        //             viveAsset.getMaterialLibrary().setMaterialTypeMapping(materialTypeMapping);
-        //             viveAsset.getGeometryLibrary().readBinaryBuffer(resourceName, entries['Vive0.geoms'].buffer);
-        //             viveAsset.readBinaryBuffer(entries['Vive.tree'].buffer);
-        //             viveAsset.setSelectable(false, true);
-        //             entries['viveAsset'] = viveAsset;
-
-        //             let sphere = new Sphere('VRControllerTip', 0.015);
-        //             entries['VRControllerTip'] = sphere;
-
-        //             this.commonResourcesLoaded.emit(entries);
-        //         });
-        // }
+        // Common resources are used by systems such at the renderer and VR controllers.
+        // Any asset that will probably be used my multiple differeint independent objects
+        // should be loaded here. (For now, it is being used to laod VR Controller assets.)
+        this.__commonResources = {};
     }
 
     getRoot() {
@@ -83,6 +67,16 @@ class Scene {
 
     getResourceLoader() {
         return this.__resourceLoader;
+    }
+
+    loadCommonAssetResource(path) {
+        if(path in this.__commonResources) {
+            return this.__commonResources[path];
+        }
+        let asset = new VLAAsset(path, this.__resourceLoader);
+        asset.getParameter('FilePath').setValue(path);
+        this.__commonResources[path] = asset;
+        return asset;
     }
 
     getSelectionManager() {

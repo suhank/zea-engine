@@ -12,6 +12,7 @@ import {
 import {
     Lines,
     Plane,
+    Sphere,
     GeomItem,
     TreeItem,
     Material,
@@ -56,17 +57,21 @@ class VRController extends Gizmo {
             */
 
             vrstage.getTreeItem().addChild(this.__treeItem);
-            vrstage.getRenderer().getScene().commonResourcesLoaded.connect((entries) => {
-                let controllerTree = entries['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
-                controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
-                controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
-                this.__treeItem.addChild(controllerTree);
 
-                let sphere = entries['VRControllerTip'];
-                this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
-                this.__sphereGeomItem.getLocalXfo().tr.set(0.0, -0.01, -0.015);
-                this.__treeItem.addChild(this.__sphereGeomItem);
-            });
+            let asset = vrstage.getAsset();
+            if(asset) {
+                asset.loaded.connect((entries) => {
+                    let controllerTree = entries['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
+                    controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
+                    controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                    this.__treeItem.addChild(controllerTree);
+
+                    let sphere = new Sphere('VRControllerTip', 0.015);
+                    this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
+                    this.__sphereGeomItem.getLocalXfo().tr.set(0.0, -0.01, -0.015);
+                    this.__treeItem.addChild(this.__sphereGeomItem);
+                });
+            }
 
             let uimat = new Material('uimat', 'FlatSurfaceShader');
             this.__uiimage =  new DataImage2D();
@@ -99,7 +104,6 @@ class VRController extends Gizmo {
             this.__uiPointerItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
             this.__uiPointerItem.setVisible(false);
             this.__treeItem.addChild(this.__uiPointerItem);
-
         }
 
         this.__touchpadPressed = false;

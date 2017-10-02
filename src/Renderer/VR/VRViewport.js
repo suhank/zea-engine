@@ -12,7 +12,8 @@ import {
     Signal
 } from '../../Math';
 import {
-    TreeItem
+    TreeItem,
+    VLAAsset
 } from '../../SceneTree';
 import {
     BaseViewport
@@ -57,6 +58,14 @@ class VRViewport extends BaseViewport {
         this.__near = 0.1;
         this.__vrDisplay.depthNear = this.__near;
         this.__vrDisplay.depthFar = this.__far;
+
+        //////////////////////////////////////////////
+        // Resources
+
+        this.__asset = renderer.getScene().loadCommonAssetResource("CommonResources/Vive.vlatree");
+        this.__asset.getMaterialLibrary().setMaterialTypeMapping( { '*': 'SimpleSurfaceShader' });
+
+
 
         //////////////////////////////////////////////
         // Tree
@@ -187,6 +196,10 @@ class VRViewport extends BaseViewport {
     }
     getHeight() {
         return this.__height;
+    }
+
+    getAsset() {
+        return this.__asset;
     }
 
     getTreeItem() {
