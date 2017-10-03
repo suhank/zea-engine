@@ -40,14 +40,26 @@ void main(void) {
 precision highp float;
 
 uniform color _color;
+uniform float _opacity;
 
 void main(void) {
     gl_FragColor = _color;
+    gl_FragColor.a *= _opacity;
 }
 `);
         this.addParameter('color', new Color(1.0, 1.0, 0.5));
         this.addParameter('opacity', 1.0);
         this.finalize();
+    }
+
+    isTransparent() {
+        return true;
+    }
+
+    bind(renderstate, key) {
+        if (renderstate.pass != 'ADD')
+            return false;
+        return super.bind(renderstate, key);
     }
 };
 

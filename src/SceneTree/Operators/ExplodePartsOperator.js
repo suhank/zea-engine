@@ -68,10 +68,9 @@ class ExplodePartsOperator extends Operator {
                 dist = explodeDist * Math.smoothStep(0.0, 1.0, explode) * (1.0 - (part.stage / (this.__stages+1)));
             }
 
-            let globalXfo = part.initialXfo.clone();
-            globalXfo.tr.addInPlace(explodeDir.scale(dist));
-
-            this.__outputs[i].setValue(globalXfo, true);// Note: Clear the cleaner op on all outputs.
+            let globalXfo = this.__outputs[i].getValue();
+            globalXfo.tr = part.initialXfo.tr.add(explodeDir.scale(dist));
+            this.__outputs[i].setValue(globalXfo);
         }
     }
 };

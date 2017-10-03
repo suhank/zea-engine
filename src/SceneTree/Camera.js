@@ -26,7 +26,7 @@ class Camera extends TreeItem {
         this.__mouseDragDelta = new Vec2();
         this.__keyboardMovement = false;
         this.__keysPressed = [];
-        this.__maxVel = 0.05;
+        this.__maxVel = 0.002;
         this.__velocity = new Vec3();
 
         this.__isOrthographicParam = this.addParameter('isOrthographic', 1.0);

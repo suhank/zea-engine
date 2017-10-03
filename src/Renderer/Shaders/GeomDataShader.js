@@ -20,28 +20,29 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 
+varying vec4 v_viewPos;
 varying vec4 v_geomData;
 
 void main(void) {
     mat4 modelMatrix = getModelMatrix();
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
-    gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
+    mat4 modelViewMatrix = viewMatrix * modelMatrix;
+    v_viewPos = modelViewMatrix * vec4(positions, 1.0);
+    gl_Position = projectionMatrix * v_viewPos;
 
     int id = getID();
-    vec4 geomItemData = getInstanceData(id);
     v_geomData.x = float(id);
-    v_geomData.y = geomItemData.z;
-    v_geomData.z = geomItemData.t;
 }
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('GeomDataShader.fragmentShader', `
 precision highp float;
 
+varying vec4 v_viewPos;
 varying vec4 v_geomData;
 
 void main(void) {
     gl_FragColor = v_geomData;
+    gl_FragColor.a = length(v_viewPos.xyz);
 }
 `);
     }

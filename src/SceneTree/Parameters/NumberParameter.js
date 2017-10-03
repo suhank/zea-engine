@@ -17,9 +17,9 @@ class NumberParameter extends Parameter {
     }
 
     getValue() {
-        if(this.__range) {
-            return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
-        }
+        // if(this.__range) {
+        //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
+        // }
         return super.getValue();
     }
 

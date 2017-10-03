@@ -50,6 +50,7 @@ class GLGeomDataPass extends GLPass {
     }
     draw(renderstate) {
         let gl = this.__gl;
+        gl.disable(gl.BLEND);
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);
