@@ -13,39 +13,45 @@
         
         <script type="text/javascript">
 
-    let div = addCanvas();
-    let resources = generateResourcesDict([]);
-    let scene = new Visualive.Scene(resources);
+    const div = addCanvas();
+    const resources = generateResourcesDict([]);
+    const scene = new Visualive.Scene(resources);
 
-    let asset = new Visualive.TreeItem('labels');
+    const asset = new Visualive.TreeItem('labels');
     scene.getRoot().addChild(asset);
 
-    let linesMaterial = new Visualive.Material('LabelLinesMaterial', 'LinesShader');
+    const linesMaterial = new Visualive.Material('LabelLinesMaterial', 'LinesShader');
     linesMaterial.addParameter('color', new Visualive.Color(.7, .7, .7));
 
     let index = 0;
-    let addLabel = (basePose, pos, color, text)=> {
-        let label = new Visualive.Label(text);
-        label.fontSize = 48;
-        label.fontColor = color;
-        let billboard = new Visualive.BillboardItem('billboard'+index, label);
-        let xfo = new Visualive.Xfo(pos);
+    const addLabel = (basePose, pos, color, text)=> {
+        const label = new Visualive.Label(text);
+        label.getParameter('fontSize').setValue(48);
+        label.getParameter('fontColor').setValue(color);
+        const billboard = new Visualive.BillboardItem('billboard'+index, label);
+        const xfo = new Visualive.Xfo(pos);
         billboard.setLocalXfo(xfo);
-        billboard.scale = 3.5;
-        billboard.gradient = 0.15;
-        // billboard.color = color;
-        billboard.alignedToCamera = true;
+        billboard.getParameter('scale').setValue(3.5);
+        billboard.getParameter('flags').setValue(1);
+        billboard.getParameter('alpha').setValue(0.1);
+        // billboard.getParameter('color').setValue(new Visualive.Color(.53, 1.0, .53));
         scene.getRoot().addChild(billboard);
 
 
-        let line = new Visualive.Lines();
+        const line = new Visualive.Lines();
         line.setNumVertices(2);
         line.setNumSegments(1);
         line.setSegment(0, 0, 1);
         line.setVertex(1, basePose.subtract(pos));
-        let lineItem = new Visualive.GeomItem('Line', line, linesMaterial);
+        const lineItem = new Visualive.GeomItem('Line', line, linesMaterial);
 
         billboard.addChild(lineItem);
+
+
+        const timeoutId = setTimeout(() => {
+            console.log(label.getParameter('text').getValue() + ": changed");
+            billboard.getParameter('alpha').setValue(1.0);
+        }, (0.5 + Math.random()) * 2000);
 
         index++;
     }
@@ -53,7 +59,7 @@
     addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-3, 1, -2), new Visualive.Color(1, 1, 0), "Label text can be long and have spaces");
 
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    const renderer = new Visualive.GLSimpleRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(10, 6, 12), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
@@ -61,7 +67,7 @@
 
     //////////////////////////////////
     // Setup the UI
-    let uicontroller = new Visualive.UIController();
+    const uicontroller = new Visualive.UIController();
     VisualiveUI.renderUI(renderer, uicontroller);
 
         </script> 

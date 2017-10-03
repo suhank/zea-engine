@@ -1,15 +1,22 @@
-import { Color } from '../Math';
-import { TreeItem } from './TreeItem.js';
+import {
+    Color
+} from '../Math';
+import {
+    Parameter,
+    ColorParameter
+} from './Parameters';
+import {
+    TreeItem
+} from './TreeItem.js';
 
 class BillboardItem extends TreeItem {
-    constructor(name, image2d) {
+    constructor(name, image) {
         super(name);
-        this.image2d = image2d;
-        this.scale = 0.01;// Mapping of image pixels to scene units..
-        this.alpha = 1.0;
-        this.gradient = 0.0;
-        this.color = new Color(1.0, 1.0, 1.0);
-        this.alignedToCamera = false;
+        this.addParameter(new Parameter('image', image, 'Image'));
+        this.addParameter('scale', 0.01);
+        this.addParameter('alpha', 1.0);
+        this.addParameter('color', new Color(1.0, 1.0, 1.0));
+        this.addParameter('flags', 0);
     }
 };
 

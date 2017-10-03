@@ -61,15 +61,24 @@ class GLBillboardsPass extends GLPass {
 
     addBillboard(billboard) {
 
-        let index = this.__billboards.length;
+        const image = billboard.getParameter('image').getValue();
+        const index = this.__billboards.length;
         this.__billboards.push({
-            billboard: billboard,
-            index: index,
-            imageIndex: this.__atlas.addSubImage(billboard.image2d)
+            billboard,
+            index,
+            imageIndex: this.__atlas.addSubImage(image)
         });
 
         billboard.visibilityChanged.connect(() => {
             this.__updateBillboard(index);
+            this.updated.emit();
+        });
+        billboard.getParameter('image').getValue().updated.connect(() => {
+            throw("TODO: update the atlas:" + index);
+        });
+        billboard.getParameter('alpha').valueChanged.connect(() => {
+            this.__updateBillboard(index);
+            this.updated.emit();
         });
 
         billboard.destructing.connect(this.removeBillboardItem.bind(this));
@@ -77,7 +86,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     removeBillboardItem(billboard) {
-        let index = this.__billboards.indexOf(billboard);
+        const index = this.__billboards.indexOf(billboard);
         billboard.destructing.disconnect(this.removeBillboardItem.bind(this));
         this.__billboards.splice(index, 1);
         this.__atlasNeedsUpdating = true;
@@ -85,21 +94,25 @@ class GLBillboardsPass extends GLPass {
 
 
     __populateBillboardDataArray(billboardData, index, dataArray) {
-        let mat4 = billboardData.billboard.getGlobalXfo().toMat4();
+        const billboard = billboardData.billboard;
+        const mat4 = billboard.getGlobalXfo().toMat4();
+        const scale = billboard.getParameter('scale').getValue();
+        const flags = billboard.getParameter('flags').getValue();
+        const alpha = billboard.getParameter('alpha').getValue();
+        const color = billboard.getParameter('color').getValue();
 
-        let stride = 24; // The number of floats per draw item.
-        let offset = index * stride;
-        let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
-        let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
-        let col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
-        let col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
+        const pixelsPerItem = 6;
+        const offset = index * pixelsPerItem * 4;
+        const col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
+        const col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
+        const col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
+        const col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        col3.set(billboardData.billboard.scale, billboardData.billboard.alignedToCamera ? 1.0 : 0.0, billboardData.imageIndex, billboardData.billboard.alpha);
+        col3.set(scale, flags, billboardData.imageIndex, alpha);
 
-        let col4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
-        let color = billboardData.billboard.color;
+        const col4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
         col4.set(color.r, color.g, color.b, color.a);
     }
 
@@ -107,8 +120,8 @@ class GLBillboardsPass extends GLPass {
         if (!this.__atlasNeedsUpdating)
             return;
 
-        let doIt = function() {
-            let gl = this.__gl;
+        const doIt = ()=>{
+            const gl = this.__gl;
 
             // Note: Currently the atlas destorys all the source images
             // after loading them(to save memory). This means we can't
@@ -116,12 +129,28 @@ class GLBillboardsPass extends GLPass {
             this.__atlas.renderAtlas();
 
 
-            let stride = 6; // The number of pixels per draw item.
-            let size = Math.round(Math.sqrt(this.__billboards.length * stride) + 0.5);
-            let dataArray = new Float32Array((size * size) * 4); /*each pixel has 4 floats*/
-            for (let i = 0; i < this.__billboards.length; i++) {
-                this.__populateBillboardDataArray(this.__billboards[i], i, dataArray);
-            }
+            const pixelsPerItem = 6; // The number of pixels per draw item.
+            let size = Math.round(Math.sqrt(this.__billboards.length * pixelsPerItem) + 0.5);
+
+
+            // Note: the following few lines need a cleanup. 
+            // We should be using power of 2 textures. The problem is that pot texture sizes don't
+            // align with the 6 pixels per draw item. So we need to upload a slightly bigger teture
+            // but upload the 'usable' size.
+
+            // Only support power 2 textures. Else we get strange corruption on some GPUs
+            // in some scenes.
+            // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
+            // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
+            // size = Math.nextPow2(size);
+
+            if((size % pixelsPerItem) != 0)
+                size += pixelsPerItem - (size % pixelsPerItem);
+
+            this.__width = size;
+            // if((this.__width % pixelsPerItem) != 0)
+            //     this.__width -= (this.__width % pixelsPerItem);
+
             if (!this.__instancesTexture) {
                 this.__instancesTexture = new GLTexture2D(gl, {
                     channels: 'RGBA',
@@ -130,21 +159,27 @@ class GLBillboardsPass extends GLPass {
                     height: size,
                     filter: 'NEAREST',
                     wrap: 'CLAMP_TO_EDGE',
-                    data: dataArray,
                     mipMapped: false
                 });
             } else {
-                this.__instancesTexture.resize(size, size, dataArray);
+                this.__instancesTexture.resize(size, size);
+            }
+
+            for (let i = 0; i < this.__billboards.length; i++) {
+                this.__updateBillboard(i);
             }
 
             // Note: When the camera moves, this array is sorted and re-upload.
             this.__indexArray = new Float32Array(this.__billboards.length);
+            for (let i = 0; i < this.__billboards.length; i++) {
+                this.__indexArray[i] = this.__billboards[i].index;
+            }
             this.__instanceIdsBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
 
             this.__atlasNeedsUpdating = false;
-        }.bind(this);
+        };
 
         if (this.__atlas.isLoaded()) {
             doIt();
@@ -153,21 +188,23 @@ class GLBillboardsPass extends GLPass {
         }
     }
 
-    __updateBillboard(index, billboardData) {
+    __updateBillboard(index) {
         if (!this.__instancesTexture)
             return;
 
-        let gl = this.__gl;
+        const billboardData = this.__billboards[index];
+        const gl = this.__gl;
 
-        let stride = 16; // The number of floats per draw item.
-        let dataArray = new Float32Array(stride);
+        const pixelsPerItem = 6; // The number of pixels per draw item.
+        const dataArray = new Float32Array(pixelsPerItem * 4);
         this.__populateBillboardDataArray(billboardData, 0, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__instancesTexture.glTex);
-        let xoffset = index * (stride / 4); /*each pixel has 4 floats*/
-        let yoffset = 0;
-        let width = stride / 4;
-        let height = 1;
+        const xoffset = (index * pixelsPerItem) % this.__width;
+        const yoffset = Math.floor((index * pixelsPerItem) / this.__width);
+        const width = pixelsPerItem;
+        const height = 1;
+        // console.log("xoffset:" + xoffset + " yoffset:" + yoffset +" width:" + width + " dataArray:" + dataArray.length);
         gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
 
     }
@@ -176,11 +213,8 @@ class GLBillboardsPass extends GLPass {
         for (let billboardData of this.__billboards) {
             billboardData.dist = billboardData.billboard.getGlobalXfo().tr.distanceTo(cameraPos);
         }
-        this.__billboards.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
+        this.__indexArray.sort((a, b) => (this.__billboards[a].dist > this.__billboards[b].dist) ? -1 : ((this.__billboards[a].dist < this.__billboards[b].dist) ? 1 : 0));
 
-        for (let i = 0; i < this.__billboards.length; i++) {
-            this.__indexArray[i] = this.__billboards[i].index;
-        }
         let gl = this.__gl;
         gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
         gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
@@ -210,7 +244,7 @@ class GLBillboardsPass extends GLPass {
 
         let unifs = renderstate.unifs;
         this.__instancesTexture.bindToUniform(renderstate, unifs.instancesTexture);
-        gl.uniform1i(unifs.instancesTextureSize.location, this.__instancesTexture.width);
+        gl.uniform1i(unifs.instancesTextureSize.location, this.__width);
 
         this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 

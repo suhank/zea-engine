@@ -145,7 +145,9 @@ class BaseItem extends RefCounted {
         }
 
         let param;
-        if (typeof defaultValue == 'string') {
+        if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
+            param = new Parameter(paramName, defaultValue, 'Boolean');
+        } else if (typeof defaultValue == 'string') {
             param = new Parameter(paramName, defaultValue, 'String');
         } else if (Number.isNumeric(defaultValue)) {
             param = new NumberParameter(paramName, defaultValue);

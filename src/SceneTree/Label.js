@@ -4,6 +4,13 @@ import {
     Async
 } from '../Math';
 import {
+    Parameter,
+    NumberParameter,
+    Vec2Parameter,
+    Vec3Parameter,
+    ColorParameter
+} from './Parameters';
+import {
     sgFactory
 } from './SGFactory.js';
 import {
@@ -75,31 +82,49 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
 }
 
 class Label  extends DataImage2D {
-    constructor(text) {
+    constructor(text='') {
         super(text);
 
-        this.text = text;
-        this.fontColor = new Color(1.0,1.0,1.0);
-        this.font = "Calibri";
-        this.textAlign = "left";
-        this.fontSize = 22;
-        this.fillText = true;
-        // this.left = 0;
-        this.borderWidth = 1;
-        this.margin = this.fontSize * 0.5;
-        this.borderRadius = this.fontSize * 0.5;
-        this.outline = false;
-        this.outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
+        // this.text = text;
+        // this.fontColor = new Color(1.0,1.0,1.0);
+        // this.font = "Calibri";
+        // this.textAlign = "left";
+        // this.fontSize = 22;
+        // this.fillText = true;
+        // // this.left = 0;
+        // this.borderWidth = 1;
+        // this.margin = this.fontSize * 0.5;
+        // this.borderRadius = this.fontSize * 0.5;
+        // this.outline = false;
+        // this.outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
 
-        this.background = true;
-        this.backgroundColor = this.outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
-        this.fillBackground = true;
-        this.strokeBackgroundOutline = true;
+        // this.background = true;
+        // this.backgroundColor = this.outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
+        // this.fillBackground = true;
+        // this.strokeBackgroundOutline = true;
 
+        let fontSize = 22;
+        let outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
+        let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
+
+        this.addParameter(new Parameter('text', text, 'String'));
+        this.addParameter(new Parameter('font', 'Calibri', 'String'));
+        this.addParameter('fontColor', new Color(1.0, 1.0, 1.0));
+        this.addParameter(new Parameter('textAlign', 'left', 'String'));
+        // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
+        this.addParameter('fontSize', 22);
+        this.addParameter('fillText', true);
+        this.addParameter('margin', fontSize * 0.5);
+        this.addParameter('borderWidth', 2);
+        this.addParameter('borderRadius', fontSize * 0.5);
+        this.addParameter('outline', false);
+        this.addParameter('outlineColor', outlineColor);
+        this.addParameter('background', true);
+        this.addParameter('backgroundColor', backgroundColor);
+        this.addParameter('fillBackground', true);
+        this.addParameter('strokeBackgroundOutline', true);
 
         this.__canvasElem = document.createElement('canvas');
-
-
     }
     
 
@@ -109,12 +134,28 @@ class Label  extends DataImage2D {
             'alpha': true
         });
 
-        // let ratio = devicePixelRatio / backingStoreRatio;
-        let margin = this.margin + this.borderWidth;
+        const text = this.getParameter('text').getValue();
+        const font = this.getParameter('font').getValue();
+        const fontColor = this.getParameter('fontColor').getValue();
+        const textAlign = this.getParameter('textAlign').getValue();
+        const fontSize = this.getParameter('fontSize').getValue();
+        const fillText = this.getParameter('fillText').getValue();
+        const margin = this.getParameter('margin').getValue();
+        const borderWidth = this.getParameter('borderWidth').getValue();
+        const borderRadius = this.getParameter('borderRadius').getValue();
+        const outline = this.getParameter('outline').getValue();
+        const outlineColor = this.getParameter('outlineColor').getValue();
+        const background = this.getParameter('background').getValue();
+        const backgroundColor = this.getParameter('backgroundColor').getValue();
+        const fillBackground = this.getParameter('fillBackground').getValue();
+        const strokeBackgroundOutline = this.getParameter('strokeBackgroundOutline').getValue();
 
-        ctx2d.font = this.fontSize + 'px ' + this.font;
-        this.width = (ctx2d.measureText(this.text).width + (margin * 2));
-        this.height = (parseInt(this.fontSize) + (margin * 2));
+        // let ratio = devicePixelRatio / backingStoreRatio;
+        let marginAndBorder = margin + borderWidth;
+
+        ctx2d.font = fontSize + 'px ' + font;
+        this.width = (ctx2d.measureText(text).width + (marginAndBorder * 2));
+        this.height = (parseInt(fontSize) + (marginAndBorder * 2));
         ctx2d.canvas.width = this.width;
         ctx2d.canvas.height = this.height;
 
@@ -122,28 +163,33 @@ class Label  extends DataImage2D {
         ctx2d.fillStyle = "rgba(0, 0, 0, 0.0)";
         ctx2d.fillRect(0, 0, this.width, this.height);
 
-        if (this.background) {
-            ctx2d.fillStyle = this.outlineColor.toHex();
-            ctx2d.strokeStyle = this.backgroundColor.toHex();
-            roundRect(ctx2d, this.borderWidth, this.borderWidth, this.width - (this.borderWidth*2), this.height - (this.borderWidth*2), this.borderRadius, this.fillBackground, this.strokeOutline);
+        if (background) {
+            ctx2d.fillStyle = outlineColor.toHex();
+            ctx2d.strokeStyle = backgroundColor.toHex();
+            roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline);
         }
 
-        ctx2d.font = this.fontSize + 'px ' + this.font;
-        ctx2d.textAlign = this.textAlign;
-        ctx2d.fillStyle = this.fontColor.toHex();
+        ctx2d.font = fontSize + 'px ' + font;
+        ctx2d.textAlign = textAlign;
+        ctx2d.fillStyle = fontColor.toHex();
         ctx2d.textBaseline = "hanging";
-        console.log(margin);
-        ctx2d.fillText(this.text, margin, margin);
+        ctx2d.fillText(text, marginAndBorder, marginAndBorder);
         
-        if (this.outline) {
-            ctx2d.strokeStyle = this.outlineColor.toHex();
+        if (outline) {
+            ctx2d.strokeStyle = outlineColor.toHex();
             ctx2d.lineWidth = 1.5;
-            ctx2d.strokeText(this.text, margin, margin);
+            ctx2d.strokeText(text, marginAndBorder, marginAndBorder);
         }
 
         this.__data = ctx2d.getImageData(0, 0, this.width, this.height);
-        this.__loaded = true;
-        this.loaded.emit();
+
+        if(!this.__loaded){
+            this.__loaded = true;
+            this.loaded.emit();
+        }
+        else {
+            this.updated.emit();
+        }
     }
 
     getParams() {

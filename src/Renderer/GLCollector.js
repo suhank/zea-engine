@@ -412,8 +412,7 @@ class GLCollector {
 
         let gl = this.__renderer.gl;
         let pixelsPerItem = 4; // The number of RGBA pixels per draw item.
-        let stride = pixelsPerItem * 4; // The number of floats per draw item.
-        let size = Math.round(Math.sqrt(this.__drawItems.length * stride) + 0.5);
+        let size = Math.round(Math.sqrt(this.__drawItems.length * pixelsPerItem) + 0.5);
         // Only support power 2 textures. Else we get strange corruption on some GPUs
         // in some scenes.
         size = Math.nextPow2(size);
@@ -453,8 +452,7 @@ class GLCollector {
             // and upload them in one step.
 
             const pixelsPerItem = 4; // The number of RGBA pixels per draw item.
-            const stride = pixelsPerItem * 4; // The number of floats per draw item.
-            let dataArray = new Float32Array(stride);
+            let dataArray = new Float32Array(pixelsPerItem * 4); // 4==RGBA pixels.
             this.__populateTransformDataArray(gldrawItem, 0, dataArray);
 
             const xoffset = (index * pixelsPerItem) % size;

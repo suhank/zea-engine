@@ -575,7 +575,7 @@ class GLRenderer {
         //     if (drawItem && pass.filter(drawItem.geomItem))
         //         pass.addDrawItem(drawItem);
         // }
-        pass.updated.connect(this.requestRedraw);
+        pass.updated.connect(this.requestRedraw.bind(this));
         this.__passes.push(pass);
         this.requestRedraw();
         return this.__passes.length - 1;

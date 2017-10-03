@@ -28,10 +28,9 @@
         let xfo = new Visualive.Xfo();
         xfo.tr.set( -1, 0, 1 );
         billboard.setLocalXfo(xfo);
-        billboard.scale = 2.5;
-        billboard.gradient = 0.75;
-        billboard.alignedToCamera = false;
-        billboard.color = new Visualive.Color(.53, 1.0, .53);
+        billboard.getParameter('scale').setValue(2.5);
+        billboard.getParameter('flags').setValue(0);
+        billboard.getParameter('color').setValue(new Visualive.Color(.53, 1.0, .53));
         scene.getRoot().addChild(billboard);
     }
 
@@ -43,10 +42,9 @@
         xfo.tr.set( 1, 0, 0 );
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3( 0, 1, 0 ), Math.PI * 0.25);
         billboard.setLocalXfo(xfo); 
-        billboard.scale = 2.5;
-        billboard.gradient = 1.0;
-        billboard.alignedToCamera = false;
-        billboard.color = new Visualive.Color(1.0, .53, .53);
+        billboard.getParameter('scale').setValue(2.5);
+        billboard.getParameter('flags').setValue(0);
+        billboard.getParameter('color').setValue(new Visualive.Color(1.0, .53, .53));
         scene.getRoot().addChild(billboard);
     }
 
