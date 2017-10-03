@@ -27,12 +27,13 @@
     let addLabel = (basePose, pos, color, text)=> {
         let label = new Visualive.Label(text);
         label.fontSize = 48;
+        label.fontColor = color;
         let billboard = new Visualive.BillboardItem('billboard'+index, label);
         let xfo = new Visualive.Xfo(pos);
         billboard.setLocalXfo(xfo);
         billboard.scale = 3.5;
         billboard.gradient = 0.15;
-        billboard.color = color;
+        // billboard.color = color;
         billboard.alignedToCamera = true;
         scene.getRoot().addChild(billboard);
 
@@ -49,7 +50,7 @@
         index++;
     }
     addLabel(new Visualive.Vec3(1, 0, 0), new Visualive.Vec3(1, 1, 1), new Visualive.Color(0, 1, 0), "Short Text...");
-    addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-3, 1, -2), new Visualive.Color(1, 1, 0), "Label Text can be long and have spaces");
+    addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-3, 1, -2), new Visualive.Color(1, 1, 0), "Label text can be long and have spaces");
 
 
     let renderer = new Visualive.GLSimpleRenderer(div);

@@ -89,7 +89,7 @@ class GLFbo {
 
         // Create the depth texture
         if (this.__createDepthTexture) {
-            if (!gl.__ext__WEBGL_depth_texture) {
+            if (!gl.__ext_WEBGL_depth_texture) {
                 // Create the depth buffer
                 var depthBuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);

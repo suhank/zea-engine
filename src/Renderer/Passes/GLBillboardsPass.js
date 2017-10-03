@@ -96,7 +96,7 @@ class GLBillboardsPass extends GLPass {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        col3.set(billboardData.billboard.scale, billboardData.billboard.alignedToCamera ? 1.0 : 0.0, billboardData.imageIndex, billboardData.billboard.gradient);
+        col3.set(billboardData.billboard.scale, billboardData.billboard.alignedToCamera ? 1.0 : 0.0, billboardData.imageIndex, billboardData.billboard.alpha);
 
         let col4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
         let color = billboardData.billboard.color;

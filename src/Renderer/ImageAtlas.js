@@ -67,7 +67,6 @@ void main()
 
 `);
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('AtlasLayoutShader.fragmentShader', `
-
 precision highp float;
 
 uniform sampler2D texture;
@@ -110,14 +109,15 @@ void main(void) {
     // TODO: check why we pre-multiply alphas here.
     // gl_FragColor = vec4(texel.rgb/texel.a, texel.a);
 
-    if(flags == 2) {
+    if(flags >= 2) {
         gl_FragColor = vec4(texel.rgb, luminanceFromRGB(texel.rgb));
-    }
-    else if(flags == 4) {
-        gl_FragColor = vec4(texel.rgb, 1.0-luminanceFromRGB(texel.rgb));
     }
     else {
         gl_FragColor = texel;
+    }
+    
+    if(flags >= 4) {
+        gl_FragColor = vec4(1.0) - gl_FragColor;
     }
 
 }

@@ -57,7 +57,7 @@ vec4 getTintColor(int id) {
 
 /* VS Outputs */
 varying vec2 v_texCoord;
-varying vec2 v_gradient;
+varying float v_alpha;
 varying vec4 v_tint;
 
 void main(void) {
@@ -67,10 +67,8 @@ void main(void) {
     vec4 billboardData = getInstanceData(instanceID);
     vec2 quadVertex = getQuadVertexPositionFromID();
 
-
-
     v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
-    v_gradient = v_texCoord * billboardData.w;
+    v_alpha = billboardData.w;
     vec4 layoutData = texelFetch1D(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
     v_texCoord *= layoutData.zw;
     v_texCoord += layoutData.xy;
@@ -101,25 +99,16 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 <%include file="utils/imageAtlas.glsl"/>
 
-
 uniform sampler2D atlasBillboards;
-
 
 /* VS Outputs */
 varying vec2 v_texCoord;
-varying vec2 v_gradient;
+varying float v_alpha;
 varying vec4 v_tint;
 
 void main(void) {
-    vec4 color = texture2D(atlasBillboards, v_texCoord);
-    // if(color.r > 0.95)
-    //     discard;
-    // TODO: for colors images on billbaords, we need to separate the
-    // alpah value into an alpha channel, (and maybe the code here can select .a or luminance)
-    // gl_FragColor.rgb = v_tint.rgb * (1.0 - v_gradient.y);
-    // gl_FragColor.a = color.r;//(1.0-color.r);
-
-    gl_FragColor = color;
+    gl_FragColor = texture2D(atlasBillboards, v_texCoord) * v_tint;
+    gl_FragColor.a *= v_alpha;
 }
 `);
     }
