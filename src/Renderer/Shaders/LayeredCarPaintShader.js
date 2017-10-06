@@ -44,7 +44,7 @@ attribute float clusterIDs;
 uniform vec2 lightmapSize;
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -82,7 +82,7 @@ void main(void) {
 
     v_worldPos      = (modelMatrix * pos).xyz;
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    v_viewPos       = -viewPos;
+    v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 }
 `);
@@ -101,7 +101,7 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -234,10 +234,10 @@ void main(void) {
 #endif
 
     vec3 viewNormal = normalize(v_viewNormal);
-    vec3 surfacePos = -v_viewPos.xyz;
+    vec3 surfacePos = -v_viewPos;
 
     // The vector from the camera to the surface point.
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
+    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos);
     vec3 viewDir = normalize(viewVector);
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
 

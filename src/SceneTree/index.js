@@ -14,6 +14,8 @@ export * from './AssetItem.js';
 export * from './BillboardItem.js';
 export * from './Camera.js';
 
+export * from './Group.js';
+
 export * from './GeomLibrary.js';
 export * from './Material.js';
 export * from './Image2D.js';

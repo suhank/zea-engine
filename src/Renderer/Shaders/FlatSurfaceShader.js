@@ -33,7 +33,7 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
@@ -66,7 +66,7 @@ uniform bool _baseColorTexConnected;
 #endif
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif

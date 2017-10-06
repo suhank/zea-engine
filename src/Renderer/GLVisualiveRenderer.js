@@ -113,7 +113,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (!isMobileDevice()) {
             if(!options.disableSpecular)
                 this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
-            this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
+            // this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
         }
     }
 

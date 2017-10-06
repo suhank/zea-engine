@@ -14,7 +14,6 @@ instancedattribute vec3 positions;
 instancedattribute vec3 normals;
 attribute vec2 vertexIDs;
 
-uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 

@@ -35,7 +35,7 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 
 varying vec3 v_worldPos;
@@ -57,7 +57,7 @@ void main(void) {
     v_worldPos      = (modelMatrix * pos).xyz;
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    v_viewPos       = -viewPos;
+    v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 }
 `);
@@ -71,7 +71,7 @@ precision highp float;
 <%include file="glslutils.glsl"/>
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 
 varying vec3 v_worldPos;
@@ -149,7 +149,7 @@ void main(void) {
 #else
 
     vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos.xyz;
+    //vec3 surfacePos = -v_viewPos;
 
 #ifdef __ENABLE_TEXTURES
     if(_normalTexConnected){
@@ -158,7 +158,7 @@ void main(void) {
     }
 #endif
 
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
     if(dot(normal, viewVector) < 0.0){
         normal = -normal;

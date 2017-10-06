@@ -35,7 +35,7 @@ uniform int positionsTextureSize;
 uniform float _lineThickness;
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
@@ -122,8 +122,8 @@ void main(void) {
         viewPos.z -= (lineThickness_0 + lineThickness_1) * 0.25;
     }
 
-    v_viewPos       = vec4(viewPos, 1.0);
-    gl_Position = projectionMatrix * v_viewPos;
+    v_viewPos       = viewPos;
+    gl_Position     = projectionMatrix * v_viewPos;
 }
 `);
 
@@ -131,7 +131,7 @@ void main(void) {
 precision highp float;
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
@@ -142,7 +142,7 @@ void main(void) {
     int debugLevel = 0;
     if(debugLevel == 0){
 
-        vec3 viewVector = mat3(cameraMatrix) * normalize(-v_viewPos.xyz);
+        vec3 viewVector = mat3(cameraMatrix) * normalize(-v_viewPos);
         vec3 normal = mat3(cameraMatrix) * v_viewNormal;
         float NdotV = dot(normalize(normal), normalize(viewVector));
 

@@ -149,7 +149,7 @@ uniform mat4 projectionMatrix;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
  
 void main()
 {
@@ -167,13 +167,13 @@ precision highp float;
 uniform mat4 cameraMatrix;
 
 varying vec2 v_texCoord;
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 
 <%include file="math/constants.glsl"/>
 <%include file="sunAndSky.glsl"/>
 
 void main() {
-    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos.xyz);
+    vec3 viewVector = mat3(cameraMatrix) * normalize(v_viewPos);
     vec3 color = sunAndSky(viewVector);
     gl_FragColor = vec4(color, 1);
 }

@@ -218,6 +218,8 @@ class GLRenderer {
 
         this.__gridTreeItem.setSelectable(false, true);
         this.__collector.addTreeItem(this.__gridTreeItem);
+
+        return this.__gridTreeItem;
     }
 
     toggleDrawGrid() {

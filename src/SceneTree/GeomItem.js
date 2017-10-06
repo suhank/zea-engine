@@ -37,6 +37,10 @@ class GeomItem extends TreeItem {
         this.materialAssigned = new Signal();
         this.geomAssigned = new Signal();
 
+        this.mouseDown = new Signal();
+        this.mouseUp = new Signal();
+        this.mouseMove = new Signal();
+
         if (geom)
             this.setGeometry(geom);
         if (material)
@@ -256,6 +260,24 @@ class GeomItem extends TreeItem {
 
     toString() {
         return JSON.stringify(this.toJSON(), null, 2)
+    }
+
+    /////////////////////////
+    // Events
+
+    onMouseDown(mousePos, event) {
+        this.mouseDown.emit(mousePos, event);
+        return false;
+    }
+
+    onMouseUp(mousePos, event) {
+        this.mouseUp.emit(mousePos, event);
+        return false;
+    }
+
+    onMouseMove(mousePos, event) {
+        this.mouseMove.emit(mousePos, event);
+        return false;
     }
 };
 

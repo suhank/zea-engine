@@ -50,13 +50,20 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let rootURL = window.location.href.split('#')[0];
     rootURL = rootURL.split('?')[0];
     if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
-        rootURL = rootURL.substring(0, rootURL.lastIndexOf('/'));
+        rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
     }
-    rootURL = rootURL + '/';
     let generatePath = (item)=>{
         let parts = item.split('/');
+        let base = rootURL;
         if(parts[0] == '.')
             parts.shift();
+        if(parts[0] == '..'){
+            item = item.substring(3);
+            let baseparts = base.split('/');
+            baseparts.pop();
+            baseparts.pop();
+            base = baseparts.join('/') + '/';
+        }
         let curr = resources;
         for(let i=0; i<parts.length-1; i++){
             let part = parts[i];
@@ -65,7 +72,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             }
             curr = curr[part];
         }
-        curr[parts[parts.length-1]] = rootURL+item;
+        curr[parts[parts.length-1]] = base+item;
     }
     for(let item of list){
         generatePath(item);

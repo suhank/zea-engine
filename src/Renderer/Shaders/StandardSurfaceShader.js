@@ -193,7 +193,7 @@ void main(void) {
 #endif
 
     vec3 viewNormal = normalize(v_viewNormal);
-    //vec3 surfacePos = -v_viewPos.xyz;
+    //vec3 surfacePos = -v_viewPos;
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_SPECULAR
@@ -204,7 +204,7 @@ void main(void) {
 #endif
 #endif
 
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     vec3 normal = normalize(mat3(cameraMatrix) * viewNormal);
     if(dot(normal, viewVector) < 0.0){
         normal = -normal;

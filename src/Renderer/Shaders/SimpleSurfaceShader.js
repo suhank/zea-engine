@@ -37,7 +37,7 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -51,7 +51,7 @@ void main(void) {
     gl_Position = projectionMatrix * viewPos;
 
     mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    v_viewPos       = -viewPos;
+    v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
@@ -68,7 +68,7 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
@@ -102,7 +102,7 @@ void main(void) {
 #endif
 
     // Hacky simple irradiance. 
-    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos.xyz));
+    vec3 viewVector = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
     vec3 normal = normalize(mat3(cameraMatrix) * v_viewNormal);
     float ndotv = dot(normal, viewVector);
     if(ndotv < 0.0){

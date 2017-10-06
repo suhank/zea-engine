@@ -297,6 +297,7 @@ class GLViewport extends BaseViewport {
     onMouseDown(event) {
 
         this.__mouseDownPos = this.__eventMousePos(event);
+        this.__mouseDownGeom = undefined;
 
         if (event.button == 0) {
             if (event.shiftKey) {
@@ -327,6 +328,8 @@ class GLViewport extends BaseViewport {
                         // If so, start a gizmo manipulation
                         let geomItem = drawItem.getGeomItem();
                         console.log(geomItem.getPath());// + " Material:" + geomItem.getMaterial().name);
+                        geomItem.onMouseDown(this.__mouseDownPos, event);
+                        this.__mouseDownGeom = geomItem;
                         // if(isGizmo)
                         //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
                         //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
@@ -364,6 +367,12 @@ class GLViewport extends BaseViewport {
 
     onMouseUp(event) {
         let mouseUpPos = this.__eventMousePos(event);
+
+        if(this.__mouseDownGeom){
+            this.__mouseDownGeom.onMouseUp(mouseUpPos, event);
+            this.__mouseDownGeom = undefined;
+        }
+
         switch (this.__manipMode) {
             case 'highlighting':
                 break;
@@ -496,6 +505,25 @@ class GLViewport extends BaseViewport {
                     let ray = this.calcRayFromScreenPos(mousePos);
                     if (ray == null)
                         return;
+
+
+                    if(this.__mouseDownGeom){
+                        this.__mouseDownGeom.onMouseMove(mousePos, event);
+                    }
+                    else {
+                        let geomData = this.getGeomDataAtPos(mousePos);
+                        if (geomData != undefined) {
+                            let drawItem = this.__renderer.getCollector().getDrawItem(geomData.id);
+                            if (drawItem) {
+                                // Check to see if we mouse-downed on a gizmo.
+                                // If so, start a gizmo manipulation
+                                let geomItem = drawItem.getGeomItem();
+                                geomItem.onMouseMove(mousePos, event);
+                            }
+                        }
+                    }
+
+
                     this.mouseMoved.emit(event, mousePos, ray);
                 }
                 break;

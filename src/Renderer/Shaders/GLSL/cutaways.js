@@ -3,6 +3,7 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 shaderLibrary.setShaderModule('cutaways.glsl', `
 
 
+uniform int _cutawayEnabled;
 uniform vec3 _planeNormal;
 uniform float _planeDist;
 uniform color _cutColor;
@@ -35,6 +36,8 @@ float intersectRayPlane(Ray ray, Ray plane) {
 }
 
 bool cutaway(vec3 worldPos) {
+    if(_cutawayEnabled == 0)
+        return false;
 
     vec3 planePos = _planeNormal * _planeDist;
     vec3 planeDir = worldPos - planePos;

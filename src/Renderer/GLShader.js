@@ -243,7 +243,7 @@ class GLShader extends BaseItem {
         gl.linkProgram(shaderProgramHdl);
 
         if (!gl.getProgramParameter(shaderProgramHdl, gl.LINK_STATUS)) {
-            console.warn("Unable to initialize the shader program.");
+            throw("Unable to initialize the shader program:" + this.constructor.name);
             gl.deleteProgram(shaderProgramHdl);
             return false;
         }

@@ -75,7 +75,7 @@ uniform float fovY;
 uniform vec2 viewportFrustumSize;
 
 /* VS Outputs */
-varying vec4 v_viewPos;
+varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
