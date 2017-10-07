@@ -19,12 +19,14 @@ class Operator extends BaseItem {
             // cause an evaluation, all outputs are considered clean.
             this.__outputs.forEach((param)=> {
                 let evalOutput = (value)=>{
+                    this.__outputs.forEach((param)=> {
+                        param.removeCleanerFn(evalOutput);
+                    });
                     this.evaluate();
-                    return param.getValue();
+                    return param.getValue(1);
                 };
-                if(!param.isDirty())
-                    param.setDirty(evalOutput);
-            })
+                param.setDirty(evalOutput);
+            });
         });
     }
 

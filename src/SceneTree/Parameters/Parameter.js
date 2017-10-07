@@ -14,7 +14,7 @@ class BaseParameter {
         this.getValue = this.getValue.bind(this);
         this.setValue = this.setValue.bind(this);
 
-        this.__cleanerFn = undefined;
+        this.__cleanerFns = [];
     }
 
     getName() {
@@ -37,51 +37,22 @@ class BaseParameter {
 
     setDirty(cleanerFn) {
         // If already dirty, simply return.
-        if(this.__cleanerFn === cleanerFn){
+        if(this.__cleanerFns.indexOf(cleanerFn) != -1){
             return false;
         }
-
-        if(!cleanerFn || (this.__cleanerFn &&  this.__cleanerFn !== cleanerFn)) {
-            throw("Error setting cleaner Fn. Can only have one cleaner bound.");
-        }
-        this.__cleanerFn = cleanerFn;
+        this.__cleanerFns.push(cleanerFn);
         this.valueChanged.emit(1); // 1 = changed via cleaner fn
     }
 
     isDirty() {
-        return this.__cleanerFn !== undefined;
+        return this.__cleanerFns.length > 0;
+    }
+    removeCleanerFn(cleanerFn) {
+        let index = this.__cleanerFns.indexOf(cleanerFn);
+        this.__cleanerFns.splice(index, 1);
     }
 };
 
-
-
-// class GetterSetterParameter extends BaseParameter {
-//     constructor(name, getter, setter, dataType) {
-//         super(name, dataType);
-//         this.__name = name;
-//     }
-
-//     getName() {
-//         return this.__name;
-//     }
-
-//     setName(name) {
-//         let prevName = this.__name;
-//         this.__name = name;
-//         this.nameChanged.emit(this.__name, prevName);
-//     }
-
-//     getValue() {
-//         return this.__getter();
-//     }
-
-//     setValue(value) {
-//         let prevValue = this.__getter();
-//         this.__setter(value);
-//         this.valueChanged.emit(0); // 0 = changed via set value.
-//     }
-
-// };
 
 
 class Parameter extends BaseParameter {
@@ -90,29 +61,27 @@ class Parameter extends BaseParameter {
         this.__value = value;
     }
 
-    getValue() {
-        if(this.__cleanerFn) {
+    getValue(mode=0) {
+        if(mode==0 && this.__cleanerFns.length > 0) {
             // Clean the param before we start evaluating the connected op.
             // this is so that operators can read from the current value
             // to compute the next.
-            let fn = this.__cleanerFn;
-            this.__cleanerFn = undefined;
-            this.__value = fn(this.__value);
+            let fns = this.__cleanerFns;
+            this.__cleanerFns = [];
+            for(let fn of fns) {
+                this.__value = fn(this.__value);
+            }
         }
         return this.__value;
     }
 
-    setValue(value, clearCleaner=false) {
-        if(this.__cleanerFn) {
-            if(clearCleaner){
-                this.__cleanerFn = undefined;
-            }
-            // else
-            //     console.warn("Error setting value when cleaner is assigned ");
+    setValue(value, mode=0) {// 0== normal set. 1 = changed via cleaner fn
+        if(mode==0 && this.__cleanerFns.length > 0) {
+            console.warn("Error setting value when cleaner is assigned ");
+            this.__cleanerFns = [];
         }
-        let prevValue = this.__value;
         this.__value = value;
-        this.valueChanged.emit();
+        this.valueChanged.emit(mode);
     }
 };
 

@@ -18,6 +18,14 @@ class StateMachine {
         this.__currentState.activate();
     }
 
+    getActiveState() {
+        return this.__currentState;
+    }
+
+    getActiveStateName() {
+        return this.__currentState.constructor.name;
+    }
+
 };
 
 export {

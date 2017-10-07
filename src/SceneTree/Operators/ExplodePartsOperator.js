@@ -17,7 +17,9 @@ class ExplodePartsOperator extends Operator {
 
         this.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
         this.addParameter(new NumberParameter('Dist', 1.0));
-        this.addParameter(new Parameter('Cascading', true, 'Boolean'));
+        this.addParameter(new Parameter('Cascading', false, 'Boolean'));
+        this.addParameter(new Parameter('BiDirectional', false, 'Boolean'));
+        this.addParameter(new Parameter('LocalSpace', false, 'Boolean'));
         this.addParameter(new Parameter('Dir', new Vec3(1, 0, 0), 'Vec3'));
         this.__parts = [];
         this.__stages = 2;
@@ -29,22 +31,53 @@ class ExplodePartsOperator extends Operator {
         this.__partGroups = partGroups;
         this.__stages = partGroups.length;
         this.__parts = [];
+        let localSpace = this.getParameter('LocalSpace').getValue();
+        let explodeDir = this.getParameter('Dir').getValue();
         for(let i=0; i<partGroups.length; i++) {
             let partGroup = partGroups[i];
             if(!partGroup){
                 continue;
             }
-            // if(typeof partGroup == 'string') {
-            //     partGroup = [partGroup];
-            // }
-            for(let path of partGroup) {
+
+            let partExplodeDir = explodeDir.clone();
+            let paths = partGroup;
+            let movement = [0.0, 1.0];
+            if(!Array.isArray(partGroup)){
+                if(partGroup.path)
+                    paths = partGroup.path;
+                else
+                    paths = partGroup.paths;
+                if(partGroup.dir){
+                    partExplodeDir = partGroup.dir;
+                }
+                if(partGroup.mult){
+                    partExplodeDir.scaleInPlace(partGroup.mult);
+                }
+                if(partGroup.movement){
+                    movement = partGroup.movement;
+                }
+            }
+
+            if(typeof paths[0] == 'string') {
+                paths = [paths];
+            }
+
+            for(let path of paths) {
                 let treeItem = this.__ownerItem.resolvePath(path);
                 if(treeItem) {
+                    let param;
+                    if(localSpace) {
+                        param = treeItem.getParameter('localXfo');
+                    } else {
+                        param = treeItem.getParameter('globalXfo');
+                    }
                     this.__parts.push({
                         stage: i,
-                        initialXfo: treeItem.getGlobalXfo().clone()
+                        initialXfo: param.getValue().clone(),
+                        explodeDir: partExplodeDir,
+                        movement
                     });
-                    this.__outputs.push(treeItem.getParameter('globalXfo'));
+                    this.__outputs.push(param);
                 }
             }
         }
@@ -53,8 +86,8 @@ class ExplodePartsOperator extends Operator {
 
         let explode = this.getParameter('Explode').getValue();
         let cascading = this.getParameter('Cascading').getValue();
+        let biDirectional = this.getParameter('BiDirectional').getValue();
         let explodeDist = this.getParameter('Dist').getValue();
-        let explodeDir = this.getParameter('Dir').getValue();
 
         for(let i=0; i<this.__parts.length; i++) {
             let part = this.__parts[i];
@@ -65,12 +98,17 @@ class ExplodePartsOperator extends Operator {
                 dist = explodeDist * Math.smoothStep(edge0, edge1, explode);
             }
             else {
-                dist = explodeDist * Math.smoothStep(0.0, 1.0, explode) * (1.0 - (part.stage / (this.__stages+1)));
+                let t = 1.0 - (part.stage / (this.__stages+1));
+                if(biDirectional){
+                    t -= 0.5;
+                }
+                dist = explodeDist * Math.smoothStep(part.movement[0], part.movement[1], explode) * t;
             }
 
-            let globalXfo = this.__outputs[i].getValue();
-            globalXfo.tr = part.initialXfo.tr.add(explodeDir.scale(dist));
-            this.__outputs[i].setValue(globalXfo);
+   
+            let xfo = this.__outputs[i].getValue(1);
+            xfo.tr = part.initialXfo.tr.add(part.explodeDir.scale(dist));
+            this.__outputs[i].setValue(xfo, 1);
         }
     }
 };

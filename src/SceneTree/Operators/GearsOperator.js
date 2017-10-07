@@ -67,6 +67,7 @@ class GearsOperator extends Operator {
                     });
                 }
             }
+            // let offset
             this.__gears.push({
                 axis: gearBinding.axis,
                 ratio: gearBinding.ratio,
@@ -81,15 +82,15 @@ class GearsOperator extends Operator {
         let revolutions = this.__revolutionsParam.getValue();
         for(let i=0; i<this.__gears.length; i++) {
             let gear = this.__gears[i];
-            revolutions *= gear.ratio;
+            let rot = revolutions * gear.ratio;
 
             let quat = new Quat();
-            quat.setFromAxisAndAngle(gear.axis, revolutions * Math.PI * 2.0);
+            quat.setFromAxisAndAngle(gear.axis, rot * Math.PI * 2.0);
 
             for(let output of gear.outputs){
-                let globalXfo = output.xfoParam.getValue();
+                let globalXfo = output.xfoParam.getValue(1);
                 globalXfo.ori = quat.multiply(output.initialXfo.ori);
-                output.xfoParam.setValue(globalXfo);
+                output.xfoParam.setValue(globalXfo, 1);
             }
         }
     }
