@@ -75,9 +75,17 @@ class Parameter extends BaseParameter {
         return this.__value;
     }
 
-    setValue(value, mode=0) {// 0== normal set. 1 = changed via cleaner fn
-        if(mode==0 && this.__cleanerFns.length > 0) {
-            console.warn("Error setting value when cleaner is assigned ");
+    setValue(value, mode=0) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading code.
+        if(this.__cleanerFns.length > 0) {
+            // Note: This message has not hilighted any real issues, and has become verbose.
+            // Enable if suspicious of operators being trampled by setValues.
+            // if(mode==0){
+            //     let cleanerNames = [];
+            //     for(let fn of this.__cleanerFns) {
+            //         cleanerNames.push(fn.name);
+            //     }
+            //     console.warn("Error setting "+this.__name + " value when cleaner is assigned:"+ cleanerNames);
+            // }
             this.__cleanerFns = [];
         }
         this.__value = value;

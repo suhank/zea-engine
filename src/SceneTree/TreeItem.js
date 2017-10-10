@@ -438,7 +438,7 @@ class TreeItem extends BaseItem {
 
         const bboxFlag = 1 << 3;
         if (itemflags & bboxFlag)
-            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()));
+            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), 2);
 
         let numChildren = reader.loadUInt32();
         if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {

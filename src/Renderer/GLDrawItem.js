@@ -92,7 +92,8 @@ class GLDrawItem {
         //this.updated.emit();
     }
 
-    __updateVisibility(geomVisible){
+    __updateVisibility(){
+        let geomVisible = this.__geomItem.getVisible();
         let visible = geomVisible && !this.__culled;
         if(this.visible != visible){
             this.visible = visible;
@@ -103,7 +104,7 @@ class GLDrawItem {
 
     setCullState(culled){
         this.__culled = culled;
-        this.__updateVisibility(this.__geomItem.getVisible());
+        this.__updateVisibility();
     }
 
     bind(renderstate) {
