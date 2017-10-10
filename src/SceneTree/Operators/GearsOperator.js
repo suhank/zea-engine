@@ -54,45 +54,72 @@ class GearsOperator extends Operator {
             if(!paths) {
                 paths = [gearBinding.path];
             }
+            let offset = 0.0;
+
+            if(gearBinding.offset){
+                offset = gearBinding.offset;
+            }
+
+
             let outputs = [];
+            let deltas = [];
             let initialXfos = [];
             for(let path of paths) {
                 let treeItem = this.__ownerItem.resolvePath(path);
                 if(treeItem) {
                     let xfoParam = treeItem.getParameter('globalXfo');
+                    let xfo = xfoParam.getValue().clone();
                     this.__outputs.push(xfoParam);
                     outputs.push({
-                        initialXfo: xfoParam.getValue().clone(),
+                        initialXfo: xfo,
                         xfoParam
                     });
+
+
+                    if(gearBinding.rotationCenter){
+                        let delta = xfo.tr.subtract(gearBinding.rotationCenter);
+                        delta.subtractInPlace(gearBinding.axis.scale(delta.dot(gearBinding.axis)));
+                        deltas.push(delta);
+                    }
                 }
             }
-            // let offset
-            this.__gears.push({
+            let gear = {
                 axis: gearBinding.axis,
                 ratio: gearBinding.ratio,
+                offset,
                 initialXfos,
-                outputs
-            });
+                outputs,
+            };
+            if(deltas.length > 0)
+                gear.deltas = deltas;
+
+            this.__gears.push(gear);
         }
     }
 
     evaluate(){
 
         let revolutions = this.__revolutionsParam.getValue();
-        for(let i=0; i<this.__gears.length; i++) {
-            let gear = this.__gears[i];
-            let rot = revolutions * gear.ratio;
+        this.__gears.forEach((gear)=>{
+            let rot = (revolutions * gear.ratio) + gear.offset;
 
             let quat = new Quat();
             quat.setFromAxisAndAngle(gear.axis, rot * Math.PI * 2.0);
 
-            for(let output of gear.outputs){
+            gear.outputs.forEach((output, index)=>{
                 let globalXfo = output.xfoParam.getValue(1);
                 globalXfo.ori = quat.multiply(output.initialXfo.ori);
+
+                if(gear.deltas) {
+                    let delta = gear.deltas[index];
+                    let vec = quat.rotateVec3(delta);
+                    vec.subtractInPlace(gear.axis.scale(vec.dot(gear.axis)));
+                    vec.addInPlace(gear.axis.scale(globalXfo.tr.dot(gear.axis)));
+                    globalXfo.tr = vec;
+                }
                 output.xfoParam.setValue(globalXfo, 1);
-            }
-        }
+            });
+        });
     }
 };
 

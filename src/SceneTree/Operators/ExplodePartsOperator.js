@@ -32,29 +32,36 @@ class ExplodePartsOperator extends Operator {
         this.__stages = partGroups.length;
         this.__parts = [];
         let localSpace = this.getParameter('LocalSpace').getValue();
-        let explodeDir = this.getParameter('Dir').getValue();
+        let opExplodeDir = this.getParameter('Dir').getValue();
         for(let i=0; i<partGroups.length; i++) {
             let partGroup = partGroups[i];
             if(!partGroup){
                 continue;
             }
 
-            let partExplodeDir = explodeDir.clone();
+            let explodeDir = opExplodeDir.clone();
             let paths = partGroup;
             let movement = [0.0, 1.0];
+            let mult = 1.0;
             if(!Array.isArray(partGroup)){
                 if(partGroup.path)
                     paths = partGroup.path;
                 else
                     paths = partGroup.paths;
                 if(partGroup.dir){
-                    partExplodeDir = partGroup.dir;
+                    explodeDir = partGroup.dir;
                 }
                 if(partGroup.mult){
-                    partExplodeDir.scaleInPlace(partGroup.mult);
+                    mult = partGroup.mult;
                 }
                 if(partGroup.movement){
                     movement = partGroup.movement;
+                }
+
+                let len = explodeDir.length();
+                if(len > 1.00001 || len < 0.99999){
+                    mult *= len;
+                    explodeDir.scaleInPlace(1.0/len);
                 }
             }
 
@@ -71,11 +78,15 @@ class ExplodePartsOperator extends Operator {
                     } else {
                         param = treeItem.getParameter('globalXfo');
                     }
+                    let initialXfo = param.getValue().clone();
+                    let offset = initialXfo.tr.dot(explodeDir);
                     this.__parts.push({
                         stage: i,
-                        initialXfo: param.getValue().clone(),
-                        explodeDir: partExplodeDir,
-                        movement
+                        initialXfo,
+                        explodeDir,
+                        offset,
+                        movement,
+                        mult
                     });
                     this.__outputs.push(param);
                 }
@@ -104,10 +115,12 @@ class ExplodePartsOperator extends Operator {
                 }
                 dist = explodeDist * Math.smoothStep(part.movement[0], part.movement[1], explode) * t;
             }
-
    
             let xfo = this.__outputs[i].getValue(1);
-            xfo.tr = part.initialXfo.tr.add(part.explodeDir.scale(dist));
+            let tr = xfo.tr;
+            tr.subtractInPlace(part.explodeDir.scale(part.explodeDir.dot(tr)));
+            tr.addInPlace(part.explodeDir.scale(part.offset + (dist * part.mult)));
+
             this.__outputs[i].setValue(xfo, 1);
         }
     }
