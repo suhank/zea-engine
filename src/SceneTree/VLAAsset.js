@@ -47,9 +47,11 @@ class VLAAsset extends AssetItem {
         async.ready.connect(()=>{
             this.allPartsLoaded.emit(); 
         });
+        let stem = filePath.split('.')[0];
+        let numGeomsFiles = 0;
 
-        let numGeomsFiles = 1;
-        this.__resourceLoader.addWork(filePath+'geoms', 4); // first geom file (load + parse + extra)
+        // TODO: one day the resourcecs tree could include meta data to indicate how
+        // manhy files make up the geom stream. 
 
         // Load the tree file. This file contains
         // the scene tree of the asset, and also
@@ -59,11 +61,18 @@ class VLAAsset extends AssetItem {
                 let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
                 this.__resourceLoader.freeData(treeData.buffer);
-                console.log("Asset:" +this.getName() + " numGeomsFiles:" + numGeomsFiles);
-                // add the work for the rest of the geom files....
-                // (load + parse)
-                this.__resourceLoader.addWork(filePath+'geoms', (numGeomsFiles - 1) * 4);
-                loadNextGeomFile();
+
+                if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('.geoms')) {
+                    this.__resourceLoader.addWork(filePath+'geoms', 1); // (load + parse + extra)
+                    let geomsData = entries[Object.keys(entries)[1]];
+                    this.__geomLibrary.readBinaryBuffer(filePath, geomsData.buffer);
+                    this.__resourceLoader.freeData(geomsData.buffer);
+                }
+                else {
+                    // add the work for the the geom files....
+                    this.__resourceLoader.addWork(filePath+'geoms', 4*numGeomsFiles); // (load + parse + extra)
+                    loadNextGeomFile();
+                }
 
                 async.decAsyncCount();
             });
@@ -73,7 +82,7 @@ class VLAAsset extends AssetItem {
         let geomFileID = 0;
         let loadNextGeomFile = () => {
             if (geomFileID < numGeomsFiles) {
-                let nextGeomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
+                let nextGeomFileName = stem + geomFileID + '.vlageoms';
                 if (this.__resourceLoader.resourceAvailable(nextGeomFileName))
                     loadGeomsfile(nextGeomFileName);
             }
@@ -91,9 +100,6 @@ class VLAAsset extends AssetItem {
             // Note: Don't add load work as we already pre-added it at the begining
             // and after the Tree file was loaded...
         }
-
-        let geomFileName = filePath.split('.')[0] + geomFileID + '.vlageoms';
-        loadGeomsfile(geomFileName);
 
         // To ensure that the resource loader knows when 
         // parsing is done, we listen to the GeomLibrary streamFileLoaded

@@ -62,7 +62,7 @@ class VRViewport extends BaseViewport {
         //////////////////////////////////////////////
         // Resources
 
-        this.__asset = renderer.getScene().loadCommonAssetResource("CommonResources/Vive.vlatree");
+        this.__asset = renderer.getScene().loadCommonAssetResource("CommonResources/Vive.vla");
         this.__asset.getMaterialLibrary().setMaterialTypeMapping( { '*': 'SimpleSurfaceShader' });
 
 

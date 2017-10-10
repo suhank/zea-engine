@@ -21,7 +21,7 @@
 
     let addMeshShape = (name, shape, pos, mat)=>{
         let geomItem = new Visualive.GeomItem(name, shape, mat);
-        geomItem.localXfo.tr = pos;
+        geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
     for(let i=0; i<10; i++){
