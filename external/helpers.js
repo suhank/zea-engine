@@ -40,9 +40,8 @@ let addCanvas = function(width, height) {
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
         VisualiveEngine: {
-            'Resources.vlr': window.location.origin+'/Resources/Resources.vlr',
-            'Dome.vlatree': window.location.origin+'/Resources/Dome.vlatree',
-            'Dome0.vlageoms': window.location.origin+'/Resources/Dome0.vlageoms',
+            'Vive.vla': window.location.origin+'/Resources/Vive.vla',
+            'Dome.vla': window.location.origin+'/Resources/Dome.vla',
             'LogoSmall.png': window.location.origin+'/Resources/LogoSmall.png',
             'FlakesNormalMap.png': window.location.origin+'/Resources/FlakesNormalMap.png'
         }

@@ -87,7 +87,7 @@ class GLSimpleRenderer extends GLRenderer {
             if (this.__vrViewport.isPresenting()){
                 this.__vrViewport.draw(this.__renderstate);
                 if(this.mirrorVRisplayToViewport){
-                    this.__gl.viewport(0, 0, this.getWidth(), this.getHeight());
+                    this.__gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
                     this.redrawOccured.emit();
                     return;

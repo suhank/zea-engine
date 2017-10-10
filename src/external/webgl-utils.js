@@ -2,11 +2,12 @@
 
 
 var create3DContext = function(canvas, opt_attribs) {
-  var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
-  var context = null;
+  let names = [/*'webgl2', */'webgl', 'experimental-webgl', 'webkit-3d', 'moz-webgl'];
+  let context = null;
   for (var ii = 0; ii < names.length; ++ii) {
     try {
       context = canvas.getContext(names[ii], opt_attribs);
+      context.name = names[ii];
     } catch(e) {}
     if (context) {
       break;
@@ -36,25 +37,27 @@ var create3DContext = function(canvas, opt_attribs) {
       }
   };
 
-  context.__ext_float = context.getExtension("OES_texture_float");
-  if(context.__ext_float){
-    context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
-  }
-  else{
-      console.warn("OES_texture_float is not available");
-  }
-  // else{
-  //     context.__ext_half_float = context.getExtension("OES_texture_half_float");
-  //   context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
-  // }
-  context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
-  // context.__ext_sRGB = context.getExtension("EXT_sRGB");
-  // context.__ext_draw_buffers = context.getExtension("WEBGL_draw_buffers");
+  if(context.name != 'webgl2') {
+    context.__ext_float = context.getExtension("OES_texture_float");
+    if(context.__ext_float){
+      context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
+    }
+    else{
+        console.warn("OES_texture_float is not available");
+    }
+    // else{
+    //     context.__ext_half_float = context.getExtension("OES_texture_half_float");
+    //   context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
+    // }
+    context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
+    // context.__ext_sRGB = context.getExtension("EXT_sRGB");
+    // context.__ext_draw_buffers = context.getExtension("WEBGL_draw_buffers");
 
-  context.__ext_Inst = context.getExtension("ANGLE_instanced_arrays");
-  context.__ext_VAO = context.getExtension("OES_vertex_array_object");
-  context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
-  context.__ext_WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
+    context.__ext_Inst = context.getExtension("ANGLE_instanced_arrays");
+    context.__ext_VAO = context.getExtension("OES_vertex_array_object");
+    context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
+    context.__ext_WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
+  }
 
 
   context.setupInstancedQuad = function(){

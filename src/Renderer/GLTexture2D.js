@@ -150,10 +150,21 @@ class GLTexture2D extends RefCounted {
         if (bind)
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         let channels = gl[this.__channels];
+        let internalFormat = channels;
         let format = gl[this.__format];
+        if(gl.name == 'webgl2'){
+            if(format == gl.FLOAT){
+                if(channels == gl.RGB){
+                    internalFormat = gl.RGB32F;
+                }
+                else if(channels == gl.RGBA){
+                    internalFormat = gl.RGBA32F;
+                }
+            }
+        }
         if (data != undefined) {
             if (data instanceof Image || data instanceof ImageData || data instanceof HTMLVideoElement) {
-                gl.texImage2D(gl.TEXTURE_2D, 0, channels, channels, format, data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, channels, format, data);
             } else {
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
@@ -167,14 +178,14 @@ class GLTexture2D extends RefCounted {
                 if(data.length != numPixels * numChannels) {
                     console.warn("Invalid data for Image width:" + this.width + " height:"+ this.height + " channels:" + this.__channels + " format:" + this.__format  + " Data Length:" + data.length  + " Expected:" + (numPixels * numChannels) );
                 }
-                gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, format, data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, this.width, this.height, 0, channels, format, data);
             }
 
             if (this.__mipMapped) {
                 gl.generateMipmap(gl.TEXTURE_2D);
             }
         } else {
-            gl.texImage2D(gl.TEXTURE_2D, 0, channels, this.width, this.height, 0, channels, format, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, this.width, this.height, 0, channels, format, null);
         }
 
         if (emit) {

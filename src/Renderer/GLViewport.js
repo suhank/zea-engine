@@ -734,6 +734,8 @@ class GLViewport extends BaseViewport {
 
             // Bind the default framebuffer
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(this.__x, this.__y, this.__width, this.__height);
+            // gl.disable(gl.SCISSOR_TEST);
 
             // this.__glshaderScreenPostProcess.bind(renderstate);
 
@@ -751,6 +753,15 @@ class GLViewport extends BaseViewport {
 
             gl.screenQuad.bindShader(renderstate);
             gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+
+
+            // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+            // more goem int he next frame then the fbo color tex is being read from and written to 
+            // at the same time. (baaaad).
+            // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+            // map, background or textures params in the scene. When it does happen it can be a bitch to 
+            // track down.
+            gl.bindTexture(gl.TEXTURE_2D, null);
         }
     }
 

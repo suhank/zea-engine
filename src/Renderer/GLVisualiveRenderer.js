@@ -338,7 +338,6 @@ class GLVisualiveRenderer extends GLRenderer {
     // Rendering
 
     drawBackground(renderstate) {
-
         if (this.__glBackgroundMap) {
             if (!this.__glBackgroundMap.isLoaded())
                 return;
@@ -378,7 +377,6 @@ class GLVisualiveRenderer extends GLRenderer {
     }
 
     drawScene(renderstate) {
-
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundLightmap = undefined;
@@ -446,7 +444,7 @@ class GLVisualiveRenderer extends GLRenderer {
     // Debugging
 };
 
-// export default GLVisualiveRenderer;
+
 export {
     GLVisualiveRenderer
 };

@@ -67,7 +67,7 @@ class GLFbo {
         this.__fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
-        if (this.__colorTexture.getFormat() == 'FLOAT') {
+        if (this.__colorTexture.getFormat() == 'FLOAT' && gl.name != 'webgl2') {
             if(gl.__ext_float){
                 if (this.__colorTexture.getFilter() == 'LINEAR') {
                     if (!gl.__ext_float_linear)
@@ -89,7 +89,7 @@ class GLFbo {
 
         // Create the depth texture
         if (this.__createDepthTexture) {
-            if (!gl.__ext_WEBGL_depth_texture) {
+            if (gl.name != 'webgl2' && !gl.__ext_WEBGL_depth_texture) {
                 // Create the depth buffer
                 var depthBuffer = gl.createRenderbuffer();
                 gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
@@ -103,7 +103,11 @@ class GLFbo {
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
                 gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-                gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+                if (gl.name == 'webgl2')
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+                else
+                    gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0);
             }
         }
