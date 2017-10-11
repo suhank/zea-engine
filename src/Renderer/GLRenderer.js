@@ -108,7 +108,7 @@ class GLRenderer {
         this.__continuousDrawing = false;
         this.__redrawRequested = false;
         this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
-        this.__supportSessions = options.supportSessions !== undefined ? options.supportSessions : true;
+        this.__supportSessions = false;//options.supportSessions !== undefined ? options.supportSessions : true;
 
         this.__collector = new GLCollector(this);
 
@@ -246,10 +246,10 @@ class GLRenderer {
         if (this.supportsVR())
             this.__setupVRViewport();
 
-        // if(this.__supportSessions){
-        //     this.sessionClient = new SessionClient(this, entries);
-        //     this.sessionClientSetup.emit(this.sessionClient);
-        // }
+        if(this.__supportSessions){
+            this.sessionClient = new SessionClient(this);
+            this.sessionClientSetup.emit(this.sessionClient);
+        }
         
         this.sceneSet.emit(this.__scene);
     }

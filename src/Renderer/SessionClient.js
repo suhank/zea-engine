@@ -170,7 +170,7 @@ let downloadData = function(file_name, mime_type, text) {
 
 class SessionClient {
 
-    constructor(renderer, commonResources) {
+    constructor(renderer) {
         this.__renderer = renderer;
 
         this.scaleFactor = 1.0;
@@ -236,7 +236,7 @@ class SessionClient {
         avatarsTreeRoot.setSelectable(false);
         renderer.getCollector().addTreeItem(avatarsTreeRoot);
 
-        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false, commonResources);
+        let myAvatar = new UserAvatar(myId, clientData, avatarsTreeRoot, this.scaleFactor, false, renderer);
         connectedUsers[myId] = myAvatar;
 
         //////////////////////////////////////
@@ -308,7 +308,7 @@ class SessionClient {
             if (!updatingTreeXfos) {
                 let path = treeItem.getPath();
                 // Only propagate changes to the scene tree..
-                if (path.startsWith('root')) {
+                if (path[0] == 'root') {
                     if(!resetXfos[path]) {
                         resetXfos[path] = prevXfo;
                         sendMessage({
