@@ -58,7 +58,12 @@ class BaseItem extends RefCounted {
     copyTo(cloned) {
         cloned.setName(this.__name);
         for (let param of this.__params) {
-            cloned.addParameterInstance(param.clone());
+            if(cloned.hasParameter(param.getName())){
+                cloned.getParameter(param.getName()).setValue(param.getValue(), 2);
+            }
+            else {
+                cloned.addParameterInstance(param.clone());
+            }
         }
     }
 
@@ -130,6 +135,10 @@ class BaseItem extends RefCounted {
 
     getParameterByIndex(index) {
         return this.__params[index];
+    }
+
+    hasParameter(paramName) {
+        return paramName in this.__paramMapping;
     }
 
     getParameter(paramName) {

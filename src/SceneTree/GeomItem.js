@@ -59,7 +59,6 @@ class GeomItem extends TreeItem {
 
     copyTo(cloned) {
         super.copyTo(cloned);
-        cloned.setGeomOffsetXfo(this.__geomOffsetXfo);
 
         if (this.__geom) {
             cloned.setGeometry(this.__geom);

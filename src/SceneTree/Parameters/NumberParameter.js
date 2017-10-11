@@ -39,6 +39,18 @@ class NumberParameter extends Parameter {
     setStep(step) {
         this.__step = step;
     }
+
+    cloneMembers(clonedParam) {
+        clonedParam.__range = this.__range;
+        clonedParam.__axis = this.__axis;
+        clonedParam.__step = this.__step;
+    }
+
+    clone() {
+        let clonedParam = new NumberParameter(this.__name, this.__value, this.__dataType);
+        this.cloneMembers();
+        return clonedParam;
+    }
 };
 
 

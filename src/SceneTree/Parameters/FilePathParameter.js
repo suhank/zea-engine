@@ -27,7 +27,15 @@ class FilePathParameter extends Parameter {
         return this.__url;
     }
 
-
+    cloneMembers(clonedParam) {
+        clonedParam.__url = this.__url;
+    }
+    
+    clone() {
+        let clonedParam = new FilePathParameter(this.__name, this.__resourceLoader);
+        this.cloneMembers();
+        return clonedParam;
+    }
 };
 
 
