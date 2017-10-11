@@ -1,22 +1,15 @@
 import {
-    Vec2
-} from '../Math/Vec2';
+    isMobileDevice
+} from '../BrowserDetection.js';
 import {
-    Vec4
-} from '../Math/Vec4';
-import {
-    Rect2
-} from '../Math/Rect2';
-import {
-    BinTreeNode
-} from '../Math/BinTreeNode';
-import {
-    Async
-} from '../Math/Async';
-import {
+    Vec2,
+    Vec4,
+    Rect2,
+    BinTreeNode,
     BinTreeRect,
-    BinTreeRectBorder
-} from '../Math/BinTreeNode';
+    BinTreeRectBorder,
+    Async
+} from '../Math';
 import {
     Image2D
 } from '../SceneTree/Image2D';
@@ -228,7 +221,7 @@ class ImageAtlas extends GLTexture2D {
             height,
             channels: (this.__format == 'FLOAT' && this.__channels == 'RGB') ? 'RGBA' : this.__channels,
             format: this.__format,
-            filter: 'LINEAR'
+            filter: (this.__format == 'FLOAT' && isMobileDevice()) ? 'NEAREST' : 'LINEAR',
         });
 
         let gl = this.__gl;
@@ -256,12 +249,12 @@ class ImageAtlas extends GLTexture2D {
                 this.__atlasLayoutTexture = new GLTexture2D(gl, {
                     channels: 'RGBA',
                     format: 'FLOAT',
+                    filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+                    wrap: 'CLAMP_TO_EDGE',
+                    mipMapped: false,
                     width: this.__layout.length,
                     height: 1,
-                    filter: 'NEAREST',
-                    wrap: 'CLAMP_TO_EDGE',
-                    data: dataArray,
-                    mipMapped: false
+                    data: dataArray
                 });
             } else {
                 this.__atlasLayoutTexture.resize(this.__layout.length, 1, dataArray);

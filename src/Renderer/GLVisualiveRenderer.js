@@ -127,9 +127,8 @@ class GLVisualiveRenderer extends GLRenderer {
             console.warn("Unsupported EnvMap:" + env);
             return;
         }
-        this.__glEnvMap.updated.connect((data) => {
-            this.requestRedraw();
-        });
+        this.__glEnvMap.ready.connect(this.requestRedraw);
+        this.__glEnvMap.updated.connect(this.requestRedraw);
     }
 
     setScene(scene) {
@@ -151,6 +150,8 @@ class GLVisualiveRenderer extends GLRenderer {
             } else {
                 this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
             }
+            this.__glBackgroundMap.ready.connect(this.requestRedraw);
+            this.__glBackgroundMap.updated.connect(this.requestRedraw);
             if (!this.__backgroundMapShader) {
                 if (!gl.__quadVertexIdsBuffer)
                     gl.setupInstancedQuad();

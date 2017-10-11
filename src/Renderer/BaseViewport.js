@@ -134,6 +134,7 @@ class BaseViewport {
         this.__fwBuffer = new GLTexture2D(gl, {
             format: 'FLOAT',
             channels,
+            filter: 'NEAREST',
             width: targetWidth,
             height: targetHeight
         });

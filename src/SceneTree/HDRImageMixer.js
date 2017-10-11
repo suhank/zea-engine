@@ -1,13 +1,20 @@
-import { Async } from '../Math/Async';
-import { Signal } from '../Math/Signal';
-import { Image2D } from './Image2D.js';
-import { HDRImage2D } from './HDRImage2D.js';
+import {
+    Async,
+    Signal
+} from '../Math';
+import {
+    Image2D
+} from './Image2D.js';
+import {
+    HDRImage2D
+} from './HDRImage2D.js';
 
 class HDRImageMixer extends Image2D {
     constructor(name, resourceLoader, stream = true) {
         super({
             format: 'FLOAT',
-            channels: 'RGB'
+            channels: 'RGB',
+            filter: isMobileDevice() ? 'NEAREST' : 'LINEAR'
         });
 
         this.__name = name;
@@ -35,16 +42,15 @@ class HDRImageMixer extends Image2D {
         let async = new Async();
         async.incAsyncCount(urls.length);
         async.ready.connect(() => {
-            if(!this.__loaded){
+            if (!this.__loaded) {
                 this.__loaded = true;
                 this.loaded.emit();
-            }
-            else{
+            } else {
                 this.updated.emit();
             }
         }, this);
-        for(let fileUrl of urls){
-            let subImage = new HDRImage2D(this.__name+this.__subImages.length, fileUrl, this.__resourceLoader);
+        for (let fileUrl of urls) {
+            let subImage = new HDRImage2D(this.__name + this.__subImages.length, fileUrl, this.__resourceLoader);
             subImage.loaded.connect(async.decAsyncCount);
             subImage.updated.connect(this.updated.emit);
             this.__subImages.push(subImage);

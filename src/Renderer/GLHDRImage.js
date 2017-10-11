@@ -1,5 +1,6 @@
 import {
-    isIOSDevice
+    isIOSDevice,
+    isMobileDevice
 } from '../BrowserDetection.js';
 import {
     GLShader
@@ -55,7 +56,7 @@ class GLHDRImage extends GLTexture2D {
                 format: (isIOSDevice() ? 'UNSIGNED_BYTE' : 'FLOAT'),
                 width: ldr.width,
                 height: ldr.height,
-                filter: 'LINEAR',
+                filter: (isMobileDevice() ? 'NEAREST' : 'LINEAR'),
                 wrap: 'CLAMP_TO_EDGE'
             });
             this.__fbo = new GLFbo(gl, this);

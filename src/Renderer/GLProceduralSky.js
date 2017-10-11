@@ -1,14 +1,37 @@
-import { Signal } from '../Math/Signal';
-import { Vec3 } from '../Math/Vec3';
-import { shaderLibrary } from './ShaderLibrary'
-import { GLShader } from './GLShader.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLHDRImage } from './GLHDRImage.js';
-import { GLProbe } from './GLProbe.js';
-import { ConvolverShader } from './Shaders/ConvolverShader.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
-import { hammersley } from '../Math/Hammersley';
+import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
+    Vec3,
+    Signal
+} from '../Math';
+import {
+    shaderLibrary
+} from './ShaderLibrary'
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
+    GLHDRImage
+} from './GLHDRImage.js';
+import {
+    GLProbe
+} from './GLProbe.js';
+import {
+    ConvolverShader
+} from './Shaders/ConvolverShader.js';
+import {
+    GLFbo
+} from './GLFbo.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
+import {
+    hammersley
+} from '../Math/Hammersley';
 
 
 // // https://threejs.org/examples/?q=sky#webgl_shaders_sky
@@ -229,10 +252,10 @@ class GLProceduralSky extends GLProbe {
         this.__srcGLTex = new GLTexture2D(gl, {
             channels: 'RGBA',
             format: 'FLOAT',
+            filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+            wrap: 'CLAMP_TO_EDGE',
             width: 2048,
-            height: 1024,
-            filter: 'LINEAR',
-            wrap: 'CLAMP_TO_EDGE'
+            height: 1024
         });
         this.__renderSkyFbo = new GLFbo(gl, this.__srcGLTex);
 
@@ -296,9 +319,9 @@ class GLProceduralSky extends GLProbe {
         //let date = new Date(2017, 2, 3, hour, minutes);
         // Note: getTime returns miliseconds, so convert to seconds.
         //this.__unixTime = Math.round(date.getTime() / 1000|0);
-        this.__unixTime = (1488517200 + (minutes * 60) + (hour * 3600))|0;
+        this.__unixTime = (1488517200 + (minutes * 60) + (hour * 3600)) | 0;
         console.log(this.__unixTime)
-        // this.renderSky();
+            // this.renderSky();
         this.updated.emit();
     }
 
@@ -309,7 +332,7 @@ class GLProceduralSky extends GLProbe {
         gui.add(this, 'time', 0, 30);
     }
 
-    renderSky(){
+    renderSky() {
         let gl = this.__gl;
 
         let renderstate = {};
@@ -329,44 +352,43 @@ class GLProceduralSky extends GLProbe {
     }
 
     draw(renderstate) {
-            let gl = this.__gl;
-            let displayAtlas = false;
-            if(displayAtlas){
-                let screenQuad = gl.screenQuad;
-                screenQuad.bindShader(renderstate);
-                //screenQuad.draw(renderstate, this.__srcGLTex);
-                //screenQuad.draw(renderstate, this.__imagePyramid);
-                screenQuad.draw(renderstate, this);
-            }
-            else{
-                this.__skyShader.bind(renderstate, 'GLProceduralSky');
-                let unifs = renderstate.unifs;
-                gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
-                gl.uniform1f(unifs.longitude.location, this.__longitude);
-                gl.uniform1f(unifs.latitude.location, this.__latitude);
+        let gl = this.__gl;
+        let displayAtlas = false;
+        if (displayAtlas) {
+            let screenQuad = gl.screenQuad;
+            screenQuad.bindShader(renderstate);
+            //screenQuad.draw(renderstate, this.__srcGLTex);
+            //screenQuad.draw(renderstate, this.__imagePyramid);
+            screenQuad.draw(renderstate, this);
+        } else {
+            this.__skyShader.bind(renderstate, 'GLProceduralSky');
+            let unifs = renderstate.unifs;
+            gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
+            gl.uniform1f(unifs.longitude.location, this.__longitude);
+            gl.uniform1f(unifs.latitude.location, this.__latitude);
 
-                this.__skyShaderBinding.bind(renderstate);
-                gl.drawQuad();
-            }
-            // else{
-            //     ///////////////////
-            //     this.__envMapShader.bind(renderstate, 'GLEnvMap');
-            //     let unifs = renderstate.unifs;
-            //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
-            //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.envMap.location);
-            //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.envMap.location);
-            //     this.bind(renderstate, renderstate.unifs.envMap.location);
+            this.__skyShaderBinding.bind(renderstate);
+            gl.drawQuad();
+        }
+        // else{
+        //     ///////////////////
+        //     this.__envMapShader.bind(renderstate, 'GLEnvMap');
+        //     let unifs = renderstate.unifs;
+        //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
+        //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.envMap.location);
+        //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.envMap.location);
+        //     this.bind(renderstate, renderstate.unifs.envMap.location);
 
-            //     if ('focus' in unifs)
-            //         gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
-            //     if ('exposure' in unifs)
-            //         gl.uniform1f(unifs.exposure.location, renderstate.exposure);
+        //     if ('focus' in unifs)
+        //         gl.uniform1f(unifs.focus.location, this.__backgroundFocus);
+        //     if ('exposure' in unifs)
+        //         gl.uniform1f(unifs.exposure.location, renderstate.exposure);
 
-            //     this.__shaderBinding.bind(renderstate);
+        //     this.__shaderBinding.bind(renderstate);
 
-            //     gl.depthMask(false);
-            //     gl.drawQuad();
-            // }
+        //     gl.depthMask(false);
+        //     gl.drawQuad();
+        // }
     }
 };
 

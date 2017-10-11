@@ -1,4 +1,11 @@
 import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
+    Vec3,
+    hammersley
+} from '../Math';
+import {
     GLShader
 } from './GLShader.js';
 import {
@@ -22,13 +29,7 @@ import {
 import {
     generateShaderGeomBinding
 } from './GeomShaderBinding.js';
-import {
-    Vec3
-} from '../Math/Vec3';
 
-import {
-    hammersley
-} from '../Math/Hammersley';
 
 class GLProbe extends ImageAtlas {
     constructor(gl, name) {
@@ -56,10 +57,10 @@ class GLProbe extends ImageAtlas {
             gl['Hammersley' + numSamples] = new GLTexture2D(gl, {
                 channels: 'RGB',
                 format: 'FLOAT',
+                filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+                wrap: 'CLAMP_TO_EDGE',
                 width: numSamples,
                 height: 1,
-                filter: 'NEAREST',
-                wrap: 'CLAMP_TO_EDGE',
                 data: dataArray,
                 mipMapped: false
             });
@@ -92,10 +93,10 @@ class GLProbe extends ImageAtlas {
                 let level = new GLTexture2D(gl, {
                     channels: 'RGBA',
                     format: 'FLOAT',
+                    filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+                    wrap: 'CLAMP_TO_EDGE',
                     width: currRez[0],
-                    height: currRez[1],
-                    filter: 'LINEAR',
-                    wrap: 'CLAMP_TO_EDGE'
+                    height: currRez[1]
                 });
                 this.addSubImage(level);
 

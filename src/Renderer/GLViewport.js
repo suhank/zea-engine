@@ -200,6 +200,7 @@ class GLViewport extends BaseViewport {
         this.__geomDataBuffer = new GLTexture2D(gl, {
             format: 'FLOAT',
             channels: 'RGBA',
+            filter: 'NEAREST',
             width: this.__width <= 1 ? 1 : this.__width,
             height: this.__height <= 1 ? 1 : this.__height,
         });

@@ -1,4 +1,7 @@
 import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
     Signal
 } from '../Math/Signal';
 import {
@@ -99,6 +102,11 @@ class GLTexture2D extends RefCounted {
         this.__flipY = ('flipY' in params) ? params['flipY'] : false;
         this.__mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
         this.flags = ('flags' in params) ? params['flags'] : 0;
+
+        if(this.__format == 'FLOAT' && this.__filter != 'NEAREST' && isMobileDevice()) {
+            console.warn('Floating point texture filtering not supported on mobile devices');
+            this.__filter = 'NEAREST';
+        }
 
         // if (this.__format == 'FLOAT') {
         //     if (gl.__ext_float){
