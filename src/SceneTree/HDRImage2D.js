@@ -1,4 +1,7 @@
 import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
     Color,
     Signal
 } from '../Math';
@@ -10,7 +13,8 @@ class HDRImage2D extends Image2D {
     constructor(name, resourceLoader, isStream) {
         super({
             format: 'FLOAT',
-            channels: 'RGB'
+            channels: 'RGB',
+            filter:isMobileDevice() ? 'NEAREST' : 'LINEAR'
         });
 
         this.__name = name;
