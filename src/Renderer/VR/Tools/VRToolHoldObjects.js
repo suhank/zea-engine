@@ -112,6 +112,7 @@ class VRToolHoldObjects extends VRTool {
         this.__geomDataBuffer = new GLTexture2D(gl, {
             format: 'FLOAT',
             channels: 'RGBA',
+            filter: 'NEAREST',
             width: 1,
             height: 1,
         });

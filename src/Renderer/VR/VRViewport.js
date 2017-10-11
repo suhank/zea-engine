@@ -51,6 +51,7 @@ class VRViewport extends BaseViewport {
         //////////////////////////////////////////////
         // Viewport params
         this.__projectionMatriciesUpdated = false;
+        this.__presentingRequested = false;
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
@@ -62,7 +63,7 @@ class VRViewport extends BaseViewport {
         //////////////////////////////////////////////
         // Resources
 
-        this.__asset = renderer.getScene().loadCommonAssetResource("CommonResources/Vive.vla");
+        this.__asset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
         this.__asset.getMaterialLibrary().setMaterialTypeMapping( { '*': 'SimpleSurfaceShader' });
 
 
@@ -283,7 +284,11 @@ class VRViewport extends BaseViewport {
 
     startPresenting() {
         //if (this.__vrDisplay.capabilities.canPresent) {
+        if(this.__presentingRequested) {
+            return false;
+        }
 
+        this.__presentingRequested = true;
         this.__stageTreeItem.setVisible(true);
 
         if (isMobileDevice()) {
@@ -303,7 +308,9 @@ class VRViewport extends BaseViewport {
         }
         this.__vrDisplay.requestPresent([{
             source: this.__renderer.getGLCanvas()
-        }]).then(function() {}, function(e) {
+        }]).then(()=>{
+            this.__presentingRequested = false;
+        }, (e)=>{
             console.warn("requestPresent failed:" + e);
         });
         // } else {

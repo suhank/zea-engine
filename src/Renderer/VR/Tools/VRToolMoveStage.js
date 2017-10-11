@@ -113,9 +113,9 @@ class VRToolMoveStage extends VRTool {
 
             // Avoid causing a scale that would make the user < 1.0 scale factor.
             let stageSc = this.__stageXfo__GrabStart.sc.x * sc;
-            if(stageSc < 1.0){
-                sc = 1.0 / this.__stageXfo__GrabStart.sc.x;
-            }
+            // if(stageSc < 1.0){
+            //     sc = 1.0 / this.__stageXfo__GrabStart.sc.x;
+            // }
 
             deltaXfo.sc.set(sc, sc, sc);
 

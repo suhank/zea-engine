@@ -91,7 +91,7 @@ class VRMarkerpenTool extends VRTool {
             this.strokeSegmentAdded.emit({
                 type: 'strokeSegmentAdded',
                 data: {
-                  xfo: xfo
+                  xfo
                 }
             });
         }

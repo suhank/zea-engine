@@ -42,7 +42,7 @@ class VRController extends Gizmo {
         // Z = Towards handle base.
 
         this.__mat = new Material('mat1', 'FlatSurfaceShader');
-        this.__mat.addParameter('baseColor', new Color(.2, .2, .2));
+        this.__mat.addParameter('baseColor', new Color(.2, .2, .2, 1));
 
 
         if(!this.__isDaydramController) {
@@ -58,52 +58,52 @@ class VRController extends Gizmo {
 
             vrstage.getTreeItem().addChild(this.__treeItem);
 
+            let sphere = new Sphere('VRControllerTip', 0.015);
+            this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
+            this.__sphereGeomItem.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
+            this.__treeItem.addChild(this.__sphereGeomItem);
+
+
             let asset = vrstage.getAsset();
             if(asset) {
                 asset.loaded.connect((entries) => {
-                    let controllerTree = entries['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
-                    controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
-                    controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                    let controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
+                    controllerTree.setLocalXfo(new Xfo(new Vec3(0, -0.035, 0.01), new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })));
                     this.__treeItem.addChild(controllerTree);
-
-                    let sphere = new Sphere('VRControllerTip', 0.015);
-                    this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
-                    this.__sphereGeomItem.getLocalXfo().tr.set(0.0, -0.01, -0.015);
-                    this.__treeItem.addChild(this.__sphereGeomItem);
                 });
             }
 
-            let uimat = new Material('uimat', 'FlatSurfaceShader');
-            this.__uiimage = new DataImage2D();
-            uimat.addParameter('baseColor', this.__uiimage);
+            // let uimat = new Material('uimat', 'FlatSurfaceShader');
+            // this.__uiimage = new DataImage2D();
+            // uimat.addParameter('baseColor', this.__uiimage);
 
-            this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
-            this.__uiGeomItem.getLocalXfo().tr.set(0.0, -0.07, 0.05); 
-            this.__uiGeomItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
-            this.__uiGeomItemGeomXfo = new Xfo();
-            this.__uiGeomItemGeomXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), -Math.PI);
-            this.__uiGeomItemGeomXfo.sc.set(0.3, 0.2, 1.0);
-            this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
-            this.__dims = { width: 200, height: 300 };
-            this.__uiGeomItem.setVisible(false);
-            this.__treeItem.addChild(this.__uiGeomItem);
+            // this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
+            // this.__uiGeomItem.getLocalXfo().tr.set(0.0, -0.07, 0.05); 
+            // this.__uiGeomItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
+            // this.__uiGeomItemGeomXfo = new Xfo();
+            // this.__uiGeomItemGeomXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), -Math.PI);
+            // this.__uiGeomItemGeomXfo.sc.set(0.3, 0.2, 1.0);
+            // this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
+            // this.__dims = { width: 200, height: 300 };
+            // this.__uiGeomItem.setVisible(false);
+            // this.__treeItem.addChild(this.__uiGeomItem);
 
-            let pointermat = new Material('pointermat', 'FlatSurfaceShader');
-            pointermat.addParameter('baseColor', new Color(1.2, 0, 0));
+            // let pointermat = new Material('pointermat', 'FlatSurfaceShader');
+            // pointermat.addParameter('baseColor', new Color(1.2, 0, 0));
 
-            let line = new Lines('pointer');
-            line.setNumVertices(2);
-            line.setNumSegments(1);
-            line.setSegment(0, 0, 1);
-            line.getVertex(0).set(0.0, 0.0, 0.0);
-            line.getVertex(1).set(0.0, 0.0, -1.0);
-            line.setBoundingBoxDirty();
+            // let line = new Lines('pointer');
+            // line.setNumVertices(2);
+            // line.setNumSegments(1);
+            // line.setSegment(0, 0, 1);
+            // line.getVertex(0).set(0.0, 0.0, 0.0);
+            // line.getVertex(1).set(0.0, 0.0, -1.0);
+            // line.setBoundingBoxDirty();
 
-            this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
-            this.__uiPointerItem.getLocalXfo().tr.set(0.0, -0.08, -0.04);
-            this.__uiPointerItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
-            this.__uiPointerItem.setVisible(false);
-            this.__treeItem.addChild(this.__uiPointerItem);
+            // this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
+            // this.__uiPointerItem.getLocalXfo().tr.set(0.0, -0.08, -0.04);
+            // this.__uiPointerItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
+            // this.__uiPointerItem.setVisible(false);
+            // this.__treeItem.addChild(this.__uiPointerItem);
         }
 
         this.__touchpadPressed = false;
@@ -257,7 +257,9 @@ class VRController extends Gizmo {
         this.pointerVisible = false;
     }
     setPointerLength(length) {
-        this.__uiPointerItem.getLocalXfo().sc.set(1, 1, length);
+        let xfo = this.__uiPointerItem.getLocalXfo();
+        xfo.sc.set(1, 1, length);
+        this.__uiPointerItem.setLocalXfo(xfo);
     }
 
     getUIDimensions() {

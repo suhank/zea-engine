@@ -17,13 +17,13 @@ import {
 
 class UserAvatar {
 
-    constructor(id, data, parentTreeItem, scaleFactor = 1.0, visible = true, commonResources) {
+    constructor(id, data, parentTreeItem, scaleFactor = 1.0, visible = true, renderer) {
         this.__id = id;
         this.__parentTreeItem = parentTreeItem;
 
         // Used when the scene scale is not meters. (usualy testin scenes)
         this.__avatarScale = scaleFactor;
-        this.__commonResources = commonResources;
+        this.__renderer = renderer;
 
         this.__controllers = [];
 
@@ -86,14 +86,21 @@ class UserAvatar {
 
     setViveRepresentation() {
         if (!this.__viveTree) {
-            let hmdTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_HMD').clone();
-            hmdTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
-            let treeItem = new TreeItem("hmdHolder");
-            treeItem.addChild(hmdTree);
 
             this.__viveTree = new TreeItem("ViveRepresentation");
             this.__viveTree.addChild(treeItem);
             this.__treeItem.addChild(this.__viveTree);
+
+            if (!this.__viveAsset) {
+                this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
+                this.__viveAsset.getMaterialLibrary().setMaterialTypeMapping( { '*': 'SimpleSurfaceShader' });
+            }
+            this.__viveAsset.loaded.connect((entries) => {
+                let hmdTree = this.__viveAsset.getChildByName('HTC_Vive_HMD').clone();
+                hmdTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                let treeItem = new TreeItem("hmdHolder");
+                treeItem.addChild(hmdTree);
+            });
         }
         // this.__treeItem.addChild(treeItem);
         this.__switchReprentationTree(this.__viveTree);
@@ -104,14 +111,17 @@ class UserAvatar {
         for (let i = 0; i < data.controllers.length; i++) {
             if (i >= this.__controllers.length) {
 
-                let controllerTree = this.__commonResources['viveAsset'].getChildByName('HTC_Vive_Controller').clone();
-                controllerTree.name = 'Handle' + i;
-                controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
-                controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
                 let treeItem = new TreeItem("handleHolder" + i);
-                treeItem.addChild(controllerTree);
-                this.__viveTree.addChild(treeItem);
 
+                this.__viveAsset.loaded.connect(() => {
+                    let controllerTree = this.__viveAsset.getChildByName('HTC_Vive_Controller').clone();
+                    controllerTree.getLocalXfo().tr.set(0, -0.035, 0.01);
+                    controllerTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
+                    treeItem.addChild(controllerTree);
+                });
+
+
+                this.__viveTree.addChild(treeItem);
                 this.__controllers.push(treeItem);
             }
             this.__controllers[i].setVisible(true);

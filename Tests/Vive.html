@@ -36,6 +36,14 @@
     let viveAsset = scene.loadCommonAssetResource("VisualiveEngine/Vive.vla");
     viveAsset.getMaterialLibrary().setMaterialTypeMapping( { '*': 'SimpleSurfaceShader' });
     scene.getRoot().addChild(viveAsset);
+
+
+    viveAsset.loaded.connect((entries) => {
+        let controllerTree = viveAsset.getChildByName('HTC_Vive_Controller').clone();
+        controllerTree.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0, -0.035, 0.01), new Visualive.Quat({ setFromAxisAndAngle: [new Visualive.Vec3(0, 1, 0), Math.PI] })));
+        scene.getRoot().addChild(controllerTree);
+    });
+
     viveAsset.allPartsLoaded.connect(()=>{
         renderer.frameAll();
     })

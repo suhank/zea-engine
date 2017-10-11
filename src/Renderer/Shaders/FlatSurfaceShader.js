@@ -43,9 +43,10 @@ void main(void) {
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-    v_viewPos = (modelViewMatrix * vec4(positions, 1.0));
-    gl_Position = projectionMatrix * v_viewPos;
+    vec4 viewPos = (modelViewMatrix * vec4(positions, 1.0));
+    gl_Position = projectionMatrix * viewPos;
 
+    v_viewPos = viewPos.xyz;
     v_textureCoord = texCoords;
     v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 }
