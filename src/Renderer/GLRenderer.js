@@ -113,10 +113,18 @@ class GLRenderer {
         this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
         this.__supportSessions = false;//options.supportSessions !== undefined ? options.supportSessions : true;
 
-        this.__collector = new GLCollector(this);
-
         this.__drawSuspensionLevel = 1;
         this.__renderstate = {};
+        this.__shaderDirectives = {};
+        this.__preproc = { };
+
+        this.__vrViewport = undefined;
+        this.mirrorVRisplayToViewport = true;
+
+        // Function Bindings.
+        this.requestRedraw = this.requestRedraw.bind(this);
+
+        this.__collector = new GLCollector(this);
 
         this.resized = new Signal();
         this.keyPressed = new Signal();
@@ -148,20 +156,10 @@ class GLRenderer {
         this.addPass(new GL2DOverlayPass(this.__gl, this.__collector));
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
-        this.addPass(new GLBillboardsPass(this.__gl, this.__collector));
+        this.addPass(new GLBillboardsPass(this));
 
         this.addViewport('main');
 
-
-        this.__vrViewport = undefined;
-        this.mirrorVRisplayToViewport = true;
-
-
-        // Function Bindings.
-        this.requestRedraw = this.requestRedraw.bind(this);
-
-        this.__shaderDirectives = {};
-        this.__preproc = { };
     }
 
     addShaderPreprocessorDirective(name, value) {
@@ -174,6 +172,11 @@ class GLRenderer {
             directives.push(this.__shaderDirectives[key]);
         }
         this.__preproc.defines = directives.join('\n')+'\n';
+    }
+
+
+    getShaderPreproc() {
+        return this.__preproc;
     }
 
 
@@ -655,7 +658,7 @@ class GLRenderer {
                 this.vrViewportSetup.emit(vrvp);
             } else {
                 //setStatus("WebVR supported, but no VRDisplays found.")
-                console.warn("WebVR supported, but no VRDisplays found.");
+                // console.warn("WebVR supported, but no VRDisplays found.");
             }
         });
     }

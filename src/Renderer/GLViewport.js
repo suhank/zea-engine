@@ -231,6 +231,7 @@ class GLViewport extends BaseViewport {
                 isOrthographic: this.__camera.getIsOrthographic(),
                 fovY: this.__camera.getFov(),
                 viewportFrustumSize: this.__frustumDim,
+                shaderopts: this.__renderer.getShaderPreproc(),
                 drawCalls: 0,
                 drawCount: 0,
                 profileJSON: {}

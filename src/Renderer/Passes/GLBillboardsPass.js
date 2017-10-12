@@ -25,13 +25,10 @@ import {
 } from '../GeomShaderBinding.js';
 
 class GLBillboardsPass extends GLPass {
-    constructor(gl, collector) {
-        super(gl, collector);
+    constructor(renderer, collector) {
+        super(renderer.gl, renderer.getCollector());
 
-        if (!gl.__quadVertexIdsBuffer) {
-            gl.setupInstancedQuad();
-        }
-
+        this.__renderer = renderer;
         this.__billboards = [];
         this.__closestBillboard = 0.0;
         this.__atlasNeedsUpdating = false;
@@ -40,8 +37,9 @@ class GLBillboardsPass extends GLPass {
 
         this.__prevSortCameraPos = new Vec3();
 
+        this.__atlas = new ImageAtlas(renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
 
-        collector.registerSceneItemFilter((treeItem, rargs)=>{
+        renderer.getCollector().registerSceneItemFilter((treeItem, rargs)=>{
             if(treeItem instanceof BillboardItem) {
                 this.addBillboard(treeItem);
                 return true;
@@ -115,26 +113,45 @@ class GLBillboardsPass extends GLPass {
         if (!this.__atlasNeedsUpdating)
             return;
 
+        // Note: When the camera moves, this array is sorted and re-upload.
+        this.__indexArray = new Float32Array(this.__billboards.length);
+        for (let i = 0; i < this.__billboards.length; i++) {
+            this.__indexArray[i] = this.__billboards[i].index;
+        }
+
+        const gl = this.__gl;
         if(!this.__glshader) {
-            this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
+            if (!gl.__quadVertexIdsBuffer) {
+                gl.setupInstancedQuad();
+            }
             this.__glshader = new BillboardShader(gl);
-            let shaderComp = this.__glshader.compileForTarget();
+            let shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', this.__renderer.getShaderPreproc());
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 
         const doIt = ()=>{
-            const gl = this.__gl;
 
-            // Note: Currently the atlas destorys all the source images
+            // Note: Currently the atlas destroys all the source images
             // after loading them(to save memory). This means we can't
             // re-render the atlas. If re-rendering is needed, add an age
             this.__atlas.renderAtlas();
 
             if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
-                this.__billboardModelMatrices = [];
+                this.__modelMatrixArray = [];
+                this.__billboardDataArray = [];
+                this.__tintColorArray = [];
                 this.__billboards.forEach((billboardData, index)=>{
-                    const mat4 = billboardData.billboard.getGlobalXfo().toMat4();
-                    this.__billboardModelMatrices[index] = mat4.asArray();
+
+                    const billboard = billboardData.billboard;
+                    const mat4 = billboard.getGlobalXfo().toMat4();
+                    const scale = billboard.getParameter('scale').getValue();
+                    const flags = billboard.getParameter('flags').getValue();
+                    const alpha = billboard.getParameter('alpha').getValue();
+                    const color = billboard.getParameter('color').getValue();
+
+                    this.__modelMatrixArray[index] = mat4.asArray();
+                    this.__billboardDataArray[index] = [scale, flags, billboardData.imageIndex, alpha];
+                    this.__tintColorArray[index] = [color.r, color.g, color.b, color.a];
                 });
                 this.__atlasNeedsUpdating = false;
                 return;
@@ -181,11 +198,7 @@ class GLBillboardsPass extends GLPass {
                 this.__updateBillboard(i);
             }
 
-            // Note: When the camera moves, this array is sorted and re-upload.
-            this.__indexArray = new Float32Array(this.__billboards.length);
-            for (let i = 0; i < this.__billboards.length; i++) {
-                this.__indexArray[i] = this.__billboards[i].index;
-            }
+
             this.__instanceIdsBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
@@ -238,8 +251,10 @@ class GLBillboardsPass extends GLPass {
         this.__indexArray.sort((a, b) => (this.__billboards[a].dist > this.__billboards[b].dist) ? -1 : ((this.__billboards[a].dist < this.__billboards[b].dist) ? 1 : 0));
 
         let gl = this.__gl;
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
+        if(gl.floatTexturesSupported && this.__instanceIdsBuffer) {
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
+        }
     }
 
 
@@ -254,34 +269,43 @@ class GLBillboardsPass extends GLPass {
 
 
         let gl = this.__gl;
+
+        gl.disable(gl.CULL_FACE);
+        gl.enable(gl.BLEND);
+        gl.blendEquation(gl.FUNC_ADD);
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+        let cameraPos = renderstate.cameraMatrix.translation;
+        let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
+        // Avoid sorting if the camera did not move more than 3 meters.
+        if (dist > this.__closestBillboard) {
+            this.sort(cameraPos);
+            this.__prevSortCameraPos = cameraPos.clone();
+            this.__closestBillboard = this.__billboards[0].dist;
+        }
+
+        this.__glshader.bind(renderstate);
+        this.__shaderBinding.bind(renderstate);
+
+        let unifs = renderstate.unifs;
+        this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
+
         if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
-            this.__billboards.forEach((billboard, index)=>{
+            this.__indexArray.forEach((index)=>{
                 // this.__drawItems[index].bind(renderstate);
                 // this.__glgeom.draw();
+
+                gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[index]);
+                gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[index]);
+                gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[index]);
+                gl.drawQuad();
             });
         }
         else
         {
-            if (!this.__drawItemsTexture)
-                return;
-
-            let cameraPos = renderstate.cameraMatrix.translation;
-            let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
-            // Avoid sorting if the camera did not move more than 3 meters.
-            if (dist > this.__closestBillboard) {
-                this.sort(cameraPos);
-                this.__prevSortCameraPos = cameraPos.clone();
-                this.__closestBillboard = this.__billboards[0].dist;
-            }
-
-            this.__glshader.bind(renderstate);
-            this.__shaderBinding.bind(renderstate);
-
-            let unifs = renderstate.unifs;
             this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture);
             gl.uniform1i(unifs.instancesTextureSize.location, this.__width);
 
-            this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 
             {
                 // The instance transform ids are bound as an instanced attribute.
@@ -292,11 +316,6 @@ class GLBillboardsPass extends GLPass {
                 gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
             }
 
-
-            gl.disable(gl.CULL_FACE);
-            gl.enable(gl.BLEND);
-            gl.blendEquation(gl.FUNC_ADD);
-            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
             gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
         }

@@ -49,7 +49,7 @@ var create3DContext = function(canvas, opt_attribs) {
     }
   }
   else {
-    // context.__ext_float = context.getExtension("OES_texture_float");
+    context.__ext_float = context.getExtension("OES_texture_float");
     if(context.__ext_float){
       context.floatTexturesSupported = true;
       context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
@@ -61,7 +61,7 @@ var create3DContext = function(canvas, opt_attribs) {
       console.warn("OES_texture_float is not available");
     }
 
-    // context.__ext_half_float = context.getExtension("OES_texture_half_float");
+    context.__ext_half_float = context.getExtension("OES_texture_half_float");
     if(context.__ext_half_float){
       context.floatTexturesSupported = true;
       context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");

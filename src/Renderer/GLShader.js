@@ -282,7 +282,7 @@ class GLShader extends BaseItem {
                     let structMemberName = uniformName + '.' + member.name;
                     let location = gl.getUniformLocation(shaderProgramHdl, structMemberName);
                     if (location == undefined) {
-                        console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
+                        // console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
                         continue;
                     }
                     result.unifs[structMemberName] = {
@@ -301,7 +301,7 @@ class GLShader extends BaseItem {
 
             let location = gl.getUniformLocation(shaderProgramHdl, uniformName);
             if (location == undefined) {
-                console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
+                // console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
                 continue;
             }
             result.unifs[uniformName] = {

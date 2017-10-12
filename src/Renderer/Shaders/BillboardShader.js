@@ -15,15 +15,19 @@ class BillboardShader extends GLShader {
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('BillboardShader.vertexShader', `
 precision highp float;
 
-instancedattribute float instanceIds;
 
-<%include file="glslutils.glsl"/>
 <%include file="utils/quadVertexFromID.glsl"/>
-<%include file="stack-gl/transpose.glsl"/>
-<%include file="utils/imageAtlas.glsl"/>
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+
+#ifdef ENABLE_FLOAT_TEXTURES
+
+instancedattribute float instanceIds;
+
+<%include file="glslutils.glsl"/>
+<%include file="stack-gl/transpose.glsl"/>
+<%include file="utils/imageAtlas.glsl"/>
 
 uniform sampler2D atlasBillboards_layout;
 uniform vec4 atlasBillboards_desc;
@@ -55,21 +59,44 @@ vec4 getTintColor(int id) {
 }
 
 
+#else
+
+uniform vec4 atlasBillboards_desc;
+
+uniform mat4 modelMatrix;
+uniform vec4 billboardData;
+uniform vec4 tintColor;
+uniform vec4 layoutData;
+
+
+#endif
+
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying float v_alpha;
 varying vec4 v_tint;
 
 void main(void) {
+
+#ifdef ENABLE_FLOAT_TEXTURES
+
     int instanceID = int(instanceIds);
 
     mat4 modelMatrix = getModelMatrix(instanceID);
     vec4 billboardData = getInstanceData(instanceID);
+    vec4 layoutData = texelFetch1D(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
+    v_tint = getTintColor(instanceID);
+
+#else
+
+    v_tint = tintColor;
+
+#endif
+
     vec2 quadVertex = getQuadVertexPositionFromID();
 
     v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
     v_alpha = billboardData.w;
-    vec4 layoutData = texelFetch1D(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
     v_texCoord *= layoutData.zw;
     v_texCoord += layoutData.xy;
 
@@ -87,7 +114,7 @@ void main(void) {
         gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
     }
 
-    v_tint = getTintColor(instanceID);
+
 }
 `);
 
@@ -109,6 +136,9 @@ varying vec4 v_tint;
 void main(void) {
     gl_FragColor = texture2D(atlasBillboards, v_texCoord) * v_tint;
     gl_FragColor.a *= v_alpha;
+
+    // gl_FragColor.r = 1.0;
+    // gl_FragColor.a = 1.0;
 }
 `);
     }
