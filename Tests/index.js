@@ -37,8 +37,14 @@ var init = function(domElement, resources) {
         case 'LatLongSterioBackgroundLoading':
             LatLongSterioBackgroundLoading(domElement, resources);
             break;
+        case 'Instancing':
+            Instancing(domElement, resources);
+            break;
         case 'Labels':
             Labels(domElement, resources);
+            break;
+        case 'Billboards':
+            Billboards(domElement, resources);
             break;
         case 'GifLoading':
             GifLoading(domElement, resources);
@@ -55,6 +61,8 @@ var init = function(domElement, resources) {
             createLink('LatLongBackgroundLoading', domElement);
             createLink('LatLongSterioBackgroundLoading', domElement);
             createLink('Labels', domElement);
+            createLink('Instancing', domElement);
+            createLink('Billboards', domElement);
             createLink('GifLoading', domElement);
             createLink('GearsOperator', domElement);
             createLink('Cutaway', domElement);

@@ -107,15 +107,27 @@ class GLDrawItem {
         this.__updateVisibility();
     }
 
+    updateGeomMatrix(){
+        // Pull on the GeomXfo param. This will trigger the lazy evaluation of the operators in the scene.
+        this.__modelMatrixArray = this.__geomItem.getGeomXfo().toMat4().asArray();
+    }
+
     bind(renderstate) {
-        if (!this.__geomItem.getVisible())
-            return false;
 
         let gl = this.__gl;
         let unifs = renderstate.unifs;
         
-        if ('transformIndex' in unifs) {
-            gl.uniform1i(unifs.transformIndex.location, this.__id);
+        if(!gl.floatTexturesSupported) {
+            let unif = unifs.modelMatrix;
+            if (unif){
+                gl.uniformMatrix4fv(unif.location, false, this.__modelMatrixArray);
+            }
+        }
+        else {
+            let unif = unifs.transformIndex;
+            if (unif){
+                gl.uniform1i(unif.location, this.__id);
+            }
         }
 
 

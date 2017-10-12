@@ -61,7 +61,6 @@ void main(void) {
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SimpleSurfaceShader.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>

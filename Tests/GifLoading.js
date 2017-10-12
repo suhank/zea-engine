@@ -103,9 +103,9 @@ Visualive.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
 var GifLoading = (domElement, resources)=> {
 
     // giffPath = "Assets/Progress.gif";
-    // giffPath = "Assets/lg.colorful-progress-loader.gif";
+    giffPath = "Assets/lg.colorful-progress-loader.gif";
     // giffPath = "Assets/loading.gif";
-    giffPath = "Assets/chuck-norris-super-kick.gif";
+    // giffPath = "Assets/chuck-norris-super-kick.gif";
 
     let scene = new Visualive.Scene(resources);
     let image =  new Visualive.FileImage2D(giffPath, scene.getResourceLoader());

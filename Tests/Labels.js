@@ -1,7 +1,6 @@
 
 var Labels = (domElement, resources)=> {
-    const div = addCanvas();
-    const resources = generateResourcesDict([]);
+    
     const scene = new Visualive.Scene(resources);
 
     const asset = new Visualive.TreeItem('labels');
@@ -46,7 +45,7 @@ var Labels = (domElement, resources)=> {
     addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-3, 1, -2), new Visualive.Color(1, 1, 0), "Label text can be long and have spaces");
 
 
-    const renderer = new Visualive.GLSimpleRenderer(div);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(10, 6, 12), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);

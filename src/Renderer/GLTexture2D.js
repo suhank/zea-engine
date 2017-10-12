@@ -64,6 +64,9 @@ class GLTexture2D extends RefCounted {
     getFormat(){
         return this.__format;
     }
+    getInternalFormat(){
+        return this.__internalFormat;
+    }
     getChannels(){
         return this.__channels;
     }
@@ -82,52 +85,82 @@ class GLTexture2D extends RefCounted {
         if (!('channels' in params) || !('width' in params) || !('height' in params))
             throw ("Invalid texture params");
 
-        let width = params['width'];
-        let height = params['height'];
-        let data = params['data'];
+        const width = params['width'];
+        const height = params['height'];
+        const data = params['data'];
 
 
-        let gl = this.__gl;
-        let maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
+        const gl = this.__gl;
+        const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
         if (width <= 0 || width > maxSize || height <= 0 || height > maxSize) {
             throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
         }
 
-        this.width = width;
-        this.height = height;
-        this.__channels = params['channels'];
-        this.__format = params['format'];
-        this.__filter = ('filter' in params) ? params['filter'] : 'LINEAR';
-        this.__wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
+        let channels = params['channels'];
+        let format = params['format'];
+        let filter = ('filter' in params) ? params['filter'] : 'LINEAR';
+        const wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
+
+        if (format == 'FLOAT') {
+            if (gl.__ext_float){
+                if (filter == 'LINEAR' && !gl.__ext_float_linear){
+                    console.warn('Floating point texture filtering not supported on this device');
+                    filter = 'NEAREST';
+                }
+            }
+            else {
+                if(gl.__ext_half_float){
+                    format = 'HALF_FLOAT';    
+                    if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                        console.warn('Half Float texture filtering not supported on this device');
+                        filter = 'NEAREST';
+                    }
+                }
+                else{
+                    throw ("OES_texture_half_float is not available");
+                }
+            }
+        }
+        // else if (this.__format == 'HALF_FLOAT') {
+        //     if(gl.__ext_half_float){
+        //         this.__format = gl.__ext_half_float.HALF_FLOAT_OES;    
+        //         if (!gl.__ext_texture_half_float_linear)
+        //             throw ("OES_texture_float_linear is not available");
+        //     }
+        //     else
+        //         throw ("OES_texture_half_float is not available");
+
+        // } 
+        else if (format == 'sRGB') {
+            if (!gl.__ext_sRGB)
+                throw ("EXT_sRGB is not available");
+        }
+
+        this.__channels = gl[channels];
+        this.__internalFormat = this.__channels;
+        this.__format;
+        if(format == 'HALF_FLOAT')
+            this.__format = gl.__ext_half_float.HALF_FLOAT_OES;  
+        else
+            this.__format = gl[format];
+
+        if(gl.name == 'webgl2'){
+            if(this.__format == gl.FLOAT){
+                if(this.__channels == gl.RGB){
+                    this.__internalFormat = gl.RGB32F;
+                }
+                else if(channels == gl.RGBA){
+                    this.__internalFormat = gl.RGBA32F;
+                }
+            }
+        }
+        this.__filter = gl[filter];
+        this.__wrap = gl[wrap];
         this.__flipY = ('flipY' in params) ? params['flipY'] : false;
         this.__mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
         this.flags = ('flags' in params) ? params['flags'] : 0;
-
-        if(this.__format == 'FLOAT' && this.__filter != 'NEAREST' && isMobileDevice()) {
-            console.warn('Floating point texture filtering not supported on mobile devices');
-            this.__filter = 'NEAREST';
-        }
-
-        // if (this.__format == 'FLOAT') {
-        //     if (gl.__ext_float){
-        //         if (!gl.__ext_float_linear)
-        //             throw ("OES_texture_float_linear is not available");
-        //     }
-        // }
-        // // else if (this.__format == 'HALF_FLOAT') {
-        // //     if(gl.__ext_half_float){
-        // //         this.__format = gl.__ext_half_float.HALF_FLOAT_OES;    
-        // //         if (!gl.__ext_texture_half_float_linear)
-        // //             throw ("OES_texture_float_linear is not available");
-        // //     }
-        // //     else
-        // //         throw ("OES_texture_half_float is not available");
-
-        // // } 
-        // else if (this.__format == 'sRGB') {
-        //     if (!gl.__ext_sRGB)
-        //         throw ("EXT_sRGB is not available");
-        // }
+        this.width = width;
+        this.height = height;
 
         this.__updateGLTexParams();
         this.bufferData(data, false, false);
@@ -147,53 +180,43 @@ class GLTexture2D extends RefCounted {
         // This parameter caused all images to be blank. Flipping in the pixel shader instead(by default)
         // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl[this.__filter]);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl[this.__filter]);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl[this.__wrap]);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl[this.__wrap]);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.__filter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.__filter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.__wrap);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.__wrap);
     }
 
     bufferData(data, bind = true, emit = true) {
         let gl = this.__gl;
         if (bind)
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
-        let channels = gl[this.__channels];
-        let internalFormat = channels;
-        let format = gl[this.__format];
-        if(gl.name == 'webgl2'){
-            if(format == gl.FLOAT){
-                if(channels == gl.RGB){
-                    internalFormat = gl.RGB32F;
-                }
-                else if(channels == gl.RGBA){
-                    internalFormat = gl.RGBA32F;
-                }
-            }
-        }
         if (data != undefined) {
             if (data instanceof Image || data instanceof ImageData || data instanceof HTMLVideoElement) {
-                gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, channels, format, data);
+                gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.__channels, this.__format, data);
             } else {
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
                 let numPixels = this.width * this.height;
                 let numChannels;
                 switch(this.__channels) {
-                    case 'ALPHA': numChannels = 1; break;
-                    case 'RGB': numChannels = 3; break;
-                    case 'RGBA': numChannels = 4; break;
+                    case gl.ALPHA: numChannels = 1; break;
+                    case gl.RGB: numChannels = 3; break;
+                    case gl.RGBA: numChannels = 4; break;
                 }
                 if(data.length != numPixels * numChannels) {
                     console.warn("Invalid data for Image width:" + this.width + " height:"+ this.height + " channels:" + this.__channels + " format:" + this.__format  + " Data Length:" + data.length  + " Expected:" + (numPixels * numChannels) );
                 }
-                gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, this.width, this.height, 0, channels, format, data);
+                if(gl.__ext_half_float && this.__format == gl.__ext_half_float.HALF_FLOAT_OES && data instanceof Float32Array){
+                    data = Math.convertFloat32ArrayToUInt16Array(data);
+                }
+                gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, data);
             }
 
             if (this.__mipMapped) {
                 gl.generateMipmap(gl.TEXTURE_2D);
             }
         } else {
-            gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, this.width, this.height, 0, channels, format, null);
+            gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, null);
         }
 
         if (emit) {
@@ -236,6 +259,10 @@ class GLTexture2D extends RefCounted {
     }
 
     get glTex() {
+        return this.__gltex;
+    }
+
+    getTexHdl() {
         return this.__gltex;
     }
 

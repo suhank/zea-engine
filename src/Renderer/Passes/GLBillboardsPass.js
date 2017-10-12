@@ -35,11 +35,6 @@ class GLBillboardsPass extends GLPass {
         this.__billboards = [];
         this.__closestBillboard = 0.0;
         this.__atlasNeedsUpdating = false;
-        this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
-        this.__glshader = new BillboardShader(gl);
-        let shaderComp = this.__glshader.compileForTarget();
-        this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
-
 
         this.__collector.renderTreeUpdated.connect(()=> this.__updateBillboards());
 
@@ -120,6 +115,13 @@ class GLBillboardsPass extends GLPass {
         if (!this.__atlasNeedsUpdating)
             return;
 
+        if(!this.__glshader) {
+            this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
+            this.__glshader = new BillboardShader(gl);
+            let shaderComp = this.__glshader.compileForTarget();
+            this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+        }
+
         const doIt = ()=>{
             const gl = this.__gl;
 
@@ -127,6 +129,16 @@ class GLBillboardsPass extends GLPass {
             // after loading them(to save memory). This means we can't
             // re-render the atlas. If re-rendering is needed, add an age
             this.__atlas.renderAtlas();
+
+            if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
+                this.__billboardModelMatrices = [];
+                this.__billboards.forEach((billboardData, index)=>{
+                    const mat4 = billboardData.billboard.getGlobalXfo().toMat4();
+                    this.__billboardModelMatrices[index] = mat4.asArray();
+                });
+                this.__atlasNeedsUpdating = false;
+                return;
+            }
 
 
             const pixelsPerItem = 6; // The number of pixels per draw item.
@@ -151,8 +163,8 @@ class GLBillboardsPass extends GLPass {
             // if((this.__width % pixelsPerItem) != 0)
             //     this.__width -= (this.__width % pixelsPerItem);
 
-            if (!this.__instancesTexture) {
-                this.__instancesTexture = new GLTexture2D(gl, {
+            if (!this.__drawItemsTexture) {
+                this.__drawItemsTexture = new GLTexture2D(gl, {
                     channels: 'RGBA',
                     format: 'FLOAT',
                     width: size,
@@ -162,7 +174,7 @@ class GLBillboardsPass extends GLPass {
                     mipMapped: false
                 });
             } else {
-                this.__instancesTexture.resize(size, size);
+                this.__drawItemsTexture.resize(size, size);
             }
 
             for (let i = 0; i < this.__billboards.length; i++) {
@@ -189,7 +201,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     __updateBillboard(index) {
-        if (!this.__instancesTexture)
+        if (!this.__drawItemsTexture)
             return;
 
         const billboardData = this.__billboards[index];
@@ -199,13 +211,23 @@ class GLBillboardsPass extends GLPass {
         const dataArray = new Float32Array(pixelsPerItem * 4);
         this.__populateBillboardDataArray(billboardData, 0, dataArray);
 
-        gl.bindTexture(gl.TEXTURE_2D, this.__instancesTexture.glTex);
+        gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex);
         const xoffset = (index * pixelsPerItem) % this.__width;
         const yoffset = Math.floor((index * pixelsPerItem) / this.__width);
         const width = pixelsPerItem;
         const height = 1;
         // console.log("xoffset:" + xoffset + " yoffset:" + yoffset +" width:" + width + " dataArray:" + dataArray.length);
-        gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
+        // gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
+
+        const format = this.__drawItemsTexture.getFormat();
+        const channels = this.__drawItemsTexture.getChannels();
+
+        if (format == gl.FLOAT) {
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, dataArray);
+        } else {
+            const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, unit16s);
+        }
 
     }
 
@@ -223,47 +245,61 @@ class GLBillboardsPass extends GLPass {
 
     draw(renderstate) {
 
-        if (this.__atlasNeedsUpdating)
+        if (this.__atlasNeedsUpdating){
             this.__updateBillboards();
-
-        if (!this.__instancesTexture)
-            return;
-
-        let cameraPos = renderstate.cameraMatrix.translation;
-        let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
-        // Avoid sorting if the camera did not move more than 3 meters.
-        if (dist > this.__closestBillboard) {
-            this.sort(cameraPos);
-            this.__prevSortCameraPos = cameraPos.clone();
-            this.__closestBillboard = this.__billboards[0].dist;
+            // Only draw once the atlas has been rendered.
+            if (this.__atlasNeedsUpdating)
+                return;
         }
+
 
         let gl = this.__gl;
-        this.__glshader.bind(renderstate);
-        this.__shaderBinding.bind(renderstate);
-
-        let unifs = renderstate.unifs;
-        this.__instancesTexture.bindToUniform(renderstate, unifs.instancesTexture);
-        gl.uniform1i(unifs.instancesTextureSize.location, this.__width);
-
-        this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
-
-        {
-            // The instance transform ids are bound as an instanced attribute.
-            let location = renderstate.attrs.instanceIds.location;
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
-            gl.enableVertexAttribArray(location);
-            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
-            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+        if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
+            this.__billboards.forEach((billboard, index)=>{
+                // this.__drawItems[index].bind(renderstate);
+                // this.__glgeom.draw();
+            });
         }
+        else
+        {
+            if (!this.__drawItemsTexture)
+                return;
+
+            let cameraPos = renderstate.cameraMatrix.translation;
+            let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
+            // Avoid sorting if the camera did not move more than 3 meters.
+            if (dist > this.__closestBillboard) {
+                this.sort(cameraPos);
+                this.__prevSortCameraPos = cameraPos.clone();
+                this.__closestBillboard = this.__billboards[0].dist;
+            }
+
+            this.__glshader.bind(renderstate);
+            this.__shaderBinding.bind(renderstate);
+
+            let unifs = renderstate.unifs;
+            this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture);
+            gl.uniform1i(unifs.instancesTextureSize.location, this.__width);
+
+            this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
+
+            {
+                // The instance transform ids are bound as an instanced attribute.
+                let location = renderstate.attrs.instanceIds.location;
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
+                gl.enableVertexAttribArray(location);
+                gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
+                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+            }
 
 
-        gl.disable(gl.CULL_FACE);
-        gl.enable(gl.BLEND);
-        gl.blendEquation(gl.FUNC_ADD);
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+            gl.disable(gl.CULL_FACE);
+            gl.enable(gl.BLEND);
+            gl.blendEquation(gl.FUNC_ADD);
+            gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
+            gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
+        }
     }
 };
 

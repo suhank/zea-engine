@@ -2,10 +2,16 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 
 import './glslutils.js';
 
-shaderLibrary.setShaderModule('matrixTexture.glsl', `
+shaderLibrary.setShaderModule('modelMatrix.glsl', `
+
+#ifdef ENABLE_FLOAT_TEXTURES
 
 uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
+
+attribute float instancedIds;    // instanced attribute..
+uniform int transformIndex;
+uniform int instancedDraw;
 
 <%include file="glslutils.glsl"/>
 
@@ -28,16 +34,6 @@ vec4 getInstanceData(int id) {
     return texelFetch(instancesTexture, instancesTextureSize, (id * cols_per_instance) + 3);
 }
 
-`);
-
-
-shaderLibrary.setShaderModule('modelMatrix.glsl', `
-
-<%include file="matrixTexture.glsl"/>
-
-attribute float instancedIds;    // instanced attribute..
-uniform int transformIndex;
-uniform int instancedDraw;
 
 int getID() {
     if(instancedDraw == 0){
@@ -55,6 +51,21 @@ mat4 getModelMatrix() {
 vec4 getInstanceData() {
     return getInstanceData(getID());
 }
+
+#else
+
+uniform mat4 modelMatrix;
+uniform vec4 drawItemData;
+
+mat4 getModelMatrix() {
+    return modelMatrix;
+}
+
+vec4 getInstanceData() {
+    return drawItemData;
+}
+
+#endif
 
 
 `);

@@ -1,4 +1,3 @@
-
 import {
     Vec4,
     Signal
@@ -38,13 +37,13 @@ import {
 
 
 class GLShaderMaterials {
-    constructor(glshader=undefined){
+    constructor(glshader = undefined) {
         this.__glshader = glshader;
         this.__glmaterialDrawItemSets = [];
 
     }
 
-    getGLShader(){
+    getGLShader() {
         return this.__glshader;
     }
 
@@ -64,12 +63,12 @@ class GLShaderMaterials {
 }
 
 class GLMaterialDrawItemSets {
-    constructor(glmaterial=undefined){
+    constructor(glmaterial = undefined) {
         this.__glmaterial = glmaterial;
         this.__drawItemSets = [];
     }
 
-    getGLMaterial(){
+    getGLMaterial() {
         return this.__glmaterial;
     }
 
@@ -84,8 +83,8 @@ class GLMaterialDrawItemSets {
     }
 
     findDrawItemSet(glgeom) {
-        for(let drawItemSet of this.__drawItemSets){
-            if(drawItemSet.getGLGeom() == glgeom)
+        for (let drawItemSet of this.__drawItemSets) {
+            if (drawItemSet.getGLGeom() == glgeom)
                 return drawItemSet;
         }
         return null;
@@ -110,16 +109,14 @@ class GLCollector {
             if (treeItem instanceof GeomItem) {
                 if (!treeItem.getMetadata('gldrawItem')) {
                     if (treeItem.getMaterial() == undefined) {
-                        console.warn ("Scene item :" + treeItem.getPath() + " has no material");
+                        console.warn("Scene item :" + treeItem.getPath() + " has no material");
                         // TODO: listen for when the material is assigned.(like geoms below)
-                    }
-                    else if (treeItem.getGeometry() == undefined) {
+                    } else if (treeItem.getGeometry() == undefined) {
                         // we will add this geomitem once it recieves its geom.
-                        treeItem.geomAssigned.connect(()=>{
+                        treeItem.geomAssigned.connect(() => {
                             this.addGeomItem(treeItem);
                         })
-                    }
-                    else{
+                    } else {
                         this.addGeomItem(treeItem);
                     }
                 }
@@ -138,7 +135,7 @@ class GLCollector {
         this.itemTransformChanged = new Signal();
     }
 
-    getRenderer(){
+    getRenderer() {
         return this.__renderer;
     };
 
@@ -160,10 +157,10 @@ class GLCollector {
 
         let glshaderMaterials;
         if (material.getShaderName() in this.__glshadermaterials) {
-           glshaderMaterials = this.__glshadermaterials[material.getShaderName()];
+            glshaderMaterials = this.__glshadermaterials[material.getShaderName()];
         } else {
             let shader = sgFactory.constructClass(material.getShaderName(), this.__renderer.gl);
-            if(!shader)
+            if (!shader)
                 return;
             glshaderMaterials = new GLShaderMaterials(shader);
             this.__glshadermaterials[material.getShaderName()] = glshaderMaterials;
@@ -181,12 +178,12 @@ class GLCollector {
         }
 
         let glshaderMaterials = this.getShaderMaterials(material);
-        if(!glshaderMaterials)
+        if (!glshaderMaterials)
             return;
 
         let glmaterial = new GLMaterial(this.__renderer.gl, material, glshaderMaterials.getGLShader());
-        glmaterial.updated.connect(()=>{
-           this.__renderer.requestRedraw(); 
+        glmaterial.updated.connect(() => {
+            this.__renderer.requestRedraw();
         });
 
         glmaterialDrawItemSets = new GLMaterialDrawItemSets(glmaterial);
@@ -228,7 +225,7 @@ class GLCollector {
 
     addGeomItem(geomItem) {
         let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
-        if(!glmaterialDrawItemSets)
+        if (!glmaterialDrawItemSets)
             return;
         let glgeom = this.addGeom(geomItem.getGeometry());
 
@@ -236,12 +233,11 @@ class GLCollector {
         let flags = 1;
         let index;
         // Use recycled indices if there are any available...
-        if (this.__drawItemsIndexFreeList.length > 0){
+        if (this.__drawItemsIndexFreeList.length > 0) {
             index = this.__drawItemsIndexFreeList.pop();
             // We will need to re-populate the array from here.
             this.__transformsDataArrayHighWaterMark = index;
-        }
-        else {
+        } else {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
         }
@@ -250,7 +246,7 @@ class GLCollector {
         let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
-        gldrawItem.updated.connect(()=> {
+        gldrawItem.updated.connect(() => {
             this.__renderer.requestRedraw();
         });
 
@@ -271,7 +267,7 @@ class GLCollector {
             this.__renderer.requestRedraw();
         });
 
-        let addDrawItemToGLMaterialDrawItemSet = ()=>{
+        let addDrawItemToGLMaterialDrawItemSet = () => {
             let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
             if (!drawItemSet) {
                 drawItemSet = new GLDrawItemSet(this.__renderer.gl, glgeom);
@@ -284,7 +280,7 @@ class GLCollector {
         }
         addDrawItemToGLMaterialDrawItemSet();
 
-        geomItem.materialAssigned.connect(()=>{
+        geomItem.materialAssigned.connect(() => {
             glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
             addDrawItemToGLMaterialDrawItemSet();
         })
@@ -295,7 +291,9 @@ class GLCollector {
     addTreeItem(treeItem) {
 
         for (let fn of this.__sceneItemFilters) {
-            let rargs = { continueInSubTree: true };
+            let rargs = {
+                continueInSubTree: true
+            };
             let handled = fn(treeItem, rargs);
             if (handled) {
                 if (!rargs.continueInSubTree)
@@ -320,7 +318,7 @@ class GLCollector {
         });
     }
 
-    __childAdded(child){
+    __childAdded(child) {
         this.addTreeItem(child);
     }
 
@@ -375,13 +373,13 @@ class GLCollector {
 
     getDrawItem(id) {
         if (id >= this.__drawItems.length)
-            throw ("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length-1));
+            throw ("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length - 1));
         return this.__drawItems[id];
     };
 
     //////////////////////////////////////////////////
     // Optimization
-    __populateTransformDataArray(gldrawItem, index, dataArray){
+    __populateTransformDataArray(gldrawItem, index, dataArray) {
 
         let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
         let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
@@ -389,9 +387,9 @@ class GLCollector {
         let stride = 16; // The number of floats per draw item.
         let offset = index * stride;
         let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
-        let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset+4);
-        let col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset+8);
-        let col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset+12);
+        let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
+        let col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
+        let col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
@@ -405,24 +403,33 @@ class GLCollector {
     newItemsReadyForLoading() {
         return this.__dirtyItemIndices.length > 0;
     };
-    
-    finalize() {
-        if(this.__dirtyItemIndices.length == 0)
-            return;
 
-        let gl = this.__renderer.gl;
-        let pixelsPerItem = 4; // The number of RGBA pixels per draw item.
+    uploadDrawItems() {
+
+        const gl = this.__renderer.gl;
+        if(!gl.floatTexturesSupported) {
+            // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
+            this.__dirtyItemIndices.forEach((index)=>{
+                const gldrawItem = this.__drawItems[index];
+                gldrawItem.updateGeomMatrix();
+            });
+            this.__dirtyItemIndices = [];
+            this.renderTreeUpdated.emit();
+            return;
+        }
+
+        const pixelsPerItem = 4; // The number of RGBA pixels per draw item.
         let size = Math.round(Math.sqrt(this.__drawItems.length * pixelsPerItem) + 0.5);
         // Only support power 2 textures. Else we get strange corruption on some GPUs
         // in some scenes.
         size = Math.nextPow2(size);
         // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
         // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
-        if((size % pixelsPerItem) != 0)
+        if ((size % pixelsPerItem) != 0)
             size += pixelsPerItem - (size % pixelsPerItem);
 
-        if(!this.__transformsTexture){
-            this.__transformsTexture = new GLTexture2D(gl, {
+        if (!this.__drawItemsTexture) {
+            this.__drawItemsTexture = new GLTexture2D(gl, {
                 channels: 'RGBA',
                 format: 'FLOAT',
                 width: size,
@@ -431,50 +438,76 @@ class GLCollector {
                 wrap: 'CLAMP_TO_EDGE',
                 mipMapped: false
             });
-        }
-        else if(this.__transformsTexture.width != size){
-            this.__transformsTexture.resize(size, size);
-            this.__dirtyItemIndices = Array((size * size)).fill().map((v,i)=>i);
+        } else if (this.__drawItemsTexture.width != size) {
+            this.__drawItemsTexture.resize(size, size);
+            this.__dirtyItemIndices = Array((size * size)).fill().map((v, i) => i);
         }
 
-        gl.bindTexture(gl.TEXTURE_2D, this.__transformsTexture.glTex);
+        gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex);
+        const format = this.__drawItemsTexture.getFormat();
+        const channels = this.__drawItemsTexture.getChannels();
 
         // for (let i=this.__transformsDataArrayHighWaterMark; i<this.__drawItems.length; i++) {
-        for (let i=0; i<this.__dirtyItemIndices.length; i++) {
-            const index = this.__dirtyItemIndices[i];
-            const gldrawItem = this.__drawItems[index];
-            // When an item is deleted, we allocate its index to the free list
-            // and null this item in the array. skip over null items.
-            if(!gldrawItem)
-                continue;
+        for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
+            const indexStart = this.__dirtyItemIndices[i];
+            const yoffset = Math.floor((indexStart * pixelsPerItem) / size);
+            let indexEnd = indexStart+1;
+            for (let j = i + 1; j < this.__dirtyItemIndices.length; j++) {
+                const index = this.__dirtyItemIndices[j];
+                if (Math.floor((index * pixelsPerItem) / size) != yoffset) {
+                    break;
+                }
+                if (index != indexEnd){
+                    break;
+                }
+                indexEnd++;
+            }
+            // const gldrawItem = this.__drawItems[index];
+            // // When an item is deleted, we allocate its index to the free list
+            // // and null this item in the array. skip over null items.
+            // if(!gldrawItem)
+            //     continue;
 
             // TODO: for contiguos blcoks, we create larger arrays and populate
             // and upload them in one step.
-
-            const pixelsPerItem = 4; // The number of RGBA pixels per draw item.
-            let dataArray = new Float32Array(pixelsPerItem * 4); // 4==RGBA pixels.
-            this.__populateTransformDataArray(gldrawItem, 0, dataArray);
-
-            const xoffset = (index * pixelsPerItem) % size;
-            const yoffset = Math.floor((index * pixelsPerItem) / size);
-            const width = pixelsPerItem;
+            const uploadCount = indexEnd - indexStart;
+            const xoffset = (indexStart * pixelsPerItem) % size;
+            const width = pixelsPerItem * uploadCount;
             const height = 1;
-            
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
+            const dataArray = new Float32Array(pixelsPerItem * 4 * uploadCount); // 4==RGBA pixels.
+
+            for (let j = indexStart; j < indexEnd; j++) {
+                const gldrawItem = this.__drawItems[j];
+                this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
+            }
+
+            if (format == gl.FLOAT) {
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, dataArray);
+            } else {
+                const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, unit16s);
+            }
+
+            i += uploadCount-1;
         }
 
 
         this.__dirtyItemIndices = [];
         this.renderTreeUpdated.emit();
     };
+    finalize() {
+        if (this.__dirtyItemIndices.length == 0)
+            return;
+        this.uploadDrawItems();
+    }
 
 
     bind(renderstate) {
         let gl = this.__renderer.gl;
         let unifs = renderstate.unifs;
-        if(this.__transformsTexture && unifs.instancesTexture){
-            this.__transformsTexture.bindToUniform(renderstate, unifs.instancesTexture);
-            gl.uniform1i(unifs.instancesTextureSize.location, this.__transformsTexture.width);
+        if (this.__drawItemsTexture && unifs.instancesTexture) {
+            this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture);
+            gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width);
         }
         return true;
     };
@@ -486,4 +519,3 @@ export {
     GLMaterialDrawItemSets,
     GLCollector
 };
-

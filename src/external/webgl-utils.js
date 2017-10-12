@@ -37,18 +37,39 @@ var create3DContext = function(canvas, opt_attribs) {
       }
   };
 
-  if(context.name != 'webgl2') {
-    context.__ext_float = context.getExtension("OES_texture_float");
+  if(context.name == 'webgl2') {
+    context.floatTexturesSupported = true;
+    context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
+    if(context.__ext_half_float){
+      context.floatTextureFilteringSupported = true;
+    }
+    context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
+    if(context.__ext_texture_half_float_linear){
+      context.floatTextureFilteringSupported = true;
+    }
+  }
+  else {
+    // context.__ext_float = context.getExtension("OES_texture_float");
     if(context.__ext_float){
+      context.floatTexturesSupported = true;
       context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
+      if(context.__ext_half_float){
+        context.floatTextureFilteringSupported = true;
+      }
     }
-    else{
-        console.warn("OES_texture_float is not available");
+    else {
+      console.warn("OES_texture_float is not available");
     }
-    // else{
-    //     context.__ext_half_float = context.getExtension("OES_texture_half_float");
-    //   context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
-    // }
+
+    // context.__ext_half_float = context.getExtension("OES_texture_half_float");
+    if(context.__ext_half_float){
+      context.floatTexturesSupported = true;
+      context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
+      if(context.__ext_texture_half_float_linear){
+        context.floatTextureFilteringSupported = true;
+      }
+    }
+
     context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
     // context.__ext_sRGB = context.getExtension("EXT_sRGB");
     // context.__ext_draw_buffers = context.getExtension("WEBGL_draw_buffers");
@@ -58,6 +79,9 @@ var create3DContext = function(canvas, opt_attribs) {
     context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
     context.__ext_WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
   }
+  
+
+  context.__ext_frag_depth = context.getExtension("EXT_frag_depth");
 
 
   context.setupInstancedQuad = function(){

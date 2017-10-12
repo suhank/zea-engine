@@ -64,8 +64,8 @@ class GLGeom {
     }
 
     unbind(renderstate) {
-         this.__shaderBindings[renderstate.shaderkey].unbind();
-        // gl.__ext_VAO.bindVertexArrayOES(null); // Note: is this necessary?
+        // Unbinding a geom in't necessar(like unbinding a texture)
+        // We simply bind the new geom.
     }
 
     ///////////////////////////////////////

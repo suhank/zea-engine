@@ -1,19 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Test Instancing</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
 
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        
-        <script type="text/javascript">
-
-    let div = addCanvas();
-    let resources = generateResourcesDict([]);
+var Instancing = (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
@@ -22,8 +8,8 @@
     standardMaterial.addParameter('metallic', 0.0);
 
     let addGeomItem = (shape, row, count, i)=>{
-        let geomItem = new Visualive.GeomItem(shape.name+'Item'+i, shape, standardMaterial);
-        geomItem.localXfo.tr.set(i * 3, row * 3, 0);
+        let geomItem = new Visualive.GeomItem('Item'+row+'-'+i, shape, standardMaterial);
+        geomItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i * 3, row * 3, 0)));
         scene.getRoot().addChild(geomItem);
         setInterval(function(){ 
             geomItem.setVisible(!geomItem.getVisible());
@@ -46,24 +32,21 @@
     let linesMaterial = new Visualive.Material('lines', 'LinesShader');
     linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
 
-    let addLinesShape = (shape, pos)=>{
+    let addLinesShape = (shape, pos, index)=>{
         // shape.lineThickness = 0.05;
-        let geomItem = new Visualive.GeomItem(shape.name+'Item', shape, linesMaterial);
-        geomItem.localXfo.tr = pos;
+        let geomItem = new Visualive.GeomItem('Item'+index, shape, linesMaterial);
+        geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
 
-    addLinesShape(new Visualive.Circle(2.2, 12), new Visualive.Vec3(-6, 0, 6));
-    addLinesShape(new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 0, 6));
+    addLinesShape(new Visualive.Circle(2.2, 12), new Visualive.Vec3(-6, 0, 6), 0);
+    addLinesShape(new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 0, 6), 1);
 
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     // renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
     renderer.frameAll();
     renderer.resumeDrawing();
-
-        </script> 
-    </body>
-</html>
+}

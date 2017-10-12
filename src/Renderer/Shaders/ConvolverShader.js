@@ -7,7 +7,7 @@ import './GLSL/utils/quadVertexFromID.js';
 class ConvolverShader extends GLShader {
     constructor(gl) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenQuadShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ConvolverShader.vertexShader', `
 precision highp float;
 
 <%include file="utils/quadVertexFromID.glsl"/>

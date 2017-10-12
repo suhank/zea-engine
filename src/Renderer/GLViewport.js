@@ -1,4 +1,7 @@
 import {
+    isMobileDevice
+} from '../BrowserDetection.js';
+import {
     Vec2,
     Vec3,
     Ray,
@@ -76,7 +79,7 @@ class GLViewport extends BaseViewport {
 
         this.__markerPenColor = new Color(1, 0, 0);
 
-        this.__glshaderScreenPostProcess = new PostProcessing(renderer.getGL());
+        // this.__glshaderScreenPostProcess = new PostProcessing(renderer.getGL());
 
         this.setCamera(new Camera('Default'));
 
@@ -197,15 +200,20 @@ class GLViewport extends BaseViewport {
 
     createGeomDataFbo() {
         let gl = this.__renderer.gl;
-        this.__geomDataBuffer = new GLTexture2D(gl, {
-            format: 'FLOAT',
-            channels: 'RGBA',
-            filter: 'NEAREST',
-            width: this.__width <= 1 ? 1 : this.__width,
-            height: this.__height <= 1 ? 1 : this.__height,
-        });
-        this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
-        this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
+        if((gl.name == 'webgl2' || gl.__ext_float != undefined) && !isMobileDevice()) {
+            this.__geomDataBuffer = new GLTexture2D(gl, {
+                format: 'FLOAT',
+                channels: 'RGBA',
+                filter: 'NEAREST',
+                width: this.__width <= 1 ? 1 : this.__width,
+                height: this.__height <= 1 ? 1 : this.__height,
+            });
+            this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
+            this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
+        }
+        else {
+            console.warn("Geom Data buffers are only in float format.")
+        }
     }
 
     getGeomDataFbo() {

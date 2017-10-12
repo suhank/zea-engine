@@ -238,12 +238,17 @@ class ImageAtlas extends GLTexture2D {
         }
 
 
-        {
+        if (!gl.floatTexturesSupported) {
+            this.__layoutVec4s = [];
+            this.__layout.forEach((layoutItem, index)=>{
+                this.__layoutVec4s = new Vec4(layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height)
+            });
+        } else {
             let dataArray = new Float32Array(this.__layout.length * 4); /*each pixel has 4 floats*/
             for (let i = 0; i < this.__layout.length; i++) {
-                let imageLayout = this.__layout[i];
+                let layoutItem = this.__layout[i];
                 let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
-                vec4.set(imageLayout.pos.x / width, imageLayout.pos.y / height, imageLayout.size.x / width, imageLayout.size.y / height)
+                vec4.set(layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height)
             }
             if (!this.__atlasLayoutTexture) {
                 this.__atlasLayoutTexture = new GLTexture2D(gl, {

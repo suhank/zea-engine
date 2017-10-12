@@ -55,6 +55,9 @@ import {
     GLLines
 } from './GLLines.js';
 import {
+    GLTexture2D
+} from './GLTexture2D.js';
+import {
     GLShader
 } from './GLShader.js';
 import {
@@ -135,6 +138,7 @@ class GLRenderer {
         this.actionOccuring = new Signal();
 
         this.setupWebGL(canvasDiv, webglOptions);
+
 
         // Note: using the geom data pass crashes VR scenes.
         this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
@@ -397,10 +401,35 @@ class GLRenderer {
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 
-        this.__isFragDepthAvailable = this.__gl.getExtension("EXT_frag_depth");
-
         this.__gl.screenQuad = new GLScreenQuad(this.__gl);
         this.__screenQuad = this.__gl.screenQuad;
+
+
+        if(this.__gl.floatTexturesSupported) {
+            this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
+        }
+
+
+        ////////////////////////////////////
+        // Bind a default texture.
+        // Note: if shaders have sampler2D uniforms, but we don't bind textures, then
+        // they get assigned texture0. If we have no textures bound at all, then 
+        // we get warnings saying.
+        // there is no texture bound to the unit 0
+        // Bind a default texture to unit 0 simply to avoid these warnings.
+        this.__texture0 = new GLTexture2D(this.__gl, {
+            channels: 'RGB',
+            format: 'UNSIGNED_BYTE',
+            width: 1,
+            height: 1,
+            filter: 'NEAREST',
+            mipMapped: false,
+            wrap: 'CLAMP_TO_EDGE',
+            data: new Uint8Array(3)
+        });
+
+        // gl.activeTexture(this.__gl.TEXTURE0);
+        this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
 
         //////////////////////////////////
         // Setup event handlers
