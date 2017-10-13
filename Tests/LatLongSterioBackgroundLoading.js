@@ -1,4 +1,4 @@
-﻿var LatLongSterioBackgroundLoading = (domElement, resources)=> {
+﻿testingHarness.registerTest('LatLongSterioBackgroundLoading', (domElement, resources)=> {
     
     let bgMapName = "Assets/teidetour23_under_over_stereo_pair_4000.jpg";
 
@@ -12,5 +12,4 @@
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main);
     renderer.resumeDrawing();
 
-
-}
+});

@@ -21,51 +21,18 @@ var createLink = (name, parent)=>{
     parent.appendChild(a);
     parent.appendChild(document.createElement('br'));
 }
+
 var init = function(domElement, resources) { 
     args = getUrlVars();
 
-    switch(args.test) {
-        case 'HelloWorld':
-            HelloWorld(domElement, resources);
-            break;
-        case 'Materials':
-            Materials(domElement, resources);
-            break;
-        case 'LatLongBackgroundLoading':
-            LatLongBackgroundLoading(domElement, resources);
-            break;
-        case 'LatLongSterioBackgroundLoading':
-            LatLongSterioBackgroundLoading(domElement, resources);
-            break;
-        case 'Instancing':
-            Instancing(domElement, resources);
-            break;
-        case 'Labels':
-            Labels(domElement, resources);
-            break;
-        case 'Billboards':
-            Billboards(domElement, resources);
-            break;
-        case 'GifLoading':
-            GifLoading(domElement, resources);
-            break;
-        case 'GearsOperator':
-            GearsOperator(domElement, resources);
-            break;
-        case 'Cutaway':
-            Cutaway(domElement, resources);
-            break;
-        default:
-            createLink('HelloWorld', domElement);
-            createLink('Materials', domElement);
-            createLink('LatLongBackgroundLoading', domElement);
-            createLink('LatLongSterioBackgroundLoading', domElement);
-            createLink('Labels', domElement);
-            createLink('Instancing', domElement);
-            createLink('Billboards', domElement);
-            createLink('GifLoading', domElement);
-            createLink('GearsOperator', domElement);
-            createLink('Cutaway', domElement);
+    if(args.test) {
+        testingHarness.runTest(args.test, domElement, resources)
+    }
+    else {
+        let names = testingHarness.getTestNames();
+        for(let name of names) {
+            createLink(name, domElement);
+        }
     }
 
 };

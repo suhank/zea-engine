@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Transform Hierarchies</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
 
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
+
+testingHarness.registerTest('TransformHierarchies', (domElement, resources)=> {
         
-        <script type="text/javascript">
 
-    let div = addCanvas();
-
-    let scene = new Visualive.Scene();
+    let scene = new Visualive.Scene(resources);
 
     let material = new Visualive.Material('material', 'SimpleSurfaceShader');
     material.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
@@ -39,12 +28,10 @@
     geomItem2.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,3,0), new Visualive.Quat({'rotateX':Math.degToRad(90)})));
     geomItem2.addChild(geomItem3);
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.setScene(scene);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     renderer.frameAll();
     renderer.resumeDrawing();
 
-        </script> 
-    </body>
-</html>
+});

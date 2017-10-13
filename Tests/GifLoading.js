@@ -100,7 +100,7 @@ void main(void) {
 
 Visualive.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
 
-var GifLoading = (domElement, resources)=> {
+testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
     // giffPath = "Assets/Progress.gif";
     giffPath = "Assets/lg.colorful-progress-loader.gif";
@@ -166,4 +166,4 @@ var GifLoading = (domElement, resources)=> {
     uicontroller.addWidgetPanel(widgetPanel);
 
     VisualiveUI.renderUI(renderer, uicontroller);
-}
+});

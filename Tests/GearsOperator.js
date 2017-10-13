@@ -1,4 +1,4 @@
-var GearsOperator = (domElement, resources)=> {
+testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
 
     let asset = new Visualive.TreeItem('gears');
@@ -53,4 +53,4 @@ var GearsOperator = (domElement, resources)=> {
     uicontroller.addWidgetPanel(widgetPanel);
 
     VisualiveUI.renderUI(renderer, uicontroller);
-}
+});

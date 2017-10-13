@@ -1,21 +1,7 @@
-﻿<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Webcam Texture</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
+﻿
 
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        <script src="../lib/VisualiveUI-dev.js"></script>
-        
-        <script type="text/javascript">
+testingHarness.registerTest('Webcam', (domElement, resources)=> {
 
-
-    let div = addCanvas();
-    let resources = generateResourcesDict();
     let scene = new Visualive.Scene(resources);
     let webcamimage = new Visualive.WebcamImage2D(640, 480, true);
 
@@ -29,9 +15,9 @@
     scene.getRoot().addChild(geomItem);
 
 
-    let renderer = new Visualive.GLSimpleRenderer(addCanvas());
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    // renderer.getViewport().setBackground(webcamimage);
+    renderer.getViewport().setBackground(webcamimage);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,1,0));
 
     renderer.vrViewportSetup.connect((vrvp)=>{
@@ -45,7 +31,4 @@
     renderer.setScene(scene);
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
-
-        </script> 
-    </body>
-</html>
+});

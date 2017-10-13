@@ -1,5 +1,5 @@
 
-var Labels = (domElement, resources)=> {
+testingHarness.registerTest('Labels', (domElement, resources)=> {
     
     const scene = new Visualive.Scene(resources);
 
@@ -55,4 +55,5 @@ var Labels = (domElement, resources)=> {
     // Setup the UI
     const uicontroller = new Visualive.UIController();
     VisualiveUI.renderUI(renderer, uicontroller);
-}
+    
+});

@@ -1,6 +1,5 @@
 ﻿
-// source file for 'HelloWorld' test.
-var HelloWorld = (domElement, resources) => { 
+testingHarness.registerTest('HelloWorld', (domElement, resources) => { 
     let scene = new Visualive.Scene(resources);
     let renderer;
     if(Visualive.isMobileDevice()){
@@ -13,5 +12,5 @@ var HelloWorld = (domElement, resources) => {
     renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,1.7,2), new Visualive.Vec3(0,1,0));
     renderer.resumeDrawing();
-};
+});
 

@@ -1,28 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Multiple Viewports</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
 
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        
-        <script type="text/javascript">
 
-    let div = addCanvas();
+testingHarness.registerTest('MultipleViewports', (domElement, resources)=> {
+
     let cuboid = new Visualive.Cuboid(2, 3, 4);
     let material = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
     let geomItem = new Visualive.GeomItem('geomItem', cuboid, material);
 
-    let scene = new Visualive.Scene();
+    let scene = new Visualive.Scene(resources);
     // let cam2 = new Visualive.Camera('right');
     scene.getRoot().addChild(geomItem);
     // scene.getRoot().addChild(cam2);
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.setScene(scene);
 
     renderer.getViewport(0).setTr(new Visualive.Vec2(0.499, 1.0));
@@ -33,7 +22,4 @@
     // vp2.setCamera(scene.getCamera());
 
     renderer.resumeDrawing();
-
-        </script> 
-    </body>
-</html>
+});

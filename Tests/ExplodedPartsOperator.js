@@ -1,20 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Exploded Parts Operator</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
-
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        <script src="../lib/VisualiveUI-dev.js"></script>
-        
-        <script type="text/javascript">
-
-    let div = addCanvas();
-    let resources = generateResourcesDict(["/Assets/ExplodePartA.obj", "/Assets/ExplodePartB.obj"]);
+testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
 
     let asset = new Visualive.TreeItem('parts');
@@ -156,6 +140,4 @@
 
     VisualiveUI.renderUI(renderer, uicontroller);
 
-        </script> 
-    </body>
-</html>
+});

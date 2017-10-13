@@ -1,19 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Procedural Shapes</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
-        
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        
-        <script type="text/javascript">
 
-    let div = addCanvas();
-    let resources = generateResourcesDict();
+testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
+
     let scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
@@ -48,13 +35,10 @@
     addLinesShape('Rect', new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 0, 6));
 
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
     // renderer.frameAll();
     renderer.resumeDrawing();
-
-        </script> 
-    </body>
-</html>
+});

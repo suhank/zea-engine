@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Test Lines Rendering</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
-
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-
-        <script type="text/javascript">
 
 
-let TestRenderLines = function() {
-    let div = addCanvas(350, 256);
+testingHarness.registerTest('TestRenderLines', (domElement, resources)=> {
+    
     let lines = new Visualive.Lines('lines', 1);
     lines.setNumVertices(3);
     lines.getVertex(0).set(-1, -1, 0.0);
@@ -32,17 +19,16 @@ let TestRenderLines = function() {
 
     let material = new Visualive.Material('material', 'FatLinesShader');
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);
-    let scene = new Visualive.Scene();
+    let scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 1.5, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
-}
+});
 
-let TestRenderCircle = function() {
-    let div = addCanvas(350, 256);
+testingHarness.registerTest('TestRenderCircle', (domElement, resources)=> {
 
     let lines = new Visualive.Circle(2.0, 8);
 
@@ -53,19 +39,11 @@ let TestRenderCircle = function() {
 
     let material = new Visualive.Material('material', 'FatLinesShader');
     let geomItem = new Visualive.GeomItem('geomItem', lines, material);
-    let scene = new Visualive.Scene();
+    let scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 0.0, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
-}
-
-TestRenderLines();
-TestRenderCircle();
-
-        </script> 
-        <br>
-    </body>
-</html>
+});

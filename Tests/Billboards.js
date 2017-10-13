@@ -1,5 +1,5 @@
 ﻿
-var Billboards = (domElement, resources)=> {
+testingHarness.registerTest('Billboards', (domElement, resources)=> {
     
     let scene = new Visualive.Scene(resources);
 
@@ -37,4 +37,4 @@ var Billboards = (domElement, resources)=> {
     renderer.setScene(scene);
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
-}
+});

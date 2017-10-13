@@ -1,5 +1,5 @@
 
-var Cutaway = (domElement, resources)=> {
+testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
     let scene = new Visualive.Scene(resources);
 
@@ -79,4 +79,4 @@ var Cutaway = (domElement, resources)=> {
 
     VisualiveUI.renderUI(renderer, uicontroller);
 
-}
+});

@@ -1,19 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Test Mesh Vertices Rendering</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
 
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        
-        <script type="text/javascript">
- 
-    let div = addCanvas();
-    let scene = new Visualive.Scene();
+testingHarness.registerTest('MeshVerticesRendering', (domElement, resources)=> {
+
+
+    let scene = new Visualive.Scene(resources);
     let objAsset = new Visualive.ObjAsset('obj');
     objAsset.splitObjects = true;
     objAsset.splitGroupsIntoObjects = true;
@@ -31,9 +20,7 @@
         scene.getCamera().frameView([scene.getRoot()]);
     }
     objAsset.loaded.connect(onLoaded);
-    objAsset.loadURL("/Tests/Assets/cow.obj");
+    objAsset.loadURL("Assets/cow.obj");
     
-        </script> 
-        <br>
-    </body>
-</html>
+});
+

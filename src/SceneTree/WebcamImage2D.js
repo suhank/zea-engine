@@ -13,7 +13,7 @@ class WebcamImage2D extends Image2D {
     constructor(width = 640, height = 480, rearCamera = false) {
         super();
         this.__loaded = false;
-        this.loaded = new Signal();
+        
         this.__initWebcam(width, height, rearCamera);
     }
 

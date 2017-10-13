@@ -1,4 +1,4 @@
-﻿var Materials = (domElement, resources)=> {
+﻿testingHarness.registerTest('Materials', (domElement, resources)=> {
     
     let scene = new Visualive.Scene(resources);
 
@@ -11,8 +11,8 @@
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
-    for(let i=0; i<20; i++){
-        for(let j=0; j<20; j++){
+    for(let i=0; i<10; i++){
+        for(let j=0; j<10; j++){
             let material = new Visualive.Material('surfaces', 'StandardSurfaceShader');
             material.addParameter('baseColor', new Visualive.Color(0.6, 0.0, 0.0));
             material.addParameter('roughness', i/9);
@@ -34,4 +34,4 @@
 
     renderer.resumeDrawing();
 
-}
+});

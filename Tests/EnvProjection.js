@@ -1,26 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Env Projection</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
-
-        <script src="../external/helpers.js"></script>
-        <script src="../external/webvr-polyfill.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        
-        <script type="text/javascript">
-    
-    let div = addCanvas();
-    let env = "Assets/HDR_041_Path_Ref.vlh";
+testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     /////////////////////////////////////
     // Scene
-    let scene = new Visualive.Scene(generateResourcesDict([env]));
+    let scene = new Visualive.Scene(resources);
 
     let layer0Material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
-    layer0Material.addParameter('env', new Visualive.FileImage2D(env, scene.getResourceLoader()));
+    layer0Material.addParameter('env', new Visualive.FileImage2D("Assets/HDR_041_Path_Ref0.vlh", scene.getResourceLoader()));
 
     let offset = 0;
     let addMeshShape = (name, shape)=>{
@@ -40,8 +24,8 @@
     /////////////////////////////////////
     // Renderer
     
-    let renderer = new Visualive.GLSimpleRenderer(div);
-    // let renderer = new Visualive.GLVisualiveRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    // let renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();
@@ -57,7 +41,4 @@
 
 
     renderer.resumeDrawing();
-
-        </script> 
-    </body>
-</html>
+});

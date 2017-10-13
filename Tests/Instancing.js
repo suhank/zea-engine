@@ -1,5 +1,5 @@
 
-var Instancing = (domElement, resources)=> {
+testingHarness.registerTest('Instancing', (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
@@ -49,4 +49,4 @@ var Instancing = (domElement, resources)=> {
     renderer.setScene(scene);
     renderer.frameAll();
     renderer.resumeDrawing();
-}
+});

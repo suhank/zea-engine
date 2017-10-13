@@ -1,22 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Cow</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
-
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        <script src="../lib/VisualiveUI-dev.js"></script>
-        
-        <script type="text/javascript">
 
 
-    let div = addCanvas();
-    let resources = generateResourcesDict(["/Assets/cow.obj"]);
-
+testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Scene
     let scene = new Visualive.Scene(resources);
@@ -36,7 +20,7 @@
     /////////////////////////////////////
     // Renderer
     
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     // let renderer = new Visualive.GLVisualiveRenderer(div);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, 7, 4), new Visualive.Vec3(3, 3, 0));
@@ -63,6 +47,6 @@
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 
-        </script> 
-    </body>
-</html>
+});
+
+

@@ -1,19 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Test NURBS Quad Clouds</title>
-        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    </head>
-    <body text-align: left;>
-
-        <script src="../external/helpers.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
-        
-        <script type="text/javascript">
-
-    let div = addCanvas();
-    let resources = generateResourcesDict([]);
+testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
 
 
@@ -108,8 +93,4 @@
     renderer.setScene(scene);
     renderer.frameAll();
     renderer.resumeDrawing();
-
-
-        </script> 
-    </body>
-</html>
+});

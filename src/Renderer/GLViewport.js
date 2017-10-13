@@ -239,18 +239,19 @@ class GLViewport extends BaseViewport {
 
     getGeomDataAtPos(screenPos) {
         if (this.__geomDataBufferFbo) {
-            let gl = this.__renderer.gl;
+            const gl = this.__renderer.gl;
             gl.finish();
             // Allocate a 1 pixel block.
-            let pixels = new Uint8Array(4);
+            const pixels = new Uint8Array(4);
 
             this.__geomDataBufferFbo.bind();
             gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             if (pixels[0] == 0)
                 return undefined;
-            let id = pixels[0] + (pixels[1] * 255);
-            console.log(id + ": " + pixels);
+            const id = pixels[0] + (pixels[1] * 255);
+            const dist = Math.decode16BitFloat([pixels[2], pixels[3]]);
+            // console.log(pixels + " id:"+ id + " dist:" + dist);
             return {
                 id,
                 dist: pixels[2]
@@ -263,7 +264,7 @@ class GLViewport extends BaseViewport {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a pixel block.
-            let rectBottom = (this.__height - br.y);
+            let rectBottom = (this.__height - br[1]);
             let rectLeft = tl.x;
             let rectWidth = (br.x - tl.x);
             let rectHeight = (br.y - tl.y);
