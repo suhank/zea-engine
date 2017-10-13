@@ -1,8 +1,4 @@
 import {
-    isIOSDevice,
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     Async
 } from '../Math';
 import {
@@ -37,7 +33,7 @@ class GLLightmapMixer extends GLTexture2D {
         this.configure({
             channels: 'RGBA',
             format: 'FLOAT',
-            filter: (isMobileDevice() ? 'NEAREST' : 'LINEAR'),
+            filter: 'LINEAR',
             wrap: 'CLAMP_TO_EDGE',
             width: this.__lightmapMixer.width,
             height: this.__lightmapMixer.height

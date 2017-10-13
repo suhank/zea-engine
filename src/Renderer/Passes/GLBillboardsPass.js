@@ -235,11 +235,11 @@ class GLBillboardsPass extends GLPass {
         const format = this.__drawItemsTexture.getFormat();
         const channels = this.__drawItemsTexture.getChannels();
 
-        if (format == gl.FLOAT) {
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, dataArray);
+        if (format == 'FLOAT') {
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], dataArray);
         } else {
             const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, unit16s);
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], unit16s);
         }
 
     }
@@ -259,6 +259,9 @@ class GLBillboardsPass extends GLPass {
 
 
     draw(renderstate) {
+
+        if(this.__billboards.length == 0)
+            return;
 
         if (this.__atlasNeedsUpdating){
             this.__updateBillboards();

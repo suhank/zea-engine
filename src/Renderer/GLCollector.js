@@ -393,11 +393,10 @@ class GLCollector {
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
-        let flags = 0;
-        // if(gldrawItem.isInverted())
-        //     flags = 1;
+
         let materialId = 0;
-        col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, flags);
+        let geomId = 0;
+        col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
     };
 
     newItemsReadyForLoading() {
@@ -478,14 +477,16 @@ class GLCollector {
 
             for (let j = indexStart; j < indexEnd; j++) {
                 const gldrawItem = this.__drawItems[j];
+                if(!gldrawItem)
+                    continue;
                 this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
             }
 
-            if (format == gl.FLOAT) {
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, dataArray);
+            if (format == 'FLOAT') {
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], dataArray);
             } else {
                 const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channels, format, unit16s);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], unit16s);
             }
 
             i += uploadCount-1;

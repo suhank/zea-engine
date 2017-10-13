@@ -2,7 +2,8 @@
     
     let scene = new Visualive.Scene(resources);
 
-    let envMap =  new Visualive.FileImage2D("Assets/hdri_sky_02_sample" + (Visualive.isMobileDevice() ? 2 : 0) + ".vlh", scene.getResourceLoader());
+    let envMapName = "Assets/hdri_sky_02_sample" + (Visualive.isMobileDevice() ? 2 : 0) + ".vlh";
+    let envMap =  new Visualive.FileImage2D(envMapName, scene.getResourceLoader());
     scene.setEnvMap(envMap);
 
     let addMeshShape = (name, shape, pos, mat)=>{
@@ -10,8 +11,8 @@
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
-    for(let i=0; i<10; i++){
-        for(let j=0; j<10; j++){
+    for(let i=0; i<20; i++){
+        for(let j=0; j<20; j++){
             let material = new Visualive.Material('surfaces', 'StandardSurfaceShader');
             material.addParameter('baseColor', new Visualive.Color(0.6, 0.0, 0.0));
             material.addParameter('roughness', i/9);

@@ -1,7 +1,4 @@
 import {
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     Vec2,
     Rect2
 } from '../Math';
@@ -133,7 +130,7 @@ class ImagePyramid extends ImageAtlas {
                 format: this.__srcGLTex.getFormat(),
                 width: size * aspectRatio,
                 height: size,
-                filter: (this.__format == 'FLOAT' && isMobileDevice()) ? 'NEAREST' : 'LINEAR',
+                filter: 'LINEAR',
                 wrap: 'CLAMP_TO_EDGE'
             });
             this.addSubImage(level);

@@ -21,7 +21,7 @@ uniform mat4 projectionMatrix;
 
 
 varying vec3 v_viewPos;
-varying vec4 v_geomData;
+varying float v_drawItemID;
 
 void main(void) {
     mat4 modelMatrix = getModelMatrix();
@@ -31,8 +31,7 @@ void main(void) {
 
     v_viewPos = -v_viewPos.xyz;
 
-    int id = getID();
-    v_geomData.x = float(id);
+    v_drawItemID = float(getID());
 }
 `);
 
@@ -40,10 +39,15 @@ void main(void) {
 precision highp float;
 
 varying vec3 v_viewPos;
-varying vec4 v_geomData;
+varying float v_drawItemID;
 
 void main(void) {
-    gl_FragColor = v_geomData;
+    gl_FragColor.x = mod(v_drawItemID, 255.0) / 255.0;
+    gl_FragColor.y = mod(v_drawItemID, (255.0 * 255.0)) / (255.0 * 255.0);
+
+
+    // TODO: encode the dist as a 16 bit float
+    // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
     gl_FragColor.a = length(v_viewPos);
 }
 `);

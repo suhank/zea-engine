@@ -1,7 +1,4 @@
 import {
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     Vec3,
     hammersley
 } from '../Math';
@@ -57,7 +54,7 @@ class GLProbe extends ImageAtlas {
             gl['Hammersley' + numSamples] = new GLTexture2D(gl, {
                 channels: 'RGB',
                 format: 'FLOAT',
-                filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+                filter: 'NEAREST',
                 wrap: 'CLAMP_TO_EDGE',
                 width: numSamples,
                 height: 1,
@@ -93,7 +90,7 @@ class GLProbe extends ImageAtlas {
                 let level = new GLTexture2D(gl, {
                     channels: 'RGBA',
                     format: 'FLOAT',
-                    filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+                    filter: 'LINEAR',
                     wrap: 'CLAMP_TO_EDGE',
                     width: currRez[0],
                     height: currRez[1]

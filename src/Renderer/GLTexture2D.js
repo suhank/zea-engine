@@ -1,7 +1,4 @@
 import {
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     Signal
 } from '../Math/Signal';
 import {
@@ -62,20 +59,18 @@ class GLTexture2D extends RefCounted {
     }
 
     getFormat(){
-        return this.__format;
-    }
-    getInternalFormat(){
-        return this.__internalFormat;
+        return this.__formatParam;
     }
     getChannels(){
-        return this.__channels;
+        return this.__channelsParam;
     }
     getFilter(){
-        return this.__filter;
+        return this.__filterParam;
     }
     getWrap(){
-        return this.__wrap;
+        return this.__wrapParam;
     }
+
     getMipMapped(){
         return this.__mipMapped;
     }
@@ -135,6 +130,12 @@ class GLTexture2D extends RefCounted {
             if (!gl.__ext_sRGB)
                 throw ("EXT_sRGB is not available");
         }
+
+        this.__channelsParam = channels;
+        this.__formatParam = format;
+        this.__filterParam = filter;
+        this.__wrapParam = wrap;
+
 
         this.__channels = gl[channels];
         this.__internalFormat = this.__channels;

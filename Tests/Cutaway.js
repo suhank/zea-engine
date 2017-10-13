@@ -60,7 +60,7 @@ var Cutaway = (domElement, resources)=> {
     objAsset.getParameter('FilePath').setValue("/Assets/CutawayAndExplode.obj");
 
 
-    let renderer = new Visualive.GLSimpleRenderer(div, { enableCrossSections:true });
+    let renderer = new Visualive.GLSimpleRenderer(domElement, { enableCrossSections:true });
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, 2, -8), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
 

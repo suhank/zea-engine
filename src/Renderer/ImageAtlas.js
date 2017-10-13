@@ -1,7 +1,4 @@
 import {
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     Vec2,
     Vec4,
     Rect2,
@@ -221,7 +218,7 @@ class ImageAtlas extends GLTexture2D {
             height,
             channels: (this.__format == 'FLOAT' && this.__channels == 'RGB') ? 'RGBA' : this.__channels,
             format: this.__format,
-            filter: (this.__format == 'FLOAT' && isMobileDevice()) ? 'NEAREST' : 'LINEAR',
+            filter: 'LINEAR',
         });
 
         let gl = this.__gl;
@@ -254,7 +251,7 @@ class ImageAtlas extends GLTexture2D {
                 this.__atlasLayoutTexture = new GLTexture2D(gl, {
                     channels: 'RGBA',
                     format: 'FLOAT',
-                    filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+                    filter: 'NEAREST',
                     wrap: 'CLAMP_TO_EDGE',
                     mipMapped: false,
                     width: this.__layout.length,

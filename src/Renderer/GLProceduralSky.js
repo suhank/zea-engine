@@ -1,7 +1,4 @@
 import {
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     Vec3,
     Signal
 } from '../Math';
@@ -252,7 +249,7 @@ class GLProceduralSky extends GLProbe {
         this.__srcGLTex = new GLTexture2D(gl, {
             channels: 'RGBA',
             format: 'FLOAT',
-            filter: isMobileDevice() ? 'NEAREST' : 'LINEAR',
+            filter: 'LINEAR',
             wrap: 'CLAMP_TO_EDGE',
             width: 2048,
             height: 1024

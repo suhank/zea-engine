@@ -1,8 +1,4 @@
 import {
-    isIOSDevice,
-    isMobileDevice
-} from '../BrowserDetection.js';
-import {
     GLShader
 } from './GLShader.js';
 import {
@@ -53,10 +49,10 @@ class GLHDRImage extends GLTexture2D {
             // If we want better quality, we could unpack the texture in JavaScript. 
             this.configure({
                 channels: 'RGBA',
-                format: (isIOSDevice() ? 'UNSIGNED_BYTE' : 'FLOAT'),
+                format: 'FLOAT',
                 width: ldr.width,
                 height: ldr.height,
-                filter: (isMobileDevice() ? 'NEAREST' : 'LINEAR'),
+                filter: 'LINEAR',
                 wrap: 'CLAMP_TO_EDGE'
             });
             this.__fbo = new GLFbo(gl, this);

@@ -200,20 +200,15 @@ class GLViewport extends BaseViewport {
 
     createGeomDataFbo() {
         let gl = this.__renderer.gl;
-        if((gl.name == 'webgl2' || gl.__ext_float != undefined) && !isMobileDevice()) {
-            this.__geomDataBuffer = new GLTexture2D(gl, {
-                format: 'FLOAT',
-                channels: 'RGBA',
-                filter: 'NEAREST',
-                width: this.__width <= 1 ? 1 : this.__width,
-                height: this.__height <= 1 ? 1 : this.__height,
-            });
-            this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
-            this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
-        }
-        else {
-            console.warn("Geom Data buffers are only in float format.")
-        }
+        this.__geomDataBuffer = new GLTexture2D(gl, {
+            format: 'UNSIGNED_BYTE',
+            channels: 'RGBA',
+            filter: 'NEAREST',
+            width: this.__width <= 1 ? 1 : this.__width,
+            height: this.__height <= 1 ? 1 : this.__height,
+        });
+        this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
+        this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
     getGeomDataFbo() {
@@ -247,18 +242,18 @@ class GLViewport extends BaseViewport {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a 1 pixel block.
-            let pixels = new Float32Array(4);
+            let pixels = new Uint8Array(4);
 
             this.__geomDataBufferFbo.bind();
-            gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
+            gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            // if (pixels[0] == 0)
-            //     return undefined;
+            if (pixels[0] == 0)
+                return undefined;
+            let id = pixels[0] + (pixels[1] * 255);
+            console.log(id + ": " + pixels);
             return {
-                'id': Math.round(pixels[0]),
-                'data1': pixels[1],
-                'data2': pixels[2],
-                'data3': pixels[3]
+                id,
+                dist: pixels[2]
             };
         }
     }
@@ -282,10 +277,10 @@ class GLViewport extends BaseViewport {
             let drawItems = new Set();
             for (let i = 0; i < numPixels; i++) {
                 let pid = i * 4;
-                if (pixels[pid + 0] !== 1) // Only keep Geoms. (filter out Gizmos)
+                if (pixels[pid + 0] == 0) // Only keep Geoms. (filter out Gizmos)
                     continue;
                 // Merge the 2 last 8bit values to make a 16bit integer index value
-                let id = (pixels[pid + 1] * 256) + pixels[pid + 2];
+                let id = pixels[pid + 0] + (pixels[pid + 1] * 255);
                 let drawItem = this.__renderer.getDrawItem(id);
                 drawItems.add(drawItem);
             }
