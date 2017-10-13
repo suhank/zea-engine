@@ -173,6 +173,27 @@ Math.convertFloat32ArrayToUInt16Array = function(float32Array) {
     return unit16s;
 };
 
+// Note: assuemd inputs are a pair of bytes, likely generated in GLSL.
+Math.decode16BitFloat = (c)=>{
+    let v = 0.;
+
+    let ix = Math.round(c[0]); // 1st byte: 1 bit signum, 4 bits exponent, 3 bits mantissa (MSB)
+    let iy = Math.round(c[1]); // 2nd byte: 8 bit mantissa (LSB)
+
+    let s = (c[0] >= 127) ? 1 : -1;
+    ix = (s > 0) ? ix - 128 : ix;           // remove the signum bit from exponent
+    let iexp = ix / 8;                      // cut off the last 3 bits of the mantissa to select the 4 exponent bits
+    let msb = ix - iexp * 8;                // subtract the exponent bits to select the 3 most significant bits of the mantissa
+
+    let norm = (iexp == 0) ? 0 : 2048;      // distinguish between normalized and subnormalized numbers
+    let mantissa = norm + msb * 256 + iy;   // implicite preceding 1 or 0 added here
+    norm = (iexp == 0) ? 1 : 0;             // normalization toggle
+    let exponent = Math.pow( 2., (iexp + norm) - 16.); // -5 for the the exponent bias from 2^-5 to 2^10 plus another -11 for the normalized 12 bit mantissa 
+    v = ( s * mantissa ) * exponent;
+
+    return v;
+}
+
 Math.smoothStep = (edge0, edge1, x)=>{
     let t = Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);

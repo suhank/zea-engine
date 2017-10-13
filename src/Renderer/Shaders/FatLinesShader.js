@@ -123,7 +123,7 @@ void main(void) {
     }
 
     v_viewPos       = viewPos;
-    gl_Position     = projectionMatrix * v_viewPos;
+    gl_Position     = projectionMatrix * vec4(viewPos, 1.0);
 }
 `);
 
