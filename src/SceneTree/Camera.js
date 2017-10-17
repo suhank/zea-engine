@@ -29,7 +29,7 @@ class Camera extends TreeItem {
         this.__maxVel = 0.002;
         this.__velocity = new Vec3();
 
-        this.__isOrthographicParam = this.addParameter('isOrthographic', 1.0);
+        this.__isOrthographicParam = this.addParameter('isOrthographic', false);
         this.__fovParam = this.addParameter('fov', 1.0);
         this.__nearParam = this.addParameter('near', 0.1);
         this.__farParam = this.addParameter('far', 1000.0);

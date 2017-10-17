@@ -6,7 +6,7 @@ import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
 class GeomDataShader extends GLShader {
-    constructor(gl) {
+    constructor(gl, floatGeomBuffer) {
         super(gl);
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GeomDataShader.vertexShader', `
 precision highp float;
@@ -40,6 +40,7 @@ precision highp float;
 
 varying vec3 v_viewPos;
 varying float v_drawItemID;
+uniform int floatGeomBuffer;
 
 /////////////////////////////////////////////////////////////////
 // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
@@ -137,17 +138,26 @@ float decode(vec2 c){
 /////////////////////////////////////////////////////////////////
 
 void main(void) {
-    gl_FragColor.r = mod(v_drawItemID, 255.0) / 255.0;
-    gl_FragColor.g = mod(v_drawItemID, (255.0 * 255.0)) / (255.0 * 255.0);
-
-
-    // TODO: encode the dist as a 16 bit float
-    // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
     float dist = length(v_viewPos);
-    vec2 float16bits = encode(dist);
 
-    gl_FragColor.b = float16bits.x;
-    gl_FragColor.a = float16bits.y;
+    if(floatGeomBuffer != 0) {
+        gl_FragColor.r = float(v_drawItemID);
+        gl_FragColor.g = dist;
+    }
+    else {
+        ///////////////////////////////////
+        // UInt8 buffer
+        gl_FragColor.r = mod(v_drawItemID, 255.0) / 255.0;
+        gl_FragColor.g = mod(v_drawItemID, (255.0 * 255.0)) / (255.0 * 255.0);
+
+        // TODO: encode the dist as a 16 bit float
+        // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
+        vec2 float16bits = encode(dist);
+        gl_FragColor.b = float16bits.x;
+        gl_FragColor.a = float16bits.y;
+    }
+
+
 }
 `);
     }

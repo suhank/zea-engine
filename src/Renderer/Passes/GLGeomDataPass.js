@@ -13,10 +13,11 @@ import {
 } from '../GLCollector.js';
 
 class GLGeomDataPass extends GLPass {
-    constructor(gl, collector) {
+    constructor(gl, collector, flaotGeomBuffer) {
         super(gl, collector);
 
         this.__glshader = new GeomDataShader(gl);
+        this.__flaotGeomBuffer = flaotGeomBuffer;
     }
 
     /////////////////////////////////////
@@ -58,6 +59,11 @@ class GLGeomDataPass extends GLPass {
 
         this.__glshader.bind(renderstate);
         this.__collector.bind(renderstate);
+
+        let unif = renderstate.unifs.floatGeomBuffer;
+        if (unif){
+            gl.uniform1i(unif.location, this.__flaotGeomBuffer ? 1 : 0);
+        }
 
         super.draw(renderstate);
     }

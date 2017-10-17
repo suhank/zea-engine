@@ -32,7 +32,16 @@ class TreeItem extends BaseItem {
         this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
         this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
 
-        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty.bind(this));
+        // Bind handlers (havk to )
+        this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
+        this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this);
+        this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
+        this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
+        this.onMouseDown = this.onMouseDown.bind(this);
+        this.onMouseMove = this.onMouseMove.bind(this);
+        this.onMouseUp = this.onMouseUp.bind(this);
+
+        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
 
         let _cleanLocalXfo = (prevValue)=>{
             let globalXfo = this.__globalXfoParam.getValue();
@@ -51,8 +60,6 @@ class TreeItem extends BaseItem {
             }
             this._setBoundingBoxDirty();
         });
-        this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
-        this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
 
 
         this.visibilityChanged = this.__visibleParam.valueChanged;
@@ -65,6 +72,10 @@ class TreeItem extends BaseItem {
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
 
+        this.mouseDown = new Signal();
+        this.mouseUp = new Signal();
+        this.mouseMove = new Signal();
+        
         this.treeItemGlobalXfoChanged = new Signal();
     }
 
@@ -93,17 +104,18 @@ class TreeItem extends BaseItem {
 
     setOwnerItem(parentItem) {
         if(this.__ownerItem) {
-            this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty.bind(this));
+            this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
         }
 
+        
         // this.__private.set(parentItem, parentItem);
         super.setOwnerItem(parentItem);
 
         this._setGlobalXfoDirty();
         if(this.__ownerItem) {
-            this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty.bind(this));
+            this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty);
         }
-        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty.bind(this));
+        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
     }
 
     __updatePath() {
@@ -305,12 +317,13 @@ class TreeItem extends BaseItem {
         this.__childItems.push(childItem);
         childItem.setParentItem(this);
 
-        childItem.boundingChanged.connect(() => {
-            this._setBoundingBoxDirty();
-        });
-        childItem.visibilityChanged.connect(() => {
-            this._setBoundingBoxDirty();
-        });
+        childItem.boundingChanged.connect(this._setBoundingBoxDirty);
+        childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
+
+        // Propagate mouse event up ths tree.
+        childItem.mouseDown.connect(this.onMouseDown);
+        childItem.mouseUp.connect(this.onMouseUp);
+        childItem.mouseMove.connect(this.onMouseMove);
 
         this._setBoundingBoxDirty();
         this.childAdded.emit(childItem);
@@ -331,6 +344,17 @@ class TreeItem extends BaseItem {
     removeChild(index, destroy = true) {
         let childItem = this.__childItems[index];
         this.__childItems.splice(index, 1);
+
+        childItem.setParentItem(undefined);
+
+        childItem.boundingChanged.disconnect(this._setBoundingBoxDirty);
+        childItem.visibilityChanged.disconnect(this._setBoundingBoxDirty);
+
+        // Propagate mouse event up ths tree.
+        childItem.mouseDown.disconnect(this.onMouseDown);
+        childItem.mouseUp.disconnect(this.onMouseUp);
+        childItem.mouseMove.disconnect(this.onMouseMove);
+
         if (destroy)
             childItem.destroy();
         this._setBoundingBoxDirty();
@@ -353,6 +377,24 @@ class TreeItem extends BaseItem {
 
     indexOfChild(childItem) {
         return this.__childItems.indexOf(childItem);
+    }
+
+    /////////////////////////
+    // Events
+
+    onMouseDown(mousePos, event) {
+        this.mouseDown.emit(mousePos, event);
+        return false;
+    }
+
+    onMouseUp(mousePos, event) {
+        this.mouseUp.emit(mousePos, event);
+        return false;
+    }
+
+    onMouseMove(mousePos, event) {
+        this.mouseMove.emit(mousePos, event);
+        return false;
     }
 
     //////////////////////////////////////////

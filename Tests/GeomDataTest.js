@@ -14,7 +14,7 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     groundMaterial.addParameter('metallic', 0.0);
     let quad = new Visualive.Plane(20, 20);
     let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
-    groundPlaneItem.getLocalXfo().ori.rotateX(Math.PI * -0.5);
+    groundPlaneItem.setLocalXfo(new Visualive.Xfo(new Visualive.Quat({rotateX: (Math.PI * -0.5) })));
     scene.getRoot().addChild(groundPlaneItem);
 
     /////////////////////////////////////
@@ -46,6 +46,29 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
 
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
+
+    /////////////////////////////////////
+    // Locators
+    let locatorMaterial = new Visualive.Material('locator', 'SimpleSurfaceShader');
+    locatorMaterial.addParameter('baseColor', new Visualive.Color(1, 0, 0));
+    let locator = new Visualive.Cuboid(.05, .05, .05);
+    let index = 0;
+    let addLocator = (pos) => {
+        let locatorItem = new Visualive.GeomItem('locatorItem'+(index++), locator, locatorMaterial);
+        locatorItem.setLocalXfo(new Visualive.Xfo(pos));
+        scene.getRoot().addChild(locatorItem);
+    }
+    scene.getRoot().mouseDown.connect((event, intersectionData)=>{
+        if(intersectionData.intersectionPos) {
+            addLocator(intersectionData.intersectionPos);
+            event.vleStopPropagation = true;
+        }
+    });
+    scene.getRoot().mouseMove.connect((event, intersectionData)=>{
+        if(intersectionData.dragging && intersectionData.intersectionPos) {
+            addLocator(intersectionData.intersectionPos);
+        }
+    });
 
 });
 

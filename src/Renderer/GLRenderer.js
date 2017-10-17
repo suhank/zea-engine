@@ -5,6 +5,9 @@ import {
     Signal
 } from '../Math';
 import {
+    getBrowserDesc
+} from '../BrowserDetection.js';
+import {
     create3DContext
 } from '../external/webgl-utils.js';
 import {
@@ -148,8 +151,8 @@ class GLRenderer {
         this.setupWebGL(canvasDiv, webglOptions);
 
 
-        // Note: using the geom data pass crashes VR scenes.
-        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector);
+
+        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -268,7 +271,7 @@ class GLRenderer {
         });
 
         if(this.__geomDataPass){
-            vp.createGeomDataFbo();
+            vp.createGeomDataFbo(this.__floatGeomBuffer);
         }
 
         vp.viewChanged.connect((data) => {
@@ -412,6 +415,12 @@ class GLRenderer {
             this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
         }
 
+        // Note: using the geom data pass crashes VR scenes.
+        let browserName = getBrowserDesc().browserName;
+        this.__floatGeomBuffer = (browserName == "Chrome") || (browserName == "Firefox");
+        // Note: the following returns Unsigned byte even if the browser supports float.
+        // let implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
+        // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
 
         ////////////////////////////////////
         // Bind a default texture.
@@ -443,8 +452,8 @@ class GLRenderer {
 
         let calcRendererCoords = (event)=>{
             var rect = this.__glcanvasDiv.getBoundingClientRect();
-            event.rendererX = event.clientX - rect.left;
-            event.rendererY = event.clientY - rect.top;
+            event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio;
+            event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio;
         }
 
         this.__glcanvas.addEventListener('mouseenter', (event) => {
@@ -455,6 +464,7 @@ class GLRenderer {
                 activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
                 mouseLeft = false;
             }
+            event.stopPropagation();
         });
         this.__glcanvas.addEventListener('mouseleave', (event) => {
             if (!mouseIsDown) {
@@ -462,6 +472,7 @@ class GLRenderer {
             } else {
                 mouseLeft = true;
             }
+            event.stopPropagation();
         });
         this.__glcanvas.addEventListener('mousedown', (event) => {
             calcRendererCoords(event);
@@ -472,9 +483,9 @@ class GLRenderer {
             if (vp) {
                 vp.onMouseDown(event);
                 event.preventDefault();
-                event.stopPropagation();
             }
             mouseLeft = false;
+            event.stopPropagation();
             return false;
         });
         document.addEventListener('mouseup', (event) => {
@@ -488,10 +499,10 @@ class GLRenderer {
             if (vp) {
                 vp.onMouseUp(event);
                 event.preventDefault();
-                event.stopPropagation();
             }
             if (mouseLeft)
                 activeGLRenderer = undefined;
+            event.stopPropagation();
             return false;
         });
 
@@ -516,8 +527,8 @@ class GLRenderer {
             if (vp) {
                 vp.onMouseMove(event);
                 event.preventDefault();
-                event.stopPropagation();
             }
+            event.stopPropagation();
             return false;
         });
         document.addEventListener('keypress', (event) => {
@@ -527,6 +538,7 @@ class GLRenderer {
             let vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyPressed(key, event)) {
                 this.onKeyPressed(key, event);
+                event.stopPropagation();
             }
         });
         document.addEventListener('keydown', (event) => {
@@ -536,6 +548,7 @@ class GLRenderer {
             let vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyDown(key, event)) {
                 this.onKeyDown(key, event);
+                event.stopPropagation();
             }
         });
         document.addEventListener('keyup', (event) => {
@@ -545,20 +558,25 @@ class GLRenderer {
             let vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyUp(key, event)) {
                 this.onKeyUp(key, event);
+                event.stopPropagation();
             }
         });
 
         this.__glcanvas.addEventListener("touchstart", (event) => {
             this.getViewport().onTouchStart(event);
+            event.stopPropagation();
         }, false);
         this.__glcanvas.addEventListener("touchmove", (event) => {
             this.getViewport().onTouchMove(event);
+            event.stopPropagation();
         }, false);
         this.__glcanvas.addEventListener("touchend", (event) => {
             this.getViewport().onTouchEnd(event);
+            event.stopPropagation();
         }, false);
         this.__glcanvas.addEventListener("touchcancel", (event) => {
             this.getViewport().onTouchCancel(event);
+            event.stopPropagation();
         }, false);
     }
 

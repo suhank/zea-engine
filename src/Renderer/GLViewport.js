@@ -72,6 +72,14 @@ class GLViewport extends BaseViewport {
         this.viewChanged = new Signal();
         this.pointerMoved = new Signal();
 
+
+        this.mouseDown = new Signal();
+        this.mouseMove = new Signal();
+        this.mouseUp = new Signal();
+        this.mouseDblClick = new Signal();
+        this.mouseClickedOnEmptySpace = new Signal();
+        this.keyPressed = new Signal();
+
         // Stroke Signals
         this.actionStarted = new Signal();
         this.actionEnded = new Signal();
@@ -162,10 +170,13 @@ class GLViewport extends BaseViewport {
 
     /// compute a ray into the scene based on a mouse coordinate
     calcRayFromScreenPos(screenPos) {
+
         // Convert the raster coordinates to screen space ([0,{w|h}] -> [-1,1]
         // - Note: The raster vertical is inverted wrt OGL screenspace Y
-        let sx = screenPos.x / this.__width;
-        let sy = screenPos.y / this.__height;
+
+        let topy = (this.__canvasHeight * (1.0 - this.__tr.y));
+        let sx = (screenPos.x - this.__x) / this.__width;
+        let sy = (screenPos.y - topy) / this.__height;
 
         sx = (sx * 2.0) - 1.0;
         sy = (sy * 2.0) - 1.0;
@@ -178,17 +189,18 @@ class GLViewport extends BaseViewport {
             return null;
 
         let rayStart, rayDirection;
-        if (!this.__camera.getIsOrthographic()) {
+        if (this.__camera.getIsOrthographic()){
+            // Orthographic projections.
+            rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)));
+            rayDirection = new Vec3(0.0, 0.0, -1.0);
+        }
+        else {
             rayStart = cameraMat.translation;
             // Get the projected window coordinate on the near plane
             // See http://www.songho.ca/opengl/gl_projectionmatrix.html
             // for details.
             rayDirection = projInv.transformVec3(new Vec3(sx, -sy, -1.0));
-        } else {
-            // Orthographic projections.
-            rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)));
-            rayDirection = new Vec3(0.0, 0.0, -1.0);
-        }
+        } 
         // And from projection space to camera local.
         // - We nuke the translation part since we're transforming a vector.
         rayDirection = cameraMat.rotateVec3(rayDirection).normalize();
@@ -198,15 +210,27 @@ class GLViewport extends BaseViewport {
     ////////////////////////////
     // GeomData
 
-    createGeomDataFbo() {
+    createGeomDataFbo(floatGeomBuffer) {
         let gl = this.__renderer.gl;
-        this.__geomDataBuffer = new GLTexture2D(gl, {
-            format: 'UNSIGNED_BYTE',
-            channels: 'RGBA',
-            filter: 'NEAREST',
-            width: this.__width <= 1 ? 1 : this.__width,
-            height: this.__height <= 1 ? 1 : this.__height,
-        });
+        this.__floatGeomBuffer = floatGeomBuffer;
+        if(this.__floatGeomBuffer) {
+            this.__geomDataBuffer = new GLTexture2D(gl, {
+                format: 'FLOAT',
+                channels: 'RGBA',
+                filter: 'NEAREST',
+                width: this.__width <= 1 ? 1 : this.__width,
+                height: this.__height <= 1 ? 1 : this.__height,
+            });
+        }
+        else {
+            this.__geomDataBuffer = new GLTexture2D(gl, {
+                format: 'UNSIGNED_BYTE',
+                channels: 'RGBA',
+                filter: 'NEAREST',
+                width: this.__width <= 1 ? 1 : this.__width,
+                height: this.__height <= 1 ? 1 : this.__height,
+            });
+        }
         this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
         this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
     }
@@ -245,17 +269,37 @@ class GLViewport extends BaseViewport {
             const pixels = new Uint8Array(4);
 
             this.__geomDataBufferFbo.bind();
-            gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            if (pixels[0] == 0)
-                return undefined;
-            const id = pixels[0] + (pixels[1] * 255);
-            const dist = Math.decode16BitFloat([pixels[2], pixels[3]]);
-            // console.log(pixels + " id:"+ id + " dist:" + dist);
-            return {
-                id,
-                dist: pixels[2]
-            };
+            let id, dist;
+            if(this.__floatGeomBuffer) {
+                const pixels = new Float32Array(4);
+                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
+                if (pixels[0] == 0)
+                    return undefined;
+                id = Math.round(pixels[0]);
+                dist = pixels[1];
+            }
+            else {
+                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                if (pixels[0] == 0)
+                    return undefined;
+                id = pixels[0] + (pixels[1] * 255);
+                dist = Math.decode16BitFloat([pixels[2], pixels[3]]);
+            }
+
+            let drawItem = this.__renderer.getCollector().getDrawItem(id);
+            if(drawItem) {
+                let mouseRay = this.calcRayFromScreenPos(screenPos);
+                let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
+                return {
+                    id,
+                    screenPos,
+                    dist: pixels[2],
+                    mouseRay: mouseRay,
+                    intersectionPos,
+                    geomItem: drawItem.getGeomItem()
+                };
+            }
         }
     }
 
@@ -295,8 +339,8 @@ class GLViewport extends BaseViewport {
 
     __eventMousePos(event) {
         return new Vec2(
-            (event.rendererX * window.devicePixelRatio) - this.getPosX(),
-            (event.rendererY * window.devicePixelRatio) - this.getPosY()
+            event.rendererX - this.getPosX(),
+            event.rendererY - this.getPosY()
         );
     }
 
@@ -324,29 +368,26 @@ class GLViewport extends BaseViewport {
                         thickness: thickness
                     }
                 });
+                return;
 
             } else {
-                let geomData = this.getGeomDataAtPos(this.__mouseDownPos);
-                if (geomData != undefined) {
-                    let drawItem = this.__renderer.getCollector().getDrawItem(geomData.id);
-                    if (drawItem) {
-                        // Check to see if we mouse-downed on a gizmo.
-                        // If so, start a gizmo manipulation
-                        let geomItem = drawItem.getGeomItem();
-                        console.log(geomItem.getPath());// + " Material:" + geomItem.getMaterial().name);
-                        geomItem.onMouseDown(this.__mouseDownPos, event);
-                        this.__mouseDownGeom = geomItem;
-                        // if(isGizmo)
-                        //     //this.__manipMode = 'gizmo-manipulation'drawItem.getGeomItem();
-                        //     //this.__manipGizmo = this.__gizmoPass.getGizmo(geomData.id);
-                        //     //this.__manipGizmo.onDragStart(event, this.__mouseDownPos, this);
-                        // }
+                let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
+                if (intersectionData != undefined) {
+                    console.log(intersectionData.geomItem.getPath());// + " Material:" + geomItem.getMaterial().name);
+                    this.__mouseDownGeom = intersectionData.geomItem;
+                    this.__mouseDownGeom.onMouseDown(event, intersectionData);
+
+                    if(event.vleStopPropagation) {
+                        this.__manipMode = 'geom-manipulation';
                     }
                 }
 
-                // Default to camera manipulation
-                this.__manipMode = 'camera-manipulation';
-                this.__camera.onDragStart(event, this.__mouseDownPos, this);
+                if(this.__manipMode == 'highlighting') {
+                    // Default to camera manipulation
+                    this.__manipMode = 'camera-manipulation';
+                    this.__camera.onDragStart(event, this.__mouseDownPos, this);
+                }
+
             }
         } else if (event.button == 2) {
 
@@ -368,16 +409,14 @@ class GLViewport extends BaseViewport {
             }
         */
         }
+
+        this.mouseDown.emit(event);
+
         return false;
     }
 
     onMouseUp(event) {
         let mouseUpPos = this.__eventMousePos(event);
-
-        if(this.__mouseDownGeom){
-            this.__mouseDownGeom.onMouseUp(mouseUpPos, event);
-            this.__mouseDownGeom = undefined;
-        }
 
         switch (this.__manipMode) {
             case 'highlighting':
@@ -385,11 +424,13 @@ class GLViewport extends BaseViewport {
             case 'camera-manipulation':
                 this.__camera.onDragEnd(event, mouseUpPos, this);
                 this.renderGeomDataFbo();
+                this.__manipMode = 'highlighting';
                 break;
-            case 'gizmo-manipulation':
-                this.__manipGizmo.onDragEnd(event, mouseUpPos, this);
-                this.__manipGizmo = undefined;
+            case 'geom-manipulation':
+                this.__mouseDownGeom.onMouseUp(event, { mousePos: mouseUpPos, geomItem:this.__mouseDownGeom } );
+                this.__mouseDownGeom = undefined;
                 this.renderGeomDataFbo();
+                this.__manipMode = 'highlighting';
                 break;
             case 'new-selection':
                 this.__renderer.getScene().getSelectionManager().clearSelection();
@@ -407,6 +448,7 @@ class GLViewport extends BaseViewport {
                     }
                 }
                 this.__renderer.resumeDrawing();
+                this.__manipMode = 'highlighting';
                 break;
             case 'new-selection-rect':
             case 'add-selection-rect':
@@ -435,15 +477,20 @@ class GLViewport extends BaseViewport {
                 }
                 // Not
                 this.__renderer.resumeDrawing();
+                this.__manipMode = 'highlighting';
                 break;
             case 'marker-tool':
                 // this.__markerPen.endStroke(this.__markerLineId);
                 this.actionEnded.emit({
                     type: 'strokeEnded'
                 });
+                this.__manipMode = 'highlighting';
                 break;
         }
-        this.__manipMode = 'highlighting';
+
+
+        this.mouseUp.emit(event);
+
         return false;
     }
 
@@ -474,27 +521,27 @@ class GLViewport extends BaseViewport {
             // Highlite the geoms.
         }
 
-        let getGizmoUnderMouse = function() {
-            let geomData = this.getGeomDataAtPos(mousePos);
-            if (geomData != undefined && geomData.flags == 2) {
-                let gizmo = this.__gizmoPass.getGizmo(geomData.id);
-                if (this.__mouseOverGizmo && this.__mouseOverGizmo != gizmo) {
-                    this.__mouseOverGizmo.unhighlight();
-                    this.__mouseOverGizmo = undefined;
-                }
-                if (gizmo && this.__mouseOverGizmo != gizmo) {
-                    this.__mouseOverGizmo = gizmo;
-                    this.__mouseOverGizmo.highlight();
-                }
-                this.__renderer.requestRedraw();
-            } else {
-                if (this.__mouseOverGizmo) {
-                    this.__mouseOverGizmo.unhighlight();
-                    this.__mouseOverGizmo = undefined;
-                    this.__renderer.requestRedraw();
-                }
-            }
-        }
+        // let getGizmoUnderMouse = function() {
+        //     let geomData = this.getGeomDataAtPos(mousePos);
+        //     if (geomData != undefined && geomData.flags == 2) {
+        //         let gizmo = this.__gizmoPass.getGizmo(geomData.id);
+        //         if (this.__mouseOverGizmo && this.__mouseOverGizmo != gizmo) {
+        //             this.__mouseOverGizmo.unhighlight();
+        //             this.__mouseOverGizmo = undefined;
+        //         }
+        //         if (gizmo && this.__mouseOverGizmo != gizmo) {
+        //             this.__mouseOverGizmo = gizmo;
+        //             this.__mouseOverGizmo.highlight();
+        //         }
+        //         this.__renderer.requestRedraw();
+        //     } else {
+        //         if (this.__mouseOverGizmo) {
+        //             this.__mouseOverGizmo.unhighlight();
+        //             this.__mouseOverGizmo = undefined;
+        //             this.__renderer.requestRedraw();
+        //         }
+        //     }
+        // }
 
         if (filterRedundantDrags())
             return false;
@@ -508,36 +555,39 @@ class GLViewport extends BaseViewport {
                         getGizmoUnderMouse.call(this);
 
                     let mousePos = this.__eventMousePos(event);
-                    let ray = this.calcRayFromScreenPos(mousePos);
-                    if (ray == null)
+                    let mouseRay = this.calcRayFromScreenPos(mousePos);
+                    if (mouseRay == null)
                         return;
 
 
-                    if(this.__mouseDownGeom){
-                        this.__mouseDownGeom.onMouseMove(mousePos, event);
-                    }
-                    else {
-                        let geomData = this.getGeomDataAtPos(mousePos);
-                        if (geomData != undefined) {
-                            let drawItem = this.__renderer.getCollector().getDrawItem(geomData.id);
-                            if (drawItem) {
-                                // Check to see if we mouse-downed on a gizmo.
-                                // If so, start a gizmo manipulation
-                                let geomItem = drawItem.getGeomItem();
-                                geomItem.onMouseMove(mousePos, event);
-                            }
-                        }
+                    let intersectionData = this.getGeomDataAtPos(mousePos);
+                    if (intersectionData != undefined) {
+                        intersectionData.dragging = false;
+                        intersectionData.geomItem.onMouseMove(event, intersectionData);
                     }
 
-
-                    this.mouseMoved.emit(event, mousePos, ray);
+                    this.mouseMoved.emit(event, mousePos, mouseRay);
                 }
                 break;
-            case 'gizmo-manipulation':
+            case 'geom-manipulation':
                 {
                     let mousePos = this.__eventMousePos(event);
-                    this.__manipGizmo.onDrag(event, mousePos, this);
-                    this.__renderer.draw();
+
+                    let intersectionData = this.getGeomDataAtPos(mousePos);
+                    if (intersectionData != undefined) {
+                        intersectionData.dragging = true;
+                        intersectionData.geomItem.onMouseMove(event, intersectionData);
+                    }
+                    else {
+                        let mouseRay = this.calcRayFromScreenPos(mousePos);
+                        this.__mouseDownGeom.onMouseMove(event, {
+                            mousePos, 
+                            geomItem: this.__mouseDownGeom, 
+                            mouseRay,
+                            dragging:true 
+                        });
+
+                    }
                     break;
                 }
             case 'camera-manipulation':
@@ -582,6 +632,8 @@ class GLViewport extends BaseViewport {
                 }
                 break;
         }
+
+        this.mouseMoved.emit(event);
 
         return false;
     }

@@ -205,7 +205,7 @@ class GLTexture2D extends RefCounted {
                     case gl.RGBA: numChannels = 4; break;
                 }
                 if(data.length != numPixels * numChannels) {
-                    console.warn("Invalid data for Image width:" + this.width + " height:"+ this.height + " channels:" + this.__channels + " format:" + this.__format  + " Data Length:" + data.length  + " Expected:" + (numPixels * numChannels) );
+                    console.warn("Invalid data for Image width:" + this.width + " height:"+ this.height + " channels:" + this.__channelsParam + " format:" + this.__formatParam  + " Data Length:" + data.length  + " Expected:" + (numPixels * numChannels) );
                 }
                 if(gl.__ext_half_float && this.__format == gl.__ext_half_float.HALF_FLOAT_OES && data instanceof Float32Array){
                     data = Math.convertFloat32ArrayToUInt16Array(data);
