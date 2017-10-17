@@ -439,14 +439,13 @@ class GLCollector {
             });
         } else if (this.__drawItemsTexture.width != size) {
             this.__drawItemsTexture.resize(size, size);
-            this.__dirtyItemIndices = Array((size * size)).fill().map((v, i) => i);
+            this.__dirtyItemIndices = Array((size * size) / pixelsPerItem).fill().map((v, i) => i);
         }
 
         gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex);
         const format = this.__drawItemsTexture.getFormat();
         const channels = this.__drawItemsTexture.getChannels();
 
-        // for (let i=this.__transformsDataArrayHighWaterMark; i<this.__drawItems.length; i++) {
         for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
             const indexStart = this.__dirtyItemIndices[i];
             const yoffset = Math.floor((indexStart * pixelsPerItem) / size);
@@ -461,13 +460,8 @@ class GLCollector {
                 }
                 indexEnd++;
             }
-            // const gldrawItem = this.__drawItems[index];
-            // // When an item is deleted, we allocate its index to the free list
-            // // and null this item in the array. skip over null items.
-            // if(!gldrawItem)
-            //     continue;
 
-            // TODO: for contiguos blcoks, we create larger arrays and populate
+            // TODO: for contiguous blcoks, we create larger arrays and populate
             // and upload them in one step.
             const uploadCount = indexEnd - indexStart;
             const xoffset = (indexStart * pixelsPerItem) % size;
@@ -477,6 +471,8 @@ class GLCollector {
 
             for (let j = indexStart; j < indexEnd; j++) {
                 const gldrawItem = this.__drawItems[j];
+                // When an item is deleted, we allocate its index to the free list
+                // and null this item in the array. skip over null items.
                 if(!gldrawItem)
                     continue;
                 this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
