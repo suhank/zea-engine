@@ -50,6 +50,9 @@ class GeomShaderBinding {
             if(instanced==true){
                 gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
             }
+            else {
+                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 0); // This makes it not-instanced
+            }
 
             // console.log("Binding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
         }
@@ -102,13 +105,15 @@ class VAOGeomShaderBinding {
             if(instanced){
                 gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
             }
+            else {
+                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 0); // This makes it not-instanced
+            }
 
             // console.log("Binding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
 
         }
 
         this.__indexBuffer = indexBuffer;
-        //gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
     }
 
     bind(renderstate) {
