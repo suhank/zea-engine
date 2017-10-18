@@ -177,9 +177,8 @@ uniform bool _emissiveStrengthTexConnected;
 void main(void) {
 
     // Cutaways
-    // if(cutaway(v_worldPos))
-    //     return;
-
+    if(cutaway(v_worldPos))
+        return;
 
     MaterialParams material;
 

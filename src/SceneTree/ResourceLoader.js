@@ -7,7 +7,7 @@ import {
 } from '../Math';
 
 let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
-let FreeMemWorker = require("worker-loader?inline!./FreeMemWorker.js");
+// let FreeMemWorker = require("worker-loader?inline!./FreeMemWorker.js");
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
@@ -36,9 +36,9 @@ class ResourceLoader {
     freeData(buffer){
         // Note: Explicitly transfer data to a web worker and then 
         // terminate the worker. (hacky way to free TypedArray memory explicitly)
-        let worker = new FreeMemWorker();
-        worker.postMessage(buffer, [buffer]);
-        worker.terminate();
+        // let worker = new FreeMemWorker();
+        // worker.postMessage(buffer, [buffer]);
+        // worker.terminate();
     }
 
     addResourceURL(resourcePath, url) {
@@ -165,18 +165,21 @@ class ResourceLoader {
             // toal number of files in the stream.
         }
 
+        ///////////////////////////////////////////////
         this.__workers[this.__nextWorker].postMessage({
             name,
             url
         });
         this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
 
+
+        ///////////////////////////////////////////////
         // For synchronous loading, uncomment these lines.
         // ResourceLoaderWorker_onmessage({
         //     name,
         //     url
         // },()=>{
-        //     this.addWorkDone(1); // loading done...
+        //     this.addWorkDone(name, 1); // loading done...
         // }, (result, transferables)=>{
         //     if(result.type == 'finished')
         //         this.__onFinishedReceiveFileData(result);

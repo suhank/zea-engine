@@ -47,7 +47,7 @@ class VLAAsset extends AssetItem {
         async.ready.connect(()=>{
             this.allPartsLoaded.emit(); 
         });
-        let stem = filePath.split('.')[0];
+        const stem = filePath.split('.')[0];
         let numGeomsFiles = 0;
 
         // TODO: one day the resourcecs tree could include meta data to indicate how

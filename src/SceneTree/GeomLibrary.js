@@ -97,9 +97,10 @@ class GeomLibrary {
     }
 
     readBinaryBuffer(key, buffer) {
-        let reader = new BinReader(buffer, 0, isMobileDevice());
-        let numGeoms = reader.loadUInt32();
-        let geomIndexOffset = reader.loadUInt32();
+        const isMobile = isMobileDevice();
+        const reader = new BinReader(buffer, 0, isMobile);
+        const numGeoms = reader.loadUInt32();
+        const geomIndexOffset = reader.loadUInt32();
         this.__streamInfos[key] = {
             total: numGeoms,
             done: 0
@@ -113,18 +114,25 @@ class GeomLibrary {
             this.__expectedNumGeoms = this.__numGeoms;
         }
 
-        let toc = reader.loadUInt32Array(numGeoms);
+        const toc = reader.loadUInt32Array(numGeoms);
+
+        let numCores = window.navigator.hardwareConcurrency;
+        if(!numCores) {
+            if(isMobile)
+                numCores = 2;
+            else 
+                numCores = 4;
+        }
+        const numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / numCores) + 1));
+
         // TODO: Use SharedArrayBuffer once available.
         // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SharedArrayBuffer 
-        let numGeomsPerWorkload = Math.max(1, Math.floor((numGeoms / window.navigator.hardwareConcurrency) + 1));
-
 
         let offset = 0;
         while (offset < numGeoms) {
-            let geomsRange;
-            let bufferSlice;
-            let bufferSlice_start = toc[offset];
+            const bufferSlice_start = toc[offset];
             let bufferSlice_end;
+            let geomsRange;
             if (offset + numGeomsPerWorkload >= numGeoms) {
                 geomsRange = [offset, numGeoms];
                 bufferSlice_end = buffer.byteLength;
@@ -132,7 +140,7 @@ class GeomLibrary {
                 geomsRange = [offset, offset + numGeomsPerWorkload];
                 bufferSlice_end = toc[geomsRange[1]];
             }
-            bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
+            const bufferSlice = buffer.slice(bufferSlice_start, bufferSlice_end);
             offset += numGeomsPerWorkload;
 
             //////////////////////////////////////////////
@@ -177,11 +185,11 @@ class GeomLibrary {
         // which is a subset of the geoms in an asset.
         // geomIndexOffset: the offset of the file geoms in the asset.
         // geomsRange: the range of geoms in the bin file.
-        let offset = geomIndexOffset + geomsRange[0];
-        let storedRange = [offset, geomIndexOffset + geomsRange[1]];
+        const offset = geomIndexOffset + geomsRange[0];
+        const storedRange = [offset, geomIndexOffset + geomsRange[1]];
 
         for (let i = 0; i < geomDatas.length; i++) {
-            let geomData = geomDatas[i];
+            const geomData = geomDatas[i];
             if (!geomData.type)
                 continue;
             let proxy;
@@ -205,11 +213,12 @@ class GeomLibrary {
         }
         this.rangeLoaded.emit(storedRange);
 
-        let loaded = storedRange[1] - storedRange[0];
+        const loaded = storedRange[1] - storedRange[0];
+        // console.log("GeomLibrary Loaded:" + loaded);
 
         // Each file in the stream has its own counter for the number of 
         // geoms, and once each stream file finishes parsing, we fire a signal.
-        let streamInfo = this.__streamInfos[key];
+        const streamInfo = this.__streamInfos[key];
         streamInfo.done += loaded;
         // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
         if (streamInfo.done == streamInfo.total){
@@ -221,10 +230,8 @@ class GeomLibrary {
         this.__loaded += loaded;
         if (this.__loaded == this.__expectedNumGeoms) {
             // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
-            if(this.__workers.length > 0){
-                this.__terminateWorkers();
-                this.loaded.emit();
-            }
+            this.__terminateWorkers();
+            this.loaded.emit();
         }
     }
 

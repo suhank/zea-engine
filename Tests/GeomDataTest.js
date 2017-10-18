@@ -5,10 +5,12 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     // Scene
     let scene = new Visualive.Scene(resources);
 
+    let envMap =  new Visualive.FileImage2D('Assets/HDR_041_Path_Ref0.vlh', scene.getResourceLoader());
+    scene.setEnvMap(envMap);
 
     /////////////////////////////////////
     // Ground Plane
-    let groundMaterial = new Visualive.Material('ground', 'SimpleSurfaceShader');
+    let groundMaterial = new Visualive.Material('ground', 'StandardSurfaceShader');
     groundMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
     groundMaterial.addParameter('roughness', 1.0);
     groundMaterial.addParameter('metallic', 0.0);
@@ -20,21 +22,22 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
-    // let renderer = new Visualive.GLVisualiveRenderer(div);
+    // let renderer = new Visualive.GLSimpleRenderer(domElement);
+    let renderer = new Visualive.GLVisualiveRenderer(domElement);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, 7, 4), new Visualive.Vec3(3, 3, 0));
+    renderer.exposure = 1.0;
     renderer.setScene(scene);
     // renderer.addGUI(gui);
 
     /////////////////////////////////////
     // Obj Asset
     let objAsset = new Visualive.ObjAsset('obj', scene.getResourceLoader());
-    objAsset.getParameter('splitObjects').setValue(true);
-    objAsset.getParameter('splitGroupsIntoObjects').setValue(true);
+    objAsset.getParameter('splitObjects').setValue(false);
+    objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
     objAsset.getParameter('loadMtlFile').setValue(false);
     objAsset.getParameter('unitsConversion').setValue(1.0);
-    objAsset.getParameter('defaultShader').setValue("SimpleSurfaceShader");
+    objAsset.getParameter('defaultShader').setValue("StandardSurfaceShader");
     objAsset.getLocalXfo().tr.set(0, 3.55, 0);
     scene.getRoot().addChild(objAsset);
 
