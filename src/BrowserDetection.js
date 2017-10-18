@@ -20,8 +20,8 @@ function isMobileDevice() {
 }
 
 function getBrowserDesc() {
-    let nVer = navigator.appVersion;
-    let nAgt = navigator.userAgent;
+    const nVer = navigator.appVersion;
+    const nAgt = navigator.userAgent;
     let browserName = navigator.appName;
     let fullVersion = '' + parseFloat(navigator.appVersion);
     let majorVersion = parseInt(navigator.appVersion, 10);
@@ -87,15 +87,15 @@ function getBrowserDesc() {
 }
 
 function getGPUDesc() {
-    let canvas = document.createElement('canvas');
-    let context = create3DContext(canvas);
+    const canvas = document.createElement('canvas');
+    const context = create3DContext(canvas);
     if(context == undefined)
         return;
 
-    var debugInfo = context.getExtension('WEBGL_debug_renderer_info');
-    var vendor = context.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-    var renderer = context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-    var gpuVendor;
+    const debugInfo = context.getExtension('WEBGL_debug_renderer_info');
+    const vendor = context.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+    const renderer = context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    let gpuVendor;
     if (renderer.match(/NVIDIA/i)) {
         gpuVendor = "NVidia";
     }
@@ -119,9 +119,9 @@ function isWebGLSupported() {
 }
 
 function getSystemDesc() {
-    let isMobile = isMobileDevice()
-    let browserDesc = getBrowserDesc();
-    let gpuDesc = getGPUDesc();
+    const isMobile = isMobileDevice();
+    const browserDesc = getBrowserDesc();
+    const gpuDesc = getGPUDesc();
 
     // We divide devices into 3 categories.
     // 0: low end, we dial everything down as much as possible

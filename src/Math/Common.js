@@ -173,29 +173,55 @@ Math.convertFloat32ArrayToUInt16Array = function(float32Array) {
     return unit16s;
 };
 
+/////////////////////////////////////////////////
+// https://gist.github.com/Flexi23/1713774
 // Note: assuemd inputs are a pair of bytes, likely generated in GLSL.
+// Define 8 separate bit flags (these can represent whatever you want)
+const bit1 = 1 << 0; // 0000 0001 
+const bit2 = 1 << 1; // 0000 0010
+const bit3 = 1 << 2; // 0000 0100
+const bit4 = 1 << 3; // 0000 1000
+const bit5 = 1 << 4; // 0001 0000
+const bit6 = 1 << 5; // 0010 0000
+const bit7 = 1 << 6; // 0100 0000
+const bit8 = 1 << 7; // 1000 0000
+
 Math.decode16BitFloat = (c)=>{
-    let v = 0.;
 
-    let ix = Math.round(c[0]); // 1st byte: 1 bit signum, 4 bits exponent, 3 bits mantissa (MSB)
-    let iy = Math.round(c[1]); // 2nd byte: 8 bit mantissa (LSB)
+    let ix = c[0];   // 1st byte: 1 bit signum, 4 bits exponent, 3 bits mantissa (MSB)
+    const iy = c[1]; // 2nd byte: 8 bit mantissa (LSB)
 
-    let s = (c[0] >= 127) ? 1 : -1;
-    ix = (s > 0) ? ix - 128 : ix;           // remove the signum bit from exponent
-    let iexp = ix / 8;                      // cut off the last 3 bits of the mantissa to select the 4 exponent bits
-    let msb = ix - iexp * 8;                // subtract the exponent bits to select the 3 most significant bits of the mantissa
+    const s = (ix & bit8) ? 1 : -1;
+    const iexp = (ix & (bit7|bit6|bit5|bit4)) >> 3;
+    const msb = (ix & (bit3|bit2|bit1));
 
-    let norm = (iexp == 0) ? 0 : 2048;      // distinguish between normalized and subnormalized numbers
-    let mantissa = norm + msb * 256 + iy;   // implicite preceding 1 or 0 added here
-    norm = (iexp == 0) ? 1 : 0;             // normalization toggle
-    let exponent = Math.pow( 2., (iexp + norm) - 16.); // -5 for the the exponent bias from 2^-5 to 2^10 plus another -11 for the normalized 12 bit mantissa 
-    v = ( s * mantissa ) * exponent;
+    let norm = (iexp == 0) ? 0 : 2048;          // distinguish between normalized and subnormalized numbers
+    const mantissa = norm + (msb << 8) + iy;    // implicite preceding 1 or 0 added here
+    norm = (iexp == 0) ? 1 : 0;                 // normalization toggle
+    const exponent = Math.pow( 2., (iexp + norm) - 16.); // -5 for the the exponent bias from 2^-5 to 2^10 plus another -11 for the normalized 12 bit mantissa 
+    const v = ( s * mantissa ) * exponent;
+
+    ///////////
+    // const s = (c[0] >= 127) ? 1 : -1;
+    // ix = (s > 0) ? ix - 128 : ix;           // remove the signum bit from exponent
+    // const iexp = Math.floor(ix / 8);        // cut off the last 3 bits of the mantissa to select the 4 exponent bits
+    // const msb = ix - iexp * 8;              // subtract the exponent bits to select the 3 most significant bits of the mantissa
+
+    // if(s != _s || _iexp != iexp || msb != _msb) {
+    //     console.log("here'");
+    // }
+
+    // let norm = (iexp == 0) ? 0 : 2048;      // distinguish between normalized and subnormalized numbers
+    // const mantissa = norm + msb * 256 + iy;   // implicite preceding 1 or 0 added here
+    // norm = (iexp == 0) ? 1 : 0;             // normalization toggle
+    // const exponent = Math.pow( 2., (iexp + norm) - 16.); // -5 for the the exponent bias from 2^-5 to 2^10 plus another -11 for the normalized 12 bit mantissa 
+    // const v = ( s * mantissa ) * exponent;
 
     return v;
 }
 
 Math.smoothStep = (edge0, edge1, x)=>{
-    let t = Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+    const t = Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
     return t * t * (3.0 - 2.0 * t);
 }
 

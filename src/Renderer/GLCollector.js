@@ -372,8 +372,10 @@ class GLCollector {
     /// DrawItem IDs
 
     getDrawItem(id) {
-        if (id >= this.__drawItems.length)
-            throw ("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length - 1));
+        if (id >= this.__drawItems.length){
+            console.warn("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length - 1));
+            return undefined;
+        }
         return this.__drawItems[id];
     };
 

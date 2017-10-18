@@ -281,9 +281,9 @@ class GLViewport extends BaseViewport {
             else {
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                if (pixels[0] == 0)
+                if (pixels[0] == 0 && pixels[1] == 0)
                     return undefined;
-                id = pixels[0] + (pixels[1] * 255);
+                id = pixels[0] + (pixels[1] << 8);
                 dist = Math.decode16BitFloat([pixels[2], pixels[3]]);
             }
 

@@ -5,6 +5,7 @@ import {
     Signal
 } from '../Math';
 import {
+    isMobileDevice,
     getBrowserDesc
 } from '../BrowserDetection.js';
 import {
@@ -170,8 +171,8 @@ class GLRenderer {
             this.__shaderDirectives[name] = '#define ' + name + " = " + value;
         else 
             this.__shaderDirectives[name] = '#define ' + name;
-        let directives = [];
-        for(let key in this.__shaderDirectives) {
+        const directives = [];
+        for(const key in this.__shaderDirectives) {
             directives.push(this.__shaderDirectives[key]);
         }
         this.__preproc.defines = directives.join('\n')+'\n';
@@ -202,27 +203,27 @@ class GLRenderer {
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         this.__gridTreeItem = new TreeItem('GridTreeItem');
 
-        let gridMaterial = new Material('gridMaterial', 'LinesShader');
+        const gridMaterial = new Material('gridMaterial', 'LinesShader');
         gridMaterial.addParameter('color', gridColor);
-        let grid = new Grid(gridSize, gridSize, resolution, resolution, true);
+        const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
         this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 
-        let axisLine = new Lines('axisLine');
+        const axisLine = new Lines('axisLine');
         axisLine.setNumVertices(2);
         axisLine.setNumSegments(1);
         axisLine.setSegment(0, 0, 1);
         axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
         axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
 
-        let gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
+        const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
         gridXAxisMaterial.addParameter('color', new Color(gridColor.luminance(), 0, 0));
         this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
 
-        let gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
+        const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
         gridZAxisMaterial.addParameter('color', new Color(0, 0, gridColor.luminance()));
-        let geomOffset = new Xfo();
+        const geomOffset = new Xfo();
         geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI * 0.5);
-        let zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
+        const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
         zAxisLineItem.setGeomOffsetXfo(geomOffset);
         this.__gridTreeItem.addChild(zAxisLineItem);
 
@@ -416,10 +417,11 @@ class GLRenderer {
         }
 
         // Note: using the geom data pass crashes VR scenes.
-        let browserName = getBrowserDesc().browserName;
-        this.__floatGeomBuffer = (browserName == "Chrome") || (browserName == "Firefox");
-        // Note: the following returns Unsigned byte even if the browser supports float.
-        // let implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
+        const isMobile = isMobileDevice();
+        const browserDesc = getBrowserDesc();
+        this.__floatGeomBuffer = false;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
+        // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
+        // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
 
         ////////////////////////////////////
@@ -446,11 +448,11 @@ class GLRenderer {
         //////////////////////////////////
         // Setup event handlers
 
-        let isValidCanvas = ()=> {  
+        const isValidCanvas = ()=> {  
             return this.__glcanvasDiv.offsetWidth > 0 && this.__glcanvasDiv.offsetHeight;
         }
 
-        let calcRendererCoords = (event)=>{
+        const calcRendererCoords = (event)=>{
             var rect = this.__glcanvasDiv.getBoundingClientRect();
             event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio;
             event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio;
@@ -479,7 +481,7 @@ class GLRenderer {
             mouseIsDown = true;
             activeGLRenderer = this;
             activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
-            let vp = activeGLRenderer.getActiveViewport();
+            const vp = activeGLRenderer.getActiveViewport();
             if (vp) {
                 vp.onMouseDown(event);
                 event.preventDefault();
@@ -495,7 +497,7 @@ class GLRenderer {
             //     mouseClick(event);
             calcRendererCoords(event);
             mouseIsDown = false;
-            let vp = activeGLRenderer.getActiveViewport();
+            const vp = activeGLRenderer.getActiveViewport();
             if (vp) {
                 vp.onMouseUp(event);
                 event.preventDefault();
@@ -523,7 +525,7 @@ class GLRenderer {
             if (!mouseIsDown)
                 activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
 
-            let vp = activeGLRenderer.getActiveViewport();
+            const vp = activeGLRenderer.getActiveViewport();
             if (vp) {
                 vp.onMouseMove(event);
                 event.preventDefault();
@@ -534,8 +536,8 @@ class GLRenderer {
         document.addEventListener('keypress', (event) => {
             if (activeGLRenderer != this || !isValidCanvas())
                 return;
-            let key = String.fromCharCode(event.keyCode).toLowerCase();
-            let vp = activeGLRenderer.getActiveViewport();
+            const key = String.fromCharCode(event.keyCode).toLowerCase();
+            const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyPressed(key, event)) {
                 this.onKeyPressed(key, event);
                 event.stopPropagation();
@@ -544,8 +546,8 @@ class GLRenderer {
         document.addEventListener('keydown', (event) => {
             if (activeGLRenderer != this || !isValidCanvas())
                 return;
-            let key = String.fromCharCode(event.keyCode).toLowerCase();
-            let vp = activeGLRenderer.getActiveViewport();
+            const key = String.fromCharCode(event.keyCode).toLowerCase();
+            const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyDown(key, event)) {
                 this.onKeyDown(key, event);
                 event.stopPropagation();
@@ -554,8 +556,8 @@ class GLRenderer {
         document.addEventListener('keyup', (event) => {
             if (activeGLRenderer != this || !isValidCanvas())
                 return;
-            let key = String.fromCharCode(event.keyCode).toLowerCase();
-            let vp = activeGLRenderer.getActiveViewport();
+            const key = String.fromCharCode(event.keyCode).toLowerCase();
+            const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyUp(key, event)) {
                 this.onKeyUp(key, event);
                 event.stopPropagation();

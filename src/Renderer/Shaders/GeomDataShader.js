@@ -75,6 +75,9 @@ vec4 EncodeFloatRGBA (float v) {
 float DecodeFloatRGBA (vec4 v) {
     return dot(v, bitDec);
 }
+
+
+
 /////////////////////////////////////////////////////////////////
 // https://gist.github.com/Flexi23/1713774
 
@@ -147,8 +150,9 @@ void main(void) {
     else {
         ///////////////////////////////////
         // UInt8 buffer
-        gl_FragColor.r = mod(v_drawItemID, 255.0) / 255.0;
-        gl_FragColor.g = mod(v_drawItemID, (255.0 * 255.0)) / (255.0 * 255.0);
+        gl_FragColor.r = (mod(v_drawItemID, 256.) + 0.5) / 255.;
+        gl_FragColor.g = (floor(v_drawItemID / 256.) + 0.5) / 255.;
+
 
         // TODO: encode the dist as a 16 bit float
         // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
