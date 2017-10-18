@@ -266,12 +266,11 @@ class GLViewport extends BaseViewport {
             const gl = this.__renderer.gl;
             gl.finish();
             // Allocate a 1 pixel block.
-            const pixels = new Uint8Array(4);
 
             this.__geomDataBufferFbo.bind();
-            let id, dist;
+            let id, dist, pixels;
             if(this.__floatGeomBuffer) {
-                const pixels = new Float32Array(4);
+                pixels = new Float32Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
                 if (pixels[0] == 0)
                     return undefined;
@@ -279,6 +278,7 @@ class GLViewport extends BaseViewport {
                 dist = pixels[1];
             }
             else {
+                pixels = new Uint8Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
                 if (pixels[0] == 0 && pixels[1] == 0)

@@ -101,8 +101,13 @@ class Parameter extends BaseParameter {
             this.__cleanerFns = [];
         }
         if(value == undefined) {
-            throw("WTF");
+            throw("Invalud valu for setvalue.");
         }
+
+        // Note: equality tests on anything but simple values is not going to work. We can't easily optimise this function.
+        // if(value == this.__value) {
+        //     return;
+        // }
         this.__value = value;
         this.valueChanged.emit(mode);
     }

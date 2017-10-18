@@ -445,8 +445,8 @@ class GLCollector {
         }
 
         gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex);
-        const format = this.__drawItemsTexture.getFormat();
-        const channels = this.__drawItemsTexture.getChannels();
+        const formatId = this.__drawItemsTexture.getFormatID();
+        const channelsId = this.__drawItemsTexture.getChannelsID();
 
         for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
             const indexStart = this.__dirtyItemIndices[i];
@@ -480,11 +480,11 @@ class GLCollector {
                 this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
             }
 
-            if (format == 'FLOAT') {
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], dataArray);
+            if (formatId == gl.FLOAT) {
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channelsId, formatId, dataArray);
             } else {
                 const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], unit16s);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channelsId, formatId, unit16s);
             }
 
             i += uploadCount-1;

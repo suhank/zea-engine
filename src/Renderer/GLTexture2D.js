@@ -61,8 +61,14 @@ class GLTexture2D extends RefCounted {
     getFormat(){
         return this.__formatParam;
     }
+    getFormatID(){
+        return this.__format;
+    }
     getChannels(){
         return this.__channelsParam;
+    }
+    getChannelsID(){
+        return this.__channels;
     }
     getFilter(){
         return this.__filterParam;

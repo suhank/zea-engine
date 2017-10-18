@@ -417,8 +417,8 @@ class GLRenderer {
         }
 
         // Note: using the geom data pass crashes VR scenes.
-        const isMobile = isMobileDevice();
-        const browserDesc = getBrowserDesc();
+        // const isMobile = isMobileDevice();
+        // const browserDesc = getBrowserDesc();
         this.__floatGeomBuffer = false;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);

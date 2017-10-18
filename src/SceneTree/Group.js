@@ -19,11 +19,8 @@ class Group extends BaseItem {
         this.__visibleParam = this.addParameter('visible', true);
         this.__visibleParam.valueChanged.connect((changeType)=>{
             let value = this.__visibleParam.getValue();
-            let propagateVisible = ()=>{
-                return value;
-            }
             this.__items.forEach((item)=>{
-                item.getParameter('visible').setDirty(propagateVisible);
+                item.getParameter('visible').setValue(value);
             });
         });
 

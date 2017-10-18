@@ -62,6 +62,12 @@ class TreeItem extends BaseItem {
         });
 
 
+        this.__visibleParam.valueChanged.connect((changeType)=>{
+            let visibile = this.getVisible();
+            for (let childItem of this.__childItems)
+                childItem.setInheritedVisiblity(visibile);
+        });
+
         this.visibilityChanged = this.__visibleParam.valueChanged;
         this.selectedChanged = this.__selectedParam.valueChanged;
         this.localXfoChanged = this.__localXfoParam.valueChanged;
@@ -221,16 +227,7 @@ class TreeItem extends BaseItem {
     }
 
     setVisible(val) {
-        if (this.__visibleParam.getValue() != val) {
-            let prev = this.getVisible();
-            this.__visibleParam.setValue(val);
-            let visibile = this.getVisible();
-            if (prev != visibile) {
-                for (let childItem of this.__childItems)
-                    childItem.setInheritedVisiblity(visibile);
-                this.visibilityChanged.emit(visibile);
-            }
-        }
+        this.__visibleParam.setValue(val);
     }
 
     setInheritedVisiblity(val) {
