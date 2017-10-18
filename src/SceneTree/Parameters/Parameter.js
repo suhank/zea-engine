@@ -78,7 +78,7 @@ class Parameter extends BaseParameter {
             let fns = this.__cleanerFns;
             this.__cleanerFns = [];
             for(let fn of fns) {
-                this.__value = fn(this.__value);
+                this.__value = fn(this.__value, this.getValue);
                 if(this.__value == undefined) {
                     throw("Error. Cleander Fn did not return a valid value:" + fn.name);
                 }

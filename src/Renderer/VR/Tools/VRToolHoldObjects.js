@@ -151,8 +151,8 @@ class VRToolHoldObjects extends VRTool {
 
         this.__geomDataBufferFbo.unbind();
 
-        let id = Math.round(pixels[0]);
-        let result = renderer.getCollector().getDrawItem(id);
+        let geomItemId = Math.round(pixels[0]);
+        let result = renderer.getCollector().getDrawItem(geomItemId);
         if(result){
             return result.getGeomItem();
         }

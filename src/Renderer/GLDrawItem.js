@@ -22,9 +22,16 @@ class GLDrawItem {
         this.destructing = new Signal();
         this.visibilityChanged = new Signal();
 
-        this.__geomItem.geomXfoChanged.connect((geomXfo) => {
-            this.transformChanged.emit();
-        });
+        if(!gl.floatTexturesSupported) {
+            this.__geomItem.geomXfoChanged.connect((geomXfo) => {
+                this.updateGeomMatrix();
+            });
+        }
+        else {
+            this.__geomItem.geomXfoChanged.connect((geomXfo) => {
+                this.transformChanged.emit();
+            });
+        }
         this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
 
         this.__geomItem.selectedChanged.connect((val) => {
@@ -44,6 +51,12 @@ class GLDrawItem {
             // when the last ref is removed.
             this.destroy();
         });
+
+
+        let lightmapCoordsOffset = this.__geomItem.getLightmapCoordsOffset();
+        let materialId = 0;
+        let geomId = 0;
+        this.__geomData = [lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId];
     }
 
     getGeomItem() {
@@ -118,18 +131,20 @@ class GLDrawItem {
         let unifs = renderstate.unifs;
         
         if(!gl.floatTexturesSupported) {
-            let unif = unifs.modelMatrix;
-            if (unif){
-                gl.uniformMatrix4fv(unif.location, false, this.__modelMatrixArray);
+            let modelMatrixunif = unifs.modelMatrix;
+            if (modelMatrixunif){
+                gl.uniformMatrix4fv(modelMatrixunif.location, false, this.__modelMatrixArray);
             }
-        }
-        else {
-            let unif = unifs.transformIndex;
-            if (unif){
-                gl.uniform1i(unif.location, this.__id);
+            let drawItemDataunif = unifs.drawItemData;
+            if (drawItemDataunif){
+                gl.uniform4f(drawItemDataunif.location, this.__geomData);
             }
         }
 
+        let unif = unifs.transformIndex;
+        if (unif){
+            gl.uniform1i(unif.location, this.__id);
+        }
 
         return true;
     }

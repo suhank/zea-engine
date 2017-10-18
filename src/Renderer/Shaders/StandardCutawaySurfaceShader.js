@@ -1,4 +1,5 @@
 import {
+    Vec3,
     Color
 } from '../../Math';
 import {
@@ -176,8 +177,8 @@ uniform bool _emissiveStrengthTexConnected;
 void main(void) {
 
     // Cutaways
-    if(cutaway(v_worldPos))
-        return;
+    // if(cutaway(v_worldPos))
+    //     return;
 
 
     MaterialParams material;
@@ -288,6 +289,13 @@ void main(void) {
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
         this.addParameter('reflectance', 0.0001);
+
+        // cutaway params
+        this.addParameter('cutawayEnabled', true);
+        this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
+        this.addParameter('planeNormal', new Vec3(0.0, 0.0, 1.0), false);
+        this.addParameter('planeDist', 0.0, false);
+
         this.finalize();
     }
 };

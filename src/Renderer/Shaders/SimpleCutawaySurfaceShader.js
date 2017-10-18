@@ -148,8 +148,11 @@ void main(void) {
 `);
 
         this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
-        this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
         this.addParameter('opacity', 1.0);
+
+        // cutaway params
+        this.addParameter('cutawayEnabled', true);
+        this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
         this.addParameter('planeNormal', new Vec3(0.0, 0.0, 1.0), false);
         this.addParameter('planeDist', 0.0, false);
         this.finalize();

@@ -55,6 +55,7 @@ vec4 getInstanceData() {
 #else
 
 uniform mat4 modelMatrix;
+uniform int transformIndex;
 uniform vec4 drawItemData;
 
 mat4 getModelMatrix() {
@@ -63,6 +64,10 @@ mat4 getModelMatrix() {
 
 vec4 getInstanceData() {
     return drawItemData;
+}
+
+int getID() {
+    return transformIndex;
 }
 
 #endif

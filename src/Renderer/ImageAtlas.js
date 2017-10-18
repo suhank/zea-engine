@@ -238,7 +238,7 @@ class ImageAtlas extends GLTexture2D {
         if (!gl.floatTexturesSupported) {
             this.__layoutVec4s = [];
             this.__layout.forEach((layoutItem, index)=>{
-                this.__layoutVec4s = new Vec4(layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height)
+                this.__layoutVec4s[index] = [layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height];
             });
         } else {
             let dataArray = new Float32Array(this.__layout.length * 4); /*each pixel has 4 floats*/
@@ -264,6 +264,10 @@ class ImageAtlas extends GLTexture2D {
         }
 
         this.__layoutNeedsRegeneration = false;
+    }
+
+    getLayoutData(index){
+        return this.__layoutVec4s[index];
     }
 
     renderAtlas(cleanup = true) {
