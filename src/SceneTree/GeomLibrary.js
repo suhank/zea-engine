@@ -31,7 +31,6 @@ class GeomLibrary {
         this.streamFileParsed = new Signal();
         this.loaded = new Signal(true);
         this.__loaded = 0;
-        this.__expectedNumGeoms = 0;
         this.__numGeoms = 0;
         this.geoms = [];
 
@@ -67,12 +66,8 @@ class GeomLibrary {
         this.__genBuffersOpts[key] = value;
     }
 
-    setExpectedNumGeoms(expectedNumGeoms) {
-        this.__expectedNumGeoms = expectedNumGeoms;
-    }
-
-    getNumGeoms() {
-        return this.__numGeoms;
+    setNumGeoms(expectedNumGeoms) {
+        this.__numGeoms = expectedNumGeoms;
     }
 
     getGeom(index) {
@@ -105,13 +100,13 @@ class GeomLibrary {
             total: numGeoms,
             done: 0
         };
-        this.__numGeoms += numGeoms;
+
         if(numGeoms == 0) {
             this.streamFileParsed.emit(1);
             return numGeoms;
         }
-        if (this.__expectedNumGeoms == 0) {
-            this.__expectedNumGeoms = this.__numGeoms;
+        if (this.__numGeoms == 0) {
+            throw("Loading cannot start will we know how many geomms.");
         }
 
         const toc = reader.loadUInt32Array(numGeoms);
@@ -228,7 +223,8 @@ class GeomLibrary {
         // Once all the geoms from all the files are loaded and parsed
         // fire the loaded signal.
         this.__loaded += loaded;
-        if (this.__loaded == this.__expectedNumGeoms) {
+        // console.log("this.__loaded:" + this.__loaded +" this.__numGeoms:" + this.__numGeoms);
+        if (this.__loaded == this.__numGeoms) {
             // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
             this.__terminateWorkers();
             this.loaded.emit();
@@ -246,7 +242,7 @@ class GeomLibrary {
     }
 
 };
+
 export {
     GeomLibrary
 };
-// GeomLibrary;

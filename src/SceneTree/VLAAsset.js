@@ -30,9 +30,13 @@ class VLAAsset extends AssetItem {
         super.readBinary(reader, flags, this);
 
         this.__atlasSize = reader.loadFloat32Vec2();
-        if(reader.remainingByteLength == 4){
-            this.__geomLibrary.setExpectedNumGeoms(reader.loadUInt32());
+        if(reader.remainingByteLength != 4){
+            throw("File needs to be re-exported:" + this.getParameter('FilePath').getValue());
         }
+        // Perpare the geom library for loading
+        // This helps with progress bars, so we know how many geoms are coming in total.
+        this.__geomLibrary.setNumGeoms(reader.loadUInt32());
+        
         this.loaded.emit();
         return numGeomsFiles;
     }
@@ -83,6 +87,7 @@ class VLAAsset extends AssetItem {
         let loadNextGeomFile = () => {
             if (geomFileID < numGeomsFiles) {
                 let nextGeomFileName = stem + geomFileID + '.vlageoms';
+                // console.log("loadNextGeomFile:" + nextGeomFileName);
                 if (this.__resourceLoader.resourceAvailable(nextGeomFileName))
                     loadGeomsfile(nextGeomFileName);
             }

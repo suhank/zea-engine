@@ -37,10 +37,11 @@ let makeParameterTexturable = (parameter) => {
         return image;
     }
 
+    let imageUpdated = () => {
+        parameter.valueChanged.emit(image);
+    }
+    
     parameter.setImage = (value) => {
-        let imageUpdated = () => {
-            parameter.valueChanged.emit(image);
-        }
         let disconnectImage = () => {
             image.removeRef(parameter);
             image.loaded.disconnect(imageUpdated);
@@ -68,12 +69,11 @@ let makeParameterTexturable = (parameter) => {
 
     let basesetValue = parameter.setValue;
     parameter.setValue = (value) => {
-        parameter.setImage();
         if (value instanceof Image2D) {
             parameter.setImage(value);
         } else {
             if (image != undefined) {
-                parameter.setImage(value);
+                parameter.setImage(undefined);
             }
             basesetValue(value);
         }

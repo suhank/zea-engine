@@ -108,7 +108,7 @@ class Label  extends DataImage2D {
         let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
 
         this.addParameter(new Parameter('text', text, 'String'));
-        this.addParameter(new Parameter('font', 'Calibri', 'String'));
+        this.addParameter(new Parameter('font', 'Helvetica', 'String'));
         this.addParameter('fontColor', new Color(1.0, 1.0, 1.0));
         this.addParameter(new Parameter('textAlign', 'left', 'String'));
         // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
@@ -164,8 +164,8 @@ class Label  extends DataImage2D {
         ctx2d.fillRect(0, 0, this.width, this.height);
 
         if (background) {
-            ctx2d.fillStyle = outlineColor.toHex();
-            ctx2d.strokeStyle = backgroundColor.toHex();
+            ctx2d.fillStyle = backgroundColor.toHex();
+            ctx2d.strokeStyle = outlineColor.toHex();
             roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline);
         }
 

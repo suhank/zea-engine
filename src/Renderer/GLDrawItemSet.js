@@ -184,6 +184,7 @@ class GLDrawItemSet {
         if (this.__drawCount == 1) {
             // return;
             if (this.__drawItems[this.__lastVisible].bind(renderstate)) {
+                // console.log("draw:"+ this.__drawItems[this.__lastVisible].getId());
                 // Specify an non-instanced draw to the shader
                 if(renderstate.unifs.instancedDraw) {
                     gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
@@ -203,6 +204,8 @@ class GLDrawItemSet {
         }
         else
         {
+            // console.log("draw:"+ this.__instancedIdsArray);
+
             // Specify an instanced draw to the shader so it knows how
             // to retrieve the modelmatrix.
             gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);

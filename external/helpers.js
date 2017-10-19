@@ -77,7 +77,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
         generatePath(item);
     }
     for(let assetDesc of assetDescs){
-        generatePath(assetDesc[0] + ".vlatree");
+        generatePath(assetDesc[0] + ".vla");
         for(let i=0; i<assetDesc[1]; i++)
             generatePath(assetDesc[0] + i + ".vlageoms");
         if(assetDesc.length == 3) {

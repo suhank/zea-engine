@@ -391,6 +391,9 @@ class GLRenderer {
     }
 
     setupWebGL(canvasDiv, webglOptions) {
+        const browserDesc = getBrowserDesc();
+        console.log(browserDesc);
+
         this.__glcanvas = document.createElement('canvas');
         this.__glcanvas.style.width = '100%';
         this.__glcanvas.style.height = '100%';
@@ -408,9 +411,12 @@ class GLRenderer {
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 
+        if(browserDesc.browserName == 'Safari'){
+            this.__gl.__ext_VAO = null;
+        }
+
         this.__gl.screenQuad = new GLScreenQuad(this.__gl);
         this.__screenQuad = this.__gl.screenQuad;
-
 
         if(this.__gl.floatTexturesSupported) {
             this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
@@ -418,11 +424,11 @@ class GLRenderer {
 
         // Note: using the geom data pass crashes VR scenes.
         // const isMobile = isMobileDevice();
-        // const browserDesc = getBrowserDesc();
         this.__floatGeomBuffer = false;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
+
 
         ////////////////////////////////////
         // Bind a default texture.
