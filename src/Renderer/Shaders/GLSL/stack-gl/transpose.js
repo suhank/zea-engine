@@ -2,6 +2,9 @@ import { shaderLibrary } from '../../../ShaderLibrary.js';
 
 shaderLibrary.setShaderModule('stack-gl/transpose.glsl', `
 
+
+#ifndef ENABLE_ES3
+
 float transpose(float m) {
   return m;
 }
@@ -23,5 +26,7 @@ mat4 transpose(mat4 m) {
               m[0][2], m[1][2], m[2][2], m[3][2],
               m[0][3], m[1][3], m[2][3], m[3][3]);
 }
+
+#endif
 
 `);

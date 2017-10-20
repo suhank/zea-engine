@@ -163,8 +163,11 @@ uniform bool _emissiveStrengthTexConnected;
 
 #endif
 
-void main(void) {
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 
+void main(void) {
 
     MaterialParams material;
 
@@ -252,13 +255,20 @@ void main(void) {
 #else
     vec3 radiance = pbrSurfaceRadiance(material, irradiance, normal, viewVector);
 #endif
-    gl_FragColor = vec4(radiance + (emission * material.baseColor), 1.0);
-    //gl_FragColor = vec4(material.baseColor * irradiance, 1.0);
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+    fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
+    //fragColor = vec4(material.baseColor * irradiance, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
 

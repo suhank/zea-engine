@@ -122,7 +122,7 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
         } else if (env instanceof HDRImage2D || env.format === "FLOAT") {
             this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
-            this.__glEnvMap = new GLEnvMap(this, env);
+            this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
         } else {
             console.warn("Unsupported EnvMap:" + env);
             return;

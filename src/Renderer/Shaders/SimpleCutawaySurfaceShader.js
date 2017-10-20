@@ -73,7 +73,6 @@ void main(void) {
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SimpleCutawaySurfaceShader.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
 #ifdef GL_EXT_frag_depth
 #extension GL_EXT_frag_depth : enable
 #endif
@@ -111,11 +110,23 @@ uniform bool _opacityTexConnected;
 <%include file="materialparams.glsl"/>
 <%include file="cutaways.glsl"/>
 
+
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     // Cutaways
-    if(cutaway(v_worldPos))
+    if(cutaway(v_worldPos, fragColor)){
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
         return;
+    }
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor      = _baseColor;
@@ -138,12 +149,17 @@ void main(void) {
         //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
-    gl_FragColor = vec4(ndotv * baseColor.rgb, opacity);
+
+    fragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb);
+    fragColor.rgb = toGamma(fragColor.rgb);
 #endif
 
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
 

@@ -88,6 +88,10 @@ float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
 
+
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
 
     vec4 env = _env;
@@ -99,13 +103,21 @@ void main(void) {
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
     float irradianceLum = clamp(luminanceFromRGB(irradiance), 0.0, 1.0);
 
-    gl_FragColor = vec4(env.rgb/env.a, 1.0);
-    gl_FragColor.rgb = mix(gl_FragColor.rgb * irradiance, gl_FragColor.rgb, irradianceLum);
-
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+#ifndef ENABLE_ES3
+    vec4 fragColor;
 #endif
 
+    fragColor = vec4(env.rgb/env.a, 1.0);
+    fragColor.rgb = mix(fragColor.rgb * irradiance, fragColor.rgb, irradianceLum);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
+#endif
+
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
         this.addParameter('env', new Color(0.7, 0.7, 0.95));
@@ -149,19 +161,29 @@ uniform float _shadowMultiplier;
 uniform float exposure;
 #endif
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
 
     // This material works by multiplying the image buffer values by the luminance in the lightmap.
     // 
-    gl_FragColor.rgb = pow(irradiance, vec3(1.0/_shadowMultiplier));
-    gl_FragColor.a = 1.0;
+    fragColor.rgb = pow(irradiance, vec3(1.0/_shadowMultiplier));
+    fragColor.a = 1.0;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
     }

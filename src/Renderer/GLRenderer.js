@@ -409,12 +409,16 @@ class GLRenderer {
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 
-        this.__gl.screenQuad = new GLScreenQuad(this.__gl);
-        this.__screenQuad = this.__gl.screenQuad;
-
+        if(this.__gl.name == 'webgl2') {
+            this.addShaderPreprocessorDirective('ENABLE_ES3');
+        }
         if(this.__gl.floatTexturesSupported) {
             this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
         }
+
+        this.__gl.screenQuad = new GLScreenQuad(this.__gl, this.__preproc);
+        this.__screenQuad = this.__gl.screenQuad;
+
 
         // Note: using the geom data pass crashes VR scenes.
         // const isMobile = isMobileDevice();

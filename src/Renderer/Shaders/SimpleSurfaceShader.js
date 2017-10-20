@@ -87,9 +87,11 @@ uniform bool _opacityTexConnected;
 
 #endif
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 
 void main(void) {
-
 
 #ifndef ENABLE_TEXTURES
     vec4 baseColor      = _baseColor;
@@ -112,12 +114,19 @@ void main(void) {
         //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
-    gl_FragColor = vec4(ndotv * baseColor.rgb, opacity);
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+    fragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb);
+    fragColor.rgb = toGamma(fragColor.rgb);
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
 

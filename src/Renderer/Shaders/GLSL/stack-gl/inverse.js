@@ -2,6 +2,9 @@ import { shaderLibrary } from '../../../ShaderLibrary.js';
 
 shaderLibrary.setShaderModule('stack-gl/inverse.glsl', `
 
+
+#ifndef ENABLE_ES3
+
 float inverse(float m) {
   return 1.0 / m;
 }
@@ -68,5 +71,6 @@ mat4 inverse(mat4 m) {
       a20 * b03 - a21 * b01 + a22 * b00) / det;
 }
 
+#endif
 
 `);

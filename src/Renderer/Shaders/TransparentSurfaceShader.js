@@ -118,6 +118,9 @@ uniform float _normalScale;
 
 #endif
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
 
     MaterialParams material;
@@ -168,14 +171,21 @@ void main(void) {
 
     vec4 specularReflectance = pbrSpecularReflectance(material, normal, viewVector);
 
-    gl_FragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
+    fragColor = vec4(specularReflectance.rgb, mix(opacity, 1.0, specularReflectance.a));
 
 #endif
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
 

@@ -53,7 +53,6 @@ void main(void) {
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
@@ -73,6 +72,9 @@ varying vec2 v_textureCoord;
 #endif
 
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
@@ -81,13 +83,18 @@ void main(void) {
     vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_textureCoord);
 #endif
 
-    gl_FragColor = baseColor;
-
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+    fragColor = baseColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb);
+    fragColor.rgb = toGamma(fragColor.rgb);
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
 

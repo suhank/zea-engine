@@ -76,15 +76,22 @@ uniform sampler2D   envMap;
 uniform sampler2D   envMap_layout;
 uniform vec4        envMap_desc;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
     vec3 N = uvToNormalSphOct(v_texCoord);
 
     if(false){
         vec2 uv = normalToUvSphOct(N);
-        gl_FragColor = vec4(uv.x, uv.y, 0.0, 1.0);
-        //gl_FragColor = sampleImagePyramid(uv, roughness, envMap);
-        //gl_FragColor = sampleSubImage(uv, 0, envMap);
-        //gl_FragColor = texture2D(envMap, uv);
+        fragColor = vec4(uv.x, uv.y, 0.0, 1.0);
+        //fragColor = sampleImagePyramid(uv, roughness, envMap);
+        //fragColor = sampleSubImage(uv, 0, envMap);
+        //fragColor = texture2D(envMap, uv);
     }
     else{
         const int numSamples = NUM_SAMPLES;
@@ -107,8 +114,12 @@ void main(void) {
             weight += VdotN;
         }
         color /= float(weight);
-        gl_FragColor = vec4(color.rgb, 1.0);
+        fragColor = vec4(color.rgb, 1.0);
     }
+    
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 
 `);

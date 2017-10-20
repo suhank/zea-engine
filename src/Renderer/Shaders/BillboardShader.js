@@ -133,12 +133,24 @@ varying vec2 v_texCoord;
 varying float v_alpha;
 varying vec4 v_tint;
 
-void main(void) {
-    gl_FragColor = texture2D(atlasBillboards, v_texCoord) * v_tint;
-    gl_FragColor.a *= v_alpha;
 
-    // gl_FragColor.r = 1.0;
-    // gl_FragColor.a = 1.0;
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
+    fragColor = texture2D(atlasBillboards, v_texCoord) * v_tint;
+    fragColor.a *= v_alpha;
+
+    // fragColor.r = 1.0;
+    // fragColor.a = 1.0;
+    
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
     }

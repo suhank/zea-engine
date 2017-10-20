@@ -34,9 +34,21 @@ uniform vec4 tint;
 
 <%include file="utils/unpackHDR.glsl"/>
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
-    vec3 color = decodeHDR(ldrSampler, cdmSampler, v_texCoord);
-    gl_FragColor = vec4(color * tint.rgb * exposure, 1.0);
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
+    fragColor = decodeHDR(ldrSampler, cdmSampler, v_texCoord);
+    fragColor.rgb = vec4(fragColor * tint.rgb * exposure, 1.0);
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 
 `);

@@ -5,7 +5,7 @@ import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js';
 import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
 class GLScreenQuad {
-    constructor(gl) {
+    constructor(gl, preproc) {
         this.__gl = gl;
 
         this.__pos = [0.0, 0.0];
@@ -16,7 +16,7 @@ class GLScreenQuad {
         if (!gl.__quadVertexIdsBuffer) 
             gl.setupInstancedQuad();
 
-        let shaderComp = this.__glshader.compileForTarget('GLScreenQuad');
+        let shaderComp = this.__glshader.compileForTarget('GLScreenQuad', preproc);
         this.__quadBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
         this.ready = true;
@@ -24,7 +24,7 @@ class GLScreenQuad {
 
     bind(renderstate, texture, pos = undefined, size = undefined) {
         let unifs = renderstate.unifs;
-        texture.bindToUniform(renderstate, renderstate.unifs.texture);
+        texture.bindToUniform(renderstate, renderstate.unifs.image);
 
         let gl = this.__gl;
         {

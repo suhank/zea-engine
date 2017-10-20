@@ -35,7 +35,7 @@ float intersectRayPlane(Ray ray, Ray plane) {
     return sI;
 }
 
-bool cutaway(vec3 worldPos) {
+bool cutaway(vec3 worldPos, out vec4 fragColor) {
     if(_cutawayEnabled == 0)
         return false;
 
@@ -47,7 +47,7 @@ bool cutaway(vec3 worldPos) {
         return true;
     }
     if(!gl_FrontFacing){
-        gl_FragColor = _cutColor;
+        fragColor = _cutColor;
 
         // Note: Moving the backfacing fragements forward onto the cutting plane.
         // This can never work, because it means back facing fragments will be rendered over 

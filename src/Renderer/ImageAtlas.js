@@ -38,7 +38,7 @@ precision highp float;
 
 uniform vec2 pos;
 uniform vec2 size;
-uniform vec2 textureDim;
+uniform vec2 srctextureDim;
 const int border = 2;
 
 /* VS Outputs */
@@ -51,16 +51,16 @@ void main()
     gl_Position = vec4(vec2(-1.0, -1.0) + (pos * 2.0) + (v_texCoord * size * 2.0), 0.0, 1.0);
 
     vec2 borderVec2 = vec2(float(border), float(border));
-    v_texCoord *= (textureDim + (borderVec2 * 2.0)) / textureDim;
-    v_texCoord -= borderVec2 / textureDim;
+    v_texCoord *= (srctextureDim + (borderVec2 * 2.0)) / srctextureDim;
+    v_texCoord -= borderVec2 / srctextureDim;
 }
 
 `);
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('AtlasLayoutShader.fragmentShader', `
 precision highp float;
 
-uniform sampler2D texture;
-uniform vec2 textureDim;
+uniform sampler2D srctexture;
+uniform vec2 srctextureDim;
 uniform int flags;
 
 /* VS Outputs */
@@ -70,46 +70,57 @@ float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 
 void main(void) {
-    vec2 pixelCoord = v_texCoord*textureDim;
+    vec2 pixelCoord = v_texCoord*srctextureDim;
     vec2 uv = v_texCoord;
 
     // Wrap X coords
     if(pixelCoord.x < 0.0){
-        uv.x += 1.0/textureDim.x;
+        uv.x += 1.0/srctextureDim.x;
         uv.y = 1.0 - uv.y;
     }
-    else if(pixelCoord.x > textureDim.x){
-        uv.x -= 1.0/textureDim.x;
+    else if(pixelCoord.x > srctextureDim.x){
+        uv.x -= 1.0/srctextureDim.x;
         uv.y = 1.0 - uv.y;
     }
 
     // Wrap Y coords
     if(pixelCoord.y < 0.0){
-        uv.y += 1.0/textureDim.y;
+        uv.y += 1.0/srctextureDim.y;
         uv.x = 1.0 - uv.x;
     }
-    else if(pixelCoord.y > textureDim.y){
-        uv.y -= 1.0/textureDim.y;
+    else if(pixelCoord.y > srctextureDim.y){
+        uv.y -= 1.0/srctextureDim.y;
         uv.x = 1.0 - uv.x;
     }
 
-    vec4 texel = texture2D(texture, uv);
+    vec4 texel = texture2D(srctexture, uv);
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
     // TODO: check why we pre-multiply alphas here.
-    // gl_FragColor = vec4(texel.rgb/texel.a, texel.a);
+    // fragColor = vec4(texel.rgb/texel.a, texel.a);
 
     if(flags >= 2) {
-        gl_FragColor = vec4(texel.rgb, luminanceFromRGB(texel.rgb));
+        fragColor = vec4(texel.rgb, luminanceFromRGB(texel.rgb));
     }
     else {
-        gl_FragColor = texel;
+        fragColor = texel;
     }
     
     if(flags >= 4) {
-        gl_FragColor = vec4(1.0) - gl_FragColor;
+        fragColor = vec4(1.0) - fragColor;
     }
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 
 `);
@@ -288,10 +299,10 @@ class ImageAtlas extends GLTexture2D {
         for (let j = 0; j < this.__subImages.length; j++) {
             let image = this.__subImages[j];
             let item = this.__layout[j];
-            image.bindToUniform(renderstate, unifs.texture);
+            image.bindToUniform(renderstate, unifs.srctexture);
             gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
-            gl.uniform2f(unifs.textureDim.location, image.width, image.height);
+            gl.uniform2f(unifs.srctextureDim.location, image.width, image.height);
             gl.uniform1i(unifs.flags.location, image.flags);
             gl.drawQuad();
         }

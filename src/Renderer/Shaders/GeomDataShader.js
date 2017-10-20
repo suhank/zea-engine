@@ -140,28 +140,39 @@ float decode(vec2 c){
 // http://ultraist.hatenablog.com/entry/20110608/1307539319
 /////////////////////////////////////////////////////////////////
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
     float dist = length(v_viewPos);
 
     if(floatGeomBuffer != 0) {
-        gl_FragColor.r = float(v_drawItemID);
-        gl_FragColor.g = dist;
+        fragColor.r = float(v_drawItemID);
+        fragColor.g = dist;
     }
     else {
         ///////////////////////////////////
         // UInt8 buffer
-        gl_FragColor.r = (mod(v_drawItemID, 256.) + 0.5) / 255.;
-        gl_FragColor.g = (floor(v_drawItemID / 256.) + 0.5) / 255.;
+        fragColor.r = (mod(v_drawItemID, 256.) + 0.5) / 255.;
+        fragColor.g = (floor(v_drawItemID / 256.) + 0.5) / 255.;
 
 
         // TODO: encode the dist as a 16 bit float
         // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
         vec2 float16bits = encode(dist);
-        gl_FragColor.b = float16bits.x;
-        gl_FragColor.a = float16bits.y;
+        fragColor.b = float16bits.x;
+        fragColor.a = float16bits.y;
     }
 
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
     }

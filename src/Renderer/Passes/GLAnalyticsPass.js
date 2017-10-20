@@ -67,9 +67,21 @@ uniform color displayColor;
 varying float v_weight;
 
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
-    gl_FragColor = displayColor;
-    gl_FragColor.a = v_weight;
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
+    fragColor = displayColor;
+    fragColor.a = v_weight;
+    
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
     }

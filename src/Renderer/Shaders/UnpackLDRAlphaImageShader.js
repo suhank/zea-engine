@@ -36,8 +36,21 @@ float luminanceFromRGB(vec3 rgb) {
     return 0.2126*rgb.r + 0.7152*rgb.g + 0.0722*rgb.b;
 }
 
+
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
-    gl_FragColor = vec4(texture2D(ldrSampler, v_texCoord).rgb, luminanceFromRGB(texture2D(alphaSampler, v_texCoord).rgb));
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
+    fragColor = vec4(texture2D(ldrSampler, v_texCoord).rgb, luminanceFromRGB(texture2D(alphaSampler, v_texCoord).rgb));
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 
 `);

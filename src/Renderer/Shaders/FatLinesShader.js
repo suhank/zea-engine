@@ -138,7 +138,14 @@ varying vec2 v_texCoord;
 uniform color _color;
 uniform mat4 cameraMatrix;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
     int debugLevel = 0;
     if(debugLevel == 0){
 
@@ -150,11 +157,15 @@ void main(void) {
         NdotV *= cos((v_texCoord.x - 0.5) * 2.0);
 
         vec4 color = _color * NdotV;
-        gl_FragColor = vec4(color.rgb, _color.a);
+        fragColor = vec4(color.rgb, _color.a);
     }
     else{
-        gl_FragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);
+        fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);
     }
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
         this.addParameter('color', new Color(1.0, 1.0, 0.5));

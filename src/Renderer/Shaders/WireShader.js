@@ -34,8 +34,15 @@ precision highp float;
 
 uniform color wireColor;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
-    gl_FragColor = wireColor;
+#ifdef ENABLE_ES3
+    gl_FragColor = color;
+#else
+    fragColor = color;
+#endif  
 }
 `);
     }

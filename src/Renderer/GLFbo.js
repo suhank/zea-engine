@@ -68,7 +68,10 @@ class GLFbo {
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
         if(gl.name == 'webgl2'){
-
+            if (this.__colorTexture.getFormat() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
+                if (!gl.__ext_float_linear)
+                    throw ("Unable to use filtering on floating point textures");
+            }
         }
         else {
             if (this.__colorTexture.getFormat() == 'FLOAT') {
@@ -90,7 +93,7 @@ class GLFbo {
             }
         }
 
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+        gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
 
         // Create the depth texture
         if (this.__createDepthTexture) {

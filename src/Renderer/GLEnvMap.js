@@ -16,7 +16,7 @@ import {
 } from './GeomShaderBinding.js';
 
 class GLEnvMap extends GLProbe {
-    constructor(renderer, envMap) {
+    constructor(renderer, envMap, preproc) {
         super(renderer.gl, 'EnvMap');
         this.__renderer = renderer;
         this.__envMap = envMap;
@@ -30,7 +30,7 @@ class GLEnvMap extends GLProbe {
         this.__srcGLTex = srcGLTex; // for debugging
 
         this.__envMapShader = new OctahedralEnvMapShader(gl);
-        let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap');
+        let envMapShaderComp = this.__envMapShader.compileForTarget('GLEnvMap', preproc);
         this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
 

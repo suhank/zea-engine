@@ -87,8 +87,11 @@ void main(void) {
 }
 `);
 
+
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LayeredCarPaintShader.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
+#ifndef ENABLE_ES3
+    #extension GL_OES_standard_derivatives : enable
+#endif
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -194,6 +197,11 @@ vec3 sampleNormalMap( sampler2D texture, vec2 texcoord )
     return map;
 }
 
+
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
 
     MaterialParams material;
@@ -267,12 +275,20 @@ void main(void) {
     //vec3 radiance = baseRadiance;
 
 #endif
-    gl_FragColor = vec4(radiance, 1.0);
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+#ifndef ENABLE_ES3
+    vec4 fragColor;
 #endif
 
+    fragColor = vec4(radiance, 1.0);
+
+#ifdef ENABLE_INLINE_GAMMACORRECTION
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
+#endif
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
 

@@ -31,15 +31,25 @@ void main()
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('ScreenQuadShader.fragmentShader', `
 precision highp float;
 
-uniform sampler2D texture;
+uniform sampler2D image;
 
 varying vec2 v_texCoord;
 
-void main(void) {
-    vec4 texel = texture2D(texture, v_texCoord);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
-}
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+    fragColor = texture2D(image, v_texCoord);
+    fragColor = vec4(fragColor.rgb/fragColor.a, 1.0);
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
+}
 `);
         this.finalize();
     }

@@ -159,9 +159,32 @@ class GLShader extends BaseItem {
     ///////////////////////////////////
     // Compilation
 
-    __compileShaderStage(glsl, stageID, name) {
+    __compileShaderStage(glsl, stageID, name, preproc) {
         let gl = this.__gl;
         // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
+
+        if (preproc) {
+            if (preproc.repl) {
+                for (let key in preproc.repl)
+                    glsl = glsl.replaceAll(key, preproc.repl[key]);
+            }
+            if (preproc.defines)
+                glsl = preproc.defines + glsl;
+        }
+
+        let prefix;
+        if(gl.name == 'webgl2') {
+            glsl = glsl.replaceAll('attribute', 'in');
+            if(name == 'vertexShader')
+                glsl = glsl.replaceAll('varying', 'out');
+            else
+                glsl = glsl.replaceAll('varying', 'in');
+            glsl = glsl.replaceAll('texture2D', 'texture');
+
+            prefix = "#version 300 es\n";
+            glsl = prefix + glsl;
+        }
+
         let shaderHdl = gl.createShader(stageID);
         gl.shaderSource(shaderHdl, glsl);
 
@@ -210,15 +233,7 @@ class GLShader extends BaseItem {
         let shaderProgramHdl = gl.createProgram();
         let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl;
         if (vertexShaderGLSL != undefined) {
-            if (preproc) {
-                if (preproc.repl) {
-                    for (let key in preproc.repl)
-                        vertexShaderGLSL = vertexShaderGLSL.replaceAll(key, preproc.repl[key]);
-                }
-                if (preproc.defines)
-                    vertexShaderGLSL = preproc.defines + vertexShaderGLSL;
-            }
-            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader');
+            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', preproc);
             if (!vertexShader) {
                 return false;
             }
@@ -226,15 +241,7 @@ class GLShader extends BaseItem {
         }
         let fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
         if (fragmentShaderGLSL != undefined) {
-            if (preproc) {
-                if (preproc.repl) {
-                    for (let key in preproc.repl)
-                        fragmentShaderGLSL = fragmentShaderGLSL.replaceAll(key, preproc.repl[key]);
-                }
-                if (preproc.defines)
-                    fragmentShaderGLSL = preproc.defines + fragmentShaderGLSL;
-            }
-            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader');
+            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', preproc);
             if (!fragmentShader) {
                 return false;
             }

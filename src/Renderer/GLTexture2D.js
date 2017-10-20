@@ -162,8 +162,16 @@ class GLTexture2D extends RefCounted {
                 if(this.__channels == gl.RGB){
                     this.__internalFormat = gl.RGB32F;
                 }
-                else if(channels == gl.RGBA){
+                else if(this.__channels == gl.RGBA){
                     this.__internalFormat = gl.RGBA32F;
+                }
+            }
+            else if(this.__format == gl.HALF_FLOAT){
+                if(this.__channels == gl.RGB){
+                    this.__internalFormat = gl.RGB16F;
+                }
+                else if(this.__channels == gl.RGBA){
+                    this.__internalFormat = gl.RGBA16F;
                 }
             }
         }
@@ -219,10 +227,15 @@ class GLTexture2D extends RefCounted {
                 if(data.length != numPixels * numChannels) {
                     console.warn("Invalid data for Image width:" + this.width + " height:"+ this.height + " channels:" + this.__channelsParam + " format:" + this.__formatParam  + " Data Length:" + data.length  + " Expected:" + (numPixels * numChannels) );
                 }
-                if(gl.__ext_half_float && this.__format == gl.__ext_half_float.HALF_FLOAT_OES && data instanceof Float32Array){
+                if(this.__format == gl.HALF_FLOAT && data instanceof Float32Array){
                     data = Math.convertFloat32ArrayToUInt16Array(data);
                 }
-                gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, data);
+                if(gl.name == 'webgl2'){
+                    gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, data, 0);
+                }
+                else {
+                    gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, data);
+                }
             }
 
             if (this.__mipMapped) {

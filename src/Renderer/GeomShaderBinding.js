@@ -47,11 +47,14 @@ class GeomShaderBinding {
             gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset);
-            if(instanced==true){
-                gl.vertexAttribDivisor(location, 1); // This makes it instanced
-            }
-            else {
-                gl.vertexAttribDivisor(location, 0); // This makes it not-instanced
+            
+            if(gl.vertexAttribDivisor) {
+                if(instanced==true){
+                    gl.vertexAttribDivisor(location, 1); // This makes it instanced
+                }
+                else {
+                    gl.vertexAttribDivisor(location, 0); // This makes it not-instanced
+                }
             }
 
             // console.log("Binding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);

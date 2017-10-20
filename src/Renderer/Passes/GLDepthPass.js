@@ -10,7 +10,6 @@ class GLDepthPass extends GLPass {
     constructor(gl, volSize, textureSize) {
         super(gl);
 
-        this.__ext_std_derivatives = gl.getExtension("OES_standard_derivatives");
         let shader = new DepthMapShader(gl);
         this.setExplicitShader(shader);
 

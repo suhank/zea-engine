@@ -9,18 +9,17 @@ var create3DContext = function(canvas, opt_attribs) {
     const browserDesc = getBrowserDesc();
     console.log(browserDesc);
 
-    let names = [ /*'webgl2',*/ 'webgl'];
+    let names = [ 'webgl2', 'webgl'];
     let context = null;
-    for (var i = 0; i < names.length; ++i) {
+    names.some((name)=>{
         try {
-            context = canvas.getContext(names[i], opt_attribs);
-            context.name = names[i];
+            context = canvas.getContext(name, opt_attribs);
+            context.name = name;
         } catch (e) {}
         if (context) {
-            break;
+            return true;
         }
-    }
-
+    });
     if (!context) {
         return;
     }
@@ -55,6 +54,12 @@ var create3DContext = function(canvas, opt_attribs) {
         if (context.__ext_texture_half_float_linear) {
             context.floatTextureFilteringSupported = true;
         }
+
+        // Needed for rendering to flat textures in an Fbo
+        context.__ext_color_buffer_float = context.getExtension("EXT_color_buffer_float");
+
+
+        context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
     } else {
         context.__ext_float = context.getExtension("OES_texture_float");
         if (context.__ext_float) {
@@ -77,6 +82,9 @@ var create3DContext = function(canvas, opt_attribs) {
             }
         }
 
+        // Needed for rendering to flat textures in an Fbo
+        context.__ext_color_buffer_float = context.getExtension("EXT_color_buffer_float");
+
         context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
         // context.__ext_sRGB = context.getExtension("EXT_sRGB");
         // context.__ext_draw_buffers = context.getExtension("WEBGL_draw_buffers");
@@ -97,7 +105,11 @@ var create3DContext = function(canvas, opt_attribs) {
         }
         context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
         context.__ext_WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
+        if(context.__ext_WEBGL_depth_texture) {
+            gl.UNSIGNED_INT_24_8 = context.__ext_WEBGL_depth_texture.UNSIGNED_INT_24_8_WEBGL;
+        }
 
+        context.DRAW_FRAMEBUFFER = context.FRAMEBUFFER;
     }
 
 

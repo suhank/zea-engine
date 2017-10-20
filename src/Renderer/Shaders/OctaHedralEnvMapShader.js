@@ -43,7 +43,6 @@ void main()
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctaHedralEnvMapShader.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
 <%include file="Florian/Lookup.glsl"/>
@@ -59,15 +58,27 @@ varying vec2 vPosition;
 varying vec3 wcNormal;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
     vec4 viewPos = invProjectionMatrix * vec4(vPosition, 1, 1);
     vec3 viewDir = normalize(viewPos.xyz);
     vec3 worldDir = mat3(cameraMatrix) * viewDir;
 
-    //gl_FragColor = texture2D(envMap, v_texCoord);
-    gl_FragColor.rgb = textureEnv(envMap, worldDir, backgroundRoughness);
+    //fragColor = texture2D(envMap, v_texCoord);
+    fragColor.rgb = textureEnv(envMap, worldDir, backgroundRoughness);
 
-    gl_FragColor.a = 1.0;
+    fragColor.a = 1.0;
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
     }

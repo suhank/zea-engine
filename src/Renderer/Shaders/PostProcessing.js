@@ -68,30 +68,35 @@ uniform float gamma;
 
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
     //can also use gl_FragCoord.xy
     mediump vec2 fragCoord = v_texCoord * textureSize; 
 
-    vec4 color;
     if (antialiase) {
-        color = fxaa(texture, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
+        fragColor = fxaa(texture, fragCoord, textureSize, v_rgbNW, v_rgbNE, v_rgbSW, v_rgbSE, v_rgbM);
     } else {
-        color = texture2D(texture, v_texCoord);
+        fragColor = texture2D(texture, v_texCoord);
     }
     
-    //color.rgb *= getStandardOutputBasedExposure(aperture, shutterSpeed, iso);
-    color.rgb *= exposure;
+    //fragColor.rgb *= getStandardOutputBasedExposure(aperture, shutterSpeed, iso);
+    fragColor.rgb *= exposure;
     
     if (tonemap) 
-        color.rgb = tonemapFilmic(color.rgb);
+        fragColor.rgb = tonemapFilmic(fragColor.rgb);
     else
-        color.rgb = toGamma(color.rgb, gamma);
+        fragColor.rgb = toGamma(fragColor.rgb, gamma);
 
     
-    //color.rgb = toGamma(color.rgb, gamma);
+    //fragColor.rgb = toGamma(fragColor.rgb, gamma);
     
-    color.a = 1.0;
-    gl_FragColor = color;
+    fragColor.a = 1.0;
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }`);
         this.finalize();
     }

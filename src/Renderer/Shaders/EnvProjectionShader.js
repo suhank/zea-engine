@@ -82,19 +82,29 @@ uniform float exposure;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = normalToUvSphOct(normalize(v_worldDir));
     vec4 env = texture2D(_envTex, uv);
-    gl_FragColor = vec4(env.rgb/env.a, 1.0);
+    fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     if(_linearSpaceImage) {
-        gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+        fragColor.rgb = toGamma(fragColor.rgb * exposure);
     }
     else {
-        gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+        fragColor.rgb = fragColor.rgb * exposure;
     }
+#endif
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
 #endif
 }
 `);
@@ -128,19 +138,29 @@ uniform float exposure;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
     vec4 env = texture2D(_envTex, uv);
-    gl_FragColor = vec4(env.rgb/env.a, 1.0);
+    fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     if(_linearSpaceImage) {
-        gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+        fragColor.rgb = toGamma(fragColor.rgb * exposure);
     }
     else {
-        gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+        fragColor.rgb = fragColor.rgb * exposure;
     }
+#endif
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
 #endif
 }
 `);

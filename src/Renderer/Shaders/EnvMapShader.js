@@ -71,16 +71,28 @@ uniform sampler2D backgroundImage;
 /* VS Outputs */
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec4 texel = texture2D(backgroundImage, v_texCoord);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+    fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    //fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
     // Assuming a simple RGB image in gamma space for now.
-    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    fragColor.rgb = fragColor.rgb * exposure;
+#endif
+
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
 #endif
 }
 `);
@@ -117,20 +129,31 @@ uniform vec4        envMap_desc;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = normalToUvSphOct(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
         vec4 texel = texture2D(envMap, uv);
-        gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+        fragColor = vec4(texel.rgb/texel.a, 1.0);
     }
     else{
-        gl_FragColor = vec4(sampleImagePyramid(uv, focus, envMap_layout, envMap, envMap_desc).rgb, 1.0);
+        fragColor = vec4(sampleImagePyramid(uv, focus, envMap_layout, envMap, envMap_desc).rgb, 1.0);
     }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
+#endif
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
 #endif
 }
 `);
@@ -162,18 +185,28 @@ uniform sampler2D backgroundImage;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
 
     vec4 texel = texture2D(backgroundImage, uv);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+    fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    //fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
     // Assuming a simple RGB image in gamma space for now.
-    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    fragColor.rgb = fragColor.rgb * exposure;
+#endif
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
 #endif
 }
 `);
@@ -206,7 +239,14 @@ uniform sampler2D backgroundImage;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
     uv.y *= 0.5;
@@ -215,15 +255,18 @@ void main(void) {
     }
 
     vec4 texel = texture2D(backgroundImage, uv);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+    fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    //fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
     // Assuming a simple RGB image in gamma space for now.
-    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    fragColor.rgb = fragColor.rgb * exposure;
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
         this.finalize();
@@ -253,20 +296,30 @@ uniform sampler2D backgroundImage;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = dualfisheyeUVsFromDir(normalize(v_worldDir));
 
     vec4 texel = texture2D(backgroundImage, uv);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+    fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    //fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
     // Assuming a simple RGB image in gamma space for now.
-    gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    fragColor.rgb = fragColor.rgb * exposure;
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
         this.finalize();
@@ -298,19 +351,29 @@ uniform sampler2D backgroundImage;
 varying vec3 v_worldDir;
 varying vec2 v_texCoord;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
 
     vec2 uv = dualfisheyeUVsFromDir(dirFromLatLongUVs(v_texCoord.x, v_texCoord.y));
     vec4 texel = texture2D(backgroundImage, uv);
-    gl_FragColor = vec4(texel.rgb/texel.a, 1.0);
+    fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    //gl_FragColor.rgb = toGamma(gl_FragColor.rgb * exposure);
+    //fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
     // Assuming a simple RGB image in gamma space for now.
-    // gl_FragColor.rgb = gl_FragColor.rgb * exposure;
+    // fragColor.rgb = fragColor.rgb * exposure;
 #endif
 
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
         this.finalize();
