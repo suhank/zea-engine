@@ -9,9 +9,6 @@ import {
     getBrowserDesc
 } from '../BrowserDetection.js';
 import {
-    create3DContext
-} from '../external/webgl-utils.js';
-import {
     onResize
 } from '../external/onResize.js';
 import {
@@ -22,6 +19,9 @@ import {
     Grid,
     Material
 } from '../SceneTree';
+import {
+    create3DContext
+} from './GLContext.js';
 import {
     GLScreenQuad
 } from './GLScreenQuad.js';
@@ -371,8 +371,8 @@ class GLRenderer {
             // Emulate the Vive HMD resolution.
             // this.__glcanvas.width = 2160;
             // this.__glcanvas.height = 1200;
-            this.__glcanvas.width = this.__glcanvas.offsetWidth * window.devicePixelRatio;
-            this.__glcanvas.height = this.__glcanvas.offsetHeight * window.devicePixelRatio;
+            this.__glcanvas.width = this.__glcanvas.offsetWidth;
+            this.__glcanvas.height = this.__glcanvas.offsetHeight;
 
             this.__onResizeViewports();
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
@@ -391,8 +391,6 @@ class GLRenderer {
     }
 
     setupWebGL(canvasDiv, webglOptions) {
-        const browserDesc = getBrowserDesc();
-        console.log(browserDesc);
 
         this.__glcanvas = document.createElement('canvas');
         this.__glcanvas.style.width = '100%';
@@ -410,10 +408,6 @@ class GLRenderer {
         webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false;
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
-
-        if(browserDesc.browserName == 'Safari'){
-            this.__gl.__ext_VAO = null;
-        }
 
         this.__gl.screenQuad = new GLScreenQuad(this.__gl);
         this.__screenQuad = this.__gl.screenQuad;
@@ -460,8 +454,8 @@ class GLRenderer {
 
         const calcRendererCoords = (event)=>{
             var rect = this.__glcanvasDiv.getBoundingClientRect();
-            event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio;
-            event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio;
+            event.rendererX = (event.clientX - rect.left);
+            event.rendererY = (event.clientY - rect.top);
         }
 
         this.__glcanvas.addEventListener('mouseenter', (event) => {

@@ -1,6 +1,3 @@
-import {
-    create3DContext
-} from './external/webgl-utils.js';
 
 function isIOSDevice() {
     return (navigator.userAgent.match(/iPhone/i) ||
@@ -88,8 +85,8 @@ function getBrowserDesc() {
 
 function getGPUDesc() {
     const canvas = document.createElement('canvas');
-    const context = create3DContext(canvas);
-    if(context == undefined)
+    let context = canvas.getContext('webgl');
+    if(!context)
         return;
 
     const debugInfo = context.getExtension('WEBGL_debug_renderer_info');

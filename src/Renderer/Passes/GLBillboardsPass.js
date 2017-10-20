@@ -38,6 +38,8 @@ class GLBillboardsPass extends GLPass {
         this.__prevSortCameraPos = new Vec3();
 
         this.__atlas = new ImageAtlas(renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
+        this.__atlas.loaded.connect(this.updated.emit);
+        this.__atlas.updated.connect(this.updated.emit);
 
         renderer.getCollector().registerSceneItemFilter((treeItem, rargs)=>{
             if(treeItem instanceof BillboardItem) {
