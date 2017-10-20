@@ -186,7 +186,7 @@ class GLMesh extends GLGeom {
     }
 
     drawInstanced(count) {
-        this.__gl.__ext_Inst.drawElementsInstancedANGLE(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, count);
+        this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, count);
     }
 
 
@@ -196,9 +196,9 @@ class GLMesh extends GLGeom {
         gl.deleteBuffer(this.__indexBuffer);
         this.__indexBuffer = undefined;
         // if (this.__wireframesVao)
-        //     this.__ext.deleteVertexArrayOES(this.__wireframesVao);
+        //     gl.deleteVertexArray(this.__wireframesVao);
         // if (this.__hardEdgesVao)
-        //     this.__ext.deleteVertexArrayOES(this.__hardEdgesVao);
+        //     gl.deleteVertexArray(this.__hardEdgesVao);
     }
 };
 

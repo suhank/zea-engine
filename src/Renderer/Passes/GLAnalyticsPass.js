@@ -151,10 +151,10 @@ class GLAnalyticsPass {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
-            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+            gl.vertexAttribDivisor(location, 1); // This makes it instanced
         }
 
-        gl.__ext_Inst.drawArraysInstancedANGLE(gl.LINES, 0, 2, this.numDrawItems);
+        gl.drawArraysInstanced(gl.LINES, 0, 2, this.numDrawItems);
     }
 
     destroy() {

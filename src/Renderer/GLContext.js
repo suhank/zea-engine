@@ -9,7 +9,7 @@ var create3DContext = function(canvas, opt_attribs) {
     const browserDesc = getBrowserDesc();
     console.log(browserDesc);
 
-    let names = [ /*'webgl2', */ 'webgl'];
+    let names = [ /*'webgl2',*/ 'webgl'];
     let context = null;
     for (var i = 0; i < names.length; ++i) {
         try {
@@ -48,6 +48,7 @@ var create3DContext = function(canvas, opt_attribs) {
         context.floatTexturesSupported = true;
         context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
         if (context.__ext_half_float) {
+            context.HALF_FLOAT = context.__ext_half_float.HALF_FLOAT_OES;  
             context.floatTextureFilteringSupported = true;
         }
         context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
@@ -68,6 +69,7 @@ var create3DContext = function(canvas, opt_attribs) {
 
         context.__ext_half_float = context.getExtension("OES_texture_half_float");
         if (context.__ext_half_float) {
+            context.HALF_FLOAT = context.__ext_half_float.HALF_FLOAT_OES;  
             context.floatTexturesSupported = true;
             context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
             if (context.__ext_texture_half_float_linear) {
@@ -80,8 +82,18 @@ var create3DContext = function(canvas, opt_attribs) {
         // context.__ext_draw_buffers = context.getExtension("WEBGL_draw_buffers");
 
         context.__ext_Inst = context.getExtension("ANGLE_instanced_arrays");
+        if(context.__ext_Inst) {
+            context.vertexAttribDivisor = context.__ext_Inst.vertexAttribDivisorANGLE.bind(context.__ext_Inst);
+            context.drawArraysInstanced = context.__ext_Inst.drawArraysInstancedANGLE.bind(context.__ext_Inst);
+            context.drawElementsInstanced = context.__ext_Inst.drawElementsInstancedANGLE.bind(context.__ext_Inst);
+        }
         if(browserDesc.browserName != 'Safari'){
             context.__ext_VAO = context.getExtension("OES_vertex_array_object");
+            if(context.__ext_VAO) {
+                context.createVertexArray = context.__ext_VAO.createVertexArrayOES.bind(context.__ext_VAO);
+                context.deleteVertexArray = context.__ext_VAO.deleteVertexArrayOES.bind(context.__ext_VAO);
+                context.bindVertexArray = context.__ext_VAO.bindVertexArrayOES.bind(context.__ext_VAO);
+            }
         }
         context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
         context.__ext_WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix

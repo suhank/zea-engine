@@ -138,7 +138,7 @@ class GLBillboardsPass extends GLPass {
             // re-render the atlas. If re-rendering is needed, add an age
             this.__atlas.renderAtlas();
 
-            if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
+            if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
                 this.__modelMatrixArray = [];
                 this.__billboardDataArray = [];
                 this.__tintColorArray = [];
@@ -295,7 +295,7 @@ class GLBillboardsPass extends GLPass {
         let unifs = renderstate.unifs;
         this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 
-        if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
+        if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
             this.__indexArray.forEach((index)=>{
                 // this.__drawItems[index].bind(renderstate);
                 // this.__glgeom.draw();
@@ -320,11 +320,11 @@ class GLBillboardsPass extends GLPass {
                 gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
                 gl.enableVertexAttribArray(location);
                 gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
-                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+                gl.vertexAttribDivisor(location, 1); // This makes it instanced
             }
 
 
-            gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
+            gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
         }
     }
 };

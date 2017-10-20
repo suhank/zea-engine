@@ -93,7 +93,7 @@ class GLNormalsPass extends GLPass {
                             for(let i=0; i<gldrawitemset.getDrawCount(); i++){
                                 let gldrawitem = gldrawitemset.getGLDrawItem(i);
                                 if (gldrawitem.bind(renderstate)) {
-                                    gl.__ext_Inst.drawArraysInstancedANGLE(gl.LINES, 0, 2, glgeom.getNumSplitVerts());
+                                    gl.drawArraysInstanced(gl.LINES, 0, 2, glgeom.getNumSplitVerts());
                                 }
                             }
                         }

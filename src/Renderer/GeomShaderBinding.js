@@ -29,7 +29,7 @@ class GeomShaderBinding {
                         gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
                         gl.enableVertexAttribArray(location);
                         gl.vertexAttribPointer(location, dimension, gl.FLOAT, false, dimension*4, 0);
-                        gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+                        gl.vertexAttribDivisor(location, 1); // This makes it instanced
                     } else {
                         gl.disableVertexAttribArray(location);
                     }
@@ -48,10 +48,10 @@ class GeomShaderBinding {
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset);
             if(instanced==true){
-                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+                gl.vertexAttribDivisor(location, 1); // This makes it instanced
             }
             else {
-                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 0); // This makes it not-instanced
+                gl.vertexAttribDivisor(location, 0); // This makes it not-instanced
             }
 
             // console.log("Binding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
@@ -73,8 +73,8 @@ class VAOGeomShaderBinding {
     constructor(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers) {
 
         this.__gl = gl;
-        this.__vao = gl.__ext_VAO.createVertexArrayOES();
-        gl.__ext_VAO.bindVertexArrayOES(this.__vao);
+        this.__vao = gl.createVertexArray();
+        gl.bindVertexArray(this.__vao);
 
         for (let attrName in shaderAttrs) {
             let attrDesc = shaderAttrs[attrName];
@@ -103,10 +103,10 @@ class VAOGeomShaderBinding {
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset);
             if(instanced){
-                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+                gl.vertexAttribDivisor(location, 1); // This makes it instanced
             }
             else {
-                gl.__ext_Inst.vertexAttribDivisorANGLE(location, 0); // This makes it not-instanced
+                gl.vertexAttribDivisor(location, 0); // This makes it not-instanced
             }
 
             // console.log("Binding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
@@ -117,22 +117,18 @@ class VAOGeomShaderBinding {
     }
 
     bind(renderstate) {
-        this.__gl.__ext_VAO.bindVertexArrayOES(this.__vao);
+        this.__gl.bindVertexArray(this.__vao);
         this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
         return true;
     }
 
-    unbind() {
-        this.__gl.__ext_VAO.bindVertexArrayOES(null);
-    }
-
     destroy(){
-        this.__gl.__ext_VAO.deleteVertexArrayOES(this.__vao);
+        this.__gl.deleteVertexArray(this.__vao);
     }
 };
 
 function generateShaderGeomBinding(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers){
-    if(gl.__ext_VAO == null){
+    if(gl.createVertexArray == null){
         return new GeomShaderBinding(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers);
     }
     else{

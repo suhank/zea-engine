@@ -196,7 +196,7 @@ class GLDrawItemSet {
         }
         // return;
 
-        if(!gl.floatTexturesSupported || !gl.__ext_Inst) {
+        if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
             this.__visibleItems.forEach((index)=>{
                 this.__drawItems[index].bind(renderstate);
                 this.__glgeom.draw();
@@ -215,7 +215,7 @@ class GLDrawItemSet {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
             gl.enableVertexAttribArray(location);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1*4, 0);
-            gl.__ext_Inst.vertexAttribDivisorANGLE(location, 1); // This makes it instanced
+            gl.vertexAttribDivisor(location, 1); // This makes it instanced
 
 
             this.__glgeom.drawInstanced(this.__drawCount);

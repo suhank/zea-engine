@@ -56,7 +56,24 @@ class Lines extends BaseGeom {
     
     genBuffers() {
         let buffers = super.genBuffers();
-        buffers.indices = this.__indices;
+
+        let indices;
+        if (buffers.numVertices < Math.pow(2, 8)){
+            indices = new Uint8Array(this.__indices.length);
+            this.__indices.forEach((value, index)=>{
+                indices[index] = value;
+            });
+        }
+        else if (totalNumVertices < Math.pow(2, 16)){
+            indices = new Uint16Array(this.__indices.length);
+            this.__indices.forEach((value, index)=>{
+                indices[index] = value;
+            });
+        }
+        else{
+            indices = this.__indices;
+        }
+        buffers.indices = indices;
         return buffers;
     }
 

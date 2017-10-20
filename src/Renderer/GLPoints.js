@@ -55,7 +55,7 @@ class GLPoints extends GLGeom {
 
     draw() {
         let gl = this.__gl;
-        gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__geom.numVertices());
+        gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__geom.numVertices());
     }
 };
 export {

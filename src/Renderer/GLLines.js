@@ -105,10 +105,16 @@ class GLLines extends GLGeom {
             }
 
             // Cache the size so we know later if it changed (see below)
-            this.__numVertices = geomBuffers.numVertices;
             this.__numSegIndices = indices.length;
+            this.__numVertices = geomBuffers.numVertices;
         }
 
+        if(indices instanceof Uint8Array)
+            this.__indexDataType = this.__gl.UNSIGNED_BYTE;
+        if(indices instanceof Uint16Array)
+            this.__indexDataType = this.__gl.UNSIGNED_SHORT;
+        if(indices instanceof Uint32Array)
+            this.__indexDataType = this.__gl.UNSIGNED_INT;
     }
 
     updateBuffers(opts) {
@@ -118,7 +124,7 @@ class GLLines extends GLGeom {
 
         if (this.fatLines) {
 
-            this.__drawCount = indices.length / 2;
+            this.__drawCount = indices.length / 2; // every pair of verts draws a quad.
 
             let vertexAttributes = this.__geom.getVertexAttributes();
 
@@ -186,6 +192,13 @@ class GLLines extends GLGeom {
             this.__numVertices = geomBuffers.numVertices;
             this.__numSegIndices = indices.length;
         }
+
+        if(indices instanceof Uint8Array)
+            this.__indexDataType = this.__gl.UNSIGNED_BYTE;
+        if(indices instanceof Uint16Array)
+            this.__indexDataType = this.__gl.UNSIGNED_SHORT;
+        if(indices instanceof Uint32Array)
+            this.__indexDataType = this.__gl.UNSIGNED_INT;
     }
 
     bind(renderstate, extrAttrBuffers, transformIds) {
@@ -232,9 +245,9 @@ class GLLines extends GLGeom {
     draw() {
         let gl = this.__gl;
         if (this.fatLines) {
-            gl.__ext_Inst.drawElementsInstancedANGLE(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
+            gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
         } else {
-            this.__gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__gl.UNSIGNED_INT, 0);
+            gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0);
         }
     }
 };

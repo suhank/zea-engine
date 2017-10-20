@@ -67,21 +67,26 @@ class GLFbo {
         this.__fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
-        if (this.__colorTexture.getFormat() == 'FLOAT' && gl.name != 'webgl2') {
-            if(gl.__ext_float){
-                if (this.__colorTexture.getFilter() == 'LINEAR') {
-                    if (!gl.__ext_float_linear)
-                        throw ("Unable to use filtering on floating point textures");
+        if(gl.name == 'webgl2'){
+
+        }
+        else {
+            if (this.__colorTexture.getFormat() == 'FLOAT') {
+                if(gl.__ext_float){
+                    if (this.__colorTexture.getFilter() == 'LINEAR') {
+                        if (!gl.__ext_float_linear)
+                            throw ("Unable to use filtering on floating point textures");
+                    }
                 }
-            }
-            else if(gl.__ext_half_float){
-                if (this.__colorTexture.getFilter() == 'LINEAR') {
-                    if (!gl.__ext_texture_half_float_linear)
-                        throw ("Unable to use filtering on half-floating point textures");
+                else if(gl.__ext_half_float){
+                    if (this.__colorTexture.getFilter() == 'LINEAR') {
+                        if (!gl.__ext_texture_half_float_linear)
+                            throw ("Unable to use filtering on half-floating point textures");
+                    }
                 }
-            }
-            else{
-                throw("floating point textures unsupported.");
+                else{
+                    throw("floating point textures unsupported.");
+                }
             }
         }
 
