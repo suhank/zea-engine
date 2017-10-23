@@ -343,18 +343,20 @@ class GLShader extends BaseItem {
 
         const attachTexture = (paramName, texture) => {
             const genGLTex = () => {
-                let gltexture;
-                if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
-                    gltexture = new GLHDRImage(this.__gl, texture);
-                }
-                else if (texture.isStreamAtlas()){
-                    gltexture = new GLImageStream(this.__gl, texture);
-                }
-                // else if (texture.hasAlpha()){
-                //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
-                // }
-                else{
-                    gltexture = new GLTexture2D(this.__gl, texture);
+                let gltexture = texture.getMetadata('gltexture');
+                if(!gltexture) {
+                    if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
+                        gltexture = new GLHDRImage(this.__gl, texture);
+                    }
+                    else if (texture.isStreamAtlas()){
+                        gltexture = new GLImageStream(this.__gl, texture);
+                    }
+                    // else if (texture.hasAlpha()){
+                    //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                    // }
+                    else{
+                        gltexture = new GLTexture2D(this.__gl, texture);
+                    }
                 }
                 gltexture.updated.connect(this.updated.emit);
                 this.__gltextures[paramName] = gltexture;

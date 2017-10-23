@@ -19,6 +19,7 @@ class GLHDRImage extends GLTexture2D {
         super(gl);
 
         this.__hdrImage = hdrImage;
+        this.__hdrImage.setMetadata('gltexture', this);
         this.__hdrImage.updated.connect(() => {
             this.__unpackHDRImage(this.__hdrImage.getParams());
         });

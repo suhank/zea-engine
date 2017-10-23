@@ -33,6 +33,7 @@ class GLTexture2D extends RefCounted {
         if (params != undefined) {
             if (params instanceof Image2D) {
                 this.__texture = params;
+                this.__texture.setMetadata('gltexture', this);
                 if (this.__texture.isLoaded()) {
                     this.configure(this.__texture.getParams());
                     this.__texture.updated.connect(imageUpdated);
@@ -309,6 +310,9 @@ class GLTexture2D extends RefCounted {
 
     destroy() {
         super.destroy();
+        if(this.__texture){
+            this.__texture.setMetadata('gltexture', undefined);
+        }
         this.__gl.deleteTexture(this.__gltex);
         this.__gltex = undefined;
     }

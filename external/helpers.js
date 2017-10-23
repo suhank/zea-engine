@@ -84,7 +84,11 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             for(let i=0; i<3; i++){
                 // PAth for the env and the lightmaps for the env
                 generatePath(assetDesc[2] + i + ".vlh");
-                generatePath(assetDesc[0] + "_" + assetDesc[2] + "_Lightmap" + i + ".vlh");
+                let envMapName = assetDesc[2].split('/');
+                if(envMapName.length > 1)
+                    envMapName.shift();
+                envMapName = envMapName[0];
+                generatePath(assetDesc[0] + "_" + envMapName + "_Lightmap" + i + ".vlh");
             }
         }
     }

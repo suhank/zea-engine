@@ -145,10 +145,13 @@ class GLVisualiveRenderer extends GLRenderer {
         if (scene.getBackgroundMap() != undefined) {
             let gl = this.__gl;
             let backgroundMap = scene.getBackgroundMap();
-            if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
-                this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
-            } else {
-                this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
+            this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
+            if(!this.__glBackgroundMap ) {
+                if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
+                    this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
+                } else {
+                    this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
+                }
             }
             this.__glBackgroundMap.ready.connect(this.requestRedraw);
             this.__glBackgroundMap.updated.connect(this.requestRedraw);
@@ -184,8 +187,12 @@ class GLVisualiveRenderer extends GLRenderer {
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLLightmapMixer(this.__gl, lightmap);
-            else
-                gllightmap = new GLHDRImage(this.__gl, lightmap.image);
+            else{
+                gllightmap = lightmap.image.getMetadata('gltexture');
+                if(!gllightmap){
+                    gllightmap = new GLHDRImage(this.__gl, lightmap.image);
+                }
+            }
             gllightmap.updated.connect((data) => {
                 this.requestRedraw();
             });

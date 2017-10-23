@@ -1,4 +1,7 @@
 import {
+    getSystemDesc
+} from '../BrowserDetection.js';
+import {
     Signal,
     JSON_stringify_fixedPrecision
 } from '../Math';
@@ -21,12 +24,15 @@ import {
     ResourceLoader
 } from './ResourceLoader.js';
 import {
-    Lightmap, LightmapMixer
+    Lightmap,
+    LightmapMixer
 } from './Lightmap.js';
 
 
 class Scene {
     constructor(resources) {
+
+        let systemDesc = getSystemDesc();
 
         this.cameras = [];
         this.__root = new TreeItem('root');
@@ -37,28 +43,32 @@ class Scene {
         // Background map used only for backgrounds. Overrides env map.
         this.__backgroundMap = undefined;
         this.__lightmaps = {};
-        this.__lightmapLOD = 1;
+
+        if (systemDesc.isMobileDevice || systemDesc.browserName != 'Chrome')
+            this.__lightmapLOD = 2;
+        else
+            this.__lightmapLOD = 0;
+
         this.__selectionManager = new SelectionManager();
         this.__resourceLoader = new ResourceLoader(resources);
-
-        this.backgroundMapChanged = new Signal();
-        this.envMapChanged = new Signal();
-        this.lightmapAdded = new Signal();
-        this.commonResourcesLoaded = new Signal(true);
-
-        /////////////////////////////
-        // Time
-        this.__sceneTime = 0.0; 
-        this.__sceneDuration = 10.0;
-        this.__playing = false;
-
-        this.sceneTimeChanged = new Signal();
-        this.sceneDurationChanged = new Signal();
 
         // Common resources are used by systems such at the renderer and VR controllers.
         // Any asset that will probably be used my multiple differeint independent objects
         // should be loaded here. (For now, it is being used to laod VR Controller assets.)
         this.__commonResources = {};
+
+        /////////////////////////////
+        // Time
+        this.__sceneTime = 0.0;
+        this.__sceneDuration = 10.0;
+        this.__playing = false;
+
+        this.backgroundMapChanged = new Signal();
+        this.envMapChanged = new Signal();
+        this.lightmapAdded = new Signal();
+        this.commonResourcesLoaded = new Signal(true);
+        this.sceneTimeChanged = new Signal();
+        this.sceneDurationChanged = new Signal();
     }
 
     getRoot() {
@@ -70,7 +80,7 @@ class Scene {
     }
 
     loadCommonAssetResource(path) {
-        if(path in this.__commonResources) {
+        if (path in this.__commonResources) {
             return this.__commonResources[path];
         }
         let asset = new VLAAsset(path, this.__resourceLoader);
@@ -85,6 +95,13 @@ class Scene {
 
     getEnvMap() {
         return this.__envMap;
+    }
+
+    setEnvMapName(envMapName) {
+        if(envMapName.endsWith('.vlh'))
+            envMapName = envMapName.splice(0, envMapName.length = 4);
+        let envMap = new Visualive.FileImage2D(envMapName + this.__lightmapLOD + ".vlh", this.__resourceLoader);
+        this.setEnvMap(envMap);
     }
 
     setEnvMap(envMap) {
@@ -122,7 +139,7 @@ class Scene {
 
     setLightMap(name, lightmap) {
         if (!(lightmap instanceof Lightmap || lightmap instanceof LightmapMixer)) {
-            throw("Object passed is not a Lightmap:" + lightmap.constructor.name);
+            throw ("Object passed is not a Lightmap:" + lightmap.constructor.name);
         }
         this.__lightmaps[name] = lightmap;
         this.lightmapAdded.emit(name, lightmap);
@@ -132,11 +149,13 @@ class Scene {
         return this.__lightmaps;
     }
 
-    addAsset(asset){
-        asset.loaded.connect(()=>{
-            if(this.__envMap) {
-                let lightmapName = asset.getName() + "_" + this.__envMap.getName() + "_Lightmap"+this.__lightmapLOD+".vlh";
-                if(!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapName)) {
+    addAsset(asset) {
+        asset.loaded.connect(() => {
+            if (this.__envMap) {
+                let path = asset.getParameter('FilePath').getValue();
+
+                let lightmapName = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
+                if (!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapName)) {
                     let lightmap = new Visualive.Lightmap(lightmapName, asset.getLightmapSize(), this.__resourceLoader);
                     this.setLightMap(asset.getName(), lightmap);
                 }
@@ -146,7 +165,7 @@ class Scene {
         this.__root.addChild(asset);
     }
 
-    getAssets() { 
+    getAssets() {
         return this.__assets;
     }
 
@@ -158,10 +177,10 @@ class Scene {
         return this.__sceneTime;
     }
 
-    setSceneTime(sceneTime, stopPlaying=true) {
+    setSceneTime(sceneTime, stopPlaying = true) {
         this.__sceneTime = sceneTime;
         this.sceneTimeChanged.emit(this.__sceneTime);
-        if(stopPlaying)
+        if (stopPlaying)
             this.__playing = false;
     }
 
@@ -176,10 +195,10 @@ class Scene {
 
     startPlaying(sceneTime) {
         let prev = Date.now();
-        let onAnimationFrame = ()=>{
+        let onAnimationFrame = () => {
             let now = Date.now();
             let newTime = this.__sceneTime + ((now - prev) / 1000);
-            if(newTime > this.__sceneDuration){
+            if (newTime > this.__sceneDuration) {
                 // newTime = 0;
                 this.__playing = false;
             }
