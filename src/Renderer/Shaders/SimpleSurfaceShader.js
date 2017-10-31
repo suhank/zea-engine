@@ -50,7 +50,7 @@ void main(void) {
     vec4 viewPos    = modelViewMatrix * vec4(positions, 1.);
     gl_Position = projectionMatrix * viewPos;
 
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 

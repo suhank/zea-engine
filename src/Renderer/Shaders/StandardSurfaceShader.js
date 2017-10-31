@@ -82,7 +82,7 @@ void main(void) {
 
     v_worldPos      = (modelMatrix * pos).xyz;
 
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 }

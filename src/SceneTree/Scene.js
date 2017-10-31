@@ -154,10 +154,11 @@ class Scene {
             if (this.__envMap) {
                 let path = asset.getParameter('FilePath').getValue();
 
-                let lightmapName = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
-                if (!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapName)) {
-                    let lightmap = new Visualive.Lightmap(lightmapName, asset.getLightmapSize(), this.__resourceLoader);
-                    this.setLightMap(asset.getName(), lightmap);
+                let lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
+                let lightmapName = asset.getName();
+                if (!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapPath)) {
+                    let lightmap = new Visualive.Lightmap(lightmapPath, asset.getLightmapSize(), this.__resourceLoader);
+                    this.setLightMap(lightmapName, lightmap);
                 }
             }
         });
