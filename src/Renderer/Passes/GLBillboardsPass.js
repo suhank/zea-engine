@@ -317,8 +317,8 @@ class GLBillboardsPass extends GLPass {
             {
                 // The instance transform ids are bound as an instanced attribute.
                 let location = renderstate.attrs.instanceIds.location;
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
                 gl.enableVertexAttribArray(location);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
                 gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
                 gl.vertexAttribDivisor(location, 1); // This makes it instanced
             }

@@ -305,6 +305,11 @@ class GLTexture2D extends RefCounted {
             gl.uniform1i(textureConnctedUnif.location, type);
         }
 
+        let textureSizeUnif = renderstate.unifs[unif.name+'Size'];
+        if (textureSizeUnif){
+            gl.uniform1i(textureSizeUnif.location, this.width);
+        }
+
         return true;
     }
 

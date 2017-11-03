@@ -57,11 +57,12 @@ class Grid extends Lines {
     }
 
     __rebuild() {
-        this.setNumVertices((this.__xDivisions + this.__zDivisions + 2 - (this.__skipCenterLines ? 1 : 0)) * 2);
-        this.setNumSegments(this.__xDivisions + this.__zDivisions + 2 - (this.__skipCenterLines ? 1 : 0));
+        const skipCenterLines = this.__skipCenterLines && (this.__xDivisions % 2) == 0 && (this.__zDivisions % 2) == 0;
+        this.setNumVertices((this.__xDivisions + this.__zDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2);
+        this.setNumSegments(this.__xDivisions + this.__zDivisions + 2 - (skipCenterLines ? 1 : 0));
         let idx = 0;
         for (let i = 0; i <= this.__xDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
@@ -69,7 +70,7 @@ class Grid extends Lines {
             idx++;
         }
         for (let i=0; i <= this.__zDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
@@ -80,9 +81,10 @@ class Grid extends Lines {
     }
 
     __resize() {
+        const skipCenterLines = this.__skipCenterLines && (this.__xDivisions % 2) == 0 && (this.__zDivisions % 2) == 0;
         let idx = 0;
         for (let i = 0; i <= this.__xDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
@@ -92,7 +94,7 @@ class Grid extends Lines {
             idx++;
         }
         for (let i = 0; i <= this.__zDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);

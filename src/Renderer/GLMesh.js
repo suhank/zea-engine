@@ -92,8 +92,8 @@ class GLMesh extends GLGeom {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wireframeIndices, gl.STATIC_DRAW);
 
         let positionsBuffer = this.__glattrbuffers['positions'].buffer;
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
         gl.enableVertexAttribArray(0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
         gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0);
 
         this.__numWireIndices = wireframeIndices.length;
@@ -143,8 +143,8 @@ class GLMesh extends GLGeom {
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW);
 
         let positionsBuffer = this.__glattrbuffers['positions'].buffer;
-        gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
         gl.enableVertexAttribArray(0);
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
         gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0);
 
         this.__numEdgeIndices = hardEdgeIndices.length;

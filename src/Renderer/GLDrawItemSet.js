@@ -28,6 +28,11 @@ class GLDrawItemSet {
         return this.__drawItems[index];
     }
 
+    //  Note: used by patternade to iterate over times.
+    getGLDrawItems(){
+        return this.__drawItems;
+    }
+
     // isInverted() {
     //     return this.__inverted;
     // }
@@ -53,15 +58,18 @@ class GLDrawItemSet {
             else
                 this.__drawCount--;
             this.__instancedIdsBufferDirty = true;
-        })
+        });
+
         gldrawItem.destructing.connect(() => {
             this.__drawItems.splice(index, 1);
-            this.__drawCount--;
+            if(gldrawItem.visible)
+                this.__drawCount--;
             if(this.__drawItems.length == 0){
                 // Destroy??
             }
             this.__instancedIdsBufferDirty = true;
         });
+
         this.__instancedIdsBufferDirty = true;
     }
 
@@ -212,8 +220,8 @@ class GLDrawItemSet {
 
             // The instanced transform ids are bound as an instanced attribute.
             let location = renderstate.attrs.instancedIds.location;
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
             gl.enableVertexAttribArray(location);
+            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
             gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1*4, 0);
             gl.vertexAttribDivisor(location, 1); // This makes it instanced
 
@@ -228,4 +236,3 @@ class GLDrawItemSet {
 export {
     GLDrawItemSet
 };
-// export default GLDrawItemSet;

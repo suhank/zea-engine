@@ -235,8 +235,6 @@ class GLCollector {
         // Use recycled indices if there are any available...
         if (this.__drawItemsIndexFreeList.length > 0) {
             index = this.__drawItemsIndexFreeList.pop();
-            // We will need to re-populate the array from here.
-            this.__transformsDataArrayHighWaterMark = index;
         } else {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
@@ -494,6 +492,8 @@ class GLCollector {
         this.__dirtyItemIndices = [];
         this.renderTreeUpdated.emit();
     };
+
+    
     finalize() {
         if (this.__dirtyItemIndices.length == 0)
             return;
@@ -506,7 +506,6 @@ class GLCollector {
         let unifs = renderstate.unifs;
         if (this.__drawItemsTexture && unifs.instancesTexture) {
             this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture);
-            gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width);
         }
         return true;
     };

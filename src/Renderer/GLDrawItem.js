@@ -124,6 +124,10 @@ class GLDrawItem {
         // Pull on the GeomXfo param. This will trigger the lazy evaluation of the operators in the scene.
         this.__modelMatrixArray = this.__geomItem.getGeomXfo().toMat4().asArray();
     }
+
+    getGeomMatrixArray(){
+        return this.__modelMatrixArray;
+    }
     
     bind(renderstate) {
 

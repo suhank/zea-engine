@@ -1,5 +1,26 @@
+
+// class GLNURBSSurfaceDrawItem {
+//     constructor(id) {
+//         this.instanceId = id;
+//         this.visibilityChanged = new Visualive.Signal();
+//         this.lodChanged = new Visualive.Signal();
+//     }
+// }
+
 testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
+
+    // // 1Gb per Million instances.
+    // // 1Mb per instance?
+    // window.surfaceItems = [];
+    // const makeInst = (id)=>{
+    //     const inst = new GLNURBSSurfaceDrawItem(id);
+    //     window.surfaceItems.push(inst);
+
+    // }
+    // for(let i=0; i<5000000; i++) {
+    //     makeInst(i);
+    // }
 
 
     let size = 2;
@@ -45,7 +66,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     
     function getNumSurfacesQuadSize(pct) {
       let min = 5000;
-      let max = 17000;
+      let max = 10000;///17000;
       let r = Math.pow(pct, 3);
       return Math.floor(r * (max - min)) + min; //The maximum is inclusive and the minimum is inclusive 
     }
@@ -88,9 +109,12 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     }
     console.log("total:" + total);
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    
+    let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
+    renderer.setupGrid(24, new Visualive.Color(.35,.35, .35), 24, .1)
     renderer.frameAll();
     renderer.resumeDrawing();
+
 });
