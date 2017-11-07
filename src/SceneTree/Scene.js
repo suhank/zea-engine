@@ -1,5 +1,5 @@
 import {
-    getSystemDesc
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Signal,
@@ -31,9 +31,7 @@ import {
 
 class Scene {
     constructor(resources) {
-
-        let systemDesc = getSystemDesc();
-
+        
         this.cameras = [];
         this.__root = new TreeItem('root');
         this.__assets = [];
@@ -44,7 +42,7 @@ class Scene {
         this.__backgroundMap = undefined;
         this.__lightmaps = {};
 
-        if (systemDesc.isMobileDevice || systemDesc.browserName != 'Chrome')
+        if (SystemDesc.isMobileDevice || SystemDesc.browserName != 'Chrome')
             this.__lightmapLOD = 2;
         else
             this.__lightmapLOD = 0;

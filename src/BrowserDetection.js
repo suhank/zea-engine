@@ -152,9 +152,5 @@ function getSystemDesc() {
 const SystemDesc = getSystemDesc();
 
 export {
-    isIOSDevice,
-    isMobileDevice,
-    getBrowserDesc,
-    getSystemDesc,
     SystemDesc
 };
