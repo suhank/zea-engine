@@ -151,7 +151,6 @@ class GLRenderer {
         this.setupWebGL(canvasDiv, webglOptions);
 
 
-
         this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
@@ -160,6 +159,11 @@ class GLRenderer {
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
         this.addPass(new GLBillboardsPass(this));
+
+        // Setup the Audio context.
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.__audioCtx = new AudioContext();
+
 
         this.addViewport('main');
 
@@ -193,6 +197,10 @@ class GLRenderer {
 
     getCollector() {
         return this.__collector;
+    }
+
+    getAudioContext() {
+        return this.__audioCtx;
     }
 
     getGeomDataPass() {
@@ -313,10 +321,49 @@ class GLRenderer {
         return undefined;
     }
 
+    __updateListnerPosition() {
+        const listener = this.__audioCtx.listener;
+        const globalXfo = this.__activeViewport.getCamera().getGlobalXfo();
+        if(listener.positionX) {
+            listener.positionX.value = globalXfo.tr.x;
+            listener.positionY.value = globalXfo.tr.y;
+            listener.positionZ.value = globalXfo.tr.z;
+        } else {
+            listener.setPosition(globalXfo.tr.x, globalXfo.tr.y, globalXfo.tr.z);
+        }
+
+        const zdir = globalXfo.ori.getZaxis().negate();
+        const ydir = globalXfo.ori.getYaxis();
+        if(listener.orientationX) {
+          listener.orientationX.value = zdir.x;
+          listener.orientationY.value = zdir.y;
+          listener.orientationZ.value = zdir.z;
+        } else {
+          listener.setOrientation(zdir.x, zdir.y, zdir.z, ydir.x, ydir.y, ydir.z);
+        }
+    }
+
+    activateViewport(vp) {
+
+        if(this.__activeViewport == vp) 
+            return;
+
+        if(this.__activeViewport) {
+            const prevcamera = vp.getCamera();
+            prevcamera.viewMatChanged.disconnect(this.__updateListnerPosition.bind(this));
+
+        }
+
+        const camera = vp.getCamera();
+        camera.viewMatChanged.connect(this.__updateListnerPosition.bind(this));
+
+        this.__activeViewport = vp;
+    }
+
     activateViewportAtPos(offsetX, offsetY) {
         if (this.__vrViewport && this.__vrViewport.isPresenting())
             return this.__vrViewport;
-        this.__activeViewport = this.getViewportAtPos(offsetX, offsetY);
+        this.activateViewport(this.getViewportAtPos(offsetX, offsetY));
         return this.__activeViewport;
     }
 
