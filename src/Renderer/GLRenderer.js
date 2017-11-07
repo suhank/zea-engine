@@ -5,8 +5,7 @@ import {
     Signal
 } from '../Math';
 import {
-    isMobileDevice,
-    getBrowserDesc
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     onResize
@@ -115,6 +114,7 @@ class GLRenderer {
         this.__redrawRequested = false;
         this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
         this.__supportSessions = false;//options.supportSessions !== undefined ? options.supportSessions : true;
+        this.__isMobile = SystemDesc.isMobileDevice;
 
         this.__drawSuspensionLevel = 1;
         this.__renderstate = {};
@@ -207,7 +207,7 @@ class GLRenderer {
         const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
         this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 
-        const axisLine = new Lines('axisLine');
+        const axisLine = new Lines();
         axisLine.setNumVertices(2);
         axisLine.setNumSegments(1);
         axisLine.setSegment(0, 0, 1);
@@ -416,7 +416,7 @@ class GLRenderer {
         }
 
         // Note: using the geom data pass crashes VR scenes.
-        // const isMobile = isMobileDevice();
+        
         this.__floatGeomBuffer = false;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
@@ -658,7 +658,8 @@ class GLRenderer {
     __setupVRViewport() {
         return navigator.getVRDisplays().then((displays) => {
             if (displays.length > 0) {
-                let vrvp = new VRViewport(this, displays[0]);
+                // Always get the last display. Additional displays are added at the end.(Polyfill, HMD)
+                let vrvp = new VRViewport(this, displays[displays.length-1]);
 
                 vrvp.viewChanged.connect((data) => {
                     this.viewChanged.emit(data);
@@ -772,8 +773,31 @@ class GLRenderer {
         if (this.__drawSuspensionLevel > 0)
             return;
 
-        for (let vp of this.__viewports)
+        const gl = this.__gl;
+
+        if (this.__vrViewport) {
+            if (this.__vrViewport.isPresenting()) {
+                this.__vrViewport.draw(this.__renderstate);
+                if (this.mirrorVRisplayToViewport) {
+                    gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+                    gl.disable(gl.SCISSOR_TEST);
+                    this.redrawOccured.emit();
+                    return;
+                }
+            } 
+            // Cannot upate the view, else it sends signals which
+            // end up propagating through the websocket. 
+            // TODO: Make the head invisible till active
+            // else
+            //     this.__vrViewport.updateHeadAndControllers();
+        }
+
+        this.__viewports.forEach((vp)=>{
             this.drawVP(vp);
+        });
+
+        gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+        // gl.disable(gl.SCISSOR_TEST);
 
         this.redrawOccured.emit();
 

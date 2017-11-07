@@ -411,6 +411,8 @@ class GLShader extends BaseItem {
         renderstate.shaderkey = this.constructor.name;
         renderstate.boundTextures = 0;
         renderstate.boundLightmap = undefined;
+        // Make sure we clear the binding cached.
+        renderstate.glgeom = undefined;
 
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;

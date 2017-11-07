@@ -1,13 +1,11 @@
 import {
-    isMobileDevice,
-    getBrowserDesc
+    SystemDesc
 } from '../BrowserDetection.js';
 
 
 var create3DContext = function(canvas, opt_attribs) {
 
-    const browserDesc = getBrowserDesc();
-    console.log(browserDesc);
+    console.log(SystemDesc);
 
     let names = [ /*'webgl2',*/ 'webgl'];
     let context = null;
@@ -87,7 +85,7 @@ var create3DContext = function(canvas, opt_attribs) {
             context.drawArraysInstanced = context.__ext_Inst.drawArraysInstancedANGLE.bind(context.__ext_Inst);
             context.drawElementsInstanced = context.__ext_Inst.drawElementsInstancedANGLE.bind(context.__ext_Inst);
         }
-        if(browserDesc.browserName != 'Safari'){
+        if(SystemDesc.browserName != 'Safari'){
             context.__ext_VAO = context.getExtension("OES_vertex_array_object");
             if(context.__ext_VAO) {
                 context.createVertexArray = context.__ext_VAO.createVertexArrayOES.bind(context.__ext_VAO);

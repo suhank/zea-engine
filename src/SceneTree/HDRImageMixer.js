@@ -1,4 +1,7 @@
 import {
+    SystemDesc
+} from '../BrowserDetection.js';
+import {
     Async,
     Signal
 } from '../Math';
@@ -14,7 +17,7 @@ class HDRImageMixer extends Image2D {
         super({
             format: 'FLOAT',
             channels: 'RGB',
-            filter: isMobileDevice() ? 'NEAREST' : 'LINEAR'
+            filter: SystemDesc.isMobileDevice ? 'NEAREST' : 'LINEAR'
         });
 
         this.__name = name;

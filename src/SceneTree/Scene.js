@@ -48,6 +48,7 @@ class Scene {
             this.__lightmapLOD = 2;
         else
             this.__lightmapLOD = 0;
+        this.__envmapLOD = this.__lightmapLOD;
 
         this.__selectionManager = new SelectionManager();
         this.__resourceLoader = new ResourceLoader(resources);
@@ -93,6 +94,14 @@ class Scene {
         return this.__selectionManager;
     }
 
+    getEnvMapLOD() {
+        return this.__envmapLOD;
+    }
+
+    setEnvMapLOD(lod) {
+        this.__envmapLOD = lod;
+    }
+
     getEnvMap() {
         return this.__envMap;
     }
@@ -100,7 +109,7 @@ class Scene {
     setEnvMapName(envMapName) {
         if(envMapName.endsWith('.vlh'))
             envMapName = envMapName.splice(0, envMapName.length = 4);
-        let envMap = new Visualive.FileImage2D(envMapName + this.__lightmapLOD + ".vlh", this.__resourceLoader);
+        let envMap = new Visualive.FileImage2D(envMapName + this.__envmapLOD + ".vlh", this.__resourceLoader);
         this.setEnvMap(envMap);
     }
 
@@ -155,6 +164,7 @@ class Scene {
                 let path = asset.getParameter('FilePath').getValue();
 
                 let lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
+                console.log(lightmapPath);
                 let lightmapName = asset.getName();
                 if (!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapPath)) {
                     let lightmap = new Visualive.Lightmap(lightmapPath, asset.getLightmapSize(), this.__resourceLoader);

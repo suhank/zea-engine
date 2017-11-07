@@ -1,5 +1,5 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Vec2,
@@ -356,8 +356,8 @@ class GLViewport extends BaseViewport {
                 if (ray == null)
                     return;
                 let xfo = this.__camera.getGlobalXfo().clone();
-                xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                let thickness = this.__camera.focalDistance * 0.002;
+                xfo.tr = ray.pointAtDist(this.__camera.getFocalDistance());
+                let thickness = this.__camera.getFocalDistance() * 0.002;
 
                 this.__currStrokeID++;
                 this.actionStarted.emit({
@@ -620,7 +620,7 @@ class GLViewport extends BaseViewport {
                     if (ray == null)
                         return;
                     let xfo = this.__camera.getGlobalXfo().clone();
-                    xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
+                    xfo.tr = ray.pointAtDist(this.__camera.getFocalDistance());
                     // this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
                     this.actionOccuring.emit({
                         type: 'strokeSegmentAdded',

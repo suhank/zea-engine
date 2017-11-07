@@ -1,5 +1,5 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Signal,
@@ -60,7 +60,7 @@ class MaterialLibrary {
         this.__materials['Default'] = material;
 
         this.lod = 0;
-        if(isMobileDevice())
+        if(SystemDesc.isMobileDevice)
             this.lod = 1;
         this.loaded = new Signal();
     }

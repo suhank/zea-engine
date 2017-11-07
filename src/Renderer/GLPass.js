@@ -45,6 +45,8 @@ class GLPass {
 
     draw(renderstate) {
         let gl = this.__gl;
+
+
         // let passProfile = [];
         // renderstate.profileJSON[this.constructor.name] = passProfile;
 

@@ -1,6 +1,9 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
+import {
+    Xfo
+} from '../Math';
 import {
     HDRImage2D,
     HDRImageMixer,
@@ -110,7 +113,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (!options.disableTextures)
             this.addShaderPreprocessorDirective('ENABLE_TEXTURES');
 
-        if (!isMobileDevice()) {
+        if (!SystemDesc.isMobileDevice) {
             if(!options.disableSpecular)
                 this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
             // this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
@@ -410,43 +413,6 @@ class GLVisualiveRenderer extends GLRenderer {
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
 
-
-    draw() {
-        if (this.__drawSuspensionLevel > 0)
-            return;
-
-        let gl = this.__gl;
-
-        if (this.__vrViewport) {
-            if (this.__vrViewport.isPresenting()) {
-                this.__vrViewport.draw(this.__renderstate);
-                if (this.mirrorVRisplayToViewport) {
-                    gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-                    gl.disable(gl.SCISSOR_TEST);
-                    this.redrawOccured.emit();
-                    return;
-                }
-            }
-            // Cannot upate the view, else it sends signals which
-            // end up propagating through the websocket. 
-            // TODO: Make the head invisible till active
-            // else
-            //     this.__vrViewport.updateHeadAndControllers();
-        }
-
-        for (let vp of this.__viewports)
-            this.drawVP(vp);
-
-        gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-        // gl.disable(gl.SCISSOR_TEST);
-
-        // console.log("Draw Calls:" + this.__renderstate.drawCalls + " Draw Count:" + this.__renderstate.drawCount);
-        this.redrawOccured.emit();
-
-        // New Items may have been added during the pause.
-        if (this.__redrawGeomDataFbos)
-            this.renderGeomDataFbos();
-    }
 
     ////////////////////////////
     // Debugging

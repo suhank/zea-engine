@@ -1,6 +1,6 @@
 
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Vec2,
@@ -34,7 +34,7 @@ class Camera extends TreeItem {
         this.__nearParam = this.addParameter('near', 0.1);
         this.__farParam = this.addParameter('far', 1000.0);
         this.__focalDistanceParam = this.addParameter('focalDistance', 5.0);
-        this.__orbitRateParam = this.addParameter('orbitRate', isMobileDevice() ? -0.002 : 0.01);
+        this.__orbitRateParam = this.addParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01);
         this.__dollySpeedParam = this.addParameter('dollySpeed', 0.02);
         this.__mouseWheelDollySpeedParam = this.addParameter('mouseWheelDollySpeed', 0.002);
 
@@ -298,7 +298,7 @@ class Camera extends TreeItem {
 
 
         let zoomDist = dragDist * focalDistance;
-        this.focalDistance = this.__mouseDownFocalDist + zoomDist;
+        this.setFocalDistance(this.__mouseDownFocalDist + zoomDist);
         delta.tr.z += zoomDist;
         this.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }

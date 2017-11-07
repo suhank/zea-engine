@@ -85,7 +85,7 @@ class UserAvatar {
     }
 
     setViveRepresentation() {
-        if (!this.__viveTree) {
+        if (!this.__viveTree && renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
 
             this.__viveTree = new TreeItem("ViveRepresentation");
             this.__viveTree.addChild(treeItem);

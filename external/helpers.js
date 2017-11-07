@@ -23,7 +23,7 @@ let addCanvas = function(width, height) {
         resizeDiv.style.position = 'fixed';
         resizeDiv.style.top = 0;
         resizeDiv.style.left = 0;
-        resizeDiv.style.overflow = 'hidden';
+        // resizeDiv.style.overflow = 'hidden';
     } else {
         resizeDiv.style.position = 'relative';
         resizeDiv.style.width = width + 'px';

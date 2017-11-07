@@ -31,7 +31,7 @@ class MarkerpenTool {
             replayMode = false;
         }
 
-        let lineGeom = new Lines(id);
+        let lineGeom = new Lines();
 
         let used = 0;
         let vertexCount = 100;

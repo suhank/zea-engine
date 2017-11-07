@@ -4,7 +4,7 @@ import {
     Async
 } from '../Math';
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     AssetItem
@@ -42,7 +42,7 @@ class VLAAsset extends AssetItem {
     }
 
     readBinaryBuffer(buffer) {
-        return this.readBinary(new BinReader(buffer, 0, isMobileDevice()));
+        return this.readBinary(new BinReader(buffer, 0, SystemDesc.isMobileDevice));
     }
 
     __loadURL(url, filePath){

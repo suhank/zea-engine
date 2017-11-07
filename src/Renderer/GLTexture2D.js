@@ -305,10 +305,12 @@ class GLTexture2D extends RefCounted {
             gl.uniform1i(textureConnctedUnif.location, type);
         }
 
-        let textureSizeUnif = renderstate.unifs[unif.name+'Size'];
-        if (textureSizeUnif){
-            gl.uniform1i(textureSizeUnif.location, this.width);
-        }
+        // Note: not all textures are square. (e.g. Lightmaps.)
+        // A more powerfull generic binding would be nice, but this is too simple.
+        // let textureSizeUnif = renderstate.unifs[unif.name+'Size'];
+        // if (textureSizeUnif){
+        //     gl.uniform1i(textureSizeUnif.location, this.width);
+        // }
 
         return true;
     }
