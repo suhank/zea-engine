@@ -163,6 +163,7 @@ class GLRenderer {
         // Setup the Audio context.
         const AudioContext = window.AudioContext || window.webkitAudioContext;
         this.__audioCtx = new AudioContext();
+        this.viewChanged.connect(this.__updateListenerPosition.bind(this));
 
 
         this.addViewport('main');
@@ -321,19 +322,19 @@ class GLRenderer {
         return undefined;
     }
 
-    __updateListnerPosition() {
+    __updateListenerPosition(data) {
         const listener = this.__audioCtx.listener;
-        const globalXfo = this.__activeViewport.getCamera().getGlobalXfo();
+        const viewXfo = data.viewXfo;
         if(listener.positionX) {
-            listener.positionX.value = globalXfo.tr.x;
-            listener.positionY.value = globalXfo.tr.y;
-            listener.positionZ.value = globalXfo.tr.z;
+            listener.positionX.value = viewXfo.tr.x;
+            listener.positionY.value = viewXfo.tr.y;
+            listener.positionZ.value = viewXfo.tr.z;
         } else {
-            listener.setPosition(globalXfo.tr.x, globalXfo.tr.y, globalXfo.tr.z);
+            listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
         }
 
-        const zdir = globalXfo.ori.getZaxis().negate();
-        const ydir = globalXfo.ori.getYaxis();
+        const zdir = viewXfo.ori.getZaxis().negate();
+        const ydir = viewXfo.ori.getYaxis();
         if(listener.orientationX) {
           listener.orientationX.value = zdir.x;
           listener.orientationY.value = zdir.y;
@@ -348,16 +349,12 @@ class GLRenderer {
         if(this.__activeViewport == vp) 
             return;
 
-        if(this.__activeViewport) {
-            const prevcamera = vp.getCamera();
-            prevcamera.viewMatChanged.disconnect(this.__updateListnerPosition.bind(this));
-
-        }
-
-        const camera = vp.getCamera();
-        camera.viewMatChanged.connect(this.__updateListnerPosition.bind(this));
-
         this.__activeViewport = vp;
+
+        this.__updateListenerPosition({
+            interfaceType: 'MouseAndKeyboard',
+            viewXfo: vp.getCamera().getGlobalXfo()
+        });
     }
 
     activateViewportAtPos(offsetX, offsetY) {

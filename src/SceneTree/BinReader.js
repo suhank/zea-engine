@@ -2,7 +2,9 @@ import {
     Vec2,
     Vec3,
     Quat,
-    Color
+    Color,
+    Box2,
+    Box3
 } from '../Math';
 
 class BinReader {
@@ -11,10 +13,6 @@ class BinReader {
         this.__byteOffset = byteOffset;
         this.__dataView = new DataView(this.__data);
         this.__isMobileDevice = isMobileDevice;
-    }
-
-    seek(pos) {
-        this.__byteOffset = pos;
     }
 
     get isMobileDevice() {
@@ -29,7 +27,6 @@ class BinReader {
         return this.__dataView.byteLength;
     }
 
-
     get remainingByteLength() {
         return this.__dataView.byteLength - this.__byteOffset;
     }
@@ -43,31 +40,31 @@ class BinReader {
     }
 
     loadUInt8() {
-        let result = this.__dataView.getUint8(this.__byteOffset);
+        const result = this.__dataView.getUint8(this.__byteOffset);
         this.__byteOffset += 1;
         return result;
     }
 
     loadUInt16() {
-        let result = this.__dataView.getUint16(this.__byteOffset);
+        const result = this.__dataView.getUint16(this.__byteOffset);
         this.__byteOffset += 2;
         return result;
     }
 
     loadUInt32() {
-        let result = this.__dataView.getUint32(this.__byteOffset, true);
+        const result = this.__dataView.getUint32(this.__byteOffset, true);
         this.__byteOffset += 4;
         return result;
     }
 
     loadSInt32() {
-        let result = this.__dataView.getInt32(this.__byteOffset, true);
+        const result = this.__dataView.getInt32(this.__byteOffset, true);
         this.__byteOffset += 4;
         return result;
     }
 
     loadFloat32() {
-        let result = this.__dataView.getFloat32(this.__byteOffset, true);
+        const result = this.__dataView.getFloat32(this.__byteOffset, true);
         this.__byteOffset += 4;
         return result;
     }
@@ -75,9 +72,9 @@ class BinReader {
     loadUInt8Array(size = undefined, clone = false) {
         if (size == undefined)
             size = this.loadUInt32();
-        let result = new Uint8Array(this.__data, this.__byteOffset, size);
+        const result = new Uint8Array(this.__data, this.__byteOffset, size);
         this.__byteOffset += size;
-        let padd = this.__byteOffset % 4;
+        const padd = this.__byteOffset % 4;
         //this.readPadd();
         return result;
     }
@@ -145,8 +142,8 @@ class BinReader {
     }
 
     loadStr() {
-        let numChars = this.loadUInt32();
-        let chars = new Uint8Array(this.__data, this.__byteOffset, numChars);
+        const numChars = this.loadUInt32();
+        const chars = new Uint8Array(this.__data, this.__byteOffset, numChars);
         this.__byteOffset += numChars;
         let result = '';
         for (let i = 0; i < numChars; i++)
@@ -155,73 +152,78 @@ class BinReader {
     }
 
     loadSInt32Vec2() {
-        let x = this.loadSInt32();
-        let y = this.loadSInt32();
+        const x = this.loadSInt32();
+        const y = this.loadSInt32();
         return new Vec2(x, y);
     }
 
     loadUInt32Vec2() {
-        let x = this.loadUInt32();
-        let y = this.loadUInt32();
+        const x = this.loadUInt32();
+        const y = this.loadUInt32();
         return new Vec2(x, y);
     }
 
     loadFloat32Vec2() {
-        let x = this.loadFloat32();
-        let y = this.loadFloat32();
+        const x = this.loadFloat32();
+        const y = this.loadFloat32();
         return new Vec2(x, y);
     }
 
     loadFloat32Vec3() {
-        let result;
-        let x = this.loadFloat32();
-        let y = this.loadFloat32();
-        let z = this.loadFloat32();
+        const x = this.loadFloat32();
+        const y = this.loadFloat32();
+        const z = this.loadFloat32();
         return new Vec3(x, y, z);
     }
 
     loadFloat32Quat() {
-        let x = this.loadFloat32();
-        let y = this.loadFloat32();
-        let z = this.loadFloat32();
-        let w = this.loadFloat32();
+        const x = this.loadFloat32();
+        const y = this.loadFloat32();
+        const z = this.loadFloat32();
+        const w = this.loadFloat32();
         return new Quat(x, y, z, w);
     }
 
     loadRGBFloat32Color() {
-        let r = this.loadFloat32();
-        let g = this.loadFloat32();
-        let b = this.loadFloat32();
+        const r = this.loadFloat32();
+        const g = this.loadFloat32();
+        const b = this.loadFloat32();
         return new Color(r, g, b);
     }
 
     loadRGBAFloat32Color() {
-        let r = this.loadFloat32();
-        let g = this.loadFloat32();
-        let b = this.loadFloat32();
-        let a = this.loadFloat32();
+        const r = this.loadFloat32();
+        const g = this.loadFloat32();
+        const b = this.loadFloat32();
+        const a = this.loadFloat32();
         return new Color(r, g, b, a);
     }
 
     loadRGBUInt8Color() {
-        let result;
-        let r = this.loadUInt8();
-        let g = this.loadUInt8();
-        let b = this.loadUInt8();
+        const r = this.loadUInt8();
+        const g = this.loadUInt8();
+        const b = this.loadUInt8();
         return new Color(r / 255, g / 255, b / 255);
     }
 
     loadRGBAUInt8Color() {
-        let result;
-        let r = this.loadUInt8();
-        let g = this.loadUInt8();
-        let b = this.loadUInt8();
-        let a = this.loadUInt8();
+        const r = this.loadUInt8();
+        const g = this.loadUInt8();
+        const b = this.loadUInt8();
+        const a = this.loadUInt8();
         return new Color(r / 255, g / 255, b / 255, a / 255);
     }
 
+    loadBox2() {
+        return new Box2(this.loadFloat32Vec2(), this.loadFloat32Vec2());
+    }
+
+    loadBox3() {
+        return new Box3(this.loadFloat32Vec3(), this.loadFloat32Vec3());
+    }
+
     readPadd(stride) {
-        let padd = this.__byteOffset % stride;
+        const padd = this.__byteOffset % stride;
         if (padd != 0)
             this.__byteOffset += stride - padd;
     }

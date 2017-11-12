@@ -2,6 +2,18 @@ import {
     Signal
 } from '../../Math';
 
+const ValueGetMode = {
+    NORMAL: 0,
+    OPERATOR_GETVALUE: 1
+};
+
+const ValueSetMode = {
+    USER_SETVALUE: 0,
+    OPERATOR_SETVALUE: 1,
+    DATA_LOAD: 2,
+    CUSTOM: 3,
+};
+
 class BaseParameter {
     constructor(name, dataType) {
         this.__name = name;
@@ -70,8 +82,8 @@ class Parameter extends BaseParameter {
         this.__value = value;
     }
 
-    getValue(mode=0) {
-        if(mode==0 && this.__cleanerFns.length > 0) {
+    getValue(mode=ValueGetMode.NORMAL) {
+        if(mode==ValueGetMode.NORMAL && this.__cleanerFns.length > 0) {
             // Clean the param before we start evaluating the connected op.
             // this is so that operators can read from the current value
             // to compute the next.
@@ -87,7 +99,7 @@ class Parameter extends BaseParameter {
         return this.__value;
     }
 
-    setValue(value, mode=0) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
+    setValue(value, mode=ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if(this.__cleanerFns.length > 0) {
             // Note: This message has not hilighted any real issues, and has become verbose.
             // Enable if suspicious of operators being trampled by setValues.
@@ -124,5 +136,7 @@ class Parameter extends BaseParameter {
 
 
 export {
-    Parameter
+    Parameter,
+    ValueGetMode,
+    ValueSetMode
 };

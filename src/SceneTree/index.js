@@ -4,6 +4,9 @@ export * from './BaseItem.js';
 export * from './Utils.js';
 export * from './SGFactory.js';
 
+export * from './BinReader.js';
+export * from './BinWriter.js';
+
 export * from './Parameters';
 export * from './Geometry';
 
@@ -26,6 +29,8 @@ export * from './FileImage2D.js';
 export * from './WebcamImage2D.js';
 export * from './HDRImage2D.js';
 export * from './HDRImageMixer.js';
+
+export * from './MaterialLibrary.js';
 export * from './ImageLibrary.js';
 
 export * from './ProceduralSky.js';

@@ -110,6 +110,9 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     let scene = new Visualive.Scene(resources);
     let image =  new Visualive.FileImage2D(giffPath, scene.getResourceLoader());
 
+    // Check that the gif is loaded only once.
+    let image2 =  new Visualive.FileImage2D(giffPath, scene.getResourceLoader());
+
     let atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
     atlasmaterial.addParameter('baseColor', image);
 
@@ -124,9 +127,19 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     gifmaterial.addParameter('baseColor', image);
 
     let geomItem2 = new Visualive.GeomItem('geomItem2', new Visualive.Plane(5.0, 3.0), gifmaterial);
-    geomItem2.getLocalXfo().tr.set(3, 2, 0);
+    geomItem2.getLocalXfo().tr.set(3, 3, 0);
     // geomItem.getLocalXfo().ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
     scene.getRoot().addChild(geomItem2);
+    // geomItem2.updateGlobalXfo();
+
+
+    let gifmaterial2 = new Visualive.Material('mat', 'GIFSurfaceShader');
+    gifmaterial2.addParameter('baseColor', image2);
+
+    let geomItem3 = new Visualive.GeomItem('geomItem3', new Visualive.Plane(5.0, 3.0), gifmaterial2);
+    geomItem3.getLocalXfo().tr.set(3, 1, 0);
+    // geomItem.getLocalXfo().ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
+    scene.getRoot().addChild(geomItem3);
     // geomItem2.updateGlobalXfo();
 
 
@@ -136,18 +149,33 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     renderer.setScene(scene);
 
     let frame = 0;
-    let param = image.getParameter('StreamAtlasIndex');
+    let param1 = image.getParameter('StreamAtlasIndex');
     let incrementingValue = false;
     let incrementFrame = () => {
         frame++;
         incrementingValue = true;
-        param.setValue(frame % param.getRange()[1]);
+        param1.setValue(frame % param1.getRange()[1]);
         incrementingValue = false;
     }
-    let id = setInterval(incrementFrame, 50);
-    param.valueChanged.connect(()=>{
+    let id = setInterval(incrementFrame, 35);
+    param1.valueChanged.connect(()=>{
         if(!incrementingValue) {
             clearInterval(id);
+        }
+    });
+
+    let frame2 = 0;
+    let param2 = image2.getParameter('StreamAtlasIndex');
+    let incrementFrame2 = () => {
+        frame2++;
+        incrementingValue = true;
+        param2.setValue(frame2 % param2.getRange()[1]);
+        incrementingValue = false;
+    }
+    let id2 = setInterval(incrementFrame2, 100);
+    param2.valueChanged.connect(()=>{
+        if(!incrementingValue) {
+            clearInterval(id2);
         }
     });
 
@@ -157,10 +185,12 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     //////////////////////////////////
     // Setup the UI
 
-    let sliderController = new Visualive.SliderController(param);
+    let sliderController1 = new Visualive.SliderController(param1);
+    let sliderController2 = new Visualive.SliderController(param2);
 
     let widgetPanel = new Visualive.UIWidgetPanel();
-    widgetPanel.addWidgetController(sliderController);
+    widgetPanel.addWidgetController(sliderController1);
+    widgetPanel.addWidgetController(sliderController2);
 
     let uicontroller = new Visualive.UIController();
     uicontroller.addWidgetPanel(widgetPanel);

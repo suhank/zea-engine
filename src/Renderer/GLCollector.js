@@ -164,22 +164,35 @@ class GLCollector {
         const audioCtx = this.__renderer.getAudioContext();
         const source = audioCtx.createMediaElementSource(audioItem.getDOMElement());
 
+        const connectVLParamToAudioNodePAram = (vlParam, param) => {
+            param.value = vlParam.getValue();
+            vlParam.valueChanged.connect(()=>{
+                param.value = vlParam.getValue();
+            });
+        }
+
         const gainNode = audioCtx.createGain();
-        let gainParam = audioItem.getParameter('Gain');
-        gainParam.valueChanged.connect(()=>{
-            gainNode.gain.value = gainParam.getValue();
-        });
+        connectVLParamToAudioNodePAram(audioItem.getParameter('Gain'), gainNode.gain);
 
         source.connect(gainNode);
         const panner = audioCtx.createPanner();
         panner.panningModel = 'HRTF';
         panner.distanceModel = 'inverse';
-        panner.refDistance = 2;
-        panner.maxDistance = 10000;
-        panner.rolloffFactor = 1;
-        panner.coneInnerAngle = 120;
-        panner.coneOuterAngle = 180;
-        panner.coneOuterGain = 0.2;
+
+        const connectVLParamToAudioNode = (paramName) => {
+            const vlParam = audioItem.getParameter(paramName)
+            panner[paramName] = vlParam.getValue();
+            vlParam.valueChanged.connect(()=>{
+                panner[paramName] = vlParam.getValue();
+            });
+        }
+
+        connectVLParamToAudioNode('refDistance');
+        connectVLParamToAudioNode('maxDistance');
+        connectVLParamToAudioNode('rolloffFactor');
+        connectVLParamToAudioNode('coneInnerAngle');
+        connectVLParamToAudioNode('coneOuterAngle');
+        connectVLParamToAudioNode('coneOuterGain');
 
 
         const updatePannerNodePosition = (globalXfo)=>{
@@ -446,7 +459,7 @@ class GLCollector {
     };
 
     //////////////////////////////////////////////////
-    // Optimization
+    // Data Uploading
     __populateTransformDataArray(gldrawItem, index, dataArray) {
 
         let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
