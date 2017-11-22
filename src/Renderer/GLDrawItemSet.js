@@ -9,11 +9,9 @@ class GLDrawItemSet {
         this.__instancedIdsArray = null;
         this.__instancedIdsBuffer = null;
         this.__instancedIdsBufferDirty = true;
-        this.__drawCount = 0;// The number of visible drawn geoms.
+        this.__drawCount = 0; // The number of visible drawn geoms.
         // this.__inverted = false;
         this.__lightmapName = undefined;
-
-        this.__shaderBindings = {};
     }
 
     getGLGeom() {
@@ -29,7 +27,7 @@ class GLDrawItemSet {
     }
 
     //  Note: used by patternade to iterate over times.
-    getGLDrawItems(){
+    getGLDrawItems() {
         return this.__drawItems;
     }
 
@@ -44,7 +42,7 @@ class GLDrawItemSet {
     addDrawItem(gldrawItem) {
         let index = this.__drawItems.length;
         this.__drawItems.push(gldrawItem);
-        if(gldrawItem.visible)
+        if (gldrawItem.visible)
             this.__drawCount++;
 
         if (this.__drawItems.length == 1) {
@@ -52,8 +50,8 @@ class GLDrawItemSet {
             this.__lightmapName = gldrawItem.getGeomItem().getLightmapName();
         }
 
-        gldrawItem.visibilityChanged.connect((visible)=>{
-            if(visible)
+        gldrawItem.visibilityChanged.connect((visible) => {
+            if (visible)
                 this.__drawCount++;
             else
                 this.__drawCount--;
@@ -62,9 +60,9 @@ class GLDrawItemSet {
 
         gldrawItem.destructing.connect(() => {
             this.__drawItems.splice(index, 1);
-            if(gldrawItem.visible)
+            if (gldrawItem.visible)
                 this.__drawCount--;
-            if(this.__drawItems.length == 0){
+            if (this.__drawItems.length == 0) {
                 // Destroy??
             }
             this.__instancedIdsBufferDirty = true;
@@ -89,10 +87,10 @@ class GLDrawItemSet {
     // drawing. 
     updateInstanceIDsBuffer() {
         let gl = this.__gl;
-        if(!gl.floatTexturesSupported) {
+        if (!gl.floatTexturesSupported) {
             this.__visibleItems = [];
             for (let i = 0; i < this.__drawItems.length; i++) {
-                if(this.__drawItems[i].visible){
+                if (this.__drawItems[i].visible) {
                     this.__visibleItems.push(i);
                     this.__lastVisible = i;
                 }
@@ -100,11 +98,11 @@ class GLDrawItemSet {
             this.__instancedIdsBufferDirty = false;
             return;
         }
-        if(this.__instancedIdsBuffer && this.__drawItems.length != this.__instancedIdsArray.length){
+        if (this.__instancedIdsBuffer && this.__drawItems.length != this.__instancedIdsArray.length) {
             this.__gl.deleteBuffer(this.__instancedIdsBuffer);
             this.__instancedIdsBuffer = null;
         }
-        if(!this.__instancedIdsBuffer){
+        if (!this.__instancedIdsBuffer) {
             this.genBuffers();
         }
 
@@ -113,7 +111,7 @@ class GLDrawItemSet {
         // we re-use the same buffer and simply invoke fewer draw calls.
         let offset = 0;
         for (let i = 0; i < this.__drawItems.length; i++) {
-            if(this.__drawItems[i].visible){
+            if (this.__drawItems[i].visible) {
                 this.__instancedIdsArray[offset] = this.__drawItems[i].getId();
                 offset++;
                 this.__lastVisible = i;
@@ -139,7 +137,7 @@ class GLDrawItemSet {
         this.__glgeom.bind(renderstate, extrAttrBuffers);
         if (this.__drawItems[index].bind(renderstate)) {
             // Specify an non-instanced draw to the shader
-            if(renderstate.unifs.instancedDraw) {
+            if (renderstate.unifs.instancedDraw) {
                 gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
                 gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
             }
@@ -164,13 +162,13 @@ class GLDrawItemSet {
                 if (gllightmap && gllightmap.glimage.isLoaded()) {
                     gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap);
                     gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray());
-                    if(unifs.lightmapConnected){
+                    if (unifs.lightmapConnected) {
                         gl.uniform1i(unifs.lightmapConnected.location, true);
                     }
                     renderstate.boundLightmap = this.__lightmapName;
                 } else {
                     // disable lightmaps. Revert to default lighting.
-                    if(unifs.lightmapConnected){
+                    if (unifs.lightmapConnected) {
                         gl.uniform1i(unifs.lightmapConnected.location, false);
                     }
                 }
@@ -180,7 +178,7 @@ class GLDrawItemSet {
         // Lazy unbinding. We can have situations where we have many materials
         // all bound to the same geom. e.g. lots of billboards
         // We can avoid the expensive re-binding of geoms with a simple check. 
-        if(renderstate.glgeom != this.__glgeom){
+        if (renderstate.glgeom != this.__glgeom) {
             this.__glgeom.bind(renderstate, extrAttrBuffers);
             renderstate.glgeom = this.__glgeom;
         }
@@ -194,7 +192,7 @@ class GLDrawItemSet {
             if (this.__drawItems[this.__lastVisible].bind(renderstate)) {
                 // console.log("draw:"+ this.__drawItems[this.__lastVisible].getId());
                 // Specify an non-instanced draw to the shader
-                if(renderstate.unifs.instancedDraw) {
+                if (renderstate.unifs.instancedDraw) {
                     gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
                     gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
                 }
@@ -204,14 +202,13 @@ class GLDrawItemSet {
         }
         // return;
 
-        if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-            this.__visibleItems.forEach((index)=>{
+        if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
+            const drawItem = (index) => {
                 this.__drawItems[index].bind(renderstate);
                 this.__glgeom.draw();
-            });
-        }
-        else
-        {
+            }
+            this.__visibleItems.forEach(drawItem);
+        } else {
             // console.log("draw:"+ this.__instancedIdsArray);
 
             // Specify an instanced draw to the shader so it knows how
@@ -222,7 +219,7 @@ class GLDrawItemSet {
             let location = renderstate.attrs.instancedIds.location;
             gl.enableVertexAttribArray(location);
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
-            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1*4, 0);
+            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0);
             gl.vertexAttribDivisor(location, 1); // This makes it instanced
 
 

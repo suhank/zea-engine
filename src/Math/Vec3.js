@@ -200,7 +200,7 @@ class Vec3 extends AttrValue {
      * @returns {Number} length of a
      */
     distanceTo(other) {
-        let x = this.__data[0] - other.x,
+        const x = this.__data[0] - other.x,
             y = this.__data[1] - other.y,
             z = this.__data[2] - other.z;
         return Math.sqrt(x * x + y * y + z * z);
@@ -230,6 +230,17 @@ class Vec3 extends AttrValue {
         this.__data[0] *= len;
         this.__data[1] *= len;
         this.__data[2] *= len;
+    }
+
+    resizeInPlace(length) {
+        const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2];
+        if (currlen < Number.EPSILON) {
+            return;
+        }
+        const scl = length / Math.sqrt(currlen);
+        this.__data[0] *= scl;
+        this.__data[1] *= scl;
+        this.__data[2] *= scl;
     }
 
     /**

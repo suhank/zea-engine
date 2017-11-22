@@ -88,6 +88,9 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
 class GLShader extends BaseItem {
     constructor(gl) {
         super();
+        if(!gl) {
+            throw("gl context must be passed to shader constructor");
+        }
         this.__gl = gl;
         this.__shaderStages = {
             'VERTEX_SHADER': {

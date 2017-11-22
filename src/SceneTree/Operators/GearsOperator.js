@@ -100,13 +100,14 @@ class GearsOperator extends Operator {
     evaluate(){
 
         let revolutions = this.__revolutionsParam.getValue();
-        this.__gears.forEach((gear)=>{
+
+        const eachGear = (gear)=>{
             let rot = (revolutions * gear.ratio) + gear.offset;
 
             let quat = new Quat();
             quat.setFromAxisAndAngle(gear.axis, rot * Math.PI * 2.0);
 
-            gear.outputs.forEach((output, index)=>{
+            const eachOutput = (output, index)=>{
                 let globalXfo = output.xfoParam.getValue(1);
                 globalXfo.ori = quat.multiply(output.initialXfo.ori);
 
@@ -118,8 +119,10 @@ class GearsOperator extends Operator {
                     globalXfo.tr = vec;
                 }
                 output.xfoParam.setValue(globalXfo, 1);
-            });
-        });
+            }
+            gear.outputs.forEach(eachOutput);
+        }
+        this.__gears.forEach(eachGear);
     }
 };
 

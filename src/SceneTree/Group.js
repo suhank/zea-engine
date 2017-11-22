@@ -19,9 +19,10 @@ class Group extends BaseItem {
         this.__visibleParam = this.addParameter('visible', true);
         this.__visibleParam.valueChanged.connect((changeType)=>{
             let value = this.__visibleParam.getValue();
-            this.__items.forEach((item)=>{
+            const eachItem = (item)=>{
                 item.getParameter('visible').setValue(value);
-            });
+            }
+            this.__items.forEach(eachItem);
         });
 
         this.mouseDownOnItem = new Signal();

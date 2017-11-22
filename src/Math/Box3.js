@@ -128,6 +128,10 @@ class Box3 {
         return new Box2(...args);
     }
 
+    static sizeInBytes(){
+        return 24;
+    }
+
     //////////////////////////////////////////
     // Persistence
 
