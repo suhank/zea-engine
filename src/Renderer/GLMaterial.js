@@ -1,6 +1,7 @@
+
 import {
     Signal
-} from '../Math';
+} from '../Utilities';
 import {
     BaseItem,
     Image2D,

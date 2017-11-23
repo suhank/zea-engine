@@ -6,9 +6,11 @@ import {
     Vec3,
     Vec4,
     Color,
-    Mat4,
-    Signal
+    Mat4
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     BaseItem,
     Image2D,

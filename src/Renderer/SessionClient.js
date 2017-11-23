@@ -1,10 +1,10 @@
 import {
     Color,
-    Signal
+    typeRegistry
 } from '../Math';
 import {
-    typeRegistry
-} from '../Math/TypeRegistry'
+    Signal
+} from '../Utilities';
 import {
     TreeItem
 } from '../SceneTree/TreeItem';

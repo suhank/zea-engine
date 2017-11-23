@@ -3,9 +3,11 @@ import {
     Vec3,
     Box2,
     Box3,
-    Signal,
     typeRegistry
 } from '../../Math';
+import {
+    Signal
+} from '../../Utilities';
 import {
     RefCounted
 } from '../RefCounted.js';

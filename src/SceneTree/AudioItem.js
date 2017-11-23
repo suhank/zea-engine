@@ -1,7 +1,9 @@
 import {
-    Signal,
     Vec2
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     Parameter,
     ValueSetMode,

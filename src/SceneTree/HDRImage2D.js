@@ -2,9 +2,11 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     Image2D
 } from './Image2D.js';

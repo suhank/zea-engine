@@ -1,12 +1,11 @@
+
 import {
     Signal
-} from '../Math/Signal';
+} from '../Utilities';
 import {
-    Image2D
-} from '../SceneTree/Image2D';
-import {
+    Image2D,
     RefCounted
-} from '../SceneTree/RefCounted';
+} from '../SceneTree';
 
 class GLTexture2D extends RefCounted {
     constructor(gl, params) {

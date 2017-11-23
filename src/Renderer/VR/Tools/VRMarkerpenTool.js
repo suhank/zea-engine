@@ -1,9 +1,11 @@
 import {
     Vec3,
     Color,
-    Xfo,
-    Signal
+    Xfo
 } from '../../../Math';
+import {
+    Signal
+} from '../../../Utilities';
 import { VRTool } from '../VRTool.js'
 
 class VRMarkerpenTool extends VRTool {

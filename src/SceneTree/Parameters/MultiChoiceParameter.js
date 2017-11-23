@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../../Math';
+} from '../../Utilities';
 import {
     Parameter
 } from './Parameter.js';

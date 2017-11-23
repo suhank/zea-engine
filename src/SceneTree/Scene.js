@@ -2,9 +2,11 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
-    Signal,
     JSON_stringify_fixedPrecision
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     TreeItem
 } from './TreeItem.js';

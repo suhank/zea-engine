@@ -2,7 +2,7 @@
 import {
     Signal,
     Async
-} from '../Math';
+} from '../Utilities';
 import {
     SystemDesc
 } from '../BrowserDetection.js';

@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../../Math';
+} from '../../Utilities';
 
 const ValueGetMode = {
     NORMAL: 0,

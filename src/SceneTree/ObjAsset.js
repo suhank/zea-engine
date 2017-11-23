@@ -2,10 +2,12 @@ import {
     Vec2,
     Vec3,
     Xfo,
-    Color,
+    Color
+} from '../Math';
+import {
     Signal,
     Async
-} from '../Math';
+} from '../Utilities';
 import {
     GeomItem
 } from './GeomItem';

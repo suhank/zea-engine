@@ -2,9 +2,11 @@ import {
     Vec3,
     Xfo,
     Color,
-    EulerAngles,
-    Signal
+    EulerAngles
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     Cone,
     Cuboid,

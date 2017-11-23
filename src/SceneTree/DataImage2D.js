@@ -1,7 +1,8 @@
+
 import {
-    Signal,
-    Async
-} from '../Math';
+    Async,
+    Signal
+} from '../Utilities';
 import {
     sgFactory
 } from './SGFactory.js';

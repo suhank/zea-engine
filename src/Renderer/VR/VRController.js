@@ -6,9 +6,11 @@ import {
     Quat,
     EulerAngles,
     Xfo,
-    Color,
-    Signal
+    Color
 } from '../../Math';
+import {
+    Signal
+} from '../../Utilities';
 import {
     Lines,
     Plane,

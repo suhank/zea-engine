@@ -1,8 +1,10 @@
 import {
-    Signal,
     Vec2,
     Xfo
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     BaseItem
 } from './BaseItem';

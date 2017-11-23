@@ -1,9 +1,11 @@
 import {
     Vec3,
     Xfo,
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     SystemDesc
 } from '../BrowserDetection.js';

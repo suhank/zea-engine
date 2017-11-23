@@ -4,7 +4,7 @@ import {
 import {
     Async,
     Signal
-} from '../Math';
+} from '../Utilities';
 import {
     Image2D
 } from './Image2D.js';

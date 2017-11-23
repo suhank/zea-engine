@@ -8,9 +8,11 @@ import {
     Quat,
     Mat4,
     Box3,
-    Xfo,
-    Signal
+    Xfo
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     TreeItem
 } from './TreeItem.js';

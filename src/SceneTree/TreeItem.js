@@ -1,8 +1,10 @@
 import {
     Xfo,
-    Box3,
-    Signal
+    Box3
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     sgFactory
 } from './SGFactory.js';

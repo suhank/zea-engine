@@ -1,8 +1,10 @@
 import {
     Color,
+} from '../Math';
+import {
     Signal,
     Async
-} from '../Math';
+} from '../Utilities';
 import {
     Parameter,
     NumberParameter,

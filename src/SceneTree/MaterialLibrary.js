@@ -2,9 +2,11 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
-    Signal,
     Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     sgFactory
 } from './SGFactory.js';

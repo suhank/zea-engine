@@ -1,8 +1,10 @@
 
 import {
-    Signal,
     Vec2
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     FilePathParameter
 } from './Parameters';

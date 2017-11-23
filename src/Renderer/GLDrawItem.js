@@ -1,19 +1,24 @@
-import { Color, Signal } from '../Math';
+import {
+    Color
+} from '../Math';
+import {
+    Signal
+} from '../Utilities';
 
 import '../SceneTree/GeomItem.js';
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLDrawItem {
-    constructor(gl, geomItem, glGeom, id, flags=null) {
+    constructor(gl, geomItem, glGeom, id, flags = null) {
         this.__gl = gl;
         this.__geomItem = geomItem;
         this.__glGeom = glGeom;
         this.__id = id;
         this.__flags = flags;
-        this.visible = this.__geomItem.getVisible(); 
+        this.visible = this.__geomItem.getVisible();
         this.__culled = false;
 
-        this.__color = geomItem.color ? geomItem.color : new Color(1,0,0,1);
+        this.__color = geomItem.color ? geomItem.color : new Color(1, 0, 0, 1);
         this.__wireColor = [0.2, 0.2, 0.2, 1.0];
         this.__lightmapName = geomItem.getLightmapName();
 
@@ -22,12 +27,11 @@ class GLDrawItem {
         this.destructing = new Signal();
         this.visibilityChanged = new Signal();
 
-        if(!gl.floatTexturesSupported) {
+        if (!gl.floatTexturesSupported) {
             this.__geomItem.geomXfoChanged.connect((geomXfo) => {
                 this.updateGeomMatrix();
             });
-        }
-        else {
+        } else {
             this.__geomItem.geomXfoChanged.connect((geomXfo) => {
                 this.transformChanged.emit();
             });
@@ -35,7 +39,7 @@ class GLDrawItem {
         this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
 
         this.__geomItem.selectedChanged.connect((val) => {
-            if(val)
+            if (val)
                 this.highlight();
             else
                 this.unhighlight();
@@ -85,12 +89,12 @@ class GLDrawItem {
         this.__color = val;
     }
 
-    getId(){
-        return  this.__id;
+    getId() {
+        return this.__id;
     }
 
-    getFlags(){
-        return  this.__flags;
+    getFlags() {
+        return this.__flags;
     }
 
     highlight() {
@@ -105,48 +109,48 @@ class GLDrawItem {
         //this.updated.emit();
     }
 
-    __updateVisibility(){
+    __updateVisibility() {
         let geomVisible = this.__geomItem.getVisible();
         let visible = geomVisible && !this.__culled;
-        if(this.visible != visible){
+        if (this.visible != visible) {
             this.visible = visible;
             this.visibilityChanged.emit(visible);
             this.updated.emit();
         }
     }
 
-    setCullState(culled){
+    setCullState(culled) {
         this.__culled = culled;
         this.__updateVisibility();
     }
 
-    updateGeomMatrix(){
+    updateGeomMatrix() {
         // Pull on the GeomXfo param. This will trigger the lazy evaluation of the operators in the scene.
         this.__modelMatrixArray = this.__geomItem.getGeomXfo().toMat4().asArray();
     }
 
-    getGeomMatrixArray(){
+    getGeomMatrixArray() {
         return this.__modelMatrixArray;
     }
-    
+
     bind(renderstate) {
 
         let gl = this.__gl;
         let unifs = renderstate.unifs;
-        
-        if(!gl.floatTexturesSupported) {
+
+        if (!gl.floatTexturesSupported) {
             let modelMatrixunif = unifs.modelMatrix;
-            if (modelMatrixunif){
+            if (modelMatrixunif) {
                 gl.uniformMatrix4fv(modelMatrixunif.location, false, this.__modelMatrixArray);
             }
             let drawItemDataunif = unifs.drawItemData;
-            if (drawItemDataunif){
+            if (drawItemDataunif) {
                 gl.uniform4f(drawItemDataunif.location, this.__geomData);
             }
         }
 
         let unif = unifs.transformIndex;
-        if (unif){
+        if (unif) {
             gl.uniform1i(unif.location, this.__id);
         }
 

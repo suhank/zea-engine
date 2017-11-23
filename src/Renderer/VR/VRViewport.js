@@ -8,9 +8,11 @@ import {
     Mat4,
     Xfo,
     Color,
-    Ray,
-    Signal
+    Ray
 } from '../../Math';
+import {
+    Signal
+} from '../../Utilities';
 import {
     TreeItem,
     VLAAsset

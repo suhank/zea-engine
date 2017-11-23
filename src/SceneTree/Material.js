@@ -1,9 +1,11 @@
 import {
     Vec2,
     Vec3,
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     BaseItem
 } from './BaseItem.js';

@@ -4,7 +4,7 @@ import {
 import {
     Async,
     Signal
-} from '../Math';
+} from '../Utilities';
 
 let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 // let FreeMemWorker = require("worker-loader?inline!./FreeMemWorker.js");

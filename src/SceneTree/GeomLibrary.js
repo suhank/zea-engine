@@ -3,7 +3,7 @@ import {
 } from '../BrowserDetection.js';
 import {
     Signal
-} from '../Math';
+} from '../Utilities';
 import {
     Mesh
 } from './Geometry/Mesh.js';

@@ -6,9 +6,11 @@ import {
     Vec3,
     Ray,
     Color,
-    Mat4,
-    Signal
+    Mat4
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     Image2D,
     HDRImage2D,

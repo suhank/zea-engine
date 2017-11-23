@@ -1,7 +1,9 @@
-import { Signal } from '../Math/Signal';
-import '../SceneTree';
-import '../SceneTree/Geometry/BaseGeom.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import {
+    Signal
+} from '../Utilities';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
 class GLGeom {
     constructor(gl, geom) {
@@ -14,19 +16,19 @@ class GLGeom {
         this.destructing = new Signal();
         this.updated = new Signal();
 
-        let updateBuffers = (opts)=>{
+        let updateBuffers = (opts) => {
             this.updateBuffers(opts);
             this.updated.emit();
         }
         this.__geom.geomDataChanged.connect(updateBuffers);
 
-        let regenBuffers = (opts)=>{
+        let regenBuffers = (opts) => {
             this.clearShaderBindings();
             this.updateBuffers(opts);
             this.updated.emit();
         }
         this.__geom.geomDataTopologyChanged.connect(regenBuffers);
-        
+
         this.__geom.destructing.connect(() => {
             this.destroy();
         });
@@ -39,8 +41,7 @@ class GLGeom {
     ///////////////////////////////////////
     // Buffers
 
-    genBuffers() {
-    }
+    genBuffers() {}
 
     updateBuffers(opts) {
 
@@ -51,8 +52,8 @@ class GLGeom {
     // Binding
 
     bind(renderstate, extrAttrBuffers) {
-        if(this.__destroyed)
-            throw("Error binding a destroyed geom");
+        if (this.__destroyed)
+            throw ("Error binding a destroyed geom");
 
         let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
         if (!shaderBinding) {
@@ -79,9 +80,9 @@ class GLGeom {
         throw ("Not implemented. Implement this method in a derived class.")
     }
 
-    clearShaderBindings(){
+    clearShaderBindings() {
 
-        for(let shaderkey in this.__shaderBindings){
+        for (let shaderkey in this.__shaderBindings) {
             let shaderBinding = this.__shaderBindings[shaderkey];
             shaderBinding.destroy();
         }
@@ -92,7 +93,7 @@ class GLGeom {
         this.clearShaderBindings();
 
         let gl = this.__gl;
-        for(let attrName in  this.__glattrbuffers){
+        for (let attrName in this.__glattrbuffers) {
             gl.deleteBuffer(this.__glattrbuffers[attrName].buffer);
         }
         this.__glattrs = {};

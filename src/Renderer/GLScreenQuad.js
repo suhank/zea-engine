@@ -1,8 +1,18 @@
-import { AttrValue } from '../Math/AttrValue';
-import { Signal } from '../Math/Signal';
-import { GLShader } from './GLShader.js';
-import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import {
+    AttrValue
+} from '../Math';
+import {
+    Signal
+} from '../Utilities';
+import {
+    GLShader
+} from './GLShader.js';
+import {
+    ScreenQuadShader
+} from './Shaders/ScreenQuadShader.js';
+import {
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
 
 class GLScreenQuad {
     constructor(gl) {
@@ -13,7 +23,7 @@ class GLScreenQuad {
         this.flipY = true;
         this.__glshader = new ScreenQuadShader(gl);
 
-        if (!gl.__quadVertexIdsBuffer) 
+        if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
 
         let shaderComp = this.__glshader.compileForTarget('GLScreenQuad');
@@ -26,16 +36,14 @@ class GLScreenQuad {
         let unifs = renderstate.unifs;
         texture.bindToUniform(renderstate, renderstate.unifs.texture);
 
-        let gl = this.__gl;
-        {
+        let gl = this.__gl; {
             let unif = unifs.pos;
-            if (unif){
+            if (unif) {
                 gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
             }
-        }
-        {
+        } {
             let unif = unifs.size;
-            if (unif){
+            if (unif) {
                 gl.uniform2fv(unif.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
             }
         }
@@ -55,7 +63,7 @@ class GLScreenQuad {
     draw(renderstate, texture, pos = undefined, size = undefined) {
 
         this.bind(renderstate, texture, pos, size);
-        
+
         this.__gl.drawQuad();
     }
 

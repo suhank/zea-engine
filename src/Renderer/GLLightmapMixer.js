@@ -1,6 +1,7 @@
+
 import {
     Async
-} from '../Math';
+} from '../Utilities';
 import {
     Image2D,
     HDRImage2D

@@ -1,7 +1,9 @@
 import {
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     HDRImage2D,
     Image2D

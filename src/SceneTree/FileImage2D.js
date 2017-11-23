@@ -1,9 +1,11 @@
 import {
-    Signal,
-    Async,
     Vec4,
     Color
 } from '../Math';
+import {
+    Async,
+    Signal
+} from '../Utilities';
 import {
     loadBinfile
 } from './Utils.js';

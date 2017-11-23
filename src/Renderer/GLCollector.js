@@ -1,7 +1,9 @@
 import {
-    Vec4,
-    Signal
+    Vec4
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     AudioItem,
     GeomItem,

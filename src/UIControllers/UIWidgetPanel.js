@@ -1,8 +1,10 @@
 import {
     Vec2,
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 
 class UIWidgetPanel {
     constructor() {

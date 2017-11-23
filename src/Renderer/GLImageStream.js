@@ -1,7 +1,7 @@
 
 import {
-    Signal,
-} from '../Math';
+    Signal
+} from '../Utilities';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
