@@ -1,5 +1,8 @@
 // Taken from here: https://github.com/jakesgordon/bin-packing/blob/master/js/packer.growing.js
 
+import {
+  Signal
+} from './Signal'
 
 
 /******************************************************************************
@@ -62,117 +65,137 @@ Example:
 ******************************************************************************/
 
 class GrowingPacker {
-  constructor() {
+  constructor(w = 0, h = 0) {
+    this.root = {
+      x: 0,
+      y: 0,
+      w: w,
+      h: h
+    };
 
+    this.resized = new Signal();
   }
 
   fit(blocks) {
-      let n, node, block, len = blocks.length;
-      const w = len > 0 ? blocks[0].w : 0;
-      const h = len > 0 ? blocks[0].h : 0;
-      this.root = {
-        x: 0,
+    const len = blocks.length;
+    if (len == 0)
+      return;
+    let resized = false;
+    if (this.root.w < blocks[0].w){
+      this.root.w = blocks[0].w;
+      resized = true;
+    }
+    if (this.root.h < blocks[0].h){
+      this.root.h = blocks[0].h;
+      resized = true;
+    }
+    if(resized){
+      this.resized.emit(this.root.w, this.root.h);
+    }
+    const eachBlock = (block) => {
+      block.fit = this.addBlock(block)
+    }
+    blocks.forEach(blocks)
+  }
+
+  addBlock(block) {
+    const node = this.findNode(this.root, block.w, block.h);
+    if (node)
+      return this.splitNode(node, block.w, block.h);
+    else
+      return this.growNode(block.w, block.h);
+  }
+
+  findNode(root, w, h) {
+    if (root.used)
+      return this.findNode(root.right, w, h) || this.findNode(root.down, w, h);
+    else if ((w <= root.w) && (h <= root.h))
+      return root;
+    else
+      return null;
+  }
+
+  splitNode(node, w, h) {
+    node.used = true;
+    node.down = {
+      x: node.x,
+      y: node.y + h,
+      w: node.w,
+      h: node.h - h
+    };
+    node.right = {
+      x: node.x + w,
+      y: node.y,
+      w: node.w - w,
+      h: h
+    };
+    return node;
+  }
+
+  growNode(w, h) {
+    const canGrowDown = (w <= this.root.w);
+    const canGrowRight = (h <= this.root.h);
+
+    const shouldGrowRight = canGrowRight && (this.root.h >= (this.root.w + w)); // attempt to keep square-ish by growing right when height is much greater than width
+    const shouldGrowDown = canGrowDown && (this.root.w >= (this.root.h + h)); // attempt to keep square-ish by growing down  when width  is much greater than height
+
+    if (shouldGrowRight)
+      return this.growRight(w, h);
+    else if (shouldGrowDown)
+      return this.growDown(w, h);
+    else if (canGrowRight)
+      return this.growRight(w, h);
+    else if (canGrowDown)
+      return this.growDown(w, h);
+    else
+      return null; // need to ensure sensible root starting size to avoid this happening
+  }
+
+  growRight(w, h) {
+    this.root = {
+      used: true,
+      x: 0,
+      y: 0,
+      w: this.root.w + w,
+      h: this.root.h,
+      down: this.root,
+      right: {
+        x: this.root.w,
         y: 0,
         w: w,
-        h: h
-      };
-      for (n = 0; n < len; n++) {
-        block = blocks[n];
-        if (node = this.findNode(this.root, block.w, block.h))
-          block.fit = this.splitNode(node, block.w, block.h);
-        else
-          block.fit = this.growNode(block.w, block.h);
+        h: this.root.h
       }
-    }
+    };
+    const node = this.findNode(this.root, w, h);
+    let res;
+    if (node)
+      res = this.splitNode(node, w, h);
+    this.resized.emit(this.root.w, this.root.h);
+    return res;
+  }
 
-    findNode(root, w, h) {
-      if (root.used)
-        return this.findNode(root.right, w, h) || this.findNode(root.down, w, h);
-      else if ((w <= root.w) && (h <= root.h))
-        return root;
-      else
-        return null;
-    }
-
-    splitNode(node, w, h) {
-      node.used = true;
-      node.down = {
-        x: node.x,
-        y: node.y + h,
-        w: node.w,
-        h: node.h - h
-      };
-      node.right = {
-        x: node.x + w,
-        y: node.y,
-        w: node.w - w,
-        h: h
-      };
-      return node;
-    }
-
-    growNode(w, h) {
-      const canGrowDown = (w <= this.root.w);
-      const canGrowRight = (h <= this.root.h);
-
-      const shouldGrowRight = canGrowRight && (this.root.h >= (this.root.w + w)); // attempt to keep square-ish by growing right when height is much greater than width
-      const shouldGrowDown = canGrowDown && (this.root.w >= (this.root.h + h)); // attempt to keep square-ish by growing down  when width  is much greater than height
-
-      if (shouldGrowRight)
-        return this.growRight(w, h);
-      else if (shouldGrowDown)
-        return this.growDown(w, h);
-      else if (canGrowRight)
-        return this.growRight(w, h);
-      else if (canGrowDown)
-        return this.growDown(w, h);
-      else
-        return null; // need to ensure sensible root starting size to avoid this happening
-    }
-
-    growRight(w, h) {
-      this.root = {
-        used: true,
+  growDown(w, h) {
+    this.root = {
+      used: true,
+      x: 0,
+      y: 0,
+      w: this.root.w,
+      h: this.root.h + h,
+      down: {
         x: 0,
-        y: 0,
-        w: this.root.w + w,
-        h: this.root.h,
-        down: this.root,
-        right: {
-          x: this.root.w,
-          y: 0,
-          w: w,
-          h: this.root.h
-        }
-      };
-      let node;
-      if (node = this.findNode(this.root, w, h))
-        return this.splitNode(node, w, h);
-      else
-        return null;
-    }
-
-    growDown(w, h) {
-      this.root = {
-        used: true,
-        x: 0,
-        y: 0,
+        y: this.root.h,
         w: this.root.w,
-        h: this.root.h + h,
-        down: {
-          x: 0,
-          y: this.root.h,
-          w: this.root.w,
-          h: h
-        },
-        right: this.root
-      };
-      let node;
-      if (node = this.findNode(this.root, w, h))
-        return this.splitNode(node, w, h);
-      else
-        return null;
-    }
+        h: h
+      },
+      right: this.root
+    };
+    const node = this.findNode(this.root, w, h);
+    let res;
+    if (node)
+      res = this.splitNode(node, w, h);
+    this.resized.emit(this.root.w, this.root.h);
+    return res;
+  }
 
 }
 
