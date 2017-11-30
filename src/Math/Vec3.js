@@ -1,8 +1,9 @@
 import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
+    AttrValue
+} from './AttrValue.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 
 class Vec3 extends AttrValue {
@@ -11,8 +12,7 @@ class Vec3 extends AttrValue {
 
         if (x instanceof Float32Array || x instanceof Uint32Array) {
             this.__data = x;
-        }
-        else if (x instanceof ArrayBuffer) {
+        } else if (x instanceof ArrayBuffer) {
             let buffer = x;
             let byteOffset = y;
             this.__data = new Float32Array(buffer, byteOffset, 3);
@@ -54,8 +54,8 @@ class Vec3 extends AttrValue {
         this.y = y !== undefined ? y : x;
         this.z = z !== undefined ? z : x;
     }
-    
-    setDataArray(float32Array){
+
+    setDataArray(float32Array) {
         this.__data = float32Array;
     }
 
@@ -70,7 +70,7 @@ class Vec3 extends AttrValue {
     isNull() {
         return Math.abs(this.x) < Number.EPSILON && Math.abs(this.y) < Number.EPSILON && Math.abs(this.z) < Number.EPSILON;
     }
-    
+
     is111() {
         return (Math.abs(1.0 - this.x) < Number.EPSILON && Math.abs(1.0 - this.y) < Number.EPSILON && Math.abs(1.0 - this.z) < Number.EPSILON);
     }
@@ -350,7 +350,7 @@ class Vec3 extends AttrValue {
     static create(...args) {
         return new Vec3(...args);
     }
-    
+
     static createFromJSON(json) {
         let result = new Vec3();
         result.fromJSON(json);
@@ -385,10 +385,6 @@ class Vec3 extends AttrValue {
         this.x = j['x'];
         this.y = j['y'];
         this.z = j['z'];
-    }
-    
-    toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON());
     }
 };
 

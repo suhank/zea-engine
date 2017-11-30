@@ -95,7 +95,7 @@ class GrowingPacker {
     const eachBlock = (block) => {
       block.fit = this.addBlock(block)
     }
-    blocks.forEach(blocks)
+    blocks.forEach(eachBlock)
   }
 
   addBlock(block) {

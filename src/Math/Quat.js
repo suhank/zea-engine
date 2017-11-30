@@ -885,6 +885,5 @@ class Quat extends AttrValue {
 typeRegistry.registerType('Quat', Quat);
 
 export {
-    EulerAngles,
     Quat
 };

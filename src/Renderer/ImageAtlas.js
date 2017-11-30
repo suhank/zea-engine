@@ -182,11 +182,7 @@ class ImageAtlas extends GLTexture2D {
             if (subImage.fit) {
                 this.__layout.push({
                     pos: new Vec2(subImage.fit.x + border, subImage.fit.y + border),
-                    size: new Vec2(rectSize.width, rectSize.height),
-                    boundingRect: {
-                        pos: new Vec2(subImage.fit.x, subImage.fit.y),
-                        size: new Vec2(subImage.w, subImage.h)
-                    }
+                    size: new Vec2(subImage.w, subImage.h)
                 });
             }
             else {
@@ -275,10 +271,10 @@ class ImageAtlas extends GLTexture2D {
         let unifs = renderstate.unifs;
         for (let j = 0; j < this.__subImages.length; j++) {
             let image = this.__subImages[j];
-            let item = this.__layout[j];
+            let layoutItem = this.__layout[j];
             image.bindToUniform(renderstate, unifs.texture);
-            gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
-            gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
+            gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray());
+            gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray());
             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
             gl.uniform1i(unifs.flags.location, image.flags);
             gl.drawQuad();
