@@ -414,13 +414,13 @@ class FileImage2D extends Image2D {
 
     readBinary(reader, flags, lod) {
         // super.readBinary(reader, flags);
-        this.name = reader.loadStr();
-        let resourcePath = reader.loadStr();
+        this.setName(reader.loadStr());
+        const resourcePath = reader.loadStr();
         if (typeof resourcePath === 'string' && resourcePath != "") {
             if (lod >= 0) {
-                let suffixSt = resourcePath.lastIndexOf('.')
+                const suffixSt = resourcePath.lastIndexOf('.')
                 if (suffixSt != -1) {
-                    let lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
+                    const lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
                     if (this.__resourceLoader.resourceAvailable(lodPath)) {
                         resourcePath = lodPath;
                     }

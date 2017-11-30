@@ -323,6 +323,8 @@ class Camera extends TreeItem {
             this.__manipulationState = 'pan';
         } else if (event.ctrlKey && event.altKey) {
             this.__manipulationState = 'dolly';
+        } else if (event.ctrlKey || event.button == 2) {
+            this.__manipulationState = 'look';
         } else {
             this.__manipulationState = this.__defaultManipulationState;
         }

@@ -773,10 +773,7 @@ class GLViewport extends BaseViewport {
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();
         renderstate.projectionMatrix = this.getProjectionMatrix();
-        renderstate.isOrthographic = this.__camera.getIsOrthographic();
-        renderstate.fovY = this.__camera.getFov();
-        renderstate.nearDist = this.__camera.getNear();
-        renderstate.farDist = this.__camera.getFar();
+        renderstate.camera = this.__camera;
         renderstate.viewportFrustumSize = this.__frustumDim;
         renderstate.viewScale = 1.0;
         renderstate.eye = 0;// 0==Left, 1==Right;

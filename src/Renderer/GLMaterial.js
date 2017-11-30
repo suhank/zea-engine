@@ -100,7 +100,7 @@ class GLMaterial extends BaseItem {
 
     bind(renderstate) {
 
-        // console.log("Material:" + this.__material.name);
+        // console.log("Material:" + this.__material.getName());
         this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
         let gl = this.__gl;
         let params = this.__material.getParameters();

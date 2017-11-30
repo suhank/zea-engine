@@ -34,7 +34,7 @@ class GLLDRAlphaImage extends GLTexture2D {
             });
         }
         this.__hdrImage.destructing.connect(() => {
-            console.log(this.__hdrImage.name + " destructing");
+            console.log(this.__hdrImage.getName() + " destructing");
             this.destroy();
         });
 
@@ -103,7 +103,7 @@ class GLLDRAlphaImage extends GLTexture2D {
         gl.drawQuad();
 
         // // Debug a block of pixels.
-        // console.log(this.__hdrImage.name);
+        // console.log(this.__hdrImage.getName());
         // gl.finish();
         // let numPixels = 4;
         // let pixels = new Float32Array(4 * numPixels);

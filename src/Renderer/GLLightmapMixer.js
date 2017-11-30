@@ -87,7 +87,7 @@ class GLLightmapMixer extends GLTexture2D {
         });
 
         this.__lightmapMixer.destructing.connect(() => {
-            console.log(this.__lightmapMixer.name + " destructing");
+            console.log(this.__lightmapMixer.getName() + " destructing");
             this.destroy();
         });
 

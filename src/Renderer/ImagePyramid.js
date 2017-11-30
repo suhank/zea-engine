@@ -106,7 +106,7 @@ class ImagePyramid extends ImageAtlas {
             });
         }
         srcGLTex.destructing.connect(() => {
-            console.log(this.__srcGLTex.name + " ImagePyramid destructing");
+            console.log(this.__srcGLTex.getName() + " ImagePyramid destructing");
             this.destroy();
         });
     }
