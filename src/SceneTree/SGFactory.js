@@ -14,7 +14,6 @@ class SGFactory {
     constructClass(name/*, ...args*/){
         let fact = this.__registeredClasses[name];
         if(!fact){
-            
             console.warn("Factory not registered:"+ name);
             return null;
         }

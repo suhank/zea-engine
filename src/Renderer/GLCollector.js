@@ -491,11 +491,9 @@ class GLCollector {
         const gl = this.__renderer.gl;
         if(!gl.floatTexturesSupported) {
             // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
-            const updateMatrix = (index)=>{
-                const gldrawItem = this.__drawItems[index];
-                gldrawItem.updateGeomMatrix();
-            }
-            this.__dirtyItemIndices.forEach(updateMatrix);
+            const len=this.__dirtyItemIndices.length;
+            for(let i=0; i< len; i++)
+                this.__drawItems[i].updateGeomMatrix();
             this.__dirtyItemIndices = [];
             this.renderTreeUpdated.emit();
             return;

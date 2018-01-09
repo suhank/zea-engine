@@ -59,13 +59,14 @@ class Signal {
                 console.warn("Toggled signals should only be fired once, or untoggled before re-firing..");
             }
         }
-        const cb = (fn) => {
+        const len=this.__slots.length;
+        for(let i=0; i< len; i++){
+            const fn = this.__slots[i];
             // Skip disconnected slots.
             if(fn){
                 fn(...data);
             }
         }
-        this.__slots.forEach(cb);
     }
 
     untoggle() {

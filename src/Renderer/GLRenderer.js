@@ -837,9 +837,11 @@ class GLRenderer {
             // else
             //     this.__vrViewport.updateHeadAndControllers();
         }
-
-        const drawVP = this.drawVP.bind(this);
-        this.__viewports.forEach(drawVP);
+        
+        const len=this.__viewports.length;
+        for(let i=0; i< len; i++){
+            this.drawVP(this.__viewports[i]);
+        }
 
         gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
         // gl.disable(gl.SCISSOR_TEST);

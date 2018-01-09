@@ -204,10 +204,10 @@ class Material extends BaseItem {
     readBinary(reader, flags, textureLibrary) {
         super.readBinary(reader, flags);
 
-        let numParams = reader.loadUInt32();
+        const numParams = reader.loadUInt32();
         for (let i = 0; i < numParams; i++) {
-            let paramName = reader.loadStr();
-            let paramType = reader.loadStr();
+            const paramName = reader.loadStr();
+            const paramType = reader.loadStr();
             let value;
             if (paramType == "MaterialColorParam") {
                 value = reader.loadRGBAFloat32Color();
@@ -217,12 +217,15 @@ class Material extends BaseItem {
             } else {
                 value = reader.loadFloat32();
             }
-            let param = this.addParameter(paramName, value);
-            let textureName = reader.loadStr();
             // console.log(paramName +":" + value);
-            if (textureName != '') {
+            const param = this.addParameter(paramName, value);
+            const textureName = reader.loadStr();
+            if (textureLibrary[textureName]) {
                 // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
                 param.setValue(textureLibrary[textureName]);
+            }
+            else if(textureName!= ''){
+                console.warn("Missing Texture:" + textureName)
             }
         }
     }

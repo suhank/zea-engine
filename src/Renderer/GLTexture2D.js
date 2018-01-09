@@ -133,14 +133,16 @@ class GLTexture2D extends RefCounted {
         }
         else if (format == 'HALF_FLOAT') {
             if(gl.__ext_half_float){
-                format = 'HALF_FLOAT';   
-                if (!gl.__ext_texture_half_float_linear) {
+                if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
                     console.warn('Half Float texture filtering not supported on this device');
                     filter = 'NEAREST';
                 }
             }
             else
                 throw ("OES_texture_half_float is not available");
+            if(channels == 'RGB'){
+                throw ("OES_texture_half_float onlysupports RGBA textures");
+            }
         } 
         else if (format == 'sRGB') {
             if (!gl.__ext_sRGB)

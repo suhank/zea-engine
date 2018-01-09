@@ -39,6 +39,10 @@ class BinReader {
         this.__byteOffset = byteOffset;
     }
 
+    advance(byteOffset) {
+        this.__byteOffset += byteOffset;
+    }
+
     loadUInt8() {
         const result = this.__dataView.getUint8(this.__byteOffset);
         this.__byteOffset += 1;
@@ -46,7 +50,7 @@ class BinReader {
     }
 
     loadUInt16() {
-        const result = this.__dataView.getUint16(this.__byteOffset);
+        const result = this.__dataView.getUint16(this.__byteOffset, true);
         this.__byteOffset += 2;
         return result;
     }
@@ -62,6 +66,20 @@ class BinReader {
         this.__byteOffset += 4;
         return result;
     }
+
+    loadFloat16() {
+        const uint16 = this.loadUInt16();
+        return Math.decode16BitFloat(uint16);
+    }
+
+    loadFloat16From2xUInt8() {
+        const result = this.__dataView.getFloat16(this.__byteOffset, true);
+        // const uint8s = this.loadUInt8Array(2);
+        // return Math.decode16BitFloat(uint8s);
+        this.__byteOffset += 2;
+        return result;
+    }
+
 
     loadFloat32() {
         const result = this.__dataView.getFloat32(this.__byteOffset, true);

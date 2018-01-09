@@ -13,10 +13,9 @@ class Operator extends BaseItem {
 
         this.__outputs = [];
         let evalOutput = (value, getter)=>{
-            const eachOutput = (param)=> {
-                param.removeCleanerFn(evalOutput);
-            }
-            this.__outputs.forEach(eachOutput);
+            const len=this.__outputs.length;
+            for(let i=0; i< len; i++)
+                this.__outputs[i].removeCleanerFn(evalOutput);
             this.evaluate();
             return getter(1);
         };
@@ -25,10 +24,9 @@ class Operator extends BaseItem {
             // Note: when the operator evaluates, it will remove the cleaners
             // on all outputs. This means that after the first operator to 
             // cause an evaluation, all outputs are considered clean.
-            const dirtyOutput = (param)=> {
-                param.setDirty(evalOutput);
-            }
-            this.__outputs.forEach(dirtyOutput);
+            const len=this.__outputs.length;
+            for(let i=0; i< len; i++)
+                this.__outputs[i].setDirty(evalOutput);
         });
     }
 

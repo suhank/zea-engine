@@ -11,7 +11,6 @@ class BinWriter {
     constructor(dataSize) {
         this.__data = new ArrayBuffer(dataSize);
         this.__byteOffset = 0;
-        this.__dataSize = dataSize;
         this.__reserved = dataSize;
         this.__dataView = new DataView(this.__data);
     }
@@ -28,26 +27,37 @@ class BinWriter {
     }
 
     getBuffer() {
-        return this.__data;
+        if(this.__data.byteLength == this.__byteOffset) {
+            return this.__data;
+        }
+        else {
+            const unit8Array = new Uint8Array(this.__data);
+            return unit8Array.slice(0, this.__byteOffset).buffer;
+        }
+    }
+
+    __grow() {
+        const newSize = this.__reserved * 2;
+        const data = new ArrayBuffer(newSize);
+        const unit8Array = new Uint8Array(data);
+        const old_unit8Array = new Uint8Array(this.__data);
+        unit8Array.set(old_unit8Array);
+        this.__data = data;
+        this.__dataView = new DataView(this.__data);
+        this.__reserved = newSize;
     }
 
     __reserve(offset) {
         if (this.__byteOffset + offset > this.__reserved) {
-            const newSize = this.__dataSize * 2;
-            const data = new ArrayBuffer(newSize);
-            const unit8Array = new Uint8Array(data);
-            const old_unit8Array = new Uint8Array(this.__data);
-            unit8Array.set(old_unit8Array);
-            this.__data = data;
-            this.__dataView = new DataView(this.__data);
-            this.__reserved = newSize;
+            this.__grow()
         }
     }
 
     __offset(byteCount) {
         this.__byteOffset += byteCount;
-        if(this.__byteOffset > this.__dataSize)
-            this.__dataSize = this.__byteOffset;
+        if(this.__byteOffset > this.__reserved) {
+            this.__grow();
+        }
     }
 
     writeUInt8(value) {
@@ -72,6 +82,11 @@ class BinWriter {
         this.__reserve(4);
         this.__dataView.setInt32(this.__byteOffset, value, true);
         this.__offset(4);
+    }
+
+    writeFloat16(value) {
+        const uint16 = Math.encode16BitFloat(value);
+        this.writeUInt16(uint16);
     }
 
     writeFloat32(value) {
@@ -196,7 +211,17 @@ class BinWriter {
     }
 
     writePadd(size) {
-        this.__reserve(size - this.__byteOffset);
+        const bytes = size - this.__byteOffset;
+        this.__reserve(bytes);
+        this.__offset(bytes);
+    }
+
+    writeAlignment(numBytes) {
+        const bytes = numBytes - (this.__byteOffset % numBytes);
+        if(bytes != 0) {
+            this.__reserve(bytes);
+            this.__offset(bytes);
+        }
     }
 
 };

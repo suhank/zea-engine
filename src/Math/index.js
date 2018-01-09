@@ -11,6 +11,7 @@ export * from './Vec2.js';
 export * from './Vec3.js';
 export * from './Vec4.js';
 export * from './Color.js';
+export * from './EulerAngles.js';
 export * from './Quat.js';
 export * from './Ray.js';
 export * from './Mat3.js';

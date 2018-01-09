@@ -286,7 +286,7 @@ class GLViewport extends BaseViewport {
                 if (pixels[0] == 0 && pixels[1] == 0)
                     return undefined;
                 id = pixels[0] + (pixels[1] << 8);
-                dist = Math.decode16BitFloat([pixels[2], pixels[3]]);
+                dist = Math.decode16BitFloatFrom2xUInt8([pixels[2], pixels[3]]);
             }
 
             let drawItem = this.__renderer.getCollector().getDrawItem(id);

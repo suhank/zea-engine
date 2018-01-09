@@ -93,12 +93,32 @@ class GrowingPacker {
       this.resized.emit(this.root.w, this.root.h);
     }
     const eachBlock = (block) => {
-      block.fit = this.addBlock(block)
+      block.fit = this.__addBlock(block)
     }
     blocks.forEach(eachBlock)
   }
 
+  __addBlock(block) {
+    const node = this.findNode(this.root, block.w, block.h);
+    if (node)
+      return this.splitNode(node, block.w, block.h);
+    else
+      return this.growNode(block.w, block.h);
+  }
+
   addBlock(block) {
+    let resized = false;
+    if (this.root.w < block.w){
+      this.root.w = block.w;
+      resized = true;
+    }
+    if (this.root.h < block.h){
+      this.root.h = block.h;
+      resized = true;
+    }
+    if(resized){
+      this.resized.emit(this.root.w, this.root.h);
+    }
     const node = this.findNode(this.root, block.w, block.h);
     if (node)
       return this.splitNode(node, block.w, block.h);

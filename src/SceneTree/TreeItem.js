@@ -474,6 +474,7 @@ class TreeItem extends BaseItem {
             xfo.tr = reader.loadFloat32Vec3();
             xfo.ori = reader.loadFloat32Quat();
             xfo.sc.set(reader.loadFloat32());
+            // console.log(xfo.toString());
             this.setLocalXfo(xfo);
         }
 

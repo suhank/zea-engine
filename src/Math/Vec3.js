@@ -145,6 +145,20 @@ class Vec3 extends AttrValue {
         this.z *= vec3.z;
     }
 
+    divide(vec3) {
+        return new Vec3(
+            this.x / vec3.x,
+            this.y / vec3.y,
+            this.z / vec3.z
+        );
+    }
+
+    divideInPlace(vec3) {
+        this.x /= vec3.x;
+        this.y /= vec3.y;
+        this.z /= vec3.z;
+    }
+
     scale(scalar) {
         return new Vec3(
             this.x * scalar,
@@ -343,6 +357,7 @@ class Vec3 extends AttrValue {
             this.__data[2]
         );
     }
+
 
     //////////////////////////////////////////
     // Static Methods

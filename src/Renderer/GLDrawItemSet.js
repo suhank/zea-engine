@@ -203,11 +203,11 @@ class GLDrawItemSet {
         // return;
 
         if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-            const drawItem = (index) => {
-                this.__drawItems[index].bind(renderstate);
+            const len = this.__visibleItems.length;
+            for (let i = 0; i < len; i++) {
+                this.__drawItems[i].bind(renderstate);
                 this.__glgeom.draw();
             }
-            this.__visibleItems.forEach(drawItem);
         } else {
             // console.log("draw:"+ this.__instancedIdsArray);
 

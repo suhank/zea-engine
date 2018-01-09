@@ -296,17 +296,18 @@ class GLBillboardsPass extends GLPass {
         this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 
         if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-            this.__indexArray.forEach((index)=>{
-                // this.__drawItems[index].bind(renderstate);
+            const len = this.__indexArray.length;
+            for (let i = 0; i < len; i++) {
+                // this.__drawItems[i].bind(renderstate);
                 // this.__glgeom.draw();
 
-                gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[index]);
-                gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[index]);
-                gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[index]);
-                gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.__billboards[index].imageIndex));
+                gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[i]);
+                gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[i]);
+                gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i]);
+                gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.__billboards[i].imageIndex));
                 ;
                 gl.drawQuad();
-            });
+            };
         }
         else
         {

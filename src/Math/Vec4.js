@@ -4,6 +4,9 @@ import {
 import {
     typeRegistry
 } from './TypeRegistry.js';
+import {
+    Vec3
+} from './Vec3.js';
 
 class Vec4 extends AttrValue {
     constructor(x = 0, y = 0, z = 0, t = 0) {
@@ -110,6 +113,13 @@ class Vec4 extends AttrValue {
         );
     }
 
+    addInPlace(other) {
+        this.x += other.x;
+        this.y += other.y;
+        this.z += other.z;
+        this.t += other.t;
+    }
+
 
     // Returns a new vector which is this vector subtracted from other
     subtract(other) {
@@ -119,6 +129,13 @@ class Vec4 extends AttrValue {
             this.z - other.z,
             this.t - other.t
         );
+    }
+
+    subtractInPlace(other) {
+        this.x -= other.x;
+        this.y -= other.y;
+        this.z -= other.z;
+        this.t -= other.t;
     }
 
 
@@ -298,6 +315,14 @@ class Vec4 extends AttrValue {
             this.__data[1],
             this.__data[2],
             this.__data[3]
+        );
+    }
+
+    toVec3(){
+        return new Vec3(
+            this.__data[0],
+            this.__data[1],
+            this.__data[2]
         );
     }
 

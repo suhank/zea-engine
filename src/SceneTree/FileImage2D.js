@@ -50,6 +50,9 @@ class FileImage2D extends Image2D {
     }
 
     getName() {
+        if(this.__name != this.constructor.name){
+            return this.__name;
+        }
         if (!this.__resourcePath || this.__resourcePath == '')
             return "FileImageNoResource";
         let getName = (str) => {
@@ -415,7 +418,7 @@ class FileImage2D extends Image2D {
     readBinary(reader, flags, lod) {
         // super.readBinary(reader, flags);
         this.setName(reader.loadStr());
-        const resourcePath = reader.loadStr();
+        let resourcePath = reader.loadStr();
         if (typeof resourcePath === 'string' && resourcePath != "") {
             if (lod >= 0) {
                 const suffixSt = resourcePath.lastIndexOf('.')
