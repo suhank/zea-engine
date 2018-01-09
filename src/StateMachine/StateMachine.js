@@ -1,10 +1,14 @@
 
 
 class StateMachine {
-    constructor(scene) {
-        this.__scene = this;
+    constructor(treeItem) {
+        this.__treeItem = treeItem;
         this.__states = {};
         this.__currentState;
+    }
+
+    getTreeItem() {
+        return this,__treeItem;
     }
 
     addState(state) {

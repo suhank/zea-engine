@@ -11,18 +11,11 @@ import {
 } from './SGFactory.js';
 
 import {
-    RefCounted
-} from './RefCounted.js';
-import {
-    Parameter,
-    NumberParameter,
-    Vec2Parameter,
-    Vec3Parameter,
-    ColorParameter
-} from './Parameters';
+    ParameterOwner
+} from './ParameterOwner.js';
 
 
-class BaseItem extends RefCounted {
+class BaseItem extends ParameterOwner {
     constructor(name) {
         super();
         if (this.constructor.name == 'BaseItem') {
@@ -34,19 +27,10 @@ class BaseItem extends RefCounted {
         this.__path = [name];
         this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
 
-        this.__params = [];
-        this.__paramMapping = {};
-
         this.__metaData = new Map();
 
         this.nameChanged = new Signal();
         this.ownerChanged = new Signal();
-        this.parameterAdded = new Signal();
-        this.parameterRemoved = new Signal();
-        this.parameterValueChanged = new Signal();
-        this.parameterNameChanged = new Signal();
-
-
     }
 
     destroy() {
@@ -58,15 +42,8 @@ class BaseItem extends RefCounted {
     }
 
     copyTo(cloned) {
+        super.copyTo(cloned)
         cloned.setName(this.__name);
-        for (let param of this.__params) {
-            if(cloned.hasParameter(param.getName())){
-                cloned.getParameter(param.getName()).setValue(param.getValue(), 2);
-            }
-            else {
-                cloned.addParameterInstance(param.clone());
-            }
-        }
     }
 
     //////////////////////////////////////////
@@ -129,67 +106,6 @@ class BaseItem extends RefCounted {
     }
 
     //////////////////////////////////////////
-    // Params
-
-    getParameters() {
-        return this.__params;
-    }
-
-    getParameterByIndex(index) {
-        return this.__params[index];
-    }
-
-    hasParameter(paramName) {
-        return paramName in this.__paramMapping;
-    }
-
-    getParameter(paramName) {
-        return this.__params[this.__paramMapping[paramName]];
-    }
-
-    addParameter(paramName, defaultValue) {
-        if (paramName instanceof Parameter) {
-            return this.addParameterInstance(paramName);
-        }
-        if (defaultValue instanceof Parameter) {
-            return this.addParameterInstance(defaultValue);
-        }
-
-        let param;
-        if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
-            param = new Parameter(paramName, defaultValue, 'Boolean');
-        } else if (typeof defaultValue == 'string') {
-            param = new Parameter(paramName, defaultValue, 'String');
-        } else if (Number.isNumeric(defaultValue)) {
-            param = new NumberParameter(paramName, defaultValue);
-        } else if (defaultValue instanceof Vec2) {
-            param = new Vec2Parameter(paramName, defaultValue);
-        } else if (defaultValue instanceof Vec3) {
-            param = new Vec3Parameter(paramName, defaultValue);
-        } else if (defaultValue instanceof Color) {
-            param = new ColorParameter(paramName, defaultValue);
-        } else {
-            param = new Parameter(paramName, defaultValue);
-        }
-        this.addParameterInstance(param);
-        return param;
-    }
-
-    addParameterInstance(param) {
-        param.valueChanged.connect(() => this.parameterValueChanged.emit(param.getName()));
-        param.nameChanged.connect((newName, oldName) => {
-            let index = this.__paramMapping[oldName];
-            delete this.__paramMapping[oldName];
-            this.__paramMapping[newName] = index;
-            this.parameterNameChanged.emit(newName, oldName);
-        });
-        this.__params.push(param)
-        this.__paramMapping[param.getName()] = this.__params.length - 1;
-        this.parameterAdded.emit();
-        return param;
-    }
-
-    //////////////////////////////////////////
     // Metadata
 
     getMetadata(key) {
@@ -210,22 +126,22 @@ class BaseItem extends RefCounted {
 
 
     toJSON(flags = 0) {
-        let paramsJSON = [];
-        for (let param of this.__params)
-            paramsJSON.push(param.toJSON())
-        return {
-            "name": this.__name,
-            "params": paramsJSON,
-        }
+        const j = super.toJSON(flags);
+        j.name = this.__name;
+        return j;
     }
 
     fromJSON(j, flags, asset) {
+        super.fromJSON(j, flags);
         this.__name = j.name;
     }
 
     readBinary(reader, flags, asset) {
         let type = reader.loadStr();
         this.setName(reader.loadStr());
+
+        // Note: parameters follow name...
+        super.readBinary(reader, flags);
     }
 
     toString() {
