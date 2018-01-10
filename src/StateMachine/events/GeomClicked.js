@@ -6,15 +6,21 @@ import {
 
 
 class GeomClicked extends StateEvent  {
-    constructor(state) {
-        super(state)
+    constructor() {
+        super()
 
         this.__pathParam = this.addParameter('path', "");
         this.__pathParam.valueChanged.connect((changeType)=>{
-            this.__geom = this.__state.getStateMachine().getTreeItem().resolvePath(this.__pathParam.getValue());
+            if(this.__state)
+                this.__geom = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());
         });
 
         this.onGeomClicked = this.onGeomClicked.bind(this);
+    }
+
+
+    setState(state) {
+        super.setState(state);
     }
 
 
@@ -23,6 +29,9 @@ class GeomClicked extends StateEvent  {
     }
 
     activate() {
+        if(!this.__geom){
+            this.__geom = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());
+        }
         if(this.__geom){
             this.__geom.mouseDownOnItem.connect(this.onGeomClicked);
         }

@@ -2,16 +2,20 @@
 
 import {
     ParameterOwner
-} from '../ParameterOwner.js';
+} from '../SceneTree/ParameterOwner.js';
 
 
 class StateAction extends ParameterOwner {
-    constructor(state) {
-        this.__state = state;
+    constructor() {
+        super();
         this.__childActions = [];
 
         this.__params = [];
         this.__paramMapping = {};
+    }
+
+    setState(state) {
+        this.__state = state;
     }
 
     addChild(action) {

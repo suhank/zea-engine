@@ -1,6 +1,10 @@
 
 
 import {
+    Parameter,
+    NumberParameter
+} from '../../SceneTree/Parameters';
+import {
     StateAction
 } from '../StateAction.js';
 
@@ -15,15 +19,15 @@ class SetParameterValue extends StateAction {
             // Initialize the value param with the same value as the boudn parameter
             this.__valueParam = this.addParameter('value', this.__parameter.getValue());
         });
-        this.__interpTimeParam = this.addParameter('interpTime', new NumberParameter(1.0));
-        this.__updateFrequencyParam = this.addParameter('updateFrequency', new NumberParameter(30));
+        this.__interpTimeParam = this.addParameter(new NumberParameter('interpTime', 1.0));
+        this.__updateFrequencyParam = this.addParameter(new NumberParameter('updateFrequency', 30));
     }
 
     start(){
 
         if(this.__parameter){
-            if(this.__interpTime > 0.0) {
-                const interpTime = this.__interpTimeParam.getValue();
+            const interpTime = this.__interpTimeParam.getValue();
+            if(interpTime > 0.0) {
                 const updateFrequency = this.__updateFrequencyParam.getValue();
                 const paramValueStart = this.__parameter.getValue();
                 let step = 0;

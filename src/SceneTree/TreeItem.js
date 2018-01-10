@@ -27,6 +27,9 @@ class TreeItem extends BaseItem {
         this.__selectable = true;
 
         this.__childItems = [];
+        this.__items = [];
+        this.__itemMapping = {};
+        
 
         this.__visibleParam = this.addParameter('visible', true);
         this.__selectedParam = this.addParameter('selected', false);
@@ -80,6 +83,9 @@ class TreeItem extends BaseItem {
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
 
+        this.itemAdded = new Signal();
+        this.itemRemoved = new Signal();
+
         this.mouseDown = new Signal();
         this.mouseUp = new Signal();
         this.mouseMove = new Signal();
@@ -110,14 +116,14 @@ class TreeItem extends BaseItem {
     //////////////////////////////////////////
     // Parent Item
 
-    setOwnerItem(parentItem) {
+    setOwner(parentItem) {
         if(this.__ownerItem) {
             this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
         }
 
         
         // this.__private.set(parentItem, parentItem);
-        super.setOwnerItem(parentItem);
+        super.setOwner(parentItem);
 
         this._setGlobalXfoDirty();
         if(this.__ownerItem) {
@@ -133,11 +139,11 @@ class TreeItem extends BaseItem {
     }
 
     getParentItem() {
-        return this.getOwnerItem();
+        return this.getOwner();
     }
 
     setParentItem(parentItem) {
-        this.setOwnerItem(parentItem);
+        this.setOwner(parentItem);
     }
 
     get parentItem() {
@@ -148,24 +154,62 @@ class TreeItem extends BaseItem {
         throw(("setter is deprectated. Please use 'setParentItem'"));
     }
 
+
+    //////////////////////////////////////////
+    // Items
+
+    addItem(item) {
+        this.__items.push(item);
+        this.__itemMapping[item.getName()] = this.__items.length - 1;
+
+        item.setOwner(this);
+
+        this.itemAdded.emit(item);
+    }
+
+    removeItem(name) {
+        const index = this.__itemMapping[name]
+        const item = this.__items[index];
+        item.setOwner(undefined);
+        this.__items.splice(index, 1);
+
+        const itemMapping = {};
+        for (let i =0; i< this.__items.length; i++)
+            itemMapping[this.__items[i].getName()] = i;
+        this.__itemMapping = itemMapping;
+
+        this.itemAdded.emit(item);
+        return item;
+    }
+
+    getItem(name) {
+        return this.__items[this.__itemMapping[name]];
+    }
+
     //////////////////////////////////////////
     // Path Traversial
+
+    resolveMember(path) {
+        if(path.startsWith('group')){
+            return this.getItem(path.substring(6)); 
+        }
+        super.resolveMember(path)
+    }
 
     resolvePath(path, index=0) {
         if(typeof path == 'string')
             path = path.split('/');
+        // if(path[0] == '.')
+        //     path = path.splice(1);
         if (path.length == 0) {
             throw("Invalid path:" + path);
         }
-        if (path.length-1 == index){
-            let parts = path[index].split(':');
-            if (parts[0] == this.__name) {
-                return this;
-            }
+        if (index == path.length-1){
             return super.resolvePath(path, index);
         }
 
-        let childItem = this.getChildByName(path[index+1]);
+        const childName = path[index+1].split(':')[0];
+        let childItem = this.getChildByName(childName);
         if (childItem == undefined) {
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
             console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);

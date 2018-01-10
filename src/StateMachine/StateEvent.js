@@ -1,15 +1,20 @@
 
 import {
     ParameterOwner
-} from '../ParameterOwner.js';
+} from '../SceneTree/ParameterOwner.js';
 
 class StateEvent extends ParameterOwner {
-    constructor(state) {
+    constructor() {
+        super();
+        this.__targetStateParam = this.addParameter('targetState', "");
+    }
+
+    setState(state) {
         this.__state = state;
     }
 
     __onEvent(){
-        this.__stateMachine.activateState(this.__targetState);
+        this.__state.getStateMachine().activateState(this.__targetStateParam.getValue());
     }
 
     activate() {

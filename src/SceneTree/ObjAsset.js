@@ -335,7 +335,7 @@ class ObjAsset extends AssetItem {
         mesh.moveVertices(delta.negate());
         geomItem.setLocalXfo(new Xfo(delta));
 
-        if (geomData.material != undefined && this.__materials.getMaterial(geomData.material)) {
+        if (geomData.material != undefined && this.__materials.hasMaterial(geomData.material)) {
             geomItem.setMaterial(this.__materials.getMaterial(geomData.material));
         } else{
 

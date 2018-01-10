@@ -76,27 +76,35 @@ class BaseItem extends ParameterOwner {
     //////////////////////////////////////////
     // Path Traversial
 
+    resolveMember(path) {
+        if(path.startswith('parameter')){
+            return this.getParameter(path.substring(10)); 
+        }
+        throw ("Invalid path:" + path + " member not found");
+    }
+
+
     resolvePath(path, index) {
         if (path[index] == this.__name) {
             return this;
         }
-        let parts = path[index].split(':');
+        const parts = path[index].split(':');
         if (parts[0] != this.__name) {
             throw ("Invalid path:" + path);
         }
-        return this.getParameter(parts[2]);
+        return this.resolveMember(parts[1]);
     }
 
 
     //////////////////////////////////////////
     // Owner Item
 
-    getOwnerItem() {
+    getOwner() {
         // return this.__private.get('ownerItem');
         return this.__ownerItem;
     }
 
-    setOwnerItem(ownerItem) {
+    setOwner(ownerItem) {
         // this.__private.set(ownerItem, ownerItem);
         this.__ownerItem = ownerItem;
         this.__updatePath();

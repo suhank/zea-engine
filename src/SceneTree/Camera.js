@@ -50,6 +50,7 @@ class Camera extends TreeItem {
 
         this.viewMatChanged = this.__viewMatParam.valueChanged;
         this.projectionParamChanged = new Signal();
+        this.movementFinished = new Signal();
         this.__isOrthographicParam.valueChanged.connect(this.projectionParamChanged.emit);
         this.__fovParam.valueChanged.connect(this.projectionParamChanged.emit);
         this.__nearParam.valueChanged.connect(this.projectionParamChanged.emit);
@@ -364,22 +365,24 @@ class Camera extends TreeItem {
     }
 
     onDragEnd(event, mouseUpPos, viewport) {
+        this.movementFinished.emit();
         return false;
     }
 
     onWheel(event) {
-        let focalDistance = this.__focalDistanceParam.getValue();
-        let mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
-        let zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance;
-        let xfo = this.getGlobalXfo();
+        const focalDistance = this.__focalDistanceParam.getValue();
+        const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
+        const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance;
+        const xfo = this.getGlobalXfo();
         xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist));
         if (this.__defaultManipulationState == 'orbit')
             this.__focalDistanceParam.setValue( focalDistance + zoomDist);
         this.setGlobalXfo(xfo);
+        this.movementFinished.emit();
     }
 
     __integrateVelocityChange(velChange) {
-        let delta = new Xfo();
+        const delta = new Xfo();
         delta.tr = this.__velocity.normalize().scale(this.__maxVel);
         this.setGlobalXfo(this.getGlobalXfo().multiply(delta));
     }
@@ -415,10 +418,9 @@ class Camera extends TreeItem {
         this.__keysPressed.push(key);
         if (!this.__keyboardMovement) {
             this.__keyboardMovement = true;
-            let _this = this;
-            let animationFrame = function() {
-                _this.__integrateVelocityChange()
-                if (_this.__keyboardMovement)
+            let animationFrame = ()=>{
+                this.__integrateVelocityChange()
+                if (this.__keyboardMovement)
                     window.requestAnimationFrame(animationFrame);
             }
             window.requestAnimationFrame(animationFrame);
@@ -493,7 +495,7 @@ class Camera extends TreeItem {
 
         this.setFocalDistance(newFocalDistance);
         this.setGlobalXfo(globalXfo);
-        
+        this.movementFinished.emit();
     }
 
     updateProjectionMatrix(mat, aspect) {

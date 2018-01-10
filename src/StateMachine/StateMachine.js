@@ -1,21 +1,24 @@
 
+import {
+    BaseItem
+} from '../SceneTree/BaseItem.js';
 
-class StateMachine {
-    constructor(treeItem) {
-        this.__treeItem = treeItem;
+class StateMachine extends BaseItem {
+    constructor(name) {
+        super(name)
         this.__states = {};
         this.__currentState;
     }
 
-    getTreeItem() {
-        return this,__treeItem;
-    }
-
     addState(state) {
-        this.__states[state.constructor.name] = state;
+        state.setStateMachine(this);
+        this.__states[state.getName()] = state;
     }
 
     activateState(key) {
+        if(!this.__ownerItem)
+            throw("Cannot activate a state machine without an owner");
+
         if(this.__currentState)
             this.__currentState.deactivate();
         this.__currentState = this.__states[key];

@@ -129,6 +129,9 @@ class GLViewport extends BaseViewport {
             this.__updateProjectionMatrix();
             this.updated.emit();
         });
+        this.__camera.movementFinished.connect(()=>{
+            this.renderGeomDataFbo();
+        });
 
         this.__updateProjectionMatrix();
     }
@@ -425,7 +428,6 @@ class GLViewport extends BaseViewport {
                 break;
             case 'camera-manipulation':
                 this.__camera.onDragEnd(event, mouseUpPos, this);
-                this.renderGeomDataFbo();
                 this.__manipMode = 'highlighting';
                 break;
             case 'geom-manipulation':
@@ -668,7 +670,6 @@ class GLViewport extends BaseViewport {
 
     onWheel(event) {
         this.__camera.onWheel(event);
-        this.renderGeomDataFbo();
     }
 
     __startTouch(touch) {

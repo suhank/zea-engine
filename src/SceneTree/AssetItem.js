@@ -28,6 +28,7 @@ class AssetItem extends TreeItem {
         this.__materials = new MaterialLibrary(this.__resourceLoader);
         this.__atlasSize = new Vec2();
 
+
         let fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
@@ -51,6 +52,11 @@ class AssetItem extends TreeItem {
         return this.__materials;
     }
 
+
+
+    //////////////////////////////////////////
+    // Groups
+
     getLightmapSize() {
         return this.__atlasSize;
     }
@@ -58,6 +64,7 @@ class AssetItem extends TreeItem {
     getAtlasSize() {
         return this.__atlasSize;
     }
+
 
     //////////////////////////////////////////
     // Persistence
