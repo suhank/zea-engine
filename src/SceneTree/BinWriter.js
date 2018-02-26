@@ -217,10 +217,10 @@ class BinWriter {
     }
 
     writeAlignment(numBytes) {
-        const bytes = numBytes - (this.__byteOffset % numBytes);
+        const bytes =  (this.__byteOffset % numBytes);
         if(bytes != 0) {
-            this.__reserve(bytes);
-            this.__offset(bytes);
+            this.__reserve(numBytes - bytes);
+            this.__offset(numBytes - bytes);
         }
     }
 

@@ -7,9 +7,8 @@ import {
 } from '../BaseItem.js';
 
 class Operator extends BaseItem {
-    constructor(ownerItem) {
-        super();
-        this.__ownerItem = ownerItem;
+    constructor(name) {
+        super(name);
 
         this.__outputs = [];
         let evalOutput = (value, getter)=>{

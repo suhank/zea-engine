@@ -9,22 +9,30 @@ import {
 } from '../StateAction.js';
 
 class SetParameterValue extends StateAction {
-    constructor(state) {
-        super(state)
+    constructor() {
+        super()
 
         this.__pathParam = this.addParameter('path', "");
+        this.__valueParam = this.addParameter('value', 1.0);
         this.__pathParam.valueChanged.connect((changeType)=>{
-            this.__parameter = this.__state.getStateMachine().getTreeItem().resolvePath(this.__pathParam.getValue());
-
-            // Initialize the value param with the same value as the boudn parameter
-            this.__valueParam = this.addParameter('value', this.__parameter.getValue());
+            if(this.__state)
+                this.__bindParam();
         });
         this.__interpTimeParam = this.addParameter(new NumberParameter('interpTime', 1.0));
         this.__updateFrequencyParam = this.addParameter(new NumberParameter('updateFrequency', 30));
     }
 
-    start(){
+    __bindParam(){
+        this.__parameter = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());
+    }
 
+    setState(state) {
+        super.setState(state);
+        this.__bindParam();
+    }
+
+
+    start(){
         if(this.__parameter){
             const interpTime = this.__interpTimeParam.getValue();
             if(interpTime > 0.0) {

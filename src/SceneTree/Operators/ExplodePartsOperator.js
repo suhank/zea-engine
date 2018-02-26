@@ -12,8 +12,8 @@ import {
 } from '../Parameters/NumberParameter.js';
 
 class ExplodePartsOperator extends Operator {
-    constructor(ownerItem) {
-        super(ownerItem);
+    constructor(name) {
+        super(name);
 
         this.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
         this.addParameter(new NumberParameter('Dist', 1.0));

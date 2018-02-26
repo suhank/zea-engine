@@ -98,9 +98,9 @@ class MaterialLibrary {
         this.__materials[material.getName()] = material;
     }
 
-    getMaterial(name) {
+    getMaterial(name, assert=true) {
         const res = this.__materials[name];
-        if(!res){
+        if(!res && assert){
             throw("Material:" + name+ " not found in library:" + this.getMaterialNames())
         }
         return res;

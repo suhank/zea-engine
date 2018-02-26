@@ -132,6 +132,10 @@ class Mat3 extends AttrValue {
         this.__data[7] = m21;
         this.__data[8] = m22;
     }
+    
+    setIdentity(){
+        this.set();
+    }
 
     // Not: works with either mat3 or mat4
     setFromMat(mat) {

@@ -189,12 +189,19 @@ class TreeItem extends BaseItem {
     //////////////////////////////////////////
     // Path Traversial
 
-    resolveMember(path) {
-        if(path.startsWith('group')){
-            return this.getItem(path.substring(6)); 
-        }
-        super.resolveMember(path)
-    }
+    // resolveMember(path) {
+    //     if(path.startsWith('item')){
+    //         let itemName = path.substring(5);
+    //         const pos = itemName.indexOf(':');
+    //         let suffix;
+    //         if(pos){
+    //             itemName = itemName.substring(0, pos);
+    //             suffix = itemName.substring(pos+1);
+    //         }
+    //         const item = this.getItem(itemName); 
+    //     }
+    //     super.resolveMember(path)
+    // }
 
     resolvePath(path, index=0) {
         if(typeof path == 'string')
@@ -205,12 +212,36 @@ class TreeItem extends BaseItem {
             throw("Invalid path:" + path);
         }
         if (index == path.length-1){
-            return super.resolvePath(path, index);
+            if (path[index] == this.__name) {
+                return this;
+            }
+            // const pos = path[index].indexOf(':');
+            // const prefix = path[index].substring(0, pos);
+            // const suffix = path[index].substring(pos+1);
+            // if (prefix != this.__name) {
+            //     throw ("Invalid path:" + path);
+            // }
+            // return this.resolveMember(suffix);
+            // return super.resolvePath(path, index);
+
+            return super.resolvePath(path[index]);
+            // if(path[index].startswith('parameter')){
+            //     return this.getParameter(path[index].substring(10)); 
+            // }
+            // throw("Invalid path:" + path);
         }
 
         const childName = path[index+1].split(':')[0];
         let childItem = this.getChildByName(childName);
         if (childItem == undefined) {
+            const item = this.getItem(childName);
+            if(item){
+                if (path.length == index + 1)
+                    return item;
+                else
+                    return item.resolvePath(path[index + 1]);
+            }
+
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
             console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
             return null;
@@ -355,10 +386,12 @@ class TreeItem extends BaseItem {
             throw ("Item '" + childItem.getName() + "' is already a child of :" + this.path);
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
+
+        this.__childItems.push(childItem);
+        childItem.setOwner(this);
+
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
-        this.__childItems.push(childItem);
-        childItem.setParentItem(this);
 
         childItem.boundingChanged.connect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
@@ -518,7 +551,7 @@ class TreeItem extends BaseItem {
             xfo.tr = reader.loadFloat32Vec3();
             xfo.ori = reader.loadFloat32Quat();
             xfo.sc.set(reader.loadFloat32());
-            // console.log(xfo.toString());
+            // console.log(this.getPath() + " TreeItem:" + xfo.toString());
             this.setLocalXfo(xfo);
         }
 

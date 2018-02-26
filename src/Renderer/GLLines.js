@@ -249,6 +249,12 @@ class GLLines extends GLGeom {
             gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0);
         }
     }
+
+    drawInstanced(count) {
+        this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, count);
+    }
+
+
 };
 
 export {

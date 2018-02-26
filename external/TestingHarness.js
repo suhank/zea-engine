@@ -11,6 +11,7 @@ class TestingHarness {
     }
 
     runTest(name, domElement, resources) {
+        name = name.replace(new RegExp("%20", 'g'), " ");
     	this.__tests[name](domElement, resources);
     }
 

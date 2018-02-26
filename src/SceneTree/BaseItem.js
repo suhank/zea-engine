@@ -76,23 +76,11 @@ class BaseItem extends ParameterOwner {
     //////////////////////////////////////////
     // Path Traversial
 
-    resolveMember(path) {
+    resolvePath(path) {
         if(path.startswith('parameter')){
             return this.getParameter(path.substring(10)); 
         }
         throw ("Invalid path:" + path + " member not found");
-    }
-
-
-    resolvePath(path, index) {
-        if (path[index] == this.__name) {
-            return this;
-        }
-        const parts = path[index].split(':');
-        if (parts[0] != this.__name) {
-            throw ("Invalid path:" + path);
-        }
-        return this.resolveMember(parts[1]);
     }
 
 

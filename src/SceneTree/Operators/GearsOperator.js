@@ -13,8 +13,8 @@ import {
 } from '../Parameters/NumberParameter.js';
 
 class GearsOperator extends Operator {
-    constructor(ownerItem) {
-        super(ownerItem);
+    constructor(name) {
+        super(name);
 
         this.__revolutionsParam = this.addParameter(new NumberParameter('Revolutions', 0.0, [0, 1]));
         let rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)); // revolutions per minute

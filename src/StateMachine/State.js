@@ -2,7 +2,7 @@
 
 class State {
     constructor(name) {
-        this.__name = name;
+        this.__name = name ? name : this.constructor.name;
         this.__flags = 0; // 1 == inactive, 2 == deactivating.  4=active, 8 == activatating.
 
 

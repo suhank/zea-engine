@@ -71,8 +71,11 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
         asset.addChild(objAsset);
 
     }
-    let op = new Visualive.ExplodePartsOperator(asset);
+    let op = new Visualive.ExplodePartsOperator('explodeOp');
     op.getParameter('Dist').setValue(30.0);
+    asset.addItem(op);
+
+
     {
         let objAsset = new Visualive.ObjAsset('PartB', scene.getResourceLoader());
         objAsset.getParameter('splitObjects').setValue(false);
@@ -141,8 +144,13 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
             asset.addItem(bolts);
 
-
+            const stateMachine = new Visualive.StateMachine();
+            const cutawayState = new Visualive.State('cutawayState');
             const initialState = new Visualive.State('initialState');
+            stateMachine.addState(initialState);
+            stateMachine.addState(cutawayState);
+            asset.addItem(stateMachine);
+
 
             const moveCameraToInitialCameraPos = new Visualive.MoveCamera(camera);
             moveCameraToInitialCameraPos.setCameraPosisionAndTarget(new Visualive.Vec3(35, 20, 35), new Visualive.Vec3(12, 0, 0));
@@ -151,23 +159,22 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
 
             const boltClicked = new Visualive.GeomClicked(camera);
-            boltClicked.getParameter('path').setValue('asset:group>bolts');
+            boltClicked.getParameter('path').setValue('asset/bolts');
             boltClicked.getParameter('targetState').setValue('cutawayState');
             initialState.addStateEvent(boltClicked);
 
 
-            const cutawayState = new Visualive.State('cutawayState');
 
             const moveCameraToCutawayPos = new Visualive.MoveCamera(camera);
             moveCameraToCutawayPos.setCameraPosisionAndTarget(new Visualive.Vec3(35, 20, -35), new Visualive.Vec3(12, 0, 0));
             moveCameraToCutawayPos.getParameter('interpTime').setValue(2.0);
-            cutawayState.addActivationAction(moveCameraToCutawayPos);
 
-            const stateMachine = new Visualive.StateMachine();
-            stateMachine.addState(initialState);
-            stateMachine.addState(cutawayState);
+            const setCutawayParam = new Visualive.SetParameterValue();
+            setCutawayParam.getParameter('path').setValue('asset/explodeOp:parameter>Explode');
+            setCutawayParam.getParameter('interpTime').setValue(3.0);
+            cutawayState.addActivationAction(setCutawayParam);
 
-            asset.addItem(stateMachine);
+
             stateMachine.activateState('initialState');
 
         });

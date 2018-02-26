@@ -16,9 +16,6 @@ class StateMachine extends BaseItem {
     }
 
     activateState(key) {
-        if(!this.__ownerItem)
-            throw("Cannot activate a state machine without an owner");
-
         if(this.__currentState)
             this.__currentState.deactivate();
         this.__currentState = this.__states[key];

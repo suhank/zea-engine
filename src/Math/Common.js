@@ -1,5 +1,6 @@
 const DEGTORAD = Math.PI / 180;
 Math.HALF_PI = Math.PI * 0.5;
+Math.TWO_PI = Math.PI * 2.0;
 // Defines used to explicity specify types for WebGL.
 const UInt32 = 1;
 const SInt32 = 2;
