@@ -248,11 +248,12 @@ class GLVisualiveRenderer extends GLRenderer {
             case 'b':
                 this.__displayEnvironment = !this.__displayEnvironment;
                 break;
-            case ' ':
+            case 'v':
                 if (this.__vrViewport)
                     this.__vrViewport.togglePresenting();
-                else
-                    this.toggleContinuousDrawing();
+                break;
+            case ' ':
+                this.toggleContinuousDrawing();
                 break;
         }
         super.onKeyPressed(key, event);

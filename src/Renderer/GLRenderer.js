@@ -115,7 +115,6 @@ class GLRenderer {
         this.__continuousDrawing = false;
         this.__redrawRequested = false;
         this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
-        this.__supportSessions = false;//options.supportSessions !== undefined ? options.supportSessions : true;
         this.__isMobile = SystemDesc.isMobileDevice;
 
         this.__drawSuspensionLevel = 1;
@@ -162,10 +161,13 @@ class GLRenderer {
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
         this.addPass(new GLBillboardsPass(this));
 
+        // Note: Audio contexts have started taking a long time to construct
+        // (Maybe a regresion in Chrome?)
         // Setup the Audio context.
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        this.__audioCtx = new AudioContext();
-        this.viewChanged.connect(this.__updateListenerPosition.bind(this));
+        // const AudioContext = window.AudioContext || window.webkitAudioContext;
+        // this.__audioCtx = new AudioContext();
+        // this.viewChanged.connect(this.__updateListenerPosition.bind(this));
+        
 
 
         this.addViewport('main');
@@ -266,11 +268,6 @@ class GLRenderer {
 
         if (this.supportsVR())
             this.__setupVRViewport();
-
-        if(this.__supportSessions){
-            this.sessionClient = new SessionClient(this);
-            this.sessionClientSetup.emit(this.sessionClient);
-        }
         
         this.sceneSet.emit(this.__scene);
     }
@@ -325,6 +322,8 @@ class GLRenderer {
     }
 
     __updateListenerPosition(data) {
+        if(!this.__audioCtx)
+            return;
         const listener = this.__audioCtx.listener;
         const viewXfo = data.viewXfo;
         if(listener.positionX) {

@@ -9,57 +9,57 @@ import {
     TreeItem
 } from '../SceneTree/TreeItem';
 import {
-    UserAvatar
-} from './UserAvatar';
-import {
-    GLAnalyticsPass
-} from './Passes/GLAnalyticsPass.js';
+    SessionParticipant
+} from './SessionParticipant';
+// import {
+//     GLAnalyticsPass
+// } from './Passes/GLAnalyticsPass.js';
 
-let getUrlVars = () => {
-    let url = window.location.href,
-        projectID,
-        args = [],
-        hash;
+// let getUrlVars = () => {
+//     let url = window.location.href,
+//         projectID,
+//         args = [],
+//         hash;
 
-    let parts = url.split('#');
-    let tmp = parts[0].split('/').filter((val) => val != '');
-    projectID = tmp[tmp.length - 1];
+//     let parts = url.split('#');
+//     let tmp = parts[0].split('/').filter((val) => val != '');
+//     projectID = tmp[tmp.length - 1];
 
-    let hashes = parts.length > 1 ? parts[1].split('&') : [];
-    for (let i = 0; i < hashes.length; i++) {
-        hash = hashes[i].split('=');
-        args[hash[0]] = hash[1];
-    }
-    if (projectID == "")
-        projectID = "SharedSession";
+//     let hashes = parts.length > 1 ? parts[1].split('&') : [];
+//     for (let i = 0; i < hashes.length; i++) {
+//         hash = hashes[i].split('=');
+//         args[hash[0]] = hash[1];
+//     }
+//     if (projectID == "")
+//         projectID = "SharedSession";
 
-    let isSecureConnection = url.startsWith('https');
+//     let isSecureConnection = url.startsWith('https');
 
-    if (parts.length > 1) {
-        // trim off the decorations. 
-        // This is so that users don't bookmark session URLs.
-        window.location.replace(parts[0] + '#');
-    }
+//     if (parts.length > 1) {
+//         // trim off the decorations. 
+//         // This is so that users don't bookmark session URLs.
+//         window.location.replace(parts[0] + '#');
+//     }
 
-    return {
-        projectID,
-        isSecureConnection,
-        args
-    };
-}
+//     return {
+//         projectID,
+//         isSecureConnection,
+//         args
+//     };
+// }
 
-function random(min, max) {
-    return Math.floor(Math.random() * max) + min;
-}
+// function random(min, max) {
+//     return Math.floor(Math.random() * max) + min;
+// }
 
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-            .toString(16)
-            .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4();;
-}
+// function guid() {
+//     function s4() {
+//         return Math.floor((1 + Math.random()) * 0x10000)
+//             .toString(16)
+//             .substring(1);
+//     }
+//     return s4() + s4() + '-' + s4() + '-' + s4();;
+// }
 
 // let generateSessionID = () => {
 //     let words = [
@@ -77,111 +77,160 @@ function guid() {
 //     return sessionID;
 // }
 
-let getLocationData = (callback) => {
-    function createElements(elements) {
-        // Assuming you get an array of objects.
-        if (typeof elements == 'string')
-            callback(JSON.parse(elements));
-    }
-    let xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        if (this.readyState == 4) {
-            createElements(this.responseText);
-        }
-    }
-    xhr.onload = createElements;
-    xhr.open("get", '//freegeoip.net/json/', true);
-    xhr.send()
-}
-
-let avatarColors = [
-    new Color(0.0, 0.15, 0.15),
-    new Color(0.0, 0.85, 0.15),
-    new Color(0.0, 0.15, 0.85),
-    new Color(0.0, 0.85, 0.85),
-    new Color(0.75, 0.15, 0.15),
-    new Color(0.75, 0.85, 0.15),
-    new Color(0.75, 0.15, 0.85),
-    new Color(0.75, 0.85, 0.85)
-];
-let randomAvatarColor = () => {
-    return avatarColors[random(0, avatarColors.length)];
-}
-
-let convertValuesFromJSON = (data) => {
-    let fromJSON = (key, value) => {
-        value.fromJSON(data[key]);
-        data[key] = value;
-    }
-    for (let key in data) {
-        let dataValue = data[key];
-        let className = dataValue.className;
-        if (className) {
-            let dataType = typeRegistry.getType(className);
-            fromJSON(key, dataType.create());
-        } else if (Array.isArray(dataValue)) {
-            convertValuesFromJSON(dataValue);
-        } else if (typeof dataValue === "object") {
-            convertValuesFromJSON(dataValue);
-        }
-    }
-}
+// let getLocationData = (callback) => {
+//     function createElements(elements) {
+//         // Assuming you get an array of objects.
+//         if (typeof elements == 'string')
+//             callback(JSON.parse(elements));
+//     }
+//     let xhr = new XMLHttpRequest();
+//     xhr.onreadystatechange = function() {
+//         if (this.readyState == 4) {
+//             createElements(this.responseText);
+//         }
+//     }
+//     xhr.onload = createElements;
+//     xhr.open("get", '//freegeoip.net/json/', true);
+//     xhr.send()
+// }
 
 
-let convertValuesToJSON = (data) => {
-    for (let key in data) {
-        let value = data[key];
-        if (value.toJSON) {
-            data[key] = value.toJSON();
-            data[key].className = value.constructor.name;
-        } else if (Array.isArray(value)) {
-            convertValuesToJSON(value);
-        } else if (typeof value === "object") {
-            convertValuesToJSON(value);
-        }
-    }
-}
 
-let downloadData = function(file_name, mime_type, text) {
-    // Anything but IE works here
-    if (undefined === window.navigator.msSaveOrOpenBlob) {
-        var e = document.createElement('a');
-        var href = 'data:' + mime_type + ';charset=utf-8,' + encodeURIComponent(text);
-        e.setAttribute('href', href);
-        e.setAttribute('download', file_name);
-        document.body.appendChild(e);
-        e.click();
-        document.body.removeChild(e);
-    }
-    // IE-specific code
-    else {
-        var charCodeArr = new Array(text.length);
-        for (var i = 0; i < text.length; ++i) {
-            var charCode = text.charCodeAt(i);
-            charCodeArr[i] = charCode;
-        }
-        var blob = new Blob([new Uint8Array(charCodeArr)], {
-            type: mime_type
-        });
-        window.navigator.msSaveOrOpenBlob(blob, file_name);
-    }
-}
+// let convertValuesFromJSON = (data) => {
+//     let fromJSON = (key, value) => {
+//         value.fromJSON(data[key]);
+//         data[key] = value;
+//     }
+//     for (let key in data) {
+//         let dataValue = data[key];
+//         let className = dataValue.className;
+//         if (className) {
+//             let dataType = typeRegistry.getType(className);
+//             fromJSON(key, dataType.create());
+//         } else if (Array.isArray(dataValue)) {
+//             convertValuesFromJSON(dataValue);
+//         } else if (typeof dataValue === "object") {
+//             convertValuesFromJSON(dataValue);
+//         }
+//     }
+// }
+
+
+// let convertValuesToJSON = (data) => {
+//     for (let key in data) {
+//         let value = data[key];
+//         if (value.toJSON) {
+//             data[key] = value.toJSON();
+//             data[key].className = value.constructor.name;
+//         } else if (Array.isArray(value)) {
+//             convertValuesToJSON(value);
+//         } else if (typeof value === "object") {
+//             convertValuesToJSON(value);
+//         }
+//     }
+// }
+
+// let downloadData = function(file_name, mime_type, text) {
+//     // Anything but IE works here
+//     if (undefined === window.navigator.msSaveOrOpenBlob) {
+//         var e = document.createElement('a');
+//         var href = 'data:' + mime_type + ';charset=utf-8,' + encodeURIComponent(text);
+//         e.setAttribute('href', href);
+//         e.setAttribute('download', file_name);
+//         document.body.appendChild(e);
+//         e.click();
+//         document.body.removeChild(e);
+//     }
+//     // IE-specific code
+//     else {
+//         var charCodeArr = new Array(text.length);
+//         for (var i = 0; i < text.length; ++i) {
+//             var charCode = text.charCodeAt(i);
+//             charCodeArr[i] = charCode;
+//         }
+//         var blob = new Blob([new Uint8Array(charCodeArr)], {
+//             type: mime_type
+//         });
+//         window.navigator.msSaveOrOpenBlob(blob, file_name);
+//     }
+// }
 
 
 class SessionClient {
 
-    constructor(renderer) {
-        this.__renderer = renderer;
+    constructor(renderer, visualivePlatform) {
 
-        this.scaleFactor = 1.0;
+        const onMessage = (message) => {
+            const participant = participants[message.userId];
+            if (participant) {
+                participant.onUserMessage(message);
+            }
+        }
+
+        const avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
+        const participants = {};
+
+        visualivePlatform.on('ready', (sessionData, user) => {
+            // createAudioHeader(document.body, resources, visualivePlatform);
+
+            participants[user.id] = new SessionParticipant(renderer, visualivePlatform, avatarsTreeRoot, user, true);;
+
+            let localUserCanvasInitialized = false;
+            if (sessionData) {
+                sessionData.map(message => {
+                    if (message.type == 'initUser') {
+                        if (message.user.id == user.id) {
+                            localUserCanvasInitialized = true;
+                        } else if (!participants[message.user.id]) {
+                            participants[message.user.id] = new SessionParticipant(renderer, visualivePlatform, avatarsTreeRoot, message.user, false);
+                        }
+                    }
+                    else if (message.userId)
+                        onMessage(message);
+                });
+            }
+
+            if (!localUserCanvasInitialized) {
+                // Send a message with user details so that when the session is reloaded
+                // the object for this user will be recreated.
+                visualivePlatform.sendMessage({
+                    type: 'initUser',
+                    user
+                }, true);
+            }
+        });
+
+        visualivePlatform.on('message', onMessage);
+        
+        visualivePlatform.on('join', (user) => {
+            if (!participants[user.id]) {
+                participants[user.id] = new SessionParticipant(renderer, visualivePlatform, avatarsTreeRoot, user, false);
+            } else {
+                // user was already in the session.
+            }
+        });
+
+        visualivePlatform.on('leave', (user) => {
+            // Do nothing....
+            // When a user leaves a session we keep diplaying thier data.
+        });
+
+        visualivePlatform.on('error', error => {
+            alert(error);
+        })
+
+        /*
+        // this.__renderer = renderer;
+
+        // this.scaleFactor = 1.0;
 
         ///////////////////////////
         // Signals.
-        this.playbackModeChanged = new Signal();
-        this.playStateChanged = new Signal();
-        // this.sessionModeChanged = new Signal();
-        this.sessionTimeChanged = new Signal();
-        this.replayDataRecieved = new Signal();
+        // this.playbackModeChanged = new Signal();
+        // this.playStateChanged = new Signal();
+        // // this.sessionModeChanged = new Signal();
+        // this.sessionTimeChanged = new Signal();
+        // this.replayDataRecieved = new Signal();
 
         ////////////////////////////
 
@@ -743,40 +792,40 @@ class SessionClient {
 
         /////////////////////////////////////////////////
         // Analytics Display
-        let analyticsPass = undefined;
-        let onAnalyticsDataRecieved = (data) => {
-            function _base64ToArrayBuffer(base64) {
-                var binary_string = window.atob(base64);
-                var len = binary_string.length;
-                var bytes = new Uint8Array(len);
-                for (var i = 0; i < len; i++) {
-                    bytes[i] = binary_string.charCodeAt(i);
-                }
-                return bytes.buffer;
-            }
-            let dataArray = new Float32Array(_base64ToArrayBuffer(data));
-            // console.log("displayAnalytics:" + dataArray);
-            analyticsPass = new GLAnalyticsPass(renderer.gl, dataArray);
-            renderer.addPass(analyticsPass);
-            renderer.requestRedraw();
-        }
-        let requestAnalytics = () => {
-            sendMessage({
-                type: 'getProjectAnalytics',
-                projectID
-            });
-        }
-        let removeAnalytics = () => {
-            renderer.removePass(analyticsPass);
-            analyticsPass.destroy();
-        }
+        // let analyticsPass = undefined;
+        // let onAnalyticsDataRecieved = (data) => {
+        //     function _base64ToArrayBuffer(base64) {
+        //         var binary_string = window.atob(base64);
+        //         var len = binary_string.length;
+        //         var bytes = new Uint8Array(len);
+        //         for (var i = 0; i < len; i++) {
+        //             bytes[i] = binary_string.charCodeAt(i);
+        //         }
+        //         return bytes.buffer;
+        //     }
+        //     let dataArray = new Float32Array(_base64ToArrayBuffer(data));
+        //     // console.log("displayAnalytics:" + dataArray);
+        //     analyticsPass = new GLAnalyticsPass(renderer.gl, dataArray);
+        //     renderer.addPass(analyticsPass);
+        //     renderer.requestRedraw();
+        // }
+        // let requestAnalytics = () => {
+        //     sendMessage({
+        //         type: 'getProjectAnalytics',
+        //         projectID
+        //     });
+        // }
+        // let removeAnalytics = () => {
+        //     renderer.removePass(analyticsPass);
+        //     analyticsPass.destroy();
+        // }
 
-        this.toggleAnalytics = () => {
-            if (!analyticsPass)
-                requestAnalytics();
-            else
-                removeAnalytics();
-        };
+        // this.toggleAnalytics = () => {
+        //     if (!analyticsPass)
+        //         requestAnalytics();
+        //     else
+        //         removeAnalytics();
+        // };
 
         /////////////////////////////////////////////////
         // Hotkeys
@@ -791,6 +840,8 @@ class SessionClient {
                     return true;
             }
         });
+
+        */
     }
 
 };

@@ -51,6 +51,16 @@ class VRViewport extends BaseViewport {
         this.__vrDisplay = vrDisplay;
 
         //////////////////////////////////////////////
+        // Resources
+
+        if (renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
+            this.__asset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
+            this.__asset.getMaterialLibrary().setMaterialTypeMapping({
+                '*': 'SimpleSurfaceShader'
+            });
+        }
+
+        //////////////////////////////////////////////
         // Viewport params
         this.__projectionMatriciesUpdated = false;
         this.__presentingRequested = false;
@@ -61,16 +71,6 @@ class VRViewport extends BaseViewport {
         this.__near = 0.1;
         this.__vrDisplay.depthNear = this.__near;
         this.__vrDisplay.depthFar = this.__far;
-
-        //////////////////////////////////////////////
-        // Resources
-
-        if (renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
-            this.__asset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
-            this.__asset.getMaterialLibrary().setMaterialTypeMapping({
-                '*': 'SimpleSurfaceShader'
-            });
-        }
 
         //////////////////////////////////////////////
         // Tree
@@ -147,7 +147,6 @@ class VRViewport extends BaseViewport {
         // simply emit the new VR data.
         this.viewChanged = new Signal();
         this.presentingChanged = new Signal();
-        this.pointerMoved = new Signal();
 
         // Stroke Signals
         this.actionStarted = new Signal();

@@ -1,3 +1,7 @@
+
+import {
+    Color
+} from '../Math';
 import {
     Lines,
     TreeItem,
@@ -7,86 +11,51 @@ import {
 
 class MarkerpenTool {
     constructor(name) {
-        this.__name = name;
-        this.__treeItem = new TreeItem(name + 'MarkerpenTool');
-        this.__strokeCount = 0;
+        this.__treeItem = new TreeItem(name);
+        this.__strokes = [];
 
-        this.__strokes = {};
-
-        // Stroke Signals
-        // this.strokeStarted = new Signal();
-        // this.strokeEnded = new Signal();
-        // this.strokeSegmentAdded = new Signal();
+        this.__color = new Color(1,0,0);
+        this.__thickness = 0.1;
     }
 
     getTreeItem() {
         return this.__treeItem;
     }
 
-    startStroke(xfo, color, thickness, id) {
-        this.__strokeCount++;
-        let replayMode = true;
-        if (!id) {
-            id = 'Stroke' + this.__strokeCount;
-            replayMode = false;
-        }
+    startStroke(xfo) {
 
-        let lineGeom = new Lines();
+        const id = this.__strokes.length;
+        const used = 0;
+        const vertexCount = 100;
 
-        let used = 0;
-        let vertexCount = 100;
+        const lineGeom = new Lines();
         lineGeom.setNumVertices(vertexCount);
         lineGeom.setNumSegments(vertexCount - 1);
         lineGeom.vertices.setValue(used, xfo.tr);
 
-        lineGeom.lineThickness = thickness;
-        let material = new Material('stroke', 'FatLinesShader');
-        material.addParameter('color', color);
+        lineGeom.lineThickness = this.__thickness;
+        const material = new Material('stroke', 'FatLinesShader');
+        material.addParameter('color', this.__color);
 
-
-        let geomItem = new GeomItem(id, lineGeom, material);
+        const geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
 
-
-        this.__strokes[id] = {
-            geomItem,
+        this.__currStroke = {
+            lineGeom,
             used,
-            vertexCount,
-            replayMode,
-        };
-
-        // if(!replayMode){
-        //     this.strokeStarted.emit({
-        //         type: 'strokeStarted',
-        //         data: {
-        //             id: id,
-        //             xfo: xfo.toJSON(),
-        //             color: color.toJSON(),
-        //             thickness: thickness
-        //         }
-        //     });
-        // }
+            vertexCount
+        }
         return id;
     }
 
-    endStroke(id = undefined) {
-        let replayMode = true;
-        if (!id) {
-            id = 'Stroke' + this.__strokeCount;
-            replayMode = false;
-        }
-
-        return id;
+    endStroke() {
+        this.__strokes.push(this.__currStroke);
+        this.__currStroke = undefined;
     }
 
-    addSegmentToStroke(xfo, id = undefined) {
-        let replayMode = true;
-        if (!id) {
-            id = 'Stroke' + this.__strokeCount;
-            replayMode = false;
-        }
-        let stroke = this.__strokes[id];
-        let lineGeom = stroke.geomItem.getGeom();
+    addSegmentToStroke(xfo) {
+        const stroke = this.__currStroke;
+        const lineGeom = stroke.lineGeom;
         stroke.used++;
 
         let realloc = false;
@@ -109,37 +78,12 @@ class MarkerpenTool {
                 'indicesChanged': true
             });
         }
-        lineGeom.__strokeCount = stroke.used;
 
-
-        // if(!stroke.replayMode){
-        //     this.strokeSegmentAdded.emit({
-        //         type: 'strokeSegmentAdded',
-        //         data: {
-        //           id: id,
-        //           xfo: xfo.toJSON()
-        //         }
-        //     });
-        // }
         return id;
     }
 
-    // removeStroke(id) {
-    //     let geomItem = this.__treeItem.getChildByName(id);
-    //     this.__treeItem.removeChildByHandle(geomItem);
-    // }
-
-    // removeSegmentFromStroke(id) {
-    //     let stroke = this.__strokes[id];
-    //     let lineGeom = stroke.geomItem.getGeom();
-    //     stroke.used--;
-    //     lineGeom.setSegment(stroke.used-1, 0, 0);
-    //     lineGeom.geomDataChanged.emit({'indicesChanged':true});
-    // }
-
     clear() {
-        this.__strokeCount = 0;
-        this.__strokes = {};
+        this.__strokes = [];
         this.__treeItem.removeAllChildren();
     };
 
