@@ -72,9 +72,6 @@ import {
     GLDrawItem
 } from './GLDrawItem.js';
 import {
-    SessionClient
-} from './SessionClient.js';
-import {
     VRViewport
 } from './VR/VRViewport.js';
 
@@ -164,9 +161,9 @@ class GLRenderer {
         // Note: Audio contexts have started taking a long time to construct
         // (Maybe a regresion in Chrome?)
         // Setup the Audio context.
-        // const AudioContext = window.AudioContext || window.webkitAudioContext;
-        // this.__audioCtx = new AudioContext();
-        // this.viewChanged.connect(this.__updateListenerPosition.bind(this));
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.__audioCtx = new AudioContext();
+        this.viewChanged.connect(this.__updateListenerPosition.bind(this));
         
 
 
@@ -327,21 +324,21 @@ class GLRenderer {
         const listener = this.__audioCtx.listener;
         const viewXfo = data.viewXfo;
         if(listener.positionX) {
-            listener.positionX.value = viewXfo.tr.x;
-            listener.positionY.value = viewXfo.tr.y;
-            listener.positionZ.value = viewXfo.tr.z;
+            listener.positionX.setTargetAtTime(viewXfo.tr.x, this.__audioCtx.currentTime, 0.0);
+            listener.positionY.setTargetAtTime(viewXfo.tr.y, this.__audioCtx.currentTime, 0.0);
+            listener.positionZ.setTargetAtTime(viewXfo.tr.z, this.__audioCtx.currentTime, 0.0);
         } else {
             listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
         }
 
         const zdir = viewXfo.ori.getZaxis().negate();
-        const ydir = viewXfo.ori.getYaxis();
-        if(listener.orientationX) {
-          listener.orientationX.value = zdir.x;
-          listener.orientationY.value = zdir.y;
-          listener.orientationZ.value = zdir.z;
+        if(listener.forwardX) {
+          listener.forwardX.setTargetAtTime(zdir.x, this.__audioCtx.currentTime, 0.0);
+          listener.forwardY.setTargetAtTime(zdir.y, this.__audioCtx.currentTime, 0.0);
+          listener.forwardZ.setTargetAtTime(zdir.z, this.__audioCtx.currentTime, 0.0);
         } else {
-          listener.setOrientation(zdir.x, zdir.y, zdir.z, ydir.x, ydir.y, ydir.z);
+            const ydir = viewXfo.ori.getYaxis();
+            listener.setOrientation(zdir.x, zdir.y, zdir.z, ydir.x, ydir.y, ydir.z);
         }
     }
 

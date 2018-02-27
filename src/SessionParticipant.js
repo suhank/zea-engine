@@ -4,10 +4,10 @@ import {
     Color,
     EulerAngles,
     typeRegistry
-} from '../Math';
+} from './Math';
 import {
     Signal
-} from '../Utilities';
+} from './Utilities';
 import {
     Cone,
     Cuboid,
@@ -16,7 +16,12 @@ import {
     GeomItem,
     Material,
     MarkerpenTool
-} from '../SceneTree';
+} from './SceneTree';
+
+
+function random(min, max) {
+    return Math.floor(Math.random() * max) + min;
+}
 
 let avatarColors = [
     new Color(0.0, 0.15, 0.15),
@@ -32,48 +37,49 @@ let randomAvatarColor = () => {
     return avatarColors[random(0, avatarColors.length)];
 }
 
-let convertValuesFromJSON = (data) => {
-    const result = data;
-    let fromJSON = (key, value) => {
-        value.fromJSON(data[key]);
-        data[key] = value;
+let convertValuesFromJSON = (value) => {
+    if (value == undefined) {
+        return undefined;
+    } else if (value.className) {
+        const newval = typeRegistry.getType(value.className).create();
+        newval.fromJSON(value);
+        return newval;
+    } else if (Array.isArray(value)) {
+        let arr = [];
+        for (const element of value)
+            arr.push(convertValuesFromJSON(element));
+        return arr;
+    } else if (typeof value === "object") {
+        const dict = {};
+        for (let key in value)
+            dict[key] = convertValuesFromJSON(value[key]);
+        return dict;
+    } else {
+        return value;
     }
-    for (let key in data) {
-        let member = data[key];
-        if (member.className) {
-            const newval = typeRegistry.getType(member.className).create();
-            value.fromJSON(member);
-            result[key] = value;
-        } else if (Array.isArray(member)) {
-            let arr = [];
-            for (const element of value)
-                arr.push(convertValuesFromJSON(element));
-            result[key] = arr;
-        } else if (typeof member === "object") {
-            convertValuesFromJSON(member);
-        }
-    }
-    return result;
 }
 
 
-let convertValuesToJSON = (data) => {
-    const result = data;
-    for (let key in result) {
-        let member = data[key];
-        if (member.toJSON) {
-            result[key] = member.toJSON();
-            result[key].className = member.constructor.name;
-        } else if (Array.isArray(member)) {
-            let arr = [];
-            for (const element of member)
-                arr.push(convertValuesToJSON(element));
-            result[key] = arr;
-        } else if (typeof member === "object") {
-            result[key] = convertValuesToJSON(member);
-        }
+let convertValuesToJSON = (value) => {
+    if (value == undefined) {
+        return undefined;
+    } else if (value.toJSON) {
+        const result = value.toJSON();
+        result.className = value.constructor.name;
+        return result;
+    } else if (Array.isArray(value)) {
+        let arr = [];
+        for (const element of value)
+            arr.push(convertValuesToJSON(element));
+        return arr;
+    } else if (typeof value === "object") {
+        const dict = {};
+        for (let key in value)
+            dict[key] =convertValuesToJSON(value[key]);
+        return dict;
+    } else {
+        return value;
     }
-    return result;
 }
 
 
@@ -85,6 +91,7 @@ class SessionParticipant {
         this.__user = user;
         this.__isLocalUser = isLocalUser;
         this.__avatarScale = 1.0;
+        this.__avatarColor =  randomAvatarColor()
 
         this.__controllers = [];
 
@@ -92,6 +99,7 @@ class SessionParticipant {
         // this.__treeItem.setVisible(visible);
 
         this.userMarker = new MarkerpenTool('marker');
+        this.userMarker.color = this.__avatarColor;
         this.__treeItem.addChild(this.userMarker.getTreeItem());
 
         this.__avatarTreeItem = new TreeItem('avatar');
@@ -101,11 +109,11 @@ class SessionParticipant {
         this.__treeItem.setSelectable(false);
 
         this.__material = new Material('user' + user.id + 'Material', 'SimpleSurfaceShader');
-        this.__material.addParameter('baseColor', new Color(data.color.r, data.color.g, data.color.b));
+        this.__material.addParameter('baseColor', this.__avatarColor);
 
 
         if (isLocalUser) {
-            const sendMessage = (type, data, persisted){
+            const sendMessage = (type, data, persisted) => {
                 data.type = type;
                 data.userId = this.__user.id;
                 visualivePlatform.sendMessage(convertValuesToJSON(data), persisted);
@@ -115,9 +123,9 @@ class SessionParticipant {
                 sendMessage('viewChanged', data, false);
             });
 
-            renderer.pointerMoved.connect((data) => {
-                sendMessage('pointerMoved', data, false);
-            });
+            // renderer.pointerMoved.connect((data) => {
+            //     sendMessage('pointerMoved', data, false);
+            // });
 
             renderer.actionStarted.connect((data) => {
                 const storkeData = this.onStrokeStarted(data);
@@ -279,4 +287,3 @@ class SessionParticipant {
 export {
     SessionParticipant
 };
-//export default SessionParticipant;

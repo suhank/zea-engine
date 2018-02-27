@@ -1,7 +1,7 @@
 
 import {
     Color
-} from '../Math';
+} from '../../Math';
 import {
     Lines,
     TreeItem,
@@ -14,8 +14,8 @@ class MarkerpenTool {
         this.__treeItem = new TreeItem(name);
         this.__strokes = [];
 
-        this.__color = new Color(1,0,0);
-        this.__thickness = 0.1;
+        this.color = new Color(1,0,0);
+        this.thickness = 0.1;
     }
 
     getTreeItem() {
@@ -33,9 +33,9 @@ class MarkerpenTool {
         lineGeom.setNumSegments(vertexCount - 1);
         lineGeom.vertices.setValue(used, xfo.tr);
 
-        lineGeom.lineThickness = this.__thickness;
+        lineGeom.lineThickness = this.thickness;
         const material = new Material('stroke', 'FatLinesShader');
-        material.addParameter('color', this.__color);
+        material.addParameter('color', this.color);
 
         const geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
@@ -45,7 +45,12 @@ class MarkerpenTool {
             used,
             vertexCount
         }
-        return id;
+        return {
+            id,
+            xfo,
+            color: this.color,
+            thickness: this.thickness
+        }
     }
 
     endStroke() {
@@ -78,8 +83,6 @@ class MarkerpenTool {
                 'indicesChanged': true
             });
         }
-
-        return id;
     }
 
     clear() {

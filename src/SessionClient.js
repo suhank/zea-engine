@@ -1,16 +1,16 @@
 import {
     Color,
     typeRegistry
-} from '../Math';
+} from './Math';
 import {
     Signal
-} from '../Utilities';
+} from './Utilities';
 import {
     TreeItem
-} from '../SceneTree/TreeItem';
+} from './SceneTree/TreeItem';
 import {
     SessionParticipant
-} from './SessionParticipant';
+} from './SessionParticipant.js';
 // import {
 //     GLAnalyticsPass
 // } from './Passes/GLAnalyticsPass.js';
@@ -168,6 +168,8 @@ class SessionClient {
         }
 
         const avatarsTreeRoot = new TreeItem("avatarsTreeRoot");
+        renderer.getCollector().addTreeItem(avatarsTreeRoot);
+
         const participants = {};
 
         visualivePlatform.on('ready', (sessionData, user) => {
@@ -220,17 +222,6 @@ class SessionClient {
         })
 
         /*
-        // this.__renderer = renderer;
-
-        // this.scaleFactor = 1.0;
-
-        ///////////////////////////
-        // Signals.
-        // this.playbackModeChanged = new Signal();
-        // this.playStateChanged = new Signal();
-        // // this.sessionModeChanged = new Signal();
-        // this.sessionTimeChanged = new Signal();
-        // this.replayDataRecieved = new Signal();
 
         ////////////////////////////
 

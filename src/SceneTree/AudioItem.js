@@ -35,6 +35,7 @@ class AudioItem extends TreeItem {
             return audioElement;
         }
 
+
         let fileParam = this.addParameter(new FilePathParameter('FilePath', resourceLoader));
         fileParam.valueChanged.connect(() => {
             audioElement.src = fileParam.getURL();
@@ -99,9 +100,6 @@ class AudioItem extends TreeItem {
             muteParam.setValue(value, ValueSetMode.CUSTOM);
         }
     }
-
-
-
 };
 
 export {

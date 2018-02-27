@@ -37,5 +37,8 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     const camera = renderer.getViewport().getCamera();
     camera.setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 1.5, 0.0));
 
+    const visualivePlatform = VisualivePlatform();
+    const sessionClient = new Visualive.SessionClient(renderer, visualivePlatform);
+
     renderer.resumeDrawing();
 });

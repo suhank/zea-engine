@@ -167,9 +167,9 @@ class GLCollector {
         const source = audioCtx.createMediaElementSource(audioItem.getDOMElement());
 
         const connectVLParamToAudioNodePAram = (vlParam, param) => {
-            param.value = vlParam.getValue();
+            param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
             vlParam.valueChanged.connect(()=>{
-                param.value = vlParam.getValue();
+                param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
             });
         }
 
@@ -199,20 +199,20 @@ class GLCollector {
 
         const updatePannerNodePosition = (globalXfo)=>{
             if(panner.positionX) {
-                panner.positionX.value = globalXfo.tr.x;
-                panner.positionY.value = globalXfo.tr.y;
-                panner.positionZ.value = globalXfo.tr.z;
+                panner.positionX.setTargetAtTime(globalXfo.tr.x, audioCtx.currentTime, 0.0);
+                panner.positionY.setTargetAtTime(globalXfo.tr.y, audioCtx.currentTime, 0.0);
+                panner.positionZ.setTargetAtTime(globalXfo.tr.z, audioCtx.currentTime, 0.0);
             } else {
                 panner.setPosition(globalXfo.tr.x, globalXfo.tr.y, globalXfo.tr.z);
             }
 
-            const dir = globalXfo.ori.getZaxis();
+            const zdir = globalXfo.ori.getZaxis();
             if(panner.orientationX) {
-              panner.orientationX.value = dir.x;
-              panner.orientationY.value = dir.y;
-              panner.orientationZ.value = dir.z;
+              panner.orientationX.setTargetAtTime(zdir.x, audioCtx.currentTime, 0.0);
+              panner.orientationY.setTargetAtTime(zdir.y, audioCtx.currentTime, 0.0);
+              panner.orientationZ.setTargetAtTime(zdir.z, audioCtx.currentTime, 0.0);
             } else {
-              panner.setOrientation(dir.x,dir.y,dir.z);
+              panner.setOrientation(zdir.x,zdir.y,zdir.z);
             }
 
             // TODO: 
