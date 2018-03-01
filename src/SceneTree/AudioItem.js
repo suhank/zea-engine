@@ -22,8 +22,33 @@ import {
 } from './MaterialLibrary.js';
 
 class AudioItem extends TreeItem {
+    constructor(name, audioElement) {
+        super(name, audioElement);
+        this.getDOMElement = () => {
+            return audioElement;
+        }
+        const muteParam = this.addParameter(new Parameter('Muted', false, 'Boolean'));
+        muteParam.valueChanged.connect(() => {
+            audioElement.muted = muteParam.getValue();
+        });
+
+        this.addParameter(new NumberParameter('Gain', 1.0)).setRange([0, 5]);
+        this.addParameter(new NumberParameter('refDistance', 2));
+        this.addParameter(new NumberParameter('maxDistance', 10000));
+        this.addParameter(new NumberParameter('rolloffFactor', 1));
+        this.addParameter(new NumberParameter('coneInnerAngle', 120));
+        this.addParameter(new NumberParameter('coneOuterAngle', 180));
+        this.addParameter(new NumberParameter('coneOuterGain', 0.2));
+        this.mute = (value)=>{
+            audioElement.muted = value;
+            muteParam.setValue(value, ValueSetMode.CUSTOM);
+        }
+    }
+};
+
+
+class FileAudioItem extends AudioItem {
     constructor(name, resourceLoader) {
-        super(name, resourceLoader);
 
         const audioElement = new Audio();
         audioElement.style.display = 'none';
@@ -31,24 +56,18 @@ class AudioItem extends TreeItem {
         audioElement.crossOrigin = "anonymous";
         document.body.appendChild(audioElement);
 
-        this.getDOMElement = () => {
-            return audioElement;
-        }
+        super(name, audioElement);
 
 
-        let fileParam = this.addParameter(new FilePathParameter('FilePath', resourceLoader));
+        const fileParam = this.addParameter(new FilePathParameter('FilePath', resourceLoader));
         fileParam.valueChanged.connect(() => {
             audioElement.src = fileParam.getURL();
         });
-        let muteParam = this.addParameter(new Parameter('Muted', false, 'Boolean'));
-        muteParam.valueChanged.connect(() => {
-            audioElement.muted = muteParam.getValue();
-        });
-        let autoplayParam = this.addParameter(new Parameter('Autoplay', true, 'Boolean'));
+        const autoplayParam = this.addParameter(new Parameter('Autoplay', true, 'Boolean'));
         autoplayParam.valueChanged.connect(() => {
             audioElement.autoplay = autoplayParam.getValue();
         });
-        let playStateParam = this.addParameter(new NumberParameter('PlayState', 0));
+        const playStateParam = this.addParameter(new NumberParameter('PlayState', 0));
         playStateParam.valueChanged.connect((mode) => {
             if(mode != ValueSetMode.CUSTOM){
                 switch (playStateParam.getValue()) {
@@ -69,14 +88,6 @@ class AudioItem extends TreeItem {
             }
         });
 
-        this.addParameter(new NumberParameter('Gain', 1.0)).setRange([0, 5]);
-        this.addParameter(new NumberParameter('refDistance', 2));
-        this.addParameter(new NumberParameter('maxDistance', 10000));
-        this.addParameter(new NumberParameter('rolloffFactor', 1));
-        this.addParameter(new NumberParameter('coneInnerAngle', 120));
-        this.addParameter(new NumberParameter('coneOuterAngle', 180));
-        this.addParameter(new NumberParameter('coneOuterGain', 0.2));
-
 
         this.play = ()=>{
             const promise = audioElement.play();
@@ -95,13 +106,10 @@ class AudioItem extends TreeItem {
             playStateParam.setValue(0, ValueSetMode.CUSTOM);
         }
 
-        this.mute = (value)=>{
-            audioElement.muted = value;
-            muteParam.setValue(value, ValueSetMode.CUSTOM);
-        }
     }
 };
 
 export {
-    AudioItem
+    AudioItem,
+    FileAudioItem
 };

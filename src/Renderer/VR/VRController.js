@@ -60,7 +60,7 @@ class VRController extends Gizmo {
 
             vrstage.getTreeItem().addChild(this.__treeItem);
 
-            let sphere = new Sphere('VRControllerTip', 0.015);
+            let sphere = new Sphere(0.015);
             this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
             this.__sphereGeomItem.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
             this.__treeItem.addChild(this.__sphereGeomItem);

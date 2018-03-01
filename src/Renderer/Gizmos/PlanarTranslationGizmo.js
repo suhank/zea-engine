@@ -16,7 +16,7 @@ class PlanarTranslationGizmo extends Gizmo {
         this.__treeItem.setLocalXfo(xfo);
         context.treeItem.addChild(this.__treeItem);
 
-        let geom = new Cuboid('tail', 0.2, 0.02, 0.2);
+        let geom = new Cuboid(0.2, 0.02, 0.2);
         geom.moveVertices(new Vec3(0.5,0.0,0.5));
         let geomItem = new GeomItem('tail', geom);
         let geomglGeom = new GLMesh(gl, geom);

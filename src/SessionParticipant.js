@@ -14,6 +14,7 @@ import {
     Sphere,
     TreeItem,
     GeomItem,
+    AudioItem,
     Material,
     MarkerpenTool
 } from './SceneTree';
@@ -75,7 +76,7 @@ let convertValuesToJSON = (value) => {
     } else if (typeof value === "object") {
         const dict = {};
         for (let key in value)
-            dict[key] =convertValuesToJSON(value[key]);
+            dict[key] = convertValuesToJSON(value[key]);
         return dict;
     } else {
         return value;
@@ -86,12 +87,13 @@ let convertValuesToJSON = (value) => {
 class SessionParticipant {
 
     constructor(renderer, visualivePlatform, parentTreeItem, user, isLocalUser) {
+        console.log("SessionClient:" + isLocalUser);
         this.__renderer = renderer;
         this.__parentTreeItem = parentTreeItem;
         this.__user = user;
         this.__isLocalUser = isLocalUser;
         this.__avatarScale = 1.0;
-        this.__avatarColor =  randomAvatarColor()
+        this.__avatarColor = randomAvatarColor()
 
         this.__controllers = [];
 
@@ -128,24 +130,32 @@ class SessionParticipant {
             // });
 
             renderer.actionStarted.connect((data) => {
-                const storkeData = this.onStrokeStarted(data);
-                sendMessage('strokeStarted', storkeData, true);
+                const strokeData = this.onStrokeStarted(data);
+                sendMessage('strokeStarted', strokeData, true);
             });
             renderer.actionOccuring.connect((data) => {
                 this.onStrokePoint(data);
-                sendMessage('strokeSegmentAdded', data, true);
+                sendMessage('strokePoint', data, true);
             });
             renderer.actionEnded.connect((msg) => {
                 this.onStrokeEnded(msg);
                 sendMessage('strokeEnded', msg, true);
             });
         } else {
-            this.setBasicCamera();
+            // Participants can be added to the session before they hav joined. 
+            // this is because the system remembers data from previous sessions,
+            // and adds previous users if they were in the previous sessions.
+            // this.setCameraAndPointer();
         }
     }
 
-    setVisibility(visible) {
-        this.__treeItem.setVisible(visible);
+    setAudioStream(stream) {
+        this.__audioIem = new AudioItem('audio', stream);
+        this.__avatarTreeItem.getChild(0).addChild(this.__audioIem);
+    }
+
+    setAvatarVisibility(visible) {
+        this.__avatarTreeItem.setVisible(visible);
     }
 
     onPointerMoved(data) {
@@ -162,26 +172,28 @@ class SessionParticipant {
         this.userMarker.endStroke();
     }
 
-    setBasicCamera() {
+    setCameraAndPointer() {
         this.__avatarTreeItem.removeAllChildren();
 
-        //let shape = new Cuboid('Camera', 0.2 * this.__avatarScale, 0.2 * this.__avatarScale, 0.4 * this.__avatarScale);
-        let shape = new Cone('Camera', 0.4 * this.__avatarScale, 0.6, 4, true);
+        //let shape = new Cuboid(0.2 * this.__avatarScale, 0.2 * this.__avatarScale, 0.4 * this.__avatarScale);
+        let shape = new Cone(0.2 * this.__avatarScale, 0.6 * this.__avatarScale, 4, true);
         shape.computeVertexNormals();
-        let geomItem = new GeomItem(this.__id, shape, this.__material);
+        let geomItem = new GeomItem('camera', shape, this.__material);
         let geomXfo = new Xfo();
         geomXfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, Math.PI * 0.25, 0.0));
         geomItem.setGeomOffsetXfo(geomXfo);
 
         this.__avatarTreeItem.addChild(geomItem);
 
-        this.__currentViewMode = 'BasicCamera';
+        this.__currentViewMode = 'CameraAndPointer';
     }
 
     setViveRepresentation() {
+        this.__avatarTreeItem.removeAllChildren();
+        let hmdHolder = new TreeItem("hmdHolder");
+        hmdHolder.addChild(hmdTree);
         if (renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
 
-            this.__avatarTreeItem.removeAllChildren();
 
             if (!this.__viveAsset) {
                 this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
@@ -193,12 +205,9 @@ class SessionParticipant {
             this.__viveAsset.loaded.connect((entries) => {
                 let hmdTree = this.__viveAsset.getChildByName('HTC_Vive_HMD').clone();
                 hmdTree.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI);
-                let treeItem = new TreeItem("hmdHolder");
-                treeItem.addChild(hmdTree);
+                hmdHolder.addChild(hmdTree);
             });
         }
-        // this.__treeItem.addChild(treeItem);
-        this.__switchReprentationTree(this.__viveTree);
         this.__currentViewMode = 'Vive';
     }
 
@@ -232,23 +241,23 @@ class SessionParticipant {
 
     onViewChanged(data) {
         switch (data.interfaceType) {
-            case 'BasicCamera':
-                if (this.__currentViewMode !== 'BasicCamera') {
-                    this.setBasicCamera(data);
+            case 'CameraAndPointer':
+                if (this.__currentViewMode !== 'CameraAndPointer') {
+                    this.setCameraAndPointer(data);
                 }
                 this.__avatarTreeItem.getChild(0).setLocalXfo(data.viewXfo);
                 break;
-            case 'TabletAndFinger':
-                if (this.__currentViewMode !== 'BasicCamera') {
+            // case 'TabletAndFinger':
+            //     if (this.__currentViewMode !== 'CameraAndPointer') {
 
-                }
-                break;
+            //     }
+            //     break;
             case 'Vive':
                 if (this.__currentViewMode !== 'Vive') {
                     this.setViveRepresentation(data);
                 }
 
-                this.__viveTree.getChild(0).setLocalXfo(data.viewXfo);
+                this.__avatarTreeItem.getChild(0).setLocalXfo(data.viewXfo);
                 if (data.controllers)
                     this.updateViveControllers(data);
                 break;
@@ -269,6 +278,9 @@ class SessionParticipant {
         } else if (tmp.type == 'pointerMoved') {
             this.onPointerMoved(tmp);
         } else if (tmp.type == 'strokeStarted') {
+
+            this.userMarker.color = tmp.color;
+            this.userMarker.thickness = tmp.thickness;
             this.onStrokeStarted(tmp);
         } else if (tmp.type == 'strokePoint') {
             this.onStrokePoint(tmp);

@@ -29,7 +29,7 @@ class VRToolHoldObjects extends VRTool {
         this.__vrControllers = vrControllers;
 
         this.__color = new Color(0, 1, 0);
-        // this.__SelVolume = new Cuboid('SelVolume', 0.06, 0.06, 0.06);
+        // this.__SelVolume = new Cuboid(0.06, 0.06, 0.06);
         // this.__mat = new Material('mat0', 'FlatSurfaceShader');
         // this.__mat.baseColor = new Color(1, 0, 0);
 

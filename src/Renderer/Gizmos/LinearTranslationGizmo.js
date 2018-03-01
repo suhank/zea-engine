@@ -16,7 +16,7 @@ class LinearTranslationGizmo extends Gizmo {
         this.__treeItem.setLocalXfo(xfo);
         context.treeItem.addChild(this.__treeItem);
 
-        let tailGeom = new Cuboid('tail', 0.02, 1.0, 0.02);
+        let tailGeom = new Cuboid(0.02, 1.0, 0.02);
         tailGeom.moveVertices(new Vec3(0,0.7,0));
         let tailGeomItem = new GeomItem('tail', tailGeom);
         let tailGeomglGeom = new GLMesh(gl, tailGeom);
@@ -24,7 +24,7 @@ class LinearTranslationGizmo extends Gizmo {
 
         this.__treeItem.addChild(tailGeomItem);
 
-        let headGeom = new Cone('head', 0.07, 0.3, 24);
+        let headGeom = new Cone(0.07, 0.3, 24);
         headGeom.moveVertices(new Vec3(0,1.10,0));
         let headGeomItem = new GeomItem('head', headGeom);
         let headGeomglGeom = new GLMesh(gl, headGeom);
@@ -36,7 +36,7 @@ class LinearTranslationGizmo extends Gizmo {
         this.__addDrawItem(headGeomglDrawItem);
 
         // Generate the proxy geom that we use to render the data buffer. 
-        let proxyGeom = new Cuboid('proxy', 0.25, 1.3, 0.25);
+        let proxyGeom = new Cuboid(0.25, 1.3, 0.25);
         proxyGeom.moveVertices(new Vec3(0,0.65,0));
         let proxyGeomItem = new GeomItem('proxy', proxyGeom);
         let proxyGeomglGeom = new GLMesh(gl, proxyGeom);

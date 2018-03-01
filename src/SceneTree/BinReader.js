@@ -181,10 +181,23 @@ class BinReader {
         return new Vec2(x, y);
     }
 
+    loadFloat16Vec2() {
+        const x = this.loadFloat16();
+        const y = this.loadFloat16();
+        return new Vec2(x, y);
+    }
+
     loadFloat32Vec2() {
         const x = this.loadFloat32();
         const y = this.loadFloat32();
         return new Vec2(x, y);
+    }
+
+    loadFloat16Vec3() {
+        const x = this.loadFloat16();
+        const y = this.loadFloat16();
+        const z = this.loadFloat16();
+        return new Vec3(x, y, z);
     }
 
     loadFloat32Vec3() {
@@ -192,6 +205,14 @@ class BinReader {
         const y = this.loadFloat32();
         const z = this.loadFloat32();
         return new Vec3(x, y, z);
+    }
+
+    loadFloat16Quat() {
+        const x = this.loadFloat16();
+        const y = this.loadFloat16();
+        const z = this.loadFloat16();
+        const w = this.loadFloat16();
+        return new Quat(x, y, z, w);
     }
 
     loadFloat32Quat() {

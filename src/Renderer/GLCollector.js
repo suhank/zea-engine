@@ -139,8 +139,8 @@ class GLCollector {
 
 
         this.__audioItems = [];
-        this.registerSceneItemFilter((treeItem, rargs)=>{
-            if(treeItem instanceof AudioItem) {
+        this.registerSceneItemFilter((treeItem, rargs) => {
+            if (treeItem instanceof AudioItem) {
                 this.addAudioItem(treeItem);
                 return true;
             }
@@ -161,15 +161,23 @@ class GLCollector {
         return this.__glshadermaterials;
     };
 
-    addAudioItem(audioItem){
+    addAudioItem(audioItem) {
 
         const audioCtx = this.__renderer.getAudioContext();
-        const source = audioCtx.createMediaElementSource(audioItem.getDOMElement());
+        const audioSource = audioItem.getDOMElement();
+        let source;
+        if (audioSource instanceof HTMLMediaElement)
+            source = audioCtx.createMediaElementSource(audioSource);
+        else {
+            source = audioCtx.createMediaStreamSource(audioSource);
+        }
 
         const connectVLParamToAudioNodePAram = (vlParam, param) => {
-            param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
-            vlParam.valueChanged.connect(()=>{
-                param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
+            // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
+            param.value = vlParam.getValue();
+            vlParam.valueChanged.connect(() => {
+                // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
+                param.value = vlParam.getValue();
             });
         }
 
@@ -184,7 +192,7 @@ class GLCollector {
         const connectVLParamToAudioNode = (paramName) => {
             const vlParam = audioItem.getParameter(paramName)
             panner[paramName] = vlParam.getValue();
-            vlParam.valueChanged.connect(()=>{
+            vlParam.valueChanged.connect(() => {
                 panner[paramName] = vlParam.getValue();
             });
         }
@@ -197,29 +205,35 @@ class GLCollector {
         connectVLParamToAudioNode('coneOuterGain');
 
 
-        const updatePannerNodePosition = (globalXfo)=>{
-            if(panner.positionX) {
-                panner.positionX.setTargetAtTime(globalXfo.tr.x, audioCtx.currentTime, 0.0);
-                panner.positionY.setTargetAtTime(globalXfo.tr.y, audioCtx.currentTime, 0.0);
-                panner.positionZ.setTargetAtTime(globalXfo.tr.z, audioCtx.currentTime, 0.0);
+        const updatePannerNodePosition = (globalXfo) => {
+            if (panner.positionX) {
+                // panner.positionX.setTargetAtTime(globalXfo.tr.x, audioCtx.currentTime);
+                // panner.positionY.setTargetAtTime(globalXfo.tr.y, audioCtx.currentTime);
+                // panner.positionZ.setTargetAtTime(globalXfo.tr.z, audioCtx.currentTime);
+                panner.positionX.value = globalXfo.tr.x;
+                panner.positionY.value = globalXfo.tr.y;
+                panner.positionZ.value = globalXfo.tr.z;
             } else {
                 panner.setPosition(globalXfo.tr.x, globalXfo.tr.y, globalXfo.tr.z);
             }
 
             const zdir = globalXfo.ori.getZaxis();
-            if(panner.orientationX) {
-              panner.orientationX.setTargetAtTime(zdir.x, audioCtx.currentTime, 0.0);
-              panner.orientationY.setTargetAtTime(zdir.y, audioCtx.currentTime, 0.0);
-              panner.orientationZ.setTargetAtTime(zdir.z, audioCtx.currentTime, 0.0);
+            if (panner.orientationX) {
+                // panner.orientationX.setTargetAtTime(zdir.x, audioCtx.currentTime);
+                // panner.orientationY.setTargetAtTime(zdir.y, audioCtx.currentTime);
+                // panner.orientationZ.setTargetAtTime(zdir.z, audioCtx.currentTime);
+                panner.orientationX.value = zdir.x;
+                panner.orientationY.value = zdir.y;
+                panner.orientationZ.value = zdir.z;
             } else {
-              panner.setOrientation(zdir.x,zdir.y,zdir.z);
+                panner.setOrientation(zdir.x, zdir.y, zdir.z);
             }
 
             // TODO: 
             // setVelocity()
         }
         updatePannerNodePosition(audioItem.getGlobalXfo());
-        audioItem.globalXfoChanged.connect((changeType)=>{
+        audioItem.globalXfoChanged.connect((changeType) => {
             const globalXfo = audioItem.getGlobalXfo();
             updatePannerNodePosition(globalXfo);
         });
@@ -453,7 +467,7 @@ class GLCollector {
     /// DrawItem IDs
 
     getDrawItem(id) {
-        if (id >= this.__drawItems.length){
+        if (id >= this.__drawItems.length) {
             console.warn("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length - 1));
             return undefined;
         }
@@ -489,10 +503,10 @@ class GLCollector {
     uploadDrawItems() {
 
         const gl = this.__renderer.gl;
-        if(!gl.floatTexturesSupported) {
+        if (!gl.floatTexturesSupported) {
             // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
-            const len=this.__dirtyItemIndices.length;
-            for(let i=0; i< len; i++)
+            const len = this.__dirtyItemIndices.length;
+            for (let i = 0; i < len; i++)
                 this.__drawItems[i].updateGeomMatrix();
             this.__dirtyItemIndices = [];
             this.renderTreeUpdated.emit();
@@ -531,13 +545,13 @@ class GLCollector {
         for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
             const indexStart = this.__dirtyItemIndices[i];
             const yoffset = Math.floor((indexStart * pixelsPerItem) / size);
-            let indexEnd = indexStart+1;
+            let indexEnd = indexStart + 1;
             for (let j = i + 1; j < this.__dirtyItemIndices.length; j++) {
                 const index = this.__dirtyItemIndices[j];
                 if (Math.floor((index * pixelsPerItem) / size) != yoffset) {
                     break;
                 }
-                if (index != indexEnd){
+                if (index != indexEnd) {
                     break;
                 }
                 indexEnd++;
@@ -555,7 +569,7 @@ class GLCollector {
                 const gldrawItem = this.__drawItems[j];
                 // When an item is deleted, we allocate its index to the free list
                 // and null this item in the array. skip over null items.
-                if(!gldrawItem)
+                if (!gldrawItem)
                     continue;
                 this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
             }
@@ -567,7 +581,7 @@ class GLCollector {
                 gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channelsId, formatId, unit16s);
             }
 
-            i += uploadCount-1;
+            i += uploadCount - 1;
         }
 
 
@@ -575,7 +589,7 @@ class GLCollector {
         this.renderTreeUpdated.emit();
     };
 
-    
+
     finalize() {
         if (this.__dirtyItemIndices.length == 0)
             return;

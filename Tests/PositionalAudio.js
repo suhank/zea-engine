@@ -14,7 +14,7 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
         const geomItem = new Visualive.GeomItem(name+'Item', shape, standardMaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
 
-        const audioItem = new Visualive.AudioItem(name+'Audio', scene.getResourceLoader());
+        const audioItem = new Visualive.FileAudioItem(name+'Audio', scene.getResourceLoader());
         audioItem.getParameter('FilePath').setValue(url);
         audioItem.getParameter('rolloffFactor').setValue(5.0);
         geomItem.addChild(audioItem);

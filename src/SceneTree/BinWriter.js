@@ -156,15 +156,33 @@ class BinWriter {
         this.writeUInt32(value.y);
     }
 
+    writeFloat16Vec2(value) {
+        this.writeFloat16(value.x);
+        this.writeFloat16(value.y);
+    }
+
     writeFloat32Vec2(value) {
         this.writeFloat32(value.x);
         this.writeFloat32(value.y);
+    }
+
+    writeFloat16Vec3(value) {
+        this.writeFloat16(value.x);
+        this.writeFloat16(value.y);
+        this.writeFloat16(value.z);
     }
 
     writeFloat32Vec3(value) {
         this.writeFloat32(value.x);
         this.writeFloat32(value.y);
         this.writeFloat32(value.z);
+    }
+
+    writeFloat16Quat(value) {
+        this.writeFloat16(value.x);
+        this.writeFloat16(value.y);
+        this.writeFloat16(value.z);
+        this.writeFloat16(value.w);
     }
 
     writeFloat32Quat(value) {

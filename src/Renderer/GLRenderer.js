@@ -324,18 +324,24 @@ class GLRenderer {
         const listener = this.__audioCtx.listener;
         const viewXfo = data.viewXfo;
         if(listener.positionX) {
-            listener.positionX.setTargetAtTime(viewXfo.tr.x, this.__audioCtx.currentTime, 0.0);
-            listener.positionY.setTargetAtTime(viewXfo.tr.y, this.__audioCtx.currentTime, 0.0);
-            listener.positionZ.setTargetAtTime(viewXfo.tr.z, this.__audioCtx.currentTime, 0.0);
+            // listener.positionX.setTargetAtTime(viewXfo.tr.x, this.__audioCtx.currentTime, 0.0);
+            // listener.positionY.setTargetAtTime(viewXfo.tr.y, this.__audioCtx.currentTime, 0.0);
+            // listener.positionZ.setTargetAtTime(viewXfo.tr.z, this.__audioCtx.currentTime, 0.0);
+            listener.positionX.value = viewXfo.tr.x;
+            listener.positionY.value = viewXfo.tr.y;
+            listener.positionZ.value = viewXfo.tr.z;
         } else {
             listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
         }
 
         const zdir = viewXfo.ori.getZaxis().negate();
         if(listener.forwardX) {
-          listener.forwardX.setTargetAtTime(zdir.x, this.__audioCtx.currentTime, 0.0);
-          listener.forwardY.setTargetAtTime(zdir.y, this.__audioCtx.currentTime, 0.0);
-          listener.forwardZ.setTargetAtTime(zdir.z, this.__audioCtx.currentTime, 0.0);
+          // listener.forwardX.setTargetAtTime(zdir.x, this.__audioCtx.currentTime, 0.0);
+          // listener.forwardY.setTargetAtTime(zdir.y, this.__audioCtx.currentTime, 0.0);
+          // listener.forwardZ.setTargetAtTime(zdir.z, this.__audioCtx.currentTime, 0.0);
+          listener.forwardX.value = zdir.x;
+          listener.forwardY.value = zdir.y;
+          listener.forwardZ.value = zdir.z;
         } else {
             const ydir = viewXfo.ori.getYaxis();
             listener.setOrientation(zdir.x, zdir.y, zdir.z, ydir.x, ydir.y, ydir.z);
@@ -350,7 +356,6 @@ class GLRenderer {
         this.__activeViewport = vp;
 
         this.__updateListenerPosition({
-            interfaceType: 'MouseAndKeyboard',
             viewXfo: vp.getCamera().getGlobalXfo()
         });
     }

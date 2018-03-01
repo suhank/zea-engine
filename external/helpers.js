@@ -40,10 +40,10 @@ let addCanvas = function(width, height) {
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
         VisualiveEngine: {
-            'Vive.vla': window.location.origin+'/Resources/Vive.vla',
-            'Dome.vla': window.location.origin+'/Resources/Dome.vla',
-            'LogoSmall.png': window.location.origin+'/Resources/LogoSmall.png',
-            'FlakesNormalMap.png': window.location.origin+'/Resources/FlakesNormalMap.png'
+            'Vive.vla': { url: window.location.origin+'/Resources/Vive.vla' } ,
+            'Dome.vla': { url: window.location.origin+'/Resources/Dome.vla' } ,
+            'LogoSmall.png': { url: window.location.origin+'/Resources/LogoSmall.png' } ,
+            'FlakesNormalMap.png': { url: window.location.origin+'/Resources/FlakesNormalMap.png' } 
         }
     };
     let rootURL = window.location.href.split('#')[0];
@@ -71,7 +71,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             }
             curr = curr[part];
         }
-        curr[parts[parts.length-1]] = base+item;
+        curr[parts[parts.length-1]] = { url: base+item };
     }
     for(let item of list){
         generatePath(item);
