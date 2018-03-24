@@ -35,7 +35,8 @@ class Signal {
             }
         });
         if(ids.length == 0){
-            throw("callback :" + fn.name + " was not connected to this signal:" + this.__name);
+            console.warn("callback :" + fn.name + " was not connected to this signal:" + this.__name);
+            return;
         }
         for(let id of ids) {
             this.__slots[id] = undefined;

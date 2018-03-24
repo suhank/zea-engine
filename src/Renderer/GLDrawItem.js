@@ -27,34 +27,35 @@ class GLDrawItem {
         this.destructing = new Signal();
         this.visibilityChanged = new Signal();
 
-        if (!gl.floatTexturesSupported) {
-            this.__geomItem.geomXfoChanged.connect((geomXfo) => {
-                this.updateGeomMatrix();
-            });
-        } else {
-            this.__geomItem.geomXfoChanged.connect((geomXfo) => {
-                this.transformChanged.emit();
-            });
-        }
-        this.__geomItem.visibilityChanged.connect(this.__updateVisibility.bind(this));
+        this.__updateVisibility = this.__updateVisibility.bind(this);
+        this.destroy = this.destroy.bind(this);
 
-        this.__geomItem.selectedChanged.connect((val) => {
+        if (!gl.floatTexturesSupported) {
+            this.__updateXfo = (geomXfo) => {
+                this.updateGeomMatrix();
+            };
+        } else {
+            this.__updateXfo = (geomXfo) => {
+                this.transformChanged.emit();
+            };
+        }
+
+        this.__updateSelection = (val) => {
             if (val)
                 this.highlight();
             else
                 this.unhighlight();
-        });
+        }
+
+        this.__geomItem.geomXfoChanged.connect(this.__updateXfo);
+        this.__geomItem.visibilityChanged.connect(this.__updateVisibility);
+        this.__geomItem.selectedChanged.connect(this.__updateSelection);
+        this.__geomItem.destructing.connect(this.destroy);
 
         this.__glGeom.updated.connect(() => {
             this.updated.emit();
         });
 
-        this.__geomItem.destructing.connect(() => {
-            // Note: it is possible for several draw items to reference the same
-            // GLGeom, so we should be maintaining a ref count, and only destroying 
-            // when the last ref is removed.
-            this.destroy();
-        });
 
 
         let lightmapCoordsOffset = this.__geomItem.getLightmapCoordsOffset();
@@ -159,10 +160,10 @@ class GLDrawItem {
 
 
     destroy() {
-        this.__geomItem.visibilityChanged.disconnectScope(this);
-        this.__geomItem.globalXfoChanged.disconnectScope(this);
-        this.__geomItem.selectedChanged.disconnectScope(this);
-        this.__geomItem.destructing.disconnectScope(this);
+        this.__geomItem.visibilityChanged.disconnect(this.__updateVisibility);
+        this.__geomItem.globalXfoChanged.disconnect(this.__updateXfo);
+        this.__geomItem.selectedChanged.disconnect(this.__updateSelection);
+        this.__geomItem.destructing.disconnect(this.destroy);
         this.destructing.emit(this);
     }
 };

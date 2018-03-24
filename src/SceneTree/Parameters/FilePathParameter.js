@@ -19,7 +19,7 @@ class FilePathParameter extends Parameter {
                 console.warn("Resource unavailable:" + value);
                 return;
             }
-            this.__file = this.__resourceLoader.resolveURL(value);
+            this.__file = this.__resourceLoader.resolveFile(value);
         });
     }
 

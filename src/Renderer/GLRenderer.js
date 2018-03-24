@@ -708,18 +708,22 @@ class GLRenderer {
                 // Always get the last display. Additional displays are added at the end.(Polyfill, HMD)
                 let vrvp = new VRViewport(this, displays[displays.length-1]);
 
-                vrvp.viewChanged.connect((data) => {
-                    this.viewChanged.emit(data);
-                });
-                vrvp.actionStarted.connect((data) => {
-                    this.actionStarted.emit(data);
-                });
-                vrvp.actionEnded.connect((data) => {
-                    this.actionEnded.emit(data);
-                });
-                vrvp.actionOccuring.connect((data) => {
-                    this.actionOccuring.emit(data);
-                });
+                vrvp.presentingChanged.connect((state)=>{
+
+                    if(state){
+                        vrvp.viewChanged.connect(this.viewChanged.emit);
+                        vrvp.actionStarted.connect(this.actionStarted.emit);
+                        vrvp.actionEnded.connect(this.actionEnded.emit);
+                        vrvp.actionOccuring.connect(this.actionOccuring.emit);
+                    }
+                    else {
+                        vrvp.viewChanged.disconnect(this.viewChanged.emit);
+                        vrvp.actionStarted.disconnect(this.actionStarted.emit);
+                        vrvp.actionEnded.disconnect(this.actionEnded.emit);
+                        vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
+                    }
+                })
+
 
                 this.__vrViewport = vrvp;
                 this.vrViewportSetup.emit(vrvp);

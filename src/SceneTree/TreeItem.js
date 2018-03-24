@@ -541,9 +541,9 @@ class TreeItem extends BaseItem {
         let itemflags = reader.loadUInt8();
 
         const visibilityFlag = 1 << 1;
-        // this.setVisibility(itemflags&visibilityFlag);
+        // this.setVisible(itemflags&visibilityFlag);
 
-        //this.setVisibility(j.visibility);
+        //this.setVisible(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
         const localXfoFlag = 1 << 2;
         if (itemflags & localXfoFlag) {

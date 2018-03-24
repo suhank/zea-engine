@@ -143,7 +143,7 @@ class GLLines extends GLGeom {
                     dataArray[(i * 4) + 3] = this.__geom.lineThickness;
             }
 
-            this.__positionsTexture.resize(positions.length, 1, dataArray);
+            this.__positionsTexture.bufferData(dataArray, positions.length, 1);
 
             let indexArray = new Float32Array(indices.length);
             for (let i = 0; i < indices.length; i++) {

@@ -137,6 +137,9 @@ class GLCollector {
         this.billboardDiscovered = new Signal();
         this.itemTransformChanged = new Signal();
 
+        this.__childAdded = this.__childAdded.bind(this)
+        this.__treeItemDestructing = this.__treeItemDestructing.bind(this)
+
 
         this.__audioItems = [];
         this.registerSceneItemFilter((treeItem, rargs) => {
@@ -162,6 +165,9 @@ class GLCollector {
     };
 
     addAudioItem(audioItem) {
+
+        if(this.__audioItems.indexOf(audioItem) != -1)
+            return;
 
         const audioCtx = this.__renderer.getAudioContext();
         const audioSource = audioItem.getDOMElement();
@@ -402,15 +408,18 @@ class GLCollector {
             this.addTreeItem(childItem);
         }
 
-        treeItem.childAdded.connect(this.__childAdded.bind(this));
-        treeItem.destructing.connect(() => {
-            treeItem.childAdded.disconnect(this.__childAdded.bind(this));
-            treeItem.destructing.disconnectScope(this);
-        });
+        treeItem.childAdded.connect(this.__childAdded);
+
+        treeItem.destructing.connect(this.__treeItemDestructing);
 
         treeItem.globalXfoChanged.connect((newXfo, prevXfo) => {
             this.itemTransformChanged.emit(treeItem, prevXfo);
         });
+    }
+
+    __treeItemDestructing(treeItem) {
+        treeItem.childAdded.disconnect(this.__childAdded);
+        treeItem.destructing.disconnect(this.__treeItemDestructing);
     }
 
     __childAdded(child) {
@@ -421,8 +430,10 @@ class GLCollector {
         let index = gldrawItem.getId();
         this.__drawItems[index] = null;
         this.__drawItemsIndexFreeList.push(index);
-        gldrawItem.destructing.disconnectScope(this);
-        gldrawItem.transformChanged.disconnectScope(this);
+
+        // TODO: review signal disconnections
+        // gldrawItem.destructing.disconnectScope(this);
+        // gldrawItem.transformChanged.disconnectScope(this);
 
         this.renderTreeUpdated.emit();
         this.__renderer.requestRedraw();
@@ -506,8 +517,12 @@ class GLCollector {
         if (!gl.floatTexturesSupported) {
             // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
             const len = this.__dirtyItemIndices.length;
-            for (let i = 0; i < len; i++)
-                this.__drawItems[i].updateGeomMatrix();
+            for (let i = 0; i < len; i++){
+                const drawItem = this.__drawItems[this.__dirtyItemIndices[i]];
+                if(drawItem){
+                    drawItem.updateGeomMatrix();
+                }
+            }
             this.__dirtyItemIndices = [];
             this.renderTreeUpdated.emit();
             return;

@@ -84,7 +84,7 @@ class ResourceLoader {
         this.__workers = [];
     }
 
-    resolveURL(filePath) {
+    resolveFile(filePath) {
         if(!this.__resources)
             throw("Resources dict not provided");
         let parts = filePath.split('/');
@@ -102,8 +102,14 @@ class ResourceLoader {
         return curr;
     }
     
+    resolveURL(filePath) {
+        const file = this.resolveFile(filePath)
+        if(file)
+            return file.url;
+    }
+    
     resourceAvailable(filePath) {
-        return this.resolveURL(filePath) != null;
+        return this.resolveFile(filePath) != null;
     }
 
     __initCategory(name){
@@ -150,8 +156,8 @@ class ResourceLoader {
             this.__constructWorkers();
         }
 
-        let url = this.resolveURL(name);
-        if(!url){
+        const file = this.resolveFile(name);
+        if(!file){
             throw("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
@@ -168,7 +174,7 @@ class ResourceLoader {
         ///////////////////////////////////////////////
         this.__workers[this.__nextWorker].postMessage({
             name,
-            url
+            url: file.url
         });
         this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
 
@@ -187,7 +193,7 @@ class ResourceLoader {
     }
 
     __onFinishedReceiveFileData(fileData) {
-        let name = fileData.name;
+        const name = fileData.name;
         this.addWorkDone(name, 1); // unpacking done...
         for(let callback of this.__callbacks[name]){
             callback(fileData.entries);

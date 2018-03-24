@@ -121,23 +121,23 @@ class SessionParticipant {
                 visualivePlatform.sendMessage(convertValuesToJSON(data), persisted);
             }
 
-            renderer.viewChanged.connect((data) => {
+            this.__renderer.viewChanged.connect((data) => {
                 sendMessage('viewChanged', data, false);
             });
 
-            // renderer.pointerMoved.connect((data) => {
+            // this.__renderer.pointerMoved.connect((data) => {
             //     sendMessage('pointerMoved', data, false);
             // });
 
-            renderer.actionStarted.connect((data) => {
+            this.__renderer.actionStarted.connect((data) => {
                 const strokeData = this.onStrokeStarted(data);
                 sendMessage('strokeStarted', strokeData, true);
             });
-            renderer.actionOccuring.connect((data) => {
+            this.__renderer.actionOccuring.connect((data) => {
                 this.onStrokePoint(data);
                 sendMessage('strokePoint', data, true);
             });
-            renderer.actionEnded.connect((msg) => {
+            this.__renderer.actionEnded.connect((msg) => {
                 this.onStrokeEnded(msg);
                 sendMessage('strokeEnded', msg, true);
             });
@@ -150,8 +150,14 @@ class SessionParticipant {
     }
 
     setAudioStream(stream) {
+        if(this.__audioIem) {
+            return;
+        }
         this.__audioIem = new AudioItem('audio', stream);
-        this.__avatarTreeItem.getChild(0).addChild(this.__audioIem);
+        const head = this.__avatarTreeItem.getChild(0);
+        if (head) {
+            head.addChild(this.__audioIem);
+        }
     }
 
     setAvatarVisibility(visible) {
@@ -183,6 +189,10 @@ class SessionParticipant {
         geomXfo.ori.setFromEulerAngles(new EulerAngles(Math.PI * 0.5, Math.PI * 0.25, 0.0));
         geomItem.setGeomOffsetXfo(geomXfo);
 
+        if (this.__audioIem) {
+            geomItem.addChild(this.__audioIem);
+        }
+
         this.__avatarTreeItem.addChild(geomItem);
 
         this.__currentViewMode = 'CameraAndPointer';
@@ -191,12 +201,15 @@ class SessionParticipant {
     setViveRepresentation() {
         this.__avatarTreeItem.removeAllChildren();
         let hmdHolder = new TreeItem("hmdHolder");
-        hmdHolder.addChild(hmdTree);
-        if (renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
+        if (this.__audioIem) {
+            hmdHolder.addChild(this.__audioIem);
+        }
+        this.__avatarTreeItem.addChild(hmdHolder);
+        if (this.__renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
 
 
             if (!this.__viveAsset) {
-                this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
+                this.__viveAsset = this.__renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
                 this.__viveAsset.getMaterialLibrary().setMaterialTypeMapping({
                     '*': 'SimpleSurfaceShader'
                 });
@@ -247,11 +260,11 @@ class SessionParticipant {
                 }
                 this.__avatarTreeItem.getChild(0).setLocalXfo(data.viewXfo);
                 break;
-            // case 'TabletAndFinger':
-            //     if (this.__currentViewMode !== 'CameraAndPointer') {
+                // case 'TabletAndFinger':
+                //     if (this.__currentViewMode !== 'CameraAndPointer') {
 
-            //     }
-            //     break;
+                //     }
+                break;
             case 'Vive':
                 if (this.__currentViewMode !== 'Vive') {
                     this.setViveRepresentation(data);

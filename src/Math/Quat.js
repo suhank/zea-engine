@@ -381,11 +381,11 @@ class Quat extends AttrValue {
      * @param {vec4} a vector to calculate length of
      * @returns {Number} length of a
      */
-    length(a) {
-        let x = this.__data[0],
+    length() {
+        const x = this.__data[0],
             y = this.__data[1],
-            z = this.__data[2];
-        w = this.__data[2];
+            z = this.__data[2],
+            w = this.__data[3];
         return Math.sqrt(x * x + y * y + z * z + w * w);
     }
 

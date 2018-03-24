@@ -91,7 +91,7 @@ class FileImage2D extends Image2D {
                 return last.substring(suffixSt).toLowerCase()
         }
         let ext = getExt(resourcePath);
-        if (ext == '.jpg' || ext == '.png') {
+        if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
             this.__loadLDRImage(resourcePath, ext);
         } else if (ext == '.mp4' || ext == '.ogg') {
             this.__loadLDRVideo(resourcePath);

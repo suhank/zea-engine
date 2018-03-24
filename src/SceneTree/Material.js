@@ -145,7 +145,6 @@ class Material extends BaseItem {
         makeParameterTexturable(param);
         param.textureConnected.connect(this.textureConnected.emit);
         param.textureDisconnected.connect(this.textureDisconnected.emit);
-        param.valueChanged.connect(this.updated.emit);
     }
 
     addParameter(paramName, defaultValue) {
@@ -155,6 +154,7 @@ class Material extends BaseItem {
             defaultValue = new Color();
         }
         let param = super.addParameter(paramName, defaultValue);
+        param.valueChanged.connect(this.updated.emit);
         if(!param.setImage)
             this.__makeParameterTexturable(param);
         if (image) {

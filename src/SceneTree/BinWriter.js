@@ -8,7 +8,7 @@ import {
 } from '../Math';
 
 class BinWriter {
-    constructor(dataSize) {
+    constructor(dataSize=0) {
         this.__data = new ArrayBuffer(dataSize);
         this.__byteOffset = 0;
         this.__reserved = dataSize;
@@ -37,7 +37,7 @@ class BinWriter {
     }
 
     __grow() {
-        const newSize = this.__reserved * 2;
+        const newSize = (this.__reserved > 0 ? this.__reserved : 1) * 2;
         const data = new ArrayBuffer(newSize);
         const unit8Array = new Uint8Array(data);
         const old_unit8Array = new Uint8Array(this.__data);

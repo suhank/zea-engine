@@ -243,7 +243,7 @@ class ImageAtlas extends GLTexture2D {
                     data: dataArray
                 });
             } else {
-                this.__atlasLayoutTexture.resize(this.__layout.length, 1, dataArray);
+                this.__atlasLayoutTexture.bufferData(data, this.__layout.length, 1);
             }
         }
 

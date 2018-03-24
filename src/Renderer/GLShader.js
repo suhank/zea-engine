@@ -203,7 +203,7 @@ class GLShader extends BaseItem {
                     numberedLinesWithErrors.push('-'.lpad('-', error.length));
                 }
             }
-            console.warn("An error occurred compiling the shader '" + this.constructor.name + "." + name + "': \n\n" + errors.join('\n') + "\n\n" + numberedLinesWithErrors.join('\n'));
+            console.warn("An error occurred compiling the shader \n\n" + numberedLinesWithErrors.join('\n') + "\n\n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n'));
             return null;
         }
         return shaderHdl;

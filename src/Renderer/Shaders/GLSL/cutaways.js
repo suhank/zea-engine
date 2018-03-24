@@ -3,10 +3,10 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 shaderLibrary.setShaderModule('cutaways.glsl', `
 
 
-uniform int _cutawayEnabled;
-uniform vec3 _planeNormal;
-uniform float _planeDist;
-uniform color _cutColor;
+// uniform int _cutawayEnabled;
+// uniform vec3 _planeNormal;
+// uniform float _planeDist;
+// uniform color _cutColor;
 
 #define RAY_EPS 0.0000001
 struct Ray {
@@ -35,19 +35,17 @@ float intersectRayPlane(Ray ray, Ray plane) {
     return sI;
 }
 
-bool cutaway(vec3 worldPos) {
-    if(_cutawayEnabled == 0)
-        return false;
+bool cutaway(vec3 worldPos, vec3 planeNormal, float planeDist, vec4 cutColor) {
 
-    vec3 planePos = _planeNormal * _planeDist;
+    vec3 planePos = planeNormal * planeDist;
     vec3 planeDir = worldPos - planePos;
-    float planeOffset = dot(planeDir, _planeNormal);
+    float planeOffset = dot(planeDir, planeNormal);
     if(planeOffset < 0.0){
         discard;
         return true;
     }
     if(!gl_FrontFacing){
-        gl_FragColor = _cutColor;
+        gl_FragColor = cutColor;
 
         // Note: Moving the backfacing fragements forward onto the cutting plane.
         // This can never work, because it means back facing fragments will be rendered over 

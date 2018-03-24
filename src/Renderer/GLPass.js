@@ -13,7 +13,8 @@ class GLPass {
         
         this.updated = new Signal();
 
-        this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
+        if(this.filterRenderTree)
+            this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
     }
 
     toggleEnabled(){
@@ -22,9 +23,9 @@ class GLPass {
 
     /////////////////////////////////////
     // Bind to Render Tree
-    filterRenderTree() {
-        console.log(this.constructor.name+':filterRenderTree');
-    }
+    // filterRenderTree() {
+    //     // console.log(this.constructor.name+':filterRenderTree');
+    // }
 
 
     /////////////////////////////////////
