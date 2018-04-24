@@ -1,5 +1,6 @@
 
 export * from './RefCounted.js';
+export * from './ParameterOwner.js';
 export * from './BaseItem.js';
 export * from './Utils.js';
 export * from './SGFactory.js';
@@ -43,3 +44,4 @@ export * from './ObjAsset.js';
 export * from './Operators';
 
 export * from './Tools';
+export * from './Manipulators';

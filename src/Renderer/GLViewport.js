@@ -35,6 +35,10 @@ import {
     PostProcessing
 } from './Shaders/PostProcessing.js';
 
+import {
+    CameraMouseAndKeyboard
+} from '../SceneTree';
+
 class GLViewport extends BaseViewport {
     constructor(renderer, name, width, height) {
         super(renderer);
@@ -56,7 +60,6 @@ class GLViewport extends BaseViewport {
         this.__mouseOverGizmo = undefined;
         this.__manipGizmo = undefined;
         this.__mouseDownPos = new Vec2();
-        this.__ongoingTouches = {};
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFbo = undefined;
@@ -86,9 +89,13 @@ class GLViewport extends BaseViewport {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
+        this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
+
         // this.__glshaderScreenPostProcess = new PostProcessing(renderer.getGL());
 
         this.setCamera(new Camera('Default'));
+
+        this.setManipulator(new CameraMouseAndKeyboard());
 
         this.resize(width, height);
         // this.createOffscreenFbo();
@@ -126,12 +133,21 @@ class GLViewport extends BaseViewport {
             this.__updateProjectionMatrix();
             this.updated.emit();
         });
-        this.__camera.movementFinished.connect(() => {
-            this.renderGeomDataFbo();
-        });
 
         this.__updateProjectionMatrix();
     }
+
+    getManipulator() {
+        return this.__manipulator;
+    }
+
+    setManipulator(manipulator) {
+        if(this.__manipulator)
+            this.__manipulator.movementFinished.disconnect(this.renderGeomDataFbo);
+        this.__manipulator = manipulator;
+        this.__manipulator.movementFinished.connect(this.renderGeomDataFbo);
+    }
+
 
     setGizmoPass(gizmoPass) {
         this.__gizmoPass = gizmoPass;
@@ -378,7 +394,7 @@ class GLViewport extends BaseViewport {
                 if (this.__manipMode == 'highlighting') {
                     // Default to camera manipulation
                     this.__manipMode = 'camera-manipulation';
-                    this.__camera.onDragStart(event, this.__mouseDownPos, this);
+                    this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
                 }
 
             }
@@ -386,7 +402,7 @@ class GLViewport extends BaseViewport {
 
             // Default to camera manipulation
             this.__manipMode = 'camera-manipulation';
-            this.__camera.onDragStart(event, this.__mouseDownPos, this);
+            this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
 
             /*
             if (event.shiftKey) {
@@ -415,7 +431,7 @@ class GLViewport extends BaseViewport {
             case 'highlighting':
                 break;
             case 'camera-manipulation':
-                this.__camera.onDragEnd(event, mouseUpPos, this);
+                this.__manipulator.onDragEnd(event, mouseUpPos, this);
                 this.__manipMode = 'highlighting';
                 break;
             case 'geom-manipulation':
@@ -586,7 +602,7 @@ class GLViewport extends BaseViewport {
             case 'camera-manipulation':
                 {
                     let mousePos = this.__eventMousePos(event);
-                    this.__camera.onDrag(event, mousePos, this);
+                    this.__manipulator.onDrag(event, mousePos, this);
                     break;
                 }
             case 'new-selection':
@@ -628,7 +644,7 @@ class GLViewport extends BaseViewport {
     }
 
     onKeyPressed(key, event) {
-        if (this.__camera.onKeyPressed(key, event))
+        if (this.__manipulator.onKeyPressed(key, event, this))
             return true;
         switch (key) {
             case 'f':
@@ -642,112 +658,36 @@ class GLViewport extends BaseViewport {
         return false;
     }
     onKeyDown(key, event) {
-        if (this.__camera.onKeyDown(key, event))
+        if (this.__manipulator.onKeyDown(key, event, this))
             return true;
         return false;
     }
 
     onKeyUp(key, event) {
-        if (this.__camera.onKeyUp(key, event))
+        if (this.__manipulator.onKeyUp(key, event, this))
             return true;
         return false;
     }
 
     onWheel(event) {
-        this.__camera.onWheel(event);
-    }
-
-    __startTouch(touch) {
-        this.__ongoingTouches[touch.identifier] = {
-            identifier: touch.identifier,
-            pos: new Vec2(touch.pageX, touch.pageY)
-        };
-    }
-    __endTouch(touch) {
-        // let idx = this.__ongoingTouchIndexById(touch.identifier);
-        // this.__ongoingTouches.splice(idx, 1); // remove it; we're done
-        delete this.__ongoingTouches[touch.identifier];
+        return this.__manipulator.onWheel(event, this);
     }
 
     // Touch events
     onTouchStart(event) {
-        // console.log("onTouchStart");
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (Object.keys(this.__ongoingTouches).length == 0)
-            this.__manipMode = undefined;
-
-        let touches = event.changedTouches;
-        for (let i = 0; i < touches.length; i++) {
-            this.__startTouch(touches[i]);
-        }
-        this.__camera.initDrag();
+        return this.__manipulator.onTouchStart(event, this);
     }
 
     onTouchMove(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        // console.log("this.__manipMode:" + this.__manipMode);
-
-        let touches = event.changedTouches;
-        if (touches.length == 1 && this.__manipMode != "panAndZoom") {
-            let touch = touches[0];
-            let touchPos = new Vec2(touch.pageX, touch.pageY);
-            let touchData = this.__ongoingTouches[touch.identifier];
-            let dragVec = touchData.pos.subtract(touchPos);
-            if (this.__camera.getDefaultManipMode() == 'look') {
-                // TODO: scale panning here.
-                dragVec.scaleInPlace(6.0);
-                this.__camera.look(dragVec, this);
-            } else {
-                this.__camera.orbit(dragVec, this);
-            }
-        } else if (touches.length == 2) {
-            let touch0 = touches[0];
-            let touchData0 = this.__ongoingTouches[touch0.identifier];
-            let touch1 = touches[1];
-            let touchData1 = this.__ongoingTouches[touch1.identifier];
-
-            let touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
-            let touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
-            let startSeparation = touchData1.pos.subtract(touchData0.pos).length();
-            let dragSeparation = touch1Pos.subtract(touch0Pos).length();
-            let separationDist = startSeparation - dragSeparation;
-
-            let touch0Drag = touch0Pos.subtract(touchData0.pos);
-            let touch1Drag = touch1Pos.subtract(touchData1.pos);
-            let dragVec = touch0Drag.add(touch1Drag);
-            // TODO: scale panning here.
-            dragVec.scaleInPlace(0.5);
-            this.__camera.panAndZoom(dragVec, separationDist * 0.002, this);
-            this.__manipMode = "panAndZoom";
-        }
+        return this.__manipulator.onTouchMove(event, this);
     }
 
     onTouchEnd(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        let touches = event.changedTouches;
-        // switch (this.__manipMode) {
-        // case 'camera-manipulation':
-        //     let touch = touches[0];
-        //     let releasePos = new Vec2(touch.pageX, touch.pageY);
-        //     this.__camera.onDragEnd(event, releasePos, this);
-        //     break;
-        // }
-        for (let i = 0; i < touches.length; i++) {
-            this.__endTouch(touches[i]);
-        }
+        return this.__manipulator.onTouchEnd(event, this);
     }
 
     onTouchCancel(event) {
-        event.preventDefault();
-        console.log("touchcancel.");
-        let touches = event.changedTouches;
-        for (let i = 0; i < touches.length; i++) {
-            this.__endTouch(touches[i]);
-        }
+        return this.__manipulator.onTouchCancel(event, this);
     }
 
 
