@@ -223,6 +223,9 @@ class GLTexture2D extends RefCounted {
                     case gl.ALPHA:
                         numChannels = 1;
                         break;
+                    case gl.RG:
+                        numChannels = 2;
+                        break;
                     case gl.RGB:
                         numChannels = 3;
                         break;

@@ -121,8 +121,6 @@ class TreeItem extends BaseItem {
             this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
         }
 
-        
-        // this.__private.set(parentItem, parentItem);
         super.setOwner(parentItem);
 
         this._setGlobalXfoDirty();

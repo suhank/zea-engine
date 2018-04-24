@@ -23,7 +23,7 @@ class BinWriter {
     }
 
     seekEnd() {
-        this.__byteOffset = byteOffset;
+        this.__byteOffset = this.__reserved;
     }
 
     getBuffer() {

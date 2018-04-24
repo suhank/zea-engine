@@ -24,65 +24,65 @@ import {
     GLTexture2D
 } from './GLTexture2D.js';
 
-let bindParam = (gl, param, renderstate, gltextures={})=>{
-    let name =  param.getName();
+let bindParam = (gl, param, renderstate, gltextures = {}) => {
+    let name = param.getName();
     // console.log("bindParam:" + name);
-    if(param.getValue() instanceof Image2D ){
+    if (param.getValue() instanceof Image2D) {
         let gltexture = gltextures[name];
-        let unif = renderstate.unifs['_'+name+'Tex'];
-        if (gltexture && unif && gltexture.bindToUniform(renderstate, unif)){
+        let unif = renderstate.unifs['_' + name + 'Tex'];
+        if (gltexture && unif && gltexture.bindToUniform(renderstate, unif)) {
             return;
         }
         // If the texture didn't bind, then let the regular value be bound...continue into the rest of the function.
         // return;
     }
 
-    let unif = renderstate.unifs['_'+name];
+    let unif = renderstate.unifs['_' + name];
     if (unif == undefined)
         return;
 
     // Note: we must set the texConnected value to 0 here so texutres bound for one
     // Material do not stay bound for subsequent materials.
-    let textureConnctedUnif = renderstate.unifs[unif.name+'TexConnected'];
-    if (textureConnctedUnif){
+    let textureConnctedUnif = renderstate.unifs[unif.name + 'TexConnected'];
+    if (textureConnctedUnif) {
         gl.uniform1i(textureConnctedUnif.location, 0);
     }
 
-    let value =  param.getValue(false);
+    let value = param.getValue(false);
     switch (unif['type']) {
-    case Boolean:
-        // gl.uniform1ui(unif.location, value);// WebGL 2
-        gl.uniform1i(unif.location, value);
-        break;
-    case UInt32:
-        // gl.uniform1ui(unif.location, value);// WebGL 2
-        gl.uniform1i(unif.location, value);
-        break;
-    case SInt32:
-        // gl.uniform1si(unif.location, value);// WebGL 2
-        gl.uniform1i(unif.location, value);
-        break;
-    case Float32:
-        gl.uniform1f(unif.location, value);
-        break;
-    case Vec2:
-        gl.uniform2fv(unif.location, value.asArray());
-        break;
-    case Vec3:
-        gl.uniform3fv(unif.location, value.asArray());
-        break;
-    case Vec4:
-    case Color:
-        gl.uniform4fv(unif.location, value.asArray());
-        break;
-    case Mat4:
-        gl.uniformMatrix4fv(unif.location, false, value.asArray());
-        break;
-    default:
-        {
-            console.warn("Param :" + name + " has unhandled data type:" + unif['type']);
-            return;
-        }
+        case Boolean:
+            // gl.uniform1ui(unif.location, value);// WebGL 2
+            gl.uniform1i(unif.location, value);
+            break;
+        case UInt32:
+            // gl.uniform1ui(unif.location, value);// WebGL 2
+            gl.uniform1i(unif.location, value);
+            break;
+        case SInt32:
+            // gl.uniform1si(unif.location, value);// WebGL 2
+            gl.uniform1i(unif.location, value);
+            break;
+        case Float32:
+            gl.uniform1f(unif.location, value);
+            break;
+        case Vec2:
+            gl.uniform2fv(unif.location, value.asArray());
+            break;
+        case Vec3:
+            gl.uniform3fv(unif.location, value.asArray());
+            break;
+        case Vec4:
+        case Color:
+            gl.uniform4fv(unif.location, value.asArray());
+            break;
+        case Mat4:
+            gl.uniformMatrix4fv(unif.location, false, value.asArray());
+            break;
+        default:
+            {
+                console.warn("Param :" + name + " has unhandled data type:" + unif['type']);
+                return;
+            }
     }
     return;
 }
@@ -90,8 +90,8 @@ let bindParam = (gl, param, renderstate, gltextures={})=>{
 class GLShader extends BaseItem {
     constructor(gl) {
         super();
-        if(!gl) {
-            throw("gl context must be passed to shader constructor");
+        if (!gl) {
+            throw ("gl context must be passed to shader constructor");
         }
         this.__gl = gl;
         this.__shaderStages = {
@@ -195,10 +195,10 @@ class GLShader extends BaseItem {
             }
             let numberedLinesWithErrors = [];
             let lines = glsl.split('\n');
-            for(let i = 0; i<lines.length; i++) {
-                numberedLinesWithErrors.push(((i+1) + ":").lpad(' ', 3) + lines[i]);
-                if((i+1) in errorLines) {
-                    let error = errorLines[(i+1)];
+            for (let i = 0; i < lines.length; i++) {
+                numberedLinesWithErrors.push(((i + 1) + ":").lpad(' ', 3) + lines[i]);
+                if ((i + 1) in errorLines) {
+                    let error = errorLines[(i + 1)];
                     numberedLinesWithErrors.push(error);
                     numberedLinesWithErrors.push('-'.lpad('-', error.length));
                 }
@@ -214,6 +214,7 @@ class GLShader extends BaseItem {
         this.__shaderCompilationAttempted = true;
         let shaderProgramHdl = gl.createProgram();
         let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl;
+        const shaderHdls = {};
         if (vertexShaderGLSL != undefined) {
             if (preproc) {
                 if (preproc.repl) {
@@ -228,6 +229,7 @@ class GLShader extends BaseItem {
                 return false;
             }
             gl.attachShader(shaderProgramHdl, vertexShader);
+            shaderHdls[gl.VERTEX_SHADER] = vertexShader;
         }
         let fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
         if (fragmentShaderGLSL != undefined) {
@@ -244,11 +246,26 @@ class GLShader extends BaseItem {
                 return false;
             }
             gl.attachShader(shaderProgramHdl, fragmentShader);
+            shaderHdls[gl.FRAGMENT_SHADER] = fragmentShader;
         }
         gl.linkProgram(shaderProgramHdl);
 
         if (!gl.getProgramParameter(shaderProgramHdl, gl.LINK_STATUS)) {
-            throw("Unable to initialize the shader program:" + this.constructor.name);
+            let info = gl.getProgramInfoLog(shaderProgramHdl);
+
+            if (info.includes("D3D shader compilation failed")) {
+                // Usefull for debugging very nasty compiler errors generated only in the ANGL layer.
+                const debug_ext = gl.getExtension("WEBGL_debug_shaders");
+                if (debug_ext) {
+                    let hlsl = debug_ext.getTranslatedShaderSource(shaderHdls[gl.VERTEX_SHADER]);
+                    console.log(hlsl);
+                }
+            }
+
+            throw ("Unable to link the shader program:" + this.constructor.name + '\n==================\n' + info);
+
+
+
             gl.deleteProgram(shaderProgramHdl);
             return false;
         }
@@ -349,17 +366,16 @@ class GLShader extends BaseItem {
         const attachTexture = (paramName, texture) => {
             const genGLTex = () => {
                 let gltexture = texture.getMetadata('gltexture');
-                if(!gltexture) {
-                    if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
+                if (!gltexture) {
+                    if (texture instanceof HDRImage2D || texture.format === "FLOAT") {
                         gltexture = new GLHDRImage(this.__gl, texture);
-                    }
-                    else if (texture.isStreamAtlas()){
+                    } else if (texture.isStreamAtlas()) {
                         gltexture = new GLImageStream(this.__gl, texture);
                     }
                     // else if (texture.hasAlpha()){
                     //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
                     // }
-                    else{
+                    else {
                         gltexture = new GLTexture2D(this.__gl, texture);
                     }
                 }
@@ -376,8 +392,8 @@ class GLShader extends BaseItem {
         }
         for (let paramName in this.__params) {
             let param = this.__params[paramName];
-            let value =  param.getValue();
-            if(value instanceof Image2D){
+            let value = param.getValue();
+            if (value instanceof Image2D) {
                 if (paramName in this.__gltextures && this.__gltextures[paramName].getTexture() == value)
                     continue;
                 attachTexture(paramName, value);
@@ -387,7 +403,7 @@ class GLShader extends BaseItem {
 
 
     compileForTarget(key, preproc) {
-        if(!key){
+        if (!key) {
             key = this.constructor.name;
         }
         let shaderCompilationResult = this.__shaderProgramHdls[key];
@@ -422,40 +438,34 @@ class GLShader extends BaseItem {
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;
 
-        let unifs = shaderCompilationResult.unifs;
-        {
+        let unifs = shaderCompilationResult.unifs; {
             let unif = unifs.viewMatrix;
-            if (unif){
+            if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.viewMatrix.asArray());
             }
-        }
-        {
+        } {
             let unif = unifs.cameraMatrix;
-            if (unif){
+            if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
             }
-        }
-        {
+        } {
             let unif = unifs.projectionMatrix;
-            if (unif){
+            if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.projectionMatrix.asArray());
             }
-        }
-        {
+        } {
             let unif = unifs.envMap;
             if (unif && renderstate.envMap != undefined) {
                 renderstate.envMap.bindToUniform(renderstate, unif);
             }
-        }
-        {
+        } {
             let unif = unifs.exposure;
-            if (unif){
+            if (unif) {
                 gl.uniform1f(unif.location, renderstate.exposure ? renderstate.exposure : 1.0);
             }
-        }
-        {
+        } {
             let unif = unifs.eye;
-            if (unif){
+            if (unif) {
                 // Left or right eye, when rendering sterio VR.
                 gl.uniform1i(unif.location, renderstate.eye);
             }
