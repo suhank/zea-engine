@@ -15,7 +15,7 @@ class GLLines extends GLGeom {
     constructor(gl, lines) {
         super(gl, lines);
 
-        this.fatLines = lines.lineThickness > 0 || this.__geom.getVertexAttributes().lineThickness != undefined;
+        this.fatLines = (lines.lineThickness > 0 || this.__geom.getVertexAttributes().lineThickness != undefined) && gl.floatTexturesSupported;
         this.genBuffers();
     }
 

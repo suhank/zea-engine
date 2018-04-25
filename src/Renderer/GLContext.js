@@ -45,22 +45,12 @@ var create3DContext = function(canvas, opt_attribs) {
     if (context.name == 'webgl2') {
         context.floatTexturesSupported = true;
         context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
-        if (context.__ext_half_float) {
-            context.HALF_FLOAT = context.__ext_half_float.HALF_FLOAT_OES;  
-            context.floatTextureFilteringSupported = true;
-        }
         context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
-        if (context.__ext_texture_half_float_linear) {
-            context.floatTextureFilteringSupported = true;
-        }
     } else {
         context.__ext_float = context.getExtension("OES_texture_float");
         if (context.__ext_float) {
             context.floatTexturesSupported = true;
             context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
-            if (context.__ext_half_float) {
-                context.floatTextureFilteringSupported = true;
-            }
         } else {
             console.warn("OES_texture_float is not available");
         }
@@ -70,9 +60,6 @@ var create3DContext = function(canvas, opt_attribs) {
             context.HALF_FLOAT = context.__ext_half_float.HALF_FLOAT_OES;  
             context.floatTexturesSupported = true;
             context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
-            if (context.__ext_texture_half_float_linear) {
-                context.floatTextureFilteringSupported = true;
-            }
         }
 
         context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");

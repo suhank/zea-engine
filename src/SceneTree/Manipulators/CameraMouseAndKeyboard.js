@@ -40,7 +40,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.movementFinished = new Signal();
     }
 
-    look(mouseDelta, viewport) {
+    look(dragVec, viewport) {
         let focalDistance = viewport.getCamera().getFocalDistance();
         let orbitRate = this.__orbitRateParam.getValue();
 
@@ -56,13 +56,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(mouseDelta.x * orbitRate * 0.12);
+        orbit.rotateY(dragVec.x * orbitRate * 0.12);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
         let pitch = new Quat();
-        pitch.rotateX(mouseDelta.y * orbitRate * 0.12);
+        pitch.rotateX(dragVec.y * orbitRate * 0.12);
         globalXfo.ori.multiplyInPlace(pitch);
 
         if (this.__keyboardMovement) {
@@ -75,7 +75,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         }
     }
 
-    orbit(mouseDelta, viewport) {
+    orbit(dragVec, viewport) {
         let focalDistance = viewport.getCamera().getFocalDistance();
         let orbitRate = this.__orbitRateParam.getValue();
 
@@ -91,13 +91,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(mouseDelta.x * -orbitRate);
+        orbit.rotateY(dragVec.x * -orbitRate);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
         let pitch = new Quat();
-        pitch.rotateX(mouseDelta.y * -orbitRate);
+        pitch.rotateX(dragVec.y * -orbitRate);
         globalXfo.ori.multiplyInPlace(pitch);
 
         globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance));
@@ -112,7 +112,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         }
     }
 
-    pan(mouseDelta, viewport) {
+    pan(dragVec, viewport) {
         let focalDistance = viewport.getCamera().getFocalDistance();
         let fovY = viewport.getCamera().getFov();
         let xAxis = new Vec3(1, 0, 0);
@@ -121,14 +121,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         let cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
         let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
         let delta = new Xfo();
-        delta.tr = xAxis.scale(-(mouseDelta.x / viewport.getWidth()) * cameraPlaneWidth)
-        delta.tr.addInPlace(yAxis.scale((mouseDelta.y / viewport.getHeight()) * cameraPlaneHeight));
+        delta.tr = xAxis.scale(-(dragVec.x / viewport.getWidth()) * cameraPlaneWidth)
+        delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight));
 
         viewport.getCamera().setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
-    dolly(mouseDelta, viewport) {
-        let dollyDist = mouseDelta.x * this.__dollySpeedParam.getValue();
+    dolly(dragVec, viewport) {
+        let dollyDist = dragVec.x * this.__dollySpeedParam.getValue();
         let delta = new Xfo();
         delta.tr.set(0, 0, dollyDist);
         viewport.getCamera().setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
@@ -154,9 +154,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         viewport.getCamera().setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
-    initDrag(mouseDownPos, viewport) {
+    initDrag(viewport) {
         let focalDistance = viewport.getCamera().getFocalDistance();
-        this.__mouseDownPos = mouseDownPos;
         this.__mouseDragDelta.set(0, 0);
         this.__mouseDownCameraXfo = viewport.getCamera().getGlobalXfo().clone();
         this.__mouseDownZaxis = viewport.getCamera().getGlobalXfo().ori.getZaxis();
@@ -170,7 +169,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
 
     onDragStart(event, mouseDownPos, viewport) {
-        this.initDrag(mouseDownPos, viewport);
+
+        this.__mouseDownPos = mouseDownPos;
+        this.initDrag(viewport);
 
         if (event.altKey || event.button == 2) {
             this.__manipulationState = 'pan';
@@ -334,7 +335,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         for (let i = 0; i < touches.length; i++) {
             this.__startTouch(touches[i]);
         }
-        viewport.getCamera().initDrag();
+        this.initDrag(viewport);
     }
 
     onTouchMove(event, viewport) {
@@ -348,12 +349,12 @@ class CameraMouseAndKeyboard extends ParameterOwner {
             let touchPos = new Vec2(touch.pageX, touch.pageY);
             let touchData = this.__ongoingTouches[touch.identifier];
             let dragVec = touchData.pos.subtract(touchPos);
-            if (viewport.getCamera().getDefaultManipMode() == 'look') {
+            if (this.__defaultManipulationState == 'look') {
                 // TODO: scale panning here.
                 dragVec.scaleInPlace(6.0);
-                viewport.getCamera().look(dragVec, this);
+                this.look(dragVec, viewport);
             } else {
-                viewport.getCamera().orbit(dragVec, this);
+                this.orbit(dragVec, viewport);
             }
         } else if (touches.length == 2) {
             let touch0 = touches[0];
@@ -372,7 +373,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
             let dragVec = touch0Drag.add(touch1Drag);
             // TODO: scale panning here.
             dragVec.scaleInPlace(0.5);
-            viewport.getCamera().panAndZoom(dragVec, separationDist * 0.002, this);
+            this.panAndZoom(dragVec, separationDist * 0.002, viewport);
             this.__manipMode = "panAndZoom";
         }
     }
@@ -385,7 +386,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         // case 'camera-manipulation':
         //     let touch = touches[0];
         //     let releasePos = new Vec2(touch.pageX, touch.pageY);
-        //     viewport.getCamera().onDragEnd(event, releasePos, this);
+        //     viewport.getCamera().onDragEnd(event, releasePos, viewport);
         //     break;
         // }
         for (let i = 0; i < touches.length; i++) {
