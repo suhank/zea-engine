@@ -642,9 +642,25 @@ class GLRenderer {
         // If running in electron, avoid handling hotkeys..
         if (window.process === undefined || process.browser == true) {
             switch (key) {
-                case '>':
-                    this.toggleStats();
-                    return true;
+            case 'f':
+                let selection = scene.getSelectionManager().selection;
+                if (selection.size == 0)
+                    this.__viewport.getCamera().frameView([scene.getRoot()]);
+                else
+                    this.__viewport.getCamera().frameView(selection);
+                break;
+            case 'p':
+                if(event.shiftKey)
+                    this.toggleContinuousDrawing();
+                break;
+            case 'g':
+                if(event.altKey)
+                    this.__canvasDiv.requestFullscreen();
+                break;
+            case 'v':
+                if (this.__vrViewport && this.__vrViewport.isPresenting())
+                    this.mirrorVRisplayToViewport = !this.mirrorVRisplayToViewport;
+                break;
             }
         }
         this.requestRedraw();

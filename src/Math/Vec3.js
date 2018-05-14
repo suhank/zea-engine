@@ -246,6 +246,19 @@ class Vec3 extends AttrValue {
         this.__data[2] *= len;
     }
 
+    resize(length) {
+        const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2];
+        if (currlen < Number.EPSILON) {
+            return;
+        }
+        const scl = length / Math.sqrt(currlen);
+        return new Vec3(
+            this.__data[0] * scl,
+            this.__data[1] * scl,
+            this.__data[2] * scl
+            );
+    }
+
     resizeInPlace(length) {
         const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2];
         if (currlen < Number.EPSILON) {

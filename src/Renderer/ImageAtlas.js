@@ -174,7 +174,7 @@ class ImageAtlas extends GLTexture2D {
             subImage.a = subImage.w * subImage.h;
         }
         this.__subImages.forEach(initDims);
-        this.__subImages.sort((a, b) => (a.a > b.a) ? -1 : ((a.a < b.a) ? 1 : 0));
+        // this.__subImages.sort((a, b) => (a.a > b.a) ? -1 : ((a.a < b.a) ? 1 : 0));
 
         const packer = new GrowingPacker();
         packer.fit(this.__subImages);

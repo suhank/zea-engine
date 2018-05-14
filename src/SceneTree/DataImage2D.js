@@ -26,6 +26,11 @@ class DataImage2D extends Image2D {
         this.height = 1;
     }
     
+
+    isLoaded() {
+        return this.__loaded;
+    }
+    
     getName() {
         return this.__name;
     }

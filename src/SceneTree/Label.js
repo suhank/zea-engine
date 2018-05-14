@@ -109,12 +109,11 @@ class Label  extends DataImage2D {
         let outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
         let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
 
+
         this.addParameter(new Parameter('text', text, 'String'));
-        this.addParameter(new Parameter('font', 'Helvetica', 'String'));
         this.addParameter('fontColor', new Color(1.0, 1.0, 1.0));
         this.addParameter(new Parameter('textAlign', 'left', 'String'));
         // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
-        this.addParameter('fontSize', 22);
         this.addParameter('fillText', true);
         this.addParameter('margin', fontSize * 0.5);
         this.addParameter('borderWidth', 2);
@@ -125,6 +124,23 @@ class Label  extends DataImage2D {
         this.addParameter('backgroundColor', backgroundColor);
         this.addParameter('fillBackground', true);
         this.addParameter('strokeBackgroundOutline', true);
+        this.addParameter('fontSize', 22).valueChanged.connect(loadFont);
+        const fontParam = this.addParameter(new Parameter('font', 'Helvetica', 'String'));
+
+        const loadFont = ()=>{
+            const font = this.getParameter('font').getValue();
+            const fontSize = this.getParameter('fontSize').getValue();
+            document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
+                console.log("Font Loaded:" + font);
+                // if(this.__loaded) {
+                //     this.__loaded = true;
+                //     this.loaded.emit();
+                // }
+                this.renderLabelToImage();
+            });
+        }
+        fontParam.valueChanged.connect(loadFont)
+        // fontParam.setValue('AGBookTTReg');
 
         this.__canvasElem = document.createElement('canvas');
     }
@@ -155,7 +171,8 @@ class Label  extends DataImage2D {
         // let ratio = devicePixelRatio / backingStoreRatio;
         let marginAndBorder = margin + borderWidth;
 
-        ctx2d.font = fontSize + 'px ' + font;
+        ctx2d.font = fontSize + 'px "' + font + '"';
+        console.log("renderLabelToImage:" + ctx2d.font);
         this.width = (ctx2d.measureText(text).width + (marginAndBorder * 2));
         this.height = (parseInt(fontSize) + (marginAndBorder * 2));
         ctx2d.canvas.width = this.width;
@@ -171,7 +188,7 @@ class Label  extends DataImage2D {
             roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline);
         }
 
-        ctx2d.font = fontSize + 'px ' + font;
+        ctx2d.font = fontSize + 'px "' + font + '"';
         ctx2d.textAlign = textAlign;
         ctx2d.fillStyle = fontColor.toHex();
         ctx2d.textBaseline = "hanging";
@@ -195,7 +212,7 @@ class Label  extends DataImage2D {
     }
 
     getParams() {
-        this.renderLabelToImage();
+        // this.renderLabelToImage();
         return super.getParams();
     }
 

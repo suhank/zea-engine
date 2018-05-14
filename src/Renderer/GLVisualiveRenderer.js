@@ -218,45 +218,39 @@ class GLVisualiveRenderer extends GLRenderer {
 
     onKeyPressed(key, event) {
         switch (key) {
-            case '[':
-                this.__debugMode--;
-                if (this.__debugMode < 0)
-                    this.__debugMode += this.__debugTextures.length + 1;
-                break;
-            case ']':
-                this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
-                break;
-            case 'k':
-                this.__debugLightmaps = !this.__debugLightmaps;
-                break;
-            case 'f':
-                let selection = scene.getSelectionManager().selection;
-                if (selection.size == 0)
-                    this.__viewport.getCamera().frameView([scene.getRoot()]);
-                else
-                    this.__viewport.getCamera().frameView(selection);
-                break;
-            case 'g':
-                this.__canvasDiv.requestFullscreen();
-                break;
-            case 'o':
-                this.__drawEdges = !this.__drawEdges;
-                break;
-            case 'p':
-                this.__drawPoints = !this.__drawPoints;
-                break;
-            case 'b':
-                this.__displayEnvironment = !this.__displayEnvironment;
-                break;
-            case 'v':
-                if (this.__vrViewport)
-                    this.__vrViewport.togglePresenting();
-                break;
-            case ' ':
-                this.toggleContinuousDrawing();
-                break;
+            // case '[':
+            //     this.__debugMode--;
+            //     if (this.__debugMode < 0)
+            //         this.__debugMode += this.__debugTextures.length + 1;
+            //     break;
+            // case ']':
+            //     this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
+            //     break;
+            // case 'k':
+            //     this.__debugLightmaps = !this.__debugLightmaps;
+            //     break;
+            // case 'f':
+            //     let selection = scene.getSelectionManager().selection;
+            //     if (selection.size == 0)
+            //         this.__viewport.getCamera().frameView([scene.getRoot()]);
+            //     else
+            //         this.__viewport.getCamera().frameView(selection);
+            //     break;
+            // case 'o':
+            //     this.__drawEdges = !this.__drawEdges;
+                // break;
+            // case 'b':
+            //     this.__displayEnvironment = !this.__displayEnvironment;
+            //     break;
+            // case 'v':
+            //     if (this.__vrViewport)
+            //         this.__vrViewport.togglePresenting();
+            //     break;
+            // case ' ':
+            //     break;
+            default:
+                super.onKeyPressed(key);
         }
-        super.onKeyPressed(key, event);
     }
 
     ////////////////////////////

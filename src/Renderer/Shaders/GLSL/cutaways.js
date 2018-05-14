@@ -3,10 +3,6 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 shaderLibrary.setShaderModule('cutaways.glsl', `
 
 
-// uniform int _cutawayEnabled;
-// uniform vec3 _planeNormal;
-// uniform float _planeDist;
-// uniform color _cutColor;
 
 #define RAY_EPS 0.0000001
 struct Ray {

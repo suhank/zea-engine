@@ -174,10 +174,16 @@ uniform bool _emissiveStrengthTexConnected;
 
 #endif
 
+
+uniform int _cutawayEnabled;
+uniform vec3 _planeNormal;
+uniform float _planeDist;
+uniform color _cutColor;
+
 void main(void) {
 
     // Cutaways
-    if(cutaway(v_worldPos))
+    if(_cutawayEnabled != 0 && cutaway(v_worldPos, _planeNormal, _planeDist, _cutColor))
         return;
 
     MaterialParams material;

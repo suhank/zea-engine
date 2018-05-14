@@ -21,6 +21,7 @@ import {
 } from './TreeItem.js';
 
 
+
 class Camera extends TreeItem {
     constructor(name = undefined) {
         if (name == undefined)
@@ -139,6 +140,53 @@ class Camera extends TreeItem {
 
     setFov(value) {
         this.__fovParam.setValue(value);
+    }
+
+    setLensFocalLength(value) {
+        // https://www.nikonians.org/reviews/fov-tables
+        const mapping = {
+            '10mm': 100.4,
+            '11mm': 95.0,
+            '12mm': 90.0,
+            '14mm': 81.2,
+            '15mm': 77.3,
+            '17mm': 70.4,
+            '18mm': 67.4,
+            '19mm': 64.6,
+            '20mm': 61.9,
+            '24mm': 53.1,
+            '28mm': 46.4,
+            '30mm': 43.6,
+            '35mm': 37.8,
+            '45mm': 29.9,
+            '50mm': 27.0,
+            '55mm': 24.6,
+            '60mm': 22.6,
+            '70mm': 19.5,
+            '75mm': 18.2,
+            '80mm': 17.1,
+            '85mm': 16.1,
+            '90mm': 15.2,
+            '100mm': 13.7,
+            '105mm': 13.0,
+            '120mm': 11.4,
+            '125mm': 11.0,
+            '135mm': 10.2,
+            '150mm': 9.1,
+            '170mm': 8.1,
+            '180mm': 7.6,
+            '210mm': 6.5,
+            '300mm': 4.6,
+            '400mm': 3.4,
+            '500mm': 2.7,
+            '600mm': 2.3,
+            '800mm': 1.7
+        };
+        if(!value in mapping) {
+            console.warn("Camera lense focal length not suported:" + value)
+            return;
+        }
+        this.__fovParam.setValue(Math.degToRad(mapping[value]));
     }
 
     getFocalDistance() {

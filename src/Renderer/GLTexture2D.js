@@ -217,7 +217,7 @@ class GLTexture2D extends RefCounted {
                 }
                 // Note: data images must have an even size width/height to load correctly. 
                 // this doesn't mean they must be pot textures...
-                let numPixels = width * height;
+                const numPixels = width * height;
                 let numChannels;
                 switch (this.__channels) {
                     case gl.ALPHA:
@@ -324,21 +324,21 @@ class GLTexture2D extends RefCounted {
             throw ("Unable to bind non-initialized or deleted texture.");
         }
 
-        let unit = renderstate['boundTextures']++;
-        let texId = this.__gl.TEXTURE0 + unit;
-        let gl = this.__gl;
+        const unit = renderstate['boundTextures']++;
+        const texId = this.__gl.TEXTURE0 + unit;
+        const gl = this.__gl;
         gl.activeTexture(texId);
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         gl.uniform1i(unif.location, unit);
 
-        let textureConnctedUnif = renderstate.unifs[unif.name + 'Connected'];
+        const textureConnctedUnif = renderstate.unifs[unif.name + 'Connected'];
         if (textureConnctedUnif) {
             gl.uniform1i(textureConnctedUnif.location, type);
         }
 
         // Note: not all textures are square. (e.g. Lightmaps.)
         // A more powerfull generic binding would be nice, but this is too simple.
-        // let textureSizeUnif = renderstate.unifs[unif.name+'Size'];
+        // const textureSizeUnif = renderstate.unifs[unif.name+'Size'];
         // if (textureSizeUnif){
         //     gl.uniform1i(textureSizeUnif.location, this.width);
         // }
@@ -354,6 +354,7 @@ class GLTexture2D extends RefCounted {
         this.__gl.deleteTexture(this.__gltex);
         this.__gltex = undefined;
     }
+
 };
 
 export {

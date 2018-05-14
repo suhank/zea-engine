@@ -114,19 +114,36 @@ class FileImage2D extends Image2D {
             this.channels = 'RGBA';
         }
         this.format = 'UNSIGNED_BYTE';
-        this.__resourceLoader.addWork(resourcePath, 1);
 
-        let domElement = new Image();
-        domElement.crossOrigin = 'anonymous';
-        domElement.onload = () => {
+        let domElement;
+        const loaded = () => {
             this.width = domElement.width;
             this.height = domElement.height;
             this.__data = domElement;
             this.__loaded = true;
-            this.__resourceLoader.addWorkDone(resourcePath, 1);
             this.loaded.emit();
         };
-        domElement.src = this.__resourceLoader.resolveURL(resourcePath);
+        if(resourcePath in imageDataLibrary) {
+            domElement = imageDataLibrary[resourcePath];
+            if(domElement.complete) {
+                loaded()
+            }
+            else {
+                domElement.addEventListener("load", loaded);
+            }
+        }
+        else {
+            this.__resourceLoader.addWork(resourcePath, 1);
+            domElement = new Image();
+            domElement.crossOrigin = 'anonymous';
+            domElement.src = this.__resourceLoader.resolveURL(resourcePath);
+
+            domElement.addEventListener("load", loaded);
+            domElement.addEventListener("load", () => {
+                this.__resourceLoader.addWorkDone(resourcePath, 1);
+            });
+            imageDataLibrary[resourcePath] = domElement;
+        }
     }
 
     __loadLDRVideo(resourcePath) {

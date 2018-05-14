@@ -69,7 +69,8 @@ class GLBillboardsPass extends GLPass {
             this.updated.emit();
         });
         billboard.getParameter('image').getValue().updated.connect(() => {
-            throw("TODO: update the atlas:" + index);
+            // throw("TODO: update the atlas:" + index);
+            this.__updateBillboard(index);
         });
         billboard.getParameter('alpha').valueChanged.connect(() => {
             this.__updateBillboard(index);
