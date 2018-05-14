@@ -124,7 +124,7 @@ class Label  extends DataImage2D {
         this.addParameter('backgroundColor', backgroundColor);
         this.addParameter('fillBackground', true);
         this.addParameter('strokeBackgroundOutline', true);
-        this.addParameter('fontSize', 22).valueChanged.connect(loadFont);
+        const fontSizeParam = this.addParameter('fontSize', 22)
         const fontParam = this.addParameter(new Parameter('font', 'Helvetica', 'String'));
 
         const loadFont = ()=>{
@@ -139,7 +139,8 @@ class Label  extends DataImage2D {
                 this.renderLabelToImage();
             });
         }
-        fontParam.valueChanged.connect(loadFont)
+        fontSizeParam.valueChanged.connect(loadFont);
+        fontParam.valueChanged.connect(loadFont);
         // fontParam.setValue('AGBookTTReg');
 
         this.__canvasElem = document.createElement('canvas');
