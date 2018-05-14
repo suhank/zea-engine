@@ -83,17 +83,17 @@ class Cylinder extends Mesh {
         // Set Vertex Positions
         let vertex = 0;
         for (let i = 0; i < nbLoops; i++) {
-            let y = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
+            let z = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
             for (let j = 0; j < nbSides; j++) {
                 let phi = (j / nbSides) * 2.0 * Math.PI;
-                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, y, Math.cos(phi) * this.__radius);
+                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, z);
                 vertex++;
             }
         }
         if (this.__caps) {
             // Top caps
-            this.getVertex(numVertices - 1).set(0.0, this.__height * -0.5, 0.0);
-            this.getVertex(numVertices - 2).set(0.0, this.__height * 0.5, 0.0);
+            this.getVertex(numVertices - 1).set(0.0, 0.0, this.__height * -0.5);
+            this.getVertex(numVertices - 2).set(0.0, 0.0, this.__height * 0.5);
         }
 
         //////////////////////////////
@@ -205,16 +205,16 @@ class Cylinder extends Mesh {
         }
         let vertex = 0;
         for (let i = 0; i < nbLoops; i++) {
-            let y = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
+            let z = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
             for (let j = 0; j < nbSides; j++) {
                 let phi = (j / nbSides) * 2.0 * Math.PI;
-                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, y, Math.cos(phi) * this.__radius);
+                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, z);
                 vertex++;
             }
         }
         if (this.__caps) {
-            this.getVertex(numVertices - 1).set(0.0, this.__height * -0.5, 0.0);
-            this.getVertex(numVertices - 2).set(0.0, this.__height * 0.5, 0.0);
+            this.getVertex(numVertices - 1).set(0.0, 0.0, this.__height * -0.5);
+            this.getVertex(numVertices - 2).set(0.0, 0.0, this.__height * 0.5);
         }
 
         this.setBoundingBoxDirty();

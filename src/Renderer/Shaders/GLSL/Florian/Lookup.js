@@ -73,8 +73,8 @@ vec3 uvToNormalSphOct(vec2 uv){
 
     return vec3(
         sOrient*suv.s*sPitch,
-        cPitch,
-        cOrient*suv.t*sPitch
+        cOrient*suv.t*sPitch,
+        cPitch
     );
 }
 

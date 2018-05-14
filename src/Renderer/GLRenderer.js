@@ -229,9 +229,9 @@ class GLRenderer {
         this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
 
         const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
-        gridZAxisMaterial.addParameter('color', new Color(0, 0, gridColor.luminance()));
+        gridZAxisMaterial.addParameter('color', new Color(0, gridColor.luminance(), 0));
         const geomOffset = new Xfo();
-        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI * 0.5);
+        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
         const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
         zAxisLineItem.setGeomOffsetXfo(geomOffset);
         this.__gridTreeItem.addChild(zAxisLineItem);

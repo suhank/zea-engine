@@ -25,18 +25,18 @@ testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
     linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
 
     let addLinesShape = (name, shape, pos)=>{
-        shape.lineThickness = 0.05;
+        shape.lineThickness = 0.25;
         let geomItem = new Visualive.GeomItem(name+'Item', shape, linesMaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
 
-    addLinesShape('Circle', new Visualive.Circle(2.2, 12), new Visualive.Vec3(-6, 0, 6));
-    addLinesShape('Rect', new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 0, 6));
+    addLinesShape('Circle', new Visualive.Circle(2.2, 12), new Visualive.Vec3(-6, 6, 0));
+    addLinesShape('Rect', new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 6, 0));
 
 
     let renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
     // renderer.frameAll();

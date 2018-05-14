@@ -222,7 +222,7 @@ class Camera extends TreeItem {
     setPositionAndTarget(position, target) {
         this.setFocalDistance(position.distanceTo(target));
         let xfo = new Xfo();
-        xfo.setLookAt(position, target, new Vec3(0.0, 1.0, 0.0));
+        xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0));
         this.setGlobalXfo(xfo);
     }
 
@@ -248,8 +248,8 @@ class Camera extends TreeItem {
         let fovY = this.__fovParam.getValue();
 
         let globalXfo = this.getGlobalXfo().clone();
-        let cameraZaxis = globalXfo.ori.getZaxis();
-        let targetOffset = cameraZaxis.scale(-focalDistance);
+        let cameraViewVec = globalXfo.ori.getZaxis();
+        let targetOffset = cameraViewVec.scale(-focalDistance);
         let currTarget = globalXfo.tr.add(targetOffset);
         let newTarget = boundingBox.center();
 
@@ -271,7 +271,7 @@ class Camera extends TreeItem {
         let newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) - camSpaceBBoxDepth;
 
         let dollyDist = newFocalDistance - focalDistance;
-        globalXfo.tr.addInPlace(cameraZaxis.scale(dollyDist));
+        globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist));
 
         this.setFocalDistance(newFocalDistance);
         this.setGlobalXfo(globalXfo);

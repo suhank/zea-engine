@@ -56,7 +56,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(dragVec.x * orbitRate * 0.12);
+        orbit.rotateZ(dragVec.x * orbitRate * 0.12);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
@@ -91,7 +91,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         // Orbit
         let orbit = new Quat();
-        orbit.rotateY(dragVec.x * -orbitRate);
+        orbit.rotateZ(dragVec.x * -orbitRate);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
