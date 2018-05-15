@@ -38,6 +38,10 @@ class GLGeom {
         return this.__geom
     }
 
+    renderableInstanced(){
+        return true;
+    }
+
     ///////////////////////////////////////
     // Buffers
 

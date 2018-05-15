@@ -149,7 +149,7 @@ class GLRenderer {
         this.setupWebGL(canvasDiv, webglOptions);
 
 
-        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
+        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -205,9 +205,9 @@ class GLRenderer {
         return this.__audioCtx;
     }
 
-    getGeomDataPass() {
-        return this.__geomDataPass;
-    }
+    // getGeomDataPass() {
+    //     return this.__geomDataPass;
+    // }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         this.__gridTreeItem = new TreeItem('GridTreeItem');
@@ -275,9 +275,9 @@ class GLRenderer {
             this.requestRedraw();
         });
 
-        if(this.__geomDataPass){
+        // if(this.__geomDataPass){
             vp.createGeomDataFbo(this.__floatGeomBuffer);
-        }
+        // }
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
@@ -383,15 +383,17 @@ class GLRenderer {
             if (this.__loadingImg)
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
 
-            this.__redrawGeomDataFbos = true;
+            this.renderGeomDataFbos();
             this.requestRedraw();
         }
     }
 
     renderGeomDataFbos() {
-        for (let vp of this.__viewports)
-            vp.renderGeomDataFbo();
-        this.__redrawGeomDataFbos = false;
+        const onAnimationFrame = () => {
+            for (let vp of this.__viewports)
+                vp.renderGeomDataFbo();
+        }
+        window.requestAnimationFrame(onAnimationFrame);
     }
 
 
@@ -464,7 +466,7 @@ class GLRenderer {
 
         // Note: using the geom data pass crashes VR scenes.
         
-        this.__floatGeomBuffer = false;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
+        this.__floatGeomBuffer = true;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
@@ -692,6 +694,7 @@ class GLRenderer {
         //         pass.addDrawItem(drawItem);
         // }
         pass.updated.connect(this.requestRedraw.bind(this));
+        pass.setPassIndex(this.__passes.length);
         this.__passes.push(pass);
         this.requestRedraw();
         return this.__passes.length - 1;
@@ -824,7 +827,6 @@ class GLRenderer {
         renderstate.drawCalls = 0;
         renderstate.drawCount = 0;
 
-        // this.__defaultGeomsPass.draw(this.__renderstate);
         for (let pass of this.__passes) {
             if (pass.enabled)
                 pass.draw(renderstate);
@@ -834,6 +836,13 @@ class GLRenderer {
             // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
             // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
         // }
+    }
+
+    drawSceneGeomData(renderstate){
+        for (let pass of this.__passes) {
+            if (pass.enabled)
+                pass.drawGeomData(renderstate);
+        }
     }
 
     draw() {
@@ -868,10 +877,6 @@ class GLRenderer {
         // gl.disable(gl.SCISSOR_TEST);
 
         this.redrawOccured.emit();
-
-        // New Items may have been added during the pause.
-        if (this.__redrawGeomDataFbos)
-            this.renderGeomDataFbos();
     }
 };
 

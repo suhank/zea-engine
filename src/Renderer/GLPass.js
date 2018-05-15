@@ -7,6 +7,7 @@ import {
 class GLPass {
     constructor(gl, collector) {
         this.__gl = gl;
+        this.__passIndex = 0;
         this.__collector = collector;
         this.__glshadermaterials = [];;
         this.enabled = true;
@@ -15,6 +16,10 @@ class GLPass {
 
         if(this.filterRenderTree)
             this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
+    }
+
+    setPassIndex(passIndex){
+        this.__passIndex = passIndex;
     }
 
     toggleEnabled(){
@@ -72,6 +77,22 @@ class GLPass {
                 }
             }
             glshader.unbind(renderstate);
+        }
+    }
+
+    drawGeomData(renderstate){
+
+        let gl = this.__gl;
+
+        for (let glshaderMaterials of this.__glshadermaterials) {
+            const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
+            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
+                const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
+                for (let gldrawitemset of gldrawitemsets) {
+                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
+                    this.drawItemSet(renderstate, gldrawitemset);
+                }
+            }
         }
     }
 

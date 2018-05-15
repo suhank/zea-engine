@@ -141,7 +141,7 @@ class GLDrawItemSet {
                 gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
                 gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
             }
-            this.__glgeom.draw();
+            this.__glgeom.draw(renderstate);
         }
     }
 
@@ -187,7 +187,7 @@ class GLDrawItemSet {
         // renderstate.drawCount+=this.__drawCount;
         // The set has a transform id stored in the texture.
         // Each set as at least one transform, but might have many...
-        if (this.__drawCount == 1) {
+        if (!renderstate.glgeom.renderableInstanced()) {
             // return;
             if (this.__drawItems[this.__lastVisible].bind(renderstate)) {
                 // console.log("draw:"+ this.__drawItems[this.__lastVisible].getId());
@@ -196,7 +196,7 @@ class GLDrawItemSet {
                     gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
                     gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
                 }
-                this.__glgeom.draw();
+                this.__glgeom.draw(renderstate);
             }
             return;
         }
@@ -206,7 +206,7 @@ class GLDrawItemSet {
             const len = this.__visibleItems.length;
             for (let i = 0; i < len; i++) {
                 this.__drawItems[i].bind(renderstate);
-                this.__glgeom.draw();
+                this.__glgeom.draw(renderstate);
             }
         } else {
             // console.log("draw:"+ this.__instancedIdsArray);

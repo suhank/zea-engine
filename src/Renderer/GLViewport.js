@@ -272,7 +272,7 @@ class GLViewport extends BaseViewport {
                 profileJSON: {}
             };
 
-            this.__renderer.getGeomDataPass().draw(renderstate);
+            this.__renderer.drawSceneGeomData(renderstate);
             // this.__gizmoPass.drawDataPass(renderstate);
         }
     }
@@ -284,35 +284,61 @@ class GLViewport extends BaseViewport {
             // Allocate a 1 pixel block.
 
             this.__geomDataBufferFbo.bind();
-            let id, dist, pixels;
+
+
+            // const logGeomData = (geomId)=>{
+            //     console.log("logGeomData " + geomId + ":[" + this.__geomDataBuffer.width +","+ this.__geomDataBuffer.height + "]")
+            //     const pixels = new Float32Array(this.__geomDataBuffer.width * 4);
+            //     for(let i=0; i<this.__geomDataBuffer.height; i++){
+            //       gl.readPixels(0, i, this.__geomDataBuffer.width, 1, gl.RGBA, gl.FLOAT, pixels);
+            //       console.log(pixels);
+            //     }
+            // }
+            // logGeomData();
+
+            let passId, itemId, dist, pixels;
             if (this.__floatGeomBuffer) {
                 pixels = new Float32Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
-                if (pixels[0] == 0)
+                if (pixels[3] == 0)
                     return undefined;
-                id = Math.round(pixels[0]);
-                dist = pixels[1];
+                pixels[0] = Math.round(pixels[0]);
+                pixels[1] = Math.round(pixels[1]);
+                pixels[2] = Math.round(pixels[2]);
+                pixels[3] = Math.round(pixels[3]);
+                passId = pixels[0];
+                itemId = pixels[1];
+                dist = pixels[3];
             } else {
                 pixels = new Uint8Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
                 if (pixels[0] == 0 && pixels[1] == 0)
                     return undefined;
-                id = pixels[0] + (pixels[1] << 8);
+                itemId = pixels[0] + (pixels[1] << 8);
                 dist = Math.decode16BitFloatFrom2xUInt8([pixels[2], pixels[3]]);
             }
+            let geomItem;
+            if(passId == 0) {
+                const drawItem = this.__renderer.getCollector().getDrawItem(itemId);
+                if (drawItem) {
+                    geomItem = drawItem.getGeomItem();
+                }
+            }
+            else {
+                geomItem = this.__renderer.getPass(passId).getGeomItem(pixels);
+            }
 
-            let drawItem = this.__renderer.getCollector().getDrawItem(id);
-            if (drawItem) {
+            if(geomItem) {
                 let mouseRay = this.calcRayFromScreenPos(screenPos);
                 let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
                 return {
-                    id,
+                    id: itemId,
                     screenPos,
                     dist: pixels[2],
                     mouseRay: mouseRay,
                     intersectionPos,
-                    geomItem: drawItem.getGeomItem()
+                    geomItem
                 };
             }
         }
@@ -360,6 +386,7 @@ class GLViewport extends BaseViewport {
     }
 
     onMouseDown(event) {
+        console.log("onMouseDown:");
 
         this.__mouseDownPos = this.__eventMousePos(event);
         this.__mouseDownGeom = undefined;
@@ -559,6 +586,9 @@ class GLViewport extends BaseViewport {
         switch (this.__manipMode) {
             case 'highlighting':
                 {
+                    // disabling higlighting whle I debug geom data buffers
+                    break;
+
                     // if (this.__geomDataBufferFbo)
                     //     getGeomUnderMouse.call(this);
                     if (this.__gizmoPass)
