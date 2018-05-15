@@ -53,7 +53,7 @@ class Camera extends TreeItem {
 
         // Initial viewing coords of a person standing 3 meters away from the
         // center of the stage looking at something 1 meter off the ground.
-        this.setPositionAndTarget(new Vec3(3, 1.75, 3), new Vec3(0, 1, 0));
+        this.setPositionAndTarget(new Vec3(3, 3, 1.75), new Vec3(0, 0, 1));
 
     }
 
