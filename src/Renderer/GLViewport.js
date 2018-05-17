@@ -386,8 +386,7 @@ class GLViewport extends BaseViewport {
     }
 
     onMouseDown(event) {
-        console.log("onMouseDown:");
-
+        
         this.__mouseDownPos = this.__eventMousePos(event);
         this.__mouseDownGeom = undefined;
 
