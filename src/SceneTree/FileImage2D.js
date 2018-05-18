@@ -27,6 +27,7 @@ import {
     Parameter,
     NumberParameter,
     Vec4Parameter,
+    FilePathParameter,
     ParameterSet
 } from './Parameters';
 
@@ -38,15 +39,22 @@ const imageDataLibrary = {
 class FileImage2D extends Image2D {
     constructor(resourcePath, resourceLoader, params = {}) {
         super(params);
-
+        
         this.__resourceLoader = resourceLoader;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
+        const fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
+        fileParam.valueChanged.connect(()=>{
+            this.loaded.untoggle();
+            const filePath = fileParam.getValue()
+            const url = fileParam.getURL();
+            this.__loadURL(url, filePath);
+        });
         if (resourcePath && resourcePath != '')
-            this.loadResource(resourcePath);
+            fileParam.setValue(resourcePath);
     }
 
     getName() {
@@ -73,15 +81,7 @@ class FileImage2D extends Image2D {
         return getName(this.__resourcePath);
     }
 
-    get resourcePath() {
-        return this.__resourcePath;
-    }
-
-    loadResource(resourcePath) {
-        if (!this.__resourceLoader.resourceAvailable(resourcePath)) {
-            throw ("Resource unavailable:" + resourcePath);
-            return;
-        }
+    __loadURL(url, resourcePath) {
 
         let getExt = (str) => {
             let p = str.split('/');
@@ -257,7 +257,7 @@ class FileImage2D extends Image2D {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
-                console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
+                // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm

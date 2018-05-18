@@ -23,7 +23,8 @@ import {
     SelectionManager
 } from './SelectionManager.js';
 import {
-    ResourceLoader
+    ResourceLoader,
+    resourceLoader
 } from './ResourceLoader.js';
 import {
     Lightmap,
@@ -51,7 +52,7 @@ class Scene {
         this.__envmapLOD = this.__lightmapLOD;
 
         this.__selectionManager = new SelectionManager();
-        this.__resourceLoader = new ResourceLoader(resources);
+        resourceLoader.setResources(resources);
 
         // Common resources are used by systems such at the renderer and VR controllers.
         // Any asset that will probably be used my multiple differeint independent objects
@@ -77,14 +78,14 @@ class Scene {
     }
 
     getResourceLoader() {
-        return this.__resourceLoader;
+        return resourceLoader;
     }
 
     loadCommonAssetResource(path) {
         if (path in this.__commonResources) {
             return this.__commonResources[path];
         }
-        let asset = new VLAAsset(path, this.__resourceLoader);
+        let asset = new VLAAsset(path, resourceLoader);
         asset.getParameter('FilePath').setValue(path);
         this.__commonResources[path] = asset;
         return asset;
@@ -109,7 +110,7 @@ class Scene {
     setEnvMapName(envMapName) {
         if(envMapName.endsWith('.vlh'))
             envMapName = envMapName.splice(0, envMapName.length = 4);
-        let envMap = new Visualive.FileImage2D(envMapName + this.__envmapLOD + ".vlh", this.__resourceLoader);
+        let envMap = new Visualive.FileImage2D(envMapName + this.__envmapLOD + ".vlh", resourceLoader);
         this.setEnvMap(envMap);
     }
 
@@ -164,10 +165,9 @@ class Scene {
                 let path = asset.getParameter('FilePath').getValue();
 
                 let lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
-                console.log(lightmapPath);
                 let lightmapName = asset.getName();
-                if (!this.getLightMap(lightmapName) && this.__resourceLoader.resourceAvailable(lightmapPath)) {
-                    let lightmap = new Visualive.Lightmap(lightmapPath, asset.getLightmapSize(), this.__resourceLoader);
+                if (!this.getLightMap(lightmapName) && resourceLoader.resourceAvailable(lightmapPath)) {
+                    let lightmap = new Visualive.Lightmap(lightmapPath, asset.getLightmapSize(), resourceLoader);
                     this.setLightMap(lightmapName, lightmap);
                 }
             }
@@ -229,6 +229,12 @@ class Scene {
     // Persistence
 
     fromJSON(json) {
+
+        if(j.envMap) {
+          const envMap =  new Visualive.FileImage2D('envMap', resourceLoader);
+          envMap.fromJSON(j.envMap);
+          this.setEnvMap(envMap);
+        }
 
     }
 

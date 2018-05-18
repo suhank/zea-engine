@@ -119,10 +119,8 @@ class ParameterOwner extends RefCounted {
     }
 
     fromJSON(j, flags) {
-
-        // TODO: make this work
-        // for (let param of j.params)
-        //     paramsJSON.push(param.toJSON());
+        for (let param of j.params)
+            paramsJSON.push(param.toJSON());
     }
 
     readBinary(reader, flags) {
