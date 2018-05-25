@@ -207,7 +207,7 @@ class ImageAtlas extends GLTexture2D {
         const width = packer.root.w;
         const height = packer.root.h;
 
-        // console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
+        console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
         // Note: only RGBA Float textures can be rendered to on Firefox.(Not RGB)
         this.configure({
@@ -231,6 +231,15 @@ class ImageAtlas extends GLTexture2D {
             gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 
+        const pixelsPerItem = 1;
+        let size = Math.round(Math.sqrt(this.__layout.length * pixelsPerItem) + 0.5);
+        // Only support power 2 textures. Else we get strange corruption on some GPUs
+        // in some scenes.
+        size = Math.nextPow2(size);
+        // Size should be a multiple of pixelsPerItem, so each geom item is always contiguous
+        // in memory. (makes updating a lot easier. See __updateItemInstanceData below)
+        if ((size % pixelsPerItem) != 0)
+            size += pixelsPerItem - (size % pixelsPerItem);
 
         if (!gl.floatTexturesSupported) {
             this.__layoutVec4s = [];
@@ -238,7 +247,7 @@ class ImageAtlas extends GLTexture2D {
                 this.__layoutVec4s[index] = [layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height];
             });
         } else {
-            let dataArray = new Float32Array(this.__layout.length * 4); /*each pixel has 4 floats*/
+            let dataArray = new Float32Array(size * size * 4); /*each pixel has 4 floats*/
             for (let i = 0; i < this.__layout.length; i++) {
                 let layoutItem = this.__layout[i];
                 let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
@@ -251,8 +260,8 @@ class ImageAtlas extends GLTexture2D {
                     filter: 'NEAREST',
                     wrap: 'CLAMP_TO_EDGE',
                     mipMapped: false,
-                    width: this.__layout.length,
-                    height: 1,
+                    width: size,
+                    height: size,
                     data: dataArray
                 });
             } else {
@@ -267,7 +276,7 @@ class ImageAtlas extends GLTexture2D {
         return this.__layoutVec4s[index];
     }
 
-    renderAtlas(cleanup = true) {
+    renderAtlas(cleanup = false) {
         if (this.__layoutNeedsRegeneration) {
             this.generateAtlasLayout();
         }
@@ -313,6 +322,7 @@ class ImageAtlas extends GLTexture2D {
         let atlasDescUnif = unifs[unif.name + '_desc'];
         if (atlasDescUnif)
             this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__layout.length, 0.0);
+
     }
 
     cleanup() {
