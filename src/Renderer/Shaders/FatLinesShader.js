@@ -51,8 +51,8 @@ void main(void) {
     int index_1 = int(segmentIndices.y) / 2;
 
     vec3 viewPos;
-    vec4 data_0 = texelFetch(positionsTexture, positionsTextureSize, index_0);
-    vec4 data_1 = texelFetch(positionsTexture, positionsTextureSize, index_1);
+    vec4 data_0 = fetchTexel(positionsTexture, positionsTextureSize, index_0);
+    vec4 data_1 = fetchTexel(positionsTexture, positionsTextureSize, index_1);
 
     vec4 pos_0 = modelViewMatrix * vec4(data_0.xyz, 1.0);
     vec4 pos_1 = modelViewMatrix * vec4(data_1.xyz, 1.0);
@@ -75,7 +75,7 @@ void main(void) {
             if(seqentialIndex_0 != 0){
                 // TODO: if index_0 == 0, get the last index in the line as previous
                 int index_prev = index_0-1;
-                vec4 data_prev = texelFetch(positionsTexture, positionsTextureSize, index_prev);
+                vec4 data_prev = fetchTexel(positionsTexture, positionsTextureSize, index_prev);
                 vec4 pos_prev = modelViewMatrix * vec4(data_prev.xyz, 1.0);
                 segmentStartDir = normalize(pos_1.xyz - pos_prev.xyz);
             }
@@ -98,7 +98,7 @@ void main(void) {
             if(seqentialIndex_1 != 0){
                 // TODO: if index_0 == numPoints-1, get the first index in the line as previous
                 int index_next = index_1+1;
-                vec4 data_next = texelFetch(positionsTexture, positionsTextureSize, index_next);
+                vec4 data_next = fetchTexel(positionsTexture, positionsTextureSize, index_next);
                 vec4 pos_next = modelViewMatrix * vec4(data_next.xyz, 1.0);
                 segmentEndDir = normalize(pos_next.xyz - pos_0.xyz);
             }

@@ -284,19 +284,12 @@ class ImageAtlas extends GLTexture2D {
         let unifs = renderstate.unifs;
         for (let j = 0; j < this.__subImages.length; j++) {
             let image = this.__subImages[j];
-// <<<<<<< HEAD
-            let item = this.__layout[j];
+
+            let layoutItem = this.__layout[j];
             image.bindToUniform(renderstate, unifs.srctexture);
-            gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
-            gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
+            gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray());
+            gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray());
             gl.uniform2f(unifs.srctextureDim.location, image.width, image.height);
-// =======
-//             let layoutItem = this.__layout[j];
-//             image.bindToUniform(renderstate, unifs.texture);
-//             gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray());
-//             gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray());
-//             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
-// >>>>>>> dev
             gl.uniform1i(unifs.flags.location, image.flags);
             gl.drawQuad();
         }

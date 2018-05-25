@@ -14,8 +14,8 @@ struct Xfo {
 Xfo getXfo(sampler2D texture, int textureSize, int index) {
     const int cols_per_instance = 2;
     Xfo xfo;
-    vec4 col0 = texelFetch(texture, textureSize, (index * cols_per_instance));
-    vec4 col1 = texelFetch(texture, textureSize, (index * cols_per_instance) + 1);
+    vec4 col0 = fetchTexel(texture, textureSize, (index * cols_per_instance));
+    vec4 col1 = fetchTexel(texture, textureSize, (index * cols_per_instance) + 1);
     xfo.tr = col0.rgb;
     xfo.ori = col1;
     xfo.sc = col0.a;

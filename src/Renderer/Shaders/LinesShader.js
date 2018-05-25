@@ -42,9 +42,19 @@ precision highp float;
 uniform color _color;
 uniform float _opacity;
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
 void main(void) {
-    gl_FragColor = _color;
-    gl_FragColor.a *= _opacity;
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+    fragColor = _color;
+    fragColor.a *= _opacity;
+    
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
         this.addParameter('color', new Color(1.0, 1.0, 0.5));

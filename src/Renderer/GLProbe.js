@@ -106,11 +106,11 @@ class GLProbe extends ImageAtlas {
             this.generateAtlasLayout();
 
             this.__convolverShader = new ConvolverShader(gl);
-            let covolverShaderComp = this.__convolverShader.compileForTarget('GLProbe', {
+            let covolverShaderComp = this.__convolverShader.compileForTarget('GLProbe',  Object.assign({
                 repl: {
                     "NUM_SAMPLES": numSamples
                 }
-            });
+            }, gl.shaderopts));
             this.__covolverShaderBinding = generateShaderGeomBinding(gl, covolverShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
         }

@@ -13,11 +13,11 @@ shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 // };
 
 // vec4 getSubImageLayout(int index, in ImageAtlas atlas){
-//     return texelFetch1D(atlas.layout, int(atlas.desc.z), index);
+//     return fetchTexel1D(atlas.layout, int(atlas.desc.z), index);
 // }
 
 // vec2 calcSubImageTexCoords(vec2 texCoord, int index, in ImageAtlas atlas){
-//     vec4 layoutData = texelFetch1D(atlas.layout, int(atlas.desc.z), index);
+//     vec4 layoutData = fetchTexel1D(atlas.layout, int(atlas.desc.z), index);
 //     return (texCoord * layoutData.zw) + layoutData.xy;
 // }
 
@@ -27,11 +27,11 @@ shaderLibrary.setShaderModule('utils/imageAtlas.glsl', `
 // }
 
 vec4 getSubImageLayout(int index, in sampler2D atlasLayout, in vec4 atlasDesc){
-    return texelFetch1D(atlasLayout, int(atlasDesc.z), index);
+    return fetchTexel1D(atlasLayout, int(atlasDesc.z), index);
 }
 
 vec2 calcSubImageTexCoords(vec2 texCoord, int index, in sampler2D atlasLayout, in vec4 atlasDesc){
-    vec4 layoutData = texelFetch1D(atlasLayout, int(atlasDesc.z), index);
+    vec4 layoutData = fetchTexel1D(atlasLayout, int(atlasDesc.z), index);
     return (texCoord * layoutData.zw) + layoutData.xy;
 }
 

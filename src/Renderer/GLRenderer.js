@@ -181,6 +181,7 @@ class GLRenderer {
             directives.push(this.__shaderDirectives[key]);
         }
         this.__preproc.defines = directives.join('\n')+'\n';
+        this.__gl.shaderopts = this.__preproc
     }
 
 

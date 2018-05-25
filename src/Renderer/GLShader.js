@@ -164,17 +164,18 @@ class GLShader extends BaseItem {
     ///////////////////////////////////
     // Compilation
 
-    __compileShaderStage(glsl, stageID, name, preproc) {
+    __compileShaderStage(glsl, stageID, name, shaderopts) {
         let gl = this.__gl;
         // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
-
-        if (preproc) {
-            if (preproc.repl) {
-                for (let key in preproc.repl)
-                    glsl = glsl.replaceAll(key, preproc.repl[key]);
+        if(!shaderopts)
+            shaderopts = gl.shaderopts;
+        if (shaderopts) {
+            if (shaderopts.repl) {
+                for (let key in shaderopts.repl)
+                    glsl = glsl.replaceAll(key, shaderopts.repl[key]);
             }
-            if (preproc.defines)
-                glsl = preproc.defines + glsl;
+            if (shaderopts.defines)
+                glsl = shaderopts.defines + glsl;
         }
 
         let prefix;
@@ -232,14 +233,14 @@ class GLShader extends BaseItem {
         return shaderHdl;
     }
 
-    __createProgram(preproc) {
+    __createProgram(shaderopts) {
         let gl = this.__gl;
         this.__shaderCompilationAttempted = true;
         let shaderProgramHdl = gl.createProgram();
         let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl;
         const shaderHdls = {};
         if (vertexShaderGLSL != undefined) {
-            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', preproc);
+            let vertexShader = this.__compileShaderStage(vertexShaderGLSL, gl.VERTEX_SHADER, 'vertexShader', shaderopts);
             if (!vertexShader) {
                 return false;
             }
@@ -248,7 +249,7 @@ class GLShader extends BaseItem {
         }
         let fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
         if (fragmentShaderGLSL != undefined) {
-            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', preproc);
+            let fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', shaderopts);
             if (!fragmentShader) {
                 return false;
             }
@@ -277,12 +278,12 @@ class GLShader extends BaseItem {
             return false;
         }
 
-        let result = this.__extractAttributeAndUniformLocations(shaderProgramHdl, preproc);
+        let result = this.__extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts);
         result.shaderProgramHdl = shaderProgramHdl;
         return result;
     }
 
-    __extractAttributeAndUniformLocations(shaderProgramHdl, preproc) {
+    __extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts) {
         let gl = this.__gl;
         let attrs = this.getAttributes();
         let result = {
@@ -321,10 +322,10 @@ class GLShader extends BaseItem {
                     };
                 }
             }
-            if (preproc) {
-                if (preproc.repl) {
-                    for (let key in preproc.repl)
-                        uniformName = uniformName.replace(key, preproc.repl[key]);
+            if (shaderopts) {
+                if (shaderopts.repl) {
+                    for (let key in shaderopts.repl)
+                        uniformName = uniformName.replace(key, shaderopts.repl[key]);
                 }
             }
 
@@ -409,14 +410,14 @@ class GLShader extends BaseItem {
     }
 
 
-    compileForTarget(key, preproc) {
+    compileForTarget(key, shaderopts) {
         if (!key) {
             key = this.constructor.name;
         }
         let shaderCompilationResult = this.__shaderProgramHdls[key];
         if (!shaderCompilationResult) {
             if (shaderCompilationResult !== false) {
-                shaderCompilationResult = this.__createProgram(preproc);
+                shaderCompilationResult = this.__createProgram(shaderopts);
                 this.__shaderProgramHdls[key] = shaderCompilationResult;
             }
         }

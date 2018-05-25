@@ -43,8 +43,7 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    fragColor = decodeHDR(ldrSampler, cdmSampler, v_texCoord);
-    fragColor.rgb = vec4(fragColor * tint.rgb * exposure, 1.0);
+    fragColor = vec4(decodeHDR(ldrSampler, cdmSampler, v_texCoord) * tint.rgb * exposure, 1.0);
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;
