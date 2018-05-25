@@ -11,7 +11,7 @@ testingHarness.registerTest('Webcam', (domElement, resources)=> {
     let plane = new Visualive.Plane(2.0, 1.5);
 
     let geomItem = new Visualive.GeomItem('PlaneItem', plane, material);
-    geomItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,1,0)));
+    geomItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,0,1)));
     scene.getRoot().addChild(geomItem);
 
 
@@ -20,13 +20,13 @@ testingHarness.registerTest('Webcam', (domElement, resources)=> {
     renderer.getViewport().setBackground(webcamimage);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,1));
 
-    renderer.vrViewportSetup.connect((vrvp)=>{
-        let geomItem = new Visualive.GeomItem('BG', plane, material);
-        geomItem.localXfo.sc.set(8, 8, 1);
-        geomItem.localXfo.tr.set(0, -4, -8);
-        // geomItem.localXfo.ori.rotateX(-0.15);
-        vrvp.getVRHead().getTreeItem().addChild(geomItem);
-    })
+    // renderer.vrViewportSetup.connect((vrvp)=>{
+    //     let geomItem = new Visualive.GeomItem('BG', plane, material);
+    //     geomItem.localXfo.sc.set(8, 8, 1);
+    //     geomItem.localXfo.tr.set(0, -4, -8);
+    //     // geomItem.localXfo.ori.rotateX(-0.15);
+    //     vrvp.getVRHead().getTreeItem().addChild(geomItem);
+    // })
 
     renderer.setScene(scene);
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
