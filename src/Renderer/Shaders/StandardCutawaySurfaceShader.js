@@ -46,6 +46,8 @@ uniform mat4 projectionMatrix;
 attribute float clusterIDs;
 uniform vec2 lightmapSize;
 
+uniform float _cutawaySurfaceOffset;
+
 /* VS Outputs */
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -90,9 +92,8 @@ void main(void) {
 
 
     if(dot(v_viewNormal, v_viewPos) > 0.0) {
-
         // Move backfaces towards the camera to fix issues with zfighting of backfaces and frontfaces.
-        gl_Position.z += 0.000003 / gl_Position.w;
+        gl_Position.z += _cutawaySurfaceOffset / gl_Position.w;
     }
 
 }
@@ -300,6 +301,7 @@ void main(void) {
         this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
         this.addParameter('planeNormal', new Vec3(0.0, 0.0, 1.0), false);
         this.addParameter('planeDist', 0.0, false);
+        this.addParameter('cutawaySurfaceOffset', 0.000003, false);
 
         this.finalize();
     }

@@ -4,6 +4,7 @@ export * from './ParameterOwner.js';
 export * from './BaseItem.js';
 export * from './Utils.js';
 export * from './SGFactory.js';
+export * from './ResourceLoader.js';
 
 export * from './BinReader.js';
 export * from './BinWriter.js';

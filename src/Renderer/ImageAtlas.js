@@ -196,7 +196,7 @@ class ImageAtlas extends GLTexture2D {
         const width = packer.root.w;
         const height = packer.root.h;
 
-        console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
+        // console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
         // Note: only RGBA Float textures can be rendered to on Firefox.(Not RGB)
         this.configure({
