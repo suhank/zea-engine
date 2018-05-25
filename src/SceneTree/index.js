@@ -1,13 +1,19 @@
 
 export * from './RefCounted.js';
+export * from './ParameterOwner.js';
 export * from './BaseItem.js';
 export * from './Utils.js';
 export * from './SGFactory.js';
+export * from './ResourceLoader.js';
+
+export * from './BinReader.js';
+export * from './BinWriter.js';
 
 export * from './Parameters';
 export * from './Geometry';
 
 export * from './TreeItem.js';
+export * from './AudioItem.js';
 export * from './GeomItem.js';
 export * from './GizmoItem.js';
 export * from './AssetItem.js';
@@ -25,6 +31,8 @@ export * from './FileImage2D.js';
 export * from './WebcamImage2D.js';
 export * from './HDRImage2D.js';
 export * from './HDRImageMixer.js';
+
+export * from './MaterialLibrary.js';
 export * from './ImageLibrary.js';
 
 export * from './ProceduralSky.js';
@@ -37,3 +45,4 @@ export * from './ObjAsset.js';
 export * from './Operators';
 
 export * from './Tools';
+export * from './Manipulators';

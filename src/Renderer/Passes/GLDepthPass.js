@@ -105,7 +105,7 @@ class GLDepthPass extends GLPass {
 
     bindForReading(renderstate) {
 
-        let unifs = renderstate['unifs'];
+        const unifs = renderstate['unifs'];
 
         this.__gl.uniformMatrix4fv(unifs['lightViewMatrix']['location'], false, this.lightViewMatrix.asArray());
         this.__gl.uniformMatrix4fv(unifs['lightProjectionMatrix']['location'], false, this.__lightProjectionMatrix.asArray());
@@ -117,16 +117,16 @@ class GLDepthPass extends GLPass {
             this.__gl.uniform3fv(unifs['lightSourceDir']['location'], this.lightSourceDir.asArray());
 
         if ('depthTexture' in unifs) {
-            let unit = renderstate['boundTextures']++;
-            let texId = this.__gl.TEXTURE0 + unit;
+            const unit = renderstate['boundTextures']++;
+            const texId = this.__gl.TEXTURE0 + unit;
             this.__gl.activeTexture(texId);
             this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.fbo.depthTextureGL);
             // this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.fbo.colorTexture.glTex);
             this.__gl.uniform1i(unifs['depthTexture']['location'], unit);
 
             if ('depthTextureSize' in unifs) {
-                let width = this.__fbo.width;
-                let height = this.__fbo.height;
+                const width = this.__fbo.width;
+                const height = this.__fbo.height;
                 this.__gl.uniform2fv(unifs['depthTextureSize']['location'], [width, height]);
             }
         }

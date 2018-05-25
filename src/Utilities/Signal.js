@@ -11,13 +11,10 @@ class Signal {
 
         this.connect = this.connect.bind(this);
         this.disconnect = this.disconnect.bind(this);
-        this.disconnectScope = this.disconnectScope.bind(this);
         this.emit = this.emit.bind(this);
     }
 
-    connect(fn, scope) {
-        if (scope !== undefined)
-            console.warn("scope args are deprecated.");
+    connect(fn) {
         if (fn == undefined)
             throw("a function callback must be passed to Signal.connect");
         let id = this.__slots.length;
@@ -25,14 +22,12 @@ class Signal {
 
         if(this.__toggledSignal && this.__toggled){
             // This signal has already been toggled, so we should emit immedietly.
-            fn.call(scope, ...this.__data);
+            fn(...this.__data);
         }
         return id;
     }
 
-    disconnect(fn, scope) {
-        if (scope !== undefined)
-            console.warn("scope args are deprecated.");
+    disconnect(fn) {
         let ids = [];
         this.__slots.forEach(function (item, index) {
             if (item === fn) {
@@ -40,25 +35,12 @@ class Signal {
             }
         });
         if(ids.length == 0){
-            throw("callback :" + fn.name + " was not connected to this signal:" + this.__name);
+            console.warn("callback :" + fn.name + " was not connected to this signal:" + this.__name);
+            return;
         }
         for(let id of ids) {
             this.__slots[id] = undefined;
         }
-    }
-
-
-    disconnectScope(scope = this) {
-        throw("disconnectScope is deprecated.");
-        // let ids = [];
-        // this.__slots.forEach(function (item, key) {
-        //     if (item["scope"] === scope) {
-        //         ids.push(key);
-        //     }
-        // });
-        // for(let id of ids) {
-        //     this.__slots.delete(id);
-        // }
     }
 
     disconnectID(id) {
@@ -78,12 +60,14 @@ class Signal {
                 console.warn("Toggled signals should only be fired once, or untoggled before re-firing..");
             }
         }
-        this.__slots.forEach(function (fn) {
+        const len=this.__slots.length;
+        for(let i=0; i< len; i++){
+            const fn = this.__slots[i];
             // Skip disconnected slots.
             if(fn){
                 fn(...data);
             }
-        });
+        }
     }
 
     untoggle() {
@@ -96,6 +80,5 @@ class Signal {
 export {
     Signal
 };
-// export default Signal;
 
 

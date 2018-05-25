@@ -48,17 +48,22 @@ varying vec2 v_textureCoord;
 
 void main(void) {
 
+    vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
-
-    vec4 pos = vec4(positions, 1.);
     vec4 viewPos    = modelViewMatrix * pos;
-    gl_Position = projectionMatrix * viewPos;
+    gl_Position     = projectionMatrix * viewPos;
 
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    v_worldPos      = (modelMatrix * pos).xyz;
+    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
+
+#ifdef ENABLE_TEXTURES
+    v_textureCoord  = textureCoords;
+#endif
+
+    // Cutaway code.
+    v_worldPos      = (modelMatrix * pos).xyz;
 
     if(dot(v_viewNormal, v_viewPos) > 0.0) {
 
@@ -66,9 +71,6 @@ void main(void) {
         gl_Position.z += 0.000003 / gl_Position.w;
     }
 
-#ifdef ENABLE_TEXTURES
-    v_textureCoord  = textureCoords;
-#endif
 }
 `);
 
@@ -88,8 +90,6 @@ varying vec2 v_textureCoord;
 #endif
 
 
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
 uniform mat4 cameraMatrix;
 
 
@@ -110,6 +110,10 @@ uniform bool _opacityTexConnected;
 <%include file="materialparams.glsl"/>
 <%include file="cutaways.glsl"/>
 
+uniform int _cutawayEnabled;
+uniform vec3 _planeNormal;
+uniform float _planeDist;
+uniform color _cutColor;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -121,9 +125,9 @@ void main(void) {
 #endif
 
     // Cutaways
-    if(cutaway(v_worldPos, fragColor)){
+    if(_cutawayEnabled != 0 && cutaway(v_worldPos, _planeNormal, _planeDist, _cutColor, fragColor)){
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+        gl_FragColor = fragColor;
 #endif
         return;
     }
@@ -169,7 +173,7 @@ void main(void) {
         // cutaway params
         this.addParameter('cutawayEnabled', true);
         this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
-        this.addParameter('planeNormal', new Vec3(0.0, 0.0, 1.0), false);
+        this.addParameter('planeNormal', new Vec3(1.0, 0.0, 0.0), false);
         this.addParameter('planeDist', 0.0, false);
         this.finalize();
     }

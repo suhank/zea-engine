@@ -1,10 +1,12 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
-    Signal,
     Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     sgFactory
 } from './SGFactory.js';
@@ -60,7 +62,7 @@ class MaterialLibrary {
         this.__materials['Default'] = material;
 
         this.lod = 0;
-        if(isMobileDevice())
+        if(SystemDesc.isMobileDevice)
             this.lod = 1;
         this.loaded = new Signal();
     }
@@ -68,9 +70,10 @@ class MaterialLibrary {
     getNumMaterials() {
         return this.__materials.length;
     }
-    // getaterials() {
-    //     return this.__materials;
-    // }
+
+    getMaterials() {
+        return Object.values(this.__materials);
+    }
 
     getMaterialNames() {
         let names = [];
@@ -92,11 +95,15 @@ class MaterialLibrary {
     }
 
     addMaterial(material) {
-        this.__materials[material.name] = material;
+        this.__materials[material.getName()] = material;
     }
 
-    getMaterial(name) {
-        return this.__materials[name];
+    getMaterial(name, assert=true) {
+        const res = this.__materials[name];
+        if(!res && assert){
+            throw("Material:" + name+ " not found in library:" + this.getMaterialNames())
+        }
+        return res;
     }
 
     __modifyMaterial (material, paramValues, shaderName) {
@@ -194,7 +201,7 @@ class MaterialLibrary {
             let type = reader.loadStr();
             let texture = sgFactory.constructClass(type, undefined, this.__resourceLoader);
             texture.readBinary(reader, flags, this.lod);
-            this.__textures[texture.name] = texture;
+            this.__textures[texture.getName()] = texture;
         }
         let numMaterials = reader.loadUInt32();
         if (numMaterials > 0) {

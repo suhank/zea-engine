@@ -3,15 +3,17 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
 
 class Plane extends Mesh {
-    constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1) {
+    constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addNormals=true, addTextureCoords=true) {
         super();
 
         this.__x = x;
         this.__y = y;
         this.__xDivisions = xDivisions;
         this.__yDivisions = yDivisions;
-        this.addVertexAttribute('texCoords', Vec2);
-        this.addVertexAttribute('normals', Vec3);
+        if(addNormals)
+            this.addVertexAttribute('normals', Vec3);
+        if(addTextureCoords)
+            this.addVertexAttribute('texCoords', Vec2);
         this.__rebuild();
     }
 
@@ -77,21 +79,25 @@ class Plane extends Mesh {
 
         let voff = 0;
         let normals = this.getVertexAttribute('normals');
-        for (let i = 0; i <= this.__yDivisions; i++) {
-            for (let j = 0; j <= this.__xDivisions; j++) {
-                normals.getValueRef(voff).set(0, 0, 1);
-                voff++;
+        if(normals){
+            for (let i = 0; i <= this.__yDivisions; i++) {
+                for (let j = 0; j <= this.__xDivisions; j++) {
+                    normals.getValueRef(voff).set(0, 0, 1);
+                    voff++;
+                }
             }
         }
 
         voff = 0;
         let texCoords = this.getVertexAttribute('texCoords');
-        for (let i = 0; i <= this.__yDivisions; i++) {
-            let y = i / this.__yDivisions;
-            for (let j = 0; j <= this.__xDivisions; j++) {
-                let x = j / this.__xDivisions;
-                texCoords.getValueRef(voff).set(x, y);
-                voff++;
+        if(texCoords){
+            for (let i = 0; i <= this.__yDivisions; i++) {
+                let y = i / this.__yDivisions;
+                for (let j = 0; j <= this.__xDivisions; j++) {
+                    let x = j / this.__xDivisions;
+                    texCoords.getValueRef(voff).set(x, y);
+                    voff++;
+                }
             }
         }
 

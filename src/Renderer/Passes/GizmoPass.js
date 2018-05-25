@@ -21,10 +21,10 @@ class GLGizmoDataPass extends GLGeomDataPass {
     draw(renderstate) {
 
         this.__explicitShader.bind(renderstate);
-        let unifs = renderstate['unifs'];
-        this.__gl.uniform1i(unifs['isOrthographic']['location'], renderstate['isOrthographic']);
-        this.__gl.uniform1f(unifs['fovY']['location'], renderstate['fovY']);
-        this.__gl.uniform2fv(unifs['viewportFrustumSize']['location'], renderstate['viewportFrustumSize'].asArray());
+        let unifs = renderstate.unifs;
+        this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
+        this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
+        this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());
 
         this.__gl.depthFunc(this.__gl.GREATER);
 
@@ -73,9 +73,9 @@ class GizmoPass extends GLPass {
         if (!super.bindDrawItem(renderstate, drawItem))
             return false;
 
-        let unifs = renderstate['unifs'];
+        let unifs = renderstate.unifs;
         if ('color' in unifs) {
-            this.__gl.uniform4fv(unifs['color']['location'], drawItem.color.asArray());
+            this.__gl.uniform4fv(unifs.color.location, drawItem.color.asArray());
         }
 
         return true;
@@ -83,13 +83,13 @@ class GizmoPass extends GLPass {
 
     draw(renderstate) {
         this.__explicitShader.bind(renderstate);
-        let unifs = renderstate['unifs'];
-        this.__gl.uniform1i(unifs['isOrthographic']['location'], renderstate['isOrthographic']);
-        this.__gl.uniform1f(unifs['fovY']['location'], renderstate['fovY']);
-        this.__gl.uniform2fv(unifs['viewportFrustumSize']['location'], renderstate['viewportFrustumSize'].asArray());
+        let unifs = renderstate.unifs;
+        this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
+        this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
+        this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());
 
         // TODO: allow each gizmo to toggle this setting.
-        this.__gl.uniform1i(unifs['fixedScreenSpaceSize']['location'], false);
+        this.__gl.uniform1i(unifs.fixedScreenSpaceSize.location, false);
 
         this.__gl.depthFunc(this.__gl.GREATER);
 

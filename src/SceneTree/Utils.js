@@ -18,7 +18,11 @@ let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
             onFail(xhr.statusText);
         });
         xhr.addEventListener("loadend", function(event) {
-            onSucceed(xhr);
+            if(xhr.status == 200)
+                onSucceed(xhr);
+            else
+                onFail(xhr.statusText);
+
         });
         xhr.open("GET", url, true);
         xhr.send();

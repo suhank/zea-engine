@@ -55,16 +55,16 @@ class Sphere extends Mesh {
 
         let normals = this.getVertexAttribute('normals');
         let vertex = 0;
-        let normal = new Vec3(0.0, 1.0, 0.0);
-        this.getVertex(vertex).set(0.0, this.__radius, 0.0);
-        normals.getValueRef(vertex).set(0.0, 1.0, 0.0);
+        let normal = new Vec3(0.0, 0.0, 1.0);
+        this.getVertex(vertex).set(0.0, 0.0, this.__radius);
+        normals.getValueRef(vertex).set(0.0, 0.0, 1.0);
         vertex++;
 
         for (let i = 0; i < this.__loops; i++) {
             let theta = ((i + 1) / (this.__loops + 1)) * Math.PI;
             for (let j = 0; j < this.__sides; j++) {
                 let phi = (j / this.__sides) * 2.0 * Math.PI;
-                normal.set(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi));
+                normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta));
 
                 // Set positions and normals at the same time.
                 this.getVertex(vertex).setFromOther(normal.scale(this.__radius));
@@ -72,8 +72,8 @@ class Sphere extends Mesh {
                 vertex++;
             }
         }
-        this.getVertex(vertex).set(0.0, -this.__radius, 0.0);
-        normals.getValueRef(vertex).set(0.0, -1.0, 0.0);
+        this.getVertex(vertex).set(0.0, 0.0, -this.__radius);
+        normals.getValueRef(vertex).set(0.0, 0.0, -1.0);
         vertex++;
 
         //////////////////////////////
@@ -137,22 +137,22 @@ class Sphere extends Mesh {
         //////////////////////////////
         // Set Vertex Positions
         let vertex = 0;
-        let normal = new Vec3(0.0, 1.0, 0.0);
-        this.getVertex(vertex).set(0.0, this.__radius, 0.0);
+        let normal = new Vec3(0.0, 0.0, 1.0);
+        this.getVertex(vertex).set(0.0, 0.0, this.__radius);
         vertex++;
 
         for (let i = 0; i < this.__loops; i++) {
             let theta = ((i + 1) / (this.__loops + 1)) * Math.PI;
             for (let j = 0; j < this.__sides; j++) {
                 let phi = (j / this.__sides) * 2.0 * Math.PI;
-                normal.set(Math.sin(theta) * Math.cos(phi), Math.cos(theta), Math.sin(theta) * Math.sin(phi));
+                normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta));
 
                 // Set positions and normals at the same time.
                 this.getVertex(vertex).setFromOther(normal.scale(radius));
                 vertex++;
             }
         }
-        this.getVertex(vertex).set(0.0, -this.__radius, 0.0);
+        this.getVertex(vertex).set(0.0, 0.0, -this.__radius);
         vertex++;
 
         this.setBoundingBoxDirty();

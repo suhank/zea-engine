@@ -46,6 +46,8 @@ uniform mat4 projectionMatrix;
 attribute float clusterIDs;
 uniform vec2 lightmapSize;
 
+uniform float _cutawaySurfaceOffset;
+
 /* VS Outputs */
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -84,15 +86,14 @@ void main(void) {
 
     v_worldPos      = (modelMatrix * pos).xyz;
 
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 
 
     if(dot(v_viewNormal, v_viewPos) > 0.0) {
-
         // Move backfaces towards the camera to fix issues with zfighting of backfaces and frontfaces.
-        gl_Position.z += 0.000003 / gl_Position.w;
+        gl_Position.z += _cutawaySurfaceOffset / gl_Position.w;
     }
 
 }
@@ -177,15 +178,21 @@ uniform bool _emissiveStrengthTexConnected;
     out vec4 fragColor;
 #endif
 
+
+uniform int _cutawayEnabled;
+uniform vec3 _planeNormal;
+uniform float _planeDist;
+uniform color _cutColor;
+
 void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
 
      // Cutaways
-    if(cutaway(v_worldPos, fragColor)){
+    if(_cutawayEnabled != 0 && cutaway(v_worldPos, _planeNormal, _planeDist, _cutColor, fragColor)) {
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+        gl_FragColor = fragColor;
 #endif
         return;
     }
@@ -309,6 +316,7 @@ void main(void) {
         this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
         this.addParameter('planeNormal', new Vec3(0.0, 0.0, 1.0), false);
         this.addParameter('planeDist', 0.0, false);
+        this.addParameter('cutawaySurfaceOffset', 0.000003, false);
 
         this.finalize();
     }

@@ -1,9 +1,11 @@
 import {
     Vec2,
     Vec3,
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     BaseItem
 } from './BaseItem.js';
@@ -143,7 +145,6 @@ class Material extends BaseItem {
         makeParameterTexturable(param);
         param.textureConnected.connect(this.textureConnected.emit);
         param.textureDisconnected.connect(this.textureDisconnected.emit);
-        param.valueChanged.connect(this.updated.emit);
     }
 
     addParameter(paramName, defaultValue) {
@@ -153,6 +154,7 @@ class Material extends BaseItem {
             defaultValue = new Color();
         }
         let param = super.addParameter(paramName, defaultValue);
+        param.valueChanged.connect(this.updated.emit);
         if(!param.setImage)
             this.__makeParameterTexturable(param);
         if (image) {
@@ -202,10 +204,10 @@ class Material extends BaseItem {
     readBinary(reader, flags, textureLibrary) {
         super.readBinary(reader, flags);
 
-        let numParams = reader.loadUInt32();
+        const numParams = reader.loadUInt32();
         for (let i = 0; i < numParams; i++) {
-            let paramName = reader.loadStr();
-            let paramType = reader.loadStr();
+            const paramName = reader.loadStr();
+            const paramType = reader.loadStr();
             let value;
             if (paramType == "MaterialColorParam") {
                 value = reader.loadRGBAFloat32Color();
@@ -215,12 +217,15 @@ class Material extends BaseItem {
             } else {
                 value = reader.loadFloat32();
             }
-            let param = this.addParameter(paramName, value);
-            let textureName = reader.loadStr();
             // console.log(paramName +":" + value);
-            if (textureName != '') {
+            const param = this.addParameter(paramName, value);
+            const textureName = reader.loadStr();
+            if (textureLibrary[textureName]) {
                 // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
                 param.setValue(textureLibrary[textureName]);
+            }
+            else if(textureName!= ''){
+                console.warn("Missing Texture:" + textureName)
             }
         }
     }

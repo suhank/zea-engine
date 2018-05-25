@@ -2,50 +2,8 @@ import { AttrValue } from './AttrValue.js';
 import { Vec3 } from './Vec3.js';
 import { Mat3 } from './Mat3.js';
 import { Mat4 } from './Mat4.js';
+import { EulerAngles } from './EulerAngles.js';
 import { typeRegistry } from './TypeRegistry.js';
-
-class EulerAngles extends AttrValue {
-    constructor(x = 0, y = 0, z = 0, order = 0) {
-        super();
-
-        this.order = order;
-        if (x instanceof ArrayBuffer) {
-            let buffer = x;
-            let byteOffset = y;
-            this.__data = new Float32Array(buffer, byteOffset, 4);
-        } else {
-            this.__data = new Float32Array(3);
-            this.__data[0] = x;
-            this.__data[1] = y;
-            this.__data[2] = z;
-        }
-    }
-
-    get x() {
-        return this.__data[0];
-    }
-
-    set x(val) {
-        this.__data[0] = val;
-    }
-
-    get y() {
-        return this.__data[1];
-    }
-
-    set y(val) {
-        this.__data[1] = val;
-    }
-
-    get z() {
-        return this.__data[2];
-    }
-
-    set z(val) {
-        this.__data[2] = val;
-    }
-
-};
 
 class Quat extends AttrValue {
     constructor(x = 0, y = 0, z = 0, w = 1) {
@@ -423,11 +381,11 @@ class Quat extends AttrValue {
      * @param {vec4} a vector to calculate length of
      * @returns {Number} length of a
      */
-    length(a) {
-        let x = this.__data[0],
+    length() {
+        const x = this.__data[0],
             y = this.__data[1],
-            z = this.__data[2];
-        w = this.__data[2];
+            z = this.__data[2],
+            w = this.__data[3];
         return Math.sqrt(x * x + y * y + z * z + w * w);
     }
 
@@ -924,10 +882,8 @@ class Quat extends AttrValue {
 
 };
 
-typeRegistry.registerType('EulerAngles', EulerAngles);
 typeRegistry.registerType('Quat', Quat);
 
 export {
-    EulerAngles,
     Quat
 };

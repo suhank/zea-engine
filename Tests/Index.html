@@ -8,9 +8,9 @@
     <body text-align: left;>
         <script src="../external/helpers.js"></script>
         <script src="../external/TestingHarness.js"></script>
-        <script src="../lib/Visualive-dev.js"></script>
+        <script src="../lib/Visualive.js"></script>
         <script src="../lib/VisualiveUI-dev.js"></script>
-        <script src="index.js"></script>
+        <script src="./VisualivePlatform.js"></script>
         <script src="HelloWorld.js"></script>
         <script src="Materials.js"></script>
         <script src="LatLongBackgroundLoading.js"></script>
@@ -30,6 +30,7 @@
         <script src="GearsOperator.js"></script>
         <script src="ExplodedPartsOperator.js"></script>
         <script src="TestUI.js"></script>
+        <script src="WebVRPolyfill.js"></script>
         <script src="Cutaway.js"></script>
         <script src="GeomDataTest.js"></script>
         <script src="EnvProjection.js"></script>
@@ -37,10 +38,40 @@
         <script src="MultipleViewports.js"></script>
         <script src="Vive.js"></script>
         <script src="WebCam.js"></script>
+        <script src="PositionalAudio.js"></script>
+        <script src="StateMachine.js"></script>
 
         <script type="text/javascript">
 
-        init(addCanvas(), generateResourcesDict([
+let getUrlVars = () => {
+    let url = window.location.href,
+        args = {};
+
+    let parts = url.split('?');
+    let hashes = parts.length > 1 ? parts[1].split('&') : [];
+    for (let i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        args[hash[0]] = hash[1];
+    }
+    return args;
+}
+
+const createLink = (name, parent)=>{
+    const a = document.createElement('a');
+    const linkText = document.createTextNode(name);
+    a.appendChild(linkText);
+    a.title = name;
+    a.href = window.location.href + "?test=" + name;
+    parent.appendChild(a);
+    parent.appendChild(document.createElement('br'));
+}
+
+const init = function(domElement, resources) { 
+    args = getUrlVars();
+
+    if(args.test) {
+        const canvas = addCanvas();
+        const resources = generateResourcesDict([
             "Assets/HDR_029_Sky_Cloudy_Ref0.vlh",
             "Assets/HDR_029_Sky_Cloudy_Ref2.vlh",
             "Assets/HDR_041_Path_Ref0.vlh",
@@ -67,8 +98,24 @@
             "Assets/ExplodePartA.obj",
             "Assets/ExplodePartA.mtl",
             "Assets/ExplodePartB.obj",
-            "Assets/ExplodePartB.mtl"
-            ]));
+            "Assets/ExplodePartB.mtl",
+
+            "Assets/AudioFiles/Albert Einstein Interview 1940.mp3",
+            "Assets/AudioFiles/Nelson Mandela speech that changed the world.mp3"
+
+            ]);
+
+        testingHarness.runTest(args.test, canvas, resources)
+    }
+    else {
+        const names = testingHarness.getTestNames();
+        for(let name of names) {
+            createLink(name, document.body);
+        }
+    }
+
+};
+init();
         
         </script> 
     </body>

@@ -1,7 +1,8 @@
+
 import {
-    Signal,
-    Async
-} from '../Math';
+    Async,
+    Signal
+} from '../Utilities';
 import {
     sgFactory
 } from './SGFactory.js';
@@ -23,6 +24,11 @@ class DataImage2D extends Image2D {
         // this.__data = new Uint8Array(4);
         this.width = 1;
         this.height = 1;
+    }
+    
+
+    isLoaded() {
+        return this.__loaded;
     }
     
     getName() {

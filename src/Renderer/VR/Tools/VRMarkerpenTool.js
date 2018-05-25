@@ -1,9 +1,11 @@
 import {
     Vec3,
     Color,
-    Xfo,
-    Signal
+    Xfo
 } from '../../../Math';
+import {
+    Signal
+} from '../../../Utilities';
 import { VRTool } from '../VRTool.js'
 
 class VRMarkerpenTool extends VRTool {
@@ -70,29 +72,23 @@ class VRMarkerpenTool extends VRTool {
         let lineThickness = 0.0075 * sc.x;
 
         this.strokeStarted.emit({
-            type: 'strokeStarted',
-            data: {
-                xfo: xfo,
-                color: this.__color,
-                thickness: lineThickness
-            }
+            pointerType: 'vrController',
+            xfo
         });
     }
 
     endAction() {
-
+        this.strokeEnded.emit({
+            pointerType: 'vrController'
+        });
     }
 
     evalTool() {
         if(this.__pressedButtons == 1) {
             let xfo = this.__activeController.getTipGlobalXfo().multiply(this.__tipOffsetXfo);
-            // this.addSegmentToStroke(this.__currStrokeID, xfo);
-
             this.strokeSegmentAdded.emit({
-                type: 'strokeSegmentAdded',
-                data: {
-                  xfo
-                }
+                pointerType: 'vrController',
+                xfo
             });
         }
     }

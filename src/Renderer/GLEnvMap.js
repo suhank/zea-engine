@@ -26,7 +26,10 @@ class GLEnvMap extends GLProbe {
         if (!gl.__quadVertexIdsBuffer)
             gl.setupInstancedQuad();
 
-        let srcGLTex = new GLHDRImage(gl, this.__envMap);
+        let srcGLTex = this.__envMap.getMetadata('gltexture');
+        if(!srcGLTex) {
+            srcGLTex = new GLHDRImage(gl, this.__envMap);
+        }
         this.__srcGLTex = srcGLTex; // for debugging
 
         this.__envMapShader = new OctahedralEnvMapShader(gl);

@@ -11,12 +11,19 @@ class Color extends AttrValue {
             let buffer = r;
             let byteOffset = g;
             this.__data = new Float32Array(buffer, byteOffset, 4);
-        } else {
+        } else  {
             this.__data = new Float32Array(4);
-            this.__data[0] = r;
-            this.__data[1] = g;
-            this.__data[2] = b;
-            this.__data[3] = a;
+            if ((typeof r)  == "string") {
+                if(r.startsWith('#')) {
+                    this.setFromHex(r);
+                }
+            }
+            else {
+                this.__data[0] = r;
+                this.__data[1] = g;
+                this.__data[2] = b;
+                this.__data[3] = a;
+            }
         }
     }
 
@@ -94,9 +101,27 @@ class Color extends AttrValue {
         this.a = vals.length == 4 ? (vals[3] / 255) : 1.0;
     }
 
+    setFromHex(hex){
+        function hexToRgb(hex) {
+           const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+           return result ? {
+               r: parseInt(result[1], 16),
+               g: parseInt(result[2], 16),
+               b: parseInt(result[3], 16)
+           } : null;
+        }
+        const rgb = hexToRgb(hex);
+        if(!rgb){
+            console.warn("Invalid hex code:" + hex);
+            return;
+        }
+        this.setFromRGB(rgb.r, rgb.g, rgb.b);
+
+    }
+
     setFromCSSColorName(name){
-        let colourNameToHex  = (colour)=>{
-            var colors = {"aliceblue":"#f0f8ff","antiquewhite":"#faebd7","aqua":"#00ffff","aquamarine":"#7fffd4","azure":"#f0ffff",
+        const colourNameToHex  = (colour)=>{
+            const colors = {"aliceblue":"#f0f8ff","antiquewhite":"#faebd7","aqua":"#00ffff","aquamarine":"#7fffd4","azure":"#f0ffff",
             "beige":"#f5f5dc","bisque":"#ffe4c4","black":"#000000","blanchedalmond":"#ffebcd","blue":"#0000ff","blueviolet":"#8a2be2","brown":"#a52a2a","burlywood":"#deb887",
             "cadetblue":"#5f9ea0","chartreuse":"#7fff00","chocolate":"#d2691e","coral":"#ff7f50","cornflowerblue":"#6495ed","cornsilk":"#fff8dc","crimson":"#dc143c","cyan":"#00ffff",
             "darkblue":"#00008b","darkcyan":"#008b8b","darkgoldenrod":"#b8860b","darkgray":"#a9a9a9","darkgreen":"#006400","darkkhaki":"#bdb76b","darkmagenta":"#8b008b","darkolivegreen":"#556b2f",
@@ -126,30 +151,19 @@ class Color extends AttrValue {
 
             return false;
         }
-        function hexToRgb(hex) {
-           var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-           return result ? {
-               r: parseInt(result[1], 16),
-               g: parseInt(result[2], 16),
-               b: parseInt(result[3], 16)
-           } : null;
-        }
-        let rgb;
         if(name.startsWith('#')) {
-            rgb = hexToRgb(name);
+            this.setFromHex(name);
         }
         else{
-            rgb = hexToRgb(colourNameToHex(name));
+            this.setFromHex(colourNameToHex(name));
         }
-        
-        this.setFromRGB(rgb.r, rgb.g, rgb.b);
     }
 
     
     toHex() {
         function componentToHex(c) {
-            let int = Math.round(c*255);
-            var hex = int.toString(16);
+            const int = Math.round(c*255);
+            const hex = int.toString(16);
             return hex.length == 1 ? "0" + hex : hex;
         }
         return "#" + componentToHex(this.r) + componentToHex(this.g) + componentToHex(this.b);

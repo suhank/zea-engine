@@ -32,27 +32,8 @@ class GLSimpleRenderer extends GLRenderer {
 
     onKeyPressed(key, event) {
         switch (key) {
-            case 'f':
-                let selection = scene.getSelectionManager().selection;
-                if (selection.size == 0)
-                    this.__viewport.getCamera().frameView([scene.getRoot()]);
-                else
-                    this.__viewport.getCamera().frameView(selection);
-                break;
-            case 'k':
-                this.__debugLightmaps = !this.__debugLightmaps;
-                break;
-            case ' ':
-                if(this.__vrViewport)
-                    this.__vrViewport.togglePresenting();
-                else
-                    this.toggleContinuousDrawing();
-                break;
-            case 'v':
-                this.mirrorVRisplayToViewport = !this.mirrorVRisplayToViewport;
             default:
-                super.onKeyPressed(key);
-
+                super.onKeyPressed(key, event);
         }
     }
 

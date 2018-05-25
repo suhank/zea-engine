@@ -15,8 +15,8 @@ class AxialRotationGizmo extends Gizmo {
         this.__treeItem.setLocalXfo(xfo);
         context.treeItem.addChild(this.__treeItem);
 
-        // let geom = new Circle('circle', 1.0, 32);
-        let geom = new Cylinder('Cylinder', 1.0, 0.04, 32, 2, false)
+        // let geom = new Circle(1.0, 32);
+        let geom = new Cylinder(1.0, 0.04, 32, 2, false)
         let geomItem = new GeomItem('circle', geom);
         let geomglGeom = new GLMesh(gl, geom);
         let geomglGeomItem = new GLDrawItem(gl, geomItem, geomglGeom);
@@ -25,8 +25,8 @@ class AxialRotationGizmo extends Gizmo {
         this.__addDrawItem(geomglGeomItem);
 
         // // Generate the proxy geom that we use to render the data buffer. 
-        // let proxyGeom = new Torus('proxy', 0.1, 1.0, 32);
-        let proxyGeom = new Cylinder('Cylinder', 1.0, 0.2, 32, 2, false)
+        // let proxyGeom = new Torus(0.1, 1.0, 32);
+        let proxyGeom = new Cylinder(1.0, 0.2, 32, 2, false)
         let proxyGeomItem = new GeomItem('proxy', proxyGeom);
         let proxyGeomglGeom = new GLMesh(gl, proxyGeom);
         let proxyGeomglGeomItem = new GLDrawItem(gl, proxyGeomItem, proxyGeomglGeom);

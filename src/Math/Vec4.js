@@ -1,8 +1,12 @@
 import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
+    AttrValue
+} from './AttrValue.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
+import {
+    Vec3
+} from './Vec3.js';
 
 class Vec4 extends AttrValue {
     constructor(x = 0, y = 0, z = 0, t = 0) {
@@ -109,6 +113,13 @@ class Vec4 extends AttrValue {
         );
     }
 
+    addInPlace(other) {
+        this.x += other.x;
+        this.y += other.y;
+        this.z += other.z;
+        this.t += other.t;
+    }
+
 
     // Returns a new vector which is this vector subtracted from other
     subtract(other) {
@@ -118,6 +129,13 @@ class Vec4 extends AttrValue {
             this.z - other.z,
             this.t - other.t
         );
+    }
+
+    subtractInPlace(other) {
+        this.x -= other.x;
+        this.y -= other.y;
+        this.z -= other.z;
+        this.t -= other.t;
     }
 
 
@@ -130,7 +148,7 @@ class Vec4 extends AttrValue {
             this.t * scalar
         );
     }
-    
+
     scaleInPlace(scalar) {
         this.set(
             this.x * scalar,
@@ -300,13 +318,21 @@ class Vec4 extends AttrValue {
         );
     }
 
+    toVec3(){
+        return new Vec3(
+            this.__data[0],
+            this.__data[1],
+            this.__data[2]
+        );
+    }
+
     //////////////////////////////////////////
     // Static Methods
 
     static create(...args) {
         return new Vec3(...args);
     }
-    
+
     // Creates a new Mat4 to wrap existing memory in a buffer.
     static createFromFloat32Buffer(buffer, offset = 0) {
         return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float
@@ -327,11 +353,6 @@ class Vec4 extends AttrValue {
             "t": this.t
         }
     }
-
-    toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON())
-    }
-
 };
 
 typeRegistry.registerType('Vec4', Vec4);
@@ -339,4 +360,3 @@ typeRegistry.registerType('Vec4', Vec4);
 export {
     Vec4
 };
-// export default Vec4;

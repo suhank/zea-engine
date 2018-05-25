@@ -38,7 +38,7 @@ class Circle extends Lines {
     __resize() {
         let angle = (Math.PI * 2.0) / this.__numSegments;
         for(let i=0; i<this.__numSegments; i++)
-            this.getVertex(i).set(Math.sin(angle * i) * this.__radius, 0.0, Math.cos(angle * i) * this.__radius);
+            this.getVertex(i).set(Math.sin(angle * i) * this.__radius, Math.cos(angle * i) * this.__radius, 0.0);
         this.setBoundingBoxDirty();
     }
 

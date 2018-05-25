@@ -3,9 +3,11 @@ import {
     Vec3,
     Box2,
     Box3,
-    Signal,
     typeRegistry
 } from '../../Math';
+import {
+    Signal
+} from '../../Utilities';
 import {
     RefCounted
 } from '../RefCounted.js';
@@ -148,10 +150,10 @@ class BaseGeom extends RefCounted {
     freeBuffers() {
         // Before destroying all our data, 
         // make sure the bbox is up to date.
-        if (this.__boundingBoxDirty)
-            this.updateBoundingBox();
-        // TODO: push the data to a worker thread and terminate like in MeshProxy. 
-        this.__vertexAttributes = new Map();
+        // if (this.__boundingBoxDirty)
+        //     this.updateBoundingBox();
+        // // TODO: push the data to a worker thread and terminate like in MeshProxy. 
+        // this.__vertexAttributes = new Map();
     }
 
     //////////////////////////////////////////

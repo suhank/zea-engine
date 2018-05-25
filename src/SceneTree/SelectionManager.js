@@ -1,4 +1,7 @@
-import { Signal } from '../Math';
+
+import {
+    Signal
+} from '../Utilities';
 
 class SelectionManager {
     constructor(scene) {
@@ -6,7 +9,7 @@ class SelectionManager {
         this.selectionChanged = new Signal();
     }
 
-    get selection(){
+    get selection() {
         return this.__selection;
     }
 
@@ -60,7 +63,7 @@ class SelectionManager {
     }
 
     clearSelection(emitSignal = true) {
-        if(this.__selection.size == 0)
+        if (this.__selection.size == 0)
             return false;
         for (let geomItem of this.__selection)
             geomItem.setSelected(false);
@@ -74,4 +77,3 @@ export {
     SelectionManager
 };
 // SelectionManager;
-

@@ -1,6 +1,7 @@
+
 import {
     Signal
-} from '../Math';
+} from '../Utilities';
 import {
     BaseItem,
     Image2D,
@@ -61,18 +62,20 @@ class GLMaterial extends BaseItem {
     updateGLTextures() {
         const attachTexture = (texName, texture) => {
             const genGLTex = () => {
-                let gltexture;
-                if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
-                    gltexture = new GLHDRImage(this.__gl, texture);
-                }
-                else if (texture.isStreamAtlas()){
-                    gltexture = new GLImageStream(this.__gl, texture);
-                }
-                // else if (texture.hasAlpha()){
-                //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
-                // }
-                else{
-                    gltexture = new GLTexture2D(this.__gl, texture);
+                let gltexture = texture.getMetadata('gltexture');
+                if(!gltexture) {
+                    if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
+                        gltexture = new GLHDRImage(this.__gl, texture);
+                    }
+                    else if (texture.isStreamAtlas()){
+                        gltexture = new GLImageStream(this.__gl, texture);
+                    }
+                    // else if (texture.hasAlpha()){
+                    //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
+                    // }
+                    else{
+                        gltexture = new GLTexture2D(this.__gl, texture);
+                    }
                 }
                 gltexture.updated.connect(this.updated.emit);
                 this.gltextures[texName] = gltexture;
@@ -97,7 +100,7 @@ class GLMaterial extends BaseItem {
 
     bind(renderstate) {
 
-        // console.log("Material:" + this.__material.name);
+        // console.log("Material:" + this.__material.getName());
         this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
         let gl = this.__gl;
         let params = this.__material.getParameters();

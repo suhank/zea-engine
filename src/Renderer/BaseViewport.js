@@ -1,7 +1,9 @@
 import {
-    Color,
-    Signal
+    Color
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     HDRImage2D,
     Image2D
@@ -19,7 +21,7 @@ import {
 class BaseViewport {
     constructor(renderer) {
         this.__renderer = renderer;
-        this.__backgroundColor = new Color(0.4, 0.4, 0.4);
+        this.__backgroundColor = new Color('#e3e3e3');
         this.__fbo = undefined;
         this.updated = new Signal();
         this.resized = new Signal();

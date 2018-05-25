@@ -3,13 +3,13 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Lines } from '../Lines.js';
 
 class Grid extends Lines {
-    constructor(x = 1.0, z = 1.0, xDivisions = 10, zDivisions = 10, skipCenterLines=false) {
+    constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines=false) {
         super();
 
         this.__x = x;
-        this.__z = z;
+        this.__y = y;
         this.__xDivisions = xDivisions;
-        this.__zDivisions = zDivisions;
+        this.__yDivisions = yDivisions;
         this.__skipCenterLines = skipCenterLines;
         this.__rebuild();
     }
@@ -23,12 +23,12 @@ class Grid extends Lines {
         this.__resize();
     }
 
-    get sizeZ() {
-        return this.__z;
+    get sizeY() {
+        return this.__y;
     }
 
-    set sizeZ(val) {
-        this.__z = val;
+    set sizeY(val) {
+        this.__y = val;
         this.__resize();
     }
 
@@ -41,35 +41,36 @@ class Grid extends Lines {
         this.__rebuild();
     }
 
-    get divisionsZ() {
-        return this.__zDivisions;
+    get divisionsY() {
+        return this.__yDivisions;
     }
 
-    set divisionsZ(val) {
-        this.__zDivisions = val;
+    set divisionsY(val) {
+        this.__yDivisions = val;
         this.__rebuild();
     }
 
     setSize(x, z) {
         this.__x = x;
-        this.__z = z;
+        this.__y = z;
         this.__resize();
     }
 
     __rebuild() {
-        this.setNumVertices((this.__xDivisions + this.__zDivisions + 2 - (this.__skipCenterLines ? 1 : 0)) * 2);
-        this.setNumSegments(this.__xDivisions + this.__zDivisions + 2 - (this.__skipCenterLines ? 1 : 0));
+        const skipCenterLines = this.__skipCenterLines && (this.__xDivisions % 2) == 0 && (this.__yDivisions % 2) == 0;
+        this.setNumVertices((this.__xDivisions + this.__yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2);
+        this.setNumSegments(this.__xDivisions + this.__yDivisions + 2 - (skipCenterLines ? 1 : 0));
         let idx = 0;
         for (let i = 0; i <= this.__xDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
             this.setSegment(idx, v0, v1);
             idx++;
         }
-        for (let i=0; i <= this.__zDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+        for (let i=0; i <= this.__yDivisions; i++) {
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
@@ -80,25 +81,26 @@ class Grid extends Lines {
     }
 
     __resize() {
+        const skipCenterLines = this.__skipCenterLines && (this.__xDivisions % 2) == 0 && (this.__yDivisions % 2) == 0;
         let idx = 0;
         for (let i = 0; i <= this.__xDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
             let x = ((i / (this.__xDivisions) - 0.5)) * this.__x;
-            this.getVertex(v0).set(x, 0.0, -0.5 * this.__z);
-            this.getVertex(v1).set(x, 0.0,  0.5 * this.__z);
+            this.getVertex(v0).set(x, -0.5 * this.__y, 0.0);
+            this.getVertex(v1).set(x,  0.5 * this.__y, 0.0);
             idx++;
         }
-        for (let i = 0; i <= this.__zDivisions; i++) {
-            if(this.__skipCenterLines && i == this.__xDivisions/2)
+        for (let i = 0; i <= this.__yDivisions; i++) {
+            if(skipCenterLines && i == this.__xDivisions/2)
                 continue;
             let v0 = (idx*2);
             let v1 = ((idx*2) + 1);
-            let z = ((i / (this.__zDivisions) - 0.5)) * this.__z;
-            this.getVertex(v0).set(-0.5 * this.__x, 0.0, z);
-            this.getVertex(v1).set( 0.5 * this.__x, 0.0, z);
+            let y = ((i / (this.__yDivisions) - 0.5)) * this.__y;
+            this.getVertex(v0).set(-0.5 * this.__x, y, 0.0);
+            this.getVertex(v1).set( 0.5 * this.__x, y, 0.0);
             idx++;
         }
 
@@ -108,9 +110,9 @@ class Grid extends Lines {
     toJSON() {
         let json = super.toJSON();
         json['x'] = this.__x;
-        json['z'] = this.__z;
+        json['z'] = this.__y;
         json['xDivisions'] = this.__xDivisions;
-        json['zDivisions'] = this.__zDivisions;
+        json['yDivisions'] = this.__yDivisions;
         return json
     }
 };

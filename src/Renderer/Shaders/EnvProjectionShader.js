@@ -52,7 +52,6 @@ void main()
 `);
 
         this.addParameter('env', new Color(1.0, 1.0, 0.5));
-        this.addParameter('linearSpaceImage', true);
         this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
         this.finalize();
     }
@@ -67,16 +66,14 @@ precision highp float;
 <%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
-#ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
-#endif
+<%include file="materialparams.glsl"/>
 
+uniform color _env;
 uniform sampler2D _envTex;
-uniform bool _linearSpaceImage;
+uniform bool _envTexConnected;
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
-#endif
 
 /* VS Outputs */
 varying vec3 v_worldDir;
@@ -90,8 +87,8 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    vec2 uv = normalToUvSphOct(normalize(v_worldDir));
-    vec4 env = texture2D(_envTex, uv);
+    vec2 texCoord = normalToUvSphOct(normalize(v_worldDir));
+    vec4 env = getColorParamValue(_env, _envTex, _envTexConnected, texCoord);
     fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -123,16 +120,14 @@ precision highp float;
 <%include file="math/constants.glsl"/>
 <%include file="glslutils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
-#ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
-#endif
+<%include file="materialparams.glsl"/>
 
+uniform color _env;
 uniform sampler2D _envTex;
-uniform bool _linearSpaceImage;
+uniform bool _envTexConnected;
 
-#ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
-#endif
 
 /* VS Outputs */
 varying vec3 v_worldDir;
@@ -146,8 +141,8 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    vec2 uv = latLongUVsFromDir(normalize(v_worldDir));
-    vec4 env = texture2D(_envTex, uv);
+    vec2 texCoord = latLongUVsFromDir(normalize(v_worldDir));
+    vec4 env = getColorParamValue(_env, _envTex, _envTexConnected, texCoord);
     fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -158,6 +153,7 @@ void main(void) {
         fragColor.rgb = fragColor.rgb * exposure;
     }
 #endif
+
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

@@ -3,6 +3,7 @@ import { BaseGeom } from './BaseGeom.js';
 class Lines extends BaseGeom {
     constructor(name) {
         super(name);
+        if(name) throw("Name param is deprecated.")
         this.__indices = new Uint32Array();
         this.__segmentAttributes = new Map();
         this.lineThickness = 0.0;
@@ -64,7 +65,7 @@ class Lines extends BaseGeom {
                 indices[index] = value;
             });
         }
-        else if (totalNumVertices < Math.pow(2, 16)){
+        else if (buffers.numVertices < Math.pow(2, 16)){
             indices = new Uint16Array(this.__indices.length);
             this.__indices.forEach((value, index)=>{
                 indices[index] = value;

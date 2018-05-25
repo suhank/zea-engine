@@ -1,9 +1,9 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Signal
-} from '../Math';
+} from '../Utilities';
 import {
     Mesh
 } from './Geometry/Mesh.js';
@@ -92,7 +92,7 @@ class GeomLibrary {
     }
 
     readBinaryBuffer(key, buffer) {
-        const isMobile = isMobileDevice();
+        const isMobile = SystemDesc.isMobileDevice;
         const reader = new BinReader(buffer, 0, isMobile);
         const numGeoms = reader.loadUInt32();
         const geomIndexOffset = reader.loadUInt32();

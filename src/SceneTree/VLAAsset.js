@@ -2,9 +2,9 @@
 import {
     Signal,
     Async
-} from '../Math';
+} from '../Utilities';
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     AssetItem
@@ -42,7 +42,7 @@ class VLAAsset extends AssetItem {
     }
 
     readBinaryBuffer(buffer) {
-        return this.readBinary(new BinReader(buffer, 0, isMobileDevice()));
+        return this.readBinary(new BinReader(buffer, 0, SystemDesc.isMobileDevice));
     }
 
     __loadURL(url, filePath){
@@ -51,7 +51,9 @@ class VLAAsset extends AssetItem {
         async.ready.connect(()=>{
             this.allPartsLoaded.emit(); 
         });
-        const stem = filePath.split('.')[0];
+        // const parts = filePath.split('/');
+        // const stem = parts[parts.length-1].split('.')[0];
+        const stem = filePath.substring(0, filePath.lastIndexOf('.'));
         let numGeomsFiles = 0;
 
         // TODO: one day the resourcecs tree could include meta data to indicate how
@@ -66,7 +68,7 @@ class VLAAsset extends AssetItem {
                 numGeomsFiles = this.readBinaryBuffer(treeData.buffer);
                 this.__resourceLoader.freeData(treeData.buffer);
 
-                if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('.geoms')) {
+                if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
                     this.__resourceLoader.addWork(filePath+'geoms', 1); // (load + parse + extra)
                     let geomsData = entries[Object.keys(entries)[1]];
                     this.__geomLibrary.readBinaryBuffer(filePath, geomsData.buffer);

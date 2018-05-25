@@ -1,14 +1,16 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../../BrowserDetection.js';
 import {
     Vec3,
     Quat,
     EulerAngles,
     Xfo,
-    Color,
-    Signal
+    Color
 } from '../../Math';
+import {
+    Signal
+} from '../../Utilities';
 import {
     Lines,
     Plane,
@@ -34,7 +36,7 @@ class VRController extends Gizmo {
 
         this.__vrstage = vrstage;
         this.__index = index;
-        this.__isDaydramController = isMobileDevice();
+        this.__isDaydramController = SystemDesc.isMobileDevice;
         this.__treeItem = new TreeItem('VRController:' + index);
         // Controller coordinate system
         // X = Horizontal.
@@ -58,7 +60,7 @@ class VRController extends Gizmo {
 
             vrstage.getTreeItem().addChild(this.__treeItem);
 
-            let sphere = new Sphere('VRControllerTip', 0.015);
+            let sphere = new Sphere(0.015);
             this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
             this.__sphereGeomItem.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
             this.__treeItem.addChild(this.__sphereGeomItem);
@@ -91,7 +93,7 @@ class VRController extends Gizmo {
             // let pointermat = new Material('pointermat', 'FlatSurfaceShader');
             // pointermat.addParameter('baseColor', new Color(1.2, 0, 0));
 
-            // let line = new Lines('pointer');
+            // let line = new Lines();
             // line.setNumVertices(2);
             // line.setNumSegments(1);
             // line.setSegment(0, 0, 1);

@@ -60,17 +60,21 @@ varying vec3 v_worldPos;
 
 void main(void) {
 
-    vec4 geomItemData = getInstanceData();
-
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
 
+    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
+    v_viewPos       = -viewPos.xyz;
+    v_viewNormal    = normalMatrix * normals;
+
 #ifdef ENABLE_TEXTURES
     v_textureCoord  = textureCoords;
 #endif
+
+    vec4 geomItemData = getInstanceData();
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
@@ -82,9 +86,6 @@ void main(void) {
 
     v_worldPos      = (modelMatrix * pos).xyz;
 
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
-    v_viewPos       = -viewPos.xyz;
-    v_viewNormal    = normalMatrix * normals;
 }
 `);
 

@@ -1,8 +1,11 @@
 import {
-    Vec4,
-    Signal
+    Vec4
 } from '../Math';
 import {
+    Signal
+} from '../Utilities';
+import {
+    AudioItem,
     GeomItem,
     Points,
     Lines,
@@ -133,6 +136,19 @@ class GLCollector {
         this.renderTreeUpdated = new Signal();
         this.billboardDiscovered = new Signal();
         this.itemTransformChanged = new Signal();
+
+        this.__childAdded = this.__childAdded.bind(this)
+        this.__treeItemDestructing = this.__treeItemDestructing.bind(this)
+
+
+        this.__audioItems = [];
+        this.registerSceneItemFilter((treeItem, rargs) => {
+            if (treeItem instanceof AudioItem) {
+                this.addAudioItem(treeItem);
+                return true;
+            }
+        });
+
     }
 
     getRenderer() {
@@ -147,6 +163,93 @@ class GLCollector {
     getGLShaderMaterials() {
         return this.__glshadermaterials;
     };
+
+    addAudioItem(audioItem) {
+
+        if(this.__audioItems.indexOf(audioItem) != -1)
+            return;
+
+        const audioCtx = this.__renderer.getAudioContext();
+        const audioSource = audioItem.getDOMElement();
+        let source;
+        if (audioSource instanceof HTMLMediaElement)
+            source = audioCtx.createMediaElementSource(audioSource);
+        else {
+            source = audioCtx.createMediaStreamSource(audioSource);
+        }
+
+        const connectVLParamToAudioNodePAram = (vlParam, param) => {
+            // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
+            param.value = vlParam.getValue();
+            vlParam.valueChanged.connect(() => {
+                // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
+                param.value = vlParam.getValue();
+            });
+        }
+
+        const gainNode = audioCtx.createGain();
+        connectVLParamToAudioNodePAram(audioItem.getParameter('Gain'), gainNode.gain);
+
+        source.connect(gainNode);
+        const panner = audioCtx.createPanner();
+        panner.panningModel = 'HRTF';
+        panner.distanceModel = 'inverse';
+
+        const connectVLParamToAudioNode = (paramName) => {
+            const vlParam = audioItem.getParameter(paramName)
+            panner[paramName] = vlParam.getValue();
+            vlParam.valueChanged.connect(() => {
+                panner[paramName] = vlParam.getValue();
+            });
+        }
+
+        connectVLParamToAudioNode('refDistance');
+        connectVLParamToAudioNode('maxDistance');
+        connectVLParamToAudioNode('rolloffFactor');
+        connectVLParamToAudioNode('coneInnerAngle');
+        connectVLParamToAudioNode('coneOuterAngle');
+        connectVLParamToAudioNode('coneOuterGain');
+
+
+        const updatePannerNodePosition = (globalXfo) => {
+            if (panner.positionX) {
+                // panner.positionX.setTargetAtTime(globalXfo.tr.x, audioCtx.currentTime);
+                // panner.positionY.setTargetAtTime(globalXfo.tr.y, audioCtx.currentTime);
+                // panner.positionZ.setTargetAtTime(globalXfo.tr.z, audioCtx.currentTime);
+                panner.positionX.value = globalXfo.tr.x;
+                panner.positionY.value = globalXfo.tr.y;
+                panner.positionZ.value = globalXfo.tr.z;
+            } else {
+                panner.setPosition(globalXfo.tr.x, globalXfo.tr.y, globalXfo.tr.z);
+            }
+
+            const zdir = globalXfo.ori.getZaxis();
+            if (panner.orientationX) {
+                // panner.orientationX.setTargetAtTime(zdir.x, audioCtx.currentTime);
+                // panner.orientationY.setTargetAtTime(zdir.y, audioCtx.currentTime);
+                // panner.orientationZ.setTargetAtTime(zdir.z, audioCtx.currentTime);
+                panner.orientationX.value = zdir.x;
+                panner.orientationY.value = zdir.y;
+                panner.orientationZ.value = zdir.z;
+            } else {
+                panner.setOrientation(zdir.x, zdir.y, zdir.z);
+            }
+
+            // TODO: 
+            // setVelocity()
+        }
+        updatePannerNodePosition(audioItem.getGlobalXfo());
+        audioItem.globalXfoChanged.connect((changeType) => {
+            const globalXfo = audioItem.getGlobalXfo();
+            updatePannerNodePosition(globalXfo);
+        });
+
+
+        gainNode.connect(panner);
+        panner.connect(audioCtx.destination);
+
+        this.__audioItems.push(audioItem);
+    }
 
     getShaderMaterials(material) {
 
@@ -235,8 +338,6 @@ class GLCollector {
         // Use recycled indices if there are any available...
         if (this.__drawItemsIndexFreeList.length > 0) {
             index = this.__drawItemsIndexFreeList.pop();
-            // We will need to re-populate the array from here.
-            this.__transformsDataArrayHighWaterMark = index;
         } else {
             index = this.__drawItems.length;
             this.__drawItems.push(null);
@@ -307,15 +408,18 @@ class GLCollector {
             this.addTreeItem(childItem);
         }
 
-        treeItem.childAdded.connect(this.__childAdded.bind(this));
-        treeItem.destructing.connect(() => {
-            treeItem.childAdded.disconnect(this.__childAdded.bind(this));
-            treeItem.destructing.disconnectScope(this);
-        });
+        treeItem.childAdded.connect(this.__childAdded);
+
+        treeItem.destructing.connect(this.__treeItemDestructing);
 
         treeItem.globalXfoChanged.connect((newXfo, prevXfo) => {
             this.itemTransformChanged.emit(treeItem, prevXfo);
         });
+    }
+
+    __treeItemDestructing(treeItem) {
+        treeItem.childAdded.disconnect(this.__childAdded);
+        treeItem.destructing.disconnect(this.__treeItemDestructing);
     }
 
     __childAdded(child) {
@@ -326,8 +430,10 @@ class GLCollector {
         let index = gldrawItem.getId();
         this.__drawItems[index] = null;
         this.__drawItemsIndexFreeList.push(index);
-        gldrawItem.destructing.disconnectScope(this);
-        gldrawItem.transformChanged.disconnectScope(this);
+
+        // TODO: review signal disconnections
+        // gldrawItem.destructing.disconnectScope(this);
+        // gldrawItem.transformChanged.disconnectScope(this);
 
         this.renderTreeUpdated.emit();
         this.__renderer.requestRedraw();
@@ -372,7 +478,7 @@ class GLCollector {
     /// DrawItem IDs
 
     getDrawItem(id) {
-        if (id >= this.__drawItems.length){
+        if (id >= this.__drawItems.length) {
             console.warn("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length - 1));
             return undefined;
         }
@@ -380,7 +486,7 @@ class GLCollector {
     };
 
     //////////////////////////////////////////////////
-    // Optimization
+    // Data Uploading
     __populateTransformDataArray(gldrawItem, index, dataArray) {
 
         let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
@@ -408,12 +514,15 @@ class GLCollector {
     uploadDrawItems() {
 
         const gl = this.__renderer.gl;
-        if(!gl.floatTexturesSupported) {
+        if (!gl.floatTexturesSupported) {
             // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
-            this.__dirtyItemIndices.forEach((index)=>{
-                const gldrawItem = this.__drawItems[index];
-                gldrawItem.updateGeomMatrix();
-            });
+            const len = this.__dirtyItemIndices.length;
+            for (let i = 0; i < len; i++){
+                const drawItem = this.__drawItems[this.__dirtyItemIndices[i]];
+                if(drawItem){
+                    drawItem.updateGeomMatrix();
+                }
+            }
             this.__dirtyItemIndices = [];
             this.renderTreeUpdated.emit();
             return;
@@ -451,13 +560,13 @@ class GLCollector {
         for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
             const indexStart = this.__dirtyItemIndices[i];
             const yoffset = Math.floor((indexStart * pixelsPerItem) / size);
-            let indexEnd = indexStart+1;
+            let indexEnd = indexStart + 1;
             for (let j = i + 1; j < this.__dirtyItemIndices.length; j++) {
                 const index = this.__dirtyItemIndices[j];
                 if (Math.floor((index * pixelsPerItem) / size) != yoffset) {
                     break;
                 }
-                if (index != indexEnd){
+                if (index != indexEnd) {
                     break;
                 }
                 indexEnd++;
@@ -475,7 +584,7 @@ class GLCollector {
                 const gldrawItem = this.__drawItems[j];
                 // When an item is deleted, we allocate its index to the free list
                 // and null this item in the array. skip over null items.
-                if(!gldrawItem)
+                if (!gldrawItem)
                     continue;
                 this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
             }
@@ -487,13 +596,15 @@ class GLCollector {
                 gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channelsId, formatId, unit16s);
             }
 
-            i += uploadCount-1;
+            i += uploadCount - 1;
         }
 
 
         this.__dirtyItemIndices = [];
         this.renderTreeUpdated.emit();
     };
+
+
     finalize() {
         if (this.__dirtyItemIndices.length == 0)
             return;

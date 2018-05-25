@@ -211,6 +211,10 @@ class Mat4 extends AttrValue {
         this.__data[14] = m32;
         this.__data[15] = m33;
     }
+
+    setIdentity(){
+        this.set();
+    }
     
     setDataArray(float32Array){
         this.__data = float32Array;

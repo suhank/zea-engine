@@ -1,12 +1,13 @@
 import {
     Vec3,
     Xfo,
-    Color,
-    Signal
+    Color
 } from '../Math';
 import {
-    isMobileDevice,
-    getBrowserDesc
+    Signal
+} from '../Utilities';
+import {
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     onResize
@@ -71,9 +72,6 @@ import {
     GLDrawItem
 } from './GLDrawItem.js';
 import {
-    SessionClient
-} from './SessionClient.js';
-import {
     VRViewport
 } from './VR/VRViewport.js';
 
@@ -104,7 +102,6 @@ if (process === 'undefined' || process.browser == true) {
 
 class GLRenderer {
     constructor(canvasDiv, options = {}, webglOptions = {}) {
-
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
@@ -115,7 +112,7 @@ class GLRenderer {
         this.__continuousDrawing = false;
         this.__redrawRequested = false;
         this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
-        this.__supportSessions = false;//options.supportSessions !== undefined ? options.supportSessions : true;
+        this.__isMobile = SystemDesc.isMobileDevice;
 
         this.__drawSuspensionLevel = 1;
         this.__renderstate = {};
@@ -152,8 +149,7 @@ class GLRenderer {
         this.setupWebGL(canvasDiv, webglOptions);
 
 
-
-        this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
+        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -161,6 +157,15 @@ class GLRenderer {
         this.addPass(new GLForwardPass(this.__gl, this.__collector));
         this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
         this.addPass(new GLBillboardsPass(this));
+
+        // Note: Audio contexts have started taking a long time to construct
+        // (Maybe a regresion in Chrome?)
+        // Setup the Audio context.
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        this.__audioCtx = new AudioContext();
+        this.viewChanged.connect(this.__updateListenerPosition.bind(this));
+        
+
 
         this.addViewport('main');
 
@@ -196,9 +201,13 @@ class GLRenderer {
         return this.__collector;
     }
 
-    getGeomDataPass() {
-        return this.__geomDataPass;
+    getAudioContext() {
+        return this.__audioCtx;
     }
+
+    // getGeomDataPass() {
+    //     return this.__geomDataPass;
+    // }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         this.__gridTreeItem = new TreeItem('GridTreeItem');
@@ -208,7 +217,7 @@ class GLRenderer {
         const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
         this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 
-        const axisLine = new Lines('axisLine');
+        const axisLine = new Lines();
         axisLine.setNumVertices(2);
         axisLine.setNumSegments(1);
         axisLine.setSegment(0, 0, 1);
@@ -220,9 +229,9 @@ class GLRenderer {
         this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
 
         const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
-        gridZAxisMaterial.addParameter('color', new Color(0, 0, gridColor.luminance()));
+        gridZAxisMaterial.addParameter('color', new Color(0, gridColor.luminance(), 0));
         const geomOffset = new Xfo();
-        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI * 0.5);
+        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
         const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
         zAxisLineItem.setGeomOffsetXfo(geomOffset);
         this.__gridTreeItem.addChild(zAxisLineItem);
@@ -256,11 +265,6 @@ class GLRenderer {
 
         if (this.supportsVR())
             this.__setupVRViewport();
-
-        if(this.__supportSessions){
-            this.sessionClient = new SessionClient(this);
-            this.sessionClientSetup.emit(this.sessionClient);
-        }
         
         this.sceneSet.emit(this.__scene);
     }
@@ -271,9 +275,9 @@ class GLRenderer {
             this.requestRedraw();
         });
 
-        if(this.__geomDataPass){
+        // if(this.__geomDataPass){
             vp.createGeomDataFbo(this.__floatGeomBuffer);
-        }
+        // }
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
@@ -314,10 +318,52 @@ class GLRenderer {
         return undefined;
     }
 
+    __updateListenerPosition(data) {
+        if(!this.__audioCtx)
+            return;
+        const listener = this.__audioCtx.listener;
+        const viewXfo = data.viewXfo;
+        if(listener.positionX) {
+            // listener.positionX.setTargetAtTime(viewXfo.tr.x, this.__audioCtx.currentTime, 0.0);
+            // listener.positionY.setTargetAtTime(viewXfo.tr.y, this.__audioCtx.currentTime, 0.0);
+            // listener.positionZ.setTargetAtTime(viewXfo.tr.z, this.__audioCtx.currentTime, 0.0);
+            listener.positionX.value = viewXfo.tr.x;
+            listener.positionY.value = viewXfo.tr.y;
+            listener.positionZ.value = viewXfo.tr.z;
+        } else {
+            listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
+        }
+
+        const zdir = viewXfo.ori.getZaxis().negate();
+        if(listener.forwardX) {
+          // listener.forwardX.setTargetAtTime(zdir.x, this.__audioCtx.currentTime, 0.0);
+          // listener.forwardY.setTargetAtTime(zdir.y, this.__audioCtx.currentTime, 0.0);
+          // listener.forwardZ.setTargetAtTime(zdir.z, this.__audioCtx.currentTime, 0.0);
+          listener.forwardX.value = zdir.x;
+          listener.forwardY.value = zdir.y;
+          listener.forwardZ.value = zdir.z;
+        } else {
+            const ydir = viewXfo.ori.getYaxis();
+            listener.setOrientation(zdir.x, zdir.y, zdir.z, ydir.x, ydir.y, ydir.z);
+        }
+    }
+
+    activateViewport(vp) {
+
+        if(this.__activeViewport == vp) 
+            return;
+
+        this.__activeViewport = vp;
+
+        this.__updateListenerPosition({
+            viewXfo: vp.getCamera().getGlobalXfo()
+        });
+    }
+
     activateViewportAtPos(offsetX, offsetY) {
         if (this.__vrViewport && this.__vrViewport.isPresenting())
             return this.__vrViewport;
-        this.__activeViewport = this.getViewportAtPos(offsetX, offsetY);
+        this.activateViewport(this.getViewportAtPos(offsetX, offsetY));
         return this.__activeViewport;
     }
 
@@ -337,15 +383,17 @@ class GLRenderer {
             if (this.__loadingImg)
                 this.__glcanvasDiv.removeChild(this.__loadingImg);
 
-            this.__redrawGeomDataFbos = true;
+            this.renderGeomDataFbos();
             this.requestRedraw();
         }
     }
 
     renderGeomDataFbos() {
-        for (let vp of this.__viewports)
-            vp.renderGeomDataFbo();
-        this.__redrawGeomDataFbos = false;
+        const onAnimationFrame = () => {
+            for (let vp of this.__viewports)
+                vp.renderGeomDataFbo();
+        }
+        window.requestAnimationFrame(onAnimationFrame);
     }
 
 
@@ -421,8 +469,8 @@ class GLRenderer {
 
 
         // Note: using the geom data pass crashes VR scenes.
-        // const isMobile = isMobileDevice();
-        this.__floatGeomBuffer = false;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
+        
+        this.__floatGeomBuffer = true;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
@@ -600,9 +648,25 @@ class GLRenderer {
         // If running in electron, avoid handling hotkeys..
         if (window.process === undefined || process.browser == true) {
             switch (key) {
-                case '>':
-                    this.toggleStats();
-                    return true;
+            case 'f':
+                let selection = scene.getSelectionManager().selection;
+                if (selection.size == 0)
+                    this.__viewport.getCamera().frameView([scene.getRoot()]);
+                else
+                    this.__viewport.getCamera().frameView(selection);
+                break;
+            case 'p':
+                if(event.shiftKey)
+                    this.toggleContinuousDrawing();
+                break;
+            case 'g':
+                if(event.altKey)
+                    this.__canvasDiv.requestFullscreen();
+                break;
+            case 'v':
+                if (this.__vrViewport && this.__vrViewport.isPresenting())
+                    this.mirrorVRisplayToViewport = !this.mirrorVRisplayToViewport;
+                break;
             }
         }
         this.requestRedraw();
@@ -634,6 +698,7 @@ class GLRenderer {
         //         pass.addDrawItem(drawItem);
         // }
         pass.updated.connect(this.requestRedraw.bind(this));
+        pass.setPassIndex(this.__passes.length);
         this.__passes.push(pass);
         this.requestRedraw();
         return this.__passes.length - 1;
@@ -663,20 +728,25 @@ class GLRenderer {
     __setupVRViewport() {
         return navigator.getVRDisplays().then((displays) => {
             if (displays.length > 0) {
-                let vrvp = new VRViewport(this, displays[0]);
+                // Always get the last display. Additional displays are added at the end.(Polyfill, HMD)
+                let vrvp = new VRViewport(this, displays[displays.length-1]);
 
-                vrvp.viewChanged.connect((data) => {
-                    this.viewChanged.emit(data);
-                });
-                vrvp.actionStarted.connect((data) => {
-                    this.actionStarted.emit(data);
-                });
-                vrvp.actionEnded.connect((data) => {
-                    this.actionEnded.emit(data);
-                });
-                vrvp.actionOccuring.connect((data) => {
-                    this.actionOccuring.emit(data);
-                });
+                vrvp.presentingChanged.connect((state)=>{
+
+                    if(state){
+                        vrvp.viewChanged.connect(this.viewChanged.emit);
+                        vrvp.actionStarted.connect(this.actionStarted.emit);
+                        vrvp.actionEnded.connect(this.actionEnded.emit);
+                        vrvp.actionOccuring.connect(this.actionOccuring.emit);
+                    }
+                    else {
+                        vrvp.viewChanged.disconnect(this.viewChanged.emit);
+                        vrvp.actionStarted.disconnect(this.actionStarted.emit);
+                        vrvp.actionEnded.disconnect(this.actionEnded.emit);
+                        vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
+                    }
+                })
+
 
                 this.__vrViewport = vrvp;
                 this.vrViewportSetup.emit(vrvp);
@@ -761,7 +831,6 @@ class GLRenderer {
         renderstate.drawCalls = 0;
         renderstate.drawCount = 0;
 
-        // this.__defaultGeomsPass.draw(this.__renderstate);
         for (let pass of this.__passes) {
             if (pass.enabled)
                 pass.draw(renderstate);
@@ -773,18 +842,45 @@ class GLRenderer {
         // }
     }
 
+    drawSceneGeomData(renderstate){
+        for (let pass of this.__passes) {
+            if (pass.enabled)
+                pass.drawGeomData(renderstate);
+        }
+    }
+
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
 
-        for (let vp of this.__viewports)
-            this.drawVP(vp);
+        const gl = this.__gl;
+
+        if (this.__vrViewport) {
+            if (this.__vrViewport.isPresenting()) {
+                this.__vrViewport.draw(this.__renderstate);
+                if (this.mirrorVRisplayToViewport) {
+                    gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+                    gl.disable(gl.SCISSOR_TEST);
+                    this.redrawOccured.emit();
+                    return;
+                }
+            } 
+            // Cannot upate the view, else it sends signals which
+            // end up propagating through the websocket. 
+            // TODO: Make the head invisible till active
+            // else
+            //     this.__vrViewport.updateHeadAndControllers();
+        }
+        
+        const len=this.__viewports.length;
+        for(let i=0; i< len; i++){
+            this.drawVP(this.__viewports[i]);
+        }
+
+        gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+        // gl.disable(gl.SCISSOR_TEST);
 
         this.redrawOccured.emit();
-
-        // New Items may have been added during the pause.
-        if (this.__redrawGeomDataFbos)
-            this.renderGeomDataFbos();
     }
 };
 

@@ -1,8 +1,10 @@
 import {
     Xfo,
-    Box3,
-    Signal
+    Box3
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     sgFactory
 } from './SGFactory.js';
@@ -25,6 +27,9 @@ class TreeItem extends BaseItem {
         this.__selectable = true;
 
         this.__childItems = [];
+        this.__items = [];
+        this.__itemMapping = {};
+        
 
         this.__visibleParam = this.addParameter('visible', true);
         this.__selectedParam = this.addParameter('selected', false);
@@ -78,6 +83,9 @@ class TreeItem extends BaseItem {
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
 
+        this.itemAdded = new Signal();
+        this.itemRemoved = new Signal();
+
         this.mouseDown = new Signal();
         this.mouseUp = new Signal();
         this.mouseMove = new Signal();
@@ -108,14 +116,12 @@ class TreeItem extends BaseItem {
     //////////////////////////////////////////
     // Parent Item
 
-    setOwnerItem(parentItem) {
+    setOwner(parentItem) {
         if(this.__ownerItem) {
             this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
         }
 
-        
-        // this.__private.set(parentItem, parentItem);
-        super.setOwnerItem(parentItem);
+        super.setOwner(parentItem);
 
         this._setGlobalXfoDirty();
         if(this.__ownerItem) {
@@ -131,11 +137,11 @@ class TreeItem extends BaseItem {
     }
 
     getParentItem() {
-        return this.getOwnerItem();
+        return this.getOwner();
     }
 
     setParentItem(parentItem) {
-        this.setOwnerItem(parentItem);
+        this.setOwner(parentItem);
     }
 
     get parentItem() {
@@ -146,25 +152,94 @@ class TreeItem extends BaseItem {
         throw(("setter is deprectated. Please use 'setParentItem'"));
     }
 
+
+    //////////////////////////////////////////
+    // Items
+
+    addItem(item) {
+        this.__items.push(item);
+        this.__itemMapping[item.getName()] = this.__items.length - 1;
+
+        item.setOwner(this);
+
+        this.itemAdded.emit(item);
+    }
+
+    removeItem(name) {
+        const index = this.__itemMapping[name]
+        const item = this.__items[index];
+        item.setOwner(undefined);
+        this.__items.splice(index, 1);
+
+        const itemMapping = {};
+        for (let i =0; i< this.__items.length; i++)
+            itemMapping[this.__items[i].getName()] = i;
+        this.__itemMapping = itemMapping;
+
+        this.itemAdded.emit(item);
+        return item;
+    }
+
+    getItem(name) {
+        return this.__items[this.__itemMapping[name]];
+    }
+
     //////////////////////////////////////////
     // Path Traversial
+
+    // resolveMember(path) {
+    //     if(path.startsWith('item')){
+    //         let itemName = path.substring(5);
+    //         const pos = itemName.indexOf(':');
+    //         let suffix;
+    //         if(pos){
+    //             itemName = itemName.substring(0, pos);
+    //             suffix = itemName.substring(pos+1);
+    //         }
+    //         const item = this.getItem(itemName); 
+    //     }
+    //     super.resolveMember(path)
+    // }
 
     resolvePath(path, index=0) {
         if(typeof path == 'string')
             path = path.split('/');
+        // if(path[0] == '.')
+        //     path = path.splice(1);
         if (path.length == 0) {
             throw("Invalid path:" + path);
         }
-        if (path.length-1 == index){
-            let parts = path[index].split(':');
-            if (parts[0] == this.__name) {
+        if (index == path.length-1){
+            if (path[index] == this.__name) {
                 return this;
             }
-            return super.resolvePath(path, index);
+            // const pos = path[index].indexOf(':');
+            // const prefix = path[index].substring(0, pos);
+            // const suffix = path[index].substring(pos+1);
+            // if (prefix != this.__name) {
+            //     throw ("Invalid path:" + path);
+            // }
+            // return this.resolveMember(suffix);
+            // return super.resolvePath(path, index);
+
+            return super.resolvePath(path[index]);
+            // if(path[index].startswith('parameter')){
+            //     return this.getParameter(path[index].substring(10)); 
+            // }
+            // throw("Invalid path:" + path);
         }
 
-        let childItem = this.getChildByName(path[index+1]);
+        const childName = path[index+1].split(':')[0];
+        let childItem = this.getChildByName(childName);
         if (childItem == undefined) {
+            const item = this.getItem(childName);
+            if(item){
+                if (path.length == index + 1)
+                    return item;
+                else
+                    return item.resolvePath(path[index + 1]);
+            }
+
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
             console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
             return null;
@@ -309,10 +384,12 @@ class TreeItem extends BaseItem {
             throw ("Item '" + childItem.getName() + "' is already a child of :" + this.path);
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
+
+        this.__childItems.push(childItem);
+        childItem.setOwner(this);
+
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
-        this.__childItems.push(childItem);
-        childItem.setParentItem(this);
 
         childItem.boundingChanged.connect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
@@ -462,9 +539,9 @@ class TreeItem extends BaseItem {
         let itemflags = reader.loadUInt8();
 
         const visibilityFlag = 1 << 1;
-        // this.setVisibility(itemflags&visibilityFlag);
+        // this.setVisible(itemflags&visibilityFlag);
 
-        //this.setVisibility(j.visibility);
+        //this.setVisible(j.visibility);
         // Note: to save space, some values are skipped if they are identity values 
         const localXfoFlag = 1 << 2;
         if (itemflags & localXfoFlag) {
@@ -472,6 +549,7 @@ class TreeItem extends BaseItem {
             xfo.tr = reader.loadFloat32Vec3();
             xfo.ori = reader.loadFloat32Quat();
             xfo.sc.set(reader.loadFloat32());
+            // console.log(this.getPath() + " TreeItem:" + xfo.toString());
             this.setLocalXfo(xfo);
         }
 

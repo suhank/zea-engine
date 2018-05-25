@@ -1,14 +1,18 @@
 
+import {
+    BaseItem
+} from '../SceneTree/BaseItem.js';
 
-class StateMachine {
-    constructor(scene) {
-        this.__scene = this;
+class StateMachine extends BaseItem {
+    constructor(name) {
+        super(name)
         this.__states = {};
         this.__currentState;
     }
 
     addState(state) {
-        this.__states[state.constructor.name] = state;
+        state.setStateMachine(this);
+        this.__states[state.getName()] = state;
     }
 
     activateState(key) {

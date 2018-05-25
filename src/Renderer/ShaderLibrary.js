@@ -169,16 +169,21 @@ class ShaderLibrary {
                     }
                 }
                 if (trimmedline.startsWith('struct')) {
-                    if(trimmedline.indexOf('}') == -1){
+                    let membersStr = '';
+                    if(trimmedline.indexOf('}') != -1){
+                        membersStr = trimmedline.substring(trimmedline.indexOf('{')+1, trimmedline.indexOf('}')-1)
+                    }
+                    else {
                         i++;
                         while(true){
-                            line += lines[i];
+                            line += lines[i] + '\n';
+                            membersStr += line.trim();
                             i++;
-                            if(line.indexOf('}') != -1)
+                            if(membersStr.indexOf('}') != -1)
                                 break;
                         }
                     }
-                    let structMembers = line.substring(line.indexOf('{')+1, line.indexOf('}')-1);
+                    let structMembers = membersStr.substring(membersStr.indexOf('{')+1, membersStr.indexOf('}')-1);
                     let members = structMembers.split(';');
                     let structDesc = [];
                     for(let member of members){

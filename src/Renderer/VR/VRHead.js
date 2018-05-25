@@ -21,7 +21,7 @@ class VRHead extends Gizmo {
         stageTreeItem.addChild(this.__treeItem);
 
         // // Head faces Z axis....
-        // let geom = new Cuboid('VRHead', 0.16, 0.24, 0.2);
+        // let geom = new Cuboid(0.16, 0.24, 0.2);
 
         // let mat0 = new GeomItem('mat0', 'FlatSurfaceShader');
         // mat0.baseColor = new Color(0, 0, 1);

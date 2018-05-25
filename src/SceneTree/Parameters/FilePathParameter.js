@@ -1,6 +1,6 @@
 import {
     Signal
-} from '../../Math';
+} from '../../Utilities';
 import {
     Parameter
 } from './Parameter.js';
@@ -12,23 +12,23 @@ class FilePathParameter extends Parameter {
             throw("Resource Loader not provided to FilePathParameter");
         this.__resourceLoader = resourceLoader;
 
-        this.__url;
+        this.__file;
         this.valueChanged.connect(()=>{
             let value = this.getValue();
             if (!this.__resourceLoader.resourceAvailable(value)) {
                 console.warn("Resource unavailable:" + value);
                 return;
             }
-            this.__url = this.__resourceLoader.resolveURL(value);
+            this.__file = this.__resourceLoader.resolveFile(value);
         });
     }
 
     getURL() {
-        return this.__url;
+        return this.__file.url;
     }
 
     cloneMembers(clonedParam) {
-        clonedParam.__url = this.__url;
+        clonedParam.__file = this.__file;
     }
     
     clone() {

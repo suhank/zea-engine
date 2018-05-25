@@ -4,6 +4,7 @@
 class GeomShaderBinding {
     constructor(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers) {
         this.__gl = gl;
+        this.__shaderAttrs = shaderAttrs;
         this.__glattrbuffers = glattrbuffers;
         this.__extrAttrBuffers = extrAttrBuffers;
         this.__indexBuffer = indexBuffer;
@@ -12,9 +13,8 @@ class GeomShaderBinding {
     bind(renderstate) {
         let gl = this.__gl;
 
-        let attrs = renderstate.attrs;
-        for (let attrName in attrs) {
-            let attrDesc = attrs[attrName];
+        for (let attrName in this.__shaderAttrs) {
+            let attrDesc = this.__shaderAttrs[attrName];
             let location = attrDesc.location;
             if (location == -1)
                 continue;
@@ -22,15 +22,7 @@ class GeomShaderBinding {
             if (!glattrbuffer) {
                 glattrbuffer = this.__extrAttrBuffers ? this.__extrAttrBuffers[attrName] : undefined;
                 if (!glattrbuffer) {
-                    if (attrName == 'instancedIds' && this.__instancedIdsBuffer) {
-
-                        // The instanced transform ids are bound as an instanced attribute.
-                        let dimension = 1;
-                        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instancedIdsBuffer);
-                        gl.enableVertexAttribArray(location);
-                        gl.vertexAttribPointer(location, dimension, gl.FLOAT, false, dimension*4, 0);
-                        gl.vertexAttribDivisor(location, 1); // This makes it instanced
-                    } else {
+                    if (attrName != 'instancedIds') {
                         gl.disableVertexAttribArray(location);
                     }
                     continue;
@@ -44,8 +36,8 @@ class GeomShaderBinding {
             let normalized = glattrbuffer.normalized==true;
             let instanced = attrDesc.instanced;
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
             gl.enableVertexAttribArray(location);
+            gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
             gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset);
             
             if(gl.vertexAttribDivisor) {
@@ -102,8 +94,8 @@ class VAOGeomShaderBinding {
             let normalized = glattrbuffer.normalized==true;
             let instanced = attrDesc.instanced;
 
-            gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
             gl.enableVertexAttribArray(location);
+            gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
             gl.vertexAttribPointer(location, dimension, dataType, normalized, stride, offset);
             if(instanced){
                 gl.vertexAttribDivisor(location, 1); // This makes it instanced

@@ -57,6 +57,12 @@ class GLFbo {
     get colorTexture() {
         return this.__colorTexture;
     }
+
+    setColorTexture(colorTexture) {
+        this.__colorTexture = colorTexture;
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+    }
+
     get depthTextureGL() {
         return this.__depthTexture;
     }
@@ -127,7 +133,9 @@ class GLFbo {
     }
 
     // Triggered Automatically when the texture reizes.
-    resize() {
+    // TODO: fbos should manage the textures assigned to them
+    // e.g. resixzing and preserving data.
+    resize(/*width, height, preserve*/) {
         let gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 

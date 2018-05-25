@@ -152,8 +152,9 @@ void main(void) {
     float dist = length(v_viewPos);
 
     if(floatGeomBuffer != 0) {
-        fragColor.r = float(v_drawItemID);
-        fragColor.g = dist;
+        gl_FragColor.r = 0.0;
+        gl_FragColor.g = float(v_drawItemID);
+        gl_FragColor.a = dist;
     }
     else {
         ///////////////////////////////////

@@ -15,9 +15,13 @@ class GLLines extends GLGeom {
     constructor(gl, lines) {
         super(gl, lines);
 
-
-        this.fatLines = lines.lineThickness > 0 || this.__geom.getVertexAttributes().lineThickness != undefined;
+        this.fatLines = (lines.lineThickness > 0 || this.__geom.getVertexAttributes().lineThickness != undefined) && gl.floatTexturesSupported;
         this.genBuffers();
+    }
+
+
+    renderableInstanced(){
+        return !this.fatLines;
     }
 
     genBuffers() {
@@ -144,7 +148,7 @@ class GLLines extends GLGeom {
                     dataArray[(i * 4) + 3] = this.__geom.lineThickness;
             }
 
-            this.__positionsTexture.resize(positions.length, 1, dataArray);
+            this.__positionsTexture.bufferData(dataArray, positions.length, 1);
 
             let indexArray = new Float32Array(indices.length);
             for (let i = 0; i < indices.length; i++) {
@@ -227,7 +231,7 @@ class GLLines extends GLGeom {
             gl.uniform1f(unifs._lineThickness.location, (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0)  * renderstate.viewScale);
             return true;
         } else {
-            return super.bind(renderstate, transformIds);
+            return super.bind(renderstate, extrAttrBuffers, transformIds);
         }
     }
 
@@ -242,14 +246,20 @@ class GLLines extends GLGeom {
     //////////////////////////////////
     // Regular Drawing.
 
-    draw() {
+    draw(renderstate) {
         let gl = this.__gl;
-        if (this.fatLines) {
+        if (this.fatLines && '_lineThickness' in renderstate.unifs) {
             gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
         } else {
             gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0);
         }
     }
+
+    drawInstanced(count) {
+        this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, count);
+    }
+
+
 };
 
 export {

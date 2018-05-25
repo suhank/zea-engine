@@ -1,6 +1,9 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
+import {
+    Xfo
+} from '../Math';
 import {
     HDRImage2D,
     HDRImageMixer,
@@ -110,7 +113,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (!options.disableTextures)
             this.addShaderPreprocessorDirective('ENABLE_TEXTURES');
 
-        if (!isMobileDevice()) {
+        if (!SystemDesc.isMobileDevice) {
             if(!options.disableSpecular)
                 this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
             // this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
@@ -145,10 +148,13 @@ class GLVisualiveRenderer extends GLRenderer {
         if (scene.getBackgroundMap() != undefined) {
             let gl = this.__gl;
             let backgroundMap = scene.getBackgroundMap();
-            if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
-                this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
-            } else {
-                this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
+            this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
+            if(!this.__glBackgroundMap ) {
+                if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
+                    this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
+                } else {
+                    this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
+                }
             }
             this.__glBackgroundMap.ready.connect(this.requestRedraw);
             this.__glBackgroundMap.updated.connect(this.requestRedraw);
@@ -184,8 +190,12 @@ class GLVisualiveRenderer extends GLRenderer {
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLLightmapMixer(this.__gl, lightmap);
-            else
-                gllightmap = new GLHDRImage(this.__gl, lightmap.image);
+            else{
+                gllightmap = lightmap.image.getMetadata('gltexture');
+                if(!gllightmap){
+                    gllightmap = new GLHDRImage(this.__gl, lightmap.image);
+                }
+            }
             gllightmap.updated.connect((data) => {
                 this.requestRedraw();
             });
@@ -208,44 +218,39 @@ class GLVisualiveRenderer extends GLRenderer {
 
     onKeyPressed(key, event) {
         switch (key) {
-            case '[':
-                this.__debugMode--;
-                if (this.__debugMode < 0)
-                    this.__debugMode += this.__debugTextures.length + 1;
-                break;
-            case ']':
-                this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
-                break;
-            case 'k':
-                this.__debugLightmaps = !this.__debugLightmaps;
-                break;
-            case 'f':
-                let selection = scene.getSelectionManager().selection;
-                if (selection.size == 0)
-                    this.__viewport.getCamera().frameView([scene.getRoot()]);
-                else
-                    this.__viewport.getCamera().frameView(selection);
-                break;
-            case 'g':
-                this.__canvasDiv.requestFullscreen();
-                break;
-            case 'o':
-                this.__drawEdges = !this.__drawEdges;
-                break;
-            case 'p':
-                this.__drawPoints = !this.__drawPoints;
-                break;
-            case 'b':
-                this.__displayEnvironment = !this.__displayEnvironment;
-                break;
-            case ' ':
-                if (this.__vrViewport)
-                    this.__vrViewport.togglePresenting();
-                else
-                    this.toggleContinuousDrawing();
-                break;
+            // case '[':
+            //     this.__debugMode--;
+            //     if (this.__debugMode < 0)
+            //         this.__debugMode += this.__debugTextures.length + 1;
+            //     break;
+            // case ']':
+            //     this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
+            //     break;
+            // case 'k':
+            //     this.__debugLightmaps = !this.__debugLightmaps;
+            //     break;
+            // case 'f':
+            //     let selection = scene.getSelectionManager().selection;
+            //     if (selection.size == 0)
+            //         this.__viewport.getCamera().frameView([scene.getRoot()]);
+            //     else
+            //         this.__viewport.getCamera().frameView(selection);
+            //     break;
+            // case 'o':
+            //     this.__drawEdges = !this.__drawEdges;
+                // break;
+            // case 'b':
+            //     this.__displayEnvironment = !this.__displayEnvironment;
+            //     break;
+            // case 'v':
+            //     if (this.__vrViewport)
+            //         this.__vrViewport.togglePresenting();
+            //     break;
+            // case ' ':
+            //     break;
+            default:
+                super.onKeyPressed(key);
         }
-        super.onKeyPressed(key, event);
     }
 
     ////////////////////////////
@@ -403,43 +408,6 @@ class GLVisualiveRenderer extends GLRenderer {
         // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
     }
 
-
-    draw() {
-        if (this.__drawSuspensionLevel > 0)
-            return;
-
-        let gl = this.__gl;
-
-        if (this.__vrViewport) {
-            if (this.__vrViewport.isPresenting()) {
-                this.__vrViewport.draw(this.__renderstate);
-                if (this.mirrorVRisplayToViewport) {
-                    gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-                    gl.disable(gl.SCISSOR_TEST);
-                    this.redrawOccured.emit();
-                    return;
-                }
-            }
-            // Cannot upate the view, else it sends signals which
-            // end up propagating through the websocket. 
-            // TODO: Make the head invisible till active
-            // else
-            //     this.__vrViewport.updateHeadAndControllers();
-        }
-
-        for (let vp of this.__viewports)
-            this.drawVP(vp);
-
-        gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-        // gl.disable(gl.SCISSOR_TEST);
-
-        // console.log("Draw Calls:" + this.__renderstate.drawCalls + " Draw Count:" + this.__renderstate.drawCount);
-        this.redrawOccured.emit();
-
-        // New Items may have been added during the pause.
-        if (this.__redrawGeomDataFbos)
-            this.renderGeomDataFbos();
-    }
 
     ////////////////////////////
     // Debugging

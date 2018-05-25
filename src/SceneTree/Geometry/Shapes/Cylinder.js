@@ -4,14 +4,14 @@ import { Mesh } from '../Mesh.js';
 
 
 class Cylinder extends Mesh {
-    constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, cap = true) {
+    constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true) {
         super();
 
         this.__radius = radius;
         this.__height = height;
         this.__sides = (sides >= 3) ? sides : 3;
         this.__loops = (loops >= 2) ? loops : 2;
-        this.__cap = cap;
+        this.__caps = caps;
 
         this.addVertexAttribute('texCoords', Vec2);
         this.addVertexAttribute('normals', Vec3);
@@ -54,12 +54,12 @@ class Cylinder extends Mesh {
         this.__rebuild();
     }
 
-    get cap() {
-        return this.__cap
+    get caps() {
+        return this.__caps
     }
 
-    set cap(val) {
-        this.__cap = val;
+    set caps(val) {
+        this.__caps = val;
         this.__rebuild();
     }
 
@@ -69,12 +69,12 @@ class Cylinder extends Mesh {
         let numVertices = nbSides * nbLoops;
         let numTris = 0;
         let numQuads = nbSides;
-        if (this.__cap) {
+        if (this.__caps) {
             numVertices += 2;
             numTris = nbSides * 2;
         }
         this.setNumVertices(numVertices);
-        if (this.__cap) 
+        if (this.__caps) 
             this.setFaceCounts([nbSides * 2, nbSides]);
         else
             this.setFaceCounts([0, nbSides]);
@@ -83,17 +83,17 @@ class Cylinder extends Mesh {
         // Set Vertex Positions
         let vertex = 0;
         for (let i = 0; i < nbLoops; i++) {
-            let y = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
+            let z = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
             for (let j = 0; j < nbSides; j++) {
                 let phi = (j / nbSides) * 2.0 * Math.PI;
-                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, y, Math.cos(phi) * this.__radius);
+                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, z);
                 vertex++;
             }
         }
-        if (this.__cap) {
-            // Top cap
-            this.getVertex(numVertices - 1).set(0.0, this.__height * -0.5, 0.0);
-            this.getVertex(numVertices - 2).set(0.0, this.__height * 0.5, 0.0);
+        if (this.__caps) {
+            // Top caps
+            this.getVertex(numVertices - 1).set(0.0, 0.0, this.__height * -0.5);
+            this.getVertex(numVertices - 2).set(0.0, 0.0, this.__height * 0.5);
         }
 
         //////////////////////////////
@@ -110,15 +110,15 @@ class Cylinder extends Mesh {
             }
         }
 
-        if (this.__cap) {
-            // Bottom cap topology
+        if (this.__caps) {
+            // Bottom caps topology
             for (let j = 0; j < nbSides; j++) {
                 let v0 = numVertices - 1;
                 let v1 = ((j + 1) % nbSides);
                 let v2 = j;
                 this.setFaceVertexIndices(faceIndex++, v0, v1, v2);
             }
-            // Top cap topology
+            // Top caps topology
             for (let j = 0; j < nbSides; j++) {
                 let v0 = (nbSides * (nbLoops - 1)) + j;
                 let v1 = (nbSides * (nbLoops - 1)) + ((j + 1) % nbSides);
@@ -148,7 +148,7 @@ class Cylinder extends Mesh {
                 faceIndex++;
             }
         }
-        if (this.__cap) {
+        if (this.__caps) {
             let normal = new Vec3(0.0, -1.0, 0.0);
             for (let i = 0; i < nbSides; i++) {
                 normals.setFaceVertexValue(faceIndex, 0, normal);
@@ -178,7 +178,7 @@ class Cylinder extends Mesh {
             texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(i / nbSides, 1.0));
             faceIndex++;
         }
-        if (this.__cap) {
+        if (this.__caps) {
             for (let i = 0; i < nbSides; i++) {
                 texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbSides, 0.0));
                 texCoords.setFaceVertexValue(faceIndex, 1, new Vec2((i + 1) / nbSides, 0.0));
@@ -200,21 +200,21 @@ class Cylinder extends Mesh {
         let nbSides = this.__sides;
         let nbLoops = this.__loops;
         let numVertices = nbSides * nbLoops;
-        if (this.__cap) {
+        if (this.__caps) {
             numVertices += 2;
         }
         let vertex = 0;
         for (let i = 0; i < nbLoops; i++) {
-            let y = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
+            let z = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
             for (let j = 0; j < nbSides; j++) {
                 let phi = (j / nbSides) * 2.0 * Math.PI;
-                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, y, Math.cos(phi) * this.__radius);
+                this.getVertex(vertex).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, z);
                 vertex++;
             }
         }
-        if (this.__cap) {
-            this.getVertex(numVertices - 1).set(0.0, this.__height * -0.5, 0.0);
-            this.getVertex(numVertices - 2).set(0.0, this.__height * 0.5, 0.0);
+        if (this.__caps) {
+            this.getVertex(numVertices - 1).set(0.0, 0.0, this.__height * -0.5);
+            this.getVertex(numVertices - 2).set(0.0, 0.0, this.__height * 0.5);
         }
 
         this.setBoundingBoxDirty();
@@ -222,9 +222,11 @@ class Cylinder extends Mesh {
 
     toJSON() {
         let json = super.toJSON();
-        json['x'] = this.__x;
-        json['y'] = this.__y;
-        json['z'] = this.__z;
+        json['radius'] = this.__radius;
+        json['height'] = this.__height;
+        json['sides'] = this.__sides;
+        json['loops'] = this.__loops;
+        json['caps'] = this.__caps;
         return json
     }
 };

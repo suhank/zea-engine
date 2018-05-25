@@ -66,10 +66,10 @@ class Cone extends Mesh {
         //////////////////////////////
         // Set Vertex Positions
 
-        this.getVertex(tipPoint).set(0.0, this.__height, 0.0);
+        this.getVertex(tipPoint).set(0.0, 0.0, this.__height);
         for (let i = 0; i < nbSides; i++) {
             let theta = (i / nbSides) * 2.0 * Math.PI;
-            this.getVertex(i).set(this.__radius * Math.cos(theta), 0.0, this.__radius * Math.sin(theta));
+            this.getVertex(i).set(this.__radius * Math.cos(theta), this.__radius * Math.sin(theta), 0.0);
         }
         if (this.__cap) {
             this.getVertex(basePoint).set(0.0, 0.0, 0.0);
@@ -148,10 +148,10 @@ class Cone extends Mesh {
         let tipPoint = nbSides;
         let basePoint = nbSides + 1;
 
-        this.getVertex(tipPoint).set(0.0, this.__height, 0.0);
+        this.getVertex(tipPoint).set(0.0, 0.0, this.__height);
         for (let i = 0; i < nbSides; i++) {
             let theta = (i / nbSides) * 2.0 * Math.PI;
-            this.getVertex(i).set(this.__radius * Math.cos(theta), 0.0, this.__radius * Math.sin(theta));
+            this.getVertex(i).set(this.__radius * Math.cos(theta), this.__radius * Math.sin(theta), 0.0);
         }
         if (this.__cap) {
             this.getVertex(basePoint).set(0.0, 0.0, 0.0);

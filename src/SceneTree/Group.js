@@ -1,8 +1,10 @@
 import {
-    Signal,
     Vec2,
     Xfo
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     BaseItem
 } from './BaseItem';
@@ -19,9 +21,11 @@ class Group extends BaseItem {
         this.__visibleParam = this.addParameter('visible', true);
         this.__visibleParam.valueChanged.connect((changeType)=>{
             let value = this.__visibleParam.getValue();
-            this.__items.forEach((item)=>{
+            const len = this.__items.length;
+            for (let i = 0; i < len; i++) {
+                const item = this.__items[i];
                 item.getParameter('visible').setValue(value);
-            });
+            }
         });
 
         this.mouseDownOnItem = new Signal();

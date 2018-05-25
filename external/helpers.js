@@ -23,7 +23,7 @@ let addCanvas = function(width, height) {
         resizeDiv.style.position = 'fixed';
         resizeDiv.style.top = 0;
         resizeDiv.style.left = 0;
-        resizeDiv.style.overflow = 'hidden';
+        // resizeDiv.style.overflow = 'hidden';
     } else {
         resizeDiv.style.position = 'relative';
         resizeDiv.style.width = width + 'px';
@@ -40,10 +40,10 @@ let addCanvas = function(width, height) {
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
         VisualiveEngine: {
-            'Vive.vla': window.location.origin+'/Resources/Vive.vla',
-            'Dome.vla': window.location.origin+'/Resources/Dome.vla',
-            'LogoSmall.png': window.location.origin+'/Resources/LogoSmall.png',
-            'FlakesNormalMap.png': window.location.origin+'/Resources/FlakesNormalMap.png'
+            'Vive.vla': { url: window.location.origin+'/Resources/Vive.vla' } ,
+            'Dome.vla': { url: window.location.origin+'/Resources/Dome.vla' } ,
+            'LogoSmall.png': { url: window.location.origin+'/Resources/LogoSmall.png' } ,
+            'FlakesNormalMap.png': { url: window.location.origin+'/Resources/FlakesNormalMap.png' } 
         }
     };
     let rootURL = window.location.href.split('#')[0];
@@ -71,7 +71,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             }
             curr = curr[part];
         }
-        curr[parts[parts.length-1]] = base+item;
+        curr[parts[parts.length-1]] = { url: base+item };
     }
     for(let item of list){
         generatePath(item);
@@ -84,7 +84,11 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             for(let i=0; i<3; i++){
                 // PAth for the env and the lightmaps for the env
                 generatePath(assetDesc[2] + i + ".vlh");
-                generatePath(assetDesc[0] + "_" + assetDesc[2] + "_Lightmap" + i + ".vlh");
+                let envMapName = assetDesc[2].split('/');
+                if(envMapName.length > 1)
+                    envMapName.shift();
+                envMapName = envMapName[0];
+                generatePath(assetDesc[0] + "_" + envMapName + "_Lightmap" + i + ".vlh");
             }
         }
     }

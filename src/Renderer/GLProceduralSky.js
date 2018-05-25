@@ -1,7 +1,9 @@
 import {
-    Vec3,
-    Signal
+    Vec3
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     shaderLibrary
 } from './ShaderLibrary'

@@ -1,6 +1,7 @@
+
 import {
     Async
-} from '../Math';
+} from '../Utilities';
 import {
     Image2D,
     HDRImage2D
@@ -54,11 +55,13 @@ class GLLightmapMixer extends GLTexture2D {
         async.incAsyncCount(); 
         const genGLTex = (index) => {
             let image = this.__lightmapMixer.getSubImage(index);
-            let gltexture;
-            if (image instanceof HDRImage2D || image.format === "FLOAT") {
-                gltexture = new GLHDRImage(gl, image);
-            } else {
-                gltexture = new GLTexture2D(gl, image);
+            let gltexture = image.getMetadata('gltexture');
+            if(!gltexture) {
+                if (image instanceof HDRImage2D || image.format === "FLOAT") {
+                    gltexture = new GLHDRImage(gl, image);
+                } else {
+                    gltexture = new GLTexture2D(gl, image);
+                }
             }
             this.__srcTextures[index] = gltexture;
             async.incAsyncCount();
@@ -84,7 +87,7 @@ class GLLightmapMixer extends GLTexture2D {
         });
 
         this.__lightmapMixer.destructing.connect(() => {
-            console.log(this.__lightmapMixer.name + " destructing");
+            console.log(this.__lightmapMixer.getName() + " destructing");
             this.destroy();
         });
 

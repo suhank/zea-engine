@@ -1,12 +1,14 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Async,
     Signal
-} from '../Math';
+} from '../Utilities';
 
-let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
+
+const asyncLoading = true;
+const ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 // let FreeMemWorker = require("worker-loader?inline!./FreeMemWorker.js");
 // For synchronous loading, uncomment these lines.
 // import {
@@ -15,8 +17,7 @@ let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.
 
 
 class ResourceLoader {
-    constructor(resources) {
-        this.__resources = resources;
+    constructor() {
         this.loaded = new Signal();
         this.progressIncremented = new Signal();
         this.allResourcesLoaded = new Signal();
@@ -28,9 +29,17 @@ class ResourceLoader {
         this.__callbacks = {};
         this.__workCategories = {};
 
-        this.__workers = [];
-        this.__constructWorkers();
-        this.__nextWorker = 0;
+        if(asyncLoading){
+            this.__workers = [];
+            this.__constructWorkers();
+            this.__nextWorker = 0;
+        }
+    }
+
+    setResources(resources){
+        if(this.__resources)
+            throw("Resource Loader already bound to resources");
+        this.__resources = resources
     }
 
     freeData(buffer){
@@ -84,10 +93,10 @@ class ResourceLoader {
         this.__workers = [];
     }
 
-    resolveURL(filePath) {
+    resolveFile(filePath) {
         if(!this.__resources)
             throw("Resources dict not provided");
-        let parts = filePath.split('/');
+        const parts = filePath.split('/');
         if(parts[0] == '.' || parts[0] == '')
             parts.shift();
         let curr = this.__resources;
@@ -102,8 +111,14 @@ class ResourceLoader {
         return curr;
     }
     
+    resolveURL(filePath) {
+        const file = this.resolveFile(filePath)
+        if(file)
+            return file.url;
+    }
+    
     resourceAvailable(filePath) {
-        return this.resolveURL(filePath) != null;
+        return this.resolveFile(filePath) != null;
     }
 
     __initCategory(name){
@@ -146,12 +161,14 @@ class ResourceLoader {
         this.__callbacks[name].push(callback);
 
         // If the loader was suspended, resume. 
-        if(this.__workers.length == 0){
-            this.__constructWorkers();
+        if(asyncLoading) {
+            if(this.__workers.length == 0){
+                this.__constructWorkers();
+            }
         }
 
-        let url = this.resolveURL(name);
-        if(!url){
+        const file = this.resolveFile(name);
+        if(!file){
             throw("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
@@ -166,28 +183,31 @@ class ResourceLoader {
         }
 
         ///////////////////////////////////////////////
-        this.__workers[this.__nextWorker].postMessage({
-            name,
-            url
-        });
-        this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
+        if(asyncLoading) {
+            this.__workers[this.__nextWorker].postMessage({
+                name,
+                url: file.url
+            });
+            this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
+        }
+        else {
+            ///////////////////////////////////////////////
+            ResourceLoaderWorker_onmessage({
+                name,
+                url: file.url
+            },()=>{
+                this.addWorkDone(name, 1); // loading done...
+            }, (result, transferables)=>{
+                if(result.type == 'finished')
+                    this.__onFinishedReceiveFileData(result);
+            });
+        }
 
 
-        ///////////////////////////////////////////////
-        // For synchronous loading, uncomment these lines.
-        // ResourceLoaderWorker_onmessage({
-        //     name,
-        //     url
-        // },()=>{
-        //     this.addWorkDone(name, 1); // loading done...
-        // }, (result, transferables)=>{
-        //     if(result.type == 'finished')
-        //         this.__onFinishedReceiveFileData(result);
-        // });
     }
 
     __onFinishedReceiveFileData(fileData) {
-        let name = fileData.name;
+        const name = fileData.name;
         this.addWorkDone(name, 1); // unpacking done...
         for(let callback of this.__callbacks[name]){
             callback(fileData.entries);
@@ -203,6 +223,8 @@ class ResourceLoader {
 
 };
 
+const resourceLoader = new ResourceLoader();
 export {
-    ResourceLoader
+    ResourceLoader,
+    resourceLoader
 };

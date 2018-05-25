@@ -1,7 +1,8 @@
+
 import {
     Async,
     Signal
-} from '../Math';
+} from '../Utilities';
 import {
     FileImage2D
 } from './FileImage2D.js';

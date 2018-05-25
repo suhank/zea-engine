@@ -69,8 +69,8 @@ class Torus extends Mesh {
                 let d = this.__outerRadius + cphi * this.__innerRadius;
 
                 // Set positions and normals at the same time.
-                this.getVertex(vertex).set(ctheta * d, this.__innerRadius * sphi, stheta * d);
-                normals.getValueRef(vertex).set(ctheta * cphi, sphi, stheta * cphi);
+                this.getVertex(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi);
+                normals.getValueRef(vertex).set(ctheta * cphi, stheta * cphi, sphi);
                 vertex++;
             }
         }
@@ -123,7 +123,7 @@ class Torus extends Mesh {
                 let d = this.__outerRadius + cphi * this.__innerRadius;
 
                 // Set positions and normals at the same time.
-                this.getVertex(vertex).set(ctheta * d, this.__innerRadius * sphi, stheta * d);
+                this.getVertex(vertex).set(ctheta * d, stheta * d, this.__innerRadius * sphi);
                 index++;
             }
         }

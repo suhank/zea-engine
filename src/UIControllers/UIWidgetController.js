@@ -1,7 +1,9 @@
 import {
-    Vec2,
-    Signal
+    Vec2
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 
 class UIWidgetController {
     constructor(parameter) {

@@ -1,14 +1,16 @@
 import {
-    isMobileDevice
+    SystemDesc
 } from '../BrowserDetection.js';
 import {
     Vec2,
     Vec3,
     Ray,
     Color,
-    Mat4,
-    Signal
+    Mat4
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     Image2D,
     HDRImage2D,
@@ -33,6 +35,10 @@ import {
     PostProcessing
 } from './Shaders/PostProcessing.js';
 
+import {
+    CameraMouseAndKeyboard
+} from '../SceneTree';
+
 class GLViewport extends BaseViewport {
     constructor(renderer, name, width, height) {
         super(renderer);
@@ -54,7 +60,6 @@ class GLViewport extends BaseViewport {
         this.__mouseOverGizmo = undefined;
         this.__manipGizmo = undefined;
         this.__mouseDownPos = new Vec2();
-        this.__ongoingTouches = {};
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFbo = undefined;
@@ -70,7 +75,6 @@ class GLViewport extends BaseViewport {
         // i.e. when a user switches to VR mode, the signals 
         // simply emit the new VR data.
         this.viewChanged = new Signal();
-        this.pointerMoved = new Signal();
 
 
         this.mouseDown = new Signal();
@@ -85,11 +89,13 @@ class GLViewport extends BaseViewport {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-        this.__markerPenColor = new Color(1, 0, 0);
+        this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
         // this.__glshaderScreenPostProcess = new PostProcessing(renderer.getGL());
 
         this.setCamera(new Camera('Default'));
+
+        this.setManipulator(new CameraMouseAndKeyboard());
 
         this.resize(width, height);
         // this.createOffscreenFbo();
@@ -112,10 +118,10 @@ class GLViewport extends BaseViewport {
 
     setCamera(camera) {
         this.__camera = camera;
-        this.__camera.viewMatChanged.connect(()=>{
+        this.__camera.viewMatChanged.connect(() => {
             this.updated.emit();
             this.viewChanged.emit({
-                interfaceType: 'MouseAndKeyboard',
+                interfaceType: 'CameraAndPointer',
                 viewXfo: this.__camera.getGlobalXfo()
             });
         });
@@ -123,13 +129,25 @@ class GLViewport extends BaseViewport {
         //     this.__updateProjectionMatrix();
         //     this.updated.emit();
         // });
-        this.__camera.projectionParamChanged.connect(()=>{
+        this.__camera.projectionParamChanged.connect(() => {
             this.__updateProjectionMatrix();
             this.updated.emit();
         });
 
         this.__updateProjectionMatrix();
     }
+
+    getManipulator() {
+        return this.__manipulator;
+    }
+
+    setManipulator(manipulator) {
+        if(this.__manipulator)
+            this.__manipulator.movementFinished.disconnect(this.renderGeomDataFbo);
+        this.__manipulator = manipulator;
+        this.__manipulator.movementFinished.connect(this.renderGeomDataFbo);
+    }
+
 
     setGizmoPass(gizmoPass) {
         this.__gizmoPass = gizmoPass;
@@ -189,18 +207,17 @@ class GLViewport extends BaseViewport {
             return null;
 
         let rayStart, rayDirection;
-        if (this.__camera.getIsOrthographic()){
+        if (this.__camera.getIsOrthographic()) {
             // Orthographic projections.
             rayStart = cameraMat.transformVec3(projInv.transformVec3(new Vec3(sx, -sy, -1.0)));
             rayDirection = new Vec3(0.0, 0.0, -1.0);
-        }
-        else {
+        } else {
             rayStart = cameraMat.translation;
             // Get the projected window coordinate on the near plane
             // See http://www.songho.ca/opengl/gl_projectionmatrix.html
             // for details.
             rayDirection = projInv.transformVec3(new Vec3(sx, -sy, -1.0));
-        } 
+        }
         // And from projection space to camera local.
         // - We nuke the translation part since we're transforming a vector.
         rayDirection = cameraMat.rotateVec3(rayDirection).normalize();
@@ -213,7 +230,7 @@ class GLViewport extends BaseViewport {
     createGeomDataFbo(floatGeomBuffer) {
         let gl = this.__renderer.gl;
         this.__floatGeomBuffer = floatGeomBuffer;
-        if(this.__floatGeomBuffer) {
+        if (this.__floatGeomBuffer) {
             this.__geomDataBuffer = new GLTexture2D(gl, {
                 format: 'FLOAT',
                 channels: 'RGBA',
@@ -221,8 +238,7 @@ class GLViewport extends BaseViewport {
                 width: this.__width <= 1 ? 1 : this.__width,
                 height: this.__height <= 1 ? 1 : this.__height,
             });
-        }
-        else {
+        } else {
             this.__geomDataBuffer = new GLTexture2D(gl, {
                 format: 'UNSIGNED_BYTE',
                 channels: 'RGBA',
@@ -256,7 +272,7 @@ class GLViewport extends BaseViewport {
                 profileJSON: {}
             };
 
-            this.__renderer.getGeomDataPass().draw(renderstate);
+            this.__renderer.drawSceneGeomData(renderstate);
             // this.__gizmoPass.drawDataPass(renderstate);
         }
     }
@@ -268,36 +284,61 @@ class GLViewport extends BaseViewport {
             // Allocate a 1 pixel block.
 
             this.__geomDataBufferFbo.bind();
-            let id, dist, pixels;
-            if(this.__floatGeomBuffer) {
+
+
+            // const logGeomData = (geomId)=>{
+            //     console.log("logGeomData " + geomId + ":[" + this.__geomDataBuffer.width +","+ this.__geomDataBuffer.height + "]")
+            //     const pixels = new Float32Array(this.__geomDataBuffer.width * 4);
+            //     for(let i=0; i<this.__geomDataBuffer.height; i++){
+            //       gl.readPixels(0, i, this.__geomDataBuffer.width, 1, gl.RGBA, gl.FLOAT, pixels);
+            //       console.log(pixels);
+            //     }
+            // }
+            // logGeomData();
+
+            let passId, itemId, dist, pixels;
+            if (this.__floatGeomBuffer) {
                 pixels = new Float32Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
-                if (pixels[0] == 0)
+                if (pixels[3] == 0)
                     return undefined;
-                id = Math.round(pixels[0]);
-                dist = pixels[1];
-            }
-            else {
+                pixels[0] = Math.round(pixels[0]);
+                pixels[1] = Math.round(pixels[1]);
+                pixels[2] = Math.round(pixels[2]);
+                pixels[3] = Math.round(pixels[3]);
+                passId = pixels[0];
+                itemId = pixels[1];
+                dist = pixels[3];
+            } else {
                 pixels = new Uint8Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
                 if (pixels[0] == 0 && pixels[1] == 0)
                     return undefined;
-                id = pixels[0] + (pixels[1] << 8);
-                dist = Math.decode16BitFloat([pixels[2], pixels[3]]);
+                itemId = pixels[0] + (pixels[1] << 8);
+                dist = Math.decode16BitFloatFrom2xUInt8([pixels[2], pixels[3]]);
+            }
+            let geomItem;
+            if(passId == 0) {
+                const drawItem = this.__renderer.getCollector().getDrawItem(itemId);
+                if (drawItem) {
+                    geomItem = drawItem.getGeomItem();
+                }
+            }
+            else {
+                geomItem = this.__renderer.getPass(passId).getGeomItem(pixels);
             }
 
-            let drawItem = this.__renderer.getCollector().getDrawItem(id);
-            if(drawItem) {
+            if(geomItem) {
                 let mouseRay = this.calcRayFromScreenPos(screenPos);
                 let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
                 return {
-                    id,
+                    id: itemId,
                     screenPos,
                     dist: pixels[2],
                     mouseRay: mouseRay,
                     intersectionPos,
-                    geomItem: drawItem.getGeomItem()
+                    geomItem
                 };
             }
         }
@@ -345,47 +386,41 @@ class GLViewport extends BaseViewport {
     }
 
     onMouseDown(event) {
-
+        
         this.__mouseDownPos = this.__eventMousePos(event);
         this.__mouseDownGeom = undefined;
 
         if (event.button == 0) {
             if (event.shiftKey) {
-                this.__manipMode = 'marker-tool';
+                this.__manipMode = 'action';
                 let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
                 if (ray == null)
                     return;
                 let xfo = this.__camera.getGlobalXfo().clone();
-                xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                let thickness = this.__camera.focalDistance * 0.002;
+                xfo.tr = ray.pointAtDist(this.__camera.getFocalDistance());
 
-                this.__currStrokeID++;
                 this.actionStarted.emit({
-                    type: 'strokeStarted',
-                    data: {
-                        xfo: xfo,
-                        color: this.__markerPenColor,
-                        thickness: thickness
-                    }
+                    pointerType: 'mouse',
+                    xfo
                 });
                 return;
 
             } else {
                 let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (intersectionData != undefined) {
-                    console.log(intersectionData.geomItem.getPath());// + " Material:" + geomItem.getMaterial().name);
+                    console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                     this.__mouseDownGeom = intersectionData.geomItem;
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
 
-                    if(event.vleStopPropagation) {
+                    if (event.vleStopPropagation) {
                         this.__manipMode = 'geom-manipulation';
                     }
                 }
 
-                if(this.__manipMode == 'highlighting') {
+                if (this.__manipMode == 'highlighting') {
                     // Default to camera manipulation
                     this.__manipMode = 'camera-manipulation';
-                    this.__camera.onDragStart(event, this.__mouseDownPos, this);
+                    this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
                 }
 
             }
@@ -393,7 +428,7 @@ class GLViewport extends BaseViewport {
 
             // Default to camera manipulation
             this.__manipMode = 'camera-manipulation';
-            this.__camera.onDragStart(event, this.__mouseDownPos, this);
+            this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
 
             /*
             if (event.shiftKey) {
@@ -422,12 +457,14 @@ class GLViewport extends BaseViewport {
             case 'highlighting':
                 break;
             case 'camera-manipulation':
-                this.__camera.onDragEnd(event, mouseUpPos, this);
-                this.renderGeomDataFbo();
+                this.__manipulator.onDragEnd(event, mouseUpPos, this);
                 this.__manipMode = 'highlighting';
                 break;
             case 'geom-manipulation':
-                this.__mouseDownGeom.onMouseUp(event, { mousePos: mouseUpPos, geomItem:this.__mouseDownGeom } );
+                this.__mouseDownGeom.onMouseUp(event, {
+                    mousePos: mouseUpPos,
+                    geomItem: this.__mouseDownGeom
+                });
                 this.__mouseDownGeom = undefined;
                 this.renderGeomDataFbo();
                 this.__manipMode = 'highlighting';
@@ -479,10 +516,9 @@ class GLViewport extends BaseViewport {
                 this.__renderer.resumeDrawing();
                 this.__manipMode = 'highlighting';
                 break;
-            case 'marker-tool':
-                // this.__markerPen.endStroke(this.__markerLineId);
+            case 'action':
                 this.actionEnded.emit({
-                    type: 'strokeEnded'
+                    pointerType: 'mouse'
                 });
                 this.__manipMode = 'highlighting';
                 break;
@@ -549,6 +585,9 @@ class GLViewport extends BaseViewport {
         switch (this.__manipMode) {
             case 'highlighting':
                 {
+                    // disabling higlighting whle I debug geom data buffers
+                    break;
+
                     // if (this.__geomDataBufferFbo)
                     //     getGeomUnderMouse.call(this);
                     if (this.__gizmoPass)
@@ -577,14 +616,13 @@ class GLViewport extends BaseViewport {
                     if (intersectionData != undefined) {
                         intersectionData.dragging = true;
                         intersectionData.geomItem.onMouseMove(event, intersectionData);
-                    }
-                    else {
+                    } else {
                         let mouseRay = this.calcRayFromScreenPos(mousePos);
                         this.__mouseDownGeom.onMouseMove(event, {
-                            mousePos, 
-                            geomItem: this.__mouseDownGeom, 
+                            mousePos,
+                            geomItem: this.__mouseDownGeom,
                             mouseRay,
-                            dragging:true 
+                            dragging: true
                         });
 
                     }
@@ -593,7 +631,7 @@ class GLViewport extends BaseViewport {
             case 'camera-manipulation':
                 {
                     let mousePos = this.__eventMousePos(event);
-                    this.__camera.onDrag(event, mousePos, this);
+                    this.__manipulator.onDrag(event, mousePos, this);
                     break;
                 }
             case 'new-selection':
@@ -614,20 +652,16 @@ class GLViewport extends BaseViewport {
             case 'remove-selection-rect':
                 updateSelectionRect.call(this);
                 break;
-            case 'marker-tool':
+            case 'action':
                 {
                     let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
                     if (ray == null)
                         return;
                     let xfo = this.__camera.getGlobalXfo().clone();
-                    xfo.tr = ray.pointAtDist(this.__camera.focalDistance);
-                    // this.__markerPen.addSegmentToStroke(this.__markerLineId, xfo);
+                    xfo.tr = ray.pointAtDist(this.__camera.getFocalDistance());
                     this.actionOccuring.emit({
-                        type: 'strokeSegmentAdded',
-                        data: {
-                            id: this.__currStrokeID,
-                            xfo: xfo
-                        }
+                        pointerType: 'mouse',
+                        xfo: xfo
                     });
                 }
                 break;
@@ -639,7 +673,7 @@ class GLViewport extends BaseViewport {
     }
 
     onKeyPressed(key, event) {
-        if (this.__camera.onKeyPressed(key, event))
+        if (this.__manipulator.onKeyPressed(key, event, this))
             return true;
         switch (key) {
             case 'f':
@@ -653,113 +687,36 @@ class GLViewport extends BaseViewport {
         return false;
     }
     onKeyDown(key, event) {
-        if (this.__camera.onKeyDown(key, event))
+        if (this.__manipulator.onKeyDown(key, event, this))
             return true;
         return false;
     }
 
     onKeyUp(key, event) {
-        if (this.__camera.onKeyUp(key, event))
+        if (this.__manipulator.onKeyUp(key, event, this))
             return true;
         return false;
     }
 
     onWheel(event) {
-        this.__camera.onWheel(event);
-        this.renderGeomDataFbo();
-    }
-
-    __startTouch(touch) {
-        this.__ongoingTouches[touch.identifier] = {
-            identifier: touch.identifier,
-            pos: new Vec2(touch.pageX, touch.pageY)
-        };
-    }
-    __endTouch(touch) {
-        // let idx = this.__ongoingTouchIndexById(touch.identifier);
-        // this.__ongoingTouches.splice(idx, 1); // remove it; we're done
-        delete this.__ongoingTouches[touch.identifier];
+        return this.__manipulator.onWheel(event, this);
     }
 
     // Touch events
     onTouchStart(event) {
-        // console.log("onTouchStart");
-        event.preventDefault();
-        event.stopPropagation();
-
-        if (Object.keys(this.__ongoingTouches).length == 0)
-            this.__manipMode = undefined;
-
-        let touches = event.changedTouches;
-        for (let i = 0; i < touches.length; i++) {
-            this.__startTouch(touches[i]);
-        }
-        this.__camera.initDrag();
+        return this.__manipulator.onTouchStart(event, this);
     }
 
     onTouchMove(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        // console.log("this.__manipMode:" + this.__manipMode);
-
-        let touches = event.changedTouches;
-        if (touches.length == 1 && this.__manipMode != "panAndZoom") {
-            let touch = touches[0];
-            let touchPos = new Vec2(touch.pageX, touch.pageY);
-            let touchData = this.__ongoingTouches[touch.identifier];
-            let dragVec = touchData.pos.subtract(touchPos);
-            if (this.__camera.getDefaultManipMode() == 'look') {
-                // TODO: scale panning here.
-                dragVec.scaleInPlace(6.0);
-                this.__camera.look(dragVec, this);
-            } else {
-                this.__camera.orbit(dragVec, this);
-            }
-        } else if (touches.length == 2) {
-            let touch0 = touches[0];
-            let touchData0 = this.__ongoingTouches[touch0.identifier];
-            let touch1 = touches[1];
-            let touchData1 = this.__ongoingTouches[touch1.identifier];
-
-            let touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
-            let touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
-            let startSeparation = touchData1.pos.subtract(touchData0.pos).length();
-            let dragSeparation = touch1Pos.subtract(touch0Pos).length();
-            let separationDist = startSeparation - dragSeparation;
-
-            let touch0Drag = touch0Pos.subtract(touchData0.pos);
-            let touch1Drag = touch1Pos.subtract(touchData1.pos);
-            let dragVec = touch0Drag.add(touch1Drag);
-            // TODO: scale panning here.
-            dragVec.scaleInPlace(0.5);
-            this.__camera.panAndZoom(dragVec, separationDist * 0.002, this);
-            this.__manipMode = "panAndZoom";
-        }
+        return this.__manipulator.onTouchMove(event, this);
     }
 
     onTouchEnd(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        let touches = event.changedTouches;
-        // switch (this.__manipMode) {
-        // case 'camera-manipulation':
-        //     let touch = touches[0];
-        //     let releasePos = new Vec2(touch.pageX, touch.pageY);
-        //     this.__camera.onDragEnd(event, releasePos, this);
-        //     break;
-        // }
-        for (let i = 0; i < touches.length; i++) {
-            this.__endTouch(touches[i]);
-        }
+        return this.__manipulator.onTouchEnd(event, this);
     }
 
     onTouchCancel(event) {
-        event.preventDefault();
-        console.log("touchcancel.");
-        let touches = event.changedTouches;
-        for (let i = 0; i < touches.length; i++) {
-            this.__endTouch(touches[i]);
-        }
+        return this.__manipulator.onTouchCancel(event, this);
     }
 
 
@@ -771,13 +728,10 @@ class GLViewport extends BaseViewport {
         renderstate.viewMatrix = this.getViewMatrix();
         renderstate.cameraMatrix = this.getCameraMatrix();
         renderstate.projectionMatrix = this.getProjectionMatrix();
-        renderstate.isOrthographic = this.__camera.getIsOrthographic();
-        renderstate.fovY = this.__camera.getFov();
-        renderstate.nearDist = this.__camera.getNear();
-        renderstate.farDist = this.__camera.getFar();
+        renderstate.camera = this.__camera;
         renderstate.viewportFrustumSize = this.__frustumDim;
         renderstate.viewScale = 1.0;
-        renderstate.eye = 0;// 0==Left, 1==Right;
+        renderstate.eye = 0; // 0==Left, 1==Right;
 
         if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);

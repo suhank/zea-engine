@@ -147,8 +147,8 @@ class Xfo {
 
     toJSON() {
         let j = {
-            'tr': this.tr.toJSON(),
-            'ori': this.ori.toJSON()
+            tr: this.tr.toJSON(),
+            ori: this.ori.toJSON()
         };
         if(!this.sc.is111())
             j.sc = this.sc.toJSON();

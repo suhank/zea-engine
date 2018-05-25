@@ -1,8 +1,10 @@
 
 import {
-    Signal,
     Vec2
 } from '../Math';
+import {
+    Signal
+} from '../Utilities';
 import {
     FilePathParameter
 } from './Parameters';
@@ -25,6 +27,7 @@ class AssetItem extends TreeItem {
         this.__geomLibrary = new GeomLibrary(this.__name);
         this.__materials = new MaterialLibrary(this.__resourceLoader);
         this.__atlasSize = new Vec2();
+
 
         let fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
         fileParam.valueChanged.connect(()=>{
@@ -49,6 +52,11 @@ class AssetItem extends TreeItem {
         return this.__materials;
     }
 
+
+
+    //////////////////////////////////////////
+    // Groups
+
     getLightmapSize() {
         return this.__atlasSize;
     }
@@ -56,6 +64,7 @@ class AssetItem extends TreeItem {
     getAtlasSize() {
         return this.__atlasSize;
     }
+
 
     //////////////////////////////////////////
     // Persistence

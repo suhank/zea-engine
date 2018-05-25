@@ -2,7 +2,7 @@
     
     let scene = new Visualive.Scene(resources);
 
-    let envMapName = "Assets/hdri_sky_02_sample" + (Visualive.isMobileDevice() ? 2 : 0) + ".vlh";
+    let envMapName = "Assets/hdri_sky_02_sample" + (Visualive.SystemDesc.isMobileDevice ? 2 : 0) + ".vlh";
     let envMap =  new Visualive.FileImage2D(envMapName, scene.getResourceLoader());
     scene.setEnvMap(envMap);
 
@@ -21,7 +21,7 @@
                 material.addParameter('reflectance', 0.02);
             else
                 material.addParameter('reflectance', 0.5);
-            addMeshShape('Sphere'+i+"-"+j, new Visualive.Sphere(1.4, 40), new Visualive.Vec3(i*3.4, 0, j*3.4), material);
+            addMeshShape('Sphere'+i+"-"+j, new Visualive.Sphere(1.4, 40), new Visualive.Vec3(i*3.4, j*3.4, 0), material);
         }
     }
     

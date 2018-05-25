@@ -69,7 +69,8 @@ class GLBillboardsPass extends GLPass {
             this.updated.emit();
         });
         billboard.getParameter('image').getValue().updated.connect(() => {
-            throw("TODO: update the atlas:" + index);
+            // throw("TODO: update the atlas:" + index);
+            this.__updateBillboard(index);
         });
         billboard.getParameter('alpha').valueChanged.connect(() => {
             this.__updateBillboard(index);
@@ -296,17 +297,18 @@ class GLBillboardsPass extends GLPass {
         this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 
         if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-            this.__indexArray.forEach((index)=>{
-                // this.__drawItems[index].bind(renderstate);
+            const len = this.__indexArray.length;
+            for (let i = 0; i < len; i++) {
+                // this.__drawItems[i].bind(renderstate);
                 // this.__glgeom.draw();
 
-                gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[index]);
-                gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[index]);
-                gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[index]);
-                gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.__billboards[index].imageIndex));
+                gl.uniformMatrix4fv(unifs.modelMatrix.location, false, this.__modelMatrixArray[i]);
+                gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[i]);
+                gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i]);
+                gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.__billboards[i].imageIndex));
                 ;
                 gl.drawQuad();
-            });
+            };
         }
         else
         {
@@ -317,8 +319,8 @@ class GLBillboardsPass extends GLPass {
             {
                 // The instance transform ids are bound as an instanced attribute.
                 let location = renderstate.attrs.instanceIds.location;
-                gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
                 gl.enableVertexAttribArray(location);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
                 gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 4, 0);
                 gl.vertexAttribDivisor(location, 1); // This makes it instanced
             }

@@ -2,7 +2,7 @@
 
 testingHarness.registerTest('TestRenderLines', (domElement, resources)=> {
     
-    let lines = new Visualive.Lines('lines', 1);
+    let lines = new Visualive.Lines();
     lines.setNumVertices(3);
     lines.getVertex(0).set(-1, -1, 0.0);
     lines.getVertex(1).set( 3, -1, 0.0);

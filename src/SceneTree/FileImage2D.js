@@ -1,9 +1,11 @@
 import {
-    Signal,
-    Async,
     Vec4,
     Color
 } from '../Math';
+import {
+    Async,
+    Signal
+} from '../Utilities';
 import {
     loadBinfile
 } from './Utils.js';
@@ -25,26 +27,40 @@ import {
     Parameter,
     NumberParameter,
     Vec4Parameter,
+    FilePathParameter,
     ParameterSet
 } from './Parameters';
 
-// let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
+const imageDataLibrary = {
+
+};
+
 
 class FileImage2D extends Image2D {
     constructor(resourcePath, resourceLoader, params = {}) {
         super(params);
-
+        
         this.__resourceLoader = resourceLoader;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
+        const fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
+        fileParam.valueChanged.connect(()=>{
+            this.loaded.untoggle();
+            const filePath = fileParam.getValue()
+            const url = fileParam.getURL();
+            this.__loadURL(url, filePath);
+        });
         if (resourcePath && resourcePath != '')
-            this.loadResource(resourcePath);
+            fileParam.setValue(resourcePath);
     }
 
     getName() {
+        if(this.__name != this.constructor.name){
+            return this.__name;
+        }
         if (!this.__resourcePath || this.__resourcePath == '')
             return "FileImageNoResource";
         let getName = (str) => {
@@ -65,15 +81,7 @@ class FileImage2D extends Image2D {
         return getName(this.__resourcePath);
     }
 
-    get resourcePath() {
-        return this.__resourcePath;
-    }
-
-    loadResource(resourcePath) {
-        if (!this.__resourceLoader.resourceAvailable(resourcePath)) {
-            throw ("Resource unavailable:" + resourcePath);
-            return;
-        }
+    __loadURL(url, resourcePath) {
 
         let getExt = (str) => {
             let p = str.split('/');
@@ -83,7 +91,7 @@ class FileImage2D extends Image2D {
                 return last.substring(suffixSt).toLowerCase()
         }
         let ext = getExt(resourcePath);
-        if (ext == '.jpg' || ext == '.png') {
+        if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
             this.__loadLDRImage(resourcePath, ext);
         } else if (ext == '.mp4' || ext == '.ogg') {
             this.__loadLDRVideo(resourcePath);
@@ -106,19 +114,36 @@ class FileImage2D extends Image2D {
             this.channels = 'RGBA';
         }
         this.format = 'UNSIGNED_BYTE';
-        this.__resourceLoader.addWork(resourcePath, 1);
 
-        let domElement = new Image();
-        domElement.crossOrigin = 'anonymous';
-        domElement.onload = () => {
+        let domElement;
+        const loaded = () => {
             this.width = domElement.width;
             this.height = domElement.height;
             this.__data = domElement;
             this.__loaded = true;
-            this.__resourceLoader.addWorkDone(resourcePath, 1);
             this.loaded.emit();
         };
-        domElement.src = this.__resourceLoader.resolveURL(resourcePath);
+        if(resourcePath in imageDataLibrary) {
+            domElement = imageDataLibrary[resourcePath];
+            if(domElement.complete) {
+                loaded()
+            }
+            else {
+                domElement.addEventListener("load", loaded);
+            }
+        }
+        else {
+            this.__resourceLoader.addWork(resourcePath, 1);
+            domElement = new Image();
+            domElement.crossOrigin = 'anonymous';
+            domElement.src = this.__resourceLoader.resolveURL(resourcePath);
+
+            domElement.addEventListener("load", loaded);
+            domElement.addEventListener("load", () => {
+                this.__resourceLoader.addWorkDone(resourcePath, 1);
+            });
+            imageDataLibrary[resourcePath] = domElement;
+        }
     }
 
     __loadLDRVideo(resourcePath) {
@@ -232,7 +257,7 @@ class FileImage2D extends Image2D {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
-                console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
+                // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm
@@ -259,93 +284,111 @@ class FileImage2D extends Image2D {
         this.addParameter(new Vec4Parameter('StreamAtlasDesc', new Vec4()));
         this.addParameter(new NumberParameter('StreamAtlasIndex', 0));
         this.getParameter('StreamAtlasIndex').setRange([0, 1]);
-        
 
-        let url = this.__resourceLoader.resolveURL(resourcePath);
-        this.__resourceLoader.addWork(resourcePath, 1);
+        let resourcePromise;
+        if(resourcePath in imageDataLibrary) {
+            resourcePromise = imageDataLibrary[resourcePath];
+        }
+        else {
+            const resourceLoader = this.__resourceLoader;
+            resourcePromise = new Promise((resolve, reject) => {
 
-        loadBinfile(url, (data) => {
+                const url = resourceLoader.resolveURL(resourcePath);
+                resourceLoader.addWork(resourcePath, 1);
 
-            // Decompressing using: https://github.com/matt-way/gifuct-js
-            let gif = new GIF(data);
-            let frames = gif.decompressFrames(true);
-            // do something with the frame data
+                loadBinfile(url, (data) => {
 
-
-            let sideLength = Math.sqrt(frames.length);
-            let atlasSize = new Visualive.Vec2(sideLength, sideLength);
-            if(Math.fract(sideLength) > 0.0) {
-                atlasSize.x = Math.floor(atlasSize.x + 1);
-                if(Math.fract(sideLength) > 0.5) {
-                    atlasSize.y = Math.floor(atlasSize.y + 1);
-                }
-                else{
-                    atlasSize.y = Math.floor(atlasSize.y);
-                }
-            }
+                    // Decompressing using: https://github.com/matt-way/gifuct-js
+                    const gif = new GIF(data);
+                    const frames = gif.decompressFrames(true);
+                    // do something with the frame data
 
 
-            let width = frames[0].dims.width;
-            let height = frames[0].dims.height;
+                    const sideLength = Math.sqrt(frames.length);
+                    const atlasSize = new Visualive.Vec2(sideLength, sideLength);
+                    if(Math.fract(sideLength) > 0.0) {
+                        atlasSize.x = Math.floor(atlasSize.x + 1);
+                        if(Math.fract(sideLength) > 0.5) {
+                            atlasSize.y = Math.floor(atlasSize.y + 1);
+                        }
+                        else{
+                            atlasSize.y = Math.floor(atlasSize.y);
+                        }
+                    }
 
-            // gif patch canvas
-            let tempCanvas = document.createElement('canvas');
-            let tempCtx = tempCanvas.getContext('2d');
-            // full gif canvas
-            let gifCanvas = document.createElement('canvas');
-            let gifCtx = gifCanvas.getContext('2d');
 
-            gifCanvas.width = width;
-            gifCanvas.height = height;
+                    const width = frames[0].dims.width;
+                    const height = frames[0].dims.height;
 
-            // The atlas for all the frames.
-            let atlasCanvas = document.createElement('canvas');
-            let atlasCtx = atlasCanvas.getContext('2d');
-            atlasCanvas.width = atlasSize.x * width;
-            atlasCanvas.height = atlasSize.y * height;
+                    // gif patch canvas
+                    const tempCanvas = document.createElement('canvas');
+                    const tempCtx = tempCanvas.getContext('2d');
+                    // full gif canvas
+                    const gifCanvas = document.createElement('canvas');
+                    const gifCtx = gifCanvas.getContext('2d');
 
-            let frameImageData;
-            let renderFrame = (frame, index)=>{
-                var dims = frame.dims;
-                
-                if(!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height){
-                    tempCanvas.width = dims.width;
-                    tempCanvas.height = dims.height;
-                    frameImageData = tempCtx.createImageData(dims.width, dims.height);  
-                }
-                
-                // set the patch data as an override
-                frameImageData.data.set(frame.patch);
+                    gifCanvas.width = width;
+                    gifCanvas.height = height;
 
-                // draw the patch back over the canvas
-                tempCtx.putImageData(frameImageData, 0, 0);
-                gifCtx.drawImage(tempCanvas, dims.left, dims.top);
-                atlasCtx.drawImage(gifCanvas, (index%atlasSize.x) * width, Math.floor(index/atlasSize.x) * height);
-            }
+                    // The atlas for all the frames.
+                    const atlasCanvas = document.createElement('canvas');
+                    const atlasCtx = atlasCanvas.getContext('2d');
+                    atlasCanvas.width = atlasSize.x * width;
+                    atlasCanvas.height = atlasSize.y * height;
 
-            for(let i =0; i<frames.length; i++) {
-                // console.log(frame);
-                renderFrame(frames[i], i);
-            }
+                    let frameImageData;
+                    const renderFrame = (frame, index)=>{
+                        var dims = frame.dims;
+                        
+                        if(!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height){
+                            tempCanvas.width = dims.width;
+                            tempCanvas.height = dims.height;
+                            frameImageData = tempCtx.createImageData(dims.width, dims.height);  
+                        }
+                        
+                        // set the patch data as an override
+                        frameImageData.data.set(frame.patch);
 
-            this.width = atlasCanvas.width;
-            this.height = atlasCanvas.height;
+                        // draw the patch back over the canvas
+                        tempCtx.putImageData(frameImageData, 0, 0);
+                        gifCtx.drawImage(tempCanvas, dims.left, dims.top);
+                        atlasCtx.drawImage(gifCanvas, (index%atlasSize.x) * width, Math.floor(index/atlasSize.x) * height);
+                    }
+
+                    for(let i =0; i<frames.length; i++) {
+                        // console.log(frame);
+                        renderFrame(frames[i], i);
+                    }
+                    resourceLoader.addWorkDone(resourcePath, 1);
+
+                    const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
+                    resolve({width:atlasCanvas.width, height:atlasCanvas.height, atlasSize, frameRange:[0, frames.length], imageData });
+
+                }, (statusText) => {
+                    console.warn("Unable to Load URL:"+ req.url);
+                    reject();
+                });
+            });
+
+            imageDataLibrary[resourcePath] = resourcePromise;
+        }
+
+        resourcePromise.then((unpackedData)=>{
+
+            this.width = unpackedData.width;
+            this.height = unpackedData.height;
 
             // this.__streamAtlasDesc.x = atlasSize.x;
             // this.__streamAtlasDesc.y = atlasSize.y;
             // this.__streamAtlasDesc.z = frames.length;
-            this.getParameter('StreamAtlasDesc').setValue(new Vec4(atlasSize.x, atlasSize.y, 0, 0));
-            this.getParameter('StreamAtlasIndex').setRange([0, frames.length]);
+            this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize.x, unpackedData.atlasSize.y, 0, 0));
+            this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
 
-            this.__data = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
+            this.__data = unpackedData.imageData;
             this.__loaded = true;
-            this.__resourceLoader.addWorkDone(resourcePath, 1);
+
             this.loaded.emit();
-
-        }, (statusText) => {
-            console.warn("Unable to Load URL:"+ req.url);
         });
-
     }
 
     getResourcePath() {
@@ -391,13 +434,13 @@ class FileImage2D extends Image2D {
 
     readBinary(reader, flags, lod) {
         // super.readBinary(reader, flags);
-        this.name = reader.loadStr();
+        this.setName(reader.loadStr());
         let resourcePath = reader.loadStr();
         if (typeof resourcePath === 'string' && resourcePath != "") {
             if (lod >= 0) {
-                let suffixSt = resourcePath.lastIndexOf('.')
+                const suffixSt = resourcePath.lastIndexOf('.')
                 if (suffixSt != -1) {
-                    let lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
+                    const lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
                     if (this.__resourceLoader.resourceAvailable(lodPath)) {
                         resourcePath = lodPath;
                     }

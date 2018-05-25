@@ -45,12 +45,13 @@ varying vec2 v_textureCoord;
 
 void main(void) {
 
+    vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    vec4 viewPos    = modelViewMatrix * vec4(positions, 1.);
-    gl_Position = projectionMatrix * viewPos;
+    vec4 viewPos    = modelViewMatrix * pos;
+    gl_Position     = projectionMatrix * viewPos;
 
-    mat3 normalMatrix = mat3(transpose(inverse(viewMatrix * modelMatrix)));
+    mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
     v_viewPos       = -viewPos.xyz;
     v_viewNormal    = normalMatrix * normals;
 

@@ -14,16 +14,16 @@ vec2 normalToUvSphOct(vec3 normal){
     vec3 aNorm = abs(normal);
     vec3 sNorm = sectorize(normal);
 
-    vec2 dir = max(aNorm.xz, 1e-20);
+    vec2 dir = max(aNorm.xy, 1e-20);
     float orient = atan(dir.x, dir.y)/HalfPI;
 
-    dir = max(vec2(aNorm.y, length(aNorm.xz)), 1e-20);
+    dir = max(vec2(aNorm.z, length(aNorm.xy)), 1e-20);
     float pitch = atan(dir.y, dir.x)/HalfPI;
 
-    vec2 uv = vec2(sNorm.x*orient, sNorm.z*(1.0-orient))*pitch;
+    vec2 uv = vec2(sNorm.x*orient, sNorm.y*(1.0-orient))*pitch;
 
-    if(normal.y < 0.0){
-        uv = sNorm.xz - abs(uv.ts)*sNorm.xz;
+    if(normal.z < 0.0){
+        uv = sNorm.xy - abs(uv.ts)*sNorm.xy;
     }
     return uv*0.5+0.5;
 }
@@ -36,10 +36,10 @@ vec3 uvToNormalSphOct(vec2 uv){
     float pitch = sabsuv*HalfPI;
 
     if (pitch <= 0.0) {
-        return vec3(0.0, 1.0, 0.0);
+        return vec3(0.0, 0.0, 1.0);
     }
     if (abs(pitch - PI) < 0.000001) {
-        return vec3(0.0, -1.0, 0.0);
+        return vec3(0.0, 0.0, -1.0);
     }
     if(sabsuv > 1.0){
         uv = (1.0-abs(uv.ts))*suv;
@@ -53,8 +53,8 @@ vec3 uvToNormalSphOct(vec2 uv){
 
     return vec3(
         sOrient*suv.s*sPitch,
-        cPitch,
-        cOrient*suv.t*sPitch
+        cOrient*suv.t*sPitch,
+        cPitch
     );
 }
 

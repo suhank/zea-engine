@@ -1,5 +1,6 @@
 const DEGTORAD = Math.PI / 180;
 Math.HALF_PI = Math.PI * 0.5;
+Math.TWO_PI = Math.PI * 2.0;
 // Defines used to explicity specify types for WebGL.
 const UInt32 = 1;
 const SInt32 = 2;
@@ -177,7 +178,7 @@ Math.convertFloat32ArrayToUInt16Array = function(float32Array) {
 // https://gist.github.com/Flexi23/1713774
 // Note: assuemd inputs are a pair of bytes, likely generated in GLSL.
 // Code converted to using bit masks in JavaScript.
-Math.decode16BitFloat = (c)=>{
+Math.decode16BitFloatFrom2xUInt8 = (c)=>{
 
     let ix = c[0];   // 1st byte: 1 bit signum, 4 bits exponent, 3 bits mantissa (MSB)
     const iy = c[1]; // 2nd byte: 8 bit mantissa (LSB)
@@ -193,6 +194,105 @@ Math.decode16BitFloat = (c)=>{
     const v = ( s * mantissa ) * exponent;
 
     return v;
+}
+
+Math.encode16BitFloatInto2xUInt8 = (v)=>{
+    if(!c)
+        c = new Uint8Array(2);
+    // const c = [0, 0];
+    const signum = (v >= 0.) ? 128 : 0;
+    v = Math.abs(v);
+    let exponent = 15;
+    let limit = 1024.; // considering the bias from 2^-5 to 2^10 (==1024)
+    for(let exp = 15; exp > 0; exp--){
+        if( v < limit){
+            limit /= 2.;
+            exponent--;
+        }
+    }
+
+    let rest;
+    if(exponent == 0){
+        rest = v / limit / 2.;      // "subnormalize" implicite preceding 0. 
+    }else{
+        rest = (v - limit)/limit;   // normalize accordingly to implicite preceding 1.
+    }
+
+    const mantissa = Math.round(rest * 2048.);   // 2048 = 2^11 for the (split) 11 bit mantissa
+    const msb = mantissa / 256;       // the most significant 3 bits go into the lower part of the first byte
+    const lsb = mantissa - msb * 256;     // there go the other 8 bit of the lower significance
+
+    c[0] = (signum + exponent * 8 + msb);    // color normalization for texture2D
+    c[1] = (lsb);
+
+    if(v >= 2048.){
+        c[0] = 255;
+    }
+
+    return c;
+}
+
+Math.encode16BitFloat = (v)=>{
+    
+    const float32Array = new Float32Array(1);
+    float32Array[0] = v;
+    const unit16s = new Uint16Array(float32Array.length);
+    const int32View = new Int32Array(float32Array.buffer);
+
+    let toUInt16 = (x)=>{
+        let bits = (x >> 16) & 0x8000; /* Get the sign */
+        let m = (x >> 12) & 0x07ff; /* Keep one extra bit for rounding */
+        let e = (x >> 23) & 0xff; /* Using int is faster here */
+
+        /* If zero, or denormal, or exponent underflows too much for a denormal
+         * half, return signed zero. */
+        if (e < 103) {
+          return bits;
+        }
+
+        /* If NaN, return NaN. If Inf or exponent overflow, return Inf. */
+        if (e > 142) {
+          bits |= 0x7c00;
+          /* If exponent was 0xff and one mantissa bit was set, it means NaN,
+                       * not Inf, so make sure we set one mantissa bit too. */
+          bits |= ((e == 255) ? 0 : 1) && (x & 0x007fffff);
+          return bits;
+        }
+
+        /* If exponent underflows but not too much, return a denormal */
+        if (e < 113) {
+          m |= 0x0800;
+          /* Extra rounding may overflow and set mantissa to 0 and exponent
+           * to 1, which is OK. */
+          bits |= (m >> (114 - e)) + ((m >> (113 - e)) & 1);
+          return bits;
+        }
+
+        bits |= ((e - 112) << 10) | (m >> 1);
+        /* Extra rounding. An overflow will set mantissa to 0 and increment
+         * the exponent, which is OK. */
+        bits += m & 1;
+
+        return bits;
+    }
+
+    return toUInt16(int32View[0]);
+}
+
+// https://stackoverflow.com/questions/5678432/decompressing-half-precision-floats-in-javascript
+// Note: faster version available, but might not matter.
+Math.decode16BitFloat = (h)=>{
+    var s = (h & 0x8000) >> 15;
+    var e = (h & 0x7C00) >> 10;
+    var f = h & 0x03FF;
+
+    if(e == 0) {
+        return (s?-1:1) * Math.pow(2,-14) * (f/Math.pow(2, 10));
+    } else if (e == 0x1F) {
+        return f?NaN:((s?-1:1)*Infinity);
+    }
+
+    return (s?-1:1) * Math.pow(2, e-15) * (1+(f/Math.pow(2, 10)));
 }
 
 Math.smoothStep = (edge0, edge1, x)=>{

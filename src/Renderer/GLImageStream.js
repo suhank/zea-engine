@@ -1,59 +1,52 @@
+
 import {
-    Vec2
-} from '../Math/Vec2';
-import {
-    Vec4
-} from '../Math/Vec4';
-import {
-    Rect2
-} from '../Math/Rect2';
-import {
-    BinTreeNode
-} from '../Math/BinTreeNode';
-import {
-    Async
-} from '../Math/Async';
-import {
-    BinTreeRect,
-    BinTreeRectBorder
-} from '../Math/BinTreeNode';
-import {
-    Image2D
-} from '../SceneTree/Image2D';
-import {
-    shaderLibrary
-} from './ShaderLibrary';
-import {
-    GLShader
-} from './GLShader.js';
+    Signal
+} from '../Utilities';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
-import {
-    GLFbo
-} from './GLFbo.js';
-import {
-    generateShaderGeomBinding
-} from './GeomShaderBinding.js';
-
-
 
 import './Shaders/GLSL/ImageStream.js';
 
 
-class GLImageStream extends GLTexture2D {
-    constructor(gl, params) {
-        super(gl, params);
+class GLImageStream {
+    constructor(gl, streamImage) {
 
-        this.__streamImage = params;
+        this.__gl = gl;
+        this.__streamImage = streamImage;
+        this.ready = new Signal(true);
+        this.updated = new Signal();
+        this.resized = new Signal();
+
+        // To support playing back the same image atlas through many different streams. 
+        // (e.g. the same Gif progress bar in many places)
+        // The GLImageStream should own an instance of GLTexture2D instead of extending it.
+        // this would enable multiple streams to share a reference.     
+        const configure = ()=>{
+            const params = this.__streamImage.getParams();
+            if(!params.data.__atlasTexture){
+                params.data.__atlasTexture = new GLTexture2D(gl, params);
+            }
+            this.__atlasTexture = params.data.__atlasTexture;
+        }
+
+        if (this.__streamImage.isLoaded()) {
+            configure();
+        } else {
+            this.__streamImage.loaded.connect(() => {
+                configure();
+            });
+        }
+
         this.__descParam = this.__streamImage.getParameter('StreamAtlasDesc');
         this.__indexParam = this.__streamImage.getParameter('StreamAtlasIndex');
-         this.__indexParam.valueChanged.connect(this.updated.emit);
+        this.__indexParam.valueChanged.connect(this.updated.emit);
+
     }
 
     bindToUniform(renderstate, unif) {
 
-        if(!super.bindToUniform(renderstate, unif, 2)){
+        if(!this.__atlasTexture.bindToUniform(renderstate, unif, 2)){
             return false;
         }
 

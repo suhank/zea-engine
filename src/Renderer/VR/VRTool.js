@@ -1,9 +1,4 @@
-import {
-    Vec3,
-    Color,
-    Xfo,
-    Signal
-} from '../../Math';
+
 
 class VRTool {
     constructor() {

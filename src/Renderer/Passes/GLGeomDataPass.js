@@ -17,7 +17,7 @@ class GLGeomDataPass extends GLPass {
         super(gl, collector);
 
         this.__glshader = new GeomDataShader(gl);
-        this.__flaotGeomBuffer = flaotGeomBuffer;
+        this.__floatGeomBuffer = flaotGeomBuffer;
     }
 
     /////////////////////////////////////
@@ -62,7 +62,7 @@ class GLGeomDataPass extends GLPass {
 
         let unif = renderstate.unifs.floatGeomBuffer;
         if (unif){
-            gl.uniform1i(unif.location, this.__flaotGeomBuffer ? 1 : 0);
+            gl.uniform1i(unif.location, this.__floatGeomBuffer ? 1 : 0);
         }
 
         super.draw(renderstate);

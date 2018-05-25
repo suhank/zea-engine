@@ -1,9 +1,16 @@
 import { GLPass } from '../GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
+import {
+    GeomDataShader
+} from '../Shaders/GeomDataShader.js';
 
 class GLForwardPass extends GLPass {
     constructor(gl, collector) {
         super(gl, collector);
+
+
+        this.__geomdatashader = new GeomDataShader(gl);
+        this.__floatGeomBuffer = false;//flaotGeomBuffer;
     }
 
     /////////////////////////////////////
@@ -49,6 +56,30 @@ class GLForwardPass extends GLPass {
         gl.depthMask(true);
 
         super.draw(renderstate);
+    }
+
+
+    drawGeomData(renderstate){
+
+        let gl = this.__gl;
+        gl.disable(gl.BLEND);
+        gl.disable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS);
+        gl.depthMask(true);
+
+        if(!this.__geomdatashader.bind(renderstate, this.constructor.name))
+            return false;
+
+        if(!this.__collector.bind(renderstate))
+            return false;
+
+        let unif = renderstate.unifs.floatGeomBuffer;
+        if (unif){
+            gl.uniform1i(unif.location, this.__floatGeomBuffer ? 1 : 0);
+        }
+
+        super.drawGeomData(renderstate);
     }
 };
 

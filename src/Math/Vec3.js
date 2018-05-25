@@ -1,8 +1,9 @@
 import {
-    JSON_stringify_fixedPrecision
-} from './Common.js';
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
+    AttrValue
+} from './AttrValue.js';
+import {
+    typeRegistry
+} from './TypeRegistry.js';
 
 
 class Vec3 extends AttrValue {
@@ -11,8 +12,7 @@ class Vec3 extends AttrValue {
 
         if (x instanceof Float32Array || x instanceof Uint32Array) {
             this.__data = x;
-        }
-        else if (x instanceof ArrayBuffer) {
+        } else if (x instanceof ArrayBuffer) {
             let buffer = x;
             let byteOffset = y;
             this.__data = new Float32Array(buffer, byteOffset, 3);
@@ -54,8 +54,8 @@ class Vec3 extends AttrValue {
         this.y = y !== undefined ? y : x;
         this.z = z !== undefined ? z : x;
     }
-    
-    setDataArray(float32Array){
+
+    setDataArray(float32Array) {
         this.__data = float32Array;
     }
 
@@ -70,7 +70,7 @@ class Vec3 extends AttrValue {
     isNull() {
         return Math.abs(this.x) < Number.EPSILON && Math.abs(this.y) < Number.EPSILON && Math.abs(this.z) < Number.EPSILON;
     }
-    
+
     is111() {
         return (Math.abs(1.0 - this.x) < Number.EPSILON && Math.abs(1.0 - this.y) < Number.EPSILON && Math.abs(1.0 - this.z) < Number.EPSILON);
     }
@@ -145,6 +145,20 @@ class Vec3 extends AttrValue {
         this.z *= vec3.z;
     }
 
+    divide(vec3) {
+        return new Vec3(
+            this.x / vec3.x,
+            this.y / vec3.y,
+            this.z / vec3.z
+        );
+    }
+
+    divideInPlace(vec3) {
+        this.x /= vec3.x;
+        this.y /= vec3.y;
+        this.z /= vec3.z;
+    }
+
     scale(scalar) {
         return new Vec3(
             this.x * scalar,
@@ -200,7 +214,7 @@ class Vec3 extends AttrValue {
      * @returns {Number} length of a
      */
     distanceTo(other) {
-        let x = this.__data[0] - other.x,
+        const x = this.__data[0] - other.x,
             y = this.__data[1] - other.y,
             z = this.__data[2] - other.z;
         return Math.sqrt(x * x + y * y + z * z);
@@ -230,6 +244,30 @@ class Vec3 extends AttrValue {
         this.__data[0] *= len;
         this.__data[1] *= len;
         this.__data[2] *= len;
+    }
+
+    resize(length) {
+        const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2];
+        if (currlen < Number.EPSILON) {
+            return;
+        }
+        const scl = length / Math.sqrt(currlen);
+        return new Vec3(
+            this.__data[0] * scl,
+            this.__data[1] * scl,
+            this.__data[2] * scl
+            );
+    }
+
+    resizeInPlace(length) {
+        const currlen = this.__data[0] * this.__data[0] + this.__data[1] * this.__data[1] + this.__data[2] * this.__data[2];
+        if (currlen < Number.EPSILON) {
+            return;
+        }
+        const scl = length / Math.sqrt(currlen);
+        this.__data[0] *= scl;
+        this.__data[1] *= scl;
+        this.__data[2] *= scl;
     }
 
     /**
@@ -333,13 +371,14 @@ class Vec3 extends AttrValue {
         );
     }
 
+
     //////////////////////////////////////////
     // Static Methods
 
     static create(...args) {
         return new Vec3(...args);
     }
-    
+
     static createFromJSON(json) {
         let result = new Vec3();
         result.fromJSON(json);
@@ -374,10 +413,6 @@ class Vec3 extends AttrValue {
         this.x = j['x'];
         this.y = j['y'];
         this.z = j['z'];
-    }
-    
-    toString() {
-        return JSON_stringify_fixedPrecision(this.toJSON());
     }
 };
 

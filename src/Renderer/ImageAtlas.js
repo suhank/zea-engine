@@ -1,12 +1,14 @@
 import {
     Vec2,
     Vec4,
-    Rect2,
-    BinTreeNode,
-    BinTreeRect,
-    BinTreeRectBorder,
-    Async
+    Rect2
 } from '../Math';
+
+import {
+    Async,
+    GrowingPacker
+} from '../Utilities';
+
 import {
     Image2D
 } from '../SceneTree/Image2D';
@@ -176,52 +178,36 @@ class ImageAtlas extends GLTexture2D {
     }
 
     generateAtlasLayout() {
-        let maxRez = [this.__subImages[0].width, this.__subImages[0].height];
         let border = 2;
-        let initialWidth = maxRez[0] + (border * 2);
-        let initialHeight = (maxRez[1] * 1.5) + (border * 2);
-        let levels = this.__subImages.length;
-        let tree = new BinTreeNode(new BinTreeRect(
-            new Vec2(0, 0),
-            new BinTreeRectBorder(initialWidth, true),
-            new BinTreeRectBorder(initialHeight, true)
-        ), true);
-        this.__layout = [];
-
-        for (let j = 0; j < this.__subImages.length; j++) {
-            let subImage = this.__subImages[j];
-            let rectSize = new Vec2(subImage.width, subImage.height);
-            rectSize.x += border * 2;
-            rectSize.y += border * 2;
-            let closestFit = {
-                'node': undefined,
-                'cost': Number.MAX_VALUE,
-                'delta': undefined
-            }
-            let node = tree.insert(rectSize, closestFit);
-            if (node == undefined) {
-                if (!closestFit.node)
-                    throw ("Error packing image atlas:" + result);
-                // we failed to find a space big enought tof our cluster, 
-                // but we found a good candidate node bordering a movable border.
-                // we move the border(thereby growing the size of the map), and
-                // then continue packing
-                node = closestFit.node.resizeAndInsert(rectSize, closestFit.delta);
-            }
-            this.__layout.push({
-                pos: new Vec2(node.rect.pos.x + border, node.rect.pos.y + border),
-                size: new Vec2(rectSize.x - (border * 2), rectSize.y - (border * 2)),
-                boundingRect: {
-                    pos: node.rect.pos,
-                    size: rectSize
-                }
-            });
+        const initDims = (subImage) => {
+            subImage.w = subImage.width + (border * 2);
+            subImage.h = subImage.height + (border * 2);
+            subImage.a = subImage.w * subImage.h;
         }
+        this.__subImages.forEach(initDims);
+        // this.__subImages.sort((a, b) => (a.a > b.a) ? -1 : ((a.a < b.a) ? 1 : 0));
 
-        let width = tree.rect.right.value;
-        let height = tree.rect.top.value;
+        const packer = new GrowingPacker();
+        packer.fit(this.__subImages);
 
-        console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
+        this.__layout = [];
+        const eachSubImage = (subImage) => {
+            if (subImage.fit) {
+                this.__layout.push({
+                    pos: new Vec2(subImage.fit.x + border, subImage.fit.y + border),
+                    size: new Vec2(subImage.w, subImage.h)
+                });
+            }
+            else {
+                console.warn("Unable to fit image");
+            }
+        }
+        this.__subImages.forEach(eachSubImage);
+
+        const width = packer.root.w;
+        const height = packer.root.h;
+
+        // console.log(this.__name + " Atlas Texture size:" + width.toFixed() + ", " + height.toFixed());
 
         // Note: only RGBA Float textures can be rendered to on Firefox.(Not RGB)
         this.configure({
@@ -232,7 +218,7 @@ class ImageAtlas extends GLTexture2D {
             filter: 'LINEAR',
         });
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         this.__fbo = new GLFbo(gl, this);
         this.__fbo.setClearColor(this.__clearColor);
 
@@ -270,7 +256,7 @@ class ImageAtlas extends GLTexture2D {
                     data: dataArray
                 });
             } else {
-                this.__atlasLayoutTexture.resize(this.__layout.length, 1, dataArray);
+                this.__atlasLayoutTexture.bufferData(data, this.__layout.length, 1);
             }
         }
 
@@ -298,11 +284,19 @@ class ImageAtlas extends GLTexture2D {
         let unifs = renderstate.unifs;
         for (let j = 0; j < this.__subImages.length; j++) {
             let image = this.__subImages[j];
+// <<<<<<< HEAD
             let item = this.__layout[j];
             image.bindToUniform(renderstate, unifs.srctexture);
             gl.uniform2fv(unifs.pos.location, item.boundingRect.pos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, item.boundingRect.size.multiply(scl).asArray());
             gl.uniform2f(unifs.srctextureDim.location, image.width, image.height);
+// =======
+//             let layoutItem = this.__layout[j];
+//             image.bindToUniform(renderstate, unifs.texture);
+//             gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray());
+//             gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray());
+//             gl.uniform2f(unifs.textureDim.location, image.width, image.height);
+// >>>>>>> dev
             gl.uniform1i(unifs.flags.location, image.flags);
             gl.drawQuad();
         }

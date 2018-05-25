@@ -11,6 +11,7 @@ export * from './Vec2.js';
 export * from './Vec3.js';
 export * from './Vec4.js';
 export * from './Color.js';
+export * from './EulerAngles.js';
 export * from './Quat.js';
 export * from './Ray.js';
 export * from './Mat3.js';
@@ -19,10 +20,6 @@ export * from './Xfo.js';
 export * from './Box2.js';
 export * from './Box3.js';
 export * from './Rect2.js';
-export * from './BinTreeNode.js';
 export * from './Hammersley.js';
-
-export * from './Async.js';
-export * from './Signal.js';
 
 export * from './TypeRegistry.js';
