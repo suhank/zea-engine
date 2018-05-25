@@ -16,7 +16,6 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     groundMaterial.addParameter('metallic', 0.0);
     let quad = new Visualive.Plane(20, 20);
     let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
-    groundPlaneItem.setLocalXfo(new Visualive.Xfo(new Visualive.Quat({rotateX: (Math.PI * -0.5) })));
     scene.getRoot().addChild(groundPlaneItem);
 
     /////////////////////////////////////
@@ -38,7 +37,10 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     objAsset.getParameter('loadMtlFile').setValue(false);
     objAsset.getParameter('unitsConversion').setValue(1.0);
     objAsset.getParameter('defaultShader').setValue("StandardSurfaceShader");
-    objAsset.getLocalXfo().tr.set(0, 3.55, 0);
+    objAsset.setLocalXfo(new Visualive.Xfo(
+        new Visualive.Vec3(0, 0, 3.55), 
+        new Visualive.Quat({rotateX: (Math.PI * 0.5) })
+        ));
     scene.getRoot().addChild(objAsset);
 
     objAsset.loaded.connect(function() {

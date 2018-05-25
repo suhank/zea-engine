@@ -15,7 +15,7 @@ testingHarness.registerTest('MultipleViewports', (domElement, resources)=> {
     renderer.setScene(scene);
 
     renderer.getViewport(0).setTr(new Visualive.Vec2(0.499, 1.0));
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-2.0, 2.0, -8.0), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-2.0, -8.0, 2.0), new Visualive.Vec3(0, 0, 0));
     let vp2 = renderer.addViewport('right'); 
     vp2.setBl(new Visualive.Vec2(0.501, 0.0));
     // vp2.setCamera(cam2);

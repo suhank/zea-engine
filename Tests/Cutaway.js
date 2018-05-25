@@ -61,7 +61,7 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
 
     let renderer = new Visualive.GLSimpleRenderer(domElement, { enableCrossSections:true });
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, 2, -8), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-8, 8, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
 
 

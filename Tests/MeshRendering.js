@@ -23,7 +23,7 @@ testingHarness.registerTest('TestRenderTriangle', (domElement, resources)=> {
     scene.getRoot().addChild(geomItem);
 
     let renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2.0, 1.0, 5.0), new Visualive.Vec3(0.0, 1.0, 0.0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2, 5, 1), new Visualive.Vec3(0, 0, 1));
     renderer.setScene(scene);
     renderer.resumeDrawing();
 });
@@ -148,7 +148,7 @@ testingHarness.registerTest('TestRenderCuboid', (domElement, resources)=> {
     scene.getRoot().addChild(geomItem);
 
     let renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-2.0, 2.0, -8.0), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-2, -8, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
 });
@@ -166,7 +166,7 @@ testingHarness.registerTest('TestRenderTexturedCuboid', (domElement, resources)=
     scene.getRoot().addChild(geomItem);
 
     let renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-5.0, 5.0, -5.0), new Visualive.Vec3());
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-5, -5, 5), new Visualive.Vec3());
     renderer.setScene(scene);
     renderer.resumeDrawing();
 });

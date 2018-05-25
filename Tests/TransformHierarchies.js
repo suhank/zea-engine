@@ -30,7 +30,7 @@ testingHarness.registerTest('TransformHierarchies', (domElement, resources)=> {
 
     let renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.setScene(scene);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.frameAll();
     renderer.resumeDrawing();
 

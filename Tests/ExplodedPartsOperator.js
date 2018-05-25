@@ -122,7 +122,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
 
 
     let renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 20, 35), new Visualive.Vec3(12, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 35, 20), new Visualive.Vec3(12, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
 
