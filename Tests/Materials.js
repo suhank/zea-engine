@@ -27,7 +27,7 @@
     
     let renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.exposure = 1.0;
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,0,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,0));
     
     renderer.setScene(scene);
     renderer.frameAll();

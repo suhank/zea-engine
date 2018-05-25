@@ -145,7 +145,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
     let renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5,2,5), new Visualive.Vec3(0,2,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,8,12), new Visualive.Vec3(0,0,0));
     renderer.setScene(scene);
 
     let frame = 0;

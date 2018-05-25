@@ -7,7 +7,8 @@
     scene.setBackgroundMap(bgMap);
 
     let renderer = new Visualive.GLVisualiveRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,2,1), new Visualive.Vec3(0,2,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,2));
+    renderer.getViewport().getManipulator().setDefaultManipulationMode('look');
     renderer.setScene(scene);
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main);
     renderer.resumeDrawing();

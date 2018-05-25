@@ -40,6 +40,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.movementFinished = new Signal();
     }
 
+    setDefaultManipulationMode(mode) {
+        this.__defaultManipulationState = mode;
+    }
+
     look(dragVec, viewport) {
         let focalDistance = viewport.getCamera().getFocalDistance();
         let orbitRate = this.__orbitRateParam.getValue();

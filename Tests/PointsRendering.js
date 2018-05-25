@@ -8,7 +8,7 @@ testingHarness.registerTest('TestRender2Points', (domElement, resources) => {
     points.getVertex(0).set(-1, 0, 0.0);
     points.getVertex(1).set(1, 0, 0.0);
 
-    let material = new Visualive.PointsMaterial();
+    let material = new Visualive.Material('points', 'PointsShader');
     material.pointSize = 1.0;
     let geomItem = new Visualive.GeomItem('geomItem', points, material);
     scene.getRoot().addChild(geomItem);

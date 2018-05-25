@@ -46,7 +46,7 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
 
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(10, 6, 12), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(10, 12, 6), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
     renderer.resumeDrawing();

@@ -12,6 +12,11 @@ class GLPoints extends GLGeom {
         this.genBuffers();
     }
 
+    renderableInstanced(){
+        // the points are aready rendered as instanced quads
+        return false;
+    }
+
     genBuffers() {
         super.genBuffers();
 
@@ -23,7 +28,7 @@ class GLPoints extends GLGeom {
 
             let attrBuffer = gl.createBuffer();
             gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, attr.values, gl.STATIC_DRAW);
+            gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
 
             this.__glattrbuffers[attrName] = {
                 buffer: attrBuffer,

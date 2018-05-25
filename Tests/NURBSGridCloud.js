@@ -111,7 +111,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
 
     
     let renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(24, new Visualive.Color(.35,.35, .35), 24, .1)
     renderer.frameAll();

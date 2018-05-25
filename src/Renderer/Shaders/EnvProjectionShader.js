@@ -52,7 +52,7 @@ void main()
 `);
 
         this.addParameter('env', new Color(1.0, 1.0, 0.5));
-        this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
+        this.addParameter('projectionCenter', new Vec3(0.0, 0.0, 1.7));
         this.finalize();
     }
 };

@@ -24,10 +24,10 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
         return audioItem;
     }
 
-    const einstein = addMeshShape('Einstein', new Visualive.Cuboid(0.3, 0.4, 0.6), new Visualive.Vec3(-4, 3, -3), "Assets/AudioFiles/Albert Einstein Interview 1940.mp3");
+    const einstein = addMeshShape('Einstein', new Visualive.Cuboid(0.3, 0.4, 0.6), new Visualive.Vec3(-4, -3, 3), "Assets/AudioFiles/Albert Einstein Interview 1940.mp3");
     einstein.getParameter('Gain').setValue(0.6);
 
-    const mandela = addMeshShape('Mandela', new Visualive.Cuboid(0.3, 0.4, 0.6), new Visualive.Vec3(5, 2, -3), "Assets/AudioFiles/Nelson Mandela speech that changed the world.mp3");
+    const mandela = addMeshShape('Mandela', new Visualive.Cuboid(0.3, 0.4, 0.6), new Visualive.Vec3(5, -3, 2), "Assets/AudioFiles/Nelson Mandela speech that changed the world.mp3");
     mandela.getParameter('Gain').setValue(2.6);
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);
@@ -35,7 +35,7 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     renderer.setScene(scene);
 
     const camera = renderer.getViewport().getCamera();
-    camera.setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 1.5, 0.0));
+    camera.setPositionAndTarget(new Visualive.Vec3(1.0, 3.0, 4.0), new Visualive.Vec3(0.0, 0.0, 1.5));
 
     const visualivePlatform = VisualivePlatform();
     const sessionClient = new Visualive.SessionClient(renderer, visualivePlatform);
