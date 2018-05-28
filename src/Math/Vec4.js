@@ -139,6 +139,38 @@ class Vec4 extends AttrValue {
     }
 
 
+    multiply(other) {
+        return new Vec4(
+            this.x * other.x,
+            this.y * other.y,
+            this.z * other.z,
+            this.t * other.t
+        );
+    }
+
+    multiplyInPlace(other) {
+        this.x *= other.x;
+        this.y *= other.y;
+        this.z *= other.z;
+        this.t *= other.t;
+    }
+
+    divide(other) {
+        return new Vec4(
+            this.x / other.x,
+            this.y / other.y,
+            this.z / other.z,
+            this.t / other.t
+        );
+    }
+
+    divideInPlace(other) {
+        this.x /= other.x;
+        this.y /= other.y;
+        this.z /= other.z;
+        this.t /= other.t;
+    }
+
     // Returns a new vector which is this vector scaled by scalar
     scale(scalar) {
         return new Vec4(

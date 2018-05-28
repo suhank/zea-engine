@@ -1,9 +1,8 @@
 import { BaseGeom } from './BaseGeom.js';
 
 class Lines extends BaseGeom {
-    constructor(name) {
-        super(name);
-        if(name) throw("Name param is deprecated.")
+    constructor() {
+        super();
         this.__indices = new Uint32Array();
         this.__segmentAttributes = new Map();
         this.lineThickness = 0.0;
