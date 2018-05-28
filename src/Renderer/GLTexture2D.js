@@ -101,7 +101,7 @@ class GLTexture2D extends RefCounted {
         let filter = ('filter' in params) ? params['filter'] : 'LINEAR';
         const wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
 
-
+        // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
         if (format == 'FLOAT') {
             if (gl.name == 'webgl2') {
                 if (filter == 'LINEAR' && !gl.__ext_float_linear) {
@@ -127,15 +127,23 @@ class GLTexture2D extends RefCounted {
                 }
             }
         } else if (format == 'HALF_FLOAT') {
-            if (gl.__ext_half_float) {
-                if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
-                    console.warn('Half Float texture filtering not supported on this device');
-                    filter = 'NEAREST';
+            if (gl.name == 'webgl2') {
+                // Half load linear filtering appears to be supported even without the extension.
+                // if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                //     console.warn('Floating point texture filtering not supported on this device');
+                //     filter = 'NEAREST';
+                // }
+            } else {
+                if (gl.__ext_half_float) {
+                    if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                        console.warn('Half Float texture filtering not supported on this device');
+                        filter = 'NEAREST';
+                    }
+                } else
+                    throw ("OES_texture_half_float is not available");
+                if (channels == 'RGB') {
+                    throw ("OES_texture_half_float onlysupports RGBA textures");
                 }
-            } else
-                throw ("OES_texture_half_float is not available");
-            if (channels == 'RGB') {
-                throw ("OES_texture_half_float onlysupports RGBA textures");
             }
         } else if (format == 'sRGB') {
             if (!gl.__ext_sRGB)
@@ -149,24 +157,26 @@ class GLTexture2D extends RefCounted {
 
 
         this.__channels = gl[channels];
-        this.__internalFormat = this.__channels;
+        this.__internalFormat = ('internalFormat' in params) ? gl[params['internalFormat']] : this.__channels;
         this.__format = gl[format];
 
         if (gl.name == 'webgl2') {
-            if (this.__format == gl.FLOAT) {
-                if (this.__channels == gl.RGB) {
-                    this.__internalFormat = gl.RGB32F;
+            if(!('internalFormat' in params)) {
+                if (this.__format == gl.FLOAT) {
+                    if (this.__channels == gl.RGB) {
+                        this.__internalFormat = gl.RGB32F;
+                    }
+                    else if(this.__channels == gl.RGBA){
+                        this.__internalFormat = gl.RGBA32F;
+                    }
                 }
-                else if(this.__channels == gl.RGBA){
-                    this.__internalFormat = gl.RGBA32F;
-                }
-            }
-            else if(this.__format == gl.HALF_FLOAT){
-                if(this.__channels == gl.RGB){
-                    this.__internalFormat = gl.RGB16F;
-                }
-                else if(this.__channels == gl.RGBA){
-                    this.__internalFormat = gl.RGBA16F;
+                else if(this.__format == gl.HALF_FLOAT){
+                    if(this.__channels == gl.RGB){
+                        this.__internalFormat = gl.RGB16F;
+                    }
+                    else if(this.__channels == gl.RGBA){
+                        this.__internalFormat = gl.RGBA16F;
+                    }
                 }
             }
         }
@@ -249,6 +259,7 @@ class GLTexture2D extends RefCounted {
                     data = Math.convertFloat32ArrayToUInt16Array(data);
                 }
                 if(gl.name == 'webgl2'){
+                    gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, null);
                     gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__channels, this.__format, data, 0);
                 }
                 else {

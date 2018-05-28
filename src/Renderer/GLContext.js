@@ -44,15 +44,11 @@ var create3DContext = function(canvas, opt_attribs) {
     if (context.name == 'webgl2') {
         context.floatTexturesSupported = true;
         context.__ext_float_linear = context.getExtension("OES_texture_float_linear");
+        context.__ext_half_float = context.getExtension("OES_texture_half_float");
         context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
-
-        if (context.__ext_texture_half_float_linear) {
-            context.floatTextureFilteringSupported = true;
-        }
-
+        
         // Needed for rendering to float textures in an Fbo
         context.__ext_color_buffer_float = context.getExtension("EXT_color_buffer_float");
-        context.__ext_std_derivatives = context.getExtension("OES_standard_derivatives");
         
     } else {
         context.__ext_float = context.getExtension("OES_texture_float");
