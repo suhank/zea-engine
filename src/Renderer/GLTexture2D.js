@@ -57,6 +57,9 @@ class GLTexture2D extends RefCounted {
         return this.__texture;
     }
 
+    getInternalFormat() {
+        return this.__internalFormat;
+    }
     getFormat() {
         return this.__formatParam;
     }

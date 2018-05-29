@@ -53,6 +53,7 @@ void main()
 
         this.addParameter('env', new Color(1.0, 1.0, 0.5));
         this.addParameter('projectionCenter', new Vec3(0.0, 0.0, 1.7));
+        this.addParameter('linearSpaceImage', true);
         this.finalize();
     }
 };
@@ -72,6 +73,7 @@ precision highp float;
 uniform color _env;
 uniform sampler2D _envTex;
 uniform bool _envTexConnected;
+uniform bool _linearSpaceImage;
 
 uniform float exposure;
 
@@ -126,6 +128,7 @@ precision highp float;
 uniform color _env;
 uniform sampler2D _envTex;
 uniform bool _envTexConnected;
+uniform bool _linearSpaceImage;
 
 uniform float exposure;
 

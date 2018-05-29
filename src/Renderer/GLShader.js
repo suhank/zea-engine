@@ -423,6 +423,9 @@ class GLShader extends BaseItem {
         }
         return shaderCompilationResult;
     }
+    compile() {
+        this.compileForTarget();
+    }
 
 
     bind(renderstate, key) {
@@ -446,32 +449,38 @@ class GLShader extends BaseItem {
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;
 
-        let unifs = shaderCompilationResult.unifs; {
+        let unifs = shaderCompilationResult.unifs; 
+        {
             let unif = unifs.viewMatrix;
             if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.viewMatrix.asArray());
             }
-        } {
+        }
+        {
             let unif = unifs.cameraMatrix;
             if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
             }
-        } {
+        }
+        {
             let unif = unifs.projectionMatrix;
             if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.projectionMatrix.asArray());
             }
-        } {
+        }
+        {
             let unif = unifs.envMap;
             if (unif && renderstate.envMap != undefined) {
                 renderstate.envMap.bindToUniform(renderstate, unif);
             }
-        } {
+        }
+        {
             let unif = unifs.exposure;
             if (unif) {
                 gl.uniform1f(unif.location, renderstate.exposure ? renderstate.exposure : 1.0);
             }
-        } {
+        }
+        {
             let unif = unifs.eye;
             if (unif) {
                 // Left or right eye, when rendering sterio VR.

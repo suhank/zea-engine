@@ -1,10 +1,10 @@
-let addGUI = function(div, options) {
-    let moveGUIDiv = document.createElement("div");
+const addGUI = function(div, options) {
+    const moveGUIDiv = document.createElement("div");
     moveGUIDiv.id = 'moveGUI';
     div.appendChild(moveGUIDiv);
     options = options ? options : {};
     options.autoPlace = false;
-    let gui = new dat.GUI(options);
+    const gui = new dat.GUI(options);
     
     moveGUIDiv.style.position = 'absolute';
     moveGUIDiv.style.top = '0px';
@@ -14,8 +14,8 @@ let addGUI = function(div, options) {
     return gui;
 }
 
-let addCanvas = function(width, height) {
-    let resizeDiv = document.createElement("div");
+const addCanvas = function(width, height) {
+    const resizeDiv = document.createElement("div");
     resizeDiv.id = 'visualive';
     if (width == undefined) {
         resizeDiv.style.width = '100%';
@@ -36,6 +36,28 @@ let addCanvas = function(width, height) {
     return resizeDiv;
 }
 
+const getUrlVars = () => {
+    const url = window.location.href,
+        args = {};
+
+    const parts = url.split('?');
+    const hashes = parts.length > 1 ? parts[1].split('&') : [];
+    for (let i = 0; i < hashes.length; i++) {
+        hash = hashes[i].split('=');
+        args[hash[0]] = hash[1];
+    }
+    return args;
+}
+
+const createLink = (name, parent)=>{
+    const a = document.createElement('a');
+    const linkText = document.createTextNode(name);
+    a.appendChild(linkText);
+    a.title = name;
+    a.href = window.location.href + "?test=" + name;
+    parent.appendChild(a);
+    parent.appendChild(document.createElement('br'));
+}
 
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
@@ -51,21 +73,21 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
     }
-    let generatePath = (item)=>{
-        let parts = item.split('/');
-        let base = rootURL;
+    const generatePath = (item)=>{
+        const parts = item.split('/');
+        const base = rootURL;
         if(parts[0] == '.')
             parts.shift();
         if(parts[0] == '..'){
             item = item.substring(3);
-            let baseparts = base.split('/');
+            const baseparts = base.split('/');
             baseparts.pop();
             baseparts.pop();
             base = baseparts.join('/') + '/';
         }
-        let curr = resources;
+        const curr = resources;
         for(let i=0; i<parts.length-1; i++){
-            let part = parts[i];
+            const part = parts[i];
             if(!(part in curr)){
                 curr[part] = {};
             }

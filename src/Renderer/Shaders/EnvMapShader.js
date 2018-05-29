@@ -179,6 +179,7 @@ uniform float exposure;
 #endif
 
 uniform sampler2D backgroundImage;
+uniform bool _linearSpaceImage;
 
 
 /* VS Outputs */
@@ -200,9 +201,9 @@ void main(void) {
     fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    //fragColor.rgb = toGamma(fragColor.rgb * exposure);
+    if(_linearSpaceImage)
+        fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
-    // Assuming a simple RGB image in gamma space for now.
     fragColor.rgb = fragColor.rgb * exposure;
 #endif
 #ifndef ENABLE_ES3
@@ -210,6 +211,8 @@ void main(void) {
 #endif
 }
 `);
+        // Assuming a simple RGB image in gamma space for now.
+        this.addParameter('linearSpaceImage', false);
         this.finalize();
     }
 };

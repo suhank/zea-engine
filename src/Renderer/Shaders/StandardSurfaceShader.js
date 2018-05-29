@@ -165,7 +165,7 @@ uniform bool _emissiveStrengthTexConnected;
 #endif
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+out vec4 fragColor;
 #endif
 
 void main(void) {

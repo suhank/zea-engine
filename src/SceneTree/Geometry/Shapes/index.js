@@ -1,5 +1,6 @@
 
 
+export * from './PointGrid.js';
 export * from './Circle.js';
 export * from './Cone.js';
 export * from './Cuboid.js';
