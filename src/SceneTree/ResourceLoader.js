@@ -15,6 +15,37 @@ const ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorke
 //     ResourceLoaderWorker_onmessage
 // } from './ResourceLoaderWorker.js';
 
+/**
+ * Simple object check.
+ * @param item
+ * @returns {boolean}
+ */
+export function isObject(item) {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+/**
+ * Deep merge two objects.
+ * @param target
+ * @param ...sources
+ */
+export function mergeDeep(target, ...sources) {
+  if (!sources.length) return target;
+  const source = sources.shift();
+
+  if (isObject(target) && isObject(source)) {
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, { [key]: {} });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, { [key]: source[key] });
+      }
+    }
+  }
+
+  return mergeDeep(target, ...sources);
+}
 
 class ResourceLoader {
     constructor() {
@@ -28,6 +59,7 @@ class ResourceLoader {
         this.__doneWorkByCategory = {};
         this.__callbacks = {};
         this.__workCategories = {};
+        this.__resources = {};
 
         if(asyncLoading){
             this.__workers = [];
@@ -37,8 +69,11 @@ class ResourceLoader {
     }
 
     setResources(resources){
-        if(this.__resources)
-            throw("Resource Loader already bound to resources");
+        if(this.__resources){
+            this.__resources = mergeDeep(this.__resources, resources)
+            return;
+            // throw("Resource Loader already bound to resources");
+        }
         this.__resources = resources
     }
 
@@ -66,7 +101,7 @@ class ResourceLoader {
                 curr = dir;
             }
         }
-        curr[filename] = url;
+        curr[filename] = { url };
     }
 
     __constructWorkers() {
