@@ -283,7 +283,7 @@ class GLViewport extends BaseViewport {
             gl.finish();
             // Allocate a 1 pixel block.
 
-            this.__geomDataBufferFbo.bind();
+            this.__geomDataBufferFbo.bindForReading();
 
 
             // const logGeomData = (geomId)=>{
@@ -318,6 +318,7 @@ class GLViewport extends BaseViewport {
                 itemId = pixels[0] + (pixels[1] << 8);
                 dist = Math.decode16BitFloatFrom2xUInt8([pixels[2], pixels[3]]);
             }
+            this.__geomDataBufferFbo.unbind();
             let geomItem;
             if(passId == 0) {
                 const drawItem = this.__renderer.getCollector().getDrawItem(itemId);

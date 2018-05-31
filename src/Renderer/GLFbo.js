@@ -13,7 +13,8 @@ class GLFbo {
         this.setup = this.setup.bind(this);
         this.resize = this.resize.bind(this);
 
-        this.__colorTexture.resized.connect(this.resize);
+        if(this.__colorTexture)
+            this.__colorTexture.resized.connect(this.resize);
 
         this.setup();
 
@@ -71,10 +72,13 @@ class GLFbo {
         let gl = this.__gl;
 
         this.__fbo = gl.createFramebuffer();
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
         if(gl.name == 'webgl2'){
-            if (this.__colorTexture.getFormat() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
+            if (this.__colorTexture && this.__colorTexture.getFormat() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
                 if (!gl.__ext_float_linear)
                     throw ("Unable to use filtering on floating point textures");
             }
@@ -99,7 +103,8 @@ class GLFbo {
             }
         }
 
-        gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+        if(this.__colorTexture)
+            gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
 
         // Create the depth texture
         if (this.__createDepthTexture) {
@@ -110,6 +115,7 @@ class GLFbo {
                 gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, this.width, this.height);
                 gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
             } else {
+                gl.activeTexture(gl.TEXTURE0);
                 this.__depthTexture = gl.createTexture();
                 gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture);
                 // TODO: Copy params from the color image.
@@ -120,18 +126,25 @@ class GLFbo {
                 if (gl.name == 'webgl2'){
                     // the proper texture format combination can be found here
                     // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
+                    // https://github.com/WebGLSamples/WebGL2Samples/blob/master/samples/fbo_rtt_depth_texture.html
+                    // gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT16, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_SHORT, null);
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+                    gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0);
                 }
-                else
+                else {
                     gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+                    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0);
+                }
 
-                gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.TEXTURE_2D, this.__depthTexture, 0);
             }
         }
 
         this.__checkFramebuffer();
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
     }
 
@@ -140,12 +153,16 @@ class GLFbo {
     // e.g. resixzing and preserving data.
     resize(/*width, height, preserve*/) {
         let gl = this.__gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
         // The coolor texture is destoryed and re-created when it is resized,
         // so we must re-bind it here..
         gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
         if (this.__depthTexture) {
+            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture);
             if (gl.name == 'webgl2'){
                 // the proper texture format combination can be found here
@@ -162,10 +179,18 @@ class GLFbo {
     __checkFramebuffer() {
         let gl = this.__gl;
 
-        let check = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+        let check;
+        if (gl.name == 'webgl2')
+            check = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER);
+        else
+            check = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
         if (check !== gl.FRAMEBUFFER_COMPLETE) {
+            gl.activeTexture(gl.TEXTURE0);
             gl.bindTexture(gl.TEXTURE_2D, null);
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            if (gl.name == 'webgl2')
+                gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+            else
+                gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             console.warn("Error creating Fbo width:" + this.width + ", height:" + this.height);
             switch(check){
             case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
@@ -187,9 +212,30 @@ class GLFbo {
 
     bind(renderstate) {
         let gl = this.__gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
         gl.viewport(0, 0, this.width, this.height); // Match the viewport to the texture size
     }
+
+    bindForReading() {
+        let gl = this.__gl;
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.__fbo);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+    }
+
+    unbindForReading() {
+        let gl = this.__gl;
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
+
+
 
     clear() {
         let gl = this.__gl;
