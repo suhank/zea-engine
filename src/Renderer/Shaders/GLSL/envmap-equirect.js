@@ -8,7 +8,7 @@ vec2 latLongUVsFromDir(vec3 dir) {
   // http://gl.ict.usc.edu/Data/HighResProbes/
   // Note: Scaling from u=[0,2], v=[0,1] to u=[0,1], v=[0,1]
   float phi = acos(dir.z);
-  float theta = atan(dir.x, -dir.y);
+  float theta = atan(dir.x, dir.y);
   return vec2((1.0 + theta / PI) / 2.0, phi / PI);
 }
 

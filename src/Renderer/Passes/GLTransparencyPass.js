@@ -8,7 +8,8 @@ class GLTransparencyPass extends GLPass {
 
         this.transparentItems = [];
         this.visibleItems = [];
-        this.prevSortCameraPos = new Vec3();
+        this.prevSortCameraPos = new Vec3(999,999,999);
+        this.resort = false;
     }
 
     /////////////////////////////////////
@@ -32,6 +33,9 @@ class GLTransparencyPass extends GLPass {
                     this.transparentItems.splice(index, 1);
                 }
             });
+            drawItem.getGeomItem().geomXfoChanged.connect(()=>{
+                this.resort = true;
+            });
         }
 
         this.transparentItems = [];
@@ -53,11 +57,13 @@ class GLTransparencyPass extends GLPass {
                 }
             }
         }
+        // force a resort.
+        this.resort = true;
     }
 
     sortItems(cameraPos) {
         for (let transparentItem of this.transparentItems)
-            transparentItem.dist = transparentItem.drawItem.geomItem.getGlobalXfo().tr.distanceTo(cameraPos);
+            transparentItem.dist = transparentItem.drawItem.geomItem.getGeomXfo().tr.distanceTo(cameraPos);
         this.transparentItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
         this.prevSortCameraPos = cameraPos;
     }
@@ -68,7 +74,7 @@ class GLTransparencyPass extends GLPass {
         const camera = renderstate.camera;
         const cameraPos = camera.getGlobalXfo().tr;
         // TODO: Avoid sorting if the camera did not movemore than 30cm
-        if(cameraPos.distanceTo(this.prevSortCameraPos) > 0.3)
+        if(this.resort || cameraPos.distanceTo(this.prevSortCameraPos) > 0.3)
             this.sortItems(cameraPos);
 
         gl.enable(gl.DEPTH_TEST);
@@ -96,10 +102,6 @@ class GLTransparencyPass extends GLPass {
         let currentglGeom;
         for (let transparentItem of this.transparentItems) {
             const drawItem = transparentItem.drawItem;
-            if (!drawItem.getVisible()){
-            console.log("Inivisble:" + drawItem.geomItem.getName())
-                continue;
-            }
 
             if (currentglShader != transparentItem.glshader) {
                 // Some passes, like the depth pass, bind custom uniforms.

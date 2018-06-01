@@ -183,7 +183,17 @@ class FileImage2D extends Image2D {
         }, false);
         domElement.src = resourceLoader.resolveURL(resourcePath);
         //domElement.load();
-        domElement.play();
+        const promise = domElement.play();
+        if (promise !== undefined) {
+          promise.then(_ => {
+            console.log("Autoplay started!")
+            // Autoplay started!
+          }).catch(error => {
+            console.log("Autoplay was prevented.")
+            // Autoplay was prevented.
+            // Show a "Play" button so that user can start playback.
+          });
+        }
     }
 
     // __loadLDRAlpha(url, resourcePath) {

@@ -318,7 +318,7 @@ class GLShader extends BaseItem {
     bind(renderstate, key) {
         const gl = this.__gl;
 
-        if(renderstate.shader != this) {
+        if(renderstate.glshader != this) {
             const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts);
             if (shaderCompilationResult === false) {
                 console.warn(this.constructor.name + " is not compiled for " + key);
@@ -329,7 +329,7 @@ class GLShader extends BaseItem {
 
             gl.useProgram(shaderProgramHdl);
             renderstate.shaderkey = this.constructor.name;
-            renderstate.shader = this;
+            renderstate.glshader = this;
             renderstate.boundTextures = 0;
             renderstate.boundLightmap = undefined;
             // Make sure we clear the binding cached.

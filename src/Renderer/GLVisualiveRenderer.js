@@ -358,7 +358,7 @@ class GLVisualiveRenderer extends GLRenderer {
         }
     }
 
-    drawVP(viewport) {
+    drawVP(viewport, renderstate) {
         /////////////////////////////////////
         // Debugging 
         const gl = this.__gl;
@@ -372,12 +372,10 @@ class GLVisualiveRenderer extends GLRenderer {
             gl.screenQuad.bindShader(renderstate);
             gl.screenQuad.draw(renderstate, displayDebugTexture);
         } else {
+            viewport.draw(renderstate);
 
-
-            viewport.draw(this.__renderstate);
-
-            // this.__gizmoPass.draw(this.__renderstate);
-            // viewport.drawOverlays(this.__renderstate);
+            // this.__gizmoPass.draw(renderstate);
+            // viewport.drawOverlays(renderstate);
         }
     }
 
@@ -404,7 +402,7 @@ class GLVisualiveRenderer extends GLRenderer {
 
         // this.__gizmoPass.draw(renderstate);
 
-        // console.log("Draw Calls:" + this.__renderstate['drawCalls']);
+        // console.log("Draw Calls:" + renderstate['drawCalls']);
     }
 
 

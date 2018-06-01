@@ -115,7 +115,6 @@ class GLRenderer {
         this.__isMobile = SystemDesc.isMobileDevice;
 
         this.__drawSuspensionLevel = 1;
-        this.__renderstate = {};
         this.__shaderDirectives = {};
         this.__preproc = { };
 
@@ -818,8 +817,8 @@ class GLRenderer {
         return true;
     }
 
-    drawVP(viewport) {
-        viewport.draw(this.__renderstate);
+    drawVP(viewport, renderstate) {
+        viewport.draw(renderstate);
     }
 
     drawScene(renderstate, vrView = false) {
@@ -855,10 +854,11 @@ class GLRenderer {
             return;
 
         const gl = this.__gl;
+        const renderstate = {};
 
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()) {
-                this.__vrViewport.draw(this.__renderstate);
+                this.__vrViewport.draw(renderstate);
                 if (this.mirrorVRisplayToViewport) {
                     gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
                     gl.disable(gl.SCISSOR_TEST);
@@ -875,7 +875,7 @@ class GLRenderer {
         
         const len=this.__viewports.length;
         for(let i=0; i< len; i++){
-            this.drawVP(this.__viewports[i]);
+            this.drawVP(this.__viewports[i], renderstate);
         }
 
         gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);

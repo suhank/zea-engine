@@ -43,8 +43,8 @@ class GLSimpleRenderer extends GLRenderer {
     /////////////////////////
     // Rendering
 
-    drawVP(viewport, vrView = false) {
-        viewport.draw(this.__renderstate);
+    drawVP(viewport, renderstate) {
+        viewport.draw(renderstate);
     }
 
     drawScene(renderstate, vrView = false) {
@@ -64,9 +64,10 @@ class GLSimpleRenderer extends GLRenderer {
         if (this.__drawSuspensionLevel > 0)
             return;
 
+        const renderstate = {};
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()){
-                this.__vrViewport.draw(this.__renderstate);
+                this.__vrViewport.draw(renderstate);
                 if(this.mirrorVRisplayToViewport){
                     this.__gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
                     this.__gl.disable(this.__gl.SCISSOR_TEST);
@@ -82,7 +83,7 @@ class GLSimpleRenderer extends GLRenderer {
         }
 
         for (let vp of this.__viewports)
-            this.drawVP(vp);
+            this.drawVP(vp, renderstate);
 
         this.redrawOccured.emit();
         
