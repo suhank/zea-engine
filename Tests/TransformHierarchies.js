@@ -3,9 +3,9 @@
 testingHarness.registerTest('TransformHierarchies', (domElement, resources)=> {
         
 
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
-    let material = new Visualive.Material('material', 'SimpleSurfaceShader');
+    const material = new Visualive.Material('material', 'SimpleSurfaceShader');
     material.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
     material.addParameter('roughness', 1.0);
     material.addParameter('metallic', 0.0);
@@ -28,7 +28,7 @@ testingHarness.registerTest('TransformHierarchies', (domElement, resources)=> {
     geomItem2.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,3,0), new Visualive.Quat({'rotateX':Math.degToRad(90)})));
     geomItem2.addChild(geomItem3);
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.setScene(scene);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.frameAll();

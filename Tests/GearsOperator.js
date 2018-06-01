@@ -1,5 +1,5 @@
 testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
     let asset = new Visualive.TreeItem('gears');
     scene.getRoot().addChild(asset);
@@ -12,7 +12,7 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
         let gearGeom = new Visualive.Cylinder(radius, 0.2, teeth);
         let gearmaterial = new Visualive.Material('gearmaterial', 'SimpleSurfaceShader');
         gearmaterial.addParameter('baseColor', color);
-        let geomItem = new Visualive.GeomItem('gear'+(index++), gearGeom, gearmaterial);
+        const geomItem = new Visualive.GeomItem('gear'+(index++), gearGeom, gearmaterial);
         let xfo = new Visualive.Xfo();
         xfo.tr = pos;
         // xfo.ori.setFromDirectionAndUpvector(axis, new Visualive.Vec3(1, 0, 0));
@@ -39,7 +39,7 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
 
 
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 10), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);

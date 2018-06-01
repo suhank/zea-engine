@@ -78,6 +78,10 @@ class FileImage2D extends Image2D {
         return getName(this.getParameter('FilePath').getValue());
     }
 
+    getDOMElement(){
+        return this.__domElement;
+    }
+
     __loadURL(url, resourcePath) {
 
         let getExt = (str) => {
@@ -111,34 +115,56 @@ class FileImage2D extends Image2D {
         }
         this.format = 'UNSIGNED_BYTE';
 
-        let domElement;
         const loaded = () => {
-            this.width = domElement.width;
-            this.height = domElement.height;
-            this.__data = domElement;
+            this.width = this.__domElement.width;
+            this.height = this.__domElement.height;
+            this.__data = this.__domElement;
             this.__loaded = true;
             this.loaded.emit();
         };
         if(resourcePath in imageDataLibrary) {
-            domElement = imageDataLibrary[resourcePath];
-            if(domElement.complete) {
+            this.__domElement = imageDataLibrary[resourcePath];
+            if(this.__domElement.complete) {
                 loaded()
             }
             else {
-                domElement.addEventListener("load", loaded);
+                this.__domElement.addEventListener("load", loaded);
             }
         }
         else {
             resourceLoader.addWork(resourcePath, 1);
-            domElement = new Image();
-            domElement.crossOrigin = 'anonymous';
-            domElement.src = resourceLoader.resolveURL(resourcePath);
+            this.__domElement = new Image();
+            this.__domElement.crossOrigin = 'anonymous';
+            this.__domElement.src = resourceLoader.resolveURL(resourcePath);
 
-            domElement.addEventListener("load", loaded);
-            domElement.addEventListener("load", () => {
+            this.__domElement.addEventListener("load", loaded);
+            this.__domElement.addEventListener("load", () => {
                 resourceLoader.addWorkDone(resourcePath, 1);
             });
-            imageDataLibrary[resourcePath] = domElement;
+            imageDataLibrary[resourcePath] = this.__domElement;
+        }
+    }
+
+    __addSpatializationParams(){
+        this.addParameter(new Parameter('spatializeAudio', true));
+        this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
+        this.addParameter(new NumberParameter('refDistance', 2));
+        this.addParameter(new NumberParameter('maxDistance', 10000));
+        this.addParameter(new NumberParameter('rolloffFactor', 1));
+        this.addParameter(new NumberParameter('coneInnerAngle', 120));
+        this.addParameter(new NumberParameter('coneOuterAngle', 180));
+        this.addParameter(new NumberParameter('coneOuterGain', 0.2))
+    }
+    __removeSpatializationParams(){
+        if(this.getParameterIndex('spatializeAudio')) {
+            this.removeParameter(this.getParameterIndex('spatializeAudio'));
+            this.removeParameter(this.getParameterIndex('Gain'));
+            this.removeParameter(this.getParameterIndex('refDistance'));
+            this.removeParameter(this.getParameterIndex('maxDistance'));
+            this.removeParameter(this.getParameterIndex('rolloffFactor'));
+            this.removeParameter(this.getParameterIndex('coneInnerAngle'));
+            this.removeParameter(this.getParameterIndex('coneOuterAngle'));
+            this.removeParameter(this.getParameterIndex('coneOuterGain'));
         }
     }
 
@@ -147,31 +173,33 @@ class FileImage2D extends Image2D {
         this.format = 'UNSIGNED_BYTE';
         resourceLoader.addWork(resourcePath, 1);
 
-        let domElement = document.createElement('video');
+        this.__addSpatializationParams();
+
+        this.__domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
-        domElement.style.display = 'none';
-        domElement.preload = 'auto';
-        domElement.crossOrigin = 'anonymous';
-        // domElement.crossorigin = true;
-        document.body.appendChild(domElement);
-        domElement.addEventListener('loadedmetadata', () => {
-            // domElement.play();
-            this.width = domElement.videoHeight;
-            this.height = domElement.videoWidth;
-            this.__data = domElement;
+        this.__domElement.style.display = 'none';
+        this.__domElement.preload = 'auto';
+        this.__domElement.crossOrigin = 'anonymous';
+        // this.__domElement.crossorigin = true;
+        document.body.appendChild(this.__domElement);
+        this.__domElement.addEventListener('loadedmetadata', () => {
+            // this.__domElement.play();
+            this.width = this.__domElement.videoHeight;
+            this.height = this.__domElement.videoWidth;
+            this.__data = this.__domElement;
             this.__loaded = true;
             resourceLoader.addWorkDone(resourcePath, 1);
-            this.loaded.emit(domElement);
+            this.loaded.emit(this.__domElement);
 
             let prevFrame = 0;
             let frameRate = 29.97;
             let timerCallback = () => {
-                if (domElement.paused || domElement.ended) {
+                if (this.__domElement.paused || this.__domElement.ended) {
                     return;
                 }
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
-                let currentFrame = Math.floor(domElement.currentTime * frameRate);
+                let currentFrame = Math.floor(this.__domElement.currentTime * frameRate);
                 if (prevFrame != currentFrame) {
                     this.updated.emit();
                     prevFrame = currentFrame;
@@ -181,9 +209,9 @@ class FileImage2D extends Image2D {
             timerCallback();
 
         }, false);
-        domElement.src = resourceLoader.resolveURL(resourcePath);
-        //domElement.load();
-        const promise = domElement.play();
+        this.__domElement.src = resourceLoader.resolveURL(resourcePath);
+        //this.__domElement.load();
+        const promise = this.__domElement.play();
         if (promise !== undefined) {
           promise.then(_ => {
             console.log("Autoplay started!")

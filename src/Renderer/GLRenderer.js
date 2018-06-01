@@ -324,9 +324,6 @@ class GLRenderer {
         const listener = this.__audioCtx.listener;
         const viewXfo = data.viewXfo;
         if(listener.positionX) {
-            // listener.positionX.setTargetAtTime(viewXfo.tr.x, this.__audioCtx.currentTime, 0.0);
-            // listener.positionY.setTargetAtTime(viewXfo.tr.y, this.__audioCtx.currentTime, 0.0);
-            // listener.positionZ.setTargetAtTime(viewXfo.tr.z, this.__audioCtx.currentTime, 0.0);
             listener.positionX.value = viewXfo.tr.x;
             listener.positionY.value = viewXfo.tr.y;
             listener.positionZ.value = viewXfo.tr.z;
@@ -334,17 +331,15 @@ class GLRenderer {
             listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
         }
 
-        const zdir = viewXfo.ori.getZaxis().negate();
+        const fw = viewXfo.ori.getZaxis().negate();
+        console.log(fw.toString())
         if(listener.forwardX) {
-          // listener.forwardX.setTargetAtTime(zdir.x, this.__audioCtx.currentTime, 0.0);
-          // listener.forwardY.setTargetAtTime(zdir.y, this.__audioCtx.currentTime, 0.0);
-          // listener.forwardZ.setTargetAtTime(zdir.z, this.__audioCtx.currentTime, 0.0);
-          listener.forwardX.value = zdir.x;
-          listener.forwardY.value = zdir.y;
-          listener.forwardZ.value = zdir.z;
+          listener.forwardX.value = fw.x;
+          listener.forwardY.value = fw.y;
+          listener.forwardZ.value = fw.z;
         } else {
             const ydir = viewXfo.ori.getYaxis();
-            listener.setOrientation(zdir.x, zdir.y, zdir.z, ydir.x, ydir.y, ydir.z);
+            listener.setOrientation(fw.x, fw.y, fw.z, ydir.x, ydir.y, ydir.z);
         }
     }
 

@@ -1,6 +1,6 @@
 testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
     const camera = new Visualive.Camera();
     camera.setPositionAndTarget(new Visualive.Vec3(35, 0, -35), new Visualive.Vec3(12, 0, 0));
 
@@ -48,7 +48,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
     let index = 0;
     let addBolt = (pos)=> {
-        let geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
+        const geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         parts.addChild(geomItem);
     }
@@ -62,7 +62,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
     // Obj Asset
     {
 
-        let objAsset = new Visualive.ObjAsset('PartA', scene.getResourceLoader());
+        let objAsset = new Visualive.ObjAsset('PartA');
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -77,7 +77,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
 
     {
-        let objAsset = new Visualive.ObjAsset('PartB', scene.getResourceLoader());
+        let objAsset = new Visualive.ObjAsset('PartB');
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -186,7 +186,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
 
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().setCamera(camera);
     renderer.setScene(scene);
     renderer.resumeDrawing();

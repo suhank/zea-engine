@@ -16,7 +16,7 @@ describe('GeomItem', function() {
     let myCuboid = new Cuboid('myCuboid', 2, 3, 4);
     let cuboidItem = new GeomItem('cuboidItem', myCuboid);
 
-    let scene = new Scene();
+    const scene = new Scene();
     scene.getRoot().addChild(cuboidItem);
 
     expect(String(scene)).to.be.equal(`{

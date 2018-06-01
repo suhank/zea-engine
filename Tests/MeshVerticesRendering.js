@@ -2,7 +2,7 @@
 testingHarness.registerTest('MeshVerticesRendering', (domElement, resources)=> {
 
 
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
     let objAsset = new Visualive.ObjAsset('obj');
     objAsset.splitObjects = true;
     objAsset.splitGroupsIntoObjects = true;
@@ -10,7 +10,7 @@ testingHarness.registerTest('MeshVerticesRendering', (domElement, resources)=> {
     scene.getRoot().addChild(objAsset);
 
 
-    let renderer = new Visualive.GLSimpleRenderer(div);
+    const renderer = new Visualive.GLSimpleRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0));
     renderer.addPass(new Visualive.GLMeshPointsPass(renderer.gl));
     renderer.setScene(scene)

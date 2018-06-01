@@ -33,6 +33,10 @@ import {
 
 class Scene {
     constructor(resources) {
+
+        if(resources) {
+            resourceLoader.setResources(resources);
+        }
         
         this.cameras = [];
         this.__root = new TreeItem('root');
@@ -51,7 +55,6 @@ class Scene {
         this.__envmapLOD = this.__lightmapLOD;
 
         this.__selectionManager = new SelectionManager();
-        resourceLoader.setResources(resources);
 
         // Common resources are used by systems such at the renderer and VR controllers.
         // Any asset that will probably be used my multiple differeint independent objects

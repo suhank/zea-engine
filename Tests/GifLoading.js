@@ -107,11 +107,11 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     // giffPath = "Assets/loading.gif";
     // giffPath = "Assets/chuck-norris-super-kick.gif";
 
-    let scene = new Visualive.Scene(resources);
-    let image =  new Visualive.FileImage2D(giffPath, scene.getResourceLoader());
+    const scene = new Visualive.Scene(resources);
+    let image =  new Visualive.FileImage2D(giffPath);
 
     // Check that the gif is loaded only once.
-    let image2 =  new Visualive.FileImage2D(giffPath, scene.getResourceLoader());
+    let image2 =  new Visualive.FileImage2D(giffPath);
 
     let atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
     atlasmaterial.addParameter('baseColor', image);
@@ -143,7 +143,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     // geomItem2.updateGlobalXfo();
 
 
-    let renderer = new Visualive.GLVisualiveRenderer(domElement);
+    const renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,8,12), new Visualive.Vec3(0,0,0));
     renderer.setScene(scene);

@@ -1,14 +1,14 @@
 testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     /////////////////////////////////////
     // Scene
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
     let layer0Material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
-    layer0Material.addParameter('env', new Visualive.FileImage2D("Assets/HDR_041_Path_Ref0.vlh", scene.getResourceLoader()));
+    layer0Material.addParameter('env', new Visualive.FileImage2D("Assets/HDR_041_Path_Ref0.vlh"));
 
     let offset = 0;
     let addMeshShape = (name, shape)=>{
-        let geomItem = new Visualive.GeomItem(name + (offset++), shape, layer0Material);
+        const geomItem = new Visualive.GeomItem(name + (offset++), shape, layer0Material);
         scene.getRoot().addChild(geomItem);
         return geomItem;
     }
@@ -24,8 +24,8 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    // let renderer = new Visualive.GLSimpleRenderer(domElement);
-    let renderer = new Visualive.GLVisualiveRenderer(domElement);
+    // const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();

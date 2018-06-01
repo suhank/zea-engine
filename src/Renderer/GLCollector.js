@@ -145,8 +145,23 @@ class GLCollector {
         this.__audioItems = [];
         this.registerSceneItemFilter((treeItem, rargs) => {
             if (treeItem instanceof AudioItem) {
-                this.addAudioItem(treeItem);
+                const audioSource = treeItem.getDOMElement();
+                if (audioSource instanceof HTMLMediaElement)
+                    this.addAudioItem(treeItem, audioSource, treeItem);
                 return true;
+            }
+            if (treeItem instanceof GeomItem) {
+                console.log("Auto tiem filter")
+                const material = treeItem.getMaterial();
+                const baseColorParam = material.getParameter('baseColor');
+                if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
+                    const image = baseColorParam.getImage();
+                    const audioSource = image.getDOMElement();
+                    if (audioSource instanceof HTMLMediaElement)
+                        this.addAudioItem(treeItem, audioSource, image);
+                }
+                // Let other filters handle this item.
+                return false;
             }
         });
 
@@ -165,13 +180,12 @@ class GLCollector {
         return this.__glshadermaterials;
     };
 
-    addAudioItem(audioItem) {
+    addAudioItem(treeItem, audioSource, parameterOwner) {
 
-        if(this.__audioItems.indexOf(audioItem) != -1)
+        if(audioSource.addedToCollector)
             return;
 
         const audioCtx = this.__renderer.getAudioContext();
-        const audioSource = audioItem.getDOMElement();
         let source;
         if (audioSource instanceof HTMLMediaElement)
             source = audioCtx.createMediaElementSource(audioSource);
@@ -179,7 +193,7 @@ class GLCollector {
             source = audioCtx.createMediaStreamSource(audioSource);
         }
 
-        const connectVLParamToAudioNodePAram = (vlParam, param) => {
+        const connectVLParamToAudioNodeParam = (vlParam, param) => {
             // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
             param.value = vlParam.getValue();
             vlParam.valueChanged.connect(() => {
@@ -189,7 +203,7 @@ class GLCollector {
         }
 
         const gainNode = audioCtx.createGain();
-        connectVLParamToAudioNodePAram(audioItem.getParameter('Gain'), gainNode.gain);
+        connectVLParamToAudioNodeParam(parameterOwner.getParameter('Gain'), gainNode.gain);
 
         source.connect(gainNode);
         const panner = audioCtx.createPanner();
@@ -197,7 +211,7 @@ class GLCollector {
         panner.distanceModel = 'inverse';
 
         const connectVLParamToAudioNode = (paramName) => {
-            const vlParam = audioItem.getParameter(paramName)
+            const vlParam = parameterOwner.getParameter(paramName)
             panner[paramName] = vlParam.getValue();
             vlParam.valueChanged.connect(() => {
                 panner[paramName] = vlParam.getValue();
@@ -212,44 +226,49 @@ class GLCollector {
         connectVLParamToAudioNode('coneOuterGain');
 
 
-        const updatePannerNodePosition = (globalXfo) => {
+        const updatePannerNodePosition = () => {
+            let xfo;
+            if(treeItem instanceof GeomItem)
+                xfo = treeItem.getGeomXfo();
+            else
+                xfo = treeItem.getGlobalXfo();
             if (panner.positionX) {
-                // panner.positionX.setTargetAtTime(globalXfo.tr.x, audioCtx.currentTime);
-                // panner.positionY.setTargetAtTime(globalXfo.tr.y, audioCtx.currentTime);
-                // panner.positionZ.setTargetAtTime(globalXfo.tr.z, audioCtx.currentTime);
-                panner.positionX.value = globalXfo.tr.x;
-                panner.positionY.value = globalXfo.tr.y;
-                panner.positionZ.value = globalXfo.tr.z;
+                // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
+                // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
+                // panner.positionZ.setTargetAtTime(xfo.tr.z, audioCtx.currentTime);
+                panner.positionX.value = xfo.tr.x;
+                panner.positionY.value = xfo.tr.y;
+                panner.positionZ.value = xfo.tr.z;
             } else {
-                panner.setPosition(globalXfo.tr.x, globalXfo.tr.y, globalXfo.tr.z);
+                panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
             }
 
-            const zdir = globalXfo.ori.getZaxis();
+            const dir = xfo.ori.getZaxis();
             if (panner.orientationX) {
-                // panner.orientationX.setTargetAtTime(zdir.x, audioCtx.currentTime);
-                // panner.orientationY.setTargetAtTime(zdir.y, audioCtx.currentTime);
-                // panner.orientationZ.setTargetAtTime(zdir.z, audioCtx.currentTime);
-                panner.orientationX.value = zdir.x;
-                panner.orientationY.value = zdir.y;
-                panner.orientationZ.value = zdir.z;
+                // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
+                // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);
+                // panner.orientationZ.setTargetAtTime(dir.z, audioCtx.currentTime);
+                panner.orientationX.value = dir.x;
+                panner.orientationY.value = dir.y;
+                panner.orientationZ.value = dir.z;
             } else {
-                panner.setOrientation(zdir.x, zdir.y, zdir.z);
+                panner.setOrientation(dir.x, dir.y, dir.z);
             }
 
             // TODO: 
             // setVelocity()
         }
-        updatePannerNodePosition(audioItem.getGlobalXfo());
-        audioItem.globalXfoChanged.connect((changeType) => {
-            const globalXfo = audioItem.getGlobalXfo();
-            updatePannerNodePosition(globalXfo);
+        updatePannerNodePosition();
+        treeItem.globalXfoChanged.connect((changeType) => {
+            updatePannerNodePosition();
         });
 
 
         gainNode.connect(panner);
         panner.connect(audioCtx.destination);
 
-        this.__audioItems.push(audioItem);
+        audioSource.addedToCollector = true;
+        this.__audioItems.push({ treeItem, audioSource, parameterOwner });
     }
 
     getShaderMaterials(material) {

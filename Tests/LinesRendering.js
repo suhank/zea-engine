@@ -17,12 +17,12 @@ testingHarness.registerTest('TestRenderLines', (domElement, resources)=> {
     // for(let i=0; i<lineThickness.length; i++)
     //     lineThickness.setFloat32Value(i, /*(i/lineThickness.length) */ 0.6);
 
-    let material = new Visualive.Material('material', 'FatLinesShader');
-    let geomItem = new Visualive.GeomItem('geomItem', lines, material);
-    let scene = new Visualive.Scene(resources);
+    const material = new Visualive.Material('material', 'FatLinesShader');
+    const geomItem = new Visualive.GeomItem('geomItem', lines, material);
+    const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 1.5, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -37,12 +37,12 @@ testingHarness.registerTest('TestRenderCircle', (domElement, resources)=> {
     for(let i=0; i<lineThickness.length; i++)
         lineThickness.setFloat32Value(i, (i/lineThickness.length) * 0.4);
 
-    let material = new Visualive.Material('material', 'FatLinesShader');
-    let geomItem = new Visualive.GeomItem('geomItem', lines, material);
-    let scene = new Visualive.Scene(resources);
+    const material = new Visualive.Material('material', 'FatLinesShader');
+    const geomItem = new Visualive.GeomItem('geomItem', lines, material);
+    const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 0.0, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();

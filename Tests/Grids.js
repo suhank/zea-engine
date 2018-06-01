@@ -1,7 +1,7 @@
 
 testingHarness.registerTest('Grids', (domElement, resources)=> {
 
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
 
     let size = 2;
@@ -16,10 +16,10 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
     }
 
 
-    let material = new Visualive.Material('material', 'SimpleSurfaceShader');
+    const material = new Visualive.Material('material', 'SimpleSurfaceShader');
     material.addParameter('baseColor', new Visualive.Color(1, 0, 1));
     let addGeomItem = (shape, xfo, index, material)=>{
-        let geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
+        const geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
         geomItem.setLocalXfo(xfo);
         scene.getRoot().addChild(geomItem, false);
     }
@@ -33,7 +33,7 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
 
     }
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.frameAll();

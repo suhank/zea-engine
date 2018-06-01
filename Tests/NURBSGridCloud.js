@@ -8,7 +8,7 @@
 // }
 
 testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
     // // 1Gb per Million instances.
     // // 1Mb per instance?
@@ -76,14 +76,14 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
         let count = getNumSurfacesQuadSize((i/16));//getRandomIntInclusive(10, 10000);
         console.log((i/16)*100 + '% :' +  count);
 
-        let material = new Visualive.Material('material', 'SimpleSurfaceShader');
+        const material = new Visualive.Material('material', 'SimpleSurfaceShader');
         material.addParameter('baseColor', Visualive.Color.random());
 
         let treeItem = new Visualive.TreeItem('Tree'+i);
         treeItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i*5+((Math.random()-0.5) * 20), (Math.random()-0.5) * 10, (Math.random()-0.5) * 10)));
 
         let addGeomItem = (shape, xfo, index, material)=>{
-            let geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
+            const geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
             geomItem.setLocalXfo(xfo);
             treeItem.addChild(geomItem, false);
         }
@@ -110,7 +110,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     console.log("total:" + total);
 
     
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(24, new Visualive.Color(.35,.35, .35), 24, .1)

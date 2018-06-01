@@ -1,7 +1,7 @@
 
 testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
 
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
     standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
@@ -9,7 +9,7 @@ testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
     standardMaterial.addParameter('metallic', 0.0);
 
     let addMeshShape = (name, shape, pos)=>{
-        let geomItem = new Visualive.GeomItem(name+'Item', shape, standardMaterial);
+        const geomItem = new Visualive.GeomItem(name+'Item', shape, standardMaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
@@ -26,7 +26,7 @@ testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
 
     let addLinesShape = (name, shape, pos)=>{
         shape.lineThickness = 0.25;
-        let geomItem = new Visualive.GeomItem(name+'Item', shape, linesMaterial);
+        const geomItem = new Visualive.GeomItem(name+'Item', shape, linesMaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);
     }
@@ -35,7 +35,7 @@ testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
     addLinesShape('Rect', new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 6, 0));
 
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);

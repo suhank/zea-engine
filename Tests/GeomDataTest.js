@@ -3,9 +3,9 @@
 testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Scene
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
-    let envMap =  new Visualive.FileImage2D('Assets/HDR_041_Path_Ref0.vlh', scene.getResourceLoader());
+    let envMap =  new Visualive.FileImage2D('Assets/HDR_041_Path_Ref0.vlh');
     scene.setEnvMap(envMap);
 
     /////////////////////////////////////
@@ -21,8 +21,8 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    // let renderer = new Visualive.GLSimpleRenderer(domElement);
-    let renderer = new Visualive.GLVisualiveRenderer(domElement);
+    // const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLVisualiveRenderer(domElement);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, 7, 4), new Visualive.Vec3(3, 3, 0));
     renderer.exposure = 1.0;
@@ -31,7 +31,7 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
 
     /////////////////////////////////////
     // Obj Asset
-    let objAsset = new Visualive.ObjAsset('obj', scene.getResourceLoader());
+    let objAsset = new Visualive.ObjAsset('obj');
     objAsset.getParameter('splitObjects').setValue(false);
     objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
     objAsset.getParameter('loadMtlFile').setValue(false);

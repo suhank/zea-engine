@@ -1,7 +1,7 @@
 
 testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
     let asset = new Visualive.TreeItem('asset');
 
@@ -15,7 +15,7 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
     /////////////////////////////////////
     // Obj Asset
-    let objAsset = new Visualive.ObjAsset('obj', scene.getResourceLoader());
+    let objAsset = new Visualive.ObjAsset('obj');
     objAsset.getParameter('splitObjects').setValue(false);
     objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
     objAsset.getParameter('loadMtlFile').setValue(false);
@@ -30,7 +30,7 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
         renderer.frameAll();
         renderer.resumeDrawing();
         objAsset.getMaterialLibrary().getMaterialNames().forEach((materialName)=>{
-            let material = objAsset.getMaterialLibrary().getMaterial(materialName);
+            const material = objAsset.getMaterialLibrary().getMaterial(materialName);
             material.addParameterInstance(cutParam);
         });
 
@@ -60,7 +60,7 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
     objAsset.getParameter('FilePath').setValue("/Assets/CutawayAndExplode.obj");
 
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement, { enableCrossSections:true });
+    const renderer = new Visualive.GLSimpleRenderer(domElement, { enableCrossSections:true });
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-8, 8, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
 

@@ -50,6 +50,10 @@ class ParameterOwner extends RefCounted {
         return this.__params;
     }
 
+    getParameterIndex(paramName) {
+        return this.__paramMapping[paramName];
+    }
+    
     getParameterByIndex(index) {
         return this.__params[index];
     }

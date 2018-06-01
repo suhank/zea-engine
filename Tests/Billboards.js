@@ -1,10 +1,11 @@
 ﻿
 testingHarness.registerTest('Billboards', (domElement, resources)=> {
     
-    let scene = new Visualive.Scene(resources);
+    Visualive.resourceLoader.setResources(resources);
+    const scene = new Visualive.Scene();
 
     {
-        let image = new Visualive.FileImage2D('Assets/VerticalDoubleMaleTrapeze2.png', scene.getResourceLoader());
+        let image = new Visualive.FileImage2D('Assets/VerticalDoubleMaleTrapeze2.png');
         image.flags = 4;
         let billboard = new Visualive.BillboardItem('billboard1', image);
         let xfo = new Visualive.Xfo();
@@ -17,7 +18,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
         scene.getRoot().addChild(billboard);
     }
     {
-        let image = new Visualive.FileImage2D('Assets/VerticalDoubleMaleTrapeze2.png', scene.getResourceLoader());
+        let image = new Visualive.FileImage2D('Assets/VerticalDoubleMaleTrapeze2.png');
         image.flags = 4;
         let billboard = new Visualive.BillboardItem('billboard2', image);
         let xfo = new Visualive.Xfo();
@@ -31,7 +32,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
     }
 
     {   
-        let image =  new Visualive.FileImage2D('Assets/SolorFloorPerformer.png', scene.getResourceLoader());
+        let image =  new Visualive.FileImage2D('Assets/SolorFloorPerformer.png');
         image.flags = 4;
         let billboard = new Visualive.BillboardItem('billboard0', image);
         let xfo = new Visualive.Xfo();
@@ -44,7 +45,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
         scene.getRoot().addChild(billboard);
     }
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5,4,3), new Visualive.Vec3(0,0,0));
 

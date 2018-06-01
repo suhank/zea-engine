@@ -1,5 +1,5 @@
 testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
-    let scene = new Visualive.Scene(resources);
+    const scene = new Visualive.Scene(resources);
 
     let asset = new Visualive.TreeItem('parts');
 
@@ -39,7 +39,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
 
     let index = 0;
     let addBolt = (pos)=> {
-        let geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
+        const geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         asset.addChild(geomItem, false);
     }
@@ -53,7 +53,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
     // Obj Asset
     {
 
-        let objAsset = new Visualive.ObjAsset('PartA', scene.getResourceLoader());
+        let objAsset = new Visualive.ObjAsset('PartA');
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -65,7 +65,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
     let op = new Visualive.ExplodePartsOperator(scene.getRoot());
     op.getParameter('Dist').setValue(30.0);
     {
-        let objAsset = new Visualive.ObjAsset('PartB', scene.getResourceLoader());
+        let objAsset = new Visualive.ObjAsset('PartB');
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -121,7 +121,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
 
 
 
-    let renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 35, 20), new Visualive.Vec3(12, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
