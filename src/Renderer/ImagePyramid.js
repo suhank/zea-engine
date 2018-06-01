@@ -142,7 +142,7 @@ class ImagePyramid extends ImageAtlas {
 
     renderAtlas(cleanup = true) {
         const gl = this.__gl;
-        let renderstate = {};
+        const renderstate = {};
         gl.screenQuad.bindShader(renderstate);
 
         for (let i = 0; i < this.__fbos.length; i++) {

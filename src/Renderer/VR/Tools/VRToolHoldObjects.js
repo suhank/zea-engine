@@ -128,7 +128,7 @@ class VRToolHoldObjects extends VRTool {
         this.__geomDataBufferFbo.bindAndClear();
         gl.viewport(0, 0, 1, 1);
 
-        let renderstate = {
+        const renderstate = {
             viewMatrix: xfo.inverse().toMat4(),
             projectionMatrix: this.__projMatrix,
             isOrthographic: true,

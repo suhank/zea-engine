@@ -259,7 +259,7 @@ class GLViewport extends BaseViewport {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBufferFbo.bindAndClear();
 
-            let renderstate = {
+            const renderstate = {
                 viewMatrix: this.getViewMatrix(),
                 cameraMatrix: this.getCameraMatrix(),
                 projectionMatrix: this.getProjectionMatrix(),
