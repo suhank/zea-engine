@@ -253,7 +253,7 @@ class GLBillboardsPass extends GLPass {
         }
         this.__indexArray.sort((a, b) => (this.__billboards[a].dist > this.__billboards[b].dist) ? -1 : ((this.__billboards[a].dist < this.__billboards[b].dist) ? 1 : 0));
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         if(gl.floatTexturesSupported && this.__instanceIdsBuffer) {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
@@ -274,7 +274,7 @@ class GLBillboardsPass extends GLPass {
         }
 
 
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.BLEND);

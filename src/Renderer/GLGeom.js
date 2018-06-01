@@ -61,7 +61,7 @@ class GLGeom {
 
         let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
         if (!shaderBinding) {
-            let gl = this.__gl;
+            const gl = this.__gl;
             shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer, extrAttrBuffers);
             this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
         }
@@ -84,6 +84,11 @@ class GLGeom {
         throw ("Not implemented. Implement this method in a derived class.")
     }
 
+    bindAndDraw(renderstate){
+        this.bind(renderstate);
+        this.draw(renderstate);
+    }
+
     clearShaderBindings() {
 
         for (let shaderkey in this.__shaderBindings) {
@@ -96,7 +101,7 @@ class GLGeom {
     destroy() {
         this.clearShaderBindings();
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         for (let attrName in this.__glattrbuffers) {
             gl.deleteBuffer(this.__glattrbuffers[attrName].buffer);
         }

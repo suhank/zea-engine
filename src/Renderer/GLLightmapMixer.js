@@ -96,10 +96,10 @@ class GLLightmapMixer extends GLTexture2D {
 
     __renderTgtImage() {
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         this.__fbo.bindAndClear();
 
-        let renderstate = {};
+        const renderstate = {};
         this.__decompAndMixShader.bind(renderstate, 'ImageMixerShader');
         this.__shaderBinding.bind(renderstate);
 

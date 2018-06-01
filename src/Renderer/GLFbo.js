@@ -19,7 +19,7 @@ class GLFbo {
 
     }
 
-    setClearColor(clearColor) {
+    setClearColor(clearColor, clear=true) {
         this.__clearColor = clearColor;
     }
 
@@ -68,7 +68,7 @@ class GLFbo {
     }
 
     setup() {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         this.__fbo = gl.createFramebuffer();
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
@@ -139,7 +139,7 @@ class GLFbo {
     // TODO: fbos should manage the textures assigned to them
     // e.g. resixzing and preserving data.
     resize(/*width, height, preserve*/) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
         // The coolor texture is destoryed and re-created when it is resized,
@@ -160,7 +160,7 @@ class GLFbo {
     }
 
     __checkFramebuffer() {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         let check = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
         if (check !== gl.FRAMEBUFFER_COMPLETE) {
@@ -186,13 +186,13 @@ class GLFbo {
     }
 
     bind(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
         gl.viewport(0, 0, this.width, this.height); // Match the viewport to the texture size
     }
 
     clear() {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.colorMask(true, true, true, true); // Don't write to the color channels at all
         gl.clearColor(...this.__clearColor);
         if (this.__createDepthTexture) {
@@ -202,18 +202,25 @@ class GLFbo {
         }
     }
 
+    bindForWriting(renderstate) {
+        this.bind(renderstate);
+    }
+    bindForReading(renderstate, readUnif) {
+        this.__colorTexture.bindToUniform(renderstate, readUnif);
+    }
+
     bindAndClear(renderstate) {
         this.bind(renderstate);
         this.clear(renderstate);
     }
 
     unbind() {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
     destroy() {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         gl.deleteFramebuffer(this.__fbo);
         this.__fbo = null;

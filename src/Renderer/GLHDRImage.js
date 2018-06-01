@@ -39,7 +39,7 @@ class GLHDRImage extends GLTexture2D {
 
     __unpackHDRImage(hdrImageParams) {
 
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         let ldr = hdrImageParams.data.ldr;
         let cdm = hdrImageParams.data.cdm;
@@ -89,7 +89,7 @@ class GLHDRImage extends GLTexture2D {
 
         this.__fbo.bindAndClear();
 
-        let renderstate = {};
+        const renderstate = {};
         this.__unpackHDRShader.bind(renderstate, 'GLHDRImage');
         this.__shaderBinding.bind(renderstate);
 

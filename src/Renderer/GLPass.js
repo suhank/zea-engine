@@ -53,7 +53,7 @@ class GLPass {
     }
 
     draw(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
 
         // let passProfile = [];
@@ -82,7 +82,7 @@ class GLPass {
 
     drawGeomData(renderstate){
 
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         for (let glshaderMaterials of this.__glshadermaterials) {
             const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();

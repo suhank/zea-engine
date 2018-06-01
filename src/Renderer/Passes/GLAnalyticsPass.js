@@ -140,7 +140,7 @@ class GLAnalyticsPass {
     }
 
     draw(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.BLEND);

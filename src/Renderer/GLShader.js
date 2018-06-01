@@ -165,7 +165,7 @@ class GLShader extends BaseItem {
     // Compilation
 
     __compileShaderStage(glsl, stageID, name, shaderopts) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
         if(!shaderopts)
             shaderopts = gl.shaderopts;
@@ -234,7 +234,7 @@ class GLShader extends BaseItem {
     }
 
     __createProgram(shaderopts) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         this.__shaderCompilationAttempted = true;
         let shaderProgramHdl = gl.createProgram();
         let vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl;
@@ -284,7 +284,7 @@ class GLShader extends BaseItem {
     }
 
     __extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         let attrs = this.getAttributes();
         let result = {
             'attrs': {},
@@ -429,7 +429,7 @@ class GLShader extends BaseItem {
 
 
     bind(renderstate, key) {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         let shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts);
         if (shaderCompilationResult === false) {
@@ -449,39 +449,39 @@ class GLShader extends BaseItem {
         renderstate.unifs = shaderCompilationResult.unifs;
         renderstate.attrs = shaderCompilationResult.attrs;
 
-        let unifs = shaderCompilationResult.unifs; 
+        const unifs = shaderCompilationResult.unifs; 
         {
-            let unif = unifs.viewMatrix;
+            const unif = unifs.viewMatrix;
             if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.viewMatrix.asArray());
             }
         }
         {
-            let unif = unifs.cameraMatrix;
+            const unif = unifs.cameraMatrix;
             if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
             }
         }
         {
-            let unif = unifs.projectionMatrix;
+            const unif = unifs.projectionMatrix;
             if (unif) {
                 gl.uniformMatrix4fv(unif.location, false, renderstate.projectionMatrix.asArray());
             }
         }
         {
-            let unif = unifs.envMap;
+            const unif = unifs.envMap;
             if (unif && renderstate.envMap != undefined) {
                 renderstate.envMap.bindToUniform(renderstate, unif);
             }
         }
         {
-            let unif = unifs.exposure;
+            const unif = unifs.exposure;
             if (unif) {
                 gl.uniform1f(unif.location, renderstate.exposure ? renderstate.exposure : 1.0);
             }
         }
         {
-            let unif = unifs.eye;
+            const unif = unifs.eye;
             if (unif) {
                 // Left or right eye, when rendering sterio VR.
                 gl.uniform1i(unif.location, renderstate.eye);
@@ -489,7 +489,7 @@ class GLShader extends BaseItem {
         }
 
         // Bind the default params.
-        let params = this.getParameters();
+        const params = this.getParameters();
         for (let [paramName, param] of Object.entries(params)) {
             bindParam(gl, param, renderstate, this.__gltextures);
         }
@@ -506,7 +506,7 @@ class GLShader extends BaseItem {
     // Destroy
 
     destroy() {
-        let gl = this.__gl;
+        const gl = this.__gl;
         for (let key in this.__shaderProgramHdls) {
             let shaderCompilationResult = this.__shaderProgramHdls[key];
             gl.deleteProgram(shaderCompilationResult.shaderProgramHdl);

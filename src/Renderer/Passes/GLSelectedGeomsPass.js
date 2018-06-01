@@ -21,7 +21,7 @@ class GLSelectedGeomsPass extends GLPass {
     constructor(renderer, collector) {
         super(renderer.gl, collector);
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         if (!glshader)
             glshader = new GLShader(gl, new GeomDataShader());
         this.setExplicitShader(glshader);
@@ -78,7 +78,7 @@ class GLSelectedGeomsPass extends GLPass {
     draw(renderstate) {
         this.__geomDataBufferFbo.bindAndClear();
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.disable(gl.BLEND);
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);

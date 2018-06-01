@@ -16,14 +16,14 @@ class GLForwardPass extends GLPass {
     /////////////////////////////////////
     // Bind to Render Tree
     filterRenderTree() {
-        let allglshaderMaterials = this.__collector.getGLShaderMaterials();
+        const allglshaderMaterials = this.__collector.getGLShaderMaterials();
         this.__glshadermaterials = [];
         for (let glshaderkey in allglshaderMaterials) {
-            let glshaderMaterials = allglshaderMaterials[glshaderkey];
+            const glshaderMaterials = allglshaderMaterials[glshaderkey];
             if (glshaderMaterials.getGLShader().isTransparent())
                 continue;
             if (glshaderMaterials.getGLShader().getPassFilter) {
-                let passFilter = glshaderMaterials.getGLShader().getPassFilter();
+                const passFilter = glshaderMaterials.getGLShader().getPassFilter();
                 if( passFilter.indexOf('GLForwardPass') == -1)
                     continue;
             }
@@ -33,7 +33,7 @@ class GLForwardPass extends GLPass {
 
     bindShader(renderstate, glshader){
         if(super.bindShader(renderstate, glshader)){
-            let unifs = renderstate.unifs;
+            const unifs = renderstate.unifs;
             if ('debugLightmapTexelSize' in unifs)
                 this.__gl.uniform1f(unifs.debugLightmapTexelSize.location, renderstate.debugLightmaps);
             if ('planeDist' in unifs){
@@ -46,7 +46,7 @@ class GLForwardPass extends GLPass {
     }
 
     draw(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         // TODO: disable cull face when rendering cross sections.
         // gl.enable(gl.CULL_FACE);
         gl.disable(gl.CULL_FACE);
@@ -61,7 +61,7 @@ class GLForwardPass extends GLPass {
 
     drawGeomData(renderstate){
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.disable(gl.BLEND);
         gl.disable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);

@@ -28,7 +28,7 @@ class GLLines extends GLGeom {
         super.genBuffers();
 
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         let geomBuffers = this.__geom.genBuffers();
         let indices = geomBuffers.indices;
 
@@ -122,7 +122,7 @@ class GLLines extends GLGeom {
     }
 
     updateBuffers(opts) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         let geomBuffers = this.__geom.genBuffers();
         let indices = geomBuffers.indices;
 
@@ -209,7 +209,7 @@ class GLLines extends GLGeom {
 
         if (this.fatLines && '_lineThickness' in renderstate.unifs) { // TODO: Provide a geomdata shader for thick lines.
 
-            let gl = this.__gl;
+            const gl = this.__gl;
 
             let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
             if (!shaderBinding) {
@@ -247,7 +247,7 @@ class GLLines extends GLGeom {
     // Regular Drawing.
 
     draw(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         if (this.fatLines && '_lineThickness' in renderstate.unifs) {
             gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
         } else {

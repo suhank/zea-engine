@@ -332,9 +332,9 @@ class GLProceduralSky extends GLProbe {
     }
 
     renderSky() {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
-        let renderstate = {};
+        const renderstate = {};
         this.__skyDomeShader.bind(renderstate, 'GLProceduralSky');
         this.__skyDomeShaderBinding.bind(renderstate);
         let unifs = renderstate.unifs;
@@ -351,7 +351,7 @@ class GLProceduralSky extends GLProbe {
     }
 
     draw(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         let displayAtlas = false;
         if (displayAtlas) {
             let screenQuad = gl.screenQuad;

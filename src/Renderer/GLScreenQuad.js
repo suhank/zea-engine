@@ -36,7 +36,7 @@ class GLScreenQuad {
         let unifs = renderstate.unifs;
         texture.bindToUniform(renderstate, renderstate.unifs.image);
 
-        let gl = this.__gl; {
+        const gl = this.__gl; {
             let unif = unifs.pos;
             if (unif) {
                 gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);

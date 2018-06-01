@@ -20,7 +20,7 @@ class GLPoints extends GLGeom {
     genBuffers() {
         super.genBuffers();
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         let geomBuffers = this.__geom.genBuffers();
 
         for (let attrName in geomBuffers.attrBuffers) {
@@ -46,7 +46,7 @@ class GLPoints extends GLGeom {
 
     bind(renderstate, extrAttrBuffers, transformIds) {
 
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
         if (!shaderBinding) {
@@ -59,7 +59,7 @@ class GLPoints extends GLGeom {
     }
 
     draw() {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__geom.numVertices());
     }
 };

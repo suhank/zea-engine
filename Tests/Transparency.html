@@ -26,13 +26,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     /////////////////////////////////////
     // Ground Plane
-    let groundMaterial = new Visualive.Material('material', 'SimpleSurfaceShader');
-    groundMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    groundMaterial.addParameter('roughness', 1.0);
-    groundMaterial.addParameter('metallic', 0.0);
+    let material1 = new Visualive.Material('material', 'SimpleSurfaceShader');
+    material1.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    material1.addParameter('roughness', 1.0);
+    material1.addParameter('metallic', 0.0);
 
     let quad = new Visualive.Plane(20, 20);
-    let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
+    let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, material1);
     groundPlaneItem.localXfo.ori.rotateX(Math.PI * -0.5);
     groundPlaneItem.irradianceMap = 'Environment';
     scene.getRoot().addChild(groundPlaneItem);

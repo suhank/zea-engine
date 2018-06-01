@@ -11,7 +11,7 @@ class GeomShaderBinding {
     }
 
     bind(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         for (let attrName in this.__shaderAttrs) {
             let attrDesc = this.__shaderAttrs[attrName];

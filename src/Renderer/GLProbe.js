@@ -41,7 +41,7 @@ class GLProbe extends ImageAtlas {
     }
 
     generateHammersleySamples(numSamples) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         if (!gl['Hammersley' + numSamples]) {
 
             let dataArray = new Float32Array(numSamples * 3);
@@ -66,7 +66,7 @@ class GLProbe extends ImageAtlas {
     }
 
     convolveEnvMap(srcGLTex) {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         // Compile and bind the convolver shader.
         let numSamples = 1024;
@@ -118,7 +118,7 @@ class GLProbe extends ImageAtlas {
         for (let i = 0; i < this.__fbos.length; i++) {
             this.__fbos[i].bind();
 
-            let renderstate = {};
+            const renderstate = {};
             this.__convolverShader.bind(renderstate, 'GLProbe');
             this.__covolverShaderBinding.bind(renderstate);
             let unifs = renderstate.unifs;

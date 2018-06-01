@@ -98,7 +98,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__drawEdges = false;
         this.__drawPoints = false;
 
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         this.__debugTextures = [undefined];
         // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
@@ -146,7 +146,7 @@ class GLVisualiveRenderer extends GLRenderer {
         // An EnvMap must be HDR, and can be convolved for reflections.
         // A Background map can be simply an image.
         if (scene.getBackgroundMap() != undefined) {
-            let gl = this.__gl;
+            const gl = this.__gl;
             let backgroundMap = scene.getBackgroundMap();
             this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
             if(!this.__glBackgroundMap ) {
@@ -347,7 +347,7 @@ class GLVisualiveRenderer extends GLRenderer {
         if (this.__glBackgroundMap) {
             if (!this.__glBackgroundMap.isLoaded())
                 return;
-            let gl = this.__gl;
+            const gl = this.__gl;
             gl.depthMask(false);
             this.__backgroundMapShader.bind(renderstate);
             let unifs = renderstate.unifs;
@@ -362,14 +362,14 @@ class GLVisualiveRenderer extends GLRenderer {
     drawVP(viewport) {
         /////////////////////////////////////
         // Debugging 
-        let gl = this.__gl;
+        const gl = this.__gl;
         if (this.__debugMode > 0) {
             // Bind the default framebuffer
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.viewport(0, 0, this.getWidth(), this.getHeight());
 
             let displayDebugTexture = this.__debugTextures[this.__debugMode];
-            let renderstate = {};
+            const renderstate = {};
             gl.screenQuad.bindShader(renderstate);
             gl.screenQuad.draw(renderstate, displayDebugTexture);
         } else {

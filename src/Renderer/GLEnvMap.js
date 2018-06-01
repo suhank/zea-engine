@@ -70,7 +70,7 @@ class GLEnvMap extends GLProbe {
     draw(renderstate) {
         if (this.__envMap.isLoaded()) {
 
-            let gl = this.__gl;
+            const gl = this.__gl;
             let displayAtlas = false;
             if (displayAtlas) {
                 let screenQuad = gl.screenQuad;

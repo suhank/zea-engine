@@ -31,7 +31,7 @@ class GLMesh extends GLGeom {
         this.__numTriangles = indices.length / 3;
         this.__numRenderVerts = geomBuffers.numRenderVerts;
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         this.__indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geomBuffers.indices, gl.STATIC_DRAW);
@@ -85,7 +85,7 @@ class GLMesh extends GLGeom {
         this.__wireframesVao = this.__ext.createVertexArrayOES();
         this.__ext.bindVertexArrayOES(this.__wireframesVao);
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         let wireframeIndexBuffer = gl.createBuffer();
         let wireframeIndices = Uint32Array.from(this.__geom.edgeVerts);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndexBuffer);
@@ -136,7 +136,7 @@ class GLMesh extends GLGeom {
         this.__hardEdgesVao = this.__ext.createVertexArrayOES();
         this.__ext.bindVertexArrayOES(this.__hardEdgesVao);
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         let hardEdgeIndexBuffer = gl.createBuffer();
         let hardEdgeIndices = Uint32Array.from(this.__geom.computeHardEdgesIndices());
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer);
@@ -192,7 +192,7 @@ class GLMesh extends GLGeom {
 
     destroy() {
         super.destroy();
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.deleteBuffer(this.__indexBuffer);
         this.__indexBuffer = undefined;
         // if (this.__wireframesVao)

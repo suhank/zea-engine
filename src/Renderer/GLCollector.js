@@ -41,52 +41,52 @@ import {
 
 class GLShaderMaterials {
     constructor(glshader = undefined) {
-        this.__glshader = glshader;
-        this.__glmaterialDrawItemSets = [];
+        this.glshader = glshader;
+        this.glmaterialDrawItemSets = [];
 
     }
 
     getGLShader() {
-        return this.__glshader;
+        return this.glshader;
     }
 
     addMaterialDrawItemSets(glmaterialDrawItemSets) {
-        if (this.__glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets) == -1)
-            this.__glmaterialDrawItemSets.push(glmaterialDrawItemSets);
+        if (this.glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets) == -1)
+            this.glmaterialDrawItemSets.push(glmaterialDrawItemSets);
     }
 
     removeMaterialDrawItemSets(glmaterialDrawItemSets) {
-        let index = this.__glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets);
-        this.__glmaterialDrawItemSets.splice(index, 1);
+        let index = this.glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets);
+        this.glmaterialDrawItemSets.splice(index, 1);
     }
 
     getMaterialDrawItemSets() {
-        return this.__glmaterialDrawItemSets;
+        return this.glmaterialDrawItemSets;
     }
 }
 
 class GLMaterialDrawItemSets {
     constructor(glmaterial = undefined) {
-        this.__glmaterial = glmaterial;
-        this.__drawItemSets = [];
+        this.glmaterial = glmaterial;
+        this.drawItemSets = [];
     }
 
     getGLMaterial() {
-        return this.__glmaterial;
+        return this.glmaterial;
     }
 
     addDrawItemSet(drawItemSet) {
-        if (this.__drawItemSets.indexOf(drawItemSet) == -1)
-            this.__drawItemSets.push(drawItemSet);
+        if (this.drawItemSets.indexOf(drawItemSet) == -1)
+            this.drawItemSets.push(drawItemSet);
     }
 
     removeDrawItemSet(drawItemSet) {
-        let index = this.__drawItemSets.indexOf(drawItemSet);
-        this.__drawItemSets.splice(index, 1);
+        let index = this.drawItemSets.indexOf(drawItemSet);
+        this.drawItemSets.splice(index, 1);
     }
 
     findDrawItemSet(glgeom) {
-        for (let drawItemSet of this.__drawItemSets) {
+        for (let drawItemSet of this.drawItemSets) {
             if (drawItemSet.getGLGeom() == glgeom)
                 return drawItemSet;
         }
@@ -94,7 +94,7 @@ class GLMaterialDrawItemSets {
     }
 
     getDrawItemSets() {
-        return this.__drawItemSets;
+        return this.drawItemSets;
     }
 };
 
@@ -105,6 +105,7 @@ class GLCollector {
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
 
+        this.__newItemsAdded = false;
         this.__dirtyItemIndices = [];
 
         this.__sceneItemFilters = [];
@@ -386,6 +387,7 @@ class GLCollector {
             addDrawItemToGLMaterialDrawItemSet();
         })
 
+        this.__newItemsAdded = true;
         return gldrawItem;
     };
 
@@ -409,7 +411,6 @@ class GLCollector {
         }
 
         treeItem.childAdded.connect(this.__childAdded);
-
         treeItem.destructing.connect(this.__treeItemDestructing);
 
         treeItem.globalXfoChanged.connect((newXfo, prevXfo) => {
@@ -417,13 +418,13 @@ class GLCollector {
         });
     }
 
+    __childAdded(child) {
+        this.addTreeItem(child);
+    }
+
     __treeItemDestructing(treeItem) {
         treeItem.childAdded.disconnect(this.__childAdded);
         treeItem.destructing.disconnect(this.__treeItemDestructing);
-    }
-
-    __childAdded(child) {
-        this.addTreeItem(child);
     }
 
     removeDrawItem(gldrawItem) {
@@ -601,7 +602,6 @@ class GLCollector {
 
 
         this.__dirtyItemIndices = [];
-        this.renderTreeUpdated.emit();
     };
 
 
@@ -609,6 +609,11 @@ class GLCollector {
         if (this.__dirtyItemIndices.length == 0)
             return;
         this.uploadDrawItems();
+        
+        if(this.__newItemsAdded) {
+            this.renderTreeUpdated.emit();
+            this.__newItemsAdded = false;
+        }
     }
 
 

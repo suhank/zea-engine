@@ -42,7 +42,7 @@ class GLLDRAlphaImage extends GLTexture2D {
 
     __unpackLDRAlpha(hdrImageParams){
 
-        let gl = this.__gl;
+        const gl = this.__gl;
         
         let ldr = hdrImageParams.data.ldr;
         let alpha = hdrImageParams.data.alpha;
@@ -91,7 +91,7 @@ class GLLDRAlphaImage extends GLTexture2D {
 
         this.__fbo.bindAndClear();
 
-        let renderstate = {};
+        const renderstate = {};
         this.__unpackLDRAlphaShader.bind(renderstate, 'GLLDRAlphaImage');
         this.__shaderBinding.bind(renderstate);
 

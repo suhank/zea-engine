@@ -284,8 +284,8 @@ class ImageAtlas extends GLTexture2D {
             return;
         this.__fbo.bindAndClear();
 
-        let gl = this.__gl;
-        let renderstate = {};
+        const gl = this.__gl;
+        const renderstate = {};
         gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas');
         gl.__atlasLayoutShaderBinding.bind(renderstate);
         let scl = new Vec2(1.0 / this.width, 1.0 / this.height);

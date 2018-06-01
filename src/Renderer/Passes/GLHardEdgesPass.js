@@ -47,7 +47,7 @@ class GLHardEdgesPass extends GLPass {
     }
 
     draw(renderstate) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         gl.enable(gl.BLEND);
         if (this.__renderHiddenLines) {
             gl.disable(gl.DEPTH_TEST);

@@ -205,7 +205,7 @@ class GLTexture2D extends RefCounted {
     }
 
     __updateGLTexParams() {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         // Load the image into the GPU for rendering.
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
@@ -220,7 +220,7 @@ class GLTexture2D extends RefCounted {
     }
 
     bufferData(data, width = -1, height = -1, bind = true, emit = true) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         if (bind) {
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         }

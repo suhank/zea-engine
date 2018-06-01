@@ -112,7 +112,7 @@ class ImagePyramid extends ImageAtlas {
     }
 
     generateAtlasLayout(minTileSize) {
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         this.size = this.__srcGLTex.height;
         let aspectRatio = this.__srcGLTex.width / this.__srcGLTex.height;
@@ -141,7 +141,7 @@ class ImagePyramid extends ImageAtlas {
     }
 
     renderAtlas(cleanup = true) {
-        let gl = this.__gl;
+        const gl = this.__gl;
         let renderstate = {};
         gl.screenQuad.bindShader(renderstate);
 

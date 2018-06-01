@@ -62,7 +62,7 @@ class GLNormalsPass extends GLPass {
         if(this.__glshadermaterials.length == 0)
             return;
 
-        let gl = this.__gl;
+        const gl = this.__gl;
 
         gl.enable(gl.CULL_FACE);
         gl.enable(gl.BLEND);
