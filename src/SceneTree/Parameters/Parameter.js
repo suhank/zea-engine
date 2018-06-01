@@ -15,7 +15,7 @@ const ValueSetMode = {
 };
 
 class BaseParameter {
-    constructor(name, dataType) {
+    constructor(name) {
         this.__name = name;
         this.valueChanged = new Signal();
         this.nameChanged = new Signal();
@@ -48,7 +48,7 @@ class BaseParameter {
 
     setDirty(cleanerFn) {
         // If already dirty, simply return.
-        if(this.__cleanerFns.indexOf(cleanerFn) != -1){
+        if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
             return false;
         }
         this.__cleanerFns.push(cleanerFn);
@@ -67,40 +67,37 @@ class BaseParameter {
         console.error("TOOD: implment me")
     }
     cloneMembers(clonedParam) {
-        
+
     }
 };
 
 
 
 class Parameter extends BaseParameter {
-    constructor(name, value, dataType) {
-        if(!dataType) {
-            dataType = value.constructor.name;
-        }
-        super(name, dataType);
+    constructor(name, value) {
+        super(name);
         this.__value = value;
     }
 
-    getValue(mode=ValueGetMode.NORMAL) {
-        if(mode==ValueGetMode.NORMAL && this.__cleanerFns.length > 0) {
+    getValue(mode = ValueGetMode.NORMAL) {
+        if (mode == ValueGetMode.NORMAL && this.__cleanerFns.length > 0) {
             // Clean the param before we start evaluating the connected op.
             // this is so that operators can read from the current value
             // to compute the next.
             let fns = this.__cleanerFns;
             this.__cleanerFns = [];
-            for(let fn of fns) {
+            for (let fn of fns) {
                 this.__value = fn(this.__value, this.getValue);
-                if(this.__value == undefined) {
-                    throw("Error. Cleander Fn did not return a valid value:" + fn.name);
+                if (this.__value == undefined) {
+                    throw ("Error. Cleander Fn did not return a valid value:" + fn.name);
                 }
             }
         }
         return this.__value;
     }
 
-    setValue(value, mode=ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-        if(this.__cleanerFns.length > 0) {
+    setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
+        if (this.__cleanerFns.length > 0) {
             // Note: This message has not hilighted any real issues, and has become verbose.
             // Enable if suspicious of operators being trampled by setValues.
             // if(mode==0){
@@ -112,8 +109,8 @@ class Parameter extends BaseParameter {
             // }
             this.__cleanerFns = [];
         }
-        if(value == undefined) {
-            throw("Invalud valu for setvalue.");
+        if (value == undefined) {
+            throw ("Invalud valu for setvalue.");
         }
 
         // Note: equality tests on anything but simple values is not going to work. We can't easily optimise this function.
@@ -126,7 +123,7 @@ class Parameter extends BaseParameter {
 
     clone() {
         let clonedValue = this.__value;
-        if(clonedValue.clone)
+        if (clonedValue.clone)
             clonedValue = clonedValue.clone();
         let clonedParam = new Parameter(this.__name, clonedValue, this.__dataType);
         this.cloneMembers();
@@ -135,8 +132,42 @@ class Parameter extends BaseParameter {
 };
 
 
+class ListParameter extends Parameter {
+    constructor(name, dataType) {
+        super(name, []);
+        this.__dataType = dataType;
+    }
+
+    addElement(elem) {
+        if(!elem)
+            elem = new this.__dataType()
+        this.__value.push(elem)
+        this.setValue(this.__value);
+        return elem;
+    }
+
+    removeElement(index) {
+        this.__value.splice(index, 1)
+        this.setValue(this.__value)
+    }
+
+    insertElement(index, elem) {
+        this.__value.splice(index, 0, elem);
+        this.setValue(this.__value)
+    }
+
+    clone() {
+        let clonedValue = this.__value.slice(0);
+        let clonedParam = new ListParameter(this.__name, clonedValue, this.__dataType);
+        this.cloneMembers();
+        return clonedParam;
+    }
+};
+
+
 export {
     Parameter,
+    ListParameter,
     ValueGetMode,
     ValueSetMode
 };
