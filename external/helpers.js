@@ -85,7 +85,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             baseparts.pop();
             base = baseparts.join('/') + '/';
         }
-        const curr = resources;
+        let curr = resources;
         for(let i=0; i<parts.length-1; i++){
             const part = parts[i];
             if(!(part in curr)){
