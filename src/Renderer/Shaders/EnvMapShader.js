@@ -211,9 +211,13 @@ void main(void) {
 #endif
 }
 `);
-        // Assuming a simple RGB image in gamma space for now.
-        this.addParameter('linearSpaceImage', false);
         this.finalize();
+    }
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        // Assuming a simple RGB image in gamma space for now.
+        paramDescs.push({ name: 'linearSpaceImage', defaultValue: false })
+        return paramDescs;
     }
 };
 

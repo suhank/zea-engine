@@ -51,10 +51,15 @@ void main()
 
 `);
 
-        this.addParameter('env', new Color(1.0, 1.0, 0.5));
-        this.addParameter('projectionCenter', new Vec3(0.0, 0.0, 1.7));
-        this.addParameter('linearSpaceImage', true);
         this.finalize();
+    }
+
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        paramDescs.push({ name: 'env', defaultValue: new Color(1.0, 1.0, 0.5) })
+        paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
+        paramDescs.push({ name: 'linearSpaceImage', defaultValue: true })
+        return paramDescs;
     }
 };
 

@@ -33,7 +33,7 @@ class BaseParameter {
     }
 
     setName(name) {
-        let prevName = this.__name;
+        const prevName = this.__name;
         this.__name = name;
         this.nameChanged.emit(this.__name, prevName);
     }
@@ -59,7 +59,7 @@ class BaseParameter {
         return this.__cleanerFns.length > 0;
     }
     removeCleanerFn(cleanerFn) {
-        let index = this.__cleanerFns.indexOf(cleanerFn);
+        const index = this.__cleanerFns.indexOf(cleanerFn);
         this.__cleanerFns.splice(index, 1);
     }
 
@@ -122,10 +122,10 @@ class Parameter extends BaseParameter {
     }
 
     clone() {
-        let clonedValue = this.__value;
+        const clonedValue = this.__value;
         if (clonedValue.clone)
             clonedValue = clonedValue.clone();
-        let clonedParam = new Parameter(this.__name, clonedValue, this.__dataType);
+        const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType);
         this.cloneMembers();
         return clonedParam;
     }

@@ -219,6 +219,10 @@ class GLFbo {
         gl.viewport(0, 0, this.width, this.height); // Match the viewport to the texture size
     }
 
+    bindForWriting(renderstate) {
+        this.bind(renderstate);
+    }
+
     bindForReading() {
         const gl = this.__gl;
         if (gl.name == 'webgl2')
@@ -235,8 +239,6 @@ class GLFbo {
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
-
-
     clear() {
         const gl = this.__gl;
         gl.colorMask(true, true, true, true); // Don't write to the color channels at all
@@ -246,13 +248,6 @@ class GLFbo {
         } else {
             gl.clear(gl.COLOR_BUFFER_BIT);
         }
-    }
-
-    bindForWriting(renderstate) {
-        this.bind(renderstate);
-    }
-    bindForReading(renderstate, readUnif) {
-        this.__colorTexture.bindToUniform(renderstate, readUnif);
     }
 
     bindAndClear(renderstate) {

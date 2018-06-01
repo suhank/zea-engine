@@ -104,7 +104,17 @@ class ParameterOwner extends RefCounted {
         return param;
     }
 
+    removeParameter(index){
+        const param = this.__params[index]
+        this.__params.splice(index, 1)
+        this.parameterRemoved.emit(param.getName());
+    }
 
+    removeAllParameters(){
+        for (let i=this.__params.length-1; i>=0; i--) {
+            this.removeParameter(i);
+        }
+    }
     //////////////////////////////////////////
     // Persistence
 

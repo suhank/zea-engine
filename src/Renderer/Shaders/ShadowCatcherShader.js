@@ -120,10 +120,15 @@ void main(void) {
 #endif
 }
 `);
-        this.addParameter('env', new Color(0.7, 0.7, 0.95));
-        this.addParameter('projectionCenter', new Vec3(0.0, 1.7, 0.0));
-        this.addParameter('shadowMultiplier', 1.0);
         this.finalize();
+    }
+
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        paramDescs.push({ name: 'env', defaultValue: new Color(0.7, 0.7, 0.95) })
+        paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 1.7, 0.0) })
+        paramDescs.push({ name: 'shadowMultiplier', defaultValue: 1.0 })
+        return paramDescs;
     }
 
     bind(renderstate, key) {

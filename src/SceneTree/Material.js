@@ -13,8 +13,8 @@ import {
     Image2D
 } from './Image2D.js';
 import {
-    RefCounted
-} from './RefCounted.js';
+    sgFactory
+} from './SGFactory.js';
 import {
     Parameter,
     NumberParameter,
@@ -89,12 +89,13 @@ let makeParameterTexturable = (parameter) => {
 class Material extends BaseItem {
     constructor(name, shaderName) {
         super(name);
-        this.__shaderName = shaderName;
 
         this.updated = new Signal();
         this.textureConnected = new Signal();
         this.textureDisconnected = new Signal();
         this.shaderNameChanged = new Signal();
+
+        this.setShaderName(shaderName);
     }
 
     getShaderName() {
@@ -102,6 +103,25 @@ class Material extends BaseItem {
     }
 
     setShaderName(shaderName) {
+
+        const shaderClass = sgFactory.getClass(shaderName);
+        if(!shaderClass)
+            throw("Error setting Shader. Shader not found:" + shaderName);
+        this.removeAllParameters();
+        const paramDescs = shaderClass.getParamDeclarations();
+        for(let desc of paramDescs) {
+            // Note: some shaders specify default images. Like the speckle texture
+            // on the car paint shader.
+            if (desc.defaultValue instanceof Image2D) {
+                image = desc.defaultValue;
+                defaultValue = new Color();
+            }
+            const param = this.addParameter(desc.name, desc.defaultValue);
+            if(desc.defaultValue instanceof Color || !isNaN(desc.defaultValue)) {
+                if(desc.texturable != false) // By default, parameters are texturable.
+                    this.__makeParameterTexturable(param);
+            }
+        }
         this.__shaderName = shaderName;
         this.shaderNameChanged.emit(this.__shaderName);
     }
@@ -112,18 +132,18 @@ class Material extends BaseItem {
     }
 
     removeAllTextures() {
-        for (let paramName in this.__params) {
-            if (this.__params[paramName].getImage()) {
-                this.__params[paramName].getImage().removeRef(this);
-                this.__params[paramName].setImage(undefined);
+        for (let param of this.__params) {
+            if (param.getImage && param.getImage()) {
+                param.getImage().removeRef(this);
+                param.setImage(undefined);
             }
         }
     }
 
     copyFrom(srcMaterial) {
-        for (let paramName in this.__params) {
-            let prop = this.__params[paramName];
-            let srcParam = srcMaterial.getParameter(paramName)
+        throw("What is happening here? ")
+        for (let param of this.__params) {
+            let srcParam = srcMaterial.getParameter(param.getName())
             if (srcParam != undefined)
                 this.__params[paramName] = srcParam;
         }
@@ -135,7 +155,7 @@ class Material extends BaseItem {
     getParamTextures() {
         let textures = {};
         for (let param of this.__params) {
-            if (param.getImage())
+            if (param.getImage && param.getImage())
                 textures[param.getName()] = param.getImage();
         }
         return textures;
@@ -147,27 +167,27 @@ class Material extends BaseItem {
         param.textureDisconnected.connect(this.textureDisconnected.emit);
     }
 
-    addParameter(paramName, defaultValue) {
-        let image;
-        if (defaultValue instanceof Image2D) {
-            image = defaultValue;
-            defaultValue = new Color();
-        }
-        let param = super.addParameter(paramName, defaultValue);
-        param.valueChanged.connect(this.updated.emit);
-        if(!param.setImage)
-            this.__makeParameterTexturable(param);
-        if (image) {
-            param.setImage(image)
-        }
-        return param;
-    }
+    // addParameter(paramName, defaultValue) {
+    //     let image;
+    //     if (defaultValue instanceof Image2D) {
+    //         image = defaultValue;
+    //         defaultValue = new Color();
+    //     }
+    //     const param = super.addParameter(paramName, defaultValue);
+    //     param.valueChanged.connect(this.updated.emit);
+    //     if(!param.setImage)
+    //         this.__makeParameterTexturable(param);
+    //     if (image) {
+    //         param.setImage(image)
+    //     }
+    //     return param;
+    // }
 
-    addParameterInstance(param) {
-        super.addParameterInstance(param);
-        this.__makeParameterTexturable(param);
-        return param;
-    }
+    // addParameterInstance(param) {
+    //     super.addParameterInstance(param);
+    //     this.__makeParameterTexturable(param);
+    //     return param;
+    // }
 
     isTransparent() {
         let opacity = this.getParameter('opacity');

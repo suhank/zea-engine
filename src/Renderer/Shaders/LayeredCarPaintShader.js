@@ -292,30 +292,36 @@ void main(void) {
 }
 `);
 
+        this.finalize();
+    }
+
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+
         // F0 = reflectance and is a physical property of materials
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
 
-        this.addParameter('baseColor', new Color(1.0, 0.0, 0.0));
-        this.addParameter('baseMetallic', 0.0);
-        this.addParameter('baseRoughness', 0.35);
-        this.addParameter('baseReflectance', 0.03);
-        this.addParameter('midColorTint', new Color(1.0, 1.0, 1.0));
-        this.addParameter('midColorTintReflectance', 0.03);
-        this.addParameter('glossMetallic', 0.0);
-        this.addParameter('glossRoughness', 0.35);
-        this.addParameter('glossReflectance', 0.03);
+        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 0.0, 0.0) });
+        paramDescs.push({ name: 'baseMetallic', defaultValue: 0.0 });
+        paramDescs.push({ name: 'baseRoughness', defaultValue: 0.35 });
+        paramDescs.push({ name: 'baseReflectance', defaultValue: 0.03 });
+        paramDescs.push({ name: 'midColorTint', defaultValue: new Color(1.0, 1.0, 1.0) });
+        paramDescs.push({ name: 'midColorTintReflectance', defaultValue: 0.03 });
+        paramDescs.push({ name: 'glossMetallic', defaultValue: 0.0 });
+        paramDescs.push({ name: 'glossRoughness', defaultValue: 0.35 });
+        paramDescs.push({ name: 'glossReflectance', defaultValue: 0.03 });
 
 
         let flakesNormal = new FileImage2D('VisualiveEngine/FlakesNormalMap.png', this.__gl.renderer.getScene().getResourceLoader());
         flakesNormal.wrap = 'REPEAT';
         flakesNormal.mipMapped = true;
-        this.addParameter('flakesNormal', flakesNormal);
-        this.addParameter('flakesScale', 0.1);
-        this.addParameter('microflakePerturbation', 0.1);
+        paramDescs.push({ name: 'flakesNormal', defaultValue: flakesNormal });
+        paramDescs.push({ name: 'flakesScale', defaultValue: 0.1 });
+        paramDescs.push({ name: 'microflakePerturbation', defaultValue: 0.1 });
 
-        this.finalize();
+        return paramDescs;
     }
 };
 

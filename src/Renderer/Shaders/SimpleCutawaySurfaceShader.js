@@ -167,15 +167,19 @@ void main(void) {
 }
 `);
 
-        this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
-        this.addParameter('opacity', 1.0);
+        this.finalize();
+    }
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
+        paramDescs.push({ name: 'opacity', defaultValue: 1.0 });
 
         // cutaway params
-        this.addParameter('cutawayEnabled', true);
-        this.addParameter('cutColor', new Color(0.7, 0.2, 0.2));
-        this.addParameter('planeNormal', new Vec3(1.0, 0.0, 0.0), false);
-        this.addParameter('planeDist', 0.0, false);
-        this.finalize();
+        paramDescs.push({ name: 'cutawayEnabled', defaultValue: true });
+        paramDescs.push({ name: 'cutColor', defaultValue: new Color(0.7, 0.2, 0.2) });
+        paramDescs.push({ name: 'planeNormal', defaultValue: new Vec3(1.0, 0.0, 0.0), false });
+        paramDescs.push({ name: 'planeDist', defaultValue: 0.0, false });
+        return paramDescs;
     }
 };
 

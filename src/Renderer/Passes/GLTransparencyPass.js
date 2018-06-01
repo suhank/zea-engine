@@ -7,6 +7,7 @@ class GLTransparencyPass extends GLPass {
         super(gl, collector);
 
         this.transparentItems = [];
+        this.visibleItems = [];
         this.prevSortCameraPos = new Vec3();
     }
 
@@ -14,7 +15,24 @@ class GLTransparencyPass extends GLPass {
     // Bind to Render Tree
     filterRenderTree() {
         let allglshaderMaterials = this.__collector.getGLShaderMaterials();
-
+        const addDrawItem = (glshader, glmaterial, glGeom, drawItem)=>{
+            const item = {
+                glshader,
+                glmaterial,
+                glGeom,
+                drawItem
+            }
+            if(drawItem.getVisible())
+                this.transparentItems.push(item);
+            drawItem.visibilityChanged.connect((visible)=>{
+                if(visible) 
+                    this.transparentItems.push(item);
+                else {
+                    const index = this.transparentItems.indexOf(item);
+                    this.transparentItems.splice(index, 1);
+                }
+            });
+        }
 
         this.transparentItems = [];
         for (let glshaderkey in allglshaderMaterials) {
@@ -30,12 +48,7 @@ class GLTransparencyPass extends GLPass {
                     // Now we must unpack the drawItemSet into individual draw items.
                     const glGeom = gldrawitemset.glgeom;
                     for (let drawItem of gldrawitemset.drawItems) {
-                        this.transparentItems.push({
-                            glshader,
-                            glmaterial,
-                            glGeom,
-                            drawItem
-                        });
+                        addDrawItem(glshader, glmaterial, glGeom, drawItem);
                     }
                 }
             }
@@ -83,8 +96,10 @@ class GLTransparencyPass extends GLPass {
         let currentglGeom;
         for (let transparentItem of this.transparentItems) {
             const drawItem = transparentItem.drawItem;
-            if (!drawItem.getVisible())
+            if (!drawItem.getVisible()){
+            console.log("Inivisble:" + drawItem.geomItem.getName())
                 continue;
+            }
 
             if (currentglShader != transparentItem.glshader) {
                 // Some passes, like the depth pass, bind custom uniforms.

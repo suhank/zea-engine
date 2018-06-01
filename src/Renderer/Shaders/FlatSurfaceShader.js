@@ -98,9 +98,14 @@ void main(void) {
 }
 `);
 
-        this.addParameter('baseColor', new Color(1.0, 1.0, 0.5));
         this.nonSelectable = true;
         this.finalize();
+    }
+
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
+        return paramDescs;
     }
 };
 
