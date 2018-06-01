@@ -3,7 +3,7 @@ import { Vec3 } from '../../../Math/Vec3';
 import { Points } from '../Points.js';
 
 class PointGrid extends Points {
-    constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addTextureCoords=true) {
+    constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addTextureCoords=false) {
         super();
 
         this.__x = x;
@@ -60,14 +60,14 @@ class PointGrid extends Points {
     }
 
     __rebuild() {
-        this.setNumVertices((this.__xDivisions + 1) * (this.__yDivisions + 1));
+        this.setNumVertices(this.__xDivisions * this.__yDivisions);
 
         const texCoords = this.getVertexAttribute('texCoords');
         if(texCoords){
-            for (let i = 0; i <= this.__yDivisions; i++) {
-                let y = i / this.__yDivisions;
-                for (let j = 0; j <= this.__xDivisions; j++) {
-                    let x = j / this.__xDivisions;
+            for (let i = 0; i < this.__yDivisions; i++) {
+                let y = i / (this.__yDivisions-1);
+                for (let j = 0; j < this.__xDivisions; j++) {
+                    let x = j / (this.__xDivisions-1);
                     texCoords.getValueRef((i*this.__xDivisions) + j).set(x, y);
                 }
             }
@@ -77,10 +77,10 @@ class PointGrid extends Points {
     }
 
     __resize() {
-        for (let i = 0; i <= this.__yDivisions; i++) {
-            let y = ((i / this.__yDivisions) - 0.5) * this.__y;
-            for (let j = 0; j <= this.__xDivisions; j++) {
-                let x = ((j / this.__xDivisions) - 0.5) * this.__x;
+        for (let i = 0; i < this.__yDivisions; i++) {
+            let y = ((i / (this.__yDivisions-1)) - 0.5) * this.__y;
+            for (let j = 0; j < this.__xDivisions; j++) {
+                let x = ((j / (this.__xDivisions-1)) - 0.5) * this.__x;
                 this.getVertex((i*this.__xDivisions) + j).set(x, y, 0.0);
             }
         }
