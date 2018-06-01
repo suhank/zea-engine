@@ -14,10 +14,10 @@ import {
 
 
 class Lightmap extends RefCounted {
-    constructor(resourceName, atlasSize, resourceLoader, stream) {
+    constructor(resourceName, atlasSize, stream) {
         super();
         this.atlasSize = atlasSize;
-        this.image = new FileImage2D(resourceName, resourceLoader, {stream});
+        this.image = new FileImage2D(resourceName, {stream});
         this.__stream = stream;
     }
 
@@ -42,10 +42,9 @@ class Lightmap extends RefCounted {
 };
 
 class LightmapMixer extends RefCounted {
-    constructor(atlasSize, resourceLoader) {
+    constructor(atlasSize) {
         super();
         this.atlasSize = atlasSize;
-        this.__resourceLoader = resourceLoader;
         this.__images = [];
         this.__weights = [];
         this.__stream = false;
@@ -67,7 +66,7 @@ class LightmapMixer extends RefCounted {
 
     loadResource(index, resourceName, weight = undefined, stream=false) {
         if (!this.__images[index]) {
-            this.__images[index] = new FileImage2D(resourceName, this.__resourceLoader, {stream});
+            this.__images[index] = new FileImage2D(resourceName, {stream});
             this.__weights[index] = weight ? weight : 1.0;
             this.lightmapAdded.emit(index);
         } else {

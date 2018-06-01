@@ -29,11 +29,9 @@ export * from './DataImage2D.js';
 export * from './Label.js';
 export * from './FileImage2D.js';
 export * from './WebcamImage2D.js';
-export * from './HDRImage2D.js';
 export * from './HDRImageMixer.js';
 
 export * from './MaterialLibrary.js';
-export * from './ImageLibrary.js';
 
 export * from './ProceduralSky.js';
 

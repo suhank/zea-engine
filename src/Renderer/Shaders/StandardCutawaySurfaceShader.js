@@ -311,11 +311,11 @@ void main(void) {
         paramDescs.push({ name: 'reflectance', defaultValue: 0.0001 } );
 
         // cutaway params
-        paramDescs.push({ name: 'cutawayEnabled', defaultValue: true });
-        paramDescs.push({ name: 'cutColor', defaultValue: new Color(0.7, 0.2, 0.2) });
-        paramDescs.push({ name: 'planeNormal', defaultValue: new Vec3(1.0, 0.0, 0.0), false });
-        paramDescs.push({ name: 'planeDist', defaultValue: 0.0, false });
-        paramDescs.push({ name: 'cutawaySurfaceOffset', defaultValue: 0.000003, false });
+        paramDescs.push({ name: 'cutawayEnabled', defaultValue: true, texturable: false });
+        paramDescs.push({ name: 'cutColor', defaultValue: new Color(0.7, 0.2, 0.2), texturable: false });
+        paramDescs.push({ name: 'planeNormal', defaultValue: new Vec3(1.0, 0.0, 0.0), texturable: false });
+        paramDescs.push({ name: 'planeDist', defaultValue: 0.0, texturable: false });
+        paramDescs.push({ name: 'cutawaySurfaceOffset', defaultValue: 0.000003, texturable: false });
         return paramDescs;
     }
 };

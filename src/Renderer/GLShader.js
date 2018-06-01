@@ -4,7 +4,6 @@ import {
 import {
     BaseItem,
     Image2D,
-    HDRImage2D,
     makeParameterTexturable
 } from '../SceneTree';
 import {
@@ -295,49 +294,6 @@ class GLShader extends BaseItem {
     }
 
     finalize() {
-        // let hash = 0;
-        // for (let stageName in this.__shaderStages) {
-        //     let shaderStageBlock = this.__shaderStages[stageName];
-        //     hash = ((hash << 5) - hash) + hashStr(shaderStageBlock['glsl']);
-        // }
-        // this.__hash = Math.abs(hash);
-
-        // const attachTexture = (paramName, texture) => {
-        //     const genGLTex = () => {
-        //         let gltexture = texture.getMetadata('gltexture');
-        //         if (!gltexture) {
-        //             if (texture instanceof HDRImage2D || texture.format === "FLOAT") {
-        //                 gltexture = new GLHDRImage(this.__gl, texture);
-        //             } else if (texture.isStreamAtlas()) {
-        //                 gltexture = new GLImageStream(this.__gl, texture);
-        //             }
-        //             // else if (texture.hasAlpha()){
-        //             //     gltexture = new GLLDRAlphaImage(this.__gl, texture);
-        //             // }
-        //             else {
-        //                 gltexture = new GLTexture2D(this.__gl, texture);
-        //             }
-        //         }
-        //         gltexture.updated.connect(this.updated.emit);
-        //         this.__gltextures[paramName] = gltexture;
-        //     }
-        //     if (!texture.isLoaded()) {
-        //         texture.loaded.connect(() => {
-        //             genGLTex();
-        //         });
-        //     } else {
-        //         genGLTex();
-        //     }
-        // }
-        // for (let paramName in this.__params) {
-        //     const param = this.__params[paramName];
-        //     const value = param.getValue();
-        //     if (value instanceof Image2D) {
-        //         if (paramName in this.__gltextures && this.__gltextures[paramName].getTexture() == value)
-        //             continue;
-        //         attachTexture(paramName, value);
-        //     }
-        // }
     }
 
 

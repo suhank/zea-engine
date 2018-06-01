@@ -24,11 +24,14 @@ import {
 import {
     Material
 } from './Material.js';
+import {
+    resourceLoader
+} from './ResourceLoader.js';
 
 
 class ObjAsset extends AssetItem {
-    constructor(name, resourceLoader) {
-        super(name, resourceLoader);
+    constructor(name) {
+        super(name);
 
         this.addParameter('splitObjects', false);
         this.addParameter('splitGroupsIntoObjects', false);
@@ -38,11 +41,11 @@ class ObjAsset extends AssetItem {
     }
 
     __loadURL(url, filePath){
-        this.__resourceLoader.addWork(this.getName(), 2);
+        resourceLoader.addWork(this.getName(), 2);
         loadTextfile(url, (fileData)=>{
-            this.__resourceLoader.addWorkDone(this.getName(), 1);
+            resourceLoader.addWorkDone(this.getName(), 1);
              this.parseObjData(filePath, fileData);
-            this.__resourceLoader.addWorkDone(this.getName(), 1);
+            resourceLoader.addWorkDone(this.getName(), 1);
         });
     }
 
@@ -174,15 +177,15 @@ class ObjAsset extends AssetItem {
                         continue;
                     // Load and parse the mat lib.
                     async.incAsyncCount();
-                    this.__resourceLoader.addWork(this.getName(), 2);
+                    resourceLoader.addWork(this.getName(), 2);
                     let fileFolder = getFileFolder(filePath);
                     loadTextfile(
                         fileFolder + elements[0],
                         ()=>{
-                            this.__resourceLoader.addWorkDone(this.getName(), 1);
+                            resourceLoader.addWorkDone(this.getName(), 1);
                             this.parseMtlData(filePath, fileData);
                             async.decAsyncCount();
-                            this.__resourceLoader.addWorkDone(this.getName(), 1);
+                            resourceLoader.addWorkDone(this.getName(), 1);
                         }
                     );
                     break;

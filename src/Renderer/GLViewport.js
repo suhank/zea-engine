@@ -13,7 +13,6 @@ import {
 } from '../Utilities';
 import {
     Image2D,
-    HDRImage2D,
     Camera
 } from '../SceneTree';
 import {

@@ -48,7 +48,7 @@ class AudioItem extends TreeItem {
 
 
 class FileAudioItem extends AudioItem {
-    constructor(name, resourceLoader) {
+    constructor(name) {
 
         const audioElement = new Audio();
         audioElement.style.display = 'none';
@@ -59,7 +59,7 @@ class FileAudioItem extends AudioItem {
         super(name, audioElement);
 
 
-        const fileParam = this.addParameter(new FilePathParameter('FilePath', resourceLoader));
+        const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(() => {
             audioElement.src = fileParam.getURL();
         });

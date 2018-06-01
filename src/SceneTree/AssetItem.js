@@ -20,16 +20,15 @@ import {
 } from './MaterialLibrary.js';
 
 class AssetItem extends TreeItem {
-    constructor(name, resourceLoader) {
-        super(name, resourceLoader);
+    constructor(name) {
+        super(name);
         this.__name = name;
-        this.__resourceLoader = resourceLoader;
         this.__geomLibrary = new GeomLibrary(this.__name);
-        this.__materials = new MaterialLibrary(this.__resourceLoader);
+        this.__materials = new MaterialLibrary();
         this.__atlasSize = new Vec2();
 
 
-        let fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
+        let fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
             let filePath = fileParam.getValue()

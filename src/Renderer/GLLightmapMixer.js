@@ -3,8 +3,7 @@ import {
     Async
 } from '../Utilities';
 import {
-    Image2D,
-    HDRImage2D
+    Image2D
 } from '../SceneTree';
 import {
     GLShader
@@ -57,7 +56,7 @@ class GLLightmapMixer extends GLTexture2D {
             let image = this.__lightmapMixer.getSubImage(index);
             let gltexture = image.getMetadata('gltexture');
             if(!gltexture) {
-                if (image instanceof HDRImage2D || image.format === "FLOAT") {
+                if (image.format === "FLOAT") {
                     gltexture = new GLHDRImage(gl, image);
                 } else {
                     gltexture = new GLTexture2D(gl, image);

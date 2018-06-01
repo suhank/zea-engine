@@ -13,8 +13,7 @@ import {
 } from '../Utilities';
 import {
     BaseItem,
-    Image2D,
-    HDRImage2D
+    Image2D
 } from '../SceneTree';
 import {
     bindParam
@@ -145,7 +144,7 @@ class GLMaterial extends BaseItem {
             const genGLTex = () => {
                 let gltexture = texture.getMetadata('gltexture');
                 if(!gltexture) {
-                    if (texture instanceof HDRImage2D || texture.format === "FLOAT"){
+                    if (texture.format === "FLOAT"){
                         gltexture = new GLHDRImage(this.__gl, texture);
                     }
                     else if (texture.isStreamAtlas()){

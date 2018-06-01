@@ -5,7 +5,6 @@ import {
     Xfo
 } from '../Math';
 import {
-    HDRImage2D,
     HDRImageMixer,
     ProceduralSky,
     Lightmap,
@@ -123,7 +122,7 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        } else if (env instanceof HDRImage2D || env.format === "FLOAT") {
+        } else if (env.format === "FLOAT") {
             this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
             this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
         } else {
@@ -150,7 +149,7 @@ class GLVisualiveRenderer extends GLRenderer {
             let backgroundMap = scene.getBackgroundMap();
             this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
             if(!this.__glBackgroundMap ) {
-                if (backgroundMap instanceof HDRImage2D || backgroundMap.format === "FLOAT") {
+                if (backgroundMap.format === "FLOAT") {
                     this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
                 } else {
                     this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);

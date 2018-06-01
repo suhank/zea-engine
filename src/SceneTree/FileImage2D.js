@@ -22,6 +22,9 @@ import {
 import {
     GIF
 } from '../external/gifuct-js.js';
+import {
+    resourceLoader
+} from './ResourceLoader.js';
 
 import {
     Parameter,
@@ -37,16 +40,15 @@ const imageDataLibrary = {
 
 
 class FileImage2D extends Image2D {
-    constructor(resourcePath, resourceLoader, params = {}) {
+    constructor(resourcePath, params = {}) {
         super(params);
         
-        this.__resourceLoader = resourceLoader;
         this.__loaded = false;
         this.__hdrexposure = 1.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
-        const fileParam = this.addParameter(new FilePathParameter('FilePath', this.__resourceLoader));
+        const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
             const filePath = fileParam.getValue()
@@ -58,11 +60,6 @@ class FileImage2D extends Image2D {
     }
 
     getName() {
-        if(this.__name != this.constructor.name){
-            return this.__name;
-        }
-        if (!this.__resourcePath || this.__resourcePath == '')
-            return "FileImageNoResource";
         let getName = (str) => {
             let p = str.split('/');
             let last = p[p.length - 1];
@@ -78,7 +75,7 @@ class FileImage2D extends Image2D {
                 }
             }
         }
-        return getName(this.__resourcePath);
+        return getName(this.getParameter('FilePath').getValue());
     }
 
     __loadURL(url, resourcePath) {
@@ -92,22 +89,21 @@ class FileImage2D extends Image2D {
         }
         let ext = getExt(resourcePath);
         if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
-            this.__loadLDRImage(resourcePath, ext);
+            this.__loadLDRImage(url, resourcePath, ext);
         } else if (ext == '.mp4' || ext == '.ogg') {
-            this.__loadLDRVideo(resourcePath);
-        } else if (ext == '.ldralpha') {
-            this.__loadLDRAlpha(resourcePath);
+            this.__loadLDRVideo(url, resourcePath);
+        // } else if (ext == '.ldralpha') {
+        //     this.__loadLDRAlpha(url, resourcePath);
         } else if (ext == '.vlh') {
-            this.__loadVLH(resourcePath);
+            this.__loadVLH(url, resourcePath);
         } else if (ext == '.gif') {
-            this.__loadGIF(resourcePath);
+            this.__loadGIF(url, resourcePath);
         } else {
             throw ("Unsupported file type. Check the ext:" + resourcePath);
         }
-        this.__resourcePath = resourcePath;
     }
 
-    __loadLDRImage(resourcePath, ext) {
+    __loadLDRImage(url, resourcePath, ext) {
         if (ext == '.jpg') {
             this.channels = 'RGB';
         } else if (ext == '.png') {
@@ -133,23 +129,23 @@ class FileImage2D extends Image2D {
             }
         }
         else {
-            this.__resourceLoader.addWork(resourcePath, 1);
+            resourceLoader.addWork(resourcePath, 1);
             domElement = new Image();
             domElement.crossOrigin = 'anonymous';
-            domElement.src = this.__resourceLoader.resolveURL(resourcePath);
+            domElement.src = resourceLoader.resolveURL(resourcePath);
 
             domElement.addEventListener("load", loaded);
             domElement.addEventListener("load", () => {
-                this.__resourceLoader.addWorkDone(resourcePath, 1);
+                resourceLoader.addWorkDone(resourcePath, 1);
             });
             imageDataLibrary[resourcePath] = domElement;
         }
     }
 
-    __loadLDRVideo(resourcePath) {
+    __loadLDRVideo(url, resourcePath) {
         this.channels = 'RGB';
         this.format = 'UNSIGNED_BYTE';
-        this.__resourceLoader.addWork(resourcePath, 1);
+        resourceLoader.addWork(resourcePath, 1);
 
         let domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
@@ -164,7 +160,7 @@ class FileImage2D extends Image2D {
             this.height = domElement.videoWidth;
             this.__data = domElement;
             this.__loaded = true;
-            this.__resourceLoader.addWorkDone(resourcePath, 1);
+            resourceLoader.addWorkDone(resourcePath, 1);
             this.loaded.emit(domElement);
 
             let prevFrame = 0;
@@ -185,12 +181,12 @@ class FileImage2D extends Image2D {
             timerCallback();
 
         }, false);
-        domElement.src = this.__resourceLoader.resolveURL(resourcePath);
+        domElement.src = resourceLoader.resolveURL(resourcePath);
         //domElement.load();
         domElement.play();
     }
 
-    // __loadLDRAlpha(resourcePath) {
+    // __loadLDRAlpha(url, resourcePath) {
     //     let worker = new ResourceLoaderWorker();
     //     worker.onmessage = (event) => {
     //         worker.terminate();
@@ -238,10 +234,10 @@ class FileImage2D extends Image2D {
     //     });
     // }
 
-    __loadVLH(resourcePath) {
+    __loadVLH(url, resourcePath) {
         this.format = 'FLOAT';
 
-        this.__resourceLoader.loadResource(resourcePath, (entries) => {
+        resourceLoader.loadResource(resourcePath, (entries) => {
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -274,7 +270,7 @@ class FileImage2D extends Image2D {
     }
 
 
-    __loadGIF(resourcePath) {
+    __loadGIF(url, resourcePath) {
 
         this.channels = 'RGBA';
         this.format = 'UNSIGNED_BYTE';
@@ -290,7 +286,7 @@ class FileImage2D extends Image2D {
             resourcePromise = imageDataLibrary[resourcePath];
         }
         else {
-            const resourceLoader = this.__resourceLoader;
+            const resourceLoader = resourceLoader;
             resourcePromise = new Promise((resolve, reject) => {
 
                 const url = resourceLoader.resolveURL(resourcePath);
@@ -392,7 +388,7 @@ class FileImage2D extends Image2D {
     }
 
     getResourcePath() {
-        return this.__resourcePath;
+        return this.getParameter('FilePath').getValue();
     }
 
     isStream() {
@@ -441,12 +437,12 @@ class FileImage2D extends Image2D {
                 const suffixSt = resourcePath.lastIndexOf('.')
                 if (suffixSt != -1) {
                     const lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
-                    if (this.__resourceLoader.resourceAvailable(lodPath)) {
+                    if (resourceLoader.resourceAvailable(lodPath)) {
                         resourcePath = lodPath;
                     }
                 }
             }
-            this.loadResource(resourcePath);
+            this.getParameter('FilePath').setValue(resourcePath);
 
         }
     }

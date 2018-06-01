@@ -23,7 +23,6 @@ import {
     SelectionManager
 } from './SelectionManager.js';
 import {
-    ResourceLoader,
     resourceLoader
 } from './ResourceLoader.js';
 import {
@@ -75,10 +74,6 @@ class Scene {
 
     getRoot() {
         return this.__root;
-    }
-
-    getResourceLoader() {
-        return resourceLoader;
     }
 
     loadCommonAssetResource(path) {

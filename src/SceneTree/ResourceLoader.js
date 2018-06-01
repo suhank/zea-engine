@@ -260,6 +260,5 @@ class ResourceLoader {
 
 const resourceLoader = new ResourceLoader();
 export {
-    ResourceLoader,
     resourceLoader
 };

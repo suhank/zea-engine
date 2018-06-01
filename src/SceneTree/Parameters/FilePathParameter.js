@@ -4,22 +4,22 @@ import {
 import {
     Parameter
 } from './Parameter.js';
+import {
+    resourceLoader
+} from '../ResourceLoader.js';
 
 class FilePathParameter extends Parameter {
-    constructor(name, resourceLoader) {
+    constructor(name) {
         super(name, '', 'FilePath');
-        if(!resourceLoader)
-            throw("Resource Loader not provided to FilePathParameter");
-        this.__resourceLoader = resourceLoader;
 
         this.__file;
         this.valueChanged.connect(()=>{
             let value = this.getValue();
-            if (!this.__resourceLoader.resourceAvailable(value)) {
+            if (!resourceLoader.resourceAvailable(value)) {
                 console.warn("Resource unavailable:" + value);
                 return;
             }
-            this.__file = this.__resourceLoader.resolveFile(value);
+            this.__file = resourceLoader.resolveFile(value);
         });
     }
 
@@ -32,7 +32,7 @@ class FilePathParameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new FilePathParameter(this.__name, this.__resourceLoader);
+        let clonedParam = new FilePathParameter(this.__name, resourceLoader);
         this.cloneMembers();
         return clonedParam;
     }

@@ -5,7 +5,6 @@ import {
     Signal
 } from '../Utilities';
 import {
-    HDRImage2D,
     Image2D
 } from '../SceneTree';
 import {

@@ -49,8 +49,7 @@ const materialPresets = {
 };
 
 class MaterialLibrary {
-    constructor(resourceLoader) {
-        this.__resourceLoader = resourceLoader;
+    constructor() {
         this.__textures = {};
         this.__materials = {};
 
@@ -199,7 +198,7 @@ class MaterialLibrary {
         let numTextures = reader.loadUInt32();
         for (let i = 0; i < numTextures; i++) {
             let type = reader.loadStr();
-            let texture = sgFactory.constructClass(type, undefined, this.__resourceLoader);
+            let texture = sgFactory.constructClass(type, undefined);
             texture.readBinary(reader, flags, this.lod);
             this.__textures[texture.getName()] = texture;
         }
