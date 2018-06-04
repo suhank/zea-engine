@@ -48,8 +48,8 @@ class TreeItem extends BaseItem {
 
         this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
 
-        let _cleanLocalXfo = (prevValue)=>{
-            let globalXfo = this.__globalXfoParam.getValue();
+        const _cleanLocalXfo = (prevValue)=>{
+            const globalXfo = this.__globalXfoParam.getValue();
             if (this.__ownerItem !== undefined)
                 return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo);
             else
@@ -68,7 +68,7 @@ class TreeItem extends BaseItem {
 
 
         this.__visibleParam.valueChanged.connect((changeType)=>{
-            let visibile = this.getVisible();
+            const visibile = this.getVisible();
             for (let childItem of this.__childItems)
                 childItem.setInheritedVisiblity(visibile);
         });
@@ -99,7 +99,7 @@ class TreeItem extends BaseItem {
     }
 
     clone() {
-        let cloned = new TreeItem();
+        const cloned = new TreeItem();
         this.copyTo(cloned);
         return cloned;
     }

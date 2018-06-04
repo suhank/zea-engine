@@ -73,6 +73,8 @@ class Scene {
         this.commonResourcesLoaded = new Signal(true);
         this.sceneTimeChanged = new Signal();
         this.sceneDurationChanged = new Signal();
+        this.assetAdded = new Signal();
+        this.assetRemoved = new Signal();
     }
 
     getRoot() {
@@ -172,6 +174,7 @@ class Scene {
         });
         this.__assets.push(asset);
         this.__root.addChild(asset);
+        this.assetAdded.emit(asset);
     }
 
     getAssets() {

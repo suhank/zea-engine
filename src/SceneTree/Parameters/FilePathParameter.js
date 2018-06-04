@@ -24,7 +24,7 @@ class FilePathParameter extends Parameter {
     }
 
     getURL() {
-        return this.__file.url;
+        return this.__file ? this.__file.url : undefined;
     }
 
     cloneMembers(clonedParam) {
