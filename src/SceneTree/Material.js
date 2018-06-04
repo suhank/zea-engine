@@ -95,7 +95,8 @@ class Material extends BaseItem {
         this.textureDisconnected = new Signal();
         this.shaderNameChanged = new Signal();
 
-        this.setShaderName(shaderName);
+        if(shaderName)
+            this.setShaderName(shaderName);
     }
 
     getShaderName() {

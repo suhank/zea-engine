@@ -157,6 +157,19 @@ class Vec2 extends AttrValue {
         return Math.sqrt(this.lengthSquared());
     }
 
+
+    /**
+     * Calculates the distance to another vector
+     *
+     * @param {vec2} a vector to calculate distance to
+     * @returns {Number} length of a
+     */
+    distanceTo(other) {
+        const x = this.__data[0] - other.x,
+            y = this.__data[1] - other.y;
+        return Math.sqrt(x * x + y * y);
+    }
+
     /**
      * Returns the vector normalized
      *
@@ -235,6 +248,27 @@ class Vec2 extends AttrValue {
     static numFloat32Elements() {
         return 2;
     }
+
+    /**
+     * Generates a random vector with the given scale
+     *
+     * @param {vec3} out the receiving vector
+     * @param {Number} [scale] Length of the resulting vector. If ommitted, a unit vector will be returned
+     * @returns {vec3} out
+     */
+    setRandomDir(scale = 1.0) {
+        let r = Math.random() * 2.0 * Math.PI;
+        this.__data[0] = Math.cos(r) * zScale;
+        this.__data[1] = Math.sin(r) * zScale;
+        return this;
+    }
+    
+    setRandom(scale = 1.0) {
+        this.__data[0] = Math.random() * scale;
+        this.__data[1] = Math.random() * scale;
+        return this;
+    }
+
 
     clone() {
         return new Vec2(

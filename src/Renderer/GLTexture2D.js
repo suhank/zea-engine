@@ -23,9 +23,9 @@ class GLTexture2D extends RefCounted {
         let imageUpdated = () => {
             // this.bufferData(data);
             let params = this.__texture.getParams();
-            let width = params['width'];
-            let height = params['height'];
-            let data = params['data'];
+            let width = params.width;
+            let height = params.height;
+            let data = params.data;
             this.bufferData(data, width, height);
         }
         if (params != undefined) {
@@ -88,9 +88,9 @@ class GLTexture2D extends RefCounted {
         if (!('channels' in params) || !('width' in params) || !('height' in params))
             throw ("Invalid texture params");
 
-        const width = params['width'];
-        const height = params['height'];
-        const data = params['data'];
+        const width = params.width;
+        const height = params.height;
+        const data = params.data;
 
 
         const gl = this.__gl;
@@ -99,10 +99,10 @@ class GLTexture2D extends RefCounted {
             throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
         }
 
-        let channels = params['channels'];
-        let format = params['format'];
-        let filter = ('filter' in params) ? params['filter'] : 'LINEAR';
-        const wrap = ('wrap' in params) ? params['wrap'] : 'CLAMP_TO_EDGE';
+        let channels = params.channels;
+        let format = params.format;
+        let filter = ('filter' in params) ? params.filter : 'LINEAR';
+        const wrap = ('wrap' in params) ? params.wrap : 'CLAMP_TO_EDGE';
 
         // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
         if (format == 'FLOAT') {
@@ -160,7 +160,7 @@ class GLTexture2D extends RefCounted {
 
 
         this.__channels = gl[channels];
-        this.__internalFormat = ('internalFormat' in params) ? gl[params['internalFormat']] : this.__channels;
+        this.__internalFormat = ('internalFormat' in params) ? gl[params.internalFormat] : this.__channels;
         this.__format = gl[format];
 
         if (gl.name == 'webgl2') {
@@ -185,9 +185,9 @@ class GLTexture2D extends RefCounted {
         }
         this.__filter = gl[filter];
         this.__wrap = gl[wrap];
-        this.__flipY = ('flipY' in params) ? params['flipY'] : false;
-        this.__mipMapped = ('mipMapped' in params) ? params['mipMapped'] : false;
-        this.flags = ('flags' in params) ? params['flags'] : 0;
+        this.__flipY = ('flipY' in params) ? params.flipY : false;
+        this.__mipMapped = ('mipMapped' in params) ? params.mipMapped : false;
+        this.flags = ('flags' in params) ? params.flags : 0;
 
 
         this.__gltex = gl.createTexture();
@@ -351,7 +351,7 @@ class GLTexture2D extends RefCounted {
             throw ("Unable to bind non-initialized or deleted texture.");
         }
 
-        const unit = renderstate['boundTextures']++;
+        const unit = renderstate.boundTextures++;
         const texId = this.__gl.TEXTURE0 + unit;
         const gl = this.__gl;
         gl.activeTexture(texId);
@@ -387,4 +387,3 @@ class GLTexture2D extends RefCounted {
 export {
     GLTexture2D
 };
-// export default GLTexture2D;

@@ -52,13 +52,7 @@ class MaterialLibrary {
     constructor() {
         this.__textures = {};
         this.__materials = {};
-
-
-        let material = new Material('Default');
-        material.addParameter('baseColor', new Color(0.3, 0.3, 0.3));
-        material.addParameter('roughness', 0.2);
-        material.addParameter('reflectance', 0.2);
-        this.__materials['Default'] = material;
+        this.__materials['Default'] = new Material('Default', 'SimpleSurfaceShader');
 
         this.lod = 0;
         if(SystemDesc.isMobileDevice)

@@ -332,7 +332,6 @@ class GLRenderer {
         }
 
         const fw = viewXfo.ori.getZaxis().negate();
-        console.log(fw.toString())
         if(listener.forwardX) {
           listener.forwardX.value = fw.x;
           listener.forwardY.value = fw.y;

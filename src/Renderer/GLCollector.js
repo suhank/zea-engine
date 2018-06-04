@@ -151,7 +151,6 @@ class GLCollector {
                 return true;
             }
             if (treeItem instanceof GeomItem) {
-                console.log("Auto tiem filter")
                 const material = treeItem.getMaterial();
                 const baseColorParam = material.getParameter('baseColor');
                 if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {

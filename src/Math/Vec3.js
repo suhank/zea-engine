@@ -346,13 +346,9 @@ class Vec3 extends AttrValue {
     }
 
     /**
-     * Generates a random vector with the given scale
-     *
-     * @param {vec3} out the receiving vector
-     * @param {Number} [scale] Length of the resulting vector. If ommitted, a unit vector will be returned
-     * @returns {vec3} out
+     * Sets the vector a random direction with the given scale
      */
-    setRandom(scale = 1.0) {
+    setRandomDir(scale = 1.0) {
         let r = Math.random() * 2.0 * Math.PI;
         let z = (Math.random() * 2.0) - 1.0;
         let zScale = Math.sqrt(1.0 - z * z) * scale;
@@ -360,6 +356,13 @@ class Vec3 extends AttrValue {
         this.__data[0] = Math.cos(r) * zScale;
         this.__data[1] = Math.sin(r) * zScale;
         this.__data[2] = z * scale;
+        return this;
+    }
+    
+    setRandom(scale = 1.0) {
+        this.__data[0] = Math.random() * scale;
+        this.__data[1] = Math.random() * scale;
+        this.__data[3] = Math.random() * scale;
         return this;
     }
 
