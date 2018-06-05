@@ -61,7 +61,7 @@ class MaterialLibrary {
     }
 
     getNumMaterials() {
-        return this.__materials.length;
+        return Object.keys(this.__materials).length;
     }
 
     getMaterials() {

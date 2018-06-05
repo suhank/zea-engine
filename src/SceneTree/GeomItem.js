@@ -202,7 +202,7 @@ class GeomItem extends TreeItem {
             }
         }
 
-        let coords = new Vec2();
+        const coords = new Vec2();
         coords.fromJSON(json.lightmapCoordsOffset);
         this.__lightmapCoordsParam.setValue(coords);
         this._setBoundingBoxDirty();
@@ -214,20 +214,20 @@ class GeomItem extends TreeItem {
 
         this.__lightmapName = asset.getName();
 
-        let itemflags = reader.loadUInt8();
-        let geomIndex = reader.loadUInt32();
-        let geomLibrary = asset.getGeometryLibrary();
-        let geom = geomLibrary.getGeom(geomIndex);
+        const itemflags = reader.loadUInt8();
+        const geomIndex = reader.loadUInt32();
+        const geomLibrary = asset.getGeometryLibrary();
+        const geom = geomLibrary.getGeom(geomIndex);
         if (geom) {
             this.setGeometry(geom);
         } else {
-            let onGeomLoaded = (range) => {
+            const onGeomLoaded = (range) => {
                 if (geomIndex >= range[0] && geomIndex < range[1]) {
                     this.setGeometry(geomLibrary.getGeom(geomIndex));
                     geomLibrary.rangeLoaded.disconnectID(connid);
                 }
             }
-            let connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);
+            const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);
         }
 
         //this.setVisibility(j.visibility);
@@ -241,14 +241,18 @@ class GeomItem extends TreeItem {
 
         const materialFlag = 1 << 3;
         if (itemflags & materialFlag) {
-            let materialLibrary = asset.getMaterialLibrary();
-            let materialName = reader.loadStr();
+            const materialLibrary = asset.getMaterialLibrary();
+            const materialName = reader.loadStr();
             let material = materialLibrary.getMaterial(materialName);
             if (!material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
-                material = materialLibrary.getMaterial('DefaultMaterial');
+                material = materialLibrary.getMaterial('Default');
             }
             this.setMaterial(material);
+        }
+        else {
+            // Force nodes to have a material so we can see them.
+            this.setMaterial(asset.getMaterialLibrary().getMaterial('Default'));
         }
 
         this.__lightmapCoordsParam.setValue(reader.loadFloat32Vec2());

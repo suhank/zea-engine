@@ -239,7 +239,11 @@ class Material extends BaseItem {
                 value = reader.loadFloat32();
             }
             // console.log(paramName +":" + value);
-            const param = this.addParameter(paramName, value);
+            let param = this.getParameter(paramName);
+            if(param)
+                param.setValue(value)
+            else
+                param = this.addParameter(paramName, value);
             const textureName = reader.loadStr();
             if (textureLibrary[textureName]) {
                 // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
