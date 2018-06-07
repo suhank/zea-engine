@@ -95,7 +95,7 @@ class ParameterOwner extends RefCounted {
     }
 
     addParameterInstance(param) {
-        param.valueChanged.connect(() => this.parameterValueChanged.emit(param.getName()));
+        param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param.getName(), mode));
         param.nameChanged.connect((newName, oldName) => {
             let index = this.__paramMapping[oldName];
             delete this.__paramMapping[oldName];
@@ -125,16 +125,27 @@ class ParameterOwner extends RefCounted {
 
     toJSON(flags = 0) {
         let paramsJSON = [];
-        for (let param of this.__params)
-            paramsJSON.push(param.toJSON())
-        return {
-            "params": paramsJSON,
+        for (let param of this.__params){
+            const paramJSON = param.toJSON();
+            if(paramJSON)
+                paramsJSON.push(paramJSON)
         }
+        const j = {};
+        if(paramsJSON.length > 0)
+            j.params = paramsJSON;
+        return j
     }
 
     fromJSON(j, flags) {
-        for (let param of j.params)
-            paramsJSON.push(param.toJSON());
+        if(j.params) {
+            for (let paramJSON of j.params) {
+                const param = this.getParameter(paramJSON.name);
+                if(!param) 
+                    console.warn("Param not found:" + paramJSON.name);
+                else
+                    param.fromJSON(paramJSON);
+            }
+        }
     }
 
     readBinary(reader, flags) {

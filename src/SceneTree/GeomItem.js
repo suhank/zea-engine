@@ -3,6 +3,12 @@ import {
     Xfo
 } from '../Math';
 import {
+    MaterialParameter
+} from './Parameters/MaterialParameter';
+import {
+    GeometryParameter
+} from './Parameters/GeometryParameter';
+import {
     Signal
 } from '../Utilities';
 import {
@@ -21,6 +27,12 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
+        this.__materialParam = this.addParameter('material', new MaterialParameter());
+        this.__geomParam = this.addParameter('geometry', new GeometryParameter());
+        this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
+        this.__geomParam.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
+
+        this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
         this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
@@ -36,8 +48,12 @@ class GeomItem extends TreeItem {
         });
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
-        this.materialAssigned = new Signal();
-        this.geomAssigned = new Signal();
+        // this.materialAssigned = new Signal();
+        // this.geomAssigned = new Signal();
+        this.materialAssigned = this.__materialParam.valueChanged;
+        this.geomAssigned = this.__geomParam.valueChanged;
+
+
 
         if (geom)
             this.setGeometry(geom);
@@ -58,15 +74,15 @@ class GeomItem extends TreeItem {
     copyTo(cloned) {
         super.copyTo(cloned);
 
-        if (this.__geom) {
-            cloned.setGeometry(this.__geom);
-        } else {
-            this.geomAssigned.connect(() => {
-                cloned.setGeometry(this.__geom);
-            });
-        }
+        // if (this.__geom) {
+        //     cloned.setGeometry(this.__geom);
+        // } else {
+        //     this.geomAssigned.connect(() => {
+        //         cloned.setGeometry(this.__geom);
+        //     });
+        // }
 
-        cloned.setMaterial(this.__material);// clone?
+        // cloned.setMaterial(this.__material);// clone?
 
         cloned.__lightmapName = this.__lightmapName;
     }
@@ -75,23 +91,12 @@ class GeomItem extends TreeItem {
     // Geometry
 
     getGeometry() {
-        return this.__geom;
+        return this.__geomParam.getValue();
     }
 
-    setGeometry(geom) {
-        if(this.__geom !== geom){
-            if(this.__geom){
-                this.__geom.removeRef(this);
-                this.__geom.boundingBoxDirtied.disconnect(this._setBoundingBoxDirty.bind(this));
-            }
-            this.__geom = geom;
-            if(this.__geom){
-                this.__geom.addRef(this);
-                this.__geom.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
-            }
-            this._setBoundingBoxDirty();
-            this.geomAssigned.emit(this.__geom);
-        }
+    setGeometry(geom, mode) {
+        this.__geomParam.setValue(geom, mode);
+        // this.geomAssigned.emit(this.__value);
     }
 
     getGeom() {
@@ -106,20 +111,11 @@ class GeomItem extends TreeItem {
 
 
     getMaterial() {
-        return this.__material;
+        return this.__materialParam.getValue();;
     }
 
-    setMaterial(material) {
-        if(this.__material !== material){
-            if(this.__material){
-                this.__material.removeRef(this);
-            }
-            this.__material = material;
-            if(this.__material){
-                this.__material.addRef(this);
-            }
-            this.materialAssigned.emit(this.__material);
-        }
+    setMaterial(material, mode) {
+        this.__materialParam.setValue(material, mode);
     }
 
     _cleanBoundingBox(bbox) {

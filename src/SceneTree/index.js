@@ -32,6 +32,7 @@ export * from './WebcamImage2D.js';
 export * from './HDRImageMixer.js';
 
 export * from './MaterialLibrary.js';
+export * from './MaterialLibraryManager.js';
 
 export * from './ProceduralSky.js';
 

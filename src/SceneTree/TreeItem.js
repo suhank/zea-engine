@@ -9,6 +9,7 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
+    ItemFlags,
     BaseItem
 } from './BaseItem.js';
 
@@ -184,71 +185,6 @@ class TreeItem extends BaseItem {
         return this.__items[this.__itemMapping[name]];
     }
 
-    //////////////////////////////////////////
-    // Path Traversial
-
-    // resolveMember(path) {
-    //     if(path.startsWith('item')){
-    //         let itemName = path.substring(5);
-    //         const pos = itemName.indexOf(':');
-    //         let suffix;
-    //         if(pos){
-    //             itemName = itemName.substring(0, pos);
-    //             suffix = itemName.substring(pos+1);
-    //         }
-    //         const item = this.getItem(itemName); 
-    //     }
-    //     super.resolveMember(path)
-    // }
-
-    resolvePath(path, index=0) {
-        if(typeof path == 'string')
-            path = path.split('/');
-        // if(path[0] == '.')
-        //     path = path.splice(1);
-        if (path.length == 0) {
-            throw("Invalid path:" + path);
-        }
-        if (index == path.length-1){
-            if (path[index] == this.__name) {
-                return this;
-            }
-            // const pos = path[index].indexOf(':');
-            // const prefix = path[index].substring(0, pos);
-            // const suffix = path[index].substring(pos+1);
-            // if (prefix != this.__name) {
-            //     throw ("Invalid path:" + path);
-            // }
-            // return this.resolveMember(suffix);
-            // return super.resolvePath(path, index);
-
-            return super.resolvePath(path[index]);
-            // if(path[index].startswith('parameter')){
-            //     return this.getParameter(path[index].substring(10)); 
-            // }
-            // throw("Invalid path:" + path);
-        }
-
-        const childName = path[index+1].split(':')[0];
-        let childItem = this.getChildByName(childName);
-        if (childItem == undefined) {
-            const item = this.getItem(childName);
-            if(item){
-                if (path.length == index + 1)
-                    return item;
-                else
-                    return item.resolvePath(path[index + 1]);
-            }
-
-            //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
-            return null;
-        }
-        if (path.length == index + 1)
-            return childItem;
-        else
-            return childItem.resolvePath(path, index + 1);
-    }
 
     //////////////////////////////////////////
     // Global Matrix
@@ -368,6 +304,12 @@ class TreeItem extends BaseItem {
         this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
     }
 
+    _childFlagsChanged(flags) {
+        if(flags & ItemFlags.USER_EDITED) {
+            this.setFlag(ItemFlags.USER_EDITED);
+        }
+    }
+
     //////////////////////////////////////////
     // Children
 
@@ -385,6 +327,7 @@ class TreeItem extends BaseItem {
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
 
+
         this.__childItems.push(childItem);
         childItem.setOwner(this);
 
@@ -393,6 +336,7 @@ class TreeItem extends BaseItem {
 
         childItem.boundingChanged.connect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
+        childItem.flagsChanged.connect(this._childFlagsChanged);
 
         // Propagate mouse event up ths tree.
         childItem.mouseDown.connect(this.onMouseDown);
@@ -409,9 +353,10 @@ class TreeItem extends BaseItem {
     }
 
     getChildByName(name) {
-        for (let childItem of this.__childItems)
+        for (let childItem of this.__childItems){
             if (childItem != null && childItem.getName() == name)
                 return childItem;
+        }
         return null;
     }
 
@@ -453,6 +398,46 @@ class TreeItem extends BaseItem {
         return this.__childItems.indexOf(childItem);
     }
 
+    //////////////////////////////////////////
+    // Path Traversial
+
+    // resolveMember(path) {
+    //     if(path.startsWith('item')){
+    //         let itemName = path.substring(5);
+    //         const pos = itemName.indexOf(':');
+    //         let suffix;
+    //         if(pos){
+    //             itemName = itemName.substring(0, pos);
+    //             suffix = itemName.substring(pos+1);
+    //         }
+    //         const item = this.getItem(itemName); 
+    //     }
+    //     super.resolveMember(path)
+    // }
+
+    resolvePath(path, index=0) {
+        if(typeof path == 'string')
+            path = path.split('/');
+        if (index == path.length){
+            return this;
+        }
+
+        const childName = path[index];
+        let childItem = this.getChildByName(childName);
+        if (childItem == undefined) {
+            // Maybe the name is a parameter name.
+            // ask the BaseItem to check.
+            const result = super.resolvePath(path[index]);
+            if(result) {
+                return result;
+            }
+
+            //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
+            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
+            return null;
+        }
+        return childItem.resolvePath(path, index + 1);
+    }
     /////////////////////////
     // Events
 

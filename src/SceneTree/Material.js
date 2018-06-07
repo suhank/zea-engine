@@ -208,18 +208,23 @@ class Material extends BaseItem {
     }
 
     fromJSON(j) {
-        super.fromJSON(j);
-        let props = this.__params;
-        for (let key in j) {
-            let value;
-            if (j[key] instanceof Object) {
-                value = new Color();
-                value.fromJSON(j[key]);
-            } else {
-                value = j[key];
-            }
-            this.addParameter(paramName, value);
+        if(!j.shader){
+            console.warn("Invalid Material JSON");
+            return;
         }
+        this.setShaderName(j.shader)
+        super.fromJSON(j);
+        // let props = this.__params;
+        // for (let key in j) {
+        //     let value;
+        //     if (j[key] instanceof Object) {
+        //         value = new Color();
+        //         value.fromJSON(j[key]);
+        //     } else {
+        //         value = j[key];
+        //     }
+        //     this.addParameter(paramName, value);
+        // }
     }
 
     readBinary(reader, flags, textureLibrary) {

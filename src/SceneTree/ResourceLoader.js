@@ -9,7 +9,6 @@ import {
 
 const asyncLoading = true;
 const ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
-// let FreeMemWorker = require("worker-loader?inline!./FreeMemWorker.js");
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
@@ -57,8 +56,9 @@ class ResourceLoader {
         this.__totalWorkByCategory = {};
         this.__doneWork = 0;
         this.__doneWorkByCategory = {};
+        this.__resourceRegisterCallbacks = {};
         this.__callbacks = {};
-        this.__workCategories = {};
+        // this.__workCategories = {};
         this.__resources = {};
 
         if(asyncLoading){
@@ -68,13 +68,45 @@ class ResourceLoader {
         }
     }
 
+    registerResourceCallback(filter, fn) {
+        this.__resourceRegisterCallbacks[filter] = fn;
+    }
+
+
+    __applyCallbacks(rootItem, filename=undefined) {
+        const applyCallbacks = (item, filename)=>{
+            for(let filter in this.__resourceRegisterCallbacks){
+                if(filename.includes(filter))
+                    this.__resourceRegisterCallbacks[filter](filename, item)
+            }
+        }
+        const traverse = (item, filename)=>{
+            if(item.url) {
+                applyCallbacks(item, filename)
+            }
+            else {
+                for(let key in item){
+                    traverse(item[key], key)
+                }
+            }
+        }
+        if(filename)
+            applyCallbacks(rootItem, filename)
+        else{
+            for(let key in rootItem){
+                traverse(rootItem[key], key)
+            }
+        }
+    }
+
     setResources(resources){
         if(this.__resources){
-            this.__resources = mergeDeep(this.__resources, resources)
-            return;
-            // throw("Resource Loader already bound to resources");
+            this.__resources = mergeDeep(this.__resources, resources);
         }
-        this.__resources = resources
+        else {
+            this.__resources = resources
+        }
+        this.__applyCallbacks(resources);
     }
 
     freeData(buffer){
@@ -87,8 +119,8 @@ class ResourceLoader {
 
     addResourceURL(resourcePath, url) {
 
-        let parts = resourcePath.split('/');
-        let filename = parts.pop();
+        const parts = resourcePath.split('/');
+        const filename = parts.pop();
         if(parts[0] == '.')
             parts.shift();
         let curr = this.__resources;
@@ -102,6 +134,7 @@ class ResourceLoader {
             }
         }
         curr[filename] = { url };
+        this.__applyCallbacks(curr[filename], filename);
     }
 
     __constructWorkers() {
@@ -156,28 +189,15 @@ class ResourceLoader {
         return this.resolveFile(filePath) != null;
     }
 
-    __initCategory(name){
-        if(!(name in this.__workCategories))
-            this.__workCategories[name] = { callbacks:[], totalWork:0, doneWork:0 };
-    }
-
     // Add work to the total work pile... We never know how big the pile will get.
     addWork(name, amount){
-        this.__initCategory(name);
         this.__totalWork += amount;
-        this.__workCategories[name].totalWork += amount;
-        // console.log("addWork:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
     }
 
     //Add work to the 'done' pile. The done pile should eventually match the total pile.
     addWorkDone(name, amount){
         this.__doneWork += amount;
-        this.__workCategories[name].doneWork += amount;
-        // console.log("addWorkDone:" + name + " amount:" + amount + " done:" + this.__workCategories[name].doneWork + " totol:" + this.__workCategories[name].totalWork + " overall done:" + this.__doneWork + " overall totol:" + this.__totalWork);
-        // if(this.__doneWork == this.__totalWork){
-        //     console.log("===========DOOOONE=================");
-        // }
         this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
         if(this.__doneWork > this.__totalWork) {
             throw("Mismatch between work loaded and work done.")
@@ -188,23 +208,22 @@ class ResourceLoader {
     }
 
     loadResource(name, callback, addLoadWork=true) {
-        this.__initCategory(name);
-        this.__workCategories[name].callbacks.push(callback);
 
-        if(!(name in this.__callbacks))
-            this.__callbacks[name] = [];
-        this.__callbacks[name].push(callback);
+        const file = this.resolveFile(name);
+        if(!file){
+            throw("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+        }
+
+        this.loadURL(name, file.url, callback, addLoadWork)
+    }
+
+    loadURL(name, url, callback, addLoadWork=true) {
 
         // If the loader was suspended, resume. 
         if(asyncLoading) {
             if(this.__workers.length == 0){
                 this.__constructWorkers();
             }
-        }
-
-        const file = this.resolveFile(name);
-        if(!file){
-            throw("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
         if(addLoadWork){ 
@@ -217,11 +236,15 @@ class ResourceLoader {
             // toal number of files in the stream.
         }
 
+        if(!(name in this.__callbacks))
+            this.__callbacks[name] = [];
+        this.__callbacks[name].push(callback);
+
         ///////////////////////////////////////////////
         if(asyncLoading) {
             this.__workers[this.__nextWorker].postMessage({
                 name,
-                url: file.url
+                url
             });
             this.__nextWorker = (this.__nextWorker+1)%this.__workers.length;
         }
@@ -229,7 +252,7 @@ class ResourceLoader {
             ///////////////////////////////////////////////
             ResourceLoaderWorker_onmessage({
                 name,
-                url: file.url
+                url
             },()=>{
                 this.addWorkDone(name, 1); // loading done...
             }, (result, transferables)=>{
@@ -237,15 +260,17 @@ class ResourceLoader {
                     this.__onFinishedReceiveFileData(result);
             });
         }
-
-
     }
 
     __onFinishedReceiveFileData(fileData) {
         const name = fileData.name;
         this.addWorkDone(name, 1); // unpacking done...
-        for(let callback of this.__callbacks[name]){
-            callback(fileData.entries);
+        const callbacks = this.__callbacks[name];
+        if(callbacks) {
+            for(let callback of callbacks){
+                callback(fileData.entries);
+            }
+            delete this.__callbacks[name];
         }
         this.loaded.emit(name);
         this.addWorkDone(name, 1); // parsing done...
