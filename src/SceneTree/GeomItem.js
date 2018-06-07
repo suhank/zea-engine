@@ -3,6 +3,12 @@ import {
     Xfo
 } from '../Math';
 import {
+    MaterialParameter
+} from './Parameters/MaterialParameter';
+import {
+    GeometryParameter
+} from './Parameters/GeometryParameter';
+import {
     Signal
 } from '../Utilities';
 import {
@@ -21,6 +27,12 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
+        this.__materialParam = this.addParameter('material', new MaterialParameter());
+        this.__geomParam = this.addParameter('geometry', new GeometryParameter());
+        this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
+        this.__geomParam.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
+
+        this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
         this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
@@ -36,8 +48,12 @@ class GeomItem extends TreeItem {
         });
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
-        this.materialAssigned = new Signal();
-        this.geomAssigned = new Signal();
+        // this.materialAssigned = new Signal();
+        // this.geomAssigned = new Signal();
+        this.materialAssigned = this.__materialParam.valueChanged;
+        this.geomAssigned = this.__geomParam.valueChanged;
+
+
 
         if (geom)
             this.setGeometry(geom);
@@ -58,15 +74,15 @@ class GeomItem extends TreeItem {
     copyTo(cloned) {
         super.copyTo(cloned);
 
-        if (this.__geom) {
-            cloned.setGeometry(this.__geom);
-        } else {
-            this.geomAssigned.connect(() => {
-                cloned.setGeometry(this.__geom);
-            });
-        }
+        // if (this.__geom) {
+        //     cloned.setGeometry(this.__geom);
+        // } else {
+        //     this.geomAssigned.connect(() => {
+        //         cloned.setGeometry(this.__geom);
+        //     });
+        // }
 
-        cloned.setMaterial(this.__material);// clone?
+        // cloned.setMaterial(this.__material);// clone?
 
         cloned.__lightmapName = this.__lightmapName;
     }
@@ -75,23 +91,12 @@ class GeomItem extends TreeItem {
     // Geometry
 
     getGeometry() {
-        return this.__geom;
+        return this.__geomParam.getValue();
     }
 
-    setGeometry(geom) {
-        if(this.__geom !== geom){
-            if(this.__geom){
-                this.__geom.removeRef(this);
-                this.__geom.boundingBoxDirtied.disconnect(this._setBoundingBoxDirty.bind(this));
-            }
-            this.__geom = geom;
-            if(this.__geom){
-                this.__geom.addRef(this);
-                this.__geom.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
-            }
-            this._setBoundingBoxDirty();
-            this.geomAssigned.emit(this.__geom);
-        }
+    setGeometry(geom, mode) {
+        this.__geomParam.setValue(geom, mode);
+        // this.geomAssigned.emit(this.__value);
     }
 
     getGeom() {
@@ -106,20 +111,11 @@ class GeomItem extends TreeItem {
 
 
     getMaterial() {
-        return this.__material;
+        return this.__materialParam.getValue();;
     }
 
-    setMaterial(material) {
-        if(this.__material !== material){
-            if(this.__material){
-                this.__material.removeRef(this);
-            }
-            this.__material = material;
-            if(this.__material){
-                this.__material.addRef(this);
-            }
-            this.materialAssigned.emit(this.__material);
-        }
+    setMaterial(material, mode) {
+        this.__materialParam.setValue(material, mode);
     }
 
     _cleanBoundingBox(bbox) {
@@ -202,7 +198,7 @@ class GeomItem extends TreeItem {
             }
         }
 
-        let coords = new Vec2();
+        const coords = new Vec2();
         coords.fromJSON(json.lightmapCoordsOffset);
         this.__lightmapCoordsParam.setValue(coords);
         this._setBoundingBoxDirty();
@@ -214,20 +210,20 @@ class GeomItem extends TreeItem {
 
         this.__lightmapName = asset.getName();
 
-        let itemflags = reader.loadUInt8();
-        let geomIndex = reader.loadUInt32();
-        let geomLibrary = asset.getGeometryLibrary();
-        let geom = geomLibrary.getGeom(geomIndex);
+        const itemflags = reader.loadUInt8();
+        const geomIndex = reader.loadUInt32();
+        const geomLibrary = asset.getGeometryLibrary();
+        const geom = geomLibrary.getGeom(geomIndex);
         if (geom) {
             this.setGeometry(geom);
         } else {
-            let onGeomLoaded = (range) => {
+            const onGeomLoaded = (range) => {
                 if (geomIndex >= range[0] && geomIndex < range[1]) {
                     this.setGeometry(geomLibrary.getGeom(geomIndex));
                     geomLibrary.rangeLoaded.disconnectID(connid);
                 }
             }
-            let connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);
+            const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);
         }
 
         //this.setVisibility(j.visibility);
@@ -241,14 +237,18 @@ class GeomItem extends TreeItem {
 
         const materialFlag = 1 << 3;
         if (itemflags & materialFlag) {
-            let materialLibrary = asset.getMaterialLibrary();
-            let materialName = reader.loadStr();
+            const materialLibrary = asset.getMaterialLibrary();
+            const materialName = reader.loadStr();
             let material = materialLibrary.getMaterial(materialName);
             if (!material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
-                material = materialLibrary.getMaterial('DefaultMaterial');
+                material = materialLibrary.getMaterial('Default');
             }
             this.setMaterial(material);
+        }
+        else {
+            // Force nodes to have a material so we can see them.
+            this.setMaterial(asset.getMaterialLibrary().getMaterial('Default'));
         }
 
         this.__lightmapCoordsParam.setValue(reader.loadFloat32Vec2());

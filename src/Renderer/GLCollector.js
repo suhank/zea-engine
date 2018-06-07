@@ -152,12 +152,14 @@ class GLCollector {
             }
             if (treeItem instanceof GeomItem) {
                 const material = treeItem.getMaterial();
-                const baseColorParam = material.getParameter('baseColor');
-                if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
-                    const image = baseColorParam.getImage();
-                    const audioSource = image.getDOMElement();
-                    if (audioSource instanceof HTMLMediaElement)
-                        this.addAudioItem(treeItem, audioSource, image);
+                if(material) {
+                    const baseColorParam = material.getParameter('baseColor');
+                    if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
+                        const image = baseColorParam.getImage();
+                        const audioSource = image.getDOMElement();
+                        if (audioSource instanceof HTMLMediaElement)
+                            this.addAudioItem(treeItem, audioSource, image);
+                    }
                 }
                 // Let other filters handle this item.
                 return false;

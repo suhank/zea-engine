@@ -9,6 +9,10 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
+    ParamFlags
+} from './Parameters';
+import {
+    ItemFlags,
     BaseItem
 } from './BaseItem.js';
 
@@ -31,11 +35,11 @@ class TreeItem extends BaseItem {
         this.__itemMapping = {};
         
 
-        this.__visibleParam = this.addParameter('visible', true);
-        this.__selectedParam = this.addParameter('selected', false);
-        this.__localXfoParam = this.addParameter('localXfo', new Xfo());
-        this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
-        this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
+        this.__visibleParam = this.addParameter('Visible', true);
+        this.__selectedParam = this.addParameter('Selected', false);
+        this.__localXfoParam = this.addParameter('LocalXfo', new Xfo());
+        this.__globalXfoParam = this.addParameter('GlobalXfo', new Xfo());
+        this.__boundingBoxParam = this.addParameter('BoundingBox', new Box3());
 
         // Bind handlers (havk to )
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
@@ -184,71 +188,6 @@ class TreeItem extends BaseItem {
         return this.__items[this.__itemMapping[name]];
     }
 
-    //////////////////////////////////////////
-    // Path Traversial
-
-    // resolveMember(path) {
-    //     if(path.startsWith('item')){
-    //         let itemName = path.substring(5);
-    //         const pos = itemName.indexOf(':');
-    //         let suffix;
-    //         if(pos){
-    //             itemName = itemName.substring(0, pos);
-    //             suffix = itemName.substring(pos+1);
-    //         }
-    //         const item = this.getItem(itemName); 
-    //     }
-    //     super.resolveMember(path)
-    // }
-
-    resolvePath(path, index=0) {
-        if(typeof path == 'string')
-            path = path.split('/');
-        // if(path[0] == '.')
-        //     path = path.splice(1);
-        if (path.length == 0) {
-            throw("Invalid path:" + path);
-        }
-        if (index == path.length-1){
-            if (path[index] == this.__name) {
-                return this;
-            }
-            // const pos = path[index].indexOf(':');
-            // const prefix = path[index].substring(0, pos);
-            // const suffix = path[index].substring(pos+1);
-            // if (prefix != this.__name) {
-            //     throw ("Invalid path:" + path);
-            // }
-            // return this.resolveMember(suffix);
-            // return super.resolvePath(path, index);
-
-            return super.resolvePath(path[index]);
-            // if(path[index].startswith('parameter')){
-            //     return this.getParameter(path[index].substring(10)); 
-            // }
-            // throw("Invalid path:" + path);
-        }
-
-        const childName = path[index+1].split(':')[0];
-        let childItem = this.getChildByName(childName);
-        if (childItem == undefined) {
-            const item = this.getItem(childName);
-            if(item){
-                if (path.length == index + 1)
-                    return item;
-                else
-                    return item.resolvePath(path[index + 1]);
-            }
-
-            //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
-            return null;
-        }
-        if (path.length == index + 1)
-            return childItem;
-        else
-            return childItem.resolvePath(path, index + 1);
-    }
 
     //////////////////////////////////////////
     // Global Matrix
@@ -368,6 +307,11 @@ class TreeItem extends BaseItem {
         this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
     }
 
+    _childFlagsChanged(flags) {
+        if((flags&ParamFlags.USER_EDITED) != 0)
+            this.setFlag(ItemFlags.USER_EDITED);
+    }
+
     //////////////////////////////////////////
     // Children
 
@@ -385,14 +329,19 @@ class TreeItem extends BaseItem {
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
 
+
         this.__childItems.push(childItem);
         childItem.setOwner(this);
+
+        if(childItem.testFlag(ItemFlags.USER_EDITED))
+            this.setFlag(ItemFlags.USER_EDITED)
 
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
 
         childItem.boundingChanged.connect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
+        childItem.flagsChanged.connect(this._childFlagsChanged.bind(this));
 
         // Propagate mouse event up ths tree.
         childItem.mouseDown.connect(this.onMouseDown);
@@ -409,9 +358,10 @@ class TreeItem extends BaseItem {
     }
 
     getChildByName(name) {
-        for (let childItem of this.__childItems)
+        for (let childItem of this.__childItems){
             if (childItem != null && childItem.getName() == name)
                 return childItem;
+        }
         return null;
     }
 
@@ -453,6 +403,46 @@ class TreeItem extends BaseItem {
         return this.__childItems.indexOf(childItem);
     }
 
+    //////////////////////////////////////////
+    // Path Traversial
+
+    // resolveMember(path) {
+    //     if(path.startsWith('item')){
+    //         let itemName = path.substring(5);
+    //         const pos = itemName.indexOf(':');
+    //         let suffix;
+    //         if(pos){
+    //             itemName = itemName.substring(0, pos);
+    //             suffix = itemName.substring(pos+1);
+    //         }
+    //         const item = this.getItem(itemName); 
+    //     }
+    //     super.resolveMember(path)
+    // }
+
+    resolvePath(path, index=0) {
+        if(typeof path == 'string')
+            path = path.split('/');
+        if (index == path.length){
+            return this;
+        }
+
+        const childName = path[index];
+        let childItem = this.getChildByName(childName);
+        if (childItem == undefined) {
+            // Maybe the name is a parameter name.
+            // ask the BaseItem to check.
+            const result = super.resolvePath(path[index]);
+            if(result) {
+                return result;
+            }
+
+            //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
+            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
+            return null;
+        }
+        return childItem.resolvePath(path, index + 1);
+    }
     /////////////////////////
     // Events
 
@@ -476,11 +466,24 @@ class TreeItem extends BaseItem {
 
 
     toJSON(flags = 0) {
+        if(!this.testFlag(ItemFlags.USER_EDITED))
+            return;
+
         let j = super.toJSON(flags);
-        let childItemsJSON = [];
-        for (let childItem of this.__childItems)
-            childItemsJSON.push(childItem.toJSON());
-        j.childItems = childItemsJSON;
+        const childItemsJSON = [];
+        for (let childItem of this.__childItems){
+            const childJSON = childItem.toJSON();
+            if(childJSON)
+                childItemsJSON.push(childJSON);
+        }
+        if(childItemsJSON.length > 0) {
+            if(j) {
+                j.childItems = childItemsJSON;
+            }
+            else {
+                j = { childItems: childItemsJSON }
+            }
+        }
         return j;
     }
 
@@ -493,7 +496,7 @@ class TreeItem extends BaseItem {
         //     this.__boundingBoxParam.setValue(box);
         // }
 
-        if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && 'children' in j && j.children != null) {
+        if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && j.children != null) {
             let childrenJson = j.children;
             let printProgress = childrenJson.length > 10000;
             let progress = 0;
@@ -550,12 +553,12 @@ class TreeItem extends BaseItem {
             xfo.ori = reader.loadFloat32Quat();
             xfo.sc.set(reader.loadFloat32());
             // console.log(this.getPath() + " TreeItem:" + xfo.toString());
-            this.setLocalXfo(xfo);
+            this.__localXfoParam.setValue(xfo, Visualive.ValueSetMode.DATA_LOAD);
         }
 
         const bboxFlag = 1 << 3;
         if (itemflags & bboxFlag)
-            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), 2);
+            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), Visualive.ValueSetMode.DATA_LOAD);
 
         let numChildren = reader.loadUInt32();
         if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {

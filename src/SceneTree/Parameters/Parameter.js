@@ -1,6 +1,9 @@
 import {
     Signal
 } from '../../Utilities';
+import {
+    sgFactory
+} from '../SGFactory';
 
 const ValueGetMode = {
     NORMAL: 0,
@@ -13,10 +16,16 @@ const ValueSetMode = {
     DATA_LOAD: 2,
     CUSTOM: 3,
 };
+const ParamFlags = {
+    USER_EDITED: 1<<1
+};
 
 class BaseParameter {
     constructor(name) {
         this.__name = name;
+        this.__cleanerFns = [];
+        this.__flags = 0;
+
         this.valueChanged = new Signal();
         this.nameChanged = new Signal();
 
@@ -24,8 +33,6 @@ class BaseParameter {
         this.setName = this.setName.bind(this);
         this.getValue = this.getValue.bind(this);
         this.setValue = this.setValue.bind(this);
-
-        this.__cleanerFns = [];
     }
 
     getName() {
@@ -69,14 +76,17 @@ class BaseParameter {
     cloneMembers(clonedParam) {
 
     }
+
+
 };
 
 
 
 class Parameter extends BaseParameter {
-    constructor(name, value) {
+    constructor(name, value, dataType) {
         super(name);
         this.__value = value;
+        this.__dataType = dataType;
     }
 
     getValue(mode = ValueGetMode.NORMAL) {
@@ -118,6 +128,8 @@ class Parameter extends BaseParameter {
         //     return;
         // }
         this.__value = value;
+        if(mode == ValueSetMode.USER_SETVALUE)
+            this.__flags |= ParamFlags.USER_EDITED;
         this.valueChanged.emit(mode);
     }
 
@@ -129,6 +141,37 @@ class Parameter extends BaseParameter {
         this.cloneMembers();
         return clonedParam;
     }
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(flags = 0) {
+        if((this.__flags&ParamFlags.USER_EDITED) == 0)
+            return;
+        if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
+            return { value: this.__value };
+        else {
+            return { value: this.__value.toJSON(flags) };
+        }
+    }
+
+    fromJSON(j) {
+        if(j.value == undefined){
+            console.warn("Invalid Parameter JSON");
+            return;
+        }
+        if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
+            this.setValue(j.value);
+        else {
+            // const value = sgFactory.constructClass();
+            this.__value.fromJSON(j.value);
+        }
+        // Note: JSON data is only used to store user edits, so 
+        // parameters loaed from JSON are considered user edited.
+        this.__flags |= ParamFlags.USER_EDITED;
+    }
+
 };
 
 
@@ -166,8 +209,9 @@ class ListParameter extends Parameter {
 
 
 export {
-    Parameter,
-    ListParameter,
+    ParamFlags,
     ValueGetMode,
-    ValueSetMode
+    ValueSetMode,
+    Parameter,
+    ListParameter
 };

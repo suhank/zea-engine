@@ -11,9 +11,16 @@ import {
 } from './SGFactory.js';
 
 import {
+    ValueSetMode
+} from './Parameters/Parameter.js';
+import {
     ParameterOwner
 } from './ParameterOwner.js';
 
+
+const ItemFlags = {
+    USER_EDITED: 1<<1
+};
 
 class BaseItem extends ParameterOwner {
     constructor(name) {
@@ -26,11 +33,19 @@ class BaseItem extends ParameterOwner {
         this.__name = name;
         this.__path = [name];
         this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
+        this.__flags = 0;
 
         this.__metaData = new Map();
 
         this.nameChanged = new Signal();
         this.ownerChanged = new Signal();
+        this.flagsChanged = new Signal();
+
+        this.parameterValueChanged.connect((name, mode) => {
+            if(mode==ValueSetMode.USER_SETVALUE){
+                this.setFlag(ItemFlags.USER_EDITED);
+            }
+        });
     }
 
     destroy() {
@@ -70,6 +85,18 @@ class BaseItem extends ParameterOwner {
 
     getPath() {
         return this.__path;
+    }
+
+    //////////////////////////////////////////
+    // Flags
+
+    setFlag(flag) {
+        this.__flags |= flag;
+        this.flagsChanged.emit(this.__flags);
+    }
+
+    testFlag(flag) {
+        return (this.__flags & flag) != 0;
     }
 
 
@@ -123,13 +150,19 @@ class BaseItem extends ParameterOwner {
 
     toJSON(flags = 0) {
         const j = super.toJSON(flags);
-        j.name = this.__name;
+        if(j) {
+            j.name = this.__name;
+        }
         return j;
     }
 
     fromJSON(j, flags, asset) {
         super.fromJSON(j, flags);
-        this.__name = j.name;
+        if(j.name)
+            this.__name = j.name;
+        // Note: JSON data is only used to store user edits, so 
+        // parameters loaded from JSON are considered user edited.
+        this.__flags |= ItemFlags.USER_EDITED;
     }
 
     readBinary(reader, flags, asset) {
@@ -146,5 +179,6 @@ class BaseItem extends ParameterOwner {
 };
 
 export {
+    ItemFlags,
     BaseItem
 };

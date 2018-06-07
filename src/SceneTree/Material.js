@@ -43,7 +43,7 @@ let makeParameterTexturable = (parameter) => {
         parameter.valueChanged.emit(image);
     }
     
-    parameter.setImage = (value) => {
+    parameter.setImage = (value, mode=0) => {
         let disconnectImage = () => {
             image.removeRef(parameter);
             image.loaded.disconnect(imageUpdated);
@@ -59,7 +59,7 @@ let makeParameterTexturable = (parameter) => {
             image.loaded.connect(imageUpdated);
             image.updated.connect(imageUpdated);
             parameter.textureConnected.emit();
-            parameter.valueChanged.emit(image);
+            parameter.valueChanged.emit(mode);
         } else {
             if (image != undefined) {
                 disconnectImage();
@@ -82,7 +82,8 @@ let makeParameterTexturable = (parameter) => {
     }
 
     // Invoke the setter so if the value is a texture, the parmater is updated.
-    parameter.setValue(basegetValue());
+    // Can we avoid this? it flags the parameter as edited.
+    // parameter.setValue(basegetValue());
 };
 
 
@@ -208,18 +209,23 @@ class Material extends BaseItem {
     }
 
     fromJSON(j) {
-        super.fromJSON(j);
-        let props = this.__params;
-        for (let key in j) {
-            let value;
-            if (j[key] instanceof Object) {
-                value = new Color();
-                value.fromJSON(j[key]);
-            } else {
-                value = j[key];
-            }
-            this.addParameter(paramName, value);
+        if(!j.shader){
+            console.warn("Invalid Material JSON");
+            return;
         }
+        this.setShaderName(j.shader)
+        super.fromJSON(j);
+        // let props = this.__params;
+        // for (let key in j) {
+        //     let value;
+        //     if (j[key] instanceof Object) {
+        //         value = new Color();
+        //         value.fromJSON(j[key]);
+        //     } else {
+        //         value = j[key];
+        //     }
+        //     this.addParameter(paramName, value);
+        // }
     }
 
     readBinary(reader, flags, textureLibrary) {
@@ -239,7 +245,11 @@ class Material extends BaseItem {
                 value = reader.loadFloat32();
             }
             // console.log(paramName +":" + value);
-            const param = this.addParameter(paramName, value);
+            let param = this.getParameter(paramName);
+            if(param)
+                param.setValue(value)
+            else
+                param = this.addParameter(paramName, value);
             const textureName = reader.loadStr();
             if (textureLibrary[textureName]) {
                 // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);

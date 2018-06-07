@@ -48,6 +48,6 @@ self.onmessage = function(event){
         self.postMessage(result, transferables);
     });
 }
-// export {
-//     ResourceLoaderWorker_onmessage
-// };
+export {
+    ResourceLoaderWorker_onmessage
+};

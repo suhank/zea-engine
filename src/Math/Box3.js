@@ -137,9 +137,14 @@ class Box3 {
 
     toJSON() {
         return {
-            "p0": this.p0.toJSON(),
-            "p1": this.p1.toJSON()
+            p0: this.p0.toJSON(),
+            p1: this.p1.toJSON()
         }
+    }
+
+    fromJSON(j) {
+        this.p0.fromJSON(j.p0);
+        this.p1.fromJSON(j.p1);
     }
 
     loadBin(data, byteOffset) {

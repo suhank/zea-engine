@@ -64,26 +64,27 @@ class AssetItem extends TreeItem {
         return this.__atlasSize;
     }
 
-
     //////////////////////////////////////////
     // Persistence
 
-    // toJSON(flags = 0) {
-    //     let j = super.toJSON(flags);
-    //     j['materialLibrary'] = this.__materials.toJSON(flags);
-    //     return j;
-    // }
+    toJSON(flags = 0) {
+        let j = super.toJSON(flags);
+        return j;
+    }
 
-    // fromJSON(j, flags = 0) {
-    //     if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0)
-    //         this.__materials.fromJSON(j['materialLibrary'], flags);
-    //     super.fromJSON(j, flags, this);
-
-    //     // Note: the Scene owns the lightmaps. 
-    //     // An AssetInstance might have a Lightmap name and an offset value. 
-    //     //this.__lightmap.fromJSON(j);
-    //     //this.__propagateLightmap();
-    // }
+    fromJSON(j, flags = 0) {
+        if(j.params && j.params.FilePath) {
+            const filePathJSON = j.params.FilePath;
+            delete j.params.FilePath;
+            const onload = ()=>{
+              this.loaded.disconnect(onload);
+              super.fromJSON(j, flags, this);
+            }
+            this.loaded.untoggle();
+            this.loaded.connect(onload)
+            this.getParameter('FilePath').fromJSON(filePathJSON);
+        }
+    }
 
 };
 

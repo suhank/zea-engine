@@ -2,9 +2,6 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
-    Color
-} from '../Math';
-import {
     Signal
 } from '../Utilities';
 import {
@@ -13,6 +10,9 @@ import {
 import {
     Material
 } from './Material.js';
+import {
+    FileImage2D
+} from './FileImage2D.js';
 
 const materialPresets = {
     Steel:{
@@ -50,6 +50,7 @@ const materialPresets = {
 
 class MaterialLibrary {
     constructor() {
+        this.__name = 'MaterialLibrary';
         this.__textures = {};
         this.__materials = {};
         this.__materials['Default'] = new Material('Default', 'SimpleSurfaceShader');
@@ -60,8 +61,12 @@ class MaterialLibrary {
         this.loaded = new Signal();
     }
 
+    getPath() {
+        return [this.__name];
+    }
+
     getNumMaterials() {
-        return this.__materials.length;
+        return Object.keys(this.__materials).length;
     }
 
     getMaterials() {
@@ -88,6 +93,7 @@ class MaterialLibrary {
     }
 
     addMaterial(material) {
+        material.setOwner(this);
         this.__materials[material.getName()] = material;
     }
 
@@ -169,11 +175,11 @@ class MaterialLibrary {
 
     fromJSON(j, flags = 0) {
         for (let name in j["textures"]) {
-            let texture = sgFactory.constructClass('FileImage2D');
+            let image = new FileImage2D(name);
             this.__textures[name] = texture;
         }
         for (let name in j.materials) {
-            let material = sgFactory.constructClass('StandardMaterial');
+            let material = new Material(name);
             material.fromJSON(j.materials[name]);
             this.__materials[name] = material;
         }
@@ -220,7 +226,7 @@ class MaterialLibrary {
                 let material = new Material(name, shaderName);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags, this.__textures);
-
+                material.setOwner(this);
                 this.__materials[name] = material;
             }
         }
