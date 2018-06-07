@@ -1,4 +1,5 @@
 import {
+    ParamFlags,
     Parameter
 } from './Parameter.js';
 import {
@@ -33,6 +34,29 @@ class FilePathParameter extends Parameter {
         this.cloneMembers();
         return clonedParam;
     }
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+
+    toJSON(flags = 0) {
+        if((this.__flags&ParamFlags.USER_EDITED) == 0)
+            return;
+        return { value: this.__value };
+    }
+
+    fromJSON(j) {
+        if(j.value == undefined){
+            console.warn("Invalid Parameter JSON");
+            return;
+        }
+        this.setValue(j.value);
+        // Note: JSON data is only used to store user edits, so 
+        // parameters loaed from JSON are considered user edited.
+        this.__flags |= ParamFlags.USER_EDITED;
+    }
+
 };
 
 

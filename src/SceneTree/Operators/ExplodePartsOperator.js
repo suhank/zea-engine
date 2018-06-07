@@ -74,9 +74,9 @@ class ExplodePartsOperator extends Operator {
                 if(treeItem) {
                     let param;
                     if(localSpace) {
-                        param = treeItem.getParameter('localXfo');
+                        param = treeItem.getParameter('LocalXfo');
                     } else {
-                        param = treeItem.getParameter('globalXfo');
+                        param = treeItem.getParameter('GlobalXfo');
                     }
                     let initialXfo = param.getValue().clone();
                     let offset = initialXfo.tr.dot(explodeDir);

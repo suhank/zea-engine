@@ -18,13 +18,13 @@ class Group extends BaseItem {
         super(name);
 
         this.__items = [];
-        this.__visibleParam = this.addParameter('visible', true);
+        this.__visibleParam = this.addParameter('Visible', true);
         this.__visibleParam.valueChanged.connect((changeType)=>{
             let value = this.__visibleParam.getValue();
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
                 const item = this.__items[i];
-                item.getParameter('visible').setValue(value);
+                item.getParameter('Visible').setValue(value);
             }
         });
 

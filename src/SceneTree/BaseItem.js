@@ -96,7 +96,7 @@ class BaseItem extends ParameterOwner {
     }
 
     testFlag(flag) {
-        return this.__flags & flag;
+        return (this.__flags & flag) != 0;
     }
 
 
@@ -150,7 +150,9 @@ class BaseItem extends ParameterOwner {
 
     toJSON(flags = 0) {
         const j = super.toJSON(flags);
-        j.name = this.__name;
+        if(j) {
+            j.name = this.__name;
+        }
         return j;
     }
 

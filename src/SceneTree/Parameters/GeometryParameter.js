@@ -30,7 +30,7 @@ class GeometryParameter extends Parameter {
                 this.__value.addRef(this);
                 this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit);
             }
-            this.valueChanged.emit(this.__value);
+            this.valueChanged.emit(mode);
         }
     }
 
@@ -38,7 +38,7 @@ class GeometryParameter extends Parameter {
     // Persistence
 
     toJSON(flags = 0) {
-        if(!this.__flags&ParamFlags.USER_EDITED)
+        if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         return;
     }

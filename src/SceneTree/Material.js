@@ -43,7 +43,7 @@ let makeParameterTexturable = (parameter) => {
         parameter.valueChanged.emit(image);
     }
     
-    parameter.setImage = (value) => {
+    parameter.setImage = (value, mode=0) => {
         let disconnectImage = () => {
             image.removeRef(parameter);
             image.loaded.disconnect(imageUpdated);
@@ -59,7 +59,7 @@ let makeParameterTexturable = (parameter) => {
             image.loaded.connect(imageUpdated);
             image.updated.connect(imageUpdated);
             parameter.textureConnected.emit();
-            parameter.valueChanged.emit(image);
+            parameter.valueChanged.emit(mode);
         } else {
             if (image != undefined) {
                 disconnectImage();
@@ -82,7 +82,8 @@ let makeParameterTexturable = (parameter) => {
     }
 
     // Invoke the setter so if the value is a texture, the parmater is updated.
-    parameter.setValue(basegetValue());
+    // Can we avoid this? it flags the parameter as edited.
+    // parameter.setValue(basegetValue());
 };
 
 

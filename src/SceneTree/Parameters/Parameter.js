@@ -147,7 +147,7 @@ class Parameter extends BaseParameter {
     // Persistence
 
     toJSON(flags = 0) {
-        if(!this.__flags&ParamFlags.USER_EDITED)
+        if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
             return { value: this.__value };
@@ -209,6 +209,7 @@ class ListParameter extends Parameter {
 
 
 export {
+    ParamFlags,
     ValueGetMode,
     ValueSetMode,
     Parameter,

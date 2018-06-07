@@ -71,6 +71,7 @@ class ParameterOwner extends RefCounted {
             return this.addParameterInstance(paramName);
         }
         if (defaultValue instanceof Parameter) {
+            defaultValue.setName(paramName);
             return this.addParameterInstance(defaultValue);
         }
 
@@ -124,26 +125,27 @@ class ParameterOwner extends RefCounted {
 
 
     toJSON(flags = 0) {
-        let paramsJSON = [];
+        let paramsJSON = {};
+        let savedParams = 0;
         for (let param of this.__params){
             const paramJSON = param.toJSON();
-            if(paramJSON)
-                paramsJSON.push(paramJSON)
+            if(paramJSON){
+                paramsJSON[param.getName()] = paramJSON;
+                savedParams++;
+            }
         }
-        const j = {};
-        if(paramsJSON.length > 0)
-            j.params = paramsJSON;
-        return j
+        if(savedParams > 0)
+            return { params: paramsJSON };
     }
 
     fromJSON(j, flags) {
         if(j.params) {
-            for (let paramJSON of j.params) {
-                const param = this.getParameter(paramJSON.name);
+            for (let key in j.params) {
+                const param = this.getParameter(key);
                 if(!param) 
                     console.warn("Param not found:" + paramJSON.name);
                 else
-                    param.fromJSON(paramJSON);
+                    param.fromJSON(j.params[key]);
             }
         }
     }

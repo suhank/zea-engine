@@ -9,6 +9,9 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
+    ParamFlags
+} from './Parameters';
+import {
     ItemFlags,
     BaseItem
 } from './BaseItem.js';
@@ -32,11 +35,11 @@ class TreeItem extends BaseItem {
         this.__itemMapping = {};
         
 
-        this.__visibleParam = this.addParameter('visible', true);
-        this.__selectedParam = this.addParameter('selected', false);
-        this.__localXfoParam = this.addParameter('localXfo', new Xfo());
-        this.__globalXfoParam = this.addParameter('globalXfo', new Xfo());
-        this.__boundingBoxParam = this.addParameter('boundingBox', new Box3());
+        this.__visibleParam = this.addParameter('Visible', true);
+        this.__selectedParam = this.addParameter('Selected', false);
+        this.__localXfoParam = this.addParameter('LocalXfo', new Xfo());
+        this.__globalXfoParam = this.addParameter('GlobalXfo', new Xfo());
+        this.__boundingBoxParam = this.addParameter('BoundingBox', new Box3());
 
         // Bind handlers (havk to )
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
@@ -305,9 +308,8 @@ class TreeItem extends BaseItem {
     }
 
     _childFlagsChanged(flags) {
-        if(flags & ItemFlags.USER_EDITED) {
+        if((flags&ParamFlags.USER_EDITED) != 0)
             this.setFlag(ItemFlags.USER_EDITED);
-        }
     }
 
     //////////////////////////////////////////
@@ -331,12 +333,15 @@ class TreeItem extends BaseItem {
         this.__childItems.push(childItem);
         childItem.setOwner(this);
 
+        if(childItem.testFlag(ItemFlags.USER_EDITED))
+            this.setFlag(ItemFlags.USER_EDITED)
+
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
 
         childItem.boundingChanged.connect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
-        childItem.flagsChanged.connect(this._childFlagsChanged);
+        childItem.flagsChanged.connect(this._childFlagsChanged.bind(this));
 
         // Propagate mouse event up ths tree.
         childItem.mouseDown.connect(this.onMouseDown);
@@ -461,11 +466,24 @@ class TreeItem extends BaseItem {
 
 
     toJSON(flags = 0) {
+        if(!this.testFlag(ItemFlags.USER_EDITED))
+            return;
+
         let j = super.toJSON(flags);
-        let childItemsJSON = [];
-        for (let childItem of this.__childItems)
-            childItemsJSON.push(childItem.toJSON());
-        j.childItems = childItemsJSON;
+        const childItemsJSON = [];
+        for (let childItem of this.__childItems){
+            const childJSON = childItem.toJSON();
+            if(childJSON)
+                childItemsJSON.push(childJSON);
+        }
+        if(childItemsJSON.length > 0) {
+            if(j) {
+                j.childItems = childItemsJSON;
+            }
+            else {
+                j = { childItems: childItemsJSON }
+            }
+        }
         return j;
     }
 
@@ -478,7 +496,7 @@ class TreeItem extends BaseItem {
         //     this.__boundingBoxParam.setValue(box);
         // }
 
-        if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && 'children' in j && j.children != null) {
+        if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && j.children != null) {
             let childrenJson = j.children;
             let printProgress = childrenJson.length > 10000;
             let progress = 0;
@@ -535,12 +553,12 @@ class TreeItem extends BaseItem {
             xfo.ori = reader.loadFloat32Quat();
             xfo.sc.set(reader.loadFloat32());
             // console.log(this.getPath() + " TreeItem:" + xfo.toString());
-            this.setLocalXfo(xfo);
+            this.__localXfoParam.setValue(xfo, Visualive.ValueSetMode.DATA_LOAD);
         }
 
         const bboxFlag = 1 << 3;
         if (itemflags & bboxFlag)
-            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), 2);
+            this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), Visualive.ValueSetMode.DATA_LOAD);
 
         let numChildren = reader.loadUInt32();
         if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {

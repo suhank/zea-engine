@@ -10,6 +10,10 @@ export * from './BinReader.js';
 export * from './BinWriter.js';
 
 export * from './Parameters';
+// Explicit export of parameters that are not included in the 
+// moduled defined by the index file in the folder. (see Parameters/index.js)
+export * from './Parameters/MaterialParameter.js';
+export * from './Parameters/GeometryParameter.js';
 export * from './Geometry';
 
 export * from './TreeItem.js';

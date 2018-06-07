@@ -66,7 +66,7 @@ class GearsOperator extends Operator {
             for (let path of paths) {
                 let treeItem = this.__ownerItem.resolvePath(path);
                 if (treeItem) {
-                    let xfoParam = treeItem.getParameter('globalXfo');
+                    let xfoParam = treeItem.getParameter('GlobalXfo');
                     let xfo = xfoParam.getValue().clone();
                     this.__outputs.push(xfoParam);
                     outputs.push({

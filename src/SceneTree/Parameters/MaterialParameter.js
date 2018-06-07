@@ -2,6 +2,7 @@ import {
     Signal
 } from '../../Utilities';
 import {
+    ParamFlags,
     ValueSetMode,
     Parameter
 } from './Parameter.js';
@@ -32,7 +33,7 @@ class MaterialParameter extends Parameter {
                 this.__value.addRef(this);
                 this.__value.parameterValueChanged.connect(this.valueParameterValueChanged.emit);
             }
-            this.valueChanged.emit(this.__value);
+            this.valueChanged.emit(mode);
         }
     }
 
@@ -40,7 +41,7 @@ class MaterialParameter extends Parameter {
     // Persistence
 
     toJSON(flags = 0) {
-        if(!this.__flags&ParamFlags.USER_EDITED)
+        if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         return {
             value: this.__value.getPath()
