@@ -15,7 +15,8 @@ import {
 } from '../../Utilities';
 import {
     TreeItem,
-    VLAAsset
+    VLAAsset,
+    resourceLoader
 } from '../../SceneTree';
 import {
     BaseViewport
@@ -45,6 +46,7 @@ import {
     VRFlyTool
 } from './Tools/VRFlyTool.js'
 
+
 class VRViewport extends BaseViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
         super(renderer);
@@ -53,7 +55,7 @@ class VRViewport extends BaseViewport {
         //////////////////////////////////////////////
         // Resources
 
-        if (renderer.getScene().getResourceLoader().resourceAvailable("VisualiveEngine/Vive.vla")) {
+        if (resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
             this.__asset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
             this.__asset.getMaterialLibrary().setMaterialTypeMapping({
                 '*': 'SimpleSurfaceShader'

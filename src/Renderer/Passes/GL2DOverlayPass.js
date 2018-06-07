@@ -29,6 +29,29 @@ class GL2DOverlayPass extends GLPass {
         this.__gl.enable(this.__gl.CULL_FACE);
         this.__gl.enable(this.__gl.DEPTH_TEST);
     }
+    
+    drawGeomData(renderstate){
+
+        // const gl = this.__gl;
+        // gl.disable(gl.BLEND);
+        // gl.disable(gl.CULL_FACE);
+        // gl.enable(gl.DEPTH_TEST);
+        // gl.depthFunc(gl.LESS);
+        // gl.depthMask(true);
+
+        // if(!this.__geomdatashader.bind(renderstate, this.constructor.name))
+        //     return false;
+
+        // if(!this.__collector.bind(renderstate))
+        //     return false;
+
+        // let unif = renderstate.unifs.floatGeomBuffer;
+        // if (unif){
+        //     gl.uniform1i(unif.location, this.__floatGeomBuffer ? 1 : 0);
+        // }
+
+        // super.drawGeomData(renderstate);
+    }
 };
 
 export {
