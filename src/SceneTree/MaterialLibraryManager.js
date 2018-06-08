@@ -20,10 +20,10 @@ class MaterialLibraryManager {
         resourceLoader.registerResourceCallback('.matlib', (filename, file)=>{
             loadTextfile(file.url,
                 (data) => {
-                    const j = JSON.parse(data);
-                    const m = new MaterialLibrary();
-                    m.fromJSON(j);
                     const stem = filename.split('.')[0];// trim off the extension
+                    const j = JSON.parse(data);
+                    const m = new MaterialLibrary(stem);
+                    m.fromJSON(j);
                     this.__materialLibraries[stem] = m;
                 }
             );

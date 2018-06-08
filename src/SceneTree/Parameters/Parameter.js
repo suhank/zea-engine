@@ -161,15 +161,17 @@ class Parameter extends BaseParameter {
             console.warn("Invalid Parameter JSON");
             return;
         }
-        if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
-            this.setValue(j.value);
-        else {
-            // const value = sgFactory.constructClass();
-            this.__value.fromJSON(j.value);
-        }
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
+
+        if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
+            this.setValue(j.value, ValueSetMode.DATA_LOAD);
+        else {
+            // const value = sgFactory.constructClass();
+            this.__value.fromJSON(j.value);
+            this.valueChanged.emit(ValueSetMode.DATA_LOAD);
+        }
     }
 
 };

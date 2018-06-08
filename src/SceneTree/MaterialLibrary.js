@@ -49,8 +49,8 @@ const materialPresets = {
 };
 
 class MaterialLibrary {
-    constructor() {
-        this.__name = 'MaterialLibrary';
+    constructor(name='MaterialLibrary') {
+        this.__name = name;
         this.__textures = {};
         this.__materials = {};
         this.__materials['Default'] = new Material('Default', 'SimpleSurfaceShader');
@@ -181,7 +181,7 @@ class MaterialLibrary {
         for (let name in j.materials) {
             let material = new Material(name);
             material.fromJSON(j.materials[name]);
-            this.__materials[name] = material;
+            this.addMaterial(material);
         }
     }
 
@@ -226,8 +226,7 @@ class MaterialLibrary {
                 let material = new Material(name, shaderName);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, flags, this.__textures);
-                material.setOwner(this);
-                this.__materials[name] = material;
+                this.addMaterial(material);
             }
         }
 

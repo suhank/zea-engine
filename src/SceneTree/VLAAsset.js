@@ -1,5 +1,8 @@
 
 import {
+    Vec2
+} from '../Math';
+import {
     Signal,
     Async
 } from '../Utilities';
@@ -18,11 +21,36 @@ import {
 import {
     resourceLoader
 } from './ResourceLoader.js';
+import {
+    GeomLibrary
+} from './GeomLibrary.js';
+import {
+    MaterialLibrary
+} from './MaterialLibrary.js';
 
 class VLAAsset extends AssetItem {
     constructor(name) {
         super(name);
+        this.__geomLibrary = new GeomLibrary(this.__name);
+        this.__materials = new MaterialLibrary();
+        this.__atlasSize = new Vec2();
         this.allPartsLoaded = new Signal();
+    }
+
+    getGeometryLibrary() {
+        return this.__geomLibrary;
+    }
+
+    getMaterialLibrary() {
+        return this.__materials;
+    }
+
+    getLightmapSize() {
+        return this.__atlasSize;
+    }
+    // Note: the atlas can be used for more than just lightmaps.
+    getAtlasSize() {
+        return this.__atlasSize;
     }
 
     readBinary(reader, flags) {

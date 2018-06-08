@@ -109,14 +109,6 @@ class ResourceLoader {
         this.__applyCallbacks(resources);
     }
 
-    freeData(buffer){
-        // Note: Explicitly transfer data to a web worker and then 
-        // terminate the worker. (hacky way to free TypedArray memory explicitly)
-        // let worker = new FreeMemWorker();
-        // worker.postMessage(buffer, [buffer]);
-        // worker.terminate();
-    }
-
     addResourceURL(resourcePath, url) {
 
         const parts = resourcePath.split('/');
@@ -135,6 +127,14 @@ class ResourceLoader {
         }
         curr[filename] = { url };
         this.__applyCallbacks(curr[filename], filename);
+    }
+
+    freeData(buffer){
+        // Note: Explicitly transfer data to a web worker and then 
+        // terminate the worker. (hacky way to free TypedArray memory explicitly)
+        // let worker = new FreeMemWorker();
+        // worker.postMessage(buffer, [buffer]);
+        // worker.terminate();
     }
 
     __constructWorkers() {
