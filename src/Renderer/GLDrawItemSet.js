@@ -211,16 +211,19 @@ class GLDrawItemSet {
         } else {
             // console.log("draw:"+ this.instancedIdsArray);
 
-            // Specify an instanced draw to the shader so it knows how
-            // to retrieve the modelmatrix.
-            gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
+            if(renderstate.attrs.instancedIds) {
 
-            // The instanced transform ids are bound as an instanced attribute.
-            let location = renderstate.attrs.instancedIds.location;
-            gl.enableVertexAttribArray(location);
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.instancedIdsBuffer);
-            gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0);
-            gl.vertexAttribDivisor(location, 1); // This makes it instanced
+                // Specify an instanced draw to the shader so it knows how
+                // to retrieve the modelmatrix.
+                gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
+
+                // The instanced transform ids are bound as an instanced attribute.
+                let location = renderstate.attrs.instancedIds.location;
+                gl.enableVertexAttribArray(location);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.instancedIdsBuffer);
+                gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0);
+                gl.vertexAttribDivisor(location, 1); // This makes it instanced
+            }
 
 
             this.glgeom.drawInstanced(this.drawCount);

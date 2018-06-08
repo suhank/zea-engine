@@ -223,6 +223,14 @@ class GLFbo {
         this.bind(renderstate);
     }
 
+    unbindForWriting() {
+        const gl = this.__gl;
+        if (gl.name == 'webgl2')
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+        else
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    }
+
     bindForReading() {
         const gl = this.__gl;
         if (gl.name == 'webgl2')

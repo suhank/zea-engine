@@ -81,6 +81,11 @@ class Scene {
         return this.__root;
     }
 
+    getResourceLoader() {
+        console.warn("Resource Loader is now a singleton")
+        return resourceLoader;
+    }
+
     loadCommonAssetResource(path) {
         if (path in this.__commonResources) {
             return this.__commonResources[path];
