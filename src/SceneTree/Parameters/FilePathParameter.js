@@ -1,4 +1,5 @@
 import {
+    ValueSetMode,
     ParamFlags,
     Parameter
 } from './Parameter.js';
@@ -12,13 +13,31 @@ class FilePathParameter extends Parameter {
 
         this.__file;
         this.valueChanged.connect(()=>{
-            let value = this.getValue();
-            if (!resourceLoader.resourceAvailable(value)) {
-                console.warn("Resource unavailable:" + value);
+            const path = this.getValue();
+            if (!resourceLoader.resourceAvailable(path)) {
+                console.warn("Resource unavailable:" + path);
                 return;
             }
-            this.__file = resourceLoader.resolveFile(value);
+            this.__file = resourceLoader.resolveFile(path);
         });
+    }
+
+    getFilename() {
+        const path = this.getValue();
+        const parts = path.split('/');
+        if(parts.length)
+            return parts[parts.length-1];
+    }
+
+    getStem() {
+        const filename = this.getFilename();
+        if(filename) {
+            const parts = filename.split('.');
+            if(parts.length == 2)
+                return parts[0];
+            else
+                return filename;
+        }
     }
 
     getURL() {
@@ -30,7 +49,7 @@ class FilePathParameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new FilePathParameter(this.__name, resourceLoader);
+        const clonedParam = new FilePathParameter(this.__name, resourceLoader);
         this.cloneMembers();
         return clonedParam;
     }
@@ -51,7 +70,7 @@ class FilePathParameter extends Parameter {
             console.warn("Invalid Parameter JSON");
             return;
         }
-        this.setValue(j.value);
+        this.setValue(j.value, ValueSetMode.DATA_LOAD);
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;

@@ -12,7 +12,7 @@ import {
 
 class MaterialParameter extends Parameter {
     constructor(name, value) {
-        super(name, value, 'Color');
+        super(name, value, 'Material');
         this.valueParameterValueChanged = new Signal();
     }
     
@@ -33,6 +33,8 @@ class MaterialParameter extends Parameter {
                 this.__value.addRef(this);
                 this.__value.parameterValueChanged.connect(this.valueParameterValueChanged.emit);
             }
+            if(mode == ValueSetMode.USER_SETVALUE)
+                this.__flags |= ParamFlags.USER_EDITED;
             this.valueChanged.emit(mode);
         }
     }
@@ -53,7 +55,7 @@ class MaterialParameter extends Parameter {
             console.warn("Invalid Parameter JSON");
             return;
         }
-        const materialPath = j.valuel
+        const materialPath = j.value;
         this.__value = materialLibraryManager.resolveMaterialFromPath(materialPath);
         this.__flags |= ParamFlags.USER_EDITED;
     }

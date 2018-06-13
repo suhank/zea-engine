@@ -11,8 +11,7 @@ import {
     NumberParameter
 } from './Parameters';
 import {
-    TreeItem,
-    LOADFLAGS_SKIP_MATERIALS
+    TreeItem
 } from './TreeItem.js';
 import {
     GeomLibrary
