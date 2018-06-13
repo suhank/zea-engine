@@ -1,10 +1,13 @@
 import {
+    Vec2
+} from '../../Math';
+import {
     Parameter
 } from './Parameter.js';
 
 class Vec2Parameter extends Parameter {
-    constructor(name, value, range=undefined) {
-        super(name, value, 'Vec2');
+    constructor(name, value) {
+        super(name, value ? value : new Vec2(), 'Vec2');
     }
     
     clone() {

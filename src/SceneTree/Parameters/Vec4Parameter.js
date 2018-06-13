@@ -1,10 +1,13 @@
 import {
+    Vec4
+} from '../../Math';
+import {
     Parameter
 } from './Parameter.js';
 
 class Vec4Parameter extends Parameter {
     constructor(name, value) {
-        super(name, value, 'Vec4');
+        super(name, value ? value : new Vec4(), 'Vec4');
     }
     
     clone() {
