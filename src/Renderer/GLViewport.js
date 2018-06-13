@@ -109,6 +109,7 @@ class GLViewport extends BaseViewport {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
         }
+        this.region = [this.__x, this.__y, this.__width, this.__height];
     }
 
     getCamera() {
@@ -731,6 +732,7 @@ class GLViewport extends BaseViewport {
         renderstate.camera = this.__camera;
         renderstate.viewportFrustumSize = this.__frustumDim;
         renderstate.viewScale = 1.0;
+        renderstate.region = this.region;
         renderstate.eye = 0; // 0==Left, 1==Right;
 
         if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
@@ -746,7 +748,7 @@ class GLViewport extends BaseViewport {
 
             // Bind the default framebuffer
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(this.__x, this.__y, this.__width, this.__height);
+            gl.viewport(...this.region);
             // gl.disable(gl.SCISSOR_TEST);
 
             // this.__glshaderScreenPostProcess.bind(renderstate);

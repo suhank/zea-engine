@@ -13,7 +13,7 @@ class GeometryParameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new GeometryParameter(this.__name, this.__value, this.__dataType);
+        let clonedParam = new GeometryParameter(this.__name, this.__value);
         this.cloneMembers();
         return clonedParam;
     }

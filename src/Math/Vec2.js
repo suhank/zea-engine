@@ -219,6 +219,12 @@ class Vec2 extends AttrValue {
         return Math.Atan2(b.x - this.x, b.y - this.y);
     }
 
+    rotate(angle) {
+        const cosa = Math.cos(angle);
+        const sina = Math.sin(angle);
+        return new Vec2(this.x * cosa - this.y * sina, this.x * sina + this.y * cosa);
+    }
+
     /**
      * Performs a linear interpolation between two vec2's
      *

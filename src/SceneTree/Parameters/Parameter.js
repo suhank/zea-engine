@@ -86,7 +86,7 @@ class Parameter extends BaseParameter {
     constructor(name, value, dataType) {
         super(name);
         this.__value = value;
-        this.__dataType = dataType;
+        this.__dataType = dataType ? dataType : value.constructor.name;
     }
 
     getValue(mode = ValueGetMode.NORMAL) {

@@ -4,7 +4,7 @@ import {
 
 class Vec4Parameter extends Parameter {
     constructor(name, value) {
-        super(name, value, 'Vec3');
+        super(name, value, 'Vec4');
     }
     
     clone() {
