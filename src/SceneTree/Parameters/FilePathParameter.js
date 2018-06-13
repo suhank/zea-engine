@@ -49,12 +49,28 @@ class FilePathParameter extends Parameter {
     }
     
     clone() {
-        const clonedParam = new FilePathParameter(this.__name, resourceLoader);
-        this.cloneMembers();
+        const clonedParam = new FilePathParameter(this.__name);
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 
 
+    setDirty(cleanerFn) {
+        throw("Cannot drive a filepath param from an oporator")
+    }
+    setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
+        if (value == undefined) {
+            throw ("Invalud value for setvalue.");
+        }
+        // Note: equality tests on anything but simple values is not going to work. We can't easily optimise this function.
+        if(value == this.__value) {
+            return;
+        }
+        this.__value = value;
+        if(mode == ValueSetMode.USER_SETVALUE)
+            this.__flags |= ParamFlags.USER_EDITED;
+        this.valueChanged.emit(mode);
+    }
     //////////////////////////////////////////
     // Persistence
 

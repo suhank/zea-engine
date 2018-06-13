@@ -25,6 +25,7 @@ class MaterialLibraryManager {
                     const m = new MaterialLibrary(stem);
                     m.fromJSON(j);
                     this.__materialLibraries[stem] = m;
+                    this.materialLibraryLoaded.emit(m)
                 }
             );
         })

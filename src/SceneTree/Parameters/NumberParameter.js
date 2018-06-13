@@ -41,14 +41,15 @@ class NumberParameter extends Parameter {
     }
 
     cloneMembers(clonedParam) {
+        super.cloneMembers(clonedParam);
         clonedParam.__range = this.__range;
         clonedParam.__axis = this.__axis;
         clonedParam.__step = this.__step;
     }
 
     clone() {
-        let clonedParam = new NumberParameter(this.__name, this.__value, this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new NumberParameter(this.__name, this.__value);
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

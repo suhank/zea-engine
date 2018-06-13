@@ -8,8 +8,8 @@ class ColorParameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new ColorParameter(this.__name, this.__value.clone(), this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new ColorParameter(this.__name, this.__value.clone());
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

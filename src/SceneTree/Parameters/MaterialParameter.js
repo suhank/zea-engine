@@ -17,8 +17,8 @@ class MaterialParameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new MaterialParameter(this.__name, this.__value, this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new MaterialParameter(this.__name, this.__value);
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 
@@ -56,7 +56,7 @@ class MaterialParameter extends Parameter {
             return;
         }
         const materialPath = j.value;
-        this.__value = materialLibraryManager.resolveMaterialFromPath(materialPath);
+        this.setValue(materialLibraryManager.resolveMaterialFromPath(materialPath));
         this.__flags |= ParamFlags.USER_EDITED;
     }
 };

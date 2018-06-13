@@ -14,46 +14,14 @@ import {
     FileImage2D
 } from './FileImage2D.js';
 
-const materialPresets = {
-    Steel:{
-        // baseColor:  new Color(0.15,0.15,0.15),
-        metallic: 0.55,
-        roughness: 0.25,
-        reflectance: 0.7
-    },
-    StainlessSteel:{
-        metallic: 0.55,
-        roughness: 0.25,
-        reflectance: 0.7
-    },
-    Aluminum:{
-        metallic: 0.55,
-        roughness: 0.15,
-        reflectance: 0.85
-    },
-    PaintedMetal: {
-        metallic: 0.05,
-        roughness: 0.25,
-        reflectance: 0.05
-    },
-    Plastic: {
-        metallic: 0.0,
-        roughness: 0.25,
-        reflectance: 0.03
-    },
-    Rubber: {
-        metallic: 0.0,
-        roughness: 0.75,
-        reflectance: 0.01
-    }
-};
 
 class MaterialLibrary {
     constructor(name='MaterialLibrary') {
         this.__name = name;
         this.__textures = {};
-        this.__materials = {};
-        this.__materials['Default'] = new Material('Default', 'SimpleSurfaceShader');
+        this.__materials = {
+            Default: new Material('Default', 'SimpleSurfaceShader')
+        };
 
         this.lod = 0;
         if(SystemDesc.isMobileDevice)
@@ -81,13 +49,6 @@ class MaterialLibrary {
         return names;
     }
 
-    setMaterialTypeMapping(materialTypeMapping) {
-        if(!this.__materialTypeMapping)
-            this.__materialTypeMapping = {};
-        for(let key in materialTypeMapping)
-            this.__materialTypeMapping[key] = materialTypeMapping[key];
-    }
-
     hasMaterial(name) {
         return name in this.__materials;
     }
@@ -105,53 +66,6 @@ class MaterialLibrary {
         return res;
     }
 
-    __modifyMaterial (material, paramValues, shaderName) {
-        for (let paramName in paramValues) {
-            let param = material.getParameter(paramName);
-            if (param) {
-                param.setValue(paramValues[paramName]);
-            } else {
-                material.addParameter(paramName, paramValues[paramName]);
-            }
-        }
-        if (shaderName)
-            material.setShaderName(shaderName);
-    }
-
-    assignMaterialPresetValues(materialNames, presetName, shaderName = undefined) {
-        for (let materialName of materialNames) {
-            if(materialName == "*") {
-                for(let name in this.__materials) {
-                    this.__modifyMaterial(this.__materials[name], materialPresets[presetName], shaderName);
-                }
-                continue;
-            }
-            let material = this.__materials[materialName];
-            if (!material) {
-                console.warn("Material not found:" + materialName);
-                continue;
-            }
-            this.__modifyMaterial(material, materialPresets[presetName], shaderName);
-        }
-    }
-
-    modifyMaterials(materialNames, paramValues, shaderName = undefined) {
-
-        for (let materialName of materialNames) {
-            if(materialName == "*") {
-                for(let name in this.__materials) {
-                    this.__modifyMaterial(this.__materials[name], paramValues, shaderName);
-                }
-                continue;
-            }
-            let material = this.__materials[materialName];
-            if (!material) {
-                console.warn("Material not found:" + materialName);
-                continue;
-            }
-            this.__modifyMaterial(material, paramValues, shaderName);
-        }
-    }
     //////////////////////////////////////////
     // Persistence
 
@@ -240,4 +154,3 @@ class MaterialLibrary {
 export {
     MaterialLibrary
 };
-// MaterialLibrary;

@@ -79,6 +79,9 @@ class GLViewport extends BaseViewport {
         this.mouseDown = new Signal();
         this.mouseMove = new Signal();
         this.mouseUp = new Signal();
+        this.mouseDownOnGeom = new Signal();
+        this.mouseMoveOnGeom = new Signal();
+        this.mouseUpOnGeom = new Signal();
         this.mouseDblClick = new Signal();
         this.mouseClickedOnEmptySpace = new Signal();
         this.keyPressed = new Signal();
@@ -408,13 +411,12 @@ class GLViewport extends BaseViewport {
             } else {
                 let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (intersectionData != undefined) {
-                    console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+                    // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                     this.__mouseDownGeom = intersectionData.geomItem;
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
 
-                    if (event.vleStopPropagation) {
-                        this.__manipMode = 'geom-manipulation';
-                    }
+                    this.mouseDownOnGeom.emit(this.__mouseDownGeom);
+                    this.__manipMode = 'geom-manipulation';
                 }
 
                 if (this.__manipMode == 'highlighting') {
@@ -465,6 +467,7 @@ class GLViewport extends BaseViewport {
                     mousePos: mouseUpPos,
                     geomItem: this.__mouseDownGeom
                 });
+                this.mouseUpOnGeom.emit(this.__mouseDownGeom);
                 this.__mouseDownGeom = undefined;
                 this.renderGeomDataFbo();
                 this.__manipMode = 'highlighting';
@@ -616,6 +619,7 @@ class GLViewport extends BaseViewport {
                     if (intersectionData != undefined) {
                         intersectionData.dragging = true;
                         intersectionData.geomItem.onMouseMove(event, intersectionData);
+                        this.mouseMoveOnGeom.emit(intersectionData.geomItem);
                     } else {
                         let mouseRay = this.calcRayFromScreenPos(mousePos);
                         this.__mouseDownGeom.onMouseMove(event, {
@@ -625,6 +629,7 @@ class GLViewport extends BaseViewport {
                             dragging: true
                         });
 
+                        this.mouseMoveOnGeom.emit(this.__mouseDownGeom);
                     }
                     break;
                 }

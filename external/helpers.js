@@ -141,3 +141,99 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     }
     return resources;
 }
+
+
+const materialLibraryHelpers = (function(){
+
+    const materialPresets = {
+        Steel:{
+            // baseColor:  new Color(0.15,0.15,0.15),
+            metallic: 0.55,
+            roughness: 0.25,
+            reflectance: 0.7
+        },
+        StainlessSteel:{
+            metallic: 0.55,
+            roughness: 0.25,
+            reflectance: 0.7
+        },
+        Aluminum:{
+            metallic: 0.55,
+            roughness: 0.15,
+            reflectance: 0.85
+        },
+        PaintedMetal: {
+            metallic: 0.05,
+            roughness: 0.25,
+            reflectance: 0.05
+        },
+        Plastic: {
+            metallic: 0.0,
+            roughness: 0.25,
+            reflectance: 0.03
+        },
+        Rubber: {
+            metallic: 0.0,
+            roughness: 0.75,
+            reflectance: 0.01
+        }
+    };
+
+    const __modifyMaterial = (material, paramValues, shaderName) => {
+        for (let paramName in paramValues) {
+            let param = material.getParameter(paramName);
+            if (param) {
+                param.setValue(paramValues[paramName]);
+            } else {
+                material.addParameter(paramName, paramValues[paramName]);
+            }
+        }
+        if (shaderName)
+            material.setShaderName(shaderName);
+    }
+
+    const __materialTypeMapping = {};
+
+    return {
+
+        setMaterialTypeMapping:function(materialTypeMapping) {
+            for(let key in materialTypeMapping)
+                __materialTypeMapping[key] = materialTypeMapping[key];
+        },
+
+        assignMaterialPresetValues:function(materialNames, presetName, shaderName = undefined) {
+            for (let materialName of materialNames) {
+                if(materialName == "*") {
+                    for(let name in __materials) {
+                        __modifyMaterial(__materials[name], materialPresets[presetName], shaderName);
+                    }
+                    continue;
+                }
+                let material = __materials[materialName];
+                if (!material) {
+                    console.warn("Material not found:" + materialName);
+                    continue;
+                }
+                __modifyMaterial(material, materialPresets[presetName], shaderName);
+            }
+        },
+
+        modifyMaterials:function(materialNames, paramValues, shaderName = undefined) {
+
+            for (let materialName of materialNames) {
+                if(materialName == "*") {
+                    for(let name in __materials) {
+                        __modifyMaterial(__materials[name], paramValues, shaderName);
+                    }
+                    continue;
+                }
+                let material = __materials[materialName];
+                if (!material) {
+                    console.warn("Material not found:" + materialName);
+                    continue;
+                }
+                __modifyMaterial(material, paramValues, shaderName);
+            }
+        }
+    }
+})()

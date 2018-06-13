@@ -1,4 +1,3 @@
-
 import {
     SystemDesc
 } from '../../BrowserDetection.js';
@@ -247,7 +246,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     onKeyPressed(key, event, viewport) {
         // Note: onKeyPressed is called intiallly only once, and then we 
         // get a series of calls. Here we ignore subsequent events.
-        // (TODO: move this logic to GLRenderer)
+        // (TODO: move this logic to a special controller)
+        /*
         switch (key) {
             case 'w':
                 if (this.__keysPressed.indexOf(key) != -1)
@@ -282,12 +282,15 @@ class CameraMouseAndKeyboard extends ParameterOwner {
             }
             window.requestAnimationFrame(animationFrame);
         }
-        return true;
+        */
+        return false;// no keys handled
     }
 
     onKeyDown(key, event, viewport) {}
 
     onKeyUp(key, event, viewport) {
+        // (TODO: move this logic to a special controller)
+        /*
         switch (key) {
             case 'w':
                 this.__velocity.z += 1.0;
@@ -308,6 +311,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.__keysPressed.splice(keyIndex, 1);
         if (this.__keysPressed.length == 0)
             this.__keyboardMovement = false;
+        */
         return true;
     }
 

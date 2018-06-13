@@ -8,8 +8,8 @@ class Vec3Parameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new Vec3Parameter(this.__name, this.__value.clone(), this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new Vec3Parameter(this.__name, this.__value.clone());
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

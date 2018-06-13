@@ -8,8 +8,8 @@ class XfoParameter extends Parameter {
     }
     
     clone() {
-        let clonedParam = new XfoParameter(this.__name, this.__value.clone(), this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new XfoParameter(this.__name, this.__value.clone());
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

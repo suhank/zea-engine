@@ -73,6 +73,7 @@ class BaseParameter {
     clone() {
         console.error("TOOD: implment me")
     }
+
     cloneMembers(clonedParam) {
 
     }
@@ -138,10 +139,13 @@ class Parameter extends BaseParameter {
         if (clonedValue.clone)
             clonedValue = clonedValue.clone();
         const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType);
-        this.cloneMembers();
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 
+    cloneMembers(clonedParam) {
+        super.cloneMembers(clonedParam);
+    }
 
     //////////////////////////////////////////
     // Persistence
@@ -203,8 +207,8 @@ class ListParameter extends Parameter {
 
     clone() {
         let clonedValue = this.__value.slice(0);
-        let clonedParam = new ListParameter(this.__name, clonedValue, this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new ListParameter(this.__name, clonedValue, this.__dataType);
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

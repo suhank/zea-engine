@@ -8,13 +8,13 @@ import {
 
 class GeometryParameter extends Parameter {
     constructor(name, value) {
-        super(name, value, 'Color');
+        super(name, value, 'Geometry');
         this.boundingBoxDirtied = new Signal();
     }
     
     clone() {
-        let clonedParam = new GeometryParameter(this.__name, this.__value, this.__dataType);
-        this.cloneMembers();
+        const clonedParam = new GeometryParameter(this.__name, this.__value);
+        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 
