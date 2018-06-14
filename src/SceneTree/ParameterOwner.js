@@ -127,11 +127,11 @@ class ParameterOwner extends RefCounted {
     // Persistence
 
 
-    toJSON(flags = 0) {
+    toJSON(context) {
         let paramsJSON = {};
         let savedParams = 0;
         for (let param of this.__params){
-            const paramJSON = param.toJSON();
+            const paramJSON = param.toJSON(context);
             if(paramJSON){
                 paramsJSON[param.getName()] = paramJSON;
                 savedParams++;
@@ -141,14 +141,14 @@ class ParameterOwner extends RefCounted {
             return { params: paramsJSON };
     }
 
-    fromJSON(j, flags) {
+    fromJSON(j, context) {
         if(j.params) {
             for (let key in j.params) {
                 const param = this.getParameter(key);
                 if(!param) 
                     console.warn("Param not found:" + paramJSON.name);
                 else
-                    param.fromJSON(j.params[key]);
+                    param.fromJSON(j.params[key], context);
             }
         }
     }

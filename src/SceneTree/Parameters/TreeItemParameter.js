@@ -57,7 +57,7 @@ class TreeItemParameter extends Parameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
+    toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         return {
@@ -136,7 +136,7 @@ class TreeItemListParameter extends ListParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
+    toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         return {

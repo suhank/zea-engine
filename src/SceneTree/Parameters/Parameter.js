@@ -187,13 +187,13 @@ class Parameter extends BaseParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
+    toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
             return { value: this.__value };
         else {
-            return { value: this.__value.toJSON(flags) };
+            return { value: this.__value.toJSON(context) };
         }
     }
 

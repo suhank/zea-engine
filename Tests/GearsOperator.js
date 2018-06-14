@@ -1,7 +1,7 @@
 testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
-    const asset = new Visualive.TreeItem('gears');
+    const asset = new Visualive.AssetItem('gears');
     scene.getRoot().addChild(asset);
 
     let index = 0;
@@ -29,7 +29,8 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     addGear(new Visualive.Vec3(3.5, 1.6, 0), 0.6, 5, new Visualive.Vec3(0, 0, 1), new Visualive.Color(1.0, 1.0, 0.0));
 
 
-    const gearsOp = new Visualive.GearsOperator(scene.getRoot());
+    const gearsOp = new Visualive.GearsOperator();
+    asset.addComponent(gearsOp);
     const revolutionsParam = gearsOp.getParameter('Revolutions');
     revolutionsParam.setRange([0, 0.5]);
     const rpmParam = gearsOp.getParameter('RPM');
@@ -44,7 +45,7 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
         gearGeoms.addElement(binding.geomItem);
     }
 
-    const j = gearsOp.toJSON();
+    const j = asset.toJSON();
     console.log(JSON.stringify(j))
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);

@@ -39,12 +39,12 @@ class Operator extends BaseItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
-        return super.toJSON(flags);
+    toJSON(context) {
+        return super.toJSON(context);
     }
 
-    fromJSON(j, flags) {
-        return super.fromJSON(j, flags);
+    fromJSON(j, context) {
+        return super.fromJSON(j, context);
     }
 
 };

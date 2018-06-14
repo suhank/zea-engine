@@ -148,8 +148,8 @@ class BaseItem extends ParameterOwner {
     // Persistence
 
 
-    toJSON(flags = 0) {
-        const j = super.toJSON(flags);
+    toJSON(context) {
+        const j = super.toJSON(context);
         if(j) {
             j.name = this.__name;
         }
@@ -157,7 +157,7 @@ class BaseItem extends ParameterOwner {
     }
 
     fromJSON(j, flags, asset) {
-        super.fromJSON(j, flags);
+        super.fromJSON(j, context);
         if(j.name)
             this.__name = j.name;
         // Note: JSON data is only used to store user edits, so 

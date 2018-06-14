@@ -31,8 +31,6 @@ class TreeItem extends BaseItem {
         this.__selectable = true;
 
         this.__childItems = [];
-        this.__items = [];
-        this.__itemMapping = {};
         
 
         this.__visibleParam = this.addParameter('Visible', true);
@@ -86,9 +84,6 @@ class TreeItem extends BaseItem {
         this.parentChanged = this.ownerChanged;
         this.childAdded = new Signal();
         this.childRemoved = new Signal();
-
-        this.itemAdded = new Signal();
-        this.itemRemoved = new Signal();
 
         this.mouseDown = new Signal();
         this.mouseUp = new Signal();
@@ -154,38 +149,6 @@ class TreeItem extends BaseItem {
 
     set parentItem(parentItem) {
         throw(("setter is deprectated. Please use 'setParentItem'"));
-    }
-
-
-    //////////////////////////////////////////
-    // Items
-
-    addItem(item) {
-        this.__items.push(item);
-        this.__itemMapping[item.getName()] = this.__items.length - 1;
-
-        item.setOwner(this);
-
-        this.itemAdded.emit(item);
-    }
-
-    removeItem(name) {
-        const index = this.__itemMapping[name]
-        const item = this.__items[index];
-        item.setOwner(undefined);
-        this.__items.splice(index, 1);
-
-        const itemMapping = {};
-        for (let i =0; i< this.__items.length; i++)
-            itemMapping[this.__items[i].getName()] = i;
-        this.__itemMapping = itemMapping;
-
-        this.itemAdded.emit(item);
-        return item;
-    }
-
-    getItem(name) {
-        return this.__items[this.__itemMapping[name]];
     }
 
 
@@ -482,11 +445,11 @@ class TreeItem extends BaseItem {
     // Persistence
 
 
-    toJSON(flags = 0) {
+    toJSON(context) {
         if(!this.testFlag(ItemFlags.USER_EDITED))
             return;
 
-        let j = super.toJSON(flags);
+        let j = super.toJSON(context);
         const childItemsJSON = [];
         for (let childItem of this.__childItems){
             const childJSON = childItem.toJSON();
@@ -505,7 +468,7 @@ class TreeItem extends BaseItem {
     }
 
     fromJSON(j, flags, asset) {
-        super.fromJSON(j, flags);
+        super.fromJSON(j, context);
 
         // if ('bbox' in j){
         //     let box = new Box3();

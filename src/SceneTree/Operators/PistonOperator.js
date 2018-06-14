@@ -166,12 +166,12 @@ class PistonOperator extends Operator {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
-        return super.toJSON(flags);
+    toJSON(context) {
+        return super.toJSON(context);
     }
 
-    fromJSON(j, flags) {
-        super.fromJSON(j, flags);
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
         this.init();
     }
 };

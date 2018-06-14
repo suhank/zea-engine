@@ -75,13 +75,22 @@ class TreeItemGroupParameter extends ListParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(flags = 0) {
-        // return super.toJSON(flags);
+    toJSON(context) {
+        // return super.toJSON(context);
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const treeItems = [];
+        // const findAsset = () => {
+        //     return this.__owner.getOwner();
+        // }
+        const makeRelative = (path, relTo) => {
+            // for(let i=0; i<relTo.length; )
+            return path.slice(relTo.length);
+        }
+        // const assetItem = findAsset(this.__owner);
+        const assetPath = context.assetItem.getPath();
         for(let p of this.__value) 
-            treeItems.push(p.getPath());
+            treeItems.push(makeRelative(p.getPath(), assetPath));
         return {
             treeItems
         };
@@ -102,16 +111,16 @@ class TreeItemGroupParameter extends ListParameter {
             return this.__owner.getOwner();
         }
         const assetItem = findAsset(this.__owner);
-        if(assetItem) {
+        if(context.assetItem) {
             const treeItems = j.treeItems;
             const onloaded = ()=>{
                 // this.setValue(assetItem.resolvePath(itemPath));
                 for(let i=0; i<j.treeItems.length; i++) {
-                    this.__value.push(assetItem.resolvePath(treeItems[i]));
+                    this.__value.push(context.assetItem.resolvePath(treeItems[i]));
                 }
-                assetItem.loaded.disconnect(onloaded)
+                context.assetItem.loaded.disconnect(onloaded)
             }
-            assetItem.loaded.connect(onloaded)
+            context.assetItem.loaded.connect(onloaded)
             this.__flags |= ParamFlags.USER_EDITED;
         }
 
