@@ -1,3 +1,9 @@
+
+import {
+    ParamFlags,
+    ValueSetMode
+} from './Parameter.js';
+
 import {
     ListParameter
 } from './ListParameter.js';
@@ -63,6 +69,52 @@ class TreeItemGroupParameter extends ListParameter {
         const clonedParam = new TreeItemGroupParameter(this.__name, clonedValue, this.__dataType);
         this.cloneMembers(clonedParam);
         return clonedParam;
+    }
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(flags = 0) {
+        // return super.toJSON(flags);
+        if((this.__flags&ParamFlags.USER_EDITED) == 0)
+            return;
+        const treeItems = [];
+        for(let p of this.__value) 
+            treeItems.push(p.getPath());
+        return {
+            treeItems
+        };
+    }
+
+    fromJSON(j) {
+        // super.fromJSON(j);
+
+        if(j.value == undefined){
+            console.warn("Invalid Parameter JSON");
+            return;
+        }
+        // Note: JSON data is only used to store user edits, so 
+        // parameters loaed from JSON are considered user edited.
+        this.__flags |= ParamFlags.USER_EDITED;
+
+        const findAsset = () => {
+            return this.__owner.getOwner();
+        }
+        const assetItem = findAsset(this.__owner);
+        if(assetItem) {
+            const treeItems = j.treeItems;
+            const onloaded = ()=>{
+                // this.setValue(assetItem.resolvePath(itemPath));
+                for(let i=0; i<j.treeItems.length; i++) {
+                    this.__value.push(assetItem.resolvePath(treeItems[i]));
+                }
+                assetItem.loaded.disconnect(onloaded)
+            }
+            assetItem.loaded.connect(onloaded)
+            this.__flags |= ParamFlags.USER_EDITED;
+        }
+
     }
 };
 

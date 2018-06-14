@@ -18,6 +18,7 @@ class StructParameter extends Parameter {
             this.__value[parameter.getName()] = parameter.getValue();
         });
         this.__params.push(parameter);
+        this.__flags |= ParamFlags.USER_EDITED;
         this.valueChanged.emit();
         return parameter;
     }

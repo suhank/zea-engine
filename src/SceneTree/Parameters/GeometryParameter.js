@@ -2,6 +2,7 @@ import {
     Signal
 } from '../../Utilities';
 import {
+    ParamFlags,
     ValueSetMode,
     Parameter
 } from './Parameter.js';
