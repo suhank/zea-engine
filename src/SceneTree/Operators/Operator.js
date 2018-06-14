@@ -11,21 +11,23 @@ class Operator extends BaseItem {
         super(name);
 
         this.__outputs = [];
-        let evalOutput = (value, getter)=>{
-            const len=this.__outputs.length;
-            for(let i=0; i< len; i++)
-                this.__outputs[i].removeCleanerFn(evalOutput);
+        let evalOutput = (cleanedParam/*value, getter*/)=>{
+            for(let o of this.__outputs){
+                o.removeCleanerFn(evalOutput);
+            }
             this.evaluate();
-            return getter(1);
+
+            // Why does the cleaner need to return a value?
+            // Usually operators are connected to multiple outputs.
+            // return getter(1);
         };
         this.parameterValueChanged.connect(()=> {
             // For each output, install a function to evalate the operator
             // Note: when the operator evaluates, it will remove the cleaners
             // on all outputs. This means that after the first operator to 
             // cause an evaluation, all outputs are considered clean.
-            const len=this.__outputs.length;
-            for(let i=0; i< len; i++)
-                this.__outputs[i].setDirty(evalOutput);
+            for(let o of this.__outputs)
+                o.setDirty(evalOutput);
         });
     }
 

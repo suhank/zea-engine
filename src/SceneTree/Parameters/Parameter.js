@@ -14,6 +14,7 @@ const ValueSetMode = {
     USER_SETVALUE: 0,
     OPERATOR_SETVALUE: 1,
     DATA_LOAD: 2,
+    OPERATOR_DIRTIED: 3,
     CUSTOM: 3,
 };
 const ParamFlags = {
@@ -23,7 +24,7 @@ const ParamFlags = {
 class BaseParameter {
     constructor(name) {
         this.__name = name;
-        this.__cleanerFns = [];
+        // this.__cleanerFns = [];
         this.__flags = 0;
 
         this.valueChanged = new Signal();
@@ -55,36 +56,65 @@ class BaseParameter {
 
     setDirty(cleanerFn) {
         // If already dirty, simply return.
-        if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
-            return false;
-        }
-        this.__cleanerFns.push(cleanerFn);
-        this.valueChanged.emit(1); // 1 = changed via cleaner fn
+        // if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
+        //     return false;
+        // }
+        // this.__cleanerFns.push(cleanerFn);
+
+        this.__cleanerFn = cleanerFn;
+        this.valueChanged.emit(ValueSetMode.OPERATOR_SETVALUE); // 1 = changed via cleaner fn
     }
 
     isDirty() {
-        return this.__cleanerFns.length > 0;
+        // return this.__cleanerFns.length > 0;
+        return this.__cleanerFn != undefined;
     }
 
     _clean(){
-        if (this.__cleanerFns.length > 0) {
-            // Clean the param before we start evaluating the connected op.
-            // this is so that operators can read from the current value
-            // to compute the next.
-            let fns = this.__cleanerFns;
-            this.__cleanerFns = [];
-            for (let fn of fns) {
-                this.__value = fn(this.__value, this.getValue);
-                if (this.__value == undefined) {
-                    throw ("Error. Cleander Fn did not return a valid value:" + fn.name);
-                }
-            }
+        // if (this.__cleanerFns.length > 0) {
+        //     // Clean the param before we start evaluating the connected op.
+        //     // this is so that operators can read from the current value
+        //     // to compute the next.
+        //     let fns = this.__cleanerFns;
+        //     // this.__cleanerFns = [];
+        //     for (let fn of fns) {
+        //         fn(this.__value, this.getValue);
+        //         // Why does the cleaner need to return a value?
+        //         // Usually operators are connected to multiple outputs.
+        //         //this.__value = fn(this.__value, this.getValue);
+        //         // if (this.__value == undefined) {
+        //         //     throw ("Error. Cleaner Fn did not return a valid value:" + fn.name);
+        //         // }
+        //     }
+        // }
+
+        if (this.__cleanerFn) {
+            const fn = this.__cleanerFn;
+            this.__cleanerFn = undefined;
+            const res = fn(this.__value, this.getValue);
+            if(res) 
+                this.__value = res;
         }
     }
 
     removeCleanerFn(cleanerFn) {
-        const index = this.__cleanerFns.indexOf(cleanerFn);
-        this.__cleanerFns.splice(index, 1);
+        // const index = this.__cleanerFns.indexOf(cleanerFn);
+        // if(index == -1){
+        //     // Note: when a getValue is called, first the cleaners array is reset
+        //     // and then the cleaners are called (see above)
+        //     // When an operator is applied to multiple outputs, then one of the outputs
+        //     // already has its cleaners array reset. 
+        //     // return 0;
+        //     throw ("Error. Cleaner Fn not applied to this parameter:" + cleanerFn.name);
+
+        //     // Due to the asynchronous nature of evaluate, multiple cleanings might occurv
+        // }
+        // this.__cleanerFns.splice(index, 1);
+
+        // if(this.__cleanerFn != cleanerFn) {
+        //     throw ("Error. Cleaner Fn not applied to this parameter:" + cleanerFn.name);
+        // }
+        this.__cleanerFn = undefined;
     }
 
     clone() {
@@ -114,18 +144,19 @@ class Parameter extends BaseParameter {
     }
 
     setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-        if (this.__cleanerFns.length > 0) {
-            // Note: This message has not hilighted any real issues, and has become verbose.
-            // Enable if suspicious of operators being trampled by setValues.
-            // if(mode==0){
-            //     let cleanerNames = [];
-            //     for(let fn of this.__cleanerFns) {
-            //         cleanerNames.push(fn.name);
-            //     }
-            //     console.warn("Error setting "+this.__name + " value when cleaner is assigned:"+ cleanerNames);
-            // }
-            this.__cleanerFns = [];
-        }
+        // if (this.__cleanerFns.length > 0) {
+        //     // Note: This message has not hilighted any real issues, and has become verbose.
+        //     // Enable if suspicious of operators being trampled by setValues.
+        //     // if(mode==0){
+        //     //     let cleanerNames = [];
+        //     //     for(let fn of this.__cleanerFns) {
+        //     //         cleanerNames.push(fn.name);
+        //     //     }
+        //     //     console.warn("Error setting "+this.__name + " value when cleaner is assigned:"+ cleanerNames);
+        //     // }
+        //     this.__cleanerFns = [];
+        // }
+        this.__cleanerFn = undefined;
         if (value == undefined) {
             throw ("Invalud valu for setvalue.");
         }

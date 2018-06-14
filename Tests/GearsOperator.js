@@ -20,13 +20,13 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
         asset.addChild(geomItem);
 
         let ratio = ((prevTeeth > 0) ? (-prevTeeth / teeth) : 1.0);
-        gearBindings.push({ path: geomItem.getPath(), ratio: ratio * -prevRatio, axis});
+        gearBindings.push({ geomItem, ratio: ratio * -prevRatio, axis});
         prevTeeth = teeth;
         prevRatio = ratio;
     }
-    addGear(new Visualive.Vec3(0, 0, 0), 2.5, 12, new Visualive.Vec3(0, 1, 0), new Visualive.Color(1.0, 0.0, 0.0));
-    addGear(new Visualive.Vec3(3.5, 0, 0), 1.2, 8, new Visualive.Vec3(0, 1, 0), new Visualive.Color(0.0, 0.0, 1.0));
-    addGear(new Visualive.Vec3(3.5, 0, 1.6), 0.6, 5, new Visualive.Vec3(0, 1, 0), new Visualive.Color(1.0, 1.0, 0.0));
+    addGear(new Visualive.Vec3(0, 0, 0), 2.5, 12, new Visualive.Vec3(0, 0, 1), new Visualive.Color(1.0, 0.0, 0.0));
+    addGear(new Visualive.Vec3(3.5, 0, 0), 1.2, 8, new Visualive.Vec3(0, 0, 1), new Visualive.Color(0.0, 0.0, 1.0));
+    addGear(new Visualive.Vec3(3.5, 1.6, 0), 0.6, 5, new Visualive.Vec3(0, 0, 1), new Visualive.Color(1.0, 1.0, 0.0));
 
 
     let op = new Visualive.GearsOperator(scene.getRoot());
@@ -35,7 +35,15 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     let rpmParam = op.getParameter('RPM');
     rpmParam.setValue(12.0);
     rpmParam.setRange([0, 60]);
-    op.connectParts(gearBindings);
+
+    for(let binding of gearBindings) {
+        const gear = op.getParameter('Gears').addElement();
+        gear.getMember('Ratio').setValue(binding.ratio)
+        gear.getMember('Axis').setValue(binding.axis)
+        const gearGeoms = gear.getMember('GearGeoms')
+        gearGeoms.addElement(binding.geomItem);
+    }
+    // op.connectParts(gearBindings);
 
 
 
@@ -55,5 +63,5 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     let uicontroller = new Visualive.UIController();
     uicontroller.addWidgetPanel(widgetPanel);
 
-    VisualiveUI.renderUI(renderer, uicontroller);
+    // VisualiveUI.renderUI(renderer, uicontroller);
 });

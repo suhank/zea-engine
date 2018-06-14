@@ -149,14 +149,14 @@ class Cylinder extends Mesh {
             }
         }
         if (this.__caps) {
-            let normal = new Vec3(0.0, -1.0, 0.0);
+            let normal = new Vec3(0.0, 0.0, -1.0);
             for (let i = 0; i < nbSides; i++) {
                 normals.setFaceVertexValue(faceIndex, 0, normal);
                 normals.setFaceVertexValue(faceIndex, 1, normal);
                 normals.setFaceVertexValue(faceIndex, 2, normal);
                 faceIndex++;
             }
-            normal.set(0.0, 1.0, 0.0);
+            normal.set(0.0, 0.0, 1.0);
             for (let i = 0; i < nbSides; i++) {
                 normals.setFaceVertexValue(faceIndex, 0, normal);
                 normals.setFaceVertexValue(faceIndex, 1, normal);

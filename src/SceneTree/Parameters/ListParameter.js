@@ -1,4 +1,7 @@
 import {
+    Signal
+} from '../../Utilities';
+import {
     Parameter
 } from './Parameter.js';
 

@@ -13,15 +13,20 @@ class StructParameter extends Parameter {
     }
 
     _addMember(parameter) {
-        if(!elem)
-            elem = new this.__dataType()
         this.__value[parameter.getName()] = parameter.getValue();
         parameter.valueChanged.connect(()=>{
             this.__value[parameter.getName()] = parameter.getValue();
         });
         this.__params.push(parameter);
         this.valueChanged.emit();
-        return elem;
+        return parameter;
+    }
+
+    getMember(name) {
+        for(let p of this.__params) {
+            if(p.getName() == name)
+                return p;
+        }
     }
 
     //////////////////////////////////////////
