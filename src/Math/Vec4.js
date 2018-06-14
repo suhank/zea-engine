@@ -357,6 +357,11 @@ class Vec4 extends AttrValue {
             this.__data[2]
         );
     }
+    
+    asArray() {
+        return this.__data;
+    }
+    
 
     //////////////////////////////////////////
     // Static Methods

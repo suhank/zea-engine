@@ -282,6 +282,11 @@ class Vec2 extends AttrValue {
             this.__data[1]
         );
     }
+    
+    asArray() {
+        return this.__data;
+    }
+    
 
     //////////////////////////////////////////
     // Static Methods

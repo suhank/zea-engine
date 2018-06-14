@@ -375,6 +375,10 @@ class Vec3 extends AttrValue {
     }
 
 
+    asArray() {
+        return this.__data;
+    }
+    
     //////////////////////////////////////////
     // Static Methods
 
