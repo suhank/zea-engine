@@ -7,6 +7,8 @@ export * from './Vec3Parameter.js';
 export * from './Vec4Parameter.js';
 export * from './ColorParameter.js';
 export * from './FilePathParameter.js';
+export * from './ListParameter.js';
+export * from './StructParameter.js';
 
 // Note: can't be imported, because ParameterOwner imports these Parameters
 // MaterialParameter imports MaterialLibraryManager which leads to circular imports

@@ -26,10 +26,13 @@ class ParameterOwner extends RefCounted {
         this.__params = [];
         this.__paramMapping = {};
 
+        // Paramters are not intended to be dynamic.
+        // Instead they are part of the mixin architecture.
+        // Note: Materials add/remove paramters when the
+        // shader name is changed.
         this.parameterAdded = new Signal();
         this.parameterRemoved = new Signal();
         this.parameterValueChanged = new Signal();
-        this.parameterNameChanged = new Signal();
     }
 
     copyTo(cloned) {
@@ -115,7 +118,7 @@ class ParameterOwner extends RefCounted {
         this.parameterRemoved.emit(param.getName());
     }
 
-    removeAllParameters(){
+    _removeAllParameters(){
         for (let i=this.__params.length-1; i>=0; i--) {
             this.removeParameter(i);
         }

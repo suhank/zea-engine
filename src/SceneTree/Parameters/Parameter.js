@@ -66,6 +66,22 @@ class BaseParameter {
         return this.__cleanerFns.length > 0;
     }
 
+    _clean(){
+        if (this.__cleanerFns.length > 0) {
+            // Clean the param before we start evaluating the connected op.
+            // this is so that operators can read from the current value
+            // to compute the next.
+            let fns = this.__cleanerFns;
+            this.__cleanerFns = [];
+            for (let fn of fns) {
+                this.__value = fn(this.__value, this.getValue);
+                if (this.__value == undefined) {
+                    throw ("Error. Cleander Fn did not return a valid value:" + fn.name);
+                }
+            }
+        }
+    }
+
     removeCleanerFn(cleanerFn) {
         const index = this.__cleanerFns.indexOf(cleanerFn);
         this.__cleanerFns.splice(index, 1);
@@ -92,19 +108,8 @@ class Parameter extends BaseParameter {
     }
 
     getValue(mode = ValueGetMode.NORMAL) {
-        if (mode == ValueGetMode.NORMAL && this.__cleanerFns.length > 0) {
-            // Clean the param before we start evaluating the connected op.
-            // this is so that operators can read from the current value
-            // to compute the next.
-            let fns = this.__cleanerFns;
-            this.__cleanerFns = [];
-            for (let fn of fns) {
-                this.__value = fn(this.__value, this.getValue);
-                if (this.__value == undefined) {
-                    throw ("Error. Cleander Fn did not return a valid value:" + fn.name);
-                }
-            }
-        }
+        if(mode == ValueGetMode.NORMAL)
+            this._clean();
         return this.__value;
     }
 
@@ -182,49 +187,10 @@ class Parameter extends BaseParameter {
 };
 
 
-class ListParameter extends Parameter {
-    constructor(name, dataType) {
-        super(name, []);
-        this.__dataType = dataType;
-        this.elementAdded = new Signal();
-        this.elementRemoved = new Signal();
-    }
-
-    addElement(elem) {
-        if(!elem)
-            elem = new this.__dataType()
-        this.__value.push(elem)
-        this.setValue(this.__value);
-        this.elementAdded.emit(elem, this.__value.length-1);
-        return elem;
-    }
-
-    removeElement(index) {
-        const elem = this.__value[index];
-        this.__value.splice(index, 1)
-        this.setValue(this.__value)
-        this.elementRemoved.emit(elem, index);
-    }
-
-    insertElement(index, elem) {
-        this.__value.splice(index, 0, elem);
-        this.setValue(this.__value)
-        this.elementAdded.emit(elem, elem);
-    }
-
-    clone() {
-        let clonedValue = this.__value.slice(0);
-        const clonedParam = new ListParameter(this.__name, clonedValue, this.__dataType);
-        this.cloneMembers(clonedParam);
-        return clonedParam;
-    }
-};
-
-
 export {
     ParamFlags,
     ValueGetMode,
     ValueSetMode,
-    Parameter,
-    ListParameter
+    BaseParameter,
+    Parameter
 };

@@ -109,7 +109,7 @@ class Material extends BaseItem {
         const shaderClass = sgFactory.getClass(shaderName);
         if(!shaderClass)
             throw("Error setting Shader. Shader not found:" + shaderName);
-        this.removeAllParameters();
+        this._removeAllParameters();
         const paramDescs = shaderClass.getParamDeclarations();
         for(let desc of paramDescs) {
             // Note: some shaders specify default images. Like the speckle texture

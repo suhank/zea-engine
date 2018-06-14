@@ -6,11 +6,47 @@ import {
     Operator
 } from './Operator.js';
 import {
-    Parameter
-} from '../Parameters/Parameter.js';
-import {
+    StructParameter,
+    Parameter,
     NumberParameter
-} from '../Parameters/NumberParameter.js';
+} from '../Parameters';
+
+
+class GearParameter extends StructParameter {
+    constructor(name) {
+        super(name);
+
+        this.__gearGeomsParam = new TreeItemListParameter('GearGeoms');
+        this.__initialXfos = [];
+        gearGeomsParam.elementAdded.connect((elem, index)=>{
+            this.__initialXfos[index] = elem.getGlobalXfo();
+        })
+
+        this._addMember(new NumberParameter('Ratio', 1.0));
+        this._addMember(new NumberParameter('Offset', 0.0));
+        this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
+        this._addMember(this.__gearGeomsParam);
+    }
+
+    getValue(mode = ValueGetMode.NORMAL) {
+        const result = super.fromJSON(mode);
+        result.initialXfos = this.__initialXfos;
+        return result;
+    }
+
+    //////////////////////////////////////////
+    // Persistence
+
+    fromJSON(j) {
+        super.fromJSON(j);
+
+        const geoms = this.__gearGeomsParam.getValue();
+        this.__initialXfos = [];
+        for(let i=0; i<geoms.length; i++) {
+            this.__initialXfos[index] = geoms[i].getGlobalXfo();
+        }
+    }
+}
 
 class GearsOperator extends Operator {
     constructor(name) {
@@ -18,7 +54,7 @@ class GearsOperator extends Operator {
 
         this.__revolutionsParam = this.addParameter(new NumberParameter('Revolutions', 0.0, [0, 1]));
         const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)); // revolutions per minute
-        const timeoutId;
+        let timeoutId;
         rpmParam.valueChanged.connect(() => {
             const rpm = rpmParam.getValue();
             if (rpm > 0.0) {
@@ -36,13 +72,55 @@ class GearsOperator extends Operator {
                 timeoutId = undefined;
             }
         });
+        this.__gearsParam = this.addParameter(new ListParameter('Gears', GearParameter));
 
         this.__gears = [];
     }
 
 
     connectParts(gearBindings) {
-        // e.g. [{ path:'.a/b/c', teeth:30, axis: vec3(1,0,0) }, [[{ path:'./foo', teeth:10, axis: vec3(1,0,0)]
+        const gearBindings = this.__gearsParam.getValue();
+        // e.g. [{ path:'.a/b/c', ratio:30, axis: vec3(1,0,0) }, [[{ path:'./foo', ratio:10, axis: vec3(1,0,0)]
+        this.__gears = [];
+        for (let i = 0; i < gearBindings.length; i++) {
+            const gearBinding = gearBindings[i];
+            const treeItems = gearBinding.GearGeoms;
+            const offset = gearBinding.Offset;
+
+
+            const outputs = [];
+            const deltas = [];
+            const initialXfos = [];
+            for (let treeItem of treeItems) {
+                if (treeItem) {
+                    const xfoParam = treeItem.getParameter('GlobalXfo');
+                    const xfo = xfoParam.getValue().clone();
+                    this.__outputs.push(xfoParam);
+                    outputs.push({
+                        initialXfo: xfo,
+                        xfoParam,
+                        offset: 
+                    });
+                    // if (gearBinding.rotationCenter) {
+                    //     const delta = xfo.tr.subtract(gearBinding.rotationCenter);
+                    //     delta.subtractInPlace(gearBinding.axis.scale(delta.dot(gearBinding.axis)));
+                    //     deltas.push(delta);
+                    // }
+                }
+            }
+            this.__gears.push({
+                axis: gearBinding.Axis,
+                ratio: gearBinding.Ratio,
+                offset,
+                initialXfos,
+                outputs,
+            });
+        }
+    }
+
+
+    __connectParts(gearBindings) {
+        // e.g. [{ path:'.a/b/c', ratio:30, axis: vec3(1,0,0) }, [[{ path:'./foo', ratio:10, axis: vec3(1,0,0)]
         this.__gears = [];
         for (let i = 0; i < gearBindings.length; i++) {
             const gearBinding = gearBindings[i];
