@@ -32,31 +32,13 @@ float intersectRayPlane(Ray ray, Ray plane) {
 }
 
 
-bool cutaway(vec3 worldPos, vec3 planeNormal, float planeDist, vec4 cutColor, out vec4 fragColor) {
+bool cutaway(vec3 worldPos, vec3 planeNormal, float planeDist) {
 
     vec3 planePos = planeNormal * planeDist;
     vec3 planeDir = worldPos - planePos;
     float planeOffset = dot(planeDir, planeNormal);
     if(planeOffset < 0.0){
         discard;
-        return true;
-    }
-    if(!gl_FrontFacing){
-        fragColor = cutColor;
-
-        // Note: Moving the backfacing fragements forward onto the cutting plane.
-        // This can never work, because it means back facing fragments will be rendered over 
-        // front facing fragments that are closer to the camera (but behind the cutting plane)
-// #ifdef GL_EXT_frag_depth
-//         vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
-//         vec3 viewDir = normalize(mat3(cameraMatrix) * normalize(v_viewPos));
-//         float dist = intersectRayPlane(Ray(cameraPos, viewDir), Ray(planePos, planeDir));
-//         if(dist > 0.0) {
-//             vec3 cutworldPos = cameraPos + (viewDir * dist);
-//             vec4 projPos = (projectionMatrix * viewMatrix) * vec4(cutworldPos, 1.0);
-//             gl_FragDepthEXT = projPos.z / projPos.w;
-//         }
-// #endif
         return true;
     }
     return  false;

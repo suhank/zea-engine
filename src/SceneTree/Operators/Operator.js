@@ -33,6 +33,18 @@ class Operator extends BaseItem {
         throw("Not yet implemented");
     }
 
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(flags = 0) {
+        return super.toJSON(flags);
+    }
+
+    fromJSON(j, flags) {
+        return super.fromJSON(j, flags);
+    }
+
 };
 
 export {

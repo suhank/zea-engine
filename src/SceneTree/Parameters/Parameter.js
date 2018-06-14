@@ -65,6 +65,7 @@ class BaseParameter {
     isDirty() {
         return this.__cleanerFns.length > 0;
     }
+
     removeCleanerFn(cleanerFn) {
         const index = this.__cleanerFns.indexOf(cleanerFn);
         this.__cleanerFns.splice(index, 1);
@@ -185,6 +186,8 @@ class ListParameter extends Parameter {
     constructor(name, dataType) {
         super(name, []);
         this.__dataType = dataType;
+        this.elementAdded = new Signal();
+        this.elementRemoved = new Signal();
     }
 
     addElement(elem) {
@@ -192,17 +195,21 @@ class ListParameter extends Parameter {
             elem = new this.__dataType()
         this.__value.push(elem)
         this.setValue(this.__value);
+        this.elementAdded.emit(elem, this.__value.length-1);
         return elem;
     }
 
     removeElement(index) {
+        const elem = this.__value[index];
         this.__value.splice(index, 1)
         this.setValue(this.__value)
+        this.elementRemoved.emit(elem, index);
     }
 
     insertElement(index, elem) {
         this.__value.splice(index, 0, elem);
         this.setValue(this.__value)
+        this.elementAdded.emit(elem, elem);
     }
 
     clone() {
