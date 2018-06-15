@@ -466,15 +466,15 @@ class FileImage2D extends Image2D {
 
     }
 
-    readBinary(reader, flags, lod) {
-        // super.readBinary(reader, flags);
+    readBinary(reader, context) {
+        // super.readBinary(reader, context);
         this.setName(reader.loadStr());
         let resourcePath = reader.loadStr();
         if (typeof resourcePath === 'string' && resourcePath != "") {
-            if (lod >= 0) {
+            if (context.lod >= 0) {
                 const suffixSt = resourcePath.lastIndexOf('.')
                 if (suffixSt != -1) {
-                    const lodPath = resourcePath.substring(0, suffixSt) + lod + resourcePath.substring(suffixSt);
+                    const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt);
                     if (resourceLoader.resourceAvailable(lodPath)) {
                         resourcePath = lodPath;
                     }

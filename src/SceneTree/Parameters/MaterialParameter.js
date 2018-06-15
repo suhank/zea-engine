@@ -50,7 +50,7 @@ class MaterialParameter extends Parameter {
         }
     }
 
-    fromJSON(j) {
+    fromJSON(j, context) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;
@@ -58,6 +58,19 @@ class MaterialParameter extends Parameter {
         const materialPath = j.value;
         this.setValue(materialLibraryManager.resolveMaterialFromPath(materialPath));
         this.__flags |= ParamFlags.USER_EDITED;
+    }
+
+
+
+    destroy(){
+        // Note: some parameters hold refs to geoms/materials, 
+        // which need to be explicitly cleaned up.
+        // e.g. freeing GPU Memory.
+
+        if(this.__value){
+            this.__value.parameterValueChanged.disconnect(this.valueParameterValueChanged.emit);
+            this.__value.removeRef(this);
+        }
     }
 };
 

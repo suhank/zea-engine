@@ -18,7 +18,7 @@ import {
 class MaterialLibrary {
     constructor(name='MaterialLibrary') {
         this.__name = name;
-        this.__textures = {};
+        this.__images = {};
         this.__materials = {
             Default: new Material('Default', 'SimpleSurfaceShader')
         };
@@ -66,6 +66,31 @@ class MaterialLibrary {
         return res;
     }
 
+    hasImage(name) {
+        return name in this.__images;
+    }
+
+    addImage(Image) {
+        Image.setOwner(this);
+        this.__images[Image.getName()] = Image;
+    }
+
+    getImage(name, assert=true) {
+        const res = this.__images[name];
+        if(!res && assert){
+            throw("Image:" + name+ " not found in library:" + this.getImageNames())
+        }
+        return res;
+    }
+
+    getImageNames() {
+        let names = [];
+        for(let name in this.__images) {
+            names.push(name);
+        }
+        return names;
+    }
+
     //////////////////////////////////////////
     // Persistence
 
@@ -87,7 +112,8 @@ class MaterialLibrary {
         xhr.send(null);
     }
 
-    fromJSON(j, flags = 0) {
+    fromJSON(j, context) {
+        context.lod = this.lod;
         for (let name in j["textures"]) {
             let image = new FileImage2D(name);
             this.__textures[name] = texture;
@@ -106,14 +132,18 @@ class MaterialLibrary {
     }
 
 
-    readBinary(reader, flags=0) {
+    readBinary(reader, context) {
         this.name = reader.loadStr();
+
+        // Specify the Lod to load the images in this library.
+        context.lod = this.lod;
+        context.materialLibrary = this;
 
         let numTextures = reader.loadUInt32();
         for (let i = 0; i < numTextures; i++) {
             let type = reader.loadStr();
             let texture = sgFactory.constructClass(type, undefined);
-            texture.readBinary(reader, flags, this.lod);
+            texture.readBinary(reader, context);
             this.__textures[texture.getName()] = texture;
         }
         let numMaterials = reader.loadUInt32();
@@ -139,7 +169,7 @@ class MaterialLibrary {
                 // console.log("Material:" + name);
                 let material = new Material(name, shaderName);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                material.readBinary(reader, flags, this.__textures);
+                material.readBinary(reader, context, this.__textures);
                 this.addMaterial(material);
             }
         }

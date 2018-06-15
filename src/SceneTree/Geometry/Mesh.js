@@ -699,7 +699,7 @@ class Mesh extends BaseGeom {
     //////////////////////////////////////////
     // Persistence
 
-    readBinary(reader) {
+    readBinary(reader, context) {
         super.loadBaseGeomBinary(reader);
         this.setFaceCounts(reader.loadUInt32Array());
         this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length);

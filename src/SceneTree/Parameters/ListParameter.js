@@ -52,16 +52,16 @@ class ListParameter extends Parameter {
     toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
-        const params = [];
+        const items = [];
         for(let p of this.__value) 
-            params.push(p.toJSON(context));
+            items.push(p.toJSON(context));
         return {
-            params
+            items
         };
     }
 
-    fromJSON(j) {
-        if(j.value == undefined){
+    fromJSON(j, context) {
+        if(j.items == undefined){
             console.warn("Invalid Parameter JSON");
             return;
         }
@@ -69,8 +69,11 @@ class ListParameter extends Parameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
-        for(let i=0; i<j.params.length; i++) {
-            this.__value[i].fromJSON(j.params[i]);
+        for(let i=0; i<j.items.length; i++) {
+            const elem = new this.__dataType()
+            elem.fromJSON(j.items[i], context);
+            this.__value.push(elem)
+            this.elementAdded.emit(elem, this.__value.length-1);
         }
     }
 };

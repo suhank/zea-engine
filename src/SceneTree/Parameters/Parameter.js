@@ -126,6 +126,11 @@ class BaseParameter {
     }
 
 
+    destroy(){
+        // Note: some parameters hold refs to geoms/materials, 
+        // which need to be explicitly cleaned up.
+        // e.g. freeing GPU Memory.
+    }
 };
 
 
@@ -197,7 +202,7 @@ class Parameter extends BaseParameter {
         }
     }
 
-    fromJSON(j) {
+    fromJSON(j, context) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;
@@ -210,7 +215,7 @@ class Parameter extends BaseParameter {
             this.setValue(j.value, ValueSetMode.DATA_LOAD);
         else {
             // const value = sgFactory.constructClass();
-            this.__value.fromJSON(j.value);
+            this.__value.fromJSON(j.value, context);
             this.valueChanged.emit(ValueSetMode.DATA_LOAD);
         }
     }

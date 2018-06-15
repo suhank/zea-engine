@@ -13,6 +13,9 @@ class FilePathParameter extends Parameter {
 
         this.__file;
         this.valueChanged.connect(()=>{
+            // Note: the file path is selected by using the file browser
+            // For now it can return an aboslute path(within the project)
+            // and we convert to relative when we save.
             const path = this.getValue();
             if (!resourceLoader.resourceAvailable(path)) {
                 console.warn("Resource unavailable:" + path);
@@ -78,15 +81,29 @@ class FilePathParameter extends Parameter {
     toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
-        return { value: this.__value };
+        // TODO: finish this.
+        const makeRelative = (fp)=>{
+            if(context.baseFilePath) {
+
+            }
+            return fp;
+        }
+        return { value: makeRelative(this.__value) };
     }
 
-    fromJSON(j) {
+    fromJSON(j, context) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;
         }
-        this.setValue(j.value, ValueSetMode.DATA_LOAD);
+        // TODO: finish this.
+        const makeAbsolute = (fp)=>{
+            if(context.baseFilePath) {
+
+            }
+            return fp;
+        }
+        this.setValue(makeAbsolute(j.value), ValueSetMode.DATA_LOAD);
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;

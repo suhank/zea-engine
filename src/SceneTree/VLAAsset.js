@@ -35,6 +35,7 @@ class VLAAsset extends AssetItem {
         this.__materials = new MaterialLibrary();
         this.__atlasSize = new Vec2();
         this.allPartsLoaded = new Signal();
+        this.loaded.setToggled(false);
     }
 
     getGeometryLibrary() {
@@ -53,12 +54,16 @@ class VLAAsset extends AssetItem {
         return this.__atlasSize;
     }
 
-    readBinary(reader, flags) {
+    readBinary(reader, context) {
+        if(!context) 
+            context = {};
+        context.assetItem = this;
+
         let numGeomsFiles = reader.loadUInt32();
 
-        this.__materials.readBinary(reader, flags);
+        this.__materials.readBinary(reader, context);
 
-        super.readBinary(reader, flags, this);
+        super.readBinary(reader, context);
 
         this.__atlasSize = reader.loadFloat32Vec2();
         if(reader.remainingByteLength != 4){

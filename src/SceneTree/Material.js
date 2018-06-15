@@ -208,13 +208,13 @@ class Material extends BaseItem {
         return super.toJSON();
     }
 
-    fromJSON(j) {
+    fromJSON(j, context) {
         if(!j.shader){
             console.warn("Invalid Material JSON");
             return;
         }
         this.setShaderName(j.shader)
-        super.fromJSON(j);
+        super.fromJSON(j, context);
         // let props = this.__params;
         // for (let key in j) {
         //     let value;
@@ -228,8 +228,8 @@ class Material extends BaseItem {
         // }
     }
 
-    readBinary(reader, flags, textureLibrary) {
-        super.readBinary(reader, flags);
+    readBinary(reader, context) {
+        super.readBinary(reader, context);
 
         const numParams = reader.loadUInt32();
         for (let i = 0; i < numParams; i++) {
@@ -251,9 +251,9 @@ class Material extends BaseItem {
             else
                 param = this.addParameter(paramName, value);
             const textureName = reader.loadStr();
-            if (textureLibrary[textureName]) {
-                // console.log(paramName +":" + textureName + ":" + textureLibrary[textureName].resourcePath);
-                param.setValue(textureLibrary[textureName]);
+            if (context.materialLibrary.hasImage(textureName)) {
+                // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
+                param.setValue(context.materialLibrary.getImage(textureName));
             }
             else if(textureName!= ''){
                 console.warn("Missing Texture:" + textureName)

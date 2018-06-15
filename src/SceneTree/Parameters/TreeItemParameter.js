@@ -65,22 +65,18 @@ class TreeItemParameter extends Parameter {
         }
     }
 
-    fromJSON(j) {
+    fromJSON(j, context) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;
         }
         const itemPath = j.value;
-        const findAsset = () => {
-            return this.__owner.getOwner();
-        }
-        const assetItem = findAsset(this.__owner);
-        if(assetItem) {
+        if(context.assetItem) {
             const onloaded = ()=>{
-                this.setValue(assetItem.resolvePath(itemPath));
-                assetItem.loaded.disconnect(onloaded)
+                this.setValue(context.assetItem.resolvePath(itemPath));
+                context.assetItem.loaded.disconnect(onloaded)
             }
-            assetItem.loaded.connect(onloaded)
+            context.assetItem.loaded.connect(onloaded)
             this.__flags |= ParamFlags.USER_EDITED;
         }
     }
@@ -144,7 +140,7 @@ class TreeItemListParameter extends ListParameter {
         }
     }
 
-    fromJSON(j) {
+    fromJSON(j, context) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;

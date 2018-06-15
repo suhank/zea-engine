@@ -10,7 +10,7 @@ export * from './FilePathParameter.js';
 export * from './ListParameter.js';
 export * from './StructParameter.js';
 export * from './TreeItemParameter.js';
-export * from './TreeItemGroupParameter.js';
+export * from './KinematicGroupParameter.js';
 
 // Note: can't be imported, because ParameterOwner imports these Parameters
 // MaterialParameter imports MaterialLibraryManager which leads to circular imports

@@ -12,7 +12,7 @@ import {
 } from './TreeItemParameter.js';
 
 
-class TreeItemGroupParameter extends ListParameter {
+class KinematicGroupParameter extends ListParameter {
     constructor(name, filterFn) {
         super(name, TreeItemParameter);
         this.__globalXfoParams = [];
@@ -66,7 +66,7 @@ class TreeItemGroupParameter extends ListParameter {
     }
 
     clone() {
-        const clonedParam = new TreeItemGroupParameter(this.__name, clonedValue, this.__dataType);
+        const clonedParam = new KinematicGroupParameter(this.__name, clonedValue, this.__dataType);
         this.cloneMembers(clonedParam);
         return clonedParam;
     }
@@ -96,10 +96,9 @@ class TreeItemGroupParameter extends ListParameter {
         };
     }
 
-    fromJSON(j) {
-        // super.fromJSON(j);
+    fromJSON(j, context) {
 
-        if(j.value == undefined){
+        if(j.treeItems == undefined){
             console.warn("Invalid Parameter JSON");
             return;
         }
@@ -107,16 +106,14 @@ class TreeItemGroupParameter extends ListParameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
-        const findAsset = () => {
-            return this.__owner.getOwner();
-        }
-        const assetItem = findAsset(this.__owner);
         if(context.assetItem) {
             const treeItems = j.treeItems;
             const onloaded = ()=>{
                 // this.setValue(assetItem.resolvePath(itemPath));
                 for(let i=0; i<j.treeItems.length; i++) {
-                    this.__value.push(context.assetItem.resolvePath(treeItems[i]));
+                    const treeItem = context.assetItem.resolvePath(treeItems[i]);
+                    this.__value.push(treeItem);
+                    this.elementAdded.emit(treeItem, this.__value.length-1)
                 }
                 context.assetItem.loaded.disconnect(onloaded)
             }
@@ -129,5 +126,5 @@ class TreeItemGroupParameter extends ListParameter {
 
 
 export {
-    TreeItemGroupParameter
+    KinematicGroupParameter
 };

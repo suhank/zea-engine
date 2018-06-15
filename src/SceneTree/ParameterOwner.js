@@ -153,7 +153,7 @@ class ParameterOwner extends RefCounted {
         }
     }
 
-    readBinary(reader, flags) {
+    readBinary(reader, context) {
         // TODO: make this work
         // for (let param of j.params)
         //     paramsJSON.push(param.toJSON());
@@ -162,6 +162,13 @@ class ParameterOwner extends RefCounted {
     toString() {
         return JSON.stringify(this.toJSON(), null, 2)
     }
+
+    destroy(){
+        for (let param of this.__params){
+            param.destroy();
+        }
+        super.destroy();
+    };
 };
 
 export {

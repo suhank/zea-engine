@@ -22,10 +22,10 @@ class MaterialLibraryManager {
                 (data) => {
                     const stem = filename.split('.')[0];// trim off the extension
                     const j = JSON.parse(data);
-                    const m = new MaterialLibrary(stem);
-                    m.fromJSON(j);
-                    this.__materialLibraries[stem] = m;
-                    this.materialLibraryLoaded.emit(m)
+                    const matlib = new MaterialLibrary(stem);
+                    matlib.fromJSON(j);
+                    this.__materialLibraries[stem] = matlib;
+                    this.materialLibraryLoaded.emit(matlib)
                 }
             );
         })

@@ -36,7 +36,7 @@ class Lightmap extends RefCounted {
         this.image.loadResource(resourceName);
     }
 
-    fromJSON(j, flags = 0) {
+    fromJSON(j, context) {
         this.__atlasSize = j.atlasSize;
     }
 };
@@ -95,7 +95,7 @@ class LightmapMixer extends RefCounted {
         return this.__weights[index];
     }
 
-    fromJSON(j, flags = 0) {
+    fromJSON(j, context) {
         this.__atlasSize = j['atlasSize'];
     }
 };

@@ -174,11 +174,11 @@ class GeomItem extends TreeItem {
         return json
     }
 
-    fromJSON(json, flags, asset) {
-        super.fromJSON(json, flags, asset);
+    fromJSON(json, context) {
+        super.fromJSON(json, context);
 
         if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
-            let geomLibrary = asset.getGeometryLibrary();
+            let geomLibrary = context.assetItem.getGeometryLibrary();
             this.geom = geomLibrary.getGeom(json.geomIndex);
         }
 
@@ -190,7 +190,7 @@ class GeomItem extends TreeItem {
 
 
         if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
-            let materialLibrary = asset.getMaterialLibrary();
+            let materialLibrary = context.assetItem.getMaterialLibrary();
             this.material = materialLibrary.getMaterial(json.materialName);
             if (!this.material) {
                 console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
@@ -205,14 +205,14 @@ class GeomItem extends TreeItem {
         return json
     }
 
-    readBinary(reader, flags, asset) {
-        super.readBinary(reader, flags, asset);
+    readBinary(reader, context) {
+        super.readBinary(reader, context);
 
-        this.__lightmapName = asset.getName();
+        this.__lightmapName = context.assetItem.getName();
 
         const itemflags = reader.loadUInt8();
         const geomIndex = reader.loadUInt32();
-        const geomLibrary = asset.getGeometryLibrary();
+        const geomLibrary = context.assetItem.getGeometryLibrary();
         const geom = geomLibrary.getGeom(geomIndex);
         if (geom) {
             this.setGeometry(geom);
@@ -237,7 +237,7 @@ class GeomItem extends TreeItem {
 
         const materialFlag = 1 << 3;
         if (itemflags & materialFlag) {
-            const materialLibrary = asset.getMaterialLibrary();
+            const materialLibrary = context.assetItem.getMaterialLibrary();
             const materialName = reader.loadStr();
             let material = materialLibrary.getMaterial(materialName);
             if (!material) {
@@ -248,7 +248,7 @@ class GeomItem extends TreeItem {
         }
         else {
             // Force nodes to have a material so we can see them.
-            this.setMaterial(asset.getMaterialLibrary().getMaterial('Default'));
+            this.setMaterial(context.assetItem.getMaterialLibrary().getMaterial('Default'));
         }
 
         this.__lightmapCoordsParam.setValue(reader.loadFloat32Vec2());

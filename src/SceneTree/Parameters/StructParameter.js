@@ -9,7 +9,7 @@ import {
 class StructParameter extends Parameter {
     constructor(name) {
         super(name, {}, 'Struct');
-        this.__params = [];
+        this.__members = [];
     }
 
     _addMember(parameter) {
@@ -17,14 +17,14 @@ class StructParameter extends Parameter {
         parameter.valueChanged.connect(()=>{
             this.__value[parameter.getName()] = parameter.getValue();
         });
-        this.__params.push(parameter);
+        this.__members.push(parameter);
         this.__flags |= ParamFlags.USER_EDITED;
         this.valueChanged.emit();
         return parameter;
     }
 
     getMember(name) {
-        for(let p of this.__params) {
+        for(let p of this.__members) {
             if(p.getName() == name)
                 return p;
         }
@@ -36,16 +36,16 @@ class StructParameter extends Parameter {
     toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
-        const params = [];
-        for(let p of this.__params) 
-            params.push(p.toJSON(context));
+        const members = [];
+        for(let p of this.__members) 
+            members.push(p.toJSON(context));
         return {
-            params
+            members
         };
     }
 
-    fromJSON(j) {
-        if(j.value == undefined){
+    fromJSON(j, context) {
+        if(j.members == undefined){
             console.warn("Invalid Parameter JSON");
             return;
         }
@@ -53,8 +53,10 @@ class StructParameter extends Parameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
-        for(let i=0; i<j.params.length; i++) {
-            this.__params[i].fromJSON(j.params[i]);
+        for(let i=0; i<j.members.length; i++) {
+            if(j.members[i]) {
+                this.__members[i].fromJSON(j.members[i], context);
+            }
         }
     }
 };

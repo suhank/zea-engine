@@ -24,11 +24,11 @@ class AssetItem extends TreeItem {
         fileParam.valueChanged.connect(()=>{
             const filePath = fileParam.getValue()
             const url = fileParam.getURL();
-            this.loaded.untoggle();
+            this.loaded.setToggled(false);
             loadTextfile(url,
                 (data) => {
                     const j = JSON.parse(data);
-                    this.fromJSON(j);
+                    this.fromJSON(j, { assetItem: this });
                 }
             );
         });
@@ -37,6 +37,7 @@ class AssetItem extends TreeItem {
         this.componentRemoved = new Signal();
 
         this.loaded = new Signal(true);
+        this.loaded.setToggled(true);
     }
 
     //////////////////////////////////////////
@@ -62,7 +63,7 @@ class AssetItem extends TreeItem {
             componentMapping[this.__components[i].getName()] = i;
         this.__componentMapping = componentMapping;
 
-        this.componentAdded.emit(component);
+        this.componentRemoved.emit(component, index);
         return component;
     }
 
@@ -72,6 +73,13 @@ class AssetItem extends TreeItem {
     //////////////////////////////////////////
     // Persistence
 
+    readBinary(reader, context) {
+        if(!context) 
+            context = {};
+        context.assetItem = this;
+        super.readBinary(reader, context);
+    }
+    
     toJSON(context) {
         if(!context) 
             context = {};
@@ -87,7 +95,7 @@ class AssetItem extends TreeItem {
         return j;
     }
 
-    fromJSON(j, flags = 0) {
+    fromJSON(j, context) {
         if(!context) 
             context = {};
         context.assetItem = this;

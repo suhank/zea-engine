@@ -22,7 +22,10 @@ class Signal {
 
         if(this.__toggledSignal && this.__toggled){
             // This signal has already been toggled, so we should emit immedietly.
-            fn(...this.__data);
+            if(this.__data)
+                fn(...this.__data);
+            else
+                fn();
         }
         return id;
     }
@@ -70,6 +73,10 @@ class Signal {
         }
     }
 
+    setToggled(state) {
+        this.__toggled = state;
+        this.__data = undefined;
+    }
     untoggle() {
         // When a toggled action needs to be re-applied, we should untoggle first.
         this.__toggled = false;

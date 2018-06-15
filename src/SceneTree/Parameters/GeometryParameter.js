@@ -53,6 +53,19 @@ class GeometryParameter extends Parameter {
         // this.__value = materialLibraryManager.resolveMaterialFromPath(materialPath);
         // this.__flags |= ParamFlags.USER_EDITED;
     }
+
+    
+
+    destroy(){
+        // Note: some parameters hold refs to geoms/materials, 
+        // which need to be explicitly cleaned up.
+        // e.g. freeing GPU Memory.
+
+        if(this.__value){
+            this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit);
+            this.__value.removeRef(this);
+        }
+    }
 };
 
 

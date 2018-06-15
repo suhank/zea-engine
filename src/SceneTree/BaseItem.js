@@ -121,11 +121,18 @@ class BaseItem extends ParameterOwner {
 
     setOwner(ownerItem) {
         // this.__private.set(ownerItem, ownerItem);
-        this.__ownerItem = ownerItem;
-        this.__updatePath();
-
-        // Notify:
-        this.ownerChanged.emit();
+        if(this.__ownerItem !== ownerItem){
+            if(this.__ownerItem){
+                this.removeRef(this.__ownerItem);
+            }
+            this.__ownerItem = ownerItem;
+            if(this.__ownerItem){
+                this.addRef(this.__ownerItem);
+            }
+            this.__updatePath();
+            // Notify:
+            this.ownerChanged.emit();
+        }
     }
 
     //////////////////////////////////////////
@@ -156,7 +163,7 @@ class BaseItem extends ParameterOwner {
         return j;
     }
 
-    fromJSON(j, flags, asset) {
+    fromJSON(j, context) {
         super.fromJSON(j, context);
         if(j.name)
             this.__name = j.name;
@@ -165,12 +172,12 @@ class BaseItem extends ParameterOwner {
         this.__flags |= ItemFlags.USER_EDITED;
     }
 
-    readBinary(reader, flags, asset) {
+    readBinary(reader, context) {
         let type = reader.loadStr();
         this.setName(reader.loadStr());
 
         // Note: parameters follow name...
-        super.readBinary(reader, flags);
+        super.readBinary(reader, context);
     }
 
     toString() {
