@@ -59,6 +59,13 @@ class StructParameter extends Parameter {
             }
         }
     }
+
+
+    destroy(){
+        super.destroy();
+        for(let p of this.__members) 
+            p.destroy();
+    }
 };
 
 

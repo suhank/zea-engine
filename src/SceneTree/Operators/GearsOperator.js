@@ -87,6 +87,9 @@ class GearsOperator extends Operator {
         this.__gearsParam.elementAdded.connect((value, index) => {
             this.__outputs[index] = value;
         })
+        this.__gearsParam.elementRemoved.connect((value, index) => {
+            this.__outputs.splice(index, 1);
+        })
 
         this.__gears = [];
     }

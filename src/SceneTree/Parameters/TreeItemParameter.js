@@ -80,6 +80,14 @@ class TreeItemParameter extends Parameter {
             this.__flags |= ParamFlags.USER_EDITED;
         }
     }
+
+
+    destroy(){
+        if(this.__value){
+            this.__value.parameterValueChanged.disconnect(this.valueParameterValueChanged.emit);
+            this.__value.removeRef(this);
+        }
+    }
 };
 
 /*

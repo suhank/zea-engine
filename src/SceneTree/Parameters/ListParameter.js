@@ -76,6 +76,15 @@ class ListParameter extends Parameter {
             this.elementAdded.emit(elem, this.__value.length-1);
         }
     }
+
+
+    destroy(){
+        for(let i=0; i<this.__value.length; i++) {
+            if(this.__value[i] instanceof Parameter)
+                this.__value[i].destroy();
+            this.removeElement(i);
+        }
+    }
 };
 
 

@@ -122,6 +122,13 @@ class KinematicGroupParameter extends ListParameter {
         }
 
     }
+
+    destroy(){
+        for(let i=0; i<this.__value.length; i++) {
+            this.removeElement(i);
+        }
+    }
+    
 };
 
 
