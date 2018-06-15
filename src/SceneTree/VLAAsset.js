@@ -36,6 +36,19 @@ class VLAAsset extends AssetItem {
         this.__atlasSize = new Vec2();
         this.allPartsLoaded = new Signal();
         this.loaded.setToggled(false);
+
+
+        const binfileParam = this.addParameter(new Visualive.FilePathParameter('BinFilePath'));
+        binfileParam.valueChanged.connect((mode) => {
+          this.loaded.untoggle();
+          const filePath = binfileParam.getValue()
+          const url = binfileParam.getURL();
+
+          const emitloaded = mode == Visualive.ValueSetMode.USER_SETVALUE;
+          this.__loadBinFile(filePath, url, emitloaded);
+        });
+
+        this.binloaded = new Visualive.Signal(true);
     }
 
     getGeometryLibrary() {
@@ -81,7 +94,7 @@ class VLAAsset extends AssetItem {
         return this.readBinary(new BinReader(buffer, 0, SystemDesc.isMobileDevice));
     }
 
-    __loadURL(url, filePath){
+    __loadBinFile(filePath, url){
         let async = new Async();
         async.incAsyncCount(2);
         async.ready.connect(()=>{

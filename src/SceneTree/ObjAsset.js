@@ -27,20 +27,41 @@ import {
 import {
     resourceLoader
 } from './ResourceLoader.js';
+import {
+    GeomLibrary
+} from './GeomLibrary.js';
+import {
+    MaterialLibrary
+} from './MaterialLibrary.js';
 
 
 class ObjAsset extends AssetItem {
     constructor(name) {
         super(name);
 
+        this.__geomLibrary = new GeomLibrary(this.__name);
+        this.__materials = new MaterialLibrary();
+        
         this.addParameter('splitObjects', false);
         this.addParameter('splitGroupsIntoObjects', false);
         this.addParameter('loadMtlFile', false);
         this.addParameter('unitsConversion', 1.0);
         this.addParameter('defaultShader', "");
+
+        const objfileParam = this.addParameter(new Visualive.FilePathParameter('ObjFilePath'));
+        objfileParam.valueChanged.connect((mode) => {
+          this.loaded.untoggle();
+          const filePath = objfileParam.getValue()
+          const url = objfileParam.getURL();
+
+          const emitloaded = mode == Visualive.ValueSetMode.USER_SETVALUE;
+          this.__loadObjFile(filePath, url, emitloaded);
+        });
+
+        this.binloaded = new Visualive.Signal(true);
     }
 
-    __loadURL(url, filePath){
+    __loadObjFile(filePath, url){
         resourceLoader.addWork(this.getName(), 2);
         loadTextfile(url, (fileData)=>{
             resourceLoader.addWorkDone(this.getName(), 1);

@@ -13,7 +13,7 @@ import {
 
 
 class KinematicGroupParameter extends ListParameter {
-    constructor(name, filterFn) {
+    constructor(name) {
         super(name, TreeItemParameter);
         this.__globalXfoParams = [];
         this.__initialXfos = [];
@@ -128,7 +128,7 @@ class KinematicGroupParameter extends ListParameter {
             this.removeElement(i);
         }
     }
-    
+
 };
 
 

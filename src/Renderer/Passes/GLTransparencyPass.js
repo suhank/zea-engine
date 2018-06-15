@@ -134,7 +134,8 @@ class GLTransparencyPass extends GLPass {
             }
         }
 
-        currentglGeom.unbind();
+        if(currentglGeom)
+            currentglGeom.unbind();
 
         gl.disable(gl.BLEND);
     }

@@ -20,16 +20,14 @@ class GearParameter extends StructParameter {
     constructor(name) {
         super(name);
 
-        this.__gearGeomsParam = new KinematicGroupParameter('GearGeoms');
+        this.__ratioParam = this._addMember(new NumberParameter('Ratio', 1.0));
+        this.__offsetParam =  this._addMember(new NumberParameter('Offset', 0.0));
+        this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
+        this.__gearGeomsParam = this._addMember(new KinematicGroupParameter('GearGeoms'));
         this.__initialXfos = [];
         this.__gearGeomsParam.elementAdded.connect((elem, index)=>{
             this.__initialXfos[index] = elem.getGlobalXfo();
         })
-
-        this.__ratioParam = this._addMember(new NumberParameter('Ratio', 1.0));
-        this.__offsetParam =  this._addMember(new NumberParameter('Offset', 0.0));
-        this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
-        this._addMember(this.__gearGeomsParam);
     }
 
     getRatio() {

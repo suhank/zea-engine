@@ -5,11 +5,11 @@ import {
     Operator
 } from './Operator.js';
 import {
-    Parameter
-} from '../Parameters/Parameter.js';
-import {
-    NumberParameter
-} from '../Parameters/NumberParameter.js';
+    Parameter,
+    NumberParameter,
+    ListParameter,
+    KinematicGroupParameter
+} from '../Parameters';
 
 class ExplodePartsOperator extends Operator {
     constructor(name) {
@@ -21,6 +21,9 @@ class ExplodePartsOperator extends Operator {
         this.addParameter(new Parameter('BiDirectional', false, 'Boolean'));
         this.addParameter(new Parameter('LocalSpace', false, 'Boolean'));
         this.addParameter(new Parameter('Dir', new Vec3(1, 0, 0), 'Vec3'));
+
+        this.__partsParam = this.addParameter(new ListParameter('Parts', KinematicGroupParameter));
+
         this.__parts = [];
         this.__stages = 2;
     }
