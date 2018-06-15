@@ -111,8 +111,7 @@ class GearsOperator extends Operator {
 
 
     destroy(){
-        console.log("GearsOperator destructing");
-        clearTimeout(this.__timeoutId);
+        // clearTimeout(this.__timeoutId);
         super.destroy();
     };
 };

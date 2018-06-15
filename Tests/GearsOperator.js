@@ -49,7 +49,7 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     console.log(JSON.stringify(j));
     asset.removeComponent('Gears');
     const gearsOp2 = new Visualive.GearsOperator('Gears2');
-    asset.addComponent(gearsOp);
+    asset.addComponent(gearsOp2);
     gearsOp2.fromJSON(j, { assetItem:asset } );
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);

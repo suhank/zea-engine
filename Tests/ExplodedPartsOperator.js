@@ -75,7 +75,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
         asset.addChild(objAsset);
         objAsset.loaded.connect(function() {
 
-            const explodedPartsOp = new Visualive.ExplodePartsOperator();
+            const explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
 
@@ -93,6 +93,13 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
             internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere2']));
             internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere3']));
             internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere4']));
+
+            // const j = explodedPartsOp.toJSON( { assetItem:asset } );
+            // console.log(JSON.stringify(j));
+            // asset.removeComponent('ExplodeParts');
+            // const explodedPartsOp2 = new Visualive.ExplodePartsOperator('ExplodeParts2');
+            // asset.addComponent(explodedPartsOp2);
+            // explodedPartsOp2.fromJSON(j, { assetItem:asset } );
 
             let explodedAmount = 0;
             let animatingValue = false;

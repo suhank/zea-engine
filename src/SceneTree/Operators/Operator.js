@@ -47,6 +47,11 @@ class Operator extends BaseItem {
         return super.fromJSON(j, context);
     }
 
+    destroy(){
+        super.destroy();
+        this.__outputs = [];
+    }
+
 };
 
 export {

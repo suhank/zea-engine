@@ -32,6 +32,7 @@ class KinematicGroupParameter extends ListParameter {
         });
     }
 
+
     getInitialXfo(){
         if(this.__value.length > 0)
             return this.__initialXfos[0];

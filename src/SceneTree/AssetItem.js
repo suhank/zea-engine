@@ -53,7 +53,10 @@ class AssetItem extends TreeItem {
     }
 
     removeComponent(name) {
-        const index = this.__componentMapping[name]
+        const index = this.__componentMapping[name];
+        if(index == undefined) {
+            throw("Component not found:" + name)
+        }
         const component = this.__components[index];
         component.setOwner(undefined);
         this.__components.splice(index, 1);

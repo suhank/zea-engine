@@ -128,6 +128,22 @@ class ExplodePartsOperator extends Operator {
         }
     }
 
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        return super.toJSON(context);
+    }
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+    }
+
+    destroy(){
+        clearTimeout(this.__timeoutId);
+        super.destroy();
+    };
+
 };
 
 export {

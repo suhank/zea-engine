@@ -132,22 +132,21 @@ class PistonOperator extends Operator {
 
         this.__revolutionsParam = this.addParameter(new NumberParameter('Revolutions', 0.0, [0, 1]));
         const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)); // revolutions per minute
-        let timeoutId;
         rpmParam.valueChanged.connect(() => {
             let rpm = rpmParam.getValue();
             if (rpm > 0.0) {
-                if (!timeoutId) {
+                if (!this.__timeoutId) {
                     const timerCallback = () => {
                         rpm = rpmParam.getValue();
                         const revolutions = this.__revolutionsParam.getValue();
                         this.__revolutionsParam.setValue(revolutions + (rpm * (1 / (50 * 60))));
-                        timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
+                        this.__timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
                     };
                     timerCallback();
                 }
             } else {
-                clearTimeout(timeoutId);
-                timeoutId = undefined;
+                clearTimeout(this.__timeoutId);
+                this.__timeoutId = undefined;
             }
         });
 
@@ -225,6 +224,12 @@ class PistonOperator extends Operator {
         super.fromJSON(j, context);
         this.init();
     }
+
+
+    destroy(){
+        clearTimeout(this.__timeoutId);
+        super.destroy();
+    };
 };
 
 export {

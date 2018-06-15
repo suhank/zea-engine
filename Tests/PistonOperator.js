@@ -97,7 +97,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
 
     const setupPistonOp = true;
     if(setupPistonOp) {
-        const pistonOp = new Visualive.PistonOperator();
+        const pistonOp = new Visualive.PistonOperator("Piston");
         asset.addComponent(pistonOp);
         pistonOp.getParameter('RPM').setValue(20.0);
         pistonOp.getParameter('CrankAxis').setValue(new Visualive.Vec3(0,1,0));
@@ -122,6 +122,14 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
         piston.getMember('Head').addElement(asset.resolvePath(['Head']));
         piston.getMember('Head').addElement(asset.resolvePath(['HeadRing0']));
         piston.getMember('Head').addElement(asset.resolvePath(['HeadRing1']));
+
+
+        const j = pistonOp.toJSON( { assetItem:asset } );
+        console.log(JSON.stringify(j));
+        asset.removeComponent('Piston');
+        // const pistonOp2 = new Visualive.PistonOperator('Piston2');
+        // asset.addComponent(pistonOp2);
+        // pistonOp2.fromJSON(j, { assetItem:asset } );
     }
 
     scene.getRoot().addChild(asset);
