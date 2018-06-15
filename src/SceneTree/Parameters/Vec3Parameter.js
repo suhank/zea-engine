@@ -1,5 +1,5 @@
 import {
-    Vec2
+    Vec3
 } from '../../Math';
 import {
     Parameter

@@ -25,7 +25,7 @@ class NumberParameter extends Parameter {
         return this.__range;
     }
 
-    __setRange(range) {// Should be an array [0, 20]
+    setRange(range) {// Should be an array [0, 20]
         this.__range = range;
     }
 

@@ -137,12 +137,12 @@ class Cylinder extends Mesh {
             for (let j = 0; j < nbSides; j++) {
 
                 let phi = (j / nbSides) * 2.0 * Math.PI;
-                let normal1 = new Vec3(Math.sin(phi), 0.0, Math.cos(phi));
+                let normal1 = new Vec3(Math.sin(phi), Math.cos(phi), 0.0);
                 normals.setFaceVertexValue(faceIndex, 0, normal1);
                 normals.setFaceVertexValue(faceIndex, 1, normal1);
 
                 phi = ((j + 1) / nbSides) * 2.0 * Math.PI;
-                let normal2 = new Vec3(Math.sin(phi), 0.0, Math.cos(phi));
+                let normal2 = new Vec3(Math.sin(phi), Math.cos(phi), 0.0);
                 normals.setFaceVertexValue(faceIndex, 2, normal2);
                 normals.setFaceVertexValue(faceIndex, 3, normal2);
                 faceIndex++;

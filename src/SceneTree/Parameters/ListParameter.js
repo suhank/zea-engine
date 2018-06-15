@@ -2,6 +2,7 @@ import {
     Signal
 } from '../../Utilities';
 import {
+    ValueSetMode,
     ParamFlags,
     Parameter
 } from './Parameter.js';
@@ -23,22 +24,28 @@ class ListParameter extends Parameter {
         if(!elem)
             elem = new this.__dataType()
         this.__value.push(elem)
-        this.setValue(this.__value);
+        // this.setValue(this.__value);
+        this.__flags |= ParamFlags.USER_EDITED;
         this.elementAdded.emit(elem, this.__value.length-1);
+        this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
         return elem;
     }
 
     removeElement(index) {
         const elem = this.__value[index];
         this.__value.splice(index, 1)
-        this.setValue(this.__value)
+        // this.setValue(this.__value)
+        this.__flags |= ParamFlags.USER_EDITED;
         this.elementRemoved.emit(elem, index);
+        this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
     }
 
     insertElement(index, elem) {
         this.__value.splice(index, 0, elem);
-        this.setValue(this.__value)
+        // this.setValue(this.__value);
+        this.__flags |= ParamFlags.USER_EDITED;
         this.elementAdded.emit(elem, index);
+        this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
     }
 
     clone() {
@@ -79,6 +86,7 @@ class ListParameter extends Parameter {
             this.__value.push(elem)
             this.elementAdded.emit(elem, this.__value.length-1);
         }
+        this.valueChanged.emit(ValueSetMode.DATA_LOAD);
     }
 
 
