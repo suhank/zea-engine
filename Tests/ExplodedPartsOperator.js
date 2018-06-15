@@ -37,7 +37,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
     const boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
     boltmaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.5, 0.0));
 
-    let index = 0;
+    let index = 1;
     const addBolt = (pos)=> {
         const geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
@@ -79,23 +79,20 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
 
-            explodedPartsOp.connectParts([
-                [
-                    ['bolt0'],
-                    ['bolt1'],
-                    ['bolt2'],
-                    ['bolt3']
-                ],
-                [
-                    ['PartB', 'PartB'], 
-                ],
-                [
-                    ['middleSphere1'],
-                    ['middleSphere2'],
-                    ['middleSphere3'],
-                    ['middleSphere4']
-                ]
-                ]);
+            const bolts = explodedPartsOp.getParameter('Parts').addElement();
+            bolts.getMember('Items').addElement(asset.resolvePath(['bolt1']));
+            bolts.getMember('Items').addElement(asset.resolvePath(['bolt2']));
+            bolts.getMember('Items').addElement(asset.resolvePath(['bolt3']));
+            bolts.getMember('Items').addElement(asset.resolvePath(['bolt4']));
+
+            const casing = explodedPartsOp.getParameter('Parts').addElement();
+            casing.getMember('Items').addElement(asset.resolvePath(['PartB', 'PartB']));
+
+            const internalBits = explodedPartsOp.getParameter('Parts').addElement();
+            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere1']));
+            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere2']));
+            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere3']));
+            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere4']));
 
             let explodedAmount = 0;
             let animatingValue = false;

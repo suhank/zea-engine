@@ -12,8 +12,6 @@ class NumberParameter extends Parameter {
         this.__range = range;
         this.__axis = 'x';
         this.__step = 0.01;
-        
-        this.rangeChanged = new Signal();
     }
 
     getValue() {
@@ -27,9 +25,8 @@ class NumberParameter extends Parameter {
         return this.__range;
     }
 
-    setRange(range) {// Should be an array [0, 20]
+    __setRange(range) {// Should be an array [0, 20]
         this.__range = range;
-        this.rangeChanged.emit();
     }
 
     getStep() {

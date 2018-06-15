@@ -23,9 +23,9 @@ class GearParameter extends StructParameter {
         this.__ratioParam = this._addMember(new NumberParameter('Ratio', 1.0));
         this.__offsetParam =  this._addMember(new NumberParameter('Offset', 0.0));
         this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
-        this.__gearGeomsParam = this._addMember(new KinematicGroupParameter('GearGeoms'));
+        this.__itemsParam = this._addMember(new KinematicGroupParameter('Items'));
         this.__initialXfos = [];
-        this.__gearGeomsParam.elementAdded.connect((elem, index)=>{
+        this.__itemsParam.elementAdded.connect((elem, index)=>{
             this.__initialXfos[index] = elem.getGlobalXfo();
         })
     }
@@ -40,20 +40,20 @@ class GearParameter extends StructParameter {
         return this.__axisParam.getValue();
     }
     getInitialXfo() {
-        return this.__gearGeomsParam.getInitialXfo();
+        return this.__itemsParam.getInitialXfo();
     }
     getXfo() {
-        return this.__gearGeomsParam.getXfo();
+        return this.__itemsParam.getXfo();
     }
     setXfo(xfo) {
-        this.__gearGeomsParam.setXfo(xfo);
+        this.__itemsParam.setXfo(xfo);
     }
 
     setDirty(cleanerFn) {
-        return this.__gearGeomsParam.setDirty(cleanerFn);
+        return this.__itemsParam.setDirty(cleanerFn);
     }
     removeCleanerFn(cleanerFn) {
-        return this.__gearGeomsParam.removeCleanerFn(cleanerFn);
+        return this.__itemsParam.removeCleanerFn(cleanerFn);
     }
 }
 

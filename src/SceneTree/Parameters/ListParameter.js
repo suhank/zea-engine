@@ -15,6 +15,10 @@ class ListParameter extends Parameter {
         this.elementRemoved = new Signal();
     }
 
+    getCount(){
+        return this.__value.length;
+    }
+
     addElement(elem) {
         if(!elem)
             elem = new this.__dataType()
