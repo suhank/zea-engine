@@ -146,7 +146,7 @@ class ParameterOwner extends RefCounted {
             for (let key in j.params) {
                 const param = this.getParameter(key);
                 if(!param) 
-                    console.warn("Param not found:" + paramJSON.name);
+                    console.warn("Param not found:" + key);
                 else
                     param.fromJSON(j.params[key], context);
             }

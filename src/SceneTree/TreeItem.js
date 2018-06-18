@@ -260,7 +260,7 @@ class TreeItem extends BaseItem {
     _cleanBoundingBox(bbox) {
         bbox.reset();
         for (let childItem of this.__childItems) {
-            if (childItem.getVisible())
+            if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX))
                 bbox.addBox3(childItem.getBoundingBox());
         }
         return bbox;

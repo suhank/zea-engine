@@ -303,7 +303,7 @@ void main(void) {
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
 
-        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 0.0, 0.0) });
+        paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 0.0, 0.0) });
         paramDescs.push({ name: 'baseMetallic', defaultValue: 0.0 });
         paramDescs.push({ name: 'baseRoughness', defaultValue: 0.35 });
         paramDescs.push({ name: 'baseReflectance', defaultValue: 0.03 });

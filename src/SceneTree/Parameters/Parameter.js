@@ -91,7 +91,9 @@ class BaseParameter {
         if (this.__cleanerFn) {
             const fn = this.__cleanerFn;
             this.__cleanerFn = undefined;
-            const res = fn(this.__value, this.getValue);
+            // Cleaners can modify the value in place
+            // See: _cleanBoundingBox
+            const res = fn(this.__value);
             if(res) 
                 this.__value = res;
         }

@@ -111,7 +111,7 @@ class SessionParticipant {
         this.__treeItem.setSelectable(false);
 
         this.__material = new Material('user' + user.id + 'Material', 'SimpleSurfaceShader');
-        this.__material.addParameter('baseColor', this.__avatarColor);
+        this.__material.addParameter('BaseColor', this.__avatarColor);
 
 
         if (isLocalUser) {

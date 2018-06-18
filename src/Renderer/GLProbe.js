@@ -130,7 +130,7 @@ class GLProbe extends ImageAtlas {
             }
 
             // Set the roughness.
-            if ('roughness' in unifs) {
+            if ('Roughness' in unifs) {
                 let roughness = i / (this.__fbos.length - 1);
                 gl.uniform1f(unifs.roughness.location, roughness);
             }

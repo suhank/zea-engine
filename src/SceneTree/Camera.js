@@ -35,7 +35,7 @@ class Camera extends TreeItem {
         this.__focalDistanceParam = this.addParameter('focalDistance', 5.0);
 
         this.__viewMatParam = this.addParameter('viewMat', new Mat4());
-        let _cleanViewMat = (xfo)=>{
+        const _cleanViewMat = (xfo)=>{
             return this.__globalXfoParam.getValue().inverse().toMat4();
         }
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
@@ -56,64 +56,6 @@ class Camera extends TreeItem {
         this.setPositionAndTarget(new Vec3(3, 3, 1.75), new Vec3(0, 0, 1));
         this.setLensFocalLength('24mm')
 
-    }
-
-    //////////////////////////////////////////////
-    // Deprectated property getters/setters.
-
-    get near() {
-        console.warn(("near is deprectated. Please use 'getNear'"));
-        return this.getNear();
-    }
-
-    get far() {
-        console.warn(("far is deprectated. Please use 'getFar'"));
-        return this.getFar();
-    }
-
-    get fov() {
-        console.warn(("fov is deprectated. Please use 'getFov'"));
-        return this.getFov();
-    }
-
-    get focalDistance() {
-        console.warn(("focalDistance is deprectated. Please use 'getFocalDistance'"));
-        return this.getFocalDistance();
-    }
-
-    set focalDistance(dist) {
-        console.warn(("focalDistance is deprectated. Please use 'getFocalDistance'"));
-        this.setFocalDistance(dist);
-    }
-
-    get isOrthographic() {
-        console.warn(("get isOrthographic is deprectated. Please use 'getIsOrthographic'"));
-        return this.getIsOrthographic();
-    }
-
-    get viewMatrix() {
-        console.warn(("get viewMatrix is deprectated. Please use 'getViewMatrix'"));
-        return this.getViewMatrix();
-    }
-
-    get globalXfo() {
-        console.warn(("get localXfo is deprectated. Please use 'getLocalXfo'"));
-        return this.getGlobalXfo();
-    }
-
-    set globalXfo(xfo) {
-        console.warn(("set globalXfo is deprectated. Please use 'setGlobalXfo'"));
-        this.setGlobalXfo(xfo);
-    }
-
-    get localXfo() {
-        console.warn(("set localXfo is deprectated. Please use 'getLocalXfo'"));
-        return this.getLocalXfo();
-    }
-
-    set localXfo(xfo) {
-        console.warn(("set localXfo is deprectated. Please use 'setLocalXfo'"));
-        this.setLocalXfo(xfo);
     }
 
     //////////////////////////////////////////////
@@ -222,15 +164,15 @@ class Camera extends TreeItem {
 
     setPositionAndTarget(position, target) {
         this.setFocalDistance(position.distanceTo(target));
-        let xfo = new Xfo();
+        const xfo = new Xfo();
         xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0));
         this.setGlobalXfo(xfo);
     }
 
     getTargetPostion() {
-        let focalDistance = this.__focalDistanceParam.getValue();
-        let xfo = this.getGlobalXfo();
-        let target = xfo.ori.getZaxis();
+        const focalDistance = this.__focalDistanceParam.getValue();
+        const xfo = this.getGlobalXfo();
+        const target = xfo.ori.getZaxis();
         target.scaleInPlace(-focalDistance);
         target.addInPlace(xfo.tr);
         return target;
@@ -239,39 +181,40 @@ class Camera extends TreeItem {
     /////////////////////////////
 
     frameView(viewport, treeItems) {
-        let boundingBox = new Box3();
+        const boundingBox = new Box3();
         for (let treeItem of treeItems)
             boundingBox.addBox3(treeItem.getBoundingBox());
 
         if (!boundingBox.isValid())
             return;
-        let focalDistance = this.__focalDistanceParam.getValue();
-        let fovY = this.__fovParam.getValue();
+        const focalDistance = this.__focalDistanceParam.getValue();
+        const fovY = this.__fovParam.getValue();
 
-        let globalXfo = this.getGlobalXfo().clone();
-        let cameraViewVec = globalXfo.ori.getZaxis();
-        let targetOffset = cameraViewVec.scale(-focalDistance);
-        let currTarget = globalXfo.tr.add(targetOffset);
-        let newTarget = boundingBox.center();
+        const globalXfo = this.getGlobalXfo().clone();
+        const cameraViewVec = globalXfo.ori.getZaxis();
+        const targetOffset = cameraViewVec.scale(-focalDistance);
+        const currTarget = globalXfo.tr.add(targetOffset);
+        const newTarget = boundingBox.center();
 
-        let pan = newTarget.subtract(currTarget);
+        const pan = newTarget.subtract(currTarget);
         globalXfo.tr.addInPlace(pan);
 
         // Transform the bounding box into camera space.
-        let transformedBBox = new Box3();
+        const transformedBBox = new Box3();
         transformedBBox.addBox3(boundingBox, globalXfo.inverse());
-        let camSpaceTarget = transformedBBox.center();
+        const camSpaceTarget = transformedBBox.center();
 
-        let fovX = fovY * (viewport.getWidth() / viewport.getHeight());
+        const fovX = fovY * (viewport.getWidth() / viewport.getHeight());
 
-        let camSpaceBBoxDepth = (transformedBBox.p0.z - transformedBBox.p1.z) * 0.5;
         // p1 is the closest corner of the transformed bbox.
-        let p = transformedBBox.p1;
-        let newFocalDistanceX = (Math.abs(p.x) / Math.tan(0.5 * fovX)) * 1.2;
-        let newFocalDistanceY = (Math.abs(p.y) / Math.tan(0.5 * fovY)) * 1.2;
-        let newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) - camSpaceBBoxDepth;
+        const p = transformedBBox.p1;
+        const newFocalDistanceX = (Math.abs(p.x) / Math.tan(0.5 * fovX)) * 1.2;
+        const newFocalDistanceY = (Math.abs(p.y) / Math.tan(0.5 * fovY)) * 1.2;
 
-        let dollyDist = newFocalDistance - focalDistance;
+        const camSpaceBBoxDepth = (transformedBBox.p0.z - transformedBBox.p1.z) * -0.5;
+        const newFocalDistance = Math.max(newFocalDistanceX, newFocalDistanceY) + camSpaceBBoxDepth;
+
+        const dollyDist = newFocalDistance - focalDistance;
         globalXfo.tr.addInPlace(cameraViewVec.scale(dollyDist));
 
         this.setFocalDistance(newFocalDistance);
@@ -280,11 +223,11 @@ class Camera extends TreeItem {
     }
 
     updateProjectionMatrix(mat, aspect) {
-        let isOrthographic = this.__isOrthographicParam.getValue();
-        let fov = this.__fovParam.getValue();
-        let near = this.__nearParam.getValue();
-        let far = this.__farParam.getValue();
-        let focalDistance = this.__focalDistanceParam.getValue();
+        const isOrthographic = this.__isOrthographicParam.getValue();
+        const fov = this.__fovParam.getValue();
+        const near = this.__nearParam.getValue();
+        const far = this.__farParam.getValue();
+        const focalDistance = this.__focalDistanceParam.getValue();
         mat.setPerspectiveMatrix(fov, aspect, near, far);
     }
 };

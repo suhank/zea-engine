@@ -302,13 +302,13 @@ void main(void) {
     }
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
+        paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
         paramDescs.push({ name: 'emissiveStrength', defaultValue: 0.0 });
         paramDescs.push({ name: 'metallic', defaultValue: 0.0 });
-        paramDescs.push({ name: 'roughness', defaultValue: 0.85 });
-        paramDescs.push({ name: 'normal', defaultValue: new Color(0.0, 0.0, 0.0) });
-        paramDescs.push({ name: 'texCoordScale', defaultValue: 1.0, texturable: false });
-        paramDescs.push({ name: 'reflectance', defaultValue: 0.0001 } );
+        paramDescs.push({ name: 'Roughness', defaultValue: 0.85 });
+        paramDescs.push({ name: 'Normal', defaultValue: new Color(0.0, 0.0, 0.0) });
+        paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
+        paramDescs.push({ name: 'Reflectance', defaultValue: 0.0001 } );
 
         // cutaway params
         paramDescs.push({ name: 'cutawayEnabled', defaultValue: true, texturable: false });
