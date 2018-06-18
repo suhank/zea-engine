@@ -112,7 +112,7 @@ class MaterialLibrary {
         xhr.send(null);
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context={}) {
         context.lod = this.lod;
         for (let name in j["textures"]) {
             let image = new FileImage2D(name);
@@ -125,14 +125,14 @@ class MaterialLibrary {
         }
     }
 
-    toJSON() {
+    toJSON(context={}) {
         return {
             "numMaterials": this.geoms.length()
         }
     }
 
 
-    readBinary(reader, context) {
+    readBinary(reader, context={}) {
         this.name = reader.loadStr();
 
         // Specify the Lod to load the images in this library.

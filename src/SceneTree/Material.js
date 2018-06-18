@@ -208,7 +208,7 @@ class Material extends BaseItem {
         return super.toJSON();
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context={}) {
         if(!j.shader){
             console.warn("Invalid Material JSON");
             return;

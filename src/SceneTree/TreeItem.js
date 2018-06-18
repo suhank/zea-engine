@@ -476,7 +476,7 @@ class TreeItem extends BaseItem {
         //     this.__boundingBoxParam.setValue(box);
         // }
 
-        if ((flags & LOADFLAGS_SKIP_CHILDREN) == 0 && j.children != null) {
+        if (/*(flags & LOADFLAGS_SKIP_CHILDREN) == 0 && */j.children != null) {
             let childrenJson = j.children;
             let printProgress = childrenJson.length > 10000;
             let progress = 0;
@@ -559,7 +559,7 @@ class TreeItem extends BaseItem {
                     let curr = Math.round((i / numChildren) * 100);
                     if (curr != progress) {
                         progress = curr;
-                        console.log("Loading " + this.__name + ": " + String(progress + "%"));
+                        // console.log("Loading " + this.__name + ": " + String(progress + "%"));
                     }
                 }
             }

@@ -2,25 +2,27 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     const asset = new Visualive.AssetItem('parts');
-    const gearmaterial = new Visualive.Material('gearmaterial', 'SimpleSurfaceShader');
-    gearmaterial.getParameter('baseColor').setValue(new Visualive.Color(1.0, 0.0, 0.0));
+    const steelmaterial = new Visualive.Material('steel', 'SimpleSurfaceShader');
+    steelmaterial.getParameter('baseColor').setValue(new Visualive.Color(0.2, 0.2, 0.2));
+    const ringsmaterial = new Visualive.Material('rings', 'SimpleSurfaceShader');
+    ringsmaterial.getParameter('baseColor').setValue(new Visualive.Color(0.3, 0.3, 0.3));
 
     {
-        const geomItem = new Visualive.GeomItem('Head', new Visualive.Cylinder(2, 3, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('Head', new Visualive.Cylinder(2, 3, 30), steelmaterial);
         const xfo = new Visualive.Xfo();
         xfo.tr.set(0, 0, 3.5);
         geomItem.setLocalXfo(xfo);
         asset.addChild(geomItem);
     }
     {
-        const geomItem = new Visualive.GeomItem('HeadRing0', new Visualive.Cylinder(2.2, .2, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('HeadRing0', new Visualive.Cylinder(2.2, .2, 30), ringsmaterial);
         const xfo = new Visualive.Xfo();
         xfo.tr.set(0, 0, 4.5);
         geomItem.setLocalXfo(xfo);
         asset.addChild(geomItem);
     }
     {
-        const geomItem = new Visualive.GeomItem('HeadRing1', new Visualive.Cylinder(2.2, .2, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('HeadRing1', new Visualive.Cylinder(2.2, .2, 30), ringsmaterial);
         const xfo = new Visualive.Xfo();
         xfo.tr.set(0, 0, 4.0);
         geomItem.setLocalXfo(xfo);
@@ -28,7 +30,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
     }
 
     {
-        const geomItem = new Visualive.GeomItem('Crank0', new Visualive.Cylinder(1, 4, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('Crank0', new Visualive.Cylinder(1, 4, 30), steelmaterial);
         const xfo = new Visualive.Xfo();
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, -3, 0);
@@ -36,7 +38,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
         asset.addChild(geomItem);
     }
     {
-        const geomItem = new Visualive.GeomItem('Crank1', new Visualive.Cylinder(1, 4, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('Crank1', new Visualive.Cylinder(1, 4, 30), steelmaterial);
         const xfo = new Visualive.Xfo();
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, 3, 0);
@@ -44,7 +46,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
         asset.addChild(geomItem);
     }
     {
-        const geomItem = new Visualive.GeomItem('CrankArm0', new Visualive.Cuboid(2, 1, 4), gearmaterial);
+        const geomItem = new Visualive.GeomItem('CrankArm0', new Visualive.Cuboid(2, 1, 4), steelmaterial);
         const xfo = new Visualive.Xfo();
         // xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, -1.5, -1.5);
@@ -52,7 +54,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
         asset.addChild(geomItem);
     }
     {
-        const geomItem = new Visualive.GeomItem('CrankArm1', new Visualive.Cuboid(2, 1, 4), gearmaterial);
+        const geomItem = new Visualive.GeomItem('CrankArm1', new Visualive.Cuboid(2, 1, 4), steelmaterial);
         const xfo = new Visualive.Xfo();
         // xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, 1.5, -1.5);
@@ -60,7 +62,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
         asset.addChild(geomItem);
     }
     {
-        const geomItem = new Visualive.GeomItem('CrankArmBar', new Visualive.Cylinder(0.7, 4, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('CrankArmBar', new Visualive.Cylinder(0.7, 4, 30), steelmaterial);
         const xfo = new Visualive.Xfo();
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, 0, -3);
@@ -69,7 +71,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
     }
 
     {
-        const geomItem = new Visualive.GeomItem('BigEnd', new Visualive.Cylinder(1.5, 2, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('BigEnd', new Visualive.Cylinder(1.5, 2, 30), steelmaterial);
         const xfo = new Visualive.Xfo();
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, 0, -3);
@@ -78,7 +80,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
     }
 
     {
-        const geomItem = new Visualive.GeomItem('SmallEnd', new Visualive.Cylinder(0.5, 2, 30), gearmaterial);
+        const geomItem = new Visualive.GeomItem('SmallEnd', new Visualive.Cylinder(0.5, 2, 30), steelmaterial);
         const xfo = new Visualive.Xfo();
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, 0, 2);
@@ -87,7 +89,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
     }
 
     {
-        const geomItem = new Visualive.GeomItem('Rod', new Visualive.Cuboid(2, 1, 4), gearmaterial);
+        const geomItem = new Visualive.GeomItem('Rod', new Visualive.Cuboid(2, 1, 4), steelmaterial);
         const xfo = new Visualive.Xfo();
         // xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1,0,0), Math.PI * 0.5)
         xfo.tr.set(0, 0, -0);
@@ -99,7 +101,7 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
     if(setupPistonOp) {
         const pistonOp = new Visualive.PistonOperator("Piston");
         asset.addComponent(pistonOp);
-        pistonOp.getParameter('RPM').setValue(20.0);
+        pistonOp.getParameter('RPM').setValue(15.0);
         pistonOp.getParameter('CrankAxis').setValue(new Visualive.Vec3(0,1,0));
         // pistonOp.getParameter('Dist').setValue(30.0);
 
@@ -123,13 +125,12 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
         piston.getMember('Head').addElement(asset.resolvePath(['HeadRing0']));
         piston.getMember('Head').addElement(asset.resolvePath(['HeadRing1']));
 
-
+        // Now save the component, remove it, and then add another one.
         const j = pistonOp.toJSON( { assetItem:asset } );
-        console.log(JSON.stringify(j));
         asset.removeComponent('Piston');
-        // const pistonOp2 = new Visualive.PistonOperator('Piston2');
-        // asset.addComponent(pistonOp2);
-        // pistonOp2.fromJSON(j, { assetItem:asset } );
+        const pistonOp2 = new Visualive.PistonOperator('Piston2');
+        asset.addComponent(pistonOp2);
+        pistonOp2.fromJSON(j, { assetItem:asset } );
     }
 
     scene.getRoot().addChild(asset);

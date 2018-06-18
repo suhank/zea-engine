@@ -76,9 +76,7 @@ class AssetItem extends TreeItem {
     //////////////////////////////////////////
     // Persistence
 
-    readBinary(reader, context) {
-        if(!context) 
-            context = {};
+    readBinary(reader, context={}) {
         context.assetItem = this;
         super.readBinary(reader, context);
     }

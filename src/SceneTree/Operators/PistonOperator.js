@@ -64,28 +64,22 @@ class PistonParameter extends StructParameter {
 
 
         const camAngle = (camPhase) * 2.0 * Math.PI;
-        // Using law of sines
-        const rodAngle = Math.asin((camLength * Math.sin(camAngle))/rodLength);
-
-        const A = Math.PI - camAngle - rodAngle;
-        const headOffset = Math.sin(A) * (rodLength / Math.sin(camAngle));
-
-        // this.__pistonOffset = this.__headParam.getInitialXfo().tr.subtract(this.__baseCrankXfo).dot(this.__pistonAxis) - headOffset; 
-        this.__pistonOffset = 0;
+        const bigEndOffset = Math.sin(camAngle) * camLength;
+        const rodAngle = Math.asin(bigEndOffset / rodLength);
+        const headOffset = Math.sqrt(rodLength * rodLength - bigEndOffset * bigEndOffset) + (Math.cos(camAngle) * camLength);
+        this.__pistonOffset = headOffset;
     }
 
     evaluate(crankXfo, crankAxis, revolutions) {
-
 
         const camPhase = this.__camPhaseParam.getValue();
         const camLength = this.__camLengthParam.getValue();
         const rodLength = this.__rodLengthParam.getValue();
         const camAngle = (camPhase + revolutions) * 2.0 * Math.PI;
-        // Using law of sines
-        const rodAngle = Math.asin((camLength * Math.sin(camAngle))/rodLength);
 
-        const A = Math.PI - camAngle - rodAngle;
-        const headOffset = Math.sin(A) * (rodLength / Math.sin(camAngle));
+        const bigEndOffset = Math.sin(camAngle) * camLength;
+        const rodAngle = Math.asin(bigEndOffset / rodLength);
+        const headOffset = Math.sqrt(rodLength * rodLength - bigEndOffset * bigEndOffset) + (Math.cos(camAngle) * camLength);
 
         {
             const rodxfo = this.__rodParam.getInitialXfo().clone();
@@ -102,7 +96,7 @@ class PistonParameter extends StructParameter {
 
         {
             const headxfo = this.__headParam.getInitialXfo().clone();
-            headxfo.tr.addInPlace(this.__pistonAxis.scale(headOffset+this.__pistonOffset))
+            headxfo.tr.addInPlace(this.__pistonAxis.scale(headOffset-this.__pistonOffset))
             this.__headParam.setXfo(headxfo, ValueSetMode.OPERATOR_SETVALUE);
         }
     }
