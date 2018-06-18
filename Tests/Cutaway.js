@@ -7,7 +7,7 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
     let bigSphere = new Visualive.Sphere(8.0, 32, 32);
     let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
-    bigSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 1.0, 0.0));
+    bigSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 1.0, 0.0));
     let bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
     asset.addChild(bigSphereItem, false);
     scene.getRoot().addChild(asset);

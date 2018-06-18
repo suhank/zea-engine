@@ -6,9 +6,9 @@ testingHarness.registerTest('TransformHierarchies', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     const material = new Visualive.Material('material', 'SimpleSurfaceShader');
-    material.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    material.addParameter('roughness', 1.0);
-    material.addParameter('metallic', 0.0);
+    material.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    material.addParameter('Roughness', 1.0);
+    material.addParameter('Metallic', 0.0);
     let cuboid = new Visualive.Cuboid(0.6, 2.0, 0.2);
 
     let geomItem0 = new Visualive.GeomItem('Item0', cuboid, material);

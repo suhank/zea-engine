@@ -11,9 +11,9 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Ground Plane
     let groundMaterial = new Visualive.Material('ground', 'StandardSurfaceShader');
-    groundMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    groundMaterial.addParameter('roughness', 1.0);
-    groundMaterial.addParameter('metallic', 0.0);
+    groundMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    groundMaterial.addParameter('Roughness', 1.0);
+    groundMaterial.addParameter('Metallic', 0.0);
     let quad = new Visualive.Plane(20, 20);
     let groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
     scene.getRoot().addChild(groundPlaneItem);
@@ -55,7 +55,7 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Locators
     let locatorMaterial = new Visualive.Material('locator', 'SimpleSurfaceShader');
-    locatorMaterial.addParameter('baseColor', new Visualive.Color(1, 0, 0));
+    locatorMaterial.addParameter('BaseColor', new Visualive.Color(1, 0, 0));
     let locator = new Visualive.Cuboid(.05, .05, .05);
     let index = 0;
     let addLocator = (pos) => {

@@ -17,7 +17,7 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
 
 
     const material = new Visualive.Material('material', 'SimpleSurfaceShader');
-    material.addParameter('baseColor', new Visualive.Color(1, 0, 1));
+    material.addParameter('BaseColor', new Visualive.Color(1, 0, 1));
     let addGeomItem = (shape, xfo, index, material)=>{
         const geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
         geomItem.setLocalXfo(xfo);

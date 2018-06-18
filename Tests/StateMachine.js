@@ -14,7 +14,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
     let middleSphere = new Visualive.Sphere(2.5);
     let middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
-    middleSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 0.0, 1.0));
+    middleSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 0.0, 1.0));
     {
         let middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, 3.5);
@@ -38,13 +38,13 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
     let littleSphere = new Visualive.Sphere(2.0);
     let littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
-    littleSphereMaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.0, 0.0));
+    littleSphereMaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.0, 0.0));
     let littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
     parts.addChild(littleSphereItem);
 
     let bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
     let boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
-    boltmaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.5, 0.0));
+    boltmaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.5, 0.0));
 
     let index = 0;
     let addBolt = (pos)=> {

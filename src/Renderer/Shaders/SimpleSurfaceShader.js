@@ -76,15 +76,15 @@ varying vec2 v_textureCoord;
 
 uniform mat4 cameraMatrix;
 
-uniform color _baseColor;
-uniform float _opacity;
+uniform color _BaseColor;
+uniform float _Opacity;
 
 #ifdef ENABLE_TEXTURES
 
-uniform sampler2D _baseColorTex;
-uniform bool _baseColorTexConnected;
-uniform sampler2D _opacityTex;
-uniform bool _opacityTexConnected;
+uniform sampler2D _BaseColorTex;
+uniform bool _BaseColorTexConnected;
+uniform sampler2D _OpacityTex;
+uniform bool _OpacityTexConnected;
 
 #endif
 
@@ -95,12 +95,12 @@ uniform bool _opacityTexConnected;
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor      = _baseColor;
-    float opacity       = baseColor.a * _opacity;
+    vec4 baseColor      = _BaseColor;
+    float opacity       = baseColor.a * _Opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord);
-    float opacity       = baseColor.a * getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoord);
+    vec4 baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(_Opacity, _OpacityTex, _OpacityTexConnected, texCoord);
 #endif
 
     // Hacky simple irradiance. 

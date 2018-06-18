@@ -58,11 +58,11 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
-uniform color _baseColor;
+uniform color _BaseColor;
 
 #ifdef ENABLE_TEXTURES
-uniform sampler2D _baseColorTex;
-uniform bool _baseColorTexConnected;
+uniform sampler2D _BaseColorTex;
+uniform bool _BaseColorTexConnected;
 #endif
 
 /* VS Outputs */
@@ -78,9 +78,9 @@ varying vec2 v_textureCoord;
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor = _baseColor;
+    vec4 baseColor = _BaseColor;
 #else
-    vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_textureCoord);
+    vec4 baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, v_textureCoord);
 #endif
 
 #ifndef ENABLE_ES3

@@ -140,37 +140,37 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 
-uniform color _baseColor;
-uniform float _emissiveStrength;
+uniform color _BaseColor;
+uniform float _EmissiveStrength;
 
 
 #ifdef ENABLE_SPECULAR
-uniform float _roughness;
-uniform float _metallic;
-uniform float _reflectance;
+uniform float _Roughness;
+uniform float _Metallic;
+uniform float _Reflectance;
 #endif
 
 #ifdef ENABLE_TEXTURES
-uniform sampler2D _baseColorTex;
-uniform bool _baseColorTexConnected;
+uniform sampler2D _BaseColorTex;
+uniform bool _BaseColorTexConnected;
 
 #ifdef ENABLE_SPECULAR
-uniform sampler2D _roughnessTex;
-uniform bool _roughnessTexConnected;
+uniform sampler2D _RoughnessTex;
+uniform bool _RoughnessTexConnected;
 
-uniform sampler2D _metallicTex;
-uniform bool _metallicTexConnected;
+uniform sampler2D _MetallicTex;
+uniform bool _MetallicTexConnected;
 
-uniform sampler2D _reflectanceTex;
-uniform bool _reflectanceTexConnected;
+uniform sampler2D _ReflectanceTex;
+uniform bool _ReflectanceTexConnected;
 
-uniform sampler2D _normalTex;
-uniform bool _normalTexConnected;
-uniform float _normalScale;
+uniform sampler2D _NormalTex;
+uniform bool _NormalTexConnected;
+uniform float _NormalScale;
 #endif
 
-uniform sampler2D _emissiveStrengthTex;
-uniform bool _emissiveStrengthTexConnected;
+uniform sampler2D _EmissiveStrengthTex;
+uniform bool _EmissiveStrengthTexConnected;
 
 #endif
 
@@ -200,27 +200,27 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = _baseColor.rgb;
-    float emission      = _emissiveStrength;
+    material.baseColor      = _BaseColor.rgb;
+    float emission      = _EmissiveStrength;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness     = _roughness;
-    material.metallic      = _metallic;
-    material.reflectance   = _reflectance;
+    material.roughness     = _Roughness;
+    material.metallic      = _Metallic;
+    material.reflectance   = _Reflectance;
 #endif
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord      = v_worldPos.xz * 0.2;
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    material.baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord).rgb;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness     = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
-    material.metallic      = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
-    material.reflectance   = getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+    material.roughness     = getLuminanceParamValue(_Roughness, _RoughnessTex, _RoughnessTexConnected, texCoord);
+    material.metallic      = getLuminanceParamValue(_Metallic, _MetallicTex, _MetallicTexConnected, texCoord);
+    material.reflectance   = getLuminanceParamValue(_Reflectance, _ReflectanceTex, _ReflectanceTexConnected, texCoord);
 #endif
-    float emission      = getLuminanceParamValue(_emissiveStrength, _emissiveStrengthTex, _emissiveStrengthTexConnected, texCoord);
+    float emission      = getLuminanceParamValue(_EmissiveStrength, _EmissiveStrengthTex, _EmissiveStrengthTexConnected, texCoord);
 #endif
 
     vec3 viewNormal = normalize(v_viewNormal);
@@ -228,8 +228,8 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_SPECULAR
-    if(_normalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
+    if(_NormalTexConnected){
+        vec3 textureNormal_tangentspace = normalize(texture2D(_NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif

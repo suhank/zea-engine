@@ -11,7 +11,7 @@ testingHarness.registerTest('GearsOperator', (domElement, resources)=> {
     const addGear = (pos, radius, teeth, axis, color)=> {
         const gearGeom = new Visualive.Cylinder(radius, 0.2, teeth);
         const gearmaterial = new Visualive.Material('gearmaterial', 'SimpleSurfaceShader');
-        gearmaterial.getParameter('baseColor').setValue(color);
+        gearmaterial.getParameter('BaseColor').setValue(color);
         const geomItem = new Visualive.GeomItem('gear'+(index++), gearGeom, gearmaterial);
         const xfo = new Visualive.Xfo();
         xfo.tr = pos;
