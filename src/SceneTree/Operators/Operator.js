@@ -40,7 +40,9 @@ class Operator extends BaseItem {
     // Persistence
 
     toJSON(context) {
-        return super.toJSON(context);
+        const j = super.toJSON(context);
+        j.type = this.constructor.name;
+        return j;
     }
 
     fromJSON(j, context) {

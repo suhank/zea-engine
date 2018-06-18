@@ -16,6 +16,9 @@ import {
     KinematicGroupParameter
 } from '../Parameters';
 
+import {
+    sgFactory
+} from '../SGFactory.js';
 
 class ExplodePartParameter extends StructParameter {
     constructor(name) {
@@ -145,6 +148,8 @@ class ExplodePartsOperator extends Operator {
     };
 
 };
+
+sgFactory.registerClass('ExplodePartsOperator', ExplodePartsOperator);
 
 export {
     ExplodePartsOperator

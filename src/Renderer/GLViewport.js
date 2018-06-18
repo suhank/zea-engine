@@ -464,12 +464,14 @@ class GLViewport extends BaseViewport {
                 this.__manipMode = 'highlighting';
                 break;
             case 'geom-manipulation':
-                this.__mouseDownGeom.onMouseUp(event, {
-                    mousePos: mouseUpPos,
-                    geomItem: this.__mouseDownGeom
-                });
-                this.mouseUpOnGeom.emit(this.__mouseDownGeom);
-                this.__mouseDownGeom = undefined;
+                if(this.__mouseDownGeom) {
+                    this.__mouseDownGeom.onMouseUp(event, {
+                        mousePos: mouseUpPos,
+                        geomItem: this.__mouseDownGeom
+                    });
+                    this.mouseUpOnGeom.emit(this.__mouseDownGeom);
+                    this.__mouseDownGeom = undefined;
+                }
                 this.renderGeomDataFbo();
                 this.__manipMode = 'highlighting';
                 break;
@@ -621,7 +623,7 @@ class GLViewport extends BaseViewport {
                         intersectionData.dragging = true;
                         intersectionData.geomItem.onMouseMove(event, intersectionData);
                         this.mouseMoveOnGeom.emit(intersectionData.geomItem);
-                    } else {
+                    } else if(this.__mouseDownGeom) {
                         let mouseRay = this.calcRayFromScreenPos(mousePos);
                         this.__mouseDownGeom.onMouseMove(event, {
                             mousePos,

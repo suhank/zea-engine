@@ -11,6 +11,9 @@ import {
 import {
     loadTextfile
 } from './Utils.js';
+import {
+    sgFactory
+} from './SGFactory.js';
 
 
 class AssetItem extends TreeItem {
@@ -104,6 +107,11 @@ class AssetItem extends TreeItem {
 
         if(j.components) {
             for(let cj of j.components) {
+                const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
+                if (component) {
+                    component.fromJSON(cj, context);
+                    this.addComponent(component);
+                }
             }
         }
     }

@@ -248,7 +248,7 @@ class GLVisualiveRenderer extends GLRenderer {
             // case ' ':
             //     break;
             default:
-                super.onKeyPressed(key);
+                super.onKeyPressed(key, event);
         }
     }
 

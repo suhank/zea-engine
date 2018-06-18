@@ -9,7 +9,8 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    ParamFlags
+    ParamFlags,
+    ValueSetMode
 } from './Parameters';
 import {
     ItemFlags,
@@ -57,8 +58,8 @@ class TreeItem extends BaseItem {
             else
                 return globalXfo;
         }
-        this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            if(changeType == 0){
+        this.__globalXfoParam.valueChanged.connect((mode)=>{
+            if(mode == ValueSetMode.USER_SETVALUE){
                 // Note: both global and local cannot be dirty at the same time
                 // because we need one clean to compute the other. If the global
                 // Xfo is explicitly set, then it is now clean, so we can make local
@@ -69,7 +70,7 @@ class TreeItem extends BaseItem {
         });
 
 
-        this.__visibleParam.valueChanged.connect((changeType)=>{
+        this.__visibleParam.valueChanged.connect((mode)=>{
             const visibile = this.getVisible();
             for (let childItem of this.__childItems)
                 childItem.setInheritedVisiblity(visibile);
