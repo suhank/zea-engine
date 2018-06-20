@@ -71,7 +71,7 @@ class BaseViewport {
     setBackground(background) {
         let gl = this.__renderer.gl;
         if (background instanceof BaseImage){
-            if (background.format === "FLOAT"){
+            if (background.type === 'FLOAT'){
                 this.__backgroundTexture = background;
                 this.__backgroundGLTexture = new GLHDRImage(gl, background);
             }
@@ -127,14 +127,14 @@ class BaseViewport {
         return this.__fbo;
     }
 
-    createOffscreenFbo(channels='RGB') {
+    createOffscreenFbo(format='RGB') {
         let targetWidth = this.__width;
         let targetHeight = this.__height;
 
         let gl = this.__renderer.gl;
         this.__fwBuffer = new GLTexture2D(gl, {
-            format: 'FLOAT',
-            channels,
+            type: 'FLOAT',
+            format,
             filter: 'NEAREST',
             width: targetWidth,
             height: targetHeight

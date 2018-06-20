@@ -134,11 +134,11 @@ import './Shaders/GLSL/ImageAtlas.js';
 
 
 class ImageAtlas extends GLTexture2D {
-    constructor(gl, name, channels = 'RGBA', format = 'FLOAT', clearColor = [0, 0, 0, 0]) {
+    constructor(gl, name, format = 'RGBA', type = 'FLOAT', clearColor = [0, 0, 0, 0]) {
         super(gl);
         this.__name = name;
-        this.__channels = channels;
         this.__format = format;
+        this.__type = type;
         this.__clearColor = clearColor;
         this.__subImages = [];
         this.__layoutNeedsRegeneration = false;
@@ -213,8 +213,8 @@ class ImageAtlas extends GLTexture2D {
         this.configure({
             width,
             height,
-            channels: (this.__format == 'FLOAT' && this.__channels == 'RGB') ? 'RGBA' : this.__channels,
-            format: this.__format,
+            format: (this.__format == 'FLOAT' && this.__format == 'RGB') ? 'RGBA' : this.__format,
+            type: this.__type,
             filter: 'LINEAR',
         });
 
@@ -255,8 +255,8 @@ class ImageAtlas extends GLTexture2D {
             }
             if (!this.__atlasLayoutTexture) {
                 this.__atlasLayoutTexture = new GLTexture2D(gl, {
-                    channels: 'RGBA',
-                    format: 'FLOAT',
+                    format: 'RGBA',
+                    type: 'FLOAT',
                     filter: 'NEAREST',
                     wrap: 'CLAMP_TO_EDGE',
                     mipMapped: false,

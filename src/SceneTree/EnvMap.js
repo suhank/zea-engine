@@ -87,19 +87,15 @@ class EnvMap extends BaseImage {
     }
 
     __loadVLENV(url, resourcePath) {
-        this.format = 'FLOAT';
+        this.type = 'FLOAT';
 
         resourceLoader.loadResource(resourcePath, (entries) => {
-            let ldr, cdm, samples;
-            for (let name in entries) {
-                if (name.endsWith('.jpg'))
-                    ldr = entries[name];
-                else if (name.endsWith('.bin'))
-                    cdm = entries[name];
-                else if (name.endsWith('.json'))
-                    samples = entries[name];
-            }
+            const ldr = entries.ldr;
+            const cdm = entries.cdm;
+            const samples = entries.samples;
 
+            this.__samples = JSON.parse((new TextDecoder("utf-8")).decode(samples));
+            
             /////////////////////////////////
             // Parse the data.
             const blob = new Blob([ldr.buffer]);
@@ -121,7 +117,6 @@ class EnvMap extends BaseImage {
             }
             ldrPic.src = URL.createObjectURL(blob);
 
-            this.__samples = JSON.parse((new TextDecoder("utf-8")).decode(samples));
         });
     }
 

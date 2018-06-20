@@ -19,8 +19,8 @@ class BaseImage extends BaseItem {
         super();
         this.width = 0;
         this.height = 0;
-        this.channels = 'RGB';
-        this.format = 'UNSIGNED_BYTE';
+        this.format = 'RGB';
+        this.type = 'UNSIGNED_BYTE';
         this.filter = 'filter' in params ? params['filter'] : "LINEAR";
         this.wrap = 'wrap' in params ? params['wrap'] : "CLAMP_TO_EDGE";
         this.flipY = 'flipY' in params ? params['flipY'] : true;
@@ -73,8 +73,8 @@ class BaseImage extends BaseItem {
 
     getParams() {
         return {
+            type: this.type,
             format: this.format,
-            channels: this.channels,
             width: this.width,
             height: this.height,
             wrap: this.wrap,

@@ -99,8 +99,8 @@ class GLAnalyticsPass {
         this.numDrawItems = dataArray.length / 8;
         let size = Math.sqrt(dataArray.length / 4);
         this.analyticsTexture = new GLTexture2D(gl, {
-            channels: 'RGBA',
-            format: 'FLOAT',
+            format: 'RGBA',
+            type: 'FLOAT',
             width: size,
             height: size,
             filter: 'NEAREST',

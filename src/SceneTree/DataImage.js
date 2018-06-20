@@ -17,8 +17,8 @@ class DataImage extends BaseImage {
         super();
 
         this.__name = name;
-        this.channels = 'RGBA';
-        this.format = 'UNSIGNED_BYTE';
+        this.format = 'RGBA';
+        this.type = 'UNSIGNED_BYTE';
         this.__loaded = false;
 
         // this.__data = new Uint8Array(4);

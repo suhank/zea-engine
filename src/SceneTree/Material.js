@@ -196,7 +196,7 @@ class Material extends BaseItem {
         if (opacity && (opacity.getValue() < 0.99 || opacity.getImage()))
             return true;
         let baseColor = this.getParameter('BaseColor');
-        if (baseColor && baseColor.getImage() && baseColor.getImage().channels == 'RGBA')
+        if (baseColor && baseColor.getImage() && baseColor.getImage().format == 'RGBA')
             return true;
         return false;
     }

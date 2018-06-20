@@ -15,8 +15,8 @@ import {
 class HDRImageMixer extends BaseImage {
     constructor(name, stream = true) {
         super({
-            format: 'FLOAT',
-            channels: 'RGB',
+            type: 'FLOAT',
+            format: 'RGB',
             filter: SystemDesc.isMobileDevice ? 'NEAREST' : 'LINEAR'
         });
 

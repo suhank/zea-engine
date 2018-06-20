@@ -106,11 +106,11 @@ class FileImage extends BaseImage {
 
     __loadLDRImage(url, resourcePath, ext) {
         if (ext == '.jpg') {
-            this.channels = 'RGB';
+            this.format = 'RGB';
         } else if (ext == '.png') {
-            this.channels = 'RGBA';
+            this.format = 'RGBA';
         }
-        this.format = 'UNSIGNED_BYTE';
+        this.type = 'UNSIGNED_BYTE';
 
         const loaded = () => {
             this.width = this.__domElement.width;
@@ -166,8 +166,8 @@ class FileImage extends BaseImage {
     }
 
     __loadLDRVideo(url, resourcePath) {
-        this.channels = 'RGB';
-        this.format = 'UNSIGNED_BYTE';
+        this.format = 'RGB';
+        this.type = 'UNSIGNED_BYTE';
         resourceLoader.addWork(resourcePath, 1);
 
         this.__addSpatializationParams();
@@ -270,7 +270,7 @@ class FileImage extends BaseImage {
     // }
 
     __loadVLH(url, resourcePath) {
-        this.format = 'FLOAT';
+        this.type = 'FLOAT';
 
         resourceLoader.loadResource(resourcePath, (entries) => {
             let ldr, cdm;
@@ -307,8 +307,8 @@ class FileImage extends BaseImage {
 
     __loadGIF(url, resourcePath) {
 
-        this.channels = 'RGBA';
-        this.format = 'UNSIGNED_BYTE';
+        this.format = 'RGBA';
+        this.type = 'UNSIGNED_BYTE';
         this.__streamAtlas = true;
 
         // this.__streamAtlasDesc = new Vec4();

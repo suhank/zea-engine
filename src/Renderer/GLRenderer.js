@@ -479,8 +479,8 @@ class GLRenderer {
         // there is no texture bound to the unit 0
         // Bind a default texture to unit 0 simply to avoid these warnings.
         this.__texture0 = new GLTexture2D(this.__gl, {
-            channels: 'RGB',
-            format: 'UNSIGNED_BYTE',
+            format: 'RGB',
+            type: 'UNSIGNED_BYTE',
             width: 1,
             height: 1,
             filter: 'NEAREST',

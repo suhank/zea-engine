@@ -110,8 +110,8 @@ class VRToolHoldObjects extends VRTool {
     createGeomDataFbo() {
         let gl = this.__vrStage.getRenderer().gl;
         this.__geomDataBuffer = new GLTexture2D(gl, {
-            format: 'FLOAT',
-            channels: 'RGBA',
+            type: 'FLOAT',
+            format: 'RGBA',
             filter: 'NEAREST',
             width: 1,
             height: 1,

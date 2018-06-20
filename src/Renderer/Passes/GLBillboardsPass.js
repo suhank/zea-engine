@@ -185,8 +185,8 @@ class GLBillboardsPass extends GLPass {
 
             if (!this.__drawItemsTexture) {
                 this.__drawItemsTexture = new GLTexture2D(gl, {
-                    channels: 'RGBA',
-                    format: 'FLOAT',
+                    format: 'RGBA',
+                    type: 'FLOAT',
                     width: size,
                     height: size,
                     filter: 'NEAREST',
@@ -235,14 +235,14 @@ class GLBillboardsPass extends GLPass {
         // console.log("xoffset:" + xoffset + " yoffset:" + yoffset +" width:" + width + " dataArray:" + dataArray.length);
         // gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl.RGBA, gl.FLOAT, dataArray);
 
+        const type = this.__drawItemsTexture.getType();
         const format = this.__drawItemsTexture.getFormat();
-        const channels = this.__drawItemsTexture.getChannels();
 
-        if (format == 'FLOAT') {
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], dataArray);
+        if (type == 'FLOAT') {
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], dataArray);
         } else {
             const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
-            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[channels], gl[format], unit16s);
+            gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, gl[format], gl[type], unit16s);
         }
 
     }

@@ -50,8 +50,8 @@ class GLLDRAlphaImage extends GLTexture2D {
         if(!this.__fbo){
 
             this.configure({
-                channels: 'RGBA',
-                format: 'UNSIGNED_BYTE',
+                format: 'RGBA',
+                type: 'UNSIGNED_BYTE',
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'LINEAR',
@@ -61,8 +61,8 @@ class GLLDRAlphaImage extends GLTexture2D {
             this.__fbo.setClearColor([0,0,0,0]);
             
             this.__srcLDRTex = new GLTexture2D(gl, {
-                channels: 'RGB',
-                format: 'UNSIGNED_BYTE',
+                format: 'RGB',
+                type: 'UNSIGNED_BYTE',
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'NEAREST',
@@ -71,8 +71,8 @@ class GLLDRAlphaImage extends GLTexture2D {
                 data: ldr
             });
             this.__srcAlphaTex = new GLTexture2D(gl, {
-                channels: 'RGB',
-                format: 'UNSIGNED_BYTE',
+                format: 'RGB',
+                type: 'UNSIGNED_BYTE',
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'NEAREST',

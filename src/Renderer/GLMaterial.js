@@ -144,7 +144,7 @@ class GLMaterial extends BaseItem {
             const genGLTex = () => {
                 let gltexture = texture.getMetadata('gltexture');
                 if(!gltexture) {
-                    if (texture.format === "FLOAT"){
+                    if (texture.type === 'FLOAT'){
                         gltexture = new GLHDRImage(this.__gl, texture);
                     }
                     else if (texture.isStreamAtlas()){

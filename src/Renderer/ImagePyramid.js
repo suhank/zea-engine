@@ -126,8 +126,8 @@ class ImagePyramid extends ImageAtlas {
             // Create a target texture for this level of the pyramid.
             // and then render to it using the base level as a source image.
             let level = new GLTexture2D(gl, {
-                channels: this.__srcGLTex.getChannels(),
                 format: this.__srcGLTex.getFormat(),
+                type: this.__srcGLTex.getType(),
                 width: size * aspectRatio,
                 height: size,
                 filter: 'LINEAR',

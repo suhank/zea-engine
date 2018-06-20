@@ -27,8 +27,8 @@ class GLSelectedGeomsPass extends GLPass {
         this.setExplicitShader(glshader);
 
         this.__geomDataBuffer = new GLTexture2D(gl, {
-            format: 'FLOAT',
-            channels: 'RGBA',
+            type: 'FLOAT',
+            format: 'RGBA',
             filter: 'NEAREST',
             width: renderer.width,
             height: renderer.height,

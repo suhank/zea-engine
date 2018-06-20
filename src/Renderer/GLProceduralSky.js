@@ -249,8 +249,8 @@ class GLProceduralSky extends GLProbe {
         this.__backgroundFocus = 0.0;
 
         this.__srcGLTex = new GLTexture2D(gl, {
-            channels: 'RGBA',
-            format: 'FLOAT',
+            format: 'RGBA',
+            type: 'FLOAT',
             filter: 'LINEAR',
             wrap: 'CLAMP_TO_EDGE',
             width: 2048,

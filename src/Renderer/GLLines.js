@@ -58,8 +58,8 @@ class GLLines extends GLGeom {
                     dataArray[(i * 4) + 3] = this.__geom.lineThickness;
             }
             this.__positionsTexture = new GLTexture2D(gl, {
-                channels: 'RGBA',
-                format: 'FLOAT',
+                format: 'RGBA',
+                type: 'FLOAT',
                 width: positions.length,
                 /*each pixel has 4 floats*/
                 height: 1,

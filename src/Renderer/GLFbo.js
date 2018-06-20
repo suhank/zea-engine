@@ -78,13 +78,13 @@ class GLFbo {
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
         if(gl.name == 'webgl2'){
-            if (this.__colorTexture && this.__colorTexture.getFormat() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
+            if (this.__colorTexture && this.__colorTexture.getType() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
                 if (!gl.__ext_float_linear)
                     throw ("Unable to use filtering on floating point textures");
             }
         }
         else {
-            if (this.__colorTexture.getFormat() == 'FLOAT') {
+            if (this.__colorTexture.getType() == 'FLOAT') {
                 if(gl.__ext_float){
                     if (this.__colorTexture.getFilter() == 'LINEAR') {
                         if (!gl.__ext_float_linear)

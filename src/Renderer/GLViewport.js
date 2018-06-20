@@ -234,16 +234,16 @@ class GLViewport extends BaseViewport {
         this.__floatGeomBuffer = floatGeomBuffer;
         if (this.__floatGeomBuffer) {
             this.__geomDataBuffer = new GLTexture2D(gl, {
-                format: 'FLOAT',
-                channels: 'RGBA',
+                type: 'FLOAT',
+                format: 'RGBA',
                 filter: 'NEAREST',
                 width: this.__width <= 1 ? 1 : this.__width,
                 height: this.__height <= 1 ? 1 : this.__height,
             });
         } else {
             this.__geomDataBuffer = new GLTexture2D(gl, {
-                format: 'UNSIGNED_BYTE',
-                channels: 'RGBA',
+                type: 'UNSIGNED_BYTE',
+                format: 'RGBA',
                 filter: 'NEAREST',
                 width: this.__width <= 1 ? 1 : this.__width,
                 height: this.__height <= 1 ? 1 : this.__height,

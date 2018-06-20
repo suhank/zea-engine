@@ -52,8 +52,8 @@ class GLProbe extends ImageAtlas {
                 dataArray[offset + 1] = Xi[1];
             }
             gl['Hammersley' + numSamples] = new GLTexture2D(gl, {
-                channels: 'RGB',
-                format: 'FLOAT',
+                format: 'RGB',
+                type: 'FLOAT',
                 filter: 'NEAREST',
                 wrap: 'CLAMP_TO_EDGE',
                 width: numSamples,
@@ -88,8 +88,8 @@ class GLProbe extends ImageAtlas {
             let levels = 6; //this.__imagePyramid.numSubImages();
             for (let i = 0; i < levels; i++) {
                 let level = new GLTexture2D(gl, {
-                    channels: 'RGBA',
-                    format: 'FLOAT',
+                    format: 'RGBA',
+                    type: 'FLOAT',
                     filter: 'LINEAR',
                     wrap: 'CLAMP_TO_EDGE',
                     width: currRez[0],

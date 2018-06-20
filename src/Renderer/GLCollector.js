@@ -561,8 +561,8 @@ class GLCollector {
 
         if (!this.__drawItemsTexture) {
             this.__drawItemsTexture = new GLTexture2D(gl, {
-                channels: 'RGBA',
-                format: 'FLOAT',
+                format: 'RGBA',
+                type: 'FLOAT',
                 width: size,
                 height: size,
                 filter: 'NEAREST',
@@ -575,8 +575,8 @@ class GLCollector {
         }
 
         gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex);
+        const typeId = this.__drawItemsTexture.getTypeID();
         const formatId = this.__drawItemsTexture.getFormatID();
-        const channelsId = this.__drawItemsTexture.getChannelsID();
 
         for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
             const indexStart = this.__dirtyItemIndices[i];
@@ -610,11 +610,11 @@ class GLCollector {
                 this.__populateTransformDataArray(gldrawItem, j - indexStart, dataArray);
             }
 
-            if (formatId == gl.FLOAT) {
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channelsId, formatId, dataArray);
+            if (typeId == gl.FLOAT) {
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, formatId, typeId, dataArray);
             } else {
                 const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray);
-                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, channelsId, formatId, unit16s);
+                gl.texSubImage2D(gl.TEXTURE_2D, 0, xoffset, yoffset, width, height, formatId, typeId, unit16s);
             }
 
             i += uploadCount - 1;

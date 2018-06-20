@@ -33,8 +33,8 @@ class GLDepthPass extends GLPass {
         );
 
         let colorTexture = new GLTexture2D(gl, {
-            format: 'UNSIGNED_BYTE',
-            channels: 'RGB',
+            type: 'UNSIGNED_BYTE',
+            format: 'RGB',
             width: textureSize,
             height: textureSize
         });

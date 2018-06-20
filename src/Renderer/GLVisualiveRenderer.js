@@ -122,7 +122,7 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        } else if (env.format === "FLOAT") {
+        } else if (env.type === 'FLOAT') {
             this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
             this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
         } else {
@@ -149,7 +149,7 @@ class GLVisualiveRenderer extends GLRenderer {
             let backgroundMap = scene.getBackgroundMap();
             this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
             if(!this.__glBackgroundMap ) {
-                if (backgroundMap.format === "FLOAT") {
+                if (backgroundMap.type === 'FLOAT') {
                     this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
                 } else {
                     this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);

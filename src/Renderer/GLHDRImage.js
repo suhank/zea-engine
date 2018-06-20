@@ -49,8 +49,8 @@ class GLHDRImage extends GLTexture2D {
             // Note: iOS devices create FLOAT Fbox.
             // If we want better quality, we could unpack the texture in JavaScript. 
             this.configure({
-                channels: 'RGBA',
-                format: 'FLOAT',
+                format: 'RGBA',
+                type: 'FLOAT',
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'LINEAR',
@@ -60,8 +60,8 @@ class GLHDRImage extends GLTexture2D {
             this.__fbo.setClearColor([0, 0, 0, 0]);
 
             this.__srcLDRTex = new GLTexture2D(gl, {
-                channels: 'RGB',
-                format: 'UNSIGNED_BYTE',
+                format: 'RGB',
+                type: 'UNSIGNED_BYTE',
                 width: ldr.width,
                 height: ldr.height,
                 filter: 'NEAREST',
@@ -69,16 +69,30 @@ class GLHDRImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE',
                 data: ldr
             });
+            // this.__srcCDMTex = new GLTexture2D(gl, {
+            //     format: 'ALPHA',
+            //     type: 'UNSIGNED_BYTE',
+            //     width: ldr.width /*8*/ ,
+            //     height: ldr.height /*8*/ ,
+            //     filter: 'NEAREST',
+            //     mipMapped: false,
+            //     wrap: 'CLAMP_TO_EDGE'/*,
+            //     data: cdm*/
+            // });
+
             this.__srcCDMTex = new GLTexture2D(gl, {
-                channels: 'ALPHA',
-                format: 'UNSIGNED_BYTE',
+                format: 'RED',
+                type: 'UNSIGNED_BYTE',
+                internalFormat: 'R16F',
                 width: ldr.width /*8*/ ,
                 height: ldr.height /*8*/ ,
                 filter: 'NEAREST',
                 mipMapped: false,
-                wrap: 'CLAMP_TO_EDGE',
-                data: cdm
+                wrap: 'CLAMP_TO_EDGE'/*,
+                data: cdm*/
             });
+
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, ldr.width, ldr.height, 0, gl.RED, gl.UNSIGNED_BYTE, cdm, 0);
             this.__unpackHDRShader = new UnpackHDRShader(gl);
             let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);

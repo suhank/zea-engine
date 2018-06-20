@@ -109,8 +109,8 @@ class WebcamImage2D extends BaseImage {
 
     getParams() {
         return {
+            type: this.type,
             format: this.format,
-            channels: this.channels,
             width: this.width,
             height: this.height,
             data: this.__data,

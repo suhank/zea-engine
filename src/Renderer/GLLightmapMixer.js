@@ -28,8 +28,8 @@ class GLLightmapMixer extends GLTexture2D {
         this.__lightmapMixer = lightmapMixer;
 
         this.configure({
-            channels: 'RGBA',
-            format: 'FLOAT',
+            format: 'RGBA',
+            type: 'FLOAT',
             filter: 'LINEAR',
             wrap: 'CLAMP_TO_EDGE',
             width: this.__lightmapMixer.width,
@@ -53,7 +53,7 @@ class GLLightmapMixer extends GLTexture2D {
             let image = this.__lightmapMixer.getSubImage(index);
             let gltexture = image.getMetadata('gltexture');
             if(!gltexture) {
-                if (image.format === "FLOAT") {
+                if (image.type === 'FLOAT') {
                     gltexture = new GLHDRImage(gl, image);
                 } else {
                     gltexture = new GLTexture2D(gl, image);
