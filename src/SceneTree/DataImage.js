@@ -7,12 +7,12 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    Image2D
-} from './Image2D.js';
+    Image
+} from './Image.js';
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
-class DataImage2D extends Image2D {
+class DataImage extends Image {
     constructor(name) {
         super();
 
@@ -53,9 +53,10 @@ class DataImage2D extends Image2D {
     }
 };
 
-sgFactory.registerClass('DataImage2D', DataImage2D);
+sgFactory.registerClass('DataImage2D', DataImage);
+sgFactory.registerClass('DataImage', DataImage);
 
 
 export {
-    DataImage2D
+    DataImage
 };

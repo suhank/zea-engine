@@ -2,7 +2,7 @@ import {
     Color
 } from '../../Math';
 import {
-    FileImage2D,
+    FileImage,
     sgFactory
 } from '../../SceneTree';
 import {
@@ -314,7 +314,7 @@ void main(void) {
         paramDescs.push({ name: 'glossReflectance', defaultValue: 0.03 });
 
 
-        let flakesNormal = new FileImage2D('VisualiveEngine/FlakesNormalMap.png', this.__gl.renderer.getScene().getResourceLoader());
+        let flakesNormal = new FileImage('VisualiveEngine/FlakesNormalMap.png', this.__gl.renderer.getScene().getResourceLoader());
         flakesNormal.wrap = 'REPEAT';
         flakesNormal.mipMapped = true;
         paramDescs.push({ name: 'flakesNormal', defaultValue: flakesNormal });

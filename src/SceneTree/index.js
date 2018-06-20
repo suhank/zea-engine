@@ -28,10 +28,10 @@ export * from './Group.js';
 
 export * from './GeomLibrary.js';
 export * from './Material.js';
-export * from './Image2D.js';
-export * from './DataImage2D.js';
+export * from './Image.js';
+export * from './DataImage.js';
 export * from './Label.js';
-export * from './FileImage2D.js';
+export * from './FileImage.js';
 export * from './WebcamImage2D.js';
 export * from './HDRImageMixer.js';
 

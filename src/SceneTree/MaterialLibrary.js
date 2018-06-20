@@ -11,8 +11,8 @@ import {
     Material
 } from './Material.js';
 import {
-    FileImage2D
-} from './FileImage2D.js';
+    FileImage
+} from './FileImage.js';
 
 
 class MaterialLibrary {
@@ -115,7 +115,7 @@ class MaterialLibrary {
     fromJSON(j, context={}) {
         context.lod = this.lod;
         for (let name in j["textures"]) {
-            let image = new FileImage2D(name);
+            let image = new FileImage(name);
             this.__textures[name] = texture;
         }
         for (let name in j.materials) {

@@ -18,7 +18,7 @@ import {
     GeomItem,
     TreeItem,
     Material,
-    DataImage2D
+    DataImage
 } from '../../SceneTree';
 import {
     GLMesh
@@ -76,7 +76,7 @@ class VRController extends Gizmo {
             }
 
             // let uimat = new Material('uimat', 'FlatSurfaceShader');
-            // this.__uiimage = new DataImage2D();
+            // this.__uiimage = new DataImage();
             // uimat.getParameter('baseColor').setValue(this.__uiimage);
 
             // this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);

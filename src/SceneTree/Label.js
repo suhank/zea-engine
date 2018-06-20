@@ -16,8 +16,8 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    DataImage2D
-} from './DataImage2D.js';
+    DataImage
+} from './DataImage.js';
 
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
@@ -83,7 +83,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
     }
 }
 
-class Label  extends DataImage2D {
+class Label  extends DataImage {
     constructor(text='') {
         super(text);
 

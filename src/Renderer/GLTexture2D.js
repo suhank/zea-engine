@@ -2,7 +2,7 @@ import {
     Signal
 } from '../Utilities';
 import {
-    Image2D,
+    Image,
     RefCounted
 } from '../SceneTree';
 
@@ -29,7 +29,7 @@ class GLTexture2D extends RefCounted {
             this.bufferData(data, width, height);
         }
         if (params != undefined) {
-            if (params instanceof Image2D) {
+            if (params instanceof Image) {
                 this.__texture = params;
                 this.__texture.setMetadata('gltexture', this);
                 if (this.__texture.isLoaded()) {

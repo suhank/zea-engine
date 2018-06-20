@@ -13,11 +13,11 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    Image2D
-} from './Image2D.js';
+    Image
+} from './Image.js';
 import {
-    Image2D
-} from './Image2D.js';
+    Image
+} from './Image.js';
 
 import {
     GIF
@@ -39,7 +39,7 @@ const imageDataLibrary = {
 };
 
 
-class FileImage2D extends Image2D {
+class FileImage extends Image {
     constructor(resourcePath, params = {}) {
         super(params);
         
@@ -486,11 +486,10 @@ class FileImage2D extends Image2D {
     }
 };
 
-sgFactory.registerClass('FileImage2D', FileImage2D);
-sgFactory.registerClass('FileImage', FileImage2D);
+sgFactory.registerClass('FileImage2D', FileImage);
+sgFactory.registerClass('FileImage', FileImage);
 
 
 export {
-    FileImage2D
+    FileImage
 };
-//export default FileImage2D;

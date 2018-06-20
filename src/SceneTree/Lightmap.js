@@ -6,8 +6,8 @@ import {
     RefCounted
 } from './RefCounted.js';
 import {
-    FileImage2D
-} from './FileImage2D.js';
+    FileImage
+} from './FileImage.js';
 import {
     ResourceLoader
 } from './ResourceLoader.js';
@@ -17,7 +17,7 @@ class Lightmap extends RefCounted {
     constructor(resourceName, atlasSize, stream) {
         super();
         this.atlasSize = atlasSize;
-        this.image = new FileImage2D(resourceName, {stream});
+        this.image = new FileImage(resourceName, {stream});
         this.__stream = stream;
     }
 
@@ -66,7 +66,7 @@ class LightmapMixer extends RefCounted {
 
     loadResource(index, resourceName, weight = undefined, stream=false) {
         if (!this.__images[index]) {
-            this.__images[index] = new FileImage2D(resourceName, {stream});
+            this.__images[index] = new FileImage(resourceName, {stream});
             this.__weights[index] = weight ? weight : 1.0;
             this.lightmapAdded.emit(index);
         } else {

@@ -13,7 +13,7 @@ import {
 } from '../Utilities';
 import {
     BaseItem,
-    Image2D
+    Image
 } from '../SceneTree';
 import {
     bindParam
@@ -35,7 +35,7 @@ import {
 const bindParam = (gl, param, renderstate, gltextures = {}) => {
     const name = param.getName();
     // console.log("bindParam:" + name);
-    if (param.getValue() instanceof Image2D) {
+    if (param.getValue() instanceof Image) {
         const gltexture = gltextures[name];
         const unif = renderstate.unifs['_' + name + 'Tex'];
         if (gltexture && unif && gltexture.bindToUniform(renderstate, unif)) {
@@ -57,7 +57,7 @@ const bindParam = (gl, param, renderstate, gltextures = {}) => {
     }
 
     const value = param.getValue(false);
-    if (value instanceof Image2D)
+    if (value instanceof Image)
         return;
 
     switch (unif.type) {

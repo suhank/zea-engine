@@ -6,13 +6,13 @@ import {
     Signal
 } from '../Utilities';
 import {
-    FileImage2D
-} from './FileImage2D.js';
+    FileImage
+} from './FileImage.js';
 import {
-    Image2D
-} from './Image2D.js';
+    Image
+} from './Image.js';
 
-class HDRImageMixer extends Image2D {
+class HDRImageMixer extends Image {
     constructor(name, stream = true) {
         super({
             format: 'FLOAT',
@@ -52,7 +52,7 @@ class HDRImageMixer extends Image2D {
             }
         }, this);
         for (let fileUrl of urls) {
-            let subImage = new FileImage2D(fileUrl);
+            let subImage = new FileImage(fileUrl);
             subImage.loaded.connect(async.decAsyncCount);
             subImage.updated.connect(this.updated.emit);
             this.__subImages.push(subImage);

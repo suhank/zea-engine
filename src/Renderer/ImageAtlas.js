@@ -10,8 +10,8 @@ import {
 } from '../Utilities';
 
 import {
-    Image2D
-} from '../SceneTree/Image2D';
+    Image
+} from '../SceneTree/Image';
 import {
     shaderLibrary
 } from './ShaderLibrary';
@@ -155,7 +155,7 @@ class ImageAtlas extends GLTexture2D {
     }
 
     addSubImage(subImage) {
-        if (subImage instanceof Image2D) {
+        if (subImage instanceof Image) {
             this.__subImages.push(new GLTexture2D(this.__gl, subImage));
             if (!subImage.isLoaded()) {
                 this.__async.incAsyncCount();

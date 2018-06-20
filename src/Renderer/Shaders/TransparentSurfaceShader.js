@@ -3,7 +3,7 @@ import {
 } from '../../Math';
 import {
     sgFactory,
-    Image2D
+    Image
 } from '../../SceneTree';
 import {
     shaderLibrary

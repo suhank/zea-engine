@@ -115,7 +115,7 @@ class Scene {
     setEnvMapName(envMapName) {
         if(envMapName.endsWith('.vlh'))
             envMapName = envMapName.splice(0, envMapName.length = 4);
-        let envMap = new Visualive.FileImage2D(envMapName + this.__envmapLOD + ".vlh", resourceLoader);
+        let envMap = new Visualive.FileImage(envMapName + this.__envmapLOD + ".vlh", resourceLoader);
         this.setEnvMap(envMap);
     }
 
@@ -237,7 +237,7 @@ class Scene {
     fromJSON(json) {
 
         if(j.envMap) {
-          const envMap =  new Visualive.FileImage2D('envMap', resourceLoader);
+          const envMap =  new Visualive.FileImage('envMap', resourceLoader);
           envMap.fromJSON(j.envMap);
           this.setEnvMap(envMap);
         }

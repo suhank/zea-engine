@@ -3,7 +3,7 @@ import {
     Async
 } from '../Utilities';
 import {
-    Image2D
+    Image
 } from '../SceneTree';
 import {
     GLShader

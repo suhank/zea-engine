@@ -12,7 +12,7 @@ import {
     Signal
 } from '../Utilities';
 import {
-    Image2D,
+    Image,
     Camera
 } from '../SceneTree';
 import {

@@ -84,7 +84,7 @@ class ObjAsset extends AssetItem {
 
         let parseMap = (elements)=>{
             let fileFolder = getFileFolder(filePath);
-            return new FileImage2D(elements[0], fileFolder + elements[0]);
+            return new FileImage(elements[0], fileFolder + elements[0]);
         }
 
         for (let i = 0; i < lines.length; i++) {
