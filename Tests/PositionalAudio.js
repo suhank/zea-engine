@@ -6,9 +6,9 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
 
 
     const standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
-    standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    standardMaterial.addParameter('roughness', 1.0);
-    standardMaterial.addParameter('metallic', 0.0);
+    standardMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    standardMaterial.addParameter('Roughness', 1.0);
+    standardMaterial.addParameter('Metallic', 0.0);
 
     const addMeshShape = (name, shape, pos, url)=>{
         const geomItem = new Visualive.GeomItem(name+'Item', shape, standardMaterial);

@@ -40,7 +40,7 @@ void main(void) {
 precision highp float;
 
 uniform color _color;
-uniform float _opacity;
+uniform float _Opacity;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -50,7 +50,7 @@ void main(void) {
     vec4 fragColor;
 #endif
     fragColor = _color;
-    fragColor.a *= _opacity;
+    fragColor.a *= _Opacity;
     
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;
@@ -63,7 +63,7 @@ void main(void) {
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
         paramDescs.push({ name: 'color', defaultValue: new Color(1.0, 1.0, 0.5) })
-        paramDescs.push({ name: 'opacity', defaultValue: 1.0 })
+        paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
         return paramDescs;
     }
 

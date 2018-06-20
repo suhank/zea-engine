@@ -44,7 +44,7 @@ class VRController extends Gizmo {
         // Z = Towards handle base.
 
         this.__mat = new Material('mat1', 'FlatSurfaceShader');
-        this.__mat.getParameter('baseColor').setValue(new Color(.2, .2, .2, 1));
+        this.__mat.getParameter('BaseColor').setValue(new Color(.2, .2, .2, 1));
 
 
         if(!this.__isDaydramController) {
@@ -76,8 +76,9 @@ class VRController extends Gizmo {
             }
 
             // let uimat = new Material('uimat', 'FlatSurfaceShader');
+
             // this.__uiimage = new DataImage();
-            // uimat.getParameter('baseColor').setValue(this.__uiimage);
+            // uimat.getParameter('BaseColor').setValue(this.__uiimage);
 
             // this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
             // this.__uiGeomItem.getLocalXfo().tr.set(0.0, -0.07, 0.05); 
@@ -91,7 +92,7 @@ class VRController extends Gizmo {
             // this.__treeItem.addChild(this.__uiGeomItem);
 
             // let pointermat = new Material('pointermat', 'FlatSurfaceShader');
-            // pointermat.getParameter('baseColor').setValue(new Color(1.2, 0, 0));
+            // pointermat.getParameter('BaseColor').setValue(new Color(1.2, 0, 0));
 
             // let line = new Lines();
             // line.setNumVertices(2);
@@ -143,7 +144,7 @@ class VRController extends Gizmo {
     }
 
     setTipColor(val) {
-        this.__mat.getParameter('baseColor').setValue(val);
+        this.__mat.getParameter('BaseColor').setValue(val);
     }
 
     update(gamepad) {

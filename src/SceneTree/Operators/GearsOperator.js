@@ -14,6 +14,9 @@ import {
     ListParameter,
     KinematicGroupParameter
 } from '../Parameters';
+import {
+    sgFactory
+} from '../SGFactory.js';
 
 
 class GearParameter extends StructParameter {
@@ -115,6 +118,9 @@ class GearsOperator extends Operator {
         super.destroy();
     };
 };
+
+
+sgFactory.registerClass('GearsOperator', GearsOperator);
 
 export {
     GearsOperator

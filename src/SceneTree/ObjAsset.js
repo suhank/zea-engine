@@ -101,20 +101,20 @@ class ObjAsset extends AssetItem {
                     this.__materials.addMaterial(material);
                     break;
                 case 'Kd':
-                    material.addParameter('baseColor', parseColor(elements));
+                    material.addParameter('BaseColor', parseColor(elements));
                     break;
                 case 'map_Kd':
-                    material.addParameter('baseColor', parseMap(elements));
+                    material.addParameter('BaseColor', parseMap(elements));
                     break;
                 case 'Ks':
                     let specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0;
                     material.roughness = 1.0 - specular;
-                    material.addParameter('roughness', 1.0 - specular);
-                    material.addParameter('reflectance', specular);
+                    material.addParameter('Roughness', 1.0 - specular);
+                    material.addParameter('Reflectance', specular);
                     break;
                 case 'map_Ks':
-                    material.addParameter('roughness', parseMap(elements /*flags=TEXTURE_INVERT*/ ));
-                    material.addParameter('reflectance', 0.2);
+                    material.addParameter('Roughness', parseMap(elements /*flags=TEXTURE_INVERT*/ ));
+                    material.addParameter('Reflectance', 0.2);
                     break;
                 case 'd':
                     material.addParameter('alpha',  parseFloat(elements[0]));
@@ -365,9 +365,9 @@ class ObjAsset extends AssetItem {
 
             let defaultShader = this.getParameter('defaultShader').getValue();
             let material = new Material(geomName + 'mat', defaultShader != "" ? defaultShader : 'StandardSurfaceShader');
-            material.addParameter('baseColor', Color.random(0.5));
-            material.addParameter('roughness', 0.2);
-            material.addParameter('reflectance', 0.2);
+            material.addParameter('BaseColor', Color.random(0.5));
+            material.addParameter('Roughness', 0.2);
+            material.addParameter('Reflectance', 0.2);
             this.__materials.addMaterial(material)
             geomItem.setMaterial(material);
         }

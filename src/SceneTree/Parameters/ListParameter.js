@@ -16,13 +16,26 @@ class ListParameter extends Parameter {
         this.elementRemoved = new Signal();
     }
 
+    __filter(item){
+        return true;
+    }
+
     getCount(){
         return this.__value.length;
+    }
+
+    getElement(index) {
+        return this.__value[index];
     }
 
     addElement(elem) {
         if(!elem)
             elem = new this.__dataType()
+        else {
+            if(!this.__filter(elem))
+                return;
+        }
+
         this.__value.push(elem)
         // this.setValue(this.__value);
         this.__flags |= ParamFlags.USER_EDITED;
@@ -41,6 +54,8 @@ class ListParameter extends Parameter {
     }
 
     insertElement(index, elem) {
+        if(!this.__filter(elem))
+            return;
         this.__value.splice(index, 0, elem);
         // this.setValue(this.__value);
         this.__flags |= ParamFlags.USER_EDITED;

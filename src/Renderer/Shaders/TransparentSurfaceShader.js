@@ -85,34 +85,34 @@ uniform mat4 cameraMatrix;
 uniform float planeDist;
 uniform float planeAngle;
 
-uniform color _baseColor;
-uniform float _opacity;
+uniform color _BaseColor;
+uniform float _Opacity;
 
 #ifdef ENABLE_SPECULAR
 <%include file="math/constants.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
-uniform float _roughness;
-uniform float _metallic;
-uniform float _reflectance;
+uniform float _Roughness;
+uniform float _Metallic;
+uniform float _Reflectance;
 #endif
 
 #ifdef __ENABLE_TEXTURES
-uniform sampler2D _baseColorTex;
-uniform bool _baseColorTexConnected;
+uniform sampler2D _BaseColorTex;
+uniform bool _BaseColorTexConnected;
 
-uniform sampler2D _opacityTex;
-uniform bool _opacityTexConnected;
+uniform sampler2D _OpacityTex;
+uniform bool _OpacityTexConnected;
 
-uniform sampler2D _roughnessTex;
-uniform bool _roughnessTexConnected;
+uniform sampler2D _RoughnessTex;
+uniform bool _RoughnessTexConnected;
 
-uniform sampler2D _reflectanceTex;
-uniform bool _reflectanceTexConnected;
+uniform sampler2D _ReflectanceTex;
+uniform bool _ReflectanceTexConnected;
 
-uniform sampler2D _normalTex;
-uniform bool _normalTexConnected;
-uniform float _normalScale;
+uniform sampler2D _NormalTex;
+uniform bool _NormalTexConnected;
+uniform float _NormalScale;
 
 
 #endif
@@ -125,25 +125,25 @@ void main(void) {
     MaterialParams material;
 
 #ifndef __ENABLE_TEXTURES
-    material.baseColor      = _baseColor.rgb;
-    float opacity           = _opacity;
+    material.baseColor      = _BaseColor.rgb;
+    float opacity           = _Opacity;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness      = _roughness;
-    material.metallic       = _metallic;
-    material.reflectance    = _reflectance;
+    material.roughness      = _Roughness;
+    material.metallic       = _Metallic;
+    material.reflectance    = _Reflectance;
 #endif
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord        = v_worldPos.xz * 0.2;
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
-    material.roughness      = getLuminanceParamValue(_roughness, _roughnessTex, _roughnessTexConnected, texCoord);
-    material.metallic       = getLuminanceParamValue(_metallic, _metallicTex, _metallicTexConnected, texCoord);
-    material.reflectance    = _reflectance;//getLuminanceParamValue(_reflectance, _reflectanceTex, _reflectanceTexConnected, texCoord);
+    material.baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord).rgb;
+    material.roughness      = getLuminanceParamValue(_Roughness, _RoughnessTex, _RoughnessTexConnected, texCoord);
+    material.metallic       = getLuminanceParamValue(_Metallic, _MetallicTex, _MetallicTexConnected, texCoord);
+    material.reflectance    = _Reflectance;//getLuminanceParamValue(_Reflectance, _ReflectanceTex, _ReflectanceTexConnected, texCoord);
 
-    float opacity           = getLuminanceParamValue(_opacity, _opacityTex, _opacityTexConnected, texCoords);
+    float opacity           = getLuminanceParamValue(_Opacity, _OpacityTex, _OpacityTexConnected, texCoords);
 #endif
 
 #ifndef ENABLE_SPECULAR
@@ -154,8 +154,8 @@ void main(void) {
     //vec3 surfacePos = -v_viewPos;
 
 #ifdef __ENABLE_TEXTURES
-    if(_normalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_normalTex, texCoord).rgb * 2.0 - 1.0);
+    if(_NormalTexConnected){
+        vec3 textureNormal_tangentspace = normalize(texture2D(_NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif
@@ -192,16 +192,16 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
-        paramDescs.push({ name: 'opacity', defaultValue: 1.0 });
-        paramDescs.push({ name: 'roughness', defaultValue: 0.85 });
-        paramDescs.push({ name: 'normal', defaultValue: new Color(0.0, 0.0, 0.0) });
-        paramDescs.push({ name: 'texCoordScale', defaultValue: 1.0, texturable: false });
+        paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
+        paramDescs.push({ name: 'Opacity', defaultValue: 1.0 });
+        paramDescs.push({ name: 'Roughness', defaultValue: 0.85 });
+        paramDescs.push({ name: 'Normal', defaultValue: new Color(0.0, 0.0, 0.0) });
+        paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
         // F0 = reflectance and is a physical property of materials
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
-        paramDescs.push({ name: 'reflectance', defaultValue: 0.0001 } );
+        paramDescs.push({ name: 'Reflectance', defaultValue: 0.0001 } );
         return paramDescs;
     }
 

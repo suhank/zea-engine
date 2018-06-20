@@ -131,7 +131,7 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 
-uniform color _baseColor;
+uniform color _BaseColor;
 uniform color _midColorTint;
 uniform float _midColorTintReflectance;
 
@@ -152,8 +152,8 @@ uniform float _glossReflectance;
 
 #ifdef ENABLE_TEXTURES
 
-uniform sampler2D _baseColorTex;
-uniform bool _baseColorTexConnected;
+uniform sampler2D _BaseColorTex;
+uniform bool _BaseColorTexConnected;
 
 #endif
 
@@ -207,10 +207,10 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = _baseColor.rgb;
+    material.baseColor      = _BaseColor.rgb;
 #else
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, texCoord).rgb;
+    material.baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord).rgb;
 #endif
 
 #ifdef ENABLE_SPECULAR
@@ -303,7 +303,7 @@ void main(void) {
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
 
-        paramDescs.push({ name: 'baseColor', defaultValue: new Color(1.0, 0.0, 0.0) });
+        paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 0.0, 0.0) });
         paramDescs.push({ name: 'baseMetallic', defaultValue: 0.0 });
         paramDescs.push({ name: 'baseRoughness', defaultValue: 0.35 });
         paramDescs.push({ name: 'baseReflectance', defaultValue: 0.03 });

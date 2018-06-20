@@ -153,7 +153,7 @@ class GLCollector {
             if (treeItem instanceof GeomItem) {
                 const material = treeItem.getMaterial();
                 if(material) {
-                    const baseColorParam = material.getParameter('baseColor');
+                    const baseColorParam = material.getParameter('BaseColor');
                     if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
                         const image = baseColorParam.getImage();
                         const audioSource = image.getDOMElement();

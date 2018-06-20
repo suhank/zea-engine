@@ -14,9 +14,9 @@
     for(let i=0; i<10; i++){
         for(let j=0; j<10; j++){
             const material = new Visualive.Material('surfaces', 'StandardSurfaceShader');
-            material.addParameter('baseColor', new Visualive.Color(0.6, 0.0, 0.0));
-            material.addParameter('roughness', i/9);
-            material.addParameter('metallic', j/9);
+            material.addParameter('BaseColor', new Visualive.Color(0.6, 0.0, 0.0));
+            material.addParameter('Roughness', i/9);
+            material.addParameter('Metallic', j/9);
             if(j < 6)
                 material.addParameter('reflectance', 0.02);
             else

@@ -21,6 +21,10 @@ import {
     NumberParameter
 } from '../Parameters/NumberParameter.js';
 
+import {
+    sgFactory
+} from '../SGFactory.js';
+
 class PistonParameter extends StructParameter {
     constructor() {
         super('Piston');
@@ -81,6 +85,7 @@ class PistonParameter extends StructParameter {
         const rodAngle = Math.asin(bigEndOffset / rodLength);
         const headOffset = Math.sqrt(rodLength * rodLength - bigEndOffset * bigEndOffset) + (Math.cos(camAngle) * camLength);
 
+        if(this.__rodParam.getCount() > 0)
         {
             const rodxfo = this.__rodParam.getInitialXfo().clone();
             const axisPos = rodxfo.tr.subtract(crankXfo.tr).dot(crankAxis);
@@ -94,6 +99,7 @@ class PistonParameter extends StructParameter {
             this.__rodParam.setXfo(rodxfo, ValueSetMode.OPERATOR_SETVALUE);
         }
 
+        if(this.__headParam.getCount() > 0)
         {
             const headxfo = this.__headParam.getInitialXfo().clone();
             headxfo.tr.addInPlace(this.__pistonAxis.scale(headOffset-this.__pistonOffset))
@@ -145,14 +151,12 @@ class PistonOperator extends Operator {
         });
 
         this.__crankParam = this.addParameter(new KinematicGroupParameter('Crank'));
-        this.__crankParam.valueChanged.connect(this.init.bind(this));
+        this.__crankParam.elementAdded.connect(this.init.bind(this));
+        this.__crankParam.elementRemoved.connect(this.init.bind(this));
         this.__outputs[0] = this.__crankParam;
         this.__crankAxisParam = this.addParameter(new Vec3Parameter('CrankAxis', new Vec3(1,0,0)));
         this.__crankAxisParam.valueChanged.connect(this.init.bind(this));
         this.__pistonsParam = this.addParameter(new ListParameter('Pistons', PistonParameter));
-        // this.__pistonsParam.valueChanged.connect((mode) => { 
-        //     if(mode == ValueSetMode.USER_SETVALUE) this.init.bind(this) 
-        // })
         this.__pistonsParam.elementAdded.connect((value, index) => {
             this.__outputs[index+1] = value;
             value.setCrankXfo(this.__baseCrankXfo)
@@ -182,7 +186,6 @@ class PistonOperator extends Operator {
     }
 
     evaluate() {
-
         if(this.__crankParam.getCount()==0)
             return;
 
@@ -195,6 +198,7 @@ class PistonOperator extends Operator {
         // crankXfo.ori = quat.multiply(crankXfo.ori);
         const crankXfo = new Xfo();
         crankXfo.ori.setFromAxisAndAngle(crankAxis, revolutions * Math.PI * 2.0);
+        // console.log("Ori:" + crankXfo.ori.toString())
         this.__crankParam.setXfo(crankXfo.multiply(this.__crankOffset), ValueSetMode.OPERATOR_SETVALUE);
 
 
@@ -225,6 +229,10 @@ class PistonOperator extends Operator {
         super.destroy();
     };
 };
+
+
+sgFactory.registerClass('PistonOperator', PistonOperator);
+
 
 export {
     PistonOperator

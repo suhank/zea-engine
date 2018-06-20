@@ -3,9 +3,9 @@ testingHarness.registerTest('Instancing', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
-    standardMaterial.addParameter('baseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    standardMaterial.addParameter('roughness', 1.0);
-    standardMaterial.addParameter('metallic', 0.0);
+    standardMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    standardMaterial.addParameter('Roughness', 1.0);
+    standardMaterial.addParameter('Metallic', 0.0);
 
     let addGeomItem = (shape, row, count, i)=>{
         const geomItem = new Visualive.GeomItem('Item'+row+'-'+i, shape, standardMaterial);

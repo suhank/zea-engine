@@ -32,6 +32,11 @@ class KinematicGroupParameter extends ListParameter {
         });
     }
 
+    __filter(item){
+        console.log(item.getPath())
+        return this.__value.indexOf(item) == -1;
+    }
+
 
     getInitialXfo(){
         if(this.__value.length > 0)

@@ -6,7 +6,7 @@ testingHarness.registerTest('Webcam', (domElement, resources)=> {
     let webcamimage = new Visualive.WebcamImage2D(640, 480, true);
 
     const material = new Visualive.Material('wecam', 'SimpleSurfaceShader');
-    material.addParameter('baseColor', webcamimage);
+    material.addParameter('BaseColor', webcamimage);
 
     const plane =new Visualive.Plane(2.0, 1.5);
 

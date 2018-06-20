@@ -77,7 +77,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
         console.log((i/16)*100 + '% :' +  count);
 
         const material = new Visualive.Material('material', 'SimpleSurfaceShader');
-        material.addParameter('baseColor', Visualive.Color.random());
+        material.addParameter('BaseColor', Visualive.Color.random());
 
         let treeItem = new Visualive.TreeItem('Tree'+i);
         treeItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i*5+((Math.random()-0.5) * 20), (Math.random()-0.5) * 10, (Math.random()-0.5) * 10)));

@@ -82,7 +82,7 @@ void main(void) {
 }
 `);
 
-        this.addParameter('baseColor', new Visualive.Color(1.0, 1.0, 0.5));
+        this.addParameter('BaseColor', new Visualive.Color(1.0, 1.0, 0.5));
         this.nonSelectable = true;
         this.finalize();
     }
@@ -114,7 +114,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     let image2 =  new Visualive.FileImage(giffPath);
 
     let atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
-    atlasmaterial.addParameter('baseColor', image);
+    atlasmaterial.addParameter('BaseColor', image);
 
     let geomItem1 = new Visualive.GeomItem('geomItem1', new Visualive.Plane(5.0, 3.0), atlasmaterial);
     geomItem1.getLocalXfo().tr.set(-3, 2, 0);
@@ -124,7 +124,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
 
     let gifmaterial = new Visualive.Material('mat', 'GIFSurfaceShader');
-    gifmaterial.addParameter('baseColor', image);
+    gifmaterial.addParameter('BaseColor', image);
 
     let geomItem2 = new Visualive.GeomItem('geomItem2', new Visualive.Plane(5.0, 3.0), gifmaterial);
     geomItem2.getLocalXfo().tr.set(3, 3, 0);
@@ -134,7 +134,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
 
     let gifmaterial2 = new Visualive.Material('mat', 'GIFSurfaceShader');
-    gifmaterial2.addParameter('baseColor', image2);
+    gifmaterial2.addParameter('BaseColor', image2);
 
     let geomItem3 = new Visualive.GeomItem('geomItem3', new Visualive.Plane(5.0, 3.0), gifmaterial2);
     geomItem3.getLocalXfo().tr.set(3, 1, 0);

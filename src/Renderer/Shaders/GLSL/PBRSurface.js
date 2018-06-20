@@ -50,7 +50,7 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
 
     // -------------------------- Color at normal incidence --------------------------
     
-    // Need to use 'reflectance' here instead of 'ior'
+    // Need to use 'Reflectance' here instead of 'ior'
     //vec3 F0 = vec3(abs((1.0 - ior) / (1.0 + ior)));    
     //F0 = F0 * F0;
     //F0 = mix(F0, materialParams.baseColor, materialParams.metallic);      

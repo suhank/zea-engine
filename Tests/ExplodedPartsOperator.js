@@ -5,7 +5,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
 
     const middleSphere = new Visualive.Sphere(2.5);
     const middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
-    middleSphereMaterial.addParameter('baseColor', new Visualive.Color(0.0, 0.0, 1.0));
+    middleSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 0.0, 1.0));
     {
         const middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, 3.5);
@@ -29,13 +29,13 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
 
     const littleSphere = new Visualive.Sphere(2.0);
     const littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
-    littleSphereMaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.0, 0.0));
+    littleSphereMaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.0, 0.0));
     const littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
     asset.addChild(littleSphereItem, false);
 
     const bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
     const boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
-    boltmaterial.addParameter('baseColor', new Visualive.Color(1.0, 0.5, 0.0));
+    boltmaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.5, 0.0));
 
     let index = 1;
     const addBolt = (pos)=> {

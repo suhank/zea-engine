@@ -19,7 +19,8 @@ import {
 
 
 const ItemFlags = {
-    USER_EDITED: 1<<1
+    USER_EDITED: 1<<1,
+    IGNORE_BBOX: 1<<2
 };
 
 class BaseItem extends ParameterOwner {

@@ -192,10 +192,10 @@ class Material extends BaseItem {
     // }
 
     isTransparent() {
-        let opacity = this.getParameter('opacity');
+        let opacity = this.getParameter('Opacity');
         if (opacity && (opacity.getValue() < 0.99 || opacity.getImage()))
             return true;
-        let baseColor = this.getParameter('baseColor');
+        let baseColor = this.getParameter('BaseColor');
         if (baseColor && baseColor.getImage() && baseColor.getImage().channels == 'RGBA')
             return true;
         return false;

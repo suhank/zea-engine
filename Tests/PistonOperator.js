@@ -3,9 +3,9 @@ testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
 
     const asset = new Visualive.AssetItem('parts');
     const steelmaterial = new Visualive.Material('steel', 'SimpleSurfaceShader');
-    steelmaterial.getParameter('baseColor').setValue(new Visualive.Color(0.2, 0.2, 0.2));
+    steelmaterial.getParameter('BaseColor').setValue(new Visualive.Color(0.2, 0.2, 0.2));
     const ringsmaterial = new Visualive.Material('rings', 'SimpleSurfaceShader');
-    ringsmaterial.getParameter('baseColor').setValue(new Visualive.Color(0.3, 0.3, 0.3));
+    ringsmaterial.getParameter('BaseColor').setValue(new Visualive.Color(0.3, 0.3, 0.3));
 
     {
         const geomItem = new Visualive.GeomItem('Head', new Visualive.Cylinder(2, 3, 30), steelmaterial);
