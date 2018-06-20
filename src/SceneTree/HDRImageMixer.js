@@ -9,10 +9,10 @@ import {
     FileImage
 } from './FileImage.js';
 import {
-    Image
-} from './Image.js';
+    BaseImage
+} from './BaseImage.js';
 
-class HDRImageMixer extends Image {
+class HDRImageMixer extends BaseImage {
     constructor(name, stream = true) {
         super({
             format: 'FLOAT',

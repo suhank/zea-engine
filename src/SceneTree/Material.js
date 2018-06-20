@@ -10,8 +10,8 @@ import {
     BaseItem
 } from './BaseItem.js';
 import {
-    Image
-} from './Image.js';
+    BaseImage
+} from './BaseImage.js';
 import {
     sgFactory
 } from './SGFactory.js';
@@ -71,7 +71,7 @@ let makeParameterTexturable = (parameter) => {
 
     let basesetValue = parameter.setValue;
     parameter.setValue = (value) => {
-        if (value instanceof Image) {
+        if (value instanceof BaseImage) {
             parameter.setImage(value);
         } else {
             if (image != undefined) {
@@ -114,7 +114,7 @@ class Material extends BaseItem {
         for(let desc of paramDescs) {
             // Note: some shaders specify default images. Like the speckle texture
             // on the car paint shader.
-            if (desc.defaultValue instanceof Image) {
+            if (desc.defaultValue instanceof BaseImage) {
                 image = desc.defaultValue;
                 defaultValue = new Color();
             }
@@ -171,7 +171,7 @@ class Material extends BaseItem {
 
     // addParameter(paramName, defaultValue) {
     //     let image;
-    //     if (defaultValue instanceof Image) {
+    //     if (defaultValue instanceof BaseImage) {
     //         image = defaultValue;
     //         defaultValue = new Color();
     //     }

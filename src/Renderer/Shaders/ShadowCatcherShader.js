@@ -3,8 +3,7 @@ import {
     Vec3
 } from '../../Math';
 import {
-    sgFactory,
-    Image
+    sgFactory
 } from '../../SceneTree';
 import {
     GLShader

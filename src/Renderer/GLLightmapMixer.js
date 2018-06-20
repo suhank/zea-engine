@@ -3,9 +3,6 @@ import {
     Async
 } from '../Utilities';
 import {
-    Image
-} from '../SceneTree';
-import {
     GLShader
 } from './GLShader.js';
 import {

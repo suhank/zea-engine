@@ -3,7 +3,7 @@
     const scene = new Visualive.Scene(resources);
 
     let envMapName = "Assets/hdri_sky_02_sample" + (Visualive.SystemDesc.isMobileDevice ? 2 : 0) + ".vlh";
-    let envMap =  new Visualive.FileImage2D(envMapName);
+    let envMap =  new Visualive.FileImage(envMapName);
     scene.setEnvMap(envMap);
 
     let addMeshShape = (name, shape, pos, mat)=>{

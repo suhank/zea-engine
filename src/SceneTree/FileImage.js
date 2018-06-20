@@ -13,11 +13,8 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    Image
-} from './Image.js';
-import {
-    Image
-} from './Image.js';
+    BaseImage
+} from './BaseImage.js';
 
 import {
     GIF
@@ -39,7 +36,7 @@ const imageDataLibrary = {
 };
 
 
-class FileImage extends Image {
+class FileImage extends BaseImage {
     constructor(resourcePath, params = {}) {
         super(params);
         
@@ -60,12 +57,12 @@ class FileImage extends Image {
     }
 
     getName() {
-        let getName = (str) => {
-            let p = str.split('/');
-            let last = p[p.length - 1];
-            let suffixSt = last.lastIndexOf('.');
+        const getName = (str) => {
+            const p = str.split('/');
+            const last = p[p.length - 1];
+            const suffixSt = last.lastIndexOf('.');
             if (suffixSt != -1) {
-                let decorator = last.substring(suffixSt - 1, suffixSt);
+                const decorator = last.substring(suffixSt - 1, suffixSt);
                 if (!isNaN(decorator)) {
                     // Note: ALL image names have an LOD specifier at the end.
                     // remove that off when retrieving the name.
@@ -84,14 +81,14 @@ class FileImage extends Image {
 
     __loadURL(url, resourcePath) {
 
-        let getExt = (str) => {
-            let p = str.split('/');
-            let last = p[p.length - 1];
-            let suffixSt = last.lastIndexOf('.')
+        const getExt = (str) => {
+            const p = str.split('/');
+            const last = p[p.length - 1];
+            const suffixSt = last.lastIndexOf('.')
             if (suffixSt != -1)
                 return last.substring(suffixSt).toLowerCase()
         }
-        let ext = getExt(resourcePath);
+        const ext = getExt(resourcePath);
         if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
             this.__loadLDRImage(url, resourcePath, ext);
         } else if (ext == '.mp4' || ext == '.ogg') {
@@ -286,8 +283,8 @@ class FileImage extends Image {
 
             /////////////////////////////////
             // Parse the data.
-            let blob = new Blob([ldr.buffer]);
-            let ldrPic = new Image();
+            const blob = new Blob([ldr.buffer]);
+            const ldrPic = new Image();
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
@@ -457,6 +454,9 @@ class FileImage extends Image {
     getHDRTint() {
         return this.__hdrtint;
     }
+    
+    //////////////////////////////////////////
+    // Persistence
 
     fromJSON(json) {
 

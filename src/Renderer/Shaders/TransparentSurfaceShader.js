@@ -2,8 +2,7 @@ import {
     Color
 } from '../../Math';
 import {
-    sgFactory,
-    Image
+    sgFactory
 } from '../../SceneTree';
 import {
     shaderLibrary

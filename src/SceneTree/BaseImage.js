@@ -14,7 +14,7 @@ import {
     ParameterSet
 } from './Parameters';
 
-class Image extends BaseItem {
+class BaseImage extends BaseItem {
     constructor(params = {}) {
         super();
         this.width = 0;
@@ -102,6 +102,5 @@ class Image extends BaseItem {
 };
 
 export {
-    Image
+    BaseImage
 };
-//export default Image;

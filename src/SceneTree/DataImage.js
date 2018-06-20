@@ -7,12 +7,12 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    Image
-} from './Image.js';
+    BaseImage
+} from './BaseImage.js';
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
-class DataImage extends Image {
+class DataImage extends BaseImage {
     constructor(name) {
         super();
 
@@ -47,7 +47,7 @@ class DataImage extends Image {
     }
 
     getParams() {
-        let params = super.getParams();
+        const params = super.getParams();
         params['data'] = this.__data;
         return params;
     }

@@ -73,6 +73,7 @@ class AssetItem extends TreeItem {
     getComponent(name) {
         return this.__components[this.__componentMapping[name]];
     }
+    
     //////////////////////////////////////////
     // Persistence
 

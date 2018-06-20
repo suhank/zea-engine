@@ -12,7 +12,6 @@ import {
     Signal
 } from '../Utilities';
 import {
-    Image,
     Camera
 } from '../SceneTree';
 import {

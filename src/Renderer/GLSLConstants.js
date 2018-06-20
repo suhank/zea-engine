@@ -10,7 +10,7 @@ import {
     Mat4,
     Color
 } from '../Math';
-import { Image } from '../SceneTree/Image.js';
+import { BaseImage } from '../SceneTree/BaseImage.js';
 
 const glslTypes = {
     'bool': Boolean,
@@ -26,7 +26,7 @@ const glslTypes = {
     'color': Color,
     'mat3': Mat3,
     'mat4': Mat4,
-    'sampler2D': Image
+    'sampler2D': BaseImage
 };
 
 export {

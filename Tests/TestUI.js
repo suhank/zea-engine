@@ -10,7 +10,7 @@ testingHarness.registerTest('TestUI', (domElement, resources)=> {
         VisualiveUI.cleanDiv(domElement);
         
         const scene = new Visualive.Scene(resources);
-        // scene.setEnvMap(new Visualive.FileImage2D('Assets/pisa.vlh'));
+        // scene.setEnvMap(new Visualive.FileImage('Assets/pisa.vlh'));
 
         let renderer  = new Visualive.GLVisualiveRenderer(domElement);
         renderer.setScene(scene);

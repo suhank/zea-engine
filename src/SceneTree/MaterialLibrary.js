@@ -70,9 +70,9 @@ class MaterialLibrary {
         return name in this.__images;
     }
 
-    addImage(Image) {
-        Image.setOwner(this);
-        this.__images[Image.getName()] = Image;
+    addImage(image) {
+        image.setOwner(this);
+        this.__images[image.getName()] = image;
     }
 
     getImage(name, assert=true) {

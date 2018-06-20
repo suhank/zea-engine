@@ -5,7 +5,7 @@ import {
     Signal
 } from '../Utilities';
 import {
-    Image
+    BaseImage
 } from '../SceneTree';
 import {
     GLHDRImage
@@ -70,7 +70,7 @@ class BaseViewport {
 
     setBackground(background) {
         let gl = this.__renderer.gl;
-        if (background instanceof Image){
+        if (background instanceof BaseImage){
             if (background.format === "FLOAT"){
                 this.__backgroundTexture = background;
                 this.__backgroundGLTexture = new GLHDRImage(gl, background);

@@ -91,7 +91,7 @@ testingHarness.registerTest('TestRenderUVSeam', (domElement, resources)=> {
     texCoords.setFaceVertexValue(1, 3, new Visualive.Vec2(0, 1), true);
 
     const material = new Visualive.Material('material', 'SimpleSurfaceShader');
-    let texture = new Visualive.FileImage2D("Assets/Texture.png");
+    let texture = new Visualive.FileImage("Assets/Texture.png");
     const geomItem = new Visualive.GeomItem('geomItem', quad, material);
     material.baseColor = texture;
 
@@ -128,7 +128,7 @@ testingHarness.registerTest('TestRenderUVAndNormalSeam', (domElement, resources)
 
     const material = new Visualive.Material('material', 'SimpleSurfaceShader');
     const geomItem = new Visualive.GeomItem('geomItem', quad, material);
-    material.baseColor = new Visualive.FileImage2D("Assets/Texture.png");
+    material.baseColor = new Visualive.FileImage("Assets/Texture.png");
 
     scene.getRoot().addChild(geomItem);
 
@@ -158,7 +158,7 @@ testingHarness.registerTest('TestRenderTexturedCuboid', (domElement, resources)=
 
     let cuboid = new Visualive.Cuboid(2, 3, 4);
     const material = new Visualive.Material('material', 'SimpleSurfaceShader');
-    let texture = new Visualive.FileImage2D("Assets/Texture.png");
+    let texture = new Visualive.FileImage("Assets/Texture.png");
     const geomItem = new Visualive.GeomItem('geomItem', cuboid, material);
 
     material.baseColor = texture;

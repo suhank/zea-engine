@@ -4,7 +4,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     let layer0Material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
-    layer0Material.addParameter('env', new Visualive.FileImage2D("Assets/HDR_041_Path_Ref0.vlh"));
+    layer0Material.addParameter('env', new Visualive.FileImage("Assets/HDR_041_Path_Ref0.vlh"));
 
     let offset = 0;
     let addMeshShape = (name, shape)=>{

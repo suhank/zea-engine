@@ -3,7 +3,7 @@
     let bgMapName = "Assets/teidetour23_under_over_stereo_pair_4000.jpg";
 
     const scene = new Visualive.Scene(resources);
-    let bgMap =  new Visualive.FileImage2D(bgMapName, { mapping: 'steriolatlong'});
+    let bgMap =  new Visualive.FileImage(bgMapName, { mapping: 'steriolatlong'});
     scene.setBackgroundMap(bgMap);
 
     const renderer = new Visualive.GLVisualiveRenderer(domElement);

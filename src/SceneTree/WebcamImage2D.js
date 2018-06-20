@@ -6,10 +6,10 @@ import {
     sgFactory
 } from './SGFactory.js';
 import {
-    Image
-} from './Image.js';
+    BaseImage
+} from './BaseImage.js';
 
-class WebcamImage2D extends Image {
+class WebcamImage2D extends BaseImage {
     constructor(width = 640, height = 480, rearCamera = false) {
         super();
         this.__loaded = false;

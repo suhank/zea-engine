@@ -108,10 +108,10 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     // giffPath = "Assets/chuck-norris-super-kick.gif";
 
     const scene = new Visualive.Scene(resources);
-    let image =  new Visualive.FileImage2D(giffPath);
+    let image =  new Visualive.FileImage(giffPath);
 
     // Check that the gif is loaded only once.
-    let image2 =  new Visualive.FileImage2D(giffPath);
+    let image2 =  new Visualive.FileImage(giffPath);
 
     let atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
     atlasmaterial.addParameter('baseColor', image);

@@ -3,7 +3,7 @@ import {
 } from '../Utilities';
 import {
     BaseItem,
-    Image,
+    BaseImage,
     makeParameterTexturable
 } from '../SceneTree';
 import {
@@ -74,7 +74,7 @@ class GLShader extends BaseItem {
 
     // addParameter(paramName, defaultValue) {
     //     let image;
-    //     if (defaultValue instanceof Image) {
+    //     if (defaultValue instanceof BaseImage) {
     //         image = defaultValue;
     //         defaultValue = new Color();
     //     }
