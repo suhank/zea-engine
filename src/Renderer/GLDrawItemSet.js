@@ -133,7 +133,7 @@ class GLDrawItemSet {
     drawSingle(renderstate, extrAttrBuffers, index = 0) {
 
         const gl = this.gl;
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         this.glgeom.bind(renderstate, extrAttrBuffers);
         if (this.drawItems[index].bind(renderstate)) {
             // Specify an non-instanced draw to the shader
@@ -154,7 +154,7 @@ class GLDrawItemSet {
         }
 
         const gl = this.gl;
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
 
         if (renderstate.lightmaps && unifs.lightmap) {
             if (renderstate.boundLightmap != this.lightmapName) {

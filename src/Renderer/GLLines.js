@@ -220,14 +220,14 @@ class GLLines extends GLGeom {
 
             let usePositionsTexture = true;
             if (usePositionsTexture) {
-                let unifs = renderstate.unifs;
+                const unifs = renderstate.unifs;
                 if (unifs.positionsTexture) {
                     this.__positionsTexture.bindToUniform(renderstate, unifs.positionsTexture);
                     gl.uniform1i(unifs.positionsTextureSize.location, this.__positionsTexture.width);
                 }
             }
 
-            let unifs = renderstate.unifs;
+            const unifs = renderstate.unifs;
             gl.uniform1f(unifs._lineThickness.location, (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0)  * renderstate.viewScale);
             return true;
         } else {

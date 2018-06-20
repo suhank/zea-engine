@@ -32,7 +32,7 @@ class GLHardEdgesPass extends GLPass {
     }
 
     bind(renderstate) {
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         // this.__gl.uniform4f(renderstate.unifs.wireColor.location, this.__wireColor.asArray());
         this.__gl.uniform4fv(renderstate.unifs.wireColor.location, this.__wireColor);
         this.__gl.lineWidth(this.__lineWidth);

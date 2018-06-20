@@ -37,14 +37,14 @@ class GLEnvMap extends GLProbe {
         this.__envMapShaderBinding = generateShaderGeomBinding(gl, envMapShaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
 
-        srcGLTex.updated.connect(() => {
-            this.convolveEnvMap(srcGLTex);
-        });
+        // srcGLTex.updated.connect(() => {
+        //     this.convolveProbe(srcGLTex);
+        // });
         if (this.__envMap.isLoaded()) {
-            this.convolveEnvMap(srcGLTex);
+            this.convolveProbe(srcGLTex);
         } else {
             this.__envMap.loaded.connect(() => {
-                this.convolveEnvMap(srcGLTex);
+                this.convolveProbe(srcGLTex);
             });
         }
         srcGLTex.destructing.connect(() => {
@@ -71,20 +71,25 @@ class GLEnvMap extends GLProbe {
         if (this.__envMap.isLoaded()) {
 
             const gl = this.__gl;
-            let displayAtlas = false;
-            if (displayAtlas) {
+            let debug = true;
+            if (debug) {
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);
-                //screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex);
-                // screenQuad.draw(renderstate, this.__srcGLTex);
-                // screenQuad.draw(renderstate, this.__imagePyramid);
-                screenQuad.draw(renderstate, this);
+                const debugId = 2;
+                switch(debugId) {
+                    case 0: screenQuad.draw(renderstate, this.__srcGLTex.__srcLDRTex); break;
+                    case 1: screenQuad.draw(renderstate, this.__srcGLTex.__srcCDMTex); break;
+                    case 2: screenQuad.draw(renderstate, this.__srcGLTex); break;
+                    case 3: screenQuad.draw(renderstate, this.__lodPyramid); break;
+                    case 4: screenQuad.draw(renderstate, this.__fbos[0].getColorTexture()); break;
+                    case 5: screenQuad.draw(renderstate, this); break;
+                }
             } else {
                 ///////////////////
                 this.__envMapShader.bind(renderstate, 'GLEnvMap');
-                let unifs = renderstate.unifs;
+                const unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
-                //this.__imagePyramid.bind(renderstate, renderstate.unifs.envMap.location);
+                //this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
                 this.bindToUniform(renderstate, unifs.envMap);
 
                 {

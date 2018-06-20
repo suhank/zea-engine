@@ -17,7 +17,7 @@ vec3 dirFromLatLongUVs(float u, float v) {
     // http://gl.ict.usc.edu/Data/HighResProbes/
     float theta = PI*((u * 2.0) - 1.0);
     float phi = PI*v;
-    return vec3(sin(phi)*sin(theta), -sin(phi)*cos(theta), cos(phi));
+    return vec3(sin(phi)*sin(theta), sin(phi)*cos(theta), cos(phi));
 }
 
 vec3 dirFromPolar(vec2 polar) {

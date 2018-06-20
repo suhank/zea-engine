@@ -478,19 +478,19 @@ class GLRenderer {
         // we get warnings saying.
         // there is no texture bound to the unit 0
         // Bind a default texture to unit 0 simply to avoid these warnings.
-        this.__texture0 = new GLTexture2D(this.__gl, {
-            format: 'RGB',
-            type: 'UNSIGNED_BYTE',
-            width: 1,
-            height: 1,
-            filter: 'NEAREST',
-            mipMapped: false,
-            wrap: 'CLAMP_TO_EDGE',
-            data: new Uint8Array(3)
-        });
+        // this.__texture0 = new GLTexture2D(this.__gl, {
+        //     format: 'RGB',
+        //     type: 'UNSIGNED_BYTE',
+        //     width: 1,
+        //     height: 1,
+        //     filter: 'NEAREST',
+        //     mipMapped: false,
+        //     wrap: 'CLAMP_TO_EDGE',
+        //     data: new Uint8Array(3)
+        // });
 
-        // gl.activeTexture(this.__gl.TEXTURE0);
-        this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
+        // // gl.activeTexture(this.__gl.TEXTURE0);
+        // this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
 
         //////////////////////////////////
         // Setup event handlers

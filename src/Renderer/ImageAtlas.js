@@ -178,7 +178,7 @@ class ImageAtlas extends GLTexture2D {
     }
 
     generateAtlasLayout() {
-        let border = 2;
+        const border = 2;
         const initDims = (subImage) => {
             subImage.w = subImage.width + (border * 2);
             subImage.h = subImage.height + (border * 2);
@@ -213,7 +213,7 @@ class ImageAtlas extends GLTexture2D {
         this.configure({
             width,
             height,
-            format: (this.__format == 'FLOAT' && this.__format == 'RGB') ? 'RGBA' : this.__format,
+            format: (this.__type == 'FLOAT' && this.__format == 'RGB') ? 'RGBA' : this.__format,
             type: this.__type,
             filter: 'LINEAR',
         });
@@ -227,7 +227,7 @@ class ImageAtlas extends GLTexture2D {
 
         if (!gl.__atlasLayoutShader) {
             gl.__atlasLayoutShader = new AtlasLayoutShader(gl);
-            let shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas');
+            const shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas');
             gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 
@@ -247,10 +247,10 @@ class ImageAtlas extends GLTexture2D {
                 this.__layoutVec4s[index] = [layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height];
             });
         } else {
-            let dataArray = new Float32Array(size * size * 4); /*each pixel has 4 floats*/
+            const dataArray = new Float32Array(size * size * 4); /*each pixel has 4 floats*/
             for (let i = 0; i < this.__layout.length; i++) {
-                let layoutItem = this.__layout[i];
-                let vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
+                const layoutItem = this.__layout[i];
+                const vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
                 vec4.set(layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height)
             }
             if (!this.__atlasLayoutTexture) {
@@ -276,7 +276,7 @@ class ImageAtlas extends GLTexture2D {
         return this.__layoutVec4s[index];
     }
 
-    renderAtlas(cleanup = false) {
+    renderAtlas(cleanup = false, off=0) {
         if (this.__layoutNeedsRegeneration) {
             this.generateAtlasLayout();
         }
@@ -288,13 +288,13 @@ class ImageAtlas extends GLTexture2D {
         const renderstate = {};
         gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas');
         gl.__atlasLayoutShaderBinding.bind(renderstate);
-        let scl = new Vec2(1.0 / this.width, 1.0 / this.height);
+        const scl = new Vec2(1.0 / this.width, 1.0 / this.height);
 
-        let unifs = renderstate.unifs;
-        for (let j = 0; j < this.__subImages.length; j++) {
-            let image = this.__subImages[j];
+        const unifs = renderstate.unifs;
+        for (let j = off; j < this.__subImages.length; j++) {
+            const image = this.__subImages[j];
 
-            let layoutItem = this.__layout[j];
+            const layoutItem = this.__layout[j];
             image.bindToUniform(renderstate, unifs.srctexture);
             gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray());
@@ -314,14 +314,14 @@ class ImageAtlas extends GLTexture2D {
 
         super.bindToUniform(renderstate, unif);
 
-        let unifs = renderstate.unifs;
-        let atlasLayoutUnif = unifs[unif.name + '_layout'];
+        const unifs = renderstate.unifs;
+        const atlasLayoutUnif = unifs[unif.name + '_layout'];
         if (atlasLayoutUnif)
             this.__atlasLayoutTexture.bindToUniform(renderstate, atlasLayoutUnif);
 
-        let atlasDescUnif = unifs[unif.name + '_desc'];
+        const atlasDescUnif = unifs[unif.name + '_desc'];
         if (atlasDescUnif)
-            this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__layout.length, 0.0);
+            this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__atlasLayoutTexture.width, 0.0);
 
     }
 

@@ -83,16 +83,14 @@ class GLHDRImage extends GLTexture2D {
             this.__srcCDMTex = new GLTexture2D(gl, {
                 format: 'RED',
                 type: 'UNSIGNED_BYTE',
-                internalFormat: 'R16F',
-                width: ldr.width /*8*/ ,
-                height: ldr.height /*8*/ ,
+                internalFormat: 'R8',
+                width: ldr.width,
+                height: ldr.height,
                 filter: 'NEAREST',
                 mipMapped: false,
-                wrap: 'CLAMP_TO_EDGE'/*,
-                data: cdm*/
+                wrap: 'CLAMP_TO_EDGE',
+                data: cdm
             });
-
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, ldr.width, ldr.height, 0, gl.RED, gl.UNSIGNED_BYTE, cdm, 0);
             this.__unpackHDRShader = new UnpackHDRShader(gl);
             let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
@@ -108,7 +106,7 @@ class GLHDRImage extends GLTexture2D {
         this.__shaderBinding.bind(renderstate);
 
 
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         this.__srcLDRTex.bindToUniform(renderstate, unifs.ldrSampler);
         this.__srcCDMTex.bindToUniform(renderstate, unifs.cdmSampler);
 
@@ -127,14 +125,14 @@ class GLHDRImage extends GLTexture2D {
 
         this.__fbo.unbind();
 
-        if (!this.__hdrImage.isStream()) {
-            this.__fbo.destroy();
-            this.__srcLDRTex.destroy();
-            this.__srcCDMTex.destroy();
-            this.__fbo = null;
-            this.__srcLDRTex = null;
-            this.__srcCDMTex = null;
-        }
+        // if (!this.__hdrImage.isStream()) {
+        //     this.__fbo.destroy();
+        //     this.__srcLDRTex.destroy();
+        //     this.__srcCDMTex.destroy();
+        //     this.__fbo = null;
+        //     this.__srcLDRTex = null;
+        //     this.__srcCDMTex = null;
+        // }
 
         this.updated.emit();
     }

@@ -72,7 +72,7 @@ class GLDepthPass extends GLPass {
 
     bind(renderstate) {
 
-        let unifs = renderstate['unifs'];
+        const unifs = renderstate['unifs'];
         this.__dir.normalizeInPlace();
 
         if (this.__dir.dot(this.__up) > 1 - 10e-10) {

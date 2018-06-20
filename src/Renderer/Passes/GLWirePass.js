@@ -7,7 +7,7 @@ class GLWirePass extends GLPass {
     constructor(gl) {
         super(gl);
 
-        let glshader = new WireShader(gl);
+        const glshader = new WireShader(gl);
         this.setExplicitShader(glshader);
 
         this.lineWidth = 1.0;
@@ -16,7 +16,7 @@ class GLWirePass extends GLPass {
     filter(drawItem) {
         if(!super.filter(drawItem))
             return false;
-        let geom = drawItem.geomItem.getGeom();
+        const geom = drawItem.geomItem.getGeom();
         return (geom instanceof Mesh);
     };
 
@@ -27,7 +27,7 @@ class GLWirePass extends GLPass {
     };
 
     bind(renderstate) {
-        let unifs = renderstate['unifs'];
+        const unifs = renderstate['unifs'];
         this.__gl.uniform4fv(unifs['wireColor']['location'], [0.1, 0.1, 0.1, 0.7]);
 
         this.__gl.lineWidth(this.lineWidth);

@@ -20,7 +20,12 @@ vec3 decodeHDR(const in vec3 ldrPixel, const in float cdmAlpha) {
 }
 
 vec3 decodeHDR(sampler2D ldrSampler, sampler2D cdmSampler, vec2 texCoord) {
-    return decodeHDR(texture2D(ldrSampler, texCoord).rgb, texture2D(cdmSampler, texCoord).a);
+#ifdef ENABLE_ES3
+    float cdm = texture2D(cdmSampler, texCoord).r;
+#else
+    float cdm = texture2D(cdmSampler, texCoord).a;
+#endif
+    return decodeHDR(texture2D(ldrSampler, texCoord).rgb, cdm);
 }
 
 `);

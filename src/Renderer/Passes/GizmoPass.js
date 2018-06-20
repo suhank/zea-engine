@@ -21,7 +21,7 @@ class GLGizmoDataPass extends GLGeomDataPass {
     draw(renderstate) {
 
         this.__explicitShader.bind(renderstate);
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
         this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
         this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());
@@ -73,7 +73,7 @@ class GizmoPass extends GLPass {
         if (!super.bindDrawItem(renderstate, drawItem))
             return false;
 
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         if ('color' in unifs) {
             this.__gl.uniform4fv(unifs.color.location, drawItem.color.asArray());
         }
@@ -83,7 +83,7 @@ class GizmoPass extends GLPass {
 
     draw(renderstate) {
         this.__explicitShader.bind(renderstate);
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
         this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
         this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());

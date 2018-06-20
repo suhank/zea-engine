@@ -67,10 +67,36 @@ vec3 ImportanceSampleGGX(vec2 Xi, float a) {
 // https://github.com/thefranke/dirtchamber/blob/master/shader/importance.hlsl
 // Compute a LOD level for filtered importance sampling.
 // From GPU Gems 3: GPU-Based Importance Sampling.
-//float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int hh)
-//{
-//   return max(0.0, 0.5*log2((ww*hh)/float(num_samples)) - 0.5*log2(pdf));
-//}
+
+
+#define M_PI       3.14159265358979323846   // pi
+#define M_HALF_PI  1.57079632679489661923   // pi/2
+float sqr(float val){ return val*val; }
+float saturate(float val) { return clamp(val, 0.0, 1.0); }
+vec3 saturate(vec3 val) { return clamp(val, 0.0, 1.0); }
+
+// Microfacet Models for Refraction through Rough Surfaces
+// Walter et al.
+// http://www.cs.cornell.edu/~srm/publications/EGSR07-btdf.html
+// aka Towbridge-Reitz
+float D_ggx(in float alpha, in float NoH)
+{
+    float a2 = alpha*alpha;
+    float cos2 = NoH*NoH;
+
+    return (1.0f/M_PI) * sqr(alpha/(cos2 * (a2 - 1.0) + 1.0));
+
+    /*
+    // version from the paper, eq 33
+    float CosSquared = NoH*NoH;
+    float TanSquared = (1.0f - CosSquared)/CosSquared;
+    return (1.0f/M_PI) * sqr(alpha/(CosSquared * (alpha*alpha + TanSquared)));
+    */
+}
+float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int hh)
+{
+  return max(0.0, 0.5*log2(float(ww*hh)/float(num_samples)) - 0.5*log2(pdf));
+}
 
 uniform sampler2D   envMap;
 uniform sampler2D   envMap_layout;
@@ -88,13 +114,15 @@ void main(void) {
 
     if(false){
         vec2 uv = normalToUvSphOct(N);
-        fragColor = vec4(uv.x, uv.y, 0.0, 1.0);
-        //fragColor = sampleImagePyramid(uv, roughness, envMap);
-        //fragColor = sampleSubImage(uv, 0, envMap);
-        //fragColor = texture2D(envMap, uv);
+        // fragColor = vec4(uv.x, uv.y, 0.0, 1.0);
+        fragColor = sampleImagePyramid(uv, 0.5, envMap_layout, envMap, envMap_desc);
+        // fragColor = sampleSubImage(uv, 0, envMap_layout, envMap, envMap_desc);
+        // fragColor = texture2D(envMap, uv);
     }
     else{
         const int numSamples = NUM_SAMPLES;
+        int w = int(floor(envMap_desc.x + 0.5));
+        int h = int(floor(envMap_desc.y + 0.5));
 
         vec4 color = vec4(0.0,0.0,0.0,0.0);
         float weight = 0.0;
@@ -105,12 +133,14 @@ void main(void) {
             vec3 H = ImportanceSampleGGX(Xi, a);
             vec3 V = normalize(vecSpace * H);
             float VdotN = dot(V, N);
+            float NoH = saturate( dot( N, H ) );
+            float VoH = saturate( dot( V, H ) );
 
             vec2 uv = normalToUvSphOct(V);
-            // float pdf = D_ggx(a, NoH) * NoH / (4 * VoH);
-            // float lod = compute_lod(H, );
+            // float pdf = D_ggx(a, NoH) * NoH / (4.0 * VoH);
+            // float lod = compute_lod(H, pdf, numSamples, w, h);
 
-            color += sampleImagePyramid(uv, 0.0, envMap_layout, envMap, envMap_desc) * VdotN;
+            color += sampleImagePyramid(uv, a, envMap_layout, envMap, envMap_desc) * VdotN;
             weight += VdotN;
         }
         color /= float(weight);

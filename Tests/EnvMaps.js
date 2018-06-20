@@ -2,7 +2,8 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
     /////////////////////////////////////
     // Scene
     const scene = new Visualive.Scene(resources);
-    scene.setEnvMap(new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv"));
+    // scene.setEnvMap(new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv"));
+    scene.setEnvMap(new Visualive.FileImage("Assets/HDR_041_Path_Ref0.vlh"));
 
     /////////////////////////////////////
     // Renderer

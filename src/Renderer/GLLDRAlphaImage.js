@@ -96,7 +96,7 @@ class GLLDRAlphaImage extends GLTexture2D {
         this.__shaderBinding.bind(renderstate);
 
 
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         this.__srcLDRTex.bind(renderstate, unifs.ldrSampler.location);
         this.__srcAlphaTex.bind(renderstate, unifs.alphaSampler.location);
 

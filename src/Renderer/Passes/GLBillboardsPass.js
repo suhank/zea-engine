@@ -293,7 +293,7 @@ class GLBillboardsPass extends GLPass {
         this.__glshader.bind(renderstate);
         this.__shaderBinding.bind(renderstate);
 
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards);
 
         if(!gl.floatTexturesSupported || !gl.drawElementsInstanced) {

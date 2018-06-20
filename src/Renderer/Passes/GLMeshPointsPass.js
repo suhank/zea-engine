@@ -24,7 +24,7 @@ class GLMeshPointsPass extends GLPass {
 
 
     bind(renderstate) {
-        let unifs = renderstate['unifs'];
+        const unifs = renderstate['unifs'];
         this.__gl.uniform4fv(unifs['pointColor']['location'], this.wireColor);
         this.__gl.uniform1f(unifs['pointSize']['location'], this.pointSize);
     }

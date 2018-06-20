@@ -17,7 +17,7 @@ class GLLightmap {
 
     bind(renderstate){
         const gl = this.__gl;
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         // let unit = renderstate.boundTextures++;
         // let texId = gl.TEXTURE0 + unit;
         // gl.activeTexture(texId);

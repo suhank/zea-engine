@@ -70,7 +70,7 @@ class GLNormalsPass extends GLPass {
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
         this.__glshader.bind(renderstate);
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         let attrs = renderstate.attrs;
         gl.uniform1f(unifs.normalLength.location, this.normalLength);
         gl.uniform4fv(unifs.normalColor.location, this.normalColor);

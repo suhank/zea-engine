@@ -759,7 +759,7 @@ class GLViewport extends BaseViewport {
 
             // this.__glshaderScreenPostProcess.bind(renderstate);
 
-            // let unifs = renderstate.unifs;
+            // const unifs = renderstate.unifs;
             // if ('antialiase' in unifs)
             //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
             // if ('textureSize' in unifs)

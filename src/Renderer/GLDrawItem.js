@@ -137,7 +137,7 @@ class GLDrawItem {
     bind(renderstate) {
 
         const gl = this.gl;
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
 
         if (!gl.floatTexturesSupported) {
             let modelMatrixunif = unifs.modelMatrix;

@@ -99,7 +99,7 @@ class GLLightmapMixer extends GLTexture2D {
         this.__decompAndMixShader.bind(renderstate, 'ImageMixerShader');
         this.__shaderBinding.bind(renderstate);
 
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         for (let i = 0; i < this.__srcTextures.length; i++) {
             this.__srcTextures[i].bind(renderstate, unifs['sampler' + i].location);
             gl.uniform1f(unifs['weight' + i].location, this.__lightmapMixer.getSubImageWeight(i));

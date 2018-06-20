@@ -20,7 +20,7 @@ class GLFbo {
 
     }
 
-    setClearColor(clearColor, clear=true) {
+    setClearColor(clearColor) {
         this.__clearColor = clearColor;
     }
 

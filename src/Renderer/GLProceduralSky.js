@@ -258,7 +258,7 @@ class GLProceduralSky extends GLProbe {
         });
         this.__renderSkyFbo = new GLFbo(gl, this.__srcGLTex);
 
-        // this.convolveEnvMap(srcGLTex);
+        // this.convolveProbe(srcGLTex);
 
         this.__skyShader = new SkyShader(gl);
         let skyShaderShaderComp = this.__skyShader.compileForTarget('GLProceduralSky');
@@ -337,7 +337,7 @@ class GLProceduralSky extends GLProbe {
         const renderstate = {};
         this.__skyDomeShader.bind(renderstate, 'GLProceduralSky');
         this.__skyDomeShaderBinding.bind(renderstate);
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
 
         gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
         gl.uniform1f(unifs.longitude.location, this.__longitude);
@@ -347,7 +347,7 @@ class GLProceduralSky extends GLProbe {
 
         gl.drawQuad();
 
-        this.convolveEnvMap(this.__srcGLTex);
+        this.convolveProbe(this.__srcGLTex);
     }
 
     draw(renderstate) {
@@ -357,11 +357,11 @@ class GLProceduralSky extends GLProbe {
             let screenQuad = gl.screenQuad;
             screenQuad.bindShader(renderstate);
             //screenQuad.draw(renderstate, this.__srcGLTex);
-            //screenQuad.draw(renderstate, this.__imagePyramid);
+            //screenQuad.draw(renderstate, this.__lodPyramid);
             screenQuad.draw(renderstate, this);
         } else {
             this.__skyShader.bind(renderstate, 'GLProceduralSky');
-            let unifs = renderstate.unifs;
+            const unifs = renderstate.unifs;
             gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
             gl.uniform1f(unifs.longitude.location, this.__longitude);
             gl.uniform1f(unifs.latitude.location, this.__latitude);
@@ -372,10 +372,10 @@ class GLProceduralSky extends GLProbe {
         // else{
         //     ///////////////////
         //     this.__envMapShader.bind(renderstate, 'GLEnvMap');
-        //     let unifs = renderstate.unifs;
+        //     const unifs = renderstate.unifs;
         //     // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
         //     // this.__srcCDMTex.bind(renderstate, renderstate.unifs.envMap.location);
-        //     //this.__imagePyramid.bind(renderstate, renderstate.unifs.envMap.location);
+        //     //this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
         //     this.bind(renderstate, renderstate.unifs.envMap.location);
 
         //     if ('focus' in unifs)

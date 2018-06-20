@@ -241,7 +241,11 @@ class GLTexture2D extends RefCounted {
                 const numPixels = width * height;
                 let numChannels;
                 switch (this.__format) {
+                    case gl.RED:
+                    case gl.RED_INTEGER:
                     case gl.ALPHA:
+                    case gl.LUMINANCE:
+                    case gl.LUMINANCE_ALPHA:
                         numChannels = 1;
                         break;
                     case gl.RG:
@@ -261,8 +265,7 @@ class GLTexture2D extends RefCounted {
                     data = Math.convertFloat32ArrayToUInt16Array(data);
                 }
                 if(gl.name == 'webgl2'){
-                    gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__format, this.__type, null);
-                    gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__format, this.__type, data, 0);
+                    gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, data, 0);
                 }
                 else {
                     gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, data);

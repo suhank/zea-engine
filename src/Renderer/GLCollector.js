@@ -639,7 +639,7 @@ class GLCollector {
 
     bind(renderstate) {
         let gl = this.__renderer.gl;
-        let unifs = renderstate.unifs;
+        const unifs = renderstate.unifs;
         if (this.__drawItemsTexture && unifs.instancesTexture) {
             this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture);
             gl.uniform1i(unifs.instancesTextureSize.location, this.__drawItemsTexture.width);
