@@ -110,10 +110,10 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    vec3 N = uvToNormalSphOct(v_texCoord);
+    vec3 N = sphOctUvToDir(v_texCoord);
 
     if(false){
-        vec2 uv = normalToUvSphOct(N);
+        vec2 uv = dirToSphOctUv(N);
         // fragColor = vec4(uv.x, uv.y, 0.0, 1.0);
         fragColor = sampleImagePyramid(uv, 0.5, envMap_layout, envMap, envMap_desc);
         // fragColor = sampleSubImage(uv, 0, envMap_layout, envMap, envMap_desc);
@@ -136,7 +136,7 @@ void main(void) {
             float NoH = saturate( dot( N, H ) );
             float VoH = saturate( dot( V, H ) );
 
-            vec2 uv = normalToUvSphOct(V);
+            vec2 uv = dirToSphOctUv(V);
             // float pdf = D_ggx(a, NoH) * NoH / (4.0 * VoH);
             // float lod = compute_lod(H, pdf, numSamples, w, h);
 

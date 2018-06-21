@@ -9,7 +9,7 @@ shaderLibrary.setShaderModule('pragmatic-pbr/envmap-octahedral.glsl', `
 #define sum(value) dot(clamp((value), 1.0, 1.0), (value))
 
 
-vec2 normalToUvSphOct(vec3 normal){
+vec2 dirToSphOctUv(vec3 normal){
     normal = normalize(normal);
     vec3 aNorm = abs(normal);
     vec3 sNorm = sectorize(normal);
@@ -29,7 +29,7 @@ vec2 normalToUvSphOct(vec3 normal){
 }
 
 
-vec3 uvToNormalSphOct(vec2 uv){
+vec3 sphOctUvToDir(vec2 uv){
     uv = uv*2.0-1.0;
     vec2 suv = sectorize(uv);
     float sabsuv =  sum(abs(uv));

@@ -9,8 +9,8 @@ class Mat3 extends AttrValue {
         super();
 
         if (m00 instanceof ArrayBuffer) {
-            let buffer = m00;
-            let byteOffset = m01;
+            const buffer = m00;
+            const byteOffset = m01;
             this.__data = new Float32Array(buffer, byteOffset, 9);
         }
         else {
@@ -151,21 +151,21 @@ class Mat3 extends AttrValue {
     }
 
     setFromDirectionAndUpvector(dir, up) {
-        let zAxis = dir;
-        let zLen = zAxis.length();
+        const zAxis = dir;
+        const zLen = zAxis.length();
         if (zLen < Number.EPSILON) {
             this.setIdentity();
             return;
         }
         zAxis.scaleInPlace(1/zLen);
 
-        let xAxis = up.cross(zAxis);
-        let xLen = xAxis.length();
+        const xAxis = up.cross(zAxis);
+        const xLen = xAxis.length();
         if (xLen > Number.EPSILON)
             xAxis.scaleInPlace(1/xLen);
 
-        let yAxis = zAxis.cross(xAxis);
-        let yLen = yAxis.length();
+        const yAxis = zAxis.cross(xAxis);
+        const yLen = yAxis.length();
         if (yLen > Number.EPSILON)
             yAxis.scaleInPlace(1/yLen);
 
@@ -179,7 +179,7 @@ class Mat3 extends AttrValue {
 
     // returnse the inverted matrix
     inverse() {
-        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2],
+        const a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2],
             a10 = this.__data[3], a11 = this.__data[4], a12 = this.__data[5],
             a20 = this.__data[6], a21 = this.__data[7], a22 = this.__data[8],
 
@@ -210,7 +210,7 @@ class Mat3 extends AttrValue {
     };
 
     invertInPlace() {
-        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2],
+        const a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2],
             a10 = this.__data[3], a11 = this.__data[4], a12 = this.__data[5],
             a20 = this.__data[6], a21 = this.__data[7], a22 = this.__data[8],
 
@@ -257,7 +257,7 @@ class Mat3 extends AttrValue {
 
     transposeInPlace() {
         // If we are transposing ourselves we can skip a few steps but have to cache some values
-        let a01 = this.__data[1], a02 = this.__data[2], a12 = this.__data[5];
+        const a01 = this.__data[1], a02 = this.__data[2], a12 = this.__data[5];
 
         this.__data[1] = this.__data[3];
         this.__data[2] = this.__data[6];

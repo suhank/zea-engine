@@ -15,7 +15,7 @@ uniform vec4        envMap_desc;
 
 
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramid(normalToUvSphOct(dir), roughness, envMap_layout, envMap, envMap_desc).rgb;
+    return sampleImagePyramid(dirToSphOctUv(dir), roughness, envMap_layout, envMap, envMap_desc).rgb;
 }
 
 

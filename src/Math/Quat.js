@@ -10,8 +10,8 @@ class Quat extends AttrValue {
         super();
 
         if (x instanceof ArrayBuffer) {
-            let buffer = x;
-            let byteOffset = y;
+            const buffer = x;
+            const byteOffset = y;
             this.__data = new Float32Array(buffer, byteOffset, 4);
         } else {
             this.__data = new Float32Array(4);
@@ -90,7 +90,7 @@ class Quat extends AttrValue {
 
     /// Set this quat from a euler rotation
     setFromEulerAngles(eulerAngles) {
-        let ordered = new Vec3();
+        const ordered = new Vec3();
 
         switch (eulerAngles.order) {
             case 0:
@@ -121,16 +121,16 @@ class Quat extends AttrValue {
                 throw ("sdrty");
         }
 
-        let ti = ordered.x * 0.5;
-        let tj = ordered.y * 0.5;
-        let tk = ordered.z * 0.5;
-        let ci = Math.cos(ti),
+        const ti = ordered.x * 0.5;
+        const tj = ordered.y * 0.5;
+        const tk = ordered.z * 0.5;
+        const ci = Math.cos(ti),
             cj = Math.cos(tj),
             ck = Math.cos(tk);
-        let si = Math.sin(ti),
+        const si = Math.sin(ti),
             sj = Math.sin(tj),
             sk = Math.sin(tk);
-        let cc = ci * ck,
+        const cc = ci * ck,
             cs = ci * sk,
             sc = si * ck,
             ss = si * sk;
@@ -185,7 +185,7 @@ class Quat extends AttrValue {
 
 
     toEulerAngles(rotationOrder) {
-        let ordered = new Vec3();
+        const ordered = new Vec3();
         switch (rotationOrder) {
             case 0:
                 /*' XYZ' */
@@ -215,8 +215,8 @@ class Quat extends AttrValue {
                 throw ("Invalid rotation order:" + rotationOrder);
         }
 
-        let euler = new Vec3();
-        let test = ordered.x * ordered.y + ordered.z * this.w;
+        const euler = new Vec3();
+        const test = ordered.x * ordered.y + ordered.z * this.w;
         if (test > 0.49999) { // singularity at north pole
             euler.y = 2.0 * atan2(ordered.x, this.w);
             euler.z = Math.PI * 0.5;
@@ -226,9 +226,9 @@ class Quat extends AttrValue {
             euler.z = Math.PI * -0.5;
             euler.x = 0.0;
         } else {
-            let sqx = ordered.x * ordered.x;
-            let sqy = ordered.y * ordered.y;
-            let sqz = ordered.z * ordered.z;
+            const sqx = ordered.x * ordered.x;
+            const sqy = ordered.y * ordered.y;
+            const sqz = ordered.z * ordered.z;
             euler.y = Math.atan2(2.0 * ordered.y * this.w - 2.0 * ordered.x * ordered.z, 1.0 - 2.0 * sqy - 2.0 * sqz);
             euler.z = Math.asin(2.0 * test);
             euler.x = Math.atan2(2.0 * ordered.x * this.w - 2.0 * ordered.y * ordered.z, 1.0 - 2.0 * sqx - 2.0 * sqz);
@@ -260,13 +260,13 @@ class Quat extends AttrValue {
 
     /// Set this quat to a rotation defined by an axis and an angle (in radians)
     setFromAxisAndAngle(axis, angle) {
-        let halfAngle = angle / 2.0;
-        let vec = axis.normalize().scale(Math.sin(halfAngle));
+        const halfAngle = angle / 2.0;
+        const vec = axis.normalize().scale(Math.sin(halfAngle));
         this.set(vec.x, vec.y, vec.z, Math.cos(halfAngle));
     }
 
     setFromDirectionAndUpvector(dir, up) {
-        let mat3 = new Mat3();
+        const mat3 = new Mat3();
         mat3.setFromDirectionAndUpvector(dir, up);
         this.setFromMat3(mat3);
     }
@@ -275,7 +275,7 @@ class Quat extends AttrValue {
 
         // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
         // article "Quaternion Calculus and Fast Animation".
-        let fTrace = mat3.__data[0] + mat3.__data[4] + mat3.__data[8];
+        const fTrace = mat3.__data[0] + mat3.__data[4] + mat3.__data[8];
         let fRoot;
 
         if (fTrace > 0.0) {
@@ -293,8 +293,8 @@ class Quat extends AttrValue {
                 i = 1;
             if (mat3.__data[8] > mat3.__data[i * 3 + i])
                 i = 2;
-            let j = (i + 1) % 3;
-            let k = (i + 2) % 3;
+            const j = (i + 1) % 3;
+            const k = (i + 2) % 3;
 
             fRoot = Math.sqrt(mat3.__data[i * 3 + i] - mat3.__data[j * 3 + j] - mat3.__data[k * 3 + k] + 1.0);
             this.__data[i] = 0.5 * fRoot;
@@ -396,7 +396,7 @@ class Quat extends AttrValue {
      * @returns {Number} squared length of a
      */
     lengthSquared() {
-        let x = this.__data[0],
+        const x = this.__data[0],
             y = this.__data[1],
             z = this.__data[2],
             w = this.__data[3];
@@ -408,7 +408,7 @@ class Quat extends AttrValue {
      *
      */
     normalize() {
-        let x = this.__data[0],
+        const x = this.__data[0],
             y = this.__data[1],
             z = this.__data[2],
             w = this.__data[3];
@@ -423,7 +423,7 @@ class Quat extends AttrValue {
     }
 
     normalizeInPlace() {
-        let x = this.__data[0],
+        const x = this.__data[0],
             y = this.__data[1],
             z = this.__data[2],
             w = this.__data[3];
@@ -453,7 +453,7 @@ class Quat extends AttrValue {
      * @returns {vec4}
      */
     cross(b) {
-        let ax = this.x,
+        const ax = this.x,
             ay = this.y,
             az = this.z,
             at = this.w,
@@ -496,7 +496,7 @@ class Quat extends AttrValue {
     // }
 
     multiply(quat) {
-        let ax = this.__data[0],
+        const ax = this.__data[0],
             ay = this.__data[1],
             az = this.__data[2],
             aw = this.__data[3],
@@ -514,7 +514,7 @@ class Quat extends AttrValue {
     };
 
     multiplyInPlace(quat) {
-        let ax = this.__data[0],
+        const ax = this.__data[0],
             ay = this.__data[1],
             az = this.__data[2],
             aw = this.__data[3],
@@ -535,8 +535,8 @@ class Quat extends AttrValue {
     /// Don't forget to normalize the quaternion unless 
     /// you want axial translation as well as rotation.
     rotateVec3(vec3) {
-        let vq = new Quat(vec3.x, vec3.y, vec3.z, 0.0);
-        let pq = this.multiply(vq).multiply(this.conjugate());
+        const vq = new Quat(vec3.x, vec3.y, vec3.z, 0.0);
+        const pq = this.multiply(vq).multiply(this.conjugate());
         return new Vec3(pq.x, pq.y, pq.z);
     }
 
@@ -550,7 +550,7 @@ class Quat extends AttrValue {
     rotateX(rad) {
         rad *= 0.5;
 
-        let ax = this.x,
+        const ax = this.x,
             ay = this.y,
             az = this.z,
             aw = this.w,
@@ -572,7 +572,7 @@ class Quat extends AttrValue {
     rotateY(rad) {
         rad *= 0.5;
 
-        let ax = this.x,
+        const ax = this.x,
             ay = this.y,
             az = this.z,
             aw = this.w,
@@ -594,7 +594,7 @@ class Quat extends AttrValue {
     rotateZ(rad) {
         rad *= 0.5;
 
-        let ax = this.x,
+        const ax = this.x,
             ay = this.y,
             az = this.z,
             aw = this.w,
@@ -608,7 +608,7 @@ class Quat extends AttrValue {
     };
 
     toMat3() {
-        let x = this.x,
+        const x = this.x,
             y = this.y,
             z = this.z,
             w = this.w,
@@ -626,7 +626,7 @@ class Quat extends AttrValue {
             wy = w * y2,
             wz = w * z2;
 
-        let mat3 = new Mat3();
+        const mat3 = new Mat3();
         mat3.__data[0] = 1 - yy - zz;
         mat3.__data[3] = yx - wz;
         mat3.__data[6] = zx + wy;
@@ -645,12 +645,12 @@ class Quat extends AttrValue {
 
     /// Returns the X axis of this quaternion
     getXaxis() {
-        let xy = this.x * this.y;
-        let xz = this.x * this.z;
-        let yy = this.y * this.y;
-        let yw = this.y * this.w;
-        let zz = this.z * this.z;
-        let zw = this.z * this.w;
+        const xy = this.x * this.y;
+        const xz = this.x * this.z;
+        const yy = this.y * this.y;
+        const yw = this.y * this.w;
+        const zz = this.z * this.z;
+        const zw = this.z * this.w;
 
         return new Vec3(
             1.0 - 2.0 * (zz + yy),
@@ -661,12 +661,12 @@ class Quat extends AttrValue {
 
     /// Returns the Y axis of this quaternion
     getYaxis() {
-        let xx = this.x * this.x;
-        let xy = this.x * this.y;
-        let xw = this.x * this.w;
-        let yz = this.y * this.z;
-        let zz = this.z * this.z;
-        let zw = this.z * this.w;
+        const xx = this.x * this.x;
+        const xy = this.x * this.y;
+        const xw = this.x * this.w;
+        const yz = this.y * this.z;
+        const zz = this.z * this.z;
+        const zw = this.z * this.w;
 
         return new Vec3(
             2.0 * (xy - zw),
@@ -677,14 +677,14 @@ class Quat extends AttrValue {
 
     /// Returns the Z axis of this quaternion
     getZaxis() {
-        let xx = this.x * this.x;
-        let xz = this.x * this.z;
-        let xw = this.x * this.w;
+        const xx = this.x * this.x;
+        const xz = this.x * this.z;
+        const xw = this.x * this.w;
 
-        let yy = this.y * this.y;
-        let yz = this.y * this.z;
-        let yw = this.y * this.w;
-        let temp = new Vec3();
+        const yy = this.y * this.y;
+        const yz = this.y * this.z;
+        const yw = this.y * this.w;
+        const temp = new Vec3();
 
         return new Vec3(
             2.0 * (yw + xz),
@@ -716,7 +716,7 @@ class Quat extends AttrValue {
     }
 
     toMat4() {
-        let x = this.x,
+        const x = this.x,
             y = this.y,
             z = this.z,
             w = this.w,
@@ -735,7 +735,7 @@ class Quat extends AttrValue {
             wz = w * z2;
 
         // Set the columns
-        let mat4 = new Mat4();
+        const mat4 = new Mat4();
         mat4.__data[0] = 1 - yy - zz;
         mat4.__data[4] = yx - wz;
         mat4.__data[8] = zx + wy;
@@ -753,12 +753,12 @@ class Quat extends AttrValue {
 
 
     getXaxis() {
-        let xy = this.x * this.y;
-        let xz = this.x * this.z;
-        let yy = this.y * this.y;
-        let yw = this.y * this.w;
-        let zz = this.z * this.z;
-        let zw = this.z * this.w;
+        const xy = this.x * this.y;
+        const xz = this.x * this.z;
+        const yy = this.y * this.y;
+        const yw = this.y * this.w;
+        const zz = this.z * this.z;
+        const zw = this.z * this.w;
 
         return new Vec3(
             1.0 - 2.0 * (zz + yy),
@@ -768,12 +768,12 @@ class Quat extends AttrValue {
     }
 
     getYaxis() {
-        let xx = this.x * this.x;
-        let xy = this.x * this.y;
-        let xw = this.x * this.w;
-        let yz = this.y * this.z;
-        let zz = this.z * this.z;
-        let zw = this.z * this.w;
+        const xx = this.x * this.x;
+        const xy = this.x * this.y;
+        const xw = this.x * this.w;
+        const yz = this.y * this.z;
+        const zz = this.z * this.z;
+        const zw = this.z * this.w;
 
         return new Vec3(
             2.0 * (xy - zw),
@@ -783,13 +783,13 @@ class Quat extends AttrValue {
     }
 
     getZaxis() {
-        let xx = this.x * this.x;
-        let xz = this.x * this.z;
-        let xw = this.x * this.w;
+        const xx = this.x * this.x;
+        const xz = this.x * this.z;
+        const xw = this.x * this.w;
 
-        let yy = this.y * this.y;
-        let yz = this.y * this.z;
-        let yw = this.y * this.w;
+        const yy = this.y * this.y;
+        const yz = this.y * this.z;
+        const yw = this.y * this.w;
 
         return new Vec3(
             2.0 * (yw + xz),
@@ -808,7 +808,7 @@ class Quat extends AttrValue {
      * @returns {vec4} out
      */
     lerp(b, w) {
-        let result = new Quat(
+        const result = new Quat(
             this.x + (w * (b.x - this.x)),
             this.y + (w * (b.y - this.y)),
             this.z + (w * (b.z - this.z)),
@@ -826,9 +826,9 @@ class Quat extends AttrValue {
     //  * @returns {vec4} out
     //  */
     // random(scale = 1.0) {
-    //     let r = glMatrix.RANDOM() * 2.0 * Math.PI;
-    //     let z = (glMatrix.RANDOM() * 2.0) - 1.0;
-    //     let zScale = Math.sqrt(1.0 - z * z) * scale;
+    //     const r = glMatrix.RANDOM() * 2.0 * Math.PI;
+    //     const z = (glMatrix.RANDOM() * 2.0) - 1.0;
+    //     const zScale = Math.sqrt(1.0 - z * z) * scale;
 
     //     out[0] = Math.cos(r) * zScale;
     //     out[1] = Math.sin(r) * zScale;

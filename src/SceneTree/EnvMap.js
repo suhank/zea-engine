@@ -94,7 +94,7 @@ class EnvMap extends BaseImage {
             const cdm = entries.cdm;
             const samples = entries.samples;
 
-            this.__samples = JSON.parse((new TextDecoder("utf-8")).decode(samples));
+            this.__sampleSets = JSON.parse((new TextDecoder("utf-8")).decode(samples));
             
             /////////////////////////////////
             // Parse the data.
@@ -148,6 +148,10 @@ class EnvMap extends BaseImage {
     }
     getHDRTint() {
         return this.__hdrtint;
+    }
+    
+    getSampleSets() {
+        return this.__sampleSets;
     }
     
     //////////////////////////////////////////

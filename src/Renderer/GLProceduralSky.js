@@ -233,7 +233,7 @@ varying vec2 v_texCoord;
 <%include file="sunAndSky.glsl"/>
 
 void main() {
-    vec3 viewVector = uvToNormalSphOct(v_texCoord);
+    vec3 viewVector = sphOctUvToDir(v_texCoord);
     vec3 color = sunAndSky(viewVector);
     gl_FragColor = vec4(color, 1);
 }
@@ -322,13 +322,6 @@ class GLProceduralSky extends GLProbe {
         console.log(this.__unixTime)
             // this.renderSky();
         this.updated.emit();
-    }
-
-    addGUI(gui) {
-        gui.add(this, 'backgroundFocus', 0.0, 1.0);
-        gui.add(this, 'longitude');
-        gui.add(this, 'latitude');
-        gui.add(this, 'time', 0, 30);
     }
 
     renderSky() {

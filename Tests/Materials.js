@@ -2,11 +2,12 @@
     
     const scene = new Visualive.Scene(resources);
 
-    let envMapName = "Assets/hdri_sky_02_sample" + (Visualive.SystemDesc.isMobileDevice ? 2 : 0) + ".vlh";
-    let envMap =  new Visualive.FileImage(envMapName);
+    // const envMapName = "Assets/hdri_sky_02_sample" + (Visualive.SystemDesc.isMobileDevice ? 2 : 0) + ".vlh";
+    const envMap = new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
+    // const envMap =  new Visualive.FileImage(envMapName);
     scene.setEnvMap(envMap);
 
-    let addMeshShape = (name, shape, pos, mat)=>{
+    const addMeshShape = (name, shape, pos, mat)=>{
         const geomItem = new Visualive.GeomItem(name, shape, mat);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(geomItem);

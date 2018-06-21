@@ -138,7 +138,7 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    vec2 uv = normalToUvSphOct(normalize(v_worldDir));
+    vec2 uv = dirToSphOctUv(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
         vec4 texel = texture2D(envMap, uv);

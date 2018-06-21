@@ -63,15 +63,11 @@ class GLEnvMap extends GLProbe {
         this.__renderer.requestRedraw();
     }
 
-    addGUI(gui) {
-        gui.add(this, 'backgroundFocus', 0.0, 1.0);
-    }
-
     draw(renderstate) {
         if (this.__envMap.isLoaded()) {
 
             const gl = this.__gl;
-            let debug = true;
+            let debug = false;
             if (debug) {
                 let screenQuad = gl.screenQuad;
                 screenQuad.bindShader(renderstate);

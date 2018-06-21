@@ -95,7 +95,7 @@ void main(void) {
 
     vec4 env = _env;
     if(_envTexConnected) {
-        vec2 uv = normalToUvSphOct(normalize(v_worldDir));
+        vec2 uv = dirToSphOctUv(normalize(v_worldDir));
         env = texture2D(_envTex, uv);
     }
 

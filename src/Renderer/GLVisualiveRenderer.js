@@ -327,18 +327,6 @@ class GLVisualiveRenderer extends GLRenderer {
         this.requestRedraw();
     }
 
-    addGUI(gui) {
-        gui.add(this, 'exposure', this.__exposureRange[0], this.__exposureRange[1]);
-        // gui.add(this, 'tonemap', 0, 1);
-        // gui.add(this, 'gamma', 0, 5.0);
-        // gui.add(this, 'antialiase');
-        gui.add(this, 'displayEnvironment');
-        // gui.add(this, 'debugLightmaps');
-
-        if (this.__glEnvMap)
-            this.__glEnvMap.addGUI(gui);
-    }
-
     ////////////////////////////
     // Rendering
 

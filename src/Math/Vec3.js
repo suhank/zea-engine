@@ -410,16 +410,16 @@ class Vec3 extends AttrValue {
 
     toJSON() {
         return {
-            "x": this.x,
-            "y": this.y,
-            "z": this.z
+            x: this.x,
+            y: this.y,
+            z: this.z
         }
     }
 
     fromJSON(j) {
-        this.x = j['x'];
-        this.y = j['y'];
-        this.z = j['z'];
+        this.x = j.x;
+        this.y = j.y;
+        this.z = j.z;
     }
 };
 
