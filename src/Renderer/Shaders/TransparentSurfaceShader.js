@@ -85,34 +85,34 @@ uniform mat4 cameraMatrix;
 uniform float planeDist;
 uniform float planeAngle;
 
-uniform color _BaseColor;
-uniform float _Opacity;
+uniform color BaseColor;
+uniform float Opacity;
 
 #ifdef ENABLE_SPECULAR
 <%include file="math/constants.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
-uniform float _Roughness;
-uniform float _Metallic;
-uniform float _Reflectance;
+uniform float Roughness;
+uniform float Metallic;
+uniform float Reflectance;
 #endif
 
 #ifdef __ENABLE_TEXTURES
-uniform sampler2D _BaseColorTex;
-uniform bool _BaseColorTexConnected;
+uniform sampler2D BaseColorTex;
+uniform bool BaseColorTexConnected;
 
-uniform sampler2D _OpacityTex;
-uniform bool _OpacityTexConnected;
+uniform sampler2D OpacityTex;
+uniform bool OpacityTexConnected;
 
-uniform sampler2D _RoughnessTex;
-uniform bool _RoughnessTexConnected;
+uniform sampler2D RoughnessTex;
+uniform bool RoughnessTexConnected;
 
-uniform sampler2D _ReflectanceTex;
-uniform bool _ReflectanceTexConnected;
+uniform sampler2D ReflectanceTex;
+uniform bool ReflectanceTexConnected;
 
-uniform sampler2D _NormalTex;
-uniform bool _NormalTexConnected;
-uniform float _NormalScale;
+uniform sampler2D NormalTex;
+uniform bool NormalTexConnected;
+uniform float NormalScale;
 
 
 #endif
@@ -125,25 +125,25 @@ void main(void) {
     MaterialParams material;
 
 #ifndef __ENABLE_TEXTURES
-    material.baseColor      = _BaseColor.rgb;
-    float opacity           = _Opacity;
+    material.baseColor      = BaseColor.rgb;
+    float opacity           = Opacity;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness      = _Roughness;
-    material.metallic       = _Metallic;
-    material.reflectance    = _Reflectance;
+    material.roughness      = Roughness;
+    material.metallic       = Metallic;
+    material.reflectance    = Reflectance;
 #endif
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord        = v_worldPos.xz * 0.2;
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord).rgb;
-    material.roughness      = getLuminanceParamValue(_Roughness, _RoughnessTex, _RoughnessTexConnected, texCoord);
-    material.metallic       = getLuminanceParamValue(_Metallic, _MetallicTex, _MetallicTexConnected, texCoord);
-    material.reflectance    = _Reflectance;//getLuminanceParamValue(_Reflectance, _ReflectanceTex, _ReflectanceTexConnected, texCoord);
+    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord).rgb;
+    material.roughness      = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexConnected, texCoord);
+    material.metallic       = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexConnected, texCoord);
+    material.reflectance    = Reflectance;//getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexConnected, texCoord);
 
-    float opacity           = getLuminanceParamValue(_Opacity, _OpacityTex, _OpacityTexConnected, texCoords);
+    float opacity           = getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoords);
 #endif
 
 #ifndef ENABLE_SPECULAR
@@ -154,8 +154,8 @@ void main(void) {
     //vec3 surfacePos = -v_viewPos;
 
 #ifdef __ENABLE_TEXTURES
-    if(_NormalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_NormalTex, texCoord).rgb * 2.0 - 1.0);
+    if(NormalTexConnected){
+        vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif

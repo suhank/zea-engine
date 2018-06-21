@@ -58,11 +58,11 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
-uniform color _BaseColor;
+uniform color BaseColor;
 
 #ifdef ENABLE_TEXTURES
-uniform sampler2D _BaseColorTex;
-uniform bool _BaseColorTexConnected;
+uniform sampler2D BaseColorTex;
+uniform bool BaseColorTexConnected;
 #endif
 
 /* VS Outputs */
@@ -78,15 +78,15 @@ varying vec2 v_textureCoord;
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor = _BaseColor;
+    vec4 __baseColor = BaseColor;
 #else
-    vec4 baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, v_textureCoord);
+    vec4 __baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_textureCoord);
 #endif
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = baseColor;
+    fragColor = __baseColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

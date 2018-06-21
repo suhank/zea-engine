@@ -28,7 +28,7 @@ attribute vec3 positions;    //(location = 0)
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform vec3 _projectionCenter;
+uniform vec3 projectionCenter;
 
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
@@ -46,7 +46,7 @@ void main()
     gl_Position = modelViewProjectionMatrix * pos;
 
     vec4 worldPos = modelMatrix * pos;
-    v_worldDir = worldPos.xyz - _projectionCenter;
+    v_worldDir = worldPos.xyz - projectionCenter;
 }
 
 `);
@@ -57,7 +57,7 @@ void main()
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
         paramDescs.push({ name: 'envMap', defaultValue: new Color(1.0, 1.0, 0.5) })
-        paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(3.0, 0.0, 1.7) })
+        paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
         paramDescs.push({ name: 'linearSpaceImage', defaultValue: true })
         return paramDescs;
     }
@@ -78,15 +78,14 @@ precision highp float;
 uniform sampler2D envMap;
 uniform bool envMapConnected;
 // uniform color _env;
-// uniform sampler2D _envTex;
+// uniform sampler2D envTex;
 // uniform bool _envTexConnected;
-uniform bool _linearSpaceImage;
+uniform bool linearSpaceImage;
 
 uniform float exposure;
 
 /* VS Outputs */
 varying vec3 v_worldDir;
-varying vec2 v_texCoord;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -101,7 +100,7 @@ void main(void) {
     fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    if(_linearSpaceImage) {
+    if(linearSpaceImage) {
         fragColor.rgb = toGamma(fragColor.rgb * exposure);
     }
     else {
@@ -133,15 +132,14 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 
 uniform color _env;
-uniform sampler2D _envTex;
+uniform sampler2D envTex;
 uniform bool _envTexConnected;
-uniform bool _linearSpaceImage;
+uniform bool linearSpaceImage;
 
 uniform float exposure;
 
 /* VS Outputs */
 varying vec3 v_worldDir;
-varying vec2 v_texCoord;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -156,7 +154,7 @@ void main(void) {
     fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    if(_linearSpaceImage) {
+    if(linearSpaceImage) {
         fragColor.rgb = toGamma(fragColor.rgb * exposure);
     }
     else {

@@ -29,6 +29,9 @@ import {
     Lightmap,
     LightmapMixer
 } from './Lightmap.js';
+import {
+    EnvMap
+} from './EnvMap.js';
 
 
 class Scene {
@@ -115,7 +118,7 @@ class Scene {
     setEnvMapName(envMapName) {
         if(envMapName.endsWith('.vlh'))
             envMapName = envMapName.splice(0, envMapName.length = 4);
-        let envMap = new Visualive.FileImage(envMapName + this.__envmapLOD + ".vlh", resourceLoader);
+        const envMap = new EnvMap(envMapName + this.__envmapLOD + ".vlh", resourceLoader);
         this.setEnvMap(envMap);
     }
 
@@ -237,7 +240,7 @@ class Scene {
     fromJSON(json) {
 
         if(j.envMap) {
-          const envMap =  new Visualive.FileImage('envMap', resourceLoader);
+          const envMap = new EnvMap('envMap', resourceLoader);
           envMap.fromJSON(j.envMap);
           this.setEnvMap(envMap);
         }

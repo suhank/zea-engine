@@ -30,7 +30,7 @@ attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform vec3 _projectionCenter;
+uniform vec3 projectionCenter;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
@@ -53,7 +53,7 @@ void main(void) {
     gl_Position     = modelViewProjectionMatrix * pos;
 
     vec4 worldPos = modelMatrix * pos;
-    v_worldDir = worldPos.xyz - _projectionCenter;
+    v_worldDir = worldPos.xyz - projectionCenter;
 
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 }
@@ -76,7 +76,7 @@ uniform sampler2D lightmap;
 uniform float _shadowMultiplier;
 
 uniform color _env;
-uniform sampler2D _envTex;
+uniform sampler2D envTex;
 uniform bool _envTexConnected;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

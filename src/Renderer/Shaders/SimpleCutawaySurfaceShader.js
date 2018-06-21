@@ -93,15 +93,15 @@ varying vec2 v_textureCoord;
 uniform mat4 cameraMatrix;
 
 
-uniform color _BaseColor;
-uniform float _Opacity;
+uniform color BaseColor;
+uniform float Opacity;
 
 #ifdef ENABLE_TEXTURES
 
-uniform sampler2D _BaseColorTex;
-uniform bool _BaseColorTexConnected;
-uniform sampler2D _OpacityTex;
-uniform bool _OpacityTexConnected;
+uniform sampler2D BaseColorTex;
+uniform bool BaseColorTexConnected;
+uniform sampler2D OpacityTex;
+uniform bool BaseColorTexConnected;
 
 #endif
 
@@ -110,10 +110,10 @@ uniform bool _OpacityTexConnected;
 <%include file="materialparams.glsl"/>
 <%include file="cutaways.glsl"/>
 
-uniform int _cutawayEnabled;
-uniform vec3 _planeNormal;
-uniform float _planeDist;
-uniform color _cutColor;
+uniform int cutawayEnabled;
+uniform vec3 planeNormal;
+uniform float planeDist;
+uniform color cutColor;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -125,7 +125,7 @@ void main(void) {
 #endif
 
     // Cutaways
-    if(_cutawayEnabled != 0 && cutaway(v_worldPos, _planeNormal, _planeDist, _cutColor, fragColor)){
+    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeNormal, cutColor, fragColor)){
 #ifndef ENABLE_ES3
         gl_FragColor = fragColor;
 #endif
@@ -133,12 +133,12 @@ void main(void) {
     }
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor      = _BaseColor;
-    float opacity       = baseColor.a * _Opacity;
+    vec4 __baseColor      = BaseColor;
+    float __opacity       = __baseColor.a * Opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec4 baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord);
-    float opacity       = baseColor.a * getLuminanceParamValue(_Opacity, _OpacityTex, _OpacityTexConnected, texCoord);
+    vec4 __baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
+    float __opacity       = __baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
 #endif
 
     // Hacky simple irradiance. 
@@ -150,11 +150,11 @@ void main(void) {
         ndotv = dot(normal, viewVector);
 
         // Note: these 2 lines can be used to debug inverted meshes.
-        //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+        //__baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
 
-    fragColor = vec4(ndotv * baseColor.rgb, opacity);
+    fragColor = vec4(ndotv * __baseColor.rgb, __opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

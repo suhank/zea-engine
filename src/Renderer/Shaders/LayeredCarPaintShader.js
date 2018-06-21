@@ -131,12 +131,12 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 
-uniform color _BaseColor;
+uniform color BaseColor;
 uniform color _midColorTint;
 uniform float _midColorTintReflectance;
 
 uniform float _microflakePerturbation;
-uniform sampler2D _flakesNormalTex;
+uniform sampler2D flakesNormalTex;
 uniform float _flakesScale;
 
 #ifdef ENABLE_SPECULAR
@@ -152,8 +152,8 @@ uniform float _glossReflectance;
 
 #ifdef ENABLE_TEXTURES
 
-uniform sampler2D _BaseColorTex;
-uniform bool _BaseColorTexConnected;
+uniform sampler2D BaseColorTex;
+uniform bool BaseColorTexConnected;
 
 #endif
 
@@ -207,10 +207,10 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = _BaseColor.rgb;
+    material.baseColor      = BaseColor.rgb;
 #else
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord).rgb;
+    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord).rgb;
 #endif
 
 #ifdef ENABLE_SPECULAR

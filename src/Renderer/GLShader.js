@@ -56,41 +56,6 @@ class GLShader extends BaseItem {
         return [];
     }
 
-    // getParamTextures() {
-    //     const textures = {};
-    //     for (let param of this.__params) {
-    //         if (param.getImage())
-    //             textures[param.getName()] = param.getImage();
-    //     }
-    //     return textures;
-    // }
-
-    // __makeParameterTexturable(param) {
-    //     makeParameterTexturable(param);
-    //     // param.textureConnected.connect(this.textureConnected.emit);
-    //     // param.textureDisconnected.connect(this.textureDisconnected.emit);
-    //     param.valueChanged.connect(this.updated.emit);
-    // }
-
-    // addParameter(paramName, defaultValue) {
-    //     let image;
-    //     if (defaultValue instanceof BaseImage) {
-    //         image = defaultValue;
-    //         defaultValue = new Color();
-    //     }
-    //     const param = super.addParameter(paramName, defaultValue);
-    //     this.__makeParameterTexturable(param);
-    //     if (image) {
-    //         param.setImage(image)
-    //     }
-    //     return param;
-    // }
-
-    // addParameterInstance(param) {
-    //     super.addParameterInstance(param);
-    //     this.__makeParameterTexturable(param);
-    // }
-
     ///////////////////////////////////
     // Compilation
 

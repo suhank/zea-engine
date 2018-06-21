@@ -33,25 +33,33 @@ import {
 
 
 const bindParam = (gl, param, renderstate, gltextures = {}) => {
+    const unifs = renderstate.unifs;
     const name = param.getName();
+    const unif = unifs[name];
     // console.log("bindParam:" + name);
     if (param.getValue() instanceof BaseImage) {
         const gltexture = gltextures[name];
-        const unif = renderstate.unifs['_' + name + 'Tex'];
-        if (gltexture && unif && gltexture.bindToUniform(renderstate, unif)) {
-            return;
+        if (gltexture) {
+            if(unif.type == BaseImage) {
+                gltexture.bindToUniform(renderstate, unif);
+            }
+            else {
+                const texunif = unifs[name + 'Tex'];
+                if(texunif && gltexture.bindToUniform(renderstate, texunif)) {
+                    return;
+                }
+            }
         }
         // If the texture didn't bind, then let the regular value be bound...continue into the rest of the function.
         // return;
     }
 
-    const unif = renderstate.unifs['_' + name];
     if (unif == undefined)
         return;
 
     // Note: we must set the texConnected value to 0 here so texutres bound for one
     // Material do not stay bound for subsequent materials.
-    const textureConnctedUnif = renderstate.unifs[unif.name + 'TexConnected'];
+    const textureConnctedUnif = unifs[unif.name + 'TexConnected'];
     if (textureConnctedUnif) {
         gl.uniform1i(textureConnctedUnif.location, 0);
     }
@@ -92,6 +100,8 @@ const bindParam = (gl, param, renderstate, gltextures = {}) => {
             break;
         case Mat4:
             gl.uniformMatrix4fv(unif.location, false, value.asArray());
+            break;
+        case BaseImage:
             break;
         default:
             {

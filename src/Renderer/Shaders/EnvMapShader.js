@@ -179,7 +179,7 @@ uniform float exposure;
 #endif
 
 uniform sampler2D backgroundImage;
-uniform bool _linearSpaceImage;
+uniform bool linearSpaceImage;
 
 
 /* VS Outputs */
@@ -201,7 +201,7 @@ void main(void) {
     fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    if(_linearSpaceImage)
+    if(linearSpaceImage)
         fragColor.rgb = toGamma(fragColor.rgb * exposure);
 
     fragColor.rgb = fragColor.rgb * exposure;

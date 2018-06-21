@@ -136,6 +136,9 @@ class GLHDRImage extends GLTexture2D {
 
         this.updated.emit();
     }
+    bindToUniform(renderstate, unif, type = 1) {
+        super.bindToUniform(renderstate, unif, type);
+    }
 
     destroy() {
         super.destroy();

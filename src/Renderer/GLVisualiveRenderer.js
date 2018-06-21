@@ -86,7 +86,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__displayEnvironment = true;
         this.__debugMode = 0;
         this.__debugLightmaps = false;
-        this.__planeDist = 0.0;
+        this._planeDist = 0.0;
         this.__planeAngle = 0.0;
 
         // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
@@ -310,11 +310,11 @@ class GLVisualiveRenderer extends GLRenderer {
     }
 
     get planeDist() {
-        return this.__planeDist;
+        return this._planeDist;
     }
 
     set planeDist(val) {
-        this.__planeDist = val;
+        this._planeDist = val;
         this.requestRedraw();
     }
 
@@ -372,7 +372,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
-        renderstate.planeDist = this.__planeDist;
+        renderstate.planeDist = this._planeDist;
         renderstate.planeAngle = this.__planeAngle;
         renderstate.exposure = Math.pow(2, this.__exposure);
         renderstate.shaderopts = this.__preproc;

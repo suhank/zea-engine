@@ -140,37 +140,37 @@ uniform float exposure;
 
 uniform mat4 cameraMatrix;
 
-uniform color _BaseColor;
-uniform float _EmissiveStrength;
+uniform color BaseColor;
+uniform float EmissiveStrength;
 
 
 #ifdef ENABLE_SPECULAR
-uniform float _Roughness;
-uniform float _Metallic;
-uniform float _Reflectance;
+uniform float Roughness;
+uniform float Metallic;
+uniform float Reflectance;
 #endif
 
 #ifdef ENABLE_TEXTURES
-uniform sampler2D _BaseColorTex;
-uniform bool _BaseColorTexConnected;
+uniform sampler2D BaseColorTex;
+uniform bool BaseColorTexConnected;
 
 #ifdef ENABLE_SPECULAR
-uniform sampler2D _RoughnessTex;
-uniform bool _RoughnessTexConnected;
+uniform sampler2D RoughnessTex;
+uniform bool RoughnessTexConnected;
 
-uniform sampler2D _MetallicTex;
-uniform bool _MetallicTexConnected;
+uniform sampler2D MetallicTex;
+uniform bool MetallicTexConnected;
 
-uniform sampler2D _ReflectanceTex;
-uniform bool _ReflectanceTexConnected;
+uniform sampler2D ReflectanceTex;
+uniform bool ReflectanceTexConnected;
 
-uniform sampler2D _NormalTex;
-uniform bool _NormalTexConnected;
-uniform float _NormalScale;
+uniform sampler2D NormalTex;
+uniform bool NormalTexConnected;
+uniform float NormalScale;
 #endif
 
-uniform sampler2D _EmissiveStrengthTex;
-uniform bool _EmissiveStrengthTexConnected;
+uniform sampler2D EmissiveStrengthTex;
+uniform bool EmissiveStrengthTexConnected;
 
 #endif
 
@@ -179,10 +179,10 @@ uniform bool _EmissiveStrengthTexConnected;
 #endif
 
 
-uniform int _cutawayEnabled;
-uniform vec3 _planeNormal;
-uniform float _planeDist;
-uniform color _cutColor;
+uniform int cutawayEnabled;
+uniform vec3 planeNormal;
+uniform float planeDist;
+uniform color cutColor;
 
 void main(void) {
 #ifndef ENABLE_ES3
@@ -190,7 +190,7 @@ void main(void) {
 #endif
 
      // Cutaways
-    if(_cutawayEnabled != 0 && cutaway(v_worldPos, _planeNormal, _planeDist, _cutColor, fragColor)) {
+    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeDist, cutColor, fragColor)) {
 #ifndef ENABLE_ES3
         gl_FragColor = fragColor;
 #endif
@@ -200,27 +200,27 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = _BaseColor.rgb;
-    float emission      = _EmissiveStrength;
+    material.baseColor      = BaseColor.rgb;
+    float emission      = EmissiveStrength;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness     = _Roughness;
-    material.metallic      = _Metallic;
-    material.reflectance   = _Reflectance;
+    material.roughness     = Roughness;
+    material.metallic      = Metallic;
+    material.reflectance   = Reflectance;
 #endif
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord      = v_worldPos.xz * 0.2;
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(_BaseColor, _BaseColorTex, _BaseColorTexConnected, texCoord).rgb;
+    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord).rgb;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness     = getLuminanceParamValue(_Roughness, _RoughnessTex, _RoughnessTexConnected, texCoord);
-    material.metallic      = getLuminanceParamValue(_Metallic, _MetallicTex, _MetallicTexConnected, texCoord);
-    material.reflectance   = getLuminanceParamValue(_Reflectance, _ReflectanceTex, _ReflectanceTexConnected, texCoord);
+    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexConnected, texCoord);
+    material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexConnected, texCoord);
+    material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexConnected, texCoord);
 #endif
-    float emission      = getLuminanceParamValue(_EmissiveStrength, _EmissiveStrengthTex, _EmissiveStrengthTexConnected, texCoord);
+    float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexConnected, texCoord);
 #endif
 
     vec3 viewNormal = normalize(v_viewNormal);
@@ -228,8 +228,8 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_SPECULAR
-    if(_NormalTexConnected){
-        vec3 textureNormal_tangentspace = normalize(texture2D(_NormalTex, texCoord).rgb * 2.0 - 1.0);
+    if(NormalTexConnected){
+        vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
 #endif

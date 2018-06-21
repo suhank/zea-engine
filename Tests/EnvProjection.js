@@ -6,21 +6,20 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     scene.setEnvMap(envMap);
 
     const material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
-    // material.addParameter('env', envMap);
+    material.getParameter('envMap').setValue(envMap);
 
-    let offset = 0;
-    const addMeshShape = (name, shape)=>{
-        const geomItem = new Visualive.GeomItem(name + (offset++), shape, material);
+    const addMeshShape = (name, shape, xfo)=>{
+        const geomItem = new Visualive.GeomItem(name, shape, material);
+        geomItem.setLocalXfo(xfo);
         scene.getRoot().addChild(geomItem);
         return geomItem;
     }
 
-    const geomItem0 = addMeshShape('Plane', new Visualive.Plane(50.0, 50.0));
-
-    const geomItem2 = addMeshShape('Plane', new Visualive.Plane(5.0, 3.0));
-    geomItem2.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0, -2, 1), new Visualive.Quat({setFromAxisAndAngle: [new Visualive.Vec3(1, 0, 0), Math.PI * 0.5] })));
-    
-    // geomItem2.localXfo.ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
+    addMeshShape('Plane0', new Visualive.Plane(50.0, 50.0), new Visualive.Xfo());
+    addMeshShape('Plane1', 
+        new Visualive.Plane(6.0, 2.0), 
+        new Visualive.Xfo(new Visualive.Vec3(0, -2, 1), new Visualive.Quat({setFromAxisAndAngle: [new Visualive.Vec3(1, 0, 0), Math.PI * 0.5] }))
+        );
 
 
     /////////////////////////////////////
@@ -39,6 +38,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1, 1.2), new Visualive.Vec3(0, 0, 0.1));
     // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.setScene(scene);
+    renderer.gamma = 1.0;
 
 
     renderer.resumeDrawing();
