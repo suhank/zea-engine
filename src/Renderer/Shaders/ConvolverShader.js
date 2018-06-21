@@ -98,9 +98,9 @@ float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int
   return max(0.0, 0.5*log2(float(ww*hh)/float(num_samples)) - 0.5*log2(pdf));
 }
 
-uniform sampler2D   envMap;
-uniform sampler2D   envMap_layout;
-uniform vec4        envMap_desc;
+uniform sampler2D   envMapPyramid;
+uniform sampler2D   envMapPyramid_layout;
+uniform vec4        envMapPyramid_desc;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -115,14 +115,14 @@ void main(void) {
     if(false){
         vec2 uv = dirToSphOctUv(N);
         // fragColor = vec4(uv.x, uv.y, 0.0, 1.0);
-        fragColor = sampleImagePyramid(uv, 0.5, envMap_layout, envMap, envMap_desc);
-        // fragColor = sampleSubImage(uv, 0, envMap_layout, envMap, envMap_desc);
-        // fragColor = texture2D(envMap, uv);
+        fragColor = sampleImagePyramid(uv, 0.5, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc);
+        // fragColor = sampleSubImage(uv, 0, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc);
+        // fragColor = texture2D(envMapPyramid, uv);
     }
     else{
         const int numSamples = NUM_SAMPLES;
-        int w = int(floor(envMap_desc.x + 0.5));
-        int h = int(floor(envMap_desc.y + 0.5));
+        int w = int(floor(envMapPyramid_desc.x + 0.5));
+        int h = int(floor(envMapPyramid_desc.y + 0.5));
 
         vec4 color = vec4(0.0,0.0,0.0,0.0);
         float weight = 0.0;
@@ -140,7 +140,7 @@ void main(void) {
             // float pdf = D_ggx(a, NoH) * NoH / (4.0 * VoH);
             // float lod = compute_lod(H, pdf, numSamples, w, h);
 
-            color += sampleImagePyramid(uv, a, envMap_layout, envMap, envMap_desc) * VdotN;
+            color += sampleImagePyramid(uv, a, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc) * VdotN;
             weight += VdotN;
         }
         color /= float(weight);

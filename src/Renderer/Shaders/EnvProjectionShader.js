@@ -56,7 +56,7 @@ void main()
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'envMap', defaultValue: new Color(1.0, 1.0, 0.5) })
+        paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
         paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
         paramDescs.push({ name: 'linearSpaceImage', defaultValue: true })
         return paramDescs;
@@ -75,11 +75,7 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
-uniform sampler2D envMap;
-uniform bool envMapConnected;
-// uniform color _env;
-// uniform sampler2D envTex;
-// uniform bool _envTexConnected;
+uniform sampler2D envMapTex;
 uniform bool linearSpaceImage;
 
 uniform float exposure;
@@ -96,7 +92,8 @@ void main(void) {
 #endif
 
     vec2 texCoord = dirToSphOctUv(normalize(v_worldDir));
-    vec4 env = getColorParamValue(vec4(0,0,0,1), envMap, envMapConnected, texCoord);
+    // vec4 env = getColorParamValue(vec4(0,0,0,1), envMapTex, true, texCoord);
+    vec4 env = texture2D(envMapTex, texCoord);
     fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
@@ -131,9 +128,7 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
-uniform color _env;
-uniform sampler2D envTex;
-uniform bool _envTexConnected;
+uniform sampler2D envMapTex;
 uniform bool linearSpaceImage;
 
 uniform float exposure;
@@ -150,7 +145,7 @@ void main(void) {
 #endif
 
     vec2 texCoord = latLongUVsFromDir(normalize(v_worldDir));
-    vec4 env = getColorParamValue(vec4(1,0,0,1), envMap, envMapConnected, texCoord);
+    vec4 env = getColorParamValue(vec4(0,0,0,1), envMapTex, true, texCoord);
     fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

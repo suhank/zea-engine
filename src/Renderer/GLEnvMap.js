@@ -86,7 +86,7 @@ class GLEnvMap extends GLProbe {
                 const unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
                 //this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
-                this.bindToUniform(renderstate, unifs.envMap);
+                this.bindToUniform(renderstate, unifs.envMapPyramid);
 
                 {
                     let unif = unifs.focus;
@@ -105,6 +105,10 @@ class GLEnvMap extends GLProbe {
                 gl.drawQuad();
             }
         }
+    }
+    
+    bindSrcImgToUniform(renderstate, unif, type = 1) {
+        return this.__srcGLTex.bindToUniform(renderstate, unif, type);
     }
 
     destroy() {

@@ -129,7 +129,7 @@ class GLProbe extends ImageAtlas {
             this.__fbos[i].bindAndClear();
 
             // Note: we should not need to bind the texture every iteration. 
-            this.__lodPyramid.bindToUniform(renderstate, unifs.envMap);
+            this.__lodPyramid.bindToUniform(renderstate, unifs.envMapPyramid);
             if ('hammersleyMap' in unifs) {
                 hammersleyTexture.bindToUniform(renderstate, unifs.hammersleyMap);
             }

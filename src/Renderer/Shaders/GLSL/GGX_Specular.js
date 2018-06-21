@@ -9,13 +9,13 @@ shaderLibrary.setShaderModule('GGX_Specular.glsl', `
 <%include file="utils/imagePyramid.glsl"/>
 
 // uniform ImageAtlas envMap;
-uniform sampler2D   envMap;
-uniform sampler2D   envMap_layout;
-uniform vec4        envMap_desc;
+uniform sampler2D   envMapPyramid;
+uniform sampler2D   envMapPyramid_layout;
+uniform vec4        envMapPyramid_desc;
 
 
 vec3 sampleEnvMap(vec3 dir, float roughness) {
-    return sampleImagePyramid(dirToSphOctUv(dir), roughness, envMap_layout, envMap, envMap_desc).rgb;
+    return sampleImagePyramid(dirToSphOctUv(dir), roughness, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb;
 }
 
 

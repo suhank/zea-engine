@@ -6,7 +6,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     scene.setEnvMap(envMap);
 
     const material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
-    material.getParameter('envMap').setValue(envMap);
+    // material.getParameter('envMap').setValue(envMap);
 
     const addMeshShape = (name, shape, xfo)=>{
         const geomItem = new Visualive.GeomItem(name, shape, material);
@@ -38,7 +38,8 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1, 1.2), new Visualive.Vec3(0, 0, 0.1));
     // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.setScene(scene);
-    renderer.gamma = 1.0;
+    // renderer.gamma = 1.0;
+    renderer.exposure = 0.5;
 
 
     renderer.resumeDrawing();

@@ -66,7 +66,7 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1, 1.2), new Visualive.Vec3(0, 0, 0.1));
     // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.setScene(scene);
-    renderer.gamma = 1.0;
+    renderer.exposure = 0.5;
     // renderer.displayEnvironment = false;
 
 

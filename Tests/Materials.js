@@ -15,20 +15,17 @@
     for(let i=0; i<10; i++){
         for(let j=0; j<10; j++){
             const material = new Visualive.Material('surfaces', 'StandardSurfaceShader');
-            material.addParameter('BaseColor', new Visualive.Color(0.6, 0.0, 0.0));
-            material.addParameter('Roughness', i/9);
-            material.addParameter('Metallic', j/9);
-            if(j < 6)
-                material.addParameter('reflectance', 0.02);
-            else
-                material.addParameter('reflectance', 0.5);
+            material.getParameter('BaseColor').setValue(new Visualive.Color(0.6, 0.0, 0.0));
+            material.getParameter('Roughness').setValue(i/9);
+            material.getParameter('Metallic').setValue(j < 5 ? 0.05 : 0.95);
+            material.getParameter('Reflectance').setValue(j < 5 ? 0.03 : 0.8);
             addMeshShape('Sphere'+i+"-"+j, new Visualive.Sphere(1.4, 40), new Visualive.Vec3(i*3.4, j*3.4, 0), material);
         }
     }
     
     const renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.exposure = 1.0;
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-20,-20,10), new Visualive.Vec3(10,10,0));
     
     renderer.setScene(scene);
     renderer.frameAll();

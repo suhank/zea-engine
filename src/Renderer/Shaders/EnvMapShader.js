@@ -121,9 +121,10 @@ uniform float exposure;
 #endif
 
 // uniform ImageAtlas envMap;
-uniform sampler2D   envMap;
-uniform sampler2D   envMap_layout;
-uniform vec4        envMap_desc;
+uniform sampler2D   envMapPyramid;
+uniform sampler2D   envMapPyramid_layout;
+uniform vec4        envMapPyramid_desc;
+
 
 /* VS Outputs */
 varying vec3 v_worldDir;
@@ -141,11 +142,11 @@ void main(void) {
     vec2 uv = dirToSphOctUv(normalize(v_worldDir));
     if(false){
         // Use these lines to debug the src GL image.
-        vec4 texel = texture2D(envMap, uv);
+        vec4 texel = texture2D(envMapPyramid, uv);
         fragColor = vec4(texel.rgb/texel.a, 1.0);
     }
     else{
-        fragColor = vec4(sampleImagePyramid(uv, focus, envMap_layout, envMap, envMap_desc).rgb, 1.0);
+        fragColor = vec4(sampleImagePyramid(uv, focus, envMapPyramid_layout, envMapPyramid, envMapPyramid_desc).rgb, 1.0);
     }
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

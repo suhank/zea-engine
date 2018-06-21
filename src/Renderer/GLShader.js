@@ -322,10 +322,16 @@ class GLShader extends BaseItem {
                     gl.uniformMatrix4fv(unif.location, false, renderstate.projectionMatrix.asArray());
                 }
             }
+
+            if(renderstate.envMap)
             {
-                const unif = unifs.envMap;
-                if (unif && renderstate.envMap != undefined) {
-                    renderstate.envMap.bindToUniform(renderstate, unif);
+                const envMapPyramid = unifs.envMapPyramid;
+                if (envMapPyramid) {
+                    renderstate.envMap.bindToUniform(renderstate, envMapPyramid);
+                }
+                const envMapTex = unifs.envMapTex;
+                if (envMapTex) {
+                    renderstate.envMap.bindSrcImgToUniform(renderstate, envMapTex);
                 }
             }
             {
