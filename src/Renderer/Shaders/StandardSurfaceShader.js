@@ -288,7 +288,7 @@ void main(void) {
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
-        paramDescs.push({ name: 'Reflectance', defaultValue: 0.0001 } );
+        paramDescs.push({ name: 'Reflectance', defaultValue: 0.025 } );
         return paramDescs;
     }
 };

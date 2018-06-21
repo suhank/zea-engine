@@ -2,6 +2,9 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
+    Signal
+} from '../Utilities';
+import {
     Xfo
 } from '../Math';
 import {
@@ -89,21 +92,14 @@ class GLVisualiveRenderer extends GLRenderer {
         this._planeDist = 0.0;
         this.__planeAngle = 0.0;
 
-        // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
-        // this.addPass(new GLWirePass(this.__gl, this.__collector));
-        // this.__edgesPass = new GLHardEdgesPass(this.__gl, this.__collector);
-        // this.__pointsPass = new GLMeshPointsPass(this.__gl, this.__collector);
-
         this.__drawEdges = false;
         this.__drawPoints = false;
+
+        this.envMapAssigned = new Signal(true);
 
         const gl = this.__gl;
 
         this.__debugTextures = [undefined];
-        // this.__debugTextures.push(this.__viewports[0].__fwBuffer);
-        // if(this.__geomDataPass){
-        //     this.__debugTextures.push(this.__viewports[0].getGeomDataFbo().colorTexture);
-        // }
 
         this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION');
 
@@ -131,6 +127,12 @@ class GLVisualiveRenderer extends GLRenderer {
         }
         this.__glEnvMap.ready.connect(this.requestRedraw);
         this.__glEnvMap.updated.connect(this.requestRedraw);
+
+        this.envMapAssigned.emit(this.__glEnvMap);
+    }
+
+    getEnvMapTex(){
+        return this.__glEnvMap;
     }
 
     setScene(scene) {
@@ -238,9 +240,10 @@ class GLVisualiveRenderer extends GLRenderer {
             // case 'o':
             //     this.__drawEdges = !this.__drawEdges;
                 // break;
-            // case 'b':
-            //     this.__displayEnvironment = !this.__displayEnvironment;
-            //     break;
+            case 'b':
+                this.__displayEnvironment = !this.__displayEnvironment;
+                this.requestRedraw();
+                break;
             // case 'v':
             //     if (this.__vrViewport)
             //         this.__vrViewport.togglePresenting();

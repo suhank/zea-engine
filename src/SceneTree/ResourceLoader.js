@@ -111,22 +111,26 @@ class ResourceLoader {
 
     addResourceURL(resourcePath, url) {
 
-        let rootURL = window.location.href.split('#')[0];
-        rootURL = rootURL.split('?')[0];
-        if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
-            rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
-        }
         const parts = resourcePath.split('/');
         const filename = parts.pop();
-        const base = rootURL;
-        if(parts[0] == '.')
-            parts.shift();
-        else if(parts[0] == '..'){
-            item = item.substring(3);
-            const baseparts = base.split('/');
-            baseparts.pop();
-            baseparts.pop();
-            base = baseparts.join('/') + '/';
+        if(!url) {
+
+            let rootURL = window.location.href.split('#')[0];
+            rootURL = rootURL.split('?')[0];
+            if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
+                rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
+            }
+            const base = rootURL;
+            if(parts[0] == '.')
+                parts.shift();
+            else if(parts[0] == '..'){
+                item = item.substring(3);
+                const baseparts = base.split('/');
+                baseparts.pop();
+                baseparts.pop();
+                base = baseparts.join('/') + '/';
+            }
+            url = base+resourcePath
         }
         let curr = this.__resources;
         for(let part of parts){
@@ -138,7 +142,7 @@ class ResourceLoader {
                 curr = dir;
             }
         }
-        curr[filename] = { url: base+url };
+        curr[filename] = { url };
         this.__applyCallbacks(curr[filename], filename);
     }
 

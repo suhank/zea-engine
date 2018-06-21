@@ -45,6 +45,7 @@ class GLEnvMap extends GLProbe {
         } else {
             this.__envMap.loaded.connect(() => {
                 this.convolveProbe(srcGLTex);
+                this.loaded.emit();
             });
         }
         srcGLTex.destructing.connect(() => {
@@ -52,6 +53,10 @@ class GLEnvMap extends GLProbe {
             this.destroy();
         });
 
+    }
+
+    getEnvMap(){
+        return this.__envMap;
     }
 
     get backgroundFocus() {
