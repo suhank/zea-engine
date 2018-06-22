@@ -6,6 +6,9 @@ class Cone extends Mesh {
     constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
         super();
 
+        if(isNaN(radius) || isNaN(height) || isNaN(detail))
+            throw("Invalid geom args");
+
         this.__radius = radius;
         this.__height = height;
         this.__detail = (detail >= 3) ? detail : 3;

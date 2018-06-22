@@ -5,6 +5,8 @@ class Cuboid extends Mesh {
     constructor(x = 1.0, y = 1.0, z = 1.0) {
         super();
 
+        if(isNaN(x) || isNaN(y) || isNaN(z))
+            throw("Invalid geom args");
         this.__x = x;
         this.__y = y;
         this.__z = z;

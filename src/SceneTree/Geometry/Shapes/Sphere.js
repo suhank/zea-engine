@@ -7,6 +7,9 @@ class Sphere extends Mesh {
     constructor(radius = 1.0, sides = 12, loops = 12) {
         super();
 
+        if(isNaN(radius) || isNaN(sides) || isNaN(loops))
+            throw("Invalid geom args");
+
         this.__radius = radius;
         this.__sides = (sides >= 3) ? sides : 3;
         this.__loops = (loops >= 3) ? loops : 3;

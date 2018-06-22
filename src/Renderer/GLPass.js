@@ -9,7 +9,8 @@ class GLPass {
         this.__gl = gl;
         this.__passIndex = 0;
         this.__collector = collector;
-        this.__glshadermaterials = [];;
+        this.__glshadermaterials = [];
+        this.__selectedGeomsShadermaterials = [];
         this.enabled = true;
         
         this.updated = new Signal();
@@ -31,6 +32,10 @@ class GLPass {
     // filterRenderTree() {
     //     // console.log(this.constructor.name+':filterRenderTree');
     // }
+
+    getGeomItem() {
+        // TODO:
+    }
 
 
     /////////////////////////////////////
@@ -77,6 +82,21 @@ class GLPass {
                 }
             }
             glshader.unbind(renderstate);
+        }
+    }
+
+    drawSelectedGeoms(renderstate){
+        const gl = this.__gl;
+
+        for (let glshaderMaterials of this.__selectedGeomsShadermaterials) {
+            const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
+            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
+                const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
+                for (let gldrawitemset of gldrawitemsets) {
+                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
+                    this.drawItemSet(renderstate, gldrawitemset);
+                }
+            }
         }
     }
 

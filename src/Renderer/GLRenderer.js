@@ -837,6 +837,12 @@ class GLRenderer {
         // }
     }
 
+    drawSceneSelectedGeoms(renderstate){
+        for (let pass of this.__passes) {
+            if (pass.enabled)
+                pass.drawSelectedGeoms(renderstate);
+        }
+    }
     drawSceneGeomData(renderstate){
         for (let pass of this.__passes) {
             if (pass.enabled)

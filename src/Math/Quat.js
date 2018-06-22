@@ -94,7 +94,7 @@ class Quat extends AttrValue {
 
         switch (eulerAngles.order) {
             case 0:
-                /*' XYZ' */
+                /* 'XYZ' */
                 ordered.set(eulerAngles.x, -eulerAngles.y, eulerAngles.z);
                 break;
             case 1:

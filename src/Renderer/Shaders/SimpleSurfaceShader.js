@@ -95,12 +95,12 @@ uniform bool OpacityTexConnected;
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 __baseColor      = BaseColor;
-    float __opacity       = __baseColor.a * Opacity;
+    vec4 baseColor      = BaseColor;
+    float opacity       = baseColor.a * Opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec4 __baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
-    float __opacity       = __baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
 #endif
 
     // Hacky simple irradiance. 
@@ -112,14 +112,14 @@ void main(void) {
         ndotv = dot(normal, viewVector);
 
         // Note: these 2 lines can be used to debug inverted meshes.
-        //__baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+        //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = vec4(ndotv * __baseColor.rgb, opacity);
+    fragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

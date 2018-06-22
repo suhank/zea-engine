@@ -7,6 +7,9 @@ class Disc extends Mesh {
     constructor(radius = 0.5, sides = 32) {
         super();
 
+        if(isNaN(radius) || isNaN(sides))
+            throw("Invalid geom args");
+        
         this.__radius = radius;
         this.__sides = (sides >= 3) ? sides : 3;
 

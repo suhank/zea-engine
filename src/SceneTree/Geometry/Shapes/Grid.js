@@ -6,6 +6,9 @@ class Grid extends Lines {
     constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines=false) {
         super();
 
+        if(isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions))
+            throw("Invalid geom args");
+        
         this.__x = x;
         this.__y = y;
         this.__xDivisions = xDivisions;

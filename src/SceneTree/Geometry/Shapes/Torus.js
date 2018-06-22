@@ -6,6 +6,9 @@ class Torus extends Mesh {
     constructor(innerRadius = 0.5, outerRadius = 1.0, detail = 32) {
         super();
 
+        if(isNaN(innerRadius) || isNaN(outerRadius) || isNaN(detail))
+            throw("Invalid geom args");
+
         this.__innerRadius = innerRadius;
         this.__outerRadius = outerRadius;
         this.__detail = (detail >= 3) ? detail : 3;

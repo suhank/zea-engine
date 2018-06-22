@@ -109,7 +109,7 @@ class Material extends BaseItem {
         const shaderClass = sgFactory.getClass(shaderName);
         if(!shaderClass)
             throw("Error setting Shader. Shader not found:" + shaderName);
-        this._removeAllParameters();
+        
         const paramDescs = shaderClass.getParamDeclarations();
         for(let desc of paramDescs) {
             // Note: some shaders specify default images. Like the speckle texture
@@ -118,11 +118,13 @@ class Material extends BaseItem {
                 image = desc.defaultValue;
                 defaultValue = new Color();
             }
-            const param = this.addParameter(desc.name, desc.defaultValue);
-            if(desc.defaultValue instanceof Color || !isNaN(desc.defaultValue)) {
-                if(desc.texturable != false) // By default, parameters are texturable.
-                    this.__makeParameterTexturable(param);
-            }
+            let param = this.getParameter(desc.name);
+            // if(param && param.getType() != desc.defaultValue)
+            // removePArameter
+            if(!param)
+                param = this.addParameter(desc.name, desc.defaultValue);
+            if(desc.texturable == true && !param.getImage) // By default, parameters are texturable.
+                this.__makeParameterTexturable(param);
         }
         this.__shaderName = shaderName;
         this.shaderNameChanged.emit(this.__shaderName);
@@ -231,9 +233,13 @@ class Material extends BaseItem {
     readBinary(reader, context) {
         super.readBinary(reader, context);
 
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
         const numParams = reader.loadUInt32();
         for (let i = 0; i < numParams; i++) {
-            const paramName = reader.loadStr();
+            const paramName = capitalizeFirstLetter(reader.loadStr());
             const paramType = reader.loadStr();
             let value;
             if (paramType == "MaterialColorParam") {
@@ -251,12 +257,14 @@ class Material extends BaseItem {
             else
                 param = this.addParameter(paramName, value);
             const textureName = reader.loadStr();
-            if (context.materialLibrary.hasImage(textureName)) {
-                // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-                param.setValue(context.materialLibrary.getImage(textureName));
-            }
-            else if(textureName!= ''){
-                console.warn("Missing Texture:" + textureName)
+            if(textureName!= ''){
+                if (context.materialLibrary.hasImage(textureName)) {
+                    // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
+                    param.setValue(context.materialLibrary.getImage(textureName));
+                }
+                else {
+                    console.warn("Missing Texture:" + textureName)
+                }
             }
         }
     }

@@ -111,6 +111,10 @@ class GLViewport extends BaseViewport {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
         }
+        if (this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBuffer.resize(this.__width, this.__height);
+            this.__selectedGeomsBufferFbo.resize();
+        }
         this.region = [this.__x, this.__y, this.__width, this.__height];
     }
 
@@ -224,6 +228,22 @@ class GLViewport extends BaseViewport {
         // - We nuke the translation part since we're transforming a vector.
         rayDirection = cameraMat.rotateVec3(rayDirection).normalize();
         return new Ray(rayStart, rayDirection);
+    }
+
+    ////////////////////////////
+    // SelectedGeomsBuffer
+
+    createSelectedGeomsFbo(floatGeomBuffer) {
+        let gl = this.__renderer.gl;
+        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
+            type: 'UNSIGNED_BYTE',
+            format: 'RGBA',
+            filter: 'NEAREST',
+            width: this.__width <= 1 ? 1 : this.__width,
+            height: this.__height <= 1 ? 1 : this.__height,
+        });
+        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
+        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
     ////////////////////////////
@@ -746,7 +766,12 @@ class GLViewport extends BaseViewport {
         }
         this.__renderer.drawScene(renderstate, false);
 
-
+        if(this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBufferFbo.bind();
+            this.__renderer.drawSceneSelectedGeoms(renderstate);
+            let gl = this.__renderer.getGL();
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
         /////////////////////////////////////
         // Post processing.
         if (this.__fbo) {

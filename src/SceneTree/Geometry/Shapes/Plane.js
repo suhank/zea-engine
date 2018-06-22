@@ -6,6 +6,9 @@ class Plane extends Mesh {
     constructor(x = 1.0, y = 1.0, xDivisions = 1, yDivisions = 1, addNormals=true, addTextureCoords=true) {
         super();
 
+        if(isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions))
+            throw("Invalid geom args");
+        
         this.__x = x;
         this.__y = y;
         this.__xDivisions = xDivisions;

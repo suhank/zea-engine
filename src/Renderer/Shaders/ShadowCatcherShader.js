@@ -30,7 +30,7 @@ attribute vec2 lightmapCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform vec3 projectionCenter;
+uniform vec3 ProjectionCenter;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
@@ -53,7 +53,7 @@ void main(void) {
     gl_Position     = modelViewProjectionMatrix * pos;
 
     vec4 worldPos = modelMatrix * pos;
-    v_worldDir = worldPos.xyz - projectionCenter;
+    v_worldDir = worldPos.xyz - ProjectionCenter;
 
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 }
@@ -73,11 +73,11 @@ varying vec2 v_lightmapCoord;
 varying vec3 v_worldDir;
 
 uniform sampler2D lightmap;
-uniform float _shadowMultiplier;
+uniform float ShadowMultiplier;
 
-uniform color _env;
-uniform sampler2D envTex;
-uniform bool _envTexConnected;
+uniform color envMap;
+uniform sampler2D envMapTex;
+uniform bool envMapTexConnected;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -93,13 +93,13 @@ float luminanceFromRGB(vec3 rgb) {
 #endif
 void main(void) {
 
-    vec4 env = _env;
-    if(_envTexConnected) {
+    vec4 env = envMap;
+    if(envMapTexConnected) {
         vec2 uv = dirToSphOctUv(normalize(v_worldDir));
-        env = texture2D(_envTex, uv);
+        env = texture2D(envMapTex, uv);
     }
 
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * ShadowMultiplier;
     float irradianceLum = clamp(luminanceFromRGB(irradiance), 0.0, 1.0);
 
 #ifndef ENABLE_ES3
@@ -124,9 +124,9 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'env', defaultValue: new Color(0.7, 0.7, 0.95) })
-        paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 1.7, 0.0) })
-        paramDescs.push({ name: 'shadowMultiplier', defaultValue: 1.0 })
+        // paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
+        paramDescs.push({ name: 'ProjectionCenter', defaultValue: new Vec3(0.0, 1.7, 0.0) })
+        paramDescs.push({ name: 'ShadowMultiplier', defaultValue: 1.0 })
         return paramDescs;
     }
 
@@ -159,7 +159,7 @@ varying vec2 v_lightmapCoord;
 varying vec3 v_worldDir;
 
 uniform sampler2D lightmap;
-uniform float _shadowMultiplier;
+uniform float ShadowMultiplier;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -174,11 +174,11 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * _shadowMultiplier;
+    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * ShadowMultiplier;
 
     // This material works by multiplying the image buffer values by the luminance in the lightmap.
     // 
-    fragColor.rgb = pow(irradiance, vec3(1.0/_shadowMultiplier));
+    fragColor.rgb = pow(irradiance, vec3(1.0/ShadowMultiplier));
     fragColor.a = 1.0;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION

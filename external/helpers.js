@@ -81,10 +81,10 @@ function saveAs(data, filename, type) {
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
         VisualiveEngine: {
-            'Vive.vla': { url: window.location.origin+'/Resources/Vive.vla' } ,
-            'Dome.vla': { url: window.location.origin+'/Resources/Dome.vla' } ,
-            'LogoSmall.png': { url: window.location.origin+'/Resources/LogoSmall.png' } ,
-            'FlakesNormalMap.png': { url: window.location.origin+'/Resources/FlakesNormalMap.png' } 
+            'Vive.vla': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/Vive.vla' } ,
+            'Dome.vla': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/Dome.vla' } ,
+            'LogoSmall.png': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/LogoSmall.png' } ,
+            'FlakesNormalMap.png': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/FlakesNormalMap.png' } 
         }
     };
     let rootURL = window.location.href.split('#')[0];

@@ -4,6 +4,9 @@ class Circle extends Lines {
     constructor(radius = 1.0, numSegments=32) {
         super();
 
+        if(isNaN(radius) || isNaN(numSegments))
+            throw("Invalid geom args");
+
         this.__radius = radius;
         this.__numSegments = numSegments;
         this.__rebuild();

@@ -116,7 +116,7 @@ class MaterialLibrary {
         context.lod = this.lod;
         for (let name in j["textures"]) {
             let image = new FileImage(name);
-            this.__textures[name] = texture;
+            this.__images[name] = texture;
         }
         for (let name in j.materials) {
             let material = new Material(name);
@@ -144,7 +144,7 @@ class MaterialLibrary {
             let type = reader.loadStr();
             let texture = sgFactory.constructClass(type, undefined);
             texture.readBinary(reader, context);
-            this.__textures[texture.getName()] = texture;
+            this.__images[texture.getName()] = texture;
         }
         let numMaterials = reader.loadUInt32();
         if (numMaterials > 0) {
@@ -152,12 +152,6 @@ class MaterialLibrary {
             for (let i = 0; i < numMaterials; i++) {
                 let shaderName = reader.loadStr();
                 let name = reader.loadStr();
-                if (this.__materialTypeMapping && ('*' in this.__materialTypeMapping || name in this.__materialTypeMapping)) {
-                    if (name in this.__materialTypeMapping)
-                        shaderName = this.__materialTypeMapping[name];
-                    else if ('*' in this.__materialTypeMapping)
-                        shaderName = this.__materialTypeMapping['*'];
-                }
 
                 if(shaderName == 'StandardMaterial'){
                     shaderName = 'StandardSurfaceShader';
@@ -169,7 +163,7 @@ class MaterialLibrary {
                 // console.log("Material:" + name);
                 let material = new Material(name, shaderName);
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                material.readBinary(reader, context, this.__textures);
+                material.readBinary(reader, context, this.__images);
                 this.addMaterial(material);
             }
         }

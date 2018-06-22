@@ -32,6 +32,7 @@ export * from './BaseImage.js';
 export * from './DataImage.js';
 export * from './FileImage.js';
 export * from './EnvMap.js';
+export * from './LightMap.js';
 export * from './Label.js';
 export * from './WebcamImage2D.js';
 export * from './HDRImageMixer.js';

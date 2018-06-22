@@ -170,12 +170,12 @@ class Scene {
     addAsset(asset) {
         asset.loaded.connect(() => {
             if (this.__envMap) {
-                let path = asset.getParameter('FilePath').getValue();
+                const path = asset.getParameter('BinFilePath').getValue();
 
-                let lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
-                let lightmapName = asset.getName();
+                const lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
+                const lightmapName = asset.getName();
                 if (!this.getLightMap(lightmapName) && resourceLoader.resourceAvailable(lightmapPath)) {
-                    let lightmap = new Visualive.Lightmap(lightmapPath, asset.getLightmapSize(), resourceLoader);
+                    const lightmap = new Lightmap(lightmapPath, asset.getLightmapSize());
                     this.setLightMap(lightmapName, lightmap);
                 }
             }
@@ -261,7 +261,5 @@ class Scene {
 
 // export default Scene;
 export {
-    Scene,
-    Lightmap,
-    LightmapMixer
+    Scene
 };

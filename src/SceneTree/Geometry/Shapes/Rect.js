@@ -4,6 +4,9 @@ class Rect extends Lines {
     constructor(x = 1.0, y = 1.0) {
         super();
 
+        if(isNaN(x) || isNaN(y))
+            throw("Invalid geom args");
+
         this.__x = x;
         this.__y = y;
         this.__rebuild();

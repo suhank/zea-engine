@@ -49,30 +49,28 @@ class FileImage extends BaseImage {
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
             const filePath = fileParam.getValue()
+            if(this.getName() == '') {
+                // Generate a name from the file path.
+                const p = filePath.split('/');
+                const last = p[p.length - 1];
+                const suffixSt = last.lastIndexOf('.');
+                if (suffixSt != -1) {
+                    const decorator = last.substring(suffixSt - 1, suffixSt);
+                    if (!isNaN(decorator)) {
+                        // Note: ALL image names have an LOD specifier at the end.
+                        // remove that off when retrieving the name.
+                        this.setName(last.substring(0, suffixSt - 1));
+                    } else {
+                        this.setName(last.substring(0, suffixSt));
+                    }
+                }
+            }
+            
             const url = fileParam.getURL();
             this.__loadURL(url, filePath);
         });
         if (resourcePath && resourcePath != '')
             fileParam.setValue(resourcePath);
-    }
-
-    getName() {
-        const getName = (str) => {
-            const p = str.split('/');
-            const last = p[p.length - 1];
-            const suffixSt = last.lastIndexOf('.');
-            if (suffixSt != -1) {
-                const decorator = last.substring(suffixSt - 1, suffixSt);
-                if (!isNaN(decorator)) {
-                    // Note: ALL image names have an LOD specifier at the end.
-                    // remove that off when retrieving the name.
-                    return last.substring(0, suffixSt - 1);
-                } else {
-                    return last.substring(0, suffixSt);
-                }
-            }
-        }
-        return getName(this.getParameter('FilePath').getValue());
     }
 
     getDOMElement(){

@@ -7,6 +7,9 @@ class Cylinder extends Mesh {
     constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true) {
         super();
 
+        if(isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops))
+            throw("Invalid geom args");
+        
         this.__radius = radius;
         this.__height = height;
         this.__sides = (sides >= 3) ? sides : 3;
