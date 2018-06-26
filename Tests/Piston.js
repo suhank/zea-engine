@@ -1,4 +1,4 @@
-testingHarness.registerTest('PistonOperator', (domElement, resources)=> {
+testingHarness.registerTest('Piston', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     const asset = new Visualive.AssetItem('parts');

@@ -136,7 +136,6 @@ class GLCollector {
 
         this.renderTreeUpdated = new Signal();
         this.billboardDiscovered = new Signal();
-        this.itemTransformChanged = new Signal();
 
         this.__childAdded = this.__childAdded.bind(this)
         this.__treeItemDestructing = this.__treeItemDestructing.bind(this)
@@ -432,10 +431,6 @@ class GLCollector {
 
         treeItem.childAdded.connect(this.__childAdded);
         treeItem.destructing.connect(this.__treeItemDestructing);
-
-        treeItem.globalXfoChanged.connect((newXfo, prevXfo) => {
-            this.itemTransformChanged.emit(treeItem, prevXfo);
-        });
     }
 
     __childAdded(child) {

@@ -1,4 +1,4 @@
-testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
+testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     const asset = new Visualive.AssetItem('parts');
@@ -49,6 +49,22 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
     addBolt(new Visualive.Vec3(6.6, -5.2, -5.2));
 
     /////////////////////////////////////
+    // Groups
+    const boltsGroup = new Visualive.Group("BoltsGroup");
+    asset.addChild(boltsGroup)
+    boltsGroup.addItem(asset.resolvePath(['bolt1']));
+    boltsGroup.addItem(asset.resolvePath(['bolt2']));
+    boltsGroup.addItem(asset.resolvePath(['bolt3']));
+    boltsGroup.addItem(asset.resolvePath(['bolt4']));
+
+    const middleSpheresGroup = new Visualive.Group("MiddleSpheresGroup");
+    asset.addChild(middleSpheresGroup)
+    middleSpheresGroup.addItem(asset.resolvePath(['middleSphere1']));
+    middleSpheresGroup.addItem(asset.resolvePath(['middleSphere2']));
+    middleSpheresGroup.addItem(asset.resolvePath(['middleSphere3']));
+    middleSpheresGroup.addItem(asset.resolvePath(['middleSphere4']));
+
+    /////////////////////////////////////
     // Obj Asset
     {
 
@@ -75,24 +91,27 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
         asset.addChild(objAsset);
         objAsset.loaded.connect(function() {
 
+
             const explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
 
             const bolts = explodedPartsOp.getParameter('Parts').addElement();
-            bolts.getMember('Items').addElement(asset.resolvePath(['bolt1']));
-            bolts.getMember('Items').addElement(asset.resolvePath(['bolt2']));
-            bolts.getMember('Items').addElement(asset.resolvePath(['bolt3']));
-            bolts.getMember('Items').addElement(asset.resolvePath(['bolt4']));
+            bolts.getMember('Items').addElement(boltsGroup);
+            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt1']));
+            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt2']));
+            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt3']));
+            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt4']));
 
             const casing = explodedPartsOp.getParameter('Parts').addElement();
             casing.getMember('Items').addElement(asset.resolvePath(['PartB', 'PartB']));
 
             const internalBits = explodedPartsOp.getParameter('Parts').addElement();
-            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere1']));
-            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere2']));
-            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere3']));
-            internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere4']));
+            internalBits.getMember('Items').addElement(middleSpheresGroup);
+            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere1']));
+            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere2']));
+            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere3']));
+            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere4']));
 
             // const j = explodedPartsOp.toJSON( { assetItem:asset } );
             // console.log(JSON.stringify(j));
@@ -123,7 +142,6 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
                     clearTimeout(timeoutId);
                 }
             });
-            
             renderer.resumeDrawing();
         });
     }
@@ -132,7 +150,7 @@ testingHarness.registerTest('ExplodedPartsOperator', (domElement, resources)=> {
 
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 35, 20), new Visualive.Vec3(12, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 55, 20), new Visualive.Vec3(12, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
 
