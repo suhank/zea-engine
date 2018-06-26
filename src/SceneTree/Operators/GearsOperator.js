@@ -132,8 +132,9 @@ class GearsOperator extends Operator {
 
             const quat = new Quat();
             quat.setFromAxisAndAngle(gear.getAxis(), rot * Math.PI * 2.0);
-            const xfo = output.getInitialValue().clone();
-            xfo.ori = quat.multiply(xfo.ori);
+            // const initialxfo = output.getInitialValue().clone();
+            const xfo = output.getValue();
+            xfo.ori = quat.multiply(output.getInitialValue().ori);
             output.setValue(xfo);
         }
     }

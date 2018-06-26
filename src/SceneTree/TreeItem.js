@@ -287,15 +287,20 @@ class TreeItem extends BaseItem {
         return this.__childItems.length;
     }
 
-    addChild(childItem, checkCollisions = true) {
+    addChild(childItem, maintainXfo=true, checkCollisions = true) {
         if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
-            throw ("Item '" + childItem.getName() + "' is already a child of :" + this.path);
+            throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
 
-
+        let newLocalXfo;
+        if(maintainXfo)
+            newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
         this.__childItems.push(childItem);
         childItem.setOwner(this);
+
+        if(maintainXfo)
+            childItem.setLocalXfo(newLocalXfo);
 
         if(childItem.testFlag(ItemFlags.USER_EDITED))
             this.setFlag(ItemFlags.USER_EDITED)
@@ -501,7 +506,7 @@ class TreeItem extends BaseItem {
                         childItem = sgFactory.constructClass(childType);
                         if (childItem) {
                             childItem.fromJSON(childJson, context);
-                            this.addChild(childItem, false);
+                            this.addChild(childItem, false, false);
                         }
                     }
                 }
@@ -518,7 +523,7 @@ class TreeItem extends BaseItem {
                         childItem = sgFactory.constructClass(childType);
                         if (childItem) {
                             childItem.fromJSON(childJson, context);
-                            this.addChild(childItem, false);
+                            this.addChild(childItem, false, false);
                         }
                     }
                 }
@@ -566,7 +571,7 @@ class TreeItem extends BaseItem {
                     continue;
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 childItem.readBinary(reader, context);
-                this.addChild(childItem, false);
+                this.addChild(childItem, false, false);
 
                 if (printProgress) {
                     // Avoid printing too much as it slows things down.

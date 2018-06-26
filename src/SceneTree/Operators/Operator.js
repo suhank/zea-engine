@@ -2,6 +2,7 @@
 
 
 import {
+    ValueGetMode,
     ValueSetMode
 } from '../Parameters';
 
@@ -22,10 +23,17 @@ class OperatorOutput {
     setParam(param) {
         this._param = param;
         this._initialParamValue = param.getValue();
+        if(this._initialParamValue.clone)
+            this._initialParamValue = this._initialParamValue.clone();
     }
 
     getInitialValue(){
         return this._initialParamValue;
+    }
+
+    getValue() {
+        if(this._param)
+            return this._param.getValue(ValueGetMode.OPERATOR_GETVALUE);
     }
 
     setValue(value) {

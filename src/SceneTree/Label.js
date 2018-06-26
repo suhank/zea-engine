@@ -131,7 +131,7 @@ class Label  extends DataImage {
             const font = this.getParameter('font').getValue();
             const fontSize = this.getParameter('fontSize').getValue();
             document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
-                console.log("Font Loaded:" + font);
+                // console.log("Font Loaded:" + font);
                 // if(this.__loaded) {
                 //     this.__loaded = true;
                 //     this.loaded.emit();
@@ -173,7 +173,7 @@ class Label  extends DataImage {
         let marginAndBorder = margin + borderWidth;
 
         ctx2d.font = fontSize + 'px "' + font + '"';
-        console.log("renderLabelToImage:" + ctx2d.font);
+        // console.log("renderLabelToImage:" + ctx2d.font);
         this.width = (ctx2d.measureText(text).width + (marginAndBorder * 2));
         this.height = (parseInt(fontSize) + (marginAndBorder * 2));
         ctx2d.canvas.width = this.width;

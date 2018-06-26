@@ -44,19 +44,26 @@ class Group extends TreeItem {
             this.__invInitialXfo = this.__initialBlobalXfoParam.getValue().inverse();
         });
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            const xfo = this.__globalXfoParam.getValue();
             if(this.__items.length == 0) {
+                const xfo = this.__globalXfoParam.getValue();
                 this.__initialBlobalXfoParam.setValue(xfo, changeType);
             }
             else {
-                const delta = this.__invInitialXfo.multiply(xfo);
+                let delta;
+                // const delta = this.__invInitialXfo.multiply(xfo);
+                const setDirty = (item, initialXfo)=>{
+                    const clean = ()=>{
+                        if(!delta) {
+                            const xfo = this.__globalXfoParam.getValue();
+                            delta = this.__invInitialXfo.multiply(xfo);
+                        }
+                        return delta.multiply(initialXfo);
+                    }
+                    item.getParameter('GlobalXfo').setDirty(clean);
+                }
                 const len = this.__items.length;
                 for (let i = 0; i < len; i++) {
-                    // TODO: should we cache the initial xfo of each bound item
-                    // so we can make this system deterministic?
-                    const item = this.__items[i];
-                    const itemXfo = delta.multiply(this.__initialXfos[i]);
-                    item.setGlobalXfo(itemXfo, ValueSetMode.OPERATOR_SETVALUE);
+                    setDirty(this.__items[i], this.__initialXfos[i]);
                 }
             }
         });
@@ -85,9 +92,10 @@ class Group extends TreeItem {
     //////////////////////////////////////////
     // Items
 
-    resolveItems(rootItem, paths) {
+    resolveItems(paths) {
+        const asset = this.getOwner();
         for(let path of paths) {
-            let treeItem = rootItem.resolvePath(path);
+            let treeItem = asset.resolvePath(path);
             if(treeItem) {
                 this.addItem(treeItem);
             }
