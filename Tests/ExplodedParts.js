@@ -91,45 +91,36 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
         asset.addChild(objAsset);
         objAsset.loaded.connect(function() {
 
-
             const explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
 
             const bolts = explodedPartsOp.getParameter('Parts').addElement();
-            bolts.getMember('Items').addElement(boltsGroup);
-            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt1']));
-            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt2']));
-            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt3']));
-            // bolts.getMember('Items').addElement(asset.resolvePath(['bolt4']));
+            bolts.getOutput().setParam(boltsGroup.getParameter('GlobalXfo'));
 
             const casing = explodedPartsOp.getParameter('Parts').addElement();
-            casing.getMember('Items').addElement(asset.resolvePath(['PartB', 'PartB']));
+            casing.getOutput().setParam(asset.resolvePath(['PartB', 'PartB', 'GlobalXfo']))
 
             const internalBits = explodedPartsOp.getParameter('Parts').addElement();
-            internalBits.getMember('Items').addElement(middleSpheresGroup);
-            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere1']));
-            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere2']));
-            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere3']));
-            // internalBits.getMember('Items').addElement(asset.resolvePath(['middleSphere4']));
+            internalBits.getOutput().setParam(middleSpheresGroup.getParameter('GlobalXfo'));
 
-            // const j = explodedPartsOp.toJSON( { assetItem:asset } );
-            // console.log(JSON.stringify(j));
-            // asset.removeComponent('ExplodeParts');
-            // const explodedPartsOp2 = new Visualive.ExplodePartsOperator('ExplodeParts2');
-            // asset.addComponent(explodedPartsOp2);
-            // explodedPartsOp2.fromJSON(j, { assetItem:asset } );
+            const j = explodedPartsOp.toJSON( { assetItem:asset } );
+            console.log(JSON.stringify(j));
+            asset.removeComponent('ExplodeParts');
+            const explodedPartsOp2 = new Visualive.ExplodePartsOperator('ExplodeParts2');
+            asset.addComponent(explodedPartsOp2);
+            explodedPartsOp2.fromJSON(j, { assetItem:asset } );
 
             let explodedAmount = 0;
             let animatingValue = false;
             let timeoutId;
-            const param = explodedPartsOp.getParameter('Explode');
+            const param = explodedPartsOp2.getParameter('Explode');
             const timerCallback = () => {
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
                 animatingValue = true;
                 explodedAmount += 0.005;
-                explodedPartsOp.getParameter('Explode').setValue(explodedAmount);
+                explodedPartsOp2.getParameter('Explode').setValue(explodedAmount);
                 renderer.requestRedraw();
                 if (explodedAmount < 1.0) {
                     timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.

@@ -3,6 +3,7 @@ import {
     Quat
 } from '../../Math';
 import {
+    XfoOperatorOutput,
     Operator
 } from './Operator.js';
 import {
@@ -26,11 +27,17 @@ class GearParameter extends StructParameter {
         this.__ratioParam = this._addMember(new NumberParameter('Ratio', 1.0));
         this.__offsetParam =  this._addMember(new NumberParameter('Offset', 0.0));
         this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
-        this.__itemsParam = this._addMember(new KinematicGroupParameter('Items'));
-        this.__initialXfos = [];
-        this.__itemsParam.elementAdded.connect((elem, index)=>{
-            this.__initialXfos[index] = elem.getGlobalXfo();
-        })
+        // this.__itemsParam = this._addMember(new KinematicGroupParameter('Items'));
+        // this.__initialXfos = [];
+        // this.__itemsParam.elementAdded.connect((elem, index)=>{
+        //     this.__initialXfos[index] = elem.getGlobalXfo();
+        // })
+
+        this.__output = new XfoOperatorOutput();
+    }
+
+    getOutput(){
+        return this.__output;
     }
 
     getRatio() {
@@ -42,21 +49,39 @@ class GearParameter extends StructParameter {
     getAxis() {
         return this.__axisParam.getValue();
     }
-    getInitialXfo() {
-        return this.__itemsParam.getInitialXfo();
-    }
-    getXfo() {
-        return this.__itemsParam.getXfo();
-    }
-    setXfo(xfo) {
-        this.__itemsParam.setXfo(xfo);
+    // getInitialXfo() {
+    //     return this.__itemsParam.getInitialXfo();
+    // }
+    // getXfo() {
+    //     return this.__itemsParam.getXfo();
+    // }
+    // setXfo(xfo) {
+    //     this.__itemsParam.setXfo(xfo);
+    // }
+
+    // setDirty(cleanerFn) {
+    //     return this.__itemsParam.setDirty(cleanerFn);
+    // }
+    // removeCleanerFn(cleanerFn) {
+    //     return this.__itemsParam.removeCleanerFn(cleanerFn);
+    // }
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        const j = super.toJSON();
+        if(j){
+            j.output = this.__output.toJSON(context);
+        }
+        return j;
     }
 
-    setDirty(cleanerFn) {
-        return this.__itemsParam.setDirty(cleanerFn);
-    }
-    removeCleanerFn(cleanerFn) {
-        return this.__itemsParam.removeCleanerFn(cleanerFn);
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+        if(j.output){
+            this.__output.fromJSON(j.output, context);
+        }
     }
 }
 
@@ -86,10 +111,10 @@ class GearsOperator extends Operator {
         });
         this.__gearsParam = this.addParameter(new ListParameter('Gears', GearParameter));
         this.__gearsParam.elementAdded.connect((value, index) => {
-            this.__outputs[index] = value;
+            this.addOutput(value.getOutput());
         })
         this.__gearsParam.elementRemoved.connect((value, index) => {
-            this.__outputs.splice(index, 1);
+            this.removeOutput(index);
         })
 
         this.__gears = [];
@@ -101,13 +126,15 @@ class GearsOperator extends Operator {
         const gears = this.__gearsParam.getValue();
         const len = gears.length;
         for(let gear of gears) {
+            const output = gear.getOutput();
+
             const rot = (revolutions * gear.getRatio()) + gear.getOffset();
 
             const quat = new Quat();
             quat.setFromAxisAndAngle(gear.getAxis(), rot * Math.PI * 2.0);
-            const xfo = gear.getInitialXfo().clone();
+            const xfo = output.getInitialValue().clone();
             xfo.ori = quat.multiply(xfo.ori);
-            gear.setXfo(xfo, ValueSetMode.OPERATOR_SETVALUE);
+            output.setValue(xfo);
         }
     }
 

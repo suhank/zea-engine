@@ -64,8 +64,12 @@ class TreeItemParameter extends Parameter {
     toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
+        const makeRelative = (path) => {
+            const assetPath = context.assetItem.getPath();
+            return path.slice(assetPath.length);
+        }
         return {
-            value: this.__value.getPath()
+            value: makeRelative(this.__value.getPath())
         }
     }
 

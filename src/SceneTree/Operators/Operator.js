@@ -1,10 +1,78 @@
 
+
+
 import {
-    Operator
-} from './Operator.js';
+    ValueSetMode
+} from '../Parameters';
+
 import {
     BaseItem
 } from '../BaseItem.js';
+
+class OperatorOutput {
+    constructor(filterFn){
+        this.__filterFn = filterFn;
+        this._param = undefined;
+    }
+
+    getFilterFn(){
+        return this.__filterFn;
+    }
+
+    setParam(param) {
+        this._param = param;
+        this._initialParamValue = param.getValue();
+    }
+
+    getInitialValue(){
+        return this._initialParamValue;
+    }
+
+    setValue(value) {
+        if(this._param)
+            this._param.setValue(value, ValueSetMode.OPERATOR_SETVALUE);
+    }
+ 
+    setDirty(fn){
+        if(this._param)
+            this._param.setDirty(fn);
+    }
+
+    removeCleanerFn(fn){
+        if(this._param)
+            this._param.removeCleanerFn(fn);
+    }
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        const makeRelative = (path) => {
+            const assetPath = context.assetItem.getPath();
+            return path.slice(assetPath.length);
+        }
+        return {
+            paramPath: makeRelative(this._param.getPath())
+        };
+    }
+
+    fromJSON(j, context) {
+        const paramPath = j.paramPath;
+        if(context.assetItem) {
+            const onloaded = ()=>{
+                this.setParam(context.assetItem.resolvePath(paramPath));
+                context.assetItem.loaded.disconnect(onloaded)
+            }
+            context.assetItem.loaded.connect(onloaded);
+        }
+    }
+}
+
+class XfoOperatorOutput extends OperatorOutput {
+    constructor(){
+        super((p)=> p.getDataType() == 'Xfo' );
+    }
+}
 
 class Operator extends BaseItem {
     constructor(name) {
@@ -14,6 +82,13 @@ class Operator extends BaseItem {
         this.__evalOutput = this.__evalOutput.bind(this);
         this.__opInputChanged = this.__opInputChanged.bind(this);
         this.parameterValueChanged.connect(this.__opInputChanged);
+    }
+
+    addOutput(output) {
+        this.__outputs.push(output);
+    }
+    removeOutput(index) {
+        this.__outputs.splice(index, 1);
     }
 
     __evalOutput (cleanedParam/*value, getter*/){
@@ -62,6 +137,8 @@ class Operator extends BaseItem {
 };
 
 export {
-    Operator
+    Operator,
+    OperatorOutput,
+    XfoOperatorOutput
 };
 //export default AssetItem;

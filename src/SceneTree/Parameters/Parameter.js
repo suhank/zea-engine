@@ -48,6 +48,33 @@ class BaseParameter {
         }
     }
 
+    getOwner() {
+        // return this.__private.get('ownerItem');
+        return this.__ownerItem;
+    }
+
+    setOwner(ownerItem) {
+        // this.__private.set(ownerItem, ownerItem);
+        if(this.__ownerItem !== ownerItem){
+            this.__ownerItem = ownerItem;
+        }
+    }
+
+    getPath() {
+        if(this.__ownerItem) {
+            if(this.__ownerItem.getPath) {
+                const path = this.__ownerItem.getPath().slice();
+                path.push(this.__name);
+                return path;
+            }
+            else {
+                return [this.__ownerItem.getName(), this.__name];
+            }
+        }
+        return [this.__name];
+    }
+
+
     getValue() {
         // TODO
     }
@@ -144,6 +171,10 @@ class Parameter extends BaseParameter {
         super(name);
         this.__value = value;
         this.__dataType = dataType ? dataType : value.constructor.name;
+    }
+
+    getDataType(){
+        return this.__dataType;
     }
 
     getValue(mode = ValueGetMode.NORMAL) {

@@ -106,6 +106,7 @@ class ParameterOwner extends RefCounted {
             this.__paramMapping[newName] = index;
             // this.parameterNameChanged.emit(newName, oldName);
         });
+        param.setOwner(this)
         this.__params.push(param)
         this.__paramMapping[param.getName()] = this.__params.length - 1;
         this.parameterAdded.emit();

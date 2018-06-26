@@ -41,8 +41,9 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
         const gear = gearsOp.getParameter('Gears').addElement();
         gear.getMember('Ratio').setValue(binding.ratio)
         gear.getMember('Axis').setValue(binding.axis)
-        const gearGeoms = gear.getMember('Items')
-        gearGeoms.addElement(binding.geomItem);
+        // const gearGeoms = gear.getMember('Items')
+        // gearGeoms.addElement(binding.geomItem);
+        gear.getOutput().setParam(binding.geomItem.getParameter('GlobalXfo'))
     }
 
     const j = gearsOp.toJSON( { assetItem:asset } );

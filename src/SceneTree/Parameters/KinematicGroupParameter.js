@@ -88,17 +88,12 @@ class KinematicGroupParameter extends ListParameter {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const treeItems = [];
-        // const findAsset = () => {
-        //     return this.__owner.getOwner();
-        // }
-        const makeRelative = (path, relTo) => {
-            // for(let i=0; i<relTo.length; )
-            return path.slice(relTo.length);
+        const makeRelative = (path) => {
+            const assetPath = context.assetItem.getPath();
+            return path.slice(assetPath.length);
         }
-        // const assetItem = findAsset(this.__owner);
-        const assetPath = context.assetItem.getPath();
         for(let p of this.__value) 
-            treeItems.push(makeRelative(p.getPath(), assetPath));
+            treeItems.push(makeRelative(p.getPath()));
         return {
             treeItems
         };

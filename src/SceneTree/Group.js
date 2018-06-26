@@ -140,12 +140,12 @@ class Group extends TreeItem {
     toJSON(context) {
         const j = super.toJSON(context);
         const treeItems = [];
-        const makeRelative = (path, relTo) => {
-            return path.slice(relTo.length);
+        const makeRelative = (path) => {
+            const assetPath = context.assetItem.getPath();
+            return path.slice(assetPath.length);
         }
-        const assetPath = context.assetItem.getPath();
         for(let p of this.__items) 
-            treeItems.push(makeRelative(p.getPath(), assetPath));
+            treeItems.push(makeRelative(p.getPath()));
         j.treeItems = treeItems;
         return j;
     }

@@ -32,7 +32,7 @@ class GeomItem extends TreeItem {
         this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
         this.__geomParam.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
 
-        this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
+        this.__cutawayParam = this.addParameter('CutawayEnabled', false);
         this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
         this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
         this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
