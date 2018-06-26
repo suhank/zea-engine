@@ -484,10 +484,20 @@ class FileImage extends BaseImage {
     }
 };
 
+
+class FileImage2D extends FileImage {
+    constructor(resourcePath, params = {}) {
+        console.warn("FileImage2D is becoming deprecated in favor of simple FileImage")
+        super(resourcePath, params);
+
+    }
+}
+
 sgFactory.registerClass('FileImage2D', FileImage);
 sgFactory.registerClass('FileImage', FileImage);
 
 
 export {
-    FileImage
+    FileImage,
+    FileImage2D
 };

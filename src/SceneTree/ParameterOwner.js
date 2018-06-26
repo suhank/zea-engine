@@ -99,12 +99,12 @@ class ParameterOwner extends RefCounted {
     }
 
     addParameterInstance(param) {
-        param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param.getName(), mode));
+        param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
         param.nameChanged.connect((newName, oldName) => {
             let index = this.__paramMapping[oldName];
             delete this.__paramMapping[oldName];
             this.__paramMapping[newName] = index;
-            this.parameterNameChanged.emit(newName, oldName);
+            // this.parameterNameChanged.emit(newName, oldName);
         });
         this.__params.push(param)
         this.__paramMapping[param.getName()] = this.__params.length - 1;

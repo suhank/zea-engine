@@ -91,7 +91,7 @@ class Material extends BaseItem {
     constructor(name, shaderName) {
         super(name);
 
-        this.updated = new Signal();
+        // this.updated = new Signal();
         this.textureConnected = new Signal();
         this.textureDisconnected = new Signal();
         this.shaderNameChanged = new Signal();
@@ -171,27 +171,6 @@ class Material extends BaseItem {
         param.textureDisconnected.connect(this.textureDisconnected.emit);
     }
 
-    // addParameter(paramName, defaultValue) {
-    //     let image;
-    //     if (defaultValue instanceof BaseImage) {
-    //         image = defaultValue;
-    //         defaultValue = new Color();
-    //     }
-    //     const param = super.addParameter(paramName, defaultValue);
-    //     param.valueChanged.connect(this.updated.emit);
-    //     if(!param.setImage)
-    //         this.__makeParameterTexturable(param);
-    //     if (image) {
-    //         param.setImage(image)
-    //     }
-    //     return param;
-    // }
-
-    // addParameterInstance(param) {
-    //     super.addParameterInstance(param);
-    //     this.__makeParameterTexturable(param);
-    //     return param;
-    // }
 
     isTransparent() {
         let opacity = this.getParameter('Opacity');

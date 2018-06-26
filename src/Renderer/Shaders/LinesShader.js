@@ -39,7 +39,7 @@ void main(void) {
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LinesShader.fragmentShader', `
 precision highp float;
 
-uniform color _color;
+uniform color Color;
 uniform float Opacity;
 
 #ifdef ENABLE_ES3
@@ -49,7 +49,7 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = _color;
+    fragColor = Color;
     fragColor.a *= Opacity;
     
 #ifndef ENABLE_ES3
@@ -62,7 +62,7 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'color', defaultValue: new Color(1.0, 1.0, 0.5) })
+        paramDescs.push({ name: 'Color', defaultValue: new Color(1.0, 1.0, 0.5) })
         paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
         return paramDescs;
     }

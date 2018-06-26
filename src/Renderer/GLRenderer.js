@@ -214,7 +214,7 @@ class GLRenderer {
         this.__gridTreeItem = new TreeItem('GridTreeItem');
 
         const gridMaterial = new Material('gridMaterial', 'LinesShader');
-        gridMaterial.getParameter('color').setValue(gridColor, ValueSetMode.DATA_LOAD);
+        gridMaterial.getParameter('Color').setValue(gridColor, ValueSetMode.DATA_LOAD);
         const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
         this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
 
@@ -226,11 +226,11 @@ class GLRenderer {
         axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
 
         const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
-        gridXAxisMaterial.getParameter('color').setValue(new Color(gridColor.luminance(), 0, 0), ValueSetMode.DATA_LOAD);
+        gridXAxisMaterial.getParameter('Color').setValue(new Color(gridColor.luminance(), 0, 0), ValueSetMode.DATA_LOAD);
         this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
 
         const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
-        gridZAxisMaterial.getParameter('color').setValue(new Color(0, gridColor.luminance(), 0), ValueSetMode.DATA_LOAD);
+        gridZAxisMaterial.getParameter('Color').setValue(new Color(0, gridColor.luminance(), 0), ValueSetMode.DATA_LOAD);
         const geomOffset = new Xfo();
         geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
         const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
@@ -822,6 +822,7 @@ class GLRenderer {
             this.__collector.finalize();
 
         renderstate.profileJSON = {};
+        renderstate.boundRendertarget = undefined;
         renderstate.materialCount = 0;
         renderstate.drawCalls = 0;
         renderstate.drawCount = 0;

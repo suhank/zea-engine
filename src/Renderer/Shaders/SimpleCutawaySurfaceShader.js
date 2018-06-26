@@ -125,7 +125,13 @@ void main(void) {
 #endif
 
     // Cutaways
-    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeNormal, cutColor, fragColor)){
+    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeDist)){
+
+        if(!gl_FrontFacing){
+            fragColor = cutColor;
+            return;
+        }
+
 #ifndef ENABLE_ES3
         gl_FragColor = fragColor;
 #endif

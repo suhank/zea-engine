@@ -184,13 +184,20 @@ uniform vec3 planeNormal;
 uniform float planeDist;
 uniform color cutColor;
 
+
 void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
 
-     // Cutaways
-    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeDist, cutColor, fragColor)) {
+
+    // Cutaways
+    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeDist)){
+
+        if(!gl_FrontFacing){
+            fragColor = cutColor;
+            return;
+        }
 #ifndef ENABLE_ES3
         gl_FragColor = fragColor;
 #endif

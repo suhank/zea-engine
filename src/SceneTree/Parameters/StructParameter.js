@@ -23,11 +23,14 @@ class StructParameter extends Parameter {
         return parameter;
     }
 
-    getMember(name) {
+    getParameter(name) {
         for(let p of this.__members) {
             if(p.getName() == name)
                 return p;
         }
+    }
+    getMember(name) {
+        return this.getParameter(name)
     }
 
     //////////////////////////////////////////

@@ -41,9 +41,11 @@ class BaseParameter {
     }
 
     setName(name) {
-        const prevName = this.__name;
-        this.__name = name;
-        this.nameChanged.emit(this.__name, prevName);
+        if(name != this.__name) {
+            const prevName = this.__name;
+            this.__name = name;
+            this.nameChanged.emit(this.__name, prevName);
+        }
     }
 
     getValue() {
@@ -62,7 +64,7 @@ class BaseParameter {
         // this.__cleanerFns.push(cleanerFn);
 
         this.__cleanerFn = cleanerFn;
-        this.valueChanged.emit(ValueSetMode.OPERATOR_SETVALUE); // 1 = changed via cleaner fn
+        this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // 1 = changed via cleaner fn
     }
 
     isDirty() {

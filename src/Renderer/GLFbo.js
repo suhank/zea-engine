@@ -210,7 +210,12 @@ class GLFbo {
 
     }
 
-    bind(renderstate) {
+
+    bindForWriting(renderstate) {
+        if(renderstate) {
+            this.__prevBoundFbo = renderstate.boundRendertarget;
+            renderstate.boundRendertarget = this.__fbo;
+        }
         const gl = this.__gl;
         if (gl.name == 'webgl2')
             gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo);
@@ -219,16 +224,21 @@ class GLFbo {
         gl.viewport(0, 0, this.width, this.height); // Match the viewport to the texture size
     }
 
-    bindForWriting(renderstate) {
-        this.bind(renderstate);
-    }
-
-    unbindForWriting() {
+    unbindForWriting(renderstate) {
+        if(renderstate)
+            renderstate.boundRendertarget = this.__prevBoundFbo;
         const gl = this.__gl;
         if (gl.name == 'webgl2')
-            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+            gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo);
         else
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo);
+    }
+
+    bind(renderstate) {
+        this.bindForWriting(renderstate);
+    }
+    unbind(renderstate){
+        this.unbindForWriting(renderstate);
     }
 
     bindForReading() {

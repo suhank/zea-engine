@@ -510,21 +510,21 @@ class GLCollector {
     // Data Uploading
     __populateTransformDataArray(gldrawItem, index, dataArray) {
 
-        let mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
-        let lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
+        const mat4 = gldrawItem.getGeomItem().getGeomXfo().toMat4();
+        const lightmapCoordsOffset = gldrawItem.getGeomItem().getLightmapCoordsOffset();
 
-        let stride = 16; // The number of floats per draw item.
-        let offset = index * stride;
-        let col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
-        let col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
-        let col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
-        let col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
+        const stride = 16; // The number of floats per draw item.
+        const offset = index * stride;
+        const col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
+        const col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
+        const col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
+        const col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
         col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
         col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
         col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
 
-        let materialId = 0;
-        let geomId = 0;
+        const materialId = 0;
+        const geomId = 0;
         col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
     };
 

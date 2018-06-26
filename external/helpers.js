@@ -148,48 +148,55 @@ const materialLibraryHelpers = (function(){
     const materialPresets = {
         Steel:{
             // baseColor:  new Color(0.15,0.15,0.15),
-            metallic: 0.55,
-            roughness: 0.25,
-            reflectance: 0.7
+            Metallic: 0.55,
+            Roughness: 0.25,
+            Reflectance: 0.7
         },
         StainlessSteel:{
-            metallic: 0.55,
-            roughness: 0.25,
-            reflectance: 0.7
+            Metallic: 0.55,
+            Roughness: 0.25,
+            Reflectance: 0.7
         },
         Aluminum:{
-            metallic: 0.55,
-            roughness: 0.15,
-            reflectance: 0.85
+            Metallic: 0.55,
+            Roughness: 0.15,
+            Reflectance: 0.85
         },
         PaintedMetal: {
-            metallic: 0.05,
-            roughness: 0.25,
-            reflectance: 0.05
+            Metallic: 0.05,
+            Roughness: 0.25,
+            Reflectance: 0.05
         },
         Plastic: {
-            metallic: 0.0,
-            roughness: 0.25,
-            reflectance: 0.03
+            Metallic: 0.0,
+            Roughness: 0.25,
+            Reflectance: 0.03
         },
         Rubber: {
-            metallic: 0.0,
-            roughness: 0.75,
-            reflectance: 0.01
+            Metallic: 0.0,
+            Roughness: 0.75,
+            Reflectance: 0.01
         }
     };
 
     const __modifyMaterial = (material, paramValues, shaderName) => {
+        if (shaderName)
+            material.setShaderName(shaderName);
         for (let paramName in paramValues) {
             let param = material.getParameter(paramName);
             if (param) {
-                param.setValue(paramValues[paramName]);
+                if(paramValues[paramName] instanceof Visualive.Parameter) {
+                    const index = material.getParameterIndex(paramName);
+                    material.removeParameter(index)
+                    material.addParameterInstance(paramValues[paramName]);
+                }
+                else {
+                    param.setValue(paramValues[paramName]);
+                }
             } else {
                 material.addParameter(paramName, paramValues[paramName]);
             }
         }
-        if (shaderName)
-            material.setShaderName(shaderName);
     }
 
     const __materialTypeMapping = {};
@@ -201,15 +208,18 @@ const materialLibraryHelpers = (function(){
                 __materialTypeMapping[key] = materialTypeMapping[key];
         },
 
-        assignMaterialPresetValues:function(materialNames, presetName, shaderName = undefined) {
+        assignMaterialPresetValues:function(matLib, materialNames, presetName, shaderName = undefined) {
+            const matLiblNames = matLib.getMaterialNames();
             for (let materialName of materialNames) {
                 if(materialName == "*") {
-                    for(let name in __materials) {
-                        __modifyMaterial(__materials[name], materialPresets[presetName], shaderName);
+                    for(let name of matLiblNames) {
+                        const material = matLib.getMaterial(name, false);
+                        if(material)
+                            __modifyMaterial(material, materialPresets[presetName], shaderName);
                     }
                     continue;
                 }
-                let material = __materials[materialName];
+                let material = matLib.getMaterial(materialName);
                 if (!material) {
                     console.warn("Material not found:" + materialName);
                     continue;
@@ -218,16 +228,19 @@ const materialLibraryHelpers = (function(){
             }
         },
 
-        modifyMaterials:function(materialNames, paramValues, shaderName = undefined) {
+        modifyMaterials:function(matLib, materialNames, paramValues, shaderName = undefined) {
+            const matLiblNames = matLib.getMaterialNames();
 
             for (let materialName of materialNames) {
                 if(materialName == "*") {
-                    for(let name in __materials) {
-                        __modifyMaterial(__materials[name], paramValues, shaderName);
+                    for(let name of matLiblNames) {
+                        const material = matLib.getMaterial(name, false);
+                        if(material)
+                            __modifyMaterial(material, paramValues, shaderName);
                     }
                     continue;
                 }
-                let material = __materials[materialName];
+                let material = matLib.getMaterial(materialName);
                 if (!material) {
                     console.warn("Material not found:" + materialName);
                     continue;

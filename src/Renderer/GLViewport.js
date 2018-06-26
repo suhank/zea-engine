@@ -189,7 +189,6 @@ class GLViewport extends BaseViewport {
 
     frameView(treeItems) {
         this.__camera.frameView(this, treeItems);
-        // this.renderGeomDataFbo();
     }
 
     /// compute a ray into the scene based on a mouse coordinate
@@ -431,7 +430,8 @@ class GLViewport extends BaseViewport {
             } else {
                 let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (intersectionData != undefined) {
-                    // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+                    console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+                    console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                     this.__mouseDownGeom = intersectionData.geomItem;
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
 

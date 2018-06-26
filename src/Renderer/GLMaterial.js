@@ -80,10 +80,7 @@ const bindParam = (gl, param, renderstate, gltextures = {}) => {
                 gl.uniform1i(unif.location, value);
             break;
         case SInt32:
-            if(gl.name == 'webgl2')
-                gl.uniform1ui(unif.location, value);
-            else
-                gl.uniform1i(unif.location, value);
+            gl.uniform1i(unif.location, value);
             break;
         case Float32:
             gl.uniform1f(unif.location, value);
@@ -124,7 +121,10 @@ class GLMaterial extends BaseItem {
         this.destructing = new Signal();
 
         // emit a notification telling the renderer to redraw.
-        this.__material.updated.connect(() => {
+        // this.__material.updated.connect(() => {
+        //     this.updated.emit();
+        // });
+        this.__material.parameterValueChanged.connect(() => {
             this.updated.emit();
         });
         this.__material.textureConnected.connect(() => {

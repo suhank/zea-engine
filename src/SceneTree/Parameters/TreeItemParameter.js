@@ -12,7 +12,7 @@ class TreeItemParameter extends Parameter {
     constructor(name, filterFn) {
         super(name, undefined, 'TreeItem');
         this.__filterFn = filterFn;
-        this.valueParameterValueChanged = new Signal();
+        this.treeItemGlobalXfoChanged = new Signal();
     }
     
     clone() {
@@ -37,16 +37,20 @@ class TreeItemParameter extends Parameter {
         return this.__filterFn;
     }
 
+    __treeItemGlobalXfoChanged(mode){
+        this.treeItemGlobalXfoChanged.emit(mode);
+    }
+
     setValue(treeItem, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if(this.__value !== treeItem){
             if(this.__value){
-                this.__value.parameterValueChanged.disconnect(this.valueParameterValueChanged.emit);
+                this.__value.globalXfoChanged.disconnect(this.__treeItemGlobalXfoChanged.bind(this));
                 this.__value.removeRef(this);
             }
             this.__value = treeItem;
             if(this.__value){
                 this.__value.addRef(this);
-                this.__value.parameterValueChanged.connect(this.valueParameterValueChanged.emit);
+                this.__value.globalXfoChanged.connect(this.__treeItemGlobalXfoChanged.bind(this));
             }
             if(mode == ValueSetMode.USER_SETVALUE)
                 this.__flags |= ParamFlags.USER_EDITED;

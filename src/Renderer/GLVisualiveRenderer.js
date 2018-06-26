@@ -5,6 +5,7 @@ import {
     Signal
 } from '../Utilities';
 import {
+    Vec3,
     Xfo
 } from '../Math';
 import {
@@ -90,7 +91,7 @@ class GLVisualiveRenderer extends GLRenderer {
         this.__debugMode = 0;
         this.__debugLightmaps = false;
         this._planeDist = 0.0;
-        this.__planeAngle = 0.0;
+        this.__cutPlaneNormal = new Vec3(1,0,0);
 
         this.__drawEdges = false;
         this.__drawPoints = false;
@@ -321,12 +322,12 @@ class GLVisualiveRenderer extends GLRenderer {
         this.requestRedraw();
     }
 
-    get planeAngle() {
-        return this.__planeAngle;
+    get cutPlaneNormal() {
+        return this.__cutPlaneNormal;
     }
 
-    set planeAngle(val) {
-        this.__planeAngle = val;
+    set cutPlaneNormal(val) {
+        this.__cutPlaneNormal = val;
         this.requestRedraw();
     }
 
@@ -373,10 +374,11 @@ class GLVisualiveRenderer extends GLRenderer {
     drawScene(renderstate) {
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
+        renderstate.boundRendertarget = undefined;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
         renderstate.planeDist = this._planeDist;
-        renderstate.planeAngle = this.__planeAngle;
+        renderstate.planeNormal = this.__cutPlaneNormal;
         renderstate.exposure = Math.pow(2, this.__exposure);
         renderstate.shaderopts = this.__preproc;
 

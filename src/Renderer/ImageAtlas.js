@@ -307,6 +307,7 @@ class ImageAtlas extends GLTexture2D {
             this.cleanup();
         }
 
+        this.__fbo.unbind();
         this.updated.emit();
     }
 

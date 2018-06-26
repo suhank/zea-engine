@@ -24,6 +24,8 @@ class KinematicGroupParameter extends ListParameter {
             this.__initialXfos[index] = globaXfoParam.getValue();
             if(index > 0)
                 this.__deltaXfos[index] = this.__initialXfos[0].inverse().multiply(this.__initialXfos[index]);
+
+            
         });
         this.elementRemoved.connect((elem, index)=>{
             this.__globalXfoParams.splice(index, 1);
@@ -33,7 +35,7 @@ class KinematicGroupParameter extends ListParameter {
     }
 
     __filter(item){
-        console.log(item.getPath())
+        // console.log(item.getPath())
         return this.__value.indexOf(item) == -1;
     }
 
@@ -50,7 +52,7 @@ class KinematicGroupParameter extends ListParameter {
 
     setXfo(xfo, mode){
         if(this.__value.length > 0) {
-            this.__value[0].setGlobalXfo(xfo);
+            this.__value[0].setGlobalXfo(xfo, mode);
             for(let i=1; i<this.__value.length; i++) {
                 this.__value[i].setGlobalXfo(xfo.multiply(this.__deltaXfos[i]), mode);
             }

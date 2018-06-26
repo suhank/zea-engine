@@ -4,37 +4,37 @@ import { GizmoShader, GizmoDataShader } from '../Shaders/GizmoShader.js';
 import { GLGeomDataPass } from './GLGeomDataPass.js';
 
 
-class GLGizmoDataPass extends GLGeomDataPass {
-    constructor(gl) {
-        let glshader = new GizmoDataShader(gl);
-        super(gl, glshader);
+// class GLGizmoDataPass extends GLGeomDataPass {
+//     constructor(gl) {
+//         let glshader = new GizmoDataShader(gl);
+//         super(gl, glshader);
 
-        this.setExplicitShader(glshader);
-    };
+//         this.setExplicitShader(glshader);
+//     };
 
-    filter(drawItem) {
-        if(!super.filter(drawItem))
-            return false;
-        return true;
-    };
+//     filter(drawItem) {
+//         if(!super.filter(drawItem))
+//             return false;
+//         return true;
+//     };
 
-    draw(renderstate) {
+//     draw(renderstate) {
 
-        this.__explicitShader.bind(renderstate);
-        const unifs = renderstate.unifs;
-        this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
-        this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
-        this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());
+//         this.__explicitShader.bind(renderstate);
+//         const unifs = renderstate.unifs;
+//         this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
+//         this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
+//         this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());
 
-        this.__gl.depthFunc(this.__gl.GREATER);
+//         this.__gl.depthFunc(this.__gl.GREATER);
 
-        super.draw(renderstate);
+//         super.draw(renderstate);
 
-        this.__gl.depthFunc(this.__gl.LESS);
+//         this.__gl.depthFunc(this.__gl.LESS);
 
-        super.draw(renderstate);
-    };
-};
+//         super.draw(renderstate);
+//     };
+// };
 
 class GizmoPass extends GLPass {
     constructor(gl, collector) {
@@ -46,6 +46,9 @@ class GizmoPass extends GLPass {
         this.__gizmoDataPass = new GLGizmoDataPass(this.__gl);
         this.__gizmos = [];
         this.__gizmos.push(undefined); // Skip using the 0 slot as an id of 0 can be a problem. 
+
+
+        this.__gizmoDataShader = new GizmoDataShader(gl);
     };
 
     drawDataPass(renderstate) {
@@ -74,7 +77,7 @@ class GizmoPass extends GLPass {
             return false;
 
         const unifs = renderstate.unifs;
-        if ('color' in unifs) {
+        if ('Color' in unifs) {
             this.__gl.uniform4fv(unifs.color.location, drawItem.color.asArray());
         }
 

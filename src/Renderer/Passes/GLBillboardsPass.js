@@ -31,7 +31,7 @@ class GLBillboardsPass extends GLPass {
         this.__renderer = renderer;
         this.__billboards = [];
         this.__closestBillboard = 0.0;
-        this.__atlasNeedsUpdating = false;
+        this.__updateRequested = false;
 
         this.__collector.renderTreeUpdated.connect(()=> this.__updateBillboards());
 
@@ -53,6 +53,15 @@ class GLBillboardsPass extends GLPass {
     // Bind to Render Tree
 
     filterRenderTree() {}
+
+    __requestUpdate(){
+        if(!this.__updateRequested) {
+            this.__updateRequested = true;
+            setTimeout(()=>{
+              this.__updateBillboards();  
+            }, 100);
+        }
+    }
 
     addBillboard(billboard) {
 
@@ -78,14 +87,14 @@ class GLBillboardsPass extends GLPass {
         });
 
         billboard.destructing.connect(this.removeBillboardItem.bind(this));
-        this.__atlasNeedsUpdating = true;
+        this.__requestUpdate();
     }
 
     removeBillboardItem(billboard) {
         const index = this.__billboards.indexOf(billboard);
         billboard.destructing.disconnect(this.removeBillboardItem.bind(this));
         this.__billboards.splice(index, 1);
-        this.__atlasNeedsUpdating = true;
+        this.__requestUpdate();
     }
 
 
@@ -113,7 +122,7 @@ class GLBillboardsPass extends GLPass {
     }
 
     __updateBillboards() {
-        if (!this.__atlasNeedsUpdating)
+        if (!this.__updateRequested)
             return;
 
         // Note: When the camera moves, this array is sorted and re-upload.
@@ -156,7 +165,7 @@ class GLBillboardsPass extends GLPass {
                     this.__billboardDataArray[index] = [scale, flags, billboardData.imageIndex, alpha];
                     this.__tintColorArray[index] = [color.r, color.g, color.b, color.a];
                 });
-                this.__atlasNeedsUpdating = false;
+                this.__updateRequested = false;
                 return;
             }
 
@@ -206,7 +215,7 @@ class GLBillboardsPass extends GLPass {
             gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
             gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
 
-            this.__atlasNeedsUpdating = false;
+            this.__updateRequested = false;
         };
 
         if (this.__atlas.isLoaded()) {
@@ -266,12 +275,6 @@ class GLBillboardsPass extends GLPass {
         if(this.__billboards.length == 0)
             return;
 
-        if (this.__atlasNeedsUpdating){
-            this.__updateBillboards();
-            // Only draw once the atlas has been rendered.
-            if (this.__atlasNeedsUpdating)
-                return;
-        }
 
 
         const gl = this.__gl;

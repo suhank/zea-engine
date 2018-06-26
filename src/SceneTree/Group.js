@@ -57,6 +57,9 @@ class Group extends BaseItem {
             if(treeItem) {
                 this.addItem(treeItem);
             }
+            else {
+                console.warn("Group could not resolve item:" + path)
+            }
         }
     }
 

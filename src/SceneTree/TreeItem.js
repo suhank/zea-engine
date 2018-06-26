@@ -387,6 +387,13 @@ class TreeItem extends BaseItem {
     resolvePath(path, index=0) {
         if(typeof path == 'string')
             path = path.split('/');
+
+        if(path[index] == '.')
+            index++;
+        else if(path[index] == '..'){
+            return this.__ownerItem.resolvePath(path, index + 1);
+        }
+
         if (index == path.length){
             return this;
         }
@@ -396,9 +403,9 @@ class TreeItem extends BaseItem {
         if (childItem == undefined) {
             // Maybe the name is a parameter name.
             // ask the BaseItem to check.
-            const result = super.resolvePath(path[index]);
-            if(result) {
-                return result;
+            const param = super.getParameter(path[index]);
+            if(param) {
+                return param;
             }
 
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());

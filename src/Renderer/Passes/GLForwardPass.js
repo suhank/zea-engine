@@ -10,7 +10,6 @@ class GLForwardPass extends GLPass {
 
 
         this.__geomdatashader = new GeomDataShader(gl);
-        this.__floatGeomBuffer = false;//flaotGeomBuffer;
     }
 
     /////////////////////////////////////
@@ -33,13 +32,13 @@ class GLForwardPass extends GLPass {
 
     bindShader(renderstate, glshader){
         if(super.bindShader(renderstate, glshader)){
-            const unifs = renderstate.unifs;
-            if ('debugLightmapTexelSize' in unifs)
-                this.__gl.uniform1f(unifs.debugLightmapTexelSize.location, renderstate.debugLightmaps);
-            if ('planeDist' in unifs){
-                this.__gl.uniform1f(unifs.planeDist.location, renderstate.planeDist);
-                this.__gl.uniform1f(unifs.planeAngle.location, renderstate.planeAngle);
-            }
+            // const unifs = renderstate.unifs;
+            // if ('debugLightmapTexelSize' in unifs)
+            //     this.__gl.uniform1f(unifs.debugLightmapTexelSize.location, renderstate.debugLightmaps);
+            // if ('cutawayEnabled' in unifs){
+            //     this.__gl.uniform1f(unifs.planeDist.location, renderstate.planeDist);
+            //     this.__gl.uniform3fv(unifs.planeNormal.location, renderstate.planeNormal.asArray());
+            // }
             return true;
         }
         return false;
@@ -76,7 +75,7 @@ class GLForwardPass extends GLPass {
 
         let unif = renderstate.unifs.floatGeomBuffer;
         if (unif){
-            gl.uniform1i(unif.location, this.__floatGeomBuffer ? 1 : 0);
+            gl.uniform1i(unif.location, gl.floatTexturesSupported ? 1 : 0);
         }
 
         super.drawGeomData(renderstate);

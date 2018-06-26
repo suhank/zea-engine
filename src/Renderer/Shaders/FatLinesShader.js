@@ -172,7 +172,7 @@ void main(void) {
     }
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'color', defaultValue: new Color(1.0, 1.0, 0.5) })
+        paramDescs.push({ name: 'Color', defaultValue: new Color(1.0, 1.0, 0.5) })
         paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
         return paramDescs;
     }

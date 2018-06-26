@@ -42,7 +42,7 @@ class BaseItem extends ParameterOwner {
         this.ownerChanged = new Signal();
         this.flagsChanged = new Signal();
 
-        this.parameterValueChanged.connect((name, mode) => {
+        this.parameterValueChanged.connect((param, mode) => {
             if(mode==ValueSetMode.USER_SETVALUE){
                 this.setFlag(ItemFlags.USER_EDITED);
             }

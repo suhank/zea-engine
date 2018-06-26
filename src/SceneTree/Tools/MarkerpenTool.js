@@ -35,7 +35,7 @@ class MarkerpenTool {
 
         lineGeom.lineThickness = this.thickness;
         const material = new Material('stroke', 'FatLinesShader');
-        material.addParameter('color', this.color);
+        material.getParameter('Color').setValue(this.color);
 
         const geomItem = new GeomItem(id, lineGeom, material);
         this.__treeItem.addChild(geomItem);
