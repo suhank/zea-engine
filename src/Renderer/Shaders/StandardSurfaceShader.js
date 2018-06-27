@@ -260,8 +260,9 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
+    // fragColor = vec4(material.baseColor, 1.0);
+    // fragColor = vec4(material.baseColor * irradiance, 1.0);
     fragColor = vec4(radiance + (emission * material.baseColor), 1.0);
-    //fragColor = vec4(material.baseColor * irradiance, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);

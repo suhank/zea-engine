@@ -64,10 +64,10 @@ vec3 GGX_Specular_PrefilteredEnv(vec3 normal, vec3 viewVector, float roughness, 
     vec3 radiance = vec3(0.0);
     float NoV = saturate(dot(normal, viewVector));
 
-    // vec3 sampleVector = reflectionVector;
+    vec3 sampleVector = reflectionVector;
 
     // Calculate the half vector
-    vec3 halfVector = normal;//normalize(sampleVector + viewVector);
+    vec3 halfVector = normalize(sampleVector + viewVector);
     float cosT = saturatedDot(reflectionVector, normal);
     float sinT = sqrt( 1.0 - cosT * cosT);
 
