@@ -18,8 +18,11 @@ import {
 } from './GLFbo.js';
 
 class GLSelectedGeomsPass extends GLPass {
-    constructor(renderer, collector) {
-        super(renderer.gl, collector);
+    constructor() {
+        super();
+    }
+
+    init(gl, collector) {
 
         const gl = this.__gl;
         if (!glshader)

@@ -37,8 +37,11 @@ import { GLGeomDataPass } from './GLGeomDataPass.js';
 // };
 
 class GizmoPass extends GLPass {
-    constructor(gl, collector) {
-        super(gl, collector);
+    constructor() {
+        super();
+    }
+
+    init(gl, collector) {
 
         this__glshader = new GizmoShader(gl);
         this.setExplicitShader(glshader);

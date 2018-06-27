@@ -463,13 +463,13 @@ class TreeItem extends BaseItem {
             return;
 
         let j = super.toJSON(context);
-        const childItemsJSON = [];
+        const childItemsJSON = {};
         for (let childItem of this.__childItems){
             const childJSON = childItem.toJSON();
             if(childJSON)
-                childItemsJSON.push(childJSON);
+                childItemsJSON[childItem.getName()] = childJSON;
         }
-        if(childItemsJSON.length > 0) {
+        if(Object.keys(childItemsJSON).length > 0) {
             if(j) {
                 j.children = childItemsJSON;
             }
@@ -503,7 +503,7 @@ class TreeItem extends BaseItem {
                     if (childItem) {
                         childItem.fromJSON(childJson, context);
                     } else if (childJson.type) {
-                        childItem = sgFactory.constructClass(childType);
+                        childItem = sgFactory.constructClass(childJson.type);
                         if (childItem) {
                             childItem.fromJSON(childJson, context);
                             this.addChild(childItem, false, false);
@@ -520,7 +520,7 @@ class TreeItem extends BaseItem {
                     if (childItem) {
                         childItem.fromJSON(childJson, context);
                     } else if (childJson.type) {
-                        childItem = sgFactory.constructClass(childType);
+                        childItem = sgFactory.constructClass(childJson.type);
                         if (childItem) {
                             childItem.fromJSON(childJson, context);
                             this.addChild(childItem, false, false);

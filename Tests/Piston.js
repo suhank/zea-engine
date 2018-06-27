@@ -97,33 +97,44 @@ testingHarness.registerTest('Piston', (domElement, resources)=> {
         asset.addChild(geomItem);
     }
 
+    const crankGroup = new Visualive.Group('crankGroup');
+    asset.addChild(crankGroup);
+    crankGroup.addItem(asset.resolvePath(['Crank0']));
+    crankGroup.addItem(asset.resolvePath(['Crank1']));
+    crankGroup.addItem(asset.resolvePath(['CrankArm0']));
+    crankGroup.addItem(asset.resolvePath(['CrankArm1']));
+    crankGroup.addItem(asset.resolvePath(['CrankArmBar']));
+
+
+    const rodGroup = new Visualive.Group('rodGroup');
+    asset.addChild(rodGroup);
+    rodGroup.addItem(asset.resolvePath(['BigEnd']));
+    rodGroup.addItem(asset.resolvePath(['SmallEnd']));
+    rodGroup.addItem(asset.resolvePath(['Rod']));
+
+    const capGroup = new Visualive.Group('capGroup');
+    asset.addChild(capGroup);
+    capGroup.addItem(asset.resolvePath(['Head']));
+    capGroup.addItem(asset.resolvePath(['HeadRing0']));
+    capGroup.addItem(asset.resolvePath(['HeadRing1']));
+
     const setupPistonOp = true;
     if(setupPistonOp) {
         const pistonOp = new Visualive.PistonOperator("Piston");
         asset.addComponent(pistonOp);
         pistonOp.getParameter('RPM').setValue(15.0);
         pistonOp.getParameter('CrankAxis').setValue(new Visualive.Vec3(0,1,0));
-        // pistonOp.getParameter('Dist').setValue(30.0);
 
-        const crank = pistonOp.getParameter('Crank');
-        crank.addElement(asset.resolvePath(['Crank0']));
-        crank.addElement(asset.resolvePath(['Crank1']));
-        crank.addElement(asset.resolvePath(['CrankArm0']));
-        crank.addElement(asset.resolvePath(['CrankArm1']));
-        crank.addElement(asset.resolvePath(['CrankArmBar']));
+        pistonOp.getCrankOutput().setParam(crankGroup.getParameter('GlobalXfo'))
         
         const piston = pistonOp.getParameter('Pistons').addElement();
         piston.getMember('PistonAngle').setValue(0);
         piston.getMember('CamPhase').setValue(.5);
         piston.getMember('CamLength').setValue(3);
         piston.getMember('RodLength').setValue(5);
-        piston.getMember('Rod').addElement(asset.resolvePath(['BigEnd']));
-        piston.getMember('Rod').addElement(asset.resolvePath(['SmallEnd']));
-        piston.getMember('Rod').addElement(asset.resolvePath(['Rod']));
-        
-        piston.getMember('Head').addElement(asset.resolvePath(['Head']));
-        piston.getMember('Head').addElement(asset.resolvePath(['HeadRing0']));
-        piston.getMember('Head').addElement(asset.resolvePath(['HeadRing1']));
+        piston.getRodOutput().setParam(rodGroup.getParameter('GlobalXfo'))
+        piston.getCapOutput().setParam(capGroup.getParameter('GlobalXfo'))
+
 
         // Now save the component, remove it, and then add another one.
         const j = pistonOp.toJSON( { assetItem:asset } );
@@ -140,6 +151,8 @@ testingHarness.registerTest('Piston', (domElement, resources)=> {
     const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(20, 20, 10), new Visualive.Vec3(0, 0, 5));
     renderer.setScene(scene);
+    renderer.setupGrid(50, new Visualive.Color(0.2, 0.2, 0.2), 10, 1);
+
     renderer.resumeDrawing();
 
     //////////////////////////////////

@@ -5,10 +5,12 @@ import {
 } from '../Shaders/GeomDataShader.js';
 
 class GLForwardPass extends GLPass {
-    constructor(gl, collector) {
-        super(gl, collector);
+    constructor() {
+        super();
+    }
 
-
+    init(gl, collector) {
+        super.init(gl, collector);
         this.__geomdatashader = new GeomDataShader(gl);
     }
 

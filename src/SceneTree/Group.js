@@ -9,6 +9,9 @@ import {
     ValueSetMode
 } from './Parameters';
 import {
+    ItemFlags
+} from './BaseItem';
+import {
     TreeItem
 } from './TreeItem';
 import {
@@ -20,7 +23,7 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
-        this.__initialBlobalXfoParam = this.addParameter('InitialGlobalXfo', new Xfo());
+        this.__initialGlobalXfoParam = this.addParameter('InitialGlobalXfo', new Xfo());
         this.__invInitialXfo = new Xfo();
         this.__initialXfos = [];
 
@@ -40,13 +43,13 @@ class Group extends TreeItem {
                 this.__items[i].getParameter('Selected').setValue(value);
             }
         });
-        this.__initialBlobalXfoParam.valueChanged.connect((changeType)=>{
-            this.__invInitialXfo = this.__initialBlobalXfoParam.getValue().inverse();
+        this.__initialGlobalXfoParam.valueChanged.connect((changeType)=>{
+            this.__invInitialXfo = this.__initialGlobalXfoParam.getValue().inverse();
         });
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
             if(this.__items.length == 0) {
                 const xfo = this.__globalXfoParam.getValue();
-                this.__initialBlobalXfoParam.setValue(xfo, changeType);
+                this.__initialGlobalXfoParam.setValue(xfo, changeType);
             }
             else {
                 let delta;
@@ -55,7 +58,10 @@ class Group extends TreeItem {
                     const clean = ()=>{
                         if(!delta) {
                             const xfo = this.__globalXfoParam.getValue();
-                            delta = this.__invInitialXfo.multiply(xfo);
+                            // Compute the skinning transform that we can
+                            // apply to all the items in the group.
+                            // delta = this.__invInitialXfo.multiply(xfo);
+                            delta = xfo.multiply(this.__invInitialXfo);
                         }
                         return delta.multiply(initialXfo);
                     }
@@ -106,7 +112,13 @@ class Group extends TreeItem {
     }
 
 
-    addItem(item) {
+    addItem(item) { 
+        if(this.__items.length == 0) {
+            const xfo = item.getGlobalXfo();
+            const pxfo = item.getParentItem().getGlobalXfo();
+            xfo.sc = pxfo.sc;
+            this.setGlobalXfo(xfo);
+        }
         const index = this.__items.length;
         item.mouseDown.connect((mousePos, event)=>{
             this.mouseDownOnItem.emit(mousePos, event, item);

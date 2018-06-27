@@ -1,6 +1,7 @@
 
-
-
+import {
+    Signal
+} from '../../Utilities';
 import {
     ValueGetMode,
     ValueSetMode
@@ -14,10 +15,16 @@ class OperatorOutput {
     constructor(filterFn){
         this.__filterFn = filterFn;
         this._param = undefined;
+
+        this.paramSet = new Signal();
     }
 
     getFilterFn(){
         return this.__filterFn;
+    }
+
+    isConnected() {
+        return this._param != undefined;
     }
 
     setParam(param) {
@@ -25,6 +32,7 @@ class OperatorOutput {
         this._initialParamValue = param.getValue();
         if(this._initialParamValue.clone)
             this._initialParamValue = this._initialParamValue.clone();
+        this.paramSet.emit();
     }
 
     getInitialValue(){
@@ -94,7 +102,9 @@ class Operator extends BaseItem {
 
     addOutput(output) {
         this.__outputs.push(output);
+        return output;
     }
+
     removeOutput(index) {
         this.__outputs.splice(index, 1);
     }
@@ -130,11 +140,25 @@ class Operator extends BaseItem {
     toJSON(context) {
         const j = super.toJSON(context);
         j.type = this.constructor.name;
+
+        const oj = [];
+        for(let o of this.__outputs){
+            oj.push(o.toJSON(context));
+        }
+
+        j.outputs = oj;
         return j;
     }
 
     fromJSON(j, context) {
-        return super.fromJSON(j, context);
+        super.fromJSON(j, context);
+
+        if(j.outputs){
+            for(let i=0; i<this.__outputs.length; i++){
+                const output = this.__outputs[i];
+                output.fromJSON(j.outputs[i], context);
+            }
+        }
     }
 
     destroy(){

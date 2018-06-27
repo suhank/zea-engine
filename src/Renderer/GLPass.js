@@ -5,15 +5,19 @@ import {
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLPass {
-    constructor(gl, collector) {
+    constructor() {
+        this.updated = new Signal();
+        this.enabled = true;
+    }
+
+    init(gl, collector) {
+
         this.__gl = gl;
         this.__passIndex = 0;
         this.__collector = collector;
         this.__glshadermaterials = [];
         this.__selectedGeomsShadermaterials = [];
-        this.enabled = true;
         
-        this.updated = new Signal();
 
         if(this.filterRenderTree)
             this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));

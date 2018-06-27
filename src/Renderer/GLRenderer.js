@@ -30,12 +30,12 @@ import {
 import {
     GLCollector
 } from './GLCollector.js';
-import {
-    GLGeomDataPass
-} from './Passes/GLGeomDataPass.js';
-import {
-    GL2DOverlayPass
-} from './Passes/GL2DOverlayPass.js';
+// import {
+//     GLGeomDataPass
+// } from './Passes/GLGeomDataPass.js';
+// import {
+//     GL2DOverlayPass
+// } from './Passes/GL2DOverlayPass.js';
 import {
     GLForwardPass
 } from './Passes/GLForwardPass.js';
@@ -45,9 +45,9 @@ import {
 import {
     GLBillboardsPass
 } from './Passes/GLBillboardsPass.js';
-import {
-    GizmoPass
-} from './Passes/GizmoPass.js';
+// import {
+//     GizmoPass
+// } from './Passes/GizmoPass.js';
 import {
     GizmoContext
 } from './Gizmos/GizmoContext.js';
@@ -153,10 +153,10 @@ class GLRenderer {
         // this.__gizmoPass = new GizmoPass(this.__collector);
         // this.__gizmoContext = new GizmoContext(this);
 
-        this.addPass(new GL2DOverlayPass(this.__gl, this.__collector));
-        this.addPass(new GLForwardPass(this.__gl, this.__collector));
-        this.addPass(new GLTransparencyPass(this.__gl, this.__collector));
-        this.addPass(new GLBillboardsPass(this));
+        // this.addPass(new GL2DOverlayPass());
+        this.addPass(new GLForwardPass());
+        this.addPass(new GLTransparencyPass());
+        this.addPass(new GLBillboardsPass());
 
         // Note: Audio contexts have started taking a long time to construct
         // (Maybe a regresion in Chrome?)
@@ -694,6 +694,7 @@ class GLRenderer {
         // }
         pass.updated.connect(this.requestRedraw.bind(this));
         pass.setPassIndex(this.__passes.length);
+        pass.init(this.__gl, this.__collector)
         this.__passes.push(pass);
         this.requestRedraw();
         return this.__passes.length - 1;

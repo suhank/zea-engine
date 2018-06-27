@@ -4,7 +4,8 @@ import {
     Xfo
 } from '../../Math';
 import {
-    Operator
+    Operator,
+    XfoOperatorOutput
 } from './Operator.js';
 import {
     ValueGetMode,
@@ -36,8 +37,8 @@ class PistonParameter extends StructParameter {
         this.__rodLengthParam = this._addMember(new NumberParameter('RodLength', 3));
 
         // The first RodItem added causes the rodOffset to be computed.
-        this.__rodParam = this._addMember(new KinematicGroupParameter('Rod'));
-        this.__headParam = this._addMember(new KinematicGroupParameter('Head'));
+        this.__rodoutput = new XfoOperatorOutput();
+        this.__capoutput = new XfoOperatorOutput();
 
 
         this.__pistonAngleParam.valueChanged.connect(this.init.bind(this));
@@ -46,6 +47,13 @@ class PistonParameter extends StructParameter {
         this.__rodLengthParam.valueChanged.connect(this.init.bind(this));
 
         this.__bindXfos = {};
+    }
+    getRodOutput() {
+        return this.__rodoutput;
+    }
+
+    getCapOutput() {
+        return this.__capoutput;
     }
 
     setCrankXfo(baseCrankXfo){
@@ -64,7 +72,7 @@ class PistonParameter extends StructParameter {
         this.__pistonAxis = this.__baseCrankXfo.ori.rotateVec3(crankVec);
         // this.__pistonOffset = Math.cos(camPhase * 2.0 * Math.PI)*camLength;
 
-        this.__camVec = new Vec3(Math.sin(camPhase * 2.0 * Math.PI)*camLength, 0.0, Math.cos(camPhase * 2.0 * Math.PI)*camLength);
+        this.__camVec = new Vec3(Math.sin(camPhase * 2.0 * Math.PI)*camLength, Math.cos(camPhase * 2.0 * Math.PI)*camLength, 0.0);
 
 
         const camAngle = (camPhase) * 2.0 * Math.PI;
@@ -85,9 +93,10 @@ class PistonParameter extends StructParameter {
         const rodAngle = Math.asin(bigEndOffset / rodLength);
         const headOffset = Math.sqrt(rodLength * rodLength - bigEndOffset * bigEndOffset) + (Math.cos(camAngle) * camLength);
 
-        if(this.__rodParam.getCount() > 0)
+
+        if(this.__rodoutput.isConnected())
         {
-            const rodxfo = this.__rodParam.getInitialXfo().clone();
+            const rodxfo = this.__rodoutput.getInitialValue().clone();
             const axisPos = rodxfo.tr.subtract(crankXfo.tr).dot(crankAxis);
 
             const rotRotation = new Quat();
@@ -95,15 +104,15 @@ class PistonParameter extends StructParameter {
 
             rodxfo.tr = crankXfo.tr.add(crankXfo.ori.rotateVec3(this.__camVec));
             rodxfo.tr.addInPlace(crankAxis.scale(axisPos))
-            rodxfo.ori = rotRotation.multiply(rodxfo.ori)
-            this.__rodParam.setXfo(rodxfo, ValueSetMode.OPERATOR_SETVALUE);
+            rodxfo.ori = rotRotation.multiply(rodxfo.ori);
+            this.__rodoutput.setValue(rodxfo);
         }
 
-        if(this.__headParam.getCount() > 0)
+        if(this.__capoutput.isConnected())
         {
-            const headxfo = this.__headParam.getInitialXfo().clone();
+            const headxfo = this.__capoutput.getInitialValue().clone();
             headxfo.tr.addInPlace(this.__pistonAxis.scale(headOffset-this.__pistonOffset))
-            this.__headParam.setXfo(headxfo, ValueSetMode.OPERATOR_SETVALUE);
+            this.__capoutput.setValue(headxfo);
         }
     }
 
@@ -115,12 +124,34 @@ class PistonParameter extends StructParameter {
 
     setOwner(owner) {
         this.__owner = owner;
-        this.__rodParam.setOwner(owner);
-        this.__headParam.setOwner(owner);
     }
 
     getOwner() {
         return this.__owner;
+    }
+
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        const j = super.toJSON();
+        // if(j){
+        //     j.rodOutput = this.__rodoutput.toJSON(context);
+        //     j.capOutput = this.__capoutput.toJSON(context);
+        // }
+        return j;
+    }
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+        if(j.rodOutput){
+            this.__rodoutput.fromJSON(j.rodOutput, context);
+        }
+        if(j.capOutput){
+            this.__capoutput.fromJSON(j.capOutput, context);
+        }
     }
 
 };
@@ -150,22 +181,27 @@ class PistonOperator extends Operator {
             }
         });
 
-        this.__crankParam = this.addParameter(new KinematicGroupParameter('Crank'));
-        this.__crankParam.elementAdded.connect(this.init.bind(this));
-        this.__crankParam.elementRemoved.connect(this.init.bind(this));
-        this.__outputs[0] = this.__crankParam;
+        // this.__crankParam = this.addParameter(new KinematicGroupParameter('Crank'));
+        this.__crankOutput = this.addOutput(new XfoOperatorOutput());
+        this.__crankOutput.paramSet.connect(this.init.bind(this));
+        // this.__crankParam.elementAdded.connect(this.init.bind(this));
+        // this.__crankParam.elementRemoved.connect(this.init.bind(this));
+        // this.__outputs[0] = this.__crankParam;
         this.__crankAxisParam = this.addParameter(new Vec3Parameter('CrankAxis', new Vec3(1,0,0)));
         this.__crankAxisParam.valueChanged.connect(this.init.bind(this));
         this.__pistonsParam = this.addParameter(new ListParameter('Pistons', PistonParameter));
         this.__pistonsParam.elementAdded.connect((value, index) => {
             this.__outputs[index+1] = value;
             value.setCrankXfo(this.__baseCrankXfo)
+
+            this.addOutput(value.getRodOutput());
+            this.addOutput(value.getCapOutput());
         })
         this.__pistonsParam.elementRemoved.connect((value, index) => {
             this.__outputs.splice(index+1, 1);
         })
-        this.init();
 
+        this.__baseCrankXfo = new Xfo();
         this.__pistons = [];
     }
 
@@ -173,34 +209,31 @@ class PistonOperator extends Operator {
         super.setOwner(ownerItem);
     }
 
-    init(){
+    getCrankOutput() {
+        return this.__crankOutput;
+    }
 
-        if(this.__crankParam.getCount()==0)
-            return;
-        this.__baseCrankXfo = new Xfo();
+    init(){
         this.__baseCrankXfo.ori.setFromAxisAndAngle(this.__crankAxisParam.getValue(), 0.0);
-        this.__crankOffset = this.__baseCrankXfo.inverse().multiply(this.__crankParam.getInitialXfo());
         const pistons = this.__pistonsParam.getValue();
         for (let piston of pistons)
             piston.setCrankXfo(this.__baseCrankXfo);
+
+        if(this.__crankOutput.isConnected())
+            this.__crankOffset = this.__baseCrankXfo.inverse().multiply(this.__crankOutput.getInitialValue());
     }
 
     evaluate() {
-        if(this.__crankParam.getCount()==0)
-            return;
 
         const revolutions = this.__revolutionsParam.getValue(ValueGetMode.OPERATOR_GETVALUE);
         const crankAxis = this.__crankAxisParam.getValue(ValueGetMode.OPERATOR_GETVALUE);
-        // const quat = new Quat();
-        // quat.setFromAxisAndAngle(crankAxis, revolutions * Math.PI * 2.0);
+        const quat = new Quat();
+        quat.setFromAxisAndAngle(crankAxis, revolutions * Math.PI * 2.0);
 
-        // const crankXfo = this.__crankParam.getInitialXfo().clone();
-        // crankXfo.ori = quat.multiply(crankXfo.ori);
-        const crankXfo = new Xfo();
-        crankXfo.ori.setFromAxisAndAngle(crankAxis, revolutions * Math.PI * 2.0);
-        // console.log("Ori:" + crankXfo.ori.toString())
-        this.__crankParam.setXfo(crankXfo.multiply(this.__crankOffset), ValueSetMode.OPERATOR_SETVALUE);
 
+        const crankXfo = this.__crankOutput.getValue();
+        crankXfo.ori = quat.multiply(this.__crankOutput.getInitialValue().ori);
+        this.__crankOutput.setValue(crankXfo);
 
         const pistons = this.__pistonsParam.getValue();
         const len = pistons.length;

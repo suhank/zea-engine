@@ -25,10 +25,13 @@ import {
 } from '../GeomShaderBinding.js';
 
 class GLBillboardsPass extends GLPass {
-    constructor(renderer, collector) {
-        super(renderer.gl, renderer.getCollector());
+    constructor() {
+        super();
+    }
+    
+    init(gl, collector) {
+        super.init(gl, collector);
 
-        this.__renderer = renderer;
         this.__billboards = [];
         this.__closestBillboard = 0.0;
         this.__updateRequested = false;
@@ -37,11 +40,11 @@ class GLBillboardsPass extends GLPass {
 
         this.__prevSortCameraPos = new Vec3();
 
-        this.__atlas = new ImageAtlas(renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
+        this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
         this.__atlas.loaded.connect(this.updated.emit);
         this.__atlas.updated.connect(this.updated.emit);
 
-        renderer.getCollector().registerSceneItemFilter((treeItem, rargs)=>{
+        collector.registerSceneItemFilter((treeItem, rargs)=>{
             if(treeItem instanceof BillboardItem) {
                 this.addBillboard(treeItem);
                 return true;
@@ -137,7 +140,7 @@ class GLBillboardsPass extends GLPass {
                 gl.setupInstancedQuad();
             }
             this.__glshader = new BillboardShader(gl);
-            let shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', this.__renderer.getShaderPreproc());
+            let shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', this.__collector.getRenderer().getShaderPreproc());
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 

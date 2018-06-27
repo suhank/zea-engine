@@ -3,8 +3,13 @@ import { GLPass } from '../GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
 
 class GLTransparencyPass extends GLPass {
-    constructor(gl, collector) {
-        super(gl, collector);
+    constructor() {
+        super();
+    }
+
+    
+    init(gl, collector) {
+        super.init(gl, collector);
 
         this.transparentItems = [];
         this.visibleItems = [];
