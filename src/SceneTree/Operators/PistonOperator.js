@@ -68,11 +68,10 @@ class PistonParameter extends StructParameter {
         const camLength = this.__camLengthParam.getValue();
         const rodLength = this.__rodLengthParam.getValue();
         const pistonAngle = this.__pistonAngleParam.getValue();
-        const crankVec = new Vec3(Math.sin(Math.degToRad(pistonAngle)), 0.0, Math.cos(Math.degToRad(pistonAngle)))
+        const crankVec = new Vec3(Math.sin(Math.degToRad(pistonAngle)), Math.cos(Math.degToRad(pistonAngle)), 0.0)
         this.__pistonAxis = this.__baseCrankXfo.ori.rotateVec3(crankVec);
-        // this.__pistonOffset = Math.cos(camPhase * 2.0 * Math.PI)*camLength;
 
-        this.__camVec = new Vec3(Math.sin(camPhase * 2.0 * Math.PI)*camLength, Math.cos(camPhase * 2.0 * Math.PI)*camLength, 0.0);
+        this.__camVec = this.__baseCrankXfo.ori.rotateVec3(new Vec3(Math.sin(camPhase * 2.0 * Math.PI)*camLength, Math.cos(camPhase * 2.0 * Math.PI)*camLength, 0.0));
 
 
         const camAngle = (camPhase) * 2.0 * Math.PI;
@@ -82,7 +81,7 @@ class PistonParameter extends StructParameter {
         this.__pistonOffset = headOffset;
     }
 
-    evaluate(crankXfo, crankAxis, revolutions) {
+    evaluate(quat, crankAxis, revolutions) {
 
         const camPhase = this.__camPhaseParam.getValue();
         const camLength = this.__camLengthParam.getValue();
@@ -97,12 +96,12 @@ class PistonParameter extends StructParameter {
         if(this.__rodoutput.isConnected())
         {
             const rodxfo = this.__rodoutput.getInitialValue().clone();
-            const axisPos = rodxfo.tr.subtract(crankXfo.tr).dot(crankAxis);
+            const axisPos = rodxfo.tr.subtract(this.__baseCrankXfo.tr).dot(crankAxis);
 
             const rotRotation = new Quat();
             rotRotation.setFromAxisAndAngle(crankAxis, -rodAngle);
 
-            rodxfo.tr = crankXfo.tr.add(crankXfo.ori.rotateVec3(this.__camVec));
+            rodxfo.tr = this.__baseCrankXfo.tr.add(quat.rotateVec3(this.__camVec));
             rodxfo.tr.addInPlace(crankAxis.scale(axisPos))
             rodxfo.ori = rotRotation.multiply(rodxfo.ori);
             this.__rodoutput.setValue(rodxfo);
@@ -188,7 +187,11 @@ class PistonOperator extends Operator {
         // this.__crankParam.elementRemoved.connect(this.init.bind(this));
         // this.__outputs[0] = this.__crankParam;
         this.__crankAxisParam = this.addParameter(new Vec3Parameter('CrankAxis', new Vec3(1,0,0)));
-        this.__crankAxisParam.valueChanged.connect(this.init.bind(this));
+        this.__crankAxisParam.valueChanged.connect(()=>{
+            // this.__baseCrankXfo.ori.setFromAxisAndAngle(this.__crankAxisParam.getValue(), 0.0);
+            this.__baseCrankXfo.ori.setFromDirectionAndUpvector(this.__crankAxisParam.getValue(), new Vec3(0,0,1));
+            this.init();
+        });
         this.__pistonsParam = this.addParameter(new ListParameter('Pistons', PistonParameter));
         this.__pistonsParam.elementAdded.connect((value, index) => {
             this.__outputs[index+1] = value;
@@ -214,7 +217,6 @@ class PistonOperator extends Operator {
     }
 
     init(){
-        this.__baseCrankXfo.ori.setFromAxisAndAngle(this.__crankAxisParam.getValue(), 0.0);
         const pistons = this.__pistonsParam.getValue();
         for (let piston of pistons)
             piston.setCrankXfo(this.__baseCrankXfo);
@@ -239,7 +241,7 @@ class PistonOperator extends Operator {
         const len = pistons.length;
         for (let i = 0; i < len; i++) {
             const piston = pistons[i];
-            piston.evaluate(crankXfo, crankAxis, revolutions);
+            piston.evaluate(quat, crankAxis, revolutions);
         }
     }
 
