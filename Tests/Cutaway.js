@@ -25,13 +25,16 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
     let cutAmount = -10.0;
     let cutParam = new Visualive.NumberParameter('planeDist', cutAmount, [-10, 10]);
+    let cutDir = new Visualive.Vec3Parameter('planeNormal', new Visualive.Vec3(-1, 0, 0));
 
+    objAsset.getParameter('ObjFilePath').setValue("/Assets/CutawayAndExplode.obj");
     objAsset.loaded.connect(function() {
         renderer.frameAll();
         renderer.resumeDrawing();
         objAsset.getMaterialLibrary().getMaterialNames().forEach((materialName)=>{
             const material = objAsset.getMaterialLibrary().getMaterial(materialName);
             material.addParameterInstance(cutParam);
+            material.addParameterInstance(cutDir);
         });
 
         let animatingValue = false;
@@ -57,11 +60,10 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
 
     });
-    objAsset.getParameter('FilePath').setValue("/Assets/CutawayAndExplode.obj");
 
 
     const renderer = new Visualive.GLSimpleRenderer(domElement, { enableCrossSections:true });
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-8, 8, 2), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-24, 24, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
 
 

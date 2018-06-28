@@ -186,8 +186,6 @@ const materialLibraryHelpers = (function(){
             let param = material.getParameter(paramName);
             if (param) {
                 if(paramValues[paramName] instanceof Visualive.Parameter) {
-                    const index = material.getParameterIndex(paramName);
-                    material.removeParameter(index)
                     material.addParameterInstance(paramValues[paramName]);
                 }
                 else {

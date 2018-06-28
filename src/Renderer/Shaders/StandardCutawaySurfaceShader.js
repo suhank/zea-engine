@@ -103,7 +103,7 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
@@ -192,16 +192,17 @@ void main(void) {
 
 
     // Cutaways
-    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeDist)){
-
-        if(!gl_FrontFacing){
-            fragColor = cutColor;
+    if(cutawayEnabled != 0){
+        if(cutaway(v_worldPos, planeNormal, planeDist)){
             return;
         }
+        else if(!gl_FrontFacing){
+            fragColor = cutColor;
 #ifndef ENABLE_ES3
         gl_FragColor = fragColor;
 #endif
-        return;
+            return;
+        }
     }
 
     MaterialParams material;

@@ -56,7 +56,7 @@ class BackgroundImageShader extends EnvMapShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 
 #define ENABLE_INLINE_GAMMACORRECTION
@@ -108,7 +108,7 @@ class OctahedralEnvMapShader extends EnvMapShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
@@ -170,7 +170,7 @@ class LatLongEnvMapShader extends EnvMapShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 
 #define ENABLE_INLINE_GAMMACORRECTION
@@ -230,7 +230,7 @@ class SterioLatLongEnvMapShader extends EnvMapShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 
 #define ENABLE_INLINE_GAMMACORRECTION
@@ -289,7 +289,7 @@ class DualFishEyeEnvMapShader extends EnvMapShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
 
 #define ENABLE_INLINE_GAMMACORRECTION
@@ -343,7 +343,7 @@ class DualFishEyeToLatLongBackgroundShader extends EnvMapShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 <%include file="pragmatic-pbr/envmap-dualfisheye.glsl"/>
 

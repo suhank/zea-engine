@@ -70,7 +70,7 @@ class OctahedralEnvProjectionShader extends EnvProjectionShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
@@ -123,7 +123,7 @@ class LatLongEnvProjectionShader extends EnvProjectionShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-equirect.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>

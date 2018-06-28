@@ -62,7 +62,7 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
@@ -148,7 +148,7 @@ class FloatingShadowCatcherShader extends ShadowCatcherShader {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>

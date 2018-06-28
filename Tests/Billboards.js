@@ -13,7 +13,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
         xfo.ori.setFromAxisAndAngle(new Visualive.Vec3(1, 0, 0), Math.PI * 0.5);
         billboard.setLocalXfo(xfo);
         billboard.getParameter('scale').setValue(2.5);
-        billboard.getParameter('flags').setValue(0);
+        billboard.getParameter('alignedToCamera').setValue(0);
         billboard.getParameter('color').setValue(new Visualive.Color(.53,  .53, 1.0));
         scene.getRoot().addChild(billboard);
     }

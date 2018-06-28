@@ -67,7 +67,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
         objAsset.getParameter('defaultShader').setValue('SimpleSurfaceShader');
-        objAsset.getParameter('FilePath').setValue("/Assets/ExplodePartA.obj");
+        objAsset.getParameter('ObjFilePath').setValue("/Assets/ExplodePartA.obj");
         asset.addChild(objAsset);
 
     }
@@ -82,7 +82,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
         objAsset.getParameter('defaultShader').setValue('SimpleSurfaceShader');
-        objAsset.getParameter('FilePath').setValue("/Assets/ExplodePartB.obj");
+        objAsset.getParameter('ObjFilePath').setValue("/Assets/ExplodePartB.obj");
         asset.addChild(objAsset);
 
         objAsset.loaded.connect(function() {

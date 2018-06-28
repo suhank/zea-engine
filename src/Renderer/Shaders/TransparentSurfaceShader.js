@@ -67,7 +67,7 @@ precision highp float;
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
 #endif
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 
 /* VS Outputs */
 varying vec3 v_viewPos;

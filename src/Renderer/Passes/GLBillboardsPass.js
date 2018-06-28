@@ -24,6 +24,9 @@ import {
     generateShaderGeomBinding
 } from '../GeomShaderBinding.js';
 
+
+const pixelsPerItem = 5; // The number of pixels per draw item.
+
 class GLBillboardsPass extends GLPass {
     constructor() {
         super();
@@ -105,11 +108,12 @@ class GLBillboardsPass extends GLPass {
         const billboard = billboardData.billboard;
         const mat4 = billboard.getGlobalXfo().toMat4();
         const scale = billboard.getParameter('scale').getValue();
-        const flags = billboard.getParameter('flags').getValue();
+        let flags = 0;
+        if(billboard.getParameter('alignedToCamera').getValue())
+            flags |= 1<<2;
         const alpha = billboard.getParameter('alpha').getValue();
         const color = billboard.getParameter('color').getValue();
 
-        const pixelsPerItem = 6;
         const offset = index * pixelsPerItem * 4;
         const col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
         const col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
@@ -173,10 +177,7 @@ class GLBillboardsPass extends GLPass {
             }
 
 
-            const pixelsPerItem = 6; // The number of pixels per draw item.
             let size = Math.round(Math.sqrt(this.__billboards.length * pixelsPerItem) + 0.5);
-
-
             // Note: the following few lines need a cleanup. 
             // We should be using power of 2 textures. The problem is that pot texture sizes don't
             // align with the 6 pixels per draw item. So we need to upload a slightly bigger teture
@@ -235,13 +236,13 @@ class GLBillboardsPass extends GLPass {
         const billboardData = this.__billboards[index];
         const gl = this.__gl;
 
-        const pixelsPerItem = 6; // The number of pixels per draw item.
         const dataArray = new Float32Array(pixelsPerItem * 4);
         this.__populateBillboardDataArray(billboardData, 0, dataArray);
 
         gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex);
         const xoffset = (index * pixelsPerItem) % this.__width;
         const yoffset = Math.floor((index * pixelsPerItem) / this.__width);
+
         const width = pixelsPerItem;
         const height = 1;
         // console.log("xoffset:" + xoffset + " yoffset:" + yoffset +" width:" + width + " dataArray:" + dataArray.length);

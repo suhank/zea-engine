@@ -46,7 +46,7 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     objAsset.loaded.connect(function() {
         renderer.frameAll();
     });
-    objAsset.getParameter('FilePath').setValue("/Assets/cow.obj");
+    objAsset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
 
 
     let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);

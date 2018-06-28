@@ -119,7 +119,7 @@ class ExplodePartsOperator extends Operator {
             this.__stagesParam.setValue(this.__stagesParam.getValue()+1, ValueSetMode.SILENT);
         })
         this.__itemsParam.elementRemoved.connect((value, index) => {
-            this.__outputs.splice(index, 1);
+            this.removeOutput(ivalue.getOutput());
         })
 
         this.__localXfos = [];

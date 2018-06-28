@@ -98,6 +98,8 @@ class Operator extends BaseItem {
         this.__evalOutput = this.__evalOutput.bind(this);
         this.__opInputChanged = this.__opInputChanged.bind(this);
         this.parameterValueChanged.connect(this.__opInputChanged);
+        
+        this.postEval = new Signal();
     }
 
     addOutput(output) {
@@ -105,8 +107,8 @@ class Operator extends BaseItem {
         return output;
     }
 
-    removeOutput(index) {
-        this.__outputs.splice(index, 1);
+    removeOutput(output) {
+        this.__outputs.splice(this.__outputs.indexOf(output), 1);
     }
 
     __evalOutput (cleanedParam/*value, getter*/){
@@ -158,6 +160,13 @@ class Operator extends BaseItem {
                 const output = this.__outputs[i];
                 output.fromJSON(j.outputs[i], context);
             }
+
+            // Force an evaluation of the operator as soon as 
+            const onloaded = ()=>{
+                this.__opInputChanged();
+                context.assetItem.loaded.disconnect(onloaded)
+            }
+            context.assetItem.loaded.connect(onloaded);
         }
     }
 

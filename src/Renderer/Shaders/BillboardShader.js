@@ -25,7 +25,7 @@ uniform mat4 projectionMatrix;
 
 instancedattribute float instanceIds;
 
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="utils/imageAtlas.glsl"/>
 
@@ -36,11 +36,11 @@ uniform sampler2D instancesTexture;
 uniform int instancesTextureSize;
 
 
-const int cols_per_instance = 6;
+const int cols_per_instance = 5;
 
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
     // Unpack 3 x 4 matix columns into a 4 x 4 matrix.
-    vec4 col0 = fetchTexel(texture, textureSize, (index * cols_per_instance));
+    vec4 col0 = fetchTexel(texture, textureSize, (index * cols_per_instance) + 0);
     vec4 col1 = fetchTexel(texture, textureSize, (index * cols_per_instance) + 1);
     vec4 col2 = fetchTexel(texture, textureSize, (index * cols_per_instance) + 2);
     mat4 result = mat4(col0, col1, col2, vec4(0.0, 0.0, 0.0, 1.0));
@@ -84,7 +84,7 @@ void main(void) {
 
     mat4 modelMatrix = getModelMatrix(instanceID);
     vec4 billboardData = getInstanceData(instanceID);
-    vec4 layoutData = fetchTexel1D(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
+    vec4 layoutData = fetchTexel(atlasBillboards_layout, int(atlasBillboards_desc.z), int(billboardData.z));
     v_tint = getTintColor(instanceID);
 
 #else
@@ -95,7 +95,8 @@ void main(void) {
 
     vec2 quadVertex = getQuadVertexPositionFromID();
 
-    v_texCoord = vec2(quadVertex.x, -quadVertex.y) + vec2(0.5, 0.5);
+
+    v_texCoord = vec2(quadVertex.x, -quadVertex.y) + 0.5;
     v_alpha = billboardData.w;
     v_texCoord *= layoutData.zw;
     v_texCoord += layoutData.xy;
@@ -103,7 +104,8 @@ void main(void) {
     float scl = billboardData.x;
     float width = layoutData.z * atlasBillboards_desc.x * scl * 0.002;
     float height = layoutData.w * atlasBillboards_desc.y * scl * 0.002;
-    bool alignedToCamera = billboardData.y > 0.5;
+    int flags = int(billboardData.y);
+    bool alignedToCamera = flags > 0;
     if(alignedToCamera){
         gl_Position = (viewMatrix * modelMatrix) * vec4(0.0, 0.0, 0.0, 1.0);
         gl_Position += vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 0.0);
@@ -113,8 +115,6 @@ void main(void) {
         mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
         gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
     }
-
-
 }
 `);
 
@@ -122,7 +122,7 @@ void main(void) {
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="materialparams.glsl"/>
 <%include file="utils/imageAtlas.glsl"/>
 

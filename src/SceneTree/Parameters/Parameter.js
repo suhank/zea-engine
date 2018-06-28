@@ -28,7 +28,7 @@ class BaseParameter {
         this.__flags = 0;
 
         this.valueChanged = new Signal();
-        this.nameChanged = new Signal();
+        this.nameChanged = new Signal(); 
 
         this.getName = this.getName.bind(this);
         this.setName = this.setName.bind(this);

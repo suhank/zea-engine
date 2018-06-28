@@ -98,32 +98,41 @@ class ParameterOwner extends RefCounted {
         return param;
     }
 
+
+
     addParameterInstance(param) {
+        const name = param.getName();
+        if(this.__paramMapping[name] != undefined) {
+            console.warn("Replacing Parameter:" + name)
+            this.removeParameter(name);
+        }
         param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
-        param.nameChanged.connect((newName, oldName) => {
-            let index = this.__paramMapping[oldName];
-            delete this.__paramMapping[oldName];
-            this.__paramMapping[newName] = index;
-            // this.parameterNameChanged.emit(newName, oldName);
-        });
         param.setOwner(this)
         this.__params.push(param)
-        this.__paramMapping[param.getName()] = this.__params.length - 1;
+        this.__paramMapping[name] = this.__params.length - 1;
         this.parameterAdded.emit();
         return param;
     }
 
-    removeParameter(index){
-        const param = this.__params[index]
+    removeParameter(name){
+        if(this.__paramMapping[name] == undefined) {
+            console.throw("Unable to Remove Parameter:" + name);
+        }
+        const index = this.__paramMapping[name];
         this.__params.splice(index, 1)
-        this.parameterRemoved.emit(param.getName());
+        const paramMapping = {};
+        for (let i=0; i<this.__params.length; i++){
+            paramMapping[this.__params[i].getName()] = i;
+        }
+        this.__paramMapping = paramMapping;
+        this.parameterRemoved.emit(name);
     }
 
-    _removeAllParameters(){
-        for (let i=this.__params.length-1; i>=0; i--) {
-            this.removeParameter(i);
-        }
-    }
+    // _removeAllParameters(){
+    //     for (let i=this.__params.length-1; i>=0; i--) {
+    //         this.removeParameter(i);
+    //     }
+    // }
     //////////////////////////////////////////
     // Persistence
 

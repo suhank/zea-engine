@@ -26,7 +26,7 @@ void main()
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="utils/imagePyramid.glsl"/>
 <%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 

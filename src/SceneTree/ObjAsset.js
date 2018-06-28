@@ -61,6 +61,14 @@ class ObjAsset extends AssetItem {
         this.binloaded = new Visualive.Signal(true);
     }
 
+    getGeometryLibrary() {
+        return this.__geomLibrary;
+    }
+
+    getMaterialLibrary() {
+        return this.__materials;
+    }
+
     __loadObjFile(filePath, url){
         resourceLoader.addWork(this.getName(), 2);
         loadTextfile(url, (fileData)=>{
@@ -365,9 +373,20 @@ class ObjAsset extends AssetItem {
 
             let defaultShader = this.getParameter('defaultShader').getValue();
             let material = new Material(geomName + 'mat', defaultShader != "" ? defaultShader : 'StandardSurfaceShader');
-            material.addParameter('BaseColor', Color.random(0.5));
-            material.addParameter('Roughness', 0.2);
-            material.addParameter('Reflectance', 0.2);
+            const baseColorParam = material.getParameter('BaseColor');
+            if(baseColorParam)
+                baseColorParam.setValue(Color.random(0.5));
+            else {
+                const colorParam = material.getParameter('Color');
+                if(colorParam)
+                    colorParam.setValue(Color.random(0.5));
+            }
+            const roughnessParam = material.getParameter('Roughness');
+            if(roughnessParam)
+                roughnessParam.setValue(0.6);
+            const reflectanceParam = material.getParameter('Reflectance');
+            if(reflectanceParam)
+                reflectanceParam.setValue(0.2);
             this.__materials.addMaterial(material)
             geomItem.setMaterial(material);
         }

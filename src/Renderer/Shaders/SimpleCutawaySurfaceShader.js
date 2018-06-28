@@ -101,7 +101,7 @@ uniform float Opacity;
 uniform sampler2D BaseColorTex;
 uniform bool BaseColorTexConnected;
 uniform sampler2D OpacityTex;
-uniform bool BaseColorTexConnected;
+uniform bool OpacityTexConnected;
 
 #endif
 
@@ -125,26 +125,26 @@ void main(void) {
 #endif
 
     // Cutaways
-    if(cutawayEnabled != 0 && cutaway(v_worldPos, planeNormal, planeDist)){
-
-        if(!gl_FrontFacing){
-            fragColor = cutColor;
+    if(cutawayEnabled != 0){
+        if(cutaway(v_worldPos, planeNormal, planeDist)){
             return;
         }
-
+        else if(!gl_FrontFacing){
+            fragColor = cutColor;
 #ifndef ENABLE_ES3
         gl_FragColor = fragColor;
 #endif
-        return;
+            return;
+        }
     }
 
 #ifndef ENABLE_TEXTURES
-    vec4 __baseColor      = BaseColor;
-    float __opacity       = __baseColor.a * Opacity;
+    vec4 baseColor      = BaseColor;
+    float opacity       = baseColor.a * Opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec4 __baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
-    float __opacity       = __baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
 #endif
 
     // Hacky simple irradiance. 
@@ -156,11 +156,11 @@ void main(void) {
         ndotv = dot(normal, viewVector);
 
         // Note: these 2 lines can be used to debug inverted meshes.
-        //__baseColor = vec4(1.0, 0.0, 0.0, 1.0);
+        //baseColor = vec4(1.0, 0.0, 0.0, 1.0);
         //ndotv = 1.0;
     }
 
-    fragColor = vec4(ndotv * __baseColor.rgb, __opacity);
+    fragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);
@@ -183,7 +183,7 @@ void main(void) {
         // cutaway params
         paramDescs.push({ name: 'cutawayEnabled', defaultValue: true, texturable: false });
         paramDescs.push({ name: 'cutColor', defaultValue: new Color(0.7, 0.2, 0.2), texturable: false });
-        paramDescs.push({ name: 'planeNormal', defaultValue: new Vec3(1.0, 0.0, 0.0), texturable: false });
+        paramDescs.push({ name: 'planeNormal', defaultValue: new Vec3(1, 0, 0), texturable: false });
         paramDescs.push({ name: 'planeDist', defaultValue: 0.0, texturable: false });
         return paramDescs;
     }

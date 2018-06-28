@@ -1,11 +1,12 @@
 import { shaderLibrary } from '../../ShaderLibrary.js';
 
-shaderLibrary.setShaderModule('glslutils.glsl', `
+shaderLibrary.setShaderModule('GLSLUtils.glsl', `
 
 #ifdef ENABLE_ES3
 
-vec4 fetchTexel1D(sampler2D texture, int textureSize, int index) {
-    return texelFetch(texture, ivec2(index, 0), 0);
+
+bool testFlag(int flags, int flag) {
+    return (flags & flag) != 0;
 }
 
 ivec2 pixelIndexToUV(int index, int textureSize){
@@ -18,8 +19,13 @@ vec4 fetchTexel(sampler2D texture, int textureSize, int index) {
 
 #else
 
-vec4 fetchTexel1D(sampler2D texture, int textureSize, int index) {
-    return texture2D(texture, vec2((float(index)+0.5)/float(textureSize), 0.5));
+
+int imod(int x, int y) {
+    return x-y*(x/y);
+}
+
+bool testFlag(int flags, int flag) {
+    return imod(flags / flag, 2) != 0;
 }
 
 ivec2 pixelIndexToUV(int index, int textureSize){
@@ -33,6 +39,9 @@ vec4 fetchTexel(sampler2D texture, int textureSize, int index) {
     vec2 texCoord = pixelIndexToUV(index, textureSize);
     return texture2D(texture, texCoord);
 }
+
+
+
 #endif
 
 int uvToPixelIndex(vec2 uv, int textureSize){

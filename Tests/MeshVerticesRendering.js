@@ -20,7 +20,7 @@ testingHarness.registerTest('MeshVerticesRendering', (domElement, resources)=> {
         scene.getCamera().frameView([scene.getRoot()]);
     }
     objAsset.loaded.connect(onLoaded);
-    objAsset.loadURL("Assets/cow.obj");
+    objAsset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
     
 });
 

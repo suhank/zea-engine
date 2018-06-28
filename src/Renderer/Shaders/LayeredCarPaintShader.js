@@ -95,7 +95,7 @@ void main(void) {
 precision highp float;
 
 <%include file="math/constants.glsl"/>
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
 #ifdef ENABLE_INLINE_GAMMACORRECTION

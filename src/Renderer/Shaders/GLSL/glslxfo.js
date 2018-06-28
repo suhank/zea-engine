@@ -3,7 +3,7 @@ import './glslutils.js';
 
 shaderLibrary.setShaderModule('glslxfo.glsl', `
 
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 
 struct Xfo {
     vec3 tr;

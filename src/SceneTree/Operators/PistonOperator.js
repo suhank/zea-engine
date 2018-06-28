@@ -186,9 +186,6 @@ class PistonOperator extends Operator {
         // this.__crankParam = this.addParameter(new KinematicGroupParameter('Crank'));
         this.__crankOutput = this.addOutput(new XfoOperatorOutput());
         this.__crankOutput.paramSet.connect(this.init.bind(this));
-        // this.__crankParam.elementAdded.connect(this.init.bind(this));
-        // this.__crankParam.elementRemoved.connect(this.init.bind(this));
-        // this.__outputs[0] = this.__crankParam;
         this.__crankAxisParam = this.addParameter(new Vec3Parameter('CrankAxis', new Vec3(1,0,0)));
         this.__crankAxisParam.valueChanged.connect(()=>{
             // this.__baseCrankXfo.ori.setFromAxisAndAngle(this.__crankAxisParam.getValue(), 0.0);
@@ -197,20 +194,19 @@ class PistonOperator extends Operator {
         });
         this.__pistonsParam = this.addParameter(new ListParameter('Pistons', PistonParameter));
         this.__pistonsParam.elementAdded.connect((value, index) => {
-            this.__outputs[index+1] = value;
             value.setCrankXfo(this.__baseCrankXfo)
 
             this.addOutput(value.getRodOutput());
             this.addOutput(value.getCapOutput());
         })
         this.__pistonsParam.elementRemoved.connect((value, index) => {
-            this.__outputs.splice(index+1, 1);
+            this.removeOutput(value.getRodOutput());
+            this.removeOutput(value.getCapOutput());
         })
 
         this.__baseCrankXfo = new Xfo();
         this.__pistons = [];
 
-        this.pistonEval = new Signal();
     }
 
     setOwner(ownerItem) {
@@ -237,7 +233,6 @@ class PistonOperator extends Operator {
         const quat = new Quat();
         quat.setFromAxisAndAngle(crankAxis, revolutions * Math.PI * 2.0);
 
-        this.pistonEval.emit(revolutions * Math.PI * 2.0)
 
         if(this.__crankOutput.isConnected()) {
             const crankXfo = this.__crankOutput.getValue();
@@ -251,6 +246,8 @@ class PistonOperator extends Operator {
             const piston = pistons[i];
             piston.evaluate(quat, crankAxis, revolutions);
         }
+        
+        this.postEval.emit(revolutions * Math.PI * 2.0)
     }
 
 

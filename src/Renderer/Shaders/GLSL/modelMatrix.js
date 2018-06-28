@@ -13,7 +13,7 @@ attribute float instancedIds;    // instanced attribute..
 uniform int transformIndex;
 uniform int instancedDraw;
 
-<%include file="glslutils.glsl"/>
+<%include file="GLSLUtils.glsl"/>
 
 const int cols_per_instance = 4;
 
