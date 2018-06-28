@@ -1,4 +1,7 @@
 import {
+    Signal
+} from '../../Utilities';
+import {
     Vec3,
     Quat,
     Xfo
@@ -206,6 +209,8 @@ class PistonOperator extends Operator {
 
         this.__baseCrankXfo = new Xfo();
         this.__pistons = [];
+
+        this.pistonEval = new Signal();
     }
 
     setOwner(ownerItem) {
@@ -232,10 +237,13 @@ class PistonOperator extends Operator {
         const quat = new Quat();
         quat.setFromAxisAndAngle(crankAxis, revolutions * Math.PI * 2.0);
 
+        this.pistonEval.emit(revolutions * Math.PI * 2.0)
 
-        const crankXfo = this.__crankOutput.getValue();
-        crankXfo.ori = quat.multiply(this.__crankOutput.getInitialValue().ori);
-        this.__crankOutput.setValue(crankXfo);
+        if(this.__crankOutput.isConnected()) {
+            const crankXfo = this.__crankOutput.getValue();
+            crankXfo.ori = quat.multiply(this.__crankOutput.getInitialValue().ori);
+            this.__crankOutput.setValue(crankXfo);
+        }
 
         const pistons = this.__pistonsParam.getValue();
         const len = pistons.length;
@@ -255,6 +263,9 @@ class PistonOperator extends Operator {
 
     fromJSON(j, context) {
         super.fromJSON(j, context);
+        if(j.crankOutput){
+            this.__crankOutput.fromJSON(j.crankOutput, context);
+        }
         this.init();
     }
 

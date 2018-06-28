@@ -98,12 +98,12 @@ class Group extends TreeItem {
     //////////////////////////////////////////
     // Items
 
-    resolveItems(paths) {
+    resolveItems(paths, centerOnFirst=true) {
         const asset = this.getOwner();
         for(let path of paths) {
             let treeItem = asset.resolvePath(path);
             if(treeItem) {
-                this.addItem(treeItem);
+                this.addItem(treeItem, centerOnFirst);
             }
             else {
                 console.warn("Group could not resolve item:" + path)
@@ -112,8 +112,8 @@ class Group extends TreeItem {
     }
 
 
-    addItem(item) { 
-        if(this.__items.length == 0) {
+    addItem(item, centerOnFirst=true) { 
+        if(this.__items.length == 0 && centerOnFirst) {
             const xfo = item.getGlobalXfo();
             const pxfo = item.getParentItem().getGlobalXfo();
             xfo.sc = pxfo.sc;
