@@ -407,6 +407,8 @@ class FileImage extends BaseImage {
             imageDataLibrary[resourcePath] = resourcePromise;
         }
 
+        // Make the resolve asynchronous so that the function returns.
+        // (Chroe started generating errors because the 'onload' callback took to long to return.)
         setTimeout(()=>{
             resourcePromise.then((unpackedData)=>{
 

@@ -210,8 +210,14 @@ class SessionParticipant {
 
             if (!this.__viveAsset) {
                 this.__viveAsset = this.__renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
-                this.__viveAsset.getMaterialLibrary().setMaterialTypeMapping({
-                    '*': 'SimpleSurfaceShader'
+                this.__viveAsset.loaded.connect(()=>{
+                    const materialLibrary = this.__viveAsset.getMaterialLibrary();
+                    const materialNames = materialLibrary.getMaterialNames();
+                    for(let name of materialNames) {
+                        const material = materialLibrary.getMaterial(name, false);
+                        if(material)
+                            material.setShaderName('SimpleSurfaceShader');
+                    }
                 });
             }
 

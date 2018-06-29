@@ -56,9 +56,15 @@ class VRViewport extends BaseViewport {
         // Resources
 
         if (resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
-            this.__asset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
-            this.__asset.getMaterialLibrary().setMaterialTypeMapping({
-                '*': 'SimpleSurfaceShader'
+            this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
+            this.__viveAsset.loaded.connect(()=>{
+                const materialLibrary = this.__viveAsset.getMaterialLibrary();
+                const materialNames = materialLibrary.getMaterialNames();
+                for(let name of materialNames) {
+                    const material = materialLibrary.getMaterial(name, false);
+                    if(material)
+                        material.setShaderName('SimpleSurfaceShader');
+                }
             });
         }
 
@@ -223,7 +229,7 @@ class VRViewport extends BaseViewport {
     }
 
     getAsset() {
-        return this.__asset;
+        return this.__viveAsset;
     }
 
     getTreeItem() {

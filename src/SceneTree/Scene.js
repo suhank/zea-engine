@@ -94,7 +94,7 @@ class Scene {
             return this.__commonResources[path];
         }
         let asset = new VLAAsset(path, resourceLoader);
-        asset.getParameter('FilePath').setValue(path);
+        asset.getParameter('BinFilePath').setValue(path);
         this.__commonResources[path] = asset;
         return asset;
     }

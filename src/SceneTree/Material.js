@@ -106,6 +106,9 @@ class Material extends BaseItem {
 
     setShaderName(shaderName) {
 
+        if(this.__shaderName == shaderName)
+            return;
+
         const shaderClass = sgFactory.getClass(shaderName);
         if(!shaderClass)
             throw("Error setting Shader. Shader not found:" + shaderName);
