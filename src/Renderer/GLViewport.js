@@ -145,7 +145,7 @@ class GLViewport extends BaseViewport {
     }
 
     getManipulator() {
-        return this.__manipulator;
+        return this.__manipulators['camera-manipulation'];
     }
 
     setManipulator(manipulator) {

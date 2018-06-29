@@ -165,6 +165,11 @@ uniform float ShadowMultiplier;
 uniform float exposure;
 #endif
 
+
+float luminanceFromRGB(vec3 color) {
+    return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
+}
+
 #ifdef ENABLE_ES3
     out vec4 fragColor;
 #endif
@@ -174,12 +179,11 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * ShadowMultiplier;
+    float shadow = luminanceFromRGB(texture2D(lightmap, v_lightmapCoord).rgb) * ShadowMultiplier;
 
     // This material works by multiplying the image buffer values by the luminance in the lightmap.
-    // 
-    fragColor.rgb = pow(irradiance, vec3(1.0/ShadowMultiplier));
-    fragColor.a = 0.5;
+    fragColor.rgb = vec3(pow(shadow, 1.0/ShadowMultiplier));
+    fragColor.a = 1.0;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);

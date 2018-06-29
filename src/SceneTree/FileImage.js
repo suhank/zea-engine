@@ -48,8 +48,8 @@ class FileImage extends BaseImage {
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
-            const filePath = fileParam.getValue()
-            if(this.getName() == 'FileImage') {
+            const filePath = fileParam.getValue();
+            if(this.getName() == this.constructor.name) {
                 // Generate a name from the file path.
                 const p = filePath.split('/');
                 const last = p[p.length - 1];
