@@ -448,6 +448,7 @@ class GLViewport extends BaseViewport {
                 return;
 
             } else {
+                */
                 let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (intersectionData != undefined) {
                     console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
@@ -460,7 +461,7 @@ class GLViewport extends BaseViewport {
                     // Note: a manipulator can set a 
                     // this.__manipMode = 'geom-manipulation';
                 }
-
+                /*
                 if (this.__manipMode == 'highlighting') {
                     // Default to camera manipulation
                 */

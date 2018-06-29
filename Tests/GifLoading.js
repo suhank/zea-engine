@@ -37,20 +37,19 @@ void main(void) {
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = Visualive.shaderLibrary.parseShader('GIFSurfaceShader.fragmentShader', `
-#extension GL_OES_standard_derivatives : enable
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 <%include file="utils/ImageStream.glsl"/>
 
-// uniform color _baseColor;
+uniform color BaseColor;
 
 #ifdef ENABLE_TEXTURES
-uniform sampler2D _baseColorTex;
-// uniform bool _baseColorTexConnected;
-uniform vec4 _baseColorTexDesc;
-uniform int _baseColorTexIndex;
+uniform sampler2D BaseColorTex;
+// uniform bool BaseColorTexConnected;
+uniform vec4 BaseColorTexDesc;
+uniform int BaseColorTexIndex;
 #endif
 
 /* VS Outputs */
@@ -60,31 +59,47 @@ varying vec2 v_texCoords;
 #endif
 
 
+#ifdef ENABLE_ES3
+    out vec4 fragColor;
+#endif
+
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 baseColor = _baseColor;
+    vec4 baseColor = BaseColor;
 #else
-    //vec4 baseColor      = getColorParamValue(_baseColor, _baseColorTex, _baseColorTexConnected, v_texCoords);
-    // vec4 baseColor      = toLinear(texture2D(_baseColorTex, v_texCoords));
-    vec4 baseColor      = toLinear(sampleStreamFrame(v_texCoords, _baseColorTexIndex, _baseColorTex, _baseColorTexDesc));
+    //vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_texCoords);
+    // vec4 baseColor      = toLinear(texture2D(BaseColorTex, v_texCoords));
+    vec4 baseColor      = toLinear(sampleStreamFrame(v_texCoords, BaseColorTexIndex, BaseColorTex, BaseColorTexDesc));
 #endif
 
     baseColor.rgb = baseColor.rgb * baseColor.a;
 
-    gl_FragColor = baseColor;
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+    fragColor = baseColor;
 
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    gl_FragColor.rgb = toGamma(gl_FragColor.rgb);
+    fragColor.rgb = toGamma(fragColor.rgb);
+#endif
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
 #endif
 
 }
 `);
 
-        this.addParameter('BaseColor', new Visualive.Color(1.0, 1.0, 0.5));
         this.nonSelectable = true;
         this.finalize();
+    }
+
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        paramDescs.push({ name: 'BaseColor', defaultValue: new Visualive.Color(1.0, 1.0, 0.5) }); 
+        return paramDescs;
     }
 
     isTransparent() {
@@ -103,44 +118,68 @@ Visualive.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
 testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
     // giffPath = "Assets/Progress.gif";
-    giffPath = "Assets/lg.colorful-progress-loader.gif";
     // giffPath = "Assets/loading.gif";
     // giffPath = "Assets/chuck-norris-super-kick.gif";
 
     const scene = new Visualive.Scene(resources);
-    let image =  new Visualive.FileImage(giffPath);
+    const setupGifPlayers = (path, pos)=>{
 
-    // Check that the gif is loaded only once.
-    let image2 =  new Visualive.FileImage(giffPath);
+        const image =  new Visualive.FileImage(path);
+        const treeItem = new Visualive.TreeItem(image.getName());
 
-    let atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
-    atlasmaterial.addParameter('BaseColor', image);
+        // Check that the gif is loaded only once.
+        const image2 =  new Visualive.FileImage(path);
 
-    let geomItem1 = new Visualive.GeomItem('geomItem1', new Visualive.Plane(5.0, 3.0), atlasmaterial);
-    geomItem1.getLocalXfo().tr.set(-3, 2, 0);
-    // geomItem1.getLocalXfo().ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
-    scene.getRoot().addChild(geomItem1);
-    // geomItem2.updateGlobalXfo();
+        const atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
+        atlasmaterial.getParameter('BaseColor').setValue(image);
 
+        const geomItem1 = new Visualive.GeomItem('geomItem1', new Visualive.Plane(5.0, 3.0), atlasmaterial);
+        geomItem1.setLocalXfo(new Visualive.Xfo(pos.add(new Visualive.Vec3(0, -3, 0))));
+        treeItem.addChild(geomItem1);
 
-    let gifmaterial = new Visualive.Material('mat', 'GIFSurfaceShader');
-    gifmaterial.addParameter('BaseColor', image);
+        const gifmaterial = new Visualive.Material('mat', 'GIFSurfaceShader');
+        gifmaterial.getParameter('BaseColor').setValue(image);
 
-    let geomItem2 = new Visualive.GeomItem('geomItem2', new Visualive.Plane(5.0, 3.0), gifmaterial);
-    geomItem2.getLocalXfo().tr.set(3, 3, 0);
-    // geomItem.getLocalXfo().ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
-    scene.getRoot().addChild(geomItem2);
-    // geomItem2.updateGlobalXfo();
+        const geomItem2 = new Visualive.GeomItem('geomItem2', new Visualive.Plane(5.0, 3.0), gifmaterial);
+        geomItem2.setLocalXfo(new Visualive.Xfo(pos.add(new Visualive.Vec3(0, 1, 0))))
+        treeItem.addChild(geomItem2);
 
 
-    let gifmaterial2 = new Visualive.Material('mat', 'GIFSurfaceShader');
-    gifmaterial2.addParameter('BaseColor', image2);
+        const gifmaterial2 = new Visualive.Material('mat', 'GIFSurfaceShader');
+        gifmaterial2.getParameter('BaseColor').setValue(image2);
 
-    let geomItem3 = new Visualive.GeomItem('geomItem3', new Visualive.Plane(5.0, 3.0), gifmaterial2);
-    geomItem3.getLocalXfo().tr.set(3, 1, 0);
-    // geomItem.getLocalXfo().ori.setFromAxisAndAngle(new Visualive.Vec3(0, 1, 0), Math.PI * 0.5);
-    scene.getRoot().addChild(geomItem3);
-    // geomItem2.updateGlobalXfo();
+        const geomItem3 = new Visualive.GeomItem('geomItem3', new Visualive.Plane(5.0, 3.0), gifmaterial2);
+        geomItem3.setLocalXfo(new Visualive.Xfo(pos.add(new Visualive.Vec3(0, 4, 0))));
+        treeItem.addChild(geomItem3);
+
+        let frame = 0;
+        let param1 = image.getParameter('StreamAtlasIndex');
+        let incrementingValue = true;
+        let incrementFrame = () => {
+            param1.setValue(frame);
+            if(incrementingValue)
+                setTimeout(incrementFrame, image.getFrameDelay(frame));
+            frame = (frame+1) % param1.getRange()[1];
+        }
+        incrementFrame();
+
+        let param2 = image2.getParameter('StreamAtlasIndex');
+        let frame2 = 0;
+        let incrementFrame2 = () => {
+            incrementingValue = true;
+            param2.setValue(frame2);
+            if(incrementingValue)
+                setTimeout(incrementFrame2, image.getFrameDelay(frame));
+            frame2 = (frame2+1) % param2.getRange()[1];
+        }
+        incrementFrame2();
+
+        scene.getRoot().addChild(treeItem);
+
+    }
+    setupGifPlayers("Assets/lg.colorful-progress-loader.gif", new Visualive.Vec3(-3, 0, 0))
+    setupGifPlayers("Assets/arrowGif.gif", new Visualive.Vec3(3, 0, 0))
+
 
 
     const renderer = new Visualive.GLVisualiveRenderer(domElement);
@@ -148,36 +187,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,8,12), new Visualive.Vec3(0,0,0));
     renderer.setScene(scene);
 
-    let frame = 0;
-    let param1 = image.getParameter('StreamAtlasIndex');
-    let incrementingValue = false;
-    let incrementFrame = () => {
-        frame++;
-        incrementingValue = true;
-        param1.setValue(frame % param1.getRange()[1]);
-        incrementingValue = false;
-    }
-    let id = setInterval(incrementFrame, 35);
-    param1.valueChanged.connect(()=>{
-        if(!incrementingValue) {
-            clearInterval(id);
-        }
-    });
 
-    let frame2 = 0;
-    let param2 = image2.getParameter('StreamAtlasIndex');
-    let incrementFrame2 = () => {
-        frame2++;
-        incrementingValue = true;
-        param2.setValue(frame2 % param2.getRange()[1]);
-        incrementingValue = false;
-    }
-    let id2 = setInterval(incrementFrame2, 100);
-    param2.valueChanged.connect(()=>{
-        if(!incrementingValue) {
-            clearInterval(id2);
-        }
-    });
 
     renderer.resumeDrawing();
 
@@ -185,15 +195,15 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     //////////////////////////////////
     // Setup the UI
 
-    let sliderController1 = new Visualive.SliderController(param1);
-    let sliderController2 = new Visualive.SliderController(param2);
+    // let sliderController1 = new Visualive.SliderController(param1);
+    // let sliderController2 = new Visualive.SliderController(param2);
 
-    let widgetPanel = new Visualive.UIWidgetPanel();
-    widgetPanel.addWidgetController(sliderController1);
-    widgetPanel.addWidgetController(sliderController2);
+    // let widgetPanel = new Visualive.UIWidgetPanel();
+    // widgetPanel.addWidgetController(sliderController1);
+    // widgetPanel.addWidgetController(sliderController2);
 
-    let uicontroller = new Visualive.UIController();
-    uicontroller.addWidgetPanel(widgetPanel);
+    // let uicontroller = new Visualive.UIController();
+    // uicontroller.addWidgetPanel(widgetPanel);
 
-    VisualiveUI.renderUI(renderer, uicontroller);
+    // VisualiveUI.renderUI(renderer, uicontroller);
 });

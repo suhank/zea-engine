@@ -173,6 +173,7 @@ class Scene {
                 const path = asset.getParameter('BinFilePath').getValue();
 
                 const lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
+                console.log("lightmapPath:" + lightmapPath)
                 const lightmapName = asset.getName();
                 if (!this.getLightMap(lightmapName) && resourceLoader.resourceAvailable(lightmapPath)) {
                     const lightmap = new Lightmap(lightmapPath, asset.getLightmapSize());

@@ -149,6 +149,8 @@ class GLTransparencyPass extends GLPass {
 
         gl.disable(gl.BLEND);
     }
+    
+
 };
 
 

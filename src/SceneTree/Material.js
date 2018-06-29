@@ -125,8 +125,8 @@ class Material extends BaseItem {
             // removePArameter
             if(!param)
                 param = this.addParameter(desc.name, desc.defaultValue);
-            if(desc.texturable == true) {
-                if(!param.getImage)  // By default, parameters are texturable.
+            if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
+                if(!param.getImage)  
                     this.__makeParameterTexturable(param);
                 // if(image)
                 //     param.setImage(image)

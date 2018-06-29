@@ -78,15 +78,15 @@ varying vec2 v_textureCoord;
 void main(void) {
 
 #ifndef ENABLE_TEXTURES
-    vec4 __baseColor = BaseColor;
+    vec4 baseColor = BaseColor;
 #else
-    vec4 __baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_textureCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_textureCoord);
 #endif
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = __baseColor;
+    fragColor = baseColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

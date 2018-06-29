@@ -314,12 +314,14 @@ class FileImage extends BaseImage {
         this.addParameter(new NumberParameter('StreamAtlasIndex', 0));
         this.getParameter('StreamAtlasIndex').setRange([0, 1]);
 
+        this.getFrameDelay = (index)=>{
+            return 20;
+        }
         let resourcePromise;
         if(resourcePath in imageDataLibrary) {
             resourcePromise = imageDataLibrary[resourcePath];
         }
         else {
-            const resourceLoader = resourceLoader;
             resourcePromise = new Promise((resolve, reject) => {
 
                 const url = resourceLoader.resolveURL(resourcePath);
@@ -366,8 +368,10 @@ class FileImage extends BaseImage {
                     atlasCanvas.height = atlasSize.y * height;
 
                     let frameImageData;
+                    const frameDelays = [];
                     const renderFrame = (frame, index)=>{
                         var dims = frame.dims;
+                        frameDelays.push(frame.delay);
                         
                         if(!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height){
                             tempCanvas.width = dims.width;
@@ -384,6 +388,7 @@ class FileImage extends BaseImage {
                         atlasCtx.drawImage(gifCanvas, (index%atlasSize.x) * width, Math.floor(index/atlasSize.x) * height);
                     }
 
+
                     for(let i =0; i<frames.length; i++) {
                         // console.log(frame);
                         renderFrame(frames[i], i);
@@ -391,7 +396,7 @@ class FileImage extends BaseImage {
                     resourceLoader.addWorkDone(resourcePath, 1);
 
                     const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
-                    resolve({width:atlasCanvas.width, height:atlasCanvas.height, atlasSize, frameRange:[0, frames.length], imageData });
+                    resolve({width:atlasCanvas.width, height:atlasCanvas.height, atlasSize, frameRange:[0, frames.length], frameDelays, imageData });
 
                 }, (statusText) => {
                     console.warn("Unable to Load URL:"+ req.url);
@@ -402,22 +407,28 @@ class FileImage extends BaseImage {
             imageDataLibrary[resourcePath] = resourcePromise;
         }
 
-        resourcePromise.then((unpackedData)=>{
+        setTimeout(()=>{
+            resourcePromise.then((unpackedData)=>{
 
-            this.width = unpackedData.width;
-            this.height = unpackedData.height;
+                this.width = unpackedData.width;
+                this.height = unpackedData.height;
 
-            // this.__streamAtlasDesc.x = atlasSize.x;
-            // this.__streamAtlasDesc.y = atlasSize.y;
-            // this.__streamAtlasDesc.z = frames.length;
-            this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize.x, unpackedData.atlasSize.y, 0, 0));
-            this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
+                // this.__streamAtlasDesc.x = atlasSize.x;
+                // this.__streamAtlasDesc.y = atlasSize.y;
+                // this.__streamAtlasDesc.z = frames.length;
+                this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize.x, unpackedData.atlasSize.y, 0, 0));
+                this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
 
-            this.__data = unpackedData.imageData;
-            this.__loaded = true;
+                this.__data = unpackedData.imageData;
 
-            this.loaded.emit();
-        });
+                this.getFrameDelay = (index)=>{
+                    return unpackedData.frameDelays[index];
+                }
+                this.__loaded = true;
+
+                this.loaded.emit();
+            });
+        }, 1)
     }
 
     getResourcePath() {
