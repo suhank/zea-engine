@@ -317,6 +317,16 @@ class FileImage extends BaseImage {
         this.getFrameDelay = (index)=>{
             return 20;
         }
+        let playing;
+        let incrementFrame;
+        this.play = ()=>{
+            playing = true;
+            if(incrementFrame)
+                incrementFrame();
+        }
+        this.stop = ()=>{
+            playing = false;
+        }
         let resourcePromise;
         if(resourcePath in imageDataLibrary) {
             resourcePromise = imageDataLibrary[resourcePath];
@@ -370,7 +380,7 @@ class FileImage extends BaseImage {
                     let frameImageData;
                     const frameDelays = [];
                     const renderFrame = (frame, index)=>{
-                        var dims = frame.dims;
+                        const dims = frame.dims;
                         frameDelays.push(frame.delay);
                         
                         if(!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height){
@@ -378,13 +388,14 @@ class FileImage extends BaseImage {
                             tempCanvas.height = dims.height;
                             frameImageData = tempCtx.createImageData(dims.width, dims.height);  
                         }
-                        
+
                         // set the patch data as an override
                         frameImageData.data.set(frame.patch);
-
-                        // draw the patch back over the canvas
                         tempCtx.putImageData(frameImageData, 0, 0);
+
+                        gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height);
                         gifCtx.drawImage(tempCanvas, dims.left, dims.top);
+
                         atlasCtx.drawImage(gifCanvas, (index%atlasSize.x) * width, Math.floor(index/atlasSize.x) * height);
                     }
 
@@ -426,6 +437,20 @@ class FileImage extends BaseImage {
                 this.getFrameDelay = (index)=>{
                     return unpackedData.frameDelays[index];
                 }
+
+                //////////////////////////
+                // Playback
+                const frameParam = this.getParameter('StreamAtlasIndex');
+                const numFrames = frameParam.getRange()[1]; 
+                let frame = 0;
+                incrementFrame = () => {
+                    frameParam.setValue(frame);
+                    if(playing)
+                        setTimeout(incrementFrame, this.getFrameDelay(frame));
+                    frame = (frame+1) % numFrames;
+                }
+                if(playing)
+                    incrementFrame();
                 this.__loaded = true;
 
                 this.loaded.emit();

@@ -145,40 +145,15 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
         treeItem.addChild(geomItem2);
 
 
-        const gifmaterial2 = new Visualive.Material('mat', 'GIFSurfaceShader');
-        gifmaterial2.getParameter('BaseColor').setValue(image2);
+        image.play();
 
-        const geomItem3 = new Visualive.GeomItem('geomItem3', new Visualive.Plane(5.0, 3.0), gifmaterial2);
-        geomItem3.setLocalXfo(new Visualive.Xfo(pos.add(new Visualive.Vec3(0, 4, 0))));
-        treeItem.addChild(geomItem3);
-
-        let frame = 0;
-        let param1 = image.getParameter('StreamAtlasIndex');
-        let incrementingValue = true;
-        let incrementFrame = () => {
-            param1.setValue(frame);
-            if(incrementingValue)
-                setTimeout(incrementFrame, image.getFrameDelay(frame));
-            frame = (frame+1) % param1.getRange()[1];
-        }
-        incrementFrame();
-
-        let param2 = image2.getParameter('StreamAtlasIndex');
-        let frame2 = 0;
-        let incrementFrame2 = () => {
-            incrementingValue = true;
-            param2.setValue(frame2);
-            if(incrementingValue)
-                setTimeout(incrementFrame2, image.getFrameDelay(frame));
-            frame2 = (frame2+1) % param2.getRange()[1];
-        }
-        incrementFrame2();
 
         scene.getRoot().addChild(treeItem);
 
     }
-    setupGifPlayers("Assets/lg.colorful-progress-loader.gif", new Visualive.Vec3(-3, 0, 0))
-    setupGifPlayers("Assets/arrowGif.gif", new Visualive.Vec3(3, 0, 0))
+    setupGifPlayers("Assets/lg.colorful-progress-loader.gif", new Visualive.Vec3(-6, 0, 0))
+    setupGifPlayers("Assets/arrowGif.gif", new Visualive.Vec3(0, 0, 0))
+    setupGifPlayers("Assets/transparency.gif", new Visualive.Vec3(6, 0, 0))
 
 
 
