@@ -94,7 +94,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     }
     const generatePath = (item)=>{
         const parts = item.split('/');
-        const base = rootURL;
+        let base = rootURL;
         if(parts[0] == '.')
             parts.shift();
         if(parts[0] == '..'){
@@ -103,6 +103,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             baseparts.pop();
             baseparts.pop();
             base = baseparts.join('/') + '/';
+            parts.shift();
         }
         let curr = resources;
         for(let i=0; i<parts.length-1; i++){

@@ -36,11 +36,12 @@ const bindParam = (gl, param, renderstate, gltextures = {}) => {
     const unifs = renderstate.unifs;
     const name = param.getName();
     const unif = unifs[name];
+    
     // console.log("bindParam:" + name);
     if (param.getValue() instanceof BaseImage) {
         const gltexture = gltextures[name];
         if (gltexture) {
-            if(unif.type == BaseImage) {
+            if(unif && unif.type == BaseImage) {
                 gltexture.bindToUniform(renderstate, unif);
             }
             else {

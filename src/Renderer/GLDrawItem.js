@@ -155,6 +155,25 @@ class GLDrawItem {
             gl.uniform1i(unif.location, this.id);
         }
 
+        if (renderstate.lightmaps && unifs.lightmap) {
+            if (renderstate.boundLightmap != this.lightmapName) {
+                let gllightmap = renderstate.lightmaps[this.lightmapName];
+                if (gllightmap && gllightmap.glimage.isLoaded()) {
+                    gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap);
+                    gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray());
+                    if (unifs.lightmapConnected) {
+                        gl.uniform1i(unifs.lightmapConnected.location, true);
+                    }
+                    renderstate.boundLightmap = this.lightmapName;
+                } else {
+                    // disable lightmaps. Revert to default lighting.
+                    if (unifs.lightmapConnected) {
+                        gl.uniform1i(unifs.lightmapConnected.location, false);
+                    }
+                }
+            }
+        }
+        
         return true;
     }
 

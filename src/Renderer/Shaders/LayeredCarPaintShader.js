@@ -132,21 +132,21 @@ uniform float exposure;
 uniform mat4 cameraMatrix;
 
 uniform color BaseColor;
-uniform color _midColorTint;
-uniform float _midColorTintReflectance;
+uniform color MidColorTint;
+uniform float MidColorTintReflectance;
 
-uniform float _microflakePerturbation;
-uniform sampler2D flakesNormalTex;
-uniform float _flakesScale;
+uniform float MicroflakePerturbation;
+uniform sampler2D FlakesNormalTex;
+uniform float FlakesScale;
 
 #ifdef ENABLE_SPECULAR
 
-uniform float _baseRoughness;
-uniform float _baseMetallic;
-uniform float _baseReflectance;
-uniform float _glossRoughness;
-uniform float _glossMetallic;
-uniform float _glossReflectance;
+uniform float BaseRoughness;
+uniform float BaseMetallic;
+uniform float BaseReflectance;
+uniform float GlossRoughness;
+uniform float GlossMetallic;
+uniform float GlossReflectance;
 
 #endif
 
@@ -180,11 +180,11 @@ mat3 cotangent_frame( vec3 normal, vec3 position, vec2 uv )
 
 #define WITH_NORMALMAP_UNSIGNED 1
 
-vec3 sampleNormalMap( sampler2D texture, vec2 texcoord )
+vec3 sampleNormalMap( sampler2D normalMap, vec2 texcoord )
 {
     // assume normal, the interpolated vertex normal and 
     // viewVec, the view vector (vertex to eye)
-    vec3 map = texture2D( texture, texcoord ).xyz;
+    vec3 map = texture2D( normalMap, texcoord ).xyz;
 #ifdef WITH_NORMALMAP_UNSIGNED
     map = map * 255./127. - 128./127.;
 #endif
@@ -214,9 +214,9 @@ void main(void) {
 #endif
 
 #ifdef ENABLE_SPECULAR
-    material.roughness      = _baseRoughness;
-    material.metallic       = _baseMetallic;
-    material.reflectance    = _baseReflectance;
+    material.roughness      = BaseRoughness;
+    material.metallic       = BaseMetallic;
+    material.reflectance    = BaseReflectance;
 #endif
 
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb;
@@ -260,16 +260,16 @@ void main(void) {
 #else
     
     // Mix the base color to give a multi-layered paint look.
-    material.baseColor      = mix(material.baseColor, material.baseColor * _midColorTint.rgb, (1.0-NdotV));
+    material.baseColor      = mix(material.baseColor, material.baseColor * MidColorTint.rgb, (1.0-NdotV));
 
     mat3 TBN = cotangent_frame( normal, surfacePos, v_lightmapCoord );
-    vec3 flakesNormal = TBN * -sampleNormalMap( _flakesNormalTex, (v_lightmapCoord * lightmapSize) / _flakesScale );
-    flakesNormal = normalize(mix(normal, flakesNormal, _microflakePerturbation));
+    vec3 flakesNormal = TBN * -sampleNormalMap( FlakesNormalTex, (v_lightmapCoord * lightmapSize) / FlakesScale );
+    flakesNormal = normalize(mix(normal, flakesNormal, MicroflakePerturbation));
 
     vec3 baseRadiance = pbrSurfaceRadiance(material, irradiance, flakesNormal, viewVector);
 
-    material.roughness      = _glossRoughness;
-    material.reflectance    = _glossReflectance;
+    material.roughness      = GlossRoughness;
+    material.reflectance    = GlossReflectance;
     vec4 gloss = pbrSpecularReflectance(material, normal, viewVector);
     vec3 radiance = mix(baseRadiance, gloss.rgb, gloss.a);
     //vec3 radiance = baseRadiance;
@@ -304,22 +304,22 @@ void main(void) {
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
 
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 0.0, 0.0) });
-        paramDescs.push({ name: 'baseMetallic', defaultValue: 0.0 });
-        paramDescs.push({ name: 'baseRoughness', defaultValue: 0.35 });
-        paramDescs.push({ name: 'baseReflectance', defaultValue: 0.03 });
-        paramDescs.push({ name: 'midColorTint', defaultValue: new Color(1.0, 1.0, 1.0) });
-        paramDescs.push({ name: 'midColorTintReflectance', defaultValue: 0.03 });
-        paramDescs.push({ name: 'glossMetallic', defaultValue: 0.0 });
-        paramDescs.push({ name: 'glossRoughness', defaultValue: 0.35 });
-        paramDescs.push({ name: 'glossReflectance', defaultValue: 0.03 });
+        paramDescs.push({ name: 'BaseMetallic', defaultValue: 0.0 });
+        paramDescs.push({ name: 'BaseRoughness', defaultValue: 0.35 });
+        paramDescs.push({ name: 'BaseReflectance', defaultValue: 0.03 });
+        paramDescs.push({ name: 'MidColorTint', defaultValue: new Color(1.0, 1.0, 1.0) });
+        paramDescs.push({ name: 'MidColorTintReflectance', defaultValue: 0.03 });
+        paramDescs.push({ name: 'GlossMetallic', defaultValue: 0.0 });
+        paramDescs.push({ name: 'GlossRoughness', defaultValue: 0.35 });
+        paramDescs.push({ name: 'GlossReflectance', defaultValue: 0.03 });
 
 
-        let flakesNormal = new FileImage('VisualiveEngine/FlakesNormalMap.png', this.__gl.renderer.getScene().getResourceLoader());
+        const flakesNormal = new FileImage('VisualiveEngine/FlakesNormalMap.png');
         flakesNormal.wrap = 'REPEAT';
         flakesNormal.mipMapped = true;
-        paramDescs.push({ name: 'flakesNormal', defaultValue: flakesNormal });
-        paramDescs.push({ name: 'flakesScale', defaultValue: 0.1 });
-        paramDescs.push({ name: 'microflakePerturbation', defaultValue: 0.1 });
+        paramDescs.push({ name: 'FlakesNormal', defaultValue: flakesNormal });
+        paramDescs.push({ name: 'FlakesScale', defaultValue: 0.1 });
+        paramDescs.push({ name: 'MicroflakePerturbation', defaultValue: 0.1 });
 
         return paramDescs;
     }

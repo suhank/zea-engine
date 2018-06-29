@@ -73,35 +73,8 @@ class GLTransparencyPass extends GLPass {
         this.prevSortCameraPos = cameraPos;
     }
 
-    draw(renderstate) {
+    _drawItems(renderstate){
         const gl = this.__gl;
-
-        const camera = renderstate.camera;
-        const cameraPos = camera.getGlobalXfo().tr;
-        // TODO: Avoid sorting if the camera did not movemore than 30cm
-        if(this.resort || cameraPos.distanceTo(this.prevSortCameraPos) > 0.3)
-            this.sortItems(cameraPos);
-
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LESS);
-        gl.depthMask(true);
-        
-        gl.enable(gl.BLEND);
-        gl.blendEquation(gl.FUNC_ADD);
-        // Complex transparent surfaces require mutiple passes.
-        // First the multiply pass tints the background color, simulating
-        // light passing through the surface, and then the add layer
-        // adds new color to the backbuffer to simulate light bouncing off
-        // the surface.
-        
-        // renderstate.pass = 'MULTIPLY';
-        // gl.blendFunc(gl.DST_COLOR, gl.ZERO);// For multiply, select this.
-        // super.draw(renderstate);
-
-        renderstate.pass = 'ADD';
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
-        // super.draw(renderstate);
-
         let currentglShader;
         let currentglMaterial;
         let currentglGeom;
@@ -141,6 +114,38 @@ class GLTransparencyPass extends GLPass {
 
         if(currentglGeom)
             currentglGeom.unbind();
+    }
+
+    draw(renderstate) {
+        const gl = this.__gl;
+
+        const camera = renderstate.camera;
+        const cameraPos = camera.getGlobalXfo().tr;
+        // TODO: Avoid sorting if the camera did not movemore than 30cm
+        if(this.resort || cameraPos.distanceTo(this.prevSortCameraPos) > 0.3)
+            this.sortItems(cameraPos);
+
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS);
+        gl.depthMask(true);
+        
+        gl.enable(gl.BLEND);
+        gl.blendEquation(gl.FUNC_ADD);
+        // Complex transparent surfaces require mutiple passes.
+        // First the multiply pass tints the background color, simulating
+        // light passing through the surface, and then the add layer
+        // adds new color to the backbuffer to simulate light bouncing off
+        // the surface.
+        
+        renderstate.pass = 'MULTIPLY';
+        gl.blendFunc(gl.DST_COLOR, gl.ZERO);// For multiply, select this.
+        this._drawItems(renderstate);
+
+        renderstate.pass = 'ADD';
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+        this._drawItems(renderstate);
+
+
 
         gl.disable(gl.BLEND);
     }

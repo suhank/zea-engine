@@ -124,8 +124,8 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        // paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
-        paramDescs.push({ name: 'ProjectionCenter', defaultValue: new Vec3(0.0, 1.7, 0.0) })
+        paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
+        paramDescs.push({ name: 'ProjectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
         paramDescs.push({ name: 'ShadowMultiplier', defaultValue: 1.0 })
         return paramDescs;
     }
@@ -179,7 +179,7 @@ void main(void) {
     // This material works by multiplying the image buffer values by the luminance in the lightmap.
     // 
     fragColor.rgb = pow(irradiance, vec3(1.0/ShadowMultiplier));
-    fragColor.a = 1.0;
+    fragColor.a = 0.5;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb * exposure);
@@ -195,6 +195,16 @@ void main(void) {
     isTransparent() {
         return true;
     }
+
+
+    static getParamDeclarations() {
+        const paramDescs = super.getParamDeclarations();
+        // paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
+        // paramDescs.push({ name: 'ProjectionCenter', defaultValue: new Vec3(0.0, 1.7, 0.0) })
+        paramDescs.push({ name: 'ShadowMultiplier', defaultValue: 1.0 })
+        return paramDescs;
+    }
+
 };
 
 sgFactory.registerClass('FloatingShadowCatcherShader', FloatingShadowCatcherShader);

@@ -114,17 +114,25 @@ class Material extends BaseItem {
         for(let desc of paramDescs) {
             // Note: some shaders specify default images. Like the speckle texture
             // on the car paint shader.
-            if (desc.defaultValue instanceof BaseImage) {
-                image = desc.defaultValue;
-                defaultValue = new Color();
-            }
+            // let image;
+            // let defaultValue = desc.defaultValue;
+            // if (desc.defaultValue instanceof BaseImage) {
+            //     image = desc.defaultValue;
+            //     defaultValue = new Color();
+            // }
             let param = this.getParameter(desc.name);
             // if(param && param.getType() != desc.defaultValue)
             // removePArameter
             if(!param)
                 param = this.addParameter(desc.name, desc.defaultValue);
-            if(desc.texturable == true && !param.getImage) // By default, parameters are texturable.
-                this.__makeParameterTexturable(param);
+            if(desc.texturable == true) {
+                if(!param.getImage)  // By default, parameters are texturable.
+                    this.__makeParameterTexturable(param);
+                // if(image)
+                //     param.setImage(image)
+            }
+
+
         }
         this.__shaderName = shaderName;
         this.shaderNameChanged.emit(this.__shaderName);
@@ -164,6 +172,7 @@ class Material extends BaseItem {
         }
         return textures;
     }
+
 
     __makeParameterTexturable(param) {
         makeParameterTexturable(param);
@@ -237,9 +246,12 @@ class Material extends BaseItem {
                 param = this.addParameter(paramName, value);
             const textureName = reader.loadStr();
             if(textureName!= ''){
+                if(!param.setImage)
+                    this.__makeParameterTexturable(param);
+
                 if (context.materialLibrary.hasImage(textureName)) {
                     // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-                    param.setValue(context.materialLibrary.getImage(textureName));
+                    param.setImage(context.materialLibrary.getImage(textureName));
                 }
                 else {
                     console.warn("Missing Texture:" + textureName)

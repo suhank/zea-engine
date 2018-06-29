@@ -54,8 +54,7 @@ class GLViewport extends BaseViewport {
         this.__gamma = 2.2;
         this.__antialiase = false;
 
-        this.__manipMode = 'highlighting';
-        this.__mouseOverGizmo = undefined;
+        // this.__mouseOverGizmo = undefined;
         this.__manipGizmo = undefined;
         this.__mouseDownPos = new Vec2();
 
@@ -96,6 +95,8 @@ class GLViewport extends BaseViewport {
 
         this.setCamera(new Camera('Default'));
 
+        this.__manipulators = {};
+        this.__manipModeStack = ['highlighting'];
         this.setManipulator(new CameraMouseAndKeyboard());
 
         this.resize(width, height);
@@ -148,10 +149,29 @@ class GLViewport extends BaseViewport {
     }
 
     setManipulator(manipulator) {
-        if(this.__manipulator)
-            this.__manipulator.movementFinished.disconnect(this.renderGeomDataFbo);
-        this.__manipulator = manipulator;
-        this.__manipulator.movementFinished.connect(this.renderGeomDataFbo);
+        // if(this.__manipulator)
+        //     this.__manipulator.movementFinished.disconnect(this.renderGeomDataFbo);
+        // this.__manipulator = manipulator;
+        // this.__manipulator.movementFinished.connect(this.renderGeomDataFbo);
+        this.registerManipulator('camera-manipulation', manipulator)
+    }
+
+    registerManipulator(key, manipulator) {
+        manipulator.movementFinished.connect(this.renderGeomDataFbo);
+        this.__manipulators[key] = manipulator;
+    }
+
+    activateManipulator(key) {
+        if (this.__manipMode) {
+            this.__manipModeStack.push(this.__manipMode);
+        }
+        this.__manipMode = key;
+    }
+
+    deactivateManipulator() {
+        if (this.__manipModeStack.length > 0) {
+            this.__manipMode = this.__manipModeStack.pop();
+        }
     }
 
 
@@ -341,17 +361,16 @@ class GLViewport extends BaseViewport {
             }
             this.__geomDataBufferFbo.unbind();
             let geomItem;
-            if(passId == 0) {
+            if (passId == 0) {
                 const drawItem = this.__renderer.getCollector().getDrawItem(itemId);
                 if (drawItem) {
                     geomItem = drawItem.getGeomItem();
                 }
-            }
-            else {
+            } else {
                 geomItem = this.__renderer.getPass(passId).getGeomItem(pixels);
             }
 
-            if(geomItem) {
+            if (geomItem) {
                 let mouseRay = this.calcRayFromScreenPos(screenPos);
                 let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
                 return {
@@ -408,11 +427,12 @@ class GLViewport extends BaseViewport {
     }
 
     onMouseDown(event) {
-        
+
         this.__mouseDownPos = this.__eventMousePos(event);
         this.__mouseDownGeom = undefined;
 
         if (event.button == 0) {
+            /*
             if (event.shiftKey) {
                 this.__manipMode = 'action';
                 let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
@@ -436,36 +456,43 @@ class GLViewport extends BaseViewport {
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
 
                     this.mouseDownOnGeom.emit(this.__mouseDownGeom);
-                    this.__manipMode = 'geom-manipulation';
+
+                    // Note: a manipulator can set a 
+                    // this.__manipMode = 'geom-manipulation';
                 }
 
                 if (this.__manipMode == 'highlighting') {
                     // Default to camera manipulation
-                    this.__manipMode = 'camera-manipulation';
-                    this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
-                }
-
-            }
-        } else if (event.button == 2) {
-
-            // Default to camera manipulation
-            this.__manipMode = 'camera-manipulation';
-            this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
-
+                */
+            this.activateManipulator('camera-manipulation');
+            this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
             /*
-            if (event.shiftKey) {
-                if (this.__geomDataBufferFbo) {
-                    this.__manipMode = 'add-selection';
                 }
-            } else if (event.ctrlKey) {
-                if (this.__geomDataBufferFbo) {
-                    this.__manipMode = 'remove-selection';
-                }
-            } else {
-                this.__manipMode = 'new-selection';
+
             }
-        */
+            */
         }
+        /*else if (event.button == 2) {
+
+                   // Default to camera manipulation
+                   this.__manipMode = 'camera-manipulation';
+                   this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
+
+                   
+                   // if (event.shiftKey) {
+                   //     if (this.__geomDataBufferFbo) {
+                   //         this.__manipMode = 'add-selection';
+                   //     }
+                   // } else if (event.ctrlKey) {
+                   //     if (this.__geomDataBufferFbo) {
+                   //         this.__manipMode = 'remove-selection';
+                   //     }
+                   // } else {
+                   //     this.__manipMode = 'new-selection';
+                   // }
+               
+               }
+               */
 
         this.mouseDown.emit(event);
 
@@ -479,11 +506,12 @@ class GLViewport extends BaseViewport {
             case 'highlighting':
                 break;
             case 'camera-manipulation':
-                this.__manipulator.onDragEnd(event, mouseUpPos, this);
-                this.__manipMode = 'highlighting';
+                this.__manipulators[this.__manipMode].onDragEnd(event, mouseUpPos, this);
+                // this.__manipMode = 'highlighting';
+                this.deactivateManipulator();
                 break;
             case 'geom-manipulation':
-                if(this.__mouseDownGeom) {
+                if (this.__mouseDownGeom) {
                     this.__mouseDownGeom.onMouseUp(event, {
                         mousePos: mouseUpPos,
                         geomItem: this.__mouseDownGeom
@@ -492,7 +520,7 @@ class GLViewport extends BaseViewport {
                     this.__mouseDownGeom = undefined;
                 }
                 this.renderGeomDataFbo();
-                this.__manipMode = 'highlighting';
+                this.deactivateManipulator();
                 break;
             case 'new-selection':
                 this.__renderer.getScene().getSelectionManager().clearSelection();
@@ -510,7 +538,7 @@ class GLViewport extends BaseViewport {
                     }
                 }
                 this.__renderer.resumeDrawing();
-                this.__manipMode = 'highlighting';
+                this.deactivateManipulator();
                 break;
             case 'new-selection-rect':
             case 'add-selection-rect':
@@ -539,13 +567,13 @@ class GLViewport extends BaseViewport {
                 }
                 // Not
                 this.__renderer.resumeDrawing();
-                this.__manipMode = 'highlighting';
+                this.deactivateManipulator();
                 break;
             case 'action':
                 this.actionEnded.emit({
                     pointerType: 'mouse'
                 });
-                this.__manipMode = 'highlighting';
+                this.deactivateManipulator();
                 break;
         }
 
@@ -642,7 +670,7 @@ class GLViewport extends BaseViewport {
                         intersectionData.dragging = true;
                         intersectionData.geomItem.onMouseMove(event, intersectionData);
                         this.mouseMoveOnGeom.emit(intersectionData.geomItem);
-                    } else if(this.__mouseDownGeom) {
+                    } else if (this.__mouseDownGeom) {
                         let mouseRay = this.calcRayFromScreenPos(mousePos);
                         this.__mouseDownGeom.onMouseMove(event, {
                             mousePos,
@@ -658,7 +686,7 @@ class GLViewport extends BaseViewport {
             case 'camera-manipulation':
                 {
                     let mousePos = this.__eventMousePos(event);
-                    this.__manipulator.onDrag(event, mousePos, this);
+                    this.__manipulators[this.__manipMode].onDrag(event, mousePos, this);
                     break;
                 }
             case 'new-selection':
@@ -700,7 +728,7 @@ class GLViewport extends BaseViewport {
     }
 
     onKeyPressed(key, event) {
-        if (this.__manipulator.onKeyPressed(key, event, this))
+        if (this.__manipulators['camera-manipulation'].onKeyPressed(key, event, this))
             return true;
         switch (key) {
             case 'f':
@@ -714,36 +742,36 @@ class GLViewport extends BaseViewport {
         return false;
     }
     onKeyDown(key, event) {
-        if (this.__manipulator.onKeyDown(key, event, this))
+        if (this.__manipulators['camera-manipulation'].onKeyDown(key, event, this))
             return true;
         return false;
     }
 
     onKeyUp(key, event) {
-        if (this.__manipulator.onKeyUp(key, event, this))
+        if (this.__manipulators['camera-manipulation'].onKeyUp(key, event, this))
             return true;
         return false;
     }
 
     onWheel(event) {
-        return this.__manipulator.onWheel(event, this);
+        return this.__manipulators['camera-manipulation'].onWheel(event, this);
     }
 
     // Touch events
     onTouchStart(event) {
-        return this.__manipulator.onTouchStart(event, this);
+        return this.__manipulators['camera-manipulation'].onTouchStart(event, this);
     }
 
     onTouchMove(event) {
-        return this.__manipulator.onTouchMove(event, this);
+        return this.__manipulators['camera-manipulation'].onTouchMove(event, this);
     }
 
     onTouchEnd(event) {
-        return this.__manipulator.onTouchEnd(event, this);
+        return this.__manipulators['camera-manipulation'].onTouchEnd(event, this);
     }
 
     onTouchCancel(event) {
-        return this.__manipulator.onTouchCancel(event, this);
+        return this.__manipulators['camera-manipulation'].onTouchCancel(event, this);
     }
 
 
@@ -766,7 +794,7 @@ class GLViewport extends BaseViewport {
         }
         this.__renderer.drawScene(renderstate, false);
 
-        if(this.__selectedGeomsBufferFbo) {
+        if (this.__selectedGeomsBufferFbo) {
             this.__selectedGeomsBufferFbo.bind();
             this.__renderer.drawSceneSelectedGeoms(renderstate);
             let gl = this.__renderer.getGL();

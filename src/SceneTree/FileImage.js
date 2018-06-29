@@ -49,7 +49,7 @@ class FileImage extends BaseImage {
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
             const filePath = fileParam.getValue()
-            if(this.getName() == '') {
+            if(this.getName() == 'FileImage') {
                 // Generate a name from the file path.
                 const p = filePath.split('/');
                 const last = p[p.length - 1];
