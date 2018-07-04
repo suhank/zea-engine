@@ -3,8 +3,6 @@
 class State {
     constructor(name) {
         this.__name = name ? name : this.constructor.name;
-        this.__flags = 0; // 1 == inactive, 2 == deactivating.  4=active, 8 == activatating.
-
 
         this.__stateEvents = [];
         this.__activationActions = [];
@@ -27,8 +25,6 @@ class State {
     }
 
     activate() {
-        this.__flags = 4;
-
         this.__stateEvents.forEach((stateEvent)=>{
             stateEvent.activate();
         });
@@ -38,8 +34,6 @@ class State {
     }
 
     deactivate() {
-        this.__flags = 1;
-
         this.__stateEvents.forEach((stateEvent)=>{
             stateEvent.deactivate();
         });
@@ -48,17 +42,6 @@ class State {
         });
     }
 
-    isActive() {
-        return this.__flags & 1;
-    }
-
-    isActivating() {
-        return this.__flags & 2;
-    }
-    
-    isDeactivating() {
-        return this.__flags & 8;
-    }
 
     addStateEvent(stateEvent) {
         stateEvent.setState(this);
@@ -75,6 +58,59 @@ class State {
         this.__deactivationActions.push(action);
     }
 
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        let j = {
+            name: this.__name,
+            type: this.constructor.name
+        };
+
+        const stateEventsJson = [];
+        for(let stateEvent of this.__stateEvents){
+            stateEventsJson.push(stateEvent.toJSON(context));
+        }
+        j.stateEvents = stateEventsJson;
+        
+        const activationActionsJson = [];
+        for(let stateEvent of this.__activationActions){
+            activationActionsJson.push(stateEvent.toJSON(context));
+        }
+        j.activationActions = activationActionsJson;
+        
+        const deactivationActionsJson = [];
+        for(let stateEvent of this.__deactivationActions){
+            deactivationActionsJson.push(stateEvent.toJSON(context));
+        }
+        j.deactivationActions = deactivationActionsJson;
+
+        return j;
+    }
+
+    fromJSON(j, context) {
+
+        this.__name = j.name;
+
+        for(let stateEventJson of j.stateEvents){
+            const stateEvent = sgFactory.constructClass(stateEventJson.type);
+            stateEvent.fromJSON(stateEventJson, context);
+            this.__stateEvents.push(stateEvent);
+        }
+        for(let activationActionJson of j.activationActions){
+            const activationAction = sgFactory.constructClass(activationActionJson.type);
+            activationAction.fromJSON(activationActionJson, context);
+            this.__activationActions.push(activationAction);
+        }
+        for(let deactivationActionJson of j.deactivationActions){
+            const deactivationAction = sgFactory.constructClass(deactivationActionJson.type);
+            deactivationAction.fromJSON(deactivationActionJson, context);
+            this.__deactivationActions.push(deactivationAction);
+        }
+
+    }
 };
 
 export {

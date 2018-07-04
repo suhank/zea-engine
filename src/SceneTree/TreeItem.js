@@ -465,7 +465,7 @@ class TreeItem extends BaseItem {
         let j = super.toJSON(context);
         const childItemsJSON = {};
         for (let childItem of this.__childItems){
-            const childJSON = childItem.toJSON();
+            const childJSON = childItem.toJSON(context);
             if(childJSON)
                 childItemsJSON[childItem.getName()] = childJSON;
         }

@@ -2,14 +2,14 @@ import { Vec3 } from '../../Math/Vec3';
 import { GLPass } from '../GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
 
-class GLTransparencyPass extends GLPass {
+class GLTransparentGeomsPass extends GLPass {
     constructor() {
         super();
     }
 
     
-    init(gl, collector) {
-        super.init(gl, collector);
+    init(gl, collector, passIndex) {
+        super.init(gl, collector, passIndex);
 
         this.transparentItems = [];
         this.visibleItems = [];
@@ -155,6 +155,6 @@ class GLTransparencyPass extends GLPass {
 
 
 export {
-    GLTransparencyPass
+    GLTransparentGeomsPass
 };
-// export default GLTransparencyPass;
+// export default GLTransparentGeomsPass;

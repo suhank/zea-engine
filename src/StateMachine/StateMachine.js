@@ -19,6 +19,8 @@ class StateMachine extends BaseItem {
         if(this.__currentState)
             this.__currentState.deactivate();
         this.__currentState = this.__states[key];
+        if(!this.__currentState)
+            throw("Invalid state transtion:" + key)
         this.__currentState.activate();
     }
 
@@ -28,6 +30,41 @@ class StateMachine extends BaseItem {
 
     getActiveStateName() {
         return this.__currentState.constructor.name;
+    }
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        let j = super.toJSON(context);
+        if(!j) j = {};
+        j.type = this.constructor.name;
+
+        const statesj = {};
+        for(let key in this.__states){
+            statesj[key] = this.__states[key].toJSON(context);
+        }
+        j.states = statesj;
+        return j;
+    }
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+
+        context.stateMachine = this;
+
+        for(let key in j.states){
+            const statejson = j.states[key];
+            const state = sgFactory.constructClass(statejson.type);
+            if (state) {
+                state.fromJSON(statejson, context);
+                this.addState(childItem);
+            }
+            else {
+                throw("Invalid type:" + statejson.type)
+            }
+        }
     }
 
 };

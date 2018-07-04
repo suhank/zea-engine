@@ -238,7 +238,7 @@ class Scene {
     ///////////////////////////////////////
     // Persistence
 
-    fromJSON(json) {
+    fromJSON(json, context) {
 
         if(j.envMap) {
           const envMap = new EnvMap('envMap', resourceLoader);
@@ -248,10 +248,10 @@ class Scene {
 
     }
 
-    toJSON(json) {
+    toJSON(context) {
         return {
-            "root": this.__root.toJSON(),
-            "boundingBox": this.boundingBox.toJSON(),
+            "root": this.__root.toJSON(context),
+            "boundingBox": this.boundingBox.toJSON(context),
         }
     }
 

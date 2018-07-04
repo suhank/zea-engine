@@ -160,6 +160,7 @@ class BaseItem extends ParameterOwner {
         const j = super.toJSON(context);
         if(j) {
             j.name = this.__name;
+            j.type = this.constructor.name;
         }
         return j;
     }

@@ -37,11 +37,11 @@ import {
 //     GL2DOverlayPass
 // } from './Passes/GL2DOverlayPass.js';
 import {
-    GLForwardPass
-} from './Passes/GLForwardPass.js';
+    GLOpaqueGeomsPass
+} from './Passes/GLOpaqueGeomsPass.js';
 import {
-    GLTransparencyPass
-} from './Passes/GLTransparencyPass.js';
+    GLTransparentGeomsPass
+} from './Passes/GLTransparentGeomsPass.js';
 import {
     GLBillboardsPass
 } from './Passes/GLBillboardsPass.js';
@@ -150,12 +150,12 @@ class GLRenderer {
 
 
         // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
-        // this.__gizmoPass = new GizmoPass(this.__collector);
+        // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
 
         // this.addPass(new GL2DOverlayPass());
-        this.addPass(new GLForwardPass());
-        this.addPass(new GLTransparencyPass());
+        this.addPass(new GLOpaqueGeomsPass());
+        this.addPass(new GLTransparentGeomsPass());
         this.addPass(new GLBillboardsPass());
 
         // Note: Audio contexts have started taking a long time to construct
@@ -587,7 +587,10 @@ class GLRenderer {
             const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyPressed(key, event)) {
                 this.onKeyPressed(key, event);
-                event.stopPropagation();
+
+                // We are setting up key listeners in the state machine now.
+                // We cannot simply assume all handers are hooked up here.
+                // event.stopPropagation();
             }
         });
         document.addEventListener('keydown', (event) => {
@@ -597,7 +600,9 @@ class GLRenderer {
             const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyDown(key, event)) {
                 this.onKeyDown(key, event);
-                event.stopPropagation();
+                // We are setting up key listeners in the state machine now.
+                // We cannot simply assume all handers are hooked up here.
+                // event.stopPropagation();
             }
         });
         document.addEventListener('keyup', (event) => {
@@ -607,7 +612,9 @@ class GLRenderer {
             const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyUp(key, event)) {
                 this.onKeyUp(key, event);
-                event.stopPropagation();
+                // We are setting up key listeners in the state machine now.
+                // We cannot simply assume all handers are hooked up here.
+                // event.stopPropagation();
             }
         });
 
@@ -686,15 +693,8 @@ class GLRenderer {
     // Render Items setup
 
     addPass(pass) {
-
-        // Add any items to the pass that meet the filter. 
-        // for (let drawItem of this.__drawItems) {
-        //     if (drawItem && pass.filter(drawItem.geomItem))
-        //         pass.addDrawItem(drawItem);
-        // }
         pass.updated.connect(this.requestRedraw.bind(this));
-        pass.setPassIndex(this.__passes.length);
-        pass.init(this.__gl, this.__collector)
+        pass.init(this.__gl, this.__collector, this.__passes.length)
         this.__passes.push(pass);
         this.requestRedraw();
         return this.__passes.length - 1;

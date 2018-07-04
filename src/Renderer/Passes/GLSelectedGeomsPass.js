@@ -22,7 +22,9 @@ class GLSelectedGeomsPass extends GLPass {
         super();
     }
 
-    init(gl, collector) {
+    init(gl, collector, passIndex) {
+
+        super.init(gl, collector, passIndex);
 
         const gl = this.__gl;
         if (!glshader)
@@ -54,7 +56,7 @@ class GLSelectedGeomsPass extends GLPass {
                 continue;
             if (glshaderMaterials.getGLShader().getPassFilter) {
                 let passFilter = glshaderMaterials.getGLShader().getPassFilter();
-                if( passFilter.indexOf('GLForwardPass') == -1)
+                if( passFilter.indexOf('GLOpaqueGeomsPass') == -1)
                     continue;
             }
             this.__glshadermaterials.push(glshaderMaterials);

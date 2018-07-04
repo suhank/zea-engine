@@ -1,5 +1,9 @@
 
 import {
+    Parameter,
+    NumberParameter
+} from '../../SceneTree/Parameters';
+import {
     StateEvent
 } from '../StateEvent.js';
 
@@ -8,26 +12,22 @@ class KeyPressedEvent extends StateEvent  {
     constructor(state) {
         super(state)
         this.onKeyPressed = this.onKeyPressed.bind(this);
+        this.__keyParam = this.addParameter(new Parameter('Key', ''));
     }
-
-    setKey(key){
-        this.__key = key;
-    }
-
 
     onKeyPressed(event) {
         console.log(event.key);
-        if(event.key == this.__key) {
+        if(event.key == this.__keyParam.getValue()) {
             this.__onEvent();
         }
     }
 
     activate() {
-        document.addEventListener('keyup', this.onKeyPressed);
+        document.addEventListener('keydown', this.onKeyPressed);
     }
 
     deactivate() {
-        document.removeEventListener('keyup', this.onKeyPressed);
+        document.removeEventListener('keydown', this.onKeyPressed);
     }
 
 };

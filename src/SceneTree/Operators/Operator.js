@@ -39,14 +39,15 @@ class OperatorOutput {
         return this._initialParamValue;
     }
 
-    getValue() {
+    getValue(mode = ValueSetMode.OPERATOR_GETVALUE) {
         if(this._param)
-            return this._param.getValue(ValueGetMode.OPERATOR_GETVALUE);
+            return this._param.getValue(mode);
     }
 
-    setValue(value) {
+    // Note: sometimes outputs are used in places like statemachines, where we would want the change to cause an event.
+    setValue(value, mode = ValueSetMode.OPERATOR_SETVALUE) {
         if(this._param)
-            this._param.setValue(value, ValueSetMode.OPERATOR_SETVALUE);
+            this._param.setValue(value, mode);
     }
  
     setDirty(fn){

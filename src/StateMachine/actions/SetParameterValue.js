@@ -1,9 +1,15 @@
 
 
 import {
+    ValueSetMode,
     Parameter,
     NumberParameter
 } from '../../SceneTree/Parameters';
+import {
+    OperatorOutput
+} from '../../SceneTree/Operators';
+
+
 import {
     StateAction
 } from '../StateAction.js';
@@ -12,32 +18,20 @@ class SetParameterValue extends StateAction {
     constructor() {
         super()
 
-        this.__pathParam = this.addParameter('path', "");
-        this.__valueParam = this.addParameter('value', 1.0);
-        this.__pathParam.valueChanged.connect((changeType)=>{
-            if(this.__state)
-                this.__bindParam();
-        });
-        this.__interpTimeParam = this.addParameter(new NumberParameter('interpTime', 1.0));
-        this.__updateFrequencyParam = this.addParameter(new NumberParameter('updateFrequency', 30));
+        this.__outParam = this.addOutput('Param', new OperatorOutput());
+        this.__outParam.paramSet.connect(()=>{
+            this.__valueParam = this.addParameter('Value', this.__outParam.getInitialValue());
+        })
+        this.__interpTimeParam = this.addParameter(new NumberParameter('InterpTime', 1.0));
+        this.__updateFrequencyParam = this.addParameter(new NumberParameter('UpdateFrequency', 30));
     }
-
-    __bindParam(){
-        this.__parameter = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());
-    }
-
-    setState(state) {
-        super.setState(state);
-        this.__bindParam();
-    }
-
 
     start(){
-        if(this.__parameter){
+        if(this.__outParam.isConnected()){
             const interpTime = this.__interpTimeParam.getValue();
             if(interpTime > 0.0) {
                 const updateFrequency = this.__updateFrequencyParam.getValue();
-                const paramValueStart = this.__parameter.getValue();
+                const paramValueStart = this.__outParam.getValue();
                 let step = 0;
                 const steps = Math.round(interpTime / (1.0/updateFrequency));
                 const timerCallback = () => {
@@ -45,21 +39,26 @@ class SetParameterValue extends StateAction {
                     if (step < steps) {
                         const t = step / steps;
                         const smooth_t = Math.smoothStep(0.0, 1.0, t);
-                        this.__parameter.setValue(Math.lerp(paramValueStart, this.__valueParam.getValue(), smooth_t));
-                        this.__timeoutId = window.setTimeout(timerCallback, updateFrequency*1000); // Sample at 50fps.
+                        const newVal = Math.lerp(paramValueStart, this.__valueParam.getValue(), smooth_t);
+                        // Note: In this case, we want the parameter to emit a notification
+                        // and cause the update of the scene. But we also don't want the parameter value to then
+                        // be considered modified so it is saved to the JSON file. I'm not sure how to address this.
+                        // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
+                        this.__outParam.setValue(newVal, ValueSetMode.USER_SETVALUE);
+                        this.__timeoutId = window.setTimeout(timerCallback, 1000/updateFrequency);
                     }
                     else {
-                        this.__parameter.setValue(this.__valueParam.getValue());
+                        this.__outParam.setValue(this.__valueParam.getValue(), ValueSetMode.USER_SETVALUE);
                         this.__timeoutId = undefined;
                         this.__onDone();
                     }
                 };
                 timerCallback();
             }
-        }
-        else {
-            this.__parameter.setValue(this.__valueParam.getValue());
-            this.__onDone();
+            else {
+                this.__outParam.setValue(this.__valueParam.getValue());
+                this.__onDone();
+            }
         }
     }
 

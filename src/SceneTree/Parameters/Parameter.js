@@ -10,6 +10,12 @@ const ValueGetMode = {
     OPERATOR_GETVALUE: 1
 };
 
+
+// Note: In some cases we want the parameter to emit a notification
+// and cause the update of the scene during evaluation. (like statemahcine updates).
+// But we also don't want the parameter value to then
+// be considered modified so it is saved to the JSON file. I'm not sure how to address this.
+// We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
 const ValueSetMode = {
     USER_SETVALUE: 0,
     OPERATOR_SETVALUE: 1,

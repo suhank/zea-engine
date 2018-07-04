@@ -4,13 +4,13 @@ import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
 
-class GLForwardPass extends GLPass {
+class GLOpaqueGeomsPass extends GLPass {
     constructor() {
         super();
     }
 
-    init(gl, collector) {
-        super.init(gl, collector);
+    init(gl, collector, passIndex) {
+        super.init(gl, collector, passIndex);
         this.__geomdatashader = new GeomDataShader(gl);
     }
 
@@ -25,7 +25,7 @@ class GLForwardPass extends GLPass {
                 continue;
             if (glshaderMaterials.getGLShader().getPassFilter) {
                 const passFilter = glshaderMaterials.getGLShader().getPassFilter();
-                if( passFilter.indexOf('GLForwardPass') == -1)
+                if( passFilter.indexOf('GLOpaqueGeomsPass') == -1)
                     continue;
             }
             this.__glshadermaterials.push(glshaderMaterials);
@@ -85,6 +85,6 @@ class GLForwardPass extends GLPass {
 };
 
 export {
-    GLForwardPass
+    GLOpaqueGeomsPass
 };
-// export default GLForwardPass;
+// export default GLOpaqueGeomsPass;

@@ -165,8 +165,6 @@ class ParameterOwner extends RefCounted {
 
     readBinary(reader, context) {
         // TODO: make this work
-        // for (let param of j.params)
-        //     paramsJSON.push(param.toJSON());
     }
 
     toString() {

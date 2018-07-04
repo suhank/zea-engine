@@ -138,7 +138,7 @@ class PistonParameter extends StructParameter {
     // Persistence
 
     toJSON(context) {
-        const j = super.toJSON();
+        const j = super.toJSON(context);
         // if(j){
         //     j.rodOutput = this.__rodoutput.toJSON(context);
         //     j.capOutput = this.__capoutput.toJSON(context);
@@ -247,7 +247,7 @@ class PistonOperator extends Operator {
             piston.evaluate(quat, crankAxis, revolutions);
         }
         
-        this.postEval.emit(revolutions * Math.PI * 2.0)
+        this.postEval.emit(revolutions)
     }
 
 

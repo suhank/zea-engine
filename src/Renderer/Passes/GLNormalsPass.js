@@ -9,11 +9,11 @@
 // import { GLShader } from '../GLShader.js';
 
 // class GLNormalsPass extends GLPass {
-//     constructor(gl, collector) {
-//         super(gl, collector);
+//     constructor() {
+//         super();
 //     }
     
-//     init(gl, collector) {
+//     init(gl, collector, passIndex) {
 
 //         this.normalColor = [.2, 1, .4, 0.75];
 //         this.normalLength = 0.03;

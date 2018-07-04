@@ -10,8 +10,16 @@ class StateAction extends ParameterOwner {
         super();
         this.__childActions = [];
 
-        this.__params = [];
-        this.__paramMapping = {};
+        this.__outputs = {};
+    }
+
+    addOutput(name, output){
+        this.__outputs[name] = output;
+        return output;
+    }
+
+    getOutput(name){
+        return this.__outputs[name];
     }
 
     setState(state) {
@@ -34,6 +42,46 @@ class StateAction extends ParameterOwner {
         this.__childActions.forEach((action)=>{
             action.start();
         });
+    }
+
+
+
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        const j = super.toJSON(context);
+        j.type = this.constructor.name;
+
+        const outputsj = {};
+        for(let key in this.__outputs){
+            outputsj[key] = this.__outputs[key].toJSON(context);
+        }
+        j.outputs = outputsj;
+
+        return j;
+    }
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+
+        for(let key in j.outputs){
+            const outputjson = j.outputs[key];
+            const output = sgFactory.constructClass(outputjson.type);
+            if (!output) {
+                output.fromJSON(outputjson, context);
+                this.addOutput(key, childItem);
+            }
+            else {
+                throw("Invalid type:" + outputjson.type)
+            }
+        }
+    }
+
+    destroy(){
+        super.destroy();
+        this.__outputs = [];
     }
 };
 

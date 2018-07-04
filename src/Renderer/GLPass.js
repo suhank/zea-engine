@@ -8,13 +8,14 @@ class GLPass {
     constructor() {
         this.updated = new Signal();
         this.enabled = true;
+        this.__passIndex = 0;
     }
 
-    init(gl, collector) {
+    init(gl, collector, passIndex) {
 
         this.__gl = gl;
-        this.__passIndex = 0;
         this.__collector = collector;
+        this.__passIndex = passIndex;
         this.__glshadermaterials = [];
         this.__selectedGeomsShadermaterials = [];
         

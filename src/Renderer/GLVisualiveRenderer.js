@@ -30,11 +30,11 @@ import {
     GLShader
 } from './GLShader.js';
 import {
-    GLForwardPass
-} from './Passes/GLForwardPass.js';
+    GLOpaqueGeomsPass
+} from './Passes/GLOpaqueGeomsPass.js';
 import {
-    GLTransparencyPass
-} from './Passes/GLTransparencyPass.js';
+    GLTransparentGeomsPass
+} from './Passes/GLTransparentGeomsPass.js';
 import {
     GLHardEdgesPass
 } from './Passes/GLHardEdgesPass.js';

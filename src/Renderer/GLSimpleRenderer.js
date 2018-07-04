@@ -18,7 +18,7 @@ class GLSimpleRenderer extends GLRenderer {
             preserveDrawingBuffer: true
         });
 
-        // this.addPass(new GLNormalsPass(this.__gl, this.__collector));
+        // this.addPass(new GLNormalsPass());
         this.__debugLightmaps = false;
 
         this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION');

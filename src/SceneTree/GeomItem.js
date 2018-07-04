@@ -157,7 +157,7 @@ class GeomItem extends TreeItem {
     // tree. This offsets the light cooords for each geom.
     applyAssetLightmapSettings(lightmapName, offset) {
         this.__lightmap = lightmapName;
-        let coords = this.__lightmapCoordsParam.getValue();
+        const coords = this.__lightmapCoordsParam.getValue();
         coords.addInPlace(offset);
         this.__lightmapCoordsParam.setValue(coords);
     }
@@ -165,44 +165,43 @@ class GeomItem extends TreeItem {
     /////////////////////////////
     // Debugging
 
-    toJSON() {
-        let json = super.toJSON();
-        if (this.__geom != undefined)
-            json.geom = this.__geom.toJSON();
-        if (this.material != undefined)
-            json.material = this.material.toJSON();
+    toJSON(context) {
+        const json = super.toJSON(context);
+        // if (this.__geom != undefined)
+        //     json.geom = this.__geom.toJSON(context);
+        // if (this.material != undefined)
+        //     json.material = this.material.toJSON(context);
         return json
     }
 
     fromJSON(json, context) {
         super.fromJSON(json, context);
 
-        if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
-            let geomLibrary = context.assetItem.getGeometryLibrary();
-            this.geom = geomLibrary.getGeom(json.geomIndex);
-        }
+        // if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
+        //     let geomLibrary = context.assetItem.getGeometryLibrary();
+        //     this.geom = geomLibrary.getGeom(json.geomIndex);
+        // }
 
-        if ('geomOffsetXfo' in json) {
-            let xfo = new Xfo();
-            xfo.fromJSON(json.geomOffsetXfo);
-            this.__geomOffsetXfoParam.setValue(xfo);
-        }
+        // if ('geomOffsetXfo' in json) {
+        //     let xfo = new Xfo();
+        //     xfo.fromJSON(json.geomOffsetXfo);
+        //     this.__geomOffsetXfoParam.setValue(xfo);
+        // }
 
 
-        if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
-            let materialLibrary = context.assetItem.getMaterialLibrary();
-            this.material = materialLibrary.getMaterial(json.materialName);
-            if (!this.material) {
-                console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
-                this.setMaterial(materialLibrary.getMaterial('DefaultMaterial'));
-            }
-        }
+        // if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
+        //     let materialLibrary = context.assetItem.getMaterialLibrary();
+        //     this.material = materialLibrary.getMaterial(json.materialName);
+        //     if (!this.material) {
+        //         console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
+        //         this.setMaterial(materialLibrary.getMaterial('DefaultMaterial'));
+        //     }
+        // }
 
-        const coords = new Vec2();
-        coords.fromJSON(json.lightmapCoordsOffset);
-        this.__lightmapCoordsParam.setValue(coords);
-        this._setBoundingBoxDirty();
-        return json
+        // const coords = new Vec2();
+        // coords.fromJSON(json.lightmapCoordsOffset);
+        // this.__lightmapCoordsParam.setValue(coords);
+        // this._setBoundingBoxDirty();
     }
 
     readBinary(reader, context) {

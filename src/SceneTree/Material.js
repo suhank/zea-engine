@@ -197,8 +197,8 @@ class Material extends BaseItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON() {
-        return super.toJSON();
+    toJSON(context) {
+        return super.toJSON(context);
     }
 
     fromJSON(j, context={}) {

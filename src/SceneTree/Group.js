@@ -23,6 +23,7 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
+        this.__cutawayParam = this.addParameter('CutawayEnabled', false);
         this.__initialGlobalXfoParam = this.addParameter('InitialGlobalXfo', new Xfo());
         this.__invInitialXfo = new Xfo();
         this.__initialXfos = [];
@@ -41,6 +42,16 @@ class Group extends TreeItem {
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
                 this.__items[i].getParameter('Selected').setValue(value);
+            }
+        });
+        // Groups can be used to control Cutaway toggles for their members.
+        this.__cutawayParam.valueChanged.connect((changeType)=>{
+            const value = this.__cutawayParam.getValue();
+            const len = this.__items.length;
+            for (let i = 0; i < len; i++) {
+                const itemParam = this.__items[i].getParameter('CutawayEnabled');
+                if(itemParam)
+                    itemParam.setValue(value);
             }
         });
         this.__initialGlobalXfoParam.valueChanged.connect((changeType)=>{

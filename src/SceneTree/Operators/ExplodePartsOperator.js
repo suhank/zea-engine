@@ -75,7 +75,7 @@ class ExplodePartParameter extends StructParameter {
     // Persistence
 
     toJSON(context) {
-        const j = super.toJSON();
+        const j = super.toJSON(context);
         if(j){
             j.output = this.__output.toJSON(context);
         }
