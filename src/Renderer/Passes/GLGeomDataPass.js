@@ -14,7 +14,7 @@
 
 // class GLGeomDataPass extends GLPass {
 //     constructor(gl, collector, flaotGeomBuffer) {
-//         super(gl, collector);
+//         super(gl, collector, passIndex);
 
 //         this.__glshader = new GeomDataShader(gl);
 //         this.__floatGeomBuffer = flaotGeomBuffer;

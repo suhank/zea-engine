@@ -91,12 +91,12 @@ class BaseParameter {
 
     setDirty(cleanerFn) {
         // If already dirty, simply return.
-        // if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
-        //     return false;
-        // }
+        if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
+            return false;
+        }
         this.__cleanerFns.push(cleanerFn);
 
-        this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // 1 = changed via cleaner fn
+        this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
     }
 
     isDirty() {

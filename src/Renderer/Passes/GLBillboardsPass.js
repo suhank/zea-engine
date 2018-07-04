@@ -32,8 +32,8 @@ class GLBillboardsPass extends GLPass {
         super();
     }
     
-    init(gl, collector) {
-        super.init(gl, collector);
+    init(gl, collector, passIndex) {
+        super.init(gl, collector, passIndex);
 
         this.__billboards = [];
         this.__closestBillboard = 0.0;

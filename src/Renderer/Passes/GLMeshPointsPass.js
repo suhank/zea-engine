@@ -4,8 +4,8 @@
 // import { GLShader } from '../GLShader.js';
 
 // class GLMeshPointsPass extends GLPass {
-//     constructor(gl, collector) {
-//         super(gl, collector);
+//     constructor(gl, collector, passIndex) {
+//         super(gl, collector, passIndex);
 
 //         let glshader = new PointsShader(gl);
 //         this.setExplicitShader(glshader);

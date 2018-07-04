@@ -12,6 +12,8 @@ class GLPass {
     }
 
     init(gl, collector, passIndex) {
+        if(passIndex == undefined)
+            throw("Missing constructor argument.");// Type checking. Seomthing that TypeScript will do for us.
 
         this.__gl = gl;
         this.__collector = collector;

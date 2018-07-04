@@ -6,6 +6,8 @@ import { Mat4 } from './Mat4.js';
 import { Quat } from './Quat.js';
 import { typeRegistry } from './TypeRegistry.js';
 
+const sc_helper = new Vec3(1,1,1);
+
 class Xfo {
     constructor(tr = undefined, ori = undefined, sc = undefined) {
 
@@ -48,8 +50,8 @@ class Xfo {
 
     setLookAt(pos, target, up) {
         // Note: we look along the -z axis. Negate the direction.
-        let dir = pos.subtract(target);
-        let dirLen = dir.length();
+        const dir = pos.subtract(target);
+        const dirLen = dir.length();
         if (dirLen < Number.EPSILON) {
             throw ("Invalid dir");
             return;
@@ -67,7 +69,11 @@ class Xfo {
             }
         }
 
-        let result = new Xfo(
+        // const sc_rot = this.ori.inverse();
+        // const rotated_unit = xfo.ori.rotateVec3(sc_helper);
+        // const rotated_sc = this.ori.inverse().rotateVec3(xfo.sc).multiply(rotated_unit);
+
+        const result = new Xfo(
             this.tr.add(this.ori.rotateVec3(this.sc.multiply(xfo.tr))),
             this.ori.multiply(xfo.ori),
             this.sc.multiply(xfo.sc)
@@ -77,7 +83,7 @@ class Xfo {
 
 
     inverse() {
-        let result = new Xfo();
+        const result = new Xfo();
         result.sc = this.sc.inverse();
         result.ori = this.ori.inverse();
         result.tr = result.ori.rotateVec3(this.tr.negate().multiply(result.sc));
@@ -85,19 +91,19 @@ class Xfo {
     }
 
     transformVec3(vec3) {
-        return this.ori.rotateVec3(this.sc.multiply(vec3)).add(this.tr);
+        return this.tr.add(this.ori.rotateVec3(this.sc.multiply(vec3)));
     }
 
     toMat4() {
-        let scl = new Mat4(
+        const scl = new Mat4(
             this.sc.x, 0, 0, 0,
             0, this.sc.y, 0, 0,
             0, 0, this.sc.z, 0,
             0, 0, 0, 1.0);
 
-        let rot = this.ori.toMat4();
+        const rot = this.ori.toMat4();
 
-        let trn = new Mat4();
+        const trn = new Mat4();
         trn.translation = this.tr;
 
         return trn.multiply(rot).multiply(scl);
@@ -114,7 +120,7 @@ class Xfo {
         if(float32array.length == 8){
             this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
             this.ori = new Quat(float32array.buffer, float32array.byteOffset+12);
-            let scl = float32array[7];
+            const scl = float32array[7];
             this.sc = new Vec3(scl, scl, scl);
             return;
         }
@@ -146,7 +152,7 @@ class Xfo {
 
 
     toJSON() {
-        let j = {
+        const j = {
             tr: this.tr.toJSON(),
             ori: this.ori.toJSON()
         };

@@ -1,8 +1,8 @@
 // import { GLPass } from '../GLPass.js';
 
 // class GL2DOverlayPass extends GLPass {
-//     constructor(gl, collector) {
-//         super(gl, collector);
+//     constructor(gl, collector, passIndex) {
+//         super(gl, collector, passIndex);
 
 //     }
 

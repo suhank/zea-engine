@@ -41,7 +41,7 @@ class GizmoPass extends GLPass {
         super();
     }
 
-    init(gl, collector) {
+    init(gl, collector, passIndex) {
 
         this__glshader = new GizmoShader(gl);
         this.setExplicitShader(glshader);

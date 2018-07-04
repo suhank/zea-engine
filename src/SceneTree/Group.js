@@ -31,27 +31,24 @@ class Group extends TreeItem {
         this.__items = [];
         // this.__visibleParam = this.addParameter('Visible', true);
         this.__visibleParam.valueChanged.connect((changeType)=>{
-            const value = this.__visibleParam.getValue();
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
-                this.__items[i].getParameter('Visible').setValue(value);
+                this.__items[i].getParameter('Visible').setDirty(this.__visibleParam.getValue);
             }
         });
         this.__selectedParam.valueChanged.connect((changeType)=>{
-            const value = this.__selectedParam.getValue();
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
-                this.__items[i].getParameter('Selected').setValue(value);
+                this.__items[i].getParameter('Selected').setDirty(this.__selectedParam.getValue);
             }
         });
         // Groups can be used to control Cutaway toggles for their members.
         this.__cutawayParam.valueChanged.connect((changeType)=>{
-            const value = this.__cutawayParam.getValue();
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
                 const itemParam = this.__items[i].getParameter('CutawayEnabled');
                 if(itemParam)
-                    itemParam.setValue(value);
+                    itemParam.setDirty(this.__cutawayParam.getValue);
             }
         });
         this.__initialGlobalXfoParam.valueChanged.connect((changeType)=>{
