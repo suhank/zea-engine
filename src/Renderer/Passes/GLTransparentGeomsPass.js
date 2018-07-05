@@ -66,11 +66,11 @@ class GLTransparentGeomsPass extends GLPass {
         this.resort = true;
     }
 
-    sortItems(cameraPos) {
+    sortItems(viewPos) {
         for (let transparentItem of this.transparentItems)
-            transparentItem.dist = transparentItem.drawItem.geomItem.getGeomXfo().tr.distanceTo(cameraPos);
+            transparentItem.dist = transparentItem.drawItem.geomItem.getGeomXfo().tr.distanceTo(viewPos);
         this.transparentItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
-        this.prevSortCameraPos = cameraPos;
+        this.prevSortCameraPos = viewPos;
     }
 
     _drawItems(renderstate){
@@ -119,11 +119,10 @@ class GLTransparentGeomsPass extends GLPass {
     draw(renderstate) {
         const gl = this.__gl;
 
-        const camera = renderstate.camera;
-        const cameraPos = camera.getGlobalXfo().tr;
+        const viewPos = renderstate.viewXfo.tr;
         // TODO: Avoid sorting if the camera did not movemore than 30cm
-        if(this.resort || cameraPos.distanceTo(this.prevSortCameraPos) > 0.3)
-            this.sortItems(cameraPos);
+        if(this.resort || viewPos.distanceTo(this.prevSortCameraPos) > 0.3)
+            this.sortItems(viewPos);
 
         gl.enable(gl.DEPTH_TEST);
         gl.depthFunc(gl.LESS);

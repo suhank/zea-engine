@@ -296,23 +296,31 @@ class GLViewport extends BaseViewport {
         return this.__geomDataBufferFbo;
     }
 
+    __initRenderState(renderstate) {
+        renderstate.viewXfo = this.__camera.getGlobalXfo();
+        renderstate.viewMatrix = this.getViewMatrix();
+        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
+        renderstate.projectionMatrix = this.getProjectionMatrix();
+        renderstate.isOrthographic = this.__camera.getIsOrthographic();
+        // renderstate.camera = this.__camera; // Note: in VR, we have no camera.
+        renderstate.viewportFrustumSize = this.__frustumDim;
+        renderstate.fovY = this.__camera.getFov(),
+        renderstate.viewScale = 1.0;
+        renderstate.region = this.region;
+        renderstate.eye = 0; // 0==Left, 1==Right;,
+    }
+
     renderGeomDataFbo() {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBufferFbo.bindAndClear();
 
             const renderstate = {
-                viewMatrix: this.getViewMatrix(),
-                cameraMatrix: this.getCameraMatrix(),
-                projectionMatrix: this.getProjectionMatrix(),
-                isOrthographic: this.__camera.getIsOrthographic(),
-                fovY: this.__camera.getFov(),
-                viewportFrustumSize: this.__frustumDim,
-                shaderopts: this.__renderer.getShaderPreproc(),
                 drawCalls: 0,
                 drawCount: 0,
-                profileJSON: {}
+                profileJSON: {},
+                shaderopts: this.__renderer.getShaderPreproc()
             };
-
+            this.__initRenderState(renderstate);
             this.__renderer.drawSceneGeomData(renderstate);
             // this.__gizmoPass.drawDataPass(renderstate);
         }
@@ -781,14 +789,7 @@ class GLViewport extends BaseViewport {
     draw(renderstate) {
         this.bindAndClear(renderstate);
 
-        renderstate.viewMatrix = this.getViewMatrix();
-        renderstate.cameraMatrix = this.getCameraMatrix();
-        renderstate.projectionMatrix = this.getProjectionMatrix();
-        renderstate.camera = this.__camera;
-        renderstate.viewportFrustumSize = this.__frustumDim;
-        renderstate.viewScale = 1.0;
-        renderstate.region = this.region;
-        renderstate.eye = 0; // 0==Left, 1==Right;
+        this.__initRenderState(renderstate);
 
         if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);

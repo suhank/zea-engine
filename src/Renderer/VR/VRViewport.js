@@ -107,10 +107,9 @@ class VRViewport extends BaseViewport {
 
         //////////////////////////////////////////////
         // Xfos
-        this.__stageXfo = new Xfo();
-        // this.__standingMatrix = new Mat4();
-        this.__stageMatrix = new Mat4();
-        this.setXfo(new Xfo()); // Reset the stage Xfo.
+        const xfo = new Xfo();
+        xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5);
+        this.setXfo(xfo); // Reset the stage Xfo.
 
         this.__leftViewMatrix = new Mat4();
         this.__leftProjectionMatrix = new Mat4();
@@ -319,7 +318,7 @@ class VRViewport extends BaseViewport {
         if (SystemDesc.isMobileDevice) {
             const xfo = this.__renderer.getViewport().getCamera().getGlobalXfo().clone();
             const yaxis = xfo.ori.getYaxis();
-            const up = new Vec3(0, 1, 0);
+            const up = new Vec3(0, 0, 1);
             const angle = yaxis.angleTo(up);
             if (angle > 0.0001) {
                 let axis = yaxis.cross(up);
@@ -601,6 +600,8 @@ class VRViewport extends BaseViewport {
         renderstate.viewport = this;
         // renderstate.cameraMatrix = this.__standingMatrix;
         renderstate.viewScale = 1.0 / this.__stageScale;
+        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
+        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
 
         const width = this.__hmdCanvasSize[0];
         const height = this.__hmdCanvasSize[1];

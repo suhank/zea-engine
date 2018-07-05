@@ -335,6 +335,8 @@ class GLBillboardsPass extends GLPass {
 
             gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
         }
+
+        gl.disable(gl.BLEND);
     }
 };
 
