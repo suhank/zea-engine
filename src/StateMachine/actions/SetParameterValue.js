@@ -24,7 +24,8 @@ class SetParameterValue extends StateAction {
 
         this.__outParam = this.addOutput('Param', new OperatorOutput());
         this.__outParam.paramSet.connect(()=>{
-            this.__valueParam = this.addParameter('Value', this.__outParam.getInitialValue());
+            if(!this.__valueParam || this.__outParam.getParam().getDataType() != this.__valueParam.getDataType() )
+                this.__valueParam = this.addParameter('Value', this.__outParam.getInitialValue());
         })
         this.__interpTimeParam = this.addParameter(new NumberParameter('InterpTime', 1.0));
         this.__updateFrequencyParam = this.addParameter(new NumberParameter('UpdateFrequency', 30));
@@ -36,6 +37,7 @@ class SetParameterValue extends StateAction {
             if(interpTime > 0.0) {
                 const updateFrequency = this.__updateFrequencyParam.getValue();
                 const paramValueStart = this.__outParam.getValue();
+                const paramValueEnd= this.__valueParam.getValue();
                 let step = 0;
                 const steps = Math.round(interpTime / (1.0/updateFrequency));
                 const timerCallback = () => {
@@ -43,7 +45,7 @@ class SetParameterValue extends StateAction {
                     if (step < steps) {
                         const t = step / steps;
                         const smooth_t = Math.smoothStep(0.0, 1.0, t);
-                        const newVal = Math.lerp(paramValueStart, this.__valueParam.getValue(), smooth_t);
+                        const newVal = Math.lerp(paramValueStart, paramValueEnd, smooth_t);
                         // Note: In this case, we want the parameter to emit a notification
                         // and cause the update of the scene. But we also don't want the parameter value to then
                         // be considered modified so it is saved to the JSON file. I'm not sure how to address this.

@@ -14,15 +14,18 @@ class SGFactory {
     constructClass(name/*, ...args*/){
         let fact = this.__registeredClasses[name];
         if(!fact){
-            console.warn("Factory not registered:"+ name);
-            return null;
+            fact = Visualive[name];
+            if(!fact){
+                console.warn("Factory not registered:"+ name);
+                return null;
+            }
         }
-        let args = Array.prototype.slice.call(arguments, 1);
+        const args = Array.prototype.slice.call(arguments, 1);
         return new fact(...args);
     }
 };
 
-let sgFactory = new SGFactory();
+const sgFactory = new SGFactory();
 export {
     sgFactory
 };

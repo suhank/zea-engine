@@ -31,6 +31,11 @@ class OperatorOutput {
         return this._param != undefined;
     }
 
+    getParam() {
+        return this._param;
+    }
+
+
     setParam(param) {
         this._param = param;
         this._initialParamValue = param.getValue();

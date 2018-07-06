@@ -165,6 +165,9 @@ class PistonOperator extends Operator {
 
         this.__revolutionsParam = this.addParameter(new NumberParameter('Revolutions', 0.0, [0, 1]));
         const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)); // revolutions per minute
+        const fps = 50;
+        const sampleTime = 1000/fps;
+        const anglePerSample = (1 / (fps * 60));
         rpmParam.valueChanged.connect(() => {
             let rpm = rpmParam.getValue();
             if (rpm > 0.0) {
@@ -172,8 +175,8 @@ class PistonOperator extends Operator {
                     const timerCallback = () => {
                         rpm = rpmParam.getValue();
                         const revolutions = this.__revolutionsParam.getValue();
-                        this.__revolutionsParam.setValue(revolutions + (rpm * (1 / (50 * 60))));
-                        this.__timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
+                        this.__revolutionsParam.setValue(revolutions + (rpm * anglePerSample));
+                        this.__timeoutId = setTimeout(timerCallback, sampleTime); // Sample at 50fps.
                     };
                     timerCallback();
                 }

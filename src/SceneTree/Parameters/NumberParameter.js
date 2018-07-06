@@ -2,6 +2,9 @@ import {
     Signal
 } from '../../Utilities';
 import {
+    sgFactory
+} from '../SGFactory';
+import {
     Parameter
 } from './Parameter.js';
 
@@ -51,6 +54,7 @@ class NumberParameter extends Parameter {
     }
 };
 
+// sgFactory.registerClass('NumberParameter', NumberParameter);
 
 export {
     NumberParameter
