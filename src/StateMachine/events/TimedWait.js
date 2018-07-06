@@ -1,5 +1,9 @@
 
 import {
+    sgFactory
+} from '../../SceneTree/SGFactory.js';
+
+import {
     Parameter,
     NumberParameter
 } from '../../SceneTree/Parameters';
@@ -31,6 +35,8 @@ class TimedWait extends StateEvent  {
 };
 
 
+
+sgFactory.registerClass('TimedWait', TimedWait);
 export {
     TimedWait
 };

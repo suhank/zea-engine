@@ -1,4 +1,8 @@
 
+import {
+    sgFactory
+} from '../../SceneTree/SGFactory.js';
+
 
 import {
     Parameter,
@@ -113,6 +117,8 @@ class MoveCamera extends StateAction {
     
 };
 
+
+sgFactory.registerClass('MoveCamera', MoveCamera);
 export {
     MoveCamera
 };

@@ -1,5 +1,8 @@
 
 import {
+    sgFactory
+} from '../SceneTree/SGFactory.js';
+import {
     ParameterOwner
 } from '../SceneTree/ParameterOwner.js';
 
@@ -60,12 +63,12 @@ class StateEvent extends ParameterOwner {
 
         for(let childActionjson of j.childActions){
             const childAction = sgFactory.constructClass(childActionjson.type);
-            if (!childAction) {
+            if (childAction) {
                 childAction.fromJSON(childActionjson, context);
-                this.addChild(key, childItem);
+                this.addChild(childAction);
             }
             else {
-                throw("Invalid type:" + childAction.type)
+                throw("Invalid type:" + childActionjson.type)
             }
         }
     }

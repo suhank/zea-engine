@@ -1,4 +1,7 @@
 
+import {
+    sgFactory
+} from '../SceneTree/SGFactory.js';
 
 import {
     ParameterOwner
@@ -24,6 +27,9 @@ class StateAction extends ParameterOwner {
 
     setState(state) {
         this.__state = state;
+        this.__childActions.forEach((childAction)=>{
+            childAction.setState(state);
+        });
     }
 
     addChild(action) {
@@ -67,15 +73,16 @@ class StateAction extends ParameterOwner {
         super.fromJSON(j, context);
 
         for(let key in j.outputs){
-            const outputjson = j.outputs[key];
-            const output = sgFactory.constructClass(outputjson.type);
-            if (!output) {
-                output.fromJSON(outputjson, context);
-                this.addOutput(key, childItem);
-            }
-            else {
-                throw("Invalid type:" + outputjson.type)
-            }
+            this.__outputs[key].fromJSON(j.outputs[key], context);
+            // const outputjson = j.outputs[key];
+            // const output = sgFactory.constructClass(outputjson.type);
+            // if (output) {
+            //     output.fromJSON(outputjson, context);
+            //     this.addOutput(key, output);
+            // }
+            // else {
+            //     throw("Invalid type:" + outputjson.type)
+            // }
         }
     }
 

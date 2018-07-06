@@ -1,4 +1,7 @@
 
+import {
+    sgFactory
+} from '../SceneTree/SGFactory.js';
 
 class State {
     constructor(name) {
@@ -47,10 +50,17 @@ class State {
         stateEvent.setState(this);
         this.__stateEvents.push(stateEvent);
     }
+    getStateEvent(index) {
+        return this.__stateEvents[index];
+    }
 
     addActivationAction(action) {
         action.setState(this);
         this.__activationActions.push(action);
+    }
+
+    getActivationAction(index) {
+        return this.__activationActions[index];
     }
 
     addDeactivationAction(action) {
@@ -97,21 +107,23 @@ class State {
         for(let stateEventJson of j.stateEvents){
             const stateEvent = sgFactory.constructClass(stateEventJson.type);
             stateEvent.fromJSON(stateEventJson, context);
-            this.__stateEvents.push(stateEvent);
+            this.addStateEvent(stateEvent);
         }
         for(let activationActionJson of j.activationActions){
             const activationAction = sgFactory.constructClass(activationActionJson.type);
             activationAction.fromJSON(activationActionJson, context);
-            this.__activationActions.push(activationAction);
+            this.addActivationAction(activationAction);
         }
         for(let deactivationActionJson of j.deactivationActions){
             const deactivationAction = sgFactory.constructClass(deactivationActionJson.type);
             deactivationAction.fromJSON(deactivationActionJson, context);
-            this.__deactivationActions.push(deactivationAction);
+            this.addDeactivationAction(deactivationAction);
         }
 
     }
 };
+
+sgFactory.registerClass('State', State);
 
 export {
     State

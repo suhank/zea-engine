@@ -1,5 +1,9 @@
 
 import {
+    sgFactory
+} from '../../SceneTree/SGFactory.js';
+
+import {
     StateEvent
 } from '../StateEvent.js';
 
@@ -45,6 +49,8 @@ class GeomClicked extends StateEvent  {
 
 };
 
+
+sgFactory.registerClass('GeomClicked', GeomClicked);
 
 export {
     GeomClicked

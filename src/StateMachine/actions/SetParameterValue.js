@@ -1,4 +1,8 @@
 
+import {
+    sgFactory
+} from '../../SceneTree/SGFactory.js';
+
 
 import {
     ValueSetMode,
@@ -70,8 +74,27 @@ class SetParameterValue extends StateAction {
         }
     }
 
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context) {
+        const j = super.toJSON(context);
+        j.valueParam = this.__valueParam.toJSON(context);
+        j.valueParamType = this.__valueParam.constructor.name;
+        return j;
+    }
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+        if(j.valueParam){
+            this.__valueParam = sgFactory.constructClass(j.valueParamType);
+            this.__valueParam.fromJSON(j.valueParam, context);
+        }
+    }
 };
 
+
+sgFactory.registerClass('SetParameterValue', SetParameterValue);
 export {
     SetParameterValue
 };

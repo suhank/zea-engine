@@ -1,4 +1,8 @@
 
+import {
+    sgFactory
+} from '../../SceneTree/SGFactory.js';
+
 
 import {
     Parameter,
@@ -24,6 +28,8 @@ class SwitchState extends StateAction {
     }
 };
 
+
+sgFactory.registerClass('SwitchState', SwitchState);
 export {
     SwitchState
 };

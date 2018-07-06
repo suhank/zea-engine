@@ -6,6 +6,10 @@ import {
     ValueGetMode,
     ValueSetMode
 } from '../Parameters';
+import {
+    sgFactory
+} from '../SGFactory';
+
 
 import {
     BaseItem
@@ -66,16 +70,24 @@ class OperatorOutput {
     toJSON(context) {
         const makeRelative = (path) => {
             const assetPath = context.assetItem.getPath();
+            const start = path.slice(0, assetPath.length);
+            for(let i=0; i<start.length; i++) {
+                if(start[i] != assetPath[i]) {
+                    console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
+                    return path;
+                }
+            }
             return path.slice(assetPath.length);
         }
         return {
+            type: this.constructor.name,
             paramPath: makeRelative(this._param.getPath())
         };
     }
 
     fromJSON(j, context) {
-        const paramPath = j.paramPath;
-        if(context.assetItem) {
+        if(j.paramPath) {
+            const paramPath = j.paramPath;
             // Note: the tree should have fully loaded by the time we are loading operators
             // even new items and groups should have been created. Operators and state machines 
             // are loaded last.
@@ -84,7 +96,12 @@ class OperatorOutput {
                 // Note: We may have a case where a state machine wants to drive a parameter in an operator.
                 // So there, wait till all loading is complete and then connect.
                 const onloaded = ()=>{
-                    this.setParam(context.assetItem.resolvePath(paramPath));
+                    const param = context.assetItem.resolvePath(paramPath);
+                    if(param)
+                        this.setParam(param);
+                    else {
+                        console.warn("Param Path unable to be resolved at load time:" + paramPath);
+                    }
                     context.assetItem.loaded.disconnect(onloaded)
                 }
                 context.assetItem.loaded.connect(onloaded);
@@ -92,16 +109,19 @@ class OperatorOutput {
             else {
                 this.setParam(param);
             }
-
         }
     }
 }
+sgFactory.registerClass('OperatorOutput', OperatorOutput);
+
 
 class XfoOperatorOutput extends OperatorOutput {
     constructor(){
         super((p)=> p.getDataType() == 'Xfo' );
     }
 }
+sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput);
+
 
 class Operator extends BaseItem {
     constructor(name) {

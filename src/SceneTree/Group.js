@@ -24,12 +24,11 @@ class Group extends TreeItem {
         super(name);
 
         this.__cutawayParam = this.addParameter('CutawayEnabled', false);
-        this.__initialGlobalXfoParam = this.addParameter('InitialGlobalXfo', new Xfo());
         this.__invInitialXfo = new Xfo();
         this.__initialXfos = [];
 
         this.__items = [];
-        // this.__visibleParam = this.addParameter('Visible', true);
+
         this.__visibleParam.valueChanged.connect((changeType)=>{
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
@@ -51,17 +50,13 @@ class Group extends TreeItem {
                     itemParam.setDirty(this.__cutawayParam.getValue);
             }
         });
-        this.__initialGlobalXfoParam.valueChanged.connect((changeType)=>{
-            this.__invInitialXfo = this.__initialGlobalXfoParam.getValue().inverse();
-        });
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
             if(this.__items.length == 0) {
                 const xfo = this.__globalXfoParam.getValue();
-                this.__initialGlobalXfoParam.setValue(xfo, changeType);
+                this.__invInitialXfo = xfo.inverse();
             }
             else {
                 let delta;
-                // const delta = this.__invInitialXfo.multiply(xfo);
                 const setDirty = (item, initialXfo)=>{
                     const clean = ()=>{
                         if(!delta) {
@@ -122,10 +117,7 @@ class Group extends TreeItem {
 
     addItem(item, centerOnFirst=true) { 
         if(this.__items.length == 0 && centerOnFirst) {
-            const xfo = item.getGlobalXfo();
-            const pxfo = item.getParentItem().getGlobalXfo();
-            xfo.sc = pxfo.sc;
-            this.setGlobalXfo(xfo);
+            this.setGlobalXfo(item.getGlobalXfo());
         }
         const index = this.__items.length;
         item.mouseDown.connect((mousePos, event)=>{
@@ -174,7 +166,7 @@ class Group extends TreeItem {
         }
         for(let p of this.__items) 
             treeItems.push(makeRelative(p.getPath()));
-        j.treeItems = treeItems;
+        j.treeItems = treeItems
         return j;
     }
 
@@ -189,16 +181,37 @@ class Group extends TreeItem {
             console.warn("Invalid Parameter JSON");
             return;
         }
-        const treeItems = j.treeItems;
-        const onloaded = ()=>{
-            // this.setValue(assetItem.resolvePath(itemPath));
-            for(let i=0; i<j.treeItems.length; i++) {
-                const treeItem = context.assetItem.resolvePath(treeItems[i]);
-                this.addItem(treeItem);
+
+        const addItem = (index, path)=>{
+            const treeItem = context.assetItem.resolvePath(path);
+            this.addItem(treeItem);
+            // Note: We want the group to match the transform of the 
+            if(index == 0) {
+                const xfo = context.assetItem.getGlobalXfo().inverse().multiply(treeItem.getGlobalXfo());
+                this.getParameter('LocalXfo').setValue(xfo, ValueSetMode.DATA_LOAD);
             }
-            context.assetItem.loaded.disconnect(onloaded)
         }
-        context.assetItem.loaded.connect(onloaded);
+        const loadItem = (index, path)=> {
+            // Note: the tree should have fully loaded by the time we are loading operators
+            // even new items and groups should have been created. Operators and state machines 
+            // are loaded last.
+            const treeItem = context.assetItem.resolvePath(path);
+            if(!treeItem) {
+                const onloaded = ()=>{
+                    addItem(index, treeItem);
+                    context.assetItem.loaded.disconnect(onloaded);
+                }
+                context.assetItem.loaded.connect(onloaded);
+            }
+            else {
+                addItem(index, treeItem);
+            }
+        }
+        const treeItems = j.treeItems;
+        for(let i=0; i<j.treeItems.length; i++) {
+            addItem(i, treeItems[i]);
+        }
+
 
     }
 };

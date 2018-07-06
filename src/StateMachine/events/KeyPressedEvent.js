@@ -1,5 +1,9 @@
 
 import {
+    sgFactory
+} from '../../SceneTree/SGFactory.js';
+
+import {
     Parameter,
     NumberParameter
 } from '../../SceneTree/Parameters';
@@ -32,6 +36,8 @@ class KeyPressedEvent extends StateEvent  {
 
 };
 
+
+sgFactory.registerClass('KeyPressedEvent', KeyPressedEvent);
 
 export {
     KeyPressedEvent
