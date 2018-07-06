@@ -22,13 +22,17 @@ class FlowLineItem extends TreeItem {
     constructor(name, audioElement) {
         super(name, audioElement);
 
-        this.__nurbsCurve = new NURBSCurve();
-        this.__nurbsCurve.addVertexAttribute('colors', Color, 1.0);
+        this.__curveParam = this.addParameter('curve', new GeometryParameter());
+        const nurbsCurve = new NURBSCurve();
+        nurbsCurve.addVertexAttribute('colors', Color, 1.0);
+        this.__curveParam.setValue(nurbsCurve);
 
         this.addParameter(new NumberParameter('curveFractionalLength', 0.2));
         this.addParameter(new NumberParameter('curveParam', 0.0));
         this.addParameter(new ProfileParameter('profile'));
     }
+
+    getNurmsCurve()
 };
 
 export {
