@@ -1,10 +1,9 @@
 import { BaseGeom } from './BaseGeom.js';
 
 class Points extends BaseGeom {
-    constructor(name) {
-        super(name);
+    constructor() {
+        super();
     }
-
 
     loadBin(reader) {
         this.name = reader.loadStr();
