@@ -802,42 +802,43 @@ class GLViewport extends BaseViewport {
             let gl = this.__renderer.getGL();
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
-        /////////////////////////////////////
-        // Post processing.
-        if (this.__fbo) {
-            let gl = this.__renderer.getGL();
+        
+        // /////////////////////////////////////
+        // // Post processing.
+        // if (this.__fbo) {
+        //     let gl = this.__renderer.getGL();
 
-            // Bind the default framebuffer
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(...this.region);
-            // gl.disable(gl.SCISSOR_TEST);
+        //     // Bind the default framebuffer
+        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        //     gl.viewport(...this.region);
+        //     // gl.disable(gl.SCISSOR_TEST);
 
-            // this.__glshaderScreenPostProcess.bind(renderstate);
+        //     // this.__glshaderScreenPostProcess.bind(renderstate);
 
-            // const unifs = renderstate.unifs;
-            // if ('antialiase' in unifs)
-            //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-            // if ('textureSize' in unifs)
-            //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-            // if ('gamma' in unifs)
-            //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-            // if ('exposure' in unifs)
-            //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-            // if ('tonemap' in unifs)
-            //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+        //     // const unifs = renderstate.unifs;
+        //     // if ('antialiase' in unifs)
+        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+        //     // if ('textureSize' in unifs)
+        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+        //     // if ('gamma' in unifs)
+        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+        //     // if ('exposure' in unifs)
+        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+        //     // if ('tonemap' in unifs)
+        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
 
-            gl.screenQuad.bindShader(renderstate);
-            gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+        //     gl.screenQuad.bindShader(renderstate);
+        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
 
 
-            // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-            // more goem int he next frame then the fbo color tex is being read from and written to 
-            // at the same time. (baaaad).
-            // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-            // map, background or textures params in the scene. When it does happen it can be a bitch to 
-            // track down.
-            gl.bindTexture(gl.TEXTURE_2D, null);
-        }
+        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+        //     // more goem int he next frame then the fbo color tex is being read from and written to 
+        //     // at the same time. (baaaad).
+        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
+        //     // track down.
+        //     gl.bindTexture(gl.TEXTURE_2D, null);
+        // }
     }
 
     // After post-processing, the overlays are rendered.

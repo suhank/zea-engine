@@ -862,12 +862,6 @@ class GLRenderer {
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()) {
                 this.__vrViewport.draw(renderstate);
-                if (this.mirrorVRisplayToViewport) {
-                    gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-                    gl.disable(gl.SCISSOR_TEST);
-                    this.redrawOccured.emit();
-                    return;
-                }
             } 
             // Cannot upate the view, else it sends signals which
             // end up propagating through the websocket. 
@@ -881,7 +875,7 @@ class GLRenderer {
             this.drawVP(this.__viewports[i], renderstate);
         }
 
-        gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+        // gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
         // gl.disable(gl.SCISSOR_TEST);
 
         this.redrawOccured.emit();

@@ -8,6 +8,8 @@ class Attribute {
         else{
             switch(dataType){
             case Visualive.Float32:
+            case Visualive.UInt32:
+            case Visualive.SInt32:
                 this.__numFloat32Elements = 1;
                 break;
             default:
@@ -36,6 +38,10 @@ class Attribute {
         for (let i = start; i < this.__data.length; i++) {
             this.__data[i] = this.__defaultScalarValue;
         }
+    }
+
+    getCount() {
+        return this.__data.length / this.__numFloat32Elements;
     }
 
     get length() {

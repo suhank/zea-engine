@@ -207,7 +207,7 @@ class GLLines extends GLGeom {
 
     bind(renderstate, extrAttrBuffers, transformIds) {
 
-        if (this.fatLines && '_lineThickness' in renderstate.unifs) { // TODO: Provide a geomdata shader for thick lines.
+        if (this.fatLines && 'LineThickness' in renderstate.unifs) { // TODO: Provide a geomdata shader for thick lines.
 
             const gl = this.__gl;
 
@@ -228,7 +228,7 @@ class GLLines extends GLGeom {
             }
 
             const unifs = renderstate.unifs;
-            gl.uniform1f(unifs._lineThickness.location, (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0)  * renderstate.viewScale);
+            gl.uniform1f(unifs.LineThickness.location, (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0)  * renderstate.viewScale);
             return true;
         } else {
             return super.bind(renderstate, extrAttrBuffers, transformIds);
@@ -248,7 +248,7 @@ class GLLines extends GLGeom {
 
     draw(renderstate) {
         const gl = this.__gl;
-        if (this.fatLines && '_lineThickness' in renderstate.unifs) {
+        if (this.fatLines && 'LineThickness' in renderstate.unifs) {
             gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
         } else {
             gl.drawElements(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0);

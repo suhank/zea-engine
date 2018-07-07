@@ -65,6 +65,9 @@ class BaseGeom extends ParameterOwner {
     numVertices() {
         return this.vertices.length;
     }
+    getNumVertices() {
+        return this.vertices.length;
+    }
 
     setNumVertices(count) {
         // If this works, remove the old version.

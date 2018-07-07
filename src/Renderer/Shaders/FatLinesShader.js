@@ -32,7 +32,7 @@ uniform mat4 cameraMatrix;
 uniform sampler2D positionsTexture;
 uniform int positionsTextureSize;
 
-uniform float _lineThickness;
+uniform float LineThickness;
 
 /* VS Outputs */
 varying vec3 v_viewPos;
@@ -57,8 +57,8 @@ void main(void) {
     vec4 pos_0 = modelViewMatrix * vec4(data_0.xyz, 1.0);
     vec4 pos_1 = modelViewMatrix * vec4(data_1.xyz, 1.0);
     // Note: multiply the per-vertex line thickness with the line thickness uniform value;
-    float lineThickness_0 = _lineThickness * data_0.w;
-    float lineThickness_1 = _lineThickness * data_1.w;
+    float lineThickness_0 = LineThickness * data_0.w;
+    float lineThickness_1 = LineThickness * data_1.w;
 
     if(vertexID < 2){
         viewPos = pos_0.xyz;
@@ -135,7 +135,7 @@ varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
-uniform color _color;
+uniform color Color;
 uniform mat4 cameraMatrix;
 
 #ifdef ENABLE_ES3
@@ -156,8 +156,8 @@ void main(void) {
         // Modulate the lighting using the texture coord so the line looks round.
         NdotV *= cos((v_texCoord.x - 0.5) * 2.0);
 
-        vec4 color = _color * NdotV;
-        fragColor = vec4(color.rgb, _color.a);
+        vec4 color = Color * NdotV;
+        fragColor = vec4(color.rgb, Color.a);
     }
     else{
         fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);

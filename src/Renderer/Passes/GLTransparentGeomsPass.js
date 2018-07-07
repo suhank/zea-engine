@@ -117,6 +117,9 @@ class GLTransparentGeomsPass extends GLPass {
     }
 
     draw(renderstate) {
+        if(this.transparentItems.length ==0)
+            return;
+        
         const gl = this.__gl;
 
         const viewPos = renderstate.viewXfo.tr;
