@@ -3,6 +3,15 @@ import {
     Xfo
 } from '../Math';
 import {
+    Parameter,
+    BooleanParameter,
+    NumberParameter,
+    ColorParameter,
+    Vec2Parameter,
+    XfoParameter
+} from './Parameters';
+
+import {
     MaterialParameter
 } from './Parameters/MaterialParameter';
 import {
@@ -27,15 +36,15 @@ class GeomItem extends TreeItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
-        this.__materialParam = this.addParameter('material', new MaterialParameter());
-        this.__geomParam = this.addParameter('geometry', new GeometryParameter());
+        this.__materialParam = this.addParameter(new MaterialParameter('material'));
+        this.__geomParam = this.addParameter(new GeometryParameter('geometry'));
         this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
         this.__geomParam.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
 
-        this.__cutawayParam = this.addParameter('CutawayEnabled', false);
-        this.__lightmapCoordsParam = this.addParameter('lightmapCoords', new Vec2());
-        this.__geomOffsetXfoParam = this.addParameter('geomOffsetXfo', new Xfo());
-        this.__geomXfoParam = this.addParameter('geomXfo', new Xfo());
+        this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
+        this.__lightmapCoordsParam = this.addParameter(new Vec2Parameter('lightmapCoords'));
+        this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('geomOffsetXfo'));
+        this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'));
 
         let _cleanGeomXfo = (xfo)=>{
             return this.getGlobalXfo().multiply(this.__geomOffsetXfoParam.getValue());

@@ -10,7 +10,13 @@ import {
 } from './SGFactory.js';
 import {
     ParamFlags,
-    ValueSetMode
+    ValueSetMode,
+    Parameter,
+    BooleanParameter,
+    NumberParameter,
+    ColorParameter,
+    Vec2Parameter,
+    XfoParameter
 } from './Parameters';
 import {
     ItemFlags,
@@ -34,11 +40,11 @@ class TreeItem extends BaseItem {
         this.__childItems = [];
         
 
-        this.__visibleParam = this.addParameter('Visible', true);
-        this.__selectedParam = this.addParameter('Selected', false);
-        this.__localXfoParam = this.addParameter('LocalXfo', new Xfo());
-        this.__globalXfoParam = this.addParameter('GlobalXfo', new Xfo());
-        this.__boundingBoxParam = this.addParameter('BoundingBox', new Box3());
+        this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
+        this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
+        this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()));
+        this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()));
+        this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()));
 
         // Bind handlers (havk to )
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);

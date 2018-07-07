@@ -23,7 +23,7 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
-        this.__cutawayParam = this.addParameter('CutawayEnabled', false);
+        this.__cutawayParam = this.addParameter(BooleanParameter('CutawayEnabled', false));
         this.__invInitialXfo = new Xfo();
         this.__initialXfos = [];
 

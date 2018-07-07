@@ -17,8 +17,10 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
-    TreeItem
-} from './TreeItem.js';
+    Parameter,
+    BooleanParameter,
+    NumberParameter
+} from './Parameters';
 
 
 
@@ -28,13 +30,13 @@ class Camera extends TreeItem {
             name = "Camera";
         super(name);
 
-        this.__isOrthographicParam = this.addParameter('isOrthographic', false);
-        this.__fovParam = this.addParameter('fov', 1.0);
-        this.__nearParam = this.addParameter('near', 0.1);
-        this.__farParam = this.addParameter('far', 1000.0);
-        this.__focalDistanceParam = this.addParameter('focalDistance', 5.0);
+        this.__isOrthographicParam = this.addParameter(new BooleanParameter('isOrthographic', false));
+        this.__fovParam = this.addParameter(new NumberParameter('fov', 1.0));
+        this.__nearParam = this.addParameter(new NumberParameter('near', 0.1));
+        this.__farParam = this.addParameter(new NumberParameter('far', 1000.0));
+        this.__focalDistanceParam = this.addParameter(new NumberParameter('focalDistance', 5.0));
 
-        this.__viewMatParam = this.addParameter('viewMat', new Mat4());
+        this.__viewMatParam = this.addParameter(new Parameter('viewMat', new Mat4()));
         const _cleanViewMat = (xfo)=>{
             return this.__globalXfoParam.getValue().inverse().toMat4();
         }

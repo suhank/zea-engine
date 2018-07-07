@@ -15,6 +15,16 @@ import {
 import {
     ParameterOwner
 } from '../ParameterOwner.js';
+import {
+    ParamFlags,
+    ValueSetMode,
+    Parameter,
+    BooleanParameter,
+    NumberParameter,
+    ColorParameter,
+    Vec2Parameter,
+    XfoParameter
+} from '../Parameters';
 
 class CameraMouseAndKeyboard extends ParameterOwner {
     constructor(name = undefined) {
@@ -32,9 +42,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         this.__ongoingTouches = {};
 
-        this.__orbitRateParam = this.addParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01);
-        this.__dollySpeedParam = this.addParameter('dollySpeed', 0.02);
-        this.__mouseWheelDollySpeedParam = this.addParameter('mouseWheelDollySpeed', 0.002);
+        this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01));
+        this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02));
+        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.002));
 
         this.movementFinished = new Signal();
     }

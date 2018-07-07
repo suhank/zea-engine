@@ -73,6 +73,9 @@ class ParameterOwner extends RefCounted {
         if (paramName instanceof Parameter) {
             return this.addParameterInstance(paramName);
         }
+        else {
+            console.warn("Add Paremter will soon only take a single argument of a parameter instance")
+        }
         if (defaultValue instanceof Parameter) {
             defaultValue.setName(paramName);
             return this.addParameterInstance(defaultValue);

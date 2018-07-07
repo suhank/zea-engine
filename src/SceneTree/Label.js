@@ -7,10 +7,12 @@ import {
 } from '../Utilities';
 import {
     Parameter,
+    BooleanParameter,
     NumberParameter,
     Vec2Parameter,
     Vec3Parameter,
-    ColorParameter
+    ColorParameter,
+    StringParameter
 } from './Parameters';
 import {
     sgFactory
@@ -110,22 +112,22 @@ class Label  extends DataImage {
         let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
 
 
-        this.addParameter(new Parameter('text', text, 'String'));
-        this.addParameter('fontColor', new Color(1.0, 1.0, 1.0));
-        this.addParameter(new Parameter('textAlign', 'left', 'String'));
+        this.addParameter(new StringParameter('text', text, 'String'));
+        this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
+        this.addParameter(new StringParameter('textAlign', 'left', 'String'));
         // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
-        this.addParameter('fillText', true);
-        this.addParameter('margin', fontSize * 0.5);
-        this.addParameter('borderWidth', 2);
-        this.addParameter('borderRadius', fontSize * 0.5);
-        this.addParameter('outline', false);
-        this.addParameter('outlineColor', outlineColor);
-        this.addParameter('background', true);
-        this.addParameter('backgroundColor', backgroundColor);
-        this.addParameter('fillBackground', true);
-        this.addParameter('strokeBackgroundOutline', true);
-        const fontSizeParam = this.addParameter('fontSize', 22)
-        const fontParam = this.addParameter(new Parameter('font', 'Helvetica', 'String'));
+        this.addParameter(new StringParameter('fillText', true));
+        this.addParameter(new NumberParameter('margin', fontSize * 0.5));
+        this.addParameter(new NumberParameter('borderWidth', 2));
+        this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5));
+        this.addParameter(new BooleanParameter('outline', false));
+        this.addParameter(new BooleanParameter('outlineColor', outlineColor));
+        this.addParameter(new BooleanParameter('background', true));
+        this.addParameter(new ColorParameter('backgroundColor', backgroundColor));
+        this.addParameter(new BooleanParameter('fillBackground', true));
+        this.addParameter(new BooleanParameter('strokeBackgroundOutline', true));
+        const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
+        const fontParam = this.addParameter(new StringParameter('font', 'Helvetica', 'String'));
 
         const loadFont = ()=>{
             const font = this.getParameter('font').getValue();

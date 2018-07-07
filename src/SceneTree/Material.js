@@ -23,7 +23,28 @@ import {
     ColorParameter
 } from './Parameters';
 
-let makeParameterTexturable = (parameter) => {
+const generateParameterInstance = (paramName, defaultValue)=>{
+
+    let param;
+    if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
+        param = new Parameter(paramName, defaultValue, 'Boolean');
+    } else if (typeof defaultValue == 'string') {
+        param = new Parameter(paramName, defaultValue, 'String');
+    } else if (Number.isNumeric(defaultValue)) {
+        param = new NumberParameter(paramName, defaultValue);
+    } else if (defaultValue instanceof Vec2) {
+        param = new Vec2Parameter(paramName, defaultValue);
+    } else if (defaultValue instanceof Vec3) {
+        param = new Vec3Parameter(paramName, defaultValue);
+    } else if (defaultValue instanceof Color) {
+        param = new ColorParameter(paramName, defaultValue);
+    } else {
+        param = new Parameter(paramName, defaultValue);
+    }
+    return param;
+}
+
+const makeParameterTexturable = (parameter) => {
     let image = undefined;
     parameter.textureConnected = new Signal();
     parameter.textureDisconnected = new Signal();
@@ -127,7 +148,7 @@ class Material extends BaseItem {
             // if(param && param.getType() != desc.defaultValue)
             // removePArameter
             if(!param)
-                param = this.addParameter(desc.name, desc.defaultValue);
+                param = this.addParameter(generateParameterInstance(desc.name, desc.defaultValue));
             if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
                 if(!param.getImage)  
                     this.__makeParameterTexturable(param);
@@ -246,7 +267,7 @@ class Material extends BaseItem {
             if(param)
                 param.setValue(value)
             else
-                param = this.addParameter(paramName, value);
+                param = this.addParameter(generateParameterInstance(paramName, value));
             const textureName = reader.loadStr();
             if(textureName!= ''){
                 if(!param.setImage)
