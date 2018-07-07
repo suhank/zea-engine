@@ -9,13 +9,13 @@ import {
     Signal
 } from '../../Utilities';
 import {
-    RefCounted
-} from '../RefCounted.js';
+    ParameterOwner
+} from '../ParameterOwner.js';
 import {
     VertexAttribute
 } from './VertexAttribute.js';
 
-class BaseGeom extends RefCounted {
+class BaseGeom extends ParameterOwner {
     constructor() {
         super();
         this.__boundingBox = new Box3();

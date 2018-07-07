@@ -1,12 +1,10 @@
 
-testingHarness.registerTest('ProceduralShapes', (domElement, resources)=> {
+testingHarness.registerTest('PrimitiveShapes', (domElement, resources)=> {
 
     const scene = new Visualive.Scene(resources);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
     standardMaterial.getParameter('BaseColor').setValue(new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    standardMaterial.getParameter('Roughness').setValue(1.0);
-    standardMaterial.getParameter('Metallic').setValue(0.0);
 
     let addMeshShape = (name, shape, pos)=>{
         const geomItem = new Visualive.GeomItem(name+'Item', shape, standardMaterial);
