@@ -18,13 +18,13 @@ const processTextureParams = function(gl, params) {
   };
   const processParam = (name, defaultValue)=>{ 
     if(name in params)
-      result[name] = isNaN(params[name]) ? params[name] : gl[params[name]]; 
+      result[name] = isNaN(params[name]) ? gl[params[name]] :  params[name]; 
     else if(defaultValue)
       result[name] = defaultValue; 
   }
-  processParam('channels', gl.RGBA);
-  processParam('internalFormat', result.channels);
-  processParam('format', gl.UNSIGNED_BYTE);
+  processParam('format', gl.RGBA);
+  processParam('internalFormat', result.format);
+  processParam('type', gl.UNSIGNED_BYTE);
   processParam('minFilter', gl.LINEAR);
   processParam('magFilter', gl.LINEAR);
   processParam('wrapS', gl.CLAMP_TO_EDGE);

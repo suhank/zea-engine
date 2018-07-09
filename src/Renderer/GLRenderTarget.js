@@ -9,7 +9,7 @@ class GLRenderTarget {
 
     this.resized = new Visualive.Signal();
     this.__gl = gl;
-    this.channels = p.channels;
+    this.type = p.type;
     this.format = p.format;
     this.internalFormat = p.internalFormat;
     this.filter = p.filter;
@@ -22,26 +22,27 @@ class GLRenderTarget {
 
     // -- Initialize texture targets
     this.textureTargets = [];
-    const numColorChannels = p.numColorChannels != undefined ? p.numColorChannels : 0;
+    const numColorChannels = p.numColorChannels != undefined ? p.numColorChannels : (p.format != undefined ? 1 : 0);
     for (let i = 0; i < numColorChannels; i++) {
 
       gl.activeTexture(gl.TEXTURE0 + 1);
       let colorTexture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, colorTexture);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-      gl.texImage2D(gl.TEXTURE_2D,
-        0,
-        gl.RGBA,
-        p.width,
-        p.height,
-        0,
-        gl.RGBA,
-        gl.UNSIGNED_BYTE,
-        null);
-      this.textureTargets.push(color1Texture)
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, p.wrapS);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, p.wrapT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, p.minFilter);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, p.magFilter);
+      gl.texImage2D(gl.TEXTURE_2D, 0, this.internalFormat, p.width, p.height, 0, this.format, this.type, null);
+      // gl.texImage2D(gl.TEXTURE_2D,
+      //   0,
+      //   gl.RGBA,
+      //   p.width,
+      //   p.height,
+      //   0,
+      //   gl.RGBA,
+      //   gl.UNSIGNED_BYTE,
+      //   null);
+      this.textureTargets.push(colorTexture)
     }
 
     if (p.depthFormat) {
@@ -49,10 +50,10 @@ class GLRenderTarget {
       gl.activeTexture(gl.TEXTURE0);
       this.depthTexture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, this.depthTexture);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, p.wrapS);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, p.wrapT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, p.minFilter);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, p.maxFilter);
 
       // the proper texture format combination can be found here
       // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
@@ -86,7 +87,20 @@ class GLRenderTarget {
 
     let status = gl.checkFramebufferStatus(gl.DRAW_FRAMEBUFFER);
     if (status != gl.FRAMEBUFFER_COMPLETE) {
-      console.log('fb status: ' + status.toString(16));
+      switch(status){
+      case gl.FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+          throw ("The attachment types are mismatched or not all framebuffer attachment points are framebuffer attachment complete.");
+      case gl.FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+          throw ("There is no attachment.");
+      case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+          throw ("Height and width of the attachment are not the same.");
+      case gl.FRAMEBUFFER_INCOMPLETE_DIMENSIONS:
+          throw ("The format of the attachment is not supported or if depth and stencil attachments are not the same renderbuffer.");
+      case 36061: //gl.GL_FRAMEBUFFER_UNSUPPORTED:
+          throw ("The framebuffer is unsupported");
+      default:
+          throw ("Incomplete Frambuffer");
+      }
       return;
     }
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
@@ -118,9 +132,9 @@ class GLRenderTarget {
   bindForReading() {
     const gl = this.__gl;
     if (gl.name == 'webgl2')
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.__fbo);
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, this.frameBuffer);
     else
-      gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
   }
 
   bindColorTexture(renderstate, unif, channelId = 0) {
@@ -184,9 +198,9 @@ class GLRenderTarget {
         }
 
         if (gl.name == 'webgl2')
-          gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo);
+          gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer);
         else
-          gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
+          gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
 
         // The color texture is destoryed and re-created when it is resized,
         // so we must re-bind it here..

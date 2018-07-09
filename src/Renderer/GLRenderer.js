@@ -350,9 +350,11 @@ class GLRenderer {
 
         this.__activeViewport = vp;
 
-        this.__updateListenerPosition({
-            viewXfo: vp.getCamera().getGlobalXfo()
-        });
+        if(vp.getCamera()) {
+            this.__updateListenerPosition({
+                viewXfo: vp.getCamera().getGlobalXfo()
+            });
+        }
     }
 
     activateViewportAtPos(offsetX, offsetY) {

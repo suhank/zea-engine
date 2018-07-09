@@ -11,13 +11,24 @@ import {
     RefCounted
 } from './RefCounted.js';
 
+// Explicit impport of files to avoid importing all the parameter types.
+// Note: soon these imports should be removed, once all code avoids calling 
+// 'addPArameter' without the parameter instance.
 import {
     Parameter,
+} from './Parameters/Parameter.js';
+import {
     NumberParameter,
+} from './Parameters/NumberParameter.js';
+import {
     Vec2Parameter,
+} from './Parameters/Vec2Parameter.js';
+import {
     Vec3Parameter,
-    ColorParameter
-} from './Parameters';
+} from './Parameters/Vec3Parameter.js';
+import {
+    ColorParameter,
+} from './Parameters/ColorParameter.js';
 
 class ParameterOwner extends RefCounted {
     constructor() {

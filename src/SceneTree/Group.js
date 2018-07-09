@@ -6,7 +6,8 @@ import {
     Signal
 } from '../Utilities';
 import {
-    ValueSetMode
+    ValueSetMode,
+    BooleanParameter,
 } from './Parameters';
 import {
     ItemFlags
@@ -23,7 +24,7 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
-        this.__cutawayParam = this.addParameter(BooleanParameter('CutawayEnabled', false));
+        this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
         this.__invInitialXfo = new Xfo();
         this.__initialXfos = [];
 
