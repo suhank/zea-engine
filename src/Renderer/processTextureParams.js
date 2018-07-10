@@ -13,8 +13,7 @@ const processTextureParams = function(gl, params) {
 
   const result = {
     width: params.width,
-    height: params.height,
-    data: params.data
+    height: params.height
   };
   const processParam = (name, defaultValue)=>{ 
     if(name in params)

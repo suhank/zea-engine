@@ -31,7 +31,7 @@ class ExplodePartParameter extends StructParameter {
         this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
         this.__movementParam = this._addMember(new Vec2Parameter('MovementTiming', new Vec2(0, 1), [new Vec2(-1, 0), new Vec2(1, 1)]));
         this.__multiplierParam =  this._addMember(new NumberParameter('Multiplier', 1.0));
-        this.__output = new XfoOperatorOutput();
+        this.__output = new XfoOperatorOutput('Part');
     }
 
     setStage(stage, mode = ValueSetMode.USER_SETVALUE) {

@@ -320,6 +320,15 @@ class Color extends AttrValue {
         }
     }
 
+    clone() {
+        return new Color(
+            this.__data[0],
+            this.__data[1],
+            this.__data[2],
+            this.__data[3]
+        );
+    }
+
     asArray() {
         return this.__data;
     }

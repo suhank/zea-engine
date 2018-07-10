@@ -22,13 +22,18 @@ class SetParameterValue extends StateAction {
     constructor() {
         super()
 
-        this.__outParam = this.addOutput('Param', new OperatorOutput());
-        this.__outParam.paramSet.connect(()=>{
-            if(!this.__valueParam || this.__outParam.getParam().getDataType() != this.__valueParam.getDataType() )
-                this.__valueParam = this.addParameter('Value', this.__outParam.getInitialValue());
-        })
         this.__interpTimeParam = this.addParameter(new NumberParameter('InterpTime', 1.0));
         this.__updateFrequencyParam = this.addParameter(new NumberParameter('UpdateFrequency', 30));
+        
+        this.__outParam = this.addOutput(new OperatorOutput('Param'));
+        this.__outParam.paramSet.connect(()=>{
+            if(!this.__valueParam || this.__outParam.getParam().getDataType() != this.__valueParam.getDataType() ){
+                const param = this.__outParam.getParam().clone();
+                param.setName('Value');
+                param.setValue(this.__outParam.getInitialValue())
+                this.__valueParam = this.addParameter(param);
+            }
+        })
     }
 
     start(){
@@ -89,8 +94,9 @@ class SetParameterValue extends StateAction {
     fromJSON(j, context) {
         super.fromJSON(j, context);
         if(j.valueParam){
-            this.__valueParam = sgFactory.constructClass(j.valueParamType);
+            this.__valueParam = sgFactory.constructClass(j.valueParamType, 'Value');
             this.__valueParam.fromJSON(j.valueParam, context);
+            this.addParameter(this.__valueParam);
         }
     }
 };

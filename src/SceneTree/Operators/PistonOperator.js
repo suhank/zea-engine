@@ -40,8 +40,8 @@ class PistonParameter extends StructParameter {
         this.__rodLengthParam = this._addMember(new NumberParameter('RodLength', 3));
 
         // The first RodItem added causes the rodOffset to be computed.
-        this.__rodoutput = new XfoOperatorOutput();
-        this.__capoutput = new XfoOperatorOutput();
+        this.__rodoutput = new XfoOperatorOutput('Rod');
+        this.__capoutput = new XfoOperatorOutput('Cap');
 
 
         this.__pistonAngleParam.valueChanged.connect(this.init.bind(this));
@@ -98,7 +98,8 @@ class PistonParameter extends StructParameter {
 
         if(this.__rodoutput.isConnected())
         {
-            const rodxfo = this.__rodoutput.getInitialValue().clone();
+            const initialRodxfo =  this.__rodoutput.getInitialValue().clone();
+            const rodxfo = this.__rodoutput.getValue();
             const axisPos = rodxfo.tr.subtract(this.__baseCrankXfo.tr).dot(crankAxis);
 
             const rotRotation = new Quat();
@@ -106,14 +107,15 @@ class PistonParameter extends StructParameter {
 
             rodxfo.tr = this.__baseCrankXfo.tr.add(quat.rotateVec3(this.__camVec));
             rodxfo.tr.addInPlace(crankAxis.scale(axisPos))
-            rodxfo.ori = rotRotation.multiply(rodxfo.ori);
+            rodxfo.ori = rotRotation.multiply(initialRodxfo.ori);
             this.__rodoutput.setValue(rodxfo);
         }
 
         if(this.__capoutput.isConnected())
         {
-            const headxfo = this.__capoutput.getInitialValue().clone();
-            headxfo.tr.addInPlace(this.__pistonAxis.scale(headOffset-this.__pistonOffset))
+            const initialHeadxfo = this.__capoutput.getInitialValue().clone();
+            const headxfo = this.__capoutput.getValue();
+            headxfo.tr = initialHeadxfo.tr.add(this.__pistonAxis.scale(headOffset-this.__pistonOffset))
             this.__capoutput.setValue(headxfo);
         }
     }
@@ -187,7 +189,7 @@ class PistonOperator extends Operator {
         });
 
         // this.__crankParam = this.addParameter(new KinematicGroupParameter('Crank'));
-        this.__crankOutput = this.addOutput(new XfoOperatorOutput());
+        this.__crankOutput = this.addOutput(new XfoOperatorOutput('Crank'));
         this.__crankOutput.paramSet.connect(this.init.bind(this));
         this.__crankAxisParam = this.addParameter(new Vec3Parameter('CrankAxis', new Vec3(1,0,0)));
         this.__crankAxisParam.valueChanged.connect(()=>{

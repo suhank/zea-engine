@@ -9,8 +9,9 @@ import {
 
 class GeometryParameter extends Parameter {
     constructor(name, value) {
-        super(name, value, 'Geometry');
+        super(name, undefined, 'Geometry');
         this.boundingBoxDirtied = new Signal();
+        this.setValue(value);
     }
     
     clone() {

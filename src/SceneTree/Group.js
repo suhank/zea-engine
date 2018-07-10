@@ -31,9 +31,11 @@ class Group extends TreeItem {
         this.__items = [];
 
         this.__visibleParam.valueChanged.connect((changeType)=>{
+            const value = this.__visibleParam.getValue();
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
-                this.__items[i].getParameter('Visible').setDirty(this.__visibleParam.getValue);
+                // this.__items[i].getParameter('Visible').setDirty(this.__visibleParam.getValue);
+                this.__items[i].setInheritedVisiblity(value);
             }
         });
         this.__selectedParam.valueChanged.connect((changeType)=>{

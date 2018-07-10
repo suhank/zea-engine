@@ -22,7 +22,7 @@ class GLRenderTarget {
 
     // -- Initialize texture targets
     this.textureTargets = [];
-    const numColorChannels = p.numColorChannels != undefined ? p.numColorChannels : (p.format != undefined ? 1 : 0);
+    const numColorChannels = params.numColorChannels != undefined ? params.numColorChannels : (p.format != undefined ? 1 : 0);
     for (let i = 0; i < numColorChannels; i++) {
 
       gl.activeTexture(gl.TEXTURE0 + 1);

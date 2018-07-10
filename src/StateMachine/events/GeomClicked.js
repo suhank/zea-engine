@@ -4,6 +4,9 @@ import {
 } from '../../SceneTree/SGFactory.js';
 
 import {
+    StringParameter
+} from '../../SceneTree/Parameters';
+import {
     StateEvent
 } from '../StateEvent.js';
 
@@ -13,7 +16,7 @@ class GeomClicked extends StateEvent  {
     constructor() {
         super()
 
-        this.__pathParam = this.addParameter('path', "");
+        this.__pathParam = this.addParameter(new StringParameter('path', ""));
         this.__pathParam.valueChanged.connect((changeType)=>{
             if(this.__state)
                 this.__geom = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());

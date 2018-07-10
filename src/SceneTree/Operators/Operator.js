@@ -16,11 +16,16 @@ import {
 } from '../BaseItem.js';
 
 class OperatorOutput {
-    constructor(filterFn){
+    constructor(name, filterFn){
+        this.__name = name;
         this.__filterFn = filterFn;
         this._param = undefined;
 
         this.paramSet = new Signal();
+    }
+
+    getName(){
+        return this.__name;
     }
 
     getFilterFn(){
@@ -121,8 +126,8 @@ sgFactory.registerClass('OperatorOutput', OperatorOutput);
 
 
 class XfoOperatorOutput extends OperatorOutput {
-    constructor(){
-        super((p)=> p.getDataType() == 'Xfo' );
+    constructor(name){
+        super(name, (p)=> p.getDataType() == 'Xfo' );
     }
 }
 sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput);
@@ -147,6 +152,13 @@ class Operator extends BaseItem {
 
     removeOutput(output) {
         this.__outputs.splice(this.__outputs.indexOf(output), 1);
+    }
+
+    getOutput(name) {
+        for(let o of this.__outputs){
+            if(o.getName() == name)
+                return o;
+        }
     }
 
     __evalOutput (cleanedParam/*value, getter*/){

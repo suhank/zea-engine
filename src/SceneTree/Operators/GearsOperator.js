@@ -27,7 +27,7 @@ class GearParameter extends StructParameter {
         this.__ratioParam = this._addMember(new NumberParameter('Ratio', 1.0));
         this.__offsetParam =  this._addMember(new NumberParameter('Offset', 0.0));
         this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
-        this.__output = new XfoOperatorOutput();
+        this.__output = new XfoOperatorOutput('Gear');
     }
 
     getOutput(){

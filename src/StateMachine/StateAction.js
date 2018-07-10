@@ -16,8 +16,8 @@ class StateAction extends ParameterOwner {
         this.__outputs = {};
     }
 
-    addOutput(name, output){
-        this.__outputs[name] = output;
+    addOutput(output){
+        this.__outputs[output.getName()] = output;
         return output;
     }
 

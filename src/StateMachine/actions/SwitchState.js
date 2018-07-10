@@ -6,7 +6,8 @@ import {
 
 import {
     Parameter,
-    NumberParameter
+    NumberParameter,
+    StringParameter
 } from '../../SceneTree/Parameters';
 import {
     OperatorOutput
@@ -20,7 +21,7 @@ import {
 class SwitchState extends StateAction {
     constructor() {
         super()
-        this.__targetStateParam = this.addParameter('TargetState', "");
+        this.__targetStateParam = this.addParameter(new StringParameter('TargetState', ""));
     }
 
     start(){

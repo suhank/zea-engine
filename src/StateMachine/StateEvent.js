@@ -9,8 +9,6 @@ import {
 class StateEvent extends ParameterOwner {
     constructor() {
         super();
-        // this.__targetStateParam = this.addParameter('TargetState', "");
-
         this.__childActions = [];
     }
 
@@ -22,8 +20,6 @@ class StateEvent extends ParameterOwner {
     }
 
     __onEvent(){
-        // this.__state.getStateMachine().activateState(this.__targetStateParam.getValue());
-
         this.__childActions.forEach((action)=>{
             action.start();
         });
