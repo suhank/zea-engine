@@ -13,8 +13,8 @@ import {
 
 
 class TimedWait extends StateEvent  {
-    constructor(state) {
-        super(state)
+    constructor(name) {
+        super(name)
         this.__waitTimeParam = this.addParameter(new NumberParameter('WaitTime', 1));
     }
 

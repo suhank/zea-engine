@@ -7,9 +7,11 @@ import {
 } from '../SceneTree/ParameterOwner.js';
 
 class StateEvent extends ParameterOwner {
-    constructor() {
+    constructor(name) {
         super();
+        this.__name = name;
         this.__childActions = [];
+        this.__onEvent = this.__onEvent.bind(this);
     }
 
     setState(state) {
@@ -32,7 +34,7 @@ class StateEvent extends ParameterOwner {
     }
 
 
-    addChild(action) {
+    addAction(action) {
         this.__childActions.push(action);
         action.setState(this.__state);
     }

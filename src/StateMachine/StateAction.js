@@ -9,8 +9,9 @@ import {
 
 
 class StateAction extends ParameterOwner {
-    constructor() {
+    constructor(name) {
         super();
+        this.__name = name;
         this.__childActions = [];
 
         this.__outputs = {};

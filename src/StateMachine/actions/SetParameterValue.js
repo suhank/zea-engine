@@ -55,11 +55,11 @@ class SetParameterValue extends StateAction {
                         // and cause the update of the scene. But we also don't want the parameter value to then
                         // be considered modified so it is saved to the JSON file. I'm not sure how to address this.
                         // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
-                        this.__outParam.setValue(newVal, ValueSetMode.USER_SETVALUE);
+                        this.__outParam.setValue(newVal, ValueSetMode.STATEMACHINE_SETVALUE);
                         this.__timeoutId = window.setTimeout(timerCallback, 1000/updateFrequency);
                     }
                     else {
-                        this.__outParam.setValue(this.__valueParam.getValue(), ValueSetMode.USER_SETVALUE);
+                        this.__outParam.setValue(this.__valueParam.getValue(), ValueSetMode.STATEMACHINE_SETVALUE);
                         this.__timeoutId = undefined;
                         this.__onDone();
                     }
@@ -67,7 +67,7 @@ class SetParameterValue extends StateAction {
                 timerCallback();
             }
             else {
-                this.__outParam.setValue(this.__valueParam.getValue());
+                this.__outParam.setValue(this.__valueParam.getValue(), ValueSetMode.STATEMACHINE_SETVALUE);
                 this.__onDone();
             }
         }

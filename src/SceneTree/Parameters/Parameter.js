@@ -19,9 +19,10 @@ const ValueGetMode = {
 const ValueSetMode = {
     USER_SETVALUE: 0,
     OPERATOR_SETVALUE: 1,
+    SILENT: 1,
     DATA_LOAD: 2,
     OPERATOR_DIRTIED: 3,
-    SILENT: 1
+    STATEMACHINE_SETVALUE: 4, /* Generate events, but don't flag the parameter as user edited*/
 };
 const ParamFlags = {
     USER_EDITED: 1<<1
@@ -112,7 +113,7 @@ class BaseParameter {
             this.__cleanerFns = [];
             for (let fn of fns) {
                 const res = fn(this.__value);
-                if(res) 
+                if(res != undefined) 
                     this.__value = res;
             }
         }

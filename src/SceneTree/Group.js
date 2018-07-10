@@ -48,7 +48,8 @@ class Group extends TreeItem {
         this.__cutawayParam.valueChanged.connect((changeType)=>{
             const len = this.__items.length;
             for (let i = 0; i < len; i++) {
-                const itemParam = this.__items[i].getParameter('CutawayEnabled');
+                // const itemParam = this.__items[i].getParameter('CutawayEnabled');
+                const itemParam = this.__items[i].getParameter('CutAway');// TODO: rename the param.
                 if(itemParam)
                     itemParam.setDirty(this.__cutawayParam.getValue);
             }
@@ -124,12 +125,15 @@ class Group extends TreeItem {
         }
         const index = this.__items.length;
         item.mouseDown.connect((mousePos, event)=>{
+            this.mouseDown.emit(mousePos, event);
             this.mouseDownOnItem.emit(mousePos, event, item);
         });
         item.mouseUp.connect((mousePos, event)=>{
+            this.mouseUp.emit(mousePos, event);
             this.mouseUpOnItem.emit(mousePos, event, item);
         });
         item.mouseMove.connect((mousePos, event)=>{
+            this.mouseMove.emit(mousePos, event);
             this.mouseMoveOnItem.emit(mousePos, event, item);
         });
         item.globalXfoChanged.connect((mode)=>{

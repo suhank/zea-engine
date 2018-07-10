@@ -29,6 +29,7 @@ class StateMachine extends BaseItem {
     }
 
     activateState(key) {
+        console.log("StateMachine.activateState:" + key)
         if(this.__currentState == this.__states[key])
             return;
         if(this.__currentState)

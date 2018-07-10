@@ -13,8 +13,8 @@ import {
 
 
 class KeyPressedEvent extends StateEvent  {
-    constructor(state) {
-        super(state)
+    constructor(name) {
+        super(name)
         this.onKeyPressed = this.onKeyPressed.bind(this);
         this.__keyParam = this.addParameter(new Parameter('Key', ''));
     }

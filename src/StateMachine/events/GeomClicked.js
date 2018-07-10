@@ -4,7 +4,7 @@ import {
 } from '../../SceneTree/SGFactory.js';
 
 import {
-    StringParameter
+    TreeItemParameter
 } from '../../SceneTree/Parameters';
 import {
     StateEvent
@@ -13,40 +13,23 @@ import {
 
 
 class GeomClicked extends StateEvent  {
-    constructor() {
-        super()
-
-        this.__pathParam = this.addParameter(new StringParameter('path', ""));
-        this.__pathParam.valueChanged.connect((changeType)=>{
-            if(this.__state)
-                this.__geom = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());
+    constructor(name) {
+        super(name)
+        this.__geomParam = this.addParameter(new TreeItemParameter('TreeItem'));
+        this.__geomParam.valueChanged.connect(()=>{
+            this.__geom = this.__geomParam.getValue();
         });
-
-        this.onGeomClicked = this.onGeomClicked.bind(this);
-    }
-
-
-    setState(state) {
-        super.setState(state);
-    }
-
-
-    onGeomClicked(event) {
-        this.__onEvent();
     }
 
     activate() {
-        if(!this.__geom){
-            this.__geom = this.__state.getStateMachine().getOwner().resolvePath(this.__pathParam.getValue());
-        }
         if(this.__geom){
-            this.__geom.mouseDownOnItem.connect(this.onGeomClicked);
+            this.__geom.mouseDown.connect(this.__onEvent);
         }
     }
 
     deactivate() {
         if(this.__geom){
-            this.__geom.mouseDownOnItem.disconnect(this.onGeomClicked);
+            this.__geom.mouseDown.disconnect(this.__onEvent);
         }
     }
 
