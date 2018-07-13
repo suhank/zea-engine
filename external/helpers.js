@@ -81,10 +81,10 @@ function saveAs(data, filename, type) {
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let resources = {
         VisualiveEngine: {
-            'Vive.vla': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/Vive.vla' } ,
-            'Dome.vla': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/Dome.vla' } ,
-            'LogoSmall.png': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/LogoSmall.png' } ,
-            'FlakesNormalMap.png': { url: 'http://localhost:3000/VisualiveEngineClient/Resources/FlakesNormalMap.png' } 
+            'Vive.vla': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/Vive.vla' } ,
+            'Dome.vla': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/Dome.vla' } ,
+            'LogoSmall.png': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/LogoSmall.png' } ,
+            'FlakesNormalMap.png': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/FlakesNormalMap.png' } 
         }
     };
     let rootURL = window.location.href.split('#')[0];
@@ -141,6 +141,43 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
         }
     }
     return resources;
+}
+
+
+let addResourceURL = (resourcePath, url, resources)=>{
+
+    const parts = resourcePath.split('/');
+    const filename = parts.pop();
+    if(!url) {
+
+        let rootURL = window.location.href.split('#')[0];
+        rootURL = rootURL.split('?')[0];
+        if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
+            rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
+        }
+        const base = rootURL;
+        if(parts[0] == '.')
+            parts.shift();
+        else if(parts[0] == '..'){
+            item = item.substring(3);
+            const baseparts = base.split('/');
+            baseparts.pop();
+            baseparts.pop();
+            base = baseparts.join('/') + '/';
+        }
+        url = base+resourcePath
+    }
+    let curr = resources;
+    for(let part of parts){
+        if(part in curr)
+            curr = curr[part];
+        else{
+            let dir = {};
+            curr[part] = dir;
+            curr = dir;
+        }
+    }
+    curr[filename] = { url };
 }
 
 

@@ -36,6 +36,7 @@ class ParameterOwner extends RefCounted {
 
         this.__params = [];
         this.__paramMapping = {};
+        this.__paramSignalIds = {};
 
         // Paramters are not intended to be dynamic.
         // Instead they are part of the mixin architecture.
@@ -120,11 +121,11 @@ class ParameterOwner extends RefCounted {
             console.warn("Replacing Parameter:" + name)
             this.removeParameter(name);
         }
-        param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
+        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
         param.setOwner(this)
         this.__params.push(param)
         this.__paramMapping[name] = this.__params.length - 1;
-        this.parameterAdded.emit();
+        this.parameterAdded.emit(name);
         return param;
     }
 
@@ -133,6 +134,8 @@ class ParameterOwner extends RefCounted {
             console.throw("Unable to Remove Parameter:" + name);
         }
         const index = this.__paramMapping[name];
+        const param = this.__params[this.__paramMapping[name]]
+        param.valueChanged.disconnectID(this.__paramSignalIds[name]);
         this.__params.splice(index, 1)
         const paramMapping = {};
         for (let i=0; i<this.__params.length; i++){
@@ -140,6 +143,16 @@ class ParameterOwner extends RefCounted {
         }
         this.__paramMapping = paramMapping;
         this.parameterRemoved.emit(name);
+    }
+
+    replaceParameter(param){
+        const name = param.getName();
+        const index = this.__paramMapping[name];
+        const prevparam = this.__params[this.__paramMapping[name]]
+        prevparam.valueChanged.disconnectID(this.__paramSignalIds[name]);
+
+        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
+        this.__params[index] = param;
     }
 
     // _removeAllParameters(){

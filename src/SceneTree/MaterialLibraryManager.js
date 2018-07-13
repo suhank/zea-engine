@@ -46,7 +46,7 @@ class MaterialLibraryManager {
     getMaterialLibrary(name, assert=true) {
         const res = this.__materialLibraries[name];
         if(!res && assert){
-            throw("MaterialLibrary:" + name+ " not found in library:" + this.getMaterialLibraryNames())
+            throw("MaterialLibrary:" + name+ " not found in MaterialLibraryManager. Found: [" + this.getMaterialLibraryNames() + "]")
         }
         return res;
     }

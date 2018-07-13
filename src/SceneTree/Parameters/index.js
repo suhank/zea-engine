@@ -1,5 +1,6 @@
 
 export * from './Parameter.js';
+export * from './MultiChoiceParameter.js';
 export * from './BooleanParameter.js';
 export * from './NumberParameter.js';
 export * from './Vec2Parameter.js';

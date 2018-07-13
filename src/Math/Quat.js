@@ -353,6 +353,13 @@ class Quat extends AttrValue {
         );
     }
 
+    addInPlace(other) {
+        this.x += other.x;
+        this.y += other.y;
+        this.z += other.z;
+        this.w += other.w;
+    }
+
 
     // Returns a new vector which is this vector subtracted from other
     subtract(other) {
@@ -373,6 +380,13 @@ class Quat extends AttrValue {
             this.z * scalar,
             this.w * scalar
         );
+    }
+
+    scaleInPlace(scalar) {
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar;
+        this.w *= scalar;
     }
 
     /**

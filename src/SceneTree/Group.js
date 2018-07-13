@@ -8,6 +8,8 @@ import {
 import {
     ValueSetMode,
     BooleanParameter,
+    XfoParameter,
+    MultiChoiceParameter
 } from './Parameters';
 import {
     ItemFlags
@@ -24,8 +26,13 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
+        this.__initialXfoParam = this.addParameter(new XfoParameter('InitialXfo'));
+        this.__initialXfoParam.valueChanged.connect(()=>{
+            this.__invInitialXfo = this.__initialXfoParam.getValue().inverse();
+        })
+        this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', ['first', 'average'], 0, 'Number'));
         this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
-        this.__invInitialXfo = new Xfo();
+        this.__invInitialXfo = undefined;
         this.__initialXfos = [];
 
         this.__items = [];
@@ -55,11 +62,7 @@ class Group extends TreeItem {
             }
         });
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            if(this.__items.length == 0) {
-                const xfo = this.__globalXfoParam.getValue();
-                this.__invInitialXfo = xfo.inverse();
-            }
-            else {
+            if(this.__items.length > 0) {
                 let delta;
                 const setDirty = (item, initialXfo)=>{
                     const clean = ()=>{
@@ -105,24 +108,21 @@ class Group extends TreeItem {
     //////////////////////////////////////////
     // Items
 
-    resolveItems(paths, centerOnFirst=true) {
+    resolveItems(paths) {
         const asset = this.getOwner();
         for(let path of paths) {
             let treeItem = asset.resolvePath(path);
             if(treeItem) {
-                this.addItem(treeItem, centerOnFirst);
+                this.addItem(treeItem);
             }
             else {
                 console.warn("Group could not resolve item:" + path)
             }
         }
+        this.recalcInitialXfo();
     }
 
-
-    addItem(item, centerOnFirst=true) { 
-        if(this.__items.length == 0 && centerOnFirst) {
-            this.setGlobalXfo(item.getGlobalXfo());
-        }
+    addItem(item) { 
         const index = this.__items.length;
         item.mouseDown.connect((mousePos, event)=>{
             this.mouseDown.emit(mousePos, event);
@@ -142,6 +142,35 @@ class Group extends TreeItem {
         });
         this.__initialXfos[index] = item.getGlobalXfo();
         this.__items.push(item);
+    }
+
+    recalcInitialXfo() {
+        if(this.__items.length == 0)
+            return;
+        const mode = this.__initialXfoModeParam.getValue();
+        let xfo;
+        if(mode == 'first') {
+            xfo = this.__items[0].getGlobalXfo();
+        }
+        else if(mode == 'average') {
+            xfo = new Xfo();
+            for(let p of this.__items) {
+                const itemXfo = p.getGlobalXfo();
+                xfo.tr.addInPlace(itemXfo.tr)
+                xfo.ori.addInPlace(itemXfo.ori)
+                // xfo.sc.addInPlace(itemXfo.sc)
+            }
+            xfo.tr.scaleInPlace(1/this.__items.length);
+            xfo.ori.normalizeInPlace(1/this.__items.length);
+            // xfo.sc.scaleInPlace(1/this.__items.length);
+        }
+        else {
+            throw("Invalid mode.")
+        }
+
+        this.__initialXfoParam.setValue(xfo);
+        this.__globalXfoParam.setValue(xfo);
+        this.__invInitialXfo = xfo.inverse();
     }
 
 
@@ -192,10 +221,13 @@ class Group extends TreeItem {
         const addItem = (index, path)=>{
             const treeItem = context.assetItem.resolvePath(path);
             this.addItem(treeItem);
-            // Note: We want the group to match the transform of the 
-            if(index == 0) {
-                const xfo = context.assetItem.getGlobalXfo().inverse().multiply(treeItem.getGlobalXfo());
-                this.getParameter('LocalXfo').setValue(xfo, ValueSetMode.DATA_LOAD);
+
+            // This is code to handle older files where the initial xfo was not explicitly stored. 
+            // can be removed sooon.
+            if(index == 0 && !this.__invInitialXfo) {
+                this.recalcInitialXfo()
+                // const xfo = context.assetItem.getGlobalXfo().inverse().multiply(treeItem.getGlobalXfo());
+                // this.getParameter('LocalXfo').setValue(xfo, ValueSetMode.DATA_LOAD);
             }
         }
         const loadItem = (index, path)=> {
