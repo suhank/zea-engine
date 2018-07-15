@@ -42,6 +42,25 @@ class TreeItem extends BaseItem {
 
         this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
         this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
+        this.__selectedParam.valueChanged.connect((changeType)=>{
+            const value = this.__selectedParam.getValue();
+            for (let childItem of this.__childItems){
+                const param = childItem.getParameter('Selected');
+                if(param)
+                    param.setValue(value);
+            }
+        });
+        this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
+        this.__cutawayParam.valueChanged.connect((changeType)=>{
+            const value = this.__cutawayParam.getValue();
+            for (let childItem of this.__childItems){
+                const param = childItem.getParameter('CutawayEnabled');
+                if(param)
+                    param.setValue(value);
+            }
+        });
+
+
         this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()));
         this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()));
         this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()));
@@ -247,9 +266,7 @@ class TreeItem extends BaseItem {
     }
 
     setSelected(sel) {
-        if (this.__selectedParam.getValue() != sel) {
-            this.__selectedParam.setValue(sel);
-        }
+        this.__selectedParam.setValue(sel);
     }
 
     //////////////////////////////////////////
