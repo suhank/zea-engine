@@ -10,11 +10,11 @@ let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
             throw("The request for " + url + " timed out.");
         });
         xhr.addEventListener("error", function(event) {
-            throw("xhr.error xhr.readyState:" + xhr.readyState);
+            throw("The request for " + url + ": xhr.readyState:" + xhr.readyState);
             onFail(xhr.statusText);
         });
         xhr.addEventListener("abort", function(event) {
-            throw("xhr.abort xhr.readyState:" + xhr.readyState);
+            throw("The request for " + url +": xhr.readyState:" + xhr.readyState);
             onFail(xhr.statusText);
         });
         xhr.addEventListener("loadend", function(event) {

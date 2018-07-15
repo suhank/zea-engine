@@ -105,17 +105,15 @@ class BaseParameter {
     }
 
     _clean(){
-        if (this.__cleanerFns.length > 0) {
-            // Clean the param before we start evaluating the connected op.
-            // this is so that operators can read from the current value
-            // to compute the next.
-            let fns = this.__cleanerFns;
-            this.__cleanerFns = [];
-            for (let fn of fns) {
-                const res = fn(this.__value);
-                if(res != undefined) 
-                    this.__value = res;
-            }
+        // Clean the param before we start evaluating the connected op.
+        // this is so that operators can read from the current value
+        // to compute the next.
+        let fns = this.__cleanerFns;
+        this.__cleanerFns = [];
+        for (let fn of fns) {
+            const res = fn(this.__value);
+            if(res != undefined) 
+                this.__value = res;
         }
     }
 
@@ -164,7 +162,7 @@ class Parameter extends BaseParameter {
     }
 
     getValue(mode = ValueGetMode.NORMAL) {
-        if(mode == ValueGetMode.NORMAL)
+        if(mode == ValueGetMode.NORMAL && this.__cleanerFns.length > 0)
             this._clean();
         return this.__value;
     }

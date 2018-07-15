@@ -12,6 +12,7 @@ import {
     Signal
 } from '../Utilities';
 import {
+    Plane,
     Camera
 } from '../SceneTree';
 import {
@@ -26,12 +27,18 @@ import {
 import {
     GLTexture2D
 } from './GLTexture2D.js';
+// import {
+//     GLSelectionRect
+// } from './Drawables/GLSelectionRect.js';
+// import {
+//     PostProcessing
+// } from './Shaders/PostProcessing.js';
 import {
-    GLSelectionRect
-} from './Drawables/GLSelectionRect.js';
+    OutlinesShader
+} from './Shaders/OutlinesShader.js';
 import {
-    PostProcessing
-} from './Shaders/PostProcessing.js';
+    GLMesh
+} from './GLMesh.js';
 
 import {
     CameraMouseAndKeyboard
@@ -61,8 +68,9 @@ class GLViewport extends BaseViewport {
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFbo = undefined;
 
-        // this.__selectionRect = new GLSelectionRect(this.__renderer.gl);
-        // this.__overlayPass = new GL2DOverlayPass(this.__renderer.gl);
+        const gl = renderer.getGL();
+        // this.__selectionRect = new GLSelectionRect(gl);
+        // this.__overlayPass = new GL2DOverlayPass(gl);
         // this.__overlayPass.addDrawItem(this.__selectionRect);
 
         this.keyPressed = new Signal();
@@ -91,7 +99,9 @@ class GLViewport extends BaseViewport {
 
         this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
-        // this.__glshaderScreenPostProcess = new PostProcessing(renderer.getGL());
+        // this.__glshaderScreenPostProcess = new PostProcessing(gl);
+        this.__outlineShader = new OutlinesShader(gl);
+        this.quad = new GLMesh(gl,  new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
 
@@ -101,6 +111,7 @@ class GLViewport extends BaseViewport {
 
         this.resize(width, height);
         // this.createOffscreenFbo();
+        this.createSelectedGeomsFbo();
     }
 
     resize(width, height) {
@@ -797,10 +808,18 @@ class GLViewport extends BaseViewport {
         this.__renderer.drawScene(renderstate, false);
 
         if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBufferFbo.bind();
+            this.__selectedGeomsBufferFbo.bindAndClear();
             this.__renderer.drawSceneSelectedGeoms(renderstate);
             let gl = this.__renderer.getGL();
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(...this.region);
+
+            this.__outlineShader.bind(renderstate);
+            const unifs = renderstate.unifs;
+            this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
+            gl.uniform2f(unifs.selectionDataTextureSize.location, this.region[2], this.region[3]);
+            gl.uniform4f(unifs.outlineColor.location, 1, 1, 1, 1);
+            this.quad.bindAndDraw(renderstate);
         }
         
         // /////////////////////////////////////
