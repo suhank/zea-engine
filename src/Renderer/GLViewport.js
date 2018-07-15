@@ -101,6 +101,7 @@ class GLViewport extends BaseViewport {
 
         // this.__glshaderScreenPostProcess = new PostProcessing(gl);
         this.__outlineShader = new OutlinesShader(gl);
+        this.__outlineColor = new Color("#03E3AC")
         this.quad = new GLMesh(gl,  new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
@@ -818,7 +819,7 @@ class GLViewport extends BaseViewport {
             const unifs = renderstate.unifs;
             this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
             gl.uniform2f(unifs.selectionDataTextureSize.location, this.region[2], this.region[3]);
-            gl.uniform4f(unifs.outlineColor.location, 1, 1, 1, 1);
+            gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
             this.quad.bindAndDraw(renderstate);
         }
         
