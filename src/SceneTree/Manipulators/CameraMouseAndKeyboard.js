@@ -54,27 +54,27 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
 
     look(dragVec, viewport) {
-        let focalDistance = viewport.getCamera().getFocalDistance();
-        let orbitRate = this.__orbitRateParam.getValue();
+        const focalDistance = viewport.getCamera().getFocalDistance();
+        const orbitRate = this.__orbitRateParam.getValue();
 
         if (this.__keyboardMovement) {
-            let globalXfo = viewport.getCamera().getGlobalXfo();
+            const globalXfo = viewport.getCamera().getGlobalXfo();
             this.__mouseDownCameraXfo = globalXfo.clone();
             this.__mouseDownZaxis = globalXfo.ori.getZaxis();
-            let targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
+            const targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
             this.__mouseDownCameraTarget = globalXfo.tr.add(targetOffset);
         }
 
-        let globalXfo = this.__mouseDownCameraXfo.clone();
+        const globalXfo = this.__mouseDownCameraXfo.clone();
 
         // Orbit
-        let orbit = new Quat();
+        const orbit = new Quat();
         orbit.rotateZ(dragVec.x * orbitRate * 0.12);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
-        let pitch = new Quat();
+        const pitch = new Quat();
         pitch.rotateX(dragVec.y * orbitRate * 0.12);
         globalXfo.ori.multiplyInPlace(pitch);
 
@@ -89,27 +89,27 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
 
     orbit(dragVec, viewport) {
-        let focalDistance = viewport.getCamera().getFocalDistance();
-        let orbitRate = this.__orbitRateParam.getValue();
+        const focalDistance = viewport.getCamera().getFocalDistance();
+        const orbitRate = this.__orbitRateParam.getValue();
 
         if (this.__keyboardMovement) {
-            let globalXfo = viewport.getCamera().getGlobalXfo();
+            const globalXfo = viewport.getCamera().getGlobalXfo();
             this.__mouseDownCameraXfo = globalXfo.clone();
             this.__mouseDownZaxis = globalXfo.ori.getZaxis();
-            let targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
+            const targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
             this.__mouseDownCameraTarget = globalXfo.tr.add(targetOffset);
         }
 
-        let globalXfo = this.__mouseDownCameraXfo.clone();
+        const globalXfo = this.__mouseDownCameraXfo.clone();
 
         // Orbit
-        let orbit = new Quat();
+        const orbit = new Quat();
         orbit.rotateZ(dragVec.x * -orbitRate);
         // globalXfo.ori.multiplyInPlace(orbit);
         globalXfo.ori = orbit.multiply(globalXfo.ori);
 
         // Pitch
-        let pitch = new Quat();
+        const pitch = new Quat();
         pitch.rotateX(dragVec.y * -orbitRate);
         globalXfo.ori.multiplyInPlace(pitch);
 
@@ -126,14 +126,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
 
     pan(dragVec, viewport) {
-        let focalDistance = viewport.getCamera().getFocalDistance();
-        let fovY = viewport.getCamera().getFov();
-        let xAxis = new Vec3(1, 0, 0);
-        let yAxis = new Vec3(0, 1, 0);
+        const focalDistance = viewport.getCamera().getFocalDistance();
+        const fovY = viewport.getCamera().getFov();
+        const xAxis = new Vec3(1, 0, 0);
+        const yAxis = new Vec3(0, 1, 0);
 
-        let cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
-        let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
-        let delta = new Xfo();
+        const cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
+        const cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
+        const delta = new Xfo();
         delta.tr = xAxis.scale(-(dragVec.x / viewport.getWidth()) * cameraPlaneWidth)
         delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight));
 
@@ -141,38 +141,38 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
 
     dolly(dragVec, viewport) {
-        let dollyDist = dragVec.x * this.__dollySpeedParam.getValue();
-        let delta = new Xfo();
+        const dollyDist = dragVec.x * this.__dollySpeedParam.getValue();
+        const delta = new Xfo();
         delta.tr.set(0, 0, dollyDist);
         viewport.getCamera().setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     panAndZoom(panDelta, dragDist, viewport) {
-        let focalDistance = viewport.getCamera().getFocalDistance();
-        let fovY = viewport.getCamera().getFov();
+        const focalDistance = viewport.getCamera().getFocalDistance();
+        const fovY = viewport.getCamera().getFov();
 
-        let xAxis = new Vec3(1, 0, 0);
-        let yAxis = new Vec3(0, 1, 0);
+        const xAxis = new Vec3(1, 0, 0);
+        const yAxis = new Vec3(0, 1, 0);
 
-        let cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
-        let cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
-        let delta = new Xfo();
+        const cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
+        const cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
+        const delta = new Xfo();
         delta.tr = xAxis.scale(-(panDelta.x / viewport.getWidth()) * cameraPlaneWidth)
         delta.tr.addInPlace(yAxis.scale((panDelta.y / viewport.getHeight()) * cameraPlaneHeight));
 
 
-        let zoomDist = dragDist * focalDistance;
+        const zoomDist = dragDist * focalDistance;
         viewport.getCamera().setFocalDistance(this.__mouseDownFocalDist + zoomDist);
         delta.tr.z += zoomDist;
         viewport.getCamera().setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
     }
 
     initDrag(viewport) {
-        let focalDistance = viewport.getCamera().getFocalDistance();
+        const focalDistance = viewport.getCamera().getFocalDistance();
         this.__mouseDragDelta.set(0, 0);
         this.__mouseDownCameraXfo = viewport.getCamera().getGlobalXfo().clone();
         this.__mouseDownZaxis = viewport.getCamera().getGlobalXfo().ori.getZaxis();
-        let targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
+        const targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
         this.__mouseDownCameraTarget = viewport.getCamera().getGlobalXfo().tr.add(targetOffset);
         this.__mouseDownFocalDist = focalDistance;
     }
