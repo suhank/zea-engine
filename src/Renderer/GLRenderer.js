@@ -120,6 +120,9 @@ class GLRenderer {
         this.__preproc = { };
 
         this.__vrViewport = undefined;
+        if(this.__supportVR && !navigator.getVRDisplays)
+            this.__vrpolyfill = new WebVRPolyfill();
+
         this.mirrorVRisplayToViewport = true;
 
         // Function Bindings.
@@ -406,6 +409,7 @@ class GLRenderer {
     }
 
     __onResize() {
+
         let vrVieportPresenting = false;
         if (this.__vrViewport && this.__vrViewport.isPresenting()) {
             var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
@@ -413,11 +417,9 @@ class GLRenderer {
             this.__glcanvas.height = hmdCanvasSize[1];
             vrVieportPresenting = true;
         } else {
-            // Emulate the Vive HMD resolution.
-            // this.__glcanvas.width = 2160;
-            // this.__glcanvas.height = 1200;
-            this.__glcanvas.width = this.__glcanvas.offsetWidth;
-            this.__glcanvas.height = this.__glcanvas.offsetHeight;
+            const devicePixelRatio = window.devicePixelRatio;
+            this.__glcanvas.width = this.__glcanvas.offsetWidth * devicePixelRatio;
+            this.__glcanvas.height = this.__glcanvas.offsetHeight * devicePixelRatio;
 
             this.__onResizeViewports();
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)

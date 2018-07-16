@@ -92,6 +92,7 @@ function getGPUDesc() {
     const debugInfo = context.getExtension('WEBGL_debug_renderer_info');
     const vendor = context.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
     const renderer = context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    const maxTextureSize = context.getParameter(context.MAX_TEXTURE_SIZE);
     let gpuVendor;
     if (renderer.match(/NVIDIA/i)) {
         gpuVendor = "NVidia";
@@ -106,7 +107,8 @@ function getGPUDesc() {
     return {
         vendor,
         renderer,
-        gpuVendor
+        gpuVendor,
+        maxTextureSize
     }
 }
 

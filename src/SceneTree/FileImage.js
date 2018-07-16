@@ -22,6 +22,11 @@ import {
 import {
     resourceLoader
 } from './ResourceLoader.js';
+import {
+    SystemDesc
+} from '../BrowserDetection.js';
+
+
 
 import {
     Parameter,
@@ -35,21 +40,24 @@ const imageDataLibrary = {
 
 };
 
+const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1;
+
 
 class FileImage extends BaseImage {
     constructor(resourcePath, params = {}) {
         super(params);
-        
+
         this.__loaded = false;
         this.__hdrexposure = 1.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
-        fileParam.valueChanged.connect(()=>{
+        const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1));
+        fileParam.valueChanged.connect(() => {
             this.loaded.untoggle();
             const filePath = fileParam.getValue();
-            if(this.getName() == this.constructor.name) {
+            if (this.getName() == this.constructor.name) {
                 // Generate a name from the file path.
                 const p = filePath.split('/');
                 const last = p[p.length - 1];
@@ -65,37 +73,97 @@ class FileImage extends BaseImage {
                     }
                 }
             }
-            
-            const url = fileParam.getURL();
-            this.__loadURL(url, filePath);
+
+            const fileDesc = fileParam.getFileDesc();
+            let url;
+            let ext;
+
+            if (fileDesc.assets && fileDesc.assets.length > 0) {
+                function chooseImage(params, fileDesc) {
+                    let filterAssets = fileDesc.assets;
+
+                    if (supportWebp) {
+                        const resultFilter = filterAssets.filter(
+                            asset => asset.format === "webp"
+                        );
+
+                        if (resultFilter.length > 1) {
+                            filterAssets = resultFilter;
+                        }
+                    } else {
+                        filterAssets = filterAssets.filter(
+                            asset => asset.format !== "webp"
+                        );
+                    }
+
+                    if (params.filter) {
+                        filterAssets = filterAssets.filter(
+                            asset => asset.url.indexOf(params.filter) !== -1
+                        );
+                    }
+                    if (params.maxSize) {
+                        filterAssets = filterAssets.filter(
+                            asset => asset.w < params.maxSize
+                        );
+                    }
+                    if (params.prefSize) {
+                        filterAssets = filterAssets.map(asset => Object.assign({
+                            score: Math.abs(params.prefSize - asset.w)
+                        }, asset));
+
+                        // return low score, close to desire
+                        // return _.sortBy(score, "score")[0].option.url;
+                        filterAssets.sort((a, b) => (a.score > b.score) ? 1 : ((a.score < b.score) ? -1 : 0));
+                    }
+                    if (filterAssets.length > 0)
+                        return filterAssets[0];
+                }
+                const params = {
+                    maxSize: SystemDesc.gpuDesc.maxTextureSize
+                };
+                let prefSize = prefSizeParam.getValue();
+                if (prefSize == -1) {
+                    params.filter = 'reduce';
+                } else {
+                    params.w = prefSize;
+                }
+                const asset = chooseImage(params, fileDesc);
+                if (asset) {
+                    this.__loadURL(asset.url, filePath, asset.format);
+                    return;
+                }
+            }
+
+            const getExt = (str) => {
+                const p = str.split('/');
+                const last = p[p.length - 1];
+                const suffixSt = last.lastIndexOf('.')
+                if (suffixSt != -1)
+                    return last.substring(suffixSt + 1).toLowerCase()
+            }
+            this.__loadURL(fileDesc.url, filePath, getExt(filePath));
         });
         if (resourcePath && resourcePath != '')
             fileParam.setValue(resourcePath);
     }
 
-    getDOMElement(){
+
+
+    getDOMElement() {
         return this.__domElement;
     }
 
-    __loadURL(url, resourcePath) {
+    __loadURL(url, resourcePath, ext) {
 
-        const getExt = (str) => {
-            const p = str.split('/');
-            const last = p[p.length - 1];
-            const suffixSt = last.lastIndexOf('.')
-            if (suffixSt != -1)
-                return last.substring(suffixSt).toLowerCase()
-        }
-        const ext = getExt(resourcePath);
-        if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
+        if (ext == 'jpg' || ext == 'png' || ext == 'webp') {
             this.__loadLDRImage(url, resourcePath, ext);
-        } else if (ext == '.mp4' || ext == '.ogg') {
+        } else if (ext == 'mp4' || ext == 'ogg') {
             this.__loadLDRVideo(url, resourcePath);
-        // } else if (ext == '.ldralpha') {
-        //     this.__loadLDRAlpha(url, resourcePath);
-        } else if (ext == '.vlh') {
+            // } else if (ext == 'ldralpha') {
+            //     this.__loadLDRAlpha(url, resourcePath);
+        } else if (ext == 'vlh') {
             this.__loadVLH(url, resourcePath);
-        } else if (ext == '.gif') {
+        } else if (ext == 'gif') {
             this.__loadGIF(url, resourcePath);
         } else {
             throw ("Unsupported file type. Check the ext:" + resourcePath);
@@ -103,9 +171,9 @@ class FileImage extends BaseImage {
     }
 
     __loadLDRImage(url, resourcePath, ext) {
-        if (ext == '.jpg') {
+        if (ext == 'jpg') {
             this.format = 'RGB';
-        } else if (ext == '.png') {
+        } else if (ext == 'png') {
             this.format = 'RGBA';
         }
         this.type = 'UNSIGNED_BYTE';
@@ -117,16 +185,14 @@ class FileImage extends BaseImage {
             this.__loaded = true;
             this.loaded.emit();
         };
-        if(resourcePath in imageDataLibrary) {
+        if (resourcePath in imageDataLibrary) {
             this.__domElement = imageDataLibrary[resourcePath];
-            if(this.__domElement.complete) {
+            if (this.__domElement.complete) {
                 loaded()
-            }
-            else {
+            } else {
                 this.__domElement.addEventListener("load", loaded);
             }
-        }
-        else {
+        } else {
             resourceLoader.addWork(resourcePath, 1);
             this.__domElement = new Image();
             this.__domElement.crossOrigin = 'anonymous';
@@ -140,7 +206,7 @@ class FileImage extends BaseImage {
         }
     }
 
-    __addSpatializationParams(){
+    __addSpatializationParams() {
         this.addParameter(new Parameter('spatializeAudio', true));
         this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
         this.addParameter(new NumberParameter('refDistance', 2));
@@ -150,8 +216,8 @@ class FileImage extends BaseImage {
         this.addParameter(new NumberParameter('coneOuterAngle', 180));
         this.addParameter(new NumberParameter('coneOuterGain', 0.2))
     }
-    __removeSpatializationParams(){
-        if(this.getParameterIndex('spatializeAudio')) {
+    __removeSpatializationParams() {
+        if (this.getParameterIndex('spatializeAudio')) {
             this.removeParameter(this.getParameterIndex('spatializeAudio'));
             this.removeParameter(this.getParameterIndex('Gain'));
             this.removeParameter(this.getParameterIndex('refDistance'));
@@ -208,66 +274,18 @@ class FileImage extends BaseImage {
         //this.__domElement.load();
         const promise = this.__domElement.play();
         if (promise !== undefined) {
-          promise.then(_ => {
-            console.log("Autoplay started!")
-            // Autoplay started!
-          }).catch(error => {
-            console.log("Autoplay was prevented.")
-            // Autoplay was prevented.
-            // Show a "Play" button so that user can start playback.
-          });
+            promise.then(_ => {
+                console.log("Autoplay started!")
+                // Autoplay started!
+            }).catch(error => {
+                console.log("Autoplay was prevented.")
+                // Autoplay was prevented.
+                // Show a "Play" button so that user can start playback.
+            });
         }
     }
 
-    // __loadLDRAlpha(url, resourcePath) {
-    //     let worker = new ResourceLoaderWorker();
-    //     worker.onmessage = (event) => {
-    //         worker.terminate();
-
-    //         let data = event.data;
-    //         let ldr, alpha;
-    //         for (let name in data.entries) {
-    //             if (name.endsWith('.jpg'))
-    //                 ldr = data.entries[name];
-    //             else if (name.endsWith('.png'))
-    //                 alpha = data.entries[name];
-    //         }
-
-    //         /////////////////////////////////
-    //         // Parse the data.
-    //         let async = new Async();
-    //         async.ready.connect(() => {
-    //             this.width = ldrPic.width;
-    //             this.height = ldrPic.height;
-    //             this.__data = {
-    //                 ldr: ldrPic,
-    //                 alpha: alphaPic
-    //             }
-    //             if (!this.__loaded) {
-    //                 this.__loaded = true;
-    //                 this.loaded.emit();
-    //             } else {
-    //                 this.updated.emit();
-    //             }
-    //         });
-    //         async.incAsyncCount(2);
-
-    //         let ldrPic = new Image();
-    //         ldrPic.onload = async.decAsyncCount;
-    //         ldrPic.src = URL.createObjectURL(new Blob([ldr.buffer]));
-
-    //         let alphaPic = new Image();
-    //         alphaPic.onload = async.decAsyncCount;
-    //         alphaPic.src = URL.createObjectURL(new Blob([alpha.buffer]));
-
-    //     };
-    //     worker.postMessage({
-    //         name: resourcePath,
-    //         url
-    //     });
-    // }
-
-    __loadVLH(url, resourcePath) {
+    __loadVLH(url, resourcePath, ext) {
         this.type = 'FLOAT';
 
         resourceLoader.loadResource(resourcePath, (entries) => {
@@ -314,24 +332,23 @@ class FileImage extends BaseImage {
         this.addParameter(new NumberParameter('StreamAtlasIndex', 0));
         this.getParameter('StreamAtlasIndex').setRange([0, 1]);
 
-        this.getFrameDelay = (index)=>{
+        this.getFrameDelay = (index) => {
             return 20;
         }
         let playing;
         let incrementFrame;
-        this.play = ()=>{
+        this.play = () => {
             playing = true;
-            if(incrementFrame)
+            if (incrementFrame)
                 incrementFrame();
         }
-        this.stop = ()=>{
+        this.stop = () => {
             playing = false;
         }
         let resourcePromise;
-        if(resourcePath in imageDataLibrary) {
+        if (resourcePath in imageDataLibrary) {
             resourcePromise = imageDataLibrary[resourcePath];
-        }
-        else {
+        } else {
             resourcePromise = new Promise((resolve, reject) => {
 
                 const url = resourceLoader.resolveURL(resourcePath);
@@ -347,12 +364,11 @@ class FileImage extends BaseImage {
 
                     const sideLength = Math.sqrt(frames.length);
                     const atlasSize = new Visualive.Vec2(sideLength, sideLength);
-                    if(Math.fract(sideLength) > 0.0) {
+                    if (Math.fract(sideLength) > 0.0) {
                         atlasSize.x = Math.floor(atlasSize.x + 1);
-                        if(Math.fract(sideLength) > 0.5) {
+                        if (Math.fract(sideLength) > 0.5) {
                             atlasSize.y = Math.floor(atlasSize.y + 1);
-                        }
-                        else{
+                        } else {
                             atlasSize.y = Math.floor(atlasSize.y);
                         }
                     }
@@ -379,14 +395,14 @@ class FileImage extends BaseImage {
 
                     let frameImageData;
                     const frameDelays = [];
-                    const renderFrame = (frame, index)=>{
+                    const renderFrame = (frame, index) => {
                         const dims = frame.dims;
                         frameDelays.push(frame.delay);
-                        
-                        if(!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height){
+
+                        if (!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height) {
                             tempCanvas.width = dims.width;
                             tempCanvas.height = dims.height;
-                            frameImageData = tempCtx.createImageData(dims.width, dims.height);  
+                            frameImageData = tempCtx.createImageData(dims.width, dims.height);
                         }
 
                         // set the patch data as an override
@@ -396,21 +412,28 @@ class FileImage extends BaseImage {
                         gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height);
                         gifCtx.drawImage(tempCanvas, dims.left, dims.top);
 
-                        atlasCtx.drawImage(gifCanvas, (index%atlasSize.x) * width, Math.floor(index/atlasSize.x) * height);
+                        atlasCtx.drawImage(gifCanvas, (index % atlasSize.x) * width, Math.floor(index / atlasSize.x) * height);
                     }
 
 
-                    for(let i =0; i<frames.length; i++) {
+                    for (let i = 0; i < frames.length; i++) {
                         // console.log(frame);
                         renderFrame(frames[i], i);
                     }
                     resourceLoader.addWorkDone(resourcePath, 1);
 
                     const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
-                    resolve({width:atlasCanvas.width, height:atlasCanvas.height, atlasSize, frameRange:[0, frames.length], frameDelays, imageData });
+                    resolve({
+                        width: atlasCanvas.width,
+                        height: atlasCanvas.height,
+                        atlasSize,
+                        frameRange: [0, frames.length],
+                        frameDelays,
+                        imageData
+                    });
 
                 }, (statusText) => {
-                    console.warn("Unable to Load URL:"+ req.url);
+                    console.warn("Unable to Load URL:" + req.url);
                     reject();
                 });
             });
@@ -420,8 +443,8 @@ class FileImage extends BaseImage {
 
         // Make the resolve asynchronous so that the function returns.
         // (Chroe started generating errors because the 'onload' callback took to long to return.)
-        setTimeout(()=>{
-            resourcePromise.then((unpackedData)=>{
+        setTimeout(() => {
+            resourcePromise.then((unpackedData) => {
 
                 this.width = unpackedData.width;
                 this.height = unpackedData.height;
@@ -434,22 +457,22 @@ class FileImage extends BaseImage {
 
                 this.__data = unpackedData.imageData;
 
-                this.getFrameDelay = (index)=>{
+                this.getFrameDelay = (index) => {
                     return unpackedData.frameDelays[index];
                 }
 
                 //////////////////////////
                 // Playback
                 const frameParam = this.getParameter('StreamAtlasIndex');
-                const numFrames = frameParam.getRange()[1]; 
+                const numFrames = frameParam.getRange()[1];
                 let frame = 0;
                 incrementFrame = () => {
                     frameParam.setValue(frame);
-                    if(playing)
+                    if (playing)
                         setTimeout(incrementFrame, this.getFrameDelay(frame));
-                    frame = (frame+1) % numFrames;
+                    frame = (frame + 1) % numFrames;
                 }
-                if(playing)
+                if (playing)
                     incrementFrame();
                 this.__loaded = true;
 
@@ -490,7 +513,7 @@ class FileImage extends BaseImage {
     getHDRTint() {
         return this.__hdrtint;
     }
-    
+
     //////////////////////////////////////////
     // Persistence
 

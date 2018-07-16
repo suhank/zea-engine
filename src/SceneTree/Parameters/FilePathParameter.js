@@ -43,6 +43,10 @@ class FilePathParameter extends Parameter {
         }
     }
 
+    getFileDesc() {
+        return this.__file;
+    }
+
     getURL() {
         return this.__file ? this.__file.url : undefined;
     }

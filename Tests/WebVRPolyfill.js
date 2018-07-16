@@ -12,7 +12,7 @@ function addScript(attribute, text, callback) {
 testingHarness.registerTest('WebVRPolyfill', (domElement, resources) => { 
 
     addScript({
-        src: 'https://cdn.jsdelivr.net/npm/webvr-polyfill@latest/build/webvr-polyfill.js',
+        src: '../external/webvr-polyfill.js',
         type: 'text/javascript'
     }, '', ()=>{
 
