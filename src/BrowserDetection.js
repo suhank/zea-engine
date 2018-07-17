@@ -41,6 +41,10 @@ function getBrowserDesc() {
         browserName = "Chrome";
         fullVersion = nAgt.substring(verOffset + 7);
     }
+
+    // TOOD: Parse Samsung userAgent
+    // https://developer.samsung.com/technical-doc/view.do?v=T000000203
+
     // In Safari, the true version is after "Safari" or after "Version" 
     else if ((verOffset = nAgt.indexOf("Safari")) != -1) {
         browserName = "Safari";

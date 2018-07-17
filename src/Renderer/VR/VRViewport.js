@@ -46,6 +46,9 @@ import {
     VRFlyTool
 } from './Tools/VRFlyTool.js'
 
+import {
+    SystemDesc
+} from '../../BrowserDetection.js';
 
 class VRViewport extends BaseViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
@@ -55,7 +58,7 @@ class VRViewport extends BaseViewport {
         //////////////////////////////////////////////
         // Resources
 
-        if (resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
+        if (!SystemDesc.isMobileDevice && resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
             this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
             this.__viveAsset.loaded.connect(()=>{
                 const materialLibrary = this.__viveAsset.getMaterialLibrary();
@@ -99,11 +102,8 @@ class VRViewport extends BaseViewport {
         this.__currentTool = undefined;
 
         //////////////////////////////////////////////
-        // Xfos
+        // UI
         this.__uivisibile = 0;
-        this.showInHandUI = new Signal();
-        this.hideInHandUI = new Signal();
-        this.pointerEvent = new Signal();
 
         //////////////////////////////////////////////
         // Xfos
@@ -116,6 +116,27 @@ class VRViewport extends BaseViewport {
         this.__rightViewMatrix = new Mat4();
         this.__rightProjectionMatrix = new Mat4();
 
+
+        //////////////////////////////////////////////
+        // Signals
+        this.showInHandUI = new Signal();
+        this.hideInHandUI = new Signal();
+        this.pointerEvent = new Signal();
+        this.resized = new Signal();
+
+        // Signals to abstract the user view. 
+        // i.e. when a user switches to VR mode, the signals 
+        // simply emit the new VR data.
+        this.viewChanged = new Signal();
+        this.presentingChanged = new Signal();
+
+        // Stroke Signals
+        this.actionStarted = new Signal();
+        this.actionEnded = new Signal();
+        this.actionOccuring = new Signal();
+
+        this.controllerAdded = new Signal();
+        
         //////////////////////////////////////////////
         // UI
         if (this.__vrDisplay.stageParameters &&
@@ -147,20 +168,6 @@ class VRViewport extends BaseViewport {
         window.addEventListener('vrdisplayactivate', vrdisplayactivate, false);
         window.addEventListener('vrdisplaydeactivate', vrdisplaydeactivate, false);
 
-        this.resized = new Signal();
-
-        // Signals to abstract the user view. 
-        // i.e. when a user switches to VR mode, the signals 
-        // simply emit the new VR data.
-        this.viewChanged = new Signal();
-        this.presentingChanged = new Signal();
-
-        // Stroke Signals
-        this.actionStarted = new Signal();
-        this.actionEnded = new Signal();
-        this.actionOccuring = new Signal();
-
-        this.controllerAdded = new Signal();
 
 
         //////////////////////////////////////////////
@@ -336,6 +343,7 @@ class VRViewport extends BaseViewport {
             this.__presentingRequested = false;
         }, (e) => {
             console.warn("requestPresent failed:" + e);
+            this.__presentingRequested = true;
         });
         // } else {
         //     console.warn("VRViewport does not support presenting.");

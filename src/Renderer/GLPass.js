@@ -34,6 +34,15 @@ class GLPass {
         this.enabled = !this.enabled;
     }
 
+
+    startPresenting() {
+
+    }
+
+    stopPresenting() {
+
+    }
+
     /////////////////////////////////////
     // Bind to Render Tree
     // filterRenderTree() {

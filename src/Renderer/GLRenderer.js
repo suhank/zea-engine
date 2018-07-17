@@ -738,12 +738,22 @@ class GLRenderer {
                         vrvp.actionStarted.connect(this.actionStarted.emit);
                         vrvp.actionEnded.connect(this.actionEnded.emit);
                         vrvp.actionOccuring.connect(this.actionOccuring.emit);
+                        
+                        // Let the passes know that VR is starting. 
+                        // They can do things like optimize shaders.                        
+                        for(let pass of this.__passes) {
+                            pass.startPresenting();
+                        }
                     }
                     else {
                         vrvp.viewChanged.disconnect(this.viewChanged.emit);
                         vrvp.actionStarted.disconnect(this.actionStarted.emit);
                         vrvp.actionEnded.disconnect(this.actionEnded.emit);
                         vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
+
+                        for(let pass of this.__passes) {
+                            pass.stopPresenting();
+                        }
                     }
                 })
 

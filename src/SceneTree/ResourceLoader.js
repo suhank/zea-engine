@@ -224,14 +224,14 @@ class ResourceLoader {
         }
     }
 
-    loadResource(name, callback, addLoadWork=true) {
+    loadResource(resourcePath, callback, addLoadWork=true) {
 
-        const file = this.resolveFile(name);
+        const file = this.resolveFile(resourcePath);
         if(!file){
-            throw("Invalid name:'"+ name + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+            throw("Invalid resource Path:'"+ resourcePath + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
-        this.loadURL(name, file.url, callback, addLoadWork)
+        this.loadURL(resourcePath, file.url, callback, addLoadWork)
     }
 
     loadURL(name, url, callback, addLoadWork=true) {

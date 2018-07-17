@@ -40,7 +40,7 @@ const imageDataLibrary = {
 
 };
 
-const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1;
+const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1;// || navigator.userAgent.indexOf("Samsung");
 
 
 class FileImage extends BaseImage {
@@ -75,73 +75,7 @@ class FileImage extends BaseImage {
             }
 
             const fileDesc = fileParam.getFileDesc();
-            let url;
-            let ext;
-
-            if (fileDesc.assets && fileDesc.assets.length > 0) {
-                function chooseImage(params, fileDesc) {
-                    let filterAssets = fileDesc.assets;
-
-                    if (supportWebp) {
-                        const resultFilter = filterAssets.filter(
-                            asset => asset.format === "webp"
-                        );
-
-                        if (resultFilter.length > 1) {
-                            filterAssets = resultFilter;
-                        }
-                    } else {
-                        filterAssets = filterAssets.filter(
-                            asset => asset.format !== "webp"
-                        );
-                    }
-
-                    if (params.filter) {
-                        filterAssets = filterAssets.filter(
-                            asset => asset.url.indexOf(params.filter) !== -1
-                        );
-                    }
-                    if (params.maxSize) {
-                        filterAssets = filterAssets.filter(
-                            asset => asset.w < params.maxSize
-                        );
-                    }
-                    if (params.prefSize) {
-                        filterAssets = filterAssets.map(asset => Object.assign({
-                            score: Math.abs(params.prefSize - asset.w)
-                        }, asset));
-
-                        // return low score, close to desire
-                        // return _.sortBy(score, "score")[0].option.url;
-                        filterAssets.sort((a, b) => (a.score > b.score) ? 1 : ((a.score < b.score) ? -1 : 0));
-                    }
-                    if (filterAssets.length > 0)
-                        return filterAssets[0];
-                }
-                const params = {
-                    maxSize: SystemDesc.gpuDesc.maxTextureSize
-                };
-                let prefSize = prefSizeParam.getValue();
-                if (prefSize == -1) {
-                    params.filter = 'reduce';
-                } else {
-                    params.w = prefSize;
-                }
-                const asset = chooseImage(params, fileDesc);
-                if (asset) {
-                    this.__loadURL(asset.url, filePath, asset.format);
-                    return;
-                }
-            }
-
-            const getExt = (str) => {
-                const p = str.split('/');
-                const last = p[p.length - 1];
-                const suffixSt = last.lastIndexOf('.')
-                if (suffixSt != -1)
-                    return last.substring(suffixSt + 1).toLowerCase()
-            }
-            this.__loadURL(fileDesc.url, filePath, getExt(filePath));
+            this.__loadData(filePath, fileDesc);
         });
         if (resourcePath && resourcePath != '')
             fileParam.setValue(resourcePath);
@@ -153,30 +87,103 @@ class FileImage extends BaseImage {
         return this.__domElement;
     }
 
-    __loadURL(url, resourcePath, ext) {
+    __loadData(resourcePath, fileDesc) {
+
+        const getExt = (str) => {
+            const p = str.split('/');
+            const last = p[p.length - 1];
+            const suffixSt = last.lastIndexOf('.')
+            if (suffixSt != -1)
+                return last.substring(suffixSt + 1).toLowerCase()
+        }
+        const ext = getExt(resourcePath);
 
         if (ext == 'jpg' || ext == 'png' || ext == 'webp') {
-            this.__loadLDRImage(url, resourcePath, ext);
+            this.__loadLDRImage(resourcePath, fileDesc, ext);
         } else if (ext == 'mp4' || ext == 'ogg') {
-            this.__loadLDRVideo(url, resourcePath);
+            this.__loadLDRVideo(resourcePath, fileDesc, ext);
             // } else if (ext == 'ldralpha') {
-            //     this.__loadLDRAlpha(url, resourcePath);
+            //     this.__loadLDRAlpha(resourcePath, fileDesc, ext);
         } else if (ext == 'vlh') {
-            this.__loadVLH(url, resourcePath);
+            this.__loadVLH(resourcePath, fileDesc, ext);
         } else if (ext == 'gif') {
-            this.__loadGIF(url, resourcePath);
+            this.__loadGIF(resourcePath, fileDesc, ext);
         } else {
             throw ("Unsupported file type. Check the ext:" + resourcePath);
         }
     }
 
-    __loadLDRImage(url, resourcePath, ext) {
+    __loadLDRImage(resourcePath, fileDesc, ext) {
         if (ext == 'jpg') {
             this.format = 'RGB';
         } else if (ext == 'png') {
             this.format = 'RGBA';
         }
         this.type = 'UNSIGNED_BYTE';
+
+        let url = fileDesc.url;
+        if (fileDesc.assets && fileDesc.assets.length > 0) {
+            function chooseImage(params, fileDesc) {
+                let filterAssets = fileDesc.assets;
+
+                if (supportWebp) {
+                    const resultFilter = filterAssets.filter(
+                        asset => asset.format === "webp"
+                    );
+
+                    if (resultFilter.length > 1) {
+                        filterAssets = resultFilter;
+                    }
+                } else {
+                    filterAssets = filterAssets.filter(
+                        asset => asset.format !== "webp"
+                    );
+                }
+
+                if (params.maxSize) {
+                    filterAssets = filterAssets.filter(
+                        asset => asset.w < params.maxSize
+                    );
+                }
+                if (params.filter) {
+                     const resultFilter = filterAssets.filter(
+                        asset => asset.url.indexOf(params.filter) !== -1
+                    );
+                    if (resultFilter.length > 1) {
+                        filterAssets = resultFilter;
+                    }
+                }
+                if (params.prefSize) {
+                    filterAssets = filterAssets.map(asset => Object.assign({
+                        score: Math.abs(params.prefSize - asset.w)
+                    }, asset));
+
+                    // return low score, close to desire
+                    // return _.sortBy(score, "score")[0].option.url;
+                    filterAssets.sort((a, b) => (a.score > b.score) ? 1 : ((a.score < b.score) ? -1 : 0));
+                }
+                if (filterAssets.length > 0)
+                    return filterAssets[0];
+            }
+            const params = {
+                maxSize: SystemDesc.gpuDesc.maxTextureSize
+            };
+            let prefSize = this.getParameter('PreferredSize').getValue();
+            if (prefSize == -1) {
+                // params.filter = 'reduce';
+                // Find the image closest to this size.
+                params.prefSize = fileDesc.assets.filter(
+                        asset => asset.url.indexOf('reduce') !== -1
+                    )[0].w;
+
+            } else {
+                params.prefSize = prefSize;
+            }
+            const asset = chooseImage(params, fileDesc);
+            if (asset) {
+                url = asset.url;
+            }
+        }
 
         const loaded = () => {
             this.width = this.__domElement.width;
@@ -196,7 +203,7 @@ class FileImage extends BaseImage {
             resourceLoader.addWork(resourcePath, 1);
             this.__domElement = new Image();
             this.__domElement.crossOrigin = 'anonymous';
-            this.__domElement.src = resourceLoader.resolveURL(resourcePath);
+            this.__domElement.src = url;
 
             this.__domElement.addEventListener("load", loaded);
             this.__domElement.addEventListener("load", () => {
@@ -229,7 +236,7 @@ class FileImage extends BaseImage {
         }
     }
 
-    __loadLDRVideo(url, resourcePath) {
+    __loadLDRVideo(resourcePath, fileDesc, ext) {
         this.format = 'RGB';
         this.type = 'UNSIGNED_BYTE';
         resourceLoader.addWork(resourcePath, 1);
@@ -270,7 +277,7 @@ class FileImage extends BaseImage {
             timerCallback();
 
         }, false);
-        this.__domElement.src = resourceLoader.resolveURL(resourcePath);
+        this.__domElement.src = fileDesc.url;
         //this.__domElement.load();
         const promise = this.__domElement.play();
         if (promise !== undefined) {
@@ -285,10 +292,10 @@ class FileImage extends BaseImage {
         }
     }
 
-    __loadVLH(url, resourcePath, ext) {
+    __loadVLH(resourcePath, fileDesc, ext) {
         this.type = 'FLOAT';
 
-        resourceLoader.loadResource(resourcePath, (entries) => {
+        resourceLoader.loadURL(resourcePath, fileDesc.url, (entries) => {
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -321,7 +328,7 @@ class FileImage extends BaseImage {
     }
 
 
-    __loadGIF(url, resourcePath) {
+    __loadGIF(resourcePath, fileDesc, ext) {
 
         this.format = 'RGBA';
         this.type = 'UNSIGNED_BYTE';
@@ -350,11 +357,10 @@ class FileImage extends BaseImage {
             resourcePromise = imageDataLibrary[resourcePath];
         } else {
             resourcePromise = new Promise((resolve, reject) => {
-
-                const url = resourceLoader.resolveURL(resourcePath);
                 resourceLoader.addWork(resourcePath, 1);
 
-                loadBinfile(url, (data) => {
+                loadBinfile(fileDesc.url, (data) => {
+                    const start = performance.now();
 
                     // Decompressing using: https://github.com/matt-way/gifuct-js
                     const gif = new GIF(data);
@@ -423,6 +429,10 @@ class FileImage extends BaseImage {
                     resourceLoader.addWorkDone(resourcePath, 1);
 
                     const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
+
+                    const ms = performance.now() - start;
+                    console.log("Decode GIF time:" + ms);
+
                     resolve({
                         width: atlasCanvas.width,
                         height: atlasCanvas.height,
