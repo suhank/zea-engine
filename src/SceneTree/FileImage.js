@@ -360,13 +360,33 @@ class FileImage extends BaseImage {
                 resourceLoader.addWork(resourcePath, 1);
 
                 loadBinfile(fileDesc.url, (data) => {
+
+                    const imageDataBase64 = localStorage.getItem(fileDesc.url);
+                    if(imageDataBase64) {
+                        const image = new Image();
+                        image.crossOrigin = 'anonymous';
+                        image.src = imageDataBase64;
+
+                        const metadata = JSON.parse(localStorage.getItem(fileDesc.url+'_metadata'));
+
+                        resolve({
+                            width: metadata.width,
+                            height: metadata.height,
+                            atlasSize: new Visualive.Vec2(metadata.atlasSize[0], metadata.atlasSize[1]),
+                            frameRange: [0, metadata.numframes],
+                            frameDelays: metadata.frameDelays,
+                            imageData: image
+                        });
+                        return;
+                    }
+
                     const start = performance.now();
 
                     // Decompressing using: https://github.com/matt-way/gifuct-js
                     const gif = new GIF(data);
                     const frames = gif.decompressFrames(true);
-                    // do something with the frame data
 
+                    // do something with the frame data
 
                     const sideLength = Math.sqrt(frames.length);
                     const atlasSize = new Visualive.Vec2(sideLength, sideLength);
@@ -415,12 +435,18 @@ class FileImage extends BaseImage {
                         frameImageData.data.set(frame.patch);
                         tempCtx.putImageData(frameImageData, 0, 0);
 
-                        gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height);
+                        // Note: undocumented disposal method.
+                        // See Ids here: https://github.com/theturtle32/Flash-Animated-GIF-Library/blob/master/AS3GifPlayer/src/com/worlize/gif/constants/DisposalType.as
+                        // From what I can gather, 2 means we should clear the background first. 
+                        // this seems towork with Gifs featuring moving transparency.
+                        // For fully opaque gifs, we should avoid this.
+                        if(frame.disposalType == 2)
+                            gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height);
+
                         gifCtx.drawImage(tempCanvas, dims.left, dims.top);
 
                         atlasCtx.drawImage(gifCanvas, (index % atlasSize.x) * width, Math.floor(index / atlasSize.x) * height);
                     }
-
 
                     for (let i = 0; i < frames.length; i++) {
                         // console.log(frame);
@@ -431,7 +457,23 @@ class FileImage extends BaseImage {
                     const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
 
                     const ms = performance.now() - start;
-                    console.log("Decode GIF time:" + ms);
+                    console.log(`Decode GIF '${resourcePath}' time:` + ms);
+                    
+                    try {
+                        localStorage.setItem(fileDesc.url, atlasCanvas.toDataURL("image/png"));
+                        localStorage.setItem(fileDesc.url+'_metadata', JSON.stringify({
+                            width: atlasCanvas.width,
+                            height: atlasCanvas.height,
+                            atlasSize: [atlasSize.x, atlasSize.y],
+                            numframes: frames.length,
+                            frameDelays
+                        }));
+                    } catch(e) {
+                      if (e.code == DOMException.QUOTA_EXCEEDED_ERR) {
+                        console.log("Storage full")
+                        // Storage full, maybe notify user or do some clean-up
+                      }
+                    }
 
                     resolve({
                         width: atlasCanvas.width,
@@ -443,7 +485,7 @@ class FileImage extends BaseImage {
                     });
 
                 }, (statusText) => {
-                    console.warn("Unable to Load URL:" + req.url);
+                    console.warn("Unable to Load URL:" + statusText + ":" + fileDesc.url);
                     reject();
                 });
             });
