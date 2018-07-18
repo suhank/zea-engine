@@ -476,7 +476,7 @@ class GLViewport extends BaseViewport {
                     this.__mouseDownGeom = intersectionData.geomItem;
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
 
-                    this.mouseDownOnGeom.emit(this.__mouseDownGeom);
+                    this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
 
                     // Note: a manipulator can set a 
                     // this.__manipMode = 'geom-manipulation';
