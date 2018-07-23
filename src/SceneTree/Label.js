@@ -41,7 +41,7 @@ import {
  * @param {Boolean} [fill = false] Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
  */
-function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) {
     if (typeof stroke == 'undefined') {
         stroke = true;
     }
@@ -81,6 +81,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
         ctx.fill();
     }
     if (stroke) {
+        ctx.lineWidth = strokeWidth;
         ctx.stroke();
     }
 }
@@ -188,7 +189,7 @@ class Label  extends DataImage {
         if (background) {
             ctx2d.fillStyle = backgroundColor.toHex();
             ctx2d.strokeStyle = outlineColor.toHex();
-            roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline);
+            roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline, borderWidth);
         }
 
         ctx2d.font = fontSize + 'px "' + font + '"';

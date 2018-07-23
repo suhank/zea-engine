@@ -132,7 +132,11 @@ class GLVisualiveRenderer extends GLRenderer {
         this.envMapAssigned.emit(this.__glEnvMap);
     }
 
+    getGLEnvMap(){
+        return this.__glEnvMap;
+    }
     getEnvMapTex(){
+            console.warn("Deprecated Function");
         return this.__glEnvMap;
     }
 

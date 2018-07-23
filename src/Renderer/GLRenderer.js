@@ -101,13 +101,20 @@ if (process === 'undefined' || process.browser == true) {
     }
 }
 
+const PassType = {
+    OPAQUE: 0,
+    TRANSPARENT: 1,
+    OVERLAY: 2
+};
+
 class GLRenderer {
     constructor(canvasDiv, options = {}, webglOptions = {}) {
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
         this.__shaders = {};
-        this.__passes = [];
+        this.__passes = {};
+
         this.__viewports = [];
         this.__activeViewport = undefined;
         this.__continuousDrawing = false;
@@ -157,9 +164,9 @@ class GLRenderer {
         // this.__gizmoContext = new GizmoContext(this);
 
         // this.addPass(new GL2DOverlayPass());
-        this.addPass(new GLOpaqueGeomsPass());
-        this.addPass(new GLTransparentGeomsPass());
-        this.addPass(new GLBillboardsPass());
+        this.addPass(new GLOpaqueGeomsPass(), PassType.OPAQUE);
+        this.addPass(new GLTransparentGeomsPass(), PassType.TRANSPARENT);
+        this.addPass(new GLBillboardsPass(), PassType.TRANSPARENT);
 
         // Note: Audio contexts have started taking a long time to construct
         // (Maybe a regresion in Chrome?)
@@ -697,22 +704,34 @@ class GLRenderer {
     /////////////////////////
     // Render Items setup
 
-    addPass(pass) {
-        pass.updated.connect(this.requestRedraw.bind(this));
-        pass.init(this.__gl, this.__collector, this.__passes.length)
-        this.__passes.push(pass);
-        this.requestRedraw();
-        return this.__passes.length - 1;
-    }
+    addPass(pass, passtype=0) {
 
-    removePass(pass) {
-        let index = this.__passes.indexOf(pass);
-        this.__passes.splice(index, 1);
+        if(!this.__passes[passtype])
+            this.__passes[passtype] = [];
+
+        let index = 0;
+        for(let key in this.__passes) {
+            if(key == passtype)
+                break;
+            index += this.__passes[key].length;
+        }
+        index += this.__passes[passtype].length;
+
+        pass.updated.connect(this.requestRedraw.bind(this));
+        pass.init(this.__gl, this.__collector, index);
+        this.__passes[passtype].push(pass);
         this.requestRedraw();
+        return index;
     }
 
     getPass(index) {
-        return this.__passes[index];
+        let offset = 0;
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            if(index < passSet.length - offset)
+                return passSet[index - offset];
+            offset += passSet.length;
+        }
     }
 
     getGizmoPass() {
@@ -740,10 +759,13 @@ class GLRenderer {
                         vrvp.actionEnded.connect(this.actionEnded.emit);
                         vrvp.actionOccuring.connect(this.actionOccuring.emit);
                         
-                        // Let the passes know that VR is starting. 
-                        // They can do things like optimize shaders.                        
-                        for(let pass of this.__passes) {
-                            pass.startPresenting();
+                        // Let the passes know that VR is starting.
+                        // They can do things like optimize shaders.
+                        for(let key in this.__passes) {
+                            const passSet = this.__passes[key];
+                            for(let pass of passSet) {
+                                pass.startPresenting();
+                            }
                         }
                     }
                     else {
@@ -752,8 +774,11 @@ class GLRenderer {
                         vrvp.actionEnded.disconnect(this.actionEnded.emit);
                         vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
 
-                        for(let pass of this.__passes) {
-                            pass.stopPresenting();
+                        for(let key in this.__passes) {
+                            const passSet = this.__passes[key];
+                            for(let pass of passSet) {
+                                pass.stopPresenting();
+                            }
                         }
                     }
                 })
@@ -843,9 +868,12 @@ class GLRenderer {
         renderstate.drawCalls = 0;
         renderstate.drawCount = 0;
 
-        for (let pass of this.__passes) {
-            if (pass.enabled)
-                pass.draw(renderstate);
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.enabled)
+                    pass.draw(renderstate);
+            }
         }
 
         // if (this.__displayStats) {
@@ -855,15 +883,21 @@ class GLRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
-        for (let pass of this.__passes) {
-            if (pass.enabled)
-                pass.drawSelectedGeoms(renderstate);
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.enabled)
+                    pass.drawSelectedGeoms(renderstate);
+            }
         }
     }
     drawSceneGeomData(renderstate){
-        for (let pass of this.__passes) {
-            if (pass.enabled)
-                pass.drawGeomData(renderstate);
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.enabled)
+                    pass.drawGeomData(renderstate);
+            }
         }
     }
 
@@ -899,6 +933,7 @@ class GLRenderer {
 
 
 export {
-    GLRenderer
+    GLRenderer,
+    PassType
 };
 // export default GLRenderer;
