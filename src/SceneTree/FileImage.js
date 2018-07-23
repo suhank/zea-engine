@@ -47,7 +47,6 @@ class FileImage extends BaseImage {
         this.__loaded = false;
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
-        const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1));
         fileParam.valueChanged.connect(() => {
             this.loaded.untoggle();
             const filePath = fileParam.getValue();
@@ -131,6 +130,7 @@ class FileImage extends BaseImage {
         } else {
             resourceLoader.addWork(resourcePath, 1);
 
+        const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1));
 
         let url = fileDesc.url;
         if (fileDesc.assets && Object.keys(fileDesc.assets).length > 0) {
@@ -152,7 +152,7 @@ class FileImage extends BaseImage {
 
                     if (params.maxSize) {
                         filterAssets = filterAssets.filter(
-                            asset => asset.w < params.maxSize
+                            asset => asset.w <= params.maxSize
                         );
                     }
                     if (params.filter) {
@@ -178,23 +178,16 @@ class FileImage extends BaseImage {
                 const params = {
                     maxSize: SystemDesc.gpuDesc.maxTextureSize
                 };
-                let prefSize = this.getParameter('PreferredSize').getValue();
+                let prefSize = prefSizeParam.getValue();
                 if (prefSize == -1) {
-                    if (fileDesc.assets.optimal)
-                        params.prefSize = fileDesc.assets.optimal.w;
-                    else {
-                        const path = fileDesc.url.split('/');
-                        const fileId = path[path.length - 1];
-                        if (fileDesc.assets[fileId + '_optimal'])
-                            params.prefSize = fileDesc.assets[fileId + '_optimal'].w;
-                    }
-
+                    if (fileDesc.assets.reduce)
+                        params.prefSize = fileDesc.assets.reduce.w;
                 } else {
                     params.prefSize = prefSize;
                 }
                 const asset = chooseImage(params, Object.values(fileDesc.assets));
                 if (asset) {
-                    console.log("Selected image:" + asset.format + " :" + asset.w + "x" + asset.h );
+                    console.log("Selected image:" + resourcePath + " format:" + asset.format + " :" + asset.w + "x" + asset.h  + " url:" + asset.url);
                     url = asset.url;
                 }
             }
@@ -486,8 +479,8 @@ class FileImage extends BaseImage {
                         }));
                     } catch (e) {
                         if (e.code == DOMException.QUOTA_EXCEEDED_ERR) {
-                            console.log("Storage full")
-                            // Storage full, maybe notify user or do some clean-up
+                            console.log("Storage full");
+                            localStorage.clear();
                         }
                     }
 
