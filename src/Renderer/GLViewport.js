@@ -154,6 +154,10 @@ class GLViewport extends BaseViewport {
             this.updated.emit();
         });
 
+        // The state machine can manipulate the camera and then signal the
+        // end of a movement.
+        this.__camera.movementFinished.connect(this.renderGeomDataFbo);
+
         this.__updateProjectionMatrix();
     }
 
