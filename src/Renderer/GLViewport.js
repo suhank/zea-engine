@@ -108,6 +108,7 @@ class GLViewport extends BaseViewport {
 
         this.__manipulators = {};
         this.__manipModeStack = ['highlighting'];
+        this.__manipMode = 'highlighting';
         this.setManipulator(new CameraMouseAndKeyboard());
 
         this.resize(width, height);
@@ -485,8 +486,12 @@ class GLViewport extends BaseViewport {
                 if (this.__manipMode == 'highlighting') {
                     // Default to camera manipulation
                 */
-            this.activateManipulator('camera-manipulation');
-            this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
+
+
+                if (this.__manipMode != 'camera-manipulation') {
+                    this.activateManipulator('camera-manipulation');
+                    this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
+                }
             /*
                 }
 
@@ -528,7 +533,6 @@ class GLViewport extends BaseViewport {
                 break;
             case 'camera-manipulation':
                 this.__manipulators[this.__manipMode].onDragEnd(event, mouseUpPos, this);
-                // this.__manipMode = 'highlighting';
                 this.deactivateManipulator();
                 break;
             case 'geom-manipulation':

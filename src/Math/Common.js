@@ -123,6 +123,10 @@ Math.fract = function(value) {
     return value % Math.floor(value)
 }
 
+Math.remap = function(value, start1, end1, start2, end2) {
+  return start2 + ((end2-start2) * ((value - start1) / (end1-start1)));
+}
+
 
 // https://stackoverflow.com/questions/32633585/how-do-you-convert-to-half-floats-in-javascript
  /* This method is faster than the OpenEXR implementation (very often

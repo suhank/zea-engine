@@ -26,8 +26,6 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 
-
-
 import {
     Parameter,
     NumberParameter,
@@ -40,17 +38,13 @@ const imageDataLibrary = {
 
 };
 
-const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1;// || navigator.userAgent.indexOf("Samsung");
-
+const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1; // || navigator.userAgent.indexOf("Samsung");
 
 class FileImage extends BaseImage {
     constructor(resourcePath, params = {}) {
         super(params);
 
         this.__loaded = false;
-        this.__hdrexposure = 1.0;
-        this.__hdrtint = new Color(1, 1, 1, 1);
-        this.__stream = 'stream' in params ? params['stream'] : false;
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1));
@@ -120,71 +114,6 @@ class FileImage extends BaseImage {
             this.format = 'RGBA';
         }
         this.type = 'UNSIGNED_BYTE';
-
-        let url = fileDesc.url;
-        if (fileDesc.assets && fileDesc.assets.length > 0) {
-            function chooseImage(params, fileDesc) {
-                let filterAssets = fileDesc.assets;
-
-                if (supportWebp) {
-                    const resultFilter = filterAssets.filter(
-                        asset => asset.format === "webp"
-                    );
-
-                    if (resultFilter.length > 1) {
-                        filterAssets = resultFilter;
-                    }
-                } else {
-                    filterAssets = filterAssets.filter(
-                        asset => asset.format !== "webp"
-                    );
-                }
-
-                if (params.maxSize) {
-                    filterAssets = filterAssets.filter(
-                        asset => asset.w < params.maxSize
-                    );
-                }
-                if (params.filter) {
-                     const resultFilter = filterAssets.filter(
-                        asset => asset.url.indexOf(params.filter) !== -1
-                    );
-                    if (resultFilter.length > 1) {
-                        filterAssets = resultFilter;
-                    }
-                }
-                if (params.prefSize) {
-                    filterAssets = filterAssets.map(asset => Object.assign({
-                        score: Math.abs(params.prefSize - asset.w)
-                    }, asset));
-
-                    // return low score, close to desire
-                    // return _.sortBy(score, "score")[0].option.url;
-                    filterAssets.sort((a, b) => (a.score > b.score) ? 1 : ((a.score < b.score) ? -1 : 0));
-                }
-                if (filterAssets.length > 0)
-                    return filterAssets[0];
-            }
-            const params = {
-                maxSize: SystemDesc.gpuDesc.maxTextureSize
-            };
-            let prefSize = this.getParameter('PreferredSize').getValue();
-            if (prefSize == -1) {
-                // params.filter = 'reduce';
-                // Find the image closest to this size.
-                params.prefSize = fileDesc.assets.filter(
-                        asset => asset.url.indexOf('reduce') !== -1
-                    )[0].w;
-
-            } else {
-                params.prefSize = prefSize;
-            }
-            const asset = chooseImage(params, fileDesc);
-            if (asset) {
-                url = asset.url;
-            }
-        }
-
         const loaded = () => {
             this.width = this.__domElement.width;
             this.height = this.__domElement.height;
@@ -201,6 +130,78 @@ class FileImage extends BaseImage {
             }
         } else {
             resourceLoader.addWork(resourcePath, 1);
+
+
+        let url = fileDesc.url;
+        if (fileDesc.assets && Object.keys(fileDesc.assets).length > 0) {
+                function chooseImage(params, filterAssets) {
+
+                    if (supportWebp) {
+                        const resultFilter = filterAssets.filter(
+                            asset => asset.format === "webp"
+                        );
+
+                        if (resultFilter.length > 1) {
+                            filterAssets = resultFilter;
+                        }
+                    } else {
+                        filterAssets = filterAssets.filter(
+                            asset => asset.format !== "webp"
+                        );
+                    }
+
+                    if (params.maxSize) {
+                        filterAssets = filterAssets.filter(
+                            asset => asset.w < params.maxSize
+                        );
+                    }
+                    if (params.filter) {
+                        const resultFilter = filterAssets.filter(
+                            asset => asset.url.indexOf(params.filter) !== -1
+                        );
+                        if (resultFilter.length > 1) {
+                            filterAssets = resultFilter;
+                        }
+                    }
+                    if (params.prefSize) {
+                        filterAssets = filterAssets.map(asset => Object.assign({
+                            score: Math.abs(params.prefSize - asset.w)
+                        }, asset));
+
+                        // return low score, close to desire
+                        // return _.sortBy(score, "score")[0].option.url;
+                        filterAssets.sort((a, b) => (a.score > b.score) ? 1 : ((a.score < b.score) ? -1 : 0));
+                    }
+                    if (filterAssets.length > 0)
+                        return filterAssets[0];
+                }
+                const params = {
+                    maxSize: SystemDesc.gpuDesc.maxTextureSize
+                };
+                let prefSize = this.getParameter('PreferredSize').getValue();
+                if (prefSize == -1) {
+                    if (fileDesc.assets.optimal)
+                        params.prefSize = fileDesc.assets.optimal.w;
+                    else {
+                        const path = fileDesc.url.split('/');
+                        const fileId = path[path.length - 1];
+                        if (fileDesc.assets[fileId + '_optimal'])
+                            params.prefSize = fileDesc.assets[fileId + '_optimal'].w;
+                    }
+
+                } else {
+                    params.prefSize = prefSize;
+                }
+                const asset = chooseImage(params, Object.values(fileDesc.assets));
+                if (asset) {
+                    console.log("Selected image:" + asset.format + " :" + asset.w + "x" + asset.h );
+                    url = asset.url;
+                }
+            }
+            else {
+                console.warn("Images not processed for this file:" + resourcePath);
+            }
+
             this.__domElement = new Image();
             this.__domElement.crossOrigin = 'anonymous';
             this.__domElement.src = url;
@@ -260,14 +261,14 @@ class FileImage extends BaseImage {
             this.loaded.emit(this.__domElement);
 
             let prevFrame = 0;
-            let frameRate = 29.97;
-            let timerCallback = () => {
+            const frameRate = 29.97;
+            const timerCallback = () => {
                 if (this.__domElement.paused || this.__domElement.ended) {
                     return;
                 }
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
-                let currentFrame = Math.floor(this.__domElement.currentTime * frameRate);
+                const currentFrame = Math.floor(this.__domElement.currentTime * frameRate);
                 if (prevFrame != currentFrame) {
                     this.updated.emit();
                     prevFrame = currentFrame;
@@ -294,6 +295,23 @@ class FileImage extends BaseImage {
 
     __loadVLH(resourcePath, fileDesc, ext) {
         this.type = 'FLOAT';
+
+        let hdrexposure = 1.0;
+        let hdrtint = new Color(1, 1, 1, 1);
+        // let stream = 'stream' in params ? params['stream'] : false;
+
+        this.setHDRExposure = (value) => {
+            hdrexposure = value;
+        }
+        this.getHDRExposure = () => {
+            return hdrexposure;
+        }
+        this.setHDRTint = (value) => {
+            hdrtint = value;
+        }
+        this.getHDRTint = () => {
+            return hdrtint;
+        }
 
         resourceLoader.loadURL(resourcePath, fileDesc.url, (entries) => {
             let ldr, cdm;
@@ -362,12 +380,12 @@ class FileImage extends BaseImage {
                 loadBinfile(fileDesc.url, (data) => {
 
                     const imageDataBase64 = localStorage.getItem(fileDesc.url);
-                    if(imageDataBase64) {
+                    if (imageDataBase64) {
                         const image = new Image();
                         image.crossOrigin = 'anonymous';
                         image.src = imageDataBase64;
 
-                        const metadata = JSON.parse(localStorage.getItem(fileDesc.url+'_metadata'));
+                        const metadata = JSON.parse(localStorage.getItem(fileDesc.url + '_metadata'));
 
                         resolve({
                             width: metadata.width,
@@ -387,7 +405,6 @@ class FileImage extends BaseImage {
                     const frames = gif.decompressFrames(true);
 
                     // do something with the frame data
-
                     const sideLength = Math.sqrt(frames.length);
                     const atlasSize = new Visualive.Vec2(sideLength, sideLength);
                     if (Math.fract(sideLength) > 0.0) {
@@ -398,7 +415,6 @@ class FileImage extends BaseImage {
                             atlasSize.y = Math.floor(atlasSize.y);
                         }
                     }
-
 
                     const width = frames[0].dims.width;
                     const height = frames[0].dims.height;
@@ -440,7 +456,7 @@ class FileImage extends BaseImage {
                         // From what I can gather, 2 means we should clear the background first. 
                         // this seems towork with Gifs featuring moving transparency.
                         // For fully opaque gifs, we should avoid this.
-                        if(frame.disposalType == 2)
+                        if (frame.disposalType == 2)
                             gifCtx.clearRect(0, 0, gifCanvas.width, gifCanvas.height);
 
                         gifCtx.drawImage(tempCanvas, dims.left, dims.top);
@@ -458,21 +474,21 @@ class FileImage extends BaseImage {
 
                     const ms = performance.now() - start;
                     console.log(`Decode GIF '${resourcePath}' time:` + ms);
-                    
+
                     try {
                         localStorage.setItem(fileDesc.url, atlasCanvas.toDataURL("image/png"));
-                        localStorage.setItem(fileDesc.url+'_metadata', JSON.stringify({
+                        localStorage.setItem(fileDesc.url + '_metadata', JSON.stringify({
                             width: atlasCanvas.width,
                             height: atlasCanvas.height,
                             atlasSize: [atlasSize.x, atlasSize.y],
                             numframes: frames.length,
                             frameDelays
                         }));
-                    } catch(e) {
-                      if (e.code == DOMException.QUOTA_EXCEEDED_ERR) {
-                        console.log("Storage full")
-                        // Storage full, maybe notify user or do some clean-up
-                      }
+                    } catch (e) {
+                        if (e.code == DOMException.QUOTA_EXCEEDED_ERR) {
+                            console.log("Storage full")
+                            // Storage full, maybe notify user or do some clean-up
+                        }
                     }
 
                     resolve({
@@ -553,18 +569,6 @@ class FileImage extends BaseImage {
         return params;
     }
 
-    setHDRExposure(hdrexposure) {
-        this.__hdrexposure = hdrexposure;
-    }
-    getHDRExposure() {
-        return this.__hdrexposure;
-    }
-    setHDRTint(hdrtint) {
-        this.__hdrtint = hdrtint;
-    }
-    getHDRTint() {
-        return this.__hdrtint;
-    }
 
     //////////////////////////////////////////
     // Persistence
