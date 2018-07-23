@@ -116,6 +116,14 @@ class GLViewport extends BaseViewport {
         this.createSelectedGeomsFbo();
     }
 
+    getOutlineColor() {
+        return this.__outlineColor
+    }
+
+    setOutlineColor(color) {
+        this.__outlineColor = color;
+    }
+
     resize(width, height) {
         super.resize(width, height);
         if (this.__camera)
