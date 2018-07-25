@@ -189,7 +189,6 @@ class GLVisualiveRenderer extends GLRenderer {
                 this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
             }
         }
-        this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
         let lightMaps = scene.getLightMaps();
         let addLightmap = (name, lightmap) => {
