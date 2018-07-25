@@ -112,7 +112,7 @@ class GLEnvMap extends GLProbe {
         }
     }
     
-    bindSrcImgToUniform(renderstate, unif, type = 1) {
+    bindToUniform(renderstate, unif, type = 1) {
         return this.__srcGLTex.bindToUniform(renderstate, unif, type);
     }
 

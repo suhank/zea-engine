@@ -331,7 +331,7 @@ class GLShader extends BaseItem {
                 }
                 const envMapTex = unifs.envMapTex;
                 if (envMapTex) {
-                    renderstate.envMap.bindSrcImgToUniform(renderstate, envMapTex);
+                    renderstate.envMap.bindToUniform(renderstate, envMapTex);
                 }
             }
             {

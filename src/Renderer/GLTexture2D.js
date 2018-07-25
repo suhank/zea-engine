@@ -374,7 +374,7 @@ class GLTexture2D extends RefCounted {
 
         return true;
     }
-
+    
     destroy() {
         super.destroy();
         if (this.__texture) {

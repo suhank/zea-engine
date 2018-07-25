@@ -9,6 +9,7 @@ import {
     Xfo
 } from '../Math';
 import {
+    FileImage,
     HDRImageMixer,
     ProceduralSky,
     Lightmap,
@@ -119,9 +120,20 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        } else if (env.type === 'FLOAT') {
-            this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
-            this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
+        } else if (env instanceof FileImage) {
+            this.__glEnvMap = env.getMetadata('gltexture');
+            if(!this.__glEnvMap) {
+                if (env.type === 'FLOAT'){
+                    this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
+                    this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
+                }
+                else if (env.isStreamAtlas()){
+                    this.__glEnvMap = new GLImageStream(this.__gl, env);
+                }
+                else{
+                    this.__glEnvMap = new GLTexture2D(this.__gl, env);
+                }
+            }
         } else {
             console.warn("Unsupported EnvMap:" + env);
             return;
@@ -348,7 +360,7 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__glBackgroundMap.bindToUniform(renderstate, unifs.backgroundImage);
             this.__backgroundMapShaderBinding.bind(renderstate);
             gl.drawQuad();
-        } else if (this.__glEnvMap) {
+        } else if (this.__glEnvMap && this.__glEnvMap.draw) {
             this.__glEnvMap.draw(renderstate);
         }
     }
