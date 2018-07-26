@@ -127,7 +127,7 @@ class GLRenderer {
         this.__preproc = { };
 
         this.__vrViewport = undefined;
-        if(this.__supportVR && !navigator.getVRDisplays)
+        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined)
             this.__vrpolyfill = new WebVRPolyfill();
 
         this.mirrorVRisplayToViewport = true;
@@ -158,8 +158,6 @@ class GLRenderer {
 
         this.setupWebGL(canvasDiv, webglOptions);
 
-
-        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
 
@@ -194,11 +192,9 @@ class GLRenderer {
         this.__gl.shaderopts = this.__preproc
     }
 
-
     getShaderPreproc() {
         return this.__preproc;
     }
-
 
     getWidth() {
         return this.__glcanvas.width;
@@ -215,10 +211,6 @@ class GLRenderer {
     getAudioContext() {
         return this.__audioCtx;
     }
-
-    // getGeomDataPass() {
-    //     return this.__geomDataPass;
-    // }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         this.__gridTreeItem = new TreeItem('GridTreeItem');
@@ -286,9 +278,7 @@ class GLRenderer {
             this.requestRedraw();
         });
 
-        // if(this.__geomDataPass){
-            vp.createGeomDataFbo(this.__floatGeomBuffer);
-        // }
+        vp.createGeomDataFbo(this.__floatGeomBuffer);
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
@@ -475,9 +465,9 @@ class GLRenderer {
         this.__screenQuad = this.__gl.screenQuad;
 
 
-        // Note: using the geom data pass crashes VR scenes.
-        
-        this.__floatGeomBuffer = true;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
+        // Note: Mobile devices don't provide much support for float textures,
+        //  and checking compatibility is patchy at best.
+        this.__floatGeomBuffer = ((SystemDesc.browserName == "Chrome") || (SystemDesc.browserName == "Firefox")) && !SystemDesc.isMobile;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
