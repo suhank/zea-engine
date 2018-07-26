@@ -109,7 +109,7 @@ class GLViewport extends BaseViewport {
         this.__manipulators = {};
         this.__manipModeStack = ['highlighting'];
         this.__manipMode = 'highlighting';
-        this.setManipulator(new CameraMouseAndKeyboard());
+        this.registerManipulator('camera-manipulation', new CameraMouseAndKeyboard())
 
         this.resize(width, height);
         // this.createOffscreenFbo();
@@ -370,49 +370,33 @@ class GLViewport extends BaseViewport {
             // }
             // logGeomData();
 
-            let passId, itemId, dist, pixels;
-            if (this.__floatGeomBuffer) {
-                pixels = new Float32Array(4);
-                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
-                if (pixels[3] == 0)
+            let passId, itemId, dist, geomData;
+            if (gl.floatGeomBuffer) {
+                geomData = new Float32Array(4);
+                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
+                if (geomData[3] == 0)
                     return undefined;
-                pixels[0] = Math.round(pixels[0]);
-                pixels[1] = Math.round(pixels[1]);
-                pixels[2] = Math.round(pixels[2]);
-                pixels[3] = Math.round(pixels[3]);
-                passId = pixels[0];
-                itemId = pixels[1];
-                dist = pixels[3];
+                passId = Math.round(geomData[0]);
             } else {
-                pixels = new Uint8Array(4);
-                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                geomData = new Uint8Array(4);
+                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                if (pixels[0] == 0 && pixels[1] == 0)
+                if (geomData[0] == 0 && geomData[1] == 0)
                     return undefined;
-                itemId = pixels[0] + (pixels[1] << 8);
-                dist = Math.decode16BitFloatFrom2xUInt8([pixels[2], pixels[3]]);
+                passId = 0;
             }
             this.__geomDataBufferFbo.unbind();
-            let geomItem;
-            if (passId == 0) {
-                const drawItem = this.__renderer.getCollector().getDrawItem(itemId);
-                if (drawItem) {
-                    geomItem = drawItem.getGeomItem();
-                }
-            } else {
-                geomItem = this.__renderer.getPass(passId).getGeomItem(pixels);
-            }
+            const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
 
-            if (geomItem) {
-                let mouseRay = this.calcRayFromScreenPos(screenPos);
-                let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
+            if (geomItemAndDist) {
+                const mouseRay = this.calcRayFromScreenPos(screenPos);
+                const intersectionPos = mouseRay.start.add(mouseRay.dir.scale(geomItemAndDist.dist));
                 return {
-                    id: itemId,
                     screenPos,
-                    dist: pixels[2],
                     mouseRay: mouseRay,
                     intersectionPos,
-                    geomItem
+                    geomItem: geomItemAndDist.geomItem,
+                    dist: geomItemAndDist.dist
                 };
             }
         }
@@ -488,8 +472,12 @@ class GLViewport extends BaseViewport {
                     // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                     this.__mouseDownGeom = intersectionData.geomItem;
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
+                    if(event.vleStopPropagation == true)
+                        return true;
 
                     this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
+                    if(event.vleStopPropagation == true)
+                        return true;
 
                     // Note: a manipulator can set a 
                     // this.__manipMode = 'geom-manipulation';

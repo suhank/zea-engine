@@ -49,7 +49,7 @@ class GLPass {
     //     // console.log(this.constructor.name+':filterRenderTree');
     // }
 
-    getGeomItem() {
+    getGeomItemAndDist() {
         // TODO:
     }
 

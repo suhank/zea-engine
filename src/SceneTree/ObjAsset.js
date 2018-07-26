@@ -33,6 +33,15 @@ import {
 import {
     MaterialLibrary
 } from './MaterialLibrary.js';
+import {
+    Parameter,
+    BooleanParameter,
+    NumberParameter,
+    StringParameter,
+    Vec2Parameter,
+    Vec3Parameter,
+    ColorParameter
+} from './Parameters';
 
 
 class ObjAsset extends AssetItem {
@@ -42,11 +51,11 @@ class ObjAsset extends AssetItem {
         this.__geomLibrary = new GeomLibrary(this.__name);
         this.__materials = new MaterialLibrary();
         
-        this.addParameter('splitObjects', false);
-        this.addParameter('splitGroupsIntoObjects', false);
-        this.addParameter('loadMtlFile', false);
-        this.addParameter('unitsConversion', 1.0);
-        this.addParameter('defaultShader', "");
+        this.addParameter(new BooleanParameter('splitObjects', false));
+        this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false));
+        this.addParameter(new BooleanParameter('loadMtlFile', false));
+        this.addParameter(new NumberParameter('unitsConversion', 1.0));
+        this.addParameter(new StringParameter('defaultShader', ""));
 
         const objfileParam = this.addParameter(new Visualive.FilePathParameter('ObjFilePath'));
         objfileParam.valueChanged.connect((mode) => {
@@ -391,7 +400,7 @@ class ObjAsset extends AssetItem {
             geomItem.setMaterial(material);
         }
 
-        this.addChild(geomItem);
+        this.addChild(geomItem, false);
     }
 };
 export {

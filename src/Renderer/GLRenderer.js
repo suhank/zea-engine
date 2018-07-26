@@ -19,7 +19,8 @@ import {
     Mesh,
     Grid,
     Material,
-    ValueSetMode
+    ValueSetMode,
+    resourceLoader
 } from '../SceneTree';
 import {
     create3DContext
@@ -30,9 +31,6 @@ import {
 import {
     GLCollector
 } from './GLCollector.js';
-// import {
-//     GLGeomDataPass
-// } from './Passes/GLGeomDataPass.js';
 // import {
 //     GL2DOverlayPass
 // } from './Passes/GL2DOverlayPass.js';
@@ -133,6 +131,7 @@ class GLRenderer {
         this.mirrorVRisplayToViewport = true;
 
         // Function Bindings.
+        this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
         this.requestRedraw = this.requestRedraw.bind(this);
 
         this.__collector = new GLCollector(this);
@@ -176,6 +175,8 @@ class GLRenderer {
 
 
         this.addViewport('main');
+
+        resourceLoader.loaded.connect(this.renderGeomDataFbos);
 
     }
 
@@ -467,7 +468,8 @@ class GLRenderer {
 
         // Note: Mobile devices don't provide much support for float textures,
         //  and checking compatibility is patchy at best.
-        this.__floatGeomBuffer = ((SystemDesc.browserName == "Chrome") || (SystemDesc.browserName == "Firefox")) && !SystemDesc.isMobile;
+        this.__floatGeomBuffer = false;//((SystemDesc.browserName == "Chrome") || (SystemDesc.browserName == "Firefox")) && !SystemDesc.isMobile;
+        this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);

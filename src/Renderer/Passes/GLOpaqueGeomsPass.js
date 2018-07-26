@@ -59,6 +59,26 @@ class GLOpaqueGeomsPass extends GLPass {
         super.draw(renderstate);
     }
 
+    getGeomItemAndDist(geomData) {
+
+        let itemId, dist;
+        const gl = this.__gl;
+        if (gl.floatGeomBuffer) {
+            itemId = geomData[1];
+            dist = geomData[3];
+        } else {
+            itemId = geomData[0] + (geomData[1] << 8);
+            dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
+        }
+
+        const drawItem = this.__collector.getDrawItem(itemId);
+        if (drawItem) {
+            return { 
+                geomItem: drawItem.getGeomItem(),
+                dist
+            } 
+        }
+    }
 
     drawGeomData(renderstate){
 
@@ -75,9 +95,17 @@ class GLOpaqueGeomsPass extends GLPass {
         if(!this.__collector.bind(renderstate))
             return false;
 
-        let unif = renderstate.unifs.floatGeomBuffer;
-        if (unif){
-            gl.uniform1i(unif.location, gl.floatTexturesSupported ? 1 : 0);
+        {
+            let unif = renderstate.unifs.floatGeomBuffer;
+            if (unif){
+                gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0);
+            }
+        }
+        {
+            let unif = renderstate.unifs.passId;
+            if (unif){
+                gl.uniform1i(unif.location, this.__passIndex);
+            }
         }
 
         super.drawGeomData(renderstate);

@@ -41,6 +41,7 @@ precision highp float;
 varying vec3 v_viewPos;
 varying float v_drawItemID;
 uniform int floatGeomBuffer;
+uniform int passId;
 
 /////////////////////////////////////////////////////////////////
 // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
@@ -152,8 +153,9 @@ void main(void) {
     float dist = length(v_viewPos);
 
     if(floatGeomBuffer != 0) {
-        fragColor.r = 0.0;
+        fragColor.r = float(passId); 
         fragColor.g = float(v_drawItemID);
+        fragColor.b = 0.0; // Note: some passes use this id. (e.g. GLCADPass)
         fragColor.a = dist;
     }
     else {
