@@ -326,8 +326,8 @@ class GLShader extends BaseItem {
             if(renderstate.envMap)
             {
                 const envMapPyramid = unifs.envMapPyramid;
-                if (envMapPyramid) {
-                    renderstate.envMap.bindToUniform(renderstate, envMapPyramid);
+                if (envMapPyramid && renderstate.envMap.bindProbeToUniform) {
+                    renderstate.envMap.bindProbeToUniform(renderstate, envMapPyramid);
                 }
                 const envMapTex = unifs.envMapTex;
                 if (envMapTex) {

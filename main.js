@@ -1,6 +1,4 @@
 
-window.main = function(domElement, resources, args, visualivePlatform) {
-
   function httpGetAsync(url, callback) {
     let xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
@@ -9,16 +7,6 @@ window.main = function(domElement, resources, args, visualivePlatform) {
     }
     xmlHttp.open("GET", url, true); // true for asynchronous 
     xmlHttp.send(null);
-  }
-
-  function loadScript(url, callback) {
-    let script = document.createElement("script");
-    script.onload = function() {
-      callback();
-    };
-    script.setAttribute('type', 'text/javascript');
-    script.setAttribute('src', url);
-    document.getElementsByTagName('head').item(0).appendChild(script);
   }
 
   function resolveURL(file, resources) {
@@ -36,6 +24,20 @@ window.main = function(domElement, resources, args, visualivePlatform) {
     }
     return curr;
   }
+
+  function loadScript(url, callback) {
+    let script = document.createElement("script");
+    script.onload = function() {
+      callback();
+    };
+    script.setAttribute('type', 'text/javascript');
+    script.setAttribute('src', url);
+    document.getElementsByTagName('head').item(0).appendChild(script);
+  }
+
+
+window.main = function(domElement, resources, args, visualivePlatform) {
+
 
   if(args.file) {
     let file = args.file;

@@ -149,7 +149,7 @@ class GLProbe extends ImageAtlas {
         this.renderAtlas(false);
     }
 
-    bindToUniform(renderstate, unif) {
+    bindProbeToUniform(renderstate, unif) {
         //this.__lodPyramid.getSubImage(3).bind(renderstate, unif);
         if (this.__convolved)
             super.bindToUniform(renderstate, unif);

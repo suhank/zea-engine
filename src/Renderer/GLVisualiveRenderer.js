@@ -9,7 +9,7 @@ import {
     Xfo
 } from '../Math';
 import {
-    FileImage,
+    BaseImage,
     HDRImageMixer,
     ProceduralSky,
     Lightmap,
@@ -120,7 +120,7 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        } else if (env instanceof FileImage) {
+        } else if (env instanceof BaseImage) {
             this.__glEnvMap = env.getMetadata('gltexture');
             if(!this.__glEnvMap) {
                 if (env.type === 'FLOAT'){
