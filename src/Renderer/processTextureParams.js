@@ -21,7 +21,7 @@ const processTextureParams = function(gl, params) {
     else if(defaultValue)
       result[name] = defaultValue; 
   }
-  processParam('format', gl.RGBA);
+  processParam('format');
   processParam('internalFormat', result.format);
   processParam('type', gl.UNSIGNED_BYTE);
   processParam('minFilter', gl.LINEAR);
@@ -33,7 +33,6 @@ const processTextureParams = function(gl, params) {
 
 
   processParam('depthFormat');
-  processParam('depthInternalFormat');
   processParam('depthType');
 
   // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
@@ -61,7 +60,8 @@ const processTextureParams = function(gl, params) {
         }
       }
     }
-  } else if (result.format == gl.HALF_FLOAT) {
+  } 
+  else if (result.format == gl.HALF_FLOAT) {
     if (gl.name == 'webgl2') {
       // Half load linear filtering appears to be supported even without the extension.
       // if (result.filter == gl.LINEAR && !gl.__ext_texture_half_float_linear) {
@@ -90,24 +90,61 @@ const processTextureParams = function(gl, params) {
   // Setup the correct combos.
   // the proper texture format combination can be found here
   // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
-  if (gl.name == 'webgl2' && result.internalFormat == result.channels) {
-    if (result.format == gl.FLOAT) {
-      if (result.channels == gl.RGB) {
-        result.internalFormat = gl.RGB32F;
+  // Determine the internal format from mthe format and type.
+  if (result.format != undefined && gl.name == 'webgl2' && result.internalFormat == result.format) {
+    if (result.type == gl.FLOAT) {
+      if (result.format == gl.RED) {
+        result.internalFormat = gl.R32F;
       }
-      else if(result.channels == gl.RGBA){
+      else if (result.format == gl.RED) {
+        result.internalFormat = gl.R32F;
+      }
+      else if (result.format == gl.RG) {
+        result.internalFormat = gl.RG32F;
+      }
+      else if(result.format == gl.RGBA){
         result.internalFormat = gl.RGBA32F;
       }
     }
-    else if(result.format == gl.HALF_FLOAT){
-      if(result.channels == gl.RGB){
+    else if(result.type == gl.HALF_FLOAT){
+      if(result.format == gl.RED){
+        result.internalFormat = gl.R16F;
+      }
+      else if(result.format == gl.RGB){
         result.internalFormat = gl.RGB16F;
       }
-      else if(result.channels == gl.RGBA){
+      else if(result.format == gl.RGBA){
         result.internalFormat = gl.RGBA16F;
       }
     }
+    else if(result.type == gl.UNSIGNED_BYTE){
+      if(result.format == gl.RED){
+        result.internalFormat = gl.R8;
+      }
+      if(result.format == gl.RGB){
+        result.internalFormat = gl.RGB8;
+      }
+      else if(result.format == gl.RGBA){
+        result.internalFormat = gl.RGBA8;
+      }
+    }
   }
+
+
+  if (result.depthFormat != undefined) {
+    if(gl.name == 'webgl2') {
+      if(result.depthType == gl.UNSIGNED_SHORT){
+        result.depthInternalFormat = gl.DEPTH_COMPONENT16;
+      }
+      else if(result.depthType == gl.UNSIGNED_INT){
+        result.depthInternalFormat = gl.UNSIGNED_INT;
+      }
+    }
+    else {
+        result.depthInternalFormat = result.depthFormat;
+    }
+  }
+
   return result;
 }
 

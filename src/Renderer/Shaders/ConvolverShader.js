@@ -84,13 +84,13 @@ float D_ggx(in float alpha, in float NoH)
     float a2 = alpha*alpha;
     float cos2 = NoH*NoH;
 
-    return (1.0f/M_PI) * sqr(alpha/(cos2 * (a2 - 1.0) + 1.0));
+    return (1.0/M_PI) * sqr(alpha/(cos2 * (a2 - 1.0) + 1.0));
 
     /*
     // version from the paper, eq 33
     float CosSquared = NoH*NoH;
-    float TanSquared = (1.0f - CosSquared)/CosSquared;
-    return (1.0f/M_PI) * sqr(alpha/(CosSquared * (alpha*alpha + TanSquared)));
+    float TanSquared = (1.0 - CosSquared)/CosSquared;
+    return (1.0/M_PI) * sqr(alpha/(CosSquared * (alpha*alpha + TanSquared)));
     */
 }
 float compute_lod(in vec3 H, in float pdf, in int num_samples, in int ww, in int hh)

@@ -468,7 +468,7 @@ class GLRenderer {
 
         // Note: Mobile devices don't provide much support for float textures,
         //  and checking compatibility is patchy at best.
-        this.__floatGeomBuffer = false;//((SystemDesc.browserName == "Chrome") || (SystemDesc.browserName == "Firefox")) && !SystemDesc.isMobile;
+        this.__floatGeomBuffer = ((SystemDesc.browserName == "Chrome") || (SystemDesc.browserName == "Firefox")) && !SystemDesc.isMobile;
         this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);

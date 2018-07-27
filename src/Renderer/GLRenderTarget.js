@@ -46,6 +46,8 @@ class GLRenderTarget {
     }
 
     if (p.depthFormat) {
+      if(gl.name == 'webgl' && !gl.__ext_WEBGL_depth_texture)
+        throw("Depth textures not support on this device")
       // -- Initialize depth texture
       gl.activeTexture(gl.TEXTURE0);
       this.depthTexture = gl.createTexture();
@@ -53,18 +55,19 @@ class GLRenderTarget {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, p.wrapS);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, p.wrapT);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, p.minFilter);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, p.maxFilter);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, p.magFilter);
 
-      // the proper texture format combination can be found here
-      // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
+
+        // the proper texture format combination can be found here
+        // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
       gl.texImage2D(gl.TEXTURE_2D,
         0,
-        gl.DEPTH_COMPONENT16,
+        p.depthInternalFormat,
         p.width,
         p.height,
         0,
-        gl.DEPTH_COMPONENT,
-        gl.UNSIGNED_SHORT,
+        p.depthFormat,
+        p.depthType,
         null);
     }
 

@@ -526,7 +526,7 @@ class GLViewport extends BaseViewport {
     }
 
     onMouseUp(event) {
-        let mouseUpPos = this.__eventMousePos(event);
+        const mouseUpPos = this.__eventMousePos(event);
 
         switch (this.__manipMode) {
             case 'highlighting':

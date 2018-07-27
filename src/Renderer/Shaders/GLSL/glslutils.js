@@ -2,6 +2,11 @@ import { shaderLibrary } from '../../ShaderLibrary.js';
 
 shaderLibrary.setShaderModule('GLSLUtils.glsl', `
 
+
+int ftoi(float val){
+    return int(floor(val + 0.5));
+}
+
 #ifdef ENABLE_ES3
 
 int imod(int x, int y) {
@@ -10,6 +15,10 @@ int imod(int x, int y) {
 
 void setFlag(inout int flags, int flag) {
     flags |= flag;
+}
+
+void clearFlag(inout int flags, int flag) {
+    flags &= ~flag;
 }
 
 bool testFlag(int flags, int flag) {
@@ -31,6 +40,9 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 
 #else
 
+float round(float val){
+    return floor(val + 0.4);
+}
 
 int imod(int x, int y) {
     return x-y*(x/y);
@@ -38,6 +50,9 @@ int imod(int x, int y) {
 
 void setFlag(inout int flags, int flag) {
     flags += flag;
+}
+void clearFlag(inout int flags, int flag) {
+    flags -= flag;
 }
 
 bool testFlag(int flags, int flag) {

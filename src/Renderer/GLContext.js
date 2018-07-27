@@ -7,7 +7,7 @@ var create3DContext = function(canvas, opt_attribs) {
 
     console.log(SystemDesc);
 
-    let names = [ 'webgl2', 'webgl'];
+    let names = ['webgl2', 'webgl'];
     let context = null;
     names.some((name)=>{
         try {

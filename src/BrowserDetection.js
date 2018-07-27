@@ -107,6 +107,9 @@ function getGPUDesc() {
     else if (renderer.match(/Intel/i)) {
         gpuVendor = "Intel";
     }
+    else if (renderer.match(/Mali/i)) {
+        gpuVendor = "ARM";
+    }
 
     return {
         vendor,
@@ -132,14 +135,15 @@ function getSystemDesc() {
     //    Typically these devices are laptops, so the textures can't be too blurry
     // 2: High-end: turn up as much as needed.
     let deviceCategory;
-    if (isMobile) {
-        deviceCategory = 0;
-    } else  if (gpuDesc.gpuVendor == 'Intel' || browserDesc.browserName != 'Chrome') {
-        deviceCategory = 1;
+    if (!isMobile && gpuDesc.gpuVendor == 'NVidia' && browserDesc.browserName == 'Chrome' && gpuDesc.renderer.match(/GTX/i)) {
+        deviceCategory = 'High';
+    } else  if (!isMobile && (gpuDesc.gpuVendor == 'Intel' || browserDesc.browserName != 'Chrome')) {
+        deviceCategory = 'Medium';
     }
-    else{
-        deviceCategory = 2;
+    else {
+        deviceCategory = 'Low';
     }
+        // deviceCategory = 'Low';
     
     return {
         isMobileDevice: isMobile,
