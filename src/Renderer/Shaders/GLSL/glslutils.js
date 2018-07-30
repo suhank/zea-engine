@@ -40,6 +40,14 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 
 #else
 
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+int min(int a, int b) {
+    return a < b ? a : b;
+}
+
+
 float round(float val){
     return floor(val + 0.4);
 }

@@ -133,14 +133,19 @@ class Label  extends DataImage {
         const loadFont = ()=>{
             const font = this.getParameter('font').getValue();
             const fontSize = this.getParameter('fontSize').getValue();
-            document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
-                // console.log("Font Loaded:" + font);
-                // if(this.__loaded) {
-                //     this.__loaded = true;
-                //     this.loaded.emit();
-                // }
+            if(document.fonts != undefined) {
+                document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
+                    // console.log("Font Loaded:" + font);
+                    // if(this.__loaded) {
+                    //     this.__loaded = true;
+                    //     this.loaded.emit();
+                    // }
+                    this.renderLabelToImage();
+                });
+            }
+            else {
                 this.renderLabelToImage();
-            });
+            }
         }
         fontSizeParam.valueChanged.connect(loadFont);
         fontParam.valueChanged.connect(loadFont);
