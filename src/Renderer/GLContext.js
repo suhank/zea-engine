@@ -6,18 +6,25 @@ import {
 var create3DContext = function(canvas, opt_attribs) {
 
     console.log(SystemDesc);
-
-    const names = ['webgl2', 'webgl'];
     let context = null;
-    names.some((name)=>{
+    if(opt_attribs.webglContextType != undefined) {
         try {
-            context = canvas.getContext(name, opt_attribs);
-            context.name = name;
+            context = canvas.getContext(opt_attribs.webglContextType, opt_attribs);
+            context.name = opt_attribs.webglContextType;
         } catch (e) {}
-        if (context) {
-            return true;
-        }
-    });
+    }
+    else {
+        const names = ['webgl2', 'webgl'];
+        names.some((name)=>{
+            try {
+                context = canvas.getContext(name, opt_attribs);
+                context.name = name;
+            } catch (e) {}
+            if (context) {
+                return true;
+            }
+        });
+    }
     if (!context) {
         return;
     }
@@ -65,6 +72,9 @@ var create3DContext = function(canvas, opt_attribs) {
             context.floatTexturesSupported = true;
             context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
         }
+
+        // Safari does not support uploading HALF_FLOAT data into the GPU.
+        context.supportUploadingHalfFloat = SystemDesc.browserName != 'Safari';
 
         // Needed for rendering to flat textures in an Fbo
         context.__ext_color_buffer_float = context.getExtension("EXT_color_buffer_float");

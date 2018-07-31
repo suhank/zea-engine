@@ -5,6 +5,9 @@ import {
     BaseImage,
     RefCounted
 } from '../SceneTree';
+import {
+    SystemDesc
+} from '../BrowserDetection.js';
 
 class GLTexture2D extends RefCounted {
     constructor(gl, params) {
@@ -139,6 +142,9 @@ class GLTexture2D extends RefCounted {
                 //     filter = 'NEAREST';
                 // }
             } else {
+                if(!gl.supportUploadingHalfFloat && data != undefined) {
+                    throw("Safari does not support uploading HALF_FLOAT texture data.")
+                }
                 if (gl.__ext_half_float) {
                     if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
                         console.warn('Half Float texture filtering not supported on this device');

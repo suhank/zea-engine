@@ -106,7 +106,7 @@ const PassType = {
 };
 
 class GLRenderer {
-    constructor(canvasDiv, options = {}, webglOptions = {}) {
+    constructor(canvasDiv, options = {}) {
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
@@ -155,7 +155,7 @@ class GLRenderer {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-        this.setupWebGL(canvasDiv, webglOptions);
+        this.setupWebGL(canvasDiv, options.webglOptions);
 
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);

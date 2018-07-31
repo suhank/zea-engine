@@ -40,6 +40,8 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 
 #else
 
+// TODO: integrate: https://gist.github.com/mattatz/70b96f8c57d4ba1ad2cd
+
 int max(int a, int b) {
     return a > b ? a : b;
 }
