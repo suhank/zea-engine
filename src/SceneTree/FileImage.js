@@ -68,7 +68,9 @@ class FileImage extends BaseImage {
             }
 
             const fileDesc = fileParam.getFileDesc();
-            this.__loadData(filePath, fileDesc);
+            if(fileDesc) {
+                this.__loadData(filePath, fileDesc);
+            }
         });
         if (resourcePath && resourcePath != '')
             fileParam.setValue(resourcePath);
@@ -370,26 +372,26 @@ class FileImage extends BaseImage {
             resourcePromise = new Promise((resolve, reject) => {
                 resourceLoader.addWork(resourcePath, 1);
 
-                loadBinfile(fileDesc.url, (data) => {
-
-                    const imageDataBase64 = localStorage.getItem(fileDesc.url);
-                    if (imageDataBase64) {
-                        const image = new Image();
-                        image.crossOrigin = 'anonymous';
-                        image.src = imageDataBase64;
-
-                        const metadata = JSON.parse(localStorage.getItem(fileDesc.url + '_metadata'));
-
+                if(fileDesc.assets.atlas) {
+                    const image = new Image();
+                    image.crossOrigin = 'anonymous';
+                    image.src = fileDesc.assets.atlas.url;
+                    image.addEventListener("load", () => {
                         resolve({
-                            width: metadata.width,
-                            height: metadata.height,
-                            atlasSize: new Visualive.Vec2(metadata.atlasSize[0], metadata.atlasSize[1]),
-                            frameRange: [0, metadata.numframes],
-                            frameDelays: metadata.frameDelays,
+                            width: fileDesc.assets.atlas.width,
+                            height: fileDesc.assets.atlas.height,
+                            atlasSize: fileDesc.assets.atlas.atlasSize,
+                            frameDelays: fileDesc.assets.atlas.frameDelays,
+                            frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
                             imageData: image
                         });
-                        return;
-                    }
+                        resourceLoader.addWorkDone(resourcePath, 1);
+                    });
+                    return;
+                }
+
+                loadBinfile(fileDesc.url, (data) => {
+                    console.warn("Unpacking Gif client side:" + resourcePath)
 
                     const start = performance.now();
 
@@ -399,13 +401,13 @@ class FileImage extends BaseImage {
 
                     // do something with the frame data
                     const sideLength = Math.sqrt(frames.length);
-                    const atlasSize = new Visualive.Vec2(sideLength, sideLength);
+                    const atlasSize = [sideLength, sideLength];
                     if (Math.fract(sideLength) > 0.0) {
-                        atlasSize.x = Math.floor(atlasSize.x + 1);
+                        atlasSize[0] = Math.floor(atlasSize[0] + 1);
                         if (Math.fract(sideLength) > 0.5) {
-                            atlasSize.y = Math.floor(atlasSize.y + 1);
+                            atlasSize[1] = Math.floor(atlasSize[1] + 1);
                         } else {
-                            atlasSize.y = Math.floor(atlasSize.y);
+                            atlasSize[1] = Math.floor(atlasSize[1]);
                         }
                     }
 
@@ -425,8 +427,8 @@ class FileImage extends BaseImage {
                     // The atlas for all the frames.
                     const atlasCanvas = document.createElement('canvas');
                     const atlasCtx = atlasCanvas.getContext('2d');
-                    atlasCanvas.width = atlasSize.x * width;
-                    atlasCanvas.height = atlasSize.y * height;
+                    atlasCanvas.width = atlasSize[0] * width;
+                    atlasCanvas.height = atlasSize[1] * height;
 
                     let frameImageData;
                     const frameDelays = [];
@@ -454,7 +456,7 @@ class FileImage extends BaseImage {
 
                         gifCtx.drawImage(tempCanvas, dims.left, dims.top);
 
-                        atlasCtx.drawImage(gifCanvas, (index % atlasSize.x) * width, Math.floor(index / atlasSize.x) * height);
+                        atlasCtx.drawImage(gifCanvas, (index % atlasSize[0]) * width, Math.floor(index / atlasSize[0]) * height);
                     }
 
                     for (let i = 0; i < frames.length; i++) {
@@ -467,22 +469,6 @@ class FileImage extends BaseImage {
 
                     const ms = performance.now() - start;
                     console.log(`Decode GIF '${resourcePath}' time:` + ms);
-
-                    try {
-                        localStorage.setItem(fileDesc.url, atlasCanvas.toDataURL("image/png"));
-                        localStorage.setItem(fileDesc.url + '_metadata', JSON.stringify({
-                            width: atlasCanvas.width,
-                            height: atlasCanvas.height,
-                            atlasSize: [atlasSize.x, atlasSize.y],
-                            numframes: frames.length,
-                            frameDelays
-                        }));
-                    } catch (e) {
-                        if (e.code == DOMException.QUOTA_EXCEEDED_ERR) {
-                            console.log("Storage full");
-                            localStorage.clear();
-                        }
-                    }
 
                     resolve({
                         width: atlasCanvas.width,
@@ -503,17 +489,17 @@ class FileImage extends BaseImage {
         }
 
         // Make the resolve asynchronous so that the function returns.
-        // (Chroe started generating errors because the 'onload' callback took to long to return.)
+        // (Chrome started generating errors because the 'onload' callback took to long to return.)
         setTimeout(() => {
             resourcePromise.then((unpackedData) => {
 
                 this.width = unpackedData.width;
                 this.height = unpackedData.height;
 
-                // this.__streamAtlasDesc.x = atlasSize.x;
-                // this.__streamAtlasDesc.y = atlasSize.y;
+                // this.__streamAtlasDesc.x = atlasSize[0];
+                // this.__streamAtlasDesc.y = atlasSize[1];
                 // this.__streamAtlasDesc.z = frames.length;
-                this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize.x, unpackedData.atlasSize.y, 0, 0));
+                this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0));
                 this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
 
                 this.__data = unpackedData.imageData;

@@ -155,7 +155,7 @@ class GLRenderer {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-        this.setupWebGL(canvasDiv, options.webglOptions);
+        this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {});
 
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
