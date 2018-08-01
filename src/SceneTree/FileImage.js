@@ -138,6 +138,12 @@ class FileImage extends BaseImage {
         if (fileDesc.assets && Object.keys(fileDesc.assets).length > 0) {
                 function chooseImage(params, filterAssets) {
 
+                    // Note: this is a filter to remove any corrupt data
+                    // generate by our broken server side processing system.
+                    filterAssets = filterAssets.filter(
+                        asset => asset !== null
+                    );
+
                     if (supportWebp) {
                         const resultFilter = filterAssets.filter(
                             asset => asset.format === "webp"
