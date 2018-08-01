@@ -434,7 +434,11 @@ class FileImage extends BaseImage {
                     const frameDelays = [];
                     const renderFrame = (frame, index) => {
                         const dims = frame.dims;
-                        frameDelays.push(frame.delay);
+
+                        // Note: the server side library returns centisecs for 
+                        // frame delays, so normalize here so that client and servers
+                        // valueus are in the 
+                        frameDelays.push(frame.delay / 10);
 
                         if (!frameImageData || dims.width != frameImageData.width || dims.height != frameImageData.height) {
                             tempCanvas.width = dims.width;
@@ -442,7 +446,7 @@ class FileImage extends BaseImage {
                             frameImageData = tempCtx.createImageData(dims.width, dims.height);
                         }
 
-                        // set the patch data as an override
+                        // set the patch data as an override    
                         frameImageData.data.set(frame.patch);
                         tempCtx.putImageData(frameImageData, 0, 0);
 
@@ -496,16 +500,14 @@ class FileImage extends BaseImage {
                 this.width = unpackedData.width;
                 this.height = unpackedData.height;
 
-                // this.__streamAtlasDesc.x = atlasSize[0];
-                // this.__streamAtlasDesc.y = atlasSize[1];
-                // this.__streamAtlasDesc.z = frames.length;
                 this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0));
                 this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
 
                 this.__data = unpackedData.imageData;
 
                 this.getFrameDelay = (index) => {
-                    return unpackedData.frameDelays[index];
+                    // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
+                    return unpackedData.frameDelays[index] * 10;
                 }
 
                 //////////////////////////
