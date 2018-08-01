@@ -23,6 +23,8 @@ class GLOpaqueGeomsPass extends GLPass {
             const glshaderMaterials = allglshaderMaterials[glshaderkey];
             if (glshaderMaterials.getGLShader().isTransparent())
                 continue;
+            if (glshaderMaterials.getGLShader().isOverlay())
+                continue;
             if (glshaderMaterials.getGLShader().getPassFilter) {
                 const passFilter = glshaderMaterials.getGLShader().getPassFilter();
                 if( passFilter.indexOf('GLOpaqueGeomsPass') == -1)
