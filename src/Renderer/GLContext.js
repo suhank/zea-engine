@@ -6,18 +6,25 @@ import {
 var create3DContext = function(canvas, opt_attribs) {
 
     console.log(SystemDesc);
-
-    let names = [ 'webgl2', 'webgl'];
     let context = null;
-    names.some((name)=>{
+    if(opt_attribs.webglContextType != undefined) {
         try {
-            context = canvas.getContext(name, opt_attribs);
-            context.name = name;
+            context = canvas.getContext(opt_attribs.webglContextType, opt_attribs);
+            context.name = opt_attribs.webglContextType;
         } catch (e) {}
-        if (context) {
-            return true;
-        }
-    });
+    }
+    else {
+        const names = ['webgl2', 'webgl'];
+        names.some((name)=>{
+            try {
+                context = canvas.getContext(name, opt_attribs);
+                context.name = name;
+            } catch (e) {}
+            if (context) {
+                return true;
+            }
+        });
+    }
     if (!context) {
         return;
     }
@@ -66,6 +73,9 @@ var create3DContext = function(canvas, opt_attribs) {
             context.__ext_texture_half_float_linear = context.getExtension("OES_texture_half_float_linear");
         }
 
+        // Safari does not support uploading HALF_FLOAT data into the GPU.
+        context.supportUploadingHalfFloat = SystemDesc.browserName != 'Safari';
+
         // Needed for rendering to flat textures in an Fbo
         context.__ext_color_buffer_float = context.getExtension("EXT_color_buffer_float");
 
@@ -90,7 +100,7 @@ var create3DContext = function(canvas, opt_attribs) {
         context.__ext_element_index_uint = context.getExtension("OES_element_index_uint");
         context.__ext_WEBGL_depth_texture = context.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
         if(context.__ext_WEBGL_depth_texture) {
-            gl.UNSIGNED_INT_24_8 = context.__ext_WEBGL_depth_texture.UNSIGNED_INT_24_8_WEBGL;
+            context.UNSIGNED_INT_24_8 = context.__ext_WEBGL_depth_texture.UNSIGNED_INT_24_8_WEBGL;
         }
 
         context.DRAW_FRAMEBUFFER = context.FRAMEBUFFER;

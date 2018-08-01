@@ -111,8 +111,11 @@ class GLEnvMap extends GLProbe {
             }
         }
     }
+
     
-    bindSrcImgToUniform(renderstate, unif, type = 1) {
+    // An EnvMap can be bound as a regular texture, but we want the
+    // orriginal source data, not the atlas of convolved images.
+    bindToUniform(renderstate, unif, type = 1) {
         return this.__srcGLTex.bindToUniform(renderstate, unif, type);
     }
 

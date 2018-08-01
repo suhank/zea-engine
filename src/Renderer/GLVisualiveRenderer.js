@@ -9,6 +9,7 @@ import {
     Xfo
 } from '../Math';
 import {
+    BaseImage,
     HDRImageMixer,
     ProceduralSky,
     Lightmap,
@@ -119,9 +120,20 @@ class GLVisualiveRenderer extends GLRenderer {
     __bindEnvMap(env) {
         if (env instanceof ProceduralSky) {
             this.__glEnvMap = new GLProceduralSky(this.__gl, env);
-        } else if (env.type === 'FLOAT') {
-            this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
-            this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
+        } else if (env instanceof BaseImage) {
+            this.__glEnvMap = env.getMetadata('gltexture');
+            if(!this.__glEnvMap) {
+                if (env.type === 'FLOAT'){
+                    this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
+                    this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
+                }
+                else if (env.isStreamAtlas()){
+                    this.__glEnvMap = new GLImageStream(this.__gl, env);
+                }
+                else{
+                    this.__glEnvMap = new GLTexture2D(this.__gl, env);
+                }
+            }
         } else {
             console.warn("Unsupported EnvMap:" + env);
             return;
@@ -132,7 +144,11 @@ class GLVisualiveRenderer extends GLRenderer {
         this.envMapAssigned.emit(this.__glEnvMap);
     }
 
+    getGLEnvMap(){
+        return this.__glEnvMap;
+    }
     getEnvMapTex(){
+            console.warn("Deprecated Function");
         return this.__glEnvMap;
     }
 
@@ -185,7 +201,6 @@ class GLVisualiveRenderer extends GLRenderer {
                 this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
             }
         }
-        this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
         let lightMaps = scene.getLightMaps();
         let addLightmap = (name, lightmap) => {
@@ -345,7 +360,7 @@ class GLVisualiveRenderer extends GLRenderer {
             this.__glBackgroundMap.bindToUniform(renderstate, unifs.backgroundImage);
             this.__backgroundMapShaderBinding.bind(renderstate);
             gl.drawQuad();
-        } else if (this.__glEnvMap) {
+        } else if (this.__glEnvMap && this.__glEnvMap.draw) {
             this.__glEnvMap.draw(renderstate);
         }
     }

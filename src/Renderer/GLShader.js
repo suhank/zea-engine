@@ -106,9 +106,12 @@ class GLShader extends BaseItem {
                 }
                 const parts = errors[i].split(':');
                 if (parts.length >= 2) {
-                    let lineNum = parseInt(parts[2]); // TODO check against ATI and intel cards
+                    const lineNum = parseInt(parts[2]); // TODO check against ATI and intel cards
                     if (!isNaN(lineNum)) {
-                        errorLines[lineNum] = errors[i];
+                        if(errorLines[lineNum])
+                            errorLines[lineNum].push(errors[i]);
+                        else
+                            errorLines[lineNum] = [errors[i]];
                     }
                 }
             }
@@ -117,12 +120,15 @@ class GLShader extends BaseItem {
             for (let i = 0; i < lines.length; i++) {
                 numberedLinesWithErrors.push(((i + 1) + ":").lpad(' ', 3) + lines[i]);
                 if ((i + 1) in errorLines) {
-                    let error = errorLines[(i + 1)];
-                    numberedLinesWithErrors.push(error);
-                    numberedLinesWithErrors.push('-'.lpad('-', error.length));
+                    const errors = errorLines[(i + 1)];
+                    for(let error of errors) {
+                        numberedLinesWithErrors.push(error);
+                        numberedLinesWithErrors.push('-'.lpad('-', error.length));
+                    }
                 }
             }
-            console.warn("An error occurred compiling the shader \n\n" + numberedLinesWithErrors.join('\n') + "\n\n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n'));
+            // throw("An error occurred compiling the shader \n\n" + numberedLinesWithErrors.join('\n') + "\n\n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n'));
+            throw("An error occurred compiling the shader \n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n') + "\n" + numberedLinesWithErrors.join('\n'));
             return null;
         }
         return shaderHdl;
@@ -165,6 +171,8 @@ class GLShader extends BaseItem {
                 }
             }
 
+            console.log("vertexShaderGLSL:" + vertexShaderGLSL);
+            console.log("fragmentShaderGLSL:" + fragmentShaderGLSL);
             throw ("Unable to link the shader program:" + this.constructor.name + '\n==================\n' + info);
 
 
@@ -326,12 +334,12 @@ class GLShader extends BaseItem {
             if(renderstate.envMap)
             {
                 const envMapPyramid = unifs.envMapPyramid;
-                if (envMapPyramid) {
-                    renderstate.envMap.bindToUniform(renderstate, envMapPyramid);
+                if (envMapPyramid && renderstate.envMap.bindProbeToUniform) {
+                    renderstate.envMap.bindProbeToUniform(renderstate, envMapPyramid);
                 }
                 const envMapTex = unifs.envMapTex;
                 if (envMapTex) {
-                    renderstate.envMap.bindSrcImgToUniform(renderstate, envMapTex);
+                    renderstate.envMap.bindToUniform(renderstate, envMapTex);
                 }
             }
             {

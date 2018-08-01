@@ -227,12 +227,10 @@ class Color extends AttrValue {
     }
     
     scaleInPlace(scalar) {
-        this.set(
-            this.r * scalar,
-            this.g * scalar,
-            this.b * scalar,
-            this.a * scalar
-        );
+        this.r *= scalar;
+        this.g *= scalar;
+        this.b *= scalar;
+        this.a *= scalar;
     }
     
     applyGamma(gamma) {

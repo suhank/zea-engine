@@ -41,7 +41,7 @@ import {
  * @param {Boolean} [fill = false] Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
  */
-function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
+function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) {
     if (typeof stroke == 'undefined') {
         stroke = true;
     }
@@ -81,6 +81,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
         ctx.fill();
     }
     if (stroke) {
+        ctx.lineWidth = strokeWidth;
         ctx.stroke();
     }
 }
@@ -132,14 +133,19 @@ class Label  extends DataImage {
         const loadFont = ()=>{
             const font = this.getParameter('font').getValue();
             const fontSize = this.getParameter('fontSize').getValue();
-            document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
-                // console.log("Font Loaded:" + font);
-                // if(this.__loaded) {
-                //     this.__loaded = true;
-                //     this.loaded.emit();
-                // }
+            if(document.fonts != undefined) {
+                document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
+                    // console.log("Font Loaded:" + font);
+                    // if(this.__loaded) {
+                    //     this.__loaded = true;
+                    //     this.loaded.emit();
+                    // }
+                    this.renderLabelToImage();
+                });
+            }
+            else {
                 this.renderLabelToImage();
-            });
+            }
         }
         fontSizeParam.valueChanged.connect(loadFont);
         fontParam.valueChanged.connect(loadFont);
@@ -188,7 +194,7 @@ class Label  extends DataImage {
         if (background) {
             ctx2d.fillStyle = backgroundColor.toHex();
             ctx2d.strokeStyle = outlineColor.toHex();
-            roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline);
+            roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline, borderWidth);
         }
 
         ctx2d.font = fontSize + 'px "' + font + '"';

@@ -36,6 +36,10 @@ function getBrowserDesc() {
         browserName = "Microsoft Internet Explorer";
         fullVersion = nAgt.substring(verOffset + 5);
     }
+    else if ((verOffset = nAgt.indexOf("Edge")) != -1) {
+        browserName = "Edge";
+        fullVersion = nAgt.substring(verOffset + 4);
+    }
     // In Chrome, the true version is after "Chrome" 
     else if ((verOffset = nAgt.indexOf("Chrome")) != -1) {
         browserName = "Chrome";
@@ -88,15 +92,21 @@ function getBrowserDesc() {
 }
 
 function getGPUDesc() {
-    const canvas = document.createElement('canvas');
-    let context = canvas.getContext('webgl');
-    if(!context)
+    let webgl;
+    try {
+        webgl = document.createElement('canvas').getContext('webgl');
+    } catch (e) {}
+    if(!webgl)
         return;
+    let webgl2;
+    try {
+        webgl2 = document.createElement('canvas').getContext('webgl2');
+    } catch (e) {}
 
-    const debugInfo = context.getExtension('WEBGL_debug_renderer_info');
-    const vendor = context.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-    const renderer = context.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-    const maxTextureSize = context.getParameter(context.MAX_TEXTURE_SIZE);
+    const debugInfo = webgl.getExtension('WEBGL_debug_renderer_info');
+    const vendor = webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+    const renderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    const maxTextureSize = webgl.getParameter(webgl.MAX_TEXTURE_SIZE);
     let gpuVendor;
     if (renderer.match(/NVIDIA/i)) {
         gpuVendor = "NVidia";
@@ -107,12 +117,16 @@ function getGPUDesc() {
     else if (renderer.match(/Intel/i)) {
         gpuVendor = "Intel";
     }
+    else if (renderer.match(/Mali/i)) {
+        gpuVendor = "ARM";
+    }
 
     return {
         vendor,
         renderer,
         gpuVendor,
-        maxTextureSize
+        maxTextureSize,
+        supportsWebGL2: (webgl2 != undefined)
     }
 }
 
@@ -132,13 +146,13 @@ function getSystemDesc() {
     //    Typically these devices are laptops, so the textures can't be too blurry
     // 2: High-end: turn up as much as needed.
     let deviceCategory;
-    if (isMobile) {
-        deviceCategory = 0;
-    } else  if (gpuDesc.gpuVendor == 'Intel' || browserDesc.browserName != 'Chrome') {
-        deviceCategory = 1;
+    if (!isMobile && gpuDesc.gpuVendor == 'NVidia' && browserDesc.browserName == 'Chrome' && gpuDesc.renderer.match(/GTX/i) && gpuDesc.supportsWebGL2) {
+        deviceCategory = 'High';
+    } else  if (!isMobile && (gpuDesc.gpuVendor == 'Intel' || browserDesc.browserName != 'Chrome')) {
+        deviceCategory = 'Medium';
     }
-    else{
-        deviceCategory = 2;
+    else {
+        deviceCategory = 'Low';
     }
     
     return {

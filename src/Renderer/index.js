@@ -9,6 +9,7 @@ export * from './GLFbo.js';
 export * from './GLRenderTarget.js';
 export * from './GLPass.js';
 export * from './GLCollector.js';
+export * from './GLRenderer.js';
 export * from './GLSimpleRenderer.js';
 export * from './GLVisualiveRenderer.js';
 export * from './ShaderLibrary.js';

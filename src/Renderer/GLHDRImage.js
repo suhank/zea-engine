@@ -69,28 +69,17 @@ class GLHDRImage extends GLTexture2D {
                 wrap: 'CLAMP_TO_EDGE',
                 data: ldr
             });
-            // this.__srcCDMTex = new GLTexture2D(gl, {
-            //     format: 'ALPHA',
-            //     type: 'UNSIGNED_BYTE',
-            //     width: ldr.width /*8*/ ,
-            //     height: ldr.height /*8*/ ,
-            //     filter: 'NEAREST',
-            //     mipMapped: false,
-            //     wrap: 'CLAMP_TO_EDGE'/*,
-            //     data: cdm*/
-            // });
-
             this.__srcCDMTex = new GLTexture2D(gl, {
-                format: 'RED',
+                format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
                 type: 'UNSIGNED_BYTE',
-                internalFormat: 'R8',
-                width: ldr.width,
-                height: ldr.height,
+                width: ldr.width /*8*/ ,
+                height: ldr.height /*8*/ ,
                 filter: 'NEAREST',
                 mipMapped: false,
                 wrap: 'CLAMP_TO_EDGE',
                 data: cdm
             });
+            
             this.__unpackHDRShader = new UnpackHDRShader(gl);
             let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);

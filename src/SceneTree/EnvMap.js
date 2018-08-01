@@ -2,7 +2,8 @@ import {
     Color
 } from '../Math';
 import {
-    Signal
+    Signal,
+    decodeText
 } from '../Utilities';
 import {
     sgFactory
@@ -95,7 +96,11 @@ class EnvMap extends BaseImage {
             const cdm = entries.cdm;
             const samples = entries.samples;
 
-            this.__sampleSets = JSON.parse((new TextDecoder("utf-8")).decode(samples));
+            if(window.TextDecoder)
+                this.__sampleSets = JSON.parse((new TextDecoder("utf-8")).decode(samples));
+            else
+                this.__sampleSets = JSON.parse(decodeText(samples));
+                
             
             /////////////////////////////////
             // Parse the data.

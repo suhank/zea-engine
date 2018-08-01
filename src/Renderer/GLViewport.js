@@ -108,11 +108,20 @@ class GLViewport extends BaseViewport {
 
         this.__manipulators = {};
         this.__manipModeStack = ['highlighting'];
-        this.setManipulator(new CameraMouseAndKeyboard());
+        this.__manipMode = 'highlighting';
+        this.registerManipulator('camera-manipulation', new CameraMouseAndKeyboard())
 
         this.resize(width, height);
         // this.createOffscreenFbo();
         this.createSelectedGeomsFbo();
+    }
+
+    getOutlineColor() {
+        return this.__outlineColor
+    }
+
+    setOutlineColor(color) {
+        this.__outlineColor = color;
     }
 
     resize(width, height) {
@@ -152,6 +161,10 @@ class GLViewport extends BaseViewport {
             this.__updateProjectionMatrix();
             this.updated.emit();
         });
+
+        // The state machine can manipulate the camera and then signal the
+        // end of a movement.
+        this.__camera.movementFinished.connect(this.renderGeomDataFbo);
 
         this.__updateProjectionMatrix();
     }
@@ -357,49 +370,33 @@ class GLViewport extends BaseViewport {
             // }
             // logGeomData();
 
-            let passId, itemId, dist, pixels;
-            if (this.__floatGeomBuffer) {
-                pixels = new Float32Array(4);
-                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, pixels);
-                if (pixels[3] == 0)
+            let passId, itemId, dist, geomData;
+            if (gl.floatGeomBuffer) {
+                geomData = new Float32Array(4);
+                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
+                if (geomData[3] == 0)
                     return undefined;
-                pixels[0] = Math.round(pixels[0]);
-                pixels[1] = Math.round(pixels[1]);
-                pixels[2] = Math.round(pixels[2]);
-                pixels[3] = Math.round(pixels[3]);
-                passId = pixels[0];
-                itemId = pixels[1];
-                dist = pixels[3];
+                passId = Math.round(geomData[0]);
             } else {
-                pixels = new Uint8Array(4);
-                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                geomData = new Uint8Array(4);
+                gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData);
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                if (pixels[0] == 0 && pixels[1] == 0)
+                if (geomData[0] == 0 && geomData[1] == 0)
                     return undefined;
-                itemId = pixels[0] + (pixels[1] << 8);
-                dist = Math.decode16BitFloatFrom2xUInt8([pixels[2], pixels[3]]);
+                passId = 0;
             }
             this.__geomDataBufferFbo.unbind();
-            let geomItem;
-            if (passId == 0) {
-                const drawItem = this.__renderer.getCollector().getDrawItem(itemId);
-                if (drawItem) {
-                    geomItem = drawItem.getGeomItem();
-                }
-            } else {
-                geomItem = this.__renderer.getPass(passId).getGeomItem(pixels);
-            }
+            const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
 
-            if (geomItem) {
-                let mouseRay = this.calcRayFromScreenPos(screenPos);
-                let intersectionPos = mouseRay.start.add(mouseRay.dir.scale(dist));
+            if (geomItemAndDist) {
+                const mouseRay = this.calcRayFromScreenPos(screenPos);
+                const intersectionPos = mouseRay.start.add(mouseRay.dir.scale(geomItemAndDist.dist));
                 return {
-                    id: itemId,
                     screenPos,
-                    dist: pixels[2],
                     mouseRay: mouseRay,
                     intersectionPos,
-                    geomItem
+                    geomItem: geomItemAndDist.geomItem,
+                    dist: geomItemAndDist.dist
                 };
             }
         }
@@ -471,12 +468,16 @@ class GLViewport extends BaseViewport {
                 */
                 let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
                 if (intersectionData != undefined) {
-                    console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-                    console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+                    // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+                    // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                     this.__mouseDownGeom = intersectionData.geomItem;
                     this.__mouseDownGeom.onMouseDown(event, intersectionData);
+                    if(event.vleStopPropagation == true)
+                        return true;
 
                     this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
+                    if(event.vleStopPropagation == true)
+                        return true;
 
                     // Note: a manipulator can set a 
                     // this.__manipMode = 'geom-manipulation';
@@ -485,8 +486,12 @@ class GLViewport extends BaseViewport {
                 if (this.__manipMode == 'highlighting') {
                     // Default to camera manipulation
                 */
-            this.activateManipulator('camera-manipulation');
-            this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
+
+
+                if (this.__manipMode != 'camera-manipulation') {
+                    this.activateManipulator('camera-manipulation');
+                    this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
+                }
             /*
                 }
 
@@ -521,14 +526,13 @@ class GLViewport extends BaseViewport {
     }
 
     onMouseUp(event) {
-        let mouseUpPos = this.__eventMousePos(event);
+        const mouseUpPos = this.__eventMousePos(event);
 
         switch (this.__manipMode) {
             case 'highlighting':
                 break;
             case 'camera-manipulation':
                 this.__manipulators[this.__manipMode].onDragEnd(event, mouseUpPos, this);
-                // this.__manipMode = 'highlighting';
                 this.deactivateManipulator();
                 break;
             case 'geom-manipulation':

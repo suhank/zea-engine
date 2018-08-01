@@ -5,6 +5,9 @@ import {
     BaseImage,
     RefCounted
 } from '../SceneTree';
+import {
+    SystemDesc
+} from '../BrowserDetection.js';
 
 class GLTexture2D extends RefCounted {
     constructor(gl, params) {
@@ -103,6 +106,9 @@ class GLTexture2D extends RefCounted {
         let filter = ('filter' in params) ? params.filter : 'LINEAR';
         const wrap = ('wrap' in params) ? params.wrap : 'CLAMP_TO_EDGE';
 
+        // if(format == 'ALPHA')
+        //     throw("ALPHA textures are now deprecated. Please use RED instead.")
+
         // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
         if (type == 'FLOAT') {
             if (gl.name == 'webgl2') {
@@ -136,6 +142,9 @@ class GLTexture2D extends RefCounted {
                 //     filter = 'NEAREST';
                 // }
             } else {
+                if(!gl.supportUploadingHalfFloat && data != undefined) {
+                    throw("Safari does not support uploading HALF_FLOAT texture data.")
+                }
                 if (gl.__ext_half_float) {
                     if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
                         console.warn('Half Float texture filtering not supported on this device');
@@ -165,7 +174,14 @@ class GLTexture2D extends RefCounted {
         if (gl.name == 'webgl2') {
             if(!('internalFormat' in params)) {
                 if (this.__type == gl.FLOAT) {
-                    if (this.__format == gl.RGB) {
+                    if (this.__format == gl.RED) {
+                        this.__internalFormat = gl.R32F;
+                    }
+                    else if (this.__format == gl.RG) {
+                        this.__internalFormat = gl.RG32F;
+                    }
+
+                    else if (this.__format == gl.RGB) {
                         this.__internalFormat = gl.RGB32F;
                     }
                     else if(this.__format == gl.RGBA){
@@ -173,11 +189,31 @@ class GLTexture2D extends RefCounted {
                     }
                 }
                 else if(this.__type == gl.HALF_FLOAT){
-                    if(this.__format == gl.RGB){
+                    if(this.__format == gl.RED){
+                        this.__internalFormat = gl.R16F;
+                    }
+                    else if(this.__format == gl.RG){
+                        this.__internalFormat = gl.RG16F;
+                    }
+                    else if(this.__format == gl.RGB){
                         this.__internalFormat = gl.RGB16F;
                     }
                     else if(this.__format == gl.RGBA){
                         this.__internalFormat = gl.RGBA16F;
+                    }
+                }
+                else if(this.__type == gl.UNSIGNED_BYTE){
+                    if(this.__format == gl.RED){
+                        this.__internalFormat = gl.R8;
+                    }
+                    if(this.__format == gl.RG){
+                        this.__internalFormat = gl.RG8;
+                    }
+                    if(this.__format == gl.RGB){
+                        this.__internalFormat = gl.RGB8;
+                    }
+                    else if(this.__format == gl.RGBA){
+                        this.__internalFormat = gl.RGBA8;
                     }
                 }
             }
@@ -299,11 +335,11 @@ class GLTexture2D extends RefCounted {
             if (width < 0 || width > maxSize || height < 0 || height > maxSize) {
                 throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
             }
-            const gltex = gl.createTexture();
-            gl.bindTexture(gl.TEXTURE_2D, gltex);
-            gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, null);
 
             if (preserveData) {
+                const gltex = gl.createTexture();
+                gl.bindTexture(gl.TEXTURE_2D, gltex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, null);
                 const fbo = gl.createFramebuffer();
                 gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
                 gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__gltex, 0);
@@ -313,15 +349,20 @@ class GLTexture2D extends RefCounted {
 
                 gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-                gl.deleteFramebuffer(fbo)
+                gl.deleteFramebuffer(fbo);
+
+                this.__gl.deleteTexture(this.__gltex);
+                this.__gltex = gltex;
+                this.__updateGLTexParams();
+            }
+            else {
+                gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
+                gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__format, this.__type, null);
             }
 
             this.width = width;
             this.height = height;
 
-            this.__gl.deleteTexture(this.__gltex);
-            this.__gltex = gltex;
-            this.__updateGLTexParams();
             if (emit) {
                 this.resized.emit(width, height);
             }
@@ -374,7 +415,7 @@ class GLTexture2D extends RefCounted {
 
         return true;
     }
-
+    
     destroy() {
         super.destroy();
         if (this.__texture) {

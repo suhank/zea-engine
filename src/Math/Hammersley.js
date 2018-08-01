@@ -19,21 +19,21 @@ function hemisphereSample_uniform(u, v, vec3) {
     let phi = v * 2.0 * Math.PI;
     let cosTheta = 1.0 - u;
     let sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
-    vec3.set(Math.cos(phi) * sinTheta, cosTheta, Math.sin(phi) * sinTheta);
+    vec3.set(Math.cos(phi) * sinTheta, Math.sin(phi) * sinTheta, cosTheta);
 }
 
 function hemisphereSample_cos(u, v, vec3) {
     let phi = v * 2.0 * Math.PI;
     let cosTheta = Math.sqrt(1.0 - u);
     let sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
-    vec3.set(Math.cos(phi) * sinTheta, cosTheta, Math.sin(phi) * sinTheta);
+    vec3.set(Math.cos(phi) * sinTheta, Math.sin(phi) * sinTheta, cosTheta);
 }
 
 function sphereSample_uniform(u, v, vec3) {
     let phi = v * 2.0 * Math.PI;
     let cosTheta = 1.0 - (u * 2.0);
     let sinTheta = Math.sqrt(1.0 - cosTheta * cosTheta);
-    vec3.set(Math.cos(phi) * sinTheta, cosTheta, Math.sin(phi) * sinTheta);
+    vec3.set(Math.cos(phi) * sinTheta, Math.sin(phi) * sinTheta, cosTheta);
 }
 
 export {

@@ -81,17 +81,6 @@ class GeomItem extends TreeItem {
 
     copyTo(cloned) {
         super.copyTo(cloned);
-
-        // if (this.__geom) {
-        //     cloned.setGeometry(this.__geom);
-        // } else {
-        //     this.geomAssigned.connect(() => {
-        //         cloned.setGeometry(this.__geom);
-        //     });
-        // }
-
-        // cloned.setMaterial(this.__material);// clone?
-
         cloned.__lightmapName = this.__lightmapName;
     }
 
@@ -128,8 +117,9 @@ class GeomItem extends TreeItem {
 
     _cleanBoundingBox(bbox) {
         bbox = super._cleanBoundingBox(bbox);
-        if (this.__geom) {
-            bbox.addBox3(this.__geom.boundingBox, this.getGeomXfo());
+        const geom = this.getGeometry();
+        if (geom) {
+            bbox.addBox3(geom.boundingBox, this.getGeomXfo());
         }
         return bbox;
     }
@@ -175,41 +165,11 @@ class GeomItem extends TreeItem {
 
     toJSON(context) {
         const json = super.toJSON(context);
-        // if (this.__geom != undefined)
-        //     json.geom = this.__geom.toJSON(context);
-        // if (this.material != undefined)
-        //     json.material = this.material.toJSON(context);
         return json
     }
 
     fromJSON(json, context) {
         super.fromJSON(json, context);
-
-        // if ((flags & LOADFLAGS_SKIP_GEOMETRIES) == 0 && 'geomIndex' in json) {
-        //     let geomLibrary = context.assetItem.getGeometryLibrary();
-        //     this.geom = geomLibrary.getGeom(json.geomIndex);
-        // }
-
-        // if ('geomOffsetXfo' in json) {
-        //     let xfo = new Xfo();
-        //     xfo.fromJSON(json.geomOffsetXfo);
-        //     this.__geomOffsetXfoParam.setValue(xfo);
-        // }
-
-
-        // if ((flags & LOADFLAGS_SKIP_MATERIALS) == 0 && 'materialName' in json) {
-        //     let materialLibrary = context.assetItem.getMaterialLibrary();
-        //     this.material = materialLibrary.getMaterial(json.materialName);
-        //     if (!this.material) {
-        //         console.warn("Geom :'" + this.name + "' Material not found:" + json.materialName);
-        //         this.setMaterial(materialLibrary.getMaterial('DefaultMaterial'));
-        //     }
-        // }
-
-        // const coords = new Vec2();
-        // coords.fromJSON(json.lightmapCoordsOffset);
-        // this.__lightmapCoordsParam.setValue(coords);
-        // this._setBoundingBoxDirty();
     }
 
     readBinary(reader, context) {

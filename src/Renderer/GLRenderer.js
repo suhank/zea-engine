@@ -19,7 +19,8 @@ import {
     Mesh,
     Grid,
     Material,
-    ValueSetMode
+    ValueSetMode,
+    resourceLoader
 } from '../SceneTree';
 import {
     create3DContext
@@ -30,9 +31,6 @@ import {
 import {
     GLCollector
 } from './GLCollector.js';
-// import {
-//     GLGeomDataPass
-// } from './Passes/GLGeomDataPass.js';
 // import {
 //     GL2DOverlayPass
 // } from './Passes/GL2DOverlayPass.js';
@@ -101,13 +99,20 @@ if (process === 'undefined' || process.browser == true) {
     }
 }
 
+const PassType = {
+    OPAQUE: 0,
+    TRANSPARENT: 1,
+    OVERLAY: 2
+};
+
 class GLRenderer {
-    constructor(canvasDiv, options = {}, webglOptions = {}) {
+    constructor(canvasDiv, options = {}) {
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
         this.__shaders = {};
-        this.__passes = [];
+        this.__passes = {};
+
         this.__viewports = [];
         this.__activeViewport = undefined;
         this.__continuousDrawing = false;
@@ -120,12 +125,13 @@ class GLRenderer {
         this.__preproc = { };
 
         this.__vrViewport = undefined;
-        if(this.__supportVR && !navigator.getVRDisplays)
+        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined)
             this.__vrpolyfill = new WebVRPolyfill();
 
         this.mirrorVRisplayToViewport = true;
 
         // Function Bindings.
+        this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
         this.requestRedraw = this.requestRedraw.bind(this);
 
         this.__collector = new GLCollector(this);
@@ -149,17 +155,15 @@ class GLRenderer {
         this.actionEnded = new Signal();
         this.actionOccuring = new Signal();
 
-        this.setupWebGL(canvasDiv, webglOptions);
+        this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {});
 
-
-        // this.__geomDataPass = new GLGeomDataPass(this.__gl, this.__collector, this.__floatGeomBuffer);
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
 
         // this.addPass(new GL2DOverlayPass());
-        this.addPass(new GLOpaqueGeomsPass());
-        this.addPass(new GLTransparentGeomsPass());
-        this.addPass(new GLBillboardsPass());
+        this.addPass(new GLOpaqueGeomsPass(), PassType.OPAQUE);
+        this.addPass(new GLTransparentGeomsPass(), PassType.TRANSPARENT);
+        this.addPass(new GLBillboardsPass(), PassType.TRANSPARENT);
 
         // Note: Audio contexts have started taking a long time to construct
         // (Maybe a regresion in Chrome?)
@@ -171,6 +175,8 @@ class GLRenderer {
 
 
         this.addViewport('main');
+
+        resourceLoader.loaded.connect(this.renderGeomDataFbos);
 
     }
 
@@ -187,11 +193,9 @@ class GLRenderer {
         this.__gl.shaderopts = this.__preproc
     }
 
-
     getShaderPreproc() {
         return this.__preproc;
     }
-
 
     getWidth() {
         return this.__glcanvas.width;
@@ -208,10 +212,6 @@ class GLRenderer {
     getAudioContext() {
         return this.__audioCtx;
     }
-
-    // getGeomDataPass() {
-    //     return this.__geomDataPass;
-    // }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
         this.__gridTreeItem = new TreeItem('GridTreeItem');
@@ -279,9 +279,7 @@ class GLRenderer {
             this.requestRedraw();
         });
 
-        // if(this.__geomDataPass){
-            vp.createGeomDataFbo(this.__floatGeomBuffer);
-        // }
+        vp.createGeomDataFbo(this.__floatGeomBuffer);
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
@@ -363,8 +361,9 @@ class GLRenderer {
     activateViewportAtPos(offsetX, offsetY) {
         if (this.__vrViewport && this.__vrViewport.isPresenting())
             return this.__vrViewport;
-        this.activateViewport(this.getViewportAtPos(offsetX, offsetY));
-        return this.__activeViewport;
+        const vp = this.getViewportAtPos(offsetX, offsetY);
+        if(vp && vp != this.__activeViewport)
+            this.activateViewport(vp);
     }
 
     getActiveViewport() {
@@ -467,9 +466,10 @@ class GLRenderer {
         this.__screenQuad = this.__gl.screenQuad;
 
 
-        // Note: using the geom data pass crashes VR scenes.
-        
-        this.__floatGeomBuffer = true;//((browserDesc.browserName == "Chrome") || (browserDesc.browserName == "Firefox")) && !isMobile;
+        // Note: Mobile devices don't provide much support for reading data back from float textures,
+        // and checking compatibility is patchy at best.
+        this.__floatGeomBuffer = !SystemDesc.isMobile;
+        this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
         // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
@@ -696,22 +696,34 @@ class GLRenderer {
     /////////////////////////
     // Render Items setup
 
-    addPass(pass) {
-        pass.updated.connect(this.requestRedraw.bind(this));
-        pass.init(this.__gl, this.__collector, this.__passes.length)
-        this.__passes.push(pass);
-        this.requestRedraw();
-        return this.__passes.length - 1;
-    }
+    addPass(pass, passtype=0) {
 
-    removePass(pass) {
-        let index = this.__passes.indexOf(pass);
-        this.__passes.splice(index, 1);
+        if(!this.__passes[passtype])
+            this.__passes[passtype] = [];
+
+        let index = 0;
+        for(let key in this.__passes) {
+            if(key == passtype)
+                break;
+            index += this.__passes[key].length;
+        }
+        index += this.__passes[passtype].length;
+
+        pass.updated.connect(this.requestRedraw.bind(this));
+        pass.init(this.__gl, this.__collector, index);
+        this.__passes[passtype].push(pass);
         this.requestRedraw();
+        return index;
     }
 
     getPass(index) {
-        return this.__passes[index];
+        let offset = 0;
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            if(index < passSet.length - offset)
+                return passSet[index - offset];
+            offset += passSet.length;
+        }
     }
 
     getGizmoPass() {
@@ -739,10 +751,13 @@ class GLRenderer {
                         vrvp.actionEnded.connect(this.actionEnded.emit);
                         vrvp.actionOccuring.connect(this.actionOccuring.emit);
                         
-                        // Let the passes know that VR is starting. 
-                        // They can do things like optimize shaders.                        
-                        for(let pass of this.__passes) {
-                            pass.startPresenting();
+                        // Let the passes know that VR is starting.
+                        // They can do things like optimize shaders.
+                        for(let key in this.__passes) {
+                            const passSet = this.__passes[key];
+                            for(let pass of passSet) {
+                                pass.startPresenting();
+                            }
                         }
                     }
                     else {
@@ -751,8 +766,11 @@ class GLRenderer {
                         vrvp.actionEnded.disconnect(this.actionEnded.emit);
                         vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
 
-                        for(let pass of this.__passes) {
-                            pass.stopPresenting();
+                        for(let key in this.__passes) {
+                            const passSet = this.__passes[key];
+                            for(let pass of passSet) {
+                                pass.stopPresenting();
+                            }
                         }
                     }
                 })
@@ -842,9 +860,12 @@ class GLRenderer {
         renderstate.drawCalls = 0;
         renderstate.drawCount = 0;
 
-        for (let pass of this.__passes) {
-            if (pass.enabled)
-                pass.draw(renderstate);
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.enabled)
+                    pass.draw(renderstate);
+            }
         }
 
         // if (this.__displayStats) {
@@ -854,15 +875,21 @@ class GLRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
-        for (let pass of this.__passes) {
-            if (pass.enabled)
-                pass.drawSelectedGeoms(renderstate);
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.enabled)
+                    pass.drawSelectedGeoms(renderstate);
+            }
         }
     }
     drawSceneGeomData(renderstate){
-        for (let pass of this.__passes) {
-            if (pass.enabled)
-                pass.drawGeomData(renderstate);
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.enabled)
+                    pass.drawGeomData(renderstate);
+            }
         }
     }
 
@@ -899,6 +926,7 @@ class GLRenderer {
 
 
 export {
-    GLRenderer
+    GLRenderer,
+    PassType
 };
 // export default GLRenderer;
