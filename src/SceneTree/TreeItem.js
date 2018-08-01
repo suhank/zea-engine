@@ -531,6 +531,8 @@ class TreeItem extends BaseItem {
                             childItem.fromJSON(childJson, context);
                             this.addChild(childItem, false, false);
                         }
+                    } else {
+                        console.warn("Warning loading JSON. Child not found:" + childJson.name + " of:" + this.getPath());
                     }
                 }
             }
@@ -548,6 +550,8 @@ class TreeItem extends BaseItem {
                             childItem.fromJSON(childJson, context);
                             this.addChild(childItem, false, false);
                         }
+                    } else {
+                        console.warn("Warning loading JSON. Child not found:" + childName);
                     }
                 }
             }

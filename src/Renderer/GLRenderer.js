@@ -876,6 +876,7 @@ class GLRenderer {
         if (this.__vrViewport) {
             if (this.__vrViewport.isPresenting()) {
                 this.__vrViewport.draw(renderstate);
+                return;
             } 
             // Cannot upate the view, else it sends signals which
             // end up propagating through the websocket. 
