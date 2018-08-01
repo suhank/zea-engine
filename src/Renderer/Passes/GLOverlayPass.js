@@ -35,10 +35,9 @@ class GLOverlayPass extends GLPass {
     }
 
     draw(renderstate) {
-        const gl = this.__gl;
-        gl.disable(gl.CULL_FACE);
-        gl.disable(gl.DEPTH_TEST);
 
+        const gl = this.__gl;
+        gl.disable(gl.DEPTH_TEST);
         gl.enable(gl.BLEND);
         gl.blendEquation(gl.FUNC_ADD);
 
@@ -48,7 +47,6 @@ class GLOverlayPass extends GLPass {
         super.draw(renderstate);
 
         gl.disable(gl.BLEND);
-        gl.enable(gl.CULL_FACE);
         gl.enable(gl.DEPTH_TEST);
     }
 
