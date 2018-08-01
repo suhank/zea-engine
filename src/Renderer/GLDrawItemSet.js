@@ -1,5 +1,10 @@
 import '../SceneTree/GeomItem.js';
 
+
+import {
+    Signal
+} from '../Utilities';
+
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLDrawItemSet {
     constructor(gl, glgeom) {
@@ -12,6 +17,8 @@ class GLDrawItemSet {
         this.drawCount = 0; // The number of visible drawn geoms.
         // this.inverted = false;
         this.lightmapName = undefined;
+
+        this.drawCountChanged = new Signal();
     }
 
     getGLGeom() {
@@ -42,8 +49,10 @@ class GLDrawItemSet {
     addDrawItem(gldrawItem) {
         let index = this.drawItems.length;
         this.drawItems.push(gldrawItem);
-        if (gldrawItem.visible)
+        if (gldrawItem.visible) {
             this.drawCount++;
+            this.drawCountChanged.emit(1);
+        }
 
         if (this.drawItems.length == 1) {
             // this.inverted = gldrawItem.isInverted();
@@ -51,17 +60,22 @@ class GLDrawItemSet {
         }
 
         gldrawItem.visibilityChanged.connect((visible) => {
-            if (visible)
+            if (visible) {
                 this.drawCount++;
-            else
+                this.drawCountChanged.emit(1);
+            } else {
                 this.drawCount--;
+                this.drawCountChanged.emit(-1);
+            }
             this.instancedIdsBufferDirty = true;
         });
 
         gldrawItem.destructing.connect(() => {
             this.drawItems.splice(index, 1);
-            if (gldrawItem.visible)
+            if (gldrawItem.visible) {
                 this.drawCount--;
+                this.drawCountChanged.emit(-1);
+            }
             if (this.drawItems.length == 0) {
                 // Destroy??
             }
@@ -211,7 +225,7 @@ class GLDrawItemSet {
         } else {
             // console.log("draw:"+ this.instancedIdsArray);
 
-            if(renderstate.attrs.instancedIds) {
+            if (renderstate.attrs.instancedIds) {
 
                 // Specify an instanced draw to the shader so it knows how
                 // to retrieve the modelmatrix.

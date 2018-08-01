@@ -17,31 +17,33 @@ class GLTransparentGeomsPass extends GLPass {
         this.resort = false;
     }
 
+
+    __addDrawItem(glshader, glmaterial, glGeom, drawItem){
+        const item = {
+            glshader,
+            glmaterial,
+            glGeom,
+            drawItem
+        }
+        if(drawItem.getVisible())
+            this.transparentItems.push(item);
+        drawItem.visibilityChanged.connect((visible)=>{
+            if(visible) 
+                this.transparentItems.push(item);
+            else {
+                const index = this.transparentItems.indexOf(item);
+                this.transparentItems.splice(index, 1);
+            }
+        });
+        drawItem.getGeomItem().geomXfoChanged.connect(()=>{
+            this.resort = true;
+        });
+    }
+
     /////////////////////////////////////
     // Bind to Render Tree
     filterRenderTree() {
         let allglshaderMaterials = this.__collector.getGLShaderMaterials();
-        const addDrawItem = (glshader, glmaterial, glGeom, drawItem)=>{
-            const item = {
-                glshader,
-                glmaterial,
-                glGeom,
-                drawItem
-            }
-            if(drawItem.getVisible())
-                this.transparentItems.push(item);
-            drawItem.visibilityChanged.connect((visible)=>{
-                if(visible) 
-                    this.transparentItems.push(item);
-                else {
-                    const index = this.transparentItems.indexOf(item);
-                    this.transparentItems.splice(index, 1);
-                }
-            });
-            drawItem.getGeomItem().geomXfoChanged.connect(()=>{
-                this.resort = true;
-            });
-        }
 
         this.transparentItems = [];
         for (let glshaderkey in allglshaderMaterials) {
@@ -57,7 +59,7 @@ class GLTransparentGeomsPass extends GLPass {
                     // Now we must unpack the drawItemSet into individual draw items.
                     const glGeom = gldrawitemset.glgeom;
                     for (let drawItem of gldrawitemset.drawItems) {
-                        addDrawItem(glshader, glmaterial, glGeom, drawItem);
+                        this.__addDrawItem(glshader, glmaterial, glGeom, drawItem);
                     }
                 }
             }
@@ -71,6 +73,7 @@ class GLTransparentGeomsPass extends GLPass {
             transparentItem.dist = transparentItem.drawItem.geomItem.getGeomXfo().tr.distanceTo(viewPos);
         this.transparentItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
         this.prevSortCameraPos = viewPos;
+        this.resort = false;
     }
 
     _drawItems(renderstate){

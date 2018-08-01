@@ -28,27 +28,6 @@ import {
     GLProceduralSky
 } from './GLProceduralSky.js';
 import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLOpaqueGeomsPass
-} from './Passes/GLOpaqueGeomsPass.js';
-import {
-    GLTransparentGeomsPass
-} from './Passes/GLTransparentGeomsPass.js';
-import {
-    GLHardEdgesPass
-} from './Passes/GLHardEdgesPass.js';
-import {
-    GLMeshPointsPass
-} from './Passes/GLMeshPointsPass.js';
-import {
-    GLGeomDataPass
-} from './Passes/GLGeomDataPass.js';
-import {
-    GLBillboardsPass
-} from './Passes/GLBillboardsPass.js';
-import {
     GLRenderer
 } from './GLRenderer.js';
 import {

@@ -3,11 +3,6 @@ import {
     Mat4,
 } from '../Math';
 import { GLRenderer } from './GLRenderer.js';
-import { GLWirePass } from './Passes/GLWirePass.js';
-import { GLHardEdgesPass } from './Passes/GLHardEdgesPass.js';
-import { GLGeomDataPass } from './Passes/GLGeomDataPass.js';
-import { GLMeshPointsPass } from './Passes/GLMeshPointsPass.js';
-import { GLNormalsPass } from './Passes/GLNormalsPass.js';
 
 class GLSimpleRenderer extends GLRenderer {
     constructor(canvasDiv, options={}) {
@@ -36,8 +31,6 @@ class GLSimpleRenderer extends GLRenderer {
                 super.onKeyPressed(key, event);
         }
     }
-
-
 
 
     /////////////////////////

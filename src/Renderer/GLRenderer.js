@@ -31,9 +31,6 @@ import {
 import {
     GLCollector
 } from './GLCollector.js';
-// import {
-//     GL2DOverlayPass
-// } from './Passes/GL2DOverlayPass.js';
 import {
     GLOpaqueGeomsPass
 } from './Passes/GLOpaqueGeomsPass.js';
@@ -43,6 +40,9 @@ import {
 import {
     GLBillboardsPass
 } from './Passes/GLBillboardsPass.js';
+import {
+    GLOverlayPass
+} from './Passes/GLOverlayPass.js';
 // import {
 //     GizmoPass
 // } from './Passes/GizmoPass.js';
@@ -160,10 +160,10 @@ class GLRenderer {
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
 
-        // this.addPass(new GL2DOverlayPass());
         this.addPass(new GLOpaqueGeomsPass(), PassType.OPAQUE);
         this.addPass(new GLTransparentGeomsPass(), PassType.TRANSPARENT);
         this.addPass(new GLBillboardsPass(), PassType.TRANSPARENT);
+        this.addPass(new GLOverlayPass(), PassType.OVERLAY);
 
         // Note: Audio contexts have started taking a long time to construct
         // (Maybe a regresion in Chrome?)

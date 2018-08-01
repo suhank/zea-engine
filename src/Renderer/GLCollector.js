@@ -69,20 +69,34 @@ class GLMaterialDrawItemSets {
     constructor(glmaterial = undefined) {
         this.glmaterial = glmaterial;
         this.drawItemSets = [];
+        this.drawCount = 0;
+        this.__drawCountChanged = this.__drawCountChanged.bind(this)
     }
 
     getGLMaterial() {
         return this.glmaterial;
     }
 
+    __drawCountChanged(change) {
+        this.drawCount += change;
+    }
+
     addDrawItemSet(drawItemSet) {
-        if (this.drawItemSets.indexOf(drawItemSet) == -1)
+        if (this.drawItemSets.indexOf(drawItemSet) == -1) {
             this.drawItemSets.push(drawItemSet);
+
+            this.drawCount += drawItemSet.drawCount;
+            drawItemSet.drawCountChanged.connect(this.__drawCountChanged);
+        }
+        else {
+            console.warn("drawItemSet already added to GLMaterialDrawItemSets")
+        }
     }
 
     removeDrawItemSet(drawItemSet) {
         let index = this.drawItemSets.indexOf(drawItemSet);
         this.drawItemSets.splice(index, 1);
+        drawItemSet.drawCountChanged.disconnect(this.__drawCountChanged);
     }
 
     findDrawItemSet(glgeom) {

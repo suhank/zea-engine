@@ -1,40 +1,6 @@
 import { GLPass } from '../GLPass.js';
 import { GLShader } from '../GLShader.js';
 import { GizmoShader, GizmoDataShader } from '../Shaders/GizmoShader.js';
-import { GLGeomDataPass } from './GLGeomDataPass.js';
-
-
-// class GLGizmoDataPass extends GLGeomDataPass {
-//     constructor(gl) {
-//         let glshader = new GizmoDataShader(gl);
-//         super(gl, glshader);
-
-//         this.setExplicitShader(glshader);
-//     };
-
-//     filter(drawItem) {
-//         if(!super.filter(drawItem))
-//             return false;
-//         return true;
-//     };
-
-//     draw(renderstate) {
-
-//         this.__explicitShader.bind(renderstate);
-//         const unifs = renderstate.unifs;
-//         this.__gl.uniform1i(unifs.isOrthographic.location, renderstate.isOrthographic);
-//         this.__gl.uniform1f(unifs.fovY.location, renderstate.fovY);
-//         this.__gl.uniform2fv(unifs.viewportFrustumSize.location, renderstate.viewportFrustumSize.asArray());
-
-//         this.__gl.depthFunc(this.__gl.GREATER);
-
-//         super.draw(renderstate);
-
-//         this.__gl.depthFunc(this.__gl.LESS);
-
-//         super.draw(renderstate);
-//     };
-// };
 
 class GizmoPass extends GLPass {
     constructor() {

@@ -22,9 +22,6 @@ import {
     GLFbo
 } from './GLFbo.js';
 import {
-    GL2DOverlayPass
-} from './Passes/GL2DOverlayPass.js';
-import {
     GLTexture2D
 } from './GLTexture2D.js';
 // import {
@@ -70,7 +67,6 @@ class GLViewport extends BaseViewport {
 
         const gl = renderer.getGL();
         // this.__selectionRect = new GLSelectionRect(gl);
-        // this.__overlayPass = new GL2DOverlayPass(gl);
         // this.__overlayPass.addDrawItem(this.__selectionRect);
 
         this.keyPressed = new Signal();
