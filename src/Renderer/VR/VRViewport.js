@@ -290,7 +290,7 @@ class VRViewport extends BaseViewport {
         this.__continuousDrawing = true;
 
         const onAnimationFrame = () => {
-            if (this.isContinuouslyDrawing())
+            if (this.__continuousDrawing)
                 this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
             this.__frameRequested = true;
             this.__renderer.draw();
@@ -320,23 +320,6 @@ class VRViewport extends BaseViewport {
         }
 
         this.__presentingRequested = true;
-        this.__stageTreeItem.setVisible(true);
-
-        if (SystemDesc.isMobileDevice) {
-            const xfo = this.__renderer.getViewport().getCamera().getGlobalXfo().clone();
-            const yaxis = xfo.ori.getYaxis();
-            const up = new Vec3(0, 0, 1);
-            const angle = yaxis.angleTo(up);
-            if (angle > 0.0001) {
-                let axis = yaxis.cross(up);
-                let align = new Quat();
-                align.setFromAxisAndAngle(axis, angle);
-                xfo.ori = align.multiply(xfo.ori);
-            }
-            //    xfo.tr.y = 0;
-            //}
-            this.setXfo(xfo);
-        }
         this.__vrDisplay.requestPresent([{
             source: this.__renderer.getGLCanvas()
         }]).then(() => {
@@ -379,20 +362,36 @@ class VRViewport extends BaseViewport {
                 Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
                 Math.max(leftEye.renderHeight, rightEye.renderHeight)
             ];
-            this.__vrhead.setVisible(true);
-            for (let vrController of this.__vrControllers)
-                vrController.setVisible(true);
+
+            this.__stageTreeItem.setVisible(true);
+
+            if (SystemDesc.isMobileDevice) {
+                const xfo = this.__renderer.getViewport().getCamera().getGlobalXfo().clone();
+                const yaxis = xfo.ori.getYaxis();
+                const up = new Vec3(0, 0, 1);
+                const angle = yaxis.angleTo(up);
+                if (angle > 0.0001) {
+                    let axis = yaxis.cross(up);
+                    let align = new Quat();
+                    align.setFromAxisAndAngle(axis, angle);
+                    xfo.ori = align.multiply(xfo.ori);
+                }
+                //    xfo.tr.y = 0;
+                //}
+                this.setXfo(xfo);
+            }
 
             this.startContinuousDrawing();
 
             this.presentingChanged.emit(true);
         } else {
 
-            this.__vrhead.setVisible(false);
-            for (let vrController of this.__vrControllers)
-                vrController.setVisible(false);
-
             this.stopContinuousDrawing();
+
+            this.__stageTreeItem.setVisible(false);
+            // this.__vrhead.setVisible(false);
+            // for (let vrController of this.__vrControllers)
+            //     vrController.setVisible(false);
 
             this.presentingChanged.emit(false);
         }
@@ -457,14 +456,15 @@ class VRViewport extends BaseViewport {
                 if (!this.__vrControllers[id]) {
                     const vrController = new VRController(this, id);
                     vrController.touchpadTouched.connect((vals) => {
-                        if (vals[1] > 0) {
-                            this.__currentToolIndex = (this.__currentToolIndex + 1) % this.__vrToolNames.length;
-                        } else if (vals[1] < 0) {
-                            this.__currentToolIndex--;
-                            if (this.__currentToolIndex < 0)
-                                this.__currentToolIndex = this.__vrToolNames.length - 1;
-                        }
-                        this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
+                        // Disabling Changing tools for now till it is solid.
+                        // if (vals[1] > 0) {
+                        //     this.__currentToolIndex = (this.__currentToolIndex + 1) % this.__vrToolNames.length;
+                        // } else if (vals[1] < 0) {
+                        //     this.__currentToolIndex--;
+                        //     if (this.__currentToolIndex < 0)
+                        //         this.__currentToolIndex = this.__vrToolNames.length - 1;
+                        // }
+                        // this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
                     });
 
                     vrController.showInHandUI.connect(() => {
