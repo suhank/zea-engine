@@ -184,6 +184,20 @@ function getSystemDesc() {
         else if(gpuDesc.gpuVendor == 'AMD') {
             const radeonIdx = parts.indexOf('Radeon');
             if(radeonIdx != -1){
+                if(parts[radeonIdx+1] == 'RX') {
+                    if(parts[radeonIdx+2] == 'Vega') {
+                        deviceCategory = 'High';
+                    }
+                    else {
+                        const modelNumber = parseInt(parts[radeonIdx+2]);
+                        if(modelNumber >= 580){
+                            deviceCategory = 'Medium';
+                        }
+                        else {
+                            deviceCategory = 'Low';
+                        }
+                    }
+                }
                 if(parts[radeonIdx+1] == 'Pro') {
                     const modelNumber = parseInt(parts[radeonIdx+2]);
                     if(modelNumber >= 450){
