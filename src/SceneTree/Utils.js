@@ -16,7 +16,7 @@ let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
         xhr.addEventListener("abort", function(event) {
             throw("The request for " + url +": xhr.readyState:" + xhr.readyState);
             onFail(xhr.statusText);
-        });
+        });;
         xhr.addEventListener("loadend", function(event) {
             if(xhr.status == 200)
                 onSucceed(xhr);
@@ -37,6 +37,24 @@ let loadTextfile = function(url, onSucceed, onFail = undefined, onProgress = und
     loadfile(url, 'text',
         (xhr) => {
             onSucceed(xhr.responseText);
+        },
+        (statusText) => {
+            if (onFail != undefined)
+                onFail(statusText);
+            else {
+                throw("Unable to XHR File:" + url);
+            }
+        },
+        (total, loaded) => {
+            if (onProgress != undefined)
+                onProgress(total, loaded);
+        });
+}
+
+let loadJSONfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+    loadfile(url, 'json',
+        (xhr) => {
+            onSucceed(xhr.response, xhr);
         },
         (statusText) => {
             if (onFail != undefined)
@@ -73,5 +91,6 @@ let loadBinfile = function(url, onSucceed, onFail = undefined, onProgress = unde
 export {
     getFileFolder,
     loadTextfile,
+    loadJSONfile,
     loadBinfile
 };
