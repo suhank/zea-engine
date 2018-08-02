@@ -3,15 +3,17 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
     
     const scene = new Visualive.Scene(resources);
 
+    Visualive.resourceLoader.addResourceURL('Assets/Default.labels')
+
     const asset = new Visualive.TreeItem('labels');
     scene.getRoot().addChild(asset);
 
     const linesMaterial = new Visualive.Material('LabelLinesMaterial', 'LinesShader');
-    linesMaterial.addParameter('color', new Visualive.Color(.7, .7, .7));
+    linesMaterial.getParameter('Color').setValue(new Visualive.Color(.7, .7, .7));
 
     let index = 0;
-    const addLabel = (basePose, pos, color, text)=> {
-        const label = new Visualive.Label(text);
+    const addLabel = (basePose, pos, color, name)=> {
+        const label = new Visualive.Label(name);
         label.getParameter('fontSize').setValue(48);
         label.getParameter('fontColor').setValue(color);
         const billboard = new Visualive.BillboardItem('billboard'+index, label);
@@ -41,14 +43,14 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
 
         index++;
     }
-    addLabel(new Visualive.Vec3(1, 0, 0), new Visualive.Vec3(1, 1, 1), new Visualive.Color(0, 1, 0), "Short Text...");
-    addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-1, -1, 1), new Visualive.Color(1, 1, 0), "Label text can be long and have spaces");
-    addLabel(new Visualive.Vec3(-0.69, 0, 0), new Visualive.Vec3(-0.69, 0.05, 0.08), new Visualive.Color(1, 1, 0), "Left Hand Wheel Speed Sensor");
-    addLabel(new Visualive.Vec3(0.04, 0, 0), new Visualive.Vec3(0.04, -0.02, 0.25), new Visualive.Color(1, 1, 0), "Average Wheel Speed Sensor (Carriage Sensor)");
-    addLabel(new Visualive.Vec3(-0.25, 0, 0), new Visualive.Vec3(-0.25, 0.0, 0.05), new Visualive.Color(1, 1, 0), "Spider Gear Carrier Assembly");
-    addLabel(new Visualive.Vec3(0.295, 0, 0), new Visualive.Vec3(0.295, 0.0, 0.35), new Visualive.Color(1, 1, 0), "Clutch Pack");
-    addLabel(new Visualive.Vec3(0.505, 0, 0), new Visualive.Vec3(0.505, 0.0, 0.25), new Visualive.Color(1, 1, 0), "Clutch Ball and Ramp");
-    addLabel(new Visualive.Vec3(0.75, 0, 0), new Visualive.Vec3(0.75, 0.03, 0.11), new Visualive.Color(1, 1, 0), "Front Diff Lock Actuator");
+    addLabel(new Visualive.Vec3(1, 0, 0), new Visualive.Vec3(1, 1, 1), new Visualive.Color(0, 1, 0), "Hello");
+    addLabel(new Visualive.Vec3(-1, 0, 0), new Visualive.Vec3(-1, -1, 1), new Visualive.Color(1, 1, 0), "Long");
+    addLabel(new Visualive.Vec3(-0.69, 0, 0), new Visualive.Vec3(-0.69, 0.05, 0.08), new Visualive.Color(1, 1, 0), "LeftHWheelSensor");
+    addLabel(new Visualive.Vec3(0.04, 0, 0), new Visualive.Vec3(0.04, -0.02, 0.25), new Visualive.Color(1, 1, 0), "AverageWheelSpeedSensor");
+    addLabel(new Visualive.Vec3(-0.25, 0, 0), new Visualive.Vec3(-0.25, 0.0, 0.05), new Visualive.Color(1, 1, 0), "SpiderGearCarrierAssembly");
+    addLabel(new Visualive.Vec3(0.295, 0, 0), new Visualive.Vec3(0.295, 0.0, 0.35), new Visualive.Color(1, 1, 0), "ClutchPack");
+    addLabel(new Visualive.Vec3(0.505, 0, 0), new Visualive.Vec3(0.505, 0.0, 0.25), new Visualive.Color(1, 1, 0), "ClutchBallandRamp");
+    addLabel(new Visualive.Vec3(0.75, 0, 0), new Visualive.Vec3(0.75, 0.03, 0.11), new Visualive.Color(1, 1, 0), "FrontDiffLockActuator");
 
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);

@@ -20,6 +20,9 @@ import {
 import {
     DataImage
 } from './DataImage.js';
+import {
+    labelManager
+} from './LabelManager.js';
 
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
@@ -87,33 +90,41 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
 }
 
 class Label  extends DataImage {
-    constructor(text='') {
-        super(text);
+    constructor(name, library='Default') {
+        super(name);
 
-        // this.text = text;
-        // this.fontColor = new Color(1.0,1.0,1.0);
-        // this.font = "Calibri";
-        // this.textAlign = "left";
-        // this.fontSize = 22;
-        // this.fillText = true;
-        // // this.left = 0;
-        // this.borderWidth = 1;
-        // this.margin = this.fontSize * 0.5;
-        // this.borderRadius = this.fontSize * 0.5;
-        // this.outline = false;
-        // this.outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
-
-        // this.background = true;
-        // this.backgroundColor = this.outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
-        // this.fillBackground = true;
-        // this.strokeBackgroundOutline = true;
-
+        this.__canvasElem = document.createElement('canvas');
         let fontSize = 22;
         let outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
         let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
 
+        const libraryParam = this.addParameter(new StringParameter('library', library, 'String'));
+        const textParam = this.addParameter(new StringParameter('text', '', 'String'));
+        const getLabelText = ()=>{
+            const library = libraryParam.getValue();
+            const name = this.getName();
+            try {
+                const text = labelManager.getLabelText(library, name);
+                textParam.setValue(text);
+                this.renderLabelToImage();
+            } catch (e) {
+            }
+        }
+        labelManager.labelLibraryLoaded.connect((loadedLibrary)=>{
+            const library = libraryParam.getValue();
+            if(loadedLibrary == library)
+                getLabelText();
+        });
+        libraryParam.valueChanged.connect(getLabelText);
+        this.nameChanged.connect(getLabelText);
+        const setLabelText = ()=>{
+            const library = libraryParam.getValue();
+            const name = this.getName();
+            const text = textParam.getValue();
+            labelManager.setLabelText(library, name, text);
+        }
+        textParam.valueChanged.connect(setLabelText);
 
-        this.addParameter(new StringParameter('text', text, 'String'));
         this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
         this.addParameter(new StringParameter('textAlign', 'left', 'String'));
         // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
@@ -131,8 +142,8 @@ class Label  extends DataImage {
         const fontParam = this.addParameter(new StringParameter('font', 'Helvetica', 'String'));
 
         const loadFont = ()=>{
-            const font = this.getParameter('font').getValue();
-            const fontSize = this.getParameter('fontSize').getValue();
+            const font = fontParam.getValue();
+            const fontSize = fontSizeParam.getValue();
             if(document.fonts != undefined) {
                 document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
                     // console.log("Font Loaded:" + font);
@@ -140,18 +151,25 @@ class Label  extends DataImage {
                     //     this.__loaded = true;
                     //     this.loaded.emit();
                     // }
-                    this.renderLabelToImage();
+
+                    // If there were no label libraries discovered, then
+                    // we assume this is an inline label, and we render immedietly.
+                    if(labelManager.getFoundLibaries().length == 0)
+                        this.renderLabelToImage();
                 });
             }
             else {
-                this.renderLabelToImage();
+                // If there were no label libraries discovered, then
+                // we assume this is an inline label, and we render immedietly.
+                if(labelManager.getFoundLibaries().length == 0)
+                    this.renderLabelToImage();
             }
         }
         fontSizeParam.valueChanged.connect(loadFont);
         fontParam.valueChanged.connect(loadFont);
         // fontParam.setValue('AGBookTTReg');
 
-        this.__canvasElem = document.createElement('canvas');
+        getLabelText();
     }
     
 
@@ -161,7 +179,10 @@ class Label  extends DataImage {
             'alpha': true
         });
 
-        const text = this.getParameter('text').getValue();
+        let text = this.getParameter('text').getValue();
+        if(text == '')
+            text = this.getName();
+
         const font = this.getParameter('font').getValue();
         const fontColor = this.getParameter('fontColor').getValue();
         const textAlign = this.getParameter('textAlign').getValue();

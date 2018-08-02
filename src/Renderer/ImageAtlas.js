@@ -159,7 +159,9 @@ class ImageAtlas extends GLTexture2D {
             this.__subImages.push(new GLTexture2D(this.__gl, subImage));
             if (!subImage.isLoaded()) {
                 this.__async.incAsyncCount();
-                subImage.loaded.connect(this.__async.decAsyncCount);
+                subImage.loaded.connect(()=>{
+                    this.__async.decAsyncCount()
+                });
             }
         } else
             this.__subImages.push(subImage);
@@ -311,7 +313,13 @@ class ImageAtlas extends GLTexture2D {
         this.updated.emit();
     }
 
+    isReady(){
+        return this.__atlasLayoutTexture != undefined;
+    }
+
     bindToUniform(renderstate, unif) {
+        if (!this.__atlasLayoutTexture) 
+            return false;
 
         super.bindToUniform(renderstate, unif);
 
@@ -324,6 +332,7 @@ class ImageAtlas extends GLTexture2D {
         if (atlasDescUnif)
             this.__gl.uniform4f(atlasDescUnif.location, this.width, this.height, this.__atlasLayoutTexture.width, 0.0);
 
+        return true;
     }
 
     cleanup() {

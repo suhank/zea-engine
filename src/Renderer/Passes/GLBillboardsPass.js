@@ -84,8 +84,12 @@ class GLBillboardsPass extends GLPass {
             this.updated.emit();
         });
         billboard.getParameter('image').getValue().updated.connect(() => {
-            // throw("TODO: update the atlas:" + index);
-            this.__updateBillboard(index);
+            throw("TODO: update the atlas:" + index);
+            // const image = billboard.getParameter('image').getValue();
+            // const imageIndex = this.__atlas.addSubImage(image)
+            // this.__billboards[index].image = image;
+            // this.__billboards[index].imageIndex = imageIndex;
+            // this.__updateBillboard(index);
         });
         billboard.getParameter('alpha').valueChanged.connect(() => {
             this.__updateBillboard(index);
@@ -276,7 +280,7 @@ class GLBillboardsPass extends GLPass {
 
     draw(renderstate) {
 
-        if(this.__billboards.length == 0)
+        if(this.__billboards.length == 0 || !this.__atlas.isReady())
             return;
 
 
