@@ -72,7 +72,7 @@ class GearsOperator extends Operator {
         this.__timeoutId;
         rpmParam.valueChanged.connect(() => {
             let rpm = rpmParam.getValue();
-            if (rpm > 0.0) {
+            if (Math.abs(rpm) > 0.0) {
                 if (!this.__timeoutId) {
                     const timerCallback = () => {
                         rpm = rpmParam.getValue();
