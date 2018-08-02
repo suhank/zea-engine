@@ -3,7 +3,8 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
     
     const scene = new Visualive.Scene(resources);
 
-    Visualive.resourceLoader.addResourceURL('Assets/Default.labels')
+    // Visualive.resourceLoader.addResourceURL('Assets/Default.labels')
+    Visualive.resourceLoader.addResourceURL('Assets/Labels.xlsx')
 
     const asset = new Visualive.TreeItem('labels');
     scene.getRoot().addChild(asset);
@@ -13,7 +14,7 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
 
     let index = 0;
     const addLabel = (basePose, pos, color, name)=> {
-        const label = new Visualive.Label(name);
+        const label = new Visualive.Label(name, 'Labels');
         label.getParameter('fontSize').setValue(48);
         label.getParameter('fontColor').setValue(color);
         const billboard = new Visualive.BillboardItem('billboard'+index, label);

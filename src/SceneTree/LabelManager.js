@@ -8,7 +8,8 @@ import {
     resourceLoader
 } from './ResourceLoader.js';
 import {
-    loadTextfile
+    loadTextfile,
+    loadBinfile
 } from './Utils.js';
 
 var getFirstBrowserLanguage = function() {
@@ -55,6 +56,7 @@ class LabelManager {
             this.__language = 'Gb';
 
         this.__foundLabelLibraries = [];
+        this.__loadedLabelLibraries = [];
 
         resourceLoader.registerResourceCallback('.labels', (filename, file) => {
             this.__foundLabelLibraries.push(filename);
@@ -66,10 +68,42 @@ class LabelManager {
                 }
             );
         })
+
+        resourceLoader.registerResourceCallback('.xlsx', (filename, file) => {
+            this.__foundLabelLibraries.push(filename);
+            loadBinfile(file.url,
+                (data) => {
+                    const stem = filename.split('.')[0]; // trim off the extension
+
+                    var unit8array = new Uint8Array(data);
+                    var workbook = XLSX.read(unit8array, {
+                        type: 'array'
+                    });
+
+                    const json = {}; 
+                    workbook.SheetNames.forEach(function(sheetName) {
+                        // Here is your object
+                        const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                        rows.forEach(function(row) {
+                            const identifier = row.Identifier;
+                            delete row.Identifier;
+                            json[identifier] = row;
+                        });
+                    })
+
+                    this.__labelLibraries[stem] = json;
+                    this.labelLibraryLoaded.emit(stem)
+                }
+            );
+        })
     }
 
     getFoundLibaries() {
         return this.__foundLabelLibraries;
+    }
+
+    isLibraryLoaded(name) {
+        return name in this.__labelLibraries;
     }
 
 
@@ -80,7 +114,7 @@ class LabelManager {
         }
         const label = library[labelName];
         if (!label) {
-            throw ("Label: '" + labelName + "' not found in LabelLibrary. Found: [" + Object.keys(library) + "]")
+            throw ("Label: '" + labelName + "' not found in LabelLibrary: '" + libraryName + "'. Found: [" + Object.keys(library) + "]")
         }
         const labelText = label[this.__language];
         if (!labelText) {

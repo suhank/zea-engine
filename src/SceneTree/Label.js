@@ -108,8 +108,12 @@ class Label  extends DataImage {
                 textParam.setValue(text);
                 this.renderLabelToImage();
             } catch (e) {
+                console.warn(e)
             }
         }
+        if(labelManager.isLibraryLoaded(library))
+            getLabelText();
+        // or load the label when it is loaded.
         labelManager.labelLibraryLoaded.connect((loadedLibrary)=>{
             const library = libraryParam.getValue();
             if(loadedLibrary == library)
@@ -168,8 +172,6 @@ class Label  extends DataImage {
         fontSizeParam.valueChanged.connect(loadFont);
         fontParam.valueChanged.connect(loadFont);
         // fontParam.setValue('AGBookTTReg');
-
-        getLabelText();
     }
     
 
