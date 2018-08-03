@@ -146,10 +146,92 @@ function getSystemDesc() {
     //    Typically these devices are laptops, so the textures can't be too blurry
     // 2: High-end: turn up as much as needed.
     let deviceCategory;
-    if (!isMobile && gpuDesc.gpuVendor == 'NVidia' && browserDesc.browserName == 'Chrome' && gpuDesc.renderer.match(/GTX/i) && gpuDesc.supportsWebGL2) {
-        deviceCategory = 'High';
-    } else  if (!isMobile && (gpuDesc.gpuVendor == 'Intel' || browserDesc.browserName != 'Chrome')) {
-        deviceCategory = 'Medium';
+    if (!isMobile){
+        const parts = gpuDesc.renderer.split(' ');
+        if(gpuDesc.gpuVendor == 'NVidia') {
+            const gtxIdx = parts.indexOf('GTX');
+            if(gtxIdx != -1){
+                const model = parts[gtxIdx+1];
+                if(model.endsWith('M')) {
+                    // laptop GPU.
+                    const modelNumber = parseInt(model.substring(0, model.length - 2));
+                    if(modelNumber >= 900){
+                        deviceCategory = 'Medium';
+                    }
+                    else {
+                        deviceCategory = 'Low';
+                    }
+                }
+                else {
+                    const modelNumber = parseInt(model);
+                    if(modelNumber >= 1030){
+                        deviceCategory = 'High';
+                    }
+                    else {
+                        deviceCategory = 'Medium';
+                    }
+                }
+            }
+            else {
+                if(parts.indexOf('TITAN') != -1 || parts.indexOf('Quadro') != -1){
+                    deviceCategory = 'High';
+                }
+                else {
+                    deviceCategory = 'Low';
+                }
+            }
+        }
+        else if(gpuDesc.gpuVendor == 'AMD') {
+            const radeonIdx = parts.indexOf('Radeon');
+            if(radeonIdx != -1){
+                if(parts[radeonIdx+1] == 'RX') {
+                    if(parts[radeonIdx+2] == 'Vega') {
+                        deviceCategory = 'High';
+                    }
+                    else {
+                        const modelNumber = parseInt(parts[radeonIdx+2]);
+                        if(modelNumber >= 580){
+                            deviceCategory = 'Medium';
+                        }
+                        else {
+                            deviceCategory = 'Low';
+                        }
+                    }
+                }
+                if(parts[radeonIdx+1] == 'Pro') {
+                    const modelNumber = parseInt(parts[radeonIdx+2]);
+                    if(modelNumber >= 450){
+                        deviceCategory = 'Medium';
+                    }
+                    else {
+                        deviceCategory = 'Low';
+                    }
+                }
+                else if(parts[radeonIdx+1] == 'Sky') {
+                    const modelNumber = parseInt(parts[radeonIdx+2]);
+                    if(modelNumber >= 700){
+                        deviceCategory = 'Medium';
+                    }
+                    else {
+                        deviceCategory = 'Low';
+                    }
+                }
+                else {
+                    deviceCategory = 'Low';
+                }
+            }
+            else {
+                if(parts.indexOf('FirePro') != -1 || parts.indexOf('Quadro') != -1){
+                    deviceCategory = 'High';
+                }
+                else {
+                    deviceCategory = 'Low';
+                }
+            }
+        }
+        else if(gpuDesc.gpuVendor == 'Intel') {
+            deviceCategory = 'Low';
+        }
     }
     else {
         deviceCategory = 'Low';
@@ -163,7 +245,7 @@ function getSystemDesc() {
         majorVersion: browserDesc.majorVersion,
         appName: browserDesc.appName,
         userAgent: browserDesc.userAgent,
-        webGLSupported: (browserDesc != undefined),
+        webGLSupported: (gpuDesc != undefined),
         gpuDesc,
         deviceCategory
     }
