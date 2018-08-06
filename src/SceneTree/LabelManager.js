@@ -69,6 +69,10 @@ class LabelManager {
             );
         })
 
+        // Note: example taken from here..
+        // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
+        // and here:
+        // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
         resourceLoader.registerResourceCallback('.xlsx', (filename, file) => {
             this.__foundLabelLibraries.push(filename);
             loadBinfile(file.url,
