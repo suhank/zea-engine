@@ -43,6 +43,11 @@ import {
 import {
     GLOverlayPass
 } from './Passes/GLOverlayPass.js';
+import {
+    GLAudioItemsPass
+} from './Passes/GLAudioItemsPass.js';
+
+
 // import {
 //     GizmoPass
 // } from './Passes/GizmoPass.js';
@@ -164,15 +169,7 @@ class GLRenderer {
         this.addPass(new GLTransparentGeomsPass(), PassType.TRANSPARENT);
         this.addPass(new GLBillboardsPass(), PassType.TRANSPARENT);
         this.addPass(new GLOverlayPass(), PassType.OVERLAY);
-
-        // Note: Audio contexts have started taking a long time to construct
-        // (Maybe a regresion in Chrome?)
-        // Setup the Audio context.
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        this.__audioCtx = new AudioContext();
-        this.viewChanged.connect(this.__updateListenerPosition.bind(this));
-        
-
+        this.addPass(new GLAudioItemsPass(), PassType.OVERLAY);
 
         this.addViewport('main');
 
@@ -207,10 +204,6 @@ class GLRenderer {
 
     getCollector() {
         return this.__collector;
-    }
-
-    getAudioContext() {
-        return this.__audioCtx;
     }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
@@ -320,42 +313,12 @@ class GLRenderer {
         return undefined;
     }
 
-    __updateListenerPosition(data) {
-        if(!this.__audioCtx)
-            return;
-        const listener = this.__audioCtx.listener;
-        const viewXfo = data.viewXfo;
-        if(listener.positionX) {
-            listener.positionX.value = viewXfo.tr.x;
-            listener.positionY.value = viewXfo.tr.y;
-            listener.positionZ.value = viewXfo.tr.z;
-        } else {
-            listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
-        }
-
-        const fw = viewXfo.ori.getZaxis().negate();
-        if(listener.forwardX) {
-          listener.forwardX.value = fw.x;
-          listener.forwardY.value = fw.y;
-          listener.forwardZ.value = fw.z;
-        } else {
-            const ydir = viewXfo.ori.getYaxis();
-            listener.setOrientation(fw.x, fw.y, fw.z, ydir.x, ydir.y, ydir.z);
-        }
-    }
 
     activateViewport(vp) {
-
         if(this.__activeViewport == vp) 
             return;
 
         this.__activeViewport = vp;
-
-        if(vp.getCamera()) {
-            this.__updateListenerPosition({
-                viewXfo: vp.getCamera().getGlobalXfo()
-            });
-        }
     }
 
     activateViewportAtPos(offsetX, offsetY) {

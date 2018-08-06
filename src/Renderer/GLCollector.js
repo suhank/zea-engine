@@ -5,7 +5,6 @@ import {
     Signal
 } from '../Utilities';
 import {
-    AudioItem,
     GeomItem,
     Points,
     Lines,
@@ -155,30 +154,6 @@ class GLCollector {
         this.__treeItemDestructing = this.__treeItemDestructing.bind(this)
 
 
-        this.__audioItems = [];
-        this.registerSceneItemFilter((treeItem, rargs) => {
-            if (treeItem instanceof AudioItem) {
-                const audioSource = treeItem.getDOMElement();
-                if (audioSource instanceof HTMLMediaElement)
-                    this.addAudioItem(treeItem, audioSource, treeItem);
-                return true;
-            }
-            if (treeItem instanceof GeomItem) {
-                const material = treeItem.getMaterial();
-                if(material) {
-                    const baseColorParam = material.getParameter('BaseColor');
-                    if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
-                        const image = baseColorParam.getImage();
-                        const audioSource = image.getDOMElement();
-                        if (audioSource instanceof HTMLMediaElement)
-                            this.addAudioItem(treeItem, audioSource, image);
-                    }
-                }
-                // Let other filters handle this item.
-                return false;
-            }
-        });
-
     }
 
     getRenderer() {
@@ -193,97 +168,6 @@ class GLCollector {
     getGLShaderMaterials() {
         return this.__glshadermaterials;
     };
-
-    addAudioItem(treeItem, audioSource, parameterOwner) {
-
-        if(audioSource.addedToCollector)
-            return;
-
-        const audioCtx = this.__renderer.getAudioContext();
-        let source;
-        if (audioSource instanceof HTMLMediaElement)
-            source = audioCtx.createMediaElementSource(audioSource);
-        else {
-            source = audioCtx.createMediaStreamSource(audioSource);
-        }
-
-        const connectVLParamToAudioNodeParam = (vlParam, param) => {
-            // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
-            param.value = vlParam.getValue();
-            vlParam.valueChanged.connect(() => {
-                // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
-                param.value = vlParam.getValue();
-            });
-        }
-
-        const gainNode = audioCtx.createGain();
-        connectVLParamToAudioNodeParam(parameterOwner.getParameter('Gain'), gainNode.gain);
-
-        source.connect(gainNode);
-        const panner = audioCtx.createPanner();
-        panner.panningModel = 'HRTF';
-        panner.distanceModel = 'inverse';
-
-        const connectVLParamToAudioNode = (paramName) => {
-            const vlParam = parameterOwner.getParameter(paramName)
-            panner[paramName] = vlParam.getValue();
-            vlParam.valueChanged.connect(() => {
-                panner[paramName] = vlParam.getValue();
-            });
-        }
-
-        connectVLParamToAudioNode('refDistance');
-        connectVLParamToAudioNode('maxDistance');
-        connectVLParamToAudioNode('rolloffFactor');
-        connectVLParamToAudioNode('coneInnerAngle');
-        connectVLParamToAudioNode('coneOuterAngle');
-        connectVLParamToAudioNode('coneOuterGain');
-
-
-        const updatePannerNodePosition = () => {
-            let xfo;
-            if(treeItem instanceof GeomItem)
-                xfo = treeItem.getGeomXfo();
-            else
-                xfo = treeItem.getGlobalXfo();
-            if (panner.positionX) {
-                // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
-                // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
-                // panner.positionZ.setTargetAtTime(xfo.tr.z, audioCtx.currentTime);
-                panner.positionX.value = xfo.tr.x;
-                panner.positionY.value = xfo.tr.y;
-                panner.positionZ.value = xfo.tr.z;
-            } else {
-                panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
-            }
-
-            const dir = xfo.ori.getZaxis();
-            if (panner.orientationX) {
-                // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
-                // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);
-                // panner.orientationZ.setTargetAtTime(dir.z, audioCtx.currentTime);
-                panner.orientationX.value = dir.x;
-                panner.orientationY.value = dir.y;
-                panner.orientationZ.value = dir.z;
-            } else {
-                panner.setOrientation(dir.x, dir.y, dir.z);
-            }
-
-            // TODO: 
-            // setVelocity()
-        }
-        updatePannerNodePosition();
-        treeItem.globalXfoChanged.connect((changeType) => {
-            updatePannerNodePosition();
-        });
-
-
-        gainNode.connect(panner);
-        panner.connect(audioCtx.destination);
-
-        audioSource.addedToCollector = true;
-        this.__audioItems.push({ treeItem, audioSource, parameterOwner });
-    }
 
     getShaderMaterials(material) {
 

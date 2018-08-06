@@ -35,7 +35,7 @@ class BaseImage extends BaseItem {
 
         // Note: many parts of the code assume a 'loaded' signal.
         // We should probably deprecate and use only 'updated'.
-        this.loaded = new Signal();
+        this.loaded = new Signal(true);
     }
 
     isLoaded() {
