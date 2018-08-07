@@ -213,7 +213,7 @@ class GLCollector {
         material.setMetadata('glmaterialDrawItemSets', glmaterialDrawItemSets);
 
         material.shaderNameChanged.connect(() => {
-            glshaderMaterials.removeMaterial(material);
+            glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
             glshaderMaterials = this.getShaderMaterials(material);
         });
 

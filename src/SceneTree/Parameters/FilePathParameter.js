@@ -16,18 +16,18 @@ class FilePathParameter extends Parameter {
             // Note: the file path is selected by using the file browser
             // For now it can return an aboslute path(within the project)
             // and we convert to relative when we save.
-            const path = this.getValue();
-            if (!resourceLoader.resourceAvailable(path)) {
-                console.warn("Resource unavailable:" + path);
+            const filePath = this.getValue();
+            if (!resourceLoader.resourceAvailable(filePath)) {
+                console.warn("Resource unavailable:" + filePath);
                 return;
             }
-            this.__file = resourceLoader.resolveFile(path);
+            this.__file = resourceLoader.resolveFile(filePath);
         });
     }
 
     getFilename() {
-        const path = this.getValue();
-        const parts = path.split('/');
+        const filePath = this.getValue();
+        const parts = filePath.split('/');
         if(parts.length)
             return parts[parts.length-1];
     }
@@ -47,6 +47,13 @@ class FilePathParameter extends Parameter {
                 return parts[0];
             else
                 return filename;
+        }
+    }
+
+    getFileFolder() {
+        const filePath = this.getValue();
+        if(filePath) {
+            return filePath.substring(0, filePath.lastIndexOf("/")) + '/';
         }
     }
 

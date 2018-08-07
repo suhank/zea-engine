@@ -582,32 +582,23 @@ class TreeItem extends BaseItem {
         if (itemflags & bboxFlag)
             this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), Visualive.ValueSetMode.DATA_LOAD);
 
-        let numChildren = reader.loadUInt32();
+        const numChildren = reader.loadUInt32();
         if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
 
-            let toc = reader.loadUInt32Array(numChildren);
-
-            let printProgress = numChildren > 10000;
-            let progress = 0;
+            const toc = reader.loadUInt32Array(numChildren);
             for (let i = 0; i < numChildren; i++) {
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                let childType = reader.loadStr();
-                // let childName = reader.loadStr();
-                let childItem = sgFactory.constructClass(childType);
-                if (!childItem)
+                const childType = reader.loadStr();
+                // const childName = reader.loadStr();
+                const childItem = sgFactory.constructClass(childType);
+                if (!childItem){
+                    const childName = reader.loadStr();
+                    console.warn("Unable to construct child:" + childName + " of type:" + childType);
                     continue;
+                }
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 childItem.readBinary(reader, context);
                 this.addChild(childItem, false, false);
-
-                if (printProgress) {
-                    // Avoid printing too much as it slows things down.
-                    let curr = Math.round((i / numChildren) * 100);
-                    if (curr != progress) {
-                        progress = curr;
-                        // console.log("Loading " + this.__name + ": " + String(progress + "%"));
-                    }
-                }
             }
         }
     }

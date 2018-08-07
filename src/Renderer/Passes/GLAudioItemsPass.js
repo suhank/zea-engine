@@ -33,9 +33,11 @@ class GLAudioItemsPass extends GLPass {
                     if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
                         const image = baseColorParam.getImage();
                         image.loaded.connect(()=>{
-                            const audioSource = image.getAudioSource();
-                            if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
-                                this.addAudioItem(treeItem, audioSource, image);
+                            if(image.getAudioSource) {
+                                const audioSource = image.getAudioSource();
+                                if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
+                                    this.addAudioItem(treeItem, audioSource, image);
+                            }
                         })
                     }
                 }

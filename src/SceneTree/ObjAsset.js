@@ -18,8 +18,7 @@ import {
     Mesh
 } from './Geometry/Mesh.js';
 import {
-    loadTextfile,
-    getFileFolder
+    loadTextfile
 } from './Utils.js';
 import {
     Material
@@ -44,21 +43,8 @@ import {
 } from './Parameters';
 
 
-const getStem = (str) => {
-    const p = str.split('/');
-    const last = p[p.length - 1];
-    const suffixSt = last.lastIndexOf('.')
-    if (suffixSt != -1)
-        return last.substring(0, suffixSt);
-}
-
 function ObjDataLoader(asset, fileParam, onDone) {
 
-    console.log("ObjDataLoader")
-
-    const filePath = fileParam.getValue();
-    const file = fileParam.getFileDesc();
-    const stem = fileParam.getStem();
     const geomLibrary = new GeomLibrary();
     const materials = new MaterialLibrary();
 
@@ -78,8 +64,8 @@ function ObjDataLoader(asset, fileParam, onDone) {
 
     let objFileData;
 
-    const parseMtlData = (filePath) => {
-        const lines = objFileData.split('\n');
+    const parseMtlData = (mtlFileData) => {
+        const lines = mtlFileData.split('\n');
         const WHITESPACE_RE = /\s+/;
         let material;
 
@@ -91,7 +77,7 @@ function ObjDataLoader(asset, fileParam, onDone) {
         }
 
         const parseMap = (elements)=>{
-            const fileFolder = getFileFolder(filePath);
+            const fileFolder = fileParam.getFileFolder();
             return new FileImage(elements[0], fileFolder + elements[0]);
         }
 
@@ -150,6 +136,8 @@ function ObjDataLoader(asset, fileParam, onDone) {
             return;
 
         asset.unloadDataFromTree();
+        const filePath = fileParam.getValue();
+        const stem = fileParam.getStem();
 
         //performance.mark("parseObjData");
 
@@ -212,12 +200,12 @@ function ObjDataLoader(asset, fileParam, onDone) {
                     // Load and parse the mat lib.
                     async.incAsyncCount();
                     resourceLoader.addWork(stem, 2);
-                    let fileFolder = getFileFolder(filePath);
+                    const fileFolder = fileParam.getFileFolder();
                     loadTextfile(
                         fileFolder + elements[0],
-                        ()=>{
+                        (data)=>{
                             resourceLoader.addWorkDone(stem, 1);
-                            parseMtlData(filePath);
+                            parseMtlData(data);
                             async.decAsyncCount();
                             resourceLoader.addWorkDone(stem, 1);
                         }
@@ -401,6 +389,8 @@ function ObjDataLoader(asset, fileParam, onDone) {
     }
 
     const loadObjData = ()=>{
+        const file = fileParam.getFileDesc();
+        const stem = fileParam.getStem();
         resourceLoader.addWork(stem, 2);    
         loadTextfile(file.url, (fileData)=>{
             resourceLoader.addWorkDone(stem, 1);

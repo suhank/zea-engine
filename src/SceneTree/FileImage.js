@@ -52,18 +52,14 @@ class FileImage extends BaseImage {
             const filePath = fileParam.getValue();
             if (this.getName() == this.constructor.name) {
                 // Generate a name from the file path.
-                const p = filePath.split('/');
-                const last = p[p.length - 1];
-                const suffixSt = last.lastIndexOf('.');
-                if (suffixSt != -1) {
-                    const decorator = last.substring(suffixSt - 1, suffixSt);
-                    if (!isNaN(decorator)) {
-                        // Note: ALL image names have an LOD specifier at the end.
-                        // remove that off when retrieving the name.
-                        this.setName(last.substring(0, suffixSt - 1));
-                    } else {
-                        this.setName(last.substring(0, suffixSt));
-                    }
+                const stem = fileParam.getStem();
+                const decorator = stem.substring(stem.length - 1);
+                if (!isNaN(decorator)) {
+                    // Note: ALL image names have an LOD specifier at the end.
+                    // remove that off when retrieving the name.
+                    this.setName(stem.substring(0, stem.length - 1));
+                } else {
+                    this.setName(stem);
                 }
             }
 
@@ -85,15 +81,15 @@ class FileImage extends BaseImage {
     __loadData(resourcePath, fileDesc) {
 
         const ext = this.getParameter('FilePath').getExt();
-        if (ext == 'jpg' || ext == 'png' || ext == 'webp') {
+        if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
             this.__loadLDRImage(resourcePath, fileDesc, ext);
-        } else if (ext == 'mp4' || ext == 'ogg') {
+        } else if (ext == '.mp4' || ext == '.ogg') {
             this.__loadLDRVideo(resourcePath, fileDesc, ext);
-            // } else if (ext == 'ldralpha') {
+            // } else if (ext == '.ldralpha') {
             //     this.__loadLDRAlpha(resourcePath, fileDesc, ext);
-        } else if (ext == 'vlh') {
+        } else if (ext == '.vlh') {
             this.__loadVLH(resourcePath, fileDesc, ext);
-        } else if (ext == 'gif') {
+        } else if (ext == '.gif') {
             this.__loadGIF(resourcePath, fileDesc, ext);
         } else {
             throw ("Unsupported file type. Check the ext:" + resourcePath);

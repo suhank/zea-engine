@@ -25,8 +25,7 @@ let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker
 // } from './Geometry/parseGeomsBinary.js';
 
 class GeomLibrary {
-    constructor(name) {
-        this.__name = name;
+    constructor() {
         this.rangeLoaded = new Signal();
         this.streamFileParsed = new Signal();
         this.loaded = new Signal(true);
