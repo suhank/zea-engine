@@ -18,16 +18,22 @@ import {
 class MaterialLibrary {
     constructor(name='MaterialLibrary') {
         this.__name = name;
-        this.__images = {};
-        this.__materials = {
-            Default: new Material('Default', 'SimpleSurfaceShader')
-        };
 
         this.lod = 0;
         if(SystemDesc.isMobileDevice)
             this.lod = 1;
         this.loaded = new Signal();
+        
+        this.clear()
     }
+    
+    clear(){
+        this.__images = {};
+        this.__materials = {
+            Default: new Material('Default', 'SimpleSurfaceShader')
+        };
+    }
+
 
     getPath() {
         return [this.__name];

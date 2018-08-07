@@ -73,6 +73,9 @@ class Signal {
         }
     }
 
+    isToggled() {
+        return this.__toggled;
+    }
     setToggled(state) {
         this.__toggled = state;
         this.__data = undefined;

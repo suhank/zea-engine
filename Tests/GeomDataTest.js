@@ -30,19 +30,19 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
 
     /////////////////////////////////////
     // Obj Asset
-    const objAsset = new Visualive.ObjAsset('obj');
-    objAsset.getParameter('splitObjects').setValue(false);
-    objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
-    objAsset.getParameter('loadMtlFile').setValue(false);
-    objAsset.getParameter('unitsConversion').setValue(1.0);
-    objAsset.getParameter('defaultShader').setValue("StandardSurfaceShader");
-    objAsset.setLocalXfo(new Visualive.Xfo(
+    const asset = new Visualive.AssetItem('obj');
+    asset.getParameter('DataFilePath').setValue("/Assets/cow.obj");
+    asset.getParameter('splitObjects').setValue(false);
+    asset.getParameter('splitGroupsIntoObjects').setValue(false);
+    asset.getParameter('loadMtlFile').setValue(false);
+    asset.getParameter('unitsConversion').setValue(1.0);
+    asset.getParameter('defaultShader').setValue("StandardSurfaceShader");
+    asset.setLocalXfo(new Visualive.Xfo(
         new Visualive.Vec3(0, 0, 3.55),
         new Visualive.Quat({rotateX: (Math.PI * 0.5) })
         ));
-    scene.getRoot().addChild(objAsset);
+    scene.getRoot().addChild(asset);
 
-    objAsset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
 
 
     const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);

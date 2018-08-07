@@ -32,6 +32,13 @@ class FilePathParameter extends Parameter {
             return parts[parts.length-1];
     }
 
+    getExt(){
+        const filename = this.getFilename();
+        const suffixSt = filename.lastIndexOf('.')
+        if (suffixSt != -1)
+            return filename.substring(suffixSt).toLowerCase()
+    }
+
     getStem() {
         const filename = this.getFilename();
         if(filename) {

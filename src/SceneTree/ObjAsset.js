@@ -44,63 +44,54 @@ import {
 } from './Parameters';
 
 
-class ObjAsset extends AssetItem {
-    constructor(name) {
-        super(name);
+const getStem = (str) => {
+    const p = str.split('/');
+    const last = p[p.length - 1];
+    const suffixSt = last.lastIndexOf('.')
+    if (suffixSt != -1)
+        return last.substring(0, suffixSt);
+}
 
-        this.__geomLibrary = new GeomLibrary(this.__name);
-        this.__materials = new MaterialLibrary();
-        
-        this.addParameter(new BooleanParameter('splitObjects', false));
-        this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false));
-        this.addParameter(new BooleanParameter('loadMtlFile', false));
-        this.addParameter(new NumberParameter('unitsConversion', 1.0));
-        this.addParameter(new StringParameter('defaultShader', ""));
+function ObjDataLoader(asset, fileParam, onDone) {
 
-        const objfileParam = this.addParameter(new Visualive.FilePathParameter('ObjFilePath'));
-        objfileParam.valueChanged.connect((mode) => {
-          this.loaded.untoggle();
-          const filePath = objfileParam.getValue()
-          const url = objfileParam.getURL();
+    console.log("ObjDataLoader")
 
-          const emitloaded = mode == Visualive.ValueSetMode.USER_SETVALUE;
-          this.__loadObjFile(filePath, url, emitloaded);
-        });
+    const filePath = fileParam.getValue();
+    const file = fileParam.getFileDesc();
+    const stem = fileParam.getStem();
+    const geomLibrary = new GeomLibrary();
+    const materials = new MaterialLibrary();
 
-        this.binloaded = new Visualive.Signal(true);
+
+    asset.getGeometryLibrary = () => {
+        return geomLibrary;
     }
-
-    getGeometryLibrary() {
-        return this.__geomLibrary;
+    asset.getMaterialLibrary = () => {
+        return materials;
     }
+    
+    asset.addParameter(new BooleanParameter('splitObjects', false));
+    asset.addParameter(new BooleanParameter('splitGroupsIntoObjects', false));
+    asset.addParameter(new BooleanParameter('loadMtlFile', false));
+    asset.addParameter(new NumberParameter('unitsConversion', 1.0));
+    asset.addParameter(new StringParameter('defaultShader', ""));
 
-    getMaterialLibrary() {
-        return this.__materials;
-    }
+    let objFileData;
 
-    __loadObjFile(filePath, url){
-        resourceLoader.addWork(this.getName(), 2);
-        loadTextfile(url, (fileData)=>{
-            resourceLoader.addWorkDone(this.getName(), 1);
-             this.parseObjData(filePath, fileData);
-            resourceLoader.addWorkDone(this.getName(), 1);
-        });
-    }
-
-    parseMtlData(filePath, fileData) {
-        let lines = fileData.split('\n');
-        let WHITESPACE_RE = /\s+/;
+    const parseMtlData = (filePath) => {
+        const lines = objFileData.split('\n');
+        const WHITESPACE_RE = /\s+/;
         let material;
 
-        let parseColor = function(elements) {
+        const parseColor = function(elements) {
             if (elements.length == 3)
                 return new Color(parseFloat(elements[0]), parseFloat(elements[1]), parseFloat(elements[2]));
             else
                 throw ("Unable to parse a color from the following parts:" + elements.join('_'));
         }
 
-        let parseMap = (elements)=>{
-            let fileFolder = getFileFolder(filePath);
+        const parseMap = (elements)=>{
+            const fileFolder = getFileFolder(filePath);
             return new FileImage(elements[0], fileFolder + elements[0]);
         }
 
@@ -110,12 +101,12 @@ class ObjAsset extends AssetItem {
                 continue;
             if (line.indexOf('#') != -1)
                 line = line.substring(0, line.indexOf('#')).trim();
-            let elements = line.split(WHITESPACE_RE);
-            let key = elements.shift();
+            const elements = line.split(WHITESPACE_RE);
+            const key = elements.shift();
             switch (key) {
                 case 'newmtl':
                     material = new Material(elements[0]);
-                    this.__materials.addMaterial(material);
+                    materials.addMaterial(material);
                     break;
                 case 'Kd':
                     material.addParameter('BaseColor', parseColor(elements));
@@ -148,28 +139,33 @@ class ObjAsset extends AssetItem {
         }
     }
 
-    parseObjData(filePath, fileData) {
+    const vertices = new Array();
+    const normals = new Array();
+    const textureCoords = new Array();
+
+    const geomDatas = {};
+
+    const parseObjData = () => {
+        if(!objFileData)
+            return;
+
+        asset.unloadDataFromTree();
 
         //performance.mark("parseObjData");
 
         // array of lines separated by the newline
-        let lines = fileData.split('\n');
+        let lines = objFileData.split('\n');
         let WHITESPACE_RE = /\s+/;
         let async = new Async();
         async.incAsyncCount();
         async.ready.connect(()=>{
-            this.buildChildItems(); 
+            buildChildItems(); 
         });
 
-        this.vertices = new Array();
-        this.normals = new Array();
-        this.textureCoords = new Array();
-
-        this.geomDatas = {};
         let currGeom = undefined;
         let newGeom = (name)=>{
             let suffix = 0;
-            while (name in this.geomDatas) {
+            while (name in geomDatas) {
                 suffix++;
                 name = name + String(suffix);
             }
@@ -187,13 +183,13 @@ class ObjAsset extends AssetItem {
                 "numQuads": 0,
                 "material": undefined
             };
-            this.geomDatas[name] = currGeom;
+            geomDatas[name] = currGeom;
         };
-        newGeom(this.getName());
+        newGeom(stem);
 
-        let loadMtlFile = this.getParameter('loadMtlFile').getValue();
-        let splitObjects = this.getParameter('splitObjects').getValue();
-        let splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue();
+        const loadMtlFile = asset.getParameter('loadMtlFile').getValue();
+        const splitObjects = asset.getParameter('splitObjects').getValue();
+        const splitGroupsIntoObjects = asset.getParameter('splitGroupsIntoObjects').getValue();
 
         let stop = false;
         // let numPolys = 0;
@@ -203,8 +199,8 @@ class ObjAsset extends AssetItem {
                 continue;
             if (line.indexOf('#') != -1)
                 line = line.substring(0, line.indexOf('#')).trim();
-            let elements = line.split(WHITESPACE_RE);
-            let key = elements.shift();
+            const elements = line.split(WHITESPACE_RE);
+            const key = elements.shift();
             switch (key) {
                 case '':
                 case 's':
@@ -215,15 +211,15 @@ class ObjAsset extends AssetItem {
                         continue;
                     // Load and parse the mat lib.
                     async.incAsyncCount();
-                    resourceLoader.addWork(this.getName(), 2);
+                    resourceLoader.addWork(stem, 2);
                     let fileFolder = getFileFolder(filePath);
                     loadTextfile(
                         fileFolder + elements[0],
                         ()=>{
-                            resourceLoader.addWorkDone(this.getName(), 1);
-                            this.parseMtlData(filePath, fileData);
+                            resourceLoader.addWorkDone(stem, 1);
+                            parseMtlData(filePath);
                             async.decAsyncCount();
-                            resourceLoader.addWorkDone(this.getName(), 1);
+                            resourceLoader.addWorkDone(stem, 1);
                         }
                     );
                     break;
@@ -239,23 +235,23 @@ class ObjAsset extends AssetItem {
                         newGeom(elements.join('_'));
                     break;
                 case 'v':
-                    this.vertices.push(elements.map(i => parseFloat(i)));
+                    vertices.push(elements.map(i => parseFloat(i)));
                     break;
                 case 'vt':
-                    this.textureCoords.push(elements.map(i => parseFloat(i)));
+                    textureCoords.push(elements.map(i => parseFloat(i)));
                     break;
                 case 'vn':
-                    this.normals.push(elements.map(i => parseFloat(i)));
+                    normals.push(elements.map(i => parseFloat(i)));
                     break;
                 case 'f':
                     {
-                        let v_poly = [];
-                        let vt_poly = [];
-                        let vn_poly = [];
+                        const v_poly = [];
+                        const vt_poly = [];
+                        const vn_poly = [];
                         for (let j = 0, eleLen = elements.length; j < eleLen; j++) {
                             // v/vt/vn
-                            let indices = elements[j].split('/').map(i => parseInt(i) - 1);
-                            let v = indices[0];
+                            const indices = elements[j].split('/').map(i => parseInt(i) - 1);
+                            const v = indices[0];
 
                             // v_poly.push(v);
                             let v_index = currGeom.verticesRemapping[v];
@@ -267,11 +263,11 @@ class ObjAsset extends AssetItem {
                             v_poly.push(v_index);
 
                             if (indices.length > 1 && !isNaN(indices[1])) {
-                                let vt = indices[1];
+                                const vt = indices[1];
                                 vt_poly.push(vt);
                             }
                             if (indices.length > 2 && !isNaN(indices[2])) {
-                                let vn = indices[2];
+                                const vn = indices[2];
                                 vn_poly.push(vn);
                             }
                         }
@@ -301,34 +297,35 @@ class ObjAsset extends AssetItem {
         async.decAsyncCount();
     }
 
-    buildChildItems() {
+    const buildChildItems = () => {
         //performance.mark("parseObjDataDone");
         //performance.mark("buildObjTree");
-        for (let geomName in this.geomDatas) {
-            if (this.geomDatas[geomName].numVertices == 0)
+        for (let geomName in geomDatas) {
+            if (geomDatas[geomName].numVertices == 0)
                 continue;
-            this.buildChildItem(geomName, this.geomDatas[geomName]);
+            buildChildItem(geomName, geomDatas[geomName]);
         }
-        this.loaded.emit();
-        //performance.mark("buildObjTreeDone");
+
+        // Done. 
+        onDone();
     }
 
-    buildChildItem(geomName, geomData) {
+    const buildChildItem = (geomName, geomData) => {
 
-        let numVertices = geomData.numVertices;
-        let numTris = geomData.numTris;
-        let mesh = new Mesh(geomName);
+        const numVertices = geomData.numVertices;
+        const numTris = geomData.numTris;
+        const mesh = new Mesh(geomName);
         mesh.setFaceCounts([geomData.numTris, geomData.numQuads]);
         mesh.setNumVertices(numVertices);
-        let positionsAttr = mesh.getVertexAttribute('positions');
-        let unitsConversion = this.getParameter('unitsConversion').getValue();
+        const positionsAttr = mesh.getVertexAttribute('positions');
+        const unitsConversion = asset.getParameter('unitsConversion').getValue();
 
         for (let vsrc in geomData.verticesRemapping) {
-            let vtgt = geomData.verticesRemapping[vsrc];
+            const vtgt = geomData.verticesRemapping[vsrc];
             positionsAttr.getValueRef(vtgt).set(
-                this.vertices[vsrc][0] * unitsConversion,
-                this.vertices[vsrc][1] * unitsConversion,
-                this.vertices[vsrc][2] * unitsConversion
+                vertices[vsrc][0] * unitsConversion,
+                vertices[vsrc][1] * unitsConversion,
+                vertices[vsrc][2] * unitsConversion
             );
         }
 
@@ -339,49 +336,49 @@ class ObjAsset extends AssetItem {
             texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2);
 
         for (let i = 0; i < geomData.vertexIndices.length; i++) {
-            let v_poly = geomData.vertexIndices[i];
+            const v_poly = geomData.vertexIndices[i];
             mesh.setFaceVertexIndices(i, ...v_poly);
 
             // Set the texCoords and normals...
             if (normalsAttr) {
-                let vn_poly = geomData.normalIndices[i];
+                const vn_poly = geomData.normalIndices[i];
                 for (let j = 0; j < vn_poly.length; j++) {
-                    let value = new Vec3(
-                        this.normals[vn_poly[j]][0],
-                        this.normals[vn_poly[j]][1],
-                        this.normals[vn_poly[j]][2]
+                    const value = new Vec3(
+                        normals[vn_poly[j]][0],
+                        normals[vn_poly[j]][1],
+                        normals[vn_poly[j]][2]
                     );
                     normalsAttr.setFaceVertexValue(i, j, value);
                 }
             }
             if (texCoordsAttr && geomData.texCoordIndices.length == geomData.vertexIndices.length) {
-                let vt_poly = geomData.texCoordIndices[i];
+                const vt_poly = geomData.texCoordIndices[i];
                 for (let j = 0; j < vt_poly.length; j++) {
-                    let value = new Vec2(
-                        this.textureCoords[vt_poly[j]][0],
-                        this.textureCoords[vt_poly[j]][1]
+                    const value = new Vec2(
+                        textureCoords[vt_poly[j]][0],
+                        textureCoords[vt_poly[j]][1]
                     );
                     texCoordsAttr.setFaceVertexValue(i, j, value);
                 }
             }
         }
 
-        let geomItem = new GeomItem(geomName, mesh);
+        const geomItem = new GeomItem(geomName, mesh);
         geomItem.selectable = true;
 
         // Move the transform of the geom item to the center of the geom.
         // This is so that transparent objects can render correctly, and the 
         // transform gizmo becomes centered on each geom(for testing)
-        let delta = mesh.boundingBox.center();
+        const delta = mesh.boundingBox.center();
         mesh.moveVertices(delta.negate());
         geomItem.setLocalXfo(new Xfo(delta));
 
-        if (geomData.material != undefined && this.__materials.hasMaterial(geomData.material)) {
-            geomItem.setMaterial(this.__materials.getMaterial(geomData.material));
+        if (geomData.material != undefined && materials.hasMaterial(geomData.material)) {
+            geomItem.setMaterial(materials.getMaterial(geomData.material));
         } else{
 
-            let defaultShader = this.getParameter('defaultShader').getValue();
-            let material = new Material(geomName + 'mat', defaultShader != "" ? defaultShader : 'StandardSurfaceShader');
+            const defaultShader = asset.getParameter('defaultShader').getValue();
+            const material = new Material(geomName + 'mat', defaultShader != "" ? defaultShader : 'StandardSurfaceShader');
             const baseColorParam = material.getParameter('BaseColor');
             if(baseColorParam)
                 baseColorParam.setValue(Color.random(0.5));
@@ -396,12 +393,54 @@ class ObjAsset extends AssetItem {
             const reflectanceParam = material.getParameter('Reflectance');
             if(reflectanceParam)
                 reflectanceParam.setValue(0.2);
-            this.__materials.addMaterial(material)
+            materials.addMaterial(material)
             geomItem.setMaterial(material);
         }
 
-        this.addChild(geomItem, false);
+        asset.addChild(geomItem, false);
     }
+
+    const loadObjData = ()=>{
+        resourceLoader.addWork(stem, 2);    
+        loadTextfile(file.url, (fileData)=>{
+            resourceLoader.addWorkDone(stem, 1);
+            objFileData = fileData;
+            parseObjData();
+            resourceLoader.addWorkDone(stem, 1);
+        });
+    }
+
+    loadObjData();
+
+
+    // If the fileParam changes again, we only trigger the load function.
+    fileParam.valueChanged.connect(loadObjData);
+    asset.getParameter('splitObjects').valueChanged.connect(parseObjData);
+    asset.getParameter('splitGroupsIntoObjects').valueChanged.connect(parseObjData);
+    asset.getParameter('loadMtlFile').valueChanged.connect(parseObjData);
+    asset.getParameter('unitsConversion').valueChanged.connect(parseObjData);
+    asset.getParameter('defaultShader').valueChanged.connect(parseObjData);
+}
+
+AssetItem.registerDataLoader('.obj', ObjDataLoader);
+
+class ObjAsset extends AssetItem {
+    constructor(name) {
+        super(name);
+
+
+        const objfileParam = this.addParameter(new Visualive.FilePathParameter('ObjFilePath'));
+        objfileParam.valueChanged.connect((mode) => {
+          this.loaded.untoggle();
+          const emitloaded = mode == Visualive.ValueSetMode.USER_SETVALUE;
+          ObjDataLoader(this, objfileParam, ()=>{
+            if(mode == Visualive.ValueSetMode.USER_SETVALUE)
+                this.loaded.emit();
+          });
+        });
+    }
+
+
 };
 export {
     ObjAsset

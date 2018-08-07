@@ -73,14 +73,7 @@ class EnvMap extends BaseImage {
     }
 
     __loadURL(url, path) {
-        const getExt = (str) => {
-            const p = str.split('/');
-            const last = p[p.length - 1];
-            const suffixSt = last.lastIndexOf('.')
-            if (suffixSt != -1)
-                return last.substring(suffixSt).toLowerCase()
-        }
-        const ext = getExt(path);
+        const ext = this.getParameter('FilePath').getExt();
         if (ext == '.vlenv') {
             this.__loadVLENV(url, path);
         } else{

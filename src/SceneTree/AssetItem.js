@@ -15,6 +15,7 @@ import {
     sgFactory
 } from './SGFactory.js';
 
+const dataLoaders = {};
 
 class AssetItem extends TreeItem {
     constructor(name) {
@@ -22,6 +23,11 @@ class AssetItem extends TreeItem {
         this.__name = name;
         this.__components = [];
         this.__componentMapping = {};
+        this.componentAdded = new Signal();
+        this.componentRemoved = new Signal();
+
+        this.loaded = new Signal(true);
+        this.loaded.setToggled(true);
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
@@ -32,15 +38,35 @@ class AssetItem extends TreeItem {
                 (data) => {
                     const j = JSON.parse(data);
                     this.fromJSON(j, { assetItem: this });
+
+                    if(!this.loaded.isToggled())
+                        this.loaded.emit();
                 }
             );
         });
 
-        this.componentAdded = new Signal();
-        this.componentRemoved = new Signal();
+        this.__loader
+        this.__datafileParam = this.addParameter(new Visualive.FilePathParameter('DataFilePath'));
+        this.__datafileParam.valueChanged.connect((mode) => {
+            this.loaded.setToggled(false);
+            const ext = this.__datafileParam.getExt();
+            const loader = dataLoaders[ext] ? dataLoaders[ext][dataLoaders[ext].length-1] : undefined;
+            if(loader && loader != this.__loader){
+                this.unloadDataFromTree();
+                this.__loader = loader;
+                this.__loader(this, this.__datafileParam, ()=>{
+                    if(mode == Visualive.ValueSetMode.USER_SETVALUE)
+                        this.loaded.emit();
+                });
+            }
+            else {
+                console.warn("No loaders found for ext:" + ext + ". loading file:" + filePath);
+            }
+        });
+    }
 
-        this.loaded = new Signal(true);
-        this.loaded.setToggled(true);
+    getLoader(){
+        return this.__loader;
     }
 
     //////////////////////////////////////////
@@ -104,19 +130,68 @@ class AssetItem extends TreeItem {
         if(!context) 
             context = {};
         context.assetItem = this;
-        super.fromJSON(j, context);
 
-        if(j.components) {
-            for(let cj of j.components) {
-                const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
-                if (component) {
-                    component.fromJSON(cj, context);
-                    this.addComponent(component);
+        const loadAssetJSON = ()=>{
+            super.fromJSON(j, context);
+            if(j.components) {
+                for(let cj of j.components) {
+                    const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
+                    if (component) {
+                        component.fromJSON(cj, context);
+                        this.addComponent(component);
+                    }
                 }
             }
         }
+
+        if(j.params && j.params.DataFilePath) {
+            const onbinloaded = ()=>{
+              loadAssetJSON();
+
+              // Emit the load signal now that both the bin and JSON file is loaded.
+              this.loaded.emit();
+            }
+            this.__datafileParam.loaded.connect(onbinloaded)
+
+            const filePathJSON = j.params.DataFilePath;
+            delete j.params.DataFilePath;
+            this.__datafileParam.fromJSON(filePathJSON, context);
+        }
+        else {
+            loadAssetJSON();
+        }
+
+
     }
 
+    unloadDataFromTree() {
+        // TODO: only remove the children loaded by the data load. (these items need to be flagged);
+        this.removeAllChildren();
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+
+    static registerDataLoader(ext, cls){
+        const regExt = (ext)=>{
+            ext = ext.toLowerCase();
+            if(!dataLoaders[ext])
+                dataLoaders[ext] = [];
+            else {
+                console.warn("overriding loader for ext:" + ext + ". Prev loader:" + dataLoaders[ext] + ". New loader:" + cls);
+            }
+            dataLoaders[ext].push(cls);
+        }
+
+        if(Array.isArray(ext)){
+            for(let e of ext)
+                regExt(e);
+        }
+        else {
+            regExt(ext);
+        }
+    }
 };
 
 export {

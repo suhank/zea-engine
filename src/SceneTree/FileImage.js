@@ -84,15 +84,7 @@ class FileImage extends BaseImage {
 
     __loadData(resourcePath, fileDesc) {
 
-        const getExt = (str) => {
-            const p = str.split('/');
-            const last = p[p.length - 1];
-            const suffixSt = last.lastIndexOf('.')
-            if (suffixSt != -1)
-                return last.substring(suffixSt + 1).toLowerCase()
-        }
-        const ext = getExt(resourcePath);
-
+        const ext = this.getParameter('FilePath').getExt();
         if (ext == 'jpg' || ext == 'png' || ext == 'webp') {
             this.__loadLDRImage(resourcePath, fileDesc, ext);
         } else if (ext == 'mp4' || ext == 'ogg') {

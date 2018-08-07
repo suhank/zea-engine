@@ -30,9 +30,6 @@ class GeomLibrary {
         this.rangeLoaded = new Signal();
         this.streamFileParsed = new Signal();
         this.loaded = new Signal(true);
-        this.__loaded = 0;
-        this.__numGeoms = 0;
-        this.geoms = [];
 
         this.__streamInfos = {};
         this.__genBuffersOpts = {};
@@ -41,6 +38,14 @@ class GeomLibrary {
         for (let i = 0; i < 3; i++)
             this.__workers.push(this.__constructWorker());
         this.__nextWorker = 0;
+
+        this.clear()
+    }
+    
+    clear(){
+        this.__loaded = 0;
+        this.__numGeoms = 0;
+        this.geoms = [];
     }
 
     __constructWorker() {
@@ -61,6 +66,7 @@ class GeomLibrary {
             worker.terminate();
         this.__workers = [];
     }
+
 
     setGenBufferOption(key, value) {
         this.__genBuffersOpts[key] = value;
