@@ -1,7 +1,8 @@
 
-// export * from './GLWirePass.js';
-// export * from './GLHardEdgesPass.js';
-// export * from './GLMeshPointsPass.js';
-// export * from './GLNormalsPass.js';
+
+export * from './GLOpaqueGeomsPass.js';
+export * from './GLTransparentGeomsPass.js';
+export * from './GLBillboardsPass.js';
+export * from './GLOverlayPass.js';
 export * from './GLAudioItemsPass.js';
 

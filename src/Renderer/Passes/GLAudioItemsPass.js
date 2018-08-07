@@ -1,5 +1,6 @@
 import { Vec3 } from '../../Math/Vec3';
-import { GLPass } from '../GLPass.js';
+import { GLPass, PassType } from '../GLPass.js';
+import { GLRenderer } from '../GLRenderer.js';
 
 import {
     AudioItem,
@@ -182,6 +183,8 @@ class GLAudioItemsPass extends GLPass {
 
 };
 
+
+GLRenderer.registerPass(GLAudioItemsPass, PassType.OVERLAY);
 
 export {
     GLAudioItemsPass,

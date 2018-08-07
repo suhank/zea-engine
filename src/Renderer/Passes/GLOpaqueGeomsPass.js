@@ -1,5 +1,6 @@
-import { GLPass } from '../GLPass.js';
+import { GLPass, PassType } from '../GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
+import { GLRenderer } from '../GLRenderer.js';
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
@@ -114,7 +115,8 @@ class GLOpaqueGeomsPass extends GLPass {
     }
 };
 
+GLRenderer.registerPass(GLOpaqueGeomsPass, PassType.OPAQUE);
+
 export {
     GLOpaqueGeomsPass
 };
-// export default GLOpaqueGeomsPass;

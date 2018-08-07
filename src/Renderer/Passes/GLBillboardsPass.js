@@ -9,7 +9,7 @@ import {
     BillboardShader
 } from '../Shaders/BillboardShader.js';
 import {
-    GLPass
+    GLPass, PassType
 } from '../GLPass.js';
 import {
     GLShader
@@ -23,6 +23,7 @@ import {
 import {
     generateShaderGeomBinding
 } from '../GeomShaderBinding.js';
+import { GLRenderer } from '../GLRenderer.js';
 
 
 const pixelsPerItem = 5; // The number of pixels per draw item.
@@ -343,6 +344,8 @@ class GLBillboardsPass extends GLPass {
         gl.disable(gl.BLEND);
     }
 };
+
+GLRenderer.registerPass(GLBillboardsPass, PassType.TRANSPARENT);
 
 export {
     GLBillboardsPass

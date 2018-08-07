@@ -3,6 +3,13 @@ import {
     Signal
 } from '../Utilities';
 
+
+const PassType = {
+    OPAQUE: 0,
+    TRANSPARENT: 1,
+    OVERLAY: 2
+};
+
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLPass {
     constructor() {
@@ -141,7 +148,8 @@ class GLPass {
 };
 
 export {
-    GLPass
+    GLPass,
+    PassType
 };
 // export default GLPass;
 

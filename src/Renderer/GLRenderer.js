@@ -31,29 +31,10 @@ import {
 import {
     GLCollector
 } from './GLCollector.js';
-import {
-    GLOpaqueGeomsPass
-} from './Passes/GLOpaqueGeomsPass.js';
-import {
-    GLTransparentGeomsPass
-} from './Passes/GLTransparentGeomsPass.js';
-import {
-    GLBillboardsPass
-} from './Passes/GLBillboardsPass.js';
-import {
-    GLOverlayPass
-} from './Passes/GLOverlayPass.js';
-import {
-    GLAudioItemsPass
-} from './Passes/GLAudioItemsPass.js';
-
 
 // import {
-//     GizmoPass
-// } from './Passes/GizmoPass.js';
-import {
-    GizmoContext
-} from './Gizmos/GizmoContext.js';
+//     GizmoContext
+// } from './Gizmos/GizmoContext.js';
 import {
     GLViewport
 } from './GLViewport.js';
@@ -104,11 +85,8 @@ if (process === 'undefined' || process.browser == true) {
     }
 }
 
-const PassType = {
-    OPAQUE: 0,
-    TRANSPARENT: 1,
-    OVERLAY: 2
-};
+
+const registeredPasses = {};
 
 class GLRenderer {
     constructor(canvasDiv, options = {}) {
@@ -165,11 +143,11 @@ class GLRenderer {
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
 
-        this.addPass(new GLOpaqueGeomsPass(), PassType.OPAQUE);
-        this.addPass(new GLTransparentGeomsPass(), PassType.TRANSPARENT);
-        this.addPass(new GLBillboardsPass(), PassType.TRANSPARENT);
-        this.addPass(new GLOverlayPass(), PassType.OVERLAY);
-        this.addPass(new GLAudioItemsPass(), PassType.OVERLAY);
+        for(let passtype in registeredPasses) {
+            for(let cls of registeredPasses[passtype]){
+                this.addPass(new cls(), passtype);
+            }
+        }
 
         this.addViewport('main');
 
@@ -884,6 +862,17 @@ class GLRenderer {
         // gl.disable(gl.SCISSOR_TEST);
 
         this.redrawOccured.emit();
+    }
+
+
+    //////////////////////////////////////////
+    // Static Methods
+
+
+    static registerPass(cls, passtype){
+        if(!registeredPasses[passtype])
+            registeredPasses[passtype] = [];
+        registeredPasses[passtype].push(cls);
     }
 };
 

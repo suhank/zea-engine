@@ -1,6 +1,7 @@
 import { Vec3 } from '../../Math/Vec3';
-import { GLPass } from '../GLPass.js';
+import { GLPass, PassType } from '../GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
+import { GLRenderer } from '../GLRenderer.js';
 
 class GLTransparentGeomsPass extends GLPass {
     constructor() {
@@ -154,12 +155,10 @@ class GLTransparentGeomsPass extends GLPass {
 
         gl.disable(gl.BLEND);
     }
-    
-
 };
 
+GLRenderer.registerPass(GLTransparentGeomsPass, PassType.TRANSPARENT);
 
 export {
     GLTransparentGeomsPass
 };
-// export default GLTransparentGeomsPass;
