@@ -3,8 +3,7 @@ import {
     Vec2
 } from '../Math';
 import {
-    Signal,
-    Async
+    Signal
 } from '../Utilities';
 import {
     SystemDesc
@@ -72,6 +71,7 @@ function VLADataLoader(asset, fileParam, onDone) {
         geomLibrary.setNumGeoms(reader.loadUInt32());
         
         // this.loaded.emit();
+        onDone(); 
         return numGeomsFiles;
     }
 
@@ -85,11 +85,6 @@ function VLADataLoader(asset, fileParam, onDone) {
         if(!file)
             return;
 
-        const async = new Async();
-        async.incAsyncCount(2);
-        async.ready.connect(()=>{
-            onDone(); 
-        });
         const filePath = fileParam.getValue();
         const stem = fileParam.getStem();
         const url = fileParam.getURL();
@@ -118,8 +113,6 @@ function VLADataLoader(asset, fileParam, onDone) {
                     resourceLoader.addWork(filePath+'geoms', 4*numGeomsFiles); // (load + parse + extra)
                     loadNextGeomFile();
                 }
-
-                async.decAsyncCount();
             });
 
         // Now load the geom files in sequence, parsing and loading
@@ -156,9 +149,6 @@ function VLADataLoader(asset, fileParam, onDone) {
         geomLibrary.streamFileParsed.connect((fraction) => {
             // A chunk of geoms are now parsed, so update the resource loader.
             resourceLoader.addWorkDone(filePath+'geoms', fraction);
-        });
-        geomLibrary.loaded.connect(() => {
-            async.decAsyncCount();
         });
     }
 
