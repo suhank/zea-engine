@@ -11,8 +11,8 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
-    VLAAsset
-} from './VLAAsset.js';
+    AssetItem
+} from './AssetItem.js';
 import {
     Sphere
 } from './Geometry/Shapes/Sphere.js';
@@ -93,8 +93,8 @@ class Scene {
         if (path in this.__commonResources) {
             return this.__commonResources[path];
         }
-        let asset = new VLAAsset(path, resourceLoader);
-        asset.getParameter('BinFilePath').setValue(path);
+        let asset = new AssetItem(path, resourceLoader);
+        asset.getParameter('DataFilePath').setValue(path);
         this.__commonResources[path] = asset;
         return asset;
     }
@@ -169,10 +169,9 @@ class Scene {
 
     addAsset(asset) {
         asset.loaded.connect(() => {
-            if (this.__envMap) {
-                const path = asset.getParameter('BinFilePath').getValue();
+            if (this.__envMap && asset.getLightmapPath) {
 
-                const lightmapPath = path.split('.')[0] + "_" + this.__envMap.getName() + "_Lightmap" + this.__lightmapLOD + ".vlh";
+                const lightmapPath = asset.getLightmapPath(this.__envMap.getName(), this.__lightmapLOD);
                 console.log("lightmapPath:" + lightmapPath)
                 const lightmapName = asset.getName();
                 if (!this.getLightMap(lightmapName) && resourceLoader.resourceAvailable(lightmapPath)) {

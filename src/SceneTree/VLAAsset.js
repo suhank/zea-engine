@@ -51,6 +51,15 @@ function VLADataLoader(asset, fileParam, onDone) {
         return atlasSize;
     }
 
+    asset.getLightmapPath = (lightmapName, lightmapLOD) => {
+        const stem = fileParam.getStem();
+        const lightmapPath = fileParam.getFileFolder() + stem + "_" + lightmapName + "_Lightmap" + lightmapLOD + ".vlh";
+                
+        return lightmapPath;
+    }
+
+
+
     const readBinary = (reader, context) => {
         if(!context) 
             context = {};
