@@ -18,10 +18,11 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
         xfo.ori.rotateX(Math.PI * -0.5);
         geomItem.setLocalXfo(xfo);
 
-        const audioItem = new Visualive.FileAudioItem(name+'Audio');
+        const audioItem = new Visualive.AudioItem(name+'Audio');
         audioItem.getParameter('FilePath').setValue(url);
         audioItem.getParameter('Gain').setValue(15.0);
-        audioItem.getParameter('rolloffFactor').setValue(0.1);
+        // audioItem.getParameter('rolloffFactor').setValue(0.1);
+        audioItem.play();
         geomItem.addChild(audioItem, false);
 
         scene.getRoot().addChild(geomItem, false);

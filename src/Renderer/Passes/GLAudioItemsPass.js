@@ -53,6 +53,9 @@ class GLAudioItemsPass extends GLPass {
         if(audioSource.addedToCollector)
             return;
 
+        if(parameterOwner.getParameter('spatializeAudio').getValue() == false)
+            return;
+
         let source;
         if (audioSource instanceof HTMLMediaElement)
             source = audioCtx.createMediaElementSource(audioSource);
@@ -62,8 +65,10 @@ class GLAudioItemsPass extends GLPass {
             source = audioCtx.createMediaStreamSource(audioSource);
         
         const connectVLParamToAudioNodeParam = (vlParam, param) => {
-            // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime, 0.2);
-            param.value = vlParam.getValue();
+            // Note: setting the gain has no effect. Not sure what to do.
+            // param.value = vlParam.getValue();
+            param.setValueAtTime(vlParam.getValue(), 0);
+            param.setValueAtTime(vlParam.getValue(), 5);
             vlParam.valueChanged.connect(() => {
                 // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
                 param.value = vlParam.getValue();
@@ -79,8 +84,6 @@ class GLAudioItemsPass extends GLPass {
         panner.distanceModel = 'inverse';
         source.connect(panner);
         panner.connect(audioCtx.destination);
-
-        source.loop = true;
 
         const connectVLParamToAudioNode = (paramName) => {
             const vlParam = parameterOwner.getParameter(paramName)
