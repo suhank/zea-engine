@@ -99,33 +99,41 @@ class GLAudioItemsPass extends GLPass {
 
 
         const updatePannerNodePosition = () => {
+
+            // Note: the new audio params are reccomended to be used, but cause audio stutter.
+            // ITs as if when we set the value, it is set for only a brief moment in time, and
+            // then reverts back to the previous value. 
+            // Note: I downloaded and messed with the 'RoomOfMetal' demo here, and found
+            // that I could not move the listener using the reccommended approach (setting values on the AudioParams.)
+            // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
+
             let xfo;
             if(treeItem instanceof GeomItem)
                 xfo = treeItem.getGeomXfo();
             else
                 xfo = treeItem.getGlobalXfo();
-            if (panner.positionX) {
-                // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
-                // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
-                // panner.positionZ.setTargetAtTime(xfo.tr.z, audioCtx.currentTime);
-                panner.positionX.value = xfo.tr.x;
-                panner.positionY.value = xfo.tr.y;
-                panner.positionZ.value = xfo.tr.z;
-            } else {
+            // if (panner.positionX) {
+            //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
+            //     // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
+            //     // panner.positionZ.setTargetAtTime(xfo.tr.z, audioCtx.currentTime);
+            //     panner.positionX.value = xfo.tr.x;
+            //     panner.positionY.value = xfo.tr.y;
+            //     panner.positionZ.value = xfo.tr.z;
+            // } else {
                 panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
-            }
+            // }
 
             const dir = xfo.ori.getZaxis();
-            if (panner.orientationX) {
-                // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
-                // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);
-                // panner.orientationZ.setTargetAtTime(dir.z, audioCtx.currentTime);
-                panner.orientationX.value = dir.x;
-                panner.orientationY.value = dir.y;
-                panner.orientationZ.value = dir.z;
-            } else {
+            // if (panner.orientationX) {
+            //     // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
+            //     // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);
+            //     // panner.orientationZ.setTargetAtTime(dir.z, audioCtx.currentTime);
+            //     panner.orientationX.value = dir.x;
+            //     panner.orientationY.value = dir.y;
+            //     panner.orientationZ.value = dir.z;
+            // } else {
                 panner.setOrientation(dir.x, dir.y, dir.z);
-            }
+            // }
 
             // TODO: 
             // setVelocity()
@@ -138,41 +146,52 @@ class GLAudioItemsPass extends GLPass {
 
         audioSource.addedToCollector = true;
         this.__audioItems.push({ treeItem, audioSource, parameterOwner });
+
+        this.updated.emit();
     }
 
     __updateListenerPosition(viewXfo) {
         if(!audioCtx)
             return;
-        const listener = audioCtx.listener;
-        if(listener.positionX) {
-          listener.positionX.value = viewXfo.tr.x;
-          listener.positionY.value = viewXfo.tr.y;
-          listener.positionZ.value = viewXfo.tr.z;
-          // listener.positionX.setValueAtTime(viewXfo.tr.x, audioCtx.currentTime);
-          // listener.positionY.setValueAtTime(viewXfo.tr.y, audioCtx.currentTime);
-          // listener.positionZ.setValueAtTime(viewXfo.tr.z, audioCtx.currentTime);
-        } else {
-            listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
-        }
 
+        
+        // Note: the new audio params are reccomended to be used, but cause audio stutter.
+        // ITs as if when we set the value, it is set for only a brief moment in time, and
+        // then reverts back to the previous value. 
+        // Note: I downloaded and messed with the 'RoomOfMetal' demo here, and found
+        // that I could not move the listener using the reccommended approach (setting values on the AudioParams.)
+        // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
+
+        // Note: Moving the listener seems to cause problems.
+        const listener = audioCtx.listener;
+        // if(listener.positionX) {
+        //   listener.positionX.value = viewXfo.tr.x;
+        //   listener.positionY.value = viewXfo.tr.y;
+        //   listener.positionZ.value = viewXfo.tr.z;
+        //   // listener.positionX.setValueAtTime(viewXfo.tr.x, audioCtx.currentTime);
+        //   // listener.positionY.setValueAtTime(viewXfo.tr.y, audioCtx.currentTime);
+        //   // listener.positionZ.setValueAtTime(viewXfo.tr.z, audioCtx.currentTime);
+        // } else {
+            listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
+        // }
         const up = viewXfo.ori.getYaxis();
         const fw = viewXfo.ori.getZaxis().negate();
-        if(listener.upX) {
-          // listener.upX.setValueAtTime(up.x, audioCtx.currentTime);
-          // listener.upY.setValueAtTime(up.y, audioCtx.currentTime);
-          // listener.upZ.setValueAtTime(up.z, audioCtx.currentTime);
-          // listener.forwardX.setValueAtTime(fw.x, audioCtx.currentTime);
-          // listener.forwardY.setValueAtTime(fw.y, audioCtx.currentTime);
-          // listener.forwardZ.setValueAtTime(fw.z, audioCtx.currentTime);
-          listener.upX.value = up.x;
-          listener.upY.value = up.y;
-          listener.upZ.value = up.z;
-          listener.forwardX.value = fw.x;
-          listener.forwardY.value = fw.y;
-          listener.forwardZ.value = fw.z;
-        } else {
+        // if(listener.upX) {
+        //   // listener.upX.setValueAtTime(up.x, audioCtx.currentTime);
+        //   // listener.upY.setValueAtTime(up.y, audioCtx.currentTime);
+        //   // listener.upZ.setValueAtTime(up.z, audioCtx.currentTime);
+        //   // listener.forwardX.setValueAtTime(fw.x, audioCtx.currentTime);
+        //   // listener.forwardY.setValueAtTime(fw.y, audioCtx.currentTime);
+        //   // listener.forwardZ.setValueAtTime(fw.z, audioCtx.currentTime);
+        //   listener.upX.value = up.x;
+        //   listener.upY.value = up.y;
+        //   listener.upZ.value = up.z;
+        //   listener.forwardX.value = fw.x;
+        //   listener.forwardY.value = fw.y;
+        //   listener.forwardZ.value = fw.z;
+        // } else {
             listener.setOrientation(fw.x, fw.y, fw.z, up.x, up.y, up.z);
-        }
+        // }
     }
 
 
