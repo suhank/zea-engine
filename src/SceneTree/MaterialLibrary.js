@@ -120,8 +120,9 @@ class MaterialLibrary {
 
     fromJSON(j, context={}) {
         context.lod = this.lod;
-        for (let name in j["textures"]) {
+        for (let name in j.textures) {
             let image = new FileImage(name);
+            image.fromJSON(j.textures[name]);
             this.__images[name] = texture;
         }
         for (let name in j.materials) {

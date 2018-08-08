@@ -25,8 +25,15 @@ import {
 
 
 class EnvMap extends BaseImage {
-    constructor(resourcePath, params = {}) {
-        super(params);
+    constructor(name, resourcePath='', params = {}) {
+        if(resourcePath.constructor == Object){
+            params = resourcePath;
+        }
+        if(resourceLoader.resourceAvailable(name)) {
+            resourcePath = name;
+            name = undefined;
+        }
+        super(name, params);
         
         this.__loaded = false;
         this.__hdrexposure = 1.0;
@@ -37,31 +44,26 @@ class EnvMap extends BaseImage {
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
+
+            if (this.getName() == this.constructor.name) {
+                // Generate a name from the file path.
+                const stem = fileParam.getStem();
+                const decorator = stem.substring(stem.length - 1);
+                if (!isNaN(decorator)) {
+                    // Note: ALL image names have an LOD specifier at the end.
+                    // remove that off when retrieving the name.
+                    this.setName(stem.substring(0, stem.length - 1));
+                } else {
+                    this.setName(stem);
+                }
+            }
+
             const filePath = fileParam.getValue()
             const url = fileParam.getURL();
             this.__loadURL(url, filePath);
         });
         if (resourcePath && resourcePath != '')
             fileParam.setValue(resourcePath);
-    }
-
-    getName() {
-        const getName = (str) => {
-            const p = str.split('/');
-            const last = p[p.length - 1];
-            const suffixSt = last.lastIndexOf('.');
-            if (suffixSt != -1) {
-                const decorator = last.substring(suffixSt - 1, suffixSt);
-                if (!isNaN(decorator)) {
-                    // Note: ALL image names have an LOD specifier at the end.
-                    // remove that off when retrieving the name.
-                    return last.substring(0, suffixSt - 1);
-                } else {
-                    return last.substring(0, suffixSt);
-                }
-            }
-        }
-        return getName(this.getParameter('FilePath').getValue());
     }
 
     getDOMElement(){

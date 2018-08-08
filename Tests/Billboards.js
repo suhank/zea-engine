@@ -5,7 +5,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
     const scene = new Visualive.Scene();
 
     {
-        let image = new Visualive.FileImage('Assets/VerticalDoubleMaleTrapeze2.png');
+        let image = new Visualive.FileImage('VerticalDoubleMaleTrapeze2', 'Assets/VerticalDoubleMaleTrapeze2.png');
         image.flags = 4;
         let billboard = new Visualive.BillboardItem('billboard1', image);
         let xfo = new Visualive.Xfo();
@@ -18,7 +18,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
         scene.getRoot().addChild(billboard);
     }
     {
-        let image = new Visualive.FileImage('Assets/VerticalDoubleMaleTrapeze2.png');
+        let image = new Visualive.FileImage('VerticalDoubleMaleTrapeze2', 'Assets/VerticalDoubleMaleTrapeze2.png');
         image.flags = 4;
         let billboard = new Visualive.BillboardItem('billboard2', image);
         let xfo = new Visualive.Xfo();
@@ -32,7 +32,7 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
     }
 
     {   
-        let image =  new Visualive.FileImage('Assets/SolorFloorPerformer.png');
+        let image =  new Visualive.FileImage('SolorFloorPerformer', 'Assets/SolorFloorPerformer.png');
         image.flags = 4;
         let billboard = new Visualive.BillboardItem('billboard0', image);
         let xfo = new Visualive.Xfo();

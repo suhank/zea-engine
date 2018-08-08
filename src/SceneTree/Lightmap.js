@@ -17,7 +17,7 @@ class Lightmap extends RefCounted {
     constructor(resourceName, atlasSize, stream) {
         super();
         this.atlasSize = atlasSize;
-        this.image = new FileImage(resourceName, {stream});
+        this.image = new FileImage(undefined, resourceName, {stream});
         this.__stream = stream;
     }
 

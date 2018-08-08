@@ -4,7 +4,7 @@ testingHarness.registerTest('EnvVideoProjection', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     // const bgMapName = "Assets/DEMO_UNLIMITED_ONLINE_Version_courte_inter_30oct_2017.mp4";
     const bgMapName = "Assets/SAMSUNG VR - The Anatomy of Ski w_ Bode Miller.mp4";
-    const bgMap =  new Visualive.FileImage(bgMapName, { mapping: 'latlong'});
+    const bgMap =  new Visualive.FileImage('bg', bgMapName, { mapping: 'latlong'});
     // scene.setBackgroundMap(bgMap);
     scene.setEnvMap(bgMap);
 

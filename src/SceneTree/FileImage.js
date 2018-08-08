@@ -28,6 +28,7 @@ import {
 
 import {
     Parameter,
+    BooleanParameter,
     NumberParameter,
     Vec4Parameter,
     FilePathParameter,
@@ -41,15 +42,23 @@ const imageDataLibrary = {
 const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1; // || navigator.userAgent.indexOf("Samsung");
 
 class FileImage extends BaseImage {
-    constructor(resourcePath, params = {}) {
-        super(params);
+    constructor(name, resourcePath='', params = {}) {
+
+        if(resourcePath.constructor == Object){
+            params = resourcePath;
+        }
+        if(name && resourceLoader.resourceAvailable(name)) {
+            resourcePath = name;
+            name = undefined;
+        }
+
+        super(name, params);
 
         this.__loaded = false;
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(() => {
             this.loaded.untoggle();
-            const filePath = fileParam.getValue();
             if (this.getName() == this.constructor.name) {
                 // Generate a name from the file path.
                 const stem = fileParam.getStem();
@@ -65,18 +74,15 @@ class FileImage extends BaseImage {
 
             const fileDesc = fileParam.getFileDesc();
             if(fileDesc) {
+                const filePath = fileParam.getValue();
                 this.__loadData(filePath, fileDesc);
             }
         });
+        
         if (resourcePath && resourcePath != '')
             fileParam.setValue(resourcePath);
     }
 
-
-
-    getDOMElement() {
-        return this.__domElement;
-    }
 
     __loadData(resourcePath, fileDesc) {
 
@@ -103,19 +109,23 @@ class FileImage extends BaseImage {
             this.format = 'RGBA';
         }
         this.type = 'UNSIGNED_BYTE';
+        let imageElem;
         const loaded = () => {
-            this.width = this.__domElement.width;
-            this.height = this.__domElement.height;
-            this.__data = this.__domElement;
+            this.getDOMElement = ()=>{
+                return imageElem;
+            }
+            this.width = imageElem.width;
+            this.height = imageElem.height;
+            this.__data = imageElem;
             this.__loaded = true;
             this.loaded.emit();
         };
         if (resourcePath in imageDataLibrary) {
-            this.__domElement = imageDataLibrary[resourcePath];
-            if (this.__domElement.complete) {
+            imageElem = imageDataLibrary[resourcePath];
+            if (imageElem.complete) {
                 loaded()
             } else {
-                this.__domElement.addEventListener("load", loaded);
+                imageElem.addEventListener("load", loaded);
             }
         } else {
             resourceLoader.addWork(resourcePath, 1);
@@ -191,30 +201,21 @@ class FileImage extends BaseImage {
                 console.warn("Images not processed for this file:" + resourcePath);
             }
 
-            this.__domElement = new Image();
-            this.__domElement.crossOrigin = 'anonymous';
-            this.__domElement.src = url;
+            imageElem = new Image();
+            imageElem.crossOrigin = 'anonymous';
+            imageElem.src = url;
 
-            this.__domElement.addEventListener("load", loaded);
-            this.__domElement.addEventListener("load", () => {
+            imageElem.addEventListener("load", loaded);
+            imageElem.addEventListener("load", () => {
                 resourceLoader.addWorkDone(resourcePath, 1);
             });
-            imageDataLibrary[resourcePath] = this.__domElement;
+            imageDataLibrary[resourcePath] = imageElem;
         }
     }
 
-    __addSpatializationParams() {
-        this.addParameter(new Parameter('spatializeAudio', true));
-        this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
-        this.addParameter(new NumberParameter('refDistance', 2));
-        this.addParameter(new NumberParameter('maxDistance', 10000));
-        this.addParameter(new NumberParameter('rolloffFactor', 1));
-        this.addParameter(new NumberParameter('coneInnerAngle', 120));
-        this.addParameter(new NumberParameter('coneOuterAngle', 180));
-        this.addParameter(new NumberParameter('coneOuterGain', 0.2))
-    }
-    __removeSpatializationParams() {
+    __removeVideoParams() {
         if (this.getParameterIndex('spatializeAudio')) {
+            this.removeParameter(this.getParameterIndex('loop'));
             this.removeParameter(this.getParameterIndex('spatializeAudio'));
             this.removeParameter(this.getParameterIndex('Gain'));
             this.removeParameter(this.getParameterIndex('refDistance'));
@@ -231,33 +232,57 @@ class FileImage extends BaseImage {
         this.type = 'UNSIGNED_BYTE';
         resourceLoader.addWork(resourcePath, 1);
 
-        this.__addSpatializationParams();
+        const muteParam = this.addParameter(new BooleanParameter('mute', false));
+        const loopParam = this.addParameter(new BooleanParameter('loop', true));
+        const spatializeAudioParam = this.addParameter(new BooleanParameter('spatializeAudio', true));
+        const GainParam = this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
+        const refDistanceParam = this.addParameter(new NumberParameter('refDistance', 2));
+        const maxDistanceParam = this.addParameter(new NumberParameter('maxDistance', 10000));
+        const rolloffFactorParam = this.addParameter(new NumberParameter('rolloffFactor', 1));
+        const coneInnerAngleParam = this.addParameter(new NumberParameter('coneInnerAngle', 360));
+        const coneOuterAngleParam = this.addParameter(new NumberParameter('coneOuterAngle', 0));
+        const coneOuterGainParam = this.addParameter(new NumberParameter('coneOuterGain', 1))
 
-        this.__domElement = document.createElement('video');
+        const videoElem = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
-        this.__domElement.style.display = 'none';
-        this.__domElement.preload = 'auto';
-        this.__domElement.crossOrigin = 'anonymous';
-        // this.__domElement.crossorigin = true;
-        document.body.appendChild(this.__domElement);
-        this.__domElement.addEventListener('loadedmetadata', () => {
-            // this.__domElement.play();
-            this.width = this.__domElement.videoHeight;
-            this.height = this.__domElement.videoWidth;
-            this.__data = this.__domElement;
+        videoElem.style.display = 'none';
+        videoElem.preload = 'auto';
+        videoElem.crossOrigin = 'anonymous';
+        // videoElem.crossorigin = true;
+
+        this.getAudioSource = ()=>{
+            return videoElem;
+        }
+            
+        document.body.appendChild(videoElem);
+        videoElem.addEventListener('loadedmetadata', () => {
+            // videoElem.play();
+
+            videoElem.muted = muteParam.getValue();
+            muteParam.valueChanged.connect(() => {
+                videoElem.muted = muteParam.getValue();
+            });
+            videoElem.loop = loopParam.getValue();
+            loopParam.valueChanged.connect(() => {
+                videoElem.loop = loopParam.getValue();
+            });
+
+            this.width = videoElem.videoHeight;
+            this.height = videoElem.videoWidth;
+            this.__data = videoElem;
             this.__loaded = true;
             resourceLoader.addWorkDone(resourcePath, 1);
-            this.loaded.emit(this.__domElement);
+            this.loaded.emit(videoElem);
 
             let prevFrame = 0;
             const frameRate = 29.97;
             const timerCallback = () => {
-                if (this.__domElement.paused || this.__domElement.ended) {
+                if (videoElem.paused || videoElem.ended) {
                     return;
                 }
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
-                const currentFrame = Math.floor(this.__domElement.currentTime * frameRate);
+                const currentFrame = Math.floor(videoElem.currentTime * frameRate);
                 if (prevFrame != currentFrame) {
                     this.updated.emit();
                     prevFrame = currentFrame;
@@ -267,9 +292,9 @@ class FileImage extends BaseImage {
             timerCallback();
 
         }, false);
-        this.__domElement.src = fileDesc.url;
-        //this.__domElement.load();
-        const promise = this.__domElement.play();
+        videoElem.src = fileDesc.url;
+        //videoElem.load();
+        const promise = videoElem.play();
         if (promise !== undefined) {
             promise.then(_ => {
                 console.log("Autoplay started!")
@@ -366,7 +391,7 @@ class FileImage extends BaseImage {
             resourcePromise = new Promise((resolve, reject) => {
                 resourceLoader.addWork(resourcePath, 1);
 
-                if(fileDesc.assets.atlas) {
+                if(fileDesc.assets && fileDesc.assets.atlas) {
                     const image = new Image();
                     image.crossOrigin = 'anonymous';
                     image.src = fileDesc.assets.atlas.url;

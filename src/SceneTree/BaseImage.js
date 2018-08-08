@@ -15,8 +15,8 @@ import {
 } from './Parameters';
 
 class BaseImage extends BaseItem {
-    constructor(params = {}) {
-        super();
+    constructor(name, params = {}) {
+        super(name);
         this.width = 0;
         this.height = 0;
         this.format = 'RGB';

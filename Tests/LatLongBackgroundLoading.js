@@ -3,7 +3,7 @@
     let bgMapName = "Assets/Man-Singh-Palace.JPG";
 
     const scene = new Visualive.Scene(resources);
-    let bgMap =  new Visualive.FileImage(bgMapName, { mapping: 'latlong'});
+    let bgMap =  new Visualive.FileImage('bg', bgMapName, { mapping: 'latlong'});
     scene.setBackgroundMap(bgMap);
 
     const renderer = new Visualive.GLVisualiveRenderer(domElement);

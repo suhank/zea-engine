@@ -5,7 +5,7 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     // Scene
     const scene = new Visualive.Scene(resources);
 
-    // const envMap =  new Visualive.FileImage('Assets/HDR_041_Path_Ref0.vlh');
+    // const envMap =  new Visualive.FileImage('HDR_041_Path_Ref0', Assets/HDR_041_Path_Ref0.vlh');
     // scene.setEnvMap(envMap);
 
     /////////////////////////////////////

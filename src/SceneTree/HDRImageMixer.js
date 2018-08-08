@@ -52,7 +52,7 @@ class HDRImageMixer extends BaseImage {
             }
         }, this);
         for (let fileUrl of urls) {
-            let subImage = new FileImage(fileUrl);
+            let subImage = new FileImage(undefined, fileUrl);
             subImage.loaded.connect(async.decAsyncCount);
             subImage.updated.connect(this.updated.emit);
             this.__subImages.push(subImage);
