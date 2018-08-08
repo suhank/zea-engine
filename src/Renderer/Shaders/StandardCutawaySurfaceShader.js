@@ -32,7 +32,7 @@ precision highp float;
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
-attribute vec2 textureCoords;
+attribute vec2 texCoords;
 #endif
 attribute vec2 lightmapCoords;
 
@@ -73,7 +73,7 @@ void main(void) {
     gl_Position     = projectionMatrix * viewPos;
 
 #ifdef ENABLE_TEXTURES
-    v_textureCoord  = textureCoords;
+    v_textureCoord  = texCoords;
 #endif
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 

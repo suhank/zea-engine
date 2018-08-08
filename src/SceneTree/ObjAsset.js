@@ -127,7 +127,7 @@ function ObjDataLoader(asset, fileParam, onDone) {
 
     const vertices = new Array();
     const normals = new Array();
-    const textureCoords = new Array();
+    const texCoords = new Array();
 
     const geomDatas = {};
 
@@ -226,7 +226,7 @@ function ObjDataLoader(asset, fileParam, onDone) {
                     vertices.push(elements.map(i => parseFloat(i)));
                     break;
                 case 'vt':
-                    textureCoords.push(elements.map(i => parseFloat(i)));
+                    texCoords.push(elements.map(i => parseFloat(i)));
                     break;
                 case 'vn':
                     normals.push(elements.map(i => parseFloat(i)));
@@ -343,8 +343,8 @@ function ObjDataLoader(asset, fileParam, onDone) {
                 const vt_poly = geomData.texCoordIndices[i];
                 for (let j = 0; j < vt_poly.length; j++) {
                     const value = new Vec2(
-                        textureCoords[vt_poly[j]][0],
-                        textureCoords[vt_poly[j]][1]
+                        texCoords[vt_poly[j]][0],
+                        texCoords[vt_poly[j]][1]
                     );
                     texCoordsAttr.setFaceVertexValue(i, j, value);
                 }

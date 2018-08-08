@@ -26,7 +26,7 @@ precision highp float;
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
-attribute vec2 textureCoords;
+attribute vec2 texCoords;
 #endif
 
 uniform mat4 viewMatrix;
@@ -56,7 +56,8 @@ void main(void) {
     v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
-    v_textureCoord  = textureCoords;
+    v_textureCoord  = texCoords;
+    // v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 #endif
 }
 `);
@@ -98,9 +99,8 @@ void main(void) {
     vec4 baseColor      = BaseColor;
     float opacity       = baseColor.a * Opacity;
 #else
-    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
-    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_textureCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, v_textureCoord);
 #endif
 
     // Hacky simple irradiance. 
@@ -119,7 +119,8 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    fragColor = vec4(ndotv * baseColor.rgb, opacity);
+    // fragColor = vec4(ndotv * baseColor.rgb, opacity);
+    fragColor = baseColor;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

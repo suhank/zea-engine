@@ -173,16 +173,16 @@ class BaseGeom extends ParameterOwner {
         this.setNumVertices(numVerts);
         let positionsAttr = this.vertices;
         let normalsAttr;
-        let textureCoordsAttr;
+        let texCoordsAttr;
         if (flags & (1 << 1)) {
             normalsAttr = this.getVertexAttribute('normals');
             if (!normalsAttr)
                 normalsAttr = this.addVertexAttribute('normals', Vec3, 0.0);
         }
         if (flags & (1 << 2)) {
-            textureCoordsAttr = this.getVertexAttribute('textureCoords');
-            if (!textureCoordsAttr)
-                textureCoordsAttr = this.addVertexAttribute('textureCoords', Vec2, 0.0);
+            texCoordsAttr = this.getVertexAttribute('texCoords');
+            if (!texCoordsAttr)
+                texCoordsAttr = this.addVertexAttribute('texCoords', Vec2, 0.0);
         }
 
         let parse8BitPositionsArray = (range, offset, sclVec, positions_8bit) => {
@@ -214,17 +214,17 @@ class BaseGeom extends ParameterOwner {
                 normalsAttr.setValue(i, normal);
             }
         }
-        let parse8BitTextureCoordsArray = (range, offset, sclVec, textureCoords_8bit) => {
+        let parse8BitTextureCoordsArray = (range, offset, sclVec, texCoords_8bit) => {
             // if (sclVec.isNull())
             //     sclVec.set(1, 1, 1);
             for (let i = range[0]; i < range[1]; i++) {
                 let textureCoord = new Vec2(
-                    textureCoords_8bit[(i * 2) + 0] / 255.0,
-                    textureCoords_8bit[(i * 2) + 1] / 255.0
+                    texCoords_8bit[(i * 2) + 0] / 255.0,
+                    texCoords_8bit[(i * 2) + 1] / 255.0
                 );
                 textureCoord.multiplyInPlace(sclVec);
                 textureCoord.addInPlace(offset);
-                textureCoordsAttr.setValue(i, textureCoord);
+                texCoordsAttr.setValue(i, textureCoord);
             }
         }
 
@@ -243,12 +243,12 @@ class BaseGeom extends ParameterOwner {
 
                 normalsAttr.loadSplitValues(reader);
             }
-            if (textureCoordsAttr) {
+            if (texCoordsAttr) {
                 let box2 = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2());
-                let textureCoords_8bit = reader.loadUInt8Array(numVerts * 2);
-                parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), textureCoords_8bit);
+                let texCoords_8bit = reader.loadUInt8Array(numVerts * 2);
+                parse8BitTextureCoordsArray([0, numVerts], box2.p0, box2.diagonal(), texCoords_8bit);
 
-                textureCoordsAttr.loadSplitValues(reader);
+                texCoordsAttr.loadSplitValues(reader);
             }
         } else {
             let clusters = [];
@@ -263,8 +263,8 @@ class BaseGeom extends ParameterOwner {
                 if (normalsAttr) {
                     clusterData.normalsRange = new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3());
                 }
-                if (textureCoordsAttr) {
-                    clusterData.textureCoordsRange = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2());
+                if (texCoordsAttr) {
+                    clusterData.texCoordsRange = new Box2(reader.loadFloat32Vec2(), reader.loadFloat32Vec2());
                 }
 
                 clusters.push(clusterData);
@@ -272,12 +272,12 @@ class BaseGeom extends ParameterOwner {
             }
             let positions_8bit = reader.loadUInt8Array(numVerts * 3);
             let normals_8bit;
-            let textureCoords_8bit;
+            let texCoords_8bit;
             if (normalsAttr) {
                 normals_8bit = reader.loadUInt8Array(numVerts * 3);
             }
-            if (textureCoordsAttr) {
-                textureCoords_8bit = reader.loadUInt8Array(numVerts * 2);
+            if (texCoordsAttr) {
+                texCoords_8bit = reader.loadUInt8Array(numVerts * 2);
             }
 
             for (let i = 0; i < numClusters; i++) {
@@ -291,16 +291,16 @@ class BaseGeom extends ParameterOwner {
                     let box3 = clusters[i].normalsRange;
                     parse8BitNormalsArray(clusters[i].range, box3.p0, box3.diagonal(), normals_8bit);
                 }
-                if (textureCoordsAttr) {
-                    let box2 = clusters[i].textureCoordsRange;
-                    parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), textureCoords_8bit);
+                if (texCoordsAttr) {
+                    let box2 = clusters[i].texCoordsRange;
+                    parse8BitTextureCoordsArray(clusters[i].range, box2.p0, box2.diagonal(), texCoords_8bit);
                 }
             }
             if (normalsAttr) {
                 normalsAttr.loadSplitValues(reader);
             }
-            if (textureCoordsAttr) {
-                textureCoordsAttr.loadSplitValues(reader);
+            if (texCoordsAttr) {
+                texCoordsAttr.loadSplitValues(reader);
             }
         }
     }

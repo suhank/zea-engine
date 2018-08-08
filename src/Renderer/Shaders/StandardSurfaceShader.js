@@ -30,7 +30,7 @@ precision highp float;
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
-attribute vec2 textureCoords;
+attribute vec2 texCoords;
 #endif
 attribute vec2 lightmapCoords;
 
@@ -71,7 +71,7 @@ void main(void) {
     v_viewNormal    = normalMatrix * normals;
 
 #ifdef ENABLE_TEXTURES
-    v_textureCoord  = textureCoords;
+    v_textureCoord  = texCoords;
 #endif
 
     vec4 geomItemData = getInstanceData();

@@ -53,6 +53,9 @@ class GLMesh extends GLGeom {
                 dimension: attrData.dimension,
                 normalized: attrData.normalized
             };
+
+            if(attrName == 'textureCoords')
+                this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords'];
         }
         
         this.__geom.freeBuffers();

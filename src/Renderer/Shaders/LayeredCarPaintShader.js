@@ -29,7 +29,7 @@ precision highp float;
 attribute vec3 positions;
 attribute vec3 normals;
 #ifdef ENABLE_TEXTURES
-attribute vec2 textureCoords;
+attribute vec2 texCoords;
 #endif
 attribute vec2 lightmapCoords;
 
@@ -69,7 +69,7 @@ void main(void) {
 
 
 #ifdef ENABLE_TEXTURES
-    v_textureCoord  = textureCoords;
+    v_textureCoord  = texCoords;
 #endif
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 
@@ -314,7 +314,7 @@ void main(void) {
         paramDescs.push({ name: 'GlossReflectance', defaultValue: 0.03 });
 
 
-        const flakesNormal = new FileImage('VisualiveEngine/FlakesNormalMap.png');
+        const flakesNormal = new FileImage('flakes', 'VisualiveEngine/FlakesNormalMap.png');
         flakesNormal.wrap = 'REPEAT';
         flakesNormal.mipMapped = true;
         paramDescs.push({ name: 'FlakesNormal', defaultValue: flakesNormal });
