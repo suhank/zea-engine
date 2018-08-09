@@ -443,9 +443,6 @@ class VRViewport extends BaseViewport {
 
     updateHeadAndControllers() {
 
-        if (!this.__frameData.pose)
-            return;
-
         this.__vrhead.update(this.__frameData);
 
         const gamepads = navigator.getGamepads();
@@ -586,6 +583,9 @@ class VRViewport extends BaseViewport {
 
 
         this.__vrDisplay.getFrameData(this.__frameData);
+        if (!this.__frameData.pose || (isNaN(this.__frameData.pose.orientation[0]) || !isFinite(this.__frameData.pose.orientation[0])))
+            return false;
+
         if (!this.__projectionMatriciesUpdated) {
             this.__leftProjectionMatrix.setDataArray(this.__frameData.leftProjectionMatrix);
             this.__rightProjectionMatrix.setDataArray(this.__frameData.rightProjectionMatrix);
