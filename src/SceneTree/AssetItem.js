@@ -57,8 +57,8 @@ class AssetItem extends TreeItem {
                 this.__loader(this, this.__datafileParam, ()=>{
                     if(mode == Visualive.ValueSetMode.USER_SETVALUE)
                         this.loaded.emit();
-                    else {
-                        this.__datafileParam.loaded.emit();
+                    else if(this.__datafileLoaded) {
+                        this.__datafileLoaded();
                     }
                 });
             }
@@ -149,11 +149,8 @@ class AssetItem extends TreeItem {
         }
 
         if(j.params && j.params.DataFilePath) {
-            const onbinloaded = ()=>{
-              loadAssetJSON();
-            }
-            this.__datafileParam.loaded.connect(onbinloaded)
-
+            // Save the callback function for later.
+            this.__datafileLoaded = loadAssetJSON;
             const filePathJSON = j.params.DataFilePath;
             delete j.params.DataFilePath;
             this.__datafileParam.fromJSON(filePathJSON, context);
