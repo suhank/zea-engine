@@ -219,6 +219,10 @@ class Group extends TreeItem {
 
         const addItem = (index, path)=>{
             const treeItem = context.assetItem.resolvePath(path);
+            if(!treeItem){
+                console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path)
+                return;
+            }
             this.addItem(treeItem);
 
             // This is code to handle older files where the initial xfo was not explicitly stored. 

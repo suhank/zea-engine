@@ -124,6 +124,8 @@ class GLRenderer {
         this.sceneSet = new Signal(true);
         this.vrViewportSetup = new Signal(true);
         this.sessionClientSetup = new Signal(true);
+        
+        this.envMapAssigned = new Signal(true);
 
         // Signals to abstract the user view. 
         // i.e. when a user switches to VR mode, the signals 
@@ -664,6 +666,16 @@ class GLRenderer {
             if(index < passSet.length - offset)
                 return passSet[index - offset];
             offset += passSet.length;
+        }
+    }
+
+    findPass(constructor) {
+        for(let key in this.__passes) {
+            const passSet = this.__passes[key];
+            for(let pass of passSet) {
+                if (pass.constructor == constructor)
+                    return pass;
+            }
         }
     }
 

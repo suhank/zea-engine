@@ -88,7 +88,7 @@ function VLADataLoader(asset, fileParam, onDone) {
         return readBinary(new BinReader(buffer, 0, SystemDesc.isMobileDevice));
     }
 
-    const __loadBinFile = () => {
+    const loadBinFile = () => {
 
         const file = fileParam.getFileDesc();
         if(!file)
@@ -161,8 +161,8 @@ function VLADataLoader(asset, fileParam, onDone) {
         });
     }
 
-    __loadBinFile();
-    fileParam.valueChanged.connect(__loadBinFile);
+    loadBinFile();
+    fileParam.valueChanged.connect(loadBinFile);
 }
 
 AssetItem.registerDataLoader('.vla', VLADataLoader);

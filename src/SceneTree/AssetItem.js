@@ -37,15 +37,15 @@ class AssetItem extends TreeItem {
             loadTextfile(url,
                 (data) => {
                     const j = JSON.parse(data);
-                    this.fromJSON(j, { assetItem: this });
+                    this.fromJSON(j, { assetItem: this }, ()=>{
+                        if(!this.loaded.isToggled())
+                            this.loaded.emit();
+                    });
 
-                    if(!this.loaded.isToggled())
-                        this.loaded.emit();
                 }
             );
         });
 
-        this.__loader
         this.__datafileParam = this.addParameter(new Visualive.FilePathParameter('DataFilePath'));
         this.__datafileParam.valueChanged.connect((mode) => {
             this.loaded.setToggled(false);
@@ -57,10 +57,13 @@ class AssetItem extends TreeItem {
                 this.__loader(this, this.__datafileParam, ()=>{
                     if(mode == Visualive.ValueSetMode.USER_SETVALUE)
                         this.loaded.emit();
+                    else {
+                        this.__datafileParam.loaded.emit();
+                    }
                 });
             }
             else {
-                console.warn("No loaders found for ext:" + ext + ". loading file:" + filePath);
+                console.warn("No loaders found for ext:" + ext + ". loading file:" + this.__datafileParam.getValue());
             }
         });
     }
@@ -126,7 +129,7 @@ class AssetItem extends TreeItem {
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, onDone) {
         if(!context) 
             context = {};
         context.assetItem = this;
@@ -142,14 +145,12 @@ class AssetItem extends TreeItem {
                     }
                 }
             }
+            onDone();
         }
 
         if(j.params && j.params.DataFilePath) {
             const onbinloaded = ()=>{
               loadAssetJSON();
-
-              // Emit the load signal now that both the bin and JSON file is loaded.
-              this.loaded.emit();
             }
             this.__datafileParam.loaded.connect(onbinloaded)
 

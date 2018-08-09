@@ -73,10 +73,6 @@ class GLVisualiveRenderer extends GLRenderer {
         this._planeDist = 0.0;
         this.__cutPlaneNormal = new Vec3(1,0,0);
 
-        this.__drawEdges = false;
-        this.__drawPoints = false;
-
-        this.envMapAssigned = new Signal(true);
 
         const gl = this.__gl;
 
