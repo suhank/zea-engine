@@ -20,8 +20,8 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
 
         const audioItem = new Visualive.AudioItem(name+'Audio');
         audioItem.getParameter('FilePath').setValue(url);
-        audioItem.getParameter('Gain').setValue(15.0);
-        // audioItem.getParameter('rolloffFactor').setValue(0.1);
+        // audioItem.getParameter('Gain').setValue(15.0);
+        audioItem.getParameter('Autoplay').setValue(true);
         audioItem.play();
         geomItem.addChild(audioItem, false);
 
@@ -33,8 +33,8 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     // const einstein = addMeshShape('Einstein', new Visualive.Plane(0.4, 0.6), new Visualive.Vec3(-4, -3, 3), "Assets/AudioFiles/Albert Einstein Interview 1940.mp3");
     // einstein.getParameter('Gain').setValue(0.6);
 
-    const mandela = addMeshShape('Mandela', new Visualive.Plane(0.3, 0.4), new Visualive.Vec3(0, 5, 1.7), "Assets/AudioFiles/Nelson Mandela speech that changed the world.mp3");
-    // const mandela = addMeshShape('viper', new Visualive.Plane(0.3, 0.4), new Visualive.Vec3(0, -3, 2), "Assets/AudioFiles/viper.ogg");
+    // const mandela = addMeshShape('Mandela', new Visualive.Plane(0.3, 0.4), new Visualive.Vec3(0, 5, 1.7), "Assets/AudioFiles/Nelson Mandela speech that changed the world.mp3");
+    const mandela = addMeshShape('viper', new Visualive.Plane(0.3, 0.4), new Visualive.Vec3(0, 5, 1.7), "Assets/AudioFiles/viper.ogg");
     mandela.getParameter('Gain').setValue(2.6);
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);

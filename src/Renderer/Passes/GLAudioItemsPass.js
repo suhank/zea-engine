@@ -21,8 +21,8 @@ class GLAudioItemsPass extends GLPass {
 
         collector.registerSceneItemFilter((treeItem, rargs)=>{
             if (treeItem instanceof AudioItem) {
-                treeItem.loaded.connect(()=>{
-                    this.addAudioItem(treeItem, treeItem.getAudioSource(), treeItem);
+                treeItem.audioSourceCreated.connect((audioSource)=>{
+                    this.addAudioSource(treeItem, audioSource, treeItem);
                 })
                 return true;
             }
@@ -36,7 +36,7 @@ class GLAudioItemsPass extends GLPass {
                             if(image.getAudioSource) {
                                 const audioSource = image.getAudioSource();
                                 if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
-                                    this.addAudioItem(treeItem, audioSource, image);
+                                    this.addAudioSource(treeItem, audioSource, image);
                             }
                         })
                     }
@@ -48,13 +48,11 @@ class GLAudioItemsPass extends GLPass {
     }
 
 
-    addAudioItem(treeItem, audioSource, parameterOwner) {
+    addAudioSource(treeItem, audioSource, parameterOwner) {
 
         if(audioSource.addedToCollector)
             return;
 
-        if(parameterOwner.getParameter('spatializeAudio').getValue() == false)
-            return;
 
         let source;
         if (audioSource instanceof HTMLMediaElement)
@@ -79,72 +77,79 @@ class GLAudioItemsPass extends GLPass {
         connectVLParamToAudioNodeParam(parameterOwner.getParameter('Gain'), gainNode.gain);
 
         source.connect(gainNode);
-        const panner = audioCtx.createPanner();
-        panner.panningModel = 'HRTF';
-        panner.distanceModel = 'inverse';
-        source.connect(panner);
-        panner.connect(audioCtx.destination);
 
-        const connectVLParamToAudioNode = (paramName) => {
-            const vlParam = parameterOwner.getParameter(paramName)
-            panner[paramName] = vlParam.getValue();
-            vlParam.valueChanged.connect(() => {
+        if(parameterOwner.getParameter('SpatializeAudio').getValue() == false ) {
+            source.connect(audioCtx.destination);
+        }
+        else {
+            const panner = audioCtx.createPanner();
+            panner.panningModel = 'HRTF';
+            panner.distanceModel = 'inverse';
+            source.connect(panner);
+            panner.connect(audioCtx.destination);
+
+            const connectVLParamToAudioNode = (paramName) => {
+                const vlParam = parameterOwner.getParameter(paramName)
                 panner[paramName] = vlParam.getValue();
+                vlParam.valueChanged.connect(() => {
+                    panner[paramName] = vlParam.getValue();
+                });
+            }
+
+            // connectVLParamToAudioNode('refDistance');
+            // connectVLParamToAudioNode('maxDistance');
+            // connectVLParamToAudioNode('rolloffFactor');
+            connectVLParamToAudioNode('coneInnerAngle');
+            connectVLParamToAudioNode('coneOuterAngle');
+            connectVLParamToAudioNode('coneOuterGain');
+
+
+            const updatePannerNodePosition = () => {
+
+                // Note: the new audio params are reccomended to be used, but cause audio stutter.
+                // ITs as if when we set the value, it is set for only a brief moment in time, and
+                // then reverts back to the previous value. 
+                // Note: I downloaded and messed with the 'RoomOfMetal' demo here, and found
+                // that I could not move the listener using the reccommended approach (setting values on the AudioParams.)
+                // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
+
+                let xfo;
+                if(treeItem instanceof GeomItem)
+                    xfo = treeItem.getGeomXfo();
+                else
+                    xfo = treeItem.getGlobalXfo();
+                // if (panner.positionX) {
+                //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
+                //     // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
+                //     // panner.positionZ.setTargetAtTime(xfo.tr.z, audioCtx.currentTime);
+                //     panner.positionX.value = xfo.tr.x;
+                //     panner.positionY.value = xfo.tr.y;
+                //     panner.positionZ.value = xfo.tr.z;
+                // } else {
+                    panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
+                // }
+
+                const dir = xfo.ori.getZaxis();
+                // if (panner.orientationX) {
+                //     // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
+                //     // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);
+                //     // panner.orientationZ.setTargetAtTime(dir.z, audioCtx.currentTime);
+                //     panner.orientationX.value = dir.x;
+                //     panner.orientationY.value = dir.y;
+                //     panner.orientationZ.value = dir.z;
+                // } else {
+                    panner.setOrientation(dir.x, dir.y, dir.z);
+                // }
+
+                // TODO: 
+                // setVelocity()
+            }
+            updatePannerNodePosition();
+            treeItem.globalXfoChanged.connect((changeType) => {
+                updatePannerNodePosition();
             });
         }
 
-        // connectVLParamToAudioNode('refDistance');
-        // connectVLParamToAudioNode('maxDistance');
-        // connectVLParamToAudioNode('rolloffFactor');
-        connectVLParamToAudioNode('coneInnerAngle');
-        connectVLParamToAudioNode('coneOuterAngle');
-        connectVLParamToAudioNode('coneOuterGain');
-
-
-        const updatePannerNodePosition = () => {
-
-            // Note: the new audio params are reccomended to be used, but cause audio stutter.
-            // ITs as if when we set the value, it is set for only a brief moment in time, and
-            // then reverts back to the previous value. 
-            // Note: I downloaded and messed with the 'RoomOfMetal' demo here, and found
-            // that I could not move the listener using the reccommended approach (setting values on the AudioParams.)
-            // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
-
-            let xfo;
-            if(treeItem instanceof GeomItem)
-                xfo = treeItem.getGeomXfo();
-            else
-                xfo = treeItem.getGlobalXfo();
-            // if (panner.positionX) {
-            //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
-            //     // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
-            //     // panner.positionZ.setTargetAtTime(xfo.tr.z, audioCtx.currentTime);
-            //     panner.positionX.value = xfo.tr.x;
-            //     panner.positionY.value = xfo.tr.y;
-            //     panner.positionZ.value = xfo.tr.z;
-            // } else {
-                panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
-            // }
-
-            const dir = xfo.ori.getZaxis();
-            // if (panner.orientationX) {
-            //     // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
-            //     // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);
-            //     // panner.orientationZ.setTargetAtTime(dir.z, audioCtx.currentTime);
-            //     panner.orientationX.value = dir.x;
-            //     panner.orientationY.value = dir.y;
-            //     panner.orientationZ.value = dir.z;
-            // } else {
-                panner.setOrientation(dir.x, dir.y, dir.z);
-            // }
-
-            // TODO: 
-            // setVelocity()
-        }
-        updatePannerNodePosition();
-        treeItem.globalXfoChanged.connect((changeType) => {
-            updatePannerNodePosition();
-        });
 
 
         audioSource.addedToCollector = true;
