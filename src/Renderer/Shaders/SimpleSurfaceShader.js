@@ -119,8 +119,7 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-    // fragColor = vec4(ndotv * baseColor.rgb, opacity);
-    fragColor = baseColor;
+    fragColor = vec4(ndotv * baseColor.rgb, opacity);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
     fragColor.rgb = toGamma(fragColor.rgb);

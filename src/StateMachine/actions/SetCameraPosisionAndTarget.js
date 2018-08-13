@@ -34,6 +34,10 @@ class SetCameraPosisionAndTarget extends StateAction {
 
     start(){
         const camera = this.getParameter('Camera').getValue();
+        if(!camera) {
+            console.warn("Camera not assigned to SetCameraPosisionAndTarget state action");
+            return;
+        }
 
         const posEnd = this.getParameter('cameraPos').getValue();
         const targetEnd = this.getParameter('cameraTarget').getValue();

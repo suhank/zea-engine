@@ -1,4 +1,4 @@
-testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
+testingHarness.registerTest('ExplodedParts_Cascade', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
 
     const asset = new Visualive.AssetItem('parts');
@@ -97,10 +97,11 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
             let explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
-            explodedPartsOp.getParameter('Cascade').setValue(false);
+            explodedPartsOp.getParameter('Cascade').setValue(true);
 
             const bolts = explodedPartsOp.getParameter('Parts').addElement();
             bolts.getOutput().setParam(boltsGroup.getParameter('GlobalXfo'));
+            
 
             const casing = explodedPartsOp.getParameter('Parts').addElement();
             casing.getOutput().setParam(asset.resolvePath(['PartB', 'GlobalXfo']))
@@ -124,10 +125,10 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
                 animatingValue = true;
-                explodedAmount += 0.005;
+                explodedAmount += 0.02;
                 explodedPartsOp.getParameter('Explode').setValue(explodedAmount);
                 renderer.requestRedraw();
-                if (explodedAmount < 1.0) {
+                if (explodedAmount < 3.0) {
                     timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
                 }
                 animatingValue = false;

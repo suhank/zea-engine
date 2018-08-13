@@ -29,7 +29,7 @@ class ExplodePartParameter extends StructParameter {
 
         this.__stageParam =  this._addMember(new NumberParameter('Stage', 0));
         this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
-        this.__movementParam = this._addMember(new Vec2Parameter('MovementTiming', new Vec2(0, 1), [new Vec2(-1, 0), new Vec2(1, 1)]));
+        this.__movementParam = this._addMember(new Vec2Parameter('MovementTiming', new Vec2(0, 1), [new Vec2(0, 0), new Vec2(1, 1)]));
         this.__multiplierParam =  this._addMember(new NumberParameter('Multiplier', 1.0));
         this.__output = new XfoOperatorOutput('Part');
     }
@@ -43,16 +43,25 @@ class ExplodePartParameter extends StructParameter {
     }
 
 
-    evaluate(explode, explodeDist, stages, centered, parentXfo, parentDelta){
+    evaluate(explode, explodeDist, stages, cascade, centered, parentXfo, parentDelta){
 
 
         const stage = this.__stageParam.getValue();
-        let t = 1.0 - (stage / stages);
-        if(centered)
-            t -= 0.5;
-
         const movement = this.__movementParam.getValue();
-        const dist = explodeDist * Math.smoothStep(movement.x, movement.y, explode) * t;
+        let dist;
+        if(cascade) {
+            // in 'cascade' mode, all parts move the same distance, but the timing is modified.
+            dist = explodeDist * Math.smoothStep(stage+movement.x, stage+movement.y, explode);
+        }
+        else {
+            // Else all the parts are spread out across the explode distance. 
+            let t = 1.0 - (stage / stages);
+            console.log(t)
+            if(centered)
+                t -= 0.5;
+            dist = explodeDist * Math.smoothStep(movement.x, movement.y, explode) * t;
+        }
+
         let explodeDir = this.__axisParam.getValue();
         const multiplier = this.__multiplierParam.getValue();
         const initialxfo = this.__output.getInitialValue();
@@ -96,9 +105,10 @@ class ExplodePartsOperator extends Operator {
     constructor(name) {
         super(name);
 
-        this.__stagesParam =  this.addParameter(new NumberParameter('Stages', 1));
+        this.__stagesParam =  this.addParameter(new NumberParameter('Stages', 0));
         this._explodeParam = this.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
         this._distParam = this.addParameter(new NumberParameter('Dist', 1.0));
+        this._cascadeParam = this.addParameter(new BooleanParameter('Cascade', false));
         this._centeredParam = this.addParameter(new BooleanParameter('Centered', false));
         this.__parentItemParam = this.addParameter(new TreeItemParameter('RelativeTo'));
         this.__parentItemParam.valueChanged.connect(()=>{
@@ -119,7 +129,7 @@ class ExplodePartsOperator extends Operator {
             this.__stagesParam.setValue(this.__stagesParam.getValue()+1, ValueSetMode.SILENT);
         })
         this.__itemsParam.elementRemoved.connect((value, index) => {
-            this.removeOutput(ivalue.getOutput());
+            this.removeOutput(value.getOutput());
         })
 
         this.__localXfos = [];
@@ -133,6 +143,7 @@ class ExplodePartsOperator extends Operator {
         const explode = this._explodeParam.getValue();
         // const explodeDir = this.getParameter('Axis').getValue();
         const explodeDist = this._distParam.getValue();
+        const cascade = this._cascadeParam.getValue();
         const centered = this._centeredParam.getValue();
         const parentItem = this.__parentItemParam.getValue();
         let parentXfo;
@@ -145,7 +156,7 @@ class ExplodePartsOperator extends Operator {
         const items = this.__itemsParam.getValue();
         for(let i=0; i<items.length; i++) {
             const part = items[i];
-            part.evaluate(explode, explodeDist, stages, centered, parentXfo, parentDelta);
+            part.evaluate(explode, explodeDist, stages, cascade, centered, parentXfo, parentDelta);
         }
     }
 

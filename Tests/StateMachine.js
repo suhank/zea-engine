@@ -2,55 +2,55 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
     const scene = new Visualive.Scene(resources);
     const camera = new Visualive.Camera();
-    camera.setPositionAndTarget(new Visualive.Vec3(35, 0, -35), new Visualive.Vec3(12, 0, 0));
+    camera.setPositionAndTarget(new Visualive.Vec3(35, -35, 0), new Visualive.Vec3(12, 0, 0));
 
 
     /////////////////////////////////////
 
-    let asset = new Visualive.TreeItem('asset');
-    let parts = new Visualive.TreeItem('parts');
+    const asset = new Visualive.TreeItem('asset');
+    const parts = new Visualive.TreeItem('parts');
     asset.addChild(parts);
     scene.getRoot().addChild(asset);
 
-    let middleSphere = new Visualive.Sphere(2.5);
-    let middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
+    const middleSphere = new Visualive.Sphere(2.5);
+    const middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
     middleSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 0.0, 1.0));
     {
-        let middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Visualive.GeomItem('middleSphere0', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, 3.5);
-        parts.addChild(middleSphereItem);
+        parts.addChild(middleSphereItem, false);
     }
     {
-        let middleSphereItem = new Visualive.GeomItem('middleSphere2', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, -3.5);
-        parts.addChild(middleSphereItem);
+        parts.addChild(middleSphereItem, false);
     }
     {
-        let middleSphereItem = new Visualive.GeomItem('middleSphere3', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Visualive.GeomItem('middleSphere2', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, -3.5, 3.5);
-        parts.addChild(middleSphereItem);
+        parts.addChild(middleSphereItem, false);
     }
     {
-        let middleSphereItem = new Visualive.GeomItem('middleSphere4', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Visualive.GeomItem('middleSphere3', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, -3.5, -3.5);
-        parts.addChild(middleSphereItem);
+        parts.addChild(middleSphereItem, false);
     }
 
-    let littleSphere = new Visualive.Sphere(2.0);
-    let littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
-    littleSphereMaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.0, 0.0));
-    let littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
+    const littleSphere = new Visualive.Sphere(2.0);
+    const littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
+    littleSphereMaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.0, 0.0));
+    const littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
     parts.addChild(littleSphereItem);
 
-    let bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
-    let boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
-    boltmaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.5, 0.0));
+    const bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
+    const boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
+    boltmaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.5, 0.0));
 
     let index = 0;
-    let addBolt = (pos)=> {
+    const addBolt = (pos)=> {
         const geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(pos));
-        parts.addChild(geomItem);
+        parts.addChild(geomItem, false);
     }
     addBolt(new Visualive.Vec3(6.6, 5.2, 5.2));
     addBolt(new Visualive.Vec3(6.6, 5.2, -5.2));
@@ -59,119 +59,106 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
 
     /////////////////////////////////////
+    // Groups
+    const boltsGroup = new Visualive.Group("BoltsGroup");
+    asset.addChild(boltsGroup)
+    boltsGroup.addItem(asset.resolvePath(['parts', 'bolt0']));
+    boltsGroup.addItem(asset.resolvePath(['parts', 'bolt1']));
+    boltsGroup.addItem(asset.resolvePath(['parts', 'bolt2']));
+    boltsGroup.addItem(asset.resolvePath(['parts', 'bolt3']));
+    boltsGroup.getParameter('InitialXfoMode').setValue('average');
+
+    const middleSpheresGroup = new Visualive.Group("MiddleSpheresGroup");
+    asset.addChild(middleSpheresGroup)
+    middleSpheresGroup.addItem(asset.resolvePath(['parts', 'middleSphere0']));
+    middleSpheresGroup.addItem(asset.resolvePath(['parts', 'middleSphere1']));
+    middleSpheresGroup.addItem(asset.resolvePath(['parts', 'middleSphere2']));
+    middleSpheresGroup.addItem(asset.resolvePath(['parts', 'middleSphere3']));
+    // middleSpheresGroup.recalcInitialXfo();
+    middleSpheresGroup.getParameter('InitialXfoMode').setValue('average');
+
+    /////////////////////////////////////
     // Obj Asset
     {
 
-        let objAsset = new Visualive.ObjAsset('PartA');
+        let objAsset = new Visualive.AssetItem('PartA');
+        objAsset.getParameter('DataFilePath').setValue("/Assets/ExplodePartA.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
         objAsset.getParameter('defaultShader').setValue('SimpleSurfaceShader');
-        objAsset.getParameter('ObjFilePath').setValue("/Assets/ExplodePartA.obj");
         asset.addChild(objAsset);
 
     }
-    let op = new Visualive.ExplodePartsOperator('explodeOp');
-    op.getParameter('Dist').setValue(30.0);
-    asset.addItem(op);
 
 
     {
-        let objAsset = new Visualive.ObjAsset('PartB');
+        let objAsset = new Visualive.AssetItem('PartB');
+        objAsset.getParameter('DataFilePath').setValue("/Assets/ExplodePartB.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
         objAsset.getParameter('defaultShader').setValue('SimpleSurfaceShader');
-        objAsset.getParameter('ObjFilePath').setValue("/Assets/ExplodePartB.obj");
         asset.addChild(objAsset);
 
         objAsset.loaded.connect(function() {
 
-            op.connectParts([
-                [
-                    ['.', 'parts', 'bolt0'],
-                    ['.', 'parts', 'bolt1'],
-                    ['.', 'parts', 'bolt2'],
-                    ['.', 'parts', 'bolt3'],
-                    ['.', 'PartB', 'PartB'], 
-                ],
-                [
-                    ['.', 'parts', 'middleSphere1'],
-                    ['.', 'parts', 'middleSphere2'],
-                    ['.', 'parts', 'middleSphere3'],
-                    ['.', 'parts', 'middleSphere4']
-                ]
-                ]);
+            let explodedPartsOp = new Visualive.ExplodePartsOperator('explodeOp');
+            explodedPartsOp.getParameter('Dist').setValue(30.0);
+            // explodedPartsOp.getParameter('Cascade').setValue(true);
 
-            // let explodedAmount = 0;
-            // let animatingValue = false;
-            // let timeoutId;
-            // let param = op.getParameter('Explode');
-            // let timerCallback = () => {
-            //     // Check to see if the video has progressed to the next frame. 
-            //     // If so, then we emit and update, which will cause a redraw.
-            //     animatingValue = true;
-            //     explodedAmount += 0.005;
-            //     op.getParameter('Explode').setValue(explodedAmount);
-            //     renderer.requestRedraw();
-            //     if (explodedAmount < 1.0) {
-            //         timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
-            //     }
-            //     animatingValue = false;
-            // };
-            // timeoutId = setTimeout(timerCallback, 1000); // half second delay
-            // param.valueChanged.connect(()=>{
-            //     if(!animatingValue) {
-            //         clearTimeout(timeoutId);
-            //     }
-            // });
+            const bolts = explodedPartsOp.getParameter('Parts').addElement();
+            bolts.getOutput().setParam(boltsGroup.getParameter('GlobalXfo'));
             
-            // renderer.resumeDrawing();
+            const casing = explodedPartsOp.getParameter('Parts').addElement();
+            casing.getOutput().setParam(asset.resolvePath(['PartB', 'GlobalXfo']))
+
+            const internalBits = explodedPartsOp.getParameter('Parts').addElement();
+            internalBits.getOutput().setParam(middleSpheresGroup.getParameter('GlobalXfo'));
 
 
+            const internalBits2 = explodedPartsOp.getParameter('Parts').addElement();
+            internalBits2.getOutput().setParam(littleSphereItem.getParameter('GlobalXfo'));
+
+            asset.addComponent(explodedPartsOp);
 
             //////////////////////////////////
             // Setup the StateMachine
-
-            const bolts = new Visualive.Group('bolts');
-            bolts.resolveItems(asset, [
-                    ['.', 'parts', 'bolt0'],
-                    ['.', 'parts', 'bolt1'],
-                    ['.', 'parts', 'bolt2'],
-                    ['.', 'parts', 'bolt3'],
-                    ['.', 'PartB', 'PartB'], 
-                ]);
-
-            asset.addItem(bolts);
 
             const stateMachine = new Visualive.StateMachine();
             const cutawayState = new Visualive.State('cutawayState');
             const initialState = new Visualive.State('initialState');
             stateMachine.addState(initialState);
             stateMachine.addState(cutawayState);
-            asset.addItem(stateMachine);
+            asset.addComponent(stateMachine);
 
 
-            const moveCameraToInitialCameraPos = new Visualive.MoveCamera(camera);
+            const moveCameraToInitialCameraPos = new Visualive.SetCameraPosisionAndTarget(camera);
             moveCameraToInitialCameraPos.setCameraPosisionAndTarget(new Visualive.Vec3(35, 20, 35), new Visualive.Vec3(12, 0, 0));
             moveCameraToInitialCameraPos.getParameter('interpTime').setValue(3.0);
+            moveCameraToInitialCameraPos.getParameter('Camera').setValue(renderer.getViewport().getCamera());
             initialState.addActivationAction(moveCameraToInitialCameraPos);
 
 
             const boltClicked = new Visualive.GeomClicked(camera);
-            boltClicked.getParameter('path').setValue('asset/bolts');
-            boltClicked.getParameter('targetState').setValue('cutawayState');
+            boltClicked.getParameter('TreeItem').setValue(boltsGroup);
+            const switchTocutawayStateState = new Visualive.SwitchState();
+            switchTocutawayStateState.getParameter('TargetState').setValue('cutawayState')
+            boltClicked.addAction(switchTocutawayStateState);
             initialState.addStateEvent(boltClicked);
 
 
 
-            const moveCameraToCutawayPos = new Visualive.MoveCamera(camera);
+            const moveCameraToCutawayPos = new Visualive.SetCameraPosisionAndTarget(camera);
             moveCameraToCutawayPos.setCameraPosisionAndTarget(new Visualive.Vec3(35, 20, -35), new Visualive.Vec3(12, 0, 0));
             moveCameraToCutawayPos.getParameter('interpTime').setValue(2.0);
+            moveCameraToCutawayPos.getParameter('Camera').setValue(renderer.getViewport().getCamera());
+
 
             const setCutawayParam = new Visualive.SetParameterValue();
-            setCutawayParam.getParameter('path').setValue('asset/explodeOp:parameter>Explode');
-            setCutawayParam.getParameter('interpTime').setValue(3.0);
+            setCutawayParam.getOutput('Param').setParam(explodedPartsOp.getParameter('Explode'));
+            setCutawayParam.getParameter('Value').setValue(1);
+            setCutawayParam.getParameter('InterpTime').setValue(3.0);
             cutawayState.addActivationAction(setCutawayParam);
 
 

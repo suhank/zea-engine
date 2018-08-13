@@ -39,6 +39,10 @@ class TreeItem extends BaseItem {
 
         this.__childItems = [];
         
+        this.__components = [];
+        this.__componentMapping = {};
+        this.componentAdded = new Signal();
+        this.componentRemoved = new Signal();
 
         this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
         this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
@@ -396,6 +400,41 @@ class TreeItem extends BaseItem {
     }
 
     //////////////////////////////////////////
+    // Components
+
+    addComponent(component) {
+        this.__components.push(component);
+        this.__componentMapping[component.getName()] = this.__components.length - 1;
+
+        component.setOwner(this);
+
+        this.componentAdded.emit(component);
+    }
+
+    removeComponent(name) {
+        const index = this.__componentMapping[name];
+        if(index == undefined) {
+            throw("Component not found:" + name)
+        }
+        const component = this.__components[index];
+        component.setOwner(undefined);
+        this.__components.splice(index, 1);
+
+        const componentMapping = {};
+        for (let i =0; i< this.__components.length; i++)
+            componentMapping[this.__components[i].getName()] = i;
+        this.__componentMapping = componentMapping;
+
+        this.componentRemoved.emit(component, index);
+        return component;
+    }
+
+    getComponent(name) {
+        return this.__components[this.__componentMapping[name]];
+    }
+    
+
+    //////////////////////////////////////////
     // Path Traversial
 
     // resolveMember(path) {
@@ -437,7 +476,7 @@ class TreeItem extends BaseItem {
             }
 
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child called :" + path[index+1]);
+            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child or property called :" + path[index]);
             return null;
         }
         return childItem.resolvePath(path, index + 1);
@@ -486,6 +525,13 @@ class TreeItem extends BaseItem {
             return;
 
         let j = super.toJSON(context);
+
+        const jcs = [];
+        for(let c of this.__components)
+            jcs.push(c.toJSON(context));
+        if(jcs.length > 0)
+            j.components = jcs;
+
         const childItemsJSON = {};
         for (let childItem of this.__childItems){
             const childJSON = childItem.toJSON(context);
@@ -507,8 +553,18 @@ class TreeItem extends BaseItem {
         super.fromJSON(j, context);
 
         // Note: JSON data is only used to store user edits, so 
-        // parameters loaed from JSON are considered user edited.
+        // parameters loaded from JSON are considered user edited.
         this.setFlag(ItemFlags.USER_EDITED);
+
+        if(j.components) {
+            for(let cj of j.components) {
+                const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
+                if (component) {
+                    component.fromJSON(cj, context);
+                    this.addComponent(component);
+                }
+            }
+        }
 
         // if ('bbox' in j){
         //     let box = new Box3();

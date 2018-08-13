@@ -12,13 +12,18 @@ class StateMachine extends BaseItem {
         this.__states = {};
         this.__currentState;
         this.__initialStateName;
+
+        window.onpopstate = (event) => {
+            if(event.state && event.state.stateName)
+                this.activateState(event.state.stateName, false);
+        }
     }
 
     addState(state) {
         state.setStateMachine(this);
         this.__states[state.getName()] = state;
 
-        if(Object.keys(this.__states).length == 1) {
+        if(Object.keys(this.__states).length == 1 && this.__initialStateName == undefined) {
             this.__initialStateName = state.getName();
         }
     }
@@ -28,16 +33,19 @@ class StateMachine extends BaseItem {
         return this.__states[name];
     }
 
-    activateState(key) {
-        console.log("StateMachine.activateState:" + key)
-        if(this.__currentState == this.__states[key])
+    activateState(name, addToHistory=true) {
+        console.log("StateMachine.activateState:" + name)
+        if(this.__currentState == this.__states[name])
             return;
         if(this.__currentState)
             this.__currentState.deactivate();
-        this.__currentState = this.__states[key];
+        this.__currentState = this.__states[name];
         if(!this.__currentState)
-            throw("Invalid state transtion:" + key)
+            throw("Invalid state transtion:" + name)
         this.__currentState.activate();
+
+        // if(addToHistory)
+        //     window.history.pushState({stateName:name}, "State:"+name, "&state="+name);
     }
 
     getActiveState() {

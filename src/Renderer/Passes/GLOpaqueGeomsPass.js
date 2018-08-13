@@ -67,10 +67,10 @@ class GLOpaqueGeomsPass extends GLPass {
         let itemId, dist;
         const gl = this.__gl;
         if (gl.floatGeomBuffer) {
-            itemId = geomData[1];
+            itemId = Math.round(geomData[1]);
             dist = geomData[3];
         } else {
-            itemId = geomData[0] + (geomData[1] << 8);
+            itemId = Math.round(geomData[0]) + (Math.round(geomData[1]) << 8);
             dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
         }
 

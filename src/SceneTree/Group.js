@@ -31,6 +31,9 @@ class Group extends TreeItem {
             this.__invInitialXfo = this.__initialXfoParam.getValue().inverse();
         })
         this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', ['first', 'average'], 0, 'Number'));
+        this.__initialXfoModeParam.valueChanged.connect(()=>{
+            this.recalcInitialXfo();
+        })
         this.__invInitialXfo = undefined;
         this.__initialXfos = [];
 
@@ -122,6 +125,10 @@ class Group extends TreeItem {
     }
 
     addItem(item) { 
+        if(!item) {
+            console.warn("Error adding item to group. Item is null");
+            return;
+        }
         const index = this.__items.length;
         item.mouseDown.connect((mousePos, event)=>{
             this.mouseDown.emit(mousePos, event);
