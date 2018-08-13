@@ -56,7 +56,6 @@ class ExplodePartParameter extends StructParameter {
         else {
             // Else all the parts are spread out across the explode distance. 
             let t = 1.0 - (stage / stages);
-            console.log(t)
             if(centered)
                 t -= 0.5;
             dist = explodeDist * Math.smoothStep(movement.x, movement.y, explode) * t;

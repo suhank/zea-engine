@@ -28,7 +28,7 @@ import {
 } from './MaterialLibrary.js';
 
 
-function VLADataLoader(asset, fileParam, onDone) {
+function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
 
     const geomLibrary = new GeomLibrary();
     const materials = new MaterialLibrary();
@@ -137,6 +137,9 @@ function VLADataLoader(asset, fileParam, onDone) {
                     throw("VLA Geoms file not found:" + nextGeomFileName)
                 }
             }
+            else {
+                onGeomsLoaded();
+            }
         }
         const loadGeomsfile = (geomsFileName) => {
             geomFileID++;
@@ -174,8 +177,11 @@ class VLAAsset extends AssetItem {
         const binfileParam = this.addParameter(new Visualive.FilePathParameter('BinFilePath'));
 
         this.__loader = VLADataLoader;
-        this.__loader(this, binfileParam, (mode)=>{
+        this.__loader(this, binfileParam, ()=>{
             this.loaded.emit();
+        },
+        ()=>{
+            this.geomsLoaded.emit();
         });
     }
 

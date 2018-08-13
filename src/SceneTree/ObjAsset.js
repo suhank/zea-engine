@@ -43,7 +43,7 @@ import {
 } from './Parameters';
 
 
-function ObjDataLoader(asset, fileParam, onDone) {
+function ObjDataLoader(asset, fileParam, onDone, onGeomsLoaded) {
 
     const geomLibrary = new GeomLibrary();
     const materials = new MaterialLibrary();
@@ -296,6 +296,7 @@ function ObjDataLoader(asset, fileParam, onDone) {
 
         // Done. 
         onDone();
+        onGeomsLoaded();
     }
 
     const buildChildItem = (geomName, geomData) => {

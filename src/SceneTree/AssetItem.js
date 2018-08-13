@@ -22,13 +22,20 @@ class AssetItem extends TreeItem {
         super(name);
 
         this.loaded = new Signal(true);
-        this.loaded.setToggled(true);
+        this.loaded.setToggled(false);
+
+        // A signal that is emitted once all the geoms are loaded.
+        // Often the state machine will activate the first state
+        // when this signal emits. 
+        this.geomsLoaded = new Signal(true);
+        this.geomsLoaded.setToggled(false);
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
             const filePath = fileParam.getValue()
             const url = fileParam.getURL();
             this.loaded.setToggled(false);
+            this.geomsLoaded.setToggled(false);
             loadTextfile(url,
                 (data) => {
                     const j = JSON.parse(data);
@@ -44,6 +51,7 @@ class AssetItem extends TreeItem {
         this.__datafileParam = this.addParameter(new Visualive.FilePathParameter('DataFilePath'));
         this.__datafileParam.valueChanged.connect((mode) => {
             this.loaded.setToggled(false);
+            this.geomsLoaded.setToggled(false);
             const ext = this.__datafileParam.getExt();
             const loader = dataLoaders[ext] ? dataLoaders[ext][dataLoaders[ext].length-1] : undefined;
             if(loader && loader != this.__loader){
@@ -55,6 +63,9 @@ class AssetItem extends TreeItem {
                     else if(this.__datafileLoaded) {
                         this.__datafileLoaded();
                     }
+                },
+                ()=>{
+                    this.geomsLoaded.emit();
                 });
             }
             else {
