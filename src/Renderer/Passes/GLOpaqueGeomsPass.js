@@ -70,7 +70,7 @@ class GLOpaqueGeomsPass extends GLPass {
             itemId = Math.round(geomData[1]);
             dist = geomData[3];
         } else {
-            itemId = Math.round(geomData[0]) + (Math.round(geomData[1]) << 8);
+            itemId = geomData[0] + (geomData[1] << 8);
             dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
         }
 
