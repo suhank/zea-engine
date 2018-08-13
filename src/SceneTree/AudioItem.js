@@ -27,8 +27,20 @@ class AudioItem extends TreeItem {
 
 
         this.__loaded = false;
-        const source = Visualive.audioCtx.createBufferSource();
+
+        this.audioSourceCreated = new Signal();
+        
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
+        let audioSource;
+        let audioBuffer;
+        const startAudioPlayback = ()=>{
+            audioSource = Visualive.audioCtx.createBufferSource();
+            audioSource.buffer = audioBuffer;
+            audioSource.loop = loopParam.getValue()
+            audioSource.muted = muteParam.getValue();
+            audioSource.start(0);
+            this.audioSourceCreated.emit(audioSource);
+        }
         fileParam.valueChanged.connect(() => {
             const request = new XMLHttpRequest();
             request.open('GET', fileParam.getURL(), true);
@@ -38,9 +50,11 @@ class AudioItem extends TreeItem {
                 const audioData = request.response;
                 Visualive.audioCtx.decodeAudioData(audioData, 
                     (buffer) => {
-                        source.buffer = buffer;
+                        audioBuffer = buffer;
                         this.__loaded = true;
                         this.loaded.emit(true);
+                        if(autoplayParam.getValue())
+                            startAudioPlayback();
                     },
                     (e) =>{
                         console.log("Error with decoding audio data" + e.err);
@@ -50,41 +64,50 @@ class AudioItem extends TreeItem {
             request.send();
 
         });
-        const autoplayParam = this.addParameter(new Parameter('Autoplay', true, 'Boolean'));
-        autoplayParam.valueChanged.connect(() => {
-            source.autoplay = autoplayParam.getValue();
-        });
+        const autoplayParam = this.addParameter(new BooleanParameter('Autoplay', false));
         const playStateParam = this.addParameter(new NumberParameter('PlayState', 0));
         playStateParam.valueChanged.connect((mode) => {
             if(mode != ValueSetMode.CUSTOM){
                 switch (playStateParam.getValue()) {
                     case 0:
-                        source.stop(0);
+                        if(this.__loaded){
+                            if(audioSource){
+                                audioSource.stop(0);
+                                audioSource = undefined;
+                            }
+                        }
                         break;
                     case 1:
-                        source.start(0);
+                        if(this.__loaded){
+                            startAudioPlayback();
+                        }
                         break;
                 }
             }
         });
 
+        this.isPlaying = ()=>{
+            return playStateParam.getValue() != 0;
+        }
+
         this.play = ()=>{
             playStateParam.setValue(1, ValueSetMode.CUSTOM);
         }
-
+        this.stop = ()=>{
+            playStateParam.setValue(0, ValueSetMode.CUSTOM);
+        }
         this.pause = ()=>{
             playStateParam.setValue(0, ValueSetMode.CUSTOM);
         }
 
         this.getAudioSource = () => {
-            return source;
+            return audioSource;
         }
         const muteParam = this.addParameter(new BooleanParameter('mute', false));
 
         this.addParameter(new NumberParameter('Gain', 1.0)).setRange([0, 5]);
         const loopParam = this.addParameter(new BooleanParameter('loop', true));
-        loopParam.valueChanged.connect(()=> source.loop = loopParam.getValue() );
-        this.addParameter(new BooleanParameter('spatializeAudio', true));
+        this.addParameter(new BooleanParameter('SpatializeAudio', true));
         this.addParameter(new NumberParameter('refDistance', 2));
         this.addParameter(new NumberParameter('maxDistance', 10000));
         // defaults taken from here.: https://github.com/mdn/webaudio-examples/blob/master/panner-node/main.js
@@ -93,13 +116,13 @@ class AudioItem extends TreeItem {
         this.addParameter(new NumberParameter('coneOuterAngle', 0));
         this.addParameter(new NumberParameter('coneOuterGain', 1));
 
-        source.muted = muteParam.getValue();
         muteParam.valueChanged.connect(() => {
-            source.muted = muteParam.getValue();
+            if(audioSource)
+                audioSource.muted = muteParam.getValue();
         });
-        source.loop = loopParam.getValue();
         loopParam.valueChanged.connect(() => {
-            source.loop = loopParam.getValue();
+            if(audioSource)
+                audioSource.loop = loopParam.getValue();
         });
 
         this.mute = (value)=>{

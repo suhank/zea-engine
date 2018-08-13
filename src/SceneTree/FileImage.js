@@ -103,9 +103,9 @@ class FileImage extends BaseImage {
     }
 
     __loadLDRImage(resourcePath, fileDesc, ext) {
-        if (ext == 'jpg') {
+        if (ext == '.jpg') {
             this.format = 'RGB';
-        } else if (ext == 'png') {
+        } else if (ext == '.png') {
             this.format = 'RGBA';
         }
         this.type = 'UNSIGNED_BYTE';
