@@ -430,6 +430,10 @@ class TreeItem extends BaseItem {
     }
 
     getComponent(name) {
+        if(!this.__componentMapping[name]) {
+            console.log("No component named '" + name + "' found.");
+            return;
+        }
         return this.__components[this.__componentMapping[name]];
     }
     
@@ -556,16 +560,6 @@ class TreeItem extends BaseItem {
         // parameters loaded from JSON are considered user edited.
         this.setFlag(ItemFlags.USER_EDITED);
 
-        if(j.components) {
-            for(let cj of j.components) {
-                const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
-                if (component) {
-                    component.fromJSON(cj, context);
-                    this.addComponent(component);
-                }
-            }
-        }
-
         // if ('bbox' in j){
         //     let box = new Box3();
         //     box.fromJSON(j.bbox);
@@ -609,6 +603,17 @@ class TreeItem extends BaseItem {
                     } else {
                         console.warn("Warning loading JSON. Child not found:" + childName);
                     }
+                }
+            }
+        }
+
+        
+        if(j.components) {
+            for(let cj of j.components) {
+                const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
+                if (component) {
+                    component.fromJSON(cj, context);
+                    this.addComponent(component);
                 }
             }
         }
