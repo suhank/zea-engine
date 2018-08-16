@@ -382,6 +382,9 @@ class GLRenderer {
     setupWebGL(canvasDiv, webglOptions) {
 
         this.__glcanvas = document.createElement('canvas');
+        this.__glcanvas.style.position = 'absolute';
+        this.__glcanvas.style.left = '0px';
+        this.__glcanvas.style.top = '0px';
         this.__glcanvas.style.width = '100%';
         this.__glcanvas.style.height = '100%';
         this.__glcanvasDiv = canvasDiv;
