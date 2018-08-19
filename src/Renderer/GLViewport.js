@@ -806,7 +806,10 @@ class GLViewport extends BaseViewport {
         if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
             this.drawBackground(renderstate);
         }
+
         this.__renderer.drawScene(renderstate, false);
+        // To see the Geom data uncomment this line.
+        // this.__renderer.drawSceneGeomData(renderstate);
 
         if (this.__selectedGeomsBufferFbo) {
             this.__selectedGeomsBufferFbo.bindAndClear();

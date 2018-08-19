@@ -8,7 +8,6 @@ import {
 class BooleanParameter extends Parameter {
     constructor(name, value) {
         super(name, value, 'Boolean');
-        this.rangeChanged = new Signal();
     }
 
     clone() {

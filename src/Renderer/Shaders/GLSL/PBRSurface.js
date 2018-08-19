@@ -36,6 +36,7 @@ vec4 pbrSpecularReflectance(in MaterialParams materialParams, vec3 normal, in ve
 vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 normal, in vec3 viewVector) {
 
     float NdotV = dot(normal, viewVector);
+    vec3 specularReflectance;
 
     // -------------------------- Diffuse Reflectance --------------------------
 
@@ -43,7 +44,7 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
 
     // From the Disney dielectric BRDF    
     // Need to check if this is useful for us but the implementation works based on their paper
-    diffuseReflectance = (diffuseReflectance / PI);
+    //diffuseReflectance = (diffuseReflectance / PI); // << [PT 18-08-2018] What did this line do??? (makes everything 3.1x darker.)
     // diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 2.5, materialParams.roughness), pow(1.0 - NdotV, 5.0)));
     diffuseReflectance = vec3(mix(diffuseReflectance, diffuseReflectance * mix(0.5, 1.0, materialParams.roughness), pow(1.0 - NdotV, 5.0)));
 
@@ -63,7 +64,7 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
 
     float schlickFresnel = materialParams.reflectance + pow((1.0-materialParams.reflectance)*(1.0-NdotV), 5.0);
 
-    vec3 specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewVector, materialParams.roughness, schlickFresnel);
+    specularReflectance = GGX_Specular_PrefilteredEnv(normal, viewVector, materialParams.roughness, schlickFresnel);
 
 
     // -------------------------- Specular Occlusion --------------------------
@@ -82,7 +83,7 @@ vec3 pbrSurfaceRadiance(in MaterialParams materialParams, vec3 irradiance, vec3 
     specularReflectance = mix(specularReflectance, specularReflectance * materialParams.baseColor, materialParams.metallic);
     diffuseReflectance = mix(diffuseReflectance, vec3(0.0,0.0,0.0), materialParams.metallic); // Leaveing at pure black for now but always need some %3 diffuse left for imperfection of pulished pure metal
     // Would be best to compute reflectace internally and set here to 0.6-0.85 for metals
-   
+    
 
     // -------------------------- Final color --------------------------
     // Energy conservation already taken into account in both the diffuse and specular reflectance

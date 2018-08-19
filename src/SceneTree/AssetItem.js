@@ -22,13 +22,14 @@ class AssetItem extends TreeItem {
         super(name);
 
         this.loaded = new Signal(true);
-        this.loaded.setToggled(false);
+        // Assets that are generated inline can be considered loaded
+        this.loaded.setToggled(true);
 
         // A signal that is emitted once all the geoms are loaded.
         // Often the state machine will activate the first state
         // when this signal emits. 
         this.geomsLoaded = new Signal(true);
-        this.geomsLoaded.setToggled(false);
+        this.geomsLoaded.setToggled(true);
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
