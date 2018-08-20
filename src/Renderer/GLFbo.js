@@ -77,31 +77,32 @@ class GLFbo {
         else
             gl.bindFramebuffer(gl.FRAMEBUFFER, this.__fbo);
 
-        if(gl.name == 'webgl2'){
-            if (this.__colorTexture && this.__colorTexture.getType() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
-                if (!gl.__ext_float_linear)
-                    throw ("Unable to use filtering on floating point textures");
-            }
-        }
-        else {
-            if (this.__colorTexture.getType() == 'FLOAT') {
-                if(gl.__ext_float){
-                    if (this.__colorTexture.getFilter() == 'LINEAR') {
-                        if (!gl.__ext_float_linear)
-                            throw ("Unable to use filtering on floating point textures");
-                    }
-                }
-                else if(gl.__ext_half_float){
-                    if (this.__colorTexture.getFilter() == 'LINEAR') {
-                        if (!gl.__ext_texture_half_float_linear)
-                            throw ("Unable to use filtering on half-floating point textures");
-                    }
-                }
-                else{
-                    throw("floating point textures unsupported.");
-                }
-            }
-        }
+        // TOSO: Migrate to using GLRenderTarget... This system is a mess.
+        // if(gl.name == 'webgl2'){
+        //     if (this.__colorTexture && this.__colorTexture.getType() == 'FLOAT' && this.__colorTexture.getFilter() == 'LINEAR') {
+        //         if (!gl.__ext_float_linear)
+        //             throw ("Unable to use filtering on floating point textures");
+        //     }
+        // }
+        // else {
+        //     if (this.__colorTexture.getType() == 'FLOAT') {
+        //         if(gl.__ext_float){
+        //             if (this.__colorTexture.getFilter() == 'LINEAR') {
+        //                 if (!gl.__ext_float_linear)
+        //                     throw ("Unable to use filtering on floating point textures");
+        //             }
+        //         }
+        //         else if(gl.__ext_half_float){
+        //             if (this.__colorTexture.getFilter() == 'LINEAR') {
+        //                 if (!gl.__ext_texture_half_float_linear)
+        //                     throw ("Unable to use filtering on half-floating point textures");
+        //             }
+        //         }
+        //         else{
+        //             throw("floating point textures unsupported.");
+        //         }
+        //     }
+        // }
 
         if(this.__colorTexture)
             gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);

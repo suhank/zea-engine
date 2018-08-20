@@ -103,7 +103,8 @@ class GLTexture2D extends RefCounted {
 
         const format = params.format;
         const type = params.type;
-        let filter = ('filter' in params) ? params.filter : 'LINEAR';
+        let minFilter =  ('minFilter' in params) ?  params.minFilter : (('filter' in params) ? params.filter : 'LINEAR');
+        let magFilter =  ('magFilter' in params) ?  params.magFilter : (('filter' in params) ? params.filter : 'LINEAR');
         const wrap = ('wrap' in params) ? params.wrap : 'CLAMP_TO_EDGE';
 
         // if(format == 'ALPHA')
@@ -112,22 +113,34 @@ class GLTexture2D extends RefCounted {
         // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
         if (type == 'FLOAT') {
             if (gl.name == 'webgl2') {
-                if (filter == 'LINEAR' && !gl.__ext_float_linear) {
+                if (minFilter == 'LINEAR' && !gl.__ext_float_linear) {
                     console.warn('Floating point texture filtering not supported on this device');
-                    filter = 'NEAREST';
+                    minFilter = 'NEAREST';
+                }
+                if (magFilter == 'LINEAR' && !gl.__ext_float_linear) {
+                    console.warn('Floating point texture filtering not supported on this device');
+                    magFilter = 'NEAREST';
                 }
             } else {
                 if (gl.__ext_float) {
-                    if (filter == 'LINEAR' && !gl.__ext_float_linear) {
+                    if (minFilter == 'LINEAR' && !gl.__ext_float_linear) {
                         console.warn('Floating point texture filtering not supported on this device');
-                        filter = 'NEAREST';
+                        minFilter = 'NEAREST';
+                    }
+                    if (magFilter == 'LINEAR' && !gl.__ext_float_linear) {
+                        console.warn('Floating point texture filtering not supported on this device');
+                        magFilter = 'NEAREST';
                     }
                 } else {
                     if (gl.__ext_half_float) {
                         type = 'HALF_FLOAT';
-                        if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                        if (minFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
                             console.warn('Half Float texture filtering not supported on this device');
-                            filter = 'NEAREST';
+                            minFilter = 'NEAREST';
+                        }
+                        if (magFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                            console.warn('Half Float texture filtering not supported on this device');
+                            magFilter = 'NEAREST';
                         }
                     } else {
                         throw ("OES_texture_half_float is not available");
@@ -136,7 +149,7 @@ class GLTexture2D extends RefCounted {
             }
         } else if (type == 'HALF_FLOAT') {
             if (gl.name == 'webgl2') {
-                // Half load linear filtering appears to be supported even without the extension.
+                // Half float linear filtering appears to be supported even without the extension.
                 // if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
                 //     console.warn('Floating point texture filtering not supported on this device');
                 //     filter = 'NEAREST';
@@ -146,12 +159,17 @@ class GLTexture2D extends RefCounted {
                     throw("Safari does not support uploading HALF_FLOAT texture data.")
                 }
                 if (gl.__ext_half_float) {
-                    if (filter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                    if (minFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
                         console.warn('Half Float texture filtering not supported on this device');
-                        filter = 'NEAREST';
+                        minFilter = 'NEAREST';
                     }
-                } else
+                    if (magFilter == 'LINEAR' && !gl.__ext_texture_half_float_linear) {
+                        console.warn('Half Float texture filtering not supported on this device');
+                        magFilter = 'NEAREST';
+                    }
+                } else {
                     throw ("OES_texture_half_float is not available");
+                }
                 if (format == 'RGB') {
                     throw ("OES_texture_half_float onlysupports RGBA textures");
                 }
@@ -163,7 +181,8 @@ class GLTexture2D extends RefCounted {
 
         this.__formatParam = format;
         this.__typeParam = type;
-        this.__filterParam = filter;
+        this.__minFilterParam = minFilter;
+        this.__magFilterParam = magFilter;
         this.__wrapParam = wrap;
 
 
@@ -218,7 +237,8 @@ class GLTexture2D extends RefCounted {
                 }
             }
         }
-        this.__filter = gl[filter];
+        this.__minFilter = gl[minFilter];
+        this.__magFilter = gl[magFilter];
         this.__wrap = gl[wrap];
         this.__flipY = ('flipY' in params) ? params.flipY : false;
         this.__mipMapped = ('mipMapped' in params) ? params.mipMapped : false;
@@ -248,8 +268,8 @@ class GLTexture2D extends RefCounted {
         // This parameter caused all images to be blank. Flipping in the pixel shader instead(by default)
         // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, flipY);
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.__filter);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.__filter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, this.__minFilter);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, this.__magFilter);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, this.__wrap);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, this.__wrap);
     }
