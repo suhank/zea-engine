@@ -39,6 +39,7 @@ class EnvMap extends BaseImage {
         this.__hdrexposure = 1.0;
         this.__sampleExposure = 1.0;
         this.__sampleOffset = 0.0;
+        this.__ambientLightFactor = 0.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
 
@@ -150,6 +151,12 @@ class EnvMap extends BaseImage {
     }
     getSamplesOffset() {
         return this.__sampleOffset;
+    }
+    setAmbientLightFactor(ambientLightFactor) {
+        this.__ambientLightFactor = ambientLightFactor;
+    }
+    getAmbientLightFactor() {
+        return this.__ambientLightFactor;
     }
 
     setHDRExposure(hdrexposure) {
