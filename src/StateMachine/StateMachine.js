@@ -48,13 +48,13 @@ class StateMachine extends BaseItem {
 
     activateState(name, addToHistory=true) {
         console.log("StateMachine.activateState:" + name)
+        if(!this.__states[name])
+            throw("Invalid state transtion:" + name)
         if(this.__currentState == this.__states[name])
             return;
         if(this.__currentState)
             this.__currentState.deactivate();
         this.__currentState = this.__states[name];
-        if(!this.__currentState)
-            throw("Invalid state transtion:" + name)
         this.__currentState.activate();
 
         if(addToHistory) {

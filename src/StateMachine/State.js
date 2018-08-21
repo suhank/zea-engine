@@ -32,7 +32,7 @@ class State {
             stateEvent.activate();
         });
         this.__activationActions.forEach((action)=>{
-            action.start();
+            action.activate();
         });
     }
 
@@ -41,7 +41,7 @@ class State {
             stateEvent.deactivate();
         });
         this.__deactivationActions.forEach((action)=>{
-            action.start();
+            action.activate();
         });
     }
 

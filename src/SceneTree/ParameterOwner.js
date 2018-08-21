@@ -160,6 +160,15 @@ class ParameterOwner extends RefCounted {
     //         this.removeParameter(i);
     //     }
     // }
+
+
+    addCommand(command) {
+        const name = command.getName();
+        command.setOwner(this)
+        this.__params.push(command)
+        this.__paramMapping[name] = this.__params.length - 1;
+        return command;
+    }
     //////////////////////////////////////////
     // Persistence
 

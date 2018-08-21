@@ -25,7 +25,8 @@ const ValueSetMode = {
     STATEMACHINE_SETVALUE: 4, /* Generate events, but don't flag the parameter as user edited*/
 };
 const ParamFlags = {
-    USER_EDITED: 1<<1
+    USER_EDITED: 1<<1,
+    DISABLED: 1<<2
 };
 
 class BaseParameter {
@@ -98,6 +99,16 @@ class BaseParameter {
         this.__cleanerFns.push(cleanerFn);
 
         this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
+    }
+
+    setEnabled(state) {
+        if(state)
+            this.__flags &= ~ParamFlags.DISABLED;
+        else
+            this.__flags |= ~ParamFlags.DISABLED;
+    }
+    isEnabled() {
+        this.__flags & ParamFlags.DISABLED;
     }
 
     isDirty() {

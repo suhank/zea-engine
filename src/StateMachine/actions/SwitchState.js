@@ -24,7 +24,7 @@ class SwitchState extends StateAction {
         this.__targetStateParam = this.addParameter(new StringParameter('TargetState', ""));
     }
 
-    start(){
+    activate(){
         this.__state.getStateMachine().activateState(this.__targetStateParam.getValue());
     }
 };

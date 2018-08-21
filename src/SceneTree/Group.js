@@ -240,22 +240,6 @@ class Group extends TreeItem {
                 // this.getParameter('LocalXfo').setValue(xfo, ValueSetMode.DATA_LOAD);
             }
         }
-        const loadItem = (index, path)=> {
-            // Note: the tree should have fully loaded by the time we are loading operators
-            // even new items and groups should have been created. Operators and state machines 
-            // are loaded last.
-            const treeItem = context.assetItem.resolvePath(path);
-            if(!treeItem) {
-                const onloaded = ()=>{
-                    addItem(index, treeItem);
-                    context.assetItem.loaded.disconnect(onloaded);
-                }
-                context.assetItem.loaded.connect(onloaded);
-            }
-            else {
-                addItem(index, treeItem);
-            }
-        }
         const treeItems = j.treeItems;
         for(let i=0; i<j.treeItems.length; i++) {
             addItem(i, treeItems[i]);

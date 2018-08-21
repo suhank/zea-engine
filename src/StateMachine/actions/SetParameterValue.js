@@ -36,7 +36,7 @@ class SetParameterValue extends StateAction {
         })
     }
 
-    start(){
+    activate(){
         if(this.__outParam.isConnected()){
             const interpTime = this.__interpTimeParam.getValue();
             if(interpTime > 0.0) {
