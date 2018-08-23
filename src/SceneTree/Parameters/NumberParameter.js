@@ -12,6 +12,7 @@ class NumberParameter extends Parameter {
     constructor(name, value=0, range=undefined) {
         super(name, value, 'Number');
         // The value might not have a range.
+        this.__display = 'slider';
         this.__range = range;
         this.__axis = 'x';
         this.__step = 0.01;
@@ -24,12 +25,22 @@ class NumberParameter extends Parameter {
         return super.getValue();
     }
 
+    getDisplay() {
+        return this.__display;
+    }
+
+    setDisplay(display) {
+        this.__display = display;
+        return this;
+    }
+
     getRange() {
         return this.__range;
     }
 
     setRange(range) {// Should be an array [0, 20]
         this.__range = range;
+        return this;
     }
 
     getStep() {
@@ -38,6 +49,7 @@ class NumberParameter extends Parameter {
 
     setStep(step) {
         this.__step = step;
+        return this;
     }
 
     cloneMembers(clonedParam) {

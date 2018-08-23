@@ -41,7 +41,8 @@ class GeomItem extends TreeItem {
         this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
         this.__geomParam.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
 
-        this.__lightmapCoordsParam = this.addParameter(new Vec2Parameter('lightmapCoords'));
+        // this.__lightmapCoordsParam = this.addParameter(new Vec2Parameter('lightmapCoords'));
+        this.__lightmapCoords = new Vec2();
         this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('geomOffsetXfo'));
         this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'));
 
@@ -148,16 +149,18 @@ class GeomItem extends TreeItem {
     }
 
     getLightmapCoordsOffset() {
-        return this.__lightmapCoordsParam.getValue();
+        // return this.__lightmapCoordsParam.getValue();
+        return this.__lightmapCoords;
     }
 
     // The root asset item pushes its offset to the geom items in the
     // tree. This offsets the light cooords for each geom.
     applyAssetLightmapSettings(lightmapName, offset) {
         this.__lightmap = lightmapName;
-        const coords = this.__lightmapCoordsParam.getValue();
-        coords.addInPlace(offset);
-        this.__lightmapCoordsParam.setValue(coords);
+        // const coords = this.__lightmapCoordsParam.getValue();
+        // coords.addInPlace(offset);
+        // this.__lightmapCoordsParam.setValue(coords);
+        this.__lightmapCoords.addInPlace(offset);
     }
 
     /////////////////////////////
@@ -218,7 +221,8 @@ class GeomItem extends TreeItem {
             this.setMaterial(context.assetItem.getMaterialLibrary().getMaterial('Default'));
         }
 
-        this.__lightmapCoordsParam.setValue(reader.loadFloat32Vec2());
+        // this.__lightmapCoordsParam.setValue(reader.loadFloat32Vec2());
+        this.__lightmapCoord = reader.loadFloat32Vec2();
     }
 
 

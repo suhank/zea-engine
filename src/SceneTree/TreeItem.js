@@ -41,8 +41,20 @@ class TreeItem extends BaseItem {
         
         this.__components = [];
         this.__componentMapping = {};
+        this.parentChanged = this.ownerChanged;
+        this.childAdded = new Signal();
+        this.childRemoved = new Signal();
         this.componentAdded = new Signal();
         this.componentRemoved = new Signal();
+
+        this.mouseDown = new Signal();
+        this.mouseUp = new Signal();
+        this.mouseMove = new Signal();
+        
+        this.treeItemGlobalXfoChanged = new Signal();
+
+        ///////////////////////////////////////
+        // Add parameters.
 
         this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
         this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
@@ -110,16 +122,6 @@ class TreeItem extends BaseItem {
         this.localXfoChanged = this.__localXfoParam.valueChanged;
         this.globalXfoChanged = this.__globalXfoParam.valueChanged;
         this.boundingChanged = this.__boundingBoxParam.valueChanged;
-
-        this.parentChanged = this.ownerChanged;
-        this.childAdded = new Signal();
-        this.childRemoved = new Signal();
-
-        this.mouseDown = new Signal();
-        this.mouseUp = new Signal();
-        this.mouseMove = new Signal();
-        
-        this.treeItemGlobalXfoChanged = new Signal();
     }
 
     destroy() {
@@ -314,7 +316,8 @@ class TreeItem extends BaseItem {
         return this.__childItems.length;
     }
 
-    addChild(childItem, maintainXfo=true, checkCollisions = true) {
+    insertChild(childItem, index, maintainXfo=true, checkCollisions = true) {
+
         if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
             throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
         if (!(childItem instanceof TreeItem))
@@ -323,7 +326,7 @@ class TreeItem extends BaseItem {
         let newLocalXfo;
         if(maintainXfo)
             newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
-        this.__childItems.push(childItem);
+        this.__childItems.splice(index, 0, childItem);
         childItem.setOwner(this);
 
         if(maintainXfo)
@@ -345,9 +348,14 @@ class TreeItem extends BaseItem {
         childItem.mouseMove.connect(this.onMouseMove);
 
         this._setBoundingBoxDirty();
-        this.childAdded.emit(childItem);
+        this.childAdded.emit(childItem, index);
+
+        return childItem;
     }
 
+    addChild(childItem, maintainXfo=true, checkCollisions = true) {
+        return this.insertChild(childItem, this.__childItems.length, maintainXfo, checkCollisions);
+    }
 
     getChild(index) {
         return this.__childItems[index];
@@ -362,7 +370,7 @@ class TreeItem extends BaseItem {
     }
 
     removeChild(index, destroy = true) {
-        let childItem = this.__childItems[index];
+        const childItem = this.__childItems[index];
         this.__childItems.splice(index, 1);
 
         childItem.setParentItem(undefined);
@@ -374,6 +382,8 @@ class TreeItem extends BaseItem {
         childItem.mouseDown.disconnect(this.onMouseDown);
         childItem.mouseUp.disconnect(this.onMouseUp);
         childItem.mouseMove.disconnect(this.onMouseMove);
+
+        this.childRemoved.emit(childItem, index);
 
         if (destroy)
             childItem.destroy();
