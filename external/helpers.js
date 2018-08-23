@@ -79,20 +79,23 @@ function saveAs(data, filename, type) {
 }
 
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
-    let resources = {
-        VisualiveEngine: {
-            'Vive.vla': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/Vive.vla' } ,
-            'Dome.vla': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/Dome.vla' } ,
-            'LogoSmall.png': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/LogoSmall.png' } ,
-            'FlakesNormalMap.png': { url: 'http://localhost:3150/VisualiveEngineClient/Resources/FlakesNormalMap.png' } 
-        }
-    };
     let rootURL = window.location.href.split('#')[0];
     rootURL = rootURL.split('?')[0];
     if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
     }
-    const generatePath = (item)=>{
+    function guid() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+          .toString(16)
+          .substring(1);
+      }
+      return s4();// + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
+    const nameToId = {}
+
+    const generateResource = (item, url)=>{
         const parts = item.split('/');
         let base = rootURL;
         if(parts[0] == '.')
@@ -105,39 +108,62 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             base = baseparts.join('/') + '/';
             parts.shift();
         }
+        const id = guid();
+        const filename = parts.pop();
+        const resource = { id, name: filename, url: (url ? url : base+item) }
+
         let curr = resources;
-        for(let i=0; i<parts.length-1; i++){
+        for(let i=0; i<parts.length; i++){
             const part = parts[i];
-            if(!(part in curr)){
-                curr[part] = {};
+            if(!resources[nameToId[part]]) {
+                const folderId = guid();
+                resources[folderId] = { 
+                    id: folderId,
+                    name: part,
+                    type: 'folder'
+                }
+                nameToId[part] = folderId;
             }
-            curr = curr[part];
+            if(i > 0) {
+                resources[nameToId[part]].parent = nameToId[parts[i-1]]
+            }
         }
-        curr[parts[parts.length-1]] = { url: base+item };
+        if(parts.length > 0)
+            resource.parent = nameToId[parts[parts.length-1]]
+
+        resources[id] = resource;
     }
+
+    let resources = {};
+    generateResource('VisualiveEngine/Vive.vla', 'http://localhost:3150/VisualiveEngineClient/Resources/Vive.vla')
+    generateResource('VisualiveEngine/Dome.vla', 'http://localhost:3150/VisualiveEngineClient/Resources/Dome.vla')
+    generateResource('VisualiveEngine/LogoSmall.png', 'http://localhost:3150/VisualiveEngineClient/Resources/LogoSmall.png')
+    generateResource('VisualiveEngine/FlakesNormalMap.png', 'http://localhost:3150/VisualiveEngineClient/Resources/FlakesNormalMap.png')
+    
+
     for(let item of list){
-        generatePath(item);
+        generateResource(item);
     }
     for(let assetDesc of assetDescs){
-        generatePath(assetDesc[0] + ".vla");
+        generateResource(assetDesc[0] + ".vla");
         for(let i=0; i<assetDesc[1]; i++)
-            generatePath(assetDesc[0] + i + ".vlageoms");
+            generateResource(assetDesc[0] + i + ".vlageoms");
         if(assetDesc.length == 3) {
             for(let i=0; i<3; i++){
                 // PAth for the env and the lightmaps for the env
-                generatePath(assetDesc[2] + i + ".vlh");
+                generateResource(assetDesc[2] + i + ".vlh");
                 let envMapName = assetDesc[2].split('/');
                 if(envMapName.length > 1)
                     envMapName.shift();
                 envMapName = envMapName[0];
-                generatePath(assetDesc[0] + "_" + envMapName + "_Lightmap" + i + ".vlh");
+                generateResource(assetDesc[0] + "_" + envMapName + "_Lightmap" + i + ".vlh");
             }
         }
     }
     for(let imageDesc of imageDescs){
         for(let i=0; i<3; i++){
             let suffixSt = imageDesc.lastIndexOf('.')
-            generatePath(imageDesc.substring(0, suffixSt) + i + imageDesc.substring(suffixSt));
+            generateResource(imageDesc.substring(0, suffixSt) + i + imageDesc.substring(suffixSt));
         }
     }
     return resources;

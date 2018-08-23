@@ -16,20 +16,35 @@ class FilePathParameter extends Parameter {
             // Note: the file path is selected by using the file browser
             // For now it can return an aboslute path(within the project)
             // and we convert to relative when we save.
-            const filePath = this.getValue();
-            if (!resourceLoader.resourceAvailable(filePath)) {
-                console.warn("Resource unavailable:" + filePath);
+            const resourceId = this.getValue();
+            if (!resourceLoader.resourceAvailable(resourceId)) {
+                console.warn("Resource unavailable:" + resourceId);
                 return;
             }
-            this.__file = resourceLoader.resolveFile(filePath);
+            this.__file = resourceLoader.getFile(resourceId);
         });
     }
 
+    getFilePath() {
+        if(this.__file) {
+            return resourceLoader.resolveFile(this.__file.id);
+        }
+        return '';
+    }
+
+    setFilePath(filePath) {
+        const resourceId = resourceLoader.resolveFilePathToId(filePath);
+        if(!resourceId) {
+            console.warn("Resource unavailable:" + resourceId);
+            return;
+        }
+        this.setValue(resourceId, ValueSetMode.DATA_LOAD);
+    }
+
     getFilename() {
-        const filePath = this.getValue();
-        const parts = filePath.split('/');
-        if(parts.length)
-            return parts[parts.length-1];
+        if(this.__file) {
+            this.__file.name;
+        }
     }
 
     getExt(){
@@ -57,7 +72,12 @@ class FilePathParameter extends Parameter {
         }
     }
 
+    getFile() {
+        return this.__file;
+    }
+
     getFileDesc() {
+        console.warn("Deprecated method: 'getFileDesc'. Please use 'getFile'")
         return this.__file;
     }
 
@@ -79,11 +99,13 @@ class FilePathParameter extends Parameter {
     setDirty(cleanerFn) {
         throw("Cannot drive a filepath param from an oporator")
     }
+
     setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if (value == undefined) {
             throw ("Invalud value for setvalue.");
         }
-        // Note: equality tests on anything but simple values is not going to work. We can't easily optimise this function.
+        // Note: equality tests only work on simple types.
+        // Important here because file changes cause reloads..
         if(value == this.__value) {
             return;
         }
@@ -99,29 +121,20 @@ class FilePathParameter extends Parameter {
     toJSON(context) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
-        // TODO: finish this.
-        const makeRelative = (fp)=>{
-            if(context.baseFilePath) {
-
-            }
-            return fp;
-        }
-        return { value: makeRelative(this.__value) };
+        const j =  {  };
+        if(this.__file)
+            j.value = this.__file.id;
+        return j;
     }
 
     fromJSON(j, context) {
-        if(j.value == undefined){
-            console.warn("Invalid Parameter JSON");
-            return;
+        if(j.value){
+            const resourceId = resourceLoader.resolveFilePathToId(j.value);
+            this.setValue(resourceId, ValueSetMode.DATA_LOAD);
         }
-        // TODO: finish this.
-        const makeAbsolute = (fp)=>{
-            if(context.baseFilePath) {
-
-            }
-            return fp;
+        else if(j.resourceId){
+            this.setValue(j.resourceId, ValueSetMode.DATA_LOAD);
         }
-        this.setValue(makeAbsolute(j.value), ValueSetMode.DATA_LOAD);
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;

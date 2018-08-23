@@ -58,8 +58,8 @@ class ResourceLoader {
         this.__doneWorkByCategory = {};
         this.__resourceRegisterCallbacks = {};
         this.__callbacks = {};
-        // this.__workCategories = {};
         this.__resources = {};
+        this.__resourcesTree = { children: {} };
 
         if(asyncLoading){
             this.__workers = [];
@@ -72,40 +72,50 @@ class ResourceLoader {
         this.__resourceRegisterCallbacks[filter] = fn;
     }
 
-
-    __applyCallbacks(rootItem, filename=undefined) {
-        const applyCallbacks = (item, filename)=>{
+    __applyCallbacks(resourcesDict, filename=undefined) {
+        const applyCallbacks = (resource, filename)=>{
             for(let filter in this.__resourceRegisterCallbacks){
-                if(filename.includes(filter))
-                    this.__resourceRegisterCallbacks[filter](filename, item)
+                if(resource.name.includes(filter))
+                    this.__resourceRegisterCallbacks[filter](resource);
             }
         }
-        const traverse = (item, filename)=>{
-            if(item.url) {
-                applyCallbacks(item, filename)
+        for(let key in resourcesDict){
+            const resource = resourcesDict[key];
+            if(resource.url)
+                applyCallbacks(resource)
+        }
+    }
+
+    __buildTree(resources){ 
+        const fileSystemEntities = {};
+
+        const buildEntity = (resourceId)=>{
+            const resource = Object.assign(resources[resourceId]);
+            if (resource.type === 'folder') {
+              resource.children = {};
+            }
+            let parent;
+            if(resource.parent) {
+                if(!fileSystemEntities[resource.parent]) {
+                    buildEntity(resource.parent)
+                }
+                parent = fileSystemEntities[resource.parent];
             }
             else {
-                for(let key in item){
-                    traverse(item[key], key)
-                }
+                parent = this.__resourcesTree;
             }
+            parent.children[resource.name] = resource;
+            fileSystemEntities[resourceId] = resource;
         }
-        if(filename)
-            applyCallbacks(rootItem, filename)
-        else{
-            for(let key in rootItem){
-                traverse(rootItem[key], key)
-            }
+
+        for(let key in resources){
+            buildEntity(key);
         }
     }
 
     setResources(resources){
-        if(this.__resources){
-            this.__resources = mergeDeep(this.__resources, resources);
-        }
-        else {
-            this.__resources = resources
-        }
+        this.__resources = Object.assign(this.__resources, resources);
+        this.__buildTree(resources);
         this.__applyCallbacks(resources);
     }
 
@@ -132,19 +142,12 @@ class ResourceLoader {
             }
             url = base+resourcePath
         }
-        let curr = this.__resources;
-        for(let part of parts){
-            if(part in curr)
-                curr = curr[part];
-            else{
-                let dir = {};
-                curr[part] = dir;
-                curr = dir;
-            }
-        }
-        curr[filename] = { url };
-        this.__applyCallbacks(curr[filename], filename);
+        const resource = { url };
+        this.__resources[resourceId] = resource;
+        this.__applyCallbacks(resource, filename);
     }
+
+
 
     freeData(buffer){
         // Note: Explicitly transfer data to a web worker and then 
@@ -177,17 +180,42 @@ class ResourceLoader {
             worker.terminate();
         this.__workers = [];
     }
+    
+    getFilePath(resourceId) {
+        let curr = this.__resources[resourceId];
+        const path = [curr.name];
+        while(curr.parent){
+            curr = this.__resources[curr.parent];
+            path.splice(0, 0, curr.name);
+        }
+        return path.join('/');
+    }
+
+    
+    resourceAvailable(resourceId) {
+        return resourceId in this.__resources;
+    }
+
+    getFile(resourceId) {
+        return this.__resources[resourceId];
+    }
+
+    resolveFilePathToId(filePath) {
+        const file = this.resolveFile(filePath);
+        if(file)
+            return file.id;
+    }
 
     resolveFile(filePath) {
-        if(!this.__resources)
+        if(!this.__resourcesTree)
             throw("Resources dict not provided");
         const parts = filePath.split('/');
         if(parts[0] == '.' || parts[0] == '')
             parts.shift();
-        let curr = this.__resources;
+        let curr = this.__resourcesTree;
         for(let part of parts){
-            if(part in curr)
-                curr = curr[part];
+            if(part in curr.children)
+                curr = curr.children[part];
             else{
                 // console.warn("Unable to resolve URL:" + filePath);
                 return null;
@@ -200,10 +228,6 @@ class ResourceLoader {
         const file = this.resolveFile(filePath)
         if(file)
             return file.url;
-    }
-    
-    resourceAvailable(filePath) {
-        return this.resolveFile(filePath) != null;
     }
 
     // Add work to the total work pile... We never know how big the pile will get.
