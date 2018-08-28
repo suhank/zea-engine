@@ -25,9 +25,9 @@ class FilePathParameter extends Parameter {
         });
     }
 
-    getFilePath() {
+    getFilepath() {
         if(this.__file) {
-            return resourceLoader.resolveFile(this.__file.id);
+            return resourceLoader.getFilepath(this.__file.id);
         }
         return '';
     }
@@ -66,7 +66,15 @@ class FilePathParameter extends Parameter {
     }
 
     getFileFolder() {
-        const filePath = this.getValue();
+        if(this.__file) {
+            if(this.__file.parent)
+                return resourceLoader.resolveFile(this.__file.parent);
+            return resourceLoader.getRootFolder();
+        }
+    }
+
+    getFileFolderPath() {
+        const filePath = this.getFilepath();
         if(filePath) {
             return filePath.substring(0, filePath.lastIndexOf("/")) + '/';
         }

@@ -72,6 +72,10 @@ class ResourceLoader {
         }
     }
 
+    getRootFolder(){
+        return this.__resourcesTree;
+    }
+
     registerResourceCallback(filter, fn) {
         this.__resourceRegisterCallbacks[filter] = fn;
     }
@@ -92,8 +96,11 @@ class ResourceLoader {
 
     __buildTree(resources){ 
         const buildEntity = (resourceId)=>{
-            const resource = Object.assign(resources[resourceId]);
-            if (resource.type === 'folder') {
+            if(this.__resourcesTreeEntities[resourceId])
+                return;
+
+            const resource = Object.assign(resources[resourceId], { id: resourceId });
+            if (resource.type === 'folder' || resource.type === 'dependency') {
               resource.children = {};
             }
             if(resource.parent) {
@@ -102,6 +109,7 @@ class ResourceLoader {
                 }
             }
             const parent = resource.parent ? this.__resourcesTreeEntities[resource.parent] : this.__resourcesTree;
+            // console.log((parent.name ? parent.name + '/' : '') + resource.name)
             parent.children[resource.name] = resource;
             this.__resourcesTreeEntities[resourceId] = resource;
         }
@@ -187,7 +195,7 @@ class ResourceLoader {
         this.__workers = [];
     }
     
-    getFilePath(resourceId) {
+    getFilepath(resourceId) {
         let curr = this.__resources[resourceId];
         const path = [curr.name];
         while(curr.parent){
@@ -217,8 +225,6 @@ class ResourceLoader {
     }
 
     resolveFilepath(filePath) {
-        if(!this.__resourcesTree)
-            throw("Resources dict not provided");
         const parts = filePath.split('/');
         if(parts[0] == '.' || parts[0] == '')
             parts.shift();
@@ -227,7 +233,7 @@ class ResourceLoader {
             if(part in curr.children)
                 curr = curr.children[part];
             else{
-                // console.warn("Unable to resolve URL:" + filePath);
+                console.warn("Unable to resolve key:" + part + " of path:" + filePath);
                 return null;
             }
         }
@@ -271,7 +277,7 @@ class ResourceLoader {
             throw("Invalid resource Id:'"+ resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
-        this.loadURL(file.name, file.url, callback, addLoadWork)
+        this.loadURL(file.id, file.url, callback, addLoadWork)
     }
 
     loadURL(name, url, callback, addLoadWork=true) {

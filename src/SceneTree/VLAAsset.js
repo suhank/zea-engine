@@ -94,7 +94,7 @@ function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
         if(!file)
             return;
 
-        const filePath = fileParam.getValue();
+        const fileId = fileParam.getValue();
         const stem = fileParam.getStem();
         const url = fileParam.getURL();
         let numGeomsFiles = 0;
@@ -105,21 +105,21 @@ function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
         // Load the tree file. This file contains
         // the scene tree of the asset, and also
         // tells us how many geom files will need to be loaded.
-        resourceLoader.loadResource(filePath,
+        resourceLoader.loadResource(fileId,
             (entries) => {
                 let treeData = entries[Object.keys(entries)[0]];
                 numGeomsFiles = readBinaryBuffer(treeData.buffer);
                 resourceLoader.freeData(treeData.buffer);
 
                 if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
-                    resourceLoader.addWork(filePath+'geoms', 1); // (load + parse + extra)
+                    resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
                     let geomsData = entries[Object.keys(entries)[1]];
-                    geomLibrary.readBinaryBuffer(filePath, geomsData.buffer);
+                    geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
                     resourceLoader.freeData(geomsData.buffer);
                 }
                 else {
                     // add the work for the the geom files....
-                    resourceLoader.addWork(filePath+'geoms', 4*numGeomsFiles); // (load + parse + extra)
+                    resourceLoader.addWork(fileId+'geoms', 4*numGeomsFiles); // (load + parse + extra)
                     loadNextGeomFile();
                 }
             });
@@ -129,10 +129,12 @@ function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
         let geomFileID = 0;
         const loadNextGeomFile = () => {
             if (geomFileID < numGeomsFiles) {
-                const nextGeomFileName = fileParam.getFileFolder() + stem + geomFileID + '.vlageoms';
+                const folder = fileParam.getFileFolderPath()
+                const nextGeomFileName = folder + stem + geomFileID + '.vlageoms';
+                const fileId = resourceLoader.resolveFilePathToId(nextGeomFileName);
                 // console.log("loadNextGeomFile:" + nextGeomFileName);
-                if (resourceLoader.resourceAvailable(nextGeomFileName))
-                    loadGeomsfile(nextGeomFileName);
+                if (resourceLoader.resourceAvailable(fileId))
+                    loadGeomsfile(fileId);
                 else {
                     throw("VLA Geoms file not found:" + nextGeomFileName)
                 }
@@ -141,12 +143,12 @@ function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
                 onGeomsLoaded();
             }
         }
-        const loadGeomsfile = (geomsFileName) => {
+        const loadGeomsfile = (fileId) => {
             geomFileID++;
-            resourceLoader.loadResource(geomsFileName,
+            resourceLoader.loadResource(fileId,
                 (entries) => {
                     let geomsData = entries[Object.keys(entries)[0]];
-                    geomLibrary.readBinaryBuffer(geomsFileName, geomsData.buffer);
+                    geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
                     resourceLoader.freeData(geomsData.buffer);
                     loadNextGeomFile();
                 },
@@ -160,7 +162,7 @@ function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
         // signal. This is fired every time a file in the stream is finshed parsing.
         geomLibrary.streamFileParsed.connect((fraction) => {
             // A chunk of geoms are now parsed, so update the resource loader.
-            resourceLoader.addWorkDone(filePath+'geoms', fraction);
+            resourceLoader.addWorkDone(fileId+'geoms', fraction);
         });
     }
 
@@ -174,7 +176,7 @@ class VLAAsset extends AssetItem {
     constructor(name) {
         super(name);
         this.loaded.setToggled(false);
-        const binfileParam = this.addParameter(new Visualive.FilePathParameter('BinFilePath'));
+        // const binfileParam = this.addParameter(new Visualive.FilePathParameter('BinFilePath'));
 
         this.__loader = VLADataLoader;
         this.__loader(this, binfileParam, ()=>{
