@@ -114,9 +114,7 @@ class WebcamImage2D extends BaseImage {
             width: this.width,
             height: this.height,
             data: this.__data,
-            wrap: this.wrap,
-            flipY: this.flipY,
-            mipMapped: this.mipMapped
+            flipY: this.getParameter('FlipY').getValue()
         }
     }
 

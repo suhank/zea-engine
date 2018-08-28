@@ -32,18 +32,18 @@ class FilePathParameter extends Parameter {
         return '';
     }
 
-    setFilePath(filePath) {
+    setFilepath(filePath, mode) {
         const resourceId = resourceLoader.resolveFilePathToId(filePath);
         if(!resourceId) {
-            console.warn("Resource unavailable:" + resourceId);
+            console.warn("Resource unavailable:" + filePath);
             return;
         }
-        this.setValue(resourceId, ValueSetMode.DATA_LOAD);
+        this.setValue(resourceId, mode);
     }
 
     getFilename() {
         if(this.__file) {
-            this.__file.name;
+            return this.__file.name;
         }
     }
 
@@ -102,8 +102,13 @@ class FilePathParameter extends Parameter {
 
     setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if (value == undefined) {
-            throw ("Invalud value for setvalue.");
+            throw ("Invalid value for setValue.");
         }
+        if(value.indexOf('.') > 0) {
+            console.warn("Deprecation warning for setValue. setValue should now only take a file id, not a path.");
+            return this.setFilepath(value, mode)
+        }
+
         // Note: equality tests only work on simple types.
         // Important here because file changes cause reloads..
         if(value == this.__value) {

@@ -42,13 +42,13 @@ const imageDataLibrary = {
 const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1; // || navigator.userAgent.indexOf("Samsung");
 
 class FileImage extends BaseImage {
-    constructor(name, resourcePath='', params = {}) {
+    constructor(name, filePath='', params = {}) {
 
-        if(resourcePath.constructor == Object){
-            params = resourcePath;
+        if(filePath.constructor == Object){
+            params = filePath;
         }
         if(name && resourceLoader.resourceAvailable(name)) {
-            resourcePath = name;
+            filePath = name;
             name = undefined;
         }
 
@@ -74,35 +74,34 @@ class FileImage extends BaseImage {
 
             const fileDesc = fileParam.getFileDesc();
             if(fileDesc) {
-                const filePath = fileParam.getValue();
-                this.__loadData(filePath, fileDesc);
+                this.__loadData( fileDesc);
             }
         });
         
-        if (resourcePath && resourcePath != '')
-            fileParam.setValue(resourcePath);
+        if (filePath && filePath != '')
+            fileParam.setFilepath(filePath);
     }
 
 
-    __loadData(resourcePath, fileDesc) {
+    __loadData(fileDesc) {
 
         const ext = this.getParameter('FilePath').getExt();
         if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
-            this.__loadLDRImage(resourcePath, fileDesc, ext);
+            this.__loadLDRImage(fileDesc, ext);
         } else if (ext == '.mp4' || ext == '.ogg') {
-            this.__loadLDRVideo(resourcePath, fileDesc, ext);
+            this.__loadLDRVideo(fileDesc, ext);
             // } else if (ext == '.ldralpha') {
-            //     this.__loadLDRAlpha(resourcePath, fileDesc, ext);
+            //     this.__loadLDRAlpha(fileDesc, ext);
         } else if (ext == '.vlh') {
-            this.__loadVLH(resourcePath, fileDesc, ext);
+            this.__loadVLH(fileDesc, ext);
         } else if (ext == '.gif') {
-            this.__loadGIF(resourcePath, fileDesc, ext);
+            this.__loadGIF(fileDesc, ext);
         } else {
-            throw ("Unsupported file type. Check the ext:" + resourcePath);
+            throw ("Unsupported file type. Check the ext:" + fileDesc);
         }
     }
 
-    __loadLDRImage(resourcePath, fileDesc, ext) {
+    __loadLDRImage(fileDesc, ext) {
         if (ext == '.jpg') {
             this.format = 'RGB';
         } else if (ext == '.png') {
@@ -120,15 +119,15 @@ class FileImage extends BaseImage {
             this.__loaded = true;
             this.loaded.emit();
         };
-        if (resourcePath in imageDataLibrary) {
-            imageElem = imageDataLibrary[resourcePath];
+        if (fileDesc.id in imageDataLibrary) {
+            imageElem = imageDataLibrary[fileDesc.id];
             if (imageElem.complete) {
                 loaded()
             } else {
                 imageElem.addEventListener("load", loaded);
             }
         } else {
-            resourceLoader.addWork(resourcePath, 1);
+            resourceLoader.addWork(fileDesc.id, 1);
 
         const prefSizeParam = this.addParameter(new NumberParameter('PreferredSize', -1));
 
@@ -193,12 +192,12 @@ class FileImage extends BaseImage {
                 }
                 const asset = chooseImage(params, Object.values(fileDesc.assets));
                 if (asset) {
-                    console.log("Selected image:" + resourcePath + " format:" + asset.format + " :" + asset.w + "x" + asset.h  + " url:" + asset.url);
+                    console.log("Selected image:" + fileDesc.name + " format:" + asset.format + " :" + asset.w + "x" + asset.h  + " url:" + asset.url);
                     url = asset.url;
                 }
             }
             else {
-                console.warn("Images not processed for this file:" + resourcePath);
+                console.warn("Images not processed for this file:" + fileDesc.name);
             }
 
             imageElem = new Image();
@@ -207,9 +206,9 @@ class FileImage extends BaseImage {
 
             imageElem.addEventListener("load", loaded);
             imageElem.addEventListener("load", () => {
-                resourceLoader.addWorkDone(resourcePath, 1);
+                resourceLoader.addWorkDone(fileDesc.id, 1);
             });
-            imageDataLibrary[resourcePath] = imageElem;
+            imageDataLibrary[fileDesc.id] = imageElem;
         }
     }
 
@@ -227,15 +226,15 @@ class FileImage extends BaseImage {
         }
     }
 
-    __loadLDRVideo(resourcePath, fileDesc, ext) {
+    __loadLDRVideo(fileDesc, ext) {
         this.format = 'RGB';
         this.type = 'UNSIGNED_BYTE';
-        resourceLoader.addWork(resourcePath, 1);
+        resourceLoader.addWork(fileDesc.id, 1);
 
         const muteParam = this.addParameter(new BooleanParameter('mute', false));
         const loopParam = this.addParameter(new BooleanParameter('loop', true));
-        const spatializeAudioParam = this.addParameter(new BooleanParameter('spatializeAudio', true));
         const GainParam = this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
+        const spatializeAudioParam = this.addParameter(new BooleanParameter('SpatializeAudio', true));
         const refDistanceParam = this.addParameter(new NumberParameter('refDistance', 2));
         const maxDistanceParam = this.addParameter(new NumberParameter('maxDistance', 10000));
         const rolloffFactorParam = this.addParameter(new NumberParameter('rolloffFactor', 1));
@@ -271,7 +270,7 @@ class FileImage extends BaseImage {
             this.height = videoElem.videoWidth;
             this.__data = videoElem;
             this.__loaded = true;
-            resourceLoader.addWorkDone(resourcePath, 1);
+            resourceLoader.addWorkDone(fileDesc.id, 1);
             this.loaded.emit(videoElem);
 
             let prevFrame = 0;
@@ -307,7 +306,7 @@ class FileImage extends BaseImage {
         }
     }
 
-    __loadVLH(resourcePath, fileDesc, ext) {
+    __loadVLH(fileDesc, ext) {
         this.type = 'FLOAT';
 
         let hdrexposure = 1.0;
@@ -327,7 +326,7 @@ class FileImage extends BaseImage {
             return hdrtint;
         }
 
-        resourceLoader.loadURL(resourcePath, fileDesc.url, (entries) => {
+        resourceLoader.loadURL(fileDesc.id, fileDesc.url, (entries) => {
             let ldr, cdm;
             for (let name in entries) {
                 if (name.endsWith('.jpg'))
@@ -343,7 +342,7 @@ class FileImage extends BaseImage {
             ldrPic.onload = () => {
                 this.width = ldrPic.width;
                 this.height = ldrPic.height;
-                // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
+                // console.log(fileDesc.name + ": [" + this.width + ", " + this.height + "]");
                 this.__data = {
                     ldr: ldrPic,
                     cdm: cdm
@@ -360,7 +359,7 @@ class FileImage extends BaseImage {
     }
 
 
-    __loadGIF(resourcePath, fileDesc, ext) {
+    __loadGIF(fileDesc, ext) {
 
         this.format = 'RGBA';
         this.type = 'UNSIGNED_BYTE';
@@ -385,11 +384,11 @@ class FileImage extends BaseImage {
             playing = false;
         }
         let resourcePromise;
-        if (resourcePath in imageDataLibrary) {
-            resourcePromise = imageDataLibrary[resourcePath];
+        if (fileDesc.id in imageDataLibrary) {
+            resourcePromise = imageDataLibrary[fileDesc.id];
         } else {
             resourcePromise = new Promise((resolve, reject) => {
-                resourceLoader.addWork(resourcePath, 1);
+                resourceLoader.addWork(fileDesc.id, 1);
 
                 if(fileDesc.assets && fileDesc.assets.atlas) {
                     const image = new Image();
@@ -404,13 +403,13 @@ class FileImage extends BaseImage {
                             frameRange: [0, fileDesc.assets.atlas.frameDelays.length],
                             imageData: image
                         });
-                        resourceLoader.addWorkDone(resourcePath, 1);
+                        resourceLoader.addWorkDone(fileDesc.id, 1);
                     });
                     return;
                 }
 
                 loadBinfile(fileDesc.url, (data) => {
-                    console.warn("Unpacking Gif client side:" + resourcePath)
+                    console.warn("Unpacking Gif client side:" + fileDesc.name)
 
                     const start = performance.now();
 
@@ -486,12 +485,12 @@ class FileImage extends BaseImage {
                         // console.log(frame);
                         renderFrame(frames[i], i);
                     }
-                    resourceLoader.addWorkDone(resourcePath, 1);
+                    resourceLoader.addWorkDone(fileDesc.id, 1);
 
                     const imageData = atlasCtx.getImageData(0, 0, atlasCanvas.width, atlasCanvas.height);
 
                     const ms = performance.now() - start;
-                    console.log(`Decode GIF '${resourcePath}' time:` + ms);
+                    console.log(`Decode GIF '${fileDesc.name}' time:` + ms);
 
                     resolve({
                         width: atlasCanvas.width,
@@ -508,7 +507,7 @@ class FileImage extends BaseImage {
                 });
             });
 
-            imageDataLibrary[resourcePath] = resourcePromise;
+            imageDataLibrary[fileDesc.id] = resourcePromise;
         }
 
         // Make the resolve asynchronous so that the function returns.
@@ -549,7 +548,7 @@ class FileImage extends BaseImage {
         }, 1)
     }
 
-    getResourcePath() {
+    getFilepath() {
         return this.getParameter('FilePath').getValue();
     }
 
@@ -584,18 +583,19 @@ class FileImage extends BaseImage {
     readBinary(reader, context) {
         // super.readBinary(reader, context);
         this.setName(reader.loadStr());
-        let resourcePath = reader.loadStr();
-        if (typeof resourcePath === 'string' && resourcePath != "") {
+
+        let filePath = reader.loadStr();
+        if (typeof filePath === 'string' && filePath != "") {
             if (context.lod >= 0) {
-                const suffixSt = resourcePath.lastIndexOf('.')
+                const suffixSt = filePath.lastIndexOf('.')
                 if (suffixSt != -1) {
-                    const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt);
+                    const lodPath = filePath.substring(0, suffixSt) + context.lod + filePath.substring(suffixSt);
                     if (resourceLoader.resourceAvailable(lodPath)) {
-                        resourcePath = lodPath;
+                        filePath = lodPath;
                     }
                 }
             }
-            this.getParameter('FilePath').setValue(resourcePath);
+            this.getParameter('FilePath').setFilepath(filePath);
 
         }
     }
@@ -603,9 +603,9 @@ class FileImage extends BaseImage {
 
 
 class FileImage2D extends FileImage {
-    constructor(resourcePath, params = {}) {
+    constructor(filePath, params = {}) {
         console.warn("FileImage2D is becoming deprecated in favor of simple FileImage")
-        super(resourcePath, params);
+        super(filePath, params);
 
     }
 }

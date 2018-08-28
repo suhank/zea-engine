@@ -2,6 +2,9 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
+    hashStr
+} from '../Math';
+import {
     Async,
     Signal
 } from '../Utilities';
@@ -59,6 +62,7 @@ class ResourceLoader {
         this.__resourceRegisterCallbacks = {};
         this.__callbacks = {};
         this.__resources = {};
+        this.__resourcesTreeEntities = { };
         this.__resourcesTree = { children: {} };
 
         if(asyncLoading){
@@ -72,8 +76,8 @@ class ResourceLoader {
         this.__resourceRegisterCallbacks[filter] = fn;
     }
 
-    __applyCallbacks(resourcesDict, filename=undefined) {
-        const applyCallbacks = (resource, filename)=>{
+    __applyCallbacks(resourcesDict) {
+        const applyCallbacks = (resource)=>{
             for(let filter in this.__resourceRegisterCallbacks){
                 if(resource.name.includes(filter))
                     this.__resourceRegisterCallbacks[filter](resource);
@@ -87,25 +91,19 @@ class ResourceLoader {
     }
 
     __buildTree(resources){ 
-        const fileSystemEntities = {};
-
         const buildEntity = (resourceId)=>{
             const resource = Object.assign(resources[resourceId]);
             if (resource.type === 'folder') {
               resource.children = {};
             }
-            let parent;
             if(resource.parent) {
-                if(!fileSystemEntities[resource.parent]) {
+                if(!this.__resourcesTreeEntities[resource.parent]) {
                     buildEntity(resource.parent)
                 }
-                parent = fileSystemEntities[resource.parent];
             }
-            else {
-                parent = this.__resourcesTree;
-            }
+            const parent = resource.parent ? this.__resourcesTreeEntities[resource.parent] : this.__resourcesTree;
             parent.children[resource.name] = resource;
-            fileSystemEntities[resourceId] = resource;
+            this.__resourcesTreeEntities[resourceId] = resource;
         }
 
         for(let key in resources){
@@ -142,9 +140,17 @@ class ResourceLoader {
             }
             url = base+resourcePath
         }
-        const resource = { url };
-        this.__resources[resourceId] = resource;
-        this.__applyCallbacks(resource, filename);
+        const parent = this.resolveFilePathToId(parts.join('/'))
+
+        const resource = { name: filename, url, parent };
+        const key = hashStr(filename);
+        this.__resources[key] = resource;
+
+
+        const tmp = {};
+        tmp[key] = resource
+        this.__buildTree(tmp)
+        this.__applyCallbacks(tmp);
     }
 
 
@@ -193,6 +199,10 @@ class ResourceLoader {
 
     
     resourceAvailable(resourceId) {
+        if(resourceId.indexOf('.') > 0) {
+            console.warn("Deprecation warning for resourceAvailable. Value should be a file id, not a path.");
+            return this.resolveFilepath(resourceId) != undefined;
+        }
         return resourceId in this.__resources;
     }
 
@@ -201,12 +211,12 @@ class ResourceLoader {
     }
 
     resolveFilePathToId(filePath) {
-        const file = this.resolveFile(filePath);
+        const file = this.resolveFilepath(filePath);
         if(file)
             return file.id;
     }
 
-    resolveFile(filePath) {
+    resolveFilepath(filePath) {
         if(!this.__resourcesTree)
             throw("Resources dict not provided");
         const parts = filePath.split('/');
@@ -224,8 +234,14 @@ class ResourceLoader {
         return curr;
     }
     
+    resolveFile(filePath) {
+        console.warn("Deprecation warning for resolveFile. Use resolveFilepath.");
+        return this.resolveFilepath(filePath);
+    }
+    
     resolveURL(filePath) {
-        const file = this.resolveFile(filePath)
+        console.warn("Deprecation warning for resolveURL. Use resolveFilepath.");
+        const file = this.resolveFilepath(filePath)
         if(file)
             return file.url;
     }
@@ -248,14 +264,14 @@ class ResourceLoader {
         }
     }
 
-    loadResource(resourcePath, callback, addLoadWork=true) {
+    loadResource(resourceId, callback, addLoadWork=true) {
 
-        const file = this.resolveFile(resourcePath);
+        const file = this.getFile(resourceId);
         if(!file){
-            throw("Invalid resource Path:'"+ resourcePath + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+            throw("Invalid resource Id:'"+ resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
-        this.loadURL(resourcePath, file.url, callback, addLoadWork)
+        this.loadURL(file.name, file.url, callback, addLoadWork)
     }
 
     loadURL(name, url, callback, addLoadWork=true) {

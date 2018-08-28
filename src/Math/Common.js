@@ -36,7 +36,7 @@ let hashStr = function(str) {
     return Math.abs(hash);
 };
 
-String.prototype.hash = ()=>{
+String.prototype.hash = function(){
     return hashStr(this);
 }
 

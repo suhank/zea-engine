@@ -37,7 +37,7 @@ class GLBillboardsPass extends GLPass {
         super.init(gl, collector, passIndex);
 
         this.__billboards = [];
-        this.__closestBillboard = 0.0;
+        this.__threshold = 0.0;
         this.__updateRequested = false;
 
         this.__collector.renderTreeUpdated.connect(()=> this.__updateBillboards());
@@ -296,10 +296,17 @@ class GLBillboardsPass extends GLPass {
         let cameraPos = renderstate.cameraMatrix.translation;
         let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
         // Avoid sorting if the camera did not move more than 3 meters.
-        if (dist > this.__closestBillboard) {
+        if (dist > this.__threshold) {
             this.sort(cameraPos);
             this.__prevSortCameraPos = cameraPos.clone();
-            this.__closestBillboard = this.__billboards[0].dist;
+            if(this.__billboards.length == 1)
+                this.__threshold = 9999;
+            else {
+                const v0 = this.__billboards[this.__indexArray[0]].billboard.getGlobalXfo().tr;
+                const v1 = this.__billboards[this.__indexArray[0]].billboard.getGlobalXfo().tr;
+                this.__threshold = v0.distanceTo(v1)
+            }
+
         }
 
         this.__glshader.bind(renderstate);

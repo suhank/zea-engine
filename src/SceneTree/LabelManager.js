@@ -58,11 +58,11 @@ class LabelManager {
         this.__foundLabelLibraries = [];
         this.__loadedLabelLibraries = [];
 
-        resourceLoader.registerResourceCallback('.labels', (filename, file) => {
-            this.__foundLabelLibraries.push(filename);
+        resourceLoader.registerResourceCallback('.labels', (file) => {
+            this.__foundLabelLibraries.push(file);
             loadTextfile(file.url,
                 (text) => {
-                    const stem = filename.split('.')[0]; // trim off the extension
+                    const stem = file.name.split('.')[0]; // trim off the extension
                     this.__labelLibraries[stem] = JSON.parse(text);
                     this.labelLibraryLoaded.emit(stem)
                 }
@@ -73,11 +73,11 @@ class LabelManager {
         // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
         // and here:
         // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
-        resourceLoader.registerResourceCallback('.xlsx', (filename, file) => {
-            this.__foundLabelLibraries.push(filename);
+        resourceLoader.registerResourceCallback('.xlsx', (file) => {
+            this.__foundLabelLibraries.push(file);
             loadBinfile(file.url,
                 (data) => {
-                    const stem = filename.split('.')[0]; // trim off the extension
+                    const stem = file.name.split('.')[0]; // trim off the extension
 
                     var unit8array = new Uint8Array(data);
                     var workbook = XLSX.read(unit8array, {

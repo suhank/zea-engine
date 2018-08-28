@@ -169,10 +169,33 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     return resources;
 }
 
+let resolveFilePath = (filePath, resources) => {
+    const parts = filePath.split('/');
+    const filename = parts.pop();
 
-let addResourceURL = (resourcePath, url, resources)=>{
+    // if(parts[0] == '.')
+    //     parts.shift();
 
-    const parts = resourcePath.split('/');
+    // for(let part of parts){
+    //     Object.values(resources).find((resource)=>{
+    //         return resource.name == part
+    //     })
+    //     if(part in curr)
+    //         curr = curr[part];
+    //     else{
+    //         let dir = {};
+    //         curr[part] = dir;
+    //         curr = dir;
+    //     }
+    // }
+    return Object.values(resources).find((resource)=>{
+        return resource.name == filename
+    })
+}
+
+let addResourceURL = (filePath, url, resources)=>{
+
+    const parts = filePath.split('/');
     const filename = parts.pop();
     if(!url) {
 
@@ -191,7 +214,7 @@ let addResourceURL = (resourcePath, url, resources)=>{
             baseparts.pop();
             base = baseparts.join('/') + '/';
         }
-        url = base+resourcePath
+        url = base+filePath
     }
     let curr = resources;
     for(let part of parts){

@@ -42,6 +42,7 @@ class EnvMap extends BaseImage {
         this.__ambientLightFactor = 0.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
+        this.type = 'FLOAT';
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
