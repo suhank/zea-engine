@@ -1,16 +1,13 @@
 import {
     Signal
-} from '../Utilities';
-import {
-    MaterialLibrary
-} from './MaterialLibrary.js';
+} from '../../Utilities';
 import {
     resourceLoader
-} from './ResourceLoader.js';
+} from '../ResourceLoader.js';
 import {
     loadTextfile,
     loadBinfile
-} from './Utils.js';
+} from '../Utils.js';
 
 var getFirstBrowserLanguage = function() {
     var nav = window.navigator,

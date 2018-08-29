@@ -108,9 +108,8 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             base = baseparts.join('/') + '/';
             parts.shift();
         }
-        const id = guid();
         const filename = parts.pop();
-        const resource = { id, name: filename, url: (url ? url : base+item) }
+        const resource = { name: filename, url: (url ? url : base+item) }
 
         let curr = resources;
         for(let i=0; i<parts.length; i++){
@@ -118,7 +117,6 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
             if(!resources[nameToId[part]]) {
                 const folderId = guid();
                 resources[folderId] = { 
-                    id: folderId,
                     name: part,
                     type: 'folder'
                 }
@@ -131,6 +129,7 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
         if(parts.length > 0)
             resource.parent = nameToId[parts[parts.length-1]]
 
+        const id = guid();
         resources[id] = resource;
     }
 

@@ -1,30 +1,30 @@
 import {
     Vec4,
     Color
-} from '../Math';
+} from '../../Math';
 import {
     Async,
     Signal
-} from '../Utilities';
+} from '../../Utilities';
 import {
     loadBinfile
-} from './Utils.js';
+} from '../Utils.js';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     BaseImage
-} from './BaseImage.js';
+} from '../BaseImage.js';
 
 import {
     GIF
-} from '../external/gifuct-js.js';
+} from '../../external/gifuct-js.js';
 import {
     resourceLoader
-} from './ResourceLoader.js';
+} from '../ResourceLoader.js';
 import {
     SystemDesc
-} from '../BrowserDetection.js';
+} from '../../BrowserDetection.js';
 
 import {
     Parameter,
@@ -33,7 +33,7 @@ import {
     Vec4Parameter,
     FilePathParameter,
     ParameterSet
-} from './Parameters';
+} from '../Parameters';
 
 const imageDataLibrary = {
 

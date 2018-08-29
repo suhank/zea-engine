@@ -1,10 +1,10 @@
 import {
     Color,
-} from '../Math';
+} from '../../Math';
 import {
     Signal,
     Async
-} from '../Utilities';
+} from '../../Utilities';
 import {
     Parameter,
     BooleanParameter,
@@ -13,10 +13,10 @@ import {
     Vec3Parameter,
     ColorParameter,
     StringParameter
-} from './Parameters';
+} from '../Parameters';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     DataImage
 } from './DataImage.js';

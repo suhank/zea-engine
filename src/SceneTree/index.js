@@ -15,6 +15,7 @@ export * from './Parameters';
 export * from './Parameters/MaterialParameter.js';
 export * from './Parameters/GeometryParameter.js';
 export * from './Geometry';
+export * from './Images';
 
 export * from './TreeItem.js';
 export * from './AudioItem.js';
@@ -29,19 +30,9 @@ export * from './Group.js';
 export * from './GeomLibrary.js';
 export * from './Material.js';
 export * from './BaseImage.js';
-export * from './DataImage.js';
-export * from './FileImage.js';
-export * from './EnvMap.js';
-export * from './Lightmap.js';
-export * from './LabelManager.js';
-export * from './Label.js';
-export * from './WebcamImage2D.js';
-export * from './HDRImageMixer.js';
 
 export * from './MaterialLibrary.js';
 export * from './MaterialLibraryManager.js';
-
-export * from './ProceduralSky.js';
 
 export * from './Scene.js';
 

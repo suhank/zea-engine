@@ -2,13 +2,13 @@
 import {
     Async,
     Signal
-} from '../Utilities';
+} from '../../Utilities';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     BaseImage
-} from './BaseImage.js';
+} from '../BaseImage.js';
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 

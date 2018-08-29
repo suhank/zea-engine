@@ -1,19 +1,19 @@
 import {
     Color
-} from '../Math';
+} from '../../Math';
 import {
     Signal,
     decodeText
-} from '../Utilities';
+} from '../../Utilities';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     BaseImage
-} from './BaseImage.js';
+} from '../BaseImage.js';
 import {
     resourceLoader
-} from './ResourceLoader.js';
+} from '../ResourceLoader.js';
 
 import {
     Parameter,
@@ -21,7 +21,7 @@ import {
     Vec4Parameter,
     FilePathParameter,
     ParameterSet
-} from './Parameters';
+} from '../Parameters';
 
 
 class EnvMap extends BaseImage {

@@ -1,16 +1,16 @@
 
 import {
     Signal
-} from '../Utilities';
+} from '../../Utilities';
 import {
     RefCounted
-} from './RefCounted.js';
+} from '../RefCounted.js';
+import {
+    ResourceLoader
+} from '../ResourceLoader.js';
 import {
     FileImage
 } from './FileImage.js';
-import {
-    ResourceLoader
-} from './ResourceLoader.js';
 
 
 class Lightmap extends RefCounted {

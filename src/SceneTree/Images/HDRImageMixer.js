@@ -1,16 +1,16 @@
 import {
     SystemDesc
-} from '../BrowserDetection.js';
+} from '../../BrowserDetection.js';
 import {
     Async,
     Signal
-} from '../Utilities';
+} from '../../Utilities';
+import {
+    BaseImage
+} from '../BaseImage.js';
 import {
     FileImage
 } from './FileImage.js';
-import {
-    BaseImage
-} from './BaseImage.js';
 
 class HDRImageMixer extends BaseImage {
     constructor(name, stream = true) {
