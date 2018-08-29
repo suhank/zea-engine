@@ -8,21 +8,16 @@ import {
 } from '../ResourceLoader.js';
 
 class FilePathParameter extends Parameter {
-    constructor(name) {
+    constructor(name, exts) {
         super(name, '', 'FilePath');
 
-        this.__file;
-        this.valueChanged.connect(()=>{
-            // Note: the file path is selected by using the file browser
-            // For now it can return an aboslute path(within the project)
-            // and we convert to relative when we save.
-            const resourceId = this.getValue();
-            if (!resourceLoader.resourceAvailable(resourceId)) {
-                console.warn("Resource unavailable:" + resourceId);
-                return;
-            }
-            this.__file = resourceLoader.getFile(resourceId);
-        });
+        if(exts)
+            this.setSupporteExts(exts);
+    }
+    
+    setSupportedExts(exts){
+        // Note: supported Extensions should be in the format   
+        this.__reextensions = new RegExp('\\.('+exts+')$', "i");
     }
 
     getFilepath() {
@@ -116,13 +111,30 @@ class FilePathParameter extends Parameter {
             console.warn("Deprecation warning for setValue. setValue should now only take a file id, not a path.");
             return this.setFilepath(value, mode)
         }
-
         // Note: equality tests only work on simple types.
         // Important here because file changes cause reloads..
         if(value == this.__value) {
             return;
         }
+
+        // Note: the file path is selected by using the file browser
+        // For now it can return an aboslute path(within the project)
+        // and we convert to relative when we save.
+        const resourceId = value;
+        if (!resourceLoader.resourceAvailable(resourceId)) {
+            console.warn("Resource unavailable:" + resourceId);
+            return;
+        }
+
+        const file = resourceLoader.getFile(resourceId);
+        if(this.__reextensions && !this.__reextensions.test(file.name)) {
+            console.warn("Unsupported file type:" + file.name);
+            return false;
+        }
+
         this.__value = value;
+        this.__file = file;
+
         if(mode == ValueSetMode.USER_SETVALUE)
             this.__flags |= ParamFlags.USER_EDITED;
         this.valueChanged.emit(mode);

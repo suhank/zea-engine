@@ -27,7 +27,6 @@ import {
 } from '../../BrowserDetection.js';
 
 import {
-    Parameter,
     BooleanParameter,
     NumberParameter,
     Vec4Parameter,
@@ -598,6 +597,13 @@ class FileImage extends BaseImage {
             this.getParameter('FilePath').setFilepath(filePath);
 
         }
+    }
+
+    //////////////////////////////////////////
+    // Static Methods
+
+    static __imageDataLibrary() {
+        return imageDataLibrary
     }
 };
 
