@@ -25,14 +25,7 @@ import {
 
 
 class EnvMap extends BaseImage {
-    constructor(name, resourcePath='', params = {}) {
-        if(resourcePath.constructor == Object){
-            params = resourcePath;
-        }
-        if(resourceLoader.resourceAvailable(name)) {
-            resourcePath = name;
-            name = undefined;
-        }
+    constructor(name, params = {}) {
         super(name, params);
         
         this.__loaded = false;
@@ -42,7 +35,7 @@ class EnvMap extends BaseImage {
         this.__stream = 'stream' in params ? params['stream'] : false;
         this.type = 'FLOAT';
 
-        const fileParam = this.addParameter(new FilePathParameter('FilePath'));
+        const fileParam = this.addParameter(new FilePathParameter('FilePath', 'vlh|vlenv'));
         fileParam.valueChanged.connect(()=>{
             this.loaded.untoggle();
 
@@ -59,12 +52,10 @@ class EnvMap extends BaseImage {
                 }
             }
 
-            const filePath = fileParam.getValue()
-            const url = fileParam.getURL();
-            this.__loadURL(url, filePath);
+            const fileId = fileParam.getValue()
+            const file = fileParam.getFile();
+            this.__loadVLENV(fileId, file);
         });
-        if (resourcePath && resourcePath != '')
-            fileParam.setValue(resourcePath);
     }
 
     getDOMElement(){
@@ -75,27 +66,21 @@ class EnvMap extends BaseImage {
         return this.getParameter('FilePath').getValue();
     }
 
-    __loadURL(url, path) {
-        const ext = this.getParameter('FilePath').getExt();
-        if (ext == '.vlenv') {
-            this.__loadVLENV(url, path);
-        } else{
-            throw(" EnvMaps can only load .vlenv files.")
-        }
-    }
 
-    __loadVLENV(url, resourcePath) {
+    __loadVLENV(fileId, file) {
         this.type = 'FLOAT';
 
-        resourceLoader.loadResource(resourcePath, (entries) => {
+        resourceLoader.loadResource(fileId, (entries) => {
             const ldr = entries.ldr;
             const cdm = entries.cdm;
             const samples = entries.samples;
 
-            if(window.TextDecoder)
-                this.__sampleSets = JSON.parse((new TextDecoder("utf-8")).decode(samples));
-            else
-                this.__sampleSets = JSON.parse(decodeText(samples));
+            if(samples) {
+                if(window.TextDecoder)
+                    this.__sampleSets = JSON.parse((new TextDecoder("utf-8")).decode(samples));
+                else
+                    this.__sampleSets = JSON.parse(decodeText(samples));
+            }
                 
             
             /////////////////////////////////
@@ -140,11 +125,11 @@ class EnvMap extends BaseImage {
         return params;
     }
 
-    setExposure(exposure) {
+    setHDRExposure(exposure) {
         this.__exposure = exposure;
     }
 
-    getExposure() {
+    getHDRExposure() {
         return this.__exposure;
     }
 

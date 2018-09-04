@@ -172,7 +172,7 @@ class Scene {
                 const lightmapPath = asset.getLightmapPath(this.__envMap.getName(), this.__lightmapLOD);
                 console.log("lightmapPath:" + lightmapPath)
                 const lightmapName = asset.getName();
-                if (!this.getLightMap(lightmapName) && resourceLoader.resourceAvailable(lightmapPath)) {
+                if (!this.getLightMap(lightmapName) && resourceLoader.resolveFilepath(lightmapPath)) {
                     const lightmap = new Lightmap(lightmapPath, asset.getLightmapSize());
                     this.setLightMap(lightmapName, lightmap);
                 }

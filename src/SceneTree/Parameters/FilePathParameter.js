@@ -12,11 +12,11 @@ class FilePathParameter extends Parameter {
         super(name, '', 'FilePath');
 
         if(exts)
-            this.setSupporteExts(exts);
+            this.setSupportedExts(exts);
     }
     
     setSupportedExts(exts){
-        // Note: supported Extensions should be in the format   
+        // Note: supported Extensions should be in the format ext1|exts2|ext3
         this.__reextensions = new RegExp('\\.('+exts+')$', "i");
     }
 
@@ -63,7 +63,7 @@ class FilePathParameter extends Parameter {
     getFileFolder() {
         if(this.__file) {
             if(this.__file.parent)
-                return resourceLoader.resolveFile(this.__file.parent);
+                return resourceLoader.getFile(this.__file.parent);
             return resourceLoader.getRootFolder();
         }
     }

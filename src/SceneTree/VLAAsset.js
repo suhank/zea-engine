@@ -80,7 +80,7 @@ class VLAAsset extends AssetItem {
 
     getLightmapPath(lightmapName, lightmapLOD) {
         const stem = this.__datafileParam.getStem();
-        const lightmapPath = this.__datafileParam.getFileFolder() + stem + "_" + lightmapName + "_Lightmap" + lightmapLOD + ".vlh";
+        const lightmapPath = this.__datafileParam.getFileFolderPath() + stem + "_" + lightmapName + "_Lightmap" + lightmapLOD + ".vlh";
                 
         return lightmapPath;
     }
