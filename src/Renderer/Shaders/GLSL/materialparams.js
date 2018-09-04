@@ -11,7 +11,7 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, bool texConnected, vec2 texCo
         return toLinear(texture2D(tex, texCoord));
     }
     else
-        return value;
+        return toLinear(value);
 }
 
 float luminanceFromRGB(vec3 rgb) {

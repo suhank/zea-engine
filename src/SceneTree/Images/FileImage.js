@@ -312,12 +312,6 @@ class FileImage extends BaseImage {
         let hdrtint = new Color(1, 1, 1, 1);
         // let stream = 'stream' in params ? params['stream'] : false;
 
-        this.setHDRExposure = (value) => {
-            hdrexposure = value;
-        }
-        this.getHDRExposure = () => {
-            return hdrexposure;
-        }
         this.setHDRTint = (value) => {
             hdrtint = value;
         }
