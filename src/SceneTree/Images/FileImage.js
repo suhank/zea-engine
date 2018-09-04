@@ -34,9 +34,9 @@ import {
     ParameterSet
 } from '../Parameters';
 
-const imageDataLibrary = {
+const imageDataLibrary = {};
 
-};
+const imageLoaders = {};
 
 const supportWebp = navigator.userAgent.indexOf("Chrome") !== -1; // || navigator.userAgent.indexOf("Samsung");
 
@@ -604,6 +604,22 @@ class FileImage extends BaseImage {
 
     static __imageDataLibrary() {
         return imageDataLibrary
+    }
+
+    static registerLoader(exts, loaderClass) {
+        imageLoaders[exts] = loaderClass;
+    }
+
+    static constructLoader(file, loaderName) {
+        for(let exts of imageLoaders) {
+            if((new RegExp('\\.('+exts+')$', "i")).test(file.name)){
+                const loader = new imageLoaders[exts](loaderName);
+                if(loader) {
+                    loader.getParameter('FilePath').setValue(file.id);
+                    return loader;
+                }
+            }
+        }
     }
 };
 

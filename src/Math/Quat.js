@@ -70,10 +70,10 @@ class Quat extends AttrValue {
 
     // Setter from scalar components
     set(x, y, z, w) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.w = w;
+        this.__data[0] = x;
+        this.__data[1] = y;
+        this.__data[2] = z;
+        this.__data[3] = w;
     }
 
     setDataArray(float32Array) {
@@ -82,10 +82,10 @@ class Quat extends AttrValue {
 
     // Setter from scalar components
     setFromOther(other) {
-        this.x = other.x;
-        this.y = other.y;
-        this.z = other.z;
-        this.w = other.w;
+        this.__data[0] = other.x;
+        this.__data[1] = other.y;
+        this.__data[2] = other.z;
+        this.__data[3] = other.w;
     }
 
     /// Set this quat from a euler rotation
@@ -134,10 +134,9 @@ class Quat extends AttrValue {
             cs = ci * sk,
             sc = si * ck,
             ss = si * sk;
-        let ai, aj, ak;
-        ai = cj * sc - sj * cs;
-        aj = cj * ss + sj * cc;
-        ak = cj * cs - sj * sc;
+        const ai = cj * sc - sj * cs, 
+            aj = cj * ss + sj * cc, 
+            ak = cj * cs - sj * sc;
 
         this.w = cj * cc + sj * ss;
 
