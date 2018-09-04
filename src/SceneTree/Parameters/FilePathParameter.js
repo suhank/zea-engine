@@ -80,7 +80,8 @@ class FilePathParameter extends Parameter {
     }
 
     getFileDesc() {
-        console.warn("Deprecated method: 'getFileDesc'. Please use 'getFile'")
+        // Can we settle on a convention?
+        // console.warn("Deprecated method: 'getFileDesc'. Please use 'getFile'")
         return this.__file;
     }
 

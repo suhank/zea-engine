@@ -213,7 +213,7 @@ class FileImage extends BaseImage {
 
     __removeVideoParams() {
         if (this.getParameterIndex('spatializeAudio')) {
-            this.removeParameter(this.getParameterIndex('loop'));
+            this.removeParameter(this.getParameterIndex('Loop'));
             this.removeParameter(this.getParameterIndex('spatializeAudio'));
             this.removeParameter(this.getParameterIndex('Gain'));
             this.removeParameter(this.getParameterIndex('refDistance'));
@@ -230,8 +230,8 @@ class FileImage extends BaseImage {
         this.type = 'UNSIGNED_BYTE';
         resourceLoader.addWork(fileDesc.id, 1);
 
-        const muteParam = this.addParameter(new BooleanParameter('mute', false));
-        const loopParam = this.addParameter(new BooleanParameter('loop', true));
+        const muteParam = this.addParameter(new BooleanParameter('Mute', false));
+        const loopParam = this.addParameter(new BooleanParameter('Loop', true));
         const GainParam = this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
         const spatializeAudioParam = this.addParameter(new BooleanParameter('SpatializeAudio', true));
         const refDistanceParam = this.addParameter(new NumberParameter('refDistance', 2));

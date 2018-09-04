@@ -34,8 +34,8 @@ class LDRVideo extends FileImage {
         this.format = 'RGB';
         this.type = 'UNSIGNED_BYTE';
 
-        this.addParameter(new BooleanParameter('mute', false));
-        this.addParameter(new BooleanParameter('loop', true));
+        this.addParameter(new BooleanParameter('Mute', false));
+        this.addParameter(new BooleanParameter('Loop', true));
         this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
         this.addParameter(new BooleanParameter('SpatializeAudio', true));
         this.addParameter(new NumberParameter('refDistance', 2));
@@ -65,13 +65,13 @@ class LDRVideo extends FileImage {
         videoElem.addEventListener('loadedmetadata', () => {
             // videoElem.play();
 
-            const muteParam = this.getParameter('mute');
+            const muteParam = this.getParameter('Mute');
             videoElem.muted = muteParam.getValue();
             muteParam.valueChanged.connect(() => {
                 videoElem.muted = muteParam.getValue();
             });
 
-            const loopParam = this.getParameter('loop');
+            const loopParam = this.getParameter('Loop');
             videoElem.loop = loopParam.getValue();
             loopParam.valueChanged.connect(() => {
                 videoElem.loop = loopParam.getValue();
