@@ -12,7 +12,7 @@ import {
 } from './Material.js';
 import {
     FileImage
-} from './FileImage.js';
+} from './Images';
 
 
 class MaterialLibrary {

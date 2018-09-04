@@ -26,12 +26,10 @@ import {
     resourceLoader
 } from './ResourceLoader.js';
 import {
+    EnvMap,
     Lightmap,
     LightmapMixer
-} from './Lightmap.js';
-import {
-    EnvMap
-} from './EnvMap.js';
+} from './Images';
 
 
 class Scene {

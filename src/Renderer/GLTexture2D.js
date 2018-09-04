@@ -242,7 +242,9 @@ class GLTexture2D extends RefCounted {
         this.__wrap = gl[wrap];
         this.__flipY = ('flipY' in params) ? params.flipY : false;
         this.__mipMapped = ('mipMapped' in params) ? params.mipMapped : false;
-        this.flags = ('flags' in params) ? params.flags : 0;
+        this.invert = ('invert' in params) ? params.invert : false;
+        this.alphaFromLuminance = ('alphaFromLuminance' in params) ? params.alphaFromLuminance : false;
+
 
 
         this.__gltex = gl.createTexture();

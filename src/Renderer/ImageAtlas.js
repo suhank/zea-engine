@@ -63,7 +63,8 @@ precision highp float;
 
 uniform sampler2D srctexture;
 uniform vec2 srctextureDim;
-uniform int flags;
+uniform bool alphaFromLuminance;
+uniform bool invert;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
@@ -109,14 +110,14 @@ void main(void) {
     // TODO: check why we pre-multiply alphas here.
     // fragColor = vec4(texel.rgb/texel.a, texel.a);
 
-    if(flags >= 2) {
+    if(alphaFromLuminance) {
         fragColor = vec4(texel.rgb, luminanceFromRGB(texel.rgb));
     }
     else {
         fragColor = texel;
     }
     
-    if(flags >= 4) {
+    if(invert) {
         fragColor = vec4(1.0) - fragColor;
     }
 
@@ -131,7 +132,6 @@ void main(void) {
 
 
 import './Shaders/GLSL/ImageAtlas.js';
-
 
 class ImageAtlas extends GLTexture2D {
     constructor(gl, name, format = 'RGBA', type = 'FLOAT', clearColor = [0, 0, 0, 0]) {
@@ -301,7 +301,8 @@ class ImageAtlas extends GLTexture2D {
             gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray());
             gl.uniform2fv(unifs.size.location, layoutItem.size.multiply(scl).asArray());
             gl.uniform2f(unifs.srctextureDim.location, image.width, image.height);
-            gl.uniform1i(unifs.flags.location, image.flags);
+            gl.uniform1i(unifs.alphaFromLuminance.location, image.alphaFromLuminance);
+            gl.uniform1i(unifs.invert.location, image.invert);
             gl.drawQuad();
         }
 

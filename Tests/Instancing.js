@@ -44,7 +44,7 @@ testingHarness.registerTest('Instancing', (domElement, resources)=> {
 
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     // renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
     renderer.frameAll();

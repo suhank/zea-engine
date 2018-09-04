@@ -1,9 +1,9 @@
 import {
 	Signal
-} from '../Utilities';
+} from '../../Utilities';
 import {
 	RefCounted
-} from './RefCounted.js';
+} from '../RefCounted.js';
 
 class ProceduralSky extends RefCounted {
 	constructor(params = {}) {

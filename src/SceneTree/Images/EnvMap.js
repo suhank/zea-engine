@@ -1,19 +1,19 @@
 import {
     Color
-} from '../Math';
+} from '../../Math';
 import {
     Signal,
     decodeText
-} from '../Utilities';
+} from '../../Utilities';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     BaseImage
-} from './BaseImage.js';
+} from '../BaseImage.js';
 import {
     resourceLoader
-} from './ResourceLoader.js';
+} from '../ResourceLoader.js';
 
 import {
     Parameter,
@@ -21,7 +21,7 @@ import {
     Vec4Parameter,
     FilePathParameter,
     ParameterSet
-} from './Parameters';
+} from '../Parameters';
 
 
 class EnvMap extends BaseImage {
@@ -40,6 +40,7 @@ class EnvMap extends BaseImage {
         this.__ambientLightFactor = 0.0;
         this.__hdrtint = new Color(1, 1, 1, 1);
         this.__stream = 'stream' in params ? params['stream'] : false;
+        this.type = 'FLOAT';
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{

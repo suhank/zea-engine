@@ -5,7 +5,7 @@ testingHarness.registerTest('ExplodedParts_Cascade', (domElement, resources)=> {
 
     const middleSphere = new Visualive.Sphere(2.5);
     const middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
-    middleSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 0.0, 1.0));
+    middleSphereMaterial.getParameter('BaseColor').setValue(new Visualive.Color(0.0, 0.0, 1.0));
     {
         const middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, 3.5);
@@ -29,13 +29,13 @@ testingHarness.registerTest('ExplodedParts_Cascade', (domElement, resources)=> {
 
     const littleSphere = new Visualive.Sphere(2.0);
     const littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
-    littleSphereMaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.0, 0.0));
+    littleSphereMaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.0, 0.0));
     const littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
     asset.addChild(littleSphereItem, false);
 
     const bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
     const boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
-    boltmaterial.addParameter('BaseColor', new Visualive.Color(1.0, 0.5, 0.0));
+    boltmaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.5, 0.0));
 
     let index = 1;
     const addBolt = (pos)=> {
@@ -72,7 +72,7 @@ testingHarness.registerTest('ExplodedParts_Cascade', (domElement, resources)=> {
     {
 
         const objAsset = new Visualive.AssetItem('PartA');
-        objAsset.getParameter('DataFilePath').setValue("/Assets/ExplodePartA.obj");
+        objAsset.getParameter('DataFilePath').setFilePath("/Assets/ExplodePartA.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -86,7 +86,7 @@ testingHarness.registerTest('ExplodedParts_Cascade', (domElement, resources)=> {
 
     {
         const objAsset = new Visualive.AssetItem('PartB');
-        objAsset.getParameter('DataFilePath').setValue("/Assets/ExplodePartB.obj");
+        objAsset.getParameter('DataFilePath').setFilePath("/Assets/ExplodePartB.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);

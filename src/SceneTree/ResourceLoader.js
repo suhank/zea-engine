@@ -2,6 +2,9 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
+    hashStr
+} from '../Math';
+import {
     Async,
     Signal
 } from '../Utilities';
@@ -58,8 +61,9 @@ class ResourceLoader {
         this.__doneWorkByCategory = {};
         this.__resourceRegisterCallbacks = {};
         this.__callbacks = {};
-        // this.__workCategories = {};
         this.__resources = {};
+        this.__resourcesTreeEntities = { };
+        this.__resourcesTree = { children: {} };
 
         if(asyncLoading){
             this.__workers = [];
@@ -68,44 +72,56 @@ class ResourceLoader {
         }
     }
 
+    getRootFolder(){
+        return this.__resourcesTree;
+    }
+
     registerResourceCallback(filter, fn) {
         this.__resourceRegisterCallbacks[filter] = fn;
     }
 
-
-    __applyCallbacks(rootItem, filename=undefined) {
-        const applyCallbacks = (item, filename)=>{
+    __applyCallbacks(resourcesDict) {
+        const applyCallbacks = (resource)=>{
             for(let filter in this.__resourceRegisterCallbacks){
-                if(filename.includes(filter))
-                    this.__resourceRegisterCallbacks[filter](filename, item)
+                if(resource.name.includes(filter))
+                    this.__resourceRegisterCallbacks[filter](resource);
             }
         }
-        const traverse = (item, filename)=>{
-            if(item.url) {
-                applyCallbacks(item, filename)
+        for(let key in resourcesDict){
+            const resource = resourcesDict[key];
+            if(resource.url)
+                applyCallbacks(resource)
+        }
+    }
+
+    __buildTree(resources){ 
+        const buildEntity = (resourceId)=>{
+            if(this.__resourcesTreeEntities[resourceId])
+                return;
+
+            const resource = Object.assign(resources[resourceId], { id: resourceId });
+            if (resource.type === 'folder' || resource.type === 'dependency') {
+              resource.children = {};
             }
-            else {
-                for(let key in item){
-                    traverse(item[key], key)
+            if(resource.parent) {
+                if(!this.__resourcesTreeEntities[resource.parent]) {
+                    buildEntity(resource.parent)
                 }
             }
+            const parent = resource.parent ? this.__resourcesTreeEntities[resource.parent] : this.__resourcesTree;
+            // console.log((parent.name ? parent.name + '/' : '') + resource.name)
+            parent.children[resource.name] = resource;
+            this.__resourcesTreeEntities[resourceId] = resource;
         }
-        if(filename)
-            applyCallbacks(rootItem, filename)
-        else{
-            for(let key in rootItem){
-                traverse(rootItem[key], key)
-            }
+
+        for(let key in resources){
+            buildEntity(key);
         }
     }
 
     setResources(resources){
-        if(this.__resources){
-            this.__resources = mergeDeep(this.__resources, resources);
-        }
-        else {
-            this.__resources = resources
-        }
+        this.__resources = Object.assign(this.__resources, resources);
+        this.__buildTree(resources);
         this.__applyCallbacks(resources);
     }
 
@@ -132,19 +148,20 @@ class ResourceLoader {
             }
             url = base+resourcePath
         }
-        let curr = this.__resources;
-        for(let part of parts){
-            if(part in curr)
-                curr = curr[part];
-            else{
-                let dir = {};
-                curr[part] = dir;
-                curr = dir;
-            }
-        }
-        curr[filename] = { url };
-        this.__applyCallbacks(curr[filename], filename);
+        const parent = this.resolveFilePathToId(parts.join('/'))
+
+        const resource = { name: filename, url, parent };
+        const key = hashStr(filename);
+        this.__resources[key] = resource;
+
+
+        const tmp = {};
+        tmp[key] = resource
+        this.__buildTree(tmp)
+        this.__applyCallbacks(tmp);
     }
+
+
 
     freeData(buffer){
         // Note: Explicitly transfer data to a web worker and then 
@@ -177,33 +194,62 @@ class ResourceLoader {
             worker.terminate();
         this.__workers = [];
     }
+    
+    getFilepath(resourceId) {
+        let curr = this.__resources[resourceId];
+        const path = [curr.name];
+        while(curr.parent){
+            curr = this.__resources[curr.parent];
+            path.splice(0, 0, curr.name);
+        }
+        return path.join('/');
+    }
 
-    resolveFile(filePath) {
-        if(!this.__resources)
-            throw("Resources dict not provided");
+    
+    resourceAvailable(resourceId) {
+        if(resourceId.indexOf('.') > 0) {
+            console.warn("Deprecation warning for resourceAvailable. Value should be a file id, not a path.");
+            return this.resolveFilepath(resourceId) != undefined;
+        }
+        return resourceId in this.__resources;
+    }
+
+    getFile(resourceId) {
+        return this.__resources[resourceId];
+    }
+
+    resolveFilePathToId(filePath) {
+        const file = this.resolveFilepath(filePath);
+        if(file)
+            return file.id;
+    }
+
+    resolveFilepath(filePath) {
         const parts = filePath.split('/');
         if(parts[0] == '.' || parts[0] == '')
             parts.shift();
-        let curr = this.__resources;
+        let curr = this.__resourcesTree;
         for(let part of parts){
-            if(part in curr)
-                curr = curr[part];
+            if(part in curr.children)
+                curr = curr.children[part];
             else{
-                // console.warn("Unable to resolve URL:" + filePath);
+                console.warn("Unable to resolve key:" + part + " of path:" + filePath);
                 return null;
             }
         }
         return curr;
     }
     
-    resolveURL(filePath) {
-        const file = this.resolveFile(filePath)
-        if(file)
-            return file.url;
+    resolveFile(filePath) {
+        console.warn("Deprecation warning for resolveFile. Use resolveFilepath.");
+        return this.resolveFilepath(filePath);
     }
     
-    resourceAvailable(filePath) {
-        return this.resolveFile(filePath) != null;
+    resolveURL(filePath) {
+        console.warn("Deprecation warning for resolveURL. Use resolveFilepath.");
+        const file = this.resolveFilepath(filePath)
+        if(file)
+            return file.url;
     }
 
     // Add work to the total work pile... We never know how big the pile will get.
@@ -224,14 +270,14 @@ class ResourceLoader {
         }
     }
 
-    loadResource(resourcePath, callback, addLoadWork=true) {
+    loadResource(resourceId, callback, addLoadWork=true) {
 
-        const file = this.resolveFile(resourcePath);
+        const file = this.getFile(resourceId);
         if(!file){
-            throw("Invalid resource Path:'"+ resourcePath + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+            throw("Invalid resource Id:'"+ resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
         }
 
-        this.loadURL(resourcePath, file.url, callback, addLoadWork)
+        this.loadURL(file.id, file.url, callback, addLoadWork)
     }
 
     loadURL(name, url, callback, addLoadWork=true) {

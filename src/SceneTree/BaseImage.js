@@ -10,9 +10,12 @@ import {
 
 import {
     Parameter,
+    BooleanParameter,
     NumberParameter,
     ParameterSet
 } from './Parameters';
+
+
 
 class BaseImage extends BaseItem {
     constructor(name, params = {}) {
@@ -21,15 +24,10 @@ class BaseImage extends BaseItem {
         this.height = 0;
         this.format = 'RGB';
         this.type = 'UNSIGNED_BYTE';
-        this.filter = 'filter' in params ? params['filter'] : "LINEAR";
-        this.wrap = 'wrap' in params ? params['wrap'] : "CLAMP_TO_EDGE";
-        this.flipY = 'flipY' in params ? params['flipY'] : true;
-        this.__mapping = 'mapping' in params ? params['mapping'] : 'uv';
 
-        this.mipMapped = false;
-
-        // Used to create alpha mapped images from black and white.
-        this.flags = 0;
+        this.addParameter(new BooleanParameter('AlphaFromLuminance', false));
+        this.addParameter(new BooleanParameter('Invert', false));
+        this.addParameter(new BooleanParameter('FlipY', false));
 
         this.updated = new Signal();
 
@@ -58,29 +56,15 @@ class BaseImage extends BaseItem {
         return this.__streamAtlas;
     }
 
-    // getStreamAtlasImageDesc() {
-    //     return this.__streamAtlasDesc;
-    // }
-
-    // getStreamAtlasImageIndex() {
-    //     return this.__streamAtlasImageIndex;
-    // }
-
-    // setStreamAtlasImageIndex(index) {
-    //     this.__streamAtlasImageIndex = index;
-    //     this.streamAtlasImageIndexChanged.emit(this.__streamAtlasImageIndex);
-    // }
-
     getParams() {
         return {
             type: this.type,
             format: this.format,
             width: this.width,
             height: this.height,
-            wrap: this.wrap,
-            flipY: this.flipY,
-            mipMapped: this.mipMapped,
-            flags: this.flags
+            flipY: this.getParameter('FlipY').getValue(),
+            invert: this.getParameter('Invert').getValue(),
+            alphaFromLuminance: this.getParameter('AlphaFromLuminance').getValue()
         }
     }
 
