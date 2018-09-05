@@ -26,10 +26,10 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
-        this.__initialXfoParam = this.addParameter(new XfoParameter('InitialXfo'));
-        this.__initialXfoParam.valueChanged.connect(()=>{
-            this.__invInitialXfo = this.__initialXfoParam.getValue().inverse();
-        })
+        // this.__initialXfoParam = this.addParameter(new XfoParameter('InitialXfo'));
+        // this.__initialXfoParam.valueChanged.connect(()=>{
+        //     this.__invInitialXfo = this.__initialXfoParam.getValue().inverse();
+        // })
         this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', ['first', 'average'], 0, 'Number'));
         this.__initialXfoModeParam.valueChanged.connect(()=>{
             this.recalcInitialXfo();
@@ -64,7 +64,7 @@ class Group extends TreeItem {
             }
         });
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            if(this.__items.length > 0) {
+            if(this.__invInitialXfo && this.__items.length > 0) {
                 let delta;
                 const setDirty = (item, initialXfo)=>{
                     const clean = ()=>{
@@ -72,7 +72,6 @@ class Group extends TreeItem {
                             const xfo = this.__globalXfoParam.getValue();
                             // Compute the skinning transform that we can
                             // apply to all the items in the group.
-                            // delta = this.__invInitialXfo.multiply(xfo);
                             delta = xfo.multiply(this.__invInitialXfo);
                         }
                         return delta.multiply(initialXfo);
@@ -151,6 +150,7 @@ class Group extends TreeItem {
     }
 
     recalcInitialXfo() {
+        console.log("recalcInitialXfo")
         if(this.__items.length == 0)
             return;
         const mode = this.__initialXfoModeParam.getValue();
@@ -174,8 +174,8 @@ class Group extends TreeItem {
             throw("Invalid mode.")
         }
 
-        this.__initialXfoParam.setValue(xfo);
         this.__globalXfoParam.setValue(xfo);
+        // this.__initialXfoParam.setValue(xfo);
         this.__invInitialXfo = xfo.inverse();
     }
 
@@ -231,21 +231,13 @@ class Group extends TreeItem {
                 return;
             }
             this.addItem(treeItem);
-
-            // This is code to handle older files where the initial xfo was not explicitly stored. 
-            // can be removed sooon.
-            if(index == 0 && !this.__invInitialXfo) {
-                this.recalcInitialXfo()
-                // const xfo = context.assetItem.getGlobalXfo().inverse().multiply(treeItem.getGlobalXfo());
-                // this.getParameter('LocalXfo').setValue(xfo, ValueSetMode.DATA_LOAD);
-            }
         }
         const treeItems = j.treeItems;
         for(let i=0; i<j.treeItems.length; i++) {
             addItem(i, treeItems[i]);
         }
 
-
+        this.recalcInitialXfo()
     }
 };
 
