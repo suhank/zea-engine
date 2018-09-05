@@ -9,6 +9,7 @@ import {
     NumberParameter,
     ColorParameter,
     Vec3Parameter,
+    ListParameter,
     ImageParameter
 } from './Parameters';
 import {
@@ -34,50 +35,50 @@ class BillboardItem extends TreeItem {
         this.addParameter(new NumberParameter('alpha', 1.0));
         this.addParameter(new ColorParameter('color', new Color(1.0, 1.0, 1.0)));
         this.addParameter(new BooleanParameter('alignedToCamera', false));
-        const lineParam = this.addParameter(new BooleanParameter('line', false));
-        let line;
-        lineParam.valueChanged.connect(()=>{
-
-            if(lineParam.getValue()){
-                const linesMaterial = new Material('LabelLinesMaterial', 'LinesShader');
-                linesMaterial.getParameter('Color').setValue(new Color(0.0, 0.0, 0.0), ValueSetMode.OPERATOR_SETVALUE);
-                linesMaterial.getParameter('Opacity').setValue(1.0, ValueSetMode.OPERATOR_SETVALUE);
-
-                const lineGeom = new Visualive.Lines();
-                lineGeom.setNumVertices(2);
-                lineGeom.setNumSegments(1);
-                lineGeom.setSegment(0, 0, 1);
-
-                line = new GeomItem('line')
-                line.setGeometry(lineGeom, ValueSetMode.OPERATOR_SETVALUE)
-                line.setMaterial(linesMaterial, ValueSetMode.OPERATOR_SETVALUE);
-                updateLinePoints();
-                this.addChild(line, false)
-            }
-            else {
-                if(line) {
-                    this.removeChildByHandle(line);
-                    line = null;
-                }
-            }
-        })
 
         const startParam = this.addParameter(new Vec3Parameter('lineStartOffset'));
-        const endParam = this.addParameter(new Vec3Parameter('lineEnd', new Vec3(0, 0, -1)));
-        const updateLinePoints = ()=>{
-            if(line) {
-                const invGlobalXfo = this.__globalXfoParam.getValue().inverse();
-                const start = startParam.getValue();
-                const end = endParam.getValue();
-                const lineGeom = line.getGeometry();
-                lineGeom.setVertex(0, start);
-                lineGeom.setVertex(1, invGlobalXfo.transformVec3(end));
+        const endParam = this.addParameter(new ListParameter('lineEnd', Vec3));
+        let lines = [];
+        const linesMaterial = new Material('LabelLinesMaterial', 'LinesShader');
+        linesMaterial.getParameter('Color').setValue(new Color(0.0, 0.0, 0.0), ValueSetMode.OPERATOR_SETVALUE);
+        linesMaterial.getParameter('Opacity').setValue(1.0, ValueSetMode.OPERATOR_SETVALUE);
+        endParam.elementAdded.connect((elem, index)=>{
+
+            const lineGeom = new Visualive.Lines();
+            lineGeom.setNumVertices(2);
+            lineGeom.setNumSegments(1);
+            lineGeom.setSegment(0, 0, 1);
+
+            const line = new GeomItem('line'+index);
+            // Note: because the lines are generated geoms. 
+            // we do not want them being persisted in the JSON structure.
+            line.setGeometry(lineGeom, ValueSetMode.OPERATOR_SETVALUE)
+            line.setMaterial(linesMaterial, ValueSetMode.OPERATOR_SETVALUE);
+            this.addChild(line, false)
+            lines[index] = line;
+        });
+        endParam.elementRemoved.connect((elem, index)=>{
+            // this.removeChildByHandle(lines[index]);
+            // lines.splice(9, 1)
+        })
+        const updateLinePoints = (index)=>{
+            const invGlobalXfo = this.__globalXfoParam.getValue().inverse();
+            const start = startParam.getValue();
+            const endPoints = endParam.getValue();
+            const end = endPoints[index]
+            const lineGeom = lines[index].getGeometry();
+            lineGeom.setVertex(0, start);
+            lineGeom.setVertex(1, invGlobalXfo.transformVec3(end));
+        }
+        const updateAllLinePoints = ()=>{
+            for(let i=0; i<lines.length; i++) {
+                updateLinePoints(i)
             }
         }
 
-        startParam.valueChanged.connect(updateLinePoints);
-        endParam.valueChanged.connect(updateLinePoints);
-        this.__globalXfoParam.valueChanged.connect(updateLinePoints);
+        startParam.valueChanged.connect(updateAllLinePoints);
+        endParam.valueChanged.connect(updateAllLinePoints);
+        this.__globalXfoParam.valueChanged.connect(updateAllLinePoints);
     }
 
 
