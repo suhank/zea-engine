@@ -161,7 +161,7 @@ class FilePathParameter extends Parameter {
     fromJSON(j, context) {
         if (j.value) {
             if (j.value.indexOf('.') > 0) {
-                this.setFilepath(value, ValueSetMode.DATA_LOAD)
+                this.setFilepath(j.value, ValueSetMode.DATA_LOAD)
             } else {
                 if (resourceLoader.resourceAvailable(j.value)) {
                     this.setValue(j.value, ValueSetMode.DATA_LOAD);

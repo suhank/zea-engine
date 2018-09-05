@@ -90,7 +90,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
 }
 
 class Label  extends DataImage {
-    constructor(name, library='Default') {
+    constructor(name, library) {
         super(name);
 
         this.__canvasElem = document.createElement('canvas');
@@ -117,7 +117,9 @@ class Label  extends DataImage {
         //     labelManager.setLabelTextToLibrary(library, name, text);
         // }
         // textParam.valueChanged.connect(setLabelText);
-        libraryParam.setValue(library)
+
+        if(library)
+            libraryParam.setValue(library)
 
         this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
         this.addParameter(new StringParameter('textAlign', 'left', 'String'));

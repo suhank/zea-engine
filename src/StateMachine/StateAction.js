@@ -38,9 +38,20 @@ class StateAction extends ParameterOwner {
         childAction.setState(this.__state);
     }
 
+
+    getChild(index) {
+        return this.__childActions[index];
+    }
+
     activate(){
         console.warn("activate must be implmented by each action. this:" + this.constructor.name)
     }
+
+    addChild(childAction) {
+        this.__childActions.push(childAction);
+        childAction.setState(this.__state);
+    }
+
 
     deactivate() {
 

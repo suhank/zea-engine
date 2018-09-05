@@ -54,8 +54,9 @@ class BillboardItem extends TreeItem {
             // we do not want them being persisted in the JSON structure.
             line.setGeometry(lineGeom, ValueSetMode.OPERATOR_SETVALUE)
             line.setMaterial(linesMaterial, ValueSetMode.OPERATOR_SETVALUE);
-            this.addChild(line, false)
             lines[index] = line;
+            updateLinePoints(index)
+            this.addChild(line, false)
         });
         endParam.elementRemoved.connect((elem, index)=>{
             // this.removeChildByHandle(lines[index]);

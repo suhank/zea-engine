@@ -244,7 +244,7 @@ class Parameter extends BaseParameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
-        if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
+        if((this.__value == undefined) || !this.__value.fromJSON)
             this.setValue(j.value, ValueSetMode.DATA_LOAD);
         else {
             this.__value.fromJSON(j.value, context);
