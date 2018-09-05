@@ -73,6 +73,10 @@ class GLBillboardsPass extends GLPass {
     addBillboard(billboard) {
 
         const image = billboard.getParameter('image').getValue();
+        if(!image) {
+            billboard.getParameter('image').valueChanged.connect(()=> addBillboard(billboard) );
+            return;
+        }
         const index = this.__billboards.length;
         this.__billboards.push({
             billboard,
@@ -84,7 +88,7 @@ class GLBillboardsPass extends GLPass {
             this.__updateBillboard(index);
             this.updated.emit();
         });
-        billboard.getParameter('image').getValue().updated.connect(() => {
+        image.updated.connect(() => {
             throw("TODO: update the atlas:" + index);
             // const image = billboard.getParameter('image').getValue();
             // const imageIndex = this.__atlas.addSubImage(image)

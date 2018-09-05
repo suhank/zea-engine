@@ -125,14 +125,6 @@ class EnvMap extends BaseImage {
         return params;
     }
 
-    setHDRExposure(exposure) {
-        this.__exposure = exposure;
-    }
-
-    getHDRExposure() {
-        return this.__exposure;
-    }
-
     setHDRTint(hdrtint) {
         this.__hdrtint = hdrtint;
     }

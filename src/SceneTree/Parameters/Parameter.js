@@ -247,7 +247,6 @@ class Parameter extends BaseParameter {
         if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
             this.setValue(j.value, ValueSetMode.DATA_LOAD);
         else {
-            // const value = sgFactory.constructClass();
             this.__value.fromJSON(j.value, context);
             this.valueChanged.emit(ValueSetMode.DATA_LOAD);
         }

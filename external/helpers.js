@@ -78,91 +78,110 @@ function saveAs(data, filename, type) {
     }
 }
 
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return s4();// + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+
+const nameToId = {}
+
+const addResourceURL = (resources, path, url)=>{
+    const parts = path.split('/');
+    if(!url) {
+
+        let rootURL = window.location.href.split('#')[0];
+        rootURL = rootURL.split('?')[0];
+        if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
+            rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
+        }
+        const base = rootURL;
+        if(parts[0] == '.')
+            parts.shift();
+        else if(parts[0] == '..'){
+            item = item.substring(3);
+            const baseparts = base.split('/');
+            baseparts.pop();
+            baseparts.pop();
+            base = baseparts.join('/') + '/';
+        }
+        url = base+path
+    }
+    const filename = parts.pop();
+
+    let parentId
+    for(let i=0; i<parts.length; i++){
+        const part = parts[i];
+        if(!resources[nameToId[part]]) {
+            const folderId = Visualive.hashStr(part);
+            const folder =  { 
+                name: part,
+                type: 'folder'
+            }
+            resources[folderId] = folder;
+            nameToId[part] = folderId;
+            if(parentId) {
+                resources[folderId].parent = parentId
+            }
+            parentId = folderId;
+        }
+        else {
+            parentId = nameToId[part];
+        }
+    }
+
+
+    const resource = { name: filename, url: (url ? url : base+path) }
+    if(parentId)
+        resource.parent = parentId
+
+    const fileId = Visualive.hashStr(filename);
+    resources[fileId] = resource;
+}
+
 let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
     let rootURL = window.location.href.split('#')[0];
     rootURL = rootURL.split('?')[0];
     if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
     }
-    function guid() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-      }
-      return s4();// + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-    }
 
-    const nameToId = {}
 
-    const generateResource = (item, url)=>{
-        const parts = item.split('/');
-        let base = rootURL;
-        if(parts[0] == '.')
-            parts.shift();
-        if(parts[0] == '..'){
-            item = item.substring(3);
-            const baseparts = base.split('/');
-            baseparts.pop();
-            baseparts.pop();
-            base = baseparts.join('/') + '/';
-            parts.shift();
-        }
-        const filename = parts.pop();
-        const resource = { name: filename, url: (url ? url : base+item) }
-
-        let curr = resources;
-        for(let i=0; i<parts.length; i++){
-            const part = parts[i];
-            if(!resources[nameToId[part]]) {
-                const folderId = guid();
-                resources[folderId] = { 
-                    name: part,
-                    type: 'folder'
-                }
-                nameToId[part] = folderId;
-            }
-            if(i > 0) {
-                resources[nameToId[part]].parent = nameToId[parts[i-1]]
-            }
-        }
-        if(parts.length > 0)
-            resource.parent = nameToId[parts[parts.length-1]]
-
-        const id = guid();
-        resources[id] = resource;
-    }
 
     let resources = {};
-    generateResource('VisualiveEngine/Vive.vla', 'http://localhost:3150/VisualiveEngineClient/Resources/Vive.vla')
-    generateResource('VisualiveEngine/Dome.vla', 'http://localhost:3150/VisualiveEngineClient/Resources/Dome.vla')
-    generateResource('VisualiveEngine/LogoSmall.png', 'http://localhost:3150/VisualiveEngineClient/Resources/LogoSmall.png')
-    generateResource('VisualiveEngine/FlakesNormalMap.png', 'http://localhost:3150/VisualiveEngineClient/Resources/FlakesNormalMap.png')
+    addResourceURL(resources, 'VisualiveEngine/Vive.vla', 'http://localhost:3150/VisualiveEngineClient/Resources/Vive.vla')
+    addResourceURL(resources, 'VisualiveEngine/Dome.vla', 'http://localhost:3150/VisualiveEngineClient/Resources/Dome.vla')
+    addResourceURL(resources, 'VisualiveEngine/LogoSmall.png', 'http://localhost:3150/VisualiveEngineClient/Resources/LogoSmall.png')
+    addResourceURL(resources, 'VisualiveEngine/FlakesNormalMap.png', 'http://localhost:3150/VisualiveEngineClient/Resources/FlakesNormalMap.png')
     
 
     for(let item of list){
-        generateResource(item);
+        addResourceURL(resources, item);
     }
     for(let assetDesc of assetDescs){
-        generateResource(assetDesc[0] + ".vla");
+        addResourceURL(resources, assetDesc[0] + ".vla");
         for(let i=0; i<assetDesc[1]; i++)
-            generateResource(assetDesc[0] + i + ".vlageoms");
+            addResourceURL(resources, assetDesc[0] + i + ".vlageoms", );
         if(assetDesc.length == 3) {
             for(let i=0; i<3; i++){
                 // PAth for the env and the lightmaps for the env
-                generateResource(assetDesc[2] + i + ".vlh");
+                addResourceURL(resources, assetDesc[2] + i + ".vlh");
                 let envMapName = assetDesc[2].split('/');
                 if(envMapName.length > 1)
                     envMapName.shift();
                 envMapName = envMapName[0];
-                generateResource(assetDesc[0] + "_" + envMapName + "_Lightmap" + i + ".vlh");
+                addResourceURL(resources, assetDesc[0] + "_" + envMapName + "_Lightmap" + i + ".vlh");
             }
         }
     }
     for(let imageDesc of imageDescs){
         for(let i=0; i<3; i++){
             let suffixSt = imageDesc.lastIndexOf('.')
-            generateResource(imageDesc.substring(0, suffixSt) + i + imageDesc.substring(suffixSt));
+            addResourceURL(resources, imageDesc.substring(0, suffixSt) + i + imageDesc.substring(suffixSt));
         }
     }
     return resources;
@@ -190,42 +209,6 @@ let resolveFilePath = (filePath, resources) => {
     return Object.values(resources).find((resource)=>{
         return resource.name == filename
     })
-}
-
-let addResourceURL = (filePath, url, resources)=>{
-
-    const parts = filePath.split('/');
-    const filename = parts.pop();
-    if(!url) {
-
-        let rootURL = window.location.href.split('#')[0];
-        rootURL = rootURL.split('?')[0];
-        if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
-            rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
-        }
-        const base = rootURL;
-        if(parts[0] == '.')
-            parts.shift();
-        else if(parts[0] == '..'){
-            item = item.substring(3);
-            const baseparts = base.split('/');
-            baseparts.pop();
-            baseparts.pop();
-            base = baseparts.join('/') + '/';
-        }
-        url = base+filePath
-    }
-    let curr = resources;
-    for(let part of parts){
-        if(part in curr)
-            curr = curr[part];
-        else{
-            let dir = {};
-            curr[part] = dir;
-            curr = dir;
-        }
-    }
-    curr[filename] = { url };
 }
 
 

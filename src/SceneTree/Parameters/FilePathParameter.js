@@ -11,17 +11,17 @@ class FilePathParameter extends Parameter {
     constructor(name, exts) {
         super(name, '', 'FilePath');
 
-        if(exts)
+        if (exts)
             this.setSupportedExts(exts);
     }
-    
-    setSupportedExts(exts){
+
+    setSupportedExts(exts) {
         // Note: supported Extensions should be in the format ext1|exts2|ext3
-        this.__reextensions = new RegExp('\\.('+exts+')$', "i");
+        this.__reextensions = new RegExp('\\.(' + exts + ')$', "i");
     }
 
     getFilepath() {
-        if(this.__file) {
+        if (this.__file) {
             return resourceLoader.getFilepath(this.__file.id);
         }
         return '';
@@ -29,7 +29,7 @@ class FilePathParameter extends Parameter {
 
     setFilepath(filePath, mode) {
         const resourceId = resourceLoader.resolveFilePathToId(filePath);
-        if(!resourceId) {
+        if (!resourceId) {
             console.warn("Resource unavailable:" + filePath);
             return;
         }
@@ -37,12 +37,12 @@ class FilePathParameter extends Parameter {
     }
 
     getFilename() {
-        if(this.__file) {
+        if (this.__file) {
             return this.__file.name;
         }
     }
 
-    getExt(){
+    getExt() {
         const filename = this.getFilename();
         const suffixSt = filename.lastIndexOf('.')
         if (suffixSt != -1)
@@ -51,9 +51,9 @@ class FilePathParameter extends Parameter {
 
     getStem() {
         const filename = this.getFilename();
-        if(filename) {
+        if (filename) {
             const parts = filename.split('.');
-            if(parts.length == 2)
+            if (parts.length == 2)
                 return parts[0];
             else
                 return filename;
@@ -61,8 +61,8 @@ class FilePathParameter extends Parameter {
     }
 
     getFileFolder() {
-        if(this.__file) {
-            if(this.__file.parent)
+        if (this.__file) {
+            if (this.__file.parent)
                 return resourceLoader.getFile(this.__file.parent);
             return resourceLoader.getRootFolder();
         }
@@ -70,7 +70,7 @@ class FilePathParameter extends Parameter {
 
     getFileFolderPath() {
         const filePath = this.getFilepath();
-        if(filePath) {
+        if (filePath) {
             return filePath.substring(0, filePath.lastIndexOf("/")) + '/';
         }
     }
@@ -92,7 +92,7 @@ class FilePathParameter extends Parameter {
     cloneMembers(clonedParam) {
         clonedParam.__file = this.__file;
     }
-    
+
     clone() {
         const clonedParam = new FilePathParameter(this.__name);
         this.cloneMembers(clonedParam);
@@ -101,20 +101,20 @@ class FilePathParameter extends Parameter {
 
 
     setDirty(cleanerFn) {
-        throw("Cannot drive a filepath param from an oporator")
+        throw ("Cannot drive a filepath param from an oporator")
     }
 
     setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if (value == undefined) {
             throw ("Invalid value for setValue.");
         }
-        if(value.indexOf('.') > 0) {
+        if (value.indexOf('.') > 0) {
             console.warn("Deprecation warning for setValue. setValue should now only take a file id, not a path.");
             return this.setFilepath(value, mode)
         }
         // Note: equality tests only work on simple types.
         // Important here because file changes cause reloads..
-        if(value == this.__value) {
+        if (value == this.__value) {
             return;
         }
 
@@ -128,7 +128,7 @@ class FilePathParameter extends Parameter {
         }
 
         const file = resourceLoader.getFile(resourceId);
-        if(this.__reextensions && !this.__reextensions.test(file.name)) {
+        if (this.__reextensions && !this.__reextensions.test(file.name)) {
             console.warn("Unsupported file type:" + file.name);
             return false;
         }
@@ -136,7 +136,7 @@ class FilePathParameter extends Parameter {
         this.__value = value;
         this.__file = file;
 
-        if(mode == ValueSetMode.USER_SETVALUE)
+        if (mode == ValueSetMode.USER_SETVALUE)
             this.__flags |= ParamFlags.USER_EDITED;
         this.valueChanged.emit(mode);
     }
@@ -145,21 +145,36 @@ class FilePathParameter extends Parameter {
 
 
     toJSON(context) {
-        if((this.__flags&ParamFlags.USER_EDITED) == 0)
+        if ((this.__flags & ParamFlags.USER_EDITED) == 0)
             return;
-        const j =  {  };
-        if(this.__file)
+        const j = {};
+        if (this.__file) {
             j.value = this.__file.id;
+            // For cases where the file ID changed. 
+            // e.g. if a file was deleted from the system, and
+            // then re-added
+            j.filepath = resourceLoader.getFilepath(this.__file.id)
+        }
         return j;
     }
 
     fromJSON(j, context) {
-        if(j.value){
-            const resourceId = resourceLoader.resolveFilePathToId(j.value);
-            this.setValue(resourceId, ValueSetMode.DATA_LOAD);
-        }
-        else if(j.resourceId){
-            this.setValue(j.resourceId, ValueSetMode.DATA_LOAD);
+        if (j.value) {
+            if (j.value.indexOf('.') > 0) {
+                this.setFilepath(value, ValueSetMode.DATA_LOAD)
+            } else {
+                if (resourceLoader.resourceAvailable(j.value)) {
+                    this.setValue(j.value, ValueSetMode.DATA_LOAD);
+                }
+                else {
+                    const resourceId = resourceLoader.resolveFilePathToId(j.filepath);
+                    if (!resourceId) {
+                        console.warn("Resource unavailable:" + j.filepath);
+                    } else {
+                        this.setValue(resourceId, ValueSetMode.DATA_LOAD);
+                    }
+                }
+            }
         }
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.

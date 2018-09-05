@@ -440,7 +440,7 @@ class TreeItem extends BaseItem {
     }
 
     getComponent(name) {
-        if(!this.__componentMapping[name]) {
+        if(!(name in this.__componentMapping)) {
             console.log("No component named '" + name + "' found.");
             return;
         }
@@ -576,7 +576,7 @@ class TreeItem extends BaseItem {
         //     this.__boundingBoxParam.setValue(box);
         // }
 
-        if (/*(flags & LOADFLAGS_SKIP_CHILDREN) == 0 && */j.children != null) {
+        if (j.children != null) {
             const childrenJson = j.children;
             if(Array.isArray(childrenJson)) {
                 for (let childJson of childrenJson) {
@@ -618,15 +618,15 @@ class TreeItem extends BaseItem {
         }
 
         
-        if(j.components) {
-            for(let cj of j.components) {
-                const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
-                if (component) {
-                    component.fromJSON(cj, context);
-                    this.addComponent(component);
-                }
-            }
-        }
+        // if(j.components) {
+        //     for(let cj of j.components) {
+        //         const component = sgFactory.constructClass(cj.type ? cj.type : cj.name);
+        //         if (component) {
+        //             component.fromJSON(cj, context);
+        //             this.addComponent(component);
+        //         }
+        //     }
+        // }
     }
 
     readBinary(reader, context) {
@@ -654,7 +654,7 @@ class TreeItem extends BaseItem {
             this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), Visualive.ValueSetMode.DATA_LOAD);
 
         const numChildren = reader.loadUInt32();
-        if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
+        if ( numChildren > 0) {
 
             const toc = reader.loadUInt32Array(numChildren);
             for (let i = 0; i < numChildren; i++) {

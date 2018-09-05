@@ -52,14 +52,13 @@ class LabelManager {
         else if (language.startsWith('gb'))
             this.__language = 'Gb';
 
-        this.__foundLabelLibraries = [];
-        this.__loadedLabelLibraries = [];
+        this.__foundLabelLibraries = {};
 
         resourceLoader.registerResourceCallback('.labels', (file) => {
-            this.__foundLabelLibraries.push(file);
+            const stem = file.name.split('.')[0]; // trim off the extension
+            this.__foundLabelLibraries[stem] = file;
             loadTextfile(file.url,
                 (text) => {
-                    const stem = file.name.split('.')[0]; // trim off the extension
                     this.__labelLibraries[stem] = JSON.parse(text);
                     this.labelLibraryLoaded.emit(stem)
                 }
@@ -71,10 +70,10 @@ class LabelManager {
         // and here:
         // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
         resourceLoader.registerResourceCallback('.xlsx', (file) => {
-            this.__foundLabelLibraries.push(file);
+            const stem = file.name.split('.')[0]; // trim off the extension
+            this.__foundLabelLibraries[stem] = file;
             loadBinfile(file.url,
                 (data) => {
-                    const stem = file.name.split('.')[0]; // trim off the extension
 
                     var unit8array = new Uint8Array(data);
                     var workbook = XLSX.read(unit8array, {
@@ -99,8 +98,8 @@ class LabelManager {
         })
     }
 
-    getFoundLibaries() {
-        return this.__foundLabelLibraries;
+    isLibraryFound(name) {
+        return name in this.__foundLabelLibraries;
     }
 
     isLibraryLoaded(name) {

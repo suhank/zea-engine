@@ -69,6 +69,12 @@ class AssetItem extends TreeItem {
         if(!context) 
             context = {};
         context.assetItem = this;
+
+        // Avoid loading the FilePAth as we are already loading json data.
+        if(j.params && j.params.FilePath) {
+          delete j.params.FilePath;
+        }
+
         super.fromJSON(j, context);
         if(onDone)
             onDone();

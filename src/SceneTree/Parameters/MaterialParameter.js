@@ -56,7 +56,10 @@ class MaterialParameter extends Parameter {
             return;
         }
         const materialPath = j.value;
-        this.setValue(materialLibraryManager.resolveMaterialFromPath(materialPath));
+        
+        const material = materialLibraryManager.resolveMaterialFromPath(materialPath);
+        if(material)
+            this.setValue(material);
         this.__flags |= ParamFlags.USER_EDITED;
     }
 
