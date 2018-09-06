@@ -35,7 +35,10 @@ class MaterialParameter extends Parameter {
             }
             if(mode == ValueSetMode.USER_SETVALUE)
                 this.__flags |= ParamFlags.USER_EDITED;
-            this.valueChanged.emit(mode);
+
+            // During the cleaning process, we don't want notifications.
+            if(mode != ValueSetMode.OPERATOR_SETVALUE)
+                this.valueChanged.emit(mode);
         }
     }
 

@@ -80,11 +80,17 @@ class Lines extends BaseGeom {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON() {
-        let json = super.toJSON();
-        json['indices'] = this.__indices.length;
-        return json;
+    toJSON(context) {
+        const j = super.toJSON(context);
+        j['indices'] = Array.from(this.__indices);
+        return j;
     };
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+        this.__indices = Uint32Array.from(j.indices);
+    }
+
 };
 
 export {

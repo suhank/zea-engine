@@ -32,7 +32,13 @@ class GeometryParameter extends Parameter {
                 this.__value.addRef(this);
                 this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit);
             }
-            this.valueChanged.emit(mode);
+            
+            if(mode == ValueSetMode.USER_SETVALUE)
+                this.__flags |= ParamFlags.USER_EDITED;
+
+            // During the cleaning process, we don't want notifications.
+            if(mode != ValueSetMode.OPERATOR_SETVALUE)
+                this.valueChanged.emit(mode);
         }
     }
 
@@ -40,19 +46,11 @@ class GeometryParameter extends Parameter {
     // Persistence
 
     toJSON(context) {
-        if((this.__flags&ParamFlags.USER_EDITED) == 0)
-            return;
-        return;
+        return super.toJSON(context);
     }
 
-    fromJSON(j) {
-        // if(j.value == undefined){
-        //     console.warn("Invalid Parameter JSON");
-        //     return;
-        // }
-        // const materialPath = j.valuel
-        // this.__value = materialLibraryManager.resolveMaterialFromPath(materialPath);
-        // this.__flags |= ParamFlags.USER_EDITED;
+    fromJSON(j, context) {
+        return super.fromJSON(j, context);
     }
 
     
