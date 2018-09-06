@@ -151,14 +151,14 @@ class Label  extends DataImage {
 
                     // If there were no label libraries discovered, then
                     // we assume this is an inline label, and we render immedietly.
-                    if(!labelManager.isLibraryFound(library))
+                    if(library == '' || !labelManager.isLibraryFound(library))
                         this.renderLabelToImage();
                 });
             }
             else {
                 // If there were no label libraries discovered, then
                 // we assume this is an inline label, and we render immedietly.
-                if(!labelManager.isLibraryFound(library))
+                if(library == '' || !labelManager.isLibraryFound(library))
                     this.renderLabelToImage();
             }
         }
@@ -169,6 +169,9 @@ class Label  extends DataImage {
     
     __getLabelText(){
         const library = this.getParameter('library').getValue();
+        if(library == '') {
+            return;
+        }
         const textParam = this.getParameter('text');
         const name = this.getName();
 

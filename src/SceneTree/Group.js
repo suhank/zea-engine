@@ -150,7 +150,6 @@ class Group extends TreeItem {
     }
 
     recalcInitialXfo() {
-        console.log("recalcInitialXfo")
         if(this.__items.length == 0)
             return;
         const mode = this.__initialXfoModeParam.getValue();
@@ -175,7 +174,6 @@ class Group extends TreeItem {
         }
 
         this.__globalXfoParam.setValue(xfo);
-        // this.__initialXfoParam.setValue(xfo);
         this.__invInitialXfo = xfo.inverse();
     }
 

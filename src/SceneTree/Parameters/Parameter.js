@@ -196,10 +196,11 @@ class Parameter extends BaseParameter {
         //     throw ("Invalud valu for setvalue.");
         // }
 
-        // Note: equality tests on anything but simple values is not going to work. We can't easily optimise this function.
-        // if(value == this.__value) {
-        //     return;
-        // }
+        if(!value.fromJSON) {
+            // Note: equality tests on anything but simple values is going to be suer expenseive.
+            if(this.__value == value)
+                return;
+        }
         this.__value = value;
         if(mode == ValueSetMode.USER_SETVALUE)
             this.__flags |= ParamFlags.USER_EDITED;

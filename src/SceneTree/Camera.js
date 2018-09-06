@@ -17,6 +17,7 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
+    ValueSetMode,
     Parameter,
     BooleanParameter,
     NumberParameter
@@ -138,18 +139,18 @@ class Camera extends TreeItem {
         return this.__focalDistanceParam.getValue();
     }
 
-    setFocalDistance(dist) {
-        this.__focalDistanceParam.setValue(dist);
-        this.__nearParam.setValue(dist * 0.01);
-        this.__farParam.setValue(dist * 200.0);
+    setFocalDistance(dist, mode=ValueSetMode.USER_SETVALUE) {
+        this.__focalDistanceParam.setValue(dist, mode);
+        this.__nearParam.setValue(dist * 0.01, mode);
+        this.__farParam.setValue(dist * 200.0, mode);
     }
 
     getIsOrthographic() {
         return this.__isOrthographicParam.getValue();
     }
 
-    setIsOrthographic(value) {
-        this.__isOrthographicParam.setValue(value);
+    setIsOrthographic(value, mode=ValueSetMode.USER_SETVALUE) {
+        this.__isOrthographicParam.setValue(value, mode);
     }
 
     getViewMatrix() {
@@ -164,11 +165,11 @@ class Camera extends TreeItem {
         this.__defaultManipulationState = mode;
     }
 
-    setPositionAndTarget(position, target) {
-        this.setFocalDistance(position.distanceTo(target));
+    setPositionAndTarget(position, target, mode=ValueSetMode.USER_SETVALUE) {
+        this.setFocalDistance(position.distanceTo(target), mode);
         const xfo = new Xfo();
         xfo.setLookAt(position, target, new Vec3(0.0, 0.0, 1.0));
-        this.setGlobalXfo(xfo);
+        this.setGlobalXfo(xfo, mode);
     }
 
     getTargetPostion() {
