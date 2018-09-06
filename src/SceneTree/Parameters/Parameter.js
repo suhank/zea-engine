@@ -2,6 +2,9 @@ import {
     Signal
 } from '../../Utilities';
 import {
+    RefCounted
+} from '../RefCounted';
+import {
     sgFactory
 } from '../SGFactory';
 
@@ -29,8 +32,9 @@ const ParamFlags = {
     DISABLED: 1<<2
 };
 
-class BaseParameter {
+class BaseParameter extends RefCounted {
     constructor(name) {
+        super();
         this.__name = name;
         this.__cleanerFns = [];
         this.__flags = 0;
@@ -58,25 +62,23 @@ class BaseParameter {
 
     getOwner() {
         // return this.__private.get('ownerItem');
-        return this.__ownerItem;
+        return this.getRefer(0);
     }
 
-    setOwner(ownerItem) {
-        // this.__private.set(ownerItem, ownerItem);
-        if(this.__ownerItem !== ownerItem){
-            this.__ownerItem = ownerItem;
-        }
+    addOwner(ownerItem) {
+        this.addRef(ownerItem);
     }
 
     getPath() {
-        if(this.__ownerItem) {
-            if(this.__ownerItem.getPath) {
-                const path = this.__ownerItem.getPath().slice();
+        const owner = this.getOwner()
+        if(owner) {
+            if(owner.getPath) {
+                const path = owner.getPath().slice();
                 path.push(this.__name);
                 return path;
             }
             else {
-                return [this.__ownerItem.getName(), this.__name];
+                return [owner.getName(), this.__name];
             }
         }
         return [this.__name];

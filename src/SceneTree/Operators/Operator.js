@@ -78,20 +78,9 @@ class OperatorOutput {
     // Persistence
 
     toJSON(context) {
-        const makeRelative = (path) => {
-            const assetPath = context.assetItem.getPath();
-            const start = path.slice(0, assetPath.length);
-            for(let i=0; i<start.length; i++) {
-                if(start[i] != assetPath[i]) {
-                    console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
-                    return path;
-                }
-            }
-            return path.slice(assetPath.length);
-        }
         return {
             type: this.constructor.name,
-            paramPath: makeRelative(this._param.getPath())
+            paramPath: context.makeRelative(this._param.getPath())
         };
     }
 

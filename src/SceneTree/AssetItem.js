@@ -60,6 +60,18 @@ class AssetItem extends TreeItem {
     toJSON(context) {
         if(!context) 
             context = {};
+
+        context.makeRelative = (path) => {
+            const assetPath = this.getPath();
+            const start = path.slice(0, assetPath.length);
+            for(let i=0; i<start.length; i++) {
+                if(start[i] != assetPath[i]) {
+                    console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
+                    return path;
+                }
+            }
+            return path.slice(assetPath.length);
+        }
         context.assetItem = this;
         const j = super.toJSON(context);
         return j;
@@ -68,7 +80,9 @@ class AssetItem extends TreeItem {
     fromJSON(j, context, onDone) {
         if(!context) 
             context = {};
+
         context.assetItem = this;
+        context.resolvePath = this.resolvePath.bind(this);
 
         // Avoid loading the FilePAth as we are already loading json data.
         if(j.params && j.params.FilePath) {
