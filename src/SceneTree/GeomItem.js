@@ -173,11 +173,14 @@ class GeomItem extends TreeItem {
 
     fromJSON(json, context) {
         super.fromJSON(json, context);
+        context.numGeomItems++;
     }
 
     readBinary(reader, context) {
         super.readBinary(reader, context);
 
+        context.numGeomItems++;
+        
         this.__lightmapName = context.assetItem.getName();
 
         const itemflags = reader.loadUInt8();

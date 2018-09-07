@@ -84,7 +84,11 @@ class AssetItem extends TreeItem {
 
     readBinary(reader, context={}) {
         context.assetItem = this;
+        context.numTreeItems = 0;
+        context.numGeomItems = 0;
         super.readBinary(reader, context);
+
+        console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     }
     
     toJSON(context) {
@@ -99,6 +103,8 @@ class AssetItem extends TreeItem {
         if(!context) 
             context = {};
         context.assetItem = this;
+        context.numTreeItems = 0;
+        context.numGeomItems = 0;
 
         const loadAssetJSON = ()=>{
             super.fromJSON(j, context);
