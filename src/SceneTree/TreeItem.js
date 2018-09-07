@@ -151,14 +151,12 @@ class TreeItem extends BaseItem {
         if(this.__ownerItem) {
             this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
         }
-
         super.setOwner(parentItem);
 
         this._setGlobalXfoDirty();
         if(this.__ownerItem) {
             this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty);
         }
-        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
     }
 
     __updatePath() {
