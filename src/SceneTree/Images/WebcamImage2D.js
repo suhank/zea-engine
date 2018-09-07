@@ -1,13 +1,13 @@
 import {
     Async,
     Signal
-} from '../Utilities';
+} from '../../Utilities';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     BaseImage
-} from './BaseImage.js';
+} from '../BaseImage.js';
 
 class WebcamImage2D extends BaseImage {
     constructor(width = 640, height = 480, rearCamera = false) {
@@ -114,9 +114,7 @@ class WebcamImage2D extends BaseImage {
             width: this.width,
             height: this.height,
             data: this.__data,
-            wrap: this.wrap,
-            flipY: this.flipY,
-            mipMapped: this.mipMapped
+            flipY: this.getParameter('FlipY').getValue()
         }
     }
 

@@ -1,192 +1,223 @@
 
 import {
-    Vec2
+  Vec2
 } from '../Math';
 import {
-    Signal
+  Signal
 } from '../Utilities';
 import {
-    SystemDesc
+  SystemDesc
 } from '../BrowserDetection.js';
 import {
-    AssetItem
+  AssetItem
 } from './AssetItem.js';
 import {
-    GeomItem
+  ValueSetMode
+} from './Parameters/Parameter.js';
+import {
+  GeomItem
 } from './GeomItem.js';
 import {
-    BinReader
+  BinReader
 } from './BinReader.js';
 import {
-    resourceLoader
+  resourceLoader
 } from './ResourceLoader.js';
 import {
-    GeomLibrary
+  GeomLibrary
 } from './GeomLibrary.js';
 import {
-    MaterialLibrary
+  MaterialLibrary
 } from './MaterialLibrary.js';
 
 
-function VLADataLoader(asset, fileParam, onDone, onGeomsLoaded) {
-
-    const geomLibrary = new GeomLibrary();
-    const materials = new MaterialLibrary();
-    let atlasSize = new Vec2();
-
-
-    asset.getGeometryLibrary = () => {
-        return geomLibrary;
-    }
-
-    asset.getMaterialLibrary = () => {
-        return materials;
-    }
-
-    asset.getLightmapSize = () => {
-        return atlasSize;
-    }
-    // Note: the atlas can be used for more than just lightmaps.
-    asset.getAtlasSize = () => {
-        return atlasSize;
-    }
-
-    asset.getLightmapPath = (lightmapName, lightmapLOD) => {
-        const stem = fileParam.getStem();
-        const lightmapPath = fileParam.getFileFolder() + stem + "_" + lightmapName + "_Lightmap" + lightmapLOD + ".vlh";
-                
-        return lightmapPath;
-    }
-
-
-
-    const readBinary = (reader, context) => {
-        if(!context) 
-            context = {};
-        context.assetItem = asset;
-
-        let numGeomsFiles = reader.loadUInt32();
-
-        materials.readBinary(reader, context);
-
-        asset.readBinary(reader, context);
-
-        atlasSize = reader.loadFloat32Vec2();
-        if(reader.remainingByteLength != 4){
-            throw("File needs to be re-exported:" + this.getParameter('FilePath').getValue());
-        }
-        // Perpare the geom library for loading
-        // This helps with progress bars, so we know how many geoms are coming in total.
-        geomLibrary.setNumGeoms(reader.loadUInt32());
-        
-        // this.loaded.emit();
-        onDone(); 
-        return numGeomsFiles;
-    }
-
-    const readBinaryBuffer = (buffer) => {
-        return readBinary(new BinReader(buffer, 0, SystemDesc.isMobileDevice));
-    }
-
-    const loadBinFile = () => {
-
-        const file = fileParam.getFileDesc();
-        if(!file)
-            return;
-
-        const filePath = fileParam.getValue();
-        const stem = fileParam.getStem();
-        const url = fileParam.getURL();
-        let numGeomsFiles = 0;
-
-        // TODO: one day the resourcecs tree could include meta data to indicate how
-        // manhy files make up the geom stream. 
-
-        // Load the tree file. This file contains
-        // the scene tree of the asset, and also
-        // tells us how many geom files will need to be loaded.
-        resourceLoader.loadResource(filePath,
-            (entries) => {
-                let treeData = entries[Object.keys(entries)[0]];
-                numGeomsFiles = readBinaryBuffer(treeData.buffer);
-                resourceLoader.freeData(treeData.buffer);
-
-                if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
-                    resourceLoader.addWork(filePath+'geoms', 1); // (load + parse + extra)
-                    let geomsData = entries[Object.keys(entries)[1]];
-                    geomLibrary.readBinaryBuffer(filePath, geomsData.buffer);
-                    resourceLoader.freeData(geomsData.buffer);
-                }
-                else {
-                    // add the work for the the geom files....
-                    resourceLoader.addWork(filePath+'geoms', 4*numGeomsFiles); // (load + parse + extra)
-                    loadNextGeomFile();
-                }
-            });
-
-        // Now load the geom files in sequence, parsing and loading
-        // the next..
-        let geomFileID = 0;
-        const loadNextGeomFile = () => {
-            if (geomFileID < numGeomsFiles) {
-                const nextGeomFileName = fileParam.getFileFolder() + stem + geomFileID + '.vlageoms';
-                // console.log("loadNextGeomFile:" + nextGeomFileName);
-                if (resourceLoader.resourceAvailable(nextGeomFileName))
-                    loadGeomsfile(nextGeomFileName);
-                else {
-                    throw("VLA Geoms file not found:" + nextGeomFileName)
-                }
-            }
-            else {
-                onGeomsLoaded();
-            }
-        }
-        const loadGeomsfile = (geomsFileName) => {
-            geomFileID++;
-            resourceLoader.loadResource(geomsFileName,
-                (entries) => {
-                    let geomsData = entries[Object.keys(entries)[0]];
-                    geomLibrary.readBinaryBuffer(geomsFileName, geomsData.buffer);
-                    resourceLoader.freeData(geomsData.buffer);
-                    loadNextGeomFile();
-                },
-                false); // <----
-            // Note: Don't add load work as we already pre-added it at the begining
-            // and after the Tree file was loaded...
-        }
-
-        // To ensure that the resource loader knows when 
-        // parsing is done, we listen to the GeomLibrary streamFileLoaded
-        // signal. This is fired every time a file in the stream is finshed parsing.
-        geomLibrary.streamFileParsed.connect((fraction) => {
-            // A chunk of geoms are now parsed, so update the resource loader.
-            resourceLoader.addWorkDone(filePath+'geoms', fraction);
-        });
-    }
-
-    loadBinFile();
-    fileParam.valueChanged.connect(loadBinFile);
-}
-
-AssetItem.registerDataLoader('.vla', VLADataLoader);
 
 class VLAAsset extends AssetItem {
-    constructor(name) {
-        super(name);
-        this.loaded.setToggled(false);
-        const binfileParam = this.addParameter(new Visualive.FilePathParameter('BinFilePath'));
+  constructor(name) {
+    super(name);
+    this.loaded.setToggled(false);
 
-        this.__loader = VLADataLoader;
-        this.__loader(this, binfileParam, ()=>{
-            this.loaded.emit();
+
+    this.__geomLibrary = new GeomLibrary();
+    this.__materials = new MaterialLibrary();
+    this.__atlasSize = new Vec2();
+
+    // A signal that is emitted once all the geoms are loaded.
+    // Often the state machine will activate the first state
+    // when this signal emits. 
+    this.geomsLoaded = new Signal(true);
+    this.geomsLoaded.setToggled(false);
+    this.loaded.setToggled(false);
+
+    this.__datafileParam = this.addParameter(new Visualive.FilePathParameter('DataFilePath'));
+    this.__datafileParam.valueChanged.connect((mode) => {
+      this.geomsLoaded.setToggled(false);
+      this.loadDataFile(()=>{
+        if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
+          this.loaded.emit();
+      }, ()=>{
+        if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
+          this.loaded.emit();
+      });
+    });
+  }
+
+  getGeometryLibrary() {
+    return this.__geomLibrary;
+  }
+
+  getMaterialLibrary() {
+    return this.__materials;
+  }
+
+  getLightmapSize() {
+    return this.__atlasSize;
+  }
+  // Note: the atlas can be used for more than just lightmaps.
+  getAtlasSize() {
+    return this.__atlasSize;
+  }
+
+  getLightmapPath(lightmapName, lightmapLOD) {
+    const stem = this.__datafileParam.getStem();
+    const lightmapPath = this.__datafileParam.getFileFolderPath() + stem + "_" + lightmapName + "_Lightmap" + lightmapLOD + ".vlh";
+        
+    return lightmapPath;
+  }
+
+  //////////////////////////////////////////
+  // Persistence
+
+  readBinary(reader, context) {
+    if(!context) 
+      context = {};
+    context.assetItem = this;
+
+    let numGeomsFiles = reader.loadUInt32();
+
+    this.__materials.readBinary(reader, context);
+
+    super.readBinary(reader, context);
+
+    this.__atlasSize = reader.loadFloat32Vec2();
+    if(reader.remainingByteLength != 4){
+      throw("File needs to be re-exported:" + this.getParameter('FilePath').getValue());
+    }
+    // Perpare the geom library for loading
+    // This helps with progress bars, so we know how many geoms are coming in total.
+    this.__geomLibrary.setNumGeoms(reader.loadUInt32());
+    
+    // this.loaded.emit();
+    // onDone(); 
+    return numGeomsFiles;
+  }
+
+
+  loadDataFile(onDone, onGeomsDone) {
+
+    const file = this.__datafileParam.getFileDesc();
+    if(!file)
+      return;
+
+    const folder = this.__datafileParam.getFileFolderPath()
+    const fileId = this.__datafileParam.getValue();
+    const stem = this.__datafileParam.getStem();
+    let numGeomsFiles = 0;
+
+    // TODO: one day the resourcecs tree could include meta data to indicate how
+    // manhy files make up the geom stream. 
+
+    // Load the tree file. This file contains
+    // the scene tree of the asset, and also
+    // tells us how many geom files will need to be loaded.
+    resourceLoader.loadResource(fileId,
+      (entries) => {
+        const treeData = entries[Object.keys(entries)[0]];
+        numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, SystemDesc.isMobileDevice));
+        resourceLoader.freeData(treeData.buffer);
+
+        onDone();
+        if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
+          resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
+          let geomsData = entries[Object.keys(entries)[1]];
+          this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
+          resourceLoader.freeData(geomsData.buffer);
+        }
+        else {
+          // add the work for the the geom files....
+          resourceLoader.addWork(fileId+'geoms', 4*numGeomsFiles); // (load + parse + extra)
+          loadNextGeomFile();
+        }
+      });
+
+    // Now load the geom files in sequence, parsing and loading
+    // the next..
+    let geomFileID = 0;
+    const loadNextGeomFile = () => {
+      if (geomFileID < numGeomsFiles) {
+        const nextGeomFileName = folder + stem + geomFileID + '.vlageoms';
+        const fileId = resourceLoader.resolveFilePathToId(nextGeomFileName);
+        // console.log("loadNextGeomFile:" + nextGeomFileName);
+        if (resourceLoader.resourceAvailable(fileId))
+          loadGeomsfile(fileId);
+        else {
+          throw("VLA Geoms file not found:" + nextGeomFileName)
+        }
+      }
+      else {
+        this.geomsLoaded.emit();
+      }
+    }
+    const loadGeomsfile = (fileId) => {
+      geomFileID++;
+      resourceLoader.loadResource(fileId,
+        (entries) => {
+          let geomsData = entries[Object.keys(entries)[0]];
+          this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
+          resourceLoader.freeData(geomsData.buffer);
+          loadNextGeomFile();
         },
-        ()=>{
-            this.geomsLoaded.emit();
-        });
+        false); // <----
+      // Note: Don't add load work as we already pre-added it at the begining
+      // and after the Tree file was loaded...
     }
 
+    // To ensure that the resource loader knows when 
+    // parsing is done, we listen to the GeomLibrary streamFileLoaded
+    // signal. This is fired every time a file in the stream is finshed parsing.
+    this.__geomLibrary.streamFileParsed.connect((fraction) => {
+      // A chunk of geoms are now parsed, so update the resource loader.
+      resourceLoader.addWorkDone(fileId+'geoms', fraction);
+    });
+  }
+
+
+
+  fromJSON(j, context, onDone) {
+    if(!context) 
+      context = {};
+    context.assetItem = this;
+
+    const loadAssetJSON = ()=>{
+      super.fromJSON(j, context, onDone);
+      if(onDone)
+        onDone();
+    }
+
+    if(j.params && j.params.DataFilePath) {
+      // Save the callback function for later.
+      this.__datafileLoaded = loadAssetJSON;
+      const filePathJSON = j.params.DataFilePath;
+      delete j.params.DataFilePath;
+      this.__datafileParam.fromJSON(filePathJSON, context);
+    }
+    else {
+      loadAssetJSON();
+    }
+  }
+  
 };
 
 export {
-    VLAAsset
+  VLAAsset
 };

@@ -7,13 +7,9 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
     Visualive.resourceLoader.addResourceURL('Assets/Labels.xlsx')
 
     const asset = new Visualive.TreeItem('labels');
-    scene.getRoot().addChild(asset);
-
-    const linesMaterial = new Visualive.Material('LabelLinesMaterial', 'LinesShader');
-    linesMaterial.getParameter('Color').setValue(new Visualive.Color(.7, .7, .7));
 
     let index = 0;
-    const addLabel = (basePose, pos, color, name)=> {
+    const addLabel = (lineEndPos, pos, color, name)=> {
         const label = new Visualive.Label(name, 'Labels');
         label.getParameter('fontSize').setValue(48);
         label.getParameter('fontColor').setValue(color);
@@ -23,19 +19,9 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
         billboard.getParameter('scale').setValue(1);
         billboard.getParameter('alignedToCamera').setValue(true);
         billboard.getParameter('alpha').setValue(1);
-        // billboard.getParameter('color').setValue(new Visualive.Color(.53, 1.0, .53));
-        scene.getRoot().addChild(billboard);
-
-
-        const line = new Visualive.Lines();
-        line.setNumVertices(2);
-        line.setNumSegments(1);
-        line.setSegment(0, 0, 1);
-        line.setVertex(1, basePose.subtract(pos));
-        const lineItem = new Visualive.GeomItem('Line', line, linesMaterial);
-
-        billboard.addChild(lineItem, false);
-
+        billboard.getParameter('lineEnd').addElement(lineEndPos);
+        billboard.getChildByName('line0').getMaterial().getParameter('Color').setValue(new Visualive.Color(.7, .7, .7));
+        asset.addChild(billboard);
 
         // const timeoutId = setTimeout(() => {
         //     console.log(label.getParameter('text').getValue() + ": changed");
@@ -53,6 +39,13 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
     addLabel(new Visualive.Vec3(0.505, 0, 0), new Visualive.Vec3(0.505, 0.0, 0.25), new Visualive.Color(1, 1, 0), "ClutchBallandRamp");
     addLabel(new Visualive.Vec3(0.75, 0, 0), new Visualive.Vec3(0.75, 0.03, 0.11), new Visualive.Color(1, 1, 0), "FrontDiffLockActuator");
 
+    scene.getRoot().addChild(asset);
+
+    // const j = asset.toJSON();
+    // console.log(j)
+    // const asset2 = new Visualive.TreeItem('asset2');
+    // asset2.fromJSON(j);
+    // scene.getRoot().addChild(asset2);
 
     const renderer = new Visualive.GLSimpleRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5, 6, 3), new Visualive.Vec3(0, 0, 0));

@@ -27,8 +27,12 @@ class StateMachine extends BaseItem {
         this.__initialStateName;
 
         window.onpopstate = (event) => {
-            if(event.state && event.state.stateName)
+            if(event.state && event.state.stateName){
                 this.activateState(event.state.stateName, false);
+            }
+            else {
+                this.activateState(this.getInitialState(), false);
+            }
         }
     }
 

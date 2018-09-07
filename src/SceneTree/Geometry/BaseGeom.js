@@ -11,9 +11,7 @@ import {
 import {
     ParameterOwner
 } from '../ParameterOwner.js';
-import {
-    VertexAttribute
-} from './VertexAttribute.js';
+import { Attribute } from './Attribute.js';
 
 class BaseGeom extends ParameterOwner {
     constructor() {
@@ -38,7 +36,7 @@ class BaseGeom extends ParameterOwner {
     }
 
     addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
-        let attr = new VertexAttribute(this, dataType, (this.vertices != undefined) ? this.vertices.length : 0, defaultScalarValue);
+        let attr = new Attribute(dataType, (this.vertices != undefined) ? this.vertices.length : 0, defaultScalarValue);
         this.__vertexAttributes.set(name, attr);
         return attr;
     }
@@ -312,7 +310,6 @@ class BaseGeom extends ParameterOwner {
                 vertexAttributes[key] = attr.toJSON(opts);
         }
         return {
-            'name': this.name,
             'vertexAttributes': vertexAttributes
         }
     }

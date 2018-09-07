@@ -17,10 +17,10 @@ class MaterialLibraryManager {
         this.__materialLibraries = {};
         this.materialLibraryLoaded = new Signal();
 
-        resourceLoader.registerResourceCallback('.matlib', (filename, file)=>{
+        resourceLoader.registerResourceCallback('.matlib', (file)=>{
             loadTextfile(file.url,
                 (data) => {
-                    const stem = filename.split('.')[0];// trim off the extension
+                    const stem = file.name.split('.')[0];// trim off the extension
                     const j = JSON.parse(data);
                     const matlib = new MaterialLibrary(stem);
                     matlib.fromJSON(j);
@@ -43,17 +43,18 @@ class MaterialLibraryManager {
         return name in this.__materialLibraries;
     }
 
-    getMaterialLibrary(name, assert=true) {
+    getMaterialLibrary(name) {
         const res = this.__materialLibraries[name];
-        if(!res && assert){
-            throw("MaterialLibrary:" + name+ " not found in MaterialLibraryManager. Found: [" + this.getMaterialLibraryNames() + "]")
+        if(!res){
+            console.warn("MaterialLibrary:" + name + " not found in MaterialLibraryManager. Found: [" + this.getMaterialLibraryNames() + "]")
         }
         return res;
     }
 
     resolveMaterialFromPath(path) {
         const materialLibrary = this.getMaterialLibrary(path[0]);
-        return materialLibrary.getMaterial(path[1]);
+        if(materialLibrary)
+            return materialLibrary.getMaterial(path[1]);
     }
  
 };

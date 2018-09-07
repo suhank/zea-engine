@@ -25,11 +25,6 @@ class AssetItem extends TreeItem {
         // Assets that are generated inline can be considered loaded
         this.loaded.setToggled(true);
 
-        // A signal that is emitted once all the geoms are loaded.
-        // Often the state machine will activate the first state
-        // when this signal emits. 
-        this.geomsLoaded = new Signal(true);
-        this.geomsLoaded.setToggled(true);
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(()=>{
@@ -47,31 +42,6 @@ class AssetItem extends TreeItem {
 
                 }
             );
-        });
-
-        this.__datafileParam = this.addParameter(new Visualive.FilePathParameter('DataFilePath'));
-        this.__datafileParam.valueChanged.connect((mode) => {
-            this.loaded.setToggled(false);
-            this.geomsLoaded.setToggled(false);
-            const ext = this.__datafileParam.getExt();
-            const loader = dataLoaders[ext] ? dataLoaders[ext][dataLoaders[ext].length-1] : undefined;
-            if(loader && loader != this.__loader){
-                this.unloadDataFromTree();
-                this.__loader = loader;
-                this.__loader(this, this.__datafileParam, ()=>{
-                    if(mode == Visualive.ValueSetMode.USER_SETVALUE)
-                        this.loaded.emit();
-                    else if(this.__datafileLoaded) {
-                        this.__datafileLoaded();
-                    }
-                },
-                ()=>{
-                    this.geomsLoaded.emit();
-                });
-            }
-            else {
-                console.warn("No loaders found for ext:" + ext + ". loading file:" + this.__datafileParam.getValue());
-            }
         });
     }
 
@@ -94,6 +64,18 @@ class AssetItem extends TreeItem {
     toJSON(context) {
         if(!context) 
             context = {};
+
+        context.makeRelative = (path) => {
+            const assetPath = this.getPath();
+            const start = path.slice(0, assetPath.length);
+            for(let i=0; i<start.length; i++) {
+                if(start[i] != assetPath[i]) {
+                    console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
+                    return path;
+                }
+            }
+            return path.slice(assetPath.length);
+        }
         context.assetItem = this;
         const j = super.toJSON(context);
         return j;
@@ -102,32 +84,22 @@ class AssetItem extends TreeItem {
     fromJSON(j, context, onDone) {
         if(!context) 
             context = {};
+        
         context.assetItem = this;
         context.numTreeItems = 0;
         context.numGeomItems = 0;
 
-        const loadAssetJSON = ()=>{
-            super.fromJSON(j, context);
+        context.assetItem = this;
+        context.resolvePath = this.resolvePath.bind(this);
+
+        // Avoid loading the FilePAth as we are already loading json data.
+        if(j.params && j.params.FilePath) {
+          delete j.params.FilePath;
+        }
+
+        super.fromJSON(j, context);
+        if(onDone)
             onDone();
-        }
-
-        if(j.params && j.params.DataFilePath) {
-            // Save the callback function for later.
-            this.__datafileLoaded = loadAssetJSON;
-            const filePathJSON = j.params.DataFilePath;
-            delete j.params.DataFilePath;
-            this.__datafileParam.fromJSON(filePathJSON, context);
-        }
-        else {
-            loadAssetJSON();
-        }
-
-
-    }
-
-    unloadDataFromTree() {
-        // TODO: only remove the children loaded by the data load. (these items need to be flagged);
-        this.removeAllChildren();
     }
 
     //////////////////////////////////////////

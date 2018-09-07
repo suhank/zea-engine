@@ -35,7 +35,10 @@ class MaterialParameter extends Parameter {
             }
             if(mode == ValueSetMode.USER_SETVALUE)
                 this.__flags |= ParamFlags.USER_EDITED;
-            this.valueChanged.emit(mode);
+
+            // During the cleaning process, we don't want notifications.
+            if(mode != ValueSetMode.OPERATOR_SETVALUE)
+                this.valueChanged.emit(mode);
         }
     }
 
@@ -56,7 +59,10 @@ class MaterialParameter extends Parameter {
             return;
         }
         const materialPath = j.value;
-        this.setValue(materialLibraryManager.resolveMaterialFromPath(materialPath));
+        
+        const material = materialLibraryManager.resolveMaterialFromPath(materialPath);
+        if(material)
+            this.setValue(material);
         this.__flags |= ParamFlags.USER_EDITED;
     }
 

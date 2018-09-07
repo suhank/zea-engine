@@ -14,14 +14,18 @@ class RefCounted {
 
     numRefs(){
         return this.__refs.length;
-    };
+    }
 
     addRef(referer) {
         if(!referer)
             throw("Error in RefCounted.addRef: Must provide a referer");
         // console.log(this.constructor.name + " addRef:" + referer.constructor.name);
-        this.__refs.push(referer);
-    };
+        if(this.__refs.indexOf(referer) == -1) {
+            this.__refs.push(referer);
+            return true;
+        }
+        return false;
+    }
 
     removeRef(referer) {
         if(!referer)
@@ -32,12 +36,20 @@ class RefCounted {
         if(this.__refs.length == 0){
             this.destroy();
         }
-    };
+    }
+
+    getRefer(index) {
+        return this.__refs[index];
+    }
+
+    getRefIndex(referer) {
+        return this.__refs.indexOf(referer);
+    }
 
     destroy(){
         // console.log(this.constructor.name + " destructing");
         this.destructing.emit(this);
-    };
+    }
 };
 export {
     RefCounted

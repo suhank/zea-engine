@@ -67,6 +67,11 @@ class EulerAngles extends AttrValue {
         this.__data[2] = val;
     }
 
+    set(x, y, z) {
+        this.__data[0] = x;
+        this.__data[1] = y;
+        this.__data[2] = z;
+    }
 };
 
 typeRegistry.registerType('EulerAngles', EulerAngles);

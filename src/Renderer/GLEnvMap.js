@@ -60,11 +60,11 @@ class GLEnvMap extends GLProbe {
         return this.__envMap;
     }
 
-    get backgroundFocus() {
+    getBackgroundFocus() {
         return this.__backgroundFocus;
     }
 
-    set backgroundFocus(val) {
+    setBackgroundFocus(val) {
         this.__backgroundFocus = val;
         this.__renderer.requestRedraw();
     }

@@ -104,9 +104,18 @@ class BaseItem extends ParameterOwner {
     //////////////////////////////////////////
     // Path Traversial
 
-    resolvePath(path) {
-        if(path.startswith('parameter')){
-            return this.getParameter(path.substring(10)); 
+    resolvePath(path, index) {
+        if (index == path.length){
+            return this;
+        }
+        if(path[index] == '>' && path.lenth == index + 2) {
+            return this.getParameter(path[index+1]); 
+        }
+        
+        // Maybe the name is a parameter name.
+        const param = this.getParameter(path[index]);
+        if(param) {
+            return param;
         }
         throw ("Invalid path:" + path + " member not found");
     }
@@ -166,9 +175,9 @@ class BaseItem extends ParameterOwner {
     }
 
     fromJSON(j, context) {
-        super.fromJSON(j, context);
         if(j.name)
             this.__name = j.name;
+        super.fromJSON(j, context);
         // Note: JSON data is only used to store user edits, so 
         // parameters loaded from JSON are considered user edited.
         this.__flags |= ItemFlags.USER_EDITED;

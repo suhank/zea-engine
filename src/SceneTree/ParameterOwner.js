@@ -122,7 +122,7 @@ class ParameterOwner extends RefCounted {
             this.removeParameter(name);
         }
         this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
-        param.setOwner(this)
+        param.addRef(this);
         this.__params.push(param)
         this.__paramMapping[name] = this.__params.length - 1;
         this.parameterAdded.emit(name);
@@ -135,6 +135,7 @@ class ParameterOwner extends RefCounted {
         }
         const index = this.__paramMapping[name];
         const param = this.__params[this.__paramMapping[name]]
+        param.removeRef(this);
         param.valueChanged.disconnectID(this.__paramSignalIds[name]);
         this.__params.splice(index, 1)
         const paramMapping = {};
@@ -149,8 +150,10 @@ class ParameterOwner extends RefCounted {
         const name = param.getName();
         const index = this.__paramMapping[name];
         const prevparam = this.__params[this.__paramMapping[name]]
+        prevparam.removeRef(this);
         prevparam.valueChanged.disconnectID(this.__paramSignalIds[name]);
 
+        param.addRef(this);
         this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
         this.__params[index] = param;
     }
@@ -174,13 +177,22 @@ class ParameterOwner extends RefCounted {
 
 
     toJSON(context) {
+
         let paramsJSON = {};
         let savedParams = 0;
         for (let param of this.__params){
-            const paramJSON = param.toJSON(context);
-            if(paramJSON){
-                paramsJSON[param.getName()] = paramJSON;
+            if(param.numRefs() > 1 && param.getRefIndex(this) != 0) {
+                paramsJSON[param.getName()] = {
+                    paramPath: context.makeRelative(param.getPath())
+                }
                 savedParams++;
+            }
+            else {
+                const paramJSON = param.toJSON(context);
+                if(paramJSON){
+                    paramsJSON[param.getName()] = paramJSON;
+                    savedParams++;
+                }
             }
         }
         if(savedParams > 0)
@@ -190,11 +202,20 @@ class ParameterOwner extends RefCounted {
     fromJSON(j, context) {
         if(j.params) {
             for (let key in j.params) {
+                const pj = j.params[key];
                 const param = this.getParameter(key);
                 if(!param) 
                     console.warn("Param not found:" + key);
-                else
-                    param.fromJSON(j.params[key], context);
+                else {
+                    if(pj.paramPath){
+                        const param = context.resolvePath(pj.paramPath);
+                        if(param)
+                            this.replaceParameter(param)
+                    }
+                    else {
+                        param.fromJSON(pj, context);
+                    }
+                }
             }
         }
     }

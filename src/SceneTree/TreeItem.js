@@ -165,6 +165,8 @@ class TreeItem extends BaseItem {
         super.__updatePath();
         for (let childItem of this.__childItems)
             childItem.__updatePath();
+        for (let component of this.__components)
+            component.__updatePath();
     }
 
     getParentItem() {
@@ -439,8 +441,12 @@ class TreeItem extends BaseItem {
         return component;
     }
 
+    hasComponent(name) {
+        return (name in this.__componentMapping)
+    }
+
     getComponent(name) {
-        if(!this.__componentMapping[name]) {
+        if(!(name in this.__componentMapping)) {
             console.log("No component named '" + name + "' found.");
             return;
         }
@@ -464,19 +470,35 @@ class TreeItem extends BaseItem {
         if (index == path.length){
             return this;
         }
+        if(path[index] == ':' && path.lenth > index + 1) {
+            if(this.hasComponent(path[index+1])) {
+                const component = this.getComponent(path[index+1]);
+                return component.resolvePath(path, index+2);
+            }
+        }
 
         const childName = path[index];
         let childItem = this.getChildByName(childName);
         if (childItem == undefined) {
+            // Maybe the name is a component name.
+            if(this.hasComponent(path[index])) {
+                const component = this.getComponent(path[index]);
+                if (index == path.length){
+                    return component;
+                }
+                else {
+                    return component.resolvePath(path, index+1);
+                }
+            }
+
             // Maybe the name is a parameter name.
-            // ask the BaseItem to check.
-            const param = super.getParameter(path[index]);
+            const param = this.getParameter(path[index]);
             if(param) {
                 return param;
             }
 
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child or property called :" + path[index]);
+            console.warn("Unable to resolve path :" + (path)+" after:"+this.getName() + "\nNo child, component or property called :" + path[index]);
             return null;
         }
         return childItem.resolvePath(path, index + 1);
@@ -564,7 +586,7 @@ class TreeItem extends BaseItem {
         //     this.__boundingBoxParam.setValue(box);
         // }
 
-        if (/*(flags & LOADFLAGS_SKIP_CHILDREN) == 0 && */j.children != null) {
+        if (j.children != null) {
             const childrenJson = j.children;
             if(Array.isArray(childrenJson)) {
                 for (let childJson of childrenJson) {
@@ -576,8 +598,8 @@ class TreeItem extends BaseItem {
                     } else if (childJson.type) {
                         childItem = sgFactory.constructClass(childJson.type);
                         if (childItem) {
-                            childItem.fromJSON(childJson, context);
                             this.addChild(childItem, false, false);
+                            childItem.fromJSON(childJson, context);
                         }
                     } else {
                         console.warn("Warning loading JSON. Child not found:" + childJson.name + " of:" + this.getPath());
@@ -595,8 +617,12 @@ class TreeItem extends BaseItem {
                     } else if (childJson.type) {
                         childItem = sgFactory.constructClass(childJson.type);
                         if (childItem) {
-                            childItem.fromJSON(childJson, context);
+                            // Note: we add the chile now before loading. 
+                            // This is because certain items. (e.g. Groups)
+                            // Calculate thier global Xfo, and use it to modify 
+                            // the transform of thier members. 
                             this.addChild(childItem, false, false);
+                            childItem.fromJSON(childJson, context);
                         }
                     } else {
                         console.warn("Warning loading JSON. Child not found:" + childName);
@@ -644,7 +670,7 @@ class TreeItem extends BaseItem {
             this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), Visualive.ValueSetMode.DATA_LOAD);
 
         const numChildren = reader.loadUInt32();
-        if ( /*(flags&LOADFLAGS_SKIP_CHILDREN) == 0 &&*/ numChildren > 0) {
+        if ( numChildren > 0) {
 
             const toc = reader.loadUInt32Array(numChildren);
             for (let i = 0; i < numChildren; i++) {

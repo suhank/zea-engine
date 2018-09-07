@@ -81,15 +81,15 @@ class Attribute {
 
     toJSON(opts) {
         return {
-            "data": this.__data,
+            "data": Array.from(this.__data),
             "dataType": this.__dataType.name,
             "defaultScalarValue": this.__defaultScalarValue,
             "length": this.__data.length / this.__numFloat32Elements
         }
     }
 
-    fromJSON(json) {
-        this.__data = json.data;
+    fromJSON(j) {
+        this.__data = Float32Array.from(j.data);
     }
 
     toString() {

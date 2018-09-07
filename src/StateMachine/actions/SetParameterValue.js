@@ -86,18 +86,18 @@ class SetParameterValue extends StateAction {
 
     toJSON(context) {
         const j = super.toJSON(context);
-        j.valueParam = this.__valueParam.toJSON(context);
-        j.valueParamType = this.__valueParam.constructor.name;
+        if(this.__valueParam){
+            j.valueParamType = this.__valueParam.constructor.name;
+        }
         return j;
     }
 
     fromJSON(j, context) {
-        super.fromJSON(j, context);
-        if(j.valueParam){
-            this.__valueParam = sgFactory.constructClass(j.valueParamType, 'Value');
-            this.__valueParam.fromJSON(j.valueParam, context);
-            this.addParameter(this.__valueParam);
+        if(j.valueParamType){
+            const param = sgFactory.constructClass(j.valueParamType, 'Value');
+            this.__valueParam = this.addParameter(param);
         }
+        super.fromJSON(j, context);
     }
 };
 

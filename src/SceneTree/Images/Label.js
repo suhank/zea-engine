@@ -1,10 +1,10 @@
 import {
     Color,
-} from '../Math';
+} from '../../Math';
 import {
     Signal,
     Async
-} from '../Utilities';
+} from '../../Utilities';
 import {
     Parameter,
     BooleanParameter,
@@ -13,10 +13,10 @@ import {
     Vec3Parameter,
     ColorParameter,
     StringParameter
-} from './Parameters';
+} from '../Parameters';
 import {
     sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
 import {
     DataImage
 } from './DataImage.js';
@@ -90,7 +90,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
 }
 
 class Label  extends DataImage {
-    constructor(name, library='Default') {
+    constructor(name, library) {
         super(name);
 
         this.__canvasElem = document.createElement('canvas');
@@ -98,36 +98,28 @@ class Label  extends DataImage {
         let outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
         let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
 
-        const libraryParam = this.addParameter(new StringParameter('library', library, 'String'));
-        const textParam = this.addParameter(new StringParameter('text', '', 'String'));
-        const getLabelText = ()=>{
-            const library = libraryParam.getValue();
-            const name = this.getName();
-            try {
-                const text = labelManager.getLabelText(library, name);
-                textParam.setValue(text);
-                this.renderLabelToImage();
-            } catch (e) {
-                console.warn(e)
-            }
-        }
+        const libraryParam = this.addParameter(new StringParameter('library'));
+        const textParam = this.addParameter(new StringParameter('text', ''));
         if(labelManager.isLibraryLoaded(library))
-            getLabelText();
+            this.__getLabelText();
         // or load the label when it is loaded.
         labelManager.labelLibraryLoaded.connect((loadedLibrary)=>{
             const library = libraryParam.getValue();
             if(loadedLibrary == library)
-                getLabelText();
+                this.__getLabelText();
         });
-        libraryParam.valueChanged.connect(getLabelText);
-        this.nameChanged.connect(getLabelText);
-        const setLabelText = ()=>{
-            const library = libraryParam.getValue();
-            const name = this.getName();
-            const text = textParam.getValue();
-            labelManager.setLabelText(library, name, text);
-        }
-        textParam.valueChanged.connect(setLabelText);
+        libraryParam.valueChanged.connect(this.__getLabelText.bind(this));
+        this.nameChanged.connect(this.__getLabelText.bind(this));
+        // const setLabelTextToLibrary = ()=>{
+        //     const library = libraryParam.getValue();
+        //     const name = this.getName();
+        //     const text = textParam.getValue();
+        //     labelManager.setLabelTextToLibrary(library, name, text);
+        // }
+        // textParam.valueChanged.connect(setLabelText);
+
+        if(library)
+            libraryParam.setValue(library)
 
         this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
         this.addParameter(new StringParameter('textAlign', 'left', 'String'));
@@ -146,6 +138,7 @@ class Label  extends DataImage {
         const fontParam = this.addParameter(new StringParameter('font', 'Helvetica', 'String'));
 
         const loadFont = ()=>{
+            const library = this.getParameter('library').getValue();
             const font = fontParam.getValue();
             const fontSize = fontSizeParam.getValue();
             if(document.fonts != undefined) {
@@ -158,14 +151,14 @@ class Label  extends DataImage {
 
                     // If there were no label libraries discovered, then
                     // we assume this is an inline label, and we render immedietly.
-                    if(labelManager.getFoundLibaries().length == 0)
+                    if(library == '' || !labelManager.isLibraryFound(library))
                         this.renderLabelToImage();
                 });
             }
             else {
                 // If there were no label libraries discovered, then
                 // we assume this is an inline label, and we render immedietly.
-                if(labelManager.getFoundLibaries().length == 0)
+                if(library == '' || !labelManager.isLibraryFound(library))
                     this.renderLabelToImage();
             }
         }
@@ -174,6 +167,29 @@ class Label  extends DataImage {
         // fontParam.setValue('AGBookTTReg');
     }
     
+    __getLabelText(){
+        const library = this.getParameter('library').getValue();
+        if(library == '') {
+            return;
+        }
+        const textParam = this.getParameter('text');
+        const name = this.getName();
+
+        if(!labelManager.isLibraryFound(library)) {
+            console.warn("Label Libary not found:", library)
+            return;
+        }
+        if(!labelManager.isLibraryLoaded(library)) {
+            return;
+        }
+        try {
+            const text = labelManager.getLabelText(library, name);
+            textParam.setValue(text);
+            this.renderLabelToImage();
+        } catch (e) {
+            console.warn(e)
+        }
+    }
 
     renderLabelToImage() {
 
@@ -248,6 +264,19 @@ class Label  extends DataImage {
         return super.getParams();
     }
 
+    //////////////////////////////////////////
+    // Persistence
+
+
+    toJSON(context) {
+        const j = super.toJSON(context);
+        return j;
+    }
+
+    fromJSON(j, context) {
+        super.fromJSON(j, context);
+        this.__getLabelText();
+    }
 };
 
 sgFactory.registerClass('Label', Label);
