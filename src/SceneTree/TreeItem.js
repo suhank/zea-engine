@@ -455,20 +455,6 @@ class TreeItem extends BaseItem {
     //////////////////////////////////////////
     // Path Traversial
 
-    // resolveMember(path) {
-    //     if(path.startsWith('item')){
-    //         let itemName = path.substring(5);
-    //         const pos = itemName.indexOf(':');
-    //         let suffix;
-    //         if(pos){
-    //             itemName = itemName.substring(0, pos);
-    //             suffix = itemName.substring(pos+1);
-    //         }
-    //         const item = this.getItem(itemName); 
-    //     }
-    //     super.resolveMember(path)
-    // }
-
     resolvePath(path, index=0) {
         if(typeof path == 'string')
             path = path.split('/');
@@ -585,6 +571,8 @@ class TreeItem extends BaseItem {
 
     fromJSON(j, context) {
         super.fromJSON(j, context);
+        
+        context.numTreeItems++;
 
         // Note: JSON data is only used to store user edits, so 
         // parameters loaded from JSON are considered user edited.
@@ -655,6 +643,8 @@ class TreeItem extends BaseItem {
 
     readBinary(reader, context) {
         super.readBinary(reader, context);
+
+        context.numTreeItems++;
 
         let itemflags = reader.loadUInt8();
 
