@@ -29,7 +29,7 @@ class ListParameter extends Parameter {
     }
 
     addElement(elem) {
-        if(!elem)
+        if(elem == undefined)
             elem = new this.__dataType()
         else {
             if(!this.__filter(elem))
