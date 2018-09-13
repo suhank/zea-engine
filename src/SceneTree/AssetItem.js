@@ -67,7 +67,7 @@ class AssetItem extends TreeItem {
         context.numGeomItems = 0;
         super.readBinary(reader, context);
 
-        console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
+        // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     }
 
     toJSON(context) {
