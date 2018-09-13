@@ -166,6 +166,7 @@ uniform bool EmissiveStrengthTexConnected;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
+
 #endif
 
 void main(void) {
@@ -173,8 +174,8 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.baseColor      = BaseColor.rgb;
-    float emission      = EmissiveStrength;
+    material.BaseColor      = BaseColor.rgb;
+    float emission          = EmissiveStrength;
 
 #ifdef ENABLE_SPECULAR
     material.roughness     = Roughness;
