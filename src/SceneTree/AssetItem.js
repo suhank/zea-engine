@@ -22,6 +22,7 @@ class AssetItem extends TreeItem {
 
         this.loaded = new Signal(true);
         // Assets that are generated inline can be considered loaded
+        // (e.g. the ground plane). So we set loaded to true, unless a file is specified.
         this.loaded.setToggled(true);
 
 
