@@ -32,7 +32,7 @@ class GLAudioItemsPass extends GLPass {
     
     init(gl, collector, passIndex) {
         super.init(gl, collector, passIndex);
-        
+
         if(!audioCtx)
             return;
 
