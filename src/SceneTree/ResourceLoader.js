@@ -11,7 +11,6 @@ import {
 
 
 const asyncLoading = true;
-const ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
@@ -65,11 +64,8 @@ class ResourceLoader {
     this.__resourcesTreeEntities = { };
     this.__resourcesTree = { children: {} };
 
-    if(asyncLoading){
-      this.__workers = [];
-      this.__constructWorkers();
-      this.__nextWorker = 0;
-    }
+    this.__workers = [];
+    this.__nextWorker = 0;
   }
 
   getRootFolder(){
@@ -122,6 +118,11 @@ class ResourceLoader {
   setResources(resources){
     this.__resources = Object.assign(this.__resources, resources);
     this.__buildTree(resources);
+
+    const resourceLoaderFile = this.resolveFilepath('VisualiveEngine/ResourceLoaderWorker.js');
+    if(resourceLoaderFile)
+      this.__constructWorkers(resourceLoaderFile);
+
     this.__applyCallbacks(resources);
   }
 
@@ -179,14 +180,15 @@ class ResourceLoader {
     // worker.terminate();
   }
 
-  __constructWorkers() {
-    let __constructWorker = ()=>{
-      let worker = new ResourceLoaderWorker();
-      worker.onmessage = (event) => {
-        if(event.data.type == 'loaded') {
-          this.addWorkDone(event.data.name, 1); // loading done...
+  __constructWorkers(resourceLoaderFile) {
+    const __constructWorker = ()=>{
+      const worker = new Worker(resourceLoaderFile.url);
+      worker.onmessage = function(event) {
+        if (event.data.type === 'WASM_LOADED') {
         }
-        else if(event.data.type == 'finished') {
+        else if (event.data.type === 'FINISHED') {
+          this.addWorkDone(event.data.name, 1); // loading done...
+
           this.__onFinishedReceiveFileData(event.data);
         }
       };
@@ -293,7 +295,7 @@ class ResourceLoader {
     // If the loader was suspended, resume. 
     if(asyncLoading) {
       if(this.__workers.length == 0){
-        this.__constructWorkers();
+        throw("No workers available")
       }
     }
 
