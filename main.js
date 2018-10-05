@@ -9,22 +9,6 @@
     xmlHttp.send(null);
   }
 
-  function resolveURL(file, resources) {
-    let parts = file.split('/');
-    if (parts[0] == '.' || parts[0] == '')
-      parts.shift();
-    let curr = resources;
-    for (let part of parts) {
-      if (part in curr)
-        curr = curr[part];
-      else {
-        // console.warn("Unable to resolve File:" + file);
-        return null;
-      }
-    }
-    return curr;
-  }
-
   function resolveURL(filePath, resources) {
     const parts = filePath.split('/');
     const filename = parts.pop();
@@ -43,9 +27,22 @@
     document.getElementsByTagName('head').item(0).appendChild(script);
   }
 
+  const getUrlVars = () => {
+      const url = window.location.href,
+          args = {};
+
+      const parts = url.split('?');
+      const hashes = parts.length > 1 ? parts[1].split('&') : [];
+      for (let i = 0; i < hashes.length; i++) {
+          hash = hashes[i].split('=');
+          args[hash[0]] = hash[1];
+      }
+      return args;
+  }
 
 window.main = function(domElement, resources, args, visualivePlatform) {
 
+  args = getUrlVars();
 
   if(args.file) {
     let file = args.file;

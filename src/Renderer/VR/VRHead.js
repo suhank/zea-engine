@@ -21,11 +21,11 @@ class VRHead extends Gizmo {
         stageTreeItem.addChild(this.__treeItem);
 
         // // Head faces Z axis....
-        // let geom = new Cuboid(0.16, 0.24, 0.2);
+        // const geom = new Cuboid(0.16, 0.24, 0.2);
 
-        // let mat0 = new GeomItem('mat0', 'FlatSurfaceShader');
+        // const mat0 = new GeomItem('mat0', 'FlatSurfaceShader');
         // mat0.baseColor = new Color(0, 0, 1);
-        // let mat1 = new GeomItem('mat1', 'FlatSurfaceShader');
+        // const mat1 = new GeomItem('mat1', 'FlatSurfaceShader');
         // mat1.baseColor = new Color(1, 1, 0);
 
         // this.__geomItem0 = new GeomItem('VRHead', geom, mat0);
@@ -33,14 +33,14 @@ class VRHead extends Gizmo {
         // this.__geomItem1 = new GeomItem('VRHead', geom, mat1);
         // this.__geomItem1.setSelectable(false);
 
-        // let xfo = new Xfo();
+        // const xfo = new Xfo();
         // xfo.sc.set(1.2, 0.3, 0.6);
         // xfo.tr.set(0, 0.03, -0.05);
         // this.__geomItem1.setGeomOffsetXfo(xfo);
 
         // this.__geomItem0.addChild(this.__geomItem1);
 
-        // let geomglGeom = new GLMesh(gl, geom);
+        // const geomglGeom = new GLMesh(gl, geom);
         // this.__geomglDrawItem0 = new GLDrawItem(gl, this.__geomItem0, geomglGeom);
         // this.__addDrawItem(this.__geomglDrawItem0);
 
@@ -62,10 +62,7 @@ class VRHead extends Gizmo {
     }
 
     update(frameData){
-        // For fun, draw a blue cube where the players head would have been if
-        // we weren't taking the stageParameters into account. It'll start in
-        // the center of the floor.
-        let localXfo = this.__treeItem.getLocalXfo();
+        const localXfo = this.__treeItem.getLocalXfo();
         if(frameData.pose.position)
             localXfo.tr.setDataArray(frameData.pose.position);
         if(frameData.pose.orientation)

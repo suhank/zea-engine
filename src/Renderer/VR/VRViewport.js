@@ -78,6 +78,7 @@ class VRViewport extends BaseViewport {
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
+        // These values are in meters.
         this.__far = 1024.0;
         this.__near = 0.1;
         this.__vrDisplay.depthNear = this.__near;
@@ -151,22 +152,9 @@ class VRViewport extends BaseViewport {
 
         //////////////////////////////////////////////
         // Events
-        let vrViewport = this;
-
-        function vrdisplaypresentchange() {
-            vrViewport.__onVRPresentChange();
-        }
-
-        function vrdisplayactivate() {
-            vrViewport.startPresenting();
-        }
-
-        function vrdisplaydeactivate() {
-            vrViewport.stopPresenting();
-        }
-        window.addEventListener('vrdisplaypresentchange', vrdisplaypresentchange, false);
-        window.addEventListener('vrdisplayactivate', vrdisplayactivate, false);
-        window.addEventListener('vrdisplaydeactivate', vrdisplaydeactivate, false);
+        window.addEventListener('vrdisplaypresentchange', this.__onVRPresentChange.bind(this), false);
+        window.addEventListener('vrdisplayactivate', this.startPresenting.bind(this), false);
+        window.addEventListener('vrdisplaydeactivate', this.stopPresenting.bind(this), false);
 
 
 
@@ -570,10 +558,6 @@ class VRViewport extends BaseViewport {
         this.viewChanged.emit(data);
     }
 
-    getFrameData() {
-        this.__vrDisplay.getFrameData(this.__frameData);
-        return this.__frameData;
-    }
 
     draw(renderstate) {
         if (!this.__frameRequested) {
@@ -583,6 +567,7 @@ class VRViewport extends BaseViewport {
 
 
         this.__vrDisplay.getFrameData(this.__frameData);
+
         if (!this.__frameData.pose || (isNaN(this.__frameData.pose.orientation[0]) || !isFinite(this.__frameData.pose.orientation[0])))
             return false;
 
