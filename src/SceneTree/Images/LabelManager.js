@@ -65,37 +65,39 @@ class LabelManager {
             );
         })
 
-        // Note: example taken from here..
-        // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
-        // and here:
-        // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
-        resourceLoader.registerResourceCallback('.xlsx', (file) => {
-            const stem = file.name.split('.')[0]; // trim off the extension
-            this.__foundLabelLibraries[stem] = file;
-            loadBinfile(file.url,
-                (data) => {
+        if (window.XLSX) {
+            // Note: example taken from here..
+            // https://stackoverflow.com/questions/8238407/how-to-parse-excel-file-in-javascript-html5
+            // and here:
+            // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
+            resourceLoader.registerResourceCallback('.xlsx', (file) => {
+                const stem = file.name.split('.')[0]; // trim off the extension
+                this.__foundLabelLibraries[stem] = file;
+                loadBinfile(file.url,
+                    (data) => {
 
-                    var unit8array = new Uint8Array(data);
-                    var workbook = XLSX.read(unit8array, {
-                        type: 'array'
-                    });
-
-                    const json = {}; 
-                    workbook.SheetNames.forEach(function(sheetName) {
-                        // Here is your object
-                        const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-                        rows.forEach(function(row) {
-                            const identifier = row.Identifier;
-                            delete row.Identifier;
-                            json[identifier] = row;
+                        var unit8array = new Uint8Array(data);
+                        var workbook = XLSX.read(unit8array, {
+                            type: 'array'
                         });
-                    })
 
-                    this.__labelLibraries[stem] = json;
-                    this.labelLibraryLoaded.emit(stem)
-                }
-            );
-        })
+                        const json = {}; 
+                        workbook.SheetNames.forEach(function(sheetName) {
+                            // Here is your object
+                            const rows = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                            rows.forEach(function(row) {
+                                const identifier = row.Identifier;
+                                delete row.Identifier;
+                                json[identifier] = row;
+                            });
+                        })
+
+                        this.__labelLibraries[stem] = json;
+                        this.labelLibraryLoaded.emit(stem)
+                    }
+                );
+            })
+        }
     }
 
     isLibraryFound(name) {
