@@ -352,16 +352,13 @@ class GLRenderer {
 
     __onResize() {
 
-        let vrVieportPresenting = false;
         if (this.__vrViewport && this.__vrViewport.isPresenting()) {
             var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
             this.__glcanvas.width = hmdCanvasSize[0];
             this.__glcanvas.height = hmdCanvasSize[1];
-            vrVieportPresenting = true;
         } else {
-            const devicePixelRatio = window.devicePixelRatio;
-            this.__glcanvas.width = this.__glcanvas.offsetWidth * devicePixelRatio;
-            this.__glcanvas.height = this.__glcanvas.offsetHeight * devicePixelRatio;
+            this.__glcanvas.width = this.__glcanvas.offsetWidth * window.devicePixelRatio;
+            this.__glcanvas.height = this.__glcanvas.offsetHeight * window.devicePixelRatio;
 
             this.__onResizeViewports();
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)

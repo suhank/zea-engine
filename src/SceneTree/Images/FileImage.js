@@ -96,6 +96,8 @@ class FileImage extends BaseImage {
             this.__loadVLH(fileDesc, ext);
         } else if (ext == '.gif') {
             this.__loadGIF(fileDesc, ext);
+        } else if (ext == '.svg') {
+            console.warn("SVG Image not yet supported")
         } else {
             throw ("Unsupported file type. Check the ext:" + fileDesc);
         }
