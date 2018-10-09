@@ -78,12 +78,17 @@ testingHarness.registerTest('MemoryTest_GeomItemsArray', (domElement, resources)
   const rootItem = new Visualive.TreeItem();
 
   const count = 50000
-  rootItem.__freeOwnerIndices.push(rootItem.addOwnerIndex(0));
-  rootItem.__addPathIndex(0);
+  // rootItem.__freeOwnerIndices.push(rootItem.addOwnerIndex(0));
+  // rootItem.__addPathIndex(0);
   for(let i=0; i<count; i++) {
     rootItem.addChild(new Visualive.GeomItem("Geom"+i))
   }
   document.body.appendChild(document.createTextNode("Done 'MemoryTest_GeomItemsArray':" + (performance.now() - start)));
+
+  // == Pre-multiple Inheritance ==
+  //  Results: Chrome spikes to ~ 4 Gigs of Ram. Settling down to 3.0 Gigs after a minute.
+  // Takes ~77000 Ms.
+
   // Results: Chrome spikes to 2.34 Gigs of Ram. Settling down to 2.3Gigs after a minute.
   // Takes ~2038 Ms.
 });

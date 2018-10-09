@@ -101,6 +101,10 @@ class ResourceLoader {
         resource.children = {};
       }
       if(resource.parent) {
+        if(!resources[resource.parent]){
+          console.warn("Item is orphaned in a folder that no longer exists:", resource.name);
+          return;
+        }
         if(!this.__resourcesTreeEntities[resource.parent]) {
           buildEntity(resource.parent)
         }
