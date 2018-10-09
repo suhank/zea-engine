@@ -146,7 +146,7 @@ function getSystemDesc() {
     //    Typically these devices are laptops, so the textures can't be too blurry
     // 2: High-end: turn up as much as needed.
     let deviceCategory;
-    if (!isMobile){
+    if (!isMobile && gpuDesc){
         const parts = gpuDesc.renderer.split(' ');
         if(gpuDesc.gpuVendor == 'NVidia') {
             const gtxIdx = parts.indexOf('GTX');

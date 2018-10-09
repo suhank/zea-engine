@@ -117,7 +117,7 @@ class GLTransparentGeomsPass extends GLPass {
         }
 
         if(currentglGeom)
-            currentglGeom.unbind();
+            currentglGeom.unbind(renderstate);
     }
 
     draw(renderstate) {
@@ -142,6 +142,12 @@ class GLTransparentGeomsPass extends GLPass {
         // light passing through the surface, and then the add layer
         // adds new color to the backbuffer to simulate light bouncing off
         // the surface.
+
+        // TODO: Optimise this system.
+        // After depth sorting, we should split the items into 2 groups. 
+        // Multipy items, and Add  items. (Many items will be in both)
+        // Then we can simply check if we have any multiply items here
+        // before rendering all items.
         
         renderstate.pass = 'MULTIPLY';
         gl.blendFunc(gl.DST_COLOR, gl.ZERO);// For multiply, select this.

@@ -16,13 +16,13 @@ class GLGeom {
         this.destructing = new Signal();
         this.updated = new Signal();
 
-        let updateBuffers = (opts) => {
+        const updateBuffers = (opts) => {
             this.updateBuffers(opts);
             this.updated.emit();
         }
         this.__geom.geomDataChanged.connect(updateBuffers);
 
-        let regenBuffers = (opts) => {
+        const regenBuffers = (opts) => {
             this.clearShaderBindings();
             this.updateBuffers(opts);
             this.updated.emit();
@@ -69,8 +69,12 @@ class GLGeom {
     }
 
     unbind(renderstate) {
-        // Unbinding a geom in't necessar(like unbinding a texture)
-        // We simply bind the new geom.
+        // Unbinding a geom is important as it puts back some important
+        // GL state. (vertexAttribDivisor)
+        let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
+        if (shaderBinding) {
+            shaderBinding.unbind(renderstate);
+        }
     }
 
     ///////////////////////////////////////
@@ -92,7 +96,7 @@ class GLGeom {
     clearShaderBindings() {
 
         for (let shaderkey in this.__shaderBindings) {
-            let shaderBinding = this.__shaderBindings[shaderkey];
+            const shaderBinding = this.__shaderBindings[shaderkey];
             shaderBinding.destroy();
         }
         this.__shaderBindings = {};

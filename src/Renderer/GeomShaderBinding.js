@@ -14,8 +14,8 @@ class GeomShaderBinding {
         const gl = this.__gl;
 
         for (let attrName in this.__shaderAttrs) {
-            let attrDesc = this.__shaderAttrs[attrName];
-            let location = attrDesc.location;
+            const attrDesc = this.__shaderAttrs[attrName];
+            const location = attrDesc.location;
             if (location == -1)
                 continue;
             let glattrbuffer = this.__glattrbuffers[attrName];
@@ -29,12 +29,12 @@ class GeomShaderBinding {
                 }
             }
 
-            let dataType = glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT;
-            let dimension = glattrbuffer.dimension;
-            let stride = glattrbuffer.dimension * gl.sizeInBytes(dataType);
-            let offset = glattrbuffer.offset != undefined ? glattrbuffer.offset * dimension * gl.sizeInBytes(dataType) : 0;
-            let normalized = glattrbuffer.normalized==true;
-            let instanced = attrDesc.instanced;
+            const dataType = glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT;
+            const dimension = glattrbuffer.dimension;
+            const stride = glattrbuffer.dimension * gl.sizeInBytes(dataType);
+            const offset = glattrbuffer.offset != undefined ? glattrbuffer.offset * dimension * gl.sizeInBytes(dataType) : 0;
+            const normalized = glattrbuffer.normalized==true;
+            const instanced = attrDesc.instanced;
 
             gl.enableVertexAttribArray(location);
             gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
@@ -58,6 +58,19 @@ class GeomShaderBinding {
     }
 
     unbind() {
+        const gl = this.__gl;
+        for (let attrName in this.__shaderAttrs) {
+            const attrDesc = this.__shaderAttrs[attrName];
+            const location = attrDesc.location;
+            if (location == -1)
+                continue;
+            gl.disableVertexAttribArray(location);
+            gl.vertexAttribDivisor(location, 0); // This makes it not-instanced
+
+            // console.log("Binding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
+        }
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 
     destroy(){
@@ -66,14 +79,13 @@ class GeomShaderBinding {
 
 class VAOGeomShaderBinding {
     constructor(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers) {
-
         this.__gl = gl;
         this.__vao = gl.createVertexArray();
         gl.bindVertexArray(this.__vao);
 
         for (let attrName in shaderAttrs) {
-            let attrDesc = shaderAttrs[attrName];
-            let location = attrDesc.location;
+            const attrDesc = shaderAttrs[attrName];
+            const location = attrDesc.location;
             if (location == -1)
                 continue;
             let glattrbuffer = glattrbuffers[attrName];
@@ -87,12 +99,12 @@ class VAOGeomShaderBinding {
                 }
             }
 
-            let dataType = glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT;
-            let dimension = glattrbuffer.dimension;
-            let stride = glattrbuffer.dimension * gl.sizeInBytes(dataType);
-            let offset = glattrbuffer.offset != undefined ? glattrbuffer.offset * dimension * gl.sizeInBytes(dataType) : 0;
-            let normalized = glattrbuffer.normalized==true;
-            let instanced = attrDesc.instanced;
+            const dataType = glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT;
+            const dimension = glattrbuffer.dimension;
+            const stride = glattrbuffer.dimension * gl.sizeInBytes(dataType);
+            const offset = glattrbuffer.offset != undefined ? glattrbuffer.offset * dimension * gl.sizeInBytes(dataType) : 0;
+            const normalized = glattrbuffer.normalized==true;
+            const instanced = attrDesc.instanced;
 
             gl.enableVertexAttribArray(location);
             gl.bindBuffer(gl.ARRAY_BUFFER, glattrbuffer.buffer);
@@ -115,6 +127,22 @@ class VAOGeomShaderBinding {
         this.__gl.bindVertexArray(this.__vao);
         this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
         return true;
+    }
+
+    unbind() {
+        const gl = this.__gl;
+        for (let attrName in this.__shaderAttrs) {
+            const attrDesc = this.__shaderAttrs[attrName];
+            const location = attrDesc.location;
+            if (location == -1)
+                continue;
+            gl.disableVertexAttribArray(location);
+            gl.vertexAttribDivisor(location, 0); // This makes it not-instanced
+
+            // console.log("Unbinding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
+        }
+
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 
     destroy(){

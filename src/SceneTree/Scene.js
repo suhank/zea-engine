@@ -11,8 +11,8 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
-    AssetItem
-} from './AssetItem.js';
+    VLAAsset
+} from './VLAAsset.js';
 import {
     Sphere
 } from './Geometry/Shapes/Sphere.js';
@@ -91,8 +91,8 @@ class Scene {
         if (path in this.__commonResources) {
             return this.__commonResources[path];
         }
-        let asset = new AssetItem(path, resourceLoader);
-        asset.getParameter('DataFilePath').setValue(path);
+        const asset = new VLAAsset(path, resourceLoader);
+        asset.getParameter('DataFilePath').setFilepath(path);
         this.__commonResources[path] = asset;
         return asset;
     }

@@ -107,9 +107,6 @@ class GLRenderer {
         this.__shaderDirectives = {};
         this.__preproc = { };
 
-        this.__vrViewport = undefined;
-        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined)
-            this.__vrpolyfill = new WebVRPolyfill();
 
         this.mirrorVRisplayToViewport = true;
 
@@ -152,6 +149,12 @@ class GLRenderer {
         }
 
         this.addViewport('main');
+
+
+        this.__vrViewport = undefined;
+        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined){
+            this.__vrpolyfill = new WebVRPolyfill();
+        }
 
         resourceLoader.loaded.connect(this.renderGeomDataFbos);
 
@@ -663,7 +666,7 @@ class GLRenderer {
         let offset = 0;
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
-            if(index < passSet.length - offset)
+            if((index - offset) < passSet.length)
                 return passSet[index - offset];
             offset += passSet.length;
         }
