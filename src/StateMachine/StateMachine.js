@@ -6,18 +6,6 @@ import {
     sgFactory
 } from '../SceneTree/SGFactory.js';
 
-const getUrlVars = () => {
-    const url = window.location.href,
-        args = {};
-
-    const parts = url.split('?');
-    const hashes = parts.length > 1 ? parts[1].split('&') : [];
-    for (let i = 0; i < hashes.length; i++) {
-        const hash = hashes[i].split('=');
-        args[hash[0]] = hash[1];
-    }
-    return args;
-}
 
 class StateMachine extends BaseItem {
     constructor(name) {
@@ -60,19 +48,6 @@ class StateMachine extends BaseItem {
             this.__currentState.deactivate();
         this.__currentState = this.__states[name];
         this.__currentState.activate();
-
-        // this turned out to be really anoying.
-        // if(addToHistory) {
-        //     const vars = getUrlVars();
-        //     vars['stateId'] = name;
-        //     let str = '?';
-        //     for(let key in vars) {
-        //         if(str != '?')
-        //             str += '&'
-        //         str += key+'='+vars[key];
-        //     }
-        //     window.history.pushState({stateName:name}, "State:"+name, str);
-        // }
     }
 
     getActiveState() {
