@@ -141,7 +141,7 @@ class GLRenderer {
 
         // this.__gizmoPass = this.addPass(new GizmoPass());
         // this.__gizmoContext = new GizmoContext(this);
-
+        
         for(let passtype in registeredPasses) {
             for(let cls of registeredPasses[passtype]){
                 this.addPass(new cls(), passtype);
@@ -157,6 +157,7 @@ class GLRenderer {
         }
 
         resourceLoader.loaded.connect(this.renderGeomDataFbos);
+        
 
     }
 
@@ -360,8 +361,8 @@ class GLRenderer {
             this.__glcanvas.width = hmdCanvasSize[0];
             this.__glcanvas.height = hmdCanvasSize[1];
         } else {
-            this.__glcanvas.width = this.__glcanvas.offsetWidth * window.devicePixelRatio;
-            this.__glcanvas.height = this.__glcanvas.offsetHeight * window.devicePixelRatio;
+            this.__glcanvas.width = this.__glcanvasDiv.clientWidth * window.devicePixelRatio;
+            this.__glcanvas.height = this.__glcanvasDiv.clientHeight * window.devicePixelRatio;
 
             this.__onResizeViewports();
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
@@ -382,7 +383,7 @@ class GLRenderer {
     setupWebGL(canvasDiv, webglOptions) {
 
         this.__glcanvas = document.createElement('canvas');
-        this.__glcanvas.style.position = 'absolute';
+        this.__glcanvas.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute';
         this.__glcanvas.style.left = '0px';
         this.__glcanvas.style.top = '0px';
         this.__glcanvas.style.width = '100%';
@@ -444,7 +445,6 @@ class GLRenderer {
 
         //////////////////////////////////
         // Setup event handlers
-
         const isValidCanvas = ()=> {  
             return this.__glcanvasDiv.offsetWidth > 0 && this.__glcanvasDiv.offsetHeight;
         }

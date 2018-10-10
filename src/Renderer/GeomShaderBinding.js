@@ -142,6 +142,7 @@ class VAOGeomShaderBinding {
             // console.log("Unbinding :" + attrName + " to attr:" + location + " count:" + glattrbuffer.count + " dimension:" + dimension  + " stride:" + stride  + " offset:" + offset + " normalized:" + normalized + " instanced:" + instanced);
         }
 
+        this.__gl.bindVertexArray(null);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
     }
 

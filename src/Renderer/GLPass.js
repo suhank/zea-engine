@@ -129,6 +129,10 @@ class GLPass {
                 }
             }
         }
+
+        if (renderstate.glgeom) {
+            renderstate.glgeom.unbind(renderstate);
+        }
     }
 
     drawGeomData(renderstate){
@@ -146,6 +150,10 @@ class GLPass {
                     this.drawItemSet(renderstate, gldrawitemset);
                 }
             }
+        }
+
+        if (renderstate.glgeom) {
+            renderstate.glgeom.unbind(renderstate);
         }
     }
 
