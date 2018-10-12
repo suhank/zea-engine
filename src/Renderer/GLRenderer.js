@@ -361,8 +361,8 @@ class GLRenderer {
             this.__glcanvas.width = hmdCanvasSize[0];
             this.__glcanvas.height = hmdCanvasSize[1];
         } else {
-            this.__glcanvas.width = this.__glcanvasDiv.clientWidth * window.devicePixelRatio;
-            this.__glcanvas.height = this.__glcanvasDiv.clientHeight * window.devicePixelRatio;
+            this.__glcanvas.width = this.__glcanvas.clientWidth * window.devicePixelRatio;
+            this.__glcanvas.height = this.__glcanvas.clientHeight * window.devicePixelRatio;
 
             this.__onResizeViewports();
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
@@ -388,10 +388,11 @@ class GLRenderer {
         this.__glcanvas.style.top = '0px';
         this.__glcanvas.style.width = '100%';
         this.__glcanvas.style.height = '100%';
+        
         this.__glcanvasDiv = canvasDiv;
         this.__glcanvasDiv.appendChild(this.__glcanvas);
 
-        onResize(canvasDiv, (event) => {
+        onResize(this.__glcanvas, (event) => {
             this.__onResize();
         });
         this.__onResize();
