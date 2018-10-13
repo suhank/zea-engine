@@ -26,8 +26,6 @@ class GLPass {
         this.__collector = collector;
         this.__passIndex = passIndex;
         this.__glshadermaterials = [];
-        this.__selectedGeomsShadermaterials = [];
-        
 
         if(this.filterRenderTree)
             this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
@@ -76,16 +74,8 @@ class GLPass {
         return glmaterial.bind(renderstate);
     }
 
-    drawItemSet(renderstate, gldrawitemset) {
-        gldrawitemset.draw(renderstate);  
-    }
-
     draw(renderstate) {
         const gl = this.__gl;
-
-
-        // let passProfile = [];
-        // renderstate.profileJSON[this.constructor.name] = passProfile;
 
         for (let glshaderMaterials of this.__glshadermaterials) {
             const glshader = glshaderMaterials.getGLShader();
@@ -94,16 +84,13 @@ class GLPass {
                 for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
                     if(glmaterialDrawItemSet.drawCount == 0)
                         continue;
-                    // let materialProfile = [];
                     if(this.bindMaterial(renderstate, glmaterialDrawItemSet.getGLMaterial())){
                         const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                         for (let gldrawitemset of gldrawitemsets) {
-                            // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
-                            this.drawItemSet(renderstate, gldrawitemset);
+                            gldrawitemset.draw(renderstate);  
                         }
                     }
                     renderstate.materialCount++;
-                    // passProfile.push(materialProfile);
                 }
             }
             glshader.unbind(renderstate);
@@ -117,18 +104,17 @@ class GLPass {
     drawSelectedGeoms(renderstate){
         const gl = this.__gl;
 
-        for (let glshaderMaterials of this.__selectedGeomsShadermaterials) {
+
+        for (let glshaderMaterials of this.__glshadermaterials) {
             const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
             for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                if(glmaterialDrawItemSet.drawCount == 0)
-                    continue;
                 const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                 for (let gldrawitemset of gldrawitemsets) {
-                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
-                    this.drawItemSet(renderstate, gldrawitemset);
+                    gldrawitemset.drawSelected(renderstate);  
                 }
             }
         }
+
 
         if (renderstate.glgeom) {
             renderstate.glgeom.unbind(renderstate);
@@ -147,7 +133,7 @@ class GLPass {
                 const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                 for (let gldrawitemset of gldrawitemsets) {
                     // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
-                    this.drawItemSet(renderstate, gldrawitemset);
+                    gldrawitemset.draw(renderstate);
                 }
             }
         }

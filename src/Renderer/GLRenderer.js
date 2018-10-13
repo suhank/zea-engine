@@ -840,6 +840,7 @@ class GLRenderer {
             }
         }
     }
+    
     drawSceneGeomData(renderstate){
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
