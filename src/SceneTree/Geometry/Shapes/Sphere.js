@@ -151,7 +151,7 @@ class Sphere extends Mesh {
                 normal.set(Math.sin(theta) * Math.cos(phi), Math.sin(theta) * Math.sin(phi), Math.cos(theta));
 
                 // Set positions and normals at the same time.
-                this.getVertex(vertex).setFromOther(normal.scale(radius));
+                this.getVertex(vertex).setFromOther(normal.scale(this.__radius));
                 vertex++;
             }
         }

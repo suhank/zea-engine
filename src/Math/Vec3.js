@@ -244,6 +244,7 @@ class Vec3 extends AttrValue {
         this.__data[0] *= len;
         this.__data[1] *= len;
         this.__data[2] *= len;
+        return len;
     }
 
     resize(length) {

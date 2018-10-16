@@ -75,7 +75,6 @@ class Scene {
     }
 
     getResourceLoader() {
-        console.warn("Resource Loader is now a singleton")
         return resourceLoader;
     }
 

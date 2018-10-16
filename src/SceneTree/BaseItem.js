@@ -26,9 +26,6 @@ const ItemFlags = {
 class BaseItem extends ParameterOwner {
     constructor(name) {
         super();
-        if (this.constructor.name == 'BaseItem') {
-            throw ("BaseItem should not be instantiated directly.");
-        }
         if (name == undefined)
             name = this.constructor.name;
         this.__name = name;
@@ -108,7 +105,7 @@ class BaseItem extends ParameterOwner {
         if (index == path.length){
             return this;
         }
-        if(path[index] == '>' && path.lenth == index + 2) {
+        if(path[index] == '>' && index == path.length - 1) {
             return this.getParameter(path[index+1]); 
         }
         
