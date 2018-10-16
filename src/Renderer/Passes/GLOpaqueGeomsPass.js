@@ -1,9 +1,15 @@
 import { GLPass, PassType } from '../GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
 import { GLRenderer } from '../GLRenderer.js';
+
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
+
+import {
+    SelectedGeomsShader
+} from '../Shaders/SelectedGeomsShader.js';
+
 
 class GLOpaqueGeomsPass extends GLPass {
     constructor() {
@@ -13,6 +19,7 @@ class GLOpaqueGeomsPass extends GLPass {
     init(gl, collector, passIndex) {
         super.init(gl, collector, passIndex);
         this.__geomdatashader = new GeomDataShader(gl);
+        this.__selectedGeomsShader = new SelectedGeomsShader(gl);
     }
 
     /////////////////////////////////////
@@ -35,20 +42,6 @@ class GLOpaqueGeomsPass extends GLPass {
         }
     }
 
-    bindShader(renderstate, glshader){
-        if(super.bindShader(renderstate, glshader)){
-            // const unifs = renderstate.unifs;
-            // if ('debugLightmapTexelSize' in unifs)
-            //     this.__gl.uniform1f(unifs.debugLightmapTexelSize.location, renderstate.debugLightmaps);
-            // if ('cutawayEnabled' in unifs){
-            //     this.__gl.uniform1f(unifs.planeDist.location, renderstate.planeDist);
-            //     this.__gl.uniform3fv(unifs.planeNormal.location, renderstate.planeNormal.asArray());
-            // }
-            return true;
-        }
-        return false;
-    }
-
     draw(renderstate) {
         const gl = this.__gl;
         // TODO: disable cull face when rendering cross sections.
@@ -60,6 +53,24 @@ class GLOpaqueGeomsPass extends GLPass {
         gl.depthMask(true);
 
         super.draw(renderstate);
+    }
+
+    drawSelectedGeoms(renderstate){
+
+        const gl = this.__gl;
+        gl.disable(gl.BLEND);
+        gl.disable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LESS);
+        gl.depthMask(true);
+
+        if(!this.__selectedGeomsShader.bind(renderstate))
+            return false;
+
+        if(!this.__collector.bind(renderstate))
+            return false;
+
+        super.drawSelectedGeoms(renderstate);
     }
 
     getGeomItemAndDist(geomData) {
@@ -92,7 +103,7 @@ class GLOpaqueGeomsPass extends GLPass {
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 
-        if(!this.__geomdatashader.bind(renderstate, this.constructor.name))
+        if(!this.__geomdatashader.bind(renderstate))
             return false;
 
         if(!this.__collector.bind(renderstate))

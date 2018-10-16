@@ -64,26 +64,6 @@ import {
 let activeGLRenderer = undefined;
 let mouseIsDown = false;
 let mouseLeft = false;
-// Hack to see if the code is running in node.js.
-// This is beause in node, we have no 'window', so this code should not run. 
-if (process === 'undefined' || process.browser == true) {
-    let onWheel = function(event) {
-        if (activeGLRenderer) {
-            activeGLRenderer.onWheel(event);
-            event.preventDefault();
-            event.stopPropagation();
-        }
-        return false;
-    }
-    if (window.addEventListener)
-    /** DOMMouseScroll is for mozilla. */
-        window.addEventListener('DOMMouseScroll', onWheel, false);
-    /** IE/Opera. */
-    window.onmousewheel = document.onmousewheel = onWheel;
-    window.oncontextmenu = function() {
-        return false;
-    }
-}
 
 
 const registeredPasses = {};
@@ -131,11 +111,6 @@ class GLRenderer {
         this.pointerMoved = new Signal();
         this.redrawOccured = new Signal();
         this.treeItemGlobalXfoChanged = new Signal();
-
-        // Stroke Signals
-        this.actionStarted = new Signal();
-        this.actionEnded = new Signal();
-        this.actionOccuring = new Signal();
 
         this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {});
 
@@ -266,15 +241,6 @@ class GLRenderer {
                 mousePos: mousePos,
                 ray: ray
             });
-        });
-        vp.actionStarted.connect((data) => {
-            this.actionStarted.emit(data);
-        });
-        vp.actionEnded.connect((data) => {
-            this.actionEnded.emit(data);
-        });
-        vp.actionOccuring.connect((data) => {
-            this.actionOccuring.emit(data);
         });
 
         this.__viewports.push(vp);
@@ -531,14 +497,33 @@ class GLRenderer {
             event.stopPropagation();
             return false;
         });
+
+        const onWheel = (event) => {
+            if (activeGLRenderer != this || !isValidCanvas())
+                return;
+            if (activeGLRenderer) {
+                this.onWheel(event);
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            return false;
+        }
+        if (window.addEventListener)
+        /** DOMMouseScroll is for mozilla. */
+            window.addEventListener('DOMMouseScroll', onWheel, false);
+        /** IE/Opera. */
+        window.onmousewheel = document.onmousewheel = onWheel;
+        
+        window.oncontextmenu = function() {
+            return false;
+        }
+
         document.addEventListener('keypress', (event) => {
             if (activeGLRenderer != this || !isValidCanvas())
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyPressed(key, event)) {
-                this.onKeyPressed(key, event);
-
                 // We are setting up key listeners in the state machine now.
                 // We cannot simply assume all handers are hooked up here.
                 // event.stopPropagation();
@@ -550,7 +535,6 @@ class GLRenderer {
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyDown(key, event)) {
-                this.onKeyDown(key, event);
                 // We are setting up key listeners in the state machine now.
                 // We cannot simply assume all handers are hooked up here.
                 // event.stopPropagation();
@@ -562,7 +546,6 @@ class GLRenderer {
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
             if (!vp || !vp.onKeyUp(key, event)) {
-                this.onKeyUp(key, event);
                 // We are setting up key listeners in the state machine now.
                 // We cannot simply assume all handers are hooked up here.
                 // event.stopPropagation();
@@ -593,43 +576,6 @@ class GLRenderer {
 
     getScreenQuad() {
         return this.__screenQuad;
-    }
-
-    onKeyPressed(key, event) {
-        this.keyPressed.emit(key, event);
-
-        // If running in electron, avoid handling hotkeys..
-        if (window.process === undefined || process.browser == true) {
-            switch (key) {
-            case 'f':
-                let selection = scene.getSelectionManager().selection;
-                if (selection.size == 0)
-                    this.__viewport.getCamera().frameView([scene.getRoot()]);
-                else
-                    this.__viewport.getCamera().frameView(selection);
-                break;
-            case 'p':
-                if(event.shiftKey)
-                    this.toggleContinuousDrawing();
-                break;
-            case 'g':
-                if(event.altKey)
-                    this.__canvasDiv.requestFullscreen();
-                break;
-            case 'v':
-                if (this.__vrViewport && this.__vrViewport.isPresenting())
-                    this.mirrorVRisplayToViewport = !this.mirrorVRisplayToViewport;
-                break;
-            }
-        }
-        this.requestRedraw();
-    }
-
-    onKeyDown(key, event) {
-
-    }
-    onKeyUp(key, event) {
-
     }
 
     onWheel(event) {
@@ -840,6 +786,7 @@ class GLRenderer {
             }
         }
     }
+    
     drawSceneGeomData(renderstate){
         for(let key in this.__passes) {
             const passSet = this.__passes[key];

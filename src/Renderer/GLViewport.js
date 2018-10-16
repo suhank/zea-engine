@@ -25,9 +25,6 @@ import {
     GLTexture2D
 } from './GLTexture2D.js';
 // import {
-//     GLSelectionRect
-// } from './Drawables/GLSelectionRect.js';
-// import {
 //     PostProcessing
 // } from './Shaders/PostProcessing.js';
 import {
@@ -69,29 +66,25 @@ class GLViewport extends BaseViewport {
         // this.__selectionRect = new GLSelectionRect(gl);
         // this.__overlayPass.addDrawItem(this.__selectionRect);
 
-        this.keyPressed = new Signal();
-        this.mouseMoved = new Signal();
-
         // Signals to abstract the user view. 
         // i.e. when a user switches to VR mode, the signals 
         // simply emit the new VR data.
         this.viewChanged = new Signal();
 
 
+        this.keyDown = new Signal();
+        this.keyPressed = new Signal();
+        this.keyUp = new Signal();
         this.mouseDown = new Signal();
-        this.mouseMove = new Signal();
+        this.mouseMoved = new Signal();
         this.mouseUp = new Signal();
         this.mouseDownOnGeom = new Signal();
-        this.mouseMoveOnGeom = new Signal();
-        this.mouseUpOnGeom = new Signal();
-        this.mouseDblClick = new Signal();
-        this.mouseClickedOnEmptySpace = new Signal();
-        this.keyPressed = new Signal();
+        this.mouseWheel = new Signal();
 
-        // Stroke Signals
-        this.actionStarted = new Signal();
-        this.actionEnded = new Signal();
-        this.actionOccuring = new Signal();
+        this.touchStart = new Signal();
+        this.touchMove = new Signal();
+        this.touchEnd = new Signal();
+        this.touchCancel = new Signal();
 
         this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -415,23 +408,36 @@ class GLViewport extends BaseViewport {
             gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-            let drawItems = new Set();
+            let geomItems = new Set();
             for (let i = 0; i < numPixels; i++) {
-                let pid = i * 4;
-                if (pixels[pid + 0] == 0) // Only keep Geoms. (filter out Gizmos)
-                    continue;
-                // Merge the 2 last 8bit values to make a 16bit integer index value
-                let id = pixels[pid + 0] + (pixels[pid + 1] * 255);
-                let drawItem = this.__renderer.getDrawItem(id);
-                drawItems.add(drawItem);
+
+                let passId, itemId, dist, geomData;
+                if (gl.floatGeomBuffer) {
+                    geomData = new Float32Array(4);
+                    gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
+                    if (geomData[3] == 0)
+                        return undefined;
+                    passId = Math.round(geomData[0]);
+                } else {
+                    geomData = new Uint8Array(4);
+                    gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData);
+                    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+                    if (geomData[0] == 0 && geomData[1] == 0)
+                        return undefined;
+                    passId = 0;
+                }
+
+                const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
+                if (geomItemAndDist) {
+                    geomItems.push(geomItemAndDist.geomItem);
+                }
             }
-            return drawItems;
+            return geomItems;
         }
     }
 
     /////////////////////////////
     // Events
-
 
     __eventMousePos(event) {
         return new Vec2(
@@ -446,78 +452,30 @@ class GLViewport extends BaseViewport {
         this.__mouseDownGeom = undefined;
 
         if (event.button == 0) {
-            /*
-            if (event.shiftKey) {
-                this.__manipMode = 'action';
-                let ray = this.calcRayFromScreenPos(this.__mouseDownPos);
-                if (ray == null)
-                    return;
-                let xfo = this.__camera.getGlobalXfo().clone();
-                xfo.tr = ray.pointAtDist(this.__camera.getFocalDistance());
+            const intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
+            if (intersectionData != undefined) {
+                // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+                // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+                this.__mouseDownGeom = intersectionData.geomItem;
+                this.__mouseDownGeom.onMouseDown(event, intersectionData);
+                if(event.vleStopPropagation == true)
+                    return true;
 
-                this.actionStarted.emit({
-                    pointerType: 'mouse',
-                    xfo
-                });
-                return;
+                this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
+                if(event.vleStopPropagation == true)
+                    return true;
 
-            } else {
-                */
-                let intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
-                if (intersectionData != undefined) {
-                    // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-                    // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-                    this.__mouseDownGeom = intersectionData.geomItem;
-                    this.__mouseDownGeom.onMouseDown(event, intersectionData);
-                    if(event.vleStopPropagation == true)
-                        return true;
-
-                    this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
-                    if(event.vleStopPropagation == true)
-                        return true;
-
-                    // Note: a manipulator can set a 
-                    // this.__manipMode = 'geom-manipulation';
-                }
-                /*
-                if (this.__manipMode == 'highlighting') {
-                    // Default to camera manipulation
-                */
-
-
-                if (this.__manipMode != 'camera-manipulation') {
-                    this.activateManipulator('camera-manipulation');
-                    this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
-                }
-            /*
-                }
-
+                // Note: a manipulator can set a 
+                // this.__manipMode = 'geom-manipulation';
             }
-            */
+
+            if (this.__manipMode != 'camera-manipulation') {
+                this.activateManipulator('camera-manipulation');
+                this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
+            }
         }
-        /*else if (event.button == 2) {
 
-                   // Default to camera manipulation
-                   this.__manipMode = 'camera-manipulation';
-                   this.__manipulator.onDragStart(event, this.__mouseDownPos, this);
-
-                   
-                   // if (event.shiftKey) {
-                   //     if (this.__geomDataBufferFbo) {
-                   //         this.__manipMode = 'add-selection';
-                   //     }
-                   // } else if (event.ctrlKey) {
-                   //     if (this.__geomDataBufferFbo) {
-                   //         this.__manipMode = 'remove-selection';
-                   //     }
-                   // } else {
-                   //     this.__manipMode = 'new-selection';
-                   // }
-               
-               }
-               */
-
-        this.mouseDown.emit(event);
+        this.mouseDown.emit(event, this.__mouseDownPos, this);
 
         return false;
     }
@@ -526,81 +484,14 @@ class GLViewport extends BaseViewport {
         const mouseUpPos = this.__eventMousePos(event);
 
         switch (this.__manipMode) {
-            case 'highlighting':
-                break;
-            case 'camera-manipulation':
-                this.__manipulators[this.__manipMode].onDragEnd(event, mouseUpPos, this);
-                this.deactivateManipulator();
-                break;
-            case 'geom-manipulation':
-                if (this.__mouseDownGeom) {
-                    this.__mouseDownGeom.onMouseUp(event, {
-                        mousePos: mouseUpPos,
-                        geomItem: this.__mouseDownGeom
-                    });
-                    this.mouseUpOnGeom.emit(this.__mouseDownGeom);
-                    this.__mouseDownGeom = undefined;
-                }
-                this.renderGeomDataFbo();
-                this.deactivateManipulator();
-                break;
-            case 'new-selection':
-                this.__renderer.getScene().getSelectionManager().clearSelection();
-            case 'add-selection':
-                this.__renderer.suspendDrawing();
-                let geomData = this.getGeomDataAtPos(mouseUpPos);
-                if (geomData != undefined && geomData.flags == 1) {
-                    let drawItem = this.__renderer.getDrawItem(geomData.id);
-                    if (drawItem) {
-                        let selectionManager = this.__renderer.getScene().getSelectionManager();
-                        if (event.ctrlKey)
-                            selectionManager.deselectGeom(drawItem.geomItem);
-                        else
-                            selectionManager.selectGeom(drawItem.geomItem, !event.shiftKey);
-                    }
-                }
-                this.__renderer.resumeDrawing();
-                this.deactivateManipulator();
-                break;
-            case 'new-selection-rect':
-            case 'add-selection-rect':
-            case 'remove-selection-rect':
-                // Rectangular selection. 
-                this.__renderer.suspendDrawing();
-                this.__selectionRect.setVisible(false);
-                let tl = new Vec2(Math.min(this.__mouseDownPos.x, mouseUpPos.x), Math.min(this.__mouseDownPos.y, mouseUpPos.y));
-                let br = new Vec2(Math.max(this.__mouseDownPos.x, mouseUpPos.x), Math.max(this.__mouseDownPos.y, mouseUpPos.y));
-                let drawItems = this.getGeomItemsInRect(tl, br);
-                if (drawItems.size > 0) {
-                    let selectedItems = new Set();
-                    for (let drawItem of drawItems) {
-                        selectedItems.add(drawItem.geomItem);
-                    }
-                    let selectionManager = this.__renderer.getScene().getSelectionManager();
-                    if (this.__manipMode == 'new-selection-rect')
-                        selectionManager.selectGeoms(selectedItems, true);
-                    else if (this.__manipMode == 'add-selection-rect')
-                        selectionManager.selectGeoms(selectedItems, false);
-                    else
-                        selectionManager.deselectGeoms(selectedItems);
-                } else {
-                    if (this.__manipMode == 'new-selection-rect')
-                        this.__renderer.getScene().getSelectionManager().clearSelection();
-                }
-                // Not
-                this.__renderer.resumeDrawing();
-                this.deactivateManipulator();
-                break;
-            case 'action':
-                this.actionEnded.emit({
-                    pointerType: 'mouse'
-                });
-                this.deactivateManipulator();
-                break;
+        case 'camera-manipulation':
+            this.__manipulators[this.__manipMode].onDragEnd(event, mouseUpPos, this);
+            this.deactivateManipulator();
+            break;
         }
 
 
-        this.mouseUp.emit(event);
+        this.mouseUp.emit(event, mouseUpPos, this);
 
         return false;
     }
@@ -608,143 +499,20 @@ class GLViewport extends BaseViewport {
     onMouseMove(event) {
 
         // Note: for some reason, I started getting mouse moves events, even when making a single click.
-        let filterRedundantDrags = () => {
-            return (event.movementX == 0 && event.movementX == 0);
-        }
-        let updateSelectionRect = function() {
-            // Update the rect.
-            let mousePos = this.__eventMousePos(event);
-            let tl = new Vec2(Math.min(this.__mouseDownPos.x, mousePos.x), Math.min(this.__mouseDownPos.y, mousePos.y));
-            let br = new Vec2(Math.max(this.__mouseDownPos.x, mousePos.x), Math.max(this.__mouseDownPos.y, mousePos.y));
-            let rectWidth = (br.x - tl.x);
-            let rectHeight = (br.y - tl.y);
-            if (rectWidth == 0 || rectHeight == 0)
-                return;
-
-            let xfo = this.__selectionRect.getGlobalXfo();
-            xfo.sc.x = (rectWidth / this.__width) * 2.0;
-            xfo.sc.y = (rectHeight / this.__height) * 2.0;
-            xfo.tr.x = (tl.x / this.__width) + (xfo.sc.x * 0.25);
-            xfo.tr.y = (tl.y / this.__height) + (xfo.sc.y * 0.25);
-            this.__selectionRect.globalXfoChanged.emit();
-
-            this.__renderer.requestRedraw();
-            // Highlite the geoms.
-        }
-
-        // let getGizmoUnderMouse = function() {
-        //     let geomData = this.getGeomDataAtPos(mousePos);
-        //     if (geomData != undefined && geomData.flags == 2) {
-        //         let gizmo = this.__gizmoPass.getGizmo(geomData.id);
-        //         if (this.__mouseOverGizmo && this.__mouseOverGizmo != gizmo) {
-        //             this.__mouseOverGizmo.unhighlight();
-        //             this.__mouseOverGizmo = undefined;
-        //         }
-        //         if (gizmo && this.__mouseOverGizmo != gizmo) {
-        //             this.__mouseOverGizmo = gizmo;
-        //             this.__mouseOverGizmo.highlight();
-        //         }
-        //         this.__renderer.requestRedraw();
-        //     } else {
-        //         if (this.__mouseOverGizmo) {
-        //             this.__mouseOverGizmo.unhighlight();
-        //             this.__mouseOverGizmo = undefined;
-        //             this.__renderer.requestRedraw();
-        //         }
-        //     }
-        // }
-
-        if (filterRedundantDrags())
+        if (event.movementX == 0 && event.movementX == 0)
             return false;
 
+        const mousePos = this.__eventMousePos(event);
+
         switch (this.__manipMode) {
-            case 'highlighting':
-                {
-                    // disabling higlighting whle I debug geom data buffers
-                    break;
-
-                    // if (this.__geomDataBufferFbo)
-                    //     getGeomUnderMouse.call(this);
-                    if (this.__gizmoPass)
-                        getGizmoUnderMouse.call(this);
-
-                    let mousePos = this.__eventMousePos(event);
-                    let mouseRay = this.calcRayFromScreenPos(mousePos);
-                    if (mouseRay == null)
-                        return;
-
-
-                    let intersectionData = this.getGeomDataAtPos(mousePos);
-                    if (intersectionData != undefined) {
-                        intersectionData.dragging = false;
-                        intersectionData.geomItem.onMouseMove(event, intersectionData);
-                    }
-
-                    this.mouseMoved.emit(event, mousePos, mouseRay);
-                }
+        case 'camera-manipulation':
+            {
+                this.__manipulators[this.__manipMode].onDrag(event, mousePos, this);
                 break;
-            case 'geom-manipulation':
-                {
-                    let mousePos = this.__eventMousePos(event);
-
-                    let intersectionData = this.getGeomDataAtPos(mousePos);
-                    if (intersectionData != undefined) {
-                        intersectionData.dragging = true;
-                        intersectionData.geomItem.onMouseMove(event, intersectionData);
-                        this.mouseMoveOnGeom.emit(intersectionData.geomItem);
-                    } else if (this.__mouseDownGeom) {
-                        let mouseRay = this.calcRayFromScreenPos(mousePos);
-                        this.__mouseDownGeom.onMouseMove(event, {
-                            mousePos,
-                            geomItem: this.__mouseDownGeom,
-                            mouseRay,
-                            dragging: true
-                        });
-
-                        this.mouseMoveOnGeom.emit(this.__mouseDownGeom);
-                    }
-                    break;
-                }
-            case 'camera-manipulation':
-                {
-                    let mousePos = this.__eventMousePos(event);
-                    this.__manipulators[this.__manipMode].onDrag(event, mousePos, this);
-                    break;
-                }
-            case 'new-selection':
-                this.__manipMode = 'new-selection-rect';
-                this.__selectionRect.setVisible(true);
-            case 'new-selection-rect':
-                updateSelectionRect.call(this);
-                break;
-            case 'add-selection':
-                this.__manipMode = 'add-selection-rect';
-                this.__selectionRect.setVisible(true);
-            case 'add-selection-rect':
-                updateSelectionRect.call(this);
-                break;
-            case 'remove-selection':
-                this.__manipMode = 'remove-selection-rect';
-                this.__selectionRect.setVisible(true);
-            case 'remove-selection-rect':
-                updateSelectionRect.call(this);
-                break;
-            case 'action':
-                {
-                    let ray = this.calcRayFromScreenPos(this.__eventMousePos(event));
-                    if (ray == null)
-                        return;
-                    let xfo = this.__camera.getGlobalXfo().clone();
-                    xfo.tr = ray.pointAtDist(this.__camera.getFocalDistance());
-                    this.actionOccuring.emit({
-                        pointerType: 'mouse',
-                        xfo: xfo
-                    });
-                }
-                break;
+            }
         }
 
-        this.mouseMoved.emit(event);
+        this.mouseMoved.emit(event, mousePos, this);
 
         return false;
     }
@@ -752,26 +520,20 @@ class GLViewport extends BaseViewport {
     onKeyPressed(key, event) {
         if (this.__manipulators['camera-manipulation'].onKeyPressed(key, event, this))
             return true;
-        switch (key) {
-            case 'f':
-                let selection = this.__renderer.getScene().getSelectionManager().selection;
-                if (selection.size == 0)
-                    this.__camera.frameView(this, [this.__renderer.getScene().getRoot()]);
-                else
-                    this.__camera.frameView(this, selection);
-                return true;
-        }
+        this.keyPressed.emit(key, event);
         return false;
     }
     onKeyDown(key, event) {
         if (this.__manipulators['camera-manipulation'].onKeyDown(key, event, this))
             return true;
+        this.keyDown.emit(key, event);
         return false;
     }
 
     onKeyUp(key, event) {
         if (this.__manipulators['camera-manipulation'].onKeyUp(key, event, this))
             return true;
+        this.keyUp.emit(key, event);
         return false;
     }
 

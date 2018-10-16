@@ -14,14 +14,8 @@ import {
     VLAAsset
 } from './VLAAsset.js';
 import {
-    Sphere
-} from './Geometry/Shapes/Sphere.js';
-import {
     GeomItem
 } from './GeomItem.js';
-import {
-    SelectionManager
-} from './SelectionManager.js';
 import {
     resourceLoader
 } from './ResourceLoader.js';
@@ -55,8 +49,6 @@ class Scene {
             this.__lightmapLOD = 0;
         this.__envmapLOD = this.__lightmapLOD;
 
-        this.__selectionManager = new SelectionManager();
-
         // Common resources are used by systems such at the renderer and VR controllers.
         // Any asset that will probably be used my multiple differeint independent objects
         // should be loaded here. (For now, it is being used to laod VR Controller assets.)
@@ -83,7 +75,6 @@ class Scene {
     }
 
     getResourceLoader() {
-        console.warn("Resource Loader is now a singleton")
         return resourceLoader;
     }
 

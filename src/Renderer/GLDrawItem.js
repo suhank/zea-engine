@@ -18,13 +18,12 @@ class GLDrawItem {
         this.visible = this.geomItem.getVisible();
         this.culled = false;
 
-        this.color = geomItem.color ? geomItem.color : new Color(1, 0, 0, 1);
-        this.wireColor = [0.2, 0.2, 0.2, 1.0];
         this.lightmapName = geomItem.getLightmapName();
 
         this.transformChanged = new Signal();
         this.updated = new Signal();
         this.destructing = new Signal();
+        this.selectedChanged = this.geomItem.selectedChanged;
         this.visibilityChanged = new Signal();
 
         this.updateVisibility = this.updateVisibility.bind(this);
@@ -40,17 +39,12 @@ class GLDrawItem {
             };
         }
 
-        this.updateSelection = (val) => {
-            if (val)
-                this.highlight();
-            else
-                this.unhighlight();
-        }
-
         this.geomItem.geomXfoChanged.connect(this.updateXfo);
         this.geomItem.visibilityChanged.connect(this.updateVisibility);
-        this.geomItem.selectedChanged.connect(this.updateSelection);
         this.geomItem.destructing.connect(this.destroy);
+        this.geomItem.selectedChanged.connect(() => {
+            this.updated.emit();
+        });
 
         this.glGeom.updated.connect(() => {
             this.updated.emit();
@@ -76,38 +70,12 @@ class GLDrawItem {
         return this.geomItem.getVisible();
     }
 
-    // isInverted(){
-    //     return this.inverted;
-    // }
-
-    // TODO: this system isn't super nice.
-    // Maybe all GeomItems should be assigned a color. (Currently only GizmoITem has a color)
-    getColor() {
-        return this.color;
-    }
-
-    setColor(val) {
-        this.color = val;
-    }
-
     getId() {
         return this.id;
     }
 
     getFlags() {
         return this.flags;
-    }
-
-    highlight() {
-        this.wireColor = [1.0, 1.0, 1.0, 1.0];
-        // Note: not connnected
-        //this.updated.emit();
-    }
-
-    unhighlight() {
-        this.wireColor = [0.2, 0.2, 0.2, 1.0];
-        // Note: not connnected
-        //this.updated.emit();
     }
 
     updateVisibility() {

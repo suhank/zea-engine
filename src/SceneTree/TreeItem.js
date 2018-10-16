@@ -58,22 +58,16 @@ class TreeItem extends BaseItem {
 
         this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
         this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
-        this.__selectedParam.valueChanged.connect((changeType)=>{
-            const value = this.__selectedParam.getValue();
-            for (let childItem of this.__childItems){
-                const param = childItem.getParameter('Selected');
-                if(param)
-                    param.setValue(value);
-            }
-        });
         this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
         this.__cutawayParam.valueChanged.connect((changeType)=>{
-            const value = this.__cutawayParam.getValue();
-            for (let childItem of this.__childItems){
-                const param = childItem.getParameter('CutawayEnabled');
-                if(param)
-                    param.setValue(value);
-            }
+            setTimeout(()=> {
+                const value = this.__cutawayParam.getValue();
+                for (let childItem of this.__childItems){
+                    const param = childItem.getParameter('CutawayEnabled');
+                    if(param)
+                        param.setValue(value);
+                }
+            }, 1)
         });
 
 
@@ -112,9 +106,13 @@ class TreeItem extends BaseItem {
 
 
         this.__visibleParam.valueChanged.connect((mode)=>{
-            const visibile = this.getVisible();
-            for (let childItem of this.__childItems)
-                childItem.setInheritedVisiblity(visibile);
+            // Make sure our own visibility change notificaiton goes out
+            // before the children.
+            setTimeout(()=> {
+                const visibile = this.getVisible();
+                for (let childItem of this.__childItems)
+                    childItem.setInheritedVisiblity(visibile);
+            }, 1)
         });
 
         this.visibilityChanged = this.__visibleParam.valueChanged;
@@ -468,7 +466,7 @@ class TreeItem extends BaseItem {
         if (index == path.length){
             return this;
         }
-        if(path[index] == ':' && path.lenth > index + 1) {
+        if(path[index] == '>' && index == path.length - 2) {
             if(this.hasComponent(path[index+1])) {
                 const component = this.getComponent(path[index+1]);
                 return component.resolvePath(path, index+2);
