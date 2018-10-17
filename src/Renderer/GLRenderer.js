@@ -448,7 +448,6 @@ class GLRenderer {
             const vp = activeGLRenderer.getActiveViewport();
             if (vp) {
                 vp.onMouseDown(event);
-                event.preventDefault();
             }
             mouseLeft = false;
             event.stopPropagation();
@@ -464,7 +463,6 @@ class GLRenderer {
             const vp = activeGLRenderer.getActiveViewport();
             if (vp) {
                 vp.onMouseUp(event);
-                event.preventDefault();
             }
             if (mouseLeft)
                 activeGLRenderer = undefined;

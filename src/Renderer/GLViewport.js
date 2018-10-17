@@ -94,11 +94,8 @@ class GLViewport extends BaseViewport {
         this.quad = new GLMesh(gl,  new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
-
-        this.__manipulators = {};
-        this.__manipModeStack = ['highlighting'];
-        this.__manipMode = 'highlighting';
-        this.registerManipulator('camera-manipulation', new CameraMouseAndKeyboard())
+        this.__cameraManipulator = new CameraMouseAndKeyboard();
+        this.__cameraManipulatorDragging = false;
 
         this.resize(width, height);
         // this.createOffscreenFbo();
@@ -159,36 +156,10 @@ class GLViewport extends BaseViewport {
         this.__updateProjectionMatrix();
     }
 
-    getManipulator() {
-        return this.__manipulators['camera-manipulation'];
-    }
 
     setManipulator(manipulator) {
-        // if(this.__manipulator)
-        //     this.__manipulator.movementFinished.disconnect(this.renderGeomDataFbo);
-        // this.__manipulator = manipulator;
-        // this.__manipulator.movementFinished.connect(this.renderGeomDataFbo);
-        this.registerManipulator('camera-manipulation', manipulator)
+        this.__cameraManipulator = manipulator;
     }
-
-    registerManipulator(key, manipulator) {
-        manipulator.movementFinished.connect(this.renderGeomDataFbo);
-        this.__manipulators[key] = manipulator;
-    }
-
-    activateManipulator(key) {
-        if (this.__manipMode) {
-            this.__manipModeStack.push(this.__manipMode);
-        }
-        this.__manipMode = key;
-    }
-
-    deactivateManipulator() {
-        if (this.__manipModeStack.length > 0) {
-            this.__manipMode = this.__manipModeStack.pop();
-        }
-    }
-
 
     setGizmoPass(gizmoPass) {
         this.__gizmoPass = gizmoPass;
@@ -459,19 +430,17 @@ class GLViewport extends BaseViewport {
                 this.__mouseDownGeom = intersectionData.geomItem;
                 this.__mouseDownGeom.onMouseDown(event, intersectionData);
                 if(event.vleStopPropagation == true)
-                    return true;
+                    return;
 
                 this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
                 if(event.vleStopPropagation == true)
-                    return true;
-
-                // Note: a manipulator can set a 
-                // this.__manipMode = 'geom-manipulation';
+                    return;
             }
 
-            if (this.__manipMode != 'camera-manipulation') {
-                this.activateManipulator('camera-manipulation');
-                this.__manipulators[this.__manipMode].onDragStart(event, this.__mouseDownPos, this);
+            if (this.__cameraManipulator) {
+                this.__cameraManipulatorDragging = true;
+                this.__cameraManipulator.onDragStart(event, this.__mouseDownPos, this);
+                return;
             }
         }
 
@@ -483,13 +452,11 @@ class GLViewport extends BaseViewport {
     onMouseUp(event) {
         const mouseUpPos = this.__eventMousePos(event);
 
-        switch (this.__manipMode) {
-        case 'camera-manipulation':
-            this.__manipulators[this.__manipMode].onDragEnd(event, mouseUpPos, this);
-            this.deactivateManipulator();
-            break;
+        if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
+            this.__cameraManipulator.onDragEnd(event, mouseUpPos, this);
+            this.__cameraManipulatorDragging = false;
+            return;
         }
-
 
         this.mouseUp.emit(event, mouseUpPos, this);
 
@@ -504,12 +471,9 @@ class GLViewport extends BaseViewport {
 
         const mousePos = this.__eventMousePos(event);
 
-        switch (this.__manipMode) {
-        case 'camera-manipulation':
-            {
-                this.__manipulators[this.__manipMode].onDrag(event, mousePos, this);
-                break;
-            }
+        if (this.__cameraManipulator && this.__cameraManipulatorDragging){
+            this.__cameraManipulator.onDrag(event, mousePos, this);
+            return;
         }
 
         this.mouseMoved.emit(event, mousePos, this);
@@ -518,44 +482,68 @@ class GLViewport extends BaseViewport {
     }
 
     onKeyPressed(key, event) {
-        if (this.__manipulators['camera-manipulation'].onKeyPressed(key, event, this))
-            return true;
-        this.keyPressed.emit(key, event);
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onKeyPressed(key, event, this);
+            return;
+        }
+        this.keyPressed.emit(key, event, this);
         return false;
     }
     onKeyDown(key, event) {
-        if (this.__manipulators['camera-manipulation'].onKeyDown(key, event, this))
-            return true;
-        this.keyDown.emit(key, event);
-        return false;
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onKeyDown(key, event, this);
+            return;
+        }
+        this.keyDown.emit(key, event, this);
     }
 
     onKeyUp(key, event) {
-        if (this.__manipulators['camera-manipulation'].onKeyUp(key, event, this))
-            return true;
-        this.keyUp.emit(key, event);
-        return false;
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onKeyUp(key, event, this);
+            return;
+        }
+        this.keyUp.emit(key, event, this);
     }
 
     onWheel(event) {
-        return this.__manipulators['camera-manipulation'].onWheel(event, this);
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onWheel(event, this);
+            return;
+        }
+        this.mouseWheel.emit(event, this);
     }
 
     // Touch events
     onTouchStart(event) {
-        return this.__manipulators['camera-manipulation'].onTouchStart(event, this);
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onTouchStart(event, this);
+            return;
+        }
+        this.touchStart.emit(event, this);
     }
 
     onTouchMove(event) {
-        return this.__manipulators['camera-manipulation'].onTouchMove(event, this);
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onTouchMove(event, this);
+            return;
+        }
+        this.touchMove.emit(event, this);
     }
 
     onTouchEnd(event) {
-        return this.__manipulators['camera-manipulation'].onTouchEnd(event, this);
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onTouchEnd(event, this);
+            return;
+        }
+        this.touchEnd.emit(event, this);
     }
 
     onTouchCancel(event) {
-        return this.__manipulators['camera-manipulation'].onTouchCancel(event, this);
+        if (this.__cameraManipulator){
+            this.__cameraManipulator.onTouchCancel(event, this);
+            return;
+        }
+        this.touchCancel.emit(event, this);
     }
 
 
