@@ -134,6 +134,7 @@ class Sphere extends Mesh {
         }
 
         this.setBoundingBoxDirty();
+        this.geomDataTopologyChanged.emit();
     }
 
     __resize() {
@@ -159,6 +160,7 @@ class Sphere extends Mesh {
         vertex++;
 
         this.setBoundingBoxDirty();
+        this.geomDataChanged.emit();
     }
 
     toJSON() {

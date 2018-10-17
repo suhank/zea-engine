@@ -189,7 +189,7 @@ class GLLines extends GLGeom {
                 }
 
                 gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
-                gl.bufferData(gl.ARRAY_BUFFER, attr.data, gl.STATIC_DRAW);
+                gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
             }
 
             // Cache the size so we know later if it changed (see below)

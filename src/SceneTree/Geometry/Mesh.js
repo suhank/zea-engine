@@ -525,7 +525,7 @@ class Mesh extends BaseGeom {
         //     this.addVertexAttribute("normals", Vec3, 0.0);
         // }
 
-        let splitIndices = {};
+        const splitIndices = {};
         let splitCount = 0;
         for (let [attrName, attr] of this.__vertexAttributes) {
             let attrSplits = attr.getSplits();
@@ -543,16 +543,20 @@ class Mesh extends BaseGeom {
             }
         }
 
-        let numUnSplitVertices = this.vertices.length;
-        let totalNumVertices = numUnSplitVertices + splitCount;
-        let indices = this.generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices);
+        const numUnSplitVertices = this.vertices.length;
+        const totalNumVertices = numUnSplitVertices + splitCount;
+
+        let indices;
+        if (!opts || opts.includeIndices != false) {
+            indices = this.generateTriangulatedIndices(totalNumVertices, numUnSplitVertices, splitIndices);
+        }
 
         // Create some vertex attribute buffers
-        let debugAttrValues = false;
-        let maxIndex;
-        if (debugAttrValues)
-            maxIndex = Math.max(...indices);
-        let attrBuffers = {};
+        const debugAttrValues = false;
+        // let maxIndex;
+        // if (debugAttrValues)
+        //     maxIndex = Math.max(...indices);
+        const attrBuffers = {};
         for (let [attrName, attr] of this.__vertexAttributes) {
             let values;
             if (splitCount == 0)
@@ -560,13 +564,13 @@ class Mesh extends BaseGeom {
             else
                 values = attr.generateSplitValues(splitIndices, splitCount);
 
-            let dimension = attr.numFloat32Elements;
-            let count = values.length / dimension;
+            const dimension = attr.numFloat32Elements;
+            const count = values.length / dimension;
 
-            if (debugAttrValues) {
-                if (count <= maxIndex)
-                    console.warn("Invalid indexing. Attr value is insufficient for indexing:" + attrName + ". Max Index:" + maxIndex + " Attr Size:" + count);
-            }
+            // if (debugAttrValues) {
+            //     if (count <= maxIndex)
+            //         console.warn("Invalid indexing. Attr value is insufficient for indexing:" + attrName + ". Max Index:" + maxIndex + " Attr Size:" + count);
+            // }
 
             attrBuffers[attrName] = {
                 values: values,
@@ -576,7 +580,7 @@ class Mesh extends BaseGeom {
             };
         }
 
-        let result = {
+        const result = {
             numVertices: this.numVertices(),
             numRenderVerts: totalNumVertices,
             indices,
@@ -595,9 +599,9 @@ class Mesh extends BaseGeom {
             }
             // The array will be structured as a start+offset for each vertex, followed
             // by a 2d array of neighbor indices.
-            let vertexNeighbors = new Uint32Array(this.vertexEdges.length * 2 + count);
+            const vertexNeighbors = new Uint32Array(this.vertexEdges.length * 2 + count);
 
-            let sortFanEdges = (fanEdges)=>{
+            const sortFanEdges = (fanEdges)=>{
 
                 for (let i = 0; i < fanEdges.length; i++) {
                     let feA = fanEdges[i];
@@ -621,7 +625,7 @@ class Mesh extends BaseGeom {
                 }
             }
 
-            let checkFanEdges = (fanEdges)=>{
+            const checkFanEdges = (fanEdges)=>{
 
                 // now check that the faces all build a fan. Maybe starting and ending with -1
                 if(fanEdges[0][0] == -1 || fanEdges[fanEdges.length-1][1] == -1){

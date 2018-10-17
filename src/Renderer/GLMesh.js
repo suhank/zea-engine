@@ -18,8 +18,10 @@ class GLMesh extends GLGeom {
     genBuffers() {
         super.genBuffers();
 
-        let geomBuffers = this.__geom.genBuffers();
-        let indices = geomBuffers.indices;
+        const gl = this.__gl;
+
+        const geomBuffers = this.__geom.genBuffers();
+        const indices = geomBuffers.indices;
         this.__numTriIndices = geomBuffers.indices.length;
         if(indices instanceof Uint8Array)
             this.__indexDataType = this.__gl.UNSIGNED_BYTE ;
@@ -31,13 +33,12 @@ class GLMesh extends GLGeom {
         this.__numTriangles = indices.length / 3;
         this.__numRenderVerts = geomBuffers.numRenderVerts;
 
-        const gl = this.__gl;
         this.__indexBuffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geomBuffers.indices, gl.STATIC_DRAW);
 
         // Create some vertex attribute buffers
-        let debugAttrValues = false;
+        const debugAttrValues = false;
         let maxIndex;
         if (debugAttrValues)
             maxIndex = Math.max(...indices);
@@ -57,8 +58,19 @@ class GLMesh extends GLGeom {
             if(attrName == 'textureCoords')
                 this.__glattrbuffers['texCoords'] = this.__glattrbuffers['textureCoords'];
         }
-        
-        this.__geom.freeBuffers();
+    }
+
+
+    updateBuffers(opts) {
+        const gl = this.__gl;
+
+        const geomBuffers = this.__geom.genBuffers({ includeIndices: false });
+        for (let attrName in geomBuffers.attrBuffers) {
+            let attrData = geomBuffers.attrBuffers[attrName];
+            let glattr = this.__glattrbuffers[attrName];
+            gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
+            gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
+        }
     }
 
 
