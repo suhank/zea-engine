@@ -4,3 +4,4 @@ Tools/
 VLPreprocessor/
 src/
 visualivestream/
+lib/*.map
