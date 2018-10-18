@@ -198,11 +198,11 @@ class GLCollector {
             return glmaterialDrawItemSets;
         }
 
-        let glshaderMaterials = this.getShaderMaterials(material);
+        const glshaderMaterials = this.getShaderMaterials(material);
         if (!glshaderMaterials)
             return;
 
-        let glmaterial = new GLMaterial(this.__renderer.gl, material, glshaderMaterials.getGLShader());
+        const glmaterial = new GLMaterial(this.__renderer.gl, material, glshaderMaterials.getGLShader());
         glmaterial.updated.connect(() => {
             this.__renderer.requestRedraw();
         });
@@ -218,7 +218,7 @@ class GLCollector {
         });
 
         material.destructing.connect(() => {
-            this.removeMaterial(material);
+            glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
         });
 
         return glmaterialDrawItemSets;

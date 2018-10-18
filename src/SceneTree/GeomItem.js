@@ -188,7 +188,7 @@ class GeomItem extends TreeItem {
             const onGeomLoaded = (range) => {
                 if (geomIndex >= range[0] && geomIndex < range[1]) {
                     this.setGeometry(geomLibrary.getGeom(geomIndex));
-                    geomLibrary.rangeLoaded.disconnectID(connid);
+                    geomLibrary.rangeLoaded.disconnectId(connid);
                 }
             }
             const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);
