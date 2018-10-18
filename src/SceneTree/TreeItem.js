@@ -59,6 +59,7 @@ class TreeItem extends BaseItem {
         this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
         this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
         this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
+
         this.__cutawayParam.valueChanged.connect((changeType) => {
             setTimeout(() => {
                 const value = this.__cutawayParam.getValue();
@@ -105,10 +106,10 @@ class TreeItem extends BaseItem {
         });
 
 
-        this.__visibleParam.valueChanged.connect((mode) => {
+        this.__visibleParam.valueChanged.connect((mode)=>{
             // Make sure our own visibility change notificaiton goes out
             // before the children.
-            setTimeout(() => {
+            setTimeout(()=> {
                 const visibile = this.getVisible();
                 for (let childItem of this.__childItems)
                     childItem.setInheritedVisiblity(visibile);
@@ -503,10 +504,11 @@ class TreeItem extends BaseItem {
         if (index == path.length) {
             return this;
         }
-        if (path[index] == '>' && index == path.length - 2) {
-            if (this.hasComponent(path[index + 1])) {
-                const component = this.getComponent(path[index + 1]);
-                return component.resolvePath(path, index + 2);
+
+        if(path[index] == '>' && index == path.length - 2) {
+            if(this.hasComponent(path[index+1])) {
+                const component = this.getComponent(path[index+1]);
+                return component.resolvePath(path, index+2);
             }
         }
 
