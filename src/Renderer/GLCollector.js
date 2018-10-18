@@ -86,8 +86,7 @@ class GLMaterialDrawItemSets {
 
             this.drawCount += drawItemSet.drawCount;
             drawItemSet.drawCountChanged.connect(this.__drawCountChanged);
-        }
-        else {
+        } else {
             console.warn("drawItemSet already added to GLMaterialDrawItemSets")
         }
     }
@@ -121,26 +120,35 @@ class GLCollector {
         this.__newItemsAdded = false;
         this.__dirtyItemIndices = [];
 
-        this.__sceneItemFilters = [];
-        this.__sceneItemFilters.push((treeItem) => {
-            if (treeItem instanceof GeomItem) {
-                if (!treeItem.getMetadata('gldrawItem')) {
-                    if (treeItem.getMaterial() == undefined) {
-                        console.warn("Scene item :" + treeItem.getPath() + " has no material");
-                        // TODO: listen for when the material is assigned.(like geoms below)
-                    } else if (treeItem.getGeometry() == undefined) {
-                        // we will add this geomitem once it recieves its geom.
-                        treeItem.geomAssigned.connect(() => {
+        this.__passCallbacks = [];
+        this.registerPass(
+            (treeItem) => {
+                if (treeItem instanceof GeomItem) {
+                    if (!treeItem.getMetadata('gldrawItem')) {
+                        if (treeItem.getMaterial() == undefined) {
+                            console.warn("Scene item :" + treeItem.getPath() + " has no material");
+                            // TODO: listen for when the material is assigned.(like geoms below)
+                        } else if (treeItem.getGeometry() == undefined) {
+                            // we will add this geomitem once it recieves its geom.
+                            treeItem.geomAssigned.connect(() => {
+                                this.addGeomItem(treeItem);
+                            })
+                        } else {
                             this.addGeomItem(treeItem);
-                        })
-                    } else {
-                        this.addGeomItem(treeItem);
+                        }
                     }
+                    return true;
                 }
-                return true;
+                return false;
+            },
+            (treeItem) => {
+                if (treeItem instanceof GeomItem && treeItem.getMetadata('gldrawItem')) {
+                    this.removeGeomItem(treeItem);
+                    return true;
+                }
+                return false;
             }
-            return false;
-        });
+        );
 
         // Un-Optimized Render Tree
         // Structured like so for efficient render traversial.
@@ -150,9 +158,8 @@ class GLCollector {
         this.renderTreeUpdated = new Signal();
         this.billboardDiscovered = new Signal();
 
-        this.__childAdded = this.__childAdded.bind(this)
-        this.__treeItemDestructing = this.__treeItemDestructing.bind(this)
-
+        this.addTreeItem = this.addTreeItem.bind(this)
+        this.removeTreeItem = this.removeTreeItem.bind(this)
 
     }
 
@@ -162,7 +169,17 @@ class GLCollector {
 
     registerSceneItemFilter(fn) {
         // insert at the beginning so it is called first.
-        this.__sceneItemFilters.splice(0, 0, fn);
+        this.__passCallbacks.splice(0, 0, {
+            itemAddedFn: fn
+        });
+    }
+
+    registerPass(itemAddedFn, itemRemovedFn) {
+        // insert at the beginning so it is called first.
+        this.__passCallbacks.splice(0, 0, {
+            itemAddedFn,
+            itemRemovedFn
+        });
     }
 
     getGLShaderMaterials() {
@@ -248,10 +265,10 @@ class GLCollector {
         let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
         if (!glmaterialDrawItemSets)
             return;
-        let glgeom = this.addGeom(geomItem.getGeometry());
+        const glgeom = this.addGeom(geomItem.getGeometry());
 
 
-        let flags = 1;
+        const flags = 1;
         let index;
         // Use recycled indices if there are any available...
         if (this.__drawItemsIndexFreeList.length > 0) {
@@ -262,10 +279,10 @@ class GLCollector {
         }
         this.__dirtyItemIndices.push(index);
 
-        let gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
+        const gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
-        gldrawItem.updated.connect(() => {
+        const updatedId = gldrawItem.updated.connect(() => {
             this.__renderer.requestRedraw();
         });
 
@@ -275,18 +292,24 @@ class GLCollector {
         // Note: we never remove the item, because
         // the DrawItem stores its index in the array,
         // and so cannot be moved.
-        gldrawItem.destructing.connect(() => {
-            this.removeDrawItem(gldrawItem);
-            this.__renderer.requestRedraw();
+        const destructingId = gldrawItem.destructing.connect(() => {
+            // Note: now items should be removed from the
+            // tree before they destruct. 
+            console.warn("gldrawItem.destructing");
+            gldrawItem.updated.disconnectId(updatedId);
+            gldrawItem.transformChanged.disconnectId(transformChangedId);
+            gldrawItem.destructing.disconnectId(destructingId);
+            // this.removeDrawItem(gldrawItem);
+            // this.__renderer.requestRedraw();
         });
 
-        gldrawItem.transformChanged.connect(() => {
+        const transformChangedId = gldrawItem.transformChanged.connect(() => {
             this.__dirtyItemIndices.push(index);
             // this.__updateItemInstanceData(index, gldrawItem);
             this.__renderer.requestRedraw();
         });
 
-        let addDrawItemToGLMaterialDrawItemSet = () => {
+        const addDrawItemToGLMaterialDrawItemSet = () => {
             let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
             if (!drawItemSet) {
                 drawItemSet = new GLDrawItemSet(this.__renderer.gl, glgeom);
@@ -308,13 +331,34 @@ class GLCollector {
         return gldrawItem;
     };
 
+    removeGeomItem(geomItem) {
+
+        const gldrawItem = geomItem.getMetadata('gldrawItem');
+        this.removeDrawItem(gldrawItem);
+
+
+        const glgeom = geomItem.getGeometry().getMetadata('glgeom');
+        const glmaterialDrawItemSets = geomItem.getMaterial().getMetadata('glmaterialDrawItemSets');
+
+        const drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
+        drawItemSet.removeDrawItem(gldrawItem);
+
+        // Note: for now leave the material and geom in place. Multiple 
+        // GeomItems can reference a given material/geom, so we simply wait
+        // for them to be destroyed. 
+
+        geomItem.deleteMetadata('gldrawItem')
+        
+        this.__newItemsAdded = true;
+    }
+
     addTreeItem(treeItem) {
 
-        for (let fn of this.__sceneItemFilters) {
-            let rargs = {
+        for (let passCbs of this.__passCallbacks) {
+            const rargs = {
                 continueInSubTree: true
             };
-            let handled = fn(treeItem, rargs);
+            const handled = passCbs.itemAddedFn(treeItem, rargs);
             if (handled) {
                 if (!rargs.continueInSubTree)
                     return;
@@ -327,17 +371,35 @@ class GLCollector {
             this.addTreeItem(childItem);
         }
 
-        treeItem.childAdded.connect(this.__childAdded);
-        treeItem.destructing.connect(this.__treeItemDestructing);
+        treeItem.childAdded.connect(this.addTreeItem);
+        treeItem.childRemoved.connect(this.removeTreeItem);
+        treeItem.destructing.connect(this.removeTreeItem);
     }
 
-    __childAdded(child) {
-        this.addTreeItem(child);
-    }
+    removeTreeItem(treeItem) {
 
-    __treeItemDestructing(treeItem) {
-        treeItem.childAdded.disconnect(this.__childAdded);
-        treeItem.destructing.disconnect(this.__treeItemDestructing);
+        treeItem.childAdded.disconnect(this.addTreeItem);
+        treeItem.childRemoved.disconnect(this.removeTreeItem);
+        treeItem.destructing.disconnect(this.removeTreeItem);
+
+        for (let passCbs of this.__passCallbacks) {
+            if (!passCbs.itemRemovedFn)
+                continue;
+            const rargs = {
+                continueInSubTree: true
+            };
+            const handled = passCbs.itemRemovedFn(treeItem, rargs);
+            if (handled) {
+                if (!rargs.continueInSubTree)
+                    return;
+                break;
+            }
+        }
+
+        // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
+        for (let childItem of treeItem.getChildren()) {
+            this.removeTreeItem(childItem);
+        }
     }
 
     removeDrawItem(gldrawItem) {
@@ -372,19 +434,6 @@ class GLCollector {
         // if(materialGeomMapping.geomItemMappings.length == 0 && !this.__explicitShader){
         //     this.removeMaterialGeomMapping(materialGeomMapping.glmaterial);
         // }
-    };
-
-    addGizmo(gizmo) {
-        // let flags = 2;
-        // let id = this.__gizmos.length;
-        // gizmo.setGeomID(flags, id);
-
-        for (let drawItem of gizmo.getDrawItems())
-            this.addGeomItem(drawItem);
-
-        this.__gizmoDataPass.addDrawItem(gizmo.getProxyItem());
-
-        this.__gizmos.push(gizmo);
     };
 
 
@@ -431,9 +480,9 @@ class GLCollector {
         if (!gl.floatTexturesSupported) {
             // Pull on the GeomXfo params. This will trigger the lazy evaluation of the operators in the scene.
             const len = this.__dirtyItemIndices.length;
-            for (let i = 0; i < len; i++){
+            for (let i = 0; i < len; i++) {
                 const drawItem = this.__drawItems[this.__dirtyItemIndices[i]];
-                if(drawItem){
+                if (drawItem) {
                     drawItem.updateGeomMatrix();
                 }
             }
@@ -522,8 +571,8 @@ class GLCollector {
         if (this.__dirtyItemIndices.length == 0)
             return;
         this.uploadDrawItems();
-        
-        if(this.__newItemsAdded) {
+
+        if (this.__newItemsAdded) {
             this.renderTreeUpdated.emit();
             this.__newItemsAdded = false;
         }

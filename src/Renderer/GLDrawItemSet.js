@@ -11,6 +11,7 @@ class GLDrawItemSet {
         this.gl = gl;
         this.glgeom = glgeom;
         this.drawItems = [];
+        this.drawItemSignalIds = [];
         this.drawIdsArray = null;
         this.drawIdsBuffer = null;
         this.drawIdsBufferDirty = true;
@@ -39,33 +40,33 @@ class GLDrawItemSet {
         return this.drawItems[index];
     }
 
-    //  Note: used by patternade to iterate over times.
+    //  Note: used by patternade to iterate over items.
     getGLDrawItems() {
         return this.drawItems;
     }
-
-    // isInverted() {
-    //     return this.inverted;
-    // }
 
     getLightmapName() {
         return this.lightmapName;
     }
 
+    getDrawCount() {
+        return this.drawCount;
+    }
+
     addDrawItem(gldrawItem) {
-        let index = this.drawItems.length;
-        this.drawItems.push(gldrawItem);
         if (gldrawItem.visible) {
             this.drawCount++;
             this.drawCountChanged.emit(1);
         }
 
-        if (this.drawItems.length == 1) {
+        if (this.drawItems.length == 0) {
             // this.inverted = gldrawItem.isInverted();
             this.lightmapName = gldrawItem.getGeomItem().getLightmapName();
         }
 
-        gldrawItem.selectedChanged.connect(() => {
+        const signalIds = {}
+
+        signalIds.sel = gldrawItem.selectedChanged.connect(() => {
             const selected = gldrawItem.getGeomItem().getSelected();
             if (selected) {
                 this.selectedCount++;
@@ -75,7 +76,7 @@ class GLDrawItemSet {
             this.selectedIdsBufferDirty = true;
         });
 
-        gldrawItem.visibilityChanged.connect((visible) => {
+        signalIds.vis = gldrawItem.visibilityChanged.connect((visible) => {
             if (visible) {
                 this.drawCount++;
                 this.drawCountChanged.emit(1);
@@ -86,21 +87,44 @@ class GLDrawItemSet {
             this.drawIdsBufferDirty = true;
         });
 
-        gldrawItem.destructing.connect(() => {
-            this.drawItems.splice(index, 1);
-            if (gldrawItem.visible) {
-                this.drawCount--;
-                this.drawCountChanged.emit(-1);
-            }
-            if (this.drawItems.length == 0) {
-                // Destroy??
-            }
-            this.drawIdsBufferDirty = true;
+        // const index = this.drawItems.length;
+        signalIds.dest = gldrawItem.destructing.connect(() => {
+            const index = this.drawItems.indexOf(gldrawItem);
+            console.log("Draw Item destructing:", index)// Index should be -1
+        //     this.drawItems.splice(index, 1);
+        //     if (gldrawItem.visible) {
+        //         this.drawCount--;
+        //         this.drawCountChanged.emit(-1);
+        //     }
+        //     if (this.drawItems.length == 0) {
+        //         // Destroy??
+        //     }
+        //     this.drawIdsBufferDirty = true;
         });
+
+        this.drawItems.push(gldrawItem);
+        this.drawItemSignalIds.push(signalIds)
 
         this.drawIdsBufferDirty = true;
     }
 
+    removeDrawItem(gldrawItem) {
+        const index = this.drawItems.indexOf(gldrawItem);
+        const signalIds = this.drawItemSignalIds[index];
+        gldrawItem.selectedChanged.disconnectId(signalIds.sel);
+        gldrawItem.visibilityChanged.disconnectId(signalIds.vis);
+        // gldrawItem.destructing.disconnectId(signalIds.dest);
+
+
+        this.drawItems.splice(index, 1)
+        this.drawItemSignalIds.splice(index, 1);
+
+        if (gldrawItem.visible) {
+            this.drawCount--;
+            this.drawCountChanged.emit(1);
+        }
+        this.drawIdsBufferDirty = true;
+    }
 
     //////////////////////////////////////
     // Instance Ids
@@ -149,9 +173,6 @@ class GLDrawItemSet {
         this.drawIdsBufferDirty = false;
     }
 
-    getDrawCount() {
-        return this.drawCount;
-    }
 
     //////////////////////////////////////
     // Selected Items
