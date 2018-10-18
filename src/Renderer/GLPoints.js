@@ -38,7 +38,6 @@ class GLPoints extends GLGeom {
         }
         this.__glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs;
 
-        this.unbind();
         this.__vboState = 2;
 
     }
