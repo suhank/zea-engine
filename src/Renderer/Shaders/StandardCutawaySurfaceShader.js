@@ -194,6 +194,7 @@ void main(void) {
     // Cutaways
     if(cutawayEnabled != 0){
         if(cutaway(v_worldPos, planeNormal, planeDist)){
+            discard;
             return;
         }
         else if(!gl_FrontFacing){
