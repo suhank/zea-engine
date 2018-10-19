@@ -129,18 +129,18 @@ class SessionParticipant {
             //     sendMessage('pointerMoved', data, false);
             // });
 
-            this.__renderer.actionStarted.connect((data) => {
-                const strokeData = this.onStrokeStarted(data);
-                sendMessage('strokeStarted', strokeData, true);
-            });
-            this.__renderer.actionOccuring.connect((data) => {
-                this.onStrokePoint(data);
-                sendMessage('strokePoint', data, true);
-            });
-            this.__renderer.actionEnded.connect((msg) => {
-                this.onStrokeEnded(msg);
-                sendMessage('strokeEnded', msg, true);
-            });
+            // this.__renderer.actionStarted.connect((data) => {
+            //     const strokeData = this.onStrokeStarted(data);
+            //     sendMessage('strokeStarted', strokeData, true);
+            // });
+            // this.__renderer.actionOccuring.connect((data) => {
+            //     this.onStrokePoint(data);
+            //     sendMessage('strokePoint', data, true);
+            // });
+            // this.__renderer.actionEnded.connect((msg) => {
+            //     this.onStrokeEnded(msg);
+            //     sendMessage('strokeEnded', msg, true);
+            // });
         } else {
             // Participants can be added to the session before they hav joined. 
             // this is because the system remembers data from previous sessions,

@@ -156,6 +156,9 @@ class GLViewport extends BaseViewport {
         this.__updateProjectionMatrix();
     }
 
+    getManipulator(){
+        return this.__cameraManipulator
+    }
 
     setManipulator(manipulator) {
         this.__cameraManipulator = manipulator;
