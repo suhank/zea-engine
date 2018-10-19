@@ -648,9 +648,9 @@ class GLRenderer {
 
                     if(state){
                         vrvp.viewChanged.connect(this.viewChanged.emit);
-                        vrvp.actionStarted.connect(this.actionStarted.emit);
-                        vrvp.actionEnded.connect(this.actionEnded.emit);
-                        vrvp.actionOccuring.connect(this.actionOccuring.emit);
+                        // vrvp.actionStarted.connect(this.actionStarted.emit);
+                        // vrvp.actionEnded.connect(this.actionEnded.emit);
+                        // vrvp.actionOccuring.connect(this.actionOccuring.emit);
                         
                         // Let the passes know that VR is starting.
                         // They can do things like optimize shaders.
@@ -663,9 +663,9 @@ class GLRenderer {
                     }
                     else {
                         vrvp.viewChanged.disconnect(this.viewChanged.emit);
-                        vrvp.actionStarted.disconnect(this.actionStarted.emit);
-                        vrvp.actionEnded.disconnect(this.actionEnded.emit);
-                        vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
+                        // vrvp.actionStarted.disconnect(this.actionStarted.emit);
+                        // vrvp.actionEnded.disconnect(this.actionEnded.emit);
+                        // vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
 
                         for(let key in this.__passes) {
                             const passSet = this.__passes[key];
