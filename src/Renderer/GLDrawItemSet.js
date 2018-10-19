@@ -308,7 +308,10 @@ class GLDrawItemSet {
                 // Specify an non-instanced draw to the shader
                 if (renderstate.unifs.instancedDraw) {
                     gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
-                    gl.disableVertexAttribArray(renderstate.attrs.drawIds.location);
+
+                    // Somoe shaders don't have this uniform. (FatLinesShader).
+                    // do we need to disable it?
+                    // gl.disableVertexAttribArray(renderstate.attrs.drawIds.location);
                 }
                 this.glgeom.draw(renderstate);
             }
