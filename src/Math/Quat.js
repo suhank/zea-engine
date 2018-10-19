@@ -217,11 +217,11 @@ class Quat extends AttrValue {
         const euler = new Vec3();
         const test = ordered.x * ordered.y + ordered.z * this.w;
         if (test > 0.49999) { // singularity at north pole
-            euler.y = 2.0 * atan2(ordered.x, this.w);
+            euler.y = 2.0 * Math.atan2(ordered.x, this.w);
             euler.z = Math.PI * 0.5;
             euler.x = 0.0;
         } else if (test < -0.49999) { // singularity at south pole
-            euler.y = -2.0 * atan2(ordered.x, this.w);
+            euler.y = -2.0 * Math.atan2(ordered.x, this.w);
             euler.z = Math.PI * -0.5;
             euler.x = 0.0;
         } else {
