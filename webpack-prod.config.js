@@ -1,6 +1,5 @@
 const path = require('path');
 const fs = require('fs');
-const Uglify = require('uglifyjs-webpack-plugin');
 
 const package_json = JSON.parse(fs.readFileSync('package.json'));
 const { libraryName } = package_json;
@@ -14,5 +13,4 @@ module.exports = {
         library: libraryName,
         libraryTarget: 'umd',
     },
-    plugins: [new Uglify()],
 };
