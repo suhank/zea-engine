@@ -168,17 +168,21 @@ class EnvMap extends VLHImage {
     }
 
 
-    sampleUsingDirection(dir) {
-        let uv;
+    dirToUv(dir) {
         switch(this.mapping) {
         case EnvMapMapping.LATLONG:
-            uv = latLongUVsFromDir(dir);
+            return latLongUVsFromDir(dir);
             break;
         case EnvMapMapping.OCTAHEDRAL:
-            uv = dirToSphOctUv(dir);
+            return dirToSphOctUv(dir);
             break;
         }
-        return this.hdrPixelData->samplePixels(uv.x, uv.y);
+    }
+
+    dirToLuminance(dir) {
+        const uv = this.dirToUv(dir);
+        const thmbPixel = Math.round(uv.y * 32) + Math.round(uv.x);
+        return this.__sampleSets.luminanceThumbnail[thmbPixel];
     }
 
 };
