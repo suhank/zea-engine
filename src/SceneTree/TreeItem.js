@@ -490,8 +490,9 @@ class TreeItem extends BaseItem {
 
     //////////////////////////////////////////
     // Path Traversial
-
-    resolvePath(path, index = 0) {
+    // Note: path resolution starts at the root of the 
+    // tree the path was generated from. (so index=1, because we don't resolve root)
+    resolvePath(path, index = 1) {
         if (typeof path == 'string')
             path = path.split('/');
 

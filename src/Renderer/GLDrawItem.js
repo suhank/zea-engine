@@ -42,7 +42,7 @@ class GLDrawItem {
         this.geomItem.geomXfoChanged.connect(this.updateXfo);
         this.geomItem.visibilityChanged.connect(this.updateVisibility);
         this.geomItem.destructing.connect(this.destroy);
-        this.geomItem.selectedChanged.connect(() => {
+        this._selId =  this.geomItem.selectedChanged.connect(() => {
             this.updated.emit();
         });
 
@@ -149,7 +149,7 @@ class GLDrawItem {
     destroy() {
         this.geomItem.visibilityChanged.disconnect(this.updateVisibility);
         this.geomItem.globalXfoChanged.disconnect(this.updateXfo);
-        this.geomItem.selectedChanged.disconnect(this.updateSelection);
+        this.geomItem.selectedChanged.disconnectID(this._selId);
         this.geomItem.destructing.disconnect(this.destroy);
         this.destructing.emit(this);
     }
