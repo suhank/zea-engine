@@ -31,7 +31,7 @@ void main(void) {
 
     v_viewPos = -viewPos.xyz;
 
-    v_drawItemID = float(getID());
+    v_drawItemID = float(getId());
 }
 `);
 
