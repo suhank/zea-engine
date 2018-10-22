@@ -67,7 +67,7 @@ class VRMarkerpenTool extends VRTool {
             this.__activeController = this.__vrControllers[1];
         }
 
-        let xfo = this.__activeController.getTipGlobalXfo().multiply(this.__tipOffsetXfo);
+        let xfo = this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo);
         let sc = this.__vrStage.getXfo().sc;
         let lineThickness = 0.0075 * sc.x;
 
@@ -85,7 +85,7 @@ class VRMarkerpenTool extends VRTool {
 
     evalTool() {
         if(this.__pressedButtons == 1) {
-            let xfo = this.__activeController.getTipGlobalXfo().multiply(this.__tipOffsetXfo);
+            let xfo = this.__activeController.getTipXfo().multiply(this.__tipOffsetXfo);
             this.strokeSegmentAdded.emit({
                 pointerType: 'vrController',
                 xfo

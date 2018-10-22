@@ -56,12 +56,12 @@ class VRViewport extends BaseViewport {
 
         if (!SystemDesc.isMobileDevice && resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
             this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
-            this.__viveAsset.loaded.connect(()=>{
+            this.__viveAsset.loaded.connect(() => {
                 const materialLibrary = this.__viveAsset.getMaterialLibrary();
                 const materialNames = materialLibrary.getMaterialNames();
-                for(let name of materialNames) {
+                for (let name of materialNames) {
                     const material = materialLibrary.getMaterial(name, false);
-                    if(material)
+                    if (material)
                         material.setShaderName('SimpleSurfaceShader');
                 }
             });
@@ -116,9 +116,9 @@ class VRViewport extends BaseViewport {
 
         //////////////////////////////////////////////
         // Signals
-        this.showInHandUI = new Signal();
-        this.hideInHandUI = new Signal();
-        this.pointerEvent = new Signal();
+        // this.showInHandUI = new Signal();
+        // this.hideInHandUI = new Signal();
+        // this.pointerEvent = new Signal();
         this.resized = new Signal();
 
         // Signals to abstract the user view.
@@ -127,12 +127,15 @@ class VRViewport extends BaseViewport {
         this.viewChanged = new Signal();
         this.presentingChanged = new Signal();
 
-        // Stroke Signals
-        this.actionStarted = new Signal();
-        this.actionEnded = new Signal();
-        this.actionOccuring = new Signal();
+        // // Stroke Signals
+        // this.actionStarted = new Signal();
+        // this.actionEnded = new Signal();
+        // this.actionOccuring = new Signal();
 
         this.controllerAdded = new Signal();
+        this.controllerButtonDown = new Signal();
+        this.controllerButtonUp = new Signal();
+        this.controllerTouchpadTouched = new Signal();
 
         //////////////////////////////////////////////
         // UI
@@ -208,16 +211,6 @@ class VRViewport extends BaseViewport {
         return this.__vrDisplay;
     }
 
-    getName() {
-        return this.__name;
-    }
-    getWidth() {
-        return this.__width;
-    }
-    getHeight() {
-        return this.__height;
-    }
-
     getAsset() {
         return this.__viveAsset;
     }
@@ -241,6 +234,10 @@ class VRViewport extends BaseViewport {
         this.__stageMatrix = xfo.inverse().toMat4();
         // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
         this.__stageScale = xfo.sc.x;
+    }
+
+    getControllers() {
+        return this.__vrControllers;
     }
 
     resize(width, height) {
@@ -448,86 +445,100 @@ class VRViewport extends BaseViewport {
                         // this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
                     });
 
-                    vrController.showInHandUI.connect(() => {
-                        this.__currentTool.deactivateTool();
-                        this.__uivisibile++;
-                        for (let controller of this.__vrControllers) {
-                            if (controller != vrController && !controller.uivisibile)
-                                controller.showPointer();
-                        }
-                        this.showInHandUI.emit(id, vrController);
-                    });
-                    vrController.hideInHandUI.connect(() => {
-                        this.__currentTool.activateTool();
-                        this.__uivisibile--;
-                        if (this.__uivisibile > 0) // switch to pointer mode.
-                            vrController.showPointer();
-                        else {
-                            // Hide all pointers
-                            for (let controller of this.__vrControllers) {
-                                if (controller != vrController)
-                                    controller.hidePointer();
-                            }
-                        }
-                        this.hideInHandUI.emit(id, vrController);
-                    });
+                    // vrController.showInHandUI.connect(() => {
+                    //     this.__currentTool.deactivateTool();
+                    //     this.__uivisibile++;
+                    //     for (let controller of this.__vrControllers) {
+                    //         if (controller != vrController && !controller.uivisibile)
+                    //             controller.showPointer();
+                    //     }
+                    //     this.showInHandUI.emit(id, vrController);
+                    // });
+                    // vrController.hideInHandUI.connect(() => {
+                    //     this.__currentTool.activateTool();
+                    //     this.__uivisibile--;
+                    //     if (this.__uivisibile > 0) // switch to pointer mode.
+                    //         vrController.showPointer();
+                    //     else {
+                    //         // Hide all pointers
+                    //         for (let controller of this.__vrControllers) {
+                    //             if (controller != vrController)
+                    //                 controller.hidePointer();
+                    //         }
+                    //     }
+                    //     this.hideInHandUI.emit(id, vrController);
+                    // });
 
 
-                    const sendEventToVisibleUIs = (xfo, eventNames, args) => {
-                        const pointervec = xfo.ori.getZaxis().negate();
-                        const ray = new Ray(xfo.tr, pointervec);
-                        for (let controller of this.__vrControllers) {
-                            if (controller.uivisibile) {
-                                const planeXfo = controller.getUIPlaneXfo();
-                                const plane = new Ray(planeXfo.tr, planeXfo.ori.getZaxis());
-                                const res = ray.intersectRayPlane(plane);
-                                if (res <= 0) {
-                                    vrController.setPointerLength(1.0);
-                                    return;
-                                }
-                                const hitOffset = xfo.tr.add(pointervec.scale(res)).subtract(plane.start);
-                                const x = hitOffset.dot(planeXfo.ori.getXaxis()) / planeXfo.sc.x;
-                                const y = hitOffset.dot(planeXfo.ori.getYaxis()) / planeXfo.sc.y;
-                                if (Math.abs(x) > 0.5 || Math.abs(y) > 0.5) {
-                                    vrController.setPointerLength(1.0);
-                                    return;
-                                }
-                                vrController.setPointerLength(res);
-                                const dim = controller.getUIDimensions();
-                                args.clientX = Math.round((x * dim.width) + (dim.width / 2));
-                                args.clientY = Math.round((y * -dim.height) + (dim.height / 2));
-                                for (let e of eventNames) {
-                                    this.pointerEvent.emit(controller, e, args);
-                                }
-                            }
-                        }
-                    }
-                    vrController.buttonPressed.connect(() => {
-                        if (!vrController.pointerVisible)
-                            return;
-                        const xfo = vrController.getPointerXfo();
-                        sendEventToVisibleUIs(xfo, ['mousedown'], {
-                            button: 0
-                        });
+                    // const sendEventToVisibleUIs = (xfo, eventNames, args) => {
+                    //     const pointervec = xfo.ori.getZaxis().negate();
+                    //     const ray = new Ray(xfo.tr, pointervec);
+                    //     for (let controller of this.__vrControllers) {
+                    //         if (controller.uivisibile) {
+                    //             const planeXfo = controller.getUIPlaneXfo();
+                    //             const plane = new Ray(planeXfo.tr, planeXfo.ori.getZaxis());
+                    //             const res = ray.intersectRayPlane(plane);
+                    //             if (res <= 0) {
+                    //                 vrController.setPointerLength(1.0);
+                    //                 return;
+                    //             }
+                    //             const hitOffset = xfo.tr.add(pointervec.scale(res)).subtract(plane.start);
+                    //             const x = hitOffset.dot(planeXfo.ori.getXaxis()) / planeXfo.sc.x;
+                    //             const y = hitOffset.dot(planeXfo.ori.getYaxis()) / planeXfo.sc.y;
+                    //             if (Math.abs(x) > 0.5 || Math.abs(y) > 0.5) {
+                    //                 vrController.setPointerLength(1.0);
+                    //                 return;
+                    //             }
+                    //             vrController.setPointerLength(res);
+                    //             const dim = controller.getUIDimensions();
+                    //             args.clientX = Math.round((x * dim.width) + (dim.width / 2));
+                    //             args.clientY = Math.round((y * -dim.height) + (dim.height / 2));
+                    //             for (let e of eventNames) {
+                    //                 this.pointerEvent.emit(controller, e, args);
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                    // vrController.buttonPressed.connect(() => {
+                    //     if (!vrController.pointerVisible)
+                    //         return;
+                    //     const xfo = vrController.getPointerXfo();
+                    //     sendEventToVisibleUIs(xfo, ['mousedown'], {
+                    //         button: 0
+                    //     });
+                    // });
+
+                    // vrController.buttonReleased.connect(() => {
+                    //     if (!vrController.pointerVisible)
+                    //         return;
+                    //     const xfo = vrController.getPointerXfo();
+                    //     sendEventToVisibleUIs(xfo, ['mouseup', 'click'], {
+                    //         button: 0
+                    //     });
+                    // });
+
+                    // vrController.controllerMoved.connect((xfo) => {
+                    //     if (!vrController.pointerVisible)
+                    //         return;
+                    //     sendEventToVisibleUIs(xfo, ['mousemove'], {});
+                    // });
+
+                    vrController.buttonPressed.connect((buttonId) => {
+                        this.controllerButtonDown.emit({
+                            controller: vrController,
+                            button: buttonId
+                        }, this)
                     });
 
-                    vrController.buttonReleased.connect(() => {
-                        if (!vrController.pointerVisible)
-                            return;
-                        const xfo = vrController.getPointerXfo();
-                        sendEventToVisibleUIs(xfo, ['mouseup', 'click'], {
-                            button: 0
-                        });
-                    });
-
-                    vrController.controllerMoved.connect((xfo) => {
-                        if (!vrController.pointerVisible)
-                            return;
-                        sendEventToVisibleUIs(xfo, ['mousemove'], {});
+                    vrController.buttonReleased.connect((buttonId) => {
+                        this.controllerButtonUp.emit({
+                            controller: vrController,
+                            button: buttonId
+                        }, this)
                     });
 
                     this.__vrControllers[id] = vrController;
-                    this.controllerAdded.emit(id, vrController);
+                    this.controllerAdded.emit(vrController);
                 }
                 // Update the controllers pose in space.
                 this.__vrControllers[id].update(gamepad);
@@ -544,14 +555,9 @@ class VRViewport extends BaseViewport {
         const data = {
             interfaceType: 'Vive',
             viewXfo: this.__vrhead.getTreeItem().getGlobalXfo(),
-            controllers: []
+            controllers: this.__vrControllers
         }
-        for (let controller of this.__vrControllers) {
-            data.controllers.push({
-                xfo: controller.getTreeItem().getGlobalXfo()
-            });
-        }
-        this.viewChanged.emit(data);
+        this.viewChanged.emit(data, this);
     }
 
 

@@ -34,7 +34,7 @@ class VRController extends Gizmo {
     constructor(vrstage, index) {
         super(new Color(0, 0, 1));
 
-        this.__vrstage = vrstage;
+        this.__vrStage = vrstage;
         this.__index = index;
         this.__isDaydramController = SystemDesc.isMobileDevice;
         this.__treeItem = new TreeItem('VRController:' + index);
@@ -43,8 +43,8 @@ class VRController extends Gizmo {
         // Y = Up.
         // Z = Towards handle base.
 
-        this.__mat = new Material('mat1', 'FlatSurfaceShader');
-        this.__mat.getParameter('BaseColor').setValue(new Color(.2, .2, .2, 1));
+        // this.__mat = new Material('mat1', 'FlatSurfaceShader');
+        // this.__mat.getParameter('BaseColor').setValue(new Color(.2, .2, .2, 1));
 
 
         if(!this.__isDaydramController) {
@@ -58,12 +58,11 @@ class VRController extends Gizmo {
             Material:Material #27
             */
 
-            vrstage.getTreeItem().addChild(this.__treeItem);
 
-            let sphere = new Sphere(0.015);
-            this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
-            this.__sphereGeomItem.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
-            this.__treeItem.addChild(this.__sphereGeomItem);
+            this.__tip = new TreeItem('Tip');
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
+            this.__treeItem.addChild(this.__tip);
+            vrstage.getTreeItem().addChild(this.__treeItem);
 
 
             let asset = vrstage.getAsset();
@@ -74,6 +73,8 @@ class VRController extends Gizmo {
                     this.__treeItem.addChild(controllerTree);
                 });
             }
+
+            this.createGeomDataFbo();
 
             // let uimat = new Material('uimat', 'FlatSurfaceShader');
 
@@ -109,18 +110,17 @@ class VRController extends Gizmo {
             // this.__treeItem.addChild(this.__uiPointerItem);
         }
 
-        this.__touchpadPressed = false;
         this.touchpadTouched = new Signal();
         this.buttonPressed = new Signal();
         this.buttonReleased = new Signal();
+        this.__pressedButtons = [];
 
         ///////////////////////////////////
         // UI
-        this.showInHandUI = new Signal();
-        this.hideInHandUI = new Signal();
-        this.controllerMoved = new Signal();
-        this.uivisibile = false;
-        this.pointerVisible = false;
+        // this.showInHandUI = new Signal();
+        // this.hideInHandUI = new Signal();
+        // this.uivisibile = false;
+        // this.pointerVisible = false;
 
         ///////////////////////////////////
         // Xfo
@@ -130,7 +130,7 @@ class VRController extends Gizmo {
         // this.setVisible(true);
     }
 
-    getID() {
+    getId() {
         return this.__index;
     }
 
@@ -143,8 +143,28 @@ class VRController extends Gizmo {
         // this.__geomItem1.setVisible(val);
     }
 
+    getTipItem() {
+        return this.__tip;
+    }
+
     setTipColor(val) {
         this.__mat.getParameter('BaseColor').setValue(val);
+    }
+    
+    getTouchPadValue() {
+        return this.__touchpadValue;
+    }
+
+    isButtonPressed(id=1) {
+        return this.__buttonPressed;
+    }
+
+    getControllerStageLocalXfo() {
+        return this.__xfo;
+    }
+
+    getTipXfo() {
+        return this.__treeItem.getGlobalXfo();
     }
 
     update(gamepad) {
@@ -160,7 +180,7 @@ class VRController extends Gizmo {
         ////////////////////////////////////////////
         /*
         let controllerUpVec = this.__treeItem.getGlobalXfo().ori.getYaxis();
-        let vecToHead = this.__treeItem.getGlobalXfo().tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
+        let vecToHead = this.__treeItem.getGlobalXfo().tr.subtract(this.__vrStage.getVRHead().getXfo().tr);
         vecToHead.normalizeInPlace();
         let angle = controllerUpVec.angleTo(vecToHead);
         if (angle < 1.0) {
@@ -180,109 +200,144 @@ class VRController extends Gizmo {
             }
         }
         if (this.pointerVisible) {
-            this.controllerMoved.emit(this.getPointerXfo());
         }
         */
 
+        if (this.__isDaydramController) {
 
-        this.__touchpadValue = gamepad.axes;
-        // Button 0 is the touchpad clicker.
-        if (gamepad.buttons[0].pressed) {
-            if (this.__isDaydramController) {
-                if (!this.__buttonPressed) {
-                    this.__buttonPressed = true;
-                    this.buttonPressed.emit();
-                }
-                return;
-            } else {
-                if (gamepad.axes[0] != 0 && gamepad.axes[1] != 0 && !this.__touchpadPressed) {
-                    this.touchpadTouched.emit(gamepad.axes);
-                    this.__touchpadPressed = true;
-                }
-            }
-        } else {
-            this.__touchpadPressed = false;
-        }
-
-        // Button 0 is the touchpad clicker.
-        for (let j = 1; j < gamepad.buttons.length; ++j) {
-            if (gamepad.buttons[j].pressed) {
-                if (!this.__buttonPressed) {
-                    this.__buttonPressed = true;
-                    // if(gamepad.buttons[j].value)
-                    //     this.__geomglDrawItem1.color.setFromOther(this.__highlightedColor);
-                    // else
-                    //     this.__geomglDrawItem1.color.setFromOther(this.__tipColor);
-                    this.buttonPressed.emit();
-                }
-                return;
+            if (gamepad.buttons[0].pressed &&!this.__buttonPressed) {
+                this.__buttonPressed = true;
+                this.buttonPressed.emit();
             }
         }
-
-        if (this.__buttonPressed) {
-            this.__buttonPressed = false;
-            // this.__geomglDrawItem1.color.setFromOther(this.__tipColor);
-            this.buttonReleased.emit();
+        else {
+            this.__touchpadValue = gamepad.axes;
+            // Note: Button 0 is the touchpad clicker.
+            for (let j = 0; j < gamepad.buttons.length; ++j) {
+                if (gamepad.buttons[j].pressed) {
+                    if (!this.__pressedButtons[i]) {
+                        this.__pressedButtons[i] = true;
+                        this.buttonPressed.emit(i);
+                    }
+                }
+                else {
+                    if (this.__pressedButtons[i]) {
+                        this.__pressedButtons[i] = false;
+                        this.buttonReleased.emit(i);
+                    }
+                }
+            }
         }
     }
 
-    getTouchPadValue() {
-        return this.__touchpadValue;
+    //////////////////////////////////
+
+    createGeomDataFbo() {
+        const gl = this.__vrStage.getRenderer().gl;
+        this.__geomDataBuffer = new GLTexture2D(gl, {
+            type: 'FLOAT',
+            format: 'RGBA',
+            filter: 'NEAREST',
+            width: 1,
+            height: 1,
+        });
+        this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
+        this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
-    isButtonPressed() {
-        return this.__buttonPressed;
-    }
+    getGeomItemAtTip() {
+        let renderer = this.__vrStage.getRenderer();
+        const gl = renderer.gl;
+        const xfo = this.__treeItem.getGlobalXfo();
 
-    getTipXfo() {
-        return this.__xfo;
-    }
+        this.__geomDataBufferFbo.bindAndClear();
+        gl.viewport(0, 0, 1, 1);
 
-    getTipGlobalXfo() {
-        return this.__treeItem.getGlobalXfo();
+        const renderstate = {
+            viewMatrix: xfo.inverse().toMat4(),
+            projectionMatrix: this.__projMatrix,
+            isOrthographic: true,
+            materialCount: 0,
+            drawCalls: 0,
+            drawCount: 0
+        };
+
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        gl.depthMask(true);
+
+        renderer.drawSceneGeomData(renderstate);
+
+        gl.finish();
+        this.__geomDataBufferFbo.bindForReading();
+
+        let passId, itemId, dist, geomData;
+        if (gl.floatGeomBuffer) {
+            geomData = new Float32Array(4);
+            gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.FLOAT, geomData);
+            if (geomData[3] == 0)
+                return undefined;
+            passId = Math.round(geomData[0]);
+        }
+
+        this.__geomDataBufferFbo.unbind();
+
+        const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
+
+        if (geomItemAndDist) {
+            const ray = new Ray(xfo.tr, xfo.ori.getZaxis());
+            const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist));
+            return {
+                controllerRay: ray,
+                intersectionPos,
+                geomItem: geomItemAndDist.geomItem,
+                dist: geomItemAndDist.dist
+            };
+        }
     }
 
     //////////////////////////////////
     // UI
-    getUIPlaneXfo() {
-        return this.__uiGeomItem.getGeomXfo();
-    }
-    showPointer() {
-        if(this.__sphereGeomItem)
-            this.__sphereGeomItem.setVisible(false);
-        this.__uiPointerItem.setVisible(true);
-        this.pointerVisible = true;
-    }
-    hidePointer() {
-        if(this.__sphereGeomItem)
-            this.__sphereGeomItem.setVisible(true);
-        this.__uiPointerItem.setVisible(false);
-        this.pointerVisible = false;
-    }
-    setPointerLength(length) {
-        let xfo = this.__uiPointerItem.getLocalXfo();
-        xfo.sc.set(1, 1, length);
-        this.__uiPointerItem.setLocalXfo(xfo);
-    }
+    // getUIPlaneXfo() {
+    //     return this.__uiGeomItem.getGeomXfo();
+    // }
+    // showPointer() {
+    //     if(this.__tip)
+    //         this.__tip.setVisible(false);
+    //     this.__uiPointerItem.setVisible(true);
+    //     this.pointerVisible = true;
+    // }
+    // hidePointer() {
+    //     if(this.__tip)
+    //         this.__tip.setVisible(true);
+    //     this.__uiPointerItem.setVisible(false);
+    //     this.pointerVisible = false;
+    // }
+    // setPointerLength(length) {
+    //     let xfo = this.__uiPointerItem.getLocalXfo();
+    //     xfo.sc.set(1, 1, length);
+    //     this.__uiPointerItem.setLocalXfo(xfo);
+    // }
 
-    getUIDimensions() {
-        return this.__dims;
-    }
+    // getUIDimensions() {
+    //     return this.__dims;
+    // }
 
-    setUIPixelData(width, height, pixels) {
-        this.__dims = {
-            width,
-            height
-        };
-        let dpm = 0.0005;//dots-per-meter (1 each 1/2mm)
-        this.__uiGeomItemGeomXfo.sc.set(width*dpm, height*dpm, 1.0);
-        this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
-        this.__uiimage.setData(width, height, pixels);
-    }
+    // setUIPixelData(width, height, pixels) {
+    //     this.__dims = {
+    //         width,
+    //         height
+    //     };
+    //     let dpm = 0.0005;//dots-per-meter (1 each 1/2mm)
+    //     this.__uiGeomItemGeomXfo.sc.set(width*dpm, height*dpm, 1.0);
+    //     this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
+    //     this.__uiimage.setData(width, height, pixels);
+    // }
 
-    getPointerXfo() {
-        return this.__uiPointerItem.getGeomXfo();
-    }
+    // getPointerXfo() {
+    //     return this.__uiPointerItem.getGeomXfo();
+    // }
 
 };
 
