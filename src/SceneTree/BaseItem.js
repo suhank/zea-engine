@@ -157,6 +157,10 @@ class BaseItem extends ParameterOwner {
         this.__metaData.set(key, metaData);
     }
 
+    deleteMetadata(key) {
+        this.__metaData.delete(key);
+    }
+
 
     //////////////////////////////////////////
     // Persistence

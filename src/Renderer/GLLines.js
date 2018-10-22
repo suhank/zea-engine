@@ -167,7 +167,7 @@ class GLLines extends GLGeom {
 
             const vertexAttributes = this.__geom.getVertexAttributes();
 
-            if (opts.indicesChanged) {
+            if (opts && opts.indicesChanged) {
                 const indices = this.__geom.getIndices();
                 if (this.__numSegIndices != indices.length) {
                     gl.deleteBuffer(this.__indexBuffer);
@@ -187,7 +187,6 @@ class GLLines extends GLGeom {
                     gl.deleteBuffer(glattr.buffer);
                     glattr.buffer = gl.createBuffer();
                 }
-
                 gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
                 gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
             }

@@ -20,7 +20,7 @@ testingHarness.registerTest('PrimitiveShapes', (domElement, resources)=> {
     addMeshShape('Sphere', new Visualive.Sphere(1.4, 13), new Visualive.Vec3(9, 0, 0));
 
     let linesMaterial = new Visualive.Material('lines', 'FatLinesShader');
-    linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
+    linesMaterial.getParameter('Color').setValue(new Visualive.Color(1.0, 0.3, .4));
 
     let addLinesShape = (name, shape, pos)=>{
         shape.lineThickness = 0.25;
@@ -33,7 +33,7 @@ testingHarness.registerTest('PrimitiveShapes', (domElement, resources)=> {
     addLinesShape('Rect', new Visualive.Rect(1.5, 2.0), new Visualive.Vec3(-3, 6, 0));
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLVisualiveRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);

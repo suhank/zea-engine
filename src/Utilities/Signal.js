@@ -52,7 +52,7 @@ class Signal {
         }
     }
 
-    disconnectID(id) {
+    disconnectId(id) {
         if(!this.__slots[id])
             throw("Invalid ID");
         this.__slots[id] = undefined;

@@ -76,7 +76,7 @@ class TreeItem extends BaseItem {
         this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()));
         this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()));
 
-        // Bind handlers (havk to )
+        // Bind handlers
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
         this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this);
         this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
@@ -390,7 +390,9 @@ class TreeItem extends BaseItem {
     }
 
     addChild(childItem, maintainXfo = true, checkCollisions = true) {
-        return this.insertChild(childItem, this.__childItems.length, maintainXfo, checkCollisions);
+        const index = this.__childItems.length;
+        this.insertChild(childItem, index, maintainXfo, checkCollisions);
+        return index;
     }
 
     getChild(index) {
@@ -405,7 +407,7 @@ class TreeItem extends BaseItem {
         return null;
     }
 
-    removeChild(index, destroy = true) {
+    removeChild(index) {
         const childItem = this.__childItems[index];
         this.__childItems.splice(index, 1);
 
@@ -421,22 +423,20 @@ class TreeItem extends BaseItem {
 
         this.childRemoved.emit(childItem, index);
 
-        if (destroy)
-            childItem.destroy();
         this._setBoundingBoxDirty();
     }
 
-    removeChildByHandle(childItem, destroy = true) {
+    removeChildByHandle(childItem) {
         let index = this.__childItems.indexOf(childItem);
         if (index == -1)
             throw ("Error in removeChildByHandle. Child not found:" + childItem.getName());
-        return this.removeChild(index, destroy);
+        return this.removeChild(index);
     }
 
-    removeAllChildren(destroy = true) {
-        if (destroy)
-            for (let childItem of this.__childItems)
-                childItem.destroy();
+    removeAllChildren() {
+        for (let childItem of this.__childItems){
+            childItem.setParentItem(undefined);
+        }
         this.__childItems = [];
         this._setBoundingBoxDirty();
     }
