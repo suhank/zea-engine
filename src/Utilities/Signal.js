@@ -35,6 +35,8 @@ class Signal {
     }
 
     disconnect(fn) {
+        if (fn == undefined)
+            throw("a function callback must be passed to Signal.disconnect");
         let ids = [];
         this.__slots.forEach(function (item, index) {
             if (item === fn) {
