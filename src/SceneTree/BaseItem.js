@@ -27,7 +27,7 @@ class BaseItem extends ParameterOwner {
     constructor(name) {
         super();
         if (name == undefined)
-            name = this.constructor.name;
+            name = sgFactory.getClassName(this);
         this.__name = name;
         this.__path = [name];
         this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
@@ -170,7 +170,7 @@ class BaseItem extends ParameterOwner {
         const j = super.toJSON(context);
         if(j) {
             j.name = this.__name;
-            j.type = this.constructor.name;
+            j.type = sgFactory.getClassName(this);
         }
         return j;
     }

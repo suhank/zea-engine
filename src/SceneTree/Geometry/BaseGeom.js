@@ -317,9 +317,9 @@ class BaseGeom extends ParameterOwner {
     fromJSON(json) {
         for (let name in json.vertexAttributes) {
             let attr = this.__vertexAttributes.get(name);
-            let attrJSON = json.vertexAttributes[name];
+            const attrJSON = json.vertexAttributes[name];
             if (!attr) {
-                let dataType = typeRegistry.getType(attrJSON.dataType);
+                const dataType = typeRegistry.getType(attrJSON.dataType);
                 attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue);
                 this.__vertexAttributes.set(name, attr);
             }
