@@ -6,6 +6,7 @@ import {
     Quat,
     EulerAngles,
     Xfo,
+    Mat4,
     Color
 } from '../../Math';
 import {
@@ -26,6 +27,12 @@ import {
 import {
     GLDrawItem
 } from '../GLDrawItem.js';
+import {
+    GLTexture2D
+} from '../GLTexture2D.js';
+import {
+    GLFbo
+} from '../GLFbo.js';
 import {
     Gizmo
 } from '../Gizmos/Gizmo.js';
@@ -74,6 +81,8 @@ class VRController extends Gizmo {
                 });
             }
 
+            this.__projMatrix = new Mat4();
+            this.__projMatrix.setOrthographicMatrix(-0.015, 0.015, -0.015, 0.015, 0.0, 0.03);
             this.createGeomDataFbo();
 
             // let uimat = new Material('uimat', 'FlatSurfaceShader');
@@ -213,8 +222,8 @@ class VRController extends Gizmo {
         else {
             this.__touchpadValue = gamepad.axes;
             // Note: Button 0 is the touchpad clicker.
-            for (let j = 0; j < gamepad.buttons.length; ++j) {
-                if (gamepad.buttons[j].pressed) {
+            for (let i = 0; i < gamepad.buttons.length; ++i) {
+                if (gamepad.buttons[i].pressed) {
                     if (!this.__pressedButtons[i]) {
                         this.__pressedButtons[i] = true;
                         this.buttonPressed.emit(i);
@@ -254,6 +263,7 @@ class VRController extends Gizmo {
         gl.viewport(0, 0, 1, 1);
 
         const renderstate = {
+            cameraMatrix: xfo.toMat4(),
             viewMatrix: xfo.inverse().toMat4(),
             projectionMatrix: this.__projMatrix,
             isOrthographic: true,

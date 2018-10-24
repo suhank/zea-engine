@@ -33,18 +33,18 @@ import {
 import {
     VRController
 } from './VRController.js'
-import {
-    VRToolMoveStage
-} from './Tools/VRToolMoveStage.js'
-import {
-    VRToolHoldObjects
-} from './Tools/VRToolHoldObjects.js'
-import {
-    VRMarkerpenTool
-} from './Tools/VRMarkerpenTool.js'
-import {
-    VRFlyTool
-} from './Tools/VRFlyTool.js'
+// import {
+//     VRToolMoveStage
+// } from './Tools/VRToolMoveStage.js'
+// import {
+//     VRToolHoldObjects
+// } from './Tools/VRToolHoldObjects.js'
+// import {
+//     VRMarkerpenTool
+// } from './Tools/VRMarkerpenTool.js'
+// import {
+//     VRFlyTool
+// } from './Tools/VRFlyTool.js'
 
 class VRViewport extends BaseViewport {
     constructor(renderer, vrDisplay /*, width, height*/ ) {
@@ -159,34 +159,34 @@ class VRViewport extends BaseViewport {
 
         //////////////////////////////////////////////
         // Tools Setup
-        if (SystemDesc.isMobileDevice) {
-            this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
+        // if (SystemDesc.isMobileDevice) {
+        //     this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
 
-            this.selectTool('FlyTool');
-        } else {
-            this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['VRToolHoldObjects'] = new VRToolHoldObjects(this, this.__vrhead, this.__vrControllers);
-            this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
+        //     this.selectTool('FlyTool');
+        // } else {
+        //     this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
+        //     this.__vrTools['VRToolHoldObjects'] = new VRToolHoldObjects(this, this.__vrhead, this.__vrControllers);
+        //     this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
 
-            this.__vrToolNames.push('VRToolMoveStage');
-            this.__vrToolNames.push('VRToolHoldObjects');
-            this.__vrToolNames.push('Markerpen');
+        //     this.__vrToolNames.push('VRToolMoveStage');
+        //     this.__vrToolNames.push('VRToolHoldObjects');
+        //     this.__vrToolNames.push('Markerpen');
 
-            let markerpenTool = this.__vrTools['Markerpen'];
-            markerpenTool.strokeStarted.connect((data) => {
-                this.actionStarted.emit(data);
-            });
-            markerpenTool.strokeEnded.connect((data) => {
-                this.actionEnded.emit(data);
-            });
-            markerpenTool.strokeSegmentAdded.connect((data) => {
-                this.actionOccuring.emit(data);
-            });
+        //     let markerpenTool = this.__vrTools['Markerpen'];
+        //     markerpenTool.strokeStarted.connect((data) => {
+        //         this.actionStarted.emit(data);
+        //     });
+        //     markerpenTool.strokeEnded.connect((data) => {
+        //         this.actionEnded.emit(data);
+        //     });
+        //     markerpenTool.strokeSegmentAdded.connect((data) => {
+        //         this.actionOccuring.emit(data);
+        //     });
 
-            this.selectTool('VRToolMoveStage');
-            this.__currentToolIndex = 0;
-            //this.selectTool('VRToolHoldObjects');
-        }
+        //     this.selectTool('VRToolMoveStage');
+        //     this.__currentToolIndex = 0;
+        //     //this.selectTool('VRToolHoldObjects');
+        // }
 
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
         //this.startContinuousDrawing();
