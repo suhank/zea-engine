@@ -334,7 +334,7 @@ class GLViewport extends BaseViewport {
             // }
             // logGeomData();
 
-            let passId, itemId, dist, geomData;
+            let passId, geomData;
             if (gl.floatGeomBuffer) {
                 geomData = new Float32Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
@@ -371,39 +371,39 @@ class GLViewport extends BaseViewport {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a pixel block.
-            let rectBottom = (this.__height - br[1]);
-            let rectLeft = tl.x;
-            let rectWidth = (br.x - tl.x);
-            let rectHeight = (br.y - tl.y);
+            let rectBottom = Math.round(this.__height - br.y);
+            let rectLeft = Math.round(tl.x);
+            let rectWidth = Math.round(br.x - tl.x);
+            let rectHeight = Math.round(br.y - tl.y);
             let numPixels = rectWidth * rectHeight;
-            let pixels = new Uint8Array(4 * numPixels);
 
-            this.__geomDataBufferFbo.bind();
-            gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            this.__geomDataBufferFbo.bindForReading();
+
+            let geomDatas;
+            if (gl.floatGeomBuffer) {
+                geomDatas = new Float32Array(4 * numPixels);
+                gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.FLOAT, geomDatas);
+            } else {
+                geomDatas = new Uint8Array(4 * numPixels);
+                gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.UNSIGNED_BYTE, geomDatas);
+            }
+
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
             let geomItems = new Set();
             for (let i = 0; i < numPixels; i++) {
 
-                let passId, itemId, dist, geomData;
+                let passId;
+                const geomData = geomDatas.subarray(i*4, (i+1)*4);
                 if (gl.floatGeomBuffer) {
-                    geomData = new Float32Array(4);
-                    gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
-                    if (geomData[3] == 0)
-                        return undefined;
                     passId = Math.round(geomData[0]);
                 } else {
-                    geomData = new Uint8Array(4);
-                    gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData);
-                    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                    if (geomData[0] == 0 && geomData[1] == 0)
-                        return undefined;
                     passId = 0;
                 }
 
                 const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
                 if (geomItemAndDist) {
-                    geomItems.push(geomItemAndDist.geomItem);
+                    geomItems.add(geomItemAndDist.geomItem);
                 }
             }
             return geomItems;
