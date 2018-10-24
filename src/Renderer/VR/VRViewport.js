@@ -54,6 +54,7 @@ class VRViewport extends BaseViewport {
         //////////////////////////////////////////////
         // Resources
 
+        const resourceLoader = renderer.getScene().getResourceLoader();
         if (!SystemDesc.isMobileDevice && resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
             this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
             this.__viveAsset.loaded.connect(() => {
