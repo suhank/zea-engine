@@ -8,30 +8,30 @@ testingHarness.registerTest('EnvMaps_DynamicExposure', (domElement, resources)=>
     envMap.loaded.connect(()=>{
 
         const setTree = new Visualive.TreeItem('luminanceValues')
-        for(let i=0; i<32; i++) {
-            for(let j=0; j<32; j++) {
-                const thmbPixel = (i * 32) + (Math.floor(uv.x * 32));
-                const lum = envMap.__sampleSets.luminanceThumbnail[thmbPixel];
-                const dir = envMap.sphOctUvToDir(new Visualive.Vec2(i/32, j/32));
+        // for(let i=0; i<32; i++) {
+        //     for(let j=0; j<32; j++) {
+        //         const thmbPixel = (i * 32) + (Math.floor(j * 32));
+        //         const lum = envMap.__sampleSets.luminanceThumbnail[thmbPixel];
+        //         const dir = envMap.sphOctUvToDir(new Visualive.Vec2(i/32, j/32));
 
-                const color = new Visualive.Color(lum, lum, lum, 1);
-                const material = new Visualive.Material('sample:'+i+':'+j, 'FlatSurfaceShader');
-                material.getParameter('BaseColor').setValue(color);
+        //         const color = new Visualive.Color(lum, lum, lum, 1);
+        //         const material = new Visualive.Material('sample:'+i+':'+j, 'FlatSurfaceShader');
+        //         material.getParameter('BaseColor').setValue(color);
 
-                const geomItem = new Visualive.GeomItem('sample:'+j, disc, material);
+        //         const geomItem = new Visualive.GeomItem('sample:'+j, disc, material);
 
-                const xfo = new Visualive.Xfo();
-                xfo.tr.addInPlace(dir.scale(dist));
-                xfo.ori.setFromDirectionAndUpvector(dir, up);
+        //         const xfo = new Visualive.Xfo();
+        //         xfo.tr.addInPlace(dir.scale(dist));
+        //         xfo.ori.setFromDirectionAndUpvector(dir, up);
 
-                // console.log(dir.toString() + " radius:" + radius)
-                xfo.sc.set(0.4, 0.4, 0.4);
-                geomItem.setLocalXfo(xfo);
-                setTree.addChild(geomItem);
-            }
-            scene.getRoot().addChild(setTree);
-            dist -= 1.0;
-        }
+        //         // console.log(dir.toString() + " radius:" + radius)
+        //         xfo.sc.set(0.4, 0.4, 0.4);
+        //         geomItem.setLocalXfo(xfo);
+        //         setTree.addChild(geomItem);
+        //     }
+        //     scene.getRoot().addChild(setTree);
+        //     dist -= 1.0;
+        // }
 
         renderer.viewChanged.connect((data) => {
             const viewDir = data.viewXfo.ori.getZaxis().negate();
