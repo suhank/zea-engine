@@ -1,4 +1,6 @@
 import {
+    Vec2, 
+    Vec3,
     Color
 } from '../../Math';
 import {
@@ -90,29 +92,30 @@ function dirFromLatLongUVs(u, v) {
     return new Vec3(sin(phi)*sin(theta), -sin(phi)*cos(theta), cos(phi));
 }
 
-
 function dirToSphOctUv(normal) {
     const aNorm = abs_vec3(normal);
     const sNorm = sectorize_vec3(normal);
     const aNorm_xy = new Vec2(aNorm.x, aNorm.y);
 
-    const dir = max_vec2(aNorm_xy, 1e-20);
+    let dir = max_vec2(aNorm_xy, 1e-20);
     const orient = Math.atan2(dir.x, dir.y) / Math.HALF_PI;
 
-    dir = max(new Vec2(aNorm.z, aNorm_xy.length()), 1e-20);
+    dir = max_vec2(new Vec2(aNorm.z, aNorm_xy.length()), 1e-20);
     const pitch = Math.atan2(dir.y, dir.x) / Math.HALF_PI;
 
-    const uv = new Vec2(sNorm.x * orient, sNorm.y * (1.0 - orient)) * pitch;
+    let uv = new Vec2(sNorm.x * orient, sNorm.y * (1.0 - orient));
+    uv.scaleInPlace(pitch)
 
     if (normal.z < 0.0) {
-        ts = new Vec2(uv.y, uv.x);
-        sNorm_xy = new Vec2(sNorm.x, sNorm.y);
-        uv = sNorm_xy - abs_vec2(ts) * sNorm_xy;
+        const ts = new Vec2(uv.y, uv.x);
+        const sNorm_xy = new Vec2(sNorm.x, sNorm.y);
+        uv = sNorm_xy.subtract(abs_vec2(ts).multiply(sNorm_xy));
     }
-    return uv * 0.5 + 0.5;
+    return uv.scale(0.5).add(new Vec2(0.5,  0.5));
 }
+
 function sphOctUvToDir(uv) {
-    uv = (uv * 2) - 1;
+    uv = uv.scale(2).subtract(new Vec2(1, 1));
     const suv = sectorize_vec2(uv);
     const sabsuv = sum_vec2(abs_vec2(uv));
     const pitch = sabsuv * Math.PI * 0.5;
@@ -120,17 +123,17 @@ function sphOctUvToDir(uv) {
     if (pitch <= 0.0) {
         return new Vec3(0.0, 0.0, 1.0);
     }
-    if (fabs(pitch - Math.PI) < 0.000001) {
+    if (Math.abs(pitch - Math.PI) < 0.000001) {
         return new Vec3(0.0, 0.0, -1.0);
     }
     if (sabsuv > 1.0) {
         const ts = Vec2(uv.y, uv.x);
-        uv = (abs_vec2(ts).negate() + 1.0) * suv;
+        uv = abs_vec2(ts).negate().add(new Vec2(1, 1)).multiply(suv);
 
         sabsuv = sum_vec2(abs_vec2(uv));
     }
 
-    const orient = (Math.fabs(uv.x) / sabsuv) * Math.HALF_PI;
+    const orient = (Math.abs(uv.x) / sabsuv) * Math.HALF_PI;
     const sOrient = Math.sin(orient);
     const cOrient = Math.cos(orient);
     const sPitch = Math.sin(pitch);
@@ -167,6 +170,16 @@ class EnvMap extends VLHImage {
         return this.__sampleSets;
     }
 
+    uvToDir(uv) {
+        switch(this.mapping) {
+        case EnvMapMapping.LATLONG:
+            return dirFromLatLongUVs(uv);
+            break;
+        case EnvMapMapping.OCTAHEDRAL:
+            return sphOctUvToDir(uv);
+            break;
+        }
+    }
 
     dirToUv(dir) {
         switch(this.mapping) {
@@ -181,7 +194,8 @@ class EnvMap extends VLHImage {
 
     dirToLuminance(dir) {
         const uv = this.dirToUv(dir);
-        const thmbPixel = Math.round(uv.y * 32) + Math.round(uv.x);
+        const thmbPixel = (Math.floor(uv.y * 32) * 32) + (Math.floor(uv.x * 32));
+        // console.log("dir:", dir.toString(), uv.toString(), thmbPixel)
         return this.__sampleSets.luminanceThumbnail[thmbPixel];
     }
 
