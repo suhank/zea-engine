@@ -7,7 +7,8 @@ import {
     EulerAngles,
     Xfo,
     Mat4,
-    Color
+    Color,
+    Ray
 } from '../../Math';
 import {
     Signal
@@ -50,39 +51,31 @@ class VRController extends Gizmo {
         // Y = Up.
         // Z = Towards handle base.
 
-        // this.__mat = new Material('mat1', 'FlatSurfaceShader');
-        // this.__mat.getParameter('BaseColor').setValue(new Color(.2, .2, .2, 1));
-
-
         if(!this.__isDaydramController) {
             // A Vive or Occulus Touch Controller
-            
-            /*
-            Material:HandleMaterial
-            Material:OtherButtons
-            Material:Metal
-            Material:Touchpad Material
-            Material:Material #27
-            */
-
-
             this.__tip = new TreeItem('Tip');
             this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
             this.__treeItem.addChild(this.__tip);
             vrstage.getTreeItem().addChild(this.__treeItem);
 
-
-            let asset = vrstage.getAsset();
+            const asset = vrstage.getAsset();
             if(asset) {
                 asset.loaded.connect((entries) => {
-                    let controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
+                    const controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
                     controllerTree.setLocalXfo(new Xfo(new Vec3(0, -0.035, 0.01), new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })));
                     this.__treeItem.addChild(controllerTree);
                 });
             }
 
             this.__projMatrix = new Mat4();
-            this.__projMatrix.setOrthographicMatrix(-0.015, 0.015, -0.015, 0.015, 0.0, 0.03);
+            this.__activeVolumeSize = 0.03
+            this.__projMatrix.setOrthographicMatrix(
+                this.__activeVolumeSize*-0.5, 
+                this.__activeVolumeSize*0.5, 
+                this.__activeVolumeSize*-0.5, 
+                this.__activeVolumeSize*0.5, 
+                0.0, 
+                this.__activeVolumeSize);
             this.createGeomDataFbo();
 
             // let uimat = new Material('uimat', 'FlatSurfaceShader');
@@ -156,9 +149,13 @@ class VRController extends Gizmo {
         return this.__tip;
     }
 
-    setTipColor(val) {
-        this.__mat.getParameter('BaseColor').setValue(val);
+    getTipXfo() {
+        return this.__tip.getGlobalXfo();
     }
+
+    // setTipColor(val) {
+    //     this.__mat.getParameter('BaseColor').setValue(val);
+    // }
     
     getTouchPadValue() {
         return this.__touchpadValue;
@@ -172,9 +169,6 @@ class VRController extends Gizmo {
         return this.__xfo;
     }
 
-    getTipXfo() {
-        return this.__treeItem.getGlobalXfo();
-    }
 
     update(gamepad) {
         if (gamepad.pose.position)
@@ -185,6 +179,8 @@ class VRController extends Gizmo {
         if (!this.__treeItem)
             return;
         this.__treeItem.setLocalXfo(this.__xfo);
+
+        this.__geomAtTip = undefined;
 
         ////////////////////////////////////////////
         /*
@@ -213,7 +209,6 @@ class VRController extends Gizmo {
         */
 
         if (this.__isDaydramController) {
-
             if (gamepad.buttons[0].pressed &&!this.__buttonPressed) {
                 this.__buttonPressed = true;
                 this.buttonPressed.emit();
@@ -255,7 +250,10 @@ class VRController extends Gizmo {
     }
 
     getGeomItemAtTip() {
-        let renderer = this.__vrStage.getRenderer();
+        if(this.__geomAtTip)
+            return this.__geomAtTip;
+
+        const renderer = this.__vrStage.getRenderer();
         const gl = renderer.gl;
         const xfo = this.__treeItem.getGlobalXfo();
 
@@ -293,17 +291,19 @@ class VRController extends Gizmo {
 
         this.__geomDataBufferFbo.unbind();
 
-        const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
+        const geomItemAndDist = renderer.getPass(passId).getGeomItemAndDist(geomData);
 
         if (geomItemAndDist) {
             const ray = new Ray(xfo.tr, xfo.ori.getZaxis());
             const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist));
-            return {
+            
+            this.__geomAtTip = {
                 controllerRay: ray,
                 intersectionPos,
                 geomItem: geomItemAndDist.geomItem,
                 dist: geomItemAndDist.dist
             };
+            return this.__geomAtTip;
         }
     }
 

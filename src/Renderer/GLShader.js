@@ -38,6 +38,8 @@ class GLShader extends BaseItem {
         this.__shaderProgramHdls = {};
         this.__gltextures = {};
         this.updated = new Signal();
+
+        this.invisibleToGeomBuffer = false;
     }
 
 

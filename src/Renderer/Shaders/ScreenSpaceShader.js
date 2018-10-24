@@ -90,7 +90,6 @@ void main(void) {
 }
 `);
 
-        this.nonSelectable = true;
         this.finalize();
     }
 

@@ -97,8 +97,7 @@ void main(void) {
 #endif
 }
 `);
-
-        this.nonSelectable = true;
+        
         this.finalize();
     }
 

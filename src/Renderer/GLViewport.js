@@ -91,7 +91,7 @@ class GLViewport extends BaseViewport {
         // this.__glshaderScreenPostProcess = new PostProcessing(gl);
         this.__outlineShader = new OutlinesShader(gl);
         this.__outlineColor = new Color("#03E3AC")
-        this.quad = new GLMesh(gl,  new Plane(1, 1));
+        this.quad = new GLMesh(gl, new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
         this.__cameraManipulator = new CameraMouseAndKeyboard();
@@ -119,10 +119,6 @@ class GLViewport extends BaseViewport {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
-        }
-        if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBuffer.resize(this.__width, this.__height);
-            this.__selectedGeomsBufferFbo.resize();
         }
         this.region = [this.__x, this.__y, this.__width, this.__height];
     }
@@ -236,22 +232,6 @@ class GLViewport extends BaseViewport {
         // - We nuke the translation part since we're transforming a vector.
         rayDirection = cameraMat.rotateVec3(rayDirection).normalize();
         return new Ray(rayStart, rayDirection);
-    }
-
-    ////////////////////////////
-    // SelectedGeomsBuffer
-
-    createSelectedGeomsFbo() {
-        let gl = this.__renderer.gl;
-        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
-            type: 'UNSIGNED_BYTE',
-            format: 'RGBA',
-            filter: 'NEAREST',
-            width: this.__width <= 1 ? 1 : this.__width,
-            height: this.__height <= 1 ? 1 : this.__height,
-        });
-        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
-        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
     ////////////////////////////
@@ -568,7 +548,7 @@ class GLViewport extends BaseViewport {
         if (this.__selectedGeomsBufferFbo) {
             this.__selectedGeomsBufferFbo.bindAndClear();
             this.__renderer.drawSceneSelectedGeoms(renderstate);
-            let gl = this.__renderer.getGL();
+            const gl = this.__renderer.getGL();
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.viewport(...this.region);
 
@@ -583,7 +563,7 @@ class GLViewport extends BaseViewport {
         // /////////////////////////////////////
         // // Post processing.
         // if (this.__fbo) {
-        //     let gl = this.__renderer.getGL();
+        //     const gl = this.__renderer.getGL();
 
         //     // Bind the default framebuffer
         //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
