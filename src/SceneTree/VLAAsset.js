@@ -36,7 +36,6 @@ import {
 } from './MaterialLibrary.js';
 
 
-
 class VLAAsset extends AssetItem {
   constructor(name) {
     super(name);
