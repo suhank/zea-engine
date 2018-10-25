@@ -73,11 +73,11 @@ void main(void) {
         if(vertexID < 2){
             vec3 segmentStartDir = segmentDir;
             if(seqentialIndex_0 != 0){
-                // TODO: if index_0 == 0, get the last index in the line as previous
-                int index_prev = index_0-1;
+                //if index_0 == 0, get the last index in the line as previous
+                int index_prev = (index_0 > 0) ? (index_0-1) : (positionsTextureSize-1);
                 vec4 data_prev = fetchTexel(positionsTexture, positionsTextureSize, index_prev);
                 vec4 pos_prev = modelViewMatrix * vec4(data_prev.xyz, 1.0);
-                segmentStartDir = normalize(pos_1.xyz - pos_prev.xyz);
+                segmentStartDir = normalize(segmentDir + normalize(pos_0.xyz - pos_prev.xyz));
             }
             vec3 startBiTangent = normalize(cross(segmentStartDir, viewVector));
             v_viewNormal = normalize(cross(segmentStartDir, startBiTangent));
@@ -96,11 +96,11 @@ void main(void) {
         else{
             vec3 segmentEndDir = segmentDir;
             if(seqentialIndex_1 != 0){
-                // TODO: if index_0 == numPoints-1, get the first index in the line as previous
-                int index_next = index_1+1;
+                //if index_1 == numPoints-1, get the first index in the line as next
+                int index_next = (index_1 < (positionsTextureSize-1)) ? (index_1+1) : 0;
                 vec4 data_next = fetchTexel(positionsTexture, positionsTextureSize, index_next);
                 vec4 pos_next = modelViewMatrix * vec4(data_next.xyz, 1.0);
-                segmentEndDir = normalize(pos_next.xyz - pos_0.xyz);
+                segmentEndDir = normalize(segmentDir + normalize(pos_next.xyz - pos_1.xyz));
             }
             vec3 endBiTangent = normalize(cross(segmentEndDir, viewVector));
             v_viewNormal = normalize(cross(segmentEndDir, endBiTangent));

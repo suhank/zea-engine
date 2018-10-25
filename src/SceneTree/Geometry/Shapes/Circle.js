@@ -20,7 +20,7 @@ class Circle extends Lines {
 
     __rebuild() {
         const segs = this.__numSegments.getValue();
-        this.setNumVertices(segs+1);
+        this.setNumVertices(segs);
         this.setNumSegments(segs);
         for(let i=0; i<segs; i++)
             this.setSegment(i, i, (i+1)%segs);

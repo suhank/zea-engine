@@ -105,19 +105,32 @@ class BaseViewport {
         this.__width = (this.__canvasWidth * this.__tr.x) - (this.__canvasWidth * this.__bl.x);
         this.__height = (this.__canvasHeight * this.__tr.y) - (this.__canvasHeight * this.__bl.y);
 
-        if (this.__camera)
-            this.__updateProjectionMatrix();
-
         if (this.__fbo) {
             this.__fbo.colorTexture.resize(this.__width, this.__height);
             this.__fbo.resize();
         }
-        if (this.__geomDataBufferFbo) {
-            this.__geomDataBuffer.resize(this.__width, this.__height);
-            this.__geomDataBufferFbo.resize();
+        if (this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBuffer.resize(this.__width, this.__height);
+            this.__selectedGeomsBufferFbo.resize();
         }
 
         this.resized.emit();
+    }
+
+    ////////////////////////////
+    // SelectedGeomsBuffer
+
+    createSelectedGeomsFbo() {
+        let gl = this.__renderer.gl;
+        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
+            type: 'UNSIGNED_BYTE',
+            format: 'RGBA',
+            filter: 'NEAREST',
+            width: this.__width <= 1 ? 1 : this.__width,
+            height: this.__height <= 1 ? 1 : this.__height,
+        });
+        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
+        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
     ////////////////////////////

@@ -121,7 +121,7 @@ class GLDrawItemSet {
 
         if (gldrawItem.visible) {
             this.drawCount--;
-            this.drawCountChanged.emit(1);
+            this.drawCountChanged.emit(-1);
         }
         this.drawIdsBufferDirty = true;
     }

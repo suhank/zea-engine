@@ -23,6 +23,8 @@ export * from './SimpleCutawaySurfaceShader.js';
 export * from './StandardSurfaceShader.js';
 export * from './StandardCutawaySurfaceShader.js';
 export * from './TransparentSurfaceShader.js';
+export * from './ScreenSpaceShader.js';
+export * from './ToolIconShader.js';
 
 
 export * from './UnpackHDRShader.js';

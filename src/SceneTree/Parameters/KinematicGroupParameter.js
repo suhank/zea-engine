@@ -114,7 +114,7 @@ class KinematicGroupParameter extends ListParameter {
             const onloaded = ()=>{
                 // this.setValue(assetItem.resolvePath(itemPath));
                 for(let i=0; i<j.treeItems.length; i++) {
-                    const treeItem = context.assetItem.resolvePath(treeItems[i]);
+                    const treeItem = context.assetItem.resolvePath(treeItems[i], 0);
                     this.__value.push(treeItem);
                     this.elementAdded.emit(treeItem, this.__value.length-1)
                 }

@@ -36,7 +36,7 @@ mat4 getModelMatrix(int id) {
     return getMatrix(instancesTexture, instancesTextureSize, id);
 }
 
-int getID() {
+int getId() {
     if(instancedDraw == 0){
        return transformIndex;
     }
@@ -46,11 +46,11 @@ int getID() {
 }
 
 mat4 getModelMatrix() {
-    return getModelMatrix(getID());
+    return getModelMatrix(getId());
 }
 
 vec4 getInstanceData() {
-    return getInstanceData(getID());
+    return getInstanceData(getId());
 }
 
 #else
@@ -67,7 +67,7 @@ vec4 getInstanceData() {
     return drawItemData;
 }
 
-int getID() {
+int getId() {
     return transformIndex;
 }
 

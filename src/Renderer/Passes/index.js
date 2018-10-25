@@ -6,3 +6,4 @@ export * from './GLBillboardsPass.js';
 export * from './GLOverlayPass.js';
 export * from './GLAudioItemsPass.js';
 
+export * from './GLGizmoPass.js';

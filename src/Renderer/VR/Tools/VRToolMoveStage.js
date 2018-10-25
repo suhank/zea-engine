@@ -56,13 +56,13 @@ class VRToolMoveStage extends VRTool {
                     break;
                 }
             }
-            this.__grabPos = this.__activeController.getTipXfo().tr.clone();
+            this.__grabPos = this.__activeController.getControllerStageLocalXfo().tr.clone();
             this.__stageXfo__GrabStart = this.__vrStage.getXfo().clone();
             this.__invOri = this.__stageXfo__GrabStart.ori.inverse();
         }
         else if(this.__pressedButtons == 2) {
-            let p0 = this.__vrControllers[0].getTipXfo().tr;
-            let p1 = this.__vrControllers[1].getTipXfo().tr;
+            let p0 = this.__vrControllers[0].getControllerStageLocalXfo().tr;
+            let p1 = this.__vrControllers[1].getControllerStageLocalXfo().tr;
             this.__grabDir = p1.subtract(p0);
             this.__grabPos = p0.lerp(p1, 0.5);
             this.__grabDist = this.__grabDir.length();
@@ -85,7 +85,7 @@ class VRToolMoveStage extends VRTool {
                 activeController = this.__vrControllers[1];
             }
 
-            let grabPos = activeController.getTipXfo().tr;
+            let grabPos = activeController.getControllerStageLocalXfo().tr;
 
             let deltaXfo = new Xfo();
             deltaXfo.tr = this.__grabPos.subtract(grabPos);
@@ -97,8 +97,8 @@ class VRToolMoveStage extends VRTool {
         }
         else if(this.__pressedButtons == 2) {
 
-            let p0 = this.__vrControllers[0].getTipXfo().tr;
-            let p1 = this.__vrControllers[1].getTipXfo().tr;
+            let p0 = this.__vrControllers[0].getControllerStageLocalXfo().tr;
+            let p1 = this.__vrControllers[1].getControllerStageLocalXfo().tr;
 
             let grabPos = p0.lerp(p1, 0.5);
             let grabDir = p1.subtract(p0);
