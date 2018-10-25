@@ -304,7 +304,8 @@ class GLCollector {
         });
 
         const transformChangedId = gldrawItem.transformChanged.connect(() => {
-            this.__dirtyItemIndices.push(index);
+            if(this.__dirtyItemIndices.indexOf(index) == -1)
+                this.__dirtyItemIndices.push(index);
             // this.__updateItemInstanceData(index, gldrawItem);
             this.__renderer.requestRedraw();
         });

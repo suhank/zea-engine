@@ -132,6 +132,7 @@ class VLAAsset extends AssetItem {
     const fileId = this.__datafileParam.getValue();
     const stem = this.__datafileParam.getStem();
     let numGeomsFiles = 0;
+    this.__geomLibrary.loaded.connect( () => this.geomsLoaded.emit() );
 
     // TODO: one day the resourcecs tree could include meta data to indicate how
     // manhy files make up the geom stream. 
@@ -148,7 +149,7 @@ class VLAAsset extends AssetItem {
         onDone();
         if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
           resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
-          let geomsData = entries[Object.keys(entries)[1]];
+          const geomsData = entries[Object.keys(entries)[1]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resourceLoader.freeData(geomsData.buffer);
         }
@@ -174,7 +175,7 @@ class VLAAsset extends AssetItem {
         }
       }
       else {
-        this.geomsLoaded.emit();
+        // this.geomsLoaded.emit();
       }
     }
     const loadGeomsfile = (fileId) => {
