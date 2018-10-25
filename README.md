@@ -40,3 +40,10 @@ Install the httpserver
   * Open [http://localhost:8080/](http://localhost:8080/) in Chrome
   * Be sure to disable caching in the Chrome Developer Tools. 
 
+
+## Publishing a new build
+
+1. install yarn. 
+2. build production. 
+3. `yarn publish`
+
