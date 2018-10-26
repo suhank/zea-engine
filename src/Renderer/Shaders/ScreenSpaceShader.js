@@ -14,11 +14,11 @@ import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
 
-class FlatSurfaceShader extends GLShader {
+class ScreenSpaceShader extends GLShader {
     constructor(gl) {
         super(gl);
 
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('ScreenSpaceShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -26,14 +26,10 @@ attribute vec3 positions;
 attribute vec2 texCoords;
 #endif
 
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
-
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
-varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
@@ -41,18 +37,15 @@ varying vec2 v_textureCoord;
 
 void main(void) {
     mat4 modelMatrix = getModelMatrix();
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-    vec4 viewPos = (modelViewMatrix * vec4(positions, 1.0));
-    gl_Position = projectionMatrix * viewPos;
+    gl_Position = (modelMatrix * vec4(positions, 1.0));
 
-    v_viewPos = viewPos.xyz;
     v_textureCoord = texCoords;
     v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('ScreenSpaceShader.fragmentShader', `
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
@@ -66,7 +59,6 @@ uniform bool BaseColorTexConnected;
 #endif
 
 /* VS Outputs */
-varying vec3 v_viewPos;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
@@ -97,8 +89,12 @@ void main(void) {
 #endif
 }
 `);
-        
+
         this.finalize();
+    }
+
+    isOverlay() {
+        return true;
     }
 
     static getParamDeclarations() {
@@ -108,7 +104,7 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('FlatSurfaceShader', FlatSurfaceShader);
+sgFactory.registerClass('ScreenSpaceShader', ScreenSpaceShader);
 export {
-    FlatSurfaceShader
+    ScreenSpaceShader
 };

@@ -29,7 +29,7 @@ class VRFlyTool extends VRTool {
     }
 
     applyAction() {
-        let flyDir = this.__activeController.getTipGlobalXfo().ori.getZaxis();
+        let flyDir = this.__activeController.getTipXfo().ori.getZaxis();
         flyDir.scaleInPlace(-this.__flySpeed);
 
         ////////////////

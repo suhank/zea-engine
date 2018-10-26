@@ -91,7 +91,7 @@ class GLViewport extends BaseViewport {
         // this.__glshaderScreenPostProcess = new PostProcessing(gl);
         this.__outlineShader = new OutlinesShader(gl);
         this.__outlineColor = new Color("#03E3AC")
-        this.quad = new GLMesh(gl,  new Plane(1, 1));
+        this.quad = new GLMesh(gl, new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
         this.__cameraManipulator = new CameraMouseAndKeyboard();
@@ -119,10 +119,6 @@ class GLViewport extends BaseViewport {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
-        }
-        if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBuffer.resize(this.__width, this.__height);
-            this.__selectedGeomsBufferFbo.resize();
         }
         this.region = [this.__x, this.__y, this.__width, this.__height];
     }
@@ -239,22 +235,6 @@ class GLViewport extends BaseViewport {
     }
 
     ////////////////////////////
-    // SelectedGeomsBuffer
-
-    createSelectedGeomsFbo() {
-        let gl = this.__renderer.gl;
-        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
-            type: 'UNSIGNED_BYTE',
-            format: 'RGBA',
-            filter: 'NEAREST',
-            width: this.__width <= 1 ? 1 : this.__width,
-            height: this.__height <= 1 ? 1 : this.__height,
-        });
-        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
-        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
-    }
-
-    ////////////////////////////
     // GeomData
 
     createGeomDataFbo(floatGeomBuffer) {
@@ -334,7 +314,7 @@ class GLViewport extends BaseViewport {
             // }
             // logGeomData();
 
-            let passId, itemId, dist, geomData;
+            let passId, geomData;
             if (gl.floatGeomBuffer) {
                 geomData = new Float32Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
@@ -371,39 +351,39 @@ class GLViewport extends BaseViewport {
             let gl = this.__renderer.gl;
             gl.finish();
             // Allocate a pixel block.
-            let rectBottom = (this.__height - br[1]);
-            let rectLeft = tl.x;
-            let rectWidth = (br.x - tl.x);
-            let rectHeight = (br.y - tl.y);
+            let rectBottom = Math.round(this.__height - br.y);
+            let rectLeft = Math.round(tl.x);
+            let rectWidth = Math.round(br.x - tl.x);
+            let rectHeight = Math.round(br.y - tl.y);
             let numPixels = rectWidth * rectHeight;
-            let pixels = new Uint8Array(4 * numPixels);
 
-            this.__geomDataBufferFbo.bind();
-            gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+            this.__geomDataBufferFbo.bindForReading();
+
+            let geomDatas;
+            if (gl.floatGeomBuffer) {
+                geomDatas = new Float32Array(4 * numPixels);
+                gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.FLOAT, geomDatas);
+            } else {
+                geomDatas = new Uint8Array(4 * numPixels);
+                gl.readPixels(rectLeft, rectBottom, rectWidth, rectHeight, gl.RGBA, gl.UNSIGNED_BYTE, geomDatas);
+            }
+
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
             let geomItems = new Set();
             for (let i = 0; i < numPixels; i++) {
 
-                let passId, itemId, dist, geomData;
+                let passId;
+                const geomData = geomDatas.subarray(i*4, (i+1)*4);
                 if (gl.floatGeomBuffer) {
-                    geomData = new Float32Array(4);
-                    gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
-                    if (geomData[3] == 0)
-                        return undefined;
                     passId = Math.round(geomData[0]);
                 } else {
-                    geomData = new Uint8Array(4);
-                    gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, geomData);
-                    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-                    if (geomData[0] == 0 && geomData[1] == 0)
-                        return undefined;
                     passId = 0;
                 }
 
                 const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
                 if (geomItemAndDist) {
-                    geomItems.push(geomItemAndDist.geomItem);
+                    geomItems.add(geomItemAndDist.geomItem);
                 }
             }
             return geomItems;
@@ -568,7 +548,7 @@ class GLViewport extends BaseViewport {
         if (this.__selectedGeomsBufferFbo) {
             this.__selectedGeomsBufferFbo.bindAndClear();
             this.__renderer.drawSceneSelectedGeoms(renderstate);
-            let gl = this.__renderer.getGL();
+            const gl = this.__renderer.getGL();
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
             gl.viewport(...this.region);
 
@@ -583,7 +563,7 @@ class GLViewport extends BaseViewport {
         // /////////////////////////////////////
         // // Post processing.
         // if (this.__fbo) {
-        //     let gl = this.__renderer.getGL();
+        //     const gl = this.__renderer.getGL();
 
         //     // Bind the default framebuffer
         //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);

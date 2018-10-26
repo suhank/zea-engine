@@ -72,10 +72,14 @@ class GLLines extends GLGeom {
             const indexArray = new Float32Array(indices.length);
             for (let i = 0; i < indices.length; i++) {
                 let seqentialIndex;
-                if (i % 2 == 0)
-                    seqentialIndex = (i > 0) && (indices[i] == indices[i - 1]);
-                else
-                    seqentialIndex = (i < indices.length - 1) && (indices[i] == indices[i + 1]);
+                if (i % 2 == 0){
+                    seqentialIndex = (i > 0) ? (indices[i] == indices[i - 1]) : (indices[i] == indices[indices.length - 1]);
+                }
+                else{
+                    seqentialIndex = (i < indices.length - 1) ? (indices[i] == indices[i + 1]) : (indices[i] == indices[0]);;
+                }
+                // encode the flag into the indices values.
+                // this flag is decoded in GLSL.
                 indexArray[i] = (seqentialIndex ? 1 : 0) + (indices[i] * 2);
             }
             const indexBuffer = gl.createBuffer();
@@ -167,7 +171,7 @@ class GLLines extends GLGeom {
 
             const vertexAttributes = this.__geom.getVertexAttributes();
 
-            if (opts.indicesChanged) {
+            if (opts && opts.indicesChanged) {
                 const indices = this.__geom.getIndices();
                 if (this.__numSegIndices != indices.length) {
                     gl.deleteBuffer(this.__indexBuffer);
@@ -187,7 +191,6 @@ class GLLines extends GLGeom {
                     gl.deleteBuffer(glattr.buffer);
                     glattr.buffer = gl.createBuffer();
                 }
-
                 gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
                 gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
             }

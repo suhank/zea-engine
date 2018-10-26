@@ -91,6 +91,8 @@ class ResourceLoader {
       parts.pop()
       parts.pop()
       this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm';
+
+      this.addResourceURL("VisualiveEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
     }
   }
 

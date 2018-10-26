@@ -136,7 +136,7 @@ class ParameterOwner extends RefCounted {
         const index = this.__paramMapping[name];
         const param = this.__params[this.__paramMapping[name]]
         param.removeRef(this);
-        param.valueChanged.disconnectID(this.__paramSignalIds[name]);
+        param.valueChanged.disconnectId(this.__paramSignalIds[name]);
         this.__params.splice(index, 1)
         const paramMapping = {};
         for (let i=0; i<this.__params.length; i++){
@@ -151,7 +151,7 @@ class ParameterOwner extends RefCounted {
         const index = this.__paramMapping[name];
         const prevparam = this.__params[this.__paramMapping[name]]
         prevparam.removeRef(this);
-        prevparam.valueChanged.disconnectID(this.__paramSignalIds[name]);
+        prevparam.valueChanged.disconnectId(this.__paramSignalIds[name]);
 
         param.addRef(this);
         this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
@@ -208,7 +208,7 @@ class ParameterOwner extends RefCounted {
                     console.warn("Param not found:" + key);
                 else {
                     if(pj.paramPath){
-                        const param = context.resolvePath(pj.paramPath);
+                        const param = context.resolvePath(pj.paramPath, 0);
                         if(param)
                             this.replaceParameter(param)
                     }

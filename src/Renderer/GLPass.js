@@ -126,6 +126,9 @@ class GLPass {
         const gl = this.__gl;
 
         for (let glshaderMaterials of this.__glshadermaterials) {
+            if(glshaderMaterials.getGLShader().invisibleToGeomBuffer)
+                continue;
+
             const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
             for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
                 if(glmaterialDrawItemSet.drawCount == 0)

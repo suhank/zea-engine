@@ -123,7 +123,7 @@ class VRToolHoldObjects extends VRTool {
     getGeomItemAtController(id, vrController) {
         let renderer = this.__vrStage.getRenderer();
         let gl = renderer.gl;
-        let xfo = vrController.getTipGlobalXfo();
+        let xfo = vrController.getTipXfo();
 
         this.__geomDataBufferFbo.bindAndClear();
         gl.viewport(0, 0, 1, 1);
@@ -162,11 +162,11 @@ class VRToolHoldObjects extends VRTool {
     computeGrabXfo(refs){
         let grabXfo;
         if(refs.length == 1) {
-            grabXfo = this.__vrControllers[refs[0]].getTipGlobalXfo();
+            grabXfo = this.__vrControllers[refs[0]].getTipXfo();
         }
         else if(refs.length == 2) {
-            let xfo0 = this.__vrControllers[refs[0]].getTipGlobalXfo();
-            let xfo1 = this.__vrControllers[refs[1]].getTipGlobalXfo();
+            let xfo0 = this.__vrControllers[refs[0]].getTipXfo();
+            let xfo1 = this.__vrControllers[refs[1]].getTipXfo();
 
             grabXfo = new Xfo();
             grabXfo.tr = xfo0.tr.lerp(xfo1.tr, 0.5);

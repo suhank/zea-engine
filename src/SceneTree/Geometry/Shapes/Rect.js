@@ -43,15 +43,18 @@ class Rect extends Lines {
         this.setSegment(1, 1, 2);
         this.setSegment(2, 2, 3);
         this.setSegment(3, 3, 0);
-        this.__resize();
+        this.__resize(-1);
+        this.geomDataTopologyChanged.emit();
     }
 
-    __resize() {
+    __resize(mode) {
         this.getVertex(0).set(-0.5 * this.__x, -0.5 * this.__y, 0.0);
         this.getVertex(1).set(0.5 * this.__x, -0.5 * this.__y, 0.0);
         this.getVertex(2).set(0.5 * this.__x,  0.5 * this.__y, 0.0);
         this.getVertex(3).set(-0.5 * this.__x,  0.5 * this.__y, 0.0);
         this.setBoundingBoxDirty();
+        if(mode != -1)
+            this.geomDataChanged.emit();
     }
 
     toJSON() {

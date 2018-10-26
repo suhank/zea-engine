@@ -81,7 +81,7 @@ class TreeItemParameter extends Parameter {
         const itemPath = j.value;
         if(context.assetItem) {
             const onloaded = ()=>{
-                this.setValue(context.assetItem.resolvePath(itemPath));
+                this.setValue(context.assetItem.resolvePath(itemPath, 0));
                 context.assetItem.loaded.disconnect(onloaded)
             }
             context.assetItem.loaded.connect(onloaded)

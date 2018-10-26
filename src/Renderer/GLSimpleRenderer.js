@@ -68,11 +68,6 @@ class GLSimpleRenderer extends GLRenderer {
                     return;
                 }
             }
-            // Cannot upate the view, else it sends signals which
-            // end up propagating through the websocket. 
-            // TODO: Make the head invisible till active
-            else
-                this.__vrViewport.updateHeadAndControllers();
         }
 
         for (let vp of this.__viewports)

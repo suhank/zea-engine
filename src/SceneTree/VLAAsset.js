@@ -36,7 +36,6 @@ import {
 } from './MaterialLibrary.js';
 
 
-
 class VLAAsset extends AssetItem {
   constructor(name) {
     super(name);
@@ -148,9 +147,12 @@ class VLAAsset extends AssetItem {
         onDone();
         if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
           resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
-          let geomsData = entries[Object.keys(entries)[1]];
+          const geomsData = entries[Object.keys(entries)[1]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resourceLoader.freeData(geomsData.buffer);
+          const id = this.__geomLibrary.loaded.connect( () => {
+            this.geomsLoaded.emit() 
+          });
         }
         else {
           // add the work for the the geom files....

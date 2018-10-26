@@ -1,14 +1,22 @@
 class SGFactory {
     constructor() {
         this.__registeredClasses = {};
+        this.__classNames = {};
     }
 
     registerClass(name, cls){
         this.__registeredClasses[name] = cls;
+        this.__classNames[cls.name] = name;
     }
 
     getClass(name){
         return this.__registeredClasses[name];
+    }
+
+    getClassName(inst){
+        if(this.__classNames[inst.constructor.name])
+            return this.__classNames[inst.constructor.name];
+        return inst.constructor.name;
     }
 
     constructClass(name/*, ...args*/){

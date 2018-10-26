@@ -90,12 +90,12 @@ class OperatorOutput {
             // Note: the tree should have fully loaded by the time we are loading operators
             // even new items and groups should have been created. Operators and state machines 
             // are loaded last.
-            const param = context.assetItem.resolvePath(paramPath);
+            const param = context.assetItem.resolvePath(paramPath, 0);
             if(!param) {
                 // Note: We may have a case where a state machine wants to drive a parameter in an operator.
                 // So there, wait till all loading is complete and then connect.
                 const onloaded = ()=>{
-                    const param = context.assetItem.resolvePath(paramPath);
+                    const param = context.assetItem.resolvePath(paramPath, 0);
                     if(param)
                         this.setParam(param);
                     else {
