@@ -124,11 +124,13 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     const setupGifPlayers = (path, pos)=>{
 
-        const image =  new Visualive.FileImage(path);
+        const image =  new Visualive.FileImage();
+        image.getParameter('FilePath').setFilepath(path);
         const treeItem = new Visualive.TreeItem(image.getName());
 
         // Check that the gif is loaded only once.
-        const image2 =  new Visualive.FileImage(path);
+        const image2 =  new Visualive.FileImage();
+        image2.getParameter('FilePath').setFilepath(path);
 
         const atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
         atlasmaterial.getParameter('BaseColor').setValue(image);
