@@ -28,7 +28,7 @@ class GLGizmoPass extends GLPass {
         this.__glshadermaterials = [];
         for (let glshaderkey in allglshaderMaterials) {
             const glshaderMaterials = allglshaderMaterials[glshaderkey];
-            if (!glshaderMaterials.getGLShader().isOverlay())
+            if (!glshaderMaterials.getGLShader().isGizmo())
                 continue;
             this.__glshadermaterials.push(glshaderMaterials);
         }

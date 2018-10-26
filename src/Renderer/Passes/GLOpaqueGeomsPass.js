@@ -33,6 +33,8 @@ class GLOpaqueGeomsPass extends GLPass {
                 continue;
             if (glshaderMaterials.getGLShader().isOverlay())
                 continue;
+            if (glshaderMaterials.getGLShader().isGizmo())
+                continue;
             if (glshaderMaterials.getGLShader().getPassFilter) {
                 const passFilter = glshaderMaterials.getGLShader().getPassFilter();
                 if( passFilter.indexOf('GLOpaqueGeomsPass') == -1)
@@ -43,6 +45,7 @@ class GLOpaqueGeomsPass extends GLPass {
     }
 
     draw(renderstate) {
+
         const gl = this.__gl;
         // TODO: disable cull face when rendering cross sections.
         // gl.enable(gl.CULL_FACE);
