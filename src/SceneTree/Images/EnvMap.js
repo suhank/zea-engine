@@ -163,6 +163,9 @@ class EnvMap extends VLHImage {
                 this.__sampleSets = JSON.parse((new TextDecoder("utf-8")).decode(samples));
             else
                 this.__sampleSets = JSON.parse(decodeText(samples));
+
+
+            this.__thumbSize = Math.sqrt(this.__sampleSets.luminanceThumbnail.length);
         }
     }
     
@@ -192,11 +195,13 @@ class EnvMap extends VLHImage {
         }
     }
 
-    dirToLuminance(dir) {
-        const uv = this.dirToUv(dir);
-        const thmbPixel = (Math.floor(uv.y * 32) * 32) + (Math.floor(uv.x * 32));
-        // console.log("dir:", dir.toString(), uv.toString(), thmbPixel)
+    uvToLuminance(uv) {
+        const thmbPixel = (Math.floor(uv.y * this.__thumbSize) * this.__thumbSize) + (Math.floor(uv.x * this.__thumbSize));
         return this.__sampleSets.luminanceThumbnail[thmbPixel];
+    }
+
+    dirToLuminance(dir) {
+        return this.uvToLuminance(this.dirToUv(dir));
     }
 
 };

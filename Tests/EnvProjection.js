@@ -34,13 +34,28 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
         vrViewport.setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     }
 
-
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1, 1.2), new Visualive.Vec3(0, 0, 0.1));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(0, 0, 1.2), new Visualive.Vec3(1, 0, 1.2));
+    renderer.getViewport().getManipulator().setDefaultManipulationMode('look');
     // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.setScene(scene);
     // renderer.gamma = 1.0;
-    renderer.exposure = 0.5;
-
 
     renderer.resumeDrawing();
+
+    envMap.loaded.connect(()=>{
+        let exposure = 1.0;
+        const camera = renderer.getViewport().getCamera();
+        renderer.startContinuousDrawing();
+        renderer.redrawOccured.connect((data) => {
+            const viewDir = camera.getGlobalXfo().ori.getZaxis().negate();
+            const uv = envMap.dirToUv(viewDir);
+            const luminance = envMap.uvToLuminance(uv);
+            // Apply a sigmoid function to reduce variance. 
+            const targExposure = Math.atan(1 / luminance);
+            // console.log("luminance:", luminance, targExposure)
+
+            exposure = Math.lerp(exposure, targExposure, 0.08);
+            renderer.exposure = exposure;
+        })
+    })
 });

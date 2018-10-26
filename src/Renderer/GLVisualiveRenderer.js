@@ -369,7 +369,7 @@ class GLVisualiveRenderer extends GLRenderer {
         renderstate.debugLightmaps = this.__debugLightmaps;
         renderstate.planeDist = this._planeDist;
         renderstate.planeNormal = this.__cutPlaneNormal;
-        renderstate.exposure = Math.pow(2, this.__exposure);
+        renderstate.exposure = this.__exposure;
         renderstate.shaderopts = this.__preproc;
 
         if (this.__displayEnvironment)
