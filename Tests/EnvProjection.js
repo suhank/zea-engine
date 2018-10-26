@@ -15,6 +15,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
         return geomItem;
     }
 
+    addMeshShape('Sphere', new Visualive.Sphere(20, 64), new Visualive.Xfo());
     addMeshShape('Plane0', new Visualive.Plane(50.0, 50.0), new Visualive.Xfo());
     addMeshShape('Plane1', 
         new Visualive.Plane(6.0, 2.0), 
@@ -48,8 +49,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
         renderer.startContinuousDrawing();
         renderer.redrawOccured.connect((data) => {
             const viewDir = camera.getGlobalXfo().ori.getZaxis().negate();
-            const uv = envMap.dirToUv(viewDir);
-            const luminance = envMap.uvToLuminance(uv);
+            const luminance = envMap.dirToLuminance(viewDir);
             // Apply a sigmoid function to reduce variance. 
             const targExposure = Math.atan(1 / luminance);
             // console.log("luminance:", luminance, targExposure)
