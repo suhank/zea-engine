@@ -48,6 +48,7 @@ class FileImage extends BaseImage {
         }
         let filepath;
         if (name != undefined && name.lastIndexOf('.') != -1) {
+            console.warn("Deprecated signature. Please provide a name and filepath to the image constructor")
             filepath = name;
             name = name.substring(name.lastIndexOf('/')+1, name.lastIndexOf('.'));
         }

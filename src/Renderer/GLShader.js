@@ -47,6 +47,10 @@ class GLShader extends BaseItem {
         return false;
     }
 
+    isGizmo() {
+        return false;
+    }
+
     isOverlay() {
         return false;
     }

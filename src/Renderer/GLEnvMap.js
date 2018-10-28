@@ -92,7 +92,9 @@ class GLEnvMap extends GLProbe {
                 const unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
                 //this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
-                this.bindToUniform(renderstate, unifs.envMapPyramid);
+                this.bindProbeToUniform(renderstate, unifs.envMapPyramid);
+                // this.bindToUniform(renderstate, unifs.envMapPyramid);
+                
 
                 {
                     let unif = unifs.focus;

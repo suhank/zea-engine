@@ -28,13 +28,6 @@ class GLOverlayPass extends GLPass {
         }
     }
 
-    bindShader(renderstate, glshader){
-        if(super.bindShader(renderstate, glshader)){
-            return true;
-        }
-        return false;
-    }
-
     draw(renderstate) {
 
         const gl = this.__gl;
