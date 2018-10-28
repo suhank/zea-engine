@@ -262,7 +262,6 @@ class GLLines extends GLGeom {
     }
 
     drawInstanced(count) {
-        console.log("drawInstanced(renderstate) {");
         this.__gl.drawElementsInstanced(this.__gl.LINES, this.__numSegIndices, this.__indexDataType, 0, count);
     }
 
