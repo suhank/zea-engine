@@ -631,6 +631,12 @@ class VRViewport extends BaseViewport {
 
         this.__vrDisplay.submitFrame();
         this.__frameRequested = false;
+
+        // Note: the renderer will be refactored to render both viewports
+        // in a single pass, and then emit this signal. For now this
+        // is a very quick hack to make automatic exposure controlls
+        // work in VR.
+        this.__renderer.redrawOccured.emit();
     }
 
     drawOverlays(renderstate) {
