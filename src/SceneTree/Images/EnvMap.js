@@ -164,8 +164,8 @@ class EnvMap extends VLHImage {
             else
                 this.__sampleSets = JSON.parse(decodeText(samples));
 
-
-            this.__thumbSize = Math.sqrt(this.__sampleSets.luminanceThumbnail.length);
+            if(this.__sampleSets.luminanceThumbnail)
+                this.__thumbSize = Math.sqrt(this.__sampleSets.luminanceThumbnail.length);
         }
     }
     
