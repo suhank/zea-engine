@@ -94,7 +94,7 @@ class GLViewport extends BaseViewport {
         this.quad = new GLMesh(gl, new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
-        this.__cameraManipulator = new CameraMouseAndKeyboard();
+        this.setManipulator(new CameraMouseAndKeyboard());
         this.__cameraManipulatorDragging = false;
 
         this.resize(width, height);
@@ -146,7 +146,8 @@ class GLViewport extends BaseViewport {
         });
 
         // The state machine can manipulate the camera and then signal the
-        // end of a movement.
+        // end of a movement. Also, when the view is framed, we get 
+        // this signal.
         this.__camera.movementFinished.connect(this.renderGeomDataFbo);
 
         this.__updateProjectionMatrix();
@@ -157,7 +158,11 @@ class GLViewport extends BaseViewport {
     }
 
     setManipulator(manipulator) {
+        if(this.__cameraManipulator && this.__cameraManipulator.movementFinished)
+            this.__cameraManipulator.movementFinished.disconnect(this.renderGeomDataFbo);
         this.__cameraManipulator = manipulator;
+        if(this.__cameraManipulator && this.__cameraManipulator.movementFinished)
+            this.__cameraManipulator.movementFinished.connect(this.renderGeomDataFbo);
     }
 
     setGizmoPass(gizmoPass) {
