@@ -81,6 +81,7 @@ class TreeItem extends BaseItem {
         this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this);
         this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
         this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
+        this._childFlagsChanged = this._childFlagsChanged.bind(this);
         this.onMouseDown = this.onMouseDown.bind(this);
         this.onMouseMove = this.onMouseMove.bind(this);
         this.onMouseUp = this.onMouseUp.bind(this);
@@ -376,7 +377,7 @@ class TreeItem extends BaseItem {
 
         childItem.boundingChanged.connect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
-        childItem.flagsChanged.connect(this._childFlagsChanged.bind(this));
+        childItem.flagsChanged.connect(this._childFlagsChanged);
 
         // Propagate mouse event up ths tree.
         childItem.mouseDown.connect(this.onMouseDown);
@@ -415,6 +416,7 @@ class TreeItem extends BaseItem {
 
         childItem.boundingChanged.disconnect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.disconnect(this._setBoundingBoxDirty);
+        childItem.flagsChanged.disconnect(this._childFlagsChanged);
 
         // Propagate mouse event up ths tree.
         childItem.mouseDown.disconnect(this.onMouseDown);
