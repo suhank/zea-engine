@@ -77,36 +77,12 @@ class VRController extends Gizmo {
                 0.0, 
                 this.__activeVolumeSize);
             this.createGeomDataFbo();
-
-            // let pointermat = new Material('pointermat', 'FlatSurfaceShader');
-            // pointermat.getParameter('BaseColor').setValue(new Color(1.2, 0, 0));
-
-            // let line = new Lines();
-            // line.setNumVertices(2);
-            // line.setNumSegments(1);
-            // line.setSegment(0, 0, 1);
-            // line.getVertex(0).set(0.0, 0.0, 0.0);
-            // line.getVertex(1).set(0.0, 0.0, -1.0);
-            // line.setBoundingBoxDirty();
-
-            // this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
-            // this.__uiPointerItem.getLocalXfo().tr.set(0.0, -0.08, -0.04);
-            // this.__uiPointerItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
-            // this.__uiPointerItem.setVisible(false);
-            // this.__treeItem.addChild(this.__uiPointerItem);
         }
 
         this.touchpadTouched = new Signal();
         this.buttonPressed = new Signal();
         this.buttonReleased = new Signal();
         this.__pressedButtons = [];
-
-        ///////////////////////////////////
-        // UI
-        // this.showInHandUI = new Signal();
-        // this.hideInHandUI = new Signal();
-        // this.uivisibile = false;
-        // this.pointerVisible = false;
 
         ///////////////////////////////////
         // Xfo
@@ -124,11 +100,6 @@ class VRController extends Gizmo {
         return this.__treeItem;
     }
 
-    setVisible(val) {
-        // this.__geomItem0.setVisible(val);
-        // this.__geomItem1.setVisible(val);
-    }
-
     getTipItem() {
         return this.__tip;
     }
@@ -136,10 +107,6 @@ class VRController extends Gizmo {
     getTipXfo() {
         return this.__tip.getGlobalXfo();
     }
-
-    // setTipColor(val) {
-    //     this.__mat.getParameter('BaseColor').setValue(val);
-    // }
     
     getTouchPadValue() {
         return this.__touchpadValue;
@@ -153,7 +120,6 @@ class VRController extends Gizmo {
         return this.__xfo;
     }
 
-
     update(gamepad) {
         if (gamepad.pose.position)
             this.__xfo.tr.setDataArray(gamepad.pose.position);
@@ -165,33 +131,9 @@ class VRController extends Gizmo {
         this.__treeItem.setLocalXfo(this.__xfo);
 
         this.__geomAtTip = undefined;
+        this.__hitTested = false;
 
         ////////////////////////////////////////////
-        /*
-        let controllerUpVec = this.__treeItem.getGlobalXfo().ori.getYaxis();
-        let vecToHead = this.__treeItem.getGlobalXfo().tr.subtract(this.__vrStage.getVRHead().getXfo().tr);
-        vecToHead.normalizeInPlace();
-        let angle = controllerUpVec.angleTo(vecToHead);
-        if (angle < 1.0) {
-            if (!this.uivisibile) {
-                this.uivisibile = true;
-                this.__uiGeomItem.setVisible(true);
-                if (this.pointerVisible)
-                    this.hidePointer();
-                this.showInHandUI.emit();
-            }
-
-        } else {
-            if (this.uivisibile) {
-                this.hideInHandUI.emit();
-                this.uivisibile = false;
-                this.__uiGeomItem.setVisible(false);
-            }
-        }
-        if (this.pointerVisible) {
-        }
-        */
-
         if (this.__isDaydramController) {
             if (gamepad.buttons[0].pressed &&!this.__buttonPressed) {
                 this.__buttonPressed = true;
@@ -205,6 +147,17 @@ class VRController extends Gizmo {
                 if (gamepad.buttons[i].pressed) {
                     if (!this.__pressedButtons[i]) {
                         this.__pressedButtons[i] = true;
+
+                        // trigger
+                        if (i == 1) {
+                            const intersectionData = this.getGeomItemAtTip();
+                            if (intersectionData != undefined) {
+                                intersectionData.geomItem.onMouseDown(event, intersectionData);
+                                if(event.vleStopPropagation == true)
+                                    continue;
+                            }
+                        }
+
                         this.buttonPressed.emit(i);
                     }
                 }
@@ -234,8 +187,9 @@ class VRController extends Gizmo {
     }
 
     getGeomItemAtTip() {
-        if(this.__geomAtTip)
+        if(this.__hitTested)
             return this.__geomAtTip;
+
 
         const renderer = this.__vrStage.getRenderer();
         const gl = renderer.gl;
@@ -277,6 +231,8 @@ class VRController extends Gizmo {
 
         const geomItemAndDist = renderer.getPass(passId).getGeomItemAndDist(geomData);
 
+        this.__hitTested = true;
+
         if (geomItemAndDist) {
             const ray = new Ray(xfo.tr, xfo.ori.getZaxis());
             const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist));
@@ -293,21 +249,6 @@ class VRController extends Gizmo {
 
     //////////////////////////////////
     // UI
-    // getUIPlaneXfo() {
-    //     return this.__uiGeomItem.getGeomXfo();
-    // }
-    // showPointer() {
-    //     if(this.__tip)
-    //         this.__tip.setVisible(false);
-    //     this.__uiPointerItem.setVisible(true);
-    //     this.pointerVisible = true;
-    // }
-    // hidePointer() {
-    //     if(this.__tip)
-    //         this.__tip.setVisible(true);
-    //     this.__uiPointerItem.setVisible(false);
-    //     this.pointerVisible = false;
-    // }
     // setPointerLength(length) {
     //     let xfo = this.__uiPointerItem.getLocalXfo();
     //     xfo.sc.set(1, 1, length);
@@ -327,10 +268,6 @@ class VRController extends Gizmo {
     //     this.__uiGeomItemGeomXfo.sc.set(width*dpm, height*dpm, 1.0);
     //     this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
     //     this.__uiimage.setData(width, height, pixels);
-    // }
-
-    // getPointerXfo() {
-    //     return this.__uiPointerItem.getGeomXfo();
     // }
 
 };
