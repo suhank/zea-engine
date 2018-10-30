@@ -78,22 +78,6 @@ class VRController extends Gizmo {
                 this.__activeVolumeSize);
             this.createGeomDataFbo();
 
-            // let uimat = new Material('uimat', 'FlatSurfaceShader');
-
-            // this.__uiimage = new DataImage();
-            // uimat.getParameter('BaseColor').setValue(this.__uiimage);
-
-            // this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
-            // this.__uiGeomItem.getLocalXfo().tr.set(0.0, -0.07, 0.05); 
-            // this.__uiGeomItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
-            // this.__uiGeomItemGeomXfo = new Xfo();
-            // this.__uiGeomItemGeomXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), -Math.PI);
-            // this.__uiGeomItemGeomXfo.sc.set(0.3, 0.2, 1.0);
-            // this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
-            // this.__dims = { width: 200, height: 300 };
-            // this.__uiGeomItem.setVisible(false);
-            // this.__treeItem.addChild(this.__uiGeomItem);
-
             // let pointermat = new Material('pointermat', 'FlatSurfaceShader');
             // pointermat.getParameter('BaseColor').setValue(new Color(1.2, 0, 0));
 
