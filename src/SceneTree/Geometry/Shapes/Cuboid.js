@@ -1,6 +1,9 @@
 import { Vec2 } from '../../../Math/Vec2';
 import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
+import {
+    sgFactory
+} from '../../SGFactory.js';
 
 class Cuboid extends Mesh {
     constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero=false) {
@@ -96,7 +99,7 @@ class Cuboid extends Mesh {
         this.__resize();
     }
 
-    __resize() {
+    __resize(mode) {
         let zoff = 0.5;
         if(this.__baseZAtZero)
             zoff = 1.0
@@ -126,6 +129,8 @@ class Cuboid extends Mesh {
         return json
     }
 };
+
+sgFactory.registerClass('Cuboid', Cuboid);
 
 export {
     Cuboid

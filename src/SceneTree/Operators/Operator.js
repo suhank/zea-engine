@@ -180,7 +180,7 @@ class Operator extends BaseItem {
 
     toJSON(context) {
         const j = super.toJSON(context);
-        j.type = this.constructor.name;
+        j.type = sgFactory.getClassName(this);
 
         const oj = [];
         for(let o of this.__outputs){

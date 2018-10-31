@@ -182,11 +182,11 @@ class GLViewport extends BaseViewport {
     }
 
     __updateProjectionMatrix() {
-        let aspect = this.__width / this.__height;
+        const aspect = this.__width / this.__height;
         this.__camera.updateProjectionMatrix(this.__projectionMatrix, aspect);
 
-        let frustumH = (Math.tan(this.__camera.getFov() / 2.0) * this.__camera.getNear()) * 2.0;
-        let frustumW = frustumH * aspect;
+        const frustumH = (Math.tan(this.__camera.getFov() / 2.0) * this.__camera.getNear()) * 2.0;
+        const frustumW = frustumH * aspect;
         this.__frustumDim.set(frustumW, frustumH);
     }
 
@@ -207,7 +207,7 @@ class GLViewport extends BaseViewport {
         // Convert the raster coordinates to screen space ([0,{w|h}] -> [-1,1]
         // - Note: The raster vertical is inverted wrt OGL screenspace Y
 
-        let topy = (this.__canvasHeight * (1.0 - this.__tr.y));
+        const topy = (this.__canvasHeight * (1.0 - this.__tr.y));
         let sx = (screenPos.x - this.__x) / this.__width;
         let sy = (screenPos.y - topy) / this.__height;
 
@@ -215,9 +215,9 @@ class GLViewport extends BaseViewport {
         sy = (sy * 2.0) - 1.0;
 
         // Transform the origin from camera local to world space
-        let cameraMat = this.getCameraMatrix();
+        const cameraMat = this.getCameraMatrix();
 
-        let projInv = this.__projectionMatrix.inverse();
+        const projInv = this.__projectionMatrix.inverse();
         if (projInv == null) // Sometimes this happens, not sure why...
             return null;
 

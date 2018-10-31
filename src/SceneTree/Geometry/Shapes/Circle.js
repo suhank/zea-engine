@@ -3,6 +3,9 @@ import { Lines } from '../Lines.js';
 import {
     NumberParameter
 } from '../../Parameters/NumberParameter.js';
+import {
+    sgFactory
+} from '../../SGFactory.js';
 
 class Circle extends Lines {
     constructor(radius = 1.0, numSegments=32) {
@@ -40,6 +43,7 @@ class Circle extends Lines {
     }
 
 };
+sgFactory.registerClass('Circle', Circle);
 
 export {
     Circle

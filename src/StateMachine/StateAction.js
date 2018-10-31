@@ -71,7 +71,7 @@ class StateAction extends ParameterOwner {
 
     toJSON(context) {
         const j = super.toJSON(context);
-        j.type = this.constructor.name;
+        j.type = sgFactory.getClassName(this);
 
         const childActionsj = [];
         for(let childAction of this.__childActions){

@@ -66,8 +66,8 @@ class GLMesh extends GLGeom {
 
         const geomBuffers = this.__geom.genBuffers({ includeIndices: false });
         for (let attrName in geomBuffers.attrBuffers) {
-            let attrData = geomBuffers.attrBuffers[attrName];
-            let glattr = this.__glattrbuffers[attrName];
+            const attrData = geomBuffers.attrBuffers[attrName];
+            const glattr = this.__glattrbuffers[attrName];
             gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
             gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
         }
@@ -101,12 +101,12 @@ class GLMesh extends GLGeom {
         this.__ext.bindVertexArrayOES(this.__wireframesVao);
 
         const gl = this.__gl;
-        let wireframeIndexBuffer = gl.createBuffer();
-        let wireframeIndices = Uint32Array.from(this.__geom.edgeVerts);
+        const wireframeIndexBuffer = gl.createBuffer();
+        const wireframeIndices = Uint32Array.from(this.__geom.edgeVerts);
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wireframeIndices, gl.STATIC_DRAW);
 
-        let positionsBuffer = this.__glattrbuffers['positions'].buffer;
+        const positionsBuffer = this.__glattrbuffers['positions'].buffer;
         gl.enableVertexAttribArray(0);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
         gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0);
@@ -152,12 +152,12 @@ class GLMesh extends GLGeom {
         this.__ext.bindVertexArrayOES(this.__hardEdgesVao);
 
         const gl = this.__gl;
-        let hardEdgeIndexBuffer = gl.createBuffer();
-        let hardEdgeIndices = Uint32Array.from(this.__geom.computeHardEdgesIndices());
+        const hardEdgeIndexBuffer = gl.createBuffer();
+        const hardEdgeIndices = Uint32Array.from(this.__geom.computeHardEdgesIndices());
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW);
 
-        let positionsBuffer = this.__glattrbuffers['positions'].buffer;
+        const positionsBuffer = this.__glattrbuffers['positions'].buffer;
         gl.enableVertexAttribArray(0);
         gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
         gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0);
@@ -200,8 +200,8 @@ class GLMesh extends GLGeom {
         this.__gl.drawElements(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0);
     }
 
-    drawInstanced(count) {
-        this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, count);
+    drawInstanced(instanceCount) {
+        this.__gl.drawElementsInstanced(this.__gl.TRIANGLES, this.__numTriIndices, this.__indexDataType, 0, instanceCount);
     }
 
 

@@ -1,7 +1,12 @@
-import { Vec2 } from '../../../Math/Vec2';
-import { Vec3 } from '../../../Math/Vec3';
+import { Vec2, Vec3 } from '../../../Math';
 import { Mesh } from '../Mesh.js';
 
+import {
+    NumberParameter
+} from '../../Parameters/NumberParameter.js';
+import {
+    sgFactory
+} from '../../SGFactory.js';
 
 class Sphere extends Mesh {
     constructor(radius = 1.0, sides = 12, loops = 12) {
@@ -171,6 +176,7 @@ class Sphere extends Mesh {
         return json
     }
 };
+sgFactory.registerClass('Sphere', Sphere);
 
 export {
     Sphere

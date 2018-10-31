@@ -13,8 +13,8 @@ class Mat4 extends AttrValue {
             this.__data = m00;
         }
         else if (m00 instanceof ArrayBuffer) {
-            let buffer = m00;
-            let byteOffset = m01;
+            const buffer = m00;
+            const byteOffset = m01;
             this.__data = new Float32Array(buffer, byteOffset, 16);
         }
         else {
@@ -256,7 +256,7 @@ class Mat4 extends AttrValue {
 
     transposeInPlace() {
         // If we are transposing ourselves we can skip a few steps but have to cache some values
-        let a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3],
+        const a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3],
             a12 = this.__data[6], a13 = this.__data[7],
             a23 = this.__data[11];
 
@@ -297,12 +297,12 @@ class Mat4 extends AttrValue {
 
     // Inverts a mat4 not using SIMD
     inverse() {
-        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3];
-        let a10 = this.__data[4], a11 = this.__data[5], a12 = this.__data[6], a13 = this.__data[7];
-        let a20 = this.__data[8], a21 = this.__data[9], a22 = this.__data[10], a23 = this.__data[11];
-        let a30 = this.__data[12], a31 = this.__data[13], a32 = this.__data[14], a33 = this.__data[15];
+        const a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3];
+        const a10 = this.__data[4], a11 = this.__data[5], a12 = this.__data[6], a13 = this.__data[7];
+        const a20 = this.__data[8], a21 = this.__data[9], a22 = this.__data[10], a23 = this.__data[11];
+        const a30 = this.__data[12], a31 = this.__data[13], a32 = this.__data[14], a33 = this.__data[15];
 
-        let b00 = a00 * a11 - a01 * a10,
+        const b00 = a00 * a11 - a01 * a10,
             b01 = a00 * a12 - a02 * a10,
             b02 = a00 * a13 - a03 * a10,
             b03 = a01 * a12 - a02 * a11,
@@ -345,12 +345,12 @@ class Mat4 extends AttrValue {
     }
 
     invertInPlace() {
-        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3];
-        let a10 = this.__data[4], a11 = this.__data[5], a12 = this.__data[6], a13 = this.__data[7];
-        let a20 = this.__data[8], a21 = this.__data[9], a22 = this.__data[10], a23 = this.__data[11];
-        let a30 = this.__data[12], a31 = this.__data[13], a32 = this.__data[14], a33 = this.__data[15];
+        const a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3];
+        const a10 = this.__data[4], a11 = this.__data[5], a12 = this.__data[6], a13 = this.__data[7];
+        const a20 = this.__data[8], a21 = this.__data[9], a22 = this.__data[10], a23 = this.__data[11];
+        const a30 = this.__data[12], a31 = this.__data[13], a32 = this.__data[14], a33 = this.__data[15];
 
-        let b00 = a00 * a11 - a01 * a10,
+        const b00 = a00 * a11 - a01 * a10,
             b01 = a00 * a12 - a02 * a10,
             b02 = a00 * a13 - a03 * a10,
             b03 = a01 * a12 - a02 * a11,
@@ -395,12 +395,12 @@ class Mat4 extends AttrValue {
 
     // Sets this matrix as the inverse of the given mat4
     setInverse(mat4) {
-        let a00 = mat4.__data[0], a01 = mat4.__data[1], a02 = mat4.__data[2], a03 = mat4.__data[3];
-        let a10 = mat4.__data[4], a11 = mat4.__data[5], a12 = mat4.__data[6], a13 = mat4.__data[7];
-        let a20 = mat4.__data[8], a21 = mat4.__data[9], a22 = mat4.__data[10], a23 = mat4.__data[11];
-        let a30 = mat4.__data[12], a31 = mat4.__data[13], a32 = mat4.__data[14], a33 = mat4.__data[15];
+        const a00 = mat4.__data[0], a01 = mat4.__data[1], a02 = mat4.__data[2], a03 = mat4.__data[3];
+        const a10 = mat4.__data[4], a11 = mat4.__data[5], a12 = mat4.__data[6], a13 = mat4.__data[7];
+        const a20 = mat4.__data[8], a21 = mat4.__data[9], a22 = mat4.__data[10], a23 = mat4.__data[11];
+        const a30 = mat4.__data[12], a31 = mat4.__data[13], a32 = mat4.__data[14], a33 = mat4.__data[15];
 
-        let b00 = a00 * a11 - a01 * a10,
+        const b00 = a00 * a11 - a01 * a10,
             b01 = a00 * a12 - a02 * a10,
             b02 = a00 * a13 - a03 * a10,
             b03 = a01 * a12 - a02 * a11,
@@ -449,15 +449,15 @@ class Mat4 extends AttrValue {
      * @returns {mat4} out
      */
     multiply(other) {
-        let a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3],
+        const a00 = this.__data[0], a01 = this.__data[1], a02 = this.__data[2], a03 = this.__data[3],
             a10 = this.__data[4], a11 = this.__data[5], a12 = this.__data[6], a13 = this.__data[7],
             a20 = this.__data[8], a21 = this.__data[9], a22 = this.__data[10], a23 = this.__data[11],
             a30 = this.__data[12], a31 = this.__data[13], a32 = this.__data[14], a33 = this.__data[15];
 
         // Cache only the current line of the second matrix
-        let b = other.asArray();
+        const b = other.asArray();
         let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
-        let result = new Mat4()
+        const result = new Mat4()
         result.m00 = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         result.m01 = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
         result.m02 = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
@@ -498,14 +498,14 @@ class Mat4 extends AttrValue {
      * @param {mat4} b the second operand
      */
     multiplyInPlace(other) {
-        let a = this.asArray();
-        let a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
+        const a = this.asArray();
+        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
             a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
             a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
             a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
 
         // Cache only the current line of the second matrix
-        let b = other.asArray();
+        const b = other.asArray();
         let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
         this.m00 = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         this.m01 = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -547,14 +547,14 @@ class Mat4 extends AttrValue {
      * @param {mat4} b the second operand
      */
     postmultiplyInPlace(other) {
-        let a = other.asArray();
-        let a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
+        const a = other.asArray();
+        const a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3],
             a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7],
             a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11],
             a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
 
         // Cache only the current line of the second matrix
-        let b = this.asArray();
+        const b = this.asArray();
         let b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
         this.m00 = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
         this.m01 = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
@@ -599,7 +599,7 @@ class Mat4 extends AttrValue {
      * @returns {mat4} out
      */
     translateInPlace(v3) {
-        let x = v3.x, y = v3.y, z = v3.z;
+        const x = v3.x, y = v3.y, z = v3.z;
         this.__data[12] = this.__data[0] * x + this.__data[4] * y + this.__data[8] * z + this.__data[12];
         this.__data[13] = this.__data[1] * x + this.__data[5] * y + this.__data[9] * z + this.__data[13];
         this.__data[14] = this.__data[2] * x + this.__data[6] * y + this.__data[10] * z + this.__data[14];
@@ -617,21 +617,21 @@ class Mat4 extends AttrValue {
      * @returns {mat4} out
      */
     setLookAt(pos, target, up) {
-        let zAxis = pos.subtract(target);
-        let zLen = zAxis.length();
+        const zAxis = pos.subtract(target);
+        const zLen = zAxis.length();
         if (zLen < Number.EPSILON) {
             this.setIdentity();
             return;
         }
         zAxis.scaleInPlace(1.0 / zLen);
 
-        let xAxis = up.cross(zAxis);
-        let xLen = xAxis.length();
+        const xAxis = up.cross(zAxis);
+        const xLen = xAxis.length();
         if (xLen > Number.EPSILON)
             xAxis.scaleInPlace(1.0 / xLen);
 
-        let yAxis = zAxis.cross(xAxis);
-        let yLen = yAxis.length();
+        const yAxis = zAxis.cross(xAxis);
+        const yLen = yAxis.length();
         if (yLen > Number.EPSILON)
             yAxis.scaleInPlace(1.0 / yLen);
 
@@ -704,7 +704,7 @@ class Mat4 extends AttrValue {
      * @returns {mat4} out
      */
     setXRotation(rad) {
-        let s = Math.sin(rad),
+        const s = Math.sin(rad),
             c = Math.cos(rad);
 
         // Perform axis-specific matrix multiplication
@@ -739,7 +739,7 @@ class Mat4 extends AttrValue {
      * @returns {mat4} out
      */
     setYRotation(rad) {
-        let s = Math.sin(rad),
+        const s = Math.sin(rad),
             c = Math.cos(rad);
 
         // Perform axis-specific matrix multiplication
@@ -774,7 +774,7 @@ class Mat4 extends AttrValue {
      * @returns {mat4} out
      */
     setZRotation(rad) {
-        let s = Math.sin(rad),
+        const s = Math.sin(rad),
             c = Math.cos(rad);
 
         // Perform axis-specific matrix multiplication
@@ -806,7 +806,7 @@ class Mat4 extends AttrValue {
      * @returns {vec4} out
      */
     transformVec4(vec) {
-        let x = vec.x, y = vec.y, z = vec.z, w = vec.t;
+        const x = vec.x, y = vec.y, z = vec.z, w = vec.t;
         return new Vec4(
             this.__data[0] * x + this.__data[4] * y + this.__data[8] * z + this.__data[12] * w,
             this.__data[1] * x + this.__data[5] * y + this.__data[9] * z + this.__data[13] * w,
@@ -816,7 +816,7 @@ class Mat4 extends AttrValue {
     };
 
     transformVec3(vec) {
-        let x = vec.x, y = vec.y, z = vec.z;
+        const x = vec.x, y = vec.y, z = vec.z;
         return new Vec3(
             this.__data[0] * x + this.__data[4] * y + this.__data[8] * z + this.__data[12],
             this.__data[1] * x + this.__data[5] * y + this.__data[9] * z + this.__data[13],
@@ -825,7 +825,7 @@ class Mat4 extends AttrValue {
     };
 
     rotateVec3(vec) {
-        let x = vec.x, y = vec.y, z = vec.z;
+        const x = vec.x, y = vec.y, z = vec.z;
         return new Vec3(
             this.__data[0] * x + this.__data[4] * y + this.__data[8] * z,
             this.__data[1] * x + this.__data[5] * y + this.__data[9] * z,
@@ -835,8 +835,8 @@ class Mat4 extends AttrValue {
 
 
     setPerspectiveMatrix(fovy, aspect, near, far) {
-        let f = Math.tan(Math.PI * 0.5 - 0.5 * fovy);
-        let rangeInv = 1.0 / (near - far);
+        const f = Math.tan(Math.PI * 0.5 - 0.5 * fovy);
+        const rangeInv = 1.0 / (near - far);
         this.set(
             f / aspect, 0, 0, 0,
             0, f, 0, 0,
@@ -846,7 +846,7 @@ class Mat4 extends AttrValue {
     };
 
     setOrthographicMatrix(left, right, bottom, top, near, far) {
-        let lr = 1 / (left - right),
+        const lr = 1 / (left - right),
             bt = 1 / (bottom - top),
             nf = 1 / (near - far);
         this.set(
