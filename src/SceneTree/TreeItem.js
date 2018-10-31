@@ -436,8 +436,9 @@ class TreeItem extends BaseItem {
     }
 
     removeAllChildren() {
-        for (let childItem of this.__childItems){
-            childItem.setParentItem(undefined);
+        let index = this.__childItems.length;
+        while (index--){
+            this.removeChild(index);
         }
         this.__childItems = [];
         this._setBoundingBoxDirty();

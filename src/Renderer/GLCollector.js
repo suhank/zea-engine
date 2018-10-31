@@ -288,21 +288,6 @@ class GLCollector {
 
         this.__drawItems[index] = gldrawItem;
 
-        // Null the entry in the array. 
-        // Note: we never remove the item, because
-        // the DrawItem stores its index in the array,
-        // and so cannot be moved.
-        const destructingId = gldrawItem.destructing.connect(() => {
-            // Note: now items should be removed from the
-            // tree before they destruct. 
-            console.warn("gldrawItem.destructing");
-            gldrawItem.updated.disconnectId(updatedId);
-            gldrawItem.transformChanged.disconnectId(transformChangedId);
-            gldrawItem.destructing.disconnectId(destructingId);
-            // this.removeDrawItem(gldrawItem);
-            // this.__renderer.requestRedraw();
-        });
-
         const transformChangedId = gldrawItem.transformChanged.connect(() => {
             if(this.__dirtyItemIndices.indexOf(index) == -1)
                 this.__dirtyItemIndices.push(index);
@@ -374,14 +359,12 @@ class GLCollector {
 
         treeItem.childAdded.connect(this.addTreeItem);
         treeItem.childRemoved.connect(this.removeTreeItem);
-        treeItem.destructing.connect(this.removeTreeItem);
     }
 
     removeTreeItem(treeItem) {
 
         treeItem.childAdded.disconnect(this.addTreeItem);
         treeItem.childRemoved.disconnect(this.removeTreeItem);
-        treeItem.destructing.disconnect(this.removeTreeItem);
 
         for (let passCbs of this.__passCallbacks) {
             if (!passCbs.itemRemovedFn)
