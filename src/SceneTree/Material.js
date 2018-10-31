@@ -176,14 +176,26 @@ class Material extends BaseItem {
         }
     }
 
-    copyFrom(srcMaterial) {
-        throw("What is happening here? ")
+    clone() {
+        const cloned = new GeomItem();
+        this.copyTo(cloned);
+        return cloned;
+    }
+
+    copyTo(cloned) {
+        super.copyTo(cloned);
+        cloned.setShaderName(this.getShaderName())
         for (let param of this.__params) {
-            let srcParam = srcMaterial.getParameter(param.getName())
-            if (srcParam != undefined)
-                this.__params[paramName] = srcParam;
+            let srcParam = cloned.getParameter(param.getName())
+            if (srcParam == undefined)
+                cloned.addParameter(srcParam.clone());
+            else {
+                const value = param.getValue();
+                srcParam.setValue(value.clone ? value.clone() : value)
+            }
         }
     }
+
 
     ///////////////////////////////
     // Parameters
