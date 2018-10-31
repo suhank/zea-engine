@@ -524,18 +524,12 @@ class VRViewport extends BaseViewport {
                     //     sendEventToVisibleUIs(xfo, ['mousemove'], {});
                     // });
 
-                    vrController.buttonPressed.connect((buttonId) => {
-                        this.controllerButtonDown.emit({
-                            controller: vrController,
-                            button: buttonId
-                        }, this)
+                    vrController.buttonPressed.connect((event) => {
+                        this.controllerButtonDown.emit(event, this)
                     });
 
-                    vrController.buttonReleased.connect((buttonId) => {
-                        this.controllerButtonUp.emit({
-                            controller: vrController,
-                            button: buttonId
-                        }, this)
+                    vrController.buttonReleased.connect((event) => {
+                        this.controllerButtonUp.emit(event, this)
                     });
 
                     this.__vrControllers[id] = vrController;

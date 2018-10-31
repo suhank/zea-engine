@@ -69,13 +69,14 @@ class VRController extends Gizmo {
 
             this.__projMatrix = new Mat4();
             this.__activeVolumeSize = 0.03
+            this.__activeVolumeLength = 0.08
             this.__projMatrix.setOrthographicMatrix(
                 this.__activeVolumeSize*-0.5, 
                 this.__activeVolumeSize*0.5, 
                 this.__activeVolumeSize*-0.5, 
                 this.__activeVolumeSize*0.5, 
                 0.0, 
-                this.__activeVolumeSize);
+                this.__activeVolumeLength);
             this.createGeomDataFbo();
         }
 
@@ -148,6 +149,8 @@ class VRController extends Gizmo {
                     if (!this.__pressedButtons[i]) {
                         this.__pressedButtons[i] = true;
 
+                        const event = { button: i, controller: this, vleStopPropagation:false }
+
                         // trigger
                         if (i == 1) {
                             const intersectionData = this.getGeomItemAtTip();
@@ -158,13 +161,14 @@ class VRController extends Gizmo {
                             }
                         }
 
-                        this.buttonPressed.emit(i);
+                        this.buttonPressed.emit(event);
                     }
                 }
                 else {
                     if (this.__pressedButtons[i]) {
                         this.__pressedButtons[i] = false;
-                        this.buttonReleased.emit(i);
+                        const event = { button: i, controller: this, vleStopPropagation:false }
+                        this.buttonReleased.emit(event);
                     }
                 }
             }
