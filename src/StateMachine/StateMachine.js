@@ -1,4 +1,3 @@
-
 import {
     BaseItem
 } from '../SceneTree/BaseItem.js';
@@ -15,10 +14,9 @@ class StateMachine extends BaseItem {
         this.__initialStateName;
 
         window.onpopstate = (event) => {
-            if(event.state && event.state.stateName){
+            if (event.state && event.state.stateName) {
                 this.activateState(event.state.stateName, false);
-            }
-            else {
+            } else {
                 this.activateState(this.getInitialState(), false);
             }
         }
@@ -28,7 +26,7 @@ class StateMachine extends BaseItem {
         state.setStateMachine(this);
         this.__states[state.getName()] = state;
 
-        if(Object.keys(this.__states).length == 1 && this.__initialStateName == undefined) {
+        if (Object.keys(this.__states).length == 1 && this.__initialStateName == undefined) {
             this.__initialStateName = state.getName();
         }
     }
@@ -38,13 +36,13 @@ class StateMachine extends BaseItem {
         return this.__states[name];
     }
 
-    activateState(name, addToHistory=true) {
+    activateState(name, addToHistory = true) {
         console.log("StateMachine.activateState:" + name)
-        if(!this.__states[name])
-            throw("Invalid state transtion:" + name)
-        if(this.__currentState == this.__states[name])
+        if (!this.__states[name])
+            throw ("Invalid state transtion:" + name)
+        if (this.__currentState == this.__states[name])
             return;
-        if(this.__currentState)
+        if (this.__currentState)
             this.__currentState.deactivate();
         this.__currentState = this.__states[name];
         this.__currentState.activate();
@@ -71,12 +69,10 @@ class StateMachine extends BaseItem {
 
     toJSON(context) {
         let j = super.toJSON(context);
-        if(!j) j = {};
-        j.type = this.constructor.name;
         j.initialStateName = this.__initialStateName;
 
         const statesj = {};
-        for(let key in this.__states){
+        for (let key in this.__states) {
             statesj[key] = this.__states[key].toJSON(context);
         }
         j.states = statesj;
@@ -89,19 +85,18 @@ class StateMachine extends BaseItem {
 
         context.stateMachine = this;
 
-        for(let key in j.states){
+        for (let key in j.states) {
             const statejson = j.states[key];
             const state = sgFactory.constructClass(statejson.type);
             if (state) {
                 state.fromJSON(statejson, context);
                 this.addState(state);
-            }
-            else {
-                throw("Invalid type:" + statejson.type)
+            } else {
+                throw ("Invalid type:" + statejson.type)
             }
         }
 
-        const onloaded = ()=>{
+        const onloaded = () => {
             this.activateState(this.__initialStateName);
             context.assetItem.loaded.disconnect(onloaded)
         }
