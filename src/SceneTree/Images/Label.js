@@ -118,9 +118,6 @@ class Label  extends DataImage {
         // }
         // textParam.valueChanged.connect(setLabelText);
 
-        if(library)
-            libraryParam.setValue(library)
-
         this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
         this.addParameter(new StringParameter('textAlign', 'left', 'String'));
         // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
@@ -165,6 +162,9 @@ class Label  extends DataImage {
         fontSizeParam.valueChanged.connect(loadFont);
         fontParam.valueChanged.connect(loadFont);
         // fontParam.setValue('AGBookTTReg');
+
+        if(library)
+            libraryParam.setValue(library)
     }
     
     __getLabelText(){

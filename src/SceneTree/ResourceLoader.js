@@ -194,12 +194,13 @@ class ResourceLoader {
       parentId = key;
     }
 
+    const key = hashStr(filename);
     const resource = {
       name: filename,
       url,
-      parent: parentId
+      parent: parentId,
+      id: key
     };
-    const key = hashStr(filename);
     this.__resources[key] = resource;
 
     tmp[key] = resource

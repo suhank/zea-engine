@@ -21,15 +21,20 @@ class GeomClicked extends StateEvent  {
         });
     }
 
+    __geomClicked(event) {
+        event.vleStopPropagation = true;
+        this.__onEvent();
+    }
+
     activate() {
         if(this.__geom){
-            this.__geom.mouseDown.connect(this.__onEvent);
+            this.__geom.mouseDown.connect(this.__geomClicked);
         }
     }
 
     deactivate() {
         if(this.__geom){
-            this.__geom.mouseDown.disconnect(this.__onEvent);
+            this.__geom.mouseDown.disconnect(this.__geomClicked);
         }
     }
 

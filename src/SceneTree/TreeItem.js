@@ -82,9 +82,6 @@ class TreeItem extends BaseItem {
         this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
         this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
         this._childFlagsChanged = this._childFlagsChanged.bind(this);
-        this.onMouseDown = this.onMouseDown.bind(this);
-        this.onMouseMove = this.onMouseMove.bind(this);
-        this.onMouseUp = this.onMouseUp.bind(this);
 
         this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
 
@@ -379,11 +376,6 @@ class TreeItem extends BaseItem {
         childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
         childItem.flagsChanged.connect(this._childFlagsChanged);
 
-        // Propagate mouse event up ths tree.
-        childItem.mouseDown.connect(this.onMouseDown);
-        childItem.mouseUp.connect(this.onMouseUp);
-        childItem.mouseMove.connect(this.onMouseMove);
-
         this._setBoundingBoxDirty();
         this.childAdded.emit(childItem, index);
 
@@ -417,11 +409,6 @@ class TreeItem extends BaseItem {
         childItem.boundingChanged.disconnect(this._setBoundingBoxDirty);
         childItem.visibilityChanged.disconnect(this._setBoundingBoxDirty);
         childItem.flagsChanged.disconnect(this._childFlagsChanged);
-
-        // Propagate mouse event up ths tree.
-        childItem.mouseDown.disconnect(this.onMouseDown);
-        childItem.mouseUp.disconnect(this.onMouseUp);
-        childItem.mouseMove.disconnect(this.onMouseMove);
 
         this.childRemoved.emit(childItem, index);
 
@@ -563,19 +550,28 @@ class TreeItem extends BaseItem {
     /////////////////////////
     // Events
 
-    onMouseDown(mousePos, event) {
-        this.mouseDown.emit(mousePos, event);
-        return false;
+    onMouseDown(event) {
+        this.mouseDown.emit(event);
+        if(event.vleStopPropagation !== true && this.__ownerItem){
+            this.__ownerItem.onMouseDown(event)
+        }
+        return event.vleStopPropagation;
     }
 
-    onMouseUp(mousePos, event) {
-        this.mouseUp.emit(mousePos, event);
-        return false;
+    onMouseUp(event) {
+        this.mouseUp.emit(event);
+        if(event.vleStopPropagation !== true && this.__ownerItem){
+            this.__ownerItem.onMouseUp(event)
+        }
+        return event.vleStopPropagation;
     }
 
-    onMouseMove(mousePos, event) {
-        this.mouseMove.emit(mousePos, event);
-        return false;
+    onMouseMove(event) {
+        this.mouseMove.emit(event);
+        if(event.vleStopPropagation !== true && this.__ownerItem){
+            this.__ownerItem.onMouseMove(event)
+        }
+        return event.vleStopPropagation;
     }
 
     //////////////////////////////////////////
