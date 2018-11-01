@@ -78,7 +78,7 @@ class GLViewport extends BaseViewport {
         this.mouseDown = new Signal();
         this.mouseMoved = new Signal();
         this.mouseUp = new Signal();
-        this.mouseDownOnGeom = new Signal();
+        // this.mouseDownOnGeom = new Signal();
         this.mouseWheel = new Signal();
 
         this.touchStart = new Signal();
@@ -416,13 +416,14 @@ class GLViewport extends BaseViewport {
                 // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
                 // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                 this.__mouseDownGeom = intersectionData.geomItem;
+                event.intersectionData = intersectionData;
                 this.__mouseDownGeom.onMouseDown(event, intersectionData);
                 if(event.vleStopPropagation == true)
                     return;
 
-                this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
-                if(event.vleStopPropagation == true)
-                    return;
+                // this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
+                // if(event.vleStopPropagation == true)
+                //     return;
             }
 
             if (this.__cameraManipulator) {

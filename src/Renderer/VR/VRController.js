@@ -155,7 +155,7 @@ class VRController extends Gizmo {
                         if (i == 1) {
                             const intersectionData = this.getGeomItemAtTip();
                             if (intersectionData != undefined) {
-                                intersectionData.geomItem.onMouseDown(event, intersectionData);
+                                intersectionData.geomItem.onMouseDown(Object.assign(event, {intersectionData}));
                                 if(event.vleStopPropagation == true)
                                     continue;
                             }

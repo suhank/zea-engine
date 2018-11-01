@@ -129,17 +129,17 @@ class Group extends TreeItem {
             return;
         }
         const index = this.__items.length;
-        item.mouseDown.connect((mousePos, event)=>{
-            this.mouseDown.emit(mousePos, event);
-            this.mouseDownOnItem.emit(mousePos, event, item);
+        item.mouseDown.connect((event)=>{
+            this.mouseDown.emit(event);
+            this.mouseDownOnItem.emit(event, item);
         });
-        item.mouseUp.connect((mousePos, event)=>{
-            this.mouseUp.emit(mousePos, event);
-            this.mouseUpOnItem.emit(mousePos, event, item);
+        item.mouseUp.connect((event)=>{
+            this.mouseUp.emit(event);
+            this.mouseUpOnItem.emit(event, item);
         });
-        item.mouseMove.connect((mousePos, event)=>{
-            this.mouseMove.emit(mousePos, event);
-            this.mouseMoveOnItem.emit(mousePos, event, item);
+        item.mouseMove.connect((event)=>{
+            this.mouseMove.emit(event);
+            this.mouseMoveOnItem.emit(event, item);
         });
         item.globalXfoChanged.connect((mode)=>{
             if(mode == ValueSetMode.USER_SETVALUE)

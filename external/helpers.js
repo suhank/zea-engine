@@ -107,7 +107,8 @@ const addResourceURL = (resources, path, url)=>{
             const folderId = Visualive.hashStr(part);
             const folder =  { 
                 name: part,
-                type: 'folder'
+                type: 'folder',
+                id: folderId
             }
             resources[folderId] = folder;
             nameToId[part] = folderId;
@@ -127,6 +128,7 @@ const addResourceURL = (resources, path, url)=>{
         resource.parent = parentId
 
     const fileId = Visualive.hashStr(filename);
+    resource.id = fileId;
     resources[fileId] = resource;
 }
 
