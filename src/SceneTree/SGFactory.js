@@ -4,22 +4,22 @@ class SGFactory {
         this.__classNames = {};
     }
 
-    registerClass(name, cls){
-        this.__registeredClasses[name] = { cls, callbacks:[] };
-        this.__classNames[cls.name] = name;
+    registerClass(classname, cls){
+        this.__registeredClasses[classname] = { cls, callbacks:[] };
+        this.__classNames[cls.name] = classname;
     }
 
     registerCallback(classname, callback){
-        const classData = this.__registeredClasses[name];
+        const classData = this.__registeredClasses[classname];
         if(!classData){
-            console.warn("Factory not registered:"+ name);
+            console.warn("Factory not registered:"+ classname);
             return;
         }
         classData.callbacks.push(callback);
     }
 
-    getClass(name){
-        return this.__registeredClasses[name].cls;
+    getClass(classname){
+        return this.__registeredClasses[classname].cls;
     }
 
     getClassName(inst){
@@ -28,11 +28,11 @@ class SGFactory {
         return inst.constructor.name;
     }
 
-    constructClass(name/*, ...args*/){
-        const classData = this.__registeredClasses[name];
+    constructClass(classname/*, ...args*/){
+        const classData = this.__registeredClasses[classname];
         if(!classData){
             if(!classData){
-                console.warn("Factory not registered:"+ name);
+                console.warn("Factory not registered:"+ classname);
                 return null;
             }
         }
@@ -48,5 +48,4 @@ const sgFactory = new SGFactory();
 export {
     sgFactory
 };
-// sgFactory;
 
