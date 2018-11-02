@@ -31,10 +31,6 @@ import {
 import {
     GLCollector
 } from './GLCollector.js';
-
-// import {
-//     GizmoContext
-// } from './Gizmos/GizmoContext.js';
 import {
     GLViewport
 } from './GLViewport.js';
@@ -108,14 +104,10 @@ class GLRenderer {
         // i.e. when a user switches to VR mode, the signals 
         // simply emit the new VR data.
         this.viewChanged = new Signal();
-        this.pointerMoved = new Signal();
         this.redrawOccured = new Signal();
         this.treeItemGlobalXfoChanged = new Signal();
 
         this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {});
-
-        // this.__gizmoPass = this.addPass(new GizmoPass());
-        // this.__gizmoContext = new GizmoContext(this);
         
         for(let passtype in registeredPasses) {
             for(let cls of registeredPasses[passtype]){
@@ -235,12 +227,6 @@ class GLRenderer {
 
         vp.viewChanged.connect((data) => {
             this.viewChanged.emit(data);
-        });
-        vp.mouseMoved.connect((event, mousePos, ray) => {
-            this.pointerMoved.emit({
-                mousePos: mousePos,
-                ray: ray
-            });
         });
 
         this.__viewports.push(vp);

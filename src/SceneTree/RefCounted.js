@@ -19,19 +19,21 @@ class RefCounted {
     addRef(referer) {
         if(!referer)
             throw("Error in RefCounted.addRef: Must provide a referer");
-        // console.log(this.constructor.name + " addRef:" + referer.constructor.name);
-        if(this.__refs.indexOf(referer) == -1) {
-            this.__refs.push(referer);
-            return true;
-        }
-        return false;
+
+        // Note: an object can be reffeed multiple times. 
+        // e.g. we can create a temporary ref while we re-attach a tree item to a new parent.
+        this.__refs.push(referer);
+        return true;
     }
 
     removeRef(referer) {
         if(!referer)
             throw("Error in RefCounted.removeRef: Must provide a referer");
         // console.log(this.constructor.name + " removeRef:" + referer.constructor.name);
-        let index = this.__refs.indexOf(referer);
+        const index = this.__refs.indexOf(referer);
+        if(index == -1)
+            throw("Error in RefCounted.removeRef: referer not found in refs list.");
+
         this.__refs.splice(index, 1);
         if(this.__refs.length == 0){
             this.destroy();
