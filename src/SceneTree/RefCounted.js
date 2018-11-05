@@ -10,6 +10,7 @@ class RefCounted {
         }
         this.__refs = [];
         this.destructing = new Signal();
+        this.__destroyed = false;
     };
 
     numRefs(){
@@ -48,7 +49,12 @@ class RefCounted {
         return this.__refs.indexOf(referer);
     }
 
+    isDestroyed() {
+        return this.__destroyed;
+    }
+
     destroy(){
+        this.__destroyed = true;
         // console.log(this.constructor.name + " destructing");
         this.destructing.emit(this);
     }

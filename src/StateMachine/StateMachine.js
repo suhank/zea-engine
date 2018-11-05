@@ -22,6 +22,12 @@ class StateMachine extends BaseItem {
                 this.activateState(this.getInitialState(), false);
             }
         }
+
+        // Manually invoke the callbacks for cases where the StateMAchine
+        // is not beingn constructed by the SGFactory.
+        if(!sgFactory.isConstructing()) {
+            sgFactory.invokeCallbacks(this)
+        }
     }
 
     addState(state) {

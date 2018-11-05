@@ -357,6 +357,9 @@ class TreeItem extends BaseItem {
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
 
+        if (childItem.isDestroyed()) 
+            throw ("childItem is destroyed:" + childItem.getPath());
+
         childItem.addRef(this)
         if(childItem.getOwner() != undefined)
             childItem.getOwner().removeChildByHandle(childItem)
