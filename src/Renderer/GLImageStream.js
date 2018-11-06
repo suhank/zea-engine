@@ -17,6 +17,9 @@ class GLImageStream {
         this.ready = new Signal(true);
         this.updated = new Signal();
         this.resized = new Signal();
+        this.__descParam = this.__streamImage.getParameter('StreamAtlasDesc');
+        this.__indexParam = this.__streamImage.getParameter('StreamAtlasIndex');
+        this.__indexParam.valueChanged.connect(this.updated.emit);
 
         // To support playing back the same image atlas through many different streams. 
         // (e.g. the same Gif progress bar in many places)
@@ -28,6 +31,8 @@ class GLImageStream {
                 params.data.__atlasTexture = new GLTexture2D(gl, params);
             }
             this.__atlasTexture = params.data.__atlasTexture;
+            this.__atlasTexture.textureType = 2;
+            this.__atlasTexture.textureDesc = this.__descParam.getValue().asArray();
         }
 
         if (this.__streamImage.isLoaded()) {
@@ -38,27 +43,24 @@ class GLImageStream {
             });
         }
 
-        this.__descParam = this.__streamImage.getParameter('StreamAtlasDesc');
-        this.__indexParam = this.__streamImage.getParameter('StreamAtlasIndex');
-        this.__indexParam.valueChanged.connect(this.updated.emit);
 
     }
 
-    bindToUniform(renderstate, unif) {
+    preBind(unif, unifs) {
+        const res = this.__atlasTexture.preBind(unif, unifs);
+        res.textureDescUnif = unifs[unif.name+'Desc'];
+        res.textureIndexUnif = unifs[unif.name+'Index'];
+        return res;
+    }
 
-        if(!this.__atlasTexture.bindToUniform(renderstate, unif, 2)){
+    bindToUniform(renderstate, unif, bindings) {
+
+        if(!this.__atlasTexture.bindToUniform(renderstate, unif, bindings)){
             return false;
         }
 
-        let textureDescUnif = renderstate.unifs[unif.name+'Desc'];
-        if (textureDescUnif){
-            this.__gl.uniform4f(textureDescUnif.location, ...this.__descParam.getValue().asArray());
-        }
-
-        
-        let textureIndexUnif = renderstate.unifs[unif.name+'Index'];
-        if (textureIndexUnif){
-            this.__gl.uniform1i(textureIndexUnif.location, this.__indexParam.getValue());
+        if (bindings.textureIndexUnif){
+            this.__gl.uniform1i(bindings.textureIndexUnif.location, this.__indexParam.getValue());
         }
 
         return true;

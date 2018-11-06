@@ -41,5 +41,5 @@ testingHarness.registerTest('VideoTextureWithAudio', (domElement, resources)=> {
 
     renderer.resumeDrawing();
 
-    VisualiveUI.renderUI(renderer);
+    // VisualiveUI.renderUI(renderer);
 });

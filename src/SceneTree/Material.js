@@ -60,15 +60,15 @@ const makeParameterTexturable = (parameter) => {
         return image;
     }
 
-    let imageUpdated = () => {
-        parameter.valueChanged.emit(image);
-    }
+    // let imageUpdated = () => {
+    //     parameter.valueChanged.emit();
+    // }
     
     parameter.setImage = (value, mode=0) => {
         let disconnectImage = () => {
             image.removeRef(parameter);
-            image.loaded.disconnect(imageUpdated);
-            image.updated.disconnect(imageUpdated);
+            // image.loaded.disconnect(imageUpdated);
+            // image.updated.disconnect(imageUpdated);
             parameter.textureDisconnected.emit();
         }
         if (value) {
@@ -77,8 +77,8 @@ const makeParameterTexturable = (parameter) => {
             }
             image = value;
             image.addRef(parameter);
-            image.loaded.connect(imageUpdated);
-            image.updated.connect(imageUpdated);
+            // image.loaded.connect(imageUpdated);
+            // image.updated.connect(imageUpdated);
             parameter.textureConnected.emit();
             parameter.valueChanged.emit(mode);
         } else {

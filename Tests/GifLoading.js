@@ -47,7 +47,7 @@ uniform color BaseColor;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
-// uniform bool BaseColorTexConnected;
+uniform bool BaseColorTexConnected;
 uniform vec4 BaseColorTexDesc;
 uniform int BaseColorTexIndex;
 #endif
@@ -68,9 +68,11 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = BaseColor;
 #else
-    //vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_texCoords);
-    // vec4 baseColor      = toLinear(texture2D(BaseColorTex, v_texCoords));
-    vec4 baseColor      = toLinear(sampleStreamFrame(v_texCoords, BaseColorTexIndex, BaseColorTex, BaseColorTexDesc));
+    vec4 baseColor = BaseColor;
+    //baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_texCoords);
+    //baseColor      = toLinear(texture2D(BaseColorTex, v_texCoords));
+    if(BaseColorTexConnected)
+        baseColor      = toLinear(sampleStreamFrame(v_texCoords, BaseColorTexIndex, BaseColorTex, BaseColorTexDesc));
 #endif
 
     baseColor.rgb = baseColor.rgb * baseColor.a;
