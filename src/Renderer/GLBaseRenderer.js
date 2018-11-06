@@ -64,7 +64,7 @@ let mouseLeft = false;
 
 const registeredPasses = {};
 
-class GLRenderer {
+class GLBaseRenderer {
     constructor(canvasDiv, options = {}) {
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
@@ -825,7 +825,7 @@ class GLRenderer {
 
 
 export {
-    GLRenderer,
+    GLBaseRenderer,
     PassType
 };
-// export default GLRenderer;
+// export default GLBaseRenderer;
