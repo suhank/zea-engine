@@ -73,7 +73,6 @@ class VRViewport extends BaseViewport {
         this.__stageTreeItem.setVisible(false);
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
 
-        // Construct the head geom and add it directly to the Gizmo pass.
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 
         this.__vrControllers = [];

@@ -7,7 +7,6 @@ import {
     EulerAngles,
     Xfo,
     Mat4,
-    Color,
     Ray
 } from '../../Math';
 import {
@@ -34,13 +33,9 @@ import {
 import {
     GLFbo
 } from '../GLFbo.js';
-import {
-    Gizmo
-} from '../Gizmos/Gizmo.js';
 
-class VRController extends Gizmo {
+class VRController {
     constructor(vrstage, index) {
-        super(new Color(0, 0, 1));
 
         this.__vrStage = vrstage;
         this.__index = index;
