@@ -19,8 +19,8 @@ class WebcamImage2D extends BaseImage {
 
     __initWebcam(width, height, rearCamera = false) {
 
-        let facingMode;
-        let video = {
+        const facingMode;
+        const video = {
             width,
             height,
             frameRate: {
@@ -38,7 +38,7 @@ class WebcamImage2D extends BaseImage {
             };
         }
 
-        let domElement = document.createElement('video');
+        const domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
         domElement.style.display = 'none';
         domElement.preload = 'auto';
@@ -78,14 +78,14 @@ class WebcamImage2D extends BaseImage {
                     this.loaded.emit(domElement);
 
                     let prevFrame = 0;
-                    let frameRate = 60;
-                    let timerCallback = () => {
+                    const frameRate = 60;
+                    const timerCallback = () => {
                         if (domElement.paused || domElement.ended) {
                             return;
                         }
                         // Check to see if the video has progressed to the next frame. 
                         // If so, then we emit and update, which will cause a redraw.
-                        let currentFrame = Math.floor(domElement.currentTime * frameRate);
+                        const currentFrame = Math.floor(domElement.currentTime * frameRate);
                         if (prevFrame != currentFrame) {
                             this.updated.emit();
                             prevFrame = currentFrame;
@@ -99,8 +99,6 @@ class WebcamImage2D extends BaseImage {
             .catch(function(err) {
                 /* handle the error */
             });
-
-
     }
 
     isLoaded() {
