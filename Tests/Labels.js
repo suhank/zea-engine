@@ -53,9 +53,5 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
     renderer.resumeDrawing();
 
-    //////////////////////////////////
-    // Setup the UI
-    const uicontroller = new Visualive.UIController();
-    VisualiveUI.renderUI(renderer, uicontroller);
     
 });

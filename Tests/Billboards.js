@@ -53,6 +53,5 @@ testingHarness.registerTest('Billboards', (domElement, resources)=> {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5,4,3), new Visualive.Vec3(0,0,0));
 
     renderer.setScene(scene);
-    const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 });

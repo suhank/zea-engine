@@ -3,6 +3,7 @@
 testingHarness.registerTest('Webcam', (domElement, resources)=> {
 
     const scene = new Visualive.Scene(resources);
+    // Note: 'back' for the Vive USB camera.
     let webcamimage = new Visualive.WebcamImage2D(640, 480, false);
 
     const material = new Visualive.Material('wecam', 'FlatSurfaceShader');
@@ -29,6 +30,5 @@ testingHarness.registerTest('Webcam', (domElement, resources)=> {
     // })
 
     renderer.setScene(scene);
-    // let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 });

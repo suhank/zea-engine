@@ -49,6 +49,4 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     const sessionClient = new Visualive.SessionClient(renderer, visualivePlatform);
 
     renderer.resumeDrawing();
-
-    VisualiveUI.renderUI(renderer);
 });

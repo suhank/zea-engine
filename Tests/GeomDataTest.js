@@ -43,9 +43,6 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
         ));
     scene.getRoot().addChild(asset);
 
-
-
-    const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 
     /////////////////////////////////////

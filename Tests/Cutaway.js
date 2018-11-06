@@ -66,19 +66,4 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-24, 24, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
 
-
-    //////////////////////////////////
-    // Setup the UI
-
-    let sliderController = new Visualive.SliderController(cutParam);
-
-    let widgetPanel = new Visualive.UIWidgetPanel();
-    widgetPanel.addWidgetController(sliderController);
-
-    let uicontroller = new Visualive.UIController();
-    uicontroller.addWidgetPanel(widgetPanel);
-
-
-    VisualiveUI.renderUI(renderer, uicontroller);
-
 });

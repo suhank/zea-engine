@@ -38,8 +38,6 @@ testingHarness.registerTest('Vive', (domElement, resources)=> {
         renderer.frameAll();
     })
 
-
-    const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
     renderer.setupGrid(1, new Visualive.Color(0, 0, 0), 50);
 });

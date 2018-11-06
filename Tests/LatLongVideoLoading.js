@@ -10,7 +10,6 @@
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,2));
     renderer.getViewport().getManipulator().setDefaultManipulationMode('look');
     renderer.setScene(scene);
-    const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main);
     renderer.resumeDrawing();
 
 });

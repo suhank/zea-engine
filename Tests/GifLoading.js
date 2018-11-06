@@ -170,19 +170,4 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
     renderer.resumeDrawing();
 
-
-    //////////////////////////////////
-    // Setup the UI
-
-    // let sliderController1 = new Visualive.SliderController(param1);
-    // let sliderController2 = new Visualive.SliderController(param2);
-
-    // let widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController1);
-    // widgetPanel.addWidgetController(sliderController2);
-
-    // let uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
 });

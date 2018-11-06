@@ -46,10 +46,6 @@ testingHarness.registerTest('WebVRPolyfill', (domElement, resources) => {
         if(Visualive.SystemDesc.isMobileDevice){
             renderer.startContinuousDrawing();
         }
-
-        // const controller = new VisualiveUI.renderUI(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
-
-        VisualiveUI.renderUI(renderer);
     });
 
 });

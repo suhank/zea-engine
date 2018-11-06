@@ -155,18 +155,4 @@ testingHarness.registerTest('Piston', (domElement, resources)=> {
 
     renderer.resumeDrawing();
 
-    //////////////////////////////////
-    // Setup the UI
-
-    // const sliderController = new Visualive.SliderController(pistonOp.getParameter('Explode'));
-
-    // const widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController);
-
-    // const uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
-
 });

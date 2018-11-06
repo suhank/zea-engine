@@ -58,16 +58,4 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
     renderer.resumeDrawing();
-
-    //////////////////////////////////
-    // Setup the UI
-    // const widgetPanel = new Visualive.UIWidgetPanel();
-
-    // widgetPanel.addWidgetController(new Visualive.SliderController(revolutionsParam));
-    // widgetPanel.addWidgetController(new Visualive.SliderController(rpmParam));
-
-    // const uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
 });

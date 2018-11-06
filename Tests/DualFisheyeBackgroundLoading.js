@@ -11,7 +11,5 @@ testingHarness.registerTest('DualFisheyeBackgroundLoading', (domElement, resourc
     bgMap.loaded.connect(() => {
         renderer.requestRedraw();
     });
-
-    let controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main);
     renderer.resumeDrawing();
 });

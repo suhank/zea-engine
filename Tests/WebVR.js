@@ -30,9 +30,5 @@ testingHarness.registerTest('WebVR', (domElement, resources) => {
         renderer.startContinuousDrawing();
     }
 
-    // const controller = new VisualiveUI.renderUI(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
-
-    VisualiveUI.renderUI(renderer);
-
 });
 
