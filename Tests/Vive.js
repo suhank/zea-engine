@@ -9,8 +9,8 @@ testingHarness.registerTest('Vive', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
-    // const renderer = new Visualive.GLVisualiveRenderer(div);
+    const renderer = new Visualive.GLRenderer(domElement);
+    // const renderer = new Visualive.GLRenderer(div);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(8, -4, 7), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);

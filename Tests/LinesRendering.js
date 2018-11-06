@@ -22,7 +22,7 @@ testingHarness.registerTest('TestRenderLines', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 1.5, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -42,7 +42,7 @@ testingHarness.registerTest('TestRenderCircle', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.0, 4.0, 3.0), new Visualive.Vec3(0.0, 0.0, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();

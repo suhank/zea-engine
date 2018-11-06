@@ -19,7 +19,6 @@ class WebcamImage2D extends BaseImage {
 
     __initWebcam(width, height, rearCamera = false) {
 
-        const facingMode;
         const video = {
             width,
             height,

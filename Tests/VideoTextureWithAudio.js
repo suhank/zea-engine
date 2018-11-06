@@ -28,7 +28,7 @@ testingHarness.registerTest('VideoTextureWithAudio', (domElement, resources)=> {
 
     addMeshShape('small', new Visualive.Plane(0.3, 0.4), new Visualive.Vec3(0, 5, 1.7), "Assets/VideoFiles/small.mp4");
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
 

@@ -145,7 +145,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 55, 20), new Visualive.Vec3(12, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();

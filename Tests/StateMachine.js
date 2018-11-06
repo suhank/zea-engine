@@ -173,7 +173,7 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().setCamera(camera);
     renderer.setScene(scene);
     renderer.resumeDrawing();

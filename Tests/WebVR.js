@@ -2,7 +2,7 @@
 testingHarness.registerTest('WebVR', (domElement, resources) => { 
 
     const scene = new Visualive.Scene(resources);
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
 
 
 

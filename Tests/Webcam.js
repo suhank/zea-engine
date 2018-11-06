@@ -16,7 +16,7 @@ testingHarness.registerTest('Webcam', (domElement, resources)=> {
     scene.getRoot().addChild(geomItem);
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     // renderer.getViewport().setBackground(webcamimage);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,1));

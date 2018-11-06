@@ -35,7 +35,7 @@ testingHarness.registerTest('WebVRPolyfill', (domElement, resources) => {
         addMeshShape('Torus', new Visualive.Torus(0.3, 0.8), new Visualive.Vec3(0, -2, 0.3));
         addMeshShape('Sphere', new Visualive.Sphere(1.2, 13), new Visualive.Vec3(0, 2, 0.6));
 
-        const renderer = new Visualive.GLVisualiveRenderer(domElement);
+        const renderer = new Visualive.GLRenderer(domElement);
 
         renderer.setScene(scene);
         renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);

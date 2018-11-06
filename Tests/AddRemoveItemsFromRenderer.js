@@ -35,7 +35,7 @@ testingHarness.registerTest('AddRemoveItemsFromRenderer', (domElement, resources
     addMeshShape(new Visualive.Sphere(1.4, 13), 3, 5);
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     // renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);

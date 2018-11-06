@@ -10,7 +10,7 @@ testingHarness.registerTest('MeshVerticesRendering', (domElement, resources)=> {
     scene.getRoot().addChild(objAsset);
 
 
-    const renderer = new Visualive.GLSimpleRenderer(div);
+    const renderer = new Visualive.GLRenderer(div);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0));
     renderer.addPass(new Visualive.GLMeshPointsPass(renderer.gl));
     renderer.setScene(scene)

@@ -110,7 +110,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     console.log("total:" + total);
 
     
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(24, new Visualive.Color(.35,.35, .35), 24, .1)
