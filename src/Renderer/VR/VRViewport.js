@@ -333,7 +333,8 @@ class VRViewport extends BaseViewport {
         const data = {
             interfaceType: 'Vive',
             viewXfo: this.__vrhead.getTreeItem().getGlobalXfo(),
-            controllers: this.__vrControllers
+            controllers: this.__vrControllers,
+            vrviewport: this
         }
         this.viewChanged.emit(data, this);
     }
