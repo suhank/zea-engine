@@ -6,15 +6,20 @@ import {
 } from '../Utilities';
 import {
     Vec3,
-    Xfo
+    Xfo,
+    Color
 } from '../Math';
 import {
+    Plane,
     BaseImage,
     HDRImageMixer,
     ProceduralSky,
     Lightmap,
     LightmapMixer
 } from '../SceneTree';
+import {
+    GLFbo
+} from './GLFbo.js';
 import {
     GLHDRImage
 } from './GLHDRImage.js';
@@ -48,6 +53,17 @@ import {
     generateShaderGeomBinding
 } from './GeomShaderBinding.js';
 
+// import {
+//     PostProcessing
+// } from './Shaders/PostProcessing.js';
+import {
+    OutlinesShader
+} from './Shaders/OutlinesShader.js';
+import {
+    GLMesh
+} from './GLMesh.js';
+
+
 class GLRenderer extends GLBaseRenderer {
     constructor(canvasDiv, options = {}) {
 
@@ -62,7 +78,6 @@ class GLRenderer extends GLBaseRenderer {
         this.__exposureRange = options.exposureRange ? options.exposureRange : [-5, 10];
         this.__tonemap = true;
         this.__gamma = 2.2;
-        this.__antialiase = false;
 
         this.__glEnvMap = undefined;
         this.__glBackgroundMap = undefined;
@@ -90,6 +105,12 @@ class GLRenderer extends GLBaseRenderer {
                 this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
             // this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
         }
+
+        this.__outlineShader = new OutlinesShader(gl);
+        this.__outlineColor = new Color("#03E3AC")
+        this.quad = new GLMesh(gl, new Plane(1, 1));
+
+        this.createSelectedGeomsFbo();
     }
 
     __bindEnvMap(env) {
@@ -202,6 +223,7 @@ class GLRenderer extends GLBaseRenderer {
         scene.lightmapAdded.connect(addLightmap);
     }
 
+
     addViewport(name) {
         let vp = super.addViewport(name);
         // vp.createOffscreenFbo();
@@ -248,15 +270,6 @@ class GLRenderer extends GLBaseRenderer {
 
     ////////////////////////////
     // GUI
-
-    get antialiase() {
-        return this.__antialiase;
-    }
-
-    set antialiase(val) {
-        this.__antialiase = val;
-        this.requestRedraw();
-    }
 
     get exposure() {
         return this.__exposure;
@@ -322,6 +335,66 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     ////////////////////////////
+    // Fbos
+
+    __onResize() {
+
+        super.__onResize();
+        if (this.__fbo) {
+            this.__fbo.colorTexture.resize(this.__glcanvas.width, this.__glcanvas.height);
+            this.__fbo.resize();
+        }
+        if (this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBuffer.resize(this.__glcanvas.width, this.__glcanvas.height);
+            this.__selectedGeomsBufferFbo.resize();
+        }
+    }
+
+    ////////////////////////////
+    // SelectedGeomsBuffer
+
+    getOutlineColor() {
+        return this.__outlineColor
+    }
+
+    setOutlineColor(color) {
+        this.__outlineColor = color;
+    }
+
+    createSelectedGeomsFbo() {
+        let gl = this.__gl;
+        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
+            type: 'UNSIGNED_BYTE',
+            format: 'RGBA',
+            filter: 'NEAREST',
+            width: this.__glcanvas.width <= 1 ? 1 : this.__glcanvas.width,
+            height: this.__glcanvas.height <= 1 ? 1 : this.__glcanvas.height,
+        });
+        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
+        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
+    }
+
+    getFbo() {
+        return this.__fbo;
+    }
+
+    createOffscreenFbo(format='RGB') {
+        let targetWidth = this.__glcanvas.width;
+        let targetHeight = this.__glcanvas.height;
+
+        let gl = this.__gl;
+        this.__fwBuffer = new GLTexture2D(gl, {
+            type: 'FLOAT',
+            format,
+            filter: 'NEAREST',
+            width: targetWidth,
+            height: targetHeight
+        });
+        this.__fbo = new GLFbo(gl, this.__fwBuffer, true);
+        this.__fbo.setClearColor(this.__backgroundColor.asArray());
+    }
+
+    ////////////////////////////
     // Rendering
 
     drawBackground(renderstate) {
@@ -340,26 +413,35 @@ class GLRenderer extends GLBaseRenderer {
         }
     }
 
-    drawVP(viewport, renderstate) {
-        /////////////////////////////////////
-        // Debugging 
-        const gl = this.__gl;
-        if (this.__debugMode > 0) {
-            // Bind the default framebuffer
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0, 0, this.getWidth(), this.getHeight());
+    // drawBackground(renderstate, pos=[0,0], size=[1,-1]) {
+    //     let gl = this.__gl;
+    //     let screenQuad = gl.screenQuad;
+    //     screenQuad.bindShader(renderstate);
+    //     gl.depthMask(false);
+    //     // TODO: Draw the BG for each eye.
+    //     screenQuad.draw(renderstate, this.__backgroundGLTexture, pos, size);
+    // }
 
-            let displayDebugTexture = this.__debugTextures[this.__debugMode];
-            const renderstate = {};
-            gl.screenQuad.bindShader(renderstate);
-            gl.screenQuad.draw(renderstate, displayDebugTexture);
-        } else {
-            viewport.draw(renderstate);
+    // drawVP(viewport, renderstate) {
+    //     /////////////////////////////////////
+    //     // Debugging 
+    //     const gl = this.__gl;
+    //     if (this.__debugMode > 0) {
+    //         // Bind the default framebuffer
+    //         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    //         gl.viewport(0, 0, this.getWidth(), this.getHeight());
 
-            // this.__gizmoPass.draw(renderstate);
-            // viewport.drawOverlays(renderstate);
-        }
-    }
+    //         let displayDebugTexture = this.__debugTextures[this.__debugMode];
+    //         const renderstate = {};
+    //         gl.screenQuad.bindShader(renderstate);
+    //         gl.screenQuad.draw(renderstate, displayDebugTexture);
+    //     } else {
+    //         viewport.draw(renderstate);
+
+    //         // this.__gizmoPass.draw(renderstate);
+    //         // viewport.drawOverlays(renderstate);
+    //     }
+    // }
 
     drawScene(renderstate) {
         renderstate.envMap = this.__glEnvMap;
@@ -376,19 +458,101 @@ class GLRenderer extends GLBaseRenderer {
             this.drawBackground(renderstate);
 
         super.drawScene(renderstate);
-
-        // if (this.__drawEdges)
-        //     this.__edgesPass.draw(renderstate);
-
-        // if (this.__drawPoints)
-        //     this.__pointsPass.draw(renderstate);
-
-        // this.__gizmoPass.draw(renderstate);
-
         // console.log("Draw Calls:" + renderstate['drawCalls']);
     }
 
 
+    draw() {
+        if (this.__drawSuspensionLevel > 0)
+            return;
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
+        const gl = this.__gl;
+        const renderstate = {
+            viewports: []
+        };
+
+        // if (this.__fbo)
+        //     this.__fbo.bindAndClear(renderstate);
+        // else 
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        if (this.__vrViewport && this.__vrViewport.isPresenting()) {
+            this.__vrViewport.bindAndClear(renderstate);
+            
+            // Cannot upate the view, else it sends signals which
+            // end up propagating through the websocket. 
+            // TODO: Make the head invisible till active
+            // else
+            //     this.__vrViewport.updateHeadAndControllers();
+        }
+        else {
+            for(let vp of this.__viewports){
+                vp.bindAndClear(renderstate);
+            }
+        }
+
+        this.drawScene(renderstate);
+
+        if (this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBufferFbo.bindAndClear();
+            this.drawSceneSelectedGeoms(renderstate);
+
+            // Now render the outlines to the entire screen.
+            const gl = this.__gl;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0,0,this.__glcanvas.width, this.__glcanvas.height);
+
+            this.__outlineShader.bind(renderstate);
+            const unifs = renderstate.unifs;
+            this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
+            gl.uniform2f(unifs.selectionDataTextureSize.location, this.__glcanvas.width, this.__glcanvas.height);
+            gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
+            this.quad.bindAndDraw(renderstate);
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
+        
+        // /////////////////////////////////////
+        // // Post processing.
+        // if (this.__fbo) {
+        //     const gl = this.__gl;
+
+        //     // Bind the default framebuffer
+        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        //     gl.viewport(...this.region);
+        //     // gl.disable(gl.SCISSOR_TEST);
+
+        //     // this.__glshaderScreenPostProcess.bind(renderstate);
+
+        //     // const unifs = renderstate.unifs;
+        //     // if ('antialiase' in unifs)
+        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+        //     // if ('textureSize' in unifs)
+        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+        //     // if ('gamma' in unifs)
+        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+        //     // if ('exposure' in unifs)
+        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+        //     // if ('tonemap' in unifs)
+        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+
+        //     gl.screenQuad.bindShader(renderstate);
+        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+
+
+        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+        //     // more goem int he next frame then the fbo color tex is being read from and written to 
+        //     // at the same time. (baaaad).
+        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
+        //     // track down.
+        //     gl.bindTexture(gl.TEXTURE_2D, null);
+        // }
+
+        this.redrawOccured.emit();
+    }
     ////////////////////////////
     // Debugging
 };

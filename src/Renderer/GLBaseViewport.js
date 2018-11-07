@@ -17,7 +17,7 @@ import {
     GLFbo
 } from './GLFbo.js';
 
-class BaseViewport {
+class GLBaseViewport {
     constructor(renderer) {
         this.__renderer = renderer;
         this.__backgroundColor = new Color('#e3e3e3');
@@ -104,84 +104,9 @@ class BaseViewport {
         this.__y = (this.__canvasWidth * this.__bl.y);
         this.__width = (this.__canvasWidth * this.__tr.x) - (this.__canvasWidth * this.__bl.x);
         this.__height = (this.__canvasHeight * this.__tr.y) - (this.__canvasHeight * this.__bl.y);
-
-        if (this.__fbo) {
-            this.__fbo.colorTexture.resize(this.__width, this.__height);
-            this.__fbo.resize();
-        }
-        if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBuffer.resize(this.__width, this.__height);
-            this.__selectedGeomsBufferFbo.resize();
-        }
+        this.region = [this.__x, this.__y, this.__width, this.__height];
 
         this.resized.emit();
-    }
-
-    ////////////////////////////
-    // SelectedGeomsBuffer
-
-    createSelectedGeomsFbo() {
-        let gl = this.__renderer.gl;
-        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
-            type: 'UNSIGNED_BYTE',
-            format: 'RGBA',
-            filter: 'NEAREST',
-            width: this.__width <= 1 ? 1 : this.__width,
-            height: this.__height <= 1 ? 1 : this.__height,
-        });
-        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
-        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
-    }
-
-    ////////////////////////////
-    // Fbo
-
-    getFbo() {
-        return this.__fbo;
-    }
-
-    createOffscreenFbo(format='RGB') {
-        let targetWidth = this.__width;
-        let targetHeight = this.__height;
-
-        let gl = this.__renderer.gl;
-        this.__fwBuffer = new GLTexture2D(gl, {
-            type: 'FLOAT',
-            format,
-            filter: 'NEAREST',
-            width: targetWidth,
-            height: targetHeight
-        });
-        this.__fbo = new GLFbo(gl, this.__fwBuffer, true);
-        this.__fbo.setClearColor(this.__backgroundColor.asArray());
-    }
-
-    ////////////////////////////
-    // Fbo
-
-    bindAndClear(renderstate) {
-        let gl = this.__renderer.gl;
-        if (this.__fbo)
-            this.__fbo.bindAndClear(renderstate);
-        else {
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(this.__x, this.__y, this.__width, this.__height);
-            // Only sissor if multiple viewports are setup.
-            // gl.enable(gl.SCISSOR_TEST);
-            // gl.scissor(this.x, this.y, this.__width, this.__height);
-
-            gl.clearColor(...this.__backgroundColor.asArray());
-            gl.colorMask(true, true, true, true);
-            gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        }
-    }
-
-    drawBackground(renderstate, pos=[0,0], size=[1,-1]) {
-        let gl = this.__renderer.gl;
-        let screenQuad = gl.screenQuad;
-        screenQuad.bindShader(renderstate);
-        gl.depthMask(false);
-        screenQuad.draw(renderstate, this.__backgroundGLTexture, pos, size);
     }
 
 
@@ -207,9 +132,19 @@ class BaseViewport {
     }
 
 
+    ////////////////////////////
+    // 
+    clear(renderstate) {
+        let gl = this.__renderer.gl;
+        gl.viewport(...this.region);
+        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.colorMask(true, true, true, true);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    }
+
 };
 
 export {
-    BaseViewport
+    GLBaseViewport
 };
-//export default BaseViewport;
+//export default GLBaseViewport;

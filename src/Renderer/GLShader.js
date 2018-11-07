@@ -317,23 +317,35 @@ class GLShader extends BaseItem {
             renderstate.unifs = shaderCompilationResult.unifs;
             renderstate.attrs = shaderCompilationResult.attrs;
 
-            const unifs = shaderCompilationResult.unifs; 
-            {
-                const unif = unifs.viewMatrix;
-                if (unif) {
-                    gl.uniformMatrix4fv(unif.location, false, renderstate.viewMatrix.asArray());
+            const unifs = shaderCompilationResult.unifs;
+
+            if(renderstate.viewports.length == 1) {
+                const vp = renderstate.viewports[0];
+                gl.viewport(...vp.region);
+                {
+                    const unif = unifs.viewMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                    }
                 }
-            }
-            {
-                const unif = unifs.cameraMatrix;
-                if (unif) {
-                    gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+                {
+                    const unif = unifs.cameraMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                    }
                 }
-            }
-            {
-                const unif = unifs.projectionMatrix;
-                if (unif) {
-                    gl.uniformMatrix4fv(unif.location, false, renderstate.projectionMatrix.asArray());
+                {
+                    const unif = unifs.projectionMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.eye;
+                    if (unif) {
+                        // Left or right eye, when rendering sterio VR.
+                        gl.uniform1i(unif.location, 0);
+                    }
                 }
             }
 
@@ -352,13 +364,6 @@ class GLShader extends BaseItem {
                 const unif = unifs.exposure;
                 if (unif) {
                     gl.uniform1f(unif.location, renderstate.exposure ? renderstate.exposure : 1.0);
-                }
-            }
-            {
-                const unif = unifs.eye;
-                if (unif) {
-                    // Left or right eye, when rendering sterio VR.
-                    gl.uniform1i(unif.location, renderstate.eye);
                 }
             }
         }

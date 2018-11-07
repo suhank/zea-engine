@@ -287,9 +287,14 @@ class GLBaseRenderer {
     }
 
     renderGeomDataFbos() {
+        if(this.__renderGeomDataFbosRequested == true)
+            return;
+
+        this.__renderGeomDataFbosRequested = true;
         const onAnimationFrame = () => {
             for (let vp of this.__viewports)
                 vp.renderGeomDataFbo();
+            this.__renderGeomDataFbosRequested = false;
         }
         window.requestAnimationFrame(onAnimationFrame);
     }
@@ -316,16 +321,13 @@ class GLBaseRenderer {
             this.__glcanvas.width = this.__glcanvas.clientWidth * window.devicePixelRatio;
             this.__glcanvas.height = this.__glcanvas.clientHeight * window.devicePixelRatio;
 
-            this.__onResizeViewports();
+            for (let vp of this.__viewports)
+                vp.resize(this.__glcanvas.width, this.__glcanvas.height);
+
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
             this.requestRedraw();
         }
 
-    }
-
-    __onResizeViewports() {
-        for (let vp of this.__viewports)
-            vp.resize(this.__glcanvas.width, this.__glcanvas.height);
     }
 
     getDiv() {
@@ -732,14 +734,11 @@ class GLBaseRenderer {
         return true;
     }
 
-    drawVP(viewport, renderstate) {
-        viewport.draw(renderstate);
-    }
+    // drawVP(viewport, renderstate) {
+    //     viewport.draw(renderstate);
+    // }
 
-    drawScene(renderstate, vrView = false) {
-
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
+    drawScene(renderstate) {
 
         renderstate.profileJSON = {};
         renderstate.boundRendertarget = undefined;
@@ -754,11 +753,6 @@ class GLBaseRenderer {
                     pass.draw(renderstate);
             }
         }
-
-        // if (this.__displayStats) {
-            // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-            // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
-        // }
     }
 
     drawSceneSelectedGeoms(renderstate){
@@ -781,35 +775,52 @@ class GLBaseRenderer {
         }
     }
 
-    draw() {
-        if (this.__drawSuspensionLevel > 0)
-            return;
+    // draw() {
+    //     if (this.__drawSuspensionLevel > 0)
+    //         return;
 
-        const gl = this.__gl;
-        const renderstate = {};
+    //     const gl = this.__gl;
+    //     const renderstate = {};
 
-        if (this.__vrViewport) {
-            if (this.__vrViewport.isPresenting()) {
-                this.__vrViewport.draw(renderstate);
-                return;
-            } 
-            // Cannot upate the view, else it sends signals which
-            // end up propagating through the websocket. 
-            // TODO: Make the head invisible till active
-            // else
-            //     this.__vrViewport.updateHeadAndControllers();
-        }
+    //     if (this.__vrViewport) {
+    //         if (this.__vrViewport.isPresenting()) {
+    //             this.__vrViewport.draw(renderstate);
+    //             return;
+    //         } 
+    //         // Cannot upate the view, else it sends signals which
+    //         // end up propagating through the websocket. 
+    //         // TODO: Make the head invisible till active
+    //         // else
+    //         //     this.__vrViewport.updateHeadAndControllers();
+    //     }
         
-        const len=this.__viewports.length;
-        for(let i=0; i< len; i++){
-            this.drawVP(this.__viewports[i], renderstate);
-        }
+    //     const len=this.__viewports.length;
+    //     for(let i=0; i< len; i++){
+    //         this.drawVP(this.__viewports[i], renderstate);
+    //     }
 
-        // gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-        // gl.disable(gl.SCISSOR_TEST);
+    //     if (this.__collector.newItemsReadyForLoading())
+    //     this.__collector.finalize();
 
-        this.redrawOccured.emit();
-    }
+    //     renderstate.profileJSON = {};
+    //     renderstate.boundRendertarget = undefined;
+    //     renderstate.materialCount = 0;
+    //     renderstate.drawCalls = 0;
+    //     renderstate.drawCount = 0;
+
+    //     for(let key in this.__passes) {
+    //         const passSet = this.__passes[key];
+    //         for(let pass of passSet) {
+    //             if (pass.enabled)
+    //                 pass.draw(renderstate);
+    //         }
+    //     }
+
+    //     // gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
+    //     // gl.disable(gl.SCISSOR_TEST);
+
+    //     this.redrawOccured.emit();
+    // }
 
 
     //////////////////////////////////////////

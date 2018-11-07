@@ -12,33 +12,23 @@ import {
     Signal
 } from '../Utilities';
 import {
-    Plane,
     Camera
 } from '../SceneTree';
 import {
-    BaseViewport
-} from './BaseViewport.js';
+    GLBaseViewport
+} from './GLBaseViewport.js';
 import {
     GLFbo
 } from './GLFbo.js';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
-// import {
-//     PostProcessing
-// } from './Shaders/PostProcessing.js';
-import {
-    OutlinesShader
-} from './Shaders/OutlinesShader.js';
-import {
-    GLMesh
-} from './GLMesh.js';
 
 import {
     CameraMouseAndKeyboard
 } from '../SceneTree';
 
-class GLViewport extends BaseViewport {
+class GLViewport extends GLBaseViewport {
     constructor(renderer, name, width, height) {
         super(renderer);
         this.__name = name;
@@ -85,9 +75,6 @@ class GLViewport extends BaseViewport {
         this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
         // this.__glshaderScreenPostProcess = new PostProcessing(gl);
-        this.__outlineShader = new OutlinesShader(gl);
-        this.__outlineColor = new Color("#03E3AC")
-        this.quad = new GLMesh(gl, new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
         this.setManipulator(new CameraMouseAndKeyboard());
@@ -95,17 +82,8 @@ class GLViewport extends BaseViewport {
 
         this.resize(width, height);
         // this.createOffscreenFbo();
-
-        this.createSelectedGeomsFbo();
     }
 
-    getOutlineColor() {
-        return this.__outlineColor
-    }
-
-    setOutlineColor(color) {
-        this.__outlineColor = color;
-    }
 
     resize(width, height) {
         super.resize(width, height);
@@ -116,7 +94,6 @@ class GLViewport extends BaseViewport {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
         }
-        this.region = [this.__x, this.__y, this.__width, this.__height];
     }
 
     getCamera() {
@@ -125,17 +102,21 @@ class GLViewport extends BaseViewport {
 
     setCamera(camera) {
         this.__camera = camera;
-        this.__camera.viewMatChanged.connect(() => {
+        const globalXfoParam = camera.getParameter('GlobalXfo')
+        const getCameraParams = ()=>{
+            this.__cameraXfo = globalXfoParam.getValue()
+            this.__cameraMat = this.__cameraXfo.toMat4()
+            this.__viewMat = this.__cameraMat.inverse()
+        }
+        getCameraParams();
+        globalXfoParam.valueChanged.connect(() => {
+            getCameraParams()
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'CameraAndPointer',
-                viewXfo: this.__camera.getGlobalXfo()
+                viewXfo: this.__cameraXfo
             });
         });
-        // this.__camera.clippingRangesChanged.connect(()=>{
-        //     this.__updateProjectionMatrix();
-        //     this.updated.emit();
-        // });
         this.__camera.projectionParamChanged.connect(() => {
             this.__updateProjectionMatrix();
             this.updated.emit();
@@ -159,22 +140,6 @@ class GLViewport extends BaseViewport {
         this.__cameraManipulator = manipulator;
         if(this.__cameraManipulator && this.__cameraManipulator.movementFinished)
             this.__cameraManipulator.movementFinished.connect(this.renderGeomDataFbo);
-    }
-
-    setGizmoPass(gizmoPass) {
-        this.__gizmoPass = gizmoPass;
-    }
-
-    getCameraMatrix() {
-        return this.__camera.getGlobalXfo().toMat4();
-    }
-
-    getViewMatrix() {
-        return this.__camera.getViewMatrix();
-    }
-
-    getProjectionMatrix() {
-        return this.__projectionMatrix;
     }
 
     __updateProjectionMatrix() {
@@ -211,7 +176,7 @@ class GLViewport extends BaseViewport {
         sy = (sy * 2.0) - 1.0;
 
         // Transform the origin from camera local to world space
-        const cameraMat = this.getCameraMatrix();
+        const cameraMat = this.__cameraMat;
 
         const projInv = this.__projectionMatrix.inverse();
         if (projInv == null) // Sometimes this happens, not sure why...
@@ -266,20 +231,6 @@ class GLViewport extends BaseViewport {
         return this.__geomDataBufferFbo;
     }
 
-    __initRenderState(renderstate) {
-        renderstate.viewXfo = this.__camera.getGlobalXfo();
-        renderstate.viewMatrix = this.getViewMatrix();
-        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
-        renderstate.projectionMatrix = this.getProjectionMatrix();
-        renderstate.isOrthographic = this.__camera.getIsOrthographic();
-        // renderstate.camera = this.__camera; // Note: in VR, we have no camera.
-        renderstate.viewportFrustumSize = this.__frustumDim;
-        renderstate.fovY = this.__camera.getFov(),
-        renderstate.viewScale = 1.0;
-        renderstate.region = this.region;
-        renderstate.eye = 0; // 0==Left, 1==Right;,
-    }
-
     renderGeomDataFbo() {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBufferFbo.bindAndClear();
@@ -288,7 +239,8 @@ class GLViewport extends BaseViewport {
                 drawCalls: 0,
                 drawCount: 0,
                 profileJSON: {},
-                shaderopts: this.__renderer.getShaderPreproc()
+                shaderopts: this.__renderer.getShaderPreproc(),
+                viewports: []
             };
             this.__initRenderState(renderstate);
             this.__renderer.drawSceneGeomData(renderstate);
@@ -563,76 +515,27 @@ class GLViewport extends BaseViewport {
 
     ////////////////////////////
     // Rendering
-    draw(renderstate) {
-        this.bindAndClear(renderstate);
 
+    __initRenderState(renderstate) {
+        // console.log(this.__viewMat.toString())
+        renderstate.viewXfo = this.__cameraXfo;
+        renderstate.viewScale = 1.0;
+        renderstate.viewports.push({
+            region: this.region,
+            cameraMatrix: this.__cameraMat,
+            viewMatrix: this.__viewMat,
+            projectionMatrix: this.__projectionMatrix,
+            viewportFrustumSize: this.__frustumDim,
+            isOrthographic: this.__camera.getIsOrthographic(),
+            fovY: this.__camera.getFov()
+        })
+    }
+
+    bindAndClear(renderstate) {
+        this.clear(renderstate);
         this.__initRenderState(renderstate);
-
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
-
-        this.__renderer.drawScene(renderstate, false);
-        // To see the Geom data uncomment this line.
-        // this.__renderer.drawSceneGeomData(renderstate);
-
-        if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBufferFbo.bindAndClear();
-            this.__renderer.drawSceneSelectedGeoms(renderstate);
-            const gl = this.__renderer.getGL();
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(...this.region);
-
-            this.__outlineShader.bind(renderstate);
-            const unifs = renderstate.unifs;
-            this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-            gl.uniform2f(unifs.selectionDataTextureSize.location, this.region[2], this.region[3]);
-            gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
-            this.quad.bindAndDraw(renderstate);
-        }
-        
-        // /////////////////////////////////////
-        // // Post processing.
-        // if (this.__fbo) {
-        //     const gl = this.__renderer.getGL();
-
-        //     // Bind the default framebuffer
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        //     gl.viewport(...this.region);
-        //     // gl.disable(gl.SCISSOR_TEST);
-
-        //     // this.__glshaderScreenPostProcess.bind(renderstate);
-
-        //     // const unifs = renderstate.unifs;
-        //     // if ('antialiase' in unifs)
-        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-        //     // if ('textureSize' in unifs)
-        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-        //     // if ('gamma' in unifs)
-        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-        //     // if ('exposure' in unifs)
-        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-        //     // if ('tonemap' in unifs)
-        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-        //     gl.screenQuad.bindShader(renderstate);
-        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
-
-
-        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-        //     // more goem int he next frame then the fbo color tex is being read from and written to 
-        //     // at the same time. (baaaad).
-        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
-        //     // track down.
-        //     gl.bindTexture(gl.TEXTURE_2D, null);
-        // }
     }
 
-    // After post-processing, the overlays are rendered.
-    drawOverlays(renderstate) {
-        this.__overlayPass.draw(renderstate);
-    }
 };
 
 export {

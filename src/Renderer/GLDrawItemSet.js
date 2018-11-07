@@ -323,7 +323,44 @@ class GLDrawItemSet {
             const len = this.visibleItems.length;
             for (let i = 0; i < len; i++) {
                 this.drawItems[i].bind(renderstate);
-                this.glgeom.draw(renderstate);
+
+                if(renderstate.viewports.length == 1) {
+                    this.glgeom.draw(renderstate);
+                }
+                else {
+                    let eye = 0;
+                    for(let vp of renderstate.viewports) {
+                        gl.viewport(...vp.region);
+                        {
+                            const unif = unifs.viewMatrix;
+                            if (unif) {
+                                gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                            }
+                        }
+                        {
+                            const unif = unifs.cameraMatrix;
+                            if (unif) {
+                                gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                            }
+                        }
+                        {
+                            const unif = unifs.projectionMatrix;
+                            if (unif) {
+                                gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                            }
+                        }
+                        {
+                            const unif = unifs.eye;
+                            if (unif) {
+                                // Left or right eye, when rendering sterio VR.
+                                gl.uniform1i(unif.location, eye);
+                            }
+                        }
+                        this.glgeom.draw(renderstate);
+
+                        eye++;
+                    }
+                }
             }
         } else {
             // console.log("draw:"+ this.drawIdsArray);
@@ -343,7 +380,42 @@ class GLDrawItemSet {
             }
 
 
-            this.glgeom.drawInstanced(this.drawCount);
+            if(renderstate.viewports.length == 1) {
+                this.glgeom.drawInstanced(this.drawCount);
+            }
+            else {
+                let eye = 0;
+                for(let vp of renderstate.viewports) {
+                    gl.viewport(...vp.region);
+                    {
+                        const unif = unifs.viewMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.cameraMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.projectionMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.eye;
+                        if (unif) {
+                            // Left or right eye, when rendering sterio VR.
+                            gl.uniform1i(unif.location, eye);
+                        }
+                    }
+                    this.glgeom.drawInstanced(this.drawCount);
+                    eye++;
+                }
+            }
         }
     }
 };

@@ -19,8 +19,8 @@ import {
     resourceLoader
 } from '../../SceneTree';
 import {
-    BaseViewport
-} from '../BaseViewport.js';
+    GLBaseViewport
+} from '../GLBaseViewport.js';
 import {
     VRHead
 } from './VRHead.js'
@@ -28,7 +28,7 @@ import {
     VRController
 } from './VRController.js'
 
-class VRViewport extends BaseViewport {
+class VRViewport extends GLBaseViewport {
     constructor(renderer, vrDisplay ) {
         super(renderer);
         this.__vrDisplay = vrDisplay;
