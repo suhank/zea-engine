@@ -71,4 +71,14 @@ testingHarness.registerTest('PrimitiveShapes', (domElement, resources)=> {
     renderer.setScene(scene);
     // renderer.frameAll();
     renderer.resumeDrawing();
+
+
+    renderer.getViewport().mouseDownOnGeom.connect((event)=>{
+        const geomItem = event.intersectionData.geomItem;
+        console.log(geomItem.getPath())
+        if(!event.shiftKey && !event.altKey){
+          geomItem.setSelected(!geomItem.getSelected());
+        }
+    });
+    
 });
