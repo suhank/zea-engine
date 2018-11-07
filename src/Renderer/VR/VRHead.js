@@ -3,10 +3,12 @@ import {
     Xfo,
     Color 
 } from '../../Math';
+import {
+    TreeItem
+} from '../../SceneTree';
 
 class VRHead {
     constructor(gl, stageTreeItem) {
-
         this.__treeItem = new TreeItem('VRHead');
         stageTreeItem.addChild(this.__treeItem);
     }

@@ -160,22 +160,6 @@ class VRViewport extends GLBaseViewport {
         return this.__vrControllers;
     }
 
-    resize(width, height) {
-        this.__canvasWidth = width;
-        this.__canvasHeight = height;
-        // TODO: Support adaptive scaling of the viewport size to
-        // enable higher Fps in heavy scenes. If the Fps drops below
-        // a certain threshold, we can drop the viewport resolution.
-        this.__width = this.__canvasWidth * this.__canvasSizeScale.x;
-        this.__height = this.__canvasHeight * this.__canvasSizeScale.y;
-
-        if (this.__fbo) {
-            this.__fwBuffer.resize(this.__width, this.__height);
-            this.__fbo.resize();
-        }
-        this.resized.emit();
-    }
-
     ////////////////////////////
     // Continuous Rendering
 
@@ -193,7 +177,6 @@ class VRViewport extends GLBaseViewport {
         const onAnimationFrame = () => {
             if (this.__continuousDrawing)
                 this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
-            this.__frameRequested = true;
             this.__renderer.draw();
         }
         this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
@@ -263,6 +246,7 @@ class VRViewport extends GLBaseViewport {
                 Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
                 Math.max(leftEye.renderHeight, rightEye.renderHeight)
             ];
+            this.region = [0, 0, this.__hmdCanvasSize[0], this.__hmdCanvasSize[1]];
 
             this.__stageTreeItem.setVisible(true);
 
@@ -338,12 +322,9 @@ class VRViewport extends GLBaseViewport {
     }
 
 
-    draw(renderstate) {
-        if (!this.__frameRequested) {
-            console.log("hey!!");
-            return;
-        }
+    bindAndClear(renderstate) {
 
+        super.clear();
 
         this.__vrDisplay.getFrameData(this.__frameData);
 
@@ -366,10 +347,10 @@ class VRViewport extends GLBaseViewport {
 
 
         this.updateHeadAndControllers();
-        this.bindAndClear(renderstate);
+        // this.bindAndClear(renderstate);
 
 
-        renderstate.viewport = this;
+        // renderstate.viewport = this;
         // renderstate.cameraMatrix = this.__standingMatrix;
         renderstate.viewScale = 1.0 / this.__stageScale;
         renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
@@ -379,40 +360,43 @@ class VRViewport extends GLBaseViewport {
         const height = this.__hmdCanvasSize[1];
         const gl = this.__renderer.gl;
 
-        gl.viewport(0, 0, width * 0.5, height);
+        // gl.viewport(0, 0, width * 0.5, height);
         this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
         this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
-        renderstate.viewMatrix = this.__leftViewMatrix;
-        renderstate.projectionMatrix = this.__leftProjectionMatrix;
-        renderstate.eye = 0; //'L';
+        // renderstate.viewMatrix = this.__leftViewMatrix;
+        // renderstate.projectionMatrix = this.__leftProjectionMatrix;
+        // renderstate.eye = 0; //'L';
 
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
+        // if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+        //     this.drawBackground(renderstate);
+        // }
 
-        this.__renderer.drawScene(renderstate);
+        // this.__renderer.drawScene(renderstate);
 
         gl.viewport(width * 0.5, 0, width * 0.5, height);
         this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
         this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
         renderstate.viewMatrix = this.__rightViewMatrix;
         renderstate.projectionMatrix = this.__rightProjectionMatrix;
-        renderstate.eye = 1; //'R';
 
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
+        renderstate.viewports.push({
+            region: [0, 0, width * 0.5, height],
+            cameraMatrix: renderstate.cameraMatrix,
+            viewMatrix: this.__leftViewMatrix,
+            projectionMatrix: this.__leftProjectionMatrix
+        })
+        renderstate.viewports.push({
+            region: [width * 0.5, 0, width * 0.5, height],
+            cameraMatrix: renderstate.cameraMatrix,
+            viewMatrix: this.__rightViewMatrix,
+            projectionMatrix: this.__rightProjectionMatrix
+        })
 
-        this.__renderer.drawScene(renderstate);
+        return true;
+    }
 
+    submitFrame(){
         this.__vrDisplay.submitFrame();
-        this.__frameRequested = false;
-
-        // Note: the renderer will be refactored to render both viewports
-        // in a single pass, and then emit this signal. For now this
-        // is a very quick hack to make automatic exposure controlls
-        // work in VR.
-        this.__renderer.redrawOccured.emit();
     }
 
 };

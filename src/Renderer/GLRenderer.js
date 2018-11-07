@@ -479,7 +479,8 @@ class GLRenderer extends GLBaseRenderer {
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         if (this.__vrViewport && this.__vrViewport.isPresenting()) {
-            this.__vrViewport.bindAndClear(renderstate);
+            if(!this.__vrViewport.bindAndClear(renderstate))
+                return;
             
             // Cannot upate the view, else it sends signals which
             // end up propagating through the websocket. 
@@ -550,6 +551,9 @@ class GLRenderer extends GLBaseRenderer {
         //     // track down.
         //     gl.bindTexture(gl.TEXTURE_2D, null);
         // }
+
+        if (this.__vrViewport && this.__vrViewport.isPresenting())
+            this.__vrViewport.submitFrame();
 
         this.redrawOccured.emit();
     }

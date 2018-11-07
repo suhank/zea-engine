@@ -319,7 +319,7 @@ class GLShader extends BaseItem {
 
             const unifs = shaderCompilationResult.unifs;
 
-            if(renderstate.viewports.length == 1) {
+            if(renderstate.viewports && renderstate.viewports.length == 1) {
                 const vp = renderstate.viewports[0];
                 gl.viewport(...vp.region);
                 {

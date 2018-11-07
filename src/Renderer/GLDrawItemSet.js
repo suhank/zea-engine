@@ -324,7 +324,7 @@ class GLDrawItemSet {
             for (let i = 0; i < len; i++) {
                 this.drawItems[i].bind(renderstate);
 
-                if(renderstate.viewports.length == 1) {
+                if(!renderstate.viewports || renderstate.viewports.length == 1) {
                     this.glgeom.draw(renderstate);
                 }
                 else {
