@@ -49,8 +49,8 @@ class VRController {
         if(!this.__isDaydramController) {
             // A Vive or Occulus Touch Controller
             this.__tip = new TreeItem('Tip');
-            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
-            this.__treeItem.addChild(this.__tip);
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.07, -0.028)));
+            this.__treeItem.addChild(this.__tip, false);
             vrstage.getTreeItem().addChild(this.__treeItem);
 
             const asset = vrstage.getAsset();
