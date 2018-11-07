@@ -65,7 +65,7 @@ testingHarness.registerTest('PrimitiveShapes', (domElement, resources)=> {
     addShape('PointGrid', new Visualive.PointGrid(2.2, 1.5, 12, 12), new Visualive.Vec3(-6, 12, 0), pointsMaterial);
 
 
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);

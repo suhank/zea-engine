@@ -112,7 +112,41 @@ class GLTransparentGeomsPass extends GLPass {
                     gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
                     gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
                 }
-                currentglGeom.draw(renderstate);
+
+
+                const unifs = renderstate.unifs;
+                let eye = 0;
+                for(let vp of renderstate.viewports) {
+                    gl.viewport(...vp.region);
+                    {
+                        const unif = unifs.viewMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.cameraMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.projectionMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.eye;
+                        if (unif) {
+                            // Left or right eye, when rendering sterio VR.
+                            gl.uniform1i(unif.location, eye);
+                        }
+                    }
+                    currentglGeom.draw(renderstate);
+
+                    eye++;
+                }
             }
         }
 

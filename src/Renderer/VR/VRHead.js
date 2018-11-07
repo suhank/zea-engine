@@ -3,62 +3,14 @@ import {
     Xfo,
     Color 
 } from '../../Math';
-import { 
-    Cuboid,
-    TreeItem,
-    GeomItem,
-    Material 
+import {
+    TreeItem
 } from '../../SceneTree';
-import { GLMesh } from '../GLMesh.js';
-import { GLDrawItem } from '../GLDrawItem.js';
-import { Gizmo } from '../Gizmos/Gizmo.js';
 
-class VRHead extends Gizmo {
+class VRHead {
     constructor(gl, stageTreeItem) {
-        super(new Color(0, 0, 1));
-
         this.__treeItem = new TreeItem('VRHead');
         stageTreeItem.addChild(this.__treeItem);
-
-        // // Head faces Z axis....
-        // const geom = new Cuboid(0.16, 0.24, 0.2);
-
-        // const mat0 = new GeomItem('mat0', 'FlatSurfaceShader');
-        // mat0.baseColor = new Color(0, 0, 1);
-        // const mat1 = new GeomItem('mat1', 'FlatSurfaceShader');
-        // mat1.baseColor = new Color(1, 1, 0);
-
-        // this.__geomItem0 = new GeomItem('VRHead', geom, mat0);
-        // this.__geomItem0.setSelectable(false);
-        // this.__geomItem1 = new GeomItem('VRHead', geom, mat1);
-        // this.__geomItem1.setSelectable(false);
-
-        // const xfo = new Xfo();
-        // xfo.sc.set(1.2, 0.3, 0.6);
-        // xfo.tr.set(0, 0.03, -0.05);
-        // this.__geomItem1.setGeomOffsetXfo(xfo);
-
-        // this.__geomItem0.addChild(this.__geomItem1);
-
-        // const geomglGeom = new GLMesh(gl, geom);
-        // this.__geomglDrawItem0 = new GLDrawItem(gl, this.__geomItem0, geomglGeom);
-        // this.__addDrawItem(this.__geomglDrawItem0);
-
-        // this.__geomglDrawItem1 = new GLDrawItem(gl, this.__geomItem1, geomglGeom);
-        // this.__addDrawItem(this.__geomglDrawItem1);
-        // this.__geomglDrawItem1.color = new Color(1, 1, 0);
-
-        // this.__setProxyItem(this.__geomglDrawItem0);
-
-        // this.__treeItem.addChild(this.__geomItem0);
-
-
-        // this.setVisible(true);
-    }
-
-    setVisible(val){
-        // this.__geomItem0.setVisible(val);
-        // this.__geomItem1.setVisible(val);
     }
 
     update(frameData){
@@ -73,6 +25,7 @@ class VRHead extends Gizmo {
     getTreeItem(){
         return this.__treeItem;
     }
+
     getXfo(){
         return this.__treeItem.getLocalXfo();
     }

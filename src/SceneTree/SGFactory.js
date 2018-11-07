@@ -4,43 +4,60 @@ class SGFactory {
         this.__classNames = {};
     }
 
-    registerClass(name, cls){
-        this.__registeredClasses[name] = { cls, callbacks:[] };
-        this.__classNames[cls.name] = name;
+    registerClass(classname, cls) {
+        this.__registeredClasses[classname] = {
+            cls,
+            callbacks: []
+        };
+        this.__classNames[cls.name] = classname;
     }
 
-    registerCallback(classname, callback){
-        const classData = this.__registeredClasses[name];
-        if(!classData){
-            console.warn("Factory not registered:"+ name);
+    registerCallback(classname, callback) {
+        const classData = this.__registeredClasses[classname];
+        if (!classData) {
+            console.warn("Factory not registered:" + classname);
             return;
         }
         classData.callbacks.push(callback);
     }
 
-    getClass(name){
-        return this.__registeredClasses[name].cls;
+    getClass(classname) {
+        return this.__registeredClasses[classname].cls;
     }
 
-    getClassName(inst){
-        if(this.__classNames[inst.constructor.name])
+    getClassName(inst) {
+        if (this.__classNames[inst.constructor.name])
             return this.__classNames[inst.constructor.name];
         return inst.constructor.name;
     }
 
-    constructClass(name/*, ...args*/){
-        const classData = this.__registeredClasses[name];
-        if(!classData){
-            if(!classData){
-                console.warn("Factory not registered:"+ name);
+    isConstructing() {
+        return this.__constructing
+    }
+
+    constructClass(classname /*, ...args*/ ) {
+        const classData = this.__registeredClasses[classname];
+        if (!classData) {
+            if (!classData) {
+                console.warn("Factory not registered:" + classname);
                 return null;
             }
         }
+        this.__constructing = true;
         const args = Array.prototype.slice.call(arguments, 1);
         const inst = new classData.cls(...args);
-        for(let callback of classData.callbacks)
-            callback(inst);
+        this.__constructing = false;
+        this.invokeCallbacks(inst);
         return inst;
+
+    }
+
+    invokeCallbacks(inst) {
+        if (this.__classNames[inst.constructor.name]){
+            const classData = this.__registeredClasses[this.__classNames[inst.constructor.name]];
+            for (let callback of classData.callbacks)
+                callback(inst);
+        }
     }
 };
 
@@ -48,5 +65,3 @@ const sgFactory = new SGFactory();
 export {
     sgFactory
 };
-// sgFactory;
-

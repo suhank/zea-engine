@@ -262,6 +262,9 @@ class GLCollector {
     };
 
     addGeomItem(geomItem) {
+        if (geomItem.isDestroyed()) {
+            throw ("geomItem is destroyed:" + geomItem.getPath());
+        }
         let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
         if (!glmaterialDrawItemSets)
             return;
@@ -289,7 +292,7 @@ class GLCollector {
         this.__drawItems[index] = gldrawItem;
 
         const transformChangedId = gldrawItem.transformChanged.connect(() => {
-            if(this.__dirtyItemIndices.indexOf(index) == -1)
+            if (this.__dirtyItemIndices.indexOf(index) == -1)
                 this.__dirtyItemIndices.push(index);
             // this.__updateItemInstanceData(index, gldrawItem);
             this.__renderer.requestRedraw();
@@ -303,8 +306,6 @@ class GLCollector {
             }
             drawItemSet.addDrawItem(gldrawItem);
 
-            // Note: before the renderer is disabled, this is a  no-op.
-            this.__renderer.requestRedraw();
         }
         addDrawItemToGLMaterialDrawItemSet();
 
@@ -314,6 +315,9 @@ class GLCollector {
         })
 
         this.__newItemsAdded = true;
+        
+        // Note: before the renderer is disabled, this is a  no-op.
+        this.__renderer.requestRedraw();
         return gldrawItem;
     };
 
@@ -334,11 +338,14 @@ class GLCollector {
         // for them to be destroyed. 
 
         geomItem.deleteMetadata('gldrawItem')
-        
+
         this.__newItemsAdded = true;
     }
 
     addTreeItem(treeItem) {
+        if (treeItem.isDestroyed()) {
+            throw ("treeItem is destroyed:" + treeItem.getPath());
+        }
 
         for (let passCbs of this.__passCallbacks) {
             const rargs = {

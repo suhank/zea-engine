@@ -1,845 +1,569 @@
 import {
+    SystemDesc
+} from '../BrowserDetection.js';
+import {
+    Signal
+} from '../Utilities';
+import {
     Vec3,
     Xfo,
     Color
 } from '../Math';
 import {
-    Signal
-} from '../Utilities';
-import {
-    SystemDesc
-} from '../BrowserDetection.js';
-import {
-    onResize
-} from '../external/onResize.js';
-import {
-    TreeItem,
-    GeomItem,
-    Lines,
-    Mesh,
-    Grid,
-    Material,
-    ValueSetMode,
-    resourceLoader
+    Plane,
+    BaseImage,
+    HDRImageMixer,
+    ProceduralSky,
+    Lightmap,
+    LightmapMixer
 } from '../SceneTree';
 import {
-    create3DContext
-} from './GLContext.js';
+    GLFbo
+} from './GLFbo.js';
 import {
-    GLScreenQuad
-} from './GLScreenQuad.js';
+    GLHDRImage
+} from './GLHDRImage.js';
 import {
-    GLCollector
-} from './GLCollector.js';
-
-// import {
-//     GizmoContext
-// } from './Gizmos/GizmoContext.js';
+    GLLightmapMixer
+} from './GLLightmapMixer.js';
 import {
-    GLViewport
-} from './GLViewport.js';
+    GLEnvMap
+} from './GLEnvMap.js';
 import {
-    GLMesh
-} from './GLMesh.js';
+    GLProceduralSky
+} from './GLProceduralSky.js';
 import {
-    GLLines
-} from './GLLines.js';
+    GLBaseRenderer
+} from './GLBaseRenderer.js';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
 import {
-    GLShader
-} from './GLShader.js';
+    GLScreenQuad
+} from './GLScreenQuad.js';
 import {
-    GLMaterial
-} from './GLMaterial.js';
+    BackgroundImageShader,
+    OctahedralEnvMapShader,
+    LatLongEnvMapShader,
+    SterioLatLongEnvMapShader,
+    DualFishEyeEnvMapShader,
+    DualFishEyeToLatLongBackgroundShader
+} from './Shaders/EnvMapShader.js';
 import {
-    GLDrawItem
-} from './GLDrawItem.js';
+    generateShaderGeomBinding
+} from './GeomShaderBinding.js';
+
+// import {
+//     PostProcessing
+// } from './Shaders/PostProcessing.js';
 import {
-    VRViewport
-} from './VR/VRViewport.js';
+    OutlinesShader
+} from './Shaders/OutlinesShader.js';
+import {
+    GLMesh
+} from './GLMesh.js';
 
 
-let activeGLRenderer = undefined;
-let mouseIsDown = false;
-let mouseLeft = false;
-
-
-const registeredPasses = {};
-
-class GLRenderer {
+class GLRenderer extends GLBaseRenderer {
     constructor(canvasDiv, options = {}) {
-        this.__drawItems = [];
-        this.__drawItemsIndexFreeList = [];
-        this.__geoms = [];
-        this.__shaders = {};
-        this.__passes = {};
 
-        this.__viewports = [];
-        this.__activeViewport = undefined;
-        this.__continuousDrawing = false;
-        this.__redrawRequested = false;
-        this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
-        this.__isMobile = SystemDesc.isMobileDevice;
+        super(canvasDiv, options, {
+            antialias: true,
+            depth: true
+        });
 
-        this.__drawSuspensionLevel = 1;
-        this.__shaderDirectives = {};
-        this.__preproc = { };
+        /////////////////////////
+        // Renderer Setup
+        this.__exposure = 0.0;
+        this.__exposureRange = options.exposureRange ? options.exposureRange : [-5, 10];
+        this.__tonemap = true;
+        this.__gamma = 2.2;
+
+        this.__glEnvMap = undefined;
+        this.__glBackgroundMap = undefined;
+        this.__glLightmaps = {};
+        this.__displayEnvironment = true;
+        this.__debugMode = 0;
+        this.__debugLightmaps = false;
+        this._planeDist = 0.0;
+        this.__cutPlaneNormal = new Vec3(1,0,0);
 
 
-        this.mirrorVRisplayToViewport = true;
+        const gl = this.__gl;
 
-        // Function Bindings.
-        this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
-        this.requestRedraw = this.requestRedraw.bind(this);
+        this.__debugTextures = [undefined];
 
-        this.__collector = new GLCollector(this);
+        this.addShaderPreprocessorDirective('ENABLE_INLINE_GAMMACORRECTION');
 
-        this.resized = new Signal();
-        this.keyPressed = new Signal();
-        this.sceneSet = new Signal(true);
-        this.vrViewportSetup = new Signal(true);
-        this.sessionClientSetup = new Signal(true);
-        
-        this.envMapAssigned = new Signal(true);
+        if (!options.disableLightmaps)
+            this.addShaderPreprocessorDirective('ENABLE_LIGHTMAPS');
+        if (!options.disableTextures)
+            this.addShaderPreprocessorDirective('ENABLE_TEXTURES');
 
-        // Signals to abstract the user view. 
-        // i.e. when a user switches to VR mode, the signals 
-        // simply emit the new VR data.
-        this.viewChanged = new Signal();
-        this.pointerMoved = new Signal();
-        this.redrawOccured = new Signal();
-        this.treeItemGlobalXfoChanged = new Signal();
+        if (!SystemDesc.isMobileDevice) {
+            if(!options.disableSpecular)
+                this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
+            // this.addShaderPreprocessorDirective('ENABLE_DEBUGGING_LIGHTMAPS');
+        }
 
-        this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {});
+        this.__outlineShader = new OutlinesShader(gl);
+        this.__outlineColor = new Color("#03E3AC")
+        this.quad = new GLMesh(gl, new Plane(1, 1));
 
-        // this.__gizmoPass = this.addPass(new GizmoPass());
-        // this.__gizmoContext = new GizmoContext(this);
-        
-        for(let passtype in registeredPasses) {
-            for(let cls of registeredPasses[passtype]){
-                this.addPass(new cls(), passtype);
+        this.createSelectedGeomsFbo();
+    }
+
+    __bindEnvMap(env) {
+        if (env instanceof ProceduralSky) {
+            this.__glEnvMap = new GLProceduralSky(this.__gl, env);
+        } else if (env instanceof BaseImage) {
+            this.__glEnvMap = env.getMetadata('gltexture');
+            if(!this.__glEnvMap) {
+                if (env.type === 'FLOAT'){
+                    this.addShaderPreprocessorDirective('ENABLE_SPECULAR');
+                    this.__glEnvMap = new GLEnvMap(this, env, this.__preproc);
+                }
+                else if (env.isStreamAtlas()){
+                    this.__glEnvMap = new GLImageStream(this.__gl, env);
+                }
+                else{
+                    this.__glEnvMap = new GLTexture2D(this.__gl, env);
+                }
             }
+        } else {
+            console.warn("Unsupported EnvMap:" + env);
+            return;
         }
+        this.__glEnvMap.ready.connect(this.requestRedraw);
+        this.__glEnvMap.updated.connect(this.requestRedraw);
 
-        this.addViewport('main');
-
-
-        this.__vrViewport = undefined;
-        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined){
-            this.__vrpolyfill = new WebVRPolyfill();
-        }
-
-        resourceLoader.loaded.connect(this.renderGeomDataFbos);
-        
-
+        this.envMapAssigned.emit(this.__glEnvMap);
     }
 
-    addShaderPreprocessorDirective(name, value) {
-        if(value)
-            this.__shaderDirectives[name] = '#define ' + name + " = " + value;
-        else 
-            this.__shaderDirectives[name] = '#define ' + name;
-        const directives = [];
-        for(const key in this.__shaderDirectives) {
-            directives.push(this.__shaderDirectives[key]);
-        }
-        this.__preproc.defines = directives.join('\n')+'\n';
-        this.__gl.shaderopts = this.__preproc
+    getGLEnvMap(){
+        return this.__glEnvMap;
     }
-
-    getShaderPreproc() {
-        return this.__preproc;
-    }
-
-    getWidth() {
-        return this.__glcanvas.width;
-    }
-
-    getHeight() {
-        return this.__glcanvas.height;
-    }
-
-    getCollector() {
-        return this.__collector;
-    }
-
-    setupGrid(gridSize, gridColor, resolution, lineThickness) {
-        this.__gridTreeItem = new TreeItem('GridTreeItem');
-
-        const gridMaterial = new Material('gridMaterial', 'LinesShader');
-        gridMaterial.getParameter('Color').setValue(gridColor, ValueSetMode.DATA_LOAD);
-        const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
-        this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
-
-        const axisLine = new Lines();
-        axisLine.setNumVertices(2);
-        axisLine.setNumSegments(1);
-        axisLine.setSegment(0, 0, 1);
-        axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
-        axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
-
-        const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
-        gridXAxisMaterial.getParameter('Color').setValue(new Color(gridColor.luminance(), 0, 0), ValueSetMode.DATA_LOAD);
-        this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
-
-        const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
-        gridZAxisMaterial.getParameter('Color').setValue(new Color(0, gridColor.luminance(), 0), ValueSetMode.DATA_LOAD);
-        const geomOffset = new Xfo();
-        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
-        const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
-        zAxisLineItem.setGeomOffsetXfo(geomOffset);
-        this.__gridTreeItem.addChild(zAxisLineItem);
-
-        this.__gridTreeItem.setSelectable(false, true);
-        this.__collector.addTreeItem(this.__gridTreeItem);
-
-        return this.__gridTreeItem;
-    }
-
-    toggleDrawGrid() {
-        this.__gridItem.visible = !this.__gridItem.visible;
-        this.requestRedraw();
-    }
-
-    ////////////////////////////////////////
-    // Scene
-
-    getScene() {
-        return this.__scene;
+    getEnvMapTex(){
+            console.warn("Deprecated Function");
+        return this.__glEnvMap;
     }
 
     setScene(scene) {
-        this.__scene = scene;
-        this.__collector.addTreeItem(this.__scene.getRoot());
+        super.setScene(scene);
 
-        if (this.__gizmoContext)
-            this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
+        if (scene.getEnvMap() != undefined) {
+            this.__bindEnvMap(scene.getEnvMap());
+        }
+        this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this));
 
-        this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
+        // Note: The difference bween an EnvMap and a BackgroundMap, is that
+        // An EnvMap must be HDR, and can be convolved for reflections.
+        // A Background map can be simply an image.
+        if (scene.getBackgroundMap() != undefined) {
+            const gl = this.__gl;
+            let backgroundMap = scene.getBackgroundMap();
+            this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
+            if(!this.__glBackgroundMap ) {
+                if (backgroundMap.type === 'FLOAT') {
+                    this.__glBackgroundMap = new GLHDRImage(gl, backgroundMap);
+                } else {
+                    this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap);
+                }
+            }
+            this.__glBackgroundMap.ready.connect(this.requestRedraw);
+            this.__glBackgroundMap.updated.connect(this.requestRedraw);
+            if (!this.__backgroundMapShader) {
+                if (!gl.__quadVertexIdsBuffer)
+                    gl.setupInstancedQuad();
+                switch (backgroundMap.getMapping()) {
+                    case 'octahedral':
+                        this.__backgroundMapShader = new OctahedralEnvMapShader(gl);
+                        break;
+                    case 'latlong':
+                        this.__backgroundMapShader = new LatLongEnvMapShader(gl);
+                        break;
+                    case 'steriolatlong':
+                        this.__backgroundMapShader = new SterioLatLongEnvMapShader(gl);
+                        break;
+                    case 'dualfisheye':
+                        this.__backgroundMapShader = new DualFishEyeToLatLongBackgroundShader(gl);
+                        break;
+                    case 'uv':
+                    default:
+                        this.__backgroundMapShader = new BackgroundImageShader(gl);
+                        break;
+                }
+                let shaderComp = this.__backgroundMapShader.compileForTarget();
+                this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+            }
+        }
 
-        if (this.supportsVR())
-            this.__setupVRViewport();
-        
-        this.sceneSet.emit(this.__scene);
+        let lightMaps = scene.getLightMaps();
+        let addLightmap = (name, lightmap) => {
+            let gllightmap;
+            if (lightmap instanceof LightmapMixer)
+                gllightmap = new GLLightmapMixer(this.__gl, lightmap);
+            else{
+                gllightmap = lightmap.image.getMetadata('gltexture');
+                if(!gllightmap){
+                    gllightmap = new GLHDRImage(this.__gl, lightmap.image);
+                }
+            }
+            gllightmap.updated.connect((data) => {
+                this.requestRedraw();
+            });
+            this.__glLightmaps[name] = {
+                atlasSize: lightmap.atlasSize,
+                glimage: gllightmap
+            };
+        }
+        for (let name in lightMaps) {
+            addLightmap(name, lightMaps[name]);
+        }
+        scene.lightmapAdded.connect(addLightmap);
     }
 
+
     addViewport(name) {
-        let vp = new GLViewport(this, name, this.getWidth(), this.getHeight());
-        vp.updated.connect(() => {
-            this.requestRedraw();
-        });
-
-        vp.createGeomDataFbo(this.__floatGeomBuffer);
-
-        vp.viewChanged.connect((data) => {
-            this.viewChanged.emit(data);
-        });
-        vp.mouseMoved.connect((event, mousePos, ray) => {
-            this.pointerMoved.emit({
-                mousePos: mousePos,
-                ray: ray
-            });
-        });
-
-        this.__viewports.push(vp);
+        let vp = super.addViewport(name);
+        // vp.createOffscreenFbo();
         return vp;
     }
 
-    getViewport(index = 0) {
-        return this.__viewports[index];
-    }
-
-    getViewportAtPos(offsetX, offsetY) {
-        for (let vp of this.__viewports) {
-            let x = vp.getPosX();
-            let y = vp.getPosY();
-            let width = vp.getWidth();
-            let height = vp.getHeight();
-            if (offsetX >= x && offsetY >= y && offsetX <= width + x && offsetY <= height + y)
-                return vp;
-        }
-        return undefined;
-    }
-
-
-    activateViewport(vp) {
-        if(this.__activeViewport == vp) 
-            return;
-
-        this.__activeViewport = vp;
-    }
-
-    activateViewportAtPos(offsetX, offsetY) {
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
-            return this.__vrViewport;
-        const vp = this.getViewportAtPos(offsetX, offsetY);
-        if(vp && vp != this.__activeViewport)
-            this.activateViewport(vp);
-    }
-
-    getActiveViewport() {
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
-            return this.__vrViewport;
-        return this.__activeViewport;
-    }
-
-    suspendDrawing() {
-        this.__drawSuspensionLevel++;
-    }
-
-    resumeDrawing() {
-        this.__drawSuspensionLevel--;
-        if (this.__drawSuspensionLevel == 0) {
-            if (this.__loadingImg)
-                this.__glcanvasDiv.removeChild(this.__loadingImg);
-
-            this.renderGeomDataFbos();
-            this.requestRedraw();
+    onKeyPressed(key, event) {
+        switch (key) {
+            // case '[':
+            //     this.__debugMode--;
+            //     if (this.__debugMode < 0)
+            //         this.__debugMode += this.__debugTextures.length + 1;
+            //     break;
+            // case ']':
+            //     this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
+            //     break;
+            // case 'k':
+            //     this.__debugLightmaps = !this.__debugLightmaps;
+            //     break;
+            // case 'f':
+            //     let selection = scene.getSelectionManager().selection;
+            //     if (selection.size == 0)
+            //         this.__viewport.getCamera().frameView([scene.getRoot()]);
+            //     else
+            //         this.__viewport.getCamera().frameView(selection);
+            //     break;
+            // case 'o':
+            //     this.__drawEdges = !this.__drawEdges;
+                // break;
+            case 'b':
+                this.__displayEnvironment = !this.__displayEnvironment;
+                this.requestRedraw();
+                break;
+            // case 'v':
+            //     if (this.__vrViewport)
+            //         this.__vrViewport.togglePresenting();
+            //     break;
+            // case ' ':
+            //     break;
+            default:
+                super.onKeyPressed(key, event);
         }
     }
 
-    renderGeomDataFbos() {
-        const onAnimationFrame = () => {
-            for (let vp of this.__viewports)
-                vp.renderGeomDataFbo();
-        }
-        window.requestAnimationFrame(onAnimationFrame);
+    ////////////////////////////
+    // GUI
+
+    get exposure() {
+        return this.__exposure;
     }
 
-
-    /////////////////////////
-    // Renderer Setup
-
-    get gl() {
-        return this.__gl;
+    set exposure(val) {
+        this.__exposure = val;
+        this.requestRedraw();
     }
 
-    getGL() {
-        return this.__gl;
+    get tonemap() {
+        return this.__tonemap;
     }
+
+    set tonemap(val) {
+        this.__tonemap = val;
+        this.requestRedraw();
+    }
+
+    get gamma() {
+        return this.__gamma;
+    }
+
+    set gamma(val) {
+        this.__gamma = val;
+        this.requestRedraw();
+    }
+
+    get displayEnvironment() {
+        return this.__displayEnvironment;
+    }
+
+    set displayEnvironment(val) {
+        this.__displayEnvironment = val;
+        this.requestRedraw();
+    }
+
+    get debugLightmaps() {
+        return this.__debugLightmaps;
+    }
+
+    set debugLightmaps(val) {
+        this.__debugLightmaps = val;
+        this.requestRedraw();
+    }
+
+    get planeDist() {
+        return this._planeDist;
+    }
+
+    set planeDist(val) {
+        this._planeDist = val;
+        this.requestRedraw();
+    }
+
+    get cutPlaneNormal() {
+        return this.__cutPlaneNormal;
+    }
+
+    set cutPlaneNormal(val) {
+        this.__cutPlaneNormal = val;
+        this.requestRedraw();
+    }
+
+    ////////////////////////////
+    // Fbos
 
     __onResize() {
 
-        if (this.__vrViewport && this.__vrViewport.isPresenting()) {
-            var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
-            this.__glcanvas.width = hmdCanvasSize[0];
-            this.__glcanvas.height = hmdCanvasSize[1];
-        } else {
-            this.__glcanvas.width = this.__glcanvas.clientWidth * window.devicePixelRatio;
-            this.__glcanvas.height = this.__glcanvas.clientHeight * window.devicePixelRatio;
-
-            this.__onResizeViewports();
-            this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
-            this.requestRedraw();
+        super.__onResize();
+        if (this.__fbo) {
+            this.__fbo.colorTexture.resize(this.__glcanvas.width, this.__glcanvas.height);
+            this.__fbo.resize();
         }
-
-    }
-
-    __onResizeViewports() {
-        for (let vp of this.__viewports)
-            vp.resize(this.__glcanvas.width, this.__glcanvas.height);
-    }
-
-    getDiv() {
-        return this.__glcanvasDiv;
-    }
-
-    setupWebGL(canvasDiv, webglOptions) {
-
-        this.__glcanvas = document.createElement('canvas');
-        this.__glcanvas.style.position = webglOptions.canvasPosition ? webglOptions.canvasPosition : 'absolute';
-        this.__glcanvas.style.left = '0px';
-        this.__glcanvas.style.top = '0px';
-        this.__glcanvas.style.width = '100%';
-        this.__glcanvas.style.height = '100%';
-        
-        this.__glcanvasDiv = canvasDiv;
-        this.__glcanvasDiv.appendChild(this.__glcanvas);
-
-        onResize(this.__glcanvas, (event) => {
-            this.__onResize();
-        });
-        this.__onResize();
-
-        webglOptions.preserveDrawingBuffer = true;
-        webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false;
-        webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false;
-        this.__gl = create3DContext(this.__glcanvas, webglOptions);
-        this.__gl.renderer = this;
-
-        if(this.__gl.name == 'webgl2') {
-            this.addShaderPreprocessorDirective('ENABLE_ES3');
-        }
-        if(this.__gl.floatTexturesSupported) {
-            this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
-        }
-
-        this.__gl.screenQuad = new GLScreenQuad(this.__gl, this.__preproc);
-        this.__screenQuad = this.__gl.screenQuad;
-
-
-        // Note: Mobile devices don't provide much support for reading data back from float textures,
-        // and checking compatibility is patchy at best.
-        this.__floatGeomBuffer = !SystemDesc.isMobileDevice;
-        this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
-        // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
-        // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
-        // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
-
-
-        ////////////////////////////////////
-        // Bind a default texture.
-        // Note: if shaders have sampler2D uniforms, but we don't bind textures, then
-        // they get assigned texture0. If we have no textures bound at all, then 
-        // we get warnings saying.
-        // there is no texture bound to the unit 0
-        // Bind a default texture to unit 0 simply to avoid these warnings.
-        // this.__texture0 = new GLTexture2D(this.__gl, {
-        //     format: 'RGB',
-        //     type: 'UNSIGNED_BYTE',
-        //     width: 1,
-        //     height: 1,
-        //     filter: 'NEAREST',
-        //     mipMapped: false,
-        //     wrap: 'CLAMP_TO_EDGE',
-        //     data: new Uint8Array(3)
-        // });
-
-        // // gl.activeTexture(this.__gl.TEXTURE0);
-        // this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
-
-        //////////////////////////////////
-        // Setup event handlers
-        const isValidCanvas = ()=> {  
-            return this.__glcanvasDiv.offsetWidth > 0 && this.__glcanvasDiv.offsetHeight;
-        }
-
-        const calcRendererCoords = (event)=>{
-            var rect = this.__glcanvasDiv.getBoundingClientRect();
-            event.rendererX = (event.clientX - rect.left);
-            event.rendererY = (event.clientY - rect.top);
-        }
-
-        this.__glcanvas.addEventListener('mouseenter', (event) => {
-            if (!mouseIsDown) {
-                activeGLRenderer = this;
-                calcRendererCoords(event);
-                // TODO: Check mouse pos.
-                activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
-                mouseLeft = false;
-            }
-            event.stopPropagation();
-        });
-        this.__glcanvas.addEventListener('mouseleave', (event) => {
-            if (!mouseIsDown) {
-                activeGLRenderer = undefined;
-            } else {
-                mouseLeft = true;
-            }
-            event.stopPropagation();
-        });
-        this.__glcanvas.addEventListener('mousedown', (event) => {
-            calcRendererCoords(event);
-            mouseIsDown = true;
-            activeGLRenderer = this;
-            activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
-            const vp = activeGLRenderer.getActiveViewport();
-            if (vp) {
-                vp.onMouseDown(event);
-            }
-            mouseLeft = false;
-            event.stopPropagation();
-            return false;
-        });
-        document.addEventListener('mouseup', (event) => {
-            if (activeGLRenderer != this || !isValidCanvas())
-                return;
-            // if(mouseIsDown && mouseMoveDist < 0.01)
-            //     mouseClick(event);
-            calcRendererCoords(event);
-            mouseIsDown = false;
-            const vp = activeGLRenderer.getActiveViewport();
-            if (vp) {
-                vp.onMouseUp(event);
-            }
-            if (mouseLeft)
-                activeGLRenderer = undefined;
-            event.stopPropagation();
-            return false;
-        });
-
-
-        // document.addEventListener('dblclick', (event)=>{
-        //     event.preventDefault();
-        //     event.stopPropagation();
-        // });
-        // document.addEventListener('click', (event)=>{
-        //     event.preventDefault();
-        //     event.stopPropagation();
-        // });
-
-        document.addEventListener('mousemove', (event) => {
-            if (activeGLRenderer != this || !isValidCanvas())
-                return;
-            calcRendererCoords(event);
-            if (!mouseIsDown)
-                activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
-
-            const vp = activeGLRenderer.getActiveViewport();
-            if (vp) {
-                vp.onMouseMove(event);
-                event.preventDefault();
-            }
-            event.stopPropagation();
-            return false;
-        });
-
-        const onWheel = (event) => {
-            if (activeGLRenderer != this || !isValidCanvas())
-                return;
-            if (activeGLRenderer) {
-                this.onWheel(event);
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            return false;
-        }
-        if (window.addEventListener)
-        /** DOMMouseScroll is for mozilla. */
-            window.addEventListener('DOMMouseScroll', onWheel, false);
-        /** IE/Opera. */
-        window.onmousewheel = document.onmousewheel = onWheel;
-        
-        window.oncontextmenu = function() {
-            return false;
-        }
-
-        document.addEventListener('keypress', (event) => {
-            if (activeGLRenderer != this || !isValidCanvas())
-                return;
-            const key = String.fromCharCode(event.keyCode).toLowerCase();
-            const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyPressed(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
-            }
-        });
-        document.addEventListener('keydown', (event) => {
-            if (activeGLRenderer != this || !isValidCanvas())
-                return;
-            const key = String.fromCharCode(event.keyCode).toLowerCase();
-            const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyDown(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
-            }
-        });
-        document.addEventListener('keyup', (event) => {
-            if (activeGLRenderer != this || !isValidCanvas())
-                return;
-            const key = String.fromCharCode(event.keyCode).toLowerCase();
-            const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyUp(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
-            }
-        });
-
-        this.__glcanvas.addEventListener("touchstart", (event) => {
-            this.getViewport().onTouchStart(event);
-            event.stopPropagation();
-        }, false);
-        this.__glcanvas.addEventListener("touchmove", (event) => {
-            this.getViewport().onTouchMove(event);
-            event.stopPropagation();
-        }, false);
-        this.__glcanvas.addEventListener("touchend", (event) => {
-            this.getViewport().onTouchEnd(event);
-            event.stopPropagation();
-        }, false);
-        this.__glcanvas.addEventListener("touchcancel", (event) => {
-            this.getViewport().onTouchCancel(event);
-            event.stopPropagation();
-        }, false);
-    }
-
-    getGLCanvas() {
-        return this.__glcanvas;
-    }
-
-    getScreenQuad() {
-        return this.__screenQuad;
-    }
-
-    onWheel(event) {
-        this.__viewports[0].onWheel(event);
-    }
-
-    frameAll(viewportIndex = 0) {
-        this.__viewports[viewportIndex].frameView([this.__scene.getRoot()]);
-    }
-
-    /////////////////////////
-    // Render Items setup
-
-    addPass(pass, passtype=0) {
-
-        if(!this.__passes[passtype])
-            this.__passes[passtype] = [];
-
-        let index = 0;
-        for(let key in this.__passes) {
-            if(key == passtype)
-                break;
-            index += this.__passes[key].length;
-        }
-        index += this.__passes[passtype].length;
-
-        pass.updated.connect(this.requestRedraw.bind(this));
-        pass.init(this.__gl, this.__collector, index);
-        this.__passes[passtype].push(pass);
-        this.requestRedraw();
-        return index;
-    }
-
-    getPass(index) {
-        let offset = 0;
-        for(let key in this.__passes) {
-            const passSet = this.__passes[key];
-            if((index - offset) < passSet.length)
-                return passSet[index - offset];
-            offset += passSet.length;
+        if (this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBuffer.resize(this.__glcanvas.width, this.__glcanvas.height);
+            this.__selectedGeomsBufferFbo.resize();
         }
     }
 
-    findPass(constructor) {
-        for(let key in this.__passes) {
-            const passSet = this.__passes[key];
-            for(let pass of passSet) {
-                if (pass.constructor == constructor)
-                    return pass;
-            }
-        }
+    ////////////////////////////
+    // SelectedGeomsBuffer
+
+    getOutlineColor() {
+        return this.__outlineColor
     }
 
-    getGizmoPass() {
-        return this.__gizmoPass;
+    setOutlineColor(color) {
+        this.__outlineColor = color;
     }
 
-    /////////////////////////
-    // VR Setup
-
-    supportsVR() {
-        return this.__supportVR && navigator.getVRDisplays != null;
-    }
-
-    __setupVRViewport() {
-        return navigator.getVRDisplays().then((displays) => {
-            if (displays.length > 0) {
-                // Always get the last display. Additional displays are added at the end.(Polyfill, HMD)
-                let vrvp = new VRViewport(this, displays[displays.length-1]);
-
-                vrvp.presentingChanged.connect((state)=>{
-
-                    if(state){
-                        vrvp.viewChanged.connect(this.viewChanged.emit);
-                        // vrvp.actionStarted.connect(this.actionStarted.emit);
-                        // vrvp.actionEnded.connect(this.actionEnded.emit);
-                        // vrvp.actionOccuring.connect(this.actionOccuring.emit);
-                        
-                        // Let the passes know that VR is starting.
-                        // They can do things like optimize shaders.
-                        for(let key in this.__passes) {
-                            const passSet = this.__passes[key];
-                            for(let pass of passSet) {
-                                pass.startPresenting();
-                            }
-                        }
-                    }
-                    else {
-                        vrvp.viewChanged.disconnect(this.viewChanged.emit);
-                        // vrvp.actionStarted.disconnect(this.actionStarted.emit);
-                        // vrvp.actionEnded.disconnect(this.actionEnded.emit);
-                        // vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
-
-                        for(let key in this.__passes) {
-                            const passSet = this.__passes[key];
-                            for(let pass of passSet) {
-                                pass.stopPresenting();
-                            }
-                        }
-                    }
-                })
-
-
-                this.__vrViewport = vrvp;
-                this.vrViewportSetup.emit(vrvp);
-            } else {
-                //setStatus("WebVR supported, but no VRDisplays found.")
-                // console.warn("WebVR supported, but no VRDisplays found.");
-            }
+    createSelectedGeomsFbo() {
+        let gl = this.__gl;
+        this.__selectedGeomsBuffer = new GLTexture2D(gl, {
+            type: 'UNSIGNED_BYTE',
+            format: 'RGBA',
+            filter: 'NEAREST',
+            width: this.__glcanvas.width <= 1 ? 1 : this.__glcanvas.width,
+            height: this.__glcanvas.height <= 1 ? 1 : this.__glcanvas.height,
         });
+        this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
+        this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
-    getVRViewport() {
-        return this.__vrViewport;
+    getFbo() {
+        return this.__fbo;
+    }
+
+    createOffscreenFbo(format='RGB') {
+        let targetWidth = this.__glcanvas.width;
+        let targetHeight = this.__glcanvas.height;
+
+        let gl = this.__gl;
+        this.__fwBuffer = new GLTexture2D(gl, {
+            type: 'FLOAT',
+            format,
+            filter: 'NEAREST',
+            width: targetWidth,
+            height: targetHeight
+        });
+        this.__fbo = new GLFbo(gl, this.__fwBuffer, true);
+        this.__fbo.setClearColor(this.__backgroundColor.asArray());
     }
 
     ////////////////////////////
     // Rendering
 
-    isContinuouslyDrawing() {
-        return this.__continuousDrawing;
-    }
-
-    startContinuousDrawing() {
-        if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
-            return;
-
-        let onAnimationFrame = ()=>{
-            if (this.__continuousDrawing) {
-                if (!this.getVRViewport() || !this.getVRViewport().isContinuouslyDrawing())
-                    window.requestAnimationFrame(onAnimationFrame);
-            }
-            this.draw();
-        }
-
-        this.__continuousDrawing = true;
-        window.requestAnimationFrame(onAnimationFrame);
-    }
-
-    stopContinuousDrawing() {
-        this.__continuousDrawing = false;
-    }
-
-    toggleContinuousDrawing() {
-        if (!this.__continuousDrawing) {
-            this.startContinuousDrawing();
-        } else {
-            this.stopContinuousDrawing();
+    drawBackground(renderstate) {
+        if (this.__glBackgroundMap) {
+            if (!this.__glBackgroundMap.isLoaded())
+                return;
+            const gl = this.__gl;
+            gl.depthMask(false);
+            this.__backgroundMapShader.bind(renderstate);
+            const unifs = renderstate.unifs;
+            this.__glBackgroundMap.bindToUniform(renderstate, unifs.backgroundImage);
+            this.__backgroundMapShaderBinding.bind(renderstate);
+            gl.drawQuad();
+        } else if (this.__glEnvMap && this.__glEnvMap.draw) {
+            this.__glEnvMap.draw(renderstate);
         }
     }
 
-    // Request a single redraw, usually in response to a signal/event.
-    requestRedraw() {
+    // drawBackground(renderstate, pos=[0,0], size=[1,-1]) {
+    //     let gl = this.__gl;
+    //     let screenQuad = gl.screenQuad;
+    //     screenQuad.bindShader(renderstate);
+    //     gl.depthMask(false);
+    //     // TODO: Draw the BG for each eye.
+    //     screenQuad.draw(renderstate, this.__backgroundGLTexture, pos, size);
+    // }
 
-        // If a redraw has already been requested, then simply return and wait.
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
-            return false;
-        // return super.requestRedraw();
+    // drawVP(viewport, renderstate) {
+    //     /////////////////////////////////////
+    //     // Debugging 
+    //     const gl = this.__gl;
+    //     if (this.__debugMode > 0) {
+    //         // Bind the default framebuffer
+    //         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    //         gl.viewport(0, 0, this.getWidth(), this.getHeight());
 
-        // If a redraw has already been requested, then simply return and wait.
-        if (this.__redrawRequested || this.__continuousDrawing)
-            return false;
+    //         let displayDebugTexture = this.__debugTextures[this.__debugMode];
+    //         const renderstate = {};
+    //         gl.screenQuad.bindShader(renderstate);
+    //         gl.screenQuad.draw(renderstate, displayDebugTexture);
+    //     } else {
+    //         viewport.draw(renderstate);
 
-        let onAnimationFrame = () => {
-            this.__redrawRequested = false;
-            this.draw();
-        }
-        window.requestAnimationFrame(onAnimationFrame);
-        this.__redrawRequested = true;
-        return true;
-    }
+    //         // this.__gizmoPass.draw(renderstate);
+    //         // viewport.drawOverlays(renderstate);
+    //     }
+    // }
 
-    drawVP(viewport, renderstate) {
-        viewport.draw(renderstate);
-    }
-
-    drawScene(renderstate, vrView = false) {
-
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
-
-        renderstate.profileJSON = {};
+    drawScene(renderstate) {
+        renderstate.envMap = this.__glEnvMap;
+        renderstate.lightmaps = this.__glLightmaps;
         renderstate.boundRendertarget = undefined;
-        renderstate.materialCount = 0;
-        renderstate.drawCalls = 0;
-        renderstate.drawCount = 0;
+        renderstate.boundLightmap = undefined;
+        renderstate.debugLightmaps = this.__debugLightmaps;
+        renderstate.planeDist = this._planeDist;
+        renderstate.planeNormal = this.__cutPlaneNormal;
+        renderstate.exposure = this.__exposure;
+        renderstate.shaderopts = this.__preproc;
 
-        for(let key in this.__passes) {
-            const passSet = this.__passes[key];
-            for(let pass of passSet) {
-                if (pass.enabled)
-                    pass.draw(renderstate);
-            }
-        }
+        if (this.__displayEnvironment)
+            this.drawBackground(renderstate);
 
-        // if (this.__displayStats) {
-            // console.log(JSON.stringify(renderstate.profileJSON, null, ' '));
-            // console.log("materialCount:" + renderstate.materialCount + " drawCalls:" + renderstate.drawCalls + " drawCount:" + renderstate.drawCount);
-        // }
+        super.drawScene(renderstate);
+        // console.log("Draw Calls:" + renderstate['drawCalls']);
     }
 
-    drawSceneSelectedGeoms(renderstate){
-        for(let key in this.__passes) {
-            const passSet = this.__passes[key];
-            for(let pass of passSet) {
-                if (pass.enabled)
-                    pass.drawSelectedGeoms(renderstate);
-            }
-        }
-    }
-    
-    drawSceneGeomData(renderstate){
-        for(let key in this.__passes) {
-            const passSet = this.__passes[key];
-            for(let pass of passSet) {
-                if (pass.enabled)
-                    pass.drawGeomData(renderstate);
-            }
-        }
-    }
 
     draw() {
         if (this.__drawSuspensionLevel > 0)
             return;
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
 
         const gl = this.__gl;
-        const renderstate = {};
+        const renderstate = {
+            viewports: []
+        };
 
-        if (this.__vrViewport) {
-            if (this.__vrViewport.isPresenting()) {
-                this.__vrViewport.draw(renderstate);
+        // if (this.__fbo)
+        //     this.__fbo.bindAndClear(renderstate);
+        // else 
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        if (this.__vrViewport && this.__vrViewport.isPresenting()) {
+            if(!this.__vrViewport.bindAndClear(renderstate))
                 return;
-            } 
+            
             // Cannot upate the view, else it sends signals which
             // end up propagating through the websocket. 
             // TODO: Make the head invisible till active
             // else
             //     this.__vrViewport.updateHeadAndControllers();
         }
-        
-        const len=this.__viewports.length;
-        for(let i=0; i< len; i++){
-            this.drawVP(this.__viewports[i], renderstate);
+        else {
+            for(let vp of this.__viewports){
+                vp.bindAndClear(renderstate);
+            }
         }
 
-        // gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-        // gl.disable(gl.SCISSOR_TEST);
+        this.drawScene(renderstate);
+
+        if (this.__selectedGeomsBufferFbo) {
+            this.__selectedGeomsBufferFbo.bindAndClear();
+            this.drawSceneSelectedGeoms(renderstate);
+
+            // Now render the outlines to the entire screen.
+            const gl = this.__gl;
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+            gl.viewport(0,0,this.__glcanvas.width, this.__glcanvas.height);
+
+            this.__outlineShader.bind(renderstate);
+            const unifs = renderstate.unifs;
+            this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
+            gl.uniform2f(unifs.selectionDataTextureSize.location, this.__glcanvas.width, this.__glcanvas.height);
+            gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
+            this.quad.bindAndDraw(renderstate);
+
+            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        }
+        
+        // /////////////////////////////////////
+        // // Post processing.
+        // if (this.__fbo) {
+        //     const gl = this.__gl;
+
+        //     // Bind the default framebuffer
+        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        //     gl.viewport(...this.region);
+        //     // gl.disable(gl.SCISSOR_TEST);
+
+        //     // this.__glshaderScreenPostProcess.bind(renderstate);
+
+        //     // const unifs = renderstate.unifs;
+        //     // if ('antialiase' in unifs)
+        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+        //     // if ('textureSize' in unifs)
+        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+        //     // if ('gamma' in unifs)
+        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+        //     // if ('exposure' in unifs)
+        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+        //     // if ('tonemap' in unifs)
+        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+
+        //     gl.screenQuad.bindShader(renderstate);
+        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+
+
+        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+        //     // more goem int he next frame then the fbo color tex is being read from and written to 
+        //     // at the same time. (baaaad).
+        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
+        //     // track down.
+        //     gl.bindTexture(gl.TEXTURE_2D, null);
+        // }
+
+        if (this.__vrViewport && this.__vrViewport.isPresenting())
+            this.__vrViewport.submitFrame();
 
         this.redrawOccured.emit();
     }
-
-
-    //////////////////////////////////////////
-    // Static Methods
-
-
-    static registerPass(cls, passtype){
-        if(!registeredPasses[passtype])
-            registeredPasses[passtype] = [];
-        registeredPasses[passtype].push(cls);
-    }
+    ////////////////////////////
+    // Debugging
 };
 
+const GLVisualiveRenderer = GLRenderer;
 
 export {
     GLRenderer,
-    PassType
+    GLVisualiveRenderer
 };
-// export default GLRenderer;

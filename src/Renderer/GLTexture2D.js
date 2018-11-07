@@ -21,6 +21,8 @@ class GLTexture2D extends RefCounted {
         this.__gltex = this.__gl.createTexture();
         this.width = 0;
         this.height = 0;
+        this.textureType = 1; // Default 2d image texture.
+        this.textureDesc = [0,0,0,0]; // To be polulated by derived classes.
         this.__loaded = false;
         this.__bound = false;
         let imageUpdated = () => {
@@ -408,7 +410,14 @@ class GLTexture2D extends RefCounted {
         return this.bindToUniform(renderstate, unif);
     }
 
-    bindToUniform(renderstate, unif, type = 1) {
+    preBind(unif, unifs) {
+        return {
+            textureConnectedUnif: unifs[unif.name+'Connected'],
+            textureDescUnif: unifs[unif.name+'Desc']
+        }
+    }
+
+    bindToUniform(renderstate, unif, bindings) {
         if (!this.__loaded) {
             return false;
         }
@@ -423,17 +432,15 @@ class GLTexture2D extends RefCounted {
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         gl.uniform1i(unif.location, unit);
 
-        const textureConnctedUnif = renderstate.unifs[unif.name + 'Connected'];
-        if (textureConnctedUnif) {
-            gl.uniform1i(textureConnctedUnif.location, type);
-        }
+        if(bindings) {
+            if (bindings.textureConnectedUnif) {
+                gl.uniform1i(bindings.textureConnectedUnif.location, this.textureType);
+            }
 
-        // Note: not all textures are square. (e.g. Lightmaps.)
-        // A more powerfull generic binding would be nice, but this is too simple.
-        // const textureSizeUnif = renderstate.unifs[unif.name+'Size'];
-        // if (textureSizeUnif){
-        //     gl.uniform1i(textureSizeUnif.location, this.width);
-        // }
+            if (bindings.textureDescUnif){
+                this.__gl.uniform4fv(bindings.textureDescUnif.location, this.textureDesc);
+            }
+        }
 
         return true;
     }

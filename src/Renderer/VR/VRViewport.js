@@ -19,35 +19,17 @@ import {
     resourceLoader
 } from '../../SceneTree';
 import {
-    BaseViewport
-} from '../BaseViewport.js';
-import {
-    GLFbo
-} from '../GLFbo.js';
-import {
-    GLTexture2D
-} from '../GLTexture2D.js';
+    GLBaseViewport
+} from '../GLBaseViewport.js';
 import {
     VRHead
 } from './VRHead.js'
 import {
     VRController
 } from './VRController.js'
-// import {
-//     VRToolMoveStage
-// } from './Tools/VRToolMoveStage.js'
-// import {
-//     VRToolHoldObjects
-// } from './Tools/VRToolHoldObjects.js'
-// import {
-//     VRMarkerpenTool
-// } from './Tools/VRMarkerpenTool.js'
-// import {
-//     VRFlyTool
-// } from './Tools/VRFlyTool.js'
 
-class VRViewport extends BaseViewport {
-    constructor(renderer, vrDisplay /*, width, height*/ ) {
+class VRViewport extends GLBaseViewport {
+    constructor(renderer, vrDisplay ) {
         super(renderer);
         this.__vrDisplay = vrDisplay;
 
@@ -91,17 +73,9 @@ class VRViewport extends BaseViewport {
         this.__stageTreeItem.setVisible(false);
         this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
 
-        // Construct the head geom and add it directly to the Gizmo pass.
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 
         this.__vrControllers = [];
-        this.__vrTools = {};
-        this.__vrToolNames = [];
-        this.__currentTool = undefined;
-
-        //////////////////////////////////////////////
-        // UI
-        this.__uivisibile = 0;
 
         //////////////////////////////////////////////
         // Xfos
@@ -117,9 +91,6 @@ class VRViewport extends BaseViewport {
 
         //////////////////////////////////////////////
         // Signals
-        // this.showInHandUI = new Signal();
-        // this.hideInHandUI = new Signal();
-        // this.pointerEvent = new Signal();
         this.resized = new Signal();
 
         // Signals to abstract the user view.
@@ -127,11 +98,6 @@ class VRViewport extends BaseViewport {
         // simply emit the new VR data.
         this.viewChanged = new Signal();
         this.presentingChanged = new Signal();
-
-        // // Stroke Signals
-        // this.actionStarted = new Signal();
-        // this.actionEnded = new Signal();
-        // this.actionOccuring = new Signal();
 
         this.controllerAdded = new Signal();
         this.controllerButtonDown = new Signal();
@@ -156,55 +122,8 @@ class VRViewport extends BaseViewport {
         window.addEventListener('vrdisplayactivate', this.startPresenting.bind(this), false);
         window.addEventListener('vrdisplaydeactivate', this.stopPresenting.bind(this), false);
 
-
-
-        //////////////////////////////////////////////
-        // Tools Setup
-        // if (SystemDesc.isMobileDevice) {
-        //     this.__vrTools['FlyTool'] = new VRFlyTool(this, this.__vrhead, this.__vrControllers);
-
-        //     this.selectTool('FlyTool');
-        // } else {
-        //     this.__vrTools['VRToolMoveStage'] = new VRToolMoveStage(this, this.__vrhead, this.__vrControllers);
-        //     this.__vrTools['VRToolHoldObjects'] = new VRToolHoldObjects(this, this.__vrhead, this.__vrControllers);
-        //     this.__vrTools['Markerpen'] = new VRMarkerpenTool(this, this.__vrhead, this.__vrControllers);
-
-        //     this.__vrToolNames.push('VRToolMoveStage');
-        //     this.__vrToolNames.push('VRToolHoldObjects');
-        //     this.__vrToolNames.push('Markerpen');
-
-        //     let markerpenTool = this.__vrTools['Markerpen'];
-        //     markerpenTool.strokeStarted.connect((data) => {
-        //         this.actionStarted.emit(data);
-        //     });
-        //     markerpenTool.strokeEnded.connect((data) => {
-        //         this.actionEnded.emit(data);
-        //     });
-        //     markerpenTool.strokeSegmentAdded.connect((data) => {
-        //         this.actionOccuring.emit(data);
-        //     });
-
-        //     this.selectTool('VRToolMoveStage');
-        //     this.__currentToolIndex = 0;
-        //     //this.selectTool('VRToolHoldObjects');
-        // }
-
         // Start the update loop that then drives the VRHead + VRController transforms in the scene.
         //this.startContinuousDrawing();
-
-        // TODO: Make mobile phones start presenting immedietly.
-        // if(SystemDesc.isMobileDevice && this.__vrDisplay) {
-        //     // Update the view usng the VR
-        //     const frameData = this.__vrViewport.getFrameData();
-        //     if(frameData.pose.orientation) {
-        //         const xfo = this.__viewports[0].getCamera().getLocalXfo();
-        //         if(frameData.pose.position)
-        //             xfo.tr.setDataArray(frameData.pose.position);
-        //         if(frameData.pose.orientation)
-        //             xfo.ori.setDataArray(frameData.pose.orientation);
-        //         this.__viewports[0].getCamera().setLocalXfo(xfo);
-        //     }
-        // }
 
     }
 
@@ -241,22 +160,6 @@ class VRViewport extends BaseViewport {
         return this.__vrControllers;
     }
 
-    resize(width, height) {
-        this.__canvasWidth = width;
-        this.__canvasHeight = height;
-        // TODO: Support adaptive scaling of the viewport size to
-        // enable higher Fps in heavy scenes. If the Fps drops below
-        // a certain threshold, we can drop the viewport resolution.
-        this.__width = this.__canvasWidth * this.__canvasSizeScale.x;
-        this.__height = this.__canvasHeight * this.__canvasSizeScale.y;
-
-        if (this.__fbo) {
-            this.__fwBuffer.resize(this.__width, this.__height);
-            this.__fbo.resize();
-        }
-        this.resized.emit();
-    }
-
     ////////////////////////////
     // Continuous Rendering
 
@@ -274,7 +177,6 @@ class VRViewport extends BaseViewport {
         const onAnimationFrame = () => {
             if (this.__continuousDrawing)
                 this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
-            this.__frameRequested = true;
             this.__renderer.draw();
         }
         this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
@@ -344,6 +246,7 @@ class VRViewport extends BaseViewport {
                 Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
                 Math.max(leftEye.renderHeight, rightEye.renderHeight)
             ];
+            this.region = [0, 0, this.__hmdCanvasSize[0], this.__hmdCanvasSize[1]];
 
             this.__stageTreeItem.setVisible(true);
 
@@ -364,17 +267,10 @@ class VRViewport extends BaseViewport {
             }
 
             this.startContinuousDrawing();
-
             this.presentingChanged.emit(true);
         } else {
-
             this.stopContinuousDrawing();
-
             this.__stageTreeItem.setVisible(false);
-            // this.__vrhead.setVisible(false);
-            // for (let vrController of this.__vrControllers)
-            //     vrController.setVisible(false);
-
             this.presentingChanged.emit(false);
         }
 
@@ -382,46 +278,7 @@ class VRViewport extends BaseViewport {
     }
 
     ////////////////////////////
-    // Events
-    onMouseDown(event) {
-        return false;
-    }
-    onMouseUp(event) {
-        return false;
-    }
-    onMouseMove(event) {
-        return false;
-    }
-
-    onKeyPressed(key) {
-        switch (key) {
-            case "":
-                if (this.__vrDisplay.isPresenting)
-                    this.stopPresenting();
-                return true;
-        }
-        return false;
-    }
-
-    onKeyDown(key) {
-        return false;
-    }
-
-    onKeyUp(key) {
-        console.log(key);
-        return false;
-    }
-
-    ////////////////////////////
     // Controllers
-
-    selectTool(name) {
-        console.log("activateTool:" + name + " this.__currentTool:" + (this.__currentTool ? this.__currentTool.constructor.name : ""));
-        if (this.__currentTool != this.__vrTools[name]) {
-            this.__currentTool = this.__vrTools[name];
-            this.__currentTool.activateTool();
-        }
-    }
 
     updateHeadAndControllers() {
 
@@ -434,101 +291,14 @@ class VRViewport extends BaseViewport {
             if (gamepad && gamepad.pose) {
                 if (!this.__vrControllers[id]) {
                     const vrController = new VRController(this, id);
-                    vrController.touchpadTouched.connect((vals) => {
-                        // Disabling Changing tools for now till it is solid.
-                        // if (vals[1] > 0) {
-                        //     this.__currentToolIndex = (this.__currentToolIndex + 1) % this.__vrToolNames.length;
-                        // } else if (vals[1] < 0) {
-                        //     this.__currentToolIndex--;
-                        //     if (this.__currentToolIndex < 0)
-                        //         this.__currentToolIndex = this.__vrToolNames.length - 1;
-                        // }
-                        // this.selectTool(this.__vrToolNames[this.__currentToolIndex]);
-                    });
-
-                    // vrController.showInHandUI.connect(() => {
-                    //     this.__currentTool.deactivateTool();
-                    //     this.__uivisibile++;
-                    //     for (let controller of this.__vrControllers) {
-                    //         if (controller != vrController && !controller.uivisibile)
-                    //             controller.showPointer();
-                    //     }
-                    //     this.showInHandUI.emit(id, vrController);
-                    // });
-                    // vrController.hideInHandUI.connect(() => {
-                    //     this.__currentTool.activateTool();
-                    //     this.__uivisibile--;
-                    //     if (this.__uivisibile > 0) // switch to pointer mode.
-                    //         vrController.showPointer();
-                    //     else {
-                    //         // Hide all pointers
-                    //         for (let controller of this.__vrControllers) {
-                    //             if (controller != vrController)
-                    //                 controller.hidePointer();
-                    //         }
-                    //     }
-                    //     this.hideInHandUI.emit(id, vrController);
-                    // });
-
-
-                    // const sendEventToVisibleUIs = (xfo, eventNames, args) => {
-                    //     const pointervec = xfo.ori.getZaxis().negate();
-                    //     const ray = new Ray(xfo.tr, pointervec);
-                    //     for (let controller of this.__vrControllers) {
-                    //         if (controller.uivisibile) {
-                    //             const planeXfo = controller.getUIPlaneXfo();
-                    //             const plane = new Ray(planeXfo.tr, planeXfo.ori.getZaxis());
-                    //             const res = ray.intersectRayPlane(plane);
-                    //             if (res <= 0) {
-                    //                 vrController.setPointerLength(1.0);
-                    //                 return;
-                    //             }
-                    //             const hitOffset = xfo.tr.add(pointervec.scale(res)).subtract(plane.start);
-                    //             const x = hitOffset.dot(planeXfo.ori.getXaxis()) / planeXfo.sc.x;
-                    //             const y = hitOffset.dot(planeXfo.ori.getYaxis()) / planeXfo.sc.y;
-                    //             if (Math.abs(x) > 0.5 || Math.abs(y) > 0.5) {
-                    //                 vrController.setPointerLength(1.0);
-                    //                 return;
-                    //             }
-                    //             vrController.setPointerLength(res);
-                    //             const dim = controller.getUIDimensions();
-                    //             args.clientX = Math.round((x * dim.width) + (dim.width / 2));
-                    //             args.clientY = Math.round((y * -dim.height) + (dim.height / 2));
-                    //             for (let e of eventNames) {
-                    //                 this.pointerEvent.emit(controller, e, args);
-                    //             }
-                    //         }
-                    //     }
-                    // }
-                    // vrController.buttonPressed.connect(() => {
-                    //     if (!vrController.pointerVisible)
-                    //         return;
-                    //     const xfo = vrController.getPointerXfo();
-                    //     sendEventToVisibleUIs(xfo, ['mousedown'], {
-                    //         button: 0
-                    //     });
-                    // });
-
-                    // vrController.buttonReleased.connect(() => {
-                    //     if (!vrController.pointerVisible)
-                    //         return;
-                    //     const xfo = vrController.getPointerXfo();
-                    //     sendEventToVisibleUIs(xfo, ['mouseup', 'click'], {
-                    //         button: 0
-                    //     });
-                    // });
-
-                    // vrController.controllerMoved.connect((xfo) => {
-                    //     if (!vrController.pointerVisible)
-                    //         return;
-                    //     sendEventToVisibleUIs(xfo, ['mousemove'], {});
-                    // });
 
                     vrController.buttonPressed.connect((event) => {
+                        event.vrviewport = this;
                         this.controllerButtonDown.emit(event, this)
                     });
 
                     vrController.buttonReleased.connect((event) => {
+                        event.vrviewport = this;
                         this.controllerButtonUp.emit(event, this)
                     });
 
@@ -539,10 +309,6 @@ class VRViewport extends BaseViewport {
                 this.__vrControllers[id].update(gamepad);
                 id++;
             }
-        }
-
-        if (this.__uivisibile == 0 && this.__currentTool) {
-            this.__currentTool.evalTool();
         }
 
         /////////////////////////
@@ -556,12 +322,9 @@ class VRViewport extends BaseViewport {
     }
 
 
-    draw(renderstate) {
-        if (!this.__frameRequested) {
-            console.log("hey!!");
-            return;
-        }
+    bindAndClear(renderstate) {
 
+        super.clear();
 
         this.__vrDisplay.getFrameData(this.__frameData);
 
@@ -584,10 +347,10 @@ class VRViewport extends BaseViewport {
 
 
         this.updateHeadAndControllers();
-        this.bindAndClear(renderstate);
+        // this.bindAndClear(renderstate);
 
 
-        renderstate.viewport = this;
+        // renderstate.viewport = this;
         // renderstate.cameraMatrix = this.__standingMatrix;
         renderstate.viewScale = 1.0 / this.__stageScale;
         renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
@@ -597,47 +360,45 @@ class VRViewport extends BaseViewport {
         const height = this.__hmdCanvasSize[1];
         const gl = this.__renderer.gl;
 
-        gl.viewport(0, 0, width * 0.5, height);
+        // gl.viewport(0, 0, width * 0.5, height);
         this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
         this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
-        renderstate.viewMatrix = this.__leftViewMatrix;
-        renderstate.projectionMatrix = this.__leftProjectionMatrix;
-        renderstate.eye = 0; //'L';
+        // renderstate.viewMatrix = this.__leftViewMatrix;
+        // renderstate.projectionMatrix = this.__leftProjectionMatrix;
+        // renderstate.eye = 0; //'L';
 
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
+        // if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
+        //     this.drawBackground(renderstate);
+        // }
 
-        this.__renderer.drawScene(renderstate);
+        // this.__renderer.drawScene(renderstate);
 
         gl.viewport(width * 0.5, 0, width * 0.5, height);
         this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
         this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
         renderstate.viewMatrix = this.__rightViewMatrix;
         renderstate.projectionMatrix = this.__rightProjectionMatrix;
-        renderstate.eye = 1; //'R';
 
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
+        renderstate.viewports.push({
+            region: [0, 0, width * 0.5, height],
+            cameraMatrix: renderstate.cameraMatrix,
+            viewMatrix: this.__leftViewMatrix,
+            projectionMatrix: this.__leftProjectionMatrix
+        })
+        renderstate.viewports.push({
+            region: [width * 0.5, 0, width * 0.5, height],
+            cameraMatrix: renderstate.cameraMatrix,
+            viewMatrix: this.__rightViewMatrix,
+            projectionMatrix: this.__rightProjectionMatrix
+        })
 
-        this.__renderer.drawScene(renderstate);
+        return true;
+    }
 
+    submitFrame(){
         this.__vrDisplay.submitFrame();
-        this.__frameRequested = false;
-
-        // Note: the renderer will be refactored to render both viewports
-        // in a single pass, and then emit this signal. For now this
-        // is a very quick hack to make automatic exposure controlls
-        // work in VR.
-        this.__renderer.redrawOccured.emit();
     }
 
-    drawOverlays(renderstate) {
-        // No overlays in VR
-        //(overlays will be 3d scene grometries at an appropriate dist to the head... maybe.)
-        // Instead we will use the controllers and attach widgets there.
-    }
 };
 
 export {

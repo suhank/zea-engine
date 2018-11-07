@@ -47,15 +47,11 @@ testingHarness.registerTest('Labels', (domElement, resources)=> {
     // asset2.fromJSON(j);
     // scene.getRoot().addChild(asset2);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(5, 6, 3), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
     renderer.resumeDrawing();
 
-    //////////////////////////////////
-    // Setup the UI
-    const uicontroller = new Visualive.UIController();
-    VisualiveUI.renderUI(renderer, uicontroller);
     
 });

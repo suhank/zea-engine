@@ -13,7 +13,7 @@ testingHarness.registerTest('TestRender2Points', (domElement, resources) => {
     const geomItem = new Visualive.GeomItem('geomItem', points, material);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2.0, 1.0, 5.0), new Visualive.Vec3(0.0, 0.0, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -35,7 +35,7 @@ testingHarness.registerTest('TestRenderPointCloud', (domElement, resources) => {
     const geomItem = new Visualive.GeomItem('geomItem', points, material);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().setBackgroundColor(new Visualive.Color(0.0, 0.0, 0.0));
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2.0, 1.0, 5.0), new Visualive.Vec3(0.0, 0.0, 0.0));
     renderer.setScene(scene);

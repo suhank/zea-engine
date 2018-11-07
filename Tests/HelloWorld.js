@@ -1,7 +1,7 @@
 ﻿
 testingHarness.registerTest('HelloWorld', (domElement, resources) => { 
     const scene = new Visualive.Scene(resources);
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
 
     renderer.setScene(scene);
     renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);

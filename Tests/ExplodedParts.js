@@ -145,23 +145,9 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 55, 20), new Visualive.Vec3(12, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
-
-    //////////////////////////////////
-    // Setup the UI
-
-    // const sliderController = new Visualive.SliderController(explodedPartsOp.getParameter('Explode'));
-
-    // const widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController);
-
-    // const uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
 
 });

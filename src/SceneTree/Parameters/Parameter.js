@@ -61,7 +61,6 @@ class BaseParameter extends RefCounted {
     }
 
     getOwner() {
-        // return this.__private.get('ownerItem');
         return this.getRefer(0);
     }
 

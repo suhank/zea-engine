@@ -21,8 +21,8 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    // const renderer = new Visualive.GLSimpleRenderer(domElement);
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    // const renderer = new Visualive.GLRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(18, 17, 14), new Visualive.Vec3(0, 0, 1));
     renderer.exposure = 1.0;
@@ -43,9 +43,6 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
         ));
     scene.getRoot().addChild(asset);
 
-
-
-    const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 
     /////////////////////////////////////

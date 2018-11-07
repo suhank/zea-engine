@@ -1,10 +1,10 @@
 import {
-    BaseItem
-} from '../SceneTree/BaseItem.js';
+    Signal
+} from '../Utilities';
 import {
+    BaseItem,
     sgFactory
-} from '../SceneTree/SGFactory.js';
-
+} from '../SceneTree';
 
 class StateMachine extends BaseItem {
     constructor(name) {
@@ -13,12 +13,20 @@ class StateMachine extends BaseItem {
         this.__currentState;
         this.__initialStateName;
 
+        this.stateChanged = new Signal();
+
         window.onpopstate = (event) => {
             if (event.state && event.state.stateName) {
                 this.activateState(event.state.stateName, false);
             } else {
                 this.activateState(this.getInitialState(), false);
             }
+        }
+
+        // Manually invoke the callbacks for cases where the StateMAchine
+        // is not beingn constructed by the SGFactory.
+        if(!sgFactory.isConstructing()) {
+            sgFactory.invokeCallbacks(this)
         }
     }
 
@@ -36,7 +44,7 @@ class StateMachine extends BaseItem {
         return this.__states[name];
     }
 
-    activateState(name, addToHistory = true) {
+    activateState(name) {
         console.log("StateMachine.activateState:" + name)
         if (!this.__states[name])
             throw ("Invalid state transtion:" + name)
@@ -46,6 +54,8 @@ class StateMachine extends BaseItem {
             this.__currentState.deactivate();
         this.__currentState = this.__states[name];
         this.__currentState.activate();
+
+        this.stateChanged.emit(name)
     }
 
     getActiveState() {

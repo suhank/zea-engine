@@ -297,7 +297,7 @@ class GLBillboardsPass extends GLPass {
         gl.blendEquation(gl.FUNC_ADD);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        let cameraPos = renderstate.cameraMatrix.translation;
+        let cameraPos = renderstate.viewXfo.tr;
         let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
         // Avoid sorting if the camera did not move more than 3 meters.
         if (dist > this.__threshold) {
@@ -329,8 +329,39 @@ class GLBillboardsPass extends GLPass {
                 gl.uniform4fv(unifs.billboardData.location, this.__billboardDataArray[i]);
                 gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i]);
                 gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.__billboards[i].imageIndex));
-                ;
-                gl.drawQuad();
+                
+                let eye = 0;
+                for(let vp of renderstate.viewports) {
+                    gl.viewport(...vp.region);
+                    {
+                        const unif = unifs.viewMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.cameraMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.projectionMatrix;
+                        if (unif) {
+                            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                        }
+                    }
+                    {
+                        const unif = unifs.eye;
+                        if (unif) {
+                            // Left or right eye, when rendering sterio VR.
+                            gl.uniform1i(unif.location, eye);
+                        }
+                    }
+                    gl.drawQuad();
+
+                    eye++;
+                }
             };
         }
         else
@@ -349,7 +380,38 @@ class GLBillboardsPass extends GLPass {
             }
 
 
-            gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
+            let eye = 0;
+            for(let vp of renderstate.viewports) {
+                gl.viewport(...vp.region);
+                {
+                    const unif = unifs.viewMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.cameraMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.projectionMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.eye;
+                    if (unif) {
+                        // Left or right eye, when rendering sterio VR.
+                        gl.uniform1i(unif.location, eye);
+                    }
+                }
+                gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
+
+                eye++;
+            }
         }
 
         gl.disable(gl.BLEND);

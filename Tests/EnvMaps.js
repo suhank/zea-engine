@@ -54,7 +54,7 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();

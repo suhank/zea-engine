@@ -178,7 +178,7 @@ class ParameterOwner extends RefCounted {
 
     toJSON(context) {
 
-        let paramsJSON = {};
+        const paramsJSON = {};
         let savedParams = 0;
         for (let param of this.__params){
             if(param.numRefs() > 1 && param.getRefIndex(this) != 0) {

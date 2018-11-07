@@ -350,18 +350,28 @@ class TreeItem extends BaseItem {
         return uniqueName;
     }
 
-    insertChild(childItem, index, maintainXfo = true, checkCollisions = true) {
+    insertChild(childItem, index, maintainXfo = false, checkCollisions = true) {
 
         if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
             throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
         if (!(childItem instanceof TreeItem))
             throw ("Object is is not a tree item :" + childItem.constructor.name);
 
+        if (childItem.isDestroyed()) 
+            throw ("childItem is destroyed:" + childItem.getPath());
+
+        childItem.addRef(this)
+        if(childItem.getOwner() != undefined)
+            childItem.getOwner().removeChildByHandle(childItem)
+
         let newLocalXfo;
         if (maintainXfo)
             newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
         this.__childItems.splice(index, 0, childItem);
         childItem.setOwner(this);
+
+        // Remove the temporary ref.
+        childItem.removeRef(this)
 
         if (maintainXfo)
             childItem.setLocalXfo(newLocalXfo);
@@ -379,10 +389,11 @@ class TreeItem extends BaseItem {
         this._setBoundingBoxDirty();
         this.childAdded.emit(childItem, index);
 
+
         return childItem;
     }
 
-    addChild(childItem, maintainXfo = true, checkCollisions = true) {
+    addChild(childItem, maintainXfo = false, checkCollisions = true) {
         const index = this.__childItems.length;
         this.insertChild(childItem, index, maintainXfo, checkCollisions);
         return index;

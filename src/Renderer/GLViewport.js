@@ -12,33 +12,23 @@ import {
     Signal
 } from '../Utilities';
 import {
-    Plane,
     Camera
 } from '../SceneTree';
 import {
-    BaseViewport
-} from './BaseViewport.js';
+    GLBaseViewport
+} from './GLBaseViewport.js';
 import {
     GLFbo
 } from './GLFbo.js';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
-// import {
-//     PostProcessing
-// } from './Shaders/PostProcessing.js';
-import {
-    OutlinesShader
-} from './Shaders/OutlinesShader.js';
-import {
-    GLMesh
-} from './GLMesh.js';
 
 import {
     CameraMouseAndKeyboard
 } from '../SceneTree';
 
-class GLViewport extends BaseViewport {
+class GLViewport extends GLBaseViewport {
     constructor(renderer, name, width, height) {
         super(renderer);
         this.__name = name;
@@ -54,10 +44,6 @@ class GLViewport extends BaseViewport {
         this.__tonemap = true;
         this.__gamma = 2.2;
         this.__antialiase = false;
-
-        // this.__mouseOverGizmo = undefined;
-        this.__manipGizmo = undefined;
-        this.__mouseDownPos = new Vec2();
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFbo = undefined;
@@ -78,7 +64,7 @@ class GLViewport extends BaseViewport {
         this.mouseDown = new Signal();
         this.mouseMoved = new Signal();
         this.mouseUp = new Signal();
-        // this.mouseDownOnGeom = new Signal();
+        this.mouseDownOnGeom = new Signal();
         this.mouseWheel = new Signal();
 
         this.touchStart = new Signal();
@@ -89,9 +75,6 @@ class GLViewport extends BaseViewport {
         this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
         // this.__glshaderScreenPostProcess = new PostProcessing(gl);
-        this.__outlineShader = new OutlinesShader(gl);
-        this.__outlineColor = new Color("#03E3AC")
-        this.quad = new GLMesh(gl, new Plane(1, 1));
 
         this.setCamera(new Camera('Default'));
         this.setManipulator(new CameraMouseAndKeyboard());
@@ -99,17 +82,8 @@ class GLViewport extends BaseViewport {
 
         this.resize(width, height);
         // this.createOffscreenFbo();
-
-        this.createSelectedGeomsFbo();
     }
 
-    getOutlineColor() {
-        return this.__outlineColor
-    }
-
-    setOutlineColor(color) {
-        this.__outlineColor = color;
-    }
 
     resize(width, height) {
         super.resize(width, height);
@@ -120,7 +94,6 @@ class GLViewport extends BaseViewport {
             this.__geomDataBuffer.resize(this.__width, this.__height);
             this.__geomDataBufferFbo.resize();
         }
-        this.region = [this.__x, this.__y, this.__width, this.__height];
     }
 
     getCamera() {
@@ -129,17 +102,21 @@ class GLViewport extends BaseViewport {
 
     setCamera(camera) {
         this.__camera = camera;
-        this.__camera.viewMatChanged.connect(() => {
+        const globalXfoParam = camera.getParameter('GlobalXfo')
+        const getCameraParams = ()=>{
+            this.__cameraXfo = globalXfoParam.getValue()
+            this.__cameraMat = this.__cameraXfo.toMat4()
+            this.__viewMat = this.__cameraMat.inverse()
+        }
+        getCameraParams();
+        globalXfoParam.valueChanged.connect(() => {
+            getCameraParams()
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'CameraAndPointer',
-                viewXfo: this.__camera.getGlobalXfo()
+                viewXfo: this.__cameraXfo
             });
         });
-        // this.__camera.clippingRangesChanged.connect(()=>{
-        //     this.__updateProjectionMatrix();
-        //     this.updated.emit();
-        // });
         this.__camera.projectionParamChanged.connect(() => {
             this.__updateProjectionMatrix();
             this.updated.emit();
@@ -163,22 +140,6 @@ class GLViewport extends BaseViewport {
         this.__cameraManipulator = manipulator;
         if(this.__cameraManipulator && this.__cameraManipulator.movementFinished)
             this.__cameraManipulator.movementFinished.connect(this.renderGeomDataFbo);
-    }
-
-    setGizmoPass(gizmoPass) {
-        this.__gizmoPass = gizmoPass;
-    }
-
-    getCameraMatrix() {
-        return this.__camera.getGlobalXfo().toMat4();
-    }
-
-    getViewMatrix() {
-        return this.__camera.getViewMatrix();
-    }
-
-    getProjectionMatrix() {
-        return this.__projectionMatrix;
     }
 
     __updateProjectionMatrix() {
@@ -215,7 +176,7 @@ class GLViewport extends BaseViewport {
         sy = (sy * 2.0) - 1.0;
 
         // Transform the origin from camera local to world space
-        const cameraMat = this.getCameraMatrix();
+        const cameraMat = this.__cameraMat;
 
         const projInv = this.__projectionMatrix.inverse();
         if (projInv == null) // Sometimes this happens, not sure why...
@@ -270,20 +231,6 @@ class GLViewport extends BaseViewport {
         return this.__geomDataBufferFbo;
     }
 
-    __initRenderState(renderstate) {
-        renderstate.viewXfo = this.__camera.getGlobalXfo();
-        renderstate.viewMatrix = this.getViewMatrix();
-        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
-        renderstate.projectionMatrix = this.getProjectionMatrix();
-        renderstate.isOrthographic = this.__camera.getIsOrthographic();
-        // renderstate.camera = this.__camera; // Note: in VR, we have no camera.
-        renderstate.viewportFrustumSize = this.__frustumDim;
-        renderstate.fovY = this.__camera.getFov(),
-        renderstate.viewScale = 1.0;
-        renderstate.region = this.region;
-        renderstate.eye = 0; // 0==Left, 1==Right;,
-    }
-
     renderGeomDataFbo() {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBufferFbo.bindAndClear();
@@ -292,7 +239,8 @@ class GLViewport extends BaseViewport {
                 drawCalls: 0,
                 drawCount: 0,
                 profileJSON: {},
-                shaderopts: this.__renderer.getShaderPreproc()
+                shaderopts: this.__renderer.getShaderPreproc(),
+                viewports: []
             };
             this.__initRenderState(renderstate);
             this.__renderer.drawSceneGeomData(renderstate);
@@ -300,11 +248,20 @@ class GLViewport extends BaseViewport {
         }
     }
 
-    getGeomDataAtPos(screenPos) {
+    getGeomDataAtPos(screenPos, mouseRay) {
         if (this.__geomDataBufferFbo) {
+
+            // cache the intersection tests result so subsequent queries will return the same value. 
+            // Note: every new mouse event will generate a new mousePos value, so the cache
+            // is only valid for a given event propagation, and for that exact mousePos value.
+            if(screenPos === this.__screenPos){
+                return this.__intersectionData;
+            }
+            this.__screenPos = screenPos;
+            this.__intersectionData = null;
+
             const gl = this.__renderer.gl;
             gl.finish();
-            // Allocate a 1 pixel block.
 
             this.__geomDataBufferFbo.bindForReading();
 
@@ -319,6 +276,7 @@ class GLViewport extends BaseViewport {
             // }
             // logGeomData();
 
+            // Allocate a 1 pixel block and read grom the GeomData buffer.
             let passId, geomData;
             if (gl.floatGeomBuffer) {
                 geomData = new Float32Array(4);
@@ -338,9 +296,10 @@ class GLViewport extends BaseViewport {
             const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
 
             if (geomItemAndDist) {
-                const mouseRay = this.calcRayFromScreenPos(screenPos);
+                if(!mouseRay)
+                    mouseRay = this.calcRayFromScreenPos(screenPos);
                 const intersectionPos = mouseRay.start.add(mouseRay.dir.scale(geomItemAndDist.dist));
-                return {
+                this.__intersectionData = {
                     screenPos,
                     mouseRay: mouseRay,
                     intersectionPos,
@@ -348,6 +307,7 @@ class GLViewport extends BaseViewport {
                     dist: geomItemAndDist.dist
                 };
             }
+            return this.__intersectionData;
         }
     }
 
@@ -407,47 +367,53 @@ class GLViewport extends BaseViewport {
 
     onMouseDown(event) {
 
-        this.__mouseDownPos = this.__eventMousePos(event);
-        this.__mouseDownGeom = undefined;
+        const mousePos = this.__eventMousePos(event);
+
+        event.viewport = this;
+        event.mousePos = mousePos;
+        event.mouseRay = this.calcRayFromScreenPos(mousePos);
 
         if (event.button == 0) {
-            const intersectionData = this.getGeomDataAtPos(this.__mouseDownPos);
+            const intersectionData = this.getGeomDataAtPos(mousePos, event.mouseRay);
             if (intersectionData != undefined) {
                 // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
                 // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-                this.__mouseDownGeom = intersectionData.geomItem;
                 event.intersectionData = intersectionData;
-                this.__mouseDownGeom.onMouseDown(event, intersectionData);
+                intersectionData.geomItem.onMouseDown(event, intersectionData);
                 if(event.vleStopPropagation == true)
                     return;
 
-                // this.mouseDownOnGeom.emit(event, this.__mouseDownGeom, intersectionData);
-                // if(event.vleStopPropagation == true)
-                //     return;
+                this.mouseDownOnGeom.emit(event);
+                if(event.vleStopPropagation == true)
+                    return;
             }
 
             if (this.__cameraManipulator) {
                 this.__cameraManipulatorDragging = true;
-                this.__cameraManipulator.onDragStart(event, this.__mouseDownPos, this);
+                this.__cameraManipulator.onDragStart(event, mousePos, this);
                 return;
             }
         }
 
-        this.mouseDown.emit(event, this.__mouseDownPos, this);
+
+        this.mouseDown.emit(event, mousePos, this);
 
         return false;
     }
 
     onMouseUp(event) {
-        const mouseUpPos = this.__eventMousePos(event);
+        const mousePos = this.__eventMousePos(event);
 
         if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-            this.__cameraManipulator.onDragEnd(event, mouseUpPos, this);
+            this.__cameraManipulator.onDragEnd(event, mousePos, this);
             this.__cameraManipulatorDragging = false;
             return;
         }
 
-        this.mouseUp.emit(event, mouseUpPos, this);
+        event.viewport = this;
+        event.mousePos = mousePos;
+        event.mouseRay = this.calcRayFromScreenPos(mousePos);
+        this.mouseUp.emit(event, mousePos, this);
 
         return false;
     }
@@ -460,13 +426,16 @@ class GLViewport extends BaseViewport {
 
         const mousePos = this.__eventMousePos(event);
 
+
         if (this.__cameraManipulator && this.__cameraManipulatorDragging){
             this.__cameraManipulator.onDrag(event, mousePos, this);
             return;
         }
 
+        event.viewport = this;
+        event.mousePos = mousePos;
+        event.mouseRay = this.calcRayFromScreenPos(mousePos);
         this.mouseMoved.emit(event, mousePos, this);
-
         return false;
     }
 
@@ -475,6 +444,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onKeyPressed(key, event, this);
             return;
         }
+        event.viewport = this;
         this.keyPressed.emit(key, event, this);
         return false;
     }
@@ -483,6 +453,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onKeyDown(key, event, this);
             return;
         }
+        event.viewport = this;
         this.keyDown.emit(key, event, this);
     }
 
@@ -491,6 +462,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onKeyUp(key, event, this);
             return;
         }
+        event.viewport = this;
         this.keyUp.emit(key, event, this);
     }
 
@@ -499,6 +471,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onWheel(event, this);
             return;
         }
+        event.viewport = this;
         this.mouseWheel.emit(event, this);
     }
 
@@ -508,6 +481,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onTouchStart(event, this);
             return;
         }
+        event.viewport = this;
         this.touchStart.emit(event, this);
     }
 
@@ -516,6 +490,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onTouchMove(event, this);
             return;
         }
+        event.viewport = this;
         this.touchMove.emit(event, this);
     }
 
@@ -524,6 +499,7 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onTouchEnd(event, this);
             return;
         }
+        event.viewport = this;
         this.touchEnd.emit(event, this);
     }
 
@@ -532,82 +508,52 @@ class GLViewport extends BaseViewport {
             this.__cameraManipulator.onTouchCancel(event, this);
             return;
         }
+        event.viewport = this;
         this.touchCancel.emit(event, this);
     }
 
 
     ////////////////////////////
     // Rendering
-    draw(renderstate) {
-        this.bindAndClear(renderstate);
 
+    __initRenderState(renderstate) {
+        // console.log(this.__viewMat.toString())
+        renderstate.viewXfo = this.__cameraXfo;
+        renderstate.viewScale = 1.0;
+        renderstate.viewports.push({
+            region: this.region,
+            cameraMatrix: this.__cameraMat,
+            viewMatrix: this.__viewMat,
+            projectionMatrix: this.__projectionMatrix,
+            viewportFrustumSize: this.__frustumDim,
+            isOrthographic: this.__camera.getIsOrthographic(),
+            fovY: this.__camera.getFov()
+        })
+        // renderstate.viewports.push({
+        //     region: [this.region[0], this.region[1], this.region[2]*0.5, this.region[3]],
+        //     cameraMatrix: this.__cameraMat,
+        //     viewMatrix: this.__viewMat,
+        //     projectionMatrix: this.__projectionMatrix,
+        //     viewportFrustumSize: this.__frustumDim,
+        //     isOrthographic: this.__camera.getIsOrthographic(),
+        //     fovY: this.__camera.getFov()
+        // })
+        // renderstate.viewports.push({
+        //     region: [this.region[2]*0.5, this.region[1], this.region[2]*0.5, this.region[3]],
+        //     cameraMatrix: this.__cameraMat,
+        //     viewMatrix: this.__viewMat,
+        //     projectionMatrix: this.__projectionMatrix,
+        //     viewportFrustumSize: this.__frustumDim,
+        //     isOrthographic: this.__camera.getIsOrthographic(),
+        //     fovY: this.__camera.getFov()
+        // })
+    }
+
+    bindAndClear(renderstate) {
+        this.clear(renderstate);
         this.__initRenderState(renderstate);
-
-        if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-            this.drawBackground(renderstate);
-        }
-
-        this.__renderer.drawScene(renderstate, false);
-        // To see the Geom data uncomment this line.
-        // this.__renderer.drawSceneGeomData(renderstate);
-
-        if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBufferFbo.bindAndClear();
-            this.__renderer.drawSceneSelectedGeoms(renderstate);
-            const gl = this.__renderer.getGL();
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(...this.region);
-
-            this.__outlineShader.bind(renderstate);
-            const unifs = renderstate.unifs;
-            this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-            gl.uniform2f(unifs.selectionDataTextureSize.location, this.region[2], this.region[3]);
-            gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
-            this.quad.bindAndDraw(renderstate);
-        }
-        
-        // /////////////////////////////////////
-        // // Post processing.
-        // if (this.__fbo) {
-        //     const gl = this.__renderer.getGL();
-
-        //     // Bind the default framebuffer
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        //     gl.viewport(...this.region);
-        //     // gl.disable(gl.SCISSOR_TEST);
-
-        //     // this.__glshaderScreenPostProcess.bind(renderstate);
-
-        //     // const unifs = renderstate.unifs;
-        //     // if ('antialiase' in unifs)
-        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-        //     // if ('textureSize' in unifs)
-        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-        //     // if ('gamma' in unifs)
-        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-        //     // if ('exposure' in unifs)
-        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-        //     // if ('tonemap' in unifs)
-        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-        //     gl.screenQuad.bindShader(renderstate);
-        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
-
-
-        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-        //     // more goem int he next frame then the fbo color tex is being read from and written to 
-        //     // at the same time. (baaaad).
-        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
-        //     // track down.
-        //     gl.bindTexture(gl.TEXTURE_2D, null);
-        // }
     }
 
-    // After post-processing, the overlays are rendered.
-    drawOverlays(renderstate) {
-        this.__overlayPass.draw(renderstate);
-    }
 };
 
 export {

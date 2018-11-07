@@ -33,7 +33,7 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
 
     }
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.frameAll();

@@ -23,7 +23,7 @@
         }
     }
     
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.exposure = 1.0;
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-20,-20,10), new Visualive.Vec3(10,10,0));
     
