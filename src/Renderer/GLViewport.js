@@ -307,14 +307,14 @@ class GLViewport extends GLBaseViewport {
 
     getGeomItemsInRect(tl, br) {
         if (this.__geomDataBufferFbo) {
-            let gl = this.__renderer.gl;
+            const gl = this.__renderer.gl;
             gl.finish();
             // Allocate a pixel block.
-            let rectBottom = Math.round(this.__height - br.y);
-            let rectLeft = Math.round(tl.x);
-            let rectWidth = Math.round(br.x - tl.x);
-            let rectHeight = Math.round(br.y - tl.y);
-            let numPixels = rectWidth * rectHeight;
+            const rectBottom = Math.round(this.__height - br.y);
+            const rectLeft = Math.round(tl.x);
+            const rectWidth = Math.round(br.x - tl.x);
+            const rectHeight = Math.round(br.y - tl.y);
+            const numPixels = rectWidth * rectHeight;
 
             this.__geomDataBufferFbo.bindForReading();
 
@@ -329,7 +329,7 @@ class GLViewport extends GLBaseViewport {
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-            let geomItems = new Set();
+            const geomItems = new Set();
             for (let i = 0; i < numPixels; i++) {
 
                 let passId;
@@ -414,12 +414,7 @@ class GLViewport extends GLBaseViewport {
 
     onMouseMove(event) {
 
-        // Note: for some reason, I started getting mouse moves events, even when making a single click.
-        if (event.movementX == 0 && event.movementX == 0)
-            return false;
-
         const mousePos = this.__eventMousePos(event);
-
 
         if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
             this.__cameraManipulator.onDrag(event, mousePos, this);
@@ -442,6 +437,7 @@ class GLViewport extends GLBaseViewport {
         this.keyPressed.emit(key, event, this);
         return false;
     }
+    
     onKeyDown(key, event) {
         if (this.__cameraManipulator) {
             this.__cameraManipulator.onKeyDown(key, event, this);

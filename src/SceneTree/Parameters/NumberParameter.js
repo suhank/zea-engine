@@ -5,6 +5,7 @@ import {
     sgFactory
 } from '../SGFactory';
 import {
+    ValueSetMode,
     Parameter
 } from './Parameter.js';
 
@@ -15,14 +16,26 @@ class NumberParameter extends Parameter {
         this.__display = 'slider';
         this.__range = range;
         this.__axis = 'x';
-        this.__step = 0.01;
+        this.__step = undefined;
     }
 
-    getValue() {
+    setValue(value, mode) {
+        if(mode == ValueSetMode.USER_SETVALUE) {
+            if(this.__range) {
+                value = Math.clamp(value, this.__range[0], this.__range[1]);
+            }
+            if(this.__step) {
+                value = Math.round(value / this.__step) * this.__step;
+            }
+        }
+        super.setValue(value, mode);
+    }
+
+    getValue(mode) {
         // if(this.__range) {
         //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
         // }
-        return super.getValue();
+        return super.getValue(mode);
     }
 
     getDisplay() {
