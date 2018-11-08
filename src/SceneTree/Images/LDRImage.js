@@ -115,6 +115,7 @@ class LDRImage extends FileImage {
             }
         }
         this.format = format;
+        this.__loaded = false;
 
         let imageElem;
         const loaded = () => {

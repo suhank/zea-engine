@@ -146,7 +146,7 @@ class ColorUniformBinding {
             }
 
             if (this.__textureUnif) {
-                const genGLTex = () => {
+                const genGLTex = (image) => {
                     let gltexture = image.getMetadata('gltexture');
                     const textureType = 1;
                     if (!gltexture) {
@@ -174,10 +174,10 @@ class ColorUniformBinding {
                 const connectImage = (image)=>{
                     if (!image.isLoaded()) {
                         image.loaded.connect(() => {
-                            genGLTex();
+                            genGLTex(image);
                         });
                     } else {
-                        genGLTex();
+                        genGLTex(image);
                     }
 
                 }
