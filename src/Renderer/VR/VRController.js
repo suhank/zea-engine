@@ -35,9 +35,9 @@ import {
 } from '../GLFbo.js';
 
 class VRController {
-    constructor(vrstage, index) {
+    constructor(vrviewport, index) {
 
-        this.__vrStage = vrstage;
+        this.__vrviewport = vrviewport;
         this.__index = index;
         this.__isDaydramController = SystemDesc.isMobileDevice;
         this.__treeItem = new TreeItem('VRController:' + index);
@@ -51,9 +51,9 @@ class VRController {
             this.__tip = new TreeItem('Tip');
             this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.07, -0.028)));
             this.__treeItem.addChild(this.__tip, false);
-            vrstage.getTreeItem().addChild(this.__treeItem);
+            vrviewport.getTreeItem().addChild(this.__treeItem);
 
-            const asset = vrstage.getAsset();
+            const asset = vrviewport.getAsset();
             if(asset) {
                 asset.loaded.connect((entries) => {
                     const controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
@@ -173,7 +173,7 @@ class VRController {
     //////////////////////////////////
 
     createGeomDataFbo() {
-        const gl = this.__vrStage.getRenderer().gl;
+        const gl = this.__vrviewport.getRenderer().gl;
         this.__geomDataBuffer = new GLTexture2D(gl, {
             type: 'FLOAT',
             format: 'RGBA',
@@ -190,7 +190,7 @@ class VRController {
             return this.__geomAtTip;
 
 
-        const renderer = this.__vrStage.getRenderer();
+        const renderer = this.__vrviewport.getRenderer();
         const gl = renderer.gl;
         const xfo = this.__treeItem.getGlobalXfo();
 

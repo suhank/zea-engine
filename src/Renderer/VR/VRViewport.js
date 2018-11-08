@@ -29,7 +29,7 @@ import {
 } from './VRController.js'
 
 class VRViewport extends GLBaseViewport {
-    constructor(renderer, vrDisplay ) {
+    constructor(renderer, vrDisplay, displayVRGeometry) {
         super(renderer);
         this.__vrDisplay = vrDisplay;
 
@@ -37,7 +37,7 @@ class VRViewport extends GLBaseViewport {
         // Resources
 
         const resourceLoader = renderer.getScene().getResourceLoader();
-        if (!SystemDesc.isMobileDevice && resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
+        if (displayVRGeometry && !SystemDesc.isMobileDevice && resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
             this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
             this.__viveAsset.loaded.connect(() => {
                 const materialLibrary = this.__viveAsset.getMaterialLibrary();

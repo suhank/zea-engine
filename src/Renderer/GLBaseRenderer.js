@@ -76,7 +76,6 @@ class GLBaseRenderer {
         this.__activeViewport = undefined;
         this.__continuousDrawing = false;
         this.__redrawRequested = false;
-        this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
         this.__isMobile = SystemDesc.isMobileDevice;
 
         this.__drawSuspensionLevel = 1;
@@ -118,6 +117,8 @@ class GLBaseRenderer {
         this.addViewport('main');
 
 
+        this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
+        this.__displayVRGeometry = options.displayVRGeometry !== undefined ? options.displayVRGeometry : true;
         this.__vrViewport = undefined;
         if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined){
             this.__vrpolyfill = new WebVRPolyfill();
@@ -629,8 +630,8 @@ class GLBaseRenderer {
     __setupVRViewport() {
         return navigator.getVRDisplays().then((displays) => {
             if (displays.length > 0) {
-                // Always get the last display. Additional displays are added at the end.(Polyfill, HMD)
-                let vrvp = new VRViewport(this, displays[displays.length-1]);
+                // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
+                let vrvp = new VRViewport(this, displays[displays.length-1], this.__displayVRGeometry);
 
                 vrvp.presentingChanged.connect((state)=>{
 
