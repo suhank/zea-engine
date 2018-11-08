@@ -110,6 +110,8 @@ class GLRenderer extends GLBaseRenderer {
         this.__outlineColor = new Color("#03E3AC")
         this.quad = new GLMesh(gl, new Plane(1, 1));
 
+        // this.__glshaderScreenPostProcess = new PostProcessing(gl);
+        
         this.createSelectedGeomsFbo();
     }
 

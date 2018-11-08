@@ -7,6 +7,15 @@ import {
 
 import '../SceneTree/GeomItem.js';
 
+
+const GLDrawItemChangeType = {
+    TRANSFORM_CHANGED: 0,
+    GEOM_CHANGED: 1,
+    VISIBILITY_CHANGED: 2,
+    SELECTION_CHANGED: 3
+};
+
+
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLDrawItem {
     constructor(gl, geomItem, glGeom, id, flags = null) {
@@ -19,8 +28,6 @@ class GLDrawItem {
         this.culled = false;
 
         this.lightmapName = geomItem.getLightmapName();
-
-        this.transformChanged = new Signal();
         this.updated = new Signal();
         this.destructing = new Signal();
         this.selectedChanged = this.geomItem.selectedChanged;
@@ -35,7 +42,7 @@ class GLDrawItem {
             };
         } else {
             this.updateXfo = (geomXfo) => {
-                this.transformChanged.emit();
+                this.updated.emit(GLDrawItemChangeType.TRANSFORM_CHANGED);
             };
         }
 
@@ -43,14 +50,11 @@ class GLDrawItem {
         this.geomItem.visibilityChanged.connect(this.updateVisibility);
         this.geomItem.destructing.connect(this.destroy);
         this.selectedChangedId = this.geomItem.selectedChanged.connect(() => {
-            this.updated.emit();
+            this.updated.emit(GLDrawItemChangeType.SELECTION_CHANGED);
         });
-
         this.glGeom.updated.connect(() => {
-            this.updated.emit();
+            this.updated.emit(GLDrawItemChangeType.GEOM_CHANGED);
         });
-
-
 
         let lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset();
         let materialId = 0;
@@ -156,6 +160,7 @@ class GLDrawItem {
 };
 
 export {
+    GLDrawItemChangeType,
     GLDrawItem
 };
 // export default GLDrawItem;

@@ -713,6 +713,12 @@ class GLBaseRenderer {
         }
     }
 
+    drawItemChanged() {
+        for (let vp of this.__viewports)
+            vp.invalidateGeomDataBuffer();
+        this.requestRedraw();
+    }
+
     // Request a single redraw, usually in response to a signal/event.
     requestRedraw() {
 

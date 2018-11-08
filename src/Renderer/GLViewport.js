@@ -49,14 +49,11 @@ class GLViewport extends GLBaseViewport {
         this.__geomDataBufferFbo = undefined;
 
         const gl = renderer.getGL();
-        // this.__selectionRect = new GLSelectionRect(gl);
-        // this.__overlayPass.addDrawItem(this.__selectionRect);
 
         // Signals to abstract the user view. 
         // i.e. when a user switches to VR mode, the signals 
         // simply emit the new VR data.
         this.viewChanged = new Signal();
-
 
         this.keyDown = new Signal();
         this.keyPressed = new Signal();
@@ -72,16 +69,13 @@ class GLViewport extends GLBaseViewport {
         this.touchEnd = new Signal();
         this.touchCancel = new Signal();
 
-        this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
-
-        // this.__glshaderScreenPostProcess = new PostProcessing(gl);
+        // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
         this.setCamera(new Camera('Default'));
         this.setManipulator(new CameraMouseAndKeyboard());
         this.__cameraManipulatorDragging = false;
 
         this.resize(width, height);
-        // this.createOffscreenFbo();
     }
 
 
@@ -103,14 +97,15 @@ class GLViewport extends GLBaseViewport {
     setCamera(camera) {
         this.__camera = camera;
         const globalXfoParam = camera.getParameter('GlobalXfo')
-        const getCameraParams = ()=>{
+        const getCameraParams = () => {
             this.__cameraXfo = globalXfoParam.getValue()
             this.__cameraMat = this.__cameraXfo.toMat4()
             this.__viewMat = this.__cameraMat.inverse()
         }
         getCameraParams();
         globalXfoParam.valueChanged.connect(() => {
-            getCameraParams()
+            getCameraParams();
+            this.invalidateGeomDataBuffer();
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'CameraAndPointer',
@@ -122,24 +117,15 @@ class GLViewport extends GLBaseViewport {
             this.updated.emit();
         });
 
-        // The state machine can manipulate the camera and then signal the
-        // end of a movement. Also, when the view is framed, we get 
-        // this signal.
-        this.__camera.movementFinished.connect(this.renderGeomDataFbo);
-
         this.__updateProjectionMatrix();
     }
 
-    getManipulator(){
+    getManipulator() {
         return this.__cameraManipulator
     }
 
     setManipulator(manipulator) {
-        if(this.__cameraManipulator && this.__cameraManipulator.movementFinished)
-            this.__cameraManipulator.movementFinished.disconnect(this.renderGeomDataFbo);
         this.__cameraManipulator = manipulator;
-        if(this.__cameraManipulator && this.__cameraManipulator.movementFinished)
-            this.__cameraManipulator.movementFinished.connect(this.renderGeomDataFbo);
     }
 
     __updateProjectionMatrix() {
@@ -244,17 +230,25 @@ class GLViewport extends GLBaseViewport {
             };
             this.__initRenderState(renderstate);
             this.__renderer.drawSceneGeomData(renderstate);
-            // this.__gizmoPass.drawDataPass(renderstate);
+            this.__geomDataBufferInvalid = false;
         }
+    }
+
+    invalidateGeomDataBuffer() {
+        this.__geomDataBufferInvalid = true;
     }
 
     getGeomDataAtPos(screenPos, mouseRay) {
         if (this.__geomDataBufferFbo) {
+            if(this.__geomDataBufferInvalid) {
+              this.renderGeomDataFbo();
+              this.__screenPos = null;
+            }
 
             // cache the intersection tests result so subsequent queries will return the same value. 
             // Note: every new mouse event will generate a new mousePos value, so the cache
             // is only valid for a given event propagation, and for that exact mousePos value.
-            if(screenPos === this.__screenPos){
+            if (screenPos === this.__screenPos) {
                 return this.__intersectionData;
             }
             this.__screenPos = screenPos;
@@ -296,7 +290,7 @@ class GLViewport extends GLBaseViewport {
             const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
 
             if (geomItemAndDist) {
-                if(!mouseRay)
+                if (!mouseRay)
                     mouseRay = this.calcRayFromScreenPos(screenPos);
                 const intersectionPos = mouseRay.start.add(mouseRay.dir.scale(geomItemAndDist.dist));
                 this.__intersectionData = {
@@ -339,7 +333,7 @@ class GLViewport extends GLBaseViewport {
             for (let i = 0; i < numPixels; i++) {
 
                 let passId;
-                const geomData = geomDatas.subarray(i*4, (i+1)*4);
+                const geomData = geomDatas.subarray(i * 4, (i + 1) * 4);
                 if (gl.floatGeomBuffer) {
                     passId = Math.round(geomData[0]);
                 } else {
@@ -380,11 +374,11 @@ class GLViewport extends GLBaseViewport {
                 // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
                 event.intersectionData = intersectionData;
                 intersectionData.geomItem.onMouseDown(event, intersectionData);
-                if(event.vleStopPropagation == true)
+                if (event.vleStopPropagation == true)
                     return;
 
                 this.mouseDownOnGeom.emit(event);
-                if(event.vleStopPropagation == true)
+                if (event.vleStopPropagation == true)
                     return;
             }
 
@@ -427,7 +421,7 @@ class GLViewport extends GLBaseViewport {
         const mousePos = this.__eventMousePos(event);
 
 
-        if (this.__cameraManipulator && this.__cameraManipulatorDragging){
+        if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
             this.__cameraManipulator.onDrag(event, mousePos, this);
             return;
         }
@@ -440,7 +434,7 @@ class GLViewport extends GLBaseViewport {
     }
 
     onKeyPressed(key, event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onKeyPressed(key, event, this);
             return;
         }
@@ -449,7 +443,7 @@ class GLViewport extends GLBaseViewport {
         return false;
     }
     onKeyDown(key, event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onKeyDown(key, event, this);
             return;
         }
@@ -458,7 +452,7 @@ class GLViewport extends GLBaseViewport {
     }
 
     onKeyUp(key, event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onKeyUp(key, event, this);
             return;
         }
@@ -467,7 +461,7 @@ class GLViewport extends GLBaseViewport {
     }
 
     onWheel(event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onWheel(event, this);
             return;
         }
@@ -477,7 +471,7 @@ class GLViewport extends GLBaseViewport {
 
     // Touch events
     onTouchStart(event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onTouchStart(event, this);
             return;
         }
@@ -486,7 +480,7 @@ class GLViewport extends GLBaseViewport {
     }
 
     onTouchMove(event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onTouchMove(event, this);
             return;
         }
@@ -495,7 +489,7 @@ class GLViewport extends GLBaseViewport {
     }
 
     onTouchEnd(event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onTouchEnd(event, this);
             return;
         }
@@ -504,7 +498,7 @@ class GLViewport extends GLBaseViewport {
     }
 
     onTouchCancel(event) {
-        if (this.__cameraManipulator){
+        if (this.__cameraManipulator) {
             this.__cameraManipulator.onTouchCancel(event, this);
             return;
         }

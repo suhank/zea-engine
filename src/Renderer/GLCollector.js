@@ -28,6 +28,7 @@ import {
     GLMaterial
 } from './GLMaterial.js';
 import {
+    GLDrawItemChangeType,
     GLDrawItem
 } from './GLDrawItem.js';
 import {
@@ -285,18 +286,24 @@ class GLCollector {
         const gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
-        const updatedId = gldrawItem.updated.connect(() => {
-            this.__renderer.requestRedraw();
+        const updatedId = gldrawItem.updated.connect((type) => {
+            switch(type) {
+                case GLDrawItemChangeType.TRANSFORM_CHANGED:
+                    if (this.__dirtyItemIndices.indexOf(index) != -1)
+                        return;
+                    this.__dirtyItemIndices.push(index);
+                    break;
+                case GLDrawItemChangeType.GEOM_CHANGED:
+                case GLDrawItemChangeType.VISIBILITY_CHANGED:
+                    break;
+                case GLDrawItemChangeType.SELECTION_CHANGED:
+                    this.__renderer.requestRedraw();
+                    return;
+            }
+            this.__renderer.drawItemChanged();
         });
 
         this.__drawItems[index] = gldrawItem;
-
-        const transformChangedId = gldrawItem.transformChanged.connect(() => {
-            if (this.__dirtyItemIndices.indexOf(index) == -1)
-                this.__dirtyItemIndices.push(index);
-            // this.__updateItemInstanceData(index, gldrawItem);
-            this.__renderer.requestRedraw();
-        });
 
         const addDrawItemToGLMaterialDrawItemSet = () => {
             let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
@@ -305,7 +312,6 @@ class GLCollector {
                 glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
             }
             drawItemSet.addDrawItem(gldrawItem);
-
         }
         addDrawItemToGLMaterialDrawItemSet();
 
