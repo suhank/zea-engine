@@ -9,15 +9,13 @@ import {
     BaseImage
 } from '../BaseImage.js';
 
-class WebcamImage2D extends BaseImage {
-    constructor(width = 640, height = 480, rearCamera = false) {
+class VideoStreamImage2D extends BaseImage {
+    constructor() {
         super();
         this.__loaded = false;
-        
-        this.__initWebcam(width, height, rearCamera);
     }
 
-    __initWebcam(width, height, rearCamera = false) {
+    connectWebcam(width, height, rearCamera = false) {
 
         const video = {
             width,
@@ -100,6 +98,33 @@ class WebcamImage2D extends BaseImage {
             });
     }
 
+    setVideoStream(video) {
+
+        this.width = video.videoWidth;
+        this.height = video.videoHeight;
+        console.log("Webcam:[" + this.width + ", " + this.height + "]");
+        this.__data = video;
+        this.__loaded = true;
+        this.loaded.emit(video);
+
+        let prevFrame = 0;
+        const frameRate = 60;
+        const timerCallback = () => {
+            if (video.paused || video.ended) {
+                return;
+            }
+            // Check to see if the video has progressed to the next frame. 
+            // If so, then we emit and update, which will cause a redraw.
+            const currentFrame = Math.floor(video.currentTime * frameRate);
+            if (prevFrame != currentFrame) {
+                this.updated.emit();
+                prevFrame = currentFrame;
+            }
+            setTimeout(timerCallback, 20); // Sample at 50fps.
+        };
+        timerCallback();
+    }
+
     isLoaded() {
         return this.__loaded;
     }
@@ -115,26 +140,11 @@ class WebcamImage2D extends BaseImage {
         }
     }
 
-    //////////////////////////////////////////
-    // Metadata
-
-    getMetadata(key) {
-        return this.__metaData.get(key)
-    }
-
-    hasMetadata(key) {
-        return this.__metaData.has(key)
-    }
-
-    setMetadata(key, metaData) {
-        this.__metaData.set(key, metaData);
-    }
-
 };
 
-sgFactory.registerClass('WebcamImage2D', WebcamImage2D);
+sgFactory.registerClass('VideoStreamImage2D', VideoStreamImage2D);
 
 
 export {
-    WebcamImage2D
+    VideoStreamImage2D
 };

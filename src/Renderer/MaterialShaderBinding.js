@@ -145,7 +145,7 @@ class ColorUniformBinding {
                 image = param.getImage();
             }
 
-            if (image && this.__textureUnif) {
+            if (this.__textureUnif) {
                 const genGLTex = () => {
                     let gltexture = image.getMetadata('gltexture');
                     const textureType = 1;
@@ -171,12 +171,23 @@ class ColorUniformBinding {
                     this.bind = this.bindTexture;
                     glmaterial.updated.emit();
                 }
-                if (!image.isLoaded()) {
-                    image.loaded.connect(() => {
+                const connectImage = (image)=>{
+                    if (!image.isLoaded()) {
+                        image.loaded.connect(() => {
+                            genGLTex();
+                        });
+                    } else {
                         genGLTex();
+                    }
+
+                }
+                if(image) {
+                    connectImage(image);
+                }
+                if(param.textureConnected){
+                    param.textureConnected.connect(()=>{
+                        connectImage(param.getImage());
                     });
-                } else {
-                    genGLTex();
                 }
             } else {
                 glmaterial.updated.emit();

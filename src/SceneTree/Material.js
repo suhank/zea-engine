@@ -113,8 +113,8 @@ class Material extends BaseItem {
         super(name);
 
         // this.updated = new Signal();
-        this.textureConnected = new Signal();
-        this.textureDisconnected = new Signal();
+        // this.textureConnected = new Signal();
+        // this.textureDisconnected = new Signal();
         this.shaderNameChanged = new Signal();
 
         if(shaderName)
@@ -212,8 +212,8 @@ class Material extends BaseItem {
 
     __makeParameterTexturable(param) {
         makeParameterTexturable(param);
-        param.textureConnected.connect(this.textureConnected.emit);
-        param.textureDisconnected.connect(this.textureDisconnected.emit);
+        // param.textureConnected.connect(this.textureConnected.emit);
+        // param.textureDisconnected.connect(this.textureDisconnected.emit);
     }
 
 
