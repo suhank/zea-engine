@@ -4,6 +4,9 @@ import {
 import {
     Parameter
 } from './Parameter.js';
+import {
+    sgFactory
+} from '../SGFactory';
 
 class BooleanParameter extends Parameter {
     constructor(name, value) {
@@ -17,6 +20,7 @@ class BooleanParameter extends Parameter {
     }
 };
 
+sgFactory.registerClass('BooleanParameter', BooleanParameter);
 
 export {
     BooleanParameter

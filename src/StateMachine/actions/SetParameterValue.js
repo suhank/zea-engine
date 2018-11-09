@@ -95,7 +95,8 @@ class SetParameterValue extends StateAction {
     fromJSON(j, context) {
         if(j.valueParamType){
             const param = sgFactory.constructClass(j.valueParamType, 'Value');
-            this.__valueParam = this.addParameter(param);
+            if(param)
+                this.__valueParam = this.addParameter(param);
         }
         super.fromJSON(j, context);
     }

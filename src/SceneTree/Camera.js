@@ -22,7 +22,9 @@ import {
     BooleanParameter,
     NumberParameter
 } from './Parameters';
-
+import {
+    sgFactory
+} from './SGFactory';
 
 
 class Camera extends TreeItem {
@@ -235,7 +237,8 @@ class Camera extends TreeItem {
     }
 };
 
+sgFactory.registerClass('Camera', Camera);
+
 export {
     Camera
 };
-//export default Camera;

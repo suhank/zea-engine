@@ -79,7 +79,7 @@ class NumberParameter extends Parameter {
     }
 };
 
-// sgFactory.registerClass('NumberParameter', NumberParameter);
+sgFactory.registerClass('NumberParameter', NumberParameter);
 
 export {
     NumberParameter

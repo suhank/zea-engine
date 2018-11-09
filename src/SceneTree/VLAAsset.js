@@ -60,8 +60,10 @@ class VLAAsset extends AssetItem {
         if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
           this.loaded.emit();
       }, ()=>{
-        if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
-          this.loaded.emit();
+        // if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled()){
+        //   this.loaded.emit();
+        // }
+          this.geomsLoaded.emit() 
       });
     });
 
@@ -145,13 +147,15 @@ class VLAAsset extends AssetItem {
         resourceLoader.freeData(treeData.buffer);
 
         onDone();
+        
         if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
           resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
           const geomsData = entries[Object.keys(entries)[1]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resourceLoader.freeData(geomsData.buffer);
           const id = this.__geomLibrary.loaded.connect( () => {
-            this.geomsLoaded.emit() 
+            if(onGeomsDone)
+              onGeomsDone();
           });
         }
         else {
@@ -176,7 +180,9 @@ class VLAAsset extends AssetItem {
         }
       }
       else {
-        this.geomsLoaded.emit();
+        // this.geomsLoaded.emit();
+        if(onGeomsDone)
+          onGeomsDone();
       }
     }
     const loadGeomsfile = (fileId) => {

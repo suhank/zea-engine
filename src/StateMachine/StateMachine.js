@@ -15,14 +15,6 @@ class StateMachine extends BaseItem {
 
         this.stateChanged = new Signal();
 
-        window.onpopstate = (event) => {
-            if (event.state && event.state.stateName) {
-                this.activateState(event.state.stateName, false);
-            } else {
-                this.activateState(this.getInitialState(), false);
-            }
-        }
-
         // Manually invoke the callbacks for cases where the StateMAchine
         // is not beingn constructed by the SGFactory.
         if(!sgFactory.isConstructing()) {
@@ -38,7 +30,6 @@ class StateMachine extends BaseItem {
             this.__initialStateName = state.getName();
         }
     }
-
 
     getState(name) {
         return this.__states[name];
@@ -107,7 +98,10 @@ class StateMachine extends BaseItem {
         }
 
         const onloaded = () => {
-            this.activateState(this.__initialStateName);
+            // Disabling for now. 
+            // We can have state machines that are not active at all. 
+            // e.g. in the 850 E-Tec project.
+            // this.activateState(this.__initialStateName);
             context.assetItem.loaded.disconnect(onloaded)
         }
         context.assetItem.loaded.connect(onloaded);
