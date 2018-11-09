@@ -348,32 +348,29 @@ class VRViewport extends GLBaseViewport {
 
         this.updateHeadAndControllers();
 
-
-        renderstate.viewScale = 1.0 / this.__stageScale;
-        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
-        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
-
-        const width = this.__hmdCanvasSize[0];
-        const height = this.__hmdCanvasSize[1];
-        const gl = this.__renderer.gl;
-
         this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
         this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
         this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
         this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
 
-        renderstate.viewports.push({
+        const width = this.__hmdCanvasSize[0];
+        const height = this.__hmdCanvasSize[1];
+
+        renderstate.viewScale = 1.0 / this.__stageScale;
+        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
+        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
+        renderstate.viewports =[{
             region: [0, 0, width * 0.5, height],
             cameraMatrix: renderstate.cameraMatrix,
             viewMatrix: this.__leftViewMatrix,
             projectionMatrix: this.__leftProjectionMatrix
-        })
-        renderstate.viewports.push({
+        },
+        {
             region: [width * 0.5, 0, width * 0.5, height],
             cameraMatrix: renderstate.cameraMatrix,
             viewMatrix: this.__rightViewMatrix,
             projectionMatrix: this.__rightProjectionMatrix
-        })
+        }]
 
         return true;
     }

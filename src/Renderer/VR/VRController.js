@@ -49,7 +49,7 @@ class VRController {
         if(!this.__isDaydramController) {
             // A Vive or Occulus Touch Controller
             this.__tip = new TreeItem('Tip');
-            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.07, -0.028)));
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.07, -0.04)));
             this.__treeItem.addChild(this.__tip, false);
             vrviewport.getTreeItem().addChild(this.__treeItem);
 
@@ -189,22 +189,21 @@ class VRController {
         if(this.__hitTested)
             return this.__geomAtTip;
 
-
         const renderer = this.__vrviewport.getRenderer();
         const gl = renderer.gl;
-        const xfo = this.__treeItem.getGlobalXfo();
+        const xfo = this.__tip.getGlobalXfo();
 
         this.__geomDataBufferFbo.bindAndClear();
         gl.viewport(0, 0, 1, 1);
 
         const renderstate = {
-            cameraMatrix: xfo.toMat4(),
-            viewMatrix: xfo.inverse().toMat4(),
-            projectionMatrix: this.__projMatrix,
-            isOrthographic: true,
-            materialCount: 0,
-            drawCalls: 0,
-            drawCount: 0
+            viewports: [{
+                region: [0, 0, 1, 1],
+                cameraMatrix: xfo.toMat4(),
+                viewMatrix: xfo.inverse().toMat4(),
+                projectionMatrix: this.__projMatrix,
+                isOrthographic: true,
+            }]
         };
 
         gl.enable(gl.CULL_FACE);
@@ -213,7 +212,6 @@ class VRController {
         gl.depthMask(true);
 
         renderer.drawSceneGeomData(renderstate);
-
         gl.finish();
         this.__geomDataBufferFbo.bindForReading();
 
