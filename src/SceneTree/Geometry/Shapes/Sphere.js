@@ -1,4 +1,5 @@
 import { Vec2, Vec3 } from '../../../Math';
+import { SAVE_FLAG_SKIP_GEOMDATA } from '../BaseGeom.js';
 import { Mesh } from '../Mesh.js';
 
 import {
@@ -168,12 +169,20 @@ class Sphere extends Mesh {
         this.geomDataChanged.emit();
     }
 
-    toJSON() {
-        const json = super.toJSON();
-        json['x'] = this.__x;
-        json['y'] = this.__y;
-        json['z'] = this.__z;
-        return json
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags|SAVE_FLAG_SKIP_GEOMDATA);
+        j.radius = this.__radius;
+        j.sides = this.__sides;
+        j.loops = this.__loops;
+        return j
+    }
+
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
+        this.__radius = j.radius;
+        this.__sides = j.sides;
+        this.__loops = j.loops;
+        this.__rebuild();
     }
 };
 sgFactory.registerClass('Sphere', Sphere);
@@ -181,4 +190,3 @@ sgFactory.registerClass('Sphere', Sphere);
 export {
     Sphere
 };
-//export default Sphere;

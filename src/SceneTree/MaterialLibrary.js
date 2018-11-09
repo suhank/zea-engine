@@ -118,7 +118,7 @@ class MaterialLibrary {
         xhr.send(null);
     }
 
-    fromJSON(j, context={}) {
+    fromJSON(j, context={}, flags=0) {
         context.lod = this.lod;
         for (let name in j.textures) {
             let image = new FileImage(name);
@@ -132,7 +132,7 @@ class MaterialLibrary {
         }
     }
 
-    toJSON(context={}) {
+    toJSON(context={}, flags=0) {
         return {
             "numMaterials": this.geoms.length()
         }

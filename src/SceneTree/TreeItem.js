@@ -25,10 +25,13 @@ import {
 
 
 // Defines used to explicity specify types for WebGL.
-const LOADFLAGS_SKIP_CHILDREN = 1 << 0;
-const LOADFLAGS_SKIP_MATERIALS = 1 << 2;
-const LOADFLAGS_SKIP_GEOMETRIES = 1 << 3;
-const LOADFLAGS_BUILDTREEFROMJSON = 1 << 4;
+const SAVE_FLAG_SKIP_CHILDREN = 1 << 0;
+const SAVE_FLAG_SKIP_MATERIALS = 1 << 2;
+const SAVE_FLAG_SKIP_GEOMETRIES = 1 << 3;
+
+const LOAD_FLAG_SKIP_CHILDREN = 1 << 0;
+const LOAD_FLAG_SKIP_MATERIALS = 1 << 2;
+const LOAD_FLAG_SKIP_GEOMETRIES = 1 << 3;
 
 class TreeItem extends BaseItem {
     constructor(name) {
@@ -589,39 +592,43 @@ class TreeItem extends BaseItem {
     // Persistence
 
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if (!this.testFlag(ItemFlags.USER_EDITED))
             return;
 
-        let j = super.toJSON(context);
+        let j = super.toJSON(context, flags);
 
         const jcs = [];
         for (let c of this.__components)
-            jcs.push(c.toJSON(context));
+            jcs.push(c.toJSON(context, flags));
         if (jcs.length > 0)
             j.components = jcs;
 
-        const childItemsJSON = {};
-        for (let childItem of this.__childItems) {
-            const childJSON = childItem.toJSON(context);
-            if (childJSON)
-                childItemsJSON[childItem.getName()] = childJSON;
-        }
-        if (Object.keys(childItemsJSON).length > 0) {
-            if (j) {
-                j.children = childItemsJSON;
-            } else {
-                j = {
-                    name: this.__name,
-                    children: childItemsJSON
+        // Some Items, such as the SliderSceneWidget do not need thier children
+        // to be saved.
+        if(!(flags&SAVE_FLAG_SKIP_CHILDREN)) {
+            const childItemsJSON = {};
+            for (let childItem of this.__childItems) {
+                const childJSON = childItem.toJSON(context, flags);
+                if (childJSON)
+                    childItemsJSON[childItem.getName()] = childJSON;
+            }
+            if (Object.keys(childItemsJSON).length > 0) {
+                if (j) {
+                    j.children = childItemsJSON;
+                } else {
+                    j = {
+                        name: this.__name,
+                        children: childItemsJSON
+                    }
                 }
             }
         }
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
 
         context.numTreeItems++;
 
@@ -668,9 +675,14 @@ class TreeItem extends BaseItem {
                             // Note: we add the chile now before loading. 
                             // This is because certain items. (e.g. Groups)
                             // Calculate thier global Xfo, and use it to modify 
-                            // the transform of thier members. 
-                            this.addChild(childItem, false, false);
+                            // the transform of thier members.
+                            // Note: Groups bind to items in the scene which are
+                            // already added as children, and so have global Xfos.
+                            // We prefer to add a child afer its loaded, because sometimes
+                            // In the tree is asset items, who will only toggled as
+                            // unloaded once they are loaed(else they are considered inline assets.)
                             childItem.fromJSON(childJson, context);
+                            this.addChild(childItem, false, false);
                         }
                     } else {
                         console.warn("Warning loading JSON. Child not found:" + childName);
@@ -742,9 +754,13 @@ class TreeItem extends BaseItem {
 sgFactory.registerClass('TreeItem', TreeItem);
 
 export {
-    LOADFLAGS_SKIP_CHILDREN,
-    LOADFLAGS_SKIP_MATERIALS,
-    LOADFLAGS_SKIP_GEOMETRIES
+    SAVE_FLAG_SKIP_CHILDREN,
+    SAVE_FLAG_SKIP_MATERIALS,
+    SAVE_FLAG_SKIP_GEOMETRIES,
+
+    LOAD_FLAG_SKIP_CHILDREN,
+    LOAD_FLAG_SKIP_MATERIALS,
+    LOAD_FLAG_SKIP_GEOMETRIES
 };
 export {
     TreeItem

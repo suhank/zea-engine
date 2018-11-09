@@ -154,11 +154,11 @@ class VLHImage extends BaseImage {
     //////////////////////////////////////////
     // Persistence
 
-    fromJSON(json) {
+    fromJSON(json, context, flags) {
 
     }
 
-    toJSON(json) {
+    toJSON(context, flags) {
 
     }
 

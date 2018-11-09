@@ -45,12 +45,12 @@ class GeometryParameter extends Parameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        return super.toJSON(context);
+    toJSON(context, flags) {
+        return super.toJSON(context, flags);
     }
 
-    fromJSON(j, context) {
-        return super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        return super.fromJSON(j, context, flags);
     }
 
     

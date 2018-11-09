@@ -61,7 +61,7 @@ class TreeItemParameter extends Parameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const makeRelative = (path) => {
@@ -73,7 +73,7 @@ class TreeItemParameter extends Parameter {
         }
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;
@@ -148,7 +148,7 @@ class TreeItemListParameter extends ListParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         return {
@@ -156,7 +156,7 @@ class TreeItemListParameter extends ListParameter {
         }
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;

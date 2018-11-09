@@ -176,7 +176,7 @@ class ParameterOwner extends RefCounted {
     // Persistence
 
 
-    toJSON(context) {
+    toJSON(context, flags) {
 
         const paramsJSON = {};
         let savedParams = 0;
@@ -188,7 +188,7 @@ class ParameterOwner extends RefCounted {
                 savedParams++;
             }
             else {
-                const paramJSON = param.toJSON(context);
+                const paramJSON = param.toJSON(context, flags);
                 if(paramJSON){
                     paramsJSON[param.getName()] = paramJSON;
                     savedParams++;
@@ -199,7 +199,7 @@ class ParameterOwner extends RefCounted {
             return { params: paramsJSON };
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.params) {
             for (let key in j.params) {
                 const pj = j.params[key];

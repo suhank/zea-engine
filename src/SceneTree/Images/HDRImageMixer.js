@@ -87,11 +87,11 @@ class HDRImageMixer extends BaseImage {
         return params;
     }
 
-    fromJSON(json) {
+    fromJSON(json, context, flags) {
 
     }
 
-    toJSON(json) {
+    toJSON(context, flags) {
 
     }
 };

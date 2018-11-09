@@ -5,12 +5,12 @@ import {
     Xfo
 } from '../../Math';
 import {
-    BaseGeom
+    BaseGeom,
+    SAVE_FLAG_SKIP_GEOMDATA
 } from './BaseGeom.js';
 import {
     Attribute
 } from './Attribute.js';
-
 
 import {
     VertexAttribute
@@ -803,17 +803,21 @@ class Mesh extends BaseGeom {
     }
 
 
-    toJSON(attrList = undefined) {
-        let j = super.toJSON(attrList);
-        j.faceCounts = Array.from(this.__faceCounts);
-        j.faceVertexIndices = Array.from(this.__faceVertexIndices);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
+        if(!(flags&SAVE_FLAG_SKIP_GEOMDATA)) {
+            j.faceCounts = Array.from(this.__faceCounts);
+            j.faceVertexIndices = Array.from(this.__faceVertexIndices);
+        }
         return j
     }
 
-    fromJSON(j) {
-        super.fromJSON(j);
-        this.__faceCounts = Uint32Array.from(j.faceCounts);
-        this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
+        if(j.faceCounts)
+            this.__faceCounts = Uint32Array.from(j.faceCounts);
+        if(j.faceVertexIndices)
+            this.__faceVertexIndices = Uint32Array.from(j.faceVertexIndices);
     }
 
 

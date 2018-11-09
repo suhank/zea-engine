@@ -166,8 +166,10 @@ class BaseItem extends ParameterOwner {
     // Persistence
 
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        let j = super.toJSON(context, flags);
+        if (!j && this.testFlag(ItemFlags.USER_EDITED))
+            j = {}
         if(j) {
             j.name = this.__name;
             j.type = sgFactory.getClassName(this);
@@ -175,10 +177,10 @@ class BaseItem extends ParameterOwner {
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.name)
             this.__name = j.name;
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
         // Note: JSON data is only used to store user edits, so 
         // parameters loaded from JSON are considered user edited.
         this.__flags |= ItemFlags.USER_EDITED;

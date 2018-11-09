@@ -47,16 +47,16 @@ class GearParameter extends StructParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         if(j){
-            j.output = this.__output.toJSON(context);
+            j.output = this.__output.toJSON(context, flags);
         }
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         if(j.output){
             this.__output.fromJSON(j.output, context);
         }

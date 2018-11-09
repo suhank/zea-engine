@@ -197,21 +197,17 @@ class Group extends TreeItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         const treeItems = [];
-        const makeRelative = (path) => {
-            const assetPath = context.assetItem.getPath();
-            return path.slice(assetPath.length);
-        }
         for(let p of this.__items) 
-            treeItems.push(makeRelative(p.getPath()));
+            treeItems.push(context.makeRelative(p.getPath()));
         j.treeItems = treeItems
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
 
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.

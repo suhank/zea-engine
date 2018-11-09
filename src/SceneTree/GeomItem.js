@@ -161,8 +161,8 @@ class GeomItem extends TreeItem {
     /////////////////////////////
     // Debugging
 
-    toJSON(context) {
-        const json = super.toJSON(context);
+    toJSON(context, flags) {
+        const json = super.toJSON(context, flags);
         return json
     }
 

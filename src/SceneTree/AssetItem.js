@@ -70,10 +70,7 @@ class AssetItem extends TreeItem {
         // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     }
 
-    toJSON(context) {
-        if (!context)
-            context = {};
-
+    toJSON(context={}, flags=0) {
         context.makeRelative = (path) => {
             const assetPath = this.getPath();
             const start = path.slice(0, assetPath.length);
@@ -86,11 +83,11 @@ class AssetItem extends TreeItem {
             return path.slice(assetPath.length);
         }
         context.assetItem = this;
-        const j = super.toJSON(context);
+        const j = super.toJSON(context, flags);
         return j;
     }
 
-    fromJSON(j, context, onDone) {
+    fromJSON(j, context={}, flags=0, onDone) {
         if (!context)
             context = {};
         
@@ -106,7 +103,7 @@ class AssetItem extends TreeItem {
             delete j.params.FilePath;
         }
 
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
         if (onDone)
             onDone();
     }

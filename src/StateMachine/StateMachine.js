@@ -3,6 +3,7 @@ import {
 } from '../Utilities';
 import {
     BaseItem,
+    ItemFlags,
     sgFactory
 } from '../SceneTree';
 
@@ -14,6 +15,10 @@ class StateMachine extends BaseItem {
         this.__initialStateName;
 
         this.stateChanged = new Signal();
+
+        // Always save state machines. 
+        // Then never come as part of the binary data.
+        this.setFlag(ItemFlags.USER_EDITED);
 
         // Manually invoke the callbacks for cases where the StateMAchine
         // is not beingn constructed by the SGFactory.
@@ -68,20 +73,20 @@ class StateMachine extends BaseItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        let j = super.toJSON(context);
+    toJSON(context, flags) {
+        let j = super.toJSON(context, flags);
         j.initialStateName = this.__initialStateName;
 
         const statesj = {};
         for (let key in this.__states) {
-            statesj[key] = this.__states[key].toJSON(context);
+            statesj[key] = this.__states[key].toJSON(context, flags);
         }
         j.states = statesj;
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         this.__initialStateName = j.initialStateName;
 
         context.stateMachine = this;

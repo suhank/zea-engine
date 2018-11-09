@@ -83,8 +83,8 @@ class KinematicGroupParameter extends ListParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        // return super.toJSON(context);
+    toJSON(context, flags) {
+        // return super.toJSON(context, flags);
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const treeItems = [];
@@ -99,7 +99,7 @@ class KinematicGroupParameter extends ListParameter {
         };
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
 
         if(j.treeItems == undefined){
             console.warn("Invalid Parameter JSON");

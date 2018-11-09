@@ -144,7 +144,7 @@ class FilePathParameter extends Parameter {
     // Persistence
 
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if ((this.__flags & ParamFlags.USER_EDITED) == 0)
             return;
         const j = {};
@@ -158,7 +158,7 @@ class FilePathParameter extends Parameter {
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if (j.value) {
             if (j.value.indexOf('.') > 0) {
                 this.setFilepath(j.value, ValueSetMode.DATA_LOAD)
@@ -166,6 +166,7 @@ class FilePathParameter extends Parameter {
             } else {
                 if (resourceLoader.resourceAvailable(j.value)) {
                     this.setValue(j.value, ValueSetMode.DATA_LOAD);
+                    this.__flags |= ParamFlags.USER_EDITED;
                     return;
                 }
             }

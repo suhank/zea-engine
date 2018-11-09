@@ -84,21 +84,21 @@ class SetParameterValue extends StateAction {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         if(this.__valueParam){
             j.valueParamType = this.__valueParam.constructor.name;
         }
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.valueParamType){
             const param = sgFactory.constructClass(j.valueParamType, 'Value');
             if(param)
                 this.__valueParam = this.addParameter(param);
         }
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
     }
 };
 

@@ -230,17 +230,17 @@ class Material extends BaseItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        return super.toJSON(context);
+    toJSON(context, flags=0) {
+        return super.toJSON(context, flags);
     }
 
-    fromJSON(j, context={}) {
+    fromJSON(j, context={}, flags=0) {
         if(!j.shader){
             console.warn("Invalid Material JSON");
             return;
         }
         this.setShaderName(j.shader)
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
         // let props = this.__params;
         // for (let key in j) {
         //     let value;

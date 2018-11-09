@@ -50,15 +50,20 @@ class ExplodePartParameter extends StructParameter {
         const movement = this.__movementParam.getValue();
         let dist;
         if(cascade) {
-            // in 'cascade' mode, all parts move the same distance, but the timing is modified.
-            dist = explodeDist * Math.smoothStep(stage+movement.x, stage+movement.y, explode);
+
+            // // in 'cascade' mode, the move in a cascade, eventually
+            // all the parts moving.
+            const t = (stage / stages);
+            if(centered)
+                t -= 0.5;
+            dist = explodeDist * Math.lerp(movement.x, movement.y, Math.max(0, explode-t));
         }
         else {
             // Else all the parts are spread out across the explode distance. 
             let t = 1.0 - (stage / stages);
             if(centered)
                 t -= 0.5;
-            dist = explodeDist * Math.smoothStep(movement.x, movement.y, explode) * t;
+            dist = explodeDist * Math.lerp(movement.x, movement.y, explode) * t;
         }
 
         let explodeDir = this.__axisParam.getValue();
@@ -82,16 +87,16 @@ class ExplodePartParameter extends StructParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         if(j){
-            j.output = this.__output.toJSON(context);
+            j.output = this.__output.toJSON(context, flags);
         }
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         if(j.output){
             this.__output.fromJSON(j.output, context);
         }
@@ -162,12 +167,12 @@ class ExplodePartsOperator extends Operator {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        return super.toJSON(context);
+    toJSON(context, flags) {
+        return super.toJSON(context, flags);
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
     }
 
     destroy(){

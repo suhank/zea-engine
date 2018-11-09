@@ -136,17 +136,17 @@ class PistonParameter extends StructParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         // if(j){
-        //     j.rodOutput = this.__rodoutput.toJSON(context);
-        //     j.capOutput = this.__capoutput.toJSON(context);
+        //     j.rodOutput = this.__rodoutput.toJSON(context, flags);
+        //     j.capOutput = this.__capoutput.toJSON(context, flags);
         // }
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         if(j.rodOutput){
             this.__rodoutput.fromJSON(j.rodOutput, context);
         }
@@ -256,12 +256,12 @@ class PistonOperator extends Operator {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        return super.toJSON(context);
+    toJSON(context, flags) {
+        return super.toJSON(context, flags);
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         if(j.crankOutput){
             this.__crankOutput.fromJSON(j.crankOutput, context);
         }

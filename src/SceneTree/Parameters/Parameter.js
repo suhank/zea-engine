@@ -227,17 +227,16 @@ class Parameter extends BaseParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
-        if(this.__dataType == 'Number' || this.__dataType == 'String' || !isNaN(this.__value) || this.__value instanceof String )
+        if(this.__value.toJSON)
+            return { value: this.__value.toJSON(context, flags) };
+        else
             return { value: this.__value };
-        else {
-            return { value: this.__value.toJSON(context) };
-        }
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;
@@ -246,6 +245,9 @@ class Parameter extends BaseParameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
+        if(j.value.type && this.__value == undefined) {
+            this.__value = sgFactory.constructClass(j.value.type);
+        }
         if((this.__value == undefined) || !this.__value.fromJSON)
             this.setValue(j.value, ValueSetMode.DATA_LOAD);
         else {

@@ -77,14 +77,14 @@ class OperatorOutput {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         return {
             type: this.constructor.name,
-            paramPath: context.makeRelative(this._param.getPath())
+            paramPath: this._param ? context.makeRelative(this._param.getPath()) : false
         };
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.paramPath) {
             const paramPath = j.paramPath;
             // Note: the tree should have fully loaded by the time we are loading operators
@@ -178,21 +178,21 @@ class Operator extends BaseItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         j.type = sgFactory.getClassName(this);
 
         const oj = [];
         for(let o of this.__outputs){
-            oj.push(o.toJSON(context));
+            oj.push(o.toJSON(context, flags));
         }
 
         j.outputs = oj;
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
 
         if(j.outputs){
             for(let i=0; i<this.__outputs.length; i++){

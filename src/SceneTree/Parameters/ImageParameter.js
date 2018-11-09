@@ -27,19 +27,19 @@ class ImageParameter extends Parameter {
     // Persistence
 
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         if(this.__value) {
             j.imageType = this.__value.constructor.name;
         }
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.imageType) {
             this.__value = sgFactory.constructClass(j.imageType);
         }
-        return super.fromJSON(j, context);
+        return super.fromJSON(j, context, flags);
     }
 };
 

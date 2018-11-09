@@ -236,10 +236,10 @@ class Scene {
 
     }
 
-    toJSON(context) {
+    toJSON(context, flags) {
         return {
-            "root": this.__root.toJSON(context),
-            "boundingBox": this.boundingBox.toJSON(context),
+            "root": this.__root.toJSON(context, flags),
+            "boundingBox": this.boundingBox.toJSON(context, flags),
         }
     }
 

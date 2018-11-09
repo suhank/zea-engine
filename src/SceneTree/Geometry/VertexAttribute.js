@@ -150,15 +150,15 @@ class VertexAttribute extends Attribute {
     }
 
 
-    toJSON(opts) {
-        let json = super.toJSON(opts);
+    toJSON(context, flags) {
+        let json = super.toJSON(context, flags);
         json.splits =  this.__splits;
         json.splitValues =  this.__splitValues;
         return json;
     }
 
-    fromJSON(json) {
-        super.fromJSON(json);
+    fromJSON(json, context, flags) {
+        super.fromJSON(json, context, flags);
         this.__splits = json.splits;
         this.__splitValues = [];
         for(let valjson of  json.splitValues)

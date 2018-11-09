@@ -36,18 +36,18 @@ class StructParameter extends Parameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const members = [];
         for(let p of this.__members) 
-            members.push(p.toJSON(context));
+            members.push(p.toJSON(context, flags));
         return {
             members
         };
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.members == undefined){
             console.warn("Invalid Parameter JSON");
             return;

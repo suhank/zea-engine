@@ -81,7 +81,7 @@ class Attribute {
     }
 
 
-    toJSON(opts) {
+    toJSON(context, flags) {
         return {
             "data": Array.from(this.__data),
             "dataType": typeRegistry.getTypeName(this.__dataType),

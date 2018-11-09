@@ -20,7 +20,6 @@ export * from './Images';
 export * from './TreeItem.js';
 export * from './AudioItem.js';
 export * from './GeomItem.js';
-export * from './GizmoItem.js';
 export * from './AssetItem.js';
 export * from './BillboardItem.js';
 export * from './Camera.js';
