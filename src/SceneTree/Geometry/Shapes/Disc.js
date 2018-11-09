@@ -61,11 +61,11 @@ class Disc extends Mesh {
 
         //////////////////////////////
         // setUVs
-        // Simple rect coords. 
         const texCoords = this.getVertexAttribute('texCoords');
+        texCoords.getValueRef(0).set(0.5, 0.5)
         for (let i = 0; i < this.__sides; i++) {
             let phi = (i / this.__sides) * 2.0 * Math.PI;
-            texCoords.getValueRef(i+1).set(Math.sin(phi), Math.cos(phi), 0.0)
+            texCoords.getValueRef(i+1).set((Math.sin(phi) * 0.5) + 0.5, (Math.cos(phi) * 0.5) + 0.5);
         }
 
         this.setBoundingBoxDirty();

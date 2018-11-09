@@ -99,33 +99,25 @@ class VideoStreamImage2D extends BaseImage {
     }
 
     setVideoStream(video) {
-
         this.__loaded = false;
         video.addEventListener("loadedmetadata", (e) => {
             this.width = video.videoWidth;
             this.height = video.videoHeight;
-            console.log("Webcam:[" + this.width + ", " + this.height + "]");
+            this.start()
             this.__data = video;
             this.__loaded = true;
             this.loaded.emit(video);
-
-            let prevFrame = 0;
-            const frameRate = 30;
-            const timerCallback = () => {
-                if (video.paused || video.ended) {
-                    return;
-                }
-                // Check to see if the video has progressed to the next frame. 
-                // If so, then we emit and update, which will cause a redraw.
-                const currentFrame = Math.floor(video.currentTime * frameRate);
-                if (prevFrame != currentFrame) {
-                    this.updated.emit();
-                    prevFrame = currentFrame;
-                }
-                setTimeout(timerCallback, 20); // Sample at 50fps.
-            };
-            timerCallback();
         })
+    }
+
+    stop() {
+        clearInterval(this.__intervalId);
+    }
+
+    start() {
+        this.__intervalId = setInterval(() => {
+            this.updated.emit();
+        }, 20); // Sample at 50fps.
     }
 
     isLoaded() {
