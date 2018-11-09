@@ -346,52 +346,31 @@ class VRViewport extends GLBaseViewport {
             this.__projectionMatriciesUpdated = true;
         }
 
-
         this.updateHeadAndControllers();
-        // this.bindAndClear(renderstate);
 
-
-        // renderstate.viewport = this;
-        // renderstate.cameraMatrix = this.__standingMatrix;
-        renderstate.viewScale = 1.0 / this.__stageScale;
-        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
-        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
+        this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
+        this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
+        this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
+        this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
 
         const width = this.__hmdCanvasSize[0];
         const height = this.__hmdCanvasSize[1];
-        const gl = this.__renderer.gl;
 
-        // gl.viewport(0, 0, width * 0.5, height);
-        this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
-        this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
-        // renderstate.viewMatrix = this.__leftViewMatrix;
-        // renderstate.projectionMatrix = this.__leftProjectionMatrix;
-        // renderstate.eye = 0; //'L';
-
-        // if (this.__backgroundTexture && this.__backgroundTexture.isLoaded()) {
-        //     this.drawBackground(renderstate);
-        // }
-
-        // this.__renderer.drawScene(renderstate);
-
-        gl.viewport(width * 0.5, 0, width * 0.5, height);
-        this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
-        this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
-        renderstate.viewMatrix = this.__rightViewMatrix;
-        renderstate.projectionMatrix = this.__rightProjectionMatrix;
-
-        renderstate.viewports.push({
+        renderstate.viewScale = 1.0 / this.__stageScale;
+        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
+        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
+        renderstate.viewports =[{
             region: [0, 0, width * 0.5, height],
             cameraMatrix: renderstate.cameraMatrix,
             viewMatrix: this.__leftViewMatrix,
             projectionMatrix: this.__leftProjectionMatrix
-        })
-        renderstate.viewports.push({
+        },
+        {
             region: [width * 0.5, 0, width * 0.5, height],
             cameraMatrix: renderstate.cameraMatrix,
             viewMatrix: this.__rightViewMatrix,
             projectionMatrix: this.__rightProjectionMatrix
-        })
+        }]
 
         return true;
     }

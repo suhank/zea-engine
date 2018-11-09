@@ -380,7 +380,7 @@ class GLDrawItemSet {
             }
 
 
-            if(renderstate.viewports.length == 1) {
+            if(!renderstate.viewports || renderstate.viewports.length == 1) {
                 this.glgeom.drawInstanced(this.drawCount);
             }
             else {
