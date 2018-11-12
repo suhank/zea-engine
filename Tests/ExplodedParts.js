@@ -71,8 +71,8 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
     // Obj Asset
     {
 
-        const objAsset = new Visualive.AssetItem('PartA');
-        objAsset.getParameter('DataFilePath').setFilepath("/Assets/ExplodePartA.obj");
+        const objAsset = new Visualive.ObjAsset('PartA');
+        objAsset.getParameter('ObjFilePath').setFilepath("/Assets/ExplodePartA.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -85,8 +85,8 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
     scene.getRoot().addChild(asset);
 
     {
-        const objAsset = new Visualive.AssetItem('PartB');
-        objAsset.getParameter('DataFilePath').setFilepath("/Assets/ExplodePartB.obj");
+        const objAsset = new Visualive.ObjAsset('PartB');
+        objAsset.getParameter('ObjFilePath').setFilepath("/Assets/ExplodePartB.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
         objAsset.getParameter('loadMtlFile').setValue(false);
@@ -124,7 +124,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
                 // Check to see if the video has progressed to the next frame. 
                 // If so, then we emit and update, which will cause a redraw.
                 animatingValue = true;
-                explodedAmount += 0.005;
+                explodedAmount += 0.01;
                 explodedPartsOp.getParameter('Explode').setValue(explodedAmount);
                 renderer.requestRedraw();
                 if (explodedAmount < 1.0) {
