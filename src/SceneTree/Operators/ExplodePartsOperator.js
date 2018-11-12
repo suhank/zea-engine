@@ -45,25 +45,23 @@ class ExplodePartParameter extends StructParameter {
 
     evaluate(explode, explodeDist, stages, cascade, centered, parentXfo, parentDelta){
 
-
         const stage = this.__stageParam.getValue();
         const movement = this.__movementParam.getValue();
         let dist;
         if(cascade) {
 
-            // // in 'cascade' mode, the move in a cascade, eventually
-            // all the parts moving.
+            // in 'cascade' mode, the move in a cascade, starting with stage 0. then 1 ...
             const t = (stage / stages);
             if(centered)
                 t -= 0.5;
-            dist = explodeDist * Math.lerp(movement.x, movement.y, Math.max(0, explode-t));
+            dist = explodeDist * Math.linStep(movement.x, movement.y, Math.max(0, explode-t));
         }
         else {
             // Else all the parts are spread out across the explode distance. 
             let t = 1.0 - (stage / stages);
             if(centered)
                 t -= 0.5;
-            dist = explodeDist * Math.lerp(movement.x, movement.y, explode) * t;
+            dist = explodeDist * Math.linStep(movement.x, movement.y, explode) * t;
         }
 
         let explodeDir = this.__axisParam.getValue();

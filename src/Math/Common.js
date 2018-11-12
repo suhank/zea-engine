@@ -304,6 +304,10 @@ Math.smoothStep = (edge0, edge1, x)=>{
     return t * t * (3.0 - 2.0 * t);
 }
 
+Math.linStep = (edge0, edge1, x)=>{
+    return Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+}
+
 
 export {
     SInt32,
