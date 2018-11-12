@@ -96,7 +96,8 @@ class TreeItem extends BaseItem {
                 return globalXfo;
         }
         this.__globalXfoParam.valueChanged.connect((mode) => {
-            if (mode == ValueSetMode.USER_SETVALUE) {
+            // if (mode != ValueSetMode.USER_SETVALUE) {
+            if(mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED) {
                 // Note: both global and local cannot be dirty at the same time
                 // because we need one clean to compute the other. If the global
                 // Xfo is explicitly set, then it is now clean, so we can make local

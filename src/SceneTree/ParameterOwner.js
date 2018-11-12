@@ -208,9 +208,9 @@ class ParameterOwner extends RefCounted {
                     console.warn("Param not found:" + key);
                 else {
                     if(pj.paramPath){
-                        const param = context.resolvePath(pj.paramPath, 0);
-                        if(param)
+                        context.resolvePath(pj.paramPath).then((param)=>{
                             this.replaceParameter(param)
+                        });
                     }
                     else {
                         param.fromJSON(pj, context);

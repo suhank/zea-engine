@@ -96,7 +96,30 @@ class AssetItem extends TreeItem {
         context.numGeomItems = 0;
 
         context.assetItem = this;
-        context.resolvePath = this.resolvePath.bind(this);
+
+        const plcbs = []; // Post load callbacks.
+        context.resolvePath = (path)=>{
+            if(!path)
+                throw("Path not spcecified")
+            return new Promise((resolve, reject) => {
+                const item = this.resolvePath(path, 0);
+                if(item) {
+                    resolve(item);
+                }
+                else {
+                    // Some paths resolve to items generated during load,
+                    // so push a callback to re-try after the load is complete.
+                    plcbs.push(()=>{
+                        const param = this.resolvePath(path, 0);
+                        if(param)
+                            resolve(param);
+                        else {
+                            reject("Path unable to be resolved:" + path);
+                        }
+                    });
+                }
+            });
+        };
 
         // Avoid loading the FilePAth as we are already loading json data.
         if (j.params && j.params.FilePath) {
@@ -104,6 +127,12 @@ class AssetItem extends TreeItem {
         }
 
         super.fromJSON(j, context, flags);
+
+        // Invoke all the post-load callbacks to resolve any 
+        // remaning references.
+        for(let cb of plcbs)
+            cb();
+
         if (onDone)
             onDone();
     }
@@ -112,36 +141,36 @@ class AssetItem extends TreeItem {
     // Static Methods
 
 
-    static registerDataLoader(ext, cls) {
-        const regExt = (ext) => {
-            ext = ext.toLowerCase();
-            if (!assetLoaders[ext])
-                assetLoaders[ext] = [];
-            else {
-                console.warn("overriding loader for ext:" + ext + ". Prev loader:" + assetLoaders[ext] + ". New loader:" + cls);
-            }
-            assetLoaders[ext].push(cls);
-        }
+    // static registerDataLoader(ext, cls) {
+    //     const regExt = (ext) => {
+    //         ext = ext.toLowerCase();
+    //         if (!assetLoaders[ext])
+    //             assetLoaders[ext] = [];
+    //         else {
+    //             console.warn("overriding loader for ext:" + ext + ". Prev loader:" + assetLoaders[ext] + ". New loader:" + cls);
+    //         }
+    //         assetLoaders[ext].push(cls);
+    //     }
 
-        if (Array.isArray(ext)) {
-            for (let e of ext)
-                regExt(e);
-        } else {
-            regExt(ext);
-        }
-    }
+    //     if (Array.isArray(ext)) {
+    //         for (let e of ext)
+    //             regExt(e);
+    //     } else {
+    //         regExt(ext);
+    //     }
+    // }
 
-    static constructLoader(file) {
-        for(let exts of assetLoaders) {
-            if((new RegExp('\\.('+exts+')$', "i")).test(file.name)){
-                const loader = new assetLoaders[exts]();
-                if(loader) {
-                    loader.getParameter('FilePath').setValue(file.id);
-                    return loader;
-                }
-            }
-        }
-    }
+    // static constructLoader(file) {
+    //     for(let exts of assetLoaders) {
+    //         if((new RegExp('\\.('+exts+')$', "i")).test(file.name)){
+    //             const loader = new assetLoaders[exts]();
+    //             if(loader) {
+    //                 loader.getParameter('FilePath').setValue(file.id);
+    //                 return loader;
+    //             }
+    //         }
+    //     }
+    // }
 };
 
 sgFactory.registerClass('AssetItem', AssetItem);

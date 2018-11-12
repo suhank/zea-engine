@@ -88,12 +88,8 @@ class KinematicGroupParameter extends ListParameter {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const treeItems = [];
-        const makeRelative = (path) => {
-            const assetPath = context.assetItem.getPath();
-            return path.slice(assetPath.length);
-        }
         for(let p of this.__value) 
-            treeItems.push(makeRelative(p.getPath()));
+            treeItems.push(context.makeRelative(p.getPath()));
         return {
             treeItems
         };
@@ -109,21 +105,12 @@ class KinematicGroupParameter extends ListParameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
-        if(context.assetItem) {
-            const treeItems = j.treeItems;
-            const onloaded = ()=>{
-                // this.setValue(assetItem.resolvePath(itemPath));
-                for(let i=0; i<j.treeItems.length; i++) {
-                    const treeItem = context.assetItem.resolvePath(treeItems[i], 0);
-                    this.__value.push(treeItem);
-                    this.elementAdded.emit(treeItem, this.__value.length-1)
-                }
-                context.assetItem.loaded.disconnect(onloaded)
-            }
-            context.assetItem.loaded.connect(onloaded)
-            this.__flags |= ParamFlags.USER_EDITED;
+        for(let i=0; i<j.treeItems.length; i++) {
+            context.resolvePath(j.treeItems[i]).then((treeItem)=>{
+                this.__value.push(treeItem);
+                this.elementAdded.emit(treeItem, this.__value.length-1)
+            });
         }
-
     }
 
     destroy(){
