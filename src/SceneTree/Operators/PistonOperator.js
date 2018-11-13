@@ -117,9 +117,8 @@ class PistonParameter extends StructParameter {
         }
     }
 
-    clone() {
+    clone(flags) {
         const clonedParam = new PistonParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 

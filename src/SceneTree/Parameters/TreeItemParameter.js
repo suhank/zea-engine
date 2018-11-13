@@ -15,9 +15,8 @@ class TreeItemParameter extends Parameter {
         this.treeItemGlobalXfoChanged = new Signal();
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new TreeItemParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 

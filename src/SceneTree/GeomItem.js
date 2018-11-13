@@ -73,15 +73,15 @@ class GeomItem extends TreeItem {
         super.destroy();
     }
 
-    clone() {
-        let cloned = new GeomItem();
-        this.copyTo(cloned);
+    clone(flags) {
+        const cloned = new GeomItem();
+        cloned.copyFrom(this, flags);
         return cloned;
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned);
-        cloned.__lightmapName = this.__lightmapName;
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags);
+        this.__lightmapCoordOffset = src.__lightmapCoordOffset;
     }
 
     //////////////////////////////////////////

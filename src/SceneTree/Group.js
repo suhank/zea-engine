@@ -97,14 +97,14 @@ class Group extends TreeItem {
         super.destroy();
     }
 
-    clone() {
+    clone(flags) {
         let cloned = new Group();
-        this.copyTo(cloned);
+        cloned.copyFrom(this, flags);
         return cloned;
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned);
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags);
     }
 
     //////////////////////////////////////////

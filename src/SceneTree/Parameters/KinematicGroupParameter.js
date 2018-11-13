@@ -73,9 +73,8 @@ class KinematicGroupParameter extends ListParameter {
         this.__cleanerFn = undefined;
     }
 
-    clone() {
+    clone(flags) {
         const clonedParam = new KinematicGroupParameter(this.__name, clonedValue, this.__dataType);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 

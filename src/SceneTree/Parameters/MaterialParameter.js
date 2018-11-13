@@ -16,9 +16,8 @@ class MaterialParameter extends Parameter {
         this.valueParameterValueChanged = new Signal();
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new MaterialParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 

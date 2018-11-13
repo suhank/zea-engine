@@ -88,22 +88,32 @@ class TreeItem extends BaseItem {
 
         this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
 
-        const _cleanLocalXfo = (prevValue) => {
-            const globalXfo = this.__globalXfoParam.getValue();
-            if (this.__ownerItem !== undefined)
-                return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo);
-            else
-                return globalXfo;
-        }
+        // const _cleanLocalXfo = (prevValue) => {
+        //     const globalXfo = this.__globalXfoParam.getValue();
+        //     if (this.__ownerItem !== undefined)
+        //         return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo);
+        //     else
+        //         return globalXfo;
+        // }
         this.__globalXfoParam.valueChanged.connect((mode) => {
-            // if (mode != ValueSetMode.USER_SETVALUE) {
-            if(mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED) {
-                // Note: both global and local cannot be dirty at the same time
-                // because we need one clean to compute the other. If the global
-                // Xfo is explicitly set, then it is now clean, so we can make local
-                // dirty. 
-                this.__localXfoParam.setDirty(_cleanLocalXfo);
-            }
+            // This system has caused a lot of trouble. 
+            // It is a bit ambiguous when the local should become dirtry. 
+            // the following code will break when an operaotr is bound to
+            // write global, and another bound to read local. 
+            // With the following code, often a global Xfo would be set as dirty,
+            // while geom Xfo was clean. so no changes to global xfo would 
+            // propagate as it would ignore any firther effors to dirty global.
+            // Pulling on geom xfo would also not clean global(as geom was considered clean)
+            // We need to figure out how to break the infinite loop, and we don't yet have a solution.
+            // if(mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED) {
+            //     // Note: both global and local cannot be dirty at the same time
+            //     // because we need one clean to compute the other. If the global
+            //     // Xfo is explicitly set, then it is now clean, so we can make local
+            //     // dirty.
+            //     // Note: setting the local dirty should not then cause the global
+            //     // to be dirty.
+            //     this.__localXfoParam.setDirty(_cleanLocalXfo, true);
+            // }
             this._setBoundingBoxDirty();
         });
 
@@ -130,18 +140,16 @@ class TreeItem extends BaseItem {
         super.destroy();
     }
 
-    clone() {
+    clone(flags) {
         const cloned = new TreeItem();
-        this.copyTo(cloned);
+        cloned.copyFrom(this, flags);
         return cloned;
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned);
-        // cloned.__visible = this.__visible;
-        cloned.__selectable = this.__selectable;
-        for (let childItem of this.__childItems)
-            cloned.addChild(childItem.clone());
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags);
+        for (let srcChildItem of src.getChildren())
+            this.addChild(srcChildItem.clone());
     }
 
 

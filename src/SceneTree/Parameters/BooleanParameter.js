@@ -13,9 +13,8 @@ class BooleanParameter extends Parameter {
         super(name, value, 'Boolean');
     }
 
-    clone() {
+    clone(flags) {
         const clonedParam = new BooleanParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

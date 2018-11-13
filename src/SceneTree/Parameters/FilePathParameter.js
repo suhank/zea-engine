@@ -89,13 +89,9 @@ class FilePathParameter extends Parameter {
         return this.__file ? this.__file.url : undefined;
     }
 
-    cloneMembers(clonedParam) {
-        clonedParam.__file = this.__file;
-    }
-
-    clone() {
+    clone(flags) {
         const clonedParam = new FilePathParameter(this.__name);
-        this.cloneMembers(clonedParam);
+        clonedParam.__file = this.__file;
         return clonedParam;
     }
 

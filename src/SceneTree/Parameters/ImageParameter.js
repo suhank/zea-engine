@@ -17,9 +17,8 @@ class ImageParameter extends Parameter {
         this.valueParameterValueChanged = new Signal();
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new ImageParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 

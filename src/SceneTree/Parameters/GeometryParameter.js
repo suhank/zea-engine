@@ -14,12 +14,10 @@ class GeometryParameter extends Parameter {
         this.setValue(value);
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new GeometryParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
-
 
     setValue(geom, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if(this.__value !== geom){

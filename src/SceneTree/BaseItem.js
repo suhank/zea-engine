@@ -50,13 +50,13 @@ class BaseItem extends ParameterOwner {
         super.destroy();
     }
 
-    clone() {
+    clone(flags) {
         throw (this.constructor.name + " does not implment its clone method");
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned)
-        cloned.setName(this.__name);
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags)
+        this.setName(src.getName());
     }
 
     //////////////////////////////////////////

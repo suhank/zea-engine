@@ -63,10 +63,9 @@ class ListParameter extends Parameter {
         // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
     }
 
-    clone() {
+    clone(flags) {
         let clonedValue = this.__value.slice(0);
         const clonedParam = new ListParameter(this.__name, this.__dataType);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 

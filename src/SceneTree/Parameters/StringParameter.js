@@ -22,9 +22,8 @@ class StringParameter extends Parameter {
         return this.multiLine;
     }
 
-    clone() {
+    clone(flags) {
         const clonedParam = new StringParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

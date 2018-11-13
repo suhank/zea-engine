@@ -92,14 +92,15 @@ class BaseParameter extends RefCounted {
         // TODO
     }
 
-    setDirty(cleanerFn) {
+    setDirty(cleanerFn, silent=false) {
         // If already dirty, simply return.
         if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
             return false;
         }
         this.__cleanerFns.push(cleanerFn);
 
-        this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
+        if(!silent)
+            this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
     }
 
     setEnabled(state) {
@@ -144,14 +145,9 @@ class BaseParameter extends RefCounted {
         this.__cleanerFns.splice(index, 1);
     }
 
-    clone() {
+    clone(flags) {
         console.error("TOOD: implment me")
     }
-
-    cloneMembers(clonedParam) {
-
-    }
-
 
     destroy(){
         // Note: some parameters hold refs to geoms/materials, 
@@ -211,17 +207,12 @@ class Parameter extends BaseParameter {
             this.valueChanged.emit(mode);
     }
 
-    clone() {
+    clone(flags) {
         const clonedValue = this.__value;
         if (clonedValue.clone)
             clonedValue = clonedValue.clone();
         const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType);
-        this.cloneMembers(clonedParam);
         return clonedParam;
-    }
-
-    cloneMembers(clonedParam) {
-        super.cloneMembers(clonedParam);
     }
 
     //////////////////////////////////////////

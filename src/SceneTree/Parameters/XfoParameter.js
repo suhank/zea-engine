@@ -10,9 +10,8 @@ class XfoParameter extends Parameter {
         super(name, value ? value : new Xfo(), 'Xfo');
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new XfoParameter(this.__name, this.__value.clone());
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

@@ -65,16 +65,11 @@ class NumberParameter extends Parameter {
         return this;
     }
 
-    cloneMembers(clonedParam) {
-        super.cloneMembers(clonedParam);
+    clone(flags) {
+        const clonedParam = new NumberParameter(this.__name, this.__value);
         clonedParam.__range = this.__range;
         clonedParam.__axis = this.__axis;
         clonedParam.__step = this.__step;
-    }
-
-    clone() {
-        const clonedParam = new NumberParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

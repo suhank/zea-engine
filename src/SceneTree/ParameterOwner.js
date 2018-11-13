@@ -47,13 +47,15 @@ class ParameterOwner extends RefCounted {
         this.parameterValueChanged = new Signal();
     }
 
-    copyTo(cloned) {
-        for (let param of this.__params) {
-            if(cloned.hasParameter(param.getName())){
-                cloned.getParameter(param.getName()).setValue(param.getValue(), 2);
+    copyFrom(src, flags) {
+        for (let srcParam of src.getParameters()) {
+            const param = this.getParameter(srcParam.getName())
+            if(param){
+                // Note: we are not cloning the values.
+                param.setValue(srcParam.getValue(), 2);
             }
             else {
-                cloned.addParameterInstance(param.clone());
+                this.addParameterInstance(srcParam.clone());
             }
         }
     }
