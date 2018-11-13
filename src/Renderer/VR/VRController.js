@@ -49,7 +49,7 @@ class VRController {
         if(!this.__isDaydramController) {
             // A Vive or Occulus Touch Controller
             this.__tip = new TreeItem('Tip');
-            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.07, -0.04)));
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.06)));
             this.__treeItem.addChild(this.__tip, false);
             vrviewport.getTreeItem().addChild(this.__treeItem);
 
@@ -213,6 +213,7 @@ class VRController {
 
         renderer.drawSceneGeomData(renderstate);
         gl.finish();
+        this.__geomDataBufferFbo.unbindForWriting();
         this.__geomDataBufferFbo.bindForReading();
 
         let passId, itemId, dist, geomData;
@@ -224,7 +225,7 @@ class VRController {
             passId = Math.round(geomData[0]);
         }
 
-        this.__geomDataBufferFbo.unbind();
+        this.__geomDataBufferFbo.unbindForReading();
 
         const geomItemAndDist = renderer.getPass(passId).getGeomItemAndDist(geomData);
 

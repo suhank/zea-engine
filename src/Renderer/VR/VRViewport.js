@@ -54,6 +54,7 @@ class VRViewport extends GLBaseViewport {
         // Viewport params
         this.__projectionMatriciesUpdated = false;
         this.__presentingRequested = false;
+        this.__frameRequested = false;
         this.__canvasSizeScale = new Vec2(1, 1);
         this.__frustumDim = new Vec2(1, 1);
 
@@ -174,9 +175,12 @@ class VRViewport extends GLBaseViewport {
     startContinuousDrawing() {
         this.__continuousDrawing = true;
 
+        this.__frameRequested = false;
         const onAnimationFrame = () => {
-            if (this.__continuousDrawing)
+            if (this.__continuousDrawing) {
                 this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
+                this.__frameRequested = true;
+            }
             this.__renderer.draw();
         }
         this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
@@ -327,9 +331,12 @@ class VRViewport extends GLBaseViewport {
 
         super.clear();
 
+        if(!this.__frameRequested)
+            return;
+
         this.__vrDisplay.getFrameData(this.__frameData);
 
-        if (!this.__frameData.pose || (isNaN(this.__frameData.pose.orientation[0]) || !isFinite(this.__frameData.pose.orientation[0])))
+        if (!this.__frameData.pose || !this.__frameData.pose.orientation)
             return false;
 
         if (!this.__projectionMatriciesUpdated) {
@@ -377,6 +384,7 @@ class VRViewport extends GLBaseViewport {
 
     submitFrame(){
         this.__vrDisplay.submitFrame();
+        this.__frameRequested = false;
     }
 
 };

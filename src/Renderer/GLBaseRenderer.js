@@ -227,7 +227,8 @@ class GLBaseRenderer {
         vp.createGeomDataFbo(this.__floatGeomBuffer);
 
         vp.viewChanged.connect((data) => {
-            this.viewChanged.emit(data);
+            if (!this.__vrViewportPresenting)
+                this.viewChanged.emit(data);
         });
 
         this.__viewports.push(vp);
@@ -259,7 +260,7 @@ class GLBaseRenderer {
     }
 
     activateViewportAtPos(offsetX, offsetY) {
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
+        if (this.__vrViewportPresenting)
             return this.__vrViewport;
         const vp = this.getViewportAtPos(offsetX, offsetY);
         if(vp && vp != this.__activeViewport)
@@ -267,7 +268,7 @@ class GLBaseRenderer {
     }
 
     getActiveViewport() {
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
+        if (this.__vrViewportPresenting)
             return this.__vrViewport;
         return this.__activeViewport;
     }
@@ -314,7 +315,7 @@ class GLBaseRenderer {
 
     __onResize() {
 
-        if (this.__vrViewport && this.__vrViewport.isPresenting()) {
+        if (this.__vrViewportPresenting) {
             var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
             this.__glcanvas.width = hmdCanvasSize[0];
             this.__glcanvas.height = hmdCanvasSize[1];
@@ -634,7 +635,7 @@ class GLBaseRenderer {
                 let vrvp = new VRViewport(this, displays[displays.length-1], this.__displayVRGeometry);
 
                 vrvp.presentingChanged.connect((state)=>{
-
+                    this.__vrViewportPresenting = state;
                     if(state){
                         vrvp.viewChanged.connect(this.viewChanged.emit);
                         // vrvp.actionStarted.connect(this.actionStarted.emit);
@@ -724,7 +725,7 @@ class GLBaseRenderer {
     requestRedraw() {
 
         // If a redraw has already been requested, then simply return and wait.
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
+        if (this.__vrViewportPresenting)
             return false;
         // return super.requestRedraw();
 
