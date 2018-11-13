@@ -423,7 +423,14 @@ class GLBaseRenderer {
             event.stopPropagation();
         });
         this.__glcanvas.addEventListener('mouseleave', (event) => {
+            if (activeGLRenderer != this || !isValidCanvas())
+                return;
             if (!mouseIsDown) {
+                const vp = activeGLRenderer.getActiveViewport();
+                if (vp) {
+                    vp.onMouseLeave(event);
+                    event.preventDefault();
+                }
                 activeGLRenderer = undefined;
             } else {
                 mouseLeft = true;
@@ -454,8 +461,14 @@ class GLBaseRenderer {
             if (vp) {
                 vp.onMouseUp(event);
             }
-            if (mouseLeft)
+            if (mouseLeft){
+                const vp = activeGLRenderer.getActiveViewport();
+                if (vp) {
+                    vp.onMouseLeave(event);
+                    event.preventDefault();
+                }
                 activeGLRenderer = undefined;
+            }
             event.stopPropagation();
             return false;
         });
@@ -663,6 +676,11 @@ class GLBaseRenderer {
                                 pass.stopPresenting();
                             }
                         }
+
+                        this.viewChanged.emit({
+                            interfaceType: 'CameraAndPointer',
+                            viewXfo: this.getViewport().getCamera().getGlobalXfo()
+                        })
                     }
                 })
 

@@ -61,6 +61,7 @@ class GLViewport extends GLBaseViewport {
         this.mouseDown = new Signal();
         this.mouseMoved = new Signal();
         this.mouseUp = new Signal();
+        this.mouseLeave = new Signal();
         this.mouseDownOnGeom = new Signal();
         this.mouseWheel = new Signal();
 
@@ -389,9 +390,7 @@ class GLViewport extends GLBaseViewport {
             }
         }
 
-
-        this.mouseDown.emit(event, mousePos, this);
-
+        this.mouseDown.emit(event);
         return false;
     }
 
@@ -407,8 +406,7 @@ class GLViewport extends GLBaseViewport {
         event.viewport = this;
         event.mousePos = mousePos;
         event.mouseRay = this.calcRayFromScreenPos(mousePos);
-        this.mouseUp.emit(event, mousePos, this);
-
+        this.mouseUp.emit(event);
         return false;
     }
 
@@ -424,7 +422,13 @@ class GLViewport extends GLBaseViewport {
         event.viewport = this;
         event.mousePos = mousePos;
         event.mouseRay = this.calcRayFromScreenPos(mousePos);
-        this.mouseMoved.emit(event, mousePos, this);
+        this.mouseMoved.emit(event);
+        return false;
+    }
+
+    onMouseLeave(event) {
+        event.viewport = this;
+        this.mouseLeave.emit(event);
         return false;
     }
 
@@ -434,7 +438,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.keyPressed.emit(key, event, this);
+        this.keyPressed.emit(key, event);
         return false;
     }
     
@@ -444,7 +448,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.keyDown.emit(key, event, this);
+        this.keyDown.emit(key, event);
     }
 
     onKeyUp(key, event) {
@@ -453,7 +457,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.keyUp.emit(key, event, this);
+        this.keyUp.emit(key, event);
     }
 
     onWheel(event) {
@@ -462,7 +466,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.mouseWheel.emit(event, this);
+        this.mouseWheel.emit(event);
     }
 
     // Touch events
@@ -472,7 +476,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.touchStart.emit(event, this);
+        this.touchStart.emit(event);
     }
 
     onTouchMove(event) {
@@ -481,7 +485,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.touchMove.emit(event, this);
+        this.touchMove.emit(event);
     }
 
     onTouchEnd(event) {
@@ -490,7 +494,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.touchEnd.emit(event, this);
+        this.touchEnd.emit(event);
     }
 
     onTouchCancel(event) {
@@ -499,7 +503,7 @@ class GLViewport extends GLBaseViewport {
             return;
         }
         event.viewport = this;
-        this.touchCancel.emit(event, this);
+        this.touchCancel.emit(event);
     }
 
 
