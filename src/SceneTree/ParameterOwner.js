@@ -48,7 +48,14 @@ class ParameterOwner extends RefCounted {
     }
 
     copyFrom(src, flags) {
-        for (let srcParam of src.getParameters()) {
+        // Note: Loop over the parameters in reverse order, 
+        // this is because often, parameter depdenencies
+        // are bottom to top. (bottom params dependent on higher params)
+        // This means that as a parameter is set with a new value
+        // it will dirty the params below it. 
+        let i = src.numParameters();
+        while (i--) {
+            const srcParam = src.getParameterByIndex(i);
             const param = this.getParameter(srcParam.getName())
             if(param){
                 // Note: we are not cloning the values.
@@ -63,6 +70,9 @@ class ParameterOwner extends RefCounted {
     //////////////////////////////////////////
     // Params
 
+    numParameters() {
+        return this.__params.length;
+    }
     getParameters() {
         return this.__params;
     }

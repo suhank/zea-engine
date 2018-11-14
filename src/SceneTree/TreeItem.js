@@ -86,34 +86,22 @@ class TreeItem extends BaseItem {
         this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
         this._childFlagsChanged = this._childFlagsChanged.bind(this);
 
-        this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
+        this.__localXfoParam.valueChanged.connect(()=>{
+            this._setGlobalXfoDirty();
+        });
 
-        // const _cleanLocalXfo = (prevValue) => {
-        //     const globalXfo = this.__globalXfoParam.getValue();
-        //     if (this.__ownerItem !== undefined)
-        //         return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo);
-        //     else
-        //         return globalXfo;
-        // }
+        const cleanLocalXfo = (prevValue) => {
+            const globalXfo = this.__globalXfoParam.getValue();
+            if (this.__ownerItem !== undefined)
+                return this.__ownerItem.getGlobalXfo().inverse().multiply(globalXfo);
+            else
+                return globalXfo;
+        }
         this.__globalXfoParam.valueChanged.connect((mode) => {
-            // This system has caused a lot of trouble. 
-            // It is a bit ambiguous when the local should become dirtry. 
-            // the following code will break when an operaotr is bound to
-            // write global, and another bound to read local. 
-            // With the following code, often a global Xfo would be set as dirty,
-            // while geom Xfo was clean. so no changes to global xfo would 
-            // propagate as it would ignore any firther effors to dirty global.
-            // Pulling on geom xfo would also not clean global(as geom was considered clean)
-            // We need to figure out how to break the infinite loop, and we don't yet have a solution.
-            // if(mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED) {
-            //     // Note: both global and local cannot be dirty at the same time
-            //     // because we need one clean to compute the other. If the global
-            //     // Xfo is explicitly set, then it is now clean, so we can make local
-            //     // dirty.
-            //     // Note: setting the local dirty should not then cause the global
-            //     // to be dirty.
-            //     this.__localXfoParam.setDirty(_cleanLocalXfo, true);
-            // }
+            // Dirtiness propagates from Local to Global, but not vice versa.
+            if(mode != ValueSetMode.OPERATOR_DIRTIED) {
+                this.__localXfoParam.setDirty(cleanLocalXfo);
+            }
             this._setBoundingBoxDirty();
         });
 

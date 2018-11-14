@@ -45,28 +45,26 @@ class GeomItem extends TreeItem {
         this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('geomOffsetXfo'));
         this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'));
 
-        let _cleanGeomXfo = (xfo)=>{
-            return this.getGlobalXfo().multiply(this.__geomOffsetXfoParam.getValue());
-        }
-        this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            this.__geomXfoParam.setDirty(_cleanGeomXfo);
+        this.__cleanGeomXfo = this.__cleanGeomXfo.bind(this)
+        this.__globalXfoParam.valueChanged.connect((mode)=>{
+            this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
         });
-        this.__geomOffsetXfoParam.valueChanged.connect((changeType)=>{
-            this.__geomXfoParam.setDirty(_cleanGeomXfo);
+        this.__geomOffsetXfoParam.valueChanged.connect((mode)=>{
+            this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
         });
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
-        // this.materialAssigned = new Signal();
-        // this.geomAssigned = new Signal();
         this.materialAssigned = this.__materialParam.valueChanged;
         this.geomAssigned = this.__geomParam.valueChanged;
-
-
 
         if (geom)
             this.setGeometry(geom);
         if (material)
             this.setMaterial(material);
+    }
+
+    __cleanGeomXfo() {
+        return this.__globalXfoParam.getValue().multiply(this.__geomOffsetXfoParam.getValue());
     }
 
     destroy() {
@@ -82,6 +80,10 @@ class GeomItem extends TreeItem {
     copyFrom(src, flags) {
         super.copyFrom(src, flags);
         this.__lightmapCoordOffset = src.__lightmapCoordOffset;
+        // Geom Xfo should be dirty after cloning.
+        // Note: this might not be necessary. It should
+        // always be dirty after cloning.
+        this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
     }
 
     //////////////////////////////////////////

@@ -92,15 +92,14 @@ class BaseParameter extends RefCounted {
         // TODO
     }
 
-    setDirty(cleanerFn, silent=false) {
+    setDirty(cleanerFn) {
         // If already dirty, simply return.
         if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
             return false;
         }
         this.__cleanerFns.push(cleanerFn);
 
-        if(!silent)
-            this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
+        this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
     }
 
     setEnabled(state) {
