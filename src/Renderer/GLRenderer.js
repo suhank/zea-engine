@@ -74,8 +74,7 @@ class GLRenderer extends GLBaseRenderer {
 
         /////////////////////////
         // Renderer Setup
-        this.__exposure = 0.0;
-        this.__exposureRange = options.exposureRange ? options.exposureRange : [-5, 10];
+        this.__exposure = 1.0;
         this.__tonemap = true;
         this.__gamma = 2.2;
 
@@ -282,15 +281,6 @@ class GLRenderer extends GLBaseRenderer {
         this.requestRedraw();
     }
 
-    get tonemap() {
-        return this.__tonemap;
-    }
-
-    set tonemap(val) {
-        this.__tonemap = val;
-        this.requestRedraw();
-    }
-
     get gamma() {
         return this.__gamma;
     }
@@ -306,15 +296,6 @@ class GLRenderer extends GLBaseRenderer {
 
     set displayEnvironment(val) {
         this.__displayEnvironment = val;
-        this.requestRedraw();
-    }
-
-    get debugLightmaps() {
-        return this.__debugLightmaps;
-    }
-
-    set debugLightmaps(val) {
-        this.__debugLightmaps = val;
         this.requestRedraw();
     }
 
@@ -454,6 +435,7 @@ class GLRenderer extends GLBaseRenderer {
         renderstate.planeDist = this._planeDist;
         renderstate.planeNormal = this.__cutPlaneNormal;
         renderstate.exposure = this.__exposure;
+        renderstate.gamma = this.__gamma;
         renderstate.shaderopts = this.__preproc;
 
         if (this.__displayEnvironment)

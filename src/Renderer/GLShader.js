@@ -362,7 +362,13 @@ class GLShader extends BaseItem {
             {
                 const unif = unifs.exposure;
                 if (unif) {
-                    gl.uniform1f(unif.location, renderstate.exposure ? renderstate.exposure : 1.0);
+                    gl.uniform1f(unif.location, renderstate.exposure);
+                }
+            }
+            {
+                const unif = unifs.gamma;
+                if (unif) {
+                    gl.uniform1f(unif.location, renderstate.gamma);
                 }
             }
         }
