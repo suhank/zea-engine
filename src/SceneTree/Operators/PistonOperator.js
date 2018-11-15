@@ -197,8 +197,8 @@ class PistonOperator extends Operator {
         this.__pistonsParam.elementAdded.connect((value, index) => {
             value.setCrankXfo(this.__baseCrankXfo)
 
-            this.addOutput(value.getRodOutput());
-            this.addOutput(value.getCapOutput());
+            // this.addOutput(value.getRodOutput());
+            // this.addOutput(value.getCapOutput());
         })
         this.__pistonsParam.elementRemoved.connect((value, index) => {
             this.removeOutput(value.getRodOutput());
@@ -241,12 +241,12 @@ class PistonOperator extends Operator {
             this.__crankOutput.setValue(crankXfo);
         }
 
-        const pistons = this.__pistonsParam.getValue();
-        const len = pistons.length;
-        for (let i = 0; i < len; i++) {
-            const piston = pistons[i];
-            piston.evaluate(quat, crankAxis, revolutions);
-        }
+        // const pistons = this.__pistonsParam.getValue();
+        // const len = pistons.length;
+        // for (let i = 0; i < len; i++) {
+        //     const piston = pistons[i];
+        //     piston.evaluate(quat, crankAxis, revolutions);
+        // }
 
         this.postEval.emit(revolutions)
     }
