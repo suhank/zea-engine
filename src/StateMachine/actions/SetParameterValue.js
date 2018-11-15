@@ -30,7 +30,10 @@ class SetParameterValue extends StateAction {
             if(!this.__valueParam || this.__outParam.getParam().getDataType() != this.__valueParam.getDataType() ){
                 const param = this.__outParam.getParam().clone();
                 param.setName('Value');
-                param.setValue(this.__outParam.getInitialValue())
+                if(this.__outParam.getInitialValue)
+                    param.setValue(this.__outParam.getInitialValue())
+                else
+                    param.setValue(this.__outParam.getParam().getValue())
                 this.__valueParam = this.addParameter(param);
             }
         })

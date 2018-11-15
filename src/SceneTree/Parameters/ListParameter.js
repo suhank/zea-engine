@@ -98,6 +98,7 @@ class ListParameter extends Parameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
+        this.__value = [];
         for(let i=0; i<j.items.length; i++) {
             let elem;
             if(typeof this.__dataType === 'string') {

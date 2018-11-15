@@ -137,21 +137,11 @@ class PistonParameter extends StructParameter {
 
     toJSON(context, flags) {
         const j = super.toJSON(context, flags);
-        // if(j){
-        //     j.rodOutput = this.__rodoutput.toJSON(context, flags);
-        //     j.capOutput = this.__capoutput.toJSON(context, flags);
-        // }
         return j;
     }
 
     fromJSON(j, context, flags) {
         super.fromJSON(j, context, flags);
-        if(j.rodOutput){
-            this.__rodoutput.fromJSON(j.rodOutput, context);
-        }
-        if(j.capOutput){
-            this.__capoutput.fromJSON(j.capOutput, context);
-        }
     }
 
 };
@@ -197,8 +187,8 @@ class PistonOperator extends Operator {
         this.__pistonsParam.elementAdded.connect((value, index) => {
             value.setCrankXfo(this.__baseCrankXfo)
 
-            // this.addOutput(value.getRodOutput());
-            // this.addOutput(value.getCapOutput());
+            this.addOutput(value.getRodOutput());
+            this.addOutput(value.getCapOutput());
         })
         this.__pistonsParam.elementRemoved.connect((value, index) => {
             this.removeOutput(value.getRodOutput());
@@ -241,12 +231,12 @@ class PistonOperator extends Operator {
             this.__crankOutput.setValue(crankXfo);
         }
 
-        // const pistons = this.__pistonsParam.getValue();
-        // const len = pistons.length;
-        // for (let i = 0; i < len; i++) {
-        //     const piston = pistons[i];
-        //     piston.evaluate(quat, crankAxis, revolutions);
-        // }
+        const pistons = this.__pistonsParam.getValue();
+        const len = pistons.length;
+        for (let i = 0; i < len; i++) {
+            const piston = pistons[i];
+            piston.evaluate(quat, crankAxis, revolutions);
+        }
 
         this.postEval.emit(revolutions)
     }
