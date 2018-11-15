@@ -28,13 +28,13 @@ class GeomClicked extends StateEvent  {
 
     activate() {
         if(this.__geom){
-            this.__geom.mouseDown.connect(this.__geomClicked);
+            this.__geom.mouseDown.connect(this.__geomClicked.bind(this));
         }
     }
 
     deactivate() {
         if(this.__geom){
-            this.__geom.mouseDown.disconnect(this.__geomClicked);
+            this.__geom.mouseDown.disconnect(this.__geomClicked.bind(this));
         }
     }
 
