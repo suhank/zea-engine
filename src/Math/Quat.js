@@ -236,22 +236,22 @@ class Quat extends AttrValue {
         switch (rotationOrder) {
             case 0:
                 /*' XYZ' */
-                return Euler(euler.y, euler.z, euler.x, rotationOrder);
+                return new EulerAngles(euler.y, euler.z, euler.x, rotationOrder);
             case 1:
                 /* 'YZX' */
-                return Euler(euler.x, euler.y, euler.z, rotationOrder);
+                return new EulerAngles(euler.x, euler.y, euler.z, rotationOrder);
             case 2:
                 /* 'ZXY' */
-                return Euler(euler.z, euler.x, euler.y, rotationOrder);
+                return new EulerAngles(euler.z, euler.x, euler.y, rotationOrder);
             case 3:
                 /* 'XZY' */
-                return Euler(-euler.y, euler.x, euler.z, rotationOrder);
+                return new EulerAngles(-euler.y, euler.x, euler.z, rotationOrder);
             case 4:
                 /* 'ZYX' */
-                return Euler(euler.x, euler.z, -euler.y, rotationOrder);
+                return new EulerAngles(euler.x, euler.z, -euler.y, rotationOrder);
             case 5:
                 /* 'YXZ' */
-                return Euler(euler.z, -euler.y, euler.x, rotationOrder);
+                return new EulerAngles(euler.z, -euler.y, euler.x, rotationOrder);
         }
 
     }

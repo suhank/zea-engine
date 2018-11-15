@@ -39,30 +39,9 @@ class OperatorOutput {
         return this._param;
     }
 
-
     setParam(param) {
         this._param = param;
-
-        // Note: sometimes the param value is changed after binding.
-        // e.g. The group Xfo is updated after the operator
-        // that binds to it is loaded. It could also change if a user
-        // Is adding items to the group using the UI. Therefore, the
-        // initial Xfo needs to be updated.
-        const init = () => {
-            this._initialParamValue = param.getValue();
-            if (this._initialParamValue.clone)
-                this._initialParamValue = this._initialParamValue.clone();
-        }
-        init();
-        param.valueChanged.connect(mode => {
-            if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.DATA_LOAD)
-                init();
-        })
         this.paramSet.emit();
-    }
-
-    getInitialValue() {
-        return this._initialParamValue;
     }
 
     getValue(mode = ValueSetMode.OPERATOR_GETVALUE) {
@@ -117,6 +96,35 @@ sgFactory.registerClass('OperatorOutput', OperatorOutput);
 class XfoOperatorOutput extends OperatorOutput {
     constructor(name) {
         super(name, (p) => p.getDataType() == 'Xfo');
+    }
+
+    getInitialValue() {
+        return this._initialParamValue;
+    }
+
+    setParam(param) {
+        // For some reason, super fails silently here.
+        // super.setParam(param);
+
+        this._param = param;
+
+        // Note: sometimes the param value is changed after binding.
+        // e.g. The group Xfo is updated after the operator
+        // that binds to it is loaded. It could also change if a user
+        // Is adding items to the group using the UI. Therefore, the
+        // initial Xfo needs to be updated.
+        const init = () => {
+            this._initialParamValue = param.getValue();
+            if (this._initialParamValue.clone)
+                this._initialParamValue = this._initialParamValue.clone();
+        }
+        init();
+        param.valueChanged.connect(mode => {
+            if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.DATA_LOAD)
+                init();
+        })
+
+        this.paramSet.emit();
     }
 }
 sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput);

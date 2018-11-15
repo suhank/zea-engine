@@ -28,10 +28,12 @@ class TypeRegistry {
         return this.__types[key];
     }
 
-    getTypeName(inst) {
-        if(this.__names[inst.constructor.name])
-            return this.__names[inst.constructor.name];
-        return inst.constructor.name;
+    getTypeName(type) {
+        if(this.__names[type])
+            return this.__names[type];
+        if(this.__names[type.name])
+            return this.__names[type.name];
+        throw("Type not regitered:", type)
     }
 }
 

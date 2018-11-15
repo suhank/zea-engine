@@ -3,8 +3,6 @@ Module = {
   ENVIRONMENT: 'WORKER'
 };
 
-console.log("Resource Loader", navigator)
-
 //--------------------unpackBridge.js----------------------------
 !function(t,e){
   // The following code has been _carefully_ modified by hand.
