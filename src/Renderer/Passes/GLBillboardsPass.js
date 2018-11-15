@@ -37,6 +37,8 @@ class GLBillboardsPass extends GLPass {
         super.init(gl, collector, passIndex);
 
         this.__billboards = [];
+        this.__freeIndices = [];
+        this.__drawCount = 0;
         this.__threshold = 0.0;
         this.__updateRequested = false;
 
@@ -77,15 +79,18 @@ class GLBillboardsPass extends GLPass {
             billboard.getParameter('image').valueChanged.connect(()=> this.addBillboard(billboard) );
             return;
         }
-        const index = this.__billboards.length;
-        this.__billboards.push({
+        let index;
+        if(this.__freeIndices.length > 0)
+            index = this.__freeIndices.pop();
+        else
+            index = this.__billboards.length;
+        this.__billboards[index] = {
             billboard,
-            index,
             imageIndex: this.__atlas.addSubImage(image)
-        });
+        };
 
         billboard.visibilityChanged.connect(() => {
-            this.__updateBillboard(index);
+            this.__updateIndexArray();
             this.updated.emit();
         });
         image.updated.connect(() => {
@@ -101,17 +106,17 @@ class GLBillboardsPass extends GLPass {
             this.updated.emit();
         });
 
-        billboard.destructing.connect(this.removeBillboardItem.bind(this));
+        billboard.destructing.connect(() => {
+            this.removeBillboardItem(index);
+        });
         this.__requestUpdate();
     }
 
-    removeBillboardItem(billboard) {
-        const index = this.__billboards.indexOf(billboard);
-        billboard.destructing.disconnect(this.removeBillboardItem.bind(this));
-        this.__billboards.splice(index, 1);
+    removeBillboardItem(index) {
+        this.__billboards[index] = null;
+        this.__freeIndices.push(index);
         this.__requestUpdate();
     }
-
 
     __populateBillboardDataArray(billboardData, index, dataArray) {
         const billboard = billboardData.billboard;
@@ -137,15 +142,35 @@ class GLBillboardsPass extends GLPass {
         col4.set(color.r, color.g, color.b, color.a);
     }
 
+    __updateIndexArray(){
+
+        const gl = this.__gl;
+        // Note: When the camera moves, this array is sorted and re-upload.
+        if(this.__indexArray && this.__indexArray.length != (this.__billboards.length - this.__freeIndices.length)) {
+            gl.deleteBuffer(this.__instanceIdsBuffer);
+            this.__instanceIdsBuffer = null;
+        }
+
+        this.__indexArray = new Float32Array(this.__billboards.length - this.__freeIndices.length);
+        this.__drawCount = 0;
+        for (let i = 0; i < this.__billboards.length; i++) {
+            if(this.__billboards[i] && this.__billboards[i].billboard.getVisible()) {
+                this.__indexArray[this.__drawCount] = i;
+                this.__drawCount++;
+            }
+        }
+        if(!this.__instanceIdsBuffer)
+            this.__instanceIdsBuffer = gl.createBuffer();
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
+    }
+
     __updateBillboards() {
         if (!this.__updateRequested)
             return;
 
-        // Note: When the camera moves, this array is sorted and re-upload.
-        this.__indexArray = new Float32Array(this.__billboards.length);
-        for (let i = 0; i < this.__billboards.length; i++) {
-            this.__indexArray[i] = this.__billboards[i].index;
-        }
+        this.__updateIndexArray();
 
         const gl = this.__gl;
         if(!this.__glshader) {
@@ -168,8 +193,9 @@ class GLBillboardsPass extends GLPass {
                 this.__modelMatrixArray = [];
                 this.__billboardDataArray = [];
                 this.__tintColorArray = [];
-                this.__billboards.forEach((billboardData, index)=>{
+                this.__indexArray.forEach((index)=>{
 
+                    const billboardData = this.__billboards[index];
                     const billboard = billboardData.billboard;
                     const mat4 = billboard.getGlobalXfo().toMat4();
                     const scale = billboard.getParameter('scale').getValue();
@@ -186,7 +212,7 @@ class GLBillboardsPass extends GLPass {
             }
 
 
-            let size = Math.round(Math.sqrt(this.__billboards.length * pixelsPerItem) + 0.5);
+            let size = Math.round(Math.sqrt(this.__indexArray.length * pixelsPerItem) + 0.5);
             // Note: the following few lines need a cleanup. 
             // We should be using power of 2 textures. The problem is that pot texture sizes don't
             // align with the 6 pixels per draw item. So we need to upload a slightly bigger teture
@@ -219,14 +245,9 @@ class GLBillboardsPass extends GLPass {
                 this.__drawItemsTexture.resize(size, size);
             }
 
-            for (let i = 0; i < this.__billboards.length; i++) {
+            for (let i = 0; i < this.__indexArray.length; i++) {
                 this.__updateBillboard(i);
             }
-
-
-            this.__instanceIdsBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW);
 
             this.__updateRequested = false;
         };
@@ -243,6 +264,9 @@ class GLBillboardsPass extends GLPass {
             return;
 
         const billboardData = this.__billboards[index];
+        if (!billboardData.billboard.getVisible())
+            return;
+
         const gl = this.__gl;
 
         const dataArray = new Float32Array(pixelsPerItem * 4);
@@ -303,12 +327,13 @@ class GLBillboardsPass extends GLPass {
         if (dist > this.__threshold) {
             this.sort(cameraPos);
             this.__prevSortCameraPos = cameraPos.clone();
-            if(this.__billboards.length == 1)
-                this.__threshold = 9999;
-            else {
+            if(this.__billboards.length > 1) {
                 const v0 = this.__billboards[this.__indexArray[0]].billboard.getGlobalXfo().tr;
-                const v1 = this.__billboards[this.__indexArray[0]].billboard.getGlobalXfo().tr;
-                this.__threshold = v0.distanceTo(v1)
+                const v1 = this.__billboards[this.__indexArray[1]].billboard.getGlobalXfo().tr;
+                this.__threshold = v0.distanceTo(v1);
+            }
+            else {
+                this.__threshold = 9999;
             }
 
         }
@@ -408,7 +433,7 @@ class GLBillboardsPass extends GLPass {
                         gl.uniform1i(unif.location, eye);
                     }
                 }
-                gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__billboards.length);
+                gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
 
                 eye++;
             }
