@@ -208,12 +208,10 @@ class Operator extends BaseItem {
                 output.fromJSON(j.outputs[i], context);
             }
 
-            // Force an evaluation of the operator as soon as 
-            const onloaded = () => {
+            // Force an evaluation of the operator as soon as loading is done.
+            context.addPLCB(() => {
                 this.__opInputChanged();
-                context.assetItem.loaded.disconnect(onloaded)
-            }
-            context.assetItem.loaded.connect(onloaded);
+            })
         }
     }
 

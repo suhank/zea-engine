@@ -120,6 +120,7 @@ class AssetItem extends TreeItem {
                 }
             });
         };
+        context.addPLCB = plcb => plcbs.push(plcb)
 
         // Avoid loading the FilePAth as we are already loading json data.
         if (j.params && j.params.FilePath) {

@@ -22,7 +22,7 @@ class StateMachine extends BaseItem {
 
         // Manually invoke the callbacks for cases where the StateMAchine
         // is not beingn constructed by the SGFactory.
-        if(!sgFactory.isConstructing()) {
+        if (!sgFactory.isConstructing()) {
             sgFactory.invokeCallbacks(this)
         }
     }
@@ -101,15 +101,12 @@ class StateMachine extends BaseItem {
                 throw ("Invalid type:" + statejson.type)
             }
         }
-
-        const onloaded = () => {
+        context.addPLCB(() => {
             // Disabling for now. 
             // We can have state machines that are not active at all. 
             // e.g. in the 850 E-Tec project.
             // this.activateState(this.__initialStateName);
-            context.assetItem.loaded.disconnect(onloaded)
-        }
-        context.assetItem.loaded.connect(onloaded);
+        });
     }
 
 };
