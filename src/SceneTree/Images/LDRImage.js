@@ -22,6 +22,11 @@ class LDRImage extends FileImage {
         super(name, filePath, params);
         this.type = 'UNSIGNED_BYTE';
         this.addParameter(new NumberParameter('PreferredSize', -1));
+        this.__crossOrigin = 'anonymous'
+    }
+
+    setCrossOrigin(crossOrigin) {
+        this.__crossOrigin = crossOrigin;
     }
 
     __loadData(fileDesc) {
@@ -139,7 +144,7 @@ class LDRImage extends FileImage {
         }
         else {
             imageElem = new Image();
-            imageElem.crossOrigin = 'anonymous';
+            imageElem.crossOrigin = this.__crossOrigin;
             imageElem.src = url;
 
             imageElem.addEventListener("load", loaded);
