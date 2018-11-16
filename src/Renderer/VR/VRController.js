@@ -57,7 +57,7 @@ class VRController {
             if(asset) {
                 asset.loaded.connect((entries) => {
                     const controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
-                    controllerTree.setLocalXfo(new Xfo(new Vec3(0, -0.035, 0.01), new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })));
+                    controllerTree.setLocalXfo(new Xfo(new Vec3(0, -0.035, -0.02), new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })));
                     this.__treeItem.addChild(controllerTree);
                 });
             }
@@ -234,7 +234,7 @@ class VRController {
         let geomData;
         for(let pixelID of dataPixels) {
             if(checkPixel(pixelID)) {
-                dataPixel = geomDatas.subarray(pixelID*4, pixelID*4+4);;
+                geomData = geomDatas.subarray(pixelID*4, pixelID*4+4);;
                 break;
             }
         }
