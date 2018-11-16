@@ -100,14 +100,16 @@ class VideoStreamImage2D extends BaseImage {
 
     setVideoStream(video) {
         this.__loaded = false;
-        video.addEventListener("loadedmetadata", (e) => {
-            this.width = video.videoWidth;
-            this.height = video.videoHeight;
-            this.start()
-            this.__data = video;
-            this.__loaded = true;
-            this.loaded.emit(video);
-        })
+        this.width = video.videoWidth;
+        this.height = video.videoHeight;
+        this.start()
+        this.__data = video;
+        this.__loaded = true;
+        this.loaded.emit(video);
+    }
+
+    getAudioSource() {
+        return this.__data;
     }
 
     stop() {
