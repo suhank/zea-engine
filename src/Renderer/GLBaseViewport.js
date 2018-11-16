@@ -121,6 +121,9 @@ class GLBaseViewport {
     onMouseMove(event) {
         return false;
     }
+    onMouseLeave(event) {
+        return false;
+    }
     onKeyPressed(key, event) {
         return false;
     }
