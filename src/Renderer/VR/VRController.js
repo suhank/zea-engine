@@ -49,7 +49,13 @@ class VRController {
         if(!this.__isDaydramController) {
             // A Vive or Occulus Touch Controller
             this.__tip = new TreeItem('Tip');
-            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.06)));
+            // Note: the tip of the controller need to be off
+            // the end of the controller. getGeomItemAtTip
+            // now searches a grid in that area and so we need to 
+            // ensure that the grid does not touch the controller, 
+            // else it will return the controller geom from
+            // the getGeomItemAtTip function
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.065)));
             this.__treeItem.addChild(this.__tip, false);
             vrviewport.getTreeItem().addChild(this.__treeItem);
 

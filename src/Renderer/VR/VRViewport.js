@@ -37,8 +37,9 @@ class VRViewport extends GLBaseViewport {
         // Resources
 
         const resourceLoader = renderer.getScene().getResourceLoader();
-        if (displayVRGeometry && !SystemDesc.isMobileDevice && resourceLoader.resourceAvailable("VisualiveEngine/Vive.vla")) {
-            this.__viveAsset = renderer.getScene().loadCommonAssetResource("VisualiveEngine/Vive.vla");
+        const viveAssetId = resourceLoader.resolveFilePathToId("VisualiveEngine/Vive.vla")
+        if (viveAssetId && displayVRGeometry && !SystemDesc.isMobileDevice) {
+            this.__viveAsset = renderer.getScene().loadCommonAssetResource(viveAssetId);
             this.__viveAsset.loaded.connect(() => {
                 const materialLibrary = this.__viveAsset.getMaterialLibrary();
                 const materialNames = materialLibrary.getMaterialNames();

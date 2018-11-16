@@ -108,9 +108,9 @@ class VideoStreamImage2D extends BaseImage {
         this.loaded.emit(video);
     }
 
-    getAudioSource() {
-        return this.__data;
-    }
+    // getAudioSource() {
+    //     return this.__data;
+    // }
 
     stop() {
         clearInterval(this.__intervalId);

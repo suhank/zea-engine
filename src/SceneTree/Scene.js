@@ -78,13 +78,13 @@ class Scene {
         return resourceLoader;
     }
 
-    loadCommonAssetResource(path) {
-        if (path in this.__commonResources) {
-            return this.__commonResources[path];
+    loadCommonAssetResource(resourceId) {
+        if (resourceId in this.__commonResources) {
+            return this.__commonResources[resourceId];
         }
-        const asset = new VLAAsset(path, resourceLoader);
-        asset.getParameter('DataFilePath').setFilepath(path);
-        this.__commonResources[path] = asset;
+        const asset = new VLAAsset();
+        asset.getParameter('DataFilePath').setValue(resourceId);
+        this.__commonResources[resourceId] = asset;
         return asset;
     }
 
