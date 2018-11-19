@@ -105,6 +105,18 @@ class GearsOperator extends Operator {
         const len = gears.length;
         for(let gear of gears) {
             const output = gear.getOutput();
+            const initialxfo = output.getInitialValue();
+            if(!initialxfo) {
+                // Note: we have cases where we have interdependencies. 
+                // Operator A Writes to [A, B, C]
+                // Operator B Writes to [A, B, C].
+                // During the load of operator B.C, we trigger an evaluation
+                // of Opeator A, which causes B to evaluate (due to B.A already connected)
+                // Now operator B is evaluating will partially setup.
+                // See SmartLoc: Exploded Parts and Gears read/write the same set of 
+                // params.
+                return;
+            }
 
             const rot = (revolutions * gear.getRatio()) + gear.getOffset();
 
@@ -112,7 +124,7 @@ class GearsOperator extends Operator {
             quat.setFromAxisAndAngle(gear.getAxis(), rot * Math.PI * 2.0);
             // const initialxfo = output.getInitialValue().clone();
             const xfo = output.getValue();
-            xfo.ori = quat.multiply(output.getInitialValue().ori);
+            xfo.ori = quat.multiply(initialxfo.ori);
             output.setValue(xfo);
         }
     }
