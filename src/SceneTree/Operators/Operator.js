@@ -144,6 +144,9 @@ class Operator extends BaseItem {
 
     addOutput(output) {
         this.__outputs.push(output);
+        output.paramSet.connect(()=>{
+            output.setDirty(this.__evalOutput);
+        });
         return output;
     }
 
@@ -151,7 +154,11 @@ class Operator extends BaseItem {
         this.__outputs.splice(this.__outputs.indexOf(output), 1);
     }
 
-    getOutput(name) {
+    getOutput(index) {
+        return this.__outputs[index]
+    }
+
+    getOutputByName(name) {
         for (let o of this.__outputs) {
             if (o.getName() == name)
                 return o;

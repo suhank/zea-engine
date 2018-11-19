@@ -13,9 +13,7 @@ class NumberParameter extends Parameter {
     constructor(name, value=0, range=undefined) {
         super(name, value, 'Number');
         // The value might not have a range.
-        this.__display = 'slider';
         this.__range = range;
-        this.__axis = 'x';
         this.__step = undefined;
     }
 
@@ -32,19 +30,11 @@ class NumberParameter extends Parameter {
     }
 
     getValue(mode) {
+        // Still not sure if we should clamp the output.
         // if(this.__range) {
         //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
         // }
         return super.getValue(mode);
-    }
-
-    getDisplay() {
-        return this.__display;
-    }
-
-    setDisplay(display) {
-        this.__display = display;
-        return this;
     }
 
     getRange() {
@@ -68,9 +58,28 @@ class NumberParameter extends Parameter {
     clone(flags) {
         const clonedParam = new NumberParameter(this.__name, this.__value);
         clonedParam.__range = this.__range;
-        clonedParam.__axis = this.__axis;
         clonedParam.__step = this.__step;
         return clonedParam;
+    }
+
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
+        if(this.__range)
+            j.range = this.__range;
+        if(this.__step)
+            j.step = this.__step;
+        return j;
+    }
+
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
+        if(j.range)
+            this.__range = j.range;
+        if(j.step)
+            this.__step = j.step;
     }
 };
 
