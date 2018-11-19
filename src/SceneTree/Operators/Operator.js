@@ -103,10 +103,6 @@ class XfoOperatorOutput extends OperatorOutput {
     }
 
     setParam(param) {
-        // For some reason, super fails silently here.
-        // super.setParam(param);
-
-        this._param = param;
 
         // Note: sometimes the param value is changed after binding.
         // e.g. The group Xfo is updated after the operator
@@ -117,6 +113,9 @@ class XfoOperatorOutput extends OperatorOutput {
             this._initialParamValue = param.getValue();
             if (this._initialParamValue.clone)
                 this._initialParamValue = this._initialParamValue.clone();
+
+            if(this._initialParamValue == undefined)
+                throw("wTF?")
         }
         init();
         param.valueChanged.connect(mode => {
@@ -124,6 +123,7 @@ class XfoOperatorOutput extends OperatorOutput {
                 init();
         })
 
+        this._param = param;
         this.paramSet.emit();
     }
 }
