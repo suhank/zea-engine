@@ -103,7 +103,7 @@ class VLAAsset extends AssetItem {
       context = {};
     context.assetItem = this;
 
-    let numGeomsFiles = reader.loadUInt32();
+    const numGeomsFiles = reader.loadUInt32();
 
     this.__materials.readBinary(reader, context);
 
@@ -189,7 +189,7 @@ class VLAAsset extends AssetItem {
       geomFileID++;
       resourceLoader.loadResource(fileId,
         (entries) => {
-          let geomsData = entries[Object.keys(entries)[0]];
+          const geomsData = entries[Object.keys(entries)[0]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resourceLoader.freeData(geomsData.buffer);
           loadNextGeomFile();

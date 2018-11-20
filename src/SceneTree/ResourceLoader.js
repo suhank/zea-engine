@@ -103,6 +103,12 @@ class ResourceLoader {
 
   registerResourceCallback(filter, fn) {
     this.__resourceRegisterCallbacks[filter] = fn;
+
+    for (let key in this.__resources) {
+      const file = this.__resources[key];
+      if (file.name.includes(filter))
+        fn(file)
+    }
   }
 
   __applyCallbacks(resourcesDict) {

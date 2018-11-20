@@ -5,7 +5,7 @@ import {
 import {
     sgFactory
 } from '../../SGFactory.js';
-console.log("here")
+
 class LinesCuboid extends Lines {
     constructor(x = 1.0, y = 1.0, z = 1.0, baseZAtZero=false) {
         super();
