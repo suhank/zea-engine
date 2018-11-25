@@ -112,10 +112,8 @@ class Material extends BaseItem {
     constructor(name, shaderName) {
         super(name);
 
-        // this.updated = new Signal();
-        // this.textureConnected = new Signal();
-        // this.textureDisconnected = new Signal();
         this.shaderNameChanged = new Signal();
+        this.visibleInGeomDataBuffer = true;
 
         if(shaderName)
             this.setShaderName(shaderName);

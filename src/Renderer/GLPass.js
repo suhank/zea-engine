@@ -131,7 +131,7 @@ class GLPass {
 
             const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
             for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                if(glmaterialDrawItemSet.drawCount == 0)
+                if(glmaterialDrawItemSet.drawCount == 0 || !glmaterialDrawItemSet.visibleInGeomDataBuffer)
                     continue;
                 const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
                 for (let gldrawitemset of gldrawitemsets) {

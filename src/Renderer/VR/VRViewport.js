@@ -45,8 +45,10 @@ class VRViewport extends GLBaseViewport {
                 const materialNames = materialLibrary.getMaterialNames();
                 for (let name of materialNames) {
                     const material = materialLibrary.getMaterial(name, false);
-                    if (material)
+                    if (material) {
+                        material.visibleInGeomDataBuffer = false;
                         material.setShaderName('SimpleSurfaceShader');
+                    }
                 }
             });
         }

@@ -879,18 +879,19 @@ class Quat extends AttrValue {
     
     toJSON() {
         return {
-            "x": this.x,
-            "y": this.y,
-            "z": this.z,
-            "w": this.w
+            x: this.x,
+            y: this.y,
+            z: this.z,
+            w: this.w
         }
     }
 
     fromJSON(j) {
-        this.x = j['x'];
-        this.y = j['y'];
-        this.z = j['z'];
-        this.w = j['w'];
+        this.__data[0] = j.x;
+        this.__data[1] = j.y;
+        this.__data[2] = j.z;
+        this.__data[3] = j.w;
+        this.normalizeInPlace();
     }
 
 };

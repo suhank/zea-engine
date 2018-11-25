@@ -75,8 +75,8 @@ class VRController {
                 this.__activeVolumeSize*0.5, 
                 this.__activeVolumeSize*-0.5, 
                 this.__activeVolumeSize*0.5, 
-                0.0, 
-                this.__activeVolumeSize);
+                this.__activeVolumeSize*-0.5, 
+                this.__activeVolumeSize*0.5);
             this.createGeomDataFbo();
         }
 

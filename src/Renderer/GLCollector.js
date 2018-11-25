@@ -43,7 +43,6 @@ class GLShaderMaterials {
     constructor(glshader = undefined) {
         this.glshader = glshader;
         this.glmaterialDrawItemSets = [];
-
     }
 
     getGLShader() {
@@ -70,6 +69,7 @@ class GLMaterialDrawItemSets {
         this.glmaterial = glmaterial;
         this.drawItemSets = [];
         this.drawCount = 0;
+        this.visibleInGeomDataBuffer = glmaterial.getMaterial().visibleInGeomDataBuffer;
         this.__drawCountChanged = this.__drawCountChanged.bind(this)
     }
 
