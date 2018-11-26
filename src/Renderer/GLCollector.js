@@ -508,6 +508,7 @@ class GLCollector {
                 wrap: 'CLAMP_TO_EDGE',
                 mipMapped: false
             });
+            this.__drawItemsTexture.clear();
         } else if (this.__drawItemsTexture.width != size) {
             this.__drawItemsTexture.resize(size, size);
             this.__dirtyItemIndices = Array((size * size) / pixelsPerItem).fill().map((v, i) => i);
