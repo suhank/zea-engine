@@ -351,6 +351,53 @@ class GLTexture2D extends RefCounted {
         }
     }
 
+    clear() {
+        const gl = this.__gl;
+        const numPixels = this.width * this.height;
+        let numChannels;
+        switch (this.__format) {
+            case gl.RED:
+            case gl.RED_INTEGER:
+            case gl.ALPHA:
+            case gl.LUMINANCE:
+            case gl.LUMINANCE_ALPHA:
+                numChannels = 1;
+                break;
+            case gl.RG:
+                numChannels = 2;
+                break;
+            case gl.RGB:
+                numChannels = 3;
+                break;
+            case gl.RGBA:
+                numChannels = 4;
+                break;
+            default:
+                throw("Invalid Format");
+        }
+        let data;
+        switch (this.__type) {
+            case gl.UNSIGNED_BYTE:
+                data = new UInt8Array(numPixels * numChannels);
+                break;
+            case gl.HALF_FLOAT:
+                data = new UInt16Array(numPixels * numChannels);
+                break;
+            case gl.FLOAT:
+                data = new Float32Array(numPixels * numChannels);
+                break;
+            default:
+                throw("Invalid Type");
+        }
+
+        if(gl.name == 'webgl2'){
+            gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__format, this.__type, data, 0);
+        }
+        else {
+            gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__format, this.__type, data);
+        }
+    }
+
     resize(width, height, preserveData = false, emit = true) {
         const gl = this.__gl;
         const sizeChanged = this.width != width || this.height != height;

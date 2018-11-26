@@ -235,10 +235,10 @@ class ResourceLoader {
           type: 'init',
           wasmUrl:this.wasmUrl
         });
-        worker.onmessage = (evt) => {
-          if (evt.data.type === 'WASM_LOADED') {
+        worker.onmessage = (event) => {
+          if (event.data.type === 'WASM_LOADED') {
             resolve(worker);
-          } else if (evt.data.type === 'FINISHED') {
+          } else if (event.data.type === 'FINISHED') {
             const data = event.data;
 
             // const file = this.__resources[event.data.resourceId]

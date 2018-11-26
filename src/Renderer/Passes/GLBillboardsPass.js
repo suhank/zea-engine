@@ -241,6 +241,7 @@ class GLBillboardsPass extends GLPass {
                     wrap: 'CLAMP_TO_EDGE',
                     mipMapped: false
                 });
+                this.__drawItemsTexture.clear();
             } else {
                 this.__drawItemsTexture.resize(size, size);
             }
