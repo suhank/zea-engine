@@ -140,101 +140,103 @@ function getSystemDesc() {
     const browserDesc = getBrowserDesc();
     const gpuDesc = getGPUDesc();
 
-    // We divide devices into 3 categories.
-    // 0: low end, we dial everything down as much as possible
-    // 1: mid-range, Enb maps and Textures go to mid-lods. 
-    //    Typically these devices are laptops, so the textures can't be too blurry
-    // 2: High-end: turn up as much as needed.
-    let deviceCategory;
-    if (!isMobile && gpuDesc){
-        const parts = gpuDesc.renderer.split(' ');
-        if(gpuDesc.gpuVendor == 'NVidia') {
-            const gtxIdx = parts.indexOf('GTX');
-            if(gtxIdx != -1){
-                const model = parts[gtxIdx+1];
-                if(model.endsWith('M')) {
-                    // laptop GPU.
-                    const modelNumber = parseInt(model.substring(0, model.length - 2));
-                    if(modelNumber >= 900){
-                        deviceCategory = 'Medium';
-                    }
-                    else {
-                        deviceCategory = 'Low';
-                    }
-                }
-                else {
-                    const modelNumber = parseInt(model);
-                    if(modelNumber >= 1030){
-                        deviceCategory = 'High';
-                    }
-                    else {
-                        deviceCategory = 'Medium';
-                    }
-                }
-            }
-            else {
-                if(parts.indexOf('TITAN') != -1 || parts.indexOf('Quadro') != -1){
-                    deviceCategory = 'High';
-                }
-                else {
-                    deviceCategory = 'Low';
-                }
-            }
-        }
-        else if(gpuDesc.gpuVendor == 'AMD') {
-            const radeonIdx = parts.indexOf('Radeon');
-            if(radeonIdx != -1){
-                if(parts[radeonIdx+1] == 'RX') {
-                    if(parts[radeonIdx+2] == 'Vega') {
-                        deviceCategory = 'High';
-                    }
-                    else {
-                        const modelNumber = parseInt(parts[radeonIdx+2]);
-                        if(modelNumber >= 580){
+    let deviceCategory = 'Low';
+    if(gpuDesc) {
+        // We divide devices into 3 categories.
+        // 0: low end, we dial everything down as much as possible
+        // 1: mid-range, Enb maps and Textures go to mid-lods. 
+        //    Typically these devices are laptops, so the textures can't be too blurry
+        // 2: High-end: turn up as much as needed.
+        if (!isMobile){
+            const parts = gpuDesc.renderer.split(' ');
+            if(gpuDesc.gpuVendor == 'NVidia') {
+                const gtxIdx = parts.indexOf('GTX');
+                if(gtxIdx != -1){
+                    const model = parts[gtxIdx+1];
+                    if(model.endsWith('M')) {
+                        // laptop GPU.
+                        const modelNumber = parseInt(model.substring(0, model.length - 2));
+                        if(modelNumber >= 900){
                             deviceCategory = 'Medium';
                         }
                         else {
                             deviceCategory = 'Low';
                         }
                     }
-                }
-                if(parts[radeonIdx+1] == 'Pro') {
-                    const modelNumber = parseInt(parts[radeonIdx+2]);
-                    if(modelNumber >= 450){
-                        deviceCategory = 'Medium';
-                    }
                     else {
-                        deviceCategory = 'Low';
-                    }
-                }
-                else if(parts[radeonIdx+1] == 'Sky') {
-                    const modelNumber = parseInt(parts[radeonIdx+2]);
-                    if(modelNumber >= 700){
-                        deviceCategory = 'Medium';
-                    }
-                    else {
-                        deviceCategory = 'Low';
+                        const modelNumber = parseInt(model);
+                        if(modelNumber >= 1030){
+                            deviceCategory = 'High';
+                        }
+                        else {
+                            deviceCategory = 'Medium';
+                        }
                     }
                 }
                 else {
-                    deviceCategory = 'Low';
+                    if(parts.indexOf('TITAN') != -1 || parts.indexOf('Quadro') != -1){
+                        deviceCategory = 'High';
+                    }
+                    else {
+                        deviceCategory = 'Low';
+                    }
                 }
             }
-            else {
-                if(parts.indexOf('FirePro') != -1 || parts.indexOf('Quadro') != -1){
-                    deviceCategory = 'High';
+            else if(gpuDesc.gpuVendor == 'AMD') {
+                const radeonIdx = parts.indexOf('Radeon');
+                if(radeonIdx != -1){
+                    if(parts[radeonIdx+1] == 'RX') {
+                        if(parts[radeonIdx+2] == 'Vega') {
+                            deviceCategory = 'High';
+                        }
+                        else {
+                            const modelNumber = parseInt(parts[radeonIdx+2]);
+                            if(modelNumber >= 580){
+                                deviceCategory = 'Medium';
+                            }
+                            else {
+                                deviceCategory = 'Low';
+                            }
+                        }
+                    }
+                    if(parts[radeonIdx+1] == 'Pro') {
+                        const modelNumber = parseInt(parts[radeonIdx+2]);
+                        if(modelNumber >= 450){
+                            deviceCategory = 'Medium';
+                        }
+                        else {
+                            deviceCategory = 'Low';
+                        }
+                    }
+                    else if(parts[radeonIdx+1] == 'Sky') {
+                        const modelNumber = parseInt(parts[radeonIdx+2]);
+                        if(modelNumber >= 700){
+                            deviceCategory = 'Medium';
+                        }
+                        else {
+                            deviceCategory = 'Low';
+                        }
+                    }
+                    else {
+                        deviceCategory = 'Low';
+                    }
                 }
                 else {
-                    deviceCategory = 'Low';
+                    if(parts.indexOf('FirePro') != -1 || parts.indexOf('Quadro') != -1){
+                        deviceCategory = 'High';
+                    }
+                    else {
+                        deviceCategory = 'Low';
+                    }
                 }
+            }
+            else if(gpuDesc.gpuVendor == 'Intel') {
+                deviceCategory = 'Low';
             }
         }
-        else if(gpuDesc.gpuVendor == 'Intel') {
+        else {
             deviceCategory = 'Low';
         }
-    }
-    else {
-        deviceCategory = 'Low';
     }
     
     return {
@@ -250,6 +252,7 @@ function getSystemDesc() {
         deviceCategory
     }
 }
+
 
 const SystemDesc = getSystemDesc();
 
