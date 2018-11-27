@@ -93,7 +93,7 @@ class GLMaterialGeomItemSets {
     }
 
     removeGeomItemSet(drawItemSet) {
-        let index = this.drawItemSets.indexOf(drawItemSet);
+        const index = this.drawItemSets.indexOf(drawItemSet);
         this.drawItemSets.splice(index, 1);
         drawItemSet.drawCountChanged.disconnect(this.__drawCountChanged);
     }
@@ -400,7 +400,7 @@ class GLCollector {
     }
 
     removeGeomItem(gldrawItem) {
-        let index = gldrawItem.getId();
+        const index = gldrawItem.getId();
         this.__drawItems[index] = null;
         this.__drawItemsIndexFreeList.push(index);
 
@@ -413,18 +413,18 @@ class GLCollector {
     };
 
     removeMaterial(material) {
-        let glshaderMaterials = this.__glshadermaterials[material.hash];
+        const glshaderMaterials = this.__glshadermaterials[material.hash];
         if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
             console.warn("Material not found in GLCollector");
             return;
         }
 
-        let glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
+        const glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
         glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
     };
 
     removeGLGeom(geomItemMapping, materialGeomMapping) {
-        let index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping);
+        const index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping);
         materialGeomMapping.geomItemMappings.splice(index, 1);
 
         // Note: the GLMAterial cleans up iself now...
