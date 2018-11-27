@@ -73,17 +73,10 @@ class Scene {
         this.__commonResources = {};
 
         /////////////////////////////
-        // Time
-        this.__sceneTime = 0.0;
-        this.__sceneDuration = 10.0;
-        this.__playing = false;
 
         this.backgroundMapChanged = new Signal();
         this.envMapChanged = new Signal();
         this.lightmapAdded = new Signal();
-        this.commonResourcesLoaded = new Signal(true);
-        this.sceneTimeChanged = new Signal();
-        this.sceneDurationChanged = new Signal();
         this.assetAdded = new Signal();
         this.assetRemoved = new Signal();
     }
@@ -194,7 +187,11 @@ class Scene {
 
 
     ///////////////////////////////////////
-    // Time
+    // Default Scene Items
+
+    getCamera() {
+        return this.__root.getChildByName('Camera')
+    }
 
     setupGrid(gridSize=5, resolution=50, gridColor=defaultGridColor) {
 
@@ -224,50 +221,6 @@ class Scene {
 
         return gridTreeItem;
     }
-
-    ///////////////////////////////////////
-    // Time
-
-    getSceneTime() {
-        return this.__sceneTime;
-    }
-
-    setSceneTime(sceneTime, stopPlaying = true) {
-        this.__sceneTime = sceneTime;
-        this.sceneTimeChanged.emit(this.__sceneTime);
-        if (stopPlaying)
-            this.__playing = false;
-    }
-
-    getSceneDuration() {
-        return this.__sceneDuration;
-    }
-
-    setSceneDuration(sceneDuration) {
-        this.__sceneDuration = sceneDuration;
-        this.sceneDurationChanged.emit(this.__sceneDuration);
-    }
-
-    startPlaying(sceneTime) {
-        let prev = Date.now();
-        let onAnimationFrame = () => {
-            let now = Date.now();
-            let newTime = this.__sceneTime + ((now - prev) / 1000);
-            if (newTime > this.__sceneDuration) {
-                // newTime = 0;
-                this.__playing = false;
-            }
-            if (this.__playing) {
-                window.requestAnimationFrame(onAnimationFrame);
-            }
-            this.setSceneTime(newTime, false);
-            prev = now;
-        }
-
-        this.__playing = true;
-        window.requestAnimationFrame(onAnimationFrame);
-    }
-
 
     ///////////////////////////////////////
     // Persistence

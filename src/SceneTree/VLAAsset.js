@@ -99,8 +99,6 @@ class VLAAsset extends AssetItem {
   // Persistence
 
   readBinary(reader, context) {
-    if(!context) 
-      context = {};
     context.assetItem = this;
 
     const numGeomsFiles = reader.loadUInt32();
