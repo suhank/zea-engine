@@ -50,8 +50,8 @@ import {
     GLMaterial
 } from './GLMaterial.js';
 import {
-    GLDrawItem
-} from './GLDrawItem.js';
+    GLGeomItem
+} from './GLGeomItem.js';
 import {
     VRViewport
 } from './VR/VRViewport.js';

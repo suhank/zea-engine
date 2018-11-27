@@ -6,7 +6,7 @@ import {
 } from '../Utilities';
 
 // This class abstracts the rendering of a collection of geometries to screen.
-class GLDrawItemSet {
+class GLGeomItemSet {
     constructor(gl, glgeom) {
         this.gl = gl;
         this.glgeom = glgeom;
@@ -32,16 +32,16 @@ class GLDrawItemSet {
         return this.glgeom;
     }
 
-    getGLDrawItemCount() {
+    getGLGeomItemCount() {
         return this.drawItems.length;
     }
 
-    getGLDrawItem(index) {
+    getGLGeomItem(index) {
         return this.drawItems[index];
     }
 
     //  Note: used by patternade to iterate over items.
-    getGLDrawItems() {
+    getGLGeomItems() {
         return this.drawItems;
     }
 
@@ -421,5 +421,5 @@ class GLDrawItemSet {
 };
 
 export {
-    GLDrawItemSet
+    GLGeomItemSet
 };

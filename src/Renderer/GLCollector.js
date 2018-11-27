@@ -28,12 +28,12 @@ import {
     GLMaterial
 } from './GLMaterial.js';
 import {
-    GLDrawItemChangeType,
-    GLDrawItem
-} from './GLDrawItem.js';
+    GLGeomItemChangeType,
+    GLGeomItem
+} from './GLGeomItem.js';
 import {
-    GLDrawItemSet
-} from './GLDrawItemSet.js';
+    GLGeomItemSet
+} from './GLGeomItemSet.js';
 import {
     GLTexture2D
 } from './GLTexture2D.js';
@@ -153,7 +153,7 @@ class GLCollector {
 
         // Un-Optimized Render Tree
         // Structured like so for efficient render traversial.
-        // {GLShaders}[GLMaterials][GLGeoms][GLDrawItems]
+        // {GLShaders}[GLMaterials][GLGeoms][GLGeomItems]
         this.__glshadermaterials = {};
 
         this.renderTreeUpdated = new Signal();
@@ -283,20 +283,20 @@ class GLCollector {
         }
         this.__dirtyItemIndices.push(index);
 
-        const gldrawItem = new GLDrawItem(this.__renderer.gl, geomItem, glgeom, index, flags);
+        const gldrawItem = new GLGeomItem(this.__renderer.gl, geomItem, glgeom, index, flags);
         geomItem.setMetadata('gldrawItem', gldrawItem);
 
         const updatedId = gldrawItem.updated.connect((type) => {
             switch(type) {
-                case GLDrawItemChangeType.TRANSFORM_CHANGED:
+                case GLGeomItemChangeType.TRANSFORM_CHANGED:
                     if (this.__dirtyItemIndices.indexOf(index) != -1)
                         return;
                     this.__dirtyItemIndices.push(index);
                     break;
-                case GLDrawItemChangeType.GEOM_CHANGED:
-                case GLDrawItemChangeType.VISIBILITY_CHANGED:
+                case GLGeomItemChangeType.GEOM_CHANGED:
+                case GLGeomItemChangeType.VISIBILITY_CHANGED:
                     break;
-                case GLDrawItemChangeType.SELECTION_CHANGED:
+                case GLGeomItemChangeType.SELECTION_CHANGED:
                     this.__renderer.requestRedraw();
                     return;
             }
@@ -308,7 +308,7 @@ class GLCollector {
         const addDrawItemToGLMaterialDrawItemSet = () => {
             let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
             if (!drawItemSet) {
-                drawItemSet = new GLDrawItemSet(this.__renderer.gl, glgeom);
+                drawItemSet = new GLGeomItemSet(this.__renderer.gl, glgeom);
                 glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
             }
             drawItemSet.addDrawItem(gldrawItem);
