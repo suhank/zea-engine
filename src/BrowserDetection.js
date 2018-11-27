@@ -105,13 +105,13 @@ function getGPUDesc() {
 
     const debugInfo = webgl.getExtension('WEBGL_debug_renderer_info');
     const vendor = webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-    const renderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    const renderer = "ANGLE (Radeon (TM) RX 480 Graphics Direct3D11 vs_5_0 ps_5_0)";//webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
     const maxTextureSize = webgl.getParameter(webgl.MAX_TEXTURE_SIZE);
     let gpuVendor;
     if (renderer.match(/NVIDIA/i)) {
         gpuVendor = "NVidia";
     }
-    else if (renderer.match(/AMD/i)) {
+    else if (renderer.match(/AMD/i) || renderer.match(/Radeon/i)) {
         gpuVendor = "AMD";
     }
     else if (renderer.match(/Intel/i)) {
@@ -119,6 +119,9 @@ function getGPUDesc() {
     }
     else if (renderer.match(/Mali/i)) {
         gpuVendor = "ARM";
+    }
+    else {
+        console.warn("Unable to determine GPU vendor:", renderer)
     }
 
     return {
@@ -148,7 +151,8 @@ function getSystemDesc() {
         //    Typically these devices are laptops, so the textures can't be too blurry
         // 2: High-end: turn up as much as needed.
         if (!isMobile){
-            const parts = gpuDesc.renderer.split(' ');
+            // Remove braces and split into parts
+            const parts = gpuDesc.renderer.replace(/[()]/g, "").split(' ');
             if(gpuDesc.gpuVendor == 'NVidia') {
                 const gtxIdx = parts.indexOf('GTX');
                 if(gtxIdx != -1){
@@ -185,22 +189,32 @@ function getSystemDesc() {
             else if(gpuDesc.gpuVendor == 'AMD') {
                 const radeonIdx = parts.indexOf('Radeon');
                 if(radeonIdx != -1){
-                    if(parts[radeonIdx+1] == 'RX') {
-                        if(parts[radeonIdx+2] == 'Vega') {
+                    const rxIdx = parts.indexOf('RX');
+                    if(rxIdx != -1) {
+                        if(parts[rxIdx+1] == 'Vega') {
                             deviceCategory = 'High';
                         }
                         else {
-                            const modelNumber = parseInt(parts[radeonIdx+2]);
-                            if(modelNumber >= 580){
-                                deviceCategory = 'Medium';
+                            const model = parts[rxIdx+1];
+                            let modelNumber;
+                            if(model.endsWith('X')) {
+                                modelNumber = parseInt(model.substring(0, model.length - 2));
+                                deviceCategory = 'High';
                             }
                             else {
-                                deviceCategory = 'Low';
+                                modelNumber = parseInt(model);
+                            }
+
+                            if(modelNumber >= 480){
+                                deviceCategory = 'High';
+                            }
+                            else {
+                                deviceCategory = 'Medium';
                             }
                         }
                     }
-                    if(parts[radeonIdx+1] == 'Pro') {
-                        const modelNumber = parseInt(parts[radeonIdx+2]);
+                    else if(parts[radeonIdx+1] == 'Pro') {
+                        const modelNumber = parseInt(parts[rxIdx+1]);
                         if(modelNumber >= 450){
                             deviceCategory = 'Medium';
                         }
@@ -209,7 +223,7 @@ function getSystemDesc() {
                         }
                     }
                     else if(parts[radeonIdx+1] == 'Sky') {
-                        const modelNumber = parseInt(parts[radeonIdx+2]);
+                        const modelNumber = parseInt(parts[rxIdx+1]);
                         if(modelNumber >= 700){
                             deviceCategory = 'Medium';
                         }
