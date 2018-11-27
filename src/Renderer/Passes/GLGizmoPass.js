@@ -71,7 +71,7 @@ class GLGizmoPass extends GLPass {
             dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
         }
 
-        const drawItem = this.__collector.getDrawItem(itemId);
+        const drawItem = this.__collector.getGeomItem(itemId);
         if (drawItem) {
             return { 
                 geomItem: drawItem.getGeomItem(),

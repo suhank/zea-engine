@@ -42,29 +42,29 @@ import {
 class GLShaderMaterials {
     constructor(glshader = undefined) {
         this.glshader = glshader;
-        this.glmaterialDrawItemSets = [];
+        this.glmaterialGeomItemSets = [];
     }
 
     getGLShader() {
         return this.glshader;
     }
 
-    addMaterialDrawItemSets(glmaterialDrawItemSets) {
-        if (this.glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets) == -1)
-            this.glmaterialDrawItemSets.push(glmaterialDrawItemSets);
+    addMaterialGeomItemSets(glmaterialGeomItemSets) {
+        if (this.glmaterialGeomItemSets.indexOf(glmaterialGeomItemSets) == -1)
+            this.glmaterialGeomItemSets.push(glmaterialGeomItemSets);
     }
 
-    removeMaterialDrawItemSets(glmaterialDrawItemSets) {
-        let index = this.glmaterialDrawItemSets.indexOf(glmaterialDrawItemSets);
-        this.glmaterialDrawItemSets.splice(index, 1);
+    removeMaterialGeomItemSets(glmaterialGeomItemSets) {
+        const index = this.glmaterialGeomItemSets.indexOf(glmaterialGeomItemSets);
+        this.glmaterialGeomItemSets.splice(index, 1);
     }
 
-    getMaterialDrawItemSets() {
-        return this.glmaterialDrawItemSets;
+    getMaterialGeomItemSets() {
+        return this.glmaterialGeomItemSets;
     }
 }
 
-class GLMaterialDrawItemSets {
+class GLMaterialGeomItemSets {
     constructor(glmaterial = undefined) {
         this.glmaterial = glmaterial;
         this.drawItemSets = [];
@@ -81,24 +81,24 @@ class GLMaterialDrawItemSets {
         this.drawCount += change;
     }
 
-    addDrawItemSet(drawItemSet) {
+    addGeomItemSet(drawItemSet) {
         if (this.drawItemSets.indexOf(drawItemSet) == -1) {
             this.drawItemSets.push(drawItemSet);
 
             this.drawCount += drawItemSet.drawCount;
             drawItemSet.drawCountChanged.connect(this.__drawCountChanged);
         } else {
-            console.warn("drawItemSet already added to GLMaterialDrawItemSets")
+            console.warn("drawItemSet already added to GLMaterialGeomItemSets")
         }
     }
 
-    removeDrawItemSet(drawItemSet) {
+    removeGeomItemSet(drawItemSet) {
         let index = this.drawItemSets.indexOf(drawItemSet);
         this.drawItemSets.splice(index, 1);
         drawItemSet.drawCountChanged.disconnect(this.__drawCountChanged);
     }
 
-    findDrawItemSet(glgeom) {
+    findGeomItemSet(glgeom) {
         for (let drawItemSet of this.drawItemSets) {
             if (drawItemSet.getGLGeom() == glgeom)
                 return drawItemSet;
@@ -106,7 +106,7 @@ class GLMaterialDrawItemSets {
         return null;
     }
 
-    getDrawItemSets() {
+    getGeomItemSets() {
         return this.drawItemSets;
     }
 };
@@ -211,9 +211,9 @@ class GLCollector {
     };
 
     addMaterial(material) {
-        let glmaterialDrawItemSets = material.getMetadata('glmaterialDrawItemSets');
-        if (glmaterialDrawItemSets) {
-            return glmaterialDrawItemSets;
+        let glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
+        if (glmaterialGeomItemSets) {
+            return glmaterialGeomItemSets;
         }
 
         const glshaderMaterials = this.getShaderMaterials(material);
@@ -225,21 +225,21 @@ class GLCollector {
             this.__renderer.requestRedraw();
         });
 
-        glmaterialDrawItemSets = new GLMaterialDrawItemSets(glmaterial);
-        glshaderMaterials.addMaterialDrawItemSets(glmaterialDrawItemSets);
+        glmaterialGeomItemSets = new GLMaterialGeomItemSets(glmaterial);
+        glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets);
 
-        material.setMetadata('glmaterialDrawItemSets', glmaterialDrawItemSets);
+        material.setMetadata('glmaterialGeomItemSets', glmaterialGeomItemSets);
 
         material.shaderNameChanged.connect(() => {
-            glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
+            glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
             glshaderMaterials = this.getShaderMaterials(material);
         });
 
         material.destructing.connect(() => {
-            glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
+            glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
         });
 
-        return glmaterialDrawItemSets;
+        return glmaterialGeomItemSets;
     };
 
 
@@ -266,8 +266,8 @@ class GLCollector {
         if (geomItem.isDestroyed()) {
             throw ("geomItem is destroyed:" + geomItem.getPath());
         }
-        let glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
-        if (!glmaterialDrawItemSets)
+        let glmaterialGeomItemSets = this.addMaterial(geomItem.getMaterial());
+        if (!glmaterialGeomItemSets)
             return;
         const glgeom = this.addGeom(geomItem.getGeometry());
 
@@ -305,19 +305,19 @@ class GLCollector {
 
         this.__drawItems[index] = gldrawItem;
 
-        const addDrawItemToGLMaterialDrawItemSet = () => {
-            let drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
+        const addGeomItemToGLMaterialGeomItemSet = () => {
+            let drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
             if (!drawItemSet) {
                 drawItemSet = new GLGeomItemSet(this.__renderer.gl, glgeom);
-                glmaterialDrawItemSets.addDrawItemSet(drawItemSet);
+                glmaterialGeomItemSets.addGeomItemSet(drawItemSet);
             }
-            drawItemSet.addDrawItem(gldrawItem);
+            drawItemSet.addGeomItem(gldrawItem);
         }
-        addDrawItemToGLMaterialDrawItemSet();
+        addGeomItemToGLMaterialGeomItemSet();
 
         geomItem.materialAssigned.connect(() => {
-            glmaterialDrawItemSets = this.addMaterial(geomItem.getMaterial());
-            addDrawItemToGLMaterialDrawItemSet();
+            glmaterialGeomItemSets = this.addMaterial(geomItem.getMaterial());
+            addGeomItemToGLMaterialGeomItemSet();
         })
 
         this.__newItemsAdded = true;
@@ -330,14 +330,14 @@ class GLCollector {
     removeGeomItem(geomItem) {
 
         const gldrawItem = geomItem.getMetadata('gldrawItem');
-        this.removeDrawItem(gldrawItem);
+        this.removeGeomItem(gldrawItem);
 
 
         const glgeom = geomItem.getGeometry().getMetadata('glgeom');
-        const glmaterialDrawItemSets = geomItem.getMaterial().getMetadata('glmaterialDrawItemSets');
+        const glmaterialGeomItemSets = geomItem.getMaterial().getMetadata('glmaterialGeomItemSets');
 
-        const drawItemSet = glmaterialDrawItemSets.findDrawItemSet(glgeom);
-        drawItemSet.removeDrawItem(gldrawItem);
+        const drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
+        drawItemSet.removeGeomItem(gldrawItem);
 
         // Note: for now leave the material and geom in place. Multiple 
         // GeomItems can reference a given material/geom, so we simply wait
@@ -399,7 +399,7 @@ class GLCollector {
         }
     }
 
-    removeDrawItem(gldrawItem) {
+    removeGeomItem(gldrawItem) {
         let index = gldrawItem.getId();
         this.__drawItems[index] = null;
         this.__drawItemsIndexFreeList.push(index);
@@ -419,8 +419,8 @@ class GLCollector {
             return;
         }
 
-        let glmaterialDrawItemSets = material.getMetadata('glmaterialDrawItemSets');
-        glshaderMaterials.removeMaterialDrawItemSets(glmaterialDrawItemSets);
+        let glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
+        glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
     };
 
     removeGLGeom(geomItemMapping, materialGeomMapping) {
@@ -435,9 +435,9 @@ class GLCollector {
 
 
     //////////////////////////////////////////////////////////
-    /// DrawItem IDs
+    /// GeomItem IDs
 
-    getDrawItem(id) {
+    getGeomItem(id) {
         if (id >= this.__drawItems.length) {
             console.warn("Invalid Draw Item id:" + id + " NumItems:" + (this.__drawItems.length - 1));
             return undefined;
@@ -471,7 +471,7 @@ class GLCollector {
         return this.__dirtyItemIndices.length > 0;
     };
 
-    uploadDrawItems() {
+    uploadGeomItems() {
 
         const gl = this.__renderer.gl;
         if (!gl.floatTexturesSupported) {
@@ -568,7 +568,7 @@ class GLCollector {
     finalize() {
         if (this.__dirtyItemIndices.length == 0)
             return;
-        this.uploadDrawItems();
+        this.uploadGeomItems();
 
         if (this.__newItemsAdded) {
             this.renderTreeUpdated.emit();
@@ -591,6 +591,6 @@ class GLCollector {
 
 export {
     GLShaderMaterials,
-    GLMaterialDrawItemSets,
+    GLMaterialGeomItemSets,
     GLCollector
 };
