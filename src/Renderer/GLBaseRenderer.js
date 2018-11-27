@@ -1,9 +1,4 @@
 import {
-    Vec3,
-    Xfo,
-    Color
-} from '../Math';
-import {
     Signal
 } from '../Utilities';
 import {
@@ -12,16 +7,6 @@ import {
 import {
     onResize
 } from '../external/onResize.js';
-import {
-    TreeItem,
-    GeomItem,
-    Lines,
-    Mesh,
-    Grid,
-    Material,
-    ValueSetMode,
-    resourceLoader
-} from '../SceneTree';
 import {
     create3DContext
 } from './GLContext.js';
@@ -34,24 +19,9 @@ import {
 import {
     GLViewport
 } from './GLViewport.js';
-import {
-    GLMesh
-} from './GLMesh.js';
-import {
-    GLLines
-} from './GLLines.js';
-import {
-    GLTexture2D
-} from './GLTexture2D.js';
-import {
-    GLShader
-} from './GLShader.js';
-import {
-    GLMaterial
-} from './GLMaterial.js';
-import {
-    GLGeomItem
-} from './GLGeomItem.js';
+// import {
+//     GLTexture2D
+// } from './GLTexture2D.js';
 import {
     VRViewport
 } from './VR/VRViewport.js';
@@ -66,6 +36,12 @@ const registeredPasses = {};
 
 class GLBaseRenderer {
     constructor(canvasDiv, options = {}) {
+
+        if(!SystemDesc.gpuDesc) {
+            console.warn("Unable to create renderer");
+            return;
+        }
+
         this.__drawItems = [];
         this.__drawItemsIndexFreeList = [];
         this.__geoms = [];
@@ -124,7 +100,8 @@ class GLBaseRenderer {
             this.__vrpolyfill = new WebVRPolyfill();
         }
 
-        resourceLoader.loaded.connect(this.renderGeomDataFbos);
+        // Do we need this? I think not.
+        // resourceLoader.loaded.connect(this.renderGeomDataFbos);
         
 
     }
@@ -159,41 +136,8 @@ class GLBaseRenderer {
     }
 
     setupGrid(gridSize, gridColor, resolution, lineThickness) {
-        this.__gridTreeItem = new TreeItem('GridTreeItem');
-
-        const gridMaterial = new Material('gridMaterial', 'LinesShader');
-        gridMaterial.getParameter('Color').setValue(gridColor, ValueSetMode.DATA_LOAD);
-        const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
-        this.__gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
-
-        const axisLine = new Lines();
-        axisLine.setNumVertices(2);
-        axisLine.setNumSegments(1);
-        axisLine.setSegment(0, 0, 1);
-        axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
-        axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
-
-        const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
-        gridXAxisMaterial.getParameter('Color').setValue(new Color(gridColor.luminance(), 0, 0), ValueSetMode.DATA_LOAD);
-        this.__gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
-
-        const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
-        gridZAxisMaterial.getParameter('Color').setValue(new Color(0, gridColor.luminance(), 0), ValueSetMode.DATA_LOAD);
-        const geomOffset = new Xfo();
-        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
-        const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
-        zAxisLineItem.setGeomOffsetXfo(geomOffset);
-        this.__gridTreeItem.addChild(zAxisLineItem);
-
-        this.__gridTreeItem.setSelectable(false, true);
-        this.__collector.addTreeItem(this.__gridTreeItem);
-
-        return this.__gridTreeItem;
-    }
-
-    toggleDrawGrid() {
-        this.__gridItem.visible = !this.__gridItem.visible;
-        this.requestRedraw();
+        console.warn("Deprecated Method. Please use scene.setupGrid");
+        return this.__scene.setupGrid(gridSize, resolution, gridColor);
     }
 
     ////////////////////////////////////////
@@ -206,6 +150,10 @@ class GLBaseRenderer {
     setScene(scene) {
         this.__scene = scene;
         this.__collector.addTreeItem(this.__scene.getRoot());
+
+        const camera = scene.getRoot().getChildByName('Camera')
+        if(camera && this.__viewports.length > 0)
+            this.__viewports[0].setCamera(camera)
 
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
@@ -765,6 +713,9 @@ class GLBaseRenderer {
     // }
 
     drawScene(renderstate) {
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
 
         renderstate.profileJSON = {};
         renderstate.boundRendertarget = undefined;
@@ -782,6 +733,9 @@ class GLBaseRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
             for(let pass of passSet) {
@@ -792,6 +746,9 @@ class GLBaseRenderer {
     }
     
     drawSceneGeomData(renderstate){
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
             for(let pass of passSet) {

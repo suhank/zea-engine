@@ -2,14 +2,26 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
+    Vec3,
+    Xfo,
+    Color,
     JSON_stringify_fixedPrecision
 } from '../Math';
 import {
     Signal
 } from '../Utilities';
 import {
+    Material
+} from './Material.js';
+import {
     TreeItem
 } from './TreeItem.js';
+import {
+    Lines
+} from './Geometry/Lines.js';
+import {
+    Grid
+} from './Geometry/Shapes/Grid.js';
 import {
     VLAAsset
 } from './VLAAsset.js';
@@ -25,6 +37,7 @@ import {
     LightmapMixer
 } from './Images';
 
+const defaultGridColor = new Color(.53, .53, .53);
 
 class Scene {
     constructor(resources) {
@@ -86,10 +99,6 @@ class Scene {
         asset.getParameter('DataFilePath').setValue(resourceId);
         this.__commonResources[resourceId] = asset;
         return asset;
-    }
-
-    getSelectionManager() {
-        return this.__selectionManager;
     }
 
     getEnvMapLOD() {
@@ -178,6 +187,38 @@ class Scene {
         return this.__assets;
     }
 
+
+    ///////////////////////////////////////
+    // Time
+
+    setupGrid(gridSize=5, resolution=50, gridColor=defaultGridColor) {
+
+        const gridTreeItem = new TreeItem('Grid');
+         const gridMaterial = new Material('gridMaterial', 'LinesShader');
+        gridMaterial.getParameter('Color').setValue(gridColor);
+        const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
+        gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
+         const axisLine = new Lines();
+        axisLine.setNumVertices(2);
+        axisLine.setNumSegments(1);
+        axisLine.setSegment(0, 0, 1);
+        axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
+        axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
+         const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
+        gridXAxisMaterial.getParameter('Color').setValue(new Color(gridColor.luminance(), 0, 0));
+        gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
+         const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
+        gridZAxisMaterial.getParameter('Color').setValue(new Color(0, gridColor.luminance(), 0));
+        const geomOffset = new Xfo();
+        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
+        const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
+        zAxisLineItem.setGeomOffsetXfo(geomOffset);
+        gridTreeItem.addChild(zAxisLineItem);
+        gridTreeItem.setSelectable(false, true);
+        this.__root.addChild(gridTreeItem);
+
+        return gridTreeItem;
+    }
 
     ///////////////////////////////////////
     // Time
