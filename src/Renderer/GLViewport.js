@@ -72,7 +72,7 @@ class GLViewport extends GLBaseViewport {
 
         // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
-        this.setCamera(new Camera('Default'));
+        // this.setCamera(new Camera('Default'));
         this.setManipulator(new CameraMouseAndKeyboard());
         this.__cameraManipulatorDragging = false;
 

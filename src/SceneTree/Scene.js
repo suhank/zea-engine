@@ -17,6 +17,9 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
+    Camera
+} from './Camera.js';
+import {
     Lines
 } from './Geometry/Lines.js';
 import {
@@ -48,6 +51,8 @@ class Scene {
         
         this.cameras = [];
         this.__root = new TreeItem('root');
+        this.__root.addChild(new Camera('Camera'));
+
         this.__assets = [];
 
         // Env map used for background and reflections.

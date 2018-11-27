@@ -105,7 +105,7 @@ function getGPUDesc() {
 
     const debugInfo = webgl.getExtension('WEBGL_debug_renderer_info');
     const vendor = webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-    const renderer = "ANGLE (Radeon (TM) RX 480 Graphics Direct3D11 vs_5_0 ps_5_0)";//webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+    const renderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
     const maxTextureSize = webgl.getParameter(webgl.MAX_TEXTURE_SIZE);
     let gpuVendor;
     if (renderer.match(/NVIDIA/i)) {
