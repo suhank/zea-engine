@@ -25,8 +25,8 @@ import {
     GLMesh
 } from '../GLMesh.js';
 import {
-    GLDrawItem
-} from '../GLDrawItem.js';
+    GLGeomItem
+} from '../GLGeomItem.js';
 import {
     GLTexture2D
 } from '../GLTexture2D.js';

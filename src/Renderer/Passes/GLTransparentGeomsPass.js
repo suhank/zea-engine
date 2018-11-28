@@ -19,7 +19,7 @@ class GLTransparentGeomsPass extends GLPass {
     }
 
 
-    __addDrawItem(glshader, glmaterial, glGeom, drawItem){
+    __addGeomItem(glshader, glmaterial, glGeom, drawItem){
         const item = {
             glshader,
             glmaterial,
@@ -52,15 +52,15 @@ class GLTransparentGeomsPass extends GLPass {
             if (!glshaderMaterials.glshader.isTransparent())
                 continue;
             const glshader = glshaderMaterials.glshader;
-            const glmaterialDrawItemSets = glshaderMaterials.glmaterialDrawItemSets;
-            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                const glmaterial = glmaterialDrawItemSet.glmaterial;
-                const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
+            const glmaterialGeomItemSets = glshaderMaterials.glmaterialGeomItemSets;
+            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                const glmaterial = glmaterialGeomItemSet.glmaterial;
+                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
                 for (let gldrawitemset of gldrawitemsets) {
                     // Now we must unpack the drawItemSet into individual draw items.
                     const glGeom = gldrawitemset.glgeom;
                     for (let drawItem of gldrawitemset.drawItems) {
-                        this.__addDrawItem(glshader, glmaterial, glGeom, drawItem);
+                        this.__addGeomItem(glshader, glmaterial, glGeom, drawItem);
                     }
                 }
             }
