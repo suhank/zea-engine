@@ -83,8 +83,8 @@ class TreeItem extends BaseItem {
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
         this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this);
         this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
-        this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
-        this._childFlagsChanged = this._childFlagsChanged.bind(this);
+        // this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
+        // this._childFlagsChanged = this._childFlagsChanged.bind(this);
 
         this.__localXfoParam.valueChanged.connect(()=>{
             this._setGlobalXfoDirty();
@@ -140,6 +140,19 @@ class TreeItem extends BaseItem {
             this.addChild(srcChildItem.clone());
     }
 
+    //////////////////////////////////////////
+    // Flags
+
+    _childFlagsChanged(flags) {
+        if ((flags & ParamFlags.USER_EDITED) != 0)
+            this.setFlag(ItemFlags.USER_EDITED);
+    }
+
+    setFlag(flag) {
+        super.setFlag(flag);
+        if(this.__ownerItem)
+            this.__ownerItem._childFlagsChanged(flag)
+    }
 
     //////////////////////////////////////////
     // Parent Item
@@ -236,15 +249,22 @@ class TreeItem extends BaseItem {
         this.__visibleParam.setValue(val);
     }
 
+    _childVisibilityChanged() {
+        this._setBoundingBoxDirty();
+    }
+
     setInheritedVisiblity(val) {
         if (this.__inheritedVisiblity != val) {
-            let prev = this.getVisible();
+            const prev = this.getVisible();
             this.__inheritedVisiblity = val;
-            let visibile = this.getVisible();
+            const visibile = this.getVisible();
             if (prev != visibile) {
                 for (let childItem of this.__childItems)
                     childItem.setInheritedVisiblity(visibile);
                 this.visibilityChanged.emit(visibile);
+
+                if(this.__ownerItem)
+                    this.__ownerItem._childVisibilityChanged();
             }
         }
     }
@@ -293,14 +313,17 @@ class TreeItem extends BaseItem {
         return bbox;
     }
 
-    _setBoundingBoxDirty() {
-        this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
+    _childBBoxChanged() {
+        this._setBoundingBoxDirty();
     }
 
-    _childFlagsChanged(flags) {
-        if ((flags & ParamFlags.USER_EDITED) != 0)
-            this.setFlag(ItemFlags.USER_EDITED);
+    _setBoundingBoxDirty() {
+        if(this.__boundingBoxParam.setDirty(this._cleanBoundingBox)) {
+            if(this.__ownerItem)
+                this.__ownerItem._childBBoxChanged();
+        }
     }
+
 
     //////////////////////////////////////////
     // Children
@@ -313,6 +336,9 @@ class TreeItem extends BaseItem {
         return this.__childItems.length;
     }
 
+    getNumChildren() {
+        return this.__childItems.length;
+    }
 
     generateUniqueName(name) {
         if (!this.getChildByName(name))
@@ -382,9 +408,9 @@ class TreeItem extends BaseItem {
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
 
-        childItem.boundingChanged.connect(this._setBoundingBoxDirty);
-        childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
-        childItem.flagsChanged.connect(this._childFlagsChanged);
+        // childItem.boundingChanged.connect(this._setBoundingBoxDirty);
+        // childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
+        // childItem.flagsChanged.connect(this._childFlagsChanged);
 
         this._setBoundingBoxDirty();
         this.childAdded.emit(childItem, index);
@@ -417,9 +443,9 @@ class TreeItem extends BaseItem {
 
         childItem.setParentItem(undefined);
 
-        childItem.boundingChanged.disconnect(this._setBoundingBoxDirty);
-        childItem.visibilityChanged.disconnect(this._setBoundingBoxDirty);
-        childItem.flagsChanged.disconnect(this._childFlagsChanged);
+        // childItem.boundingChanged.disconnect(this._setBoundingBoxDirty);
+        // childItem.visibilityChanged.disconnect(this._setBoundingBoxDirty);
+        // childItem.flagsChanged.disconnect(this._childFlagsChanged);
 
         this.childRemoved.emit(childItem, index);
 

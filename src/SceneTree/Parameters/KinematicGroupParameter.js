@@ -64,6 +64,7 @@ class KinematicGroupParameter extends ListParameter {
         for(let p of this.__globalXfoParams) {
             p.setDirty(cleanerFn);
         }
+        return true;
     }
 
     removeCleanerFn(cleanerFn) {
