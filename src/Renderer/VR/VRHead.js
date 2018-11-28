@@ -11,14 +11,14 @@ class VRHead {
     constructor(gl, stageTreeItem) {
         this.__treeItem = new TreeItem('VRHead');
         stageTreeItem.addChild(this.__treeItem);
+
+        this.__mat4 = new Mat4();
+        this.__localXfo = new Xfo();
     }
 
-    update(frameData){
-        const localXfo = this.__treeItem.getLocalXfo();
-        if(frameData.pose.position)
-            localXfo.tr.setDataArray(frameData.pose.position);
-        if(frameData.pose.orientation)
-            localXfo.ori.setDataArray(frameData.pose.orientation);
+    update(pose){
+        this.__mat4.setDataArray(pose.poseModelMatrix);
+        this.__localXfo.fromMat4(this.__mat4);
         this.__treeItem.setLocalXfo(localXfo);
     }
 
@@ -27,7 +27,7 @@ class VRHead {
     }
 
     getXfo(){
-        return this.__treeItem.getLocalXfo();
+        return this.__localXfo;
     }
 };
 

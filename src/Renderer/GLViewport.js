@@ -222,13 +222,7 @@ class GLViewport extends GLBaseViewport {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBufferFbo.bindAndClear();
 
-            const renderstate = {
-                drawCalls: 0,
-                drawCount: 0,
-                profileJSON: {},
-                shaderopts: this.__renderer.getShaderPreproc(),
-                viewports: []
-            };
+            const renderstate = {};
             this.__initRenderState(renderstate);
             this.__renderer.drawSceneGeomData(renderstate);
             this.__geomDataBufferInvalid = false;
@@ -514,7 +508,7 @@ class GLViewport extends GLBaseViewport {
         // console.log(this.__viewMat.toString())
         renderstate.viewXfo = this.__cameraXfo;
         renderstate.viewScale = 1.0;
-        renderstate.viewports.push({
+        renderstate.viewports = [{
             region: this.region,
             cameraMatrix: this.__cameraMat,
             viewMatrix: this.__viewMat,
@@ -522,7 +516,7 @@ class GLViewport extends GLBaseViewport {
             viewportFrustumSize: this.__frustumDim,
             isOrthographic: this.__camera.getIsOrthographic(),
             fovY: this.__camera.getFov()
-        })
+        }]
         // renderstate.viewports.push({
         //     region: [this.region[0], this.region[1], this.region[2]*0.5, this.region[3]],
         //     cameraMatrix: this.__cameraMat,
@@ -543,9 +537,16 @@ class GLViewport extends GLBaseViewport {
         // })
     }
 
-    bindAndClear(renderstate) {
+    bindAndClear() {
         this.clear(renderstate);
         this.__initRenderState(renderstate);
+    }
+
+    draw() {
+        const renderstate = {}
+        this.clear(renderstate);
+        this.__initRenderState(renderstate);
+        this.__renderer.drawScene(renderstate)
     }
 
 };

@@ -436,49 +436,12 @@ class GLRenderer extends GLBaseRenderer {
         renderstate.planeNormal = this.__cutPlaneNormal;
         renderstate.exposure = this.__exposure;
         renderstate.gamma = this.__gamma;
-        renderstate.shaderopts = this.__preproc;
 
         if (this.__displayEnvironment)
             this.drawBackground(renderstate);
 
         super.drawScene(renderstate);
         // console.log("Draw Calls:" + renderstate['drawCalls']);
-    }
-
-
-    draw() {
-        if (this.__drawSuspensionLevel > 0)
-            return;
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
-
-        const gl = this.__gl;
-        const renderstate = {
-            viewports: []
-        };
-
-        // if (this.__fbo)
-        //     this.__fbo.bindAndClear(renderstate);
-        // else 
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        if (this.__vrViewport && this.__vrViewport.isPresenting()) {
-            if(!this.__vrViewport.bindAndClear(renderstate))
-                return;
-            
-            // Cannot upate the view, else it sends signals which
-            // end up propagating through the websocket. 
-            // TODO: Make the head invisible till active
-            // else
-            //     this.__vrViewport.updateHeadAndControllers();
-        }
-        else {
-            for(let vp of this.__viewports){
-                vp.bindAndClear(renderstate);
-            }
-        }
-
-        this.drawScene(renderstate);
 
         if (this.__selectedGeomsBufferFbo) {
             this.__selectedGeomsBufferFbo.bindAndClear();
@@ -498,49 +461,84 @@ class GLRenderer extends GLBaseRenderer {
 
             gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
-        
-        // /////////////////////////////////////
-        // // Post processing.
-        // if (this.__fbo) {
-        //     const gl = this.__gl;
-
-        //     // Bind the default framebuffer
-        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        //     gl.viewport(...this.region);
-        //     // gl.disable(gl.SCISSOR_TEST);
-
-        //     // this.__glshaderScreenPostProcess.bind(renderstate);
-
-        //     // const unifs = renderstate.unifs;
-        //     // if ('antialiase' in unifs)
-        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-        //     // if ('textureSize' in unifs)
-        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-        //     // if ('gamma' in unifs)
-        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-        //     // if ('exposure' in unifs)
-        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-        //     // if ('tonemap' in unifs)
-        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-        //     gl.screenQuad.bindShader(renderstate);
-        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
-
-
-        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-        //     // more goem int he next frame then the fbo color tex is being read from and written to 
-        //     // at the same time. (baaaad).
-        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
-        //     // track down.
-        //     gl.bindTexture(gl.TEXTURE_2D, null);
-        // }
-
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
-            this.__vrViewport.submitFrame();
 
         this.redrawOccured.emit();
     }
+
+
+    // draw() {
+    //     if (this.__drawSuspensionLevel > 0)
+    //         return;
+    //     const gl = this.__gl;
+    //     const renderstate = {
+    //         viewports: []
+    //     };
+
+    //     // if (this.__fbo)
+    //     //     this.__fbo.bindAndClear(renderstate);
+    //     // else 
+    //         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+    //     if (this.__vrViewport && this.__vrViewport.isPresenting()) {
+    //         if(!this.__vrViewport.bindAndClear(renderstate))
+    //             return;
+            
+    //         // Cannot upate the view, else it sends signals which
+    //         // end up propagating through the websocket. 
+    //         // TODO: Make the head invisible till active
+    //         // else
+    //         //     this.__vrViewport.updateHeadAndControllers();
+    //     }
+    //     else {
+    //         for(let vp of this.__viewports){
+    //             vp.bindAndClear(renderstate);
+    //         }
+    //     }
+
+    //     this.drawScene(renderstate);
+        
+    //     // /////////////////////////////////////
+    //     // // Post processing.
+    //     // if (this.__fbo) {
+    //     //     const gl = this.__gl;
+
+    //     //     // Bind the default framebuffer
+    //     //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    //     //     gl.viewport(...this.region);
+    //     //     // gl.disable(gl.SCISSOR_TEST);
+
+    //     //     // this.__glshaderScreenPostProcess.bind(renderstate);
+
+    //     //     // const unifs = renderstate.unifs;
+    //     //     // if ('antialiase' in unifs)
+    //     //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+    //     //     // if ('textureSize' in unifs)
+    //     //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+    //     //     // if ('gamma' in unifs)
+    //     //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+    //     //     // if ('exposure' in unifs)
+    //     //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+    //     //     // if ('tonemap' in unifs)
+    //     //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+
+    //     //     gl.screenQuad.bindShader(renderstate);
+    //     //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+
+
+    //     //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+    //     //     // more goem int he next frame then the fbo color tex is being read from and written to 
+    //     //     // at the same time. (baaaad).
+    //     //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+    //     //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
+    //     //     // track down.
+    //     //     gl.bindTexture(gl.TEXTURE_2D, null);
+    //     // }
+
+    //     if (this.__vrViewport && this.__vrViewport.isPresenting())
+    //         this.__vrViewport.submitFrame();
+
+    //     this.redrawOccured.emit();
+    // }
     ////////////////////////////
     // Debugging
 };

@@ -116,12 +116,28 @@ class GLBaseRenderer {
 
         this.addViewport('main');
 
+        
 
-        this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
-        this.__displayVRGeometry = options.displayVRGeometry !== undefined ? options.displayVRGeometry : true;
+        this.__supportXR = options.supportXR !== undefined ? options.supportXR : true;
         this.__vrViewport = undefined;
-        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined){
-            this.__vrpolyfill = new WebVRPolyfill();
+        if(this.__supportXR){
+            if(navigator.xr) {
+              // navigator.xr.supportsSessionMode('immersive-vr').then(() => {
+                this.__setupVRViewport();
+              // }).catch((reason) => {
+              //   console.log("Session not supported: " + reason);
+              // });
+
+                // TODO:
+                // navigator.xr.addEventListener('devicechange', checkForXRSupport);
+            }
+            // else if(window.WebVRPolyfill != undefined) {
+            //     this.__vrpolyfill = new WebVRPolyfill();
+            // }
+            
+            // if (this.supportsVR())
+            
+
         }
 
         resourceLoader.loaded.connect(this.renderGeomDataFbos);
@@ -211,9 +227,6 @@ class GLBaseRenderer {
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
 
         this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
-
-        if (this.supportsVR())
-            this.__setupVRViewport();
         
         this.sceneSet.emit(this.__scene);
     }
@@ -356,6 +369,7 @@ class GLBaseRenderer {
         webglOptions.preserveDrawingBuffer = true;
         webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false;
         webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false;
+        webglOptions.xrCompatible = true;
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 
@@ -638,22 +652,21 @@ class GLBaseRenderer {
     // VR Setup
 
     supportsVR() {
-        return this.__supportVR && navigator.getVRDisplays != null;
+        return this.__supportXR && navigator.xr != null;
     }
 
     __setupVRViewport() {
-        return navigator.getVRDisplays().then((displays) => {
-            if (displays.length > 0) {
+
+        navigator.xr.requestDevice().then((device) => {
+            device.supportsSession({immersive: true}).then(() => {
+
                 // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-                let vrvp = new VRViewport(this, displays[displays.length-1], this.__displayVRGeometry);
+                const vrvp = new VRViewport(this, navigator.xr, device);
 
                 vrvp.presentingChanged.connect((state)=>{
                     this.__vrViewportPresenting = state;
                     if(state){
                         vrvp.viewChanged.connect(this.viewChanged.emit);
-                        // vrvp.actionStarted.connect(this.actionStarted.emit);
-                        // vrvp.actionEnded.connect(this.actionEnded.emit);
-                        // vrvp.actionOccuring.connect(this.actionOccuring.emit);
                         
                         // Let the passes know that VR is starting.
                         // They can do things like optimize shaders.
@@ -666,9 +679,6 @@ class GLBaseRenderer {
                     }
                     else {
                         vrvp.viewChanged.disconnect(this.viewChanged.emit);
-                        // vrvp.actionStarted.disconnect(this.actionStarted.emit);
-                        // vrvp.actionEnded.disconnect(this.actionEnded.emit);
-                        // vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
 
                         for(let key in this.__passes) {
                             const passSet = this.__passes[key];
@@ -683,15 +693,12 @@ class GLBaseRenderer {
                         })
                     }
                 })
-
-
                 this.__vrViewport = vrvp;
                 this.vrViewportSetup.emit(vrvp);
-            } else {
-                //setStatus("WebVR supported, but no VRDisplays found.")
-                // console.warn("WebVR supported, but no VRDisplays found.");
-            }
-        });
+            });
+          }).catch(() => {
+            console.log("Device does nto support VR")
+          });
     }
 
     getVRViewport() {
@@ -705,33 +712,33 @@ class GLBaseRenderer {
         return this.__continuousDrawing;
     }
 
-    startContinuousDrawing() {
-        if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
-            return;
+    // startContinuousDrawing() {
+    //     if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
+    //         return;
 
-        let onAnimationFrame = ()=>{
-            if (this.__continuousDrawing) {
-                if (!this.getVRViewport() || !this.getVRViewport().isContinuouslyDrawing())
-                    window.requestAnimationFrame(onAnimationFrame);
-            }
-            this.draw();
-        }
+    //     let onAnimationFrame = ()=>{
+    //         if (this.__continuousDrawing) {
+    //             if (!this.getVRViewport() || !this.getVRViewport().isContinuouslyDrawing())
+    //                 window.requestAnimationFrame(onAnimationFrame);
+    //         }
+    //         this.draw();
+    //     }
 
-        this.__continuousDrawing = true;
-        window.requestAnimationFrame(onAnimationFrame);
-    }
+    //     this.__continuousDrawing = true;
+    //     window.requestAnimationFrame(onAnimationFrame);
+    // }
 
-    stopContinuousDrawing() {
-        this.__continuousDrawing = false;
-    }
+    // stopContinuousDrawing() {
+    //     this.__continuousDrawing = false;
+    // }
 
-    toggleContinuousDrawing() {
-        if (!this.__continuousDrawing) {
-            this.startContinuousDrawing();
-        } else {
-            this.stopContinuousDrawing();
-        }
-    }
+    // toggleContinuousDrawing() {
+    //     if (!this.__continuousDrawing) {
+    //         this.startContinuousDrawing();
+    //     } else {
+    //         this.stopContinuousDrawing();
+    //     }
+    // }
 
     drawItemChanged() {
         for (let vp of this.__viewports)
@@ -753,7 +760,10 @@ class GLBaseRenderer {
 
         let onAnimationFrame = () => {
             this.__redrawRequested = false;
-            this.draw();
+            // this.draw();
+            for(let vp of this.__viewports){
+                vp.draw();
+            }
         }
         window.requestAnimationFrame(onAnimationFrame);
         this.__redrawRequested = true;
@@ -766,11 +776,15 @@ class GLBaseRenderer {
 
     drawScene(renderstate) {
 
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
         renderstate.profileJSON = {};
         renderstate.boundRendertarget = undefined;
         renderstate.materialCount = 0;
         renderstate.drawCalls = 0;
         renderstate.drawCount = 0;
+        renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
@@ -782,6 +796,11 @@ class GLBaseRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
+        renderstate.shaderopts = this.__preproc;
+
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
             for(let pass of passSet) {
@@ -792,6 +811,11 @@ class GLBaseRenderer {
     }
     
     drawSceneGeomData(renderstate){
+        renderstate.shaderopts = this.__preproc;
+
+        if (this.__collector.newItemsReadyForLoading())
+            this.__collector.finalize();
+
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
             for(let pass of passSet) {
