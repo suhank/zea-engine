@@ -66,7 +66,6 @@ class GLProbe extends ImageAtlas {
     }
 
     convolveProbe(srcGLTex) {
-        console.log("convolveProbe:" + this.constructor.name)
         const gl = this.__gl;
 
         // Compile and bind the convolver shader.

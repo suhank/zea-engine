@@ -44,7 +44,7 @@ class GLEnvMap extends GLProbe {
             this.convolveProbe(srcGLTex);
         } else {
             this.__envMap.loaded.connect(() => {
-                console.log(this.__envMap.getName() + " loaded");
+                // console.log(this.__envMap.getName() + " loaded");
                 this.convolveProbe(srcGLTex);
                 this.loaded.emit();
             });
