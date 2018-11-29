@@ -74,13 +74,14 @@ class ResourceLoader {
     this.__workers = [];
     this.__nextWorker = 0;
 
-    if(window.origin.startsWith('https://api.visualive.io') ||
-      window.origin.startsWith('https://apistage.visualive.io'))
+    if(window.location.origin.startsWith('https://api.visualive.io') ||
+      window.location.origin.startsWith('https://apistage.visualive.io'))
       this.wasmUrl = "https://assets-visualive.storage.googleapis.com/oR3y6kdDu";
     else{
       let visualiveEngineUrl;
       const scripts = document.getElementsByTagName('script');
-      for(let script of scripts) {
+      for(let i =0; i < scripts.length; i++) {
+        const script = scripts[i];
         if(script.src.endsWith('Visualive.js')) {
           visualiveEngineUrl = script.src;
           break;

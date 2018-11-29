@@ -453,14 +453,14 @@ class TreeItem extends BaseItem {
     }
 
     removeChildByHandle(childItem) {
-        let index = this.__childItems.indexOf(childItem);
+        const index = this.__childItems.indexOf(childItem);
         if (index == -1)
             throw ("Error in removeChildByHandle. Child not found:" + childItem.getName());
         return this.removeChild(index);
     }
 
     removeAllChildren() {
-        let index = this.__childItems.length;
+        const index = this.__childItems.length;
         while (index--){
             this.removeChild(index);
         }

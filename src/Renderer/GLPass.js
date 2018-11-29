@@ -80,12 +80,12 @@ class GLPass {
         for (let glshaderMaterials of this.__glshadermaterials) {
             const glshader = glshaderMaterials.getGLShader();
             if(this.bindShader(renderstate, glshader)){
-                const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
-                for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                    if(glmaterialDrawItemSet.drawCount == 0)
+                const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+                for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                    if(glmaterialGeomItemSet.drawCount == 0)
                         continue;
-                    if(this.bindMaterial(renderstate, glmaterialDrawItemSet.getGLMaterial())){
-                        const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
+                    if(this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())){
+                        const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
                         for (let gldrawitemset of gldrawitemsets) {
                             gldrawitemset.draw(renderstate);  
                         }
@@ -106,9 +106,9 @@ class GLPass {
 
 
         for (let glshaderMaterials of this.__glshadermaterials) {
-            const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
-            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
+            const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
                 for (let gldrawitemset of gldrawitemsets) {
                     gldrawitemset.drawSelected(renderstate);  
                 }
@@ -129,11 +129,11 @@ class GLPass {
             if(glshaderMaterials.getGLShader().invisibleToGeomBuffer)
                 continue;
 
-            const glmaterialDrawItemSets = glshaderMaterials.getMaterialDrawItemSets();
-            for (let glmaterialDrawItemSet of glmaterialDrawItemSets) {
-                if(glmaterialDrawItemSet.drawCount == 0 || !glmaterialDrawItemSet.visibleInGeomDataBuffer)
+            const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                if(glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer)
                     continue;
-                const gldrawitemsets = glmaterialDrawItemSet.getDrawItemSets();
+                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
                 for (let gldrawitemset of gldrawitemsets) {
                     // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
                     gldrawitemset.draw(renderstate);
