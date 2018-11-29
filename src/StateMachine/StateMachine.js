@@ -41,7 +41,7 @@ class StateMachine extends BaseItem {
     }
 
     activateState(name) {
-        console.log("StateMachine.activateState:" + name)
+        // console.log("StateMachine.activateState:" + name)
         if (!this.__states[name])
             throw ("Invalid state transtion:" + name)
         if (this.__currentState == this.__states[name])

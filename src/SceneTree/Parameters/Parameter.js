@@ -100,6 +100,7 @@ class BaseParameter extends RefCounted {
         this.__cleanerFns.push(cleanerFn);
 
         this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
+        return true;
     }
 
     setEnabled(state) {
