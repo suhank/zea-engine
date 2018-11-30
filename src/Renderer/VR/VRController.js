@@ -35,10 +35,11 @@ import {
 } from '../GLFbo.js';
 
 class VRController {
-    constructor(vrviewport, inputSource) {
+    constructor(vrviewport, inputSource, id) {
 
         this.__vrviewport = vrviewport;
         this.__inputSource = inputSource;
+        this.__id = id;
         this.__isDaydramController = SystemDesc.isMobileDevice;
         this.__treeItem = new TreeItem('VRController:' + inputSource.handedness);
         // Controller coordinate system
@@ -55,7 +56,7 @@ class VRController {
             // ensure that the grid does not touch the controller, 
             // else it will return the controller geom from
             // the getGeomItemAtTip function
-            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.065)));
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.13)));
             this.__treeItem.addChild(this.__tip, false);
             vrviewport.getTreeItem().addChild(this.__treeItem);
 
@@ -63,7 +64,10 @@ class VRController {
             if(asset) {
                 asset.loaded.connect((entries) => {
                     const controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
-                    controllerTree.setLocalXfo(new Xfo(new Vec3(0, -0.035, -0.02), new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })));
+                    controllerTree.setLocalXfo(new Xfo(
+                        new Vec3(0, -0.035, -0.085), 
+                        new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })
+                        ));
                     this.__treeItem.addChild(controllerTree);
                 });
             }
@@ -97,8 +101,9 @@ class VRController {
     getHandedness() {
         return this.__inputSource.handedness;
     }
+
     getId() {
-        return this.__inputSource.handedness;
+        return this.__id;
     }
 
     getTreeItem() {
@@ -223,29 +228,6 @@ class VRController {
             return this.__geomAtTip;
         }
     }
-
-    //////////////////////////////////
-    // UI
-    // setPointerLength(length) {
-    //     let xfo = this.__uiPointerItem.getLocalXfo();
-    //     xfo.sc.set(1, 1, length);
-    //     this.__uiPointerItem.setLocalXfo(xfo);
-    // }
-
-    // getUIDimensions() {
-    //     return this.__dims;
-    // }
-
-    // setUIPixelData(width, height, pixels) {
-    //     this.__dims = {
-    //         width,
-    //         height
-    //     };
-    //     let dpm = 0.0005;//dots-per-meter (1 each 1/2mm)
-    //     this.__uiGeomItemGeomXfo.sc.set(width*dpm, height*dpm, 1.0);
-    //     this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
-    //     this.__uiimage.setData(width, height, pixels);
-    // }
 
 };
 

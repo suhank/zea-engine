@@ -71,7 +71,8 @@ class VRViewport extends GLBaseViewport {
 
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 
-        this.__vrControllers = {};
+        this.__vrControllersMap = {};
+        this.__vrControllers = [];
 
         //////////////////////////////////////////////
         // Xfos
@@ -184,13 +185,26 @@ class VRViewport extends GLBaseViewport {
             });
 
             const onSelectStart = (ev) => {
-                const controller = this.__vrControllers[ev.inputSource.handedness];
-                this.controllerButtonDown.emit({ button: 1, controller: this, vleStopPropagation:false, vrviewport:this }, this);
+                const controller = this.__vrControllersMap[ev.inputSource.handedness];
+                if(controller) {
+                    this.controllerButtonDown.emit({ 
+                        button: 1, 
+                        controller, 
+                        vleStopPropagation:false, 
+                        vrviewport: this 
+                    }, this);
+                }
             }
-
             const onSelectEnd = (ev) => {
-                const controller = this.__vrControllers[ev.inputSource.handedness];
-                this.controllerButtonUp.emit({ button: 1, controller: this, vleStopPropagation:false, vrviewport:this }, this);
+                const controller = this.__vrControllersMap[ev.inputSource.handedness];
+                if(controller) {
+                    this.controllerButtonUp.emit({ 
+                        button: 1,
+                        controller,
+                        vleStopPropagation:false,
+                        vrviewport: this 
+                    }, this);
+                }
             }
             session.addEventListener('selectstart', onSelectStart);
             session.addEventListener('selectend', onSelectEnd);
@@ -240,19 +254,16 @@ class VRViewport extends GLBaseViewport {
     // Controllers
 
     __createController(inputSource) {
-        const vrController = new VRController(this, inputSource);
+        // Note: This is to avoid a but in WebXR where initially the 
+        // controllers have no handedness specified, then suddently 
+        // get handeedness
+        if(inputSource.handedness == "")
+            return;
+        const id = this.__vrControllers.length;
+        const vrController = new VRController(this, inputSource, id);
 
-        // vrController.buttonPressed.connect((event) => {
-        //     event.vrviewport = this;
-        //     this.controllerButtonDown.emit(event, this)
-        // });
-
-        // vrController.buttonReleased.connect((event) => {
-        //     event.vrviewport = this;
-        //     this.controllerButtonUp.emit(event, this)
-        // });
-
-        this.__vrControllers[inputSource.handedness] = vrController;
+        this.__vrControllersMap[inputSource.handedness] = vrController;
+        this.__vrControllers[id] = vrController;
         this.controllerAdded.emit(vrController);
         return vrController;
     }
@@ -265,6 +276,12 @@ class VRViewport extends GLBaseViewport {
         for (let inputSource of inputSources) {
             const inputPose = xrFrame.getInputPose(inputSource, this.__frameOfRef);
 
+            // Note: This is to avoid a but in WebXR where initially the 
+            // controllers have no handedness specified, then suddently 
+            // get handeedness
+            if(inputSource.handedness == "")
+                return;
+        
             // We may not get a pose back in cases where the input source has lost
             // tracking or does not know where it is relative to the given frame
             // of reference.
@@ -273,10 +290,10 @@ class VRViewport extends GLBaseViewport {
             }
 
             if (inputPose.gripMatrix) {
-                if (!this.__vrControllers[inputSource.handedness]) {
+                if (!this.__vrControllersMap[inputSource.handedness]) {
                     this.__createController(inputSource);
                 }
-                this.__vrControllers[inputSource.handedness].updatePose(inputPose);
+                this.__vrControllersMap[inputSource.handedness].updatePose(inputPose);
             }
         }
 
