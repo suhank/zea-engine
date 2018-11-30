@@ -35,12 +35,12 @@ import {
 } from '../GLFbo.js';
 
 class VRController {
-    constructor(vrviewport, index) {
+    constructor(vrviewport, inputSource) {
 
         this.__vrviewport = vrviewport;
-        this.__index = index;
+        this.__inputSource = inputSource;
         this.__isDaydramController = SystemDesc.isMobileDevice;
-        this.__treeItem = new TreeItem('VRController:' + index);
+        this.__treeItem = new TreeItem('VRController:' + inputSource.handedness);
         // Controller coordinate system
         // X = Horizontal.
         // Y = Up.
@@ -88,13 +88,17 @@ class VRController {
         ///////////////////////////////////
         // Xfo
 
+        this.__mat4 = new Mat4();
         this.__xfo = new Xfo();
 
         // this.setVisible(true);
     }
 
+    getHandedness() {
+        return this.__inputSource.handedness;
+    }
     getId() {
-        return this.__index;
+        return this.__inputSource.handedness;
     }
 
     getTreeItem() {
@@ -121,58 +125,14 @@ class VRController {
         return this.__xfo;
     }
 
-    update(gamepad) {
-        if (gamepad.pose.position)
-            this.__xfo.tr.setDataArray(gamepad.pose.position);
-        if (gamepad.pose.orientation)
-            this.__xfo.ori.setDataArray(gamepad.pose.orientation);
-
-        if (!this.__treeItem)
-            return;
+    updatePose(inputPose) {
+        this.__mat4.setDataArray(inputPose.gripMatrix);
+        this.__xfo.fromMat4(this.__mat4);
         this.__treeItem.setLocalXfo(this.__xfo);
 
+        // Reset the geom at tip so it will be recomuted if necessary
         this.__geomAtTip = undefined;
         this.__hitTested = false;
-
-        ////////////////////////////////////////////
-        if (this.__isDaydramController) {
-            if (gamepad.buttons[0].pressed &&!this.__buttonPressed) {
-                this.__buttonPressed = true;
-                this.buttonPressed.emit();
-            }
-        }
-        else {
-            this.__touchpadValue = gamepad.axes;
-            // Note: Button 0 is the touchpad clicker.
-            for (let i = 0; i < gamepad.buttons.length; ++i) {
-                if (gamepad.buttons[i].pressed) {
-                    if (!this.__pressedButtons[i]) {
-                        this.__pressedButtons[i] = true;
-
-                        const event = { button: i, controller: this, vleStopPropagation:false }
-
-                        // trigger
-                        if (i == 1) {
-                            const intersectionData = this.getGeomItemAtTip();
-                            if (intersectionData != undefined) {
-                                intersectionData.geomItem.onMouseDown(Object.assign(event, {intersectionData}));
-                                if(event.vleStopPropagation == true)
-                                    continue;
-                            }
-                        }
-
-                        this.buttonPressed.emit(event);
-                    }
-                }
-                else {
-                    if (this.__pressedButtons[i]) {
-                        this.__pressedButtons[i] = false;
-                        const event = { button: i, controller: this, vleStopPropagation:false }
-                        this.buttonReleased.emit(event);
-                    }
-                }
-            }
-        }
     }
 
     //////////////////////////////////

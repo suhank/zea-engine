@@ -58,8 +58,7 @@ class GLBaseRenderer {
         this.__shaderDirectives = {};
         this.__preproc = { };
 
-
-        this.mirrorVRisplayToViewport = true;
+        this.__vrViewportPresenting = false;
 
         // Function Bindings.
         this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
@@ -292,7 +291,7 @@ class GLBaseRenderer {
                 vp.resize(this.__glcanvas.width, this.__glcanvas.height);
 
             this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
-            
+
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
             this.requestRedraw();
         }

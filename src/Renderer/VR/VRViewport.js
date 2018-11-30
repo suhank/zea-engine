@@ -71,7 +71,7 @@ class VRViewport extends GLBaseViewport {
 
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 
-        this.__vrControllers = [];
+        this.__vrControllers = {};
 
         //////////////////////////////////////////////
         // Xfos
@@ -183,6 +183,18 @@ class VRViewport extends GLBaseViewport {
                 }
             });
 
+            const onSelectStart = (ev) => {
+                const controller = this.__vrControllers[ev.inputSource.handedness];
+                this.controllerButtonDown.emit({ button: 1, controller: this, vleStopPropagation:false, vrviewport:this }, this);
+            }
+
+            const onSelectEnd = (ev) => {
+                const controller = this.__vrControllers[ev.inputSource.handedness];
+                this.controllerButtonUp.emit({ button: 1, controller: this, vleStopPropagation:false, vrviewport:this }, this);
+            }
+            session.addEventListener('selectstart', onSelectStart);
+            session.addEventListener('selectend', onSelectEnd);
+
             this.__session = session;
             this.__session.baseLayer = new XRWebGLLayer(session, gl);
 
@@ -227,36 +239,46 @@ class VRViewport extends GLBaseViewport {
     ////////////////////////////
     // Controllers
 
-    updateHeadAndControllers(pose) {
+    __createController(inputSource) {
+        const vrController = new VRController(this, inputSource);
 
-        this.__vrhead.update(pose);
+        // vrController.buttonPressed.connect((event) => {
+        //     event.vrviewport = this;
+        //     this.controllerButtonDown.emit(event, this)
+        // });
 
-        // const gamepads = navigator.getGamepads();
-        // let id = 0;
-        // for (let gamepad of gamepads) {
-        //     // Skip the new broken controller that is showing up.(maybe not a vive controller??)
-        //     if (gamepad && gamepad.pose) {
-        //         if (!this.__vrControllers[id]) {
-        //             const vrController = new VRController(this, id);
+        // vrController.buttonReleased.connect((event) => {
+        //     event.vrviewport = this;
+        //     this.controllerButtonUp.emit(event, this)
+        // });
 
-        //             vrController.buttonPressed.connect((event) => {
-        //                 event.vrviewport = this;
-        //                 this.controllerButtonDown.emit(event, this)
-        //             });
+        this.__vrControllers[inputSource.handedness] = vrController;
+        this.controllerAdded.emit(vrController);
+        return vrController;
+    }
 
-        //             vrController.buttonReleased.connect((event) => {
-        //                 event.vrviewport = this;
-        //                 this.controllerButtonUp.emit(event, this)
-        //             });
+    updateControllers(xrFrame) {
 
-        //             this.__vrControllers[id] = vrController;
-        //             this.controllerAdded.emit(vrController);
-        //         }
-        //         // Update the controllers pose in space.
-        //         this.__vrControllers[id].update(gamepad);
-        //         id++;
-        //     }
-        // }
+        this.__session
+        this.__frameOfRef
+        const inputSources = this.__session.getInputSources();
+        for (let inputSource of inputSources) {
+            const inputPose = xrFrame.getInputPose(inputSource, this.__frameOfRef);
+
+            // We may not get a pose back in cases where the input source has lost
+            // tracking or does not know where it is relative to the given frame
+            // of reference.
+            if (!inputPose) {
+                continue;
+            }
+
+            if (inputPose.gripMatrix) {
+                if (!this.__vrControllers[inputSource.handedness]) {
+                    this.__createController(inputSource);
+                }
+                this.__vrControllers[inputSource.handedness].updatePose(inputPose);
+            }
+        }
 
         /////////////////////////
         // Emit a signal for the shared session.
@@ -324,7 +346,10 @@ class VRViewport extends GLBaseViewport {
             })
         }
 
-        this.updateHeadAndControllers(pose);
+
+        this.__vrhead.update(pose);
+
+        this.updateControllers(xrFrame);
 
         renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo()
         renderstate.viewScale = 1.0 / this.__stageScale;
