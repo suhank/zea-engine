@@ -8,7 +8,8 @@ import {
 } from '../../SceneTree';
 
 class VRHead {
-    constructor(gl, stageTreeItem) {
+    constructor(vrviewport, stageTreeItem) {
+        this.__vrviewport = vrviewport;
         this.__treeItem = new TreeItem('VRHead');
         stageTreeItem.addChild(this.__treeItem);
 
@@ -19,7 +20,7 @@ class VRHead {
     update(pose){
         this.__mat4.setDataArray(pose.poseModelMatrix);
         this.__localXfo.fromMat4(this.__mat4);
-        this.__treeItem.setLocalXfo(localXfo);
+        this.__treeItem.setLocalXfo(this.__localXfo);
     }
 
     getTreeItem(){

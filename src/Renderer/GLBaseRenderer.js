@@ -97,21 +97,26 @@ class GLBaseRenderer {
         this.__supportXR = options.supportXR !== undefined ? options.supportXR : true;
         this.__vrViewport = undefined;
         if(this.__supportXR){
+            // if(!navigator.xr && window.WebVRPolyfill != undefined) {
+            //     this.__vrpolyfill = new WebVRPolyfill();
+            // }
             if(navigator.xr) {
-              // navigator.xr.supportsSessionMode('immersive-vr').then(() => {
-                this.__setupVRViewport();
-              // }).catch((reason) => {
-              //   console.log("Session not supported: " + reason);
-              // });
+                navigator.xr.requestDevice().then((device) => {
+                    device.supportsSession({immersive: true}).then(() => {
+                        
+                        // Note: could cause a context loss on machines with
+                        // multi-gpus (integrated Intel). 
+                        // This is because the may force the context to switch 
+                        // to the discrete GPU.
+                        // TODO: Provide a system to re-load the GPU data. 
+                        this.__gl.setCompatibleXRDevice(device);
 
+                        this.__setupVRViewport(device);
+                    });
+                });
                 // TODO:
                 // navigator.xr.addEventListener('devicechange', checkForXRSupport);
             }
-            // else if(window.WebVRPolyfill != undefined) {
-            //     this.__vrpolyfill = new WebVRPolyfill();
-            // }
-            
-            // if (this.supportsVR())
             
 
         }
@@ -603,50 +608,43 @@ class GLBaseRenderer {
         return this.__supportXR && navigator.xr != null;
     }
 
-    __setupVRViewport() {
+    __setupVRViewport(device) {
 
-        navigator.xr.requestDevice().then((device) => {
-            device.supportsSession({immersive: true}).then(() => {
+        // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
+        const vrvp = new VRViewport(this, navigator.xr, device);
 
-                // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-                const vrvp = new VRViewport(this, navigator.xr, device);
-
-                vrvp.presentingChanged.connect((state)=>{
-                    this.__vrViewportPresenting = state;
-                    if(state){
-                        vrvp.viewChanged.connect(this.viewChanged.emit);
-                        
-                        // Let the passes know that VR is starting.
-                        // They can do things like optimize shaders.
-                        for(let key in this.__passes) {
-                            const passSet = this.__passes[key];
-                            for(let pass of passSet) {
-                                pass.startPresenting();
-                            }
-                        }
+        vrvp.presentingChanged.connect((state)=>{
+            this.__vrViewportPresenting = state;
+            if(state){
+                vrvp.viewChanged.connect(this.viewChanged.emit);
+                
+                // Let the passes know that VR is starting.
+                // They can do things like optimize shaders.
+                for(let key in this.__passes) {
+                    const passSet = this.__passes[key];
+                    for(let pass of passSet) {
+                        pass.startPresenting();
                     }
-                    else {
-                        vrvp.viewChanged.disconnect(this.viewChanged.emit);
+                }
+            }
+            else {
+                vrvp.viewChanged.disconnect(this.viewChanged.emit);
 
-                        for(let key in this.__passes) {
-                            const passSet = this.__passes[key];
-                            for(let pass of passSet) {
-                                pass.stopPresenting();
-                            }
-                        }
-
-                        this.viewChanged.emit({
-                            interfaceType: 'CameraAndPointer',
-                            viewXfo: this.getViewport().getCamera().getGlobalXfo()
-                        })
+                for(let key in this.__passes) {
+                    const passSet = this.__passes[key];
+                    for(let pass of passSet) {
+                        pass.stopPresenting();
                     }
+                }
+
+                this.viewChanged.emit({
+                    interfaceType: 'CameraAndPointer',
+                    viewXfo: this.getViewport().getCamera().getGlobalXfo()
                 })
-                this.__vrViewport = vrvp;
-                this.vrViewportSetup.emit(vrvp);
-            });
-          }).catch(() => {
-            console.log("Device does nto support VR")
-          });
+            }
+        })
+        this.__vrViewport = vrvp;
+        this.vrViewportSetup.emit(vrvp);
     }
 
     getVRViewport() {

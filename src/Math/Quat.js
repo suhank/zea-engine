@@ -309,7 +309,7 @@ class Quat extends AttrValue {
 
         // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
         // article "Quaternion Calculus and Fast Animation".
-        const fTrace = mat3.__data[0] + mat3.__data[5] + mat3.__data[10];
+        const fTrace = mat4.__data[0] + mat4.__data[5] + mat4.__data[10];
         let fRoot;
 
         if (fTrace > 0.0) {
@@ -317,25 +317,25 @@ class Quat extends AttrValue {
             fRoot = Math.sqrt(fTrace + 1.); // 2w
             this.__data[3] = 0.5 * fRoot;
             fRoot = 0.5 / fRoot; // 1/(4w)
-            this.__data[0] = (mat3.__data[6] - mat3.__data[9]) * fRoot;
-            this.__data[1] = (mat3.__data[8] - mat3.__data[2]) * fRoot;
-            this.__data[2] = (mat3.__data[1] - mat3.__data[4]) * fRoot;
+            this.__data[0] = (mat4.__data[6] - mat4.__data[9]) * fRoot;
+            this.__data[1] = (mat4.__data[8] - mat4.__data[2]) * fRoot;
+            this.__data[2] = (mat4.__data[1] - mat4.__data[4]) * fRoot;
         } else {
             // |w| <= 1/2
             let i = 0;
-            if (mat3.__data[5] > mat3.__data[0])
+            if (mat4.__data[5] > mat4.__data[0])
                 i = 1;
-            if (mat3.__data[10] > mat3.__data[i * 4 + i])
+            if (mat4.__data[10] > mat4.__data[i * 4 + i])
                 i = 2;
             const j = (i + 1) % 3;
             const k = (i + 2) % 3;
 
-            fRoot = Math.sqrt(mat3.__data[i * 4 + i] - mat3.__data[j * 4 + j] - mat3.__data[k * 4 + k] + 1.0);
+            fRoot = Math.sqrt(mat4.__data[i * 4 + i] - mat4.__data[j * 4 + j] - mat4.__data[k * 4 + k] + 1.0);
             this.__data[i] = 0.5 * fRoot;
             fRoot = 0.5 / fRoot;
-            this.__data[3] = (mat3.__data[j * 4 + k] - mat3.__data[k * 4 + j]) * fRoot;
-            this.__data[j] = (mat3.__data[j * 4 + i] + mat3.__data[i * 4 + j]) * fRoot;
-            this.__data[k] = (mat3.__data[k * 4 + i] + mat3.__data[i * 4 + k]) * fRoot;
+            this.__data[3] = (mat4.__data[j * 4 + k] - mat4.__data[k * 4 + j]) * fRoot;
+            this.__data[j] = (mat4.__data[j * 4 + i] + mat4.__data[i * 4 + j]) * fRoot;
+            this.__data[k] = (mat4.__data[k * 4 + i] + mat4.__data[i * 4 + k]) * fRoot;
         }
         this.normalizeInPlace();
     }

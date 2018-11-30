@@ -116,7 +116,7 @@ class Xfo {
     }
 
     fromMat4(mat4) {
-        this.tr = trn.translation;
+        this.tr = mat4.translation;
         this.ori.setFromMat4(mat4);
     }
 

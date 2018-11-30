@@ -57,21 +57,12 @@ class VRViewport extends GLBaseViewport {
         //////////////////////////////////////////////
         // Viewport params
         this.__projectionMatriciesUpdated = false;
-        // this.__presentingRequested = false;
-        // this.__frameRequested = false;
-        // this.__canvasSizeScale = new Vec2(1, 1);
-        // this.__frustumDim = new Vec2(1, 1);
 
         // These values are in meters.
         this.__far = 1024.0;
         this.__near = 0.1;
-        // this.__vrDisplay.depthNear = this.__near;
-        // this.__vrDisplay.depthFar = this.__far;
-
         //////////////////////////////////////////////
         // Tree
-        // this.setBackground(renderer.getViewport().getBackground());
-        // this.__frameData = new VRFrameData();
 
         this.__stageTreeItem = new TreeItem('VRStage');
         this.__stageTreeItem.setSelectable(false);
@@ -108,28 +99,6 @@ class VRViewport extends GLBaseViewport {
         this.controllerButtonDown = new Signal();
         this.controllerButtonUp = new Signal();
         this.controllerTouchpadTouched = new Signal();
-
-        //////////////////////////////////////////////
-        // UI
-        // if (this.__vrDisplay.stageParameters &&
-        //     this.__vrDisplay.stageParameters.sizeX > 0 &&
-        //     this.__vrDisplay.stageParameters.sizeZ > 0) {} else {
-        //     if (this.__vrDisplay.stageParameters) {
-        //         console.warn("VRDisplay reported stageParameters, but stage size was 0. Using default size.");
-        //     } else {
-        //         console.warn("VRDisplay did not report stageParameters");
-        //     }
-        // }
-
-        //////////////////////////////////////////////
-        // Events
-        // window.addEventListener('vrdisplaypresentchange', this.__onVRPresentChange.bind(this), false);
-        // window.addEventListener('vrdisplayactivate', this.startPresenting.bind(this), false);
-        // window.addEventListener('vrdisplaydeactivate', this.stopPresenting.bind(this), false);
-
-        // Start the update loop that then drives the VRHead + VRController transforms in the scene.
-        //this.__startContinuousDrawing();
-
     }
 
     getVRDisplay() {
@@ -150,7 +119,6 @@ class VRViewport extends GLBaseViewport {
 
     getXfo() {
         return this.__stageXfo;
-        // return this.__stageTreeItem.getGlobalXfo();
     }
 
     setXfo(xfo) {
@@ -179,7 +147,7 @@ class VRViewport extends GLBaseViewport {
     __startSession() {
         const onAnimationFrame = (t, frame) => {
             if (this.__session) {
-                this.__session.requestAnimationFrame(onXRFrame);
+                this.__session.requestAnimationFrame(onAnimationFrame);
                 this.draw(t, frame);
             }
         }
@@ -194,48 +162,49 @@ class VRViewport extends GLBaseViewport {
 
         // Add an outpute canvas that will allow XR to also send a view
         // back the monitor.
-        // const mirrorCanvas = document.createElement('canvas');
-        // const ctx = mirrorCanvas.getContext('xrpresent');
+        const mirrorCanvas = document.createElement('canvas');
+        mirrorCanvas.style.position = 'relative';
+        mirrorCanvas.style.left = '0px';
+        mirrorCanvas.style.top = '0px';
+        mirrorCanvas.style.width = '100%';
+        mirrorCanvas.style.height = '100%';
+        const ctx = mirrorCanvas.getContext('xrpresent');
+        console.log("outputContext:", ctx)
 
-        gl.makeXRCompatible().then(() => {
+        this.__device.requestSession({ immersive: true, outputContext: ctx }).then((session) => {
 
-        this.__device.requestSession({ immersive: true, outputContext: gl }).then((session) => {
-            // gl.makeXRCompatible().then(() => {
+            this.__renderer.getDiv().appendChild(mirrorCanvas);
 
-                document.body.appendChild(outputCanvas);
+            session.addEventListener('end', (event) => {
+                if (event.session.immersive) {
+                    this.__stageTreeItem.setVisible(false);
+                    this.__renderer.getDiv().removeChild(mirrorCanvas);
+                    this.__session = null;
+                    this.presentingChanged.emit(false);
+                }
+            });
 
-                session.addEventListener('end', function(event) {
-                    if (event.session.immersive) {
-                        this.__stageTreeItem.setVisible(false);
-                        document.body.removeChild(outputCanvas);
-                        this.__session = null;
-                        this.presentingChanged.emit(false);
-                    }
-                });
-
-                this.__session = session;
-                this.__session.baseLayer = new XRWebGLLayer(session, gl);
+            this.__session = session;
+            this.__session.baseLayer = new XRWebGLLayer(session, gl);
 
 
-                // Get a stage frame of reference, which will align the user's physical
-                // floor with Y=0 and can provide boundaries that indicate where the
-                // user can safely walk. If the system can't natively provide stage
-                // coordinates (for example, with a 3DoF device) then it will return an
-                // emulated stage, where the view is translated up by a static height so
-                // that the scene still renders in approximately the right place.
-                session.requestFrameOfReference('stage').then((frameOfRef) => {
-                    this.__frameOfRef = frameOfRef;
-                    this.__startSession()
-                });
+            // Get a stage frame of reference, which will align the user's physical
+            // floor with Y=0 and can provide boundaries that indicate where the
+            // user can safely walk. If the system can't natively provide stage
+            // coordinates (for example, with a 3DoF device) then it will return an
+            // emulated stage, where the view is translated up by a static height so
+            // that the scene still renders in approximately the right place.
+            session.requestFrameOfReference('stage').then((frameOfRef) => {
+                this.__frameOfRef = frameOfRef;
+                this.__startSession()
+            });
 
-                this.__stageTreeItem.setVisible(true);
-                this.presentingChanged.emit(true);
+            this.__stageTreeItem.setVisible(true);
+            this.presentingChanged.emit(true);
 
-            // });
         }).catch((e) => {
             console.warn(e)
           });;
-        });
     }
 
     stopPresenting() {
@@ -255,45 +224,6 @@ class VRViewport extends GLBaseViewport {
     getHMDCanvasSize() {
         return this.__hmdCanvasSize;
     }
-
-    // __onVRPresentChange() {
-    //     if (this.__vrDisplay.isPresenting) {
-    //         const leftEye = this.__vrDisplay.getEyeParameters("left");
-    //         const rightEye = this.__vrDisplay.getEyeParameters("right");
-    //         this.__hmdCanvasSize = [
-    //             Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
-    //             Math.max(leftEye.renderHeight, rightEye.renderHeight)
-    //         ];
-    //         this.region = [0, 0, this.__hmdCanvasSize[0], this.__hmdCanvasSize[1]];
-
-    //         this.__stageTreeItem.setVisible(true);
-
-    //         if (SystemDesc.isMobileDevice) {
-    //             const xfo = this.__renderer.getViewport().getCamera().getGlobalXfo().clone();
-    //             const yaxis = xfo.ori.getYaxis();
-    //             const up = new Vec3(0, 0, 1);
-    //             const angle = yaxis.angleTo(up);
-    //             if (angle > 0.0001) {
-    //                 let axis = yaxis.cross(up);
-    //                 let align = new Quat();
-    //                 align.setFromAxisAndAngle(axis, angle);
-    //                 xfo.ori = align.multiply(xfo.ori);
-    //             }
-    //             //    xfo.tr.y = 0;
-    //             //}
-    //             this.setXfo(xfo);
-    //         }
-
-    //         this.__startContinuousDrawing();
-    //         this.presentingChanged.emit(true);
-    //     } else {
-    //         this.stopContinuousDrawing();
-    //         this.__stageTreeItem.setVisible(false);
-    //         this.presentingChanged.emit(false);
-    //     }
-
-    //     this.__renderer.__onResize();
-    // }
 
     ////////////////////////////
     // Controllers
@@ -343,34 +273,41 @@ class VRViewport extends GLBaseViewport {
 
     draw(t, xrFrame) {
 
-        // super.clear();
-
-
-        if (!this.__projectionMatriciesUpdated) {
-            for (let i=0; i<xrFrame.views.length; i++) {
-                this.__projectionMatrices[i].setDataArray(xrFrame.views[i].projectionMatrix);
-            }
-            this.__projectionMatriciesUpdated = true;
-        }
-
-        const pose = frame.getDevicePose(this.__frameOfRef);
-
         const session = xrFrame.session;
         // Assumed to be a XRWebGLLayer for now.
         const layer = session.baseLayer;
         const gl = this.__renderer.gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
+
+        // gl.clearColor(0.1, 0.2, 0.3, 1.0);
+        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        if (!this.__projectionMatriciesUpdated) {
+            this.__projectionMatrices = [];
+            this.__viewMatrices = [];
+            for (let i=0; i<xrFrame.views.length; i++) {
+                const projMat = new Mat4();
+                projMat.setDataArray(xrFrame.views[i].projectionMatrix);
+                this.__projectionMatrices[i] = projMat;
+                this.__viewMatrices[i] = new Mat4();
+            }
+            this.__projectionMatriciesUpdated = true;
+        }
+
+        const pose = xrFrame.getDevicePose(this.__frameOfRef);
 
         let renderstate = {
             viewports:[]
         };
         for (let i=0; i<xrFrame.views.length; i++) {
             this.__viewMatrices[i].setDataArray(pose.getViewMatrix(xrFrame.views[i]));
+            this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
             const vp = layer.getViewport(xrFrame.views[i]);
             renderstate.viewports.push({
-                viewMatrix: this.__viewMatrix[i],
+                viewMatrix: this.__viewMatrices[i],
                 projectionMatrix: this.__projectionMatrices[i],
                 region: [vp.x, vp.y, vp.width, vp.height],
             })
@@ -378,40 +315,13 @@ class VRViewport extends GLBaseViewport {
 
         this.updateHeadAndControllers(pose);
 
-        this.__renderer.drawScene(renderstate)
-
-
-        // this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
-        // this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
-        // this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
-        // this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
-
-        // const width = this.__hmdCanvasSize[0];
-        // const height = this.__hmdCanvasSize[1];
-
+        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo()
         // renderstate.viewScale = 1.0 / this.__stageScale;
-        // renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
         // renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
-        // renderstate.viewports =[{
-        //     region: [0, 0, width * 0.5, height],
-        //     cameraMatrix: renderstate.cameraMatrix,
-        //     viewMatrix: this.__leftViewMatrix,
-        //     projectionMatrix: this.__leftProjectionMatrix
-        // },
-        // {
-        //     region: [width * 0.5, 0, width * 0.5, height],
-        //     cameraMatrix: renderstate.cameraMatrix,
-        //     viewMatrix: this.__rightViewMatrix,
-        //     projectionMatrix: this.__rightProjectionMatrix
-        // }]
 
-        // return true;
+        this.__renderer.drawScene(renderstate);
     }
 
-    submitFrame(){
-        this.__vrDisplay.submitFrame();
-        this.__frameRequested = false;
-    }
 
 };
 
