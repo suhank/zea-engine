@@ -104,7 +104,7 @@ class GLGeomItemSet {
         this.drawIdsBufferDirty = true;
     }
 
-    removeGeomItem(gldrawItem) {
+    removeGLGeomItem(gldrawItem) {
         const index = this.glgeomitems.indexOf(gldrawItem);
         const signalIds = this.drawItemSignalIds[index];
         gldrawItem.selectedChanged.disconnectId(signalIds.sel);

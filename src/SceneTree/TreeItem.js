@@ -460,7 +460,7 @@ class TreeItem extends BaseItem {
     }
 
     removeAllChildren() {
-        const index = this.__childItems.length;
+        let index = this.__childItems.length;
         while (index--){
             this.removeChild(index);
         }

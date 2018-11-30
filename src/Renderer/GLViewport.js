@@ -222,13 +222,7 @@ class GLViewport extends GLBaseViewport {
         if (this.__geomDataBufferFbo) {
             this.__geomDataBufferFbo.bindAndClear();
 
-            const renderstate = {
-                drawCalls: 0,
-                drawCount: 0,
-                profileJSON: {},
-                shaderopts: this.__renderer.getShaderPreproc(),
-                viewports: []
-            };
+            const renderstate = {};
             this.__initRenderState(renderstate);
             this.__renderer.drawSceneGeomData(renderstate);
             this.__geomDataBufferInvalid = false;
@@ -514,7 +508,8 @@ class GLViewport extends GLBaseViewport {
         // console.log(this.__viewMat.toString())
         renderstate.viewXfo = this.__cameraXfo;
         renderstate.viewScale = 1.0;
-        renderstate.viewports.push({
+        renderstate.region = this.region;
+        renderstate.viewports = [{
             region: this.region,
             cameraMatrix: this.__cameraMat,
             viewMatrix: this.__viewMat,
@@ -522,30 +517,27 @@ class GLViewport extends GLBaseViewport {
             viewportFrustumSize: this.__frustumDim,
             isOrthographic: this.__camera.getIsOrthographic(),
             fovY: this.__camera.getFov()
-        })
-        // renderstate.viewports.push({
-        //     region: [this.region[0], this.region[1], this.region[2]*0.5, this.region[3]],
-        //     cameraMatrix: this.__cameraMat,
-        //     viewMatrix: this.__viewMat,
-        //     projectionMatrix: this.__projectionMatrix,
-        //     viewportFrustumSize: this.__frustumDim,
-        //     isOrthographic: this.__camera.getIsOrthographic(),
-        //     fovY: this.__camera.getFov()
-        // })
-        // renderstate.viewports.push({
-        //     region: [this.region[2]*0.5, this.region[1], this.region[2]*0.5, this.region[3]],
-        //     cameraMatrix: this.__cameraMat,
-        //     viewMatrix: this.__viewMat,
-        //     projectionMatrix: this.__projectionMatrix,
-        //     viewportFrustumSize: this.__frustumDim,
-        //     isOrthographic: this.__camera.getIsOrthographic(),
-        //     fovY: this.__camera.getFov()
-        // })
+        }];
     }
 
-    bindAndClear(renderstate) {
-        this.clear(renderstate);
+    draw() {
+        const gl = this.__renderer.gl;
+
+        // Make sure th default fbo is bound
+        // Note: sometimes an Fbo is left bound
+        // from anohter op(like resizing, populating etc..)
+        // We need to unbind here to ensure rendering is to the
+        // right target.
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        gl.viewport(...this.region);
+        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.colorMask(true, true, true, true);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        const renderstate = {}
         this.__initRenderState(renderstate);
+        this.__renderer.drawScene(renderstate);
     }
 
 };

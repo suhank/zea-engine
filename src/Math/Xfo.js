@@ -115,6 +115,11 @@ class Xfo {
         return trn.multiply(rot).multiply(scl);
     }
 
+    fromMat4(mat4) {
+        this.tr = mat4.translation;
+        this.ori.setFromMat4(mat4);
+    }
+
 
     setFromFloat32Array(float32array) {
         if(float32array.length == 7){

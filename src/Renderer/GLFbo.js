@@ -159,7 +159,7 @@ class GLFbo {
     // Triggered Automatically when the texture reizes.
     // TODO: fbos should manage the textures assigned to them
     // e.g. resixzing and preserving data.
-    resize(/*width, height, preserve*/) {
+    resize() {
         const gl = this.__gl;
         if (gl.name == 'webgl2')
             gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__fbo);
@@ -181,7 +181,6 @@ class GLFbo {
                 gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
         }
         this.__checkFramebuffer();
-        //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     }
 
     __checkFramebuffer() {

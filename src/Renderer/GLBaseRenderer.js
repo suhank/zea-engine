@@ -58,8 +58,7 @@ class GLBaseRenderer {
         this.__shaderDirectives = {};
         this.__preproc = { };
 
-
-        this.mirrorVRisplayToViewport = true;
+        this.__vrViewportPresenting = false;
 
         // Function Bindings.
         this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
@@ -92,12 +91,33 @@ class GLBaseRenderer {
 
         this.addViewport('main');
 
+        
 
-        this.__supportVR = options.supportVR !== undefined ? options.supportVR : true;
-        this.__displayVRGeometry = options.displayVRGeometry !== undefined ? options.displayVRGeometry : true;
+        this.__supportXR = options.supportXR !== undefined ? options.supportXR : true;
         this.__vrViewport = undefined;
-        if(this.__supportVR && !navigator.getVRDisplays && window.WebVRPolyfill != undefined){
-            this.__vrpolyfill = new WebVRPolyfill();
+        if(this.__supportXR){
+            // if(!navigator.xr && window.WebVRPolyfill != undefined) {
+            //     this.__vrpolyfill = new WebVRPolyfill();
+            // }
+            if(navigator.xr) {
+                navigator.xr.requestDevice().then((device) => {
+                    device.supportsSession({immersive: true}).then(() => {
+
+                        // Note: could cause a context loss on machines with
+                        // multi-gpus (integrated Intel). 
+                        // This is because the may force the context to switch 
+                        // to the discrete GPU.
+                        // TODO: Provide a system to re-load the GPU data. 
+                        this.__gl.setCompatibleXRDevice(device);
+
+                        this.__setupVRViewport(device);
+                    });
+                });
+                // TODO:
+                // navigator.xr.addEventListener('devicechange', checkForXRSupport);
+            }
+            
+
         }
 
         // Do we need this? I think not.
@@ -159,9 +179,6 @@ class GLBaseRenderer {
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
 
         this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
-
-        if (this.supportsVR())
-            this.__setupVRViewport();
         
         this.sceneSet.emit(this.__scene);
     }
@@ -261,23 +278,23 @@ class GLBaseRenderer {
         return this.__gl;
     }
 
+    resizeFbos(width, height) {
+    }
+
     __onResize() {
 
-        if (this.__vrViewportPresenting) {
-            var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
-            this.__glcanvas.width = hmdCanvasSize[0];
-            this.__glcanvas.height = hmdCanvasSize[1];
-        } else {
+        if (!this.__vrViewportPresenting) {
             this.__glcanvas.width = this.__glcanvas.clientWidth * window.devicePixelRatio;
             this.__glcanvas.height = this.__glcanvas.clientHeight * window.devicePixelRatio;
 
             for (let vp of this.__viewports)
                 vp.resize(this.__glcanvas.width, this.__glcanvas.height);
 
+            this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
+
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
             this.requestRedraw();
         }
-
     }
 
     getDiv() {
@@ -304,6 +321,7 @@ class GLBaseRenderer {
         webglOptions.preserveDrawingBuffer = true;
         webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false;
         webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false;
+        webglOptions.xrCompatible = true;
         this.__gl = create3DContext(this.__glcanvas, webglOptions);
         this.__gl.renderer = this;
 
@@ -472,10 +490,8 @@ class GLBaseRenderer {
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyPressed(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
+            if (vp) {
+                vp.onKeyPressed(key, event);
             }
         });
         document.addEventListener('keydown', (event) => {
@@ -483,10 +499,8 @@ class GLBaseRenderer {
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyDown(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
+            if (vp) {
+                vp.onKeyDown(key, event);
             }
         });
         document.addEventListener('keyup', (event) => {
@@ -494,10 +508,8 @@ class GLBaseRenderer {
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyUp(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
+            if (vp) {
+                vp.onKeyUp(key, event);
             }
         });
 
@@ -586,60 +598,51 @@ class GLBaseRenderer {
     // VR Setup
 
     supportsVR() {
-        return this.__supportVR && navigator.getVRDisplays != null;
+        console.warn("Deprecated Method. Please instead connect to the vrViewportSetup signal.")
+        return this.__supportXR && navigator.xr != null;
     }
 
-    __setupVRViewport() {
-        return navigator.getVRDisplays().then((displays) => {
-            if (displays.length > 0) {
-                // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-                let vrvp = new VRViewport(this, displays[displays.length-1], this.__displayVRGeometry);
+    __setupVRViewport(device) {
 
-                vrvp.presentingChanged.connect((state)=>{
-                    this.__vrViewportPresenting = state;
-                    if(state){
-                        vrvp.viewChanged.connect(this.viewChanged.emit);
-                        // vrvp.actionStarted.connect(this.actionStarted.emit);
-                        // vrvp.actionEnded.connect(this.actionEnded.emit);
-                        // vrvp.actionOccuring.connect(this.actionOccuring.emit);
-                        
-                        // Let the passes know that VR is starting.
-                        // They can do things like optimize shaders.
-                        for(let key in this.__passes) {
-                            const passSet = this.__passes[key];
-                            for(let pass of passSet) {
-                                pass.startPresenting();
-                            }
-                        }
+        // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
+        const vrvp = new VRViewport(this, navigator.xr, device);
+
+        vrvp.presentingChanged.connect((state)=>{
+            this.__vrViewportPresenting = state;
+            if(state){
+                
+                // Let the passes know that VR is starting.
+                // They can do things like optimize shaders.
+                for(let key in this.__passes) {
+                    const passSet = this.__passes[key];
+                    for(let pass of passSet) {
+                        pass.startPresenting();
                     }
-                    else {
-                        vrvp.viewChanged.disconnect(this.viewChanged.emit);
-                        // vrvp.actionStarted.disconnect(this.actionStarted.emit);
-                        // vrvp.actionEnded.disconnect(this.actionEnded.emit);
-                        // vrvp.actionOccuring.disconnect(this.actionOccuring.emit);
+                }
 
-                        for(let key in this.__passes) {
-                            const passSet = this.__passes[key];
-                            for(let pass of passSet) {
-                                pass.stopPresenting();
-                            }
-                        }
-
-                        this.viewChanged.emit({
-                            interfaceType: 'CameraAndPointer',
-                            viewXfo: this.getViewport().getCamera().getGlobalXfo()
-                        })
-                    }
-                })
-
-
-                this.__vrViewport = vrvp;
-                this.vrViewportSetup.emit(vrvp);
-            } else {
-                //setStatus("WebVR supported, but no VRDisplays found.")
-                // console.warn("WebVR supported, but no VRDisplays found.");
+                vrvp.viewChanged.connect(this.viewChanged.emit);
             }
-        });
+            else {
+                vrvp.viewChanged.disconnect(this.viewChanged.emit);
+
+                for(let key in this.__passes) {
+                    const passSet = this.__passes[key];
+                    for(let pass of passSet) {
+                        pass.stopPresenting();
+                    }
+                }
+
+                this.viewChanged.emit({
+                    interfaceType: 'CameraAndPointer',
+                    viewXfo: this.getViewport().getCamera().getGlobalXfo()
+                });
+
+                this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
+                this.requestRedraw();
+            }
+        })
+        this.__vrViewport = vrvp;
+        this.vrViewportSetup.emit(vrvp);
     }
 
     getVRViewport() {
@@ -649,37 +652,36 @@ class GLBaseRenderer {
     ////////////////////////////
     // Rendering
 
-    isContinuouslyDrawing() {
-        return this.__continuousDrawing;
-    }
+    // isContinuouslyDrawing() {
+    //     return this.__continuousDrawing;
+    // }
 
-    startContinuousDrawing() {
-        if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
-            return;
+    // startContinuousDrawing() {
+    //     if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
+    //         return;
 
-        let onAnimationFrame = ()=>{
-            if (this.__continuousDrawing) {
-                if (!this.getVRViewport() || !this.getVRViewport().isContinuouslyDrawing())
-                    window.requestAnimationFrame(onAnimationFrame);
-            }
-            this.draw();
-        }
+    //     const onAnimationFrame = ()=>{
+    //         if (this.__continuousDrawing && !this.__vrViewportPresenting)
+    //             window.requestAnimationFrame(onAnimationFrame);
+    //         for(let vp of this.__viewports)
+    //             vp.draw();
+    //     }
 
-        this.__continuousDrawing = true;
-        window.requestAnimationFrame(onAnimationFrame);
-    }
+    //     this.__continuousDrawing = true;
+    //     window.requestAnimationFrame(onAnimationFrame);
+    // }
 
-    stopContinuousDrawing() {
-        this.__continuousDrawing = false;
-    }
+    // stopContinuousDrawing() {
+    //     this.__continuousDrawing = false;
+    // }
 
-    toggleContinuousDrawing() {
-        if (!this.__continuousDrawing) {
-            this.startContinuousDrawing();
-        } else {
-            this.stopContinuousDrawing();
-        }
-    }
+    // toggleContinuousDrawing() {
+    //     if (!this.__continuousDrawing) {
+    //         this.startContinuousDrawing();
+    //     } else {
+    //         this.stopContinuousDrawing();
+    //     }
+    // }
 
     drawItemChanged() {
         for (let vp of this.__viewports)
@@ -689,39 +691,26 @@ class GLBaseRenderer {
 
     // Request a single redraw, usually in response to a signal/event.
     requestRedraw() {
-
         // If a redraw has already been requested, then simply return and wait.
-        if (this.__vrViewportPresenting)
-            return false;
-        // return super.requestRedraw();
-
-        // If a redraw has already been requested, then simply return and wait.
-        if (this.__redrawRequested || this.__continuousDrawing)
+        if (this.__redrawRequested || this.__continuousDrawing || this.__vrViewportPresenting)
             return false;
 
-        let onAnimationFrame = () => {
+        const onAnimationFrame = () => {
             this.__redrawRequested = false;
-            this.draw();
+            for(let vp of this.__viewports){
+                vp.draw();
+            }
         }
         window.requestAnimationFrame(onAnimationFrame);
         this.__redrawRequested = true;
         return true;
     }
 
-    // drawVP(viewport, renderstate) {
-    //     viewport.draw(renderstate);
-    // }
-
     drawScene(renderstate) {
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
 
-
-        renderstate.profileJSON = {};
-        renderstate.boundRendertarget = undefined;
-        renderstate.materialCount = 0;
-        renderstate.drawCalls = 0;
-        renderstate.drawCount = 0;
+        renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
@@ -736,6 +725,8 @@ class GLBaseRenderer {
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
 
+        renderstate.shaderopts = this.__preproc;
+
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
             for(let pass of passSet) {
@@ -746,8 +737,11 @@ class GLBaseRenderer {
     }
     
     drawSceneGeomData(renderstate){
+
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
+
+        renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
@@ -758,57 +752,8 @@ class GLBaseRenderer {
         }
     }
 
-    // draw() {
-    //     if (this.__drawSuspensionLevel > 0)
-    //         return;
-
-    //     const gl = this.__gl;
-    //     const renderstate = {};
-
-    //     if (this.__vrViewport) {
-    //         if (this.__vrViewport.isPresenting()) {
-    //             this.__vrViewport.draw(renderstate);
-    //             return;
-    //         } 
-    //         // Cannot upate the view, else it sends signals which
-    //         // end up propagating through the websocket. 
-    //         // TODO: Make the head invisible till active
-    //         // else
-    //         //     this.__vrViewport.updateHeadAndControllers();
-    //     }
-        
-    //     const len=this.__viewports.length;
-    //     for(let i=0; i< len; i++){
-    //         this.drawVP(this.__viewports[i], renderstate);
-    //     }
-
-    //     if (this.__collector.newItemsReadyForLoading())
-    //     this.__collector.finalize();
-
-    //     renderstate.profileJSON = {};
-    //     renderstate.boundRendertarget = undefined;
-    //     renderstate.materialCount = 0;
-    //     renderstate.drawCalls = 0;
-    //     renderstate.drawCount = 0;
-
-    //     for(let key in this.__passes) {
-    //         const passSet = this.__passes[key];
-    //         for(let pass of passSet) {
-    //             if (pass.enabled)
-    //                 pass.draw(renderstate);
-    //         }
-    //     }
-
-    //     // gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-    //     // gl.disable(gl.SCISSOR_TEST);
-
-    //     this.redrawOccured.emit();
-    // }
-
-
     //////////////////////////////////////////
     // Static Methods
-
 
     static registerPass(cls, passtype){
         if(!registeredPasses[passtype])
@@ -817,9 +762,7 @@ class GLBaseRenderer {
     }
 };
 
-
 export {
     GLBaseRenderer,
     PassType
 };
-// export default GLBaseRenderer;

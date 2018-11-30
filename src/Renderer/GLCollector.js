@@ -330,7 +330,7 @@ class GLCollector {
     removeGeomItem(geomItem) {
 
         const gldrawItem = geomItem.getMetadata('gldrawItem');
-        this.removeGeomItem(gldrawItem);
+        this.removeGLGeomItem(gldrawItem);
 
 
         const glgeom = geomItem.getGeometry().getMetadata('glgeom');
@@ -399,7 +399,7 @@ class GLCollector {
         }
     }
 
-    removeGeomItem(gldrawItem) {
+    removeGLGeomItem(gldrawItem) {
         const index = gldrawItem.getId();
         this.__drawItems[index] = null;
         this.__drawItemsIndexFreeList.push(index);

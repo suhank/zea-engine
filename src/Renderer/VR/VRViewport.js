@@ -29,16 +29,17 @@ import {
 } from './VRController.js'
 
 class VRViewport extends GLBaseViewport {
-    constructor(renderer, vrDisplay, displayVRGeometry) {
+    constructor(renderer, xr, device) {
         super(renderer);
-        this.__vrDisplay = vrDisplay;
+        this.__xr = xr;
+        this.__device = device;
 
         //////////////////////////////////////////////
         // Resources
 
         const resourceLoader = renderer.getScene().getResourceLoader();
         const viveAssetId = resourceLoader.resolveFilePathToId("VisualiveEngine/Vive.vla")
-        if (viveAssetId && displayVRGeometry && !SystemDesc.isMobileDevice) {
+        if (viveAssetId && !SystemDesc.isMobileDevice) {
             this.__viveAsset = renderer.getScene().loadCommonAssetResource(viveAssetId);
             this.__viveAsset.loaded.connect(() => {
                 const materialLibrary = this.__viveAsset.getMaterialLibrary();
@@ -56,21 +57,12 @@ class VRViewport extends GLBaseViewport {
         //////////////////////////////////////////////
         // Viewport params
         this.__projectionMatriciesUpdated = false;
-        this.__presentingRequested = false;
-        this.__frameRequested = false;
-        this.__canvasSizeScale = new Vec2(1, 1);
-        this.__frustumDim = new Vec2(1, 1);
 
         // These values are in meters.
         this.__far = 1024.0;
         this.__near = 0.1;
-        this.__vrDisplay.depthNear = this.__near;
-        this.__vrDisplay.depthFar = this.__far;
-
         //////////////////////////////////////////////
         // Tree
-        this.setBackground(renderer.getViewport().getBackground());
-        this.__frameData = new VRFrameData();
 
         this.__stageTreeItem = new TreeItem('VRStage');
         this.__stageTreeItem.setSelectable(false);
@@ -79,6 +71,7 @@ class VRViewport extends GLBaseViewport {
 
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 
+        this.__vrControllersMap = {};
         this.__vrControllers = [];
 
         //////////////////////////////////////////////
@@ -107,28 +100,6 @@ class VRViewport extends GLBaseViewport {
         this.controllerButtonDown = new Signal();
         this.controllerButtonUp = new Signal();
         this.controllerTouchpadTouched = new Signal();
-
-        //////////////////////////////////////////////
-        // UI
-        if (this.__vrDisplay.stageParameters &&
-            this.__vrDisplay.stageParameters.sizeX > 0 &&
-            this.__vrDisplay.stageParameters.sizeZ > 0) {} else {
-            if (this.__vrDisplay.stageParameters) {
-                console.warn("VRDisplay reported stageParameters, but stage size was 0. Using default size.");
-            } else {
-                console.warn("VRDisplay did not report stageParameters");
-            }
-        }
-
-        //////////////////////////////////////////////
-        // Events
-        window.addEventListener('vrdisplaypresentchange', this.__onVRPresentChange.bind(this), false);
-        window.addEventListener('vrdisplayactivate', this.startPresenting.bind(this), false);
-        window.addEventListener('vrdisplaydeactivate', this.stopPresenting.bind(this), false);
-
-        // Start the update loop that then drives the VRHead + VRController transforms in the scene.
-        //this.startContinuousDrawing();
-
     }
 
     getVRDisplay() {
@@ -149,7 +120,6 @@ class VRViewport extends GLBaseViewport {
 
     getXfo() {
         return this.__stageXfo;
-        // return this.__stageTreeItem.getGlobalXfo();
     }
 
     setXfo(xfo) {
@@ -165,77 +135,112 @@ class VRViewport extends GLBaseViewport {
     }
 
     ////////////////////////////
-    // Continuous Rendering
-
-    __requestAnimationFrame(cb) {
-        this.__vrDisplay.requestAnimationFrame(cb);
-    }
-
-    isContinuouslyDrawing() {
-        return this.__continuousDrawing;
-    }
-
-    startContinuousDrawing() {
-        this.__continuousDrawing = true;
-
-        this.__frameRequested = false;
-        const onAnimationFrame = () => {
-            if (this.__continuousDrawing) {
-                this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
-                this.__frameRequested = true;
-            }
-            this.__renderer.draw();
-        }
-        this.__vrDisplay.requestAnimationFrame(onAnimationFrame);
-    }
-
-    stopContinuousDrawing() {
-        this.__continuousDrawing = false;
-    }
-
-    ////////////////////////////
     // Presenting
 
     canPresent() {
-        return this.__vrDisplay.capabilities.canPresent;
+        return this.__canPresent;
     }
 
     isPresenting() {
-        return this.__vrDisplay.isPresenting;
+        return this.__session;
+    }
+
+    __startSession() {
+        const onAnimationFrame = (t, frame) => {
+            if (this.__session) {
+                this.__session.requestAnimationFrame(onAnimationFrame);
+                this.draw(t, frame);
+            }
+        }
+        this.__session.requestAnimationFrame(onAnimationFrame);
     }
 
     startPresenting() {
-        //if (this.__vrDisplay.capabilities.canPresent) {
-        if (this.__presentingRequested) {
-            return false;
-        }
 
-        this.__presentingRequested = true;
-        this.__vrDisplay.requestPresent([{
-            source: this.__renderer.getGLCanvas()
-        }]).then(() => {
-            this.__presentingRequested = false;
-        }, (e) => {
-            console.warn("requestPresent failed:" + e);
-            this.__presentingRequested = true;
-        });
-        // } else {
-        //     console.warn("VRViewport does not support presenting.");
-        // }
+        // https://github.com/immersive-web/webxr/blob/master/explainer.md
+
+        const gl = this.__renderer.gl;
+
+        // Add an outpute canvas that will allow XR to also send a view
+        // back the monitor.
+        const mirrorCanvas = document.createElement('canvas');
+        mirrorCanvas.style.position = 'relative';
+        mirrorCanvas.style.left = '0px';
+        mirrorCanvas.style.top = '0px';
+        mirrorCanvas.style.width = '100%';
+        mirrorCanvas.style.height = '100%';
+        const ctx = mirrorCanvas.getContext('xrpresent');
+
+        this.__device.requestSession({ immersive: true, outputContext: ctx }).then((session) => {
+
+            this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
+
+            session.addEventListener('end', (event) => {
+                if (event.session.immersive) {
+                    this.__stageTreeItem.setVisible(false);
+                    this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
+                    this.__session = null;
+                    this.presentingChanged.emit(false);
+                }
+            });
+
+            const onSelectStart = (ev) => {
+                const controller = this.__vrControllersMap[ev.inputSource.handedness];
+                if(controller) {
+                    this.controllerButtonDown.emit({ 
+                        button: 1, 
+                        controller, 
+                        vleStopPropagation:false, 
+                        vrviewport: this 
+                    }, this);
+                }
+            }
+            const onSelectEnd = (ev) => {
+                const controller = this.__vrControllersMap[ev.inputSource.handedness];
+                if(controller) {
+                    this.controllerButtonUp.emit({ 
+                        button: 1,
+                        controller,
+                        vleStopPropagation:false,
+                        vrviewport: this 
+                    }, this);
+                }
+            }
+            session.addEventListener('selectstart', onSelectStart);
+            session.addEventListener('selectend', onSelectEnd);
+
+            this.__session = session;
+            this.__session.baseLayer = new XRWebGLLayer(session, gl);
+
+
+            // Get a stage frame of reference, which will align the user's physical
+            // floor with Y=0 and can provide boundaries that indicate where the
+            // user can safely walk. If the system can't natively provide stage
+            // coordinates (for example, with a 3DoF device) then it will return an
+            // emulated stage, where the view is translated up by a static height so
+            // that the scene still renders in approximately the right place.
+            session.requestFrameOfReference('stage').then((frameOfRef) => {
+                this.__frameOfRef = frameOfRef;
+                this.__startSession()
+            });
+
+            this.__stageTreeItem.setVisible(true);
+            this.presentingChanged.emit(true);
+
+        }).catch((e) => {
+            console.warn(e)
+          });;
     }
 
     stopPresenting() {
-        if (!this.__vrDisplay.isPresenting)
+        if (!this.__session)
             return;
 
-        this.__stageTreeItem.setVisible(false);
-        this.__vrDisplay.exitPresent().then(function() {}, function() {
-            console.warn("exitPresent failed.");
-        });
+        this.__session.end();
     }
 
     togglePresenting() {
-        if (this.__vrDisplay.isPresenting)
+        if (this.__session)
             this.stopPresenting();
         else
             this.startPresenting();
@@ -245,76 +250,50 @@ class VRViewport extends GLBaseViewport {
         return this.__hmdCanvasSize;
     }
 
-    __onVRPresentChange() {
-        if (this.__vrDisplay.isPresenting) {
-            const leftEye = this.__vrDisplay.getEyeParameters("left");
-            const rightEye = this.__vrDisplay.getEyeParameters("right");
-            this.__hmdCanvasSize = [
-                Math.max(leftEye.renderWidth, rightEye.renderWidth) * 2,
-                Math.max(leftEye.renderHeight, rightEye.renderHeight)
-            ];
-            this.region = [0, 0, this.__hmdCanvasSize[0], this.__hmdCanvasSize[1]];
-
-            this.__stageTreeItem.setVisible(true);
-
-            if (SystemDesc.isMobileDevice) {
-                const xfo = this.__renderer.getViewport().getCamera().getGlobalXfo().clone();
-                const yaxis = xfo.ori.getYaxis();
-                const up = new Vec3(0, 0, 1);
-                const angle = yaxis.angleTo(up);
-                if (angle > 0.0001) {
-                    let axis = yaxis.cross(up);
-                    let align = new Quat();
-                    align.setFromAxisAndAngle(axis, angle);
-                    xfo.ori = align.multiply(xfo.ori);
-                }
-                //    xfo.tr.y = 0;
-                //}
-                this.setXfo(xfo);
-            }
-
-            this.startContinuousDrawing();
-            this.presentingChanged.emit(true);
-        } else {
-            this.stopContinuousDrawing();
-            this.__stageTreeItem.setVisible(false);
-            this.presentingChanged.emit(false);
-        }
-
-        this.__renderer.__onResize();
-    }
-
     ////////////////////////////
     // Controllers
 
-    updateHeadAndControllers() {
+    __createController(inputSource) {
+        // Note: This is to avoid a but in WebXR where initially the 
+        // controllers have no handedness specified, then suddently 
+        // get handeedness
+        if(inputSource.handedness == "")
+            return;
+        const id = this.__vrControllers.length;
+        const vrController = new VRController(this, inputSource, id);
 
-        this.__vrhead.update(this.__frameData);
+        this.__vrControllersMap[inputSource.handedness] = vrController;
+        this.__vrControllers[id] = vrController;
+        this.controllerAdded.emit(vrController);
+        return vrController;
+    }
 
-        const gamepads = navigator.getGamepads();
-        let id = 0;
-        for (let gamepad of gamepads) {
-            // Skip the new broken controller that is showing up.(maybe not a vive controller??)
-            if (gamepad && gamepad.pose) {
-                if (!this.__vrControllers[id]) {
-                    const vrController = new VRController(this, id);
+    updateControllers(xrFrame) {
 
-                    vrController.buttonPressed.connect((event) => {
-                        event.vrviewport = this;
-                        this.controllerButtonDown.emit(event, this)
-                    });
+        this.__session
+        this.__frameOfRef
+        const inputSources = this.__session.getInputSources();
+        for (let inputSource of inputSources) {
+            const inputPose = xrFrame.getInputPose(inputSource, this.__frameOfRef);
 
-                    vrController.buttonReleased.connect((event) => {
-                        event.vrviewport = this;
-                        this.controllerButtonUp.emit(event, this)
-                    });
+            // Note: This is to avoid a but in WebXR where initially the 
+            // controllers have no handedness specified, then suddently 
+            // get handeedness
+            if(inputSource.handedness == "")
+                return;
+        
+            // We may not get a pose back in cases where the input source has lost
+            // tracking or does not know where it is relative to the given frame
+            // of reference.
+            if (!inputPose) {
+                continue;
+            }
 
-                    this.__vrControllers[id] = vrController;
-                    this.controllerAdded.emit(vrController);
+            if (inputPose.gripMatrix) {
+                if (!this.__vrControllersMap[inputSource.handedness]) {
+                    this.__createController(inputSource);
                 }
-                // Update the controllers pose in space.
-                this.__vrControllers[id].update(gamepad);
-                id++;
+                this.__vrControllersMap[inputSource.handedness].updatePose(inputPose);
             }
         }
 
@@ -330,65 +309,73 @@ class VRViewport extends GLBaseViewport {
     }
 
 
-    bindAndClear(renderstate) {
+    draw(t, xrFrame) {
 
-        super.clear();
-
-        if(!this.__frameRequested)
-            return;
-
-        this.__vrDisplay.getFrameData(this.__frameData);
-
-        if (!this.__frameData.pose || !this.__frameData.pose.orientation)
-            return false;
+        const session = xrFrame.session;
+        // Assumed to be a XRWebGLLayer for now.
+        const layer = session.baseLayer;
 
         if (!this.__projectionMatriciesUpdated) {
-            this.__leftProjectionMatrix.setDataArray(this.__frameData.leftProjectionMatrix);
-            this.__rightProjectionMatrix.setDataArray(this.__frameData.rightProjectionMatrix);
-            // if (this.__vrDisplay.stageParameters) {
-            //     this.__sittingToStandingMatrix.setDataArray(this.__vrDisplay.stageParameters.sittingToStandingTransform);
-            // } else {
-            //     this.__standingMatrix.setIdentify();
-            //     let PLAYER_HEIGHT = 1.65;
-            //     this.__sittingToStandingMatrix.translation.set(0, PLAYER_HEIGHT, 0);
-            // }
-            // this.__stageMatrix.multiplyInPlace(this.__sittingToStandingMatrix);
+            this.__projectionMatrices = [];
+            this.__viewMatrices = [];
+            this.__region = [0, 0, 0, 0];
+            for (let i=0; i<xrFrame.views.length; i++) {
+                const projMat = new Mat4();
+                projMat.setDataArray(xrFrame.views[i].projectionMatrix);
+                this.__projectionMatrices[i] = projMat;
+                this.__viewMatrices[i] = new Mat4();
+
+                const vp = layer.getViewport(xrFrame.views[i]);
+                this.__region[2] = Math.max(this.__region[2], vp.x + vp.width);
+                this.__region[3] = Math.max(this.__region[3], vp.y + vp.height);
+            }
+
+            this.__renderer.resizeFbos(this.__region[2], this.__region[3]);
             this.__projectionMatriciesUpdated = true;
         }
 
-        this.updateHeadAndControllers();
+        const gl = this.__renderer.gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
 
-        this.__leftViewMatrix.setDataArray(this.__frameData.leftViewMatrix);
-        this.__leftViewMatrix.multiplyInPlace(this.__stageMatrix);
-        this.__rightViewMatrix.setDataArray(this.__frameData.rightViewMatrix);
-        this.__rightViewMatrix.multiplyInPlace(this.__stageMatrix);
+        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.colorMask(true, true, true, true);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        const width = this.__hmdCanvasSize[0];
-        const height = this.__hmdCanvasSize[1];
+        const pose = xrFrame.getDevicePose(this.__frameOfRef);
 
+        const renderstate = {
+            boundRendertarget: layer.framebuffer,
+            region: this.__region,
+            viewports:[]
+        };
+        renderstate.boundRendertarget.vrfbo = true;
+
+        for (let i=0; i<xrFrame.views.length; i++) {
+            this.__viewMatrices[i].setDataArray(pose.getViewMatrix(xrFrame.views[i]));
+            this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
+
+            const vp = layer.getViewport(xrFrame.views[i]);
+            renderstate.viewports.push({
+                viewMatrix: this.__viewMatrices[i],
+                projectionMatrix: this.__projectionMatrices[i],
+                region: [vp.x, vp.y, vp.width, vp.height],
+                cameraMatrix: this.__viewMatrices[i].inverse(),
+            })
+        }
+
+
+        this.__vrhead.update(pose);
+
+        this.updateControllers(xrFrame);
+
+        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo()
         renderstate.viewScale = 1.0 / this.__stageScale;
-        renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo();
         renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
-        renderstate.viewports =[{
-            region: [0, 0, width * 0.5, height],
-            cameraMatrix: renderstate.cameraMatrix,
-            viewMatrix: this.__leftViewMatrix,
-            projectionMatrix: this.__leftProjectionMatrix
-        },
-        {
-            region: [width * 0.5, 0, width * 0.5, height],
-            cameraMatrix: renderstate.cameraMatrix,
-            viewMatrix: this.__rightViewMatrix,
-            projectionMatrix: this.__rightProjectionMatrix
-        }]
+        renderstate.region = this.__region;
 
-        return true;
+        this.__renderer.drawScene(renderstate);
     }
 
-    submitFrame(){
-        this.__vrDisplay.submitFrame();
-        this.__frameRequested = false;
-    }
 
 };
 

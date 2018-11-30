@@ -162,7 +162,7 @@ class GLRenderer extends GLBaseRenderer {
         // A Background map can be simply an image.
         if (scene.getBackgroundMap() != undefined) {
             const gl = this.__gl;
-            let backgroundMap = scene.getBackgroundMap();
+            const backgroundMap = scene.getBackgroundMap();
             this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
             if(!this.__glBackgroundMap ) {
                 if (backgroundMap.type === 'FLOAT') {
@@ -199,8 +199,8 @@ class GLRenderer extends GLBaseRenderer {
             }
         }
 
-        let lightMaps = scene.getLightMaps();
-        let addLightmap = (name, lightmap) => {
+        const lightMaps = scene.getLightMaps();
+        const addLightmap = (name, lightmap) => {
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLLightmapMixer(this.__gl, lightmap);
@@ -233,37 +233,10 @@ class GLRenderer extends GLBaseRenderer {
 
     onKeyPressed(key, event) {
         switch (key) {
-            // case '[':
-            //     this.__debugMode--;
-            //     if (this.__debugMode < 0)
-            //         this.__debugMode += this.__debugTextures.length + 1;
-            //     break;
-            // case ']':
-            //     this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
-            //     break;
-            // case 'k':
-            //     this.__debugLightmaps = !this.__debugLightmaps;
-            //     break;
-            // case 'f':
-            //     let selection = scene.getSelectionManager().selection;
-            //     if (selection.size == 0)
-            //         this.__viewport.getCamera().frameView([scene.getRoot()]);
-            //     else
-            //         this.__viewport.getCamera().frameView(selection);
-            //     break;
-            // case 'o':
-            //     this.__drawEdges = !this.__drawEdges;
-                // break;
             case 'b':
                 this.__displayEnvironment = !this.__displayEnvironment;
                 this.requestRedraw();
                 break;
-            // case 'v':
-            //     if (this.__vrViewport)
-            //         this.__vrViewport.togglePresenting();
-            //     break;
-            // case ' ':
-            //     break;
             default:
                 super.onKeyPressed(key, event);
         }
@@ -320,18 +293,16 @@ class GLRenderer extends GLBaseRenderer {
     ////////////////////////////
     // Fbos
 
-    __onResize() {
-
-        super.__onResize();
+    resizeFbos(width, height) {
+        super.resizeFbos();
         if (this.__fbo) {
-            this.__fbo.colorTexture.resize(this.__glcanvas.width, this.__glcanvas.height);
-            this.__fbo.resize();
+            this.__fbo.colorTexture.resize(width, height);
         }
         if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBuffer.resize(this.__glcanvas.width, this.__glcanvas.height);
-            this.__selectedGeomsBufferFbo.resize();
+            this.__selectedGeomsBuffer.resize(width, height);
         }
     }
+
 
     ////////////////////////////
     // SelectedGeomsBuffer
@@ -396,108 +367,42 @@ class GLRenderer extends GLBaseRenderer {
         }
     }
 
-    // drawBackground(renderstate, pos=[0,0], size=[1,-1]) {
-    //     let gl = this.__gl;
-    //     let screenQuad = gl.screenQuad;
-    //     screenQuad.bindShader(renderstate);
-    //     gl.depthMask(false);
-    //     // TODO: Draw the BG for each eye.
-    //     screenQuad.draw(renderstate, this.__backgroundGLTexture, pos, size);
-    // }
-
-    // drawVP(viewport, renderstate) {
-    //     /////////////////////////////////////
-    //     // Debugging 
-    //     const gl = this.__gl;
-    //     if (this.__debugMode > 0) {
-    //         // Bind the default framebuffer
-    //         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    //         gl.viewport(0, 0, this.getWidth(), this.getHeight());
-
-    //         let displayDebugTexture = this.__debugTextures[this.__debugMode];
-    //         const renderstate = {};
-    //         gl.screenQuad.bindShader(renderstate);
-    //         gl.screenQuad.draw(renderstate, displayDebugTexture);
-    //     } else {
-    //         viewport.draw(renderstate);
-
-    //         // this.__gizmoPass.draw(renderstate);
-    //         // viewport.drawOverlays(renderstate);
-    //     }
-    // }
-
     drawScene(renderstate) {
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
-        renderstate.boundRendertarget = undefined;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
         renderstate.planeDist = this._planeDist;
         renderstate.planeNormal = this.__cutPlaneNormal;
         renderstate.exposure = this.__exposure;
         renderstate.gamma = this.__gamma;
-        renderstate.shaderopts = this.__preproc;
 
-        if (this.__displayEnvironment)
-            this.drawBackground(renderstate);
+        // if (this.__displayEnvironment)
+        //     this.drawBackground(renderstate);
 
         super.drawScene(renderstate);
         // console.log("Draw Calls:" + renderstate['drawCalls']);
-    }
-
-
-    draw() {
-        if (this.__drawSuspensionLevel > 0)
-            return;
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
-
-        const gl = this.__gl;
-        const renderstate = {
-            viewports: []
-        };
-
-        // if (this.__fbo)
-        //     this.__fbo.bindAndClear(renderstate);
-        // else 
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-        if (this.__vrViewport && this.__vrViewport.isPresenting()) {
-            if(!this.__vrViewport.bindAndClear(renderstate))
-                return;
-            
-            // Cannot upate the view, else it sends signals which
-            // end up propagating through the websocket. 
-            // TODO: Make the head invisible till active
-            // else
-            //     this.__vrViewport.updateHeadAndControllers();
-        }
-        else {
-            for(let vp of this.__viewports){
-                vp.bindAndClear(renderstate);
-            }
-        }
-
-        this.drawScene(renderstate);
 
         if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBufferFbo.bindAndClear();
+            this.__selectedGeomsBufferFbo.bindForWriting(renderstate);
+            this.__selectedGeomsBufferFbo.clear();
             this.drawSceneSelectedGeoms(renderstate);
+
+            // Unbind and restore the bound fbo
+            this.__selectedGeomsBufferFbo.unbindForWriting(renderstate);
 
             // Now render the outlines to the entire screen.
             const gl = this.__gl;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0,0,this.__glcanvas.width, this.__glcanvas.height);
+            gl.viewport(...renderstate.region);
 
             this.__outlineShader.bind(renderstate);
             const unifs = renderstate.unifs;
             this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-            gl.uniform2f(unifs.selectionDataTextureSize.location, this.__glcanvas.width, this.__glcanvas.height);
+            gl.uniform2f(unifs.selectionDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
             gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
             this.quad.bindAndDraw(renderstate);
-
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+
         
         // /////////////////////////////////////
         // // Post processing.
@@ -536,13 +441,11 @@ class GLRenderer extends GLBaseRenderer {
         //     gl.bindTexture(gl.TEXTURE_2D, null);
         // }
 
-        if (this.__vrViewport && this.__vrViewport.isPresenting())
-            this.__vrViewport.submitFrame();
-
         this.redrawOccured.emit();
     }
-    ////////////////////////////
-    // Debugging
+
+
+
 };
 
 const GLVisualiveRenderer = GLRenderer;
