@@ -10,7 +10,7 @@ import {
 } from '../Shaders/BillboardShader.js';
 import {
     GLPass, PassType
-} from '../GLPass.js';
+} from './GLPass.js';
 import {
     GLShader
 } from '../GLShader.js';
@@ -42,20 +42,29 @@ class GLBillboardsPass extends GLPass {
         this.__threshold = 0.0;
         this.__updateRequested = false;
 
-        this.__collector.renderTreeUpdated.connect(()=> this.__updateBillboards());
-
         this.__prevSortCameraPos = new Vec3();
 
         this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
         this.__atlas.loaded.connect(this.updated.emit);
         this.__atlas.updated.connect(this.updated.emit);
 
-        collector.registerSceneItemFilter((treeItem, rargs)=>{
-            if(treeItem instanceof BillboardItem) {
-                this.addBillboard(treeItem);
-                return true;
+
+        this.__collector.registerPass(
+            (treeItem) => {
+                if(treeItem instanceof BillboardItem) {
+                    this.addBillboard(treeItem);
+                    return true;
+                }
+                return false;
+            },
+            (treeItem) => {
+                if(treeItem instanceof BillboardItem) {
+                    this.removeBillboard(treeItem);
+                    return true;
+                }
+                return false;
             }
-        });
+        );
     }
 
     /////////////////////////////////////

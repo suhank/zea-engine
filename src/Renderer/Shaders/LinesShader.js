@@ -67,7 +67,7 @@ void main(void) {
         return paramDescs;
     }
 
-    isTransparent() {
+    static isTransparent() {
         return true;
     }
 

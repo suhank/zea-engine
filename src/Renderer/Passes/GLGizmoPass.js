@@ -1,7 +1,7 @@
 import {
     GLPass,
     PassType
-} from '../GLPass.js';
+} from './GLPass.js';
 import {
     GLRenderer
 } from '../GLRenderer.js';
@@ -113,7 +113,7 @@ class GLGizmoPass extends GLPass {
     }
 };
 
-GLRenderer.registerPass(GLGizmoPass, PassType.OVERLAY);
+// GLRenderer.registerPass(GLGizmoPass, PassType.OVERLAY);
 
 export {
     GLGizmoPass

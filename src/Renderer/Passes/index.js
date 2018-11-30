@@ -1,5 +1,7 @@
 
 
+export * from './GLPass.js';
+export * from './GLStandardGeomsPass.js';
 export * from './GLOpaqueGeomsPass.js';
 export * from './GLTransparentGeomsPass.js';
 export * from './GLBillboardsPass.js';

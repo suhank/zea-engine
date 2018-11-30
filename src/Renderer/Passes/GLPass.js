@@ -1,7 +1,7 @@
 
 import {
     Signal
-} from '../Utilities';
+} from '../../Utilities';
 
 
 const PassType = {
@@ -27,8 +27,8 @@ class GLPass {
         this.__passIndex = passIndex;
         this.__glshadermaterials = [];
 
-        if(this.filterRenderTree)
-            this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
+        // if(this.filterRenderTree)
+        //     this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
     }
 
     setPassIndex(passIndex){

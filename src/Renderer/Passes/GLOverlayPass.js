@@ -1,11 +1,11 @@
-import { GLPass, PassType } from '../GLPass.js';
-import { GLShaderMaterials } from '../GLCollector.js';
+import { GLPass, PassType } from './GLPass.js';
+import { GLStandardGeomsPass, GLShaderMaterials } from './GLStandardGeomsPass.js';
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
 import { GLRenderer } from '../GLRenderer.js';
 
-class GLOverlayPass extends GLPass {
+class GLOverlayPass extends GLStandardGeomsPass {
     constructor() {
         super();
     }
@@ -97,7 +97,7 @@ class GLOverlayPass extends GLPass {
     }
 };
 
-GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY);
+// GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY);
 
 export {
     GLOverlayPass

@@ -1,4 +1,5 @@
-import { GLPass, PassType } from '../GLPass.js';
+import { PassType } from './GLPass.js';
+import { GLStandardGeomsPass } from './GLStandardGeomsPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
 import { GLRenderer } from '../GLRenderer.js';
 
@@ -11,7 +12,7 @@ import {
 } from '../Shaders/SelectedGeomsShader.js';
 
 
-class GLOpaqueGeomsPass extends GLPass {
+class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     constructor() {
         super();
     }
@@ -24,25 +25,17 @@ class GLOpaqueGeomsPass extends GLPass {
 
     /////////////////////////////////////
     // Bind to Render Tree
-    filterRenderTree() {
-        const allglshaderMaterials = this.__collector.getGLShaderMaterials();
-        this.__glshadermaterials = [];
-        for (let glshaderkey in allglshaderMaterials) {
-            const glshaderMaterials = allglshaderMaterials[glshaderkey];
-            if (glshaderMaterials.getGLShader().isTransparent())
-                continue;
-            if (glshaderMaterials.getGLShader().isOverlay())
-                continue;
-            if (glshaderMaterials.getGLShader().isGizmo())
-                continue;
-            if (glshaderMaterials.getGLShader().getPassFilter) {
-                const passFilter = glshaderMaterials.getGLShader().getPassFilter();
-                if( passFilter.indexOf('GLOpaqueGeomsPass') == -1)
-                    continue;
-            }
-            this.__glshadermaterials.push(glshaderMaterials);
+    filterGeomItem(geomItem) {
+        const shaderClass = geomItem.getMaterial().getShaderClass();
+        if(shaderClass) {
+            if (shaderClass.isTransparent())
+                return false;
+            if (shaderClass.isOverlay())
+                return false;
         }
+        return true;
     }
+
 
     draw(renderstate) {
 
@@ -67,10 +60,7 @@ class GLOpaqueGeomsPass extends GLPass {
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 
-        if(!this.__selectedGeomsShader.bind(renderstate))
-            return false;
-
-        if(!this.__collector.bind(renderstate))
+        if(!this.bindShader(renderstate, this.__selectedGeomsShader))
             return false;
 
         super.drawSelectedGeoms(renderstate);
@@ -106,10 +96,7 @@ class GLOpaqueGeomsPass extends GLPass {
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 
-        if(!this.__geomdatashader.bind(renderstate))
-            return false;
-
-        if(!this.__collector.bind(renderstate))
+        if(!this.bindShader(renderstate, this.__geomdatashader))
             return false;
 
         {

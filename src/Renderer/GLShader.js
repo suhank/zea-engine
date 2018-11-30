@@ -43,15 +43,11 @@ class GLShader extends BaseItem {
     }
 
 
-    isTransparent() {
+    static isTransparent() {
         return false;
     }
 
-    isGizmo() {
-        return false;
-    }
-
-    isOverlay() {
+    static isOverlay() {
         return false;
     }
 

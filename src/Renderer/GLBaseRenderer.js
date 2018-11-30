@@ -707,8 +707,8 @@ class GLBaseRenderer {
     }
 
     drawScene(renderstate) {
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
+        // if (this.__collector.newItemsReadyForLoading())
+        //     this.__collector.finalize();
 
         renderstate.shaderopts = this.__preproc;
 
@@ -722,8 +722,8 @@ class GLBaseRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
+        // if (this.__collector.newItemsReadyForLoading())
+        //     this.__collector.finalize();
 
         renderstate.shaderopts = this.__preproc;
 
@@ -738,8 +738,8 @@ class GLBaseRenderer {
     
     drawSceneGeomData(renderstate){
 
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
+        // if (this.__collector.newItemsReadyForLoading())
+        //     this.__collector.finalize();
 
         renderstate.shaderopts = this.__preproc;
 

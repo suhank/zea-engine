@@ -1,5 +1,5 @@
 import { Vec3 } from '../../Math/Vec3';
-import { GLPass, PassType } from '../GLPass.js';
+import { GLPass, PassType } from './GLPass.js';
 import { GLShaderMaterials } from '../GLCollector.js';
 import { GLRenderer } from '../GLRenderer.js';
 
@@ -19,7 +19,15 @@ class GLTransparentGeomsPass extends GLPass {
     }
 
 
+    addGeomItem(geomItem){
+        super.addGeomItem(geomItem);
+        this.filterRenderTree();
+    }
+
+
     __addGeomItem(glshader, glmaterial, glGeom, drawItem){
+
+
         const item = {
             glshader,
             glmaterial,
@@ -39,34 +47,49 @@ class GLTransparentGeomsPass extends GLPass {
         drawItem.getGeomItem().geomXfoChanged.connect(()=>{
             this.resort = true;
         });
+
+
+        // force a resort.
+        this.resort = true;
     }
 
     /////////////////////////////////////
     // Bind to Render Tree
-    filterRenderTree() {
-        let allglshaderMaterials = this.__collector.getGLShaderMaterials();
-
-        this.transparentItems = [];
-        for (let glshaderkey in allglshaderMaterials) {
-            let glshaderMaterials = allglshaderMaterials[glshaderkey];
-            if (!glshaderMaterials.glshader.isTransparent())
-                continue;
-            const glshader = glshaderMaterials.glshader;
-            const glmaterialGeomItemSets = glshaderMaterials.glmaterialGeomItemSets;
-            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
-                const glmaterial = glmaterialGeomItemSet.glmaterial;
-                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-                for (let gldrawitemset of gldrawitemsets) {
-                    // Now we must unpack the drawItemSet into individual draw items.
-                    const glGeom = gldrawitemset.glgeom;
-                    for (let drawItem of gldrawitemset.drawItems) {
-                        this.__addGeomItem(glshader, glmaterial, glGeom, drawItem);
-                    }
-                }
-            }
+    filterGeomItem(geomItem) {
+        const shaderClass = geomItem.getMaterial().getShaderClass();
+        if(shaderClass) {
+            if (shaderClass.isTransparent())
+                return true;
+            if (shaderClass.isOverlay())
+                return false;
         }
-        // force a resort.
-        this.resort = true;
+        return false;
+    }
+
+    filterRenderTree() {
+    //     let allglshaderMaterials = this.__collector.getGLShaderMaterials();
+
+    //     this.transparentItems = [];
+    //     for (let glshaderkey in allglshaderMaterials) {
+    //         let glshaderMaterials = allglshaderMaterials[glshaderkey];
+    //         if (!glshaderMaterials.glshader.isTransparent())
+    //             continue;
+    //         const glshader = glshaderMaterials.glshader;
+    //         const glmaterialGeomItemSets = glshaderMaterials.glmaterialGeomItemSets;
+    //         for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+    //             const glmaterial = glmaterialGeomItemSet.glmaterial;
+    //             const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
+    //             for (let gldrawitemset of gldrawitemsets) {
+    //                 // Now we must unpack the drawItemSet into individual draw items.
+    //                 const glGeom = gldrawitemset.glgeom;
+    //                 for (let drawItem of gldrawitemset.drawItems) {
+    //                     this.__addGeomItem(glshader, glmaterial, glGeom, drawItem);
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     // force a resort.
+    //     this.resort = true;
     }
 
     sortItems(viewPos) {

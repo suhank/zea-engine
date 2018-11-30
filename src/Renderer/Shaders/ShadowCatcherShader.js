@@ -196,7 +196,7 @@ void main(void) {
 `);
     }
 
-    isTransparent() {
+    static isTransparent() {
         return true;
     }
 
