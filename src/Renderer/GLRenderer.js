@@ -320,18 +320,18 @@ class GLRenderer extends GLBaseRenderer {
     ////////////////////////////
     // Fbos
 
-    __onResize() {
-
-        super.__onResize();
+    resizeFbos(width, height) {
+        super.resizeFbos();
         if (this.__fbo) {
-            this.__fbo.colorTexture.resize(this.__glcanvas.width, this.__glcanvas.height);
+            this.__fbo.colorTexture.resize(width, height);
             this.__fbo.resize();
         }
         if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBuffer.resize(this.__glcanvas.width, this.__glcanvas.height);
+            this.__selectedGeomsBuffer.resize(width, height);
             this.__selectedGeomsBufferFbo.resize();
         }
     }
+
 
     ////////////////////////////
     // SelectedGeomsBuffer
@@ -429,7 +429,6 @@ class GLRenderer extends GLBaseRenderer {
     drawScene(renderstate) {
         renderstate.envMap = this.__glEnvMap;
         renderstate.lightmaps = this.__glLightmaps;
-        renderstate.boundRendertarget = undefined;
         renderstate.boundLightmap = undefined;
         renderstate.debugLightmaps = this.__debugLightmaps;
         renderstate.planeDist = this._planeDist;
@@ -444,103 +443,69 @@ class GLRenderer extends GLBaseRenderer {
         // console.log("Draw Calls:" + renderstate['drawCalls']);
 
         if (this.__selectedGeomsBufferFbo) {
-            this.__selectedGeomsBufferFbo.bindAndClear();
+            this.__selectedGeomsBufferFbo.bindForWriting(renderstate);
+            this.__selectedGeomsBufferFbo.clear();
             this.drawSceneSelectedGeoms(renderstate);
+
+            // Unbind and restore the bound fbo
+            this.__selectedGeomsBufferFbo.unbindForWriting(renderstate);
 
             // Now render the outlines to the entire screen.
             const gl = this.__gl;
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-            gl.viewport(0,0,this.__glcanvas.width, this.__glcanvas.height);
+            gl.viewport(...renderstate.region);
 
             this.__outlineShader.bind(renderstate);
             const unifs = renderstate.unifs;
             this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-            gl.uniform2f(unifs.selectionDataTextureSize.location, this.__glcanvas.width, this.__glcanvas.height);
+            // gl.uniform2f(unifs.selectionDataTextureSize.location, this.__glcanvas.width, this.__glcanvas.height);
+            gl.uniform2f(unifs.selectionDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
             gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
             this.quad.bindAndDraw(renderstate);
-
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         }
+
+        
+        // /////////////////////////////////////
+        // // Post processing.
+        // if (this.__fbo) {
+        //     const gl = this.__gl;
+
+        //     // Bind the default framebuffer
+        //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        //     gl.viewport(...this.region);
+        //     // gl.disable(gl.SCISSOR_TEST);
+
+        //     // this.__glshaderScreenPostProcess.bind(renderstate);
+
+        //     // const unifs = renderstate.unifs;
+        //     // if ('antialiase' in unifs)
+        //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
+        //     // if ('textureSize' in unifs)
+        //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
+        //     // if ('gamma' in unifs)
+        //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
+        //     // if ('exposure' in unifs)
+        //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
+        //     // if ('tonemap' in unifs)
+        //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
+
+        //     gl.screenQuad.bindShader(renderstate);
+        //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
+
+
+        //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
+        //     // more goem int he next frame then the fbo color tex is being read from and written to 
+        //     // at the same time. (baaaad).
+        //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
+        //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
+        //     // track down.
+        //     gl.bindTexture(gl.TEXTURE_2D, null);
+        // }
 
         this.redrawOccured.emit();
     }
 
 
-    // draw() {
-    //     if (this.__drawSuspensionLevel > 0)
-    //         return;
-    //     const gl = this.__gl;
-    //     const renderstate = {
-    //         viewports: []
-    //     };
 
-    //     // if (this.__fbo)
-    //     //     this.__fbo.bindAndClear(renderstate);
-    //     // else 
-    //         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-    //     if (this.__vrViewport && this.__vrViewport.isPresenting()) {
-    //         if(!this.__vrViewport.bindAndClear(renderstate))
-    //             return;
-            
-    //         // Cannot upate the view, else it sends signals which
-    //         // end up propagating through the websocket. 
-    //         // TODO: Make the head invisible till active
-    //         // else
-    //         //     this.__vrViewport.updateHeadAndControllers();
-    //     }
-    //     else {
-    //         for(let vp of this.__viewports){
-    //             vp.bindAndClear(renderstate);
-    //         }
-    //     }
-
-    //     this.drawScene(renderstate);
-        
-    //     // /////////////////////////////////////
-    //     // // Post processing.
-    //     // if (this.__fbo) {
-    //     //     const gl = this.__gl;
-
-    //     //     // Bind the default framebuffer
-    //     //     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    //     //     gl.viewport(...this.region);
-    //     //     // gl.disable(gl.SCISSOR_TEST);
-
-    //     //     // this.__glshaderScreenPostProcess.bind(renderstate);
-
-    //     //     // const unifs = renderstate.unifs;
-    //     //     // if ('antialiase' in unifs)
-    //     //     //     gl.uniform1i(unifs.antialiase.location, this.__antialiase ? 1 : 0);
-    //     //     // if ('textureSize' in unifs)
-    //     //     //     gl.uniform2fv(unifs.textureSize.location, fbo.size);
-    //     //     // if ('gamma' in unifs)
-    //     //     //     gl.uniform1f(unifs.gamma.location, this.__gamma);
-    //     //     // if ('exposure' in unifs)
-    //     //     //     gl.uniform1f(unifs.exposure.location, this.__exposure);
-    //     //     // if ('tonemap' in unifs)
-    //     //     //     gl.uniform1i(unifs.tonemap.location, this.__tonemap ? 1 : 0);
-
-    //     //     gl.screenQuad.bindShader(renderstate);
-    //     //     gl.screenQuad.draw(renderstate, this.__fbo.colorTexture);
-
-
-    //     //     // Note: if the texture is left bound, and no textures are bound to slot 0 befor rendering
-    //     //     // more goem int he next frame then the fbo color tex is being read from and written to 
-    //     //     // at the same time. (baaaad).
-    //     //     // Note: any textures bound at all avoids this issue, and it only comes up when we have no env
-    //     //     // map, background or textures params in the scene. When it does happen it can be a bitch to 
-    //     //     // track down.
-    //     //     gl.bindTexture(gl.TEXTURE_2D, null);
-    //     // }
-
-    //     if (this.__vrViewport && this.__vrViewport.isPresenting())
-    //         this.__vrViewport.submitFrame();
-
-    //     this.redrawOccured.emit();
-    // }
-    ////////////////////////////
-    // Debugging
 };
 
 const GLVisualiveRenderer = GLRenderer;

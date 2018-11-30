@@ -169,16 +169,15 @@ class VRViewport extends GLBaseViewport {
         mirrorCanvas.style.width = '100%';
         mirrorCanvas.style.height = '100%';
         const ctx = mirrorCanvas.getContext('xrpresent');
-        console.log("outputContext:", ctx)
 
         this.__device.requestSession({ immersive: true, outputContext: ctx }).then((session) => {
 
-            this.__renderer.getDiv().appendChild(mirrorCanvas);
+            this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
 
             session.addEventListener('end', (event) => {
                 if (event.session.immersive) {
                     this.__stageTreeItem.setVisible(false);
-                    this.__renderer.getDiv().removeChild(mirrorCanvas);
+                    this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
                     this.__session = null;
                     this.presentingChanged.emit(false);
                 }
@@ -276,31 +275,42 @@ class VRViewport extends GLBaseViewport {
         const session = xrFrame.session;
         // Assumed to be a XRWebGLLayer for now.
         const layer = session.baseLayer;
-        const gl = this.__renderer.gl;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
-
-        // gl.clearColor(0.1, 0.2, 0.3, 1.0);
-        gl.clearColor(...this.__backgroundColor.asArray());
-        gl.colorMask(true, true, true, true);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
         if (!this.__projectionMatriciesUpdated) {
             this.__projectionMatrices = [];
             this.__viewMatrices = [];
+            this.__region = [0, 0, 0, 0];
             for (let i=0; i<xrFrame.views.length; i++) {
                 const projMat = new Mat4();
                 projMat.setDataArray(xrFrame.views[i].projectionMatrix);
                 this.__projectionMatrices[i] = projMat;
                 this.__viewMatrices[i] = new Mat4();
+
+                const vp = layer.getViewport(xrFrame.views[i]);
+                this.__region[2] = Math.max(this.__region[2], vp.x + vp.width);
+                this.__region[3] = Math.max(this.__region[3], vp.y + vp.height);
             }
+
+            this.__renderer.resizeFbos(this.__region[2], this.__region[3]);
             this.__projectionMatriciesUpdated = true;
         }
 
+        const gl = this.__renderer.gl;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
+
+        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.colorMask(true, true, true, true);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
         const pose = xrFrame.getDevicePose(this.__frameOfRef);
 
-        let renderstate = {
+        const renderstate = {
+            boundRendertarget: layer.framebuffer,
+            region: this.__region,
             viewports:[]
         };
+        renderstate.boundRendertarget.vrfbo = true;
+
         for (let i=0; i<xrFrame.views.length; i++) {
             this.__viewMatrices[i].setDataArray(pose.getViewMatrix(xrFrame.views[i]));
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
@@ -310,14 +320,16 @@ class VRViewport extends GLBaseViewport {
                 viewMatrix: this.__viewMatrices[i],
                 projectionMatrix: this.__projectionMatrices[i],
                 region: [vp.x, vp.y, vp.width, vp.height],
+                cameraMatrix: this.__viewMatrices[i].inverse(),
             })
         }
 
         this.updateHeadAndControllers(pose);
 
         renderstate.viewXfo = this.__vrhead.getTreeItem().getGlobalXfo()
-        // renderstate.viewScale = 1.0 / this.__stageScale;
-        // renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
+        renderstate.viewScale = 1.0 / this.__stageScale;
+        renderstate.cameraMatrix = renderstate.viewXfo.toMat4();
+        renderstate.region = this.__region;
 
         this.__renderer.drawScene(renderstate);
     }

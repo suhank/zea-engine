@@ -508,6 +508,7 @@ class GLViewport extends GLBaseViewport {
         // console.log(this.__viewMat.toString())
         renderstate.viewXfo = this.__cameraXfo;
         renderstate.viewScale = 1.0;
+        renderstate.region = this.region;
         renderstate.viewports = [{
             region: this.region,
             cameraMatrix: this.__cameraMat,
@@ -516,30 +517,7 @@ class GLViewport extends GLBaseViewport {
             viewportFrustumSize: this.__frustumDim,
             isOrthographic: this.__camera.getIsOrthographic(),
             fovY: this.__camera.getFov()
-        }]
-        // renderstate.viewports.push({
-        //     region: [this.region[0], this.region[1], this.region[2]*0.5, this.region[3]],
-        //     cameraMatrix: this.__cameraMat,
-        //     viewMatrix: this.__viewMat,
-        //     projectionMatrix: this.__projectionMatrix,
-        //     viewportFrustumSize: this.__frustumDim,
-        //     isOrthographic: this.__camera.getIsOrthographic(),
-        //     fovY: this.__camera.getFov()
-        // })
-        // renderstate.viewports.push({
-        //     region: [this.region[2]*0.5, this.region[1], this.region[2]*0.5, this.region[3]],
-        //     cameraMatrix: this.__cameraMat,
-        //     viewMatrix: this.__viewMat,
-        //     projectionMatrix: this.__projectionMatrix,
-        //     viewportFrustumSize: this.__frustumDim,
-        //     isOrthographic: this.__camera.getIsOrthographic(),
-        //     fovY: this.__camera.getFov()
-        // })
-    }
-
-    bindAndClear() {
-        this.clear(renderstate);
-        this.__initRenderState(renderstate);
+        }];
     }
 
     draw() {

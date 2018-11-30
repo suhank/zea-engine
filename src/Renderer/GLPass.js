@@ -90,7 +90,6 @@ class GLPass {
                             gldrawitemset.draw(renderstate);  
                         }
                     }
-                    renderstate.materialCount++;
                 }
             }
             glshader.unbind(renderstate);

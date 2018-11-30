@@ -103,7 +103,7 @@ class GLBaseRenderer {
             if(navigator.xr) {
                 navigator.xr.requestDevice().then((device) => {
                     device.supportsSession({immersive: true}).then(() => {
-                        
+
                         // Note: could cause a context loss on machines with
                         // multi-gpus (integrated Intel). 
                         // This is because the may force the context to switch 
@@ -279,23 +279,23 @@ class GLBaseRenderer {
         return this.__gl;
     }
 
+    resizeFbos(width, height) {
+    }
+
     __onResize() {
 
-        if (this.__vrViewportPresenting) {
-            var hmdCanvasSize = this.__vrViewport.getHMDCanvasSize();
-            this.__glcanvas.width = hmdCanvasSize[0];
-            this.__glcanvas.height = hmdCanvasSize[1];
-        } else {
+        if (!this.__vrViewportPresenting) {
             this.__glcanvas.width = this.__glcanvas.clientWidth * window.devicePixelRatio;
             this.__glcanvas.height = this.__glcanvas.clientHeight * window.devicePixelRatio;
 
             for (let vp of this.__viewports)
                 vp.resize(this.__glcanvas.width, this.__glcanvas.height);
 
+            this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
+            
             this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
             this.requestRedraw();
         }
-
     }
 
     getDiv() {
@@ -658,33 +658,32 @@ class GLBaseRenderer {
         return this.__continuousDrawing;
     }
 
-    // startContinuousDrawing() {
-    //     if (this.isContinuouslyDrawing() || (this.getVRViewport() && this.getVRViewport().isContinuouslyDrawing()))
-    //         return;
+    startContinuousDrawing() {
+        if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
+            return;
 
-    //     let onAnimationFrame = ()=>{
-    //         if (this.__continuousDrawing) {
-    //             if (!this.getVRViewport() || !this.getVRViewport().isContinuouslyDrawing())
-    //                 window.requestAnimationFrame(onAnimationFrame);
-    //         }
-    //         this.draw();
-    //     }
+        const onAnimationFrame = ()=>{
+            if (this.__continuousDrawing && !this.__vrViewportPresenting)
+                window.requestAnimationFrame(onAnimationFrame);
+            for(let vp of this.__viewports)
+                vp.draw();
+        }
 
-    //     this.__continuousDrawing = true;
-    //     window.requestAnimationFrame(onAnimationFrame);
-    // }
+        this.__continuousDrawing = true;
+        window.requestAnimationFrame(onAnimationFrame);
+    }
 
-    // stopContinuousDrawing() {
-    //     this.__continuousDrawing = false;
-    // }
+    stopContinuousDrawing() {
+        this.__continuousDrawing = false;
+    }
 
-    // toggleContinuousDrawing() {
-    //     if (!this.__continuousDrawing) {
-    //         this.startContinuousDrawing();
-    //     } else {
-    //         this.stopContinuousDrawing();
-    //     }
-    // }
+    toggleContinuousDrawing() {
+        if (!this.__continuousDrawing) {
+            this.startContinuousDrawing();
+        } else {
+            this.stopContinuousDrawing();
+        }
+    }
 
     drawItemChanged() {
         for (let vp of this.__viewports)
@@ -698,15 +697,13 @@ class GLBaseRenderer {
         // If a redraw has already been requested, then simply return and wait.
         if (this.__vrViewportPresenting)
             return false;
-        // return super.requestRedraw();
 
         // If a redraw has already been requested, then simply return and wait.
         if (this.__redrawRequested || this.__continuousDrawing)
             return false;
 
-        let onAnimationFrame = () => {
+        const onAnimationFrame = () => {
             this.__redrawRequested = false;
-            // this.draw();
             for(let vp of this.__viewports){
                 vp.draw();
             }
@@ -720,15 +717,9 @@ class GLBaseRenderer {
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
 
-
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
 
-        renderstate.profileJSON = {};
-        renderstate.boundRendertarget = undefined;
-        renderstate.materialCount = 0;
-        renderstate.drawCalls = 0;
-        renderstate.drawCount = 0;
         renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
@@ -770,57 +761,8 @@ class GLBaseRenderer {
         }
     }
 
-    // draw() {
-    //     if (this.__drawSuspensionLevel > 0)
-    //         return;
-
-    //     const gl = this.__gl;
-    //     const renderstate = {};
-
-    //     if (this.__vrViewport) {
-    //         if (this.__vrViewport.isPresenting()) {
-    //             this.__vrViewport.draw(renderstate);
-    //             return;
-    //         } 
-    //         // Cannot upate the view, else it sends signals which
-    //         // end up propagating through the websocket. 
-    //         // TODO: Make the head invisible till active
-    //         // else
-    //         //     this.__vrViewport.updateHeadAndControllers();
-    //     }
-        
-    //     const len=this.__viewports.length;
-    //     for(let i=0; i< len; i++){
-    //         this.drawVP(this.__viewports[i], renderstate);
-    //     }
-
-    //     if (this.__collector.newItemsReadyForLoading())
-    //     this.__collector.finalize();
-
-    //     renderstate.profileJSON = {};
-    //     renderstate.boundRendertarget = undefined;
-    //     renderstate.materialCount = 0;
-    //     renderstate.drawCalls = 0;
-    //     renderstate.drawCount = 0;
-
-    //     for(let key in this.__passes) {
-    //         const passSet = this.__passes[key];
-    //         for(let pass of passSet) {
-    //             if (pass.enabled)
-    //                 pass.draw(renderstate);
-    //         }
-    //     }
-
-    //     // gl.viewport(0, 0, this.__glcanvas.width, this.__glcanvas.height);
-    //     // gl.disable(gl.SCISSOR_TEST);
-
-    //     this.redrawOccured.emit();
-    // }
-
-
     //////////////////////////////////////////
     // Static Methods
-
 
     static registerPass(cls, passtype){
         if(!registeredPasses[passtype])
@@ -829,9 +771,7 @@ class GLBaseRenderer {
     }
 };
 
-
 export {
     GLBaseRenderer,
     PassType
 };
-// export default GLBaseRenderer;

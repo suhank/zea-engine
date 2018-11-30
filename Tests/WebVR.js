@@ -26,9 +26,19 @@ testingHarness.registerTest('WebVR', (domElement, resources) => {
     renderer.getViewport().getManipulator().setDefaultManipulationMode('look')
     renderer.resumeDrawing();
 
-    if(Visualive.SystemDesc.isMobileDevice){
-        renderer.startContinuousDrawing();
-    }
+    // if(Visualive.SystemDesc.isMobileDevice){
+    //     renderer.startContinuousDrawing();
+    // }
+
+    document.addEventListener('keypress', (event) => {
+        const key = String.fromCharCode(event.keyCode).toLowerCase();
+        console.log(key)
+        if(key == 'v' && event.shiftKey) {
+            const vrvp = renderer.getVRViewport();
+            if(vrvp) 
+                vrvp.togglePresenting();
+        }
+    });
 
 });
 
