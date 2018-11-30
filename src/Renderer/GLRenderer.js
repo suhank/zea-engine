@@ -233,37 +233,10 @@ class GLRenderer extends GLBaseRenderer {
 
     onKeyPressed(key, event) {
         switch (key) {
-            // case '[':
-            //     this.__debugMode--;
-            //     if (this.__debugMode < 0)
-            //         this.__debugMode += this.__debugTextures.length + 1;
-            //     break;
-            // case ']':
-            //     this.__debugMode = (this.__debugMode + 1) % (this.__debugTextures.length + 1);
-            //     break;
-            // case 'k':
-            //     this.__debugLightmaps = !this.__debugLightmaps;
-            //     break;
-            // case 'f':
-            //     let selection = scene.getSelectionManager().selection;
-            //     if (selection.size == 0)
-            //         this.__viewport.getCamera().frameView([scene.getRoot()]);
-            //     else
-            //         this.__viewport.getCamera().frameView(selection);
-            //     break;
-            // case 'o':
-            //     this.__drawEdges = !this.__drawEdges;
-                // break;
             case 'b':
                 this.__displayEnvironment = !this.__displayEnvironment;
                 this.requestRedraw();
                 break;
-            // case 'v':
-            //     if (this.__vrViewport)
-            //         this.__vrViewport.togglePresenting();
-            //     break;
-            // case ' ':
-            //     break;
             default:
                 super.onKeyPressed(key, event);
         }
@@ -395,36 +368,6 @@ class GLRenderer extends GLBaseRenderer {
             this.__glEnvMap.draw(renderstate);
         }
     }
-
-    // drawBackground(renderstate, pos=[0,0], size=[1,-1]) {
-    //     let gl = this.__gl;
-    //     let screenQuad = gl.screenQuad;
-    //     screenQuad.bindShader(renderstate);
-    //     gl.depthMask(false);
-    //     // TODO: Draw the BG for each eye.
-    //     screenQuad.draw(renderstate, this.__backgroundGLTexture, pos, size);
-    // }
-
-    // drawVP(viewport, renderstate) {
-    //     /////////////////////////////////////
-    //     // Debugging 
-    //     const gl = this.__gl;
-    //     if (this.__debugMode > 0) {
-    //         // Bind the default framebuffer
-    //         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    //         gl.viewport(0, 0, this.getWidth(), this.getHeight());
-
-    //         let displayDebugTexture = this.__debugTextures[this.__debugMode];
-    //         const renderstate = {};
-    //         gl.screenQuad.bindShader(renderstate);
-    //         gl.screenQuad.draw(renderstate, displayDebugTexture);
-    //     } else {
-    //         viewport.draw(renderstate);
-
-    //         // this.__gizmoPass.draw(renderstate);
-    //         // viewport.drawOverlays(renderstate);
-    //     }
-    // }
 
     drawScene(renderstate) {
         renderstate.envMap = this.__glEnvMap;
