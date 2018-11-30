@@ -162,7 +162,7 @@ class GLRenderer extends GLBaseRenderer {
         // A Background map can be simply an image.
         if (scene.getBackgroundMap() != undefined) {
             const gl = this.__gl;
-            let backgroundMap = scene.getBackgroundMap();
+            const backgroundMap = scene.getBackgroundMap();
             this.__glBackgroundMap  = backgroundMap.getMetadata('gltexture');
             if(!this.__glBackgroundMap ) {
                 if (backgroundMap.type === 'FLOAT') {
@@ -199,8 +199,8 @@ class GLRenderer extends GLBaseRenderer {
             }
         }
 
-        let lightMaps = scene.getLightMaps();
-        let addLightmap = (name, lightmap) => {
+        const lightMaps = scene.getLightMaps();
+        const addLightmap = (name, lightmap) => {
             let gllightmap;
             if (lightmap instanceof LightmapMixer)
                 gllightmap = new GLLightmapMixer(this.__gl, lightmap);
@@ -297,11 +297,9 @@ class GLRenderer extends GLBaseRenderer {
         super.resizeFbos();
         if (this.__fbo) {
             this.__fbo.colorTexture.resize(width, height);
-            this.__fbo.resize();
         }
         if (this.__selectedGeomsBufferFbo) {
             this.__selectedGeomsBuffer.resize(width, height);
-            this.__selectedGeomsBufferFbo.resize();
         }
     }
 
@@ -379,8 +377,8 @@ class GLRenderer extends GLBaseRenderer {
         renderstate.exposure = this.__exposure;
         renderstate.gamma = this.__gamma;
 
-        if (this.__displayEnvironment)
-            this.drawBackground(renderstate);
+        // if (this.__displayEnvironment)
+        //     this.drawBackground(renderstate);
 
         super.drawScene(renderstate);
         // console.log("Draw Calls:" + renderstate['drawCalls']);
@@ -400,7 +398,6 @@ class GLRenderer extends GLBaseRenderer {
             this.__outlineShader.bind(renderstate);
             const unifs = renderstate.unifs;
             this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-            // gl.uniform2f(unifs.selectionDataTextureSize.location, this.__glcanvas.width, this.__glcanvas.height);
             gl.uniform2f(unifs.selectionDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
             gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
             this.quad.bindAndDraw(renderstate);

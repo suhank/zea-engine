@@ -134,17 +134,6 @@ class GLBaseViewport {
         return false;
     }
 
-
-    ////////////////////////////
-    // 
-    clear(renderstate) {
-        let gl = this.__renderer.gl;
-        gl.viewport(...this.region);
-        gl.clearColor(...this.__backgroundColor.asArray());
-        gl.colorMask(true, true, true, true);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-    }
-
 };
 
 export {

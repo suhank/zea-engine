@@ -521,10 +521,23 @@ class GLViewport extends GLBaseViewport {
     }
 
     draw() {
+        const gl = this.__renderer.gl;
+
+        // Make sure th default fbo is bound
+        // Note: sometimes an Fbo is left bound
+        // from anohter op(like resizing, populating etc..)
+        // We need to unbind here to ensure rendering is to the
+        // right target.
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+
+        gl.viewport(...this.region);
+        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.colorMask(true, true, true, true);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
         const renderstate = {}
-        this.clear(renderstate);
         this.__initRenderState(renderstate);
-        this.__renderer.drawScene(renderstate)
+        this.__renderer.drawScene(renderstate);
     }
 
 };

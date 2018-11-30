@@ -490,10 +490,8 @@ class GLBaseRenderer {
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyPressed(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
+            if (vp) {
+                vp.onKeyPressed(key, event);
             }
         });
         document.addEventListener('keydown', (event) => {
@@ -501,10 +499,8 @@ class GLBaseRenderer {
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyDown(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
+            if (vp) {
+                vp.onKeyDown(key, event);
             }
         });
         document.addEventListener('keyup', (event) => {
@@ -512,10 +508,8 @@ class GLBaseRenderer {
                 return;
             const key = String.fromCharCode(event.keyCode).toLowerCase();
             const vp = activeGLRenderer.getActiveViewport();
-            if (!vp || !vp.onKeyUp(key, event)) {
-                // We are setting up key listeners in the state machine now.
-                // We cannot simply assume all handers are hooked up here.
-                // event.stopPropagation();
+            if (vp) {
+                vp.onKeyUp(key, event);
             }
         });
 
@@ -604,6 +598,7 @@ class GLBaseRenderer {
     // VR Setup
 
     supportsVR() {
+        console.warn("Deprecated Method. Please instead connect to the vrViewportSetup signal.")
         return this.__supportXR && navigator.xr != null;
     }
 
@@ -615,7 +610,6 @@ class GLBaseRenderer {
         vrvp.presentingChanged.connect((state)=>{
             this.__vrViewportPresenting = state;
             if(state){
-                vrvp.viewChanged.connect(this.viewChanged.emit);
                 
                 // Let the passes know that VR is starting.
                 // They can do things like optimize shaders.
@@ -625,6 +619,8 @@ class GLBaseRenderer {
                         pass.startPresenting();
                     }
                 }
+
+                vrvp.viewChanged.connect(this.viewChanged.emit);
             }
             else {
                 vrvp.viewChanged.disconnect(this.viewChanged.emit);
@@ -639,7 +635,10 @@ class GLBaseRenderer {
                 this.viewChanged.emit({
                     interfaceType: 'CameraAndPointer',
                     viewXfo: this.getViewport().getCamera().getGlobalXfo()
-                })
+                });
+
+                this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
+                this.requestRedraw();
             }
         })
         this.__vrViewport = vrvp;
@@ -653,36 +652,36 @@ class GLBaseRenderer {
     ////////////////////////////
     // Rendering
 
-    isContinuouslyDrawing() {
-        return this.__continuousDrawing;
-    }
+    // isContinuouslyDrawing() {
+    //     return this.__continuousDrawing;
+    // }
 
-    startContinuousDrawing() {
-        if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
-            return;
+    // startContinuousDrawing() {
+    //     if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
+    //         return;
 
-        const onAnimationFrame = ()=>{
-            if (this.__continuousDrawing && !this.__vrViewportPresenting)
-                window.requestAnimationFrame(onAnimationFrame);
-            for(let vp of this.__viewports)
-                vp.draw();
-        }
+    //     const onAnimationFrame = ()=>{
+    //         if (this.__continuousDrawing && !this.__vrViewportPresenting)
+    //             window.requestAnimationFrame(onAnimationFrame);
+    //         for(let vp of this.__viewports)
+    //             vp.draw();
+    //     }
 
-        this.__continuousDrawing = true;
-        window.requestAnimationFrame(onAnimationFrame);
-    }
+    //     this.__continuousDrawing = true;
+    //     window.requestAnimationFrame(onAnimationFrame);
+    // }
 
-    stopContinuousDrawing() {
-        this.__continuousDrawing = false;
-    }
+    // stopContinuousDrawing() {
+    //     this.__continuousDrawing = false;
+    // }
 
-    toggleContinuousDrawing() {
-        if (!this.__continuousDrawing) {
-            this.startContinuousDrawing();
-        } else {
-            this.stopContinuousDrawing();
-        }
-    }
+    // toggleContinuousDrawing() {
+    //     if (!this.__continuousDrawing) {
+    //         this.startContinuousDrawing();
+    //     } else {
+    //         this.stopContinuousDrawing();
+    //     }
+    // }
 
     drawItemChanged() {
         for (let vp of this.__viewports)
@@ -692,13 +691,8 @@ class GLBaseRenderer {
 
     // Request a single redraw, usually in response to a signal/event.
     requestRedraw() {
-
         // If a redraw has already been requested, then simply return and wait.
-        if (this.__vrViewportPresenting)
-            return false;
-
-        // If a redraw has already been requested, then simply return and wait.
-        if (this.__redrawRequested || this.__continuousDrawing)
+        if (this.__redrawRequested || this.__continuousDrawing || this.__vrViewportPresenting)
             return false;
 
         const onAnimationFrame = () => {
@@ -716,9 +710,6 @@ class GLBaseRenderer {
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
 
-        if (this.__collector.newItemsReadyForLoading())
-            this.__collector.finalize();
-
         renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
@@ -731,10 +722,10 @@ class GLBaseRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
-        renderstate.shaderopts = this.__preproc;
-
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
+
+        renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
@@ -746,10 +737,11 @@ class GLBaseRenderer {
     }
     
     drawSceneGeomData(renderstate){
-        renderstate.shaderopts = this.__preproc;
 
         if (this.__collector.newItemsReadyForLoading())
             this.__collector.finalize();
+
+        renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
             const passSet = this.__passes[key];
