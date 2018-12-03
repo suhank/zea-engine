@@ -1,11 +1,11 @@
 import { GLPass, PassType } from './GLPass.js';
-import { GLStandardGeomsPass, GLShaderMaterials } from './GLStandardGeomsPass.js';
+import { GLOpaqueGeomsPass } from './GLStandardGeomsPass.js';
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
 import { GLRenderer } from '../GLRenderer.js';
 
-class GLOverlayPass extends GLStandardGeomsPass {
+class GLOverlayPass extends GLOpaqueGeomsPass {
     constructor() {
         super();
     }
@@ -17,15 +17,13 @@ class GLOverlayPass extends GLStandardGeomsPass {
 
     /////////////////////////////////////
     // Bind to Render Tree
-    filterRenderTree() {
-        const allglshaderMaterials = this.__collector.getGLShaderMaterials();
-        this.__glshadermaterials = [];
-        for (let glshaderkey in allglshaderMaterials) {
-            const glshaderMaterials = allglshaderMaterials[glshaderkey];
-            if (!glshaderMaterials.getGLShader().isOverlay())
-                continue;
-            this.__glshadermaterials.push(glshaderMaterials);
+    filterGeomItem(geomItem) {
+        const shaderClass = geomItem.getMaterial().getShaderClass();
+        if (shaderClass) {
+            if (shaderClass.isOverlay())
+                return true;
         }
+        return false;
     }
 
     draw(renderstate) {

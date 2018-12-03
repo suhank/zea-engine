@@ -30,7 +30,7 @@ class GLMaterial extends BaseItem {
         return this.__material;
     }
 
-    getShader() {
+    getGLShader() {
         return this.__glshader;
     }
 

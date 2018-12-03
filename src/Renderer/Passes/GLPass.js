@@ -1,4 +1,3 @@
-
 import {
     Signal
 } from '../../Utilities';
@@ -19,8 +18,8 @@ class GLPass {
     }
 
     init(gl, collector, passIndex) {
-        if(passIndex == undefined)
-            throw("Missing constructor argument.");// Type checking. Seomthing that TypeScript will do for us.
+        if (passIndex == undefined)
+            throw ("Missing constructor argument."); // Type checking. Seomthing that TypeScript will do for us.
 
         this.__gl = gl;
         this.__collector = collector;
@@ -31,22 +30,17 @@ class GLPass {
         //     this.__collector.renderTreeUpdated.connect(this.filterRenderTree.bind(this));
     }
 
-    setPassIndex(passIndex){
+    setPassIndex(passIndex) {
         this.__passIndex = passIndex;
     }
 
-    toggleEnabled(){
+    toggleEnabled() {
         this.enabled = !this.enabled;
     }
 
+    startPresenting() {}
 
-    startPresenting() {
-
-    }
-
-    stopPresenting() {
-
-    }
+    stopPresenting() {}
 
     /////////////////////////////////////
     // Bind to Render Tree
@@ -54,96 +48,28 @@ class GLPass {
     //     // console.log(this.constructor.name+':filterRenderTree');
     // }
 
-    getGeomItemAndDist() {
-        // TODO:
-    }
-
+    getGeomItemAndDist() {}
 
     /////////////////////////////////////
     // Rendering
 
-    bindShader(renderstate, glshader){
-        if(!glshader.bind(renderstate, this.constructor.name))
-            return false;
-        if(!this.__collector.bind(renderstate))
-            return false;
-        return true;
-    }
+    // bindShader(renderstate, glshader){
+    //     if(!glshader.bind(renderstate, this.constructor.name))
+    //         return false;
+    //     if(!this.__collector.bind(renderstate))
+    //         return false;
+    //     return true;
+    // }
 
-    bindMaterial(renderstate, glmaterial){
-        return glmaterial.bind(renderstate);
-    }
+    // bindMaterial(renderstate, glmaterial){
+    //     return glmaterial.bind(renderstate);
+    // }
 
-    draw(renderstate) {
-        const gl = this.__gl;
+    draw(renderstate) {}
 
-        for (let glshaderMaterials of this.__glshadermaterials) {
-            const glshader = glshaderMaterials.getGLShader();
-            if(this.bindShader(renderstate, glshader)){
-                const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
-                for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
-                    if(glmaterialGeomItemSet.drawCount == 0)
-                        continue;
-                    if(this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())){
-                        const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-                        for (let gldrawitemset of gldrawitemsets) {
-                            gldrawitemset.draw(renderstate);  
-                        }
-                    }
-                }
-            }
-            glshader.unbind(renderstate);
-        }
+    drawSelectedGeoms(renderstate) {}
 
-        if (renderstate.glgeom) {
-            renderstate.glgeom.unbind(renderstate);
-        }
-    }
-
-    drawSelectedGeoms(renderstate){
-        const gl = this.__gl;
-
-
-        for (let glshaderMaterials of this.__glshadermaterials) {
-            const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
-            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
-                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-                for (let gldrawitemset of gldrawitemsets) {
-                    gldrawitemset.drawSelected(renderstate);  
-                }
-            }
-        }
-
-
-        if (renderstate.glgeom) {
-            renderstate.glgeom.unbind(renderstate);
-        }
-    }
-
-    drawGeomData(renderstate){
-
-        const gl = this.__gl;
-
-        for (let glshaderMaterials of this.__glshadermaterials) {
-            if(glshaderMaterials.getGLShader().invisibleToGeomBuffer)
-                continue;
-
-            const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
-            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
-                if(glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer)
-                    continue;
-                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-                for (let gldrawitemset of gldrawitemsets) {
-                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
-                    gldrawitemset.draw(renderstate);
-                }
-            }
-        }
-
-        if (renderstate.glgeom) {
-            renderstate.glgeom.unbind(renderstate);
-        }
-    }
+    drawGeomData(renderstate) {}
 
 };
 
@@ -152,4 +78,3 @@ export {
     PassType
 };
 // export default GLPass;
-

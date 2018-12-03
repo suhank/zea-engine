@@ -12,9 +12,87 @@ import {
 } from '../Shaders/SelectedGeomsShader.js';
 
 
+class GLShaderMaterials {
+    constructor(glshader = undefined) {
+        this.glshader = glshader;
+        this.glmaterialGeomItemSets = [];
+    }
+
+    getGLShader() {
+        return this.glshader;
+    }
+
+    addMaterialGeomItemSets(glmaterialGeomItemSets) {
+        if (this.glmaterialGeomItemSets.indexOf(glmaterialGeomItemSets) == -1)
+            this.glmaterialGeomItemSets.push(glmaterialGeomItemSets);
+    }
+
+    removeMaterialGeomItemSets(glmaterialGeomItemSets) {
+        const index = this.glmaterialGeomItemSets.indexOf(glmaterialGeomItemSets);
+        this.glmaterialGeomItemSets.splice(index, 1);
+    }
+
+    getMaterialGeomItemSets() {
+        return this.glmaterialGeomItemSets;
+    }
+}
+
+class GLMaterialGeomItemSets {
+    constructor(glmaterial = undefined) {
+        this.glmaterial = glmaterial;
+        this.drawItemSets = [];
+        this.drawCount = 0;
+        this.visibleInGeomDataBuffer = glmaterial.getMaterial().visibleInGeomDataBuffer;
+        this.__drawCountChanged = this.__drawCountChanged.bind(this)
+    }
+
+    getGLMaterial() {
+        return this.glmaterial;
+    }
+
+    __drawCountChanged(change) {
+        this.drawCount += change;
+    }
+
+    addGeomItemSet(drawItemSet) {
+        if (this.drawItemSets.indexOf(drawItemSet) == -1) {
+            this.drawItemSets.push(drawItemSet);
+
+            this.drawCount += drawItemSet.drawCount;
+            drawItemSet.drawCountChanged.connect(this.__drawCountChanged);
+        } else {
+            console.warn("drawItemSet already added to GLMaterialGeomItemSets")
+        }
+    }
+
+    removeGeomItemSet(drawItemSet) {
+        const index = this.drawItemSets.indexOf(drawItemSet);
+        this.drawItemSets.splice(index, 1);
+        drawItemSet.drawCountChanged.disconnect(this.__drawCountChanged);
+    }
+
+    findGeomItemSet(glgeom) {
+        for (let drawItemSet of this.drawItemSets) {
+            if (drawItemSet.getGLGeom() == glgeom)
+                return drawItemSet;
+        }
+        return null;
+    }
+
+    getGeomItemSets() {
+        return this.drawItemSets;
+    }
+};
+
+
 class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     constructor() {
         super();
+
+        // Optimized Render Tree
+        // Structured like so for efficient render traversial.
+        // {GLShaders}[GLMaterials][GLGeoms][GLGeomItems]
+        this.__glshadermaterials = {};
     }
 
     init(gl, collector, passIndex) {
@@ -36,6 +114,35 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         return true;
     }
 
+    addGeomItem(geomItem) {
+        const material = geomItem.getMaterial();
+        const geom = geomItem.getGeometry();
+
+        const glmaterial = this.addMaterial(material)
+        const glgeomItem = this.addGeomItem(geomItem);
+        const glGeom = glgeomItem.glGeom;
+
+        let glshaderMaterials = this.__glshadermaterials[material.getShaderName()];
+        if(!glshaderMaterials) {
+            glshaderMaterials = new GLShaderMaterials(glshader);
+            this.__glshadermaterials[material.getShaderName()] = glshaderMaterials;
+        }
+        
+        let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(glmaterial);
+        if(!glmaterialGeomItemSets) {
+            glmaterialGeomItemSets = new GLMaterialGeomItemSets(glmaterial);
+            glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets);
+        }
+
+        let drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
+        if(!drawItemSet) {
+            drawItemSet = new GLGeomItemSet(gl, glgeom);
+            glmaterialGeomItemSets.addDrawItemSet(drawItemSet);
+        }
+
+        drawItemSet.addGeomItem(glgeomItem);
+    }
+
 
     draw(renderstate) {
 
@@ -48,7 +155,27 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 
-        super.draw(renderstate);
+        for (let glshaderMaterials of this.__glshadermaterials) {
+            const glshader = glshaderMaterials.getGLShader();
+            if(this.bindShader(renderstate, glshader)){
+                const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+                for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                    if(glmaterialGeomItemSet.drawCount == 0)
+                        continue;
+                    if(this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())){
+                        const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
+                        for (let gldrawitemset of gldrawitemsets) {
+                            gldrawitemset.draw(renderstate);  
+                        }
+                    }
+                }
+            }
+            glshader.unbind(renderstate);
+        }
+
+        if (renderstate.glgeom) {
+            renderstate.glgeom.unbind(renderstate);
+        }
     }
 
     drawSelectedGeoms(renderstate){
@@ -63,7 +190,20 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         if(!this.bindShader(renderstate, this.__selectedGeomsShader))
             return false;
 
-        super.drawSelectedGeoms(renderstate);
+        for (let glshaderMaterials of this.__glshadermaterials) {
+            const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
+                for (let gldrawitemset of gldrawitemsets) {
+                    gldrawitemset.drawSelected(renderstate);  
+                }
+            }
+        }
+
+
+        if (renderstate.glgeom) {
+            renderstate.glgeom.unbind(renderstate);
+        }
     }
 
     getGeomItemAndDist(geomData) {
@@ -112,7 +252,26 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             }
         }
 
-        super.drawGeomData(renderstate);
+
+        for (let glshaderMaterials of this.__glshadermaterials) {
+            if(glshaderMaterials.getGLShader().invisibleToGeomBuffer)
+                continue;
+
+            const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+            for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+                if(glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer)
+                    continue;
+                const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
+                for (let gldrawitemset of gldrawitemsets) {
+                    // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
+                    gldrawitemset.draw(renderstate);
+                }
+            }
+        }
+
+        if (renderstate.glgeom) {
+            renderstate.glgeom.unbind(renderstate);
+        }
     }
 };
 
