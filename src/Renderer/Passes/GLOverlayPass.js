@@ -1,8 +1,5 @@
 import { GLPass, PassType } from './GLPass.js';
-import { GLOpaqueGeomsPass } from './GLStandardGeomsPass.js';
-import {
-    GeomDataShader
-} from '../Shaders/GeomDataShader.js';
+import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js';
 import { GLRenderer } from '../GLRenderer.js';
 
 class GLOverlayPass extends GLOpaqueGeomsPass {
@@ -12,7 +9,6 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
     init(gl, collector, passIndex) {
         super.init(gl, collector, passIndex);
-        this.__geomdatashader = new GeomDataShader(gl);
     }
 
     /////////////////////////////////////
