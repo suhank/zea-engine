@@ -35,14 +35,14 @@ import {
     GLGeomItem
 } from '../GLGeomItem.js';
 import {
-    GLGeomItemSet
-} from '../GLGeomItemSet.js';
-import {
     GLTexture2D
 } from '../GLTexture2D.js';
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
+import {
+    SelectedGeomsShader
+} from '../Shaders/SelectedGeomsShader.js';
 
 
 // This class abstracts the rendering of a collection of geometries to screen.
@@ -60,12 +60,13 @@ class GLStandardGeomsPass extends GLPass {
 
     }
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
 
-        this.__geomdatashader = new GeomDataShader(gl);
+        this.__geomdatashader = new GeomDataShader(renderer.gl);
+        this.__selectedGeomsShader = new SelectedGeomsShader(renderer.gl);
 
-        this.__collector.registerPass(
+        this.__renderer.registerPass(
             (treeItem) => {
                 if (treeItem instanceof GeomItem) {
                     if (!treeItem.getMetadata('glgeomItem')) {
@@ -141,7 +142,7 @@ class GLStandardGeomsPass extends GLPass {
         const glshader = this.__glShaders[material.getShaderName()];
         glmaterial = new GLMaterial(this.__gl, material, glshader);
         glmaterial.updated.connect(() => {
-            this.__collector.getRenderer().requestRedraw();
+            this.__renderer.requestRedraw();
         });
         material.destructing.connect(() => {
             material.clearMetadata('glmaterial');
@@ -164,7 +165,7 @@ class GLStandardGeomsPass extends GLPass {
 
         const glmaterial = new GLMaterial(gl, material, glshaderMaterials.getGLShader());
         glmaterial.updated.connect(() => {
-            this.__collector.getRenderer().requestRedraw();
+            this.__renderer.requestRedraw();
         });
 
         glmaterialGeomItemSets = new GLMaterialGeomItemSets(glmaterial);
@@ -240,34 +241,18 @@ class GLStandardGeomsPass extends GLPass {
                 case GLGeomItemChangeType.VISIBILITY_CHANGED:
                     break;
                 case GLGeomItemChangeType.SELECTION_CHANGED:
-                    this.__collector.getRenderer().requestRedraw();
+                    this.__renderer.requestRedraw();
                     return;
             }
-            this.__collector.getRenderer().drawItemChanged();
+            this.__renderer.drawItemChanged();
         });
 
         this.__drawItems[index] = glgeomItem;
 
-
-        // const addGeomItemToGLMaterialGeomItemSet = () => {
-        //     let drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
-        //     if (!drawItemSet) {
-        //         drawItemSet = new GLGeomItemSet(gl, glgeom);
-        //         glmaterialGeomItemSets.addGeomItemSet(drawItemSet);
-        //     }
-        //     drawItemSet.addGeomItem(glgeomItem);
-        // }
-        // addGeomItemToGLMaterialGeomItemSet();
-
-        // geomItem.materialAssigned.connect(() => {
-        //     glmaterialGeomItemSets = this.addMaterial(geomItem.getMaterial());
-        //     addGeomItemToGLMaterialGeomItemSet();
-        // })
-
         this.__newItemsAdded = true;
 
         // Note: before the renderer is disabled, this is a  no-op.
-        this.__collector.getRenderer().requestRedraw();
+        this.__renderer.requestRedraw();
         return glgeomItem;
     };
 
@@ -302,13 +287,13 @@ class GLStandardGeomsPass extends GLPass {
         // glgeomItem.transformChanged.disconnectScope(this);
 
         // this.renderTreeUpdated.emit();
-        this.__collector.getRenderer().requestRedraw();
+        this.__renderer.requestRedraw();
     };
 
     removeMaterial(material) {
         const glshaderMaterials = this.__glshadermaterials[material.hash];
         if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
-            console.warn("Material not found in GLCollector");
+            console.warn("Material not found in pass");
             return;
         }
 

@@ -7,8 +7,8 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
         super();
     }
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
     }
 
     /////////////////////////////////////
@@ -37,61 +37,26 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
         gl.disable(gl.BLEND);
         gl.enable(gl.DEPTH_TEST);
     }
+    
 
-    getGeomItemAndDist(geomData) {
-
-        let itemId, dist;
-        const gl = this.__gl;
-        if (gl.floatGeomBuffer) {
-            itemId = geomData[1];
-            dist = geomData[3];
-        } else {
-            itemId = geomData[0] + (geomData[1] << 8);
-            dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
-        }
-
-        const drawItem = this.__collector.getGeomItem(itemId);
-        if (drawItem) {
-            return { 
-                geomItem: drawItem.getGeomItem(),
-                dist
-            } 
-        }
-    }
-
-    drawGeomData(renderstate){
+    drawGeomData(renderstate) {
 
         const gl = this.__gl;
-        gl.disable(gl.BLEND);
-        gl.disable(gl.CULL_FACE);
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LESS);
-        gl.depthMask(true);
+        gl.disable(gl.DEPTH_TEST);
+        gl.enable(gl.BLEND);
+        gl.blendEquation(gl.FUNC_ADD);
 
-        if(!this.__geomdatashader.bind(renderstate, this.constructor.name))
-            return false;
-
-        if(!this.__collector.bind(renderstate))
-            return false;
-
-        {
-            let unif = renderstate.unifs.floatGeomBuffer;
-            if (unif){
-                gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0);
-            }
-        }
-        {
-            let unif = renderstate.unifs.passId;
-            if (unif){
-                gl.uniform1i(unif.location, this.__passIndex);
-            }
-        }
+        renderstate.pass = 'ADD';
+        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
 
         super.drawGeomData(renderstate);
+
+        gl.disable(gl.BLEND);
+        gl.enable(gl.DEPTH_TEST);
     }
 };
 
-// GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY);
+GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY);
 
 export {
     GLOverlayPass

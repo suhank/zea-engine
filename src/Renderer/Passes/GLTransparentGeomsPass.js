@@ -8,9 +8,6 @@ import {
     GLStandardGeomsPass
 } from './GLStandardGeomsPass.js';
 import {
-    GLShaderMaterials
-} from '../GLCollector.js';
-import {
     GLRenderer
 } from '../GLRenderer.js';
 
@@ -25,8 +22,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
 
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
 
         this.transparentItems = [];
         this.visibleItems = [];
@@ -100,7 +97,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
                 }
                 currentglShader = transparentItem.glshader;
             }
-            
+
             if (currentglMaterial != transparentItem.glmaterial) {
                 if (!transparentItem.glmaterial.bind(renderstate)) {
                     continue;

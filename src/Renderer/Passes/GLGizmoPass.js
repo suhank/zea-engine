@@ -17,8 +17,8 @@ class GLGizmoPass extends GLOpaqueGeomsPass {
         super();
     }
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
         this.__gizmoshader = new GizmoShader(gl);
         this.__gizmoDataShader = new GizmoDataShader(gl);
     };

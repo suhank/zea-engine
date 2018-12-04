@@ -39,13 +39,13 @@ class GLAudioItemsPass extends GLPass {
     }
 
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
 
         if (!audioCtx)
             return;
 
-        this.__collector.registerPass(
+        this.__renderer.registerPass(
             (treeItem) => {
                 if (treeItem instanceof AudioItem) {
                     treeItem.audioSourceCreated.connect((audioSource) => {

@@ -14,9 +14,6 @@ import {
     GLScreenQuad
 } from './GLScreenQuad.js';
 import {
-    GLCollector
-} from './GLCollector.js';
-import {
     GLViewport
 } from './GLViewport.js';
 // import {
@@ -47,6 +44,11 @@ class GLBaseRenderer {
         this.__geoms = [];
         this.__shaders = {};
         this.__passes = {};
+        this.__passCallbacks = [];
+
+        this.addTreeItem = this.addTreeItem.bind(this)
+        this.removeTreeItem = this.removeTreeItem.bind(this)
+
 
         this.__viewports = [];
         this.__activeViewport = undefined;
@@ -63,8 +65,6 @@ class GLBaseRenderer {
         // Function Bindings.
         this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
         this.requestRedraw = this.requestRedraw.bind(this);
-
-        this.__collector = new GLCollector(this);
 
         this.resized = new Signal();
         this.keyPressed = new Signal();
@@ -151,33 +151,10 @@ class GLBaseRenderer {
         return this.__glcanvas.height;
     }
 
-    getCollector() {
-        return this.__collector;
-    }
-
-    setupGrid(gridSize, gridColor, resolution, lineThickness) {
-        console.warn("Deprecated Method. Please use scene.setupGrid");
-        return this.__scene.setupGrid(gridSize, resolution, gridColor);
-    }
 
     ////////////////////////////////////////
-    // Scene
+    // Viewports
 
-    getScene() {
-        return this.__scene;
-    }
-
-    setScene(scene) {
-        this.__scene = scene;
-        this.__collector.addTreeItem(this.__scene.getRoot());
-
-        if (this.__gizmoContext)
-            this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
-
-        this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
-        
-        this.sceneSet.emit(this.__scene);
-    }
 
     addViewport(name) {
         let vp = new GLViewport(this, name, this.getWidth(), this.getHeight());
@@ -262,6 +239,82 @@ class GLBaseRenderer {
         window.requestAnimationFrame(onAnimationFrame);
     }
 
+
+    ////////////////////////////////////////
+    // Scene
+
+    setupGrid(gridSize, gridColor, resolution, lineThickness) {
+        console.warn("Deprecated Method. Please use scene.setupGrid");
+        return this.__scene.setupGrid(gridSize, resolution, gridColor);
+    }
+
+    getScene() {
+        return this.__scene;
+    }
+
+    setScene(scene) {
+        this.__scene = scene;
+        this.addTreeItem(this.__scene.getRoot());
+
+        if (this.__gizmoContext)
+            this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
+
+        this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
+        
+        this.sceneSet.emit(this.__scene);
+    }
+
+
+    addTreeItem(treeItem) {
+        if (treeItem.isDestroyed()) {
+            throw ("treeItem is destroyed:" + treeItem.getPath());
+        }
+
+        for (let passCbs of this.__passCallbacks) {
+            const rargs = {
+                continueInSubTree: true
+            };
+            const handled = passCbs.itemAddedFn(treeItem, rargs);
+            if (handled) {
+                if (!rargs.continueInSubTree)
+                    return;
+                break;
+            }
+        }
+
+        // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
+        for (let childItem of treeItem.getChildren()) {
+            this.addTreeItem(childItem);
+        }
+
+        treeItem.childAdded.connect(this.addTreeItem);
+        treeItem.childRemoved.connect(this.removeTreeItem);
+    }
+
+    removeTreeItem(treeItem) {
+
+        treeItem.childAdded.disconnect(this.addTreeItem);
+        treeItem.childRemoved.disconnect(this.removeTreeItem);
+
+        for (let passCbs of this.__passCallbacks) {
+            if (!passCbs.itemRemovedFn)
+                continue;
+            const rargs = {
+                continueInSubTree: true
+            };
+            const handled = passCbs.itemRemovedFn(treeItem, rargs);
+            if (handled) {
+                if (!rargs.continueInSubTree)
+                    return;
+                break;
+            }
+        }
+
+        // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
+        for (let childItem of treeItem.getChildren()) {
+            this.removeTreeItem(childItem);
+        }
+    }
 
     /////////////////////////
     // Renderer Setup
@@ -560,10 +613,18 @@ class GLBaseRenderer {
         index += this.__passes[passtype].length;
 
         pass.updated.connect(this.requestRedraw.bind(this));
-        pass.init(this.__gl, this.__collector, index);
+        pass.init(this, index);
         this.__passes[passtype].push(pass);
         this.requestRedraw();
         return index;
+    }
+
+    registerPass(itemAddedFn, itemRemovedFn) {
+        // insert at the beginning so it is called first.
+        this.__passCallbacks.splice(0, 0, {
+            itemAddedFn,
+            itemRemovedFn
+        });
     }
 
     getPass(index) {
@@ -703,9 +764,6 @@ class GLBaseRenderer {
     }
 
     drawScene(renderstate) {
-        // if (this.__collector.newItemsReadyForLoading())
-        //     this.__collector.finalize();
-
         renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
@@ -718,9 +776,6 @@ class GLBaseRenderer {
     }
 
     drawSceneSelectedGeoms(renderstate){
-        // if (this.__collector.newItemsReadyForLoading())
-        //     this.__collector.finalize();
-
         renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {
@@ -733,10 +788,6 @@ class GLBaseRenderer {
     }
     
     drawSceneGeomData(renderstate){
-
-        // if (this.__collector.newItemsReadyForLoading())
-        //     this.__collector.finalize();
-
         renderstate.shaderopts = this.__preproc;
 
         for(let key in this.__passes) {

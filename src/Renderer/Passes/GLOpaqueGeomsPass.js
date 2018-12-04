@@ -5,20 +5,12 @@ import {
     GLStandardGeomsPass
 } from './GLStandardGeomsPass.js';
 import {
-    GLShaderMaterials
-} from '../GLCollector.js';
-import {
     GLRenderer
 } from '../GLRenderer.js';
 
 import {
     GeomDataShader
 } from '../Shaders/GeomDataShader.js';
-
-import {
-    SelectedGeomsShader
-} from '../Shaders/SelectedGeomsShader.js';
-
 import {
     GLGeomItemSet
 } from '../GLGeomItemSet.js';
@@ -112,10 +104,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         this.__glshadermaterials = {};
     }
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
-        this.__geomdatashader = new GeomDataShader(gl);
-        this.__selectedGeomsShader = new SelectedGeomsShader(gl);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
     }
 
     /////////////////////////////////////
@@ -211,7 +201,9 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         if (!this.bindShader(renderstate, this.__selectedGeomsShader))
             return false;
 
-        for (let glshaderMaterials of this.__glshadermaterials) {
+        // for (let glshaderMaterials of this.__glshadermaterials) {
+        for (let shaderName in this.__glshadermaterials) {
+            const glshaderMaterials = this.__glshadermaterials[shaderName];
             const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
             for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
                 const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
@@ -239,17 +231,17 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
         }
 
-        const drawItem = this.__collector.getGeomItem(itemId);
-        if (drawItem) {
+        const glgeomitem = this.getGLGeomItem(itemId);
+        if (glgeomitem) {
             return {
-                geomItem: drawItem.getGeomItem(),
+                geomItem: glgeomitem.getGeomItem(),
                 dist
             }
         }
     }
 
     drawGeomData(renderstate) {
-        
+
         if (this.newItemsReadyForLoading())
             this.finalize();
 
@@ -264,19 +256,20 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             return false;
 
         {
-            let unif = renderstate.unifs.floatGeomBuffer;
+            const unif = renderstate.unifs.floatGeomBuffer;
             if (unif) {
                 gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0);
             }
         } {
-            let unif = renderstate.unifs.passId;
+            const unif = renderstate.unifs.passId;
             if (unif) {
                 gl.uniform1i(unif.location, this.__passIndex);
             }
         }
 
-
-        for (let glshaderMaterials of this.__glshadermaterials) {
+        // for (let glshaderMaterials of this.__glshadermaterials) {
+        for (let shaderName in this.__glshadermaterials) {
+            const glshaderMaterials = this.__glshadermaterials[shaderName];
             if (glshaderMaterials.getGLShader().invisibleToGeomBuffer)
                 continue;
 
