@@ -540,6 +540,14 @@ class GLViewport extends GLBaseViewport {
         const renderstate = {}
         this.__initRenderState(renderstate);
         this.__renderer.drawScene(renderstate);
+
+
+        // Turn this on to debug the geom data buffer.
+        // {
+        //     gl.screenQuad.bindShader(renderstate);
+        //     gl.screenQuad.draw(renderstate, this.__geomDataBuffer);
+        // }
+
     }
 
 };

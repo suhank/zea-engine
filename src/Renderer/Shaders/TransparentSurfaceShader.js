@@ -205,6 +205,14 @@ void main(void) {
         return paramDescs;
     }
 
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
+    }
+    
     static isTransparent() {
         return true;
     }

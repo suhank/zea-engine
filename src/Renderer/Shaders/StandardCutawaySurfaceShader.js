@@ -327,6 +327,14 @@ void main(void) {
         paramDescs.push({ name: 'cutawaySurfaceOffset', defaultValue: 0.000003, texturable: false });
         return paramDescs;
     }
+    
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
+    }
 };
 
 sgFactory.registerClass('StandardCutawaySurfaceShader', StandardCutawaySurfaceShader);
