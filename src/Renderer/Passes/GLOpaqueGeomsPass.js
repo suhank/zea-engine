@@ -232,7 +232,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
         }
 
-        const glgeomitem = this.getGLGeomItem(itemId);
+        const glgeomitem = this.__drawItems[itemId];
         if (glgeomitem) {
             return {
                 geomItem: glgeomitem.getGeomItem(),
