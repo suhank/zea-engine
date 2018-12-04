@@ -604,7 +604,7 @@ class GLBaseRenderer {
         if(!glshader){
             glshader = sgFactory.constructClass(shaderName, this.__gl);
             if(!glshader)
-                throw("Sahder not registered with the SGFactory:", shaderName)
+                console.error("Shader not registered with the SGFactory:", shaderName)
             this.__shaders[shaderName] = glshader;;
         }
         return glshader;

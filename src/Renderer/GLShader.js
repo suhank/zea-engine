@@ -51,12 +51,6 @@ class GLShader extends BaseItem {
         return false;
     }
 
-    ///////////////////////////////
-    // Parameters
-
-    static getParamDeclarations() {
-        return [];
-    }
 
     ///////////////////////////////////
     // Compilation
@@ -64,7 +58,7 @@ class GLShader extends BaseItem {
     __compileShaderStage(glsl, stageID, name, shaderopts) {
         const gl = this.__gl;
         // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
-        if(!shaderopts)
+        if (!shaderopts)
             shaderopts = gl.shaderopts;
         if (shaderopts) {
             if (shaderopts.repl) {
@@ -76,9 +70,9 @@ class GLShader extends BaseItem {
         }
 
         let prefix;
-        if(gl.name == 'webgl2') {
+        if (gl.name == 'webgl2') {
             glsl = glsl.replaceAll('attribute', 'in');
-            if(name == 'vertexShader')
+            if (name == 'vertexShader')
                 glsl = glsl.replaceAll('varying', 'out');
             else
                 glsl = glsl.replaceAll('varying', 'in');
@@ -110,7 +104,7 @@ class GLShader extends BaseItem {
                 if (parts.length >= 2) {
                     const lineNum = parseInt(parts[2]); // TODO check against ATI and intel cards
                     if (!isNaN(lineNum)) {
-                        if(errorLines[lineNum])
+                        if (errorLines[lineNum])
                             errorLines[lineNum].push(errors[i]);
                         else
                             errorLines[lineNum] = [errors[i]];
@@ -123,14 +117,14 @@ class GLShader extends BaseItem {
                 numberedLinesWithErrors.push(((i + 1) + ":").lpad(' ', 3) + lines[i]);
                 if ((i + 1) in errorLines) {
                     const errors = errorLines[(i + 1)];
-                    for(let error of errors) {
+                    for (let error of errors) {
                         numberedLinesWithErrors.push(error);
                         numberedLinesWithErrors.push('-'.lpad('-', error.length));
                     }
                 }
             }
             // throw("An error occurred compiling the shader \n\n" + numberedLinesWithErrors.join('\n') + "\n\n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n'));
-            throw("An error occurred compiling the shader \n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n') + "\n" + numberedLinesWithErrors.join('\n'));
+            throw ("An error occurred compiling the shader \n=================\n" + this.constructor.name + "." + name + ": \n\n" + errors.join('\n') + "\n" + numberedLinesWithErrors.join('\n'));
             return null;
         }
         return shaderHdl;
@@ -268,8 +262,7 @@ class GLShader extends BaseItem {
         return uniforms;
     }
 
-    finalize() {
-    }
+    finalize() {}
 
 
     compileForTarget(key, shaderopts) {
@@ -293,7 +286,7 @@ class GLShader extends BaseItem {
     bind(renderstate, key) {
         const gl = this.__gl;
 
-        if(renderstate.glshader != this) {
+        if (renderstate.glshader != this) {
             const shaderCompilationResult = this.compileForTarget(key, renderstate.shaderopts);
             if (shaderCompilationResult === false) {
                 console.warn(this.constructor.name + " is not compiled for " + key);
@@ -315,27 +308,23 @@ class GLShader extends BaseItem {
 
             const unifs = shaderCompilationResult.unifs;
 
-            if(renderstate.viewports && renderstate.viewports.length == 1) {
-                const vp = renderstate.viewports[0];
-                {
+            if (renderstate.viewports && renderstate.viewports.length == 1) {
+                const vp = renderstate.viewports[0]; {
                     const unif = unifs.viewMatrix;
                     if (unif) {
                         gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
                     }
-                }
-                {
+                } {
                     const unif = unifs.cameraMatrix;
                     if (unif) {
                         gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
                     }
-                }
-                {
+                } {
                     const unif = unifs.projectionMatrix;
                     if (unif) {
                         gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
                     }
-                }
-                {
+                } {
                     const unif = unifs.eye;
                     if (unif) {
                         // Left or right eye, when rendering sterio VR.
@@ -344,8 +333,7 @@ class GLShader extends BaseItem {
                 }
             }
 
-            if(renderstate.envMap)
-            {
+            if (renderstate.envMap) {
                 const envMapPyramid = unifs.envMapPyramid;
                 if (envMapPyramid && renderstate.envMap.bindProbeToUniform) {
                     renderstate.envMap.bindProbeToUniform(renderstate, envMapPyramid);
@@ -354,14 +342,12 @@ class GLShader extends BaseItem {
                 if (envMapTex) {
                     renderstate.envMap.bindToUniform(renderstate, envMapTex);
                 }
-            }
-            {
+            } {
                 const unif = unifs.exposure;
                 if (unif) {
                     gl.uniform1f(unif.location, renderstate.exposure);
                 }
-            }
-            {
+            } {
                 const unif = unifs.gamma;
                 if (unif) {
                     gl.uniform1f(unif.location, renderstate.gamma);
@@ -374,6 +360,19 @@ class GLShader extends BaseItem {
 
     unbind(renderstate) {
         return true;
+    }
+
+    ///////////////////////////////
+    // Parameters
+
+    static getParamDeclarations() {
+        return [];
+    }
+
+    static getGeomDataShaderName() {
+    }
+
+    static getSelectedShaderName() {
     }
 
 

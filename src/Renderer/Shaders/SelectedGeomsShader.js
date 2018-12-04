@@ -8,10 +8,10 @@ import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
-class SelectedGeomsShader extends GLShader {
+class StandardSurfaceSelectedGeomsShader extends GLShader {
     constructor(gl, floatGeomBuffer) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('SelectedGeomsShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardSurfaceSelectedGeomsShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -31,7 +31,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('SelectedGeomsShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardSurfaceSelectedGeomsShader.fragmentShader', `
 precision highp float;
 
 #ifdef ENABLE_ES3
@@ -54,7 +54,7 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('SelectedGeomsShader', SelectedGeomsShader);
+sgFactory.registerClass('StandardSurfaceSelectedGeomsShader', StandardSurfaceSelectedGeomsShader);
 export {
-    SelectedGeomsShader
+    StandardSurfaceSelectedGeomsShader
 };

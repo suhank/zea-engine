@@ -37,13 +37,6 @@ import {
 import {
     GLTexture2D
 } from '../GLTexture2D.js';
-import {
-    GeomDataShader
-} from '../Shaders/GeomDataShader.js';
-import {
-    SelectedGeomsShader
-} from '../Shaders/SelectedGeomsShader.js';
-
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLStandardGeomsPass extends GLPass {
@@ -60,9 +53,6 @@ class GLStandardGeomsPass extends GLPass {
 
     init(renderer, passIndex) {
         super.init(renderer, passIndex);
-    
-        this.__geomdatashader = this.__renderer.getOrCreateShader('GeomDataShader');
-        this.__selectedGeomsShader = this.__renderer.getOrCreateShader('SelectedGeomsShader');
 
         this.__renderer.registerPass(
             (treeItem) => {

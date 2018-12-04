@@ -9,20 +9,15 @@ import {
 } from '../GLRenderer.js';
 
 import {
-    GeomDataShader
-} from '../Shaders/GeomDataShader.js';
-import {
     GLGeomItemSet
 } from '../GLGeomItemSet.js';
 
 class GLShaderMaterials {
-    constructor(glshader = undefined) {
+    constructor(glshader, glgeomdatashader, glselectedshader) {
         this.glshader = glshader;
+        this.glgeomdatashader = glgeomdatashader;
+        this.glselectedshader = glselectedshader;
         this.glmaterialGeomItemSets = [];
-    }
-
-    getGLShader() {
-        return this.glshader;
     }
 
     findMaterialGeomItemSets(glmaterial) {
@@ -124,13 +119,18 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
     addGeomItem(geomItem) {
         const material = geomItem.getMaterial();
-        const glshader = this.addShader(material);
+        let glshader, glgeomdatashader, glselectedshader;
+        glshader = this.__renderer.getOrCreateShader(material.getShaderName());
+        if (glshader.constructor.getGeomDataShaderName())
+            glgeomdatashader = this.__renderer.getOrCreateShader(glshader.constructor.getGeomDataShaderName());
+        if (glshader.constructor.getGeomDataShaderName())
+            glselectedshader = this.__renderer.getOrCreateShader(glshader.constructor.getSelectedShaderName());
         const glmaterial = this.addMaterial(material);
         const glgeomitem = super.addGeomItem(geomItem);
 
         let glshaderMaterials = this.__glshadermaterials[glshader.getName()];
         if (!glshaderMaterials) {
-            glshaderMaterials = new GLShaderMaterials(glshader);
+            glshaderMaterials = new GLShaderMaterials(glshader, glgeomdatashader, glselectedshader);
             this.__glshadermaterials[material.getShaderName()] = glshaderMaterials;
         }
 
@@ -167,7 +167,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         // for (let glshaderMaterials of this.__glshadermaterials) {
         for (let shaderName in this.__glshadermaterials) {
             const glshaderMaterials = this.__glshadermaterials[shaderName];
-            const glshader = glshaderMaterials.getGLShader();
+            const glshader = glshaderMaterials.glshader;
             if (this.bindShader(renderstate, glshader)) {
                 const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
                 for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
@@ -198,12 +198,13 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 
-        if (!this.bindShader(renderstate, this.__selectedGeomsShader))
-            return false;
-
         // for (let glshaderMaterials of this.__glshadermaterials) {
         for (let shaderName in this.__glshadermaterials) {
             const glshaderMaterials = this.__glshadermaterials[shaderName];
+            if (!glshaderMaterials.glselectedshader ||
+                !this.bindShader(renderstate, glshaderMaterials.glselectedshader))
+                return false;
+
             const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
             for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
                 const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
@@ -252,26 +253,26 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         gl.depthFunc(gl.LESS);
         gl.depthMask(true);
 
-        if (!this.bindShader(renderstate, this.__geomdatashader))
-            return false;
-
-        {
-            const unif = renderstate.unifs.floatGeomBuffer;
-            if (unif) {
-                gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0);
-            }
-        } {
-            const unif = renderstate.unifs.passId;
-            if (unif) {
-                gl.uniform1i(unif.location, this.__passIndex);
-            }
-        }
 
         // for (let glshaderMaterials of this.__glshadermaterials) {
         for (let shaderName in this.__glshadermaterials) {
             const glshaderMaterials = this.__glshadermaterials[shaderName];
-            if (glshaderMaterials.getGLShader().invisibleToGeomBuffer)
+            if (!glshaderMaterials.glgeomdatashader)
                 continue;
+            if (!this.bindShader(renderstate, glshaderMaterials.glgeomdatashader))
+                return false;
+
+            {
+                const unif = renderstate.unifs.floatGeomBuffer;
+                if (unif) {
+                    gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0);
+                }
+            } {
+                const unif = renderstate.unifs.passId;
+                if (unif) {
+                    gl.uniform1i(unif.location, this.__passIndex);
+                }
+            }
 
             const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
             for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {

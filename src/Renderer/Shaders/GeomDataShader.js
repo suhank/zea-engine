@@ -8,10 +8,10 @@ import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
-class GeomDataShader extends GLShader {
+class StandardSurfaceGeomDataShader extends GLShader {
     constructor(gl, floatGeomBuffer) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GeomDataShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardSurfaceGeomDataShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -38,7 +38,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('GeomDataShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardSurfaceGeomDataShader.fragmentShader', `
 precision highp float;
 
 varying vec3 v_viewPos;
@@ -184,8 +184,8 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('GeomDataShader', GeomDataShader);
+sgFactory.registerClass('StandardSurfaceGeomDataShader', StandardSurfaceGeomDataShader);
 
 export {
-    GeomDataShader
+    StandardSurfaceGeomDataShader
 };
