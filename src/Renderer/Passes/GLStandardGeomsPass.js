@@ -50,8 +50,6 @@ class GLStandardGeomsPass extends GLPass {
     constructor() {
         super();
 
-        this.__glShaders = {};
-
         this.__drawItems = [undefined];
         this.__drawItemsIndexFreeList = [];
 
@@ -62,9 +60,9 @@ class GLStandardGeomsPass extends GLPass {
 
     init(renderer, passIndex) {
         super.init(renderer, passIndex);
-
-        this.__geomdatashader = new GeomDataShader(renderer.gl);
-        this.__selectedGeomsShader = new SelectedGeomsShader(renderer.gl);
+    
+        this.__geomdatashader = this.__renderer.getOrCreateShader('GeomDataShader');
+        this.__selectedGeomsShader = this.__renderer.getOrCreateShader('SelectedGeomsShader');
 
         this.__renderer.registerPass(
             (treeItem) => {
@@ -119,18 +117,7 @@ class GLStandardGeomsPass extends GLPass {
     }
 
     addShader(material) {
-
-        let glshader = this.__glShaders[material.getShaderName()];
-        if (glshader) {
-            return glshader;
-        }
-        glshader = sgFactory.constructClass(material.getShaderName(), this.__gl);
-        if (!glshader)
-            return;
-
-        this.__glShaders[material.getShaderName()] = glshader;
-
-        return glshader;
+        return this.__renderer.getOrCreateShader(material.getShaderName());
     }
 
     addMaterial(material) {
@@ -139,7 +126,7 @@ class GLStandardGeomsPass extends GLPass {
         if (glmaterial) {
             return glmaterial;
         }
-        const glshader = this.__glShaders[material.getShaderName()];
+        const glshader = this.__renderer.getOrCreateShader(material.getShaderName());
         glmaterial = new GLMaterial(this.__gl, material, glshader);
         glmaterial.updated.connect(() => {
             this.__renderer.requestRedraw();
@@ -150,40 +137,6 @@ class GLStandardGeomsPass extends GLPass {
         material.setMetadata('glmaterial', glmaterial);
 
         return glmaterial;
-
-        /*
-        let glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
-        if (glmaterialGeomItemSets) {
-            return glmaterialGeomItemSets;
-        }
-
-        const glshaderMaterials = this.getShaderMaterials(material);
-        if (!glshaderMaterials)
-            return;
-
-        const gl = this.__gl;
-
-        const glmaterial = new GLMaterial(gl, material, glshaderMaterials.getGLShader());
-        glmaterial.updated.connect(() => {
-            this.__renderer.requestRedraw();
-        });
-
-        glmaterialGeomItemSets = new GLMaterialGeomItemSets(glmaterial);
-        glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets);
-
-        material.setMetadata('glmaterialGeomItemSets', glmaterialGeomItemSets);
-
-        material.shaderNameChanged.connect(() => {
-            glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
-            glshaderMaterials = this.getShaderMaterials(material);
-        });
-
-        material.destructing.connect(() => {
-            glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
-        });
-
-        return glmaterialGeomItemSets;
-        */
     };
 
     addGeom(geom) {

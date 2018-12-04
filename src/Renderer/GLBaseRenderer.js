@@ -2,6 +2,9 @@ import {
     Signal
 } from '../Utilities';
 import {
+    sgFactory
+} from '../SceneTree';
+import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
@@ -39,9 +42,6 @@ class GLBaseRenderer {
             return;
         }
 
-        this.__drawItems = [];
-        this.__drawItemsIndexFreeList = [];
-        this.__geoms = [];
         this.__shaders = {};
         this.__passes = {};
         this.__passCallbacks = [];
@@ -599,6 +599,17 @@ class GLBaseRenderer {
     /////////////////////////
     // Render Items setup
 
+    getOrCreateShader(shaderName) {
+        let glshader = this.__shaders[shaderName];
+        if(!glshader){
+            glshader = sgFactory.constructClass(shaderName, this.__gl);
+            if(!glshader)
+                throw("Sahder not registered with the SGFactory:", shaderName)
+            this.__shaders[shaderName] = glshader;;
+        }
+        return glshader;
+    }
+ 
     addPass(pass, passtype=0) {
 
         if(!this.__passes[passtype])

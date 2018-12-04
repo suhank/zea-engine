@@ -14,13 +14,7 @@ import {
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
     constructor() {
         super();
-
-        this.__glShaders = {};
-        this.__glMaterials = [];
-        this.__glGeoms = {};
-        this.__glGeomItems = [];
     }
-
 
     init(renderer, passIndex) {
         super.init(renderer, passIndex);

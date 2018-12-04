@@ -1,5 +1,8 @@
 import { shaderLibrary }  from '../ShaderLibrary';
 import { GLShader }  from '../GLShader.js';
+import {
+    sgFactory
+} from '../../SceneTree';
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
@@ -180,6 +183,8 @@ void main(void) {
 `);
     }
 };
+
+sgFactory.registerClass('GeomDataShader', GeomDataShader);
 
 export {
     GeomDataShader
