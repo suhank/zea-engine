@@ -72,7 +72,9 @@ class GLViewport extends GLBaseViewport {
 
         // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
-        // this.setCamera(new Camera('Default'));
+        // Each user has a separate camera, and so the default 
+        //  camera cannot be part of the scene. 
+        this.setCamera(new Camera('Default'));
         this.setManipulator(new CameraMouseAndKeyboard());
         this.__cameraManipulatorDragging = false;
 

@@ -171,10 +171,6 @@ class GLBaseRenderer {
         this.__scene = scene;
         this.__collector.addTreeItem(this.__scene.getRoot());
 
-        const camera = scene.getRoot().getChildByName('Camera')
-        if(camera && this.__viewports.length > 0)
-            this.__viewports[0].setCamera(camera)
-
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
 
