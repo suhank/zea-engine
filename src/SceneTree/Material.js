@@ -195,7 +195,7 @@ class Material extends BaseItem {
     // Parameters
 
     getParamTextures() {
-        let textures = {};
+        const textures = {};
         for (let param of this.__params) {
             if (param.getImage && param.getImage())
                 textures[param.getName()] = param.getImage();
@@ -212,13 +212,17 @@ class Material extends BaseItem {
 
 
     isTransparent() {
-        let opacity = this.getParameter('Opacity');
+        const opacity = this.getParameter('Opacity');
         if (opacity && (opacity.getValue() < 0.99 || opacity.getImage()))
             return true;
-        let baseColor = this.getParameter('BaseColor');
+        const baseColor = this.getParameter('BaseColor');
         if (baseColor && baseColor.getImage() && baseColor.getImage().format == 'RGBA')
             return true;
         return false;
+    }
+
+    getShaderClass() {
+       return sgFactory.getClass(this.getShaderName());
     }
 
     //////////////////////////////////////////

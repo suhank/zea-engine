@@ -323,6 +323,13 @@ void main(void) {
 
         return paramDescs;
     }
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
+    }
 };
 
 sgFactory.registerClass('LayeredCarPaintShader', LayeredCarPaintShader);

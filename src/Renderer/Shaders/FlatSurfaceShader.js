@@ -106,6 +106,13 @@ void main(void) {
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
         return paramDescs;
     }
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
+    }
 };
 
 sgFactory.registerClass('FlatSurfaceShader', FlatSurfaceShader);

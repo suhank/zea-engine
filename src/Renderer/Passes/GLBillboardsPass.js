@@ -10,7 +10,7 @@ import {
 } from '../Shaders/BillboardShader.js';
 import {
     GLPass, PassType
-} from '../GLPass.js';
+} from './GLPass.js';
 import {
     GLShader
 } from '../GLShader.js';
@@ -33,8 +33,8 @@ class GLBillboardsPass extends GLPass {
         super();
     }
     
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
 
         this.__billboards = [];
         this.__freeIndices = [];
@@ -42,20 +42,29 @@ class GLBillboardsPass extends GLPass {
         this.__threshold = 0.0;
         this.__updateRequested = false;
 
-        this.__collector.renderTreeUpdated.connect(()=> this.__updateBillboards());
-
         this.__prevSortCameraPos = new Vec3();
 
-        this.__atlas = new ImageAtlas(gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
+        this.__atlas = new ImageAtlas(this.__renderer.gl, 'Billboards', 'RGBA', 'UNSIGNED_BYTE', [1, 1, 1, 0]);
         this.__atlas.loaded.connect(this.updated.emit);
         this.__atlas.updated.connect(this.updated.emit);
 
-        collector.registerSceneItemFilter((treeItem, rargs)=>{
-            if(treeItem instanceof BillboardItem) {
-                this.addBillboard(treeItem);
-                return true;
+
+        this.__renderer.registerPass(
+            (treeItem) => {
+                if(treeItem instanceof BillboardItem) {
+                    this.addBillboard(treeItem);
+                    return true;
+                }
+                return false;
+            },
+            (treeItem) => {
+                if(treeItem instanceof BillboardItem) {
+                    this.removeBillboard(treeItem);
+                    return true;
+                }
+                return false;
             }
-        });
+        );
     }
 
     /////////////////////////////////////
@@ -178,7 +187,7 @@ class GLBillboardsPass extends GLPass {
                 gl.setupInstancedQuad();
             }
             this.__glshader = new BillboardShader(gl);
-            let shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', this.__collector.getRenderer().getShaderPreproc());
+            let shaderComp = this.__glshader.compileForTarget('GLBillboardsPass', this.__renderer.getShaderPreproc());
             this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
         }
 

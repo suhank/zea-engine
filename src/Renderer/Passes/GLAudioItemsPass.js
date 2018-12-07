@@ -4,7 +4,7 @@ import {
 import {
     GLPass,
     PassType
-} from '../GLPass.js';
+} from './GLPass.js';
 import {
     GLRenderer
 } from '../GLRenderer.js';
@@ -39,39 +39,44 @@ class GLAudioItemsPass extends GLPass {
     }
 
 
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
 
         if (!audioCtx)
             return;
 
-        collector.registerSceneItemFilter((treeItem, rargs) => {
-            if (treeItem instanceof AudioItem) {
-                treeItem.audioSourceCreated.connect((audioSource) => {
-                    this.addAudioSource(treeItem, audioSource, treeItem);
-                })
-                return true;
-            }
-            if (treeItem instanceof GeomItem) {
-                const material = treeItem.getMaterial();
-                if (material) {
-                    const baseColorParam = material.getParameter('BaseColor');
-                    if (baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
-                        const image = baseColorParam.getImage();
-                        image.loaded.connect(() => {
-                            if (image.getAudioSource) {
-                                const audioSource = image.getAudioSource();
-                                if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
-                                    this.addAudioSource(treeItem, audioSource, image);
-                            }
-                        })
-                    }
+        this.__renderer.registerPass(
+            (treeItem) => {
+                if (treeItem instanceof AudioItem) {
+                    treeItem.audioSourceCreated.connect((audioSource) => {
+                        this.addAudioSource(treeItem, audioSource, treeItem);
+                    })
+                    return true;
                 }
-                // Let other filters handle this item.
-                return false;
+                if (treeItem instanceof GeomItem) {
+                    const material = treeItem.getMaterial();
+                    if (material) {
+                        const baseColorParam = material.getParameter('BaseColor');
+                        if (baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
+                            const image = baseColorParam.getImage();
+                            image.loaded.connect(() => {
+                                if (image.getAudioSource) {
+                                    const audioSource = image.getAudioSource();
+                                    if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
+                                        this.addAudioSource(treeItem, audioSource, image);
+                                }
+                            })
+                        }
+                    }
+                    // Let other passes handle this item.
+                    return false;
+                }
+            },
+            (treeItem) => {
             }
-        });
+        );
     }
+
 
 
     addAudioSource(treeItem, audioSource, parameterOwner) {

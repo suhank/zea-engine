@@ -7,8 +7,6 @@ export * from './GLPoints.js';
 export * from './GLShader.js';
 export * from './GLFbo.js';
 export * from './GLRenderTarget.js';
-export * from './GLPass.js';
-export * from './GLCollector.js';
 export * from './GLRenderer.js';
 export * from './ShaderLibrary.js';
 export * from './GeomShaderBinding.js';

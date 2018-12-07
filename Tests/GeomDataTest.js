@@ -30,8 +30,8 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
 
     /////////////////////////////////////
     // Obj Asset
-    const asset = new Visualive.AssetItem('obj');
-    asset.getParameter('DataFilePath').setValue("/Assets/cow.obj");
+    const asset = new Visualive.ObjAsset('obj');
+    asset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
     asset.getParameter('splitObjects').setValue(false);
     asset.getParameter('splitGroupsIntoObjects').setValue(false);
     asset.getParameter('loadMtlFile').setValue(false);
@@ -56,13 +56,15 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
         locatorItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(locatorItem);
     }
-    scene.getRoot().mouseDown.connect((event, intersectionData)=>{
+    scene.getRoot().mouseDown.connect((event)=>{
+        const { intersectionData } = event;
         if(intersectionData.intersectionPos) {
             addLocator(intersectionData.intersectionPos);
             event.vleStopPropagation = true;
         }
     });
-    scene.getRoot().mouseMove.connect((event, intersectionData)=>{
+    scene.getRoot().mouseMove.connect((event)=>{
+        const { intersectionData } = event;
         if(intersectionData.dragging && intersectionData.intersectionPos) {
             addLocator(intersectionData.intersectionPos);
         }

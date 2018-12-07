@@ -132,11 +132,20 @@ void main(void) {
 `);
         this.finalize();
     }
+    
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
         paramDescs.push({ name: 'Opacity', defaultValue: 1.0 });
         return paramDescs;
+    }
+
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
     }
 };
 

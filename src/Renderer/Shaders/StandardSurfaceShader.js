@@ -293,6 +293,14 @@ void main(void) {
         paramDescs.push({ name: 'Reflectance', defaultValue: 0.1 } );
         return paramDescs;
     }
+
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
+    }
 };
 
 sgFactory.registerClass('StandardSurfaceShader', StandardSurfaceShader);
