@@ -272,7 +272,7 @@ class GLViewport extends GLBaseViewport {
             if (gl.floatGeomBuffer) {
                 geomData = new Float32Array(4);
                 gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
-                if (geomData[3] == 0)
+                if (Math.abs(Math.round(geomData[3])) == 0)
                     return undefined;
                 passId = Math.round(geomData[0]);
             } else {
@@ -284,7 +284,12 @@ class GLViewport extends GLBaseViewport {
                 passId = 0;
             }
             this.__geomDataBufferFbo.unbind();
-            const geomItemAndDist = this.__renderer.getPass(passId).getGeomItemAndDist(geomData);
+            const pass = this.__renderer.getPass(passId);
+            if(!pass){
+                console.warn("Geom data buffer returns invalid pass id:", passId);
+                return;
+            }
+            const geomItemAndDist = pass.getGeomItemAndDist(geomData);
 
             if (geomItemAndDist) {
                 if (!mouseRay)

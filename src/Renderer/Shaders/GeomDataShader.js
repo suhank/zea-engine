@@ -158,7 +158,7 @@ void main(void) {
     if(floatGeomBuffer != 0) {
         fragColor.r = float(passId); 
         fragColor.g = float(v_drawItemID);
-        fragColor.b = 0.0; // Note: some passes use this id. (e.g. GLCADPass)
+        fragColor.b = 0.0;// TODO: store poly-id or something.
         fragColor.a = dist;
     }
     else {

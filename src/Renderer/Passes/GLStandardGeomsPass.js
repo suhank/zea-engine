@@ -268,24 +268,24 @@ class GLStandardGeomsPass extends GLPass {
 
     //////////////////////////////////////////////////
     // Data Uploading
-    __populateTransformDataArray(glgeomItem, index, dataArray) {
+    __populateDrawItemDataArray(glgeomItem, index, dataArray) {
 
         const mat4 = glgeomItem.getGeomItem().getGeomXfo().toMat4();
         const lightmapCoordsOffset = glgeomItem.getGeomItem().getLightmapCoordsOffset();
 
         const stride = 16; // The number of floats per draw item.
         const offset = index * stride;
-        const col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
-        const col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
-        const col2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
-        const col3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
-        col0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
-        col1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
-        col2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
+        const pix0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
+        const pix1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
+        const pix2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
+        const pix3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
+        pix0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
+        pix1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
+        pix2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
 
         const materialId = 0;
         const geomId = 0;
-        col3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
+        pix3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
     };
 
     newItemsReadyForLoading() {
@@ -368,7 +368,7 @@ class GLStandardGeomsPass extends GLPass {
                 // and null this item in the array. skip over null items.
                 if (!glgeomItem)
                     continue;
-                this.__populateTransformDataArray(glgeomItem, j - indexStart, dataArray);
+                this.__populateDrawItemDataArray(glgeomItem, j - indexStart, dataArray);
             }
 
             if (typeId == gl.FLOAT) {
@@ -417,51 +417,6 @@ class GLStandardGeomsPass extends GLPass {
     bindMaterial(renderstate, glmaterial) {
         return glmaterial.bind(renderstate);
     }
-
-    // draw(renderstate) {
-    //     if (this.newItemsReadyForLoading())
-    //         this.finalize();
-
-    //     // for (let glshaderMaterials of this.__glshadermaterials) {
-    //     for (let shaderName in this.__glshadermaterials) {
-    //         const glshaderMaterials = this.__glshadermaterials[shaderName];
-    //         const glshader = glshaderMaterials.getGLShader();
-    //         if (this.bindShader(renderstate, glshader)) {
-    //             const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
-    //             for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
-    //                 if (glmaterialGeomItemSet.drawCount == 0)
-    //                     continue;
-    //                 if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())) {
-    //                     const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-    //                     for (let gldrawitemset of gldrawitemsets) {
-    //                         gldrawitemset.draw(renderstate);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //         glshader.unbind(renderstate);
-    //     }
-
-    //     if (renderstate.glgeom) {
-    //         renderstate.glgeom.unbind(renderstate);
-    //     }
-    // }
-
-    // drawSelectedGeoms(renderstate) {
-    //     if (this.newItemsReadyForLoading())
-    //         this.finalize();
-
-
-    //     super.drawSelectedGeoms(renderstate);
-    // }
-
-    // drawGeomData(renderstate) {
-    //     if (this.newItemsReadyForLoading())
-    //         this.finalize();
-
-    //     super.drawGeomData(renderstate);
-    // }
-
 };
 
 export {

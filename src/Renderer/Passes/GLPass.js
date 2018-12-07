@@ -38,9 +38,6 @@ class GLPass {
 
     stopPresenting() {}
 
-    /////////////////////////////////////
-    // Bind to Render Tree
-    getGeomItemAndDist() {}
 
     /////////////////////////////////////
     // Rendering
@@ -52,6 +49,7 @@ class GLPass {
 
     drawGeomData(renderstate) {}
 
+    getGeomItemAndDist(geomData) {}
 };
 
 export {
