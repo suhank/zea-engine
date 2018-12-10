@@ -111,7 +111,11 @@ class GLBaseRenderer {
                         this.__gl.setCompatibleXRDevice(device);
 
                         this.__setupVRViewport(device);
+                    }).catch((reason) => {
+                        console.warn("Unable to setup XR:" + reason);
                     });
+                }).catch((reason) => {
+                    console.warn("Unable to setup XR:" + reason);
                 });
                 // TODO:
                 // navigator.xr.addEventListener('devicechange', checkForXRSupport);
@@ -519,16 +523,20 @@ class GLBaseRenderer {
                 return;
             if (activeGLRenderer) {
                 this.onWheel(event);
-                event.preventDefault();
+                if(!window.addEventListener)
+                    event.preventDefault();
                 event.stopPropagation();
             }
             return false;
         }
         if (window.addEventListener)
         /** DOMMouseScroll is for mozilla. */
-            window.addEventListener('DOMMouseScroll', onWheel, false);
-        /** IE/Opera. */
-        window.onmousewheel = document.onmousewheel = onWheel;
+            window.addEventListener('wheel', onWheel, {passive: true});
+        else {
+            /** IE/Opera. */
+            window.onmousewheel = document.onmousewheel = onWheel;
+        }
+        
         
         window.oncontextmenu = function() {
             return false;
