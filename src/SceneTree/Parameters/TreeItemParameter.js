@@ -77,8 +77,10 @@ class TreeItemParameter extends Parameter {
             console.warn("Invalid Parameter JSON");
             return;
         }
-        context.resolvePath(j.value).then((treeItem)=>{
+        context.resolvePath(j.value, (treeItem)=>{
             this.setValue(treeItem);
+        }, (reason)=>{
+            console.warn("Unable to resolve tree item parameter value:" + pj.paramPath);
         });
         this.__flags |= ParamFlags.USER_EDITED;
     }

@@ -98,27 +98,31 @@ class AssetItem extends TreeItem {
         context.assetItem = this;
 
         const plcbs = []; // Post load callbacks.
-        context.resolvePath = (path)=>{
+        context.resolvePath = (path, cb)=>{
+            // Note: Why not return a Promise here?
+            // Promise evaluation is always async, so
+            // all promisses will be resovled after the curent call stack
+            // has terminated. In our case, we want all paths
+            // to be resolved before the end of the function, which
+            // we can handle easily with callback functions. 
             if(!path)
                 throw("Path not spcecified")
-            return new Promise((resolve, reject) => {
-                const item = this.resolvePath(path, 0);
-                if(item) {
-                    resolve(item);
-                }
-                else {
-                    // Some paths resolve to items generated during load,
-                    // so push a callback to re-try after the load is complete.
-                    plcbs.push(()=>{
-                        const param = this.resolvePath(path, 0);
-                        if(param)
-                            resolve(param);
-                        else {
-                            reject("Path unable to be resolved:" + path);
-                        }
-                    });
-                }
-            });
+            const item = this.resolvePath(path, 0);
+            if(item) {
+                cb(item);
+            }
+            else {
+                // Some paths resolve to items generated during load,
+                // so push a callback to re-try after the load is complete.
+                plcbs.push(()=>{
+                    const param = this.resolvePath(path, 0);
+                    if(param)
+                        cb(param);
+                    else {
+                        reject("Path unable to be resolved:" + path);
+                    }
+                });
+            }
         };
         context.addPLCB = plcb => plcbs.push(plcb)
 

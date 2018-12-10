@@ -106,9 +106,11 @@ class KinematicGroupParameter extends ListParameter {
         this.__flags |= ParamFlags.USER_EDITED;
 
         for(let i=0; i<j.treeItems.length; i++) {
-            context.resolvePath(j.treeItems[i]).then((treeItem)=>{
+            context.resolvePath(j.treeItems[i], (treeItem)=>{
                 this.__value.push(treeItem);
                 this.elementAdded.emit(treeItem, this.__value.length-1)
+            }, (reason)=>{
+                console.warn("Unable to resolve Kinematic Group Member:" + pj.paramPath);
             });
         }
     }

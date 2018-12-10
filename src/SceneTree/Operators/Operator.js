@@ -82,9 +82,9 @@ class OperatorOutput {
             // Note: the tree should have fully loaded by the time we are loading operators
             // even new items and groups should have been created. Operators and state machines 
             // are loaded last.
-            context.resolvePath(j.paramPath).then((param) => {
+            context.resolvePath(j.paramPath, (param) => {
                 this.setParam(param);
-            }).catch((reason) => {
+            }, (reason) => {
                 console.warn("Operator Output: '" + this.getName() + "'. Unable to load item:" + j.paramPath);
             });
         }

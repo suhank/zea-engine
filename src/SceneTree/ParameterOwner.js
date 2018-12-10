@@ -168,6 +168,7 @@ class ParameterOwner extends RefCounted {
         param.addRef(this);
         this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
         this.__params[index] = param;
+        return param;
     }
 
     // _removeAllParameters(){
@@ -220,8 +221,10 @@ class ParameterOwner extends RefCounted {
                     console.warn("Param not found:" + key);
                 else {
                     if(pj.paramPath){
-                        context.resolvePath(pj.paramPath).then((param)=>{
+                        context.resolvePath(pj.paramPath, (param)=>{
                             this.replaceParameter(param)
+                        }, (reason)=>{
+                            console.warn("Unable to resolve shared parameter:" + pj.paramPath);
                         });
                     }
                     else {

@@ -26,10 +26,6 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
-        // this.__initialXfoParam = this.addParameter(new XfoParameter('InitialXfo'));
-        // this.__initialXfoParam.valueChanged.connect(()=>{
-        //     this.__invInitialXfo = this.__initialXfoParam.getValue().inverse();
-        // })
         this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', ['first', 'average'], 0, 'Number'));
         this.__initialXfoModeParam.valueChanged.connect(()=>{
             this.recalcInitialXfo();
@@ -222,27 +218,14 @@ class Group extends TreeItem {
         let count = j.treeItems.length;
 
         const addItem = (path)=>{
-            // Note: we *should* be able to resolve these paths 
-            // asynchronously, but it causes the piston op to 
-            // behave strangely int eh e-tec 850 scene.
-            // While this solution is perfectly fine in our current demos
-            // It could break as soon as items are added to the scene
-            // and then added to a group that alraedy exists. 
-            // (the group JSON will load before the tree items it references.)
-            const treeItem = context.assetItem.resolvePath(path, 0);
-            this.addItem(treeItem);
-            count--;
-            if(count == 0)
-                this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
-
-            // context.resolvePath(path).then((treeItem)=>{
-            //     this.addItem(treeItem);
-            //     count--;
-            //     if(count == 0)
-            //         this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
-            // }).catch((reason) => {
-            //     console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path);
-            // });
+            context.resolvePath(path, (treeItem)=>{
+                this.addItem(treeItem);
+                count--;
+                if(count == 0)
+                    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
+            }, (reason) => {
+                console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path);
+            });
         }
         for(let path of j.treeItems) {
             addItem(path);
