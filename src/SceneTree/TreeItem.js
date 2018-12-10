@@ -33,6 +33,8 @@ const LOAD_FLAG_SKIP_CHILDREN = 1 << 0;
 const LOAD_FLAG_SKIP_MATERIALS = 1 << 2;
 const LOAD_FLAG_SKIP_GEOMETRIES = 1 << 3;
 
+const CLONE_FLAG_INSTANCED_TREE = 1 << 0;
+
 class TreeItem extends BaseItem {
     constructor(name) {
         super(name)
@@ -136,8 +138,13 @@ class TreeItem extends BaseItem {
 
     copyFrom(src, flags) {
         super.copyFrom(src, flags);
+
+        // Share a local Xfo
+        if(flags&CLONE_FLAG_INSTANCED_TREE)
+            this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
+
         for (let srcChildItem of src.getChildren())
-            this.addChild(srcChildItem.clone());
+            this.addChild(srcChildItem.clone(flags));
     }
 
     //////////////////////////////////////////
@@ -561,8 +568,10 @@ class TreeItem extends BaseItem {
                 return param;
             }
 
+            // Note: consuming code should generate errors if necssary. 
+            // In some cases, this _should_ return null and errors messages ares imply distracting.
             //report("Unable to resolve path '"+"/".join(path)+"' after:"+this.getName());
-            console.warn("Unable to resolve path :" + (path) + " after:" + this.getName() + "\nNo child, component or property called :" + path[index]);
+            // console.warn("Unable to resolve path :" + (path) + " after:" + this.getName() + "\nNo child, component or property called :" + path[index]);
             return null;
         }
         return childItem.resolvePath(path, index + 1);
@@ -783,7 +792,8 @@ export {
 
     LOAD_FLAG_SKIP_CHILDREN,
     LOAD_FLAG_SKIP_MATERIALS,
-    LOAD_FLAG_SKIP_GEOMETRIES
+    LOAD_FLAG_SKIP_GEOMETRIES,
+    CLONE_FLAG_INSTANCED_TREE
 };
 export {
     TreeItem

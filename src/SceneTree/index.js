@@ -18,6 +18,7 @@ export * from './Geometry';
 export * from './Images';
 
 export * from './TreeItem.js';
+export * from './InstanceItem.js';
 export * from './AudioItem.js';
 export * from './GeomItem.js';
 export * from './AssetItem.js';
