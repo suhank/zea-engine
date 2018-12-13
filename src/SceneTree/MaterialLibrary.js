@@ -157,18 +157,7 @@ class MaterialLibrary {
         if (numMaterials > 0) {
             let toc = reader.loadUInt32Array(numMaterials);
             for (let i = 0; i < numMaterials; i++) {
-                let shaderName = reader.loadStr();
-                let name = reader.loadStr();
-
-                if(shaderName == 'StandardMaterial'){
-                    shaderName = 'StandardSurfaceShader';
-                }
-                if(shaderName == 'TransparentMaterial'){
-                    shaderName = 'TransparentSurfaceShader';
-                }
-
-                // console.log("Material:" + name);
-                let material = new Material(name, shaderName);
+                let material = new Material("");
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, context, this.__images);
                 this.addMaterial(material);

@@ -17,6 +17,9 @@ export * from './StructParameter.js';
 export * from './TreeItemParameter.js';
 export * from './KinematicGroupParameter.js';
 
+export * from './MaterialFloatParam.js';
+export * from './MaterialColorParam.js';
+
 // Note: can't be imported, because ParameterOwner imports these Parameters
 // MaterialParameter imports MaterialLibraryManager which leads to circular imports
 // export * from './MaterialParameter.js';

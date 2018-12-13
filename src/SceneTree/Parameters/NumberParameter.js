@@ -81,9 +81,16 @@ class NumberParameter extends Parameter {
         if(j.step)
             this.__step = j.step;
     }
+
+    readBinary(reader, context) {
+        const value = reader.loadFloat32();
+        this.setValue(value, ValueSetMode.DATA_LOAD)
+    }
 };
 
 sgFactory.registerClass('NumberParameter', NumberParameter);
+sgFactory.registerClass('Property_SInt32', NumberParameter);
+sgFactory.registerClass('Property_UInt32', NumberParameter);
 
 export {
     NumberParameter

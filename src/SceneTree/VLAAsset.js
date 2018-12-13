@@ -141,7 +141,8 @@ class VLAAsset extends AssetItem {
       (entries) => {
         const treeData = entries[Object.keys(entries)[0]];
         numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, SystemDesc.isMobileDevice), {
-          assetItem: this
+          assetItem: this,
+          version: 0
         });
         resourceLoader.freeData(treeData.buffer);
 

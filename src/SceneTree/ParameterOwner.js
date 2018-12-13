@@ -11,6 +11,10 @@ import {
     RefCounted
 } from './RefCounted.js';
 
+import {
+    sgFactory
+} from './SGFactory.js';
+
 // Explicit impport of files to avoid importing all the parameter types.
 // Note: soon these imports should be removed, once all code avoids calling 
 // 'addPArameter' without the parameter instance.
@@ -237,6 +241,25 @@ class ParameterOwner extends RefCounted {
 
     readBinary(reader, context) {
         // TODO: make this work
+
+        if(context.version >= 3) {
+
+            const numProps = reader.loadUInt32();
+            for (let i = 0; i < numProps; i++) {
+                const propType = reader.loadStr();
+                const propName = reader.loadStr();
+                let param = this.getParameter(propName);
+                if (!param) {
+                    param = sgFactory.constructClass(propType, propName);
+                    if (!param) {
+                        console.error("Unable to construct prop:" + propName + " of type:" + propType);
+                        continue;
+                    }
+                    this.addParameter(param);
+                }
+                param.readBinary(reader, context);
+            }
+        }
     }
 
     toString() {

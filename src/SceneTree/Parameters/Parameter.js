@@ -247,6 +247,9 @@ class Parameter extends BaseParameter {
         }
     }
 
+    readBinary(reader, context) {
+        console.error("TODO")
+    }
 };
 
 
