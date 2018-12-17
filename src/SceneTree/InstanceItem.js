@@ -6,7 +6,7 @@ import {
 } from './Parameters';
 import {
     TreeItem,
-    CLONE_FLAG_INSTANCED_TREE
+    CloneFlags
 } from './TreeItem.js';
 import {
     loadTextfile
@@ -24,10 +24,10 @@ class InstanceItem extends TreeItem {
         this.__srcTree = treeItem;
 
         for(let i=0; i<this.__srcTree.getNumChildren(); i++) {
-            this.addChild(this.__srcTree.getChild(i).clone(CLONE_FLAG_INSTANCED_TREE))
+            this.addChild(this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
         }
         this.__srcTree.childAdded.connect((child)=>{
-            this.addChild(child.clone(CLONE_FLAG_INSTANCED_TREE))
+            this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
         })
     }
 

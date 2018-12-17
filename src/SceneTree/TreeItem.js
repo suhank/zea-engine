@@ -25,15 +25,19 @@ import {
 
 
 // Defines used to explicity specify types for WebGL.
-const SAVE_FLAG_SKIP_CHILDREN = 1 << 0;
-const SAVE_FLAG_SKIP_MATERIALS = 1 << 2;
-const SAVE_FLAG_SKIP_GEOMETRIES = 1 << 3;
+const SaveFlags = {
+    SAVE_FLAG_SKIP_CHILDREN: 1 << 0
+}
 
-const LOAD_FLAG_SKIP_CHILDREN = 1 << 0;
-const LOAD_FLAG_SKIP_MATERIALS = 1 << 2;
-const LOAD_FLAG_SKIP_GEOMETRIES = 1 << 3;
+const LoadFlags = {
+    // When loading the values of a bin tree, as opposed
+    // to loading a full json defined tree.
+    LOAD_FLAG_LOADING_BIN_TREE_VALUES: 1 << 4
+}
 
-const CLONE_FLAG_INSTANCED_TREE = 1 << 0;
+const CloneFlags = {
+    CLONE_FLAG_INSTANCED_TREE: 1 << 0
+}
 
 class TreeItem extends BaseItem {
     constructor(name) {
@@ -43,6 +47,7 @@ class TreeItem extends BaseItem {
         this.__selectable = true;
 
         this.__childItems = [];
+        this.__freeIndices = [];
 
         this.__components = [];
         this.__componentMapping = {};
@@ -140,11 +145,16 @@ class TreeItem extends BaseItem {
         super.copyFrom(src, flags);
 
         // Share a local Xfo
-        if(flags&CLONE_FLAG_INSTANCED_TREE)
+        if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE)
             this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
 
         for (let srcChildItem of src.getChildren())
             this.addChild(srcChildItem.clone(flags));
+        if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
+            src.childAdded.connect((childItem, index)=>{
+                this.addChild(childItem.clone(flags));
+            })
+        }
     }
 
     //////////////////////////////////////////
@@ -427,7 +437,12 @@ class TreeItem extends BaseItem {
     }
 
     addChild(childItem, maintainXfo = false, checkCollisions = true) {
-        const index = this.__childItems.length;
+        let index;
+        if(this.__freeIndices.length > 0)
+            index = this.__freeIndices.pop();
+        else {
+            index = this.__childItems.length;
+        }
         this.insertChild(childItem, index, maintainXfo, checkCollisions);
         return index;
     }
@@ -444,15 +459,22 @@ class TreeItem extends BaseItem {
         return null;
     }
 
+    getChildNames() {
+        const names = [];
+        for (let i=0; i<this.__childItems.length; i++) {
+            const childItem = this.__childItems[i];
+            if (childItem != null)
+                names[i] = childItem.getName();
+        }
+        return names;
+    }
+
     removeChild(index) {
         const childItem = this.__childItems[index];
-        this.__childItems.splice(index, 1);
+        this.__childItems[index] = null;
+        this.__freeIndices.push(index);
 
         childItem.setParentItem(undefined);
-
-        // childItem.boundingChanged.disconnect(this._setBoundingBoxDirty);
-        // childItem.visibilityChanged.disconnect(this._setBoundingBoxDirty);
-        // childItem.flagsChanged.disconnect(this._childFlagsChanged);
 
         this.childRemoved.emit(childItem, index);
 
@@ -638,7 +660,7 @@ class TreeItem extends BaseItem {
 
         // Some Items, such as the SliderSceneWidget do not need thier children
         // to be saved.
-        if(!(flags&SAVE_FLAG_SKIP_CHILDREN)) {
+        if(!(flags&SaveFlags.SAVE_FLAG_SKIP_CHILDREN)) {
             const childItemsJSON = {};
             for (let childItem of this.__childItems) {
                 const childJSON = childItem.toJSON(context, flags);
@@ -702,19 +724,29 @@ class TreeItem extends BaseItem {
                     if (childItem) {
                         childItem.fromJSON(childJson, context);
                     } else if (childJson.type) {
-                        childItem = sgFactory.constructClass(childJson.type);
-                        if (childItem) {
-                            // Note: we add the chile now before loading. 
-                            // This is because certain items. (e.g. Groups)
-                            // Calculate thier global Xfo, and use it to modify 
-                            // the transform of thier members.
-                            // Note: Groups bind to items in the scene which are
-                            // already added as children, and so have global Xfos.
-                            // We prefer to add a child afer its loaded, because sometimes
-                            // In the tree is asset items, who will only toggled as
-                            // unloaded once they are loaed(else they are considered inline assets.)
-                            childItem.fromJSON(childJson, context);
-                            this.addChild(childItem, false, false);
+                        // Note: When loading a bin tree,
+                        // we will not generate new tree items
+                        // as this can be confusing. Also, if the bin tree
+                        // structure changes, we don't want the json tree
+                        // to re-instate ghost tree items. (as has happened in testing.)
+                        if(flags& LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES){
+                            console.warn("Child not found:", childName, " of ", this.getChildNames())
+                        }
+                        else {
+                            childItem = sgFactory.constructClass(childJson.type);
+                            if (childItem) {
+                                // Note: we add the child now before loading. 
+                                // This is because certain items. (e.g. Groups)
+                                // Calculate thier global Xfo, and use it to modify 
+                                // the transform of thier members.
+                                // Note: Groups bind to items in the scene which are
+                                // already added as children, and so have global Xfos.
+                                // We prefer to add a child afer its loaded, because sometimes
+                                // In the tree is asset items, who will only toggled as
+                                // unloaded once they are loaded(else they are considered inline assets.)
+                                childItem.fromJSON(childJson, context);
+                                this.addChild(childItem, false, false);
+                            }
                         }
                     } else {
                         console.warn("Warning loading JSON. Child not found:" + childName);
@@ -786,14 +818,9 @@ class TreeItem extends BaseItem {
 sgFactory.registerClass('TreeItem', TreeItem);
 
 export {
-    SAVE_FLAG_SKIP_CHILDREN,
-    SAVE_FLAG_SKIP_MATERIALS,
-    SAVE_FLAG_SKIP_GEOMETRIES,
-
-    LOAD_FLAG_SKIP_CHILDREN,
-    LOAD_FLAG_SKIP_MATERIALS,
-    LOAD_FLAG_SKIP_GEOMETRIES,
-    CLONE_FLAG_INSTANCED_TREE
+    SaveFlags, 
+    LoadFlags,
+    CloneFlags
 };
 export {
     TreeItem

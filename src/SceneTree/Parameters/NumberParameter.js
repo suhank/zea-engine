@@ -91,6 +91,7 @@ class NumberParameter extends Parameter {
 sgFactory.registerClass('NumberParameter', NumberParameter);
 sgFactory.registerClass('Property_SInt32', NumberParameter);
 sgFactory.registerClass('Property_UInt32', NumberParameter);
+sgFactory.registerClass('Property_Float32', NumberParameter);
 
 export {
     NumberParameter
