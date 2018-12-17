@@ -140,6 +140,10 @@ class MaterialLibrary {
 
 
     readBinary(reader, context={}) {
+
+        if(context.version == undefined)
+          context.version = 0;
+      
         this.name = reader.loadStr();
 
         // Specify the Lod to load the images in this library.

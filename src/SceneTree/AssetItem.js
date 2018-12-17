@@ -65,6 +65,8 @@ class AssetItem extends TreeItem {
         context.assetItem = this;
         context.numTreeItems = 0;
         context.numGeomItems = 0;
+        if(context.version == undefined)
+          context.version = 0;
         super.readBinary(reader, context);
 
         // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
@@ -94,6 +96,8 @@ class AssetItem extends TreeItem {
         context.assetItem = this;
         context.numTreeItems = 0;
         context.numGeomItems = 0;
+        if(context.version == undefined)
+          context.version = 0;
 
         context.assetItem = this;
 
