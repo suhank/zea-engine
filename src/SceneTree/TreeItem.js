@@ -39,6 +39,7 @@ const CloneFlags = {
     CLONE_FLAG_INSTANCED_TREE: 1 << 0
 }
 
+
 class TreeItem extends BaseItem {
     constructor(name) {
         super(name)
@@ -58,10 +59,8 @@ class TreeItem extends BaseItem {
         this.componentRemoved = new Signal();
 
         this.mouseDown = new Signal();
-        this.mouseUp = new Signal();
-        this.mouseMove = new Signal();
-
-        this.treeItemGlobalXfoChanged = new Signal();
+        // this.mouseUp = new Signal();
+        // this.mouseMove = new Signal();
 
         ///////////////////////////////////////
         // Add parameters.
@@ -90,8 +89,6 @@ class TreeItem extends BaseItem {
         this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
         this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this);
         this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
-        // this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
-        // this._childFlagsChanged = this._childFlagsChanged.bind(this);
 
         this.__localXfoParam.valueChanged.connect(()=>{
             this._setGlobalXfoDirty();
@@ -145,16 +142,21 @@ class TreeItem extends BaseItem {
         super.copyFrom(src, flags);
 
         // Share a local Xfo
-        if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-            this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
+        // Note: disabled for now.
+        // When cloning instanced trees, the root item should 
+        // have a unique LocalXfoParam, as it must be re-set. 
+        // (The root of the tree is a cloned and attached to an Instance node that provides the transform)
+        
+        // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+        //     this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
 
         for (let srcChildItem of src.getChildren())
             this.addChild(srcChildItem.clone(flags));
-        if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
-            src.childAdded.connect((childItem, index)=>{
-                this.addChild(childItem.clone(flags));
-            })
-        }
+        // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
+        //     src.childAdded.connect((childItem, index)=>{
+        //         this.addChild(childItem.clone(flags));
+        //     })
+        // }
     }
 
     //////////////////////////////////////////
@@ -425,10 +427,6 @@ class TreeItem extends BaseItem {
         childItem.setInheritedVisiblity(this.getVisible());
         childItem.setSelectable(this.getSelectable(), true);
 
-        // childItem.boundingChanged.connect(this._setBoundingBoxDirty);
-        // childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
-        // childItem.flagsChanged.connect(this._childFlagsChanged);
-
         this._setBoundingBoxDirty();
         this.childAdded.emit(childItem, index);
 
@@ -554,10 +552,15 @@ class TreeItem extends BaseItem {
         if (typeof path == 'string')
             path = path.split('/');
 
-        if (path[index] == '.')
-            index++;
-        else if (path[index] == '..') {
-            return this.__ownerItem.resolvePath(path, index + 1);
+        if(index == 0) {
+            if (path[0] == '.' || path[0] == this.__name)
+                index++;
+            else if (path[0] == '..') {
+                return this.__ownerItem.resolvePath(path, index + 1);
+            }
+            else {
+                console.warn("Paths should start with the name of the root item or '.'")
+            }
         }
 
         if (index == path.length) {
@@ -626,21 +629,21 @@ class TreeItem extends BaseItem {
         return event.vleStopPropagation;
     }
 
-    onMouseUp(event) {
-        this.mouseUp.emit(event);
-        if(event.vleStopPropagation !== true && this.__ownerItem){
-            this.__ownerItem.onMouseUp(event)
-        }
-        return event.vleStopPropagation;
-    }
+    // onMouseUp(event) {
+    //     this.mouseUp.emit(event);
+    //     if(event.vleStopPropagation !== true && this.__ownerItem){
+    //         this.__ownerItem.onMouseUp(event)
+    //     }
+    //     return event.vleStopPropagation;
+    // }
 
-    onMouseMove(event) {
-        this.mouseMove.emit(event);
-        if(event.vleStopPropagation !== true && this.__ownerItem){
-            this.__ownerItem.onMouseMove(event)
-        }
-        return event.vleStopPropagation;
-    }
+    // onMouseMove(event) {
+    //     this.mouseMove.emit(event);
+    //     if(event.vleStopPropagation !== true && this.__ownerItem){
+    //         this.__ownerItem.onMouseMove(event)
+    //     }
+    //     return event.vleStopPropagation;
+    // }
 
     //////////////////////////////////////////
     // Persistence
@@ -707,7 +710,7 @@ class TreeItem extends BaseItem {
                         childItem.fromJSON(childJson, context, flags);
                     } else {
                         if(flags & LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES){
-                            console.warn("Child not found:", childName, " within ", this.getChildNames() + " of:" + this.getPath())
+                            console.warn("Child not found:", childName, " within ", this.getNumChildren() + " of:" + this.getPath())
                         }
                         else if (childJson.type) {
                             childItem = sgFactory.constructClass(childJson.type);
@@ -733,7 +736,7 @@ class TreeItem extends BaseItem {
                         // structure changes, we don't want the json tree
                         // to re-instate ghost tree items. (as has happened in testing.)
                         if(flags& LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES){
-                            console.warn("Child not found:", childName, " of ", this.getChildNames())
+                            console.warn("Child not found:", childName, " of ", this.getNumChildren())
                         }
                         else {
                             childItem = sgFactory.constructClass(childJson.type);

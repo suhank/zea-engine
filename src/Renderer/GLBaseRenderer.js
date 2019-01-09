@@ -79,7 +79,6 @@ class GLBaseRenderer {
         // simply emit the new VR data.
         this.viewChanged = new Signal();
         this.redrawOccured = new Signal();
-        this.treeItemGlobalXfoChanged = new Signal();
 
         this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {});
         
@@ -262,8 +261,6 @@ class GLBaseRenderer {
 
         if (this.__gizmoContext)
             this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
-
-        this.__scene.getRoot().treeItemGlobalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
         
         this.sceneSet.emit(this.__scene);
     }

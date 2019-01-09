@@ -83,8 +83,8 @@ class Group extends TreeItem {
         });
 
         this.mouseDownOnItem = new Signal();
-        this.mouseUpOnItem = new Signal();
-        this.mouseMoveOnItem = new Signal();
+        // this.mouseUpOnItem = new Signal();
+        // this.mouseMoveOnItem = new Signal();
 
 
     }
@@ -131,14 +131,14 @@ class Group extends TreeItem {
             this.mouseDown.emit(event);
             this.mouseDownOnItem.emit(event, item);
         });
-        item.mouseUp.connect((event)=>{
-            this.mouseUp.emit(event);
-            this.mouseUpOnItem.emit(event, item);
-        });
-        item.mouseMove.connect((event)=>{
-            this.mouseMove.emit(event);
-            this.mouseMoveOnItem.emit(event, item);
-        });
+        // item.mouseUp.connect((event)=>{
+        //     this.mouseUp.emit(event);
+        //     this.mouseUpOnItem.emit(event, item);
+        // });
+        // item.mouseMove.connect((event)=>{
+        //     this.mouseMove.emit(event);
+        //     this.mouseMoveOnItem.emit(event, item);
+        // });
         item.globalXfoChanged.connect((mode)=>{
             if(mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
                 this.__initialXfos[index] = item.getGlobalXfo();

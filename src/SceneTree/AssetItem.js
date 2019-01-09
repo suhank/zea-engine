@@ -111,7 +111,7 @@ class AssetItem extends TreeItem {
             // we can handle easily with callback functions. 
             if(!path)
                 throw("Path not spcecified")
-            const item = this.resolvePath(path, 0);
+            const item = this.resolvePath(path);
             if(item) {
                 cb(item);
             }
@@ -119,7 +119,7 @@ class AssetItem extends TreeItem {
                 // Some paths resolve to items generated during load,
                 // so push a callback to re-try after the load is complete.
                 plcbs.push(()=>{
-                    const param = this.resolvePath(path, 0);
+                    const param = this.resolvePath(path);
                     if(param)
                         cb(param);
                     else {

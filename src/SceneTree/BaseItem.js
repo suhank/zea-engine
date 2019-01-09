@@ -22,6 +22,7 @@ const ItemFlags = {
     USER_EDITED: 1<<1,
     IGNORE_BBOX: 1<<2
 };
+let numBaseItems = 0;
 
 class BaseItem extends ParameterOwner {
     constructor(name) {
@@ -33,17 +34,18 @@ class BaseItem extends ParameterOwner {
         this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
         this.__flags = 0;
 
-        this.__metaData = new Map();
+        this.__metaData = {};
 
         this.nameChanged = new Signal();
-        this.ownerChanged = new Signal();
-        this.flagsChanged = new Signal();
+        // this.flagsChanged = new Signal();
 
         this.parameterValueChanged.connect((param, mode) => {
             if(mode==ValueSetMode.USER_SETVALUE){
                 this.setFlag(ItemFlags.USER_EDITED);
             }
         });
+
+        numBaseItems++;
     }
 
     destroy() {
@@ -90,7 +92,7 @@ class BaseItem extends ParameterOwner {
 
     setFlag(flag) {
         this.__flags |= flag;
-        this.flagsChanged.emit(this.__flags);
+        // this.flagsChanged.emit(this.__flags);
     }
 
     testFlag(flag) {
@@ -136,9 +138,7 @@ class BaseItem extends ParameterOwner {
             if(this.__ownerItem){
                 this.addRef(this.__ownerItem);
             }
-            this.__updatePath();
-            // Notify:
-            this.ownerChanged.emit();
+            // this.__updatePath();
         }
     }
 
@@ -146,19 +146,19 @@ class BaseItem extends ParameterOwner {
     // Metadata
 
     getMetadata(key) {
-        return this.__metaData.get(key)
+        return this.__metaData[key]
     }
 
     hasMetadata(key) {
-        return this.__metaData.has(key)
+        return key in this.__metaData
     }
 
     setMetadata(key, metaData) {
-        this.__metaData.set(key, metaData);
+        this.__metaData[key] = metaData;
     }
 
     deleteMetadata(key) {
-        this.__metaData.delete(key);
+        delete this.__metaData[key];
     }
 
 
@@ -196,6 +196,10 @@ class BaseItem extends ParameterOwner {
 
     toString() {
         return JSON.stringify(this.toJSON(), null, 2)
+    }
+
+    getNumBaseItems(){
+        return numBaseItems
     }
 };
 
