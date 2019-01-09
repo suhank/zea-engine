@@ -2,31 +2,36 @@
 
 const count = 2000000
 
+function m_log(txt) {
+  document.body.appendChild(document.createTextNode(txt));
+  document.body.appendChild(document.createElement('br'));
+} 
+
 testingHarness.registerTest('MemoryTest_SignalsArray', (domElement, resources) => {
   const start = performance.now();
-  window.data = [];
+  let data = [];
   for(let i=0; i<count; i++) {
-    window.data.push(new Visualive.Signal());
+    data.push(new Visualive.Signal());
   }
-  document.body.appendChild(document.createTextNode("Done 'MemoryTest_SignalsArray':" + (performance.now() - start)));
+  m_log("Done 'MemoryTest_SignalsArray':" + (performance.now() - start));
   // Results: Chrome spikes to 1.44 Gigs of Ram. Settling down to 1.42 Gigs after a minute.
   // Takes ~660 Ms.
 });
 
 testingHarness.registerTest('MemoryTest_XfosArray', (domElement, resources) => {
   const start = performance.now();
-  window.data = [];
+  let data = [];
   for(let i=0; i<count; i++) {
-    window.data.push(new Visualive.Xfo(new Visualive.Vec3(i, i * 0.2, i * 0.4)));
+    data.push(new Visualive.Xfo(new Visualive.Vec3(i, i * 0.2, i * 0.4)));
   }
-  document.body.appendChild(document.createTextNode("Done 'MemoryTest_XfosArray':" + (performance.now() - start)));
+  m_log("Done 'MemoryTest_XfosArray':" + (performance.now() - start));
   // Results: Chrome spikes to 2.43 Gigs of Ram. Settling down to 2.33Gigs after a minute.
   // Takes ~1915 Ms.
 });
 
 testingHarness.registerTest('MemoryTest_Float32Arrays', (domElement, resources) => {
   const start = performance.now();
-  window.data = [];
+  let data = [];
   for(let i=0; i<count; i++) {
     const array = new Float32Array(10);
 
@@ -34,9 +39,9 @@ testingHarness.registerTest('MemoryTest_Float32Arrays', (domElement, resources) 
     const tr = new Visualive.Vec3(array.buffer, 28);
     tr.set(i, i * 0.2, i * 0.4);
 
-    window.data.push(array);
+    data.push(array);
   }
-  document.body.appendChild(document.createTextNode("Done 'MemoryTest_Float32Arrays':" + (performance.now() - start)));
+  m_log("Done 'MemoryTest_Float32Arrays':" + (performance.now() - start));
   // Results: Chrome spikes to 1.55 Gigs of Ram. Settling down to 1.45 Gigs after a minute.
   // Takes ~2200 Ms.
 });
@@ -45,7 +50,7 @@ testingHarness.registerTest('MemoryTest_Float32Arrays', (domElement, resources) 
 
 testingHarness.registerTest('MemoryTest_Float32Arrays_ReuseClasses', (domElement, resources) => {
   const start = performance.now();
-  window.data = [];
+  let data = [];
   const tr = new Visualive.Vec3();
   for(let i=0; i<count; i++) {
     const array = new Float32Array(10);
@@ -56,9 +61,9 @@ testingHarness.registerTest('MemoryTest_Float32Arrays_ReuseClasses', (domElement
 
     // const tr = new Float32Array(array.buffer, 28, 3);
     // tr[0] = i; tr[1] = i * 0.2; tr[2] = i * 0.4;
-    window.data.push(array);
+    data.push(array);
   }
-  document.body.appendChild(document.createTextNode("Done 'MemoryTest_Float32Arrays_ReuseClasses':" + (performance.now() - start)));
+  m_log("Done 'MemoryTest_Float32Arrays_ReuseClasses':" + (performance.now() - start));
   // Results: Chrome spikes to 1.32 Gigs of Ram. Settling down to 1.3Gigs after a minute.
   // Takes ~528 Ms.
 });
@@ -67,23 +72,40 @@ testingHarness.registerTest('MemoryTest_Float32Arrays_ReuseClasses', (domElement
 testingHarness.registerTest('MemoryTest_Float32ArraysContiguous', (domElement, resources) => {
   const start = performance.now();
   window.data = new Float32Array(10 * count);
-  document.body.appendChild(document.createTextNode("Done 'MemoryTest_Float32ArraysContiguous':" + (performance.now() - start)));
+  m_log("Done 'MemoryTest_Float32ArraysContiguous':" + (performance.now() - start));
   // Results: Chrome spikes to 1.09 Gigs of Ram. Settling down to 1.02Gigs after a minute.
   // Takes ~11 Ms.
 });
 
 testingHarness.registerTest('MemoryTest_GeomItemsArray', (domElement, resources) => {
+
   const start = performance.now();
-  window.data = [];
+  let data = [];
   const rootItem = new Visualive.TreeItem();
 
   const count = 50000
-  // rootItem.__freeOwnerIndices.push(rootItem.addOwnerIndex(0));
-  // rootItem.__addPathIndex(0);
+  const times = new Float32Array(count);
+  let tmp, t1, t0 = performance.now();
+  let total = 0;
+
   for(let i=0; i<count; i++) {
-    rootItem.addChild(new Visualive.GeomItem("Geom"+i))
+    rootItem.addChild(new Visualive.GeomItem("Geom"+i));
+
+
+    tmp = t1;
+    t1 = performance.now();
+    times[total] = t1 - tmp;
+    total++;
   }
-  document.body.appendChild(document.createTextNode("Done 'MemoryTest_GeomItemsArray':" + (performance.now() - start)));
+  m_log("Done 'MemoryTest_GeomItemsArray':" + (performance.now() - start));
+
+  let index = 0
+  for(let i=0; i<count0; i++) {
+    for(let j=0; j<count; j+=(count/10)) {
+      m_log(`${i}.${j}:${times[index]}`);
+      index++;
+    }
+  }
 
   // == Pre-multiple Inheritance ==
   //  Results: Chrome spikes to ~ 4 Gigs of Ram. Settling down to 3.0 Gigs after a minute.
