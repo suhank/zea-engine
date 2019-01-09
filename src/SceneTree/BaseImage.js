@@ -68,21 +68,6 @@ class BaseImage extends BaseItem {
         }
     }
 
-    //////////////////////////////////////////
-    // Metadata
-
-    getMetadata(key) {
-        return this.__metaData.get(key)
-    }
-
-    hasMetadata(key) {
-        return this.__metaData.has(key)
-    }
-
-    setMetadata(key, metaData) {
-        this.__metaData.set(key, metaData);
-    }
-
 };
 
 export {

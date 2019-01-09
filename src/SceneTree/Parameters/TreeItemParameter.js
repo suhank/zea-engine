@@ -36,20 +36,16 @@ class TreeItemParameter extends Parameter {
         return this.__filterFn;
     }
 
-    __treeItemGlobalXfoChanged(mode){
-        this.treeItemGlobalXfoChanged.emit(mode);
-    }
-
     setValue(treeItem, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
         if(this.__value !== treeItem){
             if(this.__value){
-                this.__value.globalXfoChanged.disconnect(this.__treeItemGlobalXfoChanged.bind(this));
+                this.__value.globalXfoChanged.disconnect(this.treeItemGlobalXfoChanged.emit);
                 this.__value.removeRef(this);
             }
             this.__value = treeItem;
             if(this.__value){
                 this.__value.addRef(this);
-                this.__value.globalXfoChanged.connect(this.__treeItemGlobalXfoChanged.bind(this));
+                this.__value.globalXfoChanged.connect(this.treeItemGlobalXfoChanged.emit);
             }
             if(mode == ValueSetMode.USER_SETVALUE)
                 this.__flags |= ParamFlags.USER_EDITED;
