@@ -1,9 +1,9 @@
-let getFileFolder = function(filePath) {
+const getFileFolder = function(filePath) {
     return filePath.substring(0, filePath.lastIndexOf("/")) + '/';
 }
 
-let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
-    let xhr = new XMLHttpRequest();
+const loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
+    const xhr = new XMLHttpRequest();
     xhr.responseType = responseType;
     try {
         xhr.addEventListener("timeout", function(event) {
@@ -33,7 +33,7 @@ let loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
 }
 
 
-let loadTextfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+const loadTextfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
     loadfile(url, 'text',
         (xhr) => {
             onSucceed(xhr.responseText);
@@ -51,7 +51,7 @@ let loadTextfile = function(url, onSucceed, onFail = undefined, onProgress = und
         });
 }
 
-let loadJSONfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+const loadJSONfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
     loadfile(url, 'json',
         (xhr) => {
             onSucceed(xhr.response, xhr);
@@ -69,7 +69,26 @@ let loadJSONfile = function(url, onSucceed, onFail = undefined, onProgress = und
         });
 }
 
-let loadBinfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+const loadXMLfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
+    loadfile(url, 'document',
+        (xhr) => {
+            onSucceed(xhr.responseXML);
+        },
+        (statusText) => {
+            if (onFail != undefined)
+                onFail(statusText);
+            else {
+                throw("Unable to XHR File:" + url);
+            }
+        },
+        (total, loaded) => {
+            if (onProgress != undefined)
+                onProgress(total, loaded);
+        });
+}
+
+
+const loadBinfile = function(url, onSucceed, onFail = undefined, onProgress = undefined) {
     loadfile(url, 'arraybuffer',
         (xhr) => {
             onSucceed(xhr.response);
@@ -88,9 +107,11 @@ let loadBinfile = function(url, onSucceed, onFail = undefined, onProgress = unde
 }
 
 
+
 export {
     getFileFolder,
     loadTextfile,
     loadJSONfile,
+    loadXMLfile,
     loadBinfile
 };

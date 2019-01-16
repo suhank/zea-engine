@@ -138,7 +138,7 @@ class BaseItem extends ParameterOwner {
             if(this.__ownerItem){
                 this.addRef(this.__ownerItem);
             }
-            // this.__updatePath();
+            this.__updatePath();
         }
     }
 

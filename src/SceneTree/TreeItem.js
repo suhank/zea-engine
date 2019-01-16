@@ -603,7 +603,8 @@ class TreeItem extends BaseItem {
     }
 
     // Traverse the tree structure from this point down
-    // and fire the callback for each visited item
+    // and fire the callback for each visited item.
+    // Note: depth only used by selection sets for now.
     traverse(callback) {
         const __c = (treeItem) => {
             const children = treeItem.getChildren();
@@ -616,7 +617,7 @@ class TreeItem extends BaseItem {
                 return false;
             __c(treeItem);
         }
-        __c(this);
+        __t(this, 0);
     }
     /////////////////////////
     // Events

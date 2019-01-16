@@ -32,9 +32,6 @@ import {
     GeomItem
 } from './GeomItem.js';
 import {
-    SelectionSetsRoot
-} from './SelectionSet.js';
-import {
     resourceLoader
 } from './ResourceLoader.js';
 import {
@@ -84,7 +81,6 @@ class Scene {
         this.assetRemoved = new Signal();
 
 
-        this.selectionSets = new SelectionSetsRoot(this.__root);
     }
 
     getRoot() {

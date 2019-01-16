@@ -26,7 +26,6 @@ export * from './BillboardItem.js';
 export * from './Camera.js';
 
 export * from './Group.js';
-export * from './SelectionSet.js';
 
 export * from './GeomLibrary.js';
 export * from './Material.js';
@@ -44,3 +43,4 @@ export * from './Operators';
 
 export * from './Tools';
 export * from './Manipulators';
+

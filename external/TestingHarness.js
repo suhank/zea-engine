@@ -1,5 +1,11 @@
 
 
+
+function log(txt) {
+  document.body.appendChild(document.createTextNode(txt));
+  document.body.appendChild(document.createElement('br'));
+} 
+
 class TestingHarness {
 
     constructor() {
