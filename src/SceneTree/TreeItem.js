@@ -111,8 +111,8 @@ class TreeItem extends BaseItem {
 
 
         this.__visibleParam.valueChanged.connect((mode)=>{
-            // Make sure our own visibility change notificaiton goes out
-            // before the children.
+            // Make sure our own visibility change notification goes out
+            // before the children.(Need a reason for this... I think it has to do with undos.)
             setTimeout(()=> {
                 const visibile = this.getVisible();
                 for (let childItem of this.__childItems)
