@@ -79,6 +79,8 @@ class Scene {
         this.lightmapAdded = new Signal();
         this.assetAdded = new Signal();
         this.assetRemoved = new Signal();
+
+
     }
 
     getRoot() {
@@ -134,6 +136,24 @@ class Scene {
 
     getCamera(index = 0) {
         return this.cameras[index];
+    }
+
+    //////////////////////////////////
+    // Paths
+    resolvePath(path, index = 0) {
+
+        if (typeof path == 'string')
+            path = path.split('/');
+
+        if (path[index] == '.')
+            index++;
+
+        if(path[index] == 'root') {
+            return this.__root.resolvePath(path, index+1);
+        }
+        else if(path[index] == 'selectionSets') {
+            return this.__root.resolvePath(path, index+1);
+        }
     }
 
     //////////////////////////////////
@@ -247,7 +267,6 @@ class Scene {
     }
 };
 
-// export default Scene;
 export {
     Scene
 };

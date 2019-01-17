@@ -77,6 +77,7 @@ class ParameterOwner extends RefCounted {
     numParameters() {
         return this.__params.length;
     }
+
     getParameters() {
         return this.__params;
     }
@@ -94,7 +95,10 @@ class ParameterOwner extends RefCounted {
     }
 
     getParameter(paramName) {
-        return this.__params[this.__paramMapping[paramName]];
+        const index = this.__paramMapping[paramName];
+        if(index == -1)
+            return null;
+        return this.__params[index];
     }
 
     addParameter(paramName, defaultValue) {

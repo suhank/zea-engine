@@ -21,9 +21,6 @@ import {
     Signal
 } from '../Utilities';
 import {
-    TreeItem
-} from './TreeItem';
-import {
     sgFactory
 } from './SGFactory.js';
 
@@ -32,7 +29,11 @@ import {
     LOADFLAGS_SKIP_GEOMETRIES
 } from './TreeItem.js';
 
-class GeomItem extends TreeItem {
+import {
+    BaseGeomItem
+} from './BaseGeomItem.js';
+
+class GeomItem extends BaseGeomItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 

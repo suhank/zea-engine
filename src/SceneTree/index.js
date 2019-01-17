@@ -20,6 +20,7 @@ export * from './Images';
 export * from './TreeItem.js';
 export * from './InstanceItem.js';
 export * from './AudioItem.js';
+export * from './BaseGeomItem.js';
 export * from './GeomItem.js';
 export * from './AssetItem.js';
 export * from './BillboardItem.js';
@@ -43,3 +44,4 @@ export * from './Operators';
 
 export * from './Tools';
 export * from './Manipulators';
+
