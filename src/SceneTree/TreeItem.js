@@ -710,15 +710,18 @@ class TreeItem extends BaseItem {
                     if (childItem) {
                         childItem.fromJSON(childJson, context, flags);
                     } else {
-                        if(flags & LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES){
-                            console.warn("Child not found:", childName, " within ", this.getNumChildren() + " of:" + this.getPath())
-                        }
-                        else if (childJson.type) {
+                        if (childJson.type) {
                             childItem = sgFactory.constructClass(childJson.type);
                             if (childItem) {
                                 this.addChild(childItem, false, false);
                                 childItem.fromJSON(childJson, context, flags);
                             }
+                        }
+                        else {
+                            // Note: no need to log a warning. A child might not exist
+                            // if the binary tree has changed, and so the JSON data
+                            // can no longer be mapped.
+                            // console.warn("Child not found:", childName, " within ", this.getNumChildren() + " of:" + this.getPath())
                         }
                     }
                 }
@@ -731,32 +734,28 @@ class TreeItem extends BaseItem {
                     if (childItem) {
                         childItem.fromJSON(childJson, context, flags);
                     } else if (childJson.type) {
-                        // Note: When loading a bin tree,
-                        // we will not generate new tree items
-                        // as this can be confusing. Also, if the bin tree
-                        // structure changes, we don't want the json tree
-                        // to re-instate ghost tree items. (as has happened in testing.)
-                        if(flags& LoadFlags.LOAD_FLAG_LOADING_BIN_TREE_VALUES){
-                            console.warn("Child not found:", childName, " of ", this.getNumChildren())
-                        }
-                        else {
-                            childItem = sgFactory.constructClass(childJson.type);
-                            if (childItem) {
-                                // Note: we add the child now before loading. 
-                                // This is because certain items. (e.g. Groups)
-                                // Calculate thier global Xfo, and use it to modify 
-                                // the transform of thier members.
-                                // Note: Groups bind to items in the scene which are
-                                // already added as children, and so have global Xfos.
-                                // We prefer to add a child afer its loaded, because sometimes
-                                // In the tree is asset items, who will only toggled as
-                                // unloaded once they are loaded(else they are considered inline assets.)
-                                childItem.fromJSON(childJson, context, flags);
-                                this.addChild(childItem, false, false);
-                            }
+                        childItem = sgFactory.constructClass(childJson.type);
+                        if (childItem) {
+                            // Note: we add the child now before loading. 
+                            // This is because certain items. (e.g. Groups)
+                            // Calculate thier global Xfo, and use it to modify 
+                            // the transform of thier members.
+                            // Note: Groups bind to items in the scene which are
+                            // already added as children, and so have global Xfos.
+                            // We prefer to add a child afer its loaded, because sometimes
+                            // In the tree is asset items, who will only toggled as
+                            // unloaded once they are loaded(else they are considered inline assets.)
+                            childItem.fromJSON(childJson, context, flags);
+                            this.addChild(childItem, false, false);
                         }
                     } else {
-                        console.warn("Warning loading JSON. Child not found:" + childName);
+                        // Note: When saving a bin tree, we no longer save the 'type' value
+                        // so that those nodes can no longer be re-created by loading the JSON
+                        // file. We don't want the json tree
+                        // to re-instate ghost tree items that have been removed from the bin tree.
+                        //  (as has happened in testing.)
+
+                        // console.warn("Warning loading JSON. Child not found:" + childName);
                     }
                 }
             }
@@ -816,6 +815,10 @@ class TreeItem extends BaseItem {
                 }
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 childItem.readBinary(reader, context);
+
+                // Flagging this node as a bin tree node. (A node generated from loading a binary file)
+                childItem.setFlag(ItemFlags.BIN_NODE);
+
                 this.addChild(childItem, false, false);
             }
         }

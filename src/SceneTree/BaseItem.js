@@ -20,7 +20,8 @@ import {
 
 const ItemFlags = {
     USER_EDITED: 1<<1,
-    IGNORE_BBOX: 1<<2
+    IGNORE_BBOX: 1<<2,
+    BIN_NODE: 1<<3 // This node was generated when loading a binary file. 
 };
 let numBaseItems = 0;
 
@@ -172,7 +173,14 @@ class BaseItem extends ParameterOwner {
             j = {}
         if(j) {
             j.name = this.__name;
-            j.type = sgFactory.getClassName(this);
+
+            // Binary Tree nodes should only be re-created
+            // by loading binary data. The JSON tree just stores
+            // modifications to those items, and if, when loading
+            // the node no longer exists, then the json loader
+            // simply keeps going. (no errors).
+            if(!this.testFlag(ItemFlags.BIN_NODE))
+                j.type = sgFactory.getClassName(this);
         }
         return j;
     }
