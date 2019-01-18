@@ -559,7 +559,9 @@ class TreeItem extends BaseItem {
                 return this.__ownerItem.resolvePath(path, index + 1);
             }
             else {
-                console.warn("Paths should start with the name of the root item or '.'")
+                // Note: new paths should be generated starting with the name of the root object. 
+                // Re-enable this to debug path issues.
+                // console.warn("Paths should start with the name of the root item or '.'")
             }
         }
 
