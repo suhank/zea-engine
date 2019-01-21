@@ -33,7 +33,7 @@ testingHarness.registerTest('WebVR', (domElement, resources) => {
     document.addEventListener('keypress', (event) => {
         const key = String.fromCharCode(event.keyCode).toLowerCase();
         console.log(key)
-        if(key == 'v' && event.shiftKey) {
+        if(key == 'v' && event.shiftKey || key == ' ') {
             const vrvp = renderer.getVRViewport();
             if(vrvp) 
                 vrvp.togglePresenting();
