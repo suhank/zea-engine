@@ -76,13 +76,16 @@ class AssetItem extends TreeItem {
         context.makeRelative = (path) => {
             const assetPath = this.getPath();
             const start = path.slice(0, assetPath.length);
-            for (let i = 0; i < start.length; i++) {
+            for (let i = 0; i < (start.length-1); i++) {
                 if (start[i] != assetPath[i]) {
                     console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
                     return path;
                 }
             }
-            return path.slice(assetPath.length);
+            // Relative paths start with a symbol for the root element.
+            const relativePath = path.slice(assetPath.length-1);
+            relativePath[0] = '.';
+            return relativePath;
         }
         context.assetItem = this;
         const j = super.toJSON(context, flags);
