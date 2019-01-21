@@ -285,7 +285,8 @@ class GLBaseRenderer {
 
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
-            this.addTreeItem(childItem);
+            if(childItem)
+                this.addTreeItem(childItem);
         }
 
         treeItem.childAdded.connect(this.addTreeItem);
@@ -313,7 +314,8 @@ class GLBaseRenderer {
 
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
-            this.removeTreeItem(childItem);
+            if(childItem)
+                this.removeTreeItem(childItem);
         }
     }
 

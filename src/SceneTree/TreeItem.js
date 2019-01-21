@@ -73,9 +73,11 @@ class TreeItem extends BaseItem {
             setTimeout(() => {
                 const value = this.__cutawayParam.getValue();
                 for (let childItem of this.__childItems) {
-                    const param = childItem.getParameter('CutawayEnabled');
-                    if (param)
-                        param.setValue(value);
+                    if(childItem) {
+                        const param = childItem.getParameter('CutawayEnabled');
+                        if (param)
+                            param.setValue(value);
+                    }
                 }
             }, 1)
         });
@@ -115,8 +117,11 @@ class TreeItem extends BaseItem {
             // before the children.(Need a reason for this... I think it has to do with undos.)
             setTimeout(()=> {
                 const visibile = this.getVisible();
-                for (let childItem of this.__childItems)
-                    childItem.setInheritedVisiblity(visibile);
+                for (let childItem of this.__childItems) {
+                    if(childItem) {
+                        childItem.setInheritedVisiblity(visibile);
+                    }
+                }
             }, 1)
         });
 
@@ -151,7 +156,8 @@ class TreeItem extends BaseItem {
         //     this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
 
         for (let srcChildItem of src.getChildren())
-            this.addChild(srcChildItem.clone(flags));
+            if(srcChildItem)
+                this.addChild(srcChildItem.clone(flags));
         // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
         //     src.childAdded.connect((childItem, index)=>{
         //         this.addChild(childItem.clone(flags));
@@ -190,10 +196,14 @@ class TreeItem extends BaseItem {
 
     __updatePath() {
         super.__updatePath();
-        for (let childItem of this.__childItems)
-            childItem.__updatePath();
-        for (let component of this.__components)
-            component.__updatePath();
+        for (let childItem of this.__childItems) {
+            if(childItem)
+                childItem.__updatePath();
+        }
+        for (let component of this.__components) {
+            if(component)
+                component.__updatePath();
+        }
     }
 
     getParentItem() {
@@ -278,8 +288,9 @@ class TreeItem extends BaseItem {
             this.__inheritedVisiblity = val;
             const visibile = this.getVisible();
             if (prev != visibile) {
-                for (let childItem of this.__childItems)
+                for (let childItem of this.__childItems){
                     childItem.setInheritedVisiblity(visibile);
+                }
                 this.visibilityChanged.emit(visibile);
 
                 if(this.__ownerItem)
@@ -469,14 +480,16 @@ class TreeItem extends BaseItem {
 
     removeChild(index) {
         const childItem = this.__childItems[index];
-        this.__childItems[index] = null;
-        this.__freeIndices.push(index);
+        if(childItem) {
+            this.__childItems[index] = null;
+            this.__freeIndices.push(index);
 
-        childItem.setParentItem(undefined);
+            childItem.setParentItem(undefined);
 
-        this.childRemoved.emit(childItem, index);
+            this.childRemoved.emit(childItem, index);
 
-        this._setBoundingBoxDirty();
+            this._setBoundingBoxDirty();
+        }
     }
 
     removeChildByHandle(childItem) {
@@ -611,7 +624,8 @@ class TreeItem extends BaseItem {
         const __c = (treeItem) => {
             const children = treeItem.getChildren();
             for (let childItem of children) {
-                __t(childItem);
+                if(childItem)
+                    __t(childItem);
             }
         }
         const __t = (treeItem) => {
@@ -669,9 +683,11 @@ class TreeItem extends BaseItem {
         if(!(flags&SaveFlags.SAVE_FLAG_SKIP_CHILDREN)) {
             const childItemsJSON = {};
             for (let childItem of this.__childItems) {
-                const childJSON = childItem.toJSON(context, flags);
-                if (childJSON)
-                    childItemsJSON[childItem.getName()] = childJSON;
+                if(childItem) {
+                    const childJSON = childItem.toJSON(context, flags);
+                    if (childJSON)
+                        childItemsJSON[childItem.getName()] = childJSON;
+                }
             }
             if (Object.keys(childItemsJSON).length > 0) {
                 if (j) {
