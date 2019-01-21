@@ -146,8 +146,37 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             glmaterialGeomItemSets.addGeomItemSet(geomItemSet);
         }
 
+        geomItem.setMetadata('geomItemSet', geomItemSet);
+
         geomItemSet.addGeomItem(glgeomitem);
     }
+
+    removeGeomItem(geomItem) {
+
+        const glgeomItem = geomItem.getMetadata('glgeomItem');
+        this.removeGLGeomItem(glgeomItem);
+        geomItem.deleteMetadata('glgeomItem')
+
+        const geomItemSet = geomItem.getMetadata('geomItemSet');
+        if(geomItemSet) {
+            // Note: for now leave the material and geom in place. Multiple 
+            // GeomItems can reference a given material/geom, so we simply wait
+            // for them to be destroyed. 
+            geomItemSet.removeGeomItem(glgeomItem);
+            geomItem.deleteMetadata('geomItemSet')
+        }
+    }
+
+    removeMaterial(material) {
+        const glshaderMaterials = this.__glshadermaterials[material.hash];
+        if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
+            console.warn("Material not found in pass");
+            return;
+        }
+
+        const glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
+        glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
+    };
 
 
     draw(renderstate) {

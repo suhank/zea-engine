@@ -45,10 +45,7 @@ class GLStandardGeomsPass extends GLPass {
 
         this.__drawItems = [undefined];
         this.__drawItemsIndexFreeList = [];
-
-        this.__newItemsAdded = false;
         this.__dirtyItemIndices = [];
-
     }
 
     init(renderer, passIndex) {
@@ -122,7 +119,7 @@ class GLStandardGeomsPass extends GLPass {
             this.__renderer.requestRedraw();
         });
         material.destructing.connect(() => {
-            material.clearMetadata('glmaterial');
+            material.deleteMetadata('glmaterial');
         });
         material.setMetadata('glmaterial', glmaterial);
 
@@ -192,8 +189,6 @@ class GLStandardGeomsPass extends GLPass {
 
         this.__drawItems[index] = glgeomItem;
 
-        this.__newItemsAdded = true;
-
         // Note: before the renderer is disabled, this is a  no-op.
         this.__renderer.requestRedraw();
         return glgeomItem;
@@ -201,22 +196,21 @@ class GLStandardGeomsPass extends GLPass {
 
     removeGeomItem(geomItem) {
 
-        const glgeomItem = geomItem.getMetadata('glgeomItem');
-        this.removeGLGeomItem(glgeomItem);
+        // const glgeomItem = geomItem.getMetadata('glgeomItem');
+        // this.removeGLGeomItem(glgeomItem);
 
-        const glgeom = geomItem.getGeometry().getMetadata('glgeom');
-        const glmaterialGeomItemSets = geomItem.getMaterial().getMetadata('glmaterialGeomItemSets');
+        // const glgeom = geomItem.getGeometry().getMetadata('glgeom');
+        // const glmaterialGeomItemSets = geomItem.getMaterial().getMetadata('glmaterialGeomItemSets');
 
-        const drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
-        drawItemSet.removeGeomItem(glgeomItem);
+        // const drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
+        // drawItemSet.removeGeomItem(glgeomItem);
 
-        // Note: for now leave the material and geom in place. Multiple 
-        // GeomItems can reference a given material/geom, so we simply wait
-        // for them to be destroyed. 
+        // // Note: for now leave the material and geom in place. Multiple 
+        // // GeomItems can reference a given material/geom, so we simply wait
+        // // for them to be destroyed. 
 
-        geomItem.deleteMetadata('glgeomItem')
+        // geomItem.deleteMetadata('glgeomItem')
 
-        this.__newItemsAdded = true;
     }
 
 
@@ -233,16 +227,16 @@ class GLStandardGeomsPass extends GLPass {
         this.__renderer.requestRedraw();
     };
 
-    removeMaterial(material) {
-        const glshaderMaterials = this.__glshadermaterials[material.hash];
-        if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
-            console.warn("Material not found in pass");
-            return;
-        }
+    // removeMaterial(material) {
+    //     const glshaderMaterials = this.__glshadermaterials[material.hash];
+    //     if (!glshaderMaterials || glshaderMaterials != material.getMetadata('glshaderMaterials')) {
+    //         console.warn("Material not found in pass");
+    //         return;
+    //     }
 
-        const glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
-        glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
-    };
+    //     const glmaterialGeomItemSets = material.getMetadata('glmaterialGeomItemSets');
+    //     glshaderMaterials.removeMaterialGeomItemSets(glmaterialGeomItemSets);
+    // };
 
     removeGLGeom(geomItemMapping, materialGeomMapping) {
         const index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping);
@@ -389,11 +383,6 @@ class GLStandardGeomsPass extends GLPass {
         if (this.__dirtyItemIndices.length == 0)
             return;
         this.uploadGeomItems();
-
-        if (this.__newItemsAdded) {
-            // this.renderTreeUpdated.emit();
-            this.__newItemsAdded = false;
-        }
     }
 
     bind(renderstate) {

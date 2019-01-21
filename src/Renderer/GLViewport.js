@@ -112,7 +112,8 @@ class GLViewport extends GLBaseViewport {
             this.updated.emit();
             this.viewChanged.emit({
                 interfaceType: 'CameraAndPointer',
-                viewXfo: this.__cameraXfo
+                viewXfo: this.__cameraXfo,
+                focalDistance: this.__camera.getFocalDistance()
             });
         });
         this.__camera.projectionParamChanged.connect(() => {
