@@ -277,7 +277,7 @@ class GLGeomItemSet {
             return;
         }
         if (this.selectedIdsBufferDirty) {
-            this.updateDrawIDsBuffer();
+            this.updateSelectedIDsBuffer();
         }
 
         this.__bindAndRender(renderstate, this.selectedIdsBuffer, extrAttrBuffers)
