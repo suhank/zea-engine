@@ -725,36 +725,36 @@ class GLBaseRenderer {
     ////////////////////////////
     // Rendering
 
-    // isContinuouslyDrawing() {
-    //     return this.__continuousDrawing;
-    // }
+    isContinuouslyDrawing() {
+        return this.__continuousDrawing;
+    }
 
-    // startContinuousDrawing() {
-    //     if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
-    //         return;
+    startContinuousDrawing() {
+        if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
+            return;
 
-    //     const onAnimationFrame = ()=>{
-    //         if (this.__continuousDrawing && !this.__vrViewportPresenting)
-    //             window.requestAnimationFrame(onAnimationFrame);
-    //         for(let vp of this.__viewports)
-    //             vp.draw();
-    //     }
+        const onAnimationFrame = ()=>{
+            if (this.__continuousDrawing && !this.__vrViewportPresenting)
+                window.requestAnimationFrame(onAnimationFrame);
+            for(let vp of this.__viewports)
+                vp.draw();
+        }
 
-    //     this.__continuousDrawing = true;
-    //     window.requestAnimationFrame(onAnimationFrame);
-    // }
+        this.__continuousDrawing = true;
+        window.requestAnimationFrame(onAnimationFrame);
+    }
 
-    // stopContinuousDrawing() {
-    //     this.__continuousDrawing = false;
-    // }
+    stopContinuousDrawing() {
+        this.__continuousDrawing = false;
+    }
 
-    // toggleContinuousDrawing() {
-    //     if (!this.__continuousDrawing) {
-    //         this.startContinuousDrawing();
-    //     } else {
-    //         this.stopContinuousDrawing();
-    //     }
-    // }
+    toggleContinuousDrawing() {
+        if (!this.__continuousDrawing) {
+            this.startContinuousDrawing();
+        } else {
+            this.stopContinuousDrawing();
+        }
+    }
 
     drawItemChanged() {
         for (let vp of this.__viewports)

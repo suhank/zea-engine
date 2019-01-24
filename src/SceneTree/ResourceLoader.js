@@ -75,20 +75,21 @@ class ResourceLoader {
     this.__nextWorker = 0;
 
     if(window.location.origin.startsWith('https://api.visualive.io') ||
-      window.location.origin.startsWith('https://apistage.visualive.io'))
+      window.location.origin.startsWith('https://apistage.visualive.io')) {
+      // For embeds using the old generated page system.
       this.wasmUrl = "https://assets-visualive.storage.googleapis.com/oR3y6kdDu";
-    else{
+    } else {
       let visualiveEngineUrl;
       const scripts = document.getElementsByTagName('script');
-      for(let i =0; i < scripts.length; i++) {
+      for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if(script.src.endsWith('Visualive.js')) {
+        if (script.src.endsWith('Visualive.js')) {
           visualiveEngineUrl = script.src;
           break;
         }
       }
-      if(!visualiveEngineUrl)
-        throw("Unable to determine Visualive Engine URL");
+      if (!visualiveEngineUrl)
+        throw ("Unable to determine Visualive Engine URL");
       const parts = visualiveEngineUrl.split('/');
       parts.pop()
       parts.pop()
@@ -234,7 +235,7 @@ class ResourceLoader {
 
         worker.postMessage({
           type: 'init',
-          wasmUrl:this.wasmUrl
+          wasmUrl: this.wasmUrl
         });
         worker.onmessage = (event) => {
           if (event.data.type === 'WASM_LOADED') {

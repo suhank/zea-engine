@@ -24,6 +24,7 @@ class MaterialColorParam extends ColorParameter {
         super(name, value);
         this.textureConnected = new Signal();
         this.textureDisconnected = new Signal();
+        this.__imageUpdated = this.__imageUpdated.bind(this)
     }
     
     clone(flags) {
@@ -35,15 +36,15 @@ class MaterialColorParam extends ColorParameter {
         return this.__image;
     }
 
-    // let imageUpdated = () => {
-    //     valueChanged.emit();
-    // }
+    __imageUpdated(){
+        this.valueChanged.emit();
+    }
     
     setImage(value, mode=0) {
         let disconnectImage = () => {
             this.__image.removeRef(this);
-            // image.loaded.disconnect(imageUpdated);
-            // image.updated.disconnect(imageUpdated);
+            this.__image.loaded.disconnect(this.__imageUpdated);
+            this.__image.updated.disconnect(this.__imageUpdated);
             this.textureDisconnected.emit();
         }
         if (value) {
@@ -52,8 +53,8 @@ class MaterialColorParam extends ColorParameter {
             }
             this.__image = value;
             this.__image.addRef(this);
-            // image.loaded.connect(imageUpdated);
-            // image.updated.connect(imageUpdated);
+            this.__image.loaded.connect(this.__imageUpdated);
+            this.__image.updated.connect(this.__imageUpdated);
             this.textureConnected.emit();
             this.valueChanged.emit(mode);
         } else {

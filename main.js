@@ -71,6 +71,7 @@ window.main = function(domElement, resources, args) {
         });
         break;
       case 'vlexe':
+      case 'scexe':
         loadScript(resolveURL(file, resources).url, function() {
           vlmain(domElement, resources, args)
         });

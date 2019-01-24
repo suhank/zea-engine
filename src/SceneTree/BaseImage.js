@@ -29,10 +29,11 @@ class BaseImage extends BaseItem {
         this.addParameter(new BooleanParameter('Invert', false));
         this.addParameter(new BooleanParameter('FlipY', false));
 
-        this.updated = new Signal();
+        this.updated = this.parameterValueChanged;
 
         // Note: many parts of the code assume a 'loaded' signal.
         // We should probably deprecate and use only 'updated'.
+        // Instead we should start using a loaded Promise.
         this.loaded = new Signal(true);
     }
 

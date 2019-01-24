@@ -362,7 +362,7 @@ class GLRenderer extends GLBaseRenderer {
             this.__glBackgroundMap.bindToUniform(renderstate, unifs.backgroundImage);
             this.__backgroundMapShaderBinding.bind(renderstate);
             gl.drawQuad();
-        } else if (this.__glEnvMap && this.__glEnvMap.draw) {
+        } else if (this.__glEnvMap && this.__glEnvMap.draw/*Note: video env maps cannot be drawn directly.*/) {
             this.__glEnvMap.draw(renderstate);
         }
     }
@@ -377,8 +377,8 @@ class GLRenderer extends GLBaseRenderer {
         renderstate.exposure = this.__exposure;
         renderstate.gamma = this.__gamma;
 
-        // if (this.__displayEnvironment)
-        //     this.drawBackground(renderstate);
+        if (this.__displayEnvironment)
+            this.drawBackground(renderstate);
 
         super.drawScene(renderstate);
         // console.log("Draw Calls:" + renderstate['drawCalls']);

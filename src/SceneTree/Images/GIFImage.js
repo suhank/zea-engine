@@ -1,4 +1,7 @@
-
+import {
+    Vec4,
+    Color
+} from '../../Math';
 import {
     loadBinfile
 } from '../Utils.js';
@@ -47,9 +50,11 @@ class GIFImage extends FileImage {
             frame = (frame + 1) % numFrames;
         }
         this.play = () => {
-            playing = true;
-            const numFrames = frameParam.getRange()[1];
-            incrementFrame(numFrames);
+            this.__resourcePromise.then(()=>{
+                playing = true;
+                const numFrames = frameParam.getRange()[1];
+                incrementFrame(numFrames);
+            })
         }
         this.stop = () => {
             playing = false;
@@ -67,12 +72,11 @@ class GIFImage extends FileImage {
 
         // this.__streamAtlasDesc = new Vec4();
 
-        let resourcePromise;
         const imageDataLibrary = FileImage.__imageDataLibrary()
         if (fileDesc.id in imageDataLibrary) {
-            resourcePromise = imageDataLibrary[fileDesc.id];
+            this.__resourcePromise = imageDataLibrary[fileDesc.id];
         } else {
-            resourcePromise = new Promise((resolve, reject) => {
+            this.__resourcePromise = new Promise((resolve, reject) => {
                 resourceLoader.addWork(fileDesc.id, 1);
 
                 if(fileDesc.assets && fileDesc.assets.atlas) {
@@ -192,30 +196,26 @@ class GIFImage extends FileImage {
                 });
             });
 
-            imageDataLibrary[fileDesc.id] = resourcePromise;
+            imageDataLibrary[fileDesc.id] = this.__resourcePromise;
         }
 
-        // Make the resolve asynchronous so that the function returns.
-        // (Chrome started generating errors because the 'onload' callback took to long to return.)
-        setTimeout(() => {
-            resourcePromise.then((unpackedData) => {
+        this.__resourcePromise.then((unpackedData) => {
 
-                this.width = unpackedData.width;
-                this.height = unpackedData.height;
+            this.width = unpackedData.width;
+            this.height = unpackedData.height;
 
-                this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0));
-                this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
+            this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0));
+            this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
 
-                this.__unpackedData = unpackedData;
-                this.__data = unpackedData.imageData;
+            this.__unpackedData = unpackedData;
+            this.__data = unpackedData.imageData;
 
-                //////////////////////////
-                // Playback
-                this.__loaded = true;
+            //////////////////////////
+            // Playback
+            this.__loaded = true;
 
-                this.loaded.emit();
-            });
-        }, 1)
+            this.loaded.emit();
+        });
     }
 };
 
