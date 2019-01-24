@@ -20,6 +20,7 @@ testingHarness.registerTest('WebVRPolyfill', (domElement, resources) => {
         var polyfill = new WebVRPolyfill();
 
         const scene = new Visualive.Scene(resources);
+        scene.setupGrid(60.0, 6);
 
         const addMeshShape = (name, shape, pos)=>{
             const standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
@@ -38,7 +39,6 @@ testingHarness.registerTest('WebVRPolyfill', (domElement, resources) => {
         const renderer = new Visualive.GLRenderer(domElement);
 
         renderer.setScene(scene);
-        renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);
         renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(0,0,1.7), new Visualive.Vec3(1,1,1));
         renderer.getViewport().getManipulator().setDefaultManipulationMode('look')
         renderer.resumeDrawing();

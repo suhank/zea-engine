@@ -1,5 +1,6 @@
 testingHarness.registerTest('Gears', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(10.0, 10);
 
     const asset = new Visualive.AssetItem('gears');
     scene.getRoot().addChild(asset);
@@ -56,6 +57,5 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
     const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 10), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
-    renderer.setupGrid(20, new Visualive.Color(0.2, 0.2, 0.2), 10, 0);
     renderer.resumeDrawing();
 });

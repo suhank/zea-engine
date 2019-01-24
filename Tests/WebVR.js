@@ -2,6 +2,8 @@
 testingHarness.registerTest('WebVR', (domElement, resources) => { 
 
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(5.0, 506);
+
     const renderer = new Visualive.GLRenderer(domElement);
 
 
@@ -21,7 +23,6 @@ testingHarness.registerTest('WebVR', (domElement, resources) => {
     addMeshShape('Sphere', new Visualive.Sphere(1.2, 13), new Visualive.Vec3(0, 2, 0.6));
 
     renderer.setScene(scene);
-    renderer.setupGrid(5.0, new Visualive.Color(.53, .53, .53), 50, 0.01);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(0,0,1.7), new Visualive.Vec3(1,0,1));
     renderer.getViewport().getManipulator().setDefaultManipulationMode('look')
     renderer.resumeDrawing();

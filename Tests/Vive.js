@@ -5,6 +5,7 @@ testingHarness.registerTest('Vive', (domElement, resources)=> {
     /////////////////////////////////////
     // Scene
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
 
     /////////////////////////////////////
     // Renderer
@@ -39,5 +40,4 @@ testingHarness.registerTest('Vive', (domElement, resources)=> {
     })
 
     renderer.resumeDrawing();
-    renderer.setupGrid(1, new Visualive.Color(0, 0, 0), 50);
 });

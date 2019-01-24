@@ -4,6 +4,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     const envMap = new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
     scene.setEnvMap(envMap);
+    scene.setupGrid(60.0, 6);
 
     const material = new Visualive.Material('layer0', 'OctahedralEnvProjectionShader');
     // material.getParameter('envMap').setValue(envMap);
@@ -28,7 +29,6 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
     
     // const renderer = new Visualive.GLRenderer(domElement);
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     const vrViewport = renderer.getVRViewport();
     if(vrViewport){

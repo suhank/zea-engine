@@ -3,6 +3,8 @@
 testingHarness.registerTest('Webcam', (domElement, resources)=> {
 
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
+
     // Note: 'back' for the Vive USB camera.
     let webcamimage = new Visualive.WebcamImage2D(640, 480, false);
 
@@ -17,7 +19,6 @@ testingHarness.registerTest('Webcam', (domElement, resources)=> {
 
 
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     // renderer.getViewport().setBackground(webcamimage);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,1));
 

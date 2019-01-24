@@ -1,6 +1,7 @@
 
 testingHarness.registerTest('Instancing', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
     standardMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
@@ -45,7 +46,6 @@ testingHarness.registerTest('Instancing', (domElement, resources)=> {
 
     const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
-    // renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
     renderer.frameAll();
     renderer.resumeDrawing();

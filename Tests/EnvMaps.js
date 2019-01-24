@@ -4,6 +4,7 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     const envMap = new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
     scene.setEnvMap(envMap);
+    scene.setupGrid(60.0, 6);
 
     envMap.loaded.connect(()=>{
         const data = envMap.getSampleSets();
@@ -55,7 +56,6 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
     // Renderer
     
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();
     if(vrViewport){

@@ -7,6 +7,7 @@ testingHarness.registerTest('EnvVideoProjection', (domElement, resources)=> {
     const bgMap =  new Visualive.FileImage('bg', bgMapName, { mapping: 'latlong'});
     // scene.setBackgroundMap(bgMap);
     scene.setEnvMap(bgMap);
+    scene.setupGrid(60.0, 6);
 
     const material = new Visualive.Material('layer0', 'LatLongEnvProjectionShader');
     // material.getParameter('envMap').setValue(envMap);
@@ -30,7 +31,6 @@ testingHarness.registerTest('EnvVideoProjection', (domElement, resources)=> {
     
     // const renderer = new Visualive.GLRenderer(domElement);
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
     const vrViewport = renderer.getVRViewport();
     if(vrViewport){

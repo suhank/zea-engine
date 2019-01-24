@@ -3,6 +3,7 @@
 testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
 
 
     const standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
@@ -38,7 +39,6 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     mandela.getParameter('Gain').setValue(2.6);
 
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
     renderer.setScene(scene);
 
     const camera = renderer.getViewport().getCamera();

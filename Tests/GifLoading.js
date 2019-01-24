@@ -104,7 +104,7 @@ void main(void) {
         return paramDescs;
     }
 
-    isTransparent() {
+    static isTransparent() {
         return true;
     }
     
@@ -124,14 +124,16 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     // giffPath = "Assets/chuck-norris-super-kick.gif";
 
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
+
     const setupGifPlayers = (path, pos)=>{
 
-        const image =  new Visualive.FileImage();
+        const image =  new Visualive.GIFImage();
         image.getParameter('FilePath').setFilepath(path);
         const treeItem = new Visualive.TreeItem(image.getName());
 
-        // Check that the gif is loaded only once.
-        const image2 =  new Visualive.FileImage();
+        // Note: even though we request it 2x, the gif is loaded only once into the GPU.
+        const image2 =  new Visualive.GIFImage();
         image2.getParameter('FilePath').setFilepath(path);
 
         const atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
@@ -162,8 +164,7 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
 
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,8,12), new Visualive.Vec3(0,0,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(12,18,8), new Visualive.Vec3(0,0,0));
     renderer.setScene(scene);
 
 
