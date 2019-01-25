@@ -37,22 +37,25 @@ class VRViewport extends GLBaseViewport {
         //////////////////////////////////////////////
         // Resources
 
-        const resourceLoader = renderer.getScene().getResourceLoader();
-        const viveAssetId = resourceLoader.resolveFilePathToId("VisualiveEngine/Vive.vla")
-        if (viveAssetId && !SystemDesc.isMobileDevice) {
-            this.__viveAsset = renderer.getScene().loadCommonAssetResource(viveAssetId);
-            this.__viveAsset.loaded.connect(() => {
-                const materialLibrary = this.__viveAsset.getMaterialLibrary();
-                const materialNames = materialLibrary.getMaterialNames();
-                for (let name of materialNames) {
-                    const material = materialLibrary.getMaterial(name, false);
-                    if (material) {
-                        material.visibleInGeomDataBuffer = false;
-                        material.setShaderName('SimpleSurfaceShader');
+        // Note: when the VRViewport is setup
+        renderer.sceneSet.connect((scene)=>{
+            const resourceLoader = scene.getResourceLoader();
+            const viveAssetId = resourceLoader.resolveFilePathToId("VisualiveEngine/Vive.vla")
+            if (viveAssetId && !SystemDesc.isMobileDevice) {
+                this.__viveAsset = renderer.getScene().loadCommonAssetResource(viveAssetId);
+                this.__viveAsset.loaded.connect(() => {
+                    const materialLibrary = this.__viveAsset.getMaterialLibrary();
+                    const materialNames = materialLibrary.getMaterialNames();
+                    for (let name of materialNames) {
+                        const material = materialLibrary.getMaterial(name, false);
+                        if (material) {
+                            material.visibleInGeomDataBuffer = false;
+                            material.setShaderName('SimpleSurfaceShader');
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
+        })
 
         //////////////////////////////////////////////
         // Viewport params
@@ -67,7 +70,7 @@ class VRViewport extends GLBaseViewport {
         this.__stageTreeItem = new TreeItem('VRStage');
         this.__stageTreeItem.setSelectable(false);
         this.__stageTreeItem.setVisible(false);
-        this.__renderer.getCollector().addTreeItem(this.__stageTreeItem);
+        this.__renderer.addTreeItem(this.__stageTreeItem);
 
         this.__vrhead = new VRHead(this.__renderer.gl, this.__stageTreeItem);
 

@@ -24,7 +24,6 @@ attribute float vertexIDs;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform mat4 cameraMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="modelMatrix.glsl"/>

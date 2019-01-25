@@ -60,7 +60,7 @@ class GLBaseRenderer {
         this.__shaderDirectives = {};
         this.__preproc = { };
 
-        this.__vrViewportPresenting = false;
+        this.__xrViewportPresenting = false;
 
         // Function Bindings.
         this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
@@ -90,43 +90,43 @@ class GLBaseRenderer {
 
         this.addViewport('main');
 
-        
-
+        //////////////////////////////////////////////
+        // WebXR
         this.__supportXR = options.supportXR !== undefined ? options.supportXR : true;
-        this.__vrViewport = undefined;
-        if(this.__supportXR){
-            // if(!navigator.xr && window.WebVRPolyfill != undefined) {
-            //     this.__vrpolyfill = new WebVRPolyfill();
-            // }
-            if(navigator.xr) {
-                navigator.xr.requestDevice().then((device) => {
-                    device.supportsSession({immersive: true}).then(() => {
+        this.__xrViewport = undefined;
+        this.__xrViewportPromise = new Promise((resolve, reject) => {
+            if(this.__supportXR){
 
-                        // Note: could cause a context loss on machines with
-                        // multi-gpus (integrated Intel). 
-                        // This is because the may force the context to switch 
-                        // to the discrete GPU.
-                        // TODO: Provide a system to re-load the GPU data. 
-                        this.__gl.setCompatibleXRDevice(device);
+                // if(!navigator.xr && window.WebVRPolyfill != undefined) {
+                //     this.__vrpolyfill = new WebVRPolyfill();
+                // }
+                if(navigator.xr) {
+                    navigator.xr.requestDevice().then((device) => {
+                        device.supportsSession({immersive: true}).then(() => {
 
-                        this.__setupVRViewport(device);
+                            // Note: could cause a context loss on machines with
+                            // multi-gpus (integrated Intel). 
+                            // This is because the may force the context to switch 
+                            // to the discrete GPU.
+                            // TODO: Provide a system to re-load the GPU data. 
+                            this.__gl.setCompatibleXRDevice(device);
+
+                            this.__xrViewport = this.__setupXRViewport(device);
+                            this.vrViewportSetup.emit(this.__xrViewport);
+                            resolve(this.__xrViewport)
+                        }).catch((reason) => {
+                            console.warn("Unable to setup XR:" + reason);
+                            reject("Unable to setup XR:" + reason)
+                        });
                     }).catch((reason) => {
                         console.warn("Unable to setup XR:" + reason);
+                        reject("Unable to setup XR:" + reason)
                     });
-                }).catch((reason) => {
-                    console.warn("Unable to setup XR:" + reason);
-                });
-                // TODO:
-                // navigator.xr.addEventListener('devicechange', checkForXRSupport);
+                    // TODO:
+                    // navigator.xr.addEventListener('devicechange', checkForXRSupport);
+                }
             }
-            
-
-        }
-
-        // Do we need this? I think not.
-        // resourceLoader.loaded.connect(this.renderGeomDataFbos);
-        
-
+        });
     }
 
     addShaderPreprocessorDirective(name, value) {
@@ -168,7 +168,7 @@ class GLBaseRenderer {
         vp.createGeomDataFbo(this.__floatGeomBuffer);
 
         vp.viewChanged.connect((data) => {
-            if (!this.__vrViewportPresenting)
+            if (!this.__xrViewportPresenting)
                 this.viewChanged.emit(data);
         });
 
@@ -201,16 +201,16 @@ class GLBaseRenderer {
     }
 
     activateViewportAtPos(offsetX, offsetY) {
-        if (this.__vrViewportPresenting)
-            return this.__vrViewport;
+        if (this.__xrViewportPresenting)
+            return;
         const vp = this.getViewportAtPos(offsetX, offsetY);
         if(vp && vp != this.__activeViewport)
             this.activateViewport(vp);
     }
 
     getActiveViewport() {
-        if (this.__vrViewportPresenting)
-            return this.__vrViewport;
+        if (this.__xrViewportPresenting)
+            return this.__xrViewport;
         return this.__activeViewport;
     }
 
@@ -285,7 +285,8 @@ class GLBaseRenderer {
 
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
-            this.addTreeItem(childItem);
+            if(childItem)
+                this.addTreeItem(childItem);
         }
 
         treeItem.childAdded.connect(this.addTreeItem);
@@ -313,7 +314,8 @@ class GLBaseRenderer {
 
         // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
         for (let childItem of treeItem.getChildren()) {
-            this.removeTreeItem(childItem);
+            if(childItem)
+                this.removeTreeItem(childItem);
         }
     }
 
@@ -333,7 +335,7 @@ class GLBaseRenderer {
 
     __onResize() {
 
-        if (!this.__vrViewportPresenting) {
+        if (!this.__xrViewportPresenting) {
             this.__glcanvas.width = this.__glcanvas.clientWidth * window.devicePixelRatio;
             this.__glcanvas.height = this.__glcanvas.clientHeight * window.devicePixelRatio;
 
@@ -675,13 +677,13 @@ class GLBaseRenderer {
         return this.__supportXR && navigator.xr != null;
     }
 
-    __setupVRViewport(device) {
+    __setupXRViewport(device) {
 
         // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-        const vrvp = new VRViewport(this, navigator.xr, device);
+        const xrvp = new VRViewport(this, navigator.xr, device);
 
-        vrvp.presentingChanged.connect((state)=>{
-            this.__vrViewportPresenting = state;
+        xrvp.presentingChanged.connect((state)=>{
+            this.__xrViewportPresenting = state;
             if(state){
                 
                 // Let the passes know that VR is starting.
@@ -693,10 +695,10 @@ class GLBaseRenderer {
                     }
                 }
 
-                vrvp.viewChanged.connect(this.viewChanged.emit);
+                xrvp.viewChanged.connect(this.viewChanged.emit);
             }
             else {
-                vrvp.viewChanged.disconnect(this.viewChanged.emit);
+                xrvp.viewChanged.disconnect(this.viewChanged.emit);
 
                 for(let key in this.__passes) {
                     const passSet = this.__passes[key];
@@ -714,12 +716,15 @@ class GLBaseRenderer {
                 this.requestRedraw();
             }
         })
-        this.__vrViewport = vrvp;
-        this.vrViewportSetup.emit(vrvp);
+        return xrvp;
     }
 
     getVRViewport() {
-        return this.__vrViewport;
+        return this.__xrViewport;
+    }
+
+    getXRViewport() {
+        return this.__xrViewportPromise;
     }
 
     ////////////////////////////
@@ -765,7 +770,7 @@ class GLBaseRenderer {
     // Request a single redraw, usually in response to a signal/event.
     requestRedraw() {
         // If a redraw has already been requested, then simply return and wait.
-        if (this.__redrawRequested || this.__continuousDrawing || this.__vrViewportPresenting)
+        if (this.__redrawRequested || this.__continuousDrawing || this.__xrViewportPresenting)
             return false;
 
         const onAnimationFrame = () => {

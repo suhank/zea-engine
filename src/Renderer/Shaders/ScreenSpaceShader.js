@@ -104,13 +104,13 @@ void main(void) {
     }
 
     static getGeomDataShaderName(){
-        throw("TODO")
-        return 'StandardSurfaceGeomDataShader';
+        // TODO: Provide a geom data shader for overlay items.
+        return null;
     }
 
     static getSelectedShaderName(){
-        throw("TODO")
-        return 'StandardSurfaceSelectedGeomsShader';
+        // TODO: Provide a geom data shader for overlay items.
+        return null;
     }
 };
 

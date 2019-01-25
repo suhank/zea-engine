@@ -25,6 +25,11 @@ class Signal {
         this.__slots[id] = fn;
 
         if(this.__toggledSignal && this.__toggled){
+
+            // Note: we are moving away from using 'toggled' Signals
+            // in favor of promises. We will start generating errors
+            // when connecting to Toggled signals soon
+            
             // This signal has already been toggled, so we should emit immedietly.
             if(this.__data)
                 fn(...this.__data);
