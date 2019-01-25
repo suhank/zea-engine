@@ -21,7 +21,7 @@ class GLTexture2D extends RefCounted {
         this.__gltex = this.__gl.createTexture();
         this.width = 0;
         this.height = 0;
-        this.textureType = 1; // Default 2d image texture.
+        this.textureType = 1; // Default 2d 8 bit texture image texture.
         this.textureDesc = [0,0,0,0]; // To be polulated by derived classes.
         this.__loaded = false;
         this.__bound = false;
@@ -114,6 +114,9 @@ class GLTexture2D extends RefCounted {
 
         // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
         if (type == 'FLOAT') {
+
+            this.textureType = 3; // Indicating an Float HDR image.
+
             if (gl.name == 'webgl2') {
                 if (minFilter == 'LINEAR' && !gl.__ext_float_linear) {
                     console.warn('Floating point texture filtering not supported on this device');
@@ -459,7 +462,7 @@ class GLTexture2D extends RefCounted {
 
     preBind(unif, unifs) {
         return {
-            textureConnectedUnif: unifs[unif.name+'Connected'],
+            textureConnectedUnif: unifs[unif.name+'Type'],
             textureDescUnif: unifs[unif.name+'Desc']
         }
     }

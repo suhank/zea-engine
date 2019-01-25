@@ -99,19 +99,19 @@ uniform float Reflectance;
 
 #ifdef __ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
-uniform bool BaseColorTexConnected;
+uniform bool BaseColorTexType;
 
 uniform sampler2D OpacityTex;
-uniform bool OpacityTexConnected;
+uniform bool OpacityTexType;
 
 uniform sampler2D RoughnessTex;
-uniform bool RoughnessTexConnected;
+uniform bool RoughnessTexType;
 
 uniform sampler2D ReflectanceTex;
-uniform bool ReflectanceTexConnected;
+uniform bool ReflectanceTexType;
 
 uniform sampler2D NormalTex;
-uniform bool NormalTexConnected;
+uniform bool NormalTexType;
 uniform float NormalScale;
 
 
@@ -138,12 +138,12 @@ void main(void) {
     // Planar YZ projection for texturing, repeating every meter.
     // vec2 texCoord        = v_worldPos.xz * 0.2;
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord).rgb;
-    material.roughness      = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexConnected, texCoord);
-    material.metallic       = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexConnected, texCoord);
-    material.reflectance    = Reflectance;//getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexConnected, texCoord);
+    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
+    material.roughness      = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+    material.metallic       = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
+    material.reflectance    = Reflectance;//getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
 
-    float opacity           = getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoords);
+    float opacity           = getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, texCoords);
 #endif
 
 #ifndef ENABLE_SPECULAR
@@ -154,7 +154,7 @@ void main(void) {
     //vec3 surfacePos = -v_viewPos;
 
 #ifdef __ENABLE_TEXTURES
-    if(NormalTexConnected){
+    if(NormalTexType != 0){
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }

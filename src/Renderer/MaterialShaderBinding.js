@@ -126,7 +126,7 @@ class ColorUniformBinding {
         this.__gl = gl;
         this.__unif = unif;
         this.__textureUnif = unifs[unif.name + 'Tex'];
-        this.__textureConnctedUnif = unifs[unif.name + 'TexConnected'];
+        this.__textureTypeUnif = unifs[unif.name + 'TexType'];
 
         this.__vals = [0,0,0,0];
 
@@ -202,8 +202,8 @@ class ColorUniformBinding {
 
     bindValue(renderstate) {
         this.uniform4fv(this.__unif.location, this.__vals);
-        if (this.__textureConnctedUnif)
-            this.uniform1i(this.__textureConnctedUnif.location, 0);
+        if (this.__textureTypeUnif)
+            this.uniform1i(this.__textureTypeUnif.location, 0);
     }
 
     bindTexture(renderstate) {
@@ -219,8 +219,11 @@ class MaterialShaderBinding {
         const bindParam = (param) => {
             const name = param.getName();
             const unif = unifs[name];
-            if (unif == undefined)
+            if (unif == undefined){
+                // Note: this silent error caused me a lot of searching. make it noisy.
+                console.warn("Param has no unif", name)
                 return;
+            }
             switch (unif.type) {
                 case Boolean:
                 case UInt32:

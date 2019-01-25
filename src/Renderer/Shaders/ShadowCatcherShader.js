@@ -18,10 +18,9 @@ import './GLSL/envmap-equirect.js';
 import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
-class ShadowCatcherShader extends GLShader {
+class BaseShadowCatcherShader extends GLShader {
     constructor(gl) {
         super(gl);
-        this.__passName = 'ADD';
         this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatShader.vertexShader', `
 precision highp float;
 
@@ -58,6 +57,12 @@ void main(void) {
     v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
 }
 `);
+    }
+};
+
+class ShadowCatcherShader extends BaseShadowCatcherShader {
+    constructor(gl) {
+        super(gl);
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('ShadowCatcherShader.fragmentShader', `
 precision highp float;
 
@@ -77,7 +82,7 @@ uniform float ShadowMultiplier;
 
 uniform color envMap;
 uniform sampler2D envMapTex;
-uniform bool envMapTexConnected;
+uniform int envMapTexType;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -94,7 +99,7 @@ float luminanceFromRGB(vec3 rgb) {
 void main(void) {
 
     vec4 env = envMap;
-    if(envMapTexConnected) {
+    if(envMapTexType != 0) {
         vec2 uv = dirToSphOctUv(normalize(v_worldDir));
         env = texture2D(envMapTex, uv);
     }
@@ -131,7 +136,7 @@ void main(void) {
     }
 
     bind(renderstate, key) {
-        if (renderstate.pass != this.__passName)
+        if (renderstate.pass != 'ADD')
             return false;
         return super.bind(renderstate, key);
     }
@@ -140,35 +145,30 @@ void main(void) {
 sgFactory.registerClass('ShadowCatcherShader', ShadowCatcherShader);
 
 
-class FloatingShadowCatcherShader extends ShadowCatcherShader {
+class FloatingShadowCatcherShader extends BaseShadowCatcherShader {
     constructor(gl) {
         super(gl);
-        this.__passName = 'MULTIPLY';
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FloatingShadowCatcherShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
 <%include file="GLSLUtils.glsl"/>
-<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
-#ifdef ENABLE_INLINE_GAMMACORRECTION
 <%include file="stack-gl/gamma.glsl"/>
-#endif
+<%include file="materialparams.glsl"/>
+<%include file="pragmatic-pbr/envmap-octahedral.glsl"/>
 
 /* VS Outputs */
 varying vec2 v_lightmapCoord;
 varying vec3 v_worldDir;
 
 uniform sampler2D lightmap;
+
 uniform float ShadowMultiplier;
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
 #endif
 
-
-float luminanceFromRGB(vec3 color) {
-    return 0.2126 * color.r + 0.7152 * color.g + 0.0722 * color.b;
-}
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -178,7 +178,7 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-
+    
     float shadow = luminanceFromRGB(texture2D(lightmap, v_lightmapCoord).rgb) * ShadowMultiplier;
 
     // This material works by multiplying the image buffer values by the luminance in the lightmap.
@@ -196,6 +196,12 @@ void main(void) {
 `);
     }
 
+    bind(renderstate, key) {
+        if (renderstate.pass != 'MULTIPLY')
+            return false;
+        return super.bind(renderstate, key);
+    }
+
     static isTransparent() {
         return true;
     }
@@ -203,8 +209,6 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        // paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
-        // paramDescs.push({ name: 'ProjectionCenter', defaultValue: new Vec3(0.0, 1.7, 0.0) })
         paramDescs.push({ name: 'ShadowMultiplier', defaultValue: 1.0 })
         return paramDescs;
     }

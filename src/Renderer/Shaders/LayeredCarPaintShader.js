@@ -153,7 +153,7 @@ uniform float GlossReflectance;
 #ifdef ENABLE_TEXTURES
 
 uniform sampler2D BaseColorTex;
-uniform bool BaseColorTexConnected;
+uniform int BaseColorTexType;
 
 #endif
 
@@ -210,7 +210,7 @@ void main(void) {
     material.baseColor      = BaseColor.rgb;
 #else
     vec2 texCoord           = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord).rgb;
+    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
 #endif
 
 #ifdef ENABLE_SPECULAR

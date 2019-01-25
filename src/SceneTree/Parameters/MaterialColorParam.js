@@ -45,6 +45,7 @@ class MaterialColorParam extends ColorParameter {
             this.__image.removeRef(this);
             this.__image.loaded.disconnect(this.__imageUpdated);
             this.__image.updated.disconnect(this.__imageUpdated);
+            this.__image = null;
             this.textureDisconnected.emit();
         }
         if (value) {
@@ -53,7 +54,6 @@ class MaterialColorParam extends ColorParameter {
             }
             this.__image = value;
             this.__image.addRef(this);
-            this.__image.loaded.connect(this.__imageUpdated);
             this.__image.updated.connect(this.__imageUpdated);
             this.textureConnected.emit();
             this.valueChanged.emit(mode);

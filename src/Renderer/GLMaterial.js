@@ -9,9 +9,9 @@ import {
 } from './MaterialShaderBinding.js';
 
 
-class GLMaterial extends BaseItem {
+class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
     constructor(gl, material, glshader) {
-        super(name);
+        // super(name);
         this.__gl = gl;
         this.__material = material;
         this.__glshader = glshader;
