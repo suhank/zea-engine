@@ -1,0 +1,48 @@
+{
+  "description":"arst arstarst arsta rsta rs",
+  "title":"arst arstarst arsta rsta rs",
+  "preview":"https://assets-visualive.storage.googleapis.com/ZQo2Mwpie",
+  "appsIntegration":[
+    {
+      "extensions":[
+        "docx"
+      ],
+      "icon":"https://assets-visualive.storage.googleapis.com/ZQo2Mwpie",
+      "editor":"https://word.microsoft.com"
+    },
+    {
+      "extensions":[
+        "pdf"
+      ],
+      "icon":"https://assets-visualive.storage.googleapis.com/KxGLXqw4k",
+      "editor":"https://pdf.visualive.io"
+    },
+    {
+      "extensions":[
+        "xlsx"
+      ],
+      "icon":"https://assets-visualive.storage.googleapis.com/V8BsWOcoq",
+      "editor":"https://excel.microsoft.com"
+    },
+    {
+      "extensions":[
+        "bob"
+      ],
+      "icon":"https://assets-visualive.storage.googleapis.com/ZQo2Mwpie",
+      "editor":"https://word.microsoft.com"
+    },
+    {
+      "extensions":[
+        "png"
+      ],
+      "icon":"https://assets-visualive.storage.googleapis.com/ihTy6cEtc"
+    },
+    {
+      "extensions":[
+        "vlexe"
+      ],
+      "icon":"https://assets-visualive.storage.googleapis.com/KC-LsLtrv",
+      "editor":"https://editor-stage.visualive.io/"
+    }
+  ]
+}
