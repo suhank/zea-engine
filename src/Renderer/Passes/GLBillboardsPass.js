@@ -88,37 +88,39 @@ class GLBillboardsPass extends GLPass {
             billboard.getParameter('image').valueChanged.connect(()=> this.addBillboard(billboard) );
             return;
         }
-        let index;
-        if(this.__freeIndices.length > 0)
-            index = this.__freeIndices.pop();
-        else
-            index = this.__billboards.length;
-        this.__billboards[index] = {
-            billboard,
-            imageIndex: this.__atlas.addSubImage(image)
-        };
+        image.loaded.connect(()=>{
+            let index;
+            if(this.__freeIndices.length > 0)
+                index = this.__freeIndices.pop();
+            else
+                index = this.__billboards.length;
+            this.__billboards[index] = {
+                billboard,
+                imageIndex: this.__atlas.addSubImage(image)
+            };
 
-        billboard.visibilityChanged.connect(() => {
-            this.__updateIndexArray();
-            this.updated.emit();
-        });
-        image.updated.connect(() => {
-            throw("TODO: update the atlas:" + index);
-            // const image = billboard.getParameter('image').getValue();
-            // const imageIndex = this.__atlas.addSubImage(image)
-            // this.__billboards[index].image = image;
-            // this.__billboards[index].imageIndex = imageIndex;
-            // this.__updateBillboard(index);
-        });
-        billboard.getParameter('alpha').valueChanged.connect(() => {
-            this.__updateBillboard(index);
-            this.updated.emit();
-        });
+            billboard.visibilityChanged.connect(() => {
+                this.__updateIndexArray();
+                this.updated.emit();
+            });
+            image.updated.connect(() => {
+                console.warn("TODO: update the atlas:" + index);
+                // const image = billboard.getParameter('image').getValue();
+                // const imageIndex = this.__atlas.addSubImage(image)
+                // this.__billboards[index].image = image;
+                // this.__billboards[index].imageIndex = imageIndex;
+                // this.__updateBillboard(index);
+            });
+            billboard.getParameter('alpha').valueChanged.connect(() => {
+                this.__updateBillboard(index);
+                this.updated.emit();
+            });
 
+            this.__requestUpdate();
+        })
         billboard.destructing.connect(() => {
             this.removeBillboardItem(index);
         });
-        this.__requestUpdate();
     }
 
     removeBillboardItem(index) {
