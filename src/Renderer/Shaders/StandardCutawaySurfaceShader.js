@@ -237,7 +237,7 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_SPECULAR
-    if(NormalTexType){
+    if(NormalTexType != 0){
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
