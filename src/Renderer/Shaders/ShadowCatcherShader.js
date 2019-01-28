@@ -100,8 +100,8 @@ void main(void) {
 
     vec4 env = envMap;
     if(envMapTexType != 0) {
-        vec2 uv = dirToSphOctUv(normalize(v_worldDir));
-        env = texture2D(envMapTex, uv);
+        vec2 texCoord = dirToSphOctUv(normalize(v_worldDir));
+        env = texture2D(envMapTex, texCoord);
     }
 
     vec3 irradiance = texture2D(lightmap, v_lightmapCoord).rgb * ShadowMultiplier;
@@ -129,10 +129,13 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
         paramDescs.push({ name: 'ProjectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
         paramDescs.push({ name: 'ShadowMultiplier', defaultValue: 1.0 })
         return paramDescs;
+    }
+
+    static isTransparent() {
+        return true;
     }
 
     bind(renderstate, key) {

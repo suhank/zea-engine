@@ -462,7 +462,7 @@ class GLTexture2D extends RefCounted {
 
     preBind(unif, unifs) {
         return {
-            textureConnectedUnif: unifs[unif.name+'Type'],
+            textureTypeUnif: unifs[unif.name+'Type'],
             textureDescUnif: unifs[unif.name+'Desc']
         }
     }
@@ -483,8 +483,8 @@ class GLTexture2D extends RefCounted {
         gl.uniform1i(unif.location, unit);
 
         if(bindings) {
-            if (bindings.textureConnectedUnif) {
-                gl.uniform1i(bindings.textureConnectedUnif.location, this.textureType);
+            if (bindings.textureTypeUnif) {
+                gl.uniform1i(bindings.textureTypeUnif.location, this.textureType);
             }
 
             if (bindings.textureDescUnif){

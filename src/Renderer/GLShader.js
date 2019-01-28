@@ -338,9 +338,12 @@ class GLShader extends BaseItem {
                 if (envMapPyramid && renderstate.envMap.bindProbeToUniform) {
                     renderstate.envMap.bindProbeToUniform(renderstate, envMapPyramid);
                 }
-                const envMapTex = unifs.envMapTex;
-                if (envMapTex) {
-                    renderstate.envMap.bindToUniform(renderstate, envMapTex);
+                else {
+                    // Bind the env map src 2d image to the env map param
+                    const { envMapTex, envMapTexType } = unifs;
+                    if (envMapTex) {
+                        renderstate.envMap.bindToUniform(renderstate, envMapTex, { textureTypeUnif: envMapTexType });
+                    }
                 }
             } {
                 const unif = unifs.exposure;

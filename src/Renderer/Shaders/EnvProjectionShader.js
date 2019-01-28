@@ -56,7 +56,6 @@ void main()
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'envMap', defaultValue: new Color(0.0, 0.0, 0.0) })
         paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
         return paramDescs;
     }
@@ -74,9 +73,11 @@ precision highp float;
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
 
+
 uniform color envMap;
 uniform sampler2D envMapTex;
 uniform int envMapTexType;
+
 
 uniform float exposure;
 

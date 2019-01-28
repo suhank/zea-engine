@@ -16,7 +16,7 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
         return geomItem;
     }
 
-    addMeshShape('Sphere', new Visualive.Sphere(20, 64), new Visualive.Xfo());
+    // addMeshShape('Sphere', new Visualive.Sphere(20, 64), new Visualive.Xfo());
     addMeshShape('Plane0', new Visualive.Plane(50.0, 50.0), new Visualive.Xfo());
     addMeshShape('Plane1', 
         new Visualive.Plane(6.0, 2.0), 
@@ -43,19 +43,19 @@ testingHarness.registerTest('EnvProjection', (domElement, resources)=> {
 
     renderer.resumeDrawing();
 
-    envMap.loaded.connect(()=>{
-        let exposure = 1.0;
-        const camera = renderer.getViewport().getCamera();
-        renderer.startContinuousDrawing();
-        renderer.redrawOccured.connect((data) => {
-            const viewDir = camera.getGlobalXfo().ori.getZaxis().negate();
-            const luminance = envMap.dirToLuminance(viewDir);
-            // Apply a sigmoid function to reduce variance. 
-            const targExposure = Math.atan(1 / luminance);
-            // console.log("luminance:", luminance, targExposure)
+    // envMap.loaded.connect(()=>{
+    //     let exposure = 1.0;
+    //     const camera = renderer.getViewport().getCamera();
+    //     renderer.startContinuousDrawing();
+    //     renderer.redrawOccured.connect((data) => {
+    //         const viewDir = camera.getGlobalXfo().ori.getZaxis().negate();
+    //         const luminance = envMap.dirToLuminance(viewDir);
+    //         // Apply a sigmoid function to reduce variance. 
+    //         const targExposure = Math.atan(1 / luminance);
+    //         // console.log("luminance:", luminance, targExposure)
 
-            exposure = Math.lerp(exposure, targExposure, 0.08);
-            renderer.exposure = exposure;
-        })
-    })
+    //         exposure = Math.lerp(exposure, targExposure, 0.08);
+    //         renderer.exposure = exposure;
+    //     })
+    // })
 });

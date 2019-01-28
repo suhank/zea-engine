@@ -304,9 +304,7 @@ class Material extends BaseItem {
                     value = reader.loadFloat32();
                 }
                 const textureName = reader.loadStr();
-                if(textureName!= ''){
-                    console.log(textureName)
-                }
+                
                 // console.log(paramName +":" + value);
                 let param = this.getParameter(paramName);
                 if(param)
