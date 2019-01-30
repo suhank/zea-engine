@@ -79,8 +79,9 @@ class GLStandardGeomsPass extends GLPass {
                         if (treeItem.getMaterial() == undefined) {
                             console.warn("Scene item :" + treeItem.getPath() + " has no material");
                             // TODO: listen for when the material is assigned.(like geoms below)
+                            return false;
                         } else {
-                            checkGeom(treeItem)
+                            return checkGeom(treeItem)
                         }
                     } else {
                         return false;
@@ -91,8 +92,7 @@ class GLStandardGeomsPass extends GLPass {
             },
             (treeItem) => {
                 if (treeItem instanceof GeomItem && treeItem.getMetadata('glgeomItem')) {
-                    this.removeGeomItem(treeItem);
-                    return true;
+                    return this.removeGeomItem(treeItem);
                 }
                 return false;
             }
@@ -191,30 +191,17 @@ class GLStandardGeomsPass extends GLPass {
 
         // Note: before the renderer is disabled, this is a  no-op.
         this.__renderer.requestRedraw();
+
+        geomItem.setMetadata('glpass', this);
         return glgeomItem;
     };
 
     removeGeomItem(geomItem) {
+        if(geomItem.getMetadata('glpass') != this)
+            return;
 
-        // const glgeomItem = geomItem.getMetadata('glgeomItem');
-        // this.removeGLGeomItem(glgeomItem);
+        const glgeomItem = geomItem.getMetadata('glgeomItem');
 
-        // const glgeom = geomItem.getGeometry().getMetadata('glgeom');
-        // const glmaterialGeomItemSets = geomItem.getMaterial().getMetadata('glmaterialGeomItemSets');
-
-        // const drawItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeom);
-        // drawItemSet.removeGeomItem(glgeomItem);
-
-        // // Note: for now leave the material and geom in place. Multiple 
-        // // GeomItems can reference a given material/geom, so we simply wait
-        // // for them to be destroyed. 
-
-        // geomItem.deleteMetadata('glgeomItem')
-
-    }
-
-
-    removeGLGeomItem(glgeomItem) {
         const index = glgeomItem.getId();
         this.__drawItems[index] = null;
         this.__drawItemsIndexFreeList.push(index);
@@ -225,7 +212,12 @@ class GLStandardGeomsPass extends GLPass {
 
         // this.renderTreeUpdated.emit();
         this.__renderer.requestRedraw();
-    };
+
+        geomItem.getMetadata('glpass')
+        geomItem.deleteMetadata('glgeomItem')
+
+        return glgeomItem;
+    }
 
     // removeMaterial(material) {
     //     const glshaderMaterials = this.__glshadermaterials[material.hash];

@@ -126,7 +126,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         if (glshader.constructor.getGeomDataShaderName())
             glselectedshader = this.__renderer.getOrCreateShader(glshader.constructor.getSelectedShaderName());
         const glmaterial = this.addMaterial(material);
-        const glgeomitem = super.addGeomItem(geomItem);
+        const glgeomItem = super.addGeomItem(geomItem);
 
         let glshaderMaterials = this.__glshadermaterials[glshader.getName()];
         if (!glshaderMaterials) {
@@ -140,22 +140,24 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             glshaderMaterials.addMaterialGeomItemSets(glmaterialGeomItemSets);
         }
 
-        let geomItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeomitem.glGeom);
+        let geomItemSet = glmaterialGeomItemSets.findGeomItemSet(glgeomItem.glGeom);
         if (!geomItemSet) {
-            geomItemSet = new GLGeomItemSet(this.__gl, glgeomitem.glGeom);
+            geomItemSet = new GLGeomItemSet(this.__gl, glgeomItem.glGeom);
             glmaterialGeomItemSets.addGeomItemSet(geomItemSet);
         }
 
         geomItem.setMetadata('geomItemSet', geomItemSet);
 
-        geomItemSet.addGeomItem(glgeomitem);
+        geomItemSet.addGeomItem(glgeomItem);
+
+        return true;
     }
 
     removeGeomItem(geomItem) {
 
-        const glgeomItem = geomItem.getMetadata('glgeomItem');
-        this.removeGLGeomItem(glgeomItem);
-        geomItem.deleteMetadata('glgeomItem')
+        const glgeomItem = super.removeGeomItem(geomItem);
+        if(!glgeomItem)
+            return false;
 
         const geomItemSet = geomItem.getMetadata('geomItemSet');
         if(geomItemSet) {
@@ -165,6 +167,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             geomItemSet.removeGeomItem(glgeomItem);
             geomItem.deleteMetadata('geomItemSet')
         }
+
+        return true;
     }
 
     removeMaterial(material) {
@@ -261,10 +265,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]]);
         }
 
-        const glgeomitem = this.__drawItems[itemId];
-        if (glgeomitem) {
+        const glgeomItem = this.__drawItems[itemId];
+        if (glgeomItem) {
             return {
-                geomItem: glgeomitem.getGeomItem(),
+                geomItem: glgeomItem.getGeomItem(),
                 dist
             }
         }

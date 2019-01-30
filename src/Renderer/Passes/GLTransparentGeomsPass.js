@@ -20,6 +20,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         super.init(renderer, passIndex);
 
         this.transparentItems = [];
+        this.freeList = [];
         this.visibleItems = [];
         this.prevSortCameraPos = new Vec3(999, 999, 999);
         this.resort = false;
@@ -44,35 +45,62 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         const glmaterial = this.addMaterial(material);
         const glgeomitem = super.addGeomItem(geomItem);
 
+        const visibilityChangedId = geomItem.visibilityChanged.connect((visible) => {
+            if (visible){
+                this.visibleItems.push(item);
+            }
+            else {
+                const index = this.visibleItems.indexOf(item);
+                this.visibleItems.splice(index, 1);
+            }
+        });
+        const geomXfoChangedId = geomItem.geomXfoChanged.connect(() => {
+            this.resort = true;
+        });
 
         const item = {
             glshader,
             glmaterial,
-            glgeomitem
+            glgeomitem,
+            visibilityChangedId,
+            geomXfoChangedId
         }
-        if (geomItem.getVisible())
-            this.transparentItems.push(item);
+        let itemindex;
+        if(this.freeList.length > 0)
+            itemindex = this.freeList.pop();
+        else
+            itemindex = this.transparentItems.length;
+        this.transparentItems[itemindex] = item;
+        geomItem.setMetadata('itemIndex', itemindex);
+        if (geomItem.getVisible()) {
+            this.visibleItems.push(item);
+        }
 
-        geomItem.visibilityChanged.connect((visible) => {
-            if (visible)
-                this.transparentItems.push(item);
-            else {
-                const index = this.transparentItems.indexOf(item);
-                this.transparentItems.splice(index, 1);
-            }
-        });
-        geomItem.geomXfoChanged.connect(() => {
-            this.resort = true;
-        });
+
 
         // force a resort.
         this.resort = true;
     }
 
+    removeGeomItem(geomItem) {
+
+        if(!super.removeGeomItem(geomItem))
+            return;
+
+        const itemindex = geomItem.getMetadata('itemIndex');
+        const item = this.transparentItems[itemindex];
+        this.transparentItems[itemindex] = null;
+        this.freeList.push(itemindex);
+
+        const visibleindex = this.visibleItems.indexOf(item);
+        if(visibleindex != -1)
+            this.visibleItems.splice(visibleindex, 1);
+    }
+
     sortItems(viewPos) {
-        for (let transparentItem of this.transparentItems)
+        for (let transparentItem of this.visibleItems)
             transparentItem.dist = transparentItem.glgeomitem.geomItem.getGeomXfo().tr.distanceTo(viewPos);
-        this.transparentItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
+        this.visibleItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
         this.prevSortCameraPos = viewPos;
         this.resort = false;
     }
@@ -82,7 +110,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         let currentglShader;
         let currentglMaterial;
         let currentglGeom;
-        for (let transparentItem of this.transparentItems) {
+        for (let transparentItem of this.visibleItems) {
             const glshader = transparentItem.glmaterial.getGLShader();
             if (currentglShader != transparentItem.glshader) {
                 // Some passes, like the depth pass, bind custom uniforms.
@@ -151,7 +179,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
 
     draw(renderstate) {
-        if (this.transparentItems.length == 0)
+        if (this.visibleItems.length == 0)
             return;
 
         if (this.newItemsReadyForLoading())

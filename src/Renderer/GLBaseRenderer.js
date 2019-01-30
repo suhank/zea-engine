@@ -116,11 +116,9 @@ class GLBaseRenderer {
                             resolve(this.__xrViewport)
                         }).catch((reason) => {
                             console.warn("Unable to setup XR:" + reason);
-                            reject("Unable to setup XR:" + reason)
                         });
                     }).catch((reason) => {
                         console.warn("Unable to setup XR:" + reason);
-                        reject("Unable to setup XR:" + reason)
                     });
                     // TODO:
                     // navigator.xr.addEventListener('devicechange', checkForXRSupport);

@@ -2,12 +2,7 @@ testingHarness.registerTest('AddRemoveItemsFromRenderer', (domElement, resources
     const scene = new Visualive.Scene(resources);
     scene.setupGrid(60.0, 6);
 
-    let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
-    standardMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    standardMaterial.addParameter('Roughness', 1.0);
-    standardMaterial.addParameter('Metallic', 0.0);
-
-    let addGeomItem = (shape, row, count, i) => {
+    const addGeomItem = (shape, row, count, i, material) => {
         const geomItem = new Visualive.GeomItem('Item' + row + '-' + i, shape, standardMaterial);
         geomItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i * 3, row * 3, 0)));
 
@@ -27,14 +22,24 @@ testingHarness.registerTest('AddRemoveItemsFromRenderer', (domElement, resources
             }
         }, (row * 200) + (i * 500));
     }
-    let addMeshShape = (shape, row, count) => {
+    const addShapeRow = (shape, row, count, material) => {
         for (let i = 0; i < count; i++) {
-            addGeomItem(shape, row, count, i);
+            addGeomItem(shape, row, count, i, material);
         }
     }
 
-    addMeshShape(new Visualive.Sphere(1.4, 13), 3, 5);
 
+    const standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
+    standardMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    standardMaterial.addParameter('Roughness', 1.0);
+    standardMaterial.addParameter('Metallic', 0.0);
+
+    addShapeRow(new Visualive.Sphere(1.4, 24), 0, 5, standardMaterial);
+
+    const linesMaterial = new Visualive.Material('lines', 'LinesShader');
+    linesMaterial.getParameter('Color').setValue(new Visualive.Color(1.0, 0.3, .4));
+
+    addShapeRow(new Visualive.Circle(1.4, 24), 1, 5, linesMaterial);
 
     const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 2, 15), new Visualive.Vec3(0, 0, 0));
