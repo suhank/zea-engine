@@ -37,8 +37,8 @@ class Rect extends Lines {
     }
 
     setSize(x, y) {
-        this.__x.setValue(val, -1);
-        this.__y.setValue(val, -1);
+        this.__x.setValue(x, -1);
+        this.__y.setValue(y, -1);
         this.__resize();
     }
 

@@ -287,7 +287,11 @@ class GLTexture2D extends RefCounted {
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         }
         if (data != undefined) {
-            if (data instanceof Image || data instanceof ImageData || data instanceof HTMLVideoElement) {
+            if (data instanceof Image ||
+                data instanceof ImageData ||
+                data instanceof HTMLCanvasElement ||
+                data instanceof HTMLImageElement ||
+                data instanceof HTMLVideoElement) {
                 gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.__format, this.__type, data);
                 this.width = data.width;
                 this.height = data.height;
