@@ -80,6 +80,7 @@ class VRViewport extends GLBaseViewport {
         //////////////////////////////////////////////
         // Xfos
         const xfo = new Xfo();
+        // Convert Y-Up to Z-Up.
         xfo.ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * 0.5);
         this.setXfo(xfo); // Reset the stage Xfo.
 

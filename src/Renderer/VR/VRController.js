@@ -130,6 +130,10 @@ class VRController {
         return this.__xfo;
     }
 
+    getControllerTipStageLocalXfo() {
+        return this.__xfo.multiply(this.__tip.getLocalXfo());
+    }
+
     updatePose(inputPose) {
         this.__mat4.setDataArray(inputPose.gripMatrix);
         this.__xfo.fromMat4(this.__mat4);
