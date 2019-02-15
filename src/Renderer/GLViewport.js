@@ -384,12 +384,12 @@ class GLViewport extends GLBaseViewport {
                 if (event.vleStopPropagation == true)
                     return;
             }
-
-            if (this.__cameraManipulator) {
-                this.__cameraManipulatorDragging = true;
-                this.__cameraManipulator.onDragStart(event, mousePos, this);
-                return;
-            }
+        }
+        
+        if (this.__cameraManipulator) {
+            this.__cameraManipulatorDragging = true;
+            this.__cameraManipulator.onDragStart(event, mousePos, this);
+            return;
         }
 
         this.mouseDown.emit(event);
@@ -436,8 +436,8 @@ class GLViewport extends GLBaseViewport {
 
     onKeyPressed(key, event) {
         if (this.__cameraManipulator) {
-            this.__cameraManipulator.onKeyPressed(key, event, this);
-            return;
+            if(this.__cameraManipulator.onKeyPressed(key, event, this))
+                return true;
         }
         event.viewport = this;
         this.keyPressed.emit(key, event);
@@ -446,8 +446,8 @@ class GLViewport extends GLBaseViewport {
     
     onKeyDown(key, event) {
         if (this.__cameraManipulator) {
-            this.__cameraManipulator.onKeyDown(key, event, this);
-            return;
+            if(this.__cameraManipulator.onKeyDown(key, event, this))
+                return true;
         }
         event.viewport = this;
         this.keyDown.emit(key, event);
@@ -455,8 +455,8 @@ class GLViewport extends GLBaseViewport {
 
     onKeyUp(key, event) {
         if (this.__cameraManipulator) {
-            this.__cameraManipulator.onKeyUp(key, event, this);
-            return;
+            if(this.__cameraManipulator.onKeyUp(key, event, this))
+                return true;
         }
         event.viewport = this;
         this.keyUp.emit(key, event);

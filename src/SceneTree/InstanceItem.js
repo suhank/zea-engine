@@ -26,13 +26,18 @@ class InstanceItem extends TreeItem {
     setSrcTree(treeItem) {
         this.__srcTree = treeItem;
 
-        const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE);
-        child.setLocalXfo(new Xfo())
-        this.addChild(child)
+        const numChildren = this.__srcTree.getNumChildren();
+        if(numChildren == 0) {
+            const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE);
+            child.setLocalXfo(new Xfo())
+            this.addChild(child);
+        }
+        else {
+            for(let i=0; i<this.__srcTree.getNumChildren(); i++) {
+                this.addChild(this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+            }
+        }
 
-        // for(let i=0; i<this.__srcTree.getNumChildren(); i++) {
-        //     this.addChild(this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
-        // }
         // this.__srcTree.childAdded.connect((child)=>{
         //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
         // })

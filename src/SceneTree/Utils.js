@@ -22,7 +22,6 @@ const loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
                 onSucceed(xhr);
             else
                 onFail(xhr.statusText);
-
         });
         xhr.open("GET", url, true);
         xhr.send();
