@@ -2,6 +2,13 @@ import {
     Signal
 } from '../../Utilities';
 
+import {
+    ParameterOwner
+} from '../../SceneTree/ParameterOwner.js';
+import {
+    ValueSetMode,
+    BooleanParameter
+} from '../../SceneTree/Parameters';
 
 const PassType = {
     OPAQUE: 0,
@@ -10,11 +17,21 @@ const PassType = {
 };
 
 // This class abstracts the rendering of a collection of geometries to screen.
-class GLPass {
+class GLPass extends ParameterOwner {
     constructor() {
+        super();
         this.updated = new Signal();
         this.enabled = true;
         this.__passIndex = 0;
+
+        const enabledParam = this.addParameter(new BooleanParameter('Enabled', true));
+        enabledParam.valueChanged.connect( mode => this.enabled = enabledParam.getValue());
+    }
+
+    __parameterValueChanged(param, mode){
+        super.__parameterValueChanged(param, mode)
+        if(this.__renderer)
+            this.__renderer.requestRedraw()
     }
 
     init(renderer, passIndex) {
@@ -28,10 +45,6 @@ class GLPass {
 
     setPassIndex(passIndex) {
         this.__passIndex = passIndex;
-    }
-
-    toggleEnabled() {
-        this.enabled = !this.enabled;
     }
 
     startPresenting() {}

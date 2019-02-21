@@ -133,6 +133,11 @@ class ParameterOwner extends RefCounted {
         return param;
     }
 
+    // This method can be overrridden in derived classes
+    // to perform general updates. (see GLPass)
+    __parameterValueChanged(param, mode){
+        this.parameterValueChanged.emit(param, mode)
+    }
 
 
     addParameterInstance(param) {
@@ -141,7 +146,7 @@ class ParameterOwner extends RefCounted {
             console.warn("Replacing Parameter:" + name)
             this.removeParameter(name);
         }
-        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
+        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.__parameterValueChanged(param, mode));
         param.addRef(this);
         this.__params.push(param)
         this.__paramMapping[name] = this.__params.length - 1;
