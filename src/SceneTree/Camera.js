@@ -22,7 +22,9 @@ import {
     BooleanParameter,
     NumberParameter
 } from './Parameters';
-
+import {
+    sgFactory
+} from './SGFactory';
 
 
 class Camera extends TreeItem {
@@ -37,15 +39,15 @@ class Camera extends TreeItem {
         this.__farParam = this.addParameter(new NumberParameter('far', 1000.0));
         this.__focalDistanceParam = this.addParameter(new NumberParameter('focalDistance', 5.0));
 
-        this.__viewMatParam = this.addParameter(new Parameter('viewMat', new Mat4()));
-        const _cleanViewMat = (xfo)=>{
-            return this.__globalXfoParam.getValue().inverse().toMat4();
-        }
-        this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            this.__viewMatParam.setDirty(_cleanViewMat);
-        });
+        // this.__viewMatParam = this.addParameter(new Parameter('viewMat', new Mat4()));
+        // const _cleanViewMat = (xfo)=>{
+        //     return this.__globalXfoParam.getValue().inverse().toMat4();
+        // }
+        // this.__globalXfoParam.valueChanged.connect((changeType)=>{
+        //     this.__viewMatParam.setDirty(_cleanViewMat);
+        // });
 
-        this.viewMatChanged = this.__viewMatParam.valueChanged;
+        // this.viewMatChanged = this.__viewMatParam.valueChanged;
         this.projectionParamChanged = new Signal();
         this.movementFinished = new Signal();
 
@@ -235,7 +237,8 @@ class Camera extends TreeItem {
     }
 };
 
+sgFactory.registerClass('Camera', Camera);
+
 export {
     Camera
 };
-//export default Camera;

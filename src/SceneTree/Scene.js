@@ -2,14 +2,29 @@ import {
     SystemDesc
 } from '../BrowserDetection.js';
 import {
+    Vec3,
+    Xfo,
+    Color,
     JSON_stringify_fixedPrecision
 } from '../Math';
 import {
     Signal
 } from '../Utilities';
 import {
+    Material
+} from './Material.js';
+import {
     TreeItem
 } from './TreeItem.js';
+import {
+    Camera
+} from './Camera.js';
+import {
+    Lines
+} from './Geometry/Lines.js';
+import {
+    Grid
+} from './Geometry/Shapes/Grid.js';
 import {
     VLAAsset
 } from './VLAAsset.js';
@@ -25,6 +40,7 @@ import {
     LightmapMixer
 } from './Images';
 
+const defaultGridColor = new Color(.53, .53, .53);
 
 class Scene {
     constructor(resources) {
@@ -35,6 +51,8 @@ class Scene {
         
         this.cameras = [];
         this.__root = new TreeItem('root');
+        this.__root.addChild(new Camera('Camera'));
+
         this.__assets = [];
 
         // Env map used for background and reflections.
@@ -55,19 +73,14 @@ class Scene {
         this.__commonResources = {};
 
         /////////////////////////////
-        // Time
-        this.__sceneTime = 0.0;
-        this.__sceneDuration = 10.0;
-        this.__playing = false;
 
         this.backgroundMapChanged = new Signal();
         this.envMapChanged = new Signal();
         this.lightmapAdded = new Signal();
-        this.commonResourcesLoaded = new Signal(true);
-        this.sceneTimeChanged = new Signal();
-        this.sceneDurationChanged = new Signal();
         this.assetAdded = new Signal();
         this.assetRemoved = new Signal();
+
+
     }
 
     getRoot() {
@@ -78,18 +91,14 @@ class Scene {
         return resourceLoader;
     }
 
-    loadCommonAssetResource(path) {
-        if (path in this.__commonResources) {
-            return this.__commonResources[path];
+    loadCommonAssetResource(resourceId) {
+        if (resourceId in this.__commonResources) {
+            return this.__commonResources[resourceId];
         }
-        const asset = new VLAAsset(path, resourceLoader);
-        asset.getParameter('DataFilePath').setFilepath(path);
-        this.__commonResources[path] = asset;
+        const asset = new VLAAsset();
+        asset.getParameter('DataFilePath').setValue(resourceId);
+        this.__commonResources[resourceId] = asset;
         return asset;
-    }
-
-    getSelectionManager() {
-        return this.__selectionManager;
     }
 
     getEnvMapLOD() {
@@ -127,6 +136,24 @@ class Scene {
 
     getCamera(index = 0) {
         return this.cameras[index];
+    }
+
+    //////////////////////////////////
+    // Paths
+    resolvePath(path, index = 0) {
+
+        if (typeof path == 'string')
+            path = path.split('/');
+
+        if (path[index] == '.')
+            index++;
+
+        if(path[index] == 'root') {
+            return this.__root.resolvePath(path, index+1);
+        }
+        else if(path[index] == 'selectionSets') {
+            return this.__root.resolvePath(path, index+1);
+        }
     }
 
     //////////////////////////////////
@@ -180,48 +207,40 @@ class Scene {
 
 
     ///////////////////////////////////////
-    // Time
+    // Default Scene Items
 
-    getSceneTime() {
-        return this.__sceneTime;
+    getCamera() {
+        return this.__root.getChildByName('Camera')
     }
 
-    setSceneTime(sceneTime, stopPlaying = true) {
-        this.__sceneTime = sceneTime;
-        this.sceneTimeChanged.emit(this.__sceneTime);
-        if (stopPlaying)
-            this.__playing = false;
+    setupGrid(gridSize=5, resolution=50, gridColor=defaultGridColor) {
+
+        const gridTreeItem = new TreeItem('Grid');
+         const gridMaterial = new Material('gridMaterial', 'LinesShader');
+        gridMaterial.getParameter('Color').setValue(gridColor);
+        const grid = new Grid(gridSize, gridSize, resolution, resolution, true);
+        gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial));
+         const axisLine = new Lines();
+        axisLine.setNumVertices(2);
+        axisLine.setNumSegments(1);
+        axisLine.setSegment(0, 0, 1);
+        axisLine.getVertex(0).set(gridSize * -0.5, 0.0, 0.0);
+        axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
+         const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
+        gridXAxisMaterial.getParameter('Color').setValue(new Color(gridColor.luminance(), 0, 0));
+        gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
+         const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
+        gridZAxisMaterial.getParameter('Color').setValue(new Color(0, gridColor.luminance(), 0));
+        const geomOffset = new Xfo();
+        geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
+        const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
+        zAxisLineItem.setGeomOffsetXfo(geomOffset);
+        gridTreeItem.addChild(zAxisLineItem);
+        gridTreeItem.setSelectable(false, true);
+        this.__root.addChild(gridTreeItem);
+
+        return gridTreeItem;
     }
-
-    getSceneDuration() {
-        return this.__sceneDuration;
-    }
-
-    setSceneDuration(sceneDuration) {
-        this.__sceneDuration = sceneDuration;
-        this.sceneDurationChanged.emit(this.__sceneDuration);
-    }
-
-    startPlaying(sceneTime) {
-        let prev = Date.now();
-        let onAnimationFrame = () => {
-            let now = Date.now();
-            let newTime = this.__sceneTime + ((now - prev) / 1000);
-            if (newTime > this.__sceneDuration) {
-                // newTime = 0;
-                this.__playing = false;
-            }
-            if (this.__playing) {
-                window.requestAnimationFrame(onAnimationFrame);
-            }
-            this.setSceneTime(newTime, false);
-            prev = now;
-        }
-
-        this.__playing = true;
-        window.requestAnimationFrame(onAnimationFrame);
-    }
-
 
     ///////////////////////////////////////
     // Persistence
@@ -236,10 +255,10 @@ class Scene {
 
     }
 
-    toJSON(context) {
+    toJSON(context, flags) {
         return {
-            "root": this.__root.toJSON(context),
-            "boundingBox": this.boundingBox.toJSON(context),
+            "root": this.__root.toJSON(context, flags),
+            "boundingBox": this.boundingBox.toJSON(context, flags),
         }
     }
 
@@ -248,7 +267,6 @@ class Scene {
     }
 };
 
-// export default Scene;
 export {
     Scene
 };

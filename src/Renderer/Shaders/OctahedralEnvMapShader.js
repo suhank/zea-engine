@@ -5,10 +5,10 @@ import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/Florian/Lookup.js';
 
-class OctaHedralEnvMapShader extends GLShader {
+class OctahedralEnvMapShader extends GLShader {
     constructor(name) {
         super(name);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('OctaHedralEnvMapShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('OctahedralEnvMapShader.vertexShader', `
 precision highp float;
 
 attribute vec2 positions;    //(location = 0)
@@ -42,7 +42,7 @@ void main()
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctaHedralEnvMapShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctahedralEnvMapShader.fragmentShader', `
 precision highp float;
 
 <%include file="Florian/Lookup.glsl"/>
@@ -85,6 +85,6 @@ void main(void) {
 };
 
 export {
-    OctaHedralEnvMapShader
+    OctahedralEnvMapShader
 };
-//export default OctaHedralEnvMapShader;
+//export default OctahedralEnvMapShader;

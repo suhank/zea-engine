@@ -83,9 +83,9 @@ uniform float Opacity;
 #ifdef ENABLE_TEXTURES
 
 uniform sampler2D BaseColorTex;
-uniform bool BaseColorTexConnected;
+uniform int BaseColorTexType;
 uniform sampler2D OpacityTex;
-uniform bool OpacityTexConnected;
+uniform int OpacityTexType;
 
 #endif
 
@@ -99,8 +99,8 @@ void main(void) {
     vec4 baseColor      = BaseColor;
     float opacity       = baseColor.a * Opacity;
 #else
-    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_textureCoord);
-    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, v_textureCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, v_textureCoord);
 #endif
 
     // Hacky simple irradiance. 
@@ -130,14 +130,22 @@ void main(void) {
 #endif
 }
 `);
-        this.nonSelectable = true;
         this.finalize();
     }
+    
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
         paramDescs.push({ name: 'Opacity', defaultValue: 1.0 });
         return paramDescs;
+    }
+
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
     }
 };
 

@@ -138,6 +138,12 @@ class AudioItem extends TreeItem {
     isLoaded() {
         return this.__loaded;
     }
+
+    setAudioStream(audio) {
+        this.__loaded = true;
+        this.loaded.emit();
+        this.audioSourceCreated.emit(audioSource);
+    }
 };
 
 

@@ -73,7 +73,7 @@ class State {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         let j = {
             name: this.__name,
             type: this.constructor.name
@@ -81,26 +81,26 @@ class State {
 
         const stateEventsJson = [];
         for(let stateEvent of this.__stateEvents){
-            stateEventsJson.push(stateEvent.toJSON(context));
+            stateEventsJson.push(stateEvent.toJSON(context, flags));
         }
         j.stateEvents = stateEventsJson;
         
         const activationActionsJson = [];
         for(let stateEvent of this.__activationActions){
-            activationActionsJson.push(stateEvent.toJSON(context));
+            activationActionsJson.push(stateEvent.toJSON(context, flags));
         }
         j.activationActions = activationActionsJson;
         
         const deactivationActionsJson = [];
         for(let stateEvent of this.__deactivationActions){
-            deactivationActionsJson.push(stateEvent.toJSON(context));
+            deactivationActionsJson.push(stateEvent.toJSON(context, flags));
         }
         j.deactivationActions = deactivationActionsJson;
 
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
 
         this.__name = j.name;
 

@@ -26,10 +26,6 @@ class Group extends TreeItem {
     constructor(name) {
         super(name);
 
-        // this.__initialXfoParam = this.addParameter(new XfoParameter('InitialXfo'));
-        // this.__initialXfoParam.valueChanged.connect(()=>{
-        //     this.__invInitialXfo = this.__initialXfoParam.getValue().inverse();
-        // })
         this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', ['first', 'average'], 0, 'Number'));
         this.__initialXfoModeParam.valueChanged.connect(()=>{
             this.recalcInitialXfo();
@@ -66,6 +62,7 @@ class Group extends TreeItem {
         this.__globalXfoParam.valueChanged.connect((changeType)=>{
             if(this.__invInitialXfo && this.__items.length > 0) {
                 let delta;
+                const xfo = this.__globalXfoParam.getValue();
                 const setDirty = (item, initialXfo)=>{
                     const clean = ()=>{
                         if(!delta) {
@@ -86,8 +83,8 @@ class Group extends TreeItem {
         });
 
         this.mouseDownOnItem = new Signal();
-        this.mouseUpOnItem = new Signal();
-        this.mouseMoveOnItem = new Signal();
+        // this.mouseUpOnItem = new Signal();
+        // this.mouseMoveOnItem = new Signal();
 
 
     }
@@ -96,19 +93,20 @@ class Group extends TreeItem {
         super.destroy();
     }
 
-    clone() {
+    clone(flags) {
         let cloned = new Group();
-        this.copyTo(cloned);
+        cloned.copyFrom(this, flags);
         return cloned;
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned);
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags);
     }
 
     //////////////////////////////////////////
     // Items
-
+    // Thsi function is mostly used in our demos, and 
+    // should be removed from the interface
     resolveItems(paths) {
         const asset = this.getOwner();
         for(let path of paths) {
@@ -120,7 +118,7 @@ class Group extends TreeItem {
                 console.warn("Group could not resolve item:" + path)
             }
         }
-        this.recalcInitialXfo();
+        this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
     }
 
     addItem(item) { 
@@ -129,35 +127,35 @@ class Group extends TreeItem {
             return;
         }
         const index = this.__items.length;
-        item.mouseDown.connect((mousePos, event)=>{
-            this.mouseDown.emit(mousePos, event);
-            this.mouseDownOnItem.emit(mousePos, event, item);
+        item.mouseDown.connect((event)=>{
+            this.mouseDown.emit(event);
+            this.mouseDownOnItem.emit(event, item);
         });
-        item.mouseUp.connect((mousePos, event)=>{
-            this.mouseUp.emit(mousePos, event);
-            this.mouseUpOnItem.emit(mousePos, event, item);
-        });
-        item.mouseMove.connect((mousePos, event)=>{
-            this.mouseMove.emit(mousePos, event);
-            this.mouseMoveOnItem.emit(mousePos, event, item);
-        });
+        // item.mouseUp.connect((event)=>{
+        //     this.mouseUp.emit(event);
+        //     this.mouseUpOnItem.emit(event, item);
+        // });
+        // item.mouseMove.connect((event)=>{
+        //     this.mouseMove.emit(event);
+        //     this.mouseMoveOnItem.emit(event, item);
+        // });
         item.globalXfoChanged.connect((mode)=>{
-            if(mode == ValueSetMode.USER_SETVALUE)
+            if(mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
                 this.__initialXfos[index] = item.getGlobalXfo();
         });
         this.__initialXfos[index] = item.getGlobalXfo();
         this.__items.push(item);
     }
 
-    recalcInitialXfo() {
+    recalcInitialXfo(mode) {
         if(this.__items.length == 0)
             return;
-        const mode = this.__initialXfoModeParam.getValue();
+        const initialXfoMode = this.__initialXfoModeParam.getValue();
         let xfo;
-        if(mode == 'first') {
+        if(initialXfoMode == 'first') {
             xfo = this.__items[0].getGlobalXfo();
         }
-        else if(mode == 'average') {
+        else if(initialXfoMode == 'average') {
             xfo = new Xfo();
             for(let p of this.__items) {
                 const itemXfo = p.getGlobalXfo();
@@ -172,8 +170,8 @@ class Group extends TreeItem {
         else {
             throw("Invalid mode.")
         }
-
-        this.__globalXfoParam.setValue(xfo);
+        // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
+        this.__globalXfoParam.setValue(xfo, mode);
         this.__invInitialXfo = xfo.inverse();
     }
 
@@ -197,21 +195,17 @@ class Group extends TreeItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         const treeItems = [];
-        const makeRelative = (path) => {
-            const assetPath = context.assetItem.getPath();
-            return path.slice(assetPath.length);
-        }
         for(let p of this.__items) 
-            treeItems.push(makeRelative(p.getPath()));
+            treeItems.push(context.makeRelative(p.getPath()));
         j.treeItems = treeItems
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
 
         // Note: JSON data is only used to store user edits, so 
         // parameters loaed from JSON are considered user edited.
@@ -221,21 +215,22 @@ class Group extends TreeItem {
             console.warn("Invalid Parameter JSON");
             return;
         }
+        let count = j.treeItems.length;
 
-        const addItem = (index, path)=>{
-            const treeItem = context.assetItem.resolvePath(path);
-            if(!treeItem){
-                console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path)
-                return;
-            }
-            this.addItem(treeItem);
+        const addItem = (path)=>{
+            context.resolvePath(path, (treeItem)=>{
+                this.addItem(treeItem);
+                count--;
+                if(count == 0)
+                    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
+            }, (reason) => {
+                console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path);
+            });
         }
-        const treeItems = j.treeItems;
-        for(let i=0; i<j.treeItems.length; i++) {
-            addItem(i, treeItems[i]);
+        for(let path of j.treeItems) {
+            addItem(path);
         }
 
-        this.recalcInitialXfo()
     }
 };
 

@@ -20,30 +20,36 @@ import {
     NumberParameter,
     Vec2Parameter,
     Vec3Parameter,
-    ColorParameter
+    ColorParameter,
+    MaterialFloatParam,
+    MaterialColorParam
 } from './Parameters';
 
-const generateParameterInstance = (paramName, defaultValue)=>{
+const generateParameterInstance = (paramName, defaultValue, texturable)=>{
 
-    let param;
     if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
-        param = new Parameter(paramName, defaultValue, 'Boolean');
+        return new Parameter(paramName, defaultValue, 'Boolean');
     } else if (typeof defaultValue == 'string') {
-        param = new Parameter(paramName, defaultValue, 'String');
+        return new Parameter(paramName, defaultValue, 'String');
     } else if (Number.isNumeric(defaultValue)) {
-        param = new NumberParameter(paramName, defaultValue);
+        if(texturable)
+            return new MaterialFloatParam(paramName, defaultValue);
+        else
+            return new NumberParameter(paramName, defaultValue);
     } else if (defaultValue instanceof Vec2) {
-        param = new Vec2Parameter(paramName, defaultValue);
+        return new Vec2Parameter(paramName, defaultValue);
     } else if (defaultValue instanceof Vec3) {
-        param = new Vec3Parameter(paramName, defaultValue);
+        return new Vec3Parameter(paramName, defaultValue);
     } else if (defaultValue instanceof Color) {
-        param = new ColorParameter(paramName, defaultValue);
+        if(texturable)
+            return new MaterialColorParam(paramName, defaultValue);
+        else
+            return new ColorParameter(paramName, defaultValue);
     } else {
-        param = new Parameter(paramName, defaultValue);
+        return new Parameter(paramName, defaultValue);
     }
-    return param;
 }
-
+/*
 const makeParameterTexturable = (parameter) => {
     let image = undefined;
     parameter.textureConnected = new Signal();
@@ -60,15 +66,15 @@ const makeParameterTexturable = (parameter) => {
         return image;
     }
 
-    let imageUpdated = () => {
-        parameter.valueChanged.emit(image);
-    }
+    // let imageUpdated = () => {
+    //     parameter.valueChanged.emit();
+    // }
     
     parameter.setImage = (value, mode=0) => {
         let disconnectImage = () => {
             image.removeRef(parameter);
-            image.loaded.disconnect(imageUpdated);
-            image.updated.disconnect(imageUpdated);
+            // image.loaded.disconnect(imageUpdated);
+            // image.updated.disconnect(imageUpdated);
             parameter.textureDisconnected.emit();
         }
         if (value) {
@@ -77,8 +83,8 @@ const makeParameterTexturable = (parameter) => {
             }
             image = value;
             image.addRef(parameter);
-            image.loaded.connect(imageUpdated);
-            image.updated.connect(imageUpdated);
+            // image.loaded.connect(imageUpdated);
+            // image.updated.connect(imageUpdated);
             parameter.textureConnected.emit();
             parameter.valueChanged.emit(mode);
         } else {
@@ -98,7 +104,20 @@ const makeParameterTexturable = (parameter) => {
             if (image != undefined) {
                 parameter.setImage(undefined);
             }
-            basesetValue(value);
+            basesetValue.call(parameter, value);
+        }
+    }
+
+
+    let basereadBinary = parameter.readBinary;
+    parameter.readBinary = (reader, context) => {
+
+        basereadBinary.call(parameter, reader, context)
+
+        const textureName = reader.loadStr();
+        if(textureName != "") {
+            console.log("Load Texture");
+            parameter.setImage(context.materialLibrary.getImage(textureName));
         }
     }
 
@@ -106,16 +125,14 @@ const makeParameterTexturable = (parameter) => {
     // Can we avoid this? it flags the parameter as edited.
     // parameter.setValue(basegetValue());
 };
-
+*/
 
 class Material extends BaseItem {
     constructor(name, shaderName) {
         super(name);
 
-        // this.updated = new Signal();
-        this.textureConnected = new Signal();
-        this.textureDisconnected = new Signal();
         this.shaderNameChanged = new Signal();
+        this.visibleInGeomDataBuffer = true;
 
         if(shaderName)
             this.setShaderName(shaderName);
@@ -148,13 +165,13 @@ class Material extends BaseItem {
             // if(param && param.getType() != desc.defaultValue)
             // removePArameter
             if(!param)
-                param = this.addParameter(generateParameterInstance(desc.name, desc.defaultValue));
-            if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
-                if(!param.getImage)  
-                    this.__makeParameterTexturable(param);
-                // if(image)
-                //     param.setImage(image)
-            }
+                param = this.addParameter(generateParameterInstance(desc.name, desc.defaultValue, desc.texturable != false));
+            // if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
+            //     if(!param.getImage)  
+            //         this.__makeParameterTexturable(param);
+            //     // if(image)
+            //     //     param.setImage(image)
+            // }
 
 
         }
@@ -176,20 +193,28 @@ class Material extends BaseItem {
         }
     }
 
-    copyFrom(srcMaterial) {
-        throw("What is happening here? ")
-        for (let param of this.__params) {
-            let srcParam = srcMaterial.getParameter(param.getName())
-            if (srcParam != undefined)
-                this.__params[paramName] = srcParam;
+    clone(flags) {
+        const cloned = new GeomItem();
+        cloned.copyFrom(this, flags);
+        return cloned;
+    }
+
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags);
+        this.setShaderName(src.getShaderName())
+        for (let srcParam of src.getParameters()) {
+            let param = src.getParameter(srcParam.getName())
+            if(!srcParam.getImage)  
+                this.__makeParameterTexturable(param);
         }
     }
+
 
     ///////////////////////////////
     // Parameters
 
     getParamTextures() {
-        let textures = {};
+        const textures = {};
         for (let param of this.__params) {
             if (param.getImage && param.getImage())
                 textures[param.getName()] = param.getImage();
@@ -200,35 +225,38 @@ class Material extends BaseItem {
 
     __makeParameterTexturable(param) {
         makeParameterTexturable(param);
-        param.textureConnected.connect(this.textureConnected.emit);
-        param.textureDisconnected.connect(this.textureDisconnected.emit);
+        // param.textureConnected.connect(this.textureConnected.emit);
+        // param.textureDisconnected.connect(this.textureDisconnected.emit);
     }
 
-
     isTransparent() {
-        let opacity = this.getParameter('Opacity');
+        const opacity = this.getParameter('Opacity');
         if (opacity && (opacity.getValue() < 0.99 || opacity.getImage()))
             return true;
-        let baseColor = this.getParameter('BaseColor');
+        const baseColor = this.getParameter('BaseColor');
         if (baseColor && baseColor.getImage() && baseColor.getImage().format == 'RGBA')
             return true;
         return false;
     }
 
+    getShaderClass() {
+       return sgFactory.getClass(this.getShaderName());
+    }
+
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        return super.toJSON(context);
+    toJSON(context, flags=0) {
+        return super.toJSON(context, flags);
     }
 
-    fromJSON(j, context={}) {
+    fromJSON(j, context={}, flags=0) {
         if(!j.shader){
             console.warn("Invalid Material JSON");
             return;
         }
         this.setShaderName(j.shader)
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
         // let props = this.__params;
         // for (let key in j) {
         //     let value;
@@ -243,44 +271,62 @@ class Material extends BaseItem {
     }
 
     readBinary(reader, context) {
-        super.readBinary(reader, context);
 
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
+        let shaderName = reader.loadStr();
+
+        if(shaderName == 'StandardMaterial'){
+            shaderName = 'StandardSurfaceShader';
         }
+        if(shaderName == 'TransparentMaterial'){
+            shaderName = 'TransparentSurfaceShader';
+        }
+        this.setShaderName(shaderName);
 
-        const numParams = reader.loadUInt32();
-        for (let i = 0; i < numParams; i++) {
-            const paramName = capitalizeFirstLetter(reader.loadStr());
-            const paramType = reader.loadStr();
-            let value;
-            if (paramType == "MaterialColorParam") {
-                value = reader.loadRGBAFloat32Color();
-                // If the value is in linear space, then we should convert it to gamma space.
-                // Note: !! this should always be done in preprocessing...
-                value.applyGamma(2.2);
-            } else {
-                value = reader.loadFloat32();
-            }
-            // console.log(paramName +":" + value);
-            let param = this.getParameter(paramName);
-            if(param)
-                param.setValue(value)
-            else
-                param = this.addParameter(generateParameterInstance(paramName, value));
-            const textureName = reader.loadStr();
-            if(textureName!= ''){
-                if(!param.setImage)
-                    this.__makeParameterTexturable(param);
+        if(context.version < 3) {
 
-                if (context.materialLibrary.hasImage(textureName)) {
-                    // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-                    param.setImage(context.materialLibrary.getImage(textureName));
+            this.setName(reader.loadStr());
+
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+
+            const numParams = reader.loadUInt32();
+            for (let i = 0; i < numParams; i++) {
+                const paramName = capitalizeFirstLetter(reader.loadStr());
+                const paramType = reader.loadStr();
+                let value;
+                if (paramType == "MaterialColorParam") {
+                    value = reader.loadRGBAFloat32Color();
+                    // If the value is in linear space, then we should convert it to gamma space.
+                    // Note: !! this should always be done in preprocessing...
+                    value.applyGamma(2.2);
+                } else {
+                    value = reader.loadFloat32();
                 }
-                else {
-                    console.warn("Missing Texture:" + textureName)
+                const textureName = reader.loadStr();
+                
+                // console.log(paramName +":" + value);
+                let param = this.getParameter(paramName);
+                if(param)
+                    param.setValue(value)
+                else
+                    param = this.addParameter(generateParameterInstance(paramName, value));
+                if(textureName!= '' && param.setImage){
+                    // if(!param.setImage)
+                    //     this.__makeParameterTexturable(param);
+
+                    if (context.materialLibrary.hasImage(textureName)) {
+                        // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
+                        param.setImage(context.materialLibrary.getImage(textureName));
+                    }
+                    else {
+                        console.warn("Missing Texture:" + textureName)
+                    }
                 }
             }
+        }
+        else {
+            super.readBinary(reader, context);
         }
     }
 

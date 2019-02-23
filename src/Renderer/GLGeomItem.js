@@ -7,8 +7,17 @@ import {
 
 import '../SceneTree/GeomItem.js';
 
+
+const GLGeomItemChangeType = {
+    TRANSFORM_CHANGED: 0,
+    GEOM_CHANGED: 1,
+    VISIBILITY_CHANGED: 2,
+    SELECTION_CHANGED: 3
+};
+
+
 // This class abstracts the rendering of a collection of geometries to screen.
-class GLDrawItem {
+class GLGeomItem {
     constructor(gl, geomItem, glGeom, id, flags = null) {
         this.gl = gl;
         this.geomItem = geomItem;
@@ -19,8 +28,6 @@ class GLDrawItem {
         this.culled = false;
 
         this.lightmapName = geomItem.getLightmapName();
-
-        this.transformChanged = new Signal();
         this.updated = new Signal();
         this.destructing = new Signal();
         this.selectedChanged = this.geomItem.selectedChanged;
@@ -35,22 +42,19 @@ class GLDrawItem {
             };
         } else {
             this.updateXfo = (geomXfo) => {
-                this.transformChanged.emit();
+                this.updated.emit(GLGeomItemChangeType.TRANSFORM_CHANGED);
             };
         }
 
         this.geomItem.geomXfoChanged.connect(this.updateXfo);
         this.geomItem.visibilityChanged.connect(this.updateVisibility);
         this.geomItem.destructing.connect(this.destroy);
-        this.geomItem.selectedChanged.connect(() => {
-            this.updated.emit();
+        this.selectedChangedId = this.geomItem.selectedChanged.connect(() => {
+            this.updated.emit(GLGeomItemChangeType.SELECTION_CHANGED);
         });
-
         this.glGeom.updated.connect(() => {
-            this.updated.emit();
+            this.updated.emit(GLGeomItemChangeType.GEOM_CHANGED);
         });
-
-
 
         let lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset();
         let materialId = 0;
@@ -148,14 +152,15 @@ class GLDrawItem {
 
     destroy() {
         this.geomItem.visibilityChanged.disconnect(this.updateVisibility);
-        this.geomItem.globalXfoChanged.disconnect(this.updateXfo);
-        this.geomItem.selectedChanged.disconnect(this.updateSelection);
+        this.geomItem.geomXfoChanged.disconnect(this.updateXfo);
+        this.geomItem.selectedChanged.disconnectId(this.selectedChangedId);
         this.geomItem.destructing.disconnect(this.destroy);
         this.destructing.emit(this);
     }
 };
 
 export {
-    GLDrawItem
+    GLGeomItemChangeType,
+    GLGeomItem
 };
-// export default GLDrawItem;
+// export default GLGeomItem;

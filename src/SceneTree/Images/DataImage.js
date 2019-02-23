@@ -45,7 +45,12 @@ class DataImage extends BaseImage {
         this.width = width;
         this.height = height;
         this.__data = data;
-        this.updated.emit();
+        if(!this.__loaded) {
+            this.__loaded = true;
+            this.loaded.emit();
+        }
+        else
+            this.updated.emit();
     }
 
     getParams() {

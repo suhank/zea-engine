@@ -1,6 +1,13 @@
-import { Vec3 } from '../../Math/Vec3';
-import { GLPass, PassType } from '../GLPass.js';
-import { GLRenderer } from '../GLRenderer.js';
+import {
+    Vec3
+} from '../../Math/Vec3';
+import {
+    GLPass,
+    PassType
+} from './GLPass.js';
+import {
+    GLRenderer
+} from '../GLRenderer.js';
 
 import {
     AudioItem,
@@ -9,8 +16,10 @@ import {
 
 
 const AudioContext = window.AudioContext // Default
-    || window.webkitAudioContext // Safari and old versions of Chrome
-    || false; 
+    ||
+    window.webkitAudioContext // Safari and old versions of Chrome
+    ||
+    false;
 
 let audioCtx;
 if (AudioContext) {
@@ -29,45 +38,50 @@ class GLAudioItemsPass extends GLPass {
         this.__audioItems = [];
     }
 
-    
-    init(gl, collector, passIndex) {
-        super.init(gl, collector, passIndex);
 
-        if(!audioCtx)
+    init(renderer, passIndex) {
+        super.init(renderer, passIndex);
+
+        if (!audioCtx)
             return;
 
-        collector.registerSceneItemFilter((treeItem, rargs)=>{
-            if (treeItem instanceof AudioItem) {
-                treeItem.audioSourceCreated.connect((audioSource)=>{
-                    this.addAudioSource(treeItem, audioSource, treeItem);
-                })
-                return true;
-            }
-            if (treeItem instanceof GeomItem) {
-                const material = treeItem.getMaterial();
-                if(material) {
-                    const baseColorParam = material.getParameter('BaseColor');
-                    if(baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
-                        const image = baseColorParam.getImage();
-                        image.loaded.connect(()=>{
-                            if(image.getAudioSource) {
-                                const audioSource = image.getAudioSource();
-                                if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
-                                    this.addAudioSource(treeItem, audioSource, image);
-                            }
-                        })
-                    }
+        this.__renderer.registerPass(
+            (treeItem) => {
+                if (treeItem instanceof AudioItem) {
+                    treeItem.audioSourceCreated.connect((audioSource) => {
+                        this.addAudioSource(treeItem, audioSource, treeItem);
+                    })
+                    return true;
                 }
-                // Let other filters handle this item.
-                return false;
+                if (treeItem instanceof GeomItem) {
+                    const material = treeItem.getMaterial();
+                    if (material) {
+                        const baseColorParam = material.getParameter('BaseColor');
+                        if (baseColorParam && baseColorParam.getImage && baseColorParam.getImage()) {
+                            const image = baseColorParam.getImage();
+                            image.loaded.connect(() => {
+                                if (image.getAudioSource) {
+                                    const audioSource = image.getAudioSource();
+                                    if (audioSource instanceof HTMLMediaElement || audioSource instanceof AudioBufferSourceNode)
+                                        this.addAudioSource(treeItem, audioSource, image);
+                                }
+                            })
+                        }
+                    }
+                    // Let other passes handle this item.
+                    return false;
+                }
+            },
+            (treeItem) => {
             }
-        });
+        );
     }
+
 
 
     addAudioSource(treeItem, audioSource, parameterOwner) {
 
-        if(audioSource.addedToCollector)
+        if (audioSource.addedToCollector)
             return;
 
 
@@ -78,8 +92,10 @@ class GLAudioItemsPass extends GLPass {
             source = audioSource;
         else
             source = audioCtx.createMediaStreamSource(audioSource);
-        
+
         const connectVLParamToAudioNodeParam = (vlParam, param) => {
+            if(!vlParam)
+                return;
             // Note: setting the gain has no effect. Not sure what to do.
             // param.value = vlParam.getValue();
             param.setValueAtTime(vlParam.getValue(), 0);
@@ -91,14 +107,17 @@ class GLAudioItemsPass extends GLPass {
         }
 
         const gainNode = audioCtx.createGain();
-        connectVLParamToAudioNodeParam(parameterOwner.getParameter('Gain'), gainNode.gain);
+        const gainParam = parameterOwner.getParameter('Gain');
+        if (gainParam) {
+            connectVLParamToAudioNodeParam(gainParam, gainNode.gain);
+        }
 
         source.connect(gainNode);
 
-        if(parameterOwner.getParameter('SpatializeAudio').getValue() == false ) {
+        const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
+        if (spatializeParam && spatializeParam.getValue() == false) {
             source.connect(audioCtx.destination);
-        }
-        else {
+        } else {
             const panner = audioCtx.createPanner();
             panner.panningModel = 'HRTF';
             panner.distanceModel = 'inverse';
@@ -107,6 +126,8 @@ class GLAudioItemsPass extends GLPass {
 
             const connectVLParamToAudioNode = (paramName) => {
                 const vlParam = parameterOwner.getParameter(paramName)
+                if(!vlParam)
+                    return;
                 panner[paramName] = vlParam.getValue();
                 vlParam.valueChanged.connect(() => {
                     panner[paramName] = vlParam.getValue();
@@ -131,7 +152,7 @@ class GLAudioItemsPass extends GLPass {
                 // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
 
                 let xfo;
-                if(treeItem instanceof GeomItem)
+                if (treeItem instanceof GeomItem)
                     xfo = treeItem.getGeomXfo();
                 else
                     xfo = treeItem.getGlobalXfo();
@@ -143,7 +164,7 @@ class GLAudioItemsPass extends GLPass {
                 //     panner.positionY.value = xfo.tr.y;
                 //     panner.positionZ.value = xfo.tr.z;
                 // } else {
-                    panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
+                panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z);
                 // }
 
                 const dir = xfo.ori.getZaxis();
@@ -155,7 +176,7 @@ class GLAudioItemsPass extends GLPass {
                 //     panner.orientationY.value = dir.y;
                 //     panner.orientationZ.value = dir.z;
                 // } else {
-                    panner.setOrientation(dir.x, dir.y, dir.z);
+                panner.setOrientation(dir.x, dir.y, dir.z);
                 // }
 
                 // TODO: 
@@ -170,16 +191,20 @@ class GLAudioItemsPass extends GLPass {
 
 
         audioSource.addedToCollector = true;
-        this.__audioItems.push({ treeItem, audioSource, parameterOwner });
+        this.__audioItems.push({
+            treeItem,
+            audioSource,
+            parameterOwner
+        });
 
         this.updated.emit();
     }
 
     __updateListenerPosition(viewXfo) {
-        if(!audioCtx)
+        if (!audioCtx)
             return;
 
-        
+
         // Note: the new audio params are reccomended to be used, but cause audio stutter.
         // ITs as if when we set the value, it is set for only a brief moment in time, and
         // then reverts back to the previous value. 
@@ -197,7 +222,7 @@ class GLAudioItemsPass extends GLPass {
         //   // listener.positionY.setValueAtTime(viewXfo.tr.y, audioCtx.currentTime);
         //   // listener.positionZ.setValueAtTime(viewXfo.tr.z, audioCtx.currentTime);
         // } else {
-            listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
+        listener.setPosition(viewXfo.tr.x, viewXfo.tr.y, viewXfo.tr.z);
         // }
         const up = viewXfo.ori.getYaxis();
         const fw = viewXfo.ori.getZaxis().negate();
@@ -215,17 +240,17 @@ class GLAudioItemsPass extends GLPass {
         //   listener.forwardY.value = fw.y;
         //   listener.forwardZ.value = fw.z;
         // } else {
-            listener.setOrientation(fw.x, fw.y, fw.z, up.x, up.y, up.z);
+        listener.setOrientation(fw.x, fw.y, fw.z, up.x, up.y, up.z);
         // }
     }
 
 
     draw(renderstate) {
-        if(this.__audioItems.length ==0)
+        if (this.__audioItems.length == 0)
             return;
         this.__updateListenerPosition(renderstate.viewXfo)
     }
-    
+
 
 };
 

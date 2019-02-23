@@ -1,5 +1,6 @@
 testingHarness.registerTest('Piston', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
 
     const asset = new Visualive.AssetItem('parts');
     const steelmaterial = new Visualive.Material('steel', 'SimpleSurfaceShader');
@@ -148,25 +149,10 @@ testingHarness.registerTest('Piston', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(20, 20, 10), new Visualive.Vec3(0, 0, 5));
     renderer.setScene(scene);
-    renderer.setupGrid(50, new Visualive.Color(0.2, 0.2, 0.2), 10, 1);
 
     renderer.resumeDrawing();
-
-    //////////////////////////////////
-    // Setup the UI
-
-    // const sliderController = new Visualive.SliderController(pistonOp.getParameter('Explode'));
-
-    // const widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController);
-
-    // const uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
 
 });

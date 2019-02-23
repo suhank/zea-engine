@@ -69,27 +69,29 @@ class StateAction extends ParameterOwner {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
-        j.type = this.constructor.name;
+    toJSON(context, flags) {
+        let j = super.toJSON(context, flags);
+        if (!j)// If a state action has had no defaults changed, then it may not return json.
+            j = {}
+        j.type = sgFactory.getClassName(this);
 
         const childActionsj = [];
         for(let childAction of this.__childActions){
-            childActionsj.push(childAction.toJSON(context));
+            childActionsj.push(childAction.toJSON(context, flags));
         }
         j.childActions = childActionsj;
 
         const outputsj = {};
         for(let key in this.__outputs){
-            outputsj[key] = this.__outputs[key].toJSON(context);
+            outputsj[key] = this.__outputs[key].toJSON(context, flags);
         }
         j.outputs = outputsj;
 
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
 
         for(let childActionjson of j.childActions){
             const childAction = sgFactory.constructClass(childActionjson.type);

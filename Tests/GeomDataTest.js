@@ -21,8 +21,8 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    // const renderer = new Visualive.GLSimpleRenderer(domElement);
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
+    // const renderer = new Visualive.GLRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(18, 17, 14), new Visualive.Vec3(0, 0, 1));
     renderer.exposure = 1.0;
@@ -30,8 +30,8 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
 
     /////////////////////////////////////
     // Obj Asset
-    const asset = new Visualive.AssetItem('obj');
-    asset.getParameter('DataFilePath').setValue("/Assets/cow.obj");
+    const asset = new Visualive.ObjAsset('obj');
+    asset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
     asset.getParameter('splitObjects').setValue(false);
     asset.getParameter('splitGroupsIntoObjects').setValue(false);
     asset.getParameter('loadMtlFile').setValue(false);
@@ -43,9 +43,6 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
         ));
     scene.getRoot().addChild(asset);
 
-
-
-    const controller = new VisualiveUI.UIController(renderer, VisualiveUI.Main, VisualiveUI.VRControllerUI);
     renderer.resumeDrawing();
 
     /////////////////////////////////////
@@ -59,13 +56,15 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
         locatorItem.setLocalXfo(new Visualive.Xfo(pos));
         scene.getRoot().addChild(locatorItem);
     }
-    scene.getRoot().mouseDown.connect((event, intersectionData)=>{
+    scene.getRoot().mouseDown.connect((event)=>{
+        const { intersectionData } = event;
         if(intersectionData.intersectionPos) {
             addLocator(intersectionData.intersectionPos);
             event.vleStopPropagation = true;
         }
     });
-    scene.getRoot().mouseMove.connect((event, intersectionData)=>{
+    scene.getRoot().mouseMove.connect((event)=>{
+        const { intersectionData } = event;
         if(intersectionData.dragging && intersectionData.intersectionPos) {
             addLocator(intersectionData.intersectionPos);
         }

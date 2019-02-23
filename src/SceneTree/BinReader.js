@@ -169,6 +169,16 @@ class BinReader {
         return result;
     }
 
+    loadStrArray() {
+        const size = this.loadUInt32();
+        
+        let result = [];
+        for (let i = 0; i < size; i++) {
+            result[i] = this.loadStr();
+        }
+        return result;
+    }
+
     loadSInt32Vec2() {
         const x = this.loadSInt32();
         const y = this.loadSInt32();

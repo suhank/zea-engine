@@ -30,7 +30,10 @@ class SetParameterValue extends StateAction {
             if(!this.__valueParam || this.__outParam.getParam().getDataType() != this.__valueParam.getDataType() ){
                 const param = this.__outParam.getParam().clone();
                 param.setName('Value');
-                param.setValue(this.__outParam.getInitialValue())
+                if(this.__outParam.getInitialValue)
+                    param.setValue(this.__outParam.getInitialValue())
+                else
+                    param.setValue(this.__outParam.getParam().getValue())
                 this.__valueParam = this.addParameter(param);
             }
         })
@@ -84,20 +87,21 @@ class SetParameterValue extends StateAction {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         if(this.__valueParam){
             j.valueParamType = this.__valueParam.constructor.name;
         }
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.valueParamType){
             const param = sgFactory.constructClass(j.valueParamType, 'Value');
-            this.__valueParam = this.addParameter(param);
+            if(param)
+                this.__valueParam = this.addParameter(param);
         }
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
     }
 };
 

@@ -51,8 +51,9 @@ precision highp float;
 uniform color color;
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+out vec4 fragColor;
 #endif
+
 void main(void) {
 #ifdef ENABLE_ES3
     gl_FragColor = color;
@@ -112,8 +113,16 @@ precision highp float;
 
 uniform vec4 geomData;
 
+#ifdef ENABLE_ES3
+out vec4 fragColor;
+#endif
+
 void main(void) {
+#ifdef ENABLE_ES3
+    fragColor = geomData;
+#else
     gl_FragColor = geomData;
+#endif
 }
 `);
     }

@@ -3,6 +3,7 @@
 testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
 
 
     const standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
@@ -37,8 +38,7 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     const mandela = addMeshShape('viper', new Visualive.Plane(0.3, 0.4), new Visualive.Vec3(0, 5, 1.7), "Assets/AudioFiles/viper.ogg");
     mandela.getParameter('Gain').setValue(2.6);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.setScene(scene);
 
     const camera = renderer.getViewport().getCamera();
@@ -49,6 +49,4 @@ testingHarness.registerTest('PositionalAudio', (domElement, resources)=> {
     const sessionClient = new Visualive.SessionClient(renderer, visualivePlatform);
 
     renderer.resumeDrawing();
-
-    VisualiveUI.renderUI(renderer);
 });

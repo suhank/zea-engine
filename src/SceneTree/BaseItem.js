@@ -20,43 +20,46 @@ import {
 
 const ItemFlags = {
     USER_EDITED: 1<<1,
-    IGNORE_BBOX: 1<<2
+    IGNORE_BBOX: 1<<2,
+    BIN_NODE: 1<<3 // This node was generated when loading a binary file. 
 };
+let numBaseItems = 0;
 
 class BaseItem extends ParameterOwner {
     constructor(name) {
         super();
         if (name == undefined)
-            name = this.constructor.name;
+            name = sgFactory.getClassName(this);
         this.__name = name;
         this.__path = [name];
         this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
         this.__flags = 0;
 
-        this.__metaData = new Map();
+        this.__metaData = {};
 
         this.nameChanged = new Signal();
-        this.ownerChanged = new Signal();
-        this.flagsChanged = new Signal();
+        // this.flagsChanged = new Signal();
 
         this.parameterValueChanged.connect((param, mode) => {
             if(mode==ValueSetMode.USER_SETVALUE){
                 this.setFlag(ItemFlags.USER_EDITED);
             }
         });
+
+        numBaseItems++;
     }
 
     destroy() {
         super.destroy();
     }
 
-    clone() {
+    clone(flags) {
         throw (this.constructor.name + " does not implment its clone method");
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned)
-        cloned.setName(this.__name);
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags)
+        this.setName(src.getName());
     }
 
     //////////////////////////////////////////
@@ -90,7 +93,7 @@ class BaseItem extends ParameterOwner {
 
     setFlag(flag) {
         this.__flags |= flag;
-        this.flagsChanged.emit(this.__flags);
+        // this.flagsChanged.emit(this.__flags);
     }
 
     testFlag(flag) {
@@ -137,8 +140,6 @@ class BaseItem extends ParameterOwner {
                 this.addRef(this.__ownerItem);
             }
             this.__updatePath();
-            // Notify:
-            this.ownerChanged.emit();
         }
     }
 
@@ -146,15 +147,19 @@ class BaseItem extends ParameterOwner {
     // Metadata
 
     getMetadata(key) {
-        return this.__metaData.get(key)
+        return this.__metaData[key]
     }
 
     hasMetadata(key) {
-        return this.__metaData.has(key)
+        return key in this.__metaData
     }
 
     setMetadata(key, metaData) {
-        this.__metaData.set(key, metaData);
+        this.__metaData[key] = metaData;
+    }
+
+    deleteMetadata(key) {
+        delete this.__metaData[key];
     }
 
 
@@ -162,19 +167,28 @@ class BaseItem extends ParameterOwner {
     // Persistence
 
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        let j = super.toJSON(context, flags);
+        if (!j && this.testFlag(ItemFlags.USER_EDITED))
+            j = {}
         if(j) {
             j.name = this.__name;
-            j.type = this.constructor.name;
+
+            // Binary Tree nodes should only be re-created
+            // by loading binary data. The JSON tree just stores
+            // modifications to those items, and if, when loading
+            // the node no longer exists, then the json loader
+            // simply keeps going. (no errors).
+            if(!this.testFlag(ItemFlags.BIN_NODE))
+                j.type = sgFactory.getClassName(this);
         }
         return j;
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.name)
             this.__name = j.name;
-        super.fromJSON(j, context);
+        super.fromJSON(j, context, flags);
         // Note: JSON data is only used to store user edits, so 
         // parameters loaded from JSON are considered user edited.
         this.__flags |= ItemFlags.USER_EDITED;
@@ -190,6 +204,10 @@ class BaseItem extends ParameterOwner {
 
     toString() {
         return JSON.stringify(this.toJSON(), null, 2)
+    }
+
+    getNumBaseItems(){
+        return numBaseItems
     }
 };
 

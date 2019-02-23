@@ -21,9 +21,12 @@ export * from './ScreenQuadShader.js';
 export * from './SimpleSurfaceShader.js';
 export * from './SimpleCutawaySurfaceShader.js';
 export * from './StandardSurfaceShader.js';
+export * from './GeomDataShader.js';
+export * from './SelectedGeomsShader.js';
 export * from './StandardCutawaySurfaceShader.js';
 export * from './TransparentSurfaceShader.js';
-
+export * from './ScreenSpaceShader.js';
+export * from './ToolIconShader.js';
 
 export * from './UnpackHDRShader.js';
 export * from './UnpackLDRAlphaImageShader.js';

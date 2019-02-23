@@ -1,20 +1,19 @@
 {
   "name": "@visualive/engine",
   "libraryName": "Visualive",
-  "version": "0.0.16",
+  "version": "0.0.44",
   "description": "Visualive core engine",
   "main": "lib/Visualive.js",
   "scripts": {
-    "build": "webpack --config webpack-dev.config.js",
     "build:dev": "webpack --watch --config webpack-dev.config.js",
     "build:prod": "npm run build:production",
-    "build:production": "webpack --config webpack-prod.config.js"
+    "build:production": "webpack --config webpack-prod.config.js",
+    "dist": "webpack --config webpack-prod.config.js && yarn publish --access=public"
   },
   "devDependencies": {
     "chai": "3.4.1",
     "eslint": "3.2.0",
     "prettier": "^1.14.2",
-    "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
     "webpack": "^4.21.0",
     "webpack-cli": "^3.1.2",
     "worker-loader": "^2.0.0",

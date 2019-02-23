@@ -84,7 +84,7 @@ class GLGeom {
         throw ("Not implemented. Implement this method in a derived class.")
     }
 
-    drawInstanced(count) {
+    drawInstanced(instanceCount) {
         throw ("Not implemented. Implement this method in a derived class.")
     }
 

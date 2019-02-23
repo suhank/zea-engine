@@ -36,7 +36,6 @@ import {
 } from './MaterialLibrary.js';
 
 
-
 class VLAAsset extends AssetItem {
   constructor(name) {
     super(name);
@@ -61,8 +60,10 @@ class VLAAsset extends AssetItem {
         if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
           this.loaded.emit();
       }, ()=>{
-        if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
-          this.loaded.emit();
+        // if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled()){
+        //   this.loaded.emit();
+        // }
+          this.geomsLoaded.emit() 
       });
     });
 
@@ -98,11 +99,8 @@ class VLAAsset extends AssetItem {
   // Persistence
 
   readBinary(reader, context) {
-    if(!context) 
-      context = {};
-    context.assetItem = this;
 
-    let numGeomsFiles = reader.loadUInt32();
+    const numGeomsFiles = reader.loadUInt32();
 
     this.__materials.readBinary(reader, context);
 
@@ -142,15 +140,23 @@ class VLAAsset extends AssetItem {
     resourceLoader.loadResource(fileId,
       (entries) => {
         const treeData = entries[Object.keys(entries)[0]];
-        numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, SystemDesc.isMobileDevice));
+        numGeomsFiles = this.readBinary(new BinReader(treeData.buffer, 0, SystemDesc.isMobileDevice), {
+          assetItem: this,
+          version: 0
+        });
         resourceLoader.freeData(treeData.buffer);
 
         onDone();
+        
         if(numGeomsFiles == 0 && Object.keys(entries)[1].endsWith('geoms')) {
           resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
-          let geomsData = entries[Object.keys(entries)[1]];
+          const geomsData = entries[Object.keys(entries)[1]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resourceLoader.freeData(geomsData.buffer);
+          const id = this.__geomLibrary.loaded.connect( () => {
+            if(onGeomsDone)
+              onGeomsDone();
+          });
         }
         else {
           // add the work for the the geom files....
@@ -174,14 +180,16 @@ class VLAAsset extends AssetItem {
         }
       }
       else {
-        this.geomsLoaded.emit();
+        // this.geomsLoaded.emit();
+        if(onGeomsDone)
+          onGeomsDone();
       }
     }
     const loadGeomsfile = (fileId) => {
       geomFileID++;
       resourceLoader.loadResource(fileId,
         (entries) => {
-          let geomsData = entries[Object.keys(entries)[0]];
+          const geomsData = entries[Object.keys(entries)[0]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resourceLoader.freeData(geomsData.buffer);
           loadNextGeomFile();

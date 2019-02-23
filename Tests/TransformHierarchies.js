@@ -26,7 +26,7 @@ testingHarness.registerTest('TransformHierarchies', (domElement, resources)=> {
     geomItem2.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0,0,3), new Visualive.Quat({'rotateY':Math.degToRad(90)})));
     geomItem2.addChild(geomItem3);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.setScene(scene);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
     renderer.frameAll();

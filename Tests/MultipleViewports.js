@@ -11,7 +11,7 @@ testingHarness.registerTest('MultipleViewports', (domElement, resources)=> {
     scene.getRoot().addChild(geomItem);
     // scene.getRoot().addChild(cam2);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.setScene(scene);
 
     renderer.getViewport(0).setTr(new Visualive.Vec2(0.499, 1.0));

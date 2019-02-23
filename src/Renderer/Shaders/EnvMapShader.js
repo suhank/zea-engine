@@ -180,7 +180,6 @@ uniform float exposure;
 #endif
 
 uniform sampler2D backgroundImage;
-uniform bool linearSpaceImage;
 
 
 /* VS Outputs */
@@ -202,10 +201,7 @@ void main(void) {
     fragColor = vec4(texel.rgb/texel.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    if(linearSpaceImage)
-        fragColor.rgb = toGamma(fragColor.rgb * exposure);
-
-    fragColor.rgb = fragColor.rgb * exposure;
+    fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;
@@ -216,8 +212,6 @@ void main(void) {
     }
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        // Assuming a simple RGB image in gamma space for now.
-        paramDescs.push({ name: 'linearSpaceImage', defaultValue: false })
         return paramDescs;
     }
 };

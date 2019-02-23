@@ -62,7 +62,7 @@ uniform color BaseColor;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
-uniform bool BaseColorTexConnected;
+uniform int BaseColorTexType;
 #endif
 
 /* VS Outputs */
@@ -80,7 +80,7 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = BaseColor;
 #else
-    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_textureCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
 #endif
 
 #ifndef ENABLE_ES3
@@ -97,8 +97,7 @@ void main(void) {
 #endif
 }
 `);
-
-        this.nonSelectable = true;
+        
         this.finalize();
     }
 
@@ -106,6 +105,13 @@ void main(void) {
         const paramDescs = super.getParamDeclarations();
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
         return paramDescs;
+    }
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
     }
 };
 

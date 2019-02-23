@@ -29,6 +29,9 @@ class ExplodePartParameter extends StructParameter {
 
         this.__stageParam =  this._addMember(new NumberParameter('Stage', 0));
         this.__axisParam = this._addMember(new Vec3Parameter('Axis', new Vec3(1,0,0)));
+
+        // The Movement param enables fine level timing to be set per part.
+        // 
         this.__movementParam = this._addMember(new Vec2Parameter('MovementTiming', new Vec2(0, 1), [new Vec2(0, 0), new Vec2(1, 1)]));
         this.__multiplierParam =  this._addMember(new NumberParameter('Multiplier', 1.0));
         this.__output = new XfoOperatorOutput('Part');
@@ -43,23 +46,27 @@ class ExplodePartParameter extends StructParameter {
     }
 
 
-    evaluate(explode, explodeDist, stages, cascade, centered, parentXfo, parentDelta){
-
+    evaluate(explode, explodeDist, offset, stages, cascade, centered, parentXfo, parentDelta){
 
         const stage = this.__stageParam.getValue();
         const movement = this.__movementParam.getValue();
         let dist;
         if(cascade) {
-            // in 'cascade' mode, all parts move the same distance, but the timing is modified.
-            dist = explodeDist * Math.smoothStep(stage+movement.x, stage+movement.y, explode);
+            // in 'cascade' mode, the parts move in a cascade, 
+            // starting with stage 0. then 1 ...
+            const t = (stage / stages);
+            if(centered)
+                t -= 0.5;
+            dist = explodeDist * Math.linStep(movement.x, movement.y, Math.max(0, explode-t));
         }
         else {
             // Else all the parts are spread out across the explode distance. 
             let t = 1.0 - (stage / stages);
             if(centered)
                 t -= 0.5;
-            dist = explodeDist * Math.smoothStep(movement.x, movement.y, explode) * t;
+            dist = explodeDist * Math.linStep(movement.x, movement.y, explode) * t;
         }
+        dist += offset;
 
         let explodeDir = this.__axisParam.getValue();
         const multiplier = this.__multiplierParam.getValue();
@@ -82,16 +89,16 @@ class ExplodePartParameter extends StructParameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
         if(j){
-            j.output = this.__output.toJSON(context);
+            j.output = this.__output.toJSON(context, flags);
         }
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         if(j.output){
             this.__output.fromJSON(j.output, context);
         }
@@ -107,6 +114,7 @@ class ExplodePartsOperator extends Operator {
         this.__stagesParam =  this.addParameter(new NumberParameter('Stages', 0));
         this._explodeParam = this.addParameter(new NumberParameter('Explode', 0.0, [0,1]));
         this._distParam = this.addParameter(new NumberParameter('Dist', 1.0));
+        this._offsetParam = this.addParameter(new NumberParameter('Offset', 0));
         this._cascadeParam = this.addParameter(new BooleanParameter('Cascade', false));
         this._centeredParam = this.addParameter(new BooleanParameter('Centered', false));
         this.__parentItemParam = this.addParameter(new TreeItemParameter('RelativeTo'));
@@ -142,6 +150,7 @@ class ExplodePartsOperator extends Operator {
         const explode = this._explodeParam.getValue();
         // const explodeDir = this.getParameter('Axis').getValue();
         const explodeDist = this._distParam.getValue();
+        const offset = this._offsetParam.getValue();
         const cascade = this._cascadeParam.getValue();
         const centered = this._centeredParam.getValue();
         const parentItem = this.__parentItemParam.getValue();
@@ -155,19 +164,19 @@ class ExplodePartsOperator extends Operator {
         const items = this.__itemsParam.getValue();
         for(let i=0; i<items.length; i++) {
             const part = items[i];
-            part.evaluate(explode, explodeDist, stages, cascade, centered, parentXfo, parentDelta);
+            part.evaluate(explode, explodeDist, offset, stages, cascade, centered, parentXfo, parentDelta);
         }
     }
 
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        return super.toJSON(context);
+    toJSON(context, flags) {
+        return super.toJSON(context, flags);
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
     }
 
     destroy(){

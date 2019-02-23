@@ -11,6 +11,10 @@ import {
     RefCounted
 } from './RefCounted.js';
 
+import {
+    sgFactory
+} from './SGFactory.js';
+
 // Explicit impport of files to avoid importing all the parameter types.
 // Note: soon these imports should be removed, once all code avoids calling 
 // 'addPArameter' without the parameter instance.
@@ -47,19 +51,32 @@ class ParameterOwner extends RefCounted {
         this.parameterValueChanged = new Signal();
     }
 
-    copyTo(cloned) {
-        for (let param of this.__params) {
-            if(cloned.hasParameter(param.getName())){
-                cloned.getParameter(param.getName()).setValue(param.getValue(), 2);
+    copyFrom(src, flags) {
+        // Note: Loop over the parameters in reverse order, 
+        // this is because often, parameter depdenencies
+        // are bottom to top. (bottom params dependent on higher params)
+        // This means that as a parameter is set with a new value
+        // it will dirty the params below it. 
+        let i = src.numParameters();
+        while (i--) {
+            const srcParam = src.getParameterByIndex(i);
+            const param = this.getParameter(srcParam.getName())
+            if(param){
+                // Note: we are not cloning the values.
+                param.setValue(srcParam.getValue(), 2);
             }
             else {
-                cloned.addParameterInstance(param.clone());
+                this.addParameterInstance(srcParam.clone());
             }
         }
     }
 
     //////////////////////////////////////////
     // Params
+
+    numParameters() {
+        return this.__params.length;
+    }
 
     getParameters() {
         return this.__params;
@@ -78,7 +95,10 @@ class ParameterOwner extends RefCounted {
     }
 
     getParameter(paramName) {
-        return this.__params[this.__paramMapping[paramName]];
+        const index = this.__paramMapping[paramName];
+        if(index == -1)
+            return null;
+        return this.__params[index];
     }
 
     addParameter(paramName, defaultValue) {
@@ -113,6 +133,11 @@ class ParameterOwner extends RefCounted {
         return param;
     }
 
+    // This method can be overrridden in derived classes
+    // to perform general updates. (see GLPass)
+    __parameterValueChanged(param, mode){
+        this.parameterValueChanged.emit(param, mode)
+    }
 
 
     addParameterInstance(param) {
@@ -121,7 +146,7 @@ class ParameterOwner extends RefCounted {
             console.warn("Replacing Parameter:" + name)
             this.removeParameter(name);
         }
-        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
+        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.__parameterValueChanged(param, mode));
         param.addRef(this);
         this.__params.push(param)
         this.__paramMapping[name] = this.__params.length - 1;
@@ -136,7 +161,7 @@ class ParameterOwner extends RefCounted {
         const index = this.__paramMapping[name];
         const param = this.__params[this.__paramMapping[name]]
         param.removeRef(this);
-        param.valueChanged.disconnectID(this.__paramSignalIds[name]);
+        param.valueChanged.disconnectId(this.__paramSignalIds[name]);
         this.__params.splice(index, 1)
         const paramMapping = {};
         for (let i=0; i<this.__params.length; i++){
@@ -151,11 +176,12 @@ class ParameterOwner extends RefCounted {
         const index = this.__paramMapping[name];
         const prevparam = this.__params[this.__paramMapping[name]]
         prevparam.removeRef(this);
-        prevparam.valueChanged.disconnectID(this.__paramSignalIds[name]);
+        prevparam.valueChanged.disconnectId(this.__paramSignalIds[name]);
 
         param.addRef(this);
         this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
         this.__params[index] = param;
+        return param;
     }
 
     // _removeAllParameters(){
@@ -176,9 +202,9 @@ class ParameterOwner extends RefCounted {
     // Persistence
 
 
-    toJSON(context) {
+    toJSON(context, flags) {
 
-        let paramsJSON = {};
+        const paramsJSON = {};
         let savedParams = 0;
         for (let param of this.__params){
             if(param.numRefs() > 1 && param.getRefIndex(this) != 0) {
@@ -188,7 +214,7 @@ class ParameterOwner extends RefCounted {
                 savedParams++;
             }
             else {
-                const paramJSON = param.toJSON(context);
+                const paramJSON = param.toJSON(context, flags);
                 if(paramJSON){
                     paramsJSON[param.getName()] = paramJSON;
                     savedParams++;
@@ -199,7 +225,7 @@ class ParameterOwner extends RefCounted {
             return { params: paramsJSON };
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.params) {
             for (let key in j.params) {
                 const pj = j.params[key];
@@ -208,9 +234,11 @@ class ParameterOwner extends RefCounted {
                     console.warn("Param not found:" + key);
                 else {
                     if(pj.paramPath){
-                        const param = context.resolvePath(pj.paramPath);
-                        if(param)
+                        context.resolvePath(pj.paramPath, (param)=>{
                             this.replaceParameter(param)
+                        }, (reason)=>{
+                            console.warn("Unable to resolve shared parameter:" + pj.paramPath);
+                        });
                     }
                     else {
                         param.fromJSON(pj, context);
@@ -222,6 +250,25 @@ class ParameterOwner extends RefCounted {
 
     readBinary(reader, context) {
         // TODO: make this work
+
+        if(context.version >= 3) {
+
+            const numProps = reader.loadUInt32();
+            for (let i = 0; i < numProps; i++) {
+                const propType = reader.loadStr();
+                const propName = reader.loadStr();
+                let param = this.getParameter(propName);
+                if (!param) {
+                    param = sgFactory.constructClass(propType, propName);
+                    if (!param) {
+                        console.error("Unable to construct prop:" + propName + " of type:" + propType);
+                        continue;
+                    }
+                    this.addParameter(param);
+                }
+                param.readBinary(reader, context);
+            }
+        }
     }
 
     toString() {

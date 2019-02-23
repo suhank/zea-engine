@@ -47,7 +47,7 @@ uniform color BaseColor;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
-// uniform bool BaseColorTexConnected;
+uniform bool BaseColorTexConnected;
 uniform vec4 BaseColorTexDesc;
 uniform int BaseColorTexIndex;
 #endif
@@ -68,9 +68,11 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = BaseColor;
 #else
-    //vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_texCoords);
-    // vec4 baseColor      = toLinear(texture2D(BaseColorTex, v_texCoords));
-    vec4 baseColor      = toLinear(sampleStreamFrame(v_texCoords, BaseColorTexIndex, BaseColorTex, BaseColorTexDesc));
+    vec4 baseColor = BaseColor;
+    //baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, v_texCoords);
+    //baseColor      = toLinear(texture2D(BaseColorTex, v_texCoords));
+    if(BaseColorTexConnected)
+        baseColor      = toLinear(sampleStreamFrame(v_texCoords, BaseColorTexIndex, BaseColorTex, BaseColorTexDesc));
 #endif
 
     baseColor.rgb = baseColor.rgb * baseColor.a;
@@ -102,7 +104,7 @@ void main(void) {
         return paramDescs;
     }
 
-    isTransparent() {
+    static isTransparent() {
         return true;
     }
     
@@ -122,13 +124,17 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
     // giffPath = "Assets/chuck-norris-super-kick.gif";
 
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(60.0, 6);
+
     const setupGifPlayers = (path, pos)=>{
 
-        const image =  new Visualive.FileImage(path);
+        const image =  new Visualive.GIFImage();
+        image.getParameter('FilePath').setFilepath(path);
         const treeItem = new Visualive.TreeItem(image.getName());
 
-        // Check that the gif is loaded only once.
-        const image2 =  new Visualive.FileImage(path);
+        // Note: even though we request it 2x, the gif is loaded only once into the GPU.
+        const image2 =  new Visualive.GIFImage();
+        image2.getParameter('FilePath').setFilepath(path);
 
         const atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
         atlasmaterial.getParameter('BaseColor').setValue(image);
@@ -157,28 +163,12 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLVisualiveRenderer(domElement);
-    renderer.setupGrid(60.0, new Visualive.Color(.53, .53, .53), 60, 0.01);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,8,12), new Visualive.Vec3(0,0,0));
+    const renderer = new Visualive.GLRenderer(domElement);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(12,18,8), new Visualive.Vec3(0,0,0));
     renderer.setScene(scene);
 
 
 
     renderer.resumeDrawing();
 
-
-    //////////////////////////////////
-    // Setup the UI
-
-    // let sliderController1 = new Visualive.SliderController(param1);
-    // let sliderController2 = new Visualive.SliderController(param2);
-
-    // let widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController1);
-    // widgetPanel.addWidgetController(sliderController2);
-
-    // let uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
 });

@@ -22,7 +22,7 @@ testingHarness.registerTest('TestRenderTriangle', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2, 5, 1), new Visualive.Vec3(0, 0, 1));
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -52,7 +52,7 @@ testingHarness.registerTest('TestRenderManualQuad', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-2.0, 2.0, -15.0), new Visualive.Vec3(-2.0, 2.0, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -67,7 +67,7 @@ testingHarness.registerTest('TestRenderPlane', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2.0, 1.0, 2.0), new Visualive.Vec3());
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -97,7 +97,7 @@ testingHarness.registerTest('TestRenderUVSeam', (domElement, resources)=> {
 
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2.0, 1.0, 2.0), new Visualive.Vec3());
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -132,7 +132,7 @@ testingHarness.registerTest('TestRenderUVAndNormalSeam', (domElement, resources)
 
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1.3, 1.3, 1.3), new Visualive.Vec3());
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -147,7 +147,7 @@ testingHarness.registerTest('TestRenderCuboid', (domElement, resources)=> {
     const scene = new Visualive.Scene(resources);
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-2, -8, 2), new Visualive.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
@@ -165,7 +165,7 @@ testingHarness.registerTest('TestRenderTexturedCuboid', (domElement, resources)=
 
     scene.getRoot().addChild(geomItem);
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-5, -5, 5), new Visualive.Vec3());
     renderer.setScene(scene);
     renderer.resumeDrawing();

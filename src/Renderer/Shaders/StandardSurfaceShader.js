@@ -141,25 +141,25 @@ uniform float Reflectance;
 
 #ifdef ENABLE_TEXTURES
 uniform sampler2D BaseColorTex;
-uniform bool BaseColorTexConnected;
+uniform int BaseColorTexType;
 
 #ifdef ENABLE_SPECULAR
 uniform sampler2D RoughnessTex;
-uniform bool RoughnessTexConnected;
+uniform int RoughnessTexType;
 
 uniform sampler2D MetallicTex;
-uniform bool MetallicTexConnected;
+uniform int MetallicTexType;
 
 uniform sampler2D ReflectanceTex;
-uniform bool ReflectanceTexConnected;
+uniform int ReflectanceTexType;
 
 uniform sampler2D NormalTex;
-uniform bool NormalTexConnected;
+uniform int NormalTexType;
 // uniform float NormalScale;
 #endif
 
 uniform sampler2D EmissiveStrengthTex;
-uniform bool EmissiveStrengthTexConnected;
+uniform int EmissiveStrengthTexType;
 
 
 #endif
@@ -174,8 +174,8 @@ void main(void) {
     MaterialParams material;
 
 #ifndef ENABLE_TEXTURES
-    material.BaseColor      = BaseColor.rgb;
-    float emission          = EmissiveStrength;
+    material.BaseColor     = BaseColor.rgb;
+    float emission         = EmissiveStrength;
 
 #ifdef ENABLE_SPECULAR
     material.roughness     = Roughness;
@@ -185,16 +185,16 @@ void main(void) {
 
 #else
     // Planar YZ projection for texturing, repeating every meter.
-    // vec2 texCoord      = v_worldPos.xz * 0.2;
-    vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    material.baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord).rgb;
+    // vec2 texCoord       = v_worldPos.xz * 0.2;
+    vec2 texCoord          = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
+    material.baseColor     = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord).rgb;
 
 #ifdef ENABLE_SPECULAR
-    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexConnected, texCoord);
-    material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexConnected, texCoord);
-    material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexConnected, texCoord);
+    material.roughness     = getLuminanceParamValue(Roughness, RoughnessTex, RoughnessTexType, texCoord);
+    material.metallic      = getLuminanceParamValue(Metallic, MetallicTex, MetallicTexType, texCoord);
+    material.reflectance   = getLuminanceParamValue(Reflectance, ReflectanceTex, ReflectanceTexType, texCoord);
 #endif
-    float emission      = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexConnected, texCoord);
+    float emission         = getLuminanceParamValue(EmissiveStrength, EmissiveStrengthTex, EmissiveStrengthTexType, texCoord);
 #endif
 
     vec3 viewNormal = normalize(v_viewNormal);
@@ -202,7 +202,7 @@ void main(void) {
 
 #ifdef ENABLE_TEXTURES
 #ifdef ENABLE_SPECULAR
-    if(NormalTexConnected){
+    if(NormalTexType != 0){
         vec3 textureNormal_tangentspace = normalize(texture2D(NormalTex, texCoord).rgb * 2.0 - 1.0);
         viewNormal = normalize(mix(viewNormal, textureNormal_tangentspace, 0.3));
     }
@@ -292,6 +292,14 @@ void main(void) {
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
         paramDescs.push({ name: 'Reflectance', defaultValue: 0.1 } );
         return paramDescs;
+    }
+
+    static getGeomDataShaderName(){
+        return 'StandardSurfaceGeomDataShader';
+    }
+
+    static getSelectedShaderName(){
+        return 'StandardSurfaceSelectedGeomsShader';
     }
 };
 

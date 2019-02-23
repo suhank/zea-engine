@@ -173,23 +173,9 @@ testingHarness.registerTest('StateMachine', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLSimpleRenderer(domElement);
+    const renderer = new Visualive.GLRenderer(domElement);
     renderer.getViewport().setCamera(camera);
     renderer.setScene(scene);
     renderer.resumeDrawing();
-
-    //////////////////////////////////
-    // Setup the UI
-
-    // let sliderController = new Visualive.SliderController(op.getParameter('Explode'));
-
-    // let widgetPanel = new Visualive.UIWidgetPanel();
-    // widgetPanel.addWidgetController(sliderController);
-
-    // let uicontroller = new Visualive.UIController();
-    // uicontroller.addWidgetPanel(widgetPanel);
-
-
-    // VisualiveUI.renderUI(renderer, uicontroller);
 
 });

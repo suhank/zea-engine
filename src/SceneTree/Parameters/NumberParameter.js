@@ -5,6 +5,7 @@ import {
     sgFactory
 } from '../SGFactory';
 import {
+    ValueSetMode,
     Parameter
 } from './Parameter.js';
 
@@ -12,26 +13,28 @@ class NumberParameter extends Parameter {
     constructor(name, value=0, range=undefined) {
         super(name, value, 'Number');
         // The value might not have a range.
-        this.__display = 'slider';
         this.__range = range;
-        this.__axis = 'x';
-        this.__step = 0.01;
+        this.__step = undefined;
     }
 
-    getValue() {
+    setValue(value, mode) {
+        if(mode == ValueSetMode.USER_SETVALUE) {
+            if(this.__range) {
+                value = Math.clamp(value, this.__range[0], this.__range[1]);
+            }
+            if(this.__step) {
+                value = Math.round(value / this.__step) * this.__step;
+            }
+        }
+        super.setValue(value, mode);
+    }
+
+    getValue(mode) {
+        // Still not sure if we should clamp the output.
         // if(this.__range) {
         //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
         // }
-        return super.getValue();
-    }
-
-    getDisplay() {
-        return this.__display;
-    }
-
-    setDisplay(display) {
-        this.__display = display;
-        return this;
+        return super.getValue(mode);
     }
 
     getRange() {
@@ -52,21 +55,43 @@ class NumberParameter extends Parameter {
         return this;
     }
 
-    cloneMembers(clonedParam) {
-        super.cloneMembers(clonedParam);
+    clone(flags) {
+        const clonedParam = new NumberParameter(this.__name, this.__value);
         clonedParam.__range = this.__range;
-        clonedParam.__axis = this.__axis;
         clonedParam.__step = this.__step;
+        return clonedParam;
     }
 
-    clone() {
-        const clonedParam = new NumberParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
-        return clonedParam;
+    //////////////////////////////////////////
+    // Persistence
+
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
+        if(this.__range)
+            j.range = this.__range;
+        if(this.__step)
+            j.step = this.__step;
+        return j;
+    }
+
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
+        if(j.range)
+            this.__range = j.range;
+        if(j.step)
+            this.__step = j.step;
+    }
+
+    readBinary(reader, context) {
+        const value = reader.loadFloat32();
+        this.setValue(value, ValueSetMode.DATA_LOAD)
     }
 };
 
-// sgFactory.registerClass('NumberParameter', NumberParameter);
+sgFactory.registerClass('NumberParameter', NumberParameter);
+sgFactory.registerClass('Property_SInt32', NumberParameter);
+sgFactory.registerClass('Property_UInt32', NumberParameter);
+sgFactory.registerClass('Property_Float32', NumberParameter);
 
 export {
     NumberParameter

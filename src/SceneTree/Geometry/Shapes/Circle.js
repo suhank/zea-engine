@@ -3,6 +3,9 @@ import { Lines } from '../Lines.js';
 import {
     NumberParameter
 } from '../../Parameters/NumberParameter.js';
+import {
+    sgFactory
+} from '../../SGFactory.js';
 
 class Circle extends Lines {
     constructor(radius = 1.0, numSegments=32) {
@@ -20,23 +23,27 @@ class Circle extends Lines {
 
     __rebuild() {
         const segs = this.__numSegments.getValue();
-        this.setNumVertices(segs+1);
+        this.setNumVertices(segs);
         this.setNumSegments(segs);
         for(let i=0; i<segs; i++)
             this.setSegment(i, i, (i+1)%segs);
-        this.__resize();
+        this.__resize(-1);
+        this.geomDataTopologyChanged.emit();
     }
 
-    __resize() {
+    __resize(mode) {
         const radius = this.__radius.getValue();
         const segs = this.__numSegments.getValue();
         let angle = (Math.PI * 2.0) / segs;
         for(let i=0; i<segs; i++)
             this.getVertex(i).set(Math.sin(angle * i) * radius, Math.cos(angle * i) * radius, 0.0);
         this.setBoundingBoxDirty();
+        if(mode != -1)
+            this.geomDataChanged.emit();
     }
 
 };
+sgFactory.registerClass('Circle', Circle);
 
 export {
     Circle

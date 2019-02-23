@@ -1,4 +1,4 @@
-import { BaseGeom } from './BaseGeom.js';
+import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js';
 
 class Lines extends BaseGeom {
     constructor() {
@@ -17,10 +17,11 @@ class Lines extends BaseGeom {
     }
 
     setNumSegments(count) {
-        let indices = new Uint32Array(count * 2);
-        for (let i=0;i<this.__indices.length; i++) {
-            indices[i] = this.__indices[i];
-        }
+        const indices = new Uint32Array(count * 2);
+        indices.set(this.__indices)
+        // for (let i=0;i<this.__indices.length; i++) {
+        //     indices[i] = this.__indices[i];
+        // }
         this.__indices = indices;
     }
 
@@ -80,14 +81,16 @@ class Lines extends BaseGeom {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        const j = super.toJSON(context);
-        j['indices'] = Array.from(this.__indices);
+    toJSON(context, flags) {
+        const j = super.toJSON(context, flags);
+        if(!(flags&SAVE_FLAG_SKIP_GEOMDATA)) {
+            j.indices = Array.from(this.__indices);
+        }
         return j;
     };
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         this.__indices = Uint32Array.from(j.indices);
     }
 

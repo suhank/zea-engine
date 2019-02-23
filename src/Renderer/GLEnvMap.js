@@ -44,7 +44,7 @@ class GLEnvMap extends GLProbe {
             this.convolveProbe(srcGLTex);
         } else {
             this.__envMap.loaded.connect(() => {
-                console.log(this.__envMap.getName() + " loaded");
+                // console.log(this.__envMap.getName() + " loaded");
                 this.convolveProbe(srcGLTex);
                 this.loaded.emit();
             });
@@ -92,7 +92,9 @@ class GLEnvMap extends GLProbe {
                 const unifs = renderstate.unifs;
                 // this.__srcGLTex.bind(renderstate, renderstate.unifs.envMap.location);
                 //this.__lodPyramid.bind(renderstate, renderstate.unifs.envMap.location);
-                this.bindToUniform(renderstate, unifs.envMapPyramid);
+                this.bindProbeToUniform(renderstate, unifs.envMapPyramid);
+                // this.bindToUniform(renderstate, unifs.envMapPyramid);
+                
 
                 {
                     let unif = unifs.focus;
@@ -116,8 +118,8 @@ class GLEnvMap extends GLProbe {
     
     // An EnvMap can be bound as a regular texture, but we want the
     // orriginal source data, not the atlas of convolved images.
-    bindToUniform(renderstate, unif, type = 1) {
-        return this.__srcGLTex.bindToUniform(renderstate, unif, type);
+    bindToUniform(renderstate, unif, bindings) {
+        return this.__srcGLTex.bindToUniform(renderstate, unif, bindings);
     }
 
     destroy() {

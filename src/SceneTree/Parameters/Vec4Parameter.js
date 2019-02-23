@@ -10,9 +10,8 @@ class Vec4Parameter extends Parameter {
         super(name, value ? value : new Vec4(), 'Vec4');
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new Vec4Parameter(this.__name, this.__value.clone());
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

@@ -40,9 +40,10 @@
       return args;
   }
 
-window.main = function(domElement, resources, args, visualivePlatform) {
+window.main = function(domElement, resources, args) {
 
-  args = getUrlVars();
+  if(!args)
+    args = getUrlVars();
 
   if(args.file) {
     let file = args.file;
@@ -54,9 +55,6 @@ window.main = function(domElement, resources, args, visualivePlatform) {
         image.src = resolveURL(file, resources).url;
         image.setAttribute("style", "height:100%;width:100%");
         domElement.appendChild(image);
-        if(args.visualivePlatform){
-          window.overlay = new AnnotationOverlay(domElement, args.visualivePlatform);
-        }
         break;
       case "js":
         httpGetAsync(resolveURL(file, resources).url, (text) => {
@@ -73,6 +71,7 @@ window.main = function(domElement, resources, args, visualivePlatform) {
         });
         break;
       case 'vlexe':
+      case 'scexe':
         loadScript(resolveURL(file, resources).url, function() {
           vlmain(domElement, resources, args)
         });

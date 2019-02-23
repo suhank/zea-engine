@@ -40,10 +40,6 @@ class Disc extends Mesh {
         //////////////////////////////
         // Set Vertex Positions
         this.getVertex(0).set(0.0, 0.0, 0.0);
-        for (let i = 0; i < this.__sides; i++) {
-            let phi = (i / this.__sides) * 2.0 * Math.PI;
-            this.getVertex(i+1).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, 0.0);
-        }
 
         //////////////////////////////
         // build the topology
@@ -57,27 +53,29 @@ class Disc extends Mesh {
         // setNormals
         const normals = this.getVertexAttribute('normals');
         // Now set the attrbute values
-        const normal = new Vec3(0.0, 1.0, 0.0);
+        const normal = new Vec3(0, 0, 1);
+        normals.setValue(0, normal);
         for (let i = 0; i < this.__sides; i++) {
             normals.setValue(i+1, normal);
         }
 
         //////////////////////////////
         // setUVs
-        // Simple rect coords. 
         const texCoords = this.getVertexAttribute('texCoords');
+        texCoords.getValueRef(0).set(0.5, 0.5)
         for (let i = 0; i < this.__sides; i++) {
             let phi = (i / this.__sides) * 2.0 * Math.PI;
-            texCoords.getValueRef(i+1).set(Math.sin(phi), Math.cos(phi), 0.0)
+            texCoords.getValueRef(i+1).set((Math.sin(phi) * 0.5) + 0.5, (Math.cos(phi) * 0.5) + 0.5);
         }
 
         this.setBoundingBoxDirty();
+        this.__resize(-1);
     }
 
-    __resize() {
+    __resize(mode) {
         for (let i = 0; i < this.__sides; i++) {
             let phi = (i / this.__sides) * 2.0 * Math.PI;
-            this.getVertex(i+1).set(Math.sin(phi) * this.__radius, 0.0, Math.cos(phi) * this.__radius);
+            this.getVertex(i+1).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, 0.0);
         }
         this.setBoundingBoxDirty();
     }

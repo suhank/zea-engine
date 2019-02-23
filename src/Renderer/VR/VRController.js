@@ -6,7 +6,8 @@ import {
     Quat,
     EulerAngles,
     Xfo,
-    Color
+    Mat4,
+    Ray
 } from '../../Math';
 import {
     Signal
@@ -24,264 +25,212 @@ import {
     GLMesh
 } from '../GLMesh.js';
 import {
-    GLDrawItem
-} from '../GLDrawItem.js';
+    GLGeomItem
+} from '../GLGeomItem.js';
 import {
-    Gizmo
-} from '../Gizmos/Gizmo.js';
+    GLTexture2D
+} from '../GLTexture2D.js';
+import {
+    GLFbo
+} from '../GLFbo.js';
 
-class VRController extends Gizmo {
-    constructor(vrstage, index) {
-        super(new Color(0, 0, 1));
+class VRController {
+    constructor(vrviewport, inputSource, id) {
 
-        this.__vrstage = vrstage;
-        this.__index = index;
+        this.__vrviewport = vrviewport;
+        this.__inputSource = inputSource;
+        this.__id = id;
         this.__isDaydramController = SystemDesc.isMobileDevice;
-        this.__treeItem = new TreeItem('VRController:' + index);
+        this.__treeItem = new TreeItem('VRController:' + inputSource.handedness);
         // Controller coordinate system
         // X = Horizontal.
         // Y = Up.
         // Z = Towards handle base.
 
-        this.__mat = new Material('mat1', 'FlatSurfaceShader');
-        this.__mat.getParameter('BaseColor').setValue(new Color(.2, .2, .2, 1));
-
-
         if(!this.__isDaydramController) {
             // A Vive or Occulus Touch Controller
-            
-            /*
-            Material:HandleMaterial
-            Material:OtherButtons
-            Material:Metal
-            Material:Touchpad Material
-            Material:Material #27
-            */
+            this.__tip = new TreeItem('Tip');
+            // Note: the tip of the controller need to be off
+            // the end of the controller. getGeomItemAtTip
+            // now searches a grid in that area and so we need to 
+            // ensure that the grid does not touch the controller, 
+            // else it will return the controller geom from
+            // the getGeomItemAtTip function
+            this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.13)));
+            this.__treeItem.addChild(this.__tip, false);
+            vrviewport.getTreeItem().addChild(this.__treeItem);
 
-            vrstage.getTreeItem().addChild(this.__treeItem);
-
-            let sphere = new Sphere(0.015);
-            this.__sphereGeomItem = new GeomItem('VRControllerTip', sphere, this.__mat);
-            this.__sphereGeomItem.setLocalXfo(new Xfo(new Vec3(0.0, -0.01, -0.015)));
-            this.__treeItem.addChild(this.__sphereGeomItem);
-
-
-            let asset = vrstage.getAsset();
+            const asset = vrviewport.getAsset();
             if(asset) {
                 asset.loaded.connect((entries) => {
-                    let controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
-                    controllerTree.setLocalXfo(new Xfo(new Vec3(0, -0.035, 0.01), new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })));
+                    const controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
+                    controllerTree.setLocalXfo(new Xfo(
+                        new Vec3(0, -0.035, -0.085), 
+                        new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })
+                        ));
                     this.__treeItem.addChild(controllerTree);
                 });
             }
 
-            // let uimat = new Material('uimat', 'FlatSurfaceShader');
-
-            // this.__uiimage = new DataImage();
-            // uimat.getParameter('BaseColor').setValue(this.__uiimage);
-
-            // this.__uiGeomItem = new GeomItem('VRControllerUI', new Plane(), uimat);
-            // this.__uiGeomItem.getLocalXfo().tr.set(0.0, -0.07, 0.05); 
-            // this.__uiGeomItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.6);
-            // this.__uiGeomItemGeomXfo = new Xfo();
-            // this.__uiGeomItemGeomXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), -Math.PI);
-            // this.__uiGeomItemGeomXfo.sc.set(0.3, 0.2, 1.0);
-            // this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
-            // this.__dims = { width: 200, height: 300 };
-            // this.__uiGeomItem.setVisible(false);
-            // this.__treeItem.addChild(this.__uiGeomItem);
-
-            // let pointermat = new Material('pointermat', 'FlatSurfaceShader');
-            // pointermat.getParameter('BaseColor').setValue(new Color(1.2, 0, 0));
-
-            // let line = new Lines();
-            // line.setNumVertices(2);
-            // line.setNumSegments(1);
-            // line.setSegment(0, 0, 1);
-            // line.getVertex(0).set(0.0, 0.0, 0.0);
-            // line.getVertex(1).set(0.0, 0.0, -1.0);
-            // line.setBoundingBoxDirty();
-
-            // this.__uiPointerItem = new GeomItem('VRControllerPointer', line, pointermat);
-            // this.__uiPointerItem.getLocalXfo().tr.set(0.0, -0.08, -0.04);
-            // this.__uiPointerItem.getLocalXfo().ori.setFromAxisAndAngle(new Vec3(1, 0, 0), Math.PI * -0.2);
-            // this.__uiPointerItem.setVisible(false);
-            // this.__treeItem.addChild(this.__uiPointerItem);
+            this.__projMatrix = new Mat4();
+            this.__activeVolumeSize = 0.04
+            this.__projMatrix.setOrthographicMatrix(
+                this.__activeVolumeSize*-0.5, 
+                this.__activeVolumeSize*0.5, 
+                this.__activeVolumeSize*-0.5, 
+                this.__activeVolumeSize*0.5, 
+                this.__activeVolumeSize*-0.5, 
+                this.__activeVolumeSize*0.5);
+            this.createGeomDataFbo();
         }
 
-        this.__touchpadPressed = false;
         this.touchpadTouched = new Signal();
         this.buttonPressed = new Signal();
         this.buttonReleased = new Signal();
-
-        ///////////////////////////////////
-        // UI
-        this.showInHandUI = new Signal();
-        this.hideInHandUI = new Signal();
-        this.controllerMoved = new Signal();
-        this.uivisibile = false;
-        this.pointerVisible = false;
+        this.__pressedButtons = [];
 
         ///////////////////////////////////
         // Xfo
 
+        this.__mat4 = new Mat4();
         this.__xfo = new Xfo();
 
         // this.setVisible(true);
     }
 
-    getID() {
-        return this.__index;
+    getHandedness() {
+        return this.__inputSource.handedness;
+    }
+
+    getId() {
+        return this.__id;
     }
 
     getTreeItem() {
         return this.__treeItem;
     }
 
-    setVisible(val) {
-        // this.__geomItem0.setVisible(val);
-        // this.__geomItem1.setVisible(val);
+    getTipItem() {
+        return this.__tip;
     }
 
-    setTipColor(val) {
-        this.__mat.getParameter('BaseColor').setValue(val);
+    getTipXfo() {
+        return this.__tip.getGlobalXfo();
     }
-
-    update(gamepad) {
-        if (gamepad.pose.position)
-            this.__xfo.tr.setDataArray(gamepad.pose.position);
-        if (gamepad.pose.orientation)
-            this.__xfo.ori.setDataArray(gamepad.pose.orientation);
-
-        if (!this.__treeItem)
-            return;
-        this.__treeItem.setLocalXfo(this.__xfo);
-
-        ////////////////////////////////////////////
-        /*
-        let controllerUpVec = this.__treeItem.getGlobalXfo().ori.getYaxis();
-        let vecToHead = this.__treeItem.getGlobalXfo().tr.subtract(this.__vrstage.getVRHead().getXfo().tr);
-        vecToHead.normalizeInPlace();
-        let angle = controllerUpVec.angleTo(vecToHead);
-        if (angle < 1.0) {
-            if (!this.uivisibile) {
-                this.uivisibile = true;
-                this.__uiGeomItem.setVisible(true);
-                if (this.pointerVisible)
-                    this.hidePointer();
-                this.showInHandUI.emit();
-            }
-
-        } else {
-            if (this.uivisibile) {
-                this.hideInHandUI.emit();
-                this.uivisibile = false;
-                this.__uiGeomItem.setVisible(false);
-            }
-        }
-        if (this.pointerVisible) {
-            this.controllerMoved.emit(this.getPointerXfo());
-        }
-        */
-
-
-        this.__touchpadValue = gamepad.axes;
-        // Button 0 is the touchpad clicker.
-        if (gamepad.buttons[0].pressed) {
-            if (this.__isDaydramController) {
-                if (!this.__buttonPressed) {
-                    this.__buttonPressed = true;
-                    this.buttonPressed.emit();
-                }
-                return;
-            } else {
-                if (gamepad.axes[0] != 0 && gamepad.axes[1] != 0 && !this.__touchpadPressed) {
-                    this.touchpadTouched.emit(gamepad.axes);
-                    this.__touchpadPressed = true;
-                }
-            }
-        } else {
-            this.__touchpadPressed = false;
-        }
-
-        // Button 0 is the touchpad clicker.
-        for (let j = 1; j < gamepad.buttons.length; ++j) {
-            if (gamepad.buttons[j].pressed) {
-                if (!this.__buttonPressed) {
-                    this.__buttonPressed = true;
-                    // if(gamepad.buttons[j].value)
-                    //     this.__geomglDrawItem1.color.setFromOther(this.__highlightedColor);
-                    // else
-                    //     this.__geomglDrawItem1.color.setFromOther(this.__tipColor);
-                    this.buttonPressed.emit();
-                }
-                return;
-            }
-        }
-
-        if (this.__buttonPressed) {
-            this.__buttonPressed = false;
-            // this.__geomglDrawItem1.color.setFromOther(this.__tipColor);
-            this.buttonReleased.emit();
-        }
-    }
-
+    
     getTouchPadValue() {
         return this.__touchpadValue;
     }
 
-    isButtonPressed() {
+    isButtonPressed(id=1) {
         return this.__buttonPressed;
     }
 
-    getTipXfo() {
+    getControllerStageLocalXfo() {
         return this.__xfo;
     }
 
-    getTipGlobalXfo() {
-        return this.__treeItem.getGlobalXfo();
+    getControllerTipStageLocalXfo() {
+        return this.__xfo.multiply(this.__tip.getLocalXfo());
+    }
+
+    updatePose(inputPose) {
+        this.__mat4.setDataArray(inputPose.gripMatrix);
+        this.__xfo.fromMat4(this.__mat4);
+        this.__treeItem.setLocalXfo(this.__xfo);
+
+        // Reset the geom at tip so it will be recomuted if necessary
+        this.__geomAtTip = undefined;
+        this.__hitTested = false;
     }
 
     //////////////////////////////////
-    // UI
-    getUIPlaneXfo() {
-        return this.__uiGeomItem.getGeomXfo();
-    }
-    showPointer() {
-        if(this.__sphereGeomItem)
-            this.__sphereGeomItem.setVisible(false);
-        this.__uiPointerItem.setVisible(true);
-        this.pointerVisible = true;
-    }
-    hidePointer() {
-        if(this.__sphereGeomItem)
-            this.__sphereGeomItem.setVisible(true);
-        this.__uiPointerItem.setVisible(false);
-        this.pointerVisible = false;
-    }
-    setPointerLength(length) {
-        let xfo = this.__uiPointerItem.getLocalXfo();
-        xfo.sc.set(1, 1, length);
-        this.__uiPointerItem.setLocalXfo(xfo);
+
+    createGeomDataFbo() {
+        // The geom data buffer is a 3x3 data buffer.
+        // See getGeomItemAtTip below
+        const gl = this.__vrviewport.getRenderer().gl;
+        this.__geomDataBuffer = new GLTexture2D(gl, {
+            type: 'FLOAT',
+            format: 'RGBA',
+            filter: 'NEAREST',
+            width: 3,
+            height: 3,
+        });
+        this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true);
+        this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0]);
     }
 
-    getUIDimensions() {
-        return this.__dims;
-    }
+    getGeomItemAtTip() {
+        if(this.__hitTested)
+            return this.__geomAtTip;
+        this.__hitTested = true;
 
-    setUIPixelData(width, height, pixels) {
-        this.__dims = {
-            width,
-            height
+        const renderer = this.__vrviewport.getRenderer();
+        const gl = renderer.gl;
+        const xfo = this.__tip.getGlobalXfo();
+
+        this.__geomDataBufferFbo.bindAndClear();
+        gl.viewport(0, 0, 3, 3);
+
+        const renderstate = {
+            viewports: [{
+                region: [0, 0, 3, 3],
+                cameraMatrix: xfo.toMat4(),
+                viewMatrix: xfo.inverse().toMat4(),
+                projectionMatrix: this.__projMatrix,
+                isOrthographic: true,
+            }]
         };
-        let dpm = 0.0005;//dots-per-meter (1 each 1/2mm)
-        this.__uiGeomItemGeomXfo.sc.set(width*dpm, height*dpm, 1.0);
-        this.__uiGeomItem.setGeomOffsetXfo(this.__uiGeomItemGeomXfo)
-        this.__uiimage.setData(width, height, pixels);
-    }
 
-    getPointerXfo() {
-        return this.__uiPointerItem.getGeomXfo();
+        gl.enable(gl.CULL_FACE);
+        gl.enable(gl.DEPTH_TEST);
+        gl.depthFunc(gl.LEQUAL);
+        gl.depthMask(true);
+
+        renderer.drawSceneGeomData(renderstate);
+        gl.finish();
+        this.__geomDataBufferFbo.unbindForWriting();
+        this.__geomDataBufferFbo.bindForReading();
+
+        const geomDatas = new Float32Array(4*9);
+        gl.readPixels(0, 0, 3, 3, gl.RGBA, gl.FLOAT, geomDatas);
+        this.__geomDataBufferFbo.unbindForReading();
+
+        //////////////////////////////////////
+        // We have a 3x3 grid of pixels, and we
+        // scan them to find if any geom was in the 
+        // frustum.
+        // Starting with the center pixel (4),
+        // then left and right (3, 5)
+        // Then top bottom (1, 7)
+        const checkPixel = id => (geomDatas[(id*4)+3] != 0);
+        const dataPixels = [4, 3, 5, 1, 7]
+        let geomData;
+        for(let pixelID of dataPixels) {
+            if(checkPixel(pixelID)) {
+                geomData = geomDatas.subarray(pixelID*4, pixelID*4+4);;
+                break;
+            }
+        }
+        if(!geomData)
+            return;
+
+        const passId = Math.round(geomData[0]);
+        const geomItemAndDist = renderer.getPass(passId).getGeomItemAndDist(geomData);
+
+        if (geomItemAndDist) {
+            const ray = new Ray(xfo.tr, xfo.ori.getZaxis());
+            const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist));
+            
+            this.__geomAtTip = {
+                controllerRay: ray,
+                intersectionPos,
+                geomItem: geomItemAndDist.geomItem,
+                dist: geomItemAndDist.dist
+            };
+            return this.__geomAtTip;
+        }
     }
 
 };

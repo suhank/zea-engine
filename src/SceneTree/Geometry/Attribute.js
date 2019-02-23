@@ -1,19 +1,21 @@
+import {
+    typeRegistry
+} from '../../Math/TypeRegistry.js';
 
 class Attribute {
     constructor(dataType, expectedSize, defaultScalarValue = undefined) {
         this.__dataType = dataType;
-        if(dataType.numFloat32Elements !=  undefined){
+        if (dataType.numFloat32Elements != undefined) {
             this.__numFloat32Elements = this.__dataType.numFloat32Elements();
-        }
-        else{
-            switch(dataType){
-            case Visualive.Float32:
-            case Visualive.UInt32:
-            case Visualive.SInt32:
-                this.__numFloat32Elements = 1;
-                break;
-            default:
-                throw("Invalid data type for attribute:" + dataType);
+        } else {
+            switch (dataType) {
+                case Visualive.Float32:
+                case Visualive.UInt32:
+                case Visualive.SInt32:
+                    this.__numFloat32Elements = 1;
+                    break;
+                default:
+                    throw ("Invalid data type for attribute:" + dataType);
             }
         }
         this.__data = new Float32Array(expectedSize * this.__numFloat32Elements);
@@ -67,22 +69,22 @@ class Attribute {
     getValueRef(index) {
         let numElems = this.__numFloat32Elements;
         if (index >= (this.__data.length / numElems))
-            throw("Invalid vertex index:" + index + ". Num Vertices:" + (this.__data.length / 3));
+            throw ("Invalid vertex index:" + index + ". Num Vertices:" + (this.__data.length / 3));
         return this.__dataType.createFromFloat32Buffer(this.__data.buffer, index * numElems);
     }
 
     setValue(index, value) {
         let numElems = this.__numFloat32Elements;
         if (index >= (this.__data.length / numElems))
-            throw("Invalid vertex index:" + index + ". Num Vertices:" + (this.__data.length / 3));
+            throw ("Invalid vertex index:" + index + ". Num Vertices:" + (this.__data.length / 3));
         this.__dataType.createFromFloat32Buffer(this.__data.buffer, index * numElems).setFromOther(value);
     }
 
 
-    toJSON(opts) {
+    toJSON(context, flags) {
         return {
             "data": Array.from(this.__data),
-            "dataType": this.__dataType.name,
+            "dataType": typeRegistry.getTypeName(this.__dataType),
             "defaultScalarValue": this.__defaultScalarValue,
             "length": this.__data.length / this.__numFloat32Elements
         }

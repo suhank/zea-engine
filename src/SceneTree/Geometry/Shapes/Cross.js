@@ -1,4 +1,10 @@
 import { Lines } from '../Lines.js';
+import {
+    NumberParameter
+} from '../../Parameters/NumberParameter.js';
+import {
+    sgFactory
+} from '../../SGFactory.js';
 
 class Cross extends Lines {
     constructor(size = 1.0) {
@@ -46,6 +52,7 @@ class Cross extends Lines {
         return json
     }
 };
+sgFactory.registerClass('Cross', Cross);
 
 export {
     Cross

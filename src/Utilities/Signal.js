@@ -18,13 +18,18 @@ class Signal {
         if (fn == undefined)
             throw("a function callback must be passed to Signal.connect");
         if(this.__slots.indexOf(fn) != -1){
-            console.warn("fn already connected to Signal.")
+            console.warn("fn '"+fn.name+"' already connected to Signal.")
             return;
         }
         let id = this.__slots.length;
         this.__slots[id] = fn;
 
         if(this.__toggledSignal && this.__toggled){
+
+            // Note: we are moving away from using 'toggled' Signals
+            // in favor of promises. We will start generating errors
+            // when connecting to Toggled signals soon
+            
             // This signal has already been toggled, so we should emit immedietly.
             if(this.__data)
                 fn(...this.__data);
@@ -35,6 +40,8 @@ class Signal {
     }
 
     disconnect(fn) {
+        if (fn == undefined)
+            throw("a function callback must be passed to Signal.disconnect");
         let ids = [];
         this.__slots.forEach(function (item, index) {
             if (item === fn) {
@@ -50,7 +57,7 @@ class Signal {
         }
     }
 
-    disconnectID(id) {
+    disconnectId(id) {
         if(!this.__slots[id])
             throw("Invalid ID");
         this.__slots[id] = undefined;

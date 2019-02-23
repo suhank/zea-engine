@@ -63,10 +63,9 @@ class ListParameter extends Parameter {
         // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
     }
 
-    clone() {
+    clone(flags) {
         let clonedValue = this.__value.slice(0);
-        const clonedParam = new ListParameter(this.__name, clonedValue, this.__dataType);
-        this.cloneMembers(clonedParam);
+        const clonedParam = new ListParameter(this.__name, this.__dataType);
         return clonedParam;
     }
 
@@ -75,18 +74,22 @@ class ListParameter extends Parameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         const items = [];
-        for(let p of this.__value) 
-            items.push(p.toJSON(context));
+        for(let p of this.__value) {
+            if(typeof this.__dataType === 'string')
+                items.push(p);
+            else
+                items.push(p.toJSON(context, flags));
+        }
         return {
             items
         };
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.items == undefined){
             console.warn("Invalid Parameter JSON");
             return;
@@ -95,9 +98,16 @@ class ListParameter extends Parameter {
         // parameters loaed from JSON are considered user edited.
         this.__flags |= ParamFlags.USER_EDITED;
 
+        this.__value = [];
         for(let i=0; i<j.items.length; i++) {
-            const elem = new this.__dataType()
-            elem.fromJSON(j.items[i], context);
+            let elem;
+            if(typeof this.__dataType === 'string') {
+                elem = j.items[i]
+            }
+            else {
+                elem = new this.__dataType()
+                elem.fromJSON(j.items[i], context);
+            }
             this.__value.push(elem)
             this.elementAdded.emit(elem, this.__value.length-1);
         }

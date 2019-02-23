@@ -10,9 +10,8 @@ class Vec3Parameter extends Parameter {
         super(name, value ? value : new Vec3(), 'Vec3');
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new Vec3Parameter(this.__name, this.__value.clone());
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

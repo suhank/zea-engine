@@ -44,7 +44,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01));
         this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02));
-        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.002));
+        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0008));
 
         this.movementFinished = new Signal();
     }

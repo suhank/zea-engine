@@ -1,11 +1,11 @@
-
 import {
-    BaseItem
-} from '../SceneTree/BaseItem.js';
+    Signal
+} from '../Utilities';
 import {
+    BaseItem,
+    ItemFlags,
     sgFactory
-} from '../SceneTree/SGFactory.js';
-
+} from '../SceneTree';
 
 class StateMachine extends BaseItem {
     constructor(name) {
@@ -14,13 +14,16 @@ class StateMachine extends BaseItem {
         this.__currentState;
         this.__initialStateName;
 
-        window.onpopstate = (event) => {
-            if(event.state && event.state.stateName){
-                this.activateState(event.state.stateName, false);
-            }
-            else {
-                this.activateState(this.getInitialState(), false);
-            }
+        this.stateChanged = new Signal();
+
+        // Always save state machines. 
+        // Then never come as part of the binary data.
+        this.setFlag(ItemFlags.USER_EDITED);
+
+        // Manually invoke the callbacks for cases where the StateMAchine
+        // is not beingn constructed by the SGFactory.
+        if (!sgFactory.isConstructing()) {
+            sgFactory.invokeCallbacks(this)
         }
     }
 
@@ -28,26 +31,27 @@ class StateMachine extends BaseItem {
         state.setStateMachine(this);
         this.__states[state.getName()] = state;
 
-        if(Object.keys(this.__states).length == 1 && this.__initialStateName == undefined) {
+        if (Object.keys(this.__states).length == 1 && this.__initialStateName == undefined) {
             this.__initialStateName = state.getName();
         }
     }
-
 
     getState(name) {
         return this.__states[name];
     }
 
-    activateState(name, addToHistory=true) {
-        console.log("StateMachine.activateState:" + name)
-        if(!this.__states[name])
-            throw("Invalid state transtion:" + name)
-        if(this.__currentState == this.__states[name])
+    activateState(name) {
+        // console.log("StateMachine.activateState:" + name)
+        if (!this.__states[name])
+            throw ("Invalid state transtion:" + name)
+        if (this.__currentState == this.__states[name])
             return;
-        if(this.__currentState)
+        if (this.__currentState)
             this.__currentState.deactivate();
         this.__currentState = this.__states[name];
         this.__currentState.activate();
+
+        this.stateChanged.emit(name)
     }
 
     getActiveState() {
@@ -69,43 +73,40 @@ class StateMachine extends BaseItem {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
-        let j = super.toJSON(context);
-        if(!j) j = {};
-        j.type = this.constructor.name;
+    toJSON(context, flags) {
+        let j = super.toJSON(context, flags);
         j.initialStateName = this.__initialStateName;
 
         const statesj = {};
-        for(let key in this.__states){
-            statesj[key] = this.__states[key].toJSON(context);
+        for (let key in this.__states) {
+            statesj[key] = this.__states[key].toJSON(context, flags);
         }
         j.states = statesj;
         return j;
     }
 
-    fromJSON(j, context) {
-        super.fromJSON(j, context);
+    fromJSON(j, context, flags) {
+        super.fromJSON(j, context, flags);
         this.__initialStateName = j.initialStateName;
 
         context.stateMachine = this;
 
-        for(let key in j.states){
+        for (let key in j.states) {
             const statejson = j.states[key];
             const state = sgFactory.constructClass(statejson.type);
             if (state) {
                 state.fromJSON(statejson, context);
                 this.addState(state);
-            }
-            else {
-                throw("Invalid type:" + statejson.type)
+            } else {
+                throw ("Invalid type:" + statejson.type)
             }
         }
-
-        const onloaded = ()=>{
-            this.activateState(this.__initialStateName);
-            context.assetItem.loaded.disconnect(onloaded)
-        }
-        context.assetItem.loaded.connect(onloaded);
+        context.addPLCB(() => {
+            // Disabling for now. 
+            // We can have state machines that are not active at all. 
+            // e.g. in the 850 E-Tec project.
+            // this.activateState(this.__initialStateName);
+        });
     }
 
 };

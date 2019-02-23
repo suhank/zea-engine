@@ -99,9 +99,9 @@ uniform float Opacity;
 #ifdef ENABLE_TEXTURES
 
 uniform sampler2D BaseColorTex;
-uniform bool BaseColorTexConnected;
+uniform int BaseColorTexType;
 uniform sampler2D OpacityTex;
-uniform bool OpacityTexConnected;
+uniform int OpacityTexType;
 
 #endif
 
@@ -143,8 +143,8 @@ void main(void) {
     float opacity       = baseColor.a * Opacity;
 #else
     vec2 texCoord       = vec2(v_textureCoord.x, 1.0 - v_textureCoord.y);
-    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexConnected, texCoord);
-    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexConnected, texCoord);
+    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, texCoord);
+    float opacity       = baseColor.a * getLuminanceParamValue(Opacity, OpacityTex, OpacityTexType, texCoord);
 #endif
 
     // Hacky simple irradiance. 

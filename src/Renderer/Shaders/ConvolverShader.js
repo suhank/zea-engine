@@ -1,6 +1,5 @@
 import { shaderLibrary }  from '../ShaderLibrary';
 import { GLShader }  from '../GLShader.js';
-import { ScreenQuadShader } from './ScreenQuadShader.js'
 import './GLSL/utils/quadVertexFromID.js';
 
 

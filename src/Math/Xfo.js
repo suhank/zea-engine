@@ -43,6 +43,12 @@ class Xfo {
         if (sc instanceof Vec3)
             this.sc = sc;
     }
+    
+    setFromOther(other) {
+        this.tr = other.tr;
+        this.ori = other.ori;
+        this.sc = other.sc;
+    }
 
     isIdentity() {
         return this.tr.isNull() && this.ori.isIdentity() && this.sc.is111();
@@ -107,6 +113,11 @@ class Xfo {
         trn.translation = this.tr;
 
         return trn.multiply(rot).multiply(scl);
+    }
+
+    fromMat4(mat4) {
+        this.tr = mat4.translation;
+        this.ori.setFromMat4(mat4);
     }
 
 

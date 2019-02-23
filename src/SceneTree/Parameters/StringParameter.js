@@ -5,7 +5,8 @@ import {
     sgFactory
 } from '../SGFactory';
 import {
-    Parameter
+    Parameter,
+    ValueSetMode
 } from './Parameter.js';
 
 class StringParameter extends Parameter {
@@ -22,12 +23,20 @@ class StringParameter extends Parameter {
         return this.multiLine;
     }
 
-    clone() {
+    clone(flags) {
         const clonedParam = new StringParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
+
+    readBinary(reader, context) {
+        const value = reader.loadStr();
+        this.setValue(value, ValueSetMode.DATA_LOAD)
+    }
 };
+
+
+sgFactory.registerClass('StringParameter', StringParameter);
+sgFactory.registerClass('Property_String', StringParameter);
 
 export {
     StringParameter

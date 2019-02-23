@@ -9,18 +9,15 @@ import {
     BaseImage
 } from '../BaseImage.js';
 
-class WebcamImage2D extends BaseImage {
-    constructor(width = 640, height = 480, rearCamera = false) {
+class VideoStreamImage2D extends BaseImage {
+    constructor() {
         super();
         this.__loaded = false;
-        
-        this.__initWebcam(width, height, rearCamera);
     }
 
-    __initWebcam(width, height, rearCamera = false) {
+    connectWebcam(width, height, rearCamera = false) {
 
-        let facingMode;
-        let video = {
+        const video = {
             width,
             height,
             frameRate: {
@@ -38,7 +35,7 @@ class WebcamImage2D extends BaseImage {
             };
         }
 
-        let domElement = document.createElement('video');
+        const domElement = document.createElement('video');
         // TODO - confirm its necessary to add to DOM
         domElement.style.display = 'none';
         domElement.preload = 'auto';
@@ -78,14 +75,14 @@ class WebcamImage2D extends BaseImage {
                     this.loaded.emit(domElement);
 
                     let prevFrame = 0;
-                    let frameRate = 60;
-                    let timerCallback = () => {
+                    const frameRate = 60;
+                    const timerCallback = () => {
                         if (domElement.paused || domElement.ended) {
                             return;
                         }
                         // Check to see if the video has progressed to the next frame. 
                         // If so, then we emit and update, which will cause a redraw.
-                        let currentFrame = Math.floor(domElement.currentTime * frameRate);
+                        const currentFrame = Math.floor(domElement.currentTime * frameRate);
                         if (prevFrame != currentFrame) {
                             this.updated.emit();
                             prevFrame = currentFrame;
@@ -99,8 +96,30 @@ class WebcamImage2D extends BaseImage {
             .catch(function(err) {
                 /* handle the error */
             });
+    }
 
+    setVideoStream(video) {
+        this.__loaded = false;
+        this.width = video.videoWidth;
+        this.height = video.videoHeight;
+        this.start()
+        this.__data = video;
+        this.__loaded = true;
+        this.loaded.emit(video);
+    }
 
+    // getAudioSource() {
+    //     return this.__data;
+    // }
+
+    stop() {
+        clearInterval(this.__intervalId);
+    }
+
+    start() {
+        this.__intervalId = setInterval(() => {
+            this.updated.emit();
+        }, 20); // Sample at 50fps.
     }
 
     isLoaded() {
@@ -118,26 +137,11 @@ class WebcamImage2D extends BaseImage {
         }
     }
 
-    //////////////////////////////////////////
-    // Metadata
-
-    getMetadata(key) {
-        return this.__metaData.get(key)
-    }
-
-    hasMetadata(key) {
-        return this.__metaData.has(key)
-    }
-
-    setMetadata(key, metaData) {
-        this.__metaData.set(key, metaData);
-    }
-
 };
 
-sgFactory.registerClass('WebcamImage2D', WebcamImage2D);
+sgFactory.registerClass('VideoStreamImage2D', VideoStreamImage2D);
 
 
 export {
-    WebcamImage2D
+    VideoStreamImage2D
 };

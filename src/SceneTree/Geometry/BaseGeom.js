@@ -12,6 +12,12 @@ import {
     ParameterOwner
 } from '../ParameterOwner.js';
 import { Attribute } from './Attribute.js';
+import {
+    sgFactory
+} from '../SGFactory.js';
+
+// Defines used to explicity specify types for WebGL.
+const SAVE_FLAG_SKIP_GEOMDATA = 1 << 10;
 
 class BaseGeom extends ParameterOwner {
     constructor() {
@@ -303,23 +309,30 @@ class BaseGeom extends ParameterOwner {
         }
     }
 
-    toJSON(opts) {
-        let vertexAttributes = {};
-        for (let [key, attr] of this.__vertexAttributes.entries()) {
-            if (!opts || !('attrList' in opts) || opts.attrList.indexOf(key) != -1)
-                vertexAttributes[key] = attr.toJSON(opts);
+    toJSON(context, flags) {
+        let json = super.toJSON(context, flags);
+        if (!json)
+            json = {};
+        json.type = sgFactory.getClassName(this);
+        
+        if(!(flags&SAVE_FLAG_SKIP_GEOMDATA)) {
+            let vertexAttributes = {};
+            for (let [key, attr] of this.__vertexAttributes.entries()) {
+                // if (!opts || !('attrList' in opts) || opts.attrList.indexOf(key) != -1)
+                    vertexAttributes[key] = attr.toJSON(context, flags);
+            }
+            json.vertexAttributes = vertexAttributes;
         }
-        return {
-            'vertexAttributes': vertexAttributes
-        }
+        return json;
     }
 
-    fromJSON(json) {
+    fromJSON(json, context, flags) {
+        super.fromJSON(json, context, flags);
         for (let name in json.vertexAttributes) {
             let attr = this.__vertexAttributes.get(name);
-            let attrJSON = json.vertexAttributes[name];
+            const attrJSON = json.vertexAttributes[name];
             if (!attr) {
-                let dataType = typeRegistry.getType(attrJSON.dataType);
+                const dataType = typeRegistry.getType(attrJSON.dataType);
                 attr = new VertexAttribute(this, dataType, 0, attrJSON.defaultScalarValue);
                 this.__vertexAttributes.set(name, attr);
             }
@@ -332,6 +345,7 @@ class BaseGeom extends ParameterOwner {
     }
 };
 export {
-    BaseGeom
+    BaseGeom,
+    SAVE_FLAG_SKIP_GEOMDATA
 };
 // BaseGeom;

@@ -21,9 +21,6 @@ import {
     Signal
 } from '../Utilities';
 import {
-    TreeItem
-} from './TreeItem';
-import {
     sgFactory
 } from './SGFactory.js';
 
@@ -32,7 +29,11 @@ import {
     LOADFLAGS_SKIP_GEOMETRIES
 } from './TreeItem.js';
 
-class GeomItem extends TreeItem {
+import {
+    BaseGeomItem
+} from './BaseGeomItem.js';
+
+class GeomItem extends BaseGeomItem {
     constructor(name, geom = undefined, material = undefined) {
         super(name);
 
@@ -45,23 +46,17 @@ class GeomItem extends TreeItem {
         this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('geomOffsetXfo'));
         this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'));
 
-        let _cleanGeomXfo = (xfo)=>{
-            return this.getGlobalXfo().multiply(this.__geomOffsetXfoParam.getValue());
-        }
-        this.__globalXfoParam.valueChanged.connect((changeType)=>{
-            this.__geomXfoParam.setDirty(_cleanGeomXfo);
+        this.__cleanGeomXfo = this.__cleanGeomXfo.bind(this)
+        this.__globalXfoParam.valueChanged.connect((mode)=>{
+            this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
         });
-        this.__geomOffsetXfoParam.valueChanged.connect((changeType)=>{
-            this.__geomXfoParam.setDirty(_cleanGeomXfo);
+        this.__geomOffsetXfoParam.valueChanged.connect((mode)=>{
+            this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
         });
 
         this.geomXfoChanged = this.__geomXfoParam.valueChanged;
-        // this.materialAssigned = new Signal();
-        // this.geomAssigned = new Signal();
         this.materialAssigned = this.__materialParam.valueChanged;
         this.geomAssigned = this.__geomParam.valueChanged;
-
-
 
         if (geom)
             this.setGeometry(geom);
@@ -69,19 +64,27 @@ class GeomItem extends TreeItem {
             this.setMaterial(material);
     }
 
+    __cleanGeomXfo() {
+        return this.__globalXfoParam.getValue().multiply(this.__geomOffsetXfoParam.getValue());
+    }
+
     destroy() {
         super.destroy();
     }
 
-    clone() {
-        let cloned = new GeomItem();
-        this.copyTo(cloned);
+    clone(flags) {
+        const cloned = new GeomItem();
+        cloned.copyFrom(this, flags);
         return cloned;
     }
 
-    copyTo(cloned) {
-        super.copyTo(cloned);
-        cloned.__lightmapName = this.__lightmapName;
+    copyFrom(src, flags) {
+        super.copyFrom(src, flags);
+        this.__lightmapCoordOffset = src.__lightmapCoordOffset;
+        // Geom Xfo should be dirty after cloning.
+        // Note: this might not be necessary. It should
+        // always be dirty after cloning.
+        this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
     }
 
     //////////////////////////////////////////
@@ -161,8 +164,8 @@ class GeomItem extends TreeItem {
     /////////////////////////////
     // Debugging
 
-    toJSON(context) {
-        const json = super.toJSON(context);
+    toJSON(context, flags) {
+        const json = super.toJSON(context, flags);
         return json
     }
 
@@ -188,7 +191,7 @@ class GeomItem extends TreeItem {
             const onGeomLoaded = (range) => {
                 if (geomIndex >= range[0] && geomIndex < range[1]) {
                     this.setGeometry(geomLibrary.getGeom(geomIndex));
-                    geomLibrary.rangeLoaded.disconnectID(connid);
+                    geomLibrary.rangeLoaded.disconnectId(connid);
                 }
             }
             const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);

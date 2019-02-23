@@ -16,9 +16,8 @@ class MaterialParameter extends Parameter {
         this.valueParameterValueChanged = new Signal();
     }
     
-    clone() {
+    clone(flags) {
         const clonedParam = new MaterialParameter(this.__name, this.__value);
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 
@@ -45,7 +44,7 @@ class MaterialParameter extends Parameter {
     //////////////////////////////////////////
     // Persistence
 
-    toJSON(context) {
+    toJSON(context, flags) {
         if((this.__flags&ParamFlags.USER_EDITED) == 0)
             return;
         return {
@@ -53,7 +52,7 @@ class MaterialParameter extends Parameter {
         }
     }
 
-    fromJSON(j, context) {
+    fromJSON(j, context, flags) {
         if(j.value == undefined){
             console.warn("Invalid Parameter JSON");
             return;

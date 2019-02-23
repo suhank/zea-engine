@@ -118,7 +118,7 @@ class MaterialLibrary {
         xhr.send(null);
     }
 
-    fromJSON(j, context={}) {
+    fromJSON(j, context={}, flags=0) {
         context.lod = this.lod;
         for (let name in j.textures) {
             let image = new FileImage(name);
@@ -132,7 +132,7 @@ class MaterialLibrary {
         }
     }
 
-    toJSON(context={}) {
+    toJSON(context={}, flags=0) {
         return {
             "numMaterials": this.geoms.length()
         }
@@ -140,6 +140,10 @@ class MaterialLibrary {
 
 
     readBinary(reader, context={}) {
+
+        if(context.version == undefined)
+          context.version = 0;
+      
         this.name = reader.loadStr();
 
         // Specify the Lod to load the images in this library.
@@ -157,18 +161,7 @@ class MaterialLibrary {
         if (numMaterials > 0) {
             let toc = reader.loadUInt32Array(numMaterials);
             for (let i = 0; i < numMaterials; i++) {
-                let shaderName = reader.loadStr();
-                let name = reader.loadStr();
-
-                if(shaderName == 'StandardMaterial'){
-                    shaderName = 'StandardSurfaceShader';
-                }
-                if(shaderName == 'TransparentMaterial'){
-                    shaderName = 'TransparentSurfaceShader';
-                }
-
-                // console.log("Material:" + name);
-                let material = new Material(name, shaderName);
+                let material = new Material("");
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
                 material.readBinary(reader, context, this.__images);
                 this.addMaterial(material);

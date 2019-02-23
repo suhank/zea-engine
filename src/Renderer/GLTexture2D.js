@@ -21,6 +21,8 @@ class GLTexture2D extends RefCounted {
         this.__gltex = this.__gl.createTexture();
         this.width = 0;
         this.height = 0;
+        this.textureType = 1; // Default 2d 8 bit texture image texture.
+        this.textureDesc = [0,0,0,0]; // To be polulated by derived classes.
         this.__loaded = false;
         this.__bound = false;
         let imageUpdated = () => {
@@ -112,6 +114,9 @@ class GLTexture2D extends RefCounted {
 
         // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
         if (type == 'FLOAT') {
+
+            this.textureType = 3; // Indicating an Float HDR image.
+
             if (gl.name == 'webgl2') {
                 if (minFilter == 'LINEAR' && !gl.__ext_float_linear) {
                     console.warn('Floating point texture filtering not supported on this device');
@@ -282,7 +287,11 @@ class GLTexture2D extends RefCounted {
             gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         }
         if (data != undefined) {
-            if (data instanceof Image || data instanceof ImageData || data instanceof HTMLVideoElement) {
+            if (data instanceof Image ||
+                data instanceof ImageData ||
+                data instanceof HTMLCanvasElement ||
+                data instanceof HTMLImageElement ||
+                data instanceof HTMLVideoElement) {
                 gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.__format, this.__type, data);
                 this.width = data.width;
                 this.height = data.height;
@@ -349,6 +358,53 @@ class GLTexture2D extends RefCounted {
         }
     }
 
+    clear() {
+        const gl = this.__gl;
+        const numPixels = this.width * this.height;
+        let numChannels;
+        switch (this.__format) {
+            case gl.RED:
+            case gl.RED_INTEGER:
+            case gl.ALPHA:
+            case gl.LUMINANCE:
+            case gl.LUMINANCE_ALPHA:
+                numChannels = 1;
+                break;
+            case gl.RG:
+                numChannels = 2;
+                break;
+            case gl.RGB:
+                numChannels = 3;
+                break;
+            case gl.RGBA:
+                numChannels = 4;
+                break;
+            default:
+                throw("Invalid Format");
+        }
+        let data;
+        switch (this.__type) {
+            case gl.UNSIGNED_BYTE:
+                data = new UInt8Array(numPixels * numChannels);
+                break;
+            case gl.HALF_FLOAT:
+                data = new UInt16Array(numPixels * numChannels);
+                break;
+            case gl.FLOAT:
+                data = new Float32Array(numPixels * numChannels);
+                break;
+            default:
+                throw("Invalid Type");
+        }
+
+        if(gl.name == 'webgl2'){
+            gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__format, this.__type, data, 0);
+        }
+        else {
+            gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, this.width, this.height, 0, this.__format, this.__type, data);
+        }
+    }
+
     resize(width, height, preserveData = false, emit = true) {
         const gl = this.__gl;
         const sizeChanged = this.width != width || this.height != height;
@@ -408,7 +464,14 @@ class GLTexture2D extends RefCounted {
         return this.bindToUniform(renderstate, unif);
     }
 
-    bindToUniform(renderstate, unif, type = 1) {
+    preBind(unif, unifs) {
+        return {
+            textureTypeUnif: unifs[unif.name+'Type'],
+            textureDescUnif: unifs[unif.name+'Desc']
+        }
+    }
+
+    bindToUniform(renderstate, unif, bindings) {
         if (!this.__loaded) {
             return false;
         }
@@ -423,17 +486,15 @@ class GLTexture2D extends RefCounted {
         gl.bindTexture(gl.TEXTURE_2D, this.__gltex);
         gl.uniform1i(unif.location, unit);
 
-        const textureConnctedUnif = renderstate.unifs[unif.name + 'Connected'];
-        if (textureConnctedUnif) {
-            gl.uniform1i(textureConnctedUnif.location, type);
-        }
+        if(bindings) {
+            if (bindings.textureTypeUnif) {
+                gl.uniform1i(bindings.textureTypeUnif.location, this.textureType);
+            }
 
-        // Note: not all textures are square. (e.g. Lightmaps.)
-        // A more powerfull generic binding would be nice, but this is too simple.
-        // const textureSizeUnif = renderstate.unifs[unif.name+'Size'];
-        // if (textureSizeUnif){
-        //     gl.uniform1i(textureSizeUnif.location, this.width);
-        // }
+            if (bindings.textureDescUnif){
+                this.__gl.uniform4fv(bindings.textureDescUnif.location, this.textureDesc);
+            }
+        }
 
         return true;
     }

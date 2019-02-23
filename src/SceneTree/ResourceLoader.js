@@ -36,14 +36,18 @@ export function mergeDeep(target, ...sources) {
   const source = sources.shift();
 
   if (isObject(target) && isObject(source)) {
-  for (const key in source) {
-    if (isObject(source[key])) {
-    if (!target[key]) Object.assign(target, { [key]: {} });
-    mergeDeep(target[key], source[key]);
-    } else {
-    Object.assign(target, { [key]: source[key] });
+    for (const key in source) {
+      if (isObject(source[key])) {
+        if (!target[key]) Object.assign(target, {
+          [key]: {}
+        });
+        mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(target, {
+          [key]: source[key]
+        });
+      }
     }
-  }
   }
 
   return mergeDeep(target, ...sources);
@@ -62,50 +66,84 @@ class ResourceLoader {
     this.__resourceRegisterCallbacks = {};
     this.__callbacks = {};
     this.__resources = {};
-    this.__resourcesTreeEntities = { };
-    this.__resourcesTree = { children: {} };
+    this.__resourcesTreeEntities = {};
+    this.__resourcesTree = {
+      children: {}
+    };
 
     this.__workers = [];
     this.__nextWorker = 0;
+
+    if(window.location.origin.startsWith('https://api.visualive.io') ||
+      window.location.origin.startsWith('https://apistage.visualive.io')) {
+      // For embeds using the old generated page system.
+      this.wasmUrl = "https://assets-visualive.storage.googleapis.com/oR3y6kdDu";
+    } else {
+      let visualiveEngineUrl;
+      const scripts = document.getElementsByTagName('script');
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i];
+        if (script.src.endsWith('Visualive.js')) {
+          visualiveEngineUrl = script.src;
+          break;
+        }
+      }
+      if (!visualiveEngineUrl)
+        throw ("Unable to determine Visualive Engine URL");
+      const parts = visualiveEngineUrl.split('/');
+      parts.pop()
+      parts.pop()
+      this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm';
+
+      this.addResourceURL("VisualiveEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
+    }
   }
 
-  getRootFolder(){
+  getRootFolder() {
     return this.__resourcesTree;
   }
 
   registerResourceCallback(filter, fn) {
     this.__resourceRegisterCallbacks[filter] = fn;
+
+    for (let key in this.__resources) {
+      const file = this.__resources[key];
+      if (file.name.includes(filter))
+        fn(file)
+    }
   }
 
   __applyCallbacks(resourcesDict) {
-    const applyCallbacks = (resource)=>{
-      for(let filter in this.__resourceRegisterCallbacks){
-        if(resource.name.includes(filter))
+    const applyCallbacks = (resource) => {
+      for (let filter in this.__resourceRegisterCallbacks) {
+        if (resource.name.includes(filter))
           this.__resourceRegisterCallbacks[filter](resource);
       }
     }
-    for(let key in resourcesDict){
+    for (let key in resourcesDict) {
       const resource = resourcesDict[key];
-      if(resource.url)
+      if (resource.url)
         applyCallbacks(resource)
     }
   }
 
-  __buildTree(resources){ 
-    const buildEntity = (resourceId)=>{
-      if(this.__resourcesTreeEntities[resourceId])
+  __buildTree(resources) {
+    const buildEntity = (resourceId) => {
+      if (this.__resourcesTreeEntities[resourceId])
         return;
 
-      const resource = Object.assign(resources[resourceId], { id: resourceId });
+      const resource = Object.assign(resources[resourceId], {
+        id: resourceId
+      });
       if (resource.type === 'folder' || resource.type === 'dependency') {
         resource.children = {};
       }
-      if(resource.parent) {
-        if(!resources[resource.parent]){
+      if (resource.parent) {
+        if (!resources[resource.parent]) {
           console.warn("Item is orphaned in a folder that no longer exists:", resource.name);
           return;
         }
-        if(!this.__resourcesTreeEntities[resource.parent]) {
+        if (!this.__resourcesTreeEntities[resource.parent]) {
           buildEntity(resource.parent)
         }
       }
@@ -115,12 +153,12 @@ class ResourceLoader {
       this.__resourcesTreeEntities[resourceId] = resource;
     }
 
-    for(let key in resources){
+    for (let key in resources) {
       buildEntity(key);
     }
   }
 
-  setResources(resources){
+  setResources(resources) {
     this.__resources = Object.assign(this.__resources, resources);
     this.__buildTree(resources);
     this.__applyCallbacks(resources);
@@ -130,38 +168,47 @@ class ResourceLoader {
 
     const parts = resourcePath.split('/');
     const filename = parts.pop();
-    if(!url) {
+    if (!url) {
 
       let rootURL = window.location.href.split('#')[0];
       rootURL = rootURL.split('?')[0];
-      if(rootURL.endsWith('.html') || rootURL.endsWith('.html')){
+      if (rootURL.endsWith('.html') || rootURL.endsWith('.html')) {
         rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/';
       }
       const base = rootURL;
-      if(parts[0] == '.')
+      if (parts[0] == '.')
         parts.shift();
-      else if(parts[0] == '..'){
+      else if (parts[0] == '..') {
         item = item.substring(3);
         const baseparts = base.split('/');
         baseparts.pop();
         baseparts.pop();
         base = baseparts.join('/') + '/';
       }
-      url = base+resourcePath
+      url = base + resourcePath
     }
     let parentId;
     const tmp = {};
-    for(let part of parts) {
+    for (let part of parts) {
       const key = hashStr(part);
-      if(!(key in this.__resources)) {
-          this.__resources[key] = { name: part, type: 'folder', parent: parentId };
-          tmp[key] = this.__resources[key]
+      if (!(key in this.__resources)) {
+        this.__resources[key] = {
+          name: part,
+          type: 'folder',
+          parent: parentId
+        };
+        tmp[key] = this.__resources[key]
       }
       parentId = key;
     }
 
-    const resource = { name: filename, url, parent: parentId };
     const key = hashStr(filename);
+    const resource = {
+      name: filename,
+      url,
+      parent: parentId,
+      id: key
+    };
     this.__resources[key] = resource;
 
     tmp[key] = resource
@@ -172,7 +219,7 @@ class ResourceLoader {
 
 
 
-  freeData(buffer){
+  freeData(buffer) {
     // Note: Explicitly transfer data to a web worker and then 
     // terminate the worker. (hacky way to free TypedArray memory explicitly)
     // let worker = new FreeMemWorker();
@@ -181,15 +228,19 @@ class ResourceLoader {
   }
 
   __getWorker() {
-    const __constructWorker = ()=>{
+    const __constructWorker = () => {
       return new Promise((resolve) => {
         const worker = new ResourceLoaderWorker();
         // const worker = new Worker(this.__resourceLoaderFile.url);
-        worker.onmessage = (evt) => {
-          if (evt.data.type === 'WASM_LOADED') {
+
+        worker.postMessage({
+          type: 'init',
+          wasmUrl: this.wasmUrl
+        });
+        worker.onmessage = (event) => {
+          if (event.data.type === 'WASM_LOADED') {
             resolve(worker);
-          }
-          else if (evt.data.type === 'FINISHED') {
+          } else if (event.data.type === 'FINISHED') {
             const data = event.data;
 
             // const file = this.__resources[event.data.resourceId]
@@ -210,8 +261,8 @@ class ResourceLoader {
       });
     }
 
-    this.__nextWorker = (this.__nextWorker+1)%3;
-    if(this.__workers[this.__nextWorker] == undefined)
+    this.__nextWorker = (this.__nextWorker + 1) % 3;
+    if (this.__workers[this.__nextWorker] == undefined)
       this.__workers[this.__nextWorker] = __constructWorker();
     return this.__workers[this.__nextWorker];
   }
@@ -221,20 +272,20 @@ class ResourceLoader {
       worker.terminate();
     this.__workers = [];
   }
-  
+
   getFilepath(resourceId) {
     let curr = this.__resources[resourceId];
     const path = [curr.name];
-    while(curr.parent){
+    while (curr.parent) {
       curr = this.__resources[curr.parent];
       path.splice(0, 0, curr.name);
     }
     return path.join('/');
   }
 
-  
+
   resourceAvailable(resourceId) {
-    if(resourceId.indexOf('.') > 0) {
+    if (resourceId.indexOf('.') > 0) {
       console.warn("Deprecation warning for resourceAvailable. Value should be a file id, not a path.");
       return this.resolveFilepath(resourceId) != undefined;
     }
@@ -247,84 +298,84 @@ class ResourceLoader {
 
   resolveFilePathToId(filePath) {
     const file = this.resolveFilepath(filePath);
-    if(file)
+    if (file)
       return file.id;
   }
 
   resolveFilepath(filePath) {
     const parts = filePath.split('/');
-    if(parts[0] == '.' || parts[0] == '')
+    if (parts[0] == '.' || parts[0] == '')
       parts.shift();
     let curr = this.__resourcesTree;
-    for(let part of parts){
-      if(part in curr.children)
+    for (let part of parts) {
+      if (part in curr.children)
         curr = curr.children[part];
-      else{
+      else {
         console.warn("Unable to resolve key:" + part + " of path:" + filePath);
         return null;
       }
     }
     return curr;
   }
-  
+
   resolveFile(filePath) {
     console.warn("Deprecation warning for resolveFile. Use resolveFilepath.");
     return this.resolveFilepath(filePath);
   }
-  
+
   resolveURL(filePath) {
     console.warn("Deprecation warning for resolveURL. Use resolveFilepath.");
     const file = this.resolveFilepath(filePath)
-    if(file)
+    if (file)
       return file.url;
   }
 
   // Add work to the total work pile... We never know how big the pile will get.
-  addWork(resourceId, amount){
+  addWork(resourceId, amount) {
     this.__totalWork += amount;
     this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
   }
 
   //Add work to the 'done' pile. The done pile should eventually match the total pile.
-  addWorkDone(resourceId, amount){
+  addWorkDone(resourceId, amount) {
     this.__doneWork += amount;
     this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100);
-    if(this.__doneWork > this.__totalWork) {
-      throw("Mismatch between work loaded and work done.")
+    if (this.__doneWork > this.__totalWork) {
+      throw ("Mismatch between work loaded and work done.")
     }
-    if(this.__doneWork == this.__totalWork) {
+    if (this.__doneWork == this.__totalWork) {
       this.allResourcesLoaded.emit();
     }
   }
 
-  loadResource(resourceId, callback, addLoadWork=true) {
+  loadResource(resourceId, callback, addLoadWork = true) {
 
     const file = this.getFile(resourceId);
-    if(!file){
-      throw("Invalid resource Id:'"+ resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
+    if (!file) {
+      throw ("Invalid resource Id:'" + resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
     }
 
     this.loadURL(resourceId, file.url, callback, addLoadWork)
   }
 
-  loadURL(resourceId, url, callback, addLoadWork=true) {
+  loadURL(resourceId, url, callback, addLoadWork = true) {
 
-    if(addLoadWork){ 
-      this.addWork(resourceId, 3);// Add work in 2 chunks. Loading, unpacking, parsing.
-    }
-    else{
+    if (addLoadWork) {
+      this.addWork(resourceId, 3); // Add work in 2 chunks. Loading, unpacking, parsing.
+    } else {
       // the work for loading and parsing the work is already registered..
       // See BinAsset. It knows that it will load a sequwnce of files
       // and has already registered this work once is determined the 
       // toal number of files in the stream.
     }
 
-    if(!(resourceId in this.__callbacks))
+    if (!(resourceId in this.__callbacks))
       this.__callbacks[resourceId] = [];
     this.__callbacks[resourceId].push(callback);
 
-    this.__getWorker().then((worker)=>{
+    this.__getWorker().then((worker) => {
       worker.postMessage({
+        type: 'fetch',
         resourceId,
         url
       });
@@ -335,8 +386,8 @@ class ResourceLoader {
     const resourceId = fileData.resourceId;
     this.addWorkDone(resourceId, 1); // unpacking done...
     const callbacks = this.__callbacks[resourceId];
-    if(callbacks) {
-      for(let callback of callbacks){
+    if (callbacks) {
+      for (let callback of callbacks) {
         callback(fileData.entries);
       }
       delete this.__callbacks[resourceId];
@@ -346,7 +397,7 @@ class ResourceLoader {
 
   }
 
-  suspend() { 
+  suspend() {
     this.__terminateWorkers();
   }
 

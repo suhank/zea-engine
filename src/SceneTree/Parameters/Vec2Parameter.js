@@ -21,9 +21,8 @@ class Vec2Parameter extends Parameter {
         this.rangeChanged.emit();
     }
 
-    clone() {
+    clone(flags) {
         const clonedParam = new Vec2Parameter(this.__name, this.__value.clone());
-        this.cloneMembers(clonedParam);
         return clonedParam;
     }
 };

@@ -1,7 +1,7 @@
 /**
  * @license
- * webvr-polyfill
- * Copyright (c) 2015-2017 Google
+ * webxr-polyfill
+ * Copyright (c) 2017 Google
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -100,8 +100,1638 @@
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.WebVRPolyfill = factory());
+	(global.WebXRPolyfill = factory());
 }(this, (function () { 'use strict';
+
+var _global = typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : typeof window !== 'undefined' ? window : {};
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+var PRIVATE = Symbol('@@webxr-polyfill/EventTarget');
+var EventTarget = function () {
+  function EventTarget() {
+    classCallCheck(this, EventTarget);
+    this[PRIVATE] = {
+      listeners: new Map()
+    };
+  }
+  createClass(EventTarget, [{
+    key: 'addEventListener',
+    value: function addEventListener(type, listener) {
+      if (typeof type !== 'string') {
+        throw new Error('`type` must be a string');
+      }
+      if (typeof listener !== 'function') {
+        throw new Error('`listener` must be a function');
+      }
+      var typedListeners = this[PRIVATE].listeners.get(type) || [];
+      typedListeners.push(listener);
+      this[PRIVATE].listeners.set(type, typedListeners);
+    }
+  }, {
+    key: 'removeEventListener',
+    value: function removeEventListener(type, listener) {
+      if (typeof type !== 'string') {
+        throw new Error('`type` must be a string');
+      }
+      if (typeof listener !== 'function') {
+        throw new Error('`listener` must be a function');
+      }
+      var typedListeners = this[PRIVATE].listeners.get(type) || [];
+      for (var i = typedListeners.length; i >= 0; i--) {
+        if (typedListeners[i] === listener) {
+          typedListeners.pop();
+        }
+      }
+    }
+  }, {
+    key: 'dispatchEvent',
+    value: function dispatchEvent(type, event) {
+      var typedListeners = this[PRIVATE].listeners.get(type) || [];
+      var queue = [];
+      for (var i = 0; i < typedListeners.length; i++) {
+        queue[i] = typedListeners[i];
+      }
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+      try {
+        for (var _iterator = queue[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var listener = _step.value;
+          listener(event);
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+      if (typeof this['on' + type] === 'function') {
+        this['on' + type](event);
+      }
+    }
+  }]);
+  return EventTarget;
+}();
+
+var PRIVATE$1 = Symbol('@@webxr-polyfill/XR');
+var XR = function (_EventTarget) {
+  inherits(XR, _EventTarget);
+  function XR(device) {
+    classCallCheck(this, XR);
+    var _this = possibleConstructorReturn(this, (XR.__proto__ || Object.getPrototypeOf(XR)).call(this));
+    _this[PRIVATE$1] = {
+      device: device
+    };
+    return _this;
+  }
+  createClass(XR, [{
+    key: 'requestDevice',
+    value: function requestDevice() {
+      return new Promise(function ($return, $error) {
+        var device;
+        return Promise.resolve(this[PRIVATE$1].device).then(function ($await_1) {
+          try {
+            device = $await_1;
+            if (device) {
+              return $return(device);
+            }
+            return $error(new Error('NotFoundError'));
+          } catch ($boundEx) {
+            return $error($boundEx);
+          }
+        }.bind(this), $error);
+      }.bind(this));
+    }
+  }]);
+  return XR;
+}(EventTarget);
+
+var now = void 0;
+if ('performance' in _global === false) {
+  var startTime = Date.now();
+  now = function now() {
+    return Date.now() - startTime;
+  };
+} else {
+  now = function now() {
+    return performance.now();
+  };
+}
+var now$1 = now;
+
+var PRIVATE$2 = Symbol('@@webxr-polyfill/XRPresentationContext');
+var XRPresentationContext = function () {
+  function XRPresentationContext(canvas, ctx, glAttribs) {
+    classCallCheck(this, XRPresentationContext);
+    this[PRIVATE$2] = { canvas: canvas, ctx: ctx, glAttribs: glAttribs };
+    Object.assign(this, ctx);
+  }
+  createClass(XRPresentationContext, [{
+    key: 'canvas',
+    get: function get$$1() {
+      return this[PRIVATE$2].canvas;
+    }
+  }]);
+  return XRPresentationContext;
+}();
+
+var ARRAY_TYPE = typeof Float32Array !== 'undefined' ? Float32Array : Array;
+
+
+var degree = Math.PI / 180;
+
+function create() {
+  var out = new ARRAY_TYPE(16);
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = 1;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = 1;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+
+function copy(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  out[4] = a[4];
+  out[5] = a[5];
+  out[6] = a[6];
+  out[7] = a[7];
+  out[8] = a[8];
+  out[9] = a[9];
+  out[10] = a[10];
+  out[11] = a[11];
+  out[12] = a[12];
+  out[13] = a[13];
+  out[14] = a[14];
+  out[15] = a[15];
+  return out;
+}
+
+
+function identity(out) {
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = 1;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = 1;
+  out[11] = 0;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 0;
+  out[15] = 1;
+  return out;
+}
+
+function invert(out, a) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15];
+  var b00 = a00 * a11 - a01 * a10;
+  var b01 = a00 * a12 - a02 * a10;
+  var b02 = a00 * a13 - a03 * a10;
+  var b03 = a01 * a12 - a02 * a11;
+  var b04 = a01 * a13 - a03 * a11;
+  var b05 = a02 * a13 - a03 * a12;
+  var b06 = a20 * a31 - a21 * a30;
+  var b07 = a20 * a32 - a22 * a30;
+  var b08 = a20 * a33 - a23 * a30;
+  var b09 = a21 * a32 - a22 * a31;
+  var b10 = a21 * a33 - a23 * a31;
+  var b11 = a22 * a33 - a23 * a32;
+  var det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
+  if (!det) {
+    return null;
+  }
+  det = 1.0 / det;
+  out[0] = (a11 * b11 - a12 * b10 + a13 * b09) * det;
+  out[1] = (a02 * b10 - a01 * b11 - a03 * b09) * det;
+  out[2] = (a31 * b05 - a32 * b04 + a33 * b03) * det;
+  out[3] = (a22 * b04 - a21 * b05 - a23 * b03) * det;
+  out[4] = (a12 * b08 - a10 * b11 - a13 * b07) * det;
+  out[5] = (a00 * b11 - a02 * b08 + a03 * b07) * det;
+  out[6] = (a32 * b02 - a30 * b05 - a33 * b01) * det;
+  out[7] = (a20 * b05 - a22 * b02 + a23 * b01) * det;
+  out[8] = (a10 * b10 - a11 * b08 + a13 * b06) * det;
+  out[9] = (a01 * b08 - a00 * b10 - a03 * b06) * det;
+  out[10] = (a30 * b04 - a31 * b02 + a33 * b00) * det;
+  out[11] = (a21 * b02 - a20 * b04 - a23 * b00) * det;
+  out[12] = (a11 * b07 - a10 * b09 - a12 * b06) * det;
+  out[13] = (a00 * b09 - a01 * b07 + a02 * b06) * det;
+  out[14] = (a31 * b01 - a30 * b03 - a32 * b00) * det;
+  out[15] = (a20 * b03 - a21 * b01 + a22 * b00) * det;
+  return out;
+}
+
+
+function multiply(out, a, b) {
+  var a00 = a[0],
+      a01 = a[1],
+      a02 = a[2],
+      a03 = a[3];
+  var a10 = a[4],
+      a11 = a[5],
+      a12 = a[6],
+      a13 = a[7];
+  var a20 = a[8],
+      a21 = a[9],
+      a22 = a[10],
+      a23 = a[11];
+  var a30 = a[12],
+      a31 = a[13],
+      a32 = a[14],
+      a33 = a[15];
+  var b0 = b[0],
+      b1 = b[1],
+      b2 = b[2],
+      b3 = b[3];
+  out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[1] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[2] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[3] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  b0 = b[4];b1 = b[5];b2 = b[6];b3 = b[7];
+  out[4] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[5] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[6] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[7] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  b0 = b[8];b1 = b[9];b2 = b[10];b3 = b[11];
+  out[8] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[9] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[10] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[11] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  b0 = b[12];b1 = b[13];b2 = b[14];b3 = b[15];
+  out[12] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
+  out[13] = b0 * a01 + b1 * a11 + b2 * a21 + b3 * a31;
+  out[14] = b0 * a02 + b1 * a12 + b2 * a22 + b3 * a32;
+  out[15] = b0 * a03 + b1 * a13 + b2 * a23 + b3 * a33;
+  return out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function fromRotationTranslation(out, q, v) {
+  var x = q[0],
+      y = q[1],
+      z = q[2],
+      w = q[3];
+  var x2 = x + x;
+  var y2 = y + y;
+  var z2 = z + z;
+  var xx = x * x2;
+  var xy = x * y2;
+  var xz = x * z2;
+  var yy = y * y2;
+  var yz = y * z2;
+  var zz = z * z2;
+  var wx = w * x2;
+  var wy = w * y2;
+  var wz = w * z2;
+  out[0] = 1 - (yy + zz);
+  out[1] = xy + wz;
+  out[2] = xz - wy;
+  out[3] = 0;
+  out[4] = xy - wz;
+  out[5] = 1 - (xx + zz);
+  out[6] = yz + wx;
+  out[7] = 0;
+  out[8] = xz + wy;
+  out[9] = yz - wx;
+  out[10] = 1 - (xx + yy);
+  out[11] = 0;
+  out[12] = v[0];
+  out[13] = v[1];
+  out[14] = v[2];
+  out[15] = 1;
+  return out;
+}
+
+function getTranslation(out, mat) {
+  out[0] = mat[12];
+  out[1] = mat[13];
+  out[2] = mat[14];
+  return out;
+}
+
+function getRotation(out, mat) {
+  var trace = mat[0] + mat[5] + mat[10];
+  var S = 0;
+  if (trace > 0) {
+    S = Math.sqrt(trace + 1.0) * 2;
+    out[3] = 0.25 * S;
+    out[0] = (mat[6] - mat[9]) / S;
+    out[1] = (mat[8] - mat[2]) / S;
+    out[2] = (mat[1] - mat[4]) / S;
+  } else if (mat[0] > mat[5] && mat[0] > mat[10]) {
+    S = Math.sqrt(1.0 + mat[0] - mat[5] - mat[10]) * 2;
+    out[3] = (mat[6] - mat[9]) / S;
+    out[0] = 0.25 * S;
+    out[1] = (mat[1] + mat[4]) / S;
+    out[2] = (mat[8] + mat[2]) / S;
+  } else if (mat[5] > mat[10]) {
+    S = Math.sqrt(1.0 + mat[5] - mat[0] - mat[10]) * 2;
+    out[3] = (mat[8] - mat[2]) / S;
+    out[0] = (mat[1] + mat[4]) / S;
+    out[1] = 0.25 * S;
+    out[2] = (mat[6] + mat[9]) / S;
+  } else {
+    S = Math.sqrt(1.0 + mat[10] - mat[0] - mat[5]) * 2;
+    out[3] = (mat[1] - mat[4]) / S;
+    out[0] = (mat[8] + mat[2]) / S;
+    out[1] = (mat[6] + mat[9]) / S;
+    out[2] = 0.25 * S;
+  }
+  return out;
+}
+
+
+
+
+function perspective(out, fovy, aspect, near, far) {
+  var f = 1.0 / Math.tan(fovy / 2);
+  var nf = 1 / (near - far);
+  out[0] = f / aspect;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 0;
+  out[5] = f;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 0;
+  out[9] = 0;
+  out[10] = (far + near) * nf;
+  out[11] = -1;
+  out[12] = 0;
+  out[13] = 0;
+  out[14] = 2 * far * near * nf;
+  out[15] = 0;
+  return out;
+}
+
+var PRIVATE$3 = Symbol('@@webxr-polyfill/XRDevicePose');
+var XRDevicePose = function () {
+  function XRDevicePose(polyfill) {
+    classCallCheck(this, XRDevicePose);
+    this[PRIVATE$3] = {
+      polyfill: polyfill,
+      leftViewMatrix: identity(new Float32Array(16)),
+      rightViewMatrix: identity(new Float32Array(16)),
+      poseModelMatrix: identity(new Float32Array(16))
+    };
+  }
+  createClass(XRDevicePose, [{
+    key: 'getViewMatrix',
+    value: function getViewMatrix(view) {
+      switch (view.eye) {
+        case 'left':
+          return this[PRIVATE$3].leftViewMatrix;
+        case 'right':
+          return this[PRIVATE$3].rightViewMatrix;
+      }
+      throw new Error('view is not a valid XREye');
+    }
+  }, {
+    key: 'updateFromFrameOfReference',
+    value: function updateFromFrameOfReference(frameOfRef) {
+      var pose = this[PRIVATE$3].polyfill.getBasePoseMatrix();
+      var leftViewMatrix = this[PRIVATE$3].polyfill.getBaseViewMatrix('left');
+      var rightViewMatrix = this[PRIVATE$3].polyfill.getBaseViewMatrix('right');
+      if (pose) {
+        frameOfRef.transformBasePoseMatrix(this[PRIVATE$3].poseModelMatrix, pose);
+      }
+      if (leftViewMatrix && rightViewMatrix) {
+        frameOfRef.transformBaseViewMatrix(this[PRIVATE$3].leftViewMatrix, leftViewMatrix, this[PRIVATE$3].poseModelMatrix);
+        frameOfRef.transformBaseViewMatrix(this[PRIVATE$3].rightViewMatrix, rightViewMatrix, this[PRIVATE$3].poseModelMatrix);
+      }
+    }
+  }, {
+    key: 'poseModelMatrix',
+    get: function get$$1() {
+      return this[PRIVATE$3].poseModelMatrix;
+    }
+  }]);
+  return XRDevicePose;
+}();
+
+var PRIVATE$4 = Symbol('@@webxr-polyfill/XRViewport');
+var XRViewport = function () {
+  function XRViewport(target) {
+    classCallCheck(this, XRViewport);
+    this[PRIVATE$4] = { target: target };
+  }
+  createClass(XRViewport, [{
+    key: 'x',
+    get: function get$$1() {
+      return this[PRIVATE$4].target.x;
+    }
+  }, {
+    key: 'y',
+    get: function get$$1() {
+      return this[PRIVATE$4].target.y;
+    }
+  }, {
+    key: 'width',
+    get: function get$$1() {
+      return this[PRIVATE$4].target.width;
+    }
+  }, {
+    key: 'height',
+    get: function get$$1() {
+      return this[PRIVATE$4].target.height;
+    }
+  }]);
+  return XRViewport;
+}();
+
+var XREyes = ['left', 'right'];
+var PRIVATE$5 = Symbol('@@webxr-polyfill/XRView');
+var XRView = function () {
+  function XRView(polyfill, eye, sessionId) {
+    classCallCheck(this, XRView);
+    if (!XREyes.includes(eye)) {
+      throw new Error('XREye must be one of: ' + XREyes);
+    }
+    var temp = Object.create(null);
+    var viewport = new XRViewport(temp);
+    this[PRIVATE$5] = {
+      polyfill: polyfill,
+      eye: eye,
+      viewport: viewport,
+      temp: temp,
+      sessionId: sessionId
+    };
+  }
+  createClass(XRView, [{
+    key: '_getViewport',
+    value: function _getViewport(layer) {
+      var viewport = this[PRIVATE$5].viewport;
+      if (this[PRIVATE$5].polyfill.getViewport(this[PRIVATE$5].sessionId, this.eye, layer, this[PRIVATE$5].temp)) {
+        return this[PRIVATE$5].viewport;
+      }
+      return undefined;
+    }
+  }, {
+    key: 'eye',
+    get: function get$$1() {
+      return this[PRIVATE$5].eye;
+    }
+  }, {
+    key: 'projectionMatrix',
+    get: function get$$1() {
+      return this[PRIVATE$5].polyfill.getProjectionMatrix(this.eye);
+    }
+  }]);
+  return XRView;
+}();
+
+var PRIVATE$6 = Symbol('@@webxr-polyfill/XRFrame');
+var XRFrame = function () {
+  function XRFrame(polyfill, session, sessionId) {
+    classCallCheck(this, XRFrame);
+    var devicePose = new XRDevicePose(polyfill);
+    var views = [new XRView(polyfill, 'left', sessionId)];
+    if (session.immersive) {
+      views.push(new XRView(polyfill, 'right', sessionId));
+    }
+    this[PRIVATE$6] = {
+      polyfill: polyfill,
+      devicePose: devicePose,
+      views: views,
+      session: session
+    };
+  }
+  createClass(XRFrame, [{
+    key: 'getDevicePose',
+    value: function getDevicePose(coordinateSystem) {
+      this[PRIVATE$6].devicePose.updateFromFrameOfReference(coordinateSystem);
+      return this[PRIVATE$6].devicePose;
+    }
+  }, {
+    key: 'getInputPose',
+    value: function getInputPose(inputSource, coordinateSystem) {
+      return this[PRIVATE$6].polyfill.getInputPose(inputSource, coordinateSystem);
+    }
+  }, {
+    key: 'session',
+    get: function get$$1() {
+      return this[PRIVATE$6].session;
+    }
+  }, {
+    key: 'views',
+    get: function get$$1() {
+      return this[PRIVATE$6].views;
+    }
+  }]);
+  return XRFrame;
+}();
+
+var PRIVATE$7 = Symbol('@@webxr-polyfill/XRStageBoundsPoint');
+var XRStageBoundsPoint = function () {
+  function XRStageBoundsPoint(x, z) {
+    classCallCheck(this, XRStageBoundsPoint);
+    this[PRIVATE$7] = { x: x, z: z };
+  }
+  createClass(XRStageBoundsPoint, [{
+    key: 'x',
+    get: function get$$1() {
+      return this[PRIVATE$7].x;
+    }
+  }, {
+    key: 'z',
+    get: function get$$1() {
+      return this[PRIVATE$7].z;
+    }
+  }]);
+  return XRStageBoundsPoint;
+}();
+
+var PRIVATE$8 = Symbol('@@webxr-polyfill/XRStageBounds');
+var XRStageBounds = function () {
+  function XRStageBounds(boundsData) {
+    classCallCheck(this, XRStageBounds);
+    var geometry = [];
+    for (var i = 0; i < boundsData.length; i += 2) {
+      geometry.push(new XRStageBoundsPoint(boundsData[i], boundsData[i + 1]));
+    }
+    this[PRIVATE$8] = { geometry: geometry };
+  }
+  createClass(XRStageBounds, [{
+    key: 'geometry',
+    get: function get$$1() {
+      return this[PRIVATE$8].geometry;
+    }
+  }]);
+  return XRStageBounds;
+}();
+
+var XRCoordinateSystem = function () {
+  function XRCoordinateSystem() {
+    classCallCheck(this, XRCoordinateSystem);
+  }
+  createClass(XRCoordinateSystem, [{
+    key: 'getTransformTo',
+    value: function getTransformTo(other) {
+      throw new Error('Not yet supported');
+    }
+  }]);
+  return XRCoordinateSystem;
+}();
+
+var DEFAULT_EMULATION_HEIGHT = 1.6;
+var PRIVATE$9 = Symbol('@@webxr-polyfill/XRFrameOfReference');
+var XRFrameOfReferenceTypes = ['head-model', 'eye-level', 'stage'];
+var XRFrameOfReferenceOptions = Object.freeze({
+  disableStageEmulation: false,
+  stageEmulationHeight: 0
+});
+var XRFrameOfReference = function (_XRCoordinateSystem) {
+  inherits(XRFrameOfReference, _XRCoordinateSystem);
+  function XRFrameOfReference(polyfill, type, options, transform, bounds) {
+    classCallCheck(this, XRFrameOfReference);
+    options = Object.assign({}, XRFrameOfReferenceOptions, options);
+    if (!XRFrameOfReferenceTypes.includes(type)) {
+      throw new Error('XRFrameOfReferenceType must be one of ' + XRFrameOfReferenceTypes);
+    }
+    var _this = possibleConstructorReturn(this, (XRFrameOfReference.__proto__ || Object.getPrototypeOf(XRFrameOfReference)).call(this));
+    if (type === 'stage' && options.disableStageEmulation && !transform) {
+      throw new Error('XRFrameOfReference cannot use \'stage\' type, if disabling emulation and platform does not provide');
+    }
+    var _options = options,
+        disableStageEmulation = _options.disableStageEmulation,
+        stageEmulationHeight = _options.stageEmulationHeight;
+    var emulatedHeight = 0;
+    if (type === 'stage' && !transform) {
+      emulatedHeight = stageEmulationHeight !== 0 ? stageEmulationHeight : DEFAULT_EMULATION_HEIGHT;
+    }
+    if (type === 'stage' && !transform) {
+      transform = identity(new Float32Array(16));
+      transform[13] = emulatedHeight;
+    }
+    _this[PRIVATE$9] = {
+      disableStageEmulation: disableStageEmulation,
+      stageEmulationHeight: stageEmulationHeight,
+      emulatedHeight: emulatedHeight,
+      type: type,
+      transform: transform,
+      polyfill: polyfill,
+      bounds: bounds
+    };
+    _this.onboundschange = undefined;
+    return _this;
+  }
+  createClass(XRFrameOfReference, [{
+    key: 'transformBasePoseMatrix',
+    value: function transformBasePoseMatrix(out, pose) {
+      if (this[PRIVATE$9].transform) {
+        multiply(out, this[PRIVATE$9].transform, pose);
+        return;
+      }
+      switch (this.type) {
+        case 'head-model':
+          if (out !== pose) {
+            copy(out, pose);
+          }
+          out[12] = out[13] = out[14] = 0;
+          return;
+        case 'eye-level':
+          if (out !== pose) {
+            copy(out, pose);
+          }
+          return;
+      }
+    }
+  }, {
+    key: 'transformBaseViewMatrix',
+    value: function transformBaseViewMatrix(out, view) {
+      var frameOfRef = this[PRIVATE$9].transform;
+      if (frameOfRef) {
+        invert(out, frameOfRef);
+        multiply(out, view, out);
+      }
+      else if (this.type === 'head-model') {
+          invert(out, view);
+          out[12] = 0;
+          out[13] = 0;
+          out[14] = 0;
+          invert(out, out);
+          return out;
+        }
+        else {
+            copy(out, view);
+          }
+      return out;
+    }
+  }, {
+    key: 'bounds',
+    get: function get$$1() {
+      return this[PRIVATE$9].bounds;
+    }
+  }, {
+    key: 'emulatedHeight',
+    get: function get$$1() {
+      return this[PRIVATE$9].emulatedHeight;
+    }
+  }, {
+    key: 'type',
+    get: function get$$1() {
+      return this[PRIVATE$9].type;
+    }
+  }]);
+  return XRFrameOfReference;
+}(XRCoordinateSystem);
+
+var PRIVATE$10 = Symbol('@@webxr-polyfill/XRSession');
+var XRSessionCreationOptions = Object.freeze({
+  immersive: false,
+  outputContext: undefined
+});
+var validateSessionOptions = function validateSessionOptions(options) {
+  var immersive = options.immersive,
+      outputContext = options.outputContext;
+  if (!immersive && !outputContext) {
+    return false;
+  }
+  if (outputContext !== undefined && !(outputContext instanceof XRPresentationContext)) {
+    return false;
+  }
+  return true;
+};
+var XRSession = function (_EventTarget) {
+  inherits(XRSession, _EventTarget);
+  function XRSession(polyfill, device, sessionOptions, id) {
+    classCallCheck(this, XRSession);
+    sessionOptions = Object.assign({}, XRSessionCreationOptions, sessionOptions);
+    var _this = possibleConstructorReturn(this, (XRSession.__proto__ || Object.getPrototypeOf(XRSession)).call(this));
+    var _sessionOptions = sessionOptions,
+        immersive = _sessionOptions.immersive,
+        outputContext = _sessionOptions.outputContext;
+    _this[PRIVATE$10] = {
+      polyfill: polyfill,
+      device: device,
+      immersive: immersive,
+      outputContext: outputContext,
+      ended: false,
+      suspended: false,
+      suspendedCallback: null,
+      id: id
+    };
+    var frame = new XRFrame(polyfill, _this, _this[PRIVATE$10].id);
+    _this[PRIVATE$10].frame = frame;
+    _this[PRIVATE$10].onPresentationEnd = function (sessionId) {
+      if (sessionId !== _this[PRIVATE$10].id) {
+        _this[PRIVATE$10].suspended = false;
+        _this.dispatchEvent('focus', { session: _this });
+        var suspendedCallback = _this[PRIVATE$10].suspendedCallback;
+        _this[PRIVATE$10].suspendedCallback = null;
+        if (suspendedCallback) {
+          _this.requestAnimationFrame(suspendedCallback);
+        }
+        return;
+      }
+      _this[PRIVATE$10].ended = true;
+      polyfill.removeEventListener('@webvr-polyfill/vr-present-end', _this[PRIVATE$10].onPresentationEnd);
+      polyfill.removeEventListener('@webvr-polyfill/vr-present-start', _this[PRIVATE$10].onPresentationStart);
+      polyfill.removeEventListener('@@webvr-polyfill/input-select-start', _this[PRIVATE$10].onSelectStart);
+      polyfill.removeEventListener('@@webvr-polyfill/input-select-end', _this[PRIVATE$10].onSelectEnd);
+      _this.dispatchEvent('end', { session: _this });
+    };
+    polyfill.addEventListener('@@webxr-polyfill/vr-present-end', _this[PRIVATE$10].onPresentationEnd);
+    _this[PRIVATE$10].onPresentationStart = function (sessionId) {
+      if (sessionId === _this[PRIVATE$10].id) {
+        return;
+      }
+      _this[PRIVATE$10].suspended = true;
+      _this.dispatchEvent('blur', { session: _this });
+    };
+    polyfill.addEventListener('@@webxr-polyfill/vr-present-start', _this[PRIVATE$10].onPresentationStart);
+    _this[PRIVATE$10].onSelectStart = function (evt) {
+      if (evt.sessionId !== _this[PRIVATE$10].id) {
+        return;
+      }
+      _this.dispatchEvent('selectstart', {
+        frame: _this[PRIVATE$10].frame,
+        inputSource: evt.inputSource
+      });
+    };
+    polyfill.addEventListener('@@webxr-polyfill/input-select-start', _this[PRIVATE$10].onSelectStart);
+    _this[PRIVATE$10].onSelectEnd = function (evt) {
+      if (evt.sessionId !== _this[PRIVATE$10].id) {
+        return;
+      }
+      _this.dispatchEvent('selectend', {
+        frame: _this[PRIVATE$10].frame,
+        inputSource: evt.inputSource
+      });
+      _this.dispatchEvent('select', {
+        frame: _this[PRIVATE$10].frame,
+        inputSource: evt.inputSource
+      });
+    };
+    polyfill.addEventListener('@@webxr-polyfill/input-select-end', _this[PRIVATE$10].onSelectEnd);
+    _this.onblur = undefined;
+    _this.onfocus = undefined;
+    _this.onresetpose = undefined;
+    _this.onend = undefined;
+    _this.onselect = undefined;
+    _this.onselectstart = undefined;
+    _this.onselectend = undefined;
+    return _this;
+  }
+  createClass(XRSession, [{
+    key: 'requestFrameOfReference',
+    value: function requestFrameOfReference(type) {
+      var $args = arguments;return new Promise(function ($return, $error) {
+        var options, transform, bounds;
+        options = $args.length > 1 && $args[1] !== undefined ? $args[1] : {};
+        if (this[PRIVATE$10].ended) {
+          return $return();
+        }
+        options = Object.assign({}, XRFrameOfReferenceOptions, options);
+        if (!XRFrameOfReferenceTypes.includes(type)) {
+          return $error(new TypeError('XRFrameOfReferenceType must be one of ' + XRFrameOfReferenceTypes));
+        }
+        transform = null;
+        bounds = null;
+        var $Try_1_Post = function () {
+          try {
+            if (type === 'stage' && transform) {
+              bounds = this[PRIVATE$10].polyfill.requestStageBounds();
+              if (bounds) {
+                bounds = new XRStageBounds(bounds);
+              }
+            }
+            return $return(new XRFrameOfReference(this[PRIVATE$10].polyfill, type, options, transform, bounds));
+          } catch ($boundEx) {
+            return $error($boundEx);
+          }
+        }.bind(this);var $Try_1_Catch = function (e) {
+          try {
+            if (type !== 'stage' || options.disableStageEmulation) {
+              throw e;
+            }
+            return $Try_1_Post();
+          } catch ($boundEx) {
+            return $error($boundEx);
+          }
+        }.bind(this);
+        try {
+          return Promise.resolve(this[PRIVATE$10].polyfill.requestFrameOfReferenceTransform(type, options)).then(function ($await_2) {
+            try {
+              transform = $await_2;
+              return $Try_1_Post();
+            } catch ($boundEx) {
+              return $Try_1_Catch($boundEx);
+            }
+          }.bind(this), $Try_1_Catch);
+        } catch (e) {
+          $Try_1_Catch(e);
+        }
+      }.bind(this));
+    }
+  }, {
+    key: 'requestAnimationFrame',
+    value: function requestAnimationFrame(callback) {
+      var _this2 = this;
+      if (this[PRIVATE$10].ended) {
+        return;
+      }
+      if (this[PRIVATE$10].suspended && this[PRIVATE$10].suspendedCallback) {
+        return;
+      }
+      if (this[PRIVATE$10].suspended && !this[PRIVATE$10].suspendedCallback) {
+        this[PRIVATE$10].suspendedCallback = callback;
+      }
+      return this[PRIVATE$10].polyfill.requestAnimationFrame(function () {
+        _this2[PRIVATE$10].polyfill.onFrameStart(_this2[PRIVATE$10].id);
+        callback(now$1(), _this2[PRIVATE$10].frame);
+        _this2[PRIVATE$10].polyfill.onFrameEnd(_this2[PRIVATE$10].id);
+      });
+    }
+  }, {
+    key: 'cancelAnimationFrame',
+    value: function cancelAnimationFrame(handle) {
+      if (this[PRIVATE$10].ended) {
+        return;
+      }
+      this[PRIVATE$10].polyfill.cancelAnimationFrame(handle);
+    }
+  }, {
+    key: 'getInputSources',
+    value: function getInputSources() {
+      return this[PRIVATE$10].polyfill.getInputSources();
+    }
+  }, {
+    key: 'end',
+    value: function end() {
+      return new Promise(function ($return, $error) {
+        if (this[PRIVATE$10].ended) {
+          return $return();
+        }
+        if (!this.immersive) {
+          this[PRIVATE$10].ended = true;
+          this[PRIVATE$10].polyfill.removeEventListener('@@webvr-polyfill/vr-present-start', this[PRIVATE$10].onPresentationStart);
+          this[PRIVATE$10].polyfill.removeEventListener('@@webvr-polyfill/vr-present-end', this[PRIVATE$10].onPresentationEnd);
+          this[PRIVATE$10].polyfill.removeEventListener('@@webvr-polyfill/input-select-start', this[PRIVATE$10].onSelectStart);
+          this[PRIVATE$10].polyfill.removeEventListener('@@webvr-polyfill/input-select-end', this[PRIVATE$10].onSelectEnd);
+          this.dispatchEvent('end', { session: this });
+        }
+        return $return(this[PRIVATE$10].polyfill.endSession(this[PRIVATE$10].id));
+      }.bind(this));
+    }
+  }, {
+    key: 'device',
+    get: function get$$1() {
+      return this[PRIVATE$10].device;
+    }
+  }, {
+    key: 'immersive',
+    get: function get$$1() {
+      return this[PRIVATE$10].immersive;
+    }
+  }, {
+    key: 'outputContext',
+    get: function get$$1() {
+      return this[PRIVATE$10].outputContext;
+    }
+  }, {
+    key: 'depthNear',
+    get: function get$$1() {
+      return this[PRIVATE$10].polyfill.depthNear;
+    }
+    ,
+    set: function set$$1(value) {
+      this[PRIVATE$10].polyfill.depthNear = value;
+    }
+  }, {
+    key: 'depthFar',
+    get: function get$$1() {
+      return this[PRIVATE$10].polyfill.depthFar;
+    }
+    ,
+    set: function set$$1(value) {
+      this[PRIVATE$10].polyfill.depthFar = value;
+    }
+  }, {
+    key: 'environmentBlendMode',
+    get: function get$$1() {
+      return this[PRIVATE$10].polyfill.environmentBlendMode || 'opaque';
+    }
+  }, {
+    key: 'baseLayer',
+    get: function get$$1() {
+      return this[PRIVATE$10].baseLayer;
+    }
+    ,
+    set: function set$$1(value) {
+      if (this[PRIVATE$10].ended) {
+        return;
+      }
+      this[PRIVATE$10].baseLayer = value;
+      this[PRIVATE$10].polyfill.onBaseLayerSet(this[PRIVATE$10].id, value);
+    }
+  }]);
+  return XRSession;
+}(EventTarget);
+
+var PRIVATE$11 = Symbol('@@webxr-polyfill/XRDevice');
+var XRDevice = function (_EventTarget) {
+  inherits(XRDevice, _EventTarget);
+  function XRDevice(polyfill) {
+    classCallCheck(this, XRDevice);
+    if (!polyfill) {
+      throw new Error('XRDevice must receive a PolyfilledXRDevice.');
+    }
+    var _this = possibleConstructorReturn(this, (XRDevice.__proto__ || Object.getPrototypeOf(XRDevice)).call(this));
+    _this[PRIVATE$11] = {
+      polyfill: polyfill,
+      immersiveSession: null,
+      nonImmersiveSessions: new Set()
+    };
+    _this.ondeactive = undefined;
+    return _this;
+  }
+  createClass(XRDevice, [{
+    key: 'supportsSession',
+    value: function supportsSession() {
+      var $args = arguments;return new Promise(function ($return, $error) {
+        var sessionOptions = $args.length > 0 && $args[0] !== undefined ? $args[0] : {};
+        sessionOptions = Object.assign({}, XRSessionCreationOptions, sessionOptions);
+        if (!validateSessionOptions(sessionOptions)) {
+          return $return(Promise.reject(null));
+        }
+        if (!this[PRIVATE$11].polyfill.supportsSession(sessionOptions)) {
+          return $return(Promise.reject(null));
+        }
+        return $return(null);
+      }.bind(this));
+    }
+  }, {
+    key: 'requestSession',
+    value: function requestSession(sessionOptions) {
+      return new Promise(function ($return, $error) {
+        var _this2, sessionId, session, onSessionEnd;
+        _this2 = this;
+        sessionOptions = Object.assign({}, XRSessionCreationOptions, sessionOptions);
+        if (!validateSessionOptions(sessionOptions)) {
+          return $error(new Error('NotSupportedError'));
+        }
+        if (this[PRIVATE$11].immersiveSession && sessionOptions.immersive) {
+          return $error(new Error('InvalidStateError'));
+        }
+        return Promise.resolve(this[PRIVATE$11].polyfill.requestSession(sessionOptions)).then(function ($await_1) {
+          try {
+            sessionId = $await_1;
+            session = new XRSession(this[PRIVATE$11].polyfill, this, sessionOptions, sessionId);
+            if (sessionOptions.immersive) {
+              this[PRIVATE$11].immersiveSession = session;
+            } else {
+              this[PRIVATE$11].nonImmersiveSessions.add(session);
+            }
+            onSessionEnd = function onSessionEnd() {
+              if (session.immersive) {
+                _this2[PRIVATE$11].immersiveSession = null;
+              } else {
+                _this2[PRIVATE$11].nonImmersiveSessions.delete(session);
+              }
+              session.removeEventListener('end', onSessionEnd);
+            };
+            session.addEventListener('end', onSessionEnd);
+            return $return(session);
+          } catch ($boundEx) {
+            return $error($boundEx);
+          }
+        }.bind(this), $error);
+      }.bind(this));
+    }
+  }]);
+  return XRDevice;
+}(EventTarget);
+
+var domPointROExport = 'DOMPointReadOnly' in _global ? DOMPointReadOnly : null;
+if (!domPointROExport) {
+  var PRIVATE$12 = Symbol('@@webxr-polyfill/DOMPointReadOnly');
+  domPointROExport = function () {
+    function DOMPointReadOnly(x, y, z, w) {
+      classCallCheck(this, DOMPointReadOnly);
+      if (arguments.length === 1) {
+        this[PRIVATE$12] = {
+          x: x.x,
+          y: x.y,
+          z: x.z,
+          w: x.w
+        };
+      } else if (arguments.length === 4) {
+        this[PRIVATE$12] = {
+          x: x,
+          y: y,
+          z: z,
+          w: w
+        };
+      } else {
+        throw new TypeError('Must supply either 1 or 4 arguments');
+      }
+    }
+    createClass(DOMPointReadOnly, [{
+      key: 'x',
+      get: function get$$1() {
+        return this[PRIVATE$12].x;
+      }
+    }, {
+      key: 'y',
+      get: function get$$1() {
+        return this[PRIVATE$12].y;
+      }
+    }, {
+      key: 'z',
+      get: function get$$1() {
+        return this[PRIVATE$12].z;
+      }
+    }, {
+      key: 'w',
+      get: function get$$1() {
+        return this[PRIVATE$12].w;
+      }
+    }]);
+    return DOMPointReadOnly;
+  }();
+}
+var DOMPointReadOnly$1 = domPointROExport;
+
+var XRRay =
+function XRRay() {
+  var origin = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new DOMPointReadOnly$1(0, 0, 0, 1);
+  var direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new DOMPointReadOnly$1(0, 0, -1, 0);
+  var transformMatrix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Float32Array(16);
+  classCallCheck(this, XRRay);
+  if (!(origin instanceof DOMPointReadOnly$1)) {
+    throw new Error('origin must be a DOMPointReadOnly');
+  }
+  if (!(direction instanceof DOMPointReadOnly$1)) {
+    throw new Error('direction must be a DOMPointReadOnly');
+  }
+  if (!(transformMatrix instanceof Float32Array)) {
+    throw new Error('transformMatrix must be a Float32Array');
+  }
+  Object.defineProperties(this, {
+    origin: {
+      value: origin,
+      writable: false
+    },
+    direction: {
+      value: direction,
+      writable: false
+    },
+    transformMatrix: {
+      value: transformMatrix,
+      writable: false
+    }
+  });
+};
+
+var PRIVATE$13 = Symbol('@@webxr-polyfill/XRInputPose');
+var XRInputPose = function () {
+  function XRInputPose(inputSourceImpl, hasGripMatrix) {
+    classCallCheck(this, XRInputPose);
+    this[PRIVATE$13] = {
+      inputSourceImpl: inputSourceImpl,
+      targetRay: new XRRay(),
+      gripMatrix: hasGripMatrix ? create() : null
+    };
+  }
+  createClass(XRInputPose, [{
+    key: 'targetRay',
+    get: function get$$1() {
+      return this[PRIVATE$13].targetRay;
+    }
+    ,
+    set: function set$$1(value) {
+      this[PRIVATE$13].targetRay = value;
+    }
+  }, {
+    key: 'emulatedPosition',
+    get: function get$$1() {
+      return this[PRIVATE$13].inputSourceImpl.emulatedPosition;
+    }
+  }, {
+    key: 'gripMatrix',
+    get: function get$$1() {
+      return this[PRIVATE$13].gripMatrix;
+    }
+  }]);
+  return XRInputPose;
+}();
+
+var PRIVATE$14 = Symbol('@@webxr-polyfill/XRInputSource');
+var XRInputSource = function () {
+  function XRInputSource(impl) {
+    classCallCheck(this, XRInputSource);
+    this[PRIVATE$14] = {
+      impl: impl
+    };
+  }
+  createClass(XRInputSource, [{
+    key: 'handedness',
+    get: function get$$1() {
+      return this[PRIVATE$14].impl.handedness;
+    }
+  }, {
+    key: 'targetRayMode',
+    get: function get$$1() {
+      return this[PRIVATE$14].impl.targetRayMode;
+    }
+  }]);
+  return XRInputSource;
+}();
+
+var XRLayer = function () {
+  function XRLayer() {
+    classCallCheck(this, XRLayer);
+  }
+  createClass(XRLayer, [{
+    key: "getViewport",
+    value: function getViewport(view) {
+      return view._getViewport(this);
+    }
+  }]);
+  return XRLayer;
+}();
+
+var POLYFILLED_COMPATIBLE_XR_DEVICE = Symbol('@@webxr-polyfill/polyfilled-compatible-xr-device');
+var COMPATIBLE_XR_DEVICE = Symbol('@@webxr-polyfill/compatible-xr-device');
+
+var PRIVATE$15 = Symbol('@@webxr-polyfill/XRWebGLLayer');
+var XRWebGLLayerInit = Object.freeze({
+  antialias: true,
+  depth: false,
+  stencil: false,
+  alpha: true,
+  multiview: false,
+  framebufferScaleFactor: 0
+});
+var XRWebGLLayer = function (_XRLayer) {
+  inherits(XRWebGLLayer, _XRLayer);
+  function XRWebGLLayer(session, context) {
+    var layerInit = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    classCallCheck(this, XRWebGLLayer);
+    var config = Object.assign({}, XRWebGLLayerInit, layerInit);
+    if (!(session instanceof XRSession)) {
+      throw new Error('session must be a XRSession');
+    }
+    if (session.ended) {
+      throw new Error('InvalidStateError');
+    }
+    if (context[POLYFILLED_COMPATIBLE_XR_DEVICE]) {
+      if (context[COMPATIBLE_XR_DEVICE] !== session.device) {
+        throw new Error('InvalidStateError');
+      }
+    }
+    var framebuffer = context.getParameter(context.FRAMEBUFFER_BINDING);
+    var _this = possibleConstructorReturn(this, (XRWebGLLayer.__proto__ || Object.getPrototypeOf(XRWebGLLayer)).call(this));
+    _this[PRIVATE$15] = {
+      context: context,
+      config: config,
+      framebuffer: framebuffer
+    };
+    return _this;
+  }
+  createClass(XRWebGLLayer, [{
+    key: 'requestViewportScaling',
+    value: function requestViewportScaling(viewportScaleFactor) {
+      console.warn('requestViewportScaling is not yet implemented');
+    }
+  }, {
+    key: 'context',
+    get: function get$$1() {
+      return this[PRIVATE$15].context;
+    }
+  }, {
+    key: 'antialias',
+    get: function get$$1() {
+      return this[PRIVATE$15].config.antialias;
+    }
+  }, {
+    key: 'depth',
+    get: function get$$1() {
+      return this[PRIVATE$15].config.depth;
+    }
+  }, {
+    key: 'stencil',
+    get: function get$$1() {
+      return this[PRIVATE$15].config.stencil;
+    }
+  }, {
+    key: 'alpha',
+    get: function get$$1() {
+      return this[PRIVATE$15].config.alpha;
+    }
+  }, {
+    key: 'multiview',
+    get: function get$$1() {
+      return false;
+    }
+  }, {
+    key: 'framebuffer',
+    get: function get$$1() {
+      return this[PRIVATE$15].framebuffer;
+    }
+  }, {
+    key: 'framebufferWidth',
+    get: function get$$1() {
+      return this[PRIVATE$15].context.drawingBufferWidth;
+    }
+  }, {
+    key: 'framebufferHeight',
+    get: function get$$1() {
+      return this[PRIVATE$15].context.drawingBufferHeight;
+    }
+  }]);
+  return XRWebGLLayer;
+}(XRLayer);
+
+var API = {
+  XR: XR,
+  XRDevice: XRDevice,
+  XRSession: XRSession,
+  XRFrame: XRFrame,
+  XRView: XRView,
+  XRViewport: XRViewport,
+  XRDevicePose: XRDevicePose,
+  XRLayer: XRLayer,
+  XRWebGLLayer: XRWebGLLayer,
+  XRPresentationContext: XRPresentationContext,
+  XRCoordinateSystem: XRCoordinateSystem,
+  XRFrameOfReference: XRFrameOfReference,
+  XRStageBounds: XRStageBounds,
+  XRStageBoundsPoint: XRStageBoundsPoint,
+  XRInputPose: XRInputPose,
+  XRInputSource: XRInputSource,
+  XRRay: XRRay
+};
+
+var extendContextCompatibleXRDevice = function extendContextCompatibleXRDevice(Context) {
+  if (typeof Context.prototype.setCompatibleXRDevice === 'function') {
+    return false;
+  }
+  Context.prototype.setCompatibleXRDevice = function (xrDevice) {
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+      if (xrDevice && typeof xrDevice.requestSession === 'function') {
+        resolve();
+      } else {
+        reject();
+      }
+    }).then(function () {
+      return _this[COMPATIBLE_XR_DEVICE] = xrDevice;
+    });
+  };
+  return true;
+};
+var extendGetContext = function extendGetContext(Canvas) {
+  var getContext = HTMLCanvasElement.prototype.getContext;
+  HTMLCanvasElement.prototype.getContext = function (contextType, glAttribs) {
+    if (contextType === 'xrpresent') {
+      var _ctx = getContext.call(this, '2d', glAttribs);
+      return new XRPresentationContext(this, _ctx, glAttribs);
+    }
+    var ctx = getContext.call(this, contextType, glAttribs);
+    ctx[POLYFILLED_COMPATIBLE_XR_DEVICE] = true;
+    if (glAttribs && 'compatibleXRDevice' in glAttribs) {
+      ctx[COMPATIBLE_XR_DEVICE] = glAttribs.compatibleXRDevice;
+    }
+    return ctx;
+  };
+};
+
+function create$1() {
+  var out = new ARRAY_TYPE(3);
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  return out;
+}
+function clone$1(a) {
+  var out = new ARRAY_TYPE(3);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  return out;
+}
+function length(a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  return Math.sqrt(x * x + y * y + z * z);
+}
+function fromValues$1(x, y, z) {
+  var out = new ARRAY_TYPE(3);
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  return out;
+}
+function copy$1(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  return out;
+}
+function set$2(out, x, y, z) {
+  out[0] = x;
+  out[1] = y;
+  out[2] = z;
+  return out;
+}
+function add$1(out, a, b) {
+  out[0] = a[0] + b[0];
+  out[1] = a[1] + b[1];
+  out[2] = a[2] + b[2];
+  return out;
+}
+function subtract$1(out, a, b) {
+  out[0] = a[0] - b[0];
+  out[1] = a[1] - b[1];
+  out[2] = a[2] - b[2];
+  return out;
+}
+
+
+
+
+
+
+
+function scale$1(out, a, b) {
+  out[0] = a[0] * b;
+  out[1] = a[1] * b;
+  out[2] = a[2] * b;
+  return out;
+}
+
+
+
+
+
+
+function normalize(out, a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  var len = x * x + y * y + z * z;
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+    out[0] = a[0] * len;
+    out[1] = a[1] * len;
+    out[2] = a[2] * len;
+  }
+  return out;
+}
+function dot(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+function cross(out, a, b) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2];
+  out[0] = ay * bz - az * by;
+  out[1] = az * bx - ax * bz;
+  out[2] = ax * by - ay * bx;
+  return out;
+}
+
+
+
+
+function transformMat4(out, a, m) {
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  var w = m[3] * x + m[7] * y + m[11] * z + m[15];
+  w = w || 1.0;
+  out[0] = (m[0] * x + m[4] * y + m[8] * z + m[12]) / w;
+  out[1] = (m[1] * x + m[5] * y + m[9] * z + m[13]) / w;
+  out[2] = (m[2] * x + m[6] * y + m[10] * z + m[14]) / w;
+  return out;
+}
+
+function transformQuat(out, a, q) {
+  var qx = q[0],
+      qy = q[1],
+      qz = q[2],
+      qw = q[3];
+  var x = a[0],
+      y = a[1],
+      z = a[2];
+  var uvx = qy * z - qz * y,
+      uvy = qz * x - qx * z,
+      uvz = qx * y - qy * x;
+  var uuvx = qy * uvz - qz * uvy,
+      uuvy = qz * uvx - qx * uvz,
+      uuvz = qx * uvy - qy * uvx;
+  var w2 = qw * 2;
+  uvx *= w2;
+  uvy *= w2;
+  uvz *= w2;
+  uuvx *= 2;
+  uuvy *= 2;
+  uuvz *= 2;
+  out[0] = x + uvx + uuvx;
+  out[1] = y + uvy + uuvy;
+  out[2] = z + uvz + uuvz;
+  return out;
+}
+
+
+
+function angle(a, b) {
+  var tempA = fromValues$1(a[0], a[1], a[2]);
+  var tempB = fromValues$1(b[0], b[1], b[2]);
+  normalize(tempA, tempA);
+  normalize(tempB, tempB);
+  var cosine = dot(tempA, tempB);
+  if (cosine > 1.0) {
+    return 0;
+  } else if (cosine < -1.0) {
+    return Math.PI;
+  } else {
+    return Math.acos(cosine);
+  }
+}
+
+
+
+var sub$1 = subtract$1;
+
+
+
+
+var len = length;
+
+var forEach = function () {
+  var vec = create$1();
+  return function (a, stride, offset, count, fn, arg) {
+    var i = void 0,
+        l = void 0;
+    if (!stride) {
+      stride = 3;
+    }
+    if (!offset) {
+      offset = 0;
+    }
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];vec[1] = a[i + 1];vec[2] = a[i + 2];
+      fn(vec, vec, arg);
+      a[i] = vec[0];a[i + 1] = vec[1];a[i + 2] = vec[2];
+    }
+    return a;
+  };
+}();
+
+var poseMatrixToXRRay = function poseMatrixToXRRay(poseMatrix) {
+  var rayOrigin = [];
+  var rayDirection = [];
+  set$2(rayOrigin, 0, 0, 0);
+  transformMat4(rayOrigin, rayOrigin, poseMatrix);
+  set$2(rayDirection, 0, 0, -1);
+  transformMat4(rayDirection, rayDirection, poseMatrix);
+  sub$1(rayDirection, rayDirection, rayOrigin);
+  normalize(rayDirection, rayDirection);
+  return new XRRay(new DOMPointReadOnly$1(rayOrigin[0], rayOrigin[1], rayOrigin[2], 1.0), new DOMPointReadOnly$1(rayDirection[0], rayDirection[1], rayDirection[2], 0.0), poseMatrix);
+};
+var isMobile = function isMobile(global) {
+  var check = false;
+  (function (a) {
+    if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true;
+  })(global.navigator.userAgent || global.navigator.vendor || global.opera);
+  return check;
+};
+var applyCanvasStylesForMinimalRendering = function applyCanvasStylesForMinimalRendering(canvas) {
+  canvas.style.display = 'block';
+  canvas.style.position = 'absolute';
+  canvas.style.width = canvas.style.height = '1px';
+  canvas.style.top = canvas.style.left = '0px';
+};
 
 var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
@@ -115,114 +1745,7 @@ function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
 }
 
-var race = function race(promises) {
-  if (Promise.race) {
-    return Promise.race(promises);
-  }
-  return new Promise(function (resolve, reject) {
-    for (var i = 0; i < promises.length; i++) {
-      promises[i].then(resolve, reject);
-    }
-  });
-};
-
-var isMobile = function isMobile() {
-  return (/Android/i.test(navigator.userAgent) || /iPhone|iPad|iPod/i.test(navigator.userAgent)
-  );
-};
-var copyArray = function copyArray(source, dest) {
-  for (var i = 0, n = source.length; i < n; i++) {
-    dest[i] = source[i];
-  }
-};
-var extend = function extend(dest, src) {
-  for (var key in src) {
-    if (src.hasOwnProperty(key)) {
-      dest[key] = src[key];
-    }
-  }
-  return dest;
-};
-
 var cardboardVrDisplay = createCommonjsModule(function (module, exports) {
-/**
- * @license
- * cardboard-vr-display
- * Copyright (c) 2015-2017 Google
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * @license
- * gl-preserve-state
- * Copyright (c) 2016, Brandon Jones.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
-/**
- * @license
- * webvr-polyfill-dpdb
- * Copyright (c) 2015-2017 Google
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-/**
- * @license
- * nosleep.js
- * Copyright (c) 2017, Rich Tibbett
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
 (function (global, factory) {
 	module.exports = factory();
 }(commonjsGlobal, (function () { var classCallCheck = function (instance, Constructor) {
@@ -2311,6 +3834,18 @@ FusionPoseSensor.prototype.stop = function () {
 var SENSOR_FREQUENCY = 60;
 var X_AXIS = new Vector3(1, 0, 0);
 var Z_AXIS = new Vector3(0, 0, 1);
+var orientation = {};
+if (screen.orientation) {
+  orientation = screen.orientation;
+} else if (screen.msOrientation) {
+  orientation = screen.msOrientation;
+} else {
+  Object.defineProperty(orientation, 'angle', {
+    get: function get$$1() {
+      return window.orientation || 0;
+    }
+  });
+}
 var SENSOR_TO_VR = new Quaternion();
 SENSOR_TO_VR.setFromAxisAngle(X_AXIS, -Math.PI / 2);
 SENSOR_TO_VR.multiply(new Quaternion().setFromAxisAngle(Z_AXIS, Math.PI / 2));
@@ -2324,9 +3859,12 @@ var PoseSensor = function () {
     this.api = null;
     this.errors = [];
     this._sensorQ = new Quaternion();
+    this._worldToScreenQ = new Quaternion();
     this._outQ = new Quaternion();
     this._onSensorRead = this._onSensorRead.bind(this);
     this._onSensorError = this._onSensorError.bind(this);
+    this._onOrientationChange = this._onOrientationChange.bind(this);
+    this._onOrientationChange();
     this.init();
   }
   createClass(PoseSensor, [{
@@ -2334,10 +3872,7 @@ var PoseSensor = function () {
     value: function init() {
       var sensor = null;
       try {
-        sensor = new RelativeOrientationSensor({
-          frequency: SENSOR_FREQUENCY,
-          referenceFrame: 'screen'
-        });
+        sensor = new RelativeOrientationSensor({ frequency: SENSOR_FREQUENCY });
         sensor.addEventListener('error', this._onSensorError);
       } catch (error) {
         this.errors.push(error);
@@ -2357,6 +3892,7 @@ var PoseSensor = function () {
         this.sensor.addEventListener('reading', this._onSensorRead);
         this.sensor.start();
       }
+      window.addEventListener('orientationchange', this._onOrientationChange);
     }
   }, {
     key: 'useDeviceMotion',
@@ -2385,6 +3921,7 @@ var PoseSensor = function () {
       var out = this._outQ;
       out.copy(SENSOR_TO_VR);
       out.multiply(this._sensorQ);
+      out.multiply(this._worldToScreenQ);
       if (this.config.YAW_ONLY) {
         out.x = out.z = 0;
         out.normalize();
@@ -2411,6 +3948,12 @@ var PoseSensor = function () {
   }, {
     key: '_onSensorRead',
     value: function _onSensorRead() {}
+  }, {
+    key: '_onOrientationChange',
+    value: function _onOrientationChange() {
+      var angle = -orientation.angle * Math.PI / 180;
+      this._worldToScreenQ.setFromAxisAngle(Z_AXIS, angle);
+    }
   }]);
   return PoseSensor;
 }();
@@ -3362,130 +4905,1292 @@ return CardboardVRDisplay;
 });
 var CardboardVRDisplay = unwrapExports(cardboardVrDisplay);
 
-var version = "0.10.7";
+var PolyfilledXRDevice = function (_EventTarget) {
+  inherits(PolyfilledXRDevice, _EventTarget);
+  function PolyfilledXRDevice(global) {
+    classCallCheck(this, PolyfilledXRDevice);
+    var _this = possibleConstructorReturn(this, (PolyfilledXRDevice.__proto__ || Object.getPrototypeOf(PolyfilledXRDevice)).call(this));
+    _this.global = global;
+    _this.onWindowResize = _this.onWindowResize.bind(_this);
+    _this.global.window.addEventListener('resize', _this.onWindowResize);
+    _this.environmentBlendMode = 'opaque';
+    return _this;
+  }
+  createClass(PolyfilledXRDevice, [{
+    key: 'onBaseLayerSet',
+    value: function onBaseLayerSet(sessionId, layer) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'supportsSession',
+    value: function supportsSession() {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'requestSession',
+    value: function requestSession() {
+      return new Promise(function ($return, $error) {
+        return $error(new Error('Not implemented'));
+      }.bind(this));
+    }
+  }, {
+    key: 'requestAnimationFrame',
+    value: function requestAnimationFrame(callback) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'onFrameStart',
+    value: function onFrameStart(sessionId) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'onFrameEnd',
+    value: function onFrameEnd(sessionId) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'requestStageBounds',
+    value: function requestStageBounds() {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'requestFrameOfReferenceTransform',
+    value: function requestFrameOfReferenceTransform(type, options) {
+      return new Promise(function ($return, $error) {
+        return $return(undefined);
+      }.bind(this));
+    }
+  }, {
+    key: 'cancelAnimationFrame',
+    value: function cancelAnimationFrame(handle) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'endSession',
+    value: function endSession(sessionId) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'getViewport',
+    value: function getViewport(sessionId, eye, layer, target) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'getProjectionMatrix',
+    value: function getProjectionMatrix(eye) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'getBasePoseMatrix',
+    value: function getBasePoseMatrix() {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'getBaseViewMatrix',
+    value: function getBaseViewMatrix(eye) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'getInputSources',
+    value: function getInputSources() {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'getInputPose',
+    value: function getInputPose(inputSource, coordinateSystem) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'onWindowResize',
+    value: function onWindowResize() {
+      this.onWindowResize();
+    }
+  }, {
+    key: 'depthNear',
+    get: function get$$1() {
+      throw new Error('Not implemented');
+    }
+    ,
+    set: function set$$1(val) {
+      throw new Error('Not implemented');
+    }
+  }, {
+    key: 'depthFar',
+    get: function get$$1() {
+      throw new Error('Not implemented');
+    }
+    ,
+    set: function set$$1(val) {
+      throw new Error('Not implemented');
+    }
+  }]);
+  return PolyfilledXRDevice;
+}(EventTarget);
 
-var DefaultConfig = {
-  ADDITIONAL_VIEWERS: [],
-  DEFAULT_VIEWER: '',
-  PROVIDE_MOBILE_VRDISPLAY: true,
-  GET_VR_DISPLAYS_TIMEOUT: 1000,
-  MOBILE_WAKE_LOCK: true,
-  DEBUG: false,
-  DPDB_URL: 'https://dpdb.webvr.rocks/dpdb.json',
-  K_FILTER: 0.98,
-  PREDICTION_TIME_S: 0.040,
-  CARDBOARD_UI_DISABLED: false,
-  ROTATE_INSTRUCTIONS_DISABLED: false,
-  YAW_ONLY: false,
-  BUFFER_SCALE: 0.5,
-  DIRTY_SUBMIT_FRAME_BINDINGS: false
-};
+function create$2() {
+  var out = new ARRAY_TYPE(9);
+  out[0] = 1;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  out[4] = 1;
+  out[5] = 0;
+  out[6] = 0;
+  out[7] = 0;
+  out[8] = 1;
+  return out;
+}
 
-function WebVRPolyfill(config) {
-  this.config = extend(extend({}, DefaultConfig), config);
-  this.polyfillDisplays = [];
-  this.enabled = false;
-  this.hasNative = 'getVRDisplays' in navigator;
-  this.native = {};
-  this.native.getVRDisplays = navigator.getVRDisplays;
-  this.native.VRFrameData = window.VRFrameData;
-  this.native.VRDisplay = window.VRDisplay;
-  if (!this.hasNative || this.config.PROVIDE_MOBILE_VRDISPLAY && isMobile()) {
-    this.enable();
-    this.getVRDisplays().then(function (displays) {
-      if (displays && displays[0] && displays[0].fireVRDisplayConnect_) {
-        displays[0].fireVRDisplayConnect_();
-      }
-    });
+function create$3() {
+  var out = new ARRAY_TYPE(4);
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 0;
+  return out;
+}
+function clone$3(a) {
+  var out = new ARRAY_TYPE(4);
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+
+function copy$3(out, a) {
+  out[0] = a[0];
+  out[1] = a[1];
+  out[2] = a[2];
+  out[3] = a[3];
+  return out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function normalize$1(out, a) {
+  var x = a[0];
+  var y = a[1];
+  var z = a[2];
+  var w = a[3];
+  var len = x * x + y * y + z * z + w * w;
+  if (len > 0) {
+    len = 1 / Math.sqrt(len);
+    out[0] = x * len;
+    out[1] = y * len;
+    out[2] = z * len;
+    out[3] = w * len;
+  }
+  return out;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var forEach$1 = function () {
+  var vec = create$3();
+  return function (a, stride, offset, count, fn, arg) {
+    var i = void 0,
+        l = void 0;
+    if (!stride) {
+      stride = 4;
+    }
+    if (!offset) {
+      offset = 0;
+    }
+    if (count) {
+      l = Math.min(count * stride + offset, a.length);
+    } else {
+      l = a.length;
+    }
+    for (i = offset; i < l; i += stride) {
+      vec[0] = a[i];vec[1] = a[i + 1];vec[2] = a[i + 2];vec[3] = a[i + 3];
+      fn(vec, vec, arg);
+      a[i] = vec[0];a[i + 1] = vec[1];a[i + 2] = vec[2];a[i + 3] = vec[3];
+    }
+    return a;
+  };
+}();
+
+function create$4() {
+  var out = new ARRAY_TYPE(4);
+  out[0] = 0;
+  out[1] = 0;
+  out[2] = 0;
+  out[3] = 1;
+  return out;
+}
+
+function setAxisAngle(out, axis, rad) {
+  rad = rad * 0.5;
+  var s = Math.sin(rad);
+  out[0] = s * axis[0];
+  out[1] = s * axis[1];
+  out[2] = s * axis[2];
+  out[3] = Math.cos(rad);
+  return out;
+}
+
+function multiply$4(out, a, b) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2],
+      bw = b[3];
+  out[0] = ax * bw + aw * bx + ay * bz - az * by;
+  out[1] = ay * bw + aw * by + az * bx - ax * bz;
+  out[2] = az * bw + aw * bz + ax * by - ay * bx;
+  out[3] = aw * bw - ax * bx - ay * by - az * bz;
+  return out;
+}
+
+
+
+
+function slerp(out, a, b, t) {
+  var ax = a[0],
+      ay = a[1],
+      az = a[2],
+      aw = a[3];
+  var bx = b[0],
+      by = b[1],
+      bz = b[2],
+      bw = b[3];
+  var omega = void 0,
+      cosom = void 0,
+      sinom = void 0,
+      scale0 = void 0,
+      scale1 = void 0;
+  cosom = ax * bx + ay * by + az * bz + aw * bw;
+  if (cosom < 0.0) {
+    cosom = -cosom;
+    bx = -bx;
+    by = -by;
+    bz = -bz;
+    bw = -bw;
+  }
+  if (1.0 - cosom > 0.000001) {
+    omega = Math.acos(cosom);
+    sinom = Math.sin(omega);
+    scale0 = Math.sin((1.0 - t) * omega) / sinom;
+    scale1 = Math.sin(t * omega) / sinom;
+  } else {
+    scale0 = 1.0 - t;
+    scale1 = t;
+  }
+  out[0] = scale0 * ax + scale1 * bx;
+  out[1] = scale0 * ay + scale1 * by;
+  out[2] = scale0 * az + scale1 * bz;
+  out[3] = scale0 * aw + scale1 * bw;
+  return out;
+}
+function invert$2(out, a) {
+  var a0 = a[0],
+      a1 = a[1],
+      a2 = a[2],
+      a3 = a[3];
+  var dot$$1 = a0 * a0 + a1 * a1 + a2 * a2 + a3 * a3;
+  var invDot = dot$$1 ? 1.0 / dot$$1 : 0;
+  out[0] = -a0 * invDot;
+  out[1] = -a1 * invDot;
+  out[2] = -a2 * invDot;
+  out[3] = a3 * invDot;
+  return out;
+}
+
+function fromMat3(out, m) {
+  var fTrace = m[0] + m[4] + m[8];
+  var fRoot = void 0;
+  if (fTrace > 0.0) {
+    fRoot = Math.sqrt(fTrace + 1.0);
+    out[3] = 0.5 * fRoot;
+    fRoot = 0.5 / fRoot;
+    out[0] = (m[5] - m[7]) * fRoot;
+    out[1] = (m[6] - m[2]) * fRoot;
+    out[2] = (m[1] - m[3]) * fRoot;
+  } else {
+    var i = 0;
+    if (m[4] > m[0]) i = 1;
+    if (m[8] > m[i * 3 + i]) i = 2;
+    var j = (i + 1) % 3;
+    var k = (i + 2) % 3;
+    fRoot = Math.sqrt(m[i * 3 + i] - m[j * 3 + j] - m[k * 3 + k] + 1.0);
+    out[i] = 0.5 * fRoot;
+    fRoot = 0.5 / fRoot;
+    out[3] = (m[j * 3 + k] - m[k * 3 + j]) * fRoot;
+    out[j] = (m[j * 3 + i] + m[i * 3 + j]) * fRoot;
+    out[k] = (m[k * 3 + i] + m[i * 3 + k]) * fRoot;
+  }
+  return out;
+}
+function fromEuler(out, x, y, z) {
+  var halfToRad = 0.5 * Math.PI / 180.0;
+  x *= halfToRad;
+  y *= halfToRad;
+  z *= halfToRad;
+  var sx = Math.sin(x);
+  var cx = Math.cos(x);
+  var sy = Math.sin(y);
+  var cy = Math.cos(y);
+  var sz = Math.sin(z);
+  var cz = Math.cos(z);
+  out[0] = sx * cy * cz - cx * sy * sz;
+  out[1] = cx * sy * cz + sx * cy * sz;
+  out[2] = cx * cy * sz - sx * sy * cz;
+  out[3] = cx * cy * cz + sx * sy * sz;
+  return out;
+}
+
+var clone$4 = clone$3;
+
+var copy$4 = copy$3;
+
+
+
+
+
+
+
+
+
+
+var normalize$2 = normalize$1;
+
+
+var rotationTo = function () {
+  var tmpvec3 = create$1();
+  var xUnitVec3 = fromValues$1(1, 0, 0);
+  var yUnitVec3 = fromValues$1(0, 1, 0);
+  return function (out, a, b) {
+    var dot$$1 = dot(a, b);
+    if (dot$$1 < -0.999999) {
+      cross(tmpvec3, xUnitVec3, a);
+      if (len(tmpvec3) < 0.000001) cross(tmpvec3, yUnitVec3, a);
+      normalize(tmpvec3, tmpvec3);
+      setAxisAngle(out, tmpvec3, Math.PI);
+      return out;
+    } else if (dot$$1 > 0.999999) {
+      out[0] = 0;
+      out[1] = 0;
+      out[2] = 0;
+      out[3] = 1;
+      return out;
+    } else {
+      cross(tmpvec3, a, b);
+      out[0] = tmpvec3[0];
+      out[1] = tmpvec3[1];
+      out[2] = tmpvec3[2];
+      out[3] = 1 + dot$$1;
+      return normalize$2(out, out);
+    }
+  };
+}();
+var sqlerp = function () {
+  var temp1 = create$4();
+  var temp2 = create$4();
+  return function (out, a, b, c, d, t) {
+    slerp(temp1, a, d, t);
+    slerp(temp2, b, c, t);
+    slerp(out, temp1, temp2, 2 * t * (1 - t));
+    return out;
+  };
+}();
+var setAxes = function () {
+  var matr = create$2();
+  return function (out, view, right, up) {
+    matr[0] = right[0];
+    matr[3] = right[1];
+    matr[6] = right[2];
+    matr[1] = up[0];
+    matr[4] = up[1];
+    matr[7] = up[2];
+    matr[2] = -view[0];
+    matr[5] = -view[1];
+    matr[8] = -view[2];
+    return normalize$2(out, fromMat3(out, matr));
+  };
+}();
+
+var HEAD_ELBOW_OFFSET_RIGHTHANDED = fromValues$1(0.155, -0.465, -0.15);
+var HEAD_ELBOW_OFFSET_LEFTHANDED = fromValues$1(-0.155, -0.465, -0.15);
+var ELBOW_WRIST_OFFSET = fromValues$1(0, 0, -0.25);
+var WRIST_CONTROLLER_OFFSET = fromValues$1(0, 0, 0.05);
+var ARM_EXTENSION_OFFSET = fromValues$1(-0.08, 0.14, 0.08);
+var ELBOW_BEND_RATIO = 0.4;
+var EXTENSION_RATIO_WEIGHT = 0.4;
+var MIN_ANGULAR_SPEED = 0.61;
+var MIN_ANGLE_DELTA = 0.175;
+var MIN_EXTENSION_COS = 0.12;
+var MAX_EXTENSION_COS = 0.87;
+var RAD_TO_DEG = 180 / Math.PI;
+function eulerFromQuaternion(out, q, order) {
+  function clamp(value, min$$1, max$$1) {
+    return value < min$$1 ? min$$1 : value > max$$1 ? max$$1 : value;
+  }
+  var sqx = q[0] * q[0];
+  var sqy = q[1] * q[1];
+  var sqz = q[2] * q[2];
+  var sqw = q[3] * q[3];
+  if (order === 'XYZ') {
+    out[0] = Math.atan2(2 * (q[0] * q[3] - q[1] * q[2]), sqw - sqx - sqy + sqz);
+    out[1] = Math.asin(clamp(2 * (q[0] * q[2] + q[1] * q[3]), -1, 1));
+    out[2] = Math.atan2(2 * (q[2] * q[3] - q[0] * q[1]), sqw + sqx - sqy - sqz);
+  } else if (order === 'YXZ') {
+    out[0] = Math.asin(clamp(2 * (q[0] * q[3] - q[1] * q[2]), -1, 1));
+    out[1] = Math.atan2(2 * (q[0] * q[2] + q[1] * q[3]), sqw - sqx - sqy + sqz);
+    out[2] = Math.atan2(2 * (q[0] * q[1] + q[2] * q[3]), sqw - sqx + sqy - sqz);
+  } else if (order === 'ZXY') {
+    out[0] = Math.asin(clamp(2 * (q[0] * q[3] + q[1] * q[2]), -1, 1));
+    out[1] = Math.atan2(2 * (q[1] * q[3] - q[2] * q[0]), sqw - sqx - sqy + sqz);
+    out[2] = Math.atan2(2 * (q[2] * q[3] - q[0] * q[1]), sqw - sqx + sqy - sqz);
+  } else if (order === 'ZYX') {
+    out[0] = Math.atan2(2 * (q[0] * q[3] + q[2] * q[1]), sqw - sqx - sqy + sqz);
+    out[1] = Math.asin(clamp(2 * (q[1] * q[3] - q[0] * q[2]), -1, 1));
+    out[2] = Math.atan2(2 * (q[0] * q[1] + q[2] * q[3]), sqw + sqx - sqy - sqz);
+  } else if (order === 'YZX') {
+    out[0] = Math.atan2(2 * (q[0] * q[3] - q[2] * q[1]), sqw - sqx + sqy - sqz);
+    out[1] = Math.atan2(2 * (q[1] * q[3] - q[0] * q[2]), sqw + sqx - sqy - sqz);
+    out[2] = Math.asin(clamp(2 * (q[0] * q[1] + q[2] * q[3]), -1, 1));
+  } else if (order === 'XZY') {
+    out[0] = Math.atan2(2 * (q[0] * q[3] + q[1] * q[2]), sqw - sqx + sqy - sqz);
+    out[1] = Math.atan2(2 * (q[0] * q[2] + q[1] * q[3]), sqw + sqx - sqy - sqz);
+    out[2] = Math.asin(clamp(2 * (q[2] * q[3] - q[0] * q[1]), -1, 1));
+  } else {
+    console.log('No order given for quaternion to euler conversion.');
+    return;
   }
 }
-WebVRPolyfill.prototype.getPolyfillDisplays = function () {
-  if (this._polyfillDisplaysPopulated) {
-    return this.polyfillDisplays;
+var OrientationArmModel = function () {
+  function OrientationArmModel() {
+    classCallCheck(this, OrientationArmModel);
+    this.hand = 'right';
+    this.headElbowOffset = HEAD_ELBOW_OFFSET_RIGHTHANDED;
+    this.controllerQ = create$4();
+    this.lastControllerQ = create$4();
+    this.headQ = create$4();
+    this.headPos = create$1();
+    this.elbowPos = create$1();
+    this.wristPos = create$1();
+    this.time = null;
+    this.lastTime = null;
+    this.rootQ = create$4();
+    this.position = create$1();
   }
-  if (isMobile()) {
-    var vrDisplay = new CardboardVRDisplay({
-      ADDITIONAL_VIEWERS: this.config.ADDITIONAL_VIEWERS,
-      DEFAULT_VIEWER: this.config.DEFAULT_VIEWER,
-      MOBILE_WAKE_LOCK: this.config.MOBILE_WAKE_LOCK,
-      DEBUG: this.config.DEBUG,
-      DPDB_URL: this.config.DPDB_URL,
-      CARDBOARD_UI_DISABLED: this.config.CARDBOARD_UI_DISABLED,
-      K_FILTER: this.config.K_FILTER,
-      PREDICTION_TIME_S: this.config.PREDICTION_TIME_S,
-      ROTATE_INSTRUCTIONS_DISABLED: this.config.ROTATE_INSTRUCTIONS_DISABLED,
-      YAW_ONLY: this.config.YAW_ONLY,
-      BUFFER_SCALE: this.config.BUFFER_SCALE,
-      DIRTY_SUBMIT_FRAME_BINDINGS: this.config.DIRTY_SUBMIT_FRAME_BINDINGS
-    });
-    this.polyfillDisplays.push(vrDisplay);
+  createClass(OrientationArmModel, [{
+    key: 'setHandedness',
+    value: function setHandedness(hand) {
+      if (this.hand != hand) {
+        this.hand = hand;
+        if (this.hand == 'left') {
+          this.headElbowOffset = HEAD_ELBOW_OFFSET_LEFTHANDED;
+        } else {
+          this.headElbowOffset = HEAD_ELBOW_OFFSET_RIGHTHANDED;
+        }
+      }
+    }
+  }, {
+    key: 'update',
+    value: function update(controllerOrientation, headPoseMatrix) {
+      this.time = now$1();
+      if (controllerOrientation) {
+        copy$4(this.lastControllerQ, this.controllerQ);
+        copy$4(this.controllerQ, controllerOrientation);
+      }
+      if (headPoseMatrix) {
+        getTranslation(this.headPos, headPoseMatrix);
+        getRotation(this.headQ, headPoseMatrix);
+      }
+      var headYawQ = this.getHeadYawOrientation_();
+      var angleDelta = this.quatAngle_(this.lastControllerQ, this.controllerQ);
+      var timeDelta = (this.time - this.lastTime) / 1000;
+      var controllerAngularSpeed = angleDelta / timeDelta;
+      if (controllerAngularSpeed > MIN_ANGULAR_SPEED) {
+        slerp(this.rootQ, this.rootQ, headYawQ, Math.min(angleDelta / MIN_ANGLE_DELTA, 1.0));
+      } else {
+        copy$4(this.rootQ, headYawQ);
+      }
+      var controllerForward = fromValues$1(0, 0, -1.0);
+      transformQuat(controllerForward, controllerForward, this.controllerQ);
+      var controllerDotY = dot(controllerForward, [0, 1, 0]);
+      var extensionRatio = this.clamp_((controllerDotY - MIN_EXTENSION_COS) / MAX_EXTENSION_COS, 0.0, 1.0);
+      var controllerCameraQ = clone$4(this.rootQ);
+      invert$2(controllerCameraQ, controllerCameraQ);
+      multiply$4(controllerCameraQ, controllerCameraQ, this.controllerQ);
+      var elbowPos = this.elbowPos;
+      copy$1(elbowPos, this.headPos);
+      add$1(elbowPos, elbowPos, this.headElbowOffset);
+      var elbowOffset = clone$1(ARM_EXTENSION_OFFSET);
+      scale$1(elbowOffset, elbowOffset, extensionRatio);
+      add$1(elbowPos, elbowPos, elbowOffset);
+      var totalAngle = this.quatAngle_(controllerCameraQ, create$4());
+      var totalAngleDeg = totalAngle * RAD_TO_DEG;
+      var lerpSuppression = 1 - Math.pow(totalAngleDeg / 180, 4);var elbowRatio = ELBOW_BEND_RATIO;
+      var wristRatio = 1 - ELBOW_BEND_RATIO;
+      var lerpValue = lerpSuppression * (elbowRatio + wristRatio * extensionRatio * EXTENSION_RATIO_WEIGHT);
+      var wristQ = create$4();
+      slerp(wristQ, wristQ, controllerCameraQ, lerpValue);
+      var invWristQ = invert$2(create$4(), wristQ);
+      var elbowQ = clone$4(controllerCameraQ);
+      multiply$4(elbowQ, elbowQ, invWristQ);
+      var wristPos = this.wristPos;
+      copy$1(wristPos, WRIST_CONTROLLER_OFFSET);
+      transformQuat(wristPos, wristPos, wristQ);
+      add$1(wristPos, wristPos, ELBOW_WRIST_OFFSET);
+      transformQuat(wristPos, wristPos, elbowQ);
+      add$1(wristPos, wristPos, elbowPos);
+      var offset = clone$1(ARM_EXTENSION_OFFSET);
+      scale$1(offset, offset, extensionRatio);
+      add$1(this.position, this.wristPos, offset);
+      transformQuat(this.position, this.position, this.rootQ);
+      this.lastTime = this.time;
+    }
+  }, {
+    key: 'getPosition',
+    value: function getPosition() {
+      return this.position;
+    }
+  }, {
+    key: 'getHeadYawOrientation_',
+    value: function getHeadYawOrientation_() {
+      var headEuler = create$1();
+      eulerFromQuaternion(headEuler, this.headQ, 'YXZ');
+      var destinationQ = fromEuler(create$4(), 0, headEuler[1] * RAD_TO_DEG, 0);
+      return destinationQ;
+    }
+  }, {
+    key: 'clamp_',
+    value: function clamp_(value, min$$1, max$$1) {
+      return Math.min(Math.max(value, min$$1), max$$1);
+    }
+  }, {
+    key: 'quatAngle_',
+    value: function quatAngle_(q1, q2) {
+      var vec1 = [0, 0, -1];
+      var vec2 = [0, 0, -1];
+      transformQuat(vec1, vec1, q1);
+      transformQuat(vec2, vec2, q2);
+      return angle(vec1, vec2);
+    }
+  }]);
+  return OrientationArmModel;
+}();
+
+var GamepadXRInputSource = function () {
+  function GamepadXRInputSource(polyfill) {
+    var primaryButtonIndex = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    classCallCheck(this, GamepadXRInputSource);
+    this.polyfill = polyfill;
+    this.gamepad = null;
+    this.inputSource = new XRInputSource(this);
+    this.lastPosition = create$1();
+    this.emulatedPosition = false;
+    this.basePoseMatrix = create();
+    this.inputPoses = new WeakMap();
+    this.primaryButtonIndex = primaryButtonIndex;
+    this.primaryActionPressed = false;
+    this.handedness = '';
+    this.targetRayMode = 'gaze';
+    this.armModel = null;
   }
-  this._polyfillDisplaysPopulated = true;
-  return this.polyfillDisplays;
+  createClass(GamepadXRInputSource, [{
+    key: 'updateFromGamepad',
+    value: function updateFromGamepad(gamepad) {
+      this.gamepad = gamepad;
+      this.handedness = gamepad.hand;
+      if (gamepad.pose) {
+        this.targetRayMode = 'tracked-pointer';
+        this.emulatedPosition = !gamepad.pose.hasPosition;
+      } else if (gamepad.hand === '') {
+        this.targetRayMode = 'gaze';
+        this.emulatedPosition = false;
+      }
+    }
+  }, {
+    key: 'updateBasePoseMatrix',
+    value: function updateBasePoseMatrix() {
+      if (this.gamepad && this.gamepad.pose) {
+        var pose = this.gamepad.pose;
+        var position = pose.position;
+        var orientation = pose.orientation;
+        if (!position && !orientation) {
+          return;
+        }
+        if (!position) {
+          if (!pose.hasPosition) {
+            if (!this.armModel) {
+              this.armModel = new OrientationArmModel();
+            }
+            this.armModel.setHandedness(this.gamepad.hand);
+            this.armModel.update(orientation, this.polyfill.getBasePoseMatrix());
+            position = this.armModel.getPosition();
+          } else {
+            position = this.lastPosition;
+          }
+        } else {
+          this.lastPosition[0] = position[0];
+          this.lastPosition[1] = position[1];
+          this.lastPosition[2] = position[2];
+        }
+        fromRotationTranslation(this.basePoseMatrix, orientation, position);
+      } else {
+        copy(this.basePoseMatrix, this.polyfill.getBasePoseMatrix());
+      }
+      return this.basePoseMatrix;
+    }
+  }, {
+    key: 'getXRInputPose',
+    value: function getXRInputPose(coordinateSystem) {
+      this.updateBasePoseMatrix();
+      var inputPose = this.inputPoses.get(coordinateSystem);
+      if (!inputPose) {
+        inputPose = new XRInputPose(this, this.gamepad && this.gamepad.pose);
+        this.inputPoses.set(coordinateSystem, inputPose);
+      }
+      var rayTransformMatrix = new Float32Array(16);
+      coordinateSystem.transformBasePoseMatrix(rayTransformMatrix, this.basePoseMatrix);
+      inputPose.targetRay = poseMatrixToXRRay(rayTransformMatrix);
+      if (inputPose.gripMatrix) {
+        coordinateSystem.transformBasePoseMatrix(inputPose.gripMatrix, this.basePoseMatrix);
+      }
+      return inputPose;
+    }
+  }]);
+  return GamepadXRInputSource;
+}();
+
+var EXTRA_PRESENTATION_ATTRIBUTES = {
+  highRefreshRate: true
 };
-WebVRPolyfill.prototype.enable = function () {
-  this.enabled = true;
-  if (this.hasNative && this.native.VRFrameData) {
-    var NativeVRFrameData = this.native.VRFrameData;
-    var nativeFrameData = new this.native.VRFrameData();
-    var nativeGetFrameData = this.native.VRDisplay.prototype.getFrameData;
-    window.VRDisplay.prototype.getFrameData = function (frameData) {
-      if (frameData instanceof NativeVRFrameData) {
-        nativeGetFrameData.call(this, frameData);
+var PRIMARY_BUTTON_MAP = {
+  oculus: 1,
+  openvr: 1
+};
+var CAN_USE_GAMEPAD = _global.navigator && 'getGamepads' in _global.navigator;
+var SESSION_ID = 0;
+var Session = function Session(sessionOptions) {
+  classCallCheck(this, Session);
+  this.outputContext = sessionOptions.outputContext;
+  this.immersive = sessionOptions.immersive;
+  this.ended = null;
+  this.baseLayer = null;
+  this.id = ++SESSION_ID;
+  this.modifiedCanvasLayer = false;
+};
+
+var WebVRDevice = function (_PolyfilledXRDevice) {
+  inherits(WebVRDevice, _PolyfilledXRDevice);
+  function WebVRDevice(global, display) {
+    classCallCheck(this, WebVRDevice);
+    var canPresent = display.capabilities.canPresent;
+    var _this = possibleConstructorReturn(this, (WebVRDevice.__proto__ || Object.getPrototypeOf(WebVRDevice)).call(this, global));
+    _this.display = display;
+    _this.frame = new global.VRFrameData();
+    _this.sessions = new Map();
+    _this.immersiveSession = null;
+    _this.canPresent = canPresent;
+    _this.baseModelMatrix = create();
+    _this.gamepadInputSources = {};
+    _this.tempVec3 = new Float32Array(3);
+    _this.onVRDisplayPresentChange = _this.onVRDisplayPresentChange.bind(_this);
+    global.window.addEventListener('vrdisplaypresentchange', _this.onVRDisplayPresentChange);
+    return _this;
+  }
+  createClass(WebVRDevice, [{
+    key: 'onBaseLayerSet',
+    value: function onBaseLayerSet(sessionId, layer) {
+      var _this2 = this;
+      var session = this.sessions.get(sessionId);
+      var canvas = layer.context.canvas;
+      if (session.immersive) {
+        var left = this.display.getEyeParameters('left');
+        var right = this.display.getEyeParameters('right');
+        canvas.width = Math.max(left.renderWidth, right.renderWidth) * 2;
+        canvas.height = Math.max(left.renderHeight, right.renderHeight);
+        this.display.requestPresent([{
+          source: canvas, attributes: EXTRA_PRESENTATION_ATTRIBUTES
+        }]).then(function () {
+          if ("production" !== 'test' && !_this2.global.document.body.contains(canvas)) {
+            session.modifiedCanvasLayer = true;
+            _this2.global.document.body.appendChild(canvas);
+            applyCanvasStylesForMinimalRendering(canvas);
+          }
+          session.baseLayer = layer;
+        });
+      }
+      else if (session.outputContext) {
+          session.baseLayer = layer;
+        }
+    }
+  }, {
+    key: 'supportsSession',
+    value: function supportsSession() {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+      if (options.immersive === true && this.canPresent === false) {
+        return false;
+      }
+      return true;
+    }
+  }, {
+    key: 'requestSession',
+    value: function requestSession() {
+      var $args = arguments;return new Promise(function ($return, $error) {
+        var options, canvas, ctx, session;
+        options = $args.length > 0 && $args[0] !== undefined ? $args[0] : {};
+        if (!this.supportsSession(options)) {
+          return $return(Promise.reject());
+        }
+        if (options.immersive) {
+          canvas = this.global.document.createElement('canvas');
+          {
+            ctx = canvas.getContext('webgl');
+          }
+          return Promise.resolve(this.display.requestPresent([{
+            source: canvas, attributes: EXTRA_PRESENTATION_ATTRIBUTES }])).then(function ($await_2) {
+            try {
+              return $If_1.call(this);
+            } catch ($boundEx) {
+              return $error($boundEx);
+            }
+          }.bind(this), $error);
+        }
+        function $If_1() {
+          session = new Session(options);
+          this.sessions.set(session.id, session);
+          if (options.immersive) {
+            this.immersiveSession = session;
+            this.dispatchEvent('@@webxr-polyfill/vr-present-start', session.id);
+          }
+          return $return(Promise.resolve(session.id));
+        }
+        return $If_1.call(this);
+      }.bind(this));
+    }
+  }, {
+    key: 'requestAnimationFrame',
+    value: function requestAnimationFrame(callback) {
+      return this.display.requestAnimationFrame(callback);
+    }
+  }, {
+    key: 'getPrimaryButtonIndex',
+    value: function getPrimaryButtonIndex(gamepad) {
+      var primaryButton = 0;
+      var name = gamepad.id.toLowerCase();
+      for (var key in PRIMARY_BUTTON_MAP) {
+        if (name.includes(key)) {
+          primaryButton = PRIMARY_BUTTON_MAP[key];
+          break;
+        }
+      }
+      return Math.min(primaryButton, gamepad.buttons.length - 1);
+    }
+  }, {
+    key: 'onFrameStart',
+    value: function onFrameStart(sessionId) {
+      this.display.getFrameData(this.frame);
+      var session = this.sessions.get(sessionId);
+      if (session.immersive && CAN_USE_GAMEPAD) {
+        var prevInputSources = this.gamepadInputSources;
+        this.gamepadInputSources = {};
+        var gamepads = _global.navigator.getGamepads();
+        for (var i = 0; i < gamepads.length; ++i) {
+          var gamepad = gamepads[i];
+          if (gamepad && gamepad.displayId === this.display.displayId) {
+            var inputSourceImpl = prevInputSources[i];
+            if (!inputSourceImpl) {
+              inputSourceImpl = new GamepadXRInputSource(this, this.getPrimaryButtonIndex(gamepad));
+            }
+            inputSourceImpl.updateFromGamepad(gamepad);
+            this.gamepadInputSources[i] = inputSourceImpl;
+            if (inputSourceImpl.primaryButtonIndex != -1) {
+              var primaryActionPressed = gamepad.buttons[inputSourceImpl.primaryButtonIndex].pressed;
+              if (primaryActionPressed && !inputSourceImpl.primaryActionPressed) {
+                this.dispatchEvent('@@webxr-polyfill/input-select-start', { sessionId: session.id, inputSource: inputSourceImpl.inputSource });
+              } else if (!primaryActionPressed && inputSourceImpl.primaryActionPressed) {
+                this.dispatchEvent('@@webxr-polyfill/input-select-end', { sessionId: session.id, inputSource: inputSourceImpl.inputSource });
+              }
+              inputSourceImpl.primaryActionPressed = primaryActionPressed;
+            }
+          }
+        }
+      }
+      if (session.outputContext && !session.immersive) {
+        var outputCanvas = session.outputContext.canvas;
+        var oWidth = outputCanvas.offsetWidth;
+        var oHeight = outputCanvas.offsetHeight;
+        if (outputCanvas.width != oWidth) {
+          outputCanvas.width = oWidth;
+        }
+        if (outputCanvas.height != oHeight) {
+          outputCanvas.height = oHeight;
+        }
+        var canvas = session.baseLayer.context.canvas;
+        if (!this.immersiveSession || canvas !== this.immersiveSession.baseLayer.context.canvas) {
+          if (canvas.width != oWidth) {
+            canvas.width = oWidth;
+          }
+          if (canvas.height != oHeight) {
+            canvas.height = oHeight;
+          }
+          perspective(this.frame.leftProjectionMatrix, Math.PI * 0.4, oWidth / oHeight, this.depthNear, this.depthFar);
+        }
+      }
+    }
+  }, {
+    key: 'onFrameEnd',
+    value: function onFrameEnd(sessionId) {
+      var session = this.sessions.get(sessionId);
+      if (session.ended || !session.baseLayer) {
         return;
       }
-      nativeGetFrameData.call(this, nativeFrameData);
-      frameData.pose = nativeFrameData.pose;
-      copyArray(nativeFrameData.leftProjectionMatrix, frameData.leftProjectionMatrix);
-      copyArray(nativeFrameData.rightProjectionMatrix, frameData.rightProjectionMatrix);
-      copyArray(nativeFrameData.leftViewMatrix, frameData.leftViewMatrix);
-      copyArray(nativeFrameData.rightViewMatrix, frameData.rightViewMatrix);
+      if (session.outputContext && !(session.immersive && !this.display.capabilities.hasExternalDisplay)) {
+        var mirroring = session.immersive && this.display.capabilities.hasExternalDisplay;
+        var canvas = session.baseLayer.context.canvas;
+        var iWidth = mirroring ? canvas.width / 2 : canvas.width;
+        var iHeight = canvas.height;
+        {
+          var outputCanvas = session.outputContext.canvas;
+          var outputContext = outputCanvas.getContext('2d');
+          var oWidth = outputCanvas.width;
+          var oHeight = outputCanvas.height;
+          outputContext.drawImage(canvas, 0, 0, iWidth, iHeight, 0, 0, oWidth, oHeight);
+        }
+      }
+      if (session.immersive && session.baseLayer) {
+        this.display.submitFrame();
+      }
+    }
+  }, {
+    key: 'cancelAnimationFrame',
+    value: function cancelAnimationFrame(handle) {
+      this.display.cancelAnimationFrame(handle);
+    }
+  }, {
+    key: 'endSession',
+    value: function endSession(sessionId) {
+      return new Promise(function ($return, $error) {
+        var session = this.sessions.get(sessionId);
+        if (session.ended) {
+          return $return();
+        }
+        if (session.immersive) {
+          return $return(this.display.exitPresent());
+        } else {
+          session.ended = true;
+        }
+        return $return();
+      }.bind(this));
+    }
+  }, {
+    key: 'requestStageBounds',
+    value: function requestStageBounds() {
+      if (this.display.stageParameters) {
+        var width = this.display.stageParameters.sizeX;
+        var depth = this.display.stageParameters.sizeZ;
+        var data = [];
+        data.push(-width / 2);
+        data.push(-depth / 2);
+        data.push(width / 2);
+        data.push(-depth / 2);
+        data.push(width / 2);
+        data.push(depth / 2);
+        data.push(-width / 2);
+        data.push(depth / 2);
+        return data;
+      }
+      return null;
+    }
+  }, {
+    key: 'requestFrameOfReferenceTransform',
+    value: function requestFrameOfReferenceTransform(type, options) {
+      return new Promise(function ($return, $error) {
+        if (type === 'stage' && this.display.stageParameters && this.display.stageParameters.sittingToStandingTransform) {
+          return $return(this.display.stageParameters.sittingToStandingTransform);
+        }
+        return $return();
+      }.bind(this));
+    }
+  }, {
+    key: 'getProjectionMatrix',
+    value: function getProjectionMatrix(eye) {
+      if (eye === 'left') {
+        return this.frame.leftProjectionMatrix;
+      } else if (eye === 'right') {
+        return this.frame.rightProjectionMatrix;
+      } else {
+        throw new Error('eye must be of type \'left\' or \'right\'');
+      }
+    }
+  }, {
+    key: 'getViewport',
+    value: function getViewport(sessionId, eye, layer, target) {
+      var session = this.sessions.get(sessionId);
+      var _layer$context$canvas = layer.context.canvas,
+          width = _layer$context$canvas.width,
+          height = _layer$context$canvas.height;
+      if (!session.immersive) {
+        target.x = target.y = 0;
+        target.width = width;
+        target.height = height;
+        return true;
+      }
+      if (eye === 'left') {
+        target.x = 0;
+      } else if (eye === 'right') {
+        target.x = width / 2;
+      } else {
+        return false;
+      }
+      target.y = 0;
+      target.width = width / 2;
+      target.height = height;
+      return true;
+    }
+  }, {
+    key: 'getBasePoseMatrix',
+    value: function getBasePoseMatrix() {
+      var _frame$pose = this.frame.pose,
+          position = _frame$pose.position,
+          orientation = _frame$pose.orientation;
+      if (!position && !orientation) {
+        return this.baseModelMatrix;
+      }
+      if (!position) {
+        position = this.tempVec3;
+        position[0] = position[1] = position[2] = 0;
+      }
+      fromRotationTranslation(this.baseModelMatrix, orientation, position);
+      return this.baseModelMatrix;
+    }
+  }, {
+    key: 'getBaseViewMatrix',
+    value: function getBaseViewMatrix(eye) {
+      if (eye === 'left') {
+        return this.frame.leftViewMatrix;
+      } else if (eye === 'right') {
+        return this.frame.rightViewMatrix;
+      } else {
+        throw new Error('eye must be of type \'left\' or \'right\'');
+      }
+    }
+  }, {
+    key: 'getInputSources',
+    value: function getInputSources() {
+      var inputSources = [];
+      for (var i in this.gamepadInputSources) {
+        inputSources.push(this.gamepadInputSources[i].inputSource);
+      }
+      return inputSources;
+    }
+  }, {
+    key: 'getInputPose',
+    value: function getInputPose(inputSource, coordinateSystem) {
+      if (!coordinateSystem) {
+        return null;
+      }
+      for (var i in this.gamepadInputSources) {
+        var inputSourceImpl = this.gamepadInputSources[i];
+        if (inputSourceImpl.inputSource === inputSource) {
+          return inputSourceImpl.getXRInputPose(coordinateSystem);
+        }
+      }
+      return null;
+    }
+  }, {
+    key: 'onWindowResize',
+    value: function onWindowResize() {}
+  }, {
+    key: 'onVRDisplayPresentChange',
+    value: function onVRDisplayPresentChange(e) {
+      var _this3 = this;
+      if (!this.display.isPresenting) {
+        this.sessions.forEach(function (session) {
+          if (session.immersive && !session.ended) {
+            if (session.modifiedCanvasLayer) {
+              var canvas = session.baseLayer.context.canvas;
+              document.body.removeChild(canvas);
+              canvas.setAttribute('style', '');
+            }
+            if (_this3.immersiveSession === session) {
+              _this3.immersiveSession = null;
+            }
+            _this3.dispatchEvent('@@webxr-polyfill/vr-present-end', session.id);
+          }
+        });
+      }
+    }
+  }, {
+    key: 'depthNear',
+    get: function get$$1() {
+      return this.display.depthNear;
+    }
+    ,
+    set: function set$$1(val) {
+      this.display.depthNear = val;
+    }
+  }, {
+    key: 'depthFar',
+    get: function get$$1() {
+      return this.display.depthFar;
+    }
+    ,
+    set: function set$$1(val) {
+      this.display.depthFar = val;
+    }
+  }]);
+  return WebVRDevice;
+}(PolyfilledXRDevice);
+
+var CardboardXRDevice = function (_WebVRDevice) {
+  inherits(CardboardXRDevice, _WebVRDevice);
+  function CardboardXRDevice(global) {
+    classCallCheck(this, CardboardXRDevice);
+    var display = new CardboardVRDisplay();
+    var _this = possibleConstructorReturn(this, (CardboardXRDevice.__proto__ || Object.getPrototypeOf(CardboardXRDevice)).call(this, global, display));
+    _this.display = display;
+    _this.frame = {
+      rightViewMatrix: new Float32Array(16),
+      leftViewMatrix: new Float32Array(16),
+      rightProjectionMatrix: new Float32Array(16),
+      leftProjectionMatrix: new Float32Array(16),
+      pose: null,
+      timestamp: null
     };
+    return _this;
   }
-  navigator.getVRDisplays = this.getVRDisplays.bind(this);
-  window.VRDisplay = CardboardVRDisplay.VRDisplay;
-  window.VRFrameData = CardboardVRDisplay.VRFrameData;
+  return CardboardXRDevice;
+}(WebVRDevice);
+
+var getXRDevice = function getXRDevice(global) {
+  return new Promise(function ($return, $error) {
+    var device;
+    device = null;
+    if ('xr' in global.navigator) {
+      var $Try_1_Post = function () {
+        try {
+          return $If_3.call(this);
+        } catch ($boundEx) {
+          return $error($boundEx);
+        }
+      }.bind(this);var $Try_1_Catch = function (e) {
+        try {
+          return $Try_1_Post();
+        } catch ($boundEx) {
+          return $error($boundEx);
+        }
+      }.bind(this);
+      try {
+        return Promise.resolve(global.navigator.xr.requestDevice()).then(function ($await_6) {
+          try {
+            device = $await_6;
+            return $Try_1_Post();
+          } catch ($boundEx) {
+            return $Try_1_Catch($boundEx);
+          }
+        }.bind(this), $Try_1_Catch);
+      } catch (e) {
+        $Try_1_Catch(e);
+      }
+    }
+    function $If_3() {
+      return $return(device);
+    }
+    return $If_3.call(this);
+  }.bind(this));
 };
-WebVRPolyfill.prototype.getVRDisplays = function () {
-  var _this = this;
-  var config = this.config;
-  if (!this.hasNative) {
-    return Promise.resolve(this.getPolyfillDisplays());
-  }
-  var timeoutId;
-  var vrDisplaysNative = this.native.getVRDisplays.call(navigator);
-  var timeoutPromise = new Promise(function (resolve) {
-    timeoutId = setTimeout(function () {
-      console.warn('Native WebVR implementation detected, but `getVRDisplays()` failed to resolve. Falling back to polyfill.');
-      resolve([]);
-    }, config.GET_VR_DISPLAYS_TIMEOUT);
-  });
-  return race([vrDisplaysNative, timeoutPromise]).then(function (nativeDisplays) {
-    clearTimeout(timeoutId);
-    return nativeDisplays.length > 0 ? nativeDisplays : _this.getPolyfillDisplays();
-  });
+var getVRDisplay = function getVRDisplay(global) {
+  return new Promise(function ($return, $error) {
+    var device, displays;
+    device = null;
+    if ('getVRDisplays' in global.navigator) {
+      var $Try_2_Post = function () {
+        try {
+          return $If_4.call(this);
+        } catch ($boundEx) {
+          return $error($boundEx);
+        }
+      }.bind(this);var $Try_2_Catch = function (e) {
+        try {
+          return $Try_2_Post();
+        } catch ($boundEx) {
+          return $error($boundEx);
+        }
+      }.bind(this);
+      try {
+        return Promise.resolve(global.navigator.getVRDisplays()).then(function ($await_7) {
+          try {
+            displays = $await_7;
+            if (displays && displays.length) {
+              device = new WebVRDevice(global, displays[0]);
+            }
+            return $Try_2_Post();
+          } catch ($boundEx) {
+            return $Try_2_Catch($boundEx);
+          }
+        }.bind(this), $Try_2_Catch);
+      } catch (e) {
+        $Try_2_Catch(e);
+      }
+    }
+    function $If_4() {
+      return $return(device);
+    }
+    return $If_4.call(this);
+  }.bind(this));
 };
-WebVRPolyfill.version = version;
-WebVRPolyfill.VRFrameData = CardboardVRDisplay.VRFrameData;
-WebVRPolyfill.VRDisplay = CardboardVRDisplay.VRDisplay;
+var requestDevice = function requestDevice(global, config) {
+  return new Promise(function ($return, $error) {
+    var device;
+    return Promise.resolve(getXRDevice(global)).then(function ($await_8) {
+      try {
+        device = $await_8;
+        if (device) {
+          return $return(device);
+        }
+        if (config.webvr) {
+          return Promise.resolve(getVRDisplay(global)).then(function ($await_9) {
+            try {
+              device = $await_9;
+              if (device) {
+                return $return(new XRDevice(device));
+              }
+              return $If_5.call(this);
+            } catch ($boundEx) {
+              return $error($boundEx);
+            }
+          }.bind(this), $error);
+        }
+        function $If_5() {
+          if (config.cardboard && isMobile(global)) {
+            if (!global.VRFrameData) {
+              global.VRFrameData = function () {
+                this.rightViewMatrix = new Float32Array(16);
+                this.leftViewMatrix = new Float32Array(16);
+                this.rightProjectionMatrix = new Float32Array(16);
+                this.leftProjectionMatrix = new Float32Array(16);
+                this.pose = null;
+              };
+            }
+            return $return(new XRDevice(new CardboardXRDevice(global)));
+          }
+          return $return(null);
+        }
+        return $If_5.call(this);
+      } catch ($boundEx) {
+        return $error($boundEx);
+      }
+    }.bind(this), $error);
+  }.bind(this));
+};
 
-
-var webvrPolyfill = Object.freeze({
-	default: WebVRPolyfill
-});
-
-var require$$0 = ( webvrPolyfill && WebVRPolyfill ) || webvrPolyfill;
-
-if (typeof commonjsGlobal !== 'undefined' && commonjsGlobal.window) {
-  if (!commonjsGlobal.document) {
-    commonjsGlobal.document = commonjsGlobal.window.document;
+var CONFIG_DEFAULTS = {
+  webvr: true,
+  cardboard: true
+};
+var partials = ['navigator', 'HTMLCanvasElement', 'WebGLRenderingContext'];
+var WebXRPolyfill = function () {
+  function WebXRPolyfill(global) {
+    var config = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    classCallCheck(this, WebXRPolyfill);
+    this.global = global || _global;
+    this.config = Object.freeze(Object.assign({}, CONFIG_DEFAULTS, config));
+    this.nativeWebXR = 'xr' in this.global.navigator;
+    this.injected = false;
+    if (!this.nativeWebXR) {
+      this._injectPolyfill(this.global);
+    }
+    else if (this.config.cardboard && isMobile(this.global)) {
+        this._patchRequestDevice();
+      }
   }
-  if (!commonjsGlobal.navigator) {
-    commonjsGlobal.navigator = commonjsGlobal.window.navigator;
-  }
-}
-var src = require$$0;
+  createClass(WebXRPolyfill, [{
+    key: '_injectPolyfill',
+    value: function _injectPolyfill(global) {
+      if (!partials.every(function (iface) {
+        return !!global[iface];
+      })) {
+        throw new Error('Global must have the following attributes : ' + partials);
+      }
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+      try {
+        for (var _iterator = Object.keys(API)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var className = _step.value;
+          if (global[className] !== undefined) {
+            console.warn(className + ' already defined on global.');
+          } else {
+            global[className] = API[className];
+          }
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator.return) {
+            _iterator.return();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+      {
+        var polyfilledCtx = extendContextCompatibleXRDevice(global.WebGLRenderingContext);
+        if (polyfilledCtx) {
+          extendGetContext(global.HTMLCanvasElement);
+          if (global.WebGL2RenderingContext) {
+            extendContextCompatibleXRDevice(global.WebGL2RenderingContext);
+          }
+        }
+      }
+      this.injected = true;
+      this._patchRequestDevice();
+    }
+  }, {
+    key: '_patchRequestDevice',
+    value: function _patchRequestDevice() {
+      var device = requestDevice(this.global, this.config);
+      this.xr = new XR(device);
+      Object.defineProperty(this.global.navigator, 'xr', {
+        value: this.xr,
+        configurable: true
+      });
+    }
+  }]);
+  return WebXRPolyfill;
+}();
 
-return src;
+return WebXRPolyfill;
 
 })));

@@ -48,6 +48,7 @@ class FileImage extends BaseImage {
         }
         let filepath;
         if (name != undefined && name.lastIndexOf('.') != -1) {
+            console.warn("Deprecated signature. Please provide a name and filepath to the image constructor")
             filepath = name;
             name = name.substring(name.lastIndexOf('/')+1, name.lastIndexOf('.'));
         }
@@ -59,7 +60,7 @@ class FileImage extends BaseImage {
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(() => {
             this.loaded.untoggle();
-            if (this.getName() == this.constructor.name) {
+            if (this.getName() == sgFactory.getClassName(this)) {
                 // Generate a name from the file path.
                 const stem = fileParam.getStem();
                 const decorator = stem.substring(stem.length - 1);
@@ -233,7 +234,9 @@ class FileImage extends BaseImage {
         this.type = 'UNSIGNED_BYTE';
         resourceLoader.addWork(fileDesc.id, 1);
 
-        const muteParam = this.addParameter(new BooleanParameter('Mute', false));
+        // Note: mute needs to be turned off by an action from the user.
+        // Audio is disabled by default now in chrome.
+        const muteParam = this.addParameter(new BooleanParameter('Mute', true));
         const loopParam = this.addParameter(new BooleanParameter('Loop', true));
         const GainParam = this.addParameter(new NumberParameter('Gain', 2.0)).setRange([0, 5]);
         const spatializeAudioParam = this.addParameter(new BooleanParameter('SpatializeAudio', true));
@@ -275,37 +278,45 @@ class FileImage extends BaseImage {
             resourceLoader.addWorkDone(fileDesc.id, 1);
             this.loaded.emit(videoElem);
 
-            let prevFrame = 0;
-            const frameRate = 29.97;
-            const timerCallback = () => {
-                if (videoElem.paused || videoElem.ended) {
-                    return;
-                }
-                // Check to see if the video has progressed to the next frame. 
-                // If so, then we emit and update, which will cause a redraw.
-                const currentFrame = Math.floor(videoElem.currentTime * frameRate);
-                if (prevFrame != currentFrame) {
-                    this.updated.emit();
-                    prevFrame = currentFrame;
-                }
-                setTimeout(timerCallback, 20); // Sample at 50fps.
-            };
-            timerCallback();
+            videoElem.play().then(()=>{
+
+                let prevFrame = 0;
+                const frameRate = 29.97;
+                const timerCallback = () => {
+                    if (videoElem.paused || videoElem.ended) {
+                        return;
+                    }
+                    // Check to see if the video has progressed to the next frame. 
+                    // If so, then we emit and update, which will cause a redraw.
+                    const currentFrame = Math.floor(videoElem.currentTime * frameRate);
+                    if (prevFrame != currentFrame) {
+                        this.updated.emit();
+                        prevFrame = currentFrame;
+                    }
+                    setTimeout(timerCallback, 20); // Sample at 50fps.
+                };
+                timerCallback();
+
+            }, (e)=>{
+                console.log("Autoplay was prevented.", e, e.message)
+            });
+            // const promise = videoElem.play();
+            // if (promise !== undefined) {
+            //     promise.then(_ => {
+            //         console.log("Autoplay started!")
+            //         // Autoplay started!
+            //     }).catch(error => {
+            //         console.log("Autoplay was prevented.")
+            //         // Autoplay was prevented.
+            //         // Show a "Play" button so that user can start playback.
+            //     });
+            // }
+
 
         }, false);
         videoElem.src = fileDesc.url;
         //videoElem.load();
-        const promise = videoElem.play();
-        if (promise !== undefined) {
-            promise.then(_ => {
-                console.log("Autoplay started!")
-                // Autoplay started!
-            }).catch(error => {
-                console.log("Autoplay was prevented.")
-                // Autoplay was prevented.
-                // Show a "Play" button so that user can start playback.
-            });
-        }
+      
     }
 
     __loadVLH(fileDesc, ext) {
@@ -372,9 +383,11 @@ class FileImage extends BaseImage {
         let playing;
         let incrementFrame;
         this.play = () => {
-            playing = true;
-            if (incrementFrame)
-                incrementFrame();
+            resourcePromise.then(()=>{
+                playing = true;
+                if (incrementFrame)
+                    incrementFrame();
+            })
         }
         this.stop = () => {
             playing = false;
@@ -506,42 +519,38 @@ class FileImage extends BaseImage {
             imageDataLibrary[fileDesc.id] = resourcePromise;
         }
 
-        // Make the resolve asynchronous so that the function returns.
-        // (Chrome started generating errors because the 'onload' callback took to long to return.)
-        setTimeout(() => {
-            resourcePromise.then((unpackedData) => {
+        resourcePromise.then((unpackedData) => {
 
-                this.width = unpackedData.width;
-                this.height = unpackedData.height;
+            this.width = unpackedData.width;
+            this.height = unpackedData.height;
 
-                this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0));
-                this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
+            this.getParameter('StreamAtlasDesc').setValue(new Vec4(unpackedData.atlasSize[0], unpackedData.atlasSize[1], 0, 0));
+            this.getParameter('StreamAtlasIndex').setRange(unpackedData.frameRange);
 
-                this.__data = unpackedData.imageData;
+            this.__data = unpackedData.imageData;
 
-                this.getFrameDelay = (index) => {
-                    // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
-                    return unpackedData.frameDelays[index] * 10;
-                }
+            this.getFrameDelay = (index) => {
+                // Note: Frame delays are in centisecs (not millisecs which the timers will require.)
+                return unpackedData.frameDelays[index] * 10;
+            }
 
-                //////////////////////////
-                // Playback
-                const frameParam = this.getParameter('StreamAtlasIndex');
-                const numFrames = frameParam.getRange()[1];
-                let frame = 0;
-                incrementFrame = () => {
-                    frameParam.setValue(frame);
-                    if (playing)
-                        setTimeout(incrementFrame, this.getFrameDelay(frame));
-                    frame = (frame + 1) % numFrames;
-                }
+            //////////////////////////
+            // Playback
+            const frameParam = this.getParameter('StreamAtlasIndex');
+            const numFrames = frameParam.getRange()[1];
+            let frame = 0;
+            incrementFrame = () => {
+                frameParam.setValue(frame);
                 if (playing)
-                    incrementFrame();
-                this.__loaded = true;
+                    setTimeout(incrementFrame, this.getFrameDelay(frame));
+                frame = (frame + 1) % numFrames;
+            }
+            if (playing)
+                incrementFrame();
+            this.__loaded = true;
 
-                this.loaded.emit();
-            });
-        }, 1)
+            this.loaded.emit();
+        });
     }
 
     getFilepath() {
@@ -568,11 +577,11 @@ class FileImage extends BaseImage {
     //////////////////////////////////////////
     // Persistence
 
-    fromJSON(json) {
+    fromJSON(json, context, flags) {
 
     }
 
-    toJSON(json) {
+    toJSON(context, flags) {
 
     }
 

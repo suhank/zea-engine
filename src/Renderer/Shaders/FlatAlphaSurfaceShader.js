@@ -7,7 +7,7 @@ import {
 } from './FlatSurfaceShader.js';
 
 class FlatAlphaSurfaceShader extends FlatSurfaceShader {
-    isTransparent() {
+    static isTransparent() {
         return true;
     }
     

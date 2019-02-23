@@ -217,11 +217,11 @@ class Quat extends AttrValue {
         const euler = new Vec3();
         const test = ordered.x * ordered.y + ordered.z * this.w;
         if (test > 0.49999) { // singularity at north pole
-            euler.y = 2.0 * atan2(ordered.x, this.w);
+            euler.y = 2.0 * Math.atan2(ordered.x, this.w);
             euler.z = Math.PI * 0.5;
             euler.x = 0.0;
         } else if (test < -0.49999) { // singularity at south pole
-            euler.y = -2.0 * atan2(ordered.x, this.w);
+            euler.y = -2.0 * Math.atan2(ordered.x, this.w);
             euler.z = Math.PI * -0.5;
             euler.x = 0.0;
         } else {
@@ -236,22 +236,22 @@ class Quat extends AttrValue {
         switch (rotationOrder) {
             case 0:
                 /*' XYZ' */
-                return Euler(euler.y, euler.z, euler.x, rotationOrder);
+                return new EulerAngles(euler.y, euler.z, euler.x, rotationOrder);
             case 1:
                 /* 'YZX' */
-                return Euler(euler.x, euler.y, euler.z, rotationOrder);
+                return new EulerAngles(euler.x, euler.y, euler.z, rotationOrder);
             case 2:
                 /* 'ZXY' */
-                return Euler(euler.z, euler.x, euler.y, rotationOrder);
+                return new EulerAngles(euler.z, euler.x, euler.y, rotationOrder);
             case 3:
                 /* 'XZY' */
-                return Euler(-euler.y, euler.x, euler.z, rotationOrder);
+                return new EulerAngles(-euler.y, euler.x, euler.z, rotationOrder);
             case 4:
                 /* 'ZYX' */
-                return Euler(euler.x, euler.z, -euler.y, rotationOrder);
+                return new EulerAngles(euler.x, euler.z, -euler.y, rotationOrder);
             case 5:
                 /* 'YXZ' */
-                return Euler(euler.z, -euler.y, euler.x, rotationOrder);
+                return new EulerAngles(euler.z, -euler.y, euler.x, rotationOrder);
         }
 
     }
@@ -301,6 +301,41 @@ class Quat extends AttrValue {
             this.__data[3] = (mat3.__data[j * 3 + k] - mat3.__data[k * 3 + j]) * fRoot;
             this.__data[j] = (mat3.__data[j * 3 + i] + mat3.__data[i * 3 + j]) * fRoot;
             this.__data[k] = (mat3.__data[k * 3 + i] + mat3.__data[i * 3 + k]) * fRoot;
+        }
+        this.normalizeInPlace();
+    }
+
+    setFromMat4(mat4) {
+
+        // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
+        // article "Quaternion Calculus and Fast Animation".
+        const fTrace = mat4.__data[0] + mat4.__data[5] + mat4.__data[10];
+        let fRoot;
+
+        if (fTrace > 0.0) {
+            // |w| > 1/2, may as well choose w > 1/2
+            fRoot = Math.sqrt(fTrace + 1.); // 2w
+            this.__data[3] = 0.5 * fRoot;
+            fRoot = 0.5 / fRoot; // 1/(4w)
+            this.__data[0] = (mat4.__data[6] - mat4.__data[9]) * fRoot;
+            this.__data[1] = (mat4.__data[8] - mat4.__data[2]) * fRoot;
+            this.__data[2] = (mat4.__data[1] - mat4.__data[4]) * fRoot;
+        } else {
+            // |w| <= 1/2
+            let i = 0;
+            if (mat4.__data[5] > mat4.__data[0])
+                i = 1;
+            if (mat4.__data[10] > mat4.__data[i * 4 + i])
+                i = 2;
+            const j = (i + 1) % 3;
+            const k = (i + 2) % 3;
+
+            fRoot = Math.sqrt(mat4.__data[i * 4 + i] - mat4.__data[j * 4 + j] - mat4.__data[k * 4 + k] + 1.0);
+            this.__data[i] = 0.5 * fRoot;
+            fRoot = 0.5 / fRoot;
+            this.__data[3] = (mat4.__data[j * 4 + k] - mat4.__data[k * 4 + j]) * fRoot;
+            this.__data[j] = (mat4.__data[j * 4 + i] + mat4.__data[i * 4 + j]) * fRoot;
+            this.__data[k] = (mat4.__data[k * 4 + i] + mat4.__data[i * 4 + k]) * fRoot;
         }
         this.normalizeInPlace();
     }
@@ -879,18 +914,19 @@ class Quat extends AttrValue {
     
     toJSON() {
         return {
-            "x": this.x,
-            "y": this.y,
-            "z": this.z,
-            "w": this.w
+            x: this.x,
+            y: this.y,
+            z: this.z,
+            w: this.w
         }
     }
 
     fromJSON(j) {
-        this.x = j['x'];
-        this.y = j['y'];
-        this.z = j['z'];
-        this.w = j['w'];
+        this.__data[0] = j.x;
+        this.__data[1] = j.y;
+        this.__data[2] = j.z;
+        this.__data[3] = j.w;
+        this.normalizeInPlace();
     }
 
 };

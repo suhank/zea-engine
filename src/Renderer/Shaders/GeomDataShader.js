@@ -1,14 +1,17 @@
 import { shaderLibrary }  from '../ShaderLibrary';
 import { GLShader }  from '../GLShader.js';
+import {
+    sgFactory
+} from '../../SceneTree';
 
 import './GLSL/stack-gl/inverse.js';
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/modelMatrix.js';
 
-class GeomDataShader extends GLShader {
+class StandardSurfaceGeomDataShader extends GLShader {
     constructor(gl, floatGeomBuffer) {
         super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('GeomDataShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('StandardSurfaceGeomDataShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -31,11 +34,11 @@ void main(void) {
 
     v_viewPos = -viewPos.xyz;
 
-    v_drawItemID = float(getID());
+    v_drawItemID = float(getId());
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('GeomDataShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardSurfaceGeomDataShader.fragmentShader', `
 precision highp float;
 
 varying vec3 v_viewPos;
@@ -155,7 +158,7 @@ void main(void) {
     if(floatGeomBuffer != 0) {
         fragColor.r = float(passId); 
         fragColor.g = float(v_drawItemID);
-        fragColor.b = 0.0; // Note: some passes use this id. (e.g. GLCADPass)
+        fragColor.b = 0.0;// TODO: store poly-id or something.
         fragColor.a = dist;
     }
     else {
@@ -181,6 +184,8 @@ void main(void) {
     }
 };
 
+sgFactory.registerClass('StandardSurfaceGeomDataShader', StandardSurfaceGeomDataShader);
+
 export {
-    GeomDataShader
+    StandardSurfaceGeomDataShader
 };
