@@ -40,11 +40,25 @@ class VRViewport extends GLBaseViewport {
         // Note: when the VRViewport is setup
         renderer.sceneSet.connect((scene)=>{
             const resourceLoader = scene.getResourceLoader();
-            const viveAssetId = resourceLoader.resolveFilePathToId("VisualiveEngine/Vive.vla")
-            if (viveAssetId && !SystemDesc.isMobileDevice) {
-                this.__viveAsset = renderer.getScene().loadCommonAssetResource(viveAssetId);
-                this.__viveAsset.loaded.connect(() => {
-                    const materialLibrary = this.__viveAsset.getMaterialLibrary();
+
+            let assetPath;
+            switch(localStorage.getItem("hmd")){
+            case 'Vive': 
+                assetPath = "VisualiveEngine/Vive.vla";
+                break;
+            case 'Oculus': 
+                assetPath = "VisualiveEngine/Oculus.vla";
+                break;
+            default:
+                assetPath = "VisualiveEngine/Vive.vla";
+                break;
+            }
+
+            const hmdAssetId = resourceLoader.resolveFilePathToId(assetPath)
+            if (hmdAssetId && !SystemDesc.isMobileDevice) {
+                this.__vrAsset = renderer.getScene().loadCommonAssetResource(hmdAssetId);
+                this.__vrAsset.loaded.connect(() => {
+                    const materialLibrary = this.__vrAsset.getMaterialLibrary();
                     const materialNames = materialLibrary.getMaterialNames();
                     for (let name of materialNames) {
                         const material = materialLibrary.getMaterial(name, false);
@@ -111,7 +125,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     getAsset() {
-        return this.__viveAsset;
+        return this.__vrAsset;
     }
 
     getTreeItem() {

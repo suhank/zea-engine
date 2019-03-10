@@ -63,10 +63,19 @@ class VRController {
             const asset = vrviewport.getAsset();
             if(asset) {
                 asset.loaded.connect((entries) => {
-                    const controllerTree = asset.getChildByName('HTC_Vive_Controller').clone();
+
+                    let srcControllerTree;
+                    if(id==0)
+                        srcControllerTree = asset.getChildByName('LeftController');
+                    else if(id==1)
+                        srcControllerTree = asset.getChildByName('RightController');
+                    if(!srcControllerTree)
+                        srcControllerTree = asset.getChildByName('Controller');
+                    const controllerTree = srcControllerTree.clone();
                     controllerTree.setLocalXfo(new Xfo(
                         new Vec3(0, -0.035, -0.085), 
-                        new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] })
+                        new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+                        new Vec3(0.001, 0.001, 0.001)
                         ));
                     this.__treeItem.addChild(controllerTree);
                 });
