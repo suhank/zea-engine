@@ -1,5 +1,7 @@
 import { 
     Mat4,
+    Vec3,
+    Quat,
     Xfo,
     Color 
 } from '../../Math';
@@ -18,8 +20,14 @@ class VRHead {
     }
 
     update(pose){
-        this.__mat4.setDataArray(pose.poseModelMatrix);
+        this.__mat4.setDataArray(pose.transform.matrix);
         this.__localXfo.fromMat4(this.__mat4);
+
+        // const pos = pose.transform.position;
+        // this.__localXfo.tr.set(pos.x, pos.y,pos.z);
+        // const ori = pose.transform.orientation;
+        // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+
         this.__treeItem.setLocalXfo(this.__localXfo);
     }
 

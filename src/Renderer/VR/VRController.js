@@ -41,7 +41,7 @@ class VRController {
         this.__inputSource = inputSource;
         this.__id = id;
         this.__isDaydramController = SystemDesc.isMobileDevice;
-        this.__treeItem = new TreeItem('VRController:' + inputSource.handedness);
+        this.__treeItem = new TreeItem('VRController:' + inputSource.handedness + id);
         // Controller coordinate system
         // X = Horizontal.
         // Y = Up.
@@ -75,7 +75,7 @@ class VRController {
                     controllerTree.setLocalXfo(new Xfo(
                         new Vec3(0, -0.035, -0.085), 
                         new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
-                        new Vec3(0.001, 0.001, 0.001)
+                        new Vec3(0.01, 0.01, 0.01)
                         ));
                     this.__treeItem.addChild(controllerTree);
                 });
@@ -143,10 +143,28 @@ class VRController {
         return this.__xfo.multiply(this.__tip.getLocalXfo());
     }
 
-    updatePose(inputPose) {
-        this.__mat4.setDataArray(inputPose.gripMatrix);
-        this.__xfo.fromMat4(this.__mat4);
-        this.__treeItem.setLocalXfo(this.__xfo);
+    updatePose(refSpace, xrFrame, inputSource) {
+        
+        const pose = xrFrame.getInputPose(inputSource, refSpace);
+
+        // We may not get a pose back in cases where the input source has lost
+        // tracking or does not know where it is relative to the given frame
+        // of reference.
+        if (!pose || !pose.gripTransform) {
+            return;
+        }
+
+        if (pose.gripTransform) {
+            this.__mat4.setDataArray(pose.gripTransform.matrix);
+            this.__xfo.fromMat4(this.__mat4);
+
+            // const pos = pose.gripTransform.position;
+            // this.__xfo.tr.set(pos.x, pos.y,pos.z);
+            // const ori = pose.gripTransform.orientation;
+            // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+
+            this.__treeItem.setLocalXfo(this.__xfo);
+        }
 
         // Reset the geom at tip so it will be recomuted if necessary
         this.__geomAtTip = undefined;

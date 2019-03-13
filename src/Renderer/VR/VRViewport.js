@@ -164,17 +164,17 @@ class VRViewport extends GLBaseViewport {
     __startSession() {
         const onAnimationFrame = (t, frame) => {
             if (this.__session) {
-                // this.__session.requestAnimationFrame(onAnimationFrame);
-                // this.draw(t, frame);
-                console.log(frame)
-                let pose = frame.getViewerPose(this.__refSpace);
-                if(pose) {
-                    console.log(pose)
-                    this.__session.end();
-                }
-                else {
-                    this.__session.requestAnimationFrame(onAnimationFrame);
-                }
+                this.__session.requestAnimationFrame(onAnimationFrame);
+                this.draw(t, frame);
+                // console.log(frame)
+                // let pose = frame.getViewerPose(this.__refSpace);
+                // if(pose) {
+                //     console.log(pose)
+                //     this.__session.end();
+                // }
+                // else {
+                //     this.__session.requestAnimationFrame(onAnimationFrame);
+                // }
             }
         }
         this.__session.requestAnimationFrame(onAnimationFrame);
@@ -293,13 +293,12 @@ class VRViewport extends GLBaseViewport {
     ////////////////////////////
     // Controllers
 
-    __createController(inputSource) {
+    __createController(id, inputSource) {
         // Note: This is to avoid a but in WebXR where initially the 
         // controllers have no handedness specified, then suddently 
         // get handeedness
         if(inputSource.handedness == "")
             return;
-        const id = this.__vrControllers.length;
         const vrController = new VRController(this, inputSource, id);
 
         this.__vrControllersMap[inputSource.handedness] = vrController;
@@ -310,31 +309,13 @@ class VRViewport extends GLBaseViewport {
 
     updateControllers(xrFrame) {
 
-        this.__session
-        this.__refSpace
         const inputSources = this.__session.getInputSources();
-        for (let inputSource of inputSources) {
-            const inputPose = xrFrame.getInputPose(inputSource, this.__refSpace);
-
-            // Note: This is to avoid a but in WebXR where initially the 
-            // controllers have no handedness specified, then suddently 
-            // get handeedness
-            if(inputSource.handedness == "")
-                return;
-        
-            // We may not get a pose back in cases where the input source has lost
-            // tracking or does not know where it is relative to the given frame
-            // of reference.
-            if (!inputPose) {
-                continue;
+        for (let i=0; i<inputSources.length; i++) {
+            const inputSource = inputSources[i];
+            if (!this.__vrControllers[i]) {
+                this.__createController(i, inputSource);
             }
-
-            if (inputPose.gripMatrix) {
-                if (!this.__vrControllersMap[inputSource.handedness]) {
-                    this.__createController(inputSource);
-                }
-                this.__vrControllersMap[inputSource.handedness].updatePose(inputPose);
-            }
+            this.__vrControllers[i].updatePose(this.__refSpace, xrFrame, inputSource);
         }
 
         /////////////////////////
@@ -353,19 +334,24 @@ class VRViewport extends GLBaseViewport {
 
         const session = xrFrame.session;
         // Assumed to be a XRWebGLLayer for now.
-        const layer = session.baseLayer;
+        const layer = session.renderState.baseLayer;
+        const pose = xrFrame.getViewerPose(this.__refSpace);
+        const views = pose.views;
 
         if (!this.__projectionMatriciesUpdated) {
             this.__projectionMatrices = [];
             this.__viewMatrices = [];
+            this.__cameraMatrices = [];
             this.__region = [0, 0, 0, 0];
-            for (let i=0; i<xrFrame.views.length; i++) {
+            for (let i=0; i<views.length; i++) {
+                const view = views[i];
                 const projMat = new Mat4();
-                projMat.setDataArray(xrFrame.views[i].projectionMatrix);
+                projMat.setDataArray(view.projectionMatrix);
                 this.__projectionMatrices[i] = projMat;
                 this.__viewMatrices[i] = new Mat4();
+                this.__cameraMatrices[i] = new Mat4();
 
-                const vp = layer.getViewport(xrFrame.views[i]);
+                const vp = layer.getViewport(view);
                 this.__region[2] = Math.max(this.__region[2], vp.x + vp.width);
                 this.__region[3] = Math.max(this.__region[3], vp.y + vp.height);
             }
@@ -381,7 +367,6 @@ class VRViewport extends GLBaseViewport {
         gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        const pose = xrFrame.getViewerPose(this.__refSpace);
 
         const renderstate = {
             boundRendertarget: layer.framebuffer,
@@ -390,16 +375,21 @@ class VRViewport extends GLBaseViewport {
         };
         renderstate.boundRendertarget.vrfbo = true;
 
-        for (let i=0; i<xrFrame.views.length; i++) {
-            this.__viewMatrices[i].setDataArray(pose.getViewMatrix(xrFrame.views[i]));
+        for (let i=0; i<views.length; i++) {
+            const view = views[i];
+            this.__viewMatrices[i].setDataArray(view.viewMatrix);
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
-            const vp = layer.getViewport(xrFrame.views[i]);
+            // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
+            // this.__cameraMatrices[i].multiplyInPlace(this.__stageMatrix);
+            this.__cameraMatrices[i] = this.__viewMatrices[i].inverse();
+
+            const vp = layer.getViewport(view);
             renderstate.viewports.push({
                 viewMatrix: this.__viewMatrices[i],
                 projectionMatrix: this.__projectionMatrices[i],
                 region: [vp.x, vp.y, vp.width, vp.height],
-                cameraMatrix: this.__viewMatrices[i].inverse(),
+                cameraMatrix: this.__cameraMatrices[i],
             })
         }
 
