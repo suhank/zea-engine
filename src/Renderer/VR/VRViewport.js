@@ -29,10 +29,8 @@ import {
 } from './VRController.js'
 
 class VRViewport extends GLBaseViewport {
-    constructor(renderer, xr, device) {
+    constructor(renderer) {
         super(renderer);
-        this.__xr = xr;
-        this.__device = device;
 
         //////////////////////////////////////////////
         // Resources
@@ -40,11 +38,25 @@ class VRViewport extends GLBaseViewport {
         // Note: when the VRViewport is setup
         renderer.sceneSet.connect((scene)=>{
             const resourceLoader = scene.getResourceLoader();
-            const viveAssetId = resourceLoader.resolveFilePathToId("VisualiveEngine/Vive.vla")
-            if (viveAssetId && !SystemDesc.isMobileDevice) {
-                this.__viveAsset = renderer.getScene().loadCommonAssetResource(viveAssetId);
-                this.__viveAsset.loaded.connect(() => {
-                    const materialLibrary = this.__viveAsset.getMaterialLibrary();
+
+            let assetPath;
+            switch(localStorage.getItem("hmd")){
+            case 'Vive': 
+                assetPath = "VisualiveEngine/Vive.vla";
+                break;
+            case 'Oculus': 
+                assetPath = "VisualiveEngine/Oculus.vla";
+                break;
+            default:
+                assetPath = "VisualiveEngine/Vive.vla";
+                break;
+            }
+
+            const hmdAssetId = resourceLoader.resolveFilePathToId(assetPath)
+            if (hmdAssetId && !SystemDesc.isMobileDevice) {
+                this.__vrAsset = renderer.getScene().loadCommonAssetResource(hmdAssetId);
+                this.__vrAsset.loaded.connect(() => {
+                    const materialLibrary = this.__vrAsset.getMaterialLibrary();
                     const materialNames = materialLibrary.getMaterialNames();
                     for (let name of materialNames) {
                         const material = materialLibrary.getMaterial(name, false);
@@ -111,7 +123,7 @@ class VRViewport extends GLBaseViewport {
     }
 
     getAsset() {
-        return this.__viveAsset;
+        return this.__vrAsset;
     }
 
     getTreeItem() {
@@ -154,6 +166,15 @@ class VRViewport extends GLBaseViewport {
             if (this.__session) {
                 this.__session.requestAnimationFrame(onAnimationFrame);
                 this.draw(t, frame);
+                // console.log(frame)
+                // let pose = frame.getViewerPose(this.__refSpace);
+                // if(pose) {
+                //     console.log(pose)
+                //     this.__session.end();
+                // }
+                // else {
+                //     this.__session.requestAnimationFrame(onAnimationFrame);
+                // }
             }
         }
         this.__session.requestAnimationFrame(onAnimationFrame);
@@ -164,23 +185,23 @@ class VRViewport extends GLBaseViewport {
         // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
         const gl = this.__renderer.gl;
+        navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
 
-        // Add an outpute canvas that will allow XR to also send a view
-        // back the monitor.
-        const mirrorCanvas = document.createElement('canvas');
-        mirrorCanvas.style.position = 'relative';
-        mirrorCanvas.style.left = '0px';
-        mirrorCanvas.style.top = '0px';
-        mirrorCanvas.style.width = '100%';
-        mirrorCanvas.style.height = '100%';
-        const ctx = mirrorCanvas.getContext('xrpresent');
+            this.__renderer.__xrViewportPresenting = true;
 
-        this.__device.requestSession({ immersive: true, outputContext: ctx }).then((session) => {
+            // Add an output canvas that will allow XR to also send a view
+            // back the monitor.
+            const mirrorCanvas = document.createElement('canvas');
+            mirrorCanvas.style.position = 'relative';
+            mirrorCanvas.style.left = '0px';
+            mirrorCanvas.style.top = '0px';
+            mirrorCanvas.style.width = '100%';
+            mirrorCanvas.style.height = '100%';
 
             this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
 
             session.addEventListener('end', (event) => {
-                if (event.session.immersive) {
+                if (event.session.mode == 'immersive-vr') {
                     this.__stageTreeItem.setVisible(false);
                     this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
                     this.__session = null;
@@ -212,10 +233,13 @@ class VRViewport extends GLBaseViewport {
             }
             session.addEventListener('selectstart', onSelectStart);
             session.addEventListener('selectend', onSelectEnd);
+            
+            session.updateRenderState({
+                baseLayer: new XRWebGLLayer(session, gl),
+                outputContext: mirrorCanvas.getContext('xrpresent')
+            });
 
             this.__session = session;
-            this.__session.baseLayer = new XRWebGLLayer(session, gl);
-
 
             // Get a stage frame of reference, which will align the user's physical
             // floor with Y=0 and can provide boundaries that indicate where the
@@ -223,13 +247,13 @@ class VRViewport extends GLBaseViewport {
             // coordinates (for example, with a 3DoF device) then it will return an
             // emulated stage, where the view is translated up by a static height so
             // that the scene still renders in approximately the right place.
-            session.requestFrameOfReference('stage').then((frameOfRef) => {
-                this.__frameOfRef = frameOfRef;
+            session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
+                this.__refSpace = refSpace;
+                this.__stageTreeItem.setVisible(true);
+                this.presentingChanged.emit(true);
+
                 this.__startSession()
             });
-
-            this.__stageTreeItem.setVisible(true);
-            this.presentingChanged.emit(true);
 
         }).catch((e) => {
             console.warn(e)
@@ -257,15 +281,9 @@ class VRViewport extends GLBaseViewport {
     ////////////////////////////
     // Controllers
 
-    __createController(inputSource) {
-        // Note: This is to avoid a but in WebXR where initially the 
-        // controllers have no handedness specified, then suddently 
-        // get handeedness
-        if(inputSource.handedness == "")
-            return;
-        const id = this.__vrControllers.length;
+    __createController(id, inputSource) {
+        console.log("creating controller:", inputSource.handedness);
         const vrController = new VRController(this, inputSource, id);
-
         this.__vrControllersMap[inputSource.handedness] = vrController;
         this.__vrControllers[id] = vrController;
         this.controllerAdded.emit(vrController);
@@ -274,31 +292,20 @@ class VRViewport extends GLBaseViewport {
 
     updateControllers(xrFrame) {
 
-        this.__session
-        this.__frameOfRef
         const inputSources = this.__session.getInputSources();
-        for (let inputSource of inputSources) {
-            const inputPose = xrFrame.getInputPose(inputSource, this.__frameOfRef);
+        for (let i=0; i<inputSources.length; i++) {
+            const inputSource = inputSources[i];
 
-            // Note: This is to avoid a but in WebXR where initially the 
-            // controllers have no handedness specified, then suddently 
-            // get handeedness
-            if(inputSource.handedness == "")
+            // Note: This is to avoid a bug/feature in WebXR where initially the 
+            // controllers have no handedness specified, then suddenly 
+            // get handedness. We need the handedness before we can setup the controller.
+            if(inputSource.handedness == "" || inputSource.handedness == "none")
                 return;
         
-            // We may not get a pose back in cases where the input source has lost
-            // tracking or does not know where it is relative to the given frame
-            // of reference.
-            if (!inputPose) {
-                continue;
+            if (!this.__vrControllers[i]) {
+                this.__createController(i, inputSource);
             }
-
-            if (inputPose.gripMatrix) {
-                if (!this.__vrControllersMap[inputSource.handedness]) {
-                    this.__createController(inputSource);
-                }
-                this.__vrControllersMap[inputSource.handedness].updatePose(inputPose);
-            }
+            this.__vrControllers[i].updatePose(this.__refSpace, xrFrame, inputSource);
         }
 
         /////////////////////////
@@ -317,19 +324,24 @@ class VRViewport extends GLBaseViewport {
 
         const session = xrFrame.session;
         // Assumed to be a XRWebGLLayer for now.
-        const layer = session.baseLayer;
+        const layer = session.renderState.baseLayer;
+        const pose = xrFrame.getViewerPose(this.__refSpace);
+        const views = pose.views;
 
         if (!this.__projectionMatriciesUpdated) {
             this.__projectionMatrices = [];
             this.__viewMatrices = [];
+            this.__cameraMatrices = [];
             this.__region = [0, 0, 0, 0];
-            for (let i=0; i<xrFrame.views.length; i++) {
+            for (let i=0; i<views.length; i++) {
+                const view = views[i];
                 const projMat = new Mat4();
-                projMat.setDataArray(xrFrame.views[i].projectionMatrix);
+                projMat.setDataArray(view.projectionMatrix);
                 this.__projectionMatrices[i] = projMat;
                 this.__viewMatrices[i] = new Mat4();
+                this.__cameraMatrices[i] = new Mat4();
 
-                const vp = layer.getViewport(xrFrame.views[i]);
+                const vp = layer.getViewport(view);
                 this.__region[2] = Math.max(this.__region[2], vp.x + vp.width);
                 this.__region[3] = Math.max(this.__region[3], vp.y + vp.height);
             }
@@ -345,7 +357,6 @@ class VRViewport extends GLBaseViewport {
         gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        const pose = xrFrame.getDevicePose(this.__frameOfRef);
 
         const renderstate = {
             boundRendertarget: layer.framebuffer,
@@ -354,16 +365,21 @@ class VRViewport extends GLBaseViewport {
         };
         renderstate.boundRendertarget.vrfbo = true;
 
-        for (let i=0; i<xrFrame.views.length; i++) {
-            this.__viewMatrices[i].setDataArray(pose.getViewMatrix(xrFrame.views[i]));
+        for (let i=0; i<views.length; i++) {
+            const view = views[i];
+            this.__viewMatrices[i].setDataArray(view.viewMatrix);
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
-            const vp = layer.getViewport(xrFrame.views[i]);
+            // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
+            // this.__cameraMatrices[i].multiplyInPlace(this.__stageMatrix);
+            this.__cameraMatrices[i] = this.__viewMatrices[i].inverse();
+
+            const vp = layer.getViewport(view);
             renderstate.viewports.push({
                 viewMatrix: this.__viewMatrices[i],
                 projectionMatrix: this.__projectionMatrices[i],
                 region: [vp.x, vp.y, vp.width, vp.height],
-                cameraMatrix: this.__viewMatrices[i].inverse(),
+                cameraMatrix: this.__cameraMatrices[i],
             })
         }
 

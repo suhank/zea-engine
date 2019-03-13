@@ -96,6 +96,7 @@ class ResourceLoader {
       this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm';
 
       this.addResourceURL("VisualiveEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
+      this.addResourceURL("VisualiveEngine/Oculus.vla", parts.join('/') + '/public-resources/Oculus.vla')
     }
   }
 
@@ -139,10 +140,6 @@ class ResourceLoader {
         resource.children = {};
       }
       if (resource.parent) {
-        if (!resources[resource.parent]) {
-          console.warn("Item is orphaned in a folder that no longer exists:", resource.name);
-          return;
-        }
         if (!this.__resourcesTreeEntities[resource.parent]) {
           buildEntity(resource.parent)
         }
@@ -297,6 +294,10 @@ class ResourceLoader {
   }
 
   resolveFilePathToId(filePath) {
+    if(!filePath) {
+      console.warn("Invalid file path:", filePath);
+      return;
+    }
     const file = this.resolveFilepath(filePath);
     if (file)
       return file.id;
