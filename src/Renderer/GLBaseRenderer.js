@@ -727,6 +727,10 @@ class GLBaseRenderer {
         return this.__xrViewportPromise;
     }
 
+    isXRViewportPresenting() {
+        return this.__xrViewportPresenting;
+    }
+
     ////////////////////////////
     // Rendering
 
@@ -735,11 +739,11 @@ class GLBaseRenderer {
     }
 
     startContinuousDrawing() {
-        if (this.isContinuouslyDrawing() || this.__vrViewportPresenting)
+        if (this.isContinuouslyDrawing() || this.__xrViewportPresenting)
             return;
 
         const onAnimationFrame = ()=>{
-            if (this.__continuousDrawing && !this.__vrViewportPresenting)
+            if (this.__continuousDrawing && !this.__xrViewportPresenting)
                 window.requestAnimationFrame(onAnimationFrame);
             for(let vp of this.__viewports)
                 vp.draw();
