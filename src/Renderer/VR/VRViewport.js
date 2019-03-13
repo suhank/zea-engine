@@ -191,17 +191,17 @@ class VRViewport extends GLBaseViewport {
 
             // Add an output canvas that will allow XR to also send a view
             // back the monitor.
-            // const mirrorCanvas = document.createElement('canvas');
-            // mirrorCanvas.style.position = 'relative';
-            // mirrorCanvas.style.left = '0px';
-            // mirrorCanvas.style.top = '0px';
-            // mirrorCanvas.style.width = '100%';
-            // mirrorCanvas.style.height = '100%';
+            const mirrorCanvas = document.createElement('canvas');
+            mirrorCanvas.style.position = 'relative';
+            mirrorCanvas.style.left = '0px';
+            mirrorCanvas.style.top = '0px';
+            mirrorCanvas.style.width = '100%';
+            mirrorCanvas.style.height = '100%';
 
-            // this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
+            this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
 
             session.addEventListener('end', (event) => {
-                if (event.session.immersive) {
+                if (event.session.mode == 'immersive-vr') {
                     this.__stageTreeItem.setVisible(false);
                     // this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
                     this.__session = null;
@@ -250,8 +250,8 @@ class VRViewport extends GLBaseViewport {
             // });
 
             session.updateRenderState({
-                baseLayer: new XRWebGLLayer(session, gl)/*,
-                outputContext: mirrorCanvas.getContext('xrpresent')*/
+                baseLayer: new XRWebGLLayer(session, gl),
+                outputContext: mirrorCanvas.getContext('xrpresent')
             });
             // Get a stage frame of reference, which will align the user's physical
             // floor with Y=0 and can provide boundaries that indicate where the
@@ -294,13 +294,8 @@ class VRViewport extends GLBaseViewport {
     // Controllers
 
     __createController(id, inputSource) {
-        // Note: This is to avoid a but in WebXR where initially the 
-        // controllers have no handedness specified, then suddently 
-        // get handeedness
-        if(inputSource.handedness == "")
-            return;
+        console.log("creating controller:", inputSource.handedness);
         const vrController = new VRController(this, inputSource, id);
-
         this.__vrControllersMap[inputSource.handedness] = vrController;
         this.__vrControllers[id] = vrController;
         this.controllerAdded.emit(vrController);
@@ -312,6 +307,13 @@ class VRViewport extends GLBaseViewport {
         const inputSources = this.__session.getInputSources();
         for (let i=0; i<inputSources.length; i++) {
             const inputSource = inputSources[i];
+
+            // Note: This is to avoid a bug/feature in WebXR where initially the 
+            // controllers have no handedness specified, then suddenly 
+            // get handedness. We need the handedness before we can setup the controller.
+            if(inputSource.handedness == "" || inputSource.handedness == "none")
+                return;
+        
             if (!this.__vrControllers[i]) {
                 this.__createController(i, inputSource);
             }
