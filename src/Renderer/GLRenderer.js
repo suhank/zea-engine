@@ -80,6 +80,8 @@ class GLRenderer extends GLBaseRenderer {
 
         this.__glEnvMap = undefined;
         this.__glBackgroundMap = undefined;
+        this.envMapAssigned = new Signal(true);
+        
         this.__glLightmaps = {};
         this.__displayEnvironment = true;
         this.__debugMode = 0;

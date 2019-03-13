@@ -29,10 +29,8 @@ import {
 } from './VRController.js'
 
 class VRViewport extends GLBaseViewport {
-    constructor(renderer, xr, device) {
+    constructor(renderer) {
         super(renderer);
-        this.__xr = xr;
-        this.__device = device;
 
         //////////////////////////////////////////////
         // Resources
@@ -166,8 +164,17 @@ class VRViewport extends GLBaseViewport {
     __startSession() {
         const onAnimationFrame = (t, frame) => {
             if (this.__session) {
-                this.__session.requestAnimationFrame(onAnimationFrame);
-                this.draw(t, frame);
+                // this.__session.requestAnimationFrame(onAnimationFrame);
+                // this.draw(t, frame);
+                console.log(frame)
+                let pose = frame.getViewerPose(this.__refSpace);
+                if(pose) {
+                    console.log(pose)
+                    this.__session.end();
+                }
+                else {
+                    this.__session.requestAnimationFrame(onAnimationFrame);
+                }
             }
         }
         this.__session.requestAnimationFrame(onAnimationFrame);
@@ -178,25 +185,25 @@ class VRViewport extends GLBaseViewport {
         // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
         const gl = this.__renderer.gl;
+        navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
 
-        // Add an outpute canvas that will allow XR to also send a view
-        // back the monitor.
-        const mirrorCanvas = document.createElement('canvas');
-        mirrorCanvas.style.position = 'relative';
-        mirrorCanvas.style.left = '0px';
-        mirrorCanvas.style.top = '0px';
-        mirrorCanvas.style.width = '100%';
-        mirrorCanvas.style.height = '100%';
-        const ctx = mirrorCanvas.getContext('xrpresent');
+            this.__renderer.__xrViewportPresenting = true;
 
-        this.__device.requestSession({ immersive: true, outputContext: ctx }).then((session) => {
+            // Add an output canvas that will allow XR to also send a view
+            // back the monitor.
+            // const mirrorCanvas = document.createElement('canvas');
+            // mirrorCanvas.style.position = 'relative';
+            // mirrorCanvas.style.left = '0px';
+            // mirrorCanvas.style.top = '0px';
+            // mirrorCanvas.style.width = '100%';
+            // mirrorCanvas.style.height = '100%';
 
-            this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
+            // this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
 
             session.addEventListener('end', (event) => {
                 if (event.session.immersive) {
                     this.__stageTreeItem.setVisible(false);
-                    this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
+                    // this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
                     this.__session = null;
                     this.presentingChanged.emit(false);
                 }
@@ -228,7 +235,7 @@ class VRViewport extends GLBaseViewport {
             session.addEventListener('selectend', onSelectEnd);
 
             this.__session = session;
-            this.__session.baseLayer = new XRWebGLLayer(session, gl);
+            // this.__session.baseLayer = new XRWebGLLayer(session, gl);
 
 
             // Get a stage frame of reference, which will align the user's physical
@@ -237,13 +244,28 @@ class VRViewport extends GLBaseViewport {
             // coordinates (for example, with a 3DoF device) then it will return an
             // emulated stage, where the view is translated up by a static height so
             // that the scene still renders in approximately the right place.
-            session.requestFrameOfReference('stage').then((frameOfRef) => {
-                this.__frameOfRef = frameOfRef;
+            // session.requestFrameOfReference('stage').then((refSpace) => {
+            //     this.__refSpace = refSpace;
+            //     this.__startSession()
+            // });
+
+            session.updateRenderState({
+                baseLayer: new XRWebGLLayer(session, gl)/*,
+                outputContext: mirrorCanvas.getContext('xrpresent')*/
+            });
+            // Get a stage frame of reference, which will align the user's physical
+            // floor with Y=0 and can provide boundaries that indicate where the
+            // user can safely walk. If the system can't natively provide stage
+            // coordinates (for example, with a 3DoF device) then it will return an
+            // emulated stage, where the view is translated up by a static height so
+            // that the scene still renders in approximately the right place.
+            session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
+                this.__refSpace = refSpace;
+                this.__stageTreeItem.setVisible(true);
+                this.presentingChanged.emit(true);
+
                 this.__startSession()
             });
-
-            this.__stageTreeItem.setVisible(true);
-            this.presentingChanged.emit(true);
 
         }).catch((e) => {
             console.warn(e)
@@ -289,10 +311,10 @@ class VRViewport extends GLBaseViewport {
     updateControllers(xrFrame) {
 
         this.__session
-        this.__frameOfRef
+        this.__refSpace
         const inputSources = this.__session.getInputSources();
         for (let inputSource of inputSources) {
-            const inputPose = xrFrame.getInputPose(inputSource, this.__frameOfRef);
+            const inputPose = xrFrame.getInputPose(inputSource, this.__refSpace);
 
             // Note: This is to avoid a but in WebXR where initially the 
             // controllers have no handedness specified, then suddently 
@@ -359,7 +381,7 @@ class VRViewport extends GLBaseViewport {
         gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-        const pose = xrFrame.getDevicePose(this.__frameOfRef);
+        const pose = xrFrame.getViewerPose(this.__refSpace);
 
         const renderstate = {
             boundRendertarget: layer.framebuffer,

@@ -72,7 +72,7 @@ class GLBaseRenderer {
         this.vrViewportSetup = new Signal(true);
         this.sessionClientSetup = new Signal(true);
         
-        this.envMapAssigned = new Signal(true);
+        
 
         // Signals to abstract the user view. 
         // i.e. when a user switches to VR mode, the signals 
@@ -101,25 +101,27 @@ class GLBaseRenderer {
                 //     this.__vrpolyfill = new WebVRPolyfill();
                 // }
                 if(navigator.xr) {
-                    navigator.xr.requestDevice().then((device) => {
-                        device.supportsSession({immersive: true}).then(() => {
+                    // navigator.xr.requestDevice().then((device) => {
+                    navigator.xr.supportsSessionMode('immersive-vr').then(() => {
 
-                            // Note: could cause a context loss on machines with
-                            // multi-gpus (integrated Intel). 
-                            // This is because the may force the context to switch 
-                            // to the discrete GPU.
-                            // TODO: Provide a system to re-load the GPU data. 
-                            this.__gl.setCompatibleXRDevice(device);
-
-                            this.__xrViewport = this.__setupXRViewport(device);
+                        // Note: could cause a context loss on machines with
+                        // multi-gpus (integrated Intel). 
+                        // This is because the may force the context to switch 
+                        // to the discrete GPU.
+                        // TODO: Provide a system to re-load the GPU data. 
+                        // this.__gl.setCompatibleXRDevice(device);
+                        this.__gl.makeXRCompatible().then(()=>{
+                            this.__xrViewport = this.__setupXRViewport();
                             this.vrViewportSetup.emit(this.__xrViewport);
                             resolve(this.__xrViewport)
-                        }).catch((reason) => {
-                            console.warn("Unable to setup XR:" + reason);
                         });
+
                     }).catch((reason) => {
                         console.warn("Unable to setup XR:" + reason);
                     });
+                    // }).catch((reason) => {
+                    //     console.warn("Unable to setup XR:" + reason);
+                    // });
                     // TODO:
                     // navigator.xr.addEventListener('devicechange', checkForXRSupport);
                 }
@@ -675,10 +677,10 @@ class GLBaseRenderer {
         return this.__supportXR && navigator.xr != null;
     }
 
-    __setupXRViewport(device) {
+    __setupXRViewport() {
 
         // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-        const xrvp = new VRViewport(this, navigator.xr, device);
+        const xrvp = new VRViewport(this);
 
         xrvp.presentingChanged.connect((state)=>{
             this.__xrViewportPresenting = state;
