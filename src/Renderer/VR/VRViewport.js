@@ -203,7 +203,7 @@ class VRViewport extends GLBaseViewport {
             session.addEventListener('end', (event) => {
                 if (event.session.mode == 'immersive-vr') {
                     this.__stageTreeItem.setVisible(false);
-                    // this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
+                    this.__renderer.getDiv().replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas);
                     this.__session = null;
                     this.presentingChanged.emit(false);
                 }
@@ -233,26 +233,14 @@ class VRViewport extends GLBaseViewport {
             }
             session.addEventListener('selectstart', onSelectStart);
             session.addEventListener('selectend', onSelectEnd);
-
-            this.__session = session;
-            // this.__session.baseLayer = new XRWebGLLayer(session, gl);
-
-
-            // Get a stage frame of reference, which will align the user's physical
-            // floor with Y=0 and can provide boundaries that indicate where the
-            // user can safely walk. If the system can't natively provide stage
-            // coordinates (for example, with a 3DoF device) then it will return an
-            // emulated stage, where the view is translated up by a static height so
-            // that the scene still renders in approximately the right place.
-            // session.requestFrameOfReference('stage').then((refSpace) => {
-            //     this.__refSpace = refSpace;
-            //     this.__startSession()
-            // });
-
+            
             session.updateRenderState({
                 baseLayer: new XRWebGLLayer(session, gl),
                 outputContext: mirrorCanvas.getContext('xrpresent')
             });
+
+            this.__session = session;
+
             // Get a stage frame of reference, which will align the user's physical
             // floor with Y=0 and can provide boundaries that indicate where the
             // user can safely walk. If the system can't natively provide stage
