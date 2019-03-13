@@ -152,6 +152,7 @@ class Material extends BaseItem {
             throw("Error setting Shader. Shader not found:" + shaderName);
         
         const paramDescs = shaderClass.getParamDeclarations();
+        const paramMap = {};
         for(let desc of paramDescs) {
             // Note: some shaders specify default images. Like the speckle texture
             // on the car paint shader.
@@ -163,7 +164,7 @@ class Material extends BaseItem {
             // }
             let param = this.getParameter(desc.name);
             // if(param && param.getType() != desc.defaultValue)
-            // removePArameter
+            // removeParameter
             if(!param)
                 param = this.addParameter(generateParameterInstance(desc.name, desc.defaultValue, desc.texturable != false));
             // if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
@@ -173,8 +174,16 @@ class Material extends BaseItem {
             //     //     param.setImage(image)
             // }
 
-
+            paramMap[desc.name] = true;
         }
+        
+        // Remove redundant Params.
+        for (let param of this.__params) {
+            if (!paramMap[param.getName()]) {
+                this.removeParameter(param.getName());
+            }
+        }
+
         this.__shaderName = shaderName;
         this.shaderNameChanged.emit(this.__shaderName);
     }
@@ -308,7 +317,7 @@ class Material extends BaseItem {
                 // console.log(paramName +":" + value);
                 let param = this.getParameter(paramName);
                 if(param)
-                    param.setValue(value)
+                    param.setValue(value);
                 else
                     param = this.addParameter(generateParameterInstance(paramName, value));
                 if(textureName!= '' && param.setImage){
