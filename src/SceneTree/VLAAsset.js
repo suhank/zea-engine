@@ -139,24 +139,24 @@ class VLAAsset extends AssetItem {
     // tells us how many geom files will need to be loaded.
     resourceLoader.loadResource(fileId,
       (entries) => {
-
         let version = 0;
         let treeReader;
-        if(entries.tree) {
-          treeReader = new Visualive.BinReader(
-            entries.tree.buffer,
-            0,
-            Visualive.SystemDesc.isMobileDevice
-          )
-          version = 0;
-        }
-        else {
+        if(entries.tree2) {
           treeReader = new Visualive.BinReader(
             entries.tree2.buffer,
             0,
             Visualive.SystemDesc.isMobileDevice
           )
           version = treeReader.loadUInt32();
+        }
+        else {
+          const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]];
+          treeReader = new Visualive.BinReader(
+            entry.buffer,
+            0,
+            Visualive.SystemDesc.isMobileDevice
+          )
+          version = 0;
         }
 
         numGeomsFiles = this.readBinary(treeReader, {
