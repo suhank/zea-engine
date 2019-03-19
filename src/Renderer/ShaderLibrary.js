@@ -156,7 +156,7 @@ class ShaderLibrary {
                 let parseAttr= (parts, instanced)=>{
                     if (!(parts[1] in glslTypes))
                         throw ("Error while parsing :" + shaderName + " \nType not recognized:" + parts[1]);
-                    let name = parts[2].slice(0, parts[2].length - 1);
+                    const name = parts[2].slice(0, parts[2].length - 1);
                     result.attributes[name] = {
                         type: glslTypes[parts[1]],
                         instanced: instanced

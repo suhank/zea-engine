@@ -145,22 +145,23 @@ class VRController {
 
     updatePose(refSpace, xrFrame, inputSource) {
         
-        const pose = xrFrame.getInputPose(inputSource, refSpace);
+        // const pose = xrFrame.getInputPose(inputSource, refSpace);
+        const pose = xrFrame.getPose(inputSource.gripSpace, refSpace);
 
         // We may not get a pose back in cases where the input source has lost
         // tracking or does not know where it is relative to the given frame
         // of reference.
-        if (!pose || !pose.gripTransform) {
+        if (!pose || !pose.transform) {
             return;
         }
 
-        if (pose.gripTransform) {
-            this.__mat4.setDataArray(pose.gripTransform.matrix);
+        if (pose.transform) {
+            this.__mat4.setDataArray(pose.transform.matrix);
             this.__xfo.fromMat4(this.__mat4);
 
-            // const pos = pose.gripTransform.position;
+            // const pos = pose.transform.position;
             // this.__xfo.tr.set(pos.x, pos.y,pos.z);
-            // const ori = pose.gripTransform.orientation;
+            // const ori = pose.transform.orientation;
             // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
 
             this.__treeItem.setLocalXfo(this.__xfo);
