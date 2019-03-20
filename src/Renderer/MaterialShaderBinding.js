@@ -211,6 +211,7 @@ class ColorUniformBinding {
     }
 }
 
+const logged = {};
 
 class MaterialShaderBinding {
     constructor(gl, glmaterial, unifs) {
@@ -221,7 +222,16 @@ class MaterialShaderBinding {
             const unif = unifs[name];
             if (unif == undefined){
                 // Note: this silent error caused me a lot of searching. make it noisy.
-                console.warn("Param has no unif", name)
+                const shaderName = glmaterial.getMaterial().getShaderName();
+                if(!logged[shaderName]) {
+                    logged[shaderName] = {};
+                }
+                if(!logged[shaderName][name]) {
+                    // TODO: Many of these warnings are because when we change shaders
+                    // we do not remove obsolete params, but we probably should.
+                    console.warn("Material:" + glmaterial.getMaterial().getName(),  "with Shader ", shaderName, "Param has no unif", name);
+                    logged[shaderName][name] = true;
+                }
                 return;
             }
             switch (unif.type) {
