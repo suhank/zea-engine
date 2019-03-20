@@ -823,7 +823,25 @@ class TreeItem extends BaseItem {
             const toc = reader.loadUInt32Array(numChildren);
             for (let i = 0; i < numChildren; i++) {
                 reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                const childType = reader.loadStr();
+                let childType = reader.loadStr();
+
+                if(childType.startsWith('N') && childType.endsWith('E')){
+
+                    /////////////////////////////////////////
+                    // hack to work around a linux issue
+                    // untill we have a fix.
+                    const ppos = childType.indexOf("podium");
+                    if(ppos != -1) {
+                        if(parseInt(childType[ppos+7]))
+                            childType = childType.substring(ppos+8, childType.length-1);
+                        else
+                            childType = childType.substring(ppos+7, childType.length-1);
+                    }
+                    const lnpos = childType.indexOf("livenurbs");
+                    if(lnpos != -1) {
+                        childType = childType.substring(childType.indexOf("CAD"), childType.length-1);
+                    }
+                }
                 // const childName = reader.loadStr();
                 const childItem = sgFactory.constructClass(childType);
                 if (!childItem) {

@@ -212,6 +212,7 @@ class VRViewport extends GLBaseViewport {
             const onSelectStart = (ev) => {
                 const controller = this.__vrControllersMap[ev.inputSource.handedness];
                 if(controller) {
+                    console.log("controller:", ev.inputSource.handedness, " down");
                     this.controllerButtonDown.emit({ 
                         button: 1, 
                         controller, 
@@ -223,6 +224,7 @@ class VRViewport extends GLBaseViewport {
             const onSelectEnd = (ev) => {
                 const controller = this.__vrControllersMap[ev.inputSource.handedness];
                 if(controller) {
+                    console.log("controller:", ev.inputSource.handedness, " up");
                     this.controllerButtonUp.emit({ 
                         button: 1,
                         controller,
