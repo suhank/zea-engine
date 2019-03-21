@@ -253,6 +253,10 @@ class ResourceLoader {
 
             this.addWorkDone(event.data.resourceId, 1); // loading done...
             this.__onFinishedReceiveFileData(event.data);
+          } else if (event.data.type === 'ERROR') {
+            const data = event.data;
+            const file = this.__resources[data.resourceId]
+            console.error("Unable to load Resource:", file.name, " With url:", data.url);
           }
         };
       });

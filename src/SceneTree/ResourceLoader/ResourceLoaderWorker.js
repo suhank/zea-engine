@@ -59,50 +59,69 @@ InternalError=Module["InternalError"]=extendError(Error,"InternalError");embind_
  */
 function getExtractor(url) {
   return fetch(new Request(url))
-    .then(response => response.arrayBuffer())
+    .then(response => {
+      if (response.ok) 
+        return response.arrayBuffer();
+      else {
+        throw new Error('404 Error: File not found.');
+      }
+    })
     .then(buffer => unpackBridge.createExtractorFromData(buffer));
 }
 
 /**
  *  Returns a string representing the formatted contents of the given file.
  */
-async function extract({ resourceId, url }) {
-  
-  if (!unpackBridge) { throw new Error('unpackBridge not detected'); }
-  if (!unpack) { throw new Error('unpack not detected'); }
+function extract({ resourceId, url }) {
+  return new Promise(function(resolve, reject) {
 
-  const extractor = await getExtractor(url);
+    if (!unpackBridge) { throw new Error('unpackBridge not detected'); }
+    if (!unpack) { throw new Error('unpack not detected'); }
 
-
-  // return extractor.extractAll();
-  return extractor.extractAll();
+    getExtractor(url).then(extractor => {
+      // return extractor.extractAll();
+      resolve(extractor.extractAll());
+    }, err => {
+      reject(err)
+    });
+  })
 }
 
 /**
  * Listen for messages sent to the worker.
  */
-onmessage = async function(event) {
+onmessage = function(event) {
   // console.log('onmessage', event)
   if(event.data.type == 'init') {
     unpack = initunpack(event.data.wasmUrl);
     unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
   }
   else if(event.data.type == 'fetch') {
-    const [state, list] = await extract(event.data);
-    let result = {
-        type: 'FINISHED',
-        resourceId: event.data.resourceId,
-        entries: {}
-    };
+  	extract(event.data).then(data => {
 
-    const transferables = []
-    if (list && list.files) {
-      for(const file of list.files) {
-        result.entries[file.fileHeader.name] = file.extract[1];
-        transferables.push(file.extract[1].buffer);
-      }
-    }
-    self.postMessage(result, transferables);
+	    const [state, list] = data;
+	    const result = {
+	        type: 'FINISHED',
+	        resourceId: event.data.resourceId,
+	        entries: {}
+	    };
+
+	    const transferables = []
+	    if (list && list.files) {
+	      for(const file of list.files) {
+	        result.entries[file.fileHeader.name] = file.extract[1];
+	        transferables.push(file.extract[1].buffer);
+	      }
+	    }
+	    self.postMessage(result, transferables);
+  	}, err => {
+      const result = {
+          type: 'ERROR',
+          resourceId: event.data.resourceId,
+          url: event.data.url
+      };
+      self.postMessage(result);
+  	})
   }
 };
 
