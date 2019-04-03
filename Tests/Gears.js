@@ -32,8 +32,6 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
 
     const gearsOp = new Visualive.GearsOperator('Gears');
     asset.addComponent(gearsOp);
-    const revolutionsParam = gearsOp.getParameter('Revolutions');
-    revolutionsParam.setRange([0, 0.5]);
     const rpmParam = gearsOp.getParameter('RPM');
     rpmParam.setValue(12.0);
     rpmParam.setRange([0, 60]);

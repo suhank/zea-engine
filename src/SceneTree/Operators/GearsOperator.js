@@ -67,7 +67,7 @@ class GearsOperator extends Operator {
     constructor(name) {
         super(name);
 
-        this.__revolutionsParam = this.addParameter(new NumberParameter('Revolutions', 0.0, [0, 1]));
+        this.__revolutionsParam = this.addParameter(new NumberParameter('Revolutions', 0.0));
         const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)); // revolutions per minute
         this.__timeoutId;
         rpmParam.valueChanged.connect(() => {
