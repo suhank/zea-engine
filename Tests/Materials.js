@@ -3,7 +3,8 @@
     const scene = new Visualive.Scene(resources);
 
     // const envMapName = "Assets/hdri_sky_02_sample" + (Visualive.SystemDesc.isMobileDevice ? 2 : 0) + ".vlh";
-    const envMap = new Visualive.EnvMap("envMa", "Assets/HDR_041_Path_Ref.vlenv");
+    const envMap = new Visualive.EnvMap("envMa");
+    envMap.getParameter('FilePath').setFilepath("Assets/HDR_041_Path_Ref.vlenv")
     // const envMap =  new Visualive.FileImage(envMapName);
     scene.setEnvMap(envMap);
 
@@ -32,4 +33,13 @@
 
     renderer.resumeDrawing();
 
+    document.addEventListener('keypress', (event) => {
+        const key = String.fromCharCode(event.keyCode).toLowerCase();
+        if(key == 'v' && event.shiftKey) {
+            console.log("Starting VR")
+            const vrvp = renderer.getVRViewport();
+            if(vrvp) 
+                vrvp.togglePresenting();
+        }
+    });
 });

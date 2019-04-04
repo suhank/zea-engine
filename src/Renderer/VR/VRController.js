@@ -60,8 +60,7 @@ class VRController {
             this.__treeItem.addChild(this.__tip, false);
             vrviewport.getTreeItem().addChild(this.__treeItem);
 
-            const asset = vrviewport.getAsset();
-            if(asset) {
+            const asset = vrviewport.loadHMDResources().then(asset => {
                 asset.loaded.connect((entries) => {
 
                     let srcControllerTree;
@@ -79,7 +78,7 @@ class VRController {
                         ));
                     this.__treeItem.addChild(controllerTree);
                 });
-            }
+            })
 
             this.__projMatrix = new Mat4();
             this.__activeVolumeSize = 0.04

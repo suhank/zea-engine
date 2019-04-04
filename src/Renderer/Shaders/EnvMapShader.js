@@ -34,11 +34,11 @@ void main()
     mat4 inverseProjection = inverse(projectionMatrix);
     mat3 inverseModelview = transpose(mat3(viewMatrix));
 
-    //transform from the normalized device coordinates back to the view space
+    // transform from the normalized device coordinates back to the view space
     vec3 unprojected = (inverseProjection * vec4(position, 0, 1)).xyz;
 
-    //transfrom from the view space back to the world space
-    //and use it as a sampling vector
+    // transfrom from the view space back to the world space
+    // and use it as a sampling vector
     v_worldDir = inverseModelview * unprojected;
 
     gl_Position = vec4(position, 0, 1);

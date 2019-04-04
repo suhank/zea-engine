@@ -33,43 +33,6 @@ class VRViewport extends GLBaseViewport {
         super(renderer);
 
         //////////////////////////////////////////////
-        // Resources
-
-        // Note: when the VRViewport is setup
-        renderer.sceneSet.connect((scene)=>{
-            const resourceLoader = scene.getResourceLoader();
-
-            let assetPath;
-            switch(localStorage.getItem("hmd")){
-            case 'Vive': 
-                assetPath = "VisualiveEngine/Vive.vla";
-                break;
-            case 'Oculus': 
-                assetPath = "VisualiveEngine/Oculus.vla";
-                break;
-            default:
-                assetPath = "VisualiveEngine/Vive.vla";
-                break;
-            }
-
-            const hmdAssetId = resourceLoader.resolveFilePathToId(assetPath)
-            if (hmdAssetId && !SystemDesc.isMobileDevice) {
-                this.__vrAsset = renderer.getScene().loadCommonAssetResource(hmdAssetId);
-                this.__vrAsset.loaded.connect(() => {
-                    const materialLibrary = this.__vrAsset.getMaterialLibrary();
-                    const materialNames = materialLibrary.getMaterialNames();
-                    for (let name of materialNames) {
-                        const material = materialLibrary.getMaterial(name, false);
-                        if (material) {
-                            material.visibleInGeomDataBuffer = false;
-                            material.setShaderName('SimpleSurfaceShader');
-                        }
-                    }
-                });
-            }
-        })
-
-        //////////////////////////////////////////////
         // Viewport params
         this.__projectionMatriciesUpdated = false;
 
@@ -180,14 +143,71 @@ class VRViewport extends GLBaseViewport {
         this.__session.requestAnimationFrame(onAnimationFrame);
     }
 
+    loadHMDResources(){
+        if(this.__hmdAssetPromise)
+            return this.__hmdAssetPromise;
+
+        this.__hmdAssetPromise = new Promise((resolve, reject) => {
+
+            //////////////////////////////////////////////
+            // Resources
+
+            // Note: when the VRViewport is setup
+            this.__renderer.sceneSet.connect((scene)=>{
+                const resourceLoader = scene.getResourceLoader();
+
+                let assetPath;
+                switch(localStorage.getItem("hmd")){
+                case 'Vive': 
+                    assetPath = "VisualiveEngine/Vive.vla";
+                    break;
+                case 'Oculus': 
+                    assetPath = "VisualiveEngine/Oculus.vla";
+                    break;
+                default:
+                    assetPath = "VisualiveEngine/Oculus.vla";
+                    // assetPath = "VisualiveEngine/Vive.vla";
+                    break;
+                }
+
+                const hmdAssetId = resourceLoader.resolveFilePathToId(assetPath)
+                if (hmdAssetId && !SystemDesc.isMobileDevice) {
+                    this.__vrAsset = this.__renderer.getScene().loadCommonAssetResource(hmdAssetId);
+                    this.__vrAsset.loaded.connect(() => {
+                        const materialLibrary = this.__vrAsset.getMaterialLibrary();
+                        const materialNames = materialLibrary.getMaterialNames();
+                        for (let name of materialNames) {
+                            const material = materialLibrary.getMaterial(name, false);
+                            if (material) {
+                                material.visibleInGeomDataBuffer = false;
+                                material.setShaderName('SimpleSurfaceShader');
+                            }
+                        }
+                        resolve(this.__vrAsset);
+                    });
+                }
+                else 
+                    reject();
+            })
+
+        });
+        return this.__hmdAssetPromise;
+    }
+
     startPresenting() {
 
         // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
         const gl = this.__renderer.gl;
+        // Note: we should not need to load the resources here
+        // They could be loaded only once the controllers are 
+        // being created. However, I can't see the controllers if
+        // the loading is deffered
+        this.loadHMDResources().then(()=>{;
         navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
 
             this.__renderer.__xrViewportPresenting = true;
+
 
             // Add an output canvas that will allow XR to also send a view
             // back the monitor.
@@ -258,8 +278,10 @@ class VRViewport extends GLBaseViewport {
             });
 
         }).catch((e) => {
-            console.warn(e)
+            console.warn(e.message)
           });;
+
+        }); // end loadHMDResources
     }
 
     stopPresenting() {
@@ -369,7 +391,7 @@ class VRViewport extends GLBaseViewport {
 
         for (let i=0; i<views.length; i++) {
             const view = views[i];
-            this.__viewMatrices[i].setDataArray(view.viewMatrix);
+            this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
             // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
