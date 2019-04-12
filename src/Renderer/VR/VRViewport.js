@@ -144,9 +144,16 @@ class VRViewport extends GLBaseViewport {
     }
 
     loadHMDResources(){
+        // If the HMD has changed, reset it.
+        const hmd = localStorage.getItem("hmd");
+        if(this.__hmd != hmd) {
+            this.__hmdAssetPromise = undefined;
+        }
+
         if(this.__hmdAssetPromise)
             return this.__hmdAssetPromise;
 
+        this.__hmd = hmd;
         this.__hmdAssetPromise = new Promise((resolve, reject) => {
 
             //////////////////////////////////////////////
@@ -157,7 +164,7 @@ class VRViewport extends GLBaseViewport {
                 const resourceLoader = scene.getResourceLoader();
 
                 let assetPath;
-                switch(localStorage.getItem("hmd")){
+                switch(hmd){
                 case 'Vive': 
                     assetPath = "VisualiveEngine/Vive.vla";
                     break;
@@ -331,16 +338,6 @@ class VRViewport extends GLBaseViewport {
             }
             this.__vrControllers[i].updatePose(this.__refSpace, xrFrame, inputSource);
         }
-
-        /////////////////////////
-        // Emit a signal for the shared session.
-        const data = {
-            interfaceType: 'Vive',
-            viewXfo: this.__vrhead.getTreeItem().getGlobalXfo(),
-            controllers: this.__vrControllers,
-            vrviewport: this
-        }
-        this.viewChanged.emit(data, this);
     }
 
 
@@ -418,6 +415,17 @@ class VRViewport extends GLBaseViewport {
         renderstate.region = this.__region;
 
         this.__renderer.drawScene(renderstate);
+
+        /////////////////////////
+        // Emit a signal for the shared session.
+        const data = {
+            interfaceType: 'VR',
+            hmd: this.__hmd,
+            viewXfo: this.__vrhead.getTreeItem().getGlobalXfo(),
+            controllers: this.__vrControllers,
+            vrviewport: this
+        }
+        this.viewChanged.emit(data, this);
     }
 
 
