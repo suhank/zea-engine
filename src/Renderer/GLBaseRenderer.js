@@ -421,11 +421,11 @@ class GLBaseRenderer {
         //////////////////////////////////
         // Setup event handlers
         const isValidCanvas = ()=> {  
-            return this.__glcanvasDiv.offsetWidth > 0 && this.__glcanvasDiv.offsetHeight;
+            return this.__glcanvas.width > 0 && this.__glcanvas.height;
         }
 
         const calcRendererCoords = (event)=>{
-            var rect = this.__glcanvasDiv.getBoundingClientRect();
+            var rect = this.__glcanvas.getBoundingClientRect();
             event.rendererX = (event.clientX - rect.left);
             event.rendererY = (event.clientY - rect.top);
         }

@@ -20,7 +20,12 @@ class VRHead {
     }
 
     update(pose){
-        this.__mat4.setDataArray(pose.transform.matrix);
+        // Old
+        this.__mat4.setDataArray(pose.poseModelMatrix);
+        
+        // New 
+        // this.__mat4.setDataArray(pose.transform.matrix);
+        
         this.__localXfo.fromMat4(this.__mat4);
 
         // const pos = pose.transform.position;

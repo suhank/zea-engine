@@ -144,27 +144,35 @@ class VRController {
 
     updatePose(refSpace, xrFrame, inputSource) {
         
-        // const pose = xrFrame.getInputPose(inputSource, refSpace);
-        const pose = xrFrame.getPose(inputSource.gripSpace, refSpace);
-
-        // We may not get a pose back in cases where the input source has lost
-        // tracking or does not know where it is relative to the given frame
-        // of reference.
-        if (!pose || !pose.transform) {
+        ////////////////////////////////
+        // old..
+        const inputPose = xrFrame.getInputPose(inputSource, refSpace);
+        if(!inputPose.gripMatrix) 
             return;
-        }
+        this.__mat4.setDataArray(inputPose.gripMatrix);
+        this.__xfo.fromMat4(this.__mat4);
 
-        if (pose.transform) {
-            this.__mat4.setDataArray(pose.transform.matrix);
-            this.__xfo.fromMat4(this.__mat4);
+        ////////////////////////////////
+        // New. (canary)
+        // const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace);
 
-            // const pos = pose.transform.position;
-            // this.__xfo.tr.set(pos.x, pos.y,pos.z);
-            // const ori = pose.transform.orientation;
-            // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+        // // We may not get a inputPose back in cases where the input source has lost
+        // // tracking or does not know where it is relative to the given frame
+        // // of reference.
+        // if (!inputPose || !inputPose.transform) {
+        //     return;
+        // }
 
-            this.__treeItem.setLocalXfo(this.__xfo);
-        }
+        // this.__mat4.setDataArray(inputPose.transform.matrix);
+        // this.__xfo.fromMat4(this.__mat4);
+
+        // // const pos = inputPose.transform.position;
+        // // this.__xfo.tr.set(pos.x, pos.y,pos.z);
+        // // const ori = inputPose.transform.orientation;
+        // // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+        ////////////////////////////////
+
+        this.__treeItem.setLocalXfo(this.__xfo);
 
         // Reset the geom at tip so it will be recomuted if necessary
         this.__geomAtTip = undefined;

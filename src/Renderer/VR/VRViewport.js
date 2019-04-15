@@ -262,13 +262,20 @@ class VRViewport extends GLBaseViewport {
             }
             session.addEventListener('selectstart', onSelectStart);
             session.addEventListener('selectend', onSelectEnd);
-            
-            session.updateRenderState({
-                baseLayer: new XRWebGLLayer(session, gl),
-                outputContext: mirrorCanvas.getContext('xrpresent')
-            });
 
             this.__session = session;
+
+            //////////////////////////////
+            // Old code
+            this.__session.baseLayer = new XRWebGLLayer(session, gl);
+
+            // New code
+            // session.updateRenderState({
+            //     baseLayer: new XRWebGLLayer(session, gl),
+            //     outputContext: mirrorCanvas.getContext('xrpresent')
+            // });
+            //////////////////////////////
+
 
             // Get a stage frame of reference, which will align the user's physical
             // floor with Y=0 and can provide boundaries that indicate where the
@@ -345,7 +352,12 @@ class VRViewport extends GLBaseViewport {
 
         const session = xrFrame.session;
         // Assumed to be a XRWebGLLayer for now.
-        const layer = session.renderState.baseLayer;
+
+        // Old
+        const layer = session.baseLayer;
+        // New
+        // const layer = session.renderState.baseLayer;
+
         const pose = xrFrame.getViewerPose(this.__refSpace);
         const views = pose.views;
 
@@ -388,7 +400,12 @@ class VRViewport extends GLBaseViewport {
 
         for (let i=0; i<views.length; i++) {
             const view = views[i];
-            this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
+            // Old
+            this.__viewMatrices[i].setDataArray(view.viewMatrix);
+
+            // New
+            // this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
+
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
             // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
