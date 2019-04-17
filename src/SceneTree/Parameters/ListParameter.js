@@ -28,6 +28,11 @@ class ListParameter extends Parameter {
         return this.__value[index];
     }
 
+    setElement(index, value) {
+        this.__value[index] = value;
+        this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    }
+
     addElement(elem) {
         if(elem == undefined)
             elem = new this.__dataType()
