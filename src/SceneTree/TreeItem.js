@@ -796,7 +796,7 @@ class TreeItem extends BaseItem {
 
         context.numTreeItems++;
 
-        let itemflags = reader.loadUInt8();
+        const itemflags = reader.loadUInt8();
 
         const visibilityFlag = 1 << 1;
         // this.setVisible(itemflags&visibilityFlag);

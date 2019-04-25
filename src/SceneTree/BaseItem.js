@@ -195,7 +195,7 @@ class BaseItem extends ParameterOwner {
     }
 
     readBinary(reader, context) {
-        let type = reader.loadStr();
+        const type = reader.loadStr();
         this.setName(reader.loadStr());
 
         // Note: parameters follow name...
