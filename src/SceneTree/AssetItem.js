@@ -8,6 +8,9 @@ import {
     TreeItem
 } from './TreeItem.js';
 import {
+    Group
+} from './Group.js';
+import {
     loadTextfile
 } from './Utils.js';
 import {
@@ -67,6 +70,17 @@ class AssetItem extends TreeItem {
         context.numGeomItems = 0;
         if(context.version == undefined)
           context.version = 0;
+
+        const layers = {};
+        context.addGeomToLayer = (geomItem, layer) => {
+          if(!layers[layer]) {
+            const group = new Group(layer);
+            this.addChild(group)
+            layers[layer] = group;
+          }
+          layers[layer].addItem(geomItem);
+        }
+
         super.readBinary(reader, context);
 
         // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
