@@ -1,4 +1,7 @@
 import {
+    Xfo
+} from '../Math';
+import {
     Signal
 } from '../Utilities';
 import {
@@ -73,7 +76,7 @@ class AssetItem extends TreeItem {
 
         const layers = {};
         context.addGeomToLayer = (geomItem, layer) => {
-          if(!layers[layer]) {
+          if(!layers[layer]) {  
             const group = new Group(layer);
             this.addChild(group)
             layers[layer] = group;
@@ -81,7 +84,30 @@ class AssetItem extends TreeItem {
           layers[layer].addItem(geomItem);
         }
 
+        this.__materials.readBinary(reader, context);
+
         super.readBinary(reader, context);
+
+        if(context.version >= 5) {
+            this.__units = reader.loadStr();
+            // Calculate a scale factor to convert 
+            // the asset units to meters(the scene units)
+            let scaleFactor = 1.0;
+            switch(this.__units) {
+            case 'Millimeters': scaleFactor = 0.001; break;
+            case 'Centimeters': scaleFactor = 0.01; break;
+            case 'Meters': scaleFactor = 1.0; break;
+            case 'Kilometers': scaleFactor = 1000.0; break;
+            case 'Inches': scaleFactor = 0.0254; break;
+            case 'Feet': scaleFactor = 0.3048; break;
+            case 'Miles': scaleFactor = 1609.34; break;
+            }
+
+            const unitsXfo = new Xfo();
+            unitsXfo.sc.set(scaleFactor);
+            const xfo = unitsXfo.multiply(this.getLocalXfo());
+            this.setLocalXfo(xfo);
+        }
 
         // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     }
@@ -162,41 +188,6 @@ class AssetItem extends TreeItem {
         if (onDone)
             onDone();
     }
-
-    //////////////////////////////////////////
-    // Static Methods
-
-
-    // static registerDataLoader(ext, cls) {
-    //     const regExt = (ext) => {
-    //         ext = ext.toLowerCase();
-    //         if (!assetLoaders[ext])
-    //             assetLoaders[ext] = [];
-    //         else {
-    //             console.warn("overriding loader for ext:" + ext + ". Prev loader:" + assetLoaders[ext] + ". New loader:" + cls);
-    //         }
-    //         assetLoaders[ext].push(cls);
-    //     }
-
-    //     if (Array.isArray(ext)) {
-    //         for (let e of ext)
-    //             regExt(e);
-    //     } else {
-    //         regExt(ext);
-    //     }
-    // }
-
-    // static constructLoader(file) {
-    //     for(let exts of assetLoaders) {
-    //         if((new RegExp('\\.('+exts+')$', "i")).test(file.name)){
-    //             const loader = new assetLoaders[exts]();
-    //             if(loader) {
-    //                 loader.getParameter('FilePath').setValue(file.id);
-    //                 return loader;
-    //             }
-    //         }
-    //     }
-    // }
 };
 
 sgFactory.registerClass('AssetItem', AssetItem);

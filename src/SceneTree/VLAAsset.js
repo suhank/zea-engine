@@ -102,8 +102,6 @@ class VLAAsset extends AssetItem {
 
     const numGeomsFiles = reader.loadUInt32();
 
-    this.__materials.readBinary(reader, context);
-
     super.readBinary(reader, context);
 
     this.__atlasSize = reader.loadFloat32Vec2();
@@ -114,8 +112,6 @@ class VLAAsset extends AssetItem {
     // This helps with progress bars, so we know how many geoms are coming in total.
     this.__geomLibrary.setNumGeoms(reader.loadUInt32());
     
-    // this.loaded.emit();
-    // onDone(); 
     return numGeomsFiles;
   }
 
