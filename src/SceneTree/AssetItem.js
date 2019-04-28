@@ -34,10 +34,17 @@ class AssetItem extends TreeItem {
 
         const fileParam = this.addParameter(new FilePathParameter('FilePath'));
         fileParam.valueChanged.connect(() => {
-            const filePath = fileParam.getValue()
-            const url = fileParam.getURL();
+
+            const file = fileParam.getFileDesc();
+            if(!file)
+                return;
+            if(this.getName() == sgFactory.getClassName(this)) {
+                const stem = fileParam.getStem();
+                this.setName(stem);
+            }
+            
             this.loaded.setToggled(false);
-            loadTextfile(url,
+            loadTextfile(file.url,
                 (data) => {
                     const j = JSON.parse(data);
                     let asynccount = 0;

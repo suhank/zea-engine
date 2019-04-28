@@ -34,6 +34,9 @@ import {
 import {
   MaterialLibrary
 } from './MaterialLibrary.js';
+import {
+    sgFactory
+} from './SGFactory.js';
 
 
 class VLAAsset extends AssetItem {
@@ -55,6 +58,16 @@ class VLAAsset extends AssetItem {
 
     this.__datafileParam = this.addParameter(new FilePathParameter('DataFilePath'));
     this.__datafileParam.valueChanged.connect((mode) => {
+
+      const file = this.__datafileParam.getFileDesc();
+      if(!file)
+        return;
+      console.log(file);
+      if(this.getName() == sgFactory.getClassName(this)) {
+        const stem = this.__datafileParam.getStem();
+        this.setName(stem);
+      }
+
       this.geomsLoaded.setToggled(false);
       this.loadDataFile(()=>{
         if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
@@ -246,6 +259,8 @@ class VLAAsset extends AssetItem {
   }
   
 };
+
+sgFactory.registerClass('VLAAsset', VLAAsset);
 
 export {
   VLAAsset

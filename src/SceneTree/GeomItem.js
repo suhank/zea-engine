@@ -206,20 +206,23 @@ class GeomItem extends BaseGeomItem {
                                                         reader.loadFloat32Vec3()))
         }
 
-        const materialFlag = 1 << 3;
-        if (itemflags & materialFlag) {
-            const materialLibrary = context.assetItem.getMaterialLibrary();
-            const materialName = reader.loadStr();
-            let material = materialLibrary.getMaterial(materialName);
-            if (!material) {
-                console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
-                material = materialLibrary.getMaterial('Default');
+        // BaseGeomItem now handles loading materials.
+        if(context.version < 4) {
+            const materialFlag = 1 << 3;
+            if (itemflags & materialFlag) {
+                const materialLibrary = context.assetItem.getMaterialLibrary();
+                const materialName = reader.loadStr();
+                let material = materialLibrary.getMaterial(materialName);
+                if (!material) {
+                    console.warn("Geom :'" + this.name + "' Material not found:" + materialName);
+                    material = materialLibrary.getMaterial('Default');
+                }
+                this.setMaterial(material);
             }
-            this.setMaterial(material);
-        }
-        else {
-            // Force nodes to have a material so we can see them.
-            this.setMaterial(context.assetItem.getMaterialLibrary().getMaterial('Default'));
+            else {
+                // Force nodes to have a material so we can see them.
+                this.setMaterial(context.assetItem.getMaterialLibrary().getMaterial('Default'));
+            }
         }
 
         this.__lightmapCoordOffset = reader.loadFloat32Vec2();
