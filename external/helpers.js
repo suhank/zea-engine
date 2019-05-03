@@ -236,25 +236,7 @@ const materialLibraryHelpers = (function(){
             Reflectance: 0.01
         }
     };
-
-    const __modifyMaterial = (material, paramValues, shaderName) => {
-        if (shaderName)
-            material.setShaderName(shaderName);
-        for (let paramName in paramValues) {
-            let param = material.getParameter(paramName);
-            if (param) {
-                if(paramValues[paramName] instanceof Visualive.Parameter) {
-                    material.replaceParameter(paramValues[paramName]);
-                }
-                else {
-                    param.setValue(paramValues[paramName]);
-                }
-            } else {
-                material.addParameter(paramName, paramValues[paramName]);
-            }
-        }
-    }
-
+    
     const __materialTypeMapping = {};
 
     return {
@@ -271,7 +253,7 @@ const materialLibraryHelpers = (function(){
                     for(let name of matLiblNames) {
                         const material = matLib.getMaterial(name, false);
                         if(material)
-                            __modifyMaterial(material, materialPresets[presetName], shaderName);
+                            material.modifyParams(materialPresets[presetName], shaderName);
                     }
                     continue;
                 }
@@ -280,7 +262,7 @@ const materialLibraryHelpers = (function(){
                     console.warn("Material not found:" + materialName);
                     continue;
                 }
-                __modifyMaterial(material, materialPresets[presetName], shaderName);
+                material.modifyParams(materialPresets[presetName], shaderName);
             }
         },
 

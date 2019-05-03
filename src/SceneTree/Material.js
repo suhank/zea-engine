@@ -252,6 +252,24 @@ class Material extends BaseItem {
        return sgFactory.getClass(this.getShaderName());
     }
 
+    modifyParams(paramValues, shaderName) {
+        if (shaderName)
+            this.setShaderName(shaderName);
+        for (let paramName in paramValues) {
+            let param = this.getParameter(paramName);
+            if (param) {
+                if(paramValues[paramName] instanceof Visualive.Parameter) {
+                    this.replaceParameter(paramValues[paramName]);
+                }
+                else {
+                    param.setValue(paramValues[paramName]);
+                }
+            } else {
+                this.addParameter(paramName, paramValues[paramName]);
+            }
+        }
+    }
+
     //////////////////////////////////////////
     // Persistence
 
