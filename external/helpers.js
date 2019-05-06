@@ -241,12 +241,12 @@ const materialLibraryHelpers = (function(){
 
     return {
 
-        setMaterialTypeMapping:function(materialTypeMapping) {
+        setMaterialTypeMapping: function(materialTypeMapping) {
             for(let key in materialTypeMapping)
                 __materialTypeMapping[key] = materialTypeMapping[key];
         },
 
-        assignMaterialPresetValues:function(matLib, materialNames, presetName, shaderName = undefined) {
+        assignMaterialPresetValues: function(matLib, materialNames, presetName, shaderName = undefined) {
             const matLiblNames = matLib.getMaterialNames();
             for (let materialName of materialNames) {
                 if(materialName == "*") {
@@ -266,7 +266,7 @@ const materialLibraryHelpers = (function(){
             }
         },
 
-        modifyMaterials:function(matLib, materialNames, paramValues, shaderName = undefined) {
+        modifyMaterials: function(matLib, materialNames, paramValues, shaderName = undefined) {
             const matLiblNames = matLib.getMaterialNames();
 
             for (let materialName of materialNames) {
@@ -274,7 +274,7 @@ const materialLibraryHelpers = (function(){
                     for(let name of matLiblNames) {
                         const material = matLib.getMaterial(name, false);
                         if(material)
-                            __modifyMaterial(material, paramValues, shaderName);
+                            material.modifyParams(paramValues, shaderName);
                     }
                     continue;
                 }
@@ -283,7 +283,7 @@ const materialLibraryHelpers = (function(){
                     console.warn("Material not found:" + materialName);
                     continue;
                 }
-                __modifyMaterial(material, paramValues, shaderName);
+                material.modifyParams(paramValues, shaderName);
             }
         }
     }

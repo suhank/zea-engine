@@ -49,7 +49,7 @@ class LabelManager {
             this.__language = 'Es';
         else if (language.startsWith('fr'))
             this.__language = 'Fr';
-        else if (language.startsWith('gb'))
+        else if (language.startsWith('gb') || language.startsWith('de'))
             this.__language = 'Gb';
 
         this.__foundLabelLibraries = {};
