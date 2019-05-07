@@ -71,10 +71,11 @@ class VRController {
                     if(!srcControllerTree)
                         srcControllerTree = asset.getChildByName('Controller');
                     const controllerTree = srcControllerTree.clone();
+
                     controllerTree.setLocalXfo(new Xfo(
                         new Vec3(0, -0.035, -0.085), 
                         new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
-                        new Vec3(0.01, 0.01, 0.01)
+                        new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm. 
                         ));
                     this.__treeItem.addChild(controllerTree);
                 });
