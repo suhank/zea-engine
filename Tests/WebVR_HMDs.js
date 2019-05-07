@@ -27,16 +27,19 @@ testingHarness.registerTest('WebVR_HMDs', (domElement, resources)=> {
             );;
         holder.setLocalXfo(xfo);
         
-        const viveAsset = scene.loadCommonAssetResource(path);
-        holder.addChild(viveAsset);
+        const vrAsset = scene.loadCommonAssetResource(path);
+        holder.addChild(vrAsset);
         scene.getRoot().addChild(holder);
+        vrAsset.loaded.connect( () => {
+            vrAsset.traverse( (i) => console.log( i.getPath()))
+        });
     }
     loadAsset("VisualiveEngine/Vive.vla", new Visualive.Vec3(0.2, 0, 0.0));
     loadAsset("VisualiveEngine/Oculus.vla", new Visualive.Vec3(-0.2, 0, 0.0));
 
 
-    // viveAsset.loaded.connect((entries) => {
-    //     const controllerTree = viveAsset.getChildByName('Controller');
+    // vrAsset.loaded.connect((entries) => {
+    //     const controllerTree = vrAsset.getChildByName('Controller');
     //     controllerTree.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(0.25, 0,0)));
     // });
 
