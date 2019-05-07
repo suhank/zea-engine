@@ -110,9 +110,9 @@ class AssetItem extends TreeItem {
             case 'Miles': scaleFactor = 1609.34; break;
             }
 
-            const unitsXfo = new Xfo();
-            unitsXfo.sc.set(scaleFactor);
-            const xfo = unitsXfo.multiply(this.getLocalXfo());
+            // Apply units change to existing Xfo. (avoid changing tr)
+            const xfo = this.getLocalXfo();
+            xfo.sc.scaleInPlace(scaleFactor);
             this.setLocalXfo(xfo);
         }
 
