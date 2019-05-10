@@ -44,7 +44,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01));
         this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02));
-        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0008));
+        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005));
 
         this.movementFinished = new Signal();
     }
@@ -238,13 +238,27 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     onWheel(event, viewport) {
         const focalDistance = viewport.getCamera().getFocalDistance();
         const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
-        const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance;
+        const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * 0.5;
         const xfo = viewport.getCamera().getGlobalXfo();
-        xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist));
-        if (this.__defaultManipulationState == 'orbit')
-            viewport.getCamera().setFocalDistance( focalDistance + zoomDist);
-        viewport.getCamera().setGlobalXfo(xfo);
-        this.movementFinished.emit();
+        const movementVec = xfo.ori.getZaxis().scale(zoomDist);
+        if(this.__mouseWheelZoomIntervalId)
+            clearInterval(this.__mouseWheelZoomIntervalId);
+        let count = 0;
+        const applyMovement = ()=>{
+            xfo.tr.addInPlace(movementVec);
+            if (this.__defaultManipulationState == 'orbit')
+                viewport.getCamera().setFocalDistance( viewport.getCamera().getFocalDistance() + zoomDist);
+            viewport.getCamera().setGlobalXfo(xfo);
+
+            count++;
+            if(count < 10){
+                this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10);
+            } else {
+                this.__mouseWheelZoomIntervalId = undefined;
+                this.movementFinished.emit();
+            }
+        }
+        applyMovement();
     }
 
     __integrateVelocityChange(velChange, viewport) {
