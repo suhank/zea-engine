@@ -145,7 +145,7 @@ class VRViewport extends GLBaseViewport {
 
     loadHMDResources(){
         // If the HMD has changed, reset it.
-        const hmd = 'Vive';//localStorage.getItem("hmd");
+        const hmd = localStorage.getItem("hmd");
         if(this.__hmd != hmd) {
             this.__hmdAssetPromise = undefined;
         }
