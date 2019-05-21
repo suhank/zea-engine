@@ -177,42 +177,70 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.__mouseDownFocalDist = focalDistance;
     }
 
-    focus(camera, dir, dist) {
+    aimFocus(camera, pos) {
+        if(this.__focusIntervalId)
+            clearInterval(this.__focusIntervalId);
 
-        const globalXfo = camera.getGlobalXfo().clone();
+        const count = 20;
+        let i = 0;
+        const applyMovement = ()=>{
 
-        const orbit = new Quat();
-        const pitch = new Quat();
+            const initlalGlobalXfo = camera.getGlobalXfo();
+            const initlalDist = camera.getFocalDistance();
+            const dir = pos.subtract(initlalGlobalXfo.tr)
+            const dist = dir.normalizeInPlace();
 
-        // Orbit
-        {
-            const currDir = globalXfo.ori.getZaxis().clone();
-            currDir.z = 0;
-            const newDir = dir.negate();
-            newDir.z = 0;
+            const orbit = new Quat();
+            const pitch = new Quat();
 
-            orbit.setFrom2Vectors(currDir, newDir)
+            // Orbit
+            {
+                const currDir = initlalGlobalXfo.ori.getZaxis().clone();
+                currDir.z = 0;
+                const newDir = dir.negate();
+                newDir.z = 0;
+
+                orbit.setFrom2Vectors(currDir, newDir)
+            }
+
+            // Pitch
+            {
+                const currDir = initlalGlobalXfo.ori.getZaxis().clone();
+                const newDir = dir.negate();
+                currDir.x = newDir.x;
+                currDir.y = newDir.y;
+                currDir.normalizeInPlace();
+
+                if(currDir.cross(newDir).dot(initlalGlobalXfo.ori.getXaxis()) > 0.0)
+                    pitch.rotateX(currDir.angleTo(newDir));
+                else
+                    pitch.rotateX(-currDir.angleTo(newDir));
+            }
+
+            const targetGlobalXfo = initlalGlobalXfo.clone();
+            targetGlobalXfo.ori = orbit.multiply(targetGlobalXfo.ori);
+            targetGlobalXfo.ori.multiplyInPlace(pitch);
+
+            // With each iteraction we get closer to our goal
+            // and on the final iteration we should aim perfectly at 
+            // the target.
+            const t = Math.pow(i / count, 2);
+            const globalXfo = initlalGlobalXfo.clone();
+            globalXfo.ori = initlalGlobalXfo.ori.lerp(targetGlobalXfo.ori, t);
+
+            camera.setFocalDistance(initlalDist + ((dist - initlalDist) * t));
+            camera.setGlobalXfo(globalXfo);
+
+            i++;
+            if(i <= count){
+                this.__focusIntervalId = setTimeout(applyMovement, 20);
+            } else {
+                this.__focusIntervalId = undefined;
+                this.movementFinished.emit();
+            }
         }
+        applyMovement();
 
-        // Pitch
-        {
-            const currDir = globalXfo.ori.getZaxis().clone();
-            const newDir = dir.negate();
-            currDir.x = newDir.x;
-            currDir.y = newDir.y;
-            currDir.normalize();
-
-            if(currDir.cross(newDir).dot(globalXfo.ori.getXaxis()) > 0.0)
-                pitch.rotateX(currDir.angleTo(newDir));
-            else
-                pitch.rotateX(-currDir.angleTo(newDir));
-        }
-
-        globalXfo.ori = orbit.multiply(globalXfo.ori);
-        globalXfo.ori.multiplyInPlace(pitch);
-
-        camera.setFocalDistance(dist);
-        camera.setGlobalXfo(globalXfo);
         this.__manipulationState = "focussing";
     }
 
@@ -222,7 +250,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     onDoubleClick(event, mouseDownPos, viewport) {
         if(event.intersectionData) {
-            this.focus(viewport.getCamera(), event.intersectionData.mouseRay.dir, event.intersectionData.dist);
+            const camera = viewport.getCamera();
+            const pos = camera.getGlobalXfo().tr.add(event.intersectionData.mouseRay.dir.scale(event.intersectionData.dist))
+            this.aimFocus(camera, pos);
         }
     }
 
