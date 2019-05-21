@@ -171,14 +171,59 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         const focalDistance = viewport.getCamera().getFocalDistance();
         this.__mouseDragDelta.set(0, 0);
         this.__mouseDownCameraXfo = viewport.getCamera().getGlobalXfo().clone();
-        this.__mouseDownZaxis = viewport.getCamera().getGlobalXfo().ori.getZaxis();
+        this.__mouseDownZaxis = this.__mouseDownCameraXfo.ori.getZaxis();
         const targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
         this.__mouseDownCameraTarget = viewport.getCamera().getGlobalXfo().tr.add(targetOffset);
         this.__mouseDownFocalDist = focalDistance;
     }
 
+    focus(camera, dir, dist) {
+
+        const globalXfo = camera.getGlobalXfo().clone();
+
+        const orbit = new Quat();
+        const pitch = new Quat();
+
+        // Orbit
+        {
+            const currDir = globalXfo.ori.getZaxis().clone();
+            currDir.z = 0;
+            const newDir = dir.negate();
+            newDir.z = 0;
+
+            orbit.setFrom2Vectors(currDir, newDir)
+        }
+
+        // Pitch
+        {
+            const currDir = globalXfo.ori.getZaxis().clone();
+            const newDir = dir.negate();
+            currDir.x = newDir.x;
+            currDir.y = newDir.y;
+            currDir.normalize();
+
+            if(currDir.cross(newDir).dot(globalXfo.ori.getXaxis()) > 0.0)
+                pitch.rotateX(currDir.angleTo(newDir));
+            else
+                pitch.rotateX(-currDir.angleTo(newDir));
+        }
+
+        globalXfo.ori = orbit.multiply(globalXfo.ori);
+        globalXfo.ori.multiplyInPlace(pitch);
+
+        camera.setFocalDistance(dist);
+        camera.setGlobalXfo(globalXfo);
+        this.__manipulationState = "focussing";
+    }
+
     onMouseMove(event, mousePos, viewport) {
 
+    }
+
+    onDoubleClick(event, mouseDownPos, viewport) {
+        if(event.intersectionData) {
+            this.focus(viewport.getCamera(), event.intersectionData.mouseRay.dir, event.intersectionData.dist);
+        }
     }
 
     onDragStart(event, mouseDownPos, viewport) {

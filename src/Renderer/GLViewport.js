@@ -43,7 +43,6 @@ class GLViewport extends GLBaseViewport {
         this.__exposureRange = [-5, 10];
         this.__tonemap = true;
         this.__gamma = 2.2;
-        this.__antialiase = false;
 
         this.__geomDataBuffer = undefined;
         this.__geomDataBufferFbo = undefined;
@@ -59,6 +58,7 @@ class GLViewport extends GLBaseViewport {
         this.keyPressed = new Signal();
         this.keyUp = new Signal();
         this.mouseDown = new Signal();
+        this.mouseDoubleClicked = new Signal();
         this.mouseMoved = new Signal();
         this.mouseUp = new Signal();
         this.mouseLeave = new Signal();
@@ -298,7 +298,7 @@ class GLViewport extends GLBaseViewport {
                 const intersectionPos = mouseRay.start.add(mouseRay.dir.scale(geomItemAndDist.dist));
                 this.__intersectionData = {
                     screenPos,
-                    mouseRay: mouseRay,
+                    mouseRay,
                     intersectionPos,
                     geomItem: geomItemAndDist.geomItem,
                     dist: geomItemAndDist.dist
@@ -385,14 +385,28 @@ class GLViewport extends GLBaseViewport {
                     return;
             }
         }
-        
-        if (this.__cameraManipulator) {
-            this.__cameraManipulatorDragging = true;
-            this.__cameraManipulator.onDragStart(event, mousePos, this);
-            return;
-        }
 
-        this.mouseDown.emit(event);
+        var mouseDownTime = Date.now();
+        if((mouseDownTime - this.__prevMouseDownTime) < 200) {
+            if (this.__cameraManipulator) {
+                this.__cameraManipulatorDragging = true;
+                this.__cameraManipulator.onDoubleClick(event, mousePos, this);
+                return;
+            }
+
+            this.mouseDoubleClicked.emit(event);
+        }
+        else {
+            this.__prevMouseDownTime = mouseDownTime;
+            if (this.__cameraManipulator) {
+                this.__cameraManipulatorDragging = true;
+                this.__cameraManipulator.onDragStart(event, mousePos, this);
+                return;
+            }
+
+            this.mouseDown.emit(event);
+        }
+        
         return false;
     }
 

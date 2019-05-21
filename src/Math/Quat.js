@@ -270,6 +270,17 @@ class Quat extends AttrValue {
         this.setFromMat3(mat3);
     }
 
+    setFrom2Vectors( v0, v1 ) {
+        v0.normalize(); 
+        v1.normalize();
+        const c = v0.cross( v1 );
+        const d = v0.dot( v1 );
+        const s = Math.sqrt( (1+d)*2 );
+        //this.set( s/2, c.x / s, c.y / s, c.z / s );
+        this.set(c.x / s, c.y / s, c.z / s, s/2);
+        this.normalizeInPlace();
+    }
+
     setFromMat3(mat3) {
 
         // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
