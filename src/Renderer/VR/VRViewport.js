@@ -209,9 +209,10 @@ class VRViewport extends GLBaseViewport {
         // Note: we should not need to load the resources here
         // They could be loaded only once the controllers are 
         // being created. However, I can't see the controllers if
-        // the loading is deffered
+        // the loading is defered
         this.loadHMDResources().then(()=>{;
         navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
+        // navigator.xr.requestSession('immersive-vr').then((session) => {
 
             this.__renderer.__xrViewportPresenting = true;
 
@@ -267,13 +268,13 @@ class VRViewport extends GLBaseViewport {
 
             //////////////////////////////
             // Old code
-            this.__session.baseLayer = new XRWebGLLayer(session, gl);
+            // this.__session.baseLayer = new XRWebGLLayer(session, gl);
 
             // New code
-            // session.updateRenderState({
-            //     baseLayer: new XRWebGLLayer(session, gl),
-            //     outputContext: mirrorCanvas.getContext('xrpresent')
-            // });
+            session.updateRenderState({
+                baseLayer: new XRWebGLLayer(session, gl),
+                outputContext: mirrorCanvas.getContext('xrpresent')
+            });
             //////////////////////////////
 
 
@@ -354,9 +355,9 @@ class VRViewport extends GLBaseViewport {
         // Assumed to be a XRWebGLLayer for now.
 
         // Old
-        const layer = session.baseLayer;
+        // const layer = session.baseLayer;
         // New
-        // const layer = session.renderState.baseLayer;
+        const layer = session.renderState.baseLayer;
 
         const pose = xrFrame.getViewerPose(this.__refSpace);
         const views = pose.views;

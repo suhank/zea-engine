@@ -21,10 +21,10 @@ class VRHead {
 
     update(pose){
         // Old
-        this.__mat4.setDataArray(pose.poseModelMatrix);
+        // this.__mat4.setDataArray(pose.poseModelMatrix);
         
         // New 
-        // this.__mat4.setDataArray(pose.transform.matrix);
+        this.__mat4.setDataArray(pose.transform.matrix);
         
         this.__localXfo.fromMat4(this.__mat4);
 

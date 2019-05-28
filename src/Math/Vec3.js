@@ -240,10 +240,11 @@ class Vec3 extends AttrValue {
         if (len < Number.EPSILON) {
             return;
         }
-        len = 1.0 / Math.sqrt(len);
-        this.__data[0] *= len;
-        this.__data[1] *= len;
-        this.__data[2] *= len;
+        len = Math.sqrt(len);
+        const tmp = 1.0 / len;
+        this.__data[0] *= tmp;
+        this.__data[1] *= tmp;
+        this.__data[2] *= tmp;
         return len;
     }
 

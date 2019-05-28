@@ -101,8 +101,11 @@ class GLBaseRenderer {
                 //     this.__vrpolyfill = new WebVRPolyfill();
                 // }
                 if(navigator.xr) {
-                    // navigator.xr.requestDevice().then((device) => {
+                    
+                    // Old
                     navigator.xr.supportsSessionMode('immersive-vr').then(() => {
+                    // New
+                    // navigator.xr.supportsSession('immersive-vr').then(() => {
 
                         // Note: could cause a context loss on machines with
                         // multi-gpus (integrated Intel). 

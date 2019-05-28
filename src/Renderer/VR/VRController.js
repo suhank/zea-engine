@@ -71,10 +71,11 @@ class VRController {
                     if(!srcControllerTree)
                         srcControllerTree = asset.getChildByName('Controller');
                     const controllerTree = srcControllerTree.clone();
+
                     controllerTree.setLocalXfo(new Xfo(
                         new Vec3(0, -0.035, -0.085), 
                         new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
-                        new Vec3(0.01, 0.01, 0.01)
+                        new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm. 
                         ));
                     this.__treeItem.addChild(controllerTree);
                 });
@@ -146,30 +147,32 @@ class VRController {
         
         ////////////////////////////////
         // old..
-        const inputPose = xrFrame.getInputPose(inputSource, refSpace);
-        if(!inputPose.gripMatrix) 
-            return;
-        this.__mat4.setDataArray(inputPose.gripMatrix);
-        this.__xfo.fromMat4(this.__mat4);
-
-        ////////////////////////////////
-        // New. (canary)
-        // const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace);
-
-        // // We may not get a inputPose back in cases where the input source has lost
-        // // tracking or does not know where it is relative to the given frame
-        // // of reference.
-        // if (!inputPose || !inputPose.transform) {
+        // const inputPose = xrFrame.getInputPose(inputSource, refSpace);
+        // if(!inputPose.gripMatrix) 
         //     return;
-        // }
-
-        // this.__mat4.setDataArray(inputPose.transform.matrix);
+        // this.__mat4.setDataArray(inputPose.gripMatrix);
         // this.__xfo.fromMat4(this.__mat4);
 
-        // // const pos = inputPose.transform.position;
-        // // this.__xfo.tr.set(pos.x, pos.y,pos.z);
-        // // const ori = inputPose.transform.orientation;
-        // // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+        ////////////////////////////////
+        // New.
+        const inputPose = xrFrame.getInputPose(inputSource, refSpace);
+        // const inputPose = xrFrame.getInputPose(refSpace, inputSource);
+        // const inputPose = xrFrame.getPose(inputSource, refSpace);
+
+        // We may not get a inputPose back in cases where the input source has lost
+        // tracking or does not know where it is relative to the given frame
+        // of reference.
+        if (!inputPose || !inputPose.gripTransform) {
+            return;
+        }
+
+        this.__mat4.setDataArray(inputPose.gripTransform.matrix);
+        this.__xfo.fromMat4(this.__mat4);
+
+        // const pos = inputPose.transform.position;
+        // this.__xfo.tr.set(pos.x, pos.y,pos.z);
+        // const ori = inputPose.transform.orientation;
+        // this.__xfo.ori.set(ori.x, ori.y, ori.z, ori.x);
         ////////////////////////////////
 
         this.__treeItem.setLocalXfo(this.__xfo);

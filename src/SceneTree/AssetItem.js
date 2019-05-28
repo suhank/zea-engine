@@ -155,7 +155,7 @@ class AssetItem extends TreeItem {
         context.resolvePath = (path, cb)=>{
             // Note: Why not return a Promise here?
             // Promise evaluation is always async, so
-            // all promisses will be resovled after the curent call stack
+            // all promisses will be resolved after the current call stack
             // has terminated. In our case, we want all paths
             // to be resolved before the end of the function, which
             // we can handle easily with callback functions. 
@@ -173,7 +173,7 @@ class AssetItem extends TreeItem {
                     if(param)
                         cb(param);
                     else {
-                        reject("Path unable to be resolved:" + path);
+                        console.warn("Path unable to be resolved:" + path);
                     }
                 });
             }

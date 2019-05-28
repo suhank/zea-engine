@@ -22,7 +22,8 @@ class SGFactory {
     }
 
     getClass(classname) {
-        return this.__registeredClasses[classname].cls;
+        if(this.__registeredClasses[classname])
+            return this.__registeredClasses[classname].cls;
     }
 
     getClassName(inst) {

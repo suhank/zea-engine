@@ -363,11 +363,11 @@ class TreeItem extends BaseItem {
     }
 
     numChildren() {
-        return this.__childItems.length;
+        return this.__childItems.length - this.__freeIndices.length;
     }
 
     getNumChildren() {
-        return this.__childItems.length;
+        return this.__childItems.length - this.__freeIndices.length;
     }
 
     generateUniqueName(name) {

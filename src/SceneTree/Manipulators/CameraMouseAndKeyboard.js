@@ -44,7 +44,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
         this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01));
         this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02));
-        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0008));
+        this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005));
 
         this.movementFinished = new Signal();
     }
@@ -171,14 +171,89 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         const focalDistance = viewport.getCamera().getFocalDistance();
         this.__mouseDragDelta.set(0, 0);
         this.__mouseDownCameraXfo = viewport.getCamera().getGlobalXfo().clone();
-        this.__mouseDownZaxis = viewport.getCamera().getGlobalXfo().ori.getZaxis();
+        this.__mouseDownZaxis = this.__mouseDownCameraXfo.ori.getZaxis();
         const targetOffset = this.__mouseDownZaxis.scale(-focalDistance);
         this.__mouseDownCameraTarget = viewport.getCamera().getGlobalXfo().tr.add(targetOffset);
         this.__mouseDownFocalDist = focalDistance;
     }
 
+    aimFocus(camera, pos) {
+        if(this.__focusIntervalId)
+            clearInterval(this.__focusIntervalId);
+
+        const count = 20;
+        let i = 0;
+        const applyMovement = ()=>{
+
+            const initlalGlobalXfo = camera.getGlobalXfo();
+            const initlalDist = camera.getFocalDistance();
+            const dir = pos.subtract(initlalGlobalXfo.tr)
+            const dist = dir.normalizeInPlace();
+
+            const orbit = new Quat();
+            const pitch = new Quat();
+
+            // Orbit
+            {
+                const currDir = initlalGlobalXfo.ori.getZaxis().clone();
+                currDir.z = 0;
+                const newDir = dir.negate();
+                newDir.z = 0;
+
+                orbit.setFrom2Vectors(currDir, newDir)
+            }
+
+            // Pitch
+            {
+                const currDir = initlalGlobalXfo.ori.getZaxis().clone();
+                const newDir = dir.negate();
+                currDir.x = newDir.x;
+                currDir.y = newDir.y;
+                currDir.normalizeInPlace();
+
+                if(currDir.cross(newDir).dot(initlalGlobalXfo.ori.getXaxis()) > 0.0)
+                    pitch.rotateX(currDir.angleTo(newDir));
+                else
+                    pitch.rotateX(-currDir.angleTo(newDir));
+            }
+
+            const targetGlobalXfo = initlalGlobalXfo.clone();
+            targetGlobalXfo.ori = orbit.multiply(targetGlobalXfo.ori);
+            targetGlobalXfo.ori.multiplyInPlace(pitch);
+
+            // With each iteraction we get closer to our goal
+            // and on the final iteration we should aim perfectly at 
+            // the target.
+            const t = Math.pow(i / count, 2);
+            const globalXfo = initlalGlobalXfo.clone();
+            globalXfo.ori = initlalGlobalXfo.ori.lerp(targetGlobalXfo.ori, t);
+
+            camera.setFocalDistance(initlalDist + ((dist - initlalDist) * t));
+            camera.setGlobalXfo(globalXfo);
+
+            i++;
+            if(i <= count){
+                this.__focusIntervalId = setTimeout(applyMovement, 20);
+            } else {
+                this.__focusIntervalId = undefined;
+                this.movementFinished.emit();
+            }
+        }
+        applyMovement();
+
+        this.__manipulationState = "focussing";
+    }
+
     onMouseMove(event, mousePos, viewport) {
 
+    }
+
+    onDoubleClick(event, mouseDownPos, viewport) {
+        if(event.intersectionData) {
+            const camera = viewport.getCamera();
+            const pos = camera.getGlobalXfo().tr.add(event.intersectionData.mouseRay.dir.scale(event.intersectionData.dist))
+            this.aimFocus(camera, pos);
+        }
     }
 
     onDragStart(event, mouseDownPos, viewport) {
@@ -238,13 +313,27 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     onWheel(event, viewport) {
         const focalDistance = viewport.getCamera().getFocalDistance();
         const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
-        const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance;
+        const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * 0.5;
         const xfo = viewport.getCamera().getGlobalXfo();
-        xfo.tr.addInPlace(xfo.ori.getZaxis().scale(zoomDist));
-        if (this.__defaultManipulationState == 'orbit')
-            viewport.getCamera().setFocalDistance( focalDistance + zoomDist);
-        viewport.getCamera().setGlobalXfo(xfo);
-        this.movementFinished.emit();
+        const movementVec = xfo.ori.getZaxis().scale(zoomDist);
+        if(this.__mouseWheelZoomIntervalId)
+            clearInterval(this.__mouseWheelZoomIntervalId);
+        let count = 0;
+        const applyMovement = ()=>{
+            xfo.tr.addInPlace(movementVec);
+            if (this.__defaultManipulationState == 'orbit')
+                viewport.getCamera().setFocalDistance( viewport.getCamera().getFocalDistance() + zoomDist);
+            viewport.getCamera().setGlobalXfo(xfo);
+
+            count++;
+            if(count < 10){
+                this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10);
+            } else {
+                this.__mouseWheelZoomIntervalId = undefined;
+                this.movementFinished.emit();
+            }
+        }
+        applyMovement();
     }
 
     __integrateVelocityChange(velChange, viewport) {
