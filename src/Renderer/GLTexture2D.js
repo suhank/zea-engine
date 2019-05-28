@@ -22,7 +22,7 @@ class GLTexture2D extends RefCounted {
         this.width = 0;
         this.height = 0;
         this.textureType = 1; // Default 2d 8 bit texture image texture.
-        this.textureDesc = [0,0,0,0]; // To be polulated by derived classes.
+        this.textureDesc = [0,0,0,0]; // To be populated by derived classes.
         this.__loaded = false;
         this.__bound = false;
         let imageUpdated = () => {
@@ -249,6 +249,7 @@ class GLTexture2D extends RefCounted {
         this.__mipMapped = ('mipMapped' in params) ? params.mipMapped : false;
         this.invert = ('invert' in params) ? params.invert : false;
         this.alphaFromLuminance = ('alphaFromLuminance' in params) ? params.alphaFromLuminance : false;
+        this.textureDesc = [width, height, 0, 0];
 
 
 

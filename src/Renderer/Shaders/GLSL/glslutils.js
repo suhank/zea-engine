@@ -26,12 +26,12 @@ bool testFlag(int flags, int flag) {
 }
 
 // private function: Mangle me...
-ivec2 _pixelIndexToUV(int index, int textureSize){
-    return ivec2(index % textureSize, index / textureSize);
+ivec2 _pixelIndexToUV(int index, int textureWidth){
+    return ivec2(index % textureWidth, index / textureWidth);
 }
 
-vec4 fetchTexel(sampler2D texture, int textureSize, int index) {
-    return texelFetch(texture, _pixelIndexToUV(index, textureSize), 0);
+vec4 fetchTexel(sampler2D texture, int textureWidth, int index) {
+    return texelFetch(texture, _pixelIndexToUV(index, textureWidth), 0);
 }
 
 vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {

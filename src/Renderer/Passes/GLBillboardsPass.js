@@ -333,8 +333,8 @@ class GLBillboardsPass extends GLPass {
         gl.blendEquation(gl.FUNC_ADD);
         gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
-        let cameraPos = renderstate.viewXfo.tr;
-        let dist = cameraPos.distanceTo(this.__prevSortCameraPos);
+        const cameraPos = renderstate.viewXfo.tr;
+        const dist = cameraPos.distanceTo(this.__prevSortCameraPos);
         // Avoid sorting if the camera did not move more than 3 meters.
         if (dist > this.__threshold) {
             this.sort(cameraPos);

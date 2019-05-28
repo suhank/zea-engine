@@ -382,6 +382,45 @@ class GLRenderer extends GLBaseRenderer {
         if (this.__displayEnvironment)
             this.drawBackground(renderstate);
 
+        renderstate.bindViewports = (unifs, cb)=>{
+            let eye = 0;
+            if(!renderstate.viewports || renderstate.viewports.length == 1) {
+                cb();
+            }
+            else {
+              for(let vp of renderstate.viewports) {
+                gl.viewport(...vp.region);
+                {
+                    const unif = unifs.viewMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.cameraMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.projectionMatrix;
+                    if (unif) {
+                        gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+                    }
+                }
+                {
+                    const unif = unifs.eye;
+                    if (unif) {
+                        // Left or right eye, when rendering sterio VR.
+                        gl.uniform1i(unif.location, eye);
+                    }
+                }
+                cb();
+                eye++;
+              }
+            }
+        }
+
         super.drawScene(renderstate);
         // console.log("Draw Calls:" + renderstate['drawCalls']);
 

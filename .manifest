@@ -7,41 +7,47 @@
       "extensions":[
         "docx"
       ],
-      "icon":"https://assets-visualive.storage.googleapis.com/ZQo2Mwpie",
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg",
       "editor":"https://word.microsoft.com"
     },
     {
       "extensions":[
         "pdf"
       ],
-      "icon":"https://assets-visualive.storage.googleapis.com/KxGLXqw4k",
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg",
       "editor":"https://pdf.visualive.io"
     },
     {
       "extensions":[
         "xlsx"
       ],
-      "icon":"https://assets-visualive.storage.googleapis.com/V8BsWOcoq",
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg",
       "editor":"https://excel.microsoft.com"
     },
     {
       "extensions":[
         "bob"
       ],
-      "icon":"https://assets-visualive.storage.googleapis.com/ZQo2Mwpie",
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg",
       "editor":"https://word.microsoft.com"
+    },
+    {
+      "extensions":[
+        "jpg"
+      ],
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg"
     },
     {
       "extensions":[
         "png"
       ],
-      "icon":"https://assets-visualive.storage.googleapis.com/ihTy6cEtc"
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg"
     },
     {
       "extensions":[
-        "vlexe"
+        "vlexe", "zexe"
       ],
-      "icon":"https://assets-visualive.storage.googleapis.com/KC-LsLtrv",
+      "icon":"https://storage.googleapis.com/visualive-icons/01_STEP_large.svg",
       "editor":"https://editor-stage.visualive.io/"
     }
   ]
