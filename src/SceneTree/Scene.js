@@ -29,6 +29,9 @@ import {
     VLAAsset
 } from './VLAAsset.js';
 import {
+    ItemFlags
+} from './BaseItem.js';
+import {
     GeomItem
 } from './GeomItem.js';
 import {
@@ -237,6 +240,7 @@ class Scene {
         zAxisLineItem.setGeomOffsetXfo(geomOffset);
         gridTreeItem.addChild(zAxisLineItem);
         gridTreeItem.setSelectable(false, true);
+        gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX);
         this.__root.addChild(gridTreeItem);
 
         return gridTreeItem;
