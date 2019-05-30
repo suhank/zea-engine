@@ -3,61 +3,61 @@ import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js';
 import { GLRenderer } from '../GLRenderer.js';
 
 class GLOverlayPass extends GLOpaqueGeomsPass {
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+
+  init(renderer, passIndex) {
+    super.init(renderer, passIndex);
+  }
+
+  /////////////////////////////////////
+  // Bind to Render Tree
+  filterGeomItem(geomItem) {
+    const shaderClass = geomItem.getMaterial().getShaderClass();
+    if (shaderClass) {
+      if (shaderClass.isOverlay())
+        return true;
     }
+    return false;
+  }
 
-    init(renderer, passIndex) {
-        super.init(renderer, passIndex);
-    }
+  draw(renderstate) {
 
-    /////////////////////////////////////
-    // Bind to Render Tree
-    filterGeomItem(geomItem) {
-        const shaderClass = geomItem.getMaterial().getShaderClass();
-        if (shaderClass) {
-            if (shaderClass.isOverlay())
-                return true;
-        }
-        return false;
-    }
+    const gl = this.__gl;
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendEquation(gl.FUNC_ADD);
 
-    draw(renderstate) {
+    renderstate.pass = 'ADD';
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
 
-        const gl = this.__gl;
-        gl.disable(gl.DEPTH_TEST);
-        gl.enable(gl.BLEND);
-        gl.blendEquation(gl.FUNC_ADD);
+    super.draw(renderstate);
 
-        renderstate.pass = 'ADD';
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+    gl.disable(gl.BLEND);
+    gl.enable(gl.DEPTH_TEST);
+  }
+  
 
-        super.draw(renderstate);
+  drawGeomData(renderstate) {
 
-        gl.disable(gl.BLEND);
-        gl.enable(gl.DEPTH_TEST);
-    }
-    
+    const gl = this.__gl;
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
+    gl.blendEquation(gl.FUNC_ADD);
 
-    drawGeomData(renderstate) {
+    renderstate.pass = 'ADD';
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
 
-        const gl = this.__gl;
-        gl.disable(gl.DEPTH_TEST);
-        gl.enable(gl.BLEND);
-        gl.blendEquation(gl.FUNC_ADD);
+    super.drawGeomData(renderstate);
 
-        renderstate.pass = 'ADD';
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
-
-        super.drawGeomData(renderstate);
-
-        gl.disable(gl.BLEND);
-        gl.enable(gl.DEPTH_TEST);
-    }
+    gl.disable(gl.BLEND);
+    gl.enable(gl.DEPTH_TEST);
+  }
 };
 
 GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY);
 
 export {
-    GLOverlayPass
+  GLOverlayPass
 };

@@ -1,231 +1,231 @@
 import {
-    Vec3
+  Vec3
 } from '../../Math/Vec3';
 import {
-    PassType
+  PassType
 } from './GLPass.js';
 import {
-    GLStandardGeomsPass
+  GLStandardGeomsPass
 } from './GLStandardGeomsPass.js';
 import {
-    GLRenderer
+  GLRenderer
 } from '../GLRenderer.js';
 
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
-    constructor() {
-        super();
-    }
+  constructor() {
+    super();
+  }
 
-    init(renderer, passIndex) {
-        super.init(renderer, passIndex);
+  init(renderer, passIndex) {
+    super.init(renderer, passIndex);
 
-        this.transparentItems = [];
-        this.freeList = [];
-        this.visibleItems = [];
-        this.prevSortCameraPos = new Vec3(999, 999, 999);
-        this.resort = false;
-    }
+    this.transparentItems = [];
+    this.freeList = [];
+    this.visibleItems = [];
+    this.prevSortCameraPos = new Vec3(999, 999, 999);
+    this.resort = false;
+  }
 
-    filterGeomItem(geomItem) {
-        const shaderClass = geomItem.getMaterial().getShaderClass();
-        if (shaderClass) {
-            if (!shaderClass.isTransparent())
-                return false;
-            if (shaderClass.isOverlay())
-                return false;
-            return true;
-        }
+  filterGeomItem(geomItem) {
+    const shaderClass = geomItem.getMaterial().getShaderClass();
+    if (shaderClass) {
+      if (!shaderClass.isTransparent())
         return false;
+      if (shaderClass.isOverlay())
+        return false;
+      return true;
+    }
+    return false;
+  }
+
+
+  addGeomItem(geomItem) {
+    const material = geomItem.getMaterial();
+    const glshader = this.addShader(material);
+    const glmaterial = this.addMaterial(material);
+    const glgeomitem = super.addGeomItem(geomItem);
+
+    const visibilityChangedId = geomItem.visibilityChanged.connect((visible) => {
+      if (visible){
+        this.visibleItems.push(item);
+      }
+      else {
+        const index = this.visibleItems.indexOf(item);
+        this.visibleItems.splice(index, 1);
+      }
+    });
+    const geomXfoChangedId = geomItem.geomXfoChanged.connect(() => {
+      this.resort = true;
+    });
+
+    const item = {
+      glshader,
+      glmaterial,
+      glgeomitem,
+      visibilityChangedId,
+      geomXfoChangedId
+    }
+    let itemindex;
+    if(this.freeList.length > 0)
+      itemindex = this.freeList.pop();
+    else
+      itemindex = this.transparentItems.length;
+    this.transparentItems[itemindex] = item;
+    geomItem.setMetadata('itemIndex', itemindex);
+    if (geomItem.getVisible()) {
+      this.visibleItems.push(item);
     }
 
 
-    addGeomItem(geomItem) {
-        const material = geomItem.getMaterial();
-        const glshader = this.addShader(material);
-        const glmaterial = this.addMaterial(material);
-        const glgeomitem = super.addGeomItem(geomItem);
 
-        const visibilityChangedId = geomItem.visibilityChanged.connect((visible) => {
-            if (visible){
-                this.visibleItems.push(item);
-            }
-            else {
-                const index = this.visibleItems.indexOf(item);
-                this.visibleItems.splice(index, 1);
-            }
-        });
-        const geomXfoChangedId = geomItem.geomXfoChanged.connect(() => {
-            this.resort = true;
-        });
+    // force a resort.
+    this.resort = true;
+  }
 
-        const item = {
-            glshader,
-            glmaterial,
-            glgeomitem,
-            visibilityChangedId,
-            geomXfoChangedId
+  removeGeomItem(geomItem) {
+
+    if(!super.removeGeomItem(geomItem))
+      return;
+
+    const itemindex = geomItem.getMetadata('itemIndex');
+    const item = this.transparentItems[itemindex];
+    this.transparentItems[itemindex] = null;
+    this.freeList.push(itemindex);
+
+    const visibleindex = this.visibleItems.indexOf(item);
+    if(visibleindex != -1)
+      this.visibleItems.splice(visibleindex, 1);
+  }
+
+  sortItems(viewPos) {
+    for (let transparentItem of this.visibleItems)
+      transparentItem.dist = transparentItem.glgeomitem.geomItem.getGeomXfo().tr.distanceTo(viewPos);
+    this.visibleItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
+    this.prevSortCameraPos = viewPos;
+    this.resort = false;
+  }
+
+  _drawItems(renderstate) {
+    const gl = this.__gl;
+    let currentglShader;
+    let currentglMaterial;
+    let currentglGeom;
+    for (let transparentItem of this.visibleItems) {
+      const glshader = transparentItem.glmaterial.getGLShader();
+      if (currentglShader != transparentItem.glshader) {
+        // Some passes, like the depth pass, bind custom uniforms.
+        if (!this.bindShader(renderstate, transparentItem.glshader)) {
+          continue;
         }
-        let itemindex;
-        if(this.freeList.length > 0)
-            itemindex = this.freeList.pop();
-        else
-            itemindex = this.transparentItems.length;
-        this.transparentItems[itemindex] = item;
-        geomItem.setMetadata('itemIndex', itemindex);
-        if (geomItem.getVisible()) {
-            this.visibleItems.push(item);
+        currentglShader = transparentItem.glshader;
+      }
+
+      if (currentglMaterial != transparentItem.glmaterial) {
+        if (!transparentItem.glmaterial.bind(renderstate)) {
+          continue;
         }
+        currentglMaterial = transparentItem.glmaterial;
+      }
 
+      const glgeomitem = transparentItem.glgeomitem;
+      if (currentglGeom != glgeomitem.glGeom) {
+        currentglGeom = glgeomitem.glGeom;
+        if (!currentglGeom.bind(renderstate)) {
+          continue;
+        }
+      }
 
-
-        // force a resort.
-        this.resort = true;
-    }
-
-    removeGeomItem(geomItem) {
-
-        if(!super.removeGeomItem(geomItem))
-            return;
-
-        const itemindex = geomItem.getMetadata('itemIndex');
-        const item = this.transparentItems[itemindex];
-        this.transparentItems[itemindex] = null;
-        this.freeList.push(itemindex);
-
-        const visibleindex = this.visibleItems.indexOf(item);
-        if(visibleindex != -1)
-            this.visibleItems.splice(visibleindex, 1);
-    }
-
-    sortItems(viewPos) {
-        for (let transparentItem of this.visibleItems)
-            transparentItem.dist = transparentItem.glgeomitem.geomItem.getGeomXfo().tr.distanceTo(viewPos);
-        this.visibleItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
-        this.prevSortCameraPos = viewPos;
-        this.resort = false;
-    }
-
-    _drawItems(renderstate) {
-        const gl = this.__gl;
-        let currentglShader;
-        let currentglMaterial;
-        let currentglGeom;
-        for (let transparentItem of this.visibleItems) {
-            const glshader = transparentItem.glmaterial.getGLShader();
-            if (currentglShader != transparentItem.glshader) {
-                // Some passes, like the depth pass, bind custom uniforms.
-                if (!this.bindShader(renderstate, transparentItem.glshader)) {
-                    continue;
-                }
-                currentglShader = transparentItem.glshader;
-            }
-
-            if (currentglMaterial != transparentItem.glmaterial) {
-                if (!transparentItem.glmaterial.bind(renderstate)) {
-                    continue;
-                }
-                currentglMaterial = transparentItem.glmaterial;
-            }
-
-            const glgeomitem = transparentItem.glgeomitem;
-            if (currentglGeom != glgeomitem.glGeom) {
-                currentglGeom = glgeomitem.glGeom;
-                if (!currentglGeom.bind(renderstate)) {
-                    continue;
-                }
-            }
-
-            if (glgeomitem.bind(renderstate)) {
-                // Specify an non-instanced draw to the shader
-                if (renderstate.unifs.instancedDraw) {
-                    gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
-                    gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
-                }
-
-                const unifs = renderstate.unifs;
-                let eye = 0;
-                for (let vp of renderstate.viewports) {
-                    gl.viewport(...vp.region); {
-                        const unif = unifs.viewMatrix;
-                        if (unif) {
-                            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-                        }
-                    } {
-                        const unif = unifs.cameraMatrix;
-                        if (unif) {
-                            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-                        }
-                    } {
-                        const unif = unifs.projectionMatrix;
-                        if (unif) {
-                            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-                        }
-                    } {
-                        const unif = unifs.eye;
-                        if (unif) {
-                            // Left or right eye, when rendering sterio VR.
-                            gl.uniform1i(unif.location, eye);
-                        }
-                    }
-                    currentglGeom.draw(renderstate);
-
-                    eye++;
-                }
-            }
+      if (glgeomitem.bind(renderstate)) {
+        // Specify an non-instanced draw to the shader
+        if (renderstate.unifs.instancedDraw) {
+          gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
+          gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
         }
 
-        if (currentglGeom)
-            currentglGeom.unbind(renderstate);
+        const unifs = renderstate.unifs;
+        let eye = 0;
+        for (let vp of renderstate.viewports) {
+          gl.viewport(...vp.region); {
+            const unif = unifs.viewMatrix;
+            if (unif) {
+              gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+            }
+          } {
+            const unif = unifs.cameraMatrix;
+            if (unif) {
+              gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+            }
+          } {
+            const unif = unifs.projectionMatrix;
+            if (unif) {
+              gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+            }
+          } {
+            const unif = unifs.eye;
+            if (unif) {
+              // Left or right eye, when rendering sterio VR.
+              gl.uniform1i(unif.location, eye);
+            }
+          }
+          currentglGeom.draw(renderstate);
+
+          eye++;
+        }
+      }
     }
 
-    draw(renderstate) {
-        if (this.visibleItems.length == 0)
-            return;
+    if (currentglGeom)
+      currentglGeom.unbind(renderstate);
+  }
 
-        if (this.newItemsReadyForLoading())
-            this.finalize();
+  draw(renderstate) {
+    if (this.visibleItems.length == 0)
+      return;
 
-        const gl = this.__gl;
+    if (this.newItemsReadyForLoading())
+      this.finalize();
 
-        const viewPos = renderstate.viewXfo.tr;
-        // TODO: Avoid sorting if the camera did not movemore than 30cm
-        if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > 0.3)
-            this.sortItems(viewPos);
+    const gl = this.__gl;
 
-        gl.enable(gl.DEPTH_TEST);
-        gl.depthFunc(gl.LESS);
-        gl.depthMask(true);
+    const viewPos = renderstate.viewXfo.tr;
+    // TODO: Avoid sorting if the camera did not movemore than 30cm
+    if (this.resort || viewPos.distanceTo(this.prevSortCameraPos) > 0.3)
+      this.sortItems(viewPos);
 
-        gl.enable(gl.BLEND);
-        gl.blendEquation(gl.FUNC_ADD);
-        // Complex transparent surfaces require mutiple passes.
-        // First the multiply pass tints the background color, simulating
-        // light passing through the surface, and then the add layer
-        // adds new color to the backbuffer to simulate light bouncing off
-        // the surface.
+    gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LESS);
+    gl.depthMask(true);
 
-        // TODO: Optimise this system.
-        // After depth sorting, we should split the items into 2 groups. 
-        // Multipy items, and Add  items. (Many items will be in both)
-        // Then we can simply check if we have any multiply items here
-        // before rendering all items.
+    gl.enable(gl.BLEND);
+    gl.blendEquation(gl.FUNC_ADD);
+    // Complex transparent surfaces require mutiple passes.
+    // First the multiply pass tints the background color, simulating
+    // light passing through the surface, and then the add layer
+    // adds new color to the backbuffer to simulate light bouncing off
+    // the surface.
 
-        renderstate.pass = 'MULTIPLY';
-        gl.blendFunc(gl.DST_COLOR, gl.ZERO); // For multiply, select this.
-        this._drawItems(renderstate);
+    // TODO: Optimise this system.
+    // After depth sorting, we should split the items into 2 groups. 
+    // Multipy items, and Add  items. (Many items will be in both)
+    // Then we can simply check if we have any multiply items here
+    // before rendering all items.
 
-        renderstate.pass = 'ADD';
-        gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
-        this._drawItems(renderstate);
+    renderstate.pass = 'MULTIPLY';
+    gl.blendFunc(gl.DST_COLOR, gl.ZERO); // For multiply, select this.
+    this._drawItems(renderstate);
+
+    renderstate.pass = 'ADD';
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+    this._drawItems(renderstate);
 
 
 
-        gl.disable(gl.BLEND);
-    }
+    gl.disable(gl.BLEND);
+  }
 };
 
 GLRenderer.registerPass(GLTransparentGeomsPass, PassType.TRANSPARENT);
 
 export {
-    GLTransparentGeomsPass
+  GLTransparentGeomsPass
 };

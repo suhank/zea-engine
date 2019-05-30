@@ -41,7 +41,5 @@ export * from './VLAAsset.js';
 export * from './ObjAsset.js';
 
 export * from './Operators';
-
-export * from './Tools';
 export * from './Manipulators';
 
