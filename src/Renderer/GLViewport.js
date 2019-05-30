@@ -523,26 +523,27 @@ class GLViewport extends GLBaseViewport {
                 if (event.vleStopPropagation == true)
                     return;
             }
-        }
 
-        const downTime = Date.now();
-        if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
-            if (this.__cameraManipulator) {
-                this.__cameraManipulatorDragging = true;
-                this.__cameraManipulator.onDoubleTap(event, mousePos, this);
+            const downTime = Date.now();
+            if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
+                if (this.__cameraManipulator) {
+                    this.__cameraManipulatorDragging = true;
+                    this.__cameraManipulator.onDoubleTap(event, mousePos, this);
+                    return;
+                }
+                this.doubleTapped.emit(event);
                 return;
             }
-            this.doubleTapped.emit(event);
-        }
-        else {
-            this.__prevDownTime = downTime;
-
-            if (this.__cameraManipulator) {
-                this.__cameraManipulator.onTouchStart(event, this);
-                return;
+            else {
+                this.__prevDownTime = downTime;
             }
-            this.touchStart.emit(event);
         }
+
+        if (this.__cameraManipulator) {
+            this.__cameraManipulator.onTouchStart(event, this);
+            return;
+        }
+        this.touchStart.emit(event);
     }
 
     onTouchMove(event) {

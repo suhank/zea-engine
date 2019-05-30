@@ -120,6 +120,9 @@ function getGPUDesc() {
     else if (renderer.match(/Mali/i)) {
         gpuVendor = "ARM";
     }
+    else if (renderer.match(/Adreno/i)) {
+        gpuVendor = "Adreno";
+    }
     else {
         console.warn("Unable to determine GPU vendor:", renderer)
     }
@@ -243,6 +246,9 @@ function getSystemDesc() {
                         deviceCategory = 'Low';
                     }
                 }
+            }
+            else if(gpuDesc.gpuVendor == 'Adreno') {
+                deviceCategory = 'Low';
             }
             else if(gpuDesc.gpuVendor == 'Intel') {
                 deviceCategory = 'Low';
