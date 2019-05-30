@@ -450,7 +450,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         event.stopPropagation();
         // console.log("this.__manipMode:" + this.__manipMode);
 
-        let touches = event.changedTouches;
+        const touches = event.touches;
         if (touches.length == 1 && this.__manipMode != "panAndZoom") {
             let touch = touches[0];
             let touchPos = new Vec2(touch.pageX, touch.pageY);
@@ -488,7 +488,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     onTouchEnd(event, viewport) {
         event.preventDefault();
         event.stopPropagation();
-        let touches = event.changedTouches;
+        const touches = event.changedTouches;
         // switch (this.__manipMode) {
         // case 'camera-manipulation':
         //     let touch = touches[0];
@@ -503,11 +503,15 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     onTouchCancel(event, viewport) {
         event.preventDefault();
-        console.log("touchcancel.");
-        let touches = event.changedTouches;
+        const touches = event.touches;
         for (let i = 0; i < touches.length; i++) {
             this.__endTouch(touches[i]);
         }
+    }
+
+    onDoubleTap(event, viewport) {
+        event.preventDefault();
+        console.log("onDoubleTap.");
     }
 
 

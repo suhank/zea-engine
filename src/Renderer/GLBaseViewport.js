@@ -5,7 +5,10 @@ import {
     Signal
 } from '../Utilities';
 import {
-    BaseImage
+    ParameterOwner,
+    BaseImage,
+    ColorParameter,
+    NumberParameter
 } from '../SceneTree';
 import {
     GLHDRImage
@@ -17,10 +20,19 @@ import {
     GLFbo
 } from './GLFbo.js';
 
-class GLBaseViewport {
+class GLBaseViewport extends ParameterOwner {
     constructor(renderer) {
+        super();
         this.__renderer = renderer;
-        this.__backgroundColor = new Color('#e3e3e3');
+
+        this.__backgroundColorParam = this.addParameter(new ColorParameter('BackgroundColor', new Color('#e3e3e3')));
+        this.__backgroundColorParam.valueChanged.connect((mode)=>{
+            if (this.__fbo) {
+                const color = this.__backgroundColorParam.getValue();
+                this.__fbo.setClearColor(color.asArray());
+            }
+        })
+        this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200));
         this.__fbo = undefined;
         this.updated = new Signal();
         this.resized = new Signal();
@@ -65,7 +77,7 @@ class GLBaseViewport {
     }
     
     getBackground() {
-        return this.__backgroundTexture ? this.__backgroundTexture : this.__backgroundColor;
+        return this.__backgroundTexture ? this.__backgroundTexture : this.__backgroundColorParam.getValue();
     }
 
     setBackground(background) {
@@ -86,10 +98,7 @@ class GLBaseViewport {
                 this.__backgroundGLTexture = undefined;
                 this.__backgroundTexture = undefined;
             }
-            this.__backgroundColor = background;
-            if (this.__fbo) {
-                this.__fbo.setClearColor(this.__backgroundColor.asArray());
-            }
+            this.__backgroundColorParam.setValue(background)
         }
         else{
             console.warn("Invalid background:" + background);

@@ -69,6 +69,7 @@ class GLViewport extends GLBaseViewport {
         this.touchMove = new Signal();
         this.touchEnd = new Signal();
         this.touchCancel = new Signal();
+        this.doubleTapped = new Signal();
 
         // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -258,15 +259,23 @@ class GLViewport extends GLBaseViewport {
             this.__geomDataBufferFbo.bindForReading();
 
 
-            // const logGeomData = (geomId)=>{
-            //     console.log("logGeomData " + geomId + ":[" + this.__geomDataBuffer.width +","+ this.__geomDataBuffer.height + "]")
+            // const logGeomData = ()=>{
+            //     console.log("logGeomData :[" + this.__geomDataBuffer.width +","+ this.__geomDataBuffer.height + "]")
             //     const pixels = new Float32Array(this.__geomDataBuffer.width * 4);
             //     for(let i=0; i<this.__geomDataBuffer.height; i++){
             //       gl.readPixels(0, i, this.__geomDataBuffer.width, 1, gl.RGBA, gl.FLOAT, pixels);
-            //       console.log(pixels);
+            //         for(let j=0; j<this.__geomDataBuffer.width; j++){
+            //             const geomData = pixels.subarray(j*4, (j+1)*4);
+            //             if (geomData[0] != 0 || geomData[1] != 0){
+            //                 console.log(j, i)
+            //                 break; // Only log the left border pixels.
+            //             }
+            //         }
+            //       // console.log(pixels);
             //     }
             // }
             // logGeomData();
+            // console.log("getGeomDataAtPos:", screenPos.toString())
 
             // Allocate a 1 pixel block and read grom the GeomData buffer.
             let passId, geomData;
@@ -365,7 +374,6 @@ class GLViewport extends GLBaseViewport {
     onMouseDown(event) {
 
         const mousePos = this.__eventMousePos(event);
-
         event.viewport = this;
         event.mousePos = mousePos;
         event.mouseRay = this.calcRayFromScreenPos(mousePos);
@@ -386,8 +394,8 @@ class GLViewport extends GLBaseViewport {
             }
         }
 
-        var mouseDownTime = Date.now();
-        if((mouseDownTime - this.__prevMouseDownTime) < 200) {
+        const downTime = Date.now();
+        if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
             if (this.__cameraManipulator) {
                 this.__cameraManipulatorDragging = true;
                 this.__cameraManipulator.onDoubleClick(event, mousePos, this);
@@ -397,7 +405,7 @@ class GLViewport extends GLBaseViewport {
             this.mouseDoubleClicked.emit(event);
         }
         else {
-            this.__prevMouseDownTime = mouseDownTime;
+            this.__prevDownTime = downTime;
             if (this.__cameraManipulator) {
                 this.__cameraManipulatorDragging = true;
                 this.__cameraManipulator.onDragStart(event, mousePos, this);
@@ -412,6 +420,9 @@ class GLViewport extends GLBaseViewport {
 
     onMouseUp(event) {
         const mousePos = this.__eventMousePos(event);
+        event.viewport = this;
+        event.mousePos = mousePos;
+        event.mouseRay = this.calcRayFromScreenPos(mousePos);
 
         if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
             this.__cameraManipulator.onDragEnd(event, mousePos, this);
@@ -419,9 +430,6 @@ class GLViewport extends GLBaseViewport {
             return;
         }
 
-        event.viewport = this;
-        event.mousePos = mousePos;
-        event.mouseRay = this.calcRayFromScreenPos(mousePos);
         this.mouseUp.emit(event);
         return false;
     }
@@ -429,15 +437,14 @@ class GLViewport extends GLBaseViewport {
     onMouseMove(event) {
 
         const mousePos = this.__eventMousePos(event);
+        event.viewport = this;
+        event.mousePos = mousePos;
+        event.mouseRay = this.calcRayFromScreenPos(mousePos);
 
         if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
             this.__cameraManipulator.onDrag(event, mousePos, this);
             return;
         }
-
-        event.viewport = this;
-        event.mousePos = mousePos;
-        event.mouseRay = this.calcRayFromScreenPos(mousePos);
         this.mouseMoved.emit(event);
         return false;
     }
@@ -449,50 +456,93 @@ class GLViewport extends GLBaseViewport {
     }
 
     onKeyPressed(key, event) {
+        event.viewport = this;
         if (this.__cameraManipulator) {
             if(this.__cameraManipulator.onKeyPressed(key, event, this))
                 return true;
         }
-        event.viewport = this;
         this.keyPressed.emit(key, event);
         return false;
     }
     
     onKeyDown(key, event) {
+        event.viewport = this;
         if (this.__cameraManipulator) {
             if(this.__cameraManipulator.onKeyDown(key, event, this))
                 return true;
         }
-        event.viewport = this;
         this.keyDown.emit(key, event);
     }
 
     onKeyUp(key, event) {
+        event.viewport = this;
         if (this.__cameraManipulator) {
             if(this.__cameraManipulator.onKeyUp(key, event, this))
                 return true;
         }
-        event.viewport = this;
         this.keyUp.emit(key, event);
     }
 
     onWheel(event) {
+        event.viewport = this;
         if (this.__cameraManipulator) {
             this.__cameraManipulator.onWheel(event, this);
             return;
         }
-        event.viewport = this;
         this.mouseWheel.emit(event);
     }
 
     // Touch events
-    onTouchStart(event) {
-        if (this.__cameraManipulator) {
-            this.__cameraManipulator.onTouchStart(event, this);
-            return;
-        }
+    __eventTouchPos(touch) {
+        return new Vec2(
+            (touch.rendererX - this.getPosX()),
+            (touch.rendererY - this.getPosY())
+        );
+    }
+
+    onTouchStart(event) { 
         event.viewport = this;
-        this.touchStart.emit(event);
+
+
+        if (event.touches.length == 1) {
+            const touch = event.touches[0]
+            const touchPos = this.__eventTouchPos(touch);
+            event.touchPos = touchPos;
+            event.touchRay = this.calcRayFromScreenPos(touchPos);
+
+            const intersectionData = this.getGeomDataAtPos(touchPos, event.touchRay);
+            if (intersectionData != undefined) {
+                // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+                // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+                event.intersectionData = intersectionData;
+                intersectionData.geomItem.onMouseDown(event, intersectionData);
+                if (event.vleStopPropagation == true)
+                    return;
+
+                this.mouseDownOnGeom.emit(event);
+                if (event.vleStopPropagation == true)
+                    return;
+            }
+        }
+
+        const downTime = Date.now();
+        if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
+            if (this.__cameraManipulator) {
+                this.__cameraManipulatorDragging = true;
+                this.__cameraManipulator.onDoubleTap(event, mousePos, this);
+                return;
+            }
+            this.doubleTapped.emit(event);
+        }
+        else {
+            this.__prevDownTime = downTime;
+
+            if (this.__cameraManipulator) {
+                this.__cameraManipulator.onTouchStart(event, this);
+                return;
+            }
+            this.touchStart.emit(event);
+        }
     }
 
     onTouchMove(event) {
@@ -553,7 +603,9 @@ class GLViewport extends GLBaseViewport {
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
         gl.viewport(...this.region);
-        gl.clearColor(...this.__backgroundColor.asArray());
+
+        const color = this.__backgroundColorParam.getValue();
+        gl.clearColor(...color.asArray());
         gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -562,7 +614,7 @@ class GLViewport extends GLBaseViewport {
         this.__renderer.drawScene(renderstate);
 
 
-        // Turn this on to debug the geom data buffer.
+        // // Turn this on to debug the geom data buffer.
         // {
         //     gl.screenQuad.bindShader(renderstate);
         //     gl.screenQuad.draw(renderstate, this.__geomDataBuffer);

@@ -78,6 +78,7 @@ class VRViewport extends GLBaseViewport {
         this.controllerAdded = new Signal();
         this.controllerButtonDown = new Signal();
         this.controllerButtonUp = new Signal();
+        this.controllerDoubleClicked = new Signal();
         this.controllerTouchpadTouched = new Signal();
     }
 
@@ -241,12 +242,26 @@ class VRViewport extends GLBaseViewport {
                 const controller = this.__vrControllersMap[ev.inputSource.handedness];
                 if(controller) {
                     console.log("controller:", ev.inputSource.handedness, " down");
-                    this.controllerButtonDown.emit({ 
-                        button: 1, 
-                        controller, 
-                        vleStopPropagation:false, 
-                        vrviewport: this 
-                    }, this);
+
+                    const downTime = Date.now();
+                    if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
+                        if (this.__cameraManipulator) {
+                            this.__cameraManipulatorDragging = true;
+                            this.__cameraManipulator.onDoubleTap(event, mousePos, this);
+                            return;
+                        }
+                        this.controllerDoubleClicked.emit(event);
+                    }
+                    else {
+                        this.__prevDownTime = downTime;
+
+                        this.controllerButtonDown.emit({ 
+                            button: 1, 
+                            controller, 
+                            vleStopPropagation:false, 
+                            vrviewport: this 
+                        }, this);
+                    }
                 }
             }
             const onSelectEnd = (ev) => {

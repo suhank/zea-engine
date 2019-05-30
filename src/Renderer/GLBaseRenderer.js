@@ -393,7 +393,10 @@ class GLBaseRenderer {
 
         // Note: Mobile devices don't provide much support for reading data back from float textures,
         // and checking compatibility is patchy at best.
-        this.__floatGeomBuffer = !SystemDesc.isMobileDevice;
+        // Note: we are now pushing on high end mobile devices.
+        // Galaxy and above. We need this. We need ot accuratley determine 
+        // if the float buffer is not supported.
+        this.__floatGeomBuffer = this.__gl.floatTexturesSupported;// !SystemDesc.isMobileDevice;
         this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
         // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
         // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
@@ -429,8 +432,8 @@ class GLBaseRenderer {
 
         const calcRendererCoords = (event)=>{
             var rect = this.__glcanvas.getBoundingClientRect();
-            event.rendererX = (event.clientX - rect.left);
-            event.rendererY = (event.clientY - rect.top);
+            event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio;
+            event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio;
         }
 
         this.__glcanvas.addEventListener('mouseenter', (event) => {
@@ -573,14 +576,23 @@ class GLBaseRenderer {
         });
 
         this.__glcanvas.addEventListener("touchstart", (event) => {
+            for (let i = 0; i < event.touches.length; i++) {
+                calcRendererCoords(event.touches[i]);
+            }
             this.getViewport().onTouchStart(event);
             event.stopPropagation();
         }, false);
         this.__glcanvas.addEventListener("touchmove", (event) => {
+            for (let i = 0; i < event.touches.length; i++) {
+                calcRendererCoords(event.touches[i]);
+            }
             this.getViewport().onTouchMove(event);
             event.stopPropagation();
         }, false);
         this.__glcanvas.addEventListener("touchend", (event) => {
+            for (let i = 0; i < event.touches.length; i++) {
+                calcRendererCoords(event.touches[i]);
+            }
             this.getViewport().onTouchEnd(event);
             event.stopPropagation();
         }, false);
