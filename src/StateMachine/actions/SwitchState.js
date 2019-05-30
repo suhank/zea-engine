@@ -1,36 +1,36 @@
 
 import {
-    sgFactory
+  sgFactory
 } from '../../SceneTree/SGFactory.js';
 
 
 import {
-    Parameter,
-    NumberParameter,
-    StringParameter
+  Parameter,
+  NumberParameter,
+  StringParameter
 } from '../../SceneTree/Parameters';
 import {
-    OperatorOutput
+  OperatorOutput
 } from '../../SceneTree/Operators';
 
 
 import {
-    StateAction
+  StateAction
 } from '../StateAction.js';
 
 class SwitchState extends StateAction {
-    constructor() {
-        super()
-        this.__targetStateParam = this.addParameter(new StringParameter('TargetState', ""));
-    }
+  constructor() {
+    super()
+    this.__targetStateParam = this.addParameter(new StringParameter('TargetState', ""));
+  }
 
-    activate(){
-        this.__state.getStateMachine().activateState(this.__targetStateParam.getValue());
-    }
+  activate(){
+    this.__state.getStateMachine().activateState(this.__targetStateParam.getValue());
+  }
 };
 
 
 sgFactory.registerClass('SwitchState', SwitchState);
 export {
-    SwitchState
+  SwitchState
 };
