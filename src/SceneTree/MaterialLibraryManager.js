@@ -1,65 +1,65 @@
 import {
-    Signal
+  Signal
 } from '../Utilities';
 import {
-    MaterialLibrary
+  MaterialLibrary
 } from './MaterialLibrary.js';
 import {
-    resourceLoader
+  resourceLoader
 } from './ResourceLoader.js';
 import {
-    loadTextfile
+  loadTextfile
 } from './Utils.js';
 
 
 class MaterialLibraryManager {
-    constructor() {
-        this.__materialLibraries = {};
-        this.materialLibraryLoaded = new Signal();
+  constructor() {
+    this.__materialLibraries = {};
+    this.materialLibraryLoaded = new Signal();
 
-        resourceLoader.registerResourceCallback('.matlib', (file)=>{
-            loadTextfile(file.url,
-                (data) => {
-                    const stem = file.name.split('.')[0];// trim off the extension
-                    const j = JSON.parse(data);
-                    const matlib = new MaterialLibrary(stem);
-                    matlib.fromJSON(j);
-                    this.__materialLibraries[stem] = matlib;
-                    this.materialLibraryLoaded.emit(matlib)
-                }
-            );
-        })
-    }
-
-    getMaterialLibraryNames() {
-        let names = [];
-        for(let name in this.__materialLibraries) {
-            names.push(name);
+    resourceLoader.registerResourceCallback('.matlib', (file)=>{
+      loadTextfile(file.url,
+        (data) => {
+          const stem = file.name.split('.')[0];// trim off the extension
+          const j = JSON.parse(data);
+          const matlib = new MaterialLibrary(stem);
+          matlib.fromJSON(j);
+          this.__materialLibraries[stem] = matlib;
+          this.materialLibraryLoaded.emit(matlib)
         }
-        return names;
-    }
+      );
+    })
+  }
 
-    hasMaterialLibrary(name) {
-        return name in this.__materialLibraries;
+  getMaterialLibraryNames() {
+    let names = [];
+    for(let name in this.__materialLibraries) {
+      names.push(name);
     }
+    return names;
+  }
 
-    getMaterialLibrary(name) {
-        const res = this.__materialLibraries[name];
-        if(!res){
-            console.warn("MaterialLibrary:" + name + " not found in MaterialLibraryManager. Found: [" + this.getMaterialLibraryNames() + "]")
-        }
-        return res;
-    }
+  hasMaterialLibrary(name) {
+    return name in this.__materialLibraries;
+  }
 
-    resolveMaterialFromPath(path) {
-        const materialLibrary = this.getMaterialLibrary(path[0]);
-        if(materialLibrary)
-            return materialLibrary.getMaterial(path[1]);
+  getMaterialLibrary(name) {
+    const res = this.__materialLibraries[name];
+    if(!res){
+      console.warn("MaterialLibrary:" + name + " not found in MaterialLibraryManager. Found: [" + this.getMaterialLibraryNames() + "]")
     }
+    return res;
+  }
+
+  resolveMaterialFromPath(path) {
+    const materialLibrary = this.getMaterialLibrary(path[0]);
+    if(materialLibrary)
+      return materialLibrary.getMaterial(path[1]);
+  }
  
 };
 
 const materialLibraryManager = new MaterialLibraryManager();
 export {
-    materialLibraryManager
+  materialLibraryManager
 };

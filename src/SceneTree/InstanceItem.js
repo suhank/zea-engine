@@ -1,102 +1,102 @@
 import {
-    Xfo
+  Xfo
 } from '../Math';
 import {
-    Signal
+  Signal
 } from '../Utilities';
 import {
-    FilePathParameter
+  FilePathParameter
 } from './Parameters';
 import {
-    TreeItem,
-    CloneFlags
+  TreeItem,
+  CloneFlags
 } from './TreeItem.js';
 import {
-    loadTextfile
+  loadTextfile
 } from './Utils.js';
 import {
-    sgFactory
+  sgFactory
 } from './SGFactory.js';
 
 class InstanceItem extends TreeItem {
-    constructor(name) {
-        super(name);
+  constructor(name) {
+    super(name);
+  }
+
+  setSrcTree(treeItem) {
+    this.__srcTree = treeItem;
+
+    const numChildren = this.__srcTree.getNumChildren();
+    if(numChildren == 0) {
+      const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE);
+      child.setLocalXfo(new Xfo())
+      this.addChild(child);
+    }
+    else {
+      for(let i=0; i<this.__srcTree.getNumChildren(); i++) {
+        this.addChild(this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+      }
     }
 
-    setSrcTree(treeItem) {
-        this.__srcTree = treeItem;
+    // this.__srcTree.childAdded.connect((child)=>{
+    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+    // })
+  }
 
-        const numChildren = this.__srcTree.getNumChildren();
-        if(numChildren == 0) {
-            const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE);
-            child.setLocalXfo(new Xfo())
-            this.addChild(child);
-        }
-        else {
-            for(let i=0; i<this.__srcTree.getNumChildren(); i++) {
-                this.addChild(this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
-            }
-        }
+  getSrcTree(){
+    return this.__srcTree;
+  }
 
-        // this.__srcTree.childAdded.connect((child)=>{
-        //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
-        // })
-    }
+  //////////////////////////////////////////
+  // Children
 
-    getSrcTree(){
-        return this.__srcTree;
-    }
+  // getChildren() {
+  //     return this.__srcTree.getChildren();
+  // }
 
-    //////////////////////////////////////////
-    // Children
+  // numChildren() {
+  //     return this.__childItems.length;
+  // }
 
-    // getChildren() {
-    //     return this.__srcTree.getChildren();
-    // }
+  // getNumChildren() {
+  //     return this.__srcTree.getNumChildren();
+  // }
 
-    // numChildren() {
-    //     return this.__childItems.length;
-    // }
+  // getChild(index) {
+  //     return this.__srcTree.getChild(index);
+  // }
 
-    // getNumChildren() {
-    //     return this.__srcTree.getNumChildren();
-    // }
+  // getChildByName(name) {
+  //     return this.__srcTree.getChildByName(name);
+  // }
 
-    // getChild(index) {
-    //     return this.__srcTree.getChild(index);
-    // }
+  //////////////////////////////////////////
+  // Persistence
 
-    // getChildByName(name) {
-    //     return this.__srcTree.getChildByName(name);
-    // }
+  readBinary(reader, context = {}) {
+    super.readBinary(reader, context);
 
-    //////////////////////////////////////////
-    // Persistence
+    // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
+    const path = reader.loadStrArray();
+    // console.log("InstanceItem of:", path)
+    context.resolvePath(path, (treeItem)=>{
+      this.setSrcTree(treeItem);
+    })
+  }
 
-    readBinary(reader, context = {}) {
-        super.readBinary(reader, context);
+  toJSON(context={}, flags=0) {
+    const j = super.toJSON(context, flags);
+    return j;
+  }
 
-        // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
-        const path = reader.loadStrArray();
-        // console.log("InstanceItem of:", path)
-        context.resolvePath(path, (treeItem)=>{
-            this.setSrcTree(treeItem);
-        })
-    }
-
-    toJSON(context={}, flags=0) {
-        const j = super.toJSON(context, flags);
-        return j;
-    }
-
-    fromJSON(j, context={}, flags=0, onDone) {
-        
-    }
+  fromJSON(j, context={}, flags=0, onDone) {
+    
+  }
 
 };
 
 sgFactory.registerClass('InstanceItem', InstanceItem);
 
 export {
-    InstanceItem
+  InstanceItem
 };

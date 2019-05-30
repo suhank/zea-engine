@@ -1,288 +1,288 @@
 import {
-    Vec2,
-    Vec3,
-    Color
+  Vec2,
+  Vec3,
+  Color
 } from '../Math';
 import {
-    Signal
+  Signal
 } from '../Utilities';
 
 import {
-    RefCounted
+  RefCounted
 } from './RefCounted.js';
 
 import {
-    sgFactory
+  sgFactory
 } from './SGFactory.js';
 
 // Explicit impport of files to avoid importing all the parameter types.
 // Note: soon these imports should be removed, once all code avoids calling 
 // 'addPArameter' without the parameter instance.
 import {
-    Parameter,
+  Parameter,
 } from './Parameters/Parameter.js';
 import {
-    NumberParameter,
+  NumberParameter,
 } from './Parameters/NumberParameter.js';
 import {
-    Vec2Parameter,
+  Vec2Parameter,
 } from './Parameters/Vec2Parameter.js';
 import {
-    Vec3Parameter,
+  Vec3Parameter,
 } from './Parameters/Vec3Parameter.js';
 import {
-    ColorParameter,
+  ColorParameter,
 } from './Parameters/ColorParameter.js';
 
 class ParameterOwner extends RefCounted {
-    constructor() {
-        super();
+  constructor() {
+    super();
 
-        this.__params = [];
-        this.__paramMapping = {};
-        this.__paramSignalIds = {};
+    this.__params = [];
+    this.__paramMapping = {};
+    this.__paramSignalIds = {};
 
-        // Paramters are not intended to be dynamic.
-        // Instead they are part of the mixin architecture.
-        // Note: Materials add/remove paramters when the
-        // shader name is changed.
-        this.parameterAdded = new Signal();
-        this.parameterRemoved = new Signal();
-        this.parameterValueChanged = new Signal();
+    // Paramters are not intended to be dynamic.
+    // Instead they are part of the mixin architecture.
+    // Note: Materials add/remove paramters when the
+    // shader name is changed.
+    this.parameterAdded = new Signal();
+    this.parameterRemoved = new Signal();
+    this.parameterValueChanged = new Signal();
+  }
+
+  copyFrom(src, flags) {
+    // Note: Loop over the parameters in reverse order, 
+    // this is because often, parameter depdenencies
+    // are bottom to top. (bottom params dependent on higher params)
+    // This means that as a parameter is set with a new value
+    // it will dirty the params below it. 
+    let i = src.numParameters();
+    while (i--) {
+      const srcParam = src.getParameterByIndex(i);
+      const param = this.getParameter(srcParam.getName())
+      if(param){
+        // Note: we are not cloning the values.
+        param.setValue(srcParam.getValue(), 2);
+      }
+      else {
+        this.addParameterInstance(srcParam.clone());
+      }
+    }
+  }
+
+  //////////////////////////////////////////
+  // Params
+
+  numParameters() {
+    return this.__params.length;
+  }
+
+  getParameters() {
+    return this.__params;
+  }
+
+  getParameterIndex(paramName) {
+    return this.__paramMapping[paramName];
+  }
+  
+  getParameterByIndex(index) {
+    return this.__params[index];
+  }
+
+  hasParameter(paramName) {
+    return paramName in this.__paramMapping;
+  }
+
+  getParameter(paramName) {
+    const index = this.__paramMapping[paramName];
+    if(index == -1)
+      return null;
+    return this.__params[index];
+  }
+
+  addParameter(paramName, defaultValue) {
+    if (paramName instanceof Parameter) {
+      return this.addParameterInstance(paramName);
+    }
+    else {
+      console.warn("Add Paremter will soon only take a single argument of a parameter instance")
+    }
+    if (defaultValue instanceof Parameter) {
+      defaultValue.setName(paramName);
+      return this.addParameterInstance(defaultValue);
     }
 
-    copyFrom(src, flags) {
-        // Note: Loop over the parameters in reverse order, 
-        // this is because often, parameter depdenencies
-        // are bottom to top. (bottom params dependent on higher params)
-        // This means that as a parameter is set with a new value
-        // it will dirty the params below it. 
-        let i = src.numParameters();
-        while (i--) {
-            const srcParam = src.getParameterByIndex(i);
-            const param = this.getParameter(srcParam.getName())
-            if(param){
-                // Note: we are not cloning the values.
-                param.setValue(srcParam.getValue(), 2);
-            }
-            else {
-                this.addParameterInstance(srcParam.clone());
-            }
+    let param;
+    if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
+      param = new Parameter(paramName, defaultValue, 'Boolean');
+    } else if (typeof defaultValue == 'string') {
+      param = new Parameter(paramName, defaultValue, 'String');
+    } else if (Number.isNumeric(defaultValue)) {
+      param = new NumberParameter(paramName, defaultValue);
+    } else if (defaultValue instanceof Vec2) {
+      param = new Vec2Parameter(paramName, defaultValue);
+    } else if (defaultValue instanceof Vec3) {
+      param = new Vec3Parameter(paramName, defaultValue);
+    } else if (defaultValue instanceof Color) {
+      param = new ColorParameter(paramName, defaultValue);
+    } else {
+      param = new Parameter(paramName, defaultValue);
+    }
+    this.addParameterInstance(param);
+    return param;
+  }
+
+  // This method can be overrridden in derived classes
+  // to perform general updates. (see GLPass)
+  __parameterValueChanged(param, mode){
+    this.parameterValueChanged.emit(param, mode)
+  }
+
+
+  addParameterInstance(param) {
+    const name = param.getName();
+    if(this.__paramMapping[name] != undefined) {
+      console.warn("Replacing Parameter:" + name)
+      this.removeParameter(name);
+    }
+    this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.__parameterValueChanged(param, mode));
+    param.addRef(this);
+    this.__params.push(param)
+    this.__paramMapping[name] = this.__params.length - 1;
+    this.parameterAdded.emit(name);
+    return param;
+  }
+
+  removeParameter(name){
+    if(this.__paramMapping[name] == undefined) {
+      console.throw("Unable to Remove Parameter:" + name);
+    }
+    const index = this.__paramMapping[name];
+    const param = this.__params[this.__paramMapping[name]]
+    param.removeRef(this);
+    param.valueChanged.disconnectId(this.__paramSignalIds[name]);
+    this.__params.splice(index, 1)
+    const paramMapping = {};
+    for (let i=0; i<this.__params.length; i++){
+      paramMapping[this.__params[i].getName()] = i;
+    }
+    this.__paramMapping = paramMapping;
+    this.parameterRemoved.emit(name);
+  }
+
+  replaceParameter(param){
+    const name = param.getName();
+    const index = this.__paramMapping[name];
+    const prevparam = this.__params[this.__paramMapping[name]]
+    prevparam.removeRef(this);
+    prevparam.valueChanged.disconnectId(this.__paramSignalIds[name]);
+
+    param.addRef(this);
+    this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
+    this.__params[index] = param;
+    return param;
+  }
+
+  // _removeAllParameters(){
+  //     for (let i=this.__params.length-1; i>=0; i--) {
+  //         this.removeParameter(i);
+  //     }
+  // }
+
+
+  addCommand(command) {
+    const name = command.getName();
+    command.setOwner(this)
+    this.__params.push(command)
+    this.__paramMapping[name] = this.__params.length - 1;
+    return command;
+  }
+  //////////////////////////////////////////
+  // Persistence
+
+
+  toJSON(context, flags) {
+
+    const paramsJSON = {};
+    let savedParams = 0;
+    for (let param of this.__params){
+      if(param.numRefs() > 1 && param.getRefIndex(this) != 0) {
+        paramsJSON[param.getName()] = {
+          paramPath: context.makeRelative(param.getPath())
         }
-    }
-
-    //////////////////////////////////////////
-    // Params
-
-    numParameters() {
-        return this.__params.length;
-    }
-
-    getParameters() {
-        return this.__params;
-    }
-
-    getParameterIndex(paramName) {
-        return this.__paramMapping[paramName];
-    }
-    
-    getParameterByIndex(index) {
-        return this.__params[index];
-    }
-
-    hasParameter(paramName) {
-        return paramName in this.__paramMapping;
-    }
-
-    getParameter(paramName) {
-        const index = this.__paramMapping[paramName];
-        if(index == -1)
-            return null;
-        return this.__params[index];
-    }
-
-    addParameter(paramName, defaultValue) {
-        if (paramName instanceof Parameter) {
-            return this.addParameterInstance(paramName);
+        savedParams++;
+      }
+      else {
+        const paramJSON = param.toJSON(context, flags);
+        if(paramJSON){
+          paramsJSON[param.getName()] = paramJSON;
+          savedParams++;
         }
+      }
+    }
+    if(savedParams > 0)
+      return { params: paramsJSON };
+  }
+
+  fromJSON(j, context, flags) {
+    if(j.params) {
+      for (let key in j.params) {
+        const pj = j.params[key];
+        const param = this.getParameter(key);
+        if(!param) 
+          console.warn("Param not found:" + key);
         else {
-            console.warn("Add Paremter will soon only take a single argument of a parameter instance")
+          if(pj.paramPath){
+            context.resolvePath(pj.paramPath, (param)=>{
+              this.replaceParameter(param)
+            }, (reason)=>{
+              console.warn("Unable to resolve shared parameter:" + pj.paramPath);
+            });
+          }
+          else {
+            param.fromJSON(pj, context);
+          }
         }
-        if (defaultValue instanceof Parameter) {
-            defaultValue.setName(paramName);
-            return this.addParameterInstance(defaultValue);
+      }
+    }
+  }
+
+  readBinary(reader, context) {
+    // TODO: make this work
+
+    if(context.version >= 3) {
+
+      const numProps = reader.loadUInt32();
+      for (let i = 0; i < numProps; i++) {
+        const propType = reader.loadStr();
+        const propName = reader.loadStr();
+        let param = this.getParameter(propName);
+        if (!param) {
+          param = sgFactory.constructClass(propType, propName);
+          if (!param) {
+            console.error("Unable to construct prop:" + propName + " of type:" + propType);
+            continue;
+          }
+          this.addParameter(param);
         }
-
-        let param;
-        if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
-            param = new Parameter(paramName, defaultValue, 'Boolean');
-        } else if (typeof defaultValue == 'string') {
-            param = new Parameter(paramName, defaultValue, 'String');
-        } else if (Number.isNumeric(defaultValue)) {
-            param = new NumberParameter(paramName, defaultValue);
-        } else if (defaultValue instanceof Vec2) {
-            param = new Vec2Parameter(paramName, defaultValue);
-        } else if (defaultValue instanceof Vec3) {
-            param = new Vec3Parameter(paramName, defaultValue);
-        } else if (defaultValue instanceof Color) {
-            param = new ColorParameter(paramName, defaultValue);
-        } else {
-            param = new Parameter(paramName, defaultValue);
-        }
-        this.addParameterInstance(param);
-        return param;
+        param.readBinary(reader, context);
+      }
     }
+  }
 
-    // This method can be overrridden in derived classes
-    // to perform general updates. (see GLPass)
-    __parameterValueChanged(param, mode){
-        this.parameterValueChanged.emit(param, mode)
+  toString() {
+    return JSON.stringify(this.toJSON(), null, 2)
+  }
+
+  destroy(){
+    for (let param of this.__params){
+      param.destroy();
     }
-
-
-    addParameterInstance(param) {
-        const name = param.getName();
-        if(this.__paramMapping[name] != undefined) {
-            console.warn("Replacing Parameter:" + name)
-            this.removeParameter(name);
-        }
-        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.__parameterValueChanged(param, mode));
-        param.addRef(this);
-        this.__params.push(param)
-        this.__paramMapping[name] = this.__params.length - 1;
-        this.parameterAdded.emit(name);
-        return param;
-    }
-
-    removeParameter(name){
-        if(this.__paramMapping[name] == undefined) {
-            console.throw("Unable to Remove Parameter:" + name);
-        }
-        const index = this.__paramMapping[name];
-        const param = this.__params[this.__paramMapping[name]]
-        param.removeRef(this);
-        param.valueChanged.disconnectId(this.__paramSignalIds[name]);
-        this.__params.splice(index, 1)
-        const paramMapping = {};
-        for (let i=0; i<this.__params.length; i++){
-            paramMapping[this.__params[i].getName()] = i;
-        }
-        this.__paramMapping = paramMapping;
-        this.parameterRemoved.emit(name);
-    }
-
-    replaceParameter(param){
-        const name = param.getName();
-        const index = this.__paramMapping[name];
-        const prevparam = this.__params[this.__paramMapping[name]]
-        prevparam.removeRef(this);
-        prevparam.valueChanged.disconnectId(this.__paramSignalIds[name]);
-
-        param.addRef(this);
-        this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.parameterValueChanged.emit(param, mode));
-        this.__params[index] = param;
-        return param;
-    }
-
-    // _removeAllParameters(){
-    //     for (let i=this.__params.length-1; i>=0; i--) {
-    //         this.removeParameter(i);
-    //     }
-    // }
-
-
-    addCommand(command) {
-        const name = command.getName();
-        command.setOwner(this)
-        this.__params.push(command)
-        this.__paramMapping[name] = this.__params.length - 1;
-        return command;
-    }
-    //////////////////////////////////////////
-    // Persistence
-
-
-    toJSON(context, flags) {
-
-        const paramsJSON = {};
-        let savedParams = 0;
-        for (let param of this.__params){
-            if(param.numRefs() > 1 && param.getRefIndex(this) != 0) {
-                paramsJSON[param.getName()] = {
-                    paramPath: context.makeRelative(param.getPath())
-                }
-                savedParams++;
-            }
-            else {
-                const paramJSON = param.toJSON(context, flags);
-                if(paramJSON){
-                    paramsJSON[param.getName()] = paramJSON;
-                    savedParams++;
-                }
-            }
-        }
-        if(savedParams > 0)
-            return { params: paramsJSON };
-    }
-
-    fromJSON(j, context, flags) {
-        if(j.params) {
-            for (let key in j.params) {
-                const pj = j.params[key];
-                const param = this.getParameter(key);
-                if(!param) 
-                    console.warn("Param not found:" + key);
-                else {
-                    if(pj.paramPath){
-                        context.resolvePath(pj.paramPath, (param)=>{
-                            this.replaceParameter(param)
-                        }, (reason)=>{
-                            console.warn("Unable to resolve shared parameter:" + pj.paramPath);
-                        });
-                    }
-                    else {
-                        param.fromJSON(pj, context);
-                    }
-                }
-            }
-        }
-    }
-
-    readBinary(reader, context) {
-        // TODO: make this work
-
-        if(context.version >= 3) {
-
-            const numProps = reader.loadUInt32();
-            for (let i = 0; i < numProps; i++) {
-                const propType = reader.loadStr();
-                const propName = reader.loadStr();
-                let param = this.getParameter(propName);
-                if (!param) {
-                    param = sgFactory.constructClass(propType, propName);
-                    if (!param) {
-                        console.error("Unable to construct prop:" + propName + " of type:" + propType);
-                        continue;
-                    }
-                    this.addParameter(param);
-                }
-                param.readBinary(reader, context);
-            }
-        }
-    }
-
-    toString() {
-        return JSON.stringify(this.toJSON(), null, 2)
-    }
-
-    destroy(){
-        for (let param of this.__params){
-            param.destroy();
-        }
-        super.destroy();
-    };
+    super.destroy();
+  };
 };
 
 export {
-    ParameterOwner
+  ParameterOwner
 };

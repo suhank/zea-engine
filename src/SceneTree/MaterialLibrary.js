@@ -1,180 +1,180 @@
 import {
-    SystemDesc
+  SystemDesc
 } from '../BrowserDetection.js';
 import {
-    Signal
+  Signal
 } from '../Utilities';
 import {
-    sgFactory
+  sgFactory
 } from './SGFactory.js';
 import {
-    Material
+  Material
 } from './Material.js';
 import {
-    FileImage
+  FileImage
 } from './Images';
 
 
 class MaterialLibrary {
-    constructor(name='MaterialLibrary') {
-        this.__name = name;
+  constructor(name='MaterialLibrary') {
+    this.__name = name;
 
-        this.lod = 0;
-        if(SystemDesc.isMobileDevice)
-            this.lod = 1;
-        this.loaded = new Signal();
-        
-        this.clear()
-    }
+    this.lod = 0;
+    if(SystemDesc.isMobileDevice)
+      this.lod = 1;
+    this.loaded = new Signal();
     
-    clear(){
-        this.__images = {};
-        this.__materials = {
-            Default: new Material('Default', 'SimpleSurfaceShader')
-        };
+    this.clear()
+  }
+  
+  clear(){
+    this.__images = {};
+    this.__materials = {
+      Default: new Material('Default', 'SimpleSurfaceShader')
+    };
+  }
+
+
+  getPath() {
+    return [this.__name];
+  }
+
+  getNumMaterials() {
+    return Object.keys(this.__materials).length;
+  }
+
+  getMaterials() {
+    return Object.values(this.__materials);
+  }
+
+  getMaterialNames() {
+    let names = [];
+    for(let name in this.__materials) {
+      names.push(name);
     }
+    return names;
+  }
 
+  hasMaterial(name) {
+    return name in this.__materials;
+  }
 
-    getPath() {
-        return [this.__name];
+  addMaterial(material) {
+    material.setOwner(this);
+    this.__materials[material.getName()] = material;
+  }
+
+  getMaterial(name, assert=true) {
+    const res = this.__materials[name];
+    if(!res && assert){
+      throw("Material:" + name+ " not found in library:" + this.getMaterialNames())
     }
+    return res;
+  }
 
-    getNumMaterials() {
-        return Object.keys(this.__materials).length;
+  hasImage(name) {
+    return name in this.__images;
+  }
+
+  addImage(image) {
+    image.setOwner(this);
+    this.__images[image.getName()] = image;
+  }
+
+  getImage(name, assert=true) {
+    const res = this.__images[name];
+    if(!res && assert){
+      throw("Image:" + name+ " not found in library:" + this.getImageNames())
     }
+    return res;
+  }
 
-    getMaterials() {
-        return Object.values(this.__materials);
+  getImageNames() {
+    let names = [];
+    for(let name in this.__images) {
+      names.push(name);
     }
+    return names;
+  }
 
-    getMaterialNames() {
-        let names = [];
-        for(let name in this.__materials) {
-            names.push(name);
+  //////////////////////////////////////////
+  // Persistence
+
+  load(filePath) {
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", filePath, true);
+    xhr.ontimeout = ()=>{
+      throw("The request for " + filePath + " timed out.");
+    };
+    xhr.onload = ()=>{
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          this.fromJSON(JSON.parse(xhr.responseText));
+        } else {
+          console.warn(xhr.statusText);
         }
-        return names;
+      }
+    };
+    xhr.send(null);
+  }
+
+  fromJSON(j, context={}, flags=0) {
+    context.lod = this.lod;
+    for (let name in j.textures) {
+      let image = new FileImage(name);
+      image.fromJSON(j.textures[name]);
+      this.__images[name] = texture;
+    }
+    for (let name in j.materials) {
+      let material = new Material(name);
+      material.fromJSON(j.materials[name]);
+      this.addMaterial(material);
+    }
+  }
+
+  toJSON(context={}, flags=0) {
+    return {
+      "numMaterials": this.geoms.length()
+    }
+  }
+
+
+  readBinary(reader, context={}) {
+
+    if(context.version == undefined)
+      context.version = 0;
+    
+    this.name = reader.loadStr();
+
+    // Specify the Lod to load the images in this library.
+    context.lod = this.lod;
+    context.materialLibrary = this;
+
+    let numTextures = reader.loadUInt32();
+    for (let i = 0; i < numTextures; i++) {
+      let type = reader.loadStr();
+      let texture = sgFactory.constructClass(type, undefined);
+      texture.readBinary(reader, context);
+      this.__images[texture.getName()] = texture;
+    }
+    let numMaterials = reader.loadUInt32();
+    if (numMaterials > 0) {
+      let toc = reader.loadUInt32Array(numMaterials);
+      for (let i = 0; i < numMaterials; i++) {
+        let material = new Material("");
+        reader.seek(toc[i]); // Reset the pointer to the start of the item data.
+        material.readBinary(reader, context, this.__images);
+        this.addMaterial(material);
+      }
     }
 
-    hasMaterial(name) {
-        return name in this.__materials;
-    }
+    this.loaded.emit();
+  }
 
-    addMaterial(material) {
-        material.setOwner(this);
-        this.__materials[material.getName()] = material;
-    }
-
-    getMaterial(name, assert=true) {
-        const res = this.__materials[name];
-        if(!res && assert){
-            throw("Material:" + name+ " not found in library:" + this.getMaterialNames())
-        }
-        return res;
-    }
-
-    hasImage(name) {
-        return name in this.__images;
-    }
-
-    addImage(image) {
-        image.setOwner(this);
-        this.__images[image.getName()] = image;
-    }
-
-    getImage(name, assert=true) {
-        const res = this.__images[name];
-        if(!res && assert){
-            throw("Image:" + name+ " not found in library:" + this.getImageNames())
-        }
-        return res;
-    }
-
-    getImageNames() {
-        let names = [];
-        for(let name in this.__images) {
-            names.push(name);
-        }
-        return names;
-    }
-
-    //////////////////////////////////////////
-    // Persistence
-
-    load(filePath) {
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", filePath, true);
-        xhr.ontimeout = ()=>{
-            throw("The request for " + filePath + " timed out.");
-        };
-        xhr.onload = ()=>{
-            if (xhr.readyState === 4) {
-                if (xhr.status === 200) {
-                    this.fromJSON(JSON.parse(xhr.responseText));
-                } else {
-                    console.warn(xhr.statusText);
-                }
-            }
-        };
-        xhr.send(null);
-    }
-
-    fromJSON(j, context={}, flags=0) {
-        context.lod = this.lod;
-        for (let name in j.textures) {
-            let image = new FileImage(name);
-            image.fromJSON(j.textures[name]);
-            this.__images[name] = texture;
-        }
-        for (let name in j.materials) {
-            let material = new Material(name);
-            material.fromJSON(j.materials[name]);
-            this.addMaterial(material);
-        }
-    }
-
-    toJSON(context={}, flags=0) {
-        return {
-            "numMaterials": this.geoms.length()
-        }
-    }
-
-
-    readBinary(reader, context={}) {
-
-        if(context.version == undefined)
-          context.version = 0;
-      
-        this.name = reader.loadStr();
-
-        // Specify the Lod to load the images in this library.
-        context.lod = this.lod;
-        context.materialLibrary = this;
-
-        let numTextures = reader.loadUInt32();
-        for (let i = 0; i < numTextures; i++) {
-            let type = reader.loadStr();
-            let texture = sgFactory.constructClass(type, undefined);
-            texture.readBinary(reader, context);
-            this.__images[texture.getName()] = texture;
-        }
-        let numMaterials = reader.loadUInt32();
-        if (numMaterials > 0) {
-            let toc = reader.loadUInt32Array(numMaterials);
-            for (let i = 0; i < numMaterials; i++) {
-                let material = new Material("");
-                reader.seek(toc[i]); // Reset the pointer to the start of the item data.
-                material.readBinary(reader, context, this.__images);
-                this.addMaterial(material);
-            }
-        }
-
-        this.loaded.emit();
-    }
-
-    toString() {
-        return JSON.stringify(this.toJSON(), null, 2)
-    }
+  toString() {
+    return JSON.stringify(this.toJSON(), null, 2)
+  }
 };
 export {
-    MaterialLibrary
+  MaterialLibrary
 };
