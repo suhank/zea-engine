@@ -1,6 +1,6 @@
 
 if(window.Visualive) {
-	console.error("Visualive has been included twice in your project.")
+  console.error("Visualive has been included twice in your project.")
 }
 
 export * from './BrowserDetection.js';
