@@ -1,70 +1,70 @@
 import {
-    Signal
+  Signal
 } from '../Utilities';
 import {
-    BaseItem
+  BaseItem
 } from '../SceneTree';
 import {
-    MaterialShaderBinding
+  MaterialShaderBinding
 } from './MaterialShaderBinding.js';
 
 
 class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
-    constructor(gl, material, glshader) {
-        // super(name);
-        this.__gl = gl;
-        this.__material = material;
-        this.__glshader = glshader;
+  constructor(gl, material, glshader) {
+    // super(name);
+    this.__gl = gl;
+    this.__material = material;
+    this.__glshader = glshader;
 
-        this.updated = new Signal();
-        this.destructing = new Signal();
+    this.updated = new Signal();
+    this.destructing = new Signal();
 
-        this.__material.destructing.connect(() => {
-            this.destructing.emit(this); // Note: propagate this signal so the GLPass can remove the item.
-        });
+    this.__material.destructing.connect(() => {
+      this.destructing.emit(this); // Note: propagate this signal so the GLPass can remove the item.
+    });
 
-        this.__shaderBindings = {};
+    this.__shaderBindings = {};
+  }
+
+  getMaterial() {
+    return this.__material;
+  }
+
+  getGLShader() {
+    return this.__glshader;
+  }
+
+  generateShaderBinding() {
+    const params = this.__material.getParameters();
+    for (let param of params) {
+      bindParam(gl, param);
     }
+  }
 
-    getMaterial() {
-        return this.__material;
+  bind(renderstate) {
+
+    // console.log("Material:" + this.__material.getName());
+    this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
+
+    let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
+    if (!shaderBinding) {
+      const gl = this.__gl;
+      shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs);
+      this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
     }
+    return shaderBinding.bind(renderstate);
 
-    getGLShader() {
-        return this.__glshader;
-    }
+    return true;
+  }
 
-    generateShaderBinding() {
-        const params = this.__material.getParameters();
-        for (let param of params) {
-            bindParam(gl, param);
-        }
-    }
-
-    bind(renderstate) {
-
-        // console.log("Material:" + this.__material.getName());
-        this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
-
-        let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
-        if (!shaderBinding) {
-            const gl = this.__gl;
-            shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs);
-            this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
-        }
-        return shaderBinding.bind(renderstate);
-
-        return true;
-    }
-
-    unbind(renderstate) {
-        // Enable texture units to be re-used by resetting the count back
-        // to what it was.
-        renderstate.boundTextures = this.__boundTexturesBeforeMaterial;
-    }
+  unbind(renderstate) {
+    // Enable texture units to be re-used by resetting the count back
+    // to what it was.
+    renderstate.boundTextures = this.__boundTexturesBeforeMaterial;
+  }
 };
 
 export {
-    GLMaterial
+  GLMaterial
 };
 // export default GLMaterial;

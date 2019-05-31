@@ -165,63 +165,63 @@ class GLRenderTarget {
 
   resize(width, height, preserveData = false) {
     /*
-        const gl = this.__gl;
-        const sizeChanged = this.width != width || this.height != height;
-        if (sizeChanged) {
-          const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
-          if (width < 0 || width > maxSize || height < 0 || height > maxSize) {
-              throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
-          }
-          const gltex = gl.createTexture();
-          gl.bindTexture(gl.TEXTURE_2D, gltex);
-          gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__channels, this.__format, null);
+    const gl = this.__gl;
+    const sizeChanged = this.width != width || this.height != height;
+    if (sizeChanged) {
+      const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
+      if (width < 0 || width > maxSize || height < 0 || height > maxSize) {
+          throw new Error("gl-texture2d: Invalid texture size. width:" + width + " height:" + height + " maxSize:" + maxSize);
+      }
+      const gltex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, gltex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, width, height, 0, this.__channels, this.__format, null);
 
-          if (preserveData) {
-            const fbo = gl.createFramebuffer();
-            gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-            gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__gltex, 0);
+      if (preserveData) {
+        const fbo = gl.createFramebuffer();
+        gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__gltex, 0);
 
-            gl.bindTexture(gl.TEXTURE_2D, gltex); // Do we need this line?
-            gl.copyTexImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, 0, 0, this.width, this.height, 0);
+        gl.bindTexture(gl.TEXTURE_2D, gltex); // Do we need this line?
+        gl.copyTexImage2D(gl.TEXTURE_2D, 0, this.__internalFormat, 0, 0, this.width, this.height, 0);
 
-            gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-            gl.deleteFramebuffer(fbo)
-          }
+        gl.deleteFramebuffer(fbo)
+      }
 
-          this.width = width;
-          this.height = height;
+      this.width = width;
+      this.height = height;
 
-          this.__gl.deleteTexture(this.__gltex);
-          this.__gltex = gltex;
-          this.__updateGLTexParams();
-          if (emit) {
-              this.resized.emit(width, height);
-          }
-        }
+      this.__gl.deleteTexture(this.__gltex);
+      this.__gltex = gltex;
+      this.__updateGLTexParams();
+      if (emit) {
+          this.resized.emit(width, height);
+      }
+    }
 
-        if (gl.name == 'webgl2')
-          gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer);
-        else
-          gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
+    if (gl.name == 'webgl2')
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer);
+    else
+      gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer);
 
-        // The color texture is destoryed and re-created when it is resized,
-        // so we must re-bind it here..
-        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
-        if (this.depthChannel) {
-          gl.activeTexture(gl.TEXTURE0);
-          gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture);
-          if (gl.name == 'webgl2'){
-            // the proper texture format combination can be found here
-            // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
-          }
-          else
-            gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
-        }
-        this.__checkFramebuffer();
-        //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        */
+    // The color texture is destoryed and re-created when it is resized,
+    // so we must re-bind it here..
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+    if (this.depthChannel) {
+      gl.activeTexture(gl.TEXTURE0);
+      gl.bindTexture(gl.TEXTURE_2D, this.__depthTexture);
+      if (gl.name == 'webgl2'){
+        // the proper texture format combination can be found here
+        // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT24, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+      }
+      else
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.DEPTH_COMPONENT, this.width, this.height, 0, gl.DEPTH_COMPONENT, gl.UNSIGNED_INT, null);
+    }
+    this.__checkFramebuffer();
+    //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    */
   }
 }
 export {

@@ -1,32 +1,32 @@
 import {
-    Vec2,
-    Rect2
+  Vec2,
+  Rect2
 } from '../Math';
 import {
-    GLTexture2D
+  GLTexture2D
 } from './GLTexture2D.js';
 import {
-    GLFbo
+  GLFbo
 } from './GLFbo.js';
 import {
-    GLShader
+  GLShader
 } from './GLShader.js';
 import {
-    ImageAtlas
+  ImageAtlas
 } from './ImageAtlas.js';
 import {
-    generateShaderGeomBinding
+  generateShaderGeomBinding
 } from './GeomShaderBinding.js';
 import {
-    shaderLibrary
+  shaderLibrary
 } from './ShaderLibrary'
 
 import './Shaders/GLSL/ImagePyramid.js';
 
 let Math_log2 = function(value) {
-    // IE11 doesn't support Math.log2.
-    return Math.log2(value)
-        //return Math.log( value ) / Math.log( 2 ) - 2;
+  // IE11 doesn't support Math.log2.
+  return Math.log2(value)
+    //return Math.log( value ) / Math.log( 2 ) - 2;
 };
 
 
@@ -87,81 +87,81 @@ let Math_log2 = function(value) {
 // };
 
 class ImagePyramid extends ImageAtlas {
-    constructor(gl, name, srcGLTex, destroySrcImage = true, minTileSize = 16) {
-        super(gl, name);
+  constructor(gl, name, srcGLTex, destroySrcImage = true, minTileSize = 16) {
+    super(gl, name);
 
-        this.__srcGLTex = srcGLTex;
-        this.__fbos = [];
+    this.__srcGLTex = srcGLTex;
+    this.__fbos = [];
 
-        srcGLTex.updated.connect(() => {
-            this.renderAtlas(destroySrcImage);
-        });
-        if (this.__srcGLTex.isLoaded()) {
-            this.generateAtlasLayout(minTileSize);
-            this.renderAtlas(destroySrcImage);
-        } else {
-            this.__srcGLTex.updated.connect(() => {
-                this.generateAtlasLayout(minTileSize);
-                this.renderAtlas(destroySrcImage);
-            });
-        }
-        srcGLTex.destructing.connect(() => {
-            console.log(this.__srcGLTex.getName() + " ImagePyramid destructing");
-            this.destroy();
-        });
+    srcGLTex.updated.connect(() => {
+      this.renderAtlas(destroySrcImage);
+    });
+    if (this.__srcGLTex.isLoaded()) {
+      this.generateAtlasLayout(minTileSize);
+      this.renderAtlas(destroySrcImage);
+    } else {
+      this.__srcGLTex.updated.connect(() => {
+        this.generateAtlasLayout(minTileSize);
+        this.renderAtlas(destroySrcImage);
+      });
+    }
+    srcGLTex.destructing.connect(() => {
+      console.log(this.__srcGLTex.getName() + " ImagePyramid destructing");
+      this.destroy();
+    });
+  }
+
+  generateAtlasLayout(minTileSize) {
+    const gl = this.__gl;
+
+    this.size = this.__srcGLTex.height;
+    let aspectRatio = this.__srcGLTex.width / this.__srcGLTex.height;
+
+    this.addSubImage(this.__srcGLTex);
+    let numLevels = Math.round(Math_log2(this.size)) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
+    for (let i = numLevels; i >= 0; --i) {
+      let size = Math.pow(2, i);
+      if (size < minTileSize)
+        break;
+      // Create a target texture for this level of the pyramid.
+      // and then render to it using the base level as a source image.
+      let level = new GLTexture2D(gl, {
+        format: this.__srcGLTex.getFormat(),
+        type: this.__srcGLTex.getType(),
+        width: size * aspectRatio,
+        height: size,
+        filter: 'LINEAR',
+        wrap: 'CLAMP_TO_EDGE'
+      });
+      this.addSubImage(level);
+      this.__fbos.push(new GLFbo(gl, level));
     }
 
-    generateAtlasLayout(minTileSize) {
-        const gl = this.__gl;
+    super.generateAtlasLayout();
+  }
 
-        this.size = this.__srcGLTex.height;
-        let aspectRatio = this.__srcGLTex.width / this.__srcGLTex.height;
+  renderAtlas(cleanup = true) {
+    const gl = this.__gl;
+    const renderstate = {};
+    gl.screenQuad.bindShader(renderstate);
 
-        this.addSubImage(this.__srcGLTex);
-        let numLevels = Math.round(Math_log2(this.size)) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
-        for (let i = numLevels; i >= 0; --i) {
-            let size = Math.pow(2, i);
-            if (size < minTileSize)
-                break;
-            // Create a target texture for this level of the pyramid.
-            // and then render to it using the base level as a source image.
-            let level = new GLTexture2D(gl, {
-                format: this.__srcGLTex.getFormat(),
-                type: this.__srcGLTex.getType(),
-                width: size * aspectRatio,
-                height: size,
-                filter: 'LINEAR',
-                wrap: 'CLAMP_TO_EDGE'
-            });
-            this.addSubImage(level);
-            this.__fbos.push(new GLFbo(gl, level));
-        }
-
-        super.generateAtlasLayout();
+    for (let i = 0; i < this.__fbos.length; i++) {
+      this.__fbos[i].bindAndClear();
+      gl.screenQuad.draw(renderstate, this.getSubImage(i)); // Note: we are binding the previous image. (we have 1 more images than fbos.)
     }
 
-    renderAtlas(cleanup = true) {
-        const gl = this.__gl;
-        const renderstate = {};
-        gl.screenQuad.bindShader(renderstate);
+    super.renderAtlas(cleanup);
+  }
 
-        for (let i = 0; i < this.__fbos.length; i++) {
-            this.__fbos[i].bindAndClear();
-            gl.screenQuad.draw(renderstate, this.getSubImage(i)); // Note: we are binding the previous image. (we have 1 more images than fbos.)
-        }
-
-        super.renderAtlas(cleanup);
+  destroy() {
+    super.destroy();
+    for (let fbo of this.__fbos) {
+      fbo.destroy();
     }
-
-    destroy() {
-        super.destroy();
-        for (let fbo of this.__fbos) {
-            fbo.destroy();
-        }
-    }
+  }
 };
 
 export {
-    ImagePyramid
+  ImagePyramid
 };
 // export default ImagePyramid;

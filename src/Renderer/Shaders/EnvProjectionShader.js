@@ -1,15 +1,15 @@
 import {
-    Color,
-    Vec3
+  Color,
+  Vec3
 } from '../../Math';
 import {
-    sgFactory
+  sgFactory
 } from '../../SceneTree';
 import {
-    GLShader
+  GLShader
 } from '../GLShader.js';
 import {
-    shaderLibrary
+  shaderLibrary
 } from '../ShaderLibrary.js';
 
 import './GLSL/stack-gl/inverse.js';
@@ -19,9 +19,9 @@ import './GLSL/envmap-octahedral.js';
 import './GLSL/modelMatrix.js';
 
 class EnvProjectionShader extends GLShader {
-    constructor(gl) {
-        super(gl);
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.vertexShader', `
+  constructor(gl) {
+    super(gl);
+    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('EnvProjectionShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;    //(location = 0)
@@ -39,32 +39,32 @@ varying vec3 v_worldDir;
  
 void main()
 {
-    vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+  vec4 pos = vec4(positions, 1.);
+  mat4 modelMatrix = getModelMatrix();
+  mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
 
-    gl_Position = modelViewProjectionMatrix * pos;
+  gl_Position = modelViewProjectionMatrix * pos;
 
-    vec4 worldPos = modelMatrix * pos;
-    v_worldDir = worldPos.xyz - projectionCenter;
+  vec4 worldPos = modelMatrix * pos;
+  v_worldDir = worldPos.xyz - projectionCenter;
 }
 
 `);
 
-        this.finalize();
-    }
+    this.finalize();
+  }
 
-    static getParamDeclarations() {
-        const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
-        return paramDescs;
-    }
+  static getParamDeclarations() {
+    const paramDescs = super.getParamDeclarations();
+    paramDescs.push({ name: 'projectionCenter', defaultValue: new Vec3(0.0, 0.0, 1.7) })
+    return paramDescs;
+  }
 };
 
 class OctahedralEnvProjectionShader extends EnvProjectionShader {
-    constructor(gl) {
-        super(gl);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctahedralEnvProjectionShader.fragmentShader', `
+  constructor(gl) {
+    super(gl);
+    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('OctahedralEnvProjectionShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -85,37 +85,37 @@ uniform float exposure;
 varying vec3 v_worldDir;
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+  out vec4 fragColor;
 #endif
 void main(void) {
 #ifndef ENABLE_ES3
-    vec4 fragColor;
+  vec4 fragColor;
 #endif
 
-    vec2 texCoord = dirToSphOctUv(normalize(v_worldDir));
-    vec4 env = getColorParamValue(envMap, envMapTex, envMapTexType, texCoord);
+  vec2 texCoord = dirToSphOctUv(normalize(v_worldDir));
+  vec4 env = getColorParamValue(envMap, envMapTex, envMapTexType, texCoord);
 
-    fragColor = vec4(env.rgb/env.a, 1.0);
+  fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    fragColor.rgb = toGamma(fragColor.rgb * exposure);
+  fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+  gl_FragColor = fragColor;
 #endif
 }
 `);
-        this.finalize();
-    }
+    this.finalize();
+  }
 };
 
 sgFactory.registerClass('OctahedralEnvProjectionShader', OctahedralEnvProjectionShader);
 
 class LatLongEnvProjectionShader extends EnvProjectionShader {
-    constructor(gl) {
-        super(gl);
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongEnvProjectionShader.fragmentShader', `
+  constructor(gl) {
+    super(gl);
+    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('LatLongEnvProjectionShader.fragmentShader', `
 precision highp float;
 
 <%include file="math/constants.glsl"/>
@@ -134,35 +134,35 @@ uniform float exposure;
 varying vec3 v_worldDir;
 
 #ifdef ENABLE_ES3
-    out vec4 fragColor;
+  out vec4 fragColor;
 #endif
 void main(void) {
 #ifndef ENABLE_ES3
-    vec4 fragColor;
+  vec4 fragColor;
 #endif
 
-    vec2 texCoord = latLongUVsFromDir(normalize(v_worldDir));
-    vec4 env = getColorParamValue(envMap, envMapTex, envMapTexType, texCoord);
-    fragColor = vec4(env.rgb/env.a, 1.0);
+  vec2 texCoord = latLongUVsFromDir(normalize(v_worldDir));
+  vec4 env = getColorParamValue(envMap, envMapTex, envMapTexType, texCoord);
+  fragColor = vec4(env.rgb/env.a, 1.0);
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
-    fragColor.rgb = toGamma(fragColor.rgb * exposure);
+  fragColor.rgb = toGamma(fragColor.rgb * exposure);
 #endif
 
 
 #ifndef ENABLE_ES3
-    gl_FragColor = fragColor;
+  gl_FragColor = fragColor;
 #endif
 }
 `);
-        this.finalize();
-    }
+    this.finalize();
+  }
 };
 
 
 sgFactory.registerClass('LatLongEnvProjectionShader', LatLongEnvProjectionShader);
 export {
-    EnvProjectionShader,
-    OctahedralEnvProjectionShader,
-    LatLongEnvProjectionShader
+  EnvProjectionShader,
+  OctahedralEnvProjectionShader,
+  LatLongEnvProjectionShader
 };

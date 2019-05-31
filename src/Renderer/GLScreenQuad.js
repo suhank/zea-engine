@@ -1,78 +1,78 @@
 import {
-    AttrValue
+  AttrValue
 } from '../Math';
 import {
-    Signal
+  Signal
 } from '../Utilities';
 import {
-    GLShader
+  GLShader
 } from './GLShader.js';
 import {
-    ScreenQuadShader
+  ScreenQuadShader
 } from './Shaders/ScreenQuadShader.js';
 import {
-    generateShaderGeomBinding
+  generateShaderGeomBinding
 } from './GeomShaderBinding.js';
 
 class GLScreenQuad {
-    constructor(gl, preproc) {
-        this.__gl = gl;
+  constructor(gl, preproc) {
+    this.__gl = gl;
 
-        this.__pos = [0.0, 0.0];
-        this.__size = [1.0, 1.0];
-        this.flipY = true;
-        this.__glshader = new ScreenQuadShader(gl);
+    this.__pos = [0.0, 0.0];
+    this.__size = [1.0, 1.0];
+    this.flipY = true;
+    this.__glshader = new ScreenQuadShader(gl);
 
-        if (!gl.__quadVertexIdsBuffer)
-            gl.setupInstancedQuad();
+    if (!gl.__quadVertexIdsBuffer)
+      gl.setupInstancedQuad();
 
-        let shaderComp = this.__glshader.compileForTarget('GLScreenQuad', preproc);
-        this.__quadBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+    let shaderComp = this.__glshader.compileForTarget('GLScreenQuad', preproc);
+    this.__quadBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
 
-        this.ready = true;
+    this.ready = true;
+  }
+
+  bind(renderstate, texture, pos = undefined, size = undefined) {
+    const unifs = renderstate.unifs;
+    texture.bindToUniform(renderstate, renderstate.unifs.image);
+
+    const gl = this.__gl; {
+      let unif = unifs.pos;
+      if (unif) {
+        gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
+      }
+    } {
+      let unif = unifs.size;
+      if (unif) {
+        gl.uniform2fv(unif.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
+      }
     }
+    // if ('flipY' in unifs)
+    //     gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);
 
-    bind(renderstate, texture, pos = undefined, size = undefined) {
-        const unifs = renderstate.unifs;
-        texture.bindToUniform(renderstate, renderstate.unifs.image);
+    // if ('textureDim' in unifs)
+    //     gl.uniform2fv(unifs.textureDim.location, [texture.width, texture.height]);
 
-        const gl = this.__gl; {
-            let unif = unifs.pos;
-            if (unif) {
-                gl.uniform2fv(unif.location, pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos);
-            }
-        } {
-            let unif = unifs.size;
-            if (unif) {
-                gl.uniform2fv(unif.location, size ? (size instanceof AttrValue ? size.asArray() : size) : this.__size);
-            }
-        }
-        // if ('flipY' in unifs)
-        //     gl.uniform1i(unifs.flipY.location, this.flipY ? 1 : 0);
+    this.__quadBinding.bind(renderstate);
+  }
 
-        // if ('textureDim' in unifs)
-        //     gl.uniform2fv(unifs.textureDim.location, [texture.width, texture.height]);
+  bindShader(renderstate) {
+    return this.__glshader.bind(renderstate, 'GLScreenQuad');
+  }
 
-        this.__quadBinding.bind(renderstate);
-    }
+  draw(renderstate, texture, pos = undefined, size = undefined) {
 
-    bindShader(renderstate) {
-        return this.__glshader.bind(renderstate, 'GLScreenQuad');
-    }
+    this.bind(renderstate, texture, pos, size);
 
-    draw(renderstate, texture, pos = undefined, size = undefined) {
+    this.__gl.drawQuad();
+  }
 
-        this.bind(renderstate, texture, pos, size);
+  destroy() {
 
-        this.__gl.drawQuad();
-    }
-
-    destroy() {
-
-    }
+  }
 };
 
 export {
-    GLScreenQuad
+  GLScreenQuad
 };
 // export default GLScreenQuad;
