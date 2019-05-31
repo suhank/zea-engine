@@ -402,7 +402,7 @@ class VRViewport extends GLBaseViewport {
         const gl = this.__renderer.gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
 
-        gl.clearColor(...this.__backgroundColor.asArray());
+        gl.clearColor(...this.__backgroundColorParam.getValue().asArray());
         gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
