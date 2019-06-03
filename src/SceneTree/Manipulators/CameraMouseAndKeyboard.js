@@ -248,17 +248,16 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   }
 
-  onDoubleClick(event, mouseDownPos, viewport) {
+  onDoubleClick(event, viewport) {
     if(event.intersectionData) {
       const camera = viewport.getCamera();
-      const pos = camera.getGlobalXfo().tr.add(event.intersectionData.mouseRay.dir.scale(event.intersectionData.dist))
+      const pos = camera.getGlobalXfo().tr.add(event.mouseRay.dir.scale(event.intersectionData.dist))
       this.aimFocus(camera, pos);
     }
   }
 
-  onDragStart(event, mouseDownPos, viewport) {
-
-    this.__mouseDownPos = mouseDownPos;
+  onDragStart(event, viewport) {
+    this.__mouseDownPos = event.mousePos;
     this.initDrag(viewport);
 
     if (event.altKey || event.button == 2) {
@@ -272,7 +271,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
-  onDrag(event, mousePos, viewport) {
+  onDrag(event, viewport) {
+    const mousePos = event.mousePos;
     // During requestPointerLock, the offsetX/Y values are not updated.
     // Instead we get a relative delta that we use to compute the total
     // delta for the drag.
@@ -305,7 +305,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
-  onDragEnd(event, mouseUpPos, viewport) {
+  onDragEnd(event, viewport) {
     this.movementFinished.emit();
     return false;
   }
@@ -510,6 +510,11 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   onDoubleTap(event, viewport) {
+    if(event.intersectionData) {
+      const camera = viewport.getCamera();
+      const pos = camera.getGlobalXfo().tr.add(event.touchRay.dir.scale(event.intersectionData.dist))
+      this.aimFocus(camera, pos);
+    }
     event.preventDefault();
     console.log("onDoubleTap.");
   }

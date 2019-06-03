@@ -398,7 +398,7 @@ class GLViewport extends GLBaseViewport {
     if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
       if (this.__cameraManipulator) {
         this.__cameraManipulatorDragging = true;
-        this.__cameraManipulator.onDoubleClick(event, mousePos, this);
+        this.__cameraManipulator.onDoubleClick(event, this);
         return;
       }
 
@@ -408,7 +408,7 @@ class GLViewport extends GLBaseViewport {
       this.__prevDownTime = downTime;
       if (this.__cameraManipulator) {
         this.__cameraManipulatorDragging = true;
-        this.__cameraManipulator.onDragStart(event, mousePos, this);
+        this.__cameraManipulator.onDragStart(event, this);
         return;
       }
 
@@ -425,7 +425,7 @@ class GLViewport extends GLBaseViewport {
     event.mouseRay = this.calcRayFromScreenPos(mousePos);
 
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-      this.__cameraManipulator.onDragEnd(event, mousePos, this);
+      this.__cameraManipulator.onDragEnd(event, this);
       this.__cameraManipulatorDragging = false;
       return;
     }
@@ -442,7 +442,7 @@ class GLViewport extends GLBaseViewport {
     event.mouseRay = this.calcRayFromScreenPos(mousePos);
 
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-      this.__cameraManipulator.onDrag(event, mousePos, this);
+      this.__cameraManipulator.onDrag(event, this);
       return;
     }
     this.mouseMoved.emit(event);
@@ -528,7 +528,7 @@ class GLViewport extends GLBaseViewport {
       if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
         if (this.__cameraManipulator) {
           this.__cameraManipulatorDragging = true;
-          this.__cameraManipulator.onDoubleTap(event, mousePos, this);
+          this.__cameraManipulator.onDoubleTap(event, this);
           return;
         }
         this.doubleTapped.emit(event);

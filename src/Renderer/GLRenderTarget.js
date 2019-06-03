@@ -26,7 +26,7 @@ class GLRenderTarget {
     for (let i = 0; i < numColorChannels; i++) {
 
       gl.activeTexture(gl.TEXTURE0 + 1);
-      let colorTexture = gl.createTexture();
+      const colorTexture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, colorTexture);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, p.wrapS);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, p.wrapT);
@@ -109,7 +109,11 @@ class GLRenderTarget {
     gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
   }
 
-  bindForWriting(clear = false) {
+  bindForWriting(renderstate, clear = false) {
+    if(renderstate) {
+      this.__prevBoundFbo = renderstate.boundRendertarget;
+      renderstate.boundRendertarget = this.__fbo;
+    }
     const gl = this.__gl;
     if (gl.name == 'webgl2')
       gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.frameBuffer);
