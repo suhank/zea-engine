@@ -13,8 +13,13 @@ class Cross extends Lines {
     if(isNaN(size))
       throw("Invalid geom args");
 
-    this.__size = size;
+    this.__sizeParam = this.addParameter(new NumberParameter('size', size));
     this.__rebuild();
+
+    const resize = ()=>{
+      this.__resize();
+    }
+    this.__sizeParam.valueChanged.connect(resize);
   }
 
 
@@ -37,20 +42,16 @@ class Cross extends Lines {
   }
 
   __resize() {
-    this.getVertex(0).set(-0.5 * this.__size, 0, 0);
-    this.getVertex(1).set(0.5 * this.__size, 0, 0);
-    this.getVertex(2).set(0, 0.5 * this.__size,  0);
-    this.getVertex(3).set(0, -0.5 * this.__size,  0);
-    this.getVertex(4).set(0, 0, 0.5 * this.__size);
-    this.getVertex(5).set(0, 0, -0.5 * this.__size);
+    const size = this.__sizeParam.getValue();
+    this.getVertex(0).set(-0.5 * size, 0, 0);
+    this.getVertex(1).set(0.5 * size, 0, 0);
+    this.getVertex(2).set(0, 0.5 * size,  0);
+    this.getVertex(3).set(0, -0.5 * size,  0);
+    this.getVertex(4).set(0, 0, 0.5 * size);
+    this.getVertex(5).set(0, 0, -0.5 * size);
     this.setBoundingBoxDirty();
   }
 
-  toJSON() {
-    let json = super.toJSON();
-    json['size'] = this.__size;
-    return json
-  }
 };
 sgFactory.registerClass('Cross', Cross);
 

@@ -290,7 +290,7 @@ class Vec3 extends AttrValue {
    * @returns {vec3}
    */
   cross(b) {
-    let ax = this.x,
+    const ax = this.x,
       ay = this.y,
       az = this.z,
       bx = b.x,

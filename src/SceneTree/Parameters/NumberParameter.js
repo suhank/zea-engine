@@ -10,11 +10,11 @@ import {
 } from './Parameter.js';
 
 class NumberParameter extends Parameter {
-  constructor(name, value=0, range=undefined) {
+  constructor(name, value=0, range=undefined, step=undefined) {
     super(name, value, 'Number');
     // The value might not have a range.
     this.__range = range;
-    this.__step = undefined;
+    this.__step = step;
   }
 
   setValue(value, mode) {

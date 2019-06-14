@@ -282,7 +282,7 @@ class GLViewport extends GLBaseViewport {
       if (gl.floatGeomBuffer) {
         geomData = new Float32Array(4);
         gl.readPixels(screenPos.x, (this.__height - screenPos.y), 1, 1, gl.RGBA, gl.FLOAT, geomData);
-        if (Math.abs(Math.round(geomData[3])) == 0)
+        if (geomData[3] == 0)
           return undefined;
         passId = Math.round(geomData[0]);
       } else {

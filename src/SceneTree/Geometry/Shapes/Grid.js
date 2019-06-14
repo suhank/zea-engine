@@ -2,6 +2,14 @@ import { Vec2 } from '../../../Math/Vec2';
 import { Vec3 } from '../../../Math/Vec3';
 import { Lines } from '../Lines.js';
 
+import {
+  BooleanParameter,
+  NumberParameter
+} from '../../Parameters';
+import {
+  sgFactory
+} from '../../SGFactory.js';
+
 class Grid extends Lines {
   constructor(x = 1.0, y = 1.0, xDivisions = 10, yDivisions = 10, skipCenterLines=false) {
     super();
@@ -9,11 +17,13 @@ class Grid extends Lines {
     if(isNaN(x) || isNaN(y) || isNaN(xDivisions) || isNaN(yDivisions))
       throw("Invalid geom args");
     
-    this.__x = x;
-    this.__y = y;
-    this.__xDivisions = xDivisions;
-    this.__yDivisions = yDivisions;
-    this.__skipCenterLines = skipCenterLines;
+    
+    this.__xParam = this.addParameter(new NumberParameter('x', x));
+    this.__yParam = this.addParameter(new NumberParameter('y', y));
+    this.__xDivisionsParam = this.addParameter(new NumberParameter('xDivisions', xDivisions));
+    this.__yDivisionsParam = this.addParameter(new NumberParameter('yDivisions', yDivisions));
+    this.__skipCenterLinesParam = this.addParameter(new BooleanParameter('skipCenterLines', skipCenterLines));
+
     this.__rebuild();
   }
 
@@ -60,20 +70,23 @@ class Grid extends Lines {
   }
 
   __rebuild() {
-    const skipCenterLines = this.__skipCenterLines && (this.__xDivisions % 2) == 0 && (this.__yDivisions % 2) == 0;
-    this.setNumVertices((this.__xDivisions + this.__yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2);
-    this.setNumSegments(this.__xDivisions + this.__yDivisions + 2 - (skipCenterLines ? 1 : 0));
+    const xDivisions = this.__xDivisionsParam.getValue();
+    const yDivisions = this.__yDivisionsParam.getValue();
+
+    const skipCenterLines = this.__skipCenterLinesParam.getValue() && (xDivisions % 2) == 0 && (yDivisions % 2) == 0;
+    this.setNumVertices((xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0)) * 2);
+    this.setNumSegments(xDivisions + yDivisions + 2 - (skipCenterLines ? 1 : 0));
     let idx = 0;
-    for (let i = 0; i <= this.__xDivisions; i++) {
-      if(skipCenterLines && i == this.__xDivisions/2)
+    for (let i = 0; i <= xDivisions; i++) {
+      if(skipCenterLines && i == xDivisions/2)
         continue;
       let v0 = (idx*2);
       let v1 = ((idx*2) + 1);
       this.setSegment(idx, v0, v1);
       idx++;
     }
-    for (let i=0; i <= this.__yDivisions; i++) {
-      if(skipCenterLines && i == this.__xDivisions/2)
+    for (let i=0; i <= yDivisions; i++) {
+      if(skipCenterLines && i == xDivisions/2)
         continue;
       let v0 = (idx*2);
       let v1 = ((idx*2) + 1);
@@ -84,26 +97,31 @@ class Grid extends Lines {
   }
 
   __resize() {
-    const skipCenterLines = this.__skipCenterLines && (this.__xDivisions % 2) == 0 && (this.__yDivisions % 2) == 0;
+    const xDivisions = this.__xDivisionsParam.getValue();
+    const yDivisions = this.__yDivisionsParam.getValue();
+    const xSize = this.__xParam.getValue();
+    const ySize = this.__yParam.getValue();
+
+    const skipCenterLines = this.__skipCenterLines && (xDivisions % 2) == 0 && (yDivisions % 2) == 0;
     let idx = 0;
-    for (let i = 0; i <= this.__xDivisions; i++) {
-      if(skipCenterLines && i == this.__xDivisions/2)
+    for (let i = 0; i <= xDivisions; i++) {
+      if(skipCenterLines && i == xDivisions/2)
         continue;
-      let v0 = (idx*2);
-      let v1 = ((idx*2) + 1);
-      let x = ((i / (this.__xDivisions) - 0.5)) * this.__x;
-      this.getVertex(v0).set(x, -0.5 * this.__y, 0.0);
-      this.getVertex(v1).set(x,  0.5 * this.__y, 0.0);
+      const v0 = (idx*2);
+      const v1 = ((idx*2) + 1);
+      const x = ((i / (xDivisions) - 0.5)) * xSize;
+      this.getVertex(v0).set(x, -0.5 * ySize, 0.0);
+      this.getVertex(v1).set(x,  0.5 * ySize, 0.0);
       idx++;
     }
-    for (let i = 0; i <= this.__yDivisions; i++) {
-      if(skipCenterLines && i == this.__xDivisions/2)
+    for (let i = 0; i <= yDivisions; i++) {
+      if(skipCenterLines && i == xDivisions/2)
         continue;
-      let v0 = (idx*2);
-      let v1 = ((idx*2) + 1);
-      let y = ((i / (this.__yDivisions) - 0.5)) * this.__y;
-      this.getVertex(v0).set(-0.5 * this.__x, y, 0.0);
-      this.getVertex(v1).set( 0.5 * this.__x, y, 0.0);
+      const v0 = (idx*2);
+      const v1 = ((idx*2) + 1);
+      const y = ((i / (yDivisions) - 0.5)) * ySize;
+      this.getVertex(v0).set(-0.5 * xSize, y, 0.0);
+      this.getVertex(v1).set( 0.5 * xSize, y, 0.0);
       idx++;
     }
 
@@ -120,7 +138,8 @@ class Grid extends Lines {
   }
 };
 
+sgFactory.registerClass('Grid', Grid);
+
 export {
   Grid
 };
-//export default Grid;

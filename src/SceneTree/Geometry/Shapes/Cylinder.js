@@ -2,6 +2,13 @@ import { Vec2 } from '../../../Math/Vec2';
 import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
 
+import {
+  BooleanParameter,
+  NumberParameter
+} from '../../Parameters';
+import {
+  sgFactory
+} from '../../SGFactory.js';
 
 class Cylinder extends Mesh {
   constructor(radius = 0.5, height = 1.0, sides = 32, loops = 2, caps = true, baseZAtZero=false) {
@@ -10,75 +17,51 @@ class Cylinder extends Mesh {
     if(isNaN(radius) || isNaN(height) || isNaN(sides) || isNaN(loops))
       throw("Invalid geom args");
     
-    this.__radius = radius;
-    this.__height = height;
-    this.__sides = (sides >= 3) ? sides : 3;
-    this.__loops = (loops >= 2) ? loops : 2;
-    this.__caps = caps;
-    this.__baseZAtZero = baseZAtZero;
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius));
+    this.__heightParam = this.addParameter(new NumberParameter('height', height));
+    this.__sidesParam = this.addParameter(new NumberParameter('sides', ((sides >= 3) ? sides : 3), [3, 200], 1));
+    this.__loopsParam = this.addParameter(new NumberParameter('loops', ((loops >= 2) ? loops : 2), [1, 200], 1));
+    this.__capsParam = this.addParameter(new BooleanParameter('caps', caps));
+    this.__baseZAtZeroParam = this.addParameter(new BooleanParameter('baseZAtZero', baseZAtZero));
 
     this.addVertexAttribute('texCoords', Vec2);
     this.addVertexAttribute('normals', Vec3);
     this.__rebuild();
-  }
 
-  get radius() {
-    return this.__radius
-  }
-
-  set radius(val) {
-    this.__radius = val;
-    this.__resize();
-  }
-
-  get height() {
-    return this.__height
-  }
-
-  set height(val) {
-    this.__height = val;
-    this.__resize();
-  }
-
-  get sides() {
-    return this.__sides
-  }
-
-  set sides(val) {
-    this.__sides = (val >= 3) ? val : 3;
-    this.__rebuild();
-  }
-
-  get loops() {
-    return this.__loops
-  }
-
-  set loops(val) {
-    this.__loops = (val >= 2) ? val : 2;
-    this.__rebuild();
-  }
-
-  get caps() {
-    return this.__caps
-  }
-
-  set caps(val) {
-    this.__caps = val;
-    this.__rebuild();
+    const resize = ()=>{
+      this.__resize();
+    }
+    const rebuild = ()=>{
+      this.__rebuild();
+    }
+    this.__radiusParam.valueChanged.connect(resize);
+    this.__heightParam.valueChanged.connect(resize);
+    this.__sidesParam.valueChanged.connect(rebuild); 
+    this.__loopsParam.valueChanged.connect(rebuild); 
+    this.__capsParam.valueChanged.connect(rebuild);
+    this.__baseZAtZeroParam.valueChanged.connect(resize);
   }
 
   __rebuild() {
-    let nbSides = this.__sides;
-    let nbLoops = this.__loops;
+
+    this.clear()
+
+    const nbSides = this.__sidesParam.getValue();
+    const nbLoops = this.__loopsParam.getValue();
+    const radius = this.__radiusParam.getValue();
+    const height = this.__heightParam.getValue();
+    const caps = this.__capsParam.getValue();
+    const baseZAtZero = this.__baseZAtZeroParam.getValue();
+
     let numVertices = nbSides * nbLoops;
     let numTris = 0;
     let numQuads = nbSides;
-    if (this.__caps) {
+    if (caps) {
       numVertices += 2;
       numTris = nbSides * 2;
     }
     this.setNumVertices(numVertices);
-    if (this.__caps) 
+    if (caps) 
       this.setFaceCounts([nbSides * 2, nbSides]);
     else
       this.setFaceCounts([0, nbSides]);
@@ -87,17 +70,17 @@ class Cylinder extends Mesh {
     // Set Vertex Positions
     // let vertex = 0;
     // for (let i = 0; i < nbLoops; i++) {
-    //     let z = ((i / (nbLoops - 1)) * this.__height) - (this.__height * 0.5);
+    //     let z = ((i / (nbLoops - 1)) * this.__height) - (height * 0.5);
     //     for (let j = 0; j < nbSides; j++) {
     //         let phi = (j / nbSides) * 2.0 * Math.PI;
-    //         this.getVertex(vertex).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, z);
+    //         this.getVertex(vertex).set(Math.sin(phi) * radius, Math.cos(phi) * radius, z);
     //         vertex++;
     //     }
     // }
-    // if (this.__caps) {
+    // if (caps) {
     //     // Top caps
-    //     this.getVertex(numVertices - 1).set(0.0, 0.0, this.__height * -0.5);
-    //     this.getVertex(numVertices - 2).set(0.0, 0.0, this.__height * 0.5);
+    //     this.getVertex(numVertices - 1).set(0.0, 0.0, height * -0.5);
+    //     this.getVertex(numVertices - 2).set(0.0, 0.0, height * 0.5);
     // }
 
     //////////////////////////////
@@ -114,7 +97,7 @@ class Cylinder extends Mesh {
       }
     }
 
-    if (this.__caps) {
+    if (caps) {
       // Bottom caps topology
       for (let j = 0; j < nbSides; j++) {
         let v0 = numVertices - 1;
@@ -152,7 +135,7 @@ class Cylinder extends Mesh {
         faceIndex++;
       }
     }
-    if (this.__caps) {
+    if (caps) {
       let normal = new Vec3(0.0, 0.0, -1.0);
       for (let i = 0; i < nbSides; i++) {
         normals.setFaceVertexValue(faceIndex, 0, normal);
@@ -182,7 +165,7 @@ class Cylinder extends Mesh {
       texCoords.setFaceVertexValue(faceIndex, 3, new Vec2(i / nbSides, 1.0));
       faceIndex++;
     }
-    if (this.__caps) {
+    if (caps) {
       for (let i = 0; i < nbSides; i++) {
         texCoords.setFaceVertexValue(faceIndex, 0, new Vec2(i / nbSides, 0.0));
         texCoords.setFaceVertexValue(faceIndex, 1, new Vec2((i + 1) / nbSides, 0.0));
@@ -202,44 +185,41 @@ class Cylinder extends Mesh {
   }
 
   __resize() {
-    let nbSides = this.__sides;
-    let nbLoops = this.__loops;
+    const nbSides = this.__sidesParam.getValue();
+    const nbLoops = this.__loopsParam.getValue();
+    const radius = this.__radiusParam.getValue();
+    const height = this.__heightParam.getValue();
+    const caps = this.__capsParam.getValue();
+    const baseZAtZero = this.__baseZAtZeroParam.getValue();
+
     let numVertices = nbSides * nbLoops;
-    if (this.__caps) {
+    if (caps) {
       numVertices += 2;
     }
     let vertex = 0;
     let zoff = 0.5;
-    if(this.__baseZAtZero)
+    if(baseZAtZero)
       zoff = 0.0
     for (let i = 0; i < nbLoops; i++) {
-      let z = ((i / (nbLoops - 1)) * this.__height) - (this.__height * zoff);
+      let z = ((i / (nbLoops - 1)) * height) - (height * zoff);
       for (let j = 0; j < nbSides; j++) {
         let phi = (j / nbSides) * 2.0 * Math.PI;
-        this.getVertex(vertex).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius,  z);
+        this.getVertex(vertex).set(Math.sin(phi) * radius, Math.cos(phi) * radius,  z);
         vertex++;
       }
     }
-    if (this.__caps) {
-      this.getVertex(numVertices - 1).set(0.0, 0.0, this.__height * (this.__baseZAtZero ? 0.0 : -0.5));
-      this.getVertex(numVertices - 2).set(0.0, 0.0, this.__height * (this.__baseZAtZero ? 0.0 : 0.5));
+    if (caps) {
+      this.getVertex(numVertices - 1).set(0.0, 0.0, height * (baseZAtZero ? 0.0 : -0.5));
+      this.getVertex(numVertices - 2).set(0.0, 0.0, height * (baseZAtZero ? 0.0 : 0.5));
     }
 
     this.setBoundingBoxDirty();
   }
 
-  toJSON() {
-    let json = super.toJSON();
-    json['radius'] = this.__radius;
-    json['height'] = this.__height;
-    json['sides'] = this.__sides;
-    json['loops'] = this.__loops;
-    json['caps'] = this.__caps;
-    return json
-  }
 };
+
+sgFactory.registerClass('Cylinder', Cylinder);
 
 export {
   Cylinder
 };
-//export default Cylinder;

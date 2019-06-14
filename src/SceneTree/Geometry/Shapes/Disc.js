@@ -2,6 +2,13 @@ import { Vec2 } from '../../../Math/Vec2';
 import { Vec3 } from '../../../Math/Vec3';
 import { Mesh } from '../Mesh.js';
 
+import {
+  BooleanParameter,
+  NumberParameter
+} from '../../Parameters';
+import {
+  sgFactory
+} from '../../SGFactory.js';
 
 class Disc extends Mesh {
   constructor(radius = 0.5, sides = 32) {
@@ -10,8 +17,8 @@ class Disc extends Mesh {
     if(isNaN(radius) || isNaN(sides))
       throw("Invalid geom args");
     
-    this.__radius = radius;
-    this.__sides = (sides >= 3) ? sides : 3;
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius));
+    this.__sidesParam = this.addParameter(new NumberParameter('sides', ((sides >= 3) ? sides : 3), [3, 200], 1));
 
     this.addVertexAttribute('texCoords', Vec2);
     this.addVertexAttribute('normals', Vec3);
@@ -33,8 +40,10 @@ class Disc extends Mesh {
   }
 
   __rebuild() {
-    this.setNumVertices(this.__sides + 1);
-    this.setFaceCounts([this.__sides]);
+    const nbSides = this.__sidesParam.getValue();
+
+    this.setNumVertices(nbSides + 1);
+    this.setFaceCounts([nbSides]);
 
 
     //////////////////////////////
@@ -43,9 +52,9 @@ class Disc extends Mesh {
 
     //////////////////////////////
     // build the topology
-    for (let j = 0; j < this.__sides; j++) {
-      const v1 = (j % this.__sides) + 1;
-      const v2 = ((j + 1) % this.__sides) + 1;
+    for (let j = 0; j < nbSides; j++) {
+      const v1 = (j % nbSides) + 1;
+      const v2 = ((j + 1) % nbSides) + 1;
       this.setFaceVertexIndices(j, 0, v1, v2);
     }
 
@@ -55,7 +64,7 @@ class Disc extends Mesh {
     // Now set the attrbute values
     const normal = new Vec3(0, 0, 1);
     normals.setValue(0, normal);
-    for (let i = 0; i < this.__sides; i++) {
+    for (let i = 0; i < nbSides; i++) {
       normals.setValue(i+1, normal);
     }
 
@@ -63,8 +72,8 @@ class Disc extends Mesh {
     // setUVs
     const texCoords = this.getVertexAttribute('texCoords');
     texCoords.getValueRef(0).set(0.5, 0.5)
-    for (let i = 0; i < this.__sides; i++) {
-      let phi = (i / this.__sides) * 2.0 * Math.PI;
+    for (let i = 0; i < nbSides; i++) {
+      let phi = (i / nbSides) * 2.0 * Math.PI;
       texCoords.getValueRef(i+1).set((Math.sin(phi) * 0.5) + 0.5, (Math.cos(phi) * 0.5) + 0.5);
     }
 
@@ -73,9 +82,11 @@ class Disc extends Mesh {
   }
 
   __resize(mode) {
-    for (let i = 0; i < this.__sides; i++) {
-      let phi = (i / this.__sides) * 2.0 * Math.PI;
-      this.getVertex(i+1).set(Math.sin(phi) * this.__radius, Math.cos(phi) * this.__radius, 0.0);
+    const nbSides = this.__sidesParam.getValue();
+    const radius = this.__radiusParam.getValue();
+    for (let i = 0; i < nbSides; i++) {
+      let phi = (i / nbSides) * 2.0 * Math.PI;
+      this.getVertex(i+1).set(Math.sin(phi) * radius, Math.cos(phi) * radius, 0.0);
     }
     this.setBoundingBoxDirty();
   }
@@ -87,7 +98,8 @@ class Disc extends Mesh {
   }
 };
 
+sgFactory.registerClass('Disc', Disc);
+
 export {
   Disc
 };
-//export default Disc;

@@ -18,7 +18,7 @@ class Lines extends BaseGeom {
 
   setNumSegments(count) {
     const indices = new Uint32Array(count * 2);
-    indices.set(this.__indices)
+    // indices.set(this.__indices)
     // for (let i=0;i<this.__indices.length; i++) {
     //     indices[i] = this.__indices[i];
     // }
