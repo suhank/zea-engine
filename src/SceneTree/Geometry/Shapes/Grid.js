@@ -102,7 +102,7 @@ class Grid extends Lines {
     const xSize = this.__xParam.getValue();
     const ySize = this.__yParam.getValue();
 
-    const skipCenterLines = this.__skipCenterLines && (xDivisions % 2) == 0 && (yDivisions % 2) == 0;
+    const skipCenterLines = this.__skipCenterLinesParam.getValue() && (xDivisions % 2) == 0 && (yDivisions % 2) == 0;
     let idx = 0;
     for (let i = 0; i <= xDivisions; i++) {
       if(skipCenterLines && i == xDivisions/2)

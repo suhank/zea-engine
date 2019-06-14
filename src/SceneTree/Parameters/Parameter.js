@@ -70,7 +70,7 @@ class BaseParameter extends RefCounted {
 
   getPath() {
     const owner = this.getOwner()
-    if(owner) {
+    if(owner && owner.getName) {
       if(owner.getPath) {
         const path = owner.getPath().slice();
         path.push(this.__name);
