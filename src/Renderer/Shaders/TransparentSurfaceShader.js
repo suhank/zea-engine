@@ -193,15 +193,16 @@ void main(void) {
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
-        paramDescs.push({ name: 'Opacity', defaultValue: 1.0 });
+        paramDescs.push({ name: 'Opacity', defaultValue: 1.0, range:[0,1] });
         paramDescs.push({ name: 'Roughness', defaultValue: 0.85 });
-        paramDescs.push({ name: 'Normal', defaultValue: new Color(0.0, 0.0, 0.0) });
-        paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
         // F0 = reflectance and is a physical property of materials
         // It also has direct relation to IOR so we need to dial one or the other
         // For simplicity sake, we don't need to touch this value as metalic can dictate it
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
         paramDescs.push({ name: 'Reflectance', defaultValue: 0.0001 } );
+        
+        paramDescs.push({ name: 'Normal', defaultValue: new Color(0.0, 0.0, 0.0) });
+        paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
         return paramDescs;
     }
 

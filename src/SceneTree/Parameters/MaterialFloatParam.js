@@ -17,8 +17,8 @@ import {
 } from '../BaseImage.js';
 
 class MaterialFloatParam extends NumberParameter {
-  constructor(name, value) {
-    super(name, value);
+  constructor(name, value, range) {
+    super(name, value, range);
     this.textureConnected = new Signal();
     this.textureDisconnected = new Signal();
   }

@@ -25,23 +25,22 @@ import {
   MaterialColorParam
 } from './Parameters';
 
-const generateParameterInstance = (paramName, defaultValue, texturable)=>{
-
+const generateParameterInstance = (paramName, defaultValue, range, texturable) => {
   if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
     return new Parameter(paramName, defaultValue, 'Boolean');
   } else if (typeof defaultValue == 'string') {
     return new Parameter(paramName, defaultValue, 'String');
   } else if (Number.isNumeric(defaultValue)) {
-    if(texturable)
-      return new MaterialFloatParam(paramName, defaultValue);
+    if (texturable)
+      return new MaterialFloatParam(paramName, defaultValue, range);
     else
-      return new NumberParameter(paramName, defaultValue);
+      return new NumberParameter(paramName, defaultValue, range);
   } else if (defaultValue instanceof Vec2) {
     return new Vec2Parameter(paramName, defaultValue);
   } else if (defaultValue instanceof Vec3) {
     return new Vec3Parameter(paramName, defaultValue);
   } else if (defaultValue instanceof Color) {
-    if(texturable)
+    if (texturable)
       return new MaterialColorParam(paramName, defaultValue);
     else
       return new ColorParameter(paramName, defaultValue);
@@ -134,7 +133,7 @@ class Material extends BaseItem {
     this.shaderNameChanged = new Signal();
     this.visibleInGeomDataBuffer = true;
 
-    if(shaderName)
+    if (shaderName)
       this.setShaderName(shaderName);
   }
 
@@ -144,16 +143,16 @@ class Material extends BaseItem {
 
   setShaderName(shaderName) {
 
-    if(this.__shaderName == shaderName)
+    if (this.__shaderName == shaderName)
       return;
 
     const shaderClass = sgFactory.getClass(shaderName);
-    if(!shaderClass)
-      throw("Error setting Shader. Shader not found:" + shaderName);
-    
+    if (!shaderClass)
+      throw ("Error setting Shader. Shader not found:" + shaderName);
+
     const paramDescs = shaderClass.getParamDeclarations();
     const paramMap = {};
-    for(let desc of paramDescs) {
+    for (let desc of paramDescs) {
       // Note: some shaders specify default images. Like the speckle texture
       // on the car paint shader.
       // let image;
@@ -165,8 +164,8 @@ class Material extends BaseItem {
       let param = this.getParameter(desc.name);
       // if(param && param.getType() != desc.defaultValue)
       // removeParameter
-      if(!param)
-        param = this.addParameter(generateParameterInstance(desc.name, desc.defaultValue, desc.texturable != false));
+      if (!param)
+        param = this.addParameter(generateParameterInstance(desc.name, desc.defaultValue, desc.range, desc.texturable != false));
       // if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
       //     if(!param.getImage)  
       //         this.__makeParameterTexturable(param);
@@ -176,7 +175,7 @@ class Material extends BaseItem {
 
       paramMap[desc.name] = true;
     }
-    
+
     // Remove redundant Params.
     for (let param of this.__params) {
       if (!paramMap[param.getName()]) {
@@ -213,7 +212,7 @@ class Material extends BaseItem {
     this.setShaderName(src.getShaderName())
     for (let srcParam of src.getParameters()) {
       let param = src.getParameter(srcParam.getName())
-      if(!srcParam.getImage)  
+      if (!srcParam.getImage)
         this.__makeParameterTexturable(param);
     }
   }
@@ -249,7 +248,7 @@ class Material extends BaseItem {
   }
 
   getShaderClass() {
-     return sgFactory.getClass(this.getShaderName());
+    return sgFactory.getClass(this.getShaderName());
   }
 
   modifyParams(paramValues, shaderName) {
@@ -258,10 +257,9 @@ class Material extends BaseItem {
     for (let paramName in paramValues) {
       let param = this.getParameter(paramName);
       if (param) {
-        if(paramValues[paramName] instanceof Visualive.Parameter) {
+        if (paramValues[paramName] instanceof Visualive.Parameter) {
           this.replaceParameter(paramValues[paramName]);
-        }
-        else {
+        } else {
           param.setValue(paramValues[paramName]);
         }
       } else {
@@ -273,12 +271,12 @@ class Material extends BaseItem {
   //////////////////////////////////////////
   // Persistence
 
-  toJSON(context, flags=0) {
+  toJSON(context, flags = 0) {
     return super.toJSON(context, flags);
   }
 
-  fromJSON(j, context={}, flags=0) {
-    if(!j.shader){
+  fromJSON(j, context = {}, flags = 0) {
+    if (!j.shader) {
       console.warn("Invalid Material JSON");
       return;
     }
@@ -301,15 +299,15 @@ class Material extends BaseItem {
 
     let shaderName = reader.loadStr();
 
-    if(shaderName == 'StandardMaterial'){
+    if (shaderName == 'StandardMaterial') {
       shaderName = 'StandardSurfaceShader';
     }
-    if(shaderName == 'TransparentMaterial'){
+    if (shaderName == 'TransparentMaterial') {
       shaderName = 'TransparentSurfaceShader';
     }
     this.setShaderName(shaderName);
 
-    if(context.version < 3) {
+    if (context.version < 3) {
 
       this.setName(reader.loadStr());
 
@@ -331,28 +329,26 @@ class Material extends BaseItem {
           value = reader.loadFloat32();
         }
         const textureName = reader.loadStr();
-        
+
         // console.log(paramName +":" + value);
         let param = this.getParameter(paramName);
-        if(param)
+        if (param)
           param.setValue(value);
         else
           param = this.addParameter(generateParameterInstance(paramName, value));
-        if(textureName!= '' && param.setImage){
+        if (textureName != '' && param.setImage) {
           // if(!param.setImage)
           //     this.__makeParameterTexturable(param);
 
           if (context.materialLibrary.hasImage(textureName)) {
             // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
             param.setImage(context.materialLibrary.getImage(textureName));
-          }
-          else {
+          } else {
             console.warn("Missing Texture:" + textureName)
           }
         }
       }
-    }
-    else {
+    } else {
       super.readBinary(reader, context);
     }
   }
