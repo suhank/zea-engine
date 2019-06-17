@@ -82,23 +82,40 @@ class Color extends AttrValue {
   }
 
   getAsRGBArray() {
-    let vals = [];
-    vals.push(this.r * 255);
-    vals.push(this.g * 255);
-    vals.push(this.b * 255);
-    return vals;
+    return [
+      this.r * 255,
+      this.g * 255,
+      this.b * 255
+    ]
   }
+
+  getAsRGBDict() {
+    return {
+      r: this.r * 255,
+      g: this.g * 255,
+      b: this.b * 255
+    }
+  }
+
   setFromRGB(r, g, b, a) {
     this.r = r / 255;
     this.g = g / 255;
     this.b = b / 255;
     this.a = a ? (a / 255) : 1.0;
   }
+
   setFromRGBArray(vals) {
     this.r = vals[0] / 255;
     this.g = vals[1] / 255;
     this.b = vals[2] / 255;
     this.a = vals.length == 4 ? (vals[3] / 255) : 1.0;
+  }
+
+  setFromRGBDict(vals) {
+    this.r = vals.r / 255;
+    this.g = vals.g / 255;
+    this.b = vals.b / 255;
+    this.a = vals.a == 4 ? (vals.a / 255) : 1.0;
   }
 
   setFromHex(hex){
