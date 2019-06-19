@@ -13,6 +13,8 @@ class NumberParameter extends Parameter {
   constructor(name, value=0, range=undefined, step=undefined) {
     super(name, value, 'Number');
     // The value might not have a range.
+    if(range && !Array.isArray(range))
+      console.error("Range value must be an array of 2 numbers.")
     this.__range = range;
     this.__step = step;
   }

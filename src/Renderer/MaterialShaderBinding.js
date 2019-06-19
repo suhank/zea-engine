@@ -129,72 +129,93 @@ class ColorUniformBinding {
     this.__textureTypeUnif = unifs[unif.name + 'TexType'];
 
     this.__vals = [0,0,0,0];
+    this.bind = this.bindValue;
 
-    const updateBinding = () => {
-      let image;
+    const genGLTex = (image) => {
+      let gltexture = image.getMetadata('gltexture');
+      const textureType = 1;
+      if (!gltexture) {
+        if (image.type === 'FLOAT') {
+          gltexture = new GLHDRImage(this.__gl, image);
+        } else if (image.isStreamAtlas()) {
+          gltexture = new GLImageStream(this.__gl, image);
+        }
+        // else if (image.hasAlpha()){
+        //     gltexture = new GLLDRAlphaImage(this.__gl, image);
+        // }
+        else {
+          gltexture = new GLTexture2D(this.__gl, image);
+        }
+      }
+      this.texBinding = gltexture.preBind(this.__textureUnif, unifs)
+      gltexture.updated.connect(()=>{
+        glmaterial.updated.emit()
+      });
+      this.gltexture = gltexture;
+      this.textureType = textureType;
+      this.bind = this.bindTexture;
+      glmaterial.updated.emit();
+    }
+
+    let boundImage;
+    let imageLoadedId;
+    const imageLoaded = () => {
+      genGLTex(boundImage);
+    }
+    const connectImage = (image)=>{
+      if (!image.isLoaded()) {
+        image.loaded.connect(imageLoaded);
+      } else {
+        genGLTex(image);
+      }
+      boundImage = image;
+    }
+
+    const disconnectImage = ()=>{
+
+      let gltexture = boundImage.getMetadata('gltexture');
+      gltexture.destroy();
+      this.texBinding = null
+      this.gltexture = null;
+      this.textureType = null;
+      this.bind = this.bindValue;
+
+      if (imageLoadedId) {
+        boundImage.loaded.disconnectId(imageLoadedId);
+      }
+      boundImage = null;
+      imageLoadedId = null;
+      glmaterial.updated.emit();
+    }
+
+    const update = () => {
 
       // Sometimes the value of a color param is an image.
       const value = param.getValue(false);
-      if(value instanceof BaseImage)
-        image = value;
-      else
-        this.__vals = value.asArray();
-      this.bind = this.bindValue;
-
-      if (!image && param.getImage) {
-        image = param.getImage();
-      }
+      this.__vals = value.asArray();
 
       if (this.__textureUnif) {
-        const genGLTex = (image) => {
-          let gltexture = image.getMetadata('gltexture');
-          const textureType = 1;
-          if (!gltexture) {
-            if (image.type === 'FLOAT') {
-              gltexture = new GLHDRImage(this.__gl, image);
-            } else if (image.isStreamAtlas()) {
-              gltexture = new GLImageStream(this.__gl, image);
-            }
-            // else if (image.hasAlpha()){
-            //     gltexture = new GLLDRAlphaImage(this.__gl, image);
-            // }
-            else {
-              gltexture = new GLTexture2D(this.__gl, image);
-            }
-          }
-          this.texBinding = gltexture.preBind(this.__textureUnif, unifs)
-          gltexture.updated.connect(()=>{
-            glmaterial.updated.emit()
-          });
-          this.gltexture = gltexture;
-          this.textureType = textureType;
-          this.bind = this.bindTexture;
-          glmaterial.updated.emit();
+        let image;
+        if (param.getImage) {
+          image = param.getImage();
         }
-        const connectImage = (image)=>{
-          if (!image.isLoaded()) {
-            image.loaded.connect(() => {
-              genGLTex(image);
-            });
-          } else {
-            genGLTex(image);
-          }
-
-        }
-        if(image) {
+        if(image && image != boundImage) {
           connectImage(image);
         }
-        if(param.textureConnected){
-          param.textureConnected.connect(()=>{
-            connectImage(param.getImage());
-          });
+        else if (!image && boundImage) {
+          disconnectImage();
         }
-      } else {
-        glmaterial.updated.emit();
       }
+      glmaterial.updated.emit();
     }
-    updateBinding();
-    param.valueChanged.connect(updateBinding);
+
+    update();
+    if(param.textureConnected){
+      param.textureConnected.connect(()=>{
+        connectImage(param.getImage());
+      });
+    }
+    param.valueChanged.connect(update);
 
     this.uniform1i = gl.uniform1i.bind(gl);
     this.uniform4fv = gl.uniform4fv.bind(gl);
