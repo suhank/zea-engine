@@ -17,14 +17,21 @@ import {
   loadTextfile
 } from './Utils.js';
 import {
+  GeomLibrary
+} from './GeomLibrary.js';
+import {
+  MaterialLibrary
+} from './MaterialLibrary.js';
+import {
   sgFactory
 } from './SGFactory.js';
-
-const assetLoaders = {};
 
 class AssetItem extends TreeItem {
   constructor(name) {
     super(name);
+
+    this.__geomLibrary = new GeomLibrary();
+    this.__materials = new MaterialLibrary();
 
     this.loaded = new Signal(true);
     // Assets that are generated inline can be considered loaded
@@ -67,8 +74,12 @@ class AssetItem extends TreeItem {
     });
   }
 
-  getLoader() {
-    return this.__loader;
+  getGeometryLibrary() {
+    return this.__geomLibrary;
+  }
+
+  getMaterialLibrary() {
+    return this.__materials;
   }
 
   //////////////////////////////////////////

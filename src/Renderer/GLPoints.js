@@ -27,12 +27,12 @@ class GLPoints extends GLGeom {
       gl.setupInstancedQuad();
 
     const gl = this.__gl;
-    let geomBuffers = this.__geom.genBuffers();
+    const geomBuffers = this.__geom.genBuffers();
 
     for (let attrName in geomBuffers.attrBuffers) {
-      let attrData = geomBuffers.attrBuffers[attrName];
+      const attrData = geomBuffers.attrBuffers[attrName];
 
-      let attrBuffer = gl.createBuffer();
+      const attrBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
 
@@ -44,7 +44,7 @@ class GLPoints extends GLGeom {
     }
     this.__glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs;
 
-    this.__numVerts = this.__geom.getNumVertices();
+    this.__numVerts = geomBuffers.numVertices;
     this.__vboState = 2;
 
   }

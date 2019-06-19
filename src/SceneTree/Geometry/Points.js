@@ -51,6 +51,18 @@ class Points extends BaseGeom {
       }
     }
   }
+
+
+  //////////////////////////////////////////
+  // Persistence
+
+  readBinary(reader, context) {
+    super.loadBaseGeomBinary(reader);
+
+    // this.computeVertexNormals();
+    this.geomDataChanged.emit();
+  }
+
 };
 
 export {

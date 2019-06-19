@@ -11,6 +11,8 @@ import {
   Points,
   Lines,
   Mesh,
+  PointsProxy,
+  LinesProxy,
   MeshProxy,
   sgFactory
 } from '../../SceneTree';
@@ -134,9 +136,9 @@ class GLStandardGeomsPass extends GLPass {
     const gl = this.__gl;
     if (geom instanceof Mesh || geom instanceof MeshProxy) {
       glgeom = new GLMesh(gl, geom);
-    } else if (geom instanceof Lines) {
+    } else if (geom instanceof Lines || geom instanceof LinesProxy) {
       glgeom = new GLLines(gl, geom);
-    } else if (geom instanceof Points) {
+    } else if (geom instanceof Points || geom instanceof PointsProxy) {
       glgeom = new GLPoints(gl, geom);
     } else {
       throw ("Unsupported geom type:" + geom.constructor.name);

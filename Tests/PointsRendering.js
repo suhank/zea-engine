@@ -2,6 +2,7 @@
                 
 testingHarness.registerTest('TestRender2Points', (domElement, resources) => { 
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(5.0, 50);
 
     let points = new Visualive.Points('points', 1);
     points.setNumVertices(2);
@@ -23,6 +24,7 @@ testingHarness.registerTest('TestRender2Points', (domElement, resources) => {
 
 testingHarness.registerTest('TestRenderPointCloud', (domElement, resources) => {
     const scene = new Visualive.Scene(resources);
+    scene.setupGrid(5.0, 50);
 
     let points = new Visualive.Points('points', 1);
     let count = 50000;
@@ -30,13 +32,12 @@ testingHarness.registerTest('TestRenderPointCloud', (domElement, resources) => {
     for(let i=0; i<count; i++)
         points.getVertex(i).setRandom(3).scaleInPlace(Math.random());
 
-    const material = new Visualive.PointsMaterial();
+    const material = new Visualive.Material('points', 'PointsShader');
     material.pointSize = 0.02;
     const geomItem = new Visualive.GeomItem('geomItem', points, material);
     scene.getRoot().addChild(geomItem);
 
     const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().setBackgroundColor(new Visualive.Color(0.0, 0.0, 0.0));
     renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2.0, 1.0, 5.0), new Visualive.Vec3(0.0, 0.0, 0.0));
     renderer.setScene(scene);
     renderer.resumeDrawing();

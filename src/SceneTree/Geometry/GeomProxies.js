@@ -3,17 +3,20 @@ import {
   Signal
 } from '../../Utilities';
 import {
+  Box3
+} from '../../Math';
+import {
   RefCounted
 } from '../RefCounted.js';
-
-let FreeMemWorker = require("worker-loader?inline!../FreeMemWorker.js");
 
 class BaseProxy extends RefCounted {
   constructor(data) {
     super();
     this.name = data.name;
     this.__buffers = data.geomBuffers;
-    this.boundingBox = data.bbox;
+    this.boundingBox = new Box3();
+    this.boundingBox.p0.__data = data.bbox.p0.__data;
+    this.boundingBox.p1.__data = data.bbox.p1.__data;
 
     this.__metaData = new Map();
 
@@ -21,6 +24,7 @@ class BaseProxy extends RefCounted {
     this.geomDataChanged = new Signal();
     this.geomDataTopologyChanged = new Signal();
   }
+
   genBuffers() {
     return this.__buffers;
   }
@@ -45,9 +49,6 @@ class BaseProxy extends RefCounted {
       }
       delete this.__buffers.attrBuffers;
     }
-    let worker = new FreeMemWorker();
-    worker.postMessage(freeData, transferables);
-    worker.terminate();
   }
 
   //////////////////////////////////////////

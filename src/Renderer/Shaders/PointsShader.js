@@ -39,8 +39,19 @@ precision highp float;
 
 uniform color pointColor;
 
+#ifdef ENABLE_ES3
+out vec4 fragColor;
+#endif
+
 void main(void) {
-    gl_FragColor = pointColor;
+
+#ifndef ENABLE_ES3
+    vec4 fragColor;
+#endif
+
+#ifndef ENABLE_ES3
+    gl_FragColor = fragColor;
+#endif
 }
 `);
     }
