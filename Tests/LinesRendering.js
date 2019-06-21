@@ -2,7 +2,7 @@
 
 testingHarness.registerTest('TestRenderLines', (domElement, resources)=> {
     
-    let lines = new Visualive.Lines();
+    const lines = new Visualive.Lines();
     lines.setNumVertices(3);
     lines.getVertex(0).set(-1, -1, 0.0);
     lines.getVertex(1).set( 3, -1, 0.0);
@@ -30,10 +30,10 @@ testingHarness.registerTest('TestRenderLines', (domElement, resources)=> {
 
 testingHarness.registerTest('TestRenderCircle', (domElement, resources)=> {
 
-    let lines = new Visualive.Circle(2.0, 8);
+    const lines = new Visualive.Circle(2.0, 8);
 
     // lines.lineThickness = 0.4;
-    let lineThickness = lines.addVertexAttribute('lineThickness', Visualive.Float32);
+    const lineThickness = lines.addVertexAttribute('lineThickness', Visualive.Float32);
     for(let i=0; i<lineThickness.length; i++)
         lineThickness.setFloat32Value(i, (i/lineThickness.length) * 0.4);
 

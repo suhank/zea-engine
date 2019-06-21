@@ -112,6 +112,7 @@ precision highp float;
 
 uniform color BaseColor;
 uniform float Rounded;
+uniform float BorderWidth;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
@@ -129,11 +130,14 @@ void main(void) {
   float dist = length(v_texCoord - 0.5);
   if(dist > 0.5)
     discard;
+  if(dist > 0.5 - (BorderWidth * 0.5))
+    fragColor = vec4(0.,0.,0.,1.);
+  else {
+    // Modulate the lighting using the texture coord so the point looks round.
+    float NdotV = cos(dist * PI);
 
-  // Modulate the lighting using the texture coord so the point looks round.
-  float NdotV = cos(dist * PI);
-
-  fragColor = BaseColor * mix(1.0, NdotV, Rounded);
+    fragColor = BaseColor * mix(1.0, NdotV, Rounded);
+  }
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
@@ -155,6 +159,7 @@ void main(void) {
     paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
     paramDescs.push({ name: 'PointSize', defaultValue: 0.05 });
     paramDescs.push({ name: 'Rounded', defaultValue: 1.0 });
+    paramDescs.push({ name: 'BorderWidth', defaultValue: 0.2 });
     return paramDescs;
   }
 };
