@@ -369,7 +369,9 @@ class GLRenderer extends GLBaseRenderer {
     }
   }
 
-  drawScene(renderstate) {
+  bind(renderstate) {
+    super.bind(renderstate);
+
     renderstate.envMap = this.__glEnvMap;
     renderstate.lightmaps = this.__glLightmaps;
     renderstate.boundLightmap = undefined;
@@ -378,6 +380,12 @@ class GLRenderer extends GLBaseRenderer {
     renderstate.planeNormal = this.__cutPlaneNormal;
     renderstate.exposure = this.__exposure;
     renderstate.gamma = this.__gamma;
+
+  }
+
+  drawScene(renderstate) {
+
+    this.bind(renderstate);
 
     if (this.__displayEnvironment)
       this.drawBackground(renderstate);

@@ -152,7 +152,7 @@ void main(void) {
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations();
     paramDescs.push({ name: 'PointColor', defaultValue: new Color(1.0, 1.0, 0.5) });
-    paramDescs.push({ name: 'PointSize', defaultValue: 3.0 });
+    paramDescs.push({ name: 'PointSize', defaultValue: 0.05 });
     return paramDescs;
   }
 };

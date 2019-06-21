@@ -803,9 +803,7 @@ class GLBaseRenderer {
     return true;
   }
 
-  drawScene(renderstate) {
-    renderstate.shaderopts = this.__preproc;
-
+  bind(renderstate) {
     const gl = this.__gl;
     if(!renderstate.viewports || renderstate.viewports.length == 1) {
       renderstate.bindViewports = (unifs, cb)=> cb();
@@ -844,6 +842,10 @@ class GLBaseRenderer {
         }
       }
     }
+  }
+
+  drawScene(renderstate) {
+    renderstate.shaderopts = this.__preproc;
 
     for(let key in this.__passes) {
       const passSet = this.__passes[key];
