@@ -223,11 +223,11 @@ class GLGeomItemSet {
   //////////////////////////////////////
   // Drawing
 
-  drawSingle(renderstate, extrAttrBuffers, index = 0) {
+  drawSingle(renderstate, index = 0) {
 
     const gl = this.gl;
     const unifs = renderstate.unifs;
-    this.glgeom.bind(renderstate, extrAttrBuffers);
+    this.glgeom.bind(renderstate);
     if (this.glgeomItems[index].bind(renderstate)) {
       // Specify an non-instanced draw to the shader
       if (renderstate.unifs.instancedDraw) {
@@ -238,7 +238,7 @@ class GLGeomItemSet {
     }
   }
 
-  draw(renderstate, extrAttrBuffers) {
+  draw(renderstate) {
     if (this.drawCount == 0) {
       return;
     }
@@ -268,11 +268,11 @@ class GLGeomItemSet {
       }
     }
 
-    this.__bindAndRender(renderstate, this.drawIdsBuffer, extrAttrBuffers)
+    this.__bindAndRender(renderstate, this.drawIdsBuffer)
   }
 
 
-  drawSelected(renderstate, extrAttrBuffers) {
+  drawSelected(renderstate) {
     if (this.selectedCount == 0) {
       return;
     }
@@ -280,11 +280,11 @@ class GLGeomItemSet {
       this.updateSelectedIDsBuffer();
     }
 
-    this.__bindAndRender(renderstate, this.selectedIdsBuffer, extrAttrBuffers)
+    this.__bindAndRender(renderstate, this.selectedIdsBuffer)
 
   }
 
-  __bindAndRender(renderstate, drawIdsBuffer, extrAttrBuffers) {
+  __bindAndRender(renderstate, drawIdsBuffer) {
 
     const gl = this.gl;
     const unifs = renderstate.unifs;
@@ -293,7 +293,7 @@ class GLGeomItemSet {
     // all bound to the same geom. e.g. lots of billboards
     // We can avoid the expensive re-binding of geoms with a simple check. 
     if (renderstate.glgeom != this.glgeom) {
-      this.glgeom.bind(renderstate, extrAttrBuffers);
+      this.glgeom.bind(renderstate);
       renderstate.glgeom = this.glgeom;
     }
 
@@ -301,7 +301,7 @@ class GLGeomItemSet {
     // renderstate.drawCount+=this.drawCount;
     // The set has a transform id stored in the texture.
     // Each set as at least one transform, but might have many...
-    if (!renderstate.glgeom.renderableInstanced()) {
+    if (!renderstate.supportsInstancing) {
       // return;
       if (this.glgeomItems[this.lastVisible].bind(renderstate)) {
         // console.log("draw:"+ this.glgeomItems[this.lastVisible].getId());
@@ -314,41 +314,9 @@ class GLGeomItemSet {
           // gl.disableVertexAttribArray(renderstate.attrs.drawIds.location);
         }
 
-        if(!renderstate.viewports || renderstate.viewports.length == 1) {
+        renderstate.bindViewports(unifs, ()=>{
           this.glgeom.draw(renderstate);
-        }
-        else {
-          let eye = 0;
-          for(let vp of renderstate.viewports) {
-            gl.viewport(...vp.region);
-            {
-              const unif = unifs.viewMatrix;
-              if (unif) {
-                gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-              }
-            }
-            {
-              const unif = unifs.cameraMatrix;
-              if (unif) {
-                gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-              }
-            }
-            {
-              const unif = unifs.projectionMatrix;
-              if (unif) {
-                gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-              }
-            }
-            {
-              const unif = unifs.eye;
-              if (unif) {
-                // Left or right eye, when rendering sterio VR.
-                gl.uniform1i(unif.location, eye);
-              }
-            }
-            this.glgeom.draw(renderstate);
-          }
-        }
+        })
       }
       return;
     }
@@ -359,43 +327,9 @@ class GLGeomItemSet {
       for (let i = 0; i < len; i++) {
         this.glgeomItems[i].bind(renderstate);
 
-        if(!renderstate.viewports || renderstate.viewports.length == 1) {
+        renderstate.bindViewports(unifs, ()=>{
           this.glgeom.draw(renderstate);
-        }
-        else {
-          let eye = 0;
-          for(let vp of renderstate.viewports) {
-            gl.viewport(...vp.region);
-            {
-              const unif = unifs.viewMatrix;
-              if (unif) {
-                gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-              }
-            }
-            {
-              const unif = unifs.cameraMatrix;
-              if (unif) {
-                gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-              }
-            }
-            {
-              const unif = unifs.projectionMatrix;
-              if (unif) {
-                gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-              }
-            }
-            {
-              const unif = unifs.eye;
-              if (unif) {
-                // Left or right eye, when rendering sterio VR.
-                gl.uniform1i(unif.location, eye);
-              }
-            }
-            this.glgeom.draw(renderstate);
-
-            eye++;
-          }
-        }
+        })
       }
     } else {
       // console.log("draw:"+ this.drawIdsArray);
@@ -414,43 +348,12 @@ class GLGeomItemSet {
         gl.vertexAttribDivisor(location, 1); // This makes it instanced
       }
 
-
-      if(!renderstate.viewports || renderstate.viewports.length == 1) {
-        this.glgeom.drawInstanced(this.drawCount);
-      }
-      else {
-        let eye = 0;
-        for(let vp of renderstate.viewports) {
-          gl.viewport(...vp.region);
-          {
-            const unif = unifs.viewMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.cameraMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.projectionMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.eye;
-            if (unif) {
-              // Left or right eye, when rendering sterio VR.
-              gl.uniform1i(unif.location, eye);
-            }
-          }
+      renderstate.bindViewports(unifs, ()=>{
+        if(this.drawCount == 1)
+          this.glgeom.draw(renderstate);
+        else
           this.glgeom.drawInstanced(this.drawCount);
-          eye++;
-        }
-      }
+      })
     }
   }
 };

@@ -358,6 +358,8 @@ class GLShader extends BaseItem {
       }
     }
 
+    renderstate.supportsInstancing = true;
+
     return true;
   }
 

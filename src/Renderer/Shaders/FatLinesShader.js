@@ -169,6 +169,16 @@ void main(void) {
 `);
     this.finalize();
   }
+
+  bind(renderstate) {
+    if(super.bind(renderstate)) {
+      renderstate.supportsInstancing = false;
+      return true;
+    }
+    return false;
+  } 
+
+
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations();
     paramDescs.push({ name: 'Color', defaultValue: new Color(1.0, 1.0, 0.5) })

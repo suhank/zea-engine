@@ -38,10 +38,6 @@ class GLGeom {
     return this.__geom
   }
 
-  renderableInstanced(){
-    return true;
-  }
-
   ///////////////////////////////////////
   // Buffers
 
@@ -55,17 +51,18 @@ class GLGeom {
   ///////////////////////////////////////
   // Binding
 
-  bind(renderstate, extrAttrBuffers) {
+  bind(renderstate) {
     if (this.__destroyed)
       throw ("Error binding a destroyed geom");
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
     if (!shaderBinding) {
       const gl = this.__gl;
-      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer, extrAttrBuffers);
+      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer);
       this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
     }
-    return shaderBinding.bind(renderstate);
+    shaderBinding.bind(renderstate);
+    return true;
   }
 
   unbind(renderstate) {

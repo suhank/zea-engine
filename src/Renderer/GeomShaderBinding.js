@@ -2,11 +2,10 @@
 
 
 class GeomShaderBinding {
-  constructor(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers) {
+  constructor(gl, shaderAttrs, glattrbuffers, indexBuffer) {
     this.__gl = gl;
     this.__shaderAttrs = shaderAttrs;
     this.__glattrbuffers = glattrbuffers;
-    this.__extrAttrBuffers = extrAttrBuffers;
     this.__indexBuffer = indexBuffer;
   }
 
@@ -14,19 +13,16 @@ class GeomShaderBinding {
     const gl = this.__gl;
 
     for (let attrName in this.__shaderAttrs) {
+      if (attrName == 'instancedIds') 
+        continue;
       const attrDesc = this.__shaderAttrs[attrName];
       const location = attrDesc.location;
       if (location == -1)
         continue;
       let glattrbuffer = this.__glattrbuffers[attrName];
       if (!glattrbuffer) {
-        glattrbuffer = this.__extrAttrBuffers ? this.__extrAttrBuffers[attrName] : undefined;
-        if (!glattrbuffer) {
-          if (attrName != 'instancedIds') {
-            gl.disableVertexAttribArray(location);
-          }
-          continue;
-        }
+        gl.disableVertexAttribArray(location);
+        continue;
       }
 
       const dataType = glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT;
@@ -78,25 +74,24 @@ class GeomShaderBinding {
 };
 
 class VAOGeomShaderBinding {
-  constructor(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers) {
+  constructor(gl, shaderAttrs, glattrbuffers, indexBuffer) {
     this.__gl = gl;
     this.__vao = gl.createVertexArray();
     gl.bindVertexArray(this.__vao);
 
     for (let attrName in shaderAttrs) {
+      if (attrName == 'instancedIds') 
+        continue;
+
       const attrDesc = shaderAttrs[attrName];
       const location = attrDesc.location;
       if (location == -1)
         continue;
       let glattrbuffer = glattrbuffers[attrName];
       if (!glattrbuffer) {
-        glattrbuffer = extrAttrBuffers ? extrAttrBuffers[attrName] : undefined;
-        if (!glattrbuffer) {
-          // console.warn("glattrbuffer missing:" + attrName + " location:" + location);
-          if (attrName != 'instancedIds')
-            gl.disableVertexAttribArray(location);
-          continue;
-        }
+        // console.warn("glattrbuffer missing:" + attrName + " location:" + location);
+        gl.disableVertexAttribArray(location);
+        continue;
       }
 
       const dataType = glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT;
@@ -125,7 +120,8 @@ class VAOGeomShaderBinding {
 
   bind(renderstate) {
     this.__gl.bindVertexArray(this.__vao);
-    this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
+    if (this.__indexBuffer)
+      this.__gl.bindBuffer(this.__gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
     return true;
   }
 
@@ -143,7 +139,8 @@ class VAOGeomShaderBinding {
     }
 
     this.__gl.bindVertexArray(null);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+    if (this.__indexBuffer)
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
   }
 
   destroy(){
@@ -151,12 +148,12 @@ class VAOGeomShaderBinding {
   }
 };
 
-function generateShaderGeomBinding(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers){
+function generateShaderGeomBinding(gl, shaderAttrs, glattrbuffers, indexBuffer){
   if(gl.createVertexArray == null){
-    return new GeomShaderBinding(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers);
+    return new GeomShaderBinding(gl, shaderAttrs, glattrbuffers, indexBuffer);
   }
   else{
-    return new VAOGeomShaderBinding(gl, shaderAttrs, glattrbuffers, indexBuffer, extrAttrBuffers);
+    return new VAOGeomShaderBinding(gl, shaderAttrs, glattrbuffers, indexBuffer);
   }
 }
 

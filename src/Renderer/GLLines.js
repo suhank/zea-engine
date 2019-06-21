@@ -19,11 +19,6 @@ class GLLines extends GLGeom {
     this.genBuffers();
   }
 
-
-  renderableInstanced(){
-    return !this.fatLines;
-  }
-
   genBuffers() {
     super.genBuffers();
 
@@ -88,7 +83,6 @@ class GLLines extends GLGeom {
 
       this.__glattrbuffers.segmentIndices = {
         buffer: indexBuffer,
-        instanced: true,
         dimension: 2
       }
 
@@ -208,7 +202,7 @@ class GLLines extends GLGeom {
       this.__indexDataType = this.__gl.UNSIGNED_INT;
   }
 
-  bind(renderstate, extrAttrBuffers, transformIds) {
+  bind(renderstate) {
 
     if (this.fatLines && 'LineThickness' in renderstate.unifs) { // TODO: Provide a geomdata shader for thick lines.
 
@@ -216,7 +210,7 @@ class GLLines extends GLGeom {
 
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
       if (!shaderBinding) {
-        shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, gl.__quadIndexBuffer, extrAttrBuffers, transformIds);
+        shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, gl.__quadIndexBuffer);
         this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
       }
       shaderBinding.bind(renderstate);
@@ -234,7 +228,7 @@ class GLLines extends GLGeom {
       gl.uniform1f(unifs.LineThickness.location, (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0)  * renderstate.viewScale);
       return true;
     } else {
-      return super.bind(renderstate, extrAttrBuffers, transformIds);
+      return super.bind(renderstate);
     }
   }
 

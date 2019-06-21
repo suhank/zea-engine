@@ -134,7 +134,6 @@ var create3DContext = function(canvas, opt_attribs) {
     this.__quadattrbuffers = {
       'vertexIDs': {
         buffer: this.__quadVertexIdsBuffer,
-        instanced: false,
         dataType: this.FLOAT,
         dimension: 1,
         count: vertexIDs.length
