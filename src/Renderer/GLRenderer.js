@@ -373,13 +373,43 @@ class GLRenderer extends GLBaseRenderer {
     super.bind(renderstate);
 
     renderstate.envMap = this.__glEnvMap;
-    renderstate.lightmaps = this.__glLightmaps;
-    renderstate.boundLightmap = undefined;
-    renderstate.debugLightmaps = this.__debugLightmaps;
-    renderstate.planeDist = this._planeDist;
-    renderstate.planeNormal = this.__cutPlaneNormal;
     renderstate.exposure = this.__exposure;
     renderstate.gamma = this.__gamma;
+    renderstate.lightmaps = this.__glLightmaps;
+    renderstate.boundLightmap = undefined;
+    // renderstate.debugLightmaps = this.__debugLightmaps;
+    // renderstate.planeDist = this._planeDist;
+    // renderstate.planeNormal = this.__cutPlaneNormal;
+
+    const basebindRendererUnifs = renderstate.bindRendererUnifs;
+    const gl = this.__gl;
+    renderstate.bindRendererUnifs = (unifs)=>{
+      basebindRendererUnifs(unifs);
+
+      if (this.__glEnvMap) {
+        const envMapPyramid = unifs.envMapPyramid;
+        if (envMapPyramid && this.__glEnvMap.bindProbeToUniform) {
+          this.__glEnvMap.bindProbeToUniform(renderstate, envMapPyramid);
+        }
+        else {
+          // Bind the env map src 2d image to the env map param
+          const { envMapTex, envMapTexType } = unifs;
+          if (envMapTex) {
+            this.__glEnvMap.bindToUniform(renderstate, envMapTex, { textureTypeUnif: envMapTexType });
+          }
+        }
+      } {
+        const unif = unifs.exposure;
+        if (unif) {
+          gl.uniform1f(unif.location, this.__exposure);
+        }
+      } {
+        const unif = unifs.gamma;
+        if (unif) {
+          gl.uniform1f(unif.location, this.__gamma);
+        }
+      }
+    }
 
   }
 

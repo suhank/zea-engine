@@ -806,9 +806,38 @@ class GLBaseRenderer {
   bind(renderstate) {
     const gl = this.__gl;
     if(!renderstate.viewports || renderstate.viewports.length == 1) {
+      renderstate.bindRendererUnifs = (unifs)=>{
+        const vp = renderstate.viewports[0]; 
+        {
+          const unif = unifs.viewMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+          }
+        } {
+          const unif = unifs.cameraMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
+          }
+        } {
+          const unif = unifs.projectionMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
+          }
+        } {
+          const unif = unifs.eye;
+          if (unif) {
+            // Left or right eye, when rendering sterio VR.
+            gl.uniform1i(unif.location, 0);
+          }
+        }
+      }
       renderstate.bindViewports = (unifs, cb)=> cb();
     }
     else {
+
+      renderstate.bindRendererUnifs = (unifs)=>{
+      }
+
       renderstate.bindViewports = (unifs, cb)=> {
         for(let vp of renderstate.viewports) {
           gl.viewport(...vp.region);
