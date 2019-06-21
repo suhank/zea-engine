@@ -21,12 +21,17 @@ import {
   sgFactory
 } from './SGFactory.js';
 
+const GROUP_MODE = {
+  first: 0,
+  average: 1
+}
+
 
 class Group extends TreeItem {
   constructor(name) {
     super(name);
 
-    this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', ['first', 'average'], 0, 'Number'));
+    this.__initialXfoModeParam = this.addParameter(new MultiChoiceParameter('InitialXfoMode', 0, ['first', 'average']));
     this.__initialXfoModeParam.valueChanged.connect(()=>{
       this.recalcInitialXfo();
     })
@@ -152,10 +157,10 @@ class Group extends TreeItem {
       return;
     const initialXfoMode = this.__initialXfoModeParam.getValue();
     let xfo;
-    if(initialXfoMode == 'first') {
+    if(initialXfoMode == GROUP_MODE.first) {
       xfo = this.__items[0].getGlobalXfo();
     }
-    else if(initialXfoMode == 'average') {
+    else if(initialXfoMode == GROUP_MODE.average) {
       xfo = new Xfo();
       for(let p of this.__items) {
         const itemXfo = p.getGlobalXfo();
