@@ -369,58 +369,56 @@ class GLRenderer extends GLBaseRenderer {
     }
   }
 
-  drawScene(renderstate) {
+  bindGLRenderer(renderstate) {
+    super.bindGLBaseRenderer(renderstate);
+
     renderstate.envMap = this.__glEnvMap;
-    renderstate.lightmaps = this.__glLightmaps;
-    renderstate.boundLightmap = undefined;
-    renderstate.debugLightmaps = this.__debugLightmaps;
-    renderstate.planeDist = this._planeDist;
-    renderstate.planeNormal = this.__cutPlaneNormal;
     renderstate.exposure = this.__exposure;
     renderstate.gamma = this.__gamma;
-
-    if (this.__displayEnvironment)
-      this.drawBackground(renderstate);
+    renderstate.lightmaps = this.__glLightmaps;
+    renderstate.boundLightmap = undefined;
+    // renderstate.debugLightmaps = this.__debugLightmaps;
+    // renderstate.planeDist = this._planeDist;
+    // renderstate.planeNormal = this.__cutPlaneNormal;
 
     const gl = this.__gl;
-    renderstate.bindViewports = (unifs, cb)=>{
-      let eye = 0;
-      if(!renderstate.viewports || renderstate.viewports.length == 1) {
-        cb();
-      }
-      else {
-        for(let vp of renderstate.viewports) {
-          gl.viewport(...vp.region);
-          {
-            const unif = unifs.viewMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-            }
+    const bindGLBaseRendererUnifs = renderstate.bindRendererUnifs;
+    renderstate.bindRendererUnifs = (unifs)=>{
+      bindGLBaseRendererUnifs(unifs);
+
+      if (this.__glEnvMap) {
+        const envMapPyramid = unifs.envMapPyramid;
+        if (envMapPyramid && this.__glEnvMap.bindProbeToUniform) {
+          this.__glEnvMap.bindProbeToUniform(renderstate, envMapPyramid);
+        }
+        else {
+          // Bind the env map src 2d image to the env map param
+          const { envMapTex, envMapTexType } = unifs;
+          if (envMapTex) {
+            this.__glEnvMap.bindToUniform(renderstate, envMapTex, { textureTypeUnif: envMapTexType });
           }
-          {
-            const unif = unifs.cameraMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.projectionMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.eye;
-            if (unif) {
-              // Left or right eye, when rendering sterio VR.
-              gl.uniform1i(unif.location, eye);
-            }
-          }
-          cb();
-          eye++;
+        }
+      } {
+        const unif = unifs.exposure;
+        if (unif) {
+          gl.uniform1f(unif.location, this.__exposure);
+        }
+      } {
+        const unif = unifs.gamma;
+        if (unif) {
+          gl.uniform1f(unif.location, this.__gamma);
         }
       }
     }
+
+  }
+
+  drawScene(renderstate) {
+
+    this.bindGLRenderer(renderstate);
+
+    if (this.__displayEnvironment)
+      this.drawBackground(renderstate);
 
     super.drawScene(renderstate);
     // console.log("Draw Calls:" + renderstate['drawCalls']);

@@ -15,75 +15,63 @@ class GLPoints extends GLGeom {
     this.genBuffers();
   }
 
-  renderableInstanced() {
-    // the points are aready rendered as instanced quads
-    return false;
-  }
-
   genBuffers() {
     super.genBuffers();
 
-    if (this.fatPoints && !gl.__quadVertexIdsBuffer)
-      gl.setupInstancedQuad();
-
     const gl = this.__gl;
-    let geomBuffers = this.__geom.genBuffers();
+
+    const geomBuffers = this.__geom.genBuffers();
 
     for (let attrName in geomBuffers.attrBuffers) {
-      let attrData = geomBuffers.attrBuffers[attrName];
+      const attrData = geomBuffers.attrBuffers[attrName];
 
-      let attrBuffer = gl.createBuffer();
+      const attrBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
 
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
-        dimension: attrData.dimension,
-        instanced: true
+        dimension: attrData.dimension
       };
     }
-    this.__glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs;
 
-    this.__numVerts = this.__geom.getNumVertices();
+    this.__numVerts = geomBuffers.numVertices;
     this.__vboState = 2;
-
   }
 
 
-  bind(renderstate, extrAttrBuffers, transformIds) {
-
-    if (this.fatPoints) {
+  bind(renderstate) {
+    if (renderstate.unifs.PointSize){
       const gl = this.__gl;
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
       if (!shaderBinding) {
-        shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, gl.__quadIndexBuffer, extrAttrBuffers, transformIds);
+
+        if (this.fatPoints && !gl.__quadVertexIdsBuffer)
+          gl.setupInstancedQuad();
+
+        // Merge the points attrs with the quad attrs.
+        const attrbuffers = Object.assign(this.__glattrbuffers, gl.__quadattrbuffers);
+
+        shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, attrbuffers, gl.__quadIndexBuffer);
         this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
       }
       shaderBinding.bind(renderstate);
+      return true;
     } else {
-      return super.bind(renderstate, extrAttrBuffers, transformIds);
+      return super.bind(renderstate);
     }
-
-    return true;
   }
 
-  draw() {
+  draw(renderstate) {
     const gl = this.__gl;
-    if (this.fatPoints) {
-      if ('PointSize' in renderstate.unifs)
-        gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVerts);
-
-      // Note: We don't have a solution for drawing fat lines to the geom data buffer.
+    if (renderstate.unifs.PointSize){
+      gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__numVerts);
     } else {
       gl.drawArrays(gl.POINTS, 0, this.__numVerts);
     }
   }
 
   drawInstanced(instanceCount) {
-    if (this.fatPoints) {
-      console.warn("Unable to draw fat points instanced");
-      return;
-    }
     this.__gl.drawArraysInstanced(this.__gl.POINTS, 0, this.__numVerts, instanceCount);
   }
 };

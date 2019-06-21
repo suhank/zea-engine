@@ -798,6 +798,11 @@ class Mesh extends BaseGeom {
     }
 
 
+    if(!this.hasVertexAttribute('normals')){
+      this.computeVertexNormals();
+    }
+
+
     // this.computeVertexNormals();
     this.geomDataChanged.emit();
   }

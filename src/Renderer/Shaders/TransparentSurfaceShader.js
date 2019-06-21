@@ -201,8 +201,7 @@ void main(void) {
         // such that non metallic is mostly around (0.01-0.025) and metallic around (0.7-0.85)
         paramDescs.push({ name: 'Reflectance', defaultValue: 0.0001 } );
         
-        paramDescs.push({ name: 'Normal', defaultValue: new Color(0.0, 0.0, 0.0) });
-        paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
+        // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
         return paramDescs;
     }
 

@@ -96,7 +96,7 @@ class GeomLibrary {
     );
   }
 
-  readBinaryBuffer(key, buffer) {
+  readBinaryBuffer(key, buffer, context) {
     const isMobile = SystemDesc.isMobileDevice;
     const reader = new BinReader(buffer, 0, isMobile);
     const numGeoms = reader.loadUInt32();
@@ -111,7 +111,10 @@ class GeomLibrary {
       return numGeoms;
     }
     if (this.__numGeoms == 0) {
-      throw("Loading cannot start will we know how many geomms.");
+      // Note: for loading geom streams, we need to know the total number
+      // ahead of time to be able to generate accurate progress reports.
+      this.__numGeoms = numGeoms;
+      // throw("Loading cannot start will we know how many geomms.");
     }
 
     const toc = reader.loadUInt32Array(numGeoms);
@@ -153,6 +156,7 @@ class GeomLibrary {
         isMobileDevice: reader.isMobileDevice,
         bufferSlice,
         genBuffersOpts: this.__genBuffersOpts,
+        context: context
       }, [bufferSlice]);
       this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length;
       //////////////////////////////////////////////

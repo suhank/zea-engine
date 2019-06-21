@@ -38,14 +38,14 @@ class GLMesh extends GLGeom {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geomBuffers.indices, gl.STATIC_DRAW);
 
     // Create some vertex attribute buffers
-    const debugAttrValues = false;
-    let maxIndex;
-    if (debugAttrValues)
-      maxIndex = Math.max(...indices);
+    // const debugAttrValues = false;
+    // let maxIndex;
+    // if (debugAttrValues)
+    //   maxIndex = Math.max(...indices);
     for (let attrName in geomBuffers.attrBuffers) {
-      let attrData = geomBuffers.attrBuffers[attrName];
+      const attrData = geomBuffers.attrBuffers[attrName];
 
-      let attrBuffer = gl.createBuffer();
+      const attrBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
       gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
 

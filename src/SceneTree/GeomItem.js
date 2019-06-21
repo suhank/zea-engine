@@ -96,7 +96,6 @@ class GeomItem extends BaseGeomItem {
 
   setGeometry(geom, mode) {
     this.__geomParam.setValue(geom, mode);
-    // this.geomAssigned.emit(this.__value);
   }
 
   getGeom() {
@@ -190,7 +189,11 @@ class GeomItem extends BaseGeomItem {
     } else {
       const onGeomLoaded = (range) => {
         if (geomIndex >= range[0] && geomIndex < range[1]) {
-          this.setGeometry(geomLibrary.getGeom(geomIndex));
+          const geom = geomLibrary.getGeom(geomIndex);
+          if(geom)
+            this.setGeometry(geom);
+          else
+            console.warn("Geom not loaded:", this.getName())
           geomLibrary.rangeLoaded.disconnectId(connid);
         }
       }

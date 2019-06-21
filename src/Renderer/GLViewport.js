@@ -43,6 +43,7 @@ class GLViewport extends GLBaseViewport {
     this.__exposureRange = [-5, 10];
     this.__tonemap = true;
     this.__gamma = 2.2;
+    this.__prevDownTime = 0;
 
     this.__geomDataBuffer = undefined;
     this.__geomDataBufferFbo = undefined;

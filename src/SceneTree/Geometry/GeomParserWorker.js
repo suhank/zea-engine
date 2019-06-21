@@ -12,6 +12,7 @@ self.onmessage = function(event) {
     event.data.isMobileDevice, 
     event.data.bufferSlice, 
     event.data.genBuffersOpts, 
+    event.data.context, 
     (data, transferables)=>{
       self.postMessage(data, transferables);
     });

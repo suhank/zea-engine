@@ -120,7 +120,7 @@ class Label  extends DataImage {
 
     this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
     this.addParameter(new StringParameter('textAlign', 'left', 'String'));
-    // this.addParameter(MultiChoiceParameter('textAlign', ['left', 'right'], 0, 'String'));
+    // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
     this.addParameter(new StringParameter('fillText', true));
     this.addParameter(new NumberParameter('margin', fontSize * 0.5));
     this.addParameter(new NumberParameter('borderWidth', 2));

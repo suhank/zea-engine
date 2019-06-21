@@ -11,7 +11,7 @@ import {
   BinReader
 } from '../BinReader.js';
 
-let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, callback) => {
+let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context, callback) => {
   let geomDatas = [];
   let offset = toc[geomsRange[0]];
   // console.log("offset:" +  offset);
@@ -31,9 +31,6 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
         geom = new Lines();
         break;
       case 'Mesh':
-      case 'Plane': // TODO: Support procedural shape params
-      case 'Sphere':
-      case 'Cone':
         geom = new Mesh();
         break;
       default:
@@ -41,7 +38,7 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
     }
     try {
       reader.seek(pos); // Reset the pointer to the start of the item data.
-      geom.readBinary(reader);
+      geom.readBinary(reader, context);
     } catch(e) {
       console.warn("Error loading:" + geom.name + "\n:" + e);
       geomDatas.push({});

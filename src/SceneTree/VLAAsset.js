@@ -29,12 +29,6 @@ import {
   resourceLoader
 } from './ResourceLoader.js';
 import {
-  GeomLibrary
-} from './GeomLibrary.js';
-import {
-  MaterialLibrary
-} from './MaterialLibrary.js';
-import {
     sgFactory
 } from './SGFactory.js';
 
@@ -44,9 +38,6 @@ class VLAAsset extends AssetItem {
     super(name);
     this.loaded.setToggled(false);
 
-
-    this.__geomLibrary = new GeomLibrary();
-    this.__materials = new MaterialLibrary();
     this.__atlasSize = new Vec2();
 
     // A signal that is emitted once all the geoms are loaded.
@@ -82,14 +73,6 @@ class VLAAsset extends AssetItem {
 
 
     this.addParameter(new ColorParameter('LightmapTint', new Color(1,1,1,1)));
-  }
-
-  getGeometryLibrary() {
-    return this.__geomLibrary;
-  }
-
-  getMaterialLibrary() {
-    return this.__materials;
   }
 
   getLightmapSize() {
@@ -177,7 +160,9 @@ class VLAAsset extends AssetItem {
         
         if(numGeomsFiles == 0 && entries.geoms0) {
           resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
-          this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer);
+          this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
+            version
+          });
           const id = this.__geomLibrary.loaded.connect( () => {
             if(onGeomsDone)
               onGeomsDone();

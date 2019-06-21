@@ -362,9 +362,9 @@ class Vec3 extends AttrValue {
   }
   
   setRandom(scale = 1.0) {
-    this.__data[0] = Math.random() * scale;
-    this.__data[1] = Math.random() * scale;
-    this.__data[3] = Math.random() * scale;
+    this.__data[0] = (Math.random() - 0.5) * scale;
+    this.__data[1] = (Math.random() - 0.5) * scale;
+    this.__data[2] = (Math.random() - 0.5) * scale;
     return this;
   }
 

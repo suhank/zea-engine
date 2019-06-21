@@ -306,57 +306,13 @@ class GLShader extends BaseItem {
       renderstate.unifs = shaderCompilationResult.unifs;
       renderstate.attrs = shaderCompilationResult.attrs;
 
-      const unifs = shaderCompilationResult.unifs;
-
-      if (renderstate.viewports && renderstate.viewports.length == 1) {
-        const vp = renderstate.viewports[0]; {
-          const unif = unifs.viewMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-          }
-        } {
-          const unif = unifs.cameraMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-          }
-        } {
-          const unif = unifs.projectionMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-          }
-        } {
-          const unif = unifs.eye;
-          if (unif) {
-            // Left or right eye, when rendering sterio VR.
-            gl.uniform1i(unif.location, 0);
-          }
-        }
-      }
-
-      if (renderstate.envMap) {
-        const envMapPyramid = unifs.envMapPyramid;
-        if (envMapPyramid && renderstate.envMap.bindProbeToUniform) {
-          renderstate.envMap.bindProbeToUniform(renderstate, envMapPyramid);
-        }
-        else {
-          // Bind the env map src 2d image to the env map param
-          const { envMapTex, envMapTexType } = unifs;
-          if (envMapTex) {
-            renderstate.envMap.bindToUniform(renderstate, envMapTex, { textureTypeUnif: envMapTexType });
-          }
-        }
-      } {
-        const unif = unifs.exposure;
-        if (unif) {
-          gl.uniform1f(unif.location, renderstate.exposure);
-        }
-      } {
-        const unif = unifs.gamma;
-        if (unif) {
-          gl.uniform1f(unif.location, renderstate.gamma);
-        }
-      }
+      // Once the shader has been bound, we allow the renderer to bind any
+      // of its global uniform values. (e.g. env map values etc...)
+      if(renderstate.bindRendererUnifs)
+        renderstate.bindRendererUnifs(shaderCompilationResult.unifs);
     }
+
+    renderstate.supportsInstancing = true;
 
     return true;
   }

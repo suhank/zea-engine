@@ -10,6 +10,9 @@ testingHarness.registerTest('PrimitiveShapes', (domElement, resources)=> {
     const linesMaterial = new Visualive.Material('lines', 'LinesShader');
     linesMaterial.getParameter('Color').setValue(new Visualive.Color(1.0, 0.3, .4));
 
+    // const pointsMaterial = new Visualive.Material('points', 'FatPointsShader');
+    // pointsMaterial.getParameter("PointColor").setValue(new Visualive.Color(1,0,0));
+    // pointsMaterial.getParameter("PointSize").setValue(0.05);
     const pointsMaterial = new Visualive.Material('points', 'SimpleSurfaceShader');
     pointsMaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.3, .4));
 

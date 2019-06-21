@@ -56,9 +56,9 @@ class GLGeomItem {
       this.updated.emit(GLGeomItemChangeType.GEOM_CHANGED);
     });
 
-    let lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset();
-    let materialId = 0;
-    let geomId = 0;
+    const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset();
+    const materialId = 0;
+    const geomId = 0;
     this.geomData = [lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId];
   }
 
@@ -83,8 +83,8 @@ class GLGeomItem {
   }
 
   updateVisibility() {
-    let geomVisible = this.geomItem.getVisible();
-    let visible = geomVisible && !this.culled;
+    const geomVisible = this.geomItem.getVisible();
+    const visible = geomVisible && !this.culled;
     if (this.visible != visible) {
       this.visible = visible;
       this.visibilityChanged.emit(visible);
@@ -122,14 +122,14 @@ class GLGeomItem {
       }
     }
 
-    let unif = unifs.transformIndex;
+    const unif = unifs.transformIndex;
     if (unif) {
       gl.uniform1i(unif.location, this.id);
     }
 
     if (renderstate.lightmaps && unifs.lightmap) {
       if (renderstate.boundLightmap != this.lightmapName) {
-        let gllightmap = renderstate.lightmaps[this.lightmapName];
+        const gllightmap = renderstate.lightmaps[this.lightmapName];
         if (gllightmap && gllightmap.glimage.isLoaded()) {
           gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap);
           gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray());
