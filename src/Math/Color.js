@@ -17,6 +17,9 @@ class Color extends AttrValue {
         if(r.startsWith('#')) {
           this.setFromHex(r);
         }
+        else {
+          this.setFromCSSColorName(r)
+        }
       }
       else {
         this.__data[0] = r;

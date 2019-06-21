@@ -16,7 +16,7 @@ class TreeItemParameter extends Parameter {
   }
   
   clone(flags) {
-    const clonedParam = new TreeItemParameter(this.__name, this.__value);
+    const clonedParam = new TreeItemParameter(this.__name, this.__filterFn);
     return clonedParam;
   }
 
@@ -37,6 +37,8 @@ class TreeItemParameter extends Parameter {
   }
 
   setValue(treeItem, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
+    if (!this.__filterFn(treeItem))
+      return false;
     if(this.__value !== treeItem){
       if(this.__value){
         this.__value.globalXfoChanged.disconnect(this.treeItemGlobalXfoChanged.emit);
@@ -59,12 +61,8 @@ class TreeItemParameter extends Parameter {
   toJSON(context, flags) {
     if((this.__flags&ParamFlags.USER_EDITED) == 0)
       return;
-    const makeRelative = (path) => {
-      const assetPath = context.assetItem.getPath();
-      return path.slice(assetPath.length);
-    }
     return {
-      value: makeRelative(this.__value.getPath())
+      value: context.makeRelative(this.__value.getPath())
     }
   }
 

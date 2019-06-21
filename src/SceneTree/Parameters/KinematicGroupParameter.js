@@ -11,9 +11,10 @@ import {
   TreeItemParameter
 } from './TreeItemParameter.js';
 
-
+// This class is deprecated. Use Groups instead
 class KinematicGroupParameter extends ListParameter {
   constructor(name) {
+    console.error("This class is deprecated. Use Groups instead.")
     super(name, TreeItemParameter);
     this.__globalXfoParams = [];
     this.__initialXfos = [];

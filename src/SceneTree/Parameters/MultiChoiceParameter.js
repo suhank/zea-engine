@@ -12,7 +12,7 @@ class MultiChoiceParameter extends NumberParameter {
   }
 
   getChoices() {
-  	return this.choices;
+    return this.choices;
   }
 
 };

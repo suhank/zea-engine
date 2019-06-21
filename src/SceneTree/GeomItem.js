@@ -37,10 +37,10 @@ class GeomItem extends BaseGeomItem {
   constructor(name, geom = undefined, material = undefined) {
     super(name);
 
-    this.__materialParam = this.addParameter(new MaterialParameter('material'));
-    this.__geomParam = this.addParameter(new GeometryParameter('geometry'));
+    this.__geomParam = this.insertParameter(new GeometryParameter('geometry'), 0);
     this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
     this.__geomParam.boundingBoxDirtied.connect(this._setBoundingBoxDirty.bind(this));
+    this.__materialParam = this.insertParameter(new MaterialParameter('material'), 1);
 
     this.__lightmapCoordOffset = new Vec2();
     this.__geomOffsetXfoParam = this.addParameter(new XfoParameter('geomOffsetXfo'));

@@ -214,8 +214,6 @@ class ResourceLoader {
     this.__applyCallbacks(tmp);
   }
 
-
-
   freeData(buffer) {
     // Note: Explicitly transfer data to a web worker and then 
     // terminate the worker. (hacky way to free TypedArray memory explicitly)
