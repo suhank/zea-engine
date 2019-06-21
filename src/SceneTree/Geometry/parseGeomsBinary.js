@@ -21,7 +21,7 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
     let className = reader.loadStr();
     let pos = reader.pos();
     // let name = reader.loadStr();
-    console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
+    // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
     let geom;
     switch (className) {
       case 'Points':

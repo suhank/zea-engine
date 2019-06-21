@@ -369,8 +369,8 @@ class GLRenderer extends GLBaseRenderer {
     }
   }
 
-  bind(renderstate) {
-    super.bind(renderstate);
+  bindGLRenderer(renderstate) {
+    super.bindGLBaseRenderer(renderstate);
 
     renderstate.envMap = this.__glEnvMap;
     renderstate.exposure = this.__exposure;
@@ -381,10 +381,10 @@ class GLRenderer extends GLBaseRenderer {
     // renderstate.planeDist = this._planeDist;
     // renderstate.planeNormal = this.__cutPlaneNormal;
 
-    const basebindRendererUnifs = renderstate.bindRendererUnifs;
     const gl = this.__gl;
+    const bindGLBaseRendererUnifs = renderstate.bindRendererUnifs;
     renderstate.bindRendererUnifs = (unifs)=>{
-      basebindRendererUnifs(unifs);
+      bindGLBaseRendererUnifs(unifs);
 
       if (this.__glEnvMap) {
         const envMapPyramid = unifs.envMapPyramid;
@@ -415,7 +415,7 @@ class GLRenderer extends GLBaseRenderer {
 
   drawScene(renderstate) {
 
-    this.bind(renderstate);
+    this.bindGLRenderer(renderstate);
 
     if (this.__displayEnvironment)
       this.drawBackground(renderstate);

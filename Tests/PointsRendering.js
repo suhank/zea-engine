@@ -10,7 +10,7 @@ testingHarness.registerTest('TestRender2Points', (domElement, resources) => {
     points.getVertex(1).set(1, 0, 1);
 
     const material = new Visualive.Material('points', 'FatPointsShader');
-    material.getParameter("PointColor").setValue(new Visualive.Color(1,0,0));
+    material.getParameter("BaseColor").setValue(new Visualive.Color(1,0,0));
     material.getParameter("PointSize").setValue(0.05);
     const geomItem = new Visualive.GeomItem('geomItem', points, material);
     scene.getRoot().addChild(geomItem);
@@ -36,16 +36,16 @@ testingHarness.registerTest('TestRenderPointCloud', (domElement, resources) => {
         v.scaleInPlace(Math.random());
     }
 
-    const material = new Visualive.Material('points', 'PointsShader');
-    material.getParameter("PointColor").setValue(new Visualive.Color(1,0,0));
-    // const material = new Visualive.Material('points', 'StandardSurfaceShader');
+    // const material = new Visualive.Material('points', 'PointsShader');
+    // const material = new Visualive.Material('points', 'SimpleSurfaceShader');
     // material.getParameter("BaseColor").setValue(new Visualive.Color(1,0,0));
 
-    // const material = new Visualive.Material('points', 'FatPointsShader');
-    // material.getParameter("PointColor").setValue(new Visualive.Color(1,0,0));
-    // material.getParameter("PointSize").setValue(0.02);
+    const material = new Visualive.Material('points', 'FatPointsShader');
+    // material.getParameter("BaseColor").setValue(new Visualive.Color(1,0,0));
+    material.getParameter("PointSize").setValue(0.02);
+    material.getParameter("Rounded").setValue(0.2);
+    material.getParameter("BaseColor").setValue(new Visualive.Color(1,0,1));
     
-    material.pointSize = 0.02;
     const geomItem = new Visualive.GeomItem('geomItem', points, material);
     scene.getRoot().addChild(geomItem);
 

@@ -83,7 +83,6 @@ class MaterialColorParam extends ColorParameter {
 
     const textureName = reader.loadStr();
     if(textureName != "") {
-      console.log("Load Texture");
       this.setImage(context.materialLibrary.getImage(textureName));
     }
   }

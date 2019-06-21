@@ -42,7 +42,7 @@ void main(void) {
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('PointsShader.fragmentShader', `
 precision highp float;
 
-uniform color PointColor;
+uniform color BaseColor;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -54,7 +54,7 @@ void main(void) {
   vec4 fragColor;
 #endif
 
-  fragColor = PointColor;
+  fragColor = BaseColor;
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
@@ -65,7 +65,7 @@ void main(void) {
 
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations();
-    paramDescs.push({ name: 'PointColor', defaultValue: new Color(1.0, 1.0, 0.5) });
+    paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
     return paramDescs;
   }
 };
@@ -100,7 +100,7 @@ void main(void) {
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   
   gl_Position = modelViewMatrix * vec4(positions, 1.);
-  gl_Position += vec4(vec3(quadPointPos, 0.0) * PointSize, 1.);
+  gl_Position += vec4(vec3(quadPointPos, 0.0) * PointSize, 0.);
   gl_Position = projectionMatrix * gl_Position;
 }
 `);
@@ -110,7 +110,8 @@ precision highp float;
 
 <%include file="math/constants.glsl"/>
 
-uniform color PointColor;
+uniform color BaseColor;
+uniform float Rounded;
 
 /* VS Outputs */
 varying vec2 v_texCoord;
@@ -132,7 +133,7 @@ void main(void) {
   // Modulate the lighting using the texture coord so the point looks round.
   float NdotV = cos(dist * PI);
 
-  fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0) * PointColor * NdotV;
+  fragColor = BaseColor * mix(1.0, NdotV, Rounded);
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;
@@ -151,8 +152,9 @@ void main(void) {
 
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations();
-    paramDescs.push({ name: 'PointColor', defaultValue: new Color(1.0, 1.0, 0.5) });
+    paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) });
     paramDescs.push({ name: 'PointSize', defaultValue: 0.05 });
+    paramDescs.push({ name: 'Rounded', defaultValue: 1.0 });
     return paramDescs;
   }
 };

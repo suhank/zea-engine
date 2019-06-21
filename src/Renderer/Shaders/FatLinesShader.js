@@ -134,7 +134,7 @@ varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
-uniform color Color;
+uniform color BaseColor;
 uniform mat4 cameraMatrix;
 
 #ifdef ENABLE_ES3
@@ -155,7 +155,7 @@ void main(void) {
     // Modulate the lighting using the texture coord so the line looks round.
     NdotV *= cos((v_texCoord.x - 0.5) * 2.0);
 
-    vec4 color = Color * NdotV;
+    vec4 color = BaseColor * NdotV;
     fragColor = vec4(color.rgb, Color.a);
   }
   else{
@@ -181,7 +181,7 @@ void main(void) {
 
   static getParamDeclarations() {
     const paramDescs = super.getParamDeclarations();
-    paramDescs.push({ name: 'Color', defaultValue: new Color(1.0, 1.0, 0.5) })
+    paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
     paramDescs.push({ name: 'Opacity', defaultValue: 1.0 })
     return paramDescs;
   }

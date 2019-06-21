@@ -290,8 +290,7 @@ void main(void) {
         paramDescs.push({ name: 'Reflectance', defaultValue: 0.1, range:[0,1] } );
         paramDescs.push({ name: 'EmissiveStrength', defaultValue: 0.0, range:[0,1] });
         
-        paramDescs.push({ name: 'Normal', defaultValue: new Color(0.0, 0.0, 0.0) });
-        paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
+        // paramDescs.push({ name: 'TexCoordScale', defaultValue: 1.0, texturable: false });
         return paramDescs;
     }
 
