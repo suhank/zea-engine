@@ -367,45 +367,15 @@ class GLBillboardsPass extends GLPass {
         gl.uniform4fv(unifs.tintColor.location, this.__tintColorArray[i]);
         gl.uniform4fv(unifs.layoutData.location, this.__atlas.getLayoutData(this.__billboards[i].imageIndex));
         
-        let eye = 0;
-        for(let vp of renderstate.viewports) {
-          gl.viewport(...vp.region);
-          {
-            const unif = unifs.viewMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.cameraMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.projectionMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.eye;
-            if (unif) {
-              // Left or right eye, when rendering sterio VR.
-              gl.uniform1i(unif.location, eye);
-            }
-          }
+        renderstate.bindViewports(unifs, ()=>{
           gl.drawQuad();
-
-          eye++;
-        }
+        })
       };
     }
     else
     {
       this.__drawItemsTexture.bindToUniform(renderstate, unifs.instancesTexture);
       gl.uniform1i(unifs.instancesTextureSize.location, this.__width);
-
 
       {
         // The instance transform ids are bound as an instanced attribute.
@@ -416,39 +386,9 @@ class GLBillboardsPass extends GLPass {
         gl.vertexAttribDivisor(location, 1); // This makes it instanced
       }
 
-
-      let eye = 0;
-      for(let vp of renderstate.viewports) {
-        gl.viewport(...vp.region);
-        {
-          const unif = unifs.viewMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-          }
-        }
-        {
-          const unif = unifs.cameraMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-          }
-        }
-        {
-          const unif = unifs.projectionMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
-          }
-        }
-        {
-          const unif = unifs.eye;
-          if (unif) {
-            // Left or right eye, when rendering sterio VR.
-            gl.uniform1i(unif.location, eye);
-          }
-        }
+      renderstate.bindViewports(unifs, ()=>{
         gl.drawElementsInstanced(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0, this.__drawCount);
-
-        eye++;
-      }
+      })
     }
 
     gl.disable(gl.BLEND);

@@ -349,10 +349,7 @@ class GLGeomItemSet {
       }
 
       renderstate.bindViewports(unifs, ()=>{
-        if(this.drawCount == 1)
-          this.glgeom.draw(renderstate);
-        else
-          this.glgeom.drawInstanced(this.drawCount);
+        this.glgeom.drawInstanced(this.drawCount);
       })
     }
   }
