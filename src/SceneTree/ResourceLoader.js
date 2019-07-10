@@ -404,6 +404,20 @@ class ResourceLoader {
     this.__terminateWorkers();
   }
 
+  traverse(callback) {
+    const __c = (fsItem) => {
+      for (let childItemName in fsItem.children) {
+        __t(fsItem.children[childItemName]);
+      }
+    }
+    const __t = (fsItem) => {
+      if (callback(fsItem) == false)
+        return false;
+      if(fsItem.children)
+        __c(fsItem);
+    }
+    __c(this.__resourcesTree, 0);
+  }
 };
 
 const resourceLoader = new ResourceLoader();

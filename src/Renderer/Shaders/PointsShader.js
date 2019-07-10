@@ -99,9 +99,9 @@ void main(void) {
   mat4 modelMatrix = getModelMatrix();
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   
-  gl_Position = modelViewMatrix * vec4(positions, 1.);
-  gl_Position += vec4(vec3(quadPointPos, 0.0) * PointSize, 0.);
-  gl_Position = projectionMatrix * gl_Position;
+  vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
+  viewPos += vec4(vec3(quadPointPos, 0.0) * PointSize, 0.);
+  gl_Position = projectionMatrix * viewPos;
 }
 `);
 
@@ -162,11 +162,115 @@ void main(void) {
     paramDescs.push({ name: 'BorderWidth', defaultValue: 0.2 });
     return paramDescs;
   }
+
+  static getGeomDataShaderName(){
+      return 'FatPointsShaderGeomDataShader';
+  }
+
+  // static getSelectedShaderName(){
+  //     return 'FatPointsShaderSelectedGeomsShader';
+  // }
+};
+
+
+
+class FatPointsShaderGeomDataShader extends GLShader {
+  constructor(gl) {
+    console.log("FatPointsShaderGeomDataShader")
+    super(gl);
+    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FatPointsShaderGeomDataShader.vertexShader', `
+precision highp float;
+
+instancedattribute vec3 positions;
+
+uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+
+<%include file="stack-gl/transpose.glsl"/>
+<%include file="stack-gl/inverse.glsl"/>
+<%include file="modelMatrix.glsl"/>
+<%include file="utils/quadVertexFromID.glsl"/>
+
+uniform float PointSize;
+
+/* VS Outputs */
+varying vec2 v_texCoord;
+varying vec3 v_viewPos;
+varying float v_drawItemID;
+
+void main(void) {
+  vec2 quadPointPos = getQuadVertexPositionFromID();
+
+  mat4 modelMatrix = getModelMatrix();
+  mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  
+  vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
+  viewPos += vec4(vec3(quadPointPos, 0.0) * PointSize, 0.);
+  gl_Position = projectionMatrix * viewPos;
+
+
+  v_texCoord = quadPointPos + 0.5;
+  v_viewPos = -viewPos.xyz;
+  v_drawItemID = float(getId());
+}
+`);
+
+    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FatPointsShaderGeomDataShader.fragmentShader', `
+precision highp float;
+
+<%include file="math/constants.glsl"/>
+
+uniform int passId;
+
+/* VS Outputs */
+varying vec2 v_texCoord;
+varying vec3 v_viewPos;
+varying float v_drawItemID;
+
+#ifdef ENABLE_ES3
+out vec4 fragColor;
+#endif
+
+void main(void) {
+
+#ifndef ENABLE_ES3
+  vec4 fragColor;
+#endif
+
+  float dist = length(v_texCoord - 0.5);
+  if(dist > 0.5)
+    discard;
+
+
+    float viewDist = length(v_viewPos);
+
+    fragColor.r = float(passId); 
+    fragColor.g = float(v_drawItemID);
+    fragColor.b = 0.0;// TODO: store poly-id or something.
+    fragColor.a = viewDist;
+
+
+#ifndef ENABLE_ES3
+  gl_FragColor = fragColor;
+#endif
+}
+`);
+  }
+
+  bind(renderstate) {
+    if(super.bind(renderstate)) {
+      renderstate.supportsInstancing = false;
+      return true;
+    }
+    return false;
+  } 
 };
 
 
 sgFactory.registerClass('PointsShader', PointsShader);
 sgFactory.registerClass('FatPointsShader', FatPointsShader);
+sgFactory.registerClass('FatPointsShaderGeomDataShader', FatPointsShaderGeomDataShader);
+// sgFactory.registerClass('FatPointsShaderSelectedGeomsShader', FatPointsShaderSelectedGeomsShader);
 export {
   PointsShader,
   FatPointsShader

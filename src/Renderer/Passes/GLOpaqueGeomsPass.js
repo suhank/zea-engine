@@ -123,7 +123,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     glshader = this.__renderer.getOrCreateShader(material.getShaderName());
     if (glshader.constructor.getGeomDataShaderName())
       glgeomdatashader = this.__renderer.getOrCreateShader(glshader.constructor.getGeomDataShaderName());
-    if (glshader.constructor.getGeomDataShaderName())
+    if (glshader.constructor.getSelectedShaderName())
       glselectedshader = this.__renderer.getOrCreateShader(glshader.constructor.getSelectedShaderName());
     const glmaterial = this.addMaterial(material);
     const glgeomItem = super.addGeomItem(geomItem);
@@ -156,11 +156,11 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   removeGeomItem(geomItem) {
 
     const glgeomItem = super.removeGeomItem(geomItem);
-    if(!glgeomItem)
+    if (!glgeomItem)
       return false;
 
     const geomItemSet = geomItem.getMetadata('geomItemSet');
-    if(geomItemSet) {
+    if (geomItemSet) {
       // Note: for now leave the material and geom in place. Multiple 
       // GeomItems can reference a given material/geom, so we simply wait
       // for them to be destroyed. 
@@ -235,9 +235,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     // for (let glshaderMaterials of this.__glshadermaterials) {
     for (let shaderName in this.__glshadermaterials) {
       const glshaderMaterials = this.__glshadermaterials[shaderName];
-      if (!glshaderMaterials.glselectedshader ||
-        !this.bindShader(renderstate, glshaderMaterials.glselectedshader))
-        return false;
+      if (!glshaderMaterials.glselectedshader)
+        continue
+      if (!this.bindShader(renderstate, glshaderMaterials.glselectedshader))
+        continue
 
       const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
       for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
@@ -294,7 +295,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       if (!glshaderMaterials.glgeomdatashader)
         continue;
       if (!this.bindShader(renderstate, glshaderMaterials.glgeomdatashader))
-        return false;
+        continue
 
       {
         const unif = renderstate.unifs.floatGeomBuffer;
@@ -312,10 +313,13 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
         if (glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer)
           continue;
-        const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-        for (let gldrawitemset of gldrawitemsets) {
-          // materialProfile.push( 'geom:' + String(gldrawitemset.getGLGeom().getGeom().numVertices()) +  ' count:' + gldrawitemset.getDrawCount() );
-          gldrawitemset.draw(renderstate);
+        // Sometimes materials contain params required for rendering.
+        // e.g. PoointSize
+        if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())) {
+          const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
+          for (let gldrawitemset of gldrawitemsets) {
+            gldrawitemset.draw(renderstate);
+          }
         }
       }
     }
