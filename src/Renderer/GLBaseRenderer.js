@@ -103,8 +103,9 @@ class GLBaseRenderer {
         if(navigator.xr) {
           
           // Old
-          navigator.xr.supportsSessionMode('immersive-vr').then(() => {
+          // navigator.xr.supportsSessionMode({ mode:'immersive-vr' }).then(() => {
           // New
+          // navigator.xr.supportsSession({ mode:'immersive-vr' }).then(() => {
           // navigator.xr.supportsSession('immersive-vr').then(() => {
 
             // Note: could cause a context loss on machines with
@@ -119,9 +120,9 @@ class GLBaseRenderer {
               resolve(this.__xrViewport)
             });
 
-          }).catch((reason) => {
-            console.warn("Unable to setup XR:" + reason);
-          });
+          // }).catch((reason) => {
+          //   console.warn("Unable to setup XR:" + reason);
+          // });
           // }).catch((reason) => {
           //     console.warn("Unable to setup XR:" + reason);
           // });
