@@ -16,6 +16,10 @@ class Sphere extends Mesh {
     if(isNaN(radius) || isNaN(sides) || isNaN(loops))
       throw("Invalid geom args");
 
+    this.__radiusParam = this.addParameter(new NumberParameter('radius', radius));
+    this.__sidesParam = this.addParameter(new NumberParameter('sides', ((sides >= 3) ? sides : 3), [3, 200], 1));
+    this.__loopsParam = this.addParameter(new NumberParameter('loops', ((loops >= 2) ? loops : 2), [1, 200], 1));
+
     this.__radius = radius;
     this.__sides = (sides >= 3) ? sides : 3;
     this.__loops = (loops >= 3) ? loops : 3;

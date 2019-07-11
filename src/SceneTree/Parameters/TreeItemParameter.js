@@ -9,7 +9,7 @@ import {
 } from './Parameter.js';
 
 class TreeItemParameter extends Parameter {
-  constructor(name, filterFn) {
+  constructor(name, filterFn=undefined) {
     super(name, undefined, 'TreeItem');
     this.__filterFn = filterFn;
     this.treeItemGlobalXfoChanged = new Signal();
@@ -37,7 +37,7 @@ class TreeItemParameter extends Parameter {
   }
 
   setValue(treeItem, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-    if (!this.__filterFn(treeItem))
+    if (this.__filterFn && !this.__filterFn(treeItem))
       return false;
     if(this.__value !== treeItem){
       if(this.__value){

@@ -235,23 +235,27 @@ class ColorUniformBinding {
 const logged = {};
 
 class MaterialShaderBinding {
-  constructor(gl, glmaterial, unifs) {
+  constructor(gl, glmaterial, unifs, warnMissingUnifs) {
     this.__uniformBindings = [];
 
     const bindParam = (param) => {
       const name = param.getName();
       const unif = unifs[name];
       if (unif == undefined){
-        // Note: this silent error caused me a lot of searching. make it noisy.
-        const shaderName = glmaterial.getMaterial().getShaderName();
-        if(!logged[shaderName]) {
-          logged[shaderName] = {};
-        }
-        if(!logged[shaderName][name]) {
-          // TODO: Many of these warnings are because when we change shaders
-          // we do not remove obsolete params, but we probably should.
-          console.warn("Material:" + glmaterial.getMaterial().getName(),  "with Shader ", shaderName, "Param has no unif", name);
-          logged[shaderName][name] = true;
+        // Note: we now bind the Material even for rendering geom datas, 
+        // which can mean many params have no uniform in the shader, which is fine. 
+        if (warnMissingUnifs) {
+          // Note: this silent error caused me a lot of searching. make it noisy.
+          const shaderName = glmaterial.getMaterial().getShaderName();
+          if(!logged[shaderName]) {
+            logged[shaderName] = {};
+          }
+          if(!logged[shaderName][name]) {
+            // TODO: Many of these warnings are because when we change shaders
+            // we do not remove obsolete params, but we probably should.
+            console.warn("Material:" + glmaterial.getMaterial().getName(),  "with Shader ", shaderName, "Param has no unif", name);
+            logged[shaderName][name] = true;
+          }
         }
         return;
       }

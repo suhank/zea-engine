@@ -207,7 +207,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
           if (glmaterialGeomItemSet.drawCount == 0)
             continue;
-          if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())) {
+          if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial(), true)) {
             const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
             for (let gldrawitemset of gldrawitemsets) {
               gldrawitemset.draw(renderstate);
@@ -314,8 +314,9 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
         if (glmaterialGeomItemSet.drawCount == 0 || !glmaterialGeomItemSet.visibleInGeomDataBuffer)
           continue;
         // Sometimes materials contain params required for rendering.
-        // e.g. PoointSize
-        if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial())) {
+        // e.g. PointSize.
+        // Note: avoid generating warnings for missing uniforms. 
+        if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial(), false)) {
           const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
           for (let gldrawitemset of gldrawitemsets) {
             gldrawitemset.draw(renderstate);

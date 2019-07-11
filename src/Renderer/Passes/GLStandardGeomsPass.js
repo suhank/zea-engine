@@ -397,8 +397,8 @@ class GLStandardGeomsPass extends GLPass {
     return true;
   }
 
-  bindMaterial(renderstate, glmaterial) {
-    return glmaterial.bind(renderstate);
+  bindMaterial(renderstate, glmaterial, warnMissingUnifs) {
+    return glmaterial.bind(renderstate, warnMissingUnifs);
   }
 };
 
