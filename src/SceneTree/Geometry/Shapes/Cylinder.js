@@ -46,9 +46,9 @@ class Cylinder extends Mesh {
 
     this.clear()
 
+    const radius = this.__radiusParam.getValue();
     const nbSides = this.__sidesParam.getValue();
     const nbLoops = this.__loopsParam.getValue();
-    const radius = this.__radiusParam.getValue();
     const height = this.__heightParam.getValue();
     const caps = this.__capsParam.getValue();
     const baseZAtZero = this.__baseZAtZeroParam.getValue();
