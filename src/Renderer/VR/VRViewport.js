@@ -211,26 +211,25 @@ class VRViewport extends GLBaseViewport {
         // They could be loaded only once the controllers are 
         // being created. However, I can't see the controllers if
         // the loading is defered
-        this.loadHMDResources().then(()=>{;
-        // navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
-        navigator.xr.requestSession('immersive-vr').then((session) => {
+        this.loadHMDResources().then(()=>{
+
+        navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
+        // navigator.xr.requestSession('immersive-vr').then((session) => {
         // navigator.xr.requestSession('inline').then((session) => {// A 'magic window' session 
-            if(!session.mode)
-                session.mode = 'inline'
 
             this.__renderer.__xrViewportPresenting = true;
 
 
             // Add an output canvas that will allow XR to also send a view
             // back the monitor.
-            // const mirrorCanvas = document.createElement('canvas');
-            // mirrorCanvas.style.position = 'relative';
-            // mirrorCanvas.style.left = '0px';
-            // mirrorCanvas.style.top = '0px';
-            // mirrorCanvas.style.width = '100%';
-            // mirrorCanvas.style.height = '100%';
+            const mirrorCanvas = document.createElement('canvas');
+            mirrorCanvas.style.position = 'relative';
+            mirrorCanvas.style.left = '0px';
+            mirrorCanvas.style.top = '0px';
+            mirrorCanvas.style.width = '100%';
+            mirrorCanvas.style.height = '100%';
 
-            // this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
+            this.__renderer.getDiv().replaceChild(mirrorCanvas, this.__renderer.getGLCanvas());
 
             session.addEventListener('end', (event) => {
                 if (event.session.mode == 'immersive-vr') {
@@ -290,9 +289,8 @@ class VRViewport extends GLBaseViewport {
 
             // New code
             session.updateRenderState({
-                baseLayer: new XRWebGLLayer(session, gl, { compositionDisabled: (session.mode = 'inline') }),
-                /*
-                outputContext: mirrorCanvas.getContext('xrpresent')*/
+                baseLayer: new XRWebGLLayer(session, gl, { compositionDisabled: (session.mode == 'inline') }),
+                outputContext: mirrorCanvas.getContext('xrpresent')
             });
             //////////////////////////////
 
@@ -303,8 +301,8 @@ class VRViewport extends GLBaseViewport {
             // coordinates (for example, with a 3DoF device) then it will return an
             // emulated stage, where the view is translated up by a static height so
             // that the scene still renders in approximately the right place.
-            // session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
-            session.requestReferenceSpace({ type: 'bounded' }).then((refSpace) => {
+            session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
+            // session.requestReferenceSpace({ type: 'bounded' }).then((refSpace) => {
                 return refSpace;
             }).catch(() => {
               // If a bounded reference space isn't supported, fall back to a
@@ -381,9 +379,9 @@ class VRViewport extends GLBaseViewport {
 
     updateControllers(xrFrame) {
         // old
-        // const inputSources = this.__session.getInputSources();
+        const inputSources = this.__session.getInputSources();
         //new
-        const inputSources = this.__session.inputSources;
+        // const inputSources = this.__session.inputSources;
 
         for (let i=0; i<inputSources.length; i++) {
             const inputSource = inputSources[i];
@@ -455,10 +453,10 @@ class VRViewport extends GLBaseViewport {
         for (let i=0; i<views.length; i++) {
             const view = views[i];
             // Old
-            // this.__viewMatrices[i].setDataArray(view.viewMatrix);
+            this.__viewMatrices[i].setDataArray(view.viewMatrix);
 
             // New
-            this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
+            // this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
 
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 

@@ -101,12 +101,7 @@ class GLBaseRenderer {
         //     this.__vrpolyfill = new WebVRPolyfill();
         // }
         if(navigator.xr) {
-          
-          // Old
-          // navigator.xr.supportsSessionMode({ mode:'immersive-vr' }).then(() => {
-          // New
-          // navigator.xr.supportsSession({ mode:'immersive-vr' }).then(() => {
-          // navigator.xr.supportsSession('immersive-vr').then(() => {
+          const setupXRViewport = () => {
 
             // Note: could cause a context loss on machines with
             // multi-gpus (integrated Intel). 
@@ -120,12 +115,20 @@ class GLBaseRenderer {
               resolve(this.__xrViewport)
             });
 
-          // }).catch((reason) => {
-          //   console.warn("Unable to setup XR:" + reason);
-          // });
-          // }).catch((reason) => {
-          //     console.warn("Unable to setup XR:" + reason);
-          // });
+          }
+          if(navigator.xr.supportsSessionMode) {
+          // Old
+            navigator.xr.supportsSessionMode('immersive-vr').then(setupXRViewport).catch((reason) => {
+              console.warn("Unable to setup XR:" + reason);
+            });
+          }
+          else {
+            // New
+            navigator.xr.supportsSession('immersive-vr').then(setupXRViewport).catch((reason) => {
+              console.warn("Unable to setup XR:" + reason);
+            });
+          }
+
           // TODO:
           // navigator.xr.addEventListener('devicechange', checkForXRSupport);
         }
@@ -842,7 +845,7 @@ class GLBaseRenderer {
       }
 
       renderstate.bindViewports = (unifs, cb)=> {
-        for(let vp of renderstate.viewports) {
+        renderstate.viewports.forEach((vp, index) => {
           gl.viewport(...vp.region);
           {
             const unif = unifs.viewMatrix;
@@ -866,12 +869,11 @@ class GLBaseRenderer {
             const unif = unifs.eye;
             if (unif) {
               // Left or right eye, when rendering sterio VR.
-              gl.uniform1i(unif.location, eye);
+              gl.uniform1i(unif.location, index);
             }
           }
           cb();
-          eye++;
-        }
+        })
       }
     }
   }
