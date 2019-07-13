@@ -31,6 +31,7 @@ import {
 class VRViewport extends GLBaseViewport {
     constructor(renderer) {
         super(renderer);
+        this.getParameter('DoubleClickTimeMS').setValue(300);
 
         //////////////////////////////////////////////
         // Viewport params
@@ -243,19 +244,19 @@ class VRViewport extends GLBaseViewport {
             const onSelectStart = (ev) => {
                 const controller = this.__vrControllersMap[ev.inputSource.handedness];
                 if(controller) {
-                    console.log("controller:", ev.inputSource.handedness, " down");
 
                     const downTime = Date.now();
-                    if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
-                        if (this.__cameraManipulator) {
-                            this.__cameraManipulatorDragging = true;
-                            this.__cameraManipulator.onDoubleTap(event, mousePos, this);
-                            return;
-                        }
-                        this.controllerDoubleClicked.emit(event);
+                    console.log("controller:", ev.inputSource.handedness, " down", (downTime - controller.__prevDownTime));
+                    if((downTime - controller.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
+                        this.controllerDoubleClicked.emit({ 
+                            button: 1, 
+                            controller, 
+                            vleStopPropagation:false, 
+                            vrviewport: this 
+                        }, this);
                     }
                     else {
-                        this.__prevDownTime = downTime;
+                        controller.__prevDownTime = downTime;
 
                         this.controllerButtonDown.emit({ 
                             button: 1, 
