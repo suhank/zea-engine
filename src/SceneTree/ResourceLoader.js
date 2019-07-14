@@ -83,7 +83,7 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('Visualive.js')) {
+        if (script.src.endsWith('Visualive.js') || script.src.endsWith('@visualive/engine') ) {
           visualiveEngineUrl = script.src;
           break;
         }
