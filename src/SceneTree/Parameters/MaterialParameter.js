@@ -65,8 +65,6 @@ class MaterialParameter extends Parameter {
     this.__flags |= ParamFlags.USER_EDITED;
   }
 
-
-
   destroy(){
     // Note: some parameters hold refs to geoms/materials, 
     // which need to be explicitly cleaned up.

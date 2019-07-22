@@ -82,8 +82,6 @@ class Scene {
     this.lightmapAdded = new Signal();
     this.assetAdded = new Signal();
     this.assetRemoved = new Signal();
-
-
   }
 
   getRoot() {

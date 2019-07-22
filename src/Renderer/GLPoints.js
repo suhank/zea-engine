@@ -8,10 +8,6 @@ import {
 class GLPoints extends GLGeom {
   constructor(gl, points) {
     super(gl, points);
-
-
-    this.fatPoints = false;
-
     this.genBuffers();
   }
 
@@ -46,7 +42,7 @@ class GLPoints extends GLGeom {
       let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
       if (!shaderBinding) {
 
-        if (this.fatPoints && !gl.__quadVertexIdsBuffer)
+        if (!gl.__quadVertexIdsBuffer)
           gl.setupInstancedQuad();
 
         // Merge the points attrs with the quad attrs.

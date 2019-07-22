@@ -41,7 +41,7 @@ class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
     }
   }
 
-  bind(renderstate) {
+  bind(renderstate, warnMissingUnifs) {
 
     // console.log("Material:" + this.__material.getName());
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
@@ -49,7 +49,7 @@ class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
     if (!shaderBinding) {
       const gl = this.__gl;
-      shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs);
+      shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs, warnMissingUnifs);
       this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
     }
     return shaderBinding.bind(renderstate);

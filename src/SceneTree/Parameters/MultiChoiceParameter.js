@@ -12,7 +12,16 @@ class MultiChoiceParameter extends NumberParameter {
   }
 
   getChoices() {
-  	return this.choices;
+    return this.choices;
+  }
+
+  setValue(value, mode) {
+    if(typeof value === 'string') {
+      super.setValue(this.choices.indexOf(value), mode)
+    }
+    else {
+      super.setValue(value, mode)
+    }
   }
 
 };

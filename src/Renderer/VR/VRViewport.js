@@ -31,6 +31,7 @@ import {
 class VRViewport extends GLBaseViewport {
     constructor(renderer) {
         super(renderer);
+        this.getParameter('DoubleClickTimeMS').setValue(300);
 
         //////////////////////////////////////////////
         // Viewport params
@@ -211,9 +212,11 @@ class VRViewport extends GLBaseViewport {
         // They could be loaded only once the controllers are 
         // being created. However, I can't see the controllers if
         // the loading is defered
-        this.loadHMDResources().then(()=>{;
+        this.loadHMDResources().then(()=>{
+
         navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
         // navigator.xr.requestSession('immersive-vr').then((session) => {
+        // navigator.xr.requestSession('inline').then((session) => {// A 'magic window' session 
 
             this.__renderer.__xrViewportPresenting = true;
 
@@ -241,19 +244,19 @@ class VRViewport extends GLBaseViewport {
             const onSelectStart = (ev) => {
                 const controller = this.__vrControllersMap[ev.inputSource.handedness];
                 if(controller) {
-                    console.log("controller:", ev.inputSource.handedness, " down");
 
                     const downTime = Date.now();
-                    if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
-                        if (this.__cameraManipulator) {
-                            this.__cameraManipulatorDragging = true;
-                            this.__cameraManipulator.onDoubleTap(event, mousePos, this);
-                            return;
-                        }
-                        this.controllerDoubleClicked.emit(event);
+                    console.log("controller:", ev.inputSource.handedness, " down", (downTime - controller.__prevDownTime));
+                    if((downTime - controller.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
+                        this.controllerDoubleClicked.emit({ 
+                            button: 1, 
+                            controller, 
+                            vleStopPropagation:false, 
+                            vrviewport: this 
+                        }, this);
                     }
                     else {
-                        this.__prevDownTime = downTime;
+                        controller.__prevDownTime = downTime;
 
                         this.controllerButtonDown.emit({ 
                             button: 1, 
@@ -287,7 +290,7 @@ class VRViewport extends GLBaseViewport {
 
             // New code
             session.updateRenderState({
-                baseLayer: new XRWebGLLayer(session, gl),
+                baseLayer: new XRWebGLLayer(session, gl, { compositionDisabled: (session.mode == 'inline') }),
                 outputContext: mirrorCanvas.getContext('xrpresent')
             });
             //////////////////////////////
@@ -300,10 +303,41 @@ class VRViewport extends GLBaseViewport {
             // emulated stage, where the view is translated up by a static height so
             // that the scene still renders in approximately the right place.
             session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
+            // session.requestReferenceSpace({ type: 'bounded' }).then((refSpace) => {
+                return refSpace;
+            }).catch(() => {
+              // If a bounded reference space isn't supported, fall back to a
+              // stationary/floor-level reference space. This still provides a
+              // floor-relative space and will always be supported for
+              // immersive sessions. It will not, however, provide boundaries
+              // and generally expects the user to stand in one place.
+              // If the device doesn't have a way of determining the floor
+              // level (for example, with a 3DoF device) then it will return
+              // an emulated floor-level space, where the view is translated
+              // up by a static height so that the scene still renders in
+              // approximately the right place.
+              console.log('Falling back to floor-level reference space');
+              return session.requestReferenceSpace('local-floor').catch((e) => {
+                if (!session.mode.startsWith('immersive')) {
+                  // If we're in inline mode, our underlying platform may not support
+                  // the stationary reference space, but an identity space is guaranteed.
+                  console.log('Falling back to identity reference space');
+                  return session.requestReferenceSpace('viewer').then((refSpace) => {
+                    // If we use an identity reference space we need to scoot the
+                    // origin down a bit to put the camera at approximately the
+                    // right level. (Here we're moving it 1.6 meters, which should
+                    // *very* roughly align us with the eye height of an "average"
+                    // adult human.)
+                    return refSpace.getOffsetReferenceSpace(new XRRigidTransform({y: -1.6}));
+                  });
+                } else {
+                  throw e;
+                }
+              });
+            }).then((refSpace) => {
                 this.__refSpace = refSpace;
                 this.__stageTreeItem.setVisible(true);
                 this.presentingChanged.emit(true);
-
                 this.__startSession()
             });
 
@@ -345,8 +379,11 @@ class VRViewport extends GLBaseViewport {
     }
 
     updateControllers(xrFrame) {
-
+        // old
         const inputSources = this.__session.getInputSources();
+        //new
+        // const inputSources = this.__session.inputSources;
+
         for (let i=0; i<inputSources.length; i++) {
             const inputSource = inputSources[i];
 
@@ -412,7 +449,7 @@ class VRViewport extends GLBaseViewport {
             region: this.__region,
             viewports:[]
         };
-        renderstate.boundRendertarget.vrfbo = true;
+        // renderstate.boundRendertarget.vrfbo = true;
 
         for (let i=0; i<views.length; i++) {
             const view = views[i];

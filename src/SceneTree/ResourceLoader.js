@@ -83,7 +83,7 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('Visualive.js')) {
+        if (script.src.endsWith('Visualive.js') || script.src.endsWith('@visualive/engine') ) {
           visualiveEngineUrl = script.src;
           break;
         }
@@ -213,8 +213,6 @@ class ResourceLoader {
     this.__buildTree(tmp)
     this.__applyCallbacks(tmp);
   }
-
-
 
   freeData(buffer) {
     // Note: Explicitly transfer data to a web worker and then 
@@ -406,6 +404,20 @@ class ResourceLoader {
     this.__terminateWorkers();
   }
 
+  traverse(callback) {
+    const __c = (fsItem) => {
+      for (let childItemName in fsItem.children) {
+        __t(fsItem.children[childItemName]);
+      }
+    }
+    const __t = (fsItem) => {
+      if (callback(fsItem) == false)
+        return false;
+      if(fsItem.children)
+        __c(fsItem);
+    }
+    __c(this.__resourcesTree, 0);
+  }
 };
 
 const resourceLoader = new ResourceLoader();

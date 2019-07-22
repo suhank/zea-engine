@@ -66,7 +66,7 @@ class ParameterOwner extends RefCounted {
         param.setValue(srcParam.getValue(), 2);
       }
       else {
-        this.addParameterInstance(srcParam.clone());
+        this.addParameter(srcParam.clone());
       }
     }
   }
@@ -101,38 +101,6 @@ class ParameterOwner extends RefCounted {
     return this.__params[index];
   }
 
-  addParameter(paramName, defaultValue) {
-    if (paramName instanceof Parameter) {
-      return this.addParameterInstance(paramName);
-    }
-    else {
-      console.warn("Add Paremter will soon only take a single argument of a parameter instance")
-    }
-    if (defaultValue instanceof Parameter) {
-      defaultValue.setName(paramName);
-      return this.addParameterInstance(defaultValue);
-    }
-
-    let param;
-    if (typeof defaultValue == 'boolean' || defaultValue === false || defaultValue === true) {
-      param = new Parameter(paramName, defaultValue, 'Boolean');
-    } else if (typeof defaultValue == 'string') {
-      param = new Parameter(paramName, defaultValue, 'String');
-    } else if (Number.isNumeric(defaultValue)) {
-      param = new NumberParameter(paramName, defaultValue);
-    } else if (defaultValue instanceof Vec2) {
-      param = new Vec2Parameter(paramName, defaultValue);
-    } else if (defaultValue instanceof Vec3) {
-      param = new Vec3Parameter(paramName, defaultValue);
-    } else if (defaultValue instanceof Color) {
-      param = new ColorParameter(paramName, defaultValue);
-    } else {
-      param = new Parameter(paramName, defaultValue);
-    }
-    this.addParameterInstance(param);
-    return param;
-  }
-
   // This method can be overrridden in derived classes
   // to perform general updates. (see GLPass)
   __parameterValueChanged(param, mode){
@@ -140,7 +108,7 @@ class ParameterOwner extends RefCounted {
   }
 
 
-  addParameterInstance(param) {
+  addParameter(param) {
     const name = param.getName();
     if(this.__paramMapping[name] != undefined) {
       console.warn("Replacing Parameter:" + name)
@@ -150,6 +118,25 @@ class ParameterOwner extends RefCounted {
     param.addRef(this);
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1;
+    this.parameterAdded.emit(name);
+    return param;
+  }
+
+  insertParameter(param, index) {
+    const name = param.getName();
+    if(this.__paramMapping[name] != undefined) {
+      console.warn("Replacing Parameter:" + name)
+      this.removeParameter(name);
+    }
+    this.__paramSignalIds[name] = param.valueChanged.connect((mode) => this.__parameterValueChanged(param, mode));
+    param.addRef(this);
+    this.__params.splice(index, 0, param);
+
+    const paramMapping = {};
+    for(let i=0; i<this.__params.length; i++) {
+      paramMapping[this.__params[i].getName()] = i;
+    }
+    this.__paramMapping = paramMapping;
     this.parameterAdded.emit(name);
     return param;
   }

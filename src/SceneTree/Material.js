@@ -186,7 +186,8 @@ class Material extends BaseItem {
           param.setValue(paramValues[paramName]);
         }
       } else {
-        this.addParameter(paramName, paramValues[paramName]);
+        // Material Param not found....
+        // this.addParameter(paramName, paramValues[paramName]);
       }
     }
   }
