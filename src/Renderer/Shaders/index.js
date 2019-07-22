@@ -16,6 +16,8 @@ export * from './ShadowCatcherShader.js';
 export * from './LinesShader.js';
 export * from './NormalsShader.js';
 export * from './PointsShader.js';
+export * from './FatPointsShader.js';
+
 export * from './PostProcessing.js';
 export * from './ScreenQuadShader.js';
 export * from './SimpleSurfaceShader.js';

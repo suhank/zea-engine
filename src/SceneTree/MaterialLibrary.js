@@ -48,7 +48,7 @@ class MaterialLibrary {
   }
 
   getMaterialNames() {
-    let names = [];
+    const names = [];
     for(let name in this.__materials) {
       names.push(name);
     }
@@ -90,7 +90,7 @@ class MaterialLibrary {
   }
 
   getImageNames() {
-    let names = [];
+    const names = [];
     for(let name in this.__images) {
       names.push(name);
     }
@@ -101,7 +101,7 @@ class MaterialLibrary {
   // Persistence
 
   load(filePath) {
-    let xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
     xhr.open("GET", filePath, true);
     xhr.ontimeout = ()=>{
       throw("The request for " + filePath + " timed out.");
@@ -121,12 +121,12 @@ class MaterialLibrary {
   fromJSON(j, context={}, flags=0) {
     context.lod = this.lod;
     for (let name in j.textures) {
-      let image = new FileImage(name);
+      const image = new FileImage(name);
       image.fromJSON(j.textures[name]);
       this.__images[name] = texture;
     }
     for (let name in j.materials) {
-      let material = new Material(name);
+      const material = new Material(name);
       material.fromJSON(j.materials[name]);
       this.addMaterial(material);
     }
@@ -150,18 +150,18 @@ class MaterialLibrary {
     context.lod = this.lod;
     context.materialLibrary = this;
 
-    let numTextures = reader.loadUInt32();
+    const numTextures = reader.loadUInt32();
     for (let i = 0; i < numTextures; i++) {
-      let type = reader.loadStr();
-      let texture = sgFactory.constructClass(type, undefined);
+      const type = reader.loadStr();
+      const texture = sgFactory.constructClass(type, undefined);
       texture.readBinary(reader, context);
       this.__images[texture.getName()] = texture;
     }
-    let numMaterials = reader.loadUInt32();
+    const numMaterials = reader.loadUInt32();
     if (numMaterials > 0) {
-      let toc = reader.loadUInt32Array(numMaterials);
+      const toc = reader.loadUInt32Array(numMaterials);
       for (let i = 0; i < numMaterials; i++) {
-        let material = new Material("");
+        const material = new Material("");
         reader.seek(toc[i]); // Reset the pointer to the start of the item data.
         material.readBinary(reader, context, this.__images);
         this.addMaterial(material);
