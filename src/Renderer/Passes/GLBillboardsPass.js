@@ -123,18 +123,26 @@ class GLBillboardsPass extends GLPass {
 
   removeBillboard(billboard) {
     const index = billboard.getMetadata('GLBillboardsPass_Index');
-    if(index >= 0)
-      this.removeBillboardItem(index);
-    else {
-      console.warn("Billboard already removed.")
+    if(index == -1) {
+      console.warn("Billboard already removed.");
+      return;
     }
-  }
+    const billboardData = this.__billboards[index];
 
-  removeBillboardItem(index) {
+    // Currently we are getting errors when trying to re-generate the Fbo
+    // after removing and then adding images back to the atlas.
+    // I don't have time to figureit out, so simply adding images
+    // to the atlas. (for the Zahner demo)
+    // Eventually we need to clean up the atlas, so debug this using the
+    // survey-point-calibration 190528_Dummy_Srvy_Data.vlexe test 
+    // const image = billboardData.billboard.getParameter('image').getValue();
+    // this.__atlas.removeSubImage(image)
+
     this.__billboards[index] = null;
     this.__freeIndices.push(index);
     this.__requestUpdate();
   }
+
 
   __populateBillboardDataArray(billboardData, index, dataArray) {
     const billboard = billboardData.billboard;

@@ -251,7 +251,9 @@ class GLTexture2D extends RefCounted {
     this.alphaFromLuminance = ('alphaFromLuminance' in params) ? params.alphaFromLuminance : false;
     this.textureDesc = [width, height, 0, 0];
 
-
+    if(this.__gltex) {
+      gl.deleteTexture(this.__gltex);
+    }
 
     this.__gltex = gl.createTexture();
     this.__updateGLTexParams();

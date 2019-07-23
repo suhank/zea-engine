@@ -137,8 +137,8 @@ class ImageAtlas extends GLTexture2D {
   constructor(gl, name, format = 'RGBA', type = 'FLOAT', clearColor = [0, 0, 0, 0]) {
     super(gl);
     this.__name = name;
-    this.__format = format;
-    this.__type = type;
+    this.__formatParam = format;
+    this.__typeParam = type;
     this.__clearColor = clearColor;
     this.__subImages = [];
     this.__layoutNeedsRegeneration = false;
@@ -155,18 +155,40 @@ class ImageAtlas extends GLTexture2D {
   }
 
   addSubImage(subImage) {
+    const index = this.__subImages.length;
     if (subImage instanceof BaseImage) {
-      this.__subImages.push(new GLTexture2D(this.__gl, subImage));
+      const gltexture = new GLTexture2D(this.__gl, subImage);
       if (!subImage.isLoaded()) {
         this.__async.incAsyncCount();
         subImage.loaded.connect(()=>{
           this.__async.decAsyncCount()
         });
       }
-    } else
+      subImage.setMetadata('ImageAtlas_index', index);
+      gltexture.addRef(this);
+      this.__subImages.push(gltexture);
+    } else {
+      subImage.addRef(this); // subImage is a GLTexture2D
       this.__subImages.push(subImage);
+    }
+
     this.__layoutNeedsRegeneration = true;
     return this.__subImages.length - 1;
+  }
+
+  removeSubImage(subImage){
+    let index;
+    if (subImage instanceof BaseImage) {
+      index = subImage.getMetadata('ImageAtlas_index');
+    } else {
+      index = this.__subImages.indexOf(subImage);
+    }
+    const gltexture = this.__subImages[index];
+    gltexture.removeRef(this);
+
+    this.__subImages.splice(index, 1)
+
+    this.__layoutNeedsRegeneration = true;
   }
 
   getSubImage(index) {
@@ -215,8 +237,8 @@ class ImageAtlas extends GLTexture2D {
     this.configure({
       width,
       height,
-      format: (this.__type == 'FLOAT' && this.__format == 'RGB') ? 'RGBA' : this.__format,
-      type: this.__type,
+      format: (this.__typeParam == 'FLOAT' && this.__formatParam == 'RGB') ? 'RGBA' : this.__formatParam,
+      type: this.__typeParam,
       filter: 'LINEAR',
     });
 
@@ -255,7 +277,9 @@ class ImageAtlas extends GLTexture2D {
         const vec4 = Vec4.createFromFloat32Buffer(dataArray.buffer, i * 4);
         vec4.set(layoutItem.pos.x / width, layoutItem.pos.y / height, layoutItem.size.x / width, layoutItem.size.y / height)
       }
-      if (!this.__atlasLayoutTexture) {
+      if (!this.__atlasLayoutTexture || this.__atlasLayoutTexture.width != size || this.__atlasLayoutTexture.height != size) {
+        if(this.__atlasLayoutTexture)
+          this.__atlasLayoutTexture.destroy();
         this.__atlasLayoutTexture = new GLTexture2D(gl, {
           format: 'RGBA',
           type: 'FLOAT',
@@ -267,7 +291,7 @@ class ImageAtlas extends GLTexture2D {
           data: dataArray
         });
       } else {
-        this.__atlasLayoutTexture.bufferData(data, this.__layout.length, 1);
+        this.__atlasLayoutTexture.bufferData(dataArray, this.__layout.length, 1);
       }
     }
 
