@@ -100,6 +100,8 @@ class GLGeom {
   }
 
   destroy() {
+    this.__geom.deleteMetadata('glgeom');
+    
     this.clearShaderBindings();
 
     const gl = this.__gl;

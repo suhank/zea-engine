@@ -64,6 +64,9 @@ class GLMaterialGeomItemSets {
 
       this.drawCount += geomItemSet.drawCount;
       geomItemSet.drawCountChanged.connect(this.__drawCountChanged);
+      geomItemSet.destructing.connect(()=>{
+        this.removeGeomItemSet(geomItemSet);
+      });
     } else {
       console.warn("geomItemSet already added to GLMaterialGeomItemSets")
     }

@@ -74,7 +74,7 @@ class ResourceLoader {
     this.__workers = [];
     this.__nextWorker = 0;
 
-    if(window.location.origin.startsWith('https://api.visualive.io') ||
+    if (window.location.origin.startsWith('https://api.visualive.io') ||
       window.location.origin.startsWith('https://apistage.visualive.io')) {
       // For embeds using the old generated page system.
       this.wasmUrl = "https://assets-visualive.storage.googleapis.com/oR3y6kdDu";
@@ -83,7 +83,7 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('Visualive.js') || script.src.endsWith('@visualive/engine') ) {
+        if (script.src.endsWith('Visualive.js') || script.src.endsWith('@visualive/engine')) {
           visualiveEngineUrl = script.src;
           break;
         }
@@ -153,6 +153,22 @@ class ResourceLoader {
     for (let key in resources) {
       buildEntity(key);
     }
+  }
+
+  setCurrentUser(currentUser) {
+    this.__currentUser = currentUser;
+  }
+
+  getCurrentUser() {
+    return this.__currentUser;
+  }
+
+  setProjectId(projectId) {
+    this.__projectId = projectId;
+  }
+
+  getProjectId() {
+    return this.__projectId;
   }
 
   setResources(resources) {
@@ -296,7 +312,7 @@ class ResourceLoader {
   }
 
   resolveFilePathToId(filePath) {
-    if(!filePath) {
+    if (!filePath) {
       console.warn("Invalid file path:", filePath);
       return;
     }
@@ -413,7 +429,7 @@ class ResourceLoader {
     const __t = (fsItem) => {
       if (callback(fsItem) == false)
         return false;
-      if(fsItem.children)
+      if (fsItem.children)
         __c(fsItem);
     }
     __c(this.__resourcesTree, 0);

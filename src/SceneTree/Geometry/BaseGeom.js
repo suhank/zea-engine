@@ -37,10 +37,6 @@ class BaseGeom extends ParameterOwner {
     this.__name = name;
   }
 
-  destroy() {
-    this.destructing.emit();
-  }
-
   addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
     let attr = new Attribute(dataType, (this.vertices != undefined) ? this.vertices.length : 0, defaultScalarValue);
     this.__vertexAttributes.set(name, attr);
@@ -133,6 +129,11 @@ class BaseGeom extends ParameterOwner {
   setMetadata(key, metaData) {
     this.__metaData.set(key, metaData);
   }
+  
+  deleteMetadata(key) {
+    this.__metaData.delete(key);
+  }
+
 
   //////////////////////////////////////////
   // Memory

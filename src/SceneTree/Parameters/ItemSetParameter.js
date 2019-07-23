@@ -44,23 +44,27 @@ class ItemSetParameter extends Parameter {
       this.itemRemoved.emit()
   }
 
-  setItems(items) {
+  setItems(items, emit = true) {
     for (let item of items){
       if(!this.__items.has(item)) {
         this.__items.add(item);
-        this.itemAdded.emit()
+        if(emit)
+          this.itemAdded.emit()
       }
     }
     for (let item of this.__items){
       if(!items.has(item)) {
         this.__items.delete(item);
-        this.itemRemoved.emit()
+        if(emit)
+          this.itemRemoved.emit()
       }
     }
   }
 
-  clearItems(){
+  clearItems(emit = true){
     this.__items.clear();
+    if(emit)
+      this.itemRemoved.emit()
   }
 
   getNumItems() {

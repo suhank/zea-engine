@@ -26,6 +26,7 @@ class GLGeomItemSet {
     this.lightmapName = undefined;
 
     this.drawCountChanged = new Signal();
+    this.destructing = new Signal();
   }
 
   getGLGeom() {
@@ -87,23 +88,8 @@ class GLGeomItemSet {
       this.drawIdsBufferDirty = true;
     });
 
-    // const index = this.glgeomItems.length;
-    signalIds.dest = glglgeomItem.destructing.connect(() => {
-      const index = this.glgeomItems.indexOf(glglgeomItem);
-      console.log("Draw Item destructing:", index)// Index should be -1
-    //     this.glgeomItems.splice(index, 1);
-    //     if (glglgeomItem.visible) {
-    //         this.drawCount--;
-    //         this.drawCountChanged.emit(-1);
-    //     }
-    //     if (this.glgeomItems.length == 0) {
-    //         // Destroy??
-    //     }
-    //     this.drawIdsBufferDirty = true;
-    });
-
     this.glgeomItems.push(glglgeomItem);
-    this.glgeomItemSignalIds.push(signalIds)
+    this.glgeomItemSignalIds.push(signalIds);
 
     this.drawIdsBufferDirty = true;
   }
@@ -113,8 +99,6 @@ class GLGeomItemSet {
     const signalIds = this.glgeomItemSignalIds[index];
     glglgeomItem.selectedChanged.disconnectId(signalIds.sel);
     glglgeomItem.visibilityChanged.disconnectId(signalIds.vis);
-    // glglgeomItem.destructing.disconnectId(signalIds.dest);
-
 
     this.glgeomItems.splice(index, 1)
     this.glgeomItemSignalIds.splice(index, 1);
@@ -124,6 +108,10 @@ class GLGeomItemSet {
       this.drawCountChanged.emit(-1);
     }
     this.drawIdsBufferDirty = true;
+    console.log("removeGeomItem:", glglgeomItem.getGeomItem().getName(), this.glgeomItems.length)
+    if(this.glgeomItems.length == 0) {
+      this.destroy();
+    }
   }
 
   //////////////////////////////////////
@@ -352,6 +340,10 @@ class GLGeomItemSet {
         this.glgeom.drawInstanced(this.drawCount);
       })
     }
+  }
+
+  destroy() {
+    this.destructing.emit();
   }
 };
 

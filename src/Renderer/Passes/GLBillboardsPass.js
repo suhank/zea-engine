@@ -98,6 +98,7 @@ class GLBillboardsPass extends GLPass {
         billboard,
         imageIndex: this.__atlas.addSubImage(image)
       };
+      billboard.setMetadata('GLBillboardsPass_Index', index);
 
       billboard.visibilityChanged.connect(() => {
         this.__updateIndexArray();
@@ -117,10 +118,16 @@ class GLBillboardsPass extends GLPass {
       });
 
       this.__requestUpdate();
-    })
-    billboard.destructing.connect(() => {
-      this.removeBillboardItem(index);
     });
+  }
+
+  removeBillboard(billboard) {
+    const index = billboard.getMetadata('GLBillboardsPass_Index');
+    if(index >= 0)
+      this.removeBillboardItem(index);
+    else {
+      console.warn("Billboard already removed.")
+    }
   }
 
   removeBillboardItem(index) {
@@ -307,7 +314,9 @@ class GLBillboardsPass extends GLPass {
 
   sort(cameraPos) {
     for (let billboardData of this.__billboards) {
-      billboardData.dist = billboardData.billboard.getGlobalXfo().tr.distanceTo(cameraPos);
+      if(billboardData) {
+        billboardData.dist = billboardData.billboard.getGlobalXfo().tr.distanceTo(cameraPos);
+      }
     }
     this.__indexArray.sort((a, b) => (this.__billboards[a].dist > this.__billboards[b].dist) ? -1 : ((this.__billboards[a].dist < this.__billboards[b].dist) ? 1 : 0));
 
@@ -321,10 +330,8 @@ class GLBillboardsPass extends GLPass {
 
   draw(renderstate) {
 
-    if(this.__billboards.length == 0 || !this.__atlas.isReady())
+    if(this.__drawCount == 0 || !this.__atlas.isReady() || this.__updateRequested)
       return;
-
-
 
     const gl = this.__gl;
 
