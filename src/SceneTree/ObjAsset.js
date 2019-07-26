@@ -56,10 +56,10 @@ class ObjAsset extends AssetItem {
     this.geomsLoaded = new Signal(true);
     this.geomsLoaded.setToggled(false);
     this.loaded.setToggled(false);
-    
+
     this.addParameter(new BooleanParameter('splitObjects', false));
     this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false));
-    this.addParameter(new BooleanParameter('loadMtlFile', false));
+    this.addParameter(new BooleanParameter('loadMtlFile', true));
     this.addParameter(new NumberParameter('unitsConversion', 1.0));
     this.addParameter(new StringParameter('defaultShader', ""));
 
@@ -67,12 +67,12 @@ class ObjAsset extends AssetItem {
     this.objfileParam.valueChanged.connect((mode) => {
       this.loaded.untoggle();
       const emitloaded = mode == Visualive.ValueSetMode.USER_SETVALUE;
-      this.__loadObj(()=>{
-      if(mode == Visualive.ValueSetMode.USER_SETVALUE)
-        this.loaded.emit();
-      }, ()=>{
-      if(mode == Visualive.ValueSetMode.USER_SETVALUE)
-        this.geomsLoaded.emit();
+      this.__loadObj(() => {
+        if (mode == Visualive.ValueSetMode.USER_SETVALUE)
+          this.loaded.emit();
+      }, () => {
+        if (mode == Visualive.ValueSetMode.USER_SETVALUE)
+          this.geomsLoaded.emit();
       });
     });
     this.geomLibrary = new GeomLibrary();
@@ -88,7 +88,7 @@ class ObjAsset extends AssetItem {
 
   __loadObj(onDone, onGeomsLoaded) {
 
-    let objFileData;
+    const stem = this.objfileParam.getStem();
 
     const parseMtlData = (mtlFileData) => {
       const lines = mtlFileData.split('\n');
@@ -102,7 +102,7 @@ class ObjAsset extends AssetItem {
           throw ("Unable to parse a color from the following parts:" + elements.join('_'));
       }
 
-      const parseMap = (elements)=>{
+      const parseMap = (elements) => {
         const fileFolder = this.objfileParam.getFileFolder();
         return new FileImage(elements[0], fileFolder + elements[0]);
       }
@@ -115,40 +115,64 @@ class ObjAsset extends AssetItem {
           line = line.substring(0, line.indexOf('#')).trim();
         const elements = line.split(WHITESPACE_RE);
         const key = elements.shift();
+        const value = elements.join(' ');
         switch (key) {
           case 'newmtl':
-            material = new Material(elements[0]);
+            material = new Material(value);
+            material.setShaderName("StandardSurfaceShader")
             this.materials.addMaterial(material);
             break;
           case 'Kd':
-            material.addParameter('BaseColor', parseColor(elements));
+            material.getParameter('BaseColor').setValue(parseColor(elements));
             break;
           case 'map_Kd':
-            material.addParameter('BaseColor', parseMap(elements));
+            material.getParameter('BaseColor').setValue(parseMap(elements));
             break;
           case 'Ks':
-            let specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0;
+            const specular = (parseFloat(elements[0]) + parseFloat(elements[1]) + parseFloat(elements[2])) / 3.0;
             material.roughness = 1.0 - specular;
-            material.addParameter('Roughness', 1.0 - specular);
-            material.addParameter('Reflectance', specular);
+            material.getParameter('Roughness').setValue(1.0 - specular);
+            material.getParameter('Reflectance').setValue(specular);
             break;
           case 'map_Ks':
-            material.addParameter('Roughness', parseMap(elements /*flags=TEXTURE_INVERT*/ ));
-            material.addParameter('Reflectance', 0.2);
+            material.getParameter('Roughness').setValue(parseMap(elements /*flags=TEXTURE_INVERT*/ ));
+            material.getParameter('Reflectance').setValue(0.2);
             break;
           case 'd':
-            material.addParameter('alpha',  parseFloat(elements[0]));
+            const d = parseFloat(value);
+            if(d < 1.0) {
+              material.setShaderName("TransparentSurfaceShader")
+              material.getParameter('Opacity').setValue(d);
+            }
             break;
           case 'map_d':
-            material.addParameter('alpha',  parseFloat(elements));
+            material.getParameter('alpha').setValue(parseFloat(elements));
             break;
           case 'map_bump':
-            material.addParameter('normal',  parseMap(elements /*flags=BUMP_TO_NORMAL*/ ));
+            material.getParameter('normal').setValue(parseMap(elements /*flags=BUMP_TO_NORMAL*/ ));
             break;
           default:
             // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
         }
       }
+    }
+
+    let async = new Async();
+    async.incAsyncCount();
+    async.ready.connect(() => {
+      buildChildItems();
+    });
+
+    const loadMtlFile = (mtlFile) =>{
+      return new Promise((resolve, reject)=>{
+        loadTextfile(mtlFile.url, (fileData) => {
+          resourceLoader.addWorkDone(stem, 1);
+          parseMtlData(fileData);
+          async.decAsyncCount();
+          resourceLoader.addWorkDone(stem, 1);
+          resolve()
+        });
+      })
     }
 
     const vertices = new Array();
@@ -157,27 +181,20 @@ class ObjAsset extends AssetItem {
 
     const geomDatas = {};
 
-    const parseObjData = () => {
-      if(!objFileData)
-        return;
+    const parseObjData = async (fileData) => {
 
       // this.unloadDataFromTree();
       const filePath = this.objfileParam.getValue();
-      const stem = this.objfileParam.getStem();
 
       //performance.mark("parseObjData");
 
       // array of lines separated by the newline
-      let lines = objFileData.split('\n');
+      let lines = fileData.split('\n');
       let WHITESPACE_RE = /\s+/;
-      let async = new Async();
-      async.incAsyncCount();
-      async.ready.connect(()=>{
-        buildChildItems(); 
-      });
 
       let currGeom = undefined;
-      let newGeom = (name)=>{
+      let currMtl = undefined;
+      let newGeom = (name) => {
         let suffix = 0;
         while (name in geomDatas) {
           suffix++;
@@ -195,13 +212,12 @@ class ObjAsset extends AssetItem {
           "numNormals": 0,
           "numTris": 0,
           "numQuads": 0,
-          "material": undefined
+          "material": currMtl
         };
         geomDatas[name] = currGeom;
       };
       newGeom(stem);
 
-      const loadMtlFile = this.getParameter('loadMtlFile').getValue();
       const splitObjects = this.getParameter('splitObjects').getValue();
       const splitGroupsIntoObjects = this.getParameter('splitGroupsIntoObjects').getValue();
 
@@ -215,34 +231,30 @@ class ObjAsset extends AssetItem {
           line = line.substring(0, line.indexOf('#')).trim();
         const elements = line.split(WHITESPACE_RE);
         const key = elements.shift();
+        const value = elements.join(' ');
         switch (key) {
           case '':
           case 's':
             // ignore shading groups
             continue;
           case 'mtllib':
-            if (!loadMtlFile)
+            if (!this.getParameter('loadMtlFile').getValue())
               continue;
             // Load and parse the mat lib.
             async.incAsyncCount();
             resourceLoader.addWork(stem, 2);
-            const fileFolder = fileParam.getFileFolder();
-            loadTextfile(
-              fileFolder + elements[0],
-              (data)=>{
-                resourceLoader.addWorkDone(stem, 1);
-                parseMtlData(data);
-                async.decAsyncCount();
-                resourceLoader.addWorkDone(stem, 1);
-              }
-            );
+            const fileFolder = this.objfileParam.getFileFolderPath();
+            const mtlFile = resourceLoader.resolveFilepath(fileFolder+value);
+            if (mtlFile) {
+              await loadMtlFile(mtlFile);
+            }
             break;
           case 'o':
-            if (splitObjects)
-              newGeom(elements[0]);
+            newGeom(value);
             break;
           case 'usemtl':
-            currGeom.material = elements[0];
+            currMtl = value;
+            newGeom(value + Object.keys(geomDatas).length);
             break;
           case 'g':
             if (splitGroupsIntoObjects)
@@ -390,23 +402,23 @@ class ObjAsset extends AssetItem {
 
       if (geomData.material != undefined && this.materials.hasMaterial(geomData.material)) {
         geomItem.setMaterial(this.materials.getMaterial(geomData.material));
-      } else{
-
+      } else {
         const defaultShader = this.getParameter('defaultShader').getValue();
-        const material = new Material(geomName + 'mat', defaultShader != "" ? defaultShader : 'StandardSurfaceShader');
+        const material = new Material(geomName + 'mat');
+        material.setShaderName(defaultShader != "" ? defaultShader : 'StandardSurfaceShader')
         const baseColorParam = material.getParameter('BaseColor');
-        if(baseColorParam)
+        if (baseColorParam)
           baseColorParam.setValue(Color.random(0.5));
         else {
           const colorParam = material.getParameter('Color');
-          if(colorParam)
+          if (colorParam)
             colorParam.setValue(Color.random(0.5));
         }
         const roughnessParam = material.getParameter('Roughness');
-        if(roughnessParam)
+        if (roughnessParam)
           roughnessParam.setValue(0.6);
         const reflectanceParam = material.getParameter('Reflectance');
-        if(reflectanceParam)
+        if (reflectanceParam)
           reflectanceParam.setValue(0.2);
         this.materials.addMaterial(material)
         geomItem.setMaterial(material);
@@ -415,28 +427,18 @@ class ObjAsset extends AssetItem {
       this.addChild(geomItem, false);
     }
 
-    const loadObjData = ()=>{
+    const loadObjData = () => {
       const file = this.objfileParam.getFileDesc();
       const stem = this.objfileParam.getStem();
-      resourceLoader.addWork(stem, 2);    
-      loadTextfile(file.url, (fileData)=>{
+      resourceLoader.addWork(stem, 2);
+      loadTextfile(file.url, (fileData) => {
         resourceLoader.addWorkDone(stem, 1);
-        objFileData = fileData;
-        parseObjData();
+        parseObjData(fileData);
         resourceLoader.addWorkDone(stem, 1);
       });
     }
 
     loadObjData();
-
-
-    // // If the fileParam changes again, we only trigger the load function.
-    // fileParam.valueChanged.connect(loadObjData);
-    // this.getParameter('splitObjects').valueChanged.connect(parseObjData);
-    // this.getParameter('splitGroupsIntoObjects').valueChanged.connect(parseObjData);
-    // this.getParameter('loadMtlFile').valueChanged.connect(parseObjData);
-    // this.getParameter('unitsConversion').valueChanged.connect(parseObjData);
-    // this.getParameter('defaultShader').valueChanged.connect(parseObjData);
   }
 
 };

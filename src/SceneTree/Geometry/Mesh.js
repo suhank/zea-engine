@@ -720,8 +720,8 @@ class Mesh extends BaseGeom {
     super.loadBaseGeomBinary(reader);
     this.setFaceCounts(reader.loadUInt32Array());
     this.__faceVertexCounts = reader.loadUInt8Array(this.__faceVertexCounts.length);
-    let offsetRange = reader.loadSInt32Vec2();
-    let bytes = reader.loadUInt8();
+    const offsetRange = reader.loadSInt32Vec2();
+    const bytes = reader.loadUInt8();
     let faceVertexIndexDeltas;
     if (bytes == 1)
       faceVertexIndexDeltas = reader.loadUInt8Array();
@@ -732,7 +732,7 @@ class Mesh extends BaseGeom {
 
     let numVerts = this.numVertices();
 
-    let numFaces = this.getNumFaces();
+    const numFaces = this.getNumFaces();
     let offset = 0;
     let prevCount = 0;
     for (let faceIndex = 0; faceIndex < numFaces; faceIndex++) {
