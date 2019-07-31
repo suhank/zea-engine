@@ -41,7 +41,8 @@ const QUERY_MATCH_TYPE = {
 
 const QUERY_LOGIC = {
   AND: 0,
-  OR: 1
+  OR: 1,
+  NEWSET: 3
 }
 
 class QueryParameter extends StringParameter {

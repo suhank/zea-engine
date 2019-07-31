@@ -152,9 +152,16 @@ class Group extends TreeItem {
     const owner = this.getOwner();
     let result = [];
     let set = []; // Each time we hit an OR operator, we start a new set.
+    let prevset = [];
     // Filter it down, and then merge into result.
     queries.forEach((query, index) => {
-      if (index == 0 || query.getLocicalOperator() == QUERY_LOGIC.OR) {
+      // If we hit an 'OR' query, we want the prevset
+      // to the set generated before the previous query. 
+      // So: TestA && TestB || TestC
+      if (query.getLocicalOperator() == QUERY_LOGIC.AND){
+        prevset = set;
+      }
+      if (index == 0 || query.getLocicalOperator() == QUERY_LOGIC.NEWSET) {
         result = result.concat(set);
         set = [];
         switch (query.getQueryType()) {
@@ -212,24 +219,34 @@ class Group extends TreeItem {
               break;
             }
         }
-      } else if (query.getLocicalOperator() == QUERY_LOGIC.AND) {
+      } else {
+
         switch (query.getQueryType()) {
           case QUERY_TYPES.PATH:
             {
               const path = query.getValue();
-              set = set.filter((item) => regex.test(item.getPath()));
+              const f = (item) => regex.test(item.getPath())
+
+              if (query.getLocicalOperator() == QUERY_LOGIC.AND)
+                set = set.filter(f);
+              else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
+                set = set.concat(prevset.filter(f));
               break;
             }
           case QUERY_TYPES.NAME:
             {
               const regex = query.getRegex();
-              set = set.filter((item) => regex.test(item.getName()));
+              const f = (item) => regex.test(item.getName())
+              if (query.getLocicalOperator() == QUERY_LOGIC.AND)
+                set = set.filter(f);
+              else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
+                set = set.concat(prevset.filter(f));
               break;
             }
           case QUERY_TYPES.PROPERTY:
             {
               const regex = query.getRegex();
-              set = set.filter((item) => {
+              const f = (item) => {
                 if (item.hasParameter(query.getPropertyName())) {
                   const prop = item.getParameter(query.getPropertyName());
                   // Note: the property must be a string property.
@@ -237,20 +254,28 @@ class Group extends TreeItem {
                     return true;
                 }
                 return false;
-              });
+              }
+              if (query.getLocicalOperator() == QUERY_LOGIC.AND)
+                set = set.filter(f);
+              else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
+                set = set.concat(prevset.filter(f));
               break;
             }
           case QUERY_TYPES.MATERIAL:
             {
               const regex = query.getRegex();
-              set = set.filter((item) => {
+              const f = (item) => {
                 if (item.hasParameter("material")) {
                   const material = item.getParameter("material").getValue();
                   if (regex.test(material.getName()))
                     return true;
                 }
                 return false;
-              });
+              }
+              if (query.getLocicalOperator() == QUERY_LOGIC.AND)
+                set = set.filter(f);
+              else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
+                set = set.concat(prevset.filter(f));
               break;
             }
         }

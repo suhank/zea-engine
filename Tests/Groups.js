@@ -53,46 +53,46 @@ testingHarness.registerTest('Groups', (domElement, resources)=> {
     asset.addChild(level);
   }
 
-  {
-    const group = new Visualive.Group('Path Items');
-    group.setPaths([
-      'root/Groups/level0/Geom-0-5-0',
-      ["root", "Groups", "level0", "Geom-0-4-0"],
-      ["root", "Groups", "level0", "Geom-0-6-0"]
-    ])
-    scene.getRoot().addChild(group);
-    group.setSelected(true)
-  }
+  // {
+  //   const group = new Visualive.Group('Path Items');
+  //   group.setPaths([
+  //     'root/Groups/level0/Geom-0-5-0',
+  //     ["root", "Groups", "level0", "Geom-0-4-0"],
+  //     ["root", "Groups", "level0", "Geom-0-6-0"]
+  //   ])
+  //   scene.getRoot().addChild(group);
+  //   group.setSelected(true)
+  // }
 
-  {
-    // Level2 green Spheres
-    const group = new Visualive.Group('Level2 green Foo Items');
-    const groupQueries = group.getParameter('Queries');
-    {
-      const query = new Visualive.QueryParameter('level2 Items');
-      query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.PATH)
-      query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.REGEX)
-      query.setValue('level2')
-      groupQueries.addItem(query)
-    }
-    {
-      const query = new Visualive.QueryParameter();
-      query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.MATERIAL)
-      query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.EXACT)
-      query.setValue('green')
-      groupQueries.addItem(query)
-    }
-    {
-      const query = new Visualive.QueryParameter();
-      query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.PROPERTY)
-      query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.EXACT)
-      query.setPropertyName('Category')
-      query.setValue('Foo')
-      groupQueries.addItem(query)
-    }
-    scene.getRoot().addChild(group);
-    group.setSelected(true)
-  }
+  // {
+  //   // Level2 green Spheres
+  //   const group = new Visualive.Group('Level2 green Foo Items');
+  //   const groupQueries = group.getParameter('Queries');
+  //   {
+  //     const query = new Visualive.QueryParameter('level2 Items');
+  //     query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.PATH)
+  //     query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.REGEX)
+  //     query.setValue('level2')
+  //     groupQueries.addItem(query)
+  //   }
+  //   {
+  //     const query = new Visualive.QueryParameter();
+  //     query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.MATERIAL)
+  //     query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.EXACT)
+  //     query.setValue('green')
+  //     groupQueries.addItem(query)
+  //   }
+  //   {
+  //     const query = new Visualive.QueryParameter();
+  //     query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.PROPERTY)
+  //     query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.EXACT)
+  //     query.setPropertyName('Category')
+  //     query.setValue('Foo')
+  //     groupQueries.addItem(query)
+  //   }
+  //   scene.getRoot().addChild(group);
+  //   group.setSelected(true)
+  // }
 
   {
     // Level3 red* Spheres
@@ -116,7 +116,7 @@ testingHarness.registerTest('Groups', (domElement, resources)=> {
       const query = new Visualive.QueryParameter();
       query.setQueryType(Visualive.QueryParameter.QUERY_TYPES.MATERIAL)
       query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.REGEX)
-      query.setMatchType(Visualive.QueryParameter.QUERY_MATCH_TYPE.REGEX)
+      query.setLocicalOperator(Visualive.QueryParameter.QUERY_LOGIC.OR)
       query.setValue('^blue')
       groupQueries.addItem(query)
     }
