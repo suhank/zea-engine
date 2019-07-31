@@ -8,6 +8,7 @@ import {
 import {
   ValueSetMode,
   BooleanParameter,
+  StringParameter,
   XfoParameter,
   ItemSetParameter,
   MultiChoiceParameter
@@ -18,6 +19,12 @@ import {
 import {
   TreeItem
 } from './TreeItem';
+import {
+  QueryParameter,
+  QUERY_TYPES,
+  QUERY_MATCH_TYPE,
+  QUERY_LOGIC
+} from './QueryParameter';
 import {
   sgFactory
 } from './SGFactory.js';
@@ -31,8 +38,13 @@ class Group extends TreeItem {
   constructor(name) {
     super(name);
 
-    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 0);
-    this.__initialXfoModeParam = this.insertParameter(new MultiChoiceParameter('InitialXfoMode', 0, ['first', 'average']), 1);
+    this.__searchSetParam = this.insertParameter(new ItemSetParameter('Queries'), 0);
+    this.__searchSetParam.valueChanged.connect((changeType) => {
+      this.resolveQueries()
+    });
+
+    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 1);
+    this.__initialXfoModeParam = this.insertParameter(new MultiChoiceParameter('InitialXfoMode', 0, ['first', 'average']), 2);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       this.recalcInitialXfo();
     })
@@ -94,8 +106,6 @@ class Group extends TreeItem {
     this.mouseDownOnItem = new Signal();
     // this.mouseUpOnItem = new Signal();
     // this.mouseMoveOnItem = new Signal();
-
-
   }
 
   destroy() {
@@ -111,24 +121,149 @@ class Group extends TreeItem {
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
   }
+  setOwner(owner) {
+    super.setOwner(owner);
+
+    this.resolveQueries();
+  }
 
   //////////////////////////////////////////
   // Items
-  // Thsi function is mostly used in our demos, and 
+  // This function is mostly used in our demos, and 
   // should be removed from the interface
-  resolveItems(paths) {
-    const asset = this.getOwner();
-    for (let path of paths) {
-      let treeItem = asset.resolvePath(path);
-      if (treeItem) {
-        this.addItem(treeItem);
-      } else {
-        console.warn("Group could not resolve item:" + path)
-      }
-    }
-    this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
+  setPaths(paths) {
+    this.__searchSetParam.clearItems(false);
+    paths.forEach( path => {
+      const query = new QueryParameter('path', QUERY_TYPES.PATH, QUERY_MATCH_TYPE.EXACT, QUERY_LOGIC.OR);
+      let value ;
+      if (typeof path == 'array')
+        value = path.join('/');
+      else
+        value = path;
+      query.setValue(value);
+      this.__searchSetParam.addItem(query, false);
+    })
+    this.__searchSetParam.itemAdded.emit();
   }
 
+  resolveQueries() {
+
+    const queries = Array.from(this.__searchSetParam.getValue());
+    const owner = this.getOwner();
+    let result = [];
+    let set = []; // Each time we hit an OR operator, we start a new set.
+    // Filter it down, and then merge into result.
+    queries.forEach((query, index) => {
+      if (index == 0 || query.getLocicalOperator() == QUERY_LOGIC.OR) {
+        result = result.concat(set);
+        set = [];
+        switch (query.getQueryType()) {
+          case QUERY_TYPES.PATH:
+            {
+              if (query.getMatchType() == QUERY_MATCH_TYPE.EXACT) {
+                const path = query.getValue();
+                const treeItem = owner.resolvePath(path);
+                if (treeItem) {
+                  result.push(treeItem);
+                } else {
+                  console.warn("Group could not resolve item:" + path)
+                }
+              } else if (query.getMatchType() == QUERY_MATCH_TYPE.REGEX) {
+                const regex = query.getRegex();
+                owner.traverse((item) => {
+                  if (regex.test(item.getPath())){
+                    set.push(item);
+                  }
+                })
+              }
+              break;
+            }
+          case QUERY_TYPES.NAME:
+            {
+              const regex = query.getRegex();
+              owner.traverse((item) => {
+                if (regex.test(item.getName()))
+                  set.push(item);
+              });
+              break;
+            }
+          case QUERY_TYPES.PROPERTY:
+            {
+              const regex = query.getRegex();
+              owner.traverse((item) => {
+                if (item.hasParameter(query.getPropertyName())) {
+                  const prop = item.getParameter(query.getPropertyName());
+                  if (prop instanceof StringParameter && regex.test(prop.getValue()))
+                    set.push(item);
+                }
+              });
+              break;
+            }
+          case QUERY_TYPES.MATERIAL:
+            {
+              const regex = query.getRegex();
+              owner.traverse((item) => {
+                if (item.hasParameter("material")) {
+                  const material = item.getParameter("material").getValue();
+                  if (regex.test(material.getName()))
+                    set.push(item);
+                }
+              });
+              break;
+            }
+        }
+      } else if (query.getLocicalOperator() == QUERY_LOGIC.AND) {
+        switch (query.getQueryType()) {
+          case QUERY_TYPES.PATH:
+            {
+              const path = query.getValue();
+              set = set.filter((item) => regex.test(item.getPath()));
+              break;
+            }
+          case QUERY_TYPES.NAME:
+            {
+              const regex = query.getRegex();
+              set = set.filter((item) => regex.test(item.getName()));
+              break;
+            }
+          case QUERY_TYPES.PROPERTY:
+            {
+              const regex = query.getRegex();
+              set = set.filter((item) => {
+                if (item.hasParameter(query.getPropertyName())) {
+                  const prop = item.getParameter(query.getPropertyName());
+                  // Note: the property must be a string property.
+                  if (prop instanceof StringParameter && regex.test(prop.getValue()))
+                    return true;
+                }
+                return false;
+              });
+              break;
+            }
+          case QUERY_TYPES.MATERIAL:
+            {
+              const regex = query.getRegex();
+              set = set.filter((item) => {
+                if (item.hasParameter("material")) {
+                  const material = item.getParameter("material").getValue();
+                  if (regex.test(material.getName()))
+                    return true;
+                }
+                return false;
+              });
+              break;
+            }
+        }
+      }
+    })
+    result = result.concat(set);
+    // result.forEach((item) => {
+    //   console.log(item.getPath())
+    // });
+    this.__itemsParam.setItems(new Set(result));
+
+    this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
+  }
 
   addItem(item) {
     if (!item) {

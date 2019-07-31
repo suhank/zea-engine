@@ -4,9 +4,9 @@ const gpuTest = (domElement, resources, sideCount, sphereDetail, size) => {
   const scene = new Visualive.Scene(resources);
 
   const addMeshShape = (name, shape, pos, material)=>{
-      const geomItem = new Visualive.GeomItem(name+'Item', shape, material);
-      geomItem.setLocalXfo(new Visualive.Xfo(pos));
-      scene.getRoot().addChild(geomItem);
+    const geomItem = new Visualive.GeomItem(name+'Item', shape, material);
+    geomItem.setLocalXfo(new Visualive.Xfo(pos));
+    scene.getRoot().addChild(geomItem);
   }
 
   const sphere = new Visualive.Sphere(1, sphereDetail, sphereDetail);
