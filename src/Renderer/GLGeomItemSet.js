@@ -54,61 +54,78 @@ class GLGeomItemSet {
     return this.drawCount;
   }
 
-  addGeomItem(glglgeomItem) {
-    if (glglgeomItem.visible) {
+  addGeomItem(glgeomItem) {
+    if (glgeomItem.visible) {
       this.drawCount++;
       this.drawCountChanged.emit(1);
+      const selected = glgeomItem.getGeomItem().getSelected();
+      if (selected) {
+        this.selectedCount++;
+        this.selectedIdsBufferDirty = true;
+      }
     }
+    // console.log("addGeomItem:", glgeomItem.getGeomItem().getPath(), glgeomItem.getGeomItem().getSelected())
 
     if (this.glgeomItems.length == 0) {
-      // this.inverted = glglgeomItem.isInverted();
-      this.lightmapName = glglgeomItem.getGeomItem().getLightmapName();
+      // this.inverted = glgeomItem.isInverted();
+      this.lightmapName = glgeomItem.getGeomItem().getLightmapName();
     }
 
     const signalIds = {}
 
-    signalIds.sel = glglgeomItem.selectedChanged.connect(() => {
-      const selected = glglgeomItem.getGeomItem().getSelected();
-      if (selected) {
-        this.selectedCount++;
-      } else {
-        this.selectedCount--;
+    signalIds.sel = glgeomItem.selectedChanged.connect(() => {
+      if (glgeomItem.visible) {
+        const selected = glgeomItem.getGeomItem().getSelected();
+        if (selected) {
+          this.selectedCount++;
+        } else {
+          this.selectedCount--;
+        }
+        this.selectedIdsBufferDirty = true;
       }
-      this.selectedIdsBufferDirty = true;
     });
 
-    signalIds.vis = glglgeomItem.visibilityChanged.connect((visible) => {
+    signalIds.vis = glgeomItem.visibilityChanged.connect((visible) => {
+      const selected = glgeomItem.getGeomItem().getSelected()
       if (visible) {
         this.drawCount++;
         this.drawCountChanged.emit(1);
+        if (selected) {
+          this.selectedCount++;
+          this.selectedIdsBufferDirty = true;
+        }
       } else {
         this.drawCount--;
         this.drawCountChanged.emit(-1);
+        if (selected) {
+          this.selectedCount--;
+          this.selectedIdsBufferDirty = true;
+        }
       }
       this.drawIdsBufferDirty = true;
     });
 
-    this.glgeomItems.push(glglgeomItem);
+    this.glgeomItems.push(glgeomItem);
     this.glgeomItemSignalIds.push(signalIds);
 
     this.drawIdsBufferDirty = true;
   }
 
-  removeGeomItem(glglgeomItem) {
-    const index = this.glgeomItems.indexOf(glglgeomItem);
+  removeGeomItem(glgeomItem) {
+    const index = this.glgeomItems.indexOf(glgeomItem);
     const signalIds = this.glgeomItemSignalIds[index];
-    glglgeomItem.selectedChanged.disconnectId(signalIds.sel);
-    glglgeomItem.visibilityChanged.disconnectId(signalIds.vis);
+    glgeomItem.selectedChanged.disconnectId(signalIds.sel);
+    glgeomItem.visibilityChanged.disconnectId(signalIds.vis);
 
     this.glgeomItems.splice(index, 1)
     this.glgeomItemSignalIds.splice(index, 1);
 
-    if (glglgeomItem.visible) {
+    if (glgeomItem.visible) {
       this.drawCount--;
       this.drawCountChanged.emit(-1);
     }
     this.drawIdsBufferDirty = true;
-    console.log("removeGeomItem:", glglgeomItem.getGeomItem().getName(), this.glgeomItems.length)
+    // console.log("removeGeomItem:", glgeomItem.getGeomItem().getName(), this.glgeomItems.length)
     if(this.glgeomItems.length == 0) {
       this.destroy();
     }
@@ -148,13 +165,13 @@ class GLGeomItemSet {
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
     let offset = 0;
-    for (let i = 0; i < this.glgeomItems.length; i++) {
-      if (this.glgeomItems[i].visible) {
-        this.drawIdsArray[offset] = this.glgeomItems[i].getId();
+    this.glgeomItems.forEach((geomItem, index)=>{
+      if (geomItem.visible) {
+        this.drawIdsArray[offset] = geomItem.getId();
         offset++;
-        this.lastVisible = i;
+        this.lastVisible = index;
       }
-    }
+    });
     gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.drawIdsArray, gl.STATIC_DRAW);
 
@@ -183,24 +200,29 @@ class GLGeomItemSet {
       this.gl.deleteBuffer(this.selectedIdsBuffer);
       this.selectedIdsBuffer = null;
     }
-    if (!this.selectedIdsBuffer) {
-      const gl = this.gl;
-      this.selectedIdsArray = new Float32Array(this.glgeomItems.length);
-      this.selectedIdsBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, this.selectedIdsBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, this.selectedIdsArray, gl.STATIC_DRAW);
-    }
 
     // Collect all visible geom ids into the instanceIds array.
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
+    if (!this.selectedIdsArray || this.selectedCount > this.selectedIdsArray.length) {
+      this.selectedIdsArray = new Float32Array(this.selectedCount);
+      if (this.selectedIdsBuffer) {
+        gl.deleteBuffer(this.selectedIdsBuffer);
+        this.selectedIdsBuffer = null;
+      }
+    }
+
     let offset = 0;
     for (let i = 0; i < this.glgeomItems.length; i++) {
-      if (this.glgeomItems[i].visible) {
-        this.selectedIdsArray[offset] = this.glgeomItems[i].getId();
+      const glgeomItem = this.glgeomItems[i];
+      if (glgeomItem.visible && glgeomItem.getGeomItem().getSelected()) {
+        this.selectedIdsArray[offset] = glgeomItem.getId();
         offset++;
-        this.lastVisible = i;
       }
+    }
+
+    if (!this.selectedIdsBuffer) {
+      this.selectedIdsBuffer = gl.createBuffer();
     }
     gl.bindBuffer(gl.ARRAY_BUFFER, this.selectedIdsBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.selectedIdsArray, gl.STATIC_DRAW);
@@ -210,21 +232,6 @@ class GLGeomItemSet {
 
   //////////////////////////////////////
   // Drawing
-
-  drawSingle(renderstate, index = 0) {
-
-    const gl = this.gl;
-    const unifs = renderstate.unifs;
-    this.glgeom.bind(renderstate);
-    if (this.glgeomItems[index].bind(renderstate)) {
-      // Specify an non-instanced draw to the shader
-      if (renderstate.unifs.instancedDraw) {
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
-        gl.disableVertexAttribArray(renderstate.attrs.drawIds.location);
-      }
-      this.glgeom.draw(renderstate);
-    }
-  }
 
   draw(renderstate) {
     if (this.drawCount == 0) {
@@ -256,9 +263,8 @@ class GLGeomItemSet {
       }
     }
 
-    this.__bindAndRender(renderstate, this.drawIdsBuffer)
+    this.__bindAndRender(renderstate, this.drawIdsBuffer, this.drawCount)
   }
-
 
   drawSelected(renderstate) {
     if (this.selectedCount == 0) {
@@ -268,11 +274,11 @@ class GLGeomItemSet {
       this.updateSelectedIDsBuffer();
     }
 
-    this.__bindAndRender(renderstate, this.selectedIdsBuffer)
+    this.__bindAndRender(renderstate, this.selectedIdsBuffer, this.selectedCount)
 
   }
 
-  __bindAndRender(renderstate, drawIdsBuffer) {
+  __bindAndRender(renderstate, drawIdsBuffer, drawCount) {
 
     const gl = this.gl;
     const unifs = renderstate.unifs;
@@ -285,35 +291,12 @@ class GLGeomItemSet {
       renderstate.glgeom = this.glgeom;
     }
 
-    // renderstate.drawCalls++;
-    // renderstate.drawCount+=this.drawCount;
-    // The set has a transform id stored in the texture.
-    // Each set as at least one transform, but might have many...
-    if (!renderstate.supportsInstancing) {
-      // return;
-      if (this.glgeomItems[this.lastVisible].bind(renderstate)) {
-        // console.log("draw:"+ this.glgeomItems[this.lastVisible].getId());
-        // Specify an non-instanced draw to the shader
-        if (renderstate.unifs.instancedDraw) {
-          gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
-
-          // Somoe shaders don't have this uniform. (FatLinesShader).
-          // do we need to disable it?
-          // gl.disableVertexAttribArray(renderstate.attrs.drawIds.location);
-        }
-
-        renderstate.bindViewports(unifs, ()=>{
-          this.glgeom.draw(renderstate);
-        })
+    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced || !renderstate.supportsInstancing) {
+      if (renderstate.unifs.instancedDraw) {
+        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
       }
-      return;
-    }
-    // return;
-
-    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
-      const len = this.visibleItems.length;
-      for (let i = 0; i < len; i++) {
-        this.glgeomItems[i].bind(renderstate);
+      for (let i = 0; i < drawCount; i++) {
+        this.glgeomItems[drawIdsBuffer[i]].bind(renderstate);
 
         renderstate.bindViewports(unifs, ()=>{
           this.glgeom.draw(renderstate);
@@ -322,22 +305,19 @@ class GLGeomItemSet {
     } else {
       // console.log("draw:"+ this.drawIdsArray);
 
-      if (renderstate.attrs.instancedIds) {
+      // Specify an instanced draw to the shader so it knows how
+      // to retrieve the modelmatrix.
+      gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
 
-        // Specify an instanced draw to the shader so it knows how
-        // to retrieve the modelmatrix.
-        gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
-
-        // The instanced transform ids are bound as an instanced attribute.
-        let location = renderstate.attrs.instancedIds.location;
-        gl.enableVertexAttribArray(location);
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer);
-        gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0);
-        gl.vertexAttribDivisor(location, 1); // This makes it instanced
-      }
+      // The instanced transform ids are bound as an instanced attribute.
+      let location = renderstate.attrs.instancedIds.location;
+      gl.enableVertexAttribArray(location);
+      gl.bindBuffer(gl.ARRAY_BUFFER, drawIdsBuffer);
+      gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0);
+      gl.vertexAttribDivisor(location, 1); // This makes it instanced
 
       renderstate.bindViewports(unifs, ()=>{
-        this.glgeom.drawInstanced(this.drawCount);
+        this.glgeom.drawInstanced(drawCount);
       })
     }
   }
