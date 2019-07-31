@@ -51,6 +51,7 @@ class Group extends TreeItem {
     this.__calculatingInvInitialXfo = false;
     this.__invInitialXfo = undefined;
     this.__initialXfos = [];
+    this.__signalIndices = [];
 
     this.__visibleParam.valueChanged.connect((changeType) => {
       const items = Array.from(this.__itemsParam.getValue());
@@ -132,23 +133,30 @@ class Group extends TreeItem {
   // This function is mostly used in our demos, and 
   // should be removed from the interface
   setPaths(paths) {
-    this.__searchSetParam.clearItems(false);
+    this.clearItems(false);
     paths.forEach( path => {
       const query = new QueryParameter('path', QUERY_TYPES.PATH, QUERY_MATCH_TYPE.EXACT, QUERY_LOGIC.NEWSET);
       let value ;
-      if (typeof path == 'array')
+      if (Array.isArray(path))
         value = path.join('/');
       else
         value = path;
       query.setValue(value);
       this.__searchSetParam.addItem(query, false);
     })
-    this.__searchSetParam.itemAdded.emit();
+    this.__searchSetParam.valueChanged.emit();
+  }
+  // For backwards compatiblity.
+  resolveItems(paths) {
+    this.setPaths(paths);
   }
 
   resolveQueries() {
 
     const queries = Array.from(this.__searchSetParam.getValue());
+    if(queries.length == 0)
+      return;
+
     const owner = this.getOwner();
     let result = [];
     let set = []; // Each time we hit an OR operator, we start a new set.
@@ -283,47 +291,56 @@ class Group extends TreeItem {
       }
     })
     result = result.concat(set);
-    // result.forEach((item) => {
-    //   console.log(item.getPath())
-    // });
+    result.forEach((item) => {
+      // console.log(item.getPath())
+      this.addItem(item);
+    });
     this.__itemsParam.setItems(new Set(result));
 
     this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
   }
 
-  addItem(item) {
+
+  addItem(item, emit) {
     if (!item) {
       console.warn("Error adding item to group. Item is null");
       return;
     }
-    const items = Array.from(this.__itemsParam.getValue());
-    const index = items.length;
-    item.mouseDown.connect((event) => {
+    const index = this.__itemsParam.addItem(item);
+    const mouseDownIndex = item.mouseDown.connect((event) => {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
     });
-    // item.mouseUp.connect((event)=>{
-    //     this.mouseUp.emit(event);
-    //     this.mouseUpOnItem.emit(event, item);
-    // });
-    // item.mouseMove.connect((event)=>{
-    //     this.mouseMove.emit(event);
-    //     this.mouseMoveOnItem.emit(event, item);
-    // });
-    item.globalXfoChanged.connect((mode) => {
+    const globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
       if (mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
         this.__initialXfos[index] = item.getGlobalXfo();
     });
     this.__initialXfos[index] = item.getGlobalXfo();
-    this.__itemsParam.addItem(item);
+    this.__signalIndices[index] = {
+      mouseDownIndex,
+      globalXfoChangedIndex
+    }
   }
 
   removeItem(item) {
+    const index = this.__itemsParam.removeItem(item);
 
+    item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
+    item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
+    
+    this.__signalIndices.splice(index, 1);
+    this.__initialXfos.splice(index, 1);
   }
 
-  clearItems() {
-    this.__itemsParam.clearItems();
+  clearItems(emit=true) {
+    const items = this.__itemsParam.getValue();
+    items.forEach((item) => {
+      item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
+      item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
+    });
+    this.__signalIndices = [];
+    this.__initialXfos = [];
+    this.__itemsParam.clearItems(emit);
   }
 
   recalcInitialXfo(mode) {

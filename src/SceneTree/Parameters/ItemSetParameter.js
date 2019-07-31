@@ -36,12 +36,15 @@ class ItemSetParameter extends Parameter {
     this.__items.add(item);
     if(emit)
       this.itemAdded.emit()
+    return Array.from(this.__items).indexOf(item)
   }
 
   removeItem(item, emit = true) {
-    this.__items.add(item);
+    const index = Array.from(this.__items).indexOf(item)
+    this.__items.remove(item);
     if(emit)
-      this.itemRemoved.emit()
+      this.itemRemoved.emit();
+    return index;
   }
 
   setItems(items, emit = true) {
@@ -68,7 +71,7 @@ class ItemSetParameter extends Parameter {
   }
 
   getNumItems() {
-    return this.__items.length;
+    return Array.from(this.__items).length;
   }
 
   getValue(){
