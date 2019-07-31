@@ -27,7 +27,8 @@ const QUERY_TYPES = {
   NAME: 0,
   PATH: 1,
   PROPERTY: 4,
-  MATERIAL: 6
+  MATERIAL: 6,
+  VOLUME: 7
 }
 
 const QUERY_MATCH_TYPE = {

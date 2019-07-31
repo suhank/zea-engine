@@ -134,7 +134,7 @@ class Group extends TreeItem {
   setPaths(paths) {
     this.__searchSetParam.clearItems(false);
     paths.forEach( path => {
-      const query = new QueryParameter('path', QUERY_TYPES.PATH, QUERY_MATCH_TYPE.EXACT, QUERY_LOGIC.OR);
+      const query = new QueryParameter('path', QUERY_TYPES.PATH, QUERY_MATCH_TYPE.EXACT, QUERY_LOGIC.NEWSET);
       let value ;
       if (typeof path == 'array')
         value = path.join('/');
@@ -177,8 +177,10 @@ class Group extends TreeItem {
                 }
               } else if (query.getMatchType() == QUERY_MATCH_TYPE.REGEX) {
                 const regex = query.getRegex();
+                const ownerPath = owner.getPath();
                 owner.traverse((item) => {
-                  if (regex.test(item.getPath())){
+                  const itemPath = item.getPath().slice(ownerPath.length);
+                  if (regex.test(String(itemPath))){
                     set.push(item);
                   }
                 })
@@ -220,7 +222,6 @@ class Group extends TreeItem {
             }
         }
       } else {
-
         switch (query.getQueryType()) {
           case QUERY_TYPES.PATH:
             {
