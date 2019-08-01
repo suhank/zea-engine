@@ -115,78 +115,96 @@ class VLAAsset extends AssetItem {
   loadDataFile(onDone, onGeomsDone) {
 
     const file = this.__datafileParam.getFileDesc();
-    if(!file)
+    if(!file) {
+      console.warn("VLAAsset data file not found.")
       return;
+    }
 
     const folder = this.__datafileParam.getFileFolderPath()
     const fileId = this.__datafileParam.getValue();
     const stem = this.__datafileParam.getStem();
     let numGeomsFiles = 0;
 
-    // TODO: one day the resourcecs tree could include meta data to indicate how
-    // manhy files make up the geom stream. 
+    const isVLFile = new RegExp('\\.(vla)$', "i").test(file.name);
+    const vlgeomFiles = [];
 
-    // Load the tree file. This file contains
-    // the scene tree of the asset, and also
-    // tells us how many geom files will need to be loaded.
-    resourceLoader.loadResource(fileId,
-      (entries) => {
-        let version = 0;
-        let treeReader;
-        if(entries.tree2) {
-          treeReader = new Visualive.BinReader(
-            entries.tree2.buffer,
-            0,
-            Visualive.SystemDesc.isMobileDevice
-          )
-          version = treeReader.loadUInt32();
-        }
-        else {
-          const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]];
-          treeReader = new Visualive.BinReader(
-            entry.buffer,
-            0,
-            Visualive.SystemDesc.isMobileDevice
-          )
-          version = 0;
-        }
+    const loadBinary = entries => {
 
-        numGeomsFiles = this.readBinary(treeReader, {
-          assetItem: this,
+      // Load the tree file. This file contains
+      // the scene tree of the asset, and also
+      // tells us how many geom files will need to be loaded.
+
+      let version = 0;
+      let treeReader;
+      if(entries.tree2) {
+        treeReader = new Visualive.BinReader(
+          entries.tree2.buffer,
+          0,
+          Visualive.SystemDesc.isMobileDevice
+        )
+        version = treeReader.loadUInt32();
+      }
+      else {
+        const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]];
+        treeReader = new Visualive.BinReader(
+          entry.buffer,
+          0,
+          Visualive.SystemDesc.isMobileDevice
+        )
+        version = 0;
+      }
+
+      numGeomsFiles = this.readBinary(treeReader, {
+        assetItem: this,
+        version
+      });
+
+      if(!isVLFile) {
+        // Check that the number of geom files we have
+        // match the cound given by the file.
+        if(numGeomsFiles != vlgeomFiles.length)
+          console.error("The number of GeomFiles does not match the count given by the VLA file.")
+      }
+
+      onDone();
+      
+      if(numGeomsFiles == 0 && entries.geoms0) {
+        resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
+        this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
           version
         });
+        const id = this.__geomLibrary.loaded.connect( () => {
+          if(onGeomsDone)
+            onGeomsDone();
+        });
+      }
+      else {
+        // add the work for the the geom files....
+        resourceLoader.addWork(fileId+'geoms', 4*numGeomsFiles); // (load + parse + extra)
 
-        onDone();
-        
-        if(numGeomsFiles == 0 && entries.geoms0) {
-          resourceLoader.addWork(fileId+'geoms', 1); // (load + parse + extra)
-          this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
-            version
-          });
-          const id = this.__geomLibrary.loaded.connect( () => {
-            if(onGeomsDone)
-              onGeomsDone();
-          });
-        }
-        else {
-          // add the work for the the geom files....
-          resourceLoader.addWork(fileId+'geoms', 4*numGeomsFiles); // (load + parse + extra)
-          loadNextGeomFile();
-        }
-      });
+        // Note: Lets just load all the goem files in parallel.
+        loadNextGeomFile();
+      }
+    };
 
     // Now load the geom files in sequence, parsing and loading
     // the next..
     let geomFileID = 0;
     const loadNextGeomFile = () => {
       if (geomFileID < numGeomsFiles) {
-        const nextGeomFileName = folder + stem + geomFileID + '.vlageoms';
-        const fileId = resourceLoader.resolveFilePathToId(nextGeomFileName);
-        // console.log("loadNextGeomFile:" + nextGeomFileName);
-        if (resourceLoader.resourceAvailable(fileId))
-          loadGeomsfile(fileId);
+        console.log("LoadingGeom File:", geomFileID)
+        if(isVLFile) {
+          const nextGeomFileName = folder + stem + geomFileID + '.vlageoms';
+          const geomFile = resourceLoader.resolveFilepath(nextGeomFileName);
+          // console.log("loadNextGeomFile:" + nextGeomFileName);
+          if (geomFile)
+            loadGeomsfile(geomFileID, geomFile.url);
+          else {
+            throw("VLA Geoms file not found:" + nextGeomFileName)
+          }
+        }
         else {
-          throw("VLA Geoms file not found:" + nextGeomFileName)
+          loadGeomsfile(geomFileID, vlgeomFiles[geomFileID].url);
         }
       }
       else {
@@ -195,20 +213,39 @@ class VLAAsset extends AssetItem {
           onGeomsDone();
       }
     }
-    const loadGeomsfile = (fileId) => {
+    const loadGeomsfile = (index, geomFileUrl) => {
       geomFileID++;
-      resourceLoader.loadResource(fileId,
-        (entries) => {
-          const geomsData = entries[Object.keys(entries)[0]];
-          this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
-          resourceLoader.freeData(geomsData.buffer);
-          loadNextGeomFile();
-        },
-        false); // <----
+      resourceLoader.loadURL(fileId+index, geomFileUrl, (entries) => {
+        const geomsData = entries[Object.keys(entries)[0]];
+        this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
+        resourceLoader.freeData(geomsData.buffer);
+        loadNextGeomFile();
+      },
+      false); // <----
       // Note: Don't add load work as we already pre-added it at the begining
       // and after the Tree file was loaded...
     }
 
+    if (isVLFile) {
+      Visualive.resourceLoader.loadResource(fileId, loadBinary);
+    }
+    else if(file.metadata.ConvertFile){
+      let vlaFile;
+      file.metadata.ConvertFile.map( metadataFile => {
+        if(metadataFile.filename.endsWith('.vla'))
+          vlaFile = metadataFile
+        else if(metadataFile.filename.endsWith('.vlageoms'))
+          vlgeomFiles.push(metadataFile);
+      });
+      if(vlaFile) {
+        Visualive.resourceLoader.loadURL(fileId, vlaFile.url, loadBinary);
+      }
+      else {
+        console.warn("ConvertFile metadata contains no vla file.")
+      }
+    }
+
+      
     // To ensure that the resource loader knows when 
     // parsing is done, we listen to the GeomLibrary streamFileLoaded
     // signal. This is fired every time a file in the stream is finshed parsing.
