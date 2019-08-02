@@ -183,47 +183,44 @@ class VLAAsset extends AssetItem {
         resourceLoader.addWork(fileId+'geoms', 4*numGeomsFiles); // (load + parse + extra)
 
         // Note: Lets just load all the goem files in parallel.
-        loadNextGeomFile();
+        loadAllGeomFiles();
       }
     };
 
-    // Now load the geom files in sequence, parsing and loading
-    // the next..
-    let geomFileID = 0;
-    const loadNextGeomFile = () => {
-      if (geomFileID < numGeomsFiles) {
+    const loadAllGeomFiles = () => {
+      const promises = [];
+      for(let geomFileID=0; geomFileID<numGeomsFiles; geomFileID++) {
         console.log("LoadingGeom File:", geomFileID)
         if(isVLFile) {
           const nextGeomFileName = folder + stem + geomFileID + '.vlageoms';
           const geomFile = resourceLoader.resolveFilepath(nextGeomFileName);
-          // console.log("loadNextGeomFile:" + nextGeomFileName);
           if (geomFile)
-            loadGeomsfile(geomFileID, geomFile.url);
+            promises.push(loadGeomsfile(geomFileID, geomFile.url));
           else {
             throw("VLA Geoms file not found:" + nextGeomFileName)
           }
         }
         else {
-          loadGeomsfile(geomFileID, vlgeomFiles[geomFileID].url);
+          promises.push(loadGeomsfile(geomFileID, vlgeomFiles[geomFileID].url));
         }
       }
-      else {
-        // this.geomsLoaded.emit();
+      Promise.all(promises).then(()=> {
         if(onGeomsDone)
           onGeomsDone();
-      }
+      });
     }
+
     const loadGeomsfile = (index, geomFileUrl) => {
-      geomFileID++;
-      resourceLoader.loadURL(fileId+index, geomFileUrl, (entries) => {
-        const geomsData = entries[Object.keys(entries)[0]];
-        this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
-        resourceLoader.freeData(geomsData.buffer);
-        loadNextGeomFile();
-      },
-      false); // <----
-      // Note: Don't add load work as we already pre-added it at the begining
-      // and after the Tree file was loaded...
+      return new Promise((resolve, reject) => {
+        resourceLoader.loadURL(fileId+index, geomFileUrl, (entries) => {
+          const geomsData = entries[Object.keys(entries)[0]];
+          this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
+          resolve();
+        },
+        false); // <----
+        // Note: Don't add load work as we already pre-added it at the begining
+        // and after the Tree file was loaded...
+      })
     }
 
     if (isVLFile) {
