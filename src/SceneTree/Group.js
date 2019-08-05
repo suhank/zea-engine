@@ -162,10 +162,18 @@ class Group extends TreeItem {
 
   removeItem(item) {
 
+    this.__itemsParam.removeItem(item);
   }
 
   clearItems() {
     this.__itemsParam.clearItems();
+  }
+
+  getItems(set) {
+    return this.__itemsParam.getValue();
+  }
+  setItems(set) {
+    this.__itemsParam.setItems(set);
   }
 
   recalcInitialXfo(mode) {

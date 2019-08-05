@@ -25,24 +25,57 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
   draw(renderstate) {
 
     const gl = this.__gl;
-    gl.disable(gl.DEPTH_TEST);
+
+    // Clear the depth buffer so handls are always drawn over the top.
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.CULL_FACE);
+    gl.cullFace(gl.BACK);
+
+    // gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendEquation(gl.FUNC_ADD);
 
     renderstate.pass = 'ADD';
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
 
-    super.draw(renderstate);
+    // super.draw(renderstate);
+    
+    for (let shaderName in this.__glshadermaterials) {
+      const glshaderMaterials = this.__glshadermaterials[shaderName];
+      const glshader = glshaderMaterials.glshader;
+      if (this.bindShader(renderstate, glshader)) {
+        const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
+        for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
+          if (glmaterialGeomItemSet.drawCount == 0)
+            continue;
+          if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial(), true)) {
+            const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
+            for (let gldrawitemset of gldrawitemsets) {
+              gldrawitemset.draw(renderstate);
+            }
+          }
+        }
+      }
+      glshader.unbind(renderstate);
+    }
+
+    if (renderstate.glgeom) {
+      renderstate.glgeom.unbind(renderstate);
+    }
 
     gl.disable(gl.BLEND);
-    gl.enable(gl.DEPTH_TEST);
+    // gl.enable(gl.DEPTH_TEST);
   }
   
 
   drawGeomData(renderstate) {
 
     const gl = this.__gl;
-    gl.disable(gl.DEPTH_TEST);
+
+    // Clear the depth buffer so handls are always drawn over the top.
+    gl.clear(gl.DEPTH_BUFFER_BIT);
+
+    // gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
     gl.blendEquation(gl.FUNC_ADD);
 

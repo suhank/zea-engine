@@ -89,10 +89,10 @@ class Cylinder extends Mesh {
     // build the topology for the body of the cylinder
     for (let i = 0; i < (nbLoops - 1); i++) {
       for (let j = 0; j < nbSides; j++) {
-        let v0 = (nbSides * i) + j;
-        let v1 = (nbSides * i) + ((j + 1) % nbSides);
-        let v2 = (nbSides * (i + 1)) + ((j + 1) % nbSides);
-        let v3 = (nbSides * (i + 1)) + j;
+        let v0 = (nbSides * i) + ((j + 1) % nbSides);
+        let v1 = (nbSides * i) + j;
+        let v2 = (nbSides * (i + 1)) + j;
+        let v3 = (nbSides * (i + 1)) + ((j + 1) % nbSides);
         this.setFaceVertexIndices(faceIndex++, v0, v1, v2, v3);
       }
     }
@@ -101,15 +101,15 @@ class Cylinder extends Mesh {
       // Bottom caps topology
       for (let j = 0; j < nbSides; j++) {
         let v0 = numVertices - 1;
-        let v1 = ((j + 1) % nbSides);
-        let v2 = j;
+        let v1 = j;
+        let v2 = ((j + 1) % nbSides);
         this.setFaceVertexIndices(faceIndex++, v0, v1, v2);
       }
       // Top caps topology
       for (let j = 0; j < nbSides; j++) {
         let v0 = (nbSides * (nbLoops - 1)) + j;
-        let v1 = (nbSides * (nbLoops - 1)) + ((j + 1) % nbSides);
-        let v2 = numVertices - 2;
+        let v1 = numVertices - 2;
+        let v2 = (nbSides * (nbLoops - 1)) + ((j + 1) % nbSides);
         this.setFaceVertexIndices(faceIndex++, v0, v1, v2);
       }
     }
@@ -211,7 +211,7 @@ class Cylinder extends Mesh {
     }
     if (caps) {
       this.getVertex(numVertices - 1).set(0.0, 0.0, height * (baseZAtZero ? 0.0 : -0.5));
-      this.getVertex(numVertices - 2).set(0.0, 0.0, height * (baseZAtZero ? 0.0 : 0.5));
+      this.getVertex(numVertices - 2).set(0.0, 0.0, height * (baseZAtZero ? 1.0 : 0.5));
     }
 
     this.setBoundingBoxDirty();

@@ -192,16 +192,20 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       this.finalize();
 
     const gl = this.__gl;
-    // TODO: disable cull face when rendering cross sections.
-    // gl.enable(gl.CULL_FACE);
     gl.disable(gl.BLEND);
-    gl.disable(gl.CULL_FACE); // 2-sided rendering.
+
+    if(true)// 2-sided rendering.
+      gl.disable(gl.CULL_FACE); // 2-sided rendering.
+    else {
+      gl.enable(gl.CULL_FACE);
+      gl.cullFace(gl.BACK);
+    }
+
 
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
     gl.depthMask(true);
 
-    // for (let glshaderMaterials of this.__glshadermaterials) {
     for (let shaderName in this.__glshadermaterials) {
       const glshaderMaterials = this.__glshadermaterials[shaderName];
       const glshader = glshaderMaterials.glshader;
