@@ -130,14 +130,8 @@ class Group extends TreeItem {
     this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
   }
 
+  __bindItem(item, index) {
 
-  addItem(item) {
-    if (!item) {
-      console.warn("Error adding item to group. Item is null");
-      return;
-    }
-    const items = Array.from(this.__itemsParam.getValue());
-    const index = items.length;
     item.mouseDown.connect((event) => {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
@@ -155,25 +149,40 @@ class Group extends TreeItem {
         this.__initialXfos[index] = item.getGlobalXfo();
     });
     this.__initialXfos[index] = item.getGlobalXfo();
+  }
+
+  addItem(item) {
+    if (!item) {
+      console.warn("Error adding item to group. Item is null");
+      return;
+    }
+    const items = Array.from(this.__itemsParam.getValue());
+    const index = items.length;
+    this.__bindItem(item, index);
     this.__itemsParam.addItem(item);
 
     // Note: do we re-calc the initial xfo if it is set to 'first'?
   }
 
   removeItem(item) {
-
     this.__itemsParam.removeItem(item);
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
   }
 
   clearItems() {
     this.__itemsParam.clearItems();
   }
 
-  getItems(set) {
+  getItems() {
     return this.__itemsParam.getValue();
   }
-  setItems(set) {
-    this.__itemsParam.setItems(set);
+
+  setItems(items) {
+    this.__itemsParam.setItems(items);
+    Array.from(items).forEach((item, index)=>{
+      this.__bindItem(item, index)
+    })
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
   }
 
   recalcInitialXfo(mode) {
