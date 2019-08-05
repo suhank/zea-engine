@@ -69,7 +69,8 @@ class Group extends TreeItem {
     });
     this.__globalXfoParam.valueChanged.connect((changeType) => {
       const items = Array.from(this.__itemsParam.getValue());
-      if (!this.__calculatingInvInitialXfo && items.length > 0) {
+      // Only after all the items are resolved do we have an invXfo and we can tranform our items.
+      if (!this.__calculatingInvInitialXfo && items.length > 0 && this.__invInitialXfo) {
         let delta;
         const xfo = this.__globalXfoParam.getValue();
         const setDirty = (item, initialXfo) => {
@@ -155,6 +156,8 @@ class Group extends TreeItem {
     });
     this.__initialXfos[index] = item.getGlobalXfo();
     this.__itemsParam.addItem(item);
+
+    // Note: do we re-calc the initial xfo if it is set to 'first'?
   }
 
   removeItem(item) {
