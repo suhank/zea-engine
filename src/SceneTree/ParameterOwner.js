@@ -20,6 +20,7 @@ import {
 // 'addPArameter' without the parameter instance.
 import {
   Parameter,
+  ParamFlags
 } from './Parameters/Parameter.js';
 import {
   NumberParameter,
@@ -194,6 +195,8 @@ class ParameterOwner extends RefCounted {
     const paramsJSON = {};
     let savedParams = 0;
     for (let param of this.__params){
+      if(!param.testFlag(ParamFlags.USER_EDITED))
+        continue;
       if(param.numRefs() > 1 && param.getRefIndex(this) != 0) {
         paramsJSON[param.getName()] = {
           paramPath: context.makeRelative(param.getPath())

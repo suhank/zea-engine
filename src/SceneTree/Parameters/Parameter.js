@@ -83,6 +83,17 @@ class BaseParameter extends RefCounted {
     return [this.__name];
   }
 
+  setFlag(flag) {
+    this.__flags |= flag;
+  }
+
+  clearFlag(flag) {
+    this.__flags &= ~flag;
+  }
+
+  testFlag(flag) {
+    return (this.__flags&flag) != 0;
+  }
 
   getValue() {
     // TODO
@@ -105,13 +116,15 @@ class BaseParameter extends RefCounted {
 
   setEnabled(state) {
     if(state)
-      this.__flags &= ~ParamFlags.DISABLED;
+      this.setFlag(ParamFlags.DISABLED);
     else
-      this.__flags |= ~ParamFlags.DISABLED;
+      this.clearFlag(ParamFlags.DISABLED);
   }
+
   isEnabled() {
-    this.__flags & ParamFlags.DISABLED;
+    this.testFlag(ParamFlags.DISABLED);
   }
+
 
   isDirty() {
     return this.__cleanerFns.length > 0;
@@ -200,7 +213,7 @@ class Parameter extends BaseParameter {
     }
     this.__value = value;
     if(mode == ValueSetMode.USER_SETVALUE)
-      this.__flags |= ParamFlags.USER_EDITED;
+      this.setFlag(ParamFlags.USER_EDITED);
 
     // During the cleaning process, we don't want notifications.
     if(mode != ValueSetMode.OPERATOR_SETVALUE)
@@ -219,8 +232,6 @@ class Parameter extends BaseParameter {
   // Persistence
 
   toJSON(context, flags) {
-    if((this.__flags&ParamFlags.USER_EDITED) == 0)
-      return;
     if(this.__value.toJSON)
       return { value: this.__value.toJSON(context, flags) };
     else
@@ -234,7 +245,7 @@ class Parameter extends BaseParameter {
     }
     // Note: JSON data is only used to store user edits, so 
     // parameters loaed from JSON are considered user edited.
-    this.__flags |= ParamFlags.USER_EDITED;
+    this.setFlag(ParamFlags.USER_EDITED)
 
     if(j.value.type && this.__value == undefined) {
       this.__value = sgFactory.constructClass(j.value.type);

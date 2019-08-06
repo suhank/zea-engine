@@ -311,7 +311,7 @@ class BaseGeom extends ParameterOwner {
   }
 
   toJSON(context, flags) {
-    const json = super.toJSON(context, flags);
+    let json = super.toJSON(context, flags);
     if (!json)
       json = {};
     json.type = sgFactory.getClassName(this);
