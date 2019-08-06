@@ -27,3 +27,4 @@ export * from './MaterialColorParam.js';
 // export * from './MaterialParameter.js';
 export * from './GeometryParameter.js';
 
+export * from './QueryParameter.js';

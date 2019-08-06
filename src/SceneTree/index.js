@@ -27,7 +27,6 @@ export * from './BillboardItem.js';
 export * from './Camera.js';
 
 export * from './Group.js';
-export * from './QueryParameter.js';
 
 export * from './GeomLibrary.js';
 export * from './Material.js';

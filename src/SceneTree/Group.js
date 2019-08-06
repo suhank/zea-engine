@@ -14,18 +14,19 @@ import {
   MultiChoiceParameter
 } from './Parameters';
 import {
-  ItemFlags
-} from './BaseItem';
-import {
-  TreeItem
-} from './TreeItem';
-import {
   QueryParameter,
   QUERY_TYPES,
   QUERY_MATCH_TYPE,
   QUERY_LOGIC,
   QuerySet
-} from './QueryParameter';
+} from './Parameters/QueryParameter.js';
+
+import {
+  ItemFlags
+} from './BaseItem';
+import {
+  TreeItem
+} from './TreeItem';
 import {
   sgFactory
 } from './SGFactory.js';

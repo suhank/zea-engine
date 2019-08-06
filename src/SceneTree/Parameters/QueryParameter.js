@@ -1,27 +1,25 @@
 import {
   Vec2,
   Xfo
-} from '../Math';
+} from '../../Math';
 import {
   Signal
-} from '../Utilities';
-import {
-  ValueSetMode,
-  BooleanParameter,
-  StringParameter,
-  XfoParameter,
-  ItemSetParameter,
-  MultiChoiceParameter
-} from './Parameters';
+} from '../../Utilities';
 import {
   ItemFlags
-} from './BaseItem';
-import {
-  TreeItem
-} from './TreeItem';
+} from '../BaseItem';
 import {
   sgFactory
-} from './SGFactory.js';
+} from '../SGFactory.js';
+import {
+  ValueSetMode
+} from './Parameter.js';
+import {
+  StringParameter
+} from './StringParameter.js';
+import {
+  ItemSetParameter
+} from './ItemSetParameter.js';
 
 const QUERY_TYPES = {
   NAME: 0,
