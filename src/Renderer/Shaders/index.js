@@ -10,7 +10,6 @@ export * from './EnvProjectionShader.js';
 export * from './FatLinesShader.js';
 export * from './FlatSurfaceShader.js';
 export * from './FlatAlphaSurfaceShader.js';
-export * from './HandleShader.js';
 export * from './LayeredCarPaintShader.js';
 export * from './ShadowCatcherShader.js';
 export * from './LinesShader.js';
@@ -23,8 +22,12 @@ export * from './ScreenQuadShader.js';
 export * from './SimpleSurfaceShader.js';
 export * from './SimpleCutawaySurfaceShader.js';
 export * from './StandardSurfaceShader.js';
-export * from './GeomDataShader.js';
-export * from './SelectedGeomsShader.js';
+export * from './StandardSurfaceGeomDataShader.js';
+export * from './StandardSurfaceSelectedGeomsShader.js';
+
+export * from './HandleShader.js';
+export * from './HandleGeomDataShader.js';
+
 export * from './StandardCutawaySurfaceShader.js';
 export * from './TransparentSurfaceShader.js';
 export * from './ScreenSpaceShader.js';

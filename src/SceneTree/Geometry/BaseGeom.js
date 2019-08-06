@@ -91,6 +91,16 @@ class BaseGeom extends ParameterOwner {
     this.setBoundingBoxDirty();
   }
 
+  transformVertices(xfo) {
+    let vertices = this.vertices;
+    for (let i = 0; i < vertices.length; i++) {
+      const v = vertices.getValueRef(i);
+      const v2 = xfo.transformVec3(v);
+      v.set(v2.x, v2.y, v2.z)
+    }
+    this.setBoundingBoxDirty();
+  }
+
   //////////////////////////////////////////
   // BoundingBox
 
