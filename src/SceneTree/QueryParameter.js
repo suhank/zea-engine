@@ -134,9 +134,15 @@ class QueryParameter extends StringParameter {
 
 sgFactory.registerClass('QueryParameter', QueryParameter);
 
+
+class QuerySet extends ItemSetParameter {
+
+}
+
 export {
   QueryParameter,
   QUERY_TYPES,
   QUERY_MATCH_TYPE,
-  QUERY_LOGIC
+  QUERY_LOGIC,
+  QuerySet
 };

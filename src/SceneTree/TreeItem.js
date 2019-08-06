@@ -67,20 +67,20 @@ class TreeItem extends BaseItem {
 
     this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
     this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
-    this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
+    // this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
 
-    this.__cutawayParam.valueChanged.connect((changeType) => {
-      setTimeout(() => {
-        const value = this.__cutawayParam.getValue();
-        for (let childItem of this.__childItems) {
-          if(childItem) {
-            const param = childItem.getParameter('CutawayEnabled');
-            if (param)
-              param.setValue(value);
-          }
-        }
-      }, 1)
-    });
+    // this.__cutawayParam.valueChanged.connect((changeType) => {
+    //   setTimeout(() => {
+    //     const value = this.__cutawayParam.getValue();
+    //     for (let childItem of this.__childItems) {
+    //       if(childItem) {
+    //         const param = childItem.getParameter('CutawayEnabled');
+    //         if (param)
+    //           param.setValue(value);
+    //       }
+    //     }
+    //   }, 1)
+    // });
 
 
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()));

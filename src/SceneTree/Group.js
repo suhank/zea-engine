@@ -23,7 +23,8 @@ import {
   QueryParameter,
   QUERY_TYPES,
   QUERY_MATCH_TYPE,
-  QUERY_LOGIC
+  QUERY_LOGIC,
+  QuerySet
 } from './QueryParameter';
 import {
   sgFactory
@@ -38,7 +39,16 @@ class Group extends TreeItem {
   constructor(name) {
     super(name);
 
-    this.__searchSetParam = this.insertParameter(new ItemSetParameter('Queries'), 0);
+    // This setting makes selection propagate from items
+    // to the group, which then propagates down to the items 
+    this.propagateSelectionChangesFromItems = false;
+    
+    this.__calculatingInvInitialXfo = false;
+    this.__invInitialXfo = undefined;
+    this.__initialXfos = [];
+    this.__signalIndices = [];
+
+    this.__searchSetParam = this.insertParameter(new QuerySet('Queries'), 0);
     this.__searchSetParam.valueChanged.connect((changeType) => {
       this.resolveQueries()
     });
@@ -46,19 +56,11 @@ class Group extends TreeItem {
     this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 1);
 
     this.__initialXfoModeParam = this.insertParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']), 
+      new MultiChoiceParameter('XfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']), 
       2);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       this.recalcInitialXfo();
     })
-
-    // This setting makes selection propagate from items
-    // to the group, which then propagates down to the items 
-    this.propagateSelectionChangesFromItems = false;
-    this.__calculatingInvInitialXfo = false;
-    this.__invInitialXfo = undefined;
-    this.__initialXfos = [];
-    this.__signalIndices = [];
 
     this.__visibleParam.valueChanged.connect((changeType) => {
       const items = Array.from(this.__itemsParam.getValue());
@@ -78,15 +80,15 @@ class Group extends TreeItem {
       }
     });
     // Groups can be used to control Cutaway toggles for their members.
-    this.__cutawayParam.valueChanged.connect((changeType) => {
-      const items = Array.from(this.__itemsParam.getValue());
-      const len = items.length;
-      for (let i = 0; i < len; i++) {
-        const itemParam = items[i].getParameter('CutawayEnabled');
-        if (itemParam)
-          itemParam.setDirty(this.__cutawayParam.getValue);
-      }
-    });
+    // this.__cutawayParam.valueChanged.connect((changeType) => {
+    //   const items = Array.from(this.__itemsParam.getValue());
+    //   const len = items.length;
+    //   for (let i = 0; i < len; i++) {
+    //     const itemParam = items[i].getParameter('CutawayEnabled');
+    //     if (itemParam)
+    //       itemParam.setDirty(this.__cutawayParam.getValue);
+    //   }
+    // });
     this.__globalXfoParam.valueChanged.connect((changeType) => {
       const items = Array.from(this.__itemsParam.getValue());
       // Only after all the items are resolved do we have an invXfo and we can tranform our items.
