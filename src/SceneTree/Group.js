@@ -44,10 +44,15 @@ class Group extends TreeItem {
     });
 
     this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 1);
+
     this.__initialXfoModeParam = this.insertParameter(new MultiChoiceParameter('InitialXfoMode', 0, ['first', 'average']), 2);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       this.recalcInitialXfo();
     })
+
+    // This setting makes selection propagate from items
+    // to the group, which then propagates down to the items 
+    this.propagateSelectionChangesFromItems = false;
     this.__calculatingInvInitialXfo = false;
     this.__invInitialXfo = undefined;
     this.__initialXfos = [];
@@ -296,9 +301,7 @@ class Group extends TreeItem {
       // console.log(item.getPath())
       this.addItem(item);
     });
-    this.__itemsParam.setItems(new Set(result));
-
-    this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
+    this.setItems(new Set(result));
   }
 
   __bindItem(item, index) {
@@ -306,6 +309,15 @@ class Group extends TreeItem {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
     });
+    // Note: this should work. Just still trying to figure out how
+    // 
+    item.setSelected(this.getSelected());
+    if(this.propagateSelectionChangesFromItems) {
+      const selectedChangedIndex = item.selectedChanged.connect((event) => {
+        this.setSelected(item.getSelected());
+      });
+    }
+
     const globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
       if (mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
         this.__initialXfos[index] = item.getGlobalXfo();
@@ -318,37 +330,30 @@ class Group extends TreeItem {
     }
   }
 
+  __unbindItem(item, index) {
+    item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
+    item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
+    this.__signalIndices.splice(index, 1);
+    this.__initialXfos.splice(index, 1);
+  }
+
   addItem(item, emit) {
     if (!item) {
       console.warn("Error adding item to group. Item is null");
       return;
     }
     const index = this.__itemsParam.addItem(item);
-    this.__bindItem(item)
+    this.__bindItem(item, index);
+
+    // Note: do we re-calc the initial xfo if it is set to 'first'?
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
   }
 
   removeItem(item) {
     const index = this.__itemsParam.removeItem(item);
-
-    item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
-    item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
+    this.__unbindItem(item, index);
     
-    this.__signalIndices.splice(index, 1);
-    this.__initialXfos.splice(index, 1);
-    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
-  }
-
-  addItem(item) {
-    if (!item) {
-      console.warn("Error adding item to group. Item is null");
-      return;
-    }
-    const items = Array.from(this.__itemsParam.getValue());
-    const index = items.length;
-    this.__bindItem(item, index);
-    this.__itemsParam.addItem(item);
-
-    // Note: do we re-calc the initial xfo if it is set to 'first'?
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
   }
 
   clearItems(emit=true) {
@@ -406,6 +411,16 @@ class Group extends TreeItem {
     this.__calculatingInvInitialXfo = false;
   }
 
+
+  _cleanBoundingBox(bbox) {
+    const result = super._cleanBoundingBox(bbox);
+    const items = Array.from(this.__itemsParam.getValue());
+    items.forEach((item, index)=>{
+      if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
+        bbox.addBox3(item.getBoundingBox());
+    })
+    return bbox;
+  }
 
   /////////////////////////
   // Events

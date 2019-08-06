@@ -30,6 +30,10 @@ class ItemSetParameter extends Parameter {
     return this.__filterFn;
   }
 
+  getItem(index) {
+    return Array.from(this.__items)[index];
+  }
+
   addItem(item, emit = true) {
     if (this.__filterFn && !this.__filterFn(item))
       return false;
@@ -41,7 +45,7 @@ class ItemSetParameter extends Parameter {
 
   removeItem(item, emit = true) {
     const index = Array.from(this.__items).indexOf(item)
-    this.__items.remove(item);
+    this.__items.delete(item);
     if(emit)
       this.itemRemoved.emit();
     return index;
