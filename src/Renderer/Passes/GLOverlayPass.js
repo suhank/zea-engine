@@ -24,44 +24,27 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
 
   draw(renderstate) {
 
+    if (this.newItemsReadyForLoading())
+      this.finalize();
+
     const gl = this.__gl;
 
     // Clear the depth buffer so handls are always drawn over the top.
     gl.clear(gl.DEPTH_BUFFER_BIT);
-    gl.enable(gl.CULL_FACE);
-    gl.cullFace(gl.BACK);
 
-    // gl.disable(gl.DEPTH_TEST);
+    if(false)// 2-sided rendering.
+      gl.disable(gl.CULL_FACE); // 2-sided rendering.
+    else {
+      gl.enable(gl.CULL_FACE);
+      gl.cullFace(gl.BACK);
+    }
     gl.enable(gl.BLEND);
     gl.blendEquation(gl.FUNC_ADD);
 
     renderstate.pass = 'ADD';
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
 
-    // super.draw(renderstate);
-    
-    for (let shaderName in this.__glshadermaterials) {
-      const glshaderMaterials = this.__glshadermaterials[shaderName];
-      const glshader = glshaderMaterials.glshader;
-      if (this.bindShader(renderstate, glshader)) {
-        const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets();
-        for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
-          if (glmaterialGeomItemSet.drawCount == 0)
-            continue;
-          if (this.bindMaterial(renderstate, glmaterialGeomItemSet.getGLMaterial(), true)) {
-            const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
-            for (let gldrawitemset of gldrawitemsets) {
-              gldrawitemset.draw(renderstate);
-            }
-          }
-        }
-      }
-      glshader.unbind(renderstate);
-    }
-
-    if (renderstate.glgeom) {
-      renderstate.glgeom.unbind(renderstate);
-    }
+    this.__traverseTreeAndDraw(renderstate);
 
     gl.disable(gl.BLEND);
     // gl.enable(gl.DEPTH_TEST);
