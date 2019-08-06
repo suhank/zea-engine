@@ -82,7 +82,8 @@ class Group extends TreeItem {
     });
     this.__globalXfoParam.valueChanged.connect((changeType) => {
       const items = Array.from(this.__itemsParam.getValue());
-      if (!this.__calculatingInvInitialXfo && items.length > 0) {
+      // Only after all the items are resolved do we have an invXfo and we can tranform our items.
+      if (!this.__calculatingInvInitialXfo && items.length > 0 && this.__invInitialXfo) {
         let delta;
         const xfo = this.__globalXfoParam.getValue();
         const setDirty = (item, initialXfo) => {
@@ -300,13 +301,7 @@ class Group extends TreeItem {
     this.recalcInitialXfo(ValueSetMode.USER_SETVALUE);
   }
 
-
-  addItem(item, emit) {
-    if (!item) {
-      console.warn("Error adding item to group. Item is null");
-      return;
-    }
-    const index = this.__itemsParam.addItem(item);
+  __bindItem(item, index) {
     const mouseDownIndex = item.mouseDown.connect((event) => {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
@@ -316,10 +311,20 @@ class Group extends TreeItem {
         this.__initialXfos[index] = item.getGlobalXfo();
     });
     this.__initialXfos[index] = item.getGlobalXfo();
+
     this.__signalIndices[index] = {
       mouseDownIndex,
       globalXfoChangedIndex
     }
+  }
+
+  addItem(item, emit) {
+    if (!item) {
+      console.warn("Error adding item to group. Item is null");
+      return;
+    }
+    const index = this.__itemsParam.addItem(item);
+    this.__bindItem(item)
   }
 
   removeItem(item) {
@@ -330,17 +335,45 @@ class Group extends TreeItem {
     
     this.__signalIndices.splice(index, 1);
     this.__initialXfos.splice(index, 1);
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
+  }
+
+  addItem(item) {
+    if (!item) {
+      console.warn("Error adding item to group. Item is null");
+      return;
+    }
+    const items = Array.from(this.__itemsParam.getValue());
+    const index = items.length;
+    this.__bindItem(item, index);
+    this.__itemsParam.addItem(item);
+
+    // Note: do we re-calc the initial xfo if it is set to 'first'?
   }
 
   clearItems(emit=true) {
     const items = this.__itemsParam.getValue();
-    items.forEach((item) => {
+    Array.from(items).forEach((item, index) => {
       item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
       item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
     });
     this.__signalIndices = [];
     this.__initialXfos = [];
     this.__itemsParam.clearItems(emit);
+  }
+
+  getItems() {
+    return this.__itemsParam.getValue();
+  }
+
+  setItems(items) {
+    this.clearItems(false)
+    this.__itemsParam.setItems(items);
+
+    Array.from(items).forEach((item, index)=>{
+      this.__bindItem(item, index)
+    })
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
   }
 
   recalcInitialXfo(mode) {

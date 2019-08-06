@@ -13,12 +13,12 @@ import {
 import './GLSL/stack-gl/transpose.js';
 import './GLSL/stack-gl/gamma.js';
 import './GLSL/modelMatrix.js';
-
-class FlatSurfaceShader extends GLShader {
+    
+class HandleShader extends GLShader {
     constructor(gl) {
         super(gl);
 
-        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('HandleShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -52,7 +52,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('FlatSurfaceShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('HandleShader.fragmentShader', `
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
@@ -106,6 +106,10 @@ void main(void) {
         paramDescs.push({ name: 'BaseColor', defaultValue: new Color(1.0, 1.0, 0.5) })
         return paramDescs;
     }
+
+    static isOverlay() {
+        return true;
+    }
     
     static getGeomDataShaderName(){
         return 'StandardSurfaceGeomDataShader';
@@ -116,7 +120,7 @@ void main(void) {
     }
 };
 
-sgFactory.registerClass('FlatSurfaceShader', FlatSurfaceShader);
+sgFactory.registerClass('HandleShader', HandleShader);
 export {
-    FlatSurfaceShader
+    HandleShader
 };
