@@ -12,7 +12,7 @@ const GLGeomItemChangeType = {
   TRANSFORM_CHANGED: 0,
   GEOM_CHANGED: 1,
   VISIBILITY_CHANGED: 2,
-  SELECTION_CHANGED: 3
+  HIGHLIGHT_CHANGED: 3
 };
 
 
@@ -30,8 +30,8 @@ class GLGeomItem {
     this.lightmapName = geomItem.getLightmapName();
     this.updated = new Signal();
     this.destructing = new Signal();
-    this.selectedChanged = this.geomItem.selectedChanged;
     this.visibilityChanged = new Signal();
+    this.highlightChanged = geomItem.highlightChanged;
 
     this.updateVisibility = this.updateVisibility.bind(this);
     this.destroy = this.destroy.bind(this);
@@ -49,8 +49,8 @@ class GLGeomItem {
     this.geomItem.geomXfoChanged.connect(this.updateXfo);
     this.geomItem.visibilityChanged.connect(this.updateVisibility);
     this.geomItem.destructing.connect(this.destroy);
-    this.selectedChangedId = this.geomItem.selectedChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.SELECTION_CHANGED);
+    this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
+      this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED);
     });
     this.glGeom.updated.connect(() => {
       this.updated.emit(GLGeomItemChangeType.GEOM_CHANGED);
@@ -153,7 +153,7 @@ class GLGeomItem {
   destroy() {
     this.geomItem.visibilityChanged.disconnect(this.updateVisibility);
     this.geomItem.geomXfoChanged.disconnect(this.updateXfo);
-    this.geomItem.selectedChanged.disconnectId(this.selectedChangedId);
+    this.geomItem.highlightChanged.disconnectId(this.highlightChangedId);
     this.geomItem.destructing.disconnect(this.destroy);
     this.destructing.emit(this);
   }

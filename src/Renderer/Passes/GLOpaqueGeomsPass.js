@@ -233,7 +233,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     this.__traverseTreeAndDraw(renderstate);
   }
 
-  drawSelectedGeoms(renderstate) {
+  drawHighlightedGeoms(renderstate) {
 
     const gl = this.__gl;
     gl.disable(gl.BLEND);
@@ -254,7 +254,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
         const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
         for (let gldrawitemset of gldrawitemsets) {
-          gldrawitemset.drawSelected(renderstate);
+          gldrawitemset.drawHighlighted(renderstate);
         }
       }
     }

@@ -895,7 +895,7 @@ class GLBaseRenderer {
       const passSet = this.__passes[key];
       for(let pass of passSet) {
         if (pass.enabled)
-          pass.drawSelectedGeoms(renderstate);
+          pass.drawHighlightedGeoms(renderstate);
       }
     }
   }

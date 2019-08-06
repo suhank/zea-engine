@@ -309,14 +309,6 @@ class GLRenderer extends GLBaseRenderer {
   ////////////////////////////
   // SelectedGeomsBuffer
 
-  getOutlineColor() {
-    return this.__outlineColor
-  }
-
-  setOutlineColor(color) {
-    this.__outlineColor = color;
-  }
-
   createSelectedGeomsFbo() {
     let gl = this.__gl;
     this.__selectedGeomsBuffer = new GLTexture2D(gl, {
@@ -437,9 +429,8 @@ class GLRenderer extends GLBaseRenderer {
 
       this.__outlineShader.bind(renderstate);
       const unifs = renderstate.unifs;
-      this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-      gl.uniform2f(unifs.selectionDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
-      gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
+      this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture);
+      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
       this.quad.bindAndDraw(renderstate);
     }
 

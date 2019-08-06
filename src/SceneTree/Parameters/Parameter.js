@@ -190,7 +190,7 @@ class Parameter extends BaseParameter {
 
   setValue(value, mode = ValueSetMode.USER_SETVALUE) { // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
     if (this.__cleanerFns.length > 0) {
-      // Note: This message has not hilighted any real issues, and has become verbose.
+      // Note: This message has not highlighted any real issues, and has become verbose.
       // Enable if suspicious of operators being trampled by setValues.
       // if(mode==0){
       //     let cleanerNames = [];

@@ -1,4 +1,5 @@
 import {
+  Color,
   Xfo,
   Box3
 } from '../Math';
@@ -39,13 +40,16 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0
 }
 
-
+let selectionOutlineColor = new Color("#03E3AC");
+const noselectionOutlineColor = new Color();
 class TreeItem extends BaseItem {
   constructor(name) {
     super(name)
 
     this.__inheritedVisiblity = true;
     this.__selectable = true;
+    this.__highlightMapping = {};
+    this.__highlights = [];
 
     this.__childItems = [];
     this.__freeIndices = [];
@@ -57,6 +61,7 @@ class TreeItem extends BaseItem {
     this.childRemoved = new Signal();
     this.componentAdded = new Signal();
     this.componentRemoved = new Signal();
+    this.highlightChanged = new Signal();
 
     this.mouseDown = new Signal();
     // this.mouseUp = new Signal();
@@ -81,6 +86,16 @@ class TreeItem extends BaseItem {
     //     }
     //   }, 1)
     // });
+
+    this.__selectedParam.valueChanged.connect((changeType) => {
+      const value = this.__selectedParam.getValue();
+      if (value) {
+        this.addHighlight('selected', selectionOutlineColor);
+      }
+      else {
+        this.removeHighlight('selected');
+      }
+    });
 
 
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()));
@@ -320,6 +335,43 @@ class TreeItem extends BaseItem {
 
   setSelected(sel) {
     this.__selectedParam.setValue(sel);
+  }
+
+
+  //////////////////////////////////////////
+  // Highlights
+
+  addHighlight(name, color, propagateToChildren=false) {
+    if(name in this.__highlightMapping)
+      return;
+
+    this.__highlightMapping[name] = color;
+    this.__highlights.push(name);
+    this.highlightChanged.emit();
+    
+    if(propagateToChildren) {
+      for (let childItem of this.__childItems)
+        childItem.addHighlight(name, color);
+    }
+  }
+
+  removeHighlight(name) {
+    if(name in this.__highlightMapping){
+      const id = this.__highlights.indexOf(name);
+      this.__highlights.splice(id, 1)
+      delete this.__highlightMapping[name];
+      this.highlightChanged.emit();
+    }
+  }
+
+  getHighlight() {
+    if(this.__highlights.length > 0)
+      return this.__highlightMapping[this.__highlights[this.__highlights.length-1]];
+    return noselectionOutlineColor;
+  }
+
+  isHighlighted() {
+    return this.__highlights.length > 0;
   }
 
   //////////////////////////////////////////
