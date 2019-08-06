@@ -45,7 +45,9 @@ class Group extends TreeItem {
 
     this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 1);
 
-    this.__initialXfoModeParam = this.insertParameter(new MultiChoiceParameter('InitialXfoMode', 0, ['first', 'average']), 2);
+    this.__initialXfoModeParam = this.insertParameter(
+      new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']), 
+      2);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       this.recalcInitialXfo();
     })
