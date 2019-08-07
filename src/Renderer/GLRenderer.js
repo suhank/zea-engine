@@ -415,15 +415,21 @@ class GLRenderer extends GLBaseRenderer {
     // console.log("Draw Calls:" + renderstate['drawCalls']);
 
     if (this.__highlightedGeomsBufferFbo) {
+      const gl = this.__gl;
+      
       this.__highlightedGeomsBufferFbo.bindForWriting(renderstate);
       this.__highlightedGeomsBufferFbo.clear();
+
+      // We need to explicitly clear the depth buffer, 
+      // It seems that sometimes the function above does
+      // not do the trick.
+      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       this.drawHighlightedGeoms(renderstate);
 
       // Unbind and restore the bound fbo
       this.__highlightedGeomsBufferFbo.unbindForWriting(renderstate);
 
       // Now render the outlines to the entire screen.
-      const gl = this.__gl;
       gl.viewport(...renderstate.region);
 
       this.__outlineShader.bind(renderstate);
