@@ -13,8 +13,6 @@ class ItemSetParameter extends Parameter {
     super(name, undefined, 'BaseItem');
     this.__items = new Set();
     this.__filterFn = filterFn; // Note: the filter Fn indicates that users will edit the set. 
-    this.itemAdded = new Signal();
-    this.itemRemoved = new Signal();
   }
 
   clone(flags) {
@@ -39,7 +37,7 @@ class ItemSetParameter extends Parameter {
       return false;
     this.__items.add(item);
     if(emit)
-      this.itemAdded.emit()
+      this.valueChanged.emit()
     return Array.from(this.__items).indexOf(item)
   }
 
@@ -47,7 +45,7 @@ class ItemSetParameter extends Parameter {
     const index = Array.from(this.__items).indexOf(item)
     this.__items.delete(item);
     if(emit)
-      this.itemRemoved.emit();
+      this.valueChanged.emit();
     return index;
   }
 
@@ -55,23 +53,21 @@ class ItemSetParameter extends Parameter {
     for (let item of this.__items){
       if(!items.has(item)) {
         this.__items.delete(item);
-        if(emit)
-          this.itemRemoved.emit()
       }
     }
     for (let item of items){
       if(!this.__items.has(item)) {
         this.__items.add(item);
-        if(emit)
-          this.itemAdded.emit();
       }
     }
+    if(emit)
+      this.valueChanged.emit();
   }
 
   clearItems(emit = true){
     this.__items.clear();
     if(emit)
-      this.itemRemoved.emit()
+      this.valueChanged.emit()
   }
 
   getNumItems() {

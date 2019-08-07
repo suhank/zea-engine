@@ -45,6 +45,7 @@ class Group extends TreeItem {
 
     // This setting makes selection propagate from items
     // to the group, which then propagates down to the items 
+    this.propagateSelectionToItems = false;
     this.propagateSelectionChangesFromItems = false;
     
     this.__calculatingInvInitialXfo = false;
@@ -218,6 +219,7 @@ class Group extends TreeItem {
     let prevset = [];
     // Filter it down, and then merge into result.
     queries.forEach((query, index) => {
+      try {
       // If we hit an 'OR' query, we want the prevset
       // to the set generated before the previous query. 
       // So: TestA && TestB || TestC
@@ -227,6 +229,12 @@ class Group extends TreeItem {
       if (index == 0 || query.getLocicalOperator() == QUERY_LOGIC.NEWSET) {
         result = result.concat(set);
         set = [];
+        
+        // An empty RegEx matches all values, so avoid
+        // this special case. We prefer an empty set.
+        if(query.getValue() == "")
+          return;
+
         switch (query.getQueryType()) {
           case QUERY_TYPES.PATH:
             {
@@ -285,6 +293,11 @@ class Group extends TreeItem {
             }
         }
       } else {
+        // An empty RegEx matches all values, so avoid
+        // this special case. We prefer an empty set.
+        if(query.getValue() == "")
+          return;
+
         switch (query.getQueryType()) {
           case QUERY_TYPES.PATH:
             {
@@ -344,6 +357,11 @@ class Group extends TreeItem {
             }
         }
       }
+
+      }
+      catch(e) {
+        // continue...
+      }
     })
     result = result.concat(set);
     // result.forEach((item) => {
@@ -358,9 +376,13 @@ class Group extends TreeItem {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
     });
-    // Note: this should work. Just still trying to figure out how
-    // 
-    item.setSelected(this.getSelected());
+
+    // Only used by the Selection Manager.
+    // Maybe we should have a special group 
+    // for that.
+    if(this.propagateSelectionToItems) {
+      item.setSelected(this.getSelected());
+    }
     if(this.propagateSelectionChangesFromItems) {
       const selectedChangedIndex = item.selectedChanged.connect((event) => {
         this.setSelected(item.getSelected());
@@ -380,6 +402,17 @@ class Group extends TreeItem {
   }
 
   __unbindItem(item, index) {
+
+    let highlighted = false;
+    if(this.getParameter('Highlighted').getValue()) {
+      highlighted = true;
+    }
+    else if(this.getSelected()) {
+      highlighted = true;
+    }
+    if(highlighted)
+      item.removeHighlight('groupItemHighlight')
+
     item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
     item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
     this.__signalIndices.splice(index, 1);
@@ -406,11 +439,13 @@ class Group extends TreeItem {
   }
 
   clearItems(emit=true) {
-    const items = this.__itemsParam.getValue();
-    Array.from(items).forEach((item, index) => {
-      item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
-      item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
-    });
+
+    // Note: Unbind reversed so that indices
+    // do not get changed during the unbind.
+    const items = Array.from(this.__itemsParam.getValue());
+    for (let i = items.length-1; i>=0; i--) {
+      this.__unbindItem(items[i], i);
+    };
     this.__signalIndices = [];
     this.__initialXfos = [];
     this.__itemsParam.clearItems(emit);
@@ -427,6 +462,7 @@ class Group extends TreeItem {
     Array.from(items).forEach((item, index)=>{
       this.__bindItem(item, index)
     })
+    this.__updateHilight();
     this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
   }
 
