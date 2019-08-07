@@ -1,5 +1,6 @@
 import {
   Vec2,
+  Color,
   Xfo
 } from '../Math';
 import {
@@ -36,6 +37,7 @@ const GROUP_INITIAL_XFO_MODES = {
   average: 1
 }
 
+let itemHighlightColor = new Color(0.5, 0.5, 1);
 class Group extends TreeItem {
   constructor(name) {
     super(name);
@@ -73,12 +75,18 @@ class Group extends TreeItem {
       }
     });
     this.__selectedParam.valueChanged.connect((changeType) => {
-      const items = Array.from(this.__itemsParam.getValue());
+      // const items = Array.from(this.__itemsParam.getValue());
       const selected = this.__selectedParam.getValue();
-      const len = items.length;
-      for (let i = 0; i < len; i++) {
-        items[i].setSelected(selected);
-      }
+      // const len = items.length;
+      // for (let i = 0; i < len; i++) {
+      //   items[i].setSelected(selected);
+      // }
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        if(selected)
+          item.addHighlight('groupItemHighlight', itemHighlightColor)
+        else
+          item.removeHighlight('groupItemHighlight')
+      })
     });
     // Groups can be used to control Cutaway toggles for their members.
     // this.__cutawayParam.valueChanged.connect((changeType) => {

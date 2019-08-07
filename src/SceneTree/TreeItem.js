@@ -41,6 +41,7 @@ const CloneFlags = {
 }
 
 let selectionOutlineColor = new Color("#03E3AC");
+let branchSelectionOutlineColor = new Color(1, 0.5, 0.5);
 const noselectionOutlineColor = new Color();
 class TreeItem extends BaseItem {
   constructor(name) {
@@ -90,10 +91,12 @@ class TreeItem extends BaseItem {
     this.__selectedParam.valueChanged.connect((changeType) => {
       const value = this.__selectedParam.getValue();
       if (value) {
-        this.addHighlight('selected', selectionOutlineColor);
+        this.addHighlight('selected', selectionOutlineColor, false);
+        this.__childItems.forEach(childItem => childItem.addHighlight('branchselected', branchSelectionOutlineColor))
       }
       else {
         this.removeHighlight('selected');
+        this.__childItems.forEach(childItem => childItem.removeHighlight('branchselected', branchSelectionOutlineColor))
       }
     });
 
@@ -349,13 +352,13 @@ class TreeItem extends BaseItem {
     this.__highlights.push(name);
     this.highlightChanged.emit();
     
-    if(propagateToChildren) {
-      for (let childItem of this.__childItems)
-        childItem.addHighlight(name, color);
-    }
+    // if(propagateToChildren) {
+    //   for (let childItem of this.__childItems)
+    //     childItem.addHighlight(name, color);
+    // }
   }
 
-  removeHighlight(name) {
+  removeHighlight(name, propagateToChildren=false) {
     if(name in this.__highlightMapping){
       const id = this.__highlights.indexOf(name);
       this.__highlights.splice(id, 1)
@@ -920,6 +923,10 @@ class TreeItem extends BaseItem {
   }
   static get CloneFlags(){
     return CloneFlags;
+  }
+
+  static setSelectionOutlineColor(color) {
+    selectionOutlineColor = color;
   }
 };
 
