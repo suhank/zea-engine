@@ -94,9 +94,9 @@ class Label extends DataImage {
     super(name);
 
     this.__canvasElem = document.createElement('canvas');
-    let fontSize = 22;
-    let outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
-    let backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
+    const fontSize = 22;
+    const outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
+    const backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
 
     const libraryParam = this.addParameter(new StringParameter('library'));
     const textParam = this.addParameter(new StringParameter('text', ''));

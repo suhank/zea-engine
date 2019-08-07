@@ -284,29 +284,17 @@ class Color extends AttrValue {
     return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b;
   }
 
-  lerpTo(b, t) {
+  lerp(b, t) {
     const ar = this.r,
       ag = this.g,
       ab = this.b,
       aa = this.a;
-    this.set(
+    return new Color(
       ar + t * (b.r - ar),
       ag + t * (b.g - ag),
       ab + t * (b.b - ab),
       aa + t * (b.a - aa)
     );
-  }
-
-  static lerp(a, b, t) {
-    const ar = a.r,
-      ag = a.g,
-      ab = a.b,
-      aa = a.a;
-    return new Color(
-      ar + t * (b.r - ar),
-      ag + t * (b.g - ag),
-      ab + t * (b.b - ab),
-      aa + t * (b.a - aa));
   }
 
   /**

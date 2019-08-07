@@ -42,7 +42,7 @@ const CloneFlags = {
 
 const selectionOutlineColor = new Color("#03E3AC");
 selectionOutlineColor.a = 0.1;
-const branchSelectionOutlineColor = Color.lerp(selectionOutlineColor, new Color("white"), 0.5);
+const branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color("white"), 0.5);
 branchSelectionOutlineColor.a = 0.1;
 
 class TreeItem extends BaseItem {
