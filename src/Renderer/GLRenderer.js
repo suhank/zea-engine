@@ -108,7 +108,6 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     this.__outlineShader = new OutlinesShader(gl);
-    this.__outlineColor = new Color("#03E3AC")
     this.quad = new GLMesh(gl, new Plane(1, 1));
 
     // this.__glshaderScreenPostProcess = new PostProcessing(gl);
@@ -428,6 +427,10 @@ class GLRenderer extends GLBaseRenderer {
       gl.viewport(...renderstate.region);
 
       this.__outlineShader.bind(renderstate);
+      gl.enable(gl.BLEND);
+      gl.blendEquation(gl.FUNC_ADD);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+      
       const unifs = renderstate.unifs;
       this.__highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture);
       gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3]);

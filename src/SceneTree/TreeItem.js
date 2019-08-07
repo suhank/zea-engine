@@ -41,7 +41,9 @@ const CloneFlags = {
 }
 
 let selectionOutlineColor = new Color("#03E3AC");
+selectionOutlineColor.a = 0.1;
 let branchSelectionOutlineColor = new Color(1, 0.5, 0.5);
+branchSelectionOutlineColor.a = 0.1;
 const noselectionOutlineColor = new Color();
 class TreeItem extends BaseItem {
   constructor(name) {
@@ -344,10 +346,10 @@ class TreeItem extends BaseItem {
     this.__selected = sel;
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
-      this.__childItems.forEach(childItem => childItem.addHighlight('branchselected', branchSelectionOutlineColor))
+      this.traverse(item => item.addHighlight('branchselected'+this.getId(), branchSelectionOutlineColor))
     } else {
       this.removeHighlight('selected');
-      this.__childItems.forEach(childItem => childItem.removeHighlight('branchselected', branchSelectionOutlineColor))
+      this.traverse(item => item.removeHighlight('branchselected'+this.getId()))
     }
     this.selectedChanged.emit(this.__selected)
   }
@@ -685,7 +687,7 @@ class TreeItem extends BaseItem {
   // Traverse the tree structure from this point down
   // and fire the callback for each visited item.
   // Note: depth only used by selection sets for now.
-  traverse(callback) {
+  traverse(callback, includeThis=false) {
     const __c = (treeItem) => {
       const children = treeItem.getChildren();
       for (let childItem of children) {
@@ -698,7 +700,11 @@ class TreeItem extends BaseItem {
         return false;
       __c(treeItem);
     }
-    __t(this, 0);
+    if(includeThis)
+      __t(this);
+    else
+      __c(this);
+
   }
   /////////////////////////
   // Events

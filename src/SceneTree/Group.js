@@ -9,6 +9,7 @@ import {
 import {
   ValueSetMode,
   BooleanParameter,
+  NumberParameter,
   StringParameter,
   ColorParameter,
   XfoParameter,
@@ -69,19 +70,18 @@ class Group extends TreeItem {
     this.__highlightedParam.valueChanged.connect(() => {
       this.__updateHilight();
     })
-    this.__highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 4);
-    this.__highlightColorParam.valueChanged.connect(() => {
-      this.__updateHilight();
-    })
+
+    this.__updateHilight = this.__updateHilight.bind(this)
+    const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 4);
+    highlightColorParam.valueChanged.connect(this.__updateHilight)
+    const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), 5);
+    highlightFillParam.valueChanged.connect(this.__updateHilight)
 
     this.__visibleParam.valueChanged.connect((changeType) => {
-      const items = Array.from(this.__itemsParam.getValue());
       const value = this.__visibleParam.getValue();
-      const len = items.length;
-      for (let i = 0; i < len; i++) {
-        // items[i].getParameter('Visible').setDirty(this.__visibleParam.getValue);
-        items[i].setInheritedVisiblity(value);
-      }
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        item.setInheritedVisiblity(value);
+      });
     });
     // this.selectedChanged.connect((changeType) => {
     //   // const items = Array.from(this.__itemsParam.getValue());
@@ -163,6 +163,7 @@ class Group extends TreeItem {
     if(this.getParameter('Highlighted').getValue()) {
       highlighted = true;
       color = this.getParameter('HighlightColor').getValue();
+      color.a = this.getParameter('HighlightFill').getValue();
     }
     else if(this.getSelected()) {
       highlighted = true;

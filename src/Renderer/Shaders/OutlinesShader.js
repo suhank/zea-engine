@@ -31,12 +31,10 @@ precision highp float;
 uniform sampler2D highlightDataTexture;
 uniform vec2 highlightDataTextureSize;
 
-uniform color outlineColor;
-
 varying vec2 v_texCoord;
 
 
-bool isOutlinePixel(vec3 p) {
+bool isFilledPixel(vec4 p) {
     return p.r > 0.01 || p.g > 0.01 || p.b > 0.01;
 }
 void accumOutlinePixel(vec2 fragCoord, inout vec4 res) {
@@ -48,10 +46,11 @@ void accumOutlinePixel(vec2 fragCoord, inout vec4 res) {
         res.a += 1.0;
     }
 }
-vec3 getOutlinePixelColor(vec2 fragCoord) {
-    vec3 M = texture2D(highlightDataTexture, fragCoord/highlightDataTextureSize).rgb;
-    if( isOutlinePixel(M) )
-        return vec3(0.0, 0.0, 0.0);// this pixel is that of a selected geom
+vec4 getOutlinePixelColor(vec2 fragCoord) {
+    vec4 M = texture2D(highlightDataTexture, fragCoord/highlightDataTextureSize);
+    if( isFilledPixel(M) ) {
+        return M;
+    }
     // Search surrounding pixels for selected geoms.
     vec4 res;
     accumOutlinePixel(fragCoord+vec2( 1, 1), res); // NW
@@ -70,7 +69,11 @@ vec3 getOutlinePixelColor(vec2 fragCoord) {
     accumOutlinePixel(fragCoord+vec2( 2,-1), res); // WWS
     accumOutlinePixel(fragCoord+vec2( 1,-2), res); // SSW
     accumOutlinePixel(fragCoord+vec2(-1,-2), res); // SSE
-    return res.rgb / res.a;
+
+    if(isFilledPixel(res))
+        return vec4(res.rgb / res.a, 1.0);
+    else
+        return vec4(0.0, 0.0, 0.0, 0.0);
 }
 
 
@@ -85,12 +88,12 @@ void main(void) {
     mediump vec2 fragCoord = v_texCoord * highlightDataTextureSize; 
     /////////////////
     // Selection Outlines
-    vec3 outlineColor = getOutlinePixelColor(fragCoord);
-    if(isOutlinePixel(outlineColor)){
+    vec4 outlineColor = getOutlinePixelColor(fragCoord);
+    if(outlineColor.a > 0.0001){
 #ifndef ENABLE_ES3
-        gl_FragColor.rgb = outlineColor;
+        gl_FragColor = outlineColor;
 #else
-        fragColor.rgb = outlineColor;
+        fragColor = outlineColor;
 #endif
     }
     else {
