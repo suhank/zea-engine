@@ -25,7 +25,7 @@ class GLBaseViewport extends ParameterOwner {
     super();
     this.__renderer = renderer;
 
-    this.__backgroundColorParam = this.addParameter(new ColorParameter('BackgroundColor', new Color('#e3e3e3')));
+    this.__backgroundColorParam = this.addParameter(new ColorParameter('BackgroundColor', new Color('#808080')));
     this.__backgroundColorParam.valueChanged.connect((mode)=>{
       if (this.__fbo) {
         const color = this.__backgroundColorParam.getValue();

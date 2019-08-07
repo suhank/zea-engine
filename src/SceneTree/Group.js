@@ -10,6 +10,7 @@ import {
   ValueSetMode,
   BooleanParameter,
   StringParameter,
+  ColorParameter,
   XfoParameter,
   ItemSetParameter,
   MultiChoiceParameter
@@ -65,6 +66,15 @@ class Group extends TreeItem {
       this.recalcInitialXfo();
     })
 
+    this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), 3);
+    this.__highlightedParam.valueChanged.connect(() => {
+      this.__updateHilight();
+    })
+    this.__highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', itemHighlightColor), 4);
+    this.__highlightColorParam.valueChanged.connect(() => {
+      this.__updateHilight();
+    })
+
     this.__visibleParam.valueChanged.connect((changeType) => {
       const items = Array.from(this.__itemsParam.getValue());
       const value = this.__visibleParam.getValue();
@@ -74,20 +84,21 @@ class Group extends TreeItem {
         items[i].setInheritedVisiblity(value);
       }
     });
-    this.__selectedParam.valueChanged.connect((changeType) => {
-      // const items = Array.from(this.__itemsParam.getValue());
-      const selected = this.__selectedParam.getValue();
-      // const len = items.length;
-      // for (let i = 0; i < len; i++) {
-      //   items[i].setSelected(selected);
-      // }
-      Array.from(this.__itemsParam.getValue()).forEach(item => {
-        if(selected)
-          item.addHighlight('groupItemHighlight', itemHighlightColor)
-        else
-          item.removeHighlight('groupItemHighlight')
-      })
-    });
+    // this.selectedChanged.connect((changeType) => {
+    //   // const items = Array.from(this.__itemsParam.getValue());
+    //   // const selected = this.__selectedParam.getValue();
+    //   const selected = this.getSelected();
+    //   // const len = items.length;
+    //   // for (let i = 0; i < len; i++) {
+    //   //   items[i].setSelected(selected);
+    //   // }
+    //   Array.from(this.__itemsParam.getValue()).forEach(item => {
+    //     if(selected)
+    //       item.addHighlight('groupItemHighlight', itemHighlightColor)
+    //     else
+    //       item.removeHighlight('groupItemHighlight')
+    //   })
+    // });
     // Groups can be used to control Cutaway toggles for their members.
     // this.__cutawayParam.valueChanged.connect((changeType) => {
     //   const items = Array.from(this.__itemsParam.getValue());
@@ -145,6 +156,22 @@ class Group extends TreeItem {
     super.setOwner(owner);
 
     this.resolveQueries();
+  }
+
+  __updateHilight(){
+    const selected = this.getSelected() || this.getParameter('Highlighted').getValue();
+    const color = this.getParameter('HighlightColor').getValue();
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
+      if(selected)
+        item.addHighlight('groupItemHighlight', color)
+      else
+        item.removeHighlight('groupItemHighlight')
+    })
+  }
+
+  setSelected(sel) {
+    super.setSelected(sel);
+    this.__updateHilight();
   }
 
   //////////////////////////////////////////

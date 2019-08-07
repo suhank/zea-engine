@@ -300,8 +300,8 @@ class GLRenderer extends GLBaseRenderer {
     if (this.__fbo) {
       this.__fbo.colorTexture.resize(width, height);
     }
-    if (this.__selectedGeomsBufferFbo) {
-      this.__selectedGeomsBuffer.resize(width, height);
+    if (this.__highlightedGeomsBufferFbo) {
+      this.__highlightedGeomsBuffer.resize(width, height);
     }
   }
 
@@ -311,15 +311,15 @@ class GLRenderer extends GLBaseRenderer {
 
   createSelectedGeomsFbo() {
     let gl = this.__gl;
-    this.__selectedGeomsBuffer = new GLTexture2D(gl, {
+    this.__highlightedGeomsBuffer = new GLTexture2D(gl, {
       type: 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: this.__glcanvas.width <= 1 ? 1 : this.__glcanvas.width,
       height: this.__glcanvas.height <= 1 ? 1 : this.__glcanvas.height,
     });
-    this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
-    this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
+    this.__highlightedGeomsBufferFbo = new GLFbo(gl, this.__highlightedGeomsBuffer, true);
+    this.__highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
   }
 
   getFbo() {
@@ -415,13 +415,13 @@ class GLRenderer extends GLBaseRenderer {
     super.drawScene(renderstate);
     // console.log("Draw Calls:" + renderstate['drawCalls']);
 
-    if (this.__selectedGeomsBufferFbo) {
-      this.__selectedGeomsBufferFbo.bindForWriting(renderstate);
-      this.__selectedGeomsBufferFbo.clear();
-      this.drawSceneSelectedGeoms(renderstate);
+    if (this.__highlightedGeomsBufferFbo) {
+      this.__highlightedGeomsBufferFbo.bindForWriting(renderstate);
+      this.__highlightedGeomsBufferFbo.clear();
+      this.drawHighlightedGeoms(renderstate);
 
       // Unbind and restore the bound fbo
-      this.__selectedGeomsBufferFbo.unbindForWriting(renderstate);
+      this.__highlightedGeomsBufferFbo.unbindForWriting(renderstate);
 
       // Now render the outlines to the entire screen.
       const gl = this.__gl;
@@ -429,7 +429,7 @@ class GLRenderer extends GLBaseRenderer {
 
       this.__outlineShader.bind(renderstate);
       const unifs = renderstate.unifs;
-      this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture);
+      this.__highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture);
       gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
       this.quad.bindAndDraw(renderstate);
     }

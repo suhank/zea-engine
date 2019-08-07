@@ -281,8 +281,10 @@ class GLStandardGeomsPass extends GLPass {
     pix3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
 
     const pix4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
-    const highlight = geomItem.getHighlight();
-    pix4.set(highlight.r, highlight.g, highlight.b, highlight.a);
+    if(geomItem.isHighlighted()) {
+      const highlight = geomItem.getHighlight();
+      pix4.set(highlight.r, highlight.g, highlight.b, highlight.a);
+    }
   };
 
   newItemsReadyForLoading() {

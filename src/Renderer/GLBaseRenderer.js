@@ -889,7 +889,7 @@ class GLBaseRenderer {
     }
   }
 
-  drawSceneSelectedGeoms(renderstate){
+  drawHighlightedGeoms(renderstate){
     this.bindGLBaseRenderer(renderstate);
     for(let key in this.__passes) {
       const passSet = this.__passes[key];

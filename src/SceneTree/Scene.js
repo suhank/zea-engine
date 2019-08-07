@@ -43,7 +43,7 @@ import {
   LightmapMixer
 } from './Images';
 
-const defaultGridColor = new Color(.53, .53, .53);
+const defaultGridColor = new Color("#DCDCDC");
 
 class Scene {
   constructor(resources) {
