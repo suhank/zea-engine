@@ -40,11 +40,11 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0
 }
 
-let selectionOutlineColor = new Color("#03E3AC");
+const selectionOutlineColor = new Color("#03E3AC");
 selectionOutlineColor.a = 0.1;
-let branchSelectionOutlineColor = new Color(1, 0.5, 0.5);
+const branchSelectionOutlineColor = Color.lerp(selectionOutlineColor, new Color("white"), 0.5);
 branchSelectionOutlineColor.a = 0.1;
-const noselectionOutlineColor = new Color();
+
 class TreeItem extends BaseItem {
   constructor(name) {
     super(name)
@@ -346,10 +346,10 @@ class TreeItem extends BaseItem {
     this.__selected = sel;
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
-      this.traverse(item => item.addHighlight('branchselected'+this.getId(), branchSelectionOutlineColor))
+      this.traverse(item => item.addHighlight('branchselected'+this.getId(), branchSelectionOutlineColor), false)
     } else {
       this.removeHighlight('selected');
-      this.traverse(item => item.removeHighlight('branchselected'+this.getId()))
+      this.traverse(item => item.removeHighlight('branchselected'+this.getId()), false)
     }
     this.selectedChanged.emit(this.__selected)
   }
@@ -383,7 +383,6 @@ class TreeItem extends BaseItem {
   getHighlight() {
     if (this.__highlights.length > 0)
       return this.__highlightMapping[this.__highlights[this.__highlights.length - 1]];
-    return noselectionOutlineColor;
   }
 
   isHighlighted() {
@@ -687,7 +686,7 @@ class TreeItem extends BaseItem {
   // Traverse the tree structure from this point down
   // and fire the callback for each visited item.
   // Note: depth only used by selection sets for now.
-  traverse(callback, includeThis=false) {
+  traverse(callback, includeThis=true) {
     const __c = (treeItem) => {
       const children = treeItem.getChildren();
       for (let childItem of children) {
@@ -945,6 +944,12 @@ class TreeItem extends BaseItem {
   }
   static setSelectionOutlineColor(color) {
     selectionOutlineColor = color;
+  }
+  static getBranchSelectionOutlineColor() {
+    return branchSelectionOutlineColor;
+  }
+  static setBranchSelectionOutlineColor(color) {
+    branchSelectionOutlineColor = color;
   }
 };
 

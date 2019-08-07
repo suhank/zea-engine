@@ -168,14 +168,16 @@ class Group extends TreeItem {
     }
     else if(this.getSelected()) {
       highlighted = true;
-      color = TreeItem.getSelectionOutlineColor();
+      color = TreeItem.getBranchSelectionOutlineColor();
     }
     
     Array.from(this.__itemsParam.getValue()).forEach(item => {
-      if(highlighted)
-        item.addHighlight('groupItemHighlight', color)
-      else
-        item.removeHighlight('groupItemHighlight')
+      item.traverse( treeItem => {
+        if(highlighted)
+          treeItem.addHighlight('groupItemHighlight'+this.getId(), color)
+        else
+          treeItem.removeHighlight('groupItemHighlight'+this.getId())
+      }, true)
     })
   }
 
@@ -229,7 +231,7 @@ class Group extends TreeItem {
       if (index == 0 || query.getLocicalOperator() == QUERY_LOGIC.NEWSET) {
         result = result.concat(set);
         set = [];
-        
+
         // An empty RegEx matches all values, so avoid
         // this special case. We prefer an empty set.
         if(query.getValue() == "")
@@ -254,7 +256,7 @@ class Group extends TreeItem {
                   if (regex.test(String(itemPath))){
                     set.push(item);
                   }
-                })
+                }, false)
               }
               break;
             }
@@ -264,7 +266,7 @@ class Group extends TreeItem {
               owner.traverse((item) => {
                 if (regex.test(item.getName()))
                   set.push(item);
-              });
+              }, false);
               break;
             }
           case QUERY_TYPES.PROPERTY:
@@ -276,7 +278,7 @@ class Group extends TreeItem {
                   if (prop instanceof StringParameter && regex.test(prop.getValue()))
                     set.push(item);
                 }
-              });
+              }, false);
               break;
             }
           case QUERY_TYPES.MATERIAL:
@@ -288,7 +290,7 @@ class Group extends TreeItem {
                   if (regex.test(material.getName()))
                     set.push(item);
                 }
-              });
+              }, false);
               break;
             }
         }
@@ -410,8 +412,11 @@ class Group extends TreeItem {
     else if(this.getSelected()) {
       highlighted = true;
     }
-    if(highlighted)
-      item.removeHighlight('groupItemHighlight')
+    if(highlighted){
+      item.traverse( treeItem => {
+        treeItem.removeHighlight('groupItemHighlight'+this.getId())
+      }, true)
+    }
 
     item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
     item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
