@@ -934,6 +934,9 @@ class TreeItem extends BaseItem {
     return CloneFlags;
   }
 
+  static getSelectionOutlineColor() {
+    return selectionOutlineColor;
+  }
   static setSelectionOutlineColor(color) {
     selectionOutlineColor = color;
   }

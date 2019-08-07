@@ -12,6 +12,7 @@ import {
   sgFactory
 } from '../SGFactory.js';
 import {
+  Parameter,
   ValueSetMode
 } from './Parameter.js';
 import {
@@ -63,7 +64,8 @@ class QueryParameter extends StringParameter {
   }
 
   setQueryType(queryType) {
-    return this.__queryType = queryType;
+    this.__queryType = queryType;
+    this.valueChanged.emit();
   }
 
   getMatchType() {
@@ -71,7 +73,8 @@ class QueryParameter extends StringParameter {
   }
 
   setMatchType(matchType) {
-    return this.__matchType = matchType;
+    this.__matchType = matchType;
+    this.valueChanged.emit();
   }
 
   getLocicalOperator() {
@@ -79,7 +82,8 @@ class QueryParameter extends StringParameter {
   }
 
   setLocicalOperator(locicalOperator) {
-    return this.__locicalOperator = locicalOperator;
+    this.__locicalOperator = locicalOperator;
+    this.valueChanged.emit();
   }
 
   getPropertyName() {
@@ -87,6 +91,7 @@ class QueryParameter extends StringParameter {
   }
   setPropertyName(val) {
     this.__propName = val;
+    this.valueChanged.emit();
   }
 
   getRegex() {
@@ -133,7 +138,60 @@ class QueryParameter extends StringParameter {
 sgFactory.registerClass('QueryParameter', QueryParameter);
 
 
-class QuerySet extends ItemSetParameter {
+class QuerySet extends Parameter {
+
+  constructor(name) {
+    super(name, undefined, 'QueryParameter');
+    this.__items = new Set(); 
+    this.itemAdded = new Signal();
+    this.itemRemoved = new Signal();
+  }
+
+  clone(flags) {
+    const clonedParam = new QuerySet(this.__name, this.__filterFn);
+    return clonedParam;
+  }
+
+  getItem(index) {
+    return Array.from(this.__items)[index];
+  }
+
+  addItem(item, emit = true) {
+    if (this.__filterFn && !this.__filterFn(item))
+      return false;
+    item.valueChanged.connect(this.valueChanged.emit)
+    this.__items.add(item);
+    if(emit)
+      this.itemAdded.emit()
+    return Array.from(this.__items).indexOf(item)
+  }
+
+  removeItem(item, emit = true) {
+    const index = Array.from(this.__items).indexOf(item)
+    this.__items[index].valueChanged.disconnect(this.valueChanged.emit)
+    this.__items.delete(item);
+    if(emit)
+      this.itemRemoved.emit();
+    return index;
+  }
+
+  getNumItems() {
+    return Array.from(this.__items).length;
+  }
+
+  getValue(){
+    return this.__items;
+  }
+
+  //////////////////////////////////////////
+  // Persistence
+
+  toJSON(context, flags) {
+    return {}
+  }
+
+  fromJSON(j, context, flags) {
+  }
 
 }
 

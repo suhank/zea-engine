@@ -38,7 +38,6 @@ const GROUP_INITIAL_XFO_MODES = {
   average: 1
 }
 
-let itemHighlightColor = new Color(0.5, 0.5, 1);
 class Group extends TreeItem {
   constructor(name) {
     super(name);
@@ -70,7 +69,7 @@ class Group extends TreeItem {
     this.__highlightedParam.valueChanged.connect(() => {
       this.__updateHilight();
     })
-    this.__highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', itemHighlightColor), 4);
+    this.__highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 4);
     this.__highlightColorParam.valueChanged.connect(() => {
       this.__updateHilight();
     })
@@ -159,10 +158,19 @@ class Group extends TreeItem {
   }
 
   __updateHilight(){
-    const selected = this.getSelected() || this.getParameter('Highlighted').getValue();
-    const color = this.getParameter('HighlightColor').getValue();
+    let highlighted = false;
+    let color;
+    if(this.getParameter('Highlighted').getValue()) {
+      highlighted = true;
+      color = this.getParameter('HighlightColor').getValue();
+    }
+    else if(this.getSelected()) {
+      highlighted = true;
+      color = TreeItem.getSelectionOutlineColor();
+    }
+    
     Array.from(this.__itemsParam.getValue()).forEach(item => {
-      if(selected)
+      if(highlighted)
         item.addHighlight('groupItemHighlight', color)
       else
         item.removeHighlight('groupItemHighlight')
@@ -337,10 +345,10 @@ class Group extends TreeItem {
       }
     })
     result = result.concat(set);
-    result.forEach((item) => {
-      // console.log(item.getPath())
-      this.addItem(item);
-    });
+    // result.forEach((item) => {
+    //   // console.log(item.getPath())
+    //   this.addItem(item);
+    // });
     this.setItems(new Set(result));
   }
 
