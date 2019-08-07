@@ -89,7 +89,7 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
   }
 }
 
-class Label  extends DataImage {
+class Label extends DataImage {
   constructor(name, library) {
     super(name);
 
@@ -100,12 +100,12 @@ class Label  extends DataImage {
 
     const libraryParam = this.addParameter(new StringParameter('library'));
     const textParam = this.addParameter(new StringParameter('text', ''));
-    if(labelManager.isLibraryLoaded(library))
+    if (labelManager.isLibraryLoaded(library))
       this.__getLabelText();
     // or load the label when it is loaded.
-    labelManager.labelLibraryLoaded.connect((loadedLibrary)=>{
+    labelManager.labelLibraryLoaded.connect((loadedLibrary) => {
       const library = libraryParam.getValue();
-      if(loadedLibrary == library)
+      if (loadedLibrary == library)
         this.__getLabelText();
     });
     libraryParam.valueChanged.connect(this.__getLabelText.bind(this));
@@ -134,12 +134,12 @@ class Label  extends DataImage {
     const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
     const fontParam = this.addParameter(new StringParameter('font', 'Helvetica', 'String'));
 
-    const loadFont = ()=>{
+    const loadFont = () => {
       const library = this.getParameter('library').getValue();
       const font = fontParam.getValue();
       const fontSize = fontSizeParam.getValue();
-      if(document.fonts != undefined) {
-        document.fonts.load(fontSize + 'px "' + font + '"').then(()=>{
+      if (document.fonts != undefined) {
+        document.fonts.load(fontSize + 'px "' + font + '"').then(() => {
           // console.log("Font Loaded:" + font);
           // if(this.__loaded) {
           //     this.__loaded = true;
@@ -148,14 +148,13 @@ class Label  extends DataImage {
 
           // If there were no label libraries discovered, then
           // we assume this is an inline label, and we render immedietly.
-          if(library == '' || !labelManager.isLibraryFound(library))
+          if (library == '' || !labelManager.isLibraryFound(library))
             this.renderLabelToImage();
         });
-      }
-      else {
+      } else {
         // If there were no label libraries discovered, then
         // we assume this is an inline label, and we render immedietly.
-        if(library == '' || !labelManager.isLibraryFound(library))
+        if (library == '' || !labelManager.isLibraryFound(library))
           this.renderLabelToImage();
       }
     }
@@ -163,23 +162,23 @@ class Label  extends DataImage {
     fontParam.valueChanged.connect(loadFont);
     // fontParam.setValue('AGBookTTReg');
 
-    if(library)
+    if (library)
       libraryParam.setValue(library)
   }
-  
-  __getLabelText(){
+
+  __getLabelText() {
     const library = this.getParameter('library').getValue();
-    if(library == '') {
+    if (library == '') {
       return;
     }
     const textParam = this.getParameter('text');
     const name = this.getName();
 
-    if(!labelManager.isLibraryFound(library)) {
+    if (!labelManager.isLibraryFound(library)) {
       console.warn("Label Libary not found:", library)
       return;
     }
-    if(!labelManager.isLibraryLoaded(library)) {
+    if (!labelManager.isLibraryLoaded(library)) {
       return;
     }
     try {
@@ -198,7 +197,7 @@ class Label  extends DataImage {
     });
 
     let text = this.getParameter('text').getValue();
-    if(text == '')
+    if (text == '')
       text = this.getName();
 
     const font = this.getParameter('font').getValue();
@@ -217,12 +216,18 @@ class Label  extends DataImage {
     const strokeBackgroundOutline = this.getParameter('strokeBackgroundOutline').getValue();
 
     // let ratio = devicePixelRatio / backingStoreRatio;
-    let marginAndBorder = margin + borderWidth;
+    const marginAndBorder = margin + borderWidth;
+    const lines = text.split('\n')
 
     ctx2d.font = fontSize + 'px "' + font + '"';
     // console.log("renderLabelToImage:" + ctx2d.font);
-    this.width = (ctx2d.measureText(text).width + (marginAndBorder * 2));
-    this.height = (parseInt(fontSize) + (marginAndBorder * 2));
+    let width = 0;
+    lines.forEach(line => {
+      width = Math.max(ctx2d.measureText(line).width, width)
+    })
+    const fontHeight = parseInt(fontSize)
+    this.width = (width + (marginAndBorder * 2));
+    this.height = (fontHeight * lines.length + (marginAndBorder * 2));
     ctx2d.canvas.width = this.width;
     ctx2d.canvas.height = this.height;
 
@@ -233,15 +238,17 @@ class Label  extends DataImage {
     if (background) {
       ctx2d.fillStyle = backgroundColor.toHex();
       ctx2d.strokeStyle = outlineColor.toHex();
-      roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth*2), this.height - (borderWidth*2), borderRadius, fillBackground, strokeBackgroundOutline, borderWidth);
+      roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth * 2), this.height - (borderWidth * 2), borderRadius, fillBackground, strokeBackgroundOutline, borderWidth);
     }
 
     ctx2d.font = fontSize + 'px "' + font + '"';
     ctx2d.textAlign = textAlign;
     ctx2d.fillStyle = fontColor.toHex();
     ctx2d.textBaseline = "hanging";
-    ctx2d.fillText(text, marginAndBorder, marginAndBorder);
-    
+    lines.forEach((line, index) => {
+      ctx2d.fillText(line, marginAndBorder, marginAndBorder + (index * fontHeight));
+    })
+
     if (outline) {
       ctx2d.strokeStyle = outlineColor.toHex();
       ctx2d.lineWidth = 1.5;
@@ -250,11 +257,10 @@ class Label  extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height);
 
-    if(!this.__loaded){
+    if (!this.__loaded) {
       this.__loaded = true;
       this.loaded.emit();
-    }
-    else {
+    } else {
       this.updated.emit();
     }
   }
