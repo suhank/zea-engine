@@ -207,12 +207,11 @@ class Group extends TreeItem {
     }
     
     Array.from(this.__itemsParam.getValue()).forEach(item => {
-      item.traverse( treeItem => {
-        if(highlighted)
-          treeItem.addHighlight('groupItemHighlight'+this.getId(), color)
-        else
-          treeItem.removeHighlight('groupItemHighlight'+this.getId())
-      }, true)
+      if(highlighted)
+        item.addHighlight('groupItemHighlight'+this.getId(), color)
+      else
+        item.removeHighlight('groupItemHighlight'+this.getId())
+
     })
   }
 
@@ -500,10 +499,8 @@ class Group extends TreeItem {
     else if(this.getSelected()) {
       highlighted = true;
     }
-    if(highlighted){
-      item.traverse( treeItem => {
-        treeItem.removeHighlight('groupItemHighlight'+this.getId())
-      }, true)
+    if(highlighted) {
+      item.removeHighlight('groupItemHighlight'+this.getId())
     }
 
     /////////////////////////////////

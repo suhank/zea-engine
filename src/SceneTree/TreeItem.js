@@ -303,20 +303,23 @@ class TreeItem extends BaseItem {
     }
   }
 
+  isSelected() {
+    return this.__selected;
+  }
   getSelected() {
-    // return this.__selectedParam.getValue();
     return this.__selected;
   }
 
   setSelected(sel) {
-    // this.__selectedParam.setValue(sel);
     this.__selected = sel;
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
-      this.traverse(item => item.addHighlight('branchselected'+this.getId(), branchSelectionOutlineColor), false)
+      for (let childItem of this.__childItems)
+        childItem.addHighlight('branchselected'+this.getId(), branchSelectionOutlineColor, true);
     } else {
       this.removeHighlight('selected');
-      this.traverse(item => item.removeHighlight('branchselected'+this.getId()), false)
+      for (let childItem of this.__childItems)
+        childItem.removeHighlight('branchselected'+this.getId(), true);
     }
     this.selectedChanged.emit(this.__selected)
   }
@@ -332,10 +335,10 @@ class TreeItem extends BaseItem {
     this.__highlightMapping[name] = color;
     this.highlightChanged.emit();
 
-    // if(propagateToChildren) {
-    //   for (let childItem of this.__childItems)
-    //     childItem.addHighlight(name, color);
-    // }
+    if(propagateToChildren) {
+      for (let childItem of this.__childItems)
+        childItem.addHighlight(name, color, propagateToChildren);
+    }
   }
 
   removeHighlight(name, propagateToChildren = false) {
@@ -344,6 +347,10 @@ class TreeItem extends BaseItem {
       this.__highlights.splice(id, 1)
       delete this.__highlightMapping[name];
       this.highlightChanged.emit();
+    }
+    if(propagateToChildren) {
+      for (let childItem of this.__childItems)
+        childItem.removeHighlight(name, propagateToChildren);
     }
   }
 
