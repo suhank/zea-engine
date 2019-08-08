@@ -11,13 +11,12 @@ class GLGeomItemSet {
     this.gl = gl;
     this.glgeom = glgeom;
     this.glgeomItems = [];
+    this.glgeomItems_freeIndices = [];
     this.glgeomItemSignalIds = [];
     this.drawIdsArray = null;
     this.drawIdsBuffer = null;
     this.drawIdsBufferDirty = true;
-    this.drawCount = 0; // The number of visible drawn geoms.
 
-    this.highlightedCount = 0; // The number of highlighted drawn geoms.
     this.highlightedIdsArray = null;
     this.highlightedIdsBuffer = null;
     this.highlightedIdsBufferDirty = true;
@@ -27,6 +26,9 @@ class GLGeomItemSet {
 
     this.drawCountChanged = new Signal();
     this.destructing = new Signal();
+
+    this.visibleItems = [];
+    this.highlightedItems = [];
   }
 
   getGLGeom() {
@@ -51,62 +53,61 @@ class GLGeomItemSet {
   }
 
   getDrawCount() {
-    return this.drawCount;
+    return this.visibleItems.length;
   }
 
   addGeomItem(glgeomItem) {
-    if (glgeomItem.visible) {
-      this.drawCount++;
-      this.drawCountChanged.emit(1);
-      const highlighted = glgeomItem.getGeomItem().isHighlighted();
-      if (highlighted) {
-        this.highlightedCount++;
-        this.highlightedIdsBufferDirty = true;
-      }
+    let index;
+    if(this.glgeomItems_freeIndices.length > 0) {
+      index = this.glgeomItems_freeIndices.pop();
     }
-    // console.log("addGeomItem:", glgeomItem.getGeomItem().getPath(), glgeomItem.getGeomItem().isHighlighted())
+    else {
+      index = this.glgeomItems.length;
+      this.glgeomItems.push(null);
+    }
+    if (glgeomItem.visible) {
+      this.visibleItems.push(index);
+      this.drawCountChanged.emit(1);
+    }
+    if (glgeomItem.getGeomItem().isHighlighted()) {
+      this.highlightedItems.push(index);
+      this.highlightedIdsBufferDirty = true;
+    }
 
-    if (this.glgeomItems.length == 0) {
-      // this.inverted = glgeomItem.isInverted();
+    if (this.glgeomItems.length == 1) {
       this.lightmapName = glgeomItem.getGeomItem().getLightmapName();
     }
 
     const signalIds = {}
 
     signalIds.sel = glgeomItem.highlightChanged.connect(() => {
-      if (glgeomItem.visible) {
-        const highlighted = glgeomItem.getGeomItem().isHighlighted();
-        if (highlighted) {
-          this.highlightedCount++;
-        } else {
-          this.highlightedCount--;
-        }
-        this.highlightedIdsBufferDirty = true;
+      if (glgeomItem.getGeomItem().isHighlighted()) {
+        // Note: highlightChanged is fired when the color changes
+        // or another hilight is added over the top. We avoid 
+        // adding the same index again here. (TODO: use Set?)
+        if(this.highlightedItems.indexOf(index) != -1)
+          return;
+        this.highlightedItems.push(index);
+      } else {
+        this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1);
       }
+      // console.log("highlightChanged:", glgeomItem.getGeomItem().getName(), glgeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
+      this.highlightedIdsBufferDirty = true;
     });
 
     signalIds.vis = glgeomItem.visibilityChanged.connect((visible) => {
-      const highlighted = glgeomItem.getGeomItem().isHighlighted()
       if (visible) {
-        this.drawCount++;
+        this.visibleItems.push(index);
         this.drawCountChanged.emit(1);
-        if (highlighted) {
-          this.highlightedCount++;
-          this.highlightedIdsBufferDirty = true;
-        }
       } else {
-        this.drawCount--;
+        this.visibleItems.splice(this.visibleItems.indexOf(index), 1);
         this.drawCountChanged.emit(-1);
-        if (highlighted) {
-          this.highlightedCount--;
-          this.highlightedIdsBufferDirty = true;
-        }
       }
       this.drawIdsBufferDirty = true;
     });
 
-    this.glgeomItems.push(glgeomItem);
-    this.glgeomItemSignalIds.push(signalIds);
+    this.glgeomItems[index] = glgeomItem;
+    this.glgeomItemSignalIds[index] = signalIds;
 
     this.drawIdsBufferDirty = true;
   }
@@ -117,12 +118,20 @@ class GLGeomItemSet {
     glgeomItem.highlightedChanged.disconnectId(signalIds.sel);
     glgeomItem.visibilityChanged.disconnectId(signalIds.vis);
 
+    this.glgeomItems[index] = null;
+    this.glgeomItemSignalIds[index] = null;
     this.glgeomItems.splice(index, 1)
     this.glgeomItemSignalIds.splice(index, 1);
 
+    this.glgeomItems_freeIndices.push(index);
+
     if (glgeomItem.visible) {
-      this.drawCount--;
+      this.visibleItems.splice(this.visibleItems.indexOf(index), 1);
       this.drawCountChanged.emit(-1);
+    }
+    const highlighted = glgeomItem.getGeomItem().isHighlighted();
+    if (highlighted) {
+      this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1);
     }
     this.drawIdsBufferDirty = true;
     // console.log("removeGeomItem:", glgeomItem.getGeomItem().getName(), this.glgeomItems.length)
@@ -139,13 +148,6 @@ class GLGeomItemSet {
   updateDrawIDsBuffer() {
     const gl = this.gl;
     if (!gl.floatTexturesSupported) {
-      this.visibleItems = [];
-      for (let i = 0; i < this.glgeomItems.length; i++) {
-        if (this.glgeomItems[i].visible) {
-          this.visibleItems.push(i);
-          this.lastVisible = i;
-        }
-      }
       this.drawIdsBufferDirty = false;
       return;
     }
@@ -157,20 +159,13 @@ class GLGeomItemSet {
       this.drawIdsArray = new Float32Array(this.glgeomItems.length);
       this.drawIdsBuffer = gl.createBuffer();
       gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, this.drawIdsArray, gl.STATIC_DRAW);
-      this.drawIdsBuffer.name = 'transformIds';
     }
 
     // Collect all visible geom ids into the instanceIds array.
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
-    let offset = 0;
-    this.glgeomItems.forEach((geomItem, index)=>{
-      if (geomItem.visible) {
-        this.drawIdsArray[offset] = geomItem.getId();
-        offset++;
-        this.lastVisible = index;
-      }
+    this.visibleItems.forEach( index => {
+      this.drawIdsArray[index] = this.glgeomItems[index].getId();
     });
     gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, this.drawIdsArray, gl.STATIC_DRAW);
@@ -185,14 +180,6 @@ class GLGeomItemSet {
   updateHighlightedIDsBuffer() {
     const gl = this.gl;
     if (!gl.floatTexturesSupported) {
-      this.highlightedItems = [];
-      for (let i = 0; i < this.glgeomItems.length; i++) {
-        const highlighted = this.glgeomItems[i].getGeomItem().isHighlighted();
-        if (highlighted) {
-          this.highlightedItems.push(i);
-          this.lastVisible = i;
-        }
-      }
       this.highlightedIdsBufferDirty = false;
       return;
     }
@@ -204,22 +191,17 @@ class GLGeomItemSet {
     // Collect all visible geom ids into the instanceIds array.
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
-    if (!this.highlightedIdsArray || this.highlightedCount > this.highlightedIdsArray.length) {
-      this.highlightedIdsArray = new Float32Array(this.highlightedCount);
+    if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
+      this.highlightedIdsArray = new Float32Array(this.highlightedItems.length);
       if (this.highlightedIdsBuffer) {
         gl.deleteBuffer(this.highlightedIdsBuffer);
         this.highlightedIdsBuffer = null;
       }
     }
 
-    let offset = 0;
-    for (let i = 0; i < this.glgeomItems.length; i++) {
-      const glgeomItem = this.glgeomItems[i];
-      if (glgeomItem.visible && glgeomItem.getGeomItem().isHighlighted()) {
-        this.highlightedIdsArray[offset] = glgeomItem.getId();
-        offset++;
-      }
-    }
+    this.highlightedItems.forEach( index => {
+      this.highlightedIdsArray[index] = this.glgeomItems[index].getId();
+    });
 
     if (!this.highlightedIdsBuffer) {
       this.highlightedIdsBuffer = gl.createBuffer();
@@ -234,7 +216,7 @@ class GLGeomItemSet {
   // Drawing
 
   draw(renderstate) {
-    if (this.drawCount == 0) {
+    if (this.visibleItems.length == 0) {
       return;
     }
     if (this.drawIdsBufferDirty) {
@@ -263,22 +245,22 @@ class GLGeomItemSet {
       }
     }
 
-    this.__bindAndRender(renderstate, this.drawIdsBuffer, this.drawCount)
+    this.__bindAndRender(renderstate, this.visibleItems, this.drawIdsBuffer)
   }
 
   drawHighlighted(renderstate) {
-    if (this.highlightedCount == 0) {
+    if (this.highlightedItems.length == 0) {
       return;
     }
     if (this.highlightedIdsBufferDirty) {
       this.updateHighlightedIDsBuffer();
     }
 
-    this.__bindAndRender(renderstate, this.highlightedIdsBuffer, this.highlightedCount)
+    this.__bindAndRender(renderstate, this.highlightedItems, this.highlightedIdsBuffer)
 
   }
 
-  __bindAndRender(renderstate, drawIdsBuffer, drawCount) {
+  __bindAndRender(renderstate, itemIndices, drawIdsBuffer) {
 
     const gl = this.gl;
     const unifs = renderstate.unifs;
@@ -295,13 +277,12 @@ class GLGeomItemSet {
       if (renderstate.unifs.instancedDraw) {
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
       }
-      for (let i = 0; i < drawCount; i++) {
-        this.glgeomItems[drawIdsBuffer[i]].bind(renderstate);
-
+      itemIndices.forEach( index => {
+        this.glgeomItems[index].bind(renderstate);
         renderstate.bindViewports(unifs, ()=>{
           this.glgeom.draw(renderstate);
         })
-      }
+      })
     } else {
       // console.log("draw:"+ this.drawIdsArray);
 
@@ -317,7 +298,7 @@ class GLGeomItemSet {
       gl.vertexAttribDivisor(location, 1); // This makes it instanced
 
       renderstate.bindViewports(unifs, ()=>{
-        this.glgeom.drawInstanced(drawCount);
+        this.glgeom.drawInstanced(itemIndices.length);
       })
     }
   }

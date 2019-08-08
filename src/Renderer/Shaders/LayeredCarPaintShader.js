@@ -44,6 +44,7 @@ attribute float clusterIDs;
 uniform vec2 lightmapSize;
 
 /* VS Outputs */
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
@@ -52,14 +53,13 @@ varying vec2 v_textureCoord;
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
-varying vec4 v_geomItemData;
 #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
 
 void main(void) {
 
-    vec4 geomItemData = getInstanceData();
+    v_geomItemData = getInstanceData();
 
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
@@ -71,13 +71,12 @@ void main(void) {
 #ifdef ENABLE_TEXTURES
     v_textureCoord  = texCoords;
 #endif
-    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+    v_lightmapCoord = (lightmapCoords + geomItemData.zw) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
     // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     v_clusterID = clusterIDs;
-    v_geomItemData = geomItemData;
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
@@ -104,6 +103,7 @@ precision highp float;
 <%include file="materialparams.glsl"/>
 
 /* VS Outputs */
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
@@ -112,7 +112,6 @@ varying vec2 v_textureCoord;
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
-varying vec4 v_geomItemData;
 #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
@@ -224,7 +223,7 @@ void main(void) {
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.zw;
         //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
         float total = floor(coord_texelSpace.x) +
                       floor(coord_texelSpace.y);

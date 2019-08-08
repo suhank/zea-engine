@@ -416,7 +416,7 @@ class GLRenderer extends GLBaseRenderer {
 
     if (this.__highlightedGeomsBufferFbo) {
       const gl = this.__gl;
-      
+
       this.__highlightedGeomsBufferFbo.bindForWriting(renderstate);
       this.__highlightedGeomsBufferFbo.clear();
 
@@ -424,6 +424,7 @@ class GLRenderer extends GLBaseRenderer {
       // It seems that sometimes the function above does
       // not do the trick.
       // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      
       this.drawHighlightedGeoms(renderstate);
 
       // Unbind and restore the bound fbo

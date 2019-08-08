@@ -43,8 +43,10 @@ uniform mat4 projectionMatrix;
 
 attribute float clusterIDs;
 uniform vec2 lightmapSize;
+uniform color cutColor;
 
 /* VS Outputs */
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
@@ -53,12 +55,13 @@ varying vec2 v_textureCoord;
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
-varying vec4 v_geomItemData;
 #endif
 varying vec3 v_worldPos;
+varying vec4 v_cutAwayData;
 /* VS Outputs */
 
 void main(void) {
+    v_geomItemData = getInstanceData();
 
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
@@ -74,14 +77,12 @@ void main(void) {
     v_textureCoord  = texCoords;
 #endif
 
-    vec4 geomItemData = getInstanceData();
-    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+    v_lightmapCoord = (lightmapCoords + v_geomItemData.zw) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-    // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
+    // gl_Position = mvp * vec4((lightmapCoords + v_geomItemData.zw), 0., 1.);
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     v_clusterID = clusterIDs;
-    v_geomItemData = geomItemData;
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
@@ -99,8 +100,10 @@ precision highp float;
 
 <%include file="GGX_Specular.glsl"/>
 <%include file="PBRSurfaceRadiance.glsl"/>
+<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
@@ -109,7 +112,6 @@ varying vec2 v_textureCoord;
 varying vec2 v_lightmapCoord;
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
 varying float v_clusterID;
-varying vec4 v_geomItemData;
 #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
@@ -170,6 +172,26 @@ out vec4 fragColor;
 #endif
 
 void main(void) {
+
+    int flags = int(v_geomItemData.r);
+    // Cutaways
+    if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
+        vec4 cutaway = getCutaway();
+        vec3 planeNormal = cutaway.xyz;
+        float planeDist = cutaway.w;
+        if(cutaway(v_worldPos, planeNormal, planeDist)){
+            discard;
+            return;
+        }
+        else if(!gl_FrontFacing){
+            fragColor = cutColor;
+#ifndef ENABLE_ES3
+            gl_FragColor = fragColor;
+#endif
+            return;
+        }
+    }
+
 
     MaterialParams material;
 
@@ -233,7 +255,7 @@ void main(void) {
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.zw;
         //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
         float total = floor(coord_texelSpace.x) +
                       floor(coord_texelSpace.y);

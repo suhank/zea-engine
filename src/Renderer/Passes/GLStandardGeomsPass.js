@@ -40,7 +40,7 @@ import {
   GLTexture2D
 } from '../GLTexture2D.js';
 
-const pixelsPerItem = 5; // The number of RGBA pixels per draw item.
+const pixelsPerItem = 6; // The number of RGBA pixels per draw item.
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLStandardGeomsPass extends GLPass {
@@ -263,27 +263,48 @@ class GLStandardGeomsPass extends GLPass {
   // Data Uploading
   __populateDrawItemDataArray(geomItem, index, dataArray) {
 
-    const mat4 = geomItem.getGeomXfo().toMat4();
-    const lightmapCoordsOffset = geomItem.getLightmapCoordsOffset();
-
     const stride = pixelsPerItem * 4; // The number of floats per draw item.
     const offset = index * stride;
-    const pix0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
+
+    ///////////////////////////
+    // Geom Item Params
+    const materialId = 0;
+    let flags = 0;
+    if(geomItem.isCutawayEnabled()) {
+      const GEOMITEM_FLAG_CUTAWAY =  1; // 1<<0;
+      flags |= GEOMITEM_FLAG_CUTAWAY;
+    }
+    const lightmapCoordsOffset = geomItem.getLightmapCoordsOffset();
+
+    const pix0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 0);
+    pix0.set(flags, materialId, lightmapCoordsOffset.x, lightmapCoordsOffset.y);
+
+    ///////////////////////////
+    // Geom Matrix
+    const mat4 = geomItem.getGeomXfo().toMat4();
     const pix1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
     const pix2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
     const pix3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
-    pix0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
-    pix1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
-    pix2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
+    pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
+    pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
+    pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
 
-    const materialId = 0;
-    const geomId = 0;
-    pix3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
-
+    ///////////////////////////
+    // Hilight
     const pix4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
     if(geomItem.isHighlighted()) {
       const highlight = geomItem.getHighlight();
       pix4.set(highlight.r, highlight.g, highlight.b, highlight.a);
+    }
+
+    ///////////////////////////
+    // Cutaway
+    const pix5 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 20);
+    if(geomItem.isCutawayEnabled()) {
+      const cutAwayVector = geomItem.getCutVector();
+      const cutAwayDist = geomItem.getCutDist();
+      console.log(geomItem.getName(), geomItem.isCutawayEnabled(), flags, pix0.toString())
+      pix5.set(cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist);
     }
   };
 

@@ -52,6 +52,9 @@ class TreeItem extends BaseItem {
     this.__inheritedVisiblity = true;
     this.__selectable = true;
     this.__selected = false;
+    this.__cutAway = false;
+    this.__cutAwayVector = false;
+    this.__cutAwayDist = false;
     this.__highlightMapping = {};
     this.__highlights = [];
 
@@ -66,6 +69,7 @@ class TreeItem extends BaseItem {
     this.componentAdded = new Signal();
     this.componentRemoved = new Signal();
     this.highlightChanged = new Signal();
+    this.cutAwayChanged = new Signal();
 
     this.mouseDown = new Signal();
     // this.mouseUp = new Signal();
@@ -387,6 +391,33 @@ class TreeItem extends BaseItem {
 
   isHighlighted() {
     return this.__highlights.length > 0;
+  }
+
+  //////////////////////////////////////////
+  // Cutaways
+
+  isCutawayEnabled() {
+    return this.__cutAway;
+  }
+
+  setCutawayEnabled(state) {
+    this.__cutAway = state;
+  }
+
+  setCutVector(cutAwayVector) {
+    this.__cutAwayVector = cutAwayVector;
+  }
+
+  getCutVector(cutAwayVector) {
+    return this.__cutAwayVector;
+  }
+
+  setCutDist(cutAwayDist) {
+    this.__cutAwayDist = cutAwayDist;
+  }
+  
+  getCutDist(cutAwayDist) {
+    return this.__cutAwayDist;
   }
 
   //////////////////////////////////////////

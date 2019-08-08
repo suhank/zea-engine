@@ -17,6 +17,9 @@ import {
   MultiChoiceParameter
 } from './Parameters';
 import {
+  MaterialParameter
+} from './Parameters/MaterialParameter.js';
+import {
   QueryParameter,
   QUERY_TYPES,
   QUERY_MATCH_TYPE,
@@ -69,14 +72,19 @@ class Group extends TreeItem {
 
     this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), 3);
     this.__highlightedParam.valueChanged.connect(() => {
-      this.__updateHilight();
+      this.__updateHighlight();
     })
 
-    this.__updateHilight = this.__updateHilight.bind(this)
+    this.__updateHighlight = this.__updateHighlight.bind(this)
     const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 4);
-    highlightColorParam.valueChanged.connect(this.__updateHilight)
+    highlightColorParam.valueChanged.connect(this.__updateHighlight)
     const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), 5);
-    highlightFillParam.valueChanged.connect(this.__updateHilight)
+    highlightFillParam.valueChanged.connect(this.__updateHighlight)
+
+    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 6);
+    this.__materialParam.valueChanged.connect(() => {
+      this.__updateMaterial();
+    })
 
     this.__visibleParam.valueChanged.connect((changeType) => {
       const value = this.__visibleParam.getValue();
@@ -158,7 +166,7 @@ class Group extends TreeItem {
     this.resolveQueries();
   }
 
-  __updateHilight(){
+  __updateHighlight(){
     let highlighted = false;
     let color;
     if(this.getParameter('Highlighted').getValue()) {
@@ -183,8 +191,30 @@ class Group extends TreeItem {
 
   setSelected(sel) {
     super.setSelected(sel);
-    this.__updateHilight();
+    this.__updateHighlight();
   }
+
+  //////////////////////////////////////////
+  // Materials
+
+  __updateMaterial(){
+    const material = this.getParameter('Material').getValue();
+    
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
+      item.traverse( treeItem => {
+        if(treeItem.hasParameter('Material')) {
+          if(material) {
+            treeItem.__backupMaterial = treeItem.hasParameter('Material').getValue();
+            treeItem.hasParameter('Material').setValue(material);
+          }
+          else {
+            treeItem.hasParameter('Material').setValue(treeItem.__backupMaterial);
+          }
+        }
+      }, false)
+    })
+  }
+
 
   //////////////////////////////////////////
   // Items
@@ -467,7 +497,7 @@ class Group extends TreeItem {
     Array.from(items).forEach((item, index)=>{
       this.__bindItem(item, index)
     })
-    this.__updateHilight();
+    this.__updateHighlight();
     this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
   }
 
