@@ -93,7 +93,7 @@ void main(void) {
         this.finalize();
     }
 
-    isOverlay() {
+    static isOverlay() {
         return true;
     }
 

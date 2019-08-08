@@ -19,7 +19,7 @@ import {
   MeshProxy,
 } from './Geometry/GeomProxies.js';
 
-let GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
+const GeomParserWorker = require("worker-loader?inline!./Geometry/GeomParserWorker.js");
 // import {
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
@@ -34,9 +34,9 @@ class GeomLibrary {
     this.__genBuffersOpts = {};
 
     this.__workers = [];
+    this.__nextWorker = 0;
     for (let i = 0; i < 3; i++)
       this.__workers.push(this.__constructWorker());
-    this.__nextWorker = 0;
 
     this.clear()
   }
@@ -156,27 +156,29 @@ class GeomLibrary {
         isMobileDevice: reader.isMobileDevice,
         bufferSlice,
         genBuffersOpts: this.__genBuffersOpts,
-        context: context
+        context
       }, [bufferSlice]);
       this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length;
       //////////////////////////////////////////////
       // Main Threaded Parsing
-      // parseGeomsBinary(
+      // parseGeomsBinary({
       //     key,
       //     toc,
       //     geomIndexOffset,
       //     geomsRange,
-      //     reader.isMobileDevice,
+      //     isMobileDevice: reader.isMobileDevice,
       //     bufferSlice,
-      //     this.__genBuffersOpts,
-      //     (data, transferables)=>{
-      //         this.__recieveGeomDatas(
-      //             data.key, 
-      //             data.geomDatas, 
-      //             data.geomIndexOffset, 
-      //             data.geomsRange
-      //             );
-      //     });
+      //     genBuffersOpts: this.__genBuffersOpts,
+      //     context
+      //   },
+      //   (data, transferables)=>{
+      //     this.__recieveGeomDatas(
+      //       data.key, 
+      //       data.geomDatas, 
+      //       data.geomIndexOffset, 
+      //       data.geomsRange
+      //     );
+      //   });
 
 
     }

@@ -11,17 +11,18 @@ import {
   BinReader
 } from '../BinReader.js';
 
-let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context, callback) => {
-  let geomDatas = [];
-  let offset = toc[geomsRange[0]];
+// key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
+const parseGeomsBinary = (data, callback) => {
+  const geomDatas = [];
+  const offset = data.toc[data.geomsRange[0]];
   // console.log("offset:" +  offset);
-  let transferables = [];
-  for (let i = geomsRange[0]; i < geomsRange[1]; i++) {
-    let reader = new BinReader(bufferSlice, toc[i] - offset, isMobileDevice);
-    let className = reader.loadStr();
-    let pos = reader.pos();
+  const transferables = [];
+  for (let i = data.geomsRange[0]; i < data.geomsRange[1]; i++) {
+    const reader = new BinReader(data.bufferSlice, data.toc[i] - offset, data.isMobileDevice);
+    const className = reader.loadStr();
+    const pos = reader.pos();
     // let name = reader.loadStr();
-    // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
+    // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
     let geom;
     switch (className) {
       case 'Points':
@@ -38,14 +39,14 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
     }
     try {
       reader.seek(pos); // Reset the pointer to the start of the item data.
-      geom.readBinary(reader, context);
+      geom.readBinary(reader, data.context);
     } catch(e) {
       console.warn("Error loading:" + geom.name + "\n:" + e);
       geomDatas.push({});
       continue;
     }
 
-    let geomBuffers = geom.genBuffers(genBuffersOpts);
+    const geomBuffers = geom.genBuffers(data.genBuffersOpts);
     if (geomBuffers.indices)
       transferables.push(geomBuffers.indices.buffer);
     for (let name in geomBuffers.attrBuffers)
@@ -63,9 +64,9 @@ let parseGeomsBinary = (key, toc, geomIndexOffset, geomsRange, isMobileDevice, b
     });
   }
   callback({
-      key,
-      geomIndexOffset,
-      geomsRange,
+      key: data.key,
+      geomIndexOffset: data.geomIndexOffset,
+      geomsRange: data.geomsRange,
       geomDatas
     }, transferables);
 
