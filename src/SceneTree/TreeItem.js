@@ -50,11 +50,9 @@ class TreeItem extends BaseItem {
     super(name)
 
     this.__inheritedVisiblity = true;
+    this.__visible = true;
     this.__selectable = true;
     this.__selected = false;
-    this.__cutAway = false;
-    this.__cutAwayVector = false;
-    this.__cutAwayDist = false;
     this.__highlightMapping = {};
     this.__highlights = [];
 
@@ -69,7 +67,6 @@ class TreeItem extends BaseItem {
     this.componentAdded = new Signal();
     this.componentRemoved = new Signal();
     this.highlightChanged = new Signal();
-    this.cutAwayChanged = new Signal();
 
     this.mouseDown = new Signal();
     // this.mouseUp = new Signal();
@@ -79,35 +76,6 @@ class TreeItem extends BaseItem {
     // Add parameters.
 
     this.__visibleParam = this.addParameter(new BooleanParameter('Visible', true));
-    // this.__selectedParam = this.addParameter(new BooleanParameter('Selected', false));
-    // this.__cutawayParam = this.addParameter(new BooleanParameter('CutawayEnabled', false));
-
-    // this.__cutawayParam.valueChanged.connect((changeType) => {
-    //   setTimeout(() => {
-    //     const value = this.__cutawayParam.getValue();
-    //     for (let childItem of this.__childItems) {
-    //       if(childItem) {
-    //         const param = childItem.getParameter('CutawayEnabled');
-    //         if (param)
-    //           param.setValue(value);
-    //       }
-    //     }
-    //   }, 1)
-    // });
-
-    // this.__selectedParam.valueChanged.connect((changeType) => {
-    //   const value = this.__selectedParam.getValue();
-    //   if (value) {
-    //     this.addHighlight('selected', selectionOutlineColor, false);
-    //     this.__childItems.forEach(childItem => childItem.addHighlight('branchselected', branchSelectionOutlineColor))
-    //   }
-    //   else {
-    //     this.removeHighlight('selected');
-    //     this.__childItems.forEach(childItem => childItem.removeHighlight('branchselected', branchSelectionOutlineColor))
-    //   }
-    // });
-
-
     this.__localXfoParam = this.addParameter(new XfoParameter('LocalXfo', new Xfo()));
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()));
     this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()));
@@ -136,22 +104,11 @@ class TreeItem extends BaseItem {
       this._setBoundingBoxDirty();
     });
 
-
     this.__visibleParam.valueChanged.connect((mode) => {
-      // Make sure our own visibility change notification goes out
-      // before the children.(Need a reason for this... I think it has to do with undos.)
-      setTimeout(() => {
-        const visibile = this.getVisible();
-        for (let childItem of this.__childItems) {
-          if (childItem) {
-            childItem.setInheritedVisiblity(visibile);
-          }
-        }
-      }, 1)
+      this.__updateVisiblity();
     });
 
-    this.visibilityChanged = this.__visibleParam.valueChanged;
-    // this.selectedChanged = this.__selectedParam.valueChanged;
+    this.visibilityChanged = new Signal();
     this.selectedChanged = new Signal();;
     this.localXfoChanged = this.__localXfoParam.valueChanged;
     this.globalXfoChanged = this.__globalXfoParam.valueChanged;
@@ -310,19 +267,25 @@ class TreeItem extends BaseItem {
 
   setInheritedVisiblity(val) {
     if (this.__inheritedVisiblity != val) {
-      const prev = this.getVisible();
       this.__inheritedVisiblity = val;
-      const visibile = this.getVisible();
-      if (prev != visibile) {
-        for (let childItem of this.__childItems) {
-          childItem.setInheritedVisiblity(visibile);
-        }
-        this.visibilityChanged.emit(visibile);
-
-        if (this.__ownerItem)
-          this.__ownerItem._childVisibilityChanged();
-      }
+      this.__updateVisiblity();
     }
+  }
+
+  __updateVisiblity(){
+    const visible = this.__inheritedVisiblity && this.__visibleParam.getValue(); 
+    if (visible != this.__visible) {
+      this.__visible = visible;
+      for (let childItem of this.__childItems) {
+        childItem.setInheritedVisiblity(this.__visible);
+      }
+      this.visibilityChanged.emit(visible);
+
+      if (this.__ownerItem)
+        this.__ownerItem._childVisibilityChanged();
+      return true;
+    }
+    return false;
   }
 
   //////////////////////////////////////////
@@ -391,33 +354,6 @@ class TreeItem extends BaseItem {
 
   isHighlighted() {
     return this.__highlights.length > 0;
-  }
-
-  //////////////////////////////////////////
-  // Cutaways
-
-  isCutawayEnabled() {
-    return this.__cutAway;
-  }
-
-  setCutawayEnabled(state) {
-    this.__cutAway = state;
-  }
-
-  setCutVector(cutAwayVector) {
-    this.__cutAwayVector = cutAwayVector;
-  }
-
-  getCutVector(cutAwayVector) {
-    return this.__cutAwayVector;
-  }
-
-  setCutDist(cutAwayDist) {
-    this.__cutAwayDist = cutAwayDist;
-  }
-  
-  getCutDist(cutAwayDist) {
-    return this.__cutAwayDist;
   }
 
   //////////////////////////////////////////

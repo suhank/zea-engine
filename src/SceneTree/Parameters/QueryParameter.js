@@ -23,26 +23,21 @@ import {
 } from './ItemSetParameter.js';
 
 const QUERY_TYPES = {
-  NAME: 0,
-  PATH: 1,
-  PROPERTY: 4,
-  MATERIAL: 6,
-  VOLUME: 7
+  PATH: 0,
+  PROPERTY: 1,
+  MATERIAL: 2,
+  VOLUME: 3
 }
 
 const QUERY_MATCH_TYPE = {
   EXACT: 0,
-  IGNORECASE: 1,
-  CONTAINS: 2,
-  CONTAINS_IGNORECASE: 3,
-  FUZZY: 4,
-  REGEX: 5
+  REGEX: 1
 }
 
 const QUERY_LOGIC = {
   AND: 0,
   OR: 1,
-  NEWSET: 3
+  NEWSET: 2
 }
 
 class QueryParameter extends StringParameter {
@@ -143,8 +138,6 @@ class QuerySet extends Parameter {
   constructor(name) {
     super(name, undefined, 'QueryParameter');
     this.__items = new Set(); 
-    this.itemAdded = new Signal();
-    this.itemRemoved = new Signal();
   }
 
   clone(flags) {
@@ -162,16 +155,17 @@ class QuerySet extends Parameter {
     item.valueChanged.connect(this.valueChanged.emit)
     this.__items.add(item);
     if(emit)
-      this.itemAdded.emit()
+      this.valueChanged.emit()
     return Array.from(this.__items).indexOf(item)
   }
 
   removeItem(item, emit = true) {
-    const index = Array.from(this.__items).indexOf(item)
-    this.__items[index].valueChanged.disconnect(this.valueChanged.emit)
+    const items = Array.from(this.__items)
+    const index = items.indexOf(item)
+    items[index].valueChanged.disconnect(this.valueChanged.emit)
     this.__items.delete(item);
     if(emit)
-      this.itemRemoved.emit();
+      this.valueChanged.emit()
     return index;
   }
 

@@ -1,5 +1,6 @@
 import {
   Vec2,
+  Vec3,
   Color,
   Xfo
 } from '../Math';
@@ -11,6 +12,7 @@ import {
   BooleanParameter,
   NumberParameter,
   StringParameter,
+  Vec3Parameter,
   ColorParameter,
   XfoParameter,
   ItemSetParameter,
@@ -33,6 +35,9 @@ import {
 import {
   TreeItem
 } from './TreeItem';
+import {
+  BaseGeomItem
+} from './BaseGeomItem';
 import {
   sgFactory
 } from './SGFactory.js';
@@ -87,12 +92,12 @@ class Group extends TreeItem {
       this.__updateMaterial();
     })
 
-    this.__visibleParam.valueChanged.connect((changeType) => {
-      const value = this.__visibleParam.getValue();
-      Array.from(this.__itemsParam.getValue()).forEach(item => {
-        item.setInheritedVisiblity(value);
-      });
-    });
+    this.__updateCutaway = this.__updateCutaway.bind(this)
+    this.insertParameter(new BooleanParameter('CutAwayEnabled', false), 7).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1,0,0)), 8).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new NumberParameter('CutDist', 0.0), 9).valueChanged.connect(this.__updateCutaway);
+
+
     // this.selectedChanged.connect((changeType) => {
     //   // const items = Array.from(this.__itemsParam.getValue());
     //   // const selected = this.__selectedParam.getValue();
@@ -172,6 +177,22 @@ class Group extends TreeItem {
     this.resolveQueries();
   }
 
+  ////////////////////////////////
+
+
+  __updateVisiblity(){
+    if(super.__updateVisiblity()) {
+      const value = this.getVisible();
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        item.setInheritedVisiblity(value);
+      });
+      return true;
+    }
+    return false;
+  }
+
+  ///////////////////////////////
+
   __updateHighlight(){
     let highlighted = false;
     let color;
@@ -221,6 +242,23 @@ class Group extends TreeItem {
     })
   }
 
+  //////////////////////////////////////////
+  // Cutaways
+  __updateCutaway(){
+    const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
+    const cutAwayVector = this.getParameter('CutVector').getValue();
+    const cutAwayDist = this.getParameter('CutDist').getValue();
+    
+    Array.from(this.__itemsParam.getValue()).forEach(item => {
+      item.traverse( treeItem => {
+        if(treeItem instanceof BaseGeomItem) {
+          treeItem.setCutawayEnabled(cutEnabled)
+          treeItem.setCutVector(cutAwayVector)
+          treeItem.setCutDist(cutAwayDist)
+        }
+      }, true)
+    })
+  }
 
   //////////////////////////////////////////
   // Items
@@ -415,6 +453,20 @@ class Group extends TreeItem {
       this.mouseDownOnItem.emit(event, item);
     });
 
+    /////////////////////////////////
+    // Update the item cutaway
+    const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
+    const cutAwayVector = this.getParameter('CutVector').getValue();
+    const cutAwayDist = this.getParameter('CutDist').getValue();
+    item.traverse( treeItem => {
+      if(treeItem instanceof BaseGeomItem) {
+        treeItem.setCutawayEnabled(cutEnabled)
+        treeItem.setCutVector(cutAwayVector)
+        treeItem.setCutDist(cutAwayDist)
+      }
+    }, true)
+
+
     // Only used by the Selection Manager.
     // Maybe we should have a special group 
     // for that.
@@ -453,6 +505,15 @@ class Group extends TreeItem {
         treeItem.removeHighlight('groupItemHighlight'+this.getId())
       }, true)
     }
+
+    /////////////////////////////////
+    // Update the item cutaway
+    item.traverse( treeItem => {
+      if(treeItem instanceof BaseGeomItem) {
+        treeItem.setCutawayEnabled(false)
+      }
+    }, true)
+
 
     item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
     item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);

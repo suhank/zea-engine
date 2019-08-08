@@ -1,13 +1,50 @@
 
 import {
+  Signal
+} from '../Utilities';
+import {
   TreeItem
 } from './TreeItem';
 
 class BaseGeomItem extends TreeItem {
   constructor(name) {
     super(name);
+    this.__cutAway = false;
+    this.__cutAwayVector = false;
+    this.__cutAwayDist = false;
+    this.cutAwayChanged = new Signal();
   }
 
+
+  //////////////////////////////////////////
+  // Cutaways
+
+  isCutawayEnabled() {
+    return this.__cutAway;
+  }
+
+  setCutawayEnabled(state) {
+    this.__cutAway = state;
+    this.cutAwayChanged.emit();
+  }
+
+  getCutVector(cutAwayVector) {
+    return this.__cutAwayVector;
+  }
+
+  setCutVector(cutAwayVector) {
+    this.__cutAwayVector = cutAwayVector;
+    this.cutAwayChanged.emit();
+  }
+  
+  getCutDist(cutAwayDist) {
+    return this.__cutAwayDist;
+  }
+
+  setCutDist(cutAwayDist) {
+    this.__cutAwayDist = cutAwayDist;
+    this.cutAwayChanged.emit();
+  }
 
 
   /////////////////////////////

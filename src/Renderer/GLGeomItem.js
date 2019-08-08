@@ -9,7 +9,7 @@ import '../SceneTree/GeomItem.js';
 
 
 const GLGeomItemChangeType = {
-  TRANSFORM_CHANGED: 0,
+  GEOMITEM_CHANGED: 0,
   GEOM_CHANGED: 1,
   VISIBILITY_CHANGED: 2,
   HIGHLIGHT_CHANGED: 3
@@ -34,6 +34,7 @@ class GLGeomItem {
     this.highlightChanged = geomItem.highlightChanged;
 
     this.updateVisibility = this.updateVisibility.bind(this);
+    this.updateVisibility = this.updateVisibility.bind(this);
     this.destroy = this.destroy.bind(this);
 
     if (!gl.floatTexturesSupported) {
@@ -42,12 +43,15 @@ class GLGeomItem {
       };
     } else {
       this.updateXfo = (geomXfo) => {
-        this.updated.emit(GLGeomItemChangeType.TRANSFORM_CHANGED);
+        this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED);
       };
     }
 
     this.geomItem.geomXfoChanged.connect(this.updateXfo);
     this.geomItem.visibilityChanged.connect(this.updateVisibility);
+    this.geomItem.cutAwayChanged.connect(() => {
+        this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED);
+      });
     this.geomItem.destructing.connect(this.destroy);
     this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
       this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED);

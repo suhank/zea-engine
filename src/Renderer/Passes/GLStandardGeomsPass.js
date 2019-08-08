@@ -176,7 +176,7 @@ class GLStandardGeomsPass extends GLPass {
 
     const updatedId = glgeomItem.updated.connect((type) => {
       switch (type) {
-        case GLGeomItemChangeType.TRANSFORM_CHANGED:
+        case GLGeomItemChangeType.GEOMITEM_CHANGED:
           if (this.__dirtyItemIndices.indexOf(index) != -1)
             return;
           this.__dirtyItemIndices.push(index);
@@ -303,7 +303,7 @@ class GLStandardGeomsPass extends GLPass {
     if(geomItem.isCutawayEnabled()) {
       const cutAwayVector = geomItem.getCutVector();
       const cutAwayDist = geomItem.getCutDist();
-      console.log(geomItem.getName(), geomItem.isCutawayEnabled(), flags, pix0.toString())
+      // console.log(geomItem.getName(), geomItem.isCutawayEnabled(), flags, pix0.toString())
       pix5.set(cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist);
     }
   };
