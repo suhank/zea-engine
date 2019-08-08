@@ -442,6 +442,8 @@ class GLRenderer extends GLBaseRenderer {
       this.__highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture);
       gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
       this.quad.bindAndDraw(renderstate);
+      
+      gl.disable(gl.BLEND);
     }
 
     

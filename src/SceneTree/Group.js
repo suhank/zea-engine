@@ -49,6 +49,7 @@ class Group extends TreeItem {
     // This setting makes selection propagate from items
     // to the group, which then propagates down to the items 
     this.propagateSelectionToItems = false;
+    this.propagateXfoToItems = true;
     this.propagateSelectionChangesFromItems = false;
     
     this.__calculatingInvInitialXfo = false;
@@ -117,7 +118,12 @@ class Group extends TreeItem {
     //       itemParam.setDirty(this.__cutawayParam.getValue);
     //   }
     // });
+
+
     this.__globalXfoParam.valueChanged.connect((changeType) => {
+      if(!this.propagateXfoToItems)
+        return;
+      
       const items = Array.from(this.__itemsParam.getValue());
       // Only after all the items are resolved do we have an invXfo and we can tranform our items.
       if (!this.__calculatingInvInitialXfo && items.length > 0 && this.__invInitialXfo) {
@@ -502,6 +508,8 @@ class Group extends TreeItem {
   }
 
   recalcInitialXfo(mode) {
+    if(!this.propagateXfoToItems)
+      return;
     const items = Array.from(this.__itemsParam.getValue());
     if (items.length == 0)
       return;
