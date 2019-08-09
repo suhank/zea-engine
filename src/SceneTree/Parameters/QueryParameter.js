@@ -47,15 +47,26 @@ const QUERY_LOGIC = {
 class QueryParameter extends StringParameter {
   constructor(name, queryType = QUERY_TYPES.PATH, matchType = QUERY_MATCH_TYPE.EXACT, locicalOperator = QUERY_LOGIC.AND) {
     super(name, '', 'String');
+    this.__enabled = true;
     this.__queryType = queryType;
     this.__matchType = matchType;
     this.__locicalOperator = locicalOperator;
+    this.__negate = false;
     this.__propName = "";
   }
 
   clone(flags) {
     const clonedParam = new QueryParameter(this.__name, this.__value);
     return clonedParam;
+  }
+
+  getEnabled() {
+    return this.__enabled
+  }
+
+  setEnabled(ngate) {
+    this.__enabled = ngate;
+    this.valueChanged.emit();
   }
 
   getQueryType() {
@@ -82,6 +93,15 @@ class QueryParameter extends StringParameter {
 
   setLocicalOperator(locicalOperator) {
     this.__locicalOperator = locicalOperator;
+    this.valueChanged.emit();
+  }
+
+  getNegate() {
+    return this.__negate
+  }
+
+  setNegate(ngate) {
+    this.__negate = ngate;
     this.valueChanged.emit();
   }
 

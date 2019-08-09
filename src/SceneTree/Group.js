@@ -304,6 +304,16 @@ class Group extends TreeItem {
     // Filter it down, and then merge into result.
     queries.forEach((query, index) => {
       try {
+        if(!query.getEnabled() || query.getValue() == "")
+          return;
+
+        const negate = query.getNegate();
+        const applyTest = (res, item) => {
+          if (negate && !res)
+            set.push(item);
+          else if (!negate && res)
+            set.push(item);
+        }
       // If we hit an 'OR' query, we want the prevset
       // to the set generated before the previous query. 
       // So: TestA && TestB || TestC
@@ -314,11 +324,6 @@ class Group extends TreeItem {
         result = result.concat(set);
         set = [];
 
-        // An empty RegEx matches all values, so avoid
-        // this special case. We prefer an empty set.
-        if(query.getValue() == "")
-          return;
-
         switch (query.getQueryType()) {
           case QUERY_TYPES.PATH:
             {
@@ -326,7 +331,7 @@ class Group extends TreeItem {
                 const path = query.getValue();
                 const treeItem = searchRoot.resolvePath(path);
                 if (treeItem) {
-                  result.push(treeItem);
+                  set.push(treeItem);
                 } else {
                   console.warn("Group could not resolve item:" + path)
                 }
@@ -335,9 +340,7 @@ class Group extends TreeItem {
                 const searchRootPath = searchRoot.getPath();
                 searchRoot.traverse((item) => {
                   const itemPath = item.getPath().slice(searchRootPath.length);
-                  if (regex.test(String(itemPath))){
-                    set.push(item);
-                  }
+                  applyTest(regex.test(String(itemPath)), item);
                 }, false)
               }
               break;
@@ -346,8 +349,7 @@ class Group extends TreeItem {
             {
               const regex = query.getRegex();
               searchRoot.traverse((item) => {
-                if (regex.test(item.getName()))
-                  set.push(item);
+                applyTest(regex.test(item.getName()), item);
               }, false);
               break;
             }
@@ -355,23 +357,23 @@ class Group extends TreeItem {
             {
               const regex = query.getRegex();
               searchRoot.traverse((item) => {
+                let res = false;
                 if (item.hasParameter(query.getPropertyName())) {
                   const prop = item.getParameter(query.getPropertyName());
                   if (prop instanceof StringParameter && regex.test(prop.getValue()))
-                    set.push(item);
+                    res = true;
                 }
+                applyTest(res, item);
               }, false);
               break;
             }
           case QUERY_TYPES.LEVEL:
             {
               const regex = query.getRegex();
+              const searchRootPath = searchRoot.getPath();
               searchRoot.traverse((item) => {
                 const itemPath = item.getPath().slice(searchRootPath.length);
-                if (itemPath.length > 6) {
-                  if (regex.test(itemPath[5]))
-                    set.push(item);
-                }
+                applyTest(itemPath.length > 4 && regex.test(itemPath[3]), item);
               }, false);
               break;
             }
@@ -379,8 +381,7 @@ class Group extends TreeItem {
             {
               const value = query.getValue();
               searchRoot.traverse((item) => {
-                if (item.getLayers().indexOf(value) != -1)
-                  set.push(item);
+                applyTest(item.getLayers().indexOf(value) != -1, item);
               }, false);
               break;
             }
@@ -388,26 +389,24 @@ class Group extends TreeItem {
             {
               const regex = query.getRegex();
               searchRoot.traverse((item) => {
+                let res = false;
                 if (item.hasParameter("material")) {
                   const material = item.getParameter("material").getValue();
                   if (regex.test(material.getName()))
-                    set.push(item);
+                    res = true;
                 }
+                applyTest(res, item);
               }, false);
               break;
             }
         }
       } else {
-        // An empty RegEx matches all values, so avoid
-        // this special case. We prefer an empty set.
-        if(query.getValue() == "")
-          return;
 
         switch (query.getQueryType()) {
           case QUERY_TYPES.PATH:
             {
-              const path = query.getValue();
-              const f = (item) => regex.test(item.getPath())
+              const regex = query.getRegex();
+              const f = (item) => negate ? !regex.test(item.getPath()) : regex.test(item.getPath())
 
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
@@ -418,7 +417,8 @@ class Group extends TreeItem {
           case QUERY_TYPES.NAME:
             {
               const regex = query.getRegex();
-              const f = (item) => regex.test(item.getName())
+              const f = (item) => negate ? !regex.test(item.getName()) : regex.test(item.getName())
+
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
               else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
@@ -429,13 +429,14 @@ class Group extends TreeItem {
             {
               const regex = query.getRegex();
               const f = (item) => {
+                let res = false;
                 if (item.hasParameter(query.getPropertyName())) {
                   const prop = item.getParameter(query.getPropertyName());
                   // Note: the property must be a string property.
                   if (prop instanceof StringParameter && regex.test(prop.getValue()))
-                    return true;
+                    res = true;
                 }
-                return false;
+                return negate ? !res : res;
               }
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
@@ -445,13 +446,14 @@ class Group extends TreeItem {
             }
           case QUERY_TYPES.LEVEL:
             {
+              const searchRootPath = searchRoot.getPath();
               const regex = query.getRegex();
               const f = (item) => {
+                let res = false;
                 const itemPath = item.getPath().slice(searchRootPath.length);
-                if (itemPath.length > 6) {
-                  if (regex.test(itemPath[5]))
-                    set.push(item);
-                }
+                if (itemPath.length > 4 && regex.test(itemPath[3]))
+                  res = true;
+                return negate ? !res : res;
               };
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
@@ -463,8 +465,10 @@ class Group extends TreeItem {
             {
               const value = query.getValue();
               const f = (item) => {
+                let res = false;
                 if (item.getLayers().indexOf(value) != -1)
-                  set.push(item);
+                  res = true;
+                return negate ? !res : res;
               };
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
@@ -476,12 +480,13 @@ class Group extends TreeItem {
             {
               const regex = query.getRegex();
               const f = (item) => {
+                let res = false;
                 if (item.hasParameter("material")) {
                   const material = item.getParameter("material").getValue();
                   if (regex.test(material.getName()))
-                    return true;
+                    res = true;
                 }
-                return false;
+                return negate ? !res : res;
               }
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
@@ -495,6 +500,7 @@ class Group extends TreeItem {
       }
       catch(e) {
         // continue...
+        console.warn(e.message)
       }
     })
     result = result.concat(set);
