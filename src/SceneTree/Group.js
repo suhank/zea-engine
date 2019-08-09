@@ -15,6 +15,7 @@ import {
   Vec3Parameter,
   ColorParameter,
   XfoParameter,
+  TreeItemParameter,
   ItemSetParameter,
   MultiChoiceParameter
 } from './Parameters';
@@ -62,40 +63,44 @@ class Group extends TreeItem {
     this.__initialXfos = [];
     this.__signalIndices = [];
 
-    this.__searchSetParam = this.insertParameter(new QuerySet('Queries'), 0);
+    this.__searchRootParam = this.insertParameter(new TreeItemParameter('SearchRoot'), 0);
+    this.__searchRootParam.valueChanged.connect(()=>{
+      this.resolveQueries();
+    })
+
+    this.__searchSetParam = this.insertParameter(new QuerySet('Queries'), 1);
     this.__searchSetParam.valueChanged.connect((changeType) => {
       this.resolveQueries()
     });
-
-    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 1);
+    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 2);
 
     this.__initialXfoModeParam = this.insertParameter(
       new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']), 
-      2);
+      3);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       this.recalcInitialXfo();
     })
 
-    this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), 3);
+    this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), 4);
     this.__highlightedParam.valueChanged.connect(() => {
       this.__updateHighlight();
     })
 
     this.__updateHighlight = this.__updateHighlight.bind(this)
-    const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 4);
+    const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 5);
     highlightColorParam.valueChanged.connect(this.__updateHighlight)
-    const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), 5);
+    const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), 6);
     highlightFillParam.valueChanged.connect(this.__updateHighlight)
 
-    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 6);
+    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 7);
     this.__materialParam.valueChanged.connect(() => {
       this.__updateMaterial();
     })
 
     this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.insertParameter(new BooleanParameter('CutAwayEnabled', false), 7).valueChanged.connect(this.__updateCutaway);
-    this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1,0,0)), 8).valueChanged.connect(this.__updateCutaway);
-    this.insertParameter(new NumberParameter('CutDist', 0.0), 9).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new BooleanParameter('CutAwayEnabled', false), 8).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1,0,0)), 9).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new NumberParameter('CutDist', 0.0), 10).valueChanged.connect(this.__updateCutaway);
 
 
     // this.selectedChanged.connect((changeType) => {
@@ -174,7 +179,8 @@ class Group extends TreeItem {
   setOwner(owner) {
     super.setOwner(owner);
 
-    this.resolveQueries();
+    if(this.__searchRootParam.getValue() == undefined)
+      this.__searchRootParam.setValue(owner);
   }
 
   ////////////////////////////////
@@ -284,11 +290,14 @@ class Group extends TreeItem {
 
   resolveQueries() {
 
+    const searchRoot = this.__searchRootParam.getValue();
+    if(searchRoot == undefined)
+      return;
+
     const queries = Array.from(this.__searchSetParam.getValue());
     if(queries.length == 0)
       return;
 
-    const owner = this.getOwner();
     let result = [];
     let set = []; // Each time we hit an OR operator, we start a new set.
     let prevset = [];
@@ -315,7 +324,7 @@ class Group extends TreeItem {
             {
               if (query.getMatchType() == QUERY_MATCH_TYPE.EXACT) {
                 const path = query.getValue();
-                const treeItem = owner.resolvePath(path);
+                const treeItem = searchRoot.resolvePath(path);
                 if (treeItem) {
                   result.push(treeItem);
                 } else {
@@ -323,9 +332,9 @@ class Group extends TreeItem {
                 }
               } else if (query.getMatchType() == QUERY_MATCH_TYPE.REGEX) {
                 const regex = query.getRegex();
-                const ownerPath = owner.getPath();
-                owner.traverse((item) => {
-                  const itemPath = item.getPath().slice(ownerPath.length);
+                const searchRootPath = searchRoot.getPath();
+                searchRoot.traverse((item) => {
+                  const itemPath = item.getPath().slice(searchRootPath.length);
                   if (regex.test(String(itemPath))){
                     set.push(item);
                   }
@@ -336,7 +345,7 @@ class Group extends TreeItem {
           case QUERY_TYPES.NAME:
             {
               const regex = query.getRegex();
-              owner.traverse((item) => {
+              searchRoot.traverse((item) => {
                 if (regex.test(item.getName()))
                   set.push(item);
               }, false);
@@ -345,7 +354,7 @@ class Group extends TreeItem {
           case QUERY_TYPES.PROPERTY:
             {
               const regex = query.getRegex();
-              owner.traverse((item) => {
+              searchRoot.traverse((item) => {
                 if (item.hasParameter(query.getPropertyName())) {
                   const prop = item.getParameter(query.getPropertyName());
                   if (prop instanceof StringParameter && regex.test(prop.getValue()))
@@ -354,10 +363,31 @@ class Group extends TreeItem {
               }, false);
               break;
             }
+          case QUERY_TYPES.LEVEL:
+            {
+              const regex = query.getRegex();
+              searchRoot.traverse((item) => {
+                const itemPath = item.getPath().slice(searchRootPath.length);
+                if (itemPath.length > 6) {
+                  if (regex.test(itemPath[5]))
+                    set.push(item);
+                }
+              }, false);
+              break;
+            }
+          case QUERY_TYPES.LAYER:
+            {
+              const value = query.getValue();
+              searchRoot.traverse((item) => {
+                if (item.getLayers().indexOf(value) != -1)
+                  set.push(item);
+              }, false);
+              break;
+            }
           case QUERY_TYPES.MATERIAL:
             {
               const regex = query.getRegex();
-              owner.traverse((item) => {
+              searchRoot.traverse((item) => {
                 if (item.hasParameter("material")) {
                   const material = item.getParameter("material").getValue();
                   if (regex.test(material.getName()))
@@ -407,6 +437,35 @@ class Group extends TreeItem {
                 }
                 return false;
               }
+              if (query.getLocicalOperator() == QUERY_LOGIC.AND)
+                set = set.filter(f);
+              else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
+                set = set.concat(prevset.filter(f));
+              break;
+            }
+          case QUERY_TYPES.LEVEL:
+            {
+              const regex = query.getRegex();
+              const f = (item) => {
+                const itemPath = item.getPath().slice(searchRootPath.length);
+                if (itemPath.length > 6) {
+                  if (regex.test(itemPath[5]))
+                    set.push(item);
+                }
+              };
+              if (query.getLocicalOperator() == QUERY_LOGIC.AND)
+                set = set.filter(f);
+              else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
+                set = set.concat(prevset.filter(f));
+              break;
+            }
+          case QUERY_TYPES.LAYER:
+            {
+              const value = query.getValue();
+              const f = (item) => {
+                if (item.getLayers().indexOf(value) != -1)
+                  set.push(item);
+              };
               if (query.getLocicalOperator() == QUERY_LOGIC.AND)
                 set = set.filter(f);
               else if (query.getLocicalOperator() == QUERY_LOGIC.OR)

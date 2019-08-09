@@ -23,10 +23,13 @@ import {
 } from './ItemSetParameter.js';
 
 const QUERY_TYPES = {
-  PATH: 0,
-  PROPERTY: 1,
-  MATERIAL: 2,
-  VOLUME: 3
+  NAME: 0,
+  PATH: 1,
+  PROPERTY: 2,
+  MATERIAL: 3,
+  LEVEL: 4,
+  LAYER: 5,
+  VOLUME: 6
 }
 
 const QUERY_MATCH_TYPE = {
@@ -37,7 +40,8 @@ const QUERY_MATCH_TYPE = {
 const QUERY_LOGIC = {
   AND: 0,
   OR: 1,
-  NEWSET: 2
+  NOT: 3,
+  NEWSET: 4
 }
 
 class QueryParameter extends StringParameter {

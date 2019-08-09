@@ -13,6 +13,17 @@ class BaseGeomItem extends TreeItem {
     this.__cutAwayVector = false;
     this.__cutAwayDist = false;
     this.cutAwayChanged = new Signal();
+
+    this.__layers = [];
+  }
+
+  addLayer(name) {
+    // TODO: need to find the layer and add this item to it.
+    this.__layers.push(name);
+  }
+
+  getLayers() {
+    return this.__layers
   }
 
 

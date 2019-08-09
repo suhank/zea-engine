@@ -54,6 +54,7 @@ class Scene {
     
     this.cameras = [];
     this.__root = new TreeItem('root');
+    this.__root.addRef(this);
     this.__root.addChild(new Camera('Camera'));
 
     this.__assets = [];

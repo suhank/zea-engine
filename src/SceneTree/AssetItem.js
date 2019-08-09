@@ -94,13 +94,13 @@ class AssetItem extends TreeItem {
 
     const layers = {};
     context.addGeomToLayer = (geomItem, layer) => {
-      if (!layers[layer]) {
-        const group = new Group(layer);
-        group.propagateXfoToItems = false;
-        this.addChild(group)
-        layers[layer] = group;
-      }
-      layers[layer].addItem(geomItem);
+      // if (!layers[layer]) {
+      //   const group = new Group(layer);
+      //   group.propagateXfoToItems = false;
+      //   this.addChild(group)
+      //   layers[layer] = group;
+      // }
+      // layers[layer].addItem(geomItem);
     }
     const loadUnits = () => {
       this.__units = reader.loadStr();
