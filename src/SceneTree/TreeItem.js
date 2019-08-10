@@ -57,6 +57,8 @@ class TreeItem extends BaseItem {
     this.__highlights = [];
 
     this.__childItems = [];
+    this.__childItemsMapping = {};
+    this.__childItemsSignalIds = [];
     this.__freeIndices = [];
 
     this.__components = [];
@@ -412,7 +414,7 @@ class TreeItem extends BaseItem {
   }
 
   generateUniqueName(name) {
-    if (!this.getChildByName(name))
+    if (!(name in this.__childItemsMapping))
       return name;
 
     let index = 1;
@@ -449,7 +451,7 @@ class TreeItem extends BaseItem {
 
   insertChild(childItem, index, maintainXfo = false, checkCollisions = true) {
 
-    if (checkCollisions && this.getChildByName(childItem.getName()) !== null)
+    if (checkCollisions && childItem.getName() in this.__childItemsMapping)
       throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
     if (!(childItem instanceof TreeItem))
       throw ("Object is is not a tree item :" + childItem.constructor.name);
@@ -465,6 +467,15 @@ class TreeItem extends BaseItem {
     if (maintainXfo)
       newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
     this.__childItems.splice(index, 0, childItem);
+
+    const signalIds = {};
+    this.__childItemsMapping[childItem.getName()] = index;
+    signalIds.nameChangedId = childItem.nameChanged.connect((name, oldName) => {
+      // Update the acceleration structure.
+      delete this.__childItemsMapping[oldName];
+      this.__childItemsMapping[name] = index;
+    })
+    this.__childItemsSignalIds[index] = signalIds;
     childItem.setOwner(this);
 
     // Remove the temporary ref.
@@ -502,10 +513,15 @@ class TreeItem extends BaseItem {
   }
 
   getChildByName(name) {
-    for (let childItem of this.__childItems) {
-      if (childItem != null && childItem.getName() == name)
-        return childItem;
+    const index = this.__childItemsMapping[name];
+    if(index != undefined) {
+      return this.__childItems[index]
     }
+    // for (let childItem of this.__childItems) {
+    //   if (childItem != null && childItem.getName() == name) {
+    //     return childItem;
+    //   }
+    // }
     return null;
   }
 
@@ -522,14 +538,16 @@ class TreeItem extends BaseItem {
   removeChild(index) {
     const childItem = this.__childItems[index];
     if (childItem) {
+      const signalIds = this.__childItemsSignalIds[index];
+      childItem.nameChanged.disconnectID(signalIds.nameChangedId)
+
+      this.__childItemsSignalIds[index] = null;
       this.__childItems[index] = null;
       this.__freeIndices.push(index);
+      this._setBoundingBoxDirty();
 
       childItem.setParentItem(undefined);
-
       this.childRemoved.emit(childItem, index);
-
-      this._setBoundingBoxDirty();
     }
   }
 

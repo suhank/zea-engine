@@ -82,9 +82,11 @@ class BaseGeomItem extends TreeItem {
 
       
       this.__layers = reader.loadStrArray();
-      // console.log("Layers:", this.__layers)
-      for(let layer of this.__layers)
+      if(this.__layers.length > 0) {
+        // console.log("Layers:", this.__layers)
+        for(let layer of this.__layers)
         context.addGeomToLayer(this, layer);
+      }
     }
   }
 };

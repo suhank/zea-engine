@@ -92,15 +92,21 @@ class AssetItem extends TreeItem {
     if (context.version == undefined)
       context.version = 0;
 
+    let layerRoot;
     const layers = {};
     context.addGeomToLayer = (geomItem, layer) => {
-      // if (!layers[layer]) {
-      //   const group = new Group(layer);
-      //   group.propagateXfoToItems = false;
-      //   this.addChild(group)
-      //   layers[layer] = group;
-      // }
-      // layers[layer].addItem(geomItem);
+      if (!layers[layer]) {
+        if (!layerRoot) {
+          layerRoot = new TreeItem('Layers')
+          this.addChild(layerRoot)
+        }
+        const group = new Group(layer);
+        group.propagateXfoToItems = false;
+        group.getParameter('SearchRoot').setValue(this)
+        layerRoot.addChild(group)
+        layers[layer] = group;
+      }
+      layers[layer].addItem(geomItem);
     }
     const loadUnits = () => {
       this.__units = reader.loadStr();

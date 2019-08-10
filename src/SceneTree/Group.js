@@ -102,34 +102,6 @@ class Group extends TreeItem {
     this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1,0,0)), 9).valueChanged.connect(this.__updateCutaway);
     this.insertParameter(new NumberParameter('CutDist', 0.0), 10).valueChanged.connect(this.__updateCutaway);
 
-
-    // this.selectedChanged.connect((changeType) => {
-    //   // const items = Array.from(this.__itemsParam.getValue());
-    //   // const selected = this.__selectedParam.getValue();
-    //   const selected = this.getSelected();
-    //   // const len = items.length;
-    //   // for (let i = 0; i < len; i++) {
-    //   //   items[i].setSelected(selected);
-    //   // }
-    //   Array.from(this.__itemsParam.getValue()).forEach(item => {
-    //     if(selected)
-    //       item.addHighlight('groupItemHighlight', itemHighlightColor)
-    //     else
-    //       item.removeHighlight('groupItemHighlight')
-    //   })
-    // });
-    // Groups can be used to control Cutaway toggles for their members.
-    // this.__cutawayParam.valueChanged.connect((changeType) => {
-    //   const items = Array.from(this.__itemsParam.getValue());
-    //   const len = items.length;
-    //   for (let i = 0; i < len; i++) {
-    //     const itemParam = items[i].getParameter('CutawayEnabled');
-    //     if (itemParam)
-    //       itemParam.setDirty(this.__cutawayParam.getValue);
-    //   }
-    // });
-
-
     this.__globalXfoParam.valueChanged.connect((changeType) => {
       if(!this.propagateXfoToItems)
         return;
@@ -159,8 +131,6 @@ class Group extends TreeItem {
     });
 
     this.mouseDownOnItem = new Signal();
-    // this.mouseUpOnItem = new Signal();
-    // this.mouseMoveOnItem = new Signal();
   }
 
   destroy() {
@@ -214,9 +184,9 @@ class Group extends TreeItem {
     
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       if(highlighted)
-        item.addHighlight('groupItemHighlight'+this.getId(), color)
+        item.addHighlight('groupItemHighlight'+this.getId(), color, true)
       else
-        item.removeHighlight('groupItemHighlight'+this.getId())
+        item.removeHighlight('groupItemHighlight'+this.getId(), true)
 
     })
   }
@@ -301,6 +271,7 @@ class Group extends TreeItem {
     let result = [];
     let set = []; // Each time we hit an OR operator, we start a new set.
     let prevset = [];
+    let first = true;
     // Filter it down, and then merge into result.
     queries.forEach((query, index) => {
       try {
@@ -320,7 +291,8 @@ class Group extends TreeItem {
       if (query.getLocicalOperator() == QUERY_LOGIC.AND){
         prevset = set;
       }
-      if (index == 0 || query.getLocicalOperator() == QUERY_LOGIC.NEWSET) {
+      if (first || query.getLocicalOperator() == QUERY_LOGIC.NEWSET) {
+        first = false; // The first enabled query.
         result = result.concat(set);
         set = [];
 
@@ -565,7 +537,7 @@ class Group extends TreeItem {
       highlighted = true;
     }
     if(highlighted) {
-      item.removeHighlight('groupItemHighlight'+this.getId())
+      item.removeHighlight('groupItemHighlight'+this.getId(), true)
     }
 
     /////////////////////////////////
