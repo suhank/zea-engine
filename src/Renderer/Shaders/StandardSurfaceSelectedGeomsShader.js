@@ -22,17 +22,22 @@ uniform mat4 projectionMatrix;
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
+varying vec4 v_highlightColor;
 
 void main(void) {
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
     gl_Position = projectionMatrix * viewPos;
+
+    v_highlightColor = getHighlightColor();
 }
 `);
 
         this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('StandardSurfaceSelectedGeomsShader.fragmentShader', `
 precision highp float;
+
+varying vec4 v_highlightColor;
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -43,8 +48,7 @@ void main(void) {
     vec4 fragColor;
 #endif
 
-    fragColor = vec4(1.0);
-
+    fragColor = v_highlightColor;
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

@@ -8,8 +8,8 @@ class Color extends AttrValue {
     if (r instanceof Float32Array) {
       this.__data = r;
     } else if (r instanceof ArrayBuffer) {
-      let buffer = r;
-      let byteOffset = g;
+      const buffer = r;
+      const byteOffset = g;
       this.__data = new Float32Array(buffer, byteOffset, 4);
     } else  {
       this.__data = new Float32Array(4);
@@ -284,17 +284,8 @@ class Color extends AttrValue {
     return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b;
   }
 
-  /**
-   * Performs a linear interpolation between two colors
-   *
-   * @param {color} out the receiving vector
-   * @param {color} a the first operand
-   * @param {color} b the second operand
-   * @param {Number} t interpolation amount between the two inputs
-   * @returns {color} out
-   */
   lerp(b, t) {
-    let ar = this.r,
+    const ar = this.r,
       ag = this.g,
       ab = this.b,
       aa = this.a;
@@ -302,7 +293,8 @@ class Color extends AttrValue {
       ar + t * (b.r - ar),
       ag + t * (b.g - ag),
       ab + t * (b.b - ab),
-      aa + t * (b.a - aa));
+      aa + t * (b.a - aa)
+    );
   }
 
   /**

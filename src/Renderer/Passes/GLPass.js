@@ -58,7 +58,7 @@ class GLPass extends ParameterOwner {
 
   draw(renderstate) {}
 
-  drawSelectedGeoms(renderstate) {}
+  drawHighlightedGeoms(renderstate) {}
 
   drawGeomData(renderstate) {}
 

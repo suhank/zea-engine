@@ -70,9 +70,12 @@ class BaseItem extends ParameterOwner {
   }
 
   setName(name) {
-    this.__name = name;
-    this.__updatePath();
-    this.nameChanged.emit(name);
+    if(this.__name != name) {
+      const oldName = this.__name;
+      this.__name = name;
+      this.__updatePath();
+      this.nameChanged.emit(name, oldName);
+    }
   }
 
   __updatePath() {

@@ -40,6 +40,8 @@ import {
   GLTexture2D
 } from '../GLTexture2D.js';
 
+const pixelsPerItem = 6; // The number of RGBA pixels per draw item.
+
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLStandardGeomsPass extends GLPass {
   constructor() {
@@ -174,7 +176,7 @@ class GLStandardGeomsPass extends GLPass {
 
     const updatedId = glgeomItem.updated.connect((type) => {
       switch (type) {
-        case GLGeomItemChangeType.TRANSFORM_CHANGED:
+        case GLGeomItemChangeType.GEOMITEM_CHANGED:
           if (this.__dirtyItemIndices.indexOf(index) != -1)
             return;
           this.__dirtyItemIndices.push(index);
@@ -182,7 +184,10 @@ class GLStandardGeomsPass extends GLPass {
         case GLGeomItemChangeType.GEOM_CHANGED:
         case GLGeomItemChangeType.VISIBILITY_CHANGED:
           break;
-        case GLGeomItemChangeType.SELECTION_CHANGED:
+        case GLGeomItemChangeType.HIGHLIGHT_CHANGED:
+          if (this.__dirtyItemIndices.indexOf(index) != -1)
+            return;
+          this.__dirtyItemIndices.push(index);
           this.__renderer.requestRedraw();
           return;
       }
@@ -256,24 +261,51 @@ class GLStandardGeomsPass extends GLPass {
 
   //////////////////////////////////////////////////
   // Data Uploading
-  __populateDrawItemDataArray(glgeomItem, index, dataArray) {
+  __populateDrawItemDataArray(geomItem, index, dataArray) {
 
-    const mat4 = glgeomItem.getGeomItem().getGeomXfo().toMat4();
-    const lightmapCoordsOffset = glgeomItem.getGeomItem().getLightmapCoordsOffset();
-
-    const stride = 16; // The number of floats per draw item.
+    const stride = pixelsPerItem * 4; // The number of floats per draw item.
     const offset = index * stride;
-    const pix0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset);
+
+    ///////////////////////////
+    // Geom Item Params
+    const materialId = 0;
+    let flags = 0;
+    if(geomItem.isCutawayEnabled()) {
+      const GEOMITEM_FLAG_CUTAWAY =  1; // 1<<0;
+      flags |= GEOMITEM_FLAG_CUTAWAY;
+    }
+    const lightmapCoordsOffset = geomItem.getLightmapCoordsOffset();
+
+    const pix0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 0);
+    pix0.set(flags, materialId, lightmapCoordsOffset.x, lightmapCoordsOffset.y);
+
+    ///////////////////////////
+    // Geom Matrix
+    const mat4 = geomItem.getGeomXfo().toMat4();
     const pix1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4);
     const pix2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8);
     const pix3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12);
-    pix0.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
-    pix1.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
-    pix2.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
+    pix1.set(mat4.xAxis.x, mat4.yAxis.x, mat4.zAxis.x, mat4.translation.x);
+    pix2.set(mat4.xAxis.y, mat4.yAxis.y, mat4.zAxis.y, mat4.translation.y);
+    pix3.set(mat4.xAxis.z, mat4.yAxis.z, mat4.zAxis.z, mat4.translation.z);
 
-    const materialId = 0;
-    const geomId = 0;
-    pix3.set(lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId);
+    ///////////////////////////
+    // Hilight
+    const pix4 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 16);
+    if(geomItem.isHighlighted()) {
+      const highlight = geomItem.getHighlight();
+      pix4.set(highlight.r, highlight.g, highlight.b, highlight.a);
+    }
+
+    ///////////////////////////
+    // Cutaway
+    const pix5 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 20);
+    if(geomItem.isCutawayEnabled()) {
+      const cutAwayVector = geomItem.getCutVector();
+      const cutAwayDist = geomItem.getCutDist();
+      // console.log(geomItem.getName(), geomItem.isCutawayEnabled(), flags, pix0.toString())
+      pix5.set(cutAwayVector.x, cutAwayVector.y, cutAwayVector.z, cutAwayDist);
+    }
   };
 
   newItemsReadyForLoading() {
@@ -297,7 +329,6 @@ class GLStandardGeomsPass extends GLPass {
       return;
     }
 
-    const pixelsPerItem = 4; // The number of RGBA pixels per draw item.
     let size = Math.round(Math.sqrt(this.__drawItems.length * pixelsPerItem) + 0.5);
     // Only support power 2 textures. Else we get strange corruption on some GPUs
     // in some scenes.
@@ -356,7 +387,7 @@ class GLStandardGeomsPass extends GLPass {
         // and null this item in the array. skip over null items.
         if (!glgeomItem)
           continue;
-        this.__populateDrawItemDataArray(glgeomItem, j - indexStart, dataArray);
+        this.__populateDrawItemDataArray(glgeomItem.getGeomItem(), j - indexStart, dataArray);
       }
 
       if (typeId == gl.FLOAT) {

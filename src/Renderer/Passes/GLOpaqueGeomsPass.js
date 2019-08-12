@@ -233,14 +233,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     this.__traverseTreeAndDraw(renderstate);
   }
 
-  drawSelectedGeoms(renderstate) {
+  drawHighlightedGeoms(renderstate) {
 
     const gl = this.__gl;
-    gl.disable(gl.BLEND);
     gl.disable(gl.CULL_FACE); // 2-sided rendering.
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LESS);
-    gl.depthMask(true);
 
     // for (let glshaderMaterials of this.__glshadermaterials) {
     for (let shaderName in this.__glshadermaterials) {
@@ -254,7 +250,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
       for (let glmaterialGeomItemSet of glmaterialGeomItemSets) {
         const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets();
         for (let gldrawitemset of gldrawitemsets) {
-          gldrawitemset.drawSelected(renderstate);
+          gldrawitemset.drawHighlighted(renderstate);
         }
       }
     }

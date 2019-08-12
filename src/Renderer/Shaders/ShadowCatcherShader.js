@@ -54,7 +54,7 @@ void main(void) {
     vec4 worldPos = modelMatrix * pos;
     v_worldDir = worldPos.xyz - ProjectionCenter;
 
-    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+    v_lightmapCoord = (lightmapCoords + geomItemData.zw) / lightmapSize;
 }
 `);
     }

@@ -3,15 +3,22 @@ import {
   Signal
 } from '../Utilities';
 
+let counter = 0;
+
 class RefCounted {
   constructor() {
     if (this.constructor.name == 'RefCounted') {
       throw ("RefCounted should not be instantiated directly.");
     }
+    this.__id = (++counter)
     this.__refs = [];
     this.destructing = new Signal();
     this.__destroyed = false;
   };
+
+  getId() {
+    return this.__id
+  }
 
   numRefs(){
     return this.__refs.length;

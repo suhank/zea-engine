@@ -43,7 +43,7 @@ import {
   LightmapMixer
 } from './Images';
 
-const defaultGridColor = new Color(.53, .53, .53);
+const defaultGridColor = new Color("#DCDCDC");
 
 class Scene {
   constructor(resources) {
@@ -54,6 +54,7 @@ class Scene {
     
     this.cameras = [];
     this.__root = new TreeItem('root');
+    this.__root.addRef(this);
     this.__root.addChild(new Camera('Camera'));
 
     this.__assets = [];
@@ -229,12 +230,12 @@ class Scene {
     axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0);
      const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader');
     gridXAxisMaterial.getParameter('Color').setValue(new Color(gridColor.luminance(), 0, 0));
-    gridTreeItem.addChild(new GeomItem('xAxisLineItem', axisLine, gridXAxisMaterial));
+    gridTreeItem.addChild(new GeomItem('xAxisLine', axisLine, gridXAxisMaterial));
      const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader');
     gridZAxisMaterial.getParameter('Color').setValue(new Color(0, gridColor.luminance(), 0));
     const geomOffset = new Xfo();
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5);
-    const zAxisLineItem = new GeomItem('zAxisLineItem', axisLine, gridZAxisMaterial);
+    const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridZAxisMaterial);
     zAxisLineItem.setGeomOffsetXfo(geomOffset);
     gridTreeItem.addChild(zAxisLineItem);
     gridTreeItem.setSelectable(false, true);

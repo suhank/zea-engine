@@ -43,13 +43,13 @@ class AssetItem extends TreeItem {
     fileParam.valueChanged.connect(() => {
 
       const file = fileParam.getFileDesc();
-      if(!file)
+      if (!file)
         return;
-      if(this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == sgFactory.getClassName(this)) {
         const stem = fileParam.getStem();
         this.setName(stem);
       }
-      
+
       this.loaded.setToggled(false);
       loadTextfile(file.url,
         (data) => {
@@ -57,17 +57,17 @@ class AssetItem extends TreeItem {
           let asynccount = 0;
           this.fromJSON(j, {
             assetItem: this,
-            incAsyncCount: ()=>{
+            incAsyncCount: () => {
               asynccount++;
             },
-            decAsyncCount: ()=>{
+            decAsyncCount: () => {
               asynccount--;
-              if(asynccount == 0) {
+              if (asynccount == 0) {
                 this.loaded.emit();
               }
             }
           });
-          if(asynccount == 0)
+          if (asynccount == 0)
             this.loaded.emit();
         }
       );
@@ -89,36 +89,52 @@ class AssetItem extends TreeItem {
     context.assetItem = this;
     context.numTreeItems = 0;
     context.numGeomItems = 0;
-    if(context.version == undefined)
+    if (context.version == undefined)
       context.version = 0;
 
+    let layerRoot;
     const layers = {};
     context.addGeomToLayer = (geomItem, layer) => {
-      if(!layers[layer]) {  
-      const group = new Group(layer);
-      this.addChild(group)
-      layers[layer] = group;
+      if (!layers[layer]) {
+        if (!layerRoot) {
+          layerRoot = new TreeItem('Layers')
+          this.addChild(layerRoot)
+        }
+        const group = new Group(layer);
+        group.propagateXfoToItems = false;
+        group.getParameter('SearchRoot').setValue(this)
+        layerRoot.addChild(group)
+        layers[layer] = group;
       }
       layers[layer].addItem(geomItem);
     }
-
-    this.__materials.readBinary(reader, context);
-
-    super.readBinary(reader, context);
-
-    if(context.version >= 5) {
+    const loadUnits = () => {
       this.__units = reader.loadStr();
       // Calculate a scale factor to convert 
       // the asset units to meters(the scene units)
       let scaleFactor = 1.0;
-      switch(this.__units) {
-      case 'Millimeters': scaleFactor = 0.001; break;
-      case 'Centimeters': scaleFactor = 0.01; break;
-      case 'Meters': scaleFactor = 1.0; break;
-      case 'Kilometers': scaleFactor = 1000.0; break;
-      case 'Inches': scaleFactor = 0.0254; break;
-      case 'Feet': scaleFactor = 0.3048; break;
-      case 'Miles': scaleFactor = 1609.34; break;
+      switch (this.__units) {
+        case 'Millimeters':
+          scaleFactor = 0.001;
+          break;
+        case 'Centimeters':
+          scaleFactor = 0.01;
+          break;
+        case 'Meters':
+          scaleFactor = 1.0;
+          break;
+        case 'Kilometers':
+          scaleFactor = 1000.0;
+          break;
+        case 'Inches':
+          scaleFactor = 0.0254;
+          break;
+        case 'Feet':
+          scaleFactor = 0.3048;
+          break;
+        case 'Miles':
+          scaleFactor = 1609.34;
+          break;
       }
 
       // Apply units change to existing Xfo. (avoid changing tr)
@@ -127,21 +143,36 @@ class AssetItem extends TreeItem {
       this.setLocalXfo(xfo);
     }
 
+    if (context.version >= 7) {
+      // Loading units modifies our Xfo, which then propagates up
+      // the tree forcing a re-computation. Better just do it at 
+      // the start.
+      loadUnits();
+    }
+
+    this.__materials.readBinary(reader, context);
+
+    super.readBinary(reader, context);
+
+    if (context.version >= 5 && context.version < 7) {
+      loadUnits();
+    }
+
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
   }
 
-  toJSON(context={}, flags=0) {
+  toJSON(context = {}, flags = 0) {
     context.makeRelative = (path) => {
       const assetPath = this.getPath();
       const start = path.slice(0, assetPath.length);
-      for (let i = 0; i < (start.length-1); i++) {
+      for (let i = 0; i < (start.length - 1); i++) {
         if (start[i] != assetPath[i]) {
           console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
           return path;
         }
       }
       // Relative paths start with a symbol for the root element.
-      const relativePath = path.slice(assetPath.length-1);
+      const relativePath = path.slice(assetPath.length - 1);
       relativePath[0] = '.';
       return relativePath;
     }
@@ -150,38 +181,37 @@ class AssetItem extends TreeItem {
     return j;
   }
 
-  fromJSON(j, context={}, flags=0, onDone) {
+  fromJSON(j, context = {}, flags = 0, onDone) {
     if (!context)
       context = {};
-    
+
     context.assetItem = this;
     context.numTreeItems = 0;
     context.numGeomItems = 0;
-    if(context.version == undefined)
+    if (context.version == undefined)
       context.version = 0;
 
     context.assetItem = this;
 
     const plcbs = []; // Post load callbacks.
-    context.resolvePath = (path, cb)=>{
+    context.resolvePath = (path, cb) => {
       // Note: Why not return a Promise here?
       // Promise evaluation is always async, so
       // all promisses will be resolved after the current call stack
       // has terminated. In our case, we want all paths
       // to be resolved before the end of the function, which
       // we can handle easily with callback functions. 
-      if(!path)
-        throw("Path not spcecified")
+      if (!path)
+        throw ("Path not spcecified")
       const item = this.resolvePath(path);
-      if(item) {
+      if (item) {
         cb(item);
-      }
-      else {
+      } else {
         // Some paths resolve to items generated during load,
         // so push a callback to re-try after the load is complete.
-        plcbs.push(()=>{
+        plcbs.push(() => {
           const param = this.resolvePath(path);
-          if(param)
+          if (param)
             cb(param);
           else {
             console.warn("Path unable to be resolved:" + path);
@@ -200,7 +230,7 @@ class AssetItem extends TreeItem {
 
     // Invoke all the post-load callbacks to resolve any 
     // remaning references.
-    for(let cb of plcbs)
+    for (let cb of plcbs)
       cb();
 
     if (onDone)

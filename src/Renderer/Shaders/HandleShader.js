@@ -43,6 +43,19 @@ void main(void) {
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
+    bool maintainScreenSize = true;// Could be passed as a flag.
+    if(maintainScreenSize) {
+        float dist = length((modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)));
+        float sc = dist;
+        mat4 scmat = mat4(
+            sc, 0.0, 0.0, 0.0,
+            0.0, sc, 0.0, 0.0,
+            0.0, 0.0, sc, 0.0,
+            0.0, 0.0, 0.0, 1.0
+        );
+        modelViewMatrix = modelViewMatrix * scmat;
+    }
+
     vec4 viewPos = (modelViewMatrix * vec4(positions, 1.0));
     gl_Position = projectionMatrix * viewPos;
 
@@ -112,12 +125,12 @@ void main(void) {
     }
     
     static getGeomDataShaderName(){
-        return 'StandardSurfaceGeomDataShader';
+        return 'HandleGeomDataShader';
     }
 
-    static getSelectedShaderName(){
-        return 'StandardSurfaceSelectedGeomsShader';
-    }
+    // static getSelectedShaderName(){
+    //     return 'StandardSurfaceSelectedGeomsShader';
+    // }
 };
 
 sgFactory.registerClass('HandleShader', HandleShader);

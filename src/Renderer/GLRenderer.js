@@ -108,7 +108,6 @@ class GLRenderer extends GLBaseRenderer {
     }
 
     this.__outlineShader = new OutlinesShader(gl);
-    this.__outlineColor = new Color("#03E3AC")
     this.quad = new GLMesh(gl, new Plane(1, 1));
 
     // this.__glshaderScreenPostProcess = new PostProcessing(gl);
@@ -300,8 +299,8 @@ class GLRenderer extends GLBaseRenderer {
     if (this.__fbo) {
       this.__fbo.colorTexture.resize(width, height);
     }
-    if (this.__selectedGeomsBufferFbo) {
-      this.__selectedGeomsBuffer.resize(width, height);
+    if (this.__highlightedGeomsBufferFbo) {
+      this.__highlightedGeomsBuffer.resize(width, height);
     }
   }
 
@@ -309,25 +308,17 @@ class GLRenderer extends GLBaseRenderer {
   ////////////////////////////
   // SelectedGeomsBuffer
 
-  getOutlineColor() {
-    return this.__outlineColor
-  }
-
-  setOutlineColor(color) {
-    this.__outlineColor = color;
-  }
-
   createSelectedGeomsFbo() {
     let gl = this.__gl;
-    this.__selectedGeomsBuffer = new GLTexture2D(gl, {
+    this.__highlightedGeomsBuffer = new GLTexture2D(gl, {
       type: 'UNSIGNED_BYTE',
       format: 'RGBA',
       filter: 'NEAREST',
       width: this.__glcanvas.width <= 1 ? 1 : this.__glcanvas.width,
       height: this.__glcanvas.height <= 1 ? 1 : this.__glcanvas.height,
     });
-    this.__selectedGeomsBufferFbo = new GLFbo(gl, this.__selectedGeomsBuffer, true);
-    this.__selectedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
+    this.__highlightedGeomsBufferFbo = new GLFbo(gl, this.__highlightedGeomsBuffer, true);
+    this.__highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0]);
   }
 
   getFbo() {
@@ -423,24 +414,41 @@ class GLRenderer extends GLBaseRenderer {
     super.drawScene(renderstate);
     // console.log("Draw Calls:" + renderstate['drawCalls']);
 
-    if (this.__selectedGeomsBufferFbo) {
-      this.__selectedGeomsBufferFbo.bindForWriting(renderstate);
-      this.__selectedGeomsBufferFbo.clear();
-      this.drawSceneSelectedGeoms(renderstate);
+    if (this.__highlightedGeomsBufferFbo) {
+      const gl = this.__gl;
+
+      this.__highlightedGeomsBufferFbo.bindForWriting(renderstate);
+      this.__highlightedGeomsBufferFbo.clear();
+
+      // We need to explicitly clear the depth buffer, 
+      // It seems that sometimes the function above does
+      // not do the trick.
+      // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      
+      gl.disable(gl.BLEND);
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LESS);
+      gl.depthMask(true);
+      
+      this.drawHighlightedGeoms(renderstate);
 
       // Unbind and restore the bound fbo
-      this.__selectedGeomsBufferFbo.unbindForWriting(renderstate);
+      this.__highlightedGeomsBufferFbo.unbindForWriting(renderstate);
 
       // Now render the outlines to the entire screen.
-      const gl = this.__gl;
       gl.viewport(...renderstate.region);
 
       this.__outlineShader.bind(renderstate);
+      gl.enable(gl.BLEND);
+      gl.blendEquation(gl.FUNC_ADD);
+      gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+      
       const unifs = renderstate.unifs;
-      this.__selectedGeomsBuffer.bindToUniform(renderstate, unifs.selectionDataTexture);
-      gl.uniform2f(unifs.selectionDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
-      gl.uniform4fv(unifs.outlineColor.location, this.__outlineColor.asArray());
+      this.__highlightedGeomsBuffer.bindToUniform(renderstate, unifs.highlightDataTexture);
+      gl.uniform2f(unifs.highlightDataTextureSize.location, renderstate.region[2], renderstate.region[3]);
       this.quad.bindAndDraw(renderstate);
+      
+      gl.disable(gl.BLEND);
     }
 
     

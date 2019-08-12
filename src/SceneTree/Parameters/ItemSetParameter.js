@@ -13,8 +13,6 @@ class ItemSetParameter extends Parameter {
     super(name, undefined, 'BaseItem');
     this.__items = new Set();
     this.__filterFn = filterFn; // Note: the filter Fn indicates that users will edit the set. 
-    this.itemAdded = new Signal();
-    this.itemRemoved = new Signal();
   }
 
   clone(flags) {
@@ -30,45 +28,50 @@ class ItemSetParameter extends Parameter {
     return this.__filterFn;
   }
 
+  getItem(index) {
+    return Array.from(this.__items)[index];
+  }
+
   addItem(item, emit = true) {
     if (this.__filterFn && !this.__filterFn(item))
       return false;
     this.__items.add(item);
     if(emit)
-      this.itemAdded.emit()
+      this.valueChanged.emit()
+    return Array.from(this.__items).indexOf(item)
   }
 
   removeItem(item, emit = true) {
-    this.__items.add(item);
+    const index = Array.from(this.__items).indexOf(item)
+    this.__items.delete(item);
     if(emit)
-      this.itemRemoved.emit()
+      this.valueChanged.emit();
+    return index;
   }
 
   setItems(items, emit = true) {
-    for (let item of items){
-      if(!this.__items.has(item)) {
-        this.__items.add(item);
-        if(emit)
-          this.itemAdded.emit()
-      }
-    }
     for (let item of this.__items){
       if(!items.has(item)) {
         this.__items.delete(item);
-        if(emit)
-          this.itemRemoved.emit()
       }
     }
+    for (let item of items){
+      if(!this.__items.has(item)) {
+        this.__items.add(item);
+      }
+    }
+    if(emit)
+      this.valueChanged.emit();
   }
 
   clearItems(emit = true){
     this.__items.clear();
     if(emit)
-      this.itemRemoved.emit()
+      this.valueChanged.emit()
   }
 
   getNumItems() {
-    return this.__items.length;
+    return Array.from(this.__items).length;
   }
 
   getValue(){

@@ -75,10 +75,10 @@ void main(void) {
 #ifdef ENABLE_TEXTURES
     v_textureCoord  = texCoords;
 #endif
-    v_lightmapCoord = (lightmapCoords + geomItemData.xy) / lightmapSize;
+    v_lightmapCoord = (lightmapCoords + geomItemData.zw) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
-    // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
+    // gl_Position = mvp * vec4((lightmapCoords + geomItemData.zw), 0., 1.);
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     v_clusterID = clusterIDs;
     v_geomItemData = geomItemData;
@@ -268,7 +268,7 @@ void main(void) {
 #ifdef ENABLE_DEBUGGING_LIGHTMAPS
     if(debugLightmapTexelSize)
     {
-        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.xy;
+        vec2 coord_texelSpace = (v_lightmapCoord * lightmapSize) - v_geomItemData.zw;
         //vec2 coord_texelSpace = (v_textureCoord * lightmapSize);
         float total = floor(coord_texelSpace.x) +
                       floor(coord_texelSpace.y);
