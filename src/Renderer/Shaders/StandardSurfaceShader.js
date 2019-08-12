@@ -86,7 +86,7 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-
+    v_cutAwayData   = getCutaway();
 }
 `);
 
@@ -114,6 +114,7 @@ varying vec2 v_lightmapCoord;
 varying float v_clusterID;
 #endif
 varying vec3 v_worldPos;
+varying vec4 v_cutAwayData;
 /* VS Outputs */
 
 
@@ -163,6 +164,7 @@ uniform int NormalTexType;
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
+uniform color cutColor;
 
 #endif
 
@@ -176,9 +178,8 @@ void main(void) {
     int flags = int(v_geomItemData.r);
     // Cutaways
     if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-        vec4 cutaway = getCutaway();
-        vec3 planeNormal = cutaway.xyz;
-        float planeDist = cutaway.w;
+        vec3 planeNormal = v_cutAwayData.xyz;
+        float planeDist = v_cutAwayData.w;
         if(cutaway(v_worldPos, planeNormal, planeDist)){
             discard;
             return;
