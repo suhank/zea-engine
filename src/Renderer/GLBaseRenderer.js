@@ -84,7 +84,7 @@ class GLBaseRenderer {
     
     for(let passtype in registeredPasses) {
       for(let cls of registeredPasses[passtype]){
-        this.addPass(new cls(), passtype);
+        this.addPass(new cls(), passtype, false);
       }
     }
 
@@ -636,7 +636,7 @@ class GLBaseRenderer {
     return glshader;
   }
  
-  addPass(pass, passtype=0) {
+  addPass(pass, passtype=0, updateIndices = true) {
 
     if(!this.__passes[passtype])
       this.__passes[passtype] = [];
@@ -652,6 +652,20 @@ class GLBaseRenderer {
     pass.updated.connect(this.requestRedraw.bind(this));
     pass.init(this, index);
     this.__passes[passtype].push(pass);
+
+    if(updateIndices) {
+      // Now update all the  subsequent pass indices because the
+      // indices after will have changed.
+      let offset = 0;
+      for(let key in this.__passes) {
+        const passSet = this.__passes[key];
+        passSet.forEach((pass, index) => {
+          pass.setPassIndex(offset + index);
+        })
+        offset += passSet.length;
+      }
+    }
+
     this.requestRedraw();
     return index;
   }

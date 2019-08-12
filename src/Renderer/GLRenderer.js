@@ -425,6 +425,10 @@ class GLRenderer extends GLBaseRenderer {
       // not do the trick.
       // gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       
+      gl.enable(gl.DEPTH_TEST);
+      gl.depthFunc(gl.LESS);
+      gl.depthMask(true);
+      
       this.drawHighlightedGeoms(renderstate);
 
       // Unbind and restore the bound fbo
