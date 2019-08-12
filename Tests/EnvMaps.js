@@ -19,7 +19,7 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
 
                 const color = new Visualive.Color();
                 color.fromJSON(sample.color);
-                let material = new Visualive.Material('sample:'+i+':'+j, 'FlatSurfaceShader');
+                const material = new Visualive.Material('sample:'+i+':'+j, 'FlatSurfaceShader');
                 material.getParameter('BaseColor').setValue(color);
 
                 const geomItem = new Visualive.GeomItem('sample:'+j, disc, material);

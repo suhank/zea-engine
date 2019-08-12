@@ -5,12 +5,12 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
 
 
     let size = 2;
-    let quads = [];
-    let maxQuadSize = 10;
+    const quads = [];
+    const maxQuadSize = 10;
     for(let i=2; i<maxQuadSize; i++) {
         for(let j=i; j<maxQuadSize; j++) {
-            let x = Math.pow(2, i);
-            let y = Math.pow(2, j);
+            const x = Math.pow(2, i);
+            const y = Math.pow(2, j);
             quads.push(new Visualive.Plane(x*0.1, y*0.1, x, y));
         }
     }
@@ -18,7 +18,7 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
 
     const material = new Visualive.Material('material', 'SimpleSurfaceShader');
     material.addParameter('BaseColor', new Visualive.Color(1, 0, 1));
-    let addGeomItem = (shape, xfo, index, material)=>{
+    const addGeomItem = (shape, xfo, index, material)=>{
         const geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
         geomItem.setLocalXfo(xfo);
         scene.getRoot().addChild(geomItem, false);
@@ -27,8 +27,8 @@ testingHarness.registerTest('Grids', (domElement, resources)=> {
     for(let quad of quads) {
 
         offset += quad.getX()*1.4;
-        let tr = new Visualive.Vec3(offset, 1.0, 0.0);
-        let xfo = new Visualive.Xfo(tr);
+        const tr = new Visualive.Vec3(offset, 1.0, 0.0);
+        const xfo = new Visualive.Xfo(tr);
         addGeomItem(quad, xfo, offset, material);
 
     }

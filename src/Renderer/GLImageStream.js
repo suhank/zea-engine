@@ -8,7 +8,6 @@ import {
 
 import './Shaders/GLSL/ImageStream.js';
 
-
 class GLImageStream {
   constructor(gl, streamImage) {
 

@@ -4,9 +4,7 @@ testingHarness.registerTest('Instancing', (domElement, resources)=> {
     scene.setupGrid(60.0, 6);
 
     let standardMaterial = new Visualive.Material('surfaces', 'SimpleSurfaceShader');
-    standardMaterial.addParameter('BaseColor', new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
-    standardMaterial.addParameter('Roughness', 1.0);
-    standardMaterial.addParameter('Metallic', 0.0);
+    standardMaterial.getParameter('BaseColor').setValue(new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
 
     let addGeomItem = (shape, row, count, i)=>{
         const geomItem = new Visualive.GeomItem('Item'+row+'-'+i, shape, standardMaterial);
@@ -31,7 +29,7 @@ testingHarness.registerTest('Instancing', (domElement, resources)=> {
     addMeshShape(new Visualive.Torus(0.4, 1.3), -3, 4 );
 
     let linesMaterial = new Visualive.Material('lines', 'LinesShader');
-    linesMaterial.addParameter('color', new Visualive.Color(1.0, 0.3, .4));
+    linesMaterial.getParameter('Color').setValue(new Visualive.Color(1.0, 0.3, .4));
 
     let addLinesShape = (shape, pos, index)=>{
         // shape.lineThickness = 0.05;

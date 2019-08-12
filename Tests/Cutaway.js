@@ -3,19 +3,19 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
     const scene = new Visualive.Scene(resources);
 
-    let asset = new Visualive.TreeItem('asset');
+    const asset = new Visualive.TreeItem('asset');
 
-    let bigSphere = new Visualive.Sphere(8.0, 32, 32);
-    let bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
+    const bigSphere = new Visualive.Sphere(8.0, 32, 32);
+    const bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
     bigSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 1.0, 0.0));
-    let bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
+    const bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
     asset.addChild(bigSphereItem, false);
     scene.getRoot().addChild(asset);
 
 
     /////////////////////////////////////
     // Obj Asset
-    let objAsset = new Visualive.ObjAsset('obj');
+    const objAsset = new Visualive.ObjAsset('obj');
     objAsset.getParameter('splitObjects').setValue(false);
     objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
     objAsset.getParameter('loadMtlFile').setValue(false);
@@ -23,9 +23,9 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
     objAsset.getParameter('defaultShader').setValue("SimpleCutawaySurfaceShader");
     scene.addAsset(objAsset);
 
-    let cutAmount = -10.0;
-    let cutParam = new Visualive.NumberParameter('planeDist', cutAmount, [-10, 10]);
-    let cutDir = new Visualive.Vec3Parameter('planeNormal', new Visualive.Vec3(-1, 0, 0));
+    const cutAmount = -10.0;
+    const cutParam = new Visualive.NumberParameter('planeDist', cutAmount, [-10, 10]);
+    const cutDir = new Visualive.Vec3Parameter('planeNormal', new Visualive.Vec3(-1, 0, 0));
 
     objAsset.getParameter('ObjFilePath').setValue("/Assets/CutawayAndExplode.obj");
     objAsset.loaded.connect(function() {
@@ -39,7 +39,7 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
 
         let animatingValue = false;
         let timeoutId;
-        let timerCallback = () => {
+        const timerCallback = () => {
             // Check to see if the video has progressed to the next frame. 
             // If so, then we emit and update, which will cause a redraw.
             animatingValue = true;

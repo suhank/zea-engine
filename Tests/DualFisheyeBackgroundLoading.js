@@ -2,7 +2,7 @@
 testingHarness.registerTest('DualFisheyeBackgroundLoading', (domElement, resources)=> {
 
     const scene = new Visualive.Scene(resources);
-    let bgMap =  new Visualive.FileImage('DualFisheye', "Assets/DualFisheye.jpg", { mapping: 'dualfisheye'});
+    const bgMap =  new Visualive.FileImage('DualFisheye', "Assets/DualFisheye.jpg", { mapping: 'dualfisheye'});
     scene.setBackgroundMap(bgMap);
 
     const renderer = new Visualive.GLRenderer(domElement);

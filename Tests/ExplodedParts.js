@@ -94,7 +94,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
         asset.addChild(objAsset);
         objAsset.loaded.connect(function() {
 
-            let explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
+            const explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
             explodedPartsOp.getParameter('Cascade').setValue(false);

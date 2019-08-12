@@ -49,7 +49,7 @@ class TreeItem extends BaseItem {
   constructor(name) {
     super(name)
 
-    this.__inheritedVisiblity = true;
+    this.__visibleCounter = 1; // Visible by Default.
     this.__visible = true;
     this.__selectable = true;
     this.__selected = false;
@@ -107,6 +107,7 @@ class TreeItem extends BaseItem {
     });
 
     this.__visibleParam.valueChanged.connect((mode) => {
+      this.__visibleCounter += (this.__visibleParam.getValue() ? 1 : -1);
       this.__updateVisiblity();
     });
 
@@ -169,14 +170,31 @@ class TreeItem extends BaseItem {
 
   setOwner(parentItem) {
     if (this.__ownerItem) {
+      // Remove ourselves from the current owner. (we can only have one owner.)
       this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
+
+      // The effect of the invisible owner is removed.
+      if (!this.__ownerItem.getVisible())
+        this.__visibleCounter++;
+
+      this.__ownerItem.removeChildByHandle(this);
     }
+
     super.setOwner(parentItem);
 
     this._setGlobalXfoDirty();
     if (this.__ownerItem) {
+
+      this.setSelectable(this.__ownerItem.getSelectable(), true);
+      
+      // The effect of the invisible owner is added.
+      if (!this.__ownerItem.getVisible())
+        this.__visibleCounter--;
+
       this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty);
     }
+
+    this.__updateVisiblity();
   }
 
   __updatePath() {
@@ -256,7 +274,8 @@ class TreeItem extends BaseItem {
   // Visibility
 
   getVisible() {
-    return this.__inheritedVisiblity && this.__visibleParam.getValue();
+    // Should never be more than 1, but can be less than 0.
+    return this.__visibleCounter > 0;
   }
 
   setVisible(val) {
@@ -267,19 +286,17 @@ class TreeItem extends BaseItem {
     this._setBoundingBoxDirty();
   }
 
-  setInheritedVisiblity(val) {
-    if (this.__inheritedVisiblity != val) {
-      this.__inheritedVisiblity = val;
-      this.__updateVisiblity();
-    }
+  propagateVisiblity(val) {
+    this.__visibleCounter += val;
+    this.__updateVisiblity();
   }
 
-  __updateVisiblity(){
-    const visible = this.__inheritedVisiblity && this.__visibleParam.getValue(); 
+  __updateVisiblity() {
+    const visible = this.__visibleCounter > 0;
     if (visible != this.__visible) {
       this.__visible = visible;
       for (let childItem of this.__childItems) {
-        childItem.setInheritedVisiblity(this.__visible);
+        childItem.propagateVisiblity(this.__visible ? 1 : -1);
       }
       this.visibilityChanged.emit(visible);
 
@@ -317,11 +334,11 @@ class TreeItem extends BaseItem {
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
       for (let childItem of this.__childItems)
-        childItem.addHighlight('branchselected'+this.getId(), branchSelectionOutlineColor, true);
+        childItem.addHighlight('branchselected' + this.getId(), branchSelectionOutlineColor, true);
     } else {
       this.removeHighlight('selected');
       for (let childItem of this.__childItems)
-        childItem.removeHighlight('branchselected'+this.getId(), true);
+        childItem.removeHighlight('branchselected' + this.getId(), true);
     }
     this.selectedChanged.emit(this.__selected)
   }
@@ -337,7 +354,7 @@ class TreeItem extends BaseItem {
     this.__highlightMapping[name] = color;
     this.highlightChanged.emit();
 
-    if(propagateToChildren) {
+    if (propagateToChildren) {
       for (let childItem of this.__childItems)
         childItem.addHighlight(name, color, propagateToChildren);
     }
@@ -350,7 +367,7 @@ class TreeItem extends BaseItem {
       delete this.__highlightMapping[name];
       this.highlightChanged.emit();
     }
-    if(propagateToChildren) {
+    if (propagateToChildren) {
       for (let childItem of this.__childItems)
         childItem.removeHighlight(name, propagateToChildren);
     }
@@ -460,8 +477,6 @@ class TreeItem extends BaseItem {
       throw ("childItem is destroyed:" + childItem.getPath());
 
     childItem.addRef(this)
-    if (childItem.getOwner() != undefined)
-      childItem.getOwner().removeChildByHandle(childItem)
 
     let newLocalXfo;
     if (maintainXfo)
@@ -487,9 +502,6 @@ class TreeItem extends BaseItem {
     if (childItem.testFlag(ItemFlags.USER_EDITED))
       this.setFlag(ItemFlags.USER_EDITED)
 
-    childItem.setInheritedVisiblity(this.getVisible());
-    childItem.setSelectable(this.getSelectable(), true);
-
     this._setBoundingBoxDirty();
     this.childAdded.emit(childItem, index);
 
@@ -514,7 +526,7 @@ class TreeItem extends BaseItem {
 
   getChildByName(name) {
     const index = this.__childItemsMapping[name];
-    if(index != undefined) {
+    if (index != undefined) {
       return this.__childItems[index]
     }
     // for (let childItem of this.__childItems) {
@@ -678,7 +690,7 @@ class TreeItem extends BaseItem {
   // Traverse the tree structure from this point down
   // and fire the callback for each visited item.
   // Note: depth only used by selection sets for now.
-  traverse(callback, includeThis=true) {
+  traverse(callback, includeThis = true) {
     const __c = (treeItem) => {
       const children = treeItem.getChildren();
       for (let childItem of children) {
@@ -691,7 +703,7 @@ class TreeItem extends BaseItem {
         return false;
       __c(treeItem);
     }
-    if(includeThis)
+    if (includeThis)
       __t(this);
     else
       __c(this);
