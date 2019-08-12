@@ -236,8 +236,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   drawHighlightedGeoms(renderstate) {
 
     const gl = this.__gl;
-    // gl.disable(gl.BLEND);
-    // gl.disable(gl.CULL_FACE); // 2-sided rendering.
+    gl.disable(gl.CULL_FACE); // 2-sided rendering.
 
     // for (let glshaderMaterials of this.__glshadermaterials) {
     for (let shaderName in this.__glshadermaterials) {
