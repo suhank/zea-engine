@@ -160,6 +160,5 @@ export {
   QueryParameter,
   QUERY_TYPES,
   QUERY_MATCH_TYPE,
-  QUERY_LOGIC,
-  QuerySet
+  QUERY_LOGIC
 };
