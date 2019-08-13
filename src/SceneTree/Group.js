@@ -525,9 +525,12 @@ class Group extends TreeItem {
     });
     this.__initialXfos[index] = item.getGlobalXfo();
 
+    const bboxChangedIndex = item.boundingChanged.connect(this._setBoundingBoxDirty);
+
     this.__signalIndices[index] = {
       mouseDownIndex,
-      globalXfoChangedIndex
+      globalXfoChangedIndex,
+      bboxChangedIndex
     }
   }
 
@@ -562,6 +565,7 @@ class Group extends TreeItem {
 
     item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
     item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
+    item.boundingChanged.disconnectId(this.__signalIndices[index].bboxChangedIndex);
     this.__signalIndices.splice(index, 1);
     this.__initialXfos.splice(index, 1);
   }
@@ -576,6 +580,7 @@ class Group extends TreeItem {
 
     // Note: do we re-calc the initial xfo if it is set to 'first'?
     this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+    this._setBoundingBoxDirty();
   }
 
   removeItem(item) {
@@ -583,6 +588,7 @@ class Group extends TreeItem {
     this.__unbindItem(item, index);
 
     this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+    this._setBoundingBoxDirty();
   }
 
   clearItems(emit = true) {
@@ -610,7 +616,8 @@ class Group extends TreeItem {
       this.__bindItem(item, index)
     })
     this.__updateHighlight();
-    this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
+    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+    this._setBoundingBoxDirty();
   }
 
   recalcInitialXfo(mode) {
@@ -644,7 +651,6 @@ class Group extends TreeItem {
     this.__invInitialXfo = xfo.inverse();
     this.__calculatingInvInitialXfo = false;
   }
-
 
   _cleanBoundingBox(bbox) {
     const result = super._cleanBoundingBox(bbox);

@@ -190,8 +190,10 @@ class Camera extends TreeItem {
     for (let treeItem of treeItems)
       boundingBox.addBox3(treeItem.getBoundingBox());
 
-    if (!boundingBox.isValid())
+    if (!boundingBox.isValid()) {
+      console.warn("Bounding box not valid.")
       return;
+    }
     const focalDistance = this.__focalDistanceParam.getValue();
     const fovY = this.__fovParam.getValue();
 

@@ -21,10 +21,10 @@ const ValueGetMode = {
 // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
 const ValueSetMode = {
   USER_SETVALUE: 0,
-  OPERATOR_SETVALUE: 1,
+  OPERATOR_SETVALUE: 1, /* No events*/
   SILENT: 1,
-  DATA_LOAD: 2,
-  OPERATOR_DIRTIED: 3,
+  DATA_LOAD: 2, /* Generate events, but don't flag the parameter as user edited*/
+  OPERATOR_DIRTIED: 3, /* Generate events, but don't flag the parameter as user edited*/
   STATEMACHINE_SETVALUE: 4, /* Generate events, but don't flag the parameter as user edited*/
 };
 const ParamFlags = {

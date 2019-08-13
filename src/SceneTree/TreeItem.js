@@ -63,12 +63,6 @@ class TreeItem extends BaseItem {
 
     this.__components = [];
     this.__componentMapping = {};
-    this.parentChanged = this.ownerChanged;
-    this.childAdded = new Signal();
-    this.childRemoved = new Signal();
-    this.componentAdded = new Signal();
-    this.componentRemoved = new Signal();
-    this.highlightChanged = new Signal();
 
     this.mouseDown = new Signal();
     // this.mouseUp = new Signal();
@@ -82,14 +76,25 @@ class TreeItem extends BaseItem {
     this.__globalXfoParam = this.addParameter(new XfoParameter('GlobalXfo', new Xfo()));
     this.__boundingBoxParam = this.addParameter(new Parameter('BoundingBox', new Box3()));
 
+    this.parentChanged = this.ownerChanged;
+    this.childAdded = new Signal();
+    this.childRemoved = new Signal();
+    // this.componentAdded = new Signal();
+    // this.componentRemoved = new Signal();
+    this.highlightChanged = new Signal();
+    this.visibilityChanged = new Signal();
+    this.selectedChanged = new Signal();
+    this.localXfoChanged = this.__localXfoParam.valueChanged;
+    this.globalXfoChanged = this.__globalXfoParam.valueChanged;
+    this.boundingChanged = this.__boundingBoxParam.valueChanged;
+
     // Bind handlers
     this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this);
     this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this);
+    this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this);
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this);
 
-    this.__localXfoParam.valueChanged.connect(() => {
-      this._setGlobalXfoDirty();
-    });
+    this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty);
 
     const cleanLocalXfo = (prevValue) => {
       const globalXfo = this.__globalXfoParam.getValue();
@@ -110,12 +115,6 @@ class TreeItem extends BaseItem {
       this.__visibleCounter += (this.__visibleParam.getValue() ? 1 : -1);
       this.__updateVisiblity();
     });
-
-    this.visibilityChanged = new Signal();
-    this.selectedChanged = new Signal();;
-    this.localXfoChanged = this.__localXfoParam.valueChanged;
-    this.globalXfoChanged = this.__globalXfoParam.valueChanged;
-    this.boundingChanged = this.__boundingBoxParam.valueChanged;
   }
 
   destroy() {
@@ -169,14 +168,15 @@ class TreeItem extends BaseItem {
   // Parent Item
 
   setOwner(parentItem) {
+
     if (this.__ownerItem) {
-      // Remove ourselves from the current owner. (we can only have one owner.)
       this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty);
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible())
         this.__visibleCounter++;
 
+      // Remove ourselves from the current owner. (we can only be the child of one owner)
       this.__ownerItem.removeChildByHandle(this);
     }
 
@@ -282,10 +282,6 @@ class TreeItem extends BaseItem {
     this.__visibleParam.setValue(val);
   }
 
-  _childVisibilityChanged() {
-    this._setBoundingBoxDirty();
-  }
-
   propagateVisiblity(val) {
     this.__visibleCounter += val;
     this.__updateVisiblity();
@@ -299,9 +295,6 @@ class TreeItem extends BaseItem {
         childItem.propagateVisiblity(this.__visible ? 1 : -1);
       }
       this.visibilityChanged.emit(visible);
-
-      if (this.__ownerItem)
-        this.__ownerItem._childVisibilityChanged();
       return true;
     }
     return false;
@@ -408,9 +401,9 @@ class TreeItem extends BaseItem {
   }
 
   _setBoundingBoxDirty() {
-    if (this.__boundingBoxParam.setDirty(this._cleanBoundingBox)) {
-      if (this.__ownerItem)
-        this.__ownerItem._childBBoxChanged();
+    if (this.__boundingBoxParam) {
+      // Will cause boundingChanged to emit
+      this.__boundingBoxParam.setDirty(this._cleanBoundingBox);
     }
   }
 
@@ -476,7 +469,6 @@ class TreeItem extends BaseItem {
     if (childItem.isDestroyed())
       throw ("childItem is destroyed:" + childItem.getPath());
 
-    childItem.addRef(this)
 
     let newLocalXfo;
     if (maintainXfo)
@@ -490,11 +482,11 @@ class TreeItem extends BaseItem {
       delete this.__childItemsMapping[oldName];
       this.__childItemsMapping[name] = index;
     })
+    signalIds.bboxChangedId = childItem.boundingChanged.connect(this._setBoundingBoxDirty)
+    signalIds.visChangedId = childItem.visibilityChanged.connect(this._setBoundingBoxDirty)
     this.__childItemsSignalIds[index] = signalIds;
-    childItem.setOwner(this);
 
-    // Remove the temporary ref.
-    childItem.removeRef(this)
+    childItem.setOwner(this);
 
     if (maintainXfo)
       childItem.setLocalXfo(newLocalXfo);
@@ -552,6 +544,8 @@ class TreeItem extends BaseItem {
     if (childItem) {
       const signalIds = this.__childItemsSignalIds[index];
       childItem.nameChanged.disconnectID(signalIds.nameChangedId)
+      childItem.boundingChanged.disconnectID(signalIds.bboxChangedId)
+      childItem.visibilityChanged.disconnectID(signalIds.visChangedId)
 
       this.__childItemsSignalIds[index] = null;
       this.__childItems[index] = null;
@@ -592,7 +586,7 @@ class TreeItem extends BaseItem {
 
     component.setOwner(this);
 
-    this.componentAdded.emit(component);
+    // this.componentAdded.emit(component);
   }
 
   removeComponent(name) {
@@ -609,7 +603,7 @@ class TreeItem extends BaseItem {
       componentMapping[this.__components[i].getName()] = i;
     this.__componentMapping = componentMapping;
 
-    this.componentRemoved.emit(component, index);
+    // this.componentRemoved.emit(component, index);
     return component;
   }
 
