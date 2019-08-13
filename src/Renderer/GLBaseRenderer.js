@@ -402,7 +402,7 @@ class GLBaseRenderer {
     // Note: we are now pushing on high end mobile devices.
     // Galaxy and above. We need this. We need ot accuratley determine 
     // if the float buffer is not supported.
-    this.__floatGeomBuffer = this.__gl.floatTexturesSupported;// !SystemDesc.isMobileDevice;
+    this.__floatGeomBuffer = this.__gl.floatTexturesSupported && SystemDesc.browserName != "Safari";
     this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
     // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
     // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
