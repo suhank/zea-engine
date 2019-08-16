@@ -89,7 +89,9 @@ var create3DContext = function(canvas, opt_attribs) {
       context.drawArraysInstanced = context.__ext_Inst.drawArraysInstancedANGLE.bind(context.__ext_Inst);
       context.drawElementsInstanced = context.__ext_Inst.drawElementsInstancedANGLE.bind(context.__ext_Inst);
     }
-    if(SystemDesc.browserName != 'Safari'){
+
+    {
+      // Note: OES_vertex_array_object is now supported on Safari.
       context.__ext_VAO = context.getExtension("OES_vertex_array_object");
       if(context.__ext_VAO) {
         context.createVertexArray = context.__ext_VAO.createVertexArrayOES.bind(context.__ext_VAO);

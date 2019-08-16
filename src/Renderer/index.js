@@ -1,5 +1,6 @@
 
 
+export * from './GLContext.js';
 export * from './GLTexture2D.js';
 export * from './GLMesh.js';
 export * from './GLLines.js';

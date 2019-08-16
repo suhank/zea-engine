@@ -8,6 +8,9 @@ import '../Math';
 class GLFbo {
   constructor(gl, colorTexture, createDepthTexture = false) {
     if(SystemDesc.isIOSDevice && (colorTexture.getType() == 'FLOAT' || colorTexture.getType() == 'HALF_FLOAT')) {
+      // So iOS simply refuses to bind aything to a render target except a UNSIGNED_BYTE texture.
+      // See the subtle error message here: "floating-point render targets not supported -- this is legal"
+      // https://www.khronos.org/registry/webgl/conformance-suites/1.0.2/conformance/extensions/oes-texture-float.html
       console.error("IOS devices are unable to render to float textures.")
     }
 
@@ -111,8 +114,12 @@ class GLFbo {
     //     }
     // }
 
-    if(this.__colorTexture)
-      gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+    if(this.__colorTexture){
+      if (gl.name == 'webgl2')
+        gl.framebufferTexture2D(gl.DRAW_FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+      else
+        gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this.__colorTexture.glTex, 0);
+    }
 
     // Create the depth texture
     if (this.__createDepthTexture) {
@@ -192,7 +199,6 @@ class GLFbo {
     else
       check = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
     if (check !== gl.FRAMEBUFFER_COMPLETE) {
-      gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, null);
       if (gl.name == 'webgl2')
         gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);

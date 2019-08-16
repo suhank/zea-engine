@@ -18,7 +18,6 @@ class GLTexture2D extends RefCounted {
     this.updated = new Signal();
     this.resized = new Signal();
 
-    this.__gltex = this.__gl.createTexture();
     this.width = 0;
     this.height = 0;
     this.textureType = 1; // Default 2d 8 bit texture image texture.

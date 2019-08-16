@@ -195,7 +195,7 @@ class GLRenderer extends GLBaseRenderer {
             this.__backgroundMapShader = new BackgroundImageShader(gl);
             break;
         }
-        let shaderComp = this.__backgroundMapShader.compileForTarget();
+        const shaderComp = this.__backgroundMapShader.compileForTarget();
         this.__backgroundMapShaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
       }
     }

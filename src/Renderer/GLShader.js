@@ -146,7 +146,10 @@ class GLShader extends BaseItem {
     }
     const fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
     if (fragmentShaderGLSL != undefined) {
-      const fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', shaderopts);
+      const fragshaderopts = Object.assign({}, shaderopts);
+      if(fragshaderopts.frag)
+        fragshaderopts.defines = fragshaderopts.frag.defines + fragshaderopts.defines;
+      const fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', fragshaderopts);
       if (!fragmentShader) {
         return false;
       }
