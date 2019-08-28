@@ -58,18 +58,16 @@ class GLShader extends BaseItem {
   __compileShaderStage(glsl, stageID, name, shaderopts) {
     const gl = this.__gl;
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
-
-    if(shaderopts)
-      shaderopts = Object.assign(shaderopts, gl.shaderopts);
-    else
+    if (!shaderopts)
       shaderopts = gl.shaderopts;
-
-    if (shaderopts.repl) {
-      for (let key in shaderopts.repl)
-        glsl = glsl.replaceAll(key, shaderopts.repl[key]);
+    if (shaderopts) {
+      if (shaderopts.repl) {
+        for (let key in shaderopts.repl)
+          glsl = glsl.replaceAll(key, shaderopts.repl[key]);
+      }
+      if (shaderopts.defines)
+        glsl = shaderopts.defines + glsl;
     }
-    if (shaderopts.defines)
-      glsl = shaderopts.defines + glsl;
 
     let prefix;
     if (gl.name == 'webgl2') {
@@ -148,7 +146,7 @@ class GLShader extends BaseItem {
     }
     const fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
     if (fragmentShaderGLSL != undefined) {
-      const fragshaderopts = Object.assign({}, shaderopts);
+      const fragshaderopts = Object.assign({}, gl.shaderopts, shaderopts);
       if(fragshaderopts.frag)
         fragshaderopts.defines = fragshaderopts.frag.defines + fragshaderopts.defines;
       const fragmentShader = this.__compileShaderStage(fragmentShaderGLSL, gl.FRAGMENT_SHADER, 'fragmentShader', fragshaderopts);
