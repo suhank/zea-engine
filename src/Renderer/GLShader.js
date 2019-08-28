@@ -58,16 +58,18 @@ class GLShader extends BaseItem {
   __compileShaderStage(glsl, stageID, name, shaderopts) {
     const gl = this.__gl;
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
-    if (!shaderopts)
+
+    if(shaderopts)
+      shaderopts = Object.assign(shaderopts, gl.shaderopts);
+    else
       shaderopts = gl.shaderopts;
-    if (shaderopts) {
-      if (shaderopts.repl) {
-        for (let key in shaderopts.repl)
-          glsl = glsl.replaceAll(key, shaderopts.repl[key]);
-      }
-      if (shaderopts.defines)
-        glsl = shaderopts.defines + glsl;
+
+    if (shaderopts.repl) {
+      for (let key in shaderopts.repl)
+        glsl = glsl.replaceAll(key, shaderopts.repl[key]);
     }
+    if (shaderopts.defines)
+      glsl = shaderopts.defines + glsl;
 
     let prefix;
     if (gl.name == 'webgl2') {

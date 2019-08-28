@@ -393,7 +393,7 @@ class GLBaseRenderer {
       this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
     }
 
-    this.__gl.screenQuad = new GLScreenQuad(this.__gl, this.__preproc);
+    this.__gl.screenQuad = new GLScreenQuad(this.__gl);
     this.__screenQuad = this.__gl.screenQuad;
 
 
