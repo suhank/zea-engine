@@ -175,9 +175,6 @@ class TreeItem extends BaseItem {
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible())
         this.__visibleCounter++;
-
-      // Remove ourselves from the current owner. (we can only be the child of one owner)
-      this.__ownerItem.removeChildByHandle(this);
     }
 
     super.setOwner(parentItem);
@@ -543,12 +540,13 @@ class TreeItem extends BaseItem {
     const childItem = this.__childItems[index];
     if (childItem) {
       const signalIds = this.__childItemsSignalIds[index];
-      childItem.nameChanged.disconnectID(signalIds.nameChangedId)
-      childItem.boundingChanged.disconnectID(signalIds.bboxChangedId)
-      childItem.visibilityChanged.disconnectID(signalIds.visChangedId)
+      childItem.nameChanged.disconnectId(signalIds.nameChangedId)
+      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
+      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
 
       this.__childItemsSignalIds[index] = null;
       this.__childItems[index] = null;
+      delete this.__childItemsMapping[childItem.getName()]
       this.__freeIndices.push(index);
       this._setBoundingBoxDirty();
 
@@ -569,7 +567,6 @@ class TreeItem extends BaseItem {
     while (index--) {
       this.removeChild(index);
     }
-    this.__childItems = [];
     this._setBoundingBoxDirty();
   }
 

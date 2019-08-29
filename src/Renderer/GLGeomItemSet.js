@@ -115,7 +115,7 @@ class GLGeomItemSet {
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem);
     const signalIds = this.glgeomItemSignalIds[index];
-    glgeomItem.highlightedChanged.disconnectId(signalIds.sel);
+    glgeomItem.highlightChanged.disconnectId(signalIds.sel);
     glgeomItem.visibilityChanged.disconnectId(signalIds.vis);
 
     this.glgeomItems[index] = null;
