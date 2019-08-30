@@ -57,9 +57,8 @@ class TreeItem extends BaseItem {
     this.__highlights = [];
 
     this.__childItems = [];
-    this.__childItemsMapping = {};
     this.__childItemsSignalIds = [];
-    this.__freeIndices = [];
+    this.__childItemsMapping = {};
 
     this.__components = [];
     this.__componentMapping = {};
@@ -175,9 +174,6 @@ class TreeItem extends BaseItem {
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible())
         this.__visibleCounter++;
-
-      // Remove ourselves from the current owner. (we can only be the child of one owner)
-      this.__ownerItem.removeChildByHandle(this);
     }
 
     super.setOwner(parentItem);
@@ -416,11 +412,11 @@ class TreeItem extends BaseItem {
   }
 
   numChildren() {
-    return this.__childItems.length - this.__freeIndices.length;
+    return this.__childItems.length;
   }
 
   getNumChildren() {
-    return this.__childItems.length - this.__freeIndices.length;
+    return this.__childItems.length;
   }
 
   generateUniqueName(name) {
@@ -459,6 +455,14 @@ class TreeItem extends BaseItem {
     return uniqueName;
   }
 
+  __updateMapping(start) {
+    // If a child has been added or removed from the 
+    // tree item, we need to update the acceleration structure. 
+    for(let i=start; i<this.__childItems.length; i++) {
+      this.__childItemsMapping[this.__childItems[i].getName()] = i;
+    }
+  }
+
   insertChild(childItem, index, maintainXfo = false, checkCollisions = true) {
 
     if (checkCollisions && childItem.getName() in this.__childItemsMapping)
@@ -469,22 +473,24 @@ class TreeItem extends BaseItem {
     if (childItem.isDestroyed())
       throw ("childItem is destroyed:" + childItem.getPath());
 
-
     let newLocalXfo;
     if (maintainXfo)
       newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
-    this.__childItems.splice(index, 0, childItem);
 
     const signalIds = {};
-    this.__childItemsMapping[childItem.getName()] = index;
     signalIds.nameChangedId = childItem.nameChanged.connect((name, oldName) => {
       // Update the acceleration structure.
+      const index = this.__childItemsMapping[oldName];
       delete this.__childItemsMapping[oldName];
       this.__childItemsMapping[name] = index;
     })
     signalIds.bboxChangedId = childItem.boundingChanged.connect(this._setBoundingBoxDirty)
     signalIds.visChangedId = childItem.visibilityChanged.connect(this._setBoundingBoxDirty)
-    this.__childItemsSignalIds[index] = signalIds;
+
+    this.__childItems.splice(index, 0, childItem);
+    this.__childItemsSignalIds.splice(index, 0, signalIds);
+    this.__childItemsMapping[childItem.getName()] = index;
+    this.__updateMapping(index);
 
     childItem.setOwner(this);
 
@@ -502,12 +508,7 @@ class TreeItem extends BaseItem {
   }
 
   addChild(childItem, maintainXfo = false, checkCollisions = true) {
-    let index;
-    if (this.__freeIndices.length > 0)
-      index = this.__freeIndices.pop();
-    else {
-      index = this.__childItems.length;
-    }
+    let index = this.__childItems.length;
     this.insertChild(childItem, index, maintainXfo, checkCollisions);
     return index;
   }
@@ -543,13 +544,14 @@ class TreeItem extends BaseItem {
     const childItem = this.__childItems[index];
     if (childItem) {
       const signalIds = this.__childItemsSignalIds[index];
-      childItem.nameChanged.disconnectID(signalIds.nameChangedId)
-      childItem.boundingChanged.disconnectID(signalIds.bboxChangedId)
-      childItem.visibilityChanged.disconnectID(signalIds.visChangedId)
-
-      this.__childItemsSignalIds[index] = null;
-      this.__childItems[index] = null;
-      this.__freeIndices.push(index);
+      childItem.nameChanged.disconnectId(signalIds.nameChangedId)
+      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
+      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
+      
+      this.__childItems.splice(index, 1);
+      this.__childItemsSignalIds.splice(index, 1);
+      delete this.__childItemsMapping[childItem.getName()];
+      this.__updateMapping(index);
       this._setBoundingBoxDirty();
 
       childItem.setParentItem(undefined);
@@ -569,7 +571,6 @@ class TreeItem extends BaseItem {
     while (index--) {
       this.removeChild(index);
     }
-    this.__childItems = [];
     this._setBoundingBoxDirty();
   }
 
