@@ -16,6 +16,9 @@ class Vec4 extends AttrValue {
       let buffer = x;
       let byteOffset = y;
       this.__data = new Float32Array(buffer, byteOffset, 4);
+    } else if (x != null && typeof(x) == 'object') {
+      this.__data = new Float32Array(4);
+      this.fromJSON(x);
     } else {
       this.__data = new Float32Array(4);
       this.__data[0] = x;

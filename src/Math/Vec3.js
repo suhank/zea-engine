@@ -9,13 +9,15 @@ import {
 class Vec3 extends AttrValue {
   constructor(x = 0, y = 0, z = 0) {
     super();
-
     if (x instanceof Float32Array || x instanceof Uint32Array) {
       this.__data = x;
     } else if (x instanceof ArrayBuffer) {
       let buffer = x;
       let byteOffset = y;
       this.__data = new Float32Array(buffer, byteOffset, 3);
+    } else if (x != null && typeof(x) == 'object') {
+      this.__data = new Float32Array(3);
+      this.fromJSON(x);
     } else {
       this.__data = new Float32Array(3);
       this.__data[0] = x;
