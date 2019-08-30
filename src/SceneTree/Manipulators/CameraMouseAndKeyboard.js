@@ -313,7 +313,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   onWheel(event, viewport) {
     const focalDistance = viewport.getCamera().getFocalDistance();
     const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
-    const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * 0.5;
+    const modulator = event.shiftKey ? 0.1 : 0.5;
+    const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * modulator;
     const xfo = viewport.getCamera().getGlobalXfo();
     const movementVec = xfo.ori.getZaxis().scale(zoomDist);
     if(this.__mouseWheelZoomIntervalId)
