@@ -58,6 +58,7 @@ class ResourceLoader {
     this.loaded = new Signal();
     this.progressIncremented = new Signal();
     this.allResourcesLoaded = new Signal();
+    this.fileUpdated = new Signal();
 
     this.__totalWork = 0;
     this.__totalWorkByCategory = {};
@@ -132,10 +133,9 @@ class ResourceLoader {
     const buildEntity = (resourceId) => {
       if (this.__resourcesTreeEntities[resourceId])
         return;
-
-      const resource = Object.assign(resources[resourceId], {
-        id: resourceId
-      });
+      
+      const resource = resources[resourceId];
+      resource.id = resourceId;
       if (resource.type === 'folder' || resource.type === 'dependency') {
         resource.children = {};
       }
@@ -228,6 +228,18 @@ class ResourceLoader {
 
     this.__buildTree(tmp)
     this.__applyCallbacks(tmp);
+  }
+  
+  updateFile(file) {
+    const newFile = !(file.id in this.__resources);
+    this.__resources[file.id] = file;
+    if(newFile) {
+      console.log("New file added");
+      const resources = {};
+      resources[file.id] = file;
+      this.__buildTree(resources)
+    }
+    this.fileUpdated.emit(file.id);
   }
 
   freeData(buffer) {

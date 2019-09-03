@@ -136,32 +136,12 @@ class FilePathParameter extends Parameter {
     this.__value = value;
     this.__file = file;
 
-    if (window.VisualiveSessionFactory) {
-
-      // Listen to changes in the folder.
-      // If a file is uploaded to the same folder, 
-      // we will get notified.
-      const visualiveSession = window.VisualiveSessionFactory.getInstance(
-        resourceLoader.getCurrentUser(),
-        resourceLoader.getProjectId(),
-      )
-
-      this.__unsubFileWithProgress = visualiveSession.sub(
-        window.VisualiveSession.actions.FILE_WITH_PROGRESS,
-        payload => {
-          const changedFile = payload.file;
-          // Currently the id provided does not match any existing ids, because
-          // it is replaced after uploading is complete. Use file.name for now.
-          // In the future, we should see the id of the upload matching
-          // an id in drive if a file is being updated.
-          if (changedFile.name == this.__file.name && 
-            changedFile.progress && 
-            changedFile.progress.percentageCompleted == 100) {
-            this.fileUpdated.emit();
-          }
-        }
-      )
-    }
+    resourceLoader.fileUpdated.connect((id)=>{
+      if (id == this.__value) {
+        this.__file = resourceLoader.getFile(this.__value);
+        this.fileUpdated.emit();
+      }
+    })
 
     if (mode == ValueSetMode.USER_SETVALUE)
       this.__flags |= ParamFlags.USER_EDITED;
