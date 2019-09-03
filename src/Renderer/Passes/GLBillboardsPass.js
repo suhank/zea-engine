@@ -219,7 +219,7 @@ class GLBillboardsPass extends GLPass {
         this.__modelMatrixArray = [];
         this.__billboardDataArray = [];
         this.__tintColorArray = [];
-        this.__indexArray.forEach((index)=>{
+        this.__indexArray.forEach( index => {
 
           const billboardData = this.__billboards[index];
           const billboard = billboardData.billboard;
@@ -272,9 +272,9 @@ class GLBillboardsPass extends GLPass {
         this.__drawItemsTexture.resize(size, size);
       }
 
-      for (let i = 0; i < this.__indexArray.length; i++) {
-        this.__updateBillboard(i);
-      }
+      this.__indexArray.forEach( index => {
+        this.__updateBillboard(index);
+      })
 
       this.__updateRequested = false;
     };
