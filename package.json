@@ -1,9 +1,9 @@
 {
-  "name": "@visualive/engine",
-  "libraryName": "Visualive",
+  "name": "@Zea/engine",
+  "libraryName": "ZeaEngine",
   "version": "0.0.66",
-  "description": "Visualive core engine",
-  "main": "lib/Visualive.js",
+  "description": "Zea Engine",
+  "main": "lib/ZeaEngine.js",
   "scripts": {
     "build:dev": "webpack --watch --config webpack-dev.config.js",
     "build:prod": "npm run build:production",
@@ -19,18 +19,6 @@
     "worker-loader": "^2.0.0",
     "yargs": "3.32.0"
   },
-  "repository": {
-    "type": "git",
-    "url": "git@bitbucket.org:phil_visualive/visualiveengine.git"
-  },
-  "keywords": [
-    "WebGL",
-    "es6"
-  ],
   "author": "Philip Taylor",
-  "license": "Private",
-  "bugs": {
-    "url": "https://bitbucket.org/phil_visualive/visualiveengine/issues"
-  },
-  "homepage": "https://bitbucket.org/phil_visualive/visualiveengine"
+  "license": "Private"
 }
