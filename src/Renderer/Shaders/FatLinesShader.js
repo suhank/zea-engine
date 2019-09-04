@@ -156,7 +156,7 @@ void main(void) {
     NdotV *= cos((v_texCoord.x - 0.5) * 2.0);
 
     vec4 color = BaseColor * NdotV;
-    fragColor = vec4(color.rgb, Color.a);
+    fragColor = vec4(color.rgb, BaseColor.a);
   }
   else{
     fragColor = vec4(v_texCoord.x, 0.0, 0.0, 1.0);

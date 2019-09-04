@@ -260,7 +260,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__mouseDownPos = event.mousePos;
     this.initDrag(viewport);
 
-    if (event.altKey || event.button == 2) {
+    if (event.button == 2) {
       this.__manipulationState = 'pan';
     } else if (event.ctrlKey && event.altKey) {
       this.__manipulationState = 'dolly';
