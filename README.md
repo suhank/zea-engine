@@ -1,5 +1,5 @@
 # Zea Engine
-
+A high performance 3d rendering engine for the web,
 
 Install the httpserver
  npm install http-server -g
@@ -8,14 +8,12 @@ Install the httpserver
 ## Getting started
 
 1. Install Git
-1. Install Git LFS
-  https://git-lfs.github.com/
-  
 2. Install Nodejs
   * from here: https://nodejs.org/en/download/
   * Use default options. It should be straight forward.
 3. Install dependencies. 
-  * Run `npm install`
+  * Install yarn
+  * Run `yarn install`
 4. Run the HTTP Server
 4. Build:
   * See npm scripts section below.
@@ -23,9 +21,9 @@ Install the httpserver
 
 ## Scripts
 
-* `npm run build` - produces development version of ZeaEngine.
-* `npm run build:dev` - produces development version of ZeaEngine and runs a watcher.  Edited source code should auto-recompile.
-* `npm run build:production` - produces a production version of ZeaEngine under the `lib` folder.
+* `yarn build` - produces development version of ZeaEngine.
+* `yarn build:dev` - produces development version of ZeaEngine and runs a watcher.  Edited source code should auto-recompile.
+* `yarn build:production` - produces a production version of ZeaEngine under the `lib` folder.
 
 
 ## Typical development workflow
