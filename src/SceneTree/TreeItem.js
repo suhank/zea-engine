@@ -878,12 +878,12 @@ class TreeItem extends BaseItem {
       xfo.ori = reader.loadFloat32Quat();
       xfo.sc.set(reader.loadFloat32());
       // console.log(this.getPath() + " TreeItem:" + xfo.toString());
-      this.__localXfoParam.setValue(xfo, Visualive.ValueSetMode.DATA_LOAD);
+      this.__localXfoParam.setValue(xfo, ValueSetMode.DATA_LOAD);
     }
 
     const bboxFlag = 1 << 3;
     if (itemflags & bboxFlag)
-      this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), Visualive.ValueSetMode.DATA_LOAD);
+      this.__boundingBoxParam.setValue(new Box3(reader.loadFloat32Vec3(), reader.loadFloat32Vec3()), ValueSetMode.DATA_LOAD);
 
     const numChildren = reader.loadUInt32();
     if (numChildren > 0) {

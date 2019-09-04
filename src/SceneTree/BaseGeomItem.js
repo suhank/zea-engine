@@ -1,10 +1,18 @@
-
+import {
+  Color
+} from '../Math/Color.js';
 import {
   Signal
 } from '../Utilities';
 import {
   TreeItem
 } from './TreeItem';
+import {
+  Material
+} from './Material';
+import {
+  ValueSetMode
+} from './Parameters';
 
 class BaseGeomItem extends TreeItem {
   constructor(name) {
@@ -74,11 +82,11 @@ class BaseGeomItem extends TreeItem {
         // console.warn("BaseGeomItem :'" + this.name + "' Material not found:" + materialName);
         // material = materialLibrary.getMaterial('DefaultMaterial');
 
-        material = new Visualive.Material(materialName, 'SimpleSurfaceShader');
-        material.getParameter('BaseColor').setValue(Visualive.Color.random(0.25), Visualive.ValueSetMode.DATA_LOAD);
+        material = new Material(materialName, 'SimpleSurfaceShader');
+        material.getParameter('BaseColor').setValue(Color.random(0.25), ValueSetMode.DATA_LOAD);
         context.assetItem.getMaterialLibrary().addMaterial(material);
       }
-      this.setMaterial(material, Visualive.ValueSetMode.DATA_LOAD);
+      this.setMaterial(material, ValueSetMode.DATA_LOAD);
 
       
       this.__layers = reader.loadStrArray();

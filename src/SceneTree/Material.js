@@ -180,7 +180,7 @@ class Material extends BaseItem {
     for (let paramName in paramValues) {
       let param = this.getParameter(paramName);
       if (param) {
-        if (paramValues[paramName] instanceof Visualive.Parameter) {
+        if (paramValues[paramName] instanceof Parameter) {
           this.replaceParameter(paramValues[paramName]);
         } else {
           param.setValue(paramValues[paramName]);

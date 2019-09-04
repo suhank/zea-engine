@@ -313,7 +313,7 @@ void main(void) {
         paramDescs.push({ name: 'GlossReflectance', defaultValue: 0.03 });
 
 
-        const flakesNormal = new FileImage('flakes', 'VisualiveEngine/FlakesNormalMap.png');
+        const flakesNormal = new FileImage('flakes', 'ZeaEngine/FlakesNormalMap.png');
         flakesNormal.wrap = 'REPEAT';
         flakesNormal.mipMapped = true;
         paramDescs.push({ name: 'FlakesNormal', defaultValue: flakesNormal });

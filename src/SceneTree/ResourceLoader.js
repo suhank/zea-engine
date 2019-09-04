@@ -84,20 +84,20 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('Visualive.js') || script.src.endsWith('@visualive/engine')) {
+        if (script.src.endsWith('ZeaEngine.js') || script.src.endsWith('@visualive/engine')) {
           visualiveEngineUrl = script.src;
           break;
         }
       }
       if (!visualiveEngineUrl)
-        throw ("Unable to determine Visualive Engine URL");
+        throw ("Unable to determine Zea Engine URL");
       const parts = visualiveEngineUrl.split('/');
       parts.pop()
       parts.pop()
       this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm';
 
-      this.addResourceURL("VisualiveEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
-      this.addResourceURL("VisualiveEngine/Oculus.vla", parts.join('/') + '/public-resources/Oculus.vla')
+      this.addResourceURL("ZeaEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
+      this.addResourceURL("ZeaEngine/Oculus.vla", parts.join('/') + '/public-resources/Oculus.vla')
     }
   }
 

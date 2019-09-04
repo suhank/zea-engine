@@ -33,13 +33,15 @@ import {
   MaterialLibrary
 } from './MaterialLibrary.js';
 import {
+  ValueSetMode,
   Parameter,
   BooleanParameter,
   NumberParameter,
   StringParameter,
   Vec2Parameter,
   Vec3Parameter,
-  ColorParameter
+  ColorParameter,
+  FilePathParameter
 } from './Parameters';
 
 
@@ -63,15 +65,15 @@ class ObjAsset extends AssetItem {
     this.addParameter(new NumberParameter('unitsConversion', 1.0));
     this.addParameter(new StringParameter('defaultShader', ""));
 
-    this.objfileParam = this.addParameter(new Visualive.FilePathParameter('ObjFilePath'));
+    this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'));
     this.objfileParam.valueChanged.connect((mode) => {
       this.loaded.untoggle();
-      const emitloaded = mode == Visualive.ValueSetMode.USER_SETVALUE;
+      const emitloaded = mode == ValueSetMode.USER_SETVALUE;
       this.__loadObj(() => {
-        if (mode == Visualive.ValueSetMode.USER_SETVALUE)
+        if (mode == ValueSetMode.USER_SETVALUE)
           this.loaded.emit();
       }, () => {
-        if (mode == Visualive.ValueSetMode.USER_SETVALUE)
+        if (mode == ValueSetMode.USER_SETVALUE)
           this.geomsLoaded.emit();
       });
     });

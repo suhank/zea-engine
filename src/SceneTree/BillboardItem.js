@@ -44,7 +44,7 @@ class BillboardItem extends TreeItem {
     linesMaterial.getParameter('Opacity').setValue(1.0, ValueSetMode.OPERATOR_SETVALUE);
     endParam.elementAdded.connect((elem, index)=>{
 
-      const lineGeom = new Visualive.Lines();
+      const lineGeom = new Lines();
       lineGeom.setNumVertices(2);
       lineGeom.setNumSegments(1);
       lineGeom.setSegment(0, 0, 1);

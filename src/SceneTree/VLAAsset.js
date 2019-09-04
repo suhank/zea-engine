@@ -1,4 +1,3 @@
-
 import {
   Vec2,
   Color
@@ -137,19 +136,19 @@ class VLAAsset extends AssetItem {
       let version = 0;
       let treeReader;
       if(entries.tree2) {
-        treeReader = new Visualive.BinReader(
+        treeReader = new BinReader(
           entries.tree2.buffer,
           0,
-          Visualive.SystemDesc.isMobileDevice
+          SystemDesc.isMobileDevice
         )
         version = treeReader.loadUInt32();
       }
       else {
         const entry = entries.tree ? entries.tree : entries[Object.keys(entries)[0]];
-        treeReader = new Visualive.BinReader(
+        treeReader = new BinReader(
           entry.buffer,
           0,
-          Visualive.SystemDesc.isMobileDevice
+          SystemDesc.isMobileDevice
         )
         version = 0;
       }
@@ -224,7 +223,7 @@ class VLAAsset extends AssetItem {
     }
 
     if (isVLFile) {
-      Visualive.resourceLoader.loadResource(fileId, loadBinary);
+      resourceLoader.loadResource(fileId, loadBinary);
     }
     else if(file.metadata.ConvertFile){
       let vlaFile;
@@ -235,7 +234,7 @@ class VLAAsset extends AssetItem {
           vlgeomFiles.push(metadataFile);
       });
       if(vlaFile) {
-        Visualive.resourceLoader.loadURL(fileId, vlaFile.url, loadBinary);
+        resourceLoader.loadURL(fileId, vlaFile.url, loadBinary);
       }
       else {
         console.warn("ConvertFile metadata contains no vla file.")

@@ -1,4 +1,10 @@
 import {
+  Color
+} from '../Math/Color.js';
+import {
+  Signal
+} from '../Utilities/Signal.js';
+import {
   processTextureParams
 } from './processTextureParams.js';
 
@@ -7,7 +13,7 @@ class GLRenderTarget {
 
     const p = processTextureParams(gl, params);
 
-    this.resized = new Visualive.Signal();
+    this.resized = new Signal();
     this.__gl = gl;
     this.type = p.type;
     this.format = p.format;
@@ -17,7 +23,7 @@ class GLRenderTarget {
     this.flipY = p.flipY;
     this.width = p.width;
     this.height = p.height;
-    this.clearColor = new Visualive.Color(0, 0, 0, 0);
+    this.clearColor = new Color(0, 0, 0, 0);
     this.colorMask = [true, true, true, true];
 
     // -- Initialize texture targets
