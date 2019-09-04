@@ -1,9 +1,9 @@
 ﻿
-class GIFSurfaceShader extends Visualive.GLShader {
+class GIFSurfaceShader extends ZeaEngine.GLShader {
     constructor(gl) {
         super(gl);
 
-        this.__shaderStages['VERTEX_SHADER'] = Visualive.shaderLibrary.parseShader('GIFSurfaceShader.vertexShader', `
+        this.__shaderStages['VERTEX_SHADER'] = ZeaEngine.shaderLibrary.parseShader('GIFSurfaceShader.vertexShader', `
 precision highp float;
 
 attribute vec3 positions;
@@ -36,7 +36,7 @@ void main(void) {
 }
 `);
 
-        this.__shaderStages['FRAGMENT_SHADER'] = Visualive.shaderLibrary.parseShader('GIFSurfaceShader.fragmentShader', `
+        this.__shaderStages['FRAGMENT_SHADER'] = ZeaEngine.shaderLibrary.parseShader('GIFSurfaceShader.fragmentShader', `
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
@@ -100,7 +100,7 @@ void main(void) {
 
     static getParamDeclarations() {
         const paramDescs = super.getParamDeclarations();
-        paramDescs.push({ name: 'BaseColor', defaultValue: new Visualive.Color(1.0, 1.0, 0.5) }); 
+        paramDescs.push({ name: 'BaseColor', defaultValue: new ZeaEngine.Color(1.0, 1.0, 0.5) }); 
         return paramDescs;
     }
 
@@ -115,39 +115,40 @@ void main(void) {
     }
 };
 
-Visualive.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
+ZeaEngine.sgFactory.registerClass('GIFSurfaceShader', GIFSurfaceShader);
 
 testingHarness.registerTest('GifLoading', (domElement, resources)=> {
+    const Z = ZeaEngine;
 
     // giffPath = "Assets/Progress.gif";
     // giffPath = "Assets/loading.gif";
     // giffPath = "Assets/chuck-norris-super-kick.gif";
 
-    const scene = new Visualive.Scene(resources);
+    const scene = new Z.Scene(resources);
     scene.setupGrid(60.0, 6);
 
     const setupGifPlayers = (path, pos)=>{
 
-        const image =  new Visualive.GIFImage();
+        const image =  new Z.GIFImage();
         image.getParameter('FilePath').setFilepath(path);
-        const treeItem = new Visualive.TreeItem(image.getName());
+        const treeItem = new Z.TreeItem(image.getName());
 
         // Note: even though we request it 2x, the gif is loaded only once into the GPU.
-        const image2 =  new Visualive.GIFImage();
+        const image2 =  new Z.GIFImage();
         image2.getParameter('FilePath').setFilepath(path);
 
-        const atlasmaterial = new Visualive.Material('mat', 'FlatSurfaceShader');
+        const atlasmaterial = new Z.Material('mat', 'FlatSurfaceShader');
         atlasmaterial.getParameter('BaseColor').setValue(image);
 
-        const geomItem1 = new Visualive.GeomItem('geomItem1', new Visualive.Plane(5.0, 3.0), atlasmaterial);
-        geomItem1.setLocalXfo(new Visualive.Xfo(pos.add(new Visualive.Vec3(0, -3, 0))));
+        const geomItem1 = new Z.GeomItem('geomItem1', new Z.Plane(5.0, 3.0), atlasmaterial);
+        geomItem1.setLocalXfo(new Z.Xfo(pos.add(new Z.Vec3(0, -3, 0))));
         treeItem.addChild(geomItem1);
 
-        const gifmaterial = new Visualive.Material('mat', 'GIFSurfaceShader');
+        const gifmaterial = new Z.Material('mat', 'GIFSurfaceShader');
         gifmaterial.getParameter('BaseColor').setValue(image);
 
-        const geomItem2 = new Visualive.GeomItem('geomItem2', new Visualive.Plane(5.0, 3.0), gifmaterial);
-        geomItem2.setLocalXfo(new Visualive.Xfo(pos.add(new Visualive.Vec3(0, 1, 0))))
+        const geomItem2 = new Z.GeomItem('geomItem2', new Z.Plane(5.0, 3.0), gifmaterial);
+        geomItem2.setLocalXfo(new Z.Xfo(pos.add(new Z.Vec3(0, 1, 0))))
         treeItem.addChild(geomItem2);
 
 
@@ -157,14 +158,14 @@ testingHarness.registerTest('GifLoading', (domElement, resources)=> {
         scene.getRoot().addChild(treeItem);
 
     }
-    setupGifPlayers("Assets/lg.colorful-progress-loader.gif", new Visualive.Vec3(-6, 0, 0))
-    setupGifPlayers("Assets/arrowGif.gif", new Visualive.Vec3(0, 0, 0))
-    setupGifPlayers("Assets/transparency.gif", new Visualive.Vec3(6, 0, 0))
+    setupGifPlayers("Assets/lg.colorful-progress-loader.gif", new Z.Vec3(-6, 0, 0))
+    setupGifPlayers("Assets/arrowGif.gif", new Z.Vec3(0, 0, 0))
+    setupGifPlayers("Assets/transparency.gif", new Z.Vec3(6, 0, 0))
 
 
 
-    const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(12,18,8), new Visualive.Vec3(0,0,0));
+    const renderer = new Z.GLRenderer(domElement);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(12,18,8), new Z.Vec3(0,0,0));
     renderer.setScene(scene);
 
 

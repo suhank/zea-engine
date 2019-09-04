@@ -1,45 +1,46 @@
 
 
 testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
+    const Z = ZeaEngine;
     /////////////////////////////////////
     // Scene
-    const scene = new Visualive.Scene(resources);
+    const scene = new Z.Scene(resources);
 
-    // const envMap =  new Visualive.FileImage('HDR_041_Path_Ref0', Assets/HDR_041_Path_Ref0.vlh');
+    // const envMap =  new Z.FileImage('HDR_041_Path_Ref0', Assets/HDR_041_Path_Ref0.vlh');
     // scene.setEnvMap(envMap);
 
     /////////////////////////////////////
     // Ground Plane
-    const groundMaterial = new Visualive.Material('ground', 'StandardSurfaceShader');
-    groundMaterial.getParameter('BaseColor').setValue(new Visualive.Color(89 / 255, 182 / 255, 92 / 255));
+    const groundMaterial = new Z.Material('ground', 'StandardSurfaceShader');
+    groundMaterial.getParameter('BaseColor').setValue(new Z.Color(89 / 255, 182 / 255, 92 / 255));
     groundMaterial.getParameter('Roughness').setValue(1.0);
     groundMaterial.getParameter('Metallic').setValue(0.0);
-    const quad = new Visualive.Plane(20, 20);
-    const groundPlaneItem = new Visualive.GeomItem('groundPlaneItem', quad, groundMaterial);
+    const quad = new Z.Plane(20, 20);
+    const groundPlaneItem = new Z.GeomItem('groundPlaneItem', quad, groundMaterial);
     scene.getRoot().addChild(groundPlaneItem);
 
     /////////////////////////////////////
     // Renderer
     
-    // const renderer = new Visualive.GLRenderer(domElement);
-    const renderer = new Visualive.GLRenderer(domElement);
+    // const renderer = new Z.GLRenderer(domElement);
+    const renderer = new Z.GLRenderer(domElement);
 
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(18, 17, 14), new Visualive.Vec3(0, 0, 1));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(18, 17, 14), new Z.Vec3(0, 0, 1));
     renderer.exposure = 1.0;
     renderer.setScene(scene);
 
     /////////////////////////////////////
     // Obj Asset
-    const asset = new Visualive.ObjAsset('obj');
+    const asset = new Z.ObjAsset('obj');
     asset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
     asset.getParameter('splitObjects').setValue(false);
     asset.getParameter('splitGroupsIntoObjects').setValue(false);
     asset.getParameter('loadMtlFile').setValue(false);
     asset.getParameter('unitsConversion').setValue(1.0);
     asset.getParameter('defaultShader').setValue("StandardSurfaceShader");
-    asset.setLocalXfo(new Visualive.Xfo(
-        new Visualive.Vec3(0, 0, 3.55),
-        new Visualive.Quat({rotateX: (Math.PI * 0.5) })
+    asset.setLocalXfo(new Z.Xfo(
+        new Z.Vec3(0, 0, 3.55),
+        new Z.Quat({rotateX: (Math.PI * 0.5) })
         ));
     scene.getRoot().addChild(asset);
 
@@ -47,13 +48,13 @@ testingHarness.registerTest('GeomDataTest', (domElement, resources)=> {
 
     /////////////////////////////////////
     // Locators
-    const locatorMaterial = new Visualive.Material('locator', 'SimpleSurfaceShader');
-    locatorMaterial.getParameter('BaseColor').setValue(new Visualive.Color(1, 0, 0));
-    const locator = new Visualive.Cuboid(.05, .05, .05);
+    const locatorMaterial = new Z.Material('locator', 'SimpleSurfaceShader');
+    locatorMaterial.getParameter('BaseColor').setValue(new Z.Color(1, 0, 0));
+    const locator = new Z.Cuboid(.05, .05, .05);
     let index = 0;
     const addLocator = (pos) => {
-        const locatorItem = new Visualive.GeomItem('locatorItem'+(index++), locator, locatorMaterial);
-        locatorItem.setLocalXfo(new Visualive.Xfo(pos));
+        const locatorItem = new Z.GeomItem('locatorItem'+(index++), locator, locatorMaterial);
+        locatorItem.setLocalXfo(new Z.Xfo(pos));
         scene.getRoot().addChild(locatorItem);
     }
     scene.getRoot().mouseDown.connect((event)=>{

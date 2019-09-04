@@ -10,8 +10,8 @@
         <script src="../external/TestingHarness.js"></script>
         <script src="../external/xlsx.js"></script>
         <script src="../external/jszip.js"></script>
-        <script src="../lib/Visualive.js"></script>
-        <script src="../main.js"></script>
+        <script src="../lib/ZeaEngine.js"></script>
+        <!-- <script src="../main.js"></script> -->
         <script src="HelloWorld.js"></script>
         <script src="Materials.js"></script>
         <script src="LatLongBackgroundLoading.js"></script>
@@ -56,9 +56,8 @@
         <script type="text/javascript">
 
 const init = function(domElement, resources) { 
-    args = getUrlVars();
-
-    if(args.test) {
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('test')) {
         const canvas = addCanvas();
         const resources = generateResourcesDict([
             "Assets/HDR_029_Sky_Cloudy_Ref0.vlh",
@@ -103,7 +102,8 @@ const init = function(domElement, resources) {
 
             ]);
 
-        testingHarness.runTest(args.test, canvas, resources)
+        const test = urlParams.get('test');
+        testingHarness.runTest(test, canvas, resources)
     }
     else {
         const names = testingHarness.getTestNames();

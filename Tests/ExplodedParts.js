@@ -1,56 +1,58 @@
 testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
-    const scene = new Visualive.Scene(resources);
+    const Z = ZeaEngine;
 
-    const asset = new Visualive.AssetItem('parts');
+    const scene = new Z.Scene(resources);
 
-    const middleSphere = new Visualive.Sphere(2.5);
-    const middleSphereMaterial = new Visualive.Material('middleSphereMaterial', 'SimpleSurfaceShader');
-    middleSphereMaterial.getParameter('BaseColor').setValue(new Visualive.Color(0.0, 0.0, 1.0));
+    const asset = new Z.AssetItem('parts');
+
+    const middleSphere = new Z.Sphere(2.5);
+    const middleSphereMaterial = new Z.Material('middleSphereMaterial', 'SimpleSurfaceShader');
+    middleSphereMaterial.getParameter('BaseColor').setValue(new Z.Color(0.0, 0.0, 1.0));
     {
-        const middleSphereItem = new Visualive.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Z.GeomItem('middleSphere1', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, 3.5);
         asset.addChild(middleSphereItem, false);
     }
     {
-        const middleSphereItem = new Visualive.GeomItem('middleSphere2', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Z.GeomItem('middleSphere2', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, 3.5, -3.5);
         asset.addChild(middleSphereItem, false);
     }
     {
-        const middleSphereItem = new Visualive.GeomItem('middleSphere3', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Z.GeomItem('middleSphere3', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, -3.5, 3.5);
         asset.addChild(middleSphereItem, false);
     }
     {
-        const middleSphereItem = new Visualive.GeomItem('middleSphere4', middleSphere, middleSphereMaterial);
+        const middleSphereItem = new Z.GeomItem('middleSphere4', middleSphere, middleSphereMaterial);
         middleSphereItem.getLocalXfo().tr.set(0, -3.5, -3.5);
         asset.addChild(middleSphereItem, false);
     }
 
-    const littleSphere = new Visualive.Sphere(2.0);
-    const littleSphereMaterial = new Visualive.Material('littleSphereMaterial', 'SimpleSurfaceShader');
-    littleSphereMaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.0, 0.0));
-    const littleSphereItem = new Visualive.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
+    const littleSphere = new Z.Sphere(2.0);
+    const littleSphereMaterial = new Z.Material('littleSphereMaterial', 'SimpleSurfaceShader');
+    littleSphereMaterial.getParameter('BaseColor').setValue(new Z.Color(1.0, 0.0, 0.0));
+    const littleSphereItem = new Z.GeomItem('littleSphere', littleSphere, littleSphereMaterial);
     asset.addChild(littleSphereItem, false);
 
-    const bolt = new Visualive.Cuboid(1.2, 1.2, 1.2);
-    const boltmaterial = new Visualive.Material('boltmaterial', 'SimpleSurfaceShader');
-    boltmaterial.getParameter('BaseColor').setValue(new Visualive.Color(1.0, 0.5, 0.0));
+    const bolt = new Z.Cuboid(1.2, 1.2, 1.2);
+    const boltmaterial = new Z.Material('boltmaterial', 'SimpleSurfaceShader');
+    boltmaterial.getParameter('BaseColor').setValue(new Z.Color(1.0, 0.5, 0.0));
 
     let index = 1;
     const addBolt = (pos)=> {
-        const geomItem = new Visualive.GeomItem('bolt'+(index++), bolt, boltmaterial);
-        geomItem.setLocalXfo(new Visualive.Xfo(pos));
+        const geomItem = new Z.GeomItem('bolt'+(index++), bolt, boltmaterial);
+        geomItem.setLocalXfo(new Z.Xfo(pos));
         asset.addChild(geomItem, false);
     }
-    addBolt(new Visualive.Vec3(6.6, 5.2, 5.2));
-    addBolt(new Visualive.Vec3(6.6, 5.2, -5.2));
-    addBolt(new Visualive.Vec3(6.6, -5.2, 5.2));
-    addBolt(new Visualive.Vec3(6.6, -5.2, -5.2));
+    addBolt(new Z.Vec3(6.6, 5.2, 5.2));
+    addBolt(new Z.Vec3(6.6, 5.2, -5.2));
+    addBolt(new Z.Vec3(6.6, -5.2, 5.2));
+    addBolt(new Z.Vec3(6.6, -5.2, -5.2));
 
     /////////////////////////////////////
     // Groups
-    const boltsGroup = new Visualive.Group("BoltsGroup");
+    const boltsGroup = new Z.Group("BoltsGroup");
     asset.addChild(boltsGroup)
     boltsGroup.addItem(asset.resolvePath(['bolt1']));
     boltsGroup.addItem(asset.resolvePath(['bolt2']));
@@ -58,7 +60,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
     boltsGroup.addItem(asset.resolvePath(['bolt4']));
     boltsGroup.getParameter('InitialXfoMode').setValue('average');
 
-    const middleSpheresGroup = new Visualive.Group("MiddleSpheresGroup");
+    const middleSpheresGroup = new Z.Group("MiddleSpheresGroup");
     asset.addChild(middleSpheresGroup)
     middleSpheresGroup.addItem(asset.resolvePath(['middleSphere1']));
     middleSpheresGroup.addItem(asset.resolvePath(['middleSphere2']));
@@ -71,7 +73,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
     // Obj Asset
     {
 
-        const objAsset = new Visualive.ObjAsset('PartA');
+        const objAsset = new Z.ObjAsset('PartA');
         objAsset.getParameter('ObjFilePath').setFilepath("/Assets/ExplodePartA.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
@@ -85,7 +87,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
     scene.getRoot().addChild(asset);
 
     {
-        const objAsset = new Visualive.ObjAsset('PartB');
+        const objAsset = new Z.ObjAsset('PartB');
         objAsset.getParameter('ObjFilePath').setFilepath("/Assets/ExplodePartB.obj");
         objAsset.getParameter('splitObjects').setValue(false);
         objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
@@ -94,7 +96,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
         asset.addChild(objAsset);
         objAsset.loaded.connect(function() {
 
-            const explodedPartsOp = new Visualive.ExplodePartsOperator('ExplodeParts');
+            const explodedPartsOp = new Z.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
             explodedPartsOp.getParameter('Dist').setValue(30.0);
             explodedPartsOp.getParameter('Cascade').setValue(false);
@@ -111,7 +113,7 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
             // const j = explodedPartsOp.toJSON( { assetItem:asset } );
             // console.log(JSON.stringify(j));
             // asset.removeComponent('ExplodeParts');
-            // const explodedPartsOp2 = new Visualive.ExplodePartsOperator('ExplodeParts2');
+            // const explodedPartsOp2 = new Z.ExplodePartsOperator('ExplodeParts2');
             // asset.addComponent(explodedPartsOp2);
             // explodedPartsOp2.fromJSON(j, { assetItem:asset } );
             // explodedPartsOp = explodedPartsOp2;
@@ -145,8 +147,8 @@ testingHarness.registerTest('ExplodedParts', (domElement, resources)=> {
 
 
 
-    const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(35, 55, 20), new Visualive.Vec3(12, 0, 0));
+    const renderer = new Z.GLRenderer(domElement);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(35, 55, 20), new Z.Vec3(12, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
 

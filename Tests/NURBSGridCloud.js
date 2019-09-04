@@ -1,14 +1,9 @@
 
-// class GLNURBSSurfaceDrawItem {
-//     constructor(id) {
-//         this.instanceId = id;
-//         this.visibilityChanged = new Visualive.Signal();
-//         this.lodChanged = new Visualive.Signal();
-//     }
-// }
 
 testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
-    const scene = new Visualive.Scene(resources);
+    const Z = ZeaEngine;
+
+    const scene = new Z.Scene(resources);
     scene.setupGrid(24.0, 24);
 
     // // 1Gb per Million instances.
@@ -32,7 +27,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
         for(let j=i; j<maxQuadSize; j++) {
             let x = Math.pow(2, i);
             let y = Math.pow(2, j);
-            quads[x+'-'+y] = new Visualive.Plane(x*0.1, y*0.1, x, y);
+            quads[x+'-'+y] = new Z.Plane(x*0.1, y*0.1, x, y);
         }
     }
 
@@ -52,7 +47,7 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
 
 
 
-    let up = new Visualive.Vec3(0.0, 1.0, 0.0);
+    let up = new Z.Vec3(0.0, 1.0, 0.0);
 
     // for(let i=2; i<700; i++) {
     //     let xi = getRandomQuadSize(2);
@@ -77,14 +72,14 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
         let count = getNumSurfacesQuadSize((i/16));//getRandomIntInclusive(10, 10000);
         console.log((i/16)*100 + '% :' +  count);
 
-        const material = new Visualive.Material('material', 'SimpleSurfaceShader');
-        material.addParameter('BaseColor', Visualive.Color.random());
+        const material = new Z.Material('material', 'SimpleSurfaceShader');
+        material.addParameter('BaseColor', Z.Color.random());
 
-        let treeItem = new Visualive.TreeItem('Tree'+i);
-        treeItem.setLocalXfo(new Visualive.Xfo(new Visualive.Vec3(i*5+((Math.random()-0.5) * 20), (Math.random()-0.5) * 10, (Math.random()-0.5) * 10)));
+        let treeItem = new Z.TreeItem('Tree'+i);
+        treeItem.setLocalXfo(new Z.Xfo(new Z.Vec3(i*5+((Math.random()-0.5) * 20), (Math.random()-0.5) * 10, (Math.random()-0.5) * 10)));
 
         let addGeomItem = (shape, xfo, index, material)=>{
-            const geomItem = new Visualive.GeomItem(shape.name+'Item'+index, shape, material);
+            const geomItem = new Z.GeomItem(shape.name+'Item'+index, shape, material);
             geomItem.setLocalXfo(xfo);
             treeItem.addChild(geomItem, false);
         }
@@ -94,9 +89,9 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
             let yi = getRandomQuadSize(xi);
             let quadName = Math.pow(2, xi)+'-'+Math.pow(2, yi);
 
-            let tr = new Visualive.Vec3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
+            let tr = new Z.Vec3(Math.random()-0.5, Math.random()-0.5, Math.random()-0.5);
             tr.scaleInPlace(20);
-            let xfo = new Visualive.Xfo(tr);
+            let xfo = new Z.Xfo(tr);
             xfo.ori.setFromDirectionAndUpvector(tr.normalize(), up);
             addGeomItem(quads[quadName], xfo, j, material)
         }
@@ -111,8 +106,8 @@ testingHarness.registerTest('NURBSGridCloud', (domElement, resources)=> {
     console.log("total:" + total);
 
     
-    const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 2), new Visualive.Vec3(0, 0, 0));
+    const renderer = new Z.GLRenderer(domElement);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(15, 15, 2), new Z.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.frameAll();
     renderer.resumeDrawing();

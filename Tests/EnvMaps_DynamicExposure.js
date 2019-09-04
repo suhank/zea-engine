@@ -1,8 +1,9 @@
 testingHarness.registerTest('EnvMaps_DynamicExposure', (domElement, resources)=> {
+    const Z = ZeaEngine;
     /////////////////////////////////////
     // Scene
-    const scene = new Visualive.Scene(resources);
-    const envMap = new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
+    const scene = new Z.Scene(resources);
+    const envMap = new Z.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
     scene.setEnvMap(envMap);
     scene.setupGrid(60.0, 6);
 
@@ -26,9 +27,9 @@ testingHarness.registerTest('EnvMaps_DynamicExposure', (domElement, resources)=>
     /////////////////////////////////////
     // Renderer
     
-    const renderer = new Visualive.GLRenderer(domElement);
+    const renderer = new Z.GLRenderer(domElement);
 
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(0, 0, 1.2), new Visualive.Vec3(1, 0, 1.2));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(0, 0, 1.2), new Z.Vec3(1, 0, 1.2));
     renderer.getViewport().getManipulator().setDefaultManipulationMode('look');
     // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.setScene(scene);

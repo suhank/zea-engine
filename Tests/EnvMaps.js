@@ -1,30 +1,31 @@
 testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
+    const Z = ZeaEngine;
     /////////////////////////////////////
     // Scene
-    const scene = new Visualive.Scene(resources);
-    const envMap = new Visualive.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
+    const scene = new Z.Scene(resources);
+    const envMap = new Z.EnvMap("Assets/HDR_041_Path_Ref.vlenv");
     scene.setEnvMap(envMap);
     scene.setupGrid(60.0, 6);
 
     envMap.loaded.connect(()=>{
         const data = envMap.getSampleSets();
-        const disc = new Visualive.Disc(0.5)
-        const up = new Visualive.Vec3(0,0,1);
-        const dir = new Visualive.Vec3();
+        const disc = new Z.Disc(0.5)
+        const up = new Z.Vec3(0,0,1);
+        const dir = new Z.Vec3();
         let dist = 20.0;
         const displaySampleSet = (sampleSet, dist, i)=>{
-            const setTree = new Visualive.TreeItem('sampleSet'+i)
+            const setTree = new Z.TreeItem('sampleSet'+i)
             for(let j=0; j<sampleSet.length; j++) {
                 const sample = sampleSet[j];
 
-                const color = new Visualive.Color();
+                const color = new Z.Color();
                 color.fromJSON(sample.color);
-                const material = new Visualive.Material('sample:'+i+':'+j, 'FlatSurfaceShader');
+                const material = new Z.Material('sample:'+i+':'+j, 'FlatSurfaceShader');
                 material.getParameter('BaseColor').setValue(color);
 
-                const geomItem = new Visualive.GeomItem('sample:'+j, disc, material);
+                const geomItem = new Z.GeomItem('sample:'+j, disc, material);
 
-                const xfo = new Visualive.Xfo();
+                const xfo = new Z.Xfo();
                 dir.fromJSON(sample.dir);
                 xfo.tr.addInPlace(dir.scale(dist));
                 xfo.ori.setFromDirectionAndUpvector(dir, up);
@@ -55,15 +56,15 @@ testingHarness.registerTest('EnvMaps', (domElement, resources)=> {
     /////////////////////////////////////
     // Renderer
     
-    const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().setBackground(new Visualive.Color(0.94, 0.94, 0.94));
+    const renderer = new Z.GLRenderer(domElement);
+    renderer.getViewport().setBackground(new Z.Color(0.94, 0.94, 0.94));
     let vrViewport = renderer.getVRViewport();
     if(vrViewport){
-        vrViewport.setBackground(new Visualive.Color(0.94, 0.94, 0.94));
+        vrViewport.setBackground(new Z.Color(0.94, 0.94, 0.94));
     }
 
 
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1, 1, 1.2), new Visualive.Vec3(0, 0, 0.1));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(1, 1, 1.2), new Z.Vec3(0, 0, 0.1));
     // renderer.getViewport().getCamera().focalDistance = 30;
     renderer.setScene(scene);
     renderer.exposure = 0.5;

@@ -1,12 +1,13 @@
 ﻿
 testingHarness.registerTest('DualFisheyeBackgroundLoading', (domElement, resources)=> {
+    const Z = ZeaEngine;
 
-    const scene = new Visualive.Scene(resources);
-    const bgMap =  new Visualive.FileImage('DualFisheye', "Assets/DualFisheye.jpg", { mapping: 'dualfisheye'});
+    const scene = new Z.Scene(resources);
+    const bgMap =  new Z.FileImage('DualFisheye', "Assets/DualFisheye.jpg", { mapping: 'dualfisheye'});
     scene.setBackgroundMap(bgMap);
 
-    const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(1,1,2), new Visualive.Vec3(0,0,2));
+    const renderer = new Z.GLRenderer(domElement);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(1,1,2), new Z.Vec3(0,0,2));
     renderer.setScene(scene);
     bgMap.loaded.connect(() => {
         renderer.requestRedraw();

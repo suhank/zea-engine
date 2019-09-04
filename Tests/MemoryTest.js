@@ -8,10 +8,11 @@ function m_log(txt) {
 } 
 
 testingHarness.registerTest('MemoryTest_SignalsArray', (domElement, resources) => {
+  const Z = ZeaEngine;
   const start = performance.now();
   let data = [];
   for(let i=0; i<count; i++) {
-    data.push(new Visualive.Signal());
+    data.push(new VZisualive.Signal());
   }
   m_log("Done 'MemoryTest_SignalsArray':" + (performance.now() - start));
   // Results: Chrome spikes to 1.44 Gigs of Ram. Settling down to 1.42 Gigs after a minute.
@@ -19,10 +20,11 @@ testingHarness.registerTest('MemoryTest_SignalsArray', (domElement, resources) =
 });
 
 testingHarness.registerTest('MemoryTest_XfosArray', (domElement, resources) => {
+  const Z = ZeaEngine;
   const start = performance.now();
   let data = [];
   for(let i=0; i<count; i++) {
-    data.push(new Visualive.Xfo(new Visualive.Vec3(i, i * 0.2, i * 0.4)));
+    data.push(new Z.Xfo(new Z.Vec3(i, i * 0.2, i * 0.4)));
   }
   m_log("Done 'MemoryTest_XfosArray':" + (performance.now() - start));
   // Results: Chrome spikes to 2.43 Gigs of Ram. Settling down to 2.33Gigs after a minute.
@@ -30,13 +32,14 @@ testingHarness.registerTest('MemoryTest_XfosArray', (domElement, resources) => {
 });
 
 testingHarness.registerTest('MemoryTest_Float32Arrays', (domElement, resources) => {
+  const Z = ZeaEngine;
   const start = performance.now();
   let data = [];
   for(let i=0; i<count; i++) {
     const array = new Float32Array(10);
 
     // Create a temp Vec3 to wrap the array to set its values.
-    const tr = new Visualive.Vec3(array.buffer, 28);
+    const tr = new Z.Vec3(array.buffer, 28);
     tr.set(i, i * 0.2, i * 0.4);
 
     data.push(array);
@@ -49,9 +52,10 @@ testingHarness.registerTest('MemoryTest_Float32Arrays', (domElement, resources) 
 
 
 testingHarness.registerTest('MemoryTest_Float32Arrays_ReuseClasses', (domElement, resources) => {
+  const Z = ZeaEngine;
   const start = performance.now();
   let data = [];
-  const tr = new Visualive.Vec3();
+  const tr = new Z.Vec3();
   for(let i=0; i<count; i++) {
     const array = new Float32Array(10);
 
@@ -70,6 +74,7 @@ testingHarness.registerTest('MemoryTest_Float32Arrays_ReuseClasses', (domElement
 
 
 testingHarness.registerTest('MemoryTest_Float32ArraysContiguous', (domElement, resources) => {
+  const Z = ZeaEngine;
   const start = performance.now();
   window.data = new Float32Array(10 * count);
   m_log("Done 'MemoryTest_Float32ArraysContiguous':" + (performance.now() - start));
@@ -78,10 +83,11 @@ testingHarness.registerTest('MemoryTest_Float32ArraysContiguous', (domElement, r
 });
 
 testingHarness.registerTest('MemoryTest_GeomItemsArray', (domElement, resources) => {
+  const Z = ZeaEngine;
 
   const start = performance.now();
   let data = [];
-  const rootItem = new Visualive.TreeItem();
+  const rootItem = new Z.TreeItem();
 
   const count = 50000
   const times = new Float32Array(count);
@@ -89,7 +95,7 @@ testingHarness.registerTest('MemoryTest_GeomItemsArray', (domElement, resources)
   let total = 0;
 
   for(let i=0; i<count; i++) {
-    rootItem.addChild(new Visualive.GeomItem("Geom"+i));
+    rootItem.addChild(new Z.GeomItem("Geom"+i));
 
 
     tmp = t1;

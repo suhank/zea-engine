@@ -1,11 +1,13 @@
 ﻿
 testingHarness.registerTest('HelloWorld', (domElement, resources) => { 
-    const scene = new Visualive.Scene(resources);
+    const Z = ZeaEngine;
+
+    const scene = new Z.Scene(resources);
     scene.setupGrid(5.0, 50);
 
-    const renderer = new Visualive.GLRenderer(domElement);
+    const renderer = new Z.GLRenderer(domElement);
     renderer.setScene(scene);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(2,2,1.7), new Visualive.Vec3(0,0,0.4));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(2,2,1.7), new Z.Vec3(0,0,0.4));
     renderer.resumeDrawing();
 
     document.addEventListener('keypress', (event) => {

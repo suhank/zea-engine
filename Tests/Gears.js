@@ -1,8 +1,11 @@
 testingHarness.registerTest('Gears', (domElement, resources)=> {
-    const scene = new Visualive.Scene(resources);
+    
+    const Z = ZeaEngine;
+
+    const scene = new Z.Scene(resources);
     scene.setupGrid(10.0, 10);
 
-    const asset = new Visualive.AssetItem('gears');
+    const asset = new Z.AssetItem('gears');
     scene.getRoot().addChild(asset);
 
     let index = 0;
@@ -10,13 +13,13 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
     let prevTeeth = 0;
     let prevRatio = 1.0;
     const addGear = (pos, radius, teeth, axis, color)=> {
-        const gearGeom = new Visualive.Cylinder(radius, 0.2, teeth);
-        const gearmaterial = new Visualive.Material('gearmaterial', 'SimpleSurfaceShader');
+        const gearGeom = new Z.Cylinder(radius, 0.2, teeth);
+        const gearmaterial = new Z.Material('gearmaterial', 'SimpleSurfaceShader');
         gearmaterial.getParameter('BaseColor').setValue(color);
-        const geomItem = new Visualive.GeomItem('gear'+(index++), gearGeom, gearmaterial);
-        const xfo = new Visualive.Xfo();
+        const geomItem = new Z.GeomItem('gear'+(index++), gearGeom, gearmaterial);
+        const xfo = new Z.Xfo();
         xfo.tr = pos;
-        // xfo.ori.setFromDirectionAndUpvector(axis, new Visualive.Vec3(1, 0, 0));
+        // xfo.ori.setFromDirectionAndUpvector(axis, new Z.Vec3(1, 0, 0));
         geomItem.setLocalXfo(xfo);
         asset.addChild(geomItem);
 
@@ -25,12 +28,12 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
         prevTeeth = teeth;
         prevRatio = ratio;
     }
-    addGear(new Visualive.Vec3(0, 0, 0), 2.5, 12, new Visualive.Vec3(0, 0, 1), new Visualive.Color(1.0, 0.0, 0.0));
-    addGear(new Visualive.Vec3(3.5, 0, 0), 1.2, 8, new Visualive.Vec3(0, 0, 1), new Visualive.Color(0.0, 0.0, 1.0));
-    addGear(new Visualive.Vec3(3.5, 1.6, 0), 0.6, 5, new Visualive.Vec3(0, 0, 1), new Visualive.Color(1.0, 1.0, 0.0));
+    addGear(new Z.Vec3(0, 0, 0), 2.5, 12, new Z.Vec3(0, 0, 1), new Z.Color(1.0, 0.0, 0.0));
+    addGear(new Z.Vec3(3.5, 0, 0), 1.2, 8, new Z.Vec3(0, 0, 1), new Z.Color(0.0, 0.0, 1.0));
+    addGear(new Z.Vec3(3.5, 1.6, 0), 0.6, 5, new Z.Vec3(0, 0, 1), new Z.Color(1.0, 1.0, 0.0));
 
 
-    const gearsOp = new Visualive.GearsOperator('Gears');
+    const gearsOp = new Z.GearsOperator('Gears');
     asset.addComponent(gearsOp);
     const rpmParam = gearsOp.getParameter('RPM');
     rpmParam.setValue(12.0);
@@ -48,12 +51,12 @@ testingHarness.registerTest('Gears', (domElement, resources)=> {
     const j = gearsOp.toJSON( { assetItem:asset } );
     console.log(JSON.stringify(j));
     asset.removeComponent('Gears');
-    const gearsOp2 = new Visualive.GearsOperator('Gears2');
+    const gearsOp2 = new Z.GearsOperator('Gears2');
     asset.addComponent(gearsOp2);
     gearsOp2.fromJSON(j, { assetItem:asset } );
 
-    const renderer = new Visualive.GLRenderer(domElement);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(15, 15, 10), new Visualive.Vec3(0, 0, 0));
+    const renderer = new Z.GLRenderer(domElement);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(15, 15, 10), new Z.Vec3(0, 0, 0));
     renderer.setScene(scene);
     renderer.resumeDrawing();
 });

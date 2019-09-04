@@ -1,18 +1,18 @@
 
 testingHarness.registerTest('MeshVerticesRendering', (domElement, resources)=> {
+    const Z = ZeaEngine;
 
-
-    const scene = new Visualive.Scene(resources);
-    let objAsset = new Visualive.ObjAsset('obj');
+    const scene = new Z.Scene(resources);
+    let objAsset = new Z.ObjAsset('obj');
     objAsset.splitObjects = true;
     objAsset.splitGroupsIntoObjects = true;
     objAsset.loadMtlFile = false;
     scene.getRoot().addChild(objAsset);
 
 
-    const renderer = new Visualive.GLRenderer(div);
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-10, 20, 20), new Visualive.Vec3(0, 3, 0));
-    renderer.addPass(new Visualive.GLMeshPointsPass(renderer.gl));
+    const renderer = new Z.GLRenderer(div);
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(-10, 20, 20), new Z.Vec3(0, 3, 0));
+    renderer.addPass(new Z.GLMeshPointsPass(renderer.gl));
     renderer.setScene(scene)
 
     let onLoaded = function() {

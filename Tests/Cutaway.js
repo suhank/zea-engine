@@ -1,21 +1,22 @@
 
 testingHarness.registerTest('Cutaway', (domElement, resources)=> {
+    const Z = ZeaEngine;
 
-    const scene = new Visualive.Scene(resources);
+    const scene = new Z.Scene(resources);
 
-    const asset = new Visualive.TreeItem('asset');
+    const asset = new Z.TreeItem('asset');
 
-    const bigSphere = new Visualive.Sphere(8.0, 32, 32);
-    const bigSphereMaterial = new Visualive.Material('bigSphereMaterial', 'SimpleSurfaceShader');
-    bigSphereMaterial.addParameter('BaseColor', new Visualive.Color(0.0, 1.0, 0.0));
-    const bigSphereItem = new Visualive.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
+    const bigSphere = new Z.Sphere(8.0, 32, 32);
+    const bigSphereMaterial = new Z.Material('bigSphereMaterial', 'SimpleSurfaceShader');
+    bigSphereMaterial.addParameter('BaseColor', new Z.Color(0.0, 1.0, 0.0));
+    const bigSphereItem = new Z.GeomItem('bigSphere', bigSphere, bigSphereMaterial);
     asset.addChild(bigSphereItem, false);
     scene.getRoot().addChild(asset);
 
 
     /////////////////////////////////////
     // Obj Asset
-    const objAsset = new Visualive.ObjAsset('obj');
+    const objAsset = new Z.ObjAsset('obj');
     objAsset.getParameter('splitObjects').setValue(false);
     objAsset.getParameter('splitGroupsIntoObjects').setValue(false);
     objAsset.getParameter('loadMtlFile').setValue(false);
@@ -24,8 +25,8 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
     scene.addAsset(objAsset);
 
     const cutAmount = -10.0;
-    const cutParam = new Visualive.NumberParameter('planeDist', cutAmount, [-10, 10]);
-    const cutDir = new Visualive.Vec3Parameter('planeNormal', new Visualive.Vec3(-1, 0, 0));
+    const cutParam = new Z.NumberParameter('planeDist', cutAmount, [-10, 10]);
+    const cutDir = new Z.Vec3Parameter('planeNormal', new Z.Vec3(-1, 0, 0));
 
     objAsset.getParameter('ObjFilePath').setValue("/Assets/CutawayAndExplode.obj");
     objAsset.loaded.connect(function() {
@@ -62,8 +63,8 @@ testingHarness.registerTest('Cutaway', (domElement, resources)=> {
     });
 
 
-    const renderer = new Visualive.GLRenderer(domElement, { enableCrossSections:true });
-    renderer.getViewport().getCamera().setPositionAndTarget(new Visualive.Vec3(-24, 24, 2), new Visualive.Vec3(0, 0, 0));
+    const renderer = new Z.GLRenderer(domElement, { enableCrossSections:true });
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(-24, 24, 2), new Z.Vec3(0, 0, 0));
     renderer.setScene(scene);
 
 });
