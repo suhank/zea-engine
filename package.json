@@ -1,7 +1,7 @@
 {
-  "name": "@Zea/engine",
+  "name": "@zeainc/engine",
   "libraryName": "ZeaEngine",
-  "version": "0.0.66",
+  "version": "0.0.67",
   "description": "Zea Engine",
   "main": "lib/ZeaEngine.js",
   "scripts": {
