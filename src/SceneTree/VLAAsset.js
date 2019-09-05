@@ -211,7 +211,7 @@ class VLAAsset extends AssetItem {
 
     const loadGeomsfile = (index, geomFileUrl) => {
       return new Promise((resolve, reject) => {
-        resourceLoader.loadURL(fileId+index, geomFileUrl, (entries) => {
+        resourceLoader.loadUrl(fileId+index, geomFileUrl, (entries) => {
           const geomsData = entries[Object.keys(entries)[0]];
           this.__geomLibrary.readBinaryBuffer(fileId, geomsData.buffer);
           resolve();
@@ -234,7 +234,7 @@ class VLAAsset extends AssetItem {
           vlgeomFiles.push(metadataFile);
       });
       if(vlaFile) {
-        resourceLoader.loadURL(fileId, vlaFile.url, loadBinary);
+        resourceLoader.loadUrl(fileId, vlaFile.url, loadBinary);
       }
       else {
         console.warn("ConvertFile metadata contains no vla file.")

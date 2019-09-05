@@ -386,10 +386,14 @@ class ResourceLoader {
       throw ("Invalid resource Id:'" + resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
     }
 
-    this.loadURL(resourceId, file.url, callback, addLoadWork)
+    this.loadUrl(resourceId, file.url, callback, addLoadWork)
   }
 
   loadURL(resourceId, url, callback, addLoadWork = true) {
+    console.warn("Please call loadUrl instead,")
+    return this.loadUrl(resourceId, url, callback, addLoadWork);
+  }
+  loadUrl(resourceId, url, callback, addLoadWork = true) {
 
     if (addLoadWork) {
       this.addWork(resourceId, 3); // Add work in 2 chunks. Loading, unpacking, parsing.

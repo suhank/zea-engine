@@ -89,7 +89,24 @@ class FilePathParameter extends Parameter {
     return this.__file;
   }
 
-  getURL() {
+  setUrl(url, mode = ValueSetMode.USER_SETVALUE) {
+    
+    const parts = url.split('/');
+    const name = parts[parts.length-1]
+    
+    this.__value = name;
+    this.__file = {
+      id: url,
+      name,
+      url
+    };
+    
+    if (mode == ValueSetMode.USER_SETVALUE)
+      this.__flags |= ParamFlags.USER_EDITED;
+    this.valueChanged.emit(mode);
+  }
+
+  getUrl() {
     return this.__file ? this.__file.url : undefined;
   }
 
@@ -98,7 +115,6 @@ class FilePathParameter extends Parameter {
     clonedParam.__file = this.__file;
     return clonedParam;
   }
-
 
   setDirty(cleanerFn) {
     throw ("Cannot drive a filepath param from an oporator")

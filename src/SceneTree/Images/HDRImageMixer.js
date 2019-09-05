@@ -61,7 +61,7 @@ class HDRImageMixer extends BaseImage {
   }
 
   setURL(index, url) {
-    this.__subImages[index].loadURL(url);
+    this.__subImages[index].loadUrl(url);
   }
 
   setWeights(weights) {
