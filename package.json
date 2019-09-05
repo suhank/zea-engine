@@ -1,9 +1,13 @@
 {
   "name": "@zeainc/engine",
   "libraryName": "ZeaEngine",
-  "version": "0.0.68",
+  "version": "0.0.69",
   "description": "Zea Engine",
   "main": "lib/ZeaEngine.js",
+  "files": [
+    "/dist/ZeaEngine.js",
+    "/public-resources/"
+  ],
   "scripts": {
     "build:dev": "webpack --watch --config webpack-dev.config.js",
     "build:prod": "npm run build:production",
