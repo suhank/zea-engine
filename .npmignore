@@ -2,6 +2,17 @@ Resources/
 Tests/
 Tools/
 src/
+external/
+node_modules/
 lib/*.map
 lib/*.worker.js
-external/
+
+# ignoring old builds.
+lib/Visualive.js 
+*.sh
+*.config.js
+*.yaml
+.eslintrc
+.editorconfig
+.gitattributes
+package.json

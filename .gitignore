@@ -7,3 +7,5 @@ SteamServer/
 Resources/Cache/
 
 VisualiveUI/
+
+*.log

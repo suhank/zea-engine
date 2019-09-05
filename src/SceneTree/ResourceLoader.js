@@ -84,7 +84,7 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('zea-engine.js') || script.src.endsWith('@visualive/engine')) {
+        if (script.src.includes('zea-engine')) {
           visualiveEngineUrl = script.src;
           break;
         }
