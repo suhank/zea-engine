@@ -84,7 +84,7 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('ZeaEngine.js') || script.src.endsWith('@visualive/engine')) {
+        if (script.src.endsWith('zea-engine.js') || script.src.endsWith('@visualive/engine')) {
           visualiveEngineUrl = script.src;
           break;
         }
@@ -282,7 +282,7 @@ class ResourceLoader {
           } else if (event.data.type === 'ERROR') {
             const data = event.data;
             const file = this.__resources[data.resourceId]
-            console.error("Unable to load Resource:", file.name, " With url:", data.url);
+            console.error("Unable to load Resource:", file ? file.name : data.resourceId, " With url:", data.url);
           }
         };
       });
