@@ -2,13 +2,18 @@
   "name": "@zeainc/zea-engine",
   "fileName": "zea-engine",
   "libraryName": "ZeaEngine",
-  "version": "0.0.75",
+  "version": "0.0.76",
   "description": "Zea Engine",
-  "main": "lib/zea-engine.js",
+  "main": "dist/zea-engine.js",
+  "author": "Zea Inc.",
+  "license": "ISC",
+  "files": [
+    "/dist/zea-engine.js",
+    "/public-resources/**"
+  ],
   "scripts": {
     "build:dev": "webpack --watch --config webpack-dev.config.js",
-    "build:prod": "npm run build:production",
-    "build:production": "webpack --config webpack-prod.config.js",
+    "build": "webpack --config webpack-prod.config.js",
     "dist": "webpack --config webpack-prod.config.js && yarn publish --access=public"
   },
   "devDependencies": {
@@ -19,7 +24,5 @@
     "webpack-cli": "^3.1.2",
     "worker-loader": "^2.0.0",
     "yargs": "3.32.0"
-  },
-  "author": "Philip Taylor",
-  "license": "Private"
+  }
 }
