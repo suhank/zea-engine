@@ -1,6 +1,7 @@
 /node_modules
 
 lib/
+dist/
 projects/
 Tests/Assets/
 SteamServer/
