@@ -28,7 +28,7 @@ void main(void) {
 
     bool maintainScreenSize = true;// Could be passed as a flag.
     if(maintainScreenSize) {
-        float dist = length((modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)));
+        float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
         float sc = dist;
         mat4 scmat = mat4(
             sc, 0.0, 0.0, 0.0,
