@@ -45,7 +45,7 @@ class ListParameter extends Parameter {
     // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED;
     this.elementAdded.emit(elem, this.__value.length-1);
-    // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
     return elem;
   }
 
@@ -55,7 +55,7 @@ class ListParameter extends Parameter {
     // this.setValue(this.__value)
     this.__flags |= ParamFlags.USER_EDITED;
     this.elementRemoved.emit(elem, index);
-    // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
   }
 
   insertElement(index, elem) {
@@ -65,7 +65,7 @@ class ListParameter extends Parameter {
     // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED;
     this.elementAdded.emit(elem, index);
-    // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
   }
 
   clone(flags) {
