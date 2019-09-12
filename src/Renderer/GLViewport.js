@@ -60,7 +60,7 @@ class GLViewport extends GLBaseViewport {
     this.keyUp = new Signal();
     this.mouseDown = new Signal();
     this.mouseDoubleClicked = new Signal();
-    this.mouseMoved = new Signal();
+    this.mouseMove = new Signal();
     this.mouseUp = new Signal();
     this.mouseLeave = new Signal();
     this.mouseDownOnGeom = new Signal();
@@ -447,7 +447,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onDrag(event, this);
       return;
     }
-    this.mouseMoved.emit(event);
+    this.mouseMove.emit(event);
     return false;
   }
 

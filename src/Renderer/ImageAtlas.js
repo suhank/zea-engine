@@ -203,30 +203,37 @@ class ImageAtlas extends GLTexture2D {
 
   generateAtlasLayout() {
     const border = 2;
-    const initDims = (subImage) => {
-      subImage.w = subImage.width + (border * 2);
-      subImage.h = subImage.height + (border * 2);
-      subImage.a = subImage.w * subImage.h;
-    }
-    this.__subImages.forEach(initDims);
-    // this.__subImages.sort((a, b) => (a.a > b.a) ? -1 : ((a.a < b.a) ? 1 : 0));
+    
+    // We must lay out the sub images in order of size. 
+    // else the paker might have trouble.
+    const blocks = [];
+    this.__subImages.forEach((subImage, index) => {
+      blocks.push({
+        w: subImage.width + (border * 2),
+        h: subImage.height + (border * 2),
+        area: subImage.width * subImage.height,
+        index
+      })
+    });
+    
+    blocks.sort((a, b) => (a.area > b.area) ? -1 : ((a.area < b.area) ? 1 : 0));
 
     const packer = new GrowingPacker();
-    packer.fit(this.__subImages);
+    packer.fit(blocks)
 
     this.__layout = [];
-    const eachSubImage = (subImage) => {
-      if (subImage.fit) {
-        this.__layout.push({
-          pos: new Vec2(subImage.fit.x + border, subImage.fit.y + border),
-          size: new Vec2(subImage.w, subImage.h)
-        });
+    blocks.forEach((block, index) => {
+      const subImage = this.__subImages[block.index];
+      if (block.fit) {
+        this.__layout[block.index] = {
+          pos: new Vec2(block.fit.x + border, block.fit.y + border),
+          size: new Vec2(block.w, block.h)
+        };
       }
       else {
         console.warn("Unable to fit image");
       }
-    }
-    this.__subImages.forEach(eachSubImage);
+    })
 
     const width = packer.root.w;
     const height = packer.root.h;

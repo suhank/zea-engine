@@ -28,7 +28,7 @@ let unpack;
 //-------------------------unpack--------------------------
 var initunpack = function(wasmBinaryFile) {
   // The following code has been _carefully_ modified by hand.
-  // Due to WebPack embedding this script into the Visualive engine
+  // Due to WebPack embedding this script into the Zea engine
   // build, certain features broke.
   // There was code to handle loading in a nodeJS context, that tried to import("fs")
   // WebPack kepts tripping up on that code in its static analysis of the code, so
@@ -38,8 +38,8 @@ var initunpack = function(wasmBinaryFile) {
   // scope isn't available inside this 'unpack' function.
   const unpack = {};
 
-  // Note: the following is the URL of the unpack.wasm file in our VisualiveEngine project on our
-  // server. Ideally we could use a relative path from the VisualiveEngine file, but
+  // Note: the following is the URL of the unpack.wasm file in our ZeaEngine project on our
+  // server. Ideally we could use a relative path from the ZeaEngine file, but
   // that isn't possible yet. (TODO: Ask Mauro about this)
   credentials = "omit"
   // var wasmBinaryFile="unpack.wasm";

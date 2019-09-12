@@ -120,8 +120,6 @@ class GLGeomItemSet {
 
     this.glgeomItems[index] = null;
     this.glgeomItemSignalIds[index] = null;
-    this.glgeomItems.splice(index, 1)
-    this.glgeomItemSignalIds.splice(index, 1);
 
     this.glgeomItems_freeIndices.push(index);
 

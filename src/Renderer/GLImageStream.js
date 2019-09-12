@@ -58,9 +58,12 @@ class GLImageStream {
       return false;
     }
 
-    if (bindings.textureIndexUnif){
-      this.__gl.uniform1i(bindings.textureIndexUnif.location, this.__indexParam.getValue());
+    if(bindings) {
+      if (bindings.textureIndexUnif){
+        this.__gl.uniform1i(bindings.textureIndexUnif.location, this.__indexParam.getValue());
+      }
     }
+
 
     return true;
   }

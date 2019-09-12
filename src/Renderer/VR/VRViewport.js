@@ -168,14 +168,13 @@ class VRViewport extends GLBaseViewport {
                 let assetPath;
                 switch(hmd){
                 case 'Vive': 
-                    assetPath = "VisualiveEngine/Vive.vla";
+                    assetPath = "ZeaEngine/Vive.vla";
                     break;
                 case 'Oculus': 
-                    assetPath = "VisualiveEngine/Oculus.vla";
+                    assetPath = "ZeaEngine/Oculus.vla";
                     break;
                 default:
-                    assetPath = "VisualiveEngine/Oculus.vla";
-                    // assetPath = "VisualiveEngine/Vive.vla";
+                    assetPath = "ZeaEngine/Oculus.vla";
                     break;
                 }
 

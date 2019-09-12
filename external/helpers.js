@@ -104,7 +104,7 @@ const addResourceURL = (resources, path, url)=>{
     for(let i=0; i<parts.length; i++){
         const part = parts[i];
         if(!resources[nameToId[part]]) {
-            const folderId = Visualive.hashStr(part);
+            const folderId = ZeaEngine.hashStr(part);
             const folder =  { 
                 name: part,
                 type: 'folder',
@@ -127,7 +127,7 @@ const addResourceURL = (resources, path, url)=>{
     if(parentId)
         resource.parent = parentId
 
-    const fileId = Visualive.hashStr(filename);
+    const fileId = ZeaEngine.hashStr(filename);
     resource.id = fileId;
     resources[fileId] = resource;
 }
@@ -143,9 +143,9 @@ let generateResourcesDict = (list=[], assetDescs=[], imageDescs=[])=>{
 
     let resources = {};
 
-    addResourceURL(resources, 'VisualiveEngine/Vive.vla', 'http://localhost:3150/VisualiveEngineClient/public-resources/Vive.vla')
-    addResourceURL(resources, 'VisualiveEngine/Dome.vla', 'http://localhost:3150/VisualiveEngineClient/public-resources/Dome.vla')
-    addResourceURL(resources, 'VisualiveEngine/FlakesNormalMap.png', 'http://localhost:3150/VisualiveEngineClient/public-resources/FlakesNormalMap.png')
+    addResourceURL(resources, 'ZeaEngine/Vive.vla', 'http://localhost:3150/ZeaEngine/public-resources/Vive.vla')
+    addResourceURL(resources, 'ZeaEngine/Dome.vla', 'http://localhost:3150/ZeaEngine/public-resources/Dome.vla')
+    addResourceURL(resources, 'ZeaEngine/FlakesNormalMap.png', 'http://localhost:3150/ZeaEngine/public-resources/FlakesNormalMap.png')
     
 
     for(let item of list){

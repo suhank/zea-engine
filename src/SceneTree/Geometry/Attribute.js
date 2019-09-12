@@ -1,4 +1,9 @@
 import {
+  Float32,
+  UInt32,
+  SInt32
+} from '../../Math';
+import {
   typeRegistry
 } from '../../Math/TypeRegistry.js';
 
@@ -9,9 +14,9 @@ class Attribute {
       this.__numFloat32Elements = this.__dataType.numFloat32Elements();
     } else {
       switch (dataType) {
-        case Visualive.Float32:
-        case Visualive.UInt32:
-        case Visualive.SInt32:
+        case Float32:
+        case UInt32:
+        case SInt32:
           this.__numFloat32Elements = 1;
           break;
         default:

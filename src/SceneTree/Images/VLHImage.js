@@ -106,7 +106,7 @@ class VLHImage extends BaseImage {
   __loadVLH(fileId, file) {
     this.type = 'FLOAT';
 
-    resourceLoader.loadResource(fileId, (entries) => {
+    resourceLoader.loadUrl(fileId, file.url, (entries) => {
       if(!entries.ldr || !entries.cdm) {
         for (let name in entries) {
           if (name.endsWith('.jpg')){

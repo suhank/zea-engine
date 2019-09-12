@@ -298,6 +298,8 @@ class GLBaseRenderer {
 
     treeItem.childAdded.connect(this.addTreeItem);
     treeItem.childRemoved.connect(this.removeTreeItem);
+
+    this.renderGeomDataFbos();
   }
 
   removeTreeItem(treeItem) {
@@ -324,6 +326,7 @@ class GLBaseRenderer {
       if(childItem)
         this.removeTreeItem(childItem);
     }
+    this.renderGeomDataFbos();
   }
 
   /////////////////////////

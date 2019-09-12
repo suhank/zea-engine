@@ -34,7 +34,7 @@ class AudioItem extends TreeItem {
     let audioSource;
     let audioBuffer;
     const startAudioPlayback = ()=>{
-      audioSource = Visualive.audioCtx.createBufferSource();
+      audioSource = ZeaEngine.audioCtx.createBufferSource();
       audioSource.buffer = audioBuffer;
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue();
@@ -48,7 +48,10 @@ class AudioItem extends TreeItem {
 
       request.onload = () => {
         const audioData = request.response;
-        Visualive.audioCtx.decodeAudioData(audioData, 
+        // Note: this code is not pretty and should not access the global object
+        // However, its difficult to handle this case. 
+        // TODO: clean this up.
+        ZeaEngine.audioCtx.decodeAudioData(audioData, 
           (buffer) => {
             audioBuffer = buffer;
             this.__loaded = true;

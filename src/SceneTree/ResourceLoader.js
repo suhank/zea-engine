@@ -84,20 +84,20 @@ class ResourceLoader {
       const scripts = document.getElementsByTagName('script');
       for (let i = 0; i < scripts.length; i++) {
         const script = scripts[i];
-        if (script.src.endsWith('Visualive.js') || script.src.endsWith('@visualive/engine')) {
+        if (script.src.includes('zea-engine')) {
           visualiveEngineUrl = script.src;
           break;
         }
       }
       if (!visualiveEngineUrl)
-        throw ("Unable to determine Visualive Engine URL");
+        throw ("Unable to determine Zea Engine URL");
       const parts = visualiveEngineUrl.split('/');
       parts.pop()
       parts.pop()
       this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm';
 
-      this.addResourceURL("VisualiveEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
-      this.addResourceURL("VisualiveEngine/Oculus.vla", parts.join('/') + '/public-resources/Oculus.vla')
+      this.addResourceURL("ZeaEngine/Vive.vla", parts.join('/') + '/public-resources/Vive.vla')
+      this.addResourceURL("ZeaEngine/Oculus.vla", parts.join('/') + '/public-resources/Oculus.vla')
     }
   }
 
@@ -282,7 +282,7 @@ class ResourceLoader {
           } else if (event.data.type === 'ERROR') {
             const data = event.data;
             const file = this.__resources[data.resourceId]
-            console.error("Unable to load Resource:", file.name, " With url:", data.url);
+            console.error("Unable to load Resource:", file ? file.name : data.resourceId, " With url:", data.url);
           }
         };
       });
@@ -386,10 +386,14 @@ class ResourceLoader {
       throw ("Invalid resource Id:'" + resourceId + "' not found in Resources:" + JSON.stringify(this.__resources, null, 2));
     }
 
-    this.loadURL(resourceId, file.url, callback, addLoadWork)
+    this.loadUrl(resourceId, file.url, callback, addLoadWork)
   }
 
   loadURL(resourceId, url, callback, addLoadWork = true) {
+    console.warn("Please call loadUrl instead,")
+    return this.loadUrl(resourceId, url, callback, addLoadWork);
+  }
+  loadUrl(resourceId, url, callback, addLoadWork = true) {
 
     if (addLoadWork) {
       this.addWork(resourceId, 3); // Add work in 2 chunks. Loading, unpacking, parsing.

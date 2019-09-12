@@ -496,9 +496,6 @@ class GLRenderer extends GLBaseRenderer {
 
 };
 
-const GLVisualiveRenderer = GLRenderer;
-
 export {
-  GLRenderer,
-  GLVisualiveRenderer
+  GLRenderer
 };

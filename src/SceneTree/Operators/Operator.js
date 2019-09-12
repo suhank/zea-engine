@@ -73,7 +73,7 @@ class OperatorOutput {
   toJSON(context, flags) {
     return {
       type: this.constructor.name,
-      paramPath: this._param ? context.makeRelative(this._param.getPath()) : false
+      paramPath: this._param ? (context.makeRelative ? context.makeRelative(this._param.getPath()) : this._param.getPath()) : false
     };
   }
 

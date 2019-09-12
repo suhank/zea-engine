@@ -333,7 +333,7 @@ class FileImage extends BaseImage {
       return hdrtint;
     }
 
-    resourceLoader.loadURL(fileDesc.id, fileDesc.url, (entries) => {
+    resourceLoader.loadUrl(fileDesc.id, fileDesc.url, (entries) => {
       let ldr, cdm;
       for (let name in entries) {
         if (name.endsWith('.jpg'))

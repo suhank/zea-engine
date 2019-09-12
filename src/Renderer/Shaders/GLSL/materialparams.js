@@ -9,7 +9,7 @@ vec4 getColorParamValue(vec4 value, sampler2D tex, int texType, vec2 texCoord) {
     if(texType == 0){
         return toLinear(value);
     }
-    else if(texType == 1){
+    else if(texType == 1 || texType == 2){
         // TODO: Use SRGB textures.
         return toLinear(texture2D(tex, texCoord));
     }

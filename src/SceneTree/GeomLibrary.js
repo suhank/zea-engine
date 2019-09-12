@@ -83,7 +83,7 @@ class GeomLibrary {
     return this.geoms[index];
   }
 
-  loadURL(fileUrl) {
+  loadUrl(fileUrl) {
     let onLoad = this.loadBin;
     loadBinfile(
       fileUrl,

@@ -1,9 +1,12 @@
 /node_modules
 
 lib/
+dist/
 projects/
 Tests/Assets/
 SteamServer/
 Resources/Cache/
 
 VisualiveUI/
+
+*.log
