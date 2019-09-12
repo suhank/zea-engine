@@ -55,6 +55,7 @@ class GLViewport extends GLBaseViewport {
     // simply emit the new VR data.
     this.viewChanged = new Signal();
 
+    this.capturedElement = null;
     this.keyDown = new Signal();
     this.keyPressed = new Signal();
     this.keyUp = new Signal();
@@ -373,6 +374,16 @@ class GLViewport extends GLBaseViewport {
     );
   }
 
+  setCapture(target) {
+    this.capturedElement = target;
+  }
+  getCapture() {
+    return this.capturedElement;
+  }
+  releaseCapture() {
+    this.capturedElement = null;
+  }
+
   onMouseDown(event) {
 
     const mousePos = this.__eventMousePos(event);
@@ -386,8 +397,10 @@ class GLViewport extends GLBaseViewport {
         // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
         // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
         event.intersectionData = intersectionData;
+
+
         intersectionData.geomItem.onMouseDown(event, intersectionData);
-        if (event.vleStopPropagation == true)
+        if (event.vleStopPropagation == true || this.capturedElement)
           return;
 
         this.mouseDownOnGeom.emit(event);
@@ -400,7 +413,7 @@ class GLViewport extends GLBaseViewport {
     if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
       if (this.__cameraManipulator) {
         this.__cameraManipulatorDragging = true;
-        this.__cameraManipulator.onDoubleClick(event, this);
+        this.__cameraManipulator.onDoubleClick(event);
         return;
       }
 
@@ -410,29 +423,13 @@ class GLViewport extends GLBaseViewport {
       this.__prevDownTime = downTime;
       if (this.__cameraManipulator) {
         this.__cameraManipulatorDragging = true;
-        this.__cameraManipulator.onDragStart(event, this);
+        this.__cameraManipulator.onDragStart(event);
         return;
       }
 
       this.mouseDown.emit(event);
     }
     
-    return false;
-  }
-
-  onMouseUp(event) {
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
-
-    if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-      this.__cameraManipulator.onDragEnd(event, this);
-      this.__cameraManipulatorDragging = false;
-      return;
-    }
-
-    this.mouseUp.emit(event);
     return false;
   }
 
@@ -443,13 +440,43 @@ class GLViewport extends GLBaseViewport {
     event.mousePos = mousePos;
     event.mouseRay = this.calcRayFromScreenPos(mousePos);
 
+    if (this.capturedElement) {
+      this.capturedElement.onMouseMove(event);
+      return;
+    }
+
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-      this.__cameraManipulator.onDrag(event, this);
+      this.__cameraManipulator.onDrag(event);
       return;
     }
     this.mouseMove.emit(event);
     return false;
   }
+
+  onMouseUp(event) {
+    const mousePos = this.__eventMousePos(event);
+    event.viewport = this;
+    event.mousePos = mousePos;
+    event.mouseRay = this.calcRayFromScreenPos(mousePos);
+    
+    if (this.capturedElement) {
+      this.capturedElement.onMouseUp(event);
+      if(this.capturedElement) {
+        console.warn("Element was captured by setCapture but no 'releaseCapture' has been called.")
+      }
+      return;
+    }
+
+    if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
+      this.__cameraManipulator.onDragEnd(event);
+      this.__cameraManipulatorDragging = false;
+      return;
+    }
+
+    this.mouseUp.emit(event);
+    return false;
+  }
+
 
   onMouseLeave(event) {
     event.viewport = this;
@@ -460,7 +487,7 @@ class GLViewport extends GLBaseViewport {
   onKeyPressed(key, event) {
     event.viewport = this;
     if (this.__cameraManipulator) {
-      if(this.__cameraManipulator.onKeyPressed(key, event, this))
+      if(this.__cameraManipulator.onKeyPressed(key, event))
         return true;
     }
     this.keyPressed.emit(key, event);
@@ -470,7 +497,7 @@ class GLViewport extends GLBaseViewport {
   onKeyDown(key, event) {
     event.viewport = this;
     if (this.__cameraManipulator) {
-      if(this.__cameraManipulator.onKeyDown(key, event, this))
+      if(this.__cameraManipulator.onKeyDown(key, event))
         return true;
     }
     this.keyDown.emit(key, event);
@@ -479,7 +506,7 @@ class GLViewport extends GLBaseViewport {
   onKeyUp(key, event) {
     event.viewport = this;
     if (this.__cameraManipulator) {
-      if(this.__cameraManipulator.onKeyUp(key, event, this))
+      if(this.__cameraManipulator.onKeyUp(key, event))
         return true;
     }
     this.keyUp.emit(key, event);
@@ -488,7 +515,7 @@ class GLViewport extends GLBaseViewport {
   onWheel(event) {
     event.viewport = this;
     if (this.__cameraManipulator) {
-      this.__cameraManipulator.onWheel(event, this);
+      this.__cameraManipulator.onWheel(event);
       return;
     }
     this.mouseWheel.emit(event);
@@ -521,6 +548,10 @@ class GLViewport extends GLBaseViewport {
         if (event.vleStopPropagation == true)
           return;
 
+        if (this.capturedElement) {
+          return;
+        }
+
         this.mouseDownOnGeom.emit(event);
         if (event.vleStopPropagation == true)
           return;
@@ -530,7 +561,7 @@ class GLViewport extends GLBaseViewport {
       if((downTime - this.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
         if (this.__cameraManipulator) {
           this.__cameraManipulatorDragging = true;
-          this.__cameraManipulator.onDoubleTap(event, this);
+          this.__cameraManipulator.onDoubleTap(event);
           return;
         }
         this.doubleTapped.emit(event);
@@ -542,39 +573,66 @@ class GLViewport extends GLBaseViewport {
     }
 
     if (this.__cameraManipulator) {
-      this.__cameraManipulator.onTouchStart(event, this);
+      this.__cameraManipulator.onTouchStart(event);
       return;
     }
     this.touchStart.emit(event);
   }
 
   onTouchMove(event) {
-    if (this.__cameraManipulator) {
-      this.__cameraManipulator.onTouchMove(event, this);
+    event.viewport = this;
+
+    if (this.capturedElement) {
+      event.touchPos = [];
+      event.touchRay = [];
+      for(let index = 0; index < event.touches.length; index++) {
+        const touch = event.touches[index];
+        const touchPos = this.__eventTouchPos(touch);
+        event.touchPos[index] = touchPos;
+        event.touchRay[index] = this.calcRayFromScreenPos(touchPos);
+      }
+      event.mousePos = event.touchPos[0];
+      event.mouseRay = event.touchRay[0];
+      this.capturedElement.onMouseMove(event)
       return;
     }
-    event.viewport = this;
+
+    if (this.__cameraManipulator) {
+      this.__cameraManipulator.onTouchMove(event);
+      return;
+    }
     this.touchMove.emit(event);
   }
 
   onTouchEnd(event) {
-    if (this.__cameraManipulator) {
-      this.__cameraManipulator.onTouchEnd(event, this);
+    event.viewport = this;
+    
+    if (this.capturedElement) {
+      this.capturedElement.onMouseUp(event)
       return;
     }
-    event.viewport = this;
+
+    if (this.__cameraManipulator) {
+      this.__cameraManipulator.onTouchEnd(event);
+      return;
+    }
     this.touchEnd.emit(event);
   }
 
   onTouchCancel(event) {
-    if (this.__cameraManipulator) {
-      this.__cameraManipulator.onTouchCancel(event, this);
+    event.viewport = this;
+
+    if (this.capturedElement) {
+      this.capturedElement.onTouchCancel(event)
       return;
     }
-    event.viewport = this;
+
+    if (this.__cameraManipulator) {
+      this.__cameraManipulator.onTouchCancel(event);
+      return;
+    }
     this.touchCancel.emit(event);
   }
-
 
   ////////////////////////////
   // Rendering

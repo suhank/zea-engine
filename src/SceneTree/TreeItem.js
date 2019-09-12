@@ -64,8 +64,8 @@ class TreeItem extends BaseItem {
     this.__componentMapping = {};
 
     this.mouseDown = new Signal();
-    // this.mouseUp = new Signal();
-    // this.mouseMove = new Signal();
+    this.mouseUp = new Signal();
+    this.mouseMove = new Signal();
 
     ///////////////////////////////////////
     // Add parameters.
@@ -213,30 +213,8 @@ class TreeItem extends BaseItem {
     this.setOwner(parentItem);
   }
 
-  get parentItem() {
-    throw (("getter is deprectated. Please use 'getParentItem'"));
-  }
-
-  set parentItem(parentItem) {
-    throw (("setter is deprectated. Please use 'setParentItem'"));
-  }
-
-
   //////////////////////////////////////////
   // Global Matrix
-
-  get localXfo() {
-    throw (("getter is deprectated. Please use 'getLocalXfo'"));
-  }
-  set localXfo(xfo) {
-    throw (("setter is deprectated. Please use 'setLocalXfo'"));
-  }
-  get globalXfo() {
-    throw (("getter is deprectated. Please use 'getGlobalXfo'"));
-  }
-  set globalXfo(xfo) {
-    throw (("setter is deprectated. Please use 'setGlobalXfo'"));
-  }
 
   getLocalXfo() {
     return this.__localXfoParam.getValue();
@@ -715,21 +693,21 @@ class TreeItem extends BaseItem {
     return event.vleStopPropagation;
   }
 
-  // onMouseUp(event) {
-  //     this.mouseUp.emit(event);
-  //     if(event.vleStopPropagation !== true && this.__ownerItem){
-  //         this.__ownerItem.onMouseUp(event)
-  //     }
-  //     return event.vleStopPropagation;
-  // }
+  onMouseUp(event) {
+      this.mouseUp.emit(event);
+      if(event.vleStopPropagation !== true && this.__ownerItem){
+          this.__ownerItem.onMouseUp(event)
+      }
+      return event.vleStopPropagation;
+  }
 
-  // onMouseMove(event) {
-  //     this.mouseMove.emit(event);
-  //     if(event.vleStopPropagation !== true && this.__ownerItem){
-  //         this.__ownerItem.onMouseMove(event)
-  //     }
-  //     return event.vleStopPropagation;
-  // }
+  onMouseMove(event) {
+      this.mouseMove.emit(event);
+      if(event.vleStopPropagation !== true && this.__ownerItem){
+          this.__ownerItem.onMouseMove(event)
+      }
+      return event.vleStopPropagation;
+  }
 
   //////////////////////////////////////////
   // Persistence
