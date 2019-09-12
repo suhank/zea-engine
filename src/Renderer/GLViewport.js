@@ -367,11 +367,26 @@ class GLViewport extends GLBaseViewport {
   /////////////////////////////
   // Events
 
+
   __eventMousePos(event) {
     return new Vec2(
       event.rendererX - this.getPosX(),
       event.rendererY - this.getPosY()
     );
+  }
+
+  __prepareEvent(event) {
+    event.viewport = this;
+    event.propagating = true;
+    event.stopPropagation();
+    event.stopPropagation = ()=>{
+      event.propagating = false;
+    }
+    if(event instanceof MouseEvent) {
+      const mousePos = this.__eventMousePos(event);
+      event.mousePos = mousePos;
+      event.mouseRay = this.calcRayFromScreenPos(mousePos);
+    }
   }
 
   setCapture(target) {
@@ -385,28 +400,27 @@ class GLViewport extends GLBaseViewport {
   }
 
   onMouseDown(event) {
+    this.__prepareEvent(event);
+    
+    if (this.capturedElement) {
+      this.capturedElement.onMouseDown(event);
+      return;
+    }
 
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
-
-    if (event.button == 0) {
-      const intersectionData = this.getGeomDataAtPos(mousePos, event.mouseRay);
-      if (intersectionData != undefined) {
-        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-        event.intersectionData = intersectionData;
+    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
+    if (intersectionData != undefined) {
+      // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+      event.intersectionData = intersectionData;
 
 
-        intersectionData.geomItem.onMouseDown(event, intersectionData);
-        if (event.vleStopPropagation == true || this.capturedElement)
-          return;
+      intersectionData.geomItem.onMouseDown(event, intersectionData);
+      if (!event.propagating || this.capturedElement)
+        return;
 
-        this.mouseDownOnGeom.emit(event);
-        if (event.vleStopPropagation == true)
-          return;
-      }
+      this.mouseDownOnGeom.emit(event);
+      if (!event.propagating)
+        return;
     }
 
     const downTime = Date.now();
@@ -435,14 +449,33 @@ class GLViewport extends GLBaseViewport {
 
   onMouseMove(event) {
 
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
+    this.__prepareEvent(event);
 
     if (this.capturedElement) {
       this.capturedElement.onMouseMove(event);
       return;
+    }
+    
+    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
+    if (intersectionData != undefined) {
+      console.log("onMouseMove on Geom"); // + " Material:" + geomItem.getMaterial().name);
+      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+      event.intersectionData = intersectionData;
+
+      if(intersectionData.geomItem != this.mouseOverItem) {
+        if(this.mouseOverItem)
+          this.mouseOverItem.onMouseLeave(event);
+        this.mouseOverItem = intersectionData.geomItem;
+        this.mouseOverItem.onMouseEnter(event);
+      }
+
+      intersectionData.geomItem.onMouseMove(event, intersectionData);
+      if (!event.propagating || this.capturedElement)
+        return;
+    }
+    else if(this.mouseOverItem) {
+      this.mouseOverItem.onMouseLeave(event);
+      this.mouseOverItem = null;
     }
 
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
@@ -454,10 +487,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   onMouseUp(event) {
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
+    this.__prepareEvent(event);
     
     if (this.capturedElement) {
       this.capturedElement.onMouseUp(event);
@@ -465,6 +495,17 @@ class GLViewport extends GLBaseViewport {
         console.warn("Element was captured by setCapture but no 'releaseCapture' has been called.")
       }
       return;
+    }
+
+    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
+    if (intersectionData != undefined) {
+      // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+      event.intersectionData = intersectionData;
+
+      intersectionData.geomItem.onMouseUp(event, intersectionData);
+      if (!event.propagating)
+        return;
     }
 
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
@@ -479,13 +520,13 @@ class GLViewport extends GLBaseViewport {
 
 
   onMouseLeave(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     this.mouseLeave.emit(event);
     return false;
   }
 
   onKeyPressed(key, event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     if (this.__cameraManipulator) {
       if(this.__cameraManipulator.onKeyPressed(key, event))
         return true;
@@ -495,7 +536,7 @@ class GLViewport extends GLBaseViewport {
   }
   
   onKeyDown(key, event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     if (this.__cameraManipulator) {
       if(this.__cameraManipulator.onKeyDown(key, event))
         return true;
@@ -504,7 +545,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   onKeyUp(key, event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     if (this.__cameraManipulator) {
       if(this.__cameraManipulator.onKeyUp(key, event))
         return true;
@@ -513,7 +554,18 @@ class GLViewport extends GLBaseViewport {
   }
 
   onWheel(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
+    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
+    if (intersectionData != undefined) {
+      // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+      event.intersectionData = intersectionData;
+
+      intersectionData.geomItem.onWheel(event, intersectionData);
+      if (!event.propagating)
+        return;
+    }
+
     if (this.__cameraManipulator) {
       this.__cameraManipulator.onWheel(event);
       return;
@@ -530,8 +582,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   onTouchStart(event) { 
-    event.viewport = this;
-
+    this.__prepareEvent(event);
 
     if (event.touches.length == 1) {
       const touch = event.touches[0]
@@ -545,7 +596,7 @@ class GLViewport extends GLBaseViewport {
         // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
         event.intersectionData = intersectionData;
         intersectionData.geomItem.onMouseDown(event, intersectionData);
-        if (event.vleStopPropagation == true)
+        if (!event.propagating)
           return;
 
         if (this.capturedElement) {
@@ -553,7 +604,7 @@ class GLViewport extends GLBaseViewport {
         }
 
         this.mouseDownOnGeom.emit(event);
-        if (event.vleStopPropagation == true)
+        if (!event.propagating)
           return;
       }
 
@@ -580,7 +631,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   onTouchMove(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
 
     if (this.capturedElement) {
       event.touchPos = [];
@@ -605,7 +656,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   onTouchEnd(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     
     if (this.capturedElement) {
       this.capturedElement.onMouseUp(event)
@@ -620,7 +671,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   onTouchCancel(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
 
     if (this.capturedElement) {
       this.capturedElement.onTouchCancel(event)

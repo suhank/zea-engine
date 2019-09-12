@@ -687,26 +687,42 @@ class TreeItem extends BaseItem {
 
   onMouseDown(event) {
     this.mouseDown.emit(event);
-    if (event.vleStopPropagation !== true && this.__ownerItem) {
+    if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseDown(event)
     }
-    return event.vleStopPropagation;
+    return event.stopPropagation;
   }
 
   onMouseUp(event) {
       this.mouseUp.emit(event);
-      if(event.vleStopPropagation !== true && this.__ownerItem){
+      if(event.propagating && this.__ownerItem){
           this.__ownerItem.onMouseUp(event)
       }
-      return event.vleStopPropagation;
+      return event.stopPropagation;
   }
 
   onMouseMove(event) {
-      this.mouseMove.emit(event);
-      if(event.vleStopPropagation !== true && this.__ownerItem){
-          this.__ownerItem.onMouseMove(event)
-      }
-      return event.vleStopPropagation;
+    this.mouseMove.emit(event);
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onMouseMove(event)
+    }
+    return event.stopPropagation;
+  }
+
+  onMouseEnter(event) {
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onMouseEnter(event)
+    }
+  }
+  onMouseLeave(event) {
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onMouseLeave(event)
+    }
+  }
+  onWheel(event) {
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onWheel(event)
+    }
   }
 
   //////////////////////////////////////////

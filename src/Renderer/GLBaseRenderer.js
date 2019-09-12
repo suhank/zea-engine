@@ -446,6 +446,7 @@ class GLBaseRenderer {
     }
 
     this.__glcanvas.addEventListener('mouseenter', (event) => {
+      event.stopPropagation();
       if (!mouseIsDown) {
         activeGLRenderer = this;
         calcRendererCoords(event);
@@ -453,11 +454,11 @@ class GLBaseRenderer {
         activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
         mouseLeft = false;
       }
-      event.stopPropagation();
     });
     this.__glcanvas.addEventListener('mouseleave', (event) => {
       if (activeGLRenderer != this || !isValidCanvas())
         return;
+      event.stopPropagation();
       if (!mouseIsDown) {
         const vp = activeGLRenderer.getActiveViewport();
         if (vp) {
@@ -468,9 +469,9 @@ class GLBaseRenderer {
       } else {
         mouseLeft = true;
       }
-      event.stopPropagation();
     });
     this.__glcanvas.addEventListener('mousedown', (event) => {
+      event.stopPropagation();
       calcRendererCoords(event);
       mouseIsDown = true;
       activeGLRenderer = this;
@@ -480,12 +481,12 @@ class GLBaseRenderer {
         vp.onMouseDown(event);
       }
       mouseLeft = false;
-      event.stopPropagation();
       return false;
     });
     document.addEventListener('mouseup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas())
         return;
+        event.stopPropagation();
       // if(mouseIsDown && mouseMoveDist < 0.01)
       //     mouseClick(event);
       calcRendererCoords(event);
@@ -502,7 +503,6 @@ class GLBaseRenderer {
         }
         activeGLRenderer = undefined;
       }
-      event.stopPropagation();
       return false;
     });
 
@@ -519,6 +519,8 @@ class GLBaseRenderer {
     document.addEventListener('mousemove', (event) => {
       if (activeGLRenderer != this || !isValidCanvas())
         return;
+      event.preventDefault();
+      event.stopPropagation();
       calcRendererCoords(event);
       if (!mouseIsDown)
         activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
@@ -526,9 +528,7 @@ class GLBaseRenderer {
       const vp = activeGLRenderer.getActiveViewport();
       if (vp) {
         vp.onMouseMove(event);
-        event.preventDefault();
       }
-      event.stopPropagation();
       return false;
     });
 
@@ -536,10 +536,10 @@ class GLBaseRenderer {
       if (activeGLRenderer != this || !isValidCanvas())
         return;
       if (activeGLRenderer) {
-        this.onWheel(event);
+        event.stopPropagation();
         if(!window.addEventListener)
           event.preventDefault();
-        event.stopPropagation();
+        this.onWheel(event);
       }
       return false;
     }
@@ -586,28 +586,28 @@ class GLBaseRenderer {
 
     this.__glcanvas.addEventListener("touchstart", (event) => {
       for (let i = 0; i < event.touches.length; i++) {
+        event.stopPropagation();
         calcRendererCoords(event.touches[i]);
       }
       this.getViewport().onTouchStart(event);
-      event.stopPropagation();
     }, false);
     this.__glcanvas.addEventListener("touchmove", (event) => {
+      event.stopPropagation();
       for (let i = 0; i < event.touches.length; i++) {
         calcRendererCoords(event.touches[i]);
       }
       this.getViewport().onTouchMove(event);
-      event.stopPropagation();
     }, false);
     this.__glcanvas.addEventListener("touchend", (event) => {
+      event.stopPropagation();
       for (let i = 0; i < event.touches.length; i++) {
         calcRendererCoords(event.touches[i]);
       }
       this.getViewport().onTouchEnd(event);
-      event.stopPropagation();
     }, false);
     this.__glcanvas.addEventListener("touchcancel", (event) => {
-      this.getViewport().onTouchCancel(event);
       event.stopPropagation();
+      this.getViewport().onTouchCancel(event);
     }, false);
   }
 
