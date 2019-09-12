@@ -386,6 +386,13 @@ class GLViewport extends GLBaseViewport {
       const mousePos = this.__eventMousePos(event);
       event.mousePos = mousePos;
       event.mouseRay = this.calcRayFromScreenPos(mousePos);
+      
+      const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
+      if (intersectionData != undefined) {
+        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+        event.intersectionData = intersectionData;
+      }
     }
   }
 
@@ -407,14 +414,8 @@ class GLViewport extends GLBaseViewport {
       return;
     }
 
-    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
-    if (intersectionData != undefined) {
-      // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-      event.intersectionData = intersectionData;
-
-
-      intersectionData.geomItem.onMouseDown(event, intersectionData);
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onMouseDown(event);
       if (!event.propagating || this.capturedElement)
         return;
 
@@ -456,20 +457,15 @@ class GLViewport extends GLBaseViewport {
       return;
     }
     
-    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
-    if (intersectionData != undefined) {
-      console.log("onMouseMove on Geom"); // + " Material:" + geomItem.getMaterial().name);
-      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-      event.intersectionData = intersectionData;
-
-      if(intersectionData.geomItem != this.mouseOverItem) {
+    if (event.intersectionData != undefined) {
+      if(event.intersectionData.geomItem != this.mouseOverItem) {
         if(this.mouseOverItem)
           this.mouseOverItem.onMouseLeave(event);
-        this.mouseOverItem = intersectionData.geomItem;
+        this.mouseOverItem = event.intersectionData.geomItem;
         this.mouseOverItem.onMouseEnter(event);
       }
 
-      intersectionData.geomItem.onMouseMove(event, intersectionData);
+      event.intersectionData.geomItem.onMouseMove(event);
       if (!event.propagating || this.capturedElement)
         return;
     }
@@ -497,13 +493,8 @@ class GLViewport extends GLBaseViewport {
       return;
     }
 
-    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
-    if (intersectionData != undefined) {
-      // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-      event.intersectionData = intersectionData;
-
-      intersectionData.geomItem.onMouseUp(event, intersectionData);
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onMouseUp(event);
       if (!event.propagating)
         return;
     }
@@ -517,7 +508,6 @@ class GLViewport extends GLBaseViewport {
     this.mouseUp.emit(event);
     return false;
   }
-
 
   onMouseLeave(event) {
     this.__prepareEvent(event);
@@ -555,13 +545,8 @@ class GLViewport extends GLBaseViewport {
 
   onWheel(event) {
     this.__prepareEvent(event);
-    const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
-    if (intersectionData != undefined) {
-      // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-      // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-      event.intersectionData = intersectionData;
-
-      intersectionData.geomItem.onWheel(event, intersectionData);
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onWheel(event);
       if (!event.propagating)
         return;
     }
