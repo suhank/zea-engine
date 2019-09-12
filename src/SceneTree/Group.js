@@ -179,9 +179,6 @@ class Group extends TreeItem {
       highlighted = true;
       color = this.getParameter('HighlightColor').getValue();
       color.a = this.getParameter('HighlightFill').getValue();
-    } else if (this.getSelected()) {
-      highlighted = true;
-      color = TreeItem.getBranchSelectionOutlineColor();
     }
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
@@ -189,7 +186,6 @@ class Group extends TreeItem {
         item.addHighlight('groupItemHighlight' + this.getId(), color, true)
       else
         item.removeHighlight('groupItemHighlight' + this.getId(), true)
-
     })
   }
 
@@ -536,13 +532,7 @@ class Group extends TreeItem {
 
   __unbindItem(item, index) {
 
-    let highlighted = false;
     if (this.getParameter('Highlighted').getValue()) {
-      highlighted = true;
-    } else if (this.getSelected()) {
-      highlighted = true;
-    }
-    if (highlighted) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
@@ -552,6 +542,14 @@ class Group extends TreeItem {
       // It will stay invisible its parent is invisible, or if 
       // multiple groups connect to it and say it is invisible.
       item.propagateVisiblity(1);
+    }
+
+    // Only used by the Selection Manager.
+    // Maybe we should have a special group 
+    // for that.
+    if (this.propagateSelectionToItems) {
+      if(this.getSelected())
+        item.setSelected(false);
     }
 
     /////////////////////////////////
