@@ -51,8 +51,6 @@ class TreeItem extends BaseItem {
 
     this.__visibleCounter = 1; // Visible by Default.
     this.__visible = true;
-    this.__selectable = true;
-    this.__selected = false;
     this.__highlightMapping = {};
     this.__highlights = [];
 
@@ -82,7 +80,6 @@ class TreeItem extends BaseItem {
     // this.componentRemoved = new Signal();
     this.highlightChanged = new Signal();
     this.visibilityChanged = new Signal();
-    this.selectedChanged = new Signal();
     this.localXfoChanged = this.__localXfoParam.valueChanged;
     this.globalXfoChanged = this.__globalXfoParam.valueChanged;
     this.boundingChanged = this.__boundingBoxParam.valueChanged;
@@ -277,13 +274,8 @@ class TreeItem extends BaseItem {
   //////////////////////////////////////////
   // Selectability and Selection
 
-  getSelectable() {
-    return this.__selectable;
-  }
-
   setSelectable(val, propagateToChildren = true) {
-    if (this.__selectable != val || propagateToChildren) {
-      this.__selectable = val;
+    if (super.setSelectable(val) || propagateToChildren) {
       for (let childItem of this.__childItems) {
         if (childItem instanceof TreeItem)
           childItem.setSelectable(this.__selectable, propagateToChildren);
@@ -291,15 +283,8 @@ class TreeItem extends BaseItem {
     }
   }
 
-  isSelected() {
-    return this.__selected;
-  }
-  getSelected() {
-    return this.__selected;
-  }
-
   setSelected(sel) {
-    this.__selected = sel;
+    super.setSelected(sel);
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
       for (let childItem of this.__childItems)

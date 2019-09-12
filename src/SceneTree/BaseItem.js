@@ -1,9 +1,4 @@
 import {
-  Vec2,
-  Vec3,
-  Color
-} from '../Math';
-import {
   Signal
 } from '../Utilities';
 import {
@@ -34,6 +29,10 @@ class BaseItem extends ParameterOwner {
     this.__path = [name];
     this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
     this.__flags = 0;
+
+    this.__selectable = true;
+    this.__selected = false;
+    this.selectedChanged = new Signal();
 
     this.__metaData = {};
 
@@ -151,6 +150,32 @@ class BaseItem extends ParameterOwner {
     }
   }
 
+  //////////////////////////////////////////
+  // Selectability and Selection
+
+  getSelectable() {
+    return this.__selectable;
+  }
+
+  setSelectable(val) {
+    if (this.__selectable != val) {
+      this.__selectable = val;
+      return true;
+    }
+    return false;
+  }
+
+  isSelected() {
+    return this.__selected;
+  }
+  getSelected() {
+    return this.__selected;
+  }
+
+  setSelected(sel) {
+    this.__selected = sel;
+    this.selectedChanged.emit(this.__selected)
+  }
   //////////////////////////////////////////
   // Metadata
 
