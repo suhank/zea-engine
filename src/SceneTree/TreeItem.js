@@ -141,7 +141,7 @@ class TreeItem extends BaseItem {
 
     for (let srcChildItem of src.getChildren())
       if (srcChildItem)
-        this.addChild(srcChildItem.clone(flags));
+        this.addChild(srcChildItem.clone(flags), false, false);
     // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
     //     src.childAdded.connect((childItem, index)=>{
     //         this.addChild(childItem.clone(flags));
@@ -284,8 +284,10 @@ class TreeItem extends BaseItem {
   setSelectable(val, propagateToChildren = true) {
     if (this.__selectable != val || propagateToChildren) {
       this.__selectable = val;
-      for (let childItem of this.__childItems)
-        childItem.setSelectable(this.__selectable, propagateToChildren);
+      for (let childItem of this.__childItems) {
+        if (childItem instanceof TreeItem)
+          childItem.setSelectable(this.__selectable, propagateToChildren);
+      }
     }
   }
 
@@ -301,11 +303,13 @@ class TreeItem extends BaseItem {
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
       for (let childItem of this.__childItems)
-        childItem.addHighlight('branchselected' + this.getId(), branchSelectionOutlineColor, true);
+        if (childItem instanceof TreeItem)
+          childItem.addHighlight('branchselected' + this.getId(), branchSelectionOutlineColor, true);
     } else {
       this.removeHighlight('selected');
       for (let childItem of this.__childItems)
-        childItem.removeHighlight('branchselected' + this.getId(), true);
+        if (childItem instanceof TreeItem)
+          childItem.removeHighlight('branchselected' + this.getId(), true);
     }
     this.selectedChanged.emit(this.__selected)
   }
@@ -323,7 +327,8 @@ class TreeItem extends BaseItem {
 
     if (propagateToChildren) {
       for (let childItem of this.__childItems)
-        childItem.addHighlight(name, color, propagateToChildren);
+        if (childItem instanceof TreeItem)
+          childItem.addHighlight(name, color, propagateToChildren);
     }
   }
 
@@ -336,7 +341,8 @@ class TreeItem extends BaseItem {
     }
     if (propagateToChildren) {
       for (let childItem of this.__childItems)
-        childItem.removeHighlight(name, propagateToChildren);
+        if (childItem instanceof TreeItem)
+          childItem.removeHighlight(name, propagateToChildren);
     }
   }
 
@@ -364,8 +370,9 @@ class TreeItem extends BaseItem {
   _cleanBoundingBox(bbox) {
     bbox.reset();
     for (let childItem of this.__childItems) {
-      if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX))
-        bbox.addBox3(childItem.getBoundingBox());
+      if (childItem instanceof TreeItem)
+        if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX))
+          bbox.addBox3(childItem.getBoundingBox());
     }
     return bbox;
   }
@@ -441,19 +448,20 @@ class TreeItem extends BaseItem {
     }
   }
 
-  insertChild(childItem, index, maintainXfo = false, checkCollisions = true) {
-
-    if (checkCollisions && childItem.getName() in this.__childItemsMapping)
-      throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
-    if (!(childItem instanceof TreeItem))
+  insertChild(childItem, index, maintainXfo = false, fixCollisions = true) {
+    
+    if (childItem.getName() in this.__childItemsMapping) {
+      if (fixCollisions) {
+        childItem.setName(this.generateUniqueName(childItem.getName()));
+      } else {
+        throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
+      }
+    }
+    if (!(childItem instanceof BaseItem))
       throw ("Object is is not a tree item :" + childItem.constructor.name);
 
     if (childItem.isDestroyed())
       throw ("childItem is destroyed:" + childItem.getPath());
-
-    let newLocalXfo;
-    if (maintainXfo)
-      newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
 
     const signalIds = {};
     signalIds.nameChangedId = childItem.nameChanged.connect((name, oldName) => {
@@ -462,8 +470,14 @@ class TreeItem extends BaseItem {
       delete this.__childItemsMapping[oldName];
       this.__childItemsMapping[name] = index;
     })
-    signalIds.bboxChangedId = childItem.boundingChanged.connect(this._setBoundingBoxDirty)
-    signalIds.visChangedId = childItem.visibilityChanged.connect(this._setBoundingBoxDirty)
+
+    let newLocalXfo;
+    if (childItem instanceof TreeItem) {
+      if (maintainXfo)
+        newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
+      signalIds.bboxChangedId = childItem.boundingChanged.connect(this._setBoundingBoxDirty);
+      signalIds.visChangedId = childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
+    }
 
     this.__childItems.splice(index, 0, childItem);
     this.__childItemsSignalIds.splice(index, 0, signalIds);
@@ -472,22 +486,23 @@ class TreeItem extends BaseItem {
 
     childItem.setOwner(this);
 
-    if (maintainXfo)
-      childItem.setLocalXfo(newLocalXfo);
+    if (childItem instanceof TreeItem) {
+      if (maintainXfo)
+        childItem.setLocalXfo(newLocalXfo);
+      this._setBoundingBoxDirty();
+    }
 
     if (childItem.testFlag(ItemFlags.USER_EDITED))
       this.setFlag(ItemFlags.USER_EDITED)
 
-    this._setBoundingBoxDirty();
     this.childAdded.emit(childItem, index);
-
 
     return childItem;
   }
 
-  addChild(childItem, maintainXfo = false, checkCollisions = true) {
+  addChild(childItem, maintainXfo = false, fixCollisions = true) {
     let index = this.__childItems.length;
-    this.insertChild(childItem, index, maintainXfo, checkCollisions);
+    this.insertChild(childItem, index, maintainXfo, fixCollisions);
     return index;
   }
 
@@ -523,16 +538,22 @@ class TreeItem extends BaseItem {
     if (childItem) {
       const signalIds = this.__childItemsSignalIds[index];
       childItem.nameChanged.disconnectId(signalIds.nameChangedId)
-      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
-      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
+      
+      if (childItem instanceof TreeItem) {
+        childItem.boundingChanged.disconnectId(signalIds.bboxChangedId);
+        childItem.visibilityChanged.disconnectId(signalIds.visChangedId);
+      }
       
       this.__childItems.splice(index, 1);
       this.__childItemsSignalIds.splice(index, 1);
       delete this.__childItemsMapping[childItem.getName()];
       this.__updateMapping(index);
-      this._setBoundingBoxDirty();
 
-      childItem.setParentItem(undefined);
+      if (childItem instanceof TreeItem) {
+        this._setBoundingBoxDirty();
+      }
+
+      childItem.setOwner(undefined);
       this.childRemoved.emit(childItem, index);
     }
   }

@@ -163,7 +163,8 @@ class Group extends TreeItem {
     if (super.__updateVisiblity()) {
       const value = this.getVisible();
       Array.from(this.__itemsParam.getValue()).forEach(item => {
-        item.propagateVisiblity(this.__visible ? 1 : -1);
+        if (item instanceof TreeItem)
+          item.propagateVisiblity(this.__visible ? 1 : -1);
       });
       return true;
     }
@@ -182,10 +183,12 @@ class Group extends TreeItem {
     }
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
-      if (highlighted)
-        item.addHighlight('groupItemHighlight' + this.getId(), color, true)
-      else
-        item.removeHighlight('groupItemHighlight' + this.getId(), true)
+      if (item instanceof TreeItem) {
+        if (highlighted)
+          item.addHighlight('groupItemHighlight' + this.getId(), color, true);
+        else
+          item.removeHighlight('groupItemHighlight' + this.getId(), true);
+      }
     })
   }
 
@@ -202,7 +205,7 @@ class Group extends TreeItem {
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
-        if (treeItem.hasParameter('Material')) {
+        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           if (material) {
             treeItem.__backupMaterial = treeItem.hasParameter('Material').getValue();
             treeItem.hasParameter('Material').setValue(material);
@@ -480,6 +483,9 @@ class Group extends TreeItem {
   }
 
   __bindItem(item, index) {
+    if (!(item instanceof TreeItem))
+      return;
+
     const mouseDownIndex = item.mouseDown.connect((event) => {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
@@ -531,6 +537,8 @@ class Group extends TreeItem {
   }
 
   __unbindItem(item, index) {
+    if (!(item instanceof TreeItem))
+      return;
 
     if (this.getParameter('Highlighted').getValue()) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
@@ -632,15 +640,19 @@ class Group extends TreeItem {
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
       xfo = new Xfo();
       xfo.ori.set(0, 0, 0, 0);
-      for (let p of items) {
-        const itemXfo = p.getGlobalXfo();
-        xfo.tr.addInPlace(itemXfo.tr)
-        xfo.ori.addInPlace(itemXfo.ori)
-        // xfo.sc.addInPlace(itemXfo.sc)
+      let numTreeItems = 0;
+      for (let item of items) {
+        if (item instanceof TreeItem) {
+          const itemXfo = item.getGlobalXfo();
+          xfo.tr.addInPlace(itemXfo.tr)
+          xfo.ori.addInPlace(itemXfo.ori)
+          // xfo.sc.addInPlace(itemXfo.sc)
+          numTreeItems++;
+        }
       }
-      xfo.tr.scaleInPlace(1 / items.length);
+      xfo.tr.scaleInPlace(1 / numTreeItems);
       xfo.ori.normalizeInPlace();
-      // xfo.sc.scaleInPlace(1/this.__items.length);
+      // xfo.sc.scaleInPlace(1/ numTreeItems);
     } else {
       throw ("Invalid mode.")
     }
@@ -654,8 +666,10 @@ class Group extends TreeItem {
     const result = super._cleanBoundingBox(bbox);
     const items = Array.from(this.__itemsParam.getValue());
     items.forEach((item, index) => {
-      if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
-        bbox.addBox3(item.getBoundingBox());
+      if (item instanceof TreeItem) {
+        if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
+          bbox.addBox3(item.getBoundingBox());
+      }
     })
     return bbox;
   }
