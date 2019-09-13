@@ -381,12 +381,14 @@ class TreeItem extends BaseItem {
     return this.__childItems;
   }
 
-  numChildren() {
-    return this.__childItems.length;
-  }
 
   getNumChildren() {
     return this.__childItems.length;
+  }
+
+  numChildren() {
+    console.warn("Deprecated method. Please use getNumChildren")
+    return this.getNumChildren();
   }
 
   generateUniqueName(name) {
@@ -544,6 +546,7 @@ class TreeItem extends BaseItem {
   }
 
   removeChildByHandle(childItem) {
+    console.warn("Deprecated method. Please use removeChild")
     const index = this.__childItems.indexOf(childItem);
     if (index == -1)
       throw ("Error in removeChildByHandle. Child not found:" + childItem.getName());
@@ -558,9 +561,15 @@ class TreeItem extends BaseItem {
     this._setBoundingBoxDirty();
   }
 
-  indexOfChild(childItem) {
+  getChildIndex(childItem) {
     return this.__childItems.indexOf(childItem);
   }
+
+  indexOfChild(childItem) {
+    console.warn("Deprecated method. Please use getChildIndex")
+    return this.getChildIndex(childItem);
+  }
+
 
   //////////////////////////////////////////
   // Components
@@ -800,8 +809,10 @@ class TreeItem extends BaseItem {
             if (childJson.type) {
               childItem = sgFactory.constructClass(childJson.type);
               if (childItem) {
-                this.addChild(childItem, false, false);
+                // Note: we should load the json first, as it
+                // may contain the unique name of the item. 
                 childItem.fromJSON(childJson, context, flags);
+                this.addChild(childItem, false, false);
               }
             } else {
               // Note: no need to log a warning. A child might not exist

@@ -194,7 +194,6 @@ class Group extends TreeItem {
 
   setSelected(sel) {
     super.setSelected(sel);
-    // this.__updateHighlight();
     
     if (sel) {
       Array.from(this.__itemsParam.getValue()).forEach(item => {
