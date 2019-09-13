@@ -59,7 +59,7 @@ class ExplodePartParameter extends StructParameter {
     if(cascade) {
       // in 'cascade' mode, the parts move in a cascade, 
       // starting with stage 0. then 1 ...
-      const t = (stage / stages);
+      let t = (stage / stages);
       if(centered)
         t -= 0.5;
       dist = explodeDist * Math.linStep(movement.x, movement.y, Math.max(0, explode-t));

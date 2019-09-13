@@ -40,9 +40,9 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0
 }
 
-const selectionOutlineColor = new Color("#03E3AC");
+let selectionOutlineColor = new Color("#03E3AC");
 selectionOutlineColor.a = 0.1;
-const branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color("white"), 0.5);
+let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color("white"), 0.5);
 branchSelectionOutlineColor.a = 0.1;
 
 class TreeItem extends BaseItem {

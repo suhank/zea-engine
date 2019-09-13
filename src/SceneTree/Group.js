@@ -194,7 +194,20 @@ class Group extends TreeItem {
 
   setSelected(sel) {
     super.setSelected(sel);
-    this.__updateHighlight();
+    // this.__updateHighlight();
+    
+    if (sel) {
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        if (item instanceof TreeItem)
+          item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
+      })
+    } else {
+      this.removeHighlight('selected');
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        if (item instanceof TreeItem)
+          item.removeHighlight('branchselected' + this.getId(), true);
+      })
+    }
   }
 
   //////////////////////////////////////////
