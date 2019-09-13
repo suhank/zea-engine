@@ -1,9 +1,12 @@
 # Zea Engine
+
 A high performance 3d rendering engine for the web,
 
 Install the httpserver
  npm install http-server -g
 
+[![npm](https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square)](https://www.npmjs.com/package/@zeainc/zea-engine)
+[![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
 ## Getting started
 
