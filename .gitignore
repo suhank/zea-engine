@@ -10,3 +10,4 @@ Resources/Cache/
 VisualiveUI/
 
 *.log
+package-lock.json
