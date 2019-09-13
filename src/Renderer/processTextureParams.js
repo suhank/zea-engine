@@ -148,10 +148,6 @@ const processTextureParams = function(gl, params) {
   return result;
 }
 
-export {
-  GLTextureParams
-};
-
 
 export {
   processTextureParams

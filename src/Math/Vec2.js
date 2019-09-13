@@ -1,6 +1,7 @@
 import  { AttrValue } from './AttrValue.js';
 import  { typeRegistry } from './TypeRegistry.js';
 
+/** Class representing a Vec2. */
 class Vec2 extends AttrValue {
   constructor(x = 0, y = 0) {
     super();

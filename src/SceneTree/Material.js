@@ -279,7 +279,6 @@ class Material extends BaseItem {
 
 };
 export {
-  makeParameterTexturable,
   Material
 };
 // Material;

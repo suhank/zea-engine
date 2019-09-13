@@ -941,6 +941,5 @@ class GLBaseRenderer {
 };
 
 export {
-  GLBaseRenderer,
-  PassType
+  GLBaseRenderer
 };

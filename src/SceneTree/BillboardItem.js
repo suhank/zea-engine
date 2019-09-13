@@ -102,6 +102,5 @@ import {
 sgFactory.registerClass('BillboardItem', BillboardItem);
 
 export {
-  BillboardItem,
-  BillboardLine
+  BillboardItem
 };
