@@ -1,11 +1,14 @@
-import {
-  JSON_stringify_fixedPrecision
-} from './Common.js';
+import { JSON_stringify_fixedPrecision } from './Common.js';
 import { Vec3 } from './Vec3.js';
 import { typeRegistry } from './TypeRegistry.js';
 
+/** Class representing a ray. */
 class Ray {
-
+  /**
+   * Create a ray.
+   * @param {any} start - The start value.
+   * @param {any} dir - The dir value.
+   */
   constructor(start = undefined, dir = undefined) {
     if (start instanceof Vec3) {
       this.start = start;
@@ -19,31 +22,43 @@ class Ray {
     }
   }
 
+  /**
+   * The closestPoint method.
+   * @param {any} point - The point param.
+   * @return {any} - The return value.
+   */
   closestPoint(point) {
-    let w = point.subtract(this.start);
-    let c1 = w.dot(this.dir);
-    let c2 = this.dir.dot(this.dir);
-    if (c2 < Number.EPSILON)
-      return 0.0;
-    let fract = c1 / c2;
+    const w = point.subtract(this.start);
+    const c1 = w.dot(this.dir);
+    const c2 = this.dir.dot(this.dir);
+    if (c2 < Number.EPSILON) return 0.0;
+    const fract = c1 / c2;
     return this.start.add(this.dir.scale(fract));
   }
 
-  pointAtDist(dist){
+  /**
+   * The pointAtDist method.
+   * @param {any} dist - The dist param.
+   * @return {any} - The return value.
+   */
+  pointAtDist(dist) {
     return this.start.add(this.dir.scale(dist));
   }
 
-  // Returns the 2 ray params that represent the closest point between the 2 rays.
+  /**
+   * Returns the 2 ray params that represent the closest point between the 2 rays.
+   * @param {any} ray - The ray param.
+   * @return {any} - The return value.
+   */
   intersectRayVector(ray) {
-
-    let u = this.dir;
-    let v = ray.dir;
-    let w = this.start.subtract(ray.start);
-    let a = u.dot(u); // always >= 0
-    let b = u.dot(v);
-    let c = v.dot(v); // always >= 0
-    let d = u.dot(w);
-    let e = v.dot(w);
+    const u = this.dir;
+    const v = ray.dir;
+    const w = this.start.subtract(ray.start);
+    const a = u.dot(u); // always >= 0
+    const b = u.dot(v);
+    const c = v.dot(v); // always >= 0
+    const d = u.dot(w);
+    const e = v.dot(w);
     if (a == 0.0 && c == 0.0) {
       return this.start.distanceTo(ray.start);
     }
@@ -53,10 +68,11 @@ class Ray {
     if (c == 0.0) {
       return this.closestPoint(ray.start);
     }
-    let D = a * c - b * b; // always >= 0
+    const D = a * c - b * b; // always >= 0
 
     // compute the ray parameters of the two closest points
-    let this_t, ray_t;
+    let this_t;
+    let ray_t;
     if (D < 0.001) {
       // the lines are almost parallel
       this_t = 0.0;
@@ -73,66 +89,85 @@ class Ray {
     return [this_t, ray_t];
   }
 
-  // Returns the 1 ray param representing the intersectoin 
-  // of this ray against the plane defined by the given ray.
+  /**
+   * Returns the 1 ray param representing the intersection
+   * of this ray against the plane defined by the given ray.
+   * @param {any} plane - The plane param.
+   * @return {any} - The return value.
+   */
   intersectRayPlane(plane) {
-    let w = this.start.subtract(plane.start);
-    let D = plane.dir.dot(this.dir);
-    let N = -plane.dir.dot(w);
+    const w = this.start.subtract(plane.start);
+    const D = plane.dir.dot(this.dir);
+    const N = -plane.dir.dot(w);
 
     if (Math.abs(D) < Number.PRECISION) {
       // segment is parallel to plane
-      if (N == 0.0)
-        return -1.0; // segment lies in plane
-      else
-        return -1.0; // no intersection
+      if (N == 0.0) return -1.0;
+      // segment lies in plane
+      else return -1.0; // no intersection
     }
     // they are not parallel
     // compute intersect param
-    let sI = N / D;
+    const sI = N / D;
     if (sI < -Number.PRECISION) {
       return -1; // no intersection
     }
     return sI;
   }
 
+  /**
+   * The clone method.
+   * @return {any} - The return value.
+   */
   clone() {
-    return new Ray(
-      this.start.clone(),
-      this.dir.clone()
-    );
+    return new Ray(this.start.clone(), this.dir.clone());
   }
-  
-  //////////////////////////////////////////
+
+  // ////////////////////////////////////////
   // Static Methods
 
+  /**
+   * The create method.
+   * @param {...object} ...args - The ...args param.
+   * @return {vec3} - The return value.
+   */
   static create(...args) {
     return new Ray(...args);
   }
 
-  /////////////////////////////
+  // ///////////////////////////
   // Persistence
 
+  /**
+   * The toJSON method.
+   * @return {any} - The return value.
+   */
   toJSON() {
     return {
-      "start": this.start,
-      "dir": this.dir
-    }
+      start: this.start,
+      dir: this.dir,
+    };
   }
 
+  /**
+   * The fromJSON method.
+   * @param {any} j - The j param.
+   */
   fromJSON(j) {
     this.start.fromJSON(j.start);
     this.dir.fromJSON(j.dir);
   }
 
+  /**
+   * The toString method.
+   * @return {any} - The return value.
+   */
   toString() {
-    return JSON_stringify_fixedPrecision(this.toJSON())
+    return JSON_stringify_fixedPrecision(this.toJSON());
   }
-};
+}
 
 typeRegistry.registerType('Ray', Ray);
 
-export {
-  Ray
-};
+export { Ray };
 // export default Ray
