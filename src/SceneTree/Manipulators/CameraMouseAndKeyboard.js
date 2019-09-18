@@ -456,7 +456,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     if (Object.keys(this.__ongoingTouches).length == 0)
       this.__manipMode = undefined;
 
-    let touches = event.changedTouches;
+    const touches = event.changedTouches;
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i]);
     }
@@ -470,10 +470,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     const touches = event.touches;
     if (touches.length == 1 && this.__manipMode != "panAndZoom") {
-      let touch = touches[0];
-      let touchPos = new Vec2(touch.pageX, touch.pageY);
-      let touchData = this.__ongoingTouches[touch.identifier];
-      let dragVec = touchData.pos.subtract(touchPos);
+      const touch = touches[0];
+      const touchPos = new Vec2(touch.pageX, touch.pageY);
+      const touchData = this.__ongoingTouches[touch.identifier];
+      const dragVec = touchData.pos.subtract(touchPos);
       if (this.__defaultManipulationState == 'look') {
         // TODO: scale panning here.
         dragVec.scaleInPlace(6.0);
@@ -482,20 +482,20 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.orbit(event, dragVec);
       }
     } else if (touches.length == 2) {
-      let touch0 = touches[0];
-      let touchData0 = this.__ongoingTouches[touch0.identifier];
-      let touch1 = touches[1];
-      let touchData1 = this.__ongoingTouches[touch1.identifier];
+      const touch0 = touches[0];
+      const touchData0 = this.__ongoingTouches[touch0.identifier];
+      const touch1 = touches[1];
+      const touchData1 = this.__ongoingTouches[touch1.identifier];
 
-      let touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
-      let touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
-      let startSeparation = touchData1.pos.subtract(touchData0.pos).length();
-      let dragSeparation = touch1Pos.subtract(touch0Pos).length();
-      let separationDist = startSeparation - dragSeparation;
+      const touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
+      const touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
+      const startSeparation = touchData1.pos.subtract(touchData0.pos).length();
+      const dragSeparation = touch1Pos.subtract(touch0Pos).length();
+      const separationDist = startSeparation - dragSeparation;
 
-      let touch0Drag = touch0Pos.subtract(touchData0.pos);
-      let touch1Drag = touch1Pos.subtract(touchData1.pos);
-      let dragVec = touch0Drag.add(touch1Drag);
+      const touch0Drag = touch0Pos.subtract(touchData0.pos);
+      const touch1Drag = touch1Pos.subtract(touchData1.pos);
+      const dragVec = touch0Drag.add(touch1Drag);
       // TODO: scale panning here.
       dragVec.scaleInPlace(0.5);
       this.panAndZoom(event, dragVec, separationDist * 0.002);
