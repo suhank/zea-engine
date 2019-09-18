@@ -598,9 +598,9 @@ class GLBaseRenderer {
     });
 
     this.__glcanvas.addEventListener("touchstart", (event) => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
       for (let i = 0; i < event.touches.length; i++) {
-        event.stopPropagation();
-        event.undoRedoManager = this.undoRedoManager;
         calcRendererCoords(event.touches[i]);
       }
       this.getViewport().onTouchStart(event);
