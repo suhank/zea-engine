@@ -13,14 +13,16 @@ class ItemSetParameter extends Parameter {
     super(name, undefined, 'BaseItem');
     this.__items = new Set();
     this.__filterFn = filterFn; // Note: the filter Fn indicates that users will edit the set. 
+    this.itemAdded = new Signal();
+    this.itemRemoved = new Signal();
   }
 
-  clone(flags) {
+  clone() {
     const clonedParam = new ItemSetParameter(this.__name, this.__filterFn);
     return clonedParam;
   }
 
-  setFilterFn(flterFn) {
+  setFilterFn(filterFn) {
     this.__filterFn = filterFn;
   }
 
@@ -36,23 +38,35 @@ class ItemSetParameter extends Parameter {
     if (this.__filterFn && !this.__filterFn(item))
       return false;
     this.__items.add(item);
+    const index = Array.from(this.__items).indexOf(item)
+    this.itemAdded.emit(item, index)
     if(emit)
       this.valueChanged.emit()
     return Array.from(this.__items).indexOf(item)
   }
 
-  removeItem(item, emit = true) {
-    const index = Array.from(this.__items).indexOf(item)
+  addItems(items, emit = true) {
+    items.forEach( item => this.addItem(item, false));
+    if(emit)
+      this.valueChanged.emit()
+  }
+
+  removeItem(index, emit = true) {
+    const item = Array.from(this.__items)[index];
     this.__items.delete(item);
+    this.itemRemoved.emit(item, index)
     if(emit)
       this.valueChanged.emit();
-    return index;
+    return item;
   }
 
   setItems(items, emit = true) {
     for (let item of this.__items){
+      const item = Array.from(this.__items)[index];
       if(!items.has(item)) {
         this.__items.delete(item);
+        this.itemRemoved.emit(index)
+        this.itemAdded.emit()
       }
     }
     for (let item of items){
