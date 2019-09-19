@@ -1,5 +1,4 @@
 import {
-  Vec2,
   Vec3,
   Color,
   Xfo
@@ -11,11 +10,8 @@ import {
   ValueSetMode,
   BooleanParameter,
   NumberParameter,
-  StringParameter,
   Vec3Parameter,
   ColorParameter,
-  XfoParameter,
-  TreeItemParameter,
   ItemSetParameter,
   MultiChoiceParameter
 } from './Parameters';
@@ -45,14 +41,10 @@ class Group extends TreeItem {
   constructor(name) {
     super(name);
 
-    // This setting makes selection propagate from items
-    // to the group, which then propagates down to the items 
-    this.propagateSelectionToItems = false;
-    this.propagateXfoToItems = true;
-    this.propagateSelectionChangesFromItems = false;
+    this.calculatingGroupXfo = false;
+    this.propagatingXfoToItems = false;
 
-    this.__calculatingInvInitialXfo = false;
-    this.__invInitialXfo = undefined;
+    this.invGroupXfo = undefined;
     this.__initialXfos = [];
     this.__signalIndices = [];
 
@@ -66,7 +58,8 @@ class Group extends TreeItem {
     })
     this.__itemsParam.valueChanged.connect(() => {
       this.__updateHighlight();
-      this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+      // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+      this._setGlobalXfoDirty();
       this._setBoundingBoxDirty();
     })
 
@@ -74,7 +67,8 @@ class Group extends TreeItem {
       new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']),
       pid++);
     this.__initialXfoModeParam.valueChanged.connect(() => {
-      this.recalcInitialXfo();
+      // this.recalcInitialXfo();
+      this._setGlobalXfoDirty();
     })
 
     this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), pid++);
@@ -99,30 +93,31 @@ class Group extends TreeItem {
     this.insertParameter(new NumberParameter('CutDist', 0.0), pid++).valueChanged.connect(this.__updateCutaway);
 
     this.__globalXfoParam.valueChanged.connect((changeType) => {
-      if (!this.propagateXfoToItems)
+      if (this.calculatingGroupXfo)
         return;
 
       const items = Array.from(this.__itemsParam.getValue());
       // Only after all the items are resolved do we have an invXfo and we can tranform our items.
-      if (!this.__calculatingInvInitialXfo && items.length > 0 && this.__invInitialXfo) {
+      if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
         let delta;
+        this.propagatingXfoToItems = true;
         const xfo = this.__globalXfoParam.getValue();
         const setDirty = (item, initialXfo) => {
           const clean = () => {
             if (!delta) {
-              const xfo = this.__globalXfoParam.getValue();
               // Compute the skinning transform that we can
               // apply to all the items in the group.
-              delta = xfo.multiply(this.__invInitialXfo);
+              delta = xfo.multiply(this.invGroupXfo);
             }
             return delta.multiply(initialXfo);
           }
           item.getParameter('GlobalXfo').setDirty(clean);
         }
-        const len = items.length;
-        for (let i = 0; i < len; i++) {
-          setDirty(items[i], this.__initialXfos[i]);
-        }
+        items.forEach((item, index) => {
+          if (item instanceof TreeItem)
+            setDirty(item, this.__initialXfos[index]);
+        });
+        this.propagatingXfoToItems = false;
       }
     });
 
@@ -134,7 +129,7 @@ class Group extends TreeItem {
   }
 
   clone(flags) {
-    let cloned = new Group();
+    const cloned = new Group();
     cloned.copyFrom(this, flags);
     return cloned;
   }
@@ -187,6 +182,8 @@ class Group extends TreeItem {
         if (item instanceof TreeItem)
           item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
       })
+      // We want to re-apply the group hilight over the branch selection hilight. 
+      this.__updateHighlight();
     } else {
       this.removeHighlight('selected');
       Array.from(this.__itemsParam.getValue()).forEach(item => {
@@ -194,6 +191,43 @@ class Group extends TreeItem {
           item.removeHighlight('branchselected' + this.getId(), true);
       })
     }
+  }
+
+  //////////////////////////////////////////
+  // Global Xfo
+
+  _cleanGlobalXfo(prevValue) {
+    const items = Array.from(this.__itemsParam.getValue());
+    if (items.length == 0)
+      return prevValue;
+    this.calculatingGroupXfo = true;
+    const initialXfoMode = this.__initialXfoModeParam.getValue();
+    let xfo;
+    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
+      xfo = items[0].getGlobalXfo();
+    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
+      xfo = new Xfo();
+      xfo.ori.set(0, 0, 0, 0);
+      let numTreeItems = 0;
+      for (let item of items) {
+        if (item instanceof TreeItem) {
+          const itemXfo = item.getGlobalXfo();
+          xfo.tr.addInPlace(itemXfo.tr)
+          xfo.ori.addInPlace(itemXfo.ori)
+          // xfo.sc.addInPlace(itemXfo.sc)
+          numTreeItems++;
+        }
+      }
+      xfo.tr.scaleInPlace(1 / numTreeItems);
+      xfo.ori.normalizeInPlace();
+      // xfo.sc.scaleInPlace(1/ numTreeItems);
+    } else {
+      throw ("Invalid mode.")
+    }
+    // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
+    this.invGroupXfo = xfo.inverse();
+    this.calculatingGroupXfo = false;
+    return xfo;
   }
 
   //////////////////////////////////////////
@@ -261,7 +295,9 @@ class Group extends TreeItem {
     if (!(item instanceof TreeItem))
       return;
 
-    const mouseDownIndex = item.mouseDown.connect((event) => {
+    const signalIndices = {}
+
+    signalIndices.mouseDownIndex = item.mouseDown.connect((event) => {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
     });
@@ -269,59 +305,46 @@ class Group extends TreeItem {
     /////////////////////////////////
     // Update the item cutaway
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
-    const cutAwayVector = this.getParameter('CutVector').getValue();
-    const cutAwayDist = this.getParameter('CutDist').getValue();
-    item.traverse(treeItem => {
-      if (treeItem instanceof BaseGeomItem) {
-        treeItem.setCutawayEnabled(cutEnabled)
-        treeItem.setCutVector(cutAwayVector)
-        treeItem.setCutDist(cutAwayDist)
-      }
-    }, true)
+    if (cutEnabled) {
+      const cutAwayVector = this.getParameter('CutVector').getValue();
+      const cutAwayDist = this.getParameter('CutDist').getValue();
+      item.traverse(treeItem => {
+        if (treeItem instanceof BaseGeomItem) {
+          treeItem.setCutawayEnabled(cutEnabled)
+          treeItem.setCutVector(cutAwayVector)
+          treeItem.setCutDist(cutAwayDist)
+        }
+      }, true);
+    }
 
     if (!this.getVisible()) {
       // Decrement the visiblity counter which might cause
       // this item to become invisible. (or it might already be invisible.)
       item.propagateVisiblity(-1);
     }
-    // Only used by the Selection Manager.
-    // Maybe we should have a special group 
-    // for that.
-    if (this.propagateSelectionToItems) {
-      item.setSelected(this.getSelected());
-    } else {
-      // Higlight the new item with branch selection color
-      if (this.getSelected()) {
-        if (item instanceof TreeItem)
-          item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
-      }
+
+    // Higlight the new item with branch selection color
+    if (this.getSelected()) {
+      if (item instanceof TreeItem)
+        item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
     }
 
-    if (this.propagateSelectionChangesFromItems) {
-      const selectedChangedIndex = item.selectedChanged.connect((event) => {
-        this.setSelected(item.getSelected());
-      });
-    }
-
-    const globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
+    signalIndices.globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
       if (mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
         this.__initialXfos[index] = item.getGlobalXfo();
     });
     this.__initialXfos[index] = item.getGlobalXfo();
 
-    const bboxChangedIndex = item.boundingChanged.connect(this._setBoundingBoxDirty);
+    signalIndices.bboxChangedIndex = item.boundingChanged.connect(this._setBoundingBoxDirty);
 
-    this.__signalIndices[index] = {
-      mouseDownIndex,
-      globalXfoChangedIndex,
-      bboxChangedIndex
-    }
+    this.__signalIndices[index] = signalIndices
   }
 
   __unbindItem(item, index) {
     if (!(item instanceof TreeItem))
       return;
 
+    item.removeHighlight('branchselected' + this.getId(), true);
     if (this.getParameter('Highlighted').getValue()) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
@@ -332,18 +355,8 @@ class Group extends TreeItem {
       // It will stay invisible its parent is invisible, or if 
       // multiple groups connect to it and say it is invisible.
       item.propagateVisiblity(1);
-    }
-
-    // Only used by the Selection Manager.
-    // Maybe we should have a special group 
-    // for that.
-    if (this.propagateSelectionToItems) {
-      if(this.getSelected())
-        item.setSelected(false);
-    } else {
-      item.removeHighlight('branchselected' + this.getId(), true);
-    }
-
+    } 
+    
     /////////////////////////////////
     // Update the item cutaway
     item.traverse(treeItem => {
@@ -391,51 +404,50 @@ class Group extends TreeItem {
 
   setItems(items) {
     this.clearItems(false)
-    this.__itemsParam.setItems(items, false);
+    this.__itemsParam.setItems(items);
 
-    Array.from(items).forEach((item, index) => {
-      this.__bindItem(item, index)
-    })
-    this.__updateHighlight();
-    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
-    this._setBoundingBoxDirty();
+    // Array.from(items).forEach((item, index) => {
+    //   this.__bindItem(item, index)
+    // })
+    // this.__updateHighlight();
+    // // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+    // this._setGlobalXfoDirty();
+    // this._setBoundingBoxDirty();
   }
 
-  recalcInitialXfo(mode) {
-    if (!this.propagateXfoToItems)
-      return;
-    const items = Array.from(this.__itemsParam.getValue());
-    if (items.length == 0)
-      return;
-    this.__calculatingInvInitialXfo = true;
-    const initialXfoMode = this.__initialXfoModeParam.getValue();
-    let xfo;
-    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = items[0].getGlobalXfo();
-    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
-      xfo = new Xfo();
-      xfo.ori.set(0, 0, 0, 0);
-      let numTreeItems = 0;
-      for (let item of items) {
-        if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo();
-          xfo.tr.addInPlace(itemXfo.tr)
-          xfo.ori.addInPlace(itemXfo.ori)
-          // xfo.sc.addInPlace(itemXfo.sc)
-          numTreeItems++;
-        }
-      }
-      xfo.tr.scaleInPlace(1 / numTreeItems);
-      xfo.ori.normalizeInPlace();
-      // xfo.sc.scaleInPlace(1/ numTreeItems);
-    } else {
-      throw ("Invalid mode.")
-    }
-    // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
-    this.__globalXfoParam.setValue(xfo, mode);
-    this.__invInitialXfo = xfo.inverse();
-    this.__calculatingInvInitialXfo = false;
-  }
+  // recalcInitialXfo(mode) {
+  //   const items = Array.from(this.__itemsParam.getValue());
+  //   if (items.length == 0)
+  //     return;
+  //   this.calculatingGroupXfo = true;
+  //   const initialXfoMode = this.__initialXfoModeParam.getValue();
+  //   let xfo;
+  //   if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
+  //     xfo = items[0].getGlobalXfo();
+  //   } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
+  //     xfo = new Xfo();
+  //     xfo.ori.set(0, 0, 0, 0);
+  //     let numTreeItems = 0;
+  //     for (let item of items) {
+  //       if (item instanceof TreeItem) {
+  //         const itemXfo = item.getGlobalXfo();
+  //         xfo.tr.addInPlace(itemXfo.tr)
+  //         xfo.ori.addInPlace(itemXfo.ori)
+  //         // xfo.sc.addInPlace(itemXfo.sc)
+  //         numTreeItems++;
+  //       }
+  //     }
+  //     xfo.tr.scaleInPlace(1 / numTreeItems);
+  //     xfo.ori.normalizeInPlace();
+  //     // xfo.sc.scaleInPlace(1/ numTreeItems);
+  //   } else {
+  //     throw ("Invalid mode.")
+  //   }
+  //   // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
+  //   this.__globalXfoParam.setValue(xfo, mode);
+  //   this.invGroupXfo = xfo.inverse();
+  //   this.calculatingGroupXfo = false;
+  // }
 
   _cleanBoundingBox(bbox) {
     const result = super._cleanBoundingBox(bbox);

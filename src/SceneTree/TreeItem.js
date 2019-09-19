@@ -230,7 +230,7 @@ class TreeItem extends BaseItem {
   }
 
   _cleanGlobalXfo(prevValue) {
-    let parentItem = this.getParentItem();
+    const parentItem = this.getParentItem();
     if (parentItem !== undefined)
       return parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue());
     else
@@ -304,9 +304,13 @@ class TreeItem extends BaseItem {
   // Highlights
 
   addHighlight(name, color, propagateToChildren = false) {
-    if (!(name in this.__highlightMapping)) {
-      this.__highlights.push(name);
+    // If the hilight was already in the list, 
+    // remove it and put it at the top.
+    if (name in this.__highlightMapping) {
+      const id = this.__highlights.indexOf(name);
+      this.__highlights.splice(id, 1)
     }
+    this.__highlights.push(name);
     this.__highlightMapping[name] = color;
     this.highlightChanged.emit();
 

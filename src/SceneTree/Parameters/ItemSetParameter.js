@@ -35,14 +35,16 @@ class ItemSetParameter extends Parameter {
   }
 
   addItem(item, emit = true) {
-    if (this.__filterFn && !this.__filterFn(item))
+    if (this.__filterFn && !this.__filterFn(item)) {
+      console.warn("ItemSet __filterFn rejecting item:", item.getPath())
       return false;
+    }
     this.__items.add(item);
     const index = Array.from(this.__items).indexOf(item)
     this.itemAdded.emit(item, index)
     if(emit)
       this.valueChanged.emit()
-    return Array.from(this.__items).indexOf(item)
+    return index;
   }
 
   addItems(items, emit = true) {
@@ -62,16 +64,13 @@ class ItemSetParameter extends Parameter {
 
   setItems(items, emit = true) {
     for (let item of this.__items){
-      const item = Array.from(this.__items)[index];
       if(!items.has(item)) {
-        this.__items.delete(item);
-        this.itemRemoved.emit(index)
-        this.itemAdded.emit()
+        this.removeItem(item, false);
       }
     }
     for (let item of items){
       if(!this.__items.has(item)) {
-        this.__items.add(item);
+        this.addItem(item, false);
       }
     }
     if(emit)

@@ -33,7 +33,7 @@ class AdvancedGroup extends Group {
   }
 
   clone(flags) {
-    let cloned = new AdvancedGroup();
+    const cloned = new AdvancedGroup();
     cloned.copyFrom(this, flags);
     return cloned;
   }
