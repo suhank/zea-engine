@@ -7,13 +7,10 @@ import {
   Operator
 } from './Operator.js';
 import {
-  ValueSetMode,
   StructParameter,
-  Parameter,
   NumberParameter,
   Vec3Parameter,
   ListParameter,
-  KinematicGroupParameter
 } from '../Parameters';
 import {
   sgFactory
@@ -71,11 +68,11 @@ class GearsOperator extends Operator {
     const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)); // revolutions per minute
     this.__timeoutId;
     rpmParam.valueChanged.connect(() => {
-      let rpm = rpmParam.getValue();
+      const rpm = rpmParam.getValue();
       if (Math.abs(rpm) > 0.0) {
         if (!this.__timeoutId) {
           const timerCallback = () => {
-            rpm = rpmParam.getValue();
+            const rpm = rpmParam.getValue();
             const revolutions = this.__revolutionsParam.getValue();
             this.__revolutionsParam.setValue(revolutions + (rpm * (1 / (50 * 60))));
             this.__timeoutId = setTimeout(timerCallback, 20); // Sample at 50fps.
@@ -130,9 +127,26 @@ class GearsOperator extends Operator {
   }
 
 
+  detach(){
+    super.detach();
+    if(this.__timeoutId) {
+      clearTimeout(this.__timeoutId);
+      this.__timeoutId = null;
+    }
+  }
+
+  reattach(){
+    super.reattach();
+
+    // Restart the operator.
+    this.getParameter('RPM').valueChanged.emit();
+  }
 
   destroy(){
-    // clearTimeout(this.__timeoutId);
+    if(this.__timeoutId) {
+      clearTimeout(this.__timeoutId);
+      this.__timeoutId = null;
+    }
     super.destroy();
   };
 };

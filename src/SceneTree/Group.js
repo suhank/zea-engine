@@ -41,6 +41,10 @@ class Group extends TreeItem {
   constructor(name) {
     super(name);
 
+    // Items which can be constructed by a user(not loaded in binary data.)
+    // Should always have this flag set. 
+    this.setFlag(ItemFlags.USER_EDITED)
+
     this.calculatingGroupXfo = false;
     this.propagatingXfoToItems = false;
 
@@ -484,8 +488,10 @@ class Group extends TreeItem {
     const j = super.toJSON(context, flags);
     const items = Array.from(this.__itemsParam.getValue());
     const treeItems = [];
-    for (let p of items)
-      treeItems.push(context.makeRelative(p.getPath()));
+    for (let p of items) {
+      const path = p.getPath();
+      treeItems.push(context ? context.makeRelative(path) : path);
+    }
     j.treeItems = treeItems
     return j;
   }

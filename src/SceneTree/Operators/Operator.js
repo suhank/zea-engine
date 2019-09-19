@@ -11,6 +11,7 @@ import {
 
 
 import {
+  ItemFlags,
   BaseItem
 } from '../BaseItem.js';
 
@@ -19,6 +20,7 @@ class OperatorOutput {
     this.__name = name;
     this.__filterFn = filterFn;
     this._param = undefined;
+    this.detached = false;
 
     this.paramSet = new Signal();
   }
@@ -71,9 +73,10 @@ class OperatorOutput {
   // Persistence
 
   toJSON(context, flags) {
+    const paramPath = this._param ? this._param.getPath() : '';
     return {
       type: this.constructor.name,
-      paramPath: this._param ? (context.makeRelative ? context.makeRelative(this._param.getPath()) : this._param.getPath()) : false
+      paramPath: ((context && context.makeRelative) ? context.makeRelative(paramPath) : paramPath)
     };
   }
 
@@ -89,6 +92,19 @@ class OperatorOutput {
       });
     }
   }
+  
+  detach(){
+    // This function is called when we want to suspend an operator
+    // from functioning because it is deleted and on the undo stack.
+    // Once operators have persistent connections, 
+    // we will simply uninstall the output from the parameter. 
+    this.detached = true;
+  }
+
+  reattach(){
+    this.detached = false;
+  }
+
 }
 sgFactory.registerClass('OperatorOutput', OperatorOutput);
 
@@ -134,6 +150,10 @@ class Operator extends BaseItem {
   constructor(name) {
     super(name);
 
+    // Items which can be constructed by a user(not loaded in binary data.)
+    // Should always have this flag set. 
+    this.setFlag(ItemFlags.USER_EDITED);
+
     this.__outputs = [];
     this.__evalOutput = this.__evalOutput.bind(this);
     this.__opInputChanged = this.__opInputChanged.bind(this);
@@ -154,6 +174,9 @@ class Operator extends BaseItem {
     this.__outputs.splice(this.__outputs.indexOf(output), 1);
   }
 
+  getNumOutputs() {
+    return this.__outputs.length
+  }
   getOutput(index) {
     return this.__outputs[index]
   }
@@ -220,6 +243,14 @@ class Operator extends BaseItem {
         this.__opInputChanged();
       })
     }
+  }
+
+  detach(){
+    this.__outputs.forEach(output => output.detach());
+  }
+
+  reattach(){
+    this.__outputs.forEach(output => output.reattach());
   }
 
   destroy() {

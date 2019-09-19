@@ -752,7 +752,7 @@ class TreeItem extends BaseItem {
     if (!this.testFlag(ItemFlags.USER_EDITED))
       return;
 
-    let j = super.toJSON(context, flags);
+    const j = super.toJSON(context, flags);
 
     const jcs = [];
     for (let c of this.__components)
