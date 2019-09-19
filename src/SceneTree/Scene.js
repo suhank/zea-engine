@@ -17,8 +17,8 @@ import {
   TreeItem
 } from './TreeItem.js';
 import {
-  Camera
-} from './Camera.js';
+  RendererParams
+} from './RendererParams.js';
 import {
   Lines
 } from './Geometry/Lines.js';
@@ -55,7 +55,7 @@ class Scene {
     this.cameras = [];
     this.__root = new TreeItem('root');
     this.__root.addRef(this);
-    this.__root.addChild(new Camera('Camera'));
+    this.__root.addChild(new RendererParams('Renderer Params'));
 
     this.__assets = [];
 
