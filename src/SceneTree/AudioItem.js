@@ -1,46 +1,42 @@
-import {
-  Vec2
-} from '../Math';
-import {
-  Signal
-} from '../Utilities';
+import { Vec2 } from '../Math';
+import { Signal } from '../Utilities';
 import {
   Parameter,
   ValueSetMode,
   FilePathParameter,
   BooleanParameter,
-  NumberParameter
+  NumberParameter,
 } from './Parameters';
-import {
-  TreeItem
-} from './TreeItem.js';
-import {
-  GeomLibrary
-} from './GeomLibrary.js';
-import {
-  MaterialLibrary
-} from './MaterialLibrary.js';
+import { TreeItem } from './TreeItem.js';
+import { GeomLibrary } from './GeomLibrary.js';
+import { MaterialLibrary } from './MaterialLibrary.js';
 
+/** Class representing an audio item.
+ * @extends TreeItem
+ */
 class AudioItem extends TreeItem {
+  /**
+   * Create an audio item.
+   * @param {any} name - The name value.
+   */
   constructor(name) {
     super(name);
-
 
     this.__loaded = false;
 
     this.audioSourceCreated = new Signal();
-    
+
     const fileParam = this.addParameter(new FilePathParameter('FilePath'));
     let audioSource;
     let audioBuffer;
-    const startAudioPlayback = ()=>{
+    const startAudioPlayback = () => {
       audioSource = ZeaEngine.audioCtx.createBufferSource();
       audioSource.buffer = audioBuffer;
-      audioSource.loop = loopParam.getValue()
+      audioSource.loop = loopParam.getValue();
       audioSource.muted = muteParam.getValue();
       audioSource.start(0);
       this.audioSourceCreated.emit(audioSource);
-    }
+    };
     fileParam.valueChanged.connect(() => {
       const request = new XMLHttpRequest();
       request.open('GET', fileParam.getURL(), true);
@@ -49,39 +45,43 @@ class AudioItem extends TreeItem {
       request.onload = () => {
         const audioData = request.response;
         // Note: this code is not pretty and should not access the global object
-        // However, its difficult to handle this case. 
+        // However, its difficult to handle this case.
         // TODO: clean this up.
-        ZeaEngine.audioCtx.decodeAudioData(audioData, 
-          (buffer) => {
+        ZeaEngine.audioCtx.decodeAudioData(
+          audioData,
+          buffer => {
             audioBuffer = buffer;
             this.__loaded = true;
             this.loaded.emit(true);
-            if(autoplayParam.getValue())
-              startAudioPlayback();
+            if (autoplayParam.getValue()) startAudioPlayback();
           },
-          (e) =>{
-            console.log("Error with decoding audio data" + e.err);
-          });
+          e => {
+            console.log('Error with decoding audio data' + e.err);
+          }
+        );
       };
 
       request.send();
-
     });
-    const autoplayParam = this.addParameter(new BooleanParameter('Autoplay', false));
-    const playStateParam = this.addParameter(new NumberParameter('PlayState', 0));
-    playStateParam.valueChanged.connect((mode) => {
-      if(mode != ValueSetMode.CUSTOM){
+    const autoplayParam = this.addParameter(
+      new BooleanParameter('Autoplay', false)
+    );
+    const playStateParam = this.addParameter(
+      new NumberParameter('PlayState', 0)
+    );
+    playStateParam.valueChanged.connect(mode => {
+      if (mode != ValueSetMode.CUSTOM) {
         switch (playStateParam.getValue()) {
           case 0:
-            if(this.__loaded){
-              if(audioSource){
+            if (this.__loaded) {
+              if (audioSource) {
                 audioSource.stop(0);
                 audioSource = undefined;
               }
             }
             break;
           case 1:
-            if(this.__loaded){
+            if (this.__loaded) {
               startAudioPlayback();
             }
             break;
@@ -89,23 +89,23 @@ class AudioItem extends TreeItem {
       }
     });
 
-    this.isPlaying = ()=>{
+    this.isPlaying = () => {
       return playStateParam.getValue() != 0;
-    }
+    };
 
-    this.play = ()=>{
+    this.play = () => {
       playStateParam.setValue(1, ValueSetMode.CUSTOM);
-    }
-    this.stop = ()=>{
+    };
+    this.stop = () => {
       playStateParam.setValue(0, ValueSetMode.CUSTOM);
-    }
-    this.pause = ()=>{
+    };
+    this.pause = () => {
       playStateParam.setValue(0, ValueSetMode.CUSTOM);
-    }
+    };
 
     this.getAudioSource = () => {
       return audioSource;
-    }
+    };
     const muteParam = this.addParameter(new BooleanParameter('Mute', false));
 
     this.addParameter(new NumberParameter('Gain', 1.0)).setRange([0, 5]);
@@ -120,17 +120,15 @@ class AudioItem extends TreeItem {
     this.addParameter(new NumberParameter('coneOuterGain', 1));
 
     muteParam.valueChanged.connect(() => {
-      if(audioSource)
-        audioSource.muted = muteParam.getValue();
+      if (audioSource) audioSource.muted = muteParam.getValue();
     });
     loopParam.valueChanged.connect(() => {
-      if(audioSource)
-        audioSource.loop = loopParam.getValue();
+      if (audioSource) audioSource.loop = loopParam.getValue();
     });
 
-    this.mute = (value)=>{
+    this.mute = value => {
       muteParam.setValue(value, ValueSetMode.CUSTOM);
-    }
+    };
 
     // Note: many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
@@ -138,24 +136,34 @@ class AudioItem extends TreeItem {
     this.loaded.setToggled(false);
   }
 
+  /**
+   * The isLoaded method.
+   * @return {any} - The return value.
+   */
   isLoaded() {
     return this.__loaded;
   }
 
+  /**
+   * The setAudioStream method.
+   * @param {any} audio - The audio param.
+   */
   setAudioStream(audio) {
     this.__loaded = true;
     this.loaded.emit();
     this.audioSourceCreated.emit(audioSource);
   }
-};
+}
 
-
+/** Class representing a file audio item.
+ * @extends AudioItem
+ */
 class FileAudioItem extends AudioItem {
-  constructor(name) {
-  }
-};
+  /**
+   * Create a file audio item..
+   * @param {any} name - The name value.
+   */
+  constructor(name) {}
+}
 
-export {
-  AudioItem,
-  FileAudioItem
-};
+export { AudioItem, FileAudioItem };

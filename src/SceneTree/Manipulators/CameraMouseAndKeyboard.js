@@ -1,26 +1,19 @@
-import {
-  SystemDesc
-} from '../../BrowserDetection.js';
-import {
-  Vec2,
-  Vec3,
-  Quat,
-  Xfo
-} from '../../Math';
-import {
-  Signal
-} from '../../Utilities';
-import {
-  ParameterOwner
-} from '../ParameterOwner.js';
-import {
-  NumberParameter,
-} from '../Parameters';
+import { SystemDesc } from '../../BrowserDetection.js';
+import { Vec2, Vec3, Quat, Xfo } from '../../Math';
+import { Signal } from '../../Utilities';
+import { ParameterOwner } from '../ParameterOwner.js';
+import { NumberParameter } from '../Parameters';
 
+/** Class representing a camera, mouse and keyboard.
+ * @extends ParameterOwner
+ */
 class CameraMouseAndKeyboard extends ParameterOwner {
+  /**
+   * Create a camera, mouse and keyboard
+   * @param {any} name - The name value.
+   */
   constructor(name = undefined) {
-    if (name == undefined)
-      name = "Camera";
+    if (name == undefined) name = 'Camera';
     super(name);
 
     this.__defaultManipulationState = 'orbit';
@@ -33,17 +26,35 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     this.__ongoingTouches = {};
 
-    this.__orbitRateParam = this.addParameter(new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.002 : 0.01));
-    this.__dollySpeedParam = this.addParameter(new NumberParameter('dollySpeed', 0.02));
-    this.__mouseWheelDollySpeedParam = this.addParameter(new NumberParameter('mouseWheelDollySpeed', 0.0005));
+    this.__orbitRateParam = this.addParameter(
+      new NumberParameter(
+        'orbitRate',
+        SystemDesc.isMobileDevice ? -0.002 : 0.01
+      )
+    );
+    this.__dollySpeedParam = this.addParameter(
+      new NumberParameter('dollySpeed', 0.02)
+    );
+    this.__mouseWheelDollySpeedParam = this.addParameter(
+      new NumberParameter('mouseWheelDollySpeed', 0.0005)
+    );
 
     this.movementFinished = new Signal();
   }
 
+  /**
+   * The setDefaultManipulationMode method.
+   * @param {any} mode - The mode param.
+   */
   setDefaultManipulationMode(mode) {
     this.__defaultManipulationState = mode;
   }
 
+  /**
+   * The look method.
+   * @param {any} event - The event param.
+   * @param {any} dragVec - The dragVec param.
+   */
   look(event, dragVec) {
     const { viewport } = event;
     const camera = viewport.getCamera();
@@ -82,10 +93,15 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
+  /**
+   * The orbit method.
+   * @param {any} event - The event param.
+   * @param {any} dragVec - The dragVec param.
+   */
   orbit(event, dragVec) {
     const { viewport } = event;
     const camera = viewport.getCamera();
-    
+
     const focalDistance = camera.getFocalDistance();
     const orbitRate = this.__orbitRateParam.getValue();
 
@@ -110,7 +126,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     pitch.rotateX(dragVec.y * -orbitRate);
     globalXfo.ori.multiplyInPlace(pitch);
 
-    globalXfo.tr = this.__mouseDownCameraTarget.add(globalXfo.ori.getZaxis().scale(focalDistance));
+    globalXfo.tr = this.__mouseDownCameraTarget.add(
+      globalXfo.ori.getZaxis().scale(focalDistance)
+    );
 
     if (this.__keyboardMovement) {
       // TODO: debug this potential regression. we now use the generic method which emits a signal.
@@ -122,8 +140,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
+  /**
+   * The pan method.
+   * @param {any} event - The event param.
+   * @param {any} dragVec - The dragVec param.
+   */
   pan(event, dragVec) {
-    console.log("Pab")
+    console.log('Pab');
     const { viewport } = event;
     const camera = viewport.getCamera();
 
@@ -133,14 +156,24 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const yAxis = new Vec3(0, 1, 0);
 
     const cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
-    const cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
+    const cameraPlaneWidth =
+      cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
     const delta = new Xfo();
-    delta.tr = xAxis.scale(-(dragVec.x / viewport.getWidth()) * cameraPlaneWidth)
-    delta.tr.addInPlace(yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight));
+    delta.tr = xAxis.scale(
+      -(dragVec.x / viewport.getWidth()) * cameraPlaneWidth
+    );
+    delta.tr.addInPlace(
+      yAxis.scale((dragVec.y / viewport.getHeight()) * cameraPlaneHeight)
+    );
 
     camera.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
   }
 
+  /**
+   * The dolly method.
+   * @param {any} event - The event param.
+   * @param {any} dragVec - The dragVec param.
+   */
   dolly(event, dragVec) {
     const { viewport } = event;
     const camera = viewport.getCamera();
@@ -151,6 +184,12 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     camera.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
   }
 
+  /**
+   * The panAndZoom method.
+   * @param {any} event - The event param.
+   * @param {any} panDelta - The panDelta param.
+   * @param {any} dragDist - The dragDist param.
+   */
   panAndZoom(event, panDelta, dragDist) {
     const { viewport } = event;
     const camera = viewport.getCamera();
@@ -162,11 +201,15 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const yAxis = new Vec3(0, 1, 0);
 
     const cameraPlaneHeight = 2.0 * focalDistance * Math.tan(0.5 * fovY);
-    const cameraPlaneWidth = cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
+    const cameraPlaneWidth =
+      cameraPlaneHeight * (viewport.getWidth() / viewport.getHeight());
     const delta = new Xfo();
-    delta.tr = xAxis.scale(-(panDelta.x / viewport.getWidth()) * cameraPlaneWidth)
-    delta.tr.addInPlace(yAxis.scale((panDelta.y / viewport.getHeight()) * cameraPlaneHeight));
-
+    delta.tr = xAxis.scale(
+      -(panDelta.x / viewport.getWidth()) * cameraPlaneWidth
+    );
+    delta.tr.addInPlace(
+      yAxis.scale((panDelta.y / viewport.getHeight()) * cameraPlaneHeight)
+    );
 
     const zoomDist = dragDist * focalDistance;
     camera.setFocalDistance(this.__mouseDownFocalDist + zoomDist);
@@ -174,6 +217,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     camera.setGlobalXfo(this.__mouseDownCameraXfo.multiply(delta));
   }
 
+  /**
+   * The initDrag method.
+   * @param {any} event - The event param.
+   */
   initDrag(event) {
     const { viewport } = event;
     const camera = viewport.getCamera();
@@ -186,20 +233,23 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__mouseDownFocalDist = focalDistance;
   }
 
+  /**
+   * The aimFocus method.
+   * @param {any} event - The event param.
+   * @param {any} pos - The pos param.
+   */
   aimFocus(event, pos) {
     const { viewport } = event;
     const camera = viewport.getCamera();
 
-    if(this.__focusIntervalId)
-      clearInterval(this.__focusIntervalId);
+    if (this.__focusIntervalId) clearInterval(this.__focusIntervalId);
 
     const count = 20;
     let i = 0;
-    const applyMovement = ()=>{
-
+    const applyMovement = () => {
       const initlalGlobalXfo = camera.getGlobalXfo();
       const initlalDist = camera.getFocalDistance();
-      const dir = pos.subtract(initlalGlobalXfo.tr)
+      const dir = pos.subtract(initlalGlobalXfo.tr);
       const dist = dir.normalizeInPlace();
 
       const orbit = new Quat();
@@ -212,7 +262,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         const newDir = dir.negate();
         newDir.z = 0;
 
-        orbit.setFrom2Vectors(currDir, newDir)
+        orbit.setFrom2Vectors(currDir, newDir);
       }
 
       // Pitch
@@ -223,10 +273,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         currDir.y = newDir.y;
         currDir.normalizeInPlace();
 
-        if(currDir.cross(newDir).dot(initlalGlobalXfo.ori.getXaxis()) > 0.0)
+        if (currDir.cross(newDir).dot(initlalGlobalXfo.ori.getXaxis()) > 0.0)
           pitch.rotateX(currDir.angleTo(newDir));
-        else
-          pitch.rotateX(-currDir.angleTo(newDir));
+        else pitch.rotateX(-currDir.angleTo(newDir));
       }
 
       const targetGlobalXfo = initlalGlobalXfo.clone();
@@ -234,40 +283,52 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       targetGlobalXfo.ori.multiplyInPlace(pitch);
 
       // With each iteraction we get closer to our goal
-      // and on the final iteration we should aim perfectly at 
+      // and on the final iteration we should aim perfectly at
       // the target.
       const t = Math.pow(i / count, 2);
       const globalXfo = initlalGlobalXfo.clone();
       globalXfo.ori = initlalGlobalXfo.ori.lerp(targetGlobalXfo.ori, t);
 
-      camera.setFocalDistance(initlalDist + ((dist - initlalDist) * t));
+      camera.setFocalDistance(initlalDist + (dist - initlalDist) * t);
       camera.setGlobalXfo(globalXfo);
 
       i++;
-      if(i <= count){
+      if (i <= count) {
         this.__focusIntervalId = setTimeout(applyMovement, 20);
       } else {
         this.__focusIntervalId = undefined;
         this.movementFinished.emit();
       }
-    }
+    };
     applyMovement();
 
-    this.__manipulationState = "focussing";
+    this.__manipulationState = 'focussing';
   }
 
-  onMouseMove(event) {
+  /**
+   * The onMouseMove method.
+   * @param {any} event - The event param.
+   */
+  onMouseMove(event) {}
 
-  }
-
+  /**
+   * The onDoubleClick method.
+   * @param {any} event - The event param.
+   */
   onDoubleClick(event) {
-    if(event.intersectionData) {
+    if (event.intersectionData) {
       const camera = event.viewport.getCamera();
-      const pos = camera.getGlobalXfo().tr.add(event.mouseRay.dir.scale(event.intersectionData.dist))
+      const pos = camera
+        .getGlobalXfo()
+        .tr.add(event.mouseRay.dir.scale(event.intersectionData.dist));
       this.aimFocus(event, pos);
     }
   }
 
+  /**
+   * The onDragStart method.
+   * @param {any} event - The event param.
+   */
   onDragStart(event) {
     this.__mouseDownPos = event.mousePos;
     this.initDrag(event);
@@ -283,6 +344,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
+  /**
+   * The onDrag method.
+   * @param {any} event - The event param.
+   */
   onDrag(event) {
     const mousePos = event.mousePos;
     // During requestPointerLock, the offsetX/Y values are not updated.
@@ -317,40 +382,55 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
+  /**
+   * The onDragEnd method.
+   * @param {any} event - The event param.
+   * @return {boolean} - The return value.
+   */
   onDragEnd(event) {
     this.movementFinished.emit();
     return false;
   }
 
+  /**
+   * The onWheel method.
+   * @param {any} event - The event param.
+   */
   onWheel(event) {
     const { viewport } = event;
     const camera = viewport.getCamera();
     const focalDistance = camera.getFocalDistance();
     const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue();
     const modulator = event.shiftKey ? 0.1 : 0.5;
-    const zoomDist = event.deltaY * mouseWheelDollySpeed * focalDistance * modulator;
+    const zoomDist =
+      event.deltaY * mouseWheelDollySpeed * focalDistance * modulator;
     const xfo = camera.getGlobalXfo();
     const movementVec = xfo.ori.getZaxis().scale(zoomDist);
-    if(this.__mouseWheelZoomIntervalId)
+    if (this.__mouseWheelZoomIntervalId)
       clearInterval(this.__mouseWheelZoomIntervalId);
     let count = 0;
-    const applyMovement = ()=>{
+    const applyMovement = () => {
       xfo.tr.addInPlace(movementVec);
       if (this.__defaultManipulationState == 'orbit')
-        camera.setFocalDistance( camera.getFocalDistance() + zoomDist);
+        camera.setFocalDistance(camera.getFocalDistance() + zoomDist);
       camera.setGlobalXfo(xfo);
 
       count++;
-      if(count < 10){
+      if (count < 10) {
         this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10);
       } else {
         this.__mouseWheelZoomIntervalId = undefined;
         this.movementFinished.emit();
       }
-    }
+    };
     applyMovement();
   }
 
+  /**
+   * The __integrateVelocityChange method.
+   * @param {any} event - The event param.
+   * @private
+   */
   __integrateVelocityChange(event) {
     const { viewport } = event;
     const camera = viewport.getCamera();
@@ -359,8 +439,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     camera.setGlobalXfo(camera.getGlobalXfo().multiply(delta));
   }
 
+  /**
+   * The onKeyPressed method.
+   * @param {any} key - The key param.
+   * @param {any} event - The event param.
+   * @return {boolean} - The return value.
+   */
   onKeyPressed(key, event) {
-    // Note: onKeyPressed is called intiallly only once, and then we 
+    // Note: onKeyPressed is called intiallly only once, and then we
     // get a series of calls. Here we ignore subsequent events.
     // (TODO: move this logic to a special controller)
     /*
@@ -399,11 +485,22 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       window.requestAnimationFrame(animationFrame);
     }
     */
-    return false;// no keys handled
+    return false; // no keys handled
   }
 
+  /**
+   * The onKeyDown method.
+   * @param {any} key - The key param.
+   * @param {any} event - The event param.
+   */
   onKeyDown(key, event) {}
 
+  /**
+   * The onKeyUp method.
+   * @param {any} key - The key param.
+   * @param {any} event - The event param.
+   * @return {boolean} - The return value.
+   */
   onKeyUp(key, event) {
     // (TODO: move this logic to a special controller)
     /*
@@ -431,16 +528,26 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     return true;
   }
 
-  /////////////////////////////////////
+  // ///////////////////////////////////
   // Touch controls
 
+  /**
+   * The __startTouch method.
+   * @param {any} touch - The touch param.
+   * @private
+   */
   __startTouch(touch) {
     this.__ongoingTouches[touch.identifier] = {
       identifier: touch.identifier,
-      pos: new Vec2(touch.pageX, touch.pageY)
+      pos: new Vec2(touch.pageX, touch.pageY),
     };
   }
 
+  /**
+   * The __endTouch method.
+   * @param {any} touch - The touch param.
+   * @private
+   */
   __endTouch(touch) {
     // let idx = this.__ongoingTouchIndexById(touch.identifier);
     // this.__ongoingTouches.splice(idx, 1); // remove it; we're done
@@ -448,32 +555,41 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   // Touch events
+
+  /**
+   * The onTouchStart method.
+   * @param {any} event - The event param.
+   */
   onTouchStart(event) {
-    console.log("onTouchStart");
+    console.log('onTouchStart');
     event.preventDefault();
     event.stopPropagation();
 
     if (Object.keys(this.__ongoingTouches).length == 0)
       this.__manipMode = undefined;
 
-    let touches = event.changedTouches;
+    const touches = event.changedTouches;
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i]);
     }
     this.initDrag(event);
   }
 
+  /**
+   * The onTouchMove method.
+   * @param {any} event - The event param.
+   */
   onTouchMove(event) {
     event.preventDefault();
     event.stopPropagation();
     // console.log("this.__manipMode:" + this.__manipMode);
 
     const touches = event.touches;
-    if (touches.length == 1 && this.__manipMode != "panAndZoom") {
-      let touch = touches[0];
-      let touchPos = new Vec2(touch.pageX, touch.pageY);
-      let touchData = this.__ongoingTouches[touch.identifier];
-      let dragVec = touchData.pos.subtract(touchPos);
+    if (touches.length == 1 && this.__manipMode != 'panAndZoom') {
+      const touch = touches[0];
+      const touchPos = new Vec2(touch.pageX, touch.pageY);
+      const touchData = this.__ongoingTouches[touch.identifier];
+      const dragVec = touchData.pos.subtract(touchPos);
       if (this.__defaultManipulationState == 'look') {
         // TODO: scale panning here.
         dragVec.scaleInPlace(6.0);
@@ -482,27 +598,31 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.orbit(event, dragVec);
       }
     } else if (touches.length == 2) {
-      let touch0 = touches[0];
-      let touchData0 = this.__ongoingTouches[touch0.identifier];
-      let touch1 = touches[1];
-      let touchData1 = this.__ongoingTouches[touch1.identifier];
+      const touch0 = touches[0];
+      const touchData0 = this.__ongoingTouches[touch0.identifier];
+      const touch1 = touches[1];
+      const touchData1 = this.__ongoingTouches[touch1.identifier];
 
-      let touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
-      let touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
-      let startSeparation = touchData1.pos.subtract(touchData0.pos).length();
-      let dragSeparation = touch1Pos.subtract(touch0Pos).length();
-      let separationDist = startSeparation - dragSeparation;
+      const touch0Pos = new Vec2(touch0.pageX, touch0.pageY);
+      const touch1Pos = new Vec2(touch1.pageX, touch1.pageY);
+      const startSeparation = touchData1.pos.subtract(touchData0.pos).length();
+      const dragSeparation = touch1Pos.subtract(touch0Pos).length();
+      const separationDist = startSeparation - dragSeparation;
 
-      let touch0Drag = touch0Pos.subtract(touchData0.pos);
-      let touch1Drag = touch1Pos.subtract(touchData1.pos);
-      let dragVec = touch0Drag.add(touch1Drag);
+      const touch0Drag = touch0Pos.subtract(touchData0.pos);
+      const touch1Drag = touch1Pos.subtract(touchData1.pos);
+      const dragVec = touch0Drag.add(touch1Drag);
       // TODO: scale panning here.
       dragVec.scaleInPlace(0.5);
       this.panAndZoom(event, dragVec, separationDist * 0.002);
-      this.__manipMode = "panAndZoom";
+      this.__manipMode = 'panAndZoom';
     }
   }
 
+  /**
+   * The onTouchEnd method.
+   * @param {any} event - The event param.
+   */
   onTouchEnd(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -519,6 +639,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
+  /**
+   * The onTouchCancel method.
+   * @param {any} event - The event param.
+   */
   onTouchCancel(event) {
     event.preventDefault();
     const touches = event.touches;
@@ -527,20 +651,22 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     }
   }
 
+  /**
+   * The onDoubleTap method.
+   * @param {any} event - The event param.
+   */
   onDoubleTap(event) {
-    if(event.intersectionData) {
+    if (event.intersectionData) {
       const { viewport } = event;
       const camera = viewport.getCamera();
-      const pos = camera.getGlobalXfo().tr.add(event.touchRay.dir.scale(event.intersectionData.dist))
+      const pos = camera
+        .getGlobalXfo()
+        .tr.add(event.touchRay.dir.scale(event.intersectionData.dist));
       this.aimFocus(event, pos);
     }
     event.preventDefault();
   }
+}
 
-
-};
-
-export {
-  CameraMouseAndKeyboard
-};
-//export default Camera;
+export { CameraMouseAndKeyboard };
+// export default Camera;

@@ -1,40 +1,39 @@
-import {
-  Xfo
-} from '../Math';
-import {
-  Signal
-} from '../Utilities';
-import {
-  FilePathParameter
-} from './Parameters';
-import {
-  TreeItem,
-  CloneFlags
-} from './TreeItem.js';
-import {
-  loadTextfile
-} from './Utils.js';
-import {
-  sgFactory
-} from './SGFactory.js';
+import { Xfo } from '../Math';
+import { Signal } from '../Utilities';
+import { FilePathParameter } from './Parameters';
+import { TreeItem, CloneFlags } from './TreeItem.js';
+import { loadTextfile } from './Utils.js';
+import { sgFactory } from './SGFactory.js';
 
+/** Class representing an instance item.
+ * @extends TreeItem
+ */
 class InstanceItem extends TreeItem {
+  /**
+   * Create an instance item.
+   * @param {any} name - The name value.
+   */
   constructor(name) {
     super(name);
   }
 
+  /**
+   * The setSrcTree method.
+   * @param {any} treeItem - The treeItem param.
+   */
   setSrcTree(treeItem) {
     this.__srcTree = treeItem;
 
     const numChildren = this.__srcTree.getNumChildren();
-    if(numChildren == 0) {
+    if (numChildren == 0) {
       const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE);
-      child.setLocalXfo(new Xfo())
+      child.setLocalXfo(new Xfo());
       this.addChild(child);
-    }
-    else {
-      for(let i=0; i<this.__srcTree.getNumChildren(); i++) {
-        this.addChild(this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+    } else {
+      for (let i = 0; i < this.__srcTree.getNumChildren(); i++) {
+        this.addChild(
+          this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+        );
       }
     }
 
@@ -43,11 +42,15 @@ class InstanceItem extends TreeItem {
     // })
   }
 
-  getSrcTree(){
+  /**
+   * The getSrcTree method.
+   * @return {any} - The return value.
+   */
+  getSrcTree() {
     return this.__srcTree;
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Children
 
   // getChildren() {
@@ -70,33 +73,46 @@ class InstanceItem extends TreeItem {
   //     return this.__srcTree.getChildByName(name);
   // }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Persistence
 
+  /**
+   * The readBinary method.
+   * @param {any} reader - The reader param.
+   * @param {any} context - The context param.
+   */
   readBinary(reader, context = {}) {
     super.readBinary(reader, context);
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
     const path = reader.loadStrArray();
     // console.log("InstanceItem of:", path)
-    context.resolvePath(path, (treeItem)=>{
+    context.resolvePath(path, treeItem => {
       this.setSrcTree(treeItem);
-    })
+    });
   }
 
-  toJSON(context={}, flags=0) {
+  /**
+   * The toJSON method.
+   * @param {any} context - The context param.
+   * @param {any} flags - The flags param.
+   * @return {any} - The return value.
+   */
+  toJSON(context = {}, flags = 0) {
     const j = super.toJSON(context, flags);
     return j;
   }
 
-  fromJSON(j, context={}, flags=0, onDone) {
-    
-  }
-
-};
+  /**
+   * The fromJSON method.
+   * @param {any} j - The j param.
+   * @param {any} context - The context param.
+   * @param {any} flags - The flags param.
+   * @param {any} onDone - The onDone param.
+   */
+  fromJSON(j, context = {}, flags = 0, onDone) {}
+}
 
 sgFactory.registerClass('InstanceItem', InstanceItem);
 
-export {
-  InstanceItem
-};
+export { InstanceItem };

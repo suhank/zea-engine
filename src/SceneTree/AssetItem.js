@@ -1,32 +1,21 @@
-import {
-  Xfo
-} from '../Math';
-import {
-  Signal
-} from '../Utilities';
-import {
-  FilePathParameter
-} from './Parameters';
-import {
-  TreeItem
-} from './TreeItem.js';
-import {
-  Group
-} from './Group.js';
-import {
-  loadTextfile
-} from './Utils.js';
-import {
-  GeomLibrary
-} from './GeomLibrary.js';
-import {
-  MaterialLibrary
-} from './MaterialLibrary.js';
-import {
-  sgFactory
-} from './SGFactory.js';
+import { Xfo } from '../Math';
+import { Signal } from '../Utilities';
+import { FilePathParameter } from './Parameters';
+import { TreeItem } from './TreeItem.js';
+import { Group } from './Group.js';
+import { loadTextfile } from './Utils.js';
+import { GeomLibrary } from './GeomLibrary.js';
+import { MaterialLibrary } from './MaterialLibrary.js';
+import { sgFactory } from './SGFactory.js';
 
+/** Class representing an asset item.
+ * @extends TreeItem
+ */
 class AssetItem extends TreeItem {
+  /**
+   * Create an asset item.
+   * @param {any} name - The name value.
+   */
   constructor(name) {
     super(name);
 
@@ -38,79 +27,85 @@ class AssetItem extends TreeItem {
     // (e.g. the ground plane). So we set loaded to true, unless a file is specified.
     this.loaded.setToggled(true);
 
-
     const fileParam = this.addParameter(new FilePathParameter('FilePath'));
     fileParam.valueChanged.connect(() => {
-
       const file = fileParam.getFileDesc();
-      if (!file)
-        return;
+      if (!file) return;
       if (this.getName() == sgFactory.getClassName(this)) {
         const stem = fileParam.getStem();
         this.setName(stem);
       }
 
       this.loaded.setToggled(false);
-      loadTextfile(file.url,
-        (data) => {
-          const j = JSON.parse(data);
-          let asynccount = 0;
-          this.fromJSON(j, {
-            assetItem: this,
-            incAsyncCount: () => {
-              asynccount++;
-            },
-            decAsyncCount: () => {
-              asynccount--;
-              if (asynccount == 0) {
-                this.loaded.emit();
-              }
+      loadTextfile(file.url, data => {
+        const j = JSON.parse(data);
+        let asynccount = 0;
+        this.fromJSON(j, {
+          assetItem: this,
+          incAsyncCount: () => {
+            asynccount++;
+          },
+          decAsyncCount: () => {
+            asynccount--;
+            if (asynccount == 0) {
+              this.loaded.emit();
             }
-          });
-          if (asynccount == 0)
-            this.loaded.emit();
-        }
-      );
+          },
+        });
+        if (asynccount == 0) this.loaded.emit();
+      });
     });
   }
 
+  /**
+   * The getGeometryLibrary method.
+   * @return {any} - The return value.
+   */
   getGeometryLibrary() {
     return this.__geomLibrary;
   }
 
+  /**
+   * The getMaterialLibrary method.
+   * @return {any} - The return value.
+   */
   getMaterialLibrary() {
     return this.__materials;
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Persistence
 
+  /**
+   * The readBinary method.
+   * @param {any} reader - The reader param.
+   * @param {any} context - The context param.
+   */
   readBinary(reader, context = {}) {
     context.assetItem = this;
     context.numTreeItems = 0;
     context.numGeomItems = 0;
-    if (context.version == undefined)
-      context.version = 0;
+    if (context.version == undefined) context.version = 0;
 
     let layerRoot;
     const layers = {};
     context.addGeomToLayer = (geomItem, layer) => {
       if (!layers[layer]) {
         if (!layerRoot) {
-          layerRoot = new TreeItem('Layers')
-          this.addChild(layerRoot)
+          layerRoot = new TreeItem('Layers');
+          this.addChild(layerRoot);
         }
         const group = new Group(layer);
         group.propagateXfoToItems = false;
-        group.getParameter('SearchRoot').setValue(this)
-        layerRoot.addChild(group)
+        group.getParameter('SearchRoot').setValue(this);
+        layerRoot.addChild(group);
         layers[layer] = group;
       }
       layers[layer].addItem(geomItem);
-    }
+    };
     const loadUnits = () => {
       this.__units = reader.loadStr();
-      // Calculate a scale factor to convert 
+      // Calculate a scale factor to convert
       // the asset units to meters(the scene units)
       let scaleFactor = 1.0;
       switch (this.__units) {
@@ -141,11 +136,11 @@ class AssetItem extends TreeItem {
       const xfo = this.getLocalXfo();
       xfo.sc.scaleInPlace(scaleFactor);
       this.setLocalXfo(xfo);
-    }
+    };
 
     if (context.version >= 7) {
       // Loading units modifies our Xfo, which then propagates up
-      // the tree forcing a re-computation. Better just do it at 
+      // the tree forcing a re-computation. Better just do it at
       // the start.
       loadUnits();
     }
@@ -161,13 +156,22 @@ class AssetItem extends TreeItem {
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
   }
 
+  /**
+   * The toJSON method.
+   * @param {any} context - The context param.
+   * @param {number} flags - The flags param.
+   * @return {any} - The return value.
+   */
   toJSON(context = {}, flags = 0) {
-    context.makeRelative = (path) => {
+    context.makeRelative = path => {
       const assetPath = this.getPath();
       const start = path.slice(0, assetPath.length);
-      for (let i = 0; i < (start.length - 1); i++) {
+      for (let i = 0; i < start.length - 1; i++) {
         if (start[i] != assetPath[i]) {
-          console.warn("Param Path is not relative to the asset. May not be able to be resolved at load time:" + path);
+          console.warn(
+            'Param Path is not relative to the asset. May not be able to be resolved at load time:' +
+              path
+          );
           return path;
         }
       }
@@ -175,21 +179,26 @@ class AssetItem extends TreeItem {
       const relativePath = path.slice(assetPath.length - 1);
       relativePath[0] = '.';
       return relativePath;
-    }
+    };
     context.assetItem = this;
     const j = super.toJSON(context, flags);
     return j;
   }
 
+  /**
+   * The fromJSON method.
+   * @param {any} j - The j param.
+   * @param {any} context - The context param.
+   * @param {number} flags - The flags param.
+   * @param {any} onDone - The onDone param.
+   */
   fromJSON(j, context = {}, flags = 0, onDone) {
-    if (!context)
-      context = {};
+    if (!context) context = {};
 
     context.assetItem = this;
     context.numTreeItems = 0;
     context.numGeomItems = 0;
-    if (context.version == undefined)
-      context.version = 0;
+    if (context.version == undefined) context.version = 0;
 
     context.assetItem = this;
 
@@ -200,9 +209,8 @@ class AssetItem extends TreeItem {
       // all promisses will be resolved after the current call stack
       // has terminated. In our case, we want all paths
       // to be resolved before the end of the function, which
-      // we can handle easily with callback functions. 
-      if (!path)
-        throw ("Path not spcecified")
+      // we can handle easily with callback functions.
+      if (!path) throw new Error('Path not spcecified');
       const item = this.resolvePath(path);
       if (item) {
         cb(item);
@@ -211,15 +219,14 @@ class AssetItem extends TreeItem {
         // so push a callback to re-try after the load is complete.
         plcbs.push(() => {
           const param = this.resolvePath(path);
-          if (param)
-            cb(param);
+          if (param) cb(param);
           else {
-            console.warn("Path unable to be resolved:" + path);
+            console.warn('Path unable to be resolved:' + path);
           }
         });
       }
     };
-    context.addPLCB = plcb => plcbs.push(plcb)
+    context.addPLCB = plcb => plcbs.push(plcb);
 
     // Avoid loading the FilePAth as we are already loading json data.
     if (j.params && j.params.FilePath) {
@@ -228,18 +235,14 @@ class AssetItem extends TreeItem {
 
     super.fromJSON(j, context, flags);
 
-    // Invoke all the post-load callbacks to resolve any 
+    // Invoke all the post-load callbacks to resolve any
     // remaning references.
-    for (let cb of plcbs)
-      cb();
+    for (const cb of plcbs) cb();
 
-    if (onDone)
-      onDone();
+    if (onDone) onDone();
   }
-};
+}
 
 sgFactory.registerClass('AssetItem', AssetItem);
 
-export {
-  AssetItem
-};
+export { AssetItem };
