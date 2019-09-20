@@ -1,15 +1,14 @@
-import {
-  Signal
-} from '../Utilities';
-import {
-  BaseItem
-} from '../SceneTree';
-import {
-  MaterialShaderBinding
-} from './MaterialShaderBinding.js';
+import { Signal } from '../Utilities';
+import { MaterialShaderBinding } from './MaterialShaderBinding.js';
 
-
-class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
+/** Class representing a GL material. */
+class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
+  /**
+   * Create a GL material.
+   * @param {any} gl - The gl value.
+   * @param {any} material - The material value.
+   * @param {any} glshader - The glshader value.
+   */
   constructor(gl, material, glshader) {
     // super(name);
     this.__gl = gl;
@@ -26,30 +25,51 @@ class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
     this.__shaderBindings = {};
   }
 
+  /**
+   * The getMaterial method.
+   * @return {any} - The return value.
+   */
   getMaterial() {
     return this.__material;
   }
 
+  /**
+   * The getGLShader method.
+   * @return {any} - The return value.
+   */
   getGLShader() {
     return this.__glshader;
   }
 
+  /**
+   * The generateShaderBinding method.
+   */
   generateShaderBinding() {
     const params = this.__material.getParameters();
-    for (let param of params) {
+    for (const param of params) {
       bindParam(gl, param);
     }
   }
 
+  /**
+   * The bind method.
+   * @param {any} renderstate - The renderstate param.
+   * @param {any} warnMissingUnifs - The renderstate param.
+   * @return {any} - The return value.
+   */
   bind(renderstate, warnMissingUnifs) {
-
     // console.log("Material:" + this.__material.getName());
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
     if (!shaderBinding) {
       const gl = this.__gl;
-      shaderBinding = new MaterialShaderBinding(gl, this, renderstate.unifs, warnMissingUnifs);
+      shaderBinding = new MaterialShaderBinding(
+        gl,
+        this,
+        renderstate.unifs,
+        warnMissingUnifs
+      );
       this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
     }
     return shaderBinding.bind(renderstate);
@@ -57,14 +77,16 @@ class GLMaterial/* extends BaseItem why do we inherit base item here?*/{
     return true;
   }
 
+  /**
+   * The unbind method.
+   * @param {any} renderstate - The renderstate param.
+   */
   unbind(renderstate) {
     // Enable texture units to be re-used by resetting the count back
     // to what it was.
     renderstate.boundTextures = this.__boundTexturesBeforeMaterial;
   }
-};
+}
 
-export {
-  GLMaterial
-};
+export { GLMaterial };
 // export default GLMaterial;

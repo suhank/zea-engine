@@ -1,23 +1,24 @@
-import {
-  Color
-} from '../Math';
-import {
-  Signal
-} from '../Utilities';
+import { Signal } from '../Utilities';
 
 import '../SceneTree/GeomItem.js';
-
 
 const GLGeomItemChangeType = {
   GEOMITEM_CHANGED: 0,
   GEOM_CHANGED: 1,
   VISIBILITY_CHANGED: 2,
-  HIGHLIGHT_CHANGED: 3
+  HIGHLIGHT_CHANGED: 3,
 };
 
-
-// This class abstracts the rendering of a collection of geometries to screen.
+/** This class abstracts the rendering of a collection of geometries to screen. */
 class GLGeomItem {
+  /**
+   * Create a GL geom item.
+   * @param {any} gl - The gl value.
+   * @param {any} geomItem - The geomItem value.
+   * @param {any} glGeom - The glGeom value.
+   * @param {any} id - The id value.
+   * @param {any} flags - The flags value.
+   */
   constructor(gl, geomItem, glGeom, id, flags = null) {
     this.gl = gl;
     this.geomItem = geomItem;
@@ -38,11 +39,11 @@ class GLGeomItem {
     this.destroy = this.destroy.bind(this);
 
     if (!gl.floatTexturesSupported) {
-      this.updateXfo = (geomXfo) => {
+      this.updateXfo = geomXfo => {
         this.updateGeomMatrix();
       };
     } else {
-      this.updateXfo = (geomXfo) => {
+      this.updateXfo = geomXfo => {
         this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED);
       };
     }
@@ -50,8 +51,8 @@ class GLGeomItem {
     this.geomItem.geomXfoChanged.connect(this.updateXfo);
     this.geomItem.visibilityChanged.connect(this.updateVisibility);
     this.geomItem.cutAwayChanged.connect(() => {
-        this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED);
-      });
+      this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED);
+    });
     this.geomItem.destructing.connect(this.destroy);
     this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
       this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED);
@@ -63,29 +64,57 @@ class GLGeomItem {
     const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset();
     const materialId = 0;
     const geomId = 0;
-    this.geomData = [lightmapCoordsOffset.x, lightmapCoordsOffset.y, materialId, geomId];
+    this.geomData = [
+      lightmapCoordsOffset.x,
+      lightmapCoordsOffset.y,
+      materialId,
+      geomId,
+    ];
   }
 
+  /**
+   * The getGeomItem method.
+   * @return {any} - The return value.
+   */
   getGeomItem() {
     return this.geomItem;
   }
 
+  /**
+   * The getGLGeom method.
+   * @return {any} - The return value.
+   */
   getGLGeom() {
     return this.glGeom;
   }
 
+  /**
+   * The getVisible method.
+   * @return {any} - The return value.
+   */
   getVisible() {
     return this.geomItem.getVisible();
   }
 
+  /**
+   * The getId method.
+   * @return {any} - The return value.
+   */
   getId() {
     return this.id;
   }
 
+  /**
+   * The getFlags method.
+   * @return {any} - The return value.
+   */
   getFlags() {
     return this.flags;
   }
 
+  /**
+   * The updateVisibility method.
+   */
   updateVisibility() {
     const geomVisible = this.geomItem.getVisible();
     const visible = geomVisible && !this.culled;
@@ -96,31 +125,53 @@ class GLGeomItem {
     }
   }
 
+  /**
+   * The setCullState method.
+   * @param {any} culled - The culled param.
+   */
   setCullState(culled) {
     this.culled = culled;
     this.updateVisibility();
   }
 
+  /**
+   * The updateGeomMatrix method.
+   */
   updateGeomMatrix() {
     // Pull on the GeomXfo param. This will trigger the lazy evaluation of the operators in the scene.
-    this.modelMatrixArray = this.geomItem.getGeomXfo().toMat4().asArray();
+    this.modelMatrixArray = this.geomItem
+      .getGeomXfo()
+      .toMat4()
+      .asArray();
   }
 
+  /**
+   * The getGeomMatrixArray method.
+   * @return {any} - The return value.
+   */
   getGeomMatrixArray() {
     return this.modelMatrixArray;
   }
 
+  /**
+   * The bind method.
+   * @param {any} renderstate - The renderstate param.
+   * @return {any} - The return value.
+   */
   bind(renderstate) {
-
     const gl = this.gl;
     const unifs = renderstate.unifs;
 
     if (!gl.floatTexturesSupported) {
-      let modelMatrixunif = unifs.modelMatrix;
+      const modelMatrixunif = unifs.modelMatrix;
       if (modelMatrixunif) {
-        gl.uniformMatrix4fv(modelMatrixunif.location, false, this.modelMatrixArray);
+        gl.uniformMatrix4fv(
+          modelMatrixunif.location,
+          false,
+          this.modelMatrixArray
+        );
       }
-      let drawItemDataunif = unifs.drawItemData;
+      const drawItemDataunif = unifs.drawItemData;
       if (drawItemDataunif) {
         gl.uniform4f(drawItemDataunif.location, this.geomData);
       }
@@ -136,7 +187,10 @@ class GLGeomItem {
         const gllightmap = renderstate.lightmaps[this.lightmapName];
         if (gllightmap && gllightmap.glimage.isLoaded()) {
           gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap);
-          gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray());
+          gl.uniform2fv(
+            unifs.lightmapSize.location,
+            gllightmap.atlasSize.asArray()
+          );
           if (unifs.lightmapConnected) {
             gl.uniform1i(unifs.lightmapConnected.location, true);
           }
@@ -149,11 +203,13 @@ class GLGeomItem {
         }
       }
     }
-    
+
     return true;
   }
 
-
+  /**
+   * The destroy method.
+   */
   destroy() {
     this.geomItem.visibilityChanged.disconnect(this.updateVisibility);
     this.geomItem.geomXfoChanged.disconnect(this.updateXfo);
@@ -161,10 +217,7 @@ class GLGeomItem {
     this.geomItem.destructing.disconnect(this.destroy);
     this.destructing.emit(this);
   }
-};
+}
 
-export {
-  GLGeomItemChangeType,
-  GLGeomItem
-};
+export { GLGeomItemChangeType, GLGeomItem };
 // export default GLGeomItem;

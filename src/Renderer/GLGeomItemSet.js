@@ -1,12 +1,14 @@
 import '../SceneTree/GeomItem.js';
 
+import { Signal } from '../Utilities';
 
-import {
-  Signal
-} from '../Utilities';
-
-// This class abstracts the rendering of a collection of geometries to screen.
+/** This class abstracts the rendering of a collection of geometries to screen. */
 class GLGeomItemSet {
+  /**
+   * Create a GL geom item set.
+   * @param {any} gl - The gl value.
+   * @param {any} glgeom - The glgeom value.
+   */
   constructor(gl, glgeom) {
     this.gl = gl;
     this.glgeom = glgeom;
@@ -31,6 +33,10 @@ class GLGeomItemSet {
     this.highlightedItems = [];
   }
 
+  /**
+   * The getGLGeom method.
+   * @return {any} - The return value.
+   */
   getGLGeom() {
     return this.glgeom;
   }
@@ -48,20 +54,31 @@ class GLGeomItemSet {
   //     return this.glgeomItems;
   // }
 
+  /**
+   * The getLightmapName method.
+   * @return {any} - The return value.
+   */
   getLightmapName() {
     return this.lightmapName;
   }
 
+  /**
+   * The getDrawCount method.
+   * @return {any} - The return value.
+   */
   getDrawCount() {
     return this.visibleItems.length;
   }
 
+  /**
+   * The addGeomItem method.
+   * @param {any} glgeomItem - The glgeomItem param.
+   */
   addGeomItem(glgeomItem) {
     let index;
-    if(this.glgeomItems_freeIndices.length > 0) {
+    if (this.glgeomItems_freeIndices.length > 0) {
       index = this.glgeomItems_freeIndices.pop();
-    }
-    else {
+    } else {
       index = this.glgeomItems.length;
       this.glgeomItems.push(null);
     }
@@ -78,15 +95,14 @@ class GLGeomItemSet {
       this.lightmapName = glgeomItem.getGeomItem().getLightmapName();
     }
 
-    const signalIds = {}
+    const signalIds = {};
 
     signalIds.sel = glgeomItem.highlightChanged.connect(() => {
       if (glgeomItem.getGeomItem().isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
-        // or another hilight is added over the top. We avoid 
+        // or another hilight is added over the top. We avoid
         // adding the same index again here. (TODO: use Set?)
-        if(this.highlightedItems.indexOf(index) != -1)
-          return;
+        if (this.highlightedItems.indexOf(index) != -1) return;
         this.highlightedItems.push(index);
       } else {
         this.highlightedItems.splice(this.highlightedItems.indexOf(index), 1);
@@ -95,7 +111,7 @@ class GLGeomItemSet {
       this.highlightedIdsBufferDirty = true;
     });
 
-    signalIds.vis = glgeomItem.visibilityChanged.connect((visible) => {
+    signalIds.vis = glgeomItem.visibilityChanged.connect(visible => {
       if (visible) {
         this.visibleItems.push(index);
         this.drawCountChanged.emit(1);
@@ -112,6 +128,10 @@ class GLGeomItemSet {
     this.drawIdsBufferDirty = true;
   }
 
+  /**
+   * The removeGeomItem method.
+   * @param {any} glgeomItem - The glgeomItem param.
+   */
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem);
     const signalIds = this.glgeomItemSignalIds[index];
@@ -133,23 +153,29 @@ class GLGeomItemSet {
     }
     this.drawIdsBufferDirty = true;
     // console.log("removeGeomItem:", glgeomItem.getGeomItem().getName(), this.glgeomItems.length)
-    if(this.glgeomItems.length == 0) {
+    if (this.glgeomItems.length == 0) {
       this.destroy();
     }
   }
 
-  //////////////////////////////////////
+  // ////////////////////////////////////
   // Instance Ids
 
-  // The culling system will specify a subset of the total number of items for
-  // drawing. 
+  /**
+   * The updateDrawIDsBuffer method.
+   * The culling system will specify a subset of the total number of items for
+   * drawing.
+   */
   updateDrawIDsBuffer() {
     const gl = this.gl;
     if (!gl.floatTexturesSupported) {
       this.drawIdsBufferDirty = false;
       return;
     }
-    if (this.drawIdsBuffer && this.glgeomItems.length != this.drawIdsArray.length) {
+    if (
+      this.drawIdsBuffer &&
+      this.glgeomItems.length != this.drawIdsArray.length
+    ) {
       this.gl.deleteBuffer(this.drawIdsBuffer);
       this.drawIdsBuffer = null;
     }
@@ -162,7 +188,7 @@ class GLGeomItemSet {
     // Collect all visible geom ids into the instanceIds array.
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
-    this.visibleItems.forEach( index => {
+    this.visibleItems.forEach(index => {
       this.drawIdsArray[index] = this.glgeomItems[index].getId();
     });
     gl.bindBuffer(gl.ARRAY_BUFFER, this.drawIdsBuffer);
@@ -171,17 +197,22 @@ class GLGeomItemSet {
     this.drawIdsBufferDirty = false;
   }
 
-
-  //////////////////////////////////////
+  // ////////////////////////////////////
   // Selected Items
 
+  /**
+   * The updateHighlightedIDsBuffer method.
+   */
   updateHighlightedIDsBuffer() {
     const gl = this.gl;
     if (!gl.floatTexturesSupported) {
       this.highlightedIdsBufferDirty = false;
       return;
     }
-    if (this.highlightedIdsBuffer && this.glgeomItems.length != this.highlightedIdsArray.length) {
+    if (
+      this.highlightedIdsBuffer &&
+      this.glgeomItems.length != this.highlightedIdsArray.length
+    ) {
       this.gl.deleteBuffer(this.highlightedIdsBuffer);
       this.highlightedIdsBuffer = null;
     }
@@ -189,7 +220,10 @@ class GLGeomItemSet {
     // Collect all visible geom ids into the instanceIds array.
     // Note: the draw count can be less than the number of instances
     // we re-use the same buffer and simply invoke fewer draw calls.
-    if (!this.highlightedIdsArray || this.highlightedItems.length > this.highlightedIdsArray.length) {
+    if (
+      !this.highlightedIdsArray ||
+      this.highlightedItems.length > this.highlightedIdsArray.length
+    ) {
       this.highlightedIdsArray = new Float32Array(this.highlightedItems.length);
       if (this.highlightedIdsBuffer) {
         gl.deleteBuffer(this.highlightedIdsBuffer);
@@ -197,7 +231,7 @@ class GLGeomItemSet {
       }
     }
 
-    this.highlightedItems.forEach( index => {
+    this.highlightedItems.forEach(index => {
       this.highlightedIdsArray[index] = this.glgeomItems[index].getId();
     });
 
@@ -210,9 +244,13 @@ class GLGeomItemSet {
     this.highlightedIdsBufferDirty = false;
   }
 
-  //////////////////////////////////////
+  // ////////////////////////////////////
   // Drawing
 
+  /**
+   * The draw method.
+   * @param {any} renderstate - The renderstate param.
+   */
   draw(renderstate) {
     if (this.visibleItems.length == 0) {
       return;
@@ -226,10 +264,13 @@ class GLGeomItemSet {
 
     if (renderstate.lightmaps && unifs.lightmap) {
       if (renderstate.boundLightmap != this.lightmapName) {
-        let gllightmap = renderstate.lightmaps[this.lightmapName];
+        const gllightmap = renderstate.lightmaps[this.lightmapName];
         if (gllightmap && gllightmap.glimage.isLoaded()) {
           gllightmap.glimage.bindToUniform(renderstate, unifs.lightmap);
-          gl.uniform2fv(unifs.lightmapSize.location, gllightmap.atlasSize.asArray());
+          gl.uniform2fv(
+            unifs.lightmapSize.location,
+            gllightmap.atlasSize.asArray()
+          );
           if (unifs.lightmapConnected) {
             gl.uniform1i(unifs.lightmapConnected.location, true);
           }
@@ -243,9 +284,13 @@ class GLGeomItemSet {
       }
     }
 
-    this.__bindAndRender(renderstate, this.visibleItems, this.drawIdsBuffer)
+    this.__bindAndRender(renderstate, this.visibleItems, this.drawIdsBuffer);
   }
 
+  /**
+   * The drawHighlighted method.
+   * @param {any} renderstate - The renderstate param.
+   */
   drawHighlighted(renderstate) {
     if (this.highlightedItems.length == 0) {
       return;
@@ -254,33 +299,46 @@ class GLGeomItemSet {
       this.updateHighlightedIDsBuffer();
     }
 
-    this.__bindAndRender(renderstate, this.highlightedItems, this.highlightedIdsBuffer)
-
+    this.__bindAndRender(
+      renderstate,
+      this.highlightedItems,
+      this.highlightedIdsBuffer
+    );
   }
 
+  /**
+   * The __bindAndRender method.
+   * @param {any} renderstate - The renderstate param.
+   * @param {any} itemIndices - The itemIndices param.
+   * @param {any} drawIdsBuffer - The drawIdsBuffer param.
+   * @private
+   */
   __bindAndRender(renderstate, itemIndices, drawIdsBuffer) {
-
     const gl = this.gl;
     const unifs = renderstate.unifs;
 
     // Lazy unbinding. We can have situations where we have many materials
     // all bound to the same geom. e.g. lots of billboards
-    // We can avoid the expensive re-binding of geoms with a simple check. 
+    // We can avoid the expensive re-binding of geoms with a simple check.
     if (renderstate.glgeom != this.glgeom) {
       this.glgeom.bind(renderstate);
       renderstate.glgeom = this.glgeom;
     }
 
-    if (!gl.floatTexturesSupported || !gl.drawElementsInstanced || !renderstate.supportsInstancing) {
+    if (
+      !gl.floatTexturesSupported ||
+      !gl.drawElementsInstanced ||
+      !renderstate.supportsInstancing
+    ) {
       if (renderstate.unifs.instancedDraw) {
         gl.uniform1i(renderstate.unifs.instancedDraw.location, 0);
       }
-      itemIndices.forEach( index => {
+      itemIndices.forEach(index => {
         this.glgeomItems[index].bind(renderstate);
-        renderstate.bindViewports(unifs, ()=>{
+        renderstate.bindViewports(unifs, () => {
           this.glgeom.draw(renderstate);
-        })
-      })
+        });
+      });
     } else {
       // console.log("draw:"+ this.drawIdsArray);
 
@@ -289,23 +347,24 @@ class GLGeomItemSet {
       gl.uniform1i(renderstate.unifs.instancedDraw.location, 1);
 
       // The instanced transform ids are bound as an instanced attribute.
-      let location = renderstate.attrs.instancedIds.location;
+      const location = renderstate.attrs.instancedIds.location;
       gl.enableVertexAttribArray(location);
       gl.bindBuffer(gl.ARRAY_BUFFER, drawIdsBuffer);
       gl.vertexAttribPointer(location, 1, gl.FLOAT, false, 1 * 4, 0);
       gl.vertexAttribDivisor(location, 1); // This makes it instanced
 
-      renderstate.bindViewports(unifs, ()=>{
+      renderstate.bindViewports(unifs, () => {
         this.glgeom.drawInstanced(itemIndices.length);
-      })
+      });
     }
   }
 
+  /**
+   * The destroy method.
+   */
   destroy() {
     this.destructing.emit();
   }
-};
+}
 
-export {
-  GLGeomItemSet
-};
+export { GLGeomItemSet };

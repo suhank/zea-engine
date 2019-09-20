@@ -1,22 +1,30 @@
-
-
+/** Class representing a VR tool. */
 class VRTool {
-    constructor() {
-        this.__active = false;
-    }
+  /**
+   * Create a VR tool.
+   */
+  constructor() {
+    this.__active = false;
+  }
 
-    activateTool() {
-        this.__active = true;
-    }
+  /**
+   * The activateTool method.
+   */
+  activateTool() {
+    this.__active = true;
+  }
 
-    deactivateTool() {
-        this.__active = false;
-    }
+  /**
+   * The deactivateTool method.
+   */
+  deactivateTool() {
+    this.__active = false;
+  }
 
-    evalTool() {
-    }
-};
+  /**
+   * The evalTool method.
+   */
+  evalTool() {}
+}
 
-export {
-    VRTool
-};
+export { VRTool };

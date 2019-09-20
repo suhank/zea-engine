@@ -1,20 +1,17 @@
-import {
-  GLShader
-} from './GLShader.js';
-import {
-  GLTexture2D
-} from './GLTexture2D.js';
-import {
-  UnpackHDRShader
-} from './Shaders/UnpackHDRShader.js';
-import {
-  GLFbo
-} from './GLFbo.js';
-import {
-  generateShaderGeomBinding
-} from './GeomShaderBinding.js';
+import { GLTexture2D } from './GLTexture2D.js';
+import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js';
+import { GLFbo } from './GLFbo.js';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
+/** Class representing a GL HDR image.
+ * @extends GLTexture2D
+ */
 class GLHDRImage extends GLTexture2D {
+  /**
+   * Create a GL HDR image.
+   * @param {any} gl - The gl value.
+   * @param {any} hdrImage - The hdrImage value.
+   */
   constructor(gl, hdrImage) {
     super(gl);
 
@@ -31,30 +28,32 @@ class GLHDRImage extends GLTexture2D {
       });
     }
     this.__hdrImage.destructing.connect(() => {
-      console.log(this.__hdrImage.getName() + " destructing");
+      console.log(this.__hdrImage.getName() + ' destructing');
       this.destroy();
     });
-
   }
 
+  /**
+   * The __unpackHDRImage method.
+   * @param {any} hdrImageParams - The hdrImageParams param.
+   * @private
+   */
   __unpackHDRImage(hdrImageParams) {
-
     const gl = this.__gl;
 
-    let ldr = hdrImageParams.data.ldr;
-    let cdm = hdrImageParams.data.cdm;
+    const ldr = hdrImageParams.data.ldr;
+    const cdm = hdrImageParams.data.cdm;
 
     if (!this.__fbo) {
-
       // Note: iOS devices create FLOAT Fbox.
-      // If we want better quality, we could unpack the texture in JavaScript. 
+      // If we want better quality, we could unpack the texture in JavaScript.
       this.configure({
         format: 'RGBA',
         type: 'FLOAT',
         width: ldr.width,
         height: ldr.height,
         filter: 'LINEAR',
-        wrap: 'CLAMP_TO_EDGE'
+        wrap: 'CLAMP_TO_EDGE',
       });
       this.__fbo = new GLFbo(gl, this);
       this.__fbo.setClearColor([0, 0, 0, 0]);
@@ -67,22 +66,27 @@ class GLHDRImage extends GLTexture2D {
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: ldr
+        data: ldr,
       });
       this.__srcCDMTex = new GLTexture2D(gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'UNSIGNED_BYTE',
-        width: ldr.width /*8*/ ,
-        height: ldr.height /*8*/ ,
+        width: ldr.width /* 8*/,
+        height: ldr.height /* 8*/,
         filter: 'NEAREST',
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
-        data: cdm
+        data: cdm,
       });
-      
+
       this.__unpackHDRShader = new UnpackHDRShader(gl);
-      let shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
-      this.__shaderBinding = generateShaderGeomBinding(gl, shaderComp.attrs, gl.__quadattrbuffers, gl.__quadIndexBuffer);
+      const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
+      this.__shaderBinding = generateShaderGeomBinding(
+        gl,
+        shaderComp.attrs,
+        gl.__quadattrbuffers,
+        gl.__quadIndexBuffer
+      );
     } else {
       this.__srcLDRTex.bufferData(ldr);
       this.__srcCDMTex.bufferData(cdm);
@@ -93,7 +97,6 @@ class GLHDRImage extends GLTexture2D {
     const renderstate = {};
     this.__unpackHDRShader.bind(renderstate, 'GLHDRImage');
     this.__shaderBinding.bind(renderstate);
-
 
     const unifs = renderstate.unifs;
     this.__srcLDRTex.bindToUniform(renderstate, unifs.ldrSampler);
@@ -125,11 +128,21 @@ class GLHDRImage extends GLTexture2D {
 
     this.updated.emit();
   }
-  
+
+  /**
+   * The bindToUniform method.
+   * @param {any} renderstate - The renderstate param.
+   * @param {any} unif - The unif param.
+   * @param {any} bindings - The bindings param.
+   * @return {any} - The return value.
+   */
   bindToUniform(renderstate, unif, bindings) {
     return super.bindToUniform(renderstate, unif, bindings);
   }
 
+  /**
+   * The destroy method.
+   */
   destroy() {
     super.destroy();
     if (this.__fbo) {
@@ -137,17 +150,13 @@ class GLHDRImage extends GLTexture2D {
       this.__srcLDRTex.destroy();
       this.__srcCDMTex.destroy();
     }
-    if (this.__unpackHDRShader)
-      this.__unpackHDRShader.destroy();
-    if (this.__shaderBinding)
-      this.__shaderBinding.destroy();
+    if (this.__unpackHDRShader) this.__unpackHDRShader.destroy();
+    if (this.__shaderBinding) this.__shaderBinding.destroy();
 
     this.__hdrImage.loaded.disconnectScope(this);
     this.__hdrImage.updated.disconnectScope(this);
   }
-};
+}
 
-export {
-  GLHDRImage
-};
+export { GLHDRImage };
 // export default GLHDRImage;
