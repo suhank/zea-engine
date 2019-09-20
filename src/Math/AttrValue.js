@@ -19,8 +19,8 @@ class AttrValue {
 
   /**
    * Creates a new value to wrap memory in an existing buffer.
-   * @param {*} buffer - the buffer param.
-   * @param {*} offset - the offset param.
+   * @param {any} buffer - the buffer param.
+   * @param {any} offset - the offset param.
    */
   static createFromFloat32Buffer(buffer, offset) {
     throw new Error(

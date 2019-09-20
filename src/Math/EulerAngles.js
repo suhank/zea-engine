@@ -37,7 +37,7 @@ class EulerAngles extends AttrValue {
           this.order = 5;
           break;
         default:
-          throw 'Invalid Euler Angles Order:' + order;
+          throw new Error('Invalid Euler Angles Order:' + order);
       }
     }
     if (x instanceof ArrayBuffer) {

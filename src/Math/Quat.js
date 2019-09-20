@@ -169,7 +169,7 @@ class Quat extends AttrValue {
         ordered.set(eulerAngles.y, eulerAngles.x, eulerAngles.z);
         break;
       default:
-        throw 'sdrty';
+        throw new Error('sdrty');
     }
 
     const ti = ordered.x * 0.5;
@@ -229,7 +229,7 @@ class Quat extends AttrValue {
         this.z = ak;
         break;
       default:
-        throw 'sdrty';
+        throw new Error('sdrty');
     }
   }
 
@@ -266,7 +266,7 @@ class Quat extends AttrValue {
         ordered.set(this.z, -this.y, this.x);
         break;
       default:
-        throw 'Invalid rotation order:' + rotationOrder;
+        throw new Error('Invalid rotation order:' + rotationOrder);
     }
 
     const euler = new Vec3();

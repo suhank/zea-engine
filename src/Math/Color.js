@@ -546,10 +546,10 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   lerp(b, t) {
-    const ar = this.r,
-      ag = this.g,
-      ab = this.b,
-      aa = this.a;
+    const ar = this.r;
+    const ag = this.g;
+    const ab = this.b;
+    const aa = this.a;
     return new Color(
       ar + t * (b.r - ar),
       ag + t * (b.g - ag),

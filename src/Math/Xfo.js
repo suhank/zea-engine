@@ -82,7 +82,7 @@ class Xfo {
     const dir = pos.subtract(target);
     const dirLen = dir.length();
     if (dirLen < Number.EPSILON) {
-      throw 'Invalid dir';
+      throw new Error('Invalid dir');
       return;
     }
     this.ori.setFromDirectionAndUpvector(dir, up);

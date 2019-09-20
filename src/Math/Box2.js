@@ -25,8 +25,8 @@ class Box2 {
 
   /**
    * The set method.
-   * @param {*} p0 - the p0 param.
-   * @param {*} p1 - the p1 param.
+   * @param {any} p0 - the p0 param.
+   * @param {any} p1 - the p1 param.
    */
   set(p0, p1) {
     this.p0 = p0;
