@@ -102,7 +102,6 @@ class AssetItem extends TreeItem {
         }
         const group = new Group(layer);
         group.propagateXfoToItems = false;
-        group.getParameter('SearchRoot').setValue(this)
         layerRoot.addChild(group)
         layers[layer] = group;
       }
