@@ -15,6 +15,7 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3
 };
 
+// let numSceneMeshTriangles = 0;
 
 // This class abstracts the rendering of a collection of geometries to screen.
 class GLGeomItem {
@@ -26,6 +27,11 @@ class GLGeomItem {
     this.flags = flags;
     this.visible = this.geomItem.getVisible();
     this.culled = false;
+
+    // if(glGeom.__numTriangles) {
+    //   numSceneMeshTriangles += glGeom.__numTriangles
+    //   console.log(this.geomItem.getName(), glGeom.__numTriangles, numSceneMeshTriangles)
+    // }
 
     this.lightmapName = geomItem.getLightmapName();
     this.updated = new Signal();
