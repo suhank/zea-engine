@@ -25,13 +25,40 @@ class GLBaseViewport extends ParameterOwner {
     super();
     this.__renderer = renderer;
 
-    this.__backgroundColorParam = this.addParameter(new ColorParameter('BackgroundColor', new Color('#808080')));
-    this.__backgroundColorParam.valueChanged.connect((mode)=>{
-      if (this.__fbo) {
-        const color = this.__backgroundColorParam.getValue();
-        this.__fbo.setClearColor(color.asArray());
+    this.__renderer.sceneSet.connect(()=>{
+      const rp = renderer.getScene().getRoot().getChildByName('Renderer Params')
+
+      const bgColorPAram = rp.getParameter('BackgroundColor')
+      const processBGValue = (mode)=>{
+        const value = bgColorPAram.getValue();
+        let gl = this.__renderer.gl;
+        if (value instanceof BaseImage){
+          if (value.type === 'FLOAT'){
+            this.__backgroundTexture = value;
+            this.__backgroundGLTexture = new GLHDRImage(gl, value);
+          }
+          else{
+            this.__backgroundTexture = value;
+            this.__backgroundGLTexture = new GLTexture2D(gl, value);
+          }
+        }
+        else if (value instanceof Color){
+          if(this.__backgroundGLTexture) {
+            this.__backgroundGLTexture.destroy();
+            this.__backgroundGLTexture = undefined;
+            this.__backgroundTexture = undefined;
+          }
+          this.__backgroundColor = value;
+        }
+        else{
+          console.warn("Invalid background:" + value);
+        }
+        this.updated.emit();
       }
+      processBGValue(bgColorPAram.getValue());
+      bgColorPAram.valueChanged.connect(processBGValue);
     })
+
     this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200));
     this.__fbo = undefined;
     this.updated = new Signal();
@@ -77,32 +104,15 @@ class GLBaseViewport extends ParameterOwner {
   }
   
   getBackground() {
-    return this.__backgroundTexture ? this.__backgroundTexture : this.__backgroundColorParam.getValue();
+    const rp = this.__renderer.getScene().getRoot().getChildByName('Renderer Params')
+    const bgColorPAram = rp.getParameter('BackgroundColor')
+    return bgColorPAram.getValue();
   }
 
   setBackground(background) {
-    let gl = this.__renderer.gl;
-    if (background instanceof BaseImage){
-      if (background.type === 'FLOAT'){
-        this.__backgroundTexture = background;
-        this.__backgroundGLTexture = new GLHDRImage(gl, background);
-      }
-      else{
-        this.__backgroundTexture = background;
-        this.__backgroundGLTexture = new GLTexture2D(gl, background);
-      }
-    }
-    else if (background instanceof Color){
-       if(this.__backgroundGLTexture) {
-        this.__backgroundGLTexture.destroy();
-        this.__backgroundGLTexture = undefined;
-        this.__backgroundTexture = undefined;
-      }
-      this.__backgroundColorParam.setValue(background)
-    }
-    else{
-      console.warn("Invalid background:" + background);
-    }
+    const rp = this.__renderer.getScene().getRoot().getChildByName('Renderer Params')
+    const bgColorPAram = rp.getParameter('BackgroundColor')
+    bgColorPAram.setValue(background);
     this.updated.emit();
   }
 

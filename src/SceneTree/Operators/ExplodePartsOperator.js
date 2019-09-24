@@ -48,13 +48,18 @@ class ExplodePartParameter extends StructParameter {
 
   evaluate(explode, explodeDist, offset, stages, cascade, centered, parentXfo, parentDelta){
 
+    // Note: during interactive setup of the operator we
+    // can have evaluations before anhthing is connected.
+    if(!this.__output.isConnected())
+      return;
+
     const stage = this.__stageParam.getValue();
     const movement = this.__movementParam.getValue();
     let dist;
     if(cascade) {
       // in 'cascade' mode, the parts move in a cascade, 
       // starting with stage 0. then 1 ...
-      const t = (stage / stages);
+      let t = (stage / stages);
       if(centered)
         t -= 0.5;
       dist = explodeDist * Math.linStep(movement.x, movement.y, Math.max(0, explode-t));

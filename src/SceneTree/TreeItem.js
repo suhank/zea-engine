@@ -40,9 +40,9 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0
 }
 
-const selectionOutlineColor = new Color("#03E3AC");
+let selectionOutlineColor = new Color("#03E3AC");
 selectionOutlineColor.a = 0.1;
-const branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color("white"), 0.5);
+let branchSelectionOutlineColor = selectionOutlineColor.lerp(new Color("white"), 0.5);
 branchSelectionOutlineColor.a = 0.1;
 
 class TreeItem extends BaseItem {
@@ -51,8 +51,6 @@ class TreeItem extends BaseItem {
 
     this.__visibleCounter = 1; // Visible by Default.
     this.__visible = true;
-    this.__selectable = true;
-    this.__selected = false;
     this.__highlightMapping = {};
     this.__highlights = [];
 
@@ -82,7 +80,6 @@ class TreeItem extends BaseItem {
     // this.componentRemoved = new Signal();
     this.highlightChanged = new Signal();
     this.visibilityChanged = new Signal();
-    this.selectedChanged = new Signal();
     this.localXfoChanged = this.__localXfoParam.valueChanged;
     this.globalXfoChanged = this.__globalXfoParam.valueChanged;
     this.boundingChanged = this.__boundingBoxParam.valueChanged;
@@ -141,7 +138,7 @@ class TreeItem extends BaseItem {
 
     for (let srcChildItem of src.getChildren())
       if (srcChildItem)
-        this.addChild(srcChildItem.clone(flags));
+        this.addChild(srcChildItem.clone(flags), false, false);
     // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
     //     src.childAdded.connect((childItem, index)=>{
     //         this.addChild(childItem.clone(flags));
@@ -233,7 +230,7 @@ class TreeItem extends BaseItem {
   }
 
   _cleanGlobalXfo(prevValue) {
-    let parentItem = this.getParentItem();
+    const parentItem = this.getParentItem();
     if (parentItem !== undefined)
       return parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue());
     else
@@ -277,35 +274,27 @@ class TreeItem extends BaseItem {
   //////////////////////////////////////////
   // Selectability and Selection
 
-  getSelectable() {
-    return this.__selectable;
-  }
-
   setSelectable(val, propagateToChildren = true) {
-    if (this.__selectable != val || propagateToChildren) {
-      this.__selectable = val;
-      for (let childItem of this.__childItems)
-        childItem.setSelectable(this.__selectable, propagateToChildren);
+    if (super.setSelectable(val) || propagateToChildren) {
+      for (let childItem of this.__childItems) {
+        if (childItem instanceof TreeItem)
+          childItem.setSelectable(this.__selectable, propagateToChildren);
+      }
     }
   }
 
-  isSelected() {
-    return this.__selected;
-  }
-  getSelected() {
-    return this.__selected;
-  }
-
   setSelected(sel) {
-    this.__selected = sel;
+    super.setSelected(sel);
     if (sel) {
       this.addHighlight('selected', selectionOutlineColor, false);
       for (let childItem of this.__childItems)
-        childItem.addHighlight('branchselected' + this.getId(), branchSelectionOutlineColor, true);
+        if (childItem instanceof TreeItem)
+          childItem.addHighlight('branchselected' + this.getId(), branchSelectionOutlineColor, true);
     } else {
       this.removeHighlight('selected');
       for (let childItem of this.__childItems)
-        childItem.removeHighlight('branchselected' + this.getId(), true);
+        if (childItem instanceof TreeItem)
+          childItem.removeHighlight('branchselected' + this.getId(), true);
     }
     this.selectedChanged.emit(this.__selected)
   }
@@ -315,15 +304,20 @@ class TreeItem extends BaseItem {
   // Highlights
 
   addHighlight(name, color, propagateToChildren = false) {
-    if (!(name in this.__highlightMapping)) {
-      this.__highlights.push(name);
+    // If the hilight was already in the list, 
+    // remove it and put it at the top.
+    if (name in this.__highlightMapping) {
+      const id = this.__highlights.indexOf(name);
+      this.__highlights.splice(id, 1)
     }
+    this.__highlights.push(name);
     this.__highlightMapping[name] = color;
     this.highlightChanged.emit();
 
     if (propagateToChildren) {
       for (let childItem of this.__childItems)
-        childItem.addHighlight(name, color, propagateToChildren);
+        if (childItem instanceof TreeItem)
+          childItem.addHighlight(name, color, propagateToChildren);
     }
   }
 
@@ -336,7 +330,8 @@ class TreeItem extends BaseItem {
     }
     if (propagateToChildren) {
       for (let childItem of this.__childItems)
-        childItem.removeHighlight(name, propagateToChildren);
+        if (childItem instanceof TreeItem)
+          childItem.removeHighlight(name, propagateToChildren);
     }
   }
 
@@ -364,8 +359,9 @@ class TreeItem extends BaseItem {
   _cleanBoundingBox(bbox) {
     bbox.reset();
     for (let childItem of this.__childItems) {
-      if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX))
-        bbox.addBox3(childItem.getBoundingBox());
+      if (childItem instanceof TreeItem)
+        if (childItem.getVisible() && !childItem.testFlag(ItemFlags.IGNORE_BBOX))
+          bbox.addBox3(childItem.getBoundingBox());
     }
     return bbox;
   }
@@ -389,12 +385,14 @@ class TreeItem extends BaseItem {
     return this.__childItems;
   }
 
-  numChildren() {
-    return this.__childItems.length;
-  }
 
   getNumChildren() {
     return this.__childItems.length;
+  }
+
+  numChildren() {
+    console.warn("Deprecated method. Please use getNumChildren")
+    return this.getNumChildren();
   }
 
   generateUniqueName(name) {
@@ -441,19 +439,20 @@ class TreeItem extends BaseItem {
     }
   }
 
-  insertChild(childItem, index, maintainXfo = false, checkCollisions = true) {
-
-    if (checkCollisions && childItem.getName() in this.__childItemsMapping)
-      throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
-    if (!(childItem instanceof TreeItem))
+  insertChild(childItem, index, maintainXfo = false, fixCollisions = true) {
+    
+    if (childItem.getName() in this.__childItemsMapping) {
+      if (fixCollisions) {
+        childItem.setName(this.generateUniqueName(childItem.getName()));
+      } else {
+        throw ("Item '" + childItem.getName() + "' is already a child of :" + this.getPath());
+      }
+    }
+    if (!(childItem instanceof BaseItem))
       throw ("Object is is not a tree item :" + childItem.constructor.name);
 
     if (childItem.isDestroyed())
       throw ("childItem is destroyed:" + childItem.getPath());
-
-    let newLocalXfo;
-    if (maintainXfo)
-      newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
 
     const signalIds = {};
     signalIds.nameChangedId = childItem.nameChanged.connect((name, oldName) => {
@@ -462,8 +461,14 @@ class TreeItem extends BaseItem {
       delete this.__childItemsMapping[oldName];
       this.__childItemsMapping[name] = index;
     })
-    signalIds.bboxChangedId = childItem.boundingChanged.connect(this._setBoundingBoxDirty)
-    signalIds.visChangedId = childItem.visibilityChanged.connect(this._setBoundingBoxDirty)
+
+    let newLocalXfo;
+    if (childItem instanceof TreeItem) {
+      if (maintainXfo)
+        newLocalXfo = this.getGlobalXfo().inverse().multiply(childItem.getGlobalXfo());
+      signalIds.bboxChangedId = childItem.boundingChanged.connect(this._setBoundingBoxDirty);
+      signalIds.visChangedId = childItem.visibilityChanged.connect(this._setBoundingBoxDirty);
+    }
 
     this.__childItems.splice(index, 0, childItem);
     this.__childItemsSignalIds.splice(index, 0, signalIds);
@@ -472,22 +477,23 @@ class TreeItem extends BaseItem {
 
     childItem.setOwner(this);
 
-    if (maintainXfo)
-      childItem.setLocalXfo(newLocalXfo);
+    if (childItem instanceof TreeItem) {
+      if (maintainXfo)
+        childItem.setLocalXfo(newLocalXfo);
+      this._setBoundingBoxDirty();
+    }
 
     if (childItem.testFlag(ItemFlags.USER_EDITED))
       this.setFlag(ItemFlags.USER_EDITED)
 
-    this._setBoundingBoxDirty();
     this.childAdded.emit(childItem, index);
-
 
     return childItem;
   }
 
-  addChild(childItem, maintainXfo = false, checkCollisions = true) {
+  addChild(childItem, maintainXfo = false, fixCollisions = true) {
     let index = this.__childItems.length;
-    this.insertChild(childItem, index, maintainXfo, checkCollisions);
+    this.insertChild(childItem, index, maintainXfo, fixCollisions);
     return index;
   }
 
@@ -523,21 +529,28 @@ class TreeItem extends BaseItem {
     if (childItem) {
       const signalIds = this.__childItemsSignalIds[index];
       childItem.nameChanged.disconnectId(signalIds.nameChangedId)
-      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
-      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
+      
+      if (childItem instanceof TreeItem) {
+        childItem.boundingChanged.disconnectId(signalIds.bboxChangedId);
+        childItem.visibilityChanged.disconnectId(signalIds.visChangedId);
+      }
       
       this.__childItems.splice(index, 1);
       this.__childItemsSignalIds.splice(index, 1);
       delete this.__childItemsMapping[childItem.getName()];
       this.__updateMapping(index);
-      this._setBoundingBoxDirty();
 
-      childItem.setParentItem(undefined);
+      if (childItem instanceof TreeItem) {
+        this._setBoundingBoxDirty();
+      }
+
+      childItem.setOwner(undefined);
       this.childRemoved.emit(childItem, index);
     }
   }
 
   removeChildByHandle(childItem) {
+    console.warn("Deprecated method. Please use removeChild")
     const index = this.__childItems.indexOf(childItem);
     if (index == -1)
       throw ("Error in removeChildByHandle. Child not found:" + childItem.getName());
@@ -552,9 +565,15 @@ class TreeItem extends BaseItem {
     this._setBoundingBoxDirty();
   }
 
-  indexOfChild(childItem) {
+  getChildIndex(childItem) {
     return this.__childItems.indexOf(childItem);
   }
+
+  indexOfChild(childItem) {
+    console.warn("Deprecated method. Please use getChildIndex")
+    return this.getChildIndex(childItem);
+  }
+
 
   //////////////////////////////////////////
   // Components
@@ -687,26 +706,42 @@ class TreeItem extends BaseItem {
 
   onMouseDown(event) {
     this.mouseDown.emit(event);
-    if (event.vleStopPropagation !== true && this.__ownerItem) {
+    if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseDown(event)
     }
-    return event.vleStopPropagation;
+    return event.stopPropagation;
   }
 
   onMouseUp(event) {
       this.mouseUp.emit(event);
-      if(event.vleStopPropagation !== true && this.__ownerItem){
+      if(event.propagating && this.__ownerItem){
           this.__ownerItem.onMouseUp(event)
       }
-      return event.vleStopPropagation;
+      return event.stopPropagation;
   }
 
   onMouseMove(event) {
-      this.mouseMove.emit(event);
-      if(event.vleStopPropagation !== true && this.__ownerItem){
-          this.__ownerItem.onMouseMove(event)
-      }
-      return event.vleStopPropagation;
+    this.mouseMove.emit(event);
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onMouseMove(event)
+    }
+    return event.stopPropagation;
+  }
+
+  onMouseEnter(event) {
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onMouseEnter(event)
+    }
+  }
+  onMouseLeave(event) {
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onMouseLeave(event)
+    }
+  }
+  onWheel(event) {
+    if(event.propagating && this.__ownerItem){
+        this.__ownerItem.onWheel(event)
+    }
   }
 
   //////////////////////////////////////////
@@ -717,7 +752,7 @@ class TreeItem extends BaseItem {
     if (!this.testFlag(ItemFlags.USER_EDITED))
       return;
 
-    let j = super.toJSON(context, flags);
+    const j = super.toJSON(context, flags);
 
     const jcs = [];
     for (let c of this.__components)
@@ -778,8 +813,10 @@ class TreeItem extends BaseItem {
             if (childJson.type) {
               childItem = sgFactory.constructClass(childJson.type);
               if (childItem) {
-                this.addChild(childItem, false, false);
+                // Note: we should load the json first, as it
+                // may contain the unique name of the item. 
                 childItem.fromJSON(childJson, context, flags);
+                this.addChild(childItem, false, false);
               }
             } else {
               // Note: no need to log a warning. A child might not exist

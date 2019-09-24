@@ -45,7 +45,7 @@ void main(void) {
 
     bool maintainScreenSize = true;// Could be passed as a flag.
     if(maintainScreenSize) {
-        float dist = length((modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0)));
+        float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
         float sc = dist;
         mat4 scmat = mat4(
             sc, 0.0, 0.0, 0.0,
@@ -56,7 +56,7 @@ void main(void) {
         modelViewMatrix = modelViewMatrix * scmat;
     }
 
-    vec4 viewPos = (modelViewMatrix * vec4(positions, 1.0));
+    vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
     gl_Position = projectionMatrix * viewPos;
 
     v_viewPos = viewPos.xyz;

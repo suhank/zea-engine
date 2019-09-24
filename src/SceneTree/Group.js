@@ -1,5 +1,4 @@
 import {
-  Vec2,
   Vec3,
   Color,
   Xfo
@@ -11,27 +10,14 @@ import {
   ValueSetMode,
   BooleanParameter,
   NumberParameter,
-  StringParameter,
   Vec3Parameter,
   ColorParameter,
-  XfoParameter,
-  TreeItemParameter,
   ItemSetParameter,
   MultiChoiceParameter
 } from './Parameters';
 import {
   MaterialParameter
 } from './Parameters/MaterialParameter.js';
-import {
-  QueryParameter,
-  QUERY_TYPES,
-  QUERY_MATCH_TYPE,
-  QUERY_LOGIC
-} from './Parameters/QueryParameter.js'
-
-import {
-  QuerySet
-} from './Parameters/QuerySetParameter.js';;
 
 import {
   ItemFlags
@@ -55,81 +41,87 @@ class Group extends TreeItem {
   constructor(name) {
     super(name);
 
-    // This setting makes selection propagate from items
-    // to the group, which then propagates down to the items 
-    this.propagateSelectionToItems = false;
-    this.propagateXfoToItems = true;
-    this.propagateSelectionChangesFromItems = false;
+    // Items which can be constructed by a user(not loaded in binary data.)
+    // Should always have this flag set. 
+    this.setFlag(ItemFlags.USER_EDITED)
 
-    this.__calculatingInvInitialXfo = false;
-    this.__invInitialXfo = undefined;
+    this.calculatingGroupXfo = false;
+    this.propagatingXfoToItems = false;
+
+    this.invGroupXfo = undefined;
     this.__initialXfos = [];
     this.__signalIndices = [];
 
-    this.__searchRootParam = this.insertParameter(new TreeItemParameter('SearchRoot'), 0);
-    this.__searchRootParam.valueChanged.connect(() => {
-      this.resolveQueries();
+    let pid = 0;
+    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items', item => item instanceof TreeItem), pid++);
+    this.__itemsParam.itemAdded.connect((item, index) => {
+      this.__bindItem(item, index);
     })
-
-    this.__searchSetParam = this.insertParameter(new QuerySet('Queries'), 1);
-    this.__searchSetParam.valueChanged.connect((changeType) => {
-      this.resolveQueries()
-    });
-    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items'), 2);
+    this.__itemsParam.itemRemoved.connect((item, index) => {
+      this.__unbindItem(item, index);
+    })
+    this.__itemsParam.valueChanged.connect(() => {
+      this.__updateHighlight();
+      // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+      this._setGlobalXfoDirty();
+      this._setBoundingBoxDirty();
+    })
 
     this.__initialXfoModeParam = this.insertParameter(
       new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']),
-      3);
+      pid++);
     this.__initialXfoModeParam.valueChanged.connect(() => {
-      this.recalcInitialXfo();
+      // this.recalcInitialXfo();
+      this._setGlobalXfoDirty();
     })
 
-    this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), 4);
+    this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), pid++);
     this.__highlightedParam.valueChanged.connect(() => {
       this.__updateHighlight();
     })
 
     this.__updateHighlight = this.__updateHighlight.bind(this)
-    const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), 5);
+    const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), pid++);
     highlightColorParam.valueChanged.connect(this.__updateHighlight)
-    const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), 6);
+    const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), pid++);
     highlightFillParam.valueChanged.connect(this.__updateHighlight)
 
-    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), 7);
+    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), pid++);
     this.__materialParam.valueChanged.connect(() => {
       this.__updateMaterial();
     })
 
     this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.insertParameter(new BooleanParameter('CutAwayEnabled', false), 8).valueChanged.connect(this.__updateCutaway);
-    this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1, 0, 0)), 9).valueChanged.connect(this.__updateCutaway);
-    this.insertParameter(new NumberParameter('CutDist', 0.0), 10).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new BooleanParameter('CutAwayEnabled', false), pid++).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1, 0, 0)), pid++).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(new NumberParameter('CutDist', 0.0), pid++).valueChanged.connect(this.__updateCutaway);
 
     this.__globalXfoParam.valueChanged.connect((changeType) => {
-      if (!this.propagateXfoToItems)
+      if (this.calculatingGroupXfo)
         return;
 
       const items = Array.from(this.__itemsParam.getValue());
       // Only after all the items are resolved do we have an invXfo and we can tranform our items.
-      if (!this.__calculatingInvInitialXfo && items.length > 0 && this.__invInitialXfo) {
+      if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
         let delta;
+        this.propagatingXfoToItems = true;
         const xfo = this.__globalXfoParam.getValue();
         const setDirty = (item, initialXfo) => {
           const clean = () => {
             if (!delta) {
-              const xfo = this.__globalXfoParam.getValue();
               // Compute the skinning transform that we can
               // apply to all the items in the group.
-              delta = xfo.multiply(this.__invInitialXfo);
+              delta = xfo.multiply(this.invGroupXfo);
             }
             return delta.multiply(initialXfo);
           }
           item.getParameter('GlobalXfo').setDirty(clean);
         }
-        const len = items.length;
-        for (let i = 0; i < len; i++) {
-          setDirty(items[i], this.__initialXfos[i]);
-        }
+        items.forEach((item, index) => {
+          if (item instanceof TreeItem)
+            setDirty(item, this.__initialXfos[index]);
+        });
+        this.propagatingXfoToItems = false;
       }
     });
 
@@ -141,19 +133,13 @@ class Group extends TreeItem {
   }
 
   clone(flags) {
-    let cloned = new Group();
+    const cloned = new Group();
     cloned.copyFrom(this, flags);
     return cloned;
   }
 
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
-  }
-  setOwner(owner) {
-    super.setOwner(owner);
-
-    if (this.__searchRootParam.getValue() == undefined)
-      this.__searchRootParam.setValue(owner);
   }
 
   ////////////////////////////////
@@ -163,7 +149,8 @@ class Group extends TreeItem {
     if (super.__updateVisiblity()) {
       const value = this.getVisible();
       Array.from(this.__itemsParam.getValue()).forEach(item => {
-        item.propagateVisiblity(this.__visible ? 1 : -1);
+        if (item instanceof TreeItem)
+          item.propagateVisiblity(this.__visible ? 1 : -1);
       });
       return true;
     }
@@ -179,23 +166,72 @@ class Group extends TreeItem {
       highlighted = true;
       color = this.getParameter('HighlightColor').getValue();
       color.a = this.getParameter('HighlightFill').getValue();
-    } else if (this.getSelected()) {
-      highlighted = true;
-      color = TreeItem.getBranchSelectionOutlineColor();
     }
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
-      if (highlighted)
-        item.addHighlight('groupItemHighlight' + this.getId(), color, true)
-      else
-        item.removeHighlight('groupItemHighlight' + this.getId(), true)
-
+      if (item instanceof TreeItem) {
+        if (highlighted)
+          item.addHighlight('groupItemHighlight' + this.getId(), color, true);
+        else
+          item.removeHighlight('groupItemHighlight' + this.getId(), true);
+      }
     })
   }
 
   setSelected(sel) {
     super.setSelected(sel);
-    this.__updateHighlight();
+    
+    if (sel) {
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        if (item instanceof TreeItem)
+          item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
+      })
+      // We want to re-apply the group hilight over the branch selection hilight. 
+      this.__updateHighlight();
+    } else {
+      this.removeHighlight('selected');
+      Array.from(this.__itemsParam.getValue()).forEach(item => {
+        if (item instanceof TreeItem)
+          item.removeHighlight('branchselected' + this.getId(), true);
+      })
+    }
+  }
+
+  //////////////////////////////////////////
+  // Global Xfo
+
+  _cleanGlobalXfo(prevValue) {
+    const items = Array.from(this.__itemsParam.getValue());
+    if (items.length == 0)
+      return prevValue;
+    this.calculatingGroupXfo = true;
+    const initialXfoMode = this.__initialXfoModeParam.getValue();
+    let xfo;
+    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
+      xfo = items[0].getGlobalXfo();
+    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
+      xfo = new Xfo();
+      xfo.ori.set(0, 0, 0, 0);
+      let numTreeItems = 0;
+      for (let item of items) {
+        if (item instanceof TreeItem) {
+          const itemXfo = item.getGlobalXfo();
+          xfo.tr.addInPlace(itemXfo.tr)
+          xfo.ori.addInPlace(itemXfo.ori)
+          // xfo.sc.addInPlace(itemXfo.sc)
+          numTreeItems++;
+        }
+      }
+      xfo.tr.scaleInPlace(1 / numTreeItems);
+      xfo.ori.normalizeInPlace();
+      // xfo.sc.scaleInPlace(1/ numTreeItems);
+    } else {
+      throw ("Invalid mode.")
+    }
+    // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
+    this.invGroupXfo = xfo.inverse();
+    this.calculatingGroupXfo = false;
+    return xfo;
   }
 
   //////////////////////////////////////////
@@ -206,7 +242,7 @@ class Group extends TreeItem {
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
-        if (treeItem.hasParameter('Material')) {
+        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           if (material) {
             treeItem.__backupMaterial = treeItem.hasParameter('Material').getValue();
             treeItem.hasParameter('Material').setValue(material);
@@ -242,249 +278,30 @@ class Group extends TreeItem {
   // should be removed from the interface
   setPaths(paths) {
     this.clearItems(false);
+
+    const searchRoot = this.getOwner();
+    if (searchRoot == undefined)
+      return;
+    let items = [];
     paths.forEach(path => {
-      const query = new QueryParameter('path', QUERY_TYPES.PATH, QUERY_MATCH_TYPE.EXACT, QUERY_LOGIC.NEWSET);
-      let value;
-      if (Array.isArray(path))
-        value = path.join('/');
-      else
-        value = path;
-      query.setValue(value);
-      this.__searchSetParam.addItem(query, false);
+      const treeItem = searchRoot.resolvePath(path);
+      if(treeItem)
+        items.push(treeItem);
     })
-    this.__searchSetParam.valueChanged.emit();
+    this.setItems(items)
   }
   // For backwards compatiblity.
   resolveItems(paths) {
     this.setPaths(paths);
   }
 
-  resolveQueries() {
-
-    const searchRoot = this.__searchRootParam.getValue();
-    if (searchRoot == undefined)
-      return;
-
-    const queries = Array.from(this.__searchSetParam.getValue());
-    if (queries.length == 0)
-      return;
-
-    let result = [];
-    let set = []; // Each time we hit an OR operator, we start a new set.
-    let prevset = [];
-    let first = true;
-    // Filter it down, and then merge into result.
-    queries.forEach((query, index) => {
-      try {
-        if (!query.getEnabled() || query.getValue() == "")
-          return;
-
-        const negate = query.getNegate();
-        const applyTest = (res, item) => {
-          if (negate && !res)
-            set.push(item);
-          else if (!negate && res)
-            set.push(item);
-        }
-        // If we hit an 'OR' query, we want the prevset
-        // to the set generated before the previous query. 
-        // So: TestA && TestB || TestC
-        if (query.getLocicalOperator() == QUERY_LOGIC.AND) {
-          prevset = set;
-        }
-        if (first || query.getLocicalOperator() == QUERY_LOGIC.NEWSET) {
-          first = false; // The first enabled query.
-          result = result.concat(set);
-          set = [];
-
-          switch (query.getQueryType()) {
-            case QUERY_TYPES.PATH:
-              {
-                if (query.getMatchType() == QUERY_MATCH_TYPE.EXACT) {
-                  const path = query.getValue();
-                  const treeItem = searchRoot.resolvePath(path);
-                  if (treeItem) {
-                    set.push(treeItem);
-                  } else {
-                    console.warn("Group could not resolve item:" + path)
-                  }
-                } else if (query.getMatchType() == QUERY_MATCH_TYPE.REGEX) {
-                  const regex = query.getRegex();
-                  const searchRootPath = searchRoot.getPath();
-                  searchRoot.traverse((item) => {
-                    const itemPath = item.getPath().slice(searchRootPath.length);
-                    applyTest(regex.test(String(itemPath)), item);
-                  }, false)
-                }
-                break;
-              }
-            case QUERY_TYPES.NAME:
-              {
-                const regex = query.getRegex();
-                searchRoot.traverse((item) => {
-                  applyTest(regex.test(item.getName()), item);
-                }, false);
-                break;
-              }
-            case QUERY_TYPES.PROPERTY:
-              {
-                const regex = query.getRegex();
-                searchRoot.traverse((item) => {
-                  let res = false;
-                  if (item.hasParameter(query.getPropertyName())) {
-                    const prop = item.getParameter(query.getPropertyName());
-                    if (prop instanceof StringParameter && regex.test(prop.getValue()))
-                      res = true;
-                  }
-                  applyTest(res, item);
-                }, false);
-                break;
-              }
-            case QUERY_TYPES.LEVEL:
-              {
-                const regex = query.getRegex();
-                const searchRootPath = searchRoot.getPath();
-                searchRoot.traverse((item) => {
-                  const itemPath = item.getPath().slice(searchRootPath.length);
-                  applyTest(itemPath.length > 4 && regex.test(itemPath[3]), item);
-                }, false);
-                break;
-              }
-            case QUERY_TYPES.LAYER:
-              {
-                const value = query.getValue();
-                searchRoot.traverse((item) => {
-                  applyTest(item.getLayers().indexOf(value) != -1, item);
-                }, false);
-                break;
-              }
-            case QUERY_TYPES.MATERIAL:
-              {
-                const regex = query.getRegex();
-                searchRoot.traverse((item) => {
-                  let res = false;
-                  if (item.hasParameter("material")) {
-                    const material = item.getParameter("material").getValue();
-                    if (regex.test(material.getName()))
-                      res = true;
-                  }
-                  applyTest(res, item);
-                }, false);
-                break;
-              }
-          }
-        } else {
-
-          switch (query.getQueryType()) {
-            case QUERY_TYPES.PATH:
-              {
-                const regex = query.getRegex();
-                const f = (item) => negate ? !regex.test(item.getPath()) : regex.test(item.getPath())
-
-                if (query.getLocicalOperator() == QUERY_LOGIC.AND)
-                  set = set.filter(f);
-                else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
-                  set = set.concat(prevset.filter(f));
-                break;
-              }
-            case QUERY_TYPES.NAME:
-              {
-                const regex = query.getRegex();
-                const f = (item) => negate ? !regex.test(item.getName()) : regex.test(item.getName())
-
-                if (query.getLocicalOperator() == QUERY_LOGIC.AND)
-                  set = set.filter(f);
-                else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
-                  set = set.concat(prevset.filter(f));
-                break;
-              }
-            case QUERY_TYPES.PROPERTY:
-              {
-                const regex = query.getRegex();
-                const f = (item) => {
-                  let res = false;
-                  if (item.hasParameter(query.getPropertyName())) {
-                    const prop = item.getParameter(query.getPropertyName());
-                    // Note: the property must be a string property.
-                    if (prop instanceof StringParameter && regex.test(prop.getValue()))
-                      res = true;
-                  }
-                  return negate ? !res : res;
-                }
-                if (query.getLocicalOperator() == QUERY_LOGIC.AND)
-                  set = set.filter(f);
-                else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
-                  set = set.concat(prevset.filter(f));
-                break;
-              }
-            case QUERY_TYPES.LEVEL:
-              {
-                const searchRootPath = searchRoot.getPath();
-                const regex = query.getRegex();
-                const f = (item) => {
-                  let res = false;
-                  const itemPath = item.getPath().slice(searchRootPath.length);
-                  if (itemPath.length > 4 && regex.test(itemPath[3]))
-                    res = true;
-                  return negate ? !res : res;
-                };
-                if (query.getLocicalOperator() == QUERY_LOGIC.AND)
-                  set = set.filter(f);
-                else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
-                  set = set.concat(prevset.filter(f));
-                break;
-              }
-            case QUERY_TYPES.LAYER:
-              {
-                const value = query.getValue();
-                const f = (item) => {
-                  let res = false;
-                  if (item.getLayers().indexOf(value) != -1)
-                    res = true;
-                  return negate ? !res : res;
-                };
-                if (query.getLocicalOperator() == QUERY_LOGIC.AND)
-                  set = set.filter(f);
-                else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
-                  set = set.concat(prevset.filter(f));
-                break;
-              }
-            case QUERY_TYPES.MATERIAL:
-              {
-                const regex = query.getRegex();
-                const f = (item) => {
-                  let res = false;
-                  if (item.hasParameter("material")) {
-                    const material = item.getParameter("material").getValue();
-                    if (regex.test(material.getName()))
-                      res = true;
-                  }
-                  return negate ? !res : res;
-                }
-                if (query.getLocicalOperator() == QUERY_LOGIC.AND)
-                  set = set.filter(f);
-                else if (query.getLocicalOperator() == QUERY_LOGIC.OR)
-                  set = set.concat(prevset.filter(f));
-                break;
-              }
-          }
-        }
-
-      } catch (e) {
-        // continue...
-        console.warn(e.message)
-      }
-    })
-    result = result.concat(set);
-    // result.forEach((item) => {
-    //   // console.log(item.getPath())
-    //   this.addItem(item);
-    // });
-    this.setItems(new Set(result));
-  }
-
   __bindItem(item, index) {
-    const mouseDownIndex = item.mouseDown.connect((event) => {
+    if (!(item instanceof TreeItem))
+      return;
+
+    const signalIndices = {}
+
+    signalIndices.mouseDownIndex = item.mouseDown.connect((event) => {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
     });
@@ -492,57 +309,47 @@ class Group extends TreeItem {
     /////////////////////////////////
     // Update the item cutaway
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
-    const cutAwayVector = this.getParameter('CutVector').getValue();
-    const cutAwayDist = this.getParameter('CutDist').getValue();
-    item.traverse(treeItem => {
-      if (treeItem instanceof BaseGeomItem) {
-        treeItem.setCutawayEnabled(cutEnabled)
-        treeItem.setCutVector(cutAwayVector)
-        treeItem.setCutDist(cutAwayDist)
-      }
-    }, true)
+    if (cutEnabled) {
+      const cutAwayVector = this.getParameter('CutVector').getValue();
+      const cutAwayDist = this.getParameter('CutDist').getValue();
+      item.traverse(treeItem => {
+        if (treeItem instanceof BaseGeomItem) {
+          treeItem.setCutawayEnabled(cutEnabled)
+          treeItem.setCutVector(cutAwayVector)
+          treeItem.setCutDist(cutAwayDist)
+        }
+      }, true);
+    }
 
     if (!this.getVisible()) {
       // Decrement the visiblity counter which might cause
       // this item to become invisible. (or it might already be invisible.)
       item.propagateVisiblity(-1);
     }
-    // Only used by the Selection Manager.
-    // Maybe we should have a special group 
-    // for that.
-    if (this.propagateSelectionToItems) {
-      item.setSelected(this.getSelected());
-    }
-    if (this.propagateSelectionChangesFromItems) {
-      const selectedChangedIndex = item.selectedChanged.connect((event) => {
-        this.setSelected(item.getSelected());
-      });
+
+    // Higlight the new item with branch selection color
+    if (this.getSelected()) {
+      if (item instanceof TreeItem)
+        item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
     }
 
-    const globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
+    signalIndices.globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
       if (mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
         this.__initialXfos[index] = item.getGlobalXfo();
     });
     this.__initialXfos[index] = item.getGlobalXfo();
 
-    const bboxChangedIndex = item.boundingChanged.connect(this._setBoundingBoxDirty);
+    signalIndices.bboxChangedIndex = item.boundingChanged.connect(this._setBoundingBoxDirty);
 
-    this.__signalIndices[index] = {
-      mouseDownIndex,
-      globalXfoChangedIndex,
-      bboxChangedIndex
-    }
+    this.__signalIndices[index] = signalIndices
   }
 
   __unbindItem(item, index) {
+    if (!(item instanceof TreeItem))
+      return;
 
-    let highlighted = false;
+    item.removeHighlight('branchselected' + this.getId(), true);
     if (this.getParameter('Highlighted').getValue()) {
-      highlighted = true;
-    } else if (this.getSelected()) {
-      highlighted = true;
-    }
-    if (highlighted) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
@@ -552,8 +359,8 @@ class Group extends TreeItem {
       // It will stay invisible its parent is invisible, or if 
       // multiple groups connect to it and say it is invisible.
       item.propagateVisiblity(1);
-    }
-
+    } 
+    
     /////////////////////////////////
     // Update the item cutaway
     item.traverse(treeItem => {
@@ -570,25 +377,16 @@ class Group extends TreeItem {
     this.__initialXfos.splice(index, 1);
   }
 
-  addItem(item, emit) {
+  addItem(item, emit=true) {
     if (!item) {
       console.warn("Error adding item to group. Item is null");
       return;
     }
-    const index = this.__itemsParam.addItem(item);
-    this.__bindItem(item, index);
-
-    // Note: do we re-calc the initial xfo if it is set to 'first'?
-    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
-    this._setBoundingBoxDirty();
+    this.__itemsParam.addItem(item, emit);
   }
 
-  removeItem(item) {
-    const index = this.__itemsParam.removeItem(item);
-    this.__unbindItem(item, index);
-
-    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
-    this._setBoundingBoxDirty();
+  removeItem(item, emit=true) {
+    this.__itemsParam.removeItem(item, emit);
   }
 
   clearItems(emit = true) {
@@ -612,52 +410,57 @@ class Group extends TreeItem {
     this.clearItems(false)
     this.__itemsParam.setItems(items);
 
-    Array.from(items).forEach((item, index) => {
-      this.__bindItem(item, index)
-    })
-    this.__updateHighlight();
-    this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
-    this._setBoundingBoxDirty();
+    // Array.from(items).forEach((item, index) => {
+    //   this.__bindItem(item, index)
+    // })
+    // this.__updateHighlight();
+    // // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+    // this._setGlobalXfoDirty();
+    // this._setBoundingBoxDirty();
   }
 
-  recalcInitialXfo(mode) {
-    if (!this.propagateXfoToItems)
-      return;
-    const items = Array.from(this.__itemsParam.getValue());
-    if (items.length == 0)
-      return;
-    this.__calculatingInvInitialXfo = true;
-    const initialXfoMode = this.__initialXfoModeParam.getValue();
-    let xfo;
-    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = items[0].getGlobalXfo();
-    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
-      xfo = new Xfo();
-      xfo.ori.set(0, 0, 0, 0);
-      for (let p of items) {
-        const itemXfo = p.getGlobalXfo();
-        xfo.tr.addInPlace(itemXfo.tr)
-        xfo.ori.addInPlace(itemXfo.ori)
-        // xfo.sc.addInPlace(itemXfo.sc)
-      }
-      xfo.tr.scaleInPlace(1 / items.length);
-      xfo.ori.normalizeInPlace();
-      // xfo.sc.scaleInPlace(1/this.__items.length);
-    } else {
-      throw ("Invalid mode.")
-    }
-    // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
-    this.__globalXfoParam.setValue(xfo, mode);
-    this.__invInitialXfo = xfo.inverse();
-    this.__calculatingInvInitialXfo = false;
-  }
+  // recalcInitialXfo(mode) {
+  //   const items = Array.from(this.__itemsParam.getValue());
+  //   if (items.length == 0)
+  //     return;
+  //   this.calculatingGroupXfo = true;
+  //   const initialXfoMode = this.__initialXfoModeParam.getValue();
+  //   let xfo;
+  //   if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
+  //     xfo = items[0].getGlobalXfo();
+  //   } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
+  //     xfo = new Xfo();
+  //     xfo.ori.set(0, 0, 0, 0);
+  //     let numTreeItems = 0;
+  //     for (let item of items) {
+  //       if (item instanceof TreeItem) {
+  //         const itemXfo = item.getGlobalXfo();
+  //         xfo.tr.addInPlace(itemXfo.tr)
+  //         xfo.ori.addInPlace(itemXfo.ori)
+  //         // xfo.sc.addInPlace(itemXfo.sc)
+  //         numTreeItems++;
+  //       }
+  //     }
+  //     xfo.tr.scaleInPlace(1 / numTreeItems);
+  //     xfo.ori.normalizeInPlace();
+  //     // xfo.sc.scaleInPlace(1/ numTreeItems);
+  //   } else {
+  //     throw ("Invalid mode.")
+  //   }
+  //   // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
+  //   this.__globalXfoParam.setValue(xfo, mode);
+  //   this.invGroupXfo = xfo.inverse();
+  //   this.calculatingGroupXfo = false;
+  // }
 
   _cleanBoundingBox(bbox) {
     const result = super._cleanBoundingBox(bbox);
     const items = Array.from(this.__itemsParam.getValue());
     items.forEach((item, index) => {
-      if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
-        bbox.addBox3(item.getBoundingBox());
+      if (item instanceof TreeItem) {
+        if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
+          bbox.addBox3(item.getBoundingBox());
+      }
     })
     return bbox;
   }
@@ -685,8 +488,10 @@ class Group extends TreeItem {
     const j = super.toJSON(context, flags);
     const items = Array.from(this.__itemsParam.getValue());
     const treeItems = [];
-    for (let p of items)
-      treeItems.push(context.makeRelative(p.getPath()));
+    for (let p of items) {
+      const path = p.getPath();
+      treeItems.push(context ? context.makeRelative(path) : path);
+    }
     j.treeItems = treeItems
     return j;
   }

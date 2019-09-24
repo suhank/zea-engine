@@ -250,7 +250,8 @@ class VRViewport extends GLBaseViewport {
                         this.controllerDoubleClicked.emit({ 
                             button: 1, 
                             controller, 
-                            vleStopPropagation:false, 
+                            propagating: true,
+                            stopPropagation:function() { this.propagating = false; }, 
                             vrviewport: this 
                         }, this);
                     }
@@ -260,7 +261,8 @@ class VRViewport extends GLBaseViewport {
                         this.controllerButtonDown.emit({ 
                             button: 1, 
                             controller, 
-                            vleStopPropagation:false, 
+                            propagating: true,
+                            stopPropagation:function() { this.propagating = false; }, 
                             vrviewport: this 
                         }, this);
                     }
@@ -273,7 +275,8 @@ class VRViewport extends GLBaseViewport {
                     this.controllerButtonUp.emit({ 
                         button: 1,
                         controller,
-                        vleStopPropagation:false,
+                        propagating: true,
+                        stopPropagation:function() { this.propagating = false; },
                         vrviewport: this 
                     }, this);
                 }
