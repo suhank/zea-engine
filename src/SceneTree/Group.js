@@ -243,11 +243,15 @@ class Group extends TreeItem {
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
+          const p = treeItem.getParameter('Material')
           if (material) {
-            treeItem.__backupMaterial = treeItem.hasParameter('Material').getValue();
-            treeItem.hasParameter('Material').setValue(material);
-          } else {
-            treeItem.hasParameter('Material').setValue(treeItem.__backupMaterial);
+            const m = p.getValue();
+            if (m != material) {
+              p.__backupMaterial = m;
+              p.setValue(material);
+            }
+          } else if (p.__backupMaterial) {
+            p.setValue(p.__backupMaterial);
           }
         }
       }, false)
@@ -305,6 +309,24 @@ class Group extends TreeItem {
       this.mouseDown.emit(event);
       this.mouseDownOnItem.emit(event, item);
     });
+
+    /////////////////////////////////
+    // Update the Material
+    const material = this.getParameter('Material').getValue();
+    if(material) {
+      item.traverse(treeItem => {
+        if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
+          const p = treeItem.getParameter('Material')
+          if (material) {
+            const m = p.getValue();
+            if (m != material) {
+              p.__backupMaterial = m;
+              p.setValue(material);
+            }
+          }
+        }
+      }, true)
+    }
 
     /////////////////////////////////
     // Update the item cutaway
@@ -409,14 +431,6 @@ class Group extends TreeItem {
   setItems(items) {
     this.clearItems(false)
     this.__itemsParam.setItems(items);
-
-    // Array.from(items).forEach((item, index) => {
-    //   this.__bindItem(item, index)
-    // })
-    // this.__updateHighlight();
-    // // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
-    // this._setGlobalXfoDirty();
-    // this._setBoundingBoxDirty();
   }
 
   // recalcInitialXfo(mode) {
