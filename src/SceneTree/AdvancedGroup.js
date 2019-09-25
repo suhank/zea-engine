@@ -12,7 +12,7 @@ import {
 } from './Parameters/QuerySetParameter.js';;
 import {
   Group
-} from './BaseGeomItem';
+} from './Group';
 import {
   sgFactory
 } from './SGFactory.js';
@@ -22,7 +22,7 @@ class AdvancedGroup extends Group {
     super(name);
 
     this.__searchRootParam = this.insertParameter(new TreeItemParameter('SearchRoot'), 0);
-    this.__searchSetParam.valueChanged.connect((changeType) => {
+    this.__searchRootParam.valueChanged.connect((changeType) => {
       this.resolveQueries()
     });
     

@@ -1,12 +1,12 @@
 
 
-var onResize = function(element, callback) {
+function onResize(element, callback) {
   if (!onResize.watchedElementData) {
     // First time we are called, create a list of watched elements
     // and hook up the event listeners.
     onResize.watchedElementData = [];
 
-    var checkForChanges = function() {
+    const checkForChanges = function() {
       onResize.watchedElementData.forEach(function(data) {
         if (data.element.offsetWidth !== data.offsetWidth ||
             data.element.offsetHeight !== data.offsetHeight) {
@@ -21,7 +21,7 @@ var onResize = function(element, callback) {
     window.addEventListener('resize', checkForChanges);
 
     // Listen to changes on the elements in the page that affect layout 
-    var observer = new MutationObserver(checkForChanges);
+    const observer = new MutationObserver(checkForChanges);
     observer.observe(document.body, { 
       attributes: true,
       childList: true,
