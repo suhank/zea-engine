@@ -155,18 +155,20 @@ class VRController {
 
         ////////////////////////////////
         // New.
-        const inputPose = xrFrame.getInputPose(inputSource, refSpace);
-        // const inputPose = xrFrame.getInputPose(refSpace, inputSource);
+        // const inputPose = xrFrame.getInputPose(inputSource, refSpace);
+        // const inputPose = xrFrame.getPose(refSpace, inputSource);
         // const inputPose = xrFrame.getPose(inputSource, refSpace);
+        const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace);
 
         // We may not get a inputPose back in cases where the input source has lost
         // tracking or does not know where it is relative to the given frame
         // of reference.
-        if (!inputPose || !inputPose.gripTransform) {
+        // if (!inputPose || !inputPose.gripTransform) {
+        if (!inputPose || !inputPose.transform) {
             return;
         }
 
-        this.__mat4.setDataArray(inputPose.gripTransform.matrix);
+        this.__mat4.setDataArray(inputPose.transform.matrix);
         this.__xfo.fromMat4(this.__mat4);
 
         // const pos = inputPose.transform.position;

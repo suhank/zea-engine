@@ -34,7 +34,8 @@ import {
 
 const GROUP_INITIAL_XFO_MODES = {
   first: 0,
-  average: 1
+  average: 1,
+  globalOri: 2
 }
 
 class Group extends TreeItem {
@@ -68,7 +69,7 @@ class Group extends TreeItem {
     })
 
     this.__initialXfoModeParam = this.insertParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average']),
+      new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average', 'global']),
       pid++);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       // this.recalcInitialXfo();
@@ -225,6 +226,17 @@ class Group extends TreeItem {
       xfo.tr.scaleInPlace(1 / numTreeItems);
       xfo.ori.normalizeInPlace();
       // xfo.sc.scaleInPlace(1/ numTreeItems);
+    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri) {
+      xfo = new Xfo();
+      let numTreeItems = 0;
+      for (let item of items) {
+        if (item instanceof TreeItem) {
+          const itemXfo = item.getGlobalXfo();
+          xfo.tr.addInPlace(itemXfo.tr)
+          numTreeItems++;
+        }
+      }
+      xfo.tr.scaleInPlace(1 / numTreeItems);
     } else {
       throw ("Invalid mode.")
     }
@@ -432,40 +444,6 @@ class Group extends TreeItem {
     this.clearItems(false)
     this.__itemsParam.setItems(items);
   }
-
-  // recalcInitialXfo(mode) {
-  //   const items = Array.from(this.__itemsParam.getValue());
-  //   if (items.length == 0)
-  //     return;
-  //   this.calculatingGroupXfo = true;
-  //   const initialXfoMode = this.__initialXfoModeParam.getValue();
-  //   let xfo;
-  //   if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-  //     xfo = items[0].getGlobalXfo();
-  //   } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
-  //     xfo = new Xfo();
-  //     xfo.ori.set(0, 0, 0, 0);
-  //     let numTreeItems = 0;
-  //     for (let item of items) {
-  //       if (item instanceof TreeItem) {
-  //         const itemXfo = item.getGlobalXfo();
-  //         xfo.tr.addInPlace(itemXfo.tr)
-  //         xfo.ori.addInPlace(itemXfo.ori)
-  //         // xfo.sc.addInPlace(itemXfo.sc)
-  //         numTreeItems++;
-  //       }
-  //     }
-  //     xfo.tr.scaleInPlace(1 / numTreeItems);
-  //     xfo.ori.normalizeInPlace();
-  //     // xfo.sc.scaleInPlace(1/ numTreeItems);
-  //   } else {
-  //     throw ("Invalid mode.")
-  //   }
-  //   // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
-  //   this.__globalXfoParam.setValue(xfo, mode);
-  //   this.invGroupXfo = xfo.inverse();
-  //   this.calculatingGroupXfo = false;
-  // }
 
   _cleanBoundingBox(bbox) {
     const result = super._cleanBoundingBox(bbox);

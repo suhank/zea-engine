@@ -213,8 +213,8 @@ class VRViewport extends GLBaseViewport {
         // the loading is defered
         this.loadHMDResources().then(()=>{
 
-        navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
-        // navigator.xr.requestSession('immersive-vr').then((session) => {
+        // navigator.xr.requestSession({ mode: 'immersive-vr' }).then((session) => {
+        navigator.xr.requestSession('immersive-vr').then((session) => {
         // navigator.xr.requestSession('inline').then((session) => {// A 'magic window' session 
 
             this.__renderer.__xrViewportPresenting = true;
@@ -304,10 +304,10 @@ class VRViewport extends GLBaseViewport {
             // coordinates (for example, with a 3DoF device) then it will return an
             // emulated stage, where the view is translated up by a static height so
             // that the scene still renders in approximately the right place.
-            session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
-            // session.requestReferenceSpace({ type: 'bounded' }).then((refSpace) => {
-                return refSpace;
-            }).catch(() => {
+            // session.requestReferenceSpace({ type: 'stationary', subtype: 'floor-level' }).then((refSpace) => {
+            // session.requestReferenceSpace('bounded').then((refSpace) => {
+            //     return refSpace;
+            // }).catch(() => {
               // If a bounded reference space isn't supported, fall back to a
               // stationary/floor-level reference space. This still provides a
               // floor-relative space and will always be supported for
@@ -318,8 +318,8 @@ class VRViewport extends GLBaseViewport {
               // an emulated floor-level space, where the view is translated
               // up by a static height so that the scene still renders in
               // approximately the right place.
-              console.log('Falling back to floor-level reference space');
-              return session.requestReferenceSpace('local-floor').catch((e) => {
+            //   console.log('Falling back to floor-level reference space');
+            session.requestReferenceSpace('local-floor').catch((e) => {
                 if (!session.mode.startsWith('immersive')) {
                   // If we're in inline mode, our underlying platform may not support
                   // the stationary reference space, but an identity space is guaranteed.
@@ -335,7 +335,6 @@ class VRViewport extends GLBaseViewport {
                 } else {
                   throw e;
                 }
-              });
             }).then((refSpace) => {
                 this.__refSpace = refSpace;
                 this.__stageTreeItem.setVisible(true);
@@ -382,9 +381,9 @@ class VRViewport extends GLBaseViewport {
 
     updateControllers(xrFrame) {
         // old
-        const inputSources = this.__session.getInputSources();
+        // const inputSources = this.__session.getInputSources();
         //new
-        // const inputSources = this.__session.inputSources;
+        const inputSources = this.__session.inputSources;
 
         for (let i=0; i<inputSources.length; i++) {
             const inputSource = inputSources[i];
@@ -441,7 +440,8 @@ class VRViewport extends GLBaseViewport {
         const gl = this.__renderer.gl;
         gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
 
-        gl.clearColor(...this.__backgroundColorParam.getValue().asArray());
+        if(this.__backgroundColor)
+            gl.clearColor(...this.__backgroundColor.asArray());
         gl.colorMask(true, true, true, true);
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
@@ -456,16 +456,16 @@ class VRViewport extends GLBaseViewport {
         for (let i=0; i<views.length; i++) {
             const view = views[i];
             // Old
-            this.__viewMatrices[i].setDataArray(view.viewMatrix);
+            // this.__viewMatrices[i].setDataArray(view.viewMatrix);
 
             // New
-            // this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
+            this.__viewMatrices[i].setDataArray(view.transform.inverse.matrix);
 
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
-            // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
+            this.__cameraMatrices[i].setDataArray(view.transform.matrix);
             // this.__cameraMatrices[i].multiplyInPlace(this.__stageMatrix);
-            this.__cameraMatrices[i] = this.__viewMatrices[i].inverse();
+            // this.__cameraMatrices[i] = this.__viewMatrices[i].inverse();
 
             const vp = layer.getViewport(view);
             renderstate.viewports.push({

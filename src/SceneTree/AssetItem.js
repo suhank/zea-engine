@@ -46,8 +46,7 @@ class AssetItem extends TreeItem {
       if (!file)
         return;
       if (this.getName() == sgFactory.getClassName(this)) {
-        const stem = fileParam.getStem();
-        this.setName(stem);
+        this.setName(fileParam.getFilename());
       }
 
       this.loaded.setToggled(false);

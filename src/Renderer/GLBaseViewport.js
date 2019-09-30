@@ -24,6 +24,10 @@ class GLBaseViewport extends ParameterOwner {
   constructor(renderer) {
     super();
     this.__renderer = renderer;
+    this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200));
+    this.__fbo = undefined;
+    this.updated = new Signal();
+    this.resized = new Signal();
 
     this.__renderer.sceneSet.connect(()=>{
       const rp = renderer.getScene().getRoot().getChildByName('Renderer Params')
@@ -58,11 +62,6 @@ class GLBaseViewport extends ParameterOwner {
       processBGValue(bgColorPAram.getValue());
       bgColorPAram.valueChanged.connect(processBGValue);
     })
-
-    this.__doubleClickTimeMSParam = this.addParameter(new NumberParameter('DoubleClickTimeMS', 200));
-    this.__fbo = undefined;
-    this.updated = new Signal();
-    this.resized = new Signal();
   }
 
   getRenderer() {
