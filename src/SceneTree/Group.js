@@ -62,8 +62,7 @@ class Group extends TreeItem {
       this.__unbindItem(item, index);
     })
     this.__itemsParam.valueChanged.connect(() => {
-      this.__updateHighlight();
-      // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+      this.calculatingGroupXfo = true;
       this._setGlobalXfoDirty();
       this._setBoundingBoxDirty();
     })
@@ -72,7 +71,7 @@ class Group extends TreeItem {
       new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average', 'global']),
       pid++);
     this.__initialXfoModeParam.valueChanged.connect(() => {
-      // this.recalcInitialXfo();
+      this.calculatingGroupXfo = true;
       this._setGlobalXfoDirty();
     })
 
@@ -97,33 +96,8 @@ class Group extends TreeItem {
     this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1, 0, 0)), pid++).valueChanged.connect(this.__updateCutaway);
     this.insertParameter(new NumberParameter('CutDist', 0.0), pid++).valueChanged.connect(this.__updateCutaway);
 
-    this.__globalXfoParam.valueChanged.connect((changeType) => {
-      if (this.calculatingGroupXfo)
-        return;
-
-      const items = Array.from(this.__itemsParam.getValue());
-      // Only after all the items are resolved do we have an invXfo and we can tranform our items.
-      if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
-        let delta;
-        this.propagatingXfoToItems = true;
-        const xfo = this.__globalXfoParam.getValue();
-        const setDirty = (item, initialXfo) => {
-          const clean = () => {
-            if (!delta) {
-              // Compute the skinning transform that we can
-              // apply to all the items in the group.
-              delta = xfo.multiply(this.invGroupXfo);
-            }
-            return delta.multiply(initialXfo);
-          }
-          item.getParameter('GlobalXfo').setDirty(clean);
-        }
-        items.forEach((item, index) => {
-          if (item instanceof TreeItem)
-            setDirty(item, this.__initialXfos[index]);
-        });
-        this.propagatingXfoToItems = false;
-      }
+    this.__globalXfoParam.valueChanged.connect(() => {
+      this._propagateGroupXfoToItems();
     });
 
     this.mouseDownOnItem = new Signal();
@@ -201,49 +175,90 @@ class Group extends TreeItem {
   //////////////////////////////////////////
   // Global Xfo
 
-  _cleanGlobalXfo(prevValue) {
+  _cleanGlobalXfo() {
+    return this.calcGroupXfo();
+  }
+  
+  calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue());
     if (items.length == 0)
-      return prevValue;
+      return new Xfo();
     this.calculatingGroupXfo = true;
     const initialXfoMode = this.__initialXfoModeParam.getValue();
     let xfo;
     if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
       xfo = items[0].getGlobalXfo();
+      items.forEach((item, index)=>{
+        if (item instanceof TreeItem) {
+          this.__initialXfos[index] = item.getGlobalXfo();
+        }
+      });
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
       xfo = new Xfo();
       xfo.ori.set(0, 0, 0, 0);
       let numTreeItems = 0;
-      for (let item of items) {
+      items.forEach((item, index)=>{
         if (item instanceof TreeItem) {
           const itemXfo = item.getGlobalXfo();
           xfo.tr.addInPlace(itemXfo.tr)
           xfo.ori.addInPlace(itemXfo.ori)
           // xfo.sc.addInPlace(itemXfo.sc)
+          this.__initialXfos[index] = itemXfo;
           numTreeItems++;
         }
-      }
+      });
       xfo.tr.scaleInPlace(1 / numTreeItems);
       xfo.ori.normalizeInPlace();
       // xfo.sc.scaleInPlace(1/ numTreeItems);
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri) {
       xfo = new Xfo();
       let numTreeItems = 0;
-      for (let item of items) {
+      items.forEach((item, index)=>{
         if (item instanceof TreeItem) {
           const itemXfo = item.getGlobalXfo();
-          xfo.tr.addInPlace(itemXfo.tr)
+          xfo.tr.addInPlace(itemXfo.tr);
+          this.__initialXfos[index] = itemXfo;
           numTreeItems++;
         }
-      }
+      });
       xfo.tr.scaleInPlace(1 / numTreeItems);
     } else {
       throw ("Invalid mode.")
     }
-    // console.log("recalcInitialXfo", xfo.tr.toString(), this.getName())
+    
     this.invGroupXfo = xfo.inverse();
     this.calculatingGroupXfo = false;
     return xfo;
+  }
+
+  _propagateGroupXfoToItems() {
+    
+    if (this.calculatingGroupXfo)
+      return;
+
+    const items = Array.from(this.__itemsParam.getValue());
+    // Only after all the items are resolved do we have an invXfo and we can tranform our items.
+    if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
+      let delta;
+      this.propagatingXfoToItems = true;
+      const xfo = this.__globalXfoParam.getValue();
+      const setDirty = (item, initialXfo) => {
+        const clean = () => {
+          if (!delta) {
+            // Compute the skinning transform that we can
+            // apply to all the items in the group.
+            delta = xfo.multiply(this.invGroupXfo);
+          }
+          return delta.multiply(initialXfo);
+        }
+        item.getParameter('GlobalXfo').setDirty(clean);
+      }
+      items.forEach((item, index) => {
+        if (item instanceof TreeItem)
+          setDirty(item, this.__initialXfos[index]);
+      });
+      this.propagatingXfoToItems = false;
+    }
   }
 
   //////////////////////////////////////////
@@ -338,6 +353,15 @@ class Group extends TreeItem {
           }
         }
       }, true)
+    }
+    
+
+    /////////////////////////////////
+    // Update the highlight
+    if (item instanceof TreeItem && this.getParameter('Highlighted').getValue()) {
+      const color = this.getParameter('HighlightColor').getValue();
+      color.a = this.getParameter('HighlightFill').getValue();
+      item.addHighlight('groupItemHighlight' + this.getId(), color, true);
     }
 
     /////////////////////////////////
@@ -505,8 +529,11 @@ class Group extends TreeItem {
       context.resolvePath(path, (treeItem) => {
         this.addItem(treeItem);
         count--;
-        if (count == 0)
-          this.recalcInitialXfo(ValueSetMode.DATA_LOAD)
+        if (count == 0) {
+          this.calculatingGroupXfo = true;
+          this.setGlobalXfo(this.calcGroupXfo());
+          this.calculatingGroupXfo = false;
+        }
       }, (reason) => {
         console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path);
       });

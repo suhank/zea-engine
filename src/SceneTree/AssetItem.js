@@ -136,7 +136,7 @@ class AssetItem extends TreeItem {
       }
 
       // Apply units change to existing Xfo. (avoid changing tr)
-      const xfo = this.getLocalXfo();
+      const xfo = this.getLocalXfo().clone();
       xfo.sc.scaleInPlace(scaleFactor);
       this.setLocalXfo(xfo);
     }
