@@ -678,9 +678,9 @@ class GLViewport extends GLBaseViewport {
     renderstate.viewXfo = this.__cameraXfo;
     renderstate.viewScale = 1.0;
     renderstate.region = this.region;
+    renderstate.cameraMatrix = this.__cameraMat;
     renderstate.viewports = [{
       region: this.region,
-      cameraMatrix: this.__cameraMat,
       viewMatrix: this.__viewMat,
       projectionMatrix: this.__projectionMatrix,
       viewportFrustumSize: this.__frustumDim,

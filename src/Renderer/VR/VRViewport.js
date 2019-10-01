@@ -245,7 +245,7 @@ class VRViewport extends GLBaseViewport {
                 if(controller) {
 
                     const downTime = Date.now();
-                    console.log("controller:", ev.inputSource.handedness, " down", (downTime - controller.__prevDownTime));
+                    // console.log("controller:", ev.inputSource.handedness, " down", (downTime - controller.__prevDownTime));
                     if((downTime - controller.__prevDownTime) < this.__doubleClickTimeMSParam.getValue()) {
                         this.controllerDoubleClicked.emit({ 
                             button: 1, 
@@ -271,7 +271,7 @@ class VRViewport extends GLBaseViewport {
             const onSelectEnd = (ev) => {
                 const controller = this.__vrControllersMap[ev.inputSource.handedness];
                 if(controller) {
-                    console.log("controller:", ev.inputSource.handedness, " up");
+                    // console.log("controller:", ev.inputSource.handedness, " up");
                     this.controllerButtonUp.emit({ 
                         button: 1,
                         controller,
@@ -463,7 +463,7 @@ class VRViewport extends GLBaseViewport {
 
             this.__viewMatrices[i].multiplyInPlace(this.__stageMatrix);
 
-            this.__cameraMatrices[i].setDataArray(view.transform.matrix);
+            // this.__cameraMatrices[i].setDataArray(view.transform.matrix);
             // this.__cameraMatrices[i].multiplyInPlace(this.__stageMatrix);
             // this.__cameraMatrices[i] = this.__viewMatrices[i].inverse();
 
@@ -471,8 +471,7 @@ class VRViewport extends GLBaseViewport {
             renderstate.viewports.push({
                 viewMatrix: this.__viewMatrices[i],
                 projectionMatrix: this.__projectionMatrices[i],
-                region: [vp.x, vp.y, vp.width, vp.height],
-                cameraMatrix: this.__cameraMatrices[i],
+                region: [vp.x, vp.y, vp.width, vp.height]
             })
         }
 

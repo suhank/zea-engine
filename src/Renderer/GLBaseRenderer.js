@@ -853,18 +853,20 @@ class GLBaseRenderer {
     const gl = this.__gl;
     if(!renderstate.viewports || renderstate.viewports.length == 1) {
       renderstate.bindRendererUnifs = (unifs)=>{
+        {
+          const unif = unifs.cameraMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+          }
+        } 
+        
         const vp = renderstate.viewports[0]; 
         {
           const unif = unifs.viewMatrix;
           if (unif) {
             gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
           }
-        } {
-          const unif = unifs.cameraMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
-          }
-        } {
+        }{
           const unif = unifs.projectionMatrix;
           if (unif) {
             gl.uniformMatrix4fv(unif.location, false, vp.projectionMatrix.asArray());
@@ -882,6 +884,15 @@ class GLBaseRenderer {
     else {
 
       renderstate.bindRendererUnifs = (unifs)=>{
+        // Note: the camera matrix should be the head position instead
+        // of the eye position. The inverse(viewMatrix) can be used
+        // when we want the eye pos. 
+        {
+          const unif = unifs.cameraMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+          }
+        } 
       }
 
       renderstate.bindViewports = (unifs, cb)=> {
@@ -891,12 +902,6 @@ class GLBaseRenderer {
             const unif = unifs.viewMatrix;
             if (unif) {
               gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-            }
-          }
-          {
-            const unif = unifs.cameraMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.cameraMatrix.asArray());
             }
           }
           {
