@@ -233,8 +233,8 @@ class Xfo {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - The json object.
    */
   toJSON() {
     const j = {
@@ -246,8 +246,8 @@ class Xfo {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object.
    */
   fromJSON(j) {
     this.tr.fromJSON(j.tr);

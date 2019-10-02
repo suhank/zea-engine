@@ -325,7 +325,7 @@ class Vec2 extends AttrValue {
 
   /**
    * The createFromFloat32Array method.
-   * @param {any} array - The array param.
+   * @param {array} array - The array param.
    * @return {vec2} - The return value.
    */
   static createFromFloat32Array(array) {
@@ -395,8 +395,8 @@ class Vec2 extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - The json object.
    */
   toJSON() {
     return {
@@ -406,8 +406,8 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object.
    */
   fromJSON(j) {
     this.x = j['x'];

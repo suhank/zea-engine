@@ -139,8 +139,8 @@ class Ray {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - The json object.
    */
   toJSON() {
     return {
@@ -150,8 +150,8 @@ class Ray {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object.
    */
   fromJSON(j) {
     this.start.fromJSON(j.start);

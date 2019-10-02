@@ -78,8 +78,8 @@ class Vec3 extends AttrValue {
   /**
    * Setter from scalar components.
    * @param {number} x - The x param.
-   * @param {number} y  - The y param.
-   * @param {number} z  - The y param.
+   * @param {number} y - The y param.
+   * @param {number} z - The y param.
    */
   set(x, y, z) {
     this.x = x;
@@ -97,7 +97,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Setter from another vector.
-   * @param {any} other - The other param.
+   * @param {Vec3} other - The other param.
    */
   setFromOther(other) {
     this.x = other.x;
@@ -106,8 +106,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The isNull method.
-   * @return {any} - The return value.
+   * The isNull method returns true if the Vec3 contains 0 0 0.
+   * @return {boolean} - The result.
    */
   isNull() {
     return (
@@ -118,8 +118,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The is111 method.
-   * @return {any} - The return value.
+   * The is111 method returns true if the Vec3 contains 1 1 1.
+   * @return {boolean} - The return value.
    */
   is111() {
     return (
@@ -131,9 +131,9 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns true if this vector is the same as another one.
-   * @param {any} other - The other param.
-   * @param {any} precision - The precision param.
-   * @return {any} - The return value.
+   * @param {Vec3} other - The other param.
+   * @param {number} precision - The precision param.
+   * @return {boolean} - The return value.
    */
   equal(other, precision) {
     return this.x == other.x && this.y == other.y && this.z == other.z;
@@ -141,9 +141,9 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns true if this vector is not the same as another one.
-   * @param {any} other - The other param.
-   * @param {any} precision - The precision param.
-   * @return {any} - The return value.
+   * @param {Vec3} other - The other param.
+   * @param {number} precision - The precision param.
+   * @return {boolean} - The return value.
    */
   notequals(other, precision) {
     return this.x != other.x && this.y != other.y && this.z != other.z;
@@ -152,8 +152,8 @@ class Vec3 extends AttrValue {
   /**
    * Returns true if this vector is the same as another one
    * (given a precision).
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * @param {Vec3} other - The other param.
+   * @return {boolean} - The return value.
    */
   approxEqual(other) {
     return (
@@ -165,8 +165,8 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns a new vector which is this vector added to other.
-   * @param {any} other - The other param.
-   * @return {vec3} - The return value.
+   * @param {Vec3} other - The other param.
+   * @return {Vec3} - The return value.
    */
   add(other) {
     return new Vec3(this.x + other.x, this.y + other.y, this.z + other.z);
@@ -174,7 +174,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The addInPlace method.
-   * @param {any} other - The other param.
+   * @param {Vec3} other - The other param.
    */
   addInPlace(other) {
     this.x += other.x;
@@ -184,8 +184,8 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns a new vector which is this vector subtracted from other.
-   * @param {any} other - The other param.
-   * @return {vec3} - The return value.
+   * @param {Vec3} other - The other param.
+   * @return {Vec3} - The return value.
    */
   subtract(other) {
     return new Vec3(this.x - other.x, this.y - other.y, this.z - other.z);
@@ -193,7 +193,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The subtractInPlace method.
-   * @param {any} other - The other param.
+   * @param {Vec3} other - The other param.
    */
   subtractInPlace(other) {
     this.x -= other.x;
@@ -203,8 +203,8 @@ class Vec3 extends AttrValue {
 
   /**
    * The multiply method.
-   * @param {any} vec3 - The vec3 param.
-   * @return {vec3} - The return value.
+   * @param {Vec3} - The vec3 param.
+   * @return {Vec3} - The return value.
    */
   multiply(vec3) {
     return new Vec3(this.x * vec3.x, this.y * vec3.y, this.z * vec3.z);
@@ -212,7 +212,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The multiplyInPlace method.
-   * @param {any} vec3 - The vec3 param.
+   * @param {Vec3} vec3 - The vec3 param.
    */
   multiplyInPlace(vec3) {
     this.x *= vec3.x;
@@ -222,8 +222,8 @@ class Vec3 extends AttrValue {
 
   /**
    * The divide method.
-   * @param {any} vec3 - The vec3 param.
-   * @return {vec3} - The return value.
+   * @param {Vec3} vec3 - The vec3 param.
+   * @return {Vec3} - The return value.
    */
   divide(vec3) {
     return new Vec3(this.x / vec3.x, this.y / vec3.y, this.z / vec3.z);
@@ -231,7 +231,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The divideInPlace method.
-   * @param {any} vec3 - The vec3 param.
+   * @param {Vec3} vec3 - The vec3 param.
    */
   divideInPlace(vec3) {
     this.x /= vec3.x;
@@ -242,7 +242,7 @@ class Vec3 extends AttrValue {
   /**
    * The scale method.
    * @param {any} scalar - The scalar param.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   scale(scalar) {
     return new Vec3(this.x * scalar, this.y * scalar, this.z * scalar);
@@ -260,7 +260,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The negate method.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   negate() {
     return new Vec3(-this.x, -this.y, -this.z);
@@ -268,8 +268,8 @@ class Vec3 extends AttrValue {
 
   /**
    * The inverse method.
-   * @param {any} vec3 - The vec3 param.
-   * @return {vec3} - The return value.
+   * @param {Vec3} vec3 - The vec3 param.
+   * @return {Vec3} - The return value.
    */
   inverse(vec3) {
     return new Vec3(1.0 / this.x, 1.0 / this.y, 1.0 / this.z);
@@ -296,7 +296,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the distance to another vector.
-   * @param {any} other - The other param.
+   * @param {Vec3} other - The other param.
    * @return {number} - the return value.
    */
   distanceTo(other) {
@@ -308,7 +308,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns the vector normalized.
-   * @return {vec3} - the return value.
+   * @return {Vec3} - the return value.
    */
   normalize() {
     let len =
@@ -329,7 +329,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The normalizeInPlace method.
+   * The normalizeInPlace method normalizes the vecotr,
+   * modifying it and returning its original length..
    * @return {any} - The return value.
    */
   normalizeInPlace() {
@@ -349,9 +350,9 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The resize method.
-   * @param {any} length - The length param.
-   * @return {any} - The return value.
+   * The resize method returns a new Vec3 with the gien length.
+   * @param {number} length - The length param.
+   * @return {Vec3} - The return value.
    */
   resize(length) {
     const currlen =
@@ -371,7 +372,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The resizeInPlace method.
-   * @param {any} length - The length param.
+   * @param {number} length - The length param.
    */
   resizeInPlace(length) {
     const currlen =
@@ -389,7 +390,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the dot product of two vec3s.
-   * @param {vec3} b - The second operand.
+   * @param {Vec3} b - The second operand.
    * @return {number} - The dot product of a and b.
    */
   dot(b) {
@@ -398,8 +399,8 @@ class Vec3 extends AttrValue {
 
   /**
    * Computes the cross product of two vec3s.
-   * @param {vec3} b - The second operand.
-   * @return {vec3} - The return value.
+   * @param {Vec3} b - The second operand.
+   * @return {Vec3} - The return value.
    */
   cross(b) {
     const ax = this.x;
@@ -414,7 +415,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Gets the angle between two 3D vectors.
-   * @param {vec3} b - The second operand.
+   * @param {Vec3} b - The second operand.
    * @return {number} - The angle in radians.
    */
   angleTo(b) {
@@ -428,9 +429,9 @@ class Vec3 extends AttrValue {
 
   /**
    * Performs a linear interpolation between two vec3s.
-   * @param {vec3} b - The second operand.
+   * @param {Vec3} b - The second operand.
    * @param {number} t - Interpolation amount between the two inputs.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   lerp(b, t) {
     const ax = this.x;
@@ -445,7 +446,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The abs method.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   abs() {
     return new Vec3(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
@@ -481,7 +482,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Clones this type returning a new instance.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   clone() {
     return new Vec3(this.__data[0], this.__data[1], this.__data[2]);
@@ -501,7 +502,7 @@ class Vec3 extends AttrValue {
   /**
    * The create method.
    * @param {...object} ...args - The ...args param.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   static create(...args) {
     return new Vec3(...args);
@@ -510,7 +511,7 @@ class Vec3 extends AttrValue {
   /**
    * The createFromJSON method.
    * @param {any} json - The json param.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   static createFromJSON(json) {
     const result = new Vec3();
@@ -522,7 +523,7 @@ class Vec3 extends AttrValue {
    * The createFromFloat32Buffer method.
    * @param {any} buffer - The buffer param.
    * @param {number} offset - The offset param.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec3(buffer, offset * 4); // 4 bytes per 32bit float
@@ -530,8 +531,8 @@ class Vec3 extends AttrValue {
 
   /**
    * The createFromFloat32Array method.
-   * @param {any} array - The array param.
-   * @return {vec3} - The return value.
+   * @param {array} array - A Float32Array value
+   * @return {Vec3} - The return value.
    */
   static createFromFloat32Array(array) {
     return new Vec3(array);
@@ -549,8 +550,8 @@ class Vec3 extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - The json object.
    */
   toJSON() {
     return {
@@ -561,8 +562,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object.
    */
   fromJSON(j) {
     this.x = j.x;

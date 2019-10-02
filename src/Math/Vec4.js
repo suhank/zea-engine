@@ -120,7 +120,7 @@ class Vec4 extends AttrValue {
   /**
    * Returns true if this vector is the same as another one.
    * @param {any} other - The other param.
-   * @param {any} precision - The precision param.
+   * @param {number} precision - The precision param.
    * @return {any} - The return value.
    */
   equal(other, precision) {
@@ -135,7 +135,7 @@ class Vec4 extends AttrValue {
   /**
    * Returns true if this vector is not the same as another one.
    * @param {any} other - The other param.
-   * @param {any} precision - The precision param.
+   * @param {number} precision - The precision param.
    * @return {any} - The return value.
    */
   notequals(other, precision) {
@@ -496,8 +496,8 @@ class Vec4 extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - The json object.
    */
   toJSON() {
     return {
