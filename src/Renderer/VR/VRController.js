@@ -1,5 +1,5 @@
 import { SystemDesc } from '../../BrowserDetection.js';
-import { Vec3, Xfo, Mat4, Ray } from '../../Math';
+import { Vec3, Quat, Xfo, Mat4, Ray } from '../../Math';
 import { Signal } from '../../Utilities';
 import { TreeItem } from '../../SceneTree';
 import { GLTexture2D } from '../GLTexture2D.js';
@@ -18,6 +18,20 @@ class VRController {
     this.__inputSource = inputSource;
     this.__id = id;
     this.__isDaydramController = SystemDesc.isMobileDevice;
+
+    this.touchpadTouched = new Signal();
+    this.buttonPressed = new Signal();
+    this.buttonReleased = new Signal();
+    this.__pressedButtons = [];
+
+    // /////////////////////////////////
+    // Xfo
+
+    this.__mat4 = new Mat4();
+    this.__xfo = new Xfo();
+
+    // this.setVisible(true);
+
     this.__treeItem = new TreeItem(
       'VRController:' + inputSource.handedness + id
     );
@@ -38,7 +52,7 @@ class VRController {
       this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.13)));
       this.__treeItem.addChild(this.__tip, false);
       vrviewport.getTreeItem().addChild(this.__treeItem);
-
+      
       this.__projMatrix = new Mat4();
       this.__activeVolumeSize = 0.04;
       this.__projMatrix.setOrthographicMatrix(
@@ -50,20 +64,27 @@ class VRController {
         this.__activeVolumeSize * 0.5
       );
       this.createGeomDataFbo();
+
+      vrviewport.loadHMDResources().then(asset => {
+        asset.loaded.connect(() => {
+          let srcControllerTree;
+          if(id==0)
+            srcControllerTree = asset.getChildByName('LeftController');
+          else if(id==1)
+            srcControllerTree = asset.getChildByName('RightController');
+          if(!srcControllerTree)
+            srcControllerTree = asset.getChildByName('Controller');
+          const controllerTree = srcControllerTree.clone();
+
+          controllerTree.setLocalXfo(new Xfo(
+            new Vec3(0, -0.035, -0.085), 
+            new Quat({ setFromAxisAndAngle: [new Vec3(0, 1, 0), Math.PI] }),
+            new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm. 
+            ));
+          this.__treeItem.addChild(controllerTree);
+        });
+      })
     }
-
-    this.touchpadTouched = new Signal();
-    this.buttonPressed = new Signal();
-    this.buttonReleased = new Signal();
-    this.__pressedButtons = [];
-
-    // /////////////////////////////////
-    // Xfo
-
-    this.__mat4 = new Mat4();
-    this.__xfo = new Xfo();
-
-    // this.setVisible(true);
   }
 
   /**
@@ -147,35 +168,13 @@ class VRController {
    * @param {any} inputSource - The inputSource param.
    */
   updatePose(refSpace, xrFrame, inputSource) {
-    // //////////////////////////////
-    // old..
-    // const inputPose = xrFrame.getInputPose(inputSource, refSpace);
-    // if(!inputPose.gripMatrix)
-    //     return;
-    // this.__mat4.setDataArray(inputPose.gripMatrix);
-    // this.__xfo.fromMat4(this.__mat4);
-
-    // //////////////////////////////
-    // New.
-    // const inputPose = xrFrame.getInputPose(inputSource, refSpace);
-    // const inputPose = xrFrame.getInputPose(refSpace, inputSource);
-    // const inputPose = xrFrame.getPose(inputSource, refSpace);
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace);
 
     // We may not get a inputPose back in cases where the input source has lost
     // tracking or does not know where it is relative to the given frame
     // of reference.
-    if (!inputPose || !inputPose.gripTransform) {
+    if (!inputPose || !inputPose.transform) {
       return;
-    }
-
-
-    // We may not get a inputPose back in cases where the input source has lost
-    // tracking or does not know where it is relative to the given frame
-    // of reference.
-    // if (!inputPose || !inputPose.gripTransform) {
-      if (!inputPose || !inputPose.transform) {
-        return;
     }
 
     this.__mat4.setDataArray(inputPose.transform.matrix);

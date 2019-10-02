@@ -45,7 +45,7 @@ class Scene {
 
     // Common resources are used by systems such at the renderer and VR controllers.
     // Any asset that will probably be used my multiple differeint independent objects
-    // should be loaded here. (For now, it is being used to laod VR Controller assets.)
+    // should be loaded here. (For now, it is being used to load VR Controller assets.)
     this.__commonResources = {};
 
     // ///////////////////////////
