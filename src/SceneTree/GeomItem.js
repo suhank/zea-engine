@@ -1,5 +1,6 @@
 import { Vec2, Xfo } from '../Math';
 import {
+  ValueSetMode,
   Parameter,
   BooleanParameter,
   NumberParameter,
@@ -64,8 +65,8 @@ class GeomItem extends BaseGeomItem {
     this.materialAssigned = this.__materialParam.valueChanged;
     this.geomAssigned = this.__geomParam.valueChanged;
 
-    if (geom) this.setGeometry(geom);
-    if (material) this.setMaterial(material);
+    if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD);
+    if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD);
   }
 
   /**
@@ -280,12 +281,12 @@ class GeomItem extends BaseGeomItem {
     const geomLibrary = context.assetItem.getGeometryLibrary();
     const geom = geomLibrary.getGeom(geomIndex);
     if (geom) {
-      this.setGeometry(geom);
+      this.setGeometry(geom, ValueSetMode.DATA_LOAD);
     } else {
       const onGeomLoaded = range => {
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex);
-          if (geom) this.setGeometry(geom);
+          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD);
           else console.warn('Geom not loaded:', this.getName());
           geomLibrary.rangeLoaded.disconnectId(connid);
         }
@@ -319,11 +320,12 @@ class GeomItem extends BaseGeomItem {
           );
           material = materialLibrary.getMaterial('Default');
         }
-        this.setMaterial(material);
+        this.setMaterial(material, ValueSetMode.DATA_LOAD);
       } else {
         // Force nodes to have a material so we can see them.
         this.setMaterial(
-          context.assetItem.getMaterialLibrary().getMaterial('Default')
+          context.assetItem.getMaterialLibrary().getMaterial('Default'),
+          ValueSetMode.DATA_LOAD
         );
       }
     }

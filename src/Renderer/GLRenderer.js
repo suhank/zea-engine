@@ -499,9 +499,16 @@ class GLRenderer extends GLBaseRenderer {
 
       // Unbind and restore the bound fbo
       this.__highlightedGeomsBufferFbo.unbindForWriting(renderstate);
+      
 
       // Now render the outlines to the entire screen.
       gl.viewport(...renderstate.region);
+      
+      // Turn this on to debug the hilight data buffer.
+      // {
+      //   gl.screenQuad.bindShader(renderstate);
+      //   gl.screenQuad.draw(renderstate, this.__highlightedGeomsBuffer);
+      // }
 
       this.__outlineShader.bind(renderstate);
       gl.enable(gl.BLEND);

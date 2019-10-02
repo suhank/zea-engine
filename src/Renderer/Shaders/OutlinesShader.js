@@ -48,7 +48,14 @@ void accumOutlinePixel(vec2 fragCoord, inout vec4 res) {
 }
 vec4 getOutlinePixelColor(vec2 fragCoord) {
     vec4 M = texture2D(highlightDataTexture, fragCoord/highlightDataTextureSize);
+    
+    /// To display a fill instead of an outline.
+    // return M;
+
     if( isFilledPixel(M) ) {
+        // Note: the filled pixel has an alpha value
+        // that determines how much fill is applied
+        // The outline is a solid color. 
         return M;
     }
     // Search surrounding pixels for selected geoms.

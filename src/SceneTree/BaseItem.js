@@ -1,7 +1,5 @@
-import { Vec2, Vec3, Color } from '../Math';
 import { Signal } from '../Utilities';
 import { sgFactory } from './SGFactory.js';
-
 import { ValueSetMode } from './Parameters/Parameter.js';
 import { ParameterOwner } from './ParameterOwner.js';
 
@@ -27,6 +25,10 @@ class BaseItem extends ParameterOwner {
     this.__path = [name];
     this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
     this.__flags = 0;
+
+    this.__selectable = true;
+    this.__selected = false;
+    this.selectedChanged = new Signal();
 
     this.__metaData = {};
 
@@ -192,6 +194,55 @@ class BaseItem extends ParameterOwner {
       }
       this.__updatePath();
     }
+  }
+
+  //////////////////////////////////////////
+  // Selectability and Selection
+
+  /**
+   * The getSelectable method.
+   * @return {any} - The return value.
+   */
+  getSelectable() {
+    return this.__selectable;
+  }
+
+  /**
+   * The setSelectable method.
+   * @param {any} val - A boolean indicating the selectability of the item.
+   */
+  setSelectable(val) {
+    if (this.__selectable != val) {
+      this.__selectable = val;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * The isSelected method.
+   * @return {any} - The return value.
+   */
+  isSelected() {
+    return this.__selected;
+  }
+
+  /**
+   * The getSelected method.
+   * @return {any} - The return value.
+   */
+  getSelected() {
+    return this.__selected;
+  }
+
+  /**
+   * The getSelected method.
+   * @param {Boolean} val - Boolean indicating the new selection state.
+   * @return {any} - The return value.
+   */
+  setSelected(sel) {
+    this.__selected = sel;
+    this.selectedChanged.emit(this.__selected)
   }
 
   // ////////////////////////////////////////

@@ -352,55 +352,48 @@ class VRViewport extends GLBaseViewport {
           // coordinates (for example, with a 3DoF device) then it will return an
           // emulated stage, where the view is translated up by a static height so
           // that the scene still renders in approximately the right place.
-          session
-            .requestReferenceSpace({
-              type: 'stationary',
-              subtype: 'floor-level',
-            })
-            .then(refSpace => {
-              // session.requestReferenceSpace({ type: 'bounded' }).then((refSpace) => {
-              return refSpace;
-            })
-            .catch(() => {
-              // If a bounded reference space isn't supported, fall back to a
-              // stationary/floor-level reference space. This still provides a
-              // floor-relative space and will always be supported for
-              // immersive sessions. It will not, however, provide boundaries
-              // and generally expects the user to stand in one place.
-              // If the device doesn't have a way of determining the floor
-              // level (for example, with a 3DoF device) then it will return
-              // an emulated floor-level space, where the view is translated
-              // up by a static height so that the scene still renders in
-              // approximately the right place.
-              console.log('Falling back to floor-level reference space');
-              return session.requestReferenceSpace('local-floor').catch(e => {
-                if (!session.mode.startsWith('immersive')) {
-                  // If we're in inline mode, our underlying platform may not support
-                  // the stationary reference space, but an identity space is guaranteed.
-                  console.log('Falling back to identity reference space');
-                  return session
-                    .requestReferenceSpace('viewer')
-                    .then(refSpace => {
-                      // If we use an identity reference space we need to scoot the
-                      // origin down a bit to put the camera at approximately the
-                      // right level. (Here we're moving it 1.6 meters, which should
-                      // *very* roughly align us with the eye height of an "average"
-                      // adult human.)
-                      return refSpace.getOffsetReferenceSpace(
-                        new XRRigidTransform({ y: -1.6 })
-                      );
-                    });
-                } else {
-                  throw e;
-                }
-              });
-            })
-            .then(refSpace => {
-              this.__refSpace = refSpace;
-              this.__stageTreeItem.setVisible(true);
-              this.presentingChanged.emit(true);
-              this.__startSession();
-            });
+
+          // If a bounded reference space isn't supported, fall back to a
+          // stationary/floor-level reference space. This still provides a
+          // floor-relative space and will always be supported for
+          // immersive sessions. It will not, however, provide boundaries
+          // and generally expects the user to stand in one place.
+          // If the device doesn't have a way of determining the floor
+          // level (for example, with a 3DoF device) then it will return
+          // an emulated floor-level space, where the view is translated
+          // up by a static height so that the scene still renders in
+          // approximately the right place.
+          //   console.log('Falling back to floor-level reference space');
+          session.requestReferenceSpace('local-floor').catch((e) => {
+            if (!session.mode.startsWith('immersive')) {
+              // If we're in inline mode, our underlying platform may not support
+              // the stationary reference space, but an identity space is guaranteed.
+              console.log('Falling back to identity reference space');
+              return session
+                .requestReferenceSpace('viewer')
+                .then(refSpace => {
+                  // If we use an identity reference space we need to scoot the
+                  // origin down a bit to put the camera at approximately the
+                  // right level. (Here we're moving it 1.6 meters, which should
+                  // *very* roughly align us with the eye height of an "average"
+                  // adult human.)
+                  return refSpace.getOffsetReferenceSpace(
+                    new XRRigidTransform({ y: -1.6 })
+                  );
+                });
+            } else {
+              throw e;
+            }
+          })
+          .then(refSpace => {
+            this.__refSpace = refSpace;
+            this.__stageTreeItem.setVisible(true);
+            this.presentingChanged.emit(true);
+            this.__startSession();
+          })
+          .catch(e => {
+            console.warn(e.message);
+          });
         })
         .catch(e => {
           console.warn(e.message);

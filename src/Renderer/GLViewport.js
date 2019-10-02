@@ -453,7 +453,7 @@ class GLViewport extends GLBaseViewport {
   /**
    * The __eventMousePos method.
    * @param {any} event - The event param.
-   * @return {any} - The return value.
+   * @return {NewType} - The return value.
    * @private
    */
   __eventMousePos(event) {
@@ -463,10 +463,27 @@ class GLViewport extends GLBaseViewport {
     );
   }
 
-  /**
-   * The setCapture method.
-   * @param {any} target - The target param.
-   */
+  __prepareEvent(event) {
+    event.viewport = this;
+    event.propagating = true;
+    event.stopPropagation();
+    event.stopPropagation = ()=>{
+      event.propagating = false;
+    }
+    if(event instanceof MouseEvent) {
+      const mousePos = this.__eventMousePos(event);
+      event.mousePos = mousePos;
+      event.mouseRay = this.calcRayFromScreenPos(mousePos);
+      
+      const intersectionData = this.getGeomDataAtPos(event.mousePos, event.mouseRay);
+      if (intersectionData != undefined) {
+        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
+        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
+        event.intersectionData = intersectionData;
+      }
+    }
+  }
+
   setCapture(target) {
     this.capturedElement = target;
   }
@@ -492,24 +509,21 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onMouseDown(event) {
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
+    this.__prepareEvent(event);
+    
+    if (this.capturedElement) {
+      this.capturedElement.onMouseDown(event);
+      return;
+    }
 
-    if (event.button == 0) {
-      const intersectionData = this.getGeomDataAtPos(mousePos, event.mouseRay);
-      if (intersectionData != undefined) {
-        // console.log("onMouseDown on Geom"); // + " Material:" + geomItem.getMaterial().name);
-        // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
-        event.intersectionData = intersectionData;
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onMouseDown(event);
+      if (!event.propagating || this.capturedElement)
+        return;
 
-        intersectionData.geomItem.onMouseDown(event, intersectionData);
-        if (event.vleStopPropagation == true || this.capturedElement) return;
-
-        this.mouseDownOnGeom.emit(event);
-        if (event.vleStopPropagation == true) return;
-      }
+      this.mouseDownOnGeom.emit(event);
+      if (!event.propagating)
+        return;
     }
 
     const downTime = Date.now();
@@ -544,14 +558,29 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onMouseMove(event) {
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
+
+    this.__prepareEvent(event);
 
     if (this.capturedElement) {
       this.capturedElement.onMouseMove(event);
       return;
+    }
+    
+    if (event.intersectionData != undefined) {
+      if(event.intersectionData.geomItem != this.mouseOverItem) {
+        if(this.mouseOverItem)
+          this.mouseOverItem.onMouseLeave(event);
+        this.mouseOverItem = event.intersectionData.geomItem;
+        this.mouseOverItem.onMouseEnter(event);
+      }
+
+      event.intersectionData.geomItem.onMouseMove(event);
+      if (!event.propagating || this.capturedElement)
+        return;
+    }
+    else if(this.mouseOverItem) {
+      this.mouseOverItem.onMouseLeave(event);
+      this.mouseOverItem = null;
     }
 
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
@@ -568,11 +597,8 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onMouseUp(event) {
-    const mousePos = this.__eventMousePos(event);
-    event.viewport = this;
-    event.mousePos = mousePos;
-    event.mouseRay = this.calcRayFromScreenPos(mousePos);
-
+    this.__prepareEvent(event);
+    
     if (this.capturedElement) {
       this.capturedElement.onMouseUp(event);
       if (this.capturedElement) {
@@ -581,6 +607,12 @@ class GLViewport extends GLBaseViewport {
         );
       }
       return;
+    }
+
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onMouseUp(event);
+      if (!event.propagating)
+        return;
     }
 
     if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
@@ -599,7 +631,7 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onMouseLeave(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     this.mouseLeave.emit(event);
     return false;
   }
@@ -611,7 +643,7 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onKeyPressed(key, event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyPressed(key, event)) return true;
     }
@@ -626,7 +658,7 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onKeyDown(key, event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyDown(key, event)) return true;
     }
@@ -640,7 +672,7 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   onKeyUp(key, event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyUp(key, event)) return true;
     }
@@ -652,7 +684,13 @@ class GLViewport extends GLBaseViewport {
    * @param {any} event - The event param.
    */
   onWheel(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
+    if (event.intersectionData != undefined) {
+      event.intersectionData.geomItem.onWheel(event);
+      if (!event.propagating)
+        return;
+    }
+
     if (this.__cameraManipulator) {
       this.__cameraManipulator.onWheel(event);
       return;
@@ -679,8 +717,8 @@ class GLViewport extends GLBaseViewport {
    * The onTouchStart method.
    * @param {any} event - The event param.
    */
-  onTouchStart(event) {
-    event.viewport = this;
+  onTouchStart(event) { 
+    this.__prepareEvent(event);
 
     if (event.touches.length == 1) {
       const touch = event.touches[0];
@@ -694,14 +732,11 @@ class GLViewport extends GLBaseViewport {
         // console.log(intersectionData.geomItem.getPath()); // + " Material:" + geomItem.getMaterial().name);
         event.intersectionData = intersectionData;
         intersectionData.geomItem.onMouseDown(event, intersectionData);
-        if (event.vleStopPropagation == true) return;
-
-        if (this.capturedElement) {
-          return;
-        }
+        if (!event.propagating) return;
+        if (this.capturedElement) return;
 
         this.mouseDownOnGeom.emit(event);
-        if (event.vleStopPropagation == true) return;
+        if (!event.propagating) return;
       }
 
       const downTime = Date.now();
@@ -733,7 +768,7 @@ class GLViewport extends GLBaseViewport {
    * @param {any} event - The event param.
    */
   onTouchMove(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
 
     if (this.capturedElement) {
       event.touchPos = [];
@@ -762,8 +797,8 @@ class GLViewport extends GLBaseViewport {
    * @param {any} event - The event param.
    */
   onTouchEnd(event) {
-    event.viewport = this;
-
+    this.__prepareEvent(event);
+    
     if (this.capturedElement) {
       this.capturedElement.onMouseUp(event);
       return;
@@ -781,7 +816,7 @@ class GLViewport extends GLBaseViewport {
    * @param {any} event - The event param.
    */
   onTouchCancel(event) {
-    event.viewport = this;
+    this.__prepareEvent(event);
 
     if (this.capturedElement) {
       this.capturedElement.onTouchCancel(event);
@@ -808,17 +843,15 @@ class GLViewport extends GLBaseViewport {
     renderstate.viewXfo = this.__cameraXfo;
     renderstate.viewScale = 1.0;
     renderstate.region = this.region;
-    renderstate.viewports = [
-      {
-        region: this.region,
-        cameraMatrix: this.__cameraMat,
-        viewMatrix: this.__viewMat,
-        projectionMatrix: this.__projectionMatrix,
-        viewportFrustumSize: this.__frustumDim,
-        isOrthographic: this.__camera.getIsOrthographic(),
-        fovY: this.__camera.getFov(),
-      },
-    ];
+    renderstate.cameraMatrix = this.__cameraMat;
+    renderstate.viewports = [{
+      region: this.region,
+      viewMatrix: this.__viewMat,
+      projectionMatrix: this.__projectionMatrix,
+      viewportFrustumSize: this.__frustumDim,
+      isOrthographic: this.__camera.getIsOrthographic(),
+      fovY: this.__camera.getFov()
+    }];
   }
 
   /**
@@ -836,8 +869,8 @@ class GLViewport extends GLBaseViewport {
 
     gl.viewport(...this.region);
 
-    const color = this.__backgroundColorParam.getValue();
-    gl.clearColor(...color.asArray());
+    if(this.__backgroundColor)
+      gl.clearColor(...this.__backgroundColor.asArray());
     gl.colorMask(true, true, true, true);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 

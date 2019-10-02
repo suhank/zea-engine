@@ -25,7 +25,7 @@ class GeomClicked extends StateEvent {
    * @private
    */
   __geomClicked(event) {
-    event.vleStopPropagation = true;
+    event.stopPropagation();
     this.__onEvent();
   }
 

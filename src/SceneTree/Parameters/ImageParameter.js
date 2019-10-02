@@ -1,6 +1,5 @@
 import { Signal } from '../../Utilities';
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js';
-
+import { Parameter } from './Parameter.js';
 import { sgFactory } from '../SGFactory.js';
 
 /** Class representing an image parameter.

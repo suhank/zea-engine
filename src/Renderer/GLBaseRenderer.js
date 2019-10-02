@@ -1,5 +1,5 @@
 import { Signal } from '../Utilities';
-import { sgFactory } from '../SceneTree';
+import { TreeItem, sgFactory } from '../SceneTree';
 import { SystemDesc } from '../BrowserDetection.js';
 import { onResize } from '../external/onResize.js';
 import { create3DContext } from './GLContext.js';
@@ -330,6 +330,9 @@ class GLBaseRenderer {
    * @param {any} treeItem - The treeItem param.
    */
   addTreeItem(treeItem) {
+    // Note: we can have BaseItems in the tree now.
+    if (!(treeItem instanceof TreeItem))
+      return;
     if (treeItem.isDestroyed()) {
       throw new Error('treeItem is destroyed:' + treeItem.getPath());
     }
@@ -361,6 +364,10 @@ class GLBaseRenderer {
    * @param {any} treeItem - The treeItem param.
    */
   removeTreeItem(treeItem) {
+    // Note: we can have BaseItems in the tree now.
+    if (!(treeItem instanceof TreeItem))
+      return;
+
     treeItem.childAdded.disconnect(this.addTreeItem);
     treeItem.childRemoved.disconnect(this.removeTreeItem);
 
@@ -525,6 +532,8 @@ class GLBaseRenderer {
     };
 
     this.__glcanvas.addEventListener('mouseenter', event => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
       if (!mouseIsDown) {
         activeGLRenderer = this;
         calcRendererCoords(event);
@@ -535,10 +544,12 @@ class GLBaseRenderer {
         );
         mouseLeft = false;
       }
-      event.stopPropagation();
     });
     this.__glcanvas.addEventListener('mouseleave', event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
+      if (activeGLRenderer != this || !isValidCanvas())
+        return;
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
       if (!mouseIsDown) {
         const vp = activeGLRenderer.getActiveViewport();
         if (vp) {
@@ -549,9 +560,10 @@ class GLBaseRenderer {
       } else {
         mouseLeft = true;
       }
-      event.stopPropagation();
     });
     this.__glcanvas.addEventListener('mousedown', event => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
       calcRendererCoords(event);
       mouseIsDown = true;
       activeGLRenderer = this;
@@ -561,11 +573,13 @@ class GLBaseRenderer {
         vp.onMouseDown(event);
       }
       mouseLeft = false;
-      event.stopPropagation();
       return false;
     });
     document.addEventListener('mouseup', event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
+      if (activeGLRenderer != this || !isValidCanvas())
+        return;
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
       // if(mouseIsDown && mouseMoveDist < 0.01)
       //     mouseClick(event);
       calcRendererCoords(event);
@@ -582,7 +596,6 @@ class GLBaseRenderer {
         }
         activeGLRenderer = undefined;
       }
-      event.stopPropagation();
       return false;
     });
 
@@ -596,7 +609,11 @@ class GLBaseRenderer {
     // });
 
     document.addEventListener('mousemove', event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
+      if (activeGLRenderer != this || !isValidCanvas())
+        return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
       calcRendererCoords(event);
       if (!mouseIsDown)
         activeGLRenderer.activateViewportAtPos(
@@ -607,18 +624,17 @@ class GLBaseRenderer {
       const vp = activeGLRenderer.getActiveViewport();
       if (vp) {
         vp.onMouseMove(event);
-        event.preventDefault();
       }
-      event.stopPropagation();
       return false;
     });
 
     const onWheel = event => {
       if (activeGLRenderer != this || !isValidCanvas()) return;
       if (activeGLRenderer) {
-        this.onWheel(event);
-        if (!window.addEventListener) event.preventDefault();
         event.stopPropagation();
+        event.undoRedoManager = this.undoRedoManager;
+        if(!window.addEventListener) event.preventDefault();
+        this.onWheel(event);
       }
       return false;
     };
@@ -642,6 +658,7 @@ class GLBaseRenderer {
         vp.onKeyPressed(key, event);
       }
     });
+
     document.addEventListener('keydown', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return;
       const key = String.fromCharCode(event.keyCode).toLowerCase();
@@ -650,6 +667,7 @@ class GLBaseRenderer {
         vp.onKeyDown(key, event);
       }
     });
+
     document.addEventListener('keyup', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return;
       const key = String.fromCharCode(event.keyCode).toLowerCase();
@@ -659,47 +677,46 @@ class GLBaseRenderer {
       }
     });
 
-    this.__glcanvas.addEventListener(
-      'touchstart',
-      event => {
-        for (let i = 0; i < event.touches.length; i++) {
-          calcRendererCoords(event.touches[i]);
-        }
-        this.getViewport().onTouchStart(event);
-        event.stopPropagation();
-      },
-      false
-    );
-    this.__glcanvas.addEventListener(
-      'touchmove',
-      event => {
-        for (let i = 0; i < event.touches.length; i++) {
-          calcRendererCoords(event.touches[i]);
-        }
-        this.getViewport().onTouchMove(event);
-        event.stopPropagation();
-      },
-      false
-    );
-    this.__glcanvas.addEventListener(
-      'touchend',
-      event => {
-        for (let i = 0; i < event.touches.length; i++) {
-          calcRendererCoords(event.touches[i]);
-        }
-        this.getViewport().onTouchEnd(event);
-        event.stopPropagation();
-      },
-      false
-    );
-    this.__glcanvas.addEventListener(
-      'touchcancel',
-      event => {
-        this.getViewport().onTouchCancel(event);
-        event.stopPropagation();
-      },
-      false
-    );
+    this.__glcanvas.addEventListener("touchstart", (event) => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
+      for (let i = 0; i < event.touches.length; i++) {
+        calcRendererCoords(event.touches[i]);
+      }
+      this.getViewport().onTouchStart(event);
+    }, false);
+
+    this.__glcanvas.addEventListener("touchmove", (event) => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
+      for (let i = 0; i < event.touches.length; i++) {
+        calcRendererCoords(event.touches[i]);
+      }
+      this.getViewport().onTouchMove(event);
+    }, false);
+
+    this.__glcanvas.addEventListener("touchend", (event) => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
+      for (let i = 0; i < event.touches.length; i++) {
+        calcRendererCoords(event.touches[i]);
+      }
+      this.getViewport().onTouchEnd(event);
+    }, false);
+
+    this.__glcanvas.addEventListener("touchcancel", (event) => {
+      event.stopPropagation();
+      event.undoRedoManager = this.undoRedoManager;
+      this.getViewport().onTouchCancel(event);
+    }, false);
+  }
+
+  /**
+   * The setUndoRedoManager method.
+   * @param {object} - The undoRedoManager object.
+   */
+  setUndoRedoManager(undoRedoManager){
+    this.undoRedoManager = undoRedoManager;
   }
 
   /**
@@ -1010,22 +1027,19 @@ class GLBaseRenderer {
 
     const gl = this.__gl;
     if (!renderstate.viewports || renderstate.viewports.length == 1) {
-      renderstate.bindRendererUnifs = unifs => {
-        const vp = renderstate.viewports[0];
+      renderstate.bindRendererUnifs = (unifs)=>{
+        {
+          const unif = unifs.cameraMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+          }
+        } 
+        
+        const vp = renderstate.viewports[0]; 
         {
           const unif = unifs.viewMatrix;
           if (unif) {
             gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
-          }
-        }
-        {
-          const unif = unifs.cameraMatrix;
-          if (unif) {
-            gl.uniformMatrix4fv(
-              unif.location,
-              false,
-              vp.cameraMatrix.asArray()
-            );
           }
         }
         {
@@ -1045,10 +1059,21 @@ class GLBaseRenderer {
             gl.uniform1i(unif.location, 0);
           }
         }
-      };
-      renderstate.bindViewports = (unifs, cb) => cb();
+      }
+      renderstate.bindViewports = (unifs, cb)=> cb();
     } else {
-      renderstate.bindRendererUnifs = unifs => {};
+
+      renderstate.bindRendererUnifs = (unifs)=>{
+        // Note: the camera matrix should be the head position instead
+        // of the eye position. The inverse(viewMatrix) can be used
+        // when we want the eye pos. 
+        {
+          const unif = unifs.cameraMatrix;
+          if (unif) {
+            gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+          }
+        } 
+      }
 
       renderstate.bindViewports = (unifs, cb) => {
         renderstate.viewports.forEach((vp, index) => {
@@ -1060,16 +1085,6 @@ class GLBaseRenderer {
                 unif.location,
                 false,
                 vp.viewMatrix.asArray()
-              );
-            }
-          }
-          {
-            const unif = unifs.cameraMatrix;
-            if (unif) {
-              gl.uniformMatrix4fv(
-                unif.location,
-                false,
-                vp.cameraMatrix.asArray()
               );
             }
           }

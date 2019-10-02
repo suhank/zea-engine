@@ -28,6 +28,11 @@ class GLGeomItem {
     this.visible = this.geomItem.getVisible();
     this.culled = false;
 
+    // if(glGeom.__numTriangles) {
+    //   numSceneMeshTriangles += glGeom.__numTriangles
+    //   console.log(this.geomItem.getName(), glGeom.__numTriangles, numSceneMeshTriangles)
+    // }
+
     this.lightmapName = geomItem.getLightmapName();
     this.updated = new Signal();
     this.destructing = new Signal();

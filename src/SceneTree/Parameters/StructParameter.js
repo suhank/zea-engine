@@ -50,6 +50,16 @@ class StructParameter extends Parameter {
     return this.getParameter(name);
   }
 
+  getMemberNames() {
+    const names = [];
+    for (let i = 0; i < this.__members.length; i++) {
+      const member = this.__members[i];
+      if (member != null)
+        names[i] = member.getName();
+    }
+    return names;
+  }
+
   // ////////////////////////////////////////
   // Persistence
 

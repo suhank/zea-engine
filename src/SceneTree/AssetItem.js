@@ -32,8 +32,7 @@ class AssetItem extends TreeItem {
       const file = fileParam.getFileDesc();
       if (!file) return;
       if (this.getName() == sgFactory.getClassName(this)) {
-        const stem = fileParam.getStem();
-        this.setName(stem);
+        this.setName(fileParam.getFilename());
       }
 
       this.loaded.setToggled(false);
@@ -97,7 +96,6 @@ class AssetItem extends TreeItem {
         }
         const group = new Group(layer);
         group.propagateXfoToItems = false;
-        group.getParameter('SearchRoot').setValue(this);
         layerRoot.addChild(group);
         layers[layer] = group;
       }
@@ -133,7 +131,7 @@ class AssetItem extends TreeItem {
       }
 
       // Apply units change to existing Xfo. (avoid changing tr)
-      const xfo = this.getLocalXfo();
+      const xfo = this.getLocalXfo().clone();
       xfo.sc.scaleInPlace(scaleFactor);
       this.setLocalXfo(xfo);
     };

@@ -66,10 +66,9 @@ class ListParameter extends Parameter {
     }
 
     this.__value.push(elem);
-    // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED;
     this.elementAdded.emit(elem, this.__value.length - 1);
-    // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
     return elem;
   }
 
@@ -80,10 +79,9 @@ class ListParameter extends Parameter {
   removeElement(index) {
     const elem = this.__value[index];
     this.__value.splice(index, 1);
-    // this.setValue(this.__value)
     this.__flags |= ParamFlags.USER_EDITED;
     this.elementRemoved.emit(elem, index);
-    // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
   }
 
   /**
@@ -97,7 +95,7 @@ class ListParameter extends Parameter {
     // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED;
     this.elementAdded.emit(elem, index);
-    // this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE);
   }
 
   /**
@@ -108,6 +106,7 @@ class ListParameter extends Parameter {
   clone(flags) {
     const clonedValue = this.__value.slice(0);
     const clonedParam = new ListParameter(this.__name, this.__dataType);
+    clonedParam.setValue(clonedValue);
     return clonedParam;
   }
 

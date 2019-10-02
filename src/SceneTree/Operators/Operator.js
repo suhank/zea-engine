@@ -1,8 +1,8 @@
 import { Signal } from '../../Utilities';
-import { ValueGetMode, ValueSetMode } from '../Parameters';
+import { ValueSetMode } from '../Parameters';
 import { sgFactory } from '../SGFactory';
+import { ItemFlags, BaseItem } from '../BaseItem.js';
 
-import { BaseItem } from '../BaseItem.js';
 
 /** Class representing an operator output. */
 class OperatorOutput {
@@ -15,6 +15,7 @@ class OperatorOutput {
     this.__name = name;
     this.__filterFn = filterFn;
     this._param = undefined;
+    this.detached = false;
 
     this.paramSet = new Signal();
   }
@@ -110,13 +111,10 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
+    const paramPath = this._param ? this._param.getPath() : '';
     return {
       type: this.constructor.name,
-      paramPath: this._param
-        ? context.makeRelative
-          ? context.makeRelative(this._param.getPath())
-          : this._param.getPath()
-        : false,
+      paramPath: ((context && context.makeRelative) ? context.makeRelative(paramPath) : paramPath)
     };
   }
 
@@ -147,6 +145,19 @@ class OperatorOutput {
       );
     }
   }
+  
+  detach(){
+    // This function is called when we want to suspend an operator
+    // from functioning because it is deleted and on the undo stack.
+    // Once operators have persistent connections, 
+    // we will simply uninstall the output from the parameter. 
+    this.detached = true;
+  }
+
+  reattach(){
+    this.detached = false;
+  }
+
 }
 sgFactory.registerClass('OperatorOutput', OperatorOutput);
 
@@ -210,6 +221,10 @@ class Operator extends BaseItem {
   constructor(name) {
     super(name);
 
+    // Items which can be constructed by a user(not loaded in binary data.)
+    // Should always have this flag set. 
+    this.setFlag(ItemFlags.USER_EDITED);
+
     this.__outputs = [];
     this.__evalOutput = this.__evalOutput.bind(this);
     this.__opInputChanged = this.__opInputChanged.bind(this);
@@ -240,9 +255,17 @@ class Operator extends BaseItem {
   }
 
   /**
+   * The getNumOutputs method.
+   * @return {number} - The number of outputs on thie operator.
+   */
+  getNumOutputs() {
+    return this.__outputs.length
+  }
+
+  /**
    * The getOutput method.
-   * @param {any} index - The index param.
-   * @return {any} - The return value.
+   * @param {number} index - The index param.
+   * @return {object} - The return value.
    */
   getOutput(index) {
     return this.__outputs[index];
@@ -336,6 +359,20 @@ class Operator extends BaseItem {
         this.__opInputChanged();
       });
     }
+  }
+
+  /**
+   * The detach method.
+   */
+  detach(){
+    this.__outputs.forEach(output => output.detach());
+  }
+
+  /**
+   * The reattach method.
+   */
+  reattach(){
+    this.__outputs.forEach(output => output.reattach());
   }
 
   /**

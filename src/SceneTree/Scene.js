@@ -3,7 +3,6 @@ import { Vec3, Xfo, Color, JSON_stringify_fixedPrecision } from '../Math';
 import { Signal } from '../Utilities';
 import { Material } from './Material.js';
 import { TreeItem } from './TreeItem.js';
-import { Camera } from './Camera.js';
 import { Lines } from './Geometry/Lines.js';
 import { Grid } from './Geometry/Shapes/Grid.js';
 import { VLAAsset } from './VLAAsset.js';
@@ -11,6 +10,7 @@ import { ItemFlags } from './BaseItem.js';
 import { GeomItem } from './GeomItem.js';
 import { resourceLoader } from './ResourceLoader.js';
 import { EnvMap, Lightmap, LightmapMixer } from './Images';
+import { RendererParams } from './RendererParams.js';
 
 const defaultGridColor = new Color('#DCDCDC');
 
@@ -28,7 +28,7 @@ class Scene {
     this.cameras = [];
     this.__root = new TreeItem('root');
     this.__root.addRef(this);
-    this.__root.addChild(new Camera('Camera'));
+    this.__root.addChild(new RendererParams('Renderer Params'));
 
     this.__assets = [];
 

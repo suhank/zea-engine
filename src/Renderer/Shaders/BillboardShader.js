@@ -20,6 +20,7 @@ precision highp float;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform mat4 cameraMatrix;
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
@@ -71,6 +72,16 @@ uniform vec4 layoutData;
 
 #endif
 
+mat4 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
+  // vec3 rr = vec3(sin(roll), cos(roll), 0.0);
+  vec3 rr = vec3(0.0, 0.0, 1.0);
+  vec3 ww = normalize(target - origin);
+  vec3 uu = normalize(cross(rr, ww));
+  vec3 vv = normalize(cross(ww, uu));
+
+  return mat4(vec4(uu, 0.0), vec4(vv, 0.0), vec4(ww, 0.0), vec4(origin, 1.0));
+}
+
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying float v_alpha;
@@ -107,9 +118,18 @@ void main(void) {
   int flags = int(billboardData.y);
   bool alignedToCamera = flags > 0;
   if(alignedToCamera){
-    gl_Position = (viewMatrix * modelMatrix) * vec4(0.0, 0.0, 0.0, 1.0);
-    gl_Position += vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 0.0);
-    gl_Position = projectionMatrix * gl_Position;
+    // mat4 tmp = inverse(viewMatrix);
+    // vec3 cameraPos = vec3(tmp[3][0], tmp[3][1], tmp[3][2]);
+    vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
+    vec3 billboardPos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
+    mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
+    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
+    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+
+    // mat4 modelViewMatrix = viewMatrix * modelMatrix;
+    // gl_Position = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+    // gl_Position += vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 0.0);
+    // gl_Position = projectionMatrix * gl_Position;
   }
   else{
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
