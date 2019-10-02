@@ -1,16 +1,13 @@
+import { StateAction } from './StateAction.js';
 
-import {
-  sgFactory
-} from '../SceneTree/SGFactory.js';
-import {
-  ParameterOwner
-} from '../SceneTree/ParameterOwner.js';
-
-import {
-  StateAction
-} from './StateAction.js';
-
+/** Class representing a state event.
+ * @extends StateAction
+ */
 class StateEvent extends StateAction {
+  /**
+   * Create a state event.
+   * @param {string} name - The name value.
+   */
   constructor(name) {
     super();
     this.__name = name;
@@ -18,15 +15,15 @@ class StateEvent extends StateAction {
     this.__onEvent = this.__onEvent.bind(this);
   }
 
-  __onEvent(){
-    this.__childActions.forEach((action)=>{
+  /**
+   * The __onEvent method.
+   * @private
+   */
+  __onEvent() {
+    this.__childActions.forEach(action => {
       action.activate();
     });
   }
+}
 
-};
-
-
-export {
-  StateEvent
-};
+export { StateEvent };

@@ -1,10 +1,5 @@
-import {
-  Color,
-} from '../../Math';
-import {
-  Signal,
-  Async
-} from '../../Utilities';
+import { Color } from '../../Math';
+import { Signal, Async } from '../../Utilities';
 import {
   Parameter,
   BooleanParameter,
@@ -12,18 +7,11 @@ import {
   Vec2Parameter,
   Vec3Parameter,
   ColorParameter,
-  StringParameter
+  StringParameter,
 } from '../Parameters';
-import {
-  sgFactory
-} from '../SGFactory.js';
-import {
-  DataImage
-} from './DataImage.js';
-import {
-  labelManager
-} from './LabelManager.js';
-
+import { sgFactory } from '../SGFactory.js';
+import { DataImage } from './DataImage.js';
+import { labelManager } from './LabelManager.js';
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -31,20 +19,31 @@ import {
  * If you omit the last three params, it will draw a rectangle
  * outline with a 5 pixel border radius
  * @param {CanvasRenderingContext2D} ctx
- * @param {Number} x The top left x coordinate
- * @param {Number} y The top left y coordinate
- * @param {Number} width The width of the rectangle
- * @param {Number} height The height of the rectangle
- * @param {Number} [radius = 5] The corner radius; It can also be an object 
+ * @param {Number} x - The top left x coordinate
+ * @param {Number} y - The top left y coordinate
+ * @param {Number} width - The width of the rectangle
+ * @param {Number} height - The height of the rectangle
+ * @param {Number} [radius = 5] - The corner radius; It can also be an object
  *                 to specify different radii for corners
- * @param {Number} [radius.tl = 0] Top left
- * @param {Number} [radius.tr = 0] Top right
- * @param {Number} [radius.br = 0] Bottom right
- * @param {Number} [radius.bl = 0] Bottom left
- * @param {Boolean} [fill = false] Whether to fill the rectangle.
- * @param {Boolean} [stroke = true] Whether to stroke the rectangle.
+ * @param {Number} [radius.tl = 0] - Top left
+ * @param {Number} [radius.tr = 0] - Top right
+ * @param {Number} [radius.br = 0] - Bottom right
+ * @param {Number} [radius.bl = 0] - Bottom left
+ * @param {Boolean} [fill = false] - Whether to fill the rectangle.
+ * @param {Boolean} [stroke = true] - Whether to stroke the rectangle.
+ * @param {Number} [strokeWidth] - The strokeWidth param.
  */
-function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) {
+function roundRect(
+  ctx,
+  x,
+  y,
+  width,
+  height,
+  radius,
+  fill,
+  stroke,
+  strokeWidth
+) {
   if (typeof stroke == 'undefined') {
     stroke = true;
   }
@@ -56,16 +55,16 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
       tl: radius,
       tr: radius,
       br: radius,
-      bl: radius
+      bl: radius,
     };
   } else {
-    var defaultRadius = {
+    const defaultRadius = {
       tl: 0,
       tr: 0,
       br: 0,
-      bl: 0
+      bl: 0,
     };
-    for (var side in defaultRadius) {
+    for (const side in defaultRadius) {
       radius[side] = radius[side] || defaultRadius[side];
     }
   }
@@ -74,7 +73,12 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
   ctx.lineTo(x + width - radius.tr, y);
   ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
   ctx.lineTo(x + width, y + height - radius.br);
-  ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height);
+  ctx.quadraticCurveTo(
+    x + width,
+    y + height,
+    x + width - radius.br,
+    y + height
+  );
   ctx.lineTo(x + radius.bl, y + height);
   ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
   ctx.lineTo(x, y + radius.tl);
@@ -89,7 +93,15 @@ function roundRect(ctx, x, y, width, height, radius, fill, stroke, strokeWidth) 
   }
 }
 
+/** Class representing a label.
+ * @extends DataImage
+ */
 class Label extends DataImage {
+  /**
+   * Create a label.
+   * @param {string} name - The name value.
+   * @param {any} library - The library value.
+   */
   constructor(name, library) {
     super(name);
 
@@ -110,7 +122,9 @@ class Label extends DataImage {
     // }
     // textParam.valueChanged.connect(setLabelText);
 
-    this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)));
+    this.addParameter(
+      new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0))
+    );
     this.addParameter(new StringParameter('textAlign', 'left', 'String'));
     // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
     this.addParameter(new StringParameter('fillText', true));
@@ -123,8 +137,12 @@ class Label extends DataImage {
     this.addParameter(new ColorParameter('backgroundColor', backgroundColor));
     this.addParameter(new BooleanParameter('fillBackground', true));
     this.addParameter(new BooleanParameter('strokeBackgroundOutline', true));
-    const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
-    const fontParam = this.addParameter(new StringParameter('font', 'Helvetica', 'String'));
+    const fontSizeParam = this.addParameter(
+      new NumberParameter('fontSize', 22)
+    );
+    const fontParam = this.addParameter(
+      new StringParameter('font', 'Helvetica', 'String')
+    );
 
     const reRender = () => {
       this.renderLabelToImage();
@@ -272,29 +290,41 @@ class Label extends DataImage {
     ]).then(doRender)
   }
 
+  /**
+   * The getParams method.
+   * @return {any} - The return value.
+   */
   getParams() {
     // this.renderLabelToImage();
     return super.getParams();
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Persistence
 
-
+  /**
+   * The toJSON method.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   * @return {any} - The return value.
+   */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags);
     return j;
   }
 
+  /**
+   * The fromJSON method.
+   * @param {any} j - The j param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);
     this.__getLabelText();
   }
-};
+}
 
 sgFactory.registerClass('Label', Label);
 
-
-export {
-  Label
-};
+export { Label };

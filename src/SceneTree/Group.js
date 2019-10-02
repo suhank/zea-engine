@@ -1,11 +1,5 @@
-import {
-  Vec3,
-  Color,
-  Xfo
-} from '../Math';
-import {
-  Signal
-} from '../Utilities';
+import { Vec3, Color, Xfo } from '../Math';
+import { Signal } from '../Utilities';
 import {
   ValueSetMode,
   BooleanParameter,
@@ -13,24 +7,13 @@ import {
   Vec3Parameter,
   ColorParameter,
   ItemSetParameter,
-  MultiChoiceParameter
+  MultiChoiceParameter,
 } from './Parameters';
-import {
-  MaterialParameter
-} from './Parameters/MaterialParameter.js';
-
-import {
-  ItemFlags
-} from './BaseItem';
-import {
-  TreeItem
-} from './TreeItem';
-import {
-  BaseGeomItem
-} from './BaseGeomItem';
-import {
-  sgFactory
-} from './SGFactory.js';
+import { MaterialParameter } from './Parameters/MaterialParameter.js';
+import { ItemFlags } from './BaseItem';
+import { TreeItem } from './TreeItem';
+import { BaseGeomItem } from './BaseGeomItem';
+import { sgFactory } from './SGFactory.js';
 
 const GROUP_INITIAL_XFO_MODES = {
   first: 0,
@@ -38,7 +21,14 @@ const GROUP_INITIAL_XFO_MODES = {
   globalOri: 2
 }
 
+/** Class representing a group.
+ * @extends TreeItem
+ */
 class Group extends TreeItem {
+  /**
+   * Create a group.
+   * @param {string} name - The name value.
+   */
   constructor(name) {
     super(name);
 
@@ -103,23 +93,40 @@ class Group extends TreeItem {
     this.mouseDownOnItem = new Signal();
   }
 
+  /**
+   * The destroy method.
+   */
   destroy() {
     super.destroy();
   }
 
+  /**
+   * The clone method.
+   * @param {number} flags - The flags param.
+   * @return {any} - The return value.
+   */
   clone(flags) {
     const cloned = new Group();
     cloned.copyFrom(this, flags);
     return cloned;
   }
 
+  /**
+   * The copyFrom method.
+   * @param {any} src - The src param.
+   * @param {number} flags - The flags param.
+   */
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
   }
 
-  ////////////////////////////////
+  // //////////////////////////////
 
-
+  /**
+   * The __updateVisiblity method.
+   * @return {any} - The return value.
+   * @private
+   */
   __updateVisiblity() {
     if (super.__updateVisiblity()) {
       const value = this.getVisible();
@@ -132,8 +139,12 @@ class Group extends TreeItem {
     return false;
   }
 
-  ///////////////////////////////
+  // /////////////////////////////
 
+  /**
+   * The __updateHighlight method.
+   * @private
+   */
   __updateHighlight() {
     let highlighted = false;
     let color;
@@ -143,16 +154,21 @@ class Group extends TreeItem {
       color.a = this.getParameter('HighlightFill').getValue();
     }
 
+    const key = 'groupItemHighlight' + this.getId()
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted)
-          item.addHighlight('groupItemHighlight' + this.getId(), color, true);
+          item.addHighlight(key, color, true);
         else
-          item.removeHighlight('groupItemHighlight' + this.getId(), true);
+          item.removeHighlight(key, true);
       }
     })
   }
 
+  /**
+   * The setSelected method.
+   * @param {any} sel - The sel param.
+   */
   setSelected(sel) {
     super.setSelected(sel);
     
@@ -179,6 +195,9 @@ class Group extends TreeItem {
     return this.calcGroupXfo();
   }
   
+  /**
+   * The calcGroupXfo method.
+   */
   calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue());
     if (items.length == 0)
@@ -261,9 +280,13 @@ class Group extends TreeItem {
     }
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Materials
 
+  /**
+   * The __updateMaterial method.
+   * @private
+   */
   __updateMaterial() {
     const material = this.getParameter('Material').getValue();
 
@@ -281,12 +304,17 @@ class Group extends TreeItem {
             p.setValue(p.__backupMaterial);
           }
         }
-      }, false)
-    })
+      }, false);
+    });
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Cutaways
+
+  /**
+   * The __updateCutaway method.
+   * @private
+   */
   __updateCutaway() {
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
     const cutAwayVector = this.getParameter('CutVector').getValue();
@@ -295,18 +323,23 @@ class Group extends TreeItem {
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
-          treeItem.setCutawayEnabled(cutEnabled)
-          treeItem.setCutVector(cutAwayVector)
-          treeItem.setCutDist(cutAwayDist)
+          treeItem.setCutawayEnabled(cutEnabled);
+          treeItem.setCutVector(cutAwayVector);
+          treeItem.setCutDist(cutAwayDist);
         }
-      }, true)
-    })
+      }, true);
+    });
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Items
-  // This function is mostly used in our demos, and 
-  // should be removed from the interface
+
+  /**
+   * The setPaths method.
+   * This function is mostly used in our demos, and
+   * should be removed from the interface
+   * @param {any} paths - The paths param.
+   */
   setPaths(paths) {
     this.clearItems(false);
 
@@ -321,7 +354,12 @@ class Group extends TreeItem {
     })
     this.setItems(items)
   }
-  // For backwards compatiblity.
+
+  /**
+   * The resolveItems method.
+   * For backwards compatiblity.
+   * @param {any} paths - The paths param.
+   */
   resolveItems(paths) {
     this.setPaths(paths);
   }
@@ -402,6 +440,12 @@ class Group extends TreeItem {
     this.__signalIndices[index] = signalIndices
   }
 
+  /**
+   * The __unbindItem method.
+   * @param {any} item - The item param.
+   * @param {any} index - The index param.
+   * @private
+   */
   __unbindItem(item, index) {
     if (!(item instanceof TreeItem))
       return;
@@ -413,8 +457,8 @@ class Group extends TreeItem {
 
     if (!this.getVisible()) {
       // Increment the visiblity counter which might cause
-      // this item to become visible. 
-      // It will stay invisible its parent is invisible, or if 
+      // this item to become visible.
+      // It will stay invisible its parent is invisible, or if
       // multiple groups connect to it and say it is invisible.
       item.propagateVisiblity(1);
     } 
@@ -423,56 +467,85 @@ class Group extends TreeItem {
     // Update the item cutaway
     item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
-        treeItem.setCutawayEnabled(false)
+        treeItem.setCutawayEnabled(false);
       }
-    }, true)
-
+    }, true);
 
     item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
-    item.globalXfoChanged.disconnectId(this.__signalIndices[index].globalXfoChangedIndex);
-    item.boundingChanged.disconnectId(this.__signalIndices[index].bboxChangedIndex);
+    item.globalXfoChanged.disconnectId(
+      this.__signalIndices[index].globalXfoChangedIndex
+    );
+    item.boundingChanged.disconnectId(
+      this.__signalIndices[index].bboxChangedIndex
+    );
     this.__signalIndices.splice(index, 1);
     this.__initialXfos.splice(index, 1);
   }
 
+  /**
+   * The addItem method.
+   * @param {any} item - The item param.
+   * @param {any} emit - The emit param.
+   */
   addItem(item, emit=true) {
     if (!item) {
-      console.warn("Error adding item to group. Item is null");
+      console.warn('Error adding item to group. Item is null');
       return;
     }
     this.__itemsParam.addItem(item, emit);
   }
 
+  /**
+   * The removeItem method.
+   * @param {any} item - The item param.
+   */
   removeItem(item, emit=true) {
     this.__itemsParam.removeItem(item, emit);
   }
 
+  /**
+   * The clearItems method.
+   * @param {boolean} emit - The emit param.
+   */
   clearItems(emit = true) {
-
     // Note: Unbind reversed so that indices
     // do not get changed during the unbind.
     const items = Array.from(this.__itemsParam.getValue());
     for (let i = items.length - 1; i >= 0; i--) {
       this.__unbindItem(items[i], i);
-    };
+    }
     this.__signalIndices = [];
     this.__initialXfos = [];
     this.__itemsParam.clearItems(emit);
   }
 
+  /**
+   * The getItems method.
+   * @return {any} - The return value.
+   */
   getItems() {
     return this.__itemsParam.getValue();
   }
 
+  /**
+   * The setItems method.
+   * @param {any} items - The items param.
+   */
   setItems(items) {
-    this.clearItems(false)
+    this.clearItems(false);
     this.__itemsParam.setItems(items);
   }
 
+  /**
+   * The _cleanBoundingBox method.
+   * @param {any} bbox - The bbox param.
+   * @return {any} - The return value.
+   * @private
+   */
   _cleanBoundingBox(bbox) {
     const result = super._cleanBoundingBox(bbox);
     const items = Array.from(this.__itemsParam.getValue());
-    items.forEach((item, index) => {
+    items.forEach(item => {
       if (item instanceof TreeItem) {
         if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
           bbox.addBox3(item.getBoundingBox());
@@ -481,46 +554,72 @@ class Group extends TreeItem {
     return bbox;
   }
 
-  /////////////////////////
+  // ///////////////////////
   // Events
 
+  /**
+   * The onMouseDown method.
+   * @param {any} event - The event param.
+   * @return {boolean} - The return value.
+   */
   onMouseDown(event) {
     return false;
   }
 
+  /**
+   * The onMouseUp method.
+   * @param {any} event - The event param.
+   * @return {boolean} - The return value.
+   */
   onMouseUp(event) {
     return false;
   }
 
+  /**
+   * The onMouseMove method.
+   * @param {any} event - The event param.
+   * @return {boolean} - The return value.
+   */
   onMouseMove(event) {
     return false;
   }
 
-
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Persistence
 
+  /**
+   * The toJSON method.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   * @return {any} - The return value.
+   */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags);
     const items = Array.from(this.__itemsParam.getValue());
     const treeItems = [];
-    for (let p of items) {
+    items.forEach(p => {
       const path = p.getPath();
       treeItems.push(context ? context.makeRelative(path) : path);
-    }
+    });
     j.treeItems = treeItems
     return j;
   }
 
+  /**
+   * The fromJSON method.
+   * @param {any} j - The j param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);
 
-    // Note: JSON data is only used to store user edits, so 
+    // Note: JSON data is only used to store user edits, so
     // parameters loaed from JSON are considered user edited.
     this.setFlag(ItemFlags.USER_EDITED);
 
     if (!j.treeItems) {
-      console.warn("Invalid Parameter JSON");
+      console.warn('Invalid Parameter JSON');
       return;
     }
     let count = j.treeItems.length;
@@ -541,16 +640,16 @@ class Group extends TreeItem {
     for (let path of j.treeItems) {
       addItem(path);
     }
-
   }
 
+  /**
+   * Getter for INITIAL_XFO_MODES.
+   */
   static get INITIAL_XFO_MODES() {
-    return GROUP_INITIAL_XFO_MODES
+    return GROUP_INITIAL_XFO_MODES;
   }
-};
+}
 
 sgFactory.registerClass('Group', Group);
 
-export {
-  Group
-};
+export { Group };

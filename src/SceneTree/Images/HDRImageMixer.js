@@ -1,23 +1,22 @@
-import {
-  SystemDesc
-} from '../../BrowserDetection.js';
-import {
-  Async,
-  Signal
-} from '../../Utilities';
-import {
-  BaseImage
-} from '../BaseImage.js';
-import {
-  FileImage
-} from './FileImage.js';
+import { SystemDesc } from '../../BrowserDetection.js';
+import { Async, Signal } from '../../Utilities';
+import { BaseImage } from '../BaseImage.js';
+import { FileImage } from './FileImage.js';
 
+/** Class representing an HDR image mixer.
+ * @extends BaseImage
+ */
 class HDRImageMixer extends BaseImage {
+  /**
+   * Create an HDR image mixer.
+   * @param {string} name - The name value.
+   * @param {boolean} stream - The stream value.
+   */
   constructor(name, stream = true) {
     super({
       type: 'FLOAT',
       format: 'RGB',
-      filter: SystemDesc.isMobileDevice ? 'NEAREST' : 'LINEAR'
+      filter: SystemDesc.isMobileDevice ? 'NEAREST' : 'LINEAR',
     });
 
     this.__name = name;
@@ -31,17 +30,28 @@ class HDRImageMixer extends BaseImage {
     this.weightsChanged = new Signal();
   }
 
+  /**
+   * The isLoaded method.
+   * @return {any} - The return value.
+   */
   isLoaded() {
     return this.__loaded;
   }
 
+  /**
+   * The isStream method.
+   * @return {any} - The return value.
+   */
   isStream() {
     return this.__stream;
   }
 
+  /**
+   * The setURLs method.
+   * @param {any} urls - The urls param.
+   */
   setURLs(urls) {
-
-    let async = new Async();
+    const async = new Async();
     async.incAsyncCount(urls.length);
     async.ready.connect(() => {
       if (!this.__loaded) {
@@ -51,8 +61,8 @@ class HDRImageMixer extends BaseImage {
         this.updated.emit();
       }
     }, this);
-    for (let fileUrl of urls) {
-      let subImage = new FileImage(undefined, fileUrl);
+    for (const fileUrl of urls) {
+      const subImage = new FileImage(undefined, fileUrl);
       subImage.loaded.connect(async.decAsyncCount);
       subImage.updated.connect(this.updated.emit);
       this.__subImages.push(subImage);
@@ -60,10 +70,19 @@ class HDRImageMixer extends BaseImage {
     }
   }
 
+  /**
+   * The setURL method.
+   * @param {any} index - The index param.
+   * @param {any} url - The url param.
+   */
   setURL(index, url) {
     this.__subImages[index].loadUrl(url);
   }
 
+  /**
+   * The setWeights method.
+   * @param {any} weights - The weights param.
+   */
   setWeights(weights) {
     this.__weights = weights;
     if (this.__loaded) {
@@ -71,6 +90,11 @@ class HDRImageMixer extends BaseImage {
     }
   }
 
+  /**
+   * The setWeights method.
+   * @param {any} index - The index param.
+   * @param {any} weight - The weight param.
+   */
   setWeight(index, weight) {
     this.__weights[index] = weight;
     if (this.__loaded) {
@@ -78,8 +102,12 @@ class HDRImageMixer extends BaseImage {
     }
   }
 
+  /**
+   * The getParams method.
+   * @return {any} - The return value.
+   */
   getParams() {
-    let params = super.getParams();
+    const params = super.getParams();
     if (this.__loaded) {
       params.subImages = this.__subImages;
       params.weights = this.__weights;
@@ -87,16 +115,21 @@ class HDRImageMixer extends BaseImage {
     return params;
   }
 
-  fromJSON(json, context, flags) {
+  /**
+   * The fromJSON method.
+   * @param {any} json - The json param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
+  fromJSON(json, context, flags) {}
 
-  }
+  /**
+   * The toJSON method.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
+  toJSON(context, flags) {}
+}
 
-  toJSON(context, flags) {
-
-  }
-};
-
-export {
-  HDRImageMixer
-};
-//export default HDRImageMixer;
+export { HDRImageMixer };
+// export default HDRImageMixer;

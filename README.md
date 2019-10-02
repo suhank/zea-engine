@@ -8,6 +8,10 @@ Install the httpserver
 [![npm](https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square)](https://www.npmjs.com/package/@zeainc/zea-engine)
 [![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
+## Docs
+
+[https://zeainc.github.io/zea-engine/](https://zeainc.github.io/zea-engine/)
+
 ## Getting started
 
 1. Install Git

@@ -1,11 +1,13 @@
-import {
-  Signal
-} from '../Utilities';
-import {
-  generateShaderGeomBinding
-} from './GeomShaderBinding.js';
+import { Signal } from '../Utilities';
+import { generateShaderGeomBinding } from './GeomShaderBinding.js';
 
+/** Class representing a GL geom. */
 class GLGeom {
+  /**
+   * Create a GL geom.
+   * @param {any} gl - The gl value.
+   * @param {any} geom - The geom value.
+   */
   constructor(gl, geom) {
     this.__gl = gl;
     this.__geom = geom;
@@ -16,17 +18,17 @@ class GLGeom {
     this.destructing = new Signal();
     this.updated = new Signal();
 
-    const updateBuffers = (opts) => {
+    const updateBuffers = opts => {
       this.updateBuffers(opts);
       this.updated.emit();
-    }
+    };
     this.__geom.geomDataChanged.connect(updateBuffers);
 
-    const regenBuffers = (opts) => {
+    const regenBuffers = opts => {
       this.clearShaderBindings();
       this.updateBuffers(opts);
       this.updated.emit();
-    }
+    };
     this.__geom.geomDataTopologyChanged.connect(regenBuffers);
 
     this.__geom.destructing.connect(() => {
@@ -34,78 +36,120 @@ class GLGeom {
     });
   }
 
+  /**
+   * The getGeom method.
+   * @return {any} - The return value.
+   */
   getGeom() {
-    return this.__geom
+    return this.__geom;
   }
 
-  ///////////////////////////////////////
+  // /////////////////////////////////////
   // Buffers
 
+  /**
+   * The genBuffers method.
+   */
   genBuffers() {}
 
-  updateBuffers(opts) {
+  /**
+   * The updateBuffers method.
+   * @param {any} opts - The opts param.
+   */
+  updateBuffers(opts) {}
 
-  }
-
-
-  ///////////////////////////////////////
+  // /////////////////////////////////////
   // Binding
 
+  /**
+   * The bind method.
+   * @param {any} renderstate - The renderstate param.
+   * @return {any} - The return value.
+   */
   bind(renderstate) {
-    if (this.__destroyed)
-      throw ("Error binding a destroyed geom");
+    if (this.__destroyed) throw new Error('Error binding a destroyed geom');
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
     if (!shaderBinding) {
       const gl = this.__gl;
-      shaderBinding = generateShaderGeomBinding(gl, renderstate.attrs, this.__glattrbuffers, this.__indexBuffer);
+      shaderBinding = generateShaderGeomBinding(
+        gl,
+        renderstate.attrs,
+        this.__glattrbuffers,
+        this.__indexBuffer
+      );
       this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
     }
     shaderBinding.bind(renderstate);
     return true;
   }
 
+  /**
+   * The unbind method.
+   * @param {any} renderstate - The renderstate param.
+   */
   unbind(renderstate) {
     // Unbinding a geom is important as it puts back some important
     // GL state. (vertexAttribDivisor)
-    let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
+    const shaderBinding = this.__shaderBindings[renderstate.shaderkey];
     if (shaderBinding) {
       shaderBinding.unbind(renderstate);
     }
   }
 
-  ///////////////////////////////////////
+  // /////////////////////////////////////
   // Drawing
   // Draw an item to screen.
+
+  /**
+   * The draw method.
+   */
   draw() {
-    throw ("Not implemented. Implement this method in a derived class.")
+    throw new Error(
+      'Not implemented. Implement this method in a derived class.'
+    );
   }
 
+  /**
+   * The drawInstanced method.
+   * @param {any} instanceCount - The instanceCount param.
+   */
   drawInstanced(instanceCount) {
-    throw ("Not implemented. Implement this method in a derived class.")
+    throw new Error(
+      'Not implemented. Implement this method in a derived class.'
+    );
   }
 
-  bindAndDraw(renderstate){
+  /**
+   * The bindAndDraw method.
+   * @param {any} renderstate - The renderstate param.
+   */
+  bindAndDraw(renderstate) {
     this.bind(renderstate);
     this.draw(renderstate);
   }
 
+  /**
+   * The clearShaderBindings method.
+   */
   clearShaderBindings() {
-
-    for (let shaderkey in this.__shaderBindings) {
+    for (const shaderkey in this.__shaderBindings) {
       const shaderBinding = this.__shaderBindings[shaderkey];
       shaderBinding.destroy();
     }
     this.__shaderBindings = {};
   }
 
+  /**
+   * The destroy method.
+   */
   destroy() {
     this.__geom.deleteMetadata('glgeom');
-    
+
     this.clearShaderBindings();
 
     const gl = this.__gl;
-    for (let attrName in this.__glattrbuffers) {
+    for (const attrName in this.__glattrbuffers) {
       gl.deleteBuffer(this.__glattrbuffers[attrName].buffer);
     }
     this.__glattrs = {};
@@ -114,9 +158,7 @@ class GLGeom {
     this.__destroyed = true;
     this.destructing.emit(this);
   }
-};
+}
 
-export {
-  GLGeom
-};
+export { GLGeom };
 // export default GLGeom;

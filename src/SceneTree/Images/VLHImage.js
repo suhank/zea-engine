@@ -1,39 +1,34 @@
-import {
-  Color
-} from '../../Math';
-import {
-  Signal,
-  decodeText
-} from '../../Utilities';
-import {
-  sgFactory
-} from '../SGFactory.js';
-import {
-  BaseImage
-} from '../BaseImage.js';
-import {
-  resourceLoader
-} from '../ResourceLoader.js';
+import { Color } from '../../Math';
+import { Signal, decodeText } from '../../Utilities';
+import { sgFactory } from '../SGFactory.js';
+import { BaseImage } from '../BaseImage.js';
+import { resourceLoader } from '../ResourceLoader.js';
 
 import {
   Parameter,
   NumberParameter,
   Vec4Parameter,
   FilePathParameter,
-  ParameterSet
+  ParameterSet,
 } from '../Parameters';
 
-
+/** Class representing a VLH image.
+ * @extends BaseImage
+ */
 class VLHImage extends BaseImage {
+  /**
+   * Create a VLH image..
+   * @param {string} name - The name value.
+   * @param {any} params - The params value.
+   */
   constructor(name, params = {}) {
-
     let filepath;
     if (name != undefined && name.lastIndexOf('.') != -1) {
       filepath = name;
-      name = name.substring(name.lastIndexOf('/')+1, name.lastIndexOf('.'));
+      name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'));
     }
     super(name, params);
-    
+
     this.__loaded = false;
     this.__exposure = 1.0;
     this.__ambientLightFactor = 0.0;
@@ -42,7 +37,7 @@ class VLHImage extends BaseImage {
     this.type = 'FLOAT';
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'));
-    fileParam.valueChanged.connect(()=>{
+    fileParam.valueChanged.connect(() => {
       this.loaded.untoggle();
 
       if (this.getName() == sgFactory.getClassName(this)) {
@@ -58,29 +53,42 @@ class VLHImage extends BaseImage {
         }
       }
 
-      const fileId = fileParam.getValue()
+      const fileId = fileParam.getValue();
       const file = fileParam.getFile();
       this.__loadVLH(fileId, file);
     });
 
-    if(filepath) {
+    if (filepath) {
       this.getParameter('FilePath').setFilepath(filepath);
     }
   }
 
-  getDOMElement(){
+  /**
+   * The getDOMElement method.
+   * @return {any} - The return value.
+   */
+  getDOMElement() {
     return this.__domElement;
   }
 
+  /**
+   * The getResourcePath method.
+   * @return {any} - The return value.
+   */
   getResourcePath() {
     return this.getParameter('FilePath').getValue();
   }
 
+  /**
+   * The __decodeData method.
+   * @param {any} entries - The entries param.
+   * @private
+   */
   __decodeData(entries) {
     const ldr = entries.ldr;
     const cdm = entries.cdm;
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Parse the data.
     const blob = new Blob([ldr.buffer]);
     const ldrPic = new Image();
@@ -90,49 +98,63 @@ class VLHImage extends BaseImage {
       // console.log(resourcePath + ": [" + this.width + ", " + this.height + "]");
       this.__data = {
         ldr: ldrPic,
-        cdm: cdm
-      }
+        cdm: cdm,
+      };
       if (!this.__loaded) {
         this.__loaded = true;
         this.loaded.emit();
       } else {
         this.updated.emit();
       }
-    }
+    };
     ldrPic.src = URL.createObjectURL(blob);
   }
 
-
+  /**
+   * The __loadVLH method.
+   * @param {any} fileId - The fileId param.
+   * @param {any} file - The file param.
+   * @private
+   */
   __loadVLH(fileId, file) {
     this.type = 'FLOAT';
 
-    resourceLoader.loadUrl(fileId, file.url, (entries) => {
-      if(!entries.ldr || !entries.cdm) {
-        for (let name in entries) {
-          if (name.endsWith('.jpg')){
+    resourceLoader.loadUrl(fileId, file.url, entries => {
+      if (!entries.ldr || !entries.cdm) {
+        for (const name in entries) {
+          if (name.endsWith('.jpg')) {
             entries.ldr = entries[name];
             delete entries[name];
-          }
-          else if (name.endsWith('.bin')) {
+          } else if (name.endsWith('.bin')) {
             entries.cdm = entries[name];
             delete entries[name];
           }
         }
       }
       this.__decodeData(entries);
-
     });
   }
 
-
+  /**
+   * The isStream method.
+   * @return {boolean} - The return value.
+   */
   isStream() {
     return false;
   }
 
+  /**
+   * The isLoaded method.
+   * @return {any} - The return value.
+   */
   isLoaded() {
     return this.__loaded;
   }
 
+  /**
+   * The getParams method.
+   * @return {any} - The return value.
+   */
   getParams() {
     const params = super.getParams();
     if (this.__loaded) {
@@ -142,49 +164,67 @@ class VLHImage extends BaseImage {
     return params;
   }
 
+  /**
+   * The setHDRTint method.
+   * @param {any} hdrtint - The hdrtint param.
+   */
   setHDRTint(hdrtint) {
     this.__hdrtint = hdrtint;
   }
 
+  /**
+   * The getHDRTint method.
+   * @return {any} - The return value.
+   */
   getHDRTint() {
     return this.__hdrtint;
   }
-  
-  
-  //////////////////////////////////////////
+
+  // ////////////////////////////////////////
   // Persistence
 
-  fromJSON(json, context, flags) {
+  /**
+   * The fromJSON method.
+   * @param {any} json - The json param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
+  fromJSON(json, context, flags) {}
 
-  }
+  /**
+   * The toJSON method.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
+  toJSON(context, flags) {}
 
-  toJSON(context, flags) {
-
-  }
-
+  /**
+   * The readBinary method.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
+   */
   readBinary(reader, context) {
     // super.readBinary(reader, context);
     this.setName(reader.loadStr());
     const resourcePath = reader.loadStr();
-    if (typeof resourcePath === 'string' && resourcePath != "") {
+    if (typeof resourcePath === 'string' && resourcePath != '') {
       if (context.lod >= 0) {
-        const suffixSt = resourcePath.lastIndexOf('.')
+        const suffixSt = resourcePath.lastIndexOf('.');
         if (suffixSt != -1) {
-          const lodPath = resourcePath.substring(0, suffixSt) + context.lod + resourcePath.substring(suffixSt);
+          const lodPath =
+            resourcePath.substring(0, suffixSt) +
+            context.lod +
+            resourcePath.substring(suffixSt);
           if (resourceLoader.resourceAvailable(lodPath)) {
             resourcePath = lodPath;
           }
         }
       }
       this.getParameter('FilePath').setValue(resourcePath);
-
     }
   }
-};
+}
 
 sgFactory.registerClass('VLHImage', VLHImage);
 
-
-export {
-  VLHImage
-};
+export { VLHImage };

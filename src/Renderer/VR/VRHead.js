@@ -1,51 +1,59 @@
-import { 
-    Mat4,
-    Vec3,
-    Quat,
-    Xfo,
-    Color 
-} from '../../Math';
-import {
-    TreeItem
-} from '../../SceneTree';
+import { Mat4, Xfo } from '../../Math';
+import { TreeItem } from '../../SceneTree';
 
+/** Class representing a VR head. */
 class VRHead {
-    constructor(vrviewport, stageTreeItem) {
-        this.__vrviewport = vrviewport;
-        this.__treeItem = new TreeItem('VRHead');
-        stageTreeItem.addChild(this.__treeItem);
+  /**
+   * Create a VR head.
+   * @param {any} vrviewport - The vrviewport value.
+   * @param {any} stageTreeItem - The stageTreeItem value.
+   */
+  constructor(vrviewport, stageTreeItem) {
+    this.__vrviewport = vrviewport;
+    this.__treeItem = new TreeItem('VRHead');
+    stageTreeItem.addChild(this.__treeItem);
 
-        this.__mat4 = new Mat4();
-        this.__localXfo = new Xfo();
-    }
+    this.__mat4 = new Mat4();
+    this.__localXfo = new Xfo();
+  }
 
-    update(pose){
-        // Old
-        // this.__mat4.setDataArray(pose.poseModelMatrix);
-        
-        // New 
-        this.__mat4.setDataArray(pose.transform.matrix);
-        
-        this.__localXfo.fromMat4(this.__mat4);
+  /**
+   * The update method.
+   * @param {any} pose - The pose param.
+   */
+  update(pose) {
+    // Old
+    // this.__mat4.setDataArray(pose.poseModelMatrix);
 
-        // const pos = pose.transform.position;
-        // this.__localXfo.tr.set(pos.x, pos.y,pos.z);
-        // const ori = pose.transform.orientation;
-        // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
+    // New
+    this.__mat4.setDataArray(pose.transform.matrix);
 
-        this.__treeItem.setLocalXfo(this.__localXfo);
-    }
+    this.__localXfo.fromMat4(this.__mat4);
 
-    getTreeItem(){
-        return this.__treeItem;
-    }
+    // const pos = pose.transform.position;
+    // this.__localXfo.tr.set(pos.x, pos.y,pos.z);
+    // const ori = pose.transform.orientation;
+    // this.__localXfo.ori.set(ori.x, ori.y, ori.z, ori.x);
 
-    getXfo(){
-        return this.__localXfo;
-    }
-};
+    this.__treeItem.setLocalXfo(this.__localXfo);
+  }
 
-export {
-    VRHead
-};
-//export default VRHead;
+  /**
+   * The getTreeItem method.
+   * @return {any} - The return value.
+   */
+  getTreeItem() {
+    return this.__treeItem;
+  }
+
+  /**
+   * The getXfo method.
+   * @return {any} - The return value.
+   */
+  getXfo() {
+    return this.__localXfo;
+  }
+}
+
+export { VRHead };
+// export default VRHead;
