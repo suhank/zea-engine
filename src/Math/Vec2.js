@@ -333,7 +333,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * The numFloat32Elements method.
+   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    */
   static numFloat32Elements() {
@@ -372,7 +372,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * The asArray method.
+   * Returns the tpye as an array. Often used to pass types to the GPU.
    * @return {any} - The return value.
    */
   asArray() {

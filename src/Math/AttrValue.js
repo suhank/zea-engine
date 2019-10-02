@@ -29,7 +29,7 @@ class AttrValue {
   }
 
   /**
-   * The numFloat32Elements method.
+   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    */
   static numFloat32Elements() {
     throw new Error(
@@ -38,7 +38,7 @@ class AttrValue {
   }
 
   /**
-   * The asArray method.
+   * Returns the tpye as an array. Often used to pass types to the GPU.
    */
   asArray() {
     return this.__data;

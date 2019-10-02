@@ -414,7 +414,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Gets the angle between two 3D vectors.
+   * Gets the angle between this vector and another.
    * @param {Vec3} b - The second operand.
    * @return {number} - The angle in radians.
    */
@@ -428,7 +428,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Performs a linear interpolation between two vec3s.
+   * Performs a linear interpolation between this type and another Vec3.
    * @param {Vec3} b - The second operand.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Vec3} - The return value.
@@ -445,7 +445,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The abs method.
+   * Returns a new Vec3 whose component values are the abs of this Vec3's component values.
    * @return {Vec3} - The return value.
    */
   abs() {
@@ -453,9 +453,9 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Sets the vector a random direction with the given scale.
-   * @param {number} scale - The scale param.
-   * @return {any} - The return value.
+   * Sets the vector a random vector on the surface of a sphere with the radius of the givenn scale value.
+   * @param {number} scale - The radius of the surface sphere.
+   * @return {Vec3} - The random Vec3.
    */
   setRandomDir(scale = 1.0) {
     const r = Math.random() * 2.0 * Math.PI;
@@ -469,9 +469,9 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The setRandom method.
-   * @param {number} scale - The scale param.
-   * @return {any} - The return value.
+   * Generates a randome vector anywhere in the sphere defined by the provided scale value.
+   * @param {number} scale - The radius of the bounding sphere.
+   * @return {Vec3} - The random Vec3.
    */
   setRandom(scale = 1.0) {
     this.__data[0] = (Math.random() - 0.5) * scale;
@@ -489,7 +489,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The asArray method.
+   * Returns the tpye as an array. Often used to pass types to the GPU.
    * @return {any} - The return value.
    */
   asArray() {
@@ -539,7 +539,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The numFloat32Elements method.
+   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    */
   static numFloat32Elements() {
