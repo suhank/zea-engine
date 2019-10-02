@@ -8,7 +8,7 @@ import { ValueSetMode, Parameter } from './Parameter.js';
 class NumberParameter extends Parameter {
   /**
    * Create a color parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {number} value - The value value.
    * @param {any} range - The range value.
    * @param {any} step - The step value.
@@ -91,7 +91,7 @@ class NumberParameter extends Parameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -106,8 +106,8 @@ class NumberParameter extends Parameter {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -120,8 +120,8 @@ class NumberParameter extends Parameter {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);
@@ -131,8 +131,8 @@ class NumberParameter extends Parameter {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     const value = reader.loadFloat32();

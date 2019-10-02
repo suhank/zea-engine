@@ -8,7 +8,7 @@ import { sgFactory } from '../SGFactory.js';
 class ImageParameter extends Parameter {
   /**
    * Create an image parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} value - The value value.
    */
   constructor(name, value) {
@@ -18,7 +18,7 @@ class ImageParameter extends Parameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -31,8 +31,8 @@ class ImageParameter extends Parameter {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -46,8 +46,8 @@ class ImageParameter extends Parameter {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   fromJSON(j, context, flags) {

@@ -27,7 +27,7 @@ import { BaseGeomItem } from './BaseGeomItem.js';
 class GeomItem extends BaseGeomItem {
   /**
    * Create a geom item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} geom - The geom value.
    * @param {any} material - The material value.
    */
@@ -89,7 +89,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -101,7 +101,7 @@ class GeomItem extends BaseGeomItem {
   /**
    * The copyFrom method.
    * @param {any} src - The src param.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
@@ -245,8 +245,8 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -257,7 +257,7 @@ class GeomItem extends BaseGeomItem {
   /**
    * The fromJSON method.
    * @param {any} json - The json param.
-   * @param {any} context - The context param.
+   * @param {object} context - The context param.
    */
   fromJSON(json, context) {
     super.fromJSON(json, context);
@@ -266,8 +266,8 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     super.readBinary(reader, context);

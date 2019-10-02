@@ -199,8 +199,8 @@ class VertexAttribute extends Attribute {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -213,8 +213,8 @@ class VertexAttribute extends Attribute {
   /**
    * The fromJSON method.
    * @param {any} json - The json param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(json, context, flags) {
     super.fromJSON(json, context, flags);
@@ -226,7 +226,7 @@ class VertexAttribute extends Attribute {
 
   /**
    * The loadSplitValues method.
-   * @param {any} reader - The reader param.
+   * @param {object} reader - The reader param.
    */
   loadSplitValues(reader) {
     const splitIndices = reader.loadUInt32Array();

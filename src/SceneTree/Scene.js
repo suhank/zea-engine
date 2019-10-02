@@ -203,7 +203,7 @@ class Scene {
 
   /**
    * The getLightMap method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getLightMap(name) {
@@ -212,7 +212,7 @@ class Scene {
 
   /**
    * The setLightMap method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} lightmap - The lightmap param.
    */
   setLightMap(name, lightmap) {
@@ -331,7 +331,7 @@ class Scene {
   /**
    * The fromJSON method.
    * @param {any} json - The json param.
-   * @param {any} context - The context param.
+   * @param {object} context - The context param.
    *
    */
   fromJSON(json, context) {
@@ -344,8 +344,8 @@ class Scene {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {

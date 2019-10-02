@@ -11,7 +11,7 @@ import { sgFactory } from './SGFactory.js';
 class InstanceItem extends TreeItem {
   /**
    * Create an instance item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -78,8 +78,8 @@ class InstanceItem extends TreeItem {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context = {}) {
     super.readBinary(reader, context);
@@ -94,8 +94,8 @@ class InstanceItem extends TreeItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context = {}, flags = 0) {
@@ -106,8 +106,8 @@ class InstanceItem extends TreeItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @param {any} onDone - The onDone param.
    */
   fromJSON(j, context = {}, flags = 0, onDone) {}

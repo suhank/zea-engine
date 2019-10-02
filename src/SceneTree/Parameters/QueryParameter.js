@@ -34,7 +34,7 @@ const QUERY_LOGIC = {
 class QueryParameter extends StringParameter {
   /**
    * Create a query parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} queryType - The queryType value.
    * @param {any} matchType - The matchType value.
    * @param {any} locicalOperator - The locicalOperator value.
@@ -56,7 +56,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -196,8 +196,8 @@ class QueryParameter extends StringParameter {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     const value = reader.loadStr();

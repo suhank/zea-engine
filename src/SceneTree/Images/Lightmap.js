@@ -55,8 +55,8 @@ class Lightmap extends RefCounted {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     this.__atlasSize = j.atlasSize;
@@ -166,8 +166,8 @@ class LightmapMixer extends RefCounted {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     this.__atlasSize = j['atlasSize'];

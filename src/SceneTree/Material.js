@@ -49,7 +49,7 @@ const generateParameterInstance = (
 class Material extends BaseItem {
   /**
    * Create a base item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} shaderName - The shaderName value.
    */
   constructor(name, shaderName) {
@@ -146,7 +146,7 @@ class Material extends BaseItem {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -158,7 +158,7 @@ class Material extends BaseItem {
   /**
    * The copyFrom method.
    * @param {any} src - The src param.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
@@ -249,8 +249,8 @@ class Material extends BaseItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags = 0) {
@@ -260,8 +260,8 @@ class Material extends BaseItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context = {}, flags = 0) {
     if (!j.shader) {
@@ -285,8 +285,8 @@ class Material extends BaseItem {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     let shaderName = reader.loadStr();

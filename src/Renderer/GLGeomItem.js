@@ -17,7 +17,7 @@ class GLGeomItem {
    * @param {any} geomItem - The geomItem value.
    * @param {any} glGeom - The glGeom value.
    * @param {any} id - The id value.
-   * @param {any} flags - The flags value.
+   * @param {number} flags - The flags value.
    */
   constructor(gl, geomItem, glGeom, id, flags = null) {
     this.gl = gl;

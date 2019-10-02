@@ -6,7 +6,7 @@ import { StateAction } from './StateAction.js';
 class StateEvent extends StateAction {
   /**
    * Create a state event.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super();

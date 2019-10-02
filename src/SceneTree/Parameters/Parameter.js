@@ -31,7 +31,7 @@ const ParamFlags = {
 class BaseParameter extends RefCounted {
   /**
    * Create a base parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super();
@@ -58,7 +58,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The setName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   setName(name) {
     if (name != this.__name) {
@@ -104,7 +104,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The setFlag method.
-   * @param {any} flag - The flag param.
+   * @param {number} flag - The flag param.
    */
   setFlag(flag) {
     this.__flags |= flag;
@@ -112,7 +112,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The clearFlag method.
-   * @param {any} flag - The flag param.
+   * @param {number} flag - The flag param.
    */
   clearFlag(flag) {
     this.__flags &= ~flag;
@@ -120,7 +120,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The testFlag method.
-   * @param {any} flag - The flag param.
+   * @param {number} flag - The flag param.
    * @return {any} - The return value.
    */
   testFlag(flag) {
@@ -220,7 +220,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    */
   clone(flags) {
     console.error('TOOD: implment me');
@@ -242,7 +242,7 @@ class BaseParameter extends RefCounted {
 class Parameter extends BaseParameter {
   /**
    * Create a parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} value - The value value.
    * @param {any} dataType - The dataType value.
    */
@@ -309,7 +309,7 @@ class Parameter extends BaseParameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -328,8 +328,8 @@ class Parameter extends BaseParameter {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -341,8 +341,8 @@ class Parameter extends BaseParameter {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     if (j.value == undefined) {
@@ -366,8 +366,8 @@ class Parameter extends BaseParameter {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     console.error('TODO');

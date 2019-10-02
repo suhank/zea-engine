@@ -8,7 +8,7 @@ import { FileImage } from './Images';
 class MaterialLibrary {
   /**
    * Create a material library.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name = 'MaterialLibrary') {
     this.__name = name;
@@ -68,7 +68,7 @@ class MaterialLibrary {
 
   /**
    * The hasMaterial method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasMaterial(name) {
@@ -86,7 +86,7 @@ class MaterialLibrary {
 
   /**
    * The getMaterial method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {Boolean} assert - The assert param.
    * @return {any} - The return value.
    */
@@ -102,7 +102,7 @@ class MaterialLibrary {
 
   /**
    * The hasImage method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasImage(name) {
@@ -120,7 +120,7 @@ class MaterialLibrary {
 
   /**
    * The getImage method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {boolean} assert - The assert param.
    * @return {any} - The return value.
    */
@@ -174,8 +174,8 @@ class MaterialLibrary {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context = {}, flags = 0) {
     context.lod = this.lod;
@@ -193,8 +193,8 @@ class MaterialLibrary {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context = {}, flags = 0) {
@@ -205,8 +205,8 @@ class MaterialLibrary {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context = {}) {
     if (context.version == undefined) context.version = 0;

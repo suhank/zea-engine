@@ -14,7 +14,7 @@ class GLViewport extends GLBaseViewport {
   /**
    * Create a GL viewport.
    * @param {any} renderer - The renderer value.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} width - The namwidthe value.
    * @param {any} height - The height value.
    */

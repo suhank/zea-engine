@@ -12,7 +12,7 @@ const supportWebp = navigator.userAgent.indexOf('Chrome') !== -1; // || navigato
 class LDRImage extends FileImage {
   /**
    * Create a LDR image.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} filePath - The filePath value.
    * @param {any} params - The params value.
    */

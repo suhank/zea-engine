@@ -60,7 +60,7 @@ class GLShader extends BaseItem {
    * The __compileShaderStage method.
    * @param {any} glsl - The glsl param.
    * @param {any} stageID - The stageID param.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} shaderopts - The shaderopts param.
    * @return {any} - The return value.
    * @private

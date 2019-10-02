@@ -81,7 +81,7 @@ class BaseProxy extends RefCounted {
   /**
    * The setMetadata method.
    * @param {any} key - The key param.
-   * @param {any} metaData - The metaData param.
+   * @param {object} metaData - The metaData param.
    */
   setMetadata(key, metaData) {
     this.__metaData.set(key, metaData);

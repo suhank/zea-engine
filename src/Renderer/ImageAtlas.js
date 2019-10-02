@@ -132,7 +132,7 @@ class ImageAtlas extends GLTexture2D {
   /**
    * Create an image atlas..
    * @param {any} gl - The gl value.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} format - The format value.
    * @param {any} type - The type value.
    * @param {any} clearColor - The clearColor value.

@@ -15,7 +15,7 @@ import { sgFactory } from '../SGFactory.js';
 class RouterOperator extends Operator {
   /**
    * Create a router operator.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -54,8 +54,8 @@ class RouterOperator extends Operator {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -65,8 +65,8 @@ class RouterOperator extends Operator {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

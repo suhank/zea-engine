@@ -14,7 +14,7 @@ import { NumberParameter, Vec4Parameter } from '../Parameters';
 class GIFImage extends FileImage {
   /**
    * Create a GIF image.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} filePath - The filePath value.
    * @param {any} params - The params value.
    */

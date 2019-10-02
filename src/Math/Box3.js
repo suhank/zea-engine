@@ -190,7 +190,7 @@ class Box3 {
   }
 
   /**
-   * The clone method.
+   * Clones this type returning a new instance.
    * @return {any} - The return value.
    */
   clone() {

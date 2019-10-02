@@ -40,7 +40,7 @@ class ParameterOwner extends RefCounted {
   /**
    * The copyFrom method.
    * @param {any} src - The src param.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
     // Note: Loop over the parameters in reverse order,
@@ -179,7 +179,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The removeParameter method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   removeParameter(name) {
     if (this.__paramMapping[name] == undefined) {
@@ -242,8 +242,8 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -270,8 +270,8 @@ class ParameterOwner extends RefCounted {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     if (j.params) {
@@ -302,8 +302,8 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     // TODO: make this work

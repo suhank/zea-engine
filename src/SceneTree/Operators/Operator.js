@@ -8,7 +8,7 @@ import { ItemFlags, BaseItem } from '../BaseItem.js';
 class OperatorOutput {
   /**
    * Create an operator output.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} filterFn - The filterFn value.
    */
   constructor(name, filterFn) {
@@ -106,8 +106,8 @@ class OperatorOutput {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -121,8 +121,8 @@ class OperatorOutput {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     if (j.paramPath) {
@@ -167,7 +167,7 @@ sgFactory.registerClass('OperatorOutput', OperatorOutput);
 class XfoOperatorOutput extends OperatorOutput {
   /**
    * Create an XFO operator output.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name, p => p.getDataType() == 'Xfo');
@@ -216,7 +216,7 @@ sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput);
 class Operator extends BaseItem {
   /**
    * Create an operator.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -273,7 +273,7 @@ class Operator extends BaseItem {
 
   /**
    * The getOutputByName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getOutputByName(name) {
@@ -322,8 +322,8 @@ class Operator extends BaseItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -342,8 +342,8 @@ class Operator extends BaseItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

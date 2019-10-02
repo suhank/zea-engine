@@ -13,7 +13,7 @@ class GLProbe extends ImageAtlas {
   /**
    * Create a GL probe.
    * @param {any} gl - The gl value.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(gl, name) {
     super(gl, name);

@@ -10,7 +10,7 @@ import { BaseImage } from '../BaseImage.js';
 class DataImage extends BaseImage {
   /**
    * Create a data image.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super();

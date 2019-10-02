@@ -15,7 +15,7 @@ import { sgFactory } from './SGFactory.js';
 class VLAAsset extends AssetItem {
   /**
    * Create a VLA asset.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -104,8 +104,8 @@ class VLAAsset extends AssetItem {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    * @return {any} - The return value.
    */
   readBinary(reader, context) {
@@ -267,7 +267,7 @@ class VLAAsset extends AssetItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
+   * @param {object} context - The context param.
    * @param {any} onDone - The onDone param.
    */
   fromJSON(j, context, onDone) {

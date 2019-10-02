@@ -11,7 +11,7 @@ import { BaseImage } from '../BaseImage.js';
 class MaterialFloatParam extends NumberParameter {
   /**
    * Create a material float parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} value - The value value.
    * @param {any} range - The range value.
    */
@@ -23,7 +23,7 @@ class MaterialFloatParam extends NumberParameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -94,8 +94,8 @@ class MaterialFloatParam extends NumberParameter {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     super.readBinary(reader, context);

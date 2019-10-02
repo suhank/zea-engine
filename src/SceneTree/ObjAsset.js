@@ -28,7 +28,7 @@ import {
 class ObjAsset extends AssetItem {
   /**
    * Create an obj asset.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);

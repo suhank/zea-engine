@@ -73,7 +73,7 @@ class ImagePyramid extends ImageAtlas {
   /**
    * Create an image pyramid.
    * @param {any} gl - The gl value.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} srcGLTex - The srcGLTex value.
    * @param {boolean} destroySrcImage - The destroySrcImage value.
    * @param {number} minTileSize - The minTileSize value.

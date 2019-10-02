@@ -17,7 +17,7 @@ import { MaterialLibrary } from './MaterialLibrary.js';
 class AudioItem extends TreeItem {
   /**
    * Create an audio item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -161,7 +161,7 @@ class AudioItem extends TreeItem {
 class FileAudioItem extends AudioItem {
   /**
    * Create a file audio item..
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {}
 }

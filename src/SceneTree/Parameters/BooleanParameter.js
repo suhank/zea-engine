@@ -8,7 +8,7 @@ import { sgFactory } from '../SGFactory';
 class BooleanParameter extends Parameter {
   /**
    * Create a boolean parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} value - The value value.
    */
   constructor(name, value) {
@@ -17,7 +17,7 @@ class BooleanParameter extends Parameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {

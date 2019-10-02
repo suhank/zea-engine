@@ -15,7 +15,7 @@ import {
 class BaseImage extends BaseItem {
   /**
    * Create a base image.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} params - The params value.
    */
   constructor(name, params = {}) {

@@ -8,7 +8,7 @@ import { GLRenderer } from '../GLRenderer.js';
 class GLOverlayPass extends GLOpaqueGeomsPass {
   /**
    * Create a GL overlay pass.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor() {
     super();

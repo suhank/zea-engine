@@ -97,7 +97,7 @@ class LabelManager {
 
   /**
    * The isLibraryFound method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   isLibraryFound(name) {
@@ -106,7 +106,7 @@ class LabelManager {
 
   /**
    * The isLibraryLoaded method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   isLibraryLoaded(name) {

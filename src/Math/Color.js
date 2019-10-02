@@ -214,7 +214,7 @@ class Color extends AttrValue {
 
   /**
    * The setFromCSSColorName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   setFromCSSColorName(name) {
     const colourNameToHex = colour => {
@@ -590,7 +590,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * The clone method.
+   * Clones this type returning a new instance.
    * @return {color} - The return value.
    */
   clone() {

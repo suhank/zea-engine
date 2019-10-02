@@ -10,7 +10,7 @@ import { NumberParameter } from '../Parameters';
 class CameraMouseAndKeyboard extends ParameterOwner {
   /**
    * Create a camera, mouse and keyboard
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name = undefined) {
     if (name == undefined) name = 'Camera';

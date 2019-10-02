@@ -6,7 +6,7 @@ import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js';
 class StructParameter extends Parameter {
   /**
    * Create a struct parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name, {}, 'Struct');
@@ -32,7 +32,7 @@ class StructParameter extends Parameter {
 
   /**
    * The getParameter method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The name value.
    */
   getParameter(name) {
@@ -43,7 +43,7 @@ class StructParameter extends Parameter {
 
   /**
    * The getMember method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The name value.
    */
   getMember(name) {
@@ -65,8 +65,8 @@ class StructParameter extends Parameter {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -81,8 +81,8 @@ class StructParameter extends Parameter {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     if (j.members == undefined) {

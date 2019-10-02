@@ -10,7 +10,7 @@ import { ValueSetMode } from './Parameters';
 class BaseGeomItem extends TreeItem {
   /**
    * Create a base geom item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -24,7 +24,7 @@ class BaseGeomItem extends TreeItem {
 
   /**
    * The addLayer method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   addLayer(name) {
     // TODO: need to find the layer and add this item to it.
@@ -100,8 +100,8 @@ class BaseGeomItem extends TreeItem {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     super.readBinary(reader, context);

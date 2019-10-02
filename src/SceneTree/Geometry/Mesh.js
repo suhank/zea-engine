@@ -145,7 +145,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The addVertexAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} dataType - The dataType param.
    * @param {any} defaultScalarValue - The defaultScalarValue param.
    * @return {any} - The return value.
@@ -166,7 +166,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The addFaceAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} dataType - The dataType param.
    * @param {any} count - The defaultScalarValue param.
    * @return {any} - The return value.
@@ -182,7 +182,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The hasFaceAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasFaceAttribute(name) {
@@ -191,7 +191,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The getFaceAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getFaceAttribute(name) {
@@ -203,7 +203,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The addEdgeAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} dataType - The dataType param.
    * @param {any} count - The defaultScalarValue param.
    * @return {any} - The return value.
@@ -219,7 +219,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The hasEdgeAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasEdgeAttribute(name) {
@@ -228,7 +228,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The getEdgeAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getEdgeAttribute(name) {
@@ -830,8 +830,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     super.loadBaseGeomBinary(reader);
@@ -927,8 +927,8 @@ class Mesh extends BaseGeom {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -943,8 +943,8 @@ class Mesh extends BaseGeom {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

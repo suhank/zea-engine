@@ -125,7 +125,7 @@ function sphOctUvToDir(uv) {
 class EnvMap extends VLHImage {
   /**
    * Create an env map.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} params - The params value.
    */
   constructor(name, params = {}) {

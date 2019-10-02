@@ -8,7 +8,7 @@ import { ParameterOwner } from '../SceneTree/ParameterOwner.js';
 class StateAction extends ParameterOwner {
   /**
    * Create a state action.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super();
@@ -30,7 +30,7 @@ class StateAction extends ParameterOwner {
 
   /**
    * The getOutput method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getOutput(name) {
@@ -105,8 +105,8 @@ class StateAction extends ParameterOwner {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -134,8 +134,8 @@ class StateAction extends ParameterOwner {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

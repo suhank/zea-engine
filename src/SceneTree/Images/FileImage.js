@@ -28,7 +28,7 @@ const supportWebp = navigator.userAgent.indexOf('Chrome') !== -1; // || navigato
 class FileImage extends BaseImage {
   /**
    * Create a file image.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} filePath - The filePath value.
    * @param {any} params - The params value.
    */
@@ -668,22 +668,22 @@ class FileImage extends BaseImage {
   /**
    * The fromJSON method.
    * @param {any} json - The json param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(json, context, flags) {}
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   toJSON(context, flags) {}
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     // super.readBinary(reader, context);

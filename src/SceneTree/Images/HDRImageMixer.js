@@ -9,7 +9,7 @@ import { FileImage } from './FileImage.js';
 class HDRImageMixer extends BaseImage {
   /**
    * Create an HDR image mixer.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {boolean} stream - The stream value.
    */
   constructor(name, stream = true) {
@@ -118,15 +118,15 @@ class HDRImageMixer extends BaseImage {
   /**
    * The fromJSON method.
    * @param {any} json - The json param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(json, context, flags) {}
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   toJSON(context, flags) {}
 }

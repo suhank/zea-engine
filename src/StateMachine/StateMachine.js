@@ -7,7 +7,7 @@ import { BaseItem, ItemFlags, sgFactory } from '../SceneTree';
 class StateMachine extends BaseItem {
   /**
    * Create a state machine.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -46,7 +46,7 @@ class StateMachine extends BaseItem {
 
   /**
    * The getState method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getState(name) {
@@ -55,7 +55,7 @@ class StateMachine extends BaseItem {
 
   /**
    * The activateState method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   activateState(name) {
     // console.log("StateMachine.activateState:" + name)
@@ -95,7 +95,7 @@ class StateMachine extends BaseItem {
 
   /**
    * The setInitialState method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   setInitialState(name) {
     this.__initialStateName = name;
@@ -106,8 +106,8 @@ class StateMachine extends BaseItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -125,8 +125,8 @@ class StateMachine extends BaseItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

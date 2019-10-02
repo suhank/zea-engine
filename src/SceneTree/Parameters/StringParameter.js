@@ -8,7 +8,7 @@ import { Parameter, ValueSetMode } from './Parameter.js';
 class StringParameter extends Parameter {
   /**
    * Create a string parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} value - The value value.
    */
   constructor(name, value = '') {
@@ -34,7 +34,7 @@ class StringParameter extends Parameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -44,8 +44,8 @@ class StringParameter extends Parameter {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     const value = reader.loadStr();

@@ -8,7 +8,7 @@ const CommandFlags = {
 class Command {
   /**
    * Create a command.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} cb - The cb value.
    */
   constructor(name, cb) {

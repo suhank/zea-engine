@@ -4,7 +4,7 @@ import { sgFactory } from '../SceneTree/SGFactory.js';
 class State {
   /**
    * Create a state.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     this.__name = name ? name : this.constructor.name;
@@ -24,7 +24,7 @@ class State {
 
   /**
    * The setName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   setName(name) {
     this.__name = name;
@@ -120,8 +120,8 @@ class State {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -154,8 +154,8 @@ class State {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     this.__name = j.name;

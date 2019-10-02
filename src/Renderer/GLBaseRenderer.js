@@ -128,7 +128,7 @@ class GLBaseRenderer {
 
   /**
    * The addShaderPreprocessorDirective method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} value - The value param.
    */
   addShaderPreprocessorDirective(name, value) {
@@ -172,7 +172,7 @@ class GLBaseRenderer {
 
   /**
    * The addViewport method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   addViewport(name) {

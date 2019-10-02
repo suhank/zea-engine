@@ -7,7 +7,7 @@ import { NumberParameter } from './NumberParameter.js';
 class MultiChoiceParameter extends NumberParameter {
   /**
    * Create a multi choice parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} index - The index value.
    * @param {any} choices - The choices value.
    */

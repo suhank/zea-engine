@@ -20,7 +20,7 @@ import { Lines } from './Geometry/Lines.js';
 class BillboardItem extends TreeItem {
   /**
    * Create a billboard item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} image - The image value.
    */
   constructor(name, image) {
@@ -86,8 +86,8 @@ class BillboardItem extends TreeItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -97,8 +97,8 @@ class BillboardItem extends TreeItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   fromJSON(j, context, flags) {

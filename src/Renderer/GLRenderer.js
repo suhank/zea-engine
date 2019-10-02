@@ -215,7 +215,7 @@ class GLRenderer extends GLBaseRenderer {
 
   /**
    * The addViewport method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   addViewport(name) {

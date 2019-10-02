@@ -39,7 +39,7 @@ branchSelectionOutlineColor.a = 0.1;
 class TreeItem extends BaseItem {
   /**
    * Create a tree item.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -128,7 +128,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -140,7 +140,7 @@ class TreeItem extends BaseItem {
   /**
    * The copyFrom method.
    * @param {any} src - The src param.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
@@ -170,7 +170,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The _childFlagsChanged method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @private
    */
   _childFlagsChanged(flags) {
@@ -180,7 +180,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The setFlag method.
-   * @param {any} flag - The flag param.
+   * @param {number} flag - The flag param.
    */
   setFlag(flag) {
     super.setFlag(flag);
@@ -399,7 +399,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The addHighlight method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} color - The color param.
    * @param {boolean} propagateToChildren - The propagateToChildren param.
    */
@@ -424,7 +424,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The removeHighlight method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {boolean} propagateToChildren - The propagateToChildren param.
    */
   removeHighlight(name, propagateToChildren = false) {
@@ -546,7 +546,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The generateUniqueName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   generateUniqueName(name) {
@@ -691,7 +691,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getChildByName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {object} - The child TreeItem.
    */
   getChildByName(name) {
@@ -802,7 +802,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The removeComponent method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   removeComponent(name) {
@@ -825,7 +825,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The hasComponent method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasComponent(name) {
@@ -834,7 +834,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getComponent method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getComponent(name) {
@@ -1004,8 +1004,8 @@ class TreeItem extends BaseItem {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -1044,8 +1044,8 @@ class TreeItem extends BaseItem {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);
@@ -1136,8 +1136,8 @@ class TreeItem extends BaseItem {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     super.readBinary(reader, context);

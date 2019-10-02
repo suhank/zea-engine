@@ -16,7 +16,7 @@ import { sgFactory } from './SGFactory';
 class Camera extends TreeItem {
   /**
    * Create a camera.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name = undefined) {
     if (name == undefined) name = 'Camera';

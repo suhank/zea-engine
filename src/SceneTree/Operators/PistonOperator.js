@@ -21,7 +21,7 @@ import { sgFactory } from '../SGFactory.js';
 class PistonParameter extends StructParameter {
   /**
    * Create a piston parameter.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor() {
     super('Piston');
@@ -153,7 +153,7 @@ class PistonParameter extends StructParameter {
 
   /**
    * The clone method.
-   * @param {any} flags - The flags param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   clone(flags) {
@@ -182,8 +182,8 @@ class PistonParameter extends StructParameter {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -194,8 +194,8 @@ class PistonParameter extends StructParameter {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);
@@ -208,7 +208,7 @@ class PistonParameter extends StructParameter {
 class PistonOperator extends Operator {
   /**
    * Create a piston operator.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    */
   constructor(name) {
     super(name);
@@ -335,8 +335,8 @@ class PistonOperator extends Operator {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -346,8 +346,8 @@ class PistonOperator extends Operator {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

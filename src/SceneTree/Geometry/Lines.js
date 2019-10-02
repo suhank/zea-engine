@@ -74,7 +74,7 @@ class Lines extends BaseGeom {
 
   /**
    * The addSegmentAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} dataType - The dataType param.
    * @param {any} count - The count param.
    * @return {any} - The return value.
@@ -90,7 +90,7 @@ class Lines extends BaseGeom {
 
   /**
    * The hasSegmentAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasSegmentAttribute(name) {
@@ -99,7 +99,7 @@ class Lines extends BaseGeom {
 
   /**
    * The getSegmentAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getSegmentAttribute(name) {
@@ -139,8 +139,8 @@ class Lines extends BaseGeom {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -154,8 +154,8 @@ class Lines extends BaseGeom {
   /**
    * The fromJSON method.
    * @param {any} j - The j param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);

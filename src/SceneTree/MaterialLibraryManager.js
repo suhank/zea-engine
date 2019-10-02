@@ -38,7 +38,7 @@ class MaterialLibraryManager {
 
   /**
    * The hasMaterialLibrary method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasMaterialLibrary(name) {
@@ -47,7 +47,7 @@ class MaterialLibraryManager {
 
   /**
    * The getMaterialLibrary method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getMaterialLibrary(name) {

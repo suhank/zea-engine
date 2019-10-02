@@ -13,7 +13,7 @@ class Points extends BaseGeom {
 
   /**
    * The loadBin method.
-   * @param {any} reader - The reader param.
+   * @param {object} reader - The reader param.
    */
   loadBin(reader) {
     this.name = reader.loadStr();
@@ -66,8 +66,8 @@ class Points extends BaseGeom {
 
   /**
    * The readBinary method.
-   * @param {any} reader - The reader param.
-   * @param {any} context - The context param.
+   * @param {object} reader - The reader param.
+   * @param {object} context - The context param.
    */
   readBinary(reader, context) {
     super.loadBaseGeomBinary(reader);

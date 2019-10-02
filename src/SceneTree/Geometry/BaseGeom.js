@@ -29,7 +29,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The setDebugName method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    */
   setDebugName(name) {
     this.__name = name;
@@ -37,7 +37,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The addVertexAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @param {any} dataType - The dataType param.
    * @param {any} defaultScalarValue - The defaultScalarValue param.
    * @return {any} - The return value.
@@ -54,7 +54,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The hasVertexAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   hasVertexAttribute(name) {
@@ -63,7 +63,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The getVertexAttribute method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getVertexAttribute(name) {
@@ -72,7 +72,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The getVertexAttributes method.
-   * @param {any} name - The name param.
+   * @param {string} name - The name param.
    * @return {any} - The return value.
    */
   getVertexAttributes(name) {
@@ -219,7 +219,7 @@ class BaseGeom extends ParameterOwner {
   /**
    * The setMetadata method.
    * @param {any} key - The key param.
-   * @param {any} metaData - The metaData param.
+   * @param {object} metaData - The metaData param.
    */
   setMetadata(key, metaData) {
     this.__metaData.set(key, metaData);
@@ -274,7 +274,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The loadBaseGeomBinary method.
-   * @param {any} reader - The reader param.
+   * @param {object} reader - The reader param.
    */
   loadBaseGeomBinary(reader) {
     this.name = reader.loadStr();
@@ -467,8 +467,8 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The toJSON method.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -490,8 +490,8 @@ class BaseGeom extends ParameterOwner {
   /**
    * The fromJSON method.
    * @param {any} json - The json param.
-   * @param {any} context - The context param.
-   * @param {any} flags - The flags param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
    */
   fromJSON(json, context, flags) {
     super.fromJSON(json, context, flags);

@@ -117,7 +117,7 @@ class GeomLibrary {
    * The readBinaryBuffer method.
    * @param {any} key - The key param.
    * @param {any} buffer - The buffer param.
-   * @param {any} context - The context param.
+   * @param {object} context - The context param.
    * @return {any} - The return value.
    */
   readBinaryBuffer(key, buffer, context) {

@@ -480,7 +480,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The clone method.
+   * Clones this type returning a new instance.
    * @return {vec3} - The return value.
    */
   clone() {

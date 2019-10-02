@@ -15,7 +15,7 @@ import { FileImage } from './FileImage.js';
 class LDRVideo extends FileImage {
   /**
    * Create a LDR video.
-   * @param {any} name - The name value.
+   * @param {string} name - The name value.
    * @param {any} filePath - The filePath value.
    * @param {any} params - The params value.
    */
