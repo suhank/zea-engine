@@ -28,10 +28,8 @@ Install the httpserver
 
 ## Scripts
 
-* `yarn build` - produces development version of ZeaEngine.
+* `yarn build` - produces production version of ZeaEngine.
 * `yarn build:dev` - produces development version of ZeaEngine and runs a watcher.  Edited source code should auto-recompile.
-* `yarn build:production` - produces a production version of ZeaEngine under the `lib` folder.
-
 
 ## Typical development workflow
 
