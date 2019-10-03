@@ -10,7 +10,7 @@ Install the httpserver
 
 ## Docs
 
-[https://zeainc.github.io/zea-engine/](https://zeainc.github.io/zea-engine/)
+[https://zea-engine.js.org/](https://zea-engine.js.org/)
 
 ## Getting started
 
