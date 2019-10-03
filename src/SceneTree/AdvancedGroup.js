@@ -5,17 +5,11 @@ import {
 import {
   QUERY_TYPES,
   QUERY_MATCH_TYPE,
-  QUERY_LOGIC
-} from './Parameters/QueryParameter.js'
-import {
-  QuerySet
-} from './Parameters/QuerySetParameter.js';;
-import {
-  Group
-} from './Group';
-import {
-  sgFactory
-} from './SGFactory.js';
+  QUERY_LOGIC,
+} from './Parameters/QueryParameter.js';
+import { QuerySet } from './Parameters/QuerySetParameter.js';
+import { Group } from './Group';
+import { sgFactory } from './SGFactory.js';
 
 class AdvancedGroup extends Group {
   constructor(name) {

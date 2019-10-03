@@ -2,7 +2,7 @@
   "name": "@zeainc/zea-engine",
   "fileName": "zea-engine",
   "libraryName": "ZeaEngine",
-  "version": "0.0.77",
+  "version": "0.0.80",
   "description": "Zea Engine",
   "main": "dist/zea-engine.js",
   "author": "Zea Inc.",
@@ -15,9 +15,9 @@
     "build:dev": "webpack --watch --config webpack-dev.config.js",
     "build": "webpack --config webpack-prod.config.js",
     "dist": "webpack --config webpack-prod.config.js && yarn publish --access=public",
-    "docs": "documentation build src/** -f html -o docs",
-    "docs:serve": "documentation serve --watch src/**",
-    "docs:lint": "documentation lint src/**"
+    "docs": "documentation build src/index.js -f html -o docs",
+    "docs:serve": "documentation serve --watch src/index.js",
+    "docs:lint": "documentation lint src/index.js"
   },
   "devDependencies": {
     "chai": "3.4.1",

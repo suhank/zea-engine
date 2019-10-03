@@ -1,67 +1,85 @@
-
-import {
-  Operator,
-  OperatorOutput
-} from './Operator.js';
+import { Operator, OperatorOutput } from './Operator.js';
 import {
   ValueGetMode,
   Parameter,
   NumberParameter,
   StructParameter,
-  ListParameter
+  ListParameter,
 } from '../Parameters';
 
-import {
-  sgFactory
-} from '../SGFactory.js';
+import { sgFactory } from '../SGFactory.js';
 
+/** Class representing a router operator.
+ * @extends Operator
+ */
 class RouterOperator extends Operator {
+  /**
+   * Create a router operator.
+   * @param {string} name - The name value.
+   */
   constructor(name) {
     super(name);
 
     this.__inputParam = this.addParameter(new NumberParameter('Input'));
-    this.__routesParam = this.addParameter(new ListParameter('Routes', NumberParameter));
+    this.__routesParam = this.addParameter(
+      new ListParameter('Routes', NumberParameter)
+    );
     this.__routesParam.elementAdded.connect((value, index) => {
-      value.setValue(1.0)
+      value.setValue(1.0);
       this.addOutput(new OperatorOutput('Output'));
-    })
+    });
     this.__routesParam.elementRemoved.connect((value, index) => {
       this.removeOutput(this.getOutput(index));
-    })
+    });
   }
 
+  /**
+   * The evaluate method.
+   */
   evaluate() {
     const input = this.__inputParam.getValue(ValueGetMode.OPERATOR_GETVALUE);
     const routes = this.__routesParam.getValue();
     let i = this.__outputs.length;
     while (i--) {
       const output = this.__outputs[i];
-      output.setValue(input * routes[i].getValue(ValueGetMode.OPERATOR_GETVALUE));
+      output.setValue(
+        input * routes[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
+      );
     }
-    this.postEval.emit(input)
+    this.postEval.emit(input);
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Persistence
 
+  /**
+   * The toJSON method.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   * @return {any} - The return value.
+   */
   toJSON(context, flags) {
     return super.toJSON(context, flags);
   }
 
+  /**
+   * The fromJSON method.
+   * @param {any} j - The j param.
+   * @param {object} context - The context param.
+   * @param {number} flags - The flags param.
+   */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags);
   }
 
-
-  destroy(){
+  /**
+   * The destroy method.
+   */
+  destroy() {
     super.destroy();
-  };
-};
-
+  }
+}
 
 sgFactory.registerClass('RouterOperator', RouterOperator);
 
-
-export {
-  RouterOperator
-};
+export { RouterOperator };

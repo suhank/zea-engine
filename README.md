@@ -8,6 +8,10 @@ Install the httpserver
 [![npm](https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square)](https://www.npmjs.com/package/@zeainc/zea-engine)
 [![Code style: Prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
+## Docs
+
+[https://zeainc.github.io/zea-engine/](https://zeainc.github.io/zea-engine/)
+
 ## Getting started
 
 1. Install Git
@@ -24,10 +28,8 @@ Install the httpserver
 
 ## Scripts
 
-* `yarn build` - produces development version of ZeaEngine.
+* `yarn build` - produces production version of ZeaEngine.
 * `yarn build:dev` - produces development version of ZeaEngine and runs a watcher.  Edited source code should auto-recompile.
-* `yarn build:production` - produces a production version of ZeaEngine under the `lib` folder.
-
 
 ## Typical development workflow
 

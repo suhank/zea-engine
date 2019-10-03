@@ -1,34 +1,14 @@
-import {
-  Vec2,
-  Rect2
-} from '../Math';
-import {
-  GLTexture2D
-} from './GLTexture2D.js';
-import {
-  GLFbo
-} from './GLFbo.js';
-import {
-  GLShader
-} from './GLShader.js';
-import {
-  ImageAtlas
-} from './ImageAtlas.js';
-import {
-  generateShaderGeomBinding
-} from './GeomShaderBinding.js';
-import {
-  shaderLibrary
-} from './ShaderLibrary'
+import { GLTexture2D } from './GLTexture2D.js';
+import { GLFbo } from './GLFbo.js';
+import { ImageAtlas } from './ImageAtlas.js';
 
 import './Shaders/GLSL/ImagePyramid.js';
 
-let Math_log2 = function(value) {
+const Math_log2 = function(value) {
   // IE11 doesn't support Math.log2.
-  return Math.log2(value)
-    //return Math.log( value ) / Math.log( 2 ) - 2;
+  return Math.log2(value);
+  // return Math.log( value ) / Math.log( 2 ) - 2;
 };
-
 
 // class PyramidShader extends GLShader {
 
@@ -86,7 +66,18 @@ let Math_log2 = function(value) {
 //     }
 // };
 
+/** Class representing an image pyramid.
+ * @extends ImageAtlas
+ */
 class ImagePyramid extends ImageAtlas {
+  /**
+   * Create an image pyramid.
+   * @param {any} gl - The gl value.
+   * @param {string} name - The name value.
+   * @param {any} srcGLTex - The srcGLTex value.
+   * @param {boolean} destroySrcImage - The destroySrcImage value.
+   * @param {number} minTileSize - The minTileSize value.
+   */
   constructor(gl, name, srcGLTex, destroySrcImage = true, minTileSize = 16) {
     super(gl, name);
 
@@ -106,32 +97,35 @@ class ImagePyramid extends ImageAtlas {
       });
     }
     srcGLTex.destructing.connect(() => {
-      console.log(this.__srcGLTex.getName() + " ImagePyramid destructing");
+      console.log(this.__srcGLTex.getName() + ' ImagePyramid destructing');
       this.destroy();
     });
   }
 
+  /**
+   * The generateAtlasLayout method.
+   * @param {any} minTileSize - The minTileSize param.
+   */
   generateAtlasLayout(minTileSize) {
     const gl = this.__gl;
 
     this.size = this.__srcGLTex.height;
-    let aspectRatio = this.__srcGLTex.width / this.__srcGLTex.height;
+    const aspectRatio = this.__srcGLTex.width / this.__srcGLTex.height;
 
     this.addSubImage(this.__srcGLTex);
-    let numLevels = Math.round(Math_log2(this.size)) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
+    const numLevels = Math.round(Math_log2(this.size)) - 1; // compute numLevels-1 levels(because we use the source image as the base level);
     for (let i = numLevels; i >= 0; --i) {
-      let size = Math.pow(2, i);
-      if (size < minTileSize)
-        break;
+      const size = Math.pow(2, i);
+      if (size < minTileSize) break;
       // Create a target texture for this level of the pyramid.
       // and then render to it using the base level as a source image.
-      let level = new GLTexture2D(gl, {
+      const level = new GLTexture2D(gl, {
         format: this.__srcGLTex.getFormat(),
         type: this.__srcGLTex.getType(),
         width: size * aspectRatio,
         height: size,
         filter: 'LINEAR',
-        wrap: 'CLAMP_TO_EDGE'
+        wrap: 'CLAMP_TO_EDGE',
       });
       this.addSubImage(level);
       this.__fbos.push(new GLFbo(gl, level));
@@ -140,6 +134,10 @@ class ImagePyramid extends ImageAtlas {
     super.generateAtlasLayout();
   }
 
+  /**
+   * The renderAtlas method.
+   * @param {boolean} cleanup - The cleanup param.
+   */
   renderAtlas(cleanup = true) {
     const gl = this.__gl;
     const renderstate = {};
@@ -153,15 +151,16 @@ class ImagePyramid extends ImageAtlas {
     super.renderAtlas(cleanup);
   }
 
+  /**
+   * The destroy method.
+   */
   destroy() {
     super.destroy();
-    for (let fbo of this.__fbos) {
+    for (const fbo of this.__fbos) {
       fbo.destroy();
     }
   }
-};
+}
 
-export {
-  ImagePyramid
-};
+export { ImagePyramid };
 // export default ImagePyramid;

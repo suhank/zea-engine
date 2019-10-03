@@ -219,8 +219,3 @@ void main(void) {
 };
 
 sgFactory.registerClass('FloatingShadowCatcherShader', FloatingShadowCatcherShader);
-
-export {
-    LightmapCatcherShader
-};
-

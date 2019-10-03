@@ -1,21 +1,24 @@
-import {
-  Vec3
-} from '../../Math/Vec3';
-import {
-  PassType
-} from './GLPass.js';
-import {
-  GLStandardGeomsPass
-} from './GLStandardGeomsPass.js';
-import {
-  GLRenderer
-} from '../GLRenderer.js';
+import { Vec3 } from '../../Math/Vec3';
+import { PassType } from './GLPass.js';
+import { GLStandardGeomsPass } from './GLStandardGeomsPass.js';
+import { GLRenderer } from '../GLRenderer.js';
 
+/** Class representing a GL transparent geoms pass.
+ * @extends GLStandardGeomsPass
+ */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
+  /**
+   * Create GL transparent geoms pass.
+   */
   constructor() {
     super();
   }
 
+  /**
+   * The init method.
+   * @param {any} renderer - The renderer param.
+   * @param {any} passIndex - The passIndex param.
+   */
   init(renderer, passIndex) {
     super.init(renderer, passIndex);
 
@@ -26,30 +29,35 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.resort = false;
   }
 
+  /**
+   * The init method.
+   * @param {any} geomItem - The geomItem param.
+   * @return {boolean} - The return value.
+   */
   filterGeomItem(geomItem) {
     const shaderClass = geomItem.getMaterial().getShaderClass();
     if (shaderClass) {
-      if (!shaderClass.isTransparent())
-        return false;
-      if (shaderClass.isOverlay())
-        return false;
+      if (!shaderClass.isTransparent()) return false;
+      if (shaderClass.isOverlay()) return false;
       return true;
     }
     return false;
   }
 
-
+  /**
+   * The addGeomItem method.
+   * @param {any} geomItem - The geomItem param.
+   */
   addGeomItem(geomItem) {
     const material = geomItem.getMaterial();
     const glshader = this.addShader(material);
     const glmaterial = this.addMaterial(material);
     const glgeomitem = super.addGeomItem(geomItem);
 
-    const visibilityChangedId = geomItem.visibilityChanged.connect((visible) => {
-      if (visible){
+    const visibilityChangedId = geomItem.visibilityChanged.connect(visible => {
+      if (visible) {
         this.visibleItems.push(item);
-      }
-      else {
+      } else {
         const index = this.visibleItems.indexOf(item);
         this.visibleItems.splice(index, 1);
       }
@@ -63,29 +71,27 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       glmaterial,
       glgeomitem,
       visibilityChangedId,
-      geomXfoChangedId
-    }
+      geomXfoChangedId,
+    };
     let itemindex;
-    if(this.freeList.length > 0)
-      itemindex = this.freeList.pop();
-    else
-      itemindex = this.transparentItems.length;
+    if (this.freeList.length > 0) itemindex = this.freeList.pop();
+    else itemindex = this.transparentItems.length;
     this.transparentItems[itemindex] = item;
     geomItem.setMetadata('itemIndex', itemindex);
     if (geomItem.getVisible()) {
       this.visibleItems.push(item);
     }
 
-
-
     // force a resort.
     this.resort = true;
   }
 
+  /**
+   * The removeGeomItem method.
+   * @param {any} geomItem - The geomItem param.
+   */
   removeGeomItem(geomItem) {
-
-    if(!super.removeGeomItem(geomItem))
-      return;
+    if (!super.removeGeomItem(geomItem)) return;
 
     const itemindex = geomItem.getMetadata('itemIndex');
     const item = this.transparentItems[itemindex];
@@ -93,24 +99,36 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.freeList.push(itemindex);
 
     const visibleindex = this.visibleItems.indexOf(item);
-    if(visibleindex != -1)
-      this.visibleItems.splice(visibleindex, 1);
+    if (visibleindex != -1) this.visibleItems.splice(visibleindex, 1);
   }
 
+  /**
+   * The sortItems method.
+   * @param {any} viewPos - The viewPos param.
+   */
   sortItems(viewPos) {
-    for (let transparentItem of this.visibleItems)
-      transparentItem.dist = transparentItem.glgeomitem.geomItem.getGeomXfo().tr.distanceTo(viewPos);
-    this.visibleItems.sort((a, b) => (a.dist > b.dist) ? -1 : ((a.dist < b.dist) ? 1 : 0));
+    for (const transparentItem of this.visibleItems)
+      transparentItem.dist = transparentItem.glgeomitem.geomItem
+        .getGeomXfo()
+        .tr.distanceTo(viewPos);
+    this.visibleItems.sort((a, b) =>
+      a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0
+    );
     this.prevSortCameraPos = viewPos;
     this.resort = false;
   }
 
+  /**
+   * The _drawItems method.
+   * @param {any} renderstate - The renderstate param.
+   * @private
+   */
   _drawItems(renderstate) {
     const gl = this.__gl;
     let currentglShader;
     let currentglMaterial;
     let currentglGeom;
-    for (let transparentItem of this.visibleItems) {
+    for (const transparentItem of this.visibleItems) {
       const glshader = transparentItem.glmaterial.getGLShader();
       if (currentglShader != transparentItem.glshader) {
         // Some passes, like the depth pass, bind custom uniforms.
@@ -142,22 +160,23 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
           gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location);
         }
 
-        renderstate.bindViewports(renderstate.unifs, ()=>{
+        renderstate.bindViewports(renderstate.unifs, () => {
           currentglGeom.draw(renderstate);
-        })
+        });
       }
     }
 
-    if (currentglGeom)
-      currentglGeom.unbind(renderstate);
+    if (currentglGeom) currentglGeom.unbind(renderstate);
   }
 
+  /**
+   * The draw method.
+   * @param {any} renderstate - The renderstate param.
+   */
   draw(renderstate) {
-    if (this.visibleItems.length == 0)
-      return;
+    if (this.visibleItems.length == 0) return;
 
-    if (this.newItemsReadyForLoading())
-      this.finalize();
+    if (this.newItemsReadyForLoading()) this.finalize();
 
     const gl = this.__gl;
 
@@ -179,7 +198,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     // the surface.
 
     // TODO: Optimise this system.
-    // After depth sorting, we should split the items into 2 groups. 
+    // After depth sorting, we should split the items into 2 groups.
     // Multipy items, and Add  items. (Many items will be in both)
     // Then we can simply check if we have any multiply items here
     // before rendering all items.
@@ -192,14 +211,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
     this._drawItems(renderstate);
 
-
-
     gl.disable(gl.BLEND);
   }
-};
+}
 
 GLRenderer.registerPass(GLTransparentGeomsPass, PassType.TRANSPARENT);
 
-export {
-  GLTransparentGeomsPass
-};
+export { GLTransparentGeomsPass };

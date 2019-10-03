@@ -1,18 +1,19 @@
-import {
-  Signal
-} from '../../Utilities';
-import {
-  RefCounted
-} from '../RefCounted.js';
+import { Signal } from '../../Utilities';
+import { RefCounted } from '../RefCounted.js';
 
+/** Class representing a procedural sky.
+ * @extends RefCounted
+ */
 class ProceduralSky extends RefCounted {
+  /**
+   * Create a procedural sky.
+   * @param {any} params - The params value.
+   */
   constructor(params = {}) {
     super();
 
     this.updated = new Signal();
   }
-};
-export {
-  ProceduralSky
-};
+}
+export { ProceduralSky };
 // ProceduralSky;
