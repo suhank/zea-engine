@@ -63,6 +63,7 @@ class Group extends TreeItem {
     this.__itemsParam.valueChanged.connect(() => {
       this.__updateHighlight();
       // this.recalcInitialXfo(ValueSetMode.DATA_LOAD);
+      this.calculatingGroupXfo = true;
       this._setGlobalXfoDirty();
       this._setBoundingBoxDirty();
     })
@@ -72,6 +73,7 @@ class Group extends TreeItem {
       pid++);
     this.__initialXfoModeParam.valueChanged.connect(() => {
       // this.recalcInitialXfo();
+      this.calculatingGroupXfo = true;
       this._setGlobalXfoDirty();
     })
 
@@ -150,7 +152,7 @@ class Group extends TreeItem {
       const value = this.getVisible();
       Array.from(this.__itemsParam.getValue()).forEach(item => {
         if (item instanceof TreeItem)
-          item.propagateVisiblity(this.__visible ? 1 : -1);
+          item.propagateVisiblity(value ? 1 : -1);
       });
       return true;
     }
@@ -204,7 +206,7 @@ class Group extends TreeItem {
     const items = Array.from(this.__itemsParam.getValue());
     if (items.length == 0)
       return prevValue;
-    this.calculatingGroupXfo = true;
+    // this.calculatingGroupXfo = true;
     const initialXfoMode = this.__initialXfoModeParam.getValue();
     let xfo;
     if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
