@@ -1,5 +1,5 @@
-import { Vec3 } from '../../Math';
-import { Parameter } from './Parameter.js';
+import { Vec3 } from '../../Math'
+import { Parameter } from './Parameter.js'
 
 /** Class representing a Vec3 parameter.
  * @extends Parameter
@@ -12,7 +12,7 @@ class Vec3Parameter extends Parameter {
    * @param {any} range - The range value.
    */
   constructor(name, value, range = undefined) {
-    super(name, value ? value : new Vec3(), 'Vec3');
+    super(name, value ? value : new Vec3(), 'Vec3')
   }
 
   /**
@@ -21,9 +21,9 @@ class Vec3Parameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new Vec3Parameter(this.__name, this.__value.clone());
-    return clonedParam;
+    const clonedParam = new Vec3Parameter(this.__name, this.__value.clone())
+    return clonedParam
   }
 }
 
-export { Vec3Parameter };
+export { Vec3Parameter }

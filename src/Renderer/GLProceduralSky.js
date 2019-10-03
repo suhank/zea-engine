@@ -1,17 +1,17 @@
-import { Signal } from '../Utilities';
-import { shaderLibrary } from './ShaderLibrary';
-import { GLShader } from './GLShader.js';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLProbe } from './GLProbe.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { Signal } from '../Utilities'
+import { shaderLibrary } from './ShaderLibrary'
+import { GLShader } from './GLShader.js'
+import { GLTexture2D } from './GLTexture2D.js'
+import { GLProbe } from './GLProbe.js'
+import { GLFbo } from './GLFbo.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 // // https://threejs.org/examples/?q=sky#webgl_shaders_sky
 // import './Shaders/zz85/sky.js';
 // https://threejs.org/examples/?q=sky#webgl_shaders_sky
-import './Shaders/GLSL/constants.js';
-import './Shaders/GLSL/stack-gl/inverse.js';
-import './Shaders/GLSL/wwwtyro/glsl-atmosphere.js';
+import './Shaders/GLSL/constants.js'
+import './Shaders/GLSL/stack-gl/inverse.js'
+import './Shaders/GLSL/wwwtyro/glsl-atmosphere.js'
 
 // https://github.com/wwwtyro/glsl-atmosphere
 shaderLibrary.setShaderModule(
@@ -132,7 +132,7 @@ vec3 sunAndSky(vec3 viewVector){
   return color;
 }
 `
-);
+)
 
 /** Class representing a sky shader.
  * @extends GLShader
@@ -143,7 +143,7 @@ class SkyShader extends GLShader {
    * @param {any} gl - The gl value.
    */
   constructor(gl) {
-    super(gl);
+    super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SkyShader.vertexShader',
       `
@@ -168,7 +168,7 @@ void main()
 }
 
 `
-    );
+    )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'SkyShader.fragmentShader',
       `
@@ -188,7 +188,7 @@ void main() {
   gl_FragColor = vec4(color, 1);
 }
 `
-    );
+    )
   }
 }
 
@@ -201,7 +201,7 @@ class SkyDomeShader extends GLShader {
    * @param {any} gl - The gl value.
    */
   constructor(gl) {
-    super(gl);
+    super(gl)
     this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
       'SkyShader.vertexShader',
       `
@@ -220,7 +220,7 @@ void main()
 }
 
 `
-    );
+    )
     this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
       'SkyShader.fragmentShader',
       `
@@ -238,7 +238,7 @@ void main() {
   gl_FragColor = vec4(color, 1);
 }
 `
-    );
+    )
   }
 }
 
@@ -252,10 +252,10 @@ class GLProceduralSky extends GLProbe {
    * @param {any} sky - The sky value.
    */
   constructor(gl, sky) {
-    super(gl, 'EnvMap');
-    this.__gl = gl;
-    this.__sky = sky;
-    this.__backgroundFocus = 0.0;
+    super(gl, 'EnvMap')
+    this.__gl = gl
+    this.__sky = sky
+    this.__backgroundFocus = 0.0
 
     this.__srcGLTex = new GLTexture2D(gl, {
       format: 'RGBA',
@@ -264,40 +264,40 @@ class GLProceduralSky extends GLProbe {
       wrap: 'CLAMP_TO_EDGE',
       width: 2048,
       height: 1024,
-    });
-    this.__renderSkyFbo = new GLFbo(gl, this.__srcGLTex);
+    })
+    this.__renderSkyFbo = new GLFbo(gl, this.__srcGLTex)
 
     // this.convolveProbe(srcGLTex);
 
-    this.__skyShader = new SkyShader(gl);
+    this.__skyShader = new SkyShader(gl)
     const skyShaderShaderComp = this.__skyShader.compileForTarget(
       'GLProceduralSky'
-    );
+    )
     this.__skyShaderBinding = generateShaderGeomBinding(
       gl,
       skyShaderShaderComp.attrs,
       gl.__quadattrbuffers,
       gl.__quadIndexBuffer
-    );
+    )
 
-    this.__skyDomeShader = new SkyDomeShader(gl);
+    this.__skyDomeShader = new SkyDomeShader(gl)
     const skyDomeShaderComp = this.__skyDomeShader.compileForTarget(
       'GLProceduralSky'
-    );
+    )
     this.__skyDomeShaderBinding = generateShaderGeomBinding(
       gl,
       skyDomeShaderComp.attrs,
       gl.__quadattrbuffers,
       gl.__quadIndexBuffer
-    );
+    )
 
-    this.__longitude = 45.527162;
-    this.__latitude = -73.575307;
+    this.__longitude = 45.527162
+    this.__latitude = -73.575307
 
-    this.updated = new Signal();
+    this.updated = new Signal()
 
-    const now = new Date();
-    this.time = now.getHours() + now.getMinutes() / 60;
+    const now = new Date()
+    this.time = now.getHours() + now.getMinutes() / 60
 
     // this.renderSky();
   }
@@ -306,7 +306,7 @@ class GLProceduralSky extends GLProbe {
    * Getter for backgroundFocus.
    */
   get backgroundFocus() {
-    return this.__backgroundFocus;
+    return this.__backgroundFocus
   }
 
   /**
@@ -314,15 +314,15 @@ class GLProceduralSky extends GLProbe {
    * @param {number} val - The val param.
    */
   set backgroundFocus(val) {
-    this.__backgroundFocus = val;
-    this.updated.emit();
+    this.__backgroundFocus = val
+    this.updated.emit()
   }
 
   /**
    * Getter for longitude.
    */
   get longitude() {
-    return this.__longitude;
+    return this.__longitude
   }
 
   /**
@@ -330,15 +330,15 @@ class GLProceduralSky extends GLProbe {
    * @param {number} val - The val param.
    */
   set longitude(val) {
-    this.__longitude = val;
-    this.updated.emit();
+    this.__longitude = val
+    this.updated.emit()
   }
 
   /**
    * Getter for latitude.
    */
   get latitude() {
-    return this.__latitude;
+    return this.__latitude
   }
 
   /**
@@ -346,15 +346,15 @@ class GLProceduralSky extends GLProbe {
    * @param {number} val - The val param.
    */
   set latitude(val) {
-    this.__latitude = val;
-    this.updated.emit();
+    this.__latitude = val
+    this.updated.emit()
   }
 
   /**
    * Getter for time.
    */
   get time() {
-    return this.__time;
+    return this.__time
   }
 
   /**
@@ -362,39 +362,39 @@ class GLProceduralSky extends GLProbe {
    * @param {number} val - The val param.
    */
   set time(val) {
-    this.__time = val;
-    const t = val - 3;
-    const hour = Math.floor(t);
-    const minutes = Math.floor((t - hour) * 60);
+    this.__time = val
+    const t = val - 3
+    const hour = Math.floor(t)
+    const minutes = Math.floor((t - hour) * 60)
     // let date = new Date(2017, 2, 3, hour, minutes);
     // Note: getTime returns miliseconds, so convert to seconds.
     // this.__unixTime = Math.round(date.getTime() / 1000|0);
-    this.__unixTime = (1488517200 + minutes * 60 + hour * 3600) | 0;
-    console.log(this.__unixTime);
+    this.__unixTime = (1488517200 + minutes * 60 + hour * 3600) | 0
+    console.log(this.__unixTime)
     // this.renderSky();
-    this.updated.emit();
+    this.updated.emit()
   }
 
   /**
    * The renderSky method.
    */
   renderSky() {
-    const gl = this.__gl;
+    const gl = this.__gl
 
-    const renderstate = {};
-    this.__skyDomeShader.bind(renderstate, 'GLProceduralSky');
-    this.__skyDomeShaderBinding.bind(renderstate);
-    const unifs = renderstate.unifs;
+    const renderstate = {}
+    this.__skyDomeShader.bind(renderstate, 'GLProceduralSky')
+    this.__skyDomeShaderBinding.bind(renderstate)
+    const unifs = renderstate.unifs
 
-    gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
-    gl.uniform1f(unifs.longitude.location, this.__longitude);
-    gl.uniform1f(unifs.latitude.location, this.__latitude);
+    gl.uniform1f(unifs.unixTimeS.location, this.__unixTime)
+    gl.uniform1f(unifs.longitude.location, this.__longitude)
+    gl.uniform1f(unifs.latitude.location, this.__latitude)
 
-    this.__renderSkyFbo.bind();
+    this.__renderSkyFbo.bind()
 
-    gl.drawQuad();
+    gl.drawQuad()
 
-    this.convolveProbe(this.__srcGLTex);
+    this.convolveProbe(this.__srcGLTex)
   }
 
   /**
@@ -402,23 +402,23 @@ class GLProceduralSky extends GLProbe {
    * @param {any} renderstate - The renderstate param.
    */
   draw(renderstate) {
-    const gl = this.__gl;
-    const displayAtlas = false;
+    const gl = this.__gl
+    const displayAtlas = false
     if (displayAtlas) {
-      const screenQuad = gl.screenQuad;
-      screenQuad.bindShader(renderstate);
+      const screenQuad = gl.screenQuad
+      screenQuad.bindShader(renderstate)
       // screenQuad.draw(renderstate, this.__srcGLTex);
       // screenQuad.draw(renderstate, this.__lodPyramid);
-      screenQuad.draw(renderstate, this);
+      screenQuad.draw(renderstate, this)
     } else {
-      this.__skyShader.bind(renderstate, 'GLProceduralSky');
-      const unifs = renderstate.unifs;
-      gl.uniform1f(unifs.unixTimeS.location, this.__unixTime);
-      gl.uniform1f(unifs.longitude.location, this.__longitude);
-      gl.uniform1f(unifs.latitude.location, this.__latitude);
+      this.__skyShader.bind(renderstate, 'GLProceduralSky')
+      const unifs = renderstate.unifs
+      gl.uniform1f(unifs.unixTimeS.location, this.__unixTime)
+      gl.uniform1f(unifs.longitude.location, this.__longitude)
+      gl.uniform1f(unifs.latitude.location, this.__latitude)
 
-      this.__skyShaderBinding.bind(renderstate);
-      gl.drawQuad();
+      this.__skyShaderBinding.bind(renderstate)
+      gl.drawQuad()
     }
     // else{
     //     ///////////////////
@@ -442,5 +442,5 @@ class GLProceduralSky extends GLProbe {
   }
 }
 
-export { GLProceduralSky };
+export { GLProceduralSky }
 // export default GLProceduralSky;

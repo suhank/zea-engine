@@ -1,7 +1,7 @@
-import { Signal } from '../Utilities';
-import { MaterialLibrary } from './MaterialLibrary.js';
-import { resourceLoader } from './ResourceLoader.js';
-import { loadTextfile } from './Utils.js';
+import { Signal } from '../Utilities'
+import { MaterialLibrary } from './MaterialLibrary.js'
+import { resourceLoader } from './ResourceLoader.js'
+import { loadTextfile } from './Utils.js'
 
 /** Class representing a material library manager. */
 class MaterialLibraryManager {
@@ -9,19 +9,19 @@ class MaterialLibraryManager {
    * Create a material library manager.
    */
   constructor() {
-    this.__materialLibraries = {};
-    this.materialLibraryLoaded = new Signal();
+    this.__materialLibraries = {}
+    this.materialLibraryLoaded = new Signal()
 
     resourceLoader.registerResourceCallback('.matlib', file => {
       loadTextfile(file.url, data => {
-        const stem = file.name.split('.')[0]; // trim off the extension
-        const j = JSON.parse(data);
-        const matlib = new MaterialLibrary(stem);
-        matlib.fromJSON(j);
-        this.__materialLibraries[stem] = matlib;
-        this.materialLibraryLoaded.emit(matlib);
-      });
-    });
+        const stem = file.name.split('.')[0] // trim off the extension
+        const j = JSON.parse(data)
+        const matlib = new MaterialLibrary(stem)
+        matlib.fromJSON(j)
+        this.__materialLibraries[stem] = matlib
+        this.materialLibraryLoaded.emit(matlib)
+      })
+    })
   }
 
   /**
@@ -29,11 +29,11 @@ class MaterialLibraryManager {
    * @return {any} - The return value.
    */
   getMaterialLibraryNames() {
-    const names = [];
+    const names = []
     for (const name in this.__materialLibraries) {
-      names.push(name);
+      names.push(name)
     }
-    return names;
+    return names
   }
 
   /**
@@ -42,7 +42,7 @@ class MaterialLibraryManager {
    * @return {any} - The return value.
    */
   hasMaterialLibrary(name) {
-    return name in this.__materialLibraries;
+    return name in this.__materialLibraries
   }
 
   /**
@@ -51,7 +51,7 @@ class MaterialLibraryManager {
    * @return {any} - The return value.
    */
   getMaterialLibrary(name) {
-    const res = this.__materialLibraries[name];
+    const res = this.__materialLibraries[name]
     if (!res) {
       console.warn(
         'MaterialLibrary:' +
@@ -59,9 +59,9 @@ class MaterialLibraryManager {
           ' not found in MaterialLibraryManager. Found: [' +
           this.getMaterialLibraryNames() +
           ']'
-      );
+      )
     }
-    return res;
+    return res
   }
 
   /**
@@ -70,10 +70,10 @@ class MaterialLibraryManager {
    * @return {any} - The return value.
    */
   resolveMaterialFromPath(path) {
-    const materialLibrary = this.getMaterialLibrary(path[0]);
-    if (materialLibrary) return materialLibrary.getMaterial(path[1]);
+    const materialLibrary = this.getMaterialLibrary(path[0])
+    if (materialLibrary) return materialLibrary.getMaterial(path[1])
   }
 }
 
-const materialLibraryManager = new MaterialLibraryManager();
-export { materialLibraryManager };
+const materialLibraryManager = new MaterialLibraryManager()
+export { materialLibraryManager }

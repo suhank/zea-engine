@@ -1,5 +1,5 @@
-import { Signal } from '../Utilities';
-import { BaseItem } from '../SceneTree';
+import { Signal } from '../Utilities'
+import { BaseItem } from '../SceneTree'
 
 /** Class representing a GL shader.
  * @extends BaseItem
@@ -10,11 +10,11 @@ class GLShader extends BaseItem {
    * @param {any} gl - The gl value.
    */
   constructor(gl) {
-    super();
+    super()
     if (!gl) {
-      throw new Error('gl context must be passed to shader constructor');
+      throw new Error('gl context must be passed to shader constructor')
     }
-    this.__gl = gl;
+    this.__gl = gl
     this.__shaderStages = {
       VERTEX_SHADER: {
         glsl: '',
@@ -28,13 +28,13 @@ class GLShader extends BaseItem {
         uniforms: {},
         attributes: {},
       },
-    };
+    }
 
-    this.__shaderProgramHdls = {};
-    this.__gltextures = {};
-    this.updated = new Signal();
+    this.__shaderProgramHdls = {}
+    this.__gltextures = {}
+    this.updated = new Signal()
 
-    this.invisibleToGeomBuffer = false;
+    this.invisibleToGeomBuffer = false
   }
 
   /**
@@ -42,7 +42,7 @@ class GLShader extends BaseItem {
    * @return {boolean} - The return value.
    */
   static isTransparent() {
-    return false;
+    return false
   }
 
   /**
@@ -50,7 +50,7 @@ class GLShader extends BaseItem {
    * @return {boolean} - The return value.
    */
   static isOverlay() {
-    return false;
+    return false
   }
 
   // /////////////////////////////////
@@ -66,64 +66,64 @@ class GLShader extends BaseItem {
    * @private
    */
   __compileShaderStage(glsl, stageID, name, shaderopts) {
-    const gl = this.__gl;
+    const gl = this.__gl
     // console.log("__compileShaderStage:" + this.name+"."+name + " glsl:\n" + glsl);
-    if (!shaderopts) shaderopts = gl.shaderopts;
+    if (!shaderopts) shaderopts = gl.shaderopts
     if (shaderopts) {
       if (shaderopts.repl) {
         for (const key in shaderopts.repl)
-          glsl = glsl.replaceAll(key, shaderopts.repl[key]);
+          glsl = glsl.replaceAll(key, shaderopts.repl[key])
       }
-      if (shaderopts.defines) glsl = shaderopts.defines + glsl;
+      if (shaderopts.defines) glsl = shaderopts.defines + glsl
     }
 
-    let prefix;
+    let prefix
     if (gl.name == 'webgl2') {
-      glsl = glsl.replaceAll('attribute', 'in');
-      if (name == 'vertexShader') glsl = glsl.replaceAll('varying', 'out');
-      else glsl = glsl.replaceAll('varying', 'in');
-      glsl = glsl.replaceAll('texture2D', 'texture');
+      glsl = glsl.replaceAll('attribute', 'in')
+      if (name == 'vertexShader') glsl = glsl.replaceAll('varying', 'out')
+      else glsl = glsl.replaceAll('varying', 'in')
+      glsl = glsl.replaceAll('texture2D', 'texture')
 
-      prefix = '#version 300 es\n';
-      glsl = prefix + glsl;
+      prefix = '#version 300 es\n'
+      glsl = prefix + glsl
     }
 
-    const shaderHdl = gl.createShader(stageID);
-    gl.shaderSource(shaderHdl, glsl);
+    const shaderHdl = gl.createShader(stageID)
+    gl.shaderSource(shaderHdl, glsl)
 
     // Compile the shader program.
-    gl.compileShader(shaderHdl);
+    gl.compileShader(shaderHdl)
 
     // See if it compiled successfully
     if (!gl.getShaderParameter(shaderHdl, gl.COMPILE_STATUS)) {
-      console.log('Errors in :' + this.constructor.name);
-      const errors = gl.getShaderInfoLog(shaderHdl).split('\n');
-      const errorLines = {};
+      console.log('Errors in :' + this.constructor.name)
+      const errors = gl.getShaderInfoLog(shaderHdl).split('\n')
+      const errorLines = {}
       for (let i in errors) {
         if (errors[i].startsWith("'")) {
-          errors[i - 1] = errors[i - 1] + errors[i];
-          delete errors[i];
-          i--;
-          continue;
+          errors[i - 1] = errors[i - 1] + errors[i]
+          delete errors[i]
+          i--
+          continue
         }
-        const parts = errors[i].split(':');
+        const parts = errors[i].split(':')
         if (parts.length >= 2) {
-          const lineNum = parseInt(parts[2]); // TODO check against ATI and intel cards
+          const lineNum = parseInt(parts[2]) // TODO check against ATI and intel cards
           if (!isNaN(lineNum)) {
-            if (errorLines[lineNum]) errorLines[lineNum].push(errors[i]);
-            else errorLines[lineNum] = [errors[i]];
+            if (errorLines[lineNum]) errorLines[lineNum].push(errors[i])
+            else errorLines[lineNum] = [errors[i]]
           }
         }
       }
-      const numberedLinesWithErrors = [];
-      const lines = glsl.split('\n');
+      const numberedLinesWithErrors = []
+      const lines = glsl.split('\n')
       for (let i = 0; i < lines.length; i++) {
-        numberedLinesWithErrors.push((i + 1 + ':').lpad(' ', 3) + lines[i]);
+        numberedLinesWithErrors.push((i + 1 + ':').lpad(' ', 3) + lines[i])
         if (i + 1 in errorLines) {
-          const errors = errorLines[i + 1];
+          const errors = errorLines[i + 1]
           for (const error of errors) {
-            numberedLinesWithErrors.push(error);
-            numberedLinesWithErrors.push('-'.lpad('-', error.length));
+            numberedLinesWithErrors.push(error)
+            numberedLinesWithErrors.push('-'.lpad('-', error.length))
           }
         }
       }
@@ -137,10 +137,10 @@ class GLShader extends BaseItem {
           errors.join('\n') +
           '\n' +
           numberedLinesWithErrors.join('\n')
-      );
-      return null;
+      )
+      return null
     }
-    return shaderHdl;
+    return shaderHdl
   }
 
   /**
@@ -150,77 +150,77 @@ class GLShader extends BaseItem {
    * @private
    */
   __createProgram(shaderopts) {
-    const gl = this.__gl;
-    this.__shaderCompilationAttempted = true;
-    const shaderProgramHdl = gl.createProgram();
-    const vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl;
-    const shaderHdls = {};
+    const gl = this.__gl
+    this.__shaderCompilationAttempted = true
+    const shaderProgramHdl = gl.createProgram()
+    const vertexShaderGLSL = this.__shaderStages['VERTEX_SHADER'].glsl
+    const shaderHdls = {}
     if (vertexShaderGLSL != undefined) {
       const vertexShader = this.__compileShaderStage(
         vertexShaderGLSL,
         gl.VERTEX_SHADER,
         'vertexShader',
         shaderopts
-      );
+      )
       if (!vertexShader) {
-        return false;
+        return false
       }
-      gl.attachShader(shaderProgramHdl, vertexShader);
-      shaderHdls[gl.VERTEX_SHADER] = vertexShader;
+      gl.attachShader(shaderProgramHdl, vertexShader)
+      shaderHdls[gl.VERTEX_SHADER] = vertexShader
     }
-    const fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl;
+    const fragmentShaderGLSL = this.__shaderStages['FRAGMENT_SHADER'].glsl
     if (fragmentShaderGLSL != undefined) {
-      const fragshaderopts = Object.assign({}, gl.shaderopts, shaderopts);
+      const fragshaderopts = Object.assign({}, gl.shaderopts, shaderopts)
       if (fragshaderopts.frag)
         fragshaderopts.defines =
-          fragshaderopts.frag.defines + fragshaderopts.defines;
+          fragshaderopts.frag.defines + fragshaderopts.defines
       const fragmentShader = this.__compileShaderStage(
         fragmentShaderGLSL,
         gl.FRAGMENT_SHADER,
         'fragmentShader',
         fragshaderopts
-      );
+      )
       if (!fragmentShader) {
-        return false;
+        return false
       }
-      gl.attachShader(shaderProgramHdl, fragmentShader);
-      shaderHdls[gl.FRAGMENT_SHADER] = fragmentShader;
+      gl.attachShader(shaderProgramHdl, fragmentShader)
+      shaderHdls[gl.FRAGMENT_SHADER] = fragmentShader
     }
-    gl.linkProgram(shaderProgramHdl);
+    gl.linkProgram(shaderProgramHdl)
 
     if (!gl.getProgramParameter(shaderProgramHdl, gl.LINK_STATUS)) {
-      const info = gl.getProgramInfoLog(shaderProgramHdl);
+      const info = gl.getProgramInfoLog(shaderProgramHdl)
 
       if (info.includes('D3D shader compilation failed')) {
         // Usefull for debugging very nasty compiler errors generated only in the ANGL layer.
-        const debug_ext = gl.getExtension('WEBGL_debug_shaders');
+        const debug_ext = gl.getExtension('WEBGL_debug_shaders')
         if (debug_ext) {
           const hlsl = debug_ext.getTranslatedShaderSource(
             shaderHdls[gl.VERTEX_SHADER]
-          );
-          console.log(hlsl);
+          )
+          console.log(hlsl)
         }
       }
 
-      console.log('vertexShaderGLSL:' + vertexShaderGLSL);
-      console.log('fragmentShaderGLSL:' + fragmentShaderGLSL);
+      console.log('vertexShaderGLSL:' + vertexShaderGLSL)
+      console.log('fragmentShaderGLSL:' + fragmentShaderGLSL)
       throw new Error(
         'Unable to link the shader program:' +
           this.constructor.name +
           '\n==================\n' +
           info
-      );
+      )
 
-      gl.deleteProgram(shaderProgramHdl);
-      return false;
+      gl.deleteProgram(shaderProgramHdl)
+      return false
     }
 
     const result = this.__extractAttributeAndUniformLocations(
       shaderProgramHdl,
       shaderopts
-    );
-    result.shaderProgramHdl = shaderProgramHdl;
-    return result;
+    )
+    result.shaderProgramHdl = shaderProgramHdl
+    return result
   }
 
   /**
@@ -231,66 +231,66 @@ class GLShader extends BaseItem {
    * @private
    */
   __extractAttributeAndUniformLocations(shaderProgramHdl, shaderopts) {
-    const gl = this.__gl;
-    const attrs = this.getAttributes();
+    const gl = this.__gl
+    const attrs = this.getAttributes()
     const result = {
       attrs: {},
       unifs: {},
-    };
+    }
     for (const attrName in attrs) {
-      const location = gl.getAttribLocation(shaderProgramHdl, attrName);
+      const location = gl.getAttribLocation(shaderProgramHdl, attrName)
       if (location == undefined) {
-        console.warn('Shader attribute not found:' + attrName);
-        continue;
+        console.warn('Shader attribute not found:' + attrName)
+        continue
       }
-      const attrDesc = attrs[attrName];
+      const attrDesc = attrs[attrName]
       result.attrs[attrName] = {
         name: attrName,
         location: location,
         type: attrDesc.type,
         instanced: attrDesc.instanced,
-      };
+      }
     }
-    const unifs = this.getUniforms();
+    const unifs = this.getUniforms()
     for (let uniformName in unifs) {
-      const unifType = unifs[uniformName];
+      const unifType = unifs[uniformName]
       if (unifType instanceof Array) {
         for (const member of unifType) {
-          const structMemberName = uniformName + '.' + member.name;
+          const structMemberName = uniformName + '.' + member.name
           const location = gl.getUniformLocation(
             shaderProgramHdl,
             structMemberName
-          );
+          )
           if (location == undefined) {
             // console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
-            continue;
+            continue
           }
           result.unifs[structMemberName] = {
             name: structMemberName,
             location: location,
             type: member.type,
-          };
+          }
         }
       }
       if (shaderopts) {
         if (shaderopts.repl) {
           for (const key in shaderopts.repl)
-            uniformName = uniformName.replace(key, shaderopts.repl[key]);
+            uniformName = uniformName.replace(key, shaderopts.repl[key])
         }
       }
 
-      const location = gl.getUniformLocation(shaderProgramHdl, uniformName);
+      const location = gl.getUniformLocation(shaderProgramHdl, uniformName)
       if (location == undefined) {
         // console.warn(this.constructor.name + " uniform found in shader code but not in compiled program:" + uniformName);
-        continue;
+        continue
       }
       result.unifs[uniformName] = {
         name: uniformName,
         location: location,
         type: unifType,
-      };
+      }
     }
-    return result;
+    return result
   }
 
   /**
@@ -298,13 +298,13 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   getAttributes() {
-    const attributes = {};
+    const attributes = {}
     for (const stageName in this.__shaderStages) {
-      const shaderStageBlock = this.__shaderStages[stageName];
+      const shaderStageBlock = this.__shaderStages[stageName]
       for (const attrName in shaderStageBlock['attributes'])
-        attributes[attrName] = shaderStageBlock['attributes'][attrName];
+        attributes[attrName] = shaderStageBlock['attributes'][attrName]
     }
-    return attributes;
+    return attributes
   }
 
   /**
@@ -312,13 +312,13 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   getUniforms() {
-    const uniforms = {};
+    const uniforms = {}
     for (const stageName in this.__shaderStages) {
-      const shaderStageBlock = this.__shaderStages[stageName];
+      const shaderStageBlock = this.__shaderStages[stageName]
       for (const unifName in shaderStageBlock['uniforms'])
-        uniforms[unifName] = shaderStageBlock['uniforms'][unifName];
+        uniforms[unifName] = shaderStageBlock['uniforms'][unifName]
     }
-    return uniforms;
+    return uniforms
   }
 
   /**
@@ -334,23 +334,23 @@ class GLShader extends BaseItem {
    */
   compileForTarget(key, shaderopts) {
     if (!key) {
-      key = this.constructor.name;
+      key = this.constructor.name
     }
-    let shaderCompilationResult = this.__shaderProgramHdls[key];
+    let shaderCompilationResult = this.__shaderProgramHdls[key]
     if (!shaderCompilationResult) {
       if (shaderCompilationResult !== false) {
-        shaderCompilationResult = this.__createProgram(shaderopts);
-        this.__shaderProgramHdls[key] = shaderCompilationResult;
+        shaderCompilationResult = this.__createProgram(shaderopts)
+        this.__shaderProgramHdls[key] = shaderCompilationResult
       }
     }
-    return shaderCompilationResult;
+    return shaderCompilationResult
   }
 
   /**
    * The compile method.
    */
   compile() {
-    this.compileForTarget();
+    this.compileForTarget()
   }
 
   /**
@@ -360,40 +360,40 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   bind(renderstate, key) {
-    const gl = this.__gl;
+    const gl = this.__gl
 
     if (renderstate.glshader != this) {
       const shaderCompilationResult = this.compileForTarget(
         key,
         renderstate.shaderopts
-      );
+      )
       if (shaderCompilationResult === false) {
-        console.warn(this.constructor.name + ' is not compiled for ' + key);
-        return false;
+        console.warn(this.constructor.name + ' is not compiled for ' + key)
+        return false
       }
 
-      const shaderProgramHdl = shaderCompilationResult.shaderProgramHdl;
+      const shaderProgramHdl = shaderCompilationResult.shaderProgramHdl
 
-      gl.useProgram(shaderProgramHdl);
-      renderstate.shaderkey = this.constructor.name;
-      renderstate.glshader = this;
-      renderstate.boundTextures = 0;
-      renderstate.boundLightmap = undefined;
+      gl.useProgram(shaderProgramHdl)
+      renderstate.shaderkey = this.constructor.name
+      renderstate.glshader = this
+      renderstate.boundTextures = 0
+      renderstate.boundLightmap = undefined
       // Make sure we clear the binding cached.
-      renderstate.glgeom = undefined;
+      renderstate.glgeom = undefined
 
-      renderstate.unifs = shaderCompilationResult.unifs;
-      renderstate.attrs = shaderCompilationResult.attrs;
+      renderstate.unifs = shaderCompilationResult.unifs
+      renderstate.attrs = shaderCompilationResult.attrs
 
       // Once the shader has been bound, we allow the renderer to bind any
       // of its global uniform values. (e.g. env map values etc...)
       if (renderstate.bindRendererUnifs)
-        renderstate.bindRendererUnifs(shaderCompilationResult.unifs);
+        renderstate.bindRendererUnifs(shaderCompilationResult.unifs)
     }
 
-    renderstate.supportsInstancing = true;
+    renderstate.supportsInstancing = true
 
-    return true;
+    return true
   }
 
   /**
@@ -402,7 +402,7 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   unbind(renderstate) {
-    return true;
+    return true
   }
 
   // /////////////////////////////
@@ -413,7 +413,7 @@ class GLShader extends BaseItem {
    * @return {any} - The return value.
    */
   static getParamDeclarations() {
-    return [];
+    return []
   }
 
   /**
@@ -433,14 +433,14 @@ class GLShader extends BaseItem {
    * The destroy method.
    */
   destroy() {
-    const gl = this.__gl;
+    const gl = this.__gl
     for (const key in this.__shaderProgramHdls) {
-      const shaderCompilationResult = this.__shaderProgramHdls[key];
-      gl.deleteProgram(shaderCompilationResult.shaderProgramHdl);
+      const shaderCompilationResult = this.__shaderProgramHdls[key]
+      gl.deleteProgram(shaderCompilationResult.shaderProgramHdl)
     }
-    this.__shaderProgramHdls = {};
+    this.__shaderProgramHdls = {}
   }
 }
 
-export { GLShader };
+export { GLShader }
 // export default GLShader;

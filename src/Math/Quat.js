@@ -1,9 +1,9 @@
-import { AttrValue } from './AttrValue.js';
-import { Vec3 } from './Vec3.js';
-import { Mat3 } from './Mat3.js';
-import { Mat4 } from './Mat4.js';
-import { EulerAngles } from './EulerAngles.js';
-import { typeRegistry } from './TypeRegistry.js';
+import { AttrValue } from './AttrValue.js'
+import { Vec3 } from './Vec3.js'
+import { Mat3 } from './Mat3.js'
+import { Mat4 } from './Mat4.js'
+import { EulerAngles } from './EulerAngles.js'
+import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing a quat.
  * @extends AttrValue
@@ -17,28 +17,28 @@ class Quat extends AttrValue {
    * @param {number} w - The w value.
    */
   constructor(x = 0, y = 0, z = 0, w = 1) {
-    super();
+    super()
 
     if (x instanceof ArrayBuffer) {
-      const buffer = x;
-      const byteOffset = y;
-      this.__data = new Float32Array(buffer, byteOffset, 4);
+      const buffer = x
+      const byteOffset = y
+      this.__data = new Float32Array(buffer, byteOffset, 4)
     } else {
-      this.__data = new Float32Array(4);
+      this.__data = new Float32Array(4)
       if (typeof x === 'object') {
-        this.__data[0] = 0;
-        this.__data[1] = 0;
-        this.__data[2] = 0;
-        this.__data[3] = 1;
+        this.__data[0] = 0
+        this.__data[1] = 0
+        this.__data[2] = 0
+        this.__data[3] = 1
         for (const key in x) {
-          if (Array.isArray(x[key])) this[key].call(this, ...x[key]);
-          else this[key].call(this, x[key]);
+          if (Array.isArray(x[key])) this[key].call(this, ...x[key])
+          else this[key].call(this, x[key])
         }
       } else {
-        this.__data[0] = x;
-        this.__data[1] = y;
-        this.__data[2] = z;
-        this.__data[3] = w;
+        this.__data[0] = x
+        this.__data[1] = y
+        this.__data[2] = z
+        this.__data[3] = w
       }
     }
   }
@@ -47,7 +47,7 @@ class Quat extends AttrValue {
    * Getter for x.
    */
   get x() {
-    return this.__data[0];
+    return this.__data[0]
   }
 
   /**
@@ -55,14 +55,14 @@ class Quat extends AttrValue {
    * @param {number} val - The val param.
    */
   set x(val) {
-    this.__data[0] = val;
+    this.__data[0] = val
   }
 
   /**
    * Getter for y.
    */
   get y() {
-    return this.__data[1];
+    return this.__data[1]
   }
 
   /**
@@ -70,14 +70,14 @@ class Quat extends AttrValue {
    * @param {number} val - The val param.
    */
   set y(val) {
-    this.__data[1] = val;
+    this.__data[1] = val
   }
 
   /**
    * Getter for z.
    */
   get z() {
-    return this.__data[2];
+    return this.__data[2]
   }
 
   /**
@@ -85,14 +85,14 @@ class Quat extends AttrValue {
    * @param {number} val - The val param.
    */
   set z(val) {
-    this.__data[2] = val;
+    this.__data[2] = val
   }
 
   /**
    * Getter for w.
    */
   get w() {
-    return this.__data[3];
+    return this.__data[3]
   }
 
   /**
@@ -100,7 +100,7 @@ class Quat extends AttrValue {
    * @param {number} val - The val param.
    */
   set w(val) {
-    this.__data[3] = val;
+    this.__data[3] = val
   }
 
   /**
@@ -111,10 +111,10 @@ class Quat extends AttrValue {
    * @param {number} w  - The w param.
    */
   set(x, y, z, w) {
-    this.__data[0] = x;
-    this.__data[1] = y;
-    this.__data[2] = z;
-    this.__data[3] = w;
+    this.__data[0] = x
+    this.__data[1] = y
+    this.__data[2] = z
+    this.__data[3] = w
   }
 
   /**
@@ -122,7 +122,7 @@ class Quat extends AttrValue {
    * @param {any} float32Array - The float32Array param.
    */
   setDataArray(float32Array) {
-    this.__data = float32Array;
+    this.__data = float32Array
   }
 
   /**
@@ -130,10 +130,10 @@ class Quat extends AttrValue {
    * @param {any} other - The other param.
    */
   setFromOther(other) {
-    this.__data[0] = other.x;
-    this.__data[1] = other.y;
-    this.__data[2] = other.z;
-    this.__data[3] = other.w;
+    this.__data[0] = other.x
+    this.__data[1] = other.y
+    this.__data[2] = other.z
+    this.__data[3] = other.w
   }
 
   /**
@@ -141,95 +141,95 @@ class Quat extends AttrValue {
    * @param {any} eulerAngles - The eulerAngles param.
    */
   setFromEulerAngles(eulerAngles) {
-    const ordered = new Vec3();
+    const ordered = new Vec3()
 
     switch (eulerAngles.order) {
       case 0:
         /* 'XYZ' */
-        ordered.set(eulerAngles.x, -eulerAngles.y, eulerAngles.z);
-        break;
+        ordered.set(eulerAngles.x, -eulerAngles.y, eulerAngles.z)
+        break
       case 1:
         /* 'YZX' */
-        ordered.set(eulerAngles.y, -eulerAngles.z, eulerAngles.x);
-        break;
+        ordered.set(eulerAngles.y, -eulerAngles.z, eulerAngles.x)
+        break
       case 2:
         /* 'ZXY' */
-        ordered.set(eulerAngles.z, -eulerAngles.x, eulerAngles.y);
-        break;
+        ordered.set(eulerAngles.z, -eulerAngles.x, eulerAngles.y)
+        break
       case 3:
         /* 'XZY' */
-        ordered.set(eulerAngles.x, eulerAngles.z, eulerAngles.y);
-        break;
+        ordered.set(eulerAngles.x, eulerAngles.z, eulerAngles.y)
+        break
       case 4:
         /* 'ZYX' */
-        ordered.set(eulerAngles.z, eulerAngles.y, eulerAngles.x);
-        break;
+        ordered.set(eulerAngles.z, eulerAngles.y, eulerAngles.x)
+        break
       case 5:
         /* 'YXZ' */
-        ordered.set(eulerAngles.y, eulerAngles.x, eulerAngles.z);
-        break;
+        ordered.set(eulerAngles.y, eulerAngles.x, eulerAngles.z)
+        break
       default:
-        throw new Error('sdrty');
+        throw new Error('sdrty')
     }
 
-    const ti = ordered.x * 0.5;
-    const tj = ordered.y * 0.5;
-    const tk = ordered.z * 0.5;
-    const ci = Math.cos(ti);
-    const cj = Math.cos(tj);
-    const ck = Math.cos(tk);
-    const si = Math.sin(ti);
-    const sj = Math.sin(tj);
-    const sk = Math.sin(tk);
-    const cc = ci * ck;
-    const cs = ci * sk;
-    const sc = si * ck;
-    const ss = si * sk;
-    const ai = cj * sc - sj * cs;
-    const aj = cj * ss + sj * cc;
-    const ak = cj * cs - sj * sc;
+    const ti = ordered.x * 0.5
+    const tj = ordered.y * 0.5
+    const tk = ordered.z * 0.5
+    const ci = Math.cos(ti)
+    const cj = Math.cos(tj)
+    const ck = Math.cos(tk)
+    const si = Math.sin(ti)
+    const sj = Math.sin(tj)
+    const sk = Math.sin(tk)
+    const cc = ci * ck
+    const cs = ci * sk
+    const sc = si * ck
+    const ss = si * sk
+    const ai = cj * sc - sj * cs
+    const aj = cj * ss + sj * cc
+    const ak = cj * cs - sj * sc
 
-    this.w = cj * cc + sj * ss;
+    this.w = cj * cc + sj * ss
 
     switch (eulerAngles.order) {
       case 0:
         /* ' XYZ' */
-        this.x = ai;
-        this.y = -aj;
-        this.z = ak;
-        break;
+        this.x = ai
+        this.y = -aj
+        this.z = ak
+        break
       case 1:
         /* 'YZX' */
-        this.x = ak;
-        this.y = ai;
-        this.z = -aj;
-        break;
+        this.x = ak
+        this.y = ai
+        this.z = -aj
+        break
       case 2:
         /* 'ZXY' */
-        this.x = -aj;
-        this.y = ak;
-        this.z = ai;
-        break;
+        this.x = -aj
+        this.y = ak
+        this.z = ai
+        break
       case 3:
         /* 'XZY' */
-        this.x = ai;
-        this.y = ak;
-        this.z = aj;
-        break;
+        this.x = ai
+        this.y = ak
+        this.z = aj
+        break
       case 4:
         /* 'ZYX' */
-        this.x = ak;
-        this.y = aj;
-        this.z = ai;
-        break;
+        this.x = ak
+        this.y = aj
+        this.z = ai
+        break
       case 5:
         /* 'YXZ' */
-        this.x = aj;
-        this.y = ai;
-        this.z = ak;
-        break;
+        this.x = aj
+        this.y = ai
+        this.z = ak
+        break
       default:
-        throw new Error('sdrty');
+        throw new Error('sdrty')
     }
   }
 
@@ -239,82 +239,82 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   toEulerAngles(rotationOrder) {
-    const ordered = new Vec3();
+    const ordered = new Vec3()
     switch (rotationOrder) {
       case 0:
         /* ' XYZ' */
-        ordered.set(this.z, this.x, this.y);
-        break;
+        ordered.set(this.z, this.x, this.y)
+        break
       case 1:
         /* 'YZX' */
-        ordered.set(this.x, this.y, this.z);
-        break;
+        ordered.set(this.x, this.y, this.z)
+        break
       case 2:
         /* 'ZXY' */
-        ordered.set(this.y, this.z, this.x);
-        break;
+        ordered.set(this.y, this.z, this.x)
+        break
       case 3:
         /* 'XZY' */
-        ordered.set(this.y, -this.x, this.z);
-        break;
+        ordered.set(this.y, -this.x, this.z)
+        break
       case 4:
         /* 'ZYX' */
-        ordered.set(this.x, -this.z, this.y);
-        break;
+        ordered.set(this.x, -this.z, this.y)
+        break
       case 5:
         /* 'YXZ' */
-        ordered.set(this.z, -this.y, this.x);
-        break;
+        ordered.set(this.z, -this.y, this.x)
+        break
       default:
-        throw new Error('Invalid rotation order:' + rotationOrder);
+        throw new Error('Invalid rotation order:' + rotationOrder)
     }
 
-    const euler = new Vec3();
-    const test = ordered.x * ordered.y + ordered.z * this.w;
+    const euler = new Vec3()
+    const test = ordered.x * ordered.y + ordered.z * this.w
     if (test > 0.49999) {
       // singularity at north pole
-      euler.y = 2.0 * Math.atan2(ordered.x, this.w);
-      euler.z = Math.PI * 0.5;
-      euler.x = 0.0;
+      euler.y = 2.0 * Math.atan2(ordered.x, this.w)
+      euler.z = Math.PI * 0.5
+      euler.x = 0.0
     } else if (test < -0.49999) {
       // singularity at south pole
-      euler.y = -2.0 * Math.atan2(ordered.x, this.w);
-      euler.z = Math.PI * -0.5;
-      euler.x = 0.0;
+      euler.y = -2.0 * Math.atan2(ordered.x, this.w)
+      euler.z = Math.PI * -0.5
+      euler.x = 0.0
     } else {
-      const sqx = ordered.x * ordered.x;
-      const sqy = ordered.y * ordered.y;
-      const sqz = ordered.z * ordered.z;
+      const sqx = ordered.x * ordered.x
+      const sqy = ordered.y * ordered.y
+      const sqz = ordered.z * ordered.z
       euler.y = Math.atan2(
         2.0 * ordered.y * this.w - 2.0 * ordered.x * ordered.z,
         1.0 - 2.0 * sqy - 2.0 * sqz
-      );
-      euler.z = Math.asin(2.0 * test);
+      )
+      euler.z = Math.asin(2.0 * test)
       euler.x = Math.atan2(
         2.0 * ordered.x * this.w - 2.0 * ordered.y * ordered.z,
         1.0 - 2.0 * sqx - 2.0 * sqz
-      );
+      )
     }
 
     switch (rotationOrder) {
       case 0:
         /* ' XYZ' */
-        return new EulerAngles(euler.y, euler.z, euler.x, rotationOrder);
+        return new EulerAngles(euler.y, euler.z, euler.x, rotationOrder)
       case 1:
         /* 'YZX' */
-        return new EulerAngles(euler.x, euler.y, euler.z, rotationOrder);
+        return new EulerAngles(euler.x, euler.y, euler.z, rotationOrder)
       case 2:
         /* 'ZXY' */
-        return new EulerAngles(euler.z, euler.x, euler.y, rotationOrder);
+        return new EulerAngles(euler.z, euler.x, euler.y, rotationOrder)
       case 3:
         /* 'XZY' */
-        return new EulerAngles(-euler.y, euler.x, euler.z, rotationOrder);
+        return new EulerAngles(-euler.y, euler.x, euler.z, rotationOrder)
       case 4:
         /* 'ZYX' */
-        return new EulerAngles(euler.x, euler.z, -euler.y, rotationOrder);
+        return new EulerAngles(euler.x, euler.z, -euler.y, rotationOrder)
       case 5:
         /* 'YXZ' */
-        return new EulerAngles(euler.z, -euler.y, euler.x, rotationOrder);
+        return new EulerAngles(euler.z, -euler.y, euler.x, rotationOrder)
     }
   }
 
@@ -324,9 +324,9 @@ class Quat extends AttrValue {
    * @param {any} angle - The axis angle.
    */
   setFromAxisAndAngle(axis, angle) {
-    const halfAngle = angle / 2.0;
-    const vec = axis.normalize().scale(Math.sin(halfAngle));
-    this.set(vec.x, vec.y, vec.z, Math.cos(halfAngle));
+    const halfAngle = angle / 2.0
+    const vec = axis.normalize().scale(Math.sin(halfAngle))
+    this.set(vec.x, vec.y, vec.z, Math.cos(halfAngle))
   }
 
   /**
@@ -335,9 +335,9 @@ class Quat extends AttrValue {
    * @param {any} up - The up angle.
    */
   setFromDirectionAndUpvector(dir, up) {
-    const mat3 = new Mat3();
-    mat3.setFromDirectionAndUpvector(dir, up);
-    this.setFromMat3(mat3);
+    const mat3 = new Mat3()
+    mat3.setFromDirectionAndUpvector(dir, up)
+    this.setFromMat3(mat3)
   }
 
   /**
@@ -346,14 +346,14 @@ class Quat extends AttrValue {
    * @param {any} v1 - The v1 angle.
    */
   setFrom2Vectors(v0, v1) {
-    v0.normalize();
-    v1.normalize();
-    const c = v0.cross(v1);
-    const d = v0.dot(v1);
-    const s = Math.sqrt((1 + d) * 2);
+    v0.normalize()
+    v1.normalize()
+    const c = v0.cross(v1)
+    const d = v0.dot(v1)
+    const s = Math.sqrt((1 + d) * 2)
     // this.set( s/2, c.x / s, c.y / s, c.z / s );
-    this.set(c.x / s, c.y / s, c.z / s, s / 2);
-    this.normalizeInPlace();
+    this.set(c.x / s, c.y / s, c.z / s, s / 2)
+    this.normalizeInPlace()
   }
 
   /**
@@ -363,41 +363,38 @@ class Quat extends AttrValue {
   setFromMat3(mat3) {
     // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
     // article "Quaternion Calculus and Fast Animation".
-    const fTrace = mat3.__data[0] + mat3.__data[4] + mat3.__data[8];
-    let fRoot;
+    const fTrace = mat3.__data[0] + mat3.__data[4] + mat3.__data[8]
+    let fRoot
 
     if (fTrace > 0.0) {
       // |w| > 1/2, may as well choose w > 1/2
-      fRoot = Math.sqrt(fTrace + 1); // 2w
-      this.__data[3] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot; // 1/(4w)
-      this.__data[0] = (mat3.__data[5] - mat3.__data[7]) * fRoot;
-      this.__data[1] = (mat3.__data[6] - mat3.__data[2]) * fRoot;
-      this.__data[2] = (mat3.__data[1] - mat3.__data[3]) * fRoot;
+      fRoot = Math.sqrt(fTrace + 1) // 2w
+      this.__data[3] = 0.5 * fRoot
+      fRoot = 0.5 / fRoot // 1/(4w)
+      this.__data[0] = (mat3.__data[5] - mat3.__data[7]) * fRoot
+      this.__data[1] = (mat3.__data[6] - mat3.__data[2]) * fRoot
+      this.__data[2] = (mat3.__data[1] - mat3.__data[3]) * fRoot
     } else {
       // |w| <= 1/2
-      let i = 0;
-      if (mat3.__data[4] > mat3.__data[0]) i = 1;
-      if (mat3.__data[8] > mat3.__data[i * 3 + i]) i = 2;
-      const j = (i + 1) % 3;
-      const k = (i + 2) % 3;
+      let i = 0
+      if (mat3.__data[4] > mat3.__data[0]) i = 1
+      if (mat3.__data[8] > mat3.__data[i * 3 + i]) i = 2
+      const j = (i + 1) % 3
+      const k = (i + 2) % 3
 
       fRoot = Math.sqrt(
         mat3.__data[i * 3 + i] -
           mat3.__data[j * 3 + j] -
           mat3.__data[k * 3 + k] +
           1.0
-      );
-      this.__data[i] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot;
-      this.__data[3] =
-        (mat3.__data[j * 3 + k] - mat3.__data[k * 3 + j]) * fRoot;
-      this.__data[j] =
-        (mat3.__data[j * 3 + i] + mat3.__data[i * 3 + j]) * fRoot;
-      this.__data[k] =
-        (mat3.__data[k * 3 + i] + mat3.__data[i * 3 + k]) * fRoot;
+      )
+      this.__data[i] = 0.5 * fRoot
+      fRoot = 0.5 / fRoot
+      this.__data[3] = (mat3.__data[j * 3 + k] - mat3.__data[k * 3 + j]) * fRoot
+      this.__data[j] = (mat3.__data[j * 3 + i] + mat3.__data[i * 3 + j]) * fRoot
+      this.__data[k] = (mat3.__data[k * 3 + i] + mat3.__data[i * 3 + k]) * fRoot
     }
-    this.normalizeInPlace();
+    this.normalizeInPlace()
   }
 
   /**
@@ -407,41 +404,38 @@ class Quat extends AttrValue {
   setFromMat4(mat4) {
     // Algorithm in Ken Shoemake's article in 1987 SIGGRAPH course notes
     // article "Quaternion Calculus and Fast Animation".
-    const fTrace = mat4.__data[0] + mat4.__data[5] + mat4.__data[10];
-    let fRoot;
+    const fTrace = mat4.__data[0] + mat4.__data[5] + mat4.__data[10]
+    let fRoot
 
     if (fTrace > 0.0) {
       // |w| > 1/2, may as well choose w > 1/2
-      fRoot = Math.sqrt(fTrace + 1); // 2w
-      this.__data[3] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot; // 1/(4w)
-      this.__data[0] = (mat4.__data[6] - mat4.__data[9]) * fRoot;
-      this.__data[1] = (mat4.__data[8] - mat4.__data[2]) * fRoot;
-      this.__data[2] = (mat4.__data[1] - mat4.__data[4]) * fRoot;
+      fRoot = Math.sqrt(fTrace + 1) // 2w
+      this.__data[3] = 0.5 * fRoot
+      fRoot = 0.5 / fRoot // 1/(4w)
+      this.__data[0] = (mat4.__data[6] - mat4.__data[9]) * fRoot
+      this.__data[1] = (mat4.__data[8] - mat4.__data[2]) * fRoot
+      this.__data[2] = (mat4.__data[1] - mat4.__data[4]) * fRoot
     } else {
       // |w| <= 1/2
-      let i = 0;
-      if (mat4.__data[5] > mat4.__data[0]) i = 1;
-      if (mat4.__data[10] > mat4.__data[i * 4 + i]) i = 2;
-      const j = (i + 1) % 3;
-      const k = (i + 2) % 3;
+      let i = 0
+      if (mat4.__data[5] > mat4.__data[0]) i = 1
+      if (mat4.__data[10] > mat4.__data[i * 4 + i]) i = 2
+      const j = (i + 1) % 3
+      const k = (i + 2) % 3
 
       fRoot = Math.sqrt(
         mat4.__data[i * 4 + i] -
           mat4.__data[j * 4 + j] -
           mat4.__data[k * 4 + k] +
           1.0
-      );
-      this.__data[i] = 0.5 * fRoot;
-      fRoot = 0.5 / fRoot;
-      this.__data[3] =
-        (mat4.__data[j * 4 + k] - mat4.__data[k * 4 + j]) * fRoot;
-      this.__data[j] =
-        (mat4.__data[j * 4 + i] + mat4.__data[i * 4 + j]) * fRoot;
-      this.__data[k] =
-        (mat4.__data[k * 4 + i] + mat4.__data[i * 4 + k]) * fRoot;
+      )
+      this.__data[i] = 0.5 * fRoot
+      fRoot = 0.5 / fRoot
+      this.__data[3] = (mat4.__data[j * 4 + k] - mat4.__data[k * 4 + j]) * fRoot
+      this.__data[j] = (mat4.__data[j * 4 + i] + mat4.__data[i * 4 + j]) * fRoot
+      this.__data[k] = (mat4.__data[k * 4 + i] + mat4.__data[i * 4 + k]) * fRoot
     }
-    this.normalizeInPlace();
+    this.normalizeInPlace()
   }
 
   /**
@@ -449,7 +443,7 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   isIdentity() {
-    return this.getAngle() < Number.EPSILON;
+    return this.getAngle() < Number.EPSILON
   }
 
   /**
@@ -457,7 +451,7 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   getAngle() {
-    return Math.acos(this.w) * 2.0;
+    return Math.acos(this.w) * 2.0
   }
 
   /**
@@ -472,7 +466,7 @@ class Quat extends AttrValue {
       this.y == other.y &&
       this.z == other.z &&
       this.w == other.w
-    );
+    )
   }
 
   /**
@@ -487,7 +481,7 @@ class Quat extends AttrValue {
       this.y != other.y &&
       this.z != other.z &&
       this.w != other.w
-    );
+    )
   }
 
   /**
@@ -502,7 +496,7 @@ class Quat extends AttrValue {
       Math.abs(this.y - other.y) < Number.EPSILON &&
       Math.abs(this.z - other.z) < Number.EPSILON &&
       Math.abs(this.w - other.w) < Number.EPSILON
-    );
+    )
   }
 
   /**
@@ -516,7 +510,7 @@ class Quat extends AttrValue {
       this.y + other.y,
       this.z + other.z,
       this.w + other.w
-    );
+    )
   }
 
   /**
@@ -524,10 +518,10 @@ class Quat extends AttrValue {
    * @param {any} other - The other param.
    */
   addInPlace(other) {
-    this.x += other.x;
-    this.y += other.y;
-    this.z += other.z;
-    this.w += other.w;
+    this.x += other.x
+    this.y += other.y
+    this.z += other.z
+    this.w += other.w
   }
 
   /**
@@ -541,7 +535,7 @@ class Quat extends AttrValue {
       this.y - other.y,
       this.z - other.z,
       this.w - other.w
-    );
+    )
   }
 
   /**
@@ -555,7 +549,7 @@ class Quat extends AttrValue {
       this.y * scalar,
       this.z * scalar,
       this.w * scalar
-    );
+    )
   }
 
   /**
@@ -563,10 +557,10 @@ class Quat extends AttrValue {
    * @param {any} scalar - The scalar param.
    */
   scaleInPlace(scalar) {
-    this.x *= scalar;
-    this.y *= scalar;
-    this.z *= scalar;
-    this.w *= scalar;
+    this.x *= scalar
+    this.y *= scalar
+    this.z *= scalar
+    this.w *= scalar
   }
 
   /**
@@ -574,11 +568,11 @@ class Quat extends AttrValue {
    * @return {number} - The length of a.
    */
   length() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const w = this.__data[3];
-    return Math.sqrt(x * x + y * y + z * z + w * w);
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const w = this.__data[3]
+    return Math.sqrt(x * x + y * y + z * z + w * w)
   }
 
   /**
@@ -586,11 +580,11 @@ class Quat extends AttrValue {
    * @return {number} - Squared length of a.
    */
   lengthSquared() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const w = this.__data[3];
-    return x * x + y * y + z * z + w * w;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const w = this.__data[3]
+    return x * x + y * y + z * z + w * w
   }
 
   /**
@@ -598,34 +592,34 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   normalize() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const w = this.__data[3];
-    let len = x * x + y * y + z * z + w * w;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const w = this.__data[3]
+    let len = x * x + y * y + z * z + w * w
     if (len < Number.EPSILON) {
-      return new Quat();
+      return new Quat()
     }
 
     // TODO: evaluate use of glm_invsqrt here?
-    len = 1 / Math.sqrt(len);
-    return new Quat(x * len, y * len, z * len);
+    len = 1 / Math.sqrt(len)
+    return new Quat(x * len, y * len, z * len)
   }
 
   /**
    * The normalizeInPlace method.
    */
   normalizeInPlace() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const w = this.__data[3];
-    let len = x * x + y * y + z * z + w * w;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const w = this.__data[3]
+    let len = x * x + y * y + z * z + w * w
     if (len < Number.EPSILON) {
-      return;
+      return
     }
-    len = 1 / Math.sqrt(len);
-    this.set(x * len, y * len, z * len, w * len);
+    len = 1 / Math.sqrt(len)
+    this.set(x * len, y * len, z * len, w * len)
   }
 
   /**
@@ -634,7 +628,7 @@ class Quat extends AttrValue {
    * @return {number} - Dot product of a and b.
    */
   dot(b) {
-    return this.x * b.x + this.y * b.y + this.z * b.z + this.w * b.w;
+    return this.x * b.x + this.y * b.y + this.z * b.z + this.w * b.w
   }
 
   /**
@@ -643,21 +637,21 @@ class Quat extends AttrValue {
    * @return {vec4} - the return value.
    */
   cross(b) {
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    const at = this.w;
-    const bx = b.x;
-    const by = b.y;
-    const bz = b.z;
-    const bt = b.w;
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    const at = this.w
+    const bx = b.x
+    const by = b.y
+    const bz = b.z
+    const bt = b.w
 
     return new Quat(
       ay * bz - az * by,
       az * bt - at * bz,
       at * bx - ax * bt,
       ax * by - ay * bx
-    );
+    )
   }
 
   /**
@@ -665,7 +659,7 @@ class Quat extends AttrValue {
    * @return {any} - the return value.
    */
   conjugate() {
-    return new Quat(-this.x, -this.y, -this.z, this.w);
+    return new Quat(-this.x, -this.y, -this.z, this.w)
   }
 
   /**
@@ -673,7 +667,7 @@ class Quat extends AttrValue {
    * @return {any} - the return value.
    */
   inverse() {
-    return this.conjugate();
+    return this.conjugate()
   }
 
   /**
@@ -683,7 +677,7 @@ class Quat extends AttrValue {
    */
   alignWith(other) {
     if (this.dot(other) < 0.0) {
-      this.set(-this.x, -this.y, -this.z, -this.w);
+      this.set(-this.x, -this.y, -this.z, -this.w)
     }
   }
 
@@ -702,21 +696,21 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   multiply(quat) {
-    const ax = this.__data[0];
-    const ay = this.__data[1];
-    const az = this.__data[2];
-    const aw = this.__data[3];
-    const bx = quat.__data[0];
-    const by = quat.__data[1];
-    const bz = quat.__data[2];
-    const bw = quat.__data[3];
+    const ax = this.__data[0]
+    const ay = this.__data[1]
+    const az = this.__data[2]
+    const aw = this.__data[3]
+    const bx = quat.__data[0]
+    const by = quat.__data[1]
+    const bz = quat.__data[2]
+    const bw = quat.__data[3]
 
     return new Quat(
       ax * bw + aw * bx + ay * bz - az * by,
       ay * bw + aw * by + az * bx - ax * bz,
       az * bw + aw * bz + ax * by - ay * bx,
       aw * bw - ax * bx - ay * by - az * bz
-    );
+    )
   }
 
   /**
@@ -724,21 +718,21 @@ class Quat extends AttrValue {
    * @param {any} quat - The quat param.
    */
   multiplyInPlace(quat) {
-    const ax = this.__data[0];
-    const ay = this.__data[1];
-    const az = this.__data[2];
-    const aw = this.__data[3];
-    const bx = quat.__data[0];
-    const by = quat.__data[1];
-    const bz = quat.__data[2];
-    const bw = quat.__data[3];
+    const ax = this.__data[0]
+    const ay = this.__data[1]
+    const az = this.__data[2]
+    const aw = this.__data[3]
+    const bx = quat.__data[0]
+    const by = quat.__data[1]
+    const bz = quat.__data[2]
+    const bw = quat.__data[3]
 
     this.set(
       ax * bw + aw * bx + ay * bz - az * by,
       ay * bw + aw * by + az * bx - ax * bz,
       az * bw + aw * bz + ax * by - ay * bx,
       aw * bw - ax * bx - ay * by - az * bz
-    );
+    )
   }
 
   /**
@@ -749,9 +743,9 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   rotateVec3(vec3) {
-    const vq = new Quat(vec3.x, vec3.y, vec3.z, 0.0);
-    const pq = this.multiply(vq).multiply(this.conjugate());
-    return new Vec3(pq.x, pq.y, pq.z);
+    const vq = new Quat(vec3.x, vec3.y, vec3.z, 0.0)
+    const pq = this.multiply(vq).multiply(this.conjugate())
+    return new Vec3(pq.x, pq.y, pq.z)
   }
 
   /**
@@ -759,19 +753,19 @@ class Quat extends AttrValue {
    * @param {number} rad - Angle (in radians) to rotate.
    */
   rotateX(rad) {
-    rad *= 0.5;
+    rad *= 0.5
 
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    const aw = this.w;
-    const bx = Math.sin(rad);
-    const bw = Math.cos(rad);
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    const aw = this.w
+    const bx = Math.sin(rad)
+    const bw = Math.cos(rad)
 
-    this.x = ax * bw + aw * bx;
-    this.y = ay * bw + az * bx;
-    this.z = az * bw - ay * bx;
-    this.w = aw * bw - ax * bx;
+    this.x = ax * bw + aw * bx
+    this.y = ay * bw + az * bx
+    this.z = az * bw - ay * bx
+    this.w = aw * bw - ax * bx
   }
 
   /**
@@ -779,19 +773,19 @@ class Quat extends AttrValue {
    * @param {number} rad - Angle (in radians) to rotate.
    */
   rotateY(rad) {
-    rad *= 0.5;
+    rad *= 0.5
 
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    const aw = this.w;
-    const by = Math.sin(rad);
-    const bw = Math.cos(rad);
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    const aw = this.w
+    const by = Math.sin(rad)
+    const bw = Math.cos(rad)
 
-    this.x = ax * bw - az * by;
-    this.y = ay * bw + aw * by;
-    this.z = az * bw + ax * by;
-    this.w = aw * bw - ay * by;
+    this.x = ax * bw - az * by
+    this.y = ay * bw + aw * by
+    this.z = az * bw + ax * by
+    this.w = aw * bw - ay * by
   }
 
   /**
@@ -799,19 +793,19 @@ class Quat extends AttrValue {
    * @param {number} rad - Angle (in radians) to rotate.
    */
   rotateZ(rad) {
-    rad *= 0.5;
+    rad *= 0.5
 
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    const aw = this.w;
-    const bz = Math.sin(rad);
-    const bw = Math.cos(rad);
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    const aw = this.w
+    const bz = Math.sin(rad)
+    const bw = Math.cos(rad)
 
-    this.x = ax * bw + ay * bz;
-    this.y = ay * bw - ax * bz;
-    this.z = az * bw + aw * bz;
-    this.w = aw * bw - az * bz;
+    this.x = ax * bw + ay * bz
+    this.y = ay * bw - ax * bz
+    this.z = az * bw + aw * bz
+    this.w = aw * bw - az * bz
   }
 
   /**
@@ -819,37 +813,37 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   toMat3() {
-    const x = this.x;
-    const y = this.y;
-    const z = this.z;
-    const w = this.w;
-    const x2 = x + x;
-    const y2 = y + y;
-    const z2 = z + z;
-    const xx = x * x2;
-    const yx = y * x2;
-    const yy = y * y2;
-    const zx = z * x2;
-    const zy = z * y2;
-    const zz = z * z2;
-    const wx = w * x2;
-    const wy = w * y2;
-    const wz = w * z2;
+    const x = this.x
+    const y = this.y
+    const z = this.z
+    const w = this.w
+    const x2 = x + x
+    const y2 = y + y
+    const z2 = z + z
+    const xx = x * x2
+    const yx = y * x2
+    const yy = y * y2
+    const zx = z * x2
+    const zy = z * y2
+    const zz = z * z2
+    const wx = w * x2
+    const wy = w * y2
+    const wz = w * z2
 
-    const mat3 = new Mat3();
-    mat3.__data[0] = 1 - yy - zz;
-    mat3.__data[3] = yx - wz;
-    mat3.__data[6] = zx + wy;
+    const mat3 = new Mat3()
+    mat3.__data[0] = 1 - yy - zz
+    mat3.__data[3] = yx - wz
+    mat3.__data[6] = zx + wy
 
-    mat3.__data[1] = yx + wz;
-    mat3.__data[4] = 1 - xx - zz;
-    mat3.__data[7] = zy - wx;
+    mat3.__data[1] = yx + wz
+    mat3.__data[4] = 1 - xx - zz
+    mat3.__data[7] = zy - wx
 
-    mat3.__data[2] = zx - wy;
-    mat3.__data[5] = zy + wx;
-    mat3.__data[8] = 1 - xx - yy;
+    mat3.__data[2] = zx - wy
+    mat3.__data[5] = zy + wx
+    mat3.__data[8] = 1 - xx - yy
 
-    return mat3;
+    return mat3
   }
 
   /**
@@ -857,14 +851,14 @@ class Quat extends AttrValue {
    * @return {vec3} - The return value.
    */
   getXaxis() {
-    const xy = this.x * this.y;
-    const xz = this.x * this.z;
-    const yy = this.y * this.y;
-    const yw = this.y * this.w;
-    const zz = this.z * this.z;
-    const zw = this.z * this.w;
+    const xy = this.x * this.y
+    const xz = this.x * this.z
+    const yy = this.y * this.y
+    const yw = this.y * this.w
+    const zz = this.z * this.z
+    const zw = this.z * this.w
 
-    return new Vec3(1.0 - 2.0 * (zz + yy), 2.0 * (xy + zw), 2.0 * (xz - yw));
+    return new Vec3(1.0 - 2.0 * (zz + yy), 2.0 * (xy + zw), 2.0 * (xz - yw))
   }
 
   /**
@@ -872,14 +866,14 @@ class Quat extends AttrValue {
    * @return {vec3} - The return value.
    */
   getYaxis() {
-    const xx = this.x * this.x;
-    const xy = this.x * this.y;
-    const xw = this.x * this.w;
-    const yz = this.y * this.z;
-    const zz = this.z * this.z;
-    const zw = this.z * this.w;
+    const xx = this.x * this.x
+    const xy = this.x * this.y
+    const xw = this.x * this.w
+    const yz = this.y * this.z
+    const zz = this.z * this.z
+    const zw = this.z * this.w
 
-    return new Vec3(2.0 * (xy - zw), 1.0 - 2.0 * (zz + xx), 2.0 * (yz + xw));
+    return new Vec3(2.0 * (xy - zw), 1.0 - 2.0 * (zz + xx), 2.0 * (yz + xw))
   }
 
   /**
@@ -887,16 +881,16 @@ class Quat extends AttrValue {
    * @return {vec3} - The return value.
    */
   getZaxis() {
-    const xx = this.x * this.x;
-    const xz = this.x * this.z;
-    const xw = this.x * this.w;
+    const xx = this.x * this.x
+    const xz = this.x * this.z
+    const xw = this.x * this.w
 
-    const yy = this.y * this.y;
-    const yz = this.y * this.z;
-    const yw = this.y * this.w;
-    const temp = new Vec3();
+    const yy = this.y * this.y
+    const yz = this.y * this.z
+    const yw = this.y * this.w
+    const temp = new Vec3()
 
-    return new Vec3(2.0 * (yw + xz), 2.0 * (yz - xw), 1.0 - 2.0 * (yy + xx));
+    return new Vec3(2.0 * (yw + xz), 2.0 * (yz - xw), 1.0 - 2.0 * (yy + xx))
   }
 
   /**
@@ -907,11 +901,11 @@ class Quat extends AttrValue {
   mirror(axisIndex) {
     switch (axisIndex) {
       case 0:
-        return new Quat(this.z, this.w, this.x, this.y);
+        return new Quat(this.z, this.w, this.x, this.y)
       case 1:
-        return new Quat(-this.w, this.z, this.y, -this.x);
+        return new Quat(-this.w, this.z, this.y, -this.x)
       case 2:
-        return new Quat(this.x, this.y, this.z, -this.w);
+        return new Quat(this.x, this.y, this.z, -this.w)
     }
   }
 
@@ -920,38 +914,38 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   toMat4() {
-    const x = this.x;
-    const y = this.y;
-    const z = this.z;
-    const w = this.w;
-    const x2 = x + x;
-    const y2 = y + y;
-    const z2 = z + z;
-    const xx = x * x2;
-    const yx = y * x2;
-    const yy = y * y2;
-    const zx = z * x2;
-    const zy = z * y2;
-    const zz = z * z2;
-    const wx = w * x2;
-    const wy = w * y2;
-    const wz = w * z2;
+    const x = this.x
+    const y = this.y
+    const z = this.z
+    const w = this.w
+    const x2 = x + x
+    const y2 = y + y
+    const z2 = z + z
+    const xx = x * x2
+    const yx = y * x2
+    const yy = y * y2
+    const zx = z * x2
+    const zy = z * y2
+    const zz = z * z2
+    const wx = w * x2
+    const wy = w * y2
+    const wz = w * z2
 
     // Set the columns
-    const mat4 = new Mat4();
-    mat4.__data[0] = 1 - yy - zz;
-    mat4.__data[4] = yx - wz;
-    mat4.__data[8] = zx + wy;
+    const mat4 = new Mat4()
+    mat4.__data[0] = 1 - yy - zz
+    mat4.__data[4] = yx - wz
+    mat4.__data[8] = zx + wy
 
-    mat4.__data[1] = yx + wz;
-    mat4.__data[5] = 1 - xx - zz;
-    mat4.__data[9] = zy - wx;
+    mat4.__data[1] = yx + wz
+    mat4.__data[5] = 1 - xx - zz
+    mat4.__data[9] = zy - wx
 
-    mat4.__data[2] = zx - wy;
-    mat4.__data[6] = zy + wx;
-    mat4.__data[10] = 1 - xx - yy;
+    mat4.__data[2] = zx - wy
+    mat4.__data[6] = zy + wx
+    mat4.__data[10] = 1 - xx - yy
 
-    return mat4;
+    return mat4
   }
 
   /**
@@ -959,14 +953,14 @@ class Quat extends AttrValue {
    * @return {vec3} - The return value.
    */
   getXaxis() {
-    const xy = this.x * this.y;
-    const xz = this.x * this.z;
-    const yy = this.y * this.y;
-    const yw = this.y * this.w;
-    const zz = this.z * this.z;
-    const zw = this.z * this.w;
+    const xy = this.x * this.y
+    const xz = this.x * this.z
+    const yy = this.y * this.y
+    const yw = this.y * this.w
+    const zz = this.z * this.z
+    const zw = this.z * this.w
 
-    return new Vec3(1.0 - 2.0 * (zz + yy), 2.0 * (xy + zw), 2.0 * (xz - yw));
+    return new Vec3(1.0 - 2.0 * (zz + yy), 2.0 * (xy + zw), 2.0 * (xz - yw))
   }
 
   /**
@@ -974,14 +968,14 @@ class Quat extends AttrValue {
    * @return {vec3} - The return value.
    */
   getYaxis() {
-    const xx = this.x * this.x;
-    const xy = this.x * this.y;
-    const xw = this.x * this.w;
-    const yz = this.y * this.z;
-    const zz = this.z * this.z;
-    const zw = this.z * this.w;
+    const xx = this.x * this.x
+    const xy = this.x * this.y
+    const xw = this.x * this.w
+    const yz = this.y * this.z
+    const zz = this.z * this.z
+    const zw = this.z * this.w
 
-    return new Vec3(2.0 * (xy - zw), 1.0 - 2.0 * (zz + xx), 2.0 * (yz + xw));
+    return new Vec3(2.0 * (xy - zw), 1.0 - 2.0 * (zz + xx), 2.0 * (yz + xw))
   }
 
   /**
@@ -989,15 +983,15 @@ class Quat extends AttrValue {
    * @return {vec3} - The return value.
    */
   getZaxis() {
-    const xx = this.x * this.x;
-    const xz = this.x * this.z;
-    const xw = this.x * this.w;
+    const xx = this.x * this.x
+    const xz = this.x * this.z
+    const xw = this.x * this.w
 
-    const yy = this.y * this.y;
-    const yz = this.y * this.z;
-    const yw = this.y * this.w;
+    const yy = this.y * this.y
+    const yz = this.y * this.z
+    const yw = this.y * this.w
 
-    return new Vec3(2.0 * (yw + xz), 2.0 * (yz - xw), 1.0 - 2.0 * (yy + xx));
+    return new Vec3(2.0 * (yw + xz), 2.0 * (yz - xw), 1.0 - 2.0 * (yy + xx))
   }
 
   /**
@@ -1012,9 +1006,9 @@ class Quat extends AttrValue {
       this.y + w * (b.y - this.y),
       this.z + w * (b.z - this.z),
       this.w + w * (b.w - this.w)
-    );
-    result.normalizeInPlace();
-    return result;
+    )
+    result.normalizeInPlace()
+    return result
   }
 
   // /**
@@ -1042,7 +1036,7 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   static create(...args) {
-    return new Quat(...args);
+    return new Quat(...args)
   }
 
   /**
@@ -1052,7 +1046,7 @@ class Quat extends AttrValue {
    * @return {any} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Quat(buffer, offset * 4); // 4 bytes per 32bit float
+    return new Quat(buffer, offset * 4) // 4 bytes per 32bit float
   }
 
   /**
@@ -1060,7 +1054,7 @@ class Quat extends AttrValue {
    * @return {number} - The return value.
    */
   static numFloat32Elements() {
-    return 4;
+    return 4
   }
 
   /**
@@ -1073,7 +1067,7 @@ class Quat extends AttrValue {
       this.__data[1],
       this.__data[2],
       this.__data[3]
-    );
+    )
   }
 
   // ///////////////////////////
@@ -1089,7 +1083,7 @@ class Quat extends AttrValue {
       y: this.y,
       z: this.z,
       w: this.w,
-    };
+    }
   }
 
   /**
@@ -1097,14 +1091,14 @@ class Quat extends AttrValue {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.__data[0] = j.x;
-    this.__data[1] = j.y;
-    this.__data[2] = j.z;
-    this.__data[3] = j.w;
-    this.normalizeInPlace();
+    this.__data[0] = j.x
+    this.__data[1] = j.y
+    this.__data[2] = j.z
+    this.__data[3] = j.w
+    this.normalizeInPlace()
   }
 }
 
-typeRegistry.registerType('Quat', Quat);
+typeRegistry.registerType('Quat', Quat)
 
-export { Quat };
+export { Quat }

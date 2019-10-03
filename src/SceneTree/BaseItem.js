@@ -1,14 +1,14 @@
-import { Signal } from '../Utilities';
-import { sgFactory } from './SGFactory.js';
-import { ValueSetMode } from './Parameters/Parameter.js';
-import { ParameterOwner } from './ParameterOwner.js';
+import { Signal } from '../Utilities'
+import { sgFactory } from './SGFactory.js'
+import { ValueSetMode } from './Parameters/Parameter.js'
+import { ParameterOwner } from './ParameterOwner.js'
 
 const ItemFlags = {
   USER_EDITED: 1 << 1,
   IGNORE_BBOX: 1 << 2,
   BIN_NODE: 1 << 3, // This node was generated when loading a binary file.
-};
-let numBaseItems = 0;
+}
+let numBaseItems = 0
 
 /** The base class for the scene tree. A Base item has a name and parameters.
  * @extends ParameterOwner
@@ -19,37 +19,37 @@ class BaseItem extends ParameterOwner {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super();
-    if (name == undefined) name = sgFactory.getClassName(this);
-    this.__name = name;
-    this.__path = [name];
-    this.__ownerItem = undefined; // TODO: will create a circular ref. Figure out and use weak refs
-    this.__flags = 0;
+    super()
+    if (name == undefined) name = sgFactory.getClassName(this)
+    this.__name = name
+    this.__path = [name]
+    this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
+    this.__flags = 0
 
-    this.__selectable = true;
-    this.__selected = false;
-    this.selectedChanged = new Signal();
+    this.__selectable = true
+    this.__selected = false
+    this.selectedChanged = new Signal()
 
-    this.__metaData = {};
+    this.__metaData = {}
 
-    this.nameChanged = new Signal();
+    this.nameChanged = new Signal()
     // this.flagsChanged = new Signal();
 
     this.parameterValueChanged.connect((param, mode) => {
       if (mode == ValueSetMode.USER_SETVALUE) {
-        this.setFlag(ItemFlags.USER_EDITED);
+        this.setFlag(ItemFlags.USER_EDITED)
       }
-    });
+    })
 
-    numBaseItems++;
+    numBaseItems++
   }
 
   /**
-   * The destroy is called by the system to cause explicit resources cleanup. 
+   * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly..
    */
   destroy() {
-    super.destroy();
+    super.destroy()
   }
 
   /**
@@ -61,7 +61,7 @@ class BaseItem extends ParameterOwner {
   clone(flags) {
     throw new Error(
       this.constructor.name + ' does not implment its clone method'
-    );
+    )
   }
 
   /**
@@ -70,8 +70,8 @@ class BaseItem extends ParameterOwner {
    * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
-    this.setName(src.getName());
+    super.copyFrom(src, flags)
+    this.setName(src.getName())
   }
 
   // ////////////////////////////////////////
@@ -82,7 +82,7 @@ class BaseItem extends ParameterOwner {
    * @return {string} - The name of the item.
    */
   getName() {
-    return this.__name;
+    return this.__name
   }
 
   /**
@@ -91,10 +91,10 @@ class BaseItem extends ParameterOwner {
    */
   setName(name) {
     if (this.__name != name) {
-      const oldName = this.__name;
-      this.__name = name;
-      this.__updatePath();
-      this.nameChanged.emit(name, oldName);
+      const oldName = this.__name
+      this.__name = name
+      this.__updatePath()
+      this.nameChanged.emit(name, oldName)
     }
   }
 
@@ -104,10 +104,10 @@ class BaseItem extends ParameterOwner {
    * @private
    */
   __updatePath() {
-    if (this.__ownerItem == undefined) this.__path = [this.__name];
+    if (this.__ownerItem == undefined) this.__path = [this.__name]
     else {
-      this.__path = this.__ownerItem.getPath().slice();
-      this.__path.push(this.__name);
+      this.__path = this.__ownerItem.getPath().slice()
+      this.__path.push(this.__name)
     }
   }
 
@@ -116,7 +116,7 @@ class BaseItem extends ParameterOwner {
    * @return {array} - The return value.
    */
   getPath() {
-    return this.__path;
+    return this.__path
   }
 
   // ////////////////////////////////////////
@@ -127,7 +127,7 @@ class BaseItem extends ParameterOwner {
    * @param {number} flag - the flag param.
    */
   setFlag(flag) {
-    this.__flags |= flag;
+    this.__flags |= flag
     // this.flagsChanged.emit(this.__flags);
   }
 
@@ -137,7 +137,7 @@ class BaseItem extends ParameterOwner {
    * @return {boolean} - The boolean indicating if the flag is set.
    */
   testFlag(flag) {
-    return (this.__flags & flag) != 0;
+    return (this.__flags & flag) != 0
   }
 
   // ////////////////////////////////////////
@@ -153,18 +153,18 @@ class BaseItem extends ParameterOwner {
    */
   resolvePath(path, index) {
     if (index == path.length) {
-      return this;
+      return this
     }
     if (path[index] == '>' && index == path.length - 1) {
-      return this.getParameter(path[index + 1]);
+      return this.getParameter(path[index + 1])
     }
 
     // Maybe the name is a parameter name.
-    const param = this.getParameter(path[index]);
+    const param = this.getParameter(path[index])
     if (param) {
-      return param;
+      return param
     }
-    throw new Error('Invalid path:' + path + ' member not found');
+    throw new Error('Invalid path:' + path + ' member not found')
   }
 
   // ////////////////////////////////////////
@@ -172,12 +172,12 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The getOwner method returns the current owner of the item.
-   * The item is a child of the current owner. 
+   * The item is a child of the current owner.
    * @return {object} - The current owner.
    */
   getOwner() {
     // return this.__private.get('ownerItem');
-    return this.__ownerItem;
+    return this.__ownerItem
   }
 
   /**
@@ -190,16 +190,16 @@ class BaseItem extends ParameterOwner {
       // Note: to avoid having no owners for a moment
       // we add the new owner first, then remove the previous
       // So we have 2 owners for brief moment.
-      const prevOwner = this.__ownerItem;
+      const prevOwner = this.__ownerItem
 
-      this.__ownerItem = ownerItem;
+      this.__ownerItem = ownerItem
       if (this.__ownerItem) {
-        this.addRef(this.__ownerItem);
+        this.addRef(this.__ownerItem)
       }
       if (prevOwner) {
-        this.removeRef(prevOwner);
+        this.removeRef(prevOwner)
       }
-      this.__updatePath();
+      this.__updatePath()
     }
   }
 
@@ -211,7 +211,7 @@ class BaseItem extends ParameterOwner {
    * @return {any} - The return value.
    */
   getSelectable() {
-    return this.__selectable;
+    return this.__selectable
   }
 
   /**
@@ -220,10 +220,10 @@ class BaseItem extends ParameterOwner {
    */
   setSelectable(val) {
     if (this.__selectable != val) {
-      this.__selectable = val;
-      return true;
+      this.__selectable = val
+      return true
     }
-    return false;
+    return false
   }
 
   /**
@@ -232,7 +232,7 @@ class BaseItem extends ParameterOwner {
    * @return {any} - The return value.
    */
   isSelected() {
-    return this.__selected;
+    return this.__selected
   }
 
   /**
@@ -240,7 +240,7 @@ class BaseItem extends ParameterOwner {
    * @return {boolean} - The current selection state.
    */
   getSelected() {
-    return this.__selected;
+    return this.__selected
   }
 
   /**
@@ -248,7 +248,7 @@ class BaseItem extends ParameterOwner {
    * @param {Boolean} val - Boolean indicating the new selection state.
    */
   setSelected(sel) {
-    this.__selected = sel;
+    this.__selected = sel
     this.selectedChanged.emit(this.__selected)
   }
 
@@ -261,7 +261,7 @@ class BaseItem extends ParameterOwner {
    * @return {object} - The meta data associated with the given key.
    */
   getMetadata(key) {
-    return this.__metaData[key];
+    return this.__metaData[key]
   }
 
   /**
@@ -270,7 +270,7 @@ class BaseItem extends ParameterOwner {
    * @return {boolean} - returns true if meta data exists under the gien key, else false.
    */
   hasMetadata(key) {
-    return key in this.__metaData;
+    return key in this.__metaData
   }
 
   /**
@@ -279,7 +279,7 @@ class BaseItem extends ParameterOwner {
    * @param {object} metaData - The metaData param.
    */
   setMetadata(key, metaData) {
-    this.__metaData[key] = metaData;
+    this.__metaData[key] = metaData
   }
 
   /**
@@ -287,7 +287,7 @@ class BaseItem extends ParameterOwner {
    * @param {any} key - The key param.
    */
   deleteMetadata(key) {
-    delete this.__metaData[key];
+    delete this.__metaData[key]
   }
 
   // ////////////////////////////////////////
@@ -300,10 +300,10 @@ class BaseItem extends ParameterOwner {
    * @return {object} - The json object.
    */
   toJSON(context, flags) {
-    let j = super.toJSON(context, flags);
-    if (!j && this.testFlag(ItemFlags.USER_EDITED)) j = {};
+    let j = super.toJSON(context, flags)
+    if (!j && this.testFlag(ItemFlags.USER_EDITED)) j = {}
     if (j) {
-      j.name = this.__name;
+      j.name = this.__name
 
       // Binary Tree nodes should only be re-created
       // by loading binary data. The JSON tree just stores
@@ -311,9 +311,9 @@ class BaseItem extends ParameterOwner {
       // the node no longer exists, then the json loader
       // simply keeps going. (no errors).
       if (!this.testFlag(ItemFlags.BIN_NODE))
-        j.type = sgFactory.getClassName(this);
+        j.type = sgFactory.getClassName(this)
     }
-    return j;
+    return j
   }
 
   /**
@@ -323,11 +323,11 @@ class BaseItem extends ParameterOwner {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    if (j.name) this.__name = j.name;
-    super.fromJSON(j, context, flags);
+    if (j.name) this.__name = j.name
+    super.fromJSON(j, context, flags)
     // Note: JSON data is only used to store user edits, so
     // parameters loaded from JSON are considered user edited.
-    this.__flags |= ItemFlags.USER_EDITED;
+    this.__flags |= ItemFlags.USER_EDITED
   }
 
   /**
@@ -336,11 +336,11 @@ class BaseItem extends ParameterOwner {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    const type = reader.loadStr();
-    this.setName(reader.loadStr());
+    const type = reader.loadStr()
+    this.setName(reader.loadStr())
 
     // Note: parameters follow name...
-    super.readBinary(reader, context);
+    super.readBinary(reader, context)
   }
 
   /**
@@ -349,8 +349,8 @@ class BaseItem extends ParameterOwner {
    * @return {number} - The total number of base items created.
    */
   static getNumBaseItems() {
-    return numBaseItems;
+    return numBaseItems
   }
 }
 
-export { ItemFlags, BaseItem };
+export { ItemFlags, BaseItem }

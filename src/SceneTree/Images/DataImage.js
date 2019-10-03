@@ -1,6 +1,6 @@
-import { Async, Signal } from '../../Utilities';
-import { sgFactory } from '../SGFactory.js';
-import { BaseImage } from '../BaseImage.js';
+import { Async, Signal } from '../../Utilities'
+import { sgFactory } from '../SGFactory.js'
+import { BaseImage } from '../BaseImage.js'
 
 // let ResourceLoaderWorker = require("worker-loader?inline!./ResourceLoaderWorker.js");
 
@@ -13,17 +13,17 @@ class DataImage extends BaseImage {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super();
+    super()
 
-    if (name == undefined) name = this.constructor.name;
-    this.__name = name;
-    this.format = 'RGBA';
-    this.type = 'UNSIGNED_BYTE';
-    this.__loaded = false;
+    if (name == undefined) name = this.constructor.name
+    this.__name = name
+    this.format = 'RGBA'
+    this.type = 'UNSIGNED_BYTE'
+    this.__loaded = false
 
     // this.__data = new Uint8Array(4);
-    this.width = 1;
-    this.height = 1;
+    this.width = 1
+    this.height = 1
   }
 
   /**
@@ -31,7 +31,7 @@ class DataImage extends BaseImage {
    * @return {any} - The return value.
    */
   isLoaded() {
-    return this.__loaded;
+    return this.__loaded
   }
 
   /**
@@ -39,7 +39,7 @@ class DataImage extends BaseImage {
    * @return {any} - The return value.
    */
   getName() {
-    return this.__name;
+    return this.__name
   }
 
   /**
@@ -47,7 +47,7 @@ class DataImage extends BaseImage {
    * @return {boolean} - The return value.
    */
   isStream() {
-    return false;
+    return false
   }
 
   /**
@@ -57,13 +57,13 @@ class DataImage extends BaseImage {
    * @param {any} data - The data param.
    */
   setData(width, height, data) {
-    this.width = width;
-    this.height = height;
-    this.__data = data;
+    this.width = width
+    this.height = height
+    this.__data = data
     if (!this.__loaded) {
-      this.__loaded = true;
-      this.loaded.emit();
-    } else this.updated.emit();
+      this.__loaded = true
+      this.loaded.emit()
+    } else this.updated.emit()
   }
 
   /**
@@ -71,13 +71,13 @@ class DataImage extends BaseImage {
    * @return {any} - The return value.
    */
   getParams() {
-    const params = super.getParams();
-    params['data'] = this.__data;
-    return params;
+    const params = super.getParams()
+    params['data'] = this.__data
+    return params
   }
 }
 
-sgFactory.registerClass('DataImage2D', DataImage);
-sgFactory.registerClass('DataImage', DataImage);
+sgFactory.registerClass('DataImage2D', DataImage)
+sgFactory.registerClass('DataImage', DataImage)
 
-export { DataImage };
+export { DataImage }

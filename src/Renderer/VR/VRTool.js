@@ -4,21 +4,21 @@ class VRTool {
    * Create a VR tool.
    */
   constructor() {
-    this.__active = false;
+    this.__active = false
   }
 
   /**
    * The activateTool method.
    */
   activateTool() {
-    this.__active = true;
+    this.__active = true
   }
 
   /**
    * The deactivateTool method.
    */
   deactivateTool() {
-    this.__active = false;
+    this.__active = false
   }
 
   /**
@@ -27,4 +27,4 @@ class VRTool {
   evalTool() {}
 }
 
-export { VRTool };
+export { VRTool }

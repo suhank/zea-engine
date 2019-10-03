@@ -1,5 +1,5 @@
-import { Vec2, Vec3 } from '../../Math';
-import { Operator, XfoOperatorOutput } from './Operator.js';
+import { Vec2, Vec3 } from '../../Math'
+import { Operator, XfoOperatorOutput } from './Operator.js'
 import {
   ValueSetMode,
   Parameter,
@@ -11,9 +11,9 @@ import {
   StructParameter,
   TreeItemParameter,
   KinematicGroupParameter,
-} from '../Parameters';
+} from '../Parameters'
 
-import { sgFactory } from '../SGFactory.js';
+import { sgFactory } from '../SGFactory.js'
 
 /** Class representing an explode part parameter.
  * @extends StructParameter
@@ -24,12 +24,12 @@ class ExplodePartParameter extends StructParameter {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
+    super(name)
 
-    this.__stageParam = this._addMember(new NumberParameter('Stage', 0));
+    this.__stageParam = this._addMember(new NumberParameter('Stage', 0))
     this.__axisParam = this._addMember(
       new Vec3Parameter('Axis', new Vec3(1, 0, 0))
-    );
+    )
 
     // The Movement param enables fine level timing to be set per part.
     this.__movementParam = this._addMember(
@@ -37,11 +37,11 @@ class ExplodePartParameter extends StructParameter {
         new Vec2(0, 0),
         new Vec2(1, 1),
       ])
-    );
+    )
     this.__multiplierParam = this._addMember(
       new NumberParameter('Multiplier', 1.0)
-    );
-    this.__output = new XfoOperatorOutput('Part');
+    )
+    this.__output = new XfoOperatorOutput('Part')
   }
 
   /**
@@ -50,7 +50,7 @@ class ExplodePartParameter extends StructParameter {
    * @param {any} mode - The mode param.
    */
   setStage(stage, mode = ValueSetMode.USER_SETVALUE) {
-    this.__stageParam.setValue(stage, mode);
+    this.__stageParam.setValue(stage, mode)
   }
 
   /**
@@ -58,7 +58,7 @@ class ExplodePartParameter extends StructParameter {
    * @return {any} - The return value.
    */
   getOutput() {
-    return this.__output;
+    return this.__output
   }
 
   /**
@@ -72,47 +72,53 @@ class ExplodePartParameter extends StructParameter {
    * @param {any} parentXfo - The parentXfo param.
    * @param {any} parentDelta - The parentDelta param.
    */
-  evaluate(explode, explodeDist, offset, stages, cascade, centered, parentXfo, parentDelta){
-
+  evaluate(
+    explode,
+    explodeDist,
+    offset,
+    stages,
+    cascade,
+    centered,
+    parentXfo,
+    parentDelta
+  ) {
     // Note: during interactive setup of the operator we
     // can have evaluations before anhthing is connected.
-    if(!this.__output.isConnected())
-      return;
+    if (!this.__output.isConnected()) return
 
-    const stage = this.__stageParam.getValue();
-    const movement = this.__movementParam.getValue();
-    let dist;
+    const stage = this.__stageParam.getValue()
+    const movement = this.__movementParam.getValue()
+    let dist
     if (cascade) {
       // in 'cascade' mode, the parts move in a cascade,
       // starting with stage 0. then 1 ...
-      let t = (stage / stages);
-      if(centered)
-        t -= 0.5;
-      dist = explodeDist * Math.linStep(movement.x, movement.y, Math.max(0, explode-t));
-    }
-    else {
-      // Else all the parts are spread out across the explode distance. 
-      let t = 1.0 - (stage / stages);
-      if(centered)
-        t -= 0.5;
-      dist = explodeDist * Math.linStep(movement.x, movement.y, explode) * t;
-    }
-    dist += offset;
-
-    let explodeDir = this.__axisParam.getValue();
-    const multiplier = this.__multiplierParam.getValue();
-    const initialxfo = this.__output.getInitialValue();
-    let xfo;
-    if (parentXfo) {
-      xfo = parentDelta.multiply(initialxfo);
-      explodeDir = parentXfo.ori.rotateVec3(explodeDir);
-      xfo.tr.addInPlace(explodeDir.scale(dist * multiplier));
+      let t = stage / stages
+      if (centered) t -= 0.5
+      dist =
+        explodeDist *
+        Math.linStep(movement.x, movement.y, Math.max(0, explode - t))
     } else {
-      xfo = this.__output.getValue();
-      xfo.tr = initialxfo.tr.add(explodeDir.scale(dist * multiplier));
+      // Else all the parts are spread out across the explode distance.
+      let t = 1.0 - stage / stages
+      if (centered) t -= 0.5
+      dist = explodeDist * Math.linStep(movement.x, movement.y, explode) * t
+    }
+    dist += offset
+
+    let explodeDir = this.__axisParam.getValue()
+    const multiplier = this.__multiplierParam.getValue()
+    const initialxfo = this.__output.getInitialValue()
+    let xfo
+    if (parentXfo) {
+      xfo = parentDelta.multiply(initialxfo)
+      explodeDir = parentXfo.ori.rotateVec3(explodeDir)
+      xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
+    } else {
+      xfo = this.__output.getValue()
+      xfo.tr = initialxfo.tr.add(explodeDir.scale(dist * multiplier))
     }
 
-    this.__output.setValue(xfo);
+    this.__output.setValue(xfo)
   }
 
   // ////////////////////////////////////////
@@ -125,11 +131,11 @@ class ExplodePartParameter extends StructParameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const j = super.toJSON(context, flags);
+    const j = super.toJSON(context, flags)
     if (j) {
-      j.output = this.__output.toJSON(context, flags);
+      j.output = this.__output.toJSON(context, flags)
     }
-    return j;
+    return j
   }
 
   /**
@@ -139,9 +145,9 @@ class ExplodePartParameter extends StructParameter {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
+    super.fromJSON(j, context, flags)
     if (j.output) {
-      this.__output.fromJSON(j.output, context);
+      this.__output.fromJSON(j.output, context)
     }
   }
 }
@@ -155,76 +161,76 @@ class ExplodePartsOperator extends Operator {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
+    super(name)
 
-    this.__stagesParam = this.addParameter(new NumberParameter('Stages', 0));
+    this.__stagesParam = this.addParameter(new NumberParameter('Stages', 0))
     this._explodeParam = this.addParameter(
       new NumberParameter('Explode', 0.0, [0, 1])
-    );
-    this._distParam = this.addParameter(new NumberParameter('Dist', 1.0));
-    this._offsetParam = this.addParameter(new NumberParameter('Offset', 0));
+    )
+    this._distParam = this.addParameter(new NumberParameter('Dist', 1.0))
+    this._offsetParam = this.addParameter(new NumberParameter('Offset', 0))
     this._cascadeParam = this.addParameter(
       new BooleanParameter('Cascade', false)
-    );
+    )
     this._centeredParam = this.addParameter(
       new BooleanParameter('Centered', false)
-    );
+    )
     this.__parentItemParam = this.addParameter(
       new TreeItemParameter('RelativeTo')
-    );
+    )
     this.__parentItemParam.valueChanged.connect(() => {
       // compute the local xfos
-      const parentItem = this.__parentItemParam.getValue();
+      const parentItem = this.__parentItemParam.getValue()
       if (parentItem)
-        this.__invParentSpace = parentItem.getGlobalXfo().inverse();
-      else this.__invParentSpace = undefined;
-    });
+        this.__invParentSpace = parentItem.getGlobalXfo().inverse()
+      else this.__invParentSpace = undefined
+    })
     this.__parentItemParam.treeItemGlobalXfoChanged.connect(
       this.__opInputChanged
-    );
+    )
 
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
-    );
+    )
     this.__itemsParam.elementAdded.connect((value, index) => {
-      this.addOutput(value.getOutput());
-      value.setStage(index, ValueSetMode.SILENT);
+      this.addOutput(value.getOutput())
+      value.setStage(index, ValueSetMode.SILENT)
       this.__stagesParam.setValue(
         this.__stagesParam.getValue() + 1,
         ValueSetMode.SILENT
-      );
-    });
+      )
+    })
     this.__itemsParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(value.getOutput());
-    });
+      this.removeOutput(value.getOutput())
+    })
 
-    this.__localXfos = [];
-    this.__parts = [];
-    this.__stages = 2;
+    this.__localXfos = []
+    this.__parts = []
+    this.__stages = 2
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
-    const stages = this.__stagesParam.getValue();
-    const explode = this._explodeParam.getValue();
+    const stages = this.__stagesParam.getValue()
+    const explode = this._explodeParam.getValue()
     // const explodeDir = this.getParameter('Axis').getValue();
-    const explodeDist = this._distParam.getValue();
-    const offset = this._offsetParam.getValue();
-    const cascade = this._cascadeParam.getValue();
-    const centered = this._centeredParam.getValue();
-    const parentItem = this.__parentItemParam.getValue();
-    let parentXfo;
-    let parentDelta;
+    const explodeDist = this._distParam.getValue()
+    const offset = this._offsetParam.getValue()
+    const cascade = this._cascadeParam.getValue()
+    const centered = this._centeredParam.getValue()
+    const parentItem = this.__parentItemParam.getValue()
+    let parentXfo
+    let parentDelta
     if (parentItem) {
-      parentXfo = parentItem.getGlobalXfo();
-      parentDelta = this.__invParentSpace.multiply(parentXfo);
+      parentXfo = parentItem.getGlobalXfo()
+      parentDelta = this.__invParentSpace.multiply(parentXfo)
     }
 
-    const items = this.__itemsParam.getValue();
+    const items = this.__itemsParam.getValue()
     for (let i = 0; i < items.length; i++) {
-      const part = items[i];
+      const part = items[i]
       part.evaluate(
         explode,
         explodeDist,
@@ -234,7 +240,7 @@ class ExplodePartsOperator extends Operator {
         centered,
         parentXfo,
         parentDelta
-      );
+      )
     }
   }
 
@@ -248,7 +254,7 @@ class ExplodePartsOperator extends Operator {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    return super.toJSON(context, flags);
+    return super.toJSON(context, flags)
   }
 
   /**
@@ -258,19 +264,19 @@ class ExplodePartsOperator extends Operator {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
+    super.fromJSON(j, context, flags)
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    clearTimeout(this.__timeoutId);
-    super.destroy();
+    clearTimeout(this.__timeoutId)
+    super.destroy()
   }
 }
 
-sgFactory.registerClass('ExplodePartsOperator', ExplodePartsOperator);
+sgFactory.registerClass('ExplodePartsOperator', ExplodePartsOperator)
 
-export { ExplodePartsOperator };
+export { ExplodePartsOperator }
 // export default AssetItem;

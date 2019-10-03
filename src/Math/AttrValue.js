@@ -1,4 +1,4 @@
-import { JSON_stringify_fixedPrecision } from './Common.js';
+import { JSON_stringify_fixedPrecision } from './Common.js'
 
 /**
  * A base class for values that can be stored in vertex attributes.
@@ -12,9 +12,9 @@ class AttrValue {
    */
   isValid() {
     for (const v of this.__data) {
-      if (v == Infinity || isNaN(v)) return false;
+      if (v == Infinity || isNaN(v)) return false
     }
-    return true;
+    return true
   }
 
   /**
@@ -25,7 +25,7 @@ class AttrValue {
   static createFromFloat32Buffer(buffer, offset) {
     throw new Error(
       'Not yet implemented for this type:' + this.constructor.name
-    );
+    )
   }
 
   /**
@@ -34,14 +34,14 @@ class AttrValue {
   static numFloat32Elements() {
     throw new Error(
       'Not yet implemented for this type:' + this.constructor.name
-    );
+    )
   }
 
   /**
    * Returns the tpye as an array. Often used to pass types to the GPU.
    */
   asArray() {
-    return this.__data;
+    return this.__data
   }
 
   /**
@@ -49,9 +49,9 @@ class AttrValue {
    * @return {any} The return value.
    */
   toString() {
-    return JSON_stringify_fixedPrecision(this.toJSON());
+    return JSON_stringify_fixedPrecision(this.toJSON())
   }
 }
 
-export { AttrValue };
+export { AttrValue }
 // export default AttrValue;

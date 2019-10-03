@@ -1,38 +1,38 @@
-import { Signal } from '../../Utilities';
-import { resourceLoader } from '../ResourceLoader.js';
-import { loadTextfile, loadBinfile } from '../Utils.js';
+import { Signal } from '../../Utilities'
+import { resourceLoader } from '../ResourceLoader.js'
+import { loadTextfile, loadBinfile } from '../Utils.js'
 
 const getFirstBrowserLanguage = function() {
-  const nav = window.navigator;
+  const nav = window.navigator
   const browserLanguagePropertyKeys = [
     'language',
     'browserLanguage',
     'systemLanguage',
     'userLanguage',
-  ];
-  let i;
-  let language;
+  ]
+  let i
+  let language
 
   // support for HTML 5.1 "navigator.languages"
   if (Array.isArray(nav.languages)) {
     for (i = 0; i < nav.languages.length; i++) {
-      language = nav.languages[i];
+      language = nav.languages[i]
       if (language && language.length) {
-        return language;
+        return language
       }
     }
   }
 
   // support for other well known properties in browsers
   for (i = 0; i < browserLanguagePropertyKeys.length; i++) {
-    language = nav[browserLanguagePropertyKeys[i]];
+    language = nav[browserLanguagePropertyKeys[i]]
     if (language && language.length) {
-      return language;
+      return language
     }
   }
 
-  return null;
-};
+  return null
+}
 
 /** Class representing a label manager. */
 class LabelManager {
@@ -40,26 +40,26 @@ class LabelManager {
    * Create a label manager.
    */
   constructor() {
-    this.__labelLibraries = {};
-    this.labelLibraryLoaded = new Signal();
+    this.__labelLibraries = {}
+    this.labelLibraryLoaded = new Signal()
 
-    const language = getFirstBrowserLanguage();
-    if (language.startsWith('en')) this.__language = 'En';
-    else if (language.startsWith('es')) this.__language = 'Es';
-    else if (language.startsWith('fr')) this.__language = 'Fr';
+    const language = getFirstBrowserLanguage()
+    if (language.startsWith('en')) this.__language = 'En'
+    else if (language.startsWith('es')) this.__language = 'Es'
+    else if (language.startsWith('fr')) this.__language = 'Fr'
     else if (language.startsWith('gb') || language.startsWith('de'))
-      this.__language = 'Gb';
+      this.__language = 'Gb'
 
-    this.__foundLabelLibraries = {};
+    this.__foundLabelLibraries = {}
 
     resourceLoader.registerResourceCallback('.labels', file => {
-      const stem = file.name.split('.')[0]; // trim off the extension
-      this.__foundLabelLibraries[stem] = file;
+      const stem = file.name.split('.')[0] // trim off the extension
+      this.__foundLabelLibraries[stem] = file
       loadTextfile(file.url, text => {
-        this.__labelLibraries[stem] = JSON.parse(text);
-        this.labelLibraryLoaded.emit(stem);
-      });
-    });
+        this.__labelLibraries[stem] = JSON.parse(text)
+        this.labelLibraryLoaded.emit(stem)
+      })
+    })
 
     if (window.XLSX) {
       // Note: example taken from here..
@@ -67,31 +67,31 @@ class LabelManager {
       // and here:
       // https://github.com/SheetJS/js-xlsx/tree/master/demos/xhr
       resourceLoader.registerResourceCallback('.xlsx', file => {
-        const stem = file.name.split('.')[0]; // trim off the extension
-        this.__foundLabelLibraries[stem] = file;
+        const stem = file.name.split('.')[0] // trim off the extension
+        this.__foundLabelLibraries[stem] = file
         loadBinfile(file.url, data => {
-          const unit8array = new Uint8Array(data);
+          const unit8array = new Uint8Array(data)
           const workbook = XLSX.read(unit8array, {
             type: 'array',
-          });
+          })
 
-          const json = {};
+          const json = {}
           workbook.SheetNames.forEach(function(sheetName) {
             // Here is your object
             const rows = XLSX.utils.sheet_to_row_object_array(
               workbook.Sheets[sheetName]
-            );
+            )
             rows.forEach(function(row) {
-              const identifier = row.Identifier;
-              delete row.Identifier;
-              json[identifier] = row;
-            });
-          });
+              const identifier = row.Identifier
+              delete row.Identifier
+              json[identifier] = row
+            })
+          })
 
-          this.__labelLibraries[stem] = json;
-          this.labelLibraryLoaded.emit(stem);
-        });
-      });
+          this.__labelLibraries[stem] = json
+          this.labelLibraryLoaded.emit(stem)
+        })
+      })
     }
   }
 
@@ -101,7 +101,7 @@ class LabelManager {
    * @return {any} - The return value.
    */
   isLibraryFound(name) {
-    return name in this.__foundLabelLibraries;
+    return name in this.__foundLabelLibraries
   }
 
   /**
@@ -110,7 +110,7 @@ class LabelManager {
    * @return {any} - The return value.
    */
   isLibraryLoaded(name) {
-    return name in this.__labelLibraries;
+    return name in this.__labelLibraries
   }
 
   /**
@@ -120,7 +120,7 @@ class LabelManager {
    * @return {any} - The return value.
    */
   getLabelText(libraryName, labelName) {
-    const library = this.__labelLibraries[libraryName];
+    const library = this.__labelLibraries[libraryName]
     if (!library) {
       throw new Error(
         "LabelLibrary: '" +
@@ -128,9 +128,9 @@ class LabelManager {
           "' not found in LabelManager. Found: [" +
           Object.keys(this.__labelLibraries) +
           ']'
-      );
+      )
     }
-    const label = library[labelName];
+    const label = library[labelName]
     if (!label) {
       throw new Error(
         "Label: '" +
@@ -140,20 +140,20 @@ class LabelManager {
           "'. Found: [" +
           Object.keys(library) +
           ']'
-      );
+      )
     }
-    const labelText = label[this.__language];
+    const labelText = label[this.__language]
     if (!labelText) {
-      if (label['En']) return label['En'];
+      if (label['En']) return label['En']
       throw new Error(
         "labelText: '" +
           language +
           "' not found in Label. Found: [" +
           Object.keys(label) +
           ']'
-      );
+      )
     }
-    return labelText;
+    return labelText
   }
 
   /**
@@ -163,20 +163,20 @@ class LabelManager {
    * @param {any} labelText - The labelText param.
    */
   setLabelText(libraryName, labelName, labelText) {
-    let library = this.__labelLibraries[libraryName];
+    let library = this.__labelLibraries[libraryName]
     if (!library) {
-      library = {};
-      this.__labelLibraries[libraryName] = library;
+      library = {}
+      this.__labelLibraries[libraryName] = library
     }
-    let label = library[labelName];
+    let label = library[labelName]
     if (!label) {
-      label = {};
-      library[labelName] = label;
+      label = {}
+      library[labelName] = label
     }
-    label[this.__language] = labelText;
+    label[this.__language] = labelText
     // TODO: Push to server.
   }
 }
 
-const labelManager = new LabelManager();
-export { labelManager };
+const labelManager = new LabelManager()
+export { labelManager }

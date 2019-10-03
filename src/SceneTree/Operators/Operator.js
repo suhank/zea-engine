@@ -1,8 +1,7 @@
-import { Signal } from '../../Utilities';
-import { ValueSetMode } from '../Parameters';
-import { sgFactory } from '../SGFactory';
-import { ItemFlags, BaseItem } from '../BaseItem.js';
-
+import { Signal } from '../../Utilities'
+import { ValueSetMode } from '../Parameters'
+import { sgFactory } from '../SGFactory'
+import { ItemFlags, BaseItem } from '../BaseItem.js'
 
 /** Class representing an operator output. */
 class OperatorOutput {
@@ -12,12 +11,12 @@ class OperatorOutput {
    * @param {any} filterFn - The filterFn value.
    */
   constructor(name, filterFn) {
-    this.__name = name;
-    this.__filterFn = filterFn;
-    this._param = undefined;
-    this.detached = false;
+    this.__name = name
+    this.__filterFn = filterFn
+    this._param = undefined
+    this.detached = false
 
-    this.paramSet = new Signal();
+    this.paramSet = new Signal()
   }
 
   /**
@@ -25,7 +24,7 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   getName() {
-    return this.__name;
+    return this.__name
   }
 
   /**
@@ -33,7 +32,7 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   getFilterFn() {
-    return this.__filterFn;
+    return this.__filterFn
   }
 
   /**
@@ -41,7 +40,7 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   isConnected() {
-    return this._param != undefined;
+    return this._param != undefined
   }
 
   /**
@@ -49,7 +48,7 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   getParam() {
-    return this._param;
+    return this._param
   }
 
   /**
@@ -57,8 +56,8 @@ class OperatorOutput {
    * @param {any} param - The param param.
    */
   setParam(param) {
-    this._param = param;
-    this.paramSet.emit();
+    this._param = param
+    this.paramSet.emit()
   }
 
   /**
@@ -67,7 +66,7 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   getValue(mode = ValueSetMode.OPERATOR_GETVALUE) {
-    if (this._param) return this._param.getValue(mode);
+    if (this._param) return this._param.getValue(mode)
   }
 
   /**
@@ -79,7 +78,7 @@ class OperatorOutput {
    */
   setValue(value, mode = ValueSetMode.OPERATOR_SETVALUE) {
     if (this._param) {
-      this._param.setValue(value, mode);
+      this._param.setValue(value, mode)
     }
   }
 
@@ -89,7 +88,7 @@ class OperatorOutput {
    */
   setDirty(fn) {
     if (this._param) {
-      this._param.setDirty(fn);
+      this._param.setDirty(fn)
     }
   }
 
@@ -98,7 +97,7 @@ class OperatorOutput {
    * @param {any} fn - The fn param.
    */
   removeCleanerFn(fn) {
-    if (this._param) this._param.removeCleanerFn(fn);
+    if (this._param) this._param.removeCleanerFn(fn)
   }
 
   // ////////////////////////////////////////
@@ -111,11 +110,14 @@ class OperatorOutput {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const paramPath = this._param ? this._param.getPath() : '';
+    const paramPath = this._param ? this._param.getPath() : ''
     return {
       type: this.constructor.name,
-      paramPath: ((context && context.makeRelative) ? context.makeRelative(paramPath) : paramPath)
-    };
+      paramPath:
+        context && context.makeRelative
+          ? context.makeRelative(paramPath)
+          : paramPath,
+    }
   }
 
   /**
@@ -132,7 +134,7 @@ class OperatorOutput {
       context.resolvePath(
         j.paramPath,
         param => {
-          this.setParam(param);
+          this.setParam(param)
         },
         reason => {
           console.warn(
@@ -140,26 +142,25 @@ class OperatorOutput {
               this.getName() +
               "'. Unable to load item:" +
               j.paramPath
-          );
+          )
         }
-      );
+      )
     }
   }
-  
-  detach(){
+
+  detach() {
     // This function is called when we want to suspend an operator
     // from functioning because it is deleted and on the undo stack.
-    // Once operators have persistent connections, 
-    // we will simply uninstall the output from the parameter. 
-    this.detached = true;
+    // Once operators have persistent connections,
+    // we will simply uninstall the output from the parameter.
+    this.detached = true
   }
 
-  reattach(){
-    this.detached = false;
+  reattach() {
+    this.detached = false
   }
-
 }
-sgFactory.registerClass('OperatorOutput', OperatorOutput);
+sgFactory.registerClass('OperatorOutput', OperatorOutput)
 
 /** Class representing an XFO operator output.
  * @extends OperatorOutput
@@ -170,7 +171,7 @@ class XfoOperatorOutput extends OperatorOutput {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name, p => p.getDataType() == 'Xfo');
+    super(name, p => p.getDataType() == 'Xfo')
   }
 
   /**
@@ -178,7 +179,7 @@ class XfoOperatorOutput extends OperatorOutput {
    * @return {any} - The return value.
    */
   getInitialValue() {
-    return this._initialParamValue;
+    return this._initialParamValue
   }
 
   /**
@@ -192,23 +193,23 @@ class XfoOperatorOutput extends OperatorOutput {
     // Is adding items to the group using the UI. Therefore, the
     // initial Xfo needs to be updated.
     const init = () => {
-      this._initialParamValue = param.getValue();
+      this._initialParamValue = param.getValue()
       if (this._initialParamValue.clone)
-        this._initialParamValue = this._initialParamValue.clone();
+        this._initialParamValue = this._initialParamValue.clone()
 
-      if (this._initialParamValue == undefined) throw new Error('WTF?');
-    };
-    init();
+      if (this._initialParamValue == undefined) throw new Error('WTF?')
+    }
+    init()
     param.valueChanged.connect(mode => {
       if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.DATA_LOAD)
-        init();
-    });
+        init()
+    })
 
-    this._param = param;
-    this.paramSet.emit();
+    this._param = param
+    this.paramSet.emit()
   }
 }
-sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput);
+sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput)
 
 /** Class representing an operator.
  * @extends BaseItem
@@ -219,18 +220,18 @@ class Operator extends BaseItem {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
+    super(name)
 
     // Items which can be constructed by a user(not loaded in binary data.)
-    // Should always have this flag set. 
-    this.setFlag(ItemFlags.USER_EDITED);
+    // Should always have this flag set.
+    this.setFlag(ItemFlags.USER_EDITED)
 
-    this.__outputs = [];
-    this.__evalOutput = this.__evalOutput.bind(this);
-    this.__opInputChanged = this.__opInputChanged.bind(this);
-    this.parameterValueChanged.connect(this.__opInputChanged);
+    this.__outputs = []
+    this.__evalOutput = this.__evalOutput.bind(this)
+    this.__opInputChanged = this.__opInputChanged.bind(this)
+    this.parameterValueChanged.connect(this.__opInputChanged)
 
-    this.postEval = new Signal();
+    this.postEval = new Signal()
   }
 
   /**
@@ -239,11 +240,11 @@ class Operator extends BaseItem {
    * @return {any} - The return value.
    */
   addOutput(output) {
-    this.__outputs.push(output);
+    this.__outputs.push(output)
     output.paramSet.connect(() => {
-      output.setDirty(this.__evalOutput);
-    });
-    return output;
+      output.setDirty(this.__evalOutput)
+    })
+    return output
   }
 
   /**
@@ -251,7 +252,7 @@ class Operator extends BaseItem {
    * @param {any} output - The output param.
    */
   removeOutput(output) {
-    this.__outputs.splice(this.__outputs.indexOf(output), 1);
+    this.__outputs.splice(this.__outputs.indexOf(output), 1)
   }
 
   /**
@@ -268,7 +269,7 @@ class Operator extends BaseItem {
    * @return {object} - The return value.
    */
   getOutput(index) {
-    return this.__outputs[index];
+    return this.__outputs[index]
   }
 
   /**
@@ -278,7 +279,7 @@ class Operator extends BaseItem {
    */
   getOutputByName(name) {
     for (const o of this.__outputs) {
-      if (o.getName() == name) return o;
+      if (o.getName() == name) return o
     }
   }
 
@@ -289,9 +290,9 @@ class Operator extends BaseItem {
    */
   __evalOutput(cleanedParam /* value, getter */) {
     for (const o of this.__outputs) {
-      o.removeCleanerFn(this.__evalOutput);
+      o.removeCleanerFn(this.__evalOutput)
     }
-    this.evaluate();
+    this.evaluate()
 
     // Why does the cleaner need to return a value?
     // Usually operators are connected to multiple outputs.
@@ -307,14 +308,14 @@ class Operator extends BaseItem {
     // Note: when the operator evaluates, it will remove the cleaners
     // on all outputs. This means that after the first operator to
     // cause an evaluation, all outputs are considered clean.
-    for (const o of this.__outputs) o.setDirty(this.__evalOutput);
+    for (const o of this.__outputs) o.setDirty(this.__evalOutput)
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
-    throw new Error('Not yet implemented');
+    throw new Error('Not yet implemented')
   }
 
   // ////////////////////////////////////////
@@ -327,16 +328,16 @@ class Operator extends BaseItem {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const j = super.toJSON(context, flags);
-    j.type = sgFactory.getClassName(this);
+    const j = super.toJSON(context, flags)
+    j.type = sgFactory.getClassName(this)
 
-    const oj = [];
+    const oj = []
     for (const o of this.__outputs) {
-      oj.push(o.toJSON(context, flags));
+      oj.push(o.toJSON(context, flags))
     }
 
-    j.outputs = oj;
-    return j;
+    j.outputs = oj
+    return j
   }
 
   /**
@@ -346,43 +347,43 @@ class Operator extends BaseItem {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
+    super.fromJSON(j, context, flags)
 
     if (j.outputs) {
       for (let i = 0; i < this.__outputs.length; i++) {
-        const output = this.__outputs[i];
-        output.fromJSON(j.outputs[i], context);
+        const output = this.__outputs[i]
+        output.fromJSON(j.outputs[i], context)
       }
 
       // Force an evaluation of the operator as soon as loading is done.
       context.addPLCB(() => {
-        this.__opInputChanged();
-      });
+        this.__opInputChanged()
+      })
     }
   }
 
   /**
    * The detach method.
    */
-  detach(){
-    this.__outputs.forEach(output => output.detach());
+  detach() {
+    this.__outputs.forEach(output => output.detach())
   }
 
   /**
    * The reattach method.
    */
-  reattach(){
-    this.__outputs.forEach(output => output.reattach());
+  reattach() {
+    this.__outputs.forEach(output => output.reattach())
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
-    this.__outputs = [];
+    super.destroy()
+    this.__outputs = []
   }
 }
 
-export { Operator, OperatorOutput, XfoOperatorOutput };
+export { Operator, OperatorOutput, XfoOperatorOutput }
 // export default AssetItem;

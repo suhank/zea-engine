@@ -1,6 +1,6 @@
-import { PassType } from './GLPass.js';
-import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js';
-import { GLRenderer } from '../GLRenderer.js';
+import { PassType } from './GLPass.js'
+import { GLOpaqueGeomsPass } from './GLOpaqueGeomsPass.js'
+import { GLRenderer } from '../GLRenderer.js'
 
 /** Class representing a GL overlay pass.
  * @extends GLOpaqueGeomsPass
@@ -11,7 +11,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {string} name - The name value.
    */
   constructor() {
-    super();
+    super()
   }
 
   /**
@@ -20,7 +20,7 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {any} passIndex - The passIndex param.
    */
   init(renderer, passIndex) {
-    super.init(renderer, passIndex);
+    super.init(renderer, passIndex)
   }
 
   // ///////////////////////////////////
@@ -32,11 +32,11 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @return {any} - The return value.
    */
   filterGeomItem(geomItem) {
-    const shaderClass = geomItem.getMaterial().getShaderClass();
+    const shaderClass = geomItem.getMaterial().getShaderClass()
     if (shaderClass) {
-      if (shaderClass.isOverlay()) return true;
+      if (shaderClass.isOverlay()) return true
     }
-    return false;
+    return false
   }
 
   /**
@@ -44,30 +44,30 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {any} renderstate - The renderstate param.
    */
   draw(renderstate) {
-    if (this.newItemsReadyForLoading()) this.finalize();
+    if (this.newItemsReadyForLoading()) this.finalize()
 
-    const gl = this.__gl;
+    const gl = this.__gl
 
     // Clear the depth buffer so handls are always drawn over the top.
-    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.DEPTH_BUFFER_BIT)
 
     if (false)
       // 2-sided rendering.
-      gl.disable(gl.CULL_FACE);
+      gl.disable(gl.CULL_FACE)
     // 2-sided rendering.
     else {
-      gl.enable(gl.CULL_FACE);
-      gl.cullFace(gl.BACK);
+      gl.enable(gl.CULL_FACE)
+      gl.cullFace(gl.BACK)
     }
-    gl.enable(gl.BLEND);
-    gl.blendEquation(gl.FUNC_ADD);
+    gl.enable(gl.BLEND)
+    gl.blendEquation(gl.FUNC_ADD)
 
-    renderstate.pass = 'ADD';
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+    renderstate.pass = 'ADD'
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
-    this.__traverseTreeAndDraw(renderstate);
+    this.__traverseTreeAndDraw(renderstate)
 
-    gl.disable(gl.BLEND);
+    gl.disable(gl.BLEND)
     // gl.enable(gl.DEPTH_TEST);
   }
 
@@ -76,25 +76,25 @@ class GLOverlayPass extends GLOpaqueGeomsPass {
    * @param {any} renderstate - The renderstate param.
    */
   drawGeomData(renderstate) {
-    const gl = this.__gl;
+    const gl = this.__gl
 
     // Clear the depth buffer so handls are always drawn over the top.
-    gl.clear(gl.DEPTH_BUFFER_BIT);
+    gl.clear(gl.DEPTH_BUFFER_BIT)
 
     // gl.disable(gl.DEPTH_TEST);
-    gl.enable(gl.BLEND);
-    gl.blendEquation(gl.FUNC_ADD);
+    gl.enable(gl.BLEND)
+    gl.blendEquation(gl.FUNC_ADD)
 
-    renderstate.pass = 'ADD';
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA); // For add
+    renderstate.pass = 'ADD'
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA) // For add
 
-    super.drawGeomData(renderstate);
+    super.drawGeomData(renderstate)
 
-    gl.disable(gl.BLEND);
-    gl.enable(gl.DEPTH_TEST);
+    gl.disable(gl.BLEND)
+    gl.enable(gl.DEPTH_TEST)
   }
 }
 
-GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY);
+GLRenderer.registerPass(GLOverlayPass, PassType.OVERLAY)
 
-export { GLOverlayPass };
+export { GLOverlayPass }

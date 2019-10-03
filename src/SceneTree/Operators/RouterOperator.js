@@ -1,13 +1,13 @@
-import { Operator, OperatorOutput } from './Operator.js';
+import { Operator, OperatorOutput } from './Operator.js'
 import {
   ValueGetMode,
   Parameter,
   NumberParameter,
   StructParameter,
   ListParameter,
-} from '../Parameters';
+} from '../Parameters'
 
-import { sgFactory } from '../SGFactory.js';
+import { sgFactory } from '../SGFactory.js'
 
 /** Class representing a router operator.
  * @extends Operator
@@ -18,35 +18,35 @@ class RouterOperator extends Operator {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
+    super(name)
 
-    this.__inputParam = this.addParameter(new NumberParameter('Input'));
+    this.__inputParam = this.addParameter(new NumberParameter('Input'))
     this.__routesParam = this.addParameter(
       new ListParameter('Routes', NumberParameter)
-    );
+    )
     this.__routesParam.elementAdded.connect((value, index) => {
-      value.setValue(1.0);
-      this.addOutput(new OperatorOutput('Output'));
-    });
+      value.setValue(1.0)
+      this.addOutput(new OperatorOutput('Output'))
+    })
     this.__routesParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(this.getOutput(index));
-    });
+      this.removeOutput(this.getOutput(index))
+    })
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
-    const input = this.__inputParam.getValue(ValueGetMode.OPERATOR_GETVALUE);
-    const routes = this.__routesParam.getValue();
-    let i = this.__outputs.length;
+    const input = this.__inputParam.getValue(ValueGetMode.OPERATOR_GETVALUE)
+    const routes = this.__routesParam.getValue()
+    let i = this.__outputs.length
     while (i--) {
-      const output = this.__outputs[i];
+      const output = this.__outputs[i]
       output.setValue(
         input * routes[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
-      );
+      )
     }
-    this.postEval.emit(input);
+    this.postEval.emit(input)
   }
 
   // ////////////////////////////////////////
@@ -59,7 +59,7 @@ class RouterOperator extends Operator {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    return super.toJSON(context, flags);
+    return super.toJSON(context, flags)
   }
 
   /**
@@ -69,17 +69,17 @@ class RouterOperator extends Operator {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
+    super.fromJSON(j, context, flags)
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
   }
 }
 
-sgFactory.registerClass('RouterOperator', RouterOperator);
+sgFactory.registerClass('RouterOperator', RouterOperator)
 
-export { RouterOperator };
+export { RouterOperator }

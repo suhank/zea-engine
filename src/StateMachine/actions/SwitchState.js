@@ -1,8 +1,8 @@
-import { sgFactory } from '../../SceneTree/SGFactory.js';
+import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { StringParameter } from '../../SceneTree/Parameters';
+import { StringParameter } from '../../SceneTree/Parameters'
 
-import { StateAction } from '../StateAction.js';
+import { StateAction } from '../StateAction.js'
 
 /** Class representing switching a state.
  * @extends StateAction
@@ -12,10 +12,10 @@ class SwitchState extends StateAction {
    * Create a switch state.
    */
   constructor() {
-    super();
+    super()
     this.__targetStateParam = this.addParameter(
       new StringParameter('TargetState', '')
-    );
+    )
   }
 
   /**
@@ -24,9 +24,9 @@ class SwitchState extends StateAction {
   activate() {
     this.__state
       .getStateMachine()
-      .activateState(this.__targetStateParam.getValue());
+      .activateState(this.__targetStateParam.getValue())
   }
 }
 
-sgFactory.registerClass('SwitchState', SwitchState);
-export { SwitchState };
+sgFactory.registerClass('SwitchState', SwitchState)
+export { SwitchState }

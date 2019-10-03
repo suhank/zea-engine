@@ -1,6 +1,6 @@
-import { Signal } from '../../Utilities';
-import { Box3 } from '../../Math';
-import { RefCounted } from '../RefCounted.js';
+import { Signal } from '../../Utilities'
+import { Box3 } from '../../Math'
+import { RefCounted } from '../RefCounted.js'
 
 /** Class representing a base proxy.
  * @extends RefCounted
@@ -11,18 +11,18 @@ class BaseProxy extends RefCounted {
    * @param {any} data - The data value.
    */
   constructor(data) {
-    super();
-    this.name = data.name;
-    this.__buffers = data.geomBuffers;
-    this.boundingBox = new Box3();
-    this.boundingBox.p0.__data = data.bbox.p0.__data;
-    this.boundingBox.p1.__data = data.bbox.p1.__data;
+    super()
+    this.name = data.name
+    this.__buffers = data.geomBuffers
+    this.boundingBox = new Box3()
+    this.boundingBox.p0.__data = data.bbox.p0.__data
+    this.boundingBox.p1.__data = data.bbox.p1.__data
 
-    this.__metaData = new Map();
+    this.__metaData = new Map()
 
-    this.boundingBoxDirtied = new Signal();
-    this.geomDataChanged = new Signal();
-    this.geomDataTopologyChanged = new Signal();
+    this.boundingBoxDirtied = new Signal()
+    this.geomDataChanged = new Signal()
+    this.geomDataTopologyChanged = new Signal()
   }
 
   /**
@@ -30,7 +30,7 @@ class BaseProxy extends RefCounted {
    * @return {any} - The return value.
    */
   genBuffers() {
-    return this.__buffers;
+    return this.__buffers
   }
 
   /**
@@ -39,21 +39,21 @@ class BaseProxy extends RefCounted {
   freeBuffers() {
     // Note: Explicitly transfer data to a web worker and then
     // terminate the worker. (hacky way to free TypedArray memory explicitly)
-    const freeData = { attrBuffers: {} };
-    const transferables = [];
+    const freeData = { attrBuffers: {} }
+    const transferables = []
     if (this.__buffers.indices) {
-      transferables.push(this.__buffers.indices.buffer);
-      freeData.indices = this.__buffers.indices;
-      delete this.__buffers.indices;
+      transferables.push(this.__buffers.indices.buffer)
+      freeData.indices = this.__buffers.indices
+      delete this.__buffers.indices
     }
     if (this.__buffers.attrBuffers) {
       for (const attrName in this.__buffers.attrBuffers) {
-        const attrData = this.__buffers.attrBuffers[attrName];
-        freeData.attrBuffers[attrName] = this.__buffers.attrBuffers[attrName];
-        transferables.push(attrData.values.buffer);
-        delete this.__buffers.attrBuffers[attrName];
+        const attrData = this.__buffers.attrBuffers[attrName]
+        freeData.attrBuffers[attrName] = this.__buffers.attrBuffers[attrName]
+        transferables.push(attrData.values.buffer)
+        delete this.__buffers.attrBuffers[attrName]
       }
-      delete this.__buffers.attrBuffers;
+      delete this.__buffers.attrBuffers
     }
   }
 
@@ -66,7 +66,7 @@ class BaseProxy extends RefCounted {
    * @return {any} - The return value.
    */
   getMetadata(key) {
-    return this.__metaData.get(key);
+    return this.__metaData.get(key)
   }
 
   /**
@@ -75,7 +75,7 @@ class BaseProxy extends RefCounted {
    * @return {any} - The return value.
    */
   hasMetadata(key) {
-    return this.__metaData.has(key);
+    return this.__metaData.has(key)
   }
 
   /**
@@ -84,7 +84,7 @@ class BaseProxy extends RefCounted {
    * @param {object} metaData - The metaData param.
    */
   setMetadata(key, metaData) {
-    this.__metaData.set(key, metaData);
+    this.__metaData.set(key, metaData)
   }
 }
 
@@ -97,7 +97,7 @@ class PointsProxy extends BaseProxy {
    * @param {any} data - The data value.
    */
   constructor(data) {
-    super(data);
+    super(data)
   }
 }
 
@@ -110,7 +110,7 @@ class LinesProxy extends BaseProxy {
    * @param {any} data - The data value.
    */
   constructor(data) {
-    super(data);
+    super(data)
   }
 }
 
@@ -123,8 +123,8 @@ class MeshProxy extends BaseProxy {
    * @param {any} data - The data value.
    */
   constructor(data) {
-    super(data);
+    super(data)
   }
 }
 
-export { PointsProxy, LinesProxy, MeshProxy };
+export { PointsProxy, LinesProxy, MeshProxy }

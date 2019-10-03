@@ -1,5 +1,5 @@
-import { Color } from '../../Math';
-import { Signal, Async } from '../../Utilities';
+import { Color } from '../../Math'
+import { Signal, Async } from '../../Utilities'
 import {
   Parameter,
   BooleanParameter,
@@ -8,10 +8,10 @@ import {
   Vec3Parameter,
   ColorParameter,
   StringParameter,
-} from '../Parameters';
-import { sgFactory } from '../SGFactory.js';
-import { DataImage } from './DataImage.js';
-import { labelManager } from './LabelManager.js';
+} from '../Parameters'
+import { sgFactory } from '../SGFactory.js'
+import { DataImage } from './DataImage.js'
+import { labelManager } from './LabelManager.js'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -45,10 +45,10 @@ function roundRect(
   strokeWidth
 ) {
   if (typeof stroke == 'undefined') {
-    stroke = true;
+    stroke = true
   }
   if (typeof radius === 'undefined') {
-    radius = 5;
+    radius = 5
   }
   if (typeof radius === 'number') {
     radius = {
@@ -56,40 +56,35 @@ function roundRect(
       tr: radius,
       br: radius,
       bl: radius,
-    };
+    }
   } else {
     const defaultRadius = {
       tl: 0,
       tr: 0,
       br: 0,
       bl: 0,
-    };
+    }
     for (const side in defaultRadius) {
-      radius[side] = radius[side] || defaultRadius[side];
+      radius[side] = radius[side] || defaultRadius[side]
     }
   }
-  ctx.beginPath();
-  ctx.moveTo(x + radius.tl, y);
-  ctx.lineTo(x + width - radius.tr, y);
-  ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
-  ctx.lineTo(x + width, y + height - radius.br);
-  ctx.quadraticCurveTo(
-    x + width,
-    y + height,
-    x + width - radius.br,
-    y + height
-  );
-  ctx.lineTo(x + radius.bl, y + height);
-  ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
-  ctx.lineTo(x, y + radius.tl);
-  ctx.quadraticCurveTo(x, y, x + radius.tl, y);
-  ctx.closePath();
+  ctx.beginPath()
+  ctx.moveTo(x + radius.tl, y)
+  ctx.lineTo(x + width - radius.tr, y)
+  ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr)
+  ctx.lineTo(x + width, y + height - radius.br)
+  ctx.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height)
+  ctx.lineTo(x + radius.bl, y + height)
+  ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl)
+  ctx.lineTo(x, y + radius.tl)
+  ctx.quadraticCurveTo(x, y, x + radius.tl, y)
+  ctx.closePath()
   if (fill) {
-    ctx.fill();
+    ctx.fill()
   }
   if (stroke) {
-    ctx.lineWidth = strokeWidth;
-    ctx.stroke();
+    ctx.lineWidth = strokeWidth
+    ctx.stroke()
   }
 }
 
@@ -103,15 +98,15 @@ class Label extends DataImage {
    * @param {any} library - The library value.
    */
   constructor(name, library) {
-    super(name);
+    super(name)
 
-    this.__canvasElem = document.createElement('canvas');
-    const fontSize = 22;
-    const outlineColor = new Color(0.2, 0.2, 0.2, 1.0);
-    const backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5);
+    this.__canvasElem = document.createElement('canvas')
+    const fontSize = 22
+    const outlineColor = new Color(0.2, 0.2, 0.2, 1.0)
+    const backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5)
 
-    const libraryParam = this.addParameter(new StringParameter('library'));
-    this.addParameter(new StringParameter('text', ''));
+    const libraryParam = this.addParameter(new StringParameter('library'))
+    this.addParameter(new StringParameter('text', ''))
     // or load the label when it is loaded.
 
     // const setLabelTextToLibrary = ()=>{
@@ -122,172 +117,175 @@ class Label extends DataImage {
     // }
     // textParam.valueChanged.connect(setLabelText);
 
-    this.addParameter(
-      new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0))
-    );
-    this.addParameter(new StringParameter('textAlign', 'left', 'String'));
+    this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)))
+    this.addParameter(new StringParameter('textAlign', 'left', 'String'))
     // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
-    this.addParameter(new StringParameter('fillText', true));
-    this.addParameter(new NumberParameter('margin', fontSize * 0.5));
-    this.addParameter(new NumberParameter('borderWidth', 2));
-    this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5));
-    this.addParameter(new BooleanParameter('outline', false));
-    this.addParameter(new BooleanParameter('outlineColor', outlineColor));
-    this.addParameter(new BooleanParameter('background', true));
-    this.addParameter(new ColorParameter('backgroundColor', backgroundColor));
-    this.addParameter(new BooleanParameter('fillBackground', true));
-    this.addParameter(new BooleanParameter('strokeBackgroundOutline', true));
-    const fontSizeParam = this.addParameter(
-      new NumberParameter('fontSize', 22)
-    );
+    this.addParameter(new StringParameter('fillText', true))
+    this.addParameter(new NumberParameter('margin', fontSize * 0.5))
+    this.addParameter(new NumberParameter('borderWidth', 2))
+    this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5))
+    this.addParameter(new BooleanParameter('outline', false))
+    this.addParameter(new BooleanParameter('outlineColor', outlineColor))
+    this.addParameter(new BooleanParameter('background', true))
+    this.addParameter(new ColorParameter('backgroundColor', backgroundColor))
+    this.addParameter(new BooleanParameter('fillBackground', true))
+    this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
+    const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
     const fontParam = this.addParameter(
       new StringParameter('font', 'Helvetica', 'String')
-    );
+    )
 
     const reRender = () => {
-      this.renderLabelToImage();
+      this.renderLabelToImage()
     }
-    libraryParam.valueChanged.connect(reRender);
-    this.nameChanged.connect(reRender);
-    fontSizeParam.valueChanged.connect(reRender);
-    fontParam.valueChanged.connect(reRender);
+    libraryParam.valueChanged.connect(reRender)
+    this.nameChanged.connect(reRender)
+    fontSizeParam.valueChanged.connect(reRender)
+    fontParam.valueChanged.connect(reRender)
 
-    if (library)
-      libraryParam.setValue(library);
-    this.renderLabelToImage();
+    if (library) libraryParam.setValue(library)
+    this.renderLabelToImage()
   }
 
   renderLabelToImage() {
-
-    const doRender = ()=>{
-        
+    const doRender = () => {
       let ctx2d = this.__canvasElem.getContext('2d', {
-        'alpha': true
-      });
+        alpha: true,
+      })
 
-      let text = this.getParameter('text').getValue();
-      if (text == '')
-        text = this.getName();
+      let text = this.getParameter('text').getValue()
+      if (text == '') text = this.getName()
 
-      const font = this.getParameter('font').getValue();
-      const fontColor = this.getParameter('fontColor').getValue();
-      const textAlign = this.getParameter('textAlign').getValue();
-      const fontSize = this.getParameter('fontSize').getValue();
-      const fillText = this.getParameter('fillText').getValue();
-      const margin = this.getParameter('margin').getValue();
-      const borderWidth = this.getParameter('borderWidth').getValue();
-      const borderRadius = this.getParameter('borderRadius').getValue();
-      const outline = this.getParameter('outline').getValue();
-      const outlineColor = this.getParameter('outlineColor').getValue();
-      const background = this.getParameter('background').getValue();
-      const backgroundColor = this.getParameter('backgroundColor').getValue();
-      const fillBackground = this.getParameter('fillBackground').getValue();
-      const strokeBackgroundOutline = this.getParameter('strokeBackgroundOutline').getValue();
+      const font = this.getParameter('font').getValue()
+      const fontColor = this.getParameter('fontColor').getValue()
+      const textAlign = this.getParameter('textAlign').getValue()
+      const fontSize = this.getParameter('fontSize').getValue()
+      const fillText = this.getParameter('fillText').getValue()
+      const margin = this.getParameter('margin').getValue()
+      const borderWidth = this.getParameter('borderWidth').getValue()
+      const borderRadius = this.getParameter('borderRadius').getValue()
+      const outline = this.getParameter('outline').getValue()
+      const outlineColor = this.getParameter('outlineColor').getValue()
+      const background = this.getParameter('background').getValue()
+      const backgroundColor = this.getParameter('backgroundColor').getValue()
+      const fillBackground = this.getParameter('fillBackground').getValue()
+      const strokeBackgroundOutline = this.getParameter(
+        'strokeBackgroundOutline'
+      ).getValue()
 
       // let ratio = devicePixelRatio / backingStoreRatio;
-      const marginAndBorder = margin + borderWidth;
+      const marginAndBorder = margin + borderWidth
       const lines = text.split('\n')
 
-      ctx2d.font = fontSize + 'px "' + font + '"';
+      ctx2d.font = fontSize + 'px "' + font + '"'
       // console.log("renderLabelToImage:" + ctx2d.font);
-      let width = 0;
+      let width = 0
       lines.forEach(line => {
         width = Math.max(ctx2d.measureText(line).width, width)
       })
       const fontHeight = parseInt(fontSize)
-      this.width = (width + (marginAndBorder * 2));
-      this.height = (fontHeight * lines.length + (marginAndBorder * 2));
-      ctx2d.canvas.width = this.width;
-      ctx2d.canvas.height = this.height;
+      this.width = width + marginAndBorder * 2
+      this.height = fontHeight * lines.length + marginAndBorder * 2
+      ctx2d.canvas.width = this.width
+      ctx2d.canvas.height = this.height
 
       // ctx2d.clearRect(0, 0, this.width, this.height);
-      ctx2d.fillStyle = "rgba(0, 0, 0, 0.0)";
-      ctx2d.fillRect(0, 0, this.width, this.height);
+      ctx2d.fillStyle = 'rgba(0, 0, 0, 0.0)'
+      ctx2d.fillRect(0, 0, this.width, this.height)
 
       if (background) {
-        ctx2d.fillStyle = backgroundColor.toHex();
-        ctx2d.strokeStyle = outlineColor.toHex();
-        roundRect(ctx2d, borderWidth, borderWidth, this.width - (borderWidth * 2), this.height - (borderWidth * 2), borderRadius, fillBackground, strokeBackgroundOutline, borderWidth);
+        ctx2d.fillStyle = backgroundColor.toHex()
+        ctx2d.strokeStyle = outlineColor.toHex()
+        roundRect(
+          ctx2d,
+          borderWidth,
+          borderWidth,
+          this.width - borderWidth * 2,
+          this.height - borderWidth * 2,
+          borderRadius,
+          fillBackground,
+          strokeBackgroundOutline,
+          borderWidth
+        )
       }
 
-      ctx2d.font = fontSize + 'px "' + font + '"';
-      ctx2d.textAlign = textAlign;
-      ctx2d.fillStyle = fontColor.toHex();
-      ctx2d.textBaseline = "hanging";
+      ctx2d.font = fontSize + 'px "' + font + '"'
+      ctx2d.textAlign = textAlign
+      ctx2d.fillStyle = fontColor.toHex()
+      ctx2d.textBaseline = 'hanging'
       lines.forEach((line, index) => {
-        ctx2d.fillText(line, marginAndBorder, marginAndBorder + (index * fontHeight));
+        ctx2d.fillText(
+          line,
+          marginAndBorder,
+          marginAndBorder + index * fontHeight
+        )
       })
 
       if (outline) {
-        ctx2d.strokeStyle = outlineColor.toHex();
-        ctx2d.lineWidth = 1.5;
-        ctx2d.strokeText(text, marginAndBorder, marginAndBorder);
+        ctx2d.strokeStyle = outlineColor.toHex()
+        ctx2d.lineWidth = 1.5
+        ctx2d.strokeText(text, marginAndBorder, marginAndBorder)
       }
 
-      this.__data = ctx2d.getImageData(0, 0, this.width, this.height);
+      this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
 
       if (!this.__loaded) {
-        this.__loaded = true;
-        this.loaded.emit();
+        this.__loaded = true
+        this.loaded.emit()
       } else {
-        this.updated.emit();
+        this.updated.emit()
       }
     }
 
-    const loadText = ()=>{
+    const loadText = () => {
       return new Promise(resolve => {
-        const library = this.getParameter('library').getValue();
+        const library = this.getParameter('library').getValue()
         if (library == '') {
-          resolve();
-          return;
+          resolve()
+          return
         }
         if (!labelManager.isLibraryFound(library)) {
-          console.warn("Label Libary not found:", library);
-          resolve();
-          return;
+          console.warn('Label Libary not found:', library)
+          resolve()
+          return
         }
-        const getLibraryText = ()=>{
+        const getLibraryText = () => {
           try {
-            const name = this.getName();
+            const name = this.getName()
             // console.log("Text Loaded:" + name);
-            const text = labelManager.getLabelText(library, name);
-            this.getParameter('text').setValue(text);
+            const text = labelManager.getLabelText(library, name)
+            this.getParameter('text').setValue(text)
           } catch (e) {
             // Note: if the text is not found in the labels pack
-            // an exception is thrown, and we catch it here. 
-            console.warn(e);
+            // an exception is thrown, and we catch it here.
+            console.warn(e)
           }
-          resolve();
+          resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.labelLibraryLoaded.connect((loadedLibrary) => {
-            if (loadedLibrary == library)
-              getLibraryText()
-          });
-        }
-        else {
-          getLibraryText();
+          labelManager.labelLibraryLoaded.connect(loadedLibrary => {
+            if (loadedLibrary == library) getLibraryText()
+          })
+        } else {
+          getLibraryText()
         }
       })
     }
-    const loadFont = ()=>{
+    const loadFont = () => {
       return new Promise(resolve => {
         if (document.fonts != undefined) {
-          const font = this.getParameter('font').getValue();
-          const fontSize = this.getParameter('fontSize').getValue();
+          const font = this.getParameter('font').getValue()
+          const fontSize = this.getParameter('fontSize').getValue()
           document.fonts.load(fontSize + 'px "' + font + '"').then(() => {
             // console.log("Font Loaded:" + font);
-            resolve();
-          });
+            resolve()
+          })
         } else {
-          resolve();
+          resolve()
         }
       })
     }
-    Promise.all([
-      loadText(),
-      loadFont()
-    ]).then(doRender)
+    Promise.all([loadText(), loadFont()]).then(doRender)
   }
 
   /**
@@ -296,7 +294,7 @@ class Label extends DataImage {
    */
   getParams() {
     // this.renderLabelToImage();
-    return super.getParams();
+    return super.getParams()
   }
 
   // ////////////////////////////////////////
@@ -309,8 +307,8 @@ class Label extends DataImage {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const j = super.toJSON(context, flags);
-    return j;
+    const j = super.toJSON(context, flags)
+    return j
   }
 
   /**
@@ -320,11 +318,11 @@ class Label extends DataImage {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
-    this.__getLabelText();
+    super.fromJSON(j, context, flags)
+    this.__getLabelText()
   }
 }
 
-sgFactory.registerClass('Label', Label);
+sgFactory.registerClass('Label', Label)
 
-export { Label };
+export { Label }

@@ -1,13 +1,13 @@
-import { Vec4 } from '../Math';
-import { Signal } from '../Utilities';
-import { BaseItem } from './BaseItem.js';
+import { Vec4 } from '../Math'
+import { Signal } from '../Utilities'
+import { BaseItem } from './BaseItem.js'
 
 import {
   Parameter,
   BooleanParameter,
   NumberParameter,
   ParameterSet,
-} from './Parameters';
+} from './Parameters'
 
 /** Class representing a base image.
  * @extends BaseItem
@@ -19,22 +19,22 @@ class BaseImage extends BaseItem {
    * @param {any} params - The params value.
    */
   constructor(name, params = {}) {
-    super(name);
-    this.width = 0;
-    this.height = 0;
-    this.format = 'RGB';
-    this.type = 'UNSIGNED_BYTE';
+    super(name)
+    this.width = 0
+    this.height = 0
+    this.format = 'RGB'
+    this.type = 'UNSIGNED_BYTE'
 
-    this.addParameter(new BooleanParameter('AlphaFromLuminance', false));
-    this.addParameter(new BooleanParameter('Invert', false));
-    this.addParameter(new BooleanParameter('FlipY', false));
+    this.addParameter(new BooleanParameter('AlphaFromLuminance', false))
+    this.addParameter(new BooleanParameter('Invert', false))
+    this.addParameter(new BooleanParameter('FlipY', false))
 
-    this.updated = this.parameterValueChanged;
+    this.updated = this.parameterValueChanged
 
     // Note: many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     // Instead we should start using a loaded Promise.
-    this.loaded = new Signal(true);
+    this.loaded = new Signal(true)
   }
 
   /**
@@ -42,7 +42,7 @@ class BaseImage extends BaseItem {
    * @return {boolean} - The return value.
    */
   isLoaded() {
-    return true;
+    return true
   }
 
   /**
@@ -50,7 +50,7 @@ class BaseImage extends BaseItem {
    * @return {any} - The return value.
    */
   getMapping() {
-    return this.__mapping;
+    return this.__mapping
   }
 
   /**
@@ -58,7 +58,7 @@ class BaseImage extends BaseItem {
    * @param {any} mapping - The mapping param.
    */
   setMapping(mapping) {
-    this.__mapping = mapping;
+    this.__mapping = mapping
   }
 
   /**
@@ -66,7 +66,7 @@ class BaseImage extends BaseItem {
    * @return {boolean} - The return value.
    */
   isStream() {
-    return false;
+    return false
   }
 
   /**
@@ -74,7 +74,7 @@ class BaseImage extends BaseItem {
    * @return {any} - The return value.
    */
   isStreamAtlas() {
-    return this.__streamAtlas;
+    return this.__streamAtlas
   }
 
   /**
@@ -90,8 +90,8 @@ class BaseImage extends BaseItem {
       flipY: this.getParameter('FlipY').getValue(),
       invert: this.getParameter('Invert').getValue(),
       alphaFromLuminance: this.getParameter('AlphaFromLuminance').getValue(),
-    };
+    }
   }
 }
 
-export { BaseImage };
+export { BaseImage }

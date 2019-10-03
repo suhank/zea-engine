@@ -1,4 +1,4 @@
-import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math';
+import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math'
 
 /** Class representing a bin reader. */
 class BinReader {
@@ -9,38 +9,38 @@ class BinReader {
    * @param {boolean} isMobileDevice - The isMobileDevice value.
    */
   constructor(data, byteOffset = 0, isMobileDevice = true) {
-    this.__data = data;
-    this.__byteOffset = byteOffset;
-    this.__dataView = new DataView(this.__data);
-    this.__isMobileDevice = isMobileDevice;
+    this.__data = data
+    this.__byteOffset = byteOffset
+    this.__dataView = new DataView(this.__data)
+    this.__isMobileDevice = isMobileDevice
   }
 
   /**
    * Getter for isMobileDevice.
    */
   get isMobileDevice() {
-    return this.__isMobileDevice;
+    return this.__isMobileDevice
   }
 
   /**
    * Getter for data.
    */
   get data() {
-    return this.__data;
+    return this.__data
   }
 
   /**
    * Getter for byteLength.
    */
   get byteLength() {
-    return this.__dataView.byteLength;
+    return this.__dataView.byteLength
   }
 
   /**
    * Getter for remainingByteLength.
    */
   get remainingByteLength() {
-    return this.__dataView.byteLength - this.__byteOffset;
+    return this.__dataView.byteLength - this.__byteOffset
   }
 
   /**
@@ -48,7 +48,7 @@ class BinReader {
    * @return {any} - The return value.
    */
   pos() {
-    return this.__byteOffset;
+    return this.__byteOffset
   }
 
   /**
@@ -56,7 +56,7 @@ class BinReader {
    * @param {number} byteOffset - The byteOffset param.
    */
   seek(byteOffset) {
-    this.__byteOffset = byteOffset;
+    this.__byteOffset = byteOffset
   }
 
   /**
@@ -64,7 +64,7 @@ class BinReader {
    * @param {number} byteOffset - The byteOffset param.
    */
   advance(byteOffset) {
-    this.__byteOffset += byteOffset;
+    this.__byteOffset += byteOffset
   }
 
   /**
@@ -72,9 +72,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt8() {
-    const result = this.__dataView.getUint8(this.__byteOffset);
-    this.__byteOffset += 1;
-    return result;
+    const result = this.__dataView.getUint8(this.__byteOffset)
+    this.__byteOffset += 1
+    return result
   }
 
   /**
@@ -82,9 +82,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt16() {
-    const result = this.__dataView.getUint16(this.__byteOffset, true);
-    this.__byteOffset += 2;
-    return result;
+    const result = this.__dataView.getUint16(this.__byteOffset, true)
+    this.__byteOffset += 2
+    return result
   }
 
   /**
@@ -92,9 +92,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt32() {
-    const result = this.__dataView.getUint32(this.__byteOffset, true);
-    this.__byteOffset += 4;
-    return result;
+    const result = this.__dataView.getUint32(this.__byteOffset, true)
+    this.__byteOffset += 4
+    return result
   }
 
   /**
@@ -102,9 +102,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadSInt32() {
-    const result = this.__dataView.getInt32(this.__byteOffset, true);
-    this.__byteOffset += 4;
-    return result;
+    const result = this.__dataView.getInt32(this.__byteOffset, true)
+    this.__byteOffset += 4
+    return result
   }
 
   /**
@@ -112,8 +112,8 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat16() {
-    const uint16 = this.loadUInt16();
-    return Math.decode16BitFloat(uint16);
+    const uint16 = this.loadUInt16()
+    return Math.decode16BitFloat(uint16)
   }
 
   /**
@@ -121,11 +121,11 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat16From2xUInt8() {
-    const result = this.__dataView.getFloat16(this.__byteOffset, true);
+    const result = this.__dataView.getFloat16(this.__byteOffset, true)
     // const uint8s = this.loadUInt8Array(2);
     // return Math.decode16BitFloat(uint8s);
-    this.__byteOffset += 2;
-    return result;
+    this.__byteOffset += 2
+    return result
   }
 
   /**
@@ -133,9 +133,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat32() {
-    const result = this.__dataView.getFloat32(this.__byteOffset, true);
-    this.__byteOffset += 4;
-    return result;
+    const result = this.__dataView.getFloat32(this.__byteOffset, true)
+    this.__byteOffset += 4
+    return result
   }
 
   /**
@@ -145,12 +145,12 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt8Array(size = undefined, clone = false) {
-    if (size == undefined) size = this.loadUInt32();
-    const result = new Uint8Array(this.__data, this.__byteOffset, size);
-    this.__byteOffset += size;
-    const padd = this.__byteOffset % 4;
+    if (size == undefined) size = this.loadUInt32()
+    const result = new Uint8Array(this.__data, this.__byteOffset, size)
+    this.__byteOffset += size
+    const padd = this.__byteOffset % 4
     // this.readPadd();
-    return result;
+    return result
   }
 
   /**
@@ -160,22 +160,22 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt16Array(size = undefined, clone = false) {
-    if (size == undefined) size = this.loadUInt32();
-    if (size == 0) return new Uint16Array();
-    this.readPadd(2);
-    let result;
+    if (size == undefined) size = this.loadUInt32()
+    if (size == 0) return new Uint16Array()
+    this.readPadd(2)
+    let result
     if (this.__isMobileDevice) {
-      result = new Uint16Array(size);
+      result = new Uint16Array(size)
       for (let i = 0; i < size; i++) {
-        result[i] = this.__dataView.getUint16(this.__byteOffset, true);
-        this.__byteOffset += 2;
+        result[i] = this.__dataView.getUint16(this.__byteOffset, true)
+        this.__byteOffset += 2
       }
     } else {
-      result = new Uint16Array(this.__data, this.__byteOffset, size);
-      this.__byteOffset += size * 2;
+      result = new Uint16Array(this.__data, this.__byteOffset, size)
+      this.__byteOffset += size * 2
     }
     // this.readPadd();
-    return result;
+    return result
   }
 
   /**
@@ -185,21 +185,21 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt32Array(size = undefined, clone = false) {
-    if (size == undefined) size = this.loadUInt32();
-    if (size == 0) return new Uint32Array();
-    this.readPadd(4);
-    let result;
+    if (size == undefined) size = this.loadUInt32()
+    if (size == 0) return new Uint32Array()
+    this.readPadd(4)
+    let result
     if (this.__isMobileDevice) {
-      result = new Uint32Array(size);
+      result = new Uint32Array(size)
       for (let i = 0; i < size; i++) {
-        result[i] = this.__dataView.getUint32(this.__byteOffset, true);
-        this.__byteOffset += 4;
+        result[i] = this.__dataView.getUint32(this.__byteOffset, true)
+        this.__byteOffset += 4
       }
     } else {
-      result = new Uint32Array(this.__data, this.__byteOffset, size);
-      this.__byteOffset += size * 4;
+      result = new Uint32Array(this.__data, this.__byteOffset, size)
+      this.__byteOffset += size * 4
     }
-    return result;
+    return result
   }
 
   /**
@@ -209,21 +209,21 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat32Array(size = undefined, clone = false) {
-    if (size == undefined) size = this.loadUInt32();
-    if (size == 0) return new Float32Array();
-    this.readPadd(4);
-    let result;
+    if (size == undefined) size = this.loadUInt32()
+    if (size == 0) return new Float32Array()
+    this.readPadd(4)
+    let result
     if (this.__isMobileDevice) {
-      result = new Float32Array(size);
+      result = new Float32Array(size)
       for (let i = 0; i < size; i++) {
-        result[i] = this.__dataView.getFloat32(this.__byteOffset, true);
-        this.__byteOffset += 4;
+        result[i] = this.__dataView.getFloat32(this.__byteOffset, true)
+        this.__byteOffset += 4
       }
     } else {
-      result = new Float32Array(this.__data, this.__byteOffset, size);
-      this.__byteOffset += size * 4;
+      result = new Float32Array(this.__data, this.__byteOffset, size)
+      this.__byteOffset += size * 4
     }
-    return result;
+    return result
   }
 
   /**
@@ -231,13 +231,13 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadStr() {
-    const numChars = this.loadUInt32();
-    const chars = new Uint8Array(this.__data, this.__byteOffset, numChars);
-    this.__byteOffset += numChars;
-    let result = '';
+    const numChars = this.loadUInt32()
+    const chars = new Uint8Array(this.__data, this.__byteOffset, numChars)
+    this.__byteOffset += numChars
+    let result = ''
     for (let i = 0; i < numChars; i++)
-      result = result + String.fromCharCode(chars[i]);
-    return result;
+      result = result + String.fromCharCode(chars[i])
+    return result
   }
 
   /**
@@ -245,13 +245,13 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadStrArray() {
-    const size = this.loadUInt32();
+    const size = this.loadUInt32()
 
-    const result = [];
+    const result = []
     for (let i = 0; i < size; i++) {
-      result[i] = this.loadStr();
+      result[i] = this.loadStr()
     }
-    return result;
+    return result
   }
 
   /**
@@ -259,9 +259,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadSInt32Vec2() {
-    const x = this.loadSInt32();
-    const y = this.loadSInt32();
-    return new Vec2(x, y);
+    const x = this.loadSInt32()
+    const y = this.loadSInt32()
+    return new Vec2(x, y)
   }
 
   /**
@@ -269,9 +269,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadUInt32Vec2() {
-    const x = this.loadUInt32();
-    const y = this.loadUInt32();
-    return new Vec2(x, y);
+    const x = this.loadUInt32()
+    const y = this.loadUInt32()
+    return new Vec2(x, y)
   }
 
   /**
@@ -279,9 +279,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat16Vec2() {
-    const x = this.loadFloat16();
-    const y = this.loadFloat16();
-    return new Vec2(x, y);
+    const x = this.loadFloat16()
+    const y = this.loadFloat16()
+    return new Vec2(x, y)
   }
 
   /**
@@ -289,9 +289,9 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat32Vec2() {
-    const x = this.loadFloat32();
-    const y = this.loadFloat32();
-    return new Vec2(x, y);
+    const x = this.loadFloat32()
+    const y = this.loadFloat32()
+    return new Vec2(x, y)
   }
 
   /**
@@ -299,10 +299,10 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat16Vec3() {
-    const x = this.loadFloat16();
-    const y = this.loadFloat16();
-    const z = this.loadFloat16();
-    return new Vec3(x, y, z);
+    const x = this.loadFloat16()
+    const y = this.loadFloat16()
+    const z = this.loadFloat16()
+    return new Vec3(x, y, z)
   }
 
   /**
@@ -310,10 +310,10 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat32Vec3() {
-    const x = this.loadFloat32();
-    const y = this.loadFloat32();
-    const z = this.loadFloat32();
-    return new Vec3(x, y, z);
+    const x = this.loadFloat32()
+    const y = this.loadFloat32()
+    const z = this.loadFloat32()
+    return new Vec3(x, y, z)
   }
 
   /**
@@ -321,11 +321,11 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat16Quat() {
-    const x = this.loadFloat16();
-    const y = this.loadFloat16();
-    const z = this.loadFloat16();
-    const w = this.loadFloat16();
-    return new Quat(x, y, z, w);
+    const x = this.loadFloat16()
+    const y = this.loadFloat16()
+    const z = this.loadFloat16()
+    const w = this.loadFloat16()
+    return new Quat(x, y, z, w)
   }
 
   /**
@@ -333,11 +333,11 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadFloat32Quat() {
-    const x = this.loadFloat32();
-    const y = this.loadFloat32();
-    const z = this.loadFloat32();
-    const w = this.loadFloat32();
-    return new Quat(x, y, z, w);
+    const x = this.loadFloat32()
+    const y = this.loadFloat32()
+    const z = this.loadFloat32()
+    const w = this.loadFloat32()
+    return new Quat(x, y, z, w)
   }
 
   /**
@@ -345,10 +345,10 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadRGBFloat32Color() {
-    const r = this.loadFloat32();
-    const g = this.loadFloat32();
-    const b = this.loadFloat32();
-    return new Color(r, g, b);
+    const r = this.loadFloat32()
+    const g = this.loadFloat32()
+    const b = this.loadFloat32()
+    return new Color(r, g, b)
   }
 
   /**
@@ -356,11 +356,11 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadRGBAFloat32Color() {
-    const r = this.loadFloat32();
-    const g = this.loadFloat32();
-    const b = this.loadFloat32();
-    const a = this.loadFloat32();
-    return new Color(r, g, b, a);
+    const r = this.loadFloat32()
+    const g = this.loadFloat32()
+    const b = this.loadFloat32()
+    const a = this.loadFloat32()
+    return new Color(r, g, b, a)
   }
 
   /**
@@ -368,10 +368,10 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadRGBUInt8Color() {
-    const r = this.loadUInt8();
-    const g = this.loadUInt8();
-    const b = this.loadUInt8();
-    return new Color(r / 255, g / 255, b / 255);
+    const r = this.loadUInt8()
+    const g = this.loadUInt8()
+    const b = this.loadUInt8()
+    return new Color(r / 255, g / 255, b / 255)
   }
 
   /**
@@ -379,11 +379,11 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadRGBAUInt8Color() {
-    const r = this.loadUInt8();
-    const g = this.loadUInt8();
-    const b = this.loadUInt8();
-    const a = this.loadUInt8();
-    return new Color(r / 255, g / 255, b / 255, a / 255);
+    const r = this.loadUInt8()
+    const g = this.loadUInt8()
+    const b = this.loadUInt8()
+    const a = this.loadUInt8()
+    return new Color(r / 255, g / 255, b / 255, a / 255)
   }
 
   /**
@@ -391,7 +391,7 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadBox2() {
-    return new Box2(this.loadFloat32Vec2(), this.loadFloat32Vec2());
+    return new Box2(this.loadFloat32Vec2(), this.loadFloat32Vec2())
   }
 
   /**
@@ -399,7 +399,7 @@ class BinReader {
    * @return {any} - The return value.
    */
   loadBox3() {
-    return new Box3(this.loadFloat32Vec3(), this.loadFloat32Vec3());
+    return new Box3(this.loadFloat32Vec3(), this.loadFloat32Vec3())
   }
 
   /**
@@ -407,9 +407,9 @@ class BinReader {
    * @param {any} stride - The stride param.
    */
   readPadd(stride) {
-    const padd = this.__byteOffset % stride;
-    if (padd != 0) this.__byteOffset += stride - padd;
+    const padd = this.__byteOffset % stride
+    if (padd != 0) this.__byteOffset += stride - padd
   }
 }
 
-export { BinReader };
+export { BinReader }

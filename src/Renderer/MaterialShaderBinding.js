@@ -1,16 +1,7 @@
-import {
-  SInt32,
-  UInt32,
-  Float32,
-  Vec2,
-  Vec3,
-  Vec4,
-  Color,
-  Mat4,
-} from '../Math';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLHDRImage } from './GLHDRImage.js';
-import { GLImageStream } from './GLImageStream.js';
+import { SInt32, UInt32, Float32, Vec2, Vec3, Vec4, Color, Mat4 } from '../Math'
+import { GLTexture2D } from './GLTexture2D.js'
+import { GLHDRImage } from './GLHDRImage.js'
+import { GLImageStream } from './GLImageStream.js'
 
 /** Class representing simple uniform binding. */
 class SimpleUniformBinding {
@@ -22,30 +13,30 @@ class SimpleUniformBinding {
    * @param {any} unif - The unif value.
    */
   constructor(gl, glmaterial, param, unif) {
-    this.__unif = unif;
+    this.__unif = unif
 
     switch (unif.type) {
       case Boolean:
         // gl.uniform1ui(unif.location, value);// WebGL 2
-        this.uniformXX = gl.uniform1i.bind(gl);
-        break;
+        this.uniformXX = gl.uniform1i.bind(gl)
+        break
       case UInt32:
-        if (gl.name == 'webgl2') this.uniformXX = gl.uniform1ui.bind(gl);
-        else this.uniformXX = gl.uniform1i.bind(gl);
-        break;
+        if (gl.name == 'webgl2') this.uniformXX = gl.uniform1ui.bind(gl)
+        else this.uniformXX = gl.uniform1i.bind(gl)
+        break
       case SInt32:
-        this.uniformXX = gl.uniform1i.bind(gl);
-        break;
+        this.uniformXX = gl.uniform1i.bind(gl)
+        break
       case Float32:
-        this.uniformXX = gl.uniform1f.bind(gl);
-        break;
+        this.uniformXX = gl.uniform1f.bind(gl)
+        break
     }
 
-    this.__val = param.getValue();
+    this.__val = param.getValue()
     param.valueChanged.connect(() => {
-      this.__val = param.getValue();
-      glmaterial.updated.emit();
-    });
+      this.__val = param.getValue()
+      glmaterial.updated.emit()
+    })
   }
 
   /**
@@ -53,7 +44,7 @@ class SimpleUniformBinding {
    * @param {any} renderstate - The renderstate param.
    */
   bind(renderstate) {
-    this.uniformXX(this.__unif.location, this.__val);
+    this.uniformXX(this.__unif.location, this.__val)
   }
 
   /**
@@ -77,25 +68,25 @@ class ComplexUniformBinding {
    * @param {any} unif - The unif value.
    */
   constructor(gl, glmaterial, param, unif) {
-    this.__unif = unif;
+    this.__unif = unif
 
     switch (unif.type) {
       case Vec2:
-        this.uniformXX = gl.uniform2fv.bind(gl);
-        break;
+        this.uniformXX = gl.uniform2fv.bind(gl)
+        break
       case Vec3:
-        this.uniformXX = gl.uniform3fv.bind(gl);
-        break;
+        this.uniformXX = gl.uniform3fv.bind(gl)
+        break
       case Vec4:
-        this.uniformXX = gl.uniform4fv.bind(gl);
-        break;
+        this.uniformXX = gl.uniform4fv.bind(gl)
+        break
     }
 
-    this.__vals = param.getValue().asArray();
+    this.__vals = param.getValue().asArray()
     param.valueChanged.connect(() => {
-      this.__vals = param.getValue().asArray();
-      glmaterial.updated.emit();
-    });
+      this.__vals = param.getValue().asArray()
+      glmaterial.updated.emit()
+    })
   }
 
   /**
@@ -103,7 +94,7 @@ class ComplexUniformBinding {
    * @param {any} renderstate - The renderstate param.
    */
   bind(renderstate) {
-    this.uniformXX(this.__unif.location, this.__vals);
+    this.uniformXX(this.__unif.location, this.__vals)
   }
 
   /**
@@ -127,22 +118,22 @@ class MatrixUniformBinding {
    * @param {any} unif - The unif value.
    */
   constructor(gl, glmaterial, param, unif) {
-    this.__unif = unif;
+    this.__unif = unif
 
     switch (unif.type) {
       case Mat3:
-        this.uniformMatrixXXX = gl.uniformMatrix3fv.bind(gl);
-        break;
+        this.uniformMatrixXXX = gl.uniformMatrix3fv.bind(gl)
+        break
       case Mat4:
-        this.uniformMatrixXXX = gl.uniformMatrix4fv.bind(gl);
-        break;
+        this.uniformMatrixXXX = gl.uniformMatrix4fv.bind(gl)
+        break
     }
 
-    this.__vals = param.getValue().asArray();
+    this.__vals = param.getValue().asArray()
     param.valueChanged.connect(() => {
-      this.__val = param.getValue().asArray();
-      glmaterial.updated.emit();
-    });
+      this.__val = param.getValue().asArray()
+      glmaterial.updated.emit()
+    })
   }
 
   /**
@@ -150,7 +141,7 @@ class MatrixUniformBinding {
    * @param {any} renderstate - The renderstate param.
    */
   bind(renderstate) {
-    this.uniformMatrixXXX(this.__unif.location, false, this.__val);
+    this.uniformMatrixXXX(this.__unif.location, false, this.__val)
   }
 
   /**
@@ -175,102 +166,102 @@ class ColorUniformBinding {
    * @param {any} unifs - The unifs value.
    */
   constructor(gl, glmaterial, param, unif, unifs) {
-    this.__gl = gl;
-    this.__unif = unif;
-    this.__textureUnif = unifs[unif.name + 'Tex'];
-    this.__textureTypeUnif = unifs[unif.name + 'TexType'];
+    this.__gl = gl
+    this.__unif = unif
+    this.__textureUnif = unifs[unif.name + 'Tex']
+    this.__textureTypeUnif = unifs[unif.name + 'TexType']
 
-    this.__vals = [0, 0, 0, 0];
-    this.bind = this.bindValue;
+    this.__vals = [0, 0, 0, 0]
+    this.bind = this.bindValue
 
     const genGLTex = image => {
-      let gltexture = image.getMetadata('gltexture');
-      const textureType = 1;
+      let gltexture = image.getMetadata('gltexture')
+      const textureType = 1
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(this.__gl, image);
+          gltexture = new GLHDRImage(this.__gl, image)
         } else if (image.isStreamAtlas()) {
-          gltexture = new GLImageStream(this.__gl, image);
+          gltexture = new GLImageStream(this.__gl, image)
         }
         // else if (image.hasAlpha()){
         //     gltexture = new GLLDRAlphaImage(this.__gl, image);
         // }
         else {
-          gltexture = new GLTexture2D(this.__gl, image);
+          gltexture = new GLTexture2D(this.__gl, image)
         }
       }
-      this.texBinding = gltexture.preBind(this.__textureUnif, unifs);
+      this.texBinding = gltexture.preBind(this.__textureUnif, unifs)
       gltexture.updated.connect(() => {
-        glmaterial.updated.emit();
-      });
-      this.gltexture = gltexture;
-      this.textureType = textureType;
-      this.bind = this.bindTexture;
-      glmaterial.updated.emit();
-    };
+        glmaterial.updated.emit()
+      })
+      this.gltexture = gltexture
+      this.textureType = textureType
+      this.bind = this.bindTexture
+      glmaterial.updated.emit()
+    }
 
-    let boundImage;
-    let imageLoadedId;
+    let boundImage
+    let imageLoadedId
     const imageLoaded = () => {
-      genGLTex(boundImage);
-    };
+      genGLTex(boundImage)
+    }
     const connectImage = image => {
       if (!image.isLoaded()) {
-        image.loaded.connect(imageLoaded);
+        image.loaded.connect(imageLoaded)
       } else {
-        genGLTex(image);
+        genGLTex(image)
       }
-      boundImage = image;
-    };
+      boundImage = image
+    }
 
     const disconnectImage = () => {
-      const gltexture = boundImage.getMetadata('gltexture');
-      gltexture.destroy();
-      this.texBinding = null;
-      this.gltexture = null;
-      this.textureType = null;
-      this.bind = this.bindValue;
+      const gltexture = boundImage.getMetadata('gltexture')
+      gltexture.destroy()
+      this.texBinding = null
+      this.gltexture = null
+      this.textureType = null
+      this.bind = this.bindValue
 
       if (imageLoadedId) {
-        boundImage.loaded.disconnectId(imageLoadedId);
+        boundImage.loaded.disconnectId(imageLoadedId)
       }
-      boundImage = null;
-      imageLoadedId = null;
-      glmaterial.updated.emit();
-    };
+      boundImage = null
+      imageLoadedId = null
+      glmaterial.updated.emit()
+    }
 
     const update = () => {
       // Sometimes the value of a color param is an image.
-      const value = param.getValue(false);
-      this.__vals = value.asArray();
+      const value = param.getValue(false)
+      this.__vals = value.asArray()
 
       if (this.__textureUnif) {
-        let image;
+        let image
         if (param.getImage) {
-          image = param.getImage();
+          image = param.getImage()
         }
         if (image && image != boundImage) {
-          connectImage(image);
+          connectImage(image)
         } else if (!image && boundImage) {
-          disconnectImage();
+          disconnectImage()
         }
       }
-      glmaterial.updated.emit();
-    };
+      glmaterial.updated.emit()
+    }
 
     /**
      * The update method.
      */
-    update();
+    update()
     if (param.textureConnected) {
       param.textureConnected.connect(() => {
-        connectImage(param.getImage());
-      });
+        connectImage(param.getImage())
+      })
     }
-    param.valueChanged.connect(update);
+    param.valueChanged.connect(update)
 
-    this.uniform1i = gl.uniform1i.bind(gl);
-    this.uniform4fv = gl.uniform4fv.bind(gl);
+    this.uniform1i = gl.uniform1i.bind(gl)
+    this.uniform4fv = gl.uniform4fv.bind(gl)
   }
 
   /**
@@ -278,9 +269,9 @@ class ColorUniformBinding {
    * @param {any} renderstate - The renderstate param.
    */
   bindValue(renderstate) {
-    this.uniform4fv(this.__unif.location, this.__vals);
+    this.uniform4fv(this.__unif.location, this.__vals)
     if (this.__textureTypeUnif)
-      this.uniform1i(this.__textureTypeUnif.location, 0);
+      this.uniform1i(this.__textureTypeUnif.location, 0)
   }
 
   /**
@@ -292,11 +283,11 @@ class ColorUniformBinding {
       renderstate,
       this.__textureUnif,
       this.texBinding
-    );
+    )
   }
 }
 
-const logged = {};
+const logged = {}
 
 /** Class representing material shader binding. */
 class MaterialShaderBinding {
@@ -308,19 +299,19 @@ class MaterialShaderBinding {
    * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    */
   constructor(gl, glmaterial, unifs, warnMissingUnifs) {
-    this.__uniformBindings = [];
+    this.__uniformBindings = []
 
     const bindParam = param => {
-      const name = param.getName();
-      const unif = unifs[name];
+      const name = param.getName()
+      const unif = unifs[name]
       if (unif == undefined) {
         // Note: we now bind the Material even for rendering geom datas,
         // which can mean many params have no uniform in the shader, which is fine.
         if (warnMissingUnifs) {
           // Note: this silent error caused me a lot of searching. make it noisy.
-          const shaderName = glmaterial.getMaterial().getShaderName();
+          const shaderName = glmaterial.getMaterial().getShaderName()
           if (!logged[shaderName]) {
-            logged[shaderName] = {};
+            logged[shaderName] = {}
           }
           if (!logged[shaderName][name]) {
             // TODO: Many of these warnings are because when we change shaders
@@ -331,11 +322,11 @@ class MaterialShaderBinding {
               shaderName,
               'Param has no unif',
               name
-            );
-            logged[shaderName][name] = true;
+            )
+            logged[shaderName][name] = true
           }
         }
-        return;
+        return
       }
       switch (unif.type) {
         case Boolean:
@@ -344,36 +335,36 @@ class MaterialShaderBinding {
         case Float32:
           this.__uniformBindings.push(
             new SimpleUniformBinding(gl, glmaterial, param, unif)
-          );
-          break;
+          )
+          break
         case Vec2:
         case Vec3:
         case Vec4:
           this.__uniformBindings.push(
             new ComplexUniformBinding(gl, glmaterial, param, unif)
-          );
-          break;
+          )
+          break
         case Color:
           this.__uniformBindings.push(
             new ColorUniformBinding(gl, glmaterial, param, unif, unifs)
-          );
-          break;
+          )
+          break
         case Mat4:
           this.__uniformBindings.push(
             new MatrixUniformBinding(gl, glmaterial, param, unif)
-          );
-          break;
+          )
+          break
         default:
           console.warn(
             'Param :' + name + ' has unhandled data type:' + unif.type
-          );
-          return;
+          )
+          return
       }
-      return;
-    };
-    const params = glmaterial.getMaterial().getParameters();
+      return
+    }
+    const params = glmaterial.getMaterial().getParameters()
     for (const param of params) {
-      bindParam(param);
+      bindParam(param)
     }
   }
 
@@ -384,9 +375,9 @@ class MaterialShaderBinding {
    */
   bind(renderstate) {
     for (const uniformBinding of this.__uniformBindings) {
-      uniformBinding.bind(renderstate);
+      uniformBinding.bind(renderstate)
     }
-    return true;
+    return true
   }
 
   /**
@@ -394,7 +385,7 @@ class MaterialShaderBinding {
    */
   unbind() {
     for (const uniformBinding of this.__uniformBindings) {
-      uniformBinding.unbind(renderstate);
+      uniformBinding.unbind(renderstate)
     }
   }
 
@@ -403,9 +394,9 @@ class MaterialShaderBinding {
    */
   destroy() {
     for (const uniformBinding of this.__uniformBindings) {
-      uniformBinding.destroy(renderstate);
+      uniformBinding.destroy(renderstate)
     }
   }
 }
 
-export { MaterialShaderBinding };
+export { MaterialShaderBinding }

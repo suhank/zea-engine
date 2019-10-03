@@ -1,7 +1,7 @@
-import { SystemDesc } from '../../BrowserDetection.js';
-import { Async, Signal } from '../../Utilities';
-import { BaseImage } from '../BaseImage.js';
-import { FileImage } from './FileImage.js';
+import { SystemDesc } from '../../BrowserDetection.js'
+import { Async, Signal } from '../../Utilities'
+import { BaseImage } from '../BaseImage.js'
+import { FileImage } from './FileImage.js'
 
 /** Class representing an HDR image mixer.
  * @extends BaseImage
@@ -17,17 +17,17 @@ class HDRImageMixer extends BaseImage {
       type: 'FLOAT',
       format: 'RGB',
       filter: SystemDesc.isMobileDevice ? 'NEAREST' : 'LINEAR',
-    });
+    })
 
-    this.__name = name;
-    this.__stream = stream;
-    this.__loaded = false;
-    this.__subImages = [];
-    this.__weights = [];
+    this.__name = name
+    this.__stream = stream
+    this.__loaded = false
+    this.__subImages = []
+    this.__weights = []
 
-    this.loaded = new Signal();
-    this.updated = new Signal();
-    this.weightsChanged = new Signal();
+    this.loaded = new Signal()
+    this.updated = new Signal()
+    this.weightsChanged = new Signal()
   }
 
   /**
@@ -35,7 +35,7 @@ class HDRImageMixer extends BaseImage {
    * @return {any} - The return value.
    */
   isLoaded() {
-    return this.__loaded;
+    return this.__loaded
   }
 
   /**
@@ -43,7 +43,7 @@ class HDRImageMixer extends BaseImage {
    * @return {any} - The return value.
    */
   isStream() {
-    return this.__stream;
+    return this.__stream
   }
 
   /**
@@ -51,22 +51,22 @@ class HDRImageMixer extends BaseImage {
    * @param {any} urls - The urls param.
    */
   setURLs(urls) {
-    const async = new Async();
-    async.incAsyncCount(urls.length);
+    const async = new Async()
+    async.incAsyncCount(urls.length)
     async.ready.connect(() => {
       if (!this.__loaded) {
-        this.__loaded = true;
-        this.loaded.emit();
+        this.__loaded = true
+        this.loaded.emit()
       } else {
-        this.updated.emit();
+        this.updated.emit()
       }
-    }, this);
+    }, this)
     for (const fileUrl of urls) {
-      const subImage = new FileImage(undefined, fileUrl);
-      subImage.loaded.connect(async.decAsyncCount);
-      subImage.updated.connect(this.updated.emit);
-      this.__subImages.push(subImage);
-      this.__weights.push(1.0);
+      const subImage = new FileImage(undefined, fileUrl)
+      subImage.loaded.connect(async.decAsyncCount)
+      subImage.updated.connect(this.updated.emit)
+      this.__subImages.push(subImage)
+      this.__weights.push(1.0)
     }
   }
 
@@ -76,7 +76,7 @@ class HDRImageMixer extends BaseImage {
    * @param {any} url - The url param.
    */
   setURL(index, url) {
-    this.__subImages[index].loadUrl(url);
+    this.__subImages[index].loadUrl(url)
   }
 
   /**
@@ -84,9 +84,9 @@ class HDRImageMixer extends BaseImage {
    * @param {any} weights - The weights param.
    */
   setWeights(weights) {
-    this.__weights = weights;
+    this.__weights = weights
     if (this.__loaded) {
-      this.weightsChanged.emit(this.__weights);
+      this.weightsChanged.emit(this.__weights)
     }
   }
 
@@ -96,9 +96,9 @@ class HDRImageMixer extends BaseImage {
    * @param {any} weight - The weight param.
    */
   setWeight(index, weight) {
-    this.__weights[index] = weight;
+    this.__weights[index] = weight
     if (this.__loaded) {
-      this.weightsChanged.emit(this.__weights);
+      this.weightsChanged.emit(this.__weights)
     }
   }
 
@@ -107,12 +107,12 @@ class HDRImageMixer extends BaseImage {
    * @return {any} - The return value.
    */
   getParams() {
-    const params = super.getParams();
+    const params = super.getParams()
     if (this.__loaded) {
-      params.subImages = this.__subImages;
-      params.weights = this.__weights;
+      params.subImages = this.__subImages
+      params.weights = this.__weights
     }
-    return params;
+    return params
   }
 
   /**
@@ -131,5 +131,5 @@ class HDRImageMixer extends BaseImage {
   toJSON(context, flags) {}
 }
 
-export { HDRImageMixer };
+export { HDRImageMixer }
 // export default HDRImageMixer;

@@ -1,6 +1,6 @@
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
-import { Vec3 } from './Vec3.js';
+import { AttrValue } from './AttrValue.js'
+import { typeRegistry } from './TypeRegistry.js'
+import { Vec3 } from './Vec3.js'
 
 /** Class representing a Vec4.
  * @extends AttrValue
@@ -14,21 +14,21 @@ class Vec4 extends AttrValue {
    * @param {number} t - The t value.
    */
   constructor(x = 0, y = 0, z = 0, t = 0) {
-    super();
+    super()
 
     if (x instanceof ArrayBuffer) {
-      const buffer = x;
-      const byteOffset = y;
-      this.__data = new Float32Array(buffer, byteOffset, 4);
+      const buffer = x
+      const byteOffset = y
+      this.__data = new Float32Array(buffer, byteOffset, 4)
     } else if (x != null && typeof x == 'object') {
-      this.__data = new Float32Array(4);
-      this.fromJSON(x);
+      this.__data = new Float32Array(4)
+      this.fromJSON(x)
     } else {
-      this.__data = new Float32Array(4);
-      this.__data[0] = x;
-      this.__data[1] = y;
-      this.__data[2] = z;
-      this.__data[3] = t;
+      this.__data = new Float32Array(4)
+      this.__data[0] = x
+      this.__data[1] = y
+      this.__data[2] = z
+      this.__data[3] = t
     }
   }
 
@@ -36,7 +36,7 @@ class Vec4 extends AttrValue {
    * Getter for x.
    */
   get x() {
-    return this.__data[0];
+    return this.__data[0]
   }
 
   /**
@@ -44,14 +44,14 @@ class Vec4 extends AttrValue {
    * @param {number} val - The val param.
    */
   set x(val) {
-    this.__data[0] = val;
+    this.__data[0] = val
   }
 
   /**
    * Getter for y.
    */
   get y() {
-    return this.__data[1];
+    return this.__data[1]
   }
 
   /**
@@ -59,14 +59,14 @@ class Vec4 extends AttrValue {
    * @param {number} val - The val param.
    */
   set y(val) {
-    this.__data[1] = val;
+    this.__data[1] = val
   }
 
   /**
    * Getter for z.
    */
   get z() {
-    return this.__data[2];
+    return this.__data[2]
   }
 
   /**
@@ -74,14 +74,14 @@ class Vec4 extends AttrValue {
    * @param {number} val - The val param.
    */
   set z(val) {
-    this.__data[2] = val;
+    this.__data[2] = val
   }
 
   /**
    * Getter for t.
    */
   get t() {
-    return this.__data[3];
+    return this.__data[3]
   }
 
   /**
@@ -89,7 +89,7 @@ class Vec4 extends AttrValue {
    * @param {number} val - The val param.
    */
   set t(val) {
-    this.__data[3] = val;
+    this.__data[3] = val
   }
 
   /**
@@ -100,10 +100,10 @@ class Vec4 extends AttrValue {
    * @param {number} t  - The t param.
    */
   set(x, y, z, t) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.t = t;
+    this.x = x
+    this.y = y
+    this.z = z
+    this.t = t
   }
 
   /**
@@ -111,10 +111,10 @@ class Vec4 extends AttrValue {
    * @param {any} other - The other param.
    */
   setFromOther(other) {
-    this.x = other.x;
-    this.y = other.y;
-    this.z = other.z;
-    this.t = other.t;
+    this.x = other.x
+    this.y = other.y
+    this.z = other.z
+    this.t = other.t
   }
 
   /**
@@ -129,7 +129,7 @@ class Vec4 extends AttrValue {
       this.y == other.y &&
       this.z == other.z &&
       this.t == other.t
-    );
+    )
   }
 
   /**
@@ -144,7 +144,7 @@ class Vec4 extends AttrValue {
       this.y != other.y &&
       this.z != other.z &&
       this.t != other.t
-    );
+    )
   }
 
   /**
@@ -159,7 +159,7 @@ class Vec4 extends AttrValue {
       Math.abs(this.y - other.y) < Number.EPSILON &&
       Math.abs(this.z - other.z) < Number.EPSILON &&
       Math.abs(this.t - other.t) < Number.EPSILON
-    );
+    )
   }
 
   /**
@@ -173,7 +173,7 @@ class Vec4 extends AttrValue {
       this.y + other.y,
       this.z + other.z,
       this.t + other.t
-    );
+    )
   }
 
   /**
@@ -181,10 +181,10 @@ class Vec4 extends AttrValue {
    * @param {any} other - The other param.
    */
   addInPlace(other) {
-    this.x += other.x;
-    this.y += other.y;
-    this.z += other.z;
-    this.t += other.t;
+    this.x += other.x
+    this.y += other.y
+    this.z += other.z
+    this.t += other.t
   }
 
   /**
@@ -198,7 +198,7 @@ class Vec4 extends AttrValue {
       this.y - other.y,
       this.z - other.z,
       this.t - other.t
-    );
+    )
   }
 
   /**
@@ -206,10 +206,10 @@ class Vec4 extends AttrValue {
    * @param {any} other - The other param.
    */
   subtractInPlace(other) {
-    this.x -= other.x;
-    this.y -= other.y;
-    this.z -= other.z;
-    this.t -= other.t;
+    this.x -= other.x
+    this.y -= other.y
+    this.z -= other.z
+    this.t -= other.t
   }
 
   /**
@@ -223,7 +223,7 @@ class Vec4 extends AttrValue {
       this.y * other.y,
       this.z * other.z,
       this.t * other.t
-    );
+    )
   }
 
   /**
@@ -231,10 +231,10 @@ class Vec4 extends AttrValue {
    * @param {any} other - The other param.
    */
   multiplyInPlace(other) {
-    this.x *= other.x;
-    this.y *= other.y;
-    this.z *= other.z;
-    this.t *= other.t;
+    this.x *= other.x
+    this.y *= other.y
+    this.z *= other.z
+    this.t *= other.t
   }
 
   /**
@@ -248,7 +248,7 @@ class Vec4 extends AttrValue {
       this.y / other.y,
       this.z / other.z,
       this.t / other.t
-    );
+    )
   }
 
   /**
@@ -256,10 +256,10 @@ class Vec4 extends AttrValue {
    * @param {any} other - The other param.
    */
   divideInPlace(other) {
-    this.x /= other.x;
-    this.y /= other.y;
-    this.z /= other.z;
-    this.t /= other.t;
+    this.x /= other.x
+    this.y /= other.y
+    this.z /= other.z
+    this.t /= other.t
   }
 
   /**
@@ -273,7 +273,7 @@ class Vec4 extends AttrValue {
       this.y * scalar,
       this.z * scalar,
       this.t * scalar
-    );
+    )
   }
 
   /**
@@ -281,12 +281,7 @@ class Vec4 extends AttrValue {
    * @param {any} scalar - The scalar param.
    */
   scaleInPlace(scalar) {
-    this.set(
-      this.x * scalar,
-      this.y * scalar,
-      this.z * scalar,
-      this.t * scalar
-    );
+    this.set(this.x * scalar, this.y * scalar, this.z * scalar, this.t * scalar)
   }
 
   /**
@@ -295,11 +290,11 @@ class Vec4 extends AttrValue {
    * @return {number} - The length of a.
    */
   length(a) {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const t = this.__data[2];
-    return Math.sqrt(x * x + y * y + z * z + t * t);
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const t = this.__data[2]
+    return Math.sqrt(x * x + y * y + z * z + t * t)
   }
 
   /**
@@ -307,11 +302,11 @@ class Vec4 extends AttrValue {
    * @return {number} - Squared length of a.
    */
   lengthSquared() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const t = this.__data[3];
-    return x * x + y * y + z * z + t * t;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const t = this.__data[3]
+    return x * x + y * y + z * z + t * t
   }
 
   /**
@@ -319,34 +314,34 @@ class Vec4 extends AttrValue {
    * @return {vec4} - The return value.
    */
   normalize() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const t = this.__data[3];
-    let len = x * x + y * y + z * z + t * t;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const t = this.__data[3]
+    let len = x * x + y * y + z * z + t * t
     if (len < Number.EPSILON) {
-      return new Vec4();
+      return new Vec4()
     }
 
     // TODO: evaluate use of glm_invsqrt here?
-    len = 1 / Math.sqrt(len);
-    return new Vec4(x * len, y * len, z * len);
+    len = 1 / Math.sqrt(len)
+    return new Vec4(x * len, y * len, z * len)
   }
 
   /**
    * The normalizeInPlace method.
    */
   normalizeInPlace() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    const t = this.__data[3];
-    let len = x * x + y * y + z * z + t * t;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    const t = this.__data[3]
+    let len = x * x + y * y + z * z + t * t
     if (len < Number.EPSILON) {
-      return;
+      return
     }
-    len = 1 / Math.sqrt(len);
-    this.set(x * len, y * len, z * len, t * len);
+    len = 1 / Math.sqrt(len)
+    this.set(x * len, y * len, z * len, t * len)
   }
 
   /**
@@ -355,7 +350,7 @@ class Vec4 extends AttrValue {
    * @return {number} - Dot product of a and b.
    */
   dot(b) {
-    return this.x * b.x + this.y * b.y + this.z * b.z + this.t * b.t;
+    return this.x * b.x + this.y * b.y + this.z * b.z + this.t * b.t
   }
 
   /**
@@ -364,21 +359,21 @@ class Vec4 extends AttrValue {
    * @return {vec4} - The return value.
    */
   cross(b) {
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    const at = this.t;
-    const bx = b.x;
-    const by = b.y;
-    const bz = b.z;
-    const bt = b.t;
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    const at = this.t
+    const bx = b.x
+    const by = b.y
+    const bz = b.z
+    const bt = b.t
 
     return new Vec4(
       ay * bz - az * by,
       az * bt - at * bz,
       at * bx - ax * bt,
       ax * by - ay * bx
-    );
+    )
   }
 
   /**
@@ -387,14 +382,14 @@ class Vec4 extends AttrValue {
    * @return {number} - The angle in radians.
    */
   angle(b) {
-    const tempA = this.normalize();
-    const tempB = b.normalize();
-    const cosine = tempA.dot(tempB);
+    const tempA = this.normalize()
+    const tempB = b.normalize()
+    const cosine = tempA.dot(tempB)
 
     if (cosine > 1.0) {
-      return 0;
+      return 0
     } else {
-      return Math.acos(cosine);
+      return Math.acos(cosine)
     }
   }
 
@@ -405,16 +400,16 @@ class Vec4 extends AttrValue {
    * @return {vec4} - The return value.
    */
   lerp(b, t) {
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    at = this.t;
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    at = this.t
     return new Vec4(
       ax + t * (b.x - ax),
       ay + t * (b.y - ay),
       az + t * (b.z - az),
       at + t * (b.t - at)
-    );
+    )
   }
 
   /**
@@ -423,14 +418,14 @@ class Vec4 extends AttrValue {
    * @return {vec4} - The return value.
    */
   random(scale = 1.0) {
-    const r = glMatrix.RANDOM() * 2.0 * Math.PI;
-    const z = glMatrix.RANDOM() * 2.0 - 1.0;
-    const zScale = Math.sqrt(1.0 - z * z) * scale;
+    const r = glMatrix.RANDOM() * 2.0 * Math.PI
+    const z = glMatrix.RANDOM() * 2.0 - 1.0
+    const zScale = Math.sqrt(1.0 - z * z) * scale
 
-    out[0] = Math.cos(r) * zScale;
-    out[1] = Math.sin(r) * zScale;
-    out[2] = z * scale;
-    return out;
+    out[0] = Math.cos(r) * zScale
+    out[1] = Math.sin(r) * zScale
+    out[2] = z * scale
+    return out
   }
 
   /**
@@ -443,7 +438,7 @@ class Vec4 extends AttrValue {
       this.__data[1],
       this.__data[2],
       this.__data[3]
-    );
+    )
   }
 
   /**
@@ -451,7 +446,7 @@ class Vec4 extends AttrValue {
    * @return {vec3} - The return value.
    */
   toVec3() {
-    return new Vec3(this.__data[0], this.__data[1], this.__data[2]);
+    return new Vec3(this.__data[0], this.__data[1], this.__data[2])
   }
 
   /**
@@ -459,7 +454,7 @@ class Vec4 extends AttrValue {
    * @return {any} - The return value.
    */
   asArray() {
-    return this.__data;
+    return this.__data
   }
 
   // ////////////////////////////////////////
@@ -471,7 +466,7 @@ class Vec4 extends AttrValue {
    * @return {vec3} - The return value.
    */
   static create(...args) {
-    return new Vec3(...args);
+    return new Vec3(...args)
   }
 
   /**
@@ -481,7 +476,7 @@ class Vec4 extends AttrValue {
    * @return {vec4} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec4(buffer, offset * 4); // 4 bytes per 32bit float
+    return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float
   }
 
   /**
@@ -489,7 +484,7 @@ class Vec4 extends AttrValue {
    * @return {number} - The return value.
    */
   static numFloat32Elements() {
-    return 4;
+    return 4
   }
 
   // ///////////////////////////
@@ -505,10 +500,10 @@ class Vec4 extends AttrValue {
       y: this.y,
       z: this.z,
       t: this.t,
-    };
+    }
   }
 }
 
-typeRegistry.registerType('Vec4', Vec4);
+typeRegistry.registerType('Vec4', Vec4)
 
-export { Vec4 };
+export { Vec4 }

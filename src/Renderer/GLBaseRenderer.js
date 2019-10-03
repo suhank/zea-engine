@@ -1,20 +1,20 @@
-import { Signal } from '../Utilities';
-import { TreeItem, sgFactory } from '../SceneTree';
-import { SystemDesc } from '../BrowserDetection.js';
-import { onResize } from '../external/onResize.js';
-import { create3DContext } from './GLContext.js';
-import { GLScreenQuad } from './GLScreenQuad.js';
-import { GLViewport } from './GLViewport.js';
+import { Signal } from '../Utilities'
+import { TreeItem, sgFactory } from '../SceneTree'
+import { SystemDesc } from '../BrowserDetection.js'
+import { onResize } from '../external/onResize.js'
+import { create3DContext } from './GLContext.js'
+import { GLScreenQuad } from './GLScreenQuad.js'
+import { GLViewport } from './GLViewport.js'
 // import {
 //     GLTexture2D
 // } from './GLTexture2D.js';
-import { VRViewport } from './VR/VRViewport.js';
+import { VRViewport } from './VR/VRViewport.js'
 
-let activeGLRenderer = undefined;
-let mouseIsDown = false;
-let mouseLeft = false;
+let activeGLRenderer = undefined
+let mouseIsDown = false
+let mouseLeft = false
 
-const registeredPasses = {};
+const registeredPasses = {}
 
 /** Class representing a GL base renderer. */
 class GLBaseRenderer {
@@ -25,63 +25,60 @@ class GLBaseRenderer {
    */
   constructor(canvasDiv, options = {}) {
     if (!SystemDesc.gpuDesc) {
-      console.warn('Unable to create renderer');
-      return;
+      console.warn('Unable to create renderer')
+      return
     }
 
-    this.__shaders = {};
-    this.__passes = {};
-    this.__passCallbacks = [];
+    this.__shaders = {}
+    this.__passes = {}
+    this.__passCallbacks = []
 
-    this.addTreeItem = this.addTreeItem.bind(this);
-    this.removeTreeItem = this.removeTreeItem.bind(this);
+    this.addTreeItem = this.addTreeItem.bind(this)
+    this.removeTreeItem = this.removeTreeItem.bind(this)
 
-    this.__viewports = [];
-    this.__activeViewport = undefined;
-    this.__continuousDrawing = false;
-    this.__redrawRequested = false;
-    this.__isMobile = SystemDesc.isMobileDevice;
+    this.__viewports = []
+    this.__activeViewport = undefined
+    this.__continuousDrawing = false
+    this.__redrawRequested = false
+    this.__isMobile = SystemDesc.isMobileDevice
 
-    this.__drawSuspensionLevel = 1;
-    this.__shaderDirectives = {};
-    this.__preproc = {};
+    this.__drawSuspensionLevel = 1
+    this.__shaderDirectives = {}
+    this.__preproc = {}
 
-    this.__xrViewportPresenting = false;
+    this.__xrViewportPresenting = false
 
     // Function Bindings.
-    this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this);
-    this.requestRedraw = this.requestRedraw.bind(this);
+    this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
+    this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.resized = new Signal();
-    this.keyPressed = new Signal();
-    this.sceneSet = new Signal(true);
-    this.vrViewportSetup = new Signal(true);
-    this.sessionClientSetup = new Signal(true);
+    this.resized = new Signal()
+    this.keyPressed = new Signal()
+    this.sceneSet = new Signal(true)
+    this.vrViewportSetup = new Signal(true)
+    this.sessionClientSetup = new Signal(true)
 
     // Signals to abstract the user view.
     // i.e. when a user switches to VR mode, the signals
     // simply emit the new VR data.
-    this.viewChanged = new Signal();
-    this.redrawOccured = new Signal();
+    this.viewChanged = new Signal()
+    this.redrawOccured = new Signal()
 
-    this.setupWebGL(
-      canvasDiv,
-      options.webglOptions ? options.webglOptions : {}
-    );
+    this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {})
 
     for (const passtype in registeredPasses) {
       for (const cls of registeredPasses[passtype]) {
-        this.addPass(new cls(), passtype, false);
+        this.addPass(new cls(), passtype, false)
       }
     }
 
-    this.addViewport('main');
+    this.addViewport('main')
 
     // ////////////////////////////////////////////
     // WebXR
     this.__supportXR =
-      options.supportXR !== undefined ? options.supportXR : true;
-    this.__xrViewport = undefined;
+      options.supportXR !== undefined ? options.supportXR : true
+    this.__xrViewport = undefined
     this.__xrViewportPromise = new Promise((resolve, reject) => {
       if (this.__supportXR) {
         // if(!navigator.xr && window.WebVRPolyfill != undefined) {
@@ -96,34 +93,34 @@ class GLBaseRenderer {
             // TODO: Provide a system to re-load the GPU data.
             // this.__gl.setCompatibleXRDevice(device);
             this.__gl.makeXRCompatible().then(() => {
-              this.__xrViewport = this.__setupXRViewport();
-              this.vrViewportSetup.emit(this.__xrViewport);
-              resolve(this.__xrViewport);
-            });
-          };
+              this.__xrViewport = this.__setupXRViewport()
+              this.vrViewportSetup.emit(this.__xrViewport)
+              resolve(this.__xrViewport)
+            })
+          }
           if (navigator.xr.supportsSessionMode) {
             // Old
             navigator.xr
               .supportsSessionMode('immersive-vr')
               .then(setupXRViewport)
               .catch(reason => {
-                console.warn('Unable to setup XR:' + reason);
-              });
+                console.warn('Unable to setup XR:' + reason)
+              })
           } else {
             // New
             navigator.xr
               .supportsSession('immersive-vr')
               .then(setupXRViewport)
               .catch(reason => {
-                console.warn('Unable to setup XR:' + reason);
-              });
+                console.warn('Unable to setup XR:' + reason)
+              })
           }
 
           // TODO:
           // navigator.xr.addEventListener('devicechange', checkForXRSupport);
         }
       }
-    });
+    })
   }
 
   /**
@@ -132,15 +129,14 @@ class GLBaseRenderer {
    * @param {any} value - The value param.
    */
   addShaderPreprocessorDirective(name, value) {
-    if (value)
-      this.__shaderDirectives[name] = '#define ' + name + ' = ' + value;
-    else this.__shaderDirectives[name] = '#define ' + name;
-    const directives = [];
+    if (value) this.__shaderDirectives[name] = '#define ' + name + ' = ' + value
+    else this.__shaderDirectives[name] = '#define ' + name
+    const directives = []
     for (const key in this.__shaderDirectives) {
-      directives.push(this.__shaderDirectives[key]);
+      directives.push(this.__shaderDirectives[key])
     }
-    this.__preproc.defines = directives.join('\n') + '\n';
-    this.__gl.shaderopts = this.__preproc;
+    this.__preproc.defines = directives.join('\n') + '\n'
+    this.__gl.shaderopts = this.__preproc
   }
 
   /**
@@ -148,7 +144,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getShaderPreproc() {
-    return this.__preproc;
+    return this.__preproc
   }
 
   /**
@@ -156,7 +152,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getWidth() {
-    return this.__glcanvas.width;
+    return this.__glcanvas.width
   }
 
   /**
@@ -164,7 +160,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getHeight() {
-    return this.__glcanvas.height;
+    return this.__glcanvas.height
   }
 
   // //////////////////////////////////////
@@ -176,19 +172,19 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   addViewport(name) {
-    const vp = new GLViewport(this, name, this.getWidth(), this.getHeight());
+    const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
     vp.updated.connect(() => {
-      this.requestRedraw();
-    });
+      this.requestRedraw()
+    })
 
-    vp.createGeomDataFbo(this.__floatGeomBuffer);
+    vp.createGeomDataFbo(this.__floatGeomBuffer)
 
     vp.viewChanged.connect(data => {
-      if (!this.__xrViewportPresenting) this.viewChanged.emit(data);
-    });
+      if (!this.__xrViewportPresenting) this.viewChanged.emit(data)
+    })
 
-    this.__viewports.push(vp);
-    return vp;
+    this.__viewports.push(vp)
+    return vp
   }
 
   /**
@@ -197,7 +193,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getViewport(index = 0) {
-    return this.__viewports[index];
+    return this.__viewports[index]
   }
 
   /**
@@ -208,19 +204,19 @@ class GLBaseRenderer {
    */
   getViewportAtPos(offsetX, offsetY) {
     for (const vp of this.__viewports) {
-      const x = vp.getPosX();
-      const y = vp.getPosY();
-      const width = vp.getWidth();
-      const height = vp.getHeight();
+      const x = vp.getPosX()
+      const y = vp.getPosY()
+      const width = vp.getWidth()
+      const height = vp.getHeight()
       if (
         offsetX >= x &&
         offsetY >= y &&
         offsetX <= width + x &&
         offsetY <= height + y
       )
-        return vp;
+        return vp
     }
-    return undefined;
+    return undefined
   }
 
   /**
@@ -228,9 +224,9 @@ class GLBaseRenderer {
    * @param {any} vp - The vp param.
    */
   activateViewport(vp) {
-    if (this.__activeViewport == vp) return;
+    if (this.__activeViewport == vp) return
 
-    this.__activeViewport = vp;
+    this.__activeViewport = vp
   }
 
   /**
@@ -239,9 +235,9 @@ class GLBaseRenderer {
    * @param {number} offsetY - The offsetY param.
    */
   activateViewportAtPos(offsetX, offsetY) {
-    if (this.__xrViewportPresenting) return;
-    const vp = this.getViewportAtPos(offsetX, offsetY);
-    if (vp && vp != this.__activeViewport) this.activateViewport(vp);
+    if (this.__xrViewportPresenting) return
+    const vp = this.getViewportAtPos(offsetX, offsetY)
+    if (vp && vp != this.__activeViewport) this.activateViewport(vp)
   }
 
   /**
@@ -249,27 +245,27 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getActiveViewport() {
-    if (this.__xrViewportPresenting) return this.__xrViewport;
-    return this.__activeViewport;
+    if (this.__xrViewportPresenting) return this.__xrViewport
+    return this.__activeViewport
   }
 
   /**
    * The suspendDrawing method.
    */
   suspendDrawing() {
-    this.__drawSuspensionLevel++;
+    this.__drawSuspensionLevel++
   }
 
   /**
    * The resumeDrawing method.
    */
   resumeDrawing() {
-    this.__drawSuspensionLevel--;
+    this.__drawSuspensionLevel--
     if (this.__drawSuspensionLevel == 0) {
-      if (this.__loadingImg) this.__glcanvasDiv.removeChild(this.__loadingImg);
+      if (this.__loadingImg) this.__glcanvasDiv.removeChild(this.__loadingImg)
 
-      this.renderGeomDataFbos();
-      this.requestRedraw();
+      this.renderGeomDataFbos()
+      this.requestRedraw()
     }
   }
 
@@ -277,14 +273,14 @@ class GLBaseRenderer {
    * The renderGeomDataFbos method.
    */
   renderGeomDataFbos() {
-    if (this.__renderGeomDataFbosRequested == true) return;
+    if (this.__renderGeomDataFbosRequested == true) return
 
-    this.__renderGeomDataFbosRequested = true;
+    this.__renderGeomDataFbosRequested = true
     const onAnimationFrame = () => {
-      for (const vp of this.__viewports) vp.renderGeomDataFbo();
-      this.__renderGeomDataFbosRequested = false;
-    };
-    window.requestAnimationFrame(onAnimationFrame);
+      for (const vp of this.__viewports) vp.renderGeomDataFbo()
+      this.__renderGeomDataFbosRequested = false
+    }
+    window.requestAnimationFrame(onAnimationFrame)
   }
 
   // //////////////////////////////////////
@@ -299,8 +295,8 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   setupGrid(gridSize, gridColor, resolution, lineThickness) {
-    console.warn('Deprecated Method. Please use scene.setupGrid');
-    return this.__scene.setupGrid(gridSize, resolution, gridColor);
+    console.warn('Deprecated Method. Please use scene.setupGrid')
+    return this.__scene.setupGrid(gridSize, resolution, gridColor)
   }
 
   /**
@@ -308,7 +304,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getScene() {
-    return this.__scene;
+    return this.__scene
   }
 
   /**
@@ -316,13 +312,13 @@ class GLBaseRenderer {
    * @param {any} scene - The scene param.
    */
   setScene(scene) {
-    this.__scene = scene;
-    this.addTreeItem(this.__scene.getRoot());
+    this.__scene = scene
+    this.addTreeItem(this.__scene.getRoot())
 
     if (this.__gizmoContext)
-      this.__gizmoContext.setSelectionManager(scene.getSelectionManager());
+      this.__gizmoContext.setSelectionManager(scene.getSelectionManager())
 
-    this.sceneSet.emit(this.__scene);
+    this.sceneSet.emit(this.__scene)
   }
 
   /**
@@ -331,32 +327,31 @@ class GLBaseRenderer {
    */
   addTreeItem(treeItem) {
     // Note: we can have BaseItems in the tree now.
-    if (!(treeItem instanceof TreeItem))
-      return;
+    if (!(treeItem instanceof TreeItem)) return
     if (treeItem.isDestroyed()) {
-      throw new Error('treeItem is destroyed:' + treeItem.getPath());
+      throw new Error('treeItem is destroyed:' + treeItem.getPath())
     }
 
     for (const passCbs of this.__passCallbacks) {
       const rargs = {
         continueInSubTree: true,
-      };
-      const handled = passCbs.itemAddedFn(treeItem, rargs);
+      }
+      const handled = passCbs.itemAddedFn(treeItem, rargs)
       if (handled) {
-        if (!rargs.continueInSubTree) return;
-        break;
+        if (!rargs.continueInSubTree) return
+        break
       }
     }
 
     // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
     for (const childItem of treeItem.getChildren()) {
-      if (childItem) this.addTreeItem(childItem);
+      if (childItem) this.addTreeItem(childItem)
     }
 
-    treeItem.childAdded.connect(this.addTreeItem);
-    treeItem.childRemoved.connect(this.removeTreeItem);
+    treeItem.childAdded.connect(this.addTreeItem)
+    treeItem.childRemoved.connect(this.removeTreeItem)
 
-    this.renderGeomDataFbos();
+    this.renderGeomDataFbos()
   }
 
   /**
@@ -365,29 +360,28 @@ class GLBaseRenderer {
    */
   removeTreeItem(treeItem) {
     // Note: we can have BaseItems in the tree now.
-    if (!(treeItem instanceof TreeItem))
-      return;
+    if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.childAdded.disconnect(this.addTreeItem);
-    treeItem.childRemoved.disconnect(this.removeTreeItem);
+    treeItem.childAdded.disconnect(this.addTreeItem)
+    treeItem.childRemoved.disconnect(this.removeTreeItem)
 
     for (const passCbs of this.__passCallbacks) {
-      if (!passCbs.itemRemovedFn) continue;
+      if (!passCbs.itemRemovedFn) continue
       const rargs = {
         continueInSubTree: true,
-      };
-      const handled = passCbs.itemRemovedFn(treeItem, rargs);
+      }
+      const handled = passCbs.itemRemovedFn(treeItem, rargs)
       if (handled) {
-        if (!rargs.continueInSubTree) return;
-        break;
+        if (!rargs.continueInSubTree) return
+        break
       }
     }
 
     // Traverse the tree adding items till we hit the leaves(which are usually GeomItems.)
     for (const childItem of treeItem.getChildren()) {
-      if (childItem) this.removeTreeItem(childItem);
+      if (childItem) this.removeTreeItem(childItem)
     }
-    this.renderGeomDataFbos();
+    this.renderGeomDataFbos()
   }
 
   // ///////////////////////
@@ -397,7 +391,7 @@ class GLBaseRenderer {
    * Getter for gl.
    */
   get gl() {
-    return this.__gl;
+    return this.__gl
   }
 
   /**
@@ -405,7 +399,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getGL() {
-    return this.__gl;
+    return this.__gl
   }
 
   /**
@@ -422,17 +416,17 @@ class GLBaseRenderer {
   __onResize() {
     if (!this.__xrViewportPresenting) {
       this.__glcanvas.width =
-        this.__glcanvas.clientWidth * window.devicePixelRatio;
+        this.__glcanvas.clientWidth * window.devicePixelRatio
       this.__glcanvas.height =
-        this.__glcanvas.clientHeight * window.devicePixelRatio;
+        this.__glcanvas.clientHeight * window.devicePixelRatio
 
       for (const vp of this.__viewports)
-        vp.resize(this.__glcanvas.width, this.__glcanvas.height);
+        vp.resize(this.__glcanvas.width, this.__glcanvas.height)
 
-      this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
+      this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
 
-      this.resized.emit(this.__glcanvas.width, this.__glcanvas.height);
-      this.requestRedraw();
+      this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
+      this.requestRedraw()
     }
   }
 
@@ -441,7 +435,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getDiv() {
-    return this.__glcanvasDiv;
+    return this.__glcanvasDiv
   }
 
   /**
@@ -450,41 +444,41 @@ class GLBaseRenderer {
    * @param {any} webglOptions - The webglOptions param.
    */
   setupWebGL(canvasDiv, webglOptions) {
-    this.__glcanvas = document.createElement('canvas');
+    this.__glcanvas = document.createElement('canvas')
     this.__glcanvas.style.position = webglOptions.canvasPosition
       ? webglOptions.canvasPosition
-      : 'absolute';
-    this.__glcanvas.style.left = '0px';
-    this.__glcanvas.style.top = '0px';
-    this.__glcanvas.style.width = '100%';
-    this.__glcanvas.style.height = '100%';
+      : 'absolute'
+    this.__glcanvas.style.left = '0px'
+    this.__glcanvas.style.top = '0px'
+    this.__glcanvas.style.width = '100%'
+    this.__glcanvas.style.height = '100%'
 
-    this.__glcanvasDiv = canvasDiv;
-    this.__glcanvasDiv.appendChild(this.__glcanvas);
+    this.__glcanvasDiv = canvasDiv
+    this.__glcanvasDiv.appendChild(this.__glcanvas)
 
     onResize(this.__glcanvas, event => {
-      this.__onResize();
-    });
-    this.__onResize();
+      this.__onResize()
+    })
+    this.__onResize()
 
-    webglOptions.preserveDrawingBuffer = true;
-    webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false;
-    webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false;
-    webglOptions.xrCompatible = true;
-    this.__gl = create3DContext(this.__glcanvas, webglOptions);
+    webglOptions.preserveDrawingBuffer = true
+    webglOptions.stencil = webglOptions.stencil ? webglOptions.stencil : false
+    webglOptions.alpha = webglOptions.alpha ? webglOptions.alpha : false
+    webglOptions.xrCompatible = true
+    this.__gl = create3DContext(this.__glcanvas, webglOptions)
     if (!this.__gl)
-      alert('Unable to create WebGL context. WebGL not supported.');
-    this.__gl.renderer = this;
+      alert('Unable to create WebGL context. WebGL not supported.')
+    this.__gl.renderer = this
 
     if (this.__gl.name == 'webgl2') {
-      this.addShaderPreprocessorDirective('ENABLE_ES3');
+      this.addShaderPreprocessorDirective('ENABLE_ES3')
     }
     if (this.__gl.floatTexturesSupported) {
-      this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES');
+      this.addShaderPreprocessorDirective('ENABLE_FLOAT_TEXTURES')
     }
 
-    this.__gl.screenQuad = new GLScreenQuad(this.__gl);
-    this.__screenQuad = this.__gl.screenQuad;
+    this.__gl.screenQuad = new GLScreenQuad(this.__gl)
+    this.__screenQuad = this.__gl.screenQuad
 
     // Note: Mobile devices don't provide much support for reading data back from float textures,
     // and checking compatibility is patchy at best.
@@ -492,8 +486,8 @@ class GLBaseRenderer {
     // Galaxy and above. We need this. We need ot accuratley determine
     // if the float buffer is not supported.
     this.__floatGeomBuffer =
-      this.__gl.floatTexturesSupported && SystemDesc.browserName != 'Safari';
-    this.__gl.floatGeomBuffer = this.__floatGeomBuffer;
+      this.__gl.floatTexturesSupported && SystemDesc.browserName != 'Safari'
+    this.__gl.floatGeomBuffer = this.__floatGeomBuffer
     // Note: the following returns UNSIGNED_BYTE even if the browser supports float.
     // const implType = this.__gl.getParameter(this.__gl.IMPLEMENTATION_COLOR_READ_TYPE);
     // this.__floatGeomBuffer = (implType == this.__gl.FLOAT);
@@ -522,82 +516,77 @@ class GLBaseRenderer {
     // ////////////////////////////////
     // Setup event handlers
     const isValidCanvas = () => {
-      return this.__glcanvas.width > 0 && this.__glcanvas.height;
-    };
+      return this.__glcanvas.width > 0 && this.__glcanvas.height
+    }
 
     const calcRendererCoords = event => {
-      const rect = this.__glcanvas.getBoundingClientRect();
-      event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio;
-      event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio;
-    };
+      const rect = this.__glcanvas.getBoundingClientRect()
+      event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio
+      event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio
+    }
 
     this.__glcanvas.addEventListener('mouseenter', event => {
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
+      event.stopPropagation()
+      event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
-        activeGLRenderer = this;
-        calcRendererCoords(event);
+        activeGLRenderer = this
+        calcRendererCoords(event)
         // TODO: Check mouse pos.
-        activeGLRenderer.activateViewportAtPos(
-          event.rendererX,
-          event.rendererY
-        );
-        mouseLeft = false;
+        activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY)
+        mouseLeft = false
       }
-    });
+    })
     this.__glcanvas.addEventListener('mouseleave', event => {
-      if (activeGLRenderer != this || !isValidCanvas())
-        return;
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
+      if (activeGLRenderer != this || !isValidCanvas()) return
+      event.stopPropagation()
+      event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
-        const vp = activeGLRenderer.getActiveViewport();
+        const vp = activeGLRenderer.getActiveViewport()
         if (vp) {
-          vp.onMouseLeave(event);
-          event.preventDefault();
+          vp.onMouseLeave(event)
+          event.preventDefault()
         }
-        activeGLRenderer = undefined;
+        activeGLRenderer = undefined
       } else {
-        mouseLeft = true;
+        mouseLeft = true
       }
-    });
+    })
     this.__glcanvas.addEventListener('mousedown', event => {
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
-      calcRendererCoords(event);
-      mouseIsDown = true;
-      activeGLRenderer = this;
-      activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY);
-      const vp = activeGLRenderer.getActiveViewport();
+      event.stopPropagation()
+      event.undoRedoManager = this.undoRedoManager
+      calcRendererCoords(event)
+      mouseIsDown = true
+      activeGLRenderer = this
+      activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY)
+      const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onMouseDown(event);
+        vp.onMouseDown(event)
       }
-      mouseLeft = false;
-      return false;
-    });
+      mouseLeft = false
+      return false
+    })
     document.addEventListener('mouseup', event => {
-      if (activeGLRenderer != this || !isValidCanvas())
-        return;
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
+      if (activeGLRenderer != this || !isValidCanvas()) return
+      event.stopPropagation()
+      event.undoRedoManager = this.undoRedoManager
       // if(mouseIsDown && mouseMoveDist < 0.01)
       //     mouseClick(event);
-      calcRendererCoords(event);
-      mouseIsDown = false;
-      const vp = activeGLRenderer.getActiveViewport();
+      calcRendererCoords(event)
+      mouseIsDown = false
+      const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onMouseUp(event);
+        vp.onMouseUp(event)
       }
       if (mouseLeft) {
-        const vp = activeGLRenderer.getActiveViewport();
+        const vp = activeGLRenderer.getActiveViewport()
         if (vp) {
-          vp.onMouseLeave(event);
-          event.preventDefault();
+          vp.onMouseLeave(event)
+          event.preventDefault()
         }
-        activeGLRenderer = undefined;
+        activeGLRenderer = undefined
       }
-      return false;
-    });
+      return false
+    })
 
     // document.addEventListener('dblclick', (event)=>{
     //     event.preventDefault();
@@ -609,114 +598,126 @@ class GLBaseRenderer {
     // });
 
     document.addEventListener('mousemove', event => {
-      if (activeGLRenderer != this || !isValidCanvas())
-        return;
-      event.preventDefault();
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
-      calcRendererCoords(event);
+      if (activeGLRenderer != this || !isValidCanvas()) return
+      event.preventDefault()
+      event.stopPropagation()
+      event.undoRedoManager = this.undoRedoManager
+      calcRendererCoords(event)
       if (!mouseIsDown)
-        activeGLRenderer.activateViewportAtPos(
-          event.rendererX,
-          event.rendererY
-        );
+        activeGLRenderer.activateViewportAtPos(event.rendererX, event.rendererY)
 
-      const vp = activeGLRenderer.getActiveViewport();
+      const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onMouseMove(event);
+        vp.onMouseMove(event)
       }
-      return false;
-    });
+      return false
+    })
 
     const onWheel = event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
+      if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
-        event.stopPropagation();
-        event.undoRedoManager = this.undoRedoManager;
-        if(!window.addEventListener) event.preventDefault();
-        this.onWheel(event);
+        event.stopPropagation()
+        event.undoRedoManager = this.undoRedoManager
+        if (!window.addEventListener) event.preventDefault()
+        this.onWheel(event)
       }
-      return false;
-    };
+      return false
+    }
     if (window.addEventListener)
       /** DOMMouseScroll is for mozilla. */
-      window.addEventListener('wheel', onWheel, { passive: true });
+      window.addEventListener('wheel', onWheel, { passive: true })
     else {
       /** IE/Opera. */
-      window.onmousewheel = document.onmousewheel = onWheel;
+      window.onmousewheel = document.onmousewheel = onWheel
     }
 
     window.oncontextmenu = function() {
-      return false;
-    };
+      return false
+    }
 
     document.addEventListener('keypress', event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
-      const key = String.fromCharCode(event.keyCode).toLowerCase();
-      const vp = activeGLRenderer.getActiveViewport();
+      if (activeGLRenderer != this || !isValidCanvas()) return
+      const key = String.fromCharCode(event.keyCode).toLowerCase()
+      const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onKeyPressed(key, event);
+        vp.onKeyPressed(key, event)
       }
-    });
+    })
 
     document.addEventListener('keydown', event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
-      const key = String.fromCharCode(event.keyCode).toLowerCase();
-      const vp = activeGLRenderer.getActiveViewport();
+      if (activeGLRenderer != this || !isValidCanvas()) return
+      const key = String.fromCharCode(event.keyCode).toLowerCase()
+      const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onKeyDown(key, event);
+        vp.onKeyDown(key, event)
       }
-    });
+    })
 
     document.addEventListener('keyup', event => {
-      if (activeGLRenderer != this || !isValidCanvas()) return;
-      const key = String.fromCharCode(event.keyCode).toLowerCase();
-      const vp = activeGLRenderer.getActiveViewport();
+      if (activeGLRenderer != this || !isValidCanvas()) return
+      const key = String.fromCharCode(event.keyCode).toLowerCase()
+      const vp = activeGLRenderer.getActiveViewport()
       if (vp) {
-        vp.onKeyUp(key, event);
+        vp.onKeyUp(key, event)
       }
-    });
+    })
 
-    this.__glcanvas.addEventListener("touchstart", (event) => {
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
-      for (let i = 0; i < event.touches.length; i++) {
-        calcRendererCoords(event.touches[i]);
-      }
-      this.getViewport().onTouchStart(event);
-    }, false);
+    this.__glcanvas.addEventListener(
+      'touchstart',
+      event => {
+        event.stopPropagation()
+        event.undoRedoManager = this.undoRedoManager
+        for (let i = 0; i < event.touches.length; i++) {
+          calcRendererCoords(event.touches[i])
+        }
+        this.getViewport().onTouchStart(event)
+      },
+      false
+    )
 
-    this.__glcanvas.addEventListener("touchmove", (event) => {
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
-      for (let i = 0; i < event.touches.length; i++) {
-        calcRendererCoords(event.touches[i]);
-      }
-      this.getViewport().onTouchMove(event);
-    }, false);
+    this.__glcanvas.addEventListener(
+      'touchmove',
+      event => {
+        event.stopPropagation()
+        event.undoRedoManager = this.undoRedoManager
+        for (let i = 0; i < event.touches.length; i++) {
+          calcRendererCoords(event.touches[i])
+        }
+        this.getViewport().onTouchMove(event)
+      },
+      false
+    )
 
-    this.__glcanvas.addEventListener("touchend", (event) => {
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
-      for (let i = 0; i < event.touches.length; i++) {
-        calcRendererCoords(event.touches[i]);
-      }
-      this.getViewport().onTouchEnd(event);
-    }, false);
+    this.__glcanvas.addEventListener(
+      'touchend',
+      event => {
+        event.stopPropagation()
+        event.undoRedoManager = this.undoRedoManager
+        for (let i = 0; i < event.touches.length; i++) {
+          calcRendererCoords(event.touches[i])
+        }
+        this.getViewport().onTouchEnd(event)
+      },
+      false
+    )
 
-    this.__glcanvas.addEventListener("touchcancel", (event) => {
-      event.stopPropagation();
-      event.undoRedoManager = this.undoRedoManager;
-      this.getViewport().onTouchCancel(event);
-    }, false);
+    this.__glcanvas.addEventListener(
+      'touchcancel',
+      event => {
+        event.stopPropagation()
+        event.undoRedoManager = this.undoRedoManager
+        this.getViewport().onTouchCancel(event)
+      },
+      false
+    )
   }
 
   /**
    * The setUndoRedoManager method.
    * @param {object} - The undoRedoManager object.
    */
-  setUndoRedoManager(undoRedoManager){
-    this.undoRedoManager = undoRedoManager;
+  setUndoRedoManager(undoRedoManager) {
+    this.undoRedoManager = undoRedoManager
   }
 
   /**
@@ -724,7 +725,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getGLCanvas() {
-    return this.__glcanvas;
+    return this.__glcanvas
   }
 
   /**
@@ -732,7 +733,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getScreenQuad() {
-    return this.__screenQuad;
+    return this.__screenQuad
   }
 
   /**
@@ -740,7 +741,7 @@ class GLBaseRenderer {
    * @param {any} event - The event param.
    */
   onWheel(event) {
-    this.__viewports[0].onWheel(event);
+    this.__viewports[0].onWheel(event)
   }
 
   /**
@@ -748,7 +749,7 @@ class GLBaseRenderer {
    * @param {number} viewportIndex - The viewportIndex param.
    */
   frameAll(viewportIndex = 0) {
-    this.__viewports[viewportIndex].frameView([this.__scene.getRoot()]);
+    this.__viewports[viewportIndex].frameView([this.__scene.getRoot()])
   }
 
   // ///////////////////////
@@ -760,14 +761,14 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getOrCreateShader(shaderName) {
-    let glshader = this.__shaders[shaderName];
+    let glshader = this.__shaders[shaderName]
     if (!glshader) {
-      glshader = sgFactory.constructClass(shaderName, this.__gl);
+      glshader = sgFactory.constructClass(shaderName, this.__gl)
       if (!glshader)
-        console.error('Shader not registered with the SGFactory:', shaderName);
-      this.__shaders[shaderName] = glshader;
+        console.error('Shader not registered with the SGFactory:', shaderName)
+      this.__shaders[shaderName] = glshader
     }
-    return glshader;
+    return glshader
   }
 
   /**
@@ -778,34 +779,34 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   addPass(pass, passtype = 0, updateIndices = true) {
-    if (!this.__passes[passtype]) this.__passes[passtype] = [];
+    if (!this.__passes[passtype]) this.__passes[passtype] = []
 
-    let index = 0;
+    let index = 0
     for (const key in this.__passes) {
-      if (key == passtype) break;
-      index += this.__passes[key].length;
+      if (key == passtype) break
+      index += this.__passes[key].length
     }
-    index += this.__passes[passtype].length;
+    index += this.__passes[passtype].length
 
-    pass.updated.connect(this.requestRedraw.bind(this));
-    pass.init(this, index);
-    this.__passes[passtype].push(pass);
+    pass.updated.connect(this.requestRedraw.bind(this))
+    pass.init(this, index)
+    this.__passes[passtype].push(pass)
 
     if (updateIndices) {
       // Now update all the  subsequent pass indices because the
       // indices after will have changed.
-      let offset = 0;
+      let offset = 0
       for (const key in this.__passes) {
-        const passSet = this.__passes[key];
+        const passSet = this.__passes[key]
         passSet.forEach((pass, index) => {
-          pass.setPassIndex(offset + index);
-        });
-        offset += passSet.length;
+          pass.setPassIndex(offset + index)
+        })
+        offset += passSet.length
       }
     }
 
-    this.requestRedraw();
-    return index;
+    this.requestRedraw()
+    return index
   }
 
   /**
@@ -818,7 +819,7 @@ class GLBaseRenderer {
     this.__passCallbacks.splice(0, 0, {
       itemAddedFn,
       itemRemovedFn,
-    });
+    })
   }
 
   /**
@@ -827,11 +828,11 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getPass(index) {
-    let offset = 0;
+    let offset = 0
     for (const key in this.__passes) {
-      const passSet = this.__passes[key];
-      if (index - offset < passSet.length) return passSet[index - offset];
-      offset += passSet.length;
+      const passSet = this.__passes[key]
+      if (index - offset < passSet.length) return passSet[index - offset]
+      offset += passSet.length
     }
   }
 
@@ -842,9 +843,9 @@ class GLBaseRenderer {
    */
   findPass(constructor) {
     for (const key in this.__passes) {
-      const passSet = this.__passes[key];
+      const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.constructor == constructor) return pass;
+        if (pass.constructor == constructor) return pass
       }
     }
   }
@@ -854,7 +855,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getGizmoPass() {
-    return this.__gizmoPass;
+    return this.__gizmoPass
   }
 
   // ///////////////////////
@@ -867,8 +868,8 @@ class GLBaseRenderer {
   supportsVR() {
     console.warn(
       'Deprecated Method. Please instead connect to the vrViewportSetup signal.'
-    );
-    return this.__supportXR && navigator.xr != null;
+    )
+    return this.__supportXR && navigator.xr != null
   }
 
   /**
@@ -878,28 +879,28 @@ class GLBaseRenderer {
    */
   __setupXRViewport() {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
-    const xrvp = new VRViewport(this);
+    const xrvp = new VRViewport(this)
 
     xrvp.presentingChanged.connect(state => {
-      this.__xrViewportPresenting = state;
+      this.__xrViewportPresenting = state
       if (state) {
         // Let the passes know that VR is starting.
         // They can do things like optimize shaders.
         for (const key in this.__passes) {
-          const passSet = this.__passes[key];
+          const passSet = this.__passes[key]
           for (const pass of passSet) {
-            pass.startPresenting();
+            pass.startPresenting()
           }
         }
 
-        xrvp.viewChanged.connect(this.viewChanged.emit);
+        xrvp.viewChanged.connect(this.viewChanged.emit)
       } else {
-        xrvp.viewChanged.disconnect(this.viewChanged.emit);
+        xrvp.viewChanged.disconnect(this.viewChanged.emit)
 
         for (const key in this.__passes) {
-          const passSet = this.__passes[key];
+          const passSet = this.__passes[key]
           for (const pass of passSet) {
-            pass.stopPresenting();
+            pass.stopPresenting()
           }
         }
 
@@ -908,13 +909,13 @@ class GLBaseRenderer {
           viewXfo: this.getViewport()
             .getCamera()
             .getGlobalXfo(),
-        });
+        })
 
-        this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height);
-        this.requestRedraw();
+        this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
+        this.requestRedraw()
       }
-    });
-    return xrvp;
+    })
+    return xrvp
   }
 
   /**
@@ -922,7 +923,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getVRViewport() {
-    return this.__xrViewport;
+    return this.__xrViewport
   }
 
   /**
@@ -930,7 +931,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   getXRViewport() {
-    return this.__xrViewportPromise;
+    return this.__xrViewportPromise
   }
 
   /**
@@ -938,7 +939,7 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   isXRViewportPresenting() {
-    return this.__xrViewportPresenting;
+    return this.__xrViewportPresenting
   }
 
   // //////////////////////////
@@ -949,30 +950,30 @@ class GLBaseRenderer {
    * @return {any} - The return value.
    */
   isContinuouslyDrawing() {
-    return this.__continuousDrawing;
+    return this.__continuousDrawing
   }
 
   /**
    * The startContinuousDrawing method.
    */
   startContinuousDrawing() {
-    if (this.isContinuouslyDrawing() || this.__xrViewportPresenting) return;
+    if (this.isContinuouslyDrawing() || this.__xrViewportPresenting) return
 
     const onAnimationFrame = () => {
       if (this.__continuousDrawing && !this.__xrViewportPresenting)
-        window.requestAnimationFrame(onAnimationFrame);
-      for (const vp of this.__viewports) vp.draw();
-    };
+        window.requestAnimationFrame(onAnimationFrame)
+      for (const vp of this.__viewports) vp.draw()
+    }
 
-    this.__continuousDrawing = true;
-    window.requestAnimationFrame(onAnimationFrame);
+    this.__continuousDrawing = true
+    window.requestAnimationFrame(onAnimationFrame)
   }
 
   /**
    * The stopContinuousDrawing method.
    */
   stopContinuousDrawing() {
-    this.__continuousDrawing = false;
+    this.__continuousDrawing = false
   }
 
   /**
@@ -980,9 +981,9 @@ class GLBaseRenderer {
    */
   toggleContinuousDrawing() {
     if (!this.__continuousDrawing) {
-      this.startContinuousDrawing();
+      this.startContinuousDrawing()
     } else {
-      this.stopContinuousDrawing();
+      this.stopContinuousDrawing()
     }
   }
 
@@ -990,8 +991,8 @@ class GLBaseRenderer {
    * The drawItemChanged method.
    */
   drawItemChanged() {
-    for (const vp of this.__viewports) vp.invalidateGeomDataBuffer();
-    this.requestRedraw();
+    for (const vp of this.__viewports) vp.invalidateGeomDataBuffer()
+    this.requestRedraw()
   }
 
   /**
@@ -1005,17 +1006,17 @@ class GLBaseRenderer {
       this.__continuousDrawing ||
       this.__xrViewportPresenting
     )
-      return false;
+      return false
 
     const onAnimationFrame = () => {
-      this.__redrawRequested = false;
+      this.__redrawRequested = false
       for (const vp of this.__viewports) {
-        vp.draw();
+        vp.draw()
       }
-    };
-    window.requestAnimationFrame(onAnimationFrame);
-    this.__redrawRequested = true;
-    return true;
+    }
+    window.requestAnimationFrame(onAnimationFrame)
+    this.__redrawRequested = true
+    return true
   }
 
   /**
@@ -1023,91 +1024,94 @@ class GLBaseRenderer {
    * @param {any} renderstate - The renderstate param.
    */
   bindGLBaseRenderer(renderstate) {
-    renderstate.shaderopts = this.__preproc;
+    renderstate.shaderopts = this.__preproc
 
-    const gl = this.__gl;
+    const gl = this.__gl
     if (!renderstate.viewports || renderstate.viewports.length == 1) {
-      renderstate.bindRendererUnifs = (unifs)=>{
+      renderstate.bindRendererUnifs = unifs => {
         {
-          const unif = unifs.cameraMatrix;
+          const unif = unifs.cameraMatrix
           if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+            gl.uniformMatrix4fv(
+              unif.location,
+              false,
+              renderstate.cameraMatrix.asArray()
+            )
           }
-        } 
-        
-        const vp = renderstate.viewports[0]; 
+        }
+
+        const vp = renderstate.viewports[0]
         {
-          const unif = unifs.viewMatrix;
+          const unif = unifs.viewMatrix
           if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray());
+            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray())
           }
         }
         {
-          const unif = unifs.projectionMatrix;
+          const unif = unifs.projectionMatrix
           if (unif) {
             gl.uniformMatrix4fv(
               unif.location,
               false,
               vp.projectionMatrix.asArray()
-            );
+            )
           }
         }
         {
-          const unif = unifs.eye;
+          const unif = unifs.eye
           if (unif) {
             // Left or right eye, when rendering sterio VR.
-            gl.uniform1i(unif.location, 0);
+            gl.uniform1i(unif.location, 0)
           }
         }
       }
-      renderstate.bindViewports = (unifs, cb)=> cb();
+      renderstate.bindViewports = (unifs, cb) => cb()
     } else {
-
-      renderstate.bindRendererUnifs = (unifs)=>{
+      renderstate.bindRendererUnifs = unifs => {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
-        // when we want the eye pos. 
+        // when we want the eye pos.
         {
-          const unif = unifs.cameraMatrix;
+          const unif = unifs.cameraMatrix
           if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, renderstate.cameraMatrix.asArray());
+            gl.uniformMatrix4fv(
+              unif.location,
+              false,
+              renderstate.cameraMatrix.asArray()
+            )
           }
-        } 
+        }
       }
 
       renderstate.bindViewports = (unifs, cb) => {
         renderstate.viewports.forEach((vp, index) => {
-          gl.viewport(...vp.region);
+          gl.viewport(...vp.region)
           {
-            const unif = unifs.viewMatrix;
+            const unif = unifs.viewMatrix
             if (unif) {
-              gl.uniformMatrix4fv(
-                unif.location,
-                false,
-                vp.viewMatrix.asArray()
-              );
+              gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray())
             }
           }
           {
-            const unif = unifs.projectionMatrix;
+            const unif = unifs.projectionMatrix
             if (unif) {
               gl.uniformMatrix4fv(
                 unif.location,
                 false,
                 vp.projectionMatrix.asArray()
-              );
+              )
             }
           }
           {
-            const unif = unifs.eye;
+            const unif = unifs.eye
             if (unif) {
               // Left or right eye, when rendering sterio VR.
-              gl.uniform1i(unif.location, index);
+              gl.uniform1i(unif.location, index)
             }
           }
-          cb();
-        });
-      };
+          cb()
+        })
+      }
     }
   }
 
@@ -1118,9 +1122,9 @@ class GLBaseRenderer {
   drawScene(renderstate) {
     // Bind already called by GLRenderer
     for (const key in this.__passes) {
-      const passSet = this.__passes[key];
+      const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.enabled) pass.draw(renderstate);
+        if (pass.enabled) pass.draw(renderstate)
       }
     }
   }
@@ -1130,11 +1134,11 @@ class GLBaseRenderer {
    * @param {any} renderstate - The renderstate param.
    */
   drawHighlightedGeoms(renderstate) {
-    this.bindGLBaseRenderer(renderstate);
+    this.bindGLBaseRenderer(renderstate)
     for (const key in this.__passes) {
-      const passSet = this.__passes[key];
+      const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.enabled) pass.drawHighlightedGeoms(renderstate);
+        if (pass.enabled) pass.drawHighlightedGeoms(renderstate)
       }
     }
   }
@@ -1144,11 +1148,11 @@ class GLBaseRenderer {
    * @param {any} renderstate - The renderstate param.
    */
   drawSceneGeomData(renderstate) {
-    this.bindGLBaseRenderer(renderstate);
+    this.bindGLBaseRenderer(renderstate)
     for (const key in this.__passes) {
-      const passSet = this.__passes[key];
+      const passSet = this.__passes[key]
       for (const pass of passSet) {
-        if (pass.enabled) pass.drawGeomData(renderstate);
+        if (pass.enabled) pass.drawGeomData(renderstate)
       }
     }
   }
@@ -1162,9 +1166,9 @@ class GLBaseRenderer {
    * @param {any} passtype - The passtype param.
    */
   static registerPass(cls, passtype) {
-    if (!registeredPasses[passtype]) registeredPasses[passtype] = [];
-    registeredPasses[passtype].push(cls);
+    if (!registeredPasses[passtype]) registeredPasses[passtype] = []
+    registeredPasses[passtype].push(cls)
   }
 }
 
-export { GLBaseRenderer };
+export { GLBaseRenderer }
