@@ -117,7 +117,7 @@ class HDRImageMixer extends BaseImage {
 
   /**
    * The fromJSON method.
-   * @param {any} json - The json param.
+   * @param {object} json - The json param.
    * @param {object} context - The context param.
    * @param {number} flags - The flags param.
    */

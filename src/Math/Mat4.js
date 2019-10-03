@@ -1397,7 +1397,7 @@ class Mat4 extends AttrValue {
 
   /**
    * The fromJSON method.
-   * @param {any} json - The json param.
+   * @param {object} json - The json param.
    */
   fromJSON(json) {
     this.__data = new Float32Array(json);

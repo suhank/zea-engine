@@ -350,7 +350,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The resize method returns a new Vec3 with the gien length.
+   * The resize method returns a new Vec3 with the given length.
    * @param {number} length - The length param.
    * @return {Vec3} - The return value.
    */
@@ -389,7 +389,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Calculates the dot product of two vec3s.
+   * Calculates the dot product of this Vec3 against another Vec3.
    * @param {Vec3} b - The second operand.
    * @return {number} - The dot product of a and b.
    */
@@ -398,7 +398,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Computes the cross product of two vec3s.
+   * Computes the cross product of two Vec3s.
    * @param {Vec3} b - The second operand.
    * @return {Vec3} - The return value.
    */
@@ -510,7 +510,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The createFromJSON method.
-   * @param {any} json - The json param.
+   * @param {object} json - The json param.
    * @return {Vec3} - The return value.
    */
   static createFromJSON(json) {

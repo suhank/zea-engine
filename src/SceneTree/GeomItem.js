@@ -256,7 +256,7 @@ class GeomItem extends BaseGeomItem {
 
   /**
    * The fromJSON method.
-   * @param {any} json - The json param.
+   * @param {object} json - The json param.
    * @param {object} context - The context param.
    */
   fromJSON(json, context) {
