@@ -29,7 +29,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__orbitRateParam = this.addParameter(
       new NumberParameter(
         'orbitRate',
-        SystemDesc.isMobileDevice ? -0.002 : 0.01
+        ZeaEngine.SystemDesc.isMobileDevice ? -0.3 : 1
       )
     );
     this.__dollySpeedParam = this.addParameter(
@@ -74,13 +74,12 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     // Orbit
     const orbit = new Quat();
-    orbit.rotateZ(dragVec.x * orbitRate * 0.12);
-    // globalXfo.ori.multiplyInPlace(orbit);
+    orbit.rotateZ(dragVec.x / viewport.getWidth() * Math.PI * orbitRate);
     globalXfo.ori = orbit.multiply(globalXfo.ori);
 
     // Pitch
     const pitch = new Quat();
-    pitch.rotateX(dragVec.y * orbitRate * 0.12);
+    pitch.rotateX(dragVec.y / viewport.getHeight() * Math.PI * orbitRate);
     globalXfo.ori.multiplyInPlace(pitch);
 
     if (this.__keyboardMovement) {
