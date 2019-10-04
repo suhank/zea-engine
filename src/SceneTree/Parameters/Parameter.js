@@ -1,11 +1,11 @@
-import { Signal } from '../../Utilities';
-import { RefCounted } from '../RefCounted';
-import { sgFactory } from '../SGFactory';
+import { Signal } from '../../Utilities'
+import { RefCounted } from '../RefCounted'
+import { sgFactory } from '../SGFactory'
 
 const ValueGetMode = {
   NORMAL: 0,
   OPERATOR_GETVALUE: 1,
-};
+}
 
 // Note: In some cases we want the parameter to emit a notification
 // and cause the update of the scene during evaluation. (like statemahcine updates).
@@ -19,11 +19,11 @@ const ValueSetMode = {
   DATA_LOAD: 2 /* Generate events, but don't flag the parameter as user edited*/,
   OPERATOR_DIRTIED: 3 /* Generate events, but don't flag the parameter as user edited*/,
   STATEMACHINE_SETVALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
-};
+}
 const ParamFlags = {
   USER_EDITED: 1 << 1,
   DISABLED: 1 << 2,
-};
+}
 
 /** Class representing a base parameter.
  * @extends RefCounted
@@ -34,18 +34,18 @@ class BaseParameter extends RefCounted {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super();
-    this.__name = name;
-    this.__cleanerFns = [];
-    this.__flags = 0;
+    super()
+    this.__name = name
+    this.__cleanerFns = []
+    this.__flags = 0
 
-    this.valueChanged = new Signal();
-    this.nameChanged = new Signal();
+    this.valueChanged = new Signal()
+    this.nameChanged = new Signal()
 
-    this.getName = this.getName.bind(this);
-    this.setName = this.setName.bind(this);
-    this.getValue = this.getValue.bind(this);
-    this.setValue = this.setValue.bind(this);
+    this.getName = this.getName.bind(this)
+    this.setName = this.setName.bind(this)
+    this.getValue = this.getValue.bind(this)
+    this.setValue = this.setValue.bind(this)
   }
 
   /**
@@ -53,7 +53,7 @@ class BaseParameter extends RefCounted {
    * @return {any} - The return value.
    */
   getName() {
-    return this.__name;
+    return this.__name
   }
 
   /**
@@ -62,9 +62,9 @@ class BaseParameter extends RefCounted {
    */
   setName(name) {
     if (name != this.__name) {
-      const prevName = this.__name;
-      this.__name = name;
-      this.nameChanged.emit(this.__name, prevName);
+      const prevName = this.__name
+      this.__name = name
+      this.nameChanged.emit(this.__name, prevName)
     }
   }
 
@@ -73,7 +73,7 @@ class BaseParameter extends RefCounted {
    * @return {any} - The return value.
    */
   getOwner() {
-    return this.getRefer(0);
+    return this.getRefer(0)
   }
 
   /**
@@ -81,7 +81,7 @@ class BaseParameter extends RefCounted {
    * @param {any} ownerItem - The name param.
    */
   addOwner(ownerItem) {
-    this.addRef(ownerItem);
+    this.addRef(ownerItem)
   }
 
   /**
@@ -89,17 +89,17 @@ class BaseParameter extends RefCounted {
    * @return {any} - The return value.
    */
   getPath() {
-    const owner = this.getOwner();
+    const owner = this.getOwner()
     if (owner && owner.getName) {
       if (owner.getPath) {
-        const path = owner.getPath().slice();
-        path.push(this.__name);
-        return path;
+        const path = owner.getPath().slice()
+        path.push(this.__name)
+        return path
       } else {
-        return [owner.getName(), this.__name];
+        return [owner.getName(), this.__name]
       }
     }
-    return [this.__name];
+    return [this.__name]
   }
 
   /**
@@ -107,7 +107,7 @@ class BaseParameter extends RefCounted {
    * @param {number} flag - The flag param.
    */
   setFlag(flag) {
-    this.__flags |= flag;
+    this.__flags |= flag
   }
 
   /**
@@ -115,7 +115,7 @@ class BaseParameter extends RefCounted {
    * @param {number} flag - The flag param.
    */
   clearFlag(flag) {
-    this.__flags &= ~flag;
+    this.__flags &= ~flag
   }
 
   /**
@@ -124,7 +124,7 @@ class BaseParameter extends RefCounted {
    * @return {any} - The return value.
    */
   testFlag(flag) {
-    return (this.__flags & flag) != 0;
+    return (this.__flags & flag) != 0
   }
 
   /**
@@ -150,12 +150,12 @@ class BaseParameter extends RefCounted {
   setDirty(cleanerFn) {
     // If already dirty, simply return.
     if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
-      return false;
+      return false
     }
-    this.__cleanerFns.push(cleanerFn);
+    this.__cleanerFns.push(cleanerFn)
 
-    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED); // changed via cleaner fn
-    return true;
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    return true
   }
 
   /**
@@ -163,15 +163,15 @@ class BaseParameter extends RefCounted {
    * @param {any} state - The state param.
    */
   setEnabled(state) {
-    if (state) this.setFlag(ParamFlags.DISABLED);
-    else this.clearFlag(ParamFlags.DISABLED);
+    if (state) this.setFlag(ParamFlags.DISABLED)
+    else this.clearFlag(ParamFlags.DISABLED)
   }
 
   /**
    * The isEnabled method.
    */
   isEnabled() {
-    this.testFlag(ParamFlags.DISABLED);
+    this.testFlag(ParamFlags.DISABLED)
   }
 
   /**
@@ -179,7 +179,7 @@ class BaseParameter extends RefCounted {
    * @return {any} - The return value.
    */
   isDirty() {
-    return this.__cleanerFns.length > 0;
+    return this.__cleanerFns.length > 0
   }
 
   /**
@@ -190,11 +190,11 @@ class BaseParameter extends RefCounted {
     // Clean the param before we start evaluating the connected op.
     // this is so that operators can read from the current value
     // to compute the next.
-    const fns = this.__cleanerFns;
-    this.__cleanerFns = [];
+    const fns = this.__cleanerFns
+    this.__cleanerFns = []
     for (const fn of fns) {
-      const res = fn(this.__value);
-      if (res != undefined) this.__value = res;
+      const res = fn(this.__value)
+      if (res != undefined) this.__value = res
     }
   }
 
@@ -204,7 +204,7 @@ class BaseParameter extends RefCounted {
    * @return {number} - The return value.
    */
   removeCleanerFn(cleanerFn) {
-    const index = this.__cleanerFns.indexOf(cleanerFn);
+    const index = this.__cleanerFns.indexOf(cleanerFn)
     if (index == -1) {
       // Note: when a getValue is called, first the cleaners array is reset
       // and then the cleaners are called (see above)
@@ -213,9 +213,9 @@ class BaseParameter extends RefCounted {
       // Due to the asynchronous nature of evaluate, multiple cleanings might occur
       // throw ("Error. Cleaner Fn not applied to this parameter:" + cleanerFn.name);
 
-      return 0;
+      return 0
     }
-    this.__cleanerFns.splice(index, 1);
+    this.__cleanerFns.splice(index, 1)
   }
 
   /**
@@ -223,7 +223,7 @@ class BaseParameter extends RefCounted {
    * @param {number} flags - The flags param.
    */
   clone(flags) {
-    console.error('TOOD: implment me');
+    console.error('TOOD: implment me')
   }
 
   /**
@@ -247,9 +247,9 @@ class Parameter extends BaseParameter {
    * @param {any} dataType - The dataType value.
    */
   constructor(name, value, dataType) {
-    super(name);
-    this.__value = value;
-    this.__dataType = dataType ? dataType : value.constructor.name;
+    super(name)
+    this.__value = value
+    this.__dataType = dataType ? dataType : value.constructor.name
   }
 
   /**
@@ -257,7 +257,7 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   getDataType() {
-    return this.__dataType;
+    return this.__dataType
   }
 
   /**
@@ -267,8 +267,8 @@ class Parameter extends BaseParameter {
    */
   getValue(mode = ValueGetMode.NORMAL) {
     if (mode == ValueGetMode.NORMAL && this.__cleanerFns.length > 0)
-      this._clean();
-    return this.__value;
+      this._clean()
+    return this.__value
   }
 
   /**
@@ -288,7 +288,7 @@ class Parameter extends BaseParameter {
       //     }
       //     console.warn("Error setting "+this.__name + " value when cleaner is assigned:"+ cleanerNames);
       // }
-      this.__cleanerFns = [];
+      this.__cleanerFns = []
     }
 
     // if (value == undefined) {
@@ -297,14 +297,13 @@ class Parameter extends BaseParameter {
 
     if (!value.fromJSON) {
       // Note: equality tests on anything but simple values is going to be suer expenseive.
-      if (this.__value == value) return;
+      if (this.__value == value) return
     }
-    this.__value = value;
-    if (mode == ValueSetMode.USER_SETVALUE)
-      this.setFlag(ParamFlags.USER_EDITED);
+    this.__value = value
+    if (mode == ValueSetMode.USER_SETVALUE) this.setFlag(ParamFlags.USER_EDITED)
 
     // During the cleaning process, we don't want notifications.
-    if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode);
+    if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
   }
 
   /**
@@ -313,14 +312,10 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedValue = this.__value;
-    if (clonedValue.clone) clonedValue = clonedValue.clone();
-    const clonedParam = new Parameter(
-      this.__name,
-      clonedValue,
-      this.__dataType
-    );
-    return clonedParam;
+    const clonedValue = this.__value
+    if (clonedValue.clone) clonedValue = clonedValue.clone()
+    const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType)
+    return clonedParam
   }
 
   // ////////////////////////////////////////
@@ -334,8 +329,8 @@ class Parameter extends BaseParameter {
    */
   toJSON(context, flags) {
     if (this.__value.toJSON)
-      return { value: this.__value.toJSON(context, flags) };
-    else return { value: this.__value };
+      return { value: this.__value.toJSON(context, flags) }
+    else return { value: this.__value }
   }
 
   /**
@@ -346,21 +341,21 @@ class Parameter extends BaseParameter {
    */
   fromJSON(j, context, flags) {
     if (j.value == undefined) {
-      console.warn('Invalid Parameter JSON');
-      return;
+      console.warn('Invalid Parameter JSON')
+      return
     }
     // Note: JSON data is only used to store user edits, so
     // parameters loaed from JSON are considered user edited.
-    this.setFlag(ParamFlags.USER_EDITED);
+    this.setFlag(ParamFlags.USER_EDITED)
 
     if (j.value.type && this.__value == undefined) {
-      this.__value = sgFactory.constructClass(j.value.type);
+      this.__value = sgFactory.constructClass(j.value.type)
     }
     if (this.__value == undefined || !this.__value.fromJSON)
-      this.setValue(j.value, ValueSetMode.DATA_LOAD);
+      this.setValue(j.value, ValueSetMode.DATA_LOAD)
     else {
-      this.__value.fromJSON(j.value, context);
-      this.valueChanged.emit(ValueSetMode.DATA_LOAD);
+      this.__value.fromJSON(j.value, context)
+      this.valueChanged.emit(ValueSetMode.DATA_LOAD)
     }
   }
 
@@ -370,8 +365,8 @@ class Parameter extends BaseParameter {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    console.error('TODO');
+    console.error('TODO')
   }
 }
 
-export { ParamFlags, ValueGetMode, ValueSetMode, BaseParameter, Parameter };
+export { ParamFlags, ValueGetMode, ValueSetMode, BaseParameter, Parameter }

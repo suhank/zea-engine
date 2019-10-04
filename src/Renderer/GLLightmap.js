@@ -1,4 +1,4 @@
-import '../SceneTree/GeomItem.js';
+import '../SceneTree/GeomItem.js'
 
 /** Class representing a GL lightmap. */
 class GLLightmap {
@@ -8,16 +8,16 @@ class GLLightmap {
    * @param {any} lightmap - The lightmap value.
    */
   constructor(gl, lightmap) {
-    this.__gl = gl;
-    this.__lightmap = lightmap;
+    this.__gl = gl
+    this.__lightmap = lightmap
 
-    const canvasElem = document.createElement('canvas');
-    const ctx = canvasElem.getContext('2d', { alpha: true });
-    ctx.canvas.width = this.__lightmap.getSize().x;
-    ctx.canvas.height = this.__lightmap.getSize().y;
+    const canvasElem = document.createElement('canvas')
+    const ctx = canvasElem.getContext('2d', { alpha: true })
+    ctx.canvas.width = this.__lightmap.getSize().x
+    ctx.canvas.height = this.__lightmap.getSize().y
     // ctx.drawImage(this._image, 0, 0, this._image.width, this._image.height, 0, 0, size, size);
 
-    this.__data = ctx.canvas;
+    this.__data = ctx.canvas
   }
 
   /**
@@ -25,8 +25,8 @@ class GLLightmap {
    * @param {any} renderstate - The renderstate param.
    */
   bind(renderstate) {
-    const gl = this.__gl;
-    const unifs = renderstate.unifs;
+    const gl = this.__gl
+    const unifs = renderstate.unifs
     // let unit = renderstate.boundTextures++;
     // let texId = gl.TEXTURE0 + unit;
     // gl.activeTexture(texId);
@@ -35,14 +35,14 @@ class GLLightmap {
     gl.uniform2fv(
       unifs.lightmapSize.location,
       this.__lightmap.getSize().asArray()
-    );
+    )
 
     gl.uniform1i(
       unifs.debugLightmapTexelSize.location,
       renderstate.debugLightmapTexelSize
-    );
+    )
   }
 }
 
-export { GLLightmap };
+export { GLLightmap }
 // export default GLLightmap;

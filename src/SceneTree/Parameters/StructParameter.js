@@ -1,4 +1,4 @@
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js';
+import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a struct parameter.
  * @extends Parameter
@@ -9,8 +9,8 @@ class StructParameter extends Parameter {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name, {}, 'Struct');
-    this.__members = [];
+    super(name, {}, 'Struct')
+    this.__members = []
   }
 
   /**
@@ -20,14 +20,14 @@ class StructParameter extends Parameter {
    * @private
    */
   _addMember(parameter) {
-    this.__value[parameter.getName()] = parameter.getValue();
+    this.__value[parameter.getName()] = parameter.getValue()
     parameter.valueChanged.connect(() => {
-      this.__value[parameter.getName()] = parameter.getValue();
-    });
-    this.__members.push(parameter);
-    this.__flags |= ParamFlags.USER_EDITED;
-    this.valueChanged.emit();
-    return parameter;
+      this.__value[parameter.getName()] = parameter.getValue()
+    })
+    this.__members.push(parameter)
+    this.__flags |= ParamFlags.USER_EDITED
+    this.valueChanged.emit()
+    return parameter
   }
 
   /**
@@ -37,7 +37,7 @@ class StructParameter extends Parameter {
    */
   getParameter(name) {
     for (const p of this.__members) {
-      if (p.getName() == name) return p;
+      if (p.getName() == name) return p
     }
   }
 
@@ -47,17 +47,16 @@ class StructParameter extends Parameter {
    * @return {any} - The name value.
    */
   getMember(name) {
-    return this.getParameter(name);
+    return this.getParameter(name)
   }
 
   getMemberNames() {
-    const names = [];
+    const names = []
     for (let i = 0; i < this.__members.length; i++) {
-      const member = this.__members[i];
-      if (member != null)
-        names[i] = member.getName();
+      const member = this.__members[i]
+      if (member != null) names[i] = member.getName()
     }
-    return names;
+    return names
   }
 
   // ////////////////////////////////////////
@@ -70,12 +69,12 @@ class StructParameter extends Parameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return;
-    const members = [];
-    for (const p of this.__members) members.push(p.toJSON(context, flags));
+    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
+    const members = []
+    for (const p of this.__members) members.push(p.toJSON(context, flags))
     return {
       members,
-    };
+    }
   }
 
   /**
@@ -86,16 +85,16 @@ class StructParameter extends Parameter {
    */
   fromJSON(j, context, flags) {
     if (j.members == undefined) {
-      console.warn('Invalid Parameter JSON');
-      return;
+      console.warn('Invalid Parameter JSON')
+      return
     }
     // Note: JSON data is only used to store user edits, so
     // parameters loaed from JSON are considered user edited.
-    this.__flags |= ParamFlags.USER_EDITED;
+    this.__flags |= ParamFlags.USER_EDITED
 
     for (let i = 0; i < j.members.length; i++) {
       if (j.members[i]) {
-        this.__members[i].fromJSON(j.members[i], context);
+        this.__members[i].fromJSON(j.members[i], context)
       }
     }
   }
@@ -104,9 +103,9 @@ class StructParameter extends Parameter {
    * The destroy method.
    */
   destroy() {
-    super.destroy();
-    for (const p of this.__members) p.destroy();
+    super.destroy()
+    for (const p of this.__members) p.destroy()
   }
 }
 
-export { StructParameter };
+export { StructParameter }

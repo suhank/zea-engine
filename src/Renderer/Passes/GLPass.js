@@ -1,13 +1,13 @@
-import { Signal } from '../../Utilities';
+import { Signal } from '../../Utilities'
 
-import { ParameterOwner } from '../../SceneTree/ParameterOwner.js';
-import { BooleanParameter } from '../../SceneTree/Parameters';
+import { ParameterOwner } from '../../SceneTree/ParameterOwner.js'
+import { BooleanParameter } from '../../SceneTree/Parameters'
 
 const PassType = {
   OPAQUE: 0,
   TRANSPARENT: 1,
   OVERLAY: 2,
-};
+}
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends ParameterOwner
@@ -17,17 +17,17 @@ class GLPass extends ParameterOwner {
    * Create a GL pass.
    */
   constructor() {
-    super();
-    this.updated = new Signal();
-    this.enabled = true;
-    this.__passIndex = 0;
+    super()
+    this.updated = new Signal()
+    this.enabled = true
+    this.__passIndex = 0
 
     const enabledParam = this.addParameter(
       new BooleanParameter('Enabled', true)
-    );
+    )
     enabledParam.valueChanged.connect(
       mode => (this.enabled = enabledParam.getValue())
-    );
+    )
   }
 
   /**
@@ -37,8 +37,8 @@ class GLPass extends ParameterOwner {
    * @private
    */
   __parameterValueChanged(param, mode) {
-    super.__parameterValueChanged(param, mode);
-    if (this.__renderer) this.__renderer.requestRedraw();
+    super.__parameterValueChanged(param, mode)
+    if (this.__renderer) this.__renderer.requestRedraw()
   }
 
   /**
@@ -47,12 +47,11 @@ class GLPass extends ParameterOwner {
    * @param {any} passIndex - The passIndex param.
    */
   init(renderer, passIndex) {
-    if (passIndex == undefined)
-      throw new Error('Missing constructor argument.'); // Type checking. Seomthing that TypeScript will do for us.
+    if (passIndex == undefined) throw new Error('Missing constructor argument.') // Type checking. Seomthing that TypeScript will do for us.
 
-    this.__gl = renderer.gl;
-    this.__renderer = renderer;
-    this.__passIndex = passIndex;
+    this.__gl = renderer.gl
+    this.__renderer = renderer
+    this.__passIndex = passIndex
   }
 
   /**
@@ -60,7 +59,7 @@ class GLPass extends ParameterOwner {
    * @param {any} passIndex - The passIndex param.
    */
   setPassIndex(passIndex) {
-    this.__passIndex = passIndex;
+    this.__passIndex = passIndex
   }
 
   /**
@@ -101,5 +100,5 @@ class GLPass extends ParameterOwner {
   getGeomItemAndDist(geomData) {}
 }
 
-export { GLPass, PassType };
+export { GLPass, PassType }
 // export default GLPass;

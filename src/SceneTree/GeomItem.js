@@ -1,4 +1,4 @@
-import { Vec2, Xfo } from '../Math';
+import { Vec2, Xfo } from '../Math'
 import {
   ValueSetMode,
   Parameter,
@@ -7,19 +7,19 @@ import {
   ColorParameter,
   Vec2Parameter,
   XfoParameter,
-} from './Parameters';
+} from './Parameters'
 
-import { MaterialParameter } from './Parameters/MaterialParameter';
-import { GeometryParameter } from './Parameters/GeometryParameter';
-import { Signal } from '../Utilities';
-import { sgFactory } from './SGFactory.js';
+import { MaterialParameter } from './Parameters/MaterialParameter'
+import { GeometryParameter } from './Parameters/GeometryParameter'
+import { Signal } from '../Utilities'
+import { sgFactory } from './SGFactory.js'
 
 import {
   LOADFLAGS_SKIP_MATERIALS,
   LOADFLAGS_SKIP_GEOMETRIES,
-} from './TreeItem.js';
+} from './TreeItem.js'
 
-import { BaseGeomItem } from './BaseGeomItem.js';
+import { BaseGeomItem } from './BaseGeomItem.js'
 
 /** Class representing a geom item.
  * @extends BaseGeomItem
@@ -32,41 +32,41 @@ class GeomItem extends BaseGeomItem {
    * @param {any} material - The material value.
    */
   constructor(name, geom = undefined, material = undefined) {
-    super(name);
+    super(name)
 
     this.__geomParam = this.insertParameter(
       new GeometryParameter('geometry'),
       0
-    );
-    this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this));
+    )
+    this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this))
     this.__geomParam.boundingBoxDirtied.connect(
       this._setBoundingBoxDirty.bind(this)
-    );
+    )
     this.__materialParam = this.insertParameter(
       new MaterialParameter('material'),
       1
-    );
+    )
 
-    this.__lightmapCoordOffset = new Vec2();
+    this.__lightmapCoordOffset = new Vec2()
     this.__geomOffsetXfoParam = this.addParameter(
       new XfoParameter('geomOffsetXfo')
-    );
-    this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'));
+    )
+    this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'))
 
-    this.__cleanGeomXfo = this.__cleanGeomXfo.bind(this);
+    this.__cleanGeomXfo = this.__cleanGeomXfo.bind(this)
     this.__globalXfoParam.valueChanged.connect(mode => {
-      this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
-    });
+      this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
+    })
     this.__geomOffsetXfoParam.valueChanged.connect(mode => {
-      this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
-    });
+      this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
+    })
 
-    this.geomXfoChanged = this.__geomXfoParam.valueChanged;
-    this.materialAssigned = this.__materialParam.valueChanged;
-    this.geomAssigned = this.__geomParam.valueChanged;
+    this.geomXfoChanged = this.__geomXfoParam.valueChanged
+    this.materialAssigned = this.__materialParam.valueChanged
+    this.geomAssigned = this.__geomParam.valueChanged
 
-    if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD);
-    if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD);
+    if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+    if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD)
   }
 
   /**
@@ -77,14 +77,14 @@ class GeomItem extends BaseGeomItem {
   __cleanGeomXfo() {
     return this.__globalXfoParam
       .getValue()
-      .multiply(this.__geomOffsetXfoParam.getValue());
+      .multiply(this.__geomOffsetXfoParam.getValue())
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
   }
 
   /**
@@ -93,9 +93,9 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const cloned = new GeomItem();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new GeomItem()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 
   /**
@@ -104,12 +104,12 @@ class GeomItem extends BaseGeomItem {
    * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
-    this.__lightmapCoordOffset = src.__lightmapCoordOffset;
+    super.copyFrom(src, flags)
+    this.__lightmapCoordOffset = src.__lightmapCoordOffset
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
-    this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
+    this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
   }
 
   // ////////////////////////////////////////
@@ -120,7 +120,7 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getGeometry() {
-    return this.__geomParam.getValue();
+    return this.__geomParam.getValue()
   }
 
   /**
@@ -129,7 +129,7 @@ class GeomItem extends BaseGeomItem {
    * @param {any} mode - The mode param.
    */
   setGeometry(geom, mode) {
-    this.__geomParam.setValue(geom, mode);
+    this.__geomParam.setValue(geom, mode)
   }
 
   /**
@@ -137,8 +137,8 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getGeom() {
-    console.warn("getGeom is deprectated. Please use 'getGeometry'");
-    return this.getGeometry();
+    console.warn("getGeom is deprectated. Please use 'getGeometry'")
+    return this.getGeometry()
   }
 
   /**
@@ -147,8 +147,8 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   setGeom(geom) {
-    console.warn("setGeom is deprectated. Please use 'setGeometry'");
-    return this.setGeometry(geom);
+    console.warn("setGeom is deprectated. Please use 'setGeometry'")
+    return this.setGeometry(geom)
   }
 
   /**
@@ -156,7 +156,7 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getMaterial() {
-    return this.__materialParam.getValue();
+    return this.__materialParam.getValue()
   }
 
   /**
@@ -165,7 +165,7 @@ class GeomItem extends BaseGeomItem {
    * @param {any} mode - The mode param.
    */
   setMaterial(material, mode) {
-    this.__materialParam.setValue(material, mode);
+    this.__materialParam.setValue(material, mode)
   }
 
   /**
@@ -175,12 +175,12 @@ class GeomItem extends BaseGeomItem {
    * @private
    */
   _cleanBoundingBox(bbox) {
-    bbox = super._cleanBoundingBox(bbox);
-    const geom = this.getGeometry();
+    bbox = super._cleanBoundingBox(bbox)
+    const geom = this.getGeometry()
     if (geom) {
-      bbox.addBox3(geom.boundingBox, this.getGeomXfo());
+      bbox.addBox3(geom.boundingBox, this.getGeomXfo())
     }
-    return bbox;
+    return bbox
   }
 
   // ////////////////////////////////////////
@@ -191,7 +191,7 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getGeomOffsetXfo() {
-    return this.__geomOffsetXfoParam.getValue();
+    return this.__geomOffsetXfoParam.getValue()
   }
 
   /**
@@ -199,7 +199,7 @@ class GeomItem extends BaseGeomItem {
    * @param {any} xfo - The xfo param.
    */
   setGeomOffsetXfo(xfo) {
-    this.__geomOffsetXfoParam.setValue(xfo);
+    this.__geomOffsetXfoParam.setValue(xfo)
   }
 
   /**
@@ -207,7 +207,7 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getGeomXfo() {
-    return this.__geomXfoParam.getValue();
+    return this.__geomXfoParam.getValue()
   }
 
   // ///////////////////////////
@@ -218,7 +218,7 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getLightmapName() {
-    return this.__lightmapName;
+    return this.__lightmapName
   }
 
   /**
@@ -226,7 +226,7 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   getLightmapCoordsOffset() {
-    return this.__lightmapCoordOffset;
+    return this.__lightmapCoordOffset
   }
 
   /**
@@ -236,8 +236,8 @@ class GeomItem extends BaseGeomItem {
    * @param {any} offset - The offset param.
    */
   applyAssetLightmapSettings(lightmapName, offset) {
-    this.__lightmap = lightmapName;
-    this.__lightmapCoordOffset.addInPlace(offset);
+    this.__lightmap = lightmapName
+    this.__lightmapCoordOffset.addInPlace(offset)
   }
 
   // ///////////////////////////
@@ -250,8 +250,8 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const json = super.toJSON(context, flags);
-    return json;
+    const json = super.toJSON(context, flags)
+    return json
   }
 
   /**
@@ -260,8 +260,8 @@ class GeomItem extends BaseGeomItem {
    * @param {object} context - The context param.
    */
   fromJSON(json, context) {
-    super.fromJSON(json, context);
-    context.numGeomItems++;
+    super.fromJSON(json, context)
+    context.numGeomItems++
   }
 
   /**
@@ -270,33 +270,33 @@ class GeomItem extends BaseGeomItem {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    super.readBinary(reader, context);
+    super.readBinary(reader, context)
 
-    context.numGeomItems++;
+    context.numGeomItems++
 
-    this.__lightmapName = context.assetItem.getName();
+    this.__lightmapName = context.assetItem.getName()
 
-    const itemflags = reader.loadUInt8();
-    const geomIndex = reader.loadUInt32();
-    const geomLibrary = context.assetItem.getGeometryLibrary();
-    const geom = geomLibrary.getGeom(geomIndex);
+    const itemflags = reader.loadUInt8()
+    const geomIndex = reader.loadUInt32()
+    const geomLibrary = context.assetItem.getGeometryLibrary()
+    const geom = geomLibrary.getGeom(geomIndex)
     if (geom) {
-      this.setGeometry(geom, ValueSetMode.DATA_LOAD);
+      this.setGeometry(geom, ValueSetMode.DATA_LOAD)
     } else {
       const onGeomLoaded = range => {
         if (geomIndex >= range[0] && geomIndex < range[1]) {
-          const geom = geomLibrary.getGeom(geomIndex);
-          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD);
-          else console.warn('Geom not loaded:', this.getName());
-          geomLibrary.rangeLoaded.disconnectId(connid);
+          const geom = geomLibrary.getGeom(geomIndex)
+          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+          else console.warn('Geom not loaded:', this.getName())
+          geomLibrary.rangeLoaded.disconnectId(connid)
         }
-      };
-      const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded);
+      }
+      const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);
     // Note: to save space, some values are skipped if they are identity values
-    const geomOffsetXfoFlag = 1 << 2;
+    const geomOffsetXfoFlag = 1 << 2
     if (itemflags & geomOffsetXfoFlag) {
       this.__geomOffsetXfoParam.setValue(
         new Xfo(
@@ -304,33 +304,33 @@ class GeomItem extends BaseGeomItem {
           reader.loadFloat32Quat(),
           reader.loadFloat32Vec3()
         )
-      );
+      )
     }
 
     // BaseGeomItem now handles loading materials.
     if (context.version < 4) {
-      const materialFlag = 1 << 3;
+      const materialFlag = 1 << 3
       if (itemflags & materialFlag) {
-        const materialLibrary = context.assetItem.getMaterialLibrary();
-        const materialName = reader.loadStr();
-        let material = materialLibrary.getMaterial(materialName);
+        const materialLibrary = context.assetItem.getMaterialLibrary()
+        const materialName = reader.loadStr()
+        let material = materialLibrary.getMaterial(materialName)
         if (!material) {
           console.warn(
             "Geom :'" + this.name + "' Material not found:" + materialName
-          );
-          material = materialLibrary.getMaterial('Default');
+          )
+          material = materialLibrary.getMaterial('Default')
         }
-        this.setMaterial(material, ValueSetMode.DATA_LOAD);
+        this.setMaterial(material, ValueSetMode.DATA_LOAD)
       } else {
         // Force nodes to have a material so we can see them.
         this.setMaterial(
           context.assetItem.getMaterialLibrary().getMaterial('Default'),
           ValueSetMode.DATA_LOAD
-        );
+        )
       }
     }
 
-    this.__lightmapCoordOffset = reader.loadFloat32Vec2();
+    this.__lightmapCoordOffset = reader.loadFloat32Vec2()
   }
 
   /**
@@ -338,10 +338,10 @@ class GeomItem extends BaseGeomItem {
    * @return {any} - The return value.
    */
   toString() {
-    return JSON.stringify(this.toJSON(), null, 2);
+    return JSON.stringify(this.toJSON(), null, 2)
   }
 }
 
-sgFactory.registerClass('GeomItem', GeomItem);
+sgFactory.registerClass('GeomItem', GeomItem)
 
-export { GeomItem };
+export { GeomItem }

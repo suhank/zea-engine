@@ -1,10 +1,10 @@
-import { hammersley } from '../Math';
-import { GLTexture2D } from './GLTexture2D.js';
-import { ImageAtlas } from './ImageAtlas.js';
-import { ConvolverShader } from './Shaders/ConvolverShader.js';
-import { GLFbo } from './GLFbo.js';
-import { ImagePyramid } from './ImagePyramid.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { hammersley } from '../Math'
+import { GLTexture2D } from './GLTexture2D.js'
+import { ImageAtlas } from './ImageAtlas.js'
+import { ConvolverShader } from './Shaders/ConvolverShader.js'
+import { GLFbo } from './GLFbo.js'
+import { ImagePyramid } from './ImagePyramid.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL probe.
  * @extends ImageAtlas
@@ -16,13 +16,13 @@ class GLProbe extends ImageAtlas {
    * @param {string} name - The name value.
    */
   constructor(gl, name) {
-    super(gl, name);
-    this.__gl = gl;
+    super(gl, name)
+    this.__gl = gl
 
-    if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad();
+    if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    this.__convolved = false;
-    this.__fbos = [];
+    this.__convolved = false
+    this.__fbos = []
   }
 
   /**
@@ -31,14 +31,14 @@ class GLProbe extends ImageAtlas {
    * @return {any} - The return value.
    */
   generateHammersleySamples(numSamples) {
-    const gl = this.__gl;
+    const gl = this.__gl
     if (!gl['Hammersley' + numSamples]) {
-      const dataArray = new Float32Array(numSamples * 3);
+      const dataArray = new Float32Array(numSamples * 3)
       for (let i = 0; i < numSamples; i++) {
-        const Xi = hammersley(i, numSamples);
-        const offset = i * 3;
-        dataArray[offset + 0] = Xi[0];
-        dataArray[offset + 1] = Xi[1];
+        const Xi = hammersley(i, numSamples)
+        const offset = i * 3
+        dataArray[offset + 0] = Xi[0]
+        dataArray[offset + 1] = Xi[1]
       }
       gl['Hammersley' + numSamples] = new GLTexture2D(gl, {
         format: 'RGB',
@@ -49,9 +49,9 @@ class GLProbe extends ImageAtlas {
         height: 1,
         data: dataArray,
         mipMapped: false,
-      });
+      })
     }
-    return gl['Hammersley' + numSamples];
+    return gl['Hammersley' + numSamples]
   }
 
   /**
@@ -59,27 +59,27 @@ class GLProbe extends ImageAtlas {
    * @param {any} srcGLTex - The srcGLTex param.
    */
   convolveProbe(srcGLTex) {
-    const gl = this.__gl;
+    const gl = this.__gl
 
     // Compile and bind the convolver shader.
-    const numSamples = 1024;
+    const numSamples = 1024
     // const numSamples = 64;
-    const hammersleyTexture = this.generateHammersleySamples(numSamples);
+    const hammersleyTexture = this.generateHammersleySamples(numSamples)
 
     if (!this.__convolved) {
       if (!this.__lodPyramid) {
-        this.__lodPyramid = new ImagePyramid(gl, 'Probe Lods', srcGLTex, false);
+        this.__lodPyramid = new ImagePyramid(gl, 'Probe Lods', srcGLTex, false)
         this.__lodPyramid.updated.connect(() => {
           // If the image pyramid updates, we need to re-convolve.
-          this.convolveProbe(srcGLTex);
-        });
+          this.convolveProbe(srcGLTex)
+        })
       }
 
-      this.addSubImage(srcGLTex);
+      this.addSubImage(srcGLTex)
 
-      let currRez = [srcGLTex.width / 2, srcGLTex.height / 2];
+      let currRez = [srcGLTex.width / 2, srcGLTex.height / 2]
 
-      const levels = 6; // this.__lodPyramid.numSubImages();
+      const levels = 6 // this.__lodPyramid.numSubImages();
       for (let i = 0; i < levels; i++) {
         const level = new GLTexture2D(gl, {
           format: 'RGBA',
@@ -88,19 +88,19 @@ class GLProbe extends ImageAtlas {
           wrap: 'CLAMP_TO_EDGE',
           width: currRez[0],
           height: currRez[1],
-        });
-        this.addSubImage(level);
+        })
+        this.addSubImage(level)
 
-        const fbo = new GLFbo(gl, level);
-        fbo.setClearColor([0, 1, 0, 0]);
-        this.__fbos.push(fbo);
+        const fbo = new GLFbo(gl, level)
+        fbo.setClearColor([0, 1, 0, 0])
+        this.__fbos.push(fbo)
 
-        currRez = [currRez[0] / 2, currRez[1] / 2];
+        currRez = [currRez[0] / 2, currRez[1] / 2]
       }
 
-      this.generateAtlasLayout();
+      this.generateAtlasLayout()
 
-      this.__convolverShader = new ConvolverShader(gl);
+      this.__convolverShader = new ConvolverShader(gl)
       const covolverShaderComp = this.__convolverShader.compileForTarget(
         'GLProbe',
         Object.assign(
@@ -111,43 +111,43 @@ class GLProbe extends ImageAtlas {
           },
           gl.shaderopts
         )
-      );
+      )
       this.__covolverShaderBinding = generateShaderGeomBinding(
         gl,
         covolverShaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer
-      );
+      )
     }
 
     // TODO: Refactor this code.
     // We only need one target image for the probe. (not all these Fbos.)
     // Instead we can simply move the viewport around the target image atlas.
-    const renderstate = {};
-    this.__convolverShader.bind(renderstate, 'GLProbe');
-    this.__covolverShaderBinding.bind(renderstate);
-    const unifs = renderstate.unifs;
+    const renderstate = {}
+    this.__convolverShader.bind(renderstate, 'GLProbe')
+    this.__covolverShaderBinding.bind(renderstate)
+    const unifs = renderstate.unifs
     for (let i = 0; i < this.__fbos.length; i++) {
-      this.__fbos[i].bindAndClear();
+      this.__fbos[i].bindAndClear()
 
       // Note: we should not need to bind the texture every iteration.
-      this.__lodPyramid.bindToUniform(renderstate, unifs.envMapPyramid);
+      this.__lodPyramid.bindToUniform(renderstate, unifs.envMapPyramid)
       if ('hammersleyMap' in unifs) {
-        hammersleyTexture.bindToUniform(renderstate, unifs.hammersleyMap);
+        hammersleyTexture.bindToUniform(renderstate, unifs.hammersleyMap)
       }
 
       // Set the roughness.
       if ('roughness' in unifs) {
-        const roughness = (i + 1) / this.__fbos.length;
-        gl.uniform1f(unifs.roughness.location, roughness);
+        const roughness = (i + 1) / this.__fbos.length
+        gl.uniform1f(unifs.roughness.location, roughness)
       }
 
-      gl.drawQuad();
+      gl.drawQuad()
     }
 
-    this.__convolved = true;
+    this.__convolved = true
 
-    this.renderAtlas(false);
+    this.renderAtlas(false)
   }
 
   /**
@@ -157,21 +157,21 @@ class GLProbe extends ImageAtlas {
    */
   bindProbeToUniform(renderstate, unif) {
     // this.__lodPyramid.getSubImage(3).bind(renderstate, unif);
-    if (this.__convolved) super.bindToUniform(renderstate, unif);
+    if (this.__convolved) super.bindToUniform(renderstate, unif)
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
-    this.__convolverShader.destroy();
+    super.destroy()
+    this.__convolverShader.destroy()
 
     for (const fbo of this.__fbos) {
-      fbo.destroy();
+      fbo.destroy()
     }
   }
 }
 
-export { GLProbe };
+export { GLProbe }
 // export default GLProbe;

@@ -1,7 +1,7 @@
-import { GLTexture2D } from './GLTexture2D.js';
-import { UnpackLDRAlphaImageShader } from './Shaders/UnpackLDRAlphaImageShader.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { GLTexture2D } from './GLTexture2D.js'
+import { UnpackLDRAlphaImageShader } from './Shaders/UnpackLDRAlphaImageShader.js'
+import { GLFbo } from './GLFbo.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL LDR alpha image.
  * @extends GLTexture2D
@@ -13,23 +13,23 @@ class GLLDRAlphaImage extends GLTexture2D {
    * @param {any} hdrImage - The hdrImage value.
    */
   constructor(gl, hdrImage) {
-    super(gl);
+    super(gl)
 
-    this.__hdrImage = hdrImage;
+    this.__hdrImage = hdrImage
     this.__hdrImage.updated.connect(() => {
-      this.__unpackLDRAlpha(this.__hdrImage.getParams());
-    });
+      this.__unpackLDRAlpha(this.__hdrImage.getParams())
+    })
     if (this.__hdrImage.isLoaded()) {
-      this.__unpackLDRAlpha(this.__hdrImage.getParams());
+      this.__unpackLDRAlpha(this.__hdrImage.getParams())
     } else {
       this.__hdrImage.loaded.connect(() => {
-        this.__unpackLDRAlpha(this.__hdrImage.getParams());
-      });
+        this.__unpackLDRAlpha(this.__hdrImage.getParams())
+      })
     }
     this.__hdrImage.destructing.connect(() => {
-      console.log(this.__hdrImage.getName() + ' destructing');
-      this.destroy();
-    });
+      console.log(this.__hdrImage.getName() + ' destructing')
+      this.destroy()
+    })
   }
 
   /**
@@ -38,10 +38,10 @@ class GLLDRAlphaImage extends GLTexture2D {
    * @private
    */
   __unpackLDRAlpha(hdrImageParams) {
-    const gl = this.__gl;
+    const gl = this.__gl
 
-    const ldr = hdrImageParams.data.ldr;
-    const alpha = hdrImageParams.data.alpha;
+    const ldr = hdrImageParams.data.ldr
+    const alpha = hdrImageParams.data.alpha
 
     if (!this.__fbo) {
       this.configure({
@@ -51,9 +51,9 @@ class GLLDRAlphaImage extends GLTexture2D {
         height: ldr.height,
         filter: 'LINEAR',
         wrap: 'CLAMP_TO_EDGE',
-      });
-      this.__fbo = new GLFbo(gl, this);
-      this.__fbo.setClearColor([0, 0, 0, 0]);
+      })
+      this.__fbo = new GLFbo(gl, this)
+      this.__fbo.setClearColor([0, 0, 0, 0])
 
       this.__srcLDRTex = new GLTexture2D(gl, {
         format: 'RGB',
@@ -64,7 +64,7 @@ class GLLDRAlphaImage extends GLTexture2D {
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
         data: ldr,
-      });
+      })
       this.__srcAlphaTex = new GLTexture2D(gl, {
         format: 'RGB',
         type: 'UNSIGNED_BYTE',
@@ -74,31 +74,31 @@ class GLLDRAlphaImage extends GLTexture2D {
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
         data: alpha,
-      });
-      this.__unpackLDRAlphaShader = new UnpackLDRAlphaImageShader(gl);
-      const shaderComp = this.__unpackLDRAlphaShader.compileForTarget();
+      })
+      this.__unpackLDRAlphaShader = new UnpackLDRAlphaImageShader(gl)
+      const shaderComp = this.__unpackLDRAlphaShader.compileForTarget()
       this.__shaderBinding = generateShaderGeomBinding(
         gl,
         shaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer
-      );
+      )
     } else {
-      this.__srcLDRTex.bufferData(ldr);
-      this.__srcAlphaTex.bufferData(alpha);
+      this.__srcLDRTex.bufferData(ldr)
+      this.__srcAlphaTex.bufferData(alpha)
     }
 
-    this.__fbo.bindAndClear();
+    this.__fbo.bindAndClear()
 
-    const renderstate = {};
-    this.__unpackLDRAlphaShader.bind(renderstate, 'GLLDRAlphaImage');
-    this.__shaderBinding.bind(renderstate);
+    const renderstate = {}
+    this.__unpackLDRAlphaShader.bind(renderstate, 'GLLDRAlphaImage')
+    this.__shaderBinding.bind(renderstate)
 
-    const unifs = renderstate.unifs;
-    this.__srcLDRTex.bind(renderstate, unifs.ldrSampler.location);
-    this.__srcAlphaTex.bind(renderstate, unifs.alphaSampler.location);
+    const unifs = renderstate.unifs
+    this.__srcLDRTex.bind(renderstate, unifs.ldrSampler.location)
+    this.__srcAlphaTex.bind(renderstate, unifs.alphaSampler.location)
 
-    gl.drawQuad();
+    gl.drawQuad()
 
     // // Debug a block of pixels.
     // console.log(this.__hdrImage.getName());
@@ -109,36 +109,36 @@ class GLLDRAlphaImage extends GLTexture2D {
     // console.log(pixels);
     // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    this.__fbo.unbind();
+    this.__fbo.unbind()
 
     if (!this.__hdrImage.isStream()) {
-      this.__fbo.destroy();
-      this.__srcLDRTex.destroy();
-      this.__srcAlphaTex.destroy();
-      this.__fbo = null;
-      this.__srcLDRTex = null;
-      this.__srcAlphaTex = null;
+      this.__fbo.destroy()
+      this.__srcLDRTex.destroy()
+      this.__srcAlphaTex.destroy()
+      this.__fbo = null
+      this.__srcLDRTex = null
+      this.__srcAlphaTex = null
     }
 
-    this.updated.emit();
+    this.updated.emit()
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
     if (this.__fbo) {
-      this.__fbo.destroy();
-      this.__srcLDRTex.destroy();
-      this.__srcAlphaTex.destroy();
+      this.__fbo.destroy()
+      this.__srcLDRTex.destroy()
+      this.__srcAlphaTex.destroy()
     }
-    this.__unpackLDRAlphaShader.destroy();
-    this.__shaderBinding.destroy();
+    this.__unpackLDRAlphaShader.destroy()
+    this.__shaderBinding.destroy()
 
-    this.__hdrImage.loaded.disconnectScope(this);
-    this.__hdrImage.updated.disconnectScope(this);
+    this.__hdrImage.loaded.disconnectScope(this)
+    this.__hdrImage.updated.disconnectScope(this)
   }
 }
 
-export { GLLDRAlphaImage };
+export { GLLDRAlphaImage }

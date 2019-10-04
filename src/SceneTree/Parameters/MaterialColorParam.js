@@ -1,10 +1,10 @@
-import { Color } from '../../Math';
-import { Signal } from '../../Utilities';
-import { sgFactory } from '../SGFactory';
-import { Parameter, ValueSetMode } from './Parameter.js';
-import { ColorParameter } from './ColorParameter.js';
+import { Color } from '../../Math'
+import { Signal } from '../../Utilities'
+import { sgFactory } from '../SGFactory'
+import { Parameter, ValueSetMode } from './Parameter.js'
+import { ColorParameter } from './ColorParameter.js'
 
-import { BaseImage } from '../BaseImage.js';
+import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a material color parameter.
  * @extends Parameter
@@ -16,10 +16,10 @@ class MaterialColorParam extends ColorParameter {
    * @param {any} value - The value value.
    */
   constructor(name, value) {
-    super(name, value);
-    this.textureConnected = new Signal();
-    this.textureDisconnected = new Signal();
-    this.__imageUpdated = this.__imageUpdated.bind(this);
+    super(name, value)
+    this.textureConnected = new Signal()
+    this.textureDisconnected = new Signal()
+    this.__imageUpdated = this.__imageUpdated.bind(this)
   }
 
   /**
@@ -31,8 +31,8 @@ class MaterialColorParam extends ColorParameter {
     const clonedParam = new MaterialColorParam(
       this.__name,
       this.__value.clone()
-    );
-    return clonedParam;
+    )
+    return clonedParam
   }
 
   /**
@@ -40,7 +40,7 @@ class MaterialColorParam extends ColorParameter {
    * @return {any} - The return value.
    */
   getImage() {
-    return this.__image;
+    return this.__image
   }
 
   /**
@@ -48,7 +48,7 @@ class MaterialColorParam extends ColorParameter {
    * @private
    */
   __imageUpdated() {
-    this.valueChanged.emit();
+    this.valueChanged.emit()
   }
 
   /**
@@ -58,26 +58,26 @@ class MaterialColorParam extends ColorParameter {
    */
   setImage(value, mode = 0) {
     const disconnectImage = () => {
-      this.__image.removeRef(this);
-      this.__image.loaded.disconnect(this.__imageUpdated);
-      this.__image.updated.disconnect(this.__imageUpdated);
-      this.__image = null;
-      this.textureDisconnected.emit();
-    };
+      this.__image.removeRef(this)
+      this.__image.loaded.disconnect(this.__imageUpdated)
+      this.__image.updated.disconnect(this.__imageUpdated)
+      this.__image = null
+      this.textureDisconnected.emit()
+    }
     if (value) {
       if (this.__image != undefined && this.__image !== value) {
-        disconnectImage();
+        disconnectImage()
       }
-      this.__image = value;
-      this.__image.addRef(this);
-      this.__image.updated.connect(this.__imageUpdated);
-      this.textureConnected.emit();
-      this.valueChanged.emit(mode);
+      this.__image = value
+      this.__image.addRef(this)
+      this.__image.updated.connect(this.__imageUpdated)
+      this.textureConnected.emit()
+      this.valueChanged.emit(mode)
     } else {
       if (this.__image != undefined) {
-        disconnectImage();
-        this.__image = undefined;
-        this.textureDisconnected.emit();
+        disconnectImage()
+        this.__image = undefined
+        this.textureDisconnected.emit()
       }
     }
   }
@@ -88,12 +88,12 @@ class MaterialColorParam extends ColorParameter {
    */
   setValue(value) {
     if (value instanceof BaseImage) {
-      this.setImage(value);
+      this.setImage(value)
     } else {
       if (this.__image != undefined) {
-        this.setImage(undefined);
+        this.setImage(undefined)
       }
-      super.setValue(value);
+      super.setValue(value)
     }
   }
   /**
@@ -102,15 +102,15 @@ class MaterialColorParam extends ColorParameter {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    super.readBinary(reader, context);
+    super.readBinary(reader, context)
 
-    const textureName = reader.loadStr();
+    const textureName = reader.loadStr()
     if (textureName != '') {
-      this.setImage(context.materialLibrary.getImage(textureName));
+      this.setImage(context.materialLibrary.getImage(textureName))
     }
   }
 }
 
-sgFactory.registerClass('MaterialColorParam', MaterialColorParam);
+sgFactory.registerClass('MaterialColorParam', MaterialColorParam)
 
-export { MaterialColorParam };
+export { MaterialColorParam }

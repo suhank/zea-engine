@@ -1,8 +1,8 @@
-import { Vec2 } from '../../../Math/Vec2';
-import { Vec3 } from '../../../Math/Vec3';
-import { Mesh } from '../Mesh.js';
-import { BooleanParameter, NumberParameter } from '../../Parameters';
-import { sgFactory } from '../../SGFactory.js';
+import { Vec2 } from '../../../Math/Vec2'
+import { Vec3 } from '../../../Math/Vec3'
+import { Mesh } from '../Mesh.js'
+import { BooleanParameter, NumberParameter } from '../../Parameters'
+import { sgFactory } from '../../SGFactory.js'
 
 /** Class representing a cone.
  * @extends Mesh
@@ -16,43 +16,43 @@ class Cone extends Mesh {
    * @param {boolean} cap - The cap value.
    */
   constructor(radius = 0.5, height = 1.0, detail = 32, cap = true) {
-    super();
+    super()
 
     if (isNaN(radius) || isNaN(height) || isNaN(detail))
-      throw new Error('Invalid geom args');
+      throw new Error('Invalid geom args')
 
     this.__radiusParam = this.addParameter(
       new NumberParameter('radius', radius)
-    );
+    )
     this.__heightParam = this.addParameter(
       new NumberParameter('height', height)
-    );
+    )
     this.__detailParam = this.addParameter(
       new NumberParameter('detail', detail >= 3 ? detail : 3, [3, 200], 1)
-    );
-    this.__capParam = this.addParameter(new BooleanParameter('cap', cap));
+    )
+    this.__capParam = this.addParameter(new BooleanParameter('cap', cap))
 
-    this.addVertexAttribute('texCoords', Vec2);
-    this.addVertexAttribute('normals', Vec3);
-    this.__rebuild();
+    this.addVertexAttribute('texCoords', Vec2)
+    this.addVertexAttribute('normals', Vec3)
+    this.__rebuild()
 
     const resize = () => {
-      this.__resize();
-    };
+      this.__resize()
+    }
     const rebuild = () => {
-      this.__rebuild();
-    };
-    this.__radiusParam.valueChanged.connect(resize);
-    this.__heightParam.valueChanged.connect(resize);
-    this.__detailParam.valueChanged.connect(rebuild);
-    this.__capParam.valueChanged.connect(rebuild);
+      this.__rebuild()
+    }
+    this.__radiusParam.valueChanged.connect(resize)
+    this.__heightParam.valueChanged.connect(resize)
+    this.__detailParam.valueChanged.connect(rebuild)
+    this.__capParam.valueChanged.connect(rebuild)
   }
 
   /**
    * Getter for radius.
    */
   get radius() {
-    return this.__radiusParam.getValue();
+    return this.__radiusParam.getValue()
   }
 
   /**
@@ -60,15 +60,15 @@ class Cone extends Mesh {
    * @param {number} val - The val param.
    */
   set radius(val) {
-    this.__radiusParam.setValue(val);
-    this.__resize();
+    this.__radiusParam.setValue(val)
+    this.__resize()
   }
 
   /**
    * Getter for height.
    */
   get height() {
-    return this.__heightParam.getValue();
+    return this.__heightParam.getValue()
   }
 
   /**
@@ -76,15 +76,15 @@ class Cone extends Mesh {
    * @param {number} val - The val param.
    */
   set height(val) {
-    this.__heightParam.setValue(val);
-    this.__resize();
+    this.__heightParam.setValue(val)
+    this.__resize()
   }
 
   /**
    * Getter for detail.
    */
   get detail() {
-    return this.__detailParam.getValue();
+    return this.__detailParam.getValue()
   }
 
   /**
@@ -92,15 +92,15 @@ class Cone extends Mesh {
    * @param {number} val - The val param.
    */
   set detail(val) {
-    this.__detailParam.setValue(val);
-    this.__rebuild();
+    this.__detailParam.setValue(val)
+    this.__rebuild()
   }
 
   /**
    * Getter for cap.
    */
   get cap() {
-    return this.__capParam.getValue();
+    return this.__capParam.getValue()
   }
 
   /**
@@ -108,8 +108,8 @@ class Cone extends Mesh {
    * @param {number} val - The val param.
    */
   set cap(val) {
-    this.__capParam.setValue(val);
-    this.__rebuild();
+    this.__capParam.setValue(val)
+    this.__rebuild()
   }
 
   /**
@@ -117,65 +117,65 @@ class Cone extends Mesh {
    * @private
    */
   __rebuild() {
-    this.clear();
+    this.clear()
 
-    const nbSides = this.__detailParam.getValue();
-    const radius = this.__radiusParam.getValue();
-    const height = this.__heightParam.getValue();
-    const cap = this.__capParam.getValue();
-    let numVertices = nbSides + 1;
+    const nbSides = this.__detailParam.getValue()
+    const radius = this.__radiusParam.getValue()
+    const height = this.__heightParam.getValue()
+    const cap = this.__capParam.getValue()
+    let numVertices = nbSides + 1
     if (cap) {
-      numVertices += 1;
+      numVertices += 1
     }
-    this.setNumVertices(numVertices);
-    const tipPoint = nbSides;
-    const basePoint = nbSides + 1;
+    this.setNumVertices(numVertices)
+    const tipPoint = nbSides
+    const basePoint = nbSides + 1
 
     // ////////////////////////////
     // Set Vertex Positions
 
-    this.getVertex(tipPoint).set(0.0, 0.0, height);
+    this.getVertex(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
-      let theta = (i / nbSides) * 2.0 * Math.PI;
+      let theta = (i / nbSides) * 2.0 * Math.PI
       this.getVertex(i).set(
         radius * Math.cos(theta),
         radius * Math.sin(theta),
         0.0
-      );
+      )
     }
     if (cap) {
-      this.getVertex(basePoint).set(0.0, 0.0, 0.0);
+      this.getVertex(basePoint).set(0.0, 0.0, 0.0)
     }
 
     // ////////////////////////////
     // build the topology
-    this.setFaceCounts([nbSides + (cap ? nbSides : 0)]);
+    this.setFaceCounts([nbSides + (cap ? nbSides : 0)])
     for (let i = 0; i < nbSides; i++) {
-      let j = (i + 1) % nbSides;
-      this.setFaceVertexIndices(i, j, i, tipPoint);
+      let j = (i + 1) % nbSides
+      this.setFaceVertexIndices(i, j, i, tipPoint)
     }
     if (cap) {
       for (let i = 0; i < nbSides; i++) {
-        let j = (i + 1) % nbSides;
-        this.setFaceVertexIndices(nbSides + i, i, j, basePoint);
+        let j = (i + 1) % nbSides
+        this.setFaceVertexIndices(nbSides + i, i, j, basePoint)
       }
     }
 
     // ////////////////////////////
     // setNormals
-    let normals = this.getVertexAttribute('normals');
+    let normals = this.getVertexAttribute('normals')
 
-    let normalElevation;
-    let divider = height;
+    let normalElevation
+    let divider = height
     if (Math.abs(height) < 1.0e-12)
-      normalElevation = height < 0 ? -1.0e-12 : 1.0e-12;
-    normalElevation = radius / divider;
+      normalElevation = height < 0 ? -1.0e-12 : 1.0e-12
+    normalElevation = radius / divider
 
-    let tri = 0;
+    let tri = 0
     for (let i = 0; i < nbSides; i++) {
-      let theta1 = ((i + 1) / nbSides) * 2.0 * Math.PI;
-      let theta2 = (i / nbSides) * 2.0 * Math.PI;
-      let theta = (theta1 + theta2) * 0.5;
+      let theta1 = ((i + 1) / nbSides) * 2.0 * Math.PI
+      let theta2 = (i / nbSides) * 2.0 * Math.PI
+      let theta = (theta1 + theta2) * 0.5
 
       normals.setFaceVertexValue(
         tri,
@@ -185,7 +185,7 @@ class Cone extends Mesh {
           normalElevation,
           Math.sin(theta1)
         ).normalize()
-      );
+      )
       normals.setFaceVertexValue(
         tri,
         1,
@@ -194,49 +194,45 @@ class Cone extends Mesh {
           normalElevation,
           Math.sin(theta2)
         ).normalize()
-      );
+      )
       normals.setFaceVertexValue(
         tri,
         2,
         new Vec3(Math.cos(theta), normalElevation, Math.sin(theta)).normalize()
-      );
-      tri++;
+      )
+      tri++
     }
     if (cap) {
-      let normal = new Vec3(0.0, -1.0, 0.0);
+      let normal = new Vec3(0.0, -1.0, 0.0)
       for (let i = 0; i < nbSides; i++) {
-        normals.setFaceVertexValue(tri, 0, normal);
-        normals.setFaceVertexValue(tri, 1, normal);
-        normals.setFaceVertexValue(tri, 2, normal);
-        tri++;
+        normals.setFaceVertexValue(tri, 0, normal)
+        normals.setFaceVertexValue(tri, 1, normal)
+        normals.setFaceVertexValue(tri, 2, normal)
+        tri++
       }
     }
 
     // ////////////////////////////
     // setUVs
-    let texCoords = this.getVertexAttribute('texCoords');
+    let texCoords = this.getVertexAttribute('texCoords')
 
     // Now set the attrbute values
-    tri = 0;
+    tri = 0
     for (let i = 0; i < nbSides; i++) {
-      texCoords.setFaceVertexValue(tri, 0, new Vec2((i + 1) / nbSides, 0.0));
-      texCoords.setFaceVertexValue(tri, 1, new Vec2(i / nbSides, 0.0));
-      texCoords.setFaceVertexValue(tri, 2, new Vec2((i + 0.5) / nbSides, 1.0));
+      texCoords.setFaceVertexValue(tri, 0, new Vec2((i + 1) / nbSides, 0.0))
+      texCoords.setFaceVertexValue(tri, 1, new Vec2(i / nbSides, 0.0))
+      texCoords.setFaceVertexValue(tri, 2, new Vec2((i + 0.5) / nbSides, 1.0))
     }
     if (cap) {
       for (let i = 0; i < nbSides; i++) {
-        texCoords.setFaceVertexValue(tri, 0, new Vec2(i / nbSides, 0.0));
-        texCoords.setFaceVertexValue(tri, 1, new Vec2((i + 1) / nbSides, 0.0));
-        texCoords.setFaceVertexValue(
-          tri,
-          2,
-          new Vec2((i + 0.5) / nbSides, 1.0)
-        );
-        tri++;
+        texCoords.setFaceVertexValue(tri, 0, new Vec2(i / nbSides, 0.0))
+        texCoords.setFaceVertexValue(tri, 1, new Vec2((i + 1) / nbSides, 0.0))
+        texCoords.setFaceVertexValue(tri, 2, new Vec2((i + 0.5) / nbSides, 1.0))
+        tri++
       }
     }
 
-    this.setBoundingBoxDirty();
+    this.setBoundingBoxDirty()
   }
 
   /**
@@ -244,30 +240,30 @@ class Cone extends Mesh {
    * @private
    */
   __resize() {
-    const nbSides = this.__detailParam.getValue();
-    const radius = this.__radiusParam.getValue();
-    const height = this.__heightParam.getValue();
-    const cap = this.__capParam.getValue();
+    const nbSides = this.__detailParam.getValue()
+    const radius = this.__radiusParam.getValue()
+    const height = this.__heightParam.getValue()
+    const cap = this.__capParam.getValue()
 
-    const tipPoint = nbSides;
-    const basePoint = nbSides + 1;
+    const tipPoint = nbSides
+    const basePoint = nbSides + 1
 
-    this.getVertex(tipPoint).set(0.0, 0.0, height);
+    this.getVertex(tipPoint).set(0.0, 0.0, height)
     for (let i = 0; i < nbSides; i++) {
-      let theta = (i / nbSides) * 2.0 * Math.PI;
+      let theta = (i / nbSides) * 2.0 * Math.PI
       this.getVertex(i).set(
         radius * Math.cos(theta),
         radius * Math.sin(theta),
         0.0
-      );
+      )
     }
     if (this.__cap) {
-      this.getVertex(basePoint).set(0.0, 0.0, 0.0);
+      this.getVertex(basePoint).set(0.0, 0.0, 0.0)
     }
 
-    this.setBoundingBoxDirty();
+    this.setBoundingBoxDirty()
   }
 }
 
-sgFactory.registerClass('Cone', Cone);
-export { Cone };
+sgFactory.registerClass('Cone', Cone)
+export { Cone }

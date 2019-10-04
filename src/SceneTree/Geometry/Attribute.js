@@ -1,5 +1,5 @@
-import { Float32, UInt32, SInt32 } from '../../Math';
-import { typeRegistry } from '../../Math/TypeRegistry.js';
+import { Float32, UInt32, SInt32 } from '../../Math'
+import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 /** Class representing an attribute. */
 class Attribute {
@@ -10,24 +10,24 @@ class Attribute {
    * @param {any} defaultScalarValue - The defaultScalarValue value.
    */
   constructor(dataType, expectedSize, defaultScalarValue = undefined) {
-    this.__dataType = dataType;
+    this.__dataType = dataType
     if (dataType.numFloat32Elements != undefined) {
-      this.__numFloat32Elements = this.__dataType.numFloat32Elements();
+      this.__numFloat32Elements = this.__dataType.numFloat32Elements()
     } else {
       switch (dataType) {
         case Float32:
         case UInt32:
         case SInt32:
-          this.__numFloat32Elements = 1;
-          break;
+          this.__numFloat32Elements = 1
+          break
         default:
-          throw new Error('Invalid data type for attribute:' + dataType);
+          throw new Error('Invalid data type for attribute:' + dataType)
       }
     }
-    this.__data = new Float32Array(expectedSize * this.__numFloat32Elements);
+    this.__data = new Float32Array(expectedSize * this.__numFloat32Elements)
     this.__defaultScalarValue =
-      defaultScalarValue != undefined ? defaultScalarValue : Number.MAX_VALUE;
-    this.initRange(0);
+      defaultScalarValue != undefined ? defaultScalarValue : Number.MAX_VALUE
+    this.initRange(0)
   }
 
   /**
@@ -35,14 +35,14 @@ class Attribute {
    * @param {any} size - The size param.
    */
   resize(size) {
-    const prevLength = this.__data.length;
-    const newLength = size * this.__numFloat32Elements;
-    const data = new Float32Array(newLength);
+    const prevLength = this.__data.length
+    const newLength = size * this.__numFloat32Elements
+    const data = new Float32Array(newLength)
     for (let i = 0; i < Math.min(this.__data.length, newLength); i++) {
-      data[i] = this.__data[i];
+      data[i] = this.__data[i]
     }
-    if (this.__data.length < newLength) this.__data = data;
-    this.initRange(prevLength);
+    if (this.__data.length < newLength) this.__data = data
+    this.initRange(prevLength)
   }
 
   /**
@@ -52,7 +52,7 @@ class Attribute {
   initRange(start) {
     // Initialize the values to invalid values.
     for (let i = start; i < this.__data.length; i++) {
-      this.__data[i] = this.__defaultScalarValue;
+      this.__data[i] = this.__defaultScalarValue
     }
   }
 
@@ -61,28 +61,28 @@ class Attribute {
    * @return {any} - The return value.
    */
   getCount() {
-    return this.__data.length / this.__numFloat32Elements;
+    return this.__data.length / this.__numFloat32Elements
   }
 
   /**
    * Getter for length.
    */
   get length() {
-    return this.__data.length / this.__numFloat32Elements;
+    return this.__data.length / this.__numFloat32Elements
   }
 
   /**
    * Getter for data.
    */
   get data() {
-    return this.__data;
+    return this.__data
   }
 
   /**
    * Getter for numFloat32Elements.
    */
   get numFloat32Elements() {
-    return this.__numFloat32Elements;
+    return this.__numFloat32Elements
   }
 
   /**
@@ -91,7 +91,7 @@ class Attribute {
    * @return {any} - The return value.
    */
   getFloat32Value(index) {
-    return this.__data[index];
+    return this.__data[index]
   }
 
   /**
@@ -100,7 +100,7 @@ class Attribute {
    * @param {any} value - The value param.
    */
   setFloat32Value(index, value) {
-    this.__data[index] = value;
+    this.__data[index] = value
   }
 
   /**
@@ -109,18 +109,18 @@ class Attribute {
    * @return {any} - The return value.
    */
   getValueRef(index) {
-    const numElems = this.__numFloat32Elements;
+    const numElems = this.__numFloat32Elements
     if (index >= this.__data.length / numElems)
       throw new Error(
         'Invalid vertex index:' +
           index +
           '. Num Vertices:' +
           this.__data.length / 3
-      );
+      )
     return this.__dataType.createFromFloat32Buffer(
       this.__data.buffer,
       index * numElems
-    );
+    )
   }
 
   /**
@@ -129,17 +129,17 @@ class Attribute {
    * @param {any} value - The value param.
    */
   setValue(index, value) {
-    const numElems = this.__numFloat32Elements;
+    const numElems = this.__numFloat32Elements
     if (index >= this.__data.length / numElems)
       throw new Error(
         'Invalid vertex index:' +
           index +
           '. Num Vertices:' +
           this.__data.length / 3
-      );
+      )
     this.__dataType
       .createFromFloat32Buffer(this.__data.buffer, index * numElems)
-      .setFromOther(value);
+      .setFromOther(value)
   }
 
   /**
@@ -154,7 +154,7 @@ class Attribute {
       dataType: typeRegistry.getTypeName(this.__dataType),
       defaultScalarValue: this.__defaultScalarValue,
       length: this.__data.length / this.__numFloat32Elements,
-    };
+    }
   }
 
   /**
@@ -162,7 +162,7 @@ class Attribute {
    * @param {any} j - The j param.
    */
   fromJSON(j) {
-    this.__data = Float32Array.from(j.data);
+    this.__data = Float32Array.from(j.data)
   }
 
   /**
@@ -170,9 +170,9 @@ class Attribute {
    * @return {any} - The return value.
    */
   toString() {
-    return JSON.stringify(this.toJSON(), null, 2);
+    return JSON.stringify(this.toJSON(), null, 2)
   }
 }
 
-export { Attribute };
+export { Attribute }
 // export default Attribute;

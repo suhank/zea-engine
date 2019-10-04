@@ -1,7 +1,7 @@
-import { sgFactory } from '../../SceneTree/SGFactory.js';
+import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { TreeItemParameter } from '../../SceneTree/Parameters';
-import { StateEvent } from '../StateEvent.js';
+import { TreeItemParameter } from '../../SceneTree/Parameters'
+import { StateEvent } from '../StateEvent.js'
 
 /** Class representing a geom being clicked.
  * @extends StateEvent
@@ -12,11 +12,11 @@ class GeomClicked extends StateEvent {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
-    this.__geomParam = this.addParameter(new TreeItemParameter('TreeItem'));
+    super(name)
+    this.__geomParam = this.addParameter(new TreeItemParameter('TreeItem'))
     this.__geomParam.valueChanged.connect(() => {
-      this.__geom = this.__geomParam.getValue();
-    });
+      this.__geom = this.__geomParam.getValue()
+    })
   }
 
   /**
@@ -25,8 +25,8 @@ class GeomClicked extends StateEvent {
    * @private
    */
   __geomClicked(event) {
-    event.stopPropagation();
-    this.__onEvent();
+    event.stopPropagation()
+    this.__onEvent()
   }
 
   /**
@@ -34,7 +34,7 @@ class GeomClicked extends StateEvent {
    */
   activate() {
     if (this.__geom) {
-      this.__geom.mouseDown.connect(this.__geomClicked.bind(this));
+      this.__geom.mouseDown.connect(this.__geomClicked.bind(this))
     }
   }
 
@@ -43,11 +43,11 @@ class GeomClicked extends StateEvent {
    */
   deactivate() {
     if (this.__geom) {
-      this.__geom.mouseDown.disconnect(this.__geomClicked.bind(this));
+      this.__geom.mouseDown.disconnect(this.__geomClicked.bind(this))
     }
   }
 }
 
-sgFactory.registerClass('GeomClicked', GeomClicked);
+sgFactory.registerClass('GeomClicked', GeomClicked)
 
-export { GeomClicked };
+export { GeomClicked }

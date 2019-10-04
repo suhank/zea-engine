@@ -1,7 +1,7 @@
-import { GLTexture2D } from './GLTexture2D.js';
-import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { GLTexture2D } from './GLTexture2D.js'
+import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js'
+import { GLFbo } from './GLFbo.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL HDR image.
  * @extends GLTexture2D
@@ -13,24 +13,24 @@ class GLHDRImage extends GLTexture2D {
    * @param {any} hdrImage - The hdrImage value.
    */
   constructor(gl, hdrImage) {
-    super(gl);
+    super(gl)
 
-    this.__hdrImage = hdrImage;
-    this.__hdrImage.setMetadata('gltexture', this);
+    this.__hdrImage = hdrImage
+    this.__hdrImage.setMetadata('gltexture', this)
     this.__hdrImage.updated.connect(() => {
-      this.__unpackHDRImage(this.__hdrImage.getParams());
-    });
+      this.__unpackHDRImage(this.__hdrImage.getParams())
+    })
     if (this.__hdrImage.isLoaded()) {
-      this.__unpackHDRImage(this.__hdrImage.getParams());
+      this.__unpackHDRImage(this.__hdrImage.getParams())
     } else {
       this.__hdrImage.loaded.connect(() => {
-        this.__unpackHDRImage(this.__hdrImage.getParams());
-      });
+        this.__unpackHDRImage(this.__hdrImage.getParams())
+      })
     }
     this.__hdrImage.destructing.connect(() => {
-      console.log(this.__hdrImage.getName() + ' destructing');
-      this.destroy();
-    });
+      console.log(this.__hdrImage.getName() + ' destructing')
+      this.destroy()
+    })
   }
 
   /**
@@ -39,10 +39,10 @@ class GLHDRImage extends GLTexture2D {
    * @private
    */
   __unpackHDRImage(hdrImageParams) {
-    const gl = this.__gl;
+    const gl = this.__gl
 
-    const ldr = hdrImageParams.data.ldr;
-    const cdm = hdrImageParams.data.cdm;
+    const ldr = hdrImageParams.data.ldr
+    const cdm = hdrImageParams.data.cdm
 
     if (!this.__fbo) {
       // Note: iOS devices create FLOAT Fbox.
@@ -54,9 +54,9 @@ class GLHDRImage extends GLTexture2D {
         height: ldr.height,
         filter: 'LINEAR',
         wrap: 'CLAMP_TO_EDGE',
-      });
-      this.__fbo = new GLFbo(gl, this);
-      this.__fbo.setClearColor([0, 0, 0, 0]);
+      })
+      this.__fbo = new GLFbo(gl, this)
+      this.__fbo.setClearColor([0, 0, 0, 0])
 
       this.__srcLDRTex = new GLTexture2D(gl, {
         format: 'RGB',
@@ -67,7 +67,7 @@ class GLHDRImage extends GLTexture2D {
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
         data: ldr,
-      });
+      })
       this.__srcCDMTex = new GLTexture2D(gl, {
         format: gl.name == 'webgl2' ? 'RED' : 'ALPHA',
         type: 'UNSIGNED_BYTE',
@@ -77,34 +77,34 @@ class GLHDRImage extends GLTexture2D {
         mipMapped: false,
         wrap: 'CLAMP_TO_EDGE',
         data: cdm,
-      });
+      })
 
-      this.__unpackHDRShader = new UnpackHDRShader(gl);
-      const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage');
+      this.__unpackHDRShader = new UnpackHDRShader(gl)
+      const shaderComp = this.__unpackHDRShader.compileForTarget('GLHDRImage')
       this.__shaderBinding = generateShaderGeomBinding(
         gl,
         shaderComp.attrs,
         gl.__quadattrbuffers,
         gl.__quadIndexBuffer
-      );
+      )
     } else {
-      this.__srcLDRTex.bufferData(ldr);
-      this.__srcCDMTex.bufferData(cdm);
+      this.__srcLDRTex.bufferData(ldr)
+      this.__srcCDMTex.bufferData(cdm)
     }
 
-    this.__fbo.bindAndClear();
+    this.__fbo.bindAndClear()
 
-    const renderstate = {};
-    this.__unpackHDRShader.bind(renderstate, 'GLHDRImage');
-    this.__shaderBinding.bind(renderstate);
+    const renderstate = {}
+    this.__unpackHDRShader.bind(renderstate, 'GLHDRImage')
+    this.__shaderBinding.bind(renderstate)
 
-    const unifs = renderstate.unifs;
-    this.__srcLDRTex.bindToUniform(renderstate, unifs.ldrSampler);
-    this.__srcCDMTex.bindToUniform(renderstate, unifs.cdmSampler);
+    const unifs = renderstate.unifs
+    this.__srcLDRTex.bindToUniform(renderstate, unifs.ldrSampler)
+    this.__srcCDMTex.bindToUniform(renderstate, unifs.cdmSampler)
 
-    gl.uniform1f(unifs.exposure.location, 1);
-    gl.uniform4fv(unifs.tint.location, this.__hdrImage.getHDRTint().asArray());
-    gl.drawQuad();
+    gl.uniform1f(unifs.exposure.location, 1)
+    gl.uniform4fv(unifs.tint.location, this.__hdrImage.getHDRTint().asArray())
+    gl.drawQuad()
 
     // // Debug a block of pixels.
     // console.log(this.__hdrImage.getName());
@@ -115,7 +115,7 @@ class GLHDRImage extends GLTexture2D {
     // console.log(pixels);
     // gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    this.__fbo.unbind();
+    this.__fbo.unbind()
 
     // if (!this.__hdrImage.isStream()) {
     //     this.__fbo.destroy();
@@ -126,7 +126,7 @@ class GLHDRImage extends GLTexture2D {
     //     this.__srcCDMTex = null;
     // }
 
-    this.updated.emit();
+    this.updated.emit()
   }
 
   /**
@@ -137,26 +137,26 @@ class GLHDRImage extends GLTexture2D {
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {
-    return super.bindToUniform(renderstate, unif, bindings);
+    return super.bindToUniform(renderstate, unif, bindings)
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
     if (this.__fbo) {
-      this.__fbo.destroy();
-      this.__srcLDRTex.destroy();
-      this.__srcCDMTex.destroy();
+      this.__fbo.destroy()
+      this.__srcLDRTex.destroy()
+      this.__srcCDMTex.destroy()
     }
-    if (this.__unpackHDRShader) this.__unpackHDRShader.destroy();
-    if (this.__shaderBinding) this.__shaderBinding.destroy();
+    if (this.__unpackHDRShader) this.__unpackHDRShader.destroy()
+    if (this.__shaderBinding) this.__shaderBinding.destroy()
 
-    this.__hdrImage.loaded.disconnectScope(this);
-    this.__hdrImage.updated.disconnectScope(this);
+    this.__hdrImage.loaded.disconnectScope(this)
+    this.__hdrImage.updated.disconnectScope(this)
   }
 }
 
-export { GLHDRImage };
+export { GLHDRImage }
 // export default GLHDRImage;

@@ -1,12 +1,12 @@
-import { sgFactory } from '../../SceneTree/SGFactory.js';
+import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { Camera } from '../../SceneTree/Camera.js';
+import { Camera } from '../../SceneTree/Camera.js'
 import {
   NumberParameter,
   Vec3Parameter,
   TreeItemParameter,
-} from '../../SceneTree/Parameters';
-import { StateAction } from '../StateAction.js';
+} from '../../SceneTree/Parameters'
+import { StateAction } from '../StateAction.js'
 
 /** Class representing setting camera position and target.
  * @extends StateAction
@@ -16,15 +16,15 @@ class SetCameraPosisionAndTarget extends StateAction {
    * Create a set camera position and target.
    */
   constructor() {
-    super();
+    super()
 
     this.addParameter(
       new TreeItemParameter('Camera', treeItem => treeItem instanceof Camera)
-    );
-    this.addParameter(new Vec3Parameter('cameraPos'));
-    this.addParameter(new Vec3Parameter('cameraTarget'));
-    this.addParameter(new NumberParameter('interpTime', 1.0));
-    this.addParameter(new NumberParameter('updateFrequency', 30));
+    )
+    this.addParameter(new Vec3Parameter('cameraPos'))
+    this.addParameter(new Vec3Parameter('cameraTarget'))
+    this.addParameter(new NumberParameter('interpTime', 1.0))
+    this.addParameter(new NumberParameter('updateFrequency', 30))
   }
 
   /**
@@ -33,86 +33,86 @@ class SetCameraPosisionAndTarget extends StateAction {
    * @param {any} target - The target param.
    */
   setCameraPosisionAndTarget(pos, target) {
-    this.getParameter('cameraPos').setValue(pos);
-    this.getParameter('cameraTarget').setValue(target);
+    this.getParameter('cameraPos').setValue(pos)
+    this.getParameter('cameraTarget').setValue(target)
   }
 
   /**
    * The activate method.
    */
   activate() {
-    const camera = this.getParameter('Camera').getValue();
+    const camera = this.getParameter('Camera').getValue()
     if (!camera) {
       console.warn(
         'Camera not assigned to SetCameraPosisionAndTarget state action'
-      );
-      return;
+      )
+      return
     }
 
-    const posEnd = this.getParameter('cameraPos').getValue();
-    const targetEnd = this.getParameter('cameraTarget').getValue();
-    const interpTime = this.getParameter('interpTime').getValue();
+    const posEnd = this.getParameter('cameraPos').getValue()
+    const targetEnd = this.getParameter('cameraTarget').getValue()
+    const interpTime = this.getParameter('interpTime').getValue()
     if (interpTime > 0.0) {
-      const posStart = camera.getGlobalXfo().tr;
-      const targetStart = camera.getTargetPostion();
-      const distStart = posStart.subtract(targetStart).length();
+      const posStart = camera.getGlobalXfo().tr
+      const targetStart = camera.getTargetPostion()
+      const distStart = posStart.subtract(targetStart).length()
 
-      const updateFrequency = this.getParameter('updateFrequency').getValue();
+      const updateFrequency = this.getParameter('updateFrequency').getValue()
 
-      const distEnd = posEnd.subtract(targetEnd).length();
-      let settingCameraDirection = true;
-      let smooth_t_prev = 0;
-      let step = 0;
-      const steps = Math.round(interpTime * updateFrequency);
-      let modifyingCameraXfo = false;
+      const distEnd = posEnd.subtract(targetEnd).length()
+      let settingCameraDirection = true
+      let smooth_t_prev = 0
+      let step = 0
+      const steps = Math.round(interpTime * updateFrequency)
+      let modifyingCameraXfo = false
       const onCameraChanged = () => {
         if (!modifyingCameraXfo) {
-          settingCameraDirection = false;
+          settingCameraDirection = false
         }
-      };
-      camera.globalXfoChanged.connect(onCameraChanged);
+      }
+      camera.globalXfoChanged.connect(onCameraChanged)
       const timerCallback = () => {
-        step++;
+        step++
         if (step < steps) {
-          const t = step / steps;
-          const smooth_t = Math.smoothStep(0.0, 1.0, t);
-          const delta = (smooth_t - smooth_t_prev) / (1.0 - t);
-          smooth_t_prev = smooth_t;
+          const t = step / steps
+          const smooth_t = Math.smoothStep(0.0, 1.0, t)
+          const delta = (smooth_t - smooth_t_prev) / (1.0 - t)
+          smooth_t_prev = smooth_t
 
-          const posNow = camera.getGlobalXfo().tr;
-          const targetNow = camera.getTargetPostion();
-          const distNow = posNow.subtract(targetNow).length();
-          let newPos = posNow;
-          const newTarget = targetNow.lerp(targetEnd, delta);
+          const posNow = camera.getGlobalXfo().tr
+          const targetNow = camera.getTargetPostion()
+          const distNow = posNow.subtract(targetNow).length()
+          let newPos = posNow
+          const newTarget = targetNow.lerp(targetEnd, delta)
           if (settingCameraDirection) {
-            newPos = posNow.lerp(posEnd, delta);
+            newPos = posNow.lerp(posEnd, delta)
           }
 
-          const newVec = newPos.subtract(newTarget);
-          const newDist = newVec.length();
-          const idealDist = Math.lerp(distNow, distEnd, delta);
+          const newVec = newPos.subtract(newTarget)
+          const newDist = newVec.length()
+          const idealDist = Math.lerp(distNow, distEnd, delta)
           // console.log("t:" + t + " delta: " + delta + " distNow:" + distNow + " idealDist:" + idealDist);
-          newVec.scaleInPlace(idealDist / newVec.length());
+          newVec.scaleInPlace(idealDist / newVec.length())
 
-          modifyingCameraXfo = true;
-          camera.setPositionAndTarget(newTarget.add(newVec), newTarget);
-          modifyingCameraXfo = false;
+          modifyingCameraXfo = true
+          camera.setPositionAndTarget(newTarget.add(newVec), newTarget)
+          modifyingCameraXfo = false
 
           this.__timeoutId = window.setTimeout(
             timerCallback,
             1000 / updateFrequency
-          );
+          )
         } else {
           // camera.setPositionAndTarget(posEnd, targetEnd);
-          camera.globalXfoChanged.disconnect(onCameraChanged);
-          camera.movementFinished.emit();
-          this.__timeoutId = undefined;
-          this.__onDone();
+          camera.globalXfoChanged.disconnect(onCameraChanged)
+          camera.movementFinished.emit()
+          this.__timeoutId = undefined
+          this.__onDone()
         }
-      };
-      timerCallback();
+      }
+      timerCallback()
     } else {
-      camera.setPositionAndTarget(posEnd, targetEnd);
+      camera.setPositionAndTarget(posEnd, targetEnd)
     }
   }
 
@@ -121,8 +121,8 @@ class SetCameraPosisionAndTarget extends StateAction {
    */
   cancel() {
     if (this.__timeoutId) {
-      clearTimeout(this.__timeoutId);
-      this.__timeoutId = undefined;
+      clearTimeout(this.__timeoutId)
+      this.__timeoutId = undefined
     }
   }
 }
@@ -130,5 +130,5 @@ class SetCameraPosisionAndTarget extends StateAction {
 sgFactory.registerClass(
   'SetCameraPosisionAndTarget',
   SetCameraPosisionAndTarget
-);
-export { SetCameraPosisionAndTarget };
+)
+export { SetCameraPosisionAndTarget }

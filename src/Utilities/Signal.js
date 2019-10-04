@@ -5,18 +5,18 @@ class Signal {
    * @param {boolean} toggledSignal - The toggledSignal value.
    */
   constructor(toggledSignal = false) {
-    this.__slots = [];
+    this.__slots = []
     // A toggled signal means that once it is fired, it is toggled to true
     // and never fired again. Any connections are immedietly emitted.
     // Note: this is emulating the 'promise' system, and I really should
     // investigate using promisses.
-    this.__toggledSignal = toggledSignal;
-    this.__toggled = false;
-    this.__data = null;
+    this.__toggledSignal = toggledSignal
+    this.__toggled = false
+    this.__data = null
 
-    this.connect = this.connect.bind(this);
-    this.disconnect = this.disconnect.bind(this);
-    this.emit = this.emit.bind(this);
+    this.connect = this.connect.bind(this)
+    this.disconnect = this.disconnect.bind(this)
+    this.emit = this.emit.bind(this)
   }
 
   /**
@@ -26,13 +26,13 @@ class Signal {
    */
   connect(fn) {
     if (fn == undefined)
-      throw new Error('a function callback must be passed to Signal.connect');
+      throw new Error('a function callback must be passed to Signal.connect')
     if (this.__slots.indexOf(fn) != -1) {
-      console.warn("fn '" + fn.name + "' already connected to Signal.");
-      return;
+      console.warn("fn '" + fn.name + "' already connected to Signal.")
+      return
     }
-    const id = this.__slots.length;
-    this.__slots[id] = fn;
+    const id = this.__slots.length
+    this.__slots[id] = fn
 
     if (this.__toggledSignal && this.__toggled) {
       // Note: we are moving away from using 'toggled' Signals
@@ -40,10 +40,10 @@ class Signal {
       // when connecting to Toggled signals soon
 
       // This signal has already been toggled, so we should emit immedietly.
-      if (this.__data) fn(...this.__data);
-      else fn();
+      if (this.__data) fn(...this.__data)
+      else fn()
     }
-    return id;
+    return id
   }
 
   /**
@@ -52,26 +52,24 @@ class Signal {
    */
   disconnect(fn) {
     if (fn == undefined)
-      throw new Error(
-        'a function callback must be passed to Signal.disconnect'
-      );
-    const ids = [];
+      throw new Error('a function callback must be passed to Signal.disconnect')
+    const ids = []
     this.__slots.forEach(function(item, index) {
       if (item === fn) {
-        ids.push(index);
+        ids.push(index)
       }
-    });
+    })
     if (ids.length == 0) {
       console.warn(
         'callback :' +
           fn.name +
           ' was not connected to this signal:' +
           this.__name
-      );
-      return;
+      )
+      return
     }
     for (const id of ids) {
-      this.__slots[id] = undefined;
+      this.__slots[id] = undefined
     }
   }
 
@@ -80,8 +78,8 @@ class Signal {
    * @param {any} id - The id param.
    */
   disconnectId(id) {
-    if (!this.__slots[id]) throw new Error('Invalid ID');
-    this.__slots[id] = undefined;
+    if (!this.__slots[id]) throw new Error('Invalid ID')
+    this.__slots[id] = undefined
   }
 
   /**
@@ -91,20 +89,20 @@ class Signal {
   emit(...data) {
     if (this.__toggledSignal) {
       if (!this.__toggled) {
-        this.__toggled = true;
-        this.__data = data;
+        this.__toggled = true
+        this.__data = data
       } else {
         console.warn(
           'Toggled signals should only be fired once, or untoggled before re-firing..'
-        );
+        )
       }
     }
-    const len = this.__slots.length;
+    const len = this.__slots.length
     for (let i = 0; i < len; i++) {
-      const fn = this.__slots[i];
+      const fn = this.__slots[i]
       // Skip disconnected slots.
       if (fn) {
-        fn(...data);
+        fn(...data)
       }
     }
   }
@@ -114,7 +112,7 @@ class Signal {
    * @return {any} - The return value.
    */
   isToggled() {
-    return this.__toggled;
+    return this.__toggled
   }
 
   /**
@@ -122,8 +120,8 @@ class Signal {
    * @param {any} state - The state param.
    */
   setToggled(state) {
-    this.__toggled = state;
-    this.__data = undefined;
+    this.__toggled = state
+    this.__data = undefined
   }
 
   /**
@@ -131,9 +129,9 @@ class Signal {
    */
   untoggle() {
     // When a toggled action needs to be re-applied, we should untoggle first.
-    this.__toggled = false;
-    this.__data = undefined;
+    this.__toggled = false
+    this.__data = undefined
   }
 }
 
-export { Signal };
+export { Signal }

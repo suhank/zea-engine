@@ -1,6 +1,8 @@
-import { shaderLibrary } from '../../ShaderLibrary.js';
+import { shaderLibrary } from '../../ShaderLibrary.js'
 
-shaderLibrary.setShaderModule('GLSLBits.glsl', `
+shaderLibrary.setShaderModule(
+  'GLSLBits.glsl',
+  `
     
 /////////////////////////////////////////////////////////////////
 // http://concord-consortium.github.io/lab/experiments/webgl-gpgpu/script.js
@@ -102,4 +104,4 @@ float decode16BitFloatFrom2xUInt8(vec2 c){
 // http://ultraist.hatenablog.com/entry/20110608/1307539319
 
 `
-);
+)

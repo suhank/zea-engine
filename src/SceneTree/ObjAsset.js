@@ -1,13 +1,13 @@
-import { Vec2, Vec3, Xfo, Color } from '../Math';
-import { Signal, Async } from '../Utilities';
-import { GeomItem } from './GeomItem';
-import { AssetItem } from './AssetItem';
-import { Mesh } from './Geometry/Mesh.js';
-import { loadTextfile } from './Utils.js';
-import { Material } from './Material.js';
-import { resourceLoader } from './ResourceLoader.js';
-import { GeomLibrary } from './GeomLibrary.js';
-import { MaterialLibrary } from './MaterialLibrary.js';
+import { Vec2, Vec3, Xfo, Color } from '../Math'
+import { Signal, Async } from '../Utilities'
+import { GeomItem } from './GeomItem'
+import { AssetItem } from './AssetItem'
+import { Mesh } from './Geometry/Mesh.js'
+import { loadTextfile } from './Utils.js'
+import { Material } from './Material.js'
+import { resourceLoader } from './ResourceLoader.js'
+import { GeomLibrary } from './GeomLibrary.js'
+import { MaterialLibrary } from './MaterialLibrary.js'
 import {
   ValueSetMode,
   Parameter,
@@ -18,7 +18,7 @@ import {
   Vec3Parameter,
   ColorParameter,
   FilePathParameter,
-} from './Parameters';
+} from './Parameters'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
@@ -31,36 +31,36 @@ class ObjAsset extends AssetItem {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
+    super(name)
 
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
     // when this signal emits.
-    this.geomsLoaded = new Signal(true);
-    this.geomsLoaded.setToggled(false);
-    this.loaded.setToggled(false);
+    this.geomsLoaded = new Signal(true)
+    this.geomsLoaded.setToggled(false)
+    this.loaded.setToggled(false)
 
-    this.addParameter(new BooleanParameter('splitObjects', false));
-    this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false));
-    this.addParameter(new BooleanParameter('loadMtlFile', true));
-    this.addParameter(new NumberParameter('unitsConversion', 1.0));
-    this.addParameter(new StringParameter('defaultShader', ''));
+    this.addParameter(new BooleanParameter('splitObjects', false))
+    this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false))
+    this.addParameter(new BooleanParameter('loadMtlFile', true))
+    this.addParameter(new NumberParameter('unitsConversion', 1.0))
+    this.addParameter(new StringParameter('defaultShader', ''))
 
-    this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'));
+    this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
     this.objfileParam.valueChanged.connect(mode => {
-      this.loaded.untoggle();
-      const emitloaded = mode == ValueSetMode.USER_SETVALUE;
+      this.loaded.untoggle()
+      const emitloaded = mode == ValueSetMode.USER_SETVALUE
       this.__loadObj(
         () => {
-          if (mode == ValueSetMode.USER_SETVALUE) this.loaded.emit();
+          if (mode == ValueSetMode.USER_SETVALUE) this.loaded.emit()
         },
         () => {
-          if (mode == ValueSetMode.USER_SETVALUE) this.geomsLoaded.emit();
+          if (mode == ValueSetMode.USER_SETVALUE) this.geomsLoaded.emit()
         }
-      );
-    });
-    this.geomLibrary = new GeomLibrary();
-    this.materials = new MaterialLibrary();
+      )
+    })
+    this.geomLibrary = new GeomLibrary()
+    this.materials = new MaterialLibrary()
   }
 
   /**
@@ -68,7 +68,7 @@ class ObjAsset extends AssetItem {
    * @return {any} - The return value.
    */
   getGeometryLibrary() {
-    return this.geomLibrary;
+    return this.geomLibrary
   }
 
   /**
@@ -76,7 +76,7 @@ class ObjAsset extends AssetItem {
    * @return {any} - The return value.
    */
   getMaterialLibrary() {
-    return this.materials;
+    return this.materials
   }
 
   /**
@@ -86,12 +86,12 @@ class ObjAsset extends AssetItem {
    * @private
    */
   __loadObj(onDone, onGeomsLoaded) {
-    const stem = this.objfileParam.getStem();
+    const stem = this.objfileParam.getStem()
 
     const parseMtlData = mtlFileData => {
-      const lines = mtlFileData.split('\n');
-      const WHITESPACE_RE = /\s+/;
-      let material;
+      const lines = mtlFileData.split('\n')
+      const WHITESPACE_RE = /\s+/
+      let material
 
       const parseColor = function(elements) {
         if (elements.length == 3)
@@ -99,117 +99,117 @@ class ObjAsset extends AssetItem {
             parseFloat(elements[0]),
             parseFloat(elements[1]),
             parseFloat(elements[2])
-          );
+          )
         else
           throw new Error(
             'Unable to parse a color from the following parts:' +
               elements.join('_')
-          );
-      };
+          )
+      }
 
       const parseMap = elements => {
-        const fileFolder = this.objfileParam.getFileFolder();
-        return new FileImage(elements[0], fileFolder + elements[0]);
-      };
+        const fileFolder = this.objfileParam.getFileFolder()
+        return new FileImage(elements[0], fileFolder + elements[0])
+      }
 
       for (let i = 0; i < lines.length; i++) {
-        let line = lines[i].trim();
-        if (line.startsWith('#')) continue;
+        let line = lines[i].trim()
+        if (line.startsWith('#')) continue
         if (line.indexOf('#') != -1)
-          line = line.substring(0, line.indexOf('#')).trim();
-        const elements = line.split(WHITESPACE_RE);
-        const key = elements.shift();
-        const value = elements.join(' ');
+          line = line.substring(0, line.indexOf('#')).trim()
+        const elements = line.split(WHITESPACE_RE)
+        const key = elements.shift()
+        const value = elements.join(' ')
         switch (key) {
           case 'newmtl':
-            material = new Material(value);
-            material.setShaderName('StandardSurfaceShader');
-            this.materials.addMaterial(material);
-            break;
+            material = new Material(value)
+            material.setShaderName('StandardSurfaceShader')
+            this.materials.addMaterial(material)
+            break
           case 'Kd':
-            material.getParameter('BaseColor').setValue(parseColor(elements));
-            break;
+            material.getParameter('BaseColor').setValue(parseColor(elements))
+            break
           case 'map_Kd':
-            material.getParameter('BaseColor').setValue(parseMap(elements));
-            break;
+            material.getParameter('BaseColor').setValue(parseMap(elements))
+            break
           case 'Ks':
             const specular =
               (parseFloat(elements[0]) +
                 parseFloat(elements[1]) +
                 parseFloat(elements[2])) /
-              3.0;
-            material.roughness = 1.0 - specular;
-            material.getParameter('Roughness').setValue(1.0 - specular);
-            material.getParameter('Reflectance').setValue(specular);
-            break;
+              3.0
+            material.roughness = 1.0 - specular
+            material.getParameter('Roughness').setValue(1.0 - specular)
+            material.getParameter('Reflectance').setValue(specular)
+            break
           case 'map_Ks':
             material
               .getParameter('Roughness')
-              .setValue(parseMap(elements /* flags=TEXTURE_INVERT */));
-            material.getParameter('Reflectance').setValue(0.2);
-            break;
+              .setValue(parseMap(elements /* flags=TEXTURE_INVERT */))
+            material.getParameter('Reflectance').setValue(0.2)
+            break
           case 'd':
-            const d = parseFloat(value);
+            const d = parseFloat(value)
             if (d < 1.0) {
-              material.setShaderName('TransparentSurfaceShader');
-              material.getParameter('Opacity').setValue(d);
+              material.setShaderName('TransparentSurfaceShader')
+              material.getParameter('Opacity').setValue(d)
             }
-            break;
+            break
           case 'map_d':
-            material.getParameter('alpha').setValue(parseFloat(elements));
-            break;
+            material.getParameter('alpha').setValue(parseFloat(elements))
+            break
           case 'map_bump':
             material
               .getParameter('normal')
-              .setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */));
-            break;
+              .setValue(parseMap(elements /* flags=BUMP_TO_NORMAL */))
+            break
           default:
           // console.warn("Unhandled material parameter: '" + key +"' in:" + filePath);
         }
       }
-    };
+    }
 
-    const async = new Async();
-    async.incAsyncCount();
+    const async = new Async()
+    async.incAsyncCount()
     async.ready.connect(() => {
-      buildChildItems();
-    });
+      buildChildItems()
+    })
 
     const loadMtlFile = mtlFile => {
       return new Promise((resolve, reject) => {
         loadTextfile(mtlFile.url, fileData => {
-          resourceLoader.addWorkDone(stem, 1);
-          parseMtlData(fileData);
-          async.decAsyncCount();
-          resourceLoader.addWorkDone(stem, 1);
-          resolve();
-        });
-      });
-    };
+          resourceLoader.addWorkDone(stem, 1)
+          parseMtlData(fileData)
+          async.decAsyncCount()
+          resourceLoader.addWorkDone(stem, 1)
+          resolve()
+        })
+      })
+    }
 
-    const vertices = new Array();
-    const normals = new Array();
-    const texCoords = new Array();
+    const vertices = new Array()
+    const normals = new Array()
+    const texCoords = new Array()
 
-    const geomDatas = {};
+    const geomDatas = {}
 
     const parseObjData = async fileData => {
       // this.unloadDataFromTree();
-      const filePath = this.objfileParam.getValue();
+      const filePath = this.objfileParam.getValue()
 
       // performance.mark("parseObjData");
 
       // array of lines separated by the newline
-      const lines = fileData.split('\n');
-      const WHITESPACE_RE = /\s+/;
+      const lines = fileData.split('\n')
+      const WHITESPACE_RE = /\s+/
 
-      let currGeom = undefined;
-      let currMtl = undefined;
+      let currGeom = undefined
+      let currMtl = undefined
       const newGeom = name => {
-        let suffix = 0;
+        let suffix = 0
         while (name in geomDatas) {
-          suffix++;
-          name = name + String(suffix);
+          suffix++
+          name = name + String(suffix)
         }
         currGeom = {
           verticesRemapping: {},
@@ -224,233 +224,233 @@ class ObjAsset extends AssetItem {
           numTris: 0,
           numQuads: 0,
           material: currMtl,
-        };
-        geomDatas[name] = currGeom;
-      };
-      newGeom(stem);
+        }
+        geomDatas[name] = currGeom
+      }
+      newGeom(stem)
 
-      const splitObjects = this.getParameter('splitObjects').getValue();
+      const splitObjects = this.getParameter('splitObjects').getValue()
       const splitGroupsIntoObjects = this.getParameter(
         'splitGroupsIntoObjects'
-      ).getValue();
+      ).getValue()
 
-      const stop = false;
+      const stop = false
       // let numPolys = 0;
       for (let i = 0; i < lines.length && !stop; i++) {
-        let line = lines[i].trim();
-        if (line.startsWith('#')) continue;
+        let line = lines[i].trim()
+        if (line.startsWith('#')) continue
         if (line.indexOf('#') != -1)
-          line = line.substring(0, line.indexOf('#')).trim();
-        const elements = line.split(WHITESPACE_RE);
-        const key = elements.shift();
-        const value = elements.join(' ');
+          line = line.substring(0, line.indexOf('#')).trim()
+        const elements = line.split(WHITESPACE_RE)
+        const key = elements.shift()
+        const value = elements.join(' ')
         switch (key) {
           case '':
           case 's':
             // ignore shading groups
-            continue;
+            continue
           case 'mtllib':
-            if (!this.getParameter('loadMtlFile').getValue()) continue;
+            if (!this.getParameter('loadMtlFile').getValue()) continue
             // Load and parse the mat lib.
-            async.incAsyncCount();
-            resourceLoader.addWork(stem, 2);
-            const fileFolder = this.objfileParam.getFileFolderPath();
-            const mtlFile = resourceLoader.resolveFilepath(fileFolder + value);
+            async.incAsyncCount()
+            resourceLoader.addWork(stem, 2)
+            const fileFolder = this.objfileParam.getFileFolderPath()
+            const mtlFile = resourceLoader.resolveFilepath(fileFolder + value)
             if (mtlFile) {
-              await loadMtlFile(mtlFile);
+              await loadMtlFile(mtlFile)
             }
-            break;
+            break
           case 'o':
-            newGeom(value);
-            break;
+            newGeom(value)
+            break
           case 'usemtl':
-            currMtl = value;
-            newGeom(value + Object.keys(geomDatas).length);
-            break;
+            currMtl = value
+            newGeom(value + Object.keys(geomDatas).length)
+            break
           case 'g':
-            if (splitGroupsIntoObjects) newGeom(elements.join('_'));
-            break;
+            if (splitGroupsIntoObjects) newGeom(elements.join('_'))
+            break
           case 'v':
-            vertices.push(elements.map(i => parseFloat(i)));
-            break;
+            vertices.push(elements.map(i => parseFloat(i)))
+            break
           case 'vt':
-            texCoords.push(elements.map(i => parseFloat(i)));
-            break;
+            texCoords.push(elements.map(i => parseFloat(i)))
+            break
           case 'vn':
-            normals.push(elements.map(i => parseFloat(i)));
-            break;
+            normals.push(elements.map(i => parseFloat(i)))
+            break
           case 'f': {
-            const v_poly = [];
-            const vt_poly = [];
-            const vn_poly = [];
+            const v_poly = []
+            const vt_poly = []
+            const vn_poly = []
             for (let j = 0, eleLen = elements.length; j < eleLen; j++) {
               // v/vt/vn
-              const indices = elements[j].split('/').map(i => parseInt(i) - 1);
-              const v = indices[0];
+              const indices = elements[j].split('/').map(i => parseInt(i) - 1)
+              const v = indices[0]
 
               // v_poly.push(v);
-              let v_index = currGeom.verticesRemapping[v];
+              let v_index = currGeom.verticesRemapping[v]
               if (v_index == undefined) {
-                v_index = currGeom.numVertices;
-                currGeom.verticesRemapping[v] = v_index;
-                currGeom.numVertices++;
+                v_index = currGeom.numVertices
+                currGeom.verticesRemapping[v] = v_index
+                currGeom.numVertices++
               }
-              v_poly.push(v_index);
+              v_poly.push(v_index)
 
               if (indices.length > 1 && !isNaN(indices[1])) {
-                const vt = indices[1];
-                vt_poly.push(vt);
+                const vt = indices[1]
+                vt_poly.push(vt)
               }
               if (indices.length > 2 && !isNaN(indices[2])) {
-                const vn = indices[2];
-                vn_poly.push(vn);
+                const vn = indices[2]
+                vn_poly.push(vn)
               }
             }
-            currGeom.vertexIndices.push(v_poly);
-            if (vn_poly.length > 0) currGeom.normalIndices.push(vn_poly);
-            if (vt_poly.length > 0) currGeom.texCoordIndices.push(vt_poly);
+            currGeom.vertexIndices.push(v_poly)
+            if (vn_poly.length > 0) currGeom.normalIndices.push(vn_poly)
+            if (vt_poly.length > 0) currGeom.texCoordIndices.push(vt_poly)
 
             if (v_poly.length == 3) {
-              currGeom.numTris++;
+              currGeom.numTris++
             } else {
-              currGeom.numQuads++;
+              currGeom.numQuads++
             }
             // numPolys++;
             // if(numPolys == 16000)
             //     stop = true;
-            break;
+            break
           }
           default: {
-            console.warn('Unhandled line:' + line);
+            console.warn('Unhandled line:' + line)
           }
         }
       }
 
-      async.decAsyncCount();
-    };
+      async.decAsyncCount()
+    }
 
     const buildChildItems = () => {
       // performance.mark("parseObjDataDone");
       // performance.mark("buildObjTree");
       for (const geomName in geomDatas) {
-        if (geomDatas[geomName].numVertices == 0) continue;
-        buildChildItem(geomName, geomDatas[geomName]);
+        if (geomDatas[geomName].numVertices == 0) continue
+        buildChildItem(geomName, geomDatas[geomName])
       }
 
       // Done.
-      onDone();
-      onGeomsLoaded();
-    };
+      onDone()
+      onGeomsLoaded()
+    }
 
     const buildChildItem = (geomName, geomData) => {
-      const numVertices = geomData.numVertices;
-      const numTris = geomData.numTris;
-      const mesh = new Mesh(geomName);
-      mesh.setFaceCounts([geomData.numTris, geomData.numQuads]);
-      mesh.setNumVertices(numVertices);
-      const positionsAttr = mesh.getVertexAttribute('positions');
-      const unitsConversion = this.getParameter('unitsConversion').getValue();
+      const numVertices = geomData.numVertices
+      const numTris = geomData.numTris
+      const mesh = new Mesh(geomName)
+      mesh.setFaceCounts([geomData.numTris, geomData.numQuads])
+      mesh.setNumVertices(numVertices)
+      const positionsAttr = mesh.getVertexAttribute('positions')
+      const unitsConversion = this.getParameter('unitsConversion').getValue()
 
       for (const vsrc in geomData.verticesRemapping) {
-        const vtgt = geomData.verticesRemapping[vsrc];
+        const vtgt = geomData.verticesRemapping[vsrc]
         positionsAttr
           .getValueRef(vtgt)
           .set(
             vertices[vsrc][0] * unitsConversion,
             vertices[vsrc][1] * unitsConversion,
             vertices[vsrc][2] * unitsConversion
-          );
+          )
       }
 
-      let normalsAttr;
-      let texCoordsAttr;
+      let normalsAttr
+      let texCoordsAttr
       if (geomData.normalIndices.length > 0)
-        normalsAttr = mesh.addVertexAttribute('normals', Vec3);
+        normalsAttr = mesh.addVertexAttribute('normals', Vec3)
       if (geomData.texCoordIndices.length > 0)
-        texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2);
+        texCoordsAttr = mesh.addVertexAttribute('texCoords', Vec2)
 
       for (let i = 0; i < geomData.vertexIndices.length; i++) {
-        const v_poly = geomData.vertexIndices[i];
-        mesh.setFaceVertexIndices(i, ...v_poly);
+        const v_poly = geomData.vertexIndices[i]
+        mesh.setFaceVertexIndices(i, ...v_poly)
 
         // Set the texCoords and normals...
         if (normalsAttr) {
-          const vn_poly = geomData.normalIndices[i];
+          const vn_poly = geomData.normalIndices[i]
           for (let j = 0; j < vn_poly.length; j++) {
             const value = new Vec3(
               normals[vn_poly[j]][0],
               normals[vn_poly[j]][1],
               normals[vn_poly[j]][2]
-            );
-            normalsAttr.setFaceVertexValue(i, j, value);
+            )
+            normalsAttr.setFaceVertexValue(i, j, value)
           }
         }
         if (
           texCoordsAttr &&
           geomData.texCoordIndices.length == geomData.vertexIndices.length
         ) {
-          const vt_poly = geomData.texCoordIndices[i];
+          const vt_poly = geomData.texCoordIndices[i]
           for (let j = 0; j < vt_poly.length; j++) {
             const value = new Vec2(
               texCoords[vt_poly[j]][0],
               texCoords[vt_poly[j]][1]
-            );
-            texCoordsAttr.setFaceVertexValue(i, j, value);
+            )
+            texCoordsAttr.setFaceVertexValue(i, j, value)
           }
         }
       }
 
-      const geomItem = new GeomItem(geomName, mesh);
-      geomItem.selectable = true;
+      const geomItem = new GeomItem(geomName, mesh)
+      geomItem.selectable = true
 
       // Move the transform of the geom item to the center of the geom.
       // This is so that transparent objects can render correctly, and the
       // transform gizmo becomes centered on each geom(for testing)
-      const delta = mesh.boundingBox.center();
-      mesh.moveVertices(delta.negate());
-      geomItem.setLocalXfo(new Xfo(delta));
+      const delta = mesh.boundingBox.center()
+      mesh.moveVertices(delta.negate())
+      geomItem.setLocalXfo(new Xfo(delta))
 
       if (
         geomData.material != undefined &&
         this.materials.hasMaterial(geomData.material)
       ) {
-        geomItem.setMaterial(this.materials.getMaterial(geomData.material));
+        geomItem.setMaterial(this.materials.getMaterial(geomData.material))
       } else {
-        const defaultShader = this.getParameter('defaultShader').getValue();
-        const material = new Material(geomName + 'mat');
+        const defaultShader = this.getParameter('defaultShader').getValue()
+        const material = new Material(geomName + 'mat')
         material.setShaderName(
           defaultShader != '' ? defaultShader : 'StandardSurfaceShader'
-        );
-        const baseColorParam = material.getParameter('BaseColor');
-        if (baseColorParam) baseColorParam.setValue(Color.random(0.5));
+        )
+        const baseColorParam = material.getParameter('BaseColor')
+        if (baseColorParam) baseColorParam.setValue(Color.random(0.5))
         else {
-          const colorParam = material.getParameter('Color');
-          if (colorParam) colorParam.setValue(Color.random(0.5));
+          const colorParam = material.getParameter('Color')
+          if (colorParam) colorParam.setValue(Color.random(0.5))
         }
-        const roughnessParam = material.getParameter('Roughness');
-        if (roughnessParam) roughnessParam.setValue(0.6);
-        const reflectanceParam = material.getParameter('Reflectance');
-        if (reflectanceParam) reflectanceParam.setValue(0.2);
-        this.materials.addMaterial(material);
-        geomItem.setMaterial(material);
+        const roughnessParam = material.getParameter('Roughness')
+        if (roughnessParam) roughnessParam.setValue(0.6)
+        const reflectanceParam = material.getParameter('Reflectance')
+        if (reflectanceParam) reflectanceParam.setValue(0.2)
+        this.materials.addMaterial(material)
+        geomItem.setMaterial(material)
       }
 
-      this.addChild(geomItem, false);
-    };
+      this.addChild(geomItem, false)
+    }
 
     const loadObjData = () => {
-      const file = this.objfileParam.getFileDesc();
-      const stem = this.objfileParam.getStem();
-      resourceLoader.addWork(stem, 2);
+      const file = this.objfileParam.getFileDesc()
+      const stem = this.objfileParam.getStem()
+      resourceLoader.addWork(stem, 2)
       loadTextfile(file.url, fileData => {
-        resourceLoader.addWorkDone(stem, 1);
-        parseObjData(fileData);
-        resourceLoader.addWorkDone(stem, 1);
-      });
-    };
+        resourceLoader.addWorkDone(stem, 1)
+        parseObjData(fileData)
+        resourceLoader.addWorkDone(stem, 1)
+      })
+    }
 
-    loadObjData();
+    loadObjData()
   }
 }
-export { ObjAsset };
+export { ObjAsset }
 // ObjAsset;

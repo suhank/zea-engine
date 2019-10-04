@@ -1,8 +1,10 @@
-import { shaderLibrary } from '../../ShaderLibrary.js';
+import { shaderLibrary } from '../../ShaderLibrary.js'
 
-import './glslutils.js';
+import './glslutils.js'
 
-shaderLibrary.setShaderModule('modelMatrix.glsl', `
+shaderLibrary.setShaderModule(
+  'modelMatrix.glsl',
+  `
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
@@ -97,4 +99,5 @@ int getId() {
 #endif
 
 
-`);
+`
+)

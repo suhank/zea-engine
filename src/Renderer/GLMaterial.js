@@ -1,5 +1,5 @@
-import { Signal } from '../Utilities';
-import { MaterialShaderBinding } from './MaterialShaderBinding.js';
+import { Signal } from '../Utilities'
+import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
 /** Class representing a GL material. */
 class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
@@ -11,18 +11,18 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    */
   constructor(gl, material, glshader) {
     // super(name);
-    this.__gl = gl;
-    this.__material = material;
-    this.__glshader = glshader;
+    this.__gl = gl
+    this.__material = material
+    this.__glshader = glshader
 
-    this.updated = new Signal();
-    this.destructing = new Signal();
+    this.updated = new Signal()
+    this.destructing = new Signal()
 
     this.__material.destructing.connect(() => {
-      this.destructing.emit(this); // Note: propagate this signal so the GLPass can remove the item.
-    });
+      this.destructing.emit(this) // Note: propagate this signal so the GLPass can remove the item.
+    })
 
-    this.__shaderBindings = {};
+    this.__shaderBindings = {}
   }
 
   /**
@@ -30,7 +30,7 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    * @return {any} - The return value.
    */
   getMaterial() {
-    return this.__material;
+    return this.__material
   }
 
   /**
@@ -38,16 +38,16 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    * @return {any} - The return value.
    */
   getGLShader() {
-    return this.__glshader;
+    return this.__glshader
   }
 
   /**
    * The generateShaderBinding method.
    */
   generateShaderBinding() {
-    const params = this.__material.getParameters();
+    const params = this.__material.getParameters()
     for (const param of params) {
-      bindParam(gl, param);
+      bindParam(gl, param)
     }
   }
 
@@ -59,22 +59,22 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    */
   bind(renderstate, warnMissingUnifs) {
     // console.log("Material:" + this.__material.getName());
-    this.__boundTexturesBeforeMaterial = renderstate.boundTextures;
+    this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
-    let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
+    let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
     if (!shaderBinding) {
-      const gl = this.__gl;
+      const gl = this.__gl
       shaderBinding = new MaterialShaderBinding(
         gl,
         this,
         renderstate.unifs,
         warnMissingUnifs
-      );
-      this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
+      )
+      this.__shaderBindings[renderstate.shaderkey] = shaderBinding
     }
-    return shaderBinding.bind(renderstate);
+    return shaderBinding.bind(renderstate)
 
-    return true;
+    return true
   }
 
   /**
@@ -84,9 +84,9 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
   unbind(renderstate) {
     // Enable texture units to be re-used by resetting the count back
     // to what it was.
-    renderstate.boundTextures = this.__boundTexturesBeforeMaterial;
+    renderstate.boundTextures = this.__boundTexturesBeforeMaterial
   }
 }
 
-export { GLMaterial };
+export { GLMaterial }
 // export default GLMaterial;

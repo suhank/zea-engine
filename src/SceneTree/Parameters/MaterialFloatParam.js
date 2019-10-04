@@ -1,9 +1,9 @@
-import { Signal } from '../../Utilities';
-import { sgFactory } from '../SGFactory';
-import { Parameter, ValueSetMode } from './Parameter.js';
-import { NumberParameter } from './NumberParameter.js';
+import { Signal } from '../../Utilities'
+import { sgFactory } from '../SGFactory'
+import { Parameter, ValueSetMode } from './Parameter.js'
+import { NumberParameter } from './NumberParameter.js'
 
-import { BaseImage } from '../BaseImage.js';
+import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a material float parameter.
  * @extends NumberParameter
@@ -16,9 +16,9 @@ class MaterialFloatParam extends NumberParameter {
    * @param {any} range - The range value.
    */
   constructor(name, value, range) {
-    super(name, value, range);
-    this.textureConnected = new Signal();
-    this.textureDisconnected = new Signal();
+    super(name, value, range)
+    this.textureConnected = new Signal()
+    this.textureDisconnected = new Signal()
   }
 
   /**
@@ -30,8 +30,8 @@ class MaterialFloatParam extends NumberParameter {
     const clonedParam = new MaterialFloatParam(
       this.__name,
       this.__value.clone()
-    );
-    return clonedParam;
+    )
+    return clonedParam
   }
 
   /**
@@ -39,7 +39,7 @@ class MaterialFloatParam extends NumberParameter {
    * @return {any} - The return value.
    */
   getImage() {
-    return this.__image;
+    return this.__image
   }
 
   // let imageUpdated = () => {
@@ -53,26 +53,26 @@ class MaterialFloatParam extends NumberParameter {
    */
   setImage(value, mode = 0) {
     const disconnectImage = () => {
-      this.__image.removeRef(this);
+      this.__image.removeRef(this)
       // image.loaded.disconnect(imageUpdated);
       // image.updated.disconnect(imageUpdated);
-      this.textureDisconnected.emit();
-    };
+      this.textureDisconnected.emit()
+    }
     if (value) {
       if (this.__image != undefined && this.__image !== value) {
-        disconnectImage();
+        disconnectImage()
       }
-      this.__image = value;
-      this.__image.addRef(this);
+      this.__image = value
+      this.__image.addRef(this)
       // image.loaded.connect(imageUpdated);
       // image.updated.connect(imageUpdated);
-      this.textureConnected.emit();
-      this.valueChanged.emit(mode);
+      this.textureConnected.emit()
+      this.valueChanged.emit(mode)
     } else {
       if (this.__image != undefined) {
-        disconnectImage();
-        this.__image = undefined;
-        this.textureDisconnected.emit();
+        disconnectImage()
+        this.__image = undefined
+        this.textureDisconnected.emit()
       }
     }
   }
@@ -83,12 +83,12 @@ class MaterialFloatParam extends NumberParameter {
    */
   setValue(value) {
     if (value instanceof BaseImage) {
-      this.setImage(value);
+      this.setImage(value)
     } else {
       if (this.__image != undefined) {
-        this.setImage(undefined);
+        this.setImage(undefined)
       }
-      super.setValue(value);
+      super.setValue(value)
     }
   }
 
@@ -98,16 +98,16 @@ class MaterialFloatParam extends NumberParameter {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    super.readBinary(reader, context);
+    super.readBinary(reader, context)
 
-    const textureName = reader.loadStr();
+    const textureName = reader.loadStr()
     if (textureName != '') {
-      console.log('Load Texture');
-      this.setImage(context.materialLibrary.getImage(textureName));
+      console.log('Load Texture')
+      this.setImage(context.materialLibrary.getImage(textureName))
     }
   }
 }
 
-sgFactory.registerClass('MaterialFloatParam', MaterialFloatParam);
+sgFactory.registerClass('MaterialFloatParam', MaterialFloatParam)
 
-export { MaterialFloatParam };
+export { MaterialFloatParam }

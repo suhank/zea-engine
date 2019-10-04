@@ -1,5 +1,5 @@
-import { Vec3, Color, Xfo } from '../Math';
-import { Signal } from '../Utilities';
+import { Vec3, Color, Xfo } from '../Math'
+import { Signal } from '../Utilities'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -8,17 +8,17 @@ import {
   ColorParameter,
   ItemSetParameter,
   MultiChoiceParameter,
-} from './Parameters';
-import { MaterialParameter } from './Parameters/MaterialParameter.js';
-import { ItemFlags } from './BaseItem';
-import { TreeItem } from './TreeItem';
-import { BaseGeomItem } from './BaseGeomItem';
-import { sgFactory } from './SGFactory.js';
+} from './Parameters'
+import { MaterialParameter } from './Parameters/MaterialParameter.js'
+import { ItemFlags } from './BaseItem'
+import { TreeItem } from './TreeItem'
+import { BaseGeomItem } from './BaseGeomItem'
+import { sgFactory } from './SGFactory.js'
 
 const GROUP_INITIAL_XFO_MODES = {
   first: 0,
   average: 1,
-  globalOri: 2
+  globalOri: 2,
 }
 
 /** Class representing a group.
@@ -30,74 +30,103 @@ class Group extends TreeItem {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name);
+    super(name)
 
     // Items which can be constructed by a user(not loaded in binary data.)
-    // Should always have this flag set. 
+    // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
 
-    this.calculatingGroupXfo = false;
-    this.propagatingXfoToItems = false;
+    this.calculatingGroupXfo = false
+    this.propagatingXfoToItems = false
 
-    this.invGroupXfo = undefined;
-    this.__initialXfos = [];
-    this.__signalIndices = [];
+    this.invGroupXfo = undefined
+    this.__initialXfos = []
+    this.__signalIndices = []
 
-    let pid = 0;
-    this.__itemsParam = this.insertParameter(new ItemSetParameter('Items', item => item instanceof TreeItem), pid++);
+    let pid = 0
+    this.__itemsParam = this.insertParameter(
+      new ItemSetParameter('Items', item => item instanceof TreeItem),
+      pid++
+    )
     this.__itemsParam.itemAdded.connect((item, index) => {
-      this.__bindItem(item, index);
+      this.__bindItem(item, index)
     })
     this.__itemsParam.itemRemoved.connect((item, index) => {
-      this.__unbindItem(item, index);
+      this.__unbindItem(item, index)
     })
     this.__itemsParam.valueChanged.connect(() => {
-      this.calculatingGroupXfo = true;
-      this._setGlobalXfoDirty();
-      this._setBoundingBoxDirty();
+      this.calculatingGroupXfo = true
+      this._setGlobalXfoDirty()
+      this._setBoundingBoxDirty()
     })
 
     this.__initialXfoModeParam = this.insertParameter(
-      new MultiChoiceParameter('InitialXfoMode', GROUP_INITIAL_XFO_MODES.average, ['first', 'average', 'global']),
-      pid++);
+      new MultiChoiceParameter(
+        'InitialXfoMode',
+        GROUP_INITIAL_XFO_MODES.average,
+        ['first', 'average', 'global']
+      ),
+      pid++
+    )
     this.__initialXfoModeParam.valueChanged.connect(() => {
-      this.calculatingGroupXfo = true;
-      this._setGlobalXfoDirty();
+      this.calculatingGroupXfo = true
+      this._setGlobalXfoDirty()
     })
 
-    this.__highlightedParam = this.insertParameter(new BooleanParameter('Highlighted', false), pid++);
+    this.__highlightedParam = this.insertParameter(
+      new BooleanParameter('Highlighted', false),
+      pid++
+    )
     this.__highlightedParam.valueChanged.connect(() => {
-      this.__updateHighlight();
+      this.__updateHighlight()
     })
 
     this.__updateHighlight = this.__updateHighlight.bind(this)
-    const highlightColorParam = this.insertParameter(new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)), pid++);
+    const highlightColorParam = this.insertParameter(
+      new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)),
+      pid++
+    )
     highlightColorParam.valueChanged.connect(this.__updateHighlight)
-    const highlightFillParam = this.insertParameter(new NumberParameter('HighlightFill', 0.0, [0, 1]), pid++);
+    const highlightFillParam = this.insertParameter(
+      new NumberParameter('HighlightFill', 0.0, [0, 1]),
+      pid++
+    )
     highlightFillParam.valueChanged.connect(this.__updateHighlight)
 
-    this.__materialParam = this.insertParameter(new MaterialParameter('Material'), pid++);
+    this.__materialParam = this.insertParameter(
+      new MaterialParameter('Material'),
+      pid++
+    )
     this.__materialParam.valueChanged.connect(() => {
-      this.__updateMaterial();
+      this.__updateMaterial()
     })
 
     this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.insertParameter(new BooleanParameter('CutAwayEnabled', false), pid++).valueChanged.connect(this.__updateCutaway);
-    this.insertParameter(new Vec3Parameter('CutVector', new Vec3(1, 0, 0)), pid++).valueChanged.connect(this.__updateCutaway);
-    this.insertParameter(new NumberParameter('CutDist', 0.0), pid++).valueChanged.connect(this.__updateCutaway);
+    this.insertParameter(
+      new BooleanParameter('CutAwayEnabled', false),
+      pid++
+    ).valueChanged.connect(this.__updateCutaway)
+    this.insertParameter(
+      new Vec3Parameter('CutVector', new Vec3(1, 0, 0)),
+      pid++
+    ).valueChanged.connect(this.__updateCutaway)
+    this.insertParameter(
+      new NumberParameter('CutDist', 0.0),
+      pid++
+    ).valueChanged.connect(this.__updateCutaway)
 
     this.__globalXfoParam.valueChanged.connect(() => {
-      this._propagateGroupXfoToItems();
-    });
+      this._propagateGroupXfoToItems()
+    })
 
-    this.mouseDownOnItem = new Signal();
+    this.mouseDownOnItem = new Signal()
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
   }
 
   /**
@@ -106,9 +135,9 @@ class Group extends TreeItem {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const cloned = new Group();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new Group()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 
   /**
@@ -117,7 +146,7 @@ class Group extends TreeItem {
    * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
+    super.copyFrom(src, flags)
   }
 
   // //////////////////////////////
@@ -129,14 +158,13 @@ class Group extends TreeItem {
    */
   __updateVisiblity() {
     if (super.__updateVisiblity()) {
-      const value = this.getVisible();
+      const value = this.getVisible()
       Array.from(this.__itemsParam.getValue()).forEach(item => {
-        if (item instanceof TreeItem)
-          item.propagateVisiblity(value ? 1 : -1);
-      });
-      return true;
+        if (item instanceof TreeItem) item.propagateVisiblity(value ? 1 : -1)
+      })
+      return true
     }
-    return false;
+    return false
   }
 
   // /////////////////////////////
@@ -146,21 +174,19 @@ class Group extends TreeItem {
    * @private
    */
   __updateHighlight() {
-    let highlighted = false;
-    let color;
+    let highlighted = false
+    let color
     if (this.getParameter('Highlighted').getValue()) {
-      highlighted = true;
-      color = this.getParameter('HighlightColor').getValue();
-      color.a = this.getParameter('HighlightFill').getValue();
+      highlighted = true
+      color = this.getParameter('HighlightColor').getValue()
+      color.a = this.getParameter('HighlightFill').getValue()
     }
 
     const key = 'groupItemHighlight' + this.getId()
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
-        if (highlighted)
-          item.addHighlight(key, color, true);
-        else
-          item.removeHighlight(key, true);
+        if (highlighted) item.addHighlight(key, color, true)
+        else item.removeHighlight(key, true)
       }
     })
   }
@@ -170,20 +196,24 @@ class Group extends TreeItem {
    * @param {any} sel - The sel param.
    */
   setSelected(sel) {
-    super.setSelected(sel);
-    
+    super.setSelected(sel)
+
     if (sel) {
       Array.from(this.__itemsParam.getValue()).forEach(item => {
         if (item instanceof TreeItem)
-          item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
+          item.addHighlight(
+            'branchselected' + this.getId(),
+            TreeItem.getBranchSelectionOutlineColor(),
+            true
+          )
       })
-      // We want to re-apply the group hilight over the branch selection hilight. 
-      this.__updateHighlight();
+      // We want to re-apply the group hilight over the branch selection hilight.
+      this.__updateHighlight()
     } else {
-      this.removeHighlight('selected');
+      this.removeHighlight('selected')
       Array.from(this.__itemsParam.getValue()).forEach(item => {
         if (item instanceof TreeItem)
-          item.removeHighlight('branchselected' + this.getId(), true);
+          item.removeHighlight('branchselected' + this.getId(), true)
       })
     }
   }
@@ -192,91 +222,87 @@ class Group extends TreeItem {
   // Global Xfo
 
   _cleanGlobalXfo() {
-    return this.calcGroupXfo();
+    return this.calcGroupXfo()
   }
-  
+
   /**
    * The calcGroupXfo method.
    */
   calcGroupXfo() {
-    const items = Array.from(this.__itemsParam.getValue());
-    if (items.length == 0)
-      return new Xfo();
-    this.calculatingGroupXfo = true;
-    const initialXfoMode = this.__initialXfoModeParam.getValue();
-    let xfo;
+    const items = Array.from(this.__itemsParam.getValue())
+    if (items.length == 0) return new Xfo()
+    this.calculatingGroupXfo = true
+    const initialXfoMode = this.__initialXfoModeParam.getValue()
+    let xfo
     if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = items[0].getGlobalXfo();
-      items.forEach((item, index)=>{
+      xfo = items[0].getGlobalXfo()
+      items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          this.__initialXfos[index] = item.getGlobalXfo();
+          this.__initialXfos[index] = item.getGlobalXfo()
         }
-      });
+      })
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
-      xfo = new Xfo();
-      xfo.ori.set(0, 0, 0, 0);
-      let numTreeItems = 0;
-      items.forEach((item, index)=>{
+      xfo = new Xfo()
+      xfo.ori.set(0, 0, 0, 0)
+      let numTreeItems = 0
+      items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo();
+          const itemXfo = item.getGlobalXfo()
           xfo.tr.addInPlace(itemXfo.tr)
           xfo.ori.addInPlace(itemXfo.ori)
           // xfo.sc.addInPlace(itemXfo.sc)
-          this.__initialXfos[index] = itemXfo;
-          numTreeItems++;
+          this.__initialXfos[index] = itemXfo
+          numTreeItems++
         }
-      });
-      xfo.tr.scaleInPlace(1 / numTreeItems);
-      xfo.ori.normalizeInPlace();
+      })
+      xfo.tr.scaleInPlace(1 / numTreeItems)
+      xfo.ori.normalizeInPlace()
       // xfo.sc.scaleInPlace(1/ numTreeItems);
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri) {
-      xfo = new Xfo();
-      let numTreeItems = 0;
-      items.forEach((item, index)=>{
+      xfo = new Xfo()
+      let numTreeItems = 0
+      items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo();
-          xfo.tr.addInPlace(itemXfo.tr);
-          this.__initialXfos[index] = itemXfo;
-          numTreeItems++;
+          const itemXfo = item.getGlobalXfo()
+          xfo.tr.addInPlace(itemXfo.tr)
+          this.__initialXfos[index] = itemXfo
+          numTreeItems++
         }
-      });
-      xfo.tr.scaleInPlace(1 / numTreeItems);
+      })
+      xfo.tr.scaleInPlace(1 / numTreeItems)
     } else {
-      throw ("Invalid mode.")
+      throw 'Invalid mode.'
     }
-    
-    this.invGroupXfo = xfo.inverse();
-    this.calculatingGroupXfo = false;
-    return xfo;
+
+    this.invGroupXfo = xfo.inverse()
+    this.calculatingGroupXfo = false
+    return xfo
   }
 
   _propagateGroupXfoToItems() {
-    
-    if (this.calculatingGroupXfo)
-      return;
+    if (this.calculatingGroupXfo) return
 
-    const items = Array.from(this.__itemsParam.getValue());
+    const items = Array.from(this.__itemsParam.getValue())
     // Only after all the items are resolved do we have an invXfo and we can tranform our items.
     if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
-      let delta;
-      this.propagatingXfoToItems = true;
-      const xfo = this.__globalXfoParam.getValue();
+      let delta
+      this.propagatingXfoToItems = true
+      const xfo = this.__globalXfoParam.getValue()
       const setDirty = (item, initialXfo) => {
         const clean = () => {
           if (!delta) {
             // Compute the skinning transform that we can
             // apply to all the items in the group.
-            delta = xfo.multiply(this.invGroupXfo);
+            delta = xfo.multiply(this.invGroupXfo)
           }
-          return delta.multiply(initialXfo);
+          return delta.multiply(initialXfo)
         }
-        item.getParameter('GlobalXfo').setDirty(clean);
+        item.getParameter('GlobalXfo').setDirty(clean)
       }
       items.forEach((item, index) => {
-        if (item instanceof TreeItem)
-          setDirty(item, this.__initialXfos[index]);
-      });
-      this.propagatingXfoToItems = false;
+        if (item instanceof TreeItem) setDirty(item, this.__initialXfos[index])
+      })
+      this.propagatingXfoToItems = false
     }
   }
 
@@ -288,24 +314,24 @@ class Group extends TreeItem {
    * @private
    */
   __updateMaterial() {
-    const material = this.getParameter('Material').getValue();
+    const material = this.getParameter('Material').getValue()
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           const p = treeItem.getParameter('Material')
           if (material) {
-            const m = p.getValue();
+            const m = p.getValue()
             if (m != material) {
-              p.__backupMaterial = m;
-              p.setValue(material);
+              p.__backupMaterial = m
+              p.setValue(material)
             }
           } else if (p.__backupMaterial) {
-            p.setValue(p.__backupMaterial);
+            p.setValue(p.__backupMaterial)
           }
         }
-      }, false);
-    });
+      }, false)
+    })
   }
 
   // ////////////////////////////////////////
@@ -316,19 +342,19 @@ class Group extends TreeItem {
    * @private
    */
   __updateCutaway() {
-    const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
-    const cutAwayVector = this.getParameter('CutVector').getValue();
-    const cutAwayDist = this.getParameter('CutDist').getValue();
+    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
+    const cutAwayVector = this.getParameter('CutVector').getValue()
+    const cutAwayDist = this.getParameter('CutDist').getValue()
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
-          treeItem.setCutawayEnabled(cutEnabled);
-          treeItem.setCutVector(cutAwayVector);
-          treeItem.setCutDist(cutAwayDist);
+          treeItem.setCutawayEnabled(cutEnabled)
+          treeItem.setCutVector(cutAwayVector)
+          treeItem.setCutDist(cutAwayDist)
         }
-      }, true);
-    });
+      }, true)
+    })
   }
 
   // ////////////////////////////////////////
@@ -341,16 +367,14 @@ class Group extends TreeItem {
    * @param {any} paths - The paths param.
    */
   setPaths(paths) {
-    this.clearItems(false);
+    this.clearItems(false)
 
-    const searchRoot = this.getOwner();
-    if (searchRoot == undefined)
-      return;
-    let items = [];
+    const searchRoot = this.getOwner()
+    if (searchRoot == undefined) return
+    let items = []
     paths.forEach(path => {
-      const treeItem = searchRoot.resolvePath(path);
-      if(treeItem)
-        items.push(treeItem);
+      const treeItem = searchRoot.resolvePath(path)
+      if (treeItem) items.push(treeItem)
     })
     this.setItems(items)
   }
@@ -361,81 +385,93 @@ class Group extends TreeItem {
    * @param {any} paths - The paths param.
    */
   resolveItems(paths) {
-    this.setPaths(paths);
+    this.setPaths(paths)
   }
 
   __bindItem(item, index) {
-    if (!(item instanceof TreeItem))
-      return;
+    if (!(item instanceof TreeItem)) return
 
     const signalIndices = {}
 
-    signalIndices.mouseDownIndex = item.mouseDown.connect((event) => {
-      this.mouseDown.emit(event);
-      this.mouseDownOnItem.emit(event, item);
-    });
+    signalIndices.mouseDownIndex = item.mouseDown.connect(event => {
+      this.mouseDown.emit(event)
+      this.mouseDownOnItem.emit(event, item)
+    })
 
     /////////////////////////////////
     // Update the Material
-    const material = this.getParameter('Material').getValue();
-    if(material) {
+    const material = this.getParameter('Material').getValue()
+    if (material) {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
           const p = treeItem.getParameter('Material')
           if (material) {
-            const m = p.getValue();
+            const m = p.getValue()
             if (m != material) {
-              p.__backupMaterial = m;
-              p.setValue(material);
+              p.__backupMaterial = m
+              p.setValue(material)
             }
           }
         }
       }, true)
     }
-    
 
     /////////////////////////////////
     // Update the highlight
-    if (item instanceof TreeItem && this.getParameter('Highlighted').getValue()) {
-      const color = this.getParameter('HighlightColor').getValue();
-      color.a = this.getParameter('HighlightFill').getValue();
-      item.addHighlight('groupItemHighlight' + this.getId(), color, true);
+    if (
+      item instanceof TreeItem &&
+      this.getParameter('Highlighted').getValue()
+    ) {
+      const color = this.getParameter('HighlightColor').getValue()
+      color.a = this.getParameter('HighlightFill').getValue()
+      item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
     /////////////////////////////////
     // Update the item cutaway
-    const cutEnabled = this.getParameter('CutAwayEnabled').getValue();
+    const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
     if (cutEnabled) {
-      const cutAwayVector = this.getParameter('CutVector').getValue();
-      const cutAwayDist = this.getParameter('CutDist').getValue();
+      const cutAwayVector = this.getParameter('CutVector').getValue()
+      const cutAwayDist = this.getParameter('CutDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
           treeItem.setCutawayEnabled(cutEnabled)
           treeItem.setCutVector(cutAwayVector)
           treeItem.setCutDist(cutAwayDist)
         }
-      }, true);
+      }, true)
     }
 
     if (!this.getVisible()) {
       // Decrement the visiblity counter which might cause
       // this item to become invisible. (or it might already be invisible.)
-      item.propagateVisiblity(-1);
+      item.propagateVisiblity(-1)
     }
 
     // Higlight the new item with branch selection color
     if (this.getSelected()) {
       if (item instanceof TreeItem)
-        item.addHighlight('branchselected' + this.getId(), TreeItem.getBranchSelectionOutlineColor(), true);
+        item.addHighlight(
+          'branchselected' + this.getId(),
+          TreeItem.getBranchSelectionOutlineColor(),
+          true
+        )
     }
 
-    signalIndices.globalXfoChangedIndex = item.globalXfoChanged.connect((mode) => {
-      if (mode != ValueSetMode.OPERATOR_SETVALUE && mode != ValueSetMode.OPERATOR_DIRTIED)
-        this.__initialXfos[index] = item.getGlobalXfo();
-    });
-    this.__initialXfos[index] = item.getGlobalXfo();
+    signalIndices.globalXfoChangedIndex = item.globalXfoChanged.connect(
+      mode => {
+        if (
+          mode != ValueSetMode.OPERATOR_SETVALUE &&
+          mode != ValueSetMode.OPERATOR_DIRTIED
+        )
+          this.__initialXfos[index] = item.getGlobalXfo()
+      }
+    )
+    this.__initialXfos[index] = item.getGlobalXfo()
 
-    signalIndices.bboxChangedIndex = item.boundingChanged.connect(this._setBoundingBoxDirty);
+    signalIndices.bboxChangedIndex = item.boundingChanged.connect(
+      this._setBoundingBoxDirty
+    )
 
     this.__signalIndices[index] = signalIndices
   }
@@ -447,10 +483,9 @@ class Group extends TreeItem {
    * @private
    */
   __unbindItem(item, index) {
-    if (!(item instanceof TreeItem))
-      return;
+    if (!(item instanceof TreeItem)) return
 
-    item.removeHighlight('branchselected' + this.getId(), true);
+    item.removeHighlight('branchselected' + this.getId(), true)
     if (this.getParameter('Highlighted').getValue()) {
       item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
@@ -460,26 +495,26 @@ class Group extends TreeItem {
       // this item to become visible.
       // It will stay invisible its parent is invisible, or if
       // multiple groups connect to it and say it is invisible.
-      item.propagateVisiblity(1);
-    } 
-    
+      item.propagateVisiblity(1)
+    }
+
     /////////////////////////////////
     // Update the item cutaway
     item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
-        treeItem.setCutawayEnabled(false);
+        treeItem.setCutawayEnabled(false)
       }
-    }, true);
+    }, true)
 
-    item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex);
+    item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex)
     item.globalXfoChanged.disconnectId(
       this.__signalIndices[index].globalXfoChangedIndex
-    );
+    )
     item.boundingChanged.disconnectId(
       this.__signalIndices[index].bboxChangedIndex
-    );
-    this.__signalIndices.splice(index, 1);
-    this.__initialXfos.splice(index, 1);
+    )
+    this.__signalIndices.splice(index, 1)
+    this.__initialXfos.splice(index, 1)
   }
 
   /**
@@ -487,20 +522,20 @@ class Group extends TreeItem {
    * @param {any} item - The item param.
    * @param {any} emit - The emit param.
    */
-  addItem(item, emit=true) {
+  addItem(item, emit = true) {
     if (!item) {
-      console.warn('Error adding item to group. Item is null');
-      return;
+      console.warn('Error adding item to group. Item is null')
+      return
     }
-    this.__itemsParam.addItem(item, emit);
+    this.__itemsParam.addItem(item, emit)
   }
 
   /**
    * The removeItem method.
    * @param {any} item - The item param.
    */
-  removeItem(item, emit=true) {
-    this.__itemsParam.removeItem(item, emit);
+  removeItem(item, emit = true) {
+    this.__itemsParam.removeItem(item, emit)
   }
 
   /**
@@ -510,13 +545,13 @@ class Group extends TreeItem {
   clearItems(emit = true) {
     // Note: Unbind reversed so that indices
     // do not get changed during the unbind.
-    const items = Array.from(this.__itemsParam.getValue());
+    const items = Array.from(this.__itemsParam.getValue())
     for (let i = items.length - 1; i >= 0; i--) {
-      this.__unbindItem(items[i], i);
+      this.__unbindItem(items[i], i)
     }
-    this.__signalIndices = [];
-    this.__initialXfos = [];
-    this.__itemsParam.clearItems(emit);
+    this.__signalIndices = []
+    this.__initialXfos = []
+    this.__itemsParam.clearItems(emit)
   }
 
   /**
@@ -524,7 +559,7 @@ class Group extends TreeItem {
    * @return {any} - The return value.
    */
   getItems() {
-    return this.__itemsParam.getValue();
+    return this.__itemsParam.getValue()
   }
 
   /**
@@ -532,8 +567,8 @@ class Group extends TreeItem {
    * @param {any} items - The items param.
    */
   setItems(items) {
-    this.clearItems(false);
-    this.__itemsParam.setItems(items);
+    this.clearItems(false)
+    this.__itemsParam.setItems(items)
   }
 
   /**
@@ -543,15 +578,15 @@ class Group extends TreeItem {
    * @private
    */
   _cleanBoundingBox(bbox) {
-    const result = super._cleanBoundingBox(bbox);
-    const items = Array.from(this.__itemsParam.getValue());
+    const result = super._cleanBoundingBox(bbox)
+    const items = Array.from(this.__itemsParam.getValue())
     items.forEach(item => {
       if (item instanceof TreeItem) {
         if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
-          bbox.addBox3(item.getBoundingBox());
+          bbox.addBox3(item.getBoundingBox())
       }
     })
-    return bbox;
+    return bbox
   }
 
   // ///////////////////////
@@ -563,7 +598,7 @@ class Group extends TreeItem {
    * @return {boolean} - The return value.
    */
   onMouseDown(event) {
-    return false;
+    return false
   }
 
   /**
@@ -572,7 +607,7 @@ class Group extends TreeItem {
    * @return {boolean} - The return value.
    */
   onMouseUp(event) {
-    return false;
+    return false
   }
 
   /**
@@ -581,7 +616,7 @@ class Group extends TreeItem {
    * @return {boolean} - The return value.
    */
   onMouseMove(event) {
-    return false;
+    return false
   }
 
   // ////////////////////////////////////////
@@ -594,15 +629,15 @@ class Group extends TreeItem {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const j = super.toJSON(context, flags);
-    const items = Array.from(this.__itemsParam.getValue());
-    const treeItems = [];
+    const j = super.toJSON(context, flags)
+    const items = Array.from(this.__itemsParam.getValue())
+    const treeItems = []
     items.forEach(p => {
-      const path = p.getPath();
-      treeItems.push(context ? context.makeRelative(path) : path);
-    });
+      const path = p.getPath()
+      treeItems.push(context ? context.makeRelative(path) : path)
+    })
     j.treeItems = treeItems
-    return j;
+    return j
   }
 
   /**
@@ -612,33 +647,39 @@ class Group extends TreeItem {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
+    super.fromJSON(j, context, flags)
 
     // Note: JSON data is only used to store user edits, so
     // parameters loaed from JSON are considered user edited.
-    this.setFlag(ItemFlags.USER_EDITED);
+    this.setFlag(ItemFlags.USER_EDITED)
 
     if (!j.treeItems) {
-      console.warn('Invalid Parameter JSON');
-      return;
+      console.warn('Invalid Parameter JSON')
+      return
     }
-    let count = j.treeItems.length;
+    let count = j.treeItems.length
 
-    const addItem = (path) => {
-      context.resolvePath(path, (treeItem) => {
-        this.addItem(treeItem);
-        count--;
-        if (count == 0) {
-          this.calculatingGroupXfo = true;
-          this.setGlobalXfo(this.calcGroupXfo());
-          this.calculatingGroupXfo = false;
+    const addItem = path => {
+      context.resolvePath(
+        path,
+        treeItem => {
+          this.addItem(treeItem)
+          count--
+          if (count == 0) {
+            this.calculatingGroupXfo = true
+            this.setGlobalXfo(this.calcGroupXfo())
+            this.calculatingGroupXfo = false
+          }
+        },
+        reason => {
+          console.warn(
+            "Group: '" + this.getName() + "'. Unable to load item:" + path
+          )
         }
-      }, (reason) => {
-        console.warn("Group: '" + this.getName() + "'. Unable to load item:" + path);
-      });
+      )
     }
     for (let path of j.treeItems) {
-      addItem(path);
+      addItem(path)
     }
   }
 
@@ -646,10 +687,10 @@ class Group extends TreeItem {
    * Getter for INITIAL_XFO_MODES.
    */
   static get INITIAL_XFO_MODES() {
-    return GROUP_INITIAL_XFO_MODES;
+    return GROUP_INITIAL_XFO_MODES
   }
 }
 
-sgFactory.registerClass('Group', Group);
+sgFactory.registerClass('Group', Group)
 
-export { Group };
+export { Group }

@@ -1,6 +1,6 @@
-import { Signal } from '../../Utilities';
-import { sgFactory } from '../SGFactory';
-import { Parameter, ValueSetMode } from './Parameter.js';
+import { Signal } from '../../Utilities'
+import { sgFactory } from '../SGFactory'
+import { Parameter, ValueSetMode } from './Parameter.js'
 
 /** Class representing a string parameter.
  * @extends Parameter
@@ -12,8 +12,8 @@ class StringParameter extends Parameter {
    * @param {any} value - The value value.
    */
   constructor(name, value = '') {
-    super(name, value, 'String');
-    this.multiLine = false;
+    super(name, value, 'String')
+    this.multiLine = false
   }
 
   /**
@@ -21,7 +21,7 @@ class StringParameter extends Parameter {
    * @param {any} multiLine - The multiLine param.
    */
   setMultiLine(multiLine) {
-    this.multiLine = multiLine;
+    this.multiLine = multiLine
   }
 
   /**
@@ -29,7 +29,7 @@ class StringParameter extends Parameter {
    * @return {any} - The return value.
    */
   getMultiLine() {
-    return this.multiLine;
+    return this.multiLine
   }
 
   /**
@@ -38,8 +38,8 @@ class StringParameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new StringParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new StringParameter(this.__name, this.__value)
+    return clonedParam
   }
 
   /**
@@ -48,12 +48,12 @@ class StringParameter extends Parameter {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    const value = reader.loadStr();
-    this.setValue(value, ValueSetMode.DATA_LOAD);
+    const value = reader.loadStr()
+    this.setValue(value, ValueSetMode.DATA_LOAD)
   }
 }
 
-sgFactory.registerClass('StringParameter', StringParameter);
-sgFactory.registerClass('Property_String', StringParameter);
+sgFactory.registerClass('StringParameter', StringParameter)
+sgFactory.registerClass('Property_String', StringParameter)
 
-export { StringParameter };
+export { StringParameter }

@@ -1,5 +1,5 @@
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
+import { AttrValue } from './AttrValue.js'
+import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing a color.
  * @extends AttrValue
@@ -13,27 +13,27 @@ class Color extends AttrValue {
    * @param {number} a - The a value.
    */
   constructor(r = 0, g = 0, b = 0, a = 1.0) {
-    super();
+    super()
 
     if (r instanceof Float32Array) {
-      this.__data = r;
+      this.__data = r
     } else if (r instanceof ArrayBuffer) {
-      const buffer = r;
-      const byteOffset = g;
-      this.__data = new Float32Array(buffer, byteOffset, 4);
+      const buffer = r
+      const byteOffset = g
+      this.__data = new Float32Array(buffer, byteOffset, 4)
     } else {
-      this.__data = new Float32Array(4);
+      this.__data = new Float32Array(4)
       if (typeof r == 'string') {
         if (r.startsWith('#')) {
-          this.setFromHex(r);
+          this.setFromHex(r)
         } else {
-          this.setFromCSSColorName(r);
+          this.setFromCSSColorName(r)
         }
       } else {
-        this.__data[0] = r;
-        this.__data[1] = g;
-        this.__data[2] = b;
-        this.__data[3] = a;
+        this.__data[0] = r
+        this.__data[1] = g
+        this.__data[2] = b
+        this.__data[3] = a
       }
     }
   }
@@ -42,7 +42,7 @@ class Color extends AttrValue {
    * Getter for r.
    */
   get r() {
-    return this.__data[0];
+    return this.__data[0]
   }
 
   /**
@@ -50,14 +50,14 @@ class Color extends AttrValue {
    * @param {number} val - The val param.
    */
   set r(val) {
-    this.__data[0] = val;
+    this.__data[0] = val
   }
 
   /**
    * Getter for g.
    */
   get g() {
-    return this.__data[1];
+    return this.__data[1]
   }
 
   /**
@@ -65,14 +65,14 @@ class Color extends AttrValue {
    * @param {number} val - The val param.
    */
   set g(val) {
-    this.__data[1] = val;
+    this.__data[1] = val
   }
 
   /**
    * Getter for b.
    */
   get b() {
-    return this.__data[2];
+    return this.__data[2]
   }
 
   /**
@@ -80,21 +80,21 @@ class Color extends AttrValue {
    * @param {number} val - The val param.
    */
   set b(val) {
-    this.__data[2] = val;
+    this.__data[2] = val
   }
 
   /**
    * Getter for a.
    */
   get a() {
-    return this.__data[3];
+    return this.__data[3]
   }
   /**
    * Setter for a.
    * @param {number} val - The val param.
    */
   set a(val) {
-    this.__data[3] = val;
+    this.__data[3] = val
   }
 
   /**
@@ -105,10 +105,10 @@ class Color extends AttrValue {
    * @param {number} a  - The a param.
    */
   set(r, g, b, a = 1.0) {
-    this.r = r;
-    this.g = g;
-    this.b = b;
-    this.a = a;
+    this.r = r
+    this.g = g
+    this.b = b
+    this.a = a
   }
 
   /**
@@ -116,10 +116,10 @@ class Color extends AttrValue {
    * @param {any} other - The other param.
    */
   setFromOther(other) {
-    this.r = other.r;
-    this.g = other.g;
-    this.b = other.b;
-    this.a = other.a;
+    this.r = other.r
+    this.g = other.g
+    this.b = other.b
+    this.a = other.a
   }
 
   /**
@@ -127,10 +127,10 @@ class Color extends AttrValue {
    * @param {any} vals - The vals param.
    */
   setFromScalarArray(vals) {
-    this.r = vals[0];
-    this.g = vals[1];
-    this.b = vals[2];
-    this.a = vals.length == 4 ? vals[3] : 1.0;
+    this.r = vals[0]
+    this.g = vals[1]
+    this.b = vals[2]
+    this.a = vals.length == 4 ? vals[3] : 1.0
   }
 
   /**
@@ -138,7 +138,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   getAsRGBArray() {
-    return [this.r * 255, this.g * 255, this.b * 255];
+    return [this.r * 255, this.g * 255, this.b * 255]
   }
 
   /**
@@ -150,7 +150,7 @@ class Color extends AttrValue {
       r: this.r * 255,
       g: this.g * 255,
       b: this.b * 255,
-    };
+    }
   }
 
   /**
@@ -161,10 +161,10 @@ class Color extends AttrValue {
    * @param {number} a  - The a param.
    */
   setFromRGB(r, g, b, a) {
-    this.r = r / 255;
-    this.g = g / 255;
-    this.b = b / 255;
-    this.a = a ? a / 255 : 1.0;
+    this.r = r / 255
+    this.g = g / 255
+    this.b = b / 255
+    this.a = a ? a / 255 : 1.0
   }
 
   /**
@@ -172,10 +172,10 @@ class Color extends AttrValue {
    * @param {any} vals - The vals param.
    */
   setFromRGBArray(vals) {
-    this.r = vals[0] / 255;
-    this.g = vals[1] / 255;
-    this.b = vals[2] / 255;
-    this.a = vals.length == 4 ? vals[3] / 255 : 1.0;
+    this.r = vals[0] / 255
+    this.g = vals[1] / 255
+    this.b = vals[2] / 255
+    this.a = vals.length == 4 ? vals[3] / 255 : 1.0
   }
 
   /**
@@ -183,10 +183,10 @@ class Color extends AttrValue {
    * @param {any} vals - The vals param.
    */
   setFromRGBDict(vals) {
-    this.r = vals.r / 255;
-    this.g = vals.g / 255;
-    this.b = vals.b / 255;
-    this.a = vals.a == 4 ? vals.a / 255 : 1.0;
+    this.r = vals.r / 255
+    this.g = vals.g / 255
+    this.b = vals.b / 255
+    this.a = vals.a == 4 ? vals.a / 255 : 1.0
   }
 
   /**
@@ -195,21 +195,21 @@ class Color extends AttrValue {
    */
   setFromHex(hex) {
     function hexToRgb(hex) {
-      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
       return result
         ? {
             r: parseInt(result[1], 16),
             g: parseInt(result[2], 16),
             b: parseInt(result[3], 16),
           }
-        : null;
+        : null
     }
-    const rgb = hexToRgb(hex);
+    const rgb = hexToRgb(hex)
     if (!rgb) {
-      console.warn('Invalid hex code:' + hex);
-      return;
+      console.warn('Invalid hex code:' + hex)
+      return
     }
-    this.setFromRGB(rgb.r, rgb.g, rgb.b);
+    this.setFromRGB(rgb.r, rgb.g, rgb.b)
   }
 
   /**
@@ -360,17 +360,17 @@ class Color extends AttrValue {
         whitesmoke: '#f5f5f5',
         yellow: '#ffff00',
         yellowgreen: '#9acd32',
-      };
+      }
 
       if (typeof colors[colour.toLowerCase()] != 'undefined')
-        return colors[colour.toLowerCase()];
+        return colors[colour.toLowerCase()]
 
-      return false;
-    };
+      return false
+    }
     if (name.startsWith('#')) {
-      this.setFromHex(name);
+      this.setFromHex(name)
     } else {
-      this.setFromHex(colourNameToHex(name));
+      this.setFromHex(colourNameToHex(name))
     }
   }
 
@@ -380,16 +380,16 @@ class Color extends AttrValue {
    */
   toHex() {
     function componentToHex(c) {
-      const int = Math.round(c * 255);
-      const hex = int.toString(16);
-      return hex.length == 1 ? '0' + hex : hex;
+      const int = Math.round(c * 255)
+      const hex = int.toString(16)
+      return hex.length == 1 ? '0' + hex : hex
     }
     return (
       '#' +
       componentToHex(this.r) +
       componentToHex(this.g) +
       componentToHex(this.b)
-    );
+    )
   }
 
   /**
@@ -404,7 +404,7 @@ class Color extends AttrValue {
       this.g == other.g &&
       this.b == other.b &&
       this.a == other.a
-    );
+    )
   }
 
   /**
@@ -419,7 +419,7 @@ class Color extends AttrValue {
       this.g != other.g &&
       this.b != other.b &&
       this.a != other.a
-    );
+    )
   }
 
   /**
@@ -434,7 +434,7 @@ class Color extends AttrValue {
       Math.abs(this.g - other.g) < Number.EPSILON &&
       Math.abs(this.b - other.b) < Number.EPSILON &&
       Math.abs(this.a - other.a) < Number.EPSILON
-    );
+    )
   }
 
   /**
@@ -448,7 +448,7 @@ class Color extends AttrValue {
       this.g + other.g,
       this.b + other.b,
       this.a + other.a
-    );
+    )
   }
 
   /**
@@ -462,7 +462,7 @@ class Color extends AttrValue {
       this.g - other.g,
       this.b - other.b,
       this.a - other.a
-    );
+    )
   }
 
   /**
@@ -476,7 +476,7 @@ class Color extends AttrValue {
       this.g * scalar,
       this.b * scalar,
       this.a * scalar
-    );
+    )
   }
 
   /**
@@ -484,10 +484,10 @@ class Color extends AttrValue {
    * @param {any} scalar - The scalar param.
    */
   scaleInPlace(scalar) {
-    this.r *= scalar;
-    this.g *= scalar;
-    this.b *= scalar;
-    this.a *= scalar;
+    this.r *= scalar
+    this.g *= scalar
+    this.b *= scalar
+    this.a *= scalar
   }
 
   /**
@@ -500,7 +500,7 @@ class Color extends AttrValue {
       Math.pow(this.g, gamma),
       Math.pow(this.b, gamma),
       this.a
-    );
+    )
   }
 
   /**
@@ -514,7 +514,7 @@ class Color extends AttrValue {
       Math.pow(this.g, gamma),
       Math.pow(this.b, gamma),
       this.a
-    );
+    )
   }
 
   /**
@@ -528,7 +528,7 @@ class Color extends AttrValue {
       Math.pow(this.g, 1.0 / gamma),
       Math.pow(this.b, 1.0 / gamma),
       this.a
-    );
+    )
   }
 
   /**
@@ -536,7 +536,7 @@ class Color extends AttrValue {
    * @return {number} - The return value.
    */
   luminance() {
-    return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b;
+    return 0.2126 * this.r + 0.7152 * this.g + 0.0722 * this.b
   }
 
   /**
@@ -546,16 +546,16 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   lerp(b, t) {
-    const ar = this.r;
-    const ag = this.g;
-    const ab = this.b;
-    const aa = this.a;
+    const ar = this.r
+    const ag = this.g
+    const ab = this.b
+    const aa = this.a
     return new Color(
       ar + t * (b.r - ar),
       ag + t * (b.g - ag),
       ab + t * (b.b - ab),
       aa + t * (b.a - aa)
-    );
+    )
   }
 
   /**
@@ -571,21 +571,21 @@ class Color extends AttrValue {
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0
-      );
+      )
     } else if (gammaOffset < 0.0) {
       return new Color(
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
-      );
+      )
     } else {
       return new Color(
         Math.random(),
         Math.random(),
         Math.random(),
         randomAlpha ? Math.random() : 1.0
-      );
+      )
     }
   }
 
@@ -599,7 +599,7 @@ class Color extends AttrValue {
       this.__data[1],
       this.__data[2],
       this.__data[3]
-    );
+    )
   }
 
   /**
@@ -607,7 +607,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   asArray() {
-    return this.__data;
+    return this.__data
   }
 
   /**
@@ -615,7 +615,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   as3ComponentArray() {
-    return [this.__data[0], this.__data[1], this.__data[2]];
+    return [this.__data[0], this.__data[1], this.__data[2]]
   }
 
   // ////////////////////////////////////////
@@ -627,7 +627,7 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   static create(...args) {
-    return new Color(...args);
+    return new Color(...args)
   }
 
   /**
@@ -637,7 +637,7 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Color(buffer, offset * 4); // 4 bytes per 32bit float
+    return new Color(buffer, offset * 4) // 4 bytes per 32bit float
   }
 
   /**
@@ -645,7 +645,7 @@ class Color extends AttrValue {
    * @return {number} - The return value.
    */
   static numFloat32Elements() {
-    return 4;
+    return 4
   }
 
   // ////////////////////////////////////////
@@ -661,7 +661,7 @@ class Color extends AttrValue {
       g: this.g,
       b: this.b,
       a: this.a,
-    };
+    }
   }
 
   /**
@@ -669,10 +669,10 @@ class Color extends AttrValue {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.r = j.r;
-    this.g = j.g;
-    this.b = j.b;
-    this.a = j.a;
+    this.r = j.r
+    this.g = j.g
+    this.b = j.b
+    this.a = j.a
   }
 
   /**
@@ -690,11 +690,11 @@ class Color extends AttrValue {
       ', ' +
       this.a +
       ')'
-    );
+    )
   }
 }
 
-typeRegistry.registerType('Color', Color);
+typeRegistry.registerType('Color', Color)
 
-export { Color };
+export { Color }
 // export default Color;
