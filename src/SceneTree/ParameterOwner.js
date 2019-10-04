@@ -1,18 +1,18 @@
-import { Vec2, Vec3, Color } from '../Math';
-import { Signal } from '../Utilities';
+import { Vec2, Vec3, Color } from '../Math'
+import { Signal } from '../Utilities'
 
-import { RefCounted } from './RefCounted.js';
+import { RefCounted } from './RefCounted.js'
 
-import { sgFactory } from './SGFactory.js';
+import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
 // Note: soon these imports should be removed, once all code avoids calling
 // 'addPArameter' without the parameter instance.
-import { Parameter, ParamFlags } from './Parameters/Parameter.js';
-import { NumberParameter } from './Parameters/NumberParameter.js';
-import { Vec2Parameter } from './Parameters/Vec2Parameter.js';
-import { Vec3Parameter } from './Parameters/Vec3Parameter.js';
-import { ColorParameter } from './Parameters/ColorParameter.js';
+import { Parameter, ParamFlags } from './Parameters/Parameter.js'
+import { NumberParameter } from './Parameters/NumberParameter.js'
+import { Vec2Parameter } from './Parameters/Vec2Parameter.js'
+import { Vec3Parameter } from './Parameters/Vec3Parameter.js'
+import { ColorParameter } from './Parameters/ColorParameter.js'
 
 /** Class representing a parameter owner.
  * @extends RefCounted
@@ -22,19 +22,19 @@ class ParameterOwner extends RefCounted {
    * Create a parameter owner.
    */
   constructor() {
-    super();
+    super()
 
-    this.__params = [];
-    this.__paramMapping = {};
-    this.__paramSignalIds = {};
+    this.__params = []
+    this.__paramMapping = {}
+    this.__paramSignalIds = {}
 
     // Paramters are not intended to be dynamic.
     // Instead they are part of the mixin architecture.
     // Note: Materials add/remove paramters when the
     // shader name is changed.
-    this.parameterAdded = new Signal();
-    this.parameterRemoved = new Signal();
-    this.parameterValueChanged = new Signal();
+    this.parameterAdded = new Signal()
+    this.parameterRemoved = new Signal()
+    this.parameterValueChanged = new Signal()
   }
 
   /**
@@ -48,15 +48,15 @@ class ParameterOwner extends RefCounted {
     // are bottom to top. (bottom params dependent on higher params)
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.
-    let i = src.numParameters();
+    let i = src.numParameters()
     while (i--) {
-      const srcParam = src.getParameterByIndex(i);
-      const param = this.getParameter(srcParam.getName());
+      const srcParam = src.getParameterByIndex(i)
+      const param = this.getParameter(srcParam.getName())
       if (param) {
         // Note: we are not cloning the values.
-        param.setValue(srcParam.getValue(), 2);
+        param.setValue(srcParam.getValue(), 2)
       } else {
-        this.addParameter(srcParam.clone());
+        this.addParameter(srcParam.clone())
       }
     }
   }
@@ -69,7 +69,7 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   numParameters() {
-    return this.__params.length;
+    return this.__params.length
   }
 
   /**
@@ -77,7 +77,7 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   getParameters() {
-    return this.__params;
+    return this.__params
   }
 
   /**
@@ -86,7 +86,7 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   getParameterIndex(paramName) {
-    return this.__paramMapping[paramName];
+    return this.__paramMapping[paramName]
   }
 
   /**
@@ -95,7 +95,7 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   getParameterByIndex(index) {
-    return this.__params[index];
+    return this.__params[index]
   }
 
   /**
@@ -104,7 +104,7 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   hasParameter(paramName) {
-    return paramName in this.__paramMapping;
+    return paramName in this.__paramMapping
   }
 
   /**
@@ -113,9 +113,9 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   getParameter(paramName) {
-    const index = this.__paramMapping[paramName];
-    if (index == -1) return null;
-    return this.__params[index];
+    const index = this.__paramMapping[paramName]
+    if (index == -1) return null
+    return this.__params[index]
   }
 
   /**
@@ -126,7 +126,7 @@ class ParameterOwner extends RefCounted {
    * @private
    */
   __parameterValueChanged(param, mode) {
-    this.parameterValueChanged.emit(param, mode);
+    this.parameterValueChanged.emit(param, mode)
   }
 
   /**
@@ -135,19 +135,19 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   addParameter(param) {
-    const name = param.getName();
+    const name = param.getName()
     if (this.__paramMapping[name] != undefined) {
-      console.warn('Replacing Parameter:' + name);
-      this.removeParameter(name);
+      console.warn('Replacing Parameter:' + name)
+      this.removeParameter(name)
     }
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
       this.__parameterValueChanged(param, mode)
-    );
-    param.addRef(this);
-    this.__params.push(param);
-    this.__paramMapping[name] = this.__params.length - 1;
-    this.parameterAdded.emit(name);
-    return param;
+    )
+    param.addRef(this)
+    this.__params.push(param)
+    this.__paramMapping[name] = this.__params.length - 1
+    this.parameterAdded.emit(name)
+    return param
   }
 
   /**
@@ -157,24 +157,24 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   insertParameter(param, index) {
-    const name = param.getName();
+    const name = param.getName()
     if (this.__paramMapping[name] != undefined) {
-      console.warn('Replacing Parameter:' + name);
-      this.removeParameter(name);
+      console.warn('Replacing Parameter:' + name)
+      this.removeParameter(name)
     }
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
       this.__parameterValueChanged(param, mode)
-    );
-    param.addRef(this);
-    this.__params.splice(index, 0, param);
+    )
+    param.addRef(this)
+    this.__params.splice(index, 0, param)
 
-    const paramMapping = {};
+    const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
-      paramMapping[this.__params[i].getName()] = i;
+      paramMapping[this.__params[i].getName()] = i
     }
-    this.__paramMapping = paramMapping;
-    this.parameterAdded.emit(name);
-    return param;
+    this.__paramMapping = paramMapping
+    this.parameterAdded.emit(name)
+    return param
   }
 
   /**
@@ -183,19 +183,19 @@ class ParameterOwner extends RefCounted {
    */
   removeParameter(name) {
     if (this.__paramMapping[name] == undefined) {
-      console.throw('Unable to Remove Parameter:' + name);
+      console.throw('Unable to Remove Parameter:' + name)
     }
-    const index = this.__paramMapping[name];
-    const param = this.__params[this.__paramMapping[name]];
-    param.removeRef(this);
-    param.valueChanged.disconnectId(this.__paramSignalIds[name]);
-    this.__params.splice(index, 1);
-    const paramMapping = {};
+    const index = this.__paramMapping[name]
+    const param = this.__params[this.__paramMapping[name]]
+    param.removeRef(this)
+    param.valueChanged.disconnectId(this.__paramSignalIds[name])
+    this.__params.splice(index, 1)
+    const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
-      paramMapping[this.__params[i].getName()] = i;
+      paramMapping[this.__params[i].getName()] = i
     }
-    this.__paramMapping = paramMapping;
-    this.parameterRemoved.emit(name);
+    this.__paramMapping = paramMapping
+    this.parameterRemoved.emit(name)
   }
 
   /**
@@ -204,18 +204,18 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   replaceParameter(param) {
-    const name = param.getName();
-    const index = this.__paramMapping[name];
-    const prevparam = this.__params[this.__paramMapping[name]];
-    prevparam.removeRef(this);
-    prevparam.valueChanged.disconnectId(this.__paramSignalIds[name]);
+    const name = param.getName()
+    const index = this.__paramMapping[name]
+    const prevparam = this.__params[this.__paramMapping[name]]
+    prevparam.removeRef(this)
+    prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
 
-    param.addRef(this);
+    param.addRef(this)
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
       this.parameterValueChanged.emit(param, mode)
-    );
-    this.__params[index] = param;
-    return param;
+    )
+    this.__params[index] = param
+    return param
   }
 
   // _removeAllParameters(){
@@ -230,11 +230,11 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   addCommand(command) {
-    const name = command.getName();
-    command.setOwner(this);
-    this.__params.push(command);
-    this.__paramMapping[name] = this.__params.length - 1;
-    return command;
+    const name = command.getName()
+    command.setOwner(this)
+    this.__params.push(command)
+    this.__paramMapping[name] = this.__params.length - 1
+    return command
   }
 
   // ////////////////////////////////////////
@@ -247,24 +247,24 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const paramsJSON = {};
-    let savedParams = 0;
+    const paramsJSON = {}
+    let savedParams = 0
     for (const param of this.__params) {
-      if (!param.testFlag(ParamFlags.USER_EDITED)) continue;
+      if (!param.testFlag(ParamFlags.USER_EDITED)) continue
       if (param.numRefs() > 1 && param.getRefIndex(this) != 0) {
         paramsJSON[param.getName()] = {
           paramPath: context.makeRelative(param.getPath()),
-        };
-        savedParams++;
+        }
+        savedParams++
       } else {
-        const paramJSON = param.toJSON(context, flags);
+        const paramJSON = param.toJSON(context, flags)
         if (paramJSON) {
-          paramsJSON[param.getName()] = paramJSON;
-          savedParams++;
+          paramsJSON[param.getName()] = paramJSON
+          savedParams++
         }
       }
     }
-    if (savedParams > 0) return { params: paramsJSON };
+    if (savedParams > 0) return { params: paramsJSON }
   }
 
   /**
@@ -276,24 +276,24 @@ class ParameterOwner extends RefCounted {
   fromJSON(j, context, flags) {
     if (j.params) {
       for (const key in j.params) {
-        const pj = j.params[key];
-        const param = this.getParameter(key);
-        if (!param) console.warn('Param not found:' + key);
+        const pj = j.params[key]
+        const param = this.getParameter(key)
+        if (!param) console.warn('Param not found:' + key)
         else {
           if (pj.paramPath) {
             context.resolvePath(
               pj.paramPath,
               param => {
-                this.replaceParameter(param);
+                this.replaceParameter(param)
               },
               reason => {
                 console.warn(
                   'Unable to resolve shared parameter:' + pj.paramPath
-                );
+                )
               }
-            );
+            )
           } else {
-            param.fromJSON(pj, context);
+            param.fromJSON(pj, context)
           }
         }
       }
@@ -309,22 +309,22 @@ class ParameterOwner extends RefCounted {
     // TODO: make this work
 
     if (context.version >= 3) {
-      const numProps = reader.loadUInt32();
+      const numProps = reader.loadUInt32()
       for (let i = 0; i < numProps; i++) {
-        const propType = reader.loadStr();
-        const propName = reader.loadStr();
-        let param = this.getParameter(propName);
+        const propType = reader.loadStr()
+        const propName = reader.loadStr()
+        let param = this.getParameter(propName)
         if (!param) {
-          param = sgFactory.constructClass(propType, propName);
+          param = sgFactory.constructClass(propType, propName)
           if (!param) {
             console.error(
               'Unable to construct prop:' + propName + ' of type:' + propType
-            );
-            continue;
+            )
+            continue
           }
-          this.addParameter(param);
+          this.addParameter(param)
         }
-        param.readBinary(reader, context);
+        param.readBinary(reader, context)
       }
     }
   }
@@ -334,7 +334,7 @@ class ParameterOwner extends RefCounted {
    * @return {any} - The return value.
    */
   toString() {
-    return JSON.stringify(this.toJSON(), null, 2);
+    return JSON.stringify(this.toJSON(), null, 2)
   }
 
   /**
@@ -342,10 +342,10 @@ class ParameterOwner extends RefCounted {
    */
   destroy() {
     for (const param of this.__params) {
-      param.destroy();
+      param.destroy()
     }
-    super.destroy();
+    super.destroy()
   }
 }
 
-export { ParameterOwner };
+export { ParameterOwner }

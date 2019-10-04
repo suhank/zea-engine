@@ -4,8 +4,8 @@ class SGFactory {
    * Create a SG factory.
    */
   constructor() {
-    this.__registeredClasses = {};
-    this.__classNames = {};
+    this.__registeredClasses = {}
+    this.__classNames = {}
   }
 
   /**
@@ -17,8 +17,8 @@ class SGFactory {
     this.__registeredClasses[classname] = {
       cls,
       callbacks: [],
-    };
-    this.__classNames[cls.name] = classname;
+    }
+    this.__classNames[cls.name] = classname
   }
 
   /**
@@ -27,12 +27,12 @@ class SGFactory {
    * @param {any} callback - The callback param.
    */
   registerCallback(classname, callback) {
-    const classData = this.__registeredClasses[classname];
+    const classData = this.__registeredClasses[classname]
     if (!classData) {
-      console.warn('Factory not registered:' + classname);
-      return;
+      console.warn('Factory not registered:' + classname)
+      return
     }
-    classData.callbacks.push(callback);
+    classData.callbacks.push(callback)
   }
 
   /**
@@ -42,7 +42,7 @@ class SGFactory {
    */
   getClass(classname) {
     if (this.__registeredClasses[classname])
-      return this.__registeredClasses[classname].cls;
+      return this.__registeredClasses[classname].cls
   }
 
   /**
@@ -52,8 +52,8 @@ class SGFactory {
    */
   getClassName(inst) {
     if (this.__classNames[inst.constructor.name])
-      return this.__classNames[inst.constructor.name];
-    return inst.constructor.name;
+      return this.__classNames[inst.constructor.name]
+    return inst.constructor.name
   }
 
   /**
@@ -61,7 +61,7 @@ class SGFactory {
    * @return {any} - The return value.
    */
   isConstructing() {
-    return this.__constructing;
+    return this.__constructing
   }
 
   /**
@@ -70,19 +70,19 @@ class SGFactory {
    * @return {any} - The return value.
    */
   constructClass(classname /* , ...args */) {
-    const classData = this.__registeredClasses[classname];
+    const classData = this.__registeredClasses[classname]
     if (!classData) {
       if (!classData) {
-        console.warn('Factory not registered:' + classname);
-        return null;
+        console.warn('Factory not registered:' + classname)
+        return null
       }
     }
-    this.__constructing = true;
-    const args = Array.prototype.slice.call(arguments, 1);
-    const inst = new classData.cls(...args);
-    this.__constructing = false;
-    this.invokeCallbacks(inst);
-    return inst;
+    this.__constructing = true
+    const args = Array.prototype.slice.call(arguments, 1)
+    const inst = new classData.cls(...args)
+    this.__constructing = false
+    this.invokeCallbacks(inst)
+    return inst
   }
 
   /**
@@ -93,11 +93,11 @@ class SGFactory {
     if (this.__classNames[inst.constructor.name]) {
       const classData = this.__registeredClasses[
         this.__classNames[inst.constructor.name]
-      ];
-      for (const callback of classData.callbacks) callback(inst);
+      ]
+      for (const callback of classData.callbacks) callback(inst)
     }
   }
 }
 
-const sgFactory = new SGFactory();
-export { sgFactory };
+const sgFactory = new SGFactory()
+export { sgFactory }

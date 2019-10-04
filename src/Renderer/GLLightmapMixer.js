@@ -1,9 +1,9 @@
-import { Async } from '../Utilities';
-import { GLTexture2D } from './GLTexture2D.js';
-import { GLHDRImage } from './GLHDRImage.js';
-import { ImageMixerShader } from './Shaders/ImageMixerShader.js';
-import { GLFbo } from './GLFbo.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { Async } from '../Utilities'
+import { GLTexture2D } from './GLTexture2D.js'
+import { GLHDRImage } from './GLHDRImage.js'
+import { ImageMixerShader } from './Shaders/ImageMixerShader.js'
+import { GLFbo } from './GLFbo.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL lightmap mixer.
  * @extends GLTexture2D
@@ -15,9 +15,9 @@ class GLLightmapMixer extends GLTexture2D {
    * @param {any} lightmapMixer - The lightmapMixer value.
    */
   constructor(gl, lightmapMixer) {
-    super(gl);
+    super(gl)
 
-    this.__lightmapMixer = lightmapMixer;
+    this.__lightmapMixer = lightmapMixer
 
     this.configure({
       format: 'RGBA',
@@ -26,63 +26,63 @@ class GLLightmapMixer extends GLTexture2D {
       wrap: 'CLAMP_TO_EDGE',
       width: this.__lightmapMixer.width,
       height: this.__lightmapMixer.height,
-    });
-    this.__fbo = new GLFbo(gl, this);
+    })
+    this.__fbo = new GLFbo(gl, this)
 
-    this.__decompAndMixShader = new ImageMixerShader(gl);
+    this.__decompAndMixShader = new ImageMixerShader(gl)
     const shaderComp = this.__decompAndMixShader.compileForTarget(
       'ImageMixerShader'
-    );
+    )
     this.__shaderBinding = generateShaderGeomBinding(
       gl,
       shaderComp.attrs,
       gl.__quadattrbuffers,
       gl.__quadIndexBuffer
-    );
+    )
 
-    this.__srcTextures = [];
+    this.__srcTextures = []
 
-    const async = new Async();
+    const async = new Async()
     // increment the count, so its not zero.
     // (so an already loaded image doesn't trigger the ready signal)
-    async.incAsyncCount();
+    async.incAsyncCount()
     const genGLTex = index => {
-      const image = this.__lightmapMixer.getSubImage(index);
-      let gltexture = image.getMetadata('gltexture');
+      const image = this.__lightmapMixer.getSubImage(index)
+      let gltexture = image.getMetadata('gltexture')
       if (!gltexture) {
         if (image.type === 'FLOAT') {
-          gltexture = new GLHDRImage(gl, image);
+          gltexture = new GLHDRImage(gl, image)
         } else {
-          gltexture = new GLTexture2D(gl, image);
+          gltexture = new GLTexture2D(gl, image)
         }
       }
-      this.__srcTextures[index] = gltexture;
-      async.incAsyncCount();
-      gltexture.ready.connect(async.decAsyncCount);
-    };
+      this.__srcTextures[index] = gltexture
+      async.incAsyncCount()
+      gltexture.ready.connect(async.decAsyncCount)
+    }
 
     for (let i = 0; i < this.__lightmapMixer.numSubImages(); i++) {
-      genGLTex(i);
+      genGLTex(i)
     }
 
     this.__lightmapMixer.lightmapAdded.connect(index => {
-      genGLTex(index);
-    });
+      genGLTex(index)
+    })
 
-    async.ready.connect(this.__renderTgtImage.bind(this));
-    async.decAsyncCount();
+    async.ready.connect(this.__renderTgtImage.bind(this))
+    async.decAsyncCount()
 
     this.__lightmapMixer.lightmapResourceChanged.connect(() => {
-      this.__renderTgtImage();
-    });
+      this.__renderTgtImage()
+    })
     this.__lightmapMixer.lightmapWeightChanged.connect(() => {
-      this.__renderTgtImage();
-    });
+      this.__renderTgtImage()
+    })
 
     this.__lightmapMixer.destructing.connect(() => {
-      console.log(this.__lightmapMixer.getName() + ' destructing');
-      this.destroy();
-    });
+      console.log(this.__lightmapMixer.getName() + ' destructing')
+      this.destroy()
+    })
   }
 
   /**
@@ -90,23 +90,23 @@ class GLLightmapMixer extends GLTexture2D {
    * @private
    */
   __renderTgtImage() {
-    const gl = this.__gl;
-    this.__fbo.bindAndClear();
+    const gl = this.__gl
+    this.__fbo.bindAndClear()
 
-    const renderstate = {};
-    this.__decompAndMixShader.bind(renderstate, 'ImageMixerShader');
-    this.__shaderBinding.bind(renderstate);
+    const renderstate = {}
+    this.__decompAndMixShader.bind(renderstate, 'ImageMixerShader')
+    this.__shaderBinding.bind(renderstate)
 
-    const unifs = renderstate.unifs;
+    const unifs = renderstate.unifs
     for (let i = 0; i < this.__srcTextures.length; i++) {
-      this.__srcTextures[i].bind(renderstate, unifs['sampler' + i].location);
+      this.__srcTextures[i].bind(renderstate, unifs['sampler' + i].location)
       gl.uniform1f(
         unifs['weight' + i].location,
         this.__lightmapMixer.getSubImageWeight(i)
-      );
+      )
     }
 
-    gl.drawQuad();
+    gl.drawQuad()
 
     // // Debug a block of pixels.
     // gl.finish();
@@ -115,38 +115,38 @@ class GLLightmapMixer extends GLTexture2D {
     // gl.readPixels(this.width / 4, this.height/4, numPixels, 1, gl.RGBA, gl.FLOAT, pixels);
     // console.log(pixels);
 
-    this.__fbo.unbind();
+    this.__fbo.unbind()
 
     if (!this.__lightmapMixer.isStream()) {
-      this.__fbo.destroy();
+      this.__fbo.destroy()
       for (let i = 0; i < this.__srcTextures.length; i++) {
-        this.__srcTextures[i].destroy();
+        this.__srcTextures[i].destroy()
       }
-      this.__fbo = null;
-      this.__srcTextures = [];
+      this.__fbo = null
+      this.__srcTextures = []
     }
 
-    this.updated.emit();
+    this.updated.emit()
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
     if (this.__fbo) {
-      this.__fbo.destroy();
+      this.__fbo.destroy()
       for (let i = 0; i < this.__srcTextures.length; i++) {
-        this.__srcTextures[i].destroy();
+        this.__srcTextures[i].destroy()
       }
     }
-    this.__decompAndMixShader.destroy();
-    this.__shaderBinding.destroy();
+    this.__decompAndMixShader.destroy()
+    this.__shaderBinding.destroy()
 
-    this.__lightmapMixer.loaded.disconnectScope(this);
-    this.__lightmapMixer.updated.disconnectScope(this);
+    this.__lightmapMixer.loaded.disconnectScope(this)
+    this.__lightmapMixer.updated.disconnectScope(this)
   }
 }
 
-export { GLLightmapMixer };
+export { GLLightmapMixer }
 // export default GLLightmapMixer;

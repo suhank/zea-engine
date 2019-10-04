@@ -1,5 +1,5 @@
-import { Xfo } from '../../Math';
-import { Parameter } from './Parameter.js';
+import { Xfo } from '../../Math'
+import { Parameter } from './Parameter.js'
 
 /** Class representing a Xfo parameter.
  * @extends Parameter
@@ -11,7 +11,7 @@ class XfoParameter extends Parameter {
    * @param {any} value - The value value.
    */
   constructor(name, value) {
-    super(name, value ? value : new Xfo(), 'Xfo');
+    super(name, value ? value : new Xfo(), 'Xfo')
   }
 
   /**
@@ -20,9 +20,9 @@ class XfoParameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new XfoParameter(this.__name, this.__value.clone());
-    return clonedParam;
+    const clonedParam = new XfoParameter(this.__name, this.__value.clone())
+    return clonedParam
   }
 }
 
-export { XfoParameter };
+export { XfoParameter }

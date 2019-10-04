@@ -1,8 +1,7 @@
 const processTextureParams = function(gl, params) {
-  if (!params.width || !params.height)
-    throw new Error('Invalid texture params');
+  if (!params.width || !params.height) throw new Error('Invalid texture params')
 
-  const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE);
+  const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE)
   if (
     params.width <= 0 ||
     params.width > maxSize ||
@@ -16,30 +15,30 @@ const processTextureParams = function(gl, params) {
         params.height +
         ' maxSize:' +
         maxSize
-    );
+    )
   }
 
   const result = {
     width: params.width,
     height: params.height,
-  };
+  }
   const processParam = (name, defaultValue) => {
     if (name in params)
-      result[name] = isNaN(params[name]) ? gl[params[name]] : params[name];
-    else if (defaultValue) result[name] = defaultValue;
-  };
-  processParam('format');
-  processParam('internalFormat', result.format);
-  processParam('type', gl.UNSIGNED_BYTE);
-  processParam('minFilter', gl.LINEAR);
-  processParam('magFilter', gl.LINEAR);
-  processParam('wrapS', gl.CLAMP_TO_EDGE);
-  processParam('wrapT', gl.CLAMP_TO_EDGE);
-  processParam('flipY', false);
-  processParam('mipMapped', false);
+      result[name] = isNaN(params[name]) ? gl[params[name]] : params[name]
+    else if (defaultValue) result[name] = defaultValue
+  }
+  processParam('format')
+  processParam('internalFormat', result.format)
+  processParam('type', gl.UNSIGNED_BYTE)
+  processParam('minFilter', gl.LINEAR)
+  processParam('magFilter', gl.LINEAR)
+  processParam('wrapS', gl.CLAMP_TO_EDGE)
+  processParam('wrapT', gl.CLAMP_TO_EDGE)
+  processParam('flipY', false)
+  processParam('mipMapped', false)
 
-  processParam('depthFormat');
-  processParam('depthType');
+  processParam('depthFormat')
+  processParam('depthType')
 
   // https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glTexImage2D.xhtml
   if (result.format == gl.FLOAT) {
@@ -47,31 +46,31 @@ const processTextureParams = function(gl, params) {
       if (result.filter == gl.LINEAR && !gl.__ext_float_linear) {
         console.warn(
           'Floating point texture filtering not supported on result device'
-        );
-        result.filter = gl.NEAREST;
+        )
+        result.filter = gl.NEAREST
       }
     } else {
       if (gl.__ext_float) {
         if (result.filter == gl.LINEAR && !gl.__ext_float_linear) {
           console.warn(
             'Floating point texture filtering not supported on result device'
-          );
-          result.filter = gl.NEAREST;
+          )
+          result.filter = gl.NEAREST
         }
       } else {
         if (gl.__ext_half_float) {
-          result.format = gl.HALF_FLOAT;
+          result.format = gl.HALF_FLOAT
           if (
             result.filter == gl.LINEAR &&
             !gl.__ext_texture_half_float_linear
           ) {
             console.warn(
               'Half Float texture filtering not supported on result device'
-            );
-            result.filter = gl.NEAREST;
+            )
+            result.filter = gl.NEAREST
           }
         } else {
-          throw new Error('OES_texture_half_float is not available');
+          throw new Error('OES_texture_half_float is not available')
         }
       }
     }
@@ -87,16 +86,16 @@ const processTextureParams = function(gl, params) {
         if (result.filter == gl.LINEAR && !gl.__ext_texture_half_float_linear) {
           console.warn(
             'Half Float texture filtering not supported on result device'
-          );
-          result.filter = gl.NEAREST;
+          )
+          result.filter = gl.NEAREST
         }
-      } else throw new Error('OES_texture_half_float is not available');
+      } else throw new Error('OES_texture_half_float is not available')
       if (result.channels == gl.RGB) {
-        throw new Error('OES_texture_half_float onlysupports RGBA textures');
+        throw new Error('OES_texture_half_float onlysupports RGBA textures')
       }
     }
   } else if (result.format == 'sRGB') {
-    if (!gl.__ext_sRGB) throw new Error('EXT_sRGB is not available');
+    if (!gl.__ext_sRGB) throw new Error('EXT_sRGB is not available')
   }
 
   // ////////////////////////////////////////////////////
@@ -112,30 +111,30 @@ const processTextureParams = function(gl, params) {
   ) {
     if (result.type == gl.FLOAT) {
       if (result.format == gl.RED) {
-        result.internalFormat = gl.R32F;
+        result.internalFormat = gl.R32F
       } else if (result.format == gl.RED) {
-        result.internalFormat = gl.R32F;
+        result.internalFormat = gl.R32F
       } else if (result.format == gl.RG) {
-        result.internalFormat = gl.RG32F;
+        result.internalFormat = gl.RG32F
       } else if (result.format == gl.RGBA) {
-        result.internalFormat = gl.RGBA32F;
+        result.internalFormat = gl.RGBA32F
       }
     } else if (result.type == gl.HALF_FLOAT) {
       if (result.format == gl.RED) {
-        result.internalFormat = gl.R16F;
+        result.internalFormat = gl.R16F
       } else if (result.format == gl.RGB) {
-        result.internalFormat = gl.RGB16F;
+        result.internalFormat = gl.RGB16F
       } else if (result.format == gl.RGBA) {
-        result.internalFormat = gl.RGBA16F;
+        result.internalFormat = gl.RGBA16F
       }
     } else if (result.type == gl.UNSIGNED_BYTE) {
       if (result.format == gl.RED) {
-        result.internalFormat = gl.R8;
+        result.internalFormat = gl.R8
       }
       if (result.format == gl.RGB) {
-        result.internalFormat = gl.RGB8;
+        result.internalFormat = gl.RGB8
       } else if (result.format == gl.RGBA) {
-        result.internalFormat = gl.RGBA8;
+        result.internalFormat = gl.RGBA8
       }
     }
   }
@@ -143,16 +142,16 @@ const processTextureParams = function(gl, params) {
   if (result.depthFormat != undefined) {
     if (gl.name == 'webgl2') {
       if (result.depthType == gl.UNSIGNED_SHORT) {
-        result.depthInternalFormat = gl.DEPTH_COMPONENT16;
+        result.depthInternalFormat = gl.DEPTH_COMPONENT16
       } else if (result.depthType == gl.UNSIGNED_INT) {
-        result.depthInternalFormat = gl.UNSIGNED_INT;
+        result.depthInternalFormat = gl.UNSIGNED_INT
       }
     } else {
-      result.depthInternalFormat = result.depthFormat;
+      result.depthInternalFormat = result.depthFormat
     }
   }
 
-  return result;
-};
+  return result
+}
 
-export { processTextureParams };
+export { processTextureParams }

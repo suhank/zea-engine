@@ -1,5 +1,5 @@
-import { Signal } from '../../Utilities';
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js';
+import { Signal } from '../../Utilities'
+import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
  * @extends Parameter
@@ -11,9 +11,9 @@ class GeometryParameter extends Parameter {
    * @param {any} value - The value value.
    */
   constructor(name, value) {
-    super(name, undefined, 'Geometry');
-    this.boundingBoxDirtied = new Signal();
-    this.setValue(value);
+    super(name, undefined, 'Geometry')
+    this.boundingBoxDirtied = new Signal()
+    this.setValue(value)
   }
 
   /**
@@ -22,8 +22,8 @@ class GeometryParameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new GeometryParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new GeometryParameter(this.__name, this.__value)
+    return clonedParam
   }
 
   /**
@@ -35,22 +35,20 @@ class GeometryParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
     if (this.__value !== geom) {
       if (this.__value) {
-        this.__value.boundingBoxDirtied.disconnect(
-          this.boundingBoxDirtied.emit
-        );
-        this.__value.removeRef(this);
+        this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
+        this.__value.removeRef(this)
       }
-      this.__value = geom;
+      this.__value = geom
       if (this.__value) {
-        this.__value.addRef(this);
-        this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit);
+        this.__value.addRef(this)
+        this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit)
       }
 
       if (mode == ValueSetMode.USER_SETVALUE)
-        this.__flags |= ParamFlags.USER_EDITED;
+        this.__flags |= ParamFlags.USER_EDITED
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode);
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
     }
   }
 
@@ -64,7 +62,7 @@ class GeometryParameter extends Parameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    return super.toJSON(context, flags);
+    return super.toJSON(context, flags)
   }
 
   /**
@@ -75,7 +73,7 @@ class GeometryParameter extends Parameter {
    * @return {any} - The return value.
    */
   fromJSON(j, context, flags) {
-    return super.fromJSON(j, context, flags);
+    return super.fromJSON(j, context, flags)
   }
 
   /**
@@ -87,10 +85,10 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit);
-      this.__value.removeRef(this);
+      this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
+      this.__value.removeRef(this)
     }
   }
 }
 
-export { GeometryParameter };
+export { GeometryParameter }

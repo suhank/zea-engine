@@ -1,6 +1,6 @@
-import { AttrValue } from '../Math';
-import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
+import { AttrValue } from '../Math'
+import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL screen quad. */
 class GLScreenQuad {
@@ -10,27 +10,24 @@ class GLScreenQuad {
    * @param {any} preproc - The preproc value.
    */
   constructor(gl, preproc) {
-    this.__gl = gl;
+    this.__gl = gl
 
-    this.__pos = [0.0, 0.0];
-    this.__size = [1.0, 1.0];
-    this.flipY = true;
-    this.__glshader = new ScreenQuadShader(gl);
+    this.__pos = [0.0, 0.0]
+    this.__size = [1.0, 1.0]
+    this.flipY = true
+    this.__glshader = new ScreenQuadShader(gl)
 
-    if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad();
+    if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
-    const shaderComp = this.__glshader.compileForTarget(
-      'GLScreenQuad',
-      preproc
-    );
+    const shaderComp = this.__glshader.compileForTarget('GLScreenQuad', preproc)
     this.__quadBinding = generateShaderGeomBinding(
       gl,
       shaderComp.attrs,
       gl.__quadattrbuffers,
       gl.__quadIndexBuffer
-    );
+    )
 
-    this.ready = true;
+    this.ready = true
   }
 
   /**
@@ -41,21 +38,21 @@ class GLScreenQuad {
    * @param {any} size - The size param.
    */
   bind(renderstate, texture, pos = undefined, size = undefined) {
-    const unifs = renderstate.unifs;
-    texture.bindToUniform(renderstate, renderstate.unifs.image);
+    const unifs = renderstate.unifs
+    texture.bindToUniform(renderstate, renderstate.unifs.image)
 
-    const gl = this.__gl;
+    const gl = this.__gl
     {
-      const unif = unifs.pos;
+      const unif = unifs.pos
       if (unif) {
         gl.uniform2fv(
           unif.location,
           pos ? (pos instanceof AttrValue ? pos.asArray() : pos) : this.__pos
-        );
+        )
       }
     }
     {
-      const unif = unifs.size;
+      const unif = unifs.size
       if (unif) {
         gl.uniform2fv(
           unif.location,
@@ -64,7 +61,7 @@ class GLScreenQuad {
               ? size.asArray()
               : size
             : this.__size
-        );
+        )
       }
     }
     // if ('flipY' in unifs)
@@ -73,7 +70,7 @@ class GLScreenQuad {
     // if ('textureDim' in unifs)
     //     gl.uniform2fv(unifs.textureDim.location, [texture.width, texture.height]);
 
-    this.__quadBinding.bind(renderstate);
+    this.__quadBinding.bind(renderstate)
   }
 
   /**
@@ -82,7 +79,7 @@ class GLScreenQuad {
    * @return {any} - The return value.
    */
   bindShader(renderstate) {
-    return this.__glshader.bind(renderstate, 'GLScreenQuad');
+    return this.__glshader.bind(renderstate, 'GLScreenQuad')
   }
 
   /**
@@ -93,9 +90,9 @@ class GLScreenQuad {
    * @param {any} size - The size param.
    */
   draw(renderstate, texture, pos = undefined, size = undefined) {
-    this.bind(renderstate, texture, pos, size);
+    this.bind(renderstate, texture, pos, size)
 
-    this.__gl.drawQuad();
+    this.__gl.drawQuad()
   }
 
   /**
@@ -104,5 +101,5 @@ class GLScreenQuad {
   destroy() {}
 }
 
-export { GLScreenQuad };
+export { GLScreenQuad }
 // export default GLScreenQuad;

@@ -1,5 +1,5 @@
-import { GLGeom } from './GLGeom.js';
-import '../SceneTree/Geometry/Mesh.js';
+import { GLGeom } from './GLGeom.js'
+import '../SceneTree/Geometry/Mesh.js'
 
 /** Class representing a GL mesh.
  * @extends GLGeom
@@ -11,8 +11,8 @@ class GLMesh extends GLGeom {
    * @param {any} mesh - The mesh value.
    */
   constructor(gl, mesh) {
-    super(gl, mesh);
-    this.genBuffers();
+    super(gl, mesh)
+    this.genBuffers()
   }
 
   /**
@@ -20,7 +20,7 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   getNumTriangles() {
-    return this.__numTriangles;
+    return this.__numTriangles
   }
 
   // /////////////////////////////////////
@@ -30,26 +30,26 @@ class GLMesh extends GLGeom {
    * The genBuffers method.
    */
   genBuffers() {
-    super.genBuffers();
+    super.genBuffers()
 
-    const gl = this.__gl;
+    const gl = this.__gl
 
-    const geomBuffers = this.__geom.genBuffers();
-    const indices = geomBuffers.indices;
-    this.__numTriIndices = geomBuffers.indices.length;
+    const geomBuffers = this.__geom.genBuffers()
+    const indices = geomBuffers.indices
+    this.__numTriIndices = geomBuffers.indices.length
     if (indices instanceof Uint8Array)
-      this.__indexDataType = this.__gl.UNSIGNED_BYTE;
+      this.__indexDataType = this.__gl.UNSIGNED_BYTE
     if (indices instanceof Uint16Array)
-      this.__indexDataType = this.__gl.UNSIGNED_SHORT;
+      this.__indexDataType = this.__gl.UNSIGNED_SHORT
     if (indices instanceof Uint32Array)
-      this.__indexDataType = this.__gl.UNSIGNED_INT;
+      this.__indexDataType = this.__gl.UNSIGNED_INT
 
-    this.__numTriangles = indices.length / 3;
-    this.__numRenderVerts = geomBuffers.numRenderVerts;
+    this.__numTriangles = indices.length / 3
+    this.__numRenderVerts = geomBuffers.numRenderVerts
 
-    this.__indexBuffer = gl.createBuffer();
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geomBuffers.indices, gl.STATIC_DRAW);
+    this.__indexBuffer = gl.createBuffer()
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, geomBuffers.indices, gl.STATIC_DRAW)
 
     // Create some vertex attribute buffers
     // const debugAttrValues = false;
@@ -57,22 +57,22 @@ class GLMesh extends GLGeom {
     // if (debugAttrValues)
     //   maxIndex = Math.max(...indices);
     for (const attrName in geomBuffers.attrBuffers) {
-      const attrData = geomBuffers.attrBuffers[attrName];
+      const attrData = geomBuffers.attrBuffers[attrName]
 
-      const attrBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
+      const attrBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
+      gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
 
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
         dimension: attrData.dimension,
         normalized: attrData.normalized,
-      };
+      }
 
       if (attrName == 'textureCoords')
         this.__glattrbuffers['texCoords'] = this.__glattrbuffers[
           'textureCoords'
-        ];
+        ]
     }
   }
 
@@ -81,14 +81,14 @@ class GLMesh extends GLGeom {
    * @param {any} opts - The opts param.
    */
   updateBuffers(opts) {
-    const gl = this.__gl;
+    const gl = this.__gl
 
-    const geomBuffers = this.__geom.genBuffers({ includeIndices: false });
+    const geomBuffers = this.__geom.genBuffers({ includeIndices: false })
     for (const attrName in geomBuffers.attrBuffers) {
-      const attrData = geomBuffers.attrBuffers[attrName];
-      const glattr = this.__glattrbuffers[attrName];
-      gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
-      gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
+      const attrData = geomBuffers.attrBuffers[attrName]
+      const glattr = this.__glattrbuffers[attrName]
+      gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer)
+      gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
     }
   }
 
@@ -97,7 +97,7 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   getNumUnSplitVerts() {
-    return this.__geom.vertices.length;
+    return this.__geom.vertices.length
   }
 
   /**
@@ -105,7 +105,7 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   getNumSplitVerts() {
-    return this.__numRenderVerts;
+    return this.__numRenderVerts
   }
 
   // ////////////////////////////////
@@ -116,30 +116,30 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   generateWireframesVAO() {
-    if (!this.__vao) return false;
+    if (!this.__vao) return false
 
-    if (!this.__geom.edgeVerts) this.__geom.genTopologyInfo();
+    if (!this.__geom.edgeVerts) this.__geom.genTopologyInfo()
 
     // generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
     if (this.__wireframesVao)
-      this.__ext.deleteVertexArrayOES(this.__wireframesVao);
-    this.__wireframesVao = this.__ext.createVertexArrayOES();
-    this.__ext.bindVertexArrayOES(this.__wireframesVao);
+      this.__ext.deleteVertexArrayOES(this.__wireframesVao)
+    this.__wireframesVao = this.__ext.createVertexArrayOES()
+    this.__ext.bindVertexArrayOES(this.__wireframesVao)
 
-    const gl = this.__gl;
-    const wireframeIndexBuffer = gl.createBuffer();
-    const wireframeIndices = Uint32Array.from(this.__geom.edgeVerts);
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wireframeIndices, gl.STATIC_DRAW);
+    const gl = this.__gl
+    const wireframeIndexBuffer = gl.createBuffer()
+    const wireframeIndices = Uint32Array.from(this.__geom.edgeVerts)
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, wireframeIndexBuffer)
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, wireframeIndices, gl.STATIC_DRAW)
 
-    const positionsBuffer = this.__glattrbuffers['positions'].buffer;
-    gl.enableVertexAttribArray(0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0);
+    const positionsBuffer = this.__glattrbuffers['positions'].buffer
+    gl.enableVertexAttribArray(0)
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer)
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0)
 
-    this.__numWireIndices = wireframeIndices.length;
-    this.__ext.bindVertexArrayOES(null); // Note: is this necessary?
+    this.__numWireIndices = wireframeIndices.length
+    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
   }
 
   /**
@@ -148,16 +148,16 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   bindWireframeVAO(renderstate) {
-    if (this.__wireframesVao == undefined) return false;
-    this.__ext.bindVertexArrayOES(this.__wireframesVao);
-    return true;
+    if (this.__wireframesVao == undefined) return false
+    this.__ext.bindVertexArrayOES(this.__wireframesVao)
+    return true
   }
 
   /**
    * The unbindWireframeVAO method.
    */
   unbindWireframeVAO() {
-    this.__ext.bindVertexArrayOES(null); // Note: is this necessary?
+    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
   }
 
   /**
@@ -170,7 +170,7 @@ class GLMesh extends GLGeom {
         this.__numWireIndices,
         this.__gl.UNSIGNED_INT,
         0
-      );
+      )
   }
 
   // ////////////////////////////////
@@ -181,32 +181,32 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   generateHardEdgesVAO() {
-    if (!this.__vao) return false;
+    if (!this.__vao) return false
 
-    if (!this.__geom.edgeVerts) this.__geom.generateHardEdgesFlags();
+    if (!this.__geom.edgeVerts) this.__geom.generateHardEdgesFlags()
 
     // generate the wireframes VAO.
     // It can share buffers with the regular VAO, but provide a different index buffer.
     if (this.__hardEdgesVao)
-      this.__ext.deleteVertexArrayOES(this.__hardEdgesVao);
-    this.__hardEdgesVao = this.__ext.createVertexArrayOES();
-    this.__ext.bindVertexArrayOES(this.__hardEdgesVao);
+      this.__ext.deleteVertexArrayOES(this.__hardEdgesVao)
+    this.__hardEdgesVao = this.__ext.createVertexArrayOES()
+    this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
 
-    const gl = this.__gl;
-    const hardEdgeIndexBuffer = gl.createBuffer();
+    const gl = this.__gl
+    const hardEdgeIndexBuffer = gl.createBuffer()
     const hardEdgeIndices = Uint32Array.from(
       this.__geom.computeHardEdgesIndices()
-    );
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer);
-    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW);
+    )
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndexBuffer)
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, hardEdgeIndices, gl.STATIC_DRAW)
 
-    const positionsBuffer = this.__glattrbuffers['positions'].buffer;
-    gl.enableVertexAttribArray(0);
-    gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer);
-    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0);
+    const positionsBuffer = this.__glattrbuffers['positions'].buffer
+    gl.enableVertexAttribArray(0)
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionsBuffer)
+    gl.vertexAttribPointer(0, 3, gl.FLOAT, false, 3 * 4, 0)
 
-    this.__numEdgeIndices = hardEdgeIndices.length;
-    this.__ext.bindVertexArrayOES(null); // Note: is this necessary?
+    this.__numEdgeIndices = hardEdgeIndices.length
+    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
   }
 
   /**
@@ -215,16 +215,16 @@ class GLMesh extends GLGeom {
    * @return {any} - The return value.
    */
   bindHardEdgesVAO(renderstate) {
-    if (this.__hardEdgesVao == undefined) return false;
-    this.__ext.bindVertexArrayOES(this.__hardEdgesVao);
-    return true;
+    if (this.__hardEdgesVao == undefined) return false
+    this.__ext.bindVertexArrayOES(this.__hardEdgesVao)
+    return true
   }
 
   /**
    * The unbindHardEdgesVAO method.
    */
   unbindHardEdgesVAO() {
-    this.__ext.bindVertexArrayOES(null); // Note: is this necessary?
+    this.__ext.bindVertexArrayOES(null) // Note: is this necessary?
   }
 
   /**
@@ -237,7 +237,7 @@ class GLMesh extends GLGeom {
         this.__numEdgeIndices,
         this.__gl.UNSIGNED_INT,
         0
-      );
+      )
   }
 
   // ////////////////////////////////
@@ -247,7 +247,7 @@ class GLMesh extends GLGeom {
    * The drawPoints method.
    */
   drawPoints() {
-    this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices());
+    this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices())
   }
 
   // ////////////////////////////////
@@ -262,7 +262,7 @@ class GLMesh extends GLGeom {
       this.__numTriIndices,
       this.__indexDataType,
       0
-    );
+    )
   }
 
   /**
@@ -276,17 +276,17 @@ class GLMesh extends GLGeom {
       this.__indexDataType,
       0,
       instanceCount
-    );
+    )
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    super.destroy();
-    const gl = this.__gl;
-    gl.deleteBuffer(this.__indexBuffer);
-    this.__indexBuffer = undefined;
+    super.destroy()
+    const gl = this.__gl
+    gl.deleteBuffer(this.__indexBuffer)
+    this.__indexBuffer = undefined
     // if (this.__wireframesVao)
     //     gl.deleteVertexArray(this.__wireframesVao);
     // if (this.__hardEdgesVao)
@@ -294,5 +294,5 @@ class GLMesh extends GLGeom {
   }
 }
 
-export { GLMesh };
+export { GLMesh }
 // export default GLMesh;

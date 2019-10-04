@@ -1,4 +1,4 @@
-import { StateAction } from './StateAction.js';
+import { StateAction } from './StateAction.js'
 
 /** Class representing a state event.
  * @extends StateAction
@@ -9,10 +9,10 @@ class StateEvent extends StateAction {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super();
-    this.__name = name;
+    super()
+    this.__name = name
     // this.__childActions = [];
-    this.__onEvent = this.__onEvent.bind(this);
+    this.__onEvent = this.__onEvent.bind(this)
   }
 
   /**
@@ -21,9 +21,9 @@ class StateEvent extends StateAction {
    */
   __onEvent() {
     this.__childActions.forEach(action => {
-      action.activate();
-    });
+      action.activate()
+    })
   }
 }
 
-export { StateEvent };
+export { StateEvent }

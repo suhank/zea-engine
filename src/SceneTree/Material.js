@@ -1,8 +1,8 @@
-import { Vec2, Vec3, Color } from '../Math';
-import { Signal } from '../Utilities';
-import { BaseItem } from './BaseItem.js';
-import { BaseImage } from './BaseImage.js';
-import { sgFactory } from './SGFactory.js';
+import { Vec2, Vec3, Color } from '../Math'
+import { Signal } from '../Utilities'
+import { BaseItem } from './BaseItem.js'
+import { BaseImage } from './BaseImage.js'
+import { sgFactory } from './SGFactory.js'
 import {
   Parameter,
   NumberParameter,
@@ -11,7 +11,7 @@ import {
   ColorParameter,
   MaterialFloatParam,
   MaterialColorParam,
-} from './Parameters';
+} from './Parameters'
 
 const generateParameterInstance = (
   paramName,
@@ -24,24 +24,24 @@ const generateParameterInstance = (
     defaultValue === false ||
     defaultValue === true
   ) {
-    return new Parameter(paramName, defaultValue, 'Boolean');
+    return new Parameter(paramName, defaultValue, 'Boolean')
   } else if (typeof defaultValue == 'string') {
-    return new Parameter(paramName, defaultValue, 'String');
+    return new Parameter(paramName, defaultValue, 'String')
   } else if (Number.isNumeric(defaultValue)) {
     if (texturable)
-      return new MaterialFloatParam(paramName, defaultValue, range);
-    else return new NumberParameter(paramName, defaultValue, range);
+      return new MaterialFloatParam(paramName, defaultValue, range)
+    else return new NumberParameter(paramName, defaultValue, range)
   } else if (defaultValue instanceof Vec2) {
-    return new Vec2Parameter(paramName, defaultValue);
+    return new Vec2Parameter(paramName, defaultValue)
   } else if (defaultValue instanceof Vec3) {
-    return new Vec3Parameter(paramName, defaultValue);
+    return new Vec3Parameter(paramName, defaultValue)
   } else if (defaultValue instanceof Color) {
-    if (texturable) return new MaterialColorParam(paramName, defaultValue);
-    else return new ColorParameter(paramName, defaultValue);
+    if (texturable) return new MaterialColorParam(paramName, defaultValue)
+    else return new ColorParameter(paramName, defaultValue)
   } else {
-    return new Parameter(paramName, defaultValue);
+    return new Parameter(paramName, defaultValue)
   }
-};
+}
 
 /** Class representing a material.
  * @extends BaseItem
@@ -53,12 +53,12 @@ class Material extends BaseItem {
    * @param {any} shaderName - The shaderName value.
    */
   constructor(name, shaderName) {
-    super(name);
+    super(name)
 
-    this.shaderNameChanged = new Signal();
-    this.visibleInGeomDataBuffer = true;
+    this.shaderNameChanged = new Signal()
+    this.visibleInGeomDataBuffer = true
 
-    if (shaderName) this.setShaderName(shaderName);
+    if (shaderName) this.setShaderName(shaderName)
   }
 
   /**
@@ -66,7 +66,7 @@ class Material extends BaseItem {
    * @return {any} - The return value.
    */
   getShaderName() {
-    return this.__shaderName;
+    return this.__shaderName
   }
 
   /**
@@ -74,14 +74,14 @@ class Material extends BaseItem {
    * @param {any} shaderName - The shaderName param.
    */
   setShaderName(shaderName) {
-    if (this.__shaderName == shaderName) return;
+    if (this.__shaderName == shaderName) return
 
-    const shaderClass = sgFactory.getClass(shaderName);
+    const shaderClass = sgFactory.getClass(shaderName)
     if (!shaderClass)
-      throw new Error('Error setting Shader. Shader not found:' + shaderName);
+      throw new Error('Error setting Shader. Shader not found:' + shaderName)
 
-    const paramDescs = shaderClass.getParamDeclarations();
-    const paramMap = {};
+    const paramDescs = shaderClass.getParamDeclarations()
+    const paramMap = {}
     for (const desc of paramDescs) {
       // Note: some shaders specify default images. Like the speckle texture
       // on the car paint shader.
@@ -91,7 +91,7 @@ class Material extends BaseItem {
       //     image = desc.defaultValue;
       //     defaultValue = new Color();
       // }
-      let param = this.getParameter(desc.name);
+      let param = this.getParameter(desc.name)
       // if(param && param.getType() != desc.defaultValue)
       // removeParameter
       if (!param)
@@ -102,7 +102,7 @@ class Material extends BaseItem {
             desc.range,
             desc.texturable != false
           )
-        );
+        )
       // if(desc.texturable != false) {// By default, parameters are texturable. texturable must be set to false to disable texturing.
       //     if(!param.getImage)
       //         this.__makeParameterTexturable(param);
@@ -110,26 +110,26 @@ class Material extends BaseItem {
       //     //     param.setImage(image)
       // }
 
-      paramMap[desc.name] = true;
+      paramMap[desc.name] = true
     }
 
     // Remove redundant Params.
     for (const param of this.__params) {
       if (!paramMap[param.getName()]) {
-        this.removeParameter(param.getName());
+        this.removeParameter(param.getName())
       }
     }
 
-    this.__shaderName = shaderName;
-    this.shaderNameChanged.emit(this.__shaderName);
+    this.__shaderName = shaderName
+    this.shaderNameChanged.emit(this.__shaderName)
   }
 
   /**
    * The destroy method.
    */
   destroy() {
-    this.removeAllTextures();
-    super.destroy();
+    this.removeAllTextures()
+    super.destroy()
   }
 
   /**
@@ -138,8 +138,8 @@ class Material extends BaseItem {
   removeAllTextures() {
     for (const param of this.__params) {
       if (param.getImage && param.getImage()) {
-        param.getImage().removeRef(this);
-        param.setImage(undefined);
+        param.getImage().removeRef(this)
+        param.setImage(undefined)
       }
     }
   }
@@ -150,9 +150,9 @@ class Material extends BaseItem {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const cloned = new GeomItem();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new GeomItem()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 
   /**
@@ -161,11 +161,11 @@ class Material extends BaseItem {
    * @param {number} flags - The flags param.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
-    this.setShaderName(src.getShaderName());
+    super.copyFrom(src, flags)
+    this.setShaderName(src.getShaderName())
     for (const srcParam of src.getParameters()) {
-      const param = src.getParameter(srcParam.getName());
-      if (!srcParam.getImage) this.__makeParameterTexturable(param);
+      const param = src.getParameter(srcParam.getName())
+      if (!srcParam.getImage) this.__makeParameterTexturable(param)
     }
   }
 
@@ -177,12 +177,12 @@ class Material extends BaseItem {
    * @return {any} - The return value.
    */
   getParamTextures() {
-    const textures = {};
+    const textures = {}
     for (const param of this.__params) {
       if (param.getImage && param.getImage())
-        textures[param.getName()] = param.getImage();
+        textures[param.getName()] = param.getImage()
     }
-    return textures;
+    return textures
   }
 
   /**
@@ -191,7 +191,7 @@ class Material extends BaseItem {
    * @private
    */
   __makeParameterTexturable(param) {
-    makeParameterTexturable(param);
+    makeParameterTexturable(param)
     // param.textureConnected.connect(this.textureConnected.emit);
     // param.textureDisconnected.connect(this.textureDisconnected.emit);
   }
@@ -201,17 +201,17 @@ class Material extends BaseItem {
    * @return {boolean} - The return value.
    */
   isTransparent() {
-    const opacity = this.getParameter('Opacity');
+    const opacity = this.getParameter('Opacity')
     if (opacity && (opacity.getValue() < 0.99 || opacity.getImage()))
-      return true;
-    const baseColor = this.getParameter('BaseColor');
+      return true
+    const baseColor = this.getParameter('BaseColor')
     if (
       baseColor &&
       baseColor.getImage() &&
       baseColor.getImage().format == 'RGBA'
     )
-      return true;
-    return false;
+      return true
+    return false
   }
 
   /**
@@ -219,7 +219,7 @@ class Material extends BaseItem {
    * @return {any} - The return value.
    */
   getShaderClass() {
-    return sgFactory.getClass(this.getShaderName());
+    return sgFactory.getClass(this.getShaderName())
   }
 
   /**
@@ -228,14 +228,14 @@ class Material extends BaseItem {
    * @param {any} shaderName - The shaderName param.
    */
   modifyParams(paramValues, shaderName) {
-    if (shaderName) this.setShaderName(shaderName);
+    if (shaderName) this.setShaderName(shaderName)
     for (const paramName in paramValues) {
-      const param = this.getParameter(paramName);
+      const param = this.getParameter(paramName)
       if (param) {
         if (paramValues[paramName] instanceof Parameter) {
-          this.replaceParameter(paramValues[paramName]);
+          this.replaceParameter(paramValues[paramName])
         } else {
-          param.setValue(paramValues[paramName]);
+          param.setValue(paramValues[paramName])
         }
       } else {
         // Material Param not found....
@@ -254,7 +254,7 @@ class Material extends BaseItem {
    * @return {any} - The return value.
    */
   toJSON(context, flags = 0) {
-    return super.toJSON(context, flags);
+    return super.toJSON(context, flags)
   }
 
   /**
@@ -265,11 +265,11 @@ class Material extends BaseItem {
    */
   fromJSON(j, context = {}, flags = 0) {
     if (!j.shader) {
-      console.warn('Invalid Material JSON');
-      return;
+      console.warn('Invalid Material JSON')
+      return
     }
-    this.setShaderName(j.shader);
-    super.fromJSON(j, context, flags);
+    this.setShaderName(j.shader)
+    super.fromJSON(j, context, flags)
     // let props = this.__params;
     // for (let key in j) {
     //     let value;
@@ -289,61 +289,59 @@ class Material extends BaseItem {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    let shaderName = reader.loadStr();
+    let shaderName = reader.loadStr()
 
     if (shaderName == 'StandardMaterial') {
-      shaderName = 'StandardSurfaceShader';
+      shaderName = 'StandardSurfaceShader'
     }
     if (shaderName == 'TransparentMaterial') {
-      shaderName = 'TransparentSurfaceShader';
+      shaderName = 'TransparentSurfaceShader'
     }
-    this.setShaderName(shaderName);
+    this.setShaderName(shaderName)
 
     if (context.version < 3) {
-      this.setName(reader.loadStr());
+      this.setName(reader.loadStr())
 
       function capitalizeFirstLetter(string) {
-        return string.charAt(0).toUpperCase() + string.slice(1);
+        return string.charAt(0).toUpperCase() + string.slice(1)
       }
 
-      const numParams = reader.loadUInt32();
+      const numParams = reader.loadUInt32()
       for (let i = 0; i < numParams; i++) {
-        const paramName = capitalizeFirstLetter(reader.loadStr());
-        const paramType = reader.loadStr();
-        let value;
+        const paramName = capitalizeFirstLetter(reader.loadStr())
+        const paramType = reader.loadStr()
+        let value
         if (paramType == 'MaterialColorParam') {
-          value = reader.loadRGBAFloat32Color();
+          value = reader.loadRGBAFloat32Color()
           // If the value is in linear space, then we should convert it to gamma space.
           // Note: !! this should always be done in preprocessing...
-          value.applyGamma(2.2);
+          value.applyGamma(2.2)
         } else {
-          value = reader.loadFloat32();
+          value = reader.loadFloat32()
         }
-        const textureName = reader.loadStr();
+        const textureName = reader.loadStr()
 
         // console.log(paramName +":" + value);
-        let param = this.getParameter(paramName);
-        if (param) param.setValue(value);
+        let param = this.getParameter(paramName)
+        if (param) param.setValue(value)
         else
-          param = this.addParameter(
-            generateParameterInstance(paramName, value)
-          );
+          param = this.addParameter(generateParameterInstance(paramName, value))
         if (textureName != '' && param.setImage) {
           // if(!param.setImage)
           //     this.__makeParameterTexturable(param);
 
           if (context.materialLibrary.hasImage(textureName)) {
             // console.log(paramName +":" + textureName + ":" + context.materialLibrary[textureName].resourcePath);
-            param.setImage(context.materialLibrary.getImage(textureName));
+            param.setImage(context.materialLibrary.getImage(textureName))
           } else {
-            console.warn('Missing Texture:' + textureName);
+            console.warn('Missing Texture:' + textureName)
           }
         }
       }
     } else {
-      super.readBinary(reader, context);
+      super.readBinary(reader, context)
     }
   }
 }
-export { Material };
+export { Material }
 // Material;

@@ -1,6 +1,6 @@
-import { sgFactory } from '../SGFactory.js';
-import { Parameter } from './Parameter.js';
-import { QueryParameter } from './QueryParameter.js';
+import { sgFactory } from '../SGFactory.js'
+import { Parameter } from './Parameter.js'
+import { QueryParameter } from './QueryParameter.js'
 
 /** Class representing a query set.
  * @extends Parameter
@@ -11,8 +11,8 @@ class QuerySet extends Parameter {
    * @param {string} name - The name value.
    */
   constructor(name) {
-    super(name, undefined, 'QueryParameter');
-    this.__items = new Set();
+    super(name, undefined, 'QueryParameter')
+    this.__items = new Set()
   }
 
   /**
@@ -21,8 +21,8 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new QuerySet(this.__name, this.__filterFn);
-    return clonedParam;
+    const clonedParam = new QuerySet(this.__name, this.__filterFn)
+    return clonedParam
   }
 
   /**
@@ -31,7 +31,7 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   getItem(index) {
-    return Array.from(this.__items)[index];
+    return Array.from(this.__items)[index]
   }
 
   /**
@@ -41,11 +41,11 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   addItem(item, emit = true) {
-    if (this.__filterFn && !this.__filterFn(item)) return false;
-    item.valueChanged.connect(this.valueChanged.emit);
-    this.__items.add(item);
-    if (emit) this.valueChanged.emit();
-    return Array.from(this.__items).indexOf(item);
+    if (this.__filterFn && !this.__filterFn(item)) return false
+    item.valueChanged.connect(this.valueChanged.emit)
+    this.__items.add(item)
+    if (emit) this.valueChanged.emit()
+    return Array.from(this.__items).indexOf(item)
   }
 
   /**
@@ -55,12 +55,12 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   removeItem(item, emit = true) {
-    const items = Array.from(this.__items);
-    const index = items.indexOf(item);
-    items[index].valueChanged.disconnect(this.valueChanged.emit);
-    this.__items.delete(item);
-    if (emit) this.valueChanged.emit();
-    return index;
+    const items = Array.from(this.__items)
+    const index = items.indexOf(item)
+    items[index].valueChanged.disconnect(this.valueChanged.emit)
+    this.__items.delete(item)
+    if (emit) this.valueChanged.emit()
+    return index
   }
 
   /**
@@ -68,7 +68,7 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   getNumItems() {
-    return Array.from(this.__items).length;
+    return Array.from(this.__items).length
   }
 
   /**
@@ -76,7 +76,7 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   getValue() {
-    return this.__items;
+    return this.__items
   }
 
   // ////////////////////////////////////////
@@ -89,7 +89,7 @@ class QuerySet extends Parameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    return {};
+    return {}
   }
 
   /**
@@ -101,6 +101,6 @@ class QuerySet extends Parameter {
   fromJSON(j, context, flags) {}
 }
 
-sgFactory.registerClass('QuerySet', QuerySet);
+sgFactory.registerClass('QuerySet', QuerySet)
 
-export { QuerySet };
+export { QuerySet }

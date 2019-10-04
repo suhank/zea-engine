@@ -1,5 +1,5 @@
-import { Vec2 } from '../../Math';
-import { Parameter } from './Parameter.js';
+import { Vec2 } from '../../Math'
+import { Parameter } from './Parameter.js'
 
 /** Class representing a Vec2 parameter.
  * @extends Parameter
@@ -12,8 +12,8 @@ class Vec2Parameter extends Parameter {
    * @param {any} range - The range value.
    */
   constructor(name, value, range = undefined) {
-    super(name, value ? value : new Vec2(), 'Vec2');
-    this.__range = range;
+    super(name, value ? value : new Vec2(), 'Vec2')
+    this.__range = range
   }
 
   /**
@@ -22,7 +22,7 @@ class Vec2Parameter extends Parameter {
    */
   getRange() {
     // Range should be an array of 2 vec2s. [min(x,y), max(x,y)]
-    return this.__range;
+    return this.__range
   }
 
   /**
@@ -32,8 +32,8 @@ class Vec2Parameter extends Parameter {
    */
   __setRange(range) {
     // Should be an array [0, 20]
-    this.__range = range;
-    this.rangeChanged.emit();
+    this.__range = range
+    this.rangeChanged.emit()
   }
 
   /**
@@ -42,9 +42,9 @@ class Vec2Parameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new Vec2Parameter(this.__name, this.__value.clone());
-    return clonedParam;
+    const clonedParam = new Vec2Parameter(this.__name, this.__value.clone())
+    return clonedParam
   }
 }
 
-export { Vec2Parameter };
+export { Vec2Parameter }

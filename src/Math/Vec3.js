@@ -1,5 +1,5 @@
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
+import { AttrValue } from './AttrValue.js'
+import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing a Vec3.
  * @extends AttrValue
@@ -12,21 +12,21 @@ class Vec3 extends AttrValue {
    * @param {number} z - The y value.
    */
   constructor(x = 0, y = 0, z = 0) {
-    super();
+    super()
     if (x instanceof Float32Array || x instanceof Uint32Array) {
-      this.__data = x;
+      this.__data = x
     } else if (x instanceof ArrayBuffer) {
-      const buffer = x;
-      const byteOffset = y;
-      this.__data = new Float32Array(buffer, byteOffset, 3);
+      const buffer = x
+      const byteOffset = y
+      this.__data = new Float32Array(buffer, byteOffset, 3)
     } else if (x != null && typeof x == 'object') {
-      this.__data = new Float32Array(3);
-      this.fromJSON(x);
+      this.__data = new Float32Array(3)
+      this.fromJSON(x)
     } else {
-      this.__data = new Float32Array(3);
-      this.__data[0] = x;
-      this.__data[1] = y;
-      this.__data[2] = z;
+      this.__data = new Float32Array(3)
+      this.__data[0] = x
+      this.__data[1] = y
+      this.__data[2] = z
     }
   }
 
@@ -34,7 +34,7 @@ class Vec3 extends AttrValue {
    * Getter for x.
    */
   get x() {
-    return this.__data[0];
+    return this.__data[0]
   }
 
   /**
@@ -42,14 +42,14 @@ class Vec3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set x(val) {
-    this.__data[0] = val;
+    this.__data[0] = val
   }
 
   /**
    * Getter for y.
    */
   get y() {
-    return this.__data[1];
+    return this.__data[1]
   }
 
   /**
@@ -57,14 +57,14 @@ class Vec3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set y(val) {
-    this.__data[1] = val;
+    this.__data[1] = val
   }
 
   /**
    * Getter for z.
    */
   get z() {
-    return this.__data[2];
+    return this.__data[2]
   }
 
   /**
@@ -72,7 +72,7 @@ class Vec3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set z(val) {
-    this.__data[2] = val;
+    this.__data[2] = val
   }
 
   /**
@@ -82,9 +82,9 @@ class Vec3 extends AttrValue {
    * @param {number} z - The y param.
    */
   set(x, y, z) {
-    this.x = x;
-    this.y = y !== undefined ? y : x;
-    this.z = z !== undefined ? z : x;
+    this.x = x
+    this.y = y !== undefined ? y : x
+    this.z = z !== undefined ? z : x
   }
 
   /**
@@ -92,7 +92,7 @@ class Vec3 extends AttrValue {
    * @param {any} float32Array - The float32Array param.
    */
   setDataArray(float32Array) {
-    this.__data = float32Array;
+    this.__data = float32Array
   }
 
   /**
@@ -100,9 +100,9 @@ class Vec3 extends AttrValue {
    * @param {Vec3} other - The other param.
    */
   setFromOther(other) {
-    this.x = other.x;
-    this.y = other.y;
-    this.z = other.z;
+    this.x = other.x
+    this.y = other.y
+    this.z = other.z
   }
 
   /**
@@ -114,7 +114,7 @@ class Vec3 extends AttrValue {
       Math.abs(this.x) < Number.EPSILON &&
       Math.abs(this.y) < Number.EPSILON &&
       Math.abs(this.z) < Number.EPSILON
-    );
+    )
   }
 
   /**
@@ -126,7 +126,7 @@ class Vec3 extends AttrValue {
       Math.abs(1.0 - this.x) < Number.EPSILON &&
       Math.abs(1.0 - this.y) < Number.EPSILON &&
       Math.abs(1.0 - this.z) < Number.EPSILON
-    );
+    )
   }
 
   /**
@@ -136,7 +136,7 @@ class Vec3 extends AttrValue {
    * @return {boolean} - The return value.
    */
   equal(other, precision) {
-    return this.x == other.x && this.y == other.y && this.z == other.z;
+    return this.x == other.x && this.y == other.y && this.z == other.z
   }
 
   /**
@@ -146,7 +146,7 @@ class Vec3 extends AttrValue {
    * @return {boolean} - The return value.
    */
   notequals(other, precision) {
-    return this.x != other.x && this.y != other.y && this.z != other.z;
+    return this.x != other.x && this.y != other.y && this.z != other.z
   }
 
   /**
@@ -160,7 +160,7 @@ class Vec3 extends AttrValue {
       Math.abs(this.x - other.x) < Number.EPSILON &&
       Math.abs(this.y - other.y) < Number.EPSILON &&
       Math.abs(this.z - other.z) < Number.EPSILON
-    );
+    )
   }
 
   /**
@@ -169,7 +169,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   add(other) {
-    return new Vec3(this.x + other.x, this.y + other.y, this.z + other.z);
+    return new Vec3(this.x + other.x, this.y + other.y, this.z + other.z)
   }
 
   /**
@@ -177,9 +177,9 @@ class Vec3 extends AttrValue {
    * @param {Vec3} other - The other param.
    */
   addInPlace(other) {
-    this.x += other.x;
-    this.y += other.y;
-    this.z += other.z;
+    this.x += other.x
+    this.y += other.y
+    this.z += other.z
   }
 
   /**
@@ -188,7 +188,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   subtract(other) {
-    return new Vec3(this.x - other.x, this.y - other.y, this.z - other.z);
+    return new Vec3(this.x - other.x, this.y - other.y, this.z - other.z)
   }
 
   /**
@@ -196,9 +196,9 @@ class Vec3 extends AttrValue {
    * @param {Vec3} other - The other param.
    */
   subtractInPlace(other) {
-    this.x -= other.x;
-    this.y -= other.y;
-    this.z -= other.z;
+    this.x -= other.x
+    this.y -= other.y
+    this.z -= other.z
   }
 
   /**
@@ -207,7 +207,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   multiply(vec3) {
-    return new Vec3(this.x * vec3.x, this.y * vec3.y, this.z * vec3.z);
+    return new Vec3(this.x * vec3.x, this.y * vec3.y, this.z * vec3.z)
   }
 
   /**
@@ -215,9 +215,9 @@ class Vec3 extends AttrValue {
    * @param {Vec3} vec3 - The vec3 param.
    */
   multiplyInPlace(vec3) {
-    this.x *= vec3.x;
-    this.y *= vec3.y;
-    this.z *= vec3.z;
+    this.x *= vec3.x
+    this.y *= vec3.y
+    this.z *= vec3.z
   }
 
   /**
@@ -226,7 +226,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   divide(vec3) {
-    return new Vec3(this.x / vec3.x, this.y / vec3.y, this.z / vec3.z);
+    return new Vec3(this.x / vec3.x, this.y / vec3.y, this.z / vec3.z)
   }
 
   /**
@@ -234,9 +234,9 @@ class Vec3 extends AttrValue {
    * @param {Vec3} vec3 - The vec3 param.
    */
   divideInPlace(vec3) {
-    this.x /= vec3.x;
-    this.y /= vec3.y;
-    this.z /= vec3.z;
+    this.x /= vec3.x
+    this.y /= vec3.y
+    this.z /= vec3.z
   }
 
   /**
@@ -245,7 +245,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   scale(scalar) {
-    return new Vec3(this.x * scalar, this.y * scalar, this.z * scalar);
+    return new Vec3(this.x * scalar, this.y * scalar, this.z * scalar)
   }
 
   /**
@@ -253,9 +253,9 @@ class Vec3 extends AttrValue {
    * @param {any} scalar - The scalar param.
    */
   scaleInPlace(scalar) {
-    this.x *= scalar;
-    this.y *= scalar;
-    this.z *= scalar;
+    this.x *= scalar
+    this.y *= scalar
+    this.z *= scalar
   }
 
   /**
@@ -263,7 +263,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   negate() {
-    return new Vec3(-this.x, -this.y, -this.z);
+    return new Vec3(-this.x, -this.y, -this.z)
   }
 
   /**
@@ -272,7 +272,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   inverse(vec3) {
-    return new Vec3(1.0 / this.x, 1.0 / this.y, 1.0 / this.z);
+    return new Vec3(1.0 / this.x, 1.0 / this.y, 1.0 / this.z)
   }
 
   /**
@@ -280,10 +280,10 @@ class Vec3 extends AttrValue {
    * @return {number} - The length of a.
    */
   lengthSquared() {
-    const x = this.__data[0];
-    const y = this.__data[1];
-    const z = this.__data[2];
-    return x * x + y * y + z * z;
+    const x = this.__data[0]
+    const y = this.__data[1]
+    const z = this.__data[2]
+    return x * x + y * y + z * z
   }
 
   /**
@@ -291,7 +291,7 @@ class Vec3 extends AttrValue {
    * @return {number} - The length of a.
    */
   length() {
-    return Math.sqrt(this.lengthSquared());
+    return Math.sqrt(this.lengthSquared())
   }
 
   /**
@@ -300,10 +300,10 @@ class Vec3 extends AttrValue {
    * @return {number} - the return value.
    */
   distanceTo(other) {
-    const x = this.__data[0] - other.x;
-    const y = this.__data[1] - other.y;
-    const z = this.__data[2] - other.z;
-    return Math.sqrt(x * x + y * y + z * z);
+    const x = this.__data[0] - other.x
+    const y = this.__data[1] - other.y
+    const z = this.__data[2] - other.z
+    return Math.sqrt(x * x + y * y + z * z)
   }
 
   /**
@@ -314,18 +314,18 @@ class Vec3 extends AttrValue {
     let len =
       this.__data[0] * this.__data[0] +
       this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2];
+      this.__data[2] * this.__data[2]
     if (len < Number.EPSILON) {
-      return new Vec3();
+      return new Vec3()
     }
 
     // TODO: evaluate use of glm_invsqrt here?
-    len = 1.0 / Math.sqrt(len);
+    len = 1.0 / Math.sqrt(len)
     return new Vec3(
       this.__data[0] * len,
       this.__data[1] * len,
       this.__data[2] * len
-    );
+    )
   }
 
   /**
@@ -337,16 +337,16 @@ class Vec3 extends AttrValue {
     let len =
       this.__data[0] * this.__data[0] +
       this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2];
+      this.__data[2] * this.__data[2]
     if (len < Number.EPSILON) {
-      return;
+      return
     }
-    len = Math.sqrt(len);
-    const tmp = 1.0 / len;
-    this.__data[0] *= tmp;
-    this.__data[1] *= tmp;
-    this.__data[2] *= tmp;
-    return len;
+    len = Math.sqrt(len)
+    const tmp = 1.0 / len
+    this.__data[0] *= tmp
+    this.__data[1] *= tmp
+    this.__data[2] *= tmp
+    return len
   }
 
   /**
@@ -358,16 +358,16 @@ class Vec3 extends AttrValue {
     const currlen =
       this.__data[0] * this.__data[0] +
       this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2];
+      this.__data[2] * this.__data[2]
     if (currlen < Number.EPSILON) {
-      return;
+      return
     }
-    const scl = length / Math.sqrt(currlen);
+    const scl = length / Math.sqrt(currlen)
     return new Vec3(
       this.__data[0] * scl,
       this.__data[1] * scl,
       this.__data[2] * scl
-    );
+    )
   }
 
   /**
@@ -378,14 +378,14 @@ class Vec3 extends AttrValue {
     const currlen =
       this.__data[0] * this.__data[0] +
       this.__data[1] * this.__data[1] +
-      this.__data[2] * this.__data[2];
+      this.__data[2] * this.__data[2]
     if (currlen < Number.EPSILON) {
-      return;
+      return
     }
-    const scl = length / Math.sqrt(currlen);
-    this.__data[0] *= scl;
-    this.__data[1] *= scl;
-    this.__data[2] *= scl;
+    const scl = length / Math.sqrt(currlen)
+    this.__data[0] *= scl
+    this.__data[1] *= scl
+    this.__data[2] *= scl
   }
 
   /**
@@ -394,7 +394,7 @@ class Vec3 extends AttrValue {
    * @return {number} - The dot product of a and b.
    */
   dot(b) {
-    return this.x * b.x + this.y * b.y + this.z * b.z;
+    return this.x * b.x + this.y * b.y + this.z * b.z
   }
 
   /**
@@ -403,14 +403,14 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   cross(b) {
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
-    const bx = b.x;
-    const by = b.y;
-    const bz = b.z;
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
+    const bx = b.x
+    const by = b.y
+    const bz = b.z
 
-    return new Vec3(ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx);
+    return new Vec3(ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx)
   }
 
   /**
@@ -419,11 +419,11 @@ class Vec3 extends AttrValue {
    * @return {number} - The angle in radians.
    */
   angleTo(b) {
-    const cosine = this.dot(b);
+    const cosine = this.dot(b)
     if (cosine > 1.0) {
-      return 0;
+      return 0
     } else {
-      return Math.acos(cosine);
+      return Math.acos(cosine)
     }
   }
 
@@ -434,14 +434,14 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   lerp(b, t) {
-    const ax = this.x;
-    const ay = this.y;
-    const az = this.z;
+    const ax = this.x
+    const ay = this.y
+    const az = this.z
     return new Vec3(
       ax + t * (b.x - ax),
       ay + t * (b.y - ay),
       az + t * (b.z - az)
-    );
+    )
   }
 
   /**
@@ -449,7 +449,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   abs() {
-    return new Vec3(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z));
+    return new Vec3(Math.abs(this.x), Math.abs(this.y), Math.abs(this.z))
   }
 
   /**
@@ -458,14 +458,14 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The random Vec3.
    */
   setRandomDir(scale = 1.0) {
-    const r = Math.random() * 2.0 * Math.PI;
-    const z = Math.random() * 2.0 - 1.0;
-    const zScale = Math.sqrt(1.0 - z * z) * scale;
+    const r = Math.random() * 2.0 * Math.PI
+    const z = Math.random() * 2.0 - 1.0
+    const zScale = Math.sqrt(1.0 - z * z) * scale
 
-    this.__data[0] = Math.cos(r) * zScale;
-    this.__data[1] = Math.sin(r) * zScale;
-    this.__data[2] = z * scale;
-    return this;
+    this.__data[0] = Math.cos(r) * zScale
+    this.__data[1] = Math.sin(r) * zScale
+    this.__data[2] = z * scale
+    return this
   }
 
   /**
@@ -474,10 +474,10 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The random Vec3.
    */
   setRandom(scale = 1.0) {
-    this.__data[0] = (Math.random() - 0.5) * scale;
-    this.__data[1] = (Math.random() - 0.5) * scale;
-    this.__data[2] = (Math.random() - 0.5) * scale;
-    return this;
+    this.__data[0] = (Math.random() - 0.5) * scale
+    this.__data[1] = (Math.random() - 0.5) * scale
+    this.__data[2] = (Math.random() - 0.5) * scale
+    return this
   }
 
   /**
@@ -485,7 +485,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   clone() {
-    return new Vec3(this.__data[0], this.__data[1], this.__data[2]);
+    return new Vec3(this.__data[0], this.__data[1], this.__data[2])
   }
 
   /**
@@ -493,7 +493,7 @@ class Vec3 extends AttrValue {
    * @return {any} - The return value.
    */
   asArray() {
-    return this.__data;
+    return this.__data
   }
 
   // ////////////////////////////////////////
@@ -505,7 +505,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   static create(...args) {
-    return new Vec3(...args);
+    return new Vec3(...args)
   }
 
   /**
@@ -514,9 +514,9 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   static createFromJSON(json) {
-    const result = new Vec3();
-    result.fromJSON(json);
-    return result;
+    const result = new Vec3()
+    result.fromJSON(json)
+    return result
   }
 
   /**
@@ -526,7 +526,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec3(buffer, offset * 4); // 4 bytes per 32bit float
+    return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
   }
 
   /**
@@ -535,7 +535,7 @@ class Vec3 extends AttrValue {
    * @return {Vec3} - The return value.
    */
   static createFromFloat32Array(array) {
-    return new Vec3(array);
+    return new Vec3(array)
   }
 
   /**
@@ -543,7 +543,7 @@ class Vec3 extends AttrValue {
    * @return {number} - The return value.
    */
   static numFloat32Elements() {
-    return 3;
+    return 3
   }
 
   // ///////////////////////////
@@ -558,7 +558,7 @@ class Vec3 extends AttrValue {
       x: this.x,
       y: this.y,
       z: this.z,
-    };
+    }
   }
 
   /**
@@ -566,13 +566,13 @@ class Vec3 extends AttrValue {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.x = j.x;
-    this.y = j.y;
-    this.z = j.z;
+    this.x = j.x
+    this.y = j.y
+    this.z = j.z
   }
 }
 
-typeRegistry.registerType('Vec3', Vec3);
+typeRegistry.registerType('Vec3', Vec3)
 
-export { Vec3 };
+export { Vec3 }
 // export default Vec3;

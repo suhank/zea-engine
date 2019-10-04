@@ -1,7 +1,7 @@
-import { Vec3 } from '../Math/Vec3';
-import { GLGeom } from './GLGeom.js';
-import { generateShaderGeomBinding } from './GeomShaderBinding.js';
-import { GLTexture2D } from './GLTexture2D.js';
+import { Vec3 } from '../Math/Vec3'
+import { GLGeom } from './GLGeom.js'
+import { generateShaderGeomBinding } from './GeomShaderBinding.js'
+import { GLTexture2D } from './GLTexture2D.js'
 
 /** Class representing GL lines.
  * @extends GLGeom
@@ -13,47 +13,47 @@ class GLLines extends GLGeom {
    * @param {any} lines - The geom value.
    */
   constructor(gl, lines) {
-    super(gl, lines);
+    super(gl, lines)
 
     this.fatLines =
       (lines.lineThickness > 0 ||
         this.__geom.getVertexAttributes().lineThickness != undefined) &&
-      gl.floatTexturesSupported;
-    this.genBuffers();
+      gl.floatTexturesSupported
+    this.genBuffers()
   }
 
   /**
    * The genBuffers method.
    */
   genBuffers() {
-    super.genBuffers();
+    super.genBuffers()
 
-    const gl = this.__gl;
-    const geomBuffers = this.__geom.genBuffers();
-    const indices = geomBuffers.indices;
+    const gl = this.__gl
+    const geomBuffers = this.__geom.genBuffers()
+    const indices = geomBuffers.indices
 
     if (this.fatLines) {
       if (!gl.__quadVertexIdsBuffer) {
-        gl.setupInstancedQuad();
+        gl.setupInstancedQuad()
       }
-      this.__glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs;
+      this.__glattrbuffers.vertexIDs = gl.__quadattrbuffers.vertexIDs
 
-      this.__drawCount = indices.length / 2;
+      this.__drawCount = indices.length / 2
 
-      const vertexAttributes = this.__geom.getVertexAttributes();
-      const positions = vertexAttributes.positions;
-      const lineThicknessAttr = vertexAttributes.lineThickness;
+      const vertexAttributes = this.__geom.getVertexAttributes()
+      const positions = vertexAttributes.positions
+      const lineThicknessAttr = vertexAttributes.lineThickness
 
-      const stride = 4; // The number of floats per draw item.
-      const dataArray = new Float32Array(positions.length * stride);
+      const stride = 4 // The number of floats per draw item.
+      const dataArray = new Float32Array(positions.length * stride)
       for (let i = 0; i < positions.length; i++) {
-        const pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
-        pos.setFromOther(positions.getValueRef(i));
+        const pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4)
+        pos.setFromOther(positions.getValueRef(i))
 
         // The thickness of the line.
         if (lineThicknessAttr)
-          dataArray[i * 4 + 3] = lineThicknessAttr.getFloat32Value(i);
-        else dataArray[i * 4 + 3] = this.__geom.lineThickness;
+          dataArray[i * 4 + 3] = lineThicknessAttr.getFloat32Value(i)
+        else dataArray[i * 4 + 3] = this.__geom.lineThickness
       }
       this.__positionsTexture = new GLTexture2D(gl, {
         format: 'RGBA',
@@ -65,63 +65,63 @@ class GLLines extends GLGeom {
         wrap: 'CLAMP_TO_EDGE',
         data: dataArray,
         mipMapped: false,
-      });
+      })
 
-      const indexArray = new Float32Array(indices.length);
+      const indexArray = new Float32Array(indices.length)
       for (let i = 0; i < indices.length; i++) {
-        let seqentialIndex;
+        let seqentialIndex
         if (i % 2 == 0) {
           seqentialIndex =
             i > 0
               ? indices[i] == indices[i - 1]
-              : indices[i] == indices[indices.length - 1];
+              : indices[i] == indices[indices.length - 1]
         } else {
           seqentialIndex =
             i < indices.length - 1
               ? indices[i] == indices[i + 1]
-              : indices[i] == indices[0];
+              : indices[i] == indices[0]
         }
         // encode the flag into the indices values.
         // this flag is decoded in GLSL.
-        indexArray[i] = (seqentialIndex ? 1 : 0) + indices[i] * 2;
+        indexArray[i] = (seqentialIndex ? 1 : 0) + indices[i] * 2
       }
-      const indexBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+      const indexBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ARRAY_BUFFER, indexBuffer)
+      gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW)
 
       this.__glattrbuffers.segmentIndices = {
         buffer: indexBuffer,
         dimension: 2,
-      };
+      }
     } else {
-      this.__indexBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
-      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+      this.__indexBuffer = gl.createBuffer()
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
 
       for (const attrName in geomBuffers.attrBuffers) {
-        const attrData = geomBuffers.attrBuffers[attrName];
+        const attrData = geomBuffers.attrBuffers[attrName]
 
-        const attrBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
+        const attrBuffer = gl.createBuffer()
+        gl.bindBuffer(gl.ARRAY_BUFFER, attrBuffer)
+        gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
 
         this.__glattrbuffers[attrName] = {
           buffer: attrBuffer,
           dimension: attrData.dimension,
-        };
+        }
       }
 
       // Cache the size so we know later if it changed (see below)
-      this.__numSegIndices = indices.length;
-      this.__numVertices = geomBuffers.numVertices;
+      this.__numSegIndices = indices.length
+      this.__numVertices = geomBuffers.numVertices
     }
 
     if (indices instanceof Uint8Array)
-      this.__indexDataType = this.__gl.UNSIGNED_BYTE;
+      this.__indexDataType = this.__gl.UNSIGNED_BYTE
     if (indices instanceof Uint16Array)
-      this.__indexDataType = this.__gl.UNSIGNED_SHORT;
+      this.__indexDataType = this.__gl.UNSIGNED_SHORT
     if (indices instanceof Uint32Array)
-      this.__indexDataType = this.__gl.UNSIGNED_INT;
+      this.__indexDataType = this.__gl.UNSIGNED_INT
   }
 
   /**
@@ -129,85 +129,82 @@ class GLLines extends GLGeom {
    * @param {any} opts - The opts param.
    */
   updateBuffers(opts) {
-    const gl = this.__gl;
-    const geomBuffers = this.__geom.genBuffers();
-    const indices = geomBuffers.indices;
+    const gl = this.__gl
+    const geomBuffers = this.__geom.genBuffers()
+    const indices = geomBuffers.indices
 
     if (this.fatLines) {
-      this.__drawCount = indices.length / 2; // every pair of verts draws a quad.
+      this.__drawCount = indices.length / 2 // every pair of verts draws a quad.
 
-      const vertexAttributes = this.__geom.getVertexAttributes();
+      const vertexAttributes = this.__geom.getVertexAttributes()
 
-      const positions = vertexAttributes.positions;
-      const lineThicknessAttr = vertexAttributes.lineThickness;
+      const positions = vertexAttributes.positions
+      const lineThicknessAttr = vertexAttributes.lineThickness
 
-      const stride = 4; // The number of floats per draw item.
-      const dataArray = new Float32Array(positions.length * stride);
+      const stride = 4 // The number of floats per draw item.
+      const dataArray = new Float32Array(positions.length * stride)
       for (let i = 0; i < positions.length; i++) {
-        const pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4);
-        pos.setFromOther(positions.getValueRef(i));
+        const pos = Vec3.createFromFloat32Buffer(dataArray.buffer, i * 4)
+        pos.setFromOther(positions.getValueRef(i))
 
         // The thickness of the line.
         if (lineThicknessAttr)
-          dataArray[i * 4 + 3] = lineThicknessAttr.getFloat32Value(i);
-        else dataArray[i * 4 + 3] = this.__geom.lineThickness;
+          dataArray[i * 4 + 3] = lineThicknessAttr.getFloat32Value(i)
+        else dataArray[i * 4 + 3] = this.__geom.lineThickness
       }
 
-      this.__positionsTexture.bufferData(dataArray, positions.length, 1);
+      this.__positionsTexture.bufferData(dataArray, positions.length, 1)
 
-      const indexArray = new Float32Array(indices.length);
+      const indexArray = new Float32Array(indices.length)
       for (let i = 0; i < indices.length; i++) {
-        let seqentialIndex;
-        if (i % 2 == 0) seqentialIndex = i > 0 && indices[i] == indices[i - 1];
+        let seqentialIndex
+        if (i % 2 == 0) seqentialIndex = i > 0 && indices[i] == indices[i - 1]
         else
           seqentialIndex =
-            i < indices.length - 1 && indices[i] == indices[i + 1];
-        indexArray[i] = (seqentialIndex ? 1 : 0) + indices[i] * 2;
+            i < indices.length - 1 && indices[i] == indices[i + 1]
+        indexArray[i] = (seqentialIndex ? 1 : 0) + indices[i] * 2
       }
 
-      gl.bindBuffer(
-        gl.ARRAY_BUFFER,
-        this.__glattrbuffers.segmentIndices.buffer
-      );
-      gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.__glattrbuffers.segmentIndices.buffer)
+      gl.bufferData(gl.ARRAY_BUFFER, indexArray, gl.STATIC_DRAW)
     } else {
-      const vertexAttributes = this.__geom.getVertexAttributes();
+      const vertexAttributes = this.__geom.getVertexAttributes()
 
       if (opts && opts.indicesChanged) {
-        const indices = this.__geom.getIndices();
+        const indices = this.__geom.getIndices()
         if (this.__numSegIndices != indices.length) {
-          gl.deleteBuffer(this.__indexBuffer);
-          this.__indexBuffer = gl.createBuffer();
+          gl.deleteBuffer(this.__indexBuffer)
+          this.__indexBuffer = gl.createBuffer()
         }
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
-        this.__numSegIndices = indices.length;
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.__indexBuffer)
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW)
+        this.__numSegIndices = indices.length
       }
 
       // Update the vertex attribute buffers
-      const numVertsChanged = geomBuffers.numVertices != this.__numVertices;
+      const numVertsChanged = geomBuffers.numVertices != this.__numVertices
       for (const attrName in geomBuffers.attrBuffers) {
-        const attrData = geomBuffers.attrBuffers[attrName];
-        const glattr = this.__glattrbuffers[attrName];
+        const attrData = geomBuffers.attrBuffers[attrName]
+        const glattr = this.__glattrbuffers[attrName]
         if (numVertsChanged) {
-          gl.deleteBuffer(glattr.buffer);
-          glattr.buffer = gl.createBuffer();
+          gl.deleteBuffer(glattr.buffer)
+          glattr.buffer = gl.createBuffer()
         }
-        gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer);
-        gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW);
+        gl.bindBuffer(gl.ARRAY_BUFFER, glattr.buffer)
+        gl.bufferData(gl.ARRAY_BUFFER, attrData.values, gl.STATIC_DRAW)
       }
 
       // Cache the size so we know later if it changed (see below)
-      this.__numVertices = geomBuffers.numVertices;
-      this.__numSegIndices = indices.length;
+      this.__numVertices = geomBuffers.numVertices
+      this.__numSegIndices = indices.length
     }
 
     if (indices instanceof Uint8Array)
-      this.__indexDataType = this.__gl.UNSIGNED_BYTE;
+      this.__indexDataType = this.__gl.UNSIGNED_BYTE
     if (indices instanceof Uint16Array)
-      this.__indexDataType = this.__gl.UNSIGNED_SHORT;
+      this.__indexDataType = this.__gl.UNSIGNED_SHORT
     if (indices instanceof Uint32Array)
-      this.__indexDataType = this.__gl.UNSIGNED_INT;
+      this.__indexDataType = this.__gl.UNSIGNED_INT
   }
 
   /**
@@ -219,44 +216,44 @@ class GLLines extends GLGeom {
     if (this.fatLines && 'LineThickness' in renderstate.unifs) {
       // TODO: Provide a geomdata shader for thick lines.
 
-      const gl = this.__gl;
+      const gl = this.__gl
 
-      let shaderBinding = this.__shaderBindings[renderstate.shaderkey];
+      let shaderBinding = this.__shaderBindings[renderstate.shaderkey]
       if (!shaderBinding) {
         shaderBinding = generateShaderGeomBinding(
           gl,
           renderstate.attrs,
           this.__glattrbuffers,
           gl.__quadIndexBuffer
-        );
-        this.__shaderBindings[renderstate.shaderkey] = shaderBinding;
+        )
+        this.__shaderBindings[renderstate.shaderkey] = shaderBinding
       }
-      shaderBinding.bind(renderstate);
+      shaderBinding.bind(renderstate)
 
-      const usePositionsTexture = true;
+      const usePositionsTexture = true
       if (usePositionsTexture) {
-        const unifs = renderstate.unifs;
+        const unifs = renderstate.unifs
         if (unifs.positionsTexture) {
           this.__positionsTexture.bindToUniform(
             renderstate,
             unifs.positionsTexture
-          );
+          )
           gl.uniform1i(
             unifs.positionsTextureSize.location,
             this.__positionsTexture.width
-          );
+          )
         }
       }
 
-      const unifs = renderstate.unifs;
+      const unifs = renderstate.unifs
       gl.uniform1f(
         unifs.LineThickness.location,
         (this.__geom.lineThickness ? this.__geom.lineThickness : 1.0) *
           renderstate.viewScale
-      );
-      return true;
+      )
+      return true
     } else {
-      return super.bind(renderstate);
+      return super.bind(renderstate)
     }
   }
 
@@ -267,7 +264,7 @@ class GLLines extends GLGeom {
    * The drawPoints method.
    */
   drawPoints() {
-    this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices());
+    this.__gl.drawArrays(this.__gl.POINTS, 0, this.__geom.numVertices())
   }
 
   // ////////////////////////////////
@@ -278,7 +275,7 @@ class GLLines extends GLGeom {
    * @param {any} renderstate - The renderstate param.
    */
   draw(renderstate) {
-    const gl = this.__gl;
+    const gl = this.__gl
     if (this.fatLines) {
       if (renderstate.unifs.LineThickness)
         gl.drawElementsInstanced(
@@ -287,7 +284,7 @@ class GLLines extends GLGeom {
           gl.UNSIGNED_SHORT,
           0,
           this.__drawCount
-        );
+        )
 
       // Note: We don't have a solution for drawing fat lines to the geom data buffer.
     } else {
@@ -296,7 +293,7 @@ class GLLines extends GLGeom {
         this.__numSegIndices,
         this.__indexDataType,
         0
-      );
+      )
     }
   }
 
@@ -311,9 +308,9 @@ class GLLines extends GLGeom {
       this.__indexDataType,
       0,
       instanceCount
-    );
+    )
   }
 }
 
-export { GLLines };
+export { GLLines }
 // export default GLLines;

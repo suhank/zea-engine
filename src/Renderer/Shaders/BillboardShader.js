@@ -1,18 +1,16 @@
-import {
-  shaderLibrary
-} from '../ShaderLibrary.js';
-import {
-  GLShader
-} from '../GLShader.js';
+import { shaderLibrary } from '../ShaderLibrary.js'
+import { GLShader } from '../GLShader.js'
 
-import './GLSL/stack-gl/inverse.js';
-import './GLSL/stack-gl/transpose.js';
-import './GLSL/materialparams.js';
+import './GLSL/stack-gl/inverse.js'
+import './GLSL/stack-gl/transpose.js'
+import './GLSL/materialparams.js'
 
 class BillboardShader extends GLShader {
   constructor(gl) {
-    super(gl);
-    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader('BillboardShader.vertexShader', `
+    super(gl)
+    this.__shaderStages['VERTEX_SHADER'] = shaderLibrary.parseShader(
+      'BillboardShader.vertexShader',
+      `
 precision highp float;
 
 
@@ -136,9 +134,12 @@ void main(void) {
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
   }
 }
-`);
+`
+    )
 
-    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader('BillboardShader.fragmentShader', `
+    this.__shaderStages['FRAGMENT_SHADER'] = shaderLibrary.parseShader(
+      'BillboardShader.fragmentShader',
+      `
 precision highp float;
 
 <%include file="stack-gl/gamma.glsl"/>
@@ -172,10 +173,9 @@ void main(void) {
   gl_FragColor = fragColor;
 #endif
 }
-`);
+`
+    )
   }
-};
+}
 
-export {
-  BillboardShader
-};
+export { BillboardShader }

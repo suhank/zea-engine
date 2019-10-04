@@ -1,10 +1,10 @@
-import { JSON_stringify_fixedPrecision } from './Common.js';
-import { Vec3 } from './Vec3.js';
-import { Mat4 } from './Mat4.js';
-import { Quat } from './Quat.js';
-import { typeRegistry } from './TypeRegistry.js';
+import { JSON_stringify_fixedPrecision } from './Common.js'
+import { Vec3 } from './Vec3.js'
+import { Mat4 } from './Mat4.js'
+import { Quat } from './Quat.js'
+import { typeRegistry } from './TypeRegistry.js'
 
-const sc_helper = new Vec3(1, 1, 1);
+const sc_helper = new Vec3(1, 1, 1)
 
 /** Class representing an Xfo. */
 class Xfo {
@@ -16,28 +16,28 @@ class Xfo {
    */
   constructor(tr = undefined, ori = undefined, sc = undefined) {
     if (tr instanceof Float32Array) {
-      this.setFromFloat32Array(tr);
-      return;
+      this.setFromFloat32Array(tr)
+      return
     }
     if (tr instanceof Vec3) {
-      this.tr = tr;
+      this.tr = tr
     } else if (tr instanceof Quat && ori == undefined && sc == undefined) {
-      this.tr = new Vec3();
-      this.ori = tr; // Xfo constructor with just a Quat.
-      this.sc = new Vec3(1, 1, 1);
-      return;
+      this.tr = new Vec3()
+      this.ori = tr // Xfo constructor with just a Quat.
+      this.sc = new Vec3(1, 1, 1)
+      return
     } else {
-      this.tr = new Vec3();
+      this.tr = new Vec3()
     }
     if (ori instanceof Quat) {
-      this.ori = ori;
+      this.ori = ori
     } else {
-      this.ori = new Quat();
+      this.ori = new Quat()
     }
     if (sc instanceof Vec3) {
-      this.sc = sc;
+      this.sc = sc
     } else {
-      this.sc = new Vec3(1, 1, 1);
+      this.sc = new Vec3(1, 1, 1)
     }
   }
 
@@ -48,9 +48,9 @@ class Xfo {
    * @param {any} sc - The sc value.
    */
   set(tr, ori, sc = undefined) {
-    this.tr = tr;
-    this.ori = ori;
-    if (sc instanceof Vec3) this.sc = sc;
+    this.tr = tr
+    this.ori = ori
+    if (sc instanceof Vec3) this.sc = sc
   }
 
   /**
@@ -58,9 +58,9 @@ class Xfo {
    * @param {any} other - The other param.
    */
   setFromOther(other) {
-    this.tr = other.tr;
-    this.ori = other.ori;
-    this.sc = other.sc;
+    this.tr = other.tr
+    this.ori = other.ori
+    this.sc = other.sc
   }
 
   /**
@@ -68,7 +68,7 @@ class Xfo {
    * @return {any} - The return value.
    */
   isIdentity() {
-    return this.tr.isNull() && this.ori.isIdentity() && this.sc.is111();
+    return this.tr.isNull() && this.ori.isIdentity() && this.sc.is111()
   }
 
   /**
@@ -79,14 +79,14 @@ class Xfo {
    */
   setLookAt(pos, target, up) {
     // Note: We look along the -z axis. Negate the direction.
-    const dir = pos.subtract(target);
-    const dirLen = dir.length();
+    const dir = pos.subtract(target)
+    const dirLen = dir.length()
     if (dirLen < Number.EPSILON) {
-      throw new Error('Invalid dir');
-      return;
+      throw new Error('Invalid dir')
+      return
     }
-    this.ori.setFromDirectionAndUpvector(dir, up);
-    this.tr = pos;
+    this.ori.setFromDirectionAndUpvector(dir, up)
+    this.tr = pos
   }
 
   /**
@@ -105,7 +105,7 @@ class Xfo {
       ) {
         console.warn(
           'Xfo.multiply: Cannot multiply to xfos with non-uniform scaling without causing shearing. Use Mat44s instead.'
-        );
+        )
       }
     }
 
@@ -117,8 +117,8 @@ class Xfo {
       this.tr.add(this.ori.rotateVec3(this.sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
       this.sc.multiply(xfo.sc)
-    );
-    return result;
+    )
+    return result
   }
 
   /**
@@ -126,11 +126,11 @@ class Xfo {
    * @return {any} - The return value.
    */
   inverse() {
-    const result = new Xfo();
-    result.sc = this.sc.inverse();
-    result.ori = this.ori.inverse();
-    result.tr = result.ori.rotateVec3(this.tr.negate().multiply(result.sc));
-    return result;
+    const result = new Xfo()
+    result.sc = this.sc.inverse()
+    result.ori = this.ori.inverse()
+    result.tr = result.ori.rotateVec3(this.tr.negate().multiply(result.sc))
+    return result
   }
 
   /**
@@ -139,7 +139,7 @@ class Xfo {
    * @return {any} - The return value.
    */
   transformVec3(vec3) {
-    return this.tr.add(this.ori.rotateVec3(this.sc.multiply(vec3)));
+    return this.tr.add(this.ori.rotateVec3(this.sc.multiply(vec3)))
   }
 
   /**
@@ -164,14 +164,14 @@ class Xfo {
       0,
       0,
       1.0
-    );
+    )
 
-    const rot = this.ori.toMat4();
+    const rot = this.ori.toMat4()
 
-    const trn = new Mat4();
-    trn.translation = this.tr;
+    const trn = new Mat4()
+    trn.translation = this.tr
 
-    return trn.multiply(rot).multiply(scl);
+    return trn.multiply(rot).multiply(scl)
   }
 
   /**
@@ -179,8 +179,8 @@ class Xfo {
    * @param {any} mat4 - The mat4 param.
    */
   fromMat4(mat4) {
-    this.tr = mat4.translation;
-    this.ori.setFromMat4(mat4);
+    this.tr = mat4.translation
+    this.ori.setFromMat4(mat4)
   }
 
   /**
@@ -189,23 +189,23 @@ class Xfo {
    */
   setFromFloat32Array(float32array) {
     if (float32array.length == 7) {
-      this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
-      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12);
-      this.sc = new Vec3(1, 1, 1);
-      return;
+      this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
+      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
+      this.sc = new Vec3(1, 1, 1)
+      return
     }
     if (float32array.length == 8) {
-      this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
-      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12);
-      const scl = float32array[7];
-      this.sc = new Vec3(scl, scl, scl);
-      return;
+      this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
+      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
+      const scl = float32array[7]
+      this.sc = new Vec3(scl, scl, scl)
+      return
     }
     if (float32array.length == 10) {
-      this.tr = new Vec3(float32array.buffer, float32array.byteOffset);
-      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12);
-      this.sc = new Vec3(float32array.buffer, float32array.byteOffset + 21);
-      return;
+      this.tr = new Vec3(float32array.buffer, float32array.byteOffset)
+      this.ori = new Quat(float32array.buffer, float32array.byteOffset + 12)
+      this.sc = new Vec3(float32array.buffer, float32array.byteOffset + 21)
+      return
     }
   }
 
@@ -214,7 +214,7 @@ class Xfo {
    * @return {any} - The return value.
    */
   clone() {
-    return new Xfo(this.tr.clone(), this.ori.clone(), this.sc.clone());
+    return new Xfo(this.tr.clone(), this.ori.clone(), this.sc.clone())
   }
 
   // ////////////////////////////////////////
@@ -226,7 +226,7 @@ class Xfo {
    * @return {vec3} - The return value.
    */
   static create(...args) {
-    return new Xfo(...args);
+    return new Xfo(...args)
   }
 
   // ///////////////////////////
@@ -240,9 +240,9 @@ class Xfo {
     const j = {
       tr: this.tr.toJSON(),
       ori: this.ori.toJSON(),
-    };
-    if (!this.sc.is111()) j.sc = this.sc.toJSON();
-    return j;
+    }
+    if (!this.sc.is111()) j.sc = this.sc.toJSON()
+    return j
   }
 
   /**
@@ -250,10 +250,10 @@ class Xfo {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.tr.fromJSON(j.tr);
-    this.ori.fromJSON(j.ori);
+    this.tr.fromJSON(j.tr)
+    this.ori.fromJSON(j.ori)
     if (j.sc) {
-      this.sc.fromJSON(j.sc);
+      this.sc.fromJSON(j.sc)
     }
   }
 
@@ -262,11 +262,11 @@ class Xfo {
    * @return {any} - The return value.
    */
   toString() {
-    return JSON_stringify_fixedPrecision(this.toJSON());
+    return JSON_stringify_fixedPrecision(this.toJSON())
   }
 }
 
-typeRegistry.registerType('Xfo', Xfo);
+typeRegistry.registerType('Xfo', Xfo)
 
-export { Xfo };
+export { Xfo }
 // export default Xfo;

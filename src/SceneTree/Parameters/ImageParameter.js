@@ -1,6 +1,6 @@
-import { Signal } from '../../Utilities';
-import { Parameter } from './Parameter.js';
-import { sgFactory } from '../SGFactory.js';
+import { Signal } from '../../Utilities'
+import { Parameter } from './Parameter.js'
+import { sgFactory } from '../SGFactory.js'
 
 /** Class representing an image parameter.
  * @extends Parameter
@@ -12,8 +12,8 @@ class ImageParameter extends Parameter {
    * @param {any} value - The value value.
    */
   constructor(name, value) {
-    super(name, value, 'BaseImage');
-    this.valueParameterValueChanged = new Signal();
+    super(name, value, 'BaseImage')
+    this.valueParameterValueChanged = new Signal()
   }
 
   /**
@@ -22,8 +22,8 @@ class ImageParameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new ImageParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new ImageParameter(this.__name, this.__value)
+    return clonedParam
   }
 
   // ////////////////////////////////////////
@@ -36,11 +36,11 @@ class ImageParameter extends Parameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const j = super.toJSON(context, flags);
+    const j = super.toJSON(context, flags)
     if (this.__value) {
-      j.imageType = this.__value.constructor.name;
+      j.imageType = this.__value.constructor.name
     }
-    return j;
+    return j
   }
 
   /**
@@ -52,10 +52,10 @@ class ImageParameter extends Parameter {
    */
   fromJSON(j, context, flags) {
     if (j.imageType) {
-      this.__value = sgFactory.constructClass(j.imageType);
+      this.__value = sgFactory.constructClass(j.imageType)
     }
-    return super.fromJSON(j, context, flags);
+    return super.fromJSON(j, context, flags)
   }
 }
 
-export { ImageParameter };
+export { ImageParameter }

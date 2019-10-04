@@ -1,6 +1,6 @@
-import { Signal } from '../../Utilities';
-import { sgFactory } from '../SGFactory';
-import { ValueSetMode, Parameter } from './Parameter.js';
+import { Signal } from '../../Utilities'
+import { sgFactory } from '../SGFactory'
+import { ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a number parameter.
  * @extends Parameter
@@ -14,12 +14,12 @@ class NumberParameter extends Parameter {
    * @param {any} step - The step value.
    */
   constructor(name, value = 0, range = undefined, step = undefined) {
-    super(name, value, 'Number');
+    super(name, value, 'Number')
     // The value might not have a range.
     if (range && !Array.isArray(range))
-      console.error('Range value must be an array of 2 numbers.');
-    this.__range = range;
-    this.__step = step;
+      console.error('Range value must be an array of 2 numbers.')
+    this.__range = range
+    this.__step = step
   }
 
   /**
@@ -30,13 +30,13 @@ class NumberParameter extends Parameter {
   setValue(value, mode) {
     if (mode == ValueSetMode.USER_SETVALUE) {
       if (this.__range) {
-        value = Math.clamp(value, this.__range[0], this.__range[1]);
+        value = Math.clamp(value, this.__range[0], this.__range[1])
       }
       if (this.__step) {
-        value = Math.round(value / this.__step) * this.__step;
+        value = Math.round(value / this.__step) * this.__step
       }
     }
-    super.setValue(value, mode);
+    super.setValue(value, mode)
   }
 
   /**
@@ -49,7 +49,7 @@ class NumberParameter extends Parameter {
     // if(this.__range) {
     //     return Math.clamp(super.getValue(), this.__range[0], this.__range[1]);
     // }
-    return super.getValue(mode);
+    return super.getValue(mode)
   }
 
   /**
@@ -57,7 +57,7 @@ class NumberParameter extends Parameter {
    * @return {any} - The return value.
    */
   getRange() {
-    return this.__range;
+    return this.__range
   }
 
   /**
@@ -67,8 +67,8 @@ class NumberParameter extends Parameter {
    */
   setRange(range) {
     // Should be an array [0, 20]
-    this.__range = range;
-    return this;
+    this.__range = range
+    return this
   }
 
   /**
@@ -76,7 +76,7 @@ class NumberParameter extends Parameter {
    * @return {any} - The return value.
    */
   getStep() {
-    return this.__step;
+    return this.__step
   }
 
   /**
@@ -85,8 +85,8 @@ class NumberParameter extends Parameter {
    * @return {any} - The return value.
    */
   setStep(step) {
-    this.__step = step;
-    return this;
+    this.__step = step
+    return this
   }
 
   /**
@@ -95,10 +95,10 @@ class NumberParameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new NumberParameter(this.__name, this.__value);
-    clonedParam.__range = this.__range;
-    clonedParam.__step = this.__step;
-    return clonedParam;
+    const clonedParam = new NumberParameter(this.__name, this.__value)
+    clonedParam.__range = this.__range
+    clonedParam.__step = this.__step
+    return clonedParam
   }
 
   // ////////////////////////////////////////
@@ -111,10 +111,10 @@ class NumberParameter extends Parameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    const j = super.toJSON(context, flags);
-    if (this.__range) j.range = this.__range;
-    if (this.__step) j.step = this.__step;
-    return j;
+    const j = super.toJSON(context, flags)
+    if (this.__range) j.range = this.__range
+    if (this.__step) j.step = this.__step
+    return j
   }
 
   /**
@@ -124,9 +124,9 @@ class NumberParameter extends Parameter {
    * @param {number} flags - The flags param.
    */
   fromJSON(j, context, flags) {
-    super.fromJSON(j, context, flags);
-    if (j.range) this.__range = j.range;
-    if (j.step) this.__step = j.step;
+    super.fromJSON(j, context, flags)
+    if (j.range) this.__range = j.range
+    if (j.step) this.__step = j.step
   }
 
   /**
@@ -135,14 +135,14 @@ class NumberParameter extends Parameter {
    * @param {object} context - The context param.
    */
   readBinary(reader, context) {
-    const value = reader.loadFloat32();
-    this.setValue(value, ValueSetMode.DATA_LOAD);
+    const value = reader.loadFloat32()
+    this.setValue(value, ValueSetMode.DATA_LOAD)
   }
 }
 
-sgFactory.registerClass('NumberParameter', NumberParameter);
-sgFactory.registerClass('Property_SInt32', NumberParameter);
-sgFactory.registerClass('Property_UInt32', NumberParameter);
-sgFactory.registerClass('Property_Float32', NumberParameter);
+sgFactory.registerClass('NumberParameter', NumberParameter)
+sgFactory.registerClass('Property_SInt32', NumberParameter)
+sgFactory.registerClass('Property_UInt32', NumberParameter)
+sgFactory.registerClass('Property_Float32', NumberParameter)
 
-export { NumberParameter };
+export { NumberParameter }

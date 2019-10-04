@@ -1,6 +1,6 @@
-import { Signal } from '../../Utilities';
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js';
-import { materialLibraryManager } from '../MaterialLibraryManager.js';
+import { Signal } from '../../Utilities'
+import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
+import { materialLibraryManager } from '../MaterialLibraryManager.js'
 
 /** Class representing a material parameter.
  * @extends Parameter
@@ -12,8 +12,8 @@ class MaterialParameter extends Parameter {
    * @param {any} value - The value value.
    */
   constructor(name, value) {
-    super(name, value, 'Material');
-    this.valueParameterValueChanged = new Signal();
+    super(name, value, 'Material')
+    this.valueParameterValueChanged = new Signal()
   }
 
   /**
@@ -22,8 +22,8 @@ class MaterialParameter extends Parameter {
    * @return {any} - The return value.
    */
   clone(flags) {
-    const clonedParam = new MaterialParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new MaterialParameter(this.__name, this.__value)
+    return clonedParam
   }
 
   /**
@@ -37,21 +37,21 @@ class MaterialParameter extends Parameter {
       if (this.__value) {
         this.__value.parameterValueChanged.disconnect(
           this.valueParameterValueChanged.emit
-        );
-        this.__value.removeRef(this);
+        )
+        this.__value.removeRef(this)
       }
-      this.__value = material;
+      this.__value = material
       if (this.__value) {
-        this.__value.addRef(this);
+        this.__value.addRef(this)
         this.__value.parameterValueChanged.connect(
           this.valueParameterValueChanged.emit
-        );
+        )
       }
       if (mode == ValueSetMode.USER_SETVALUE)
-        this.__flags |= ParamFlags.USER_EDITED;
+        this.__flags |= ParamFlags.USER_EDITED
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode);
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
     }
   }
 
@@ -65,10 +65,10 @@ class MaterialParameter extends Parameter {
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
-    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return;
+    if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
     return {
       value: this.__value.getPath(),
-    };
+    }
   }
 
   /**
@@ -79,16 +79,16 @@ class MaterialParameter extends Parameter {
    */
   fromJSON(j, context, flags) {
     if (j.value == undefined) {
-      console.warn('Invalid Parameter JSON');
-      return;
+      console.warn('Invalid Parameter JSON')
+      return
     }
-    const materialPath = j.value;
+    const materialPath = j.value
 
     const material = materialLibraryManager.resolveMaterialFromPath(
       materialPath
-    );
-    if (material) this.setValue(material);
-    this.__flags |= ParamFlags.USER_EDITED;
+    )
+    if (material) this.setValue(material)
+    this.__flags |= ParamFlags.USER_EDITED
   }
 
   /**
@@ -102,10 +102,10 @@ class MaterialParameter extends Parameter {
     if (this.__value) {
       this.__value.parameterValueChanged.disconnect(
         this.valueParameterValueChanged.emit
-      );
-      this.__value.removeRef(this);
+      )
+      this.__value.removeRef(this)
     }
   }
 }
 
-export { MaterialParameter };
+export { MaterialParameter }

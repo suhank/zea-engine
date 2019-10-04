@@ -1,54 +1,54 @@
-import { Points } from './Points.js';
-import { Lines } from './Lines.js';
-import { Mesh } from './Mesh.js';
-import { BinReader } from '../BinReader.js';
+import { Points } from './Points.js'
+import { Lines } from './Lines.js'
+import { Mesh } from './Mesh.js'
+import { BinReader } from '../BinReader.js'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data, callback) => {
-  const geomDatas = [];
-  const offset = data.toc[data.geomsRange[0]];
+  const geomDatas = []
+  const offset = data.toc[data.geomsRange[0]]
   // console.log("offset:" +  offset);
-  const transferables = [];
+  const transferables = []
   for (let i = data.geomsRange[0]; i < data.geomsRange[1]; i++) {
     const reader = new BinReader(
       data.bufferSlice,
       data.toc[i] - offset,
       data.isMobileDevice
-    );
-    const className = reader.loadStr();
-    const pos = reader.pos();
+    )
+    const className = reader.loadStr()
+    const pos = reader.pos()
     // let name = reader.loadStr();
     // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
-    let geom;
+    let geom
     switch (className) {
       case 'Points':
-        geom = new Points();
-        break;
+        geom = new Points()
+        break
       case 'Lines':
-        geom = new Lines();
-        break;
+        geom = new Lines()
+        break
       case 'Mesh':
-        geom = new Mesh();
-        break;
+        geom = new Mesh()
+        break
       default:
-        throw new Error('Unsupported Geom type:' + className);
+        throw new Error('Unsupported Geom type:' + className)
     }
     try {
-      reader.seek(pos); // Reset the pointer to the start of the item data.
-      geom.readBinary(reader, data.context);
+      reader.seek(pos) // Reset the pointer to the start of the item data.
+      geom.readBinary(reader, data.context)
     } catch (e) {
-      console.warn('Error loading:' + geom.name + '\n:' + e);
-      geomDatas.push({});
-      continue;
+      console.warn('Error loading:' + geom.name + '\n:' + e)
+      geomDatas.push({})
+      continue
     }
 
-    const geomBuffers = geom.genBuffers(data.genBuffersOpts);
-    if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer);
+    const geomBuffers = geom.genBuffers(data.genBuffersOpts)
+    if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
     for (const name in geomBuffers.attrBuffers)
-      transferables.push(geomBuffers.attrBuffers[name].values.buffer);
+      transferables.push(geomBuffers.attrBuffers[name].values.buffer)
 
     if (geomBuffers.vertexNeighbors) {
-      transferables.push(geomBuffers.vertexNeighbors.buffer);
+      transferables.push(geomBuffers.vertexNeighbors.buffer)
     }
 
     geomDatas.push({
@@ -56,7 +56,7 @@ const parseGeomsBinary = (data, callback) => {
       type: className,
       geomBuffers,
       bbox: geom.boundingBox,
-    });
+    })
   }
   callback(
     {
@@ -66,7 +66,7 @@ const parseGeomsBinary = (data, callback) => {
       geomDatas,
     },
     transferables
-  );
-};
+  )
+}
 
-export { parseGeomsBinary };
+export { parseGeomsBinary }

@@ -1,5 +1,5 @@
-import { AttrValue } from './AttrValue.js';
-import { typeRegistry } from './TypeRegistry.js';
+import { AttrValue } from './AttrValue.js'
+import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing euler angles.
  * @extends AttrValue
@@ -13,42 +13,42 @@ class EulerAngles extends AttrValue {
    * @param {number} order - The order value.
    */
   constructor(x = 0, y = 0, z = 0, order = 0) {
-    super();
+    super()
 
-    if (!isNaN(order)) this.order = order;
+    if (!isNaN(order)) this.order = order
     else {
       switch (order) {
         case 'XYZ':
-          this.order = 0;
-          break;
+          this.order = 0
+          break
         case 'YZX':
-          this.order = 1;
-          break;
+          this.order = 1
+          break
         case 'ZXY':
-          this.order = 2;
-          break;
+          this.order = 2
+          break
         case 'XZY':
-          this.order = 3;
-          break;
+          this.order = 3
+          break
         case 'ZYX':
-          this.order = 4;
-          break;
+          this.order = 4
+          break
         case 'YXZ':
-          this.order = 5;
-          break;
+          this.order = 5
+          break
         default:
-          throw new Error('Invalid Euler Angles Order:' + order);
+          throw new Error('Invalid Euler Angles Order:' + order)
       }
     }
     if (x instanceof ArrayBuffer) {
-      const buffer = x;
-      const byteOffset = y;
-      this.__data = new Float32Array(buffer, byteOffset, 4);
+      const buffer = x
+      const byteOffset = y
+      this.__data = new Float32Array(buffer, byteOffset, 4)
     } else {
-      this.__data = new Float32Array(3);
-      this.__data[0] = x;
-      this.__data[1] = y;
-      this.__data[2] = z;
+      this.__data = new Float32Array(3)
+      this.__data[0] = x
+      this.__data[1] = y
+      this.__data[2] = z
     }
   }
 
@@ -56,7 +56,7 @@ class EulerAngles extends AttrValue {
    * Getter for x.
    */
   get x() {
-    return this.__data[0];
+    return this.__data[0]
   }
 
   /**
@@ -64,14 +64,14 @@ class EulerAngles extends AttrValue {
    * @param {number} val - The val param.
    */
   set x(val) {
-    this.__data[0] = val;
+    this.__data[0] = val
   }
 
   /**
    * Getter for y.
    */
   get y() {
-    return this.__data[1];
+    return this.__data[1]
   }
 
   /**
@@ -79,14 +79,14 @@ class EulerAngles extends AttrValue {
    * @param {number} val - The val param.
    */
   set y(val) {
-    this.__data[1] = val;
+    this.__data[1] = val
   }
 
   /**
    * Getter for z.
    */
   get z() {
-    return this.__data[2];
+    return this.__data[2]
   }
 
   /**
@@ -94,7 +94,7 @@ class EulerAngles extends AttrValue {
    * @param {number} val - The val param.
    */
   set z(val) {
-    this.__data[2] = val;
+    this.__data[2] = val
   }
 
   /**
@@ -104,12 +104,12 @@ class EulerAngles extends AttrValue {
    * @param {number} z  - The y param.
    */
   set(x, y, z) {
-    this.__data[0] = x;
-    this.__data[1] = y;
-    this.__data[2] = z;
+    this.__data[0] = x
+    this.__data[1] = y
+    this.__data[2] = z
   }
 }
 
-typeRegistry.registerType('EulerAngles', EulerAngles);
+typeRegistry.registerType('EulerAngles', EulerAngles)
 
-export { EulerAngles };
+export { EulerAngles }
