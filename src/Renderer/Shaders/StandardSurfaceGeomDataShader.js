@@ -45,12 +45,14 @@ void main(void) {
       `
 precision highp float;
 
-varying vec3 v_viewPos;
-varying float v_drawItemID;
+<%include file="GLSLBits.glsl"/>
+
 uniform int floatGeomBuffer;
 uniform int passId;
 
-<%include file="GLSLBits.glsl"/>
+varying vec3 v_viewPos;
+varying float v_drawItemID;
+
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
