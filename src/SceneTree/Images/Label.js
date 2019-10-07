@@ -1,11 +1,8 @@
 import { Color } from '../../Math'
 import { Signal, Async } from '../../Utilities'
 import {
-  Parameter,
   BooleanParameter,
   NumberParameter,
-  Vec2Parameter,
-  Vec3Parameter,
   ColorParameter,
   StringParameter,
 } from '../Parameters'
@@ -118,7 +115,7 @@ class Label extends DataImage {
     // textParam.valueChanged.connect(setLabelText);
 
     this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)))
-    this.addParameter(new StringParameter('textAlign', 'left', 'String'))
+    this.addParameter(new StringParameter('textAlign', 'left'))
     // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
     this.addParameter(new StringParameter('fillText', true))
     this.addParameter(new NumberParameter('margin', fontSize * 0.5))
@@ -131,104 +128,25 @@ class Label extends DataImage {
     this.addParameter(new BooleanParameter('fillBackground', true))
     this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
     const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
-    const fontParam = this.addParameter(
-      new StringParameter('font', 'Helvetica', 'String')
-    )
+    const fontParam = this.addParameter(new StringParameter('font', 'Helvetica'))
 
-    const reRender = () => {
-      this.renderLabelToImage()
+    const reload = () => {
+      this.loadLabelData()
     }
-    libraryParam.valueChanged.connect(reRender)
-    this.nameChanged.connect(reRender)
-    fontSizeParam.valueChanged.connect(reRender)
-    fontParam.valueChanged.connect(reRender)
+    libraryParam.valueChanged.connect(reload)
+    this.nameChanged.connect(reload)
+    fontSizeParam.valueChanged.connect(reload)
+    fontParam.valueChanged.connect(reload)
 
     if (library) libraryParam.setValue(library)
-    this.renderLabelToImage()
+    
+    this.__needsRender = false;
+    this.loadLabelData();
   }
 
-  renderLabelToImage() {
-    const doRender = () => {
-      let ctx2d = this.__canvasElem.getContext('2d', {
-        alpha: true,
-      })
-
-      let text = this.getParameter('text').getValue()
-      if (text == '') text = this.getName()
-
-      const font = this.getParameter('font').getValue()
-      const fontColor = this.getParameter('fontColor').getValue()
-      const textAlign = this.getParameter('textAlign').getValue()
-      const fontSize = this.getParameter('fontSize').getValue()
-      const fillText = this.getParameter('fillText').getValue()
-      const margin = this.getParameter('margin').getValue()
-      const borderWidth = this.getParameter('borderWidth').getValue()
-      const borderRadius = this.getParameter('borderRadius').getValue()
-      const outline = this.getParameter('outline').getValue()
-      const outlineColor = this.getParameter('outlineColor').getValue()
-      const background = this.getParameter('background').getValue()
-      const backgroundColor = this.getParameter('backgroundColor').getValue()
-      const fillBackground = this.getParameter('fillBackground').getValue()
-      const strokeBackgroundOutline = this.getParameter(
-        'strokeBackgroundOutline'
-      ).getValue()
-
-      // let ratio = devicePixelRatio / backingStoreRatio;
-      const marginAndBorder = margin + borderWidth
-      const lines = text.split('\n')
-
-      ctx2d.font = fontSize + 'px "' + font + '"'
-      // console.log("renderLabelToImage:" + ctx2d.font);
-      let width = 0
-      lines.forEach(line => {
-        width = Math.max(ctx2d.measureText(line).width, width)
-      })
-      const fontHeight = parseInt(fontSize)
-      this.width = width + marginAndBorder * 2
-      this.height = fontHeight * lines.length + marginAndBorder * 2
-      ctx2d.canvas.width = this.width
-      ctx2d.canvas.height = this.height
-
-      // ctx2d.clearRect(0, 0, this.width, this.height);
-      ctx2d.fillStyle = 'rgba(0, 0, 0, 0.0)'
-      ctx2d.fillRect(0, 0, this.width, this.height)
-
-      if (background) {
-        ctx2d.fillStyle = backgroundColor.toHex()
-        ctx2d.strokeStyle = outlineColor.toHex()
-        roundRect(
-          ctx2d,
-          borderWidth,
-          borderWidth,
-          this.width - borderWidth * 2,
-          this.height - borderWidth * 2,
-          borderRadius,
-          fillBackground,
-          strokeBackgroundOutline,
-          borderWidth
-        )
-      }
-
-      ctx2d.font = fontSize + 'px "' + font + '"'
-      ctx2d.textAlign = textAlign
-      ctx2d.fillStyle = fontColor.toHex()
-      ctx2d.textBaseline = 'hanging'
-      lines.forEach((line, index) => {
-        ctx2d.fillText(
-          line,
-          marginAndBorder,
-          marginAndBorder + index * fontHeight
-        )
-      })
-
-      if (outline) {
-        ctx2d.strokeStyle = outlineColor.toHex()
-        ctx2d.lineWidth = 1.5
-        ctx2d.strokeText(text, marginAndBorder, marginAndBorder)
-      }
-
-      this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
-
+  loadLabelData() {
+    const onLoaded = () => {
+      this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
         this.loaded.emit()
@@ -285,7 +203,92 @@ class Label extends DataImage {
         }
       })
     }
-    Promise.all([loadText(), loadFont()]).then(doRender)
+    Promise.all([loadText(), loadFont()]).then(onLoaded)
+  }
+
+  /**
+   * Renders the label text to a canvas element ready to display,
+   */
+  renderLabelToImage() {
+    const ctx2d = this.__canvasElem.getContext('2d', {
+      alpha: true,
+    })
+
+    let text = this.getParameter('text').getValue()
+    if (text == '') text = this.getName()
+
+    const font = this.getParameter('font').getValue()
+    const fontColor = this.getParameter('fontColor').getValue()
+    const textAlign = this.getParameter('textAlign').getValue()
+    const fontSize = this.getParameter('fontSize').getValue()
+    const margin = this.getParameter('margin').getValue()
+    const borderWidth = this.getParameter('borderWidth').getValue()
+    const borderRadius = this.getParameter('borderRadius').getValue()
+    const outline = this.getParameter('outline').getValue()
+    const outlineColor = this.getParameter('outlineColor').getValue()
+    const background = this.getParameter('background').getValue()
+    const backgroundColor = this.getParameter('backgroundColor').getValue()
+    const fillBackground = this.getParameter('fillBackground').getValue()
+    const strokeBackgroundOutline = this.getParameter(
+      'strokeBackgroundOutline'
+    ).getValue()
+
+    // let ratio = devicePixelRatio / backingStoreRatio;
+    const marginAndBorder = margin + borderWidth
+    const lines = text.split('\n')
+
+    ctx2d.font = fontSize + 'px "' + font + '"'
+    // console.log("renderLabelToImage:" + ctx2d.font);
+    let width = 0
+    lines.forEach(line => {
+      width = Math.max(ctx2d.measureText(line).width, width)
+    })
+    const fontHeight = parseInt(fontSize)
+    this.width = width + marginAndBorder * 2
+    this.height = fontHeight * lines.length + marginAndBorder * 2
+    ctx2d.canvas.width = this.width
+    ctx2d.canvas.height = this.height
+
+    // ctx2d.clearRect(0, 0, this.width, this.height);
+    ctx2d.fillStyle = 'rgba(0, 0, 0, 0.0)'
+    ctx2d.fillRect(0, 0, this.width, this.height)
+
+    if (background) {
+      ctx2d.fillStyle = backgroundColor.toHex()
+      ctx2d.strokeStyle = outlineColor.toHex()
+      roundRect(
+        ctx2d,
+        borderWidth,
+        borderWidth,
+        this.width - borderWidth * 2,
+        this.height - borderWidth * 2,
+        borderRadius,
+        fillBackground,
+        strokeBackgroundOutline,
+        borderWidth
+      )
+    }
+
+    ctx2d.font = fontSize + 'px "' + font + '"'
+    ctx2d.textAlign = textAlign
+    ctx2d.fillStyle = fontColor.toHex()
+    ctx2d.textBaseline = 'hanging'
+    lines.forEach((line, index) => {
+      ctx2d.fillText(
+        line,
+        marginAndBorder,
+        marginAndBorder + index * fontHeight
+      )
+    })
+
+    if (outline) {
+      ctx2d.strokeStyle = outlineColor.toHex()
+      ctx2d.lineWidth = 1.5
+      ctx2d.strokeText(text, marginAndBorder, marginAndBorder)
+    }
+
+    this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
+    this.__needsRender = false
   }
 
   /**
@@ -293,7 +296,7 @@ class Label extends DataImage {
    * @return {any} - The return value.
    */
   getParams() {
-    // this.renderLabelToImage();
+    if (this.__needsRender) this.renderLabelToImage()
     return super.getParams()
   }
 
