@@ -1,13 +1,13 @@
-import { Vec2, Color } from '../Math'
+import { Color } from '../Math'
 import { Signal } from '../Utilities'
 import { SystemDesc } from '../BrowserDetection.js'
 import { FilePathParameter, ColorParameter } from './Parameters'
 import { AssetItem } from './AssetItem.js'
 import { ValueSetMode } from './Parameters/Parameter.js'
-import { GeomItem } from './GeomItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { sgFactory } from './SGFactory.js'
+// import { EnvMap, Lightmap, LightmapMixer } from './Images'
 
 /** Class representing a VLA asset.
  * @extends AssetItem
@@ -21,7 +21,7 @@ class VLAAsset extends AssetItem {
     super(name)
     this.loaded.setToggled(false)
 
-    this.__atlasSize = new Vec2()
+    this.lightmap = null
 
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
@@ -60,41 +60,13 @@ class VLAAsset extends AssetItem {
     this.addParameter(new ColorParameter('LightmapTint', new Color(1, 1, 1, 1)))
   }
 
-  /**
-   * The getLightmapSize method.
-   * @return {any} - The return value.
-   */
-  getLightmapSize() {
-    return this.__atlasSize
-  }
 
   /**
-   * The getAtlasSize method.
-   * Note: the atlas can be used for more than just lightmaps.
-   * @return {any} - The return value.
+   * The getLightmap method.
+   * @return {Lightmap} - The return lightmap.
    */
-  getAtlasSize() {
-    return this.__atlasSize
-  }
-
-  /**
-   * The getLightmapPath method.
-   * @param {any} lightmapName - The lightmapName param.
-   * @param {any} lightmapLOD - The lightmapLOD param.
-   * @return {any} - The return value.
-   */
-  getLightmapPath(lightmapName, lightmapLOD) {
-    const stem = this.__datafileParam.getStem()
-    const lightmapPath =
-      this.__datafileParam.getFileFolderPath() +
-      stem +
-      '_' +
-      lightmapName +
-      '_Lightmap' +
-      lightmapLOD +
-      '.vlh'
-
-    return lightmapPath
+  getLightmap() {
+    return this.lightmap
   }
 
   // ////////////////////////////////////////
@@ -111,7 +83,7 @@ class VLAAsset extends AssetItem {
 
     super.readBinary(reader, context)
 
-    this.__atlasSize = reader.loadFloat32Vec2()
+    const atlasSize = reader.loadFloat32Vec2()
     if (reader.remainingByteLength != 4) {
       throw new Error(
         'File needs to be re-exported:' +
@@ -121,6 +93,13 @@ class VLAAsset extends AssetItem {
     // Perpare the geom library for loading
     // This helps with progress bars, so we know how many geoms are coming in total.
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
+
+    // Load the lightmap if available.
+    // const folder = this.__datafileParam.getFileFolderPath();
+    // const stem = this.__datafileParam.getStem()
+    // const lod = context.lightmapLOD;
+    // const lightmapPath = `${folder}${stem}_${lightmapName}_Lightmap${lod}.vlh`
+    // this.lightmap = new Lightmap(lightmapPath, this, atlasSize)
 
     return numGeomsFiles
   }

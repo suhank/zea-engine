@@ -1,6 +1,6 @@
-import { SystemDesc } from '../BrowserDetection.js'
 import { hashStr } from '../Math'
-import { Async, Signal } from '../Utilities'
+import { Signal } from '../Utilities'
+// import { VLAAsset } from './VLAAsset.js'
 
 // const asyncLoading = true;
 const ResourceLoaderWorker = require('worker-loader?inline!./ResourceLoader/ResourceLoaderWorker.js')
@@ -70,6 +70,11 @@ class ResourceLoader {
       children: {},
     }
 
+    // Common resources are used by systems such at the renderer and VR controllers.
+    // Any asset that will probably be used my multiple differeint independent objects
+    // should be loaded here. (For now, it is being used to load VR Controller assets.)
+    this.__commonResources = {}
+
     this.__workers = []
     this.__nextWorker = 0
 
@@ -127,6 +132,21 @@ class ResourceLoader {
       const file = this.__resources[key]
       if (file.name.includes(filter)) fn(file)
     }
+  }
+
+  /**
+   * The loadCommonAssetResource method.
+   * @param {any} resourceId - The resourceId param.
+   * @return {any} - The return value.
+   */
+  loadCommonAssetResource(resourceId) {
+    if (resourceId in this.__commonResources) {
+      return this.__commonResources[resourceId]
+    }
+    const asset = new VLAAsset()
+    asset.getParameter('DataFilePath').setValue(resourceId)
+    this.__commonResources[resourceId] = asset
+    return asset
   }
 
   /**

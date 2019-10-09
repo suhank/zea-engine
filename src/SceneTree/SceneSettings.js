@@ -1,15 +1,16 @@
 import { Color } from '../Math'
 import { BaseItem } from './BaseItem.js'
-import { ColorParameter, ImageParameter } from './Parameters'
+import { NumberParameter, ColorParameter, ImageParameter } from './Parameters'
 
-class RendererParams extends BaseItem {
+class SceneSettings extends BaseItem {
   constructor(name) {
     super(name)
     this.addParameter(
       new ColorParameter('BackgroundColor', new Color('#808080'))
     )
     this.addParameter(new ImageParameter('EnvMap'))
+    this.addParameter(new NumberParameter('EnvMapLOD', 0))
   }
 }
 
-export { RendererParams }
+export { SceneSettings }

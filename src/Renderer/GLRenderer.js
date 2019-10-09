@@ -1,7 +1,7 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Signal } from '../Utilities'
 import { Vec3 } from '../Math'
-import { Plane, BaseImage, ProceduralSky, LightmapMixer } from '../SceneTree'
+import { Plane, BaseImage, ProceduralSky, LightmapMixer, VLAAsset, EnvMap } from '../SceneTree'
 import { GLFbo } from './GLFbo.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLLightmapMixer } from './GLLightmapMixer.js'
@@ -89,7 +89,7 @@ class GLRenderer extends GLBaseRenderer {
   __bindEnvMap(env) {
     if (env instanceof ProceduralSky) {
       this.__glEnvMap = new GLProceduralSky(this.__gl, env)
-    } else if (env instanceof BaseImage) {
+    } else if (env instanceof EnvMap) {
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
@@ -102,50 +102,10 @@ class GLRenderer extends GLBaseRenderer {
         }
       }
     } else {
-      console.warn('Unsupported EnvMap:' + env)
-      return
-    }
-    this.__glEnvMap.ready.connect(this.requestRedraw)
-    this.__glEnvMap.updated.connect(this.requestRedraw)
-
-    this.envMapAssigned.emit(this.__glEnvMap)
-  }
-
-  /**
-   * The getGLEnvMap method.
-   * @return {any} - The return value.
-   */
-  getGLEnvMap() {
-    return this.__glEnvMap
-  }
-
-  /**
-   * The getEnvMapTex method.
-   * @return {any} - The return value.
-   */
-  getEnvMapTex() {
-    console.warn('Deprecated Function')
-    return this.__glEnvMap
-  }
-
-  /**
-   * The setScene method.
-   * @param {any} scene - The scene param.
-   */
-  setScene(scene) {
-    super.setScene(scene)
-
-    if (scene.getEnvMap() != undefined) {
-      this.__bindEnvMap(scene.getEnvMap())
-    }
-    this.__scene.envMapChanged.connect(this.__bindEnvMap.bind(this))
-
-    // Note: The difference bween an EnvMap and a BackgroundMap, is that
-    // An EnvMap must be HDR, and can be convolved for reflections.
-    // A Background map can be simply an image.
-    if (scene.getBackgroundMap() != undefined) {
-      const gl = this.__gl
-      const backgroundMap = scene.getBackgroundMap()
+      // Note: The difference bween an EnvMap and a BackgroundMap, is that
+      // An EnvMap must be HDR, and can be convolved for reflections.
+      // A Background map can be simply an image.
+      const backgroundMap = env
       this.__glBackgroundMap = backgroundMap.getMetadata('gltexture')
       if (!this.__glBackgroundMap) {
         if (backgroundMap.type === 'FLOAT') {
@@ -186,33 +146,92 @@ class GLRenderer extends GLBaseRenderer {
           gl.__quadIndexBuffer
         )
       }
+      // console.warn('Unsupported EnvMap:' + env)
+      return
     }
+    this.__glEnvMap.ready.connect(this.requestRedraw)
+    this.__glEnvMap.updated.connect(this.requestRedraw)
 
-    const lightMaps = scene.getLightMaps()
-    const addLightmap = (name, lightmap) => {
-      let gllightmap
-      if (lightmap instanceof LightmapMixer)
-        gllightmap = new GLLightmapMixer(this.__gl, lightmap)
-      else {
-        gllightmap = lightmap.image.getMetadata('gltexture')
-        if (!gllightmap) {
-          gllightmap = new GLHDRImage(this.__gl, lightmap.image)
-        }
-      }
-      gllightmap.updated.connect(data => {
-        this.requestRedraw()
-      })
-      this.__glLightmaps[name] = {
-        atlasSize: lightmap.atlasSize,
-        glimage: gllightmap,
-      }
-    }
-    for (const name in lightMaps) {
-      addLightmap(name, lightMaps[name])
-    }
-    scene.lightmapAdded.connect(addLightmap)
+    this.envMapAssigned.emit(this.__glEnvMap)
   }
 
+  /**
+   * The getGLEnvMap method.
+   * @return {any} - The return value.
+   */
+  getGLEnvMap() {
+    return this.__glEnvMap
+  }
+
+  /**
+   * The getEnvMapTex method.
+   * @return {any} - The return value.
+   */
+  getEnvMapTex() {
+    console.warn('Deprecated Function')
+    return this.__glEnvMap
+  }
+
+  /**
+   * The setScene method.
+   * @param {any} scene - The scene param.
+   */
+  setScene(scene) {
+    const envMapParam = scene.settings.getParameter('EnvMap')
+    if (envMapParam.getValue() != undefined) {
+      this.__bindEnvMap(envMapParam.getValue())
+    }
+    envMapParam.valueChanged.connect(this.__bindEnvMap.bind(this))
+
+    super.setScene(scene)
+  }
+
+  /**
+   * The addTreeItem method.
+   * @param {any} treeItem - The treeItem param.
+   */
+  addTreeItem(treeItem) {
+    super.addTreeItem(treeItem)
+
+    // Note: we can have BaseItems in the tree now.
+    if (treeItem instanceof VLAAsset) {
+      const addLightmap = (name, lightmap) => {
+        let gllightmap
+        if (lightmap instanceof LightmapMixer)
+          gllightmap = new GLLightmapMixer(this.__gl, lightmap)
+        else {
+          gllightmap = lightmap.image.getMetadata('gltexture')
+          if (!gllightmap) {
+            gllightmap = new GLHDRImage(this.__gl, lightmap.image)
+          }
+        }
+        gllightmap.updated.connect(data => {
+          this.requestRedraw()
+        })
+        this.__glLightmaps[name] = {
+          atlasSize: lightmap.atlasSize,
+          glimage: gllightmap,
+        }
+      }
+      const vlaAsset = treeItem
+      vlaAsset.loaded.connect(() => {
+        if (this.__glEnvMap) {
+          addLightmap(vlaAsset.getName(), vlaAsset.getLightmap())
+        }
+      })
+    }
+  }
+
+  /**
+   * The removeTreeItem method.
+   * @param {any} treeItem - The treeItem param.
+   */
+  removeTreeItem(treeItem) {
+    super.removeTreeItem(treeItem)
+
+    // TODO: Remove the lightmap.
+
+  }
   /**
    * The addViewport method.
    * @param {string} name - The name param.

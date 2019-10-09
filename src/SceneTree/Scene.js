@@ -1,16 +1,12 @@
-import { SystemDesc } from '../BrowserDetection.js'
-import { Vec3, Xfo, Color, JSON_stringify_fixedPrecision } from '../Math'
-import { Signal } from '../Utilities'
+import { Vec3, Xfo, Color } from '../Math'
 import { Material } from './Material.js'
 import { TreeItem } from './TreeItem.js'
 import { Lines } from './Geometry/Lines.js'
 import { Grid } from './Geometry/Shapes/Grid.js'
-import { VLAAsset } from './VLAAsset.js'
 import { ItemFlags } from './BaseItem.js'
 import { GeomItem } from './GeomItem.js'
 import { resourceLoader } from './ResourceLoader.js'
-import { EnvMap, Lightmap, LightmapMixer } from './Images'
-import { RendererParams } from './RendererParams.js'
+import { SceneSettings } from './SceneSettings.js'
 
 const defaultGridColor = new Color('#DCDCDC')
 
@@ -24,37 +20,18 @@ class Scene {
     if (resources) {
       resourceLoader.setResources(resources)
     }
+    this.settings = new SceneSettings('Scene Settings');
+    this.root = new TreeItem('root')
+    this.root.addRef(this)
+    this.root.addChild(this.settings)
+  }
 
-    this.cameras = []
-    this.__root = new TreeItem('root')
-    this.__root.addRef(this)
-    this.__root.addChild(new RendererParams('Renderer Params'))
-
-    this.__assets = []
-
-    // Env map used for background and reflections.
-    this.__envMap = undefined
-    // Background map used only for backgrounds. Overrides env map.
-    this.__backgroundMap = undefined
-    this.__lightmaps = {}
-
-    if (SystemDesc.isMobileDevice || SystemDesc.browserName != 'Chrome')
-      this.__lightmapLOD = 2
-    else this.__lightmapLOD = 0
-    this.__envmapLOD = this.__lightmapLOD
-
-    // Common resources are used by systems such at the renderer and VR controllers.
-    // Any asset that will probably be used my multiple differeint independent objects
-    // should be loaded here. (For now, it is being used to load VR Controller assets.)
-    this.__commonResources = {}
-
-    // ///////////////////////////
-
-    this.backgroundMapChanged = new Signal()
-    this.envMapChanged = new Signal()
-    this.lightmapAdded = new Signal()
-    this.assetAdded = new Signal()
-    this.assetRemoved = new Signal()
+  /**
+   * The getRoot method.
+   * @return {any} - The return value.
+   */
+  getSettings() {
+    return this.settings
   }
 
   /**
@@ -62,7 +39,7 @@ class Scene {
    * @return {any} - The return value.
    */
   getRoot() {
-    return this.__root
+    return this.root
   }
 
   /**
@@ -71,212 +48,6 @@ class Scene {
    */
   getResourceLoader() {
     return resourceLoader
-  }
-
-  /**
-   * The loadCommonAssetResource method.
-   * @param {any} resourceId - The resourceId param.
-   * @return {any} - The return value.
-   */
-  loadCommonAssetResource(resourceId) {
-    if (resourceId in this.__commonResources) {
-      return this.__commonResources[resourceId]
-    }
-    const asset = new VLAAsset()
-    asset.getParameter('DataFilePath').setValue(resourceId)
-    this.__commonResources[resourceId] = asset
-    return asset
-  }
-
-  /**
-   * The getEnvMapLOD method.
-   * @return {any} - The return value.
-   */
-  getEnvMapLOD() {
-    return this.__envmapLOD
-  }
-
-  /**
-   * The setEnvMapLOD method.
-   * @param {any} lod - The lod param.
-   */
-  setEnvMapLOD(lod) {
-    this.__envmapLOD = lod
-  }
-
-  /**
-   * The getEnvMapLOD method.
-   * @return {any} - The return value.
-   */
-  getEnvMap() {
-    return this.__envMap
-  }
-
-  /**
-   * The setEnvMapName method.
-   * @param {any} envMapName - The envMapName param.
-   */
-  setEnvMapName(envMapName) {
-    if (envMapName.endsWith('.vlh'))
-      envMapName = envMapName.splice(0, (envMapName.length = 4))
-    const envMap = new EnvMap(
-      envMapName + this.__envmapLOD + '.vlh',
-      resourceLoader
-    )
-    this.setEnvMap(envMap)
-  }
-
-  /**
-   * The setEnvMap method.
-   * @param {any} envMap - The envMap param.
-   */
-  setEnvMap(envMap) {
-    this.__envMap = envMap
-    this.envMapChanged.emit(this.__envMap)
-  }
-
-  /**
-   * The getBackgroundMap method.
-   * @return {any} - The return value.
-   */
-  getBackgroundMap() {
-    return this.__backgroundMap
-  }
-
-  /**
-   * The setBackgroundMap method.
-   * @param {any} backgroundMap - The backgroundMap param.
-   */
-  setBackgroundMap(backgroundMap) {
-    this.__backgroundMap = backgroundMap
-    this.backgroundMapChanged.emit(this.__backgroundMap)
-  }
-
-  /**
-   * The getCamera method.
-   * @param {number} index - The index param.
-   * @return {any} - The return value.
-   */
-  getCamera(index = 0) {
-    return this.cameras[index]
-  }
-
-  // ////////////////////////////////
-  // Paths
-
-  /**
-   * The resolvePath method.
-   * @param {any} path - The path param.
-   * @param {number} index - The index param.
-   * @return {any} - The return value.
-   */
-  resolvePath(path, index = 0) {
-    if (typeof path == 'string') path = path.split('/')
-
-    if (path[index] == '.') index++
-
-    if (path[index] == 'root') {
-      return this.__root.resolvePath(path, index + 1)
-    } else if (path[index] == 'selectionSets') {
-      return this.__root.resolvePath(path, index + 1)
-    }
-  }
-
-  // ////////////////////////////////
-  // Lightmaps
-
-  /**
-   * The getLightMapLOD method.
-   * @return {any} - The return value.
-   */
-  getLightMapLOD() {
-    return this.__lightmapLOD
-  }
-
-  /**
-   * The setLightMapLOD method.
-   * @param {any} lod - The lod param.
-   */
-  setLightMapLOD(lod) {
-    this.__lightmapLOD = lod
-  }
-
-  /**
-   * The getLightMap method.
-   * @param {string} name - The name param.
-   * @return {any} - The return value.
-   */
-  getLightMap(name) {
-    return this.__lightmaps[name]
-  }
-
-  /**
-   * The setLightMap method.
-   * @param {string} name - The name param.
-   * @param {any} lightmap - The lightmap param.
-   */
-  setLightMap(name, lightmap) {
-    if (!(lightmap instanceof Lightmap || lightmap instanceof LightmapMixer)) {
-      throw new Error(
-        'Object passed is not a Lightmap:' + lightmap.constructor.name
-      )
-    }
-    this.__lightmaps[name] = lightmap
-    this.lightmapAdded.emit(name, lightmap)
-  }
-
-  /**
-   * The getLightMaps method.
-   * @return {any} - The return value.
-   */
-  getLightMaps() {
-    return this.__lightmaps
-  }
-
-  /**
-   * The addAsset method.
-   * @param {any} asset - The asset param.
-   */
-  addAsset(asset) {
-    asset.loaded.connect(() => {
-      if (this.__envMap && asset.getLightmapPath) {
-        const lightmapPath = asset.getLightmapPath(
-          this.__envMap.getName(),
-          this.__lightmapLOD
-        )
-        console.log('lightmapPath:' + lightmapPath)
-        const lightmapName = asset.getName()
-        if (
-          !this.getLightMap(lightmapName) &&
-          resourceLoader.resolveFilepath(lightmapPath)
-        ) {
-          const lightmap = new Lightmap(lightmapPath, asset)
-          this.setLightMap(lightmapName, lightmap)
-        }
-      }
-    })
-    this.__assets.push(asset)
-    this.__root.addChild(asset)
-    this.assetAdded.emit(asset)
-  }
-
-  /**
-   * The getAssets method.
-   * @return {any} - The return value.
-   */
-  getAssets() {
-    return this.__assets
-  }
-
-  // /////////////////////////////////////
-  // Default Scene Items
-
-  /**
-   * The getCamera method.
-   * @return {any} - The return value.
-   */
-  getCamera() {
-    return this.__root.getChildByName('Camera')
   }
 
   /**
@@ -316,7 +87,11 @@ class Scene {
     gridTreeItem.addChild(zAxisLineItem)
     gridTreeItem.setSelectable(false, true)
     gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
-    this.__root.addChild(gridTreeItem)
+
+    // Avoid persisting the grid and hide in the tree view.
+    gridTreeItem.clearFlag(ItemFlags.USER_EDITED)
+    gridTreeItem.setFlag(ItemFlags.INVISIBLE)
+    this.root.addChild(gridTreeItem)
 
     return gridTreeItem
   }
@@ -330,12 +105,41 @@ class Scene {
    * @param {object} context - The context param.
    *
    */
-  fromJSON(json, context) {
-    if (j.envMap) {
-      const envMap = new EnvMap('envMap', resourceLoader)
-      envMap.fromJSON(j.envMap)
-      this.setEnvMap(envMap)
+  fromJSON(json, context = {}) {
+    const plcbs = [] // Post load callbacks.
+    context.resolvePath = (path, cb) => {
+      // Note: Why not return a Promise here?
+      // Promise evaluation is always async, so
+      // all promisses will be resolved after the current call stack
+      // has terminated. In our case, we want all paths
+      // to be resolved before the end of the function, which
+      // we can handle easily with callback functions.
+      if (!path) throw new Error('Path not spcecified')
+      const item = this.root.resolvePath(path)
+      if (item) {
+        cb(item)
+      } else {
+        // Some paths resolve to items generated during load,
+        // so push a callback to re-try after the load is complete.
+        plcbs.push(() => {
+          const param = this.resolvePath(path)
+          if (param) cb(param)
+          else {
+            console.warn('Path unable to be resolved:' + path)
+          }
+        })
+      }
     }
+    context.addPLCB = plcb => plcbs.push(plcb)
+    context.settings = this.settings
+
+    if (json.root) {
+      this.root.fromJSON(json.root, context)
+    }
+
+    // Invoke all the post-load callbacks to resolve any
+    // remaning references.
+    for (const cb of plcbs) cb()
   }
 
   /**
@@ -344,19 +148,12 @@ class Scene {
    * @param {number} flags - The flags param.
    * @return {any} - The return value.
    */
-  toJSON(context, flags) {
-    return {
-      root: this.__root.toJSON(context, flags),
-      boundingBox: this.boundingBox.toJSON(context, flags),
+  toJSON(context = {}, flags = 0) {
+    context.makeRelative = path => path
+    const json = {
+      root: this.root.toJSON(context, flags),
     }
-  }
-
-  /**
-   * The toString method.
-   * @return {any} - The return value.
-   */
-  toString() {
-    return JSON_stringify_fixedPrecision(this.toJSON(), 2)
+    return json
   }
 }
 

@@ -28,14 +28,10 @@ class GLBaseViewport extends ParameterOwner {
     this.resized = new Signal()
 
     this.__renderer.sceneSet.connect(() => {
-      const rp = renderer
-        .getScene()
-        .getRoot()
-        .getChildByName('Renderer Params')
-
-      const bgColorPAram = rp.getParameter('BackgroundColor')
+      const settings = renderer.getScene().settings
+      const bgColorParam = settings.getParameter('BackgroundColor')
       const processBGValue = mode => {
-        const value = bgColorPAram.getValue()
+        const value = bgColorParam.getValue()
         let gl = this.__renderer.gl
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
@@ -57,8 +53,8 @@ class GLBaseViewport extends ParameterOwner {
         }
         this.updated.emit()
       }
-      processBGValue(bgColorPAram.getValue())
-      bgColorPAram.valueChanged.connect(processBGValue)
+      processBGValue(bgColorParam.getValue())
+      bgColorParam.valueChanged.connect(processBGValue)
     })
   }
 
@@ -149,12 +145,9 @@ class GLBaseViewport extends ParameterOwner {
    * @return {any} - The return value.
    */
   getBackground() {
-    const rp = this.__renderer
-      .getScene()
-      .getRoot()
-      .getChildByName('Renderer Params')
-    const bgColorPAram = rp.getParameter('BackgroundColor')
-    return bgColorPAram.getValue()
+    const settings = this.__renderer.getScene().settings
+    const bgColorParam = settings.getParameter('BackgroundColor')
+    return bgColorParam.getValue()
   }
 
   /**
@@ -162,12 +155,9 @@ class GLBaseViewport extends ParameterOwner {
    * @param {any} background - The background param.
    */
   setBackground(background) {
-    const rp = this.__renderer
-      .getScene()
-      .getRoot()
-      .getChildByName('Renderer Params')
-    const bgColorPAram = rp.getParameter('BackgroundColor')
-    bgColorPAram.setValue(background)
+    const settings = this.__renderer.getScene().settings
+    const bgColorParam = settings.getParameter('BackgroundColor')
+    bgColorParam.setValue(background)
     this.updated.emit()
   }
 
@@ -261,4 +251,3 @@ class GLBaseViewport extends ParameterOwner {
 }
 
 export { GLBaseViewport }
-// export default GLBaseViewport;

@@ -13,9 +13,9 @@ class Lightmap extends RefCounted {
    * @param {any} asset - The asset value.
    * @param {any} stream - The stream value.
    */
-  constructor(filepath, asset, stream) {
+  constructor(filepath, asset, atlasSize, stream) {
     super()
-    this.atlasSize = asset.getLightmapSize()
+    this.atlasSize = atlasSize
     this.image = new VLHImage('Lightmap', { stream })
     this.image.getParameter('FilePath').setFilepath(filepath)
     this.image.setHDRTint(asset.getParameter('LightmapTint').getValue())
