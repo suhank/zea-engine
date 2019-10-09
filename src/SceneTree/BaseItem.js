@@ -7,6 +7,7 @@ const ItemFlags = {
   USER_EDITED: 1 << 1,
   IGNORE_BBOX: 1 << 2,
   BIN_NODE: 1 << 3, // This node was generated when loading a binary file.
+  INVISIBLE: 1 << 4, // This node was generated when loading a binary file.
 }
 let numBaseItems = 0
 
@@ -33,7 +34,6 @@ class BaseItem extends ParameterOwner {
     this.__metaData = {}
 
     this.nameChanged = new Signal()
-    // this.flagsChanged = new Signal();
 
     this.parameterValueChanged.connect((param, mode) => {
       if (mode == ValueSetMode.USER_SETVALUE) {
@@ -128,7 +128,14 @@ class BaseItem extends ParameterOwner {
    */
   setFlag(flag) {
     this.__flags |= flag
-    // this.flagsChanged.emit(this.__flags);
+  }
+
+  /**
+   * The clearFlag method.
+   * @param {number} flag - the flag param.
+   */
+  clearFlag(flag) {
+    this.__flags &= ~flag
   }
 
   /**

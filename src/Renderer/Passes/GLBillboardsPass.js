@@ -112,7 +112,7 @@ class GLBillboardsPass extends GLPass {
         this.updated.emit()
       })
       image.updated.connect(() => {
-        console.warn('TODO: update the atlas:' + index)
+        // console.warn('TODO: update the atlas:' + index)
         // const image = billboard.getParameter('image').getValue();
         // const imageIndex = this.__atlas.addSubImage(image)
         // this.__billboards[index].image = image;
