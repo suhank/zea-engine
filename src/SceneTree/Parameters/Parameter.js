@@ -14,11 +14,12 @@ const ValueGetMode = {
 // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
 const ValueSetMode = {
   USER_SETVALUE: 0,
-  OPERATOR_SETVALUE: 1 /* No events*/,
-  SILENT: 1,
-  DATA_LOAD: 2 /* Generate events, but don't flag the parameter as user edited*/,
-  OPERATOR_DIRTIED: 3 /* Generate events, but don't flag the parameter as user edited*/,
-  STATEMACHINE_SETVALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
+  USER_SETTINGVALUE: 1 /* A value is being interactivly set */,
+  OPERATOR_SETVALUE: 2 /* No events*/,
+  SILENT: 2,
+  DATA_LOAD: 3 /* Generate events, but don't flag the parameter as user edited*/,
+  OPERATOR_DIRTIED: 4 /* Generate events, but don't flag the parameter as user edited*/,
+  STATEMACHINE_SETVALUE: 5 /* Generate events, but don't flag the parameter as user edited*/,
 }
 const ParamFlags = {
   USER_EDITED: 1 << 1,
@@ -297,7 +298,9 @@ class Parameter extends BaseParameter {
 
     if (!value.fromJSON) {
       // Note: equality tests on anything but simple values is going to be suer expenseive.
-      if (this.__value == value) return
+      // Note: during an interactive setvalue session, we see many USER_SETTINGVALUE
+      // followed by a USER_SETVALUE where the value == the previous USER_SETTINGVALUE.
+      if (this.__value == value && mode != ValueSetMode.USER_SETVALUE) return
     }
     this.__value = value
     if (mode == ValueSetMode.USER_SETVALUE) this.setFlag(ParamFlags.USER_EDITED)

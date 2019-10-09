@@ -28,7 +28,10 @@ class NumberParameter extends Parameter {
    * @param {any} mode - The mode param.
    */
   setValue(value, mode) {
-    if (mode == ValueSetMode.USER_SETVALUE) {
+    if (
+      mode == ValueSetMode.USER_SETTINGVALUE ||
+      mode == ValueSetMode.USER_SETVALUE
+    ) {
       if (this.__range) {
         value = Math.clamp(value, this.__range[0], this.__range[1])
       }
