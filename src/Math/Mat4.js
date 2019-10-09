@@ -27,22 +27,10 @@ class Mat4 extends AttrValue {
    * @param {number} m33 - The m33 value.
    */
   constructor(
-    m00 = 1,
-    m01 = 0,
-    m02 = 0,
-    m03 = 0,
-    m10 = 0,
-    m11 = 1,
-    m12 = 0,
-    m13 = 0,
-    m20 = 0,
-    m21 = 0,
-    m22 = 1,
-    m23 = 0,
-    m30 = 0,
-    m31 = 0,
-    m32 = 0,
-    m33 = 1
+    m00 = 1, m01 = 0, m02 = 0, m03 = 0,
+    m10 = 0, m11 = 1, m12 = 0, m13 = 0,
+    m20 = 0, m21 = 0, m22 = 1, m23 = 0,
+    m30 = 0, m31 = 0, m32 = 0, m33 = 1
   ) {
     super()
 
@@ -402,22 +390,10 @@ class Mat4 extends AttrValue {
    * @param {number} m33 - The m33 value.
    */
   set(
-    m00 = 1,
-    m01 = 0,
-    m02 = 0,
-    m03 = 0,
-    m10 = 0,
-    m11 = 1,
-    m12 = 0,
-    m13 = 0,
-    m20 = 0,
-    m21 = 0,
-    m22 = 1,
-    m23 = 0,
-    m30 = 0,
-    m31 = 0,
-    m32 = 0,
-    m33 = 1
+    m00 = 1, m01 = 0, m02 = 0, m03 = 0,
+    m10 = 0, m11 = 1, m12 = 0, m13 = 0,
+    m20 = 0, m21 = 0, m22 = 1, m23 = 0,
+    m30 = 0, m31 = 0, m32 = 0, m33 = 1
   ) {
     this.__data[0] = m00
     this.__data[1] = m01
@@ -940,29 +916,14 @@ class Mat4 extends AttrValue {
    * @return {any} - The return value.
    */
   translateInPlace(v3) {
+    const a = this.__data
     const x = v3.x
     const y = v3.y
     const z = v3.z
-    this.__data[12] =
-      this.__data[0] * x +
-      this.__data[4] * y +
-      this.__data[8] * z +
-      this.__data[12]
-    this.__data[13] =
-      this.__data[1] * x +
-      this.__data[5] * y +
-      this.__data[9] * z +
-      this.__data[13]
-    this.__data[14] =
-      this.__data[2] * x +
-      this.__data[6] * y +
-      this.__data[10] * z +
-      this.__data[14]
-    this.__data[15] =
-      this.__data[3] * x +
-      this.__data[7] * y +
-      this.__data[11] * z +
-      this.__data[15]
+    a[12] = a[0] * x + a[4] * y + a[8] * z + a[12]
+    a[13] = a[1] * x + a[5] * y + a[9] * z + a[13]
+    a[14] = a[2] * x + a[6] * y + a[10] * z + a[14]
+    a[15] = a[3] * x + a[7] * y + a[11] * z + a[15]
     return this
   }
 
@@ -989,24 +950,14 @@ class Mat4 extends AttrValue {
     const yLen = yAxis.length()
     if (yLen > Number.EPSILON) yAxis.scaleInPlace(1.0 / yLen)
 
+    /* eslint-disable prettier/prettier*/
     this.set(
-      xAxis.x,
-      xAxis.y,
-      xAxis.z,
-      0,
-      yAxis.x,
-      yAxis.y,
-      yAxis.z,
-      0,
-      zAxis.x,
-      zAxis.y,
-      zAxis.z,
-      0,
-      pos.x,
-      pos.y,
-      pos.z,
-      1
+      xAxis.x, xAxis.y, xAxis.z, 0,
+      yAxis.x, yAxis.y, yAxis.z, 0,
+      zAxis.x, zAxis.y, zAxis.z, 0,
+      pos.x,     pos.y,   pos.z, 1
     )
+    /* eslint-enable prettier/prettier*/
   }
 
   /**
@@ -1021,44 +972,38 @@ class Mat4 extends AttrValue {
    * @return {any} - The return value.
    */
   setRotation(axis, rad) {
-    let x = axis.x
-    let y = axis.y
-    let z = axis.z
-    let len = axis.length()
-    let s
-    let c
-    let t
+    const len = axis.length()
 
     if (Math.abs(len) < Number.EPSILON) {
       return null
     }
 
-    len = 1 / len
-    x *= len
-    y *= len
-    z *= len
+    const x = axis.x / len
+    const y = axis.y / len
+    const z = axis.z / len
 
-    s = Math.sin(rad)
-    c = Math.cos(rad)
-    t = 1 - c
+    const s = Math.sin(rad)
+    const c = Math.cos(rad)
+    const t = 1 - c
 
     // Perform rotation-specific matrix multiplication
-    this.__data[0] = x * x * t + c
-    this.__data[1] = y * x * t + z * s
-    this.__data[2] = z * x * t - y * s
-    this.__data[3] = 0
-    this.__data[4] = x * y * t - z * s
-    this.__data[5] = y * y * t + c
-    this.__data[6] = z * y * t + x * s
-    this.__data[7] = 0
-    this.__data[8] = x * z * t + y * s
-    this.__data[9] = y * z * t - x * s
-    this.__data[10] = z * z * t + c
-    this.__data[11] = 0
-    this.__data[12] = 0
-    this.__data[13] = 0
-    this.__data[14] = 0
-    this.__data[15] = 1
+    const a = this.__data
+    a[0] = x * x * t + c
+    a[1] = y * x * t + z * s
+    a[2] = z * x * t - y * s
+    a[3] = 0
+    a[4] = x * y * t - z * s
+    a[5] = y * y * t + c
+    a[6] = z * y * t + x * s
+    a[7] = 0
+    a[8] = x * z * t + y * s
+    a[9] = y * z * t - x * s
+    a[10] = z * z * t + c
+    a[11] = 0
+    a[12] = 0
+    a[13] = 0
+    a[14] = 0
+    a[15] = 1
     return this
   }
 
@@ -1077,22 +1022,13 @@ class Mat4 extends AttrValue {
     const c = Math.cos(rad)
 
     // Perform axis-specific matrix multiplication
-    this.__data[0] = 1
-    this.__data[1] = 0
-    this.__data[2] = 0
-    this.__data[3] = 0
-    this.__data[4] = 0
-    this.__data[5] = c
-    this.__data[6] = s
-    this.__data[7] = 0
-    this.__data[8] = 0
-    this.__data[9] = -s
-    this.__data[10] = c
-    this.__data[11] = 0
-    this.__data[12] = 0
-    this.__data[13] = 0
-    this.__data[14] = 0
-    this.__data[15] = 1
+    const a = this.__data
+    /* eslint-disable prettier/prettier*/
+    a[0] = 1; a[1] = 0; a[2] = 0; a[3] = 0;
+    a[4] = 0; a[5] = c; a[6] = s; a[7] = 0;
+    a[8] = 0; a[9] = -s; a[10] = c; a[11] = 0;
+    a[12] = 0; a[13] = 0; a[14] = 0; a[15] = 1;
+    /* eslint-enable prettier/prettier*/
     return this
   }
 
@@ -1111,22 +1047,13 @@ class Mat4 extends AttrValue {
     const c = Math.cos(rad)
 
     // Perform axis-specific matrix multiplication
-    this.__data[0] = c
-    this.__data[1] = 0
-    this.__data[2] = -s
-    this.__data[3] = 0
-    this.__data[4] = 0
-    this.__data[5] = 1
-    this.__data[6] = 0
-    this.__data[7] = 0
-    this.__data[8] = s
-    this.__data[9] = 0
-    this.__data[10] = c
-    this.__data[11] = 0
-    this.__data[12] = 0
-    this.__data[13] = 0
-    this.__data[14] = 0
-    this.__data[15] = 1
+    const a = this.__data;
+    /* eslint-disable prettier/prettier*/
+    a[0] = c; a[1] = 0; a[2] = -s; a[3] = 0;
+    a[4] = 0; a[5] = 1; a[6] = 0; a[7] = 0;
+    a[8] = s; a[9] = 0; a[10] = c; a[11] = 0;
+    a[12] = 0; a[13] = 0; a[14] = 0; a[15] = 1;
+    /* eslint-enable prettier/prettier*/
     return this
   }
 
@@ -1145,22 +1072,13 @@ class Mat4 extends AttrValue {
     const c = Math.cos(rad)
 
     // Perform axis-specific matrix multiplication
-    this.__data[0] = c
-    this.__data[1] = s
-    this.__data[2] = 0
-    this.__data[3] = 0
-    this.__data[4] = -s
-    this.__data[5] = c
-    this.__data[6] = 0
-    this.__data[7] = 0
-    this.__data[8] = 0
-    this.__data[9] = 0
-    this.__data[10] = 1
-    this.__data[11] = 0
-    this.__data[12] = 0
-    this.__data[13] = 0
-    this.__data[14] = 0
-    this.__data[15] = 1
+    const a = this.__data;
+    /* eslint-disable prettier/prettier*/
+    a[0] = c; a[1] = s; a[2] = 0; a[3] = 0; 
+    a[4] = -s; a[5] = c; a[6] = 0; a[7] = 0; 
+    a[8] = 0; a[9] = 0; a[10] = 1; a[11] = 0; 
+    a[12] = 0; a[13] = 0; a[14] = 0; a[15] = 1;
+    /* eslint-enable prettier/prettier*/
     return this
   }
 
@@ -1170,27 +1088,16 @@ class Mat4 extends AttrValue {
    * @return {vec4} - The return value.
    */
   transformVec4(vec) {
+    const a = this.__data
     const x = vec.x
     const y = vec.y
     const z = vec.z
     const w = vec.t
     return new Vec4(
-      this.__data[0] * x +
-        this.__data[4] * y +
-        this.__data[8] * z +
-        this.__data[12] * w,
-      this.__data[1] * x +
-        this.__data[5] * y +
-        this.__data[9] * z +
-        this.__data[13] * w,
-      this.__data[2] * x +
-        this.__data[6] * y +
-        this.__data[10] * z +
-        this.__data[14] * w,
-      this.__data[3] * x +
-        this.__data[7] * y +
-        this.__data[11] * z +
-        this.__data[15] * w
+      a[0] * x + a[4] * y + a[8] * z + a[12] * w,
+      a[1] * x + a[5] * y + a[9] * z + a[13] * w,
+      a[2] * x + a[6] * y + a[10] * z + a[14] * w,
+      a[3] * x + a[7] * y + a[11] * z + a[15] * w
     )
   }
 
@@ -1200,22 +1107,14 @@ class Mat4 extends AttrValue {
    * @return {vec3} - The return value.
    */
   transformVec3(vec) {
+    const a = this.__data
     const x = vec.x
     const y = vec.y
     const z = vec.z
     return new Vec3(
-      this.__data[0] * x +
-        this.__data[4] * y +
-        this.__data[8] * z +
-        this.__data[12],
-      this.__data[1] * x +
-        this.__data[5] * y +
-        this.__data[9] * z +
-        this.__data[13],
-      this.__data[2] * x +
-        this.__data[6] * y +
-        this.__data[10] * z +
-        this.__data[14]
+      a[0] * x + a[4] * y + a[8] * z + a[12],
+      a[1] * x + a[5] * y + a[9] * z + a[13],
+      a[2] * x + a[6] * y + a[10] * z + a[14]
     )
   }
 
@@ -1225,13 +1124,14 @@ class Mat4 extends AttrValue {
    * @return {vec3} - The return value.
    */
   rotateVec3(vec) {
+    const a = this.__data
     const x = vec.x
     const y = vec.y
     const z = vec.z
     return new Vec3(
-      this.__data[0] * x + this.__data[4] * y + this.__data[8] * z,
-      this.__data[1] * x + this.__data[5] * y + this.__data[9] * z,
-      this.__data[2] * x + this.__data[6] * y + this.__data[10] * z
+      a[0] * x + a[4] * y + a[8] * z,
+      a[1] * x + a[5] * y + a[9] * z,
+      a[2] * x + a[6] * y + a[10] * z
     )
   }
 
@@ -1245,24 +1145,14 @@ class Mat4 extends AttrValue {
   setPerspectiveMatrix(fovy, aspect, near, far) {
     const f = Math.tan(Math.PI * 0.5 - 0.5 * fovy)
     const rangeInv = 1.0 / (near - far)
+    /* eslint-disable prettier/prettier*/
     this.set(
-      f / aspect,
-      0,
-      0,
-      0,
-      0,
-      f,
-      0,
-      0,
-      0,
-      0,
-      (near + far) * rangeInv,
-      -1,
-      0,
-      0,
-      near * far * rangeInv * 2,
-      0
+      f / aspect, 0, 0, 0,
+      0, f, 0, 0, 
+      0, 0, (near + far) * rangeInv, -1,
+      0, 0, near * far * rangeInv * 2, 0
     )
+    /* eslint-enable prettier/prettier*/
   }
 
   /**
@@ -1278,24 +1168,14 @@ class Mat4 extends AttrValue {
     const lr = 1 / (left - right)
     const bt = 1 / (bottom - top)
     const nf = 1 / (near - far)
+    /* eslint-disable prettier/prettier*/
     this.set(
-      -2 * lr,
-      0,
-      0,
-      0,
-      0,
-      -2 * bt,
-      0,
-      0,
-      0,
-      0,
-      2 * nf,
-      0,
-      (left + right) * lr,
-      (top + bottom) * bt,
-      (far + near) * nf,
-      1
+      -2 * lr, 0, 0, 0,
+      0, -2 * bt, 0, 0,
+      0, 0, 2 * nf, 0, 
+      (left + right) * lr, (top + bottom) * bt, (far + near) * nf,  1
     )
+    /* eslint-enable prettier/prettier*/
   }
 
   /**
@@ -1305,11 +1185,23 @@ class Mat4 extends AttrValue {
    * @param {any} z - The z param.
    */
   setScale(x, y, z) {
+    /* eslint-disable prettier/prettier*/
     if (x instanceof Vec3) {
-      this.set(x.x, 0, 0, 0, 0, x.y, 0, 0, 0, 0, x.z, 0, 0, 0, 0, 1)
+      this.set(
+        x.x, 0, 0, 0, 
+        0, x.y, 0, 0, 
+        0, 0, x.z, 0, 
+        0, 0, 0, 1
+      )
     } else {
-      this.set(x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1)
+      this.set(
+        x, 0, 0, 0,
+        0, y, 0, 0,
+        0, 0, z, 0, 
+        0, 0, 0, 1
+      )
     }
+    /* eslint-enable prettier/prettier*/
   }
 
   /**
@@ -1317,24 +1209,14 @@ class Mat4 extends AttrValue {
    * @param {any} m3x4 - The m3x4 param.
    */
   setFromMat3x4Array(m3x4) {
+    /* eslint-disable prettier/prettier*/
     this.set(
-      m3x4[0],
-      m3x4[1],
-      m3x4[2],
-      0,
-      m3x4[3],
-      m3x4[4],
-      m3x4[5],
-      0,
-      m3x4[6],
-      m3x4[7],
-      m3x4[8],
-      0,
-      m3x4[9],
-      m3x4[10],
-      m3x4[11],
-      1
+      m3x4[0], m3x4[1], m3x4[2], 0,
+      m3x4[3], m3x4[4], m3x4[5], 0,
+      m3x4[6], m3x4[7], m3x4[8], 0,
+      m3x4[9], m3x4[10], m3x4[11], 1
     )
+    /* eslint-enable prettier/prettier*/
   }
 
   /**
