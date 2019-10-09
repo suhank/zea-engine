@@ -1,24 +1,8 @@
 import { Vec2, Xfo } from '../Math'
-import {
-  ValueSetMode,
-  Parameter,
-  BooleanParameter,
-  NumberParameter,
-  ColorParameter,
-  Vec2Parameter,
-  XfoParameter,
-} from './Parameters'
-
+import { ValueSetMode, XfoParameter, Mat4Parameter } from './Parameters'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
-import { Signal } from '../Utilities'
 import { sgFactory } from './SGFactory.js'
-
-import {
-  LOADFLAGS_SKIP_MATERIALS,
-  LOADFLAGS_SKIP_GEOMETRIES,
-} from './TreeItem.js'
-
 import { BaseGeomItem } from './BaseGeomItem.js'
 
 /** Class representing a geom item.
@@ -49,19 +33,19 @@ class GeomItem extends BaseGeomItem {
 
     this.__lightmapCoordOffset = new Vec2()
     this.__geomOffsetXfoParam = this.addParameter(
-      new XfoParameter('geomOffsetXfo')
+      new XfoParameter('GeomOffsetXfo')
     )
-    this.__geomXfoParam = this.addParameter(new XfoParameter('geomXfo'))
+    this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
-    this.__cleanGeomXfo = this.__cleanGeomXfo.bind(this)
+    this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
     this.__globalXfoParam.valueChanged.connect(mode => {
-      this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
+      this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
     this.__geomOffsetXfoParam.valueChanged.connect(mode => {
-      this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
+      this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
 
-    this.geomXfoChanged = this.__geomXfoParam.valueChanged
+    this.geomXfoChanged = this.__geomMatParam.valueChanged
     this.materialAssigned = this.__materialParam.valueChanged
     this.geomAssigned = this.__geomParam.valueChanged
 
@@ -70,14 +54,14 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The __cleanGeomXfo method.
+   * The __cleanGeomMat method.
    * @return {any} - The return value.
    * @private
    */
-  __cleanGeomXfo() {
-    return this.__globalXfoParam
-      .getValue()
-      .multiply(this.__geomOffsetXfoParam.getValue())
+  __cleanGeomMat() {
+    const globalMat4 = this.__globalXfoParam.getValue().toMat4()
+    const geomOffsetMat4 = this.__geomOffsetXfoParam.getValue().toMat4()
+    return globalMat4.multiply(geomOffsetMat4)
   }
 
   /**
@@ -109,7 +93,7 @@ class GeomItem extends BaseGeomItem {
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
-    this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
+    this.__geomMatParam.setDirty(this.__cleanGeomMat)
   }
 
   // ////////////////////////////////////////
@@ -178,7 +162,7 @@ class GeomItem extends BaseGeomItem {
     bbox = super._cleanBoundingBox(bbox)
     const geom = this.getGeometry()
     if (geom) {
-      bbox.addBox3(geom.boundingBox, this.getGeomXfo())
+      bbox.addBox3(geom.boundingBox, this.getGeomMat4())
     }
     return bbox
   }
@@ -203,11 +187,11 @@ class GeomItem extends BaseGeomItem {
   }
 
   /**
-   * The getGeomXfo method.
-   * @return {any} - The return value.
+   * The getGeomMat4 method.
+   * @return {Mat4} - The return value.
    */
-  getGeomXfo() {
-    return this.__geomXfoParam.getValue()
+  getGeomMat4() {
+    return this.__geomMatParam.getValue()
   }
 
   // ///////////////////////////

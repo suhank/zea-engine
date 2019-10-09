@@ -144,10 +144,7 @@ class GLGeomItem {
    */
   updateGeomMatrix() {
     // Pull on the GeomXfo param. This will trigger the lazy evaluation of the operators in the scene.
-    this.modelMatrixArray = this.geomItem
-      .getGeomXfo()
-      .toMat4()
-      .asArray()
+    this.modelMatrixArray = this.geomItem.getGeomMat4().asArray()
   }
 
   /**

@@ -107,10 +107,10 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
    * @param {any} viewPos - The viewPos param.
    */
   sortItems(viewPos) {
-    for (const transparentItem of this.visibleItems)
-      transparentItem.dist = transparentItem.glgeomitem.geomItem
-        .getGeomXfo()
-        .tr.distanceTo(viewPos)
+    for (const transparentItem of this.visibleItems) {
+      const mat4 = transparentItem.glgeomitem.geomItem.getGeomMat4()
+      transparentItem.dist = mat4.translation.distanceTo(viewPos)
+    }
     this.visibleItems.sort((a, b) =>
       a.dist > b.dist ? -1 : a.dist < b.dist ? 1 : 0
     )

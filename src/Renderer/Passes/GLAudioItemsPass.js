@@ -150,9 +150,10 @@ class GLAudioItemsPass extends GLPass {
         // that I could not move the listener using the reccommended approach (setting values on the AudioParams.)
         // https://developer.mozilla.org/en-US/docs/Web/API/AudioListener/setPosition
 
-        let xfo
-        if (treeItem instanceof GeomItem) xfo = treeItem.getGeomXfo()
-        else xfo = treeItem.getGlobalXfo()
+        let mat4
+        if (treeItem instanceof GeomItem) mat4 = treeItem.getGeomMat4()
+        else mat4 = treeItem.getGlobalXfo().toMat4()
+        const tr = mat4.translation
         // if (panner.positionX) {
         //     // panner.positionX.setTargetAtTime(xfo.tr.x, audioCtx.currentTime);
         //     // panner.positionY.setTargetAtTime(xfo.tr.y, audioCtx.currentTime);
@@ -161,10 +162,10 @@ class GLAudioItemsPass extends GLPass {
         //     panner.positionY.value = xfo.tr.y;
         //     panner.positionZ.value = xfo.tr.z;
         // } else {
-        panner.setPosition(xfo.tr.x, xfo.tr.y, xfo.tr.z)
+        panner.setPosition(tr.x, tr.y, tr.z)
         // }
 
-        const dir = xfo.ori.getZaxis()
+        const dir = mat4.zAxis
         // if (panner.orientationX) {
         //     // panner.orientationX.setTargetAtTime(dir.x, audioCtx.currentTime);
         //     // panner.orientationY.setTargetAtTime(dir.y, audioCtx.currentTime);

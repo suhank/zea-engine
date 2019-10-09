@@ -320,7 +320,7 @@ class GLStandardGeomsPass extends GLPass {
 
     // /////////////////////////
     // Geom Matrix
-    const mat4 = geomItem.getGeomXfo().toMat4()
+    const mat4 = geomItem.getGeomMat4()
     const pix1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4)
     const pix2 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 8)
     const pix3 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 12)
