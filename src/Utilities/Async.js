@@ -12,6 +12,7 @@ class Async {
 
     this.incAsyncCount = function(count = 1) {
       this.__asyncCount += count
+      this.ready.setToggled(false)
     }.bind(this)
 
     this.decAsyncCount = function() {

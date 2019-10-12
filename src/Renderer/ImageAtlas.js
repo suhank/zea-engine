@@ -1,4 +1,4 @@
-import { Vec2, Vec4 } from '../Math'
+import { Vec2, Vec4, Color } from '../Math'
 
 import { Async, GrowingPacker } from '../Utilities'
 
@@ -6,7 +6,7 @@ import { BaseImage } from '../SceneTree'
 import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js'
 import { GLTexture2D } from './GLTexture2D.js'
-import { GLFbo } from './GLFbo.js'
+import { GLRenderTarget } from './GLRenderTarget.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing an atlas layout shader.
@@ -126,9 +126,9 @@ void main(void) {
 import './Shaders/GLSL/ImageAtlas.js'
 
 /** Class representing an image atlas.
- * @extends GLTexture2D
+ * @extends GLRenderTarget
  */
-class ImageAtlas extends GLTexture2D {
+class ImageAtlas extends GLRenderTarget {
   /**
    * Create an image atlas..
    * @param {any} gl - The gl value.
@@ -137,18 +137,12 @@ class ImageAtlas extends GLTexture2D {
    * @param {any} type - The type value.
    * @param {any} clearColor - The clearColor value.
    */
-  constructor(
-    gl,
-    name,
-    format = 'RGBA',
-    type = 'FLOAT',
-    clearColor = [0, 0, 0, 0]
-  ) {
+  constructor(gl, name, format = 'RGBA', type = 'FLOAT') {
     super(gl)
     this.__name = name
     this.__formatParam = format
     this.__typeParam = type
-    this.__clearColor = clearColor
+    this.clearColor = new Color(0, 0, 0, 0)
     this.__subImages = []
     this.__layoutNeedsRegeneration = false
     this.__async = new Async()
@@ -186,7 +180,11 @@ class ImageAtlas extends GLTexture2D {
           this.__async.decAsyncCount()
         })
       }
-      subImage.setMetadata('ImageAtlas_index', index)
+      const imageUpdatedId = subImage.updated.connect(() => {
+        // console.warn('TODO: update the atlas:' + index)
+      })
+      subImage.setMetadata('ImageAtlas_gltex', gltexture)
+      subImage.setMetadata('ImageAtlas_imageUpdatedId', imageUpdatedId)
       gltexture.addRef(this)
       this.__subImages.push(gltexture)
     } else {
@@ -205,7 +203,8 @@ class ImageAtlas extends GLTexture2D {
   removeSubImage(subImage) {
     let index
     if (subImage instanceof BaseImage) {
-      index = subImage.getMetadata('ImageAtlas_index')
+      const gltext = subImage.getMetadata('ImageAtlas_gltex')
+      index = this.__subImages.indexOf(gltext)
     } else {
       index = this.__subImages.indexOf(subImage)
     }
@@ -289,8 +288,8 @@ class ImageAtlas extends GLTexture2D {
     })
 
     const gl = this.__gl
-    this.__fbo = new GLFbo(gl, this)
-    this.__fbo.setClearColor(this.__clearColor)
+    // this.__fbo = new GLFbo(gl, this)
+    // this.__fbo.setClearColor(this.__clearColor)
 
     if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
 
@@ -381,11 +380,10 @@ class ImageAtlas extends GLTexture2D {
     if (this.__layoutNeedsRegeneration) {
       this.generateAtlasLayout()
     }
-    if (!this.__fbo) return
-    this.__fbo.bindAndClear()
-
     const gl = this.__gl
     const renderstate = {}
+    this.bindForWriting(renderstate, true)
+
     gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas')
     gl.__atlasLayoutShaderBinding.bind(renderstate)
     const scl = new Vec2(1.0 / this.width, 1.0 / this.height)
@@ -405,13 +403,17 @@ class ImageAtlas extends GLTexture2D {
       gl.uniform1i(unifs.alphaFromLuminance.location, image.alphaFromLuminance)
       gl.uniform1i(unifs.invert.location, image.invert)
       gl.drawQuad()
+
+      // After rendering the texture, we can reuse the texture unit.
+      renderstate.boundTextures--
     }
 
     if (cleanup) {
       this.cleanup()
     }
 
-    this.__fbo.unbind()
+    this.unbind(renderstate)
+    // this.__fbo.unbind()
     this.updated.emit()
   }
 
@@ -457,11 +459,10 @@ class ImageAtlas extends GLTexture2D {
    */
   cleanup() {
     for (const image of this.__subImages) {
-      image.destroy()
+      image.removeRef(this)
     }
-    if (this.__fbo) this.__fbo.destroy()
     this.__subImages = []
-    this.__fbo = null
+    this.destroy()
   }
 
   /**
@@ -474,4 +475,4 @@ class ImageAtlas extends GLTexture2D {
 }
 
 export { ImageAtlas }
-// export default ImageAtlas;
+

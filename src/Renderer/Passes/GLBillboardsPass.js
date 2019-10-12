@@ -90,42 +90,38 @@ class GLBillboardsPass extends GLPass {
    * @param {any} billboard - The billboard param.
    */
   addBillboard(billboard) {
-    const image = billboard.getParameter('image').getValue()
+    const imageParam = billboard.getParameter('image')
+    const image = imageParam.getValue()
     if (!image) {
-      billboard
-        .getParameter('image')
-        .valueChanged.connect(() => this.addBillboard(billboard))
+      imageParam.valueChanged.connect(() => this.addBillboard(billboard))
       return
     }
-    image.loaded.connect(() => {
-      let index
-      if (this.__freeIndices.length > 0) index = this.__freeIndices.pop()
-      else index = this.__billboards.length
-      this.__billboards[index] = {
-        billboard,
-        imageIndex: this.__atlas.addSubImage(image),
-      }
-      billboard.setMetadata('GLBillboardsPass_Index', index)
+    
+    let index
+    if (this.__freeIndices.length > 0) index = this.__freeIndices.pop()
+    else index = this.__billboards.length
+    
+    const imageIndex = this.__atlas.addSubImage(image)
+    billboard.setMetadata('GLBillboardsPass_Index', index)
 
-      billboard.visibilityChanged.connect(() => {
-        this.__updateIndexArray()
-        this.updated.emit()
-      })
-      image.updated.connect(() => {
-        // console.warn('TODO: update the atlas:' + index)
-        // const image = billboard.getParameter('image').getValue();
-        // const imageIndex = this.__atlas.addSubImage(image)
-        // this.__billboards[index].image = image;
-        // this.__billboards[index].imageIndex = imageIndex;
-        // this.__updateBillboard(index);
-      })
-      billboard.getParameter('alpha').valueChanged.connect(() => {
-        this.__updateBillboard(index)
-        this.updated.emit()
-      })
-
-      this.__requestUpdate()
+    const visibilityChangedId = billboard.visibilityChanged.connect(() => {
+      this.__updateIndexArray()
+      this.updated.emit()
     })
+
+    const alphaChangedId = billboard.getParameter('alpha').valueChanged.connect(() => {
+      this.__updateBillboard(index)
+      this.updated.emit()
+    })
+
+    this.__billboards[index] = {
+      billboard,
+      imageIndex,
+      visibilityChangedId,
+      alphaChangedId,
+    }
+
+    this.__requestUpdate()
   }
 
   /**
@@ -142,12 +138,12 @@ class GLBillboardsPass extends GLPass {
 
     // Currently we are getting errors when trying to re-generate the Fbo
     // after removing and then adding images back to the atlas.
-    // I don't have time to figureit out, so simply adding images
+    // I don't have time to figure it out, so simply adding images
     // to the atlas. (for the Zahner demo)
     // Eventually we need to clean up the atlas, so debug this using the
     // survey-point-calibration 190528_Dummy_Srvy_Data.vlexe test
-    // const image = billboardData.billboard.getParameter('image').getValue();
-    // this.__atlas.removeSubImage(image)
+    const image = billboardData.billboard.getParameter('image').getValue();
+    this.__atlas.removeSubImage(image)
 
     this.__billboards[index] = null
     this.__freeIndices.push(index)

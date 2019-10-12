@@ -1,7 +1,13 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Signal } from '../Utilities'
 import { Vec3 } from '../Math'
-import { Plane, BaseImage, ProceduralSky, LightmapMixer, VLAAsset, EnvMap } from '../SceneTree'
+import {
+  Plane,
+  ProceduralSky,
+  LightmapMixer,
+  VLAAsset,
+  EnvMap,
+} from '../SceneTree'
 import { GLFbo } from './GLFbo.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLLightmapMixer } from './GLLightmapMixer.js'

@@ -144,7 +144,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {any} dragVec - The dragVec param.
    */
   pan(event, dragVec) {
-    console.log('Pab')
     const { viewport } = event
     const camera = viewport.getCamera()
 

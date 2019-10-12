@@ -10,10 +10,38 @@ class GLRenderTarget {
    * @param {any} params - The params value.
    */
   constructor(gl, params) {
+    this.resized = new Signal()
+    this.updated = new Signal()
+    this.__gl = gl
+    this.textureTargets = []
+    this.depthTexture = null
+
+    if (params) {
+      this.configure(params)
+    }
+  }
+
+  /**
+   * The configure method.
+   * @param {any} params - The params param.
+   */
+  configure(params) {
+    const gl = this.__gl
+
     const p = processTextureParams(gl, params)
 
-    this.resized = new Signal()
-    this.__gl = gl
+    this.textureTargets.forEach(colorTexture => {
+      gl.deleteTexture(colorTexture)
+    })
+    this.textureTargets = []
+    if (this.depthTexture) {
+      gl.deleteTexture(this.depthTexture)
+      this.depthTexture = null
+    }
+    if (this.frameBuffer){
+      gl.deleteFramebuffer(this.frameBuffer)
+    }
+
     this.type = p.type
     this.format = p.format
     this.internalFormat = p.internalFormat
@@ -25,8 +53,11 @@ class GLRenderTarget {
     this.clearColor = new Color(0, 0, 0, 0)
     this.colorMask = [true, true, true, true]
 
+    this.textureType = 1 // Default 2d 8 bit texture image texture.
+    this.textureDesc = [this.width, this.height, 0, 0]
+
+
     // -- Initialize texture targets
-    this.textureTargets = []
     const numColorChannels =
       params.numColorChannels != undefined
         ? params.numColorChannels
@@ -155,7 +186,7 @@ class GLRenderTarget {
       }
       return
     }
-    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null)
+    this.unbind()
   }
 
   /**
@@ -304,6 +335,45 @@ class GLRenderTarget {
     this.__checkFramebuffer();
     //gl.bindFramebuffer(gl.FRAMEBUFFER, null);
     */
+  }
+
+
+  /**
+   * The bindToUniform method.
+   * @param {any} renderstate - The renderstate param.
+   * @param {any} unif - The unif param.
+   * @param {any} bindings - The bindings param.
+   * @return {any} - The return value.
+   */
+  bindToUniform(renderstate, unif, bindings) {
+    // if (!this.__loaded) {
+    //   return false
+    // }
+    // if (!this.__gltex) {
+    //   throw new Error('Unable to bind non-initialized or deleted texture.')
+    // }
+
+    const unit = renderstate.boundTextures++
+    const texId = this.__gl.TEXTURE0 + unit
+    const gl = this.__gl
+    gl.activeTexture(texId)
+    gl.bindTexture(gl.TEXTURE_2D, this.textureTargets[0])
+    gl.uniform1i(unif.location, unit)
+
+    if (bindings) {
+      if (bindings.textureTypeUnif) {
+        gl.uniform1i(bindings.textureTypeUnif.location, this.textureType)
+      }
+
+      if (bindings.textureDescUnif) {
+        this.__gl.uniform4fv(
+          bindings.textureDescUnif.location,
+          this.textureDesc
+        )
+      }
+    }
+
+    return true
   }
 }
 export { GLRenderTarget }
