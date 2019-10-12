@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory'
 import { Parameter, ValueSetMode } from './Parameter.js'
 
