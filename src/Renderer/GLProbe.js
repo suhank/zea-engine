@@ -1,15 +1,15 @@
 import { hammersley } from '../Math'
 import { GLTexture2D } from './GLTexture2D.js'
-import { ImageAtlas } from './ImageAtlas.js'
+import { GLImageAtlas } from './GLImageAtlas.js'
 import { ConvolverShader } from './Shaders/ConvolverShader.js'
 import { GLFbo } from './GLFbo.js'
 import { ImagePyramid } from './ImagePyramid.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL probe.
- * @extends ImageAtlas
+ * @extends GLImageAtlas
  */
-class GLProbe extends ImageAtlas {
+class GLProbe extends GLImageAtlas {
   /**
    * Create a GL probe.
    * @param {any} gl - The gl value.

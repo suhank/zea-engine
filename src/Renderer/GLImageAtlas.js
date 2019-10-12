@@ -128,7 +128,7 @@ import './Shaders/GLSL/ImageAtlas.js'
 /** Class representing an image atlas.
  * @extends GLRenderTarget
  */
-class ImageAtlas extends GLRenderTarget {
+class GLImageAtlas extends GLRenderTarget {
   /**
    * Create an image atlas..
    * @param {any} gl - The gl value.
@@ -295,7 +295,7 @@ class ImageAtlas extends GLRenderTarget {
 
     if (!gl.__atlasLayoutShader) {
       gl.__atlasLayoutShader = new AtlasLayoutShader(gl)
-      const shaderComp = gl.__atlasLayoutShader.compileForTarget('ImageAtlas')
+      const shaderComp = gl.__atlasLayoutShader.compileForTarget('GLImageAtlas')
       gl.__atlasLayoutShaderBinding = generateShaderGeomBinding(
         gl,
         shaderComp.attrs,
@@ -384,7 +384,7 @@ class ImageAtlas extends GLRenderTarget {
     const renderstate = {}
     this.bindForWriting(renderstate, true)
 
-    gl.__atlasLayoutShader.bind(renderstate, 'ImageAtlas')
+    gl.__atlasLayoutShader.bind(renderstate, 'GLImageAtlas')
     gl.__atlasLayoutShaderBinding.bind(renderstate)
     const scl = new Vec2(1.0 / this.width, 1.0 / this.height)
 
@@ -474,5 +474,5 @@ class ImageAtlas extends GLRenderTarget {
   }
 }
 
-export { ImageAtlas }
+export { GLImageAtlas }
 

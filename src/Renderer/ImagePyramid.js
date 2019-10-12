@@ -1,6 +1,6 @@
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLFbo } from './GLFbo.js'
-import { ImageAtlas } from './ImageAtlas.js'
+import { GLImageAtlas } from './GLImageAtlas.js'
 
 import './Shaders/GLSL/ImagePyramid.js'
 
@@ -67,9 +67,9 @@ const Math_log2 = function(value) {
 // };
 
 /** Class representing an image pyramid.
- * @extends ImageAtlas
+ * @extends GLImageAtlas
  */
-class ImagePyramid extends ImageAtlas {
+class ImagePyramid extends GLImageAtlas {
   /**
    * Create an image pyramid.
    * @param {any} gl - The gl value.

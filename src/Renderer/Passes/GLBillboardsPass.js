@@ -2,7 +2,7 @@ import { Vec3, Vec4 } from '../../Math'
 import { BillboardItem } from '../../SceneTree'
 import { BillboardShader } from '../Shaders/BillboardShader.js'
 import { GLPass, PassType } from './GLPass.js'
-import { ImageAtlas } from '../ImageAtlas.js'
+import { GLImageAtlas } from '../GLImageAtlas.js'
 import { GLTexture2D } from '../GLTexture2D.js'
 import { generateShaderGeomBinding } from '../GeomShaderBinding.js'
 import { GLRenderer } from '../GLRenderer.js'
@@ -36,7 +36,7 @@ class GLBillboardsPass extends GLPass {
 
     this.__prevSortCameraPos = new Vec3()
 
-    this.__atlas = new ImageAtlas(
+    this.__atlas = new GLImageAtlas(
       this.__renderer.gl,
       'Billboards',
       'RGBA',
