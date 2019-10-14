@@ -759,6 +759,19 @@ class TreeItem extends BaseItem {
   }
 
   /**
+   * The removeChildByName method.
+   * @param {string} name - The name param.
+   * @return {object} - The child TreeItem.
+   */
+  removeChildByName(name) {
+    const index = this.__childItemsMapping[name]
+    if (index != undefined) {
+      return this.removeChild(index)
+    }
+    return null
+  }
+
+  /**
    * The removeChildByHandle method.
    * @param {any} childItem - The childItem to remove.
    */
