@@ -186,10 +186,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
    */
   addGeomItem(geomItem) {
     const material = geomItem.getMaterial()
-    let glshader
+    const shaderName = material.getShaderName()
     let glgeomdatashader
     let glselectedshader
-    glshader = this.__renderer.getOrCreateShader(material.getShaderName())
+    const glshader = this.__renderer.getOrCreateShader(shaderName)
     if (glshader.constructor.getGeomDataShaderName())
       glgeomdatashader = this.__renderer.getOrCreateShader(
         glshader.constructor.getGeomDataShaderName()
@@ -201,14 +201,14 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     const glmaterial = this.addMaterial(material)
     const glgeomItem = super.addGeomItem(geomItem)
 
-    let glshaderMaterials = this.__glshadermaterials[glshader.getName()]
+    let glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials) {
       glshaderMaterials = new GLShaderMaterials(
         glshader,
         glgeomdatashader,
         glselectedshader
       )
-      this.__glshadermaterials[material.getShaderName()] = glshaderMaterials
+      this.__glshadermaterials[shaderName] = glshaderMaterials
     }
 
     let glmaterialGeomItemSets = glshaderMaterials.findMaterialGeomItemSets(

@@ -133,8 +133,6 @@ void main(void) {
   }
 }
 
-
-
 class FatPointsGeomDataShader extends FatPointsShader {
   constructor(gl) {
     super(gl)
@@ -198,14 +196,6 @@ void main(void) {
 `
     )
   }
-
-  bind(renderstate) {
-    if (super.bind(renderstate)) {
-      renderstate.supportsInstancing = false
-      return true
-    }
-    return false
-  }
 }
 
 
@@ -253,18 +243,14 @@ void main(void) {
 `
     )
   }
-
-  bind(renderstate) {
-    if (super.bind(renderstate)) {
-      renderstate.supportsInstancing = false
-      return true
-    }
-    return false
-  }
 }
 
 sgFactory.registerClass('FatPointsShader', FatPointsShader)
 sgFactory.registerClass('FatPointsGeomDataShader', FatPointsGeomDataShader)
 sgFactory.registerClass('FatPointsSelectedShader', FatPointsSelectedShader)
 
-export { FatPointsShader }
+// Note: due to a bug in webpack, if these classes are not exported, 
+// then we get a mangling of the code _only_in_release_mode_. 
+// The factory returns FatPointsSelectedShader
+// instead of FatPointsShader when the GLPAss tries to construct it.
+export { FatPointsShader, FatPointsGeomDataShader, FatPointsSelectedShader }

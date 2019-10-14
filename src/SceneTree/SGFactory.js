@@ -72,10 +72,8 @@ class SGFactory {
   constructClass(classname /* , ...args */) {
     const classData = this.__registeredClasses[classname]
     if (!classData) {
-      if (!classData) {
-        console.warn('Factory not registered:' + classname)
-        return null
-      }
+      console.warn('Factory not registered:' + classname)
+      return null
     }
     this.__constructing = true
     const args = Array.prototype.slice.call(arguments, 1)
