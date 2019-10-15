@@ -149,11 +149,7 @@ class ResourceLoader {
     return asset
   }
 
-  /**
-   * The __applyCallbacks method.
-   * @param {any} resourcesDict - The resourcesDict param.
-   * @private
-   */
+  // eslint-disable-next-line require-jsdoc
   __applyCallbacks(resourcesDict) {
     const applyCallbacks = resource => {
       for (const filter in this.__resourceRegisterCallbacks) {
@@ -167,11 +163,7 @@ class ResourceLoader {
     }
   }
 
-  /**
-   * The __buildTree method.
-   * @param {any} resources - The resources param.
-   * @private
-   */
+  // eslint-disable-next-line require-jsdoc
   __buildTree(resources) {
     const buildEntity = resourceId => {
       if (this.__resourcesTreeEntities[resourceId]) return
@@ -197,38 +189,6 @@ class ResourceLoader {
     for (const key in resources) {
       buildEntity(key)
     }
-  }
-
-  /**
-   * The setCurrentUser method.
-   * @param {any} currentUser - The currentUser param.
-   */
-  setCurrentUser(currentUser) {
-    this.__currentUser = currentUser
-  }
-
-  /**
-   * The getCurrentUser method.
-   * @return {any} - The return value.
-   */
-  getCurrentUser() {
-    return this.__currentUser
-  }
-
-  /**
-   * The setProjectId method.
-   * @param {any} projectId - The projectId param.
-   */
-  setProjectId(projectId) {
-    this.__projectId = projectId
-  }
-
-  /**
-   * The getProjectId method.
-   * @return {any} - The return value.
-   */
-  getProjectId() {
-    return this.__projectId
   }
 
   /**
