@@ -65,6 +65,7 @@ class GLBaseRenderer {
     this.redrawOccured = new Signal()
 
     this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {})
+    this.bindEventHandlers()
 
     for (const passtype in registeredPasses) {
       for (const cls of registeredPasses[passtype]) {
@@ -415,10 +416,20 @@ class GLBaseRenderer {
    */
   __onResize() {
     if (!this.__xrViewportPresenting) {
-      this.__glcanvas.width =
-        this.__glcanvas.clientWidth * window.devicePixelRatio
-      this.__glcanvas.height =
-        this.__glcanvas.clientHeight * window.devicePixelRatio
+      // Note: devicePixelRatio has already been factored into the clientWidth and clientHeight,
+      // meaning we do not need to multiply client values by devicePixelRatio to get real values.
+      // On some devices, this duplicate multiplication (when the meta tag was not present), caused
+      // very large offscreen buffers to be created, which crashed devices.
+      // (PT 15/10/2019 - Zahner project)
+      // In some cases I have seen this is disabled using a viewport meta tag in the DOM, which then
+      // requires that we multiply by devicePixelRatio to get the screen pixels size.
+      // By removing that tag, it seems like manual zooming now on desktop systems does _NOT_
+      // effect the clientWidth/clientHeight which causes blurry rendering(when zoomed).
+      // This is a minor issue IMO, and so am disabling devicePixelRatio until its value is clear.
+      // _Remove the meta name="viewport" from the HTML_
+      const dpr = 1.0;//window.devicePixelRatio
+      this.__glcanvas.width = this.__glcanvas.clientWidth * dpr
+      this.__glcanvas.height = this.__glcanvas.clientHeight * dpr
 
       for (const vp of this.__viewports)
         vp.resize(this.__glcanvas.width, this.__glcanvas.height)
@@ -512,7 +523,12 @@ class GLBaseRenderer {
 
     // // gl.activeTexture(this.__gl.TEXTURE0);
     // this.__gl.bindTexture(this.__gl.TEXTURE_2D, this.__texture0.getTexHdl());
+  }
 
+  /**
+   * The bindEventHandlers method.
+   */
+  bindEventHandlers() {
     // ////////////////////////////////
     // Setup event handlers
     const isValidCanvas = () => {
@@ -521,8 +537,10 @@ class GLBaseRenderer {
 
     const calcRendererCoords = event => {
       const rect = this.__glcanvas.getBoundingClientRect()
-      event.rendererX = (event.clientX - rect.left) * window.devicePixelRatio
-      event.rendererY = (event.clientY - rect.top) * window.devicePixelRatio
+      // Disabling devicePixelRatio for now. See: __onResize
+      const dpr = 1.0;//window.devicePixelRatio
+      event.rendererX = (event.clientX - rect.left) * dpr
+      event.rendererY = (event.clientY - rect.top) * dpr
     }
 
     this.__glcanvas.addEventListener('mouseenter', event => {

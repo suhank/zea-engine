@@ -37,8 +37,6 @@ class GLViewport extends GLBaseViewport {
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
 
-    const gl = renderer.getGL()
-
     // Signals to abstract the user view.
     // i.e. when a user switches to VR mode, the signals
     // simply emit the new VR data.
@@ -78,14 +76,23 @@ class GLViewport extends GLBaseViewport {
    * @param {any} width - The width param.
    * @param {any} height - The height param.
    */
-  resize(width, height) {
-    super.resize(width, height)
+  resize(canvasWidth, canvasHeight) {
+    
+    this.__canvasWidth = canvasWidth
+    this.__canvasHeight = canvasHeight
+    this.__x = canvasWidth * this.__bl.x
+    this.__y = canvasWidth * this.__bl.y
+    this.__width = canvasWidth * this.__tr.x - canvasWidth * this.__bl.x
+    this.__height = canvasHeight * this.__tr.y - canvasHeight * this.__bl.y
+    this.region = [this.__x, this.__y, this.__width, this.__height]
+
     if (this.__camera) this.__updateProjectionMatrix()
 
     if (this.__geomDataBufferFbo) {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.__geomDataBufferFbo.resize()
     }
+    this.resized.emit()
   }
 
   /**
