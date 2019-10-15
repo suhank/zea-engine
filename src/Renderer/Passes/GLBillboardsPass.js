@@ -105,6 +105,7 @@ class GLBillboardsPass extends GLPass {
     billboard.setMetadata('GLBillboardsPass_Index', index)
 
     const visibilityChangedId = billboard.visibilityChanged.connect(() => {
+      this.__billboards[index].visible = billboard.getVisible()
       this.__updateIndexArray()
       this.updated.emit()
     })
@@ -119,6 +120,7 @@ class GLBillboardsPass extends GLPass {
       imageIndex,
       visibilityChangedId,
       alphaChangedId,
+      visible: billboard.getVisible(),
     }
 
     this.__requestUpdate()
@@ -184,6 +186,15 @@ class GLBillboardsPass extends GLPass {
    * The __updateIndexArray method.
    * @private
    */
+  __reqUpdateIndexArray() {
+    if (this.updateIndexArrayRequested) return
+    this.updateIndexArrayRequested = true
+    this.updateIndexArrayId = setTimeout(() => {
+      this.__updateIndexArray()
+      this.updateIndexArrayRequested = false
+    }, 1)
+  }
+
   __updateIndexArray() {
     const gl = this.__gl
     // Note: When the camera moves, this array is sorted and re-upload.
@@ -205,6 +216,11 @@ class GLBillboardsPass extends GLPass {
         this.__indexArray[this.__drawCount] = i
         this.__drawCount++
       }
+    }
+    // TODO: the indexArray should be of length draw count
+    // Draw count should be managed as a running total.
+    for (let i = this.__drawCount; i < this.__billboards.length; i++) {
+      this.__indexArray[i] = -1
     }
     if (!this.__instanceIdsBuffer) this.__instanceIdsBuffer = gl.createBuffer()
 
@@ -250,6 +266,7 @@ class GLBillboardsPass extends GLPass {
         this.__billboardDataArray = []
         this.__tintColorArray = []
         this.__indexArray.forEach(index => {
+          if (index == -1) return;
           const billboardData = this.__billboards[index]
           const billboard = billboardData.billboard
           const mat4 = billboard.getGlobalXfo().toMat4()
@@ -308,7 +325,7 @@ class GLBillboardsPass extends GLPass {
       }
 
       this.__indexArray.forEach(index => {
-        this.__updateBillboard(index)
+        if (index != -1) this.__updateBillboard(index)
       })
 
       this.__updateRequested = false
@@ -383,19 +400,21 @@ class GLBillboardsPass extends GLPass {
    */
   sort(cameraPos) {
     for (const billboardData of this.__billboards) {
-      if (billboardData) {
+      if (billboardData && billboardData.billboard.getVisible()) {
         billboardData.dist = billboardData.billboard
           .getGlobalXfo()
           .tr.distanceTo(cameraPos)
       }
     }
-    this.__indexArray.sort((a, b) =>
-      this.__billboards[a].dist > this.__billboards[b].dist
+    this.__indexArray.sort((a, b) => {
+      if (a == -1) return 1
+      if (b == -1) return -1
+      return this.__billboards[a].dist > this.__billboards[b].dist
         ? -1
         : this.__billboards[a].dist < this.__billboards[b].dist
         ? 1
         : 0
-    )
+    })
 
     const gl = this.__gl
     if (gl.floatTexturesSupported && this.__instanceIdsBuffer) {
