@@ -176,7 +176,7 @@ class Group extends TreeItem {
   __updateHighlight() {
     let highlighted = false
     let color
-    if (this.getParameter('Highlighted').getValue()) {
+    if (this.getParameter('Highlighted').getValue() || this.isSelected()) {
       highlighted = true
       color = this.getParameter('HighlightColor').getValue()
       color.a = this.getParameter('HighlightFill').getValue()
@@ -197,25 +197,27 @@ class Group extends TreeItem {
    */
   setSelected(sel) {
     super.setSelected(sel)
+    this.__updateHighlight()
 
-    if (sel) {
-      Array.from(this.__itemsParam.getValue()).forEach(item => {
-        if (item instanceof TreeItem)
-          item.addHighlight(
-            'branchselected' + this.getId(),
-            TreeItem.getBranchSelectionOutlineColor(),
-            true
-          )
-      })
-      // We want to re-apply the group hilight over the branch selection hilight.
-      this.__updateHighlight()
-    } else {
-      this.removeHighlight('selected')
-      Array.from(this.__itemsParam.getValue()).forEach(item => {
-        if (item instanceof TreeItem)
-          item.removeHighlight('branchselected' + this.getId(), true)
-      })
-    }
+    // if (sel) {
+    //   if (!this.getParameter('Highlighted').getValue()) {
+    //     Array.from(this.__itemsParam.getValue()).forEach(item => {
+    //       if (item instanceof TreeItem)
+    //         item.addHighlight(
+    //           'branchselected' + this.getId(),
+    //           TreeItem.getBranchSelectionOutlineColor(),
+    //           true
+    //         )
+    //     })
+    //   }
+    //   // We want to re-apply the group hilight over the branch selection hilight.
+    //   this.__updateHighlight()
+    // } else {
+    //   Array.from(this.__itemsParam.getValue()).forEach(item => {
+    //     if (item instanceof TreeItem)
+    //       item.removeHighlight('branchselected' + this.getId(), true)
+    //   })
+    // }
   }
 
   //////////////////////////////////////////
