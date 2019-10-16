@@ -72,18 +72,6 @@ class GLBillboardsPass extends GLPass {
    */
   filterRenderTree() {}
 
-  /**
-   * The __requestUpdate method.
-   * @private
-   */
-  __requestUpdate() {
-    if (!this.__updateRequested) {
-      this.__updateRequested = true
-      setTimeout(() => {
-        this.__updateBillboards()
-      }, 100)
-    }
-  }
 
   /**
    * The addBillboard method.
@@ -105,24 +93,42 @@ class GLBillboardsPass extends GLPass {
     billboard.setMetadata('GLBillboardsPass_Index', index)
 
     const visibilityChangedId = billboard.visibilityChanged.connect(() => {
-      this.__billboards[index].visible = billboard.getVisible()
-      this.__updateIndexArray()
-      this.updated.emit()
+      if (billboard.getVisible()) {
+        this.__drawCount++
+        // The billboard Xfo might have changed while it was 
+        // not visible. We need to update here.
+        this.__updateBillboard(index)
+      }
+      else this.__drawCount--
+      this.__reqUpdateIndexArray()
+    })
+
+    const xfoChangedId = billboard.getParameter('GlobalXfo').valueChanged.connect(() => {
+      if (billboard.getVisible()) {
+        this.__updateBillboard(index)
+        this.updated.emit()
+      }
     })
 
     const alphaChangedId = billboard.getParameter('alpha').valueChanged.connect(() => {
-      this.__updateBillboard(index)
-      this.updated.emit()
+      if (billboard.getVisible()) {
+        this.__updateBillboard(index)
+        this.updated.emit()
+      }
     })
+
+    if (billboard.getVisible())
+      this.__drawCount++
 
     this.__billboards[index] = {
       billboard,
       imageIndex,
       visibilityChangedId,
-      alphaChangedId,
-      visible: billboard.getVisible(),
+      xfoChangedId,
+      alphaChangedId
     }
 
+    this.indexArrayUpdateNeeded = true
     this.__requestUpdate()
   }
 
@@ -147,8 +153,16 @@ class GLBillboardsPass extends GLPass {
     const image = billboardData.billboard.getParameter('image').getValue();
     this.__atlas.removeSubImage(image)
 
+    billboard.visibilityChanged.disconnectId(billboardData.visibilityChangedId)
+    billboard.getParameter('GlobalXfo').valueChanged.disconnectId(billboardData.xfoChangedId)
+    billboard.getParameter('alpha').valueChanged.disconnectId(billboardData.alphaChangedId)
+
     this.__billboards[index] = null
     this.__freeIndices.push(index)
+    
+    if (billboard.getVisible()) this.__drawCount--
+
+    this.indexArrayUpdateNeeded = true
     this.__requestUpdate()
   }
 
@@ -183,33 +197,43 @@ class GLBillboardsPass extends GLPass {
   }
 
   /**
-   * The __updateIndexArray method.
+   * The __requestUpdate method.
+   * @private
+   */
+  __requestUpdate() {
+    if (!this.__updateRequested) {
+      this.__updateRequested = true
+      setTimeout(() => {
+        this.__updateBillboards()
+      }, 100)
+    }
+  }
+
+  /**
+   * The __reqUpdateIndexArray method.
    * @private
    */
   __reqUpdateIndexArray() {
-    if (this.updateIndexArrayRequested) return
-    this.updateIndexArrayRequested = true
+    if (this.indexArrayUpdateNeeded) return
+    this.indexArrayUpdateNeeded = true
     this.updateIndexArrayId = setTimeout(() => {
+      // Another update or a draw might have occured
+      // since the request was made.
+      if (!this.indexArrayUpdateNeeded) return
       this.__updateIndexArray()
-      this.updateIndexArrayRequested = false
+      this.updated.emit()
     }, 1)
   }
 
   __updateIndexArray() {
     const gl = this.__gl
     // Note: When the camera moves, this array is sorted and re-upload.
-    if (
-      this.__indexArray &&
-      this.__indexArray.length !=
-        this.__billboards.length - this.__freeIndices.length
-    ) {
+    if (this.__indexArray && this.__indexArray.length != this.__drawCount) {
       gl.deleteBuffer(this.__instanceIdsBuffer)
       this.__instanceIdsBuffer = null
     }
 
-    this.__indexArray = new Float32Array(
-      this.__billboards.length - this.__freeIndices.length
-    )
+    this.__indexArray = new Float32Array(this.__drawCount)
     this.__drawCount = 0
     for (let i = 0; i < this.__billboards.length; i++) {
       if (this.__billboards[i] && this.__billboards[i].billboard.getVisible()) {
@@ -217,15 +241,11 @@ class GLBillboardsPass extends GLPass {
         this.__drawCount++
       }
     }
-    // TODO: the indexArray should be of length draw count
-    // Draw count should be managed as a running total.
-    for (let i = this.__drawCount; i < this.__billboards.length; i++) {
-      this.__indexArray[i] = -1
-    }
     if (!this.__instanceIdsBuffer) this.__instanceIdsBuffer = gl.createBuffer()
 
     gl.bindBuffer(gl.ARRAY_BUFFER, this.__instanceIdsBuffer)
     gl.bufferData(gl.ARRAY_BUFFER, this.__indexArray, gl.STATIC_DRAW)
+    this.indexArrayUpdateNeeded = false
   }
 
   /**
@@ -233,9 +253,9 @@ class GLBillboardsPass extends GLPass {
    * @private
    */
   __updateBillboards() {
-    if (!this.__updateRequested) return
 
-    this.__updateIndexArray()
+    if (this.indexArrayUpdateNeeded)
+      this.__updateIndexArray()
 
     const gl = this.__gl
     if (!this.__glshader) {
@@ -266,7 +286,7 @@ class GLBillboardsPass extends GLPass {
         this.__billboardDataArray = []
         this.__tintColorArray = []
         this.__indexArray.forEach(index => {
-          if (index == -1) return;
+          // if (index == -1) return;
           const billboardData = this.__billboards[index]
           const billboard = billboardData.billboard
           const mat4 = billboard.getGlobalXfo().toMat4()
@@ -289,7 +309,7 @@ class GLBillboardsPass extends GLPass {
       }
 
       let size = Math.round(
-        Math.sqrt(this.__indexArray.length * pixelsPerItem) + 0.5
+        Math.sqrt((this.__billboards.length - this.__freeIndices.length) * pixelsPerItem) + 0.5
       )
       // Note: the following few lines need a cleanup.
       // We should be using power of 2 textures. The problem is that pot texture sizes don't
