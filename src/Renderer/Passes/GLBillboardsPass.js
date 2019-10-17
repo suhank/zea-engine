@@ -234,11 +234,11 @@ class GLBillboardsPass extends GLPass {
     }
 
     this.__indexArray = new Float32Array(this.__drawCount)
-    this.__drawCount = 0
+    let offset = 0
     for (let i = 0; i < this.__billboards.length; i++) {
       if (this.__billboards[i] && this.__billboards[i].billboard.getVisible()) {
-        this.__indexArray[this.__drawCount] = i
-        this.__drawCount++
+        this.__indexArray[offset] = i
+        offset++
       }
     }
     if (!this.__instanceIdsBuffer) this.__instanceIdsBuffer = gl.createBuffer()
@@ -364,7 +364,9 @@ class GLBillboardsPass extends GLPass {
    * @private
    */
   __updateBillboard(index) {
-    if (!this.__drawItemsTexture) return
+    if (this.__drawCount == 0 || !this.__drawItemsTexture) {
+      return
+    }
 
     const billboardData = this.__billboards[index]
     if (!billboardData.billboard.getVisible()) return
@@ -452,8 +454,9 @@ class GLBillboardsPass extends GLPass {
       this.__drawCount == 0 ||
       !this.__atlas.isReady() ||
       this.__updateRequested
-    )
+    ) {
       return
+    }
 
     const gl = this.__gl
 
