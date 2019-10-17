@@ -27,33 +27,33 @@ class AssetItem extends TreeItem {
     // (e.g. the ground plane). So we set loaded to true, unless a file is specified.
     this.loaded.setToggled(true)
 
-    const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.valueChanged.connect(() => {
-      const file = fileParam.getFileDesc()
-      if (!file) return
-      if (this.getName() == sgFactory.getClassName(this)) {
-        this.setName(fileParam.getFilename())
-      }
+    // const fileParam = this.addParameter(new FilePathParameter('FilePath'))
+    // fileParam.valueChanged.connect(() => {
+    //   const file = fileParam.getFileDesc()
+    //   if (!file) return
+    //   if (this.getName() == sgFactory.getClassName(this)) {
+    //     this.setName(fileParam.getFilename())
+    //   }
 
-      this.loaded.setToggled(false)
-      loadTextfile(file.url, data => {
-        const j = JSON.parse(data)
-        let asynccount = 0
-        this.fromJSON(j, {
-          assetItem: this,
-          incAsyncCount: () => {
-            asynccount++
-          },
-          decAsyncCount: () => {
-            asynccount--
-            if (asynccount == 0) {
-              this.loaded.emit()
-            }
-          },
-        })
-        if (asynccount == 0) this.loaded.emit()
-      })
-    })
+    //   this.loaded.setToggled(false)
+    //   loadTextfile(file.url, data => {
+    //     const j = JSON.parse(data)
+    //     let asynccount = 0
+    //     this.fromJSON(j, {
+    //       assetItem: this,
+    //       incAsyncCount: () => {
+    //         asynccount++
+    //       },
+    //       decAsyncCount: () => {
+    //         asynccount--
+    //         if (asynccount == 0) {
+    //           this.loaded.emit()
+    //         }
+    //       },
+    //     })
+    //     if (asynccount == 0) this.loaded.emit()
+    //   })
+    // })
   }
 
   /**
@@ -227,9 +227,9 @@ class AssetItem extends TreeItem {
     context.addPLCB = plcb => plcbs.push(plcb)
 
     // Avoid loading the FilePAth as we are already loading json data.
-    if (j.params && j.params.FilePath) {
-      delete j.params.FilePath
-    }
+    // if (j.params && j.params.FilePath) {
+    //   delete j.params.FilePath
+    // }
 
     super.fromJSON(j, context, flags)
 
