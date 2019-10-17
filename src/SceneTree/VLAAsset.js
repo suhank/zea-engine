@@ -45,11 +45,11 @@ class VLAAsset extends AssetItem {
       this.geomsLoaded.setToggled(false)
       this.loadDataFile(
         () => {
-          if (mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled())
+          if (!this.loaded.isToggled())
             this.loaded.emit()
         },
         () => {
-          // if(mode == ValueSetMode.USER_SETVALUE && !this.loaded.isToggled()){
+          // if(!this.loaded.isToggled()){
           //   this.loaded.emit();
           // }
           this.geomsLoaded.emit()
