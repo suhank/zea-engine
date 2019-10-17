@@ -35,21 +35,23 @@ class BaseItem extends ParameterOwner {
 
     this.nameChanged = new Signal()
 
-    this.parameterValueChanged.connect((param, mode) => {
-      if (mode == ValueSetMode.USER_SETVALUE) {
-        this.setFlag(ItemFlags.USER_EDITED)
-      }
-    })
-
     numBaseItems++
   }
 
   /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly..
+   * The __parameterValueChanged method.
+   * @param {any} param - The param param.
+   * @param {any} mode - The mode param.
+   * @private
    */
-  destroy() {
-    super.destroy()
+  __parameterValueChanged(param, mode) {
+    super.__parameterValueChanged(param, mode)
+    if (
+      mode == ValueSetMode.USER_SETVALUE ||
+      mode == ValueSetMode.REMOTEUSER_SETVALUE
+    ) {
+      this.setFlag(ItemFlags.USER_EDITED)
+    }
   }
 
   /**
@@ -348,6 +350,14 @@ class BaseItem extends ParameterOwner {
 
     // Note: parameters follow name...
     super.readBinary(reader, context)
+  }
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly..
+   */
+  destroy() {
+    super.destroy()
   }
 
   /**

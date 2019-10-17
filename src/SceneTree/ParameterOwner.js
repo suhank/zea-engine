@@ -1,18 +1,12 @@
-import { Vec2, Vec3, Color } from '../Math'
+
 import { Signal } from '../Utilities'
-
 import { RefCounted } from './RefCounted.js'
-
 import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
 // Note: soon these imports should be removed, once all code avoids calling
 // 'addPArameter' without the parameter instance.
-import { Parameter, ParamFlags } from './Parameters/Parameter.js'
-import { NumberParameter } from './Parameters/NumberParameter.js'
-import { Vec2Parameter } from './Parameters/Vec2Parameter.js'
-import { Vec3Parameter } from './Parameters/Vec3Parameter.js'
-import { ColorParameter } from './Parameters/ColorParameter.js'
+import { ParamFlags } from './Parameters/Parameter.js'
 
 /** Class representing a parameter owner.
  * @extends RefCounted
@@ -120,7 +114,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * This method can be overrridden in derived classes
-   * to perform general updates. (see GLPass)
+   * to perform general updates. (see GLPass or BaseItem)
    * @param {any} param - The param param.
    * @param {any} mode - The mode param.
    * @private
@@ -218,24 +212,6 @@ class ParameterOwner extends RefCounted {
     return param
   }
 
-  // _removeAllParameters(){
-  //     for (let i=this.__params.length-1; i>=0; i--) {
-  //         this.removeParameter(i);
-  //     }
-  // }
-
-  /**
-   * The addCommand method.
-   * @param {any} command - The command param.
-   * @return {any} - The return value.
-   */
-  addCommand(command) {
-    const name = command.getName()
-    command.setOwner(this)
-    this.__params.push(command)
-    this.__paramMapping[name] = this.__params.length - 1
-    return command
-  }
 
   // ////////////////////////////////////////
   // Persistence

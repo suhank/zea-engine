@@ -326,10 +326,10 @@ class Group extends TreeItem {
             const m = p.getValue()
             if (m != material) {
               p.__backupMaterial = m
-              p.setValue(material)
+              p.setValue(material, ValueSetMode.GENERATED_VALUE)
             }
           } else if (p.__backupMaterial) {
-            p.setValue(p.__backupMaterial)
+            p.setValue(p.__backupMaterial, ValueSetMode.GENERATED_VALUE)
           }
         }
       }, false)
@@ -411,7 +411,7 @@ class Group extends TreeItem {
             const m = p.getValue()
             if (m != material) {
               p.__backupMaterial = m
-              p.setValue(material)
+              p.setValue(material, ValueSetMode.GENERATED_VALUE)
             }
           }
         }
@@ -669,7 +669,7 @@ class Group extends TreeItem {
           count--
           if (count == 0) {
             this.calculatingGroupXfo = true
-            this.setGlobalXfo(this.calcGroupXfo())
+            this.setGlobalXfo(this.calcGroupXfo(), ValueSetMode.GENERATED_VALUE)
             this.calculatingGroupXfo = false
           }
         },

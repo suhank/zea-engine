@@ -2,7 +2,6 @@ import { Vec2, Vec3 } from '../../Math'
 import { Operator, XfoOperatorOutput } from './Operator.js'
 import {
   ValueSetMode,
-  Parameter,
   BooleanParameter,
   NumberParameter,
   Vec2Parameter,
@@ -10,7 +9,6 @@ import {
   ListParameter,
   StructParameter,
   TreeItemParameter,
-  KinematicGroupParameter,
 } from '../Parameters'
 
 import { sgFactory } from '../SGFactory.js'
@@ -118,7 +116,7 @@ class ExplodePartParameter extends StructParameter {
       xfo.tr = initialxfo.tr.add(explodeDir.scale(dist * multiplier))
     }
 
-    this.__output.setValue(xfo)
+    this.__output.setClean(xfo)
   }
 
   // ////////////////////////////////////////
@@ -193,12 +191,9 @@ class ExplodePartsOperator extends Operator {
       new ListParameter('Parts', ExplodePartParameter)
     )
     this.__itemsParam.elementAdded.connect((value, index) => {
+      value.setStage(index)
       this.addOutput(value.getOutput())
-      value.setStage(index, ValueSetMode.SILENT)
-      this.__stagesParam.setValue(
-        this.__stagesParam.getValue() + 1,
-        ValueSetMode.SILENT
-      )
+      this.__stagesParam.setClean(this.__stagesParam.getValue() + 1)
     })
     this.__itemsParam.elementRemoved.connect((value, index) => {
       this.removeOutput(value.getOutput())

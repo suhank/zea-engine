@@ -1,8 +1,6 @@
 import { Xfo } from '../Math'
-import { Signal } from '../Utilities'
-import { FilePathParameter } from './Parameters'
+import { ValueSetMode } from './Parameters'
 import { TreeItem, CloneFlags } from './TreeItem.js'
-import { loadTextfile } from './Utils.js'
 import { sgFactory } from './SGFactory.js'
 
 /** Class representing an instance item.
@@ -27,7 +25,7 @@ class InstanceItem extends TreeItem {
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
       const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-      child.setLocalXfo(new Xfo())
+      child.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
       this.addChild(child)
     } else {
       for (let i = 0; i < this.__srcTree.getNumChildren(); i++) {

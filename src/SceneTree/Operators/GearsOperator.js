@@ -167,7 +167,7 @@ class GearsOperator extends Operator {
       // const initialxfo = output.getInitialValue().clone();
       const xfo = output.getValue()
       xfo.ori = quat.multiply(initialxfo.ori)
-      output.setValue(xfo)
+      output.setClean(xfo)
     }
   }
 

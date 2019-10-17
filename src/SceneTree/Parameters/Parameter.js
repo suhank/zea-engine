@@ -13,13 +13,15 @@ const ValueGetMode = {
 // be considered modified so it is saved to the JSON file. I'm not sure how to address this.
 // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
 const ValueSetMode = {
-  USER_SETVALUE: 0,
-  USER_SETVALUE_DONE: 1 /* A value has finished being interactivly set */,
-  OPERATOR_SETVALUE: 2 /* No events*/,
-  SILENT: 2,
-  DATA_LOAD: 3 /* Generate events, but don't flag the parameter as user edited*/,
-  OPERATOR_DIRTIED: 4 /* Generate events, but don't flag the parameter as user edited*/,
-  STATEMACHINE_SETVALUE: 5 /* Generate events, but don't flag the parameter as user edited*/,
+  USER_SETVALUE: 0 /* A value has being modified by a local user. emit events and set user edited flag */,
+  REMOTEUSER_SETVALUE: 1 /* A value has being modified by a remote user. emit events and set user edited flag. may not trigger file save. */,
+  USER_SETVALUE_DONE: 2 /* A value has finished being interactivly set */,
+  OPERATOR_SETVALUE: 3 /* No events*/,
+  OPERATOR_DIRTIED: 4 /* Emitted when the param is dirtied. Generate events, but don't flag the parameter as user edited*/,
+  COMPUTED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
+  GENERATED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
+  DATA_LOAD: 4 /* Generate events, but don't flag the parameter as user edited*/,
+  STATEMACHINE_SETVALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
 }
 const ParamFlags = {
   USER_EDITED: 1 << 1,
@@ -273,6 +275,14 @@ class Parameter extends BaseParameter {
   }
 
   /**
+   * The setClean method.
+   * @param {any} value - The value param.
+   */
+  setClean(value) {
+    this.__value = value
+  }
+
+  /**
    * The getValue method.
    * @param {any} value - The value param.
    * @param {any} mode - The mode param.
@@ -301,10 +311,28 @@ class Parameter extends BaseParameter {
       if (this.__value == value) return
     }
     this.__value = value
-    if (mode == ValueSetMode.USER_SETVALUE) this.setFlag(ParamFlags.USER_EDITED)
+    if (
+      mode == ValueSetMode.USER_SETVALUE ||
+      mode == ValueSetMode.REMOTEUSER_SETVALUE
+    ) {
+      this.setFlag(ParamFlags.USER_EDITED)
+    }
 
     // During the cleaning process, we don't want notifications.
     if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+  }
+
+  /**
+   * At the end of an interaction session of setting a value.
+   * E.g. moving a slider handle, or typing in some values
+   * this method should be called to notify that that interaction is complete
+   * Code can listed to this event to trigger longer running actions like
+   * saving a file or heavy computation.
+   * @param {any} value - The value param.
+   * @param {any} mode - The mode param.
+   */
+  setValueDone() {
+    this.valueChanged.emit(ValueSetMode.USER_SETVALUE_DONE)
   }
 
   /**

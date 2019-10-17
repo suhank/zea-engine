@@ -261,8 +261,8 @@ class TreeItem extends BaseItem {
    * The setLocalXfo method.
    * @param {any} xfo - The xfo param.
    */
-  setLocalXfo(xfo) {
-    this.__localXfoParam.setValue(xfo)
+  setLocalXfo(xfo, mode) {
+    this.__localXfoParam.setValue(xfo, mode)
   }
 
   /**
