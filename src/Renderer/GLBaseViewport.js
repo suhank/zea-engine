@@ -140,6 +140,7 @@ class GLBaseViewport extends ParameterOwner {
    * @return {any} - The return value.
    */
   getBackground() {
+    console.warn("Deprecated Function. Please access the Scene Settings object.")
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     return bgColorParam.getValue()
@@ -150,6 +151,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {any} background - The background param.
    */
   setBackground(background) {
+    console.warn("Deprecated Function. Please access the Scene Settings object.")
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
