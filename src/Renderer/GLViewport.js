@@ -150,10 +150,7 @@ class GLViewport extends GLBaseViewport {
     this.__cameraManipulator = manipulator
   }
 
-  /**
-   * The __updateProjectionMatrix method.
-   * @private
-   */
+  // eslint-disable-next-line require-jsdoc
   __updateProjectionMatrix() {
     const aspect = this.__width / this.__height
     this.__camera.updateProjectionMatrix(this.__projectionMatrix, aspect)
@@ -162,6 +159,22 @@ class GLViewport extends GLBaseViewport {
       Math.tan(this.__camera.getFov() / 2.0) * this.__camera.getNear() * 2.0
     const frustumW = frustumH * aspect
     this.__frustumDim.set(frustumW, frustumH)
+  }
+
+  /**
+   * The getProjectionMatrix method.
+   * @return {Mat4} - The return projection matrix for the viewport.
+   */
+  getProjectionMatrix() {
+    return this.__projectionMatrix
+  }
+
+  /**
+   * The getProjectionMatrix method.
+   * @return {Mat4} - The return projection matrix for the viewport.
+   */
+  getViewMatrix() {
+    return this.__viewMat
   }
 
   /**

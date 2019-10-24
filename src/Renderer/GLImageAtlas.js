@@ -180,7 +180,6 @@ class GLImageAtlas extends GLRenderTarget {
         })
       }
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
-      subImage.setMetadata('ImageAtlas_imageUpdatedId', imageUpdatedId)
       gltexture.addRef(this)
       this.__subImages.push(gltexture)
     } else {
@@ -201,6 +200,7 @@ class GLImageAtlas extends GLRenderTarget {
     if (subImage instanceof BaseImage) {
       const gltext = subImage.getMetadata('ImageAtlas_gltex')
       index = this.__subImages.indexOf(gltext)
+      subImage.deleteMetadata('ImageAtlas_gltex')
     } else {
       index = this.__subImages.indexOf(subImage)
     }

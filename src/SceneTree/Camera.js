@@ -190,14 +190,6 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The getViewMatrix method.
-   * @return {any} - The return value.
-   */
-  getViewMatrix() {
-    return this.__viewMatParam.getValue()
-  }
-
-  /**
    * The getDefaultManipMode method.
    * @return {any} - The return value.
    */
@@ -302,7 +294,6 @@ class Camera extends TreeItem {
     const fov = this.__fovParam.getValue()
     const near = this.__nearParam.getValue()
     const far = this.__farParam.getValue()
-    const focalDistance = this.__focalDistanceParam.getValue()
     mat.setPerspectiveMatrix(fov, aspect, near, far)
   }
 }

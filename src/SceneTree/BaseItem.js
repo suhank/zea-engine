@@ -91,12 +91,12 @@ class BaseItem extends ParameterOwner {
    * Sets the name of the item.
    * @param {string} name - The name param.
    */
-  setName(name) {
+  setName(name, mode = ValueSetMode.USER_SETVALUE) {
     if (this.__name != name) {
       const oldName = this.__name
       this.__name = name
       this.__updatePath()
-      this.nameChanged.emit(name, oldName)
+      this.nameChanged.emit(name, oldName, mode)
     }
   }
 
