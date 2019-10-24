@@ -1,5 +1,16 @@
-
-import { Float32, UInt32, SInt32, Color, Vec3, Vec4, RGBA } from '../Math'
+import {
+  UInt8,
+  SInt8,
+  UInt16,
+  SInt16,
+  UInt32,
+  SInt32,
+  Float32,
+  Color,
+  Vec3,
+  Vec4,
+  RGBA,
+} from '../Math'
 
 /** Class representing a geom shader binding. */
 class GeomShaderBinding {
@@ -80,7 +91,7 @@ class GeomShaderBinding {
           elementSize = 4
           dataType = gl.FLOAT
           break
-        case Vec3:
+        case Vec4:
         case Color:
           dimension = 4
           elementSize = 4
@@ -224,7 +235,7 @@ class VAOGeomShaderBinding {
           elementSize = 4
           dataType = gl.FLOAT
           break
-        case Vec3:
+        case Vec4:
         case Color:
           dimension = 4
           elementSize = 4

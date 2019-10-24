@@ -400,8 +400,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getHighlight method.
-   * @return {any} - The return value.
+   * Returns the color of the current hilghlight.
+   * @return {Color} - The color value.
    */
   getHighlight() {
     if (this.__highlights.length > 0)
@@ -411,8 +411,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The isHighlighted method.
-   * @return {any} - The return value.
+   * Returns true if this items has a hilghlight color assigned.
+   * @return {boolean} - True if this item is hilghlighted.
    */
   isHighlighted() {
     return this.__highlights.length > 0
@@ -431,7 +431,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getBoundingBox method.
-   * @return {any} - The return value.
+   * @return {Box3} - The return value.
    */
   getBoundingBox() {
     return this.__boundingBoxParam.getValue()
