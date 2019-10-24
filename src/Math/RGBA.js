@@ -4,7 +4,7 @@ import { typeRegistry } from './TypeRegistry.js'
 /** Class representing a color.
  * @extends AttrValue
  */
-class Color extends AttrValue {
+class RGBA extends AttrValue {
   /**
    * Create a color.
    * @param {number} r - The r value.
@@ -12,17 +12,17 @@ class Color extends AttrValue {
    * @param {number} b - The b value.
    * @param {number} a - The a value.
    */
-  constructor(r = 0, g = 0, b = 0, a = 1.0) {
+  constructor(r = 0, g = 0, b = 0, a = 255) {
     super()
 
-    if (r instanceof Float32Array) {
+    if (r instanceof Uint8Array) {
       this.__data = r
     } else if (r instanceof ArrayBuffer) {
       const buffer = r
       const byteOffset = g
-      this.__data = new Float32Array(buffer, byteOffset, 4)
+      this.__data = new Uint8Array(buffer, byteOffset, 4)
     } else {
-      this.__data = new Float32Array(4)
+      this.__data = new Uint8Array(4)
       if (typeof r == 'string') {
         if (r.startsWith('#')) {
           this.setFromHex(r)
@@ -104,7 +104,7 @@ class Color extends AttrValue {
    * @param {number} b  - The b param.
    * @param {number} a  - The a param.
    */
-  set(r, g, b, a = 1.0) {
+  set(r, g, b, a = 255) {
     this.r = r
     this.g = g
     this.b = b
@@ -126,68 +126,13 @@ class Color extends AttrValue {
    * The setFromScalarArray method.
    * @param {any} vals - The vals param.
    */
-  setFromScalarArray(vals) {
+  setFromArray(vals) {
     this.r = vals[0]
     this.g = vals[1]
     this.b = vals[2]
     this.a = vals.length == 4 ? vals[3] : 1.0
   }
 
-  /**
-   * The getAsRGBArray method.
-   * @return {any} - The return value.
-   */
-  getAsRGBArray() {
-    return [this.r * 255, this.g * 255, this.b * 255]
-  }
-
-  /**
-   * The getAsRGBDict method.
-   * @return {any} - The return value.
-   */
-  getAsRGBDict() {
-    return {
-      r: this.r * 255,
-      g: this.g * 255,
-      b: this.b * 255,
-    }
-  }
-
-  /**
-   * The setFromRGB method.
-   * @param {number} r - The r param.
-   * @param {number} g  - The g param.
-   * @param {number} b  - The b param.
-   * @param {number} a  - The a param.
-   */
-  setFromRGB(r, g, b, a) {
-    this.r = r / 255
-    this.g = g / 255
-    this.b = b / 255
-    this.a = a ? a / 255 : 1.0
-  }
-
-  /**
-   * The setFromRGBArray method.
-   * @param {any} vals - The vals param.
-   */
-  setFromRGBArray(vals) {
-    this.r = vals[0] / 255
-    this.g = vals[1] / 255
-    this.b = vals[2] / 255
-    this.a = vals.length == 4 ? vals[3] / 255 : 1.0
-  }
-
-  /**
-   * The setFromRGBDict method.
-   * @param {any} vals - The vals param.
-   */
-  setFromRGBDict(vals) {
-    this.r = vals.r / 255
-    this.g = vals.g / 255
-    this.b = vals.b / 255
-    this.a = vals.a == 4 ? vals.a / 255 : 1.0
-  }
 
   /**
    * The setFromHex method.
@@ -209,7 +154,7 @@ class Color extends AttrValue {
       console.warn('Invalid hex code:' + hex)
       return
     }
-    this.setFromRGB(rgb.r, rgb.g, rgb.b)
+    this.set(rgb.r, rgb.g, rgb.b)
   }
 
   /**
@@ -379,8 +324,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   toHex() {
-    function componentToHex(c) {
-      const int = Math.round(c * 255)
+    function componentToHex(int) {
       const hex = int.toString(16)
       return hex.length == 1 ? '0' + hex : hex
     }
@@ -443,7 +387,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   add(other) {
-    return new Color(
+    return new RGBA(
       this.r + other.r,
       this.g + other.g,
       this.b + other.b,
@@ -457,7 +401,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   subtract(other) {
-    return new Color(
+    return new RGBA(
       this.r - other.r,
       this.g - other.g,
       this.b - other.b,
@@ -509,7 +453,7 @@ class Color extends AttrValue {
    * @return {any} - The return value.
    */
   toLinear(gamma = 2.2) {
-    return new Color(
+    return new RGBA(
       Math.pow(this.r, gamma),
       Math.pow(this.g, gamma),
       Math.pow(this.b, gamma),
@@ -523,7 +467,7 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   toGamma(gamma = 2.2) {
-    return new Color(
+    return new RGBA(
       Math.pow(this.r, 1.0 / gamma),
       Math.pow(this.g, 1.0 / gamma),
       Math.pow(this.b, 1.0 / gamma),
@@ -550,7 +494,7 @@ class Color extends AttrValue {
     const ag = this.g
     const ab = this.b
     const aa = this.a
-    return new Color(
+    return new RGBA(
       ar + t * (b.r - ar),
       ag + t * (b.g - ag),
       ab + t * (b.b - ab),
@@ -566,21 +510,21 @@ class Color extends AttrValue {
    */
   static random(gammaOffset = 0.0, randomAlpha = false) {
     if (gammaOffset > 0.0) {
-      return new Color(
+      return new RGBA(
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         gammaOffset + Math.random() * (1.0 - gammaOffset),
         randomAlpha ? gammaOffset + Math.random() * (1.0 - gammaOffset) : 1.0
       )
     } else if (gammaOffset < 0.0) {
-      return new Color(
+      return new RGBA(
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         Math.random() * (1.0 + gammaOffset),
         randomAlpha ? Math.random() * (1.0 + gammaOffset) : 1.0
       )
     } else {
-      return new Color(
+      return new RGBA(
         Math.random(),
         Math.random(),
         Math.random(),
@@ -594,7 +538,7 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   clone() {
-    return new Color(
+    return new RGBA(
       this.__data[0],
       this.__data[1],
       this.__data[2],
@@ -627,7 +571,7 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   static create(...args) {
-    return new Color(...args)
+    return new RGBA(...args)
   }
 
   /**
@@ -637,7 +581,7 @@ class Color extends AttrValue {
    * @return {color} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Color(buffer, offset * 4) // 4 bytes per 32bit float
+    return new RGBA(buffer, offset * 4) // 4 bytes per 32bit float
   }
 
   /**
@@ -694,7 +638,7 @@ class Color extends AttrValue {
   }
 }
 
-typeRegistry.registerType('Color', Color)
+typeRegistry.registerType('RGBA', RGBA)
 
-export { Color }
-// export default Color;
+export { RGBA }
+// export default RGBA;

@@ -2,9 +2,13 @@ const DEGTORAD = Math.PI / 180
 Math.HALF_PI = Math.PI * 0.5
 Math.TWO_PI = Math.PI * 2.0
 // Defines used to explicity specify types for WebGL.
-const UInt32 = 1
-const SInt32 = 2
-const Float32 = 3
+const UInt8 = 0
+const SInt8 = 1
+const UInt16 = 2
+const SInt16 = 3
+const UInt32 = 4
+const SInt32 = 5
+const Float32 = 6
 
 Math.radToDeg = function(rad) {
   return rad / DEGTORAD
@@ -299,4 +303,14 @@ Math.linStep = (edge0, edge1, x) => {
   return Math.clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0)
 }
 
-export { SInt32, UInt32, Float32, hashStr, JSON_stringify_fixedPrecision }
+export {
+  UInt8,
+  SInt8,
+  SInt16,
+  UInt16,
+  SInt32,
+  UInt32,
+  Float32,
+  hashStr,
+  JSON_stringify_fixedPrecision,
+}

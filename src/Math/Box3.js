@@ -35,6 +35,14 @@ class Box3 {
     }
   }
 
+  get min(){
+    return this.p0;
+  }
+
+  get max(){
+    return this.p1;
+  }
+
   /**
    * The set method.
    * @param {*} p0 - the p0 param.
@@ -188,6 +196,72 @@ class Box3 {
       1.0
     )
   }
+
+	intersectsBox( box ) {
+
+		// using 6 splitting planes to rule out intersections.
+		return box.max.x < this.min.x || box.min.x > this.max.x ||
+			box.max.y < this.min.y || box.min.y > this.max.y ||
+			box.max.z < this.min.z || box.min.z > this.max.z ? false : true;
+
+	}
+
+	intersectsSphere(sphere) {
+		// var closestPoint = new Vector3();
+
+    // Find the point on the AABB closest to the sphere center.
+    // this.clampPoint( sphere.center, closestPoint );
+
+    // If that point is inside the sphere, the AABB and sphere intersect.
+    return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
+	}
+
+	intersectsPlane( plane ) {
+
+		// We compute the minimum and maximum dot product values. If those values
+		// are on the same side (back or front) of the plane, then there is no intersection.
+
+		var min, max;
+
+		if ( plane.normal.x > 0 ) {
+
+			min = plane.normal.x * this.min.x;
+			max = plane.normal.x * this.max.x;
+
+		} else {
+
+			min = plane.normal.x * this.max.x;
+			max = plane.normal.x * this.min.x;
+
+		}
+
+		if ( plane.normal.y > 0 ) {
+
+			min += plane.normal.y * this.min.y;
+			max += plane.normal.y * this.max.y;
+
+		} else {
+
+			min += plane.normal.y * this.max.y;
+			max += plane.normal.y * this.min.y;
+
+		}
+
+		if ( plane.normal.z > 0 ) {
+
+			min += plane.normal.z * this.min.z;
+			max += plane.normal.z * this.max.z;
+
+		} else {
+
+			min += plane.normal.z * this.max.z;
+			max += plane.normal.z * this.min.z;
+
+		}
+
+		return ( min <= - plane.constant && max >= - plane.constant );
+
+	}
 
   /**
    * Clones this type returning a new instance.
