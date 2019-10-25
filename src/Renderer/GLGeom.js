@@ -149,8 +149,12 @@ class GLGeom {
     this.clearShaderBindings()
 
     const gl = this.__gl
+    // eslint-disable-next-line guard-for-in
     for (const attrName in this.__glattrbuffers) {
-      gl.deleteBuffer(this.__glattrbuffers[attrName].buffer)
+      const glbuffer = this.__glattrbuffers[attrName]
+      if (glbuffer.shared)
+        continue /* This buffer is shared between geoms. do not destroy */
+      gl.deleteBuffer(glbuffer.buffer)
     }
     this.__glattrs = {}
 

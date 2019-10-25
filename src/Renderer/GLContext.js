@@ -154,6 +154,7 @@ const create3DContext = function(canvas, opt_attribs) {
         dataType: Float32,
         dimension: 1,
         count: vertexIDs.length,
+        shared: true /*This buffer is shared between geoms. do not destroy */
       },
     }
   }
@@ -174,6 +175,7 @@ const create3DContext = function(canvas, opt_attribs) {
         buffer: vertexIdsBuffer,
         dimension: 1,
         count: vertexIDs.length,
+        shared: true /*This buffer is shared between geoms. do not destroy */
       },
     }
   }
