@@ -78,7 +78,17 @@ class OperatorOutput {
    */
   setValue(value, mode = ValueSetMode.OPERATOR_SETVALUE) {
     if (this._param) {
-      this._param.setValue(value, mode)
+      this._param.setClean(value, mode)
+    }
+  }
+
+  /**
+   * The setClean method.
+   * @param {any} value - The value param.
+   */
+  setClean(value) {
+    if (this._param) {
+      this._param.setClean(value)
     }
   }
 
@@ -201,8 +211,13 @@ class XfoOperatorOutput extends OperatorOutput {
     }
     init()
     param.valueChanged.connect(mode => {
-      if (mode == ValueSetMode.USER_SETVALUE || mode == ValueSetMode.DATA_LOAD)
+      if (
+        mode == ValueSetMode.USER_SETVALUE ||
+        mode == ValueSetMode.REMOTEUSER_SETVALUE ||
+        mode == ValueSetMode.DATA_LOAD
+      ) {
         init()
+      }
     })
 
     this._param = param

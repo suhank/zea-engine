@@ -293,8 +293,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
               true
             )
           ) {
-            const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets()
-            for (const gldrawitemset of gldrawitemsets) {
+            const glgeomitemsets = glmaterialGeomItemSet.getGeomItemSets()
+            for (const gldrawitemset of glgeomitemsets) {
               gldrawitemset.draw(renderstate)
             }
           }
@@ -351,8 +351,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
 
       const glmaterialGeomItemSets = glshaderMaterials.getMaterialGeomItemSets()
       for (const glmaterialGeomItemSet of glmaterialGeomItemSets) {
-        const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets()
-        for (const gldrawitemset of gldrawitemsets) {
+        const glgeomitemsets = glmaterialGeomItemSet.getGeomItemSets()
+        for (const gldrawitemset of glgeomitemsets) {
           gldrawitemset.drawHighlighted(renderstate)
         }
       }
@@ -440,8 +440,8 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
             false
           )
         ) {
-          const gldrawitemsets = glmaterialGeomItemSet.getGeomItemSets()
-          for (const gldrawitemset of gldrawitemsets) {
+          const glgeomitemsets = glmaterialGeomItemSet.getGeomItemSets()
+          for (const gldrawitemset of glgeomitemsets) {
             gldrawitemset.draw(renderstate)
           }
         }

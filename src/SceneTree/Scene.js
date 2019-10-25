@@ -50,6 +50,15 @@ class Scene {
     return resourceLoader
   }
 
+  setEnvMap(envMap){
+    console.warn("Deprecated Function. Please access the Scene Settings object.")
+    this.settings.getParameter('EnvMap').setValue(envMap);
+  }
+
+  addAsset(asset){
+    console.warn("Deprecated Function. Please access the Scene Root object.")
+    this.root.addChild(asset);
+  }
   /**
    * The setupGrid method.
    * @param {number} gridSize - The gridSize param.

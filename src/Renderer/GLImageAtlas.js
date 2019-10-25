@@ -171,7 +171,6 @@ class GLImageAtlas extends GLRenderTarget {
    * @return {any} - The return value.
    */
   addSubImage(subImage) {
-    const index = this.__subImages.length
     if (subImage instanceof BaseImage) {
       const gltexture = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
@@ -180,11 +179,7 @@ class GLImageAtlas extends GLRenderTarget {
           this.__async.decAsyncCount()
         })
       }
-      const imageUpdatedId = subImage.updated.connect(() => {
-        // console.warn('TODO: update the atlas:' + index)
-      })
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
-      subImage.setMetadata('ImageAtlas_imageUpdatedId', imageUpdatedId)
       gltexture.addRef(this)
       this.__subImages.push(gltexture)
     } else {
@@ -205,6 +200,7 @@ class GLImageAtlas extends GLRenderTarget {
     if (subImage instanceof BaseImage) {
       const gltext = subImage.getMetadata('ImageAtlas_gltex')
       index = this.__subImages.indexOf(gltext)
+      subImage.deleteMetadata('ImageAtlas_gltex')
     } else {
       index = this.__subImages.indexOf(subImage)
     }
@@ -238,6 +234,10 @@ class GLImageAtlas extends GLRenderTarget {
    * The generateAtlasLayout method.
    */
   generateAtlasLayout() {
+    if (this.__subImages.length == 0) {
+      this.__layoutNeedsRegeneration = false
+      return
+    }
     const border = 2
 
     // We must lay out the sub images in order of size.
@@ -377,6 +377,9 @@ class GLImageAtlas extends GLRenderTarget {
    * @param {number} off - The off param.
    */
   renderAtlas(cleanup = false, off = 0) {
+    if (this.__subImages.length == 0) {
+      return
+    }
     if (this.__layoutNeedsRegeneration) {
       this.generateAtlasLayout()
     }

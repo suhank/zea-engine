@@ -44,8 +44,12 @@ class GeometryParameter extends Parameter {
         this.__value.boundingBoxDirtied.connect(this.boundingBoxDirtied.emit)
       }
 
-      if (mode == ValueSetMode.USER_SETVALUE)
+      if (
+        mode == ValueSetMode.USER_SETVALUE ||
+        mode == ValueSetMode.REMOTEUSER_SETVALUE
+      ) {
         this.__flags |= ParamFlags.USER_EDITED
+      }
 
       // During the cleaning process, we don't want notifications.
       if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)

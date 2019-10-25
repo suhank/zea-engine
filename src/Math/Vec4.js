@@ -7,7 +7,7 @@ import { Vec3 } from './Vec3.js'
  */
 class Vec4 extends AttrValue {
   /**
-   * Create a Vec3.
+   * Create a Vec4.
    * @param {number} x - The x value.
    * @param {number} y - The y value.
    * @param {number} z - The y value.
@@ -483,7 +483,7 @@ class Vec4 extends AttrValue {
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    */
-  static numFloat32Elements() {
+  static numElements() {
     return 4
   }
 

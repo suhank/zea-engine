@@ -65,7 +65,7 @@ class GLMesh extends GLGeom {
 
       this.__glattrbuffers[attrName] = {
         buffer: attrBuffer,
-        dimension: attrData.dimension,
+        dataType: attrData.dataType,
         normalized: attrData.normalized,
       }
 

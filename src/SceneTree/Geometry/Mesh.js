@@ -677,7 +677,7 @@ class Mesh extends BaseGeom {
       if (splitCount == 0) values = attr.data
       else values = attr.generateSplitValues(splitIndices, splitCount)
 
-      const dimension = attr.numFloat32Elements
+      const dimension = attr.numElements
       const count = values.length / dimension
 
       // if (debugAttrValues) {
@@ -690,6 +690,7 @@ class Mesh extends BaseGeom {
         count: count,
         dimension: dimension,
         normalized: attrName == 'normals',
+        dataType: attr.dataType,
       }
     }
 

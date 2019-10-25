@@ -6,6 +6,9 @@ import { sgFactory } from '../SGFactory.js'
 
 // Defines used to explicity specify types for WebGL.
 const SAVE_FLAG_SKIP_GEOMDATA = 1 << 10
+function isTypedArray(obj){
+    return !!obj && obj.byteLength !== undefined;
+}
 
 /** Class representing a base geom.
  * @extends ParameterOwner
@@ -43,11 +46,16 @@ class BaseGeom extends ParameterOwner {
    * @return {any} - The return value.
    */
   addVertexAttribute(name, dataType, defaultScalarValue = undefined) {
-    const attr = new Attribute(
-      dataType,
-      this.vertices != undefined ? this.vertices.length : 0,
-      defaultScalarValue
-    )
+    let attr
+    if (isTypedArray(defaultScalarValue)) {
+      attr = new Attribute(dataType, defaultScalarValue)
+    } else {
+      attr = new Attribute(
+        dataType,
+        this.vertices != undefined ? this.vertices.length : 0,
+        defaultScalarValue
+      )
+    }
     this.__vertexAttributes.set(name, attr)
     return attr
   }
@@ -247,8 +255,8 @@ class BaseGeom extends ParameterOwner {
       attrBuffers[attrName] = {
         values: attr.data,
         count: attr.size,
-        dimension: attr.numFloat32Elements,
-        normalized: false,
+        dataType: attr.dataType,
+        normalized: attr.normalized,
       }
     }
     return {

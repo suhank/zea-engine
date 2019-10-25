@@ -141,8 +141,12 @@ class FilePathParameter extends Parameter {
       url,
     }
 
-    if (mode == ValueSetMode.USER_SETVALUE)
+    if (
+      mode == ValueSetMode.USER_SETVALUE ||
+      mode == ValueSetMode.REMOTEUSER_SETVALUE
+    ) {
       this.__flags |= ParamFlags.USER_EDITED
+    }
     this.valueChanged.emit(mode)
   }
 

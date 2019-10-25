@@ -6,9 +6,6 @@ import {
   ValueSetMode,
   Parameter,
   BooleanParameter,
-  NumberParameter,
-  ColorParameter,
-  Vec2Parameter,
   XfoParameter,
 } from './Parameters'
 import { ItemFlags, BaseItem } from './BaseItem.js'
@@ -28,13 +25,13 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0,
 }
 
-let selectionOutlineColor = new Color('#03E3AC')
-selectionOutlineColor.a = 0.1
-let branchSelectionOutlineColor = selectionOutlineColor.lerp(
-  new Color('white'),
-  0.5
-)
-branchSelectionOutlineColor.a = 0.1
+// let selectionOutlineColor = new Color('#03E3AC')
+// selectionOutlineColor.a = 0.1
+// let branchSelectionOutlineColor = selectionOutlineColor.lerp(
+//   new Color('white'),
+//   0.5
+// )
+// branchSelectionOutlineColor.a = 0.1
 
 /** Class representing a tree item.
  * @extends BaseItem
@@ -264,8 +261,8 @@ class TreeItem extends BaseItem {
    * The setLocalXfo method.
    * @param {any} xfo - The xfo param.
    */
-  setLocalXfo(xfo) {
-    this.__localXfoParam.setValue(xfo)
+  setLocalXfo(xfo, mode) {
+    this.__localXfoParam.setValue(xfo, mode)
   }
 
   /**
@@ -355,50 +352,6 @@ class TreeItem extends BaseItem {
   }
 
   // ////////////////////////////////////////
-  // Selectability and Selection
-
-  /**
-   * The setSelectable method.
-   * @param {any} val - A boolean indicating the selectability of the item.
-   * @param {boolean} propagateToChildren - The propagateToChildren param.
-   */
-  setSelectable(val, propagateToChildren = true) {
-    if (super.setSelectable(val) || propagateToChildren) {
-      for (let childItem of this.__childItems) {
-        if (childItem instanceof TreeItem)
-          childItem.setSelectable(this.__selectable, propagateToChildren)
-      }
-    }
-  }
-
-  /**
-   * The getSelected method.
-   * @param {Boolean} val - Boolean indicating the new selection state.
-   * @return {any} - The return value.
-   */
-  setSelected(sel) {
-    super.setSelected(sel)
-    if (sel) {
-      this.addHighlight('selected', selectionOutlineColor, false)
-      this.__childItems.forEach(childItem => {
-        if (childItem instanceof TreeItem)
-          childItem.addHighlight(
-            'branchselected' + this.getId(),
-            branchSelectionOutlineColor,
-            true
-          )
-      })
-    } else {
-      this.removeHighlight('selected')
-      this.__childItems.forEach(childItem => {
-        if (childItem instanceof TreeItem)
-          childItem.removeHighlight('branchselected' + this.getId(), true)
-      })
-    }
-    this.selectedChanged.emit(this.__selected)
-  }
-
-  // ////////////////////////////////////////
   // Highlights
 
   /**
@@ -447,8 +400,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The getHighlight method.
-   * @return {any} - The return value.
+   * Returns the color of the current hilghlight.
+   * @return {Color} - The color value.
    */
   getHighlight() {
     if (this.__highlights.length > 0)
@@ -458,8 +411,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * The isHighlighted method.
-   * @return {any} - The return value.
+   * Returns true if this items has a hilghlight color assigned.
+   * @return {boolean} - True if this item is hilghlighted.
    */
   isHighlighted() {
     return this.__highlights.length > 0
@@ -478,7 +431,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getBoundingBox method.
-   * @return {any} - The return value.
+   * @return {Box3} - The return value.
    */
   getBoundingBox() {
     return this.__boundingBoxParam.getValue()
@@ -1264,33 +1217,33 @@ class TreeItem extends BaseItem {
    * The getSelectionOutlineColor method.
    * @return {any} - The return value.
    */
-  static getSelectionOutlineColor() {
-    return selectionOutlineColor
-  }
+  // static getSelectionOutlineColor() {
+  //   return selectionOutlineColor
+  // }
 
-  /**
-   * The setSelectionOutlineColor method.
-   * @param {any} color - The color param.
-   */
-  static setSelectionOutlineColor(color) {
-    selectionOutlineColor = color
-  }
+  // /**
+  //  * The setSelectionOutlineColor method.
+  //  * @param {any} color - The color param.
+  //  */
+  // static setSelectionOutlineColor(color) {
+  //   selectionOutlineColor = color
+  // }
 
-  /**
-   * The getBranchSelectionOutlineColor method.
-   * @return {any} - The return value.
-   */
-  static getBranchSelectionOutlineColor() {
-    return branchSelectionOutlineColor
-  }
+  // /**
+  //  * The getBranchSelectionOutlineColor method.
+  //  * @return {any} - The return value.
+  //  */
+  // static getBranchSelectionOutlineColor() {
+  //   return branchSelectionOutlineColor
+  // }
 
-  /**
-   * The setBranchSelectionOutlineColor method.
-   * @param {any} color - The color param.
-   */
-  static setBranchSelectionOutlineColor(color) {
-    branchSelectionOutlineColor = color
-  }
+  // /**
+  //  * The setBranchSelectionOutlineColor method.
+  //  * @param {any} color - The color param.
+  //  */
+  // static setBranchSelectionOutlineColor(color) {
+  //   branchSelectionOutlineColor = color
+  // }
 }
 
 sgFactory.registerClass('TreeItem', TreeItem)

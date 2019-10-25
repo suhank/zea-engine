@@ -1,5 +1,5 @@
 import { SystemDesc } from '../BrowserDetection.js'
-
+import { Float32 } from '../Math'
 const create3DContext = function(canvas, opt_attribs) {
   console.log(SystemDesc)
   let context = null
@@ -151,7 +151,7 @@ const create3DContext = function(canvas, opt_attribs) {
     this.__quadattrbuffers = {
       vertexIDs: {
         buffer: this.__quadVertexIdsBuffer,
-        dataType: this.FLOAT,
+        dataType: Float32,
         dimension: 1,
         count: vertexIDs.length,
       },

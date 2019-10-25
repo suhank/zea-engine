@@ -336,7 +336,7 @@ class Vec2 extends AttrValue {
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
    */
-  static numFloat32Elements() {
+  static numElements() {
     return 2
   }
 

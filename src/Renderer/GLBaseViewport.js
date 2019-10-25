@@ -1,11 +1,6 @@
 import { Color } from '../Math'
 import { Signal } from '../Utilities'
-import {
-  ParameterOwner,
-  BaseImage,
-  ColorParameter,
-  NumberParameter,
-} from '../SceneTree'
+import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 
@@ -145,6 +140,7 @@ class GLBaseViewport extends ParameterOwner {
    * @return {any} - The return value.
    */
   getBackground() {
+    console.warn("Deprecated Function. Please access the Scene Settings object.")
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     return bgColorParam.getValue()
@@ -155,6 +151,7 @@ class GLBaseViewport extends ParameterOwner {
    * @param {any} background - The background param.
    */
   setBackground(background) {
+    console.warn("Deprecated Function. Please access the Scene Settings object.")
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
@@ -166,17 +163,11 @@ class GLBaseViewport extends ParameterOwner {
    * @param {any} width - The src param.
    * @param {any} height - The flags param.
    */
-  resize(width, height) {
-    this.__canvasWidth = width
-    this.__canvasHeight = height
-    this.__x = this.__canvasWidth * this.__bl.x
-    this.__y = this.__canvasWidth * this.__bl.y
-    this.__width =
-      this.__canvasWidth * this.__tr.x - this.__canvasWidth * this.__bl.x
-    this.__height =
-      this.__canvasHeight * this.__tr.y - this.__canvasHeight * this.__bl.y
-    this.region = [this.__x, this.__y, this.__width, this.__height]
-
+  resize(canvasWidth, canvasHeight) {
+    this.__canvasWidth = canvasWidth
+    this.__canvasHeight = canvasHeight
+    this.__width = canvasWidth
+    this.__height = canvasHeight
     this.resized.emit()
   }
 

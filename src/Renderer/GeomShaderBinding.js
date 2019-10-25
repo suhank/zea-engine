@@ -1,3 +1,17 @@
+import {
+  UInt8,
+  SInt8,
+  UInt16,
+  SInt16,
+  UInt32,
+  SInt32,
+  Float32,
+  Color,
+  Vec3,
+  Vec4,
+  RGBA,
+} from '../Math'
+
 /** Class representing a geom shader binding. */
 class GeomShaderBinding {
   /**
@@ -33,13 +47,68 @@ class GeomShaderBinding {
         continue
       }
 
-      const dataType =
-        glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT
-      const dimension = glattrbuffer.dimension
-      const stride = glattrbuffer.dimension * gl.sizeInBytes(dataType)
+      let dimension
+      let elementSize
+      let dataType
+      switch (glattrbuffer.dataType) {
+        case UInt8:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_BYTE
+          break
+        case SInt8:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.BYTE
+          break
+        case UInt16:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_SHORT
+          break
+        case SInt16:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.SHORT
+          break
+        case UInt32:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_INT
+          break
+        case SInt32:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.INT
+          break
+        case Float32:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case Vec3:
+          dimension = 3
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case Vec4:
+        case Color:
+          dimension = 4
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case RGBA:
+          dimension = 4
+          elementSize = 1
+          dataType = gl.UNSIGNED_BYTE
+          break
+        default: throw("Unhandled Type")
+      }
+
+      const stride = dimension * elementSize
       const offset =
         glattrbuffer.offset != undefined
-          ? glattrbuffer.offset * dimension * gl.sizeInBytes(dataType)
+          ? glattrbuffer.offset * dimension * elementSize
           : 0
       const normalized = glattrbuffer.normalized == true
       const instanced = attrDesc.instanced
@@ -122,13 +191,68 @@ class VAOGeomShaderBinding {
         continue
       }
 
-      const dataType =
-        glattrbuffer.dataType != undefined ? glattrbuffer.dataType : gl.FLOAT
-      const dimension = glattrbuffer.dimension
-      const stride = glattrbuffer.dimension * gl.sizeInBytes(dataType)
+      let dimension
+      let elementSize
+      let dataType
+      switch (glattrbuffer.dataType) {
+        case UInt8:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_BYTE
+          break
+        case SInt8:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.BYTE
+          break
+        case UInt16:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_SHORT
+          break
+        case SInt16:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.SHORT
+          break
+        case UInt32:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.UNSIGNED_INT
+          break
+        case SInt32:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.INT
+          break
+        case Float32:
+          dimension = 1
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case Vec3:
+          dimension = 3
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case Vec4:
+        case Color:
+          dimension = 4
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case RGBA:
+          dimension = 4
+          elementSize = 1
+          dataType = gl.UNSIGNED_BYTE
+          break
+        default: throw("Unhandled Type")
+      }
+
+      const stride = dimension * elementSize
       const offset =
         glattrbuffer.offset != undefined
-          ? glattrbuffer.offset * dimension * gl.sizeInBytes(dataType)
+          ? glattrbuffer.offset * dimension * elementSize
           : 0
       const normalized = glattrbuffer.normalized == true
       const instanced = attrDesc.instanced

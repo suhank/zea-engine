@@ -37,8 +37,6 @@ class GLViewport extends GLBaseViewport {
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
 
-    const gl = renderer.getGL()
-
     // Signals to abstract the user view.
     // i.e. when a user switches to VR mode, the signals
     // simply emit the new VR data.
@@ -78,14 +76,23 @@ class GLViewport extends GLBaseViewport {
    * @param {any} width - The width param.
    * @param {any} height - The height param.
    */
-  resize(width, height) {
-    super.resize(width, height)
+  resize(canvasWidth, canvasHeight) {
+    
+    this.__canvasWidth = canvasWidth
+    this.__canvasHeight = canvasHeight
+    this.__x = canvasWidth * this.__bl.x
+    this.__y = canvasWidth * this.__bl.y
+    this.__width = canvasWidth * this.__tr.x - canvasWidth * this.__bl.x
+    this.__height = canvasHeight * this.__tr.y - canvasHeight * this.__bl.y
+    this.region = [this.__x, this.__y, this.__width, this.__height]
+
     if (this.__camera) this.__updateProjectionMatrix()
 
     if (this.__geomDataBufferFbo) {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.__geomDataBufferFbo.resize()
     }
+    this.resized.emit()
   }
 
   /**
@@ -143,10 +150,7 @@ class GLViewport extends GLBaseViewport {
     this.__cameraManipulator = manipulator
   }
 
-  /**
-   * The __updateProjectionMatrix method.
-   * @private
-   */
+  // eslint-disable-next-line require-jsdoc
   __updateProjectionMatrix() {
     const aspect = this.__width / this.__height
     this.__camera.updateProjectionMatrix(this.__projectionMatrix, aspect)
@@ -155,6 +159,22 @@ class GLViewport extends GLBaseViewport {
       Math.tan(this.__camera.getFov() / 2.0) * this.__camera.getNear() * 2.0
     const frustumW = frustumH * aspect
     this.__frustumDim.set(frustumW, frustumH)
+  }
+
+  /**
+   * The getProjectionMatrix method.
+   * @return {Mat4} - The return projection matrix for the viewport.
+   */
+  getProjectionMatrix() {
+    return this.__projectionMatrix
+  }
+
+  /**
+   * The getProjectionMatrix method.
+   * @return {Mat4} - The return projection matrix for the viewport.
+   */
+  getViewMatrix() {
+    return this.__viewMat
   }
 
   /**

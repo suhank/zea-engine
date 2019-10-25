@@ -159,14 +159,18 @@ class VertexAttribute extends Attribute {
     const numUnSplitValues = this.length
     const count = this.length + splitCount
     const numElems =
-      this.__dataType == Float32 ? 1 : this.__dataType.numFloat32Elements()
+      this.__dataType == this.__dataType.numElements
+        ? this.__dataType.numElements()
+        : 1
     const data = new Float32Array(count * numElems)
     for (let i = 0; i < this.__data.length; i++) data[i] = this.__data[i]
 
     // Now duplicate the split values to generate an attributes array
     // usig the shared splits accross all attributes.
+    // eslint-disable-next-line guard-for-in
     for (const vertex in splitIndices) {
       const faces = splitIndices[vertex]
+      // eslint-disable-next-line guard-for-in
       for (const face in faces) {
         const tgt = numUnSplitValues + faces[face]
         if (vertex in this.__splits && face in this.__splits[vertex]) {

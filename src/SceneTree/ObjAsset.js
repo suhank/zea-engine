@@ -49,13 +49,12 @@ class ObjAsset extends AssetItem {
     this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
     this.objfileParam.valueChanged.connect(mode => {
       this.loaded.untoggle()
-      const emitloaded = mode == ValueSetMode.USER_SETVALUE
       this.__loadObj(
         () => {
-          if (mode == ValueSetMode.USER_SETVALUE) this.loaded.emit()
+          this.loaded.emit()
         },
         () => {
-          if (mode == ValueSetMode.USER_SETVALUE) this.geomsLoaded.emit()
+          this.geomsLoaded.emit()
         }
       )
     })

@@ -31,7 +31,7 @@ class AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    */
-  static numFloat32Elements() {
+  static numElements() {
     throw new Error(
       'Not yet implemented for this type:' + this.constructor.name
     )
