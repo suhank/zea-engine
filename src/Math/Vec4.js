@@ -2,16 +2,18 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 
-/** Class representing a Vec4.
+/** Class representing a Vec4. A Vec4 represents a four-dimensional coordinate.
+ * Vector classes in zea-engine internally store values in Float32Arrays and
+ * expose getters and setters for the component values.
  * @extends AttrValue
  */
 class Vec4 extends AttrValue {
   /**
    * Create a Vec4.
-   * @param {number} x - The x value.
-   * @param {number} y - The y value.
-   * @param {number} z - The y value.
-   * @param {number} t - The t value.
+   * @param {number} x - The x value. Default is 0.
+   * @param {number} y - The y value. Default is 0.
+   * @param {number} z - The y value. Default is 0.
+   * @param {number} t - The t value. Default is 0.
    */
   constructor(x = 0, y = 0, z = 0, t = 0) {
     super()
@@ -33,14 +35,15 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Getter for x.
+   * Getter for x value.
+   * @return {number} - Returns the x value.
    */
   get x() {
     return this.__data[0]
   }
 
   /**
-   * Setter for x.
+   * Setter for x value.
    * @param {number} val - The val param.
    */
   set x(val) {
@@ -48,14 +51,15 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Getter for y.
+   * Getter for y value.
+   * @return {number} - Returns the y value.
    */
   get y() {
     return this.__data[1]
   }
 
   /**
-   * Setter for y.
+   * Setter for y value.
    * @param {number} val - The val param.
    */
   set y(val) {
@@ -63,14 +67,15 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Getter for z.
+   * Getter for z value.
+   * @param {number} val - The val param.
    */
   get z() {
     return this.__data[2]
   }
 
   /**
-   * Setter for z.
+   * Setter for z value.
    * @param {number} val - The val param.
    */
   set z(val) {
@@ -78,14 +83,15 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Getter for t.
+   * Getter for t value.
+   * @param {number} val - The val param.
    */
   get t() {
     return this.__data[3]
   }
 
   /**
-   * Setter for t.
+   * Setter for t value.
    * @param {number} val - The val param.
    */
   set t(val) {
@@ -94,10 +100,10 @@ class Vec4 extends AttrValue {
 
   /**
    * Setter from scalar components.
-   * @param {number} x - The x param.
-   * @param {number} y  - The y param.
-   * @param {number} z  - The y param.
-   * @param {number} t  - The t param.
+   * @param {number} x - The x value.
+   * @param {number} y  - The y value.
+   * @param {number} z  - The y value.
+   * @param {number} t  - The t value.
    */
   set(x, y, z, t) {
     this.x = x
@@ -107,8 +113,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Setter from another vector.
-   * @param {any} other - The other param.
+   * Setter from another Vec4.
+   * @param {Vec4} other - The other Vec4 to set from.
    */
   setFromOther(other) {
     this.x = other.x
@@ -118,10 +124,10 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is the same as another one.
-   * @param {any} other - The other param.
-   * @param {number} precision - The precision param.
-   * @return {any} - The return value.
+   * Returns true if this Vec4 is exactly the same as other.
+   * @param {Vec4} other - The other Vec4 to compare with.
+   * @param {number} precision - The precision between the two Vec4s.
+   * @return {boolean} - Returns true or false.
    */
   equal(other, precision) {
     return (
@@ -133,12 +139,12 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is not the same as another one.
-   * @param {any} other - The other param.
-   * @param {number} precision - The precision param.
-   * @return {any} - The return value.
+   * Returns true if this Vec4 is NOT exactly the same as other.
+   * @param {Vec4} other - The other Vec4 to compare with.
+   * @param {number} precision - The precision between the two Vec4s.
+   * @return {boolean} - Returns true or false.
    */
-  notequals(other, precision) {
+  notEquals(other, precision) {
     return (
       this.x != other.x &&
       this.y != other.y &&
@@ -148,10 +154,10 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is the same as another one
+   * Returns true if this Vec4 is the same as other
    * (given a precision).
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * @param {Vec4} other - The other Vec4 to compare with.
+   * @return {boolean} - The return value.
    */
   approxEqual(other) {
     return (
@@ -163,9 +169,9 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns a new vector which is this vector added to other.
-   * @param {any} other - The other param.
-   * @return {vec4} - The return value.
+   * Adds other to this Vec4 and returns the result as a new Vec4.
+   * @param {Vec4} other - The other Vec4 to add.
+   * @return {Vec4} - Returns a new Vec4.
    */
   add(other) {
     return new Vec4(
@@ -177,8 +183,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The addInPlace method.
-   * @param {any} other - The other param.
+   * Adds other to this Vec4.
+   * @param {Vec4} other - The other Vec4 to add.
    */
   addInPlace(other) {
     this.x += other.x
@@ -188,9 +194,9 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns a new vector which is this vector subtracted from other.
-   * @param {any} other - The other param.
-   * @return {vec4} - The return value.
+   * Subtracts other from this Vec4 and returns then result as a new Vec4.
+   * @param {Vec4} other - The other Vec4 to subtract.
+   * @return {Vec4} - Returns a new Vec4.
    */
   subtract(other) {
     return new Vec4(
@@ -202,8 +208,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The subtractInPlace method.
-   * @param {any} other - The other param.
+   * Subtracts other from this Vec4.
+   * @param {Vec4} other - The other Vec4 to subtract.
    */
   subtractInPlace(other) {
     this.x -= other.x
@@ -213,9 +219,9 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The multiply method.
-   * @param {any} other - The other param.
-   * @return {vec4} - The return value.
+   * Multiplies two Vec4s and returns the result as a new Vec4.
+   * @param {Vec4} other - The other Vec4 to multiply with.
+   * @return {Vec4} - Returns a new Vec4.
    */
   multiply(other) {
     return new Vec4(
@@ -227,8 +233,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The multiplyInPlace method.
-   * @param {any} other - The other param.
+   * Multiplies two Vec4s.
+   * @param {Vec4} other - The other Vec4 to multiply with.
    */
   multiplyInPlace(other) {
     this.x *= other.x
@@ -238,9 +244,9 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The divide method.
-   * @param {any} other - The other param.
-   * @return {vec4} - The return value.
+   * Divides two Vec4s and returns the result as a new Vec4.
+   * @param {Vec4} other - The other Vec4 to divide by.
+   * @return {Vec4} - Returns a new Vec4.
    */
   divide(other) {
     return new Vec4(
@@ -252,8 +258,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The divideInPlace method.
-   * @param {any} other - The other param.
+   * Divides two Vec4s.
+   * @param {Vec4} other - The other Vec4 to divide by.
    */
   divideInPlace(other) {
     this.x /= other.x
@@ -263,9 +269,9 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns a new vector which is this vector scaled by scalar.
-   * @param {any} scalar - The scalar param.
-   * @return {vec4} - The return value.
+   * Scales this Vec4 by scalar and return the result as a new Vec4.
+   * @param {number} scalar - The scalar value.
+   * @return {Vec4} - The return value.
    */
   scale(scalar) {
     return new Vec4(
@@ -277,19 +283,18 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The scaleInPlace method.
-   * @param {any} scalar - The scalar param.
+   * Scales this Vec4 by scalar.
+   * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
     this.set(this.x * scalar, this.y * scalar, this.z * scalar, this.t * scalar)
   }
 
   /**
-   * Calculates the length of a vec4.
-   * @param {vec4} a - Vector to calculate length of.
-   * @return {number} - The length of a.
+   * Calculates the length of a Vec4.
+   * @return {number} - Returns the length.
    */
-  length(a) {
+  length() {
     const x = this.__data[0]
     const y = this.__data[1]
     const z = this.__data[2]
@@ -298,8 +303,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Calculates the squared length of a vec4.
-   * @return {number} - Squared length of a.
+   * Calculates the length of a Vec4 squared.
+   * @return {number} - Returns the length.
    */
   lengthSquared() {
     const x = this.__data[0]
@@ -310,8 +315,8 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Returns the vector normalized
-   * @return {vec4} - The return value.
+   * Normalizes the Vec4 and returns it as a new Vec4.
+   * @return {Vec4} - Returns the Vec4 normalized.
    */
   normalize() {
     const x = this.__data[0]
@@ -329,7 +334,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The normalizeInPlace method.
+   * Normalizes the Vec4.
    */
   normalizeInPlace() {
     const x = this.__data[0]
@@ -345,18 +350,18 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Calculates the dot product of two vec4s.
-   * @param {vec4} b - The second operand.
-   * @return {number} - Dot product of a and b.
+   * Calculates the dot product of this Vec4 against another Vec4.
+   * @param {Vec4} other - The other Vec4 to compare with.
+   * @return {number} - Returns the dot product.
    */
-  dot(b) {
-    return this.x * b.x + this.y * b.y + this.z * b.z + this.t * b.t
+  dot(other) {
+    return this.x * other.x + this.y * other.y + this.z * other.z + this.t * b.t
   }
 
   /**
-   * Computes the cross product of two vec4s.
-   * @param {vec4} b - The second operand.
-   * @return {vec4} - The return value.
+   * Calculates the cross product of two Vec4s and returns the result as a new Vec4.
+   * @param {Vec4} b - The other Vec4 to compare with.
+   * @return {Vec4} - Returns the cross products as a new Vec4.
    */
   cross(b) {
     const ax = this.x
@@ -377,9 +382,9 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Gets the angle between two 3D vectors.
-   * @param {vec4} b - The second operand.
-   * @return {number} - The angle in radians.
+   * Gets the angle between this Vec4 and b.
+   * @param {Vec4} b - The other Vec4 to compare with.
+   * @return {number} - Returns the angle in radians.
    */
   angle(b) {
     const tempA = this.normalize()
@@ -394,10 +399,10 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Performs a linear interpolation between two vec4s.
-   * @param {vec4} b - The second operand.
+   * Performs a linear interpolation between two Vec4s.
+   * @param {Vec4} b - The second operand.
    * @param {number} t - Interpolation amount between the two inputs.
-   * @return {vec4} - The return value.
+   * @return {Vec4} - The return value.
    */
   lerp(b, t) {
     const ax = this.x
@@ -415,7 +420,7 @@ class Vec4 extends AttrValue {
   /**
    * Generates a random vector with the given scale.
    * @param {number} scale - Length of the resulting vector. If ommitted, a unit vector will be returned.
-   * @return {vec4} - The return value.
+   * @return {Vec4} - The return value.
    */
   random(scale = 1.0) {
     const r = glMatrix.RANDOM() * 2.0 * Math.PI
@@ -430,7 +435,7 @@ class Vec4 extends AttrValue {
 
   /**
    * Clones this type returning a new instance.
-   * @return {vec4} - The return value.
+   * @return {Vec4} - The return value.
    */
   clone() {
     return new Vec4(
@@ -442,15 +447,15 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * The toVec3 method.
-   * @return {vec3} - The return value.
+   * Converts this Vec4 into a Vec3.
+   * @return {Vec3} - Returns the value as a new Vec3.
    */
   toVec3() {
     return new Vec3(this.__data[0], this.__data[1], this.__data[2])
   }
 
   /**
-   * Returns the tpye as an array. Often used to pass types to the GPU.
+   * Returns the type as an array. Often used to pass types to the GPU.
    * @return {any} - The return value.
    */
   asArray() {
@@ -463,7 +468,7 @@ class Vec4 extends AttrValue {
   /**
    * The create method.
    * @param {...object} ...args - The ...args param.
-   * @return {vec3} - The return value.
+   * @return {Vec3} - The return value.
    */
   static create(...args) {
     return new Vec3(...args)
@@ -473,7 +478,7 @@ class Vec4 extends AttrValue {
    * Creates a new Vec4 to wrap existing memory in a buffer.
    * @param {any} buffer - The buffer param.
    * @param {number} offset - The offset param.
-   * @return {vec4} - The return value.
+   * @return {Vec4} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float
