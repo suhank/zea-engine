@@ -1,6 +1,7 @@
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec3 } from './Vec3.js'
 import { Mat4 } from './Mat4.js'
+import { SphereType } from './SphereType.js'
 import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing a Box3. */
@@ -197,13 +198,18 @@ class Box3 {
     )
   }
 
-	intersectsBox( box ) {
+  getBoundingSphere() {
+    return new SphereType(
+      this.center(),
+      this.diagonal().length() * 0.5
+    );
+  }
 
+	intersectsBox( box ) {
 		// using 6 splitting planes to rule out intersections.
 		return box.max.x < this.min.x || box.min.x > this.max.x ||
 			box.max.y < this.min.y || box.min.y > this.max.y ||
 			box.max.z < this.min.z || box.min.z > this.max.z ? false : true;
-
 	}
 
 	intersectsSphere(sphere) {
