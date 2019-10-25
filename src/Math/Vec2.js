@@ -1,7 +1,9 @@
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Vec2.
+/** Class representing a Vec2. A Vec2 reresents a 2 dimensional coordinate.
+ *  Vector classes in ZeaEngine internally store values in Float32Arrays and expose
+ * getters and setters for the component values.
  * @extends AttrValue
  */
 class Vec2 extends AttrValue {
@@ -69,13 +71,13 @@ class Vec2 extends AttrValue {
    * @param {number} y  - The y param.
    */
   set(x, y) {
-    this.x = x
-    this.y = y
+    this.__data[0] = x
+    this.__data[1] = y
   }
 
   /**
-   * Setter from another vector.
-   * @param {any} other - The other param.
+   * Setter from another Vec2.
+   * @param {Vec2} other - The other vector.
    */
   setFromOther(other) {
     this.x = other.x
@@ -84,8 +86,8 @@ class Vec2 extends AttrValue {
 
   /**
    * Returns true if this vector is the same as another one.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * @param {Vec2} other - The other vecotr to compare with.
+   * @return {boolean} - The return value.
    */
   equal(other) {
     return this.x == other.x && this.y == other.y
@@ -93,30 +95,30 @@ class Vec2 extends AttrValue {
 
   /**
    * Returns true if this vector is not the same as another one.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * @param {Vec2} other - The other param to compare with.
+   * @return {boolean} - The return value.
    */
-  notequals(other) {
+  notEquals(other) {
     return this.x != other.x && this.y != other.y
   }
 
   /**
    * Returns true if this vector is the same as another one
    * (given a precision).
-   * @param {any} other - The other param.
+   * @param {Vec2} other - The other param.
    * @return {any} - The return value.
    */
-  approxEqual(other) {
+  approxEqual(other, precision=Number.EPSILON) {
     return (
-      Math.abs(this.x - other.x) < Number.EPSILON &&
-      Math.abs(this.y - other.y) < Number.EPSILON
+      Math.abs(this.x - other.x) < precision &&
+      Math.abs(this.y - other.y) < precision
     )
   }
 
   /**
    * Returns a new vector which is this vector added to other.
-   * @param {any} other - The other param.
-   * @return {vec2} - The return value.
+   * @param {Vec2} other - The other param.
+   * @return {Vec2} - The return value.
    */
   add(other) {
     return new Vec2(this.x + other.x, this.y + other.y)
@@ -130,7 +132,6 @@ class Vec2 extends AttrValue {
   addInPlace(other) {
     this.x += other.x
     this.y += other.y
-    return this
   }
 
   /**
@@ -170,7 +171,6 @@ class Vec2 extends AttrValue {
   scaleInPlace(scalar) {
     this.x *= scalar
     this.y *= scalar
-    return this
   }
 
   /**
@@ -274,23 +274,23 @@ class Vec2 extends AttrValue {
    * @param {vec2} b - The second operand.
    * @return {number} - The dot product of a and b.
    */
-  dot(b) {
-    return this.x * b.x + this.y * b.y
+  dot(other) {
+    return this.x * other.x + this.y * other.y
   }
 
   /**
-   * Gets the angle between two 3D vectors
-   * @param {vec3} b - The second operand.
+   * Gets the angle between two Vec2D vectors
+   * @param {Vec2} b - The second operand.
    * @return {number} - The angle in radians.
    */
-  angle(b) {
-    return Math.Atan2(b.x - this.x, b.y - this.y)
+  angle(other) {
+    return Math.Atan2(other.x - this.x, other.y - this.y)
   }
 
   /**
-   * The rotate method.
-   * @param {any} angle - The angle operand
-   * @return {vec2} - The return value.
+   * Rotates a Vec2 in a clockwise direction, returning a new rotated Vec3
+   * @param {any} angle - The angle
+   * @return {Vec2} - The rotated vector.
    */
   rotate(angle) {
     const cosa = Math.cos(angle)
@@ -303,7 +303,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Performs a linear interpolation between two vec2s.
-   * @param {vec2} b - The second operand.
+   * @param {Vec2} b - The second operand.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {vec2} - The return value.
    */
@@ -385,7 +385,7 @@ class Vec2 extends AttrValue {
   /**
    * The create method.
    * @param {...object} ...args - The ...args param.
-   * @return {vec2} - The return value.
+   * @return {Vec2} - The return value.
    */
   static create(...args) {
     return new Vec2(...args)
@@ -395,7 +395,7 @@ class Vec2 extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @return {object} - The json object.
    */
   toJSON() {
@@ -410,12 +410,11 @@ class Vec2 extends AttrValue {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.x = j['x']
-    this.y = j['y']
+    this.x = j.x
+    this.y = j.y
   }
 }
 
 typeRegistry.registerType('Vec2', Vec2)
 
 export { Vec2 }
-// export default Vec2;
