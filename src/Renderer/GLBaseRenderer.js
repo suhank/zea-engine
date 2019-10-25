@@ -1047,40 +1047,31 @@ class GLBaseRenderer {
     const gl = this.__gl
     if (!renderstate.viewports || renderstate.viewports.length == 1) {
       renderstate.bindRendererUnifs = unifs => {
-        {
-          const unif = unifs.cameraMatrix
-          if (unif) {
-            gl.uniformMatrix4fv(
-              unif.location,
-              false,
-              renderstate.cameraMatrix.asArray()
-            )
-          }
+        const { cameraMatrix, viewMatrix, projectionMatrix, eye } = unifs
+        if (cameraMatrix) {
+          gl.uniformMatrix4fv(
+            cameraMatrix.location,
+            false,
+            renderstate.cameraMatrix.asArray()
+          )
         }
 
         const vp = renderstate.viewports[0]
-        {
-          const unif = unifs.viewMatrix
-          if (unif) {
-            gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray())
-          }
+        if (viewMatrix) {
+          gl.uniformMatrix4fv(viewMatrix.location, false, vp.viewMatrix.asArray())
         }
-        {
-          const unif = unifs.projectionMatrix
-          if (unif) {
-            gl.uniformMatrix4fv(
-              unif.location,
-              false,
-              vp.projectionMatrix.asArray()
-            )
-          }
+
+        if (projectionMatrix) {
+          gl.uniformMatrix4fv(
+            projectionMatrix.location,
+            false,
+            vp.projectionMatrix.asArray()
+          )
         }
-        {
-          const unif = unifs.eye
-          if (unif) {
-            // Left or right eye, when rendering sterio VR.
-            gl.uniform1i(unif.location, 0)
-          }
+
+        if (eye) {
+          // Left or right eye, when rendering sterio VR.
+          gl.uniform1i(eye.location, index)
         }
       }
       renderstate.bindViewports = (unifs, cb) => cb()
@@ -1089,43 +1080,36 @@ class GLBaseRenderer {
         // Note: the camera matrix should be the head position instead
         // of the eye position. The inverse(viewMatrix) can be used
         // when we want the eye pos.
-        {
-          const unif = unifs.cameraMatrix
-          if (unif) {
-            gl.uniformMatrix4fv(
-              unif.location,
-              false,
-              renderstate.cameraMatrix.asArray()
-            )
-          }
+        const { cameraMatrix } = unifs
+        if (cameraMatrix) {
+          gl.uniformMatrix4fv(
+            cameraMatrix.location,
+            false,
+            renderstate.cameraMatrix.asArray()
+          )
         }
       }
 
       renderstate.bindViewports = (unifs, cb) => {
         renderstate.viewports.forEach((vp, index) => {
           gl.viewport(...vp.region)
-          {
-            const unif = unifs.viewMatrix
-            if (unif) {
-              gl.uniformMatrix4fv(unif.location, false, vp.viewMatrix.asArray())
-            }
+
+          const { viewMatrix, projectionMatrix, eye } = unifs
+          if (viewMatrix) {
+            gl.uniformMatrix4fv(viewMatrix.location, false, vp.viewMatrix.asArray())
           }
-          {
-            const unif = unifs.projectionMatrix
-            if (unif) {
-              gl.uniformMatrix4fv(
-                unif.location,
-                false,
-                vp.projectionMatrix.asArray()
-              )
-            }
+
+          if (projectionMatrix) {
+            gl.uniformMatrix4fv(
+              projectionMatrix.location,
+              false,
+              vp.projectionMatrix.asArray()
+            )
           }
-          {
-            const unif = unifs.eye
-            if (unif) {
-              // Left or right eye, when rendering sterio VR.
-              gl.uniform1i(unif.location, index)
-            }
+
+          if (eye) {
+            // Left or right eye, when rendering sterio VR.
+            gl.uniform1i(eye.location, index)
           }
           cb()
         })
