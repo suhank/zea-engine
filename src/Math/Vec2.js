@@ -105,10 +105,9 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Returns true if this Vec2 is the same as other
-   * (given a precision).
+   * Returns true if this Vec2 is approximately the same as other.
    * @param {Vec2} other - The other Vec2 to compare with.
-   * @param {number} precision - The precision between the two Vec2s.
+   * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
    */
   approxEqual(other, precision = Number.EPSILON) {
@@ -157,7 +156,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Scales this Vec2 by scalar and return the result as a new Vec2.
+   * Scales this Vec2 by scalar and returns the result as a new Vec2.
    * @param {number} scalar - The scalar value.
    * @return {Vec2} - Returns a new Vec2.
    */
@@ -167,7 +166,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Scales this Vec2 by scalar.
-   * @param {any} scalar - The scalar value.
+   * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
     this.x *= scalar
@@ -194,24 +193,24 @@ class Vec2 extends AttrValue {
 
   /**
    * Multiplies two Vec2s and returns the result as a new Vec2.
-   * @param {Vec2} vec2 - The other Vec2 to multiply with.
+   * @param {Vec2} other - The other Vec2 to multiply with.
    * @return {Vec2} - Returns a new Vec2.
    */
-  multiply(vec2) {
-    return new Vec2(this.x * vec2.x, this.y * vec2.y)
+  multiply(other) {
+    return new Vec2(this.x * other.x, this.y * other.y)
   }
 
   /**
    * Multiplies two Vec2s.
-   * @param {Vec2} vec2 - The other Vec2 to multiply with.
+   * @param {Vec2} other - The other Vec2 to multiply with.
    */
-  multiplyInPlace(vec2) {
-    this.x *= vec2.x
-    this.y *= vec2.y
+  multiplyInPlace(other) {
+    this.x *= other.x
+    this.y *= other.y
   }
 
   /**
-   * Calculates the length of a Vec2 squared.
+   * Calculates the squared length of this Vec2.
    * @return {number} - Returns the length squared.
    */
   lengthSquared() {
@@ -221,7 +220,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Calculates the length of a Vec2.
+   * Calculates the length of this Vec2.
    * @return {number} - Returns the length.
    */
   length() {
@@ -230,7 +229,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Calculates the distance to another vector.
-   * @param {Vec2} other - The other param.
+   * @param {Vec2} other - The other value.
    * @return {number} - Returns the distance between vectors.
    */
   distanceTo(other) {
@@ -284,7 +283,7 @@ class Vec2 extends AttrValue {
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {number} - Returns the angle in radians.
    */
-  angle(other) {
+  angleTo(other) {
     return Math.Atan2(other.x - this.x, other.y - this.y)
   }
 
@@ -303,21 +302,21 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Performs a linear interpolation between two Vec2s.
-   * @param {Vec2} b - The second operand.
+   * Performs a linear interpolation between this Vec2 and other.
+   * @param {Vec2} other - The other Vec2 to interpolate between.
    * @param {number} t - Interpolation amount between the two inputs.
-   * @return {Vec2} - The return value.
+   * @return {Vec2} - Returns a new Vec2.
    */
-  lerp(b, t) {
+  lerp(other, t) {
     const ax = this.x
     const ay = this.y
-    return new Vec2(ax + t * (b.x - ax), ay + t * (b.y - ay))
+    return new Vec2(ax + t * (other.x - ax), ay + t * (other.y - ay))
   }
 
   /**
    * Creates a new Vec2 to wrap existing memory in a buffer.
    * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
+   * @param {number} offset - The offset value.
    * @return {Vec2} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
@@ -326,7 +325,7 @@ class Vec2 extends AttrValue {
 
   /**
    * The createFromFloat32Array method.
-   * @param {any} array - The array param.
+   * @param {array} array - The array value.
    * @return {Vec2} - The return value.
    */
   static createFromFloat32Array(array) {
@@ -334,7 +333,8 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
+   * Returns the number of Float32 elements used by this type. Used to calculate storage requi
+   * ents for large arrays of this type.
    * @return {number} - The return value.
    */
   static numElements() {
@@ -355,7 +355,7 @@ class Vec2 extends AttrValue {
 
   /**
    * The setRandom method.
-   * @param {number} scale - The scale param.
+   * @param {number} scale - The scale value.
    * @return {any} - The return value.
    */
   setRandom(scale = 1.0) {
@@ -365,8 +365,8 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {Vec2} - The return value.
+   * Clones this Vec2 and returns a new instance.
+   * @return {Vec2} - Returns a new Vec2.
    */
   clone() {
     return new Vec2(this.__data[0], this.__data[1])
@@ -374,7 +374,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Returns the tpye as an array. Often used to pass types to the GPU.
-   * @return {any} - The return value.
+   * @return {any} - Returns as an array.
    */
   asArray() {
     return this.__data
@@ -384,9 +384,9 @@ class Vec2 extends AttrValue {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Vec2.
    * @param {...object} ...args - The ...args param.
-   * @return {Vec2} - The return value.
+   * @return {Vec2} - Returns a new Vec2.
    */
   static create(...args) {
     return new Vec2(...args)

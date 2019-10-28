@@ -94,7 +94,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The setDataArray method.
-   * @param {any} float32Array - The float32Array param.
+   * @param {any} float32Array - The float32Array value.
    */
   setDataArray(float32Array) {
     this.__data = float32Array
@@ -137,34 +137,32 @@ class Vec3 extends AttrValue {
   /**
    * Returns true if this Vec3 is exactly the same as other.
    * @param {Vec3} other - The other Vec3 to compare with.
-   * @param {number} precision - The precision between the two Vec3s.
    * @return {boolean} - Returns true or false.
    */
-  equal(other, precision) {
+  equal(other) {
     return this.x == other.x && this.y == other.y && this.z == other.z
   }
 
   /**
    * Returns true if this vector is NOT exactly the same other.
    * @param {Vec3} other - The other Vec3 to compare with.
-   * @param {number} precision - The precision between the two Vec3s.
    * @return {boolean} - Returns true or false.
    */
-  notEquals(other, precision) {
+  notEquals(other) {
     return this.x != other.x && this.y != other.y && this.z != other.z
   }
 
   /**
-   * Returns true if this vector is the same as other
-   * (given a precision).
+   * Returns true if this Vec3 is approximately the same as other.
    * @param {Vec3} other - The other Vec3 to compare with.
+   * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
    */
-  approxEqual(other) {
+  approxEqual(other, precision = Number.EPSILON) {
     return (
-      Math.abs(this.x - other.x) < Number.EPSILON &&
-      Math.abs(this.y - other.y) < Number.EPSILON &&
-      Math.abs(this.z - other.z) < Number.EPSILON
+      Math.abs(this.x - other.x) < precision &&
+      Math.abs(this.y - other.y) < precision &&
+      Math.abs(this.z - other.z) < precision
     )
   }
 
@@ -208,21 +206,21 @@ class Vec3 extends AttrValue {
 
   /**
    * Multiplies two Vec3s and returns the result as a new Vec3.
-   * @param {Vec3} vec3 - The other Vec3 to multiply with..
+   * @param {Vec3} other - The other Vec3 to multiply with.
    * @return {Vec3} - Returns a new Vec3.
    */
-  multiply(vec3) {
-    return new Vec3(this.x * vec3.x, this.y * vec3.y, this.z * vec3.z)
+  multiply(other) {
+    return new Vec3(this.x * other.x, this.y * other.y, this.z * other.z)
   }
 
   /**
    * Multiplies two Vec3s.
-   * @param {Vec3} vec3 - The other Vec3 to multiply with.
+   * @param {Vec3} other - The other Vec3 to multiply with.
    */
-  multiplyInPlace(vec3) {
-    this.x *= vec3.x
-    this.y *= vec3.y
-    this.z *= vec3.z
+  multiplyInPlace(other) {
+    this.x *= other.x
+    this.y *= other.y
+    this.z *= other.z
   }
 
   /**
@@ -245,7 +243,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Scales this Vec3 by scalar and return the result as a new Vec3.
+   * Scales this Vec3 by scalar and returns the result as a new Vec3.
    * @param {number} scalar - The scalar value.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -281,7 +279,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Calculates the length of a Vec3 squared.
+   * Calculates the squared length of this Vec3.
    * @return {number} - Returns the length.
    */
   lengthSquared() {
@@ -292,7 +290,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Calculates the length of a Vec3.
+   * Calculates the length of this Vec3.
    * @return {number} - Returns the length.
    */
   length() {
@@ -403,27 +401,27 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the cross product of two Vec3s and returns the result as a new Vec3.
-   * @param {Vec3} b - The second operand.
-   * @return {Vec3} - Returns the cross products as a new Vec3.
+   * @param {Vec3} other - The other Vec3 to calculate with.
+   * @return {Vec3} - Returns the cross product as a new Vec3.
    */
-  cross(b) {
+  cross(other) {
     const ax = this.x
     const ay = this.y
     const az = this.z
-    const bx = b.x
-    const by = b.y
-    const bz = b.z
+    const bx = other.x
+    const by = other.y
+    const bz = other.z
 
     return new Vec3(ay * bz - az * by, az * bx - ax * bz, ax * by - ay * bx)
   }
 
   /**
    * Gets the angle between this Vec3 and b.
-   * @param {Vec3} b - The other Vec3 to compare with.
+   * @param {Vec3} other - The other Vec3 to compare with.
    * @return {number} - Returns the angle in radians.
    */
-  angleTo(b) {
-    const cosine = this.dot(b)
+  angleTo(other) {
+    const cosine = this.dot(other)
     if (cosine > 1.0) {
       return 0
     } else {
@@ -432,19 +430,19 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Performs a linear interpolation between two Vec3s.
-   * @param {Vec3} b - The second operand.
+   * Performs a linear interpolation between this Vec3 and other.
+   * @param {Vec3} other - The other Vec3 to interpolate between.
    * @param {number} t - Interpolation amount between the two inputs.
-   * @return {Vec3} - The return value.
+   * @return {Vec3} - Returns a new Vec3.
    */
-  lerp(b, t) {
+  lerp(other, t) {
     const ax = this.x
     const ay = this.y
     const az = this.z
     return new Vec3(
-      ax + t * (b.x - ax),
-      ay + t * (b.y - ay),
-      az + t * (b.z - az)
+      ax + t * (other.x - ax),
+      ay + t * (other.y - ay),
+      az + t * (other.z - az)
     )
   }
 
@@ -485,8 +483,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {Vec3} - The return value.
+   * Clones this Vec3 and returns a new instance.
+   * @return {Vec3} - Returns a new Vec3.
    */
   clone() {
     return new Vec3(this.__data[0], this.__data[1], this.__data[2])
@@ -494,7 +492,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
-   * @return {any} - The return value.
+   * @return {any} - Returns as an array.
    */
   asArray() {
     return this.__data
@@ -504,9 +502,9 @@ class Vec3 extends AttrValue {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Vec3.
    * @param {...object} ...args - The ...args param.
-   * @return {Vec3} - The return value.
+   * @return {Vec3} - Returns a new Vec3.
    */
   static create(...args) {
     return new Vec3(...args)
@@ -526,7 +524,7 @@ class Vec3 extends AttrValue {
   /**
    * The createFromFloat32Buffer method.
    * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
+   * @param {number} offset - The offset value.
    * @return {Vec3} - The return value.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
