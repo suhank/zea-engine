@@ -662,6 +662,24 @@ class GLTexture2D extends RefCounted {
     }
   }
 
+  // Upload data for the image to the GPU.
+  populate(dataArray, width, height, offsetX=0, offsetY=0, bind=true) {
+    const gl = this.__gl
+    if (bind)
+      gl.bindTexture(gl.TEXTURE_2D, this.__gltex)
+    gl.texSubImage2D(
+      gl.TEXTURE_2D,
+      0,
+      offsetX,
+      offsetY,
+      width,
+      height,
+      this.__format,
+      this.__type,
+      dataArray
+    )
+  }
+
   /**
    * The getSize method.
    * @return {any} - The return value.

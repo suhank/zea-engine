@@ -405,7 +405,6 @@ class GLStandardGeomsPass extends GLPass {
 
     gl.bindTexture(gl.TEXTURE_2D, this.__drawItemsTexture.glTex)
     const typeId = this.__drawItemsTexture.getTypeID()
-    const formatId = this.__drawItemsTexture.getFormatID()
 
     for (let i = 0; i < this.__dirtyItemIndices.length; i++) {
       const indexStart = this.__dirtyItemIndices[i]
@@ -443,29 +442,23 @@ class GLStandardGeomsPass extends GLPass {
       }
 
       if (typeId == gl.FLOAT) {
-        gl.texSubImage2D(
-          gl.TEXTURE_2D,
-          0,
-          xoffset,
-          yoffset,
+        this.__drawItemsTexture.populate(
+          dataArray,
           width,
           height,
-          formatId,
-          typeId,
-          dataArray
+          xoffset,
+          yoffset,
+          false
         )
       } else {
         const unit16s = Math.convertFloat32ArrayToUInt16Array(dataArray)
-        gl.texSubImage2D(
-          gl.TEXTURE_2D,
-          0,
-          xoffset,
-          yoffset,
+        this.__drawItemsTexture.populate(
+          unit16s,
           width,
           height,
-          formatId,
-          typeId,
-          unit16s
+          xoffset,
+          yoffset,
+          false
         )
       }
 
