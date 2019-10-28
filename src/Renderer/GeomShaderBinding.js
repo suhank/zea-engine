@@ -7,6 +7,7 @@ import {
   SInt32,
   Float32,
   Color,
+  Vec2,
   Vec3,
   Vec4,
   RGBA,
@@ -83,6 +84,11 @@ class GeomShaderBinding {
           break
         case Float32:
           dimension = 1
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case Vec2:
+          dimension = 2
           elementSize = 4
           dataType = gl.FLOAT
           break
@@ -227,6 +233,11 @@ class VAOGeomShaderBinding {
           break
         case Float32:
           dimension = 1
+          elementSize = 4
+          dataType = gl.FLOAT
+          break
+        case Vec2:
+          dimension = 2
           elementSize = 4
           dataType = gl.FLOAT
           break

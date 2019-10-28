@@ -158,10 +158,9 @@ class VertexAttribute extends Attribute {
 
     const numUnSplitValues = this.length
     const count = this.length + splitCount
-    const numElems =
-      this.__dataType == this.__dataType.numElements
-        ? this.__dataType.numElements()
-        : 1
+    const numElems = this.__dataType.numElements
+      ? this.__dataType.numElements()
+      : 1
     const data = new Float32Array(count * numElems)
     for (let i = 0; i < this.__data.length; i++) data[i] = this.__data[i]
 
