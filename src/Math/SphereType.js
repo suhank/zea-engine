@@ -3,14 +3,14 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 
-/** Class representing a Sphere.
+/** Class representing a sphere.
  * @extends AttrValue
  */
 class SphereType extends AttrValue {
   /**
-   * Create a Vec3.
-   * @param {Vec3} pos - The pos value.
-   * @param {number} radius - The radius value.
+   * Create a sphere.
+   * @param {Vec3} pos - The position of the sphere.
+   * @param {number} radius - The radius of the sphere.
    */
   constructor(pos, radius = 0) {
     super()
@@ -22,27 +22,30 @@ class SphereType extends AttrValue {
     this.radius = radius
   }
 
-
   /**
-   * Clones this type returning a new instance.
-   * @return {any} - The return value.
+   * Clones this sphere and returns a new sphere.
+   * @return {Sphere} - Returns a new sphere.
    */
   clone() {
     return new Sphere(this.pos.clone(), this.radius)
   }
 
-  
-	intersectsBox ( box ) {
-		return box.intersectsSphere( this );
-	}
+  /**
+   * Checks if this spehere intersects a box.
+   * @param {any} box - The box value.
+   * @return {any} - The return value.
+   */
+  intersectsBox(box) {
+    return box.intersectsSphere(this)
+  }
 
   // ////////////////////////////////////////
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new sphere.
    * @param {...object} ...args - The ...args param.
-   * @return {vec3} - The return value.
+   * @return {Sphere} - Returns a new sphere.
    */
   static create(...args) {
     return new Sphere(...args)
@@ -58,7 +61,7 @@ class SphereType extends AttrValue {
   toJSON() {
     return {
       pos: this.pos.toJSON(),
-      radius: this.radius
+      radius: this.radius,
     }
   }
 

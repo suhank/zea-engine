@@ -415,10 +415,10 @@ class Mat3 extends AttrValue {
   /**
    * Transposes (exchanges columns with rows) this matrix
    * and returns the result as a new instance.
-   * @return {Mat4} - Return a new transposed Mat4.
+   * @return {Mat3} - Return a new transposed Mat3.
    */
   transpose() {
-    return Mat4(
+    return Mat3(
       this.__data[0],
       this.__data[3],
       this.__data[6],
@@ -500,8 +500,8 @@ class Mat3 extends AttrValue {
 
   /**
    * Creates a new Mat3 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
+   * @param {any} buffer - The buffer value.
+   * @param {number} offset - The offset value.
    * @return {Mat3} - Returns a new Mat3.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {

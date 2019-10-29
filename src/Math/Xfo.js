@@ -6,13 +6,13 @@ import { typeRegistry } from './TypeRegistry.js'
 
 const sc_helper = new Vec3(1, 1, 1)
 
-/** Class representing an Xfo. */
+/** Class representing an Xfo transform. */
 class Xfo {
   /**
    * Create a Xfo.
-   * @param {any} tr - The tr value.
-   * @param {any} ori - The ori value.
-   * @param {any} sc - The sc value.
+   * @param {any} tr - The translation value.
+   * @param {any} ori - The orientation value.
+   * @param {any} sc - The scaling value.
    */
   constructor(tr = undefined, ori = undefined, sc = undefined) {
     if (tr instanceof Float32Array) {
@@ -43,9 +43,9 @@ class Xfo {
 
   /**
    * The set method.
-   * @param {any} tr - The tr value.
-   * @param {any} ori - The ori value.
-   * @param {any} sc - The sc value.
+   * @param {any} tr - The translation value.
+   * @param {any} ori - The orientation value.
+   * @param {any} sc - The scaling value.
    */
   set(tr, ori, sc = undefined) {
     this.tr = tr
@@ -54,8 +54,8 @@ class Xfo {
   }
 
   /**
-   * The setFromOther method.
-   * @param {any} other - The other param.
+   * Setter from another Xfo.
+   * @param {Xfo} other - The other Xfo to set from.
    */
   setFromOther(other) {
     this.tr = other.tr
@@ -73,7 +73,7 @@ class Xfo {
 
   /**
    * The setLookAt method.
-   * @param {any} pos - The pos value.
+   * @param {any} pos - The position value.
    * @param {any} target - The target value.
    * @param {any} up - The up value.
    */
@@ -90,9 +90,9 @@ class Xfo {
   }
 
   /**
-   * Multiplies two transforms.
-   * @param {any} xfo - The xfo value.
-   * @return {any} - The return value.
+   * Multiplies two Xfo transforms.
+   * @param {Xfo} xfo - The xfo to multiply with.
+   * @return {Xfo} - Returns an Xfo.
    */
   multiply(xfo) {
     if (
@@ -123,7 +123,7 @@ class Xfo {
 
   /**
    * The inverse method.
-   * @return {any} - The return value.
+   * @return {Xfo} - Returns a new Xfo.
    */
   inverse() {
     const result = new Xfo()
@@ -135,7 +135,7 @@ class Xfo {
 
   /**
    * The transformVec3 method.
-   * @param {any} vec3 - The vec3 param.
+   * @param {Vec3} vec3 - The vec3 value.
    * @return {any} - The return value.
    */
   transformVec3(vec3) {
@@ -143,8 +143,8 @@ class Xfo {
   }
 
   /**
-   * The toMat4 method.
-   * @return {any} - The return value.
+   * Converts this Xfo to a Mat4 (a 4x4 matrix).
+   * @return {Mat4} - Returns a new Mat4.
    */
   toMat4() {
     const scl = new Mat4(
@@ -176,7 +176,7 @@ class Xfo {
 
   /**
    * The fromMat4 method.
-   * @param {any} mat4 - The mat4 param.
+   * @param {Mat4} mat4 - The mat4 value.
    */
   fromMat4(mat4) {
     this.tr = mat4.translation
@@ -185,7 +185,7 @@ class Xfo {
 
   /**
    * The setFromFloat32Array method.
-   * @param {any} float32array - The float32array param.
+   * @param {array} float32array - The float32array value.
    */
   setFromFloat32Array(float32array) {
     if (float32array.length == 7) {
@@ -210,8 +210,8 @@ class Xfo {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {any} - The return value.
+   * Clones this Xfo and returns a new Xfo.
+   * @return {Xfo} - Returns a new Xfo.
    */
   clone() {
     return new Xfo(this.tr.clone(), this.ori.clone(), this.sc.clone())
@@ -221,9 +221,9 @@ class Xfo {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Xfo.
    * @param {...object} ...args - The ...args param.
-   * @return {vec3} - The return value.
+   * @return {Xfo} - eturns a new Xfo.
    */
   static create(...args) {
     return new Xfo(...args)
@@ -269,4 +269,3 @@ class Xfo {
 typeRegistry.registerType('Xfo', Xfo)
 
 export { Xfo }
-// export default Xfo;

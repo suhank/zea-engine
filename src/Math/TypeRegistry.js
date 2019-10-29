@@ -17,8 +17,8 @@ class TypeRegistry {
 
   /**
    * The registerType method.
-   * @param {any} key - The key param.
-   * @param {any} type - The type param.
+   * @param {any} key - The key value.
+   * @param {any} type - The type value.
    */
   registerType(key, type) {
     this.__types[key] = type
@@ -28,7 +28,7 @@ class TypeRegistry {
 
   /**
    * The getType method.
-   * @param {any} key - The key param.
+   * @param {any} key - The key value.
    * @return {any} - The return value.
    */
   getType(key) {
@@ -37,7 +37,7 @@ class TypeRegistry {
 
   /**
    * The getTypeName method.
-   * @param {any} type - The type param.
+   * @param {any} type - The type value.
    * @return {any} - The return value.
    */
   getTypeName(type) {

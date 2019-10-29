@@ -315,9 +315,9 @@ class Vec2 extends AttrValue {
 
   /**
    * Creates a new Vec2 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer param.
+   * @param {any} buffer - The buffer value.
    * @param {number} offset - The offset value.
-   * @return {Vec2} - The return value.
+   * @return {Vec2} - Returns a new Vec2.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec2(buffer, offset * 4) // 4 bytes per 32bit float
@@ -326,7 +326,7 @@ class Vec2 extends AttrValue {
   /**
    * The createFromFloat32Array method.
    * @param {array} array - The array value.
-   * @return {Vec2} - The return value.
+   * @return {Vec2} - Returns a new Vec2.
    */
   static createFromFloat32Array(array) {
     return new Vec2(array)
@@ -365,7 +365,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Clones this Vec2 and returns a new instance.
+   * Clones this Vec2 and returns a new Vec2.
    * @return {Vec2} - Returns a new Vec2.
    */
   clone() {
@@ -374,7 +374,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Returns the tpye as an array. Often used to pass types to the GPU.
-   * @return {any} - Returns as an array.
+   * @return {array} - Returns as an array.
    */
   asArray() {
     return this.__data

@@ -11,7 +11,7 @@ class Vec3 extends AttrValue {
    * Create a Vec3.
    * @param {number} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
-   * @param {number} z - The y value. Default is 0.
+   * @param {number} z - The z value. Default is 0.
    */
   constructor(x = 0, y = 0, z = 0) {
     super()
@@ -196,7 +196,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Subtracts other from this Vec3.
-   * @param {Vec3} other - The other param.
+   * @param {Vec3} other - The other Vec3 to subtract.
    */
   subtractInPlace(other) {
     this.x -= other.x
@@ -298,8 +298,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Calculates the distance to another vector.
-   * @param {Vec3} other - The other param.
+   * Calculates the distance to another Vec3.
+   * @param {Vec3} other - The other Vec3 to calculate the distance to.
    * @return {number} - Returns the distance between vectors.
    */
   distanceTo(other) {
@@ -353,7 +353,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The resize method returns a new Vec3 with the given length.
-   * @param {number} length - The length param.
+   * @param {number} length - The length value.
    * @return {Vec3} - The return value.
    */
   resize(length) {
@@ -374,7 +374,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The resizeInPlace method.
-   * @param {number} length - The length param.
+   * @param {number} length - The length value.
    */
   resizeInPlace(length) {
     const currlen =
@@ -483,7 +483,7 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Clones this Vec3 and returns a new instance.
+   * Clones this Vec3 and returns a new Vec3.
    * @return {Vec3} - Returns a new Vec3.
    */
   clone() {
@@ -492,7 +492,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
-   * @return {any} - Returns as an array.
+   * @return {array} - Returns as an array.
    */
   asArray() {
     return this.__data
@@ -523,9 +523,9 @@ class Vec3 extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
-   * @param {any} buffer - The buffer param.
+   * @param {any} buffer - The buffer value.
    * @param {number} offset - The offset value.
-   * @return {Vec3} - The return value.
+   * @return {Vec3} - Returns a new Vec3.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
@@ -534,7 +534,7 @@ class Vec3 extends AttrValue {
   /**
    * The createFromFloat32Array method.
    * @param {array} array - A Float32Array value
-   * @return {Vec3} - The return value.
+   * @return {Vec3} - Returns a new Vec3.
    */
   static createFromFloat32Array(array) {
     return new Vec3(array)

@@ -8,8 +8,8 @@ import { typeRegistry } from './TypeRegistry.js'
 class Box3 {
   /**
    * Create a Box3
-   * @param {any} p0 - the p0 value.
-   * @param {any} p1 - the p1 value.
+   * @param {Vec3} p0 - A point representing the corners of a 3D box.
+   * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
   constructor(p0 = undefined, p1 = undefined) {
     if (p0 instanceof Float32Array) {
@@ -54,8 +54,8 @@ class Box3 {
 
   /**
    * The set method.
-   * @param {Vec3} p0 - the p0 value.
-   * @param {Vec3} p1 - the p1 value.
+   * @param {Vec3} p0 - A point representing the corners of a 3D box.
+   * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
   set(p0, p1) {
     this.p0 = p0
@@ -90,8 +90,8 @@ class Box3 {
   }
 
   /**
-   * The addPoint method.
-   * @param {any} point - The point value.
+   * Expands the Box3 to contain the new point.
+   * @param {Vec3} point - A point represents the corners of a 3D box.
    */
   addPoint(point) {
     if (
@@ -119,12 +119,12 @@ class Box3 {
 
   /**
    * The addBox3 method.
-   * @param {any} box3 - The box3 param.
-   * @param {any} xfo - The xfo param.
+   * @param {Box3} box3 - A 3D box.
+   * @param {Vec3} xfo - A 3D transform.
    */
   addBox3(box3, xfo = undefined) {
     if (xfo) {
-      // transform each corner of the box3 into the new coord sys
+      // Transform each corner of the Box3 into the new coordinate system.
       this.addPoint(xfo.transformVec3(box3.p0))
       this.addPoint(
         xfo.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z))
@@ -152,24 +152,24 @@ class Box3 {
   }
 
   /**
-   * The size method.
-   * @return {any} - The return value.
+   * Returns the size of a Box3.
+   * @return {Box3} - Returns a Box3.
    */
   size() {
     return this.p1.subtract(this.p0)
   }
 
   /**
-   * The diagonal method.
-   * @return {any} - The return value.
+   * Returns the size of a Box3 - the same as size().
+   * @return {Box3} - Returns a Box3.
    */
   diagonal() {
     return this.p1.subtract(this.p0)
   }
 
   /**
-   * The center method.
-   * @return {any} - The return value.
+   * Returns the center point of a Box3.
+   * @return {Vec3} - Returns a Vec3.
    */
   center() {
     const result = this.p1.subtract(this.p0)
@@ -215,9 +215,9 @@ class Box3 {
   }
 
   /**
-   * Determines if this Box3 intersects plane.
+   * Determines if this Box3 intersects a plane.
    * @param {any} box - The box to check for intersection against.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   intersectsBox(box) {
     // Using 6 splitting planes to rule out intersections.
@@ -233,7 +233,7 @@ class Box3 {
 
   /**
    * Determines if this Box3 intersects a sphere.
-   * @param {any} sphere - The sphere to check for intersection against.
+   * @param {Sphere} sphere - The sphere to check for intersection against.
    * @return {any} - The return value.
    */
   intersectsSphere(sphere) {
@@ -251,7 +251,7 @@ class Box3 {
 
   /**
    * Determines if this Box3 intersects a plane.
-   * @param {any} plane - The plane to check for intersection against.
+   * @param {Plane} plane - The plane to check for intersection against.
    * @return {any} - The return value.
    */
   intersectsPlane(plane) {
@@ -289,7 +289,7 @@ class Box3 {
   }
 
   /**
-   * Clones this Box3 and returns a new instance.
+   * Clones this Box3 and returns a new Box3.
    * @return {Box3} - Returns a new Box3.
    */
   clone() {
@@ -300,12 +300,12 @@ class Box3 {
   // Static Methods
 
   /**
-   * Creates a new Box2.
+   * Creates a new Box3.
    * @param {...object} ...args - The ...args param.
-   * @return {Box2} - Returns a new Box2.
+   * @return {Box3} - Returns a new Box3.
    */
   static create(...args) {
-    return new Box2(...args)
+    return new Box3(...args)
   }
 
   /**
@@ -341,8 +341,8 @@ class Box3 {
 
   /**
    * The loadBin method.
-   * @param {any} data - The data param.
-   * @param {any} byteOffset - The byteOffset param.
+   * @param {any} data - The data value.
+   * @param {any} byteOffset - The byteOffset value.
    */
   loadBin(data, byteOffset) {
     this.p0.loadBin(data, byteOffset)
@@ -351,7 +351,7 @@ class Box3 {
 
   /**
    * The setFromFloat32Array method.
-   * @param {any} float32array - The float32array param.
+   * @param {any} float32array - The float32array value.
    */
   setFromFloat32Array(float32array) {
     this.p0 = new Vec3(float32array.buffer, float32array.byteOffset)

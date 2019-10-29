@@ -429,7 +429,7 @@ class Color extends AttrValue {
   /**
    * Returns true if this color is approximately the same as other.
    * @param {Color} other - The other color to compare with.
-   * @param {number} precision - The precision param.
+   * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
    */
   approxEqual(other, precision = Number.EPSILON) {
@@ -471,7 +471,7 @@ class Color extends AttrValue {
 
   /**
    * Scales this color by scalar and return the result as a new Vec4.
-   * @param {number} scalar - The scalar param.
+   * @param {number} scalar - The scalar value.
    * @return {Color} - Returns a new color.
    */
   scale(scalar) {
@@ -485,7 +485,7 @@ class Color extends AttrValue {
 
   /**
    * Scales this color by scalar.
-   * @param {number} scalar - The scalar param.
+   * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
     this.r *= scalar
@@ -566,7 +566,7 @@ class Color extends AttrValue {
    * Creates a random color.
    * @param {number} gammaOffset - The gamma offset.
    * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
-   * @return {color} - Returns a new random color.
+   * @return {Color} - Returns a new random color.
    */
   static random(gammaOffset = 0.0, randomAlpha = false) {
     if (gammaOffset > 0.0) {
@@ -594,7 +594,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * Clones this color and returns a new instance.
+   * Clones this color and returns a new color.
    * @return {Color} - Returns a new color.
    */
   clone() {
@@ -608,7 +608,7 @@ class Color extends AttrValue {
 
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
-   * @return {any} - Returns as an array.
+   * @return {array} - Returns as an array.
    */
   asArray() {
     return this.__data
@@ -616,7 +616,7 @@ class Color extends AttrValue {
 
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
-   * @return {any} - Returns as a 3 component array.
+   * @return {array} - Returns as a 3 component array.
    */
   as3ComponentArray() {
     return [this.__data[0], this.__data[1], this.__data[2]]
@@ -636,9 +636,9 @@ class Color extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
-   * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
-   * @return {color} - The return value.
+   * @param {any} buffer - The buffer value.
+   * @param {number} offset - The offset value.
+   * @return {Color} - Returns a new color.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Color(buffer, offset * 4) // 4 bytes per 32bit float

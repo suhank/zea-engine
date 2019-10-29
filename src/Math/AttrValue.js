@@ -8,7 +8,7 @@ import { JSON_stringify_fixedPrecision } from './Common.js'
 class AttrValue {
   /**
    * The isValid method.
-   * @return {any} The return value.
+   * @return {boolean} - Returns the result as a boolean.
    */
   isValid() {
     for (const v of this.__data) {
@@ -19,8 +19,8 @@ class AttrValue {
 
   /**
    * Creates a new value to wrap memory in an existing buffer.
-   * @param {any} buffer - the buffer param.
-   * @param {any} offset - the offset param.
+   * @param {any} buffer - the buffer value.
+   * @param {number} offset - the offset value.
    */
   static createFromFloat32Buffer(buffer, offset) {
     throw new Error(
@@ -38,8 +38,8 @@ class AttrValue {
   }
 
   /**
-   * Returns the tpye as an array. Often used to pass types to the GPU.
-   * @return {any} The return value.
+   * Returns the type as an array. Often used to pass types to the GPU.
+   * @return {array} - Returns the result as an array.
    */
   asArray() {
     return this.__data
@@ -47,7 +47,7 @@ class AttrValue {
 
   /**
    * The toString method.
-   * @return {any} The return value.
+   * @return {any} - The return value.
    */
   toString() {
     return JSON_stringify_fixedPrecision(this.toJSON())
@@ -55,4 +55,3 @@ class AttrValue {
 }
 
 export { AttrValue }
-// export default AttrValue;

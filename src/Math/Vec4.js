@@ -432,7 +432,7 @@ class Vec4 extends AttrValue {
   }
 
   /**
-   * Clones this Vec4 and returns a new instance.
+   * Clones this Vec4 and returns a new Vec4.
    * @return {Vec4} - Returns a new Vec4.
    */
   clone() {
@@ -474,9 +474,9 @@ class Vec4 extends AttrValue {
 
   /**
    * Creates a new Vec4 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer param.
+   * @param {any} buffer - The buffer value.
    * @param {number} offset - The offset value.
-   * @return {Vec4} - The return value.
+   * @return {Vec4} - Returns a new Vec3.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float

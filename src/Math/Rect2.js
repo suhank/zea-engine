@@ -2,12 +2,12 @@ import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec2 } from './Vec2.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Rect2. */
+/** Class representing a 2D rectangle. */
 class Rect2 {
   /**
    * Create a Rect2.
-   * @param {any} pos - The pos value.
-   * @param {any} size - The size value.
+   * @param {Vec2} pos - The position of the Rect2.
+   * @param {Vec2} size - The size of the Rect2.
    */
   constructor(pos = undefined, size = undefined) {
     if (pos instanceof Vec2) {
@@ -23,35 +23,40 @@ class Rect2 {
   }
 
   /**
-   * Getter for left.
+   * Getter for the left side of a rectangle.
+   * @return {Vec2} - Returns the left side.
    */
   get left() {
     return this.pos.x
   }
 
   /**
-   * Getter for right.
+   * Getter for the right side of a rectangle.
+   * @return {Vec2} - Returns the right side.
    */
   get right() {
     return this.pos.x + this.size.x
   }
 
   /**
-   * Getter for bottom.
+   * Getter for the bottom side of a rectangle.
+   * @return {Vec2} - Returns the bottom side.
    */
   get bottom() {
     return this.pos.y
   }
 
   /**
-   * Getter for top.
+   * Getter for the top side of a rectangle.
+   * @return {Vec2} - Returns the top side.
    */
   get top() {
     return this.pos.y + this.size.y
   }
 
   /**
-   * Getter for area.
+   * Getter for the area of a rectangle.
+   * @return {Rect2} - Returns the area of a Rect2.
    */
   get area() {
     return this.size.x * this.size.y
@@ -59,7 +64,7 @@ class Rect2 {
 
   /**
    * The expandByPoint method.
-   * @param {any} point - The point param.
+   * @param {Vec3} point - A point represents the corners of a  Rect2.
    */
   expandByPoint(point) {
     if (point.x < this.pos.x) {
@@ -77,8 +82,8 @@ class Rect2 {
   }
 
   /**
-   * Scales the rect modifying it size value..
-   * @param {any} scalar - The scalar param.
+   * Scales the Rect2 modifying its size value.
+   * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
     this.pos.scaleInPlace(scalar)
@@ -100,9 +105,9 @@ class Rect2 {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Rect2.
    * @param {...object} ...args - The ...args param.
-   * @return {any} - The return value.
+   * @return {Rect2} - Returns a new Rect2.
    */
   static create(...args) {
     return new Rect2(...args)
@@ -134,4 +139,3 @@ class Rect2 {
 typeRegistry.registerType('Rect2', Rect2)
 
 export { Rect2 }
-// export default Rect2;

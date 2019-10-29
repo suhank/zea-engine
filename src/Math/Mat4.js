@@ -1213,7 +1213,7 @@ class Mat4 extends AttrValue {
 
   /**
    * The rotateVec3 method.
-   * @param {any} vec - The vec param.
+   * @param {any} vec - The vec value.
    * @return {Vec3} - Return the result as a new Vec3.
    */
   rotateVec3(vec) {
@@ -1313,7 +1313,7 @@ class Mat4 extends AttrValue {
 
   /**
    * The setFromMat3x4Array method.
-   * @param {any} m3x4 - The m3x4 param.
+   * @param {any} m3x4 - The m3x4 value.
    */
   setFromMat3x4Array(m3x4) {
     /* eslint-disable prettier/prettier*/
@@ -1340,8 +1340,8 @@ class Mat4 extends AttrValue {
 
   /**
    * Creates a new Mat4 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
+   * @param {any} buffer - The buffer value.
+   * @param {number} offset - The offset value.
    * @return {Mat4} - Returns a new Mat4.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {

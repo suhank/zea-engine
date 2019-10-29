@@ -3,13 +3,13 @@ import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 
-/** Class representing a Plane.
+/** Class representing a plane.
  * @extends AttrValue
  */
 class PlaneType extends AttrValue {
   /**
-   * Create a Vec3.
-   * @param {Vec3} normal - The normal value.
+   * Create a plane.
+   * @param {Vec3} normal - The normal of the plane.
    * @param {number} w - The w value.
    */
   constructor(normal, w = 0) {
@@ -22,22 +22,38 @@ class PlaneType extends AttrValue {
     this.w = w
   }
 
+  /**
+   * Thet set method
+   * @param {number} x - The x value.
+   * @param {number} y - The y value.
+   * @param {number} z - The z value.
+   * @param {number} w - The w value.
+   */
   set(x, y, z, w) {
     this.normal.set(x, y, z)
-    this.w = w;
+    this.w = w
   }
 
+  /**
+   * Thet divideScalar method
+   * @param {number} value - The value value.
+   */
   divideScalar(value) {
-    this.normal.scaleInPlace(1/value)
-    this.w /= value;
+    this.normal.scaleInPlace(1 / value)
+    this.w /= value
   }
 
-  distanceToPoint(point){
+  /**
+   * Thet distanceToPoint method
+   * @param {any} point - The point value.
+   * @return {any} - The rreturn value.
+   */
+  distanceToPoint(point) {
     return point.dot(this.normal) + this.w
   }
 
   /**
-   * normalizeInPlace this plane modifying its values.
+   * Normalize this plane in place modifying its values.
    */
   normalizeInPlace() {
     const inverseNormalLength = 1.0 / this.normal.length()
@@ -46,8 +62,8 @@ class PlaneType extends AttrValue {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {any} - The return value.
+   * Clones this plane and returns a new plane.
+   * @return {Plane} - Returns a new plane.
    */
   clone() {
     return new Plane(this.normal.clone(), this.w)
@@ -57,9 +73,9 @@ class PlaneType extends AttrValue {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new plane.
    * @param {...object} ...args - The ...args param.
-   * @return {vec3} - The return value.
+   * @return {Plane} - Returns a new plane.
    */
   static create(...args) {
     return new Plane(...args)
@@ -75,7 +91,7 @@ class PlaneType extends AttrValue {
   toJSON() {
     return {
       normal: this.normal.toJSON(),
-      w: this.w
+      w: this.w,
     }
   }
 

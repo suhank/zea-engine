@@ -7,8 +7,8 @@ import { typeRegistry } from './TypeRegistry.js'
 class Box2 {
   /**
    * Create a Box2
-   * @param {any} p0 - the p0 value.
-   * @param {any} p1 - the p1 value.
+   * @param {any} p0 - A point representing the corners of a 2D box.
+   * @param {any} p1 - A point representing the corners of a 2D box.
    */
   constructor(p0 = undefined, p1 = undefined) {
     if (p0 instanceof Vec2) {
@@ -25,8 +25,8 @@ class Box2 {
 
   /**
    * The set method.
-   * @param {Vec2} p0 - the p0 value.
-   * @param {Vec2} p1 - the p1 value.
+   * @param {Vec2} p0 - A point representing the corners of a 2D box.
+   * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
   set(p0, p1) {
     this.p0 = p0
@@ -57,8 +57,8 @@ class Box2 {
   }
 
   /**
-   * The addPoint method.
-   * @param {any} point - The point value.
+   * Expands the Box2 to contain the new point.
+   * @param {Vec2} point - A point represents the corners of a 2D box.
    */
   addPoint(point) {
     if (this.p0.x == Number.POSITIVE_INFINITY || point.x < this.p0.x)
@@ -73,24 +73,24 @@ class Box2 {
   }
 
   /**
-   * The size method.
-   * @return {any} - The return value.
+   * Returns the size of a Box2.
+   * @return {Box2} - Returns a Box2.
    */
   size() {
     return this.p1.subtract(this.p0)
   }
 
   /**
-   * The diagonal method.
-   * @return {any} - The return value.
+   * Returns the size of a Box2 - the same as size().
+   * @return {Box2} - Returns a Box2.
    */
   diagonal() {
     return this.p1.subtract(this.p0)
   }
 
   /**
-   * The center method.
-   * @return {any} - The return value.
+   * Returns the center point of a Box2.
+   * @return {Vec2} - Returns a Vec2.
    */
   center() {
     const result = this.p1.subtract(this.p0)

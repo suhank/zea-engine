@@ -2,12 +2,12 @@ import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec3 } from './Vec3.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a ray. */
+/** Class representing a ray that emits from an origin in a specified direction. */
 class Ray {
   /**
    * Create a ray.
-   * @param {any} start - The start value.
-   * @param {any} dir - The dir value.
+   * @param {Vec3} start - The origin of the ray.
+   * @param {Vec3} dir - The direction of the ray.
    */
   constructor(start = undefined, dir = undefined) {
     if (start instanceof Vec3) {
@@ -23,9 +23,9 @@ class Ray {
   }
 
   /**
-   * The closestPoint method.
-   * @param {any} point - The point param.
-   * @return {any} - The return value.
+   * Get the closest point.
+   * @param {Vec3} point - The point in 3D space.
+   * @return {Ray} - Returns a Ray.
    */
   closestPoint(point) {
     const w = point.subtract(this.start)
@@ -37,18 +37,18 @@ class Ray {
   }
 
   /**
-   * The pointAtDist method.
-   * @param {any} dist - The dist param.
-   * @return {any} - The return value.
+   * Get the closest point at a distance.
+   * @param {Vec3} dist - The distance value.
+   * @return {Ray} - Returns a Ray.
    */
   pointAtDist(dist) {
     return this.start.add(this.dir.scale(dist))
   }
 
   /**
-   * Returns the 2 ray params that represent the closest point between the 2 rays.
-   * @param {any} ray - The ray param.
-   * @return {any} - The return value.
+   * Returns the two ray params that represent the closest point between the two rays.
+   * @param {Ray} ray - The ray value.
+   * @return {Ray} - Returns a Ray.
    */
   intersectRayVector(ray) {
     const u = this.dir
@@ -90,9 +90,9 @@ class Ray {
   }
 
   /**
-   * Returns the 1 ray param representing the intersection
+   * Returns one ray param representing the intersection
    * of this ray against the plane defined by the given ray.
-   * @param {any} plane - The plane param.
+   * @param {any} plane - The plane to intersect with.
    * @return {any} - The return value.
    */
   intersectRayPlane(plane) {
@@ -116,8 +116,8 @@ class Ray {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {any} - The return value.
+   * Clones this Ray and returns a new Ray.
+   * @return {Ray} - Returns a new Ray.
    */
   clone() {
     return new Ray(this.start.clone(), this.dir.clone())
@@ -127,9 +127,9 @@ class Ray {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Ray.
    * @param {...object} ...args - The ...args param.
-   * @return {vec3} - The return value.
+   * @return {Ray} - Returns a new Ray.
    */
   static create(...args) {
     return new Ray(...args)
@@ -170,4 +170,3 @@ class Ray {
 typeRegistry.registerType('Ray', Ray)
 
 export { Ray }
-// export default Ray
