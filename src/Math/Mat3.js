@@ -127,7 +127,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 1, column 2.
-   * @return {number} - Returns the m02 value.
+   * @return {number} - Returns the m12 value.
    */
   get m12() {
     return this.__data[6]
@@ -199,7 +199,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for the x axis.
-   * @param {any} vec3 - The vec3 value.
+   * @param {Vec3} vec3 - The vec3 value.
    */
   set xAxis(vec3) {
     this.xAxis.set(vec3.x, vec3.y, vec3.z)
@@ -215,7 +215,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for the y axis.
-   * @param {any} vec3 - The vec3 value.
+   * @param {Vec3} vec3 - The vec3 value.
    */
   set yAxis(vec3) {
     this.yAxis.set(vec3.x, vec3.y, vec3.z)
@@ -231,7 +231,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for the z axis.
-   * @param {any} vec3 - The vec3 value.
+   * @param {Vec3} vec3 - The vec3 value.
    */
   set zAxis(vec3) {
     this.zAxis.set(vec3.x, vec3.y, vec3.z)
@@ -283,7 +283,7 @@ class Mat3 extends AttrValue {
 
   /**
    * The setFromMat method.
-   * Note: works with either mat3 or mat4
+   * Note: works with either Mat3 or Mat4.
    * @param {any} mat - The mat value.
    */
   setFromMat(mat) {
@@ -334,7 +334,7 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Inverts a Mat3 and returns the result as a new Mat3.
+   * Inverts a Mat3 and returns the result as a new instance.
    * @return {Mat3} - Returns a new Mat3.
    */
   inverse() {
@@ -414,7 +414,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Transposes (exchanges columns with rows) this matrix
-   * and returns the result as a new Mat4.
+   * and returns the result as a new instance.
    * @return {Mat4} - Return a new transposed Mat4.
    */
   transpose() {
@@ -469,7 +469,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Clones this Mat3 returning a new instance.
-   * @return {Mat43 - Returns a new Mat3.
+   * @return {Mat3} - Returns a new Mat3.
    */
   clone() {
     return new Mat3(
@@ -492,7 +492,7 @@ class Mat3 extends AttrValue {
   /**
    * Create a new Mat3.
    * @param {...object} ...args - The ...args param.
-   * @return {any} - Returns a new Mat3.
+   * @return {Mat3} - Returns a new Mat3.
    */
   static create(...args) {
     return new Mat3(...args)
@@ -502,7 +502,7 @@ class Mat3 extends AttrValue {
    * Creates a new Mat3 to wrap existing memory in a buffer.
    * @param {any} buffer - The buffer param.
    * @param {number} offset - The offset param.
-   * @return {any} - The return value.
+   * @return {Mat3} - Returns a new Mat3.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Mat3(buffer, offset * 4) // 4 bytes per 32bit float
@@ -542,4 +542,3 @@ class Mat3 extends AttrValue {
 typeRegistry.registerType('Mat3', Mat3)
 
 export { Mat3 }
-// export default Mat3;

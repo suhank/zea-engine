@@ -39,6 +39,7 @@ class AttrValue {
 
   /**
    * Returns the tpye as an array. Often used to pass types to the GPU.
+   * @return {any} The return value.
    */
   asArray() {
     return this.__data

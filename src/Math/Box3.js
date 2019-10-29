@@ -4,7 +4,7 @@ import { Mat4 } from './Mat4.js'
 import { SphereType } from './SphereType.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Box3. */
+/** Class representing a box in 3D space. */
 class Box3 {
   /**
    * Create a Box3
@@ -36,18 +36,26 @@ class Box3 {
     }
   }
 
-  get min(){
-    return this.p0;
+  /**
+   * Getter for the lower (x, y, z) boundary of the box.
+   * @return {Vec3} - Returns the minumum Vec3.
+   */
+  get min() {
+    return this.p0
   }
 
-  get max(){
-    return this.p1;
+  /**
+   * Getter for the upper (x, y, z) boundary of the box.
+   * @return {Vec3} - Returns the minumum Vec3.
+   */
+  get max() {
+    return this.p1
   }
 
   /**
    * The set method.
-   * @param {*} p0 - the p0 param.
-   * @param {*} p1 - the p1 param.
+   * @param {Vec3} p0 - the p0 value.
+   * @param {Vec3} p1 - the p1 value.
    */
   set(p0, p1) {
     this.p0 = p0
@@ -83,7 +91,7 @@ class Box3 {
 
   /**
    * The addPoint method.
-   * @param {any} point - The point param.
+   * @param {any} point - The point value.
    */
   addPoint(point) {
     if (
@@ -116,7 +124,7 @@ class Box3 {
    */
   addBox3(box3, xfo = undefined) {
     if (xfo) {
-      // transform each corner of the box33 into the new coord sys
+      // transform each corner of the box3 into the new coord sys
       this.addPoint(xfo.transformVec3(box3.p0))
       this.addPoint(
         xfo.transformVec3(new Vec3(box3.p0.x, box3.p0.y, box3.p1.z))
@@ -171,8 +179,8 @@ class Box3 {
   }
 
   /**
-   * The toMat4 method.
-   * @return {any} - The return value.
+   * Converts this Box3 to a Mat4 (a 4x4 matrix).
+   * @return {Mat4} - Returns a new Mat4.
    */
   toMat4() {
     const sc_x = this.p1.x - this.p0.x
@@ -198,80 +206,91 @@ class Box3 {
     )
   }
 
+  /**
+   * The getBoundingSphere method.
+   * @return {any} - The return value.
+   */
   getBoundingSphere() {
-    return new SphereType(
-      this.center(),
-      this.diagonal().length() * 0.5
-    );
+    return new SphereType(this.center(), this.diagonal().length() * 0.5)
   }
 
-	intersectsBox( box ) {
-		// using 6 splitting planes to rule out intersections.
-		return box.max.x < this.min.x || box.min.x > this.max.x ||
-			box.max.y < this.min.y || box.min.y > this.max.y ||
-			box.max.z < this.min.z || box.min.z > this.max.z ? false : true;
-	}
+  /**
+   * Determines if this Box3 intersects plane.
+   * @param {any} box - The box to check for intersection against.
+   * @return {any} - The return value.
+   */
+  intersectsBox(box) {
+    // Using 6 splitting planes to rule out intersections.
+    return box.max.x < this.min.x ||
+      box.min.x > this.max.x ||
+      box.max.y < this.min.y ||
+      box.min.y > this.max.y ||
+      box.max.z < this.min.z ||
+      box.min.z > this.max.z
+      ? false
+      : true
+  }
 
-	intersectsSphere(sphere) {
-		// var closestPoint = new Vector3();
+  /**
+   * Determines if this Box3 intersects a sphere.
+   * @param {any} sphere - The sphere to check for intersection against.
+   * @return {any} - The return value.
+   */
+  intersectsSphere(sphere) {
+    // var closestPoint = new Vector3();
 
     // Find the point on the AABB closest to the sphere center.
     // this.clampPoint( sphere.center, closestPoint );
 
     // If that point is inside the sphere, the AABB and sphere intersect.
-    return closestPoint.distanceToSquared( sphere.center ) <= ( sphere.radius * sphere.radius );
-	}
-
-	intersectsPlane( plane ) {
-
-		// We compute the minimum and maximum dot product values. If those values
-		// are on the same side (back or front) of the plane, then there is no intersection.
-
-		var min, max;
-
-		if ( plane.normal.x > 0 ) {
-
-			min = plane.normal.x * this.min.x;
-			max = plane.normal.x * this.max.x;
-
-		} else {
-
-			min = plane.normal.x * this.max.x;
-			max = plane.normal.x * this.min.x;
-
-		}
-
-		if ( plane.normal.y > 0 ) {
-
-			min += plane.normal.y * this.min.y;
-			max += plane.normal.y * this.max.y;
-
-		} else {
-
-			min += plane.normal.y * this.max.y;
-			max += plane.normal.y * this.min.y;
-
-		}
-
-		if ( plane.normal.z > 0 ) {
-
-			min += plane.normal.z * this.min.z;
-			max += plane.normal.z * this.max.z;
-
-		} else {
-
-			min += plane.normal.z * this.max.z;
-			max += plane.normal.z * this.min.z;
-
-		}
-
-		return ( min <= - plane.constant && max >= - plane.constant );
-
-	}
+    return (
+      closestPoint.distanceToSquared(sphere.center) <=
+      sphere.radius * sphere.radius
+    )
+  }
 
   /**
-   * Clones this type returning a new instance.
+   * Determines if this Box3 intersects a plane.
+   * @param {any} plane - The plane to check for intersection against.
    * @return {any} - The return value.
+   */
+  intersectsPlane(plane) {
+    // We compute the minimum and maximum dot product values. If those values
+    // are on the same side (back or front) of the plane, then there is no intersection.
+
+    let min
+    let max
+
+    if (plane.normal.x > 0) {
+      min = plane.normal.x * this.min.x
+      max = plane.normal.x * this.max.x
+    } else {
+      min = plane.normal.x * this.max.x
+      max = plane.normal.x * this.min.x
+    }
+
+    if (plane.normal.y > 0) {
+      min += plane.normal.y * this.min.y
+      max += plane.normal.y * this.max.y
+    } else {
+      min += plane.normal.y * this.max.y
+      max += plane.normal.y * this.min.y
+    }
+
+    if (plane.normal.z > 0) {
+      min += plane.normal.z * this.min.z
+      max += plane.normal.z * this.max.z
+    } else {
+      min += plane.normal.z * this.max.z
+      max += plane.normal.z * this.min.z
+    }
+
+    return min <= -plane.constant && max >= -plane.constant
+  }
+
+  /**
+   * Clones this Box3 and returns a new instance.
+   * @return {Box3} - Returns a new Box3.
    */
   clone() {
     return new Box3(this.p0.clone(), this.p1.clone())
@@ -281,9 +300,9 @@ class Box3 {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Box2.
    * @param {...object} ...args - The ...args param.
-   * @return {any} - The return value.
+   * @return {Box2} - Returns a new Box2.
    */
   static create(...args) {
     return new Box2(...args)
@@ -351,4 +370,3 @@ class Box3 {
 typeRegistry.registerType('Box3', Box3)
 
 export { Box3 }
-// export default Box3;

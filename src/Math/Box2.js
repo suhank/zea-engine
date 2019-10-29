@@ -3,7 +3,7 @@ import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec2 } from './Vec2'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Box2. */
+/** Class representing a box in 2D space. */
 class Box2 {
   /**
    * Create a Box2
@@ -25,8 +25,8 @@ class Box2 {
 
   /**
    * The set method.
-   * @param {any} p0 - the p0 param.
-   * @param {any} p1 - the p1 param.
+   * @param {Vec2} p0 - the p0 value.
+   * @param {Vec2} p1 - the p1 value.
    */
   set(p0, p1) {
     this.p0 = p0
@@ -58,7 +58,7 @@ class Box2 {
 
   /**
    * The addPoint method.
-   * @param {any} point - The point param.
+   * @param {any} point - The point value.
    */
   addPoint(point) {
     if (this.p0.x == Number.POSITIVE_INFINITY || point.x < this.p0.x)
@@ -103,9 +103,9 @@ class Box2 {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Box2.
    * @param {...object} ...args - The ...args param.
-   * @return {any} - The return value.
+   * @return {Box2} - Returns a new Box2.
    */
   static create(...args) {
     return new Box2(...args)
@@ -137,4 +137,3 @@ class Box2 {
 typeRegistry.registerType('Box2', Box2)
 
 export { Box2 }
-// export default Box2;

@@ -3,7 +3,9 @@ import { Vec3 } from './Vec3.js'
 import { PlaneType } from './PlaneType.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Frustum. */
+/** Class representing a Frustum. Frustums are used to determine what
+ * is inside the camera's field of view.
+ * */
 class Frustum {
   /**
    * Create a Frustum
@@ -16,19 +18,19 @@ class Frustum {
    */
   constructor(p0, p1, p2, p3, p4, p5) {
     this.planes = [
-      p0 || new PlaneType(), 
-      p1 || new PlaneType(), 
+      p0 || new PlaneType(),
+      p1 || new PlaneType(),
       p2 || new PlaneType(),
       p3 || new PlaneType(),
       p4 || new PlaneType(),
-      p5 || new PlaneType()
+      p5 || new PlaneType(),
     ]
   }
 
   /**
-   * The setFromMatrix configures a Frustum object using a matrix. 
+   * The setFromMatrix configures a Frustum object using a matrix.
    * Typically the matrix is a model view projection matrix.
-   * @param {Mat4} mat4 - The matrix to use
+   * @param {Mat4} mat4 - The matrix to use.
    */
   setFromMatrix(mat4) {
     const m = mat4
@@ -44,9 +46,9 @@ class Frustum {
   }
 
   /**
-   * The intersectsBox tests a box to see if it is entirely within the frustum.
-   * @param {Box3} box3 - The box to test
-   * @return {boolean} - true if the frustum intersects the box.
+   * Tests a box to see if it is entirely within the frustum.
+   * @param {Box3} box3 - The box to test.
+   * @return {boolean} - True if the frustum intersects the box.
    */
   intersectsBox(box3) {
     const p = new Vec3()
@@ -57,13 +59,13 @@ class Frustum {
       const plane = planes[i]
 
       // corner at max distance
-      p.x = plane.normal.x > 0 ? max.x : min.x;
-      p.y = plane.normal.y > 0 ? max.y : min.y;
-      p.z = plane.normal.z > 0 ? max.z : min.z;
+      p.x = plane.normal.x > 0 ? max.x : min.x
+      p.y = plane.normal.y > 0 ? max.y : min.y
+      p.z = plane.normal.z > 0 ? max.z : min.z
 
       if (plane.distanceToPoint(p) < 0) return false
     }
-    return true;
+    return true
   }
 
   // ////////////////////////////////////////
@@ -109,4 +111,3 @@ class Frustum {
 typeRegistry.registerType('Frustum', Frustum)
 
 export { Frustum }
-// export default Frustum;
