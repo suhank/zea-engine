@@ -164,4 +164,3 @@ class Lines extends BaseGeom {
 }
 
 export { Lines }
-// export default Lines;

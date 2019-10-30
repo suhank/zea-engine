@@ -401,4 +401,3 @@ class Operator extends BaseItem {
 }
 
 export { Operator, OperatorOutput, XfoOperatorOutput }
-// export default AssetItem;

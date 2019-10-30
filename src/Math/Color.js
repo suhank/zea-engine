@@ -7,10 +7,10 @@ import { typeRegistry } from './TypeRegistry.js'
 class Color extends AttrValue {
   /**
    * Create a color.
-   * @param {number} r - The r value.
-   * @param {number} g - The g value.
-   * @param {number} b - The b value.
-   * @param {number} a - The a value.
+   * @param {number} r - The red channel of a color.
+   * @param {number} g - The green channel of a color.
+   * @param {number} b - The blue channel of a color.
+   * @param {number} a - The alpha (transparency) channel of a color.
    */
   constructor(r = 0, g = 0, b = 0, a = 1.0) {
     super()
@@ -39,14 +39,15 @@ class Color extends AttrValue {
   }
 
   /**
-   * Getter for r.
+   * Getter for red channel.
+   * @return {Color} - Returns the red channel.
    */
   get r() {
     return this.__data[0]
   }
 
   /**
-   * Setter for r.
+   * Setter for red channel.
    * @param {number} val - The val param.
    */
   set r(val) {
@@ -54,14 +55,15 @@ class Color extends AttrValue {
   }
 
   /**
-   * Getter for g.
+   * Getter for green channel.
+   * @return {Color} - Returns the green channel.
    */
   get g() {
     return this.__data[1]
   }
 
   /**
-   * Setter for g.
+   * Setter for green channel.
    * @param {number} val - The val param.
    */
   set g(val) {
@@ -69,14 +71,15 @@ class Color extends AttrValue {
   }
 
   /**
-   * Getter for b.
+   * Getter for blue channel.
+   * @return {Color} - Returns the blue channel.
    */
   get b() {
     return this.__data[2]
   }
 
   /**
-   * Setter for b.
+   * Setter for blue channel.
    * @param {number} val - The val param.
    */
   set b(val) {
@@ -84,13 +87,14 @@ class Color extends AttrValue {
   }
 
   /**
-   * Getter for a.
+   * Getter for alpha channel.
+   * @return {Color} - Returns the alpha channel.
    */
   get a() {
     return this.__data[3]
   }
   /**
-   * Setter for a.
+   * Setter for alpha value.
    * @param {number} val - The val param.
    */
   set a(val) {
@@ -99,10 +103,10 @@ class Color extends AttrValue {
 
   /**
    * Setter from scalar components.
-   * @param {number} r - The r param.
-   * @param {number} g  - The g param.
-   * @param {number} b  - The b param.
-   * @param {number} a  - The a param.
+   * @param {number} r - The red channel.
+   * @param {number} g  - The green channel.
+   * @param {number} b  - The blue channel.
+   * @param {number} a  - The alpha channel.
    */
   set(r, g, b, a = 1.0) {
     this.r = r
@@ -112,8 +116,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromOther method.
-   * @param {any} other - The other param.
+   * Setter from another color.
+   * @param {Color} other - The other color to set from.
    */
   setFromOther(other) {
     this.r = other.r
@@ -123,7 +127,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromScalarArray method.
+   * Setter from a scalar array.
    * @param {any} vals - The vals param.
    */
   setFromScalarArray(vals) {
@@ -134,16 +138,16 @@ class Color extends AttrValue {
   }
 
   /**
-   * The getAsRGBArray method.
-   * @return {any} - The return value.
+   * Getter from an RGB array.
+   * @return {Color} - The return value.
    */
   getAsRGBArray() {
     return [this.r * 255, this.g * 255, this.b * 255]
   }
 
   /**
-   * The getAsRGBDict method.
-   * @return {any} - The return value.
+   * Getter from an RGB dict.
+   * @return {Color} - The return value.
    */
   getAsRGBDict() {
     return {
@@ -154,11 +158,11 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromRGB method.
-   * @param {number} r - The r param.
-   * @param {number} g  - The g param.
-   * @param {number} b  - The b param.
-   * @param {number} a  - The a param.
+   * Setter from a RGB value.
+   * @param {number} r - The red channel.
+   * @param {number} g  - The green channel.
+   * @param {number} b  - The blue channel.
+   * @param {number} a  - The alpha channel.
    */
   setFromRGB(r, g, b, a) {
     this.r = r / 255
@@ -168,7 +172,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromRGBArray method.
+   * Setter from an RGB array.
    * @param {any} vals - The vals param.
    */
   setFromRGBArray(vals) {
@@ -179,7 +183,7 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromRGBDict method.
+   * Setter from an RGB dict.
    * @param {any} vals - The vals param.
    */
   setFromRGBDict(vals) {
@@ -190,8 +194,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromHex method.
-   * @param {any} hex - The hex param.
+   * Setter from a hexadecimal value.
+   * E.g. #ff0000
+   * @param {number} hex - The hex value.
    */
   setFromHex(hex) {
     function hexToRgb(hex) {
@@ -213,8 +218,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * The setFromCSSColorName method.
-   * @param {string} name - The name param.
+   * Setter from a CSS color name.
+   * E.g. "red"
+   * @param {string} name - The CSS color name.
    */
   setFromCSSColorName(name) {
     const colourNameToHex = colour => {
@@ -375,8 +381,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * The toHex method.
-   * @return {any} - The return value.
+   * Returns the hexadecimal value of this color.
+   * @return {number} - Returns the hex value.
    */
   toHex() {
     function componentToHex(c) {
@@ -393,12 +399,11 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is the same as another one.
-   * @param {any} other - The other param.
-   * @param {number} precision - The precision param.
-   * @return {any} - The return value.
+   * Returns true if this color is exactly the same as other.
+   * @param {Color} other - The other color to compare with.
+   * @return {boolean} - Returns true or false.
    */
-  equal(other, precision) {
+  equal(other) {
     return (
       this.r == other.r &&
       this.g == other.g &&
@@ -408,12 +413,11 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is not the same as another one.
-   * @param {any} other - The other param.
-   * @param {number} precision - The precision param.
-   * @return {any} - The return value.
+   * Returns true if this color is NOT exactly the same as other.
+   * @param {Color} other - The other color to compare with.
+   * @return {boolean} - Returns true or false.
    */
-  notequals(other, precision) {
+  notequals(other) {
     return (
       this.r != other.r &&
       this.g != other.g &&
@@ -423,24 +427,24 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is the same as another one
-   * (given a precision).
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Returns true if this color is approximately the same as other.
+   * @param {Color} other - The other color to compare with.
+   * @param {number} precision - The precision to which the values must match.
+   * @return {boolean} - Returns true or false.
    */
-  approxEqual(other) {
+  approxEqual(other, precision = Number.EPSILON) {
     return (
-      Math.abs(this.r - other.r) < Number.EPSILON &&
-      Math.abs(this.g - other.g) < Number.EPSILON &&
-      Math.abs(this.b - other.b) < Number.EPSILON &&
-      Math.abs(this.a - other.a) < Number.EPSILON
+      Math.abs(this.r - other.r) < precision &&
+      Math.abs(this.g - other.g) < precision &&
+      Math.abs(this.b - other.b) < precision &&
+      Math.abs(this.a - other.a) < precision
     )
   }
 
   /**
-   * Returns a new vector which is this vector added to other.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Returns a new color which is this color added to other.
+   * @param {Color} other - The other color to add.
+   * @return {Color} - Returns a new color.
    */
   add(other) {
     return new Color(
@@ -452,9 +456,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns a new vector which is this vector subtracted from other.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Returns a new color which is this color subtracted from other.
+   * @param {Color} other - The other color to subtract.
+   * @return {Color} - Returns a new color.
    */
   subtract(other) {
     return new Color(
@@ -466,12 +470,12 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns a new vector which is this vector scaled by scalar.
-   * @param {any} scalar - The scalar param.
-   * @return {vec4} - The return value.
+   * Scales this color by scalar and return the result as a new Vec4.
+   * @param {number} scalar - The scalar value.
+   * @return {Color} - Returns a new color.
    */
   scale(scalar) {
-    return new Vec4(
+    return new Color(
       this.r * scalar,
       this.g * scalar,
       this.b * scalar,
@@ -480,8 +484,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * The scaleInPlace method.
-   * @param {any} scalar - The scalar param.
+   * Scales this color by scalar.
+   * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
     this.r *= scalar
@@ -491,8 +495,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * The applyGamma method.
-   * @param {any} gamma - The gamma param.
+   * Apply gamma correction to this color.
+   * @param {number} gamma - The gamma value.
    */
   applyGamma(gamma) {
     this.set(
@@ -504,9 +508,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * The toLinear method.
-   * @param {any} gamma - The gamma param.
-   * @return {any} - The return value.
+   * Converts to linear color space and returns a new color.
+   * @param {number} gamma - The gamma value.
+   * @return {Color} - Returns a new color.
    */
   toLinear(gamma = 2.2) {
     return new Color(
@@ -518,9 +522,9 @@ class Color extends AttrValue {
   }
 
   /**
-   * The toGamma method.
-   * @param {any} gamma - The gamma param.
-   * @return {color} - The return value.
+   * Converts to gamma color space and returns a new color.
+   * @param {number} gamma - The gamma value.
+   * @return {Color} - Returns a new color.
    */
   toGamma(gamma = 2.2) {
     return new Color(
@@ -540,29 +544,29 @@ class Color extends AttrValue {
   }
 
   /**
-   * The lerp method.
-   * @param {any} b - The b param.
-   * @param {any} t - The t param.
-   * @return {color} - The return value.
+   * Performs a linear interpolation between this color and other.
+   * @param {Color} other - The other color to interpolate between.
+   * @param {number} t - Interpolation amount between the two inputs.
+   * @return {Color} - Returns a new color.
    */
-  lerp(b, t) {
+  lerp(other, t) {
     const ar = this.r
     const ag = this.g
     const ab = this.b
     const aa = this.a
     return new Color(
-      ar + t * (b.r - ar),
-      ag + t * (b.g - ag),
-      ab + t * (b.b - ab),
-      aa + t * (b.a - aa)
+      ar + t * (other.r - ar),
+      ag + t * (other.g - ag),
+      ab + t * (other.b - ab),
+      aa + t * (other.a - aa)
     )
   }
 
   /**
-   * The random method.
-   * @param {number} gammaOffset - The gammaOffset param.
-   * @param {boolean} randomAlpha -The randomAlpha param.
-   * @return {color} - The return value.
+   * Creates a random color.
+   * @param {number} gammaOffset - The gamma offset.
+   * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
+   * @return {Color} - Returns a new random color.
    */
   static random(gammaOffset = 0.0, randomAlpha = false) {
     if (gammaOffset > 0.0) {
@@ -590,8 +594,8 @@ class Color extends AttrValue {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {color} - The return value.
+   * Clones this color and returns a new color.
+   * @return {Color} - Returns a new color.
    */
   clone() {
     return new Color(
@@ -603,16 +607,16 @@ class Color extends AttrValue {
   }
 
   /**
-   * Returns the tpye as an array. Often used to pass types to the GPU.
-   * @return {any} - The return value.
+   * Returns the type as an array. Often used to pass types to the GPU.
+   * @return {array} - Returns as an array.
    */
   asArray() {
     return this.__data
   }
 
   /**
-   * Returns the tpye as an array. Often used to pass types to the GPU.
-   * @return {any} - The return value.
+   * Returns the type as a 3 component array. Often used to pass types to the GPU.
+   * @return {array} - Returns as a 3 component array.
    */
   as3ComponentArray() {
     return [this.__data[0], this.__data[1], this.__data[2]]
@@ -622,9 +626,9 @@ class Color extends AttrValue {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new color.
    * @param {...object} ...args - The ...args param.
-   * @return {color} - The return value.
+   * @return {Color} - Returns a new color.
    */
   static create(...args) {
     return new Color(...args)
@@ -632,9 +636,9 @@ class Color extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
-   * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
-   * @return {color} - The return value.
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} offset - The offset value.
+   * @return {Color} - Returns a new color.
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Color(buffer, offset * 4) // 4 bytes per 32bit float
@@ -697,4 +701,3 @@ class Color extends AttrValue {
 typeRegistry.registerType('Color', Color)
 
 export { Color }
-// export default Color;

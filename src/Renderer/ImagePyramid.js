@@ -163,4 +163,3 @@ class ImagePyramid extends GLImageAtlas {
 }
 
 export { ImagePyramid }
-// export default ImagePyramid;

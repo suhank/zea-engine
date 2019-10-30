@@ -295,4 +295,3 @@ class GLMesh extends GLGeom {
 }
 
 export { GLMesh }
-// export default GLMesh;

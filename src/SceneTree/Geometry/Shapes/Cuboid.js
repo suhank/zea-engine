@@ -159,4 +159,3 @@ class Cuboid extends Mesh {
 sgFactory.registerClass('Cuboid', Cuboid)
 
 export { Cuboid }
-// export default Cuboid;

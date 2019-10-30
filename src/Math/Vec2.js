@@ -1,14 +1,16 @@
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a Vec2.
+/** Class representing a Vec2. A Vec2 represents a two-dimensional coordinate.
+ * Vector classes in zea-engine internally store values in Float32Arrays and
+ * expose getters and setters for the component values.
  * @extends AttrValue
  */
 class Vec2 extends AttrValue {
   /**
    * Create a Vec2.
-   * @param {number} x - The x value.
-   * @param {number} y - The y value.
+   * @param {number} x - The x value. Default is 0.
+   * @param {number} y - The y value. Default is 0.
    */
   constructor(x = 0, y = 0) {
     super()
@@ -34,14 +36,15 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Getter for x.
+   * Getter for x value.
+   * @return {number} - Returns the x value.
    */
   get x() {
     return this.__data[0]
   }
 
   /**
-   * Setter for x.
+   * Setter for x value.
    * @param {number} val - The val param.
    */
   set x(val) {
@@ -49,14 +52,15 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Getter for y.
+   * Getter for y value.
+   * @return {number} - Returns the y value.
    */
   get y() {
     return this.__data[1]
   }
 
   /**
-   * Setter for y.
+   * Setter for y value.
    * @param {number} val - The val param.
    */
   set y(val) {
@@ -65,17 +69,17 @@ class Vec2 extends AttrValue {
 
   /**
    * Setter from scalar components.
-   * @param {number} x - The x param.
-   * @param {number} y  - The y param.
+   * @param {number} x - The x value.
+   * @param {number} y  - The y value.
    */
   set(x, y) {
-    this.x = x
-    this.y = y
+    this.__data[0] = x
+    this.__data[1] = y
   }
 
   /**
-   * Setter from another vector.
-   * @param {any} other - The other param.
+   * Setter from another Vec2.
+   * @param {Vec2} other - The other Vec2 to set from.
    */
   setFromOther(other) {
     this.x = other.x
@@ -83,69 +87,67 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Returns true if this vector is the same as another one.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Returns true if this Vec2 is exactly the same as other.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {boolean} - Returns true or false.
    */
   equal(other) {
     return this.x == other.x && this.y == other.y
   }
 
   /**
-   * Returns true if this vector is not the same as another one.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Returns true if this vector is NOT exactly the same as other.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {boolean} - Returns true or false.
    */
-  notequals(other) {
+  notEquals(other) {
     return this.x != other.x && this.y != other.y
   }
 
   /**
-   * Returns true if this vector is the same as another one
-   * (given a precision).
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Returns true if this Vec2 is approximately the same as other.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @param {number} precision - The precision to which the values must match.
+   * @return {boolean} - Returns true or false.
    */
-  approxEqual(other) {
+  approxEqual(other, precision = Number.EPSILON) {
     return (
-      Math.abs(this.x - other.x) < Number.EPSILON &&
-      Math.abs(this.y - other.y) < Number.EPSILON
+      Math.abs(this.x - other.x) < precision &&
+      Math.abs(this.y - other.y) < precision
     )
   }
 
   /**
-   * Returns a new vector which is this vector added to other.
-   * @param {any} other - The other param.
-   * @return {vec2} - The return value.
+   * Adds other to this Vec2 and returns the result as a new Vec2.
+   * @param {Vec2} other - The other Vec2 to add.
+   * @return {Vec2} - Returns a new Vec2.
    */
   add(other) {
     return new Vec2(this.x + other.x, this.y + other.y)
   }
 
   /**
-   * The addInPlace method.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Adds other to this Vec2.
+   * @param {Vec2} other - The other Vec2 to add.
    */
   addInPlace(other) {
     this.x += other.x
     this.y += other.y
-    return this
   }
 
   /**
-   * Returns a new vector which is this vector subtracted from other.
-   * @param {any} other - The other param.
-   * @return {vec2} - The return value.
+   * Subtracts other from this Vec2 and returns the result as a new Vec2.
+   * @param {Vec2} other - The other Vec2 to subtract.
+   * @return {Vec2} - Returns a new Vec2.
    */
   subtract(other) {
     return new Vec2(this.x - other.x, this.y - other.y)
   }
 
   /**
-   * The subtractInPlace method.
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Subtracts other from this Vec2.
+   * @param {Vec2} other - The other Vec2 to subtract.
+   * @return {Vec2} - Returns a new Vec2.
    */
   subtractInPlace(other) {
     this.x -= other.x
@@ -154,36 +156,34 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Returns a new vector which is this vector scaled by scalar.
-   * @param {any} scalar - The scalar param.
-   * @return {vec2} - The return value.
+   * Scales this Vec2 by scalar and returns the result as a new Vec2.
+   * @param {number} scalar - The scalar value.
+   * @return {Vec2} - Returns a new Vec2.
    */
   scale(scalar) {
     return new Vec2(this.x * scalar, this.y * scalar)
   }
 
   /**
-   * Scales the vector modifying its values.
-   * @param {any} scalar - The scalar param.
-   * @return {any} - The return value.
+   * Scales this Vec2 by scalar.
+   * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
     this.x *= scalar
     this.y *= scalar
-    return this
   }
 
   /**
-   * The invert method.
-   * @return {vec2} - The return value.
+   * Inverts this Vec2 and returns the result as a new Vec2.
+   * @return {Vec2} - Returns a new Vec2.
    */
   invert() {
     return new Vec2(1.0 / this.x, 1.0 / this.y)
   }
 
   /**
-   * The invertInPlace method.
-   * @return {any} - The return value.
+   * Inverts this Vec2.
+   * @return {Vec2} - The return value.
    */
   invertInPlace() {
     this.x = 1.0 / this.x
@@ -192,26 +192,26 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * The multiply method.
-   * @param {any} vec2 - The vec2 param.
-   * @return {vec2} - The return value.
+   * Multiplies two Vec2s and returns the result as a new Vec2.
+   * @param {Vec2} other - The other Vec2 to multiply with.
+   * @return {Vec2} - Returns a new Vec2.
    */
-  multiply(vec2) {
-    return new Vec2(this.x * vec2.x, this.y * vec2.y)
+  multiply(other) {
+    return new Vec2(this.x * other.x, this.y * other.y)
   }
 
   /**
-   * The multiplyInPlace method.
-   * @param {any} vec2 - The vec2 param.
+   * Multiplies two Vec2s.
+   * @param {Vec2} other - The other Vec2 to multiply with.
    */
-  multiplyInPlace(vec2) {
-    this.x *= vec2.x
-    this.y *= vec2.y
+  multiplyInPlace(other) {
+    this.x *= other.x
+    this.y *= other.y
   }
 
   /**
-   * Calculates the length of a vec2.
-   * @return {number} - The length of a.
+   * Calculates the squared length of this Vec2.
+   * @return {number} - Returns the length squared.
    */
   lengthSquared() {
     const x = this.__data[0]
@@ -220,17 +220,17 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Calculates the length of a vec2
-   * @return {Number} length of a
+   * Calculates the length of this Vec2.
+   * @return {number} - Returns the length.
    */
   length() {
     return Math.sqrt(this.lengthSquared())
   }
 
   /**
-   * Calculates the distance to another vector
-   * @param {any} other - The other param.
-   * @return {any} - The return value.
+   * Calculates the distance to another vector.
+   * @param {Vec2} other - The other value.
+   * @return {number} - Returns the distance between vectors.
    */
   distanceTo(other) {
     const x = this.__data[0] - other.x
@@ -239,8 +239,8 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Returns the vector normalized.
-   * @return {vec2} - The return value.
+   * Normalizes the Vec2 and returns it as a new Vec2.
+   * @return {Vec2} - Returns the Vec2 normalized.
    */
   normalize() {
     const x = this.__data[0]
@@ -256,7 +256,7 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * The normalizeInPlace method.
+   * Normalizes the Vec2.
    */
   normalizeInPlace() {
     const x = this.__data[0]
@@ -270,27 +270,27 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Calculates the dot product of two vec2s.
-   * @param {vec2} b - The second operand.
-   * @return {number} - The dot product of a and b.
+   * Calculates the dot product of this Vec2 against another Vec2.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {number} - Returns the dot product.
    */
-  dot(b) {
-    return this.x * b.x + this.y * b.y
+  dot(other) {
+    return this.x * other.x + this.y * other.y
   }
 
   /**
-   * Gets the angle between two 3D vectors
-   * @param {vec3} b - The second operand.
-   * @return {number} - The angle in radians.
+   * Gets the angle between this Vec2 and other.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {number} - Returns the angle in radians.
    */
-  angle(b) {
-    return Math.Atan2(b.x - this.x, b.y - this.y)
+  angleTo(other) {
+    return Math.Atan2(other.x - this.x, other.y - this.y)
   }
 
   /**
-   * The rotate method.
-   * @param {any} angle - The angle operand
-   * @return {vec2} - The return value.
+   * Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
+   * @param {number} angle - The angle of rotation.
+   * @return {Vec2} - Returns the rotated vector.
    */
   rotate(angle) {
     const cosa = Math.cos(angle)
@@ -302,48 +302,21 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Performs a linear interpolation between two vec2s.
-   * @param {vec2} b - The second operand.
+   * Performs a linear interpolation between this Vec2 and other.
+   * @param {Vec2} other - The other Vec2 to interpolate between.
    * @param {number} t - Interpolation amount between the two inputs.
-   * @return {vec2} - The return value.
+   * @return {Vec2} - Returns a new Vec2.
    */
-  lerp(b, t) {
+  lerp(other, t) {
     const ax = this.x
     const ay = this.y
-    return new Vec2(ax + t * (b.x - ax), ay + t * (b.y - ay))
-  }
-
-  /**
-   * Creates a new Mat4 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer param.
-   * @param {number} offset - The offset param.
-   * @return {vec2} - The return value.
-   */
-  static createFromFloat32Buffer(buffer, offset = 0) {
-    return new Vec2(buffer, offset * 4) // 4 bytes per 32bit float
-  }
-
-  /**
-   * The createFromFloat32Array method.
-   * @param {array} array - The array param.
-   * @return {vec2} - The return value.
-   */
-  static createFromFloat32Array(array) {
-    return new Vec2(array)
-  }
-
-  /**
-   * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
-   * @return {number} - The return value.
-   */
-  static numElements() {
-    return 2
+    return new Vec2(ax + t * (other.x - ax), ay + t * (other.y - ay))
   }
 
   /**
    * Generates a random vector with the given scale.
    * @param {number} scale - Length of the resulting vector. If ommitted, a unit vector will be returned.
-   * @return {vec3} - The return value.
+   * @return {Vec2} - The return value.
    */
   setRandomDir(scale = 1.0) {
     const r = Math.random() * 2.0 * Math.PI
@@ -354,7 +327,7 @@ class Vec2 extends AttrValue {
 
   /**
    * The setRandom method.
-   * @param {number} scale - The scale param.
+   * @param {number} scale - The scale value.
    * @return {any} - The return value.
    */
   setRandom(scale = 1.0) {
@@ -364,8 +337,8 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Clones this type returning a new instance.
-   * @return {vec2} - The return value.
+   * Clones this Vec2 and returns a new Vec2.
+   * @return {Vec2} - Returns a new Vec2.
    */
   clone() {
     return new Vec2(this.__data[0], this.__data[1])
@@ -373,7 +346,7 @@ class Vec2 extends AttrValue {
 
   /**
    * Returns the tpye as an array. Often used to pass types to the GPU.
-   * @return {any} - The return value.
+   * @return {array} - Returns as an array.
    */
   asArray() {
     return this.__data
@@ -383,19 +356,47 @@ class Vec2 extends AttrValue {
   // Static Methods
 
   /**
-   * The create method.
+   * Creates a new Vec2.
    * @param {...object} ...args - The ...args param.
-   * @return {vec2} - The return value.
+   * @return {Vec2} - Returns a new Vec2.
    */
   static create(...args) {
     return new Vec2(...args)
+  }
+
+  /**
+   * Creates a new Vec2 to wrap existing memory in a buffer.
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {number} offset - The offset value.
+   * @return {Vec2} - Returns a new Vec2.
+   */
+  static createFromFloat32Buffer(buffer, offset = 0) {
+    return new Vec2(buffer, offset * 4) // 4 bytes per 32bit float
+  }
+
+  /**
+   * The createFromFloat32Array method.
+   * @param {Float32Array} array - The array value.
+   * @return {Vec2} - Returns a new Vec2.
+   */
+  static createFromFloat32Array(array) {
+    return new Vec2(array)
+  }
+
+  /**
+   * Returns the number of Float32 elements used by this type. Used to calculate storage requi
+   * ents for large arrays of this type.
+   * @return {number} - The return value.
+   */
+  static numElements() {
+    return 2
   }
 
   // ///////////////////////////
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * The toJSON method encodes this type as a json object for persistence.
    * @return {object} - The json object.
    */
   toJSON() {
@@ -410,12 +411,11 @@ class Vec2 extends AttrValue {
    * @param {object} j - The json object.
    */
   fromJSON(j) {
-    this.x = j['x']
-    this.y = j['y']
+    this.x = j.x
+    this.y = j.y
   }
 }
 
 typeRegistry.registerType('Vec2', Vec2)
 
 export { Vec2 }
-// export default Vec2;

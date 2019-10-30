@@ -45,4 +45,3 @@ class GLLightmap {
 }
 
 export { GLLightmap }
-// export default GLLightmap;

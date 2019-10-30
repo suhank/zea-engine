@@ -101,4 +101,3 @@ class GLPass extends ParameterOwner {
 }
 
 export { GLPass, PassType }
-// export default GLPass;

@@ -274,7 +274,7 @@ class ResourceLoader {
 
   /**
    * The freeData method.
-   * @param {any} buffer - The buffer param.
+   * @param {ArrayBuffer} buffer - The buffer param.
    */
   freeData(buffer) {
     // Note: Explicitly transfer data to a web worker and then

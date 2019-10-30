@@ -443,4 +443,3 @@ class GLProceduralSky extends GLProbe {
 }
 
 export { GLProceduralSky }
-// export default GLProceduralSky;

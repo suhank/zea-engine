@@ -196,4 +196,3 @@ class Plane extends Mesh {
 }
 
 export { Plane }
-// export default Plane;

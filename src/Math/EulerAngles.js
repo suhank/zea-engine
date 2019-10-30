@@ -1,16 +1,17 @@
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing euler angles.
+/** Class representing euler angles. Euler angles decribe rotating an object
+ *  around its various axis in a specified axis order.
  * @extends AttrValue
  */
 class EulerAngles extends AttrValue {
   /**
    * Create a euler angle.
-   * @param {number} x - The x value.
-   * @param {number} y - The y value.
-   * @param {number} z - The y value.
-   * @param {number} order - The order value.
+   * @param {number} x - The angle of the x axis in degrees. Default is 0.
+   * @param {number} y - The angle of the y axis in degrees. Default is 0.
+   * @param {number} z - The angle of the z axis in degrees. Default is 0.
+   * @param {number} order - The order in which the rotations are applied.
    */
   constructor(x = 0, y = 0, z = 0, order = 0) {
     super()
@@ -53,14 +54,15 @@ class EulerAngles extends AttrValue {
   }
 
   /**
-   * Getter for x.
+   * Getter for x axis rotation.
+   * @return {number} - Returns the x axis rotation.
    */
   get x() {
     return this.__data[0]
   }
 
   /**
-   * Setter for x.
+   * Setter for x axis rotation.
    * @param {number} val - The val param.
    */
   set x(val) {
@@ -68,14 +70,15 @@ class EulerAngles extends AttrValue {
   }
 
   /**
-   * Getter for y.
+   * Getter for y axis rotation.
+   * @return {number} - Returns the y axis rotation.
    */
   get y() {
     return this.__data[1]
   }
 
   /**
-   * Setter for y.
+   * Setter for y axis rotation.
    * @param {number} val - The val param.
    */
   set y(val) {
@@ -83,14 +86,15 @@ class EulerAngles extends AttrValue {
   }
 
   /**
-   * Getter for z.
+   * Getter for z axis rotation.
+   * @return {number} - Returns the z axis rotation.
    */
   get z() {
     return this.__data[2]
   }
 
   /**
-   * Setter for z.
+   * Setter for z axis rotation.
    * @param {number} val - The val param.
    */
   set z(val) {
@@ -99,9 +103,9 @@ class EulerAngles extends AttrValue {
 
   /**
    * The set method
-   * @param {number} x - The x param.
-   * @param {number} y  - The y param.
-   * @param {number} z  - The y param.
+   * @param {number} x - The x axis rotation.
+   * @param {number} y  - The y axis rotation.
+   * @param {number} z  - The z axis rotation.
    */
   set(x, y, z) {
     this.__data[0] = x

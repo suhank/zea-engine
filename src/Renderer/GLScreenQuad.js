@@ -102,4 +102,3 @@ class GLScreenQuad {
 }
 
 export { GLScreenQuad }
-// export default GLScreenQuad;

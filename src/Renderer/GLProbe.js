@@ -174,4 +174,3 @@ class GLProbe extends GLImageAtlas {
 }
 
 export { GLProbe }
-// export default GLProbe;

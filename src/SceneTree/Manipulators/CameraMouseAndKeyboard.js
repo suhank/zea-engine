@@ -396,18 +396,18 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   onWheel(event) {
     const { viewport } = event
     const camera = viewport.getCamera()
-    const focalDistance = camera.getFocalDistance()
     const mouseWheelDollySpeed = this.__mouseWheelDollySpeedParam.getValue()
     const modulator = event.shiftKey ? 0.1 : 0.5
-    const zoomDist =
-      event.deltaY * mouseWheelDollySpeed * focalDistance * modulator
     const xfo = camera.getGlobalXfo()
-    const movementVec = xfo.ori.getZaxis().scale(zoomDist)
+    const movementVec = xfo.ori.getZaxis()
     if (this.__mouseWheelZoomIntervalId)
       clearInterval(this.__mouseWheelZoomIntervalId)
     let count = 0
     const applyMovement = () => {
-      xfo.tr.addInPlace(movementVec)
+      const focalDistance = camera.getFocalDistance()
+      const zoomDist =
+        event.deltaY * mouseWheelDollySpeed * focalDistance * modulator
+      xfo.tr.addInPlace(movementVec.scale(zoomDist))
       if (this.__defaultManipulationState == 'orbit')
         camera.setFocalDistance(camera.getFocalDistance() + zoomDist)
       camera.setGlobalXfo(xfo)
@@ -666,4 +666,3 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 }
 
 export { CameraMouseAndKeyboard }
-// export default Camera;

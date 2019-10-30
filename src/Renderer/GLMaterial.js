@@ -89,4 +89,3 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
 }
 
 export { GLMaterial }
-// export default GLMaterial;

@@ -222,4 +222,3 @@ class GLGeomItem {
 }
 
 export { GLGeomItemChangeType, GLGeomItem }
-// export default GLGeomItem;

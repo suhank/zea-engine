@@ -546,4 +546,3 @@ class GLBillboardsPass extends GLPass {
 GLRenderer.registerPass(GLBillboardsPass, PassType.TRANSPARENT)
 
 export { GLBillboardsPass }
-// export default GLBillboardsPass;

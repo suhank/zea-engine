@@ -274,4 +274,3 @@ class ExplodePartsOperator extends Operator {
 sgFactory.registerClass('ExplodePartsOperator', ExplodePartsOperator)
 
 export { ExplodePartsOperator }
-// export default AssetItem;
