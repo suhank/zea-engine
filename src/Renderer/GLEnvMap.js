@@ -168,4 +168,3 @@ class GLEnvMap extends GLProbe {
 }
 
 export { GLEnvMap }
-// export default GLEnvMap;

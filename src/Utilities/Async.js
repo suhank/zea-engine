@@ -38,4 +38,3 @@ class Async {
 }
 
 export { Async }
-// export default Async;

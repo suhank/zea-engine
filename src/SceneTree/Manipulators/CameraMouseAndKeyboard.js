@@ -666,4 +666,3 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 }
 
 export { CameraMouseAndKeyboard }
-// export default Camera;

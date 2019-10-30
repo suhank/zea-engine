@@ -199,4 +199,3 @@ class Attribute {
 }
 
 export { Attribute }
-// export default Attribute;

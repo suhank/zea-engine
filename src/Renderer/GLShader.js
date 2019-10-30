@@ -443,4 +443,3 @@ class GLShader extends BaseItem {
 }
 
 export { GLShader }
-// export default GLShader;

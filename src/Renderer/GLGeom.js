@@ -161,4 +161,3 @@ class GLGeom {
 }
 
 export { GLGeom }
-// export default GLGeom;

@@ -264,4 +264,3 @@ class VertexAttribute extends Attribute {
 }
 
 export { VertexAttribute }
-// export default VertexAttribute;

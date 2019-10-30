@@ -256,4 +256,3 @@ class GLAudioItemsPass extends GLPass {
 GLRenderer.registerPass(GLAudioItemsPass, PassType.OVERLAY)
 
 export { GLAudioItemsPass, audioCtx }
-// export default GLAudioItemsPass;

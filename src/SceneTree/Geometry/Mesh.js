@@ -953,4 +953,3 @@ class Mesh extends BaseGeom {
 }
 
 export { Mesh }
-// export default Mesh;

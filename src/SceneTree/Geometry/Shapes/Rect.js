@@ -110,4 +110,3 @@ class Rect extends Lines {
 sgFactory.registerClass('Rect', Rect)
 
 export { Rect }
-// export default Rect;

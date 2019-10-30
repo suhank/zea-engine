@@ -526,4 +526,3 @@ class GLStandardGeomsPass extends GLPass {
 }
 
 export { GLStandardGeomsPass }
-// export default GLPass;

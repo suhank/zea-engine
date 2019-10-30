@@ -209,4 +209,3 @@ class Torus extends Mesh {
 }
 
 export { Torus }
-// export default Torus;

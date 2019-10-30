@@ -165,4 +165,3 @@ class PointGrid extends Points {
 }
 
 export { PointGrid }
-// export default PointGrid;

@@ -149,4 +149,3 @@ class GLLightmapMixer extends GLTexture2D {
 }
 
 export { GLLightmapMixer }
-// export default GLLightmapMixer;

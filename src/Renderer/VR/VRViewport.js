@@ -558,4 +558,3 @@ class VRViewport extends GLBaseViewport {
 }
 
 export { VRViewport }
-// export default VRViewport;

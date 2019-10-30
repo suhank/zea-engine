@@ -56,4 +56,3 @@ class VRHead {
 }
 
 export { VRHead }
-// export default VRHead;

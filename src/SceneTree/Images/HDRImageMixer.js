@@ -132,4 +132,3 @@ class HDRImageMixer extends BaseImage {
 }
 
 export { HDRImageMixer }
-// export default HDRImageMixer;
