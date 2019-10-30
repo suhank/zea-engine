@@ -579,7 +579,7 @@ class RGBA extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {RGBA} - Returns a new color.
    */

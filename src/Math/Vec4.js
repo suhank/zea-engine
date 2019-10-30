@@ -474,7 +474,7 @@ class Vec4 extends AttrValue {
 
   /**
    * Creates a new Vec4 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec4} - Returns a new Vec3.
    */

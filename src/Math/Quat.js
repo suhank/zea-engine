@@ -1003,7 +1003,7 @@ class Quat extends AttrValue {
 
   /**
    * Creates a new Quat to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Quat} - Returns a new Quat.
    */

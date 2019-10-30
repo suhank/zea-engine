@@ -636,7 +636,7 @@ class Color extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Color} - Returns a new color.
    */

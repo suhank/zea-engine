@@ -1340,7 +1340,7 @@ class Mat4 extends AttrValue {
 
   /**
    * Creates a new Mat4 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat4} - Returns a new Mat4.
    */

@@ -523,7 +523,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -533,7 +533,7 @@ class Vec3 extends AttrValue {
 
   /**
    * The createFromFloat32Array method.
-   * @param {array} array - A Float32Array value
+   * @param {Float32Array} array - A Float32Array value
    * @return {Vec3} - Returns a new Vec3.
    */
   static createFromFloat32Array(array) {
@@ -577,4 +577,3 @@ class Vec3 extends AttrValue {
 typeRegistry.registerType('Vec3', Vec3)
 
 export { Vec3 }
-// export default Vec3;

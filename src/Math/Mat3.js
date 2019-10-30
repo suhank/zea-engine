@@ -500,7 +500,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Creates a new Mat3 to wrap existing memory in a buffer.
-   * @param {any} buffer - The buffer value.
+   * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat3} - Returns a new Mat3.
    */
