@@ -167,6 +167,7 @@ class Camera extends TreeItem {
    * @param {any} mode - The mode param.
    */
   setFocalDistance(dist, mode = ValueSetMode.USER_SETVALUE) {
+    if (dist < 0.0001) console.error('Never set focal distance to zero')
     this.__focalDistanceParam.setValue(dist, mode)
     this.__nearParam.setValue(dist * 0.01, mode)
     this.__farParam.setValue(dist * 200.0, mode)
