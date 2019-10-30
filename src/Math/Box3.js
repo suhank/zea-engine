@@ -183,26 +183,14 @@ class Box3 {
    * @return {Mat4} - Returns a new Mat4.
    */
   toMat4() {
-    const sc_x = this.p1.x - this.p0.x
-    const sc_y = this.p1.y - this.p0.y
-    const sc_z = this.p1.z - this.p0.z
+    const scx = this.p1.x - this.p0.x
+    const scy = this.p1.y - this.p0.y
+    const scz = this.p1.z - this.p0.z
     return new Mat4(
-      sc_x,
-      0,
-      0,
-      0,
-      0,
-      sc_y,
-      0,
-      0,
-      0,
-      0,
-      sc_z,
-      0,
-      this.p0.x,
-      this.p0.y,
-      this.p0.z,
-      1.0
+      scx, 0, 0, 0,
+      0, scy, 0, 0,
+      0, 0, scz, 0,
+      this.p0.x, this.p0.y, this.p0.z, 1.0
     )
   }
 
@@ -351,7 +339,7 @@ class Box3 {
 
   /**
    * The setFromFloat32Array method.
-   * @param {any} float32array - The float32array value.
+   * @param {Float32Array} float32array - The float32array value.
    */
   setFromFloat32Array(float32array) {
     this.p0 = new Vec3(float32array.buffer, float32array.byteOffset)
