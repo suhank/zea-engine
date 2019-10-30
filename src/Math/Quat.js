@@ -957,63 +957,17 @@ class Quat extends AttrValue {
   }
 
   /**
-   * Returns the X axis of this quaternion.
-   * @return {Vec3} - Returns the X axis as a Vec3.
-   */
-  getXaxis() {
-    const xy = this.x * this.y
-    const xz = this.x * this.z
-    const yy = this.y * this.y
-    const yw = this.y * this.w
-    const zz = this.z * this.z
-    const zw = this.z * this.w
-
-    return new Vec3(1.0 - 2.0 * (zz + yy), 2.0 * (xy + zw), 2.0 * (xz - yw))
-  }
-
-  /**
-   * Returns the Y axis of this quaternion.
-   * @return {Vec3} - Returns the Y axis as a Vec3.
-   */
-  getYaxis() {
-    const xx = this.x * this.x
-    const xy = this.x * this.y
-    const xw = this.x * this.w
-    const yz = this.y * this.z
-    const zz = this.z * this.z
-    const zw = this.z * this.w
-
-    return new Vec3(2.0 * (xy - zw), 1.0 - 2.0 * (zz + xx), 2.0 * (yz + xw))
-  }
-
-  /**
-   * Returns the Z axis of this quaternion.
-   * @return {Vec3} - Returns the Y axis as a Vec3.
-   */
-  getZaxis() {
-    const xx = this.x * this.x
-    const xz = this.x * this.z
-    const xw = this.x * this.w
-
-    const yy = this.y * this.y
-    const yz = this.y * this.z
-    const yw = this.y * this.w
-
-    return new Vec3(2.0 * (yw + xz), 2.0 * (yz - xw), 1.0 - 2.0 * (yy + xx))
-  }
-
-  /**
    * Performs a linear interpolation between two Quats.
    * @param {Quat} other  - The other Quat to interpolate between.
-   * @param {number} w - Interpolation amount between the two inputs.
+   * @param {number} t - Interpolation amount between the two inputs.
    * @return {Quat} - Returns a new Quat.
    */
-  lerp(other, w) {
+  lerp(other, t) {
     const result = new Quat(
-      this.x + w * (other.x - this.x),
-      this.y + w * (other.y - this.y),
-      this.z + w * (other.z - this.z),
-      this.w + w * (other.w - this.w)
+      this.x + t * (other.x - this.x),
+      this.y + t * (other.y - this.y),
+      this.z + t * (other.z - this.z),
+      this.w + t * (other.w - this.w)
     )
     result.normalizeInPlace()
     return result
