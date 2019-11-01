@@ -134,22 +134,27 @@ class FilePathParameter extends Parameter {
     const parts = url.split('/')
     const name = parts[parts.length - 1]
 
-    
-    let rootURL = window.location.href.split('#')[0]
-    rootURL = rootURL.split('?')[0]
-    if (rootURL.endsWith('.html') || rootURL.endsWith('.html')) {
-      rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/'
+    if (!url.startsWith('http:')) {
+      // Convert this relative url to an absolute.
+      // Note: this is necessary because the HTTP requests
+      // are invoked from the worker where the current file context
+      // is not known.
+      let rootURL = window.location.href.split('#')[0]
+      rootURL = rootURL.split('?')[0]
+      if (rootURL.endsWith('.html') || rootURL.endsWith('.html')) {
+        rootURL = rootURL.substring(0, rootURL.lastIndexOf('/')) + '/'
+      }
+      const base = rootURL
+      if (parts[0] == '.') parts.shift()
+      else if (parts[0] == '..') {
+        item = item.substring(3)
+        const baseparts = base.split('/')
+        baseparts.pop()
+        baseparts.pop()
+        base = baseparts.join('/') + '/'
+      }
+      url = base + url
     }
-    const base = rootURL
-    if (parts[0] == '.') parts.shift()
-    else if (parts[0] == '..') {
-      item = item.substring(3)
-      const baseparts = base.split('/')
-      baseparts.pop()
-      baseparts.pop()
-      base = baseparts.join('/') + '/'
-    }
-    url = base + url
 
     this.__value = name
     this.__file = {

@@ -377,6 +377,9 @@ class Group extends TreeItem {
     paths.forEach(path => {
       const treeItem = searchRoot.resolvePath(path)
       if (treeItem) items.push(treeItem)
+      else {
+        console.warn("Path does not resolve to an Item:", path);
+      }
     })
     this.setItems(items)
   }

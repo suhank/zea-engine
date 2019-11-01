@@ -898,18 +898,18 @@ class TreeItem extends BaseItem {
    * @param {boolean} includeThis - Fire the callback for this item.
    */
   traverse(callback, includeThis = true) {
-    const __c = treeItem => {
+    const __c = (treeItem, depth) => {
       const children = treeItem.getChildren()
       for (const childItem of children) {
-        if (childItem) __t(childItem)
+        if (childItem) __t(childItem, depth+1)
       }
     }
-    const __t = treeItem => {
-      if (callback(treeItem) == false) return false
-      __c(treeItem)
+    const __t = (treeItem, depth) => {
+      if (callback(treeItem, depth) == false) return false
+      __c(treeItem, depth)
     }
-    if (includeThis) __t(this)
-    else __c(this)
+    if (includeThis) __t(this, 1)
+    else __c(this, 0)
   }
 
   // ///////////////////////
