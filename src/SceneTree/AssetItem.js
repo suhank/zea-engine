@@ -109,6 +109,7 @@ class AssetItem extends TreeItem {
           scaleFactor = 1609.34
           break
       }
+      this.__unitsScale = scaleFactor;
 
       // Apply units change to existing Xfo. (avoid changing tr)
       const xfo = this.getLocalXfo().clone()
@@ -132,6 +133,14 @@ class AssetItem extends TreeItem {
     }
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
+  }
+
+  /**
+   * The get method.
+   * @return {any} - The return value.
+   */
+  getUnitsConversion() {
+    return this.__unitsScale
   }
 
   /**
