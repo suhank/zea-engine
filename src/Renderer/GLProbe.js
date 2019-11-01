@@ -1,4 +1,4 @@
-import { hammersley } from '../Math'
+import { hammersley } from './hammersley.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLImageAtlas } from './GLImageAtlas.js'
 import { ConvolverShader } from './Shaders/ConvolverShader.js'
