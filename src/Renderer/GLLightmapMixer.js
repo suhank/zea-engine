@@ -130,7 +130,8 @@ class GLLightmapMixer extends GLTexture2D {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     super.destroy()
