@@ -159,7 +159,7 @@ class FileAudioItem extends AudioItem {
    * Create a audio file item.
    * @param {string} name - The name of the audio file.
    */
-  constructor() {}
+  constructor(name) {}
 }
 
 export { AudioItem, FileAudioItem }
