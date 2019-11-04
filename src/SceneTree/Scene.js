@@ -10,7 +10,7 @@ import { SceneSettings } from './SceneSettings.js'
 
 const defaultGridColor = new Color('#DCDCDC')
 
-/** Class representing a scene. */
+/** Class representing a scene in a scene tree. */
 class Scene {
   /**
    * Create a scene.
@@ -60,10 +60,10 @@ class Scene {
     this.root.addChild(asset);
   }
   /**
-   * The setupGrid method.
-   * @param {number} gridSize - The gridSize param.
-   * @param {number} resolution - The resolution param.
-   * @param {any} gridColor - The gridColor param.
+   * Set up the scene grid.
+   * @param {number} gridSize - The size of the grid.
+   * @param {number} resolution - The resolution of the grid.
+   * @param {Color} gridColor - The color of the grid.
    * @return {any} - The return value.
    */
   setupGrid(gridSize = 5, resolution = 50, gridColor = defaultGridColor) {

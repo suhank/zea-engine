@@ -8,7 +8,7 @@ import { sgFactory } from './SGFactory.js'
 // 'addPArameter' without the parameter instance.
 import { ParamFlags } from './Parameters/Parameter.js'
 
-/** Class representing a parameter owner.
+/** Class representing a parameter owner in the scene tree.
  * @extends RefCounted
  */
 class ParameterOwner extends RefCounted {
@@ -36,7 +36,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The numParameters method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   numParameters() {
     return this.__params.length
@@ -52,7 +52,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The getParameterIndex method.
-   * @param {any} paramName - The paramName param.
+   * @param {string} paramName - The parameter name.
    * @return {any} - The return value.
    */
   getParameterIndex(paramName) {
@@ -61,7 +61,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The getParameterByIndex method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getParameterByIndex(index) {
@@ -70,7 +70,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The hasParameter method.
-   * @param {any} paramName - The paramName param.
+   * @param {string} paramName - The parameter name.
    * @return {any} - The return value.
    */
   hasParameter(paramName) {
@@ -79,7 +79,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The getParameter method.
-   * @param {any} paramName - The paramName param.
+   * @param {string} paramName - The parameter name.
    * @return {any} - The return value.
    */
   getParameter(paramName) {
@@ -100,8 +100,8 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The addParameter method.
-   * @param {any} param - The param param.
+   * Add a parameter.
+   * @param {any} param - The paramater to add.
    * @return {any} - The return value.
    */
   addParameter(param) {
@@ -121,9 +121,9 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The insertParameter method.
-   * @param {any} param - The param param.
-   * @param {any} index - The index param.
+   * Insert a parameter.
+   * @param {any} param - The paramater to insert.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   insertParameter(param, index) {
@@ -148,8 +148,8 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The removeParameter method.
-   * @param {string} name - The name param.
+   * Remove a parameter.
+   * @param {string} name - The parameter name.
    */
   removeParameter(name) {
     if (this.__paramMapping[name] == undefined) {
@@ -169,8 +169,8 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The replaceParameter method.
-   * @param {any} param - The param param.
+   * Replace a parameter.
+   * @param {any} param - The parameter to replace.
    * @return {any} - The return value.
    */
   replaceParameter(param) {
@@ -193,10 +193,10 @@ class ParameterOwner extends RefCounted {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const paramsJSON = {}
@@ -220,10 +220,10 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     if (j.params) {
@@ -254,8 +254,8 @@ class ParameterOwner extends RefCounted {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     // TODO: make this work
@@ -289,10 +289,13 @@ class ParameterOwner extends RefCounted {
     return JSON.stringify(this.toJSON(), null, 2)
   }
 
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
   /**
    * The copyFrom method.
-   * @param {any} src - The src param.
-   * @param {number} flags - The flags param.
+   * @param {ParameterOwner} src - The ParameterOwner copy from.
+   * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
     // Note: Loop over the parameters in reverse order,
@@ -314,7 +317,8 @@ class ParameterOwner extends RefCounted {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     for (const param of this.__params) {

@@ -21,13 +21,13 @@ const GROUP_INITIAL_XFO_MODES = {
   globalOri: 2,
 }
 
-/** Class representing a group.
+/** Class representing a group in the scene tree.
  * @extends TreeItem
  */
 class Group extends TreeItem {
   /**
    * Create a group.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the group.
    */
   constructor(name) {
     super(name)
@@ -123,37 +123,15 @@ class Group extends TreeItem {
   }
 
   /**
-   * The destroy method.
+   * Getter for INITIAL_XFO_MODES.
    */
-  destroy() {
-    super.destroy()
+  static get INITIAL_XFO_MODES() {
+    return GROUP_INITIAL_XFO_MODES;
   }
-
-  /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  clone(flags) {
-    const cloned = new Group()
-    cloned.copyFrom(this, flags)
-    return cloned
-  }
-
-  /**
-   * The copyFrom method.
-   * @param {any} src - The src param.
-   * @param {number} flags - The flags param.
-   */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
-  }
-
-  // //////////////////////////////
 
   /**
    * The __updateVisiblity method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    * @private
    */
   __updateVisiblity() {
@@ -182,18 +160,18 @@ class Group extends TreeItem {
       color.a = this.getParameter('HighlightFill').getValue()
     }
 
-    const key = 'groupItemHighlight' + this.getId()
+    const key = 'groupItemHighlight' + this.getId();
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
       }
-    })
+    });
   }
 
   /**
-   * The setSelected method.
-   * @param {any} sel - The sel param.
+   * Returns a boolean indicating if this group is selectable.
+   * @param {boolean} sel - Boolean indicating the new selection state.
    */
   setSelected(sel) {
     super.setSelected(sel)
@@ -220,15 +198,21 @@ class Group extends TreeItem {
     // }
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Global Xfo
 
+  /**
+   * The _cleanGlobalXfo method.
+   * @return {any} - The return value.
+   * @private
+   */
   _cleanGlobalXfo() {
     return this.calcGroupXfo()
   }
 
   /**
-   * The calcGroupXfo method.
+   * Calculate the group Xfo translate.
+   * @return {Xfo} - Returns a new Xfo.
    */
   calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue())
@@ -281,6 +265,10 @@ class Group extends TreeItem {
     return xfo
   }
 
+  /**
+   * The _propagateGroupXfoToItems method.
+   * @private
+   */
   _propagateGroupXfoToItems() {
     if (this.calculatingGroupXfo) return
 
@@ -321,7 +309,7 @@ class Group extends TreeItem {
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')
+          const p = treeItem.getParameter('Material');
           if (material) {
             const m = p.getValue()
             if (m != material) {
@@ -363,10 +351,9 @@ class Group extends TreeItem {
   // Items
 
   /**
-   * The setPaths method.
-   * This function is mostly used in our demos, and
-   * should be removed from the interface
-   * @param {any} paths - The paths param.
+   * This method is mostly used in our demos,
+   * and should be removed from the interface
+   * @param {any} paths - The paths value.
    */
   setPaths(paths) {
     this.clearItems(false)
@@ -385,31 +372,36 @@ class Group extends TreeItem {
   }
 
   /**
-   * The resolveItems method.
    * For backwards compatiblity.
-   * @param {any} paths - The paths param.
+   * @param {any} paths - The paths value.
    */
   resolveItems(paths) {
     this.setPaths(paths)
   }
 
+  /**
+   * The __bindItem method.
+   * @param {any} item - The item value.
+   * @param {number} index - The index value.
+   * @private
+   */
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
-    const signalIndices = {}
+    const signalIndices = {};
 
     signalIndices.mouseDownIndex = item.mouseDown.connect(event => {
       this.mouseDown.emit(event)
       this.mouseDownOnItem.emit(event, item)
     })
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the Material
     const material = this.getParameter('Material').getValue()
     if (material) {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material')
+          const p = treeItem.getParameter('Material');
           if (material) {
             const m = p.getValue()
             if (m != material) {
@@ -418,10 +410,10 @@ class Group extends TreeItem {
             }
           }
         }
-      }, true)
+      }, true);
     }
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the highlight
     if (
       item instanceof TreeItem &&
@@ -432,7 +424,7 @@ class Group extends TreeItem {
       item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the item cutaway
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
     if (cutEnabled) {
@@ -440,9 +432,9 @@ class Group extends TreeItem {
       const cutAwayDist = this.getParameter('CutDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
-          treeItem.setCutawayEnabled(cutEnabled)
-          treeItem.setCutVector(cutAwayVector)
-          treeItem.setCutDist(cutAwayDist)
+          treeItem.setCutawayEnabled(cutEnabled);
+          treeItem.setCutVector(cutAwayVector);
+          treeItem.setCutDist(cutAwayDist);
         }
       }, true)
     }
@@ -453,7 +445,7 @@ class Group extends TreeItem {
       item.propagateVisiblity(-1)
     }
 
-    // Higlight the new item with branch selection color
+    // Higlight the new item with branch selection color.
     if (this.getSelected()) {
       if (item instanceof TreeItem)
         item.addHighlight(
@@ -478,13 +470,13 @@ class Group extends TreeItem {
       this._setBoundingBoxDirty
     )
 
-    this.__signalIndices[index] = signalIndices
+    this.__signalIndices[index] = signalIndices;
   }
 
   /**
    * The __unbindItem method.
-   * @param {any} item - The item param.
-   * @param {any} index - The index param.
+   * @param {any} item - The item value.
+   * @param {number} index - The index value.
    * @private
    */
   __unbindItem(item, index) {
@@ -492,13 +484,13 @@ class Group extends TreeItem {
 
     item.removeHighlight('branchselected' + this.getId(), true)
     if (this.getParameter('Highlighted').getValue()) {
-      item.removeHighlight('groupItemHighlight' + this.getId(), true)
+      item.removeHighlight('groupItemHighlight' + this.getId(), true);
     }
 
     if (!this.getVisible()) {
       // Increment the visiblity counter which might cause
       // this item to become visible.
-      // It will stay invisible its parent is invisible, or if
+      // It will stay invisible if its parent is invisible, or if
       // multiple groups connect to it and say it is invisible.
       item.propagateVisiblity(1)
     }
@@ -523,9 +515,9 @@ class Group extends TreeItem {
   }
 
   /**
-   * The addItem method.
-   * @param {any} item - The item param.
-   * @param {any} emit - The emit param.
+   * Add an item to the group.
+   * @param {any} item - The item value.
+   * @param {any} emit - The emit value.
    */
   addItem(item, emit = true) {
     if (!item) {
@@ -536,16 +528,17 @@ class Group extends TreeItem {
   }
 
   /**
-   * The removeItem method.
-   * @param {any} item - The item param.
+   * Remove an item to the group.
+   * @param {any} item - The item value.
+   * @param {boolean} emit - The emit value.
    */
   removeItem(item, emit = true) {
     this.__itemsParam.removeItem(item, emit)
   }
 
   /**
-   * The clearItems method.
-   * @param {boolean} emit - The emit param.
+   * Clear items from the group.
+   * @param {boolean} emit - The emit value.
    */
   clearItems(emit = true) {
     // Note: Unbind reversed so that indices
@@ -569,7 +562,7 @@ class Group extends TreeItem {
 
   /**
    * The setItems method.
-   * @param {any} items - The items param.
+   * @param {any} items - The items value.
    */
   setItems(items) {
     this.clearItems(false)
@@ -578,7 +571,7 @@ class Group extends TreeItem {
 
   /**
    * The _cleanBoundingBox method.
-   * @param {any} bbox - The bbox param.
+   * @param {Box3} bbox - The bounding box value.
    * @return {any} - The return value.
    * @private
    */
@@ -598,27 +591,27 @@ class Group extends TreeItem {
   // Events
 
   /**
-   * The onMouseDown method.
-   * @param {any} event - The event param.
-   * @return {boolean} - The return value.
+   * Occurs when a user presses a mouse button over an element.
+   * @param {any} event - The event that occurs.
+   * @return {boolean} - Returns false.
    */
   onMouseDown(event) {
     return false
   }
 
   /**
-   * The onMouseUp method.
-   * @param {any} event - The event param.
-   * @return {boolean} - The return value.
+   * Occurs when a user releases a mouse button over a element.
+   * @param {any} event - The event that occurs.
+   * @return {boolean} - Returns false.
    */
   onMouseUp(event) {
     return false
   }
 
   /**
-   * The onMouseMove method.
-   * @param {any} event - The event param.
-   * @return {boolean} - The return value.
+   * Occur when the mouse pointer is moving while over an element.
+   * @param {any} event - The event that occurs.
+   * @return {boolean} - Returns false.
    */
   onMouseMove(event) {
     return false
@@ -628,10 +621,10 @@ class Group extends TreeItem {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
@@ -646,10 +639,10 @@ class Group extends TreeItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
@@ -688,11 +681,36 @@ class Group extends TreeItem {
     }
   }
 
-  /**
-   * Getter for INITIAL_XFO_MODES.
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
+
+ 
+   /**
+   * The destroy method.
    */
-  static get INITIAL_XFO_MODES() {
-    return GROUP_INITIAL_XFO_MODES
+  destroy() {
+    super.destroy()
+  }
+
+  /**
+   * The clone method.
+   * @param {number} flags - The flags param.
+   * @return {any} - The return value.
+   */
+  clone(flags) {
+    const cloned = new Group()
+    cloned.copyFrom(this, flags)
+    return cloned
+  }
+
+  /**
+   * The copyFrom method.
+   * @param {any} src - The src param.
+   * @param {number} flags - The flags param.
+   */
+  copyFrom(src, flags) {
+    super.copyFrom(src, flags)
   }
 }
 

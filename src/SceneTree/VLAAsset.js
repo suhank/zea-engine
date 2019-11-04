@@ -74,8 +74,8 @@ class VLAAsset extends AssetItem {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    * @return {any} - The return value.
    */
   readBinary(reader, context) {
@@ -106,8 +106,8 @@ class VLAAsset extends AssetItem {
 
   /**
    * The loadDataFile method.
-   * @param {any} onDone - The onDone param.
-   * @param {any} onGeomsDone - The onGeomsDone param.
+   * @param {any} onDone - The onDone value.
+   * @param {any} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
     const file = this.__datafileParam.getFileDesc()
@@ -242,10 +242,10 @@ class VLAAsset extends AssetItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {any} onDone - The onDone param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {any} onDone - The onDone value.
    */
   fromJSON(j, context, onDone) {
     if (!context) context = {}

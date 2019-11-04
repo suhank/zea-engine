@@ -22,13 +22,13 @@ import {
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
-/** Class representing an obj asset.
+/** Class representing an object asset.
  * @extends AssetItem
  */
 class ObjAsset extends AssetItem {
   /**
    * Create an obj asset.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the object asset.
    */
   constructor(name) {
     super(name)
@@ -80,8 +80,8 @@ class ObjAsset extends AssetItem {
 
   /**
    * The __loadObj method.
-   * @param {any} onDone - The onDone param.
-   * @param {any} onGeomsLoaded - The onGeomsLoaded param.
+   * @param {any} onDone - The onDone value.
+   * @param {any} onGeomsLoaded - The onGeomsLoaded value.
    * @private
    */
   __loadObj(onDone, onGeomsLoaded) {
@@ -451,5 +451,5 @@ class ObjAsset extends AssetItem {
     loadObjData()
   }
 }
+
 export { ObjAsset }
-// ObjAsset;

@@ -11,7 +11,7 @@ const ResourceLoaderWorker = require('worker-loader?inline!./ResourceLoader/Reso
 
 /**
  * Simple object check.
- * @param {any} item - The item param.
+ * @param {any} item - The item value.
  * @return {boolean} - The return value.
  */
 export function isObject(item) {
@@ -20,8 +20,8 @@ export function isObject(item) {
 
 /**
  * Deep merge two objects.
- * @param {any} target - The target param.
- * @param {...object} ...sources - The ...sources param.
+ * @param {any} target - The target value.
+ * @param {...object} ...sources - The ...sources value.
  * @return {any} - The return value.
  */
 export function mergeDeep(target, ...sources) {
@@ -122,8 +122,8 @@ class ResourceLoader {
 
   /**
    * The registerResourceCallback method.
-   * @param {any} filter - The filter param.
-   * @param {any} fn - The fn param.
+   * @param {any} filter - The filter value.
+   * @param {any} fn - The fn value.
    */
   registerResourceCallback(filter, fn) {
     this.__resourceRegisterCallbacks[filter] = fn
@@ -193,7 +193,7 @@ class ResourceLoader {
 
   /**
    * The setResources method.
-   * @param {any} resources - The resources param.
+   * @param {any} resources - The resources value.
    */
   setResources(resources) {
     this.__resources = Object.assign(this.__resources, resources)
@@ -203,8 +203,8 @@ class ResourceLoader {
 
   /**
    * The addResourceURL method.
-   * @param {any} resourcePath - The resourcePath param.
-   * @param {any} url - The url param.
+   * @param {any} resourcePath - The resourcePath value.
+   * @param {any} url - The url value.
    */
   addResourceURL(resourcePath, url) {
     const parts = resourcePath.split('/')
@@ -258,7 +258,7 @@ class ResourceLoader {
 
   /**
    * The updateFile method.
-   * @param {any} file - The file param.
+   * @param {any} file - The file value.
    */
   updateFile(file) {
     const newFile = !(file.id in this.__resources)
@@ -339,7 +339,7 @@ class ResourceLoader {
   }
 
   /**
-   * The __terminateWorkers method.
+   * The __terminateWorkers value.
    * @private
    */
   __terminateWorkers() {
@@ -349,7 +349,7 @@ class ResourceLoader {
 
   /**
    * The getFilepath method.
-   * @param {any} resourceId - The resourceId param.
+   * @param {any} resourceId - The resourceId value.
    * @return {any} - The return value.
    */
   getFilepath(resourceId) {
@@ -364,7 +364,7 @@ class ResourceLoader {
 
   /**
    * The resourceAvailable method.
-   * @param {any} resourceId - The resourceId param.
+   * @param {any} resourceId - The resourceId value.
    * @return {any} - The return value.
    */
   resourceAvailable(resourceId) {
@@ -379,7 +379,7 @@ class ResourceLoader {
 
   /**
    * The getFile method.
-   * @param {any} resourceId - The resourceId param.
+   * @param {any} resourceId - The resourceId value.
    * @return {any} - The return value.
    */
   getFile(resourceId) {
@@ -388,7 +388,7 @@ class ResourceLoader {
 
   /**
    * The resolveFilePathToId method.
-   * @param {any} filePath - The filePath param.
+   * @param {any} filePath - The filePath value.
    * @return {any} - The return value.
    */
   resolveFilePathToId(filePath) {
@@ -402,7 +402,7 @@ class ResourceLoader {
 
   /**
    * The resolveFilepath method.
-   * @param {any} filePath - The filePath param.
+   * @param {any} filePath - The filePath value.
    * @return {any} - The return value.
    */
   resolveFilepath(filePath) {
@@ -421,7 +421,7 @@ class ResourceLoader {
 
   /**
    * The resolveFile method.
-   * @param {any} filePath - The filePath param.
+   * @param {any} filePath - The filePath value.
    * @return {any} - The return value.
    */
   resolveFile(filePath) {
@@ -431,7 +431,7 @@ class ResourceLoader {
 
   /**
    * The resolveURL method.
-   * @param {any} filePath - The filePath param.
+   * @param {any} filePath - The filePath value.
    * @return {any} - The return value.
    */
   resolveURL(filePath) {
@@ -441,9 +441,9 @@ class ResourceLoader {
   }
 
   /**
-   * Add work to the total work pile... We never know how big the pile will get.
-   * @param {any} resourceId - The resourceId param.
-   * @param {any} amount - The amount param.
+   * Add work to the total work pile.. We never know how big the pile will get.
+   * @param {any} resourceId - The resourceId value.
+   * @param {any} amount - The amount value.
    */
   addWork(resourceId, amount) {
     this.__totalWork += amount
@@ -452,8 +452,8 @@ class ResourceLoader {
 
   /**
    * Add work to the 'done' pile. The done pile should eventually match the total pile.
-   * @param {any} resourceId - The resourceId param.
-   * @param {any} amount - The amount param.
+   * @param {any} resourceId - The resourceId value.
+   * @param {any} amount - The amount value.
    */
   addWorkDone(resourceId, amount) {
     this.__doneWork += amount
@@ -468,9 +468,9 @@ class ResourceLoader {
 
   /**
    * The loadResource method.
-   * @param {any} resourceId - The resourceId param.
-   * @param {any} callback - The callback param.
-   * @param {boolean} addLoadWork - The addLoadWork param.
+   * @param {any} resourceId - The resourceId value.
+   * @param {any} callback - The callback value.
+   * @param {boolean} addLoadWork - The addLoadWork value.
    */
   loadResource(resourceId, callback, addLoadWork = true) {
     const file = this.getFile(resourceId)
@@ -488,10 +488,10 @@ class ResourceLoader {
 
   /**
    * The loadURL method.
-   * @param {any} resourceId - The resourceId param.
-   * @param {any} url - The url param.
-   * @param {any} callback - The callback param.
-   * @param {boolean} addLoadWork - The addLoadWork param.
+   * @param {any} resourceId - The resourceId value.
+   * @param {any} url - The url value.
+   * @param {any} callback - The callback value.
+   * @param {boolean} addLoadWork - The addLoadWork value.
    * @return {any} - The return value.
    */
   loadURL(resourceId, url, callback, addLoadWork = true) {
@@ -501,10 +501,10 @@ class ResourceLoader {
 
   /**
    * The loadUrl method.
-   * @param {any} resourceId - The resourceId param.
-   * @param {any} url - The url param.
-   * @param {any} callback - The callback param.
-   * @param {boolean} addLoadWork - The addLoadWork param.
+   * @param {any} resourceId - The resourceId value.
+   * @param {any} url - The url value.
+   * @param {any} callback - The callback value.
+   * @param {boolean} addLoadWork - The addLoadWork value.
    */
   loadUrl(resourceId, url, callback, addLoadWork = true) {
     if (addLoadWork) {
@@ -530,7 +530,7 @@ class ResourceLoader {
 
   /**
    * The __onFinishedReceiveFileData method.
-   * @param {any} fileData - The fileData param.
+   * @param {any} fileData - The fileData value.
    * @private
    */
   __onFinishedReceiveFileData(fileData) {
@@ -556,7 +556,7 @@ class ResourceLoader {
 
   /**
    * The traverse method.
-   * @param {any} callback - The callback param.
+   * @param {any} callback - The callback value.
    */
   traverse(callback) {
     const __c = fsItem => {

@@ -11,13 +11,13 @@ const ItemFlags = {
 }
 let numBaseItems = 0
 
-/** The base class for the scene tree. A Base item has a name and parameters.
+/** The base class for the scene tree. A base item has a name and parameters.
  * @extends ParameterOwner
  */
 class BaseItem extends ParameterOwner {
   /**
    * Create a base item.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the base item.
    */
   constructor(name) {
     super()
@@ -38,10 +38,13 @@ class BaseItem extends ParameterOwner {
     numBaseItems++
   }
 
+  // ////////////////////////////////////////
+  // Static Methods
+
   /**
    * The getNumBaseItems method returns the total number of base items created.
    * This method is used in debugging memory consumption.
-   * @return {number} - The total number of base items created.
+   * @return {number} - Returns the total number of base items created.
    */
   static getNumBaseItems() {
     return numBaseItems
@@ -67,17 +70,16 @@ class BaseItem extends ParameterOwner {
   // Name and Path
 
   /**
-   * Returns the name of the item.
-   * @return {string} - The name of the item.
+   * Returns the name of the base item.
+   * @return {string} - Returns the base item name.
    */
   getName() {
     return this.__name
   }
 
   /**
-   * Sets the name of the item.
-   * @param {string} name - The name value.
-   * @param {number} mode - The mode value.
+   * Sets the name of the base item.
+   * @param {string} name - The base item name.
    */
   setName(name, mode = ValueSetMode.USER_SETVALUE) {
     if (this.__name != name) {
@@ -103,7 +105,7 @@ class BaseItem extends ParameterOwner {
 
   /**
    * Returns the current path of the item in the tree as an array of names.
-   * @return {array} - The return value.
+   * @return {array} - Returns an array.
    */
   getPath() {
     return this.__path
@@ -114,7 +116,7 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The setFlag method.
-   * @param {number} flag - the flag param.
+   * @param {number} flag - the flag value.
    */
   setFlag(flag) {
     this.__flags |= flag
@@ -129,9 +131,9 @@ class BaseItem extends ParameterOwner {
   }
 
   /**
-   * The testFlag method returns true if the flag if set, else false.
+   * Returns true if the flag if set, otherwise returns false.
    * @param {number} flag - The flag to test.
-   * @return {boolean} - The boolean indicating if the flag is set.
+   * @return {boolean} - Returns a boolean indicating if the flag is set.
    */
   testFlag(flag) {
     return (this.__flags & flag) != 0
@@ -141,11 +143,11 @@ class BaseItem extends ParameterOwner {
   // Path Traversial
 
   /**
-   * The resolvePath method traverses the subtree from this itemm down
-   * matching each name in the path with a chile until it reaches the
+   * The resolvePath method traverses the subtree from this item down
+   * matching each name in the path with a child until it reaches the
    * end of the path.
-   * @param {any} path - The path param.
-   * @param {any} index - The index param.
+   * @param {any} path - The path valie.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   resolvePath(path, index) {
@@ -170,7 +172,7 @@ class BaseItem extends ParameterOwner {
   /**
    * The getOwner method returns the current owner of the item.
    * The item is a child of the current owner.
-   * @return {object} - The current owner.
+   * @return {object} - Returns the current owner.
    */
   getOwner() {
     // return this.__private.get('ownerItem');
@@ -179,7 +181,7 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The setOwner method assigns a new owner to the item.
-   * @param {any} ownerItem - The new owner item.
+   * @param {object} ownerItem - The new owner item.
    */
   setOwner(ownerItem) {
     // this.__private.set(ownerItem, ownerItem);
@@ -200,12 +202,12 @@ class BaseItem extends ParameterOwner {
     }
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Selectability and Selection
 
   /**
    * The getSelectable method returns a boolean indicating if this item is selectable.
-   * @return {any} - The return value.
+   * @return {boolean} - Returns a boolean indicating if the item is selectable.
    */
   getSelectable() {
     return this.__selectable
@@ -213,7 +215,8 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The setSelectable method modifies the selectability of this item.
-   * @param {any} val - A boolean indicating the selectability of the item.
+   * @param {boolean} val - A boolean indicating the selectability of the item.
+   * @return {boolean} - Returns a boolean.
    */
   setSelectable(val) {
     if (this.__selectable != val) {
@@ -242,11 +245,11 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The getSelected method changes the current state of the selection of this item.
-   * @param {Boolean} sel - Boolean indicating the new selection state.
+   * @param {boolean} sel - Boolean indicating the new selection state.
    */
   setSelected(sel) {
-    this.__selected = sel
-    this.selectedChanged.emit(this.__selected)
+    this.__selected = sel;
+    this.selectedChanged.emit(this.__selected);
   }
 
   // ////////////////////////////////////////
@@ -254,8 +257,8 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The getMetadata method.
-   * @param {any} key - The key value under which to check for metadata..
-   * @return {object} - The meta data associated with the given key.
+   * @param {any} key - The key value under which to check for metadata.
+   * @return {object} - Returns the metadata associated with the given key.
    */
   getMetadata(key) {
     return this.__metaData[key]
@@ -263,8 +266,8 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The hasMetadata method checks to see if there is metadata for a given key.
-   * @param {any} key - The key param.
-   * @return {boolean} - returns true if meta data exists under the gien key, else false.
+   * @param {any} key - The key value.
+   * @return {boolean} - Returns true if metadata exists under the given key, otherwise returns false.
    */
   hasMetadata(key) {
     return key in this.__metaData
@@ -272,8 +275,8 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The setMetadata method assigns metadata to a given key.
-   * @param {any} key - The key param.
-   * @param {object} metaData - The metaData param.
+   * @param {any} key - The key value.
+   * @param {object} metaData - The metaData value.
    */
   setMetadata(key, metaData) {
     this.__metaData[key] = metaData
@@ -281,7 +284,7 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The deleteMetadata method removes metadata for a given key.
-   * @param {any} key - The key param.
+   * @param {any} key - The key value.
    */
   deleteMetadata(key) {
     delete this.__metaData[key]
@@ -292,9 +295,9 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The toJSON method encodes the current object as a json object.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {object} - The json object.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     let j = super.toJSON(context, flags)
@@ -314,10 +317,10 @@ class BaseItem extends ParameterOwner {
   }
 
   /**
-   * The fromJSON method.
-   * @param {object} j - The json object thish this item bust decode.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     if (j.name) this.__name = j.name
@@ -329,8 +332,8 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     const type = reader.loadStr()
@@ -348,12 +351,13 @@ class BaseItem extends ParameterOwner {
     super.destroy()
   }
 
+  // ////////////////////////////////////////
+  // Clone and Destroy
 
   /**
-   * Clones this item returning a new item.
-   * Note: each class should implement clone to be clonable.
-   * @param {number} flags - The flags param.
-   * @return {object} - The new cloned instance.
+   * Clones this bse item and returns a new base item.
+   * Note: Each class should implement clone to be clonable.
+   * @param {number} flags - The flags value.
    */
   clone(flags) {
     throw new Error(
@@ -367,10 +371,10 @@ class BaseItem extends ParameterOwner {
    * its values from the source using this method.
    * This method copies any relevant data from the source object to
    * ensure that it represents a valid clone.
-   * Derived classes override this method to copy any releevant
+   * Derived classes override this method to copy any relevant
    * data from the source object.
-   * @param {BaseItem} src - The src param.
-   * @param {number} flags - The flags param.
+   * @param {BaseItem} src - The BaseItem to copy from.
+   * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
     super.copyFrom(src, flags);
@@ -378,13 +382,12 @@ class BaseItem extends ParameterOwner {
   }
 
   /**
-   * The destroy is called by the system to cause explicit resources cleanup. 
-   * Users should never need to call this method directly..
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     super.destroy();
   }
-
 }
 
 export { ItemFlags, BaseItem }
