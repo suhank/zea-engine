@@ -13,7 +13,7 @@ class Points extends BaseGeom {
 
   /**
    * The loadBin method.
-   * @param {object} reader - The reader param.
+   * @param {object} reader - The reader value.
    */
   loadBin(reader) {
     this.name = reader.loadStr()
