@@ -1,6 +1,5 @@
 import { sgFactory } from '../SGFactory.js'
 import { Parameter } from './Parameter.js'
-import { QueryParameter } from './QueryParameter.js'
 
 /** Class representing a query set parameter.
  * @extends Parameter
@@ -100,8 +99,8 @@ class QuerySet extends Parameter {
    * @return {QuerySet} - Returns a new query set parameter.
    */
   clone(flags) {
-    const clonedParam = new QuerySet(this.__name, this.__filterFn);
-    return clonedParam;
+    const clonedParam = new QuerySet(this.__name, this.__filterFn)
+    return clonedParam
   }
 }
 

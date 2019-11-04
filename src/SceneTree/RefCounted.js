@@ -10,7 +10,7 @@ let counter = 0
  */
 class RefCounted {
   /**
-   * Create ref counted.
+   * Create a ref counted object.
    */
   constructor() {
     if (this.constructor.name == 'RefCounted') {

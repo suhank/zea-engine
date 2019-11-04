@@ -395,14 +395,10 @@ class Parameter extends BaseParameter {
    * @return {Parameter} - Returns a new cloned parameter.
    */
   clone(flags) {
-    const clonedValue = this.__value;
-    if (clonedValue.clone) clonedValue = clonedValue.clone();
-    const clonedParam = new Parameter(
-      this.__name,
-      clonedValue,
-      this.__dataType
-    );
-    return clonedParam;
+    const clonedValue = this.__value
+    if (clonedValue.clone) clonedValue = clonedValue.clone()
+    const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType)
+    return clonedParam
   }
 }
 

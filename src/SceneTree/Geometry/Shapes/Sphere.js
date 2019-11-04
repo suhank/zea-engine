@@ -1,5 +1,4 @@
 import { Vec2, Vec3 } from '../../../Math'
-import { SAVE_FLAG_SKIP_GEOMDATA } from '../BaseGeom.js'
 import { Mesh } from '../Mesh.js'
 
 import { NumberParameter } from '../../Parameters/NumberParameter.js'
@@ -92,7 +91,7 @@ class Sphere extends Mesh {
     vertex++
 
     // ////////////////////////////
-    // build the topology
+    // Build the topology
     const texCoords = this.getVertexAttribute('texCoords')
 
     // build the fan at the first pole.

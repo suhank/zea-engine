@@ -16,4 +16,3 @@ class ProceduralSky extends RefCounted {
   }
 }
 export { ProceduralSky }
-// ProceduralSky;

@@ -158,6 +158,9 @@ class OperatorOutput {
     }
   }
 
+  /**
+   * The detach method.
+   */
   detach() {
     // This function is called when we want to suspend an operator
     // from functioning because it is deleted and on the undo stack.
@@ -166,18 +169,21 @@ class OperatorOutput {
     this.detached = true
   }
 
+  /**
+   * The reattach method.
+   */
   reattach() {
     this.detached = false
   }
 }
 sgFactory.registerClass('OperatorOutput', OperatorOutput)
 
-/** Class representing an XFO operator output.
+/** Class representing an Xfo operator output.
  * @extends OperatorOutput
  */
 class XfoOperatorOutput extends OperatorOutput {
   /**
-   * Create an XFO operator output.
+   * Create an Xfo operator output.
    * @param {string} name - The name value.
    */
   constructor(name) {
@@ -237,7 +243,7 @@ class Operator extends BaseItem {
   constructor(name) {
     super(name)
 
-    // Items which can be constructed by a user(not loaded in binary data.)
+    // Items which can be constructed by a user (not loaded in binary data).
     // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
 
@@ -271,11 +277,11 @@ class Operator extends BaseItem {
   }
 
   /**
-   * Getter for the number of putputs in this operator.
-   * @return {number} - Returns he number of outputs.
+   * Getter for the number of outputs in this operator.
+   * @return {number} - Returns the number of outputs.
    */
   getNumOutputs() {
-    return this.__outputs.length;
+    return this.__outputs.length
   }
 
   /**

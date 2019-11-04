@@ -304,13 +304,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the mouse pointer is moving while over an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {}
 
   /**
    * Causes an event to occur when a user double clicks a mouse button over an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onDoubleClick(event) {
     if (event.intersectionData) {
@@ -324,7 +324,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the user starts to drag an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onDragStart(event) {
     this.__mouseDownPos = event.mousePos
@@ -343,7 +343,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when an element is being dragged.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onDrag(event) {
     const mousePos = event.mousePos
@@ -381,7 +381,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the user has finished dragging an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    * @return {boolean} - The return value.
    */
   onDragEnd(event) {
@@ -391,7 +391,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
-   * @param {any} event - The event that occurs.
+   * @param {WheelEvent } event - The wheel event that occurs.
    */
   onWheel(event) {
     const { viewport } = event
@@ -439,7 +439,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   /**
    * Causes an event to occurs when the user presses a key on the keyboard.
    * @param {any} key - The key the user presses.
-   * @param {any} event - The event that occurs.
+   * @param {KeyboardEvent} event - The keyboard event that occurs.
    * @return {boolean} - The return value.
    */
   onKeyPressed(key, event) {
@@ -488,7 +488,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   /**
    * Causes an event to occur when the user is pressing a key on the keyboard.
    * @param {any} key - The key the user is pressing.
-   * @param {any} event - The event that occurs.
+   * @param {KeyboardEvent} event - The keyboard event that occurs.
    */
   onKeyDown(key, event) {}
 
@@ -554,7 +554,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the user touches an element on a touch screen.
-   * @param {any} event - The event that occurs.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchStart(event) {
     console.log('onTouchStart')
@@ -573,7 +573,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The event that occurs when the user moves his/her finger across a touch screen.
-   * @param {any} event - The event that occurs.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchMove(event) {
     event.preventDefault()
@@ -617,7 +617,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the user removes his/her finger from an element.
-   * @param {any} event - The event that occurs.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchEnd(event) {
     event.preventDefault()
@@ -637,7 +637,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the touch event gets interrupted.
-   * @param {any} event - The event that occurs.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchCancel(event) {
     event.preventDefault()
@@ -649,7 +649,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * Causes an event to occur when the user double taps an element on a touch screen.
-   * @param {any} event - The event that occurs.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onDoubleTap(event) {
     if (event.intersectionData) {

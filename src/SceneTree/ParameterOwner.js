@@ -1,10 +1,9 @@
-
 import { Signal } from '../Utilities'
 import { RefCounted } from './RefCounted.js'
 import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
-// Note: soon these imports should be removed, once all code avoids calling
+// Note: Soon these imports should be removed, once all code avoids calling
 // 'addPArameter' without the parameter instance.
 import { ParamFlags } from './Parameters/Parameter.js'
 
@@ -90,7 +89,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * This method can be overrridden in derived classes
-   * to perform general updates. (see GLPass or BaseItem)
+   * to perform general updates (see GLPass or BaseItem).
    * @param {any} param - The param param.
    * @param {any} mode - The mode param.
    * @private
@@ -151,21 +150,21 @@ class ParameterOwner extends RefCounted {
    * Remove a parameter.
    * @param {string} paramName - The parameter name.
    */
-  removeParameter(name) {
-    if (this.__paramMapping[name] == undefined) {
-      console.throw('Unable to Remove Parameter:' + name)
+  removeParameter(paramName) {
+    if (this.__paramMapping[paramName] == undefined) {
+      console.throw('Unable to Remove Parameter:' + paramName)
     }
-    const index = this.__paramMapping[name]
-    const param = this.__params[this.__paramMapping[name]]
+    const index = this.__paramMapping[paramName]
+    const param = this.__params[this.__paramMapping[paramName]]
     param.removeRef(this)
-    param.valueChanged.disconnectId(this.__paramSignalIds[name])
+    param.valueChanged.disconnectId(this.__paramSignalIds[paramName])
     this.__params.splice(index, 1)
     const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.parameterRemoved.emit(name)
+    this.parameterRemoved.emit(paramName)
   }
 
   /**
@@ -187,7 +186,6 @@ class ParameterOwner extends RefCounted {
     this.__params[index] = param
     return param
   }
-
 
   // ////////////////////////////////////////
   // Persistence
@@ -300,18 +298,18 @@ class ParameterOwner extends RefCounted {
   copyFrom(src, flags) {
     // Note: Loop over the parameters in reverse order,
     // this is because often, parameter depdenencies
-    // are bottom to top. (bottom params dependent on higher params)
+    // are bottom to top (bottom params dependent on higher params).
     // This means that as a parameter is set with a new value
     // it will dirty the params below it.
-    let i = src.numParameters();
+    let i = src.numParameters()
     while (i--) {
-      const srcParam = src.getParameterByIndex(i);
-      const param = this.getParameter(srcParam.getName());
+      const srcParam = src.getParameterByIndex(i)
+      const param = this.getParameter(srcParam.getName())
       if (param) {
         // Note: we are not cloning the values.
-        param.setValue(srcParam.getValue(), 2);
+        param.setValue(srcParam.getValue(), 2)
       } else {
-        this.addParameter(srcParam.clone());
+        this.addParameter(srcParam.clone())
       }
     }
   }

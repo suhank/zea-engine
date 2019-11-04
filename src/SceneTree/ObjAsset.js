@@ -9,14 +9,9 @@ import { resourceLoader } from './ResourceLoader.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import {
-  ValueSetMode,
-  Parameter,
   BooleanParameter,
   NumberParameter,
   StringParameter,
-  Vec2Parameter,
-  Vec3Parameter,
-  ColorParameter,
   FilePathParameter,
 } from './Parameters'
 
@@ -47,7 +42,7 @@ class ObjAsset extends AssetItem {
     this.addParameter(new StringParameter('defaultShader', ''))
 
     this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
-    this.objfileParam.valueChanged.connect(mode => {
+    this.objfileParam.valueChanged.connect(() => {
       this.loaded.untoggle()
       this.__loadObj(
         () => {
@@ -175,7 +170,7 @@ class ObjAsset extends AssetItem {
     })
 
     const loadMtlFile = mtlFile => {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         loadTextfile(mtlFile.url, fileData => {
           resourceLoader.addWorkDone(stem, 1)
           parseMtlData(fileData)
@@ -193,9 +188,6 @@ class ObjAsset extends AssetItem {
     const geomDatas = {}
 
     const parseObjData = async fileData => {
-      // this.unloadDataFromTree();
-      const filePath = this.objfileParam.getValue()
-
       // performance.mark("parseObjData");
 
       // array of lines separated by the newline
@@ -228,7 +220,6 @@ class ObjAsset extends AssetItem {
       }
       newGeom(stem)
 
-      const splitObjects = this.getParameter('splitObjects').getValue()
       const splitGroupsIntoObjects = this.getParameter(
         'splitGroupsIntoObjects'
       ).getValue()
@@ -343,7 +334,6 @@ class ObjAsset extends AssetItem {
 
     const buildChildItem = (geomName, geomData) => {
       const numVertices = geomData.numVertices
-      const numTris = geomData.numTris
       const mesh = new Mesh(geomName)
       mesh.setFaceCounts([geomData.numTris, geomData.numQuads])
       mesh.setNumVertices(numVertices)

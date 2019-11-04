@@ -1,5 +1,3 @@
-import { Signal } from '../../Utilities'
-
 const CommandFlags = {
   DISABLED: 1 << 2,
 }

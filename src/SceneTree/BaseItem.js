@@ -52,8 +52,8 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The __parameterValueChanged method.
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   * @param {any} param - The param value.
+   * @param {number} mode - The mode value.
    * @private
    */
   __parameterValueChanged(param, mode) {
@@ -80,6 +80,7 @@ class BaseItem extends ParameterOwner {
   /**
    * Sets the name of the base item.
    * @param {string} name - The base item name.
+   * @param {number} mode - The mode value
    */
   setName(name, mode = ValueSetMode.USER_SETVALUE) {
     if (this.__name != name) {
@@ -124,7 +125,7 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The clearFlag method.
-   * @param {number} flag - the flag param.
+   * @param {number} flag - the flag value.
    */
   clearFlag(flag) {
     this.__flags &= ~flag
@@ -146,7 +147,7 @@ class BaseItem extends ParameterOwner {
    * The resolvePath method traverses the subtree from this item down
    * matching each name in the path with a child until it reaches the
    * end of the path.
-   * @param {any} path - The path valie.
+   * @param {any} path - The path value.
    * @param {number} index - The index value.
    * @return {any} - The return value.
    */
@@ -229,7 +230,7 @@ class BaseItem extends ParameterOwner {
   /**
    * The isSelected method.
    * @deprecated
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isSelected() {
     return this.__selected
@@ -248,8 +249,8 @@ class BaseItem extends ParameterOwner {
    * @param {boolean} sel - Boolean indicating the new selection state.
    */
   setSelected(sel) {
-    this.__selected = sel;
-    this.selectedChanged.emit(this.__selected);
+    this.__selected = sel
+    this.selectedChanged.emit(this.__selected)
   }
 
   // ////////////////////////////////////////
@@ -343,14 +344,6 @@ class BaseItem extends ParameterOwner {
     super.readBinary(reader, context)
   }
 
-  /**
-   * The destroy is called by the system to cause explicit resources cleanup.
-   * Users should never need to call this method directly..
-   */
-  destroy() {
-    super.destroy()
-  }
-
   // ////////////////////////////////////////
   // Clone and Destroy
 
@@ -362,7 +355,7 @@ class BaseItem extends ParameterOwner {
   clone(flags) {
     throw new Error(
       this.constructor.name + ' does not implment its clone method'
-    );
+    )
   }
 
   /**
@@ -377,8 +370,8 @@ class BaseItem extends ParameterOwner {
    * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
-    this.setName(src.getName());
+    super.copyFrom(src, flags)
+    this.setName(src.getName())
   }
 
   /**
@@ -386,7 +379,7 @@ class BaseItem extends ParameterOwner {
    * Users should never need to call this method directly.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
   }
 }
 

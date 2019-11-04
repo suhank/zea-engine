@@ -1,4 +1,4 @@
-import { ParamFlags, ValueSetMode } from './Parameter.js'
+import { ParamFlags } from './Parameter.js'
 
 import { ListParameter } from './ListParameter.js'
 import { TreeItemParameter } from './TreeItemParameter.js'
@@ -58,7 +58,7 @@ class KinematicGroupParameter extends ListParameter {
    * @param {number} mode - The mode value.
    * @return {any} - The return value.
    */
-  getXfo(mode = 0) {
+  getXfo() {
     if (this.__value.length > 0) return this.__value[0].getGlobalXfo((mode = 0))
   }
 
@@ -142,7 +142,7 @@ class KinematicGroupParameter extends ListParameter {
           this.__value.push(treeItem)
           this.elementAdded.emit(treeItem, this.__value.length - 1)
         },
-        reason => {
+        () => {
           console.warn(
             'Unable to resolve Kinematic Group Member:' + pj.paramPath
           )
@@ -165,8 +165,8 @@ class KinematicGroupParameter extends ListParameter {
       this.__name,
       clonedValue,
       this.__dataType
-    );
-    return clonedParam;
+    )
+    return clonedParam
   }
 
   /**

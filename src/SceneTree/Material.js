@@ -1,7 +1,6 @@
 import { Vec2, Vec3, Color } from '../Math'
 import { Signal } from '../Utilities'
 import { BaseItem } from './BaseItem.js'
-import { BaseImage } from './BaseImage.js'
 import { sgFactory } from './SGFactory.js'
 import {
   Parameter,
@@ -320,9 +319,9 @@ class Material extends BaseItem {
    * @return {Material} - Returns a new cloned material.
    */
   clone(flags) {
-    const cloned = new Material();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new Material()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 
   /**
@@ -331,11 +330,11 @@ class Material extends BaseItem {
    * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
-    this.setShaderName(src.getShaderName());
+    super.copyFrom(src, flags)
+    this.setShaderName(src.getShaderName())
     for (const srcParam of src.getParameters()) {
-      const param = src.getParameter(srcParam.getName());
-      if (!srcParam.getImage) this.__makeParameterTexturable(param);
+      const param = src.getParameter(srcParam.getName())
+      if (!srcParam.getImage) this.__makeParameterTexturable(param)
     }
   }
 
@@ -344,9 +343,8 @@ class Material extends BaseItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.removeAllTextures();
-    super.destroy();
+    this.removeAllTextures()
+    super.destroy()
   }
 }
 export { Material }
-// Material;

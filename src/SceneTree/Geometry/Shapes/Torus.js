@@ -119,7 +119,7 @@ class Torus extends Mesh {
     }
 
     // ////////////////////////////
-    // build the topology and texCoords
+    // Build the topology and texCoords
     const texCoords = this.getVertexAttribute('texCoords')
     let faceIndex = 0
     for (let i = 0; i < nbLoops; i++) {
@@ -166,12 +166,7 @@ class Torus extends Mesh {
   __resize() {
     const nbSlices = this.__detail
     const nbLoops = this.__detail * 2
-    const numVertices = nbSlices * nbLoops
 
-    // ////////////////////////////
-    // Set Vertex Positions
-
-    const normals = this.getVertexAttribute('normals')
     const vertex = 0
     for (let i = 0; i < nbLoops; i++) {
       const theta = (i / nbLoops) * 2.0 * Math.PI

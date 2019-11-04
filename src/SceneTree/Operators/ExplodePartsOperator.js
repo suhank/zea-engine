@@ -262,8 +262,12 @@ class ExplodePartsOperator extends Operator {
     super.fromJSON(j, context, flags)
   }
 
+  // ////////////////////////////////////////
+  // Destroy
+
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     clearTimeout(this.__timeoutId)

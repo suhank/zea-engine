@@ -1,5 +1,3 @@
-import { Vec2 } from '../../../Math/Vec2'
-import { Vec3 } from '../../../Math/Vec3'
 import { Lines } from '../Lines.js'
 
 import { BooleanParameter, NumberParameter } from '../../Parameters'
@@ -117,9 +115,9 @@ class Grid extends Lines {
    * @param {number} x - The length along the X axis.
    * @param {number} y - The length along the Y axis.
    */
-  setSize(x, z) {
+  setSize(x, y) {
     this.__x = x
-    this.__y = z
+    this.__y = y
     this.__resize()
   }
 

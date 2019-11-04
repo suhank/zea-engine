@@ -20,7 +20,7 @@ class Scene {
     if (resources) {
       resourceLoader.setResources(resources)
     }
-    this.settings = new SceneSettings('Scene Settings');
+    this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')
     this.root.addRef(this)
     this.root.addChild(this.settings)
@@ -50,14 +50,24 @@ class Scene {
     return resourceLoader
   }
 
-  setEnvMap(envMap){
-    console.warn("Deprecated Function. Please access the Scene Settings object.")
-    this.settings.getParameter('EnvMap').setValue(envMap);
+  /**
+   * The setEnvMap method.
+   * @param {any} envMap - The envMap value.
+   */
+  setEnvMap(envMap) {
+    console.warn(
+      'Deprecated Function. Please access the Scene Settings object.'
+    )
+    this.settings.getParameter('EnvMap').setValue(envMap)
   }
 
-  addAsset(asset){
-    console.warn("Deprecated Function. Please access the Scene Root object.")
-    this.root.addChild(asset);
+  /**
+   * The addAsset method.
+   * @param {any} asset - The asset value.
+   */
+  addAsset(asset) {
+    console.warn('Deprecated Function. Please access the Scene Root object.')
+    this.root.addChild(asset)
   }
   /**
    * Set up the scene grid.
@@ -109,10 +119,23 @@ class Scene {
   // Persistence
 
   /**
-   * The fromJSON method.
-   * @param {object} json - The json param.
-   * @param {object} context - The context param.
-   *
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
+   */
+  toJSON(context = {}, flags = 0) {
+    context.makeRelative = path => path
+    const json = {
+      root: this.root.toJSON(context, flags),
+    }
+    return json
+  }
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} json - The json object this item must decode.
+   * @param {object} context - The context value.
    */
   fromJSON(json, context = {}) {
     const plcbs = [] // Post load callbacks.
@@ -149,20 +172,6 @@ class Scene {
     // Invoke all the post-load callbacks to resolve any
     // remaning references.
     for (const cb of plcbs) cb()
-  }
-
-  /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  toJSON(context = {}, flags = 0) {
-    context.makeRelative = path => path
-    const json = {
-      root: this.root.toJSON(context, flags),
-    }
-    return json
   }
 }
 

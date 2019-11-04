@@ -1,30 +1,17 @@
-import { Vec2, Vec3, Color } from '../../Math'
-import { Signal, decodeText } from '../../Utilities'
+import { Vec2, Vec3 } from '../../Math'
+import { decodeText } from '../../Utilities'
 import { sgFactory } from '../SGFactory.js'
 import { VLHImage } from './VLHImage.js'
-import { resourceLoader } from '../ResourceLoader.js'
-
-import {
-  Parameter,
-  NumberParameter,
-  Vec4Parameter,
-  FilePathParameter,
-  ParameterSet,
-} from '../Parameters'
 
 const EnvMapMapping = {
   LATLONG: 1,
   OCTAHEDRAL: 2,
 }
 
-const sq = x => x * x
 const step = (edge, x) => (x < edge ? 0.0 : 1.0)
 
 function sum_vec2(value) {
   return value.dot(new Vec2(1.0, 1.0))
-}
-function sum_vec3(value) {
-  return value.dot(new Vec3(1.0, 1.0, 1.0))
 }
 function abs_vec2(value) {
   return new Vec2(Math.abs(value.x), Math.abs(value.y))
@@ -119,7 +106,7 @@ function sphOctUvToDir(uv) {
   return new Vec3(sOrient * suv.x * sPitch, cOrient * suv.y * sPitch, cPitch)
 }
 
-/** Class representing an env map.
+/** Class representing an environment map.
  * @extends VLHImage
  */
 class EnvMap extends VLHImage {
@@ -136,7 +123,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The __decodeData method.
-   * @param {any} entries - The entries param.
+   * @param {any} entries - The entries value.
    * @private
    */
   __decodeData(entries) {
@@ -166,7 +153,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The uvToDir method.
-   * @param {any} uv - The uv param.
+   * @param {any} uv - The uv value.
    * @return {any} - The return value.
    */
   uvToDir(uv) {
@@ -182,7 +169,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The dirToUv method.
-   * @param {any} dir - The dir param.
+   * @param {any} dir - The dir value.
    * @return {any} - The return value.
    */
   dirToUv(dir) {
@@ -198,7 +185,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The uvToLuminance method.
-   * @param {any} uv - The uv param.
+   * @param {any} uv - The uv value.
    * @return {any} - The return value.
    */
   uvToLuminance(uv) {
@@ -210,7 +197,7 @@ class EnvMap extends VLHImage {
 
   /**
    * The dirToLuminance method.
-   * @param {any} dir - The dir param.
+   * @param {any} dir - The dir value.
    * @return {any} - The return value.
    */
   dirToLuminance(dir) {

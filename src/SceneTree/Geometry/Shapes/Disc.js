@@ -2,7 +2,7 @@ import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 
-import { BooleanParameter, NumberParameter } from '../../Parameters'
+import { NumberParameter } from '../../Parameters'
 import { sgFactory } from '../../SGFactory.js'
 
 /** A class for generating a disc geometry.
@@ -72,7 +72,7 @@ class Disc extends Mesh {
     this.getVertex(0).set(0.0, 0.0, 0.0)
 
     // ////////////////////////////
-    // build the topology
+    // Build the topology
     for (let j = 0; j < nbSides; j++) {
       const v1 = (j % nbSides) + 1
       const v2 = ((j + 1) % nbSides) + 1
@@ -101,7 +101,7 @@ class Disc extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    this.__resize(-1)
+    this.__resize()
   }
 
   /**
@@ -109,7 +109,7 @@ class Disc extends Mesh {
    * @param {number} mode - The mode value.
    * @private
    */
-  __resize(mode) {
+  __resize() {
     const nbSides = this.__sidesParam.getValue()
     const radius = this.__radiusParam.getValue()
     for (let i = 0; i < nbSides; i++) {

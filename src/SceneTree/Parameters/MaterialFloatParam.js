@@ -1,6 +1,5 @@
 import { Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory'
-import { Parameter, ValueSetMode } from './Parameter.js'
 import { NumberParameter } from './NumberParameter.js'
 
 import { BaseImage } from '../BaseImage.js'
@@ -104,8 +103,8 @@ class MaterialFloatParam extends NumberParameter {
     const clonedParam = new MaterialFloatParam(
       this.__name,
       this.__value.clone()
-    );
-    return clonedParam;
+    )
+    return clonedParam
   }
 }
 

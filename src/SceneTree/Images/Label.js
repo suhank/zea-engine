@@ -1,5 +1,4 @@
 import { Color } from '../../Math'
-import { Signal, Async } from '../../Utilities'
 import {
   BooleanParameter,
   NumberParameter,
@@ -128,7 +127,9 @@ class Label extends DataImage {
     this.addParameter(new BooleanParameter('fillBackground', true))
     this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
     const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
-    const fontParam = this.addParameter(new StringParameter('font', 'Helvetica'))
+    const fontParam = this.addParameter(
+      new StringParameter('font', 'Helvetica')
+    )
 
     const reload = () => {
       this.loadLabelData()
@@ -139,11 +140,14 @@ class Label extends DataImage {
     fontParam.valueChanged.connect(reload)
 
     if (library) libraryParam.setValue(library)
-    
-    this.__needsRender = false;
-    this.loadLabelData();
+
+    this.__needsRender = false
+    this.loadLabelData()
   }
 
+  /**
+   * The loadLabelData method.
+   */
   loadLabelData() {
     const onLoaded = () => {
       this.__needsRender = true
@@ -304,10 +308,10 @@ class Label extends DataImage {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
@@ -315,10 +319,10 @@ class Label extends DataImage {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)

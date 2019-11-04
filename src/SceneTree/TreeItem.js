@@ -33,7 +33,7 @@ const CloneFlags = {
 // )
 // branchSelectionOutlineColor.a = 0.1
 
-/** Class representing an item in the scene tree.
+/** Class representing a tree item in the scene tree.
  * @extends BaseItem
  */
 class TreeItem extends BaseItem {
@@ -123,7 +123,7 @@ class TreeItem extends BaseItem {
    * @return {any} - The return value.
    */
   static get SaveFlags() {
-    return SaveFlags;
+    return SaveFlags
   }
 
   /**
@@ -131,7 +131,7 @@ class TreeItem extends BaseItem {
    * @return {any} - The return value.
    */
   static get LoadFlags() {
-    return LoadFlags;
+    return LoadFlags
   }
 
   /**
@@ -139,7 +139,7 @@ class TreeItem extends BaseItem {
    * @return {any} - The return value.
    */
   static get CloneFlags() {
-    return CloneFlags;
+    return CloneFlags
   }
 
   /**
@@ -147,7 +147,7 @@ class TreeItem extends BaseItem {
    * @return {Color} - Returns a color.
    */
   static getSelectionOutlineColor() {
-    return selectionOutlineColor;
+    return selectionOutlineColor
   }
 
   /**
@@ -155,7 +155,7 @@ class TreeItem extends BaseItem {
    * @param {Color} color - The color value.
    */
   static setSelectionOutlineColor(color) {
-    selectionOutlineColor = color;
+    selectionOutlineColor = color
   }
 
   /**
@@ -163,7 +163,7 @@ class TreeItem extends BaseItem {
    * @return {Color} - Returns a color.
    */
   static getBranchSelectionOutlineColor() {
-    return branchSelectionOutlineColor;
+    return branchSelectionOutlineColor
   }
 
   /**
@@ -171,7 +171,7 @@ class TreeItem extends BaseItem {
    * @param {Color} color - The color value.
    */
   static setBranchSelectionOutlineColor(color) {
-    branchSelectionOutlineColor = color;
+    branchSelectionOutlineColor = color
   }
 
   // ////////////////////////////////////////
@@ -270,6 +270,7 @@ class TreeItem extends BaseItem {
   /**
    * Sets the local Xfo transform.
    * @param {Xfo} xfo - The local xfo transform.
+   * @param {number} mode - The mode value.
    */
   setLocalXfo(xfo, mode) {
     this.__localXfoParam.setValue(xfo, mode)
@@ -450,7 +451,7 @@ class TreeItem extends BaseItem {
   /**
    * The _cleanBoundingBox method.
    * @param {Box3} bbox - The bounding box value.
-   * @return {any} - The return value.
+   * @return {Box3} - The return value.
    * @private
    */
   _cleanBoundingBox(bbox) {
@@ -490,7 +491,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getChildren method.
-   * @return {object} - The return value.
+   * @return {TreeItem} - The return value.
    */
   getChildren() {
     return this.__childItems
@@ -499,7 +500,7 @@ class TreeItem extends BaseItem {
   /**
    * The numChildren method.
    * @deprecated since version 0.0.80
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   numChildren() {
     console.warn('Deprecated method. Please use getNumChildren')
@@ -508,7 +509,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getNumChildren method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getNumChildren() {
     return this.__childItems.length
@@ -576,8 +577,8 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Insert a child tree item.
-   * @param {object} childItem - The child TreeItem.
+   * Insert a child TreeItem.
+   * @param {object} childItem - The child TreeItem to insert.
    * @param {number} index - The index to add the child item.
    * @param {boolean} maintainXfo - Boolean that determines if the Xfo value is maintained.
    * @param {boolean} fixCollisions - Modify the name of the item to avoid name collisions.
@@ -589,14 +590,18 @@ class TreeItem extends BaseItem {
       if (fixCollisions) {
         childItem.setName(this.generateUniqueName(childItem.getName()))
       } else {
-        throw "Item '" +
-          childItem.getName() +
-          "' is already a child of :" +
-          this.getPath()
+        throw new Error(
+          "Item '" +
+            childItem.getName() +
+            "' is already a child of :" +
+            this.getPath()
+        )
       }
     }
     if (!(childItem instanceof BaseItem))
-      throw 'Object is is not a tree item :' + childItem.constructor.name
+      throw new Error(
+        'Object is is not a tree item :' + childItem.constructor.name
+      )
 
     if (childItem.isDestroyed())
       throw new Error('childItem is destroyed:' + childItem.getPath())
@@ -644,9 +649,9 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Add a child tree item.
-   * @param {object} childItem - The child TreeItem.
-   * @param {boolean} maintainXfo - The maintainXfo value.
+   * Add a child TreeItem..
+   * @param {TreeItem} childItem - The child TreeItem to add.
+   * @param {boolean} maintainXfo - Boolean that determines if the Xfo value is maintained.
    * @param {boolean} fixCollisions - Modify the name of the item to avoid name collisions.
    * If false, an exception wll be thrown instead if a name collision occurs.
    * @return {number} - The index of the child item in this items children array.
@@ -659,8 +664,8 @@ class TreeItem extends BaseItem {
 
   /**
    * The getChild method.
-   * @param {number} index - The index to remove the child item.
-   * @return {object} - Return the child TreeItem.
+   * @param {number} index - The index to remove the child TreeItem.
+   * @return {TreeItem} - Return the child TreeItem.
    */
   getChild(index) {
     return this.__childItems[index]
@@ -669,7 +674,7 @@ class TreeItem extends BaseItem {
   /**
    * The getChildByName method.
    * @param {string} name - The name value.
-   * @return {object} - Return the child TreeItem.
+   * @return {TreeItem} - Return the child TreeItem.
    */
   getChildByName(name) {
     const index = this.__childItemsMapping[name]
@@ -724,7 +729,7 @@ class TreeItem extends BaseItem {
   /**
    * The removeChildByName method.
    * @param {string} name - The name param.
-   * @return {object} - The child TreeItem.
+   * @return {TreeItem} - Return the child TreeItem.
    */
   removeChildByName(name) {
     const index = this.__childItemsMapping[name]
@@ -736,7 +741,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Remove a child tree item by handle.
-   * @param {object} childItem - The childItem to remove.
+   * @param {objTreeItemect} childItem - The child TreeItem to remove.
    */
   removeChildByHandle(childItem) {
     console.warn('Deprecated method. Please use removeChild')
@@ -749,7 +754,7 @@ class TreeItem extends BaseItem {
   }
 
   /**
-   * Remove all child tree items.
+   * Remove all child TreeItems.
    */
   removeAllChildren() {
     let index = this.__childItems.length
@@ -761,7 +766,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getChildIndex method.
-   * @param {object} childItem - The childItem value.
+   * @param {TreeItem} childItem - The child TreeItem value.
    * @return {object} - The return value.
    */
   getChildIndex(childItem) {
@@ -770,7 +775,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The indexOfChild method.
-   * @param {object} childItem - The childItem value.
+   * @param {object} childItem - The child TreeItem value.
    * @return {any} - The return value.
    */
   indexOfChild(childItem) {
@@ -796,7 +801,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Remove a component.
-   * @param {string} name - The name value..
+   * @param {string} name - The name value.
    * @return {any} - The return value.
    */
   removeComponent(name) {
@@ -828,7 +833,7 @@ class TreeItem extends BaseItem {
 
   /**
    * The getComponent method.
-   * @param {string} name - The name vLue.
+   * @param {string} name - The name value.
    * @return {any} - The return value.
    */
   getComponent(name) {
@@ -916,7 +921,7 @@ class TreeItem extends BaseItem {
     const __c = (treeItem, depth) => {
       const children = treeItem.getChildren()
       for (const childItem of children) {
-        if (childItem) __t(childItem, depth+1)
+        if (childItem) __t(childItem, depth + 1)
       }
     }
     const __t = (treeItem, depth) => {
@@ -932,7 +937,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when a user presses a mouse button over an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
     this.mouseDown.emit(event)
@@ -943,7 +948,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when a user releases a mouse button over a element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseUp(event) {
     this.mouseUp.emit(event)
@@ -954,7 +959,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse pointer is moving while over an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {
     this.mouseMove.emit(event)
@@ -965,7 +970,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse pointer is moved onto an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseEnter(event) {
     if (event.propagating && this.__ownerItem) {
@@ -975,7 +980,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse pointer is moved out of an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseLeave(event) {
     if (event.propagating && this.__ownerItem) {
@@ -985,7 +990,7 @@ class TreeItem extends BaseItem {
 
   /**
    * Causes an event to occur when the mouse wheel is rolled up or down over an element.
-   * @param {any} event - The event that occurs.
+   * @param {WheelEvent } event - The wheel event that occurs.
    */
   onWheel(event) {
     if (event.propagating && this.__ownerItem) {
@@ -1217,9 +1222,9 @@ class TreeItem extends BaseItem {
    * @return {TreeItem} - Returns a new cloned tree item.
    */
   clone(flags) {
-    const cloned = new TreeItem();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new TreeItem()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 
   /**
@@ -1228,7 +1233,7 @@ class TreeItem extends BaseItem {
    * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
+    super.copyFrom(src, flags)
 
     // Share a local Xfo
     // Note: disabled for now.
@@ -1240,13 +1245,13 @@ class TreeItem extends BaseItem {
     //     this.__localXfoParam = this.replaceParameter(src.getParameter('LocalXfo'));
 
     src.getChildren().forEach(srcChildItem => {
-      if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false);
+      if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
       //     src.childAdded.connect((childItem, index)=>{
       //         this.addChild(childItem.clone(flags));
       //     })
       // }
-    });
+    })
   }
 
   /**
@@ -1254,8 +1259,8 @@ class TreeItem extends BaseItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.removeAllChildren();
-    super.destroy();
+    this.removeAllChildren()
+    super.destroy()
   }
 }
 

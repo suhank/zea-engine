@@ -1,10 +1,5 @@
 import { Signal } from '../../Utilities'
-import {
-  ParamFlags,
-  ValueSetMode,
-  Parameter,
-  ListParameter,
-} from './Parameter.js'
+import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a tree item parameter.
  * @extends Parameter
@@ -41,7 +36,7 @@ class TreeItemParameter extends Parameter {
    * The setFilterFn method.
    * @param {any} flterFn - The flterFn value.
    */
-  setFilterFn(flterFn) {
+  setFilterFn() {
     this.__filterFn = filterFn
   }
 
@@ -118,7 +113,7 @@ class TreeItemParameter extends Parameter {
       treeItem => {
         this.setValue(treeItem)
       },
-      reason => {
+      () => {
         console.warn(
           'Unable to resolve tree item parameter value:' + pj.paramPath
         )
@@ -137,8 +132,8 @@ class TreeItemParameter extends Parameter {
    * @return {TreeItemParameter} - Returns a new tree item parameter.
    */
   clone(flags) {
-    const clonedParam = new TreeItemParameter(this.__name, this.__filterFn);
-    return clonedParam;
+    const clonedParam = new TreeItemParameter(this.__name, this.__filterFn)
+    return clonedParam
   }
 
   /**

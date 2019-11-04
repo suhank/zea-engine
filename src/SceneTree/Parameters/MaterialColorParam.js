@@ -1,7 +1,5 @@
-import { Color } from '../../Math'
 import { Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory'
-import { Parameter, ValueSetMode } from './Parameter.js'
 import { ColorParameter } from './ColorParameter.js'
 
 import { BaseImage } from '../BaseImage.js'
@@ -107,8 +105,8 @@ class MaterialColorParam extends ColorParameter {
     const clonedParam = new MaterialColorParam(
       this.__name,
       this.__value.clone()
-    );
-    return clonedParam;
+    )
+    return clonedParam
   }
 }
 

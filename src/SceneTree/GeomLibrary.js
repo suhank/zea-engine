@@ -1,6 +1,5 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Signal } from '../Utilities'
-import { Mesh } from './Geometry/Mesh.js'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
@@ -41,7 +40,7 @@ class GeomLibrary {
 
   /**
    * The __constructWorker method.
-   * @return {any} - The return value.
+   * @return {GeomParserWorker} - Returns a GeomParserWorker.
    * @private
    */
   __constructWorker() {
@@ -101,7 +100,6 @@ class GeomLibrary {
    * @param {any} fileUrl - The fileUrl value.
    */
   loadUrl(fileUrl) {
-    const onLoad = this.loadBin
     loadBinfile(
       fileUrl,
       data => {

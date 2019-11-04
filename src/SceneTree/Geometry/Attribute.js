@@ -1,9 +1,8 @@
 import { Float32, UInt32, SInt32 } from '../../Math'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
 
-function isTypedArray(obj)
-{
-    return !!obj && obj.byteLength !== undefined;
+function isTypedArray(obj) {
+  return !!obj && obj.byteLength !== undefined
 }
 
 /** Class representing an attribute. */
@@ -76,6 +75,7 @@ class Attribute {
 
   /**
    * Getter for length.
+   * @return {any} - The return value.
    */
   get length() {
     return this.__data.length / this.__dimension
@@ -83,6 +83,7 @@ class Attribute {
 
   /**
    * Getter for data.
+   * @return {any} - The return value.
    */
   get dataType() {
     return this.__dataType
@@ -90,6 +91,7 @@ class Attribute {
 
   /**
    * Getter for data.
+   * @return {any} - The return value.
    */
   get data() {
     return this.__data
@@ -97,6 +99,7 @@ class Attribute {
 
   /**
    * Setter for data.
+   * @param {any} data - The data value.
    */
   set data(data) {
     this.__data = data
@@ -104,6 +107,7 @@ class Attribute {
 
   /**
    * Getter for numElements.
+   * @return {any} - The return value.
    */
   get numElements() {
     return this.__dimension

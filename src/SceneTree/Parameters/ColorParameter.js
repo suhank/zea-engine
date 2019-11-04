@@ -36,8 +36,8 @@ class ColorParameter extends Parameter {
    * @return {ColorParameter} - Returns a new cloned color parameter.
    */
   clone(flags) {
-    const clonedParam = new ColorParameter(this.__name, this.__value.clone());
-    return clonedParam;
+    const clonedParam = new ColorParameter(this.__name, this.__value.clone())
+    return clonedParam
   }
 }
 

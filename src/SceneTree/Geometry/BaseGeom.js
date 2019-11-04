@@ -6,8 +6,8 @@ import { sgFactory } from '../SGFactory.js'
 
 // Defines used to explicity specify types for WebGL.
 const SAVE_FLAG_SKIP_GEOMDATA = 1 << 10
-function isTypedArray(obj){
-    return !!obj && obj.byteLength !== undefined;
+function isTypedArray(obj) {
+  return !!obj && obj.byteLength !== undefined
 }
 
 /** Class representing a base geometry.
@@ -32,7 +32,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The setDebugName method.
-   * @param {string} name - The name value.
+   * @param {string} name - The debug name value.
    */
   setDebugName(name) {
     this.__name = name
@@ -99,7 +99,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The numVertices method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   numVertices() {
     return this.vertices.length
@@ -115,7 +115,7 @@ class BaseGeom extends ParameterOwner {
 
   /**
    * The setNumVertices method.
-   * @param {number} count - The count param.
+   * @param {number} count - The count value.
    */
   setNumVertices(count) {
     // If this works, remove the old version.
@@ -529,4 +529,3 @@ class BaseGeom extends ParameterOwner {
   }
 }
 export { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA }
-// BaseGeom;

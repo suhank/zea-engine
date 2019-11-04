@@ -8,7 +8,7 @@ import { materialLibraryManager } from '../MaterialLibraryManager.js'
 class MaterialParameter extends Parameter {
   /**
    * Create a material parameter.
-   * @param {string} name - The name of the material color parameter.
+   * @param {string} name - The name of the material parameter.
    * @param {any} value - The value of the parameter.
    */
   constructor(name, value) {
@@ -95,8 +95,8 @@ class MaterialParameter extends Parameter {
    * @return {MaterialParameter} - Returns a new material parameter.
    */
   clone(flags) {
-    const clonedParam = new MaterialParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new MaterialParameter(this.__name, this.__value)
+    return clonedParam
   }
 
   /**

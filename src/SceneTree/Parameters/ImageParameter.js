@@ -51,14 +51,14 @@ class ImageParameter extends Parameter {
   // Clone
 
   /**
-   * The clone method constructs a new boolean parameter,
+   * The clone method constructs a new image parameter,
    * copies its values from this parameter and returns it.
    * @param {number} flags - The flags value.
    * @return {ImageParameter} - Returns a new cloned image parameter.
    */
   clone(flags) {
-    const clonedParam = new ImageParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new ImageParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 

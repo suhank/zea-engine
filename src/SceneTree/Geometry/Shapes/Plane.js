@@ -38,7 +38,7 @@ class Plane extends Mesh {
   }
 
   /**
-   * Getter for x.
+   * Getter for X.
    * Is deprectated. Please use "getX".
    * @return {number} - Returns the length.
    */
@@ -48,7 +48,7 @@ class Plane extends Mesh {
   }
 
   /**
-   * Setter for x.
+   * Setter for X.
    * Is deprectated. Please use "setX".
    * @param {number} val - The length along the X axis.
    */
@@ -58,7 +58,7 @@ class Plane extends Mesh {
   }
 
   /**
-   * Getter for y.
+   * Getter for Y.
    * Is deprectated. Please use "getY".
    * @return {number} - Returns the length.
    */
@@ -68,7 +68,7 @@ class Plane extends Mesh {
   }
 
   /**
-   * Setter for y.
+   * Setter for Y.
    * Is deprectated. Please use "setY".
    * @param {number} val - The length along the Y axis.
    */

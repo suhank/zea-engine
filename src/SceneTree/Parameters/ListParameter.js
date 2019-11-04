@@ -159,10 +159,10 @@ class ListParameter extends Parameter {
    * @return {ListParameter} - Returns a new list parameter.
    */
   clone(flags) {
-    const clonedValue = this.__value.slice(0);
-    const clonedParam = new ListParameter(this.__name, this.__dataType);
-    clonedParam.setValue(clonedValue);
-    return clonedParam;
+    const clonedValue = this.__value.slice(0)
+    const clonedParam = new ListParameter(this.__name, this.__dataType)
+    clonedParam.setValue(clonedValue)
+    return clonedParam
   }
 
   /**

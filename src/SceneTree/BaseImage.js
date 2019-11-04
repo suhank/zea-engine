@@ -1,13 +1,7 @@
-import { Vec4 } from '../Math'
 import { Signal } from '../Utilities'
 import { BaseItem } from './BaseItem.js'
 
-import {
-  Parameter,
-  BooleanParameter,
-  NumberParameter,
-  ParameterSet,
-} from './Parameters'
+import { BooleanParameter } from './Parameters'
 
 /** Class representing a base image in the scene tree.
  * @extends BaseItem
@@ -18,7 +12,7 @@ class BaseImage extends BaseItem {
    * @param {string} name - The name of the base image.
    * @param {any} params - The parameters of the base image.
    */
-  constructor(name, params = {}) {
+  constructor(name) {
     super(name)
     this.width = 0
     this.height = 0
@@ -31,7 +25,7 @@ class BaseImage extends BaseItem {
 
     this.updated = this.parameterValueChanged
 
-    // Note: many parts of the code assume a 'loaded' signal.
+    // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     // Instead we should start using a loaded Promise.
     this.loaded = new Signal(true)

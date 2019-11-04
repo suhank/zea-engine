@@ -47,7 +47,11 @@ class Camera extends TreeItem {
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
-    this.setPositionAndTarget(new Vec3(3, 3, 1.75), new Vec3(0, 0, 1), ValueSetMode.GENERATED_VALUE)
+    this.setPositionAndTarget(
+      new Vec3(3, 3, 1.75),
+      new Vec3(0, 0, 1),
+      ValueSetMode.GENERATED_VALUE
+    )
     this.setLensFocalLength('28mm', ValueSetMode.GENERATED_VALUE)
   }
 
@@ -56,7 +60,7 @@ class Camera extends TreeItem {
 
   /**
    * The getNear method.
-   * @return {any} - The return value.
+   * @return {number} - Returns the near value.
    */
   getNear() {
     return this.__nearParam.getValue()
@@ -64,7 +68,7 @@ class Camera extends TreeItem {
 
   /**
    * The setNear method.
-   * @param {any} value - The value param.
+   * @param {number} value - The near value.
    */
   setNear(value) {
     this.__nearParam.setValue(value)
@@ -72,7 +76,7 @@ class Camera extends TreeItem {
 
   /**
    * The getFar method.
-   * @return {any} - The return value.
+   * @return {number} - Returns the far value.
    */
   getFar() {
     return this.__farParam.getValue()
@@ -80,7 +84,7 @@ class Camera extends TreeItem {
 
   /**
    * The setFar method.
-   * @param {any} value - The value param.
+   * @param {number} value - The far value.
    */
   setFar(value) {
     this.__farParam.setValue(value)
@@ -89,7 +93,7 @@ class Camera extends TreeItem {
   /**
    * Getter for the camera field of view (FOV).
    * The FOV is how much of the scene the camera can see at once.
-   * @return {any} - The return value.
+   * @return {number} - Returns the FOV value.
    */
   getFov() {
     return this.__fovParam.getValue()
@@ -98,7 +102,7 @@ class Camera extends TreeItem {
   /**
    * Setter for the camera field of view (FOV).
    * The FOV is how much of the scene the camera can see at once.
-   * @param {any} value - The value param.
+   * @param {number} value - The FOV value.
    */
   setFov(value) {
     this.__fovParam.setValue(value)
@@ -106,7 +110,8 @@ class Camera extends TreeItem {
 
   /**
    * Setter for the camera lens focal length.
-   * @param {any} value - The value param.
+   * @param {number} value - The lens focal length value.
+   * @param {number} mode - The mode value.
    */
   setLensFocalLength(value, mode = ValueSetMode.USER_SETVALUE) {
     // https://www.nikonians.org/reviews/fov-tables
@@ -157,7 +162,7 @@ class Camera extends TreeItem {
 
   /**
    * Getter for the camera focal length.
-   * @return {any} - The return value.
+   * @return {any} - Returns the lens focal length value..
    */
   getFocalDistance() {
     return this.__focalDistanceParam.getValue()
@@ -165,7 +170,7 @@ class Camera extends TreeItem {
 
   /**
    * Setter for the camera focal length.
-   * @param {any} dist - The distance value.
+   * @param {number} dist - The focal distance value.
    * @param {number} mode - The mode value.
    */
   setFocalDistance(dist, mode = ValueSetMode.USER_SETVALUE) {
@@ -240,6 +245,7 @@ class Camera extends TreeItem {
    * The frameView method.
    * @param {any} viewport - The viewport value.
    * @param {any} treeItems - The treeItems value.
+   * @param {number} mode - The mode value.
    */
   frameView(viewport, treeItems, mode = ValueSetMode.USER_SETVALUE) {
     const boundingBox = new Box3()

@@ -1,7 +1,6 @@
 import { Color, Vec3 } from '../Math'
 import {
   ValueSetMode,
-  Parameter,
   BooleanParameter,
   NumberParameter,
   ColorParameter,
@@ -57,7 +56,7 @@ class BillboardItem extends TreeItem {
       updateLinePoints(index)
       this.addChild(line, false)
     })
-    endParam.elementRemoved.connect((elem, index) => {
+    endParam.elementRemoved.connect(() => {
       // this.removeChildByHandle(lines[index]);
       // lines.splice(9, 1)
     })

@@ -114,7 +114,7 @@ class GeomItem extends BaseGeomItem {
   /**
    * Setter for material.
    * @param {Material} material - The material value.
-   * @param {any} mode - The mode value.
+   * @param {number} mode - The mode value.
    */
   setMaterial(material, mode) {
     this.__materialParam.setValue(material, mode)
@@ -303,9 +303,9 @@ class GeomItem extends BaseGeomItem {
    * @return {GeomItem} - Returns a new cloned geom item.
    */
   clone(flags) {
-    const cloned = new GeomItem();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new GeomItem()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 
   /**
@@ -314,12 +314,12 @@ class GeomItem extends BaseGeomItem {
    * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
-    super.copyFrom(src, flags);
-    this.__lightmapCoordOffset = src.__lightmapCoordOffset;
+    super.copyFrom(src, flags)
+    this.__lightmapCoordOffset = src.__lightmapCoordOffset
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
-    this.__geomXfoParam.setDirty(this.__cleanGeomXfo);
+    this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
   }
 
   /**
@@ -327,7 +327,7 @@ class GeomItem extends BaseGeomItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    super.destroy();
+    super.destroy()
   }
 }
 

@@ -1,10 +1,6 @@
-import { Vec2, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
-import { ItemFlags } from '../BaseItem'
 import { sgFactory } from '../SGFactory.js'
-import { Parameter, ValueSetMode } from './Parameter.js'
+import { ValueSetMode } from './Parameter.js'
 import { StringParameter } from './StringParameter.js'
-import { ItemSetParameter } from './ItemSetParameter.js'
 
 const QUERY_TYPES = {
   NAME: 0,
@@ -59,14 +55,14 @@ class QueryParameter extends StringParameter {
    * @return {any} - The return value.
    */
   static get QUERY_TYPES() {
-    return QUERY_TYPES;
+    return QUERY_TYPES
   }
   /**
    * Getter for QUERY_MATCH_TYPE.
    * @return {any} - The return value.
    */
   static get QUERY_MATCH_TYPE() {
-    return QUERY_MATCH_TYPE;
+    return QUERY_MATCH_TYPE
   }
 
   /**
@@ -74,7 +70,7 @@ class QueryParameter extends StringParameter {
    * @return {any} - The return value.
    */
   static get QUERY_LOGIC() {
-    return QUERY_LOGIC;
+    return QUERY_LOGIC
   }
 
   /**
@@ -227,8 +223,8 @@ class QueryParameter extends StringParameter {
    * @return {QueryParameter} - Returns a new query parameter.
    */
   clone(flags) {
-    const clonedParam = new QueryParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new QueryParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 

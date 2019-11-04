@@ -1,15 +1,11 @@
-import { Vec4, Color } from '../../Math'
-import { Async, Signal } from '../../Utilities'
-import { loadBinfile } from '../Utils.js'
 import { sgFactory } from '../SGFactory.js'
 import { resourceLoader } from '../ResourceLoader.js'
-import { SystemDesc } from '../../BrowserDetection.js'
 
 import { BooleanParameter, NumberParameter } from '../Parameters'
 
 import { FileImage } from './FileImage.js'
 
-/** Class representing a LDR video.
+/** Class representing a LDR (low dynamic range) video.
  * @extends FileImage
  */
 class LDRVideo extends FileImage {
@@ -38,11 +34,10 @@ class LDRVideo extends FileImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc param.
+   * @param {any} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {
-    const ext = this.getParameter('FilePath').getExt()
     resourceLoader.addWork(fileDesc.id, 1)
 
     const videoElem = document.createElement('video')
@@ -109,7 +104,7 @@ class LDRVideo extends FileImage {
           console.log('Autoplay started!')
           // Autoplay started!
         })
-        .catch(error => {
+        .catch(() => {
           console.log('Autoplay was prevented.')
           // Autoplay was prevented.
           // Show a "Play" button so that user can start playback.

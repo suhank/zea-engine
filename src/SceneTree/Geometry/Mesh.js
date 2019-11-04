@@ -1,4 +1,4 @@
-import { Float32, Vec2, Vec3, Xfo } from '../../Math'
+import { Vec2, Vec3, Xfo } from '../../Math'
 import { BaseGeom, SAVE_FLAG_SKIP_GEOMDATA } from './BaseGeom.js'
 import { Attribute } from './Attribute.js'
 
@@ -134,7 +134,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The getNumFaces method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   getNumFaces() {
     return this.__faceVertexCounts.length
@@ -145,7 +145,7 @@ class Mesh extends BaseGeom {
 
   /**
    * The addVertexAttribute method.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the vertex attribute to add.
    * @param {any} dataType - The dataType value.
    * @param {number} defaultScalarValue - The default scalar value.
    * @return {VertexAttribute} - Returns a vertex attribute.
@@ -166,10 +166,10 @@ class Mesh extends BaseGeom {
 
   /**
    * The addFaceAttribute method.
-   * @param {string} name - The name of the face attribute.
+   * @param {string} name - The name of the face attribute to add.
    * @param {any} dataType - The data type.
    * @param {any} count - The count value.
-   * @return {Attribute} - Returns an attribute.
+   * @return {Attribute} - Returns a face attribute.
    */
   addFaceAttribute(name, dataType, count = undefined) {
     const attr = new Attribute(
@@ -203,10 +203,10 @@ class Mesh extends BaseGeom {
 
   /**
    * The addEdgeAttribute method.
-   * @param {string} name - The name of the edge attribute.
+   * @param {string} name - The name of the edge attribute t oadd.
    * @param {any} dataType - The data type.
    * @param {number} count - The default scalar value.
-   * @return {Attribute} - Returns an attribute.
+   * @return {Attribute} - Returns an edge attribute.
    */
   addEdgeAttribute(name, dataType, count = undefined) {
     const attr = new Attribute(
@@ -288,7 +288,6 @@ class Mesh extends BaseGeom {
       // console.log('addEdge:' + v0 + " :" + v1 + " faceIndex:" + faceIndex );
       const edgeData = getEdgeIndex(v0, v1)
       const edgeIndex = edgeData.edgeIndex
-      const edgeVec = edgeData.edgeVec
       if (v1 < v0) {
         const edgeFaceIndex = edgeIndex * 2 + 0
         if (this.__logTopologyWarnings && this.edgeFaces[edgeFaceIndex] != -1)
@@ -403,7 +402,7 @@ class Mesh extends BaseGeom {
 
   /**
    * Compute vertex normals.
-   * @param {number} hardAngle - The hardAngle value in radans.
+   * @param {number} hardAngle - The hardAngle value in radians.
    * @return {any} - The return value.
    */
   computeVertexNormals(hardAngle = 1.0 /* radians */) {
@@ -447,7 +446,6 @@ class Mesh extends BaseGeom {
       // If this face indexing doesn't start at 0, then the vertexEdges don't either.
       if (this.vertexEdges[i] == undefined) continue
 
-      const v = vertices.getValueRef(i)
       const edges = this.vertexEdges[i]
 
       // Groups of faces having a smooth normal at the current vertex.
@@ -460,13 +458,10 @@ class Mesh extends BaseGeom {
         }
         if (!inGroup) faceGroups.push([face])
       }
-      let smooth = true
       for (const e of edges) {
         const f0 = this.edgeFaces[e * 2]
         const f1 = this.edgeFaces[e * 2 + 1]
         if (f0 != -1 && f1 == -1 && this.edgeAngles[e] < hardAngle) {
-          // This is a smooth edge... Add both faces to the same group.
-          const addedtoGroup = false
           let f0groupIndex = -1
           let f1groupIndex = -1
           for (
@@ -499,7 +494,6 @@ class Mesh extends BaseGeom {
           }
           continue
         }
-        smooth = false
         // This is a hard edge or a border edge... Add faces separately group.
         if (f0 != -1) addFaceToGroup(f0)
         if (f1 != -1) addFaceToGroup(f1)
@@ -559,7 +553,6 @@ class Mesh extends BaseGeom {
     numUnSplitVertices,
     splitIndices
   ) {
-    const faceCount = this.getNumFaces()
     // let faceVertexIndices = this.getFaceVertexIndices();
 
     const trisCount = this.computeNumTriangles()
@@ -605,8 +598,6 @@ class Mesh extends BaseGeom {
       hardEdges.push(this.edgeVerts[index + 1])
     }
     for (let i = 0; i < this.edgeFlags.length; i += 2) {
-      const p0 = this.edgeFaces[i]
-      const p1 = this.edgeFaces[i + 1]
       if (this.edgeAngles[i / 2] > hardAngle) {
         addEdge(i)
       }
@@ -639,7 +630,7 @@ class Mesh extends BaseGeom {
 
     const splitIndices = {}
     let splitCount = 0
-    for (const [attrName, attr] of this.__vertexAttributes) {
+    for (const [, attr] of this.__vertexAttributes) {
       const attrSplits = attr.getSplits()
       for (const polygon in attrSplits) {
         if (!(polygon in splitIndices)) splitIndices[polygon] = {}
@@ -666,8 +657,6 @@ class Mesh extends BaseGeom {
       )
     }
 
-    // Create some vertex attribute buffers
-    const debugAttrValues = false
     // let maxIndex;
     // if (debugAttrValues)
     //     maxIndex = Math.max(...indices);
@@ -846,8 +835,6 @@ class Mesh extends BaseGeom {
     if (bytes == 1) faceVertexIndexDeltas = reader.loadUInt8Array()
     else if (bytes == 2) faceVertexIndexDeltas = reader.loadUInt16Array()
     else if (bytes == 4) faceVertexIndexDeltas = reader.loadUInt32Array()
-
-    const numVerts = this.numVertices()
 
     const numFaces = this.getNumFaces()
     let offset = 0

@@ -48,8 +48,8 @@ class StringParameter extends Parameter {
    * @return {StringParameter} - Returns a new string parameter.
    */
   clone(flags) {
-    const clonedParam = new StringParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new StringParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 

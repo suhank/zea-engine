@@ -80,8 +80,8 @@ class GeometryParameter extends Parameter {
    * @return {GeometryParameter} - Returns a new geometry parameter.
    */
   clone(flags) {
-    const clonedParam = new GeometryParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new GeometryParameter(this.__name, this.__value)
+    return clonedParam
   }
 
   /**

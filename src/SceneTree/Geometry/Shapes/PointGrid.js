@@ -1,5 +1,4 @@
 import { Vec2 } from '../../../Math/Vec2'
-import { Vec3 } from '../../../Math/Vec3'
 import { Points } from '../Points.js'
 
 /** A class for generating a point grid.
@@ -36,7 +35,7 @@ class PointGrid extends Points {
   }
 
   /**
-   * Getter for x.
+   * Getter for X.
    * Is deprectated. Please use "getX".
    * @return {number} - Returns the length.
    */
@@ -46,7 +45,7 @@ class PointGrid extends Points {
   }
 
   /**
-   * Setter for x.
+   * Setter for X.
    * Is deprectated. Please use "setX".
    * @param {number} val - The length along the X axis.
    */
@@ -56,7 +55,7 @@ class PointGrid extends Points {
   }
 
   /**
-   * Getter for y.
+   * Getter for Y.
    * Is deprectated. Please use "getY".
    * @return {number} - Returns the length.
    */
@@ -66,7 +65,7 @@ class PointGrid extends Points {
   }
 
   /**
-   * Setter for y.
+   * Setter for Y.
    * Is deprectated. Please use "setY".
    * @param {number} val - The length along the Y axis.
    */

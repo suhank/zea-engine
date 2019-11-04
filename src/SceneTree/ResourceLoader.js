@@ -136,7 +136,7 @@ class ResourceLoader {
 
   /**
    * The loadCommonAssetResource method.
-   * @param {any} resourceId - The resourceId param.
+   * @param {any} resourceId - The resourceId value.
    * @return {any} - The return value.
    */
   loadCommonAssetResource(resourceId) {
@@ -149,7 +149,11 @@ class ResourceLoader {
     return asset
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /**
+   * The __applyCallbacks method.
+   * @param {any} resourcesDict - The resourcesDict value.
+   * @private
+   */
   __applyCallbacks(resourcesDict) {
     const applyCallbacks = resource => {
       for (const filter in this.__resourceRegisterCallbacks) {
@@ -163,7 +167,11 @@ class ResourceLoader {
     }
   }
 
-  // eslint-disable-next-line require-jsdoc
+  /**
+   * The __buildTree method.
+   * @param {any} resources - The resources param.
+   * @private
+   */
   __buildTree(resources) {
     const buildEntity = resourceId => {
       if (this.__resourcesTreeEntities[resourceId]) return
@@ -274,7 +282,7 @@ class ResourceLoader {
 
   /**
    * The freeData method.
-   * @param {ArrayBuffer} buffer - The buffer param.
+   * @param {ArrayBuffer} buffer - The buffer value.
    */
   freeData(buffer) {
     // Note: Explicitly transfer data to a web worker and then

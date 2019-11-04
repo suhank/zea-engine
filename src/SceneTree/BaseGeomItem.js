@@ -14,7 +14,7 @@ class BaseGeomItem extends TreeItem {
    */
   constructor(name) {
     super(name)
-    this.overlay = false;
+    this.overlay = false
     this.__cutAway = false
     this.__cutAwayVector = false
     this.__cutAwayDist = false
@@ -24,17 +24,17 @@ class BaseGeomItem extends TreeItem {
   }
 
   /**
-   * The addLayer method.
-   * @param {string} name - The name param.
+   * The setOverlay method.
+   * @param {any} val - The val param.
    */
   setOverlay(val) {
     // TODO: need to find the layer and add this item to it.
-    this.overlay = val;
+    this.overlay = val
   }
 
   /**
    * The getLayers method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isOverlay() {
     return this.overlay

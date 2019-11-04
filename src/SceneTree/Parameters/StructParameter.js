@@ -1,4 +1,4 @@
-import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
+import { ParamFlags, Parameter } from './Parameter.js'
 
 /** Class representing a struct parameter.
  * @extends Parameter

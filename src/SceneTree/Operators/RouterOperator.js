@@ -1,11 +1,5 @@
 import { Operator, OperatorOutput } from './Operator.js'
-import {
-  ValueGetMode,
-  Parameter,
-  NumberParameter,
-  StructParameter,
-  ListParameter,
-} from '../Parameters'
+import { ValueGetMode, NumberParameter, ListParameter } from '../Parameters'
 
 import { sgFactory } from '../SGFactory.js'
 
@@ -24,7 +18,7 @@ class RouterOperator extends Operator {
     this.__routesParam = this.addParameter(
       new ListParameter('Routes', NumberParameter)
     )
-    this.__routesParam.elementAdded.connect((value, index) => {
+    this.__routesParam.elementAdded.connect(value => {
       value.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })

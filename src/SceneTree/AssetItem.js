@@ -1,9 +1,6 @@
-import { Xfo } from '../Math'
 import { Signal } from '../Utilities'
-import { FilePathParameter } from './Parameters'
 import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
-import { loadTextfile } from './Utils.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { sgFactory } from './SGFactory.js'
@@ -30,7 +27,7 @@ class AssetItem extends TreeItem {
 
   /**
    * The isLoaded method.
-   * @return {boolean} - Returns true the asset has already loaded its data.
+   * @return {boolean} - Returns true if the asset has already loaded its data.
    */
   isLoaded() {
     return this.loaded.isToggled()
@@ -50,6 +47,14 @@ class AssetItem extends TreeItem {
    */
   getMaterialLibrary() {
     return this.__materials
+  }
+
+  /**
+   * The getUnitsConversion method.
+   * @return {any} - The return value.
+   */
+  getUnitsConversion() {
+    return this.__unitsScale
   }
 
   // ////////////////////////////////////////
@@ -109,9 +114,9 @@ class AssetItem extends TreeItem {
           scaleFactor = 1609.34
           break
       }
-      this.__unitsScale = scaleFactor;
+      this.__unitsScale = scaleFactor
 
-      // Apply units change to existing Xfo. (avoid changing tr)
+      // Apply units change to existing Xfo (avoid changing tr).
       const xfo = this.getLocalXfo().clone()
       xfo.sc.scaleInPlace(scaleFactor)
       this.setLocalXfo(xfo)
@@ -133,17 +138,6 @@ class AssetItem extends TreeItem {
     }
 
     // console.log("numTreeItems:", context.numTreeItems, " numGeomItems:", context.numGeomItems)
-  }
-
-  // ////////////////////////////////////////
-  // Persistence
-
-  /**
-   * The get method.
-   * @return {any} - The return value.
-   */
-  getUnitsConversion() {
-    return this.__unitsScale
   }
 
   /**
@@ -218,7 +212,7 @@ class AssetItem extends TreeItem {
     }
     context.addPLCB = plcb => plcbs.push(plcb)
 
-    // Avoid loading the FilePAth as we are already loading json data.
+    // Avoid loading the FilePath as we are already loading json data.
     // if (j.params && j.params.FilePath) {
     //   delete j.params.FilePath
     // }

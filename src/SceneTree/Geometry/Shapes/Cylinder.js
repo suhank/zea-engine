@@ -109,7 +109,7 @@ class Cylinder extends Mesh {
     // }
 
     // ////////////////////////////
-    // build the topology
+    // Build the topology
     let faceIndex = 0
     // build the topology for the body of the cylinder
     for (let i = 0; i < nbLoops - 1; i++) {

@@ -155,14 +155,14 @@ class ItemSetParameter extends Parameter {
   // Clone
 
   /**
-   * The clone method constructs a new parameter, copies its values
+   * The clone method constructs a item set new parameter, copies its values
    * from this parameter and returns it.
    * @param {number} flags - The flags value.
    * @return {ItemSetParameter} - Returns a new item set parameter.
    */
   clone(flags) {
-    const clonedParam = new ItemSetParameter(this.__name, this.__filterFn);
-    return clonedParam;
+    const clonedParam = new ItemSetParameter(this.__name, this.__filterFn)
+    return clonedParam
   }
 }
 

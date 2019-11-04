@@ -171,6 +171,9 @@ class GearsOperator extends Operator {
     }
   }
 
+  /**
+   * The detach method.
+   */
   detach() {
     super.detach()
     if (this.__timeoutId) {
@@ -179,6 +182,9 @@ class GearsOperator extends Operator {
     }
   }
 
+  /**
+   * The reattach method.
+   */
   reattach() {
     super.reattach()
 

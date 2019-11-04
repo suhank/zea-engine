@@ -1,4 +1,3 @@
-import { Parameter } from './Parameter.js'
 import { NumberParameter } from './NumberParameter.js'
 
 /** Class representing a multi choice parameter.

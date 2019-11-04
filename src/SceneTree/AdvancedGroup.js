@@ -22,15 +22,15 @@ class AdvancedGroup extends Group {
     this.__searchRootParam = this.insertParameter(
       new TreeItemParameter('SearchRoot'),
       0
-    );
+    )
     this.__searchRootParam.valueChanged.connect(changeType => {
-      this.resolveQueries();
-    });
+      this.resolveQueries()
+    })
 
-    this.__searchSetParam = this.insertParameter(new QuerySet('Queries'), 1);
+    this.__searchSetParam = this.insertParameter(new QuerySet('Queries'), 1)
     this.__searchSetParam.valueChanged.connect(changeType => {
-      this.resolveQueries();
-    });
+      this.resolveQueries()
+    })
   }
 
   /**
@@ -251,7 +251,7 @@ class AdvancedGroup extends Group {
         }
       } catch (e) {
         // continue...
-        console.warn(e.message);
+        console.warn(e.message)
       }
     })
     result = result.concat(set)
@@ -290,15 +290,15 @@ class AdvancedGroup extends Group {
   // Clone
 
   /**
-   * The clone method constructs a new group,
+   * The clone method constructs a new advancded group,
    * copies its values and returns it.
    * @param {number} flags - The flags value.
-   * @return {Group} - Returns a new cloned group.
+   * @return {AdvancedGroup} - Returns a new cloned advanced group.
    */
   clone(flags) {
-    const cloned = new AdvancedGroup();
-    cloned.copyFrom(this, flags);
-    return cloned;
+    const cloned = new AdvancedGroup()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 }
 

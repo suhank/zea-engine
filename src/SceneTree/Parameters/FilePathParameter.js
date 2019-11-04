@@ -302,9 +302,9 @@ class FilePathParameter extends Parameter {
    * @return {FilePathParameter} - Returns a new cloned file path parameter.
    */
   clone(flags) {
-    const clonedParam = new FilePathParameter(this.__name);
-    clonedParam.__file = this.__file;
-    return clonedParam;
+    const clonedParam = new FilePathParameter(this.__name)
+    clonedParam.__file = this.__file
+    return clonedParam
   }
 
   /**

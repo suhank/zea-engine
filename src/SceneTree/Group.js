@@ -32,7 +32,7 @@ class Group extends TreeItem {
   constructor(name) {
     super(name)
 
-    // Items which can be constructed by a user(not loaded in binary data.)
+    // Items which can be constructed by a user (not loaded in binary data.)
     // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
 
@@ -126,7 +126,7 @@ class Group extends TreeItem {
    * Getter for INITIAL_XFO_MODES.
    */
   static get INITIAL_XFO_MODES() {
-    return GROUP_INITIAL_XFO_MODES;
+    return GROUP_INITIAL_XFO_MODES
   }
 
   /**
@@ -160,13 +160,13 @@ class Group extends TreeItem {
       color.a = this.getParameter('HighlightFill').getValue()
     }
 
-    const key = 'groupItemHighlight' + this.getId();
+    const key = 'groupItemHighlight' + this.getId()
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       if (item instanceof TreeItem) {
         if (highlighted) item.addHighlight(key, color, true)
         else item.removeHighlight(key, true)
       }
-    });
+    })
   }
 
   /**
@@ -257,7 +257,7 @@ class Group extends TreeItem {
       })
       xfo.tr.scaleInPlace(1 / numTreeItems)
     } else {
-      throw 'Invalid mode.'
+      throw new Error('Invalid mode.')
     }
 
     this.invGroupXfo = xfo.inverse()
@@ -309,7 +309,7 @@ class Group extends TreeItem {
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material');
+          const p = treeItem.getParameter('Material')
           if (material) {
             const m = p.getValue()
             if (m != material) {
@@ -360,12 +360,12 @@ class Group extends TreeItem {
 
     const searchRoot = this.getOwner()
     if (searchRoot == undefined) return
-    let items = []
+    const items = []
     paths.forEach(path => {
       const treeItem = searchRoot.resolvePath(path)
       if (treeItem) items.push(treeItem)
       else {
-        console.warn("Path does not resolve to an Item:", path);
+        console.warn('Path does not resolve to an Item:', path)
       }
     })
     this.setItems(items)
@@ -388,7 +388,7 @@ class Group extends TreeItem {
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
-    const signalIndices = {};
+    const signalIndices = {}
 
     signalIndices.mouseDownIndex = item.mouseDown.connect(event => {
       this.mouseDown.emit(event)
@@ -401,7 +401,7 @@ class Group extends TreeItem {
     if (material) {
       item.traverse(treeItem => {
         if (treeItem instanceof TreeItem && treeItem.hasParameter('Material')) {
-          const p = treeItem.getParameter('Material');
+          const p = treeItem.getParameter('Material')
           if (material) {
             const m = p.getValue()
             if (m != material) {
@@ -410,7 +410,7 @@ class Group extends TreeItem {
             }
           }
         }
-      }, true);
+      }, true)
     }
 
     // ///////////////////////////////
@@ -432,9 +432,9 @@ class Group extends TreeItem {
       const cutAwayDist = this.getParameter('CutDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
-          treeItem.setCutawayEnabled(cutEnabled);
-          treeItem.setCutVector(cutAwayVector);
-          treeItem.setCutDist(cutAwayDist);
+          treeItem.setCutawayEnabled(cutEnabled)
+          treeItem.setCutVector(cutAwayVector)
+          treeItem.setCutDist(cutAwayDist)
         }
       }, true)
     }
@@ -470,7 +470,7 @@ class Group extends TreeItem {
       this._setBoundingBoxDirty
     )
 
-    this.__signalIndices[index] = signalIndices;
+    this.__signalIndices[index] = signalIndices
   }
 
   /**
@@ -484,7 +484,7 @@ class Group extends TreeItem {
 
     item.removeHighlight('branchselected' + this.getId(), true)
     if (this.getParameter('Highlighted').getValue()) {
-      item.removeHighlight('groupItemHighlight' + this.getId(), true);
+      item.removeHighlight('groupItemHighlight' + this.getId(), true)
     }
 
     if (!this.getVisible()) {
@@ -495,7 +495,7 @@ class Group extends TreeItem {
       item.propagateVisiblity(1)
     }
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the item cutaway
     item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
@@ -517,7 +517,7 @@ class Group extends TreeItem {
   /**
    * Add an item to the group.
    * @param {any} item - The item value.
-   * @param {any} emit - The emit value.
+   * @param {boolean} emit - The emit value.
    */
   addItem(item, emit = true) {
     if (!item) {
@@ -572,7 +572,7 @@ class Group extends TreeItem {
   /**
    * The _cleanBoundingBox method.
    * @param {Box3} bbox - The bounding box value.
-   * @return {any} - The return value.
+   * @return {Box3} - The return value.
    * @private
    */
   _cleanBoundingBox(bbox) {
@@ -592,7 +592,7 @@ class Group extends TreeItem {
 
   /**
    * Occurs when a user presses a mouse button over an element.
-   * @param {any} event - The event that occurs.
+   * @param {MouseEvent} event - The mouse event that occurs.
    * @return {boolean} - Returns false.
    */
   onMouseDown(event) {
@@ -600,8 +600,8 @@ class Group extends TreeItem {
   }
 
   /**
-   * Occurs when a user releases a mouse button over a element.
-   * @param {any} event - The event that occurs.
+   * Occurs when a user releases a mouse button over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
    * @return {boolean} - Returns false.
    */
   onMouseUp(event) {
@@ -609,8 +609,8 @@ class Group extends TreeItem {
   }
 
   /**
-   * Occur when the mouse pointer is moving while over an element.
-   * @param {any} event - The event that occurs.
+   * Occur when the mouse pointer is moving  while over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
    * @return {boolean} - Returns false.
    */
   onMouseMove(event) {
@@ -676,7 +676,7 @@ class Group extends TreeItem {
         }
       )
     }
-    for (let path of j.treeItems) {
+    for (const path of j.treeItems) {
       addItem(path)
     }
   }
@@ -684,19 +684,11 @@ class Group extends TreeItem {
   // ////////////////////////////////////////
   // Clone and Destroy
 
-
- 
-   /**
-   * The destroy method.
-   */
-  destroy() {
-    super.destroy()
-  }
-
   /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The clone method constructs a new group,
+   * copies its values and returns it.
+   * @param {number} flags - The flags value.
+   * @return {Group} - Returns a new cloned group.
    */
   clone(flags) {
     const cloned = new Group()
@@ -706,11 +698,19 @@ class Group extends TreeItem {
 
   /**
    * The copyFrom method.
-   * @param {any} src - The src param.
-   * @param {number} flags - The flags param.
+   * @param {Group} src - The group to copy from.
+   * @param {number} flags - The flags value.
    */
   copyFrom(src, flags) {
     super.copyFrom(src, flags)
+  }
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
+   */
+  destroy() {
+    super.destroy()
   }
 }
 

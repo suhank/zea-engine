@@ -152,15 +152,15 @@ class Cone extends Mesh {
     }
 
     // ////////////////////////////
-    // build the topology
+    // Build the topology
     this.setFaceCounts([nbSides + (cap ? nbSides : 0)])
     for (let i = 0; i < nbSides; i++) {
-      let j = (i + 1) % nbSides
+      const j = (i + 1) % nbSides
       this.setFaceVertexIndices(i, j, i, tipPoint)
     }
     if (cap) {
       for (let i = 0; i < nbSides; i++) {
-        let j = (i + 1) % nbSides
+        const j = (i + 1) % nbSides
         this.setFaceVertexIndices(nbSides + i, i, j, basePoint)
       }
     }
@@ -170,16 +170,16 @@ class Cone extends Mesh {
     const normals = this.getVertexAttribute('normals')
 
     let normalElevation
-    let divider = height
+    const divider = height
     if (Math.abs(height) < 1.0e-12)
       normalElevation = height < 0 ? -1.0e-12 : 1.0e-12
     normalElevation = radius / divider
 
     let tri = 0
     for (let i = 0; i < nbSides; i++) {
-      let theta1 = ((i + 1) / nbSides) * 2.0 * Math.PI
-      let theta2 = (i / nbSides) * 2.0 * Math.PI
-      let theta = (theta1 + theta2) * 0.5
+      const theta1 = ((i + 1) / nbSides) * 2.0 * Math.PI
+      const theta2 = (i / nbSides) * 2.0 * Math.PI
+      const theta = (theta1 + theta2) * 0.5
 
       normals.setFaceVertexValue(
         tri,
@@ -207,7 +207,7 @@ class Cone extends Mesh {
       tri++
     }
     if (cap) {
-      const normal = new Vec3(0.0, -1.0, 0.0);
+      const normal = new Vec3(0.0, -1.0, 0.0)
       for (let i = 0; i < nbSides; i++) {
         normals.setFaceVertexValue(tri, 0, normal)
         normals.setFaceVertexValue(tri, 1, normal)

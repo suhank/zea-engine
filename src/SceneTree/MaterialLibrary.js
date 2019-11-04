@@ -76,7 +76,7 @@ class MaterialLibrary {
   }
 
   /**
-   * Add a metrial.
+   * Add a material.
    * @param {Material} material - The material value.
    */
   addMaterial(material) {
@@ -180,7 +180,7 @@ class MaterialLibrary {
   toJSON(context = {}, flags = 0) {
     return {
       numMaterials: this.geoms.length(),
-    };
+    }
   }
 
   /**

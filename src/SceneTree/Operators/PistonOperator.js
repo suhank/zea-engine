@@ -1,16 +1,11 @@
-import { Signal } from '../../Utilities'
 import { Vec3, Quat, Xfo } from '../../Math'
 import { Operator, XfoOperatorOutput } from './Operator.js'
 import {
   ValueGetMode,
-  ValueSetMode,
-  Parameter,
   NumberParameter,
   Vec3Parameter,
   StructParameter,
-  TreeItemParameter,
   ListParameter,
-  KinematicGroupParameter,
 } from '../Parameters'
 
 import { sgFactory } from '../SGFactory.js'
@@ -98,7 +93,6 @@ class PistonParameter extends StructParameter {
 
     const camAngle = camPhase * 2.0 * Math.PI
     const bigEndOffset = Math.sin(camAngle) * camLength
-    const rodAngle = Math.asin(bigEndOffset / rodLength)
     const headOffset =
       Math.sqrt(rodLength * rodLength - bigEndOffset * bigEndOffset) +
       Math.cos(camAngle) * camLength
@@ -197,8 +191,8 @@ class PistonParameter extends StructParameter {
    * @return {PistonParameter} - Returns a new cloned piston parameter.
    */
   clone(flags) {
-    const clonedParam = new PistonParameter(this.__name, this.__value);
-    return clonedParam;
+    const clonedParam = new PistonParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 
@@ -255,13 +249,13 @@ class PistonOperator extends Operator {
     this.__pistonsParam = this.addParameter(
       new ListParameter('Pistons', PistonParameter)
     )
-    this.__pistonsParam.elementAdded.connect((value, index) => {
+    this.__pistonsParam.elementAdded.connect(value => {
       value.setCrankXfo(this.__baseCrankXfo)
 
       this.addOutput(value.getRodOutput())
       this.addOutput(value.getCapOutput())
     })
-    this.__pistonsParam.elementRemoved.connect((value, index) => {
+    this.__pistonsParam.elementRemoved.connect(value => {
       this.removeOutput(value.getRodOutput())
       this.removeOutput(value.getCapOutput())
     })
