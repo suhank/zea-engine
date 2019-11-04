@@ -122,7 +122,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * Insert a parameter.
-   * @param {any} param - The paramater to insert.
+   * @param {any} param - The parameter to insert.
    * @param {number} index - The index value.
    * @return {any} - The return value.
    */
@@ -149,7 +149,7 @@ class ParameterOwner extends RefCounted {
 
   /**
    * Remove a parameter.
-   * @param {string} name - The parameter name.
+   * @param {string} paramName - The parameter name.
    */
   removeParameter(name) {
     if (this.__paramMapping[name] == undefined) {
