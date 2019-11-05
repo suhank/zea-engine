@@ -290,7 +290,7 @@ class AdvancedGroup extends Group {
   // Clone
 
   /**
-   * The clone method constructs a new advancded group,
+   * The clone method constructs a new advanced group.
    * copies its values and returns it.
    * @param {number} flags - The flags value.
    * @return {AdvancedGroup} - Returns a new cloned advanced group.
