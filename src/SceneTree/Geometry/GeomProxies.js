@@ -1,6 +1,7 @@
 import { Signal } from '../../Utilities'
 import { Box3 } from '../../Math'
 import { RefCounted } from '../RefCounted.js'
+import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 /** Class representing a base proxy.
  * @extends RefCounted
@@ -14,6 +15,15 @@ class BaseProxy extends RefCounted {
     super()
     this.name = data.name
     this.__buffers = data.geomBuffers
+    if (this.__buffers.attrBuffers) {
+      // eslint-disable-next-line guard-for-in
+      for (const attrName in this.__buffers.attrBuffers) {
+        const attrData = this.__buffers.attrBuffers[attrName]
+        const dataType = typeRegistry.getType(attrData.dataType)
+        attrData.dataType = dataType
+      }
+    }
+
     this.boundingBox = new Box3()
     this.boundingBox.p0.__data = data.bbox.p0.__data
     this.boundingBox.p1.__data = data.bbox.p1.__data
