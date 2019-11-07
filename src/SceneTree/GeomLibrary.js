@@ -4,6 +4,11 @@ import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
 
+// The GeomLibrary parses geometry data using workers.
+// This can be difficult to debug, so you can disable this 
+// by setting the following boolena to false, and uncommenting
+// the import of parseGeomsBinary
+const multiThreadParsing = true
 const GeomParserWorker = require('worker-loader?inline!./Geometry/GeomParserWorker.js')
 // import {
 //     parseGeomsBinary
@@ -24,7 +29,12 @@ class GeomLibrary {
 
     this.__workers = []
     this.__nextWorker = 0
-    for (let i = 0; i < 3; i++) this.__workers.push(this.__constructWorker())
+
+    if (multiThreadParsing) {
+      for (let i = 0; i < 3; i++) {
+        this.__workers.push(this.__constructWorker())
+      }
+    }
 
     this.clear()
   }
@@ -168,40 +178,43 @@ class GeomLibrary {
 
       // ////////////////////////////////////////////
       // Multi Threaded Parsing
-      this.__workers[this.__nextWorker].postMessage(
-        {
-          key,
-          toc,
-          geomIndexOffset,
-          geomsRange,
-          isMobileDevice: reader.isMobileDevice,
-          bufferSlice,
-          genBuffersOpts: this.__genBuffersOpts,
-          context,
-        },
-        [bufferSlice]
-      )
-      this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
-      // ////////////////////////////////////////////
-      // Main Threaded Parsing
-      // parseGeomsBinary({
-      //     key,
-      //     toc,
-      //     geomIndexOffset,
-      //     geomsRange,
-      //     isMobileDevice: reader.isMobileDevice,
-      //     bufferSlice,
-      //     genBuffersOpts: this.__genBuffersOpts,
-      //     context
-      //   },
-      //   (data, transferables)=>{
-      //     this.__recieveGeomDatas(
-      //       data.key,
-      //       data.geomDatas,
-      //       data.geomIndexOffset,
-      //       data.geomsRange
-      //     );
-      //   });
+      if (multiThreadParsing) {
+        this.__workers[this.__nextWorker].postMessage(
+          {
+            key,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context,
+          },
+          [bufferSlice]
+        )
+        this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
+      } else {
+        // ////////////////////////////////////////////
+        // Main Threaded Parsing
+        parseGeomsBinary({
+            key,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context
+          },
+          (data, transferables)=>{
+            this.__recieveGeomDatas(
+              data.key,
+              data.geomDatas,
+              data.geomIndexOffset,
+              data.geomsRange
+            );
+          });
+      }
     }
     return numGeoms
   }
