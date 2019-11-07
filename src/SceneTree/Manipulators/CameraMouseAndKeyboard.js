@@ -497,6 +497,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {any} key - The key the user releases.
    * @param {any} event - The event that occurs.
    * @return {boolean} - The return value.
+   */
   onKeyUp(key, event) {
     // (TODO: move this logic to a special controller)
     /*
@@ -521,7 +522,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     if (this.__keysPressed.length == 0)
       this.__keyboardMovement = false;
     */
-    return true
   }
 
   // ///////////////////////////////////
