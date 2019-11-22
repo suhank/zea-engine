@@ -44,7 +44,7 @@ class AimOperator extends Operator {
     const target = this.getParameter('Target').getValue()
     const axis = this.getParameter('axis').getValue()
     const stretch = this.getParameter('stretch').getValue()
-    const output = this.getOutput(0)
+    const output = this.getOutputByIndex(0)
     const xfo = output.getValue()
     if (!xfo) {
       // Note: we have cases where we have interdependencies.
@@ -69,14 +69,24 @@ class AimOperator extends Operator {
       case 1:
         vec = xfo.ori.getXaxis().negate()
         break
-      case 0:
-        vec = xfo.ori.getXaxis()
+      case 2:
+        vec = xfo.ori.getYaxis()
+        break
+      case 3:
+        vec = xfo.ori.getYaxis().negate()
+        break
+      case 4:
+        vec = xfo.ori.getZaxis()
+        break
+      case 5:
+        vec = xfo.ori.getZaxis().negate()
         break
     }
 
     let align = new Quat()
     align.setFrom2Vectors(vec, dir)
     if (weight < 1.0) align = new Quat().lerp(align, weight)
+
     xfo.ori = align.multiply(xfo.ori)
 
     if (stretch) {

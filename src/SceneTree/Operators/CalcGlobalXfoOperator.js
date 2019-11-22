@@ -24,7 +24,7 @@ class CalcGlobalXfoOperator extends Operator {
   evaluate() {
     const parentGlobalXfo = this.getParameter('ParentGlobal').getValue()
     const localXfo = this.getParameter('LocalXfo').getValue()
-    this.getOutput(0).setClean(parentGlobalXfo.multiply(localXfo))
+    this.getOutputByIndex(0).setClean(parentGlobalXfo.multiply(localXfo))
   }
 }
 

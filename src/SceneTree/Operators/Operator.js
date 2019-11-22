@@ -80,20 +80,20 @@ class Operator extends BaseItem {
   }
 
   /**
-   * The getOutput method.
+   * The getOutputByIndex method.
    * @param {number} index - The index value.
    * @return {object} - The return value.
    */
-  getOutput(index) {
+  getOutputByIndex(index) {
     return this.__outputs[index]
   }
 
   /**
-   * The getOutputByName method.
+   * The getOutput method.
    * @param {string} name - The name value.
    * @return {any} - The return value.
    */
-  getOutputByName(name) {
+  getOutput(name) {
     for (const o of this.__outputs) {
       if (o.getName() == name) return o
     }

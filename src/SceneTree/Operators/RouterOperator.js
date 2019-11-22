@@ -24,7 +24,7 @@ class RouterOperator extends Operator {
       this.addOutput(new OperatorOutput('Output'))
     })
     this.__routesParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(this.getOutput(index))
+      this.removeOutput(this.getOutputByIndex(index))
     })
   }
 
