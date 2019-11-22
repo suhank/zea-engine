@@ -77,7 +77,7 @@ class OperatorOutput {
    */
   setValue(value, mode = ValueSetMode.OPERATOR_SETVALUE) {
     if (this._param) {
-      this._param.setClean(value, mode)
+      this._param.setValue(value, mode)
     }
   }
 

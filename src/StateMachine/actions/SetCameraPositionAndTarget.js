@@ -48,7 +48,6 @@ class SetCameraPositionAndTarget extends StateAction {
       )
       return
     }
-
     const posEnd = this.getParameter('cameraPos').getValue()
     const targetEnd = this.getParameter('cameraTarget').getValue()
     const interpTime = this.getParameter('interpTime').getValue()

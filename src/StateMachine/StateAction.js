@@ -96,6 +96,7 @@ class StateAction extends ParameterOwner {
    */
   __onDone() {
     this.__childActions.forEach(action => {
+      console.log("__childActions.activate")
       action.activate()
     })
   }

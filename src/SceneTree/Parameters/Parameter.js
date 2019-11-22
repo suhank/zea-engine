@@ -21,7 +21,6 @@ const ValueSetMode = {
   COMPUTED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
   GENERATED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
   DATA_LOAD: 4 /* Generate events, but don't flag the parameter as user edited*/,
-  STATEMACHINE_SETVALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
 }
 const ParamFlags = {
   USER_EDITED: 1 << 1,
