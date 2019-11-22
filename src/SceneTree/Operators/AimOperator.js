@@ -46,17 +46,6 @@ class AimOperator extends Operator {
     const stretch = this.getParameter('stretch').getValue()
     const output = this.getOutputByIndex(0)
     const xfo = output.getValue()
-    if (!xfo) {
-      // Note: we have cases where we have interdependencies.
-      // Operator A Writes to [A, B, C]
-      // Operator B Writes to [A, B, C].
-      // During the load of operator B.C, we trigger an evaluation
-      // of Opeator A, which causes B to evaluate (due to B.A already connected)
-      // Now operator B is evaluating will partially setup.
-      // See SmartLoc: Exploded Parts and Gears read/write the same set of
-      // params.
-      return
-    }
     const dir = target.tr.subtract(xfo.tr)
     const dist = dir.length()
     if (dist < 0.000001) return
@@ -85,6 +74,7 @@ class AimOperator extends Operator {
 
     let align = new Quat()
     align.setFrom2Vectors(vec, dir)
+    align.alignWith(new Quat())
     if (weight < 1.0) align = new Quat().lerp(align, weight)
 
     xfo.ori = align.multiply(xfo.ori)
