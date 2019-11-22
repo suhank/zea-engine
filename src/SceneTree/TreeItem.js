@@ -106,6 +106,9 @@ class TreeItem extends BaseItem {
     }
     this.__globalXfoParam.valueChanged.connect(mode => {
       // Dirtiness propagates from Local to Global, but not vice versa.
+      // We need to move to using operators to invert values.
+      // This system of having ops connected in all directions
+      // is super difficult to debug.
       if (mode != ValueSetMode.OPERATOR_DIRTIED) {
         this.__localXfoParam.setDirty(cleanLocalXfo)
       }
@@ -293,7 +296,14 @@ class TreeItem extends BaseItem {
    * @param {number} mode - The mode value.
    */
   setGlobalXfo(xfo, mode) {
-    this.__globalXfoParam.setValue(xfo, mode)
+    const owner = this.getOwner()
+    if (owner) {
+      const parentXfo = owner.getGlobalXfo()
+      const localXfo = parentXfo.inverse().multiply(xfo)
+      this.__localXfoParam.setValue(localXfo, mode)
+    } else {
+      this.__globalXfoParam.setValue(xfo, mode)
+    }
   }
 
   /**
@@ -619,10 +629,11 @@ class TreeItem extends BaseItem {
 
     let newLocalXfo
     if (childItem instanceof TreeItem) {
-      if (maintainXfo)
+      if (maintainXfo) {
         newLocalXfo = this.getGlobalXfo()
           .inverse()
           .multiply(childItem.getGlobalXfo())
+      }
       signalIds.bboxChangedId = childItem.boundingChanged.connect(
         this._setBoundingBoxDirty
       )
@@ -666,7 +677,7 @@ class TreeItem extends BaseItem {
    * If false, an exception wll be thrown instead if a name collision occurs.
    * @return {number} - The index of the child item in this items children array.
    */
-  addChild(childItem, maintainXfo = false, fixCollisions = true) {
+  addChild(childItem, maintainXfo = true, fixCollisions = true) {
     const index = this.__childItems.length
     this.insertChild(childItem, index, maintainXfo, fixCollisions)
     return index
