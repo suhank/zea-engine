@@ -278,6 +278,7 @@ class Cylinder extends Mesh {
     }
 
     this.setBoundingBoxDirty()
+    this.geomDataChanged.emit()
   }
 }
 
