@@ -209,6 +209,8 @@ class TreeItem extends BaseItem {
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter++
+      const index = this.__ownerItem.getChildIndex(this)
+      if (index >= 0) this.__ownerItem.__unbindChild(index, this)
     }
 
     super.setOwner(parentItem)
@@ -354,7 +356,8 @@ class TreeItem extends BaseItem {
     if (visible != this.__visible) {
       this.__visible = visible
       for (const childItem of this.__childItems) {
-        childItem.propagateVisiblity(this.__visible ? 1 : -1)
+        if (childItem instanceof TreeItem)
+          childItem.propagateVisiblity(this.__visible ? 1 : -1)
       }
       this.visibilityChanged.emit(visible)
       return true
@@ -697,6 +700,28 @@ class TreeItem extends BaseItem {
     return names
   }
 
+  __unbindChild(index, childItem) {
+
+    const signalIds = this.__childItemsSignalIds[index]
+    childItem.nameChanged.disconnectId(signalIds.nameChangedId)
+
+    if (childItem instanceof TreeItem) {
+      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
+      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
+    }
+
+    this.__childItems.splice(index, 1)
+    this.__childItemsSignalIds.splice(index, 1)
+    delete this.__childItemsMapping[childItem.getName()]
+    this.__updateMapping(index)
+
+    if (childItem instanceof TreeItem) {
+      this._setBoundingBoxDirty()
+    }
+
+    this.childRemoved.emit(childItem, index)
+  }
+
   /**
    * Remove a child tree item.
    * @param {number} index - The index value.
@@ -704,25 +729,8 @@ class TreeItem extends BaseItem {
   removeChild(index) {
     const childItem = this.__childItems[index]
     if (childItem) {
-      const signalIds = this.__childItemsSignalIds[index]
-      childItem.nameChanged.disconnectId(signalIds.nameChangedId)
-
-      if (childItem instanceof TreeItem) {
-        childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
-        childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
-      }
-
-      this.__childItems.splice(index, 1)
-      this.__childItemsSignalIds.splice(index, 1)
-      delete this.__childItemsMapping[childItem.getName()]
-      this.__updateMapping(index)
-
-      if (childItem instanceof TreeItem) {
-        this._setBoundingBoxDirty()
-      }
-
+      this.__unbindChild(index, childItem)
       childItem.setOwner(undefined)
-      this.childRemoved.emit(childItem, index)
     }
   }
 
