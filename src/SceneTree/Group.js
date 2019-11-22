@@ -16,9 +16,10 @@ import { BaseGeomItem } from './BaseGeomItem'
 import { sgFactory } from './SGFactory.js'
 
 const GROUP_INITIAL_XFO_MODES = {
-  first: 0,
-  average: 1,
-  globalOri: 2,
+  manual: 0,
+  first: 1,
+  average: 2,
+  globalOri: 3,
 }
 
 /** Class representing a group in the scene tree.
@@ -55,8 +56,7 @@ class Group extends TreeItem {
       this.__unbindItem(item, index)
     })
     this.__itemsParam.valueChanged.connect(() => {
-      this.calculatingGroupXfo = true
-      this._setGlobalXfoDirty()
+      this.calcGroupXfo()
       this._setBoundingBoxDirty()
     })
 
@@ -64,13 +64,12 @@ class Group extends TreeItem {
       new MultiChoiceParameter(
         'InitialXfoMode',
         GROUP_INITIAL_XFO_MODES.average,
-        ['first', 'average', 'global']
+        ['manual', 'first', 'average', 'global']
       ),
       pid++
     )
     this.__initialXfoModeParam.valueChanged.connect(() => {
-      this.calculatingGroupXfo = true
-      this._setGlobalXfoDirty()
+      this.calcGroupXfo()
     })
 
     this.__highlightedParam = this.insertParameter(
@@ -115,9 +114,12 @@ class Group extends TreeItem {
       pid++
     ).valueChanged.connect(this.__updateCutaway)
 
-    this.__globalXfoParam.valueChanged.connect(() => {
-      this._propagateGroupXfoToItems()
-    })
+    // TODO: this should be the way we propagate dirty. Instead
+    // of using the overloaded method (_setGlobalXfoDirty)
+    // this.__globalXfoParam.valueChanged.connect(mode => {
+    //   if (mode == ValueSetMode.OPERATOR_DIRTIED)
+    //     this._propagateDirtyXfoToItems()
+    // })
 
     this.mouseDownOnItem = new Signal()
   }
@@ -202,12 +204,12 @@ class Group extends TreeItem {
   // Global Xfo
 
   /**
-   * The _cleanGlobalXfo method.
-   * @return {any} - The return value.
+   * The _setGlobalXfoDirty method.
    * @private
    */
-  _cleanGlobalXfo() {
-    return this.calcGroupXfo()
+  _setGlobalXfoDirty() {
+    super._setGlobalXfoDirty()
+    this._propagateDirtyXfoToItems()
   }
 
   /**
@@ -220,24 +222,21 @@ class Group extends TreeItem {
     this.calculatingGroupXfo = true
     const initialXfoMode = this.__initialXfoModeParam.getValue()
     let xfo
-    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = items[0].getGlobalXfo()
-      items.forEach((item, index) => {
-        if (item instanceof TreeItem) {
-          this.__initialXfos[index] = item.getGlobalXfo()
-        }
-      })
+    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.manual) {
+      // The xfo is manually set by the current global xfo.
+      this.invGroupXfo = this.getGlobalXfo()
+      this.calculatingGroupXfo = false
+      return;
+    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
+      xfo = this.__initialXfos[0]
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo()
-          xfo.tr.addInPlace(itemXfo.tr)
-          xfo.ori.addInPlace(itemXfo.ori)
-          // xfo.sc.addInPlace(itemXfo.sc)
-          this.__initialXfos[index] = itemXfo
+          xfo.tr.addInPlace(this.__initialXfos[index].tr)
+          xfo.ori.addInPlace(this.__initialXfos[index].ori)
           numTreeItems++
         }
       })
@@ -249,9 +248,7 @@ class Group extends TreeItem {
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo()
-          xfo.tr.addInPlace(itemXfo.tr)
-          this.__initialXfos[index] = itemXfo
+          xfo.tr.addInPlace(this.__initialXfos[index].tr)
           numTreeItems++
         }
       })
@@ -260,16 +257,16 @@ class Group extends TreeItem {
       throw new Error('Invalid mode.')
     }
 
+    this.setGlobalXfo(xfo, ValueSetMode.GENERATED_VALUE)
     this.invGroupXfo = xfo.inverse()
     this.calculatingGroupXfo = false
-    return xfo
   }
 
   /**
-   * The _propagateGroupXfoToItems method.
+   * The _propagateDirtyXfoToItems method.
    * @private
    */
-  _propagateGroupXfoToItems() {
+  _propagateDirtyXfoToItems() {
     if (this.calculatingGroupXfo) return
 
     const items = Array.from(this.__itemsParam.getValue())
@@ -295,6 +292,16 @@ class Group extends TreeItem {
       this.propagatingXfoToItems = false
     }
   }
+  
+
+  // _propagateGroupXfoToItem(index) {
+  //   const clean = () => {
+  //     const xfo = this.__globalXfoParam.getValue()
+  //     const delta = xfo.multiply(this.invGroupXfo)
+  //     return delta.multiply(this.__initialXfos[index])
+  //   }
+  //   item.getParameter('GlobalXfo').setDirty(clean)
+  // }
 
   // ////////////////////////////////////////
   // Materials
@@ -455,13 +462,27 @@ class Group extends TreeItem {
         )
     }
 
+    const updateGlobalXfo = () => {
+      const initialXfoMode = this.__initialXfoModeParam.getValue()
+      if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first && index == 0) {
+        this.calcGroupXfo()
+      } else if (
+        initialXfoMode == GROUP_INITIAL_XFO_MODES.average ||
+        initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri
+      ) {
+        this.calcGroupXfo()
+      }
+    }
+
     signalIndices.globalXfoChangedIndex = item.globalXfoChanged.connect(
       mode => {
         if (
           mode != ValueSetMode.OPERATOR_SETVALUE &&
           mode != ValueSetMode.OPERATOR_DIRTIED
-        )
+        ) {
           this.__initialXfos[index] = item.getGlobalXfo()
+          updateGlobalXfo()
+        }
       }
     )
     this.__initialXfos[index] = item.getGlobalXfo()
@@ -471,6 +492,8 @@ class Group extends TreeItem {
     )
 
     this.__signalIndices[index] = signalIndices
+
+    updateGlobalXfo()
   }
 
   /**
@@ -665,7 +688,8 @@ class Group extends TreeItem {
           count--
           if (count == 0) {
             this.calculatingGroupXfo = true
-            this.setGlobalXfo(this.calcGroupXfo(), ValueSetMode.GENERATED_VALUE)
+            // this.setGlobalXfo(this.calcGroupXfo(), ValueSetMode.GENERATED_VALUE)
+            this.calcGroupXfo()
             this.calculatingGroupXfo = false
           }
         },
