@@ -98,8 +98,6 @@ class Label extends DataImage {
 
     this.__canvasElem = document.createElement('canvas')
     const fontSize = 22
-    const outlineColor = new Color(0.2, 0.2, 0.2, 1.0)
-    const backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5)
 
     const libraryParam = this.addParameter(new StringParameter('library'))
     this.addParameter(new StringParameter('text', ''))
@@ -113,36 +111,48 @@ class Label extends DataImage {
     // }
     // textParam.valueChanged.connect(setLabelText);
 
-    this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)))
-    this.addParameter(new StringParameter('textAlign', 'left'))
+    this.addParameter(new ColorParameter('fontColor', new Color(0, 0, 0)))
+    // this.addParameter(new StringParameter('textAlign', 'left'))
     // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
-    this.addParameter(new StringParameter('fillText', true))
+    // this.addParameter(new BooleanParameter('fillText', true))
     this.addParameter(new NumberParameter('margin', fontSize * 0.5))
     this.addParameter(new NumberParameter('borderWidth', 2))
     this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5))
     this.addParameter(new BooleanParameter('outline', false))
-    this.addParameter(new BooleanParameter('outlineColor', outlineColor))
+    this.addParameter(new BooleanParameter('outlineColor', new Color(0, 0, 0)))
     this.addParameter(new BooleanParameter('background', true))
-    this.addParameter(new ColorParameter('backgroundColor', backgroundColor))
+    this.addParameter(
+      new ColorParameter('backgroundColor', new Color('#FBC02D'))
+    )
     this.addParameter(new BooleanParameter('fillBackground', true))
     this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
-    const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
-    const fontParam = this.addParameter(
-      new StringParameter('font', 'Helvetica')
-    )
+    this.addParameter(new NumberParameter('fontSize', 22))
+    this.addParameter(new StringParameter('font', 'Helvetica'))
 
     const reload = () => {
       this.loadLabelData()
     }
-    libraryParam.valueChanged.connect(reload)
     this.nameChanged.connect(reload)
-    fontSizeParam.valueChanged.connect(reload)
-    fontParam.valueChanged.connect(reload)
 
     if (library) libraryParam.setValue(library)
 
+    this.__requestedRerender = false
     this.__needsRender = false
     this.loadLabelData()
+  }
+
+  /**
+   * This method can be overrridden in derived classes
+   * to perform general updates (see GLPass or BaseItem).
+   * @param {any} param - The param param.
+   * @param {any} mode - The mode param.
+   * @private
+   */
+  __parameterValueChanged(param, mode) {
+    if (!this.__requestedRerender) {
+      this.__requestedRerender = true
+      this.loadLabelData()
+    }
   }
 
   /**
@@ -150,6 +160,7 @@ class Label extends DataImage {
    */
   loadLabelData() {
     const onLoaded = () => {
+      this.__requestedRerender = false
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
@@ -214,6 +225,7 @@ class Label extends DataImage {
    * Renders the label text to a canvas element ready to display,
    */
   renderLabelToImage() {
+    console.log("renderLabelToImage")
     const ctx2d = this.__canvasElem.getContext('2d', {
       alpha: true,
     })
@@ -223,7 +235,7 @@ class Label extends DataImage {
 
     const font = this.getParameter('font').getValue()
     const fontColor = this.getParameter('fontColor').getValue()
-    const textAlign = this.getParameter('textAlign').getValue()
+    const textAlign = 'left';//this.getParameter('textAlign').getValue()
     const fontSize = this.getParameter('fontSize').getValue()
     const margin = this.getParameter('margin').getValue()
     const borderWidth = this.getParameter('borderWidth').getValue()
@@ -248,10 +260,12 @@ class Label extends DataImage {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
     const fontHeight = parseInt(fontSize)
-    this.width = width + marginAndBorder * 2
-    this.height = fontHeight * lines.length + marginAndBorder * 2
+    this.width = Math.ceil(width + marginAndBorder * 2)
+    this.height = Math.ceil(fontHeight * lines.length + marginAndBorder * 2)
     ctx2d.canvas.width = this.width
     ctx2d.canvas.height = this.height
+    this.__canvasElem.width = this.width
+    this.__canvasElem.height = this.height
 
     // ctx2d.clearRect(0, 0, this.width, this.height);
     ctx2d.fillStyle = 'rgba(0, 0, 0, 0.0)'

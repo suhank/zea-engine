@@ -276,9 +276,8 @@ class GLBillboardsPass extends GLPass {
     }
 
     const doIt = () => {
-      // Note: Currently the atlas destroys all the source images
-      // after loading them(to save memory). This means we can't
-      // re-render the atlas. If re-rendering is needed, add an age
+      // Note: Maybe the atlas is alreadu up to date. It should
+      // maintain its own coherencey by listening to the sub images.
       this.__atlas.renderAtlas()
 
       if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
@@ -458,6 +457,8 @@ class GLBillboardsPass extends GLPass {
       return
     }
 
+    if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
+
     const gl = this.__gl
 
     gl.disable(gl.CULL_FACE)
@@ -471,7 +472,7 @@ class GLBillboardsPass extends GLPass {
     if (dist > this.__threshold) {
       this.sort(cameraPos)
       this.__prevSortCameraPos = cameraPos.clone()
-      if (this.__billboards.length > 1) {
+      if (this.__drawCount > 1) {
         const v0 = this.__billboards[
           this.__indexArray[0]
         ].billboard.getGlobalXfo().tr

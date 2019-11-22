@@ -181,6 +181,14 @@ class GLImageAtlas extends GLRenderTarget {
       }
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
       gltexture.addRef(this)
+      subImage.updated.connect(() => {
+        // TODO: Check to see if the new dimensions
+        // do not match the previous. If not, then we 
+        // need to relayout. wE could also avlid a complete
+        // relaout by reremoving and re-adding this image.
+        this.__layoutNeedsRegeneration = true
+        this.renderAtlas()
+      })
       this.__subImages.push(gltexture)
     } else {
       subImage.addRef(this) // subImage is a GLTexture2D
