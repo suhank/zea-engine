@@ -1,4 +1,5 @@
-import { Operator, OperatorOutput } from './Operator.js'
+import { Operator } from './Operator.js'
+import { OperatorOutput } from './OperatorOutput.js'
 import { ValueGetMode, NumberParameter, ListParameter } from '../Parameters'
 
 import { sgFactory } from '../SGFactory.js'

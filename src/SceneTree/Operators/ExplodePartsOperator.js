@@ -1,5 +1,6 @@
 import { Vec2, Vec3 } from '../../Math'
-import { Operator, XfoOperatorOutput } from './Operator.js'
+import { Operator } from './Operator.js'
+import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -40,6 +41,15 @@ class ExplodePartParameter extends StructParameter {
       new NumberParameter('Multiplier', 1.0)
     )
     this.__output = new XfoOperatorOutput('Part')
+  }
+
+  /**
+   * The getStage method.
+   * @param {number} mode - The mode value.
+   * @return {any} - The return value.
+   */
+  getStage(mode = ValueSetMode.USER_GETVALUE) {
+    return this.__stageParam.getValue(mode)
   }
 
   /**
@@ -105,15 +115,15 @@ class ExplodePartParameter extends StructParameter {
 
     let explodeDir = this.__axisParam.getValue()
     const multiplier = this.__multiplierParam.getValue()
-    const initialxfo = this.__output.getInitialValue()
+    const initialXfo = this.__output.getInitialValue()
     let xfo
     if (parentXfo) {
-      xfo = parentDelta.multiply(initialxfo)
+      xfo = parentDelta.multiply(initialXfo)
       explodeDir = parentXfo.ori.rotateVec3(explodeDir)
       xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
     } else {
       xfo = this.__output.getValue()
-      xfo.tr = initialxfo.tr.add(explodeDir.scale(dist * multiplier))
+      xfo.tr = initialXfo.tr.add(explodeDir.scale(dist * multiplier))
     }
 
     this.__output.setClean(xfo)
@@ -183,17 +193,21 @@ class ExplodePartsOperator extends Operator {
         this.__invParentSpace = parentItem.getGlobalXfo().inverse()
       else this.__invParentSpace = undefined
     })
-    this.__parentItemParam.treeItemGlobalXfoChanged.connect(
-      this.__opInputChanged
-    )
+    this.__parentItemParam.treeItemGlobalXfoChanged.connect(this.setDirty)
 
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
     )
     this.__itemsParam.elementAdded.connect((value, index) => {
-      value.setStage(index)
+      if (index > 0) {
+        const prevStage = this.__itemsParam.getElement(index-1).getStage();
+        value.setStage(prevStage + 1)
+        this.__stagesParam.setClean(prevStage + 2)
+      } else {
+        this.__stagesParam.setClean(1)
+      }
       this.addOutput(value.getOutput())
-      this.__stagesParam.setClean(this.__stagesParam.getValue() + 1)
+      this.setDirty()
     })
     this.__itemsParam.elementRemoved.connect((value, index) => {
       this.removeOutput(value.getOutput())

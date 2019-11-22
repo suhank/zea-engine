@@ -5,7 +5,7 @@ import { sgFactory } from './SGFactory.js'
 // Explicit impport of files to avoid importing all the parameter types.
 // Note: Soon these imports should be removed, once all code avoids calling
 // 'addPArameter' without the parameter instance.
-import { ParamFlags } from './Parameters/Parameter.js'
+import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
 /** Class representing a parameter owner in the scene tree.
  * @extends RefCounted
@@ -181,7 +181,7 @@ class ParameterOwner extends RefCounted {
 
     param.addRef(this)
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.parameterValueChanged.emit(param, mode)
+      this.__parameterValueChanged(param, mode)
     )
     this.__params[index] = param
     return param
@@ -307,7 +307,7 @@ class ParameterOwner extends RefCounted {
       const param = this.getParameter(srcParam.getName())
       if (param) {
         // Note: we are not cloning the values.
-        param.setValue(srcParam.getValue(), 2)
+        param.setValue(srcParam.getValue(), ValueSetMode.OPERATOR_SETVALUE)
       } else {
         this.addParameter(srcParam.clone())
       }

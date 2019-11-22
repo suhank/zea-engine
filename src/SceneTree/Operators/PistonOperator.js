@@ -1,5 +1,6 @@
 import { Vec3, Quat, Xfo } from '../../Math'
-import { Operator, XfoOperatorOutput } from './Operator.js'
+import { Operator } from './Operator.js'
+import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
   ValueGetMode,
   NumberParameter,

@@ -40,6 +40,8 @@ class BaseParameter extends RefCounted {
     super()
     this.__name = name
     this.__cleanerFns = []
+    this.__boundOps = []
+    this.__dirty = false
     this.__flags = 0
 
     this.valueChanged = new Signal()
@@ -146,26 +148,11 @@ class BaseParameter extends RefCounted {
   }
 
   /**
-   * The setDirty method.
-   * @param {any} cleanerFn - The cleanerFn value.
-   * @return {boolean} - The return value.
-   */
-  setDirty(cleanerFn) {
-    // If already dirty, simply return.
-    if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
-      return false
-    }
-    this.__cleanerFns.push(cleanerFn)
-
-    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
-    return true
-  }
-
-  /**
    * The setEnabled method.
    * @param {any} state - The state value.
    */
   setEnabled(state) {
+    console.warn("Deprecated Method: This method will be removed soon.")
     if (state) this.setFlag(ParamFlags.DISABLED)
     else this.clearFlag(ParamFlags.DISABLED)
   }
@@ -174,15 +161,74 @@ class BaseParameter extends RefCounted {
    * The isEnabled method.
    */
   isEnabled() {
+    console.warn("Deprecated Method: This method will be removed soon.")
     this.testFlag(ParamFlags.DISABLED)
   }
+
+  /**
+   * The bindOperator method.
+   * @param {Operator} op - The cleanerFn value.
+   */
+  bindOperator(op) {
+    this.__boundOps.push(op)
+    this.__dirty = true
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+  }
+
+  /**
+   * The unbindOperator method.
+   * @param {Operator} op - The cleanerFn value.
+   * @return {boolean} - The return value.
+   */
+  unbindOperator(op) {
+    // If already dirty, simply return.
+    const index = this.__boundOps.indexOf(op)
+    if (index == -1) {
+      return false
+    }
+    this.__boundOps.splice(index, 1)
+    this.__dirty = true
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+  }
+
+  /**
+   * The setDirty method.
+   * @param {any} cleanerFn - The cleanerFn value.
+   * @return {boolean} - The return value.
+   */
+  setDirty(cleanerFn) {
+
+    // If already dirty, simply return.
+    if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
+      return false
+    }
+    this.__cleanerFns.push(cleanerFn)
+    this.__dirty = true
+
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    return true
+  }
+  /**
+   * The setDirtyFromOp method.
+   */
+  setDirtyFromOp() {
+    // As we migrate to bound ops, we will no longer call store
+    // cleaner fns and intead simply propagate.
+    if (!this.__dirty) {
+      this.__dirty = true
+      this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    }
+    return true
+  }
+  
 
   /**
    * The isDirty method.
    * @return {boolean} - Returns a boolean.
    */
   isDirty() {
-    return this.__cleanerFns.length > 0
+    return this.__dirty
+    // return this.__cleanerFns.length > 0
   }
 
   /**
@@ -190,6 +236,14 @@ class BaseParameter extends RefCounted {
    * @private
    */
   _clean() {
+    // The evaluation of the operators will set this op to clean
+    // but we should set first so that we don't get a cycle
+    // wehn caling causes a getValue.
+    // this.__dirty = false
+    if (this.__boundOps.length > 0){
+       const bo = 3
+    }
+
     // Clean the param before we start evaluating the connected op.
     // This is so that operators can read from the current value
     // to compute the next.
@@ -199,6 +253,14 @@ class BaseParameter extends RefCounted {
       const res = fn(this.__value)
       if (res != undefined) this.__value = res
     }
+
+    // Note: we always evaluate all the ops in the stack, not just the dirty ones.
+    // A bas op might comptue global Xfo, and a subsequen modifies it.
+    for (const op of this.__boundOps) {
+      // The op can get the current value and modify it in place
+      // and set the output to clean. 
+      op.evaluate()
+    }
   }
 
   /**
@@ -207,6 +269,8 @@ class BaseParameter extends RefCounted {
    * @return {number} - The return value.
    */
   removeCleanerFn(cleanerFn) {
+    // Once operators store a dirty flag, then the op sets its
+    // self to clean before outputting.
     const index = this.__cleanerFns.indexOf(cleanerFn)
     if (index == -1) {
       // Note: when a getValue is called, first the cleaners array is reset
@@ -269,7 +333,7 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
-    if (mode == ValueGetMode.NORMAL && this.__cleanerFns.length > 0)
+    if (mode == ValueGetMode.NORMAL && this.__dirty)
       this._clean()
     return this.__value
   }
@@ -280,6 +344,10 @@ class Parameter extends BaseParameter {
    */
   setClean(value) {
     this.__value = value
+    // Note: an operator can write to multiple outputs, but is trigggered
+    // by exactly one output being cleaned. Before cleaning a given output
+    // we set it to clean so 
+    this.__dirty = false
   }
 
   /**
