@@ -3,7 +3,6 @@ import { Signal } from '../Utilities'
 import { Vec3 } from '../Math'
 import {
   Plane,
-  ProceduralSky,
   LightmapMixer,
   VLAAsset,
   EnvMap,
@@ -12,7 +11,6 @@ import { GLFbo } from './GLFbo.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLLightmapMixer } from './GLLightmapMixer.js'
 import { GLEnvMap } from './GLEnvMap.js'
-import { GLProceduralSky } from './GLProceduralSky.js'
 import { GLBaseRenderer } from './GLBaseRenderer.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import {
@@ -93,9 +91,7 @@ class GLRenderer extends GLBaseRenderer {
    * @private
    */
   __bindEnvMap(env) {
-    if (env instanceof ProceduralSky) {
-      this.__glEnvMap = new GLProceduralSky(this.__gl, env)
-    } else if (env instanceof EnvMap) {
+    if (env instanceof EnvMap) {
       this.__glEnvMap = env.getMetadata('gltexture')
       if (!this.__glEnvMap) {
         if (env.type === 'FLOAT') {
