@@ -83,7 +83,7 @@ class VRController {
               new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
             )
           )
-          this.__treeItem.addChild(controllerTree)
+          this.__treeItem.addChild(controllerTree, false)
         })
       })
     }

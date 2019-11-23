@@ -654,8 +654,15 @@ class TreeItem extends BaseItem {
   /**
    * Add a child TreeItem..
    * @param {TreeItem} childItem - The child TreeItem to add.
-   * @param {boolean} maintainXfo - Boolean that determines if the Xfo value is maintained.
-   * @param {boolean} fixCollisions - Modify the name of the item to avoid name collisions.
+   * @param {boolean} maintainXfo - Boolean that determines if
+   * the Global Xfo value is maintained. If true, when moving
+   * items in the hierarchy from one parent to another, the local Xfo
+   * of the item will be modified to maintaine and the Global Xfo.
+   * Note: this option defaults to false because we expect that is the
+   * behavior users would expect when manipulating the tree in code.
+   * To be safe and unambiguous, always try to specify this value.
+   * @param {boolean} fixCollisions - Modify the name of the item to avoid
+   * name collisions with other chidrent of the same parent.
    * If false, an exception wll be thrown instead if a name collision occurs.
    * @return {number} - The index of the child item in this items children array.
    */
@@ -1256,7 +1263,7 @@ class TreeItem extends BaseItem {
       if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
       //     src.childAdded.connect((childItem, index)=>{
-      //         this.addChild(childItem.clone(flags));
+      //         this.addChild(childItem.clone(flags), false);
       //     })
       // }
     })

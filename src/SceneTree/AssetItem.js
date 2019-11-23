@@ -77,11 +77,11 @@ class AssetItem extends TreeItem {
       if (!layers[layer]) {
         if (!layerRoot) {
           layerRoot = new TreeItem('Layers')
-          this.addChild(layerRoot)
+          this.addChild(layerRoot, false)
         }
         const group = new Group(layer)
         group.propagateXfoToItems = false
-        layerRoot.addChild(group)
+        layerRoot.addChild(group, false)
         layers[layer] = group
       }
       layers[layer].addItem(geomItem)

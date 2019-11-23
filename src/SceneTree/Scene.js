@@ -67,7 +67,7 @@ class Scene {
    */
   addAsset(asset) {
     console.warn('Deprecated Function. Please access the Scene Root object.')
-    this.root.addChild(asset)
+    this.root.addChild(asset, false)
   }
   /**
    * Set up the scene grid.
@@ -81,7 +81,7 @@ class Scene {
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
     gridMaterial.getParameter('Color').setValue(gridColor)
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
-    gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial))
+    gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
     const axisLine = new Lines()
     axisLine.setNumVertices(2)
     axisLine.setNumSegments(1)
@@ -93,7 +93,8 @@ class Scene {
       .getParameter('Color')
       .setValue(new Color(gridColor.luminance(), 0, 0))
     gridTreeItem.addChild(
-      new GeomItem('xAxisLine', axisLine, gridXAxisMaterial)
+      new GeomItem('xAxisLine', axisLine, gridXAxisMaterial),
+      false
     )
     const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader')
     gridZAxisMaterial
@@ -103,14 +104,14 @@ class Scene {
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridZAxisMaterial)
     zAxisLineItem.setGeomOffsetXfo(geomOffset)
-    gridTreeItem.addChild(zAxisLineItem)
+    gridTreeItem.addChild(zAxisLineItem, false)
     gridTreeItem.setSelectable(false, true)
     gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
 
     // Avoid persisting the grid and hide in the tree view.
     gridTreeItem.clearFlag(ItemFlags.USER_EDITED)
     gridTreeItem.setFlag(ItemFlags.INVISIBLE)
-    this.root.addChild(gridTreeItem)
+    this.root.addChild(gridTreeItem, false)
 
     return gridTreeItem
   }

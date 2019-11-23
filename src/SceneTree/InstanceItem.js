@@ -24,19 +24,19 @@ class InstanceItem extends TreeItem {
 
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
-      const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-      child.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
-      this.addChild(child)
+      const clonedTree = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+      clonedTree.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
+      this.addChild(clonedTree, false)
     } else {
-      for (let i = 0; i < this.__srcTree.getNumChildren(); i++) {
-        this.addChild(
-          this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-        )
-      }
+      const children = this.__srcTree.getChildren()
+      children.forEach(child => {
+        const clonedChild = child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+        this.addChild(clonedChild, false)
+      })
     }
 
     // this.__srcTree.childAdded.connect((child)=>{
-    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE), false)
     // })
   }
 
