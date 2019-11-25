@@ -20,30 +20,43 @@ class AimOperator extends Operator {
   constructor(name) {
     super(name)
 
-    this.addParameter(new NumberParameter('weight', 1))
+    this.addParameter(new NumberParameter('Weight', 1))
     this.addParameter(
-      new MultiChoiceParameter('axis', 0, [
+      new MultiChoiceParameter('Axis', 0, [
         '+X Axis',
         '-X Axis',
         '+Y Axis',
         '-Y Axis',
         '+Z Axis',
         '-Z Axis',
-      ]));
+      ])
+    )
 
-    this.addParameter(new BooleanParameter('stretch', false))
+    this.addParameter(new BooleanParameter('Stretch', false))
+    this.addParameter(new NumberParameter('Initial Dist', 1.0))
     this.addParameter(new XfoParameter('Target'))
     this.addOutput(new XfoOperatorOutput('InputOutput'))
+  }
+
+  /**
+   * The resetStretchRefDist method.
+   */
+  resetStretchRefDist() {
+    const target = this.getParameter('Target').getValue()
+    const output = this.getOutputByIndex(0)
+    const xfo = output.getValue()
+    const dist = target.tr.subtract(xfo.tr).length()
+    console.log("Initial Dist:", dist)
+    this.getParameter('Initial Dist').setValue(dist)
   }
 
   /**
    * The evaluate method.
    */
   evaluate() {
-    const weight = this.getParameter('weight').getValue()
+    const weight = this.getParameter('Weight').getValue()
     const target = this.getParameter('Target').getValue()
-    const axis = this.getParameter('axis').getValue()
-    const stretch = this.getParameter('stretch').getValue()
+    const axis = this.getParameter('Axis').getValue()
     const output = this.getOutputByIndex(0)
     const xfo = output.getValue()
     const dir = target.tr.subtract(xfo.tr)
@@ -79,20 +92,22 @@ class AimOperator extends Operator {
 
     xfo.ori = align.multiply(xfo.ori)
 
+    const stretch = this.getParameter('Stretch').getValue()
     if (stretch) {
+      const initialDist = this.getParameter('Initial Dist').getValue()
       // Scale the output to reach towards the target.
       switch (axis) {
         case 0:
         case 1:
-          xfo.sc.x = dist
+          xfo.sc.x *= dist / initialDist
           break
         case 2:
         case 3:
-          xfo.sc.y = dist
+          xfo.sc.y *= dist / initialDist
           break
         case 4:
         case 5:
-          xfo.sc.y = dist
+          xfo.sc.y *= dist / initialDist
           break
       }
     }
