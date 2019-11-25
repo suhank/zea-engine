@@ -361,7 +361,8 @@ class GLViewport extends GLBaseViewport {
           geomData
         )
         if (geomData[3] == 0) return undefined
-        passId = Math.round(geomData[0])
+        // Mask the pass id to be only the first 6 bits of the integer.
+        passId = Math.round(geomData[0]) & (64 - 1)
       } else {
         geomData = new Uint8Array(4)
         gl.readPixels(
