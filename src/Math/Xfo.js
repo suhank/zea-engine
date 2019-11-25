@@ -95,28 +95,19 @@ class Xfo {
    * @return {Xfo} - Returns an Xfo.
    */
   multiply(xfo) {
-    if (
-      (this.sc.x != this.sc.y || this.sc.x != this.sc.z) &&
-      !xfo.ori.isIdentity()
-    ) {
-      if (
-        Math.abs(this.sc.x - this.sc.y) > 0.000001 ||
-        Math.abs(this.sc.x - this.sc.z) > 0.000001
-      ) {
-        console.warn(
-          'Xfo.multiply: Cannot multiply to xfos with non-uniform scaling without causing shearing. Use Mat44s instead.'
-        )
-      }
-    }
 
-    // const sc_rot = this.ori.inverse();
-    // const rotated_unit = xfo.ori.rotateVec3(sc_helper);
-    // const rotated_sc = this.ori.inverse().rotateVec3(xfo.sc).multiply(rotated_unit);
+    let this_sc = this.sc
+    if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
+      this_sc = xfo.ori.rotateVec3(this.sc)
+      if(Math.sign(this_sc.x) != Math.sign(this.sc.x)) this_sc.x = -this_sc.x;
+      if(Math.sign(this_sc.y) != Math.sign(this.sc.y)) this_sc.y = -this_sc.y;
+      if(Math.sign(this_sc.z) != Math.sign(this.sc.z)) this_sc.z = -this_sc.z;
+    }
 
     const result = new Xfo(
       this.tr.add(this.ori.rotateVec3(this.sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
-      this.sc.multiply(xfo.sc)
+      this_sc.multiply(xfo.sc)
     )
     return result
   }
