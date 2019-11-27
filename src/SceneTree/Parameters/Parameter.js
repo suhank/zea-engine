@@ -8,10 +8,10 @@ const ValueGetMode = {
 }
 
 // Note: In some cases we want the parameter to emit a notification
-// and cause the update of the scene during evaluation. (like statemahcine updates).
+// and cause the update of the scene during evaluation (like statemachine updates).
 // But we also don't want the parameter value to then
 // be considered modified so it is saved to the JSON file. I'm not sure how to address this.
-// We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
+// We need to check what happens if a parameter emits a 'valueChanged' during cleaning (maybe it gets ignored).
 const ValueSetMode = {
   USER_SETVALUE: 0 /* A value has being modified by a local user. emit events and set user edited flag */,
   REMOTEUSER_SETVALUE: 1 /* A value has being modified by a remote user. emit events and set user edited flag. may not trigger file save. */,
@@ -21,7 +21,6 @@ const ValueSetMode = {
   COMPUTED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
   GENERATED_VALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
   DATA_LOAD: 4 /* Generate events, but don't flag the parameter as user edited*/,
-  STATEMACHINE_SETVALUE: 4 /* Generate events, but don't flag the parameter as user edited*/,
 }
 const ParamFlags = {
   USER_EDITED: 1 << 1,
@@ -34,12 +33,14 @@ const ParamFlags = {
 class BaseParameter extends RefCounted {
   /**
    * Create a base parameter.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the base parameter.
    */
   constructor(name) {
     super()
     this.__name = name
     this.__cleanerFns = []
+    this.__boundOps = []
+    this.__dirty = false
     this.__flags = 0
 
     this.valueChanged = new Signal()
@@ -52,16 +53,16 @@ class BaseParameter extends RefCounted {
   }
 
   /**
-   * The getName method.
-   * @return {any} - The return value.
+   * Getter for the base parameter name.
+   * @return {string} - Returns the name.
    */
   getName() {
     return this.__name
   }
 
   /**
-   * The setName method.
-   * @param {string} name - The name param.
+   * Setter for the base parameter name.
+   * @param {string} name - The base parameter name.
    */
   setName(name) {
     if (name != this.__name) {
@@ -72,7 +73,7 @@ class BaseParameter extends RefCounted {
   }
 
   /**
-   * The getOwner method.
+   * Getter for the owner of the parameter.
    * @return {any} - The return value.
    */
   getOwner() {
@@ -80,15 +81,15 @@ class BaseParameter extends RefCounted {
   }
 
   /**
-   * The addOwner method.
-   * @param {any} ownerItem - The name param.
+   * Adds the owner of the parameter.
+   * @param {any} ownerItem - The ownerItem value.
    */
   addOwner(ownerItem) {
     this.addRef(ownerItem)
   }
 
   /**
-   * The getPath method.
+   * Getter for the parameter path.
    * @return {any} - The return value.
    */
   getPath() {
@@ -107,7 +108,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The setFlag method.
-   * @param {number} flag - The flag param.
+   * @param {number} flag - The flag value.
    */
   setFlag(flag) {
     this.__flags |= flag
@@ -115,16 +116,16 @@ class BaseParameter extends RefCounted {
 
   /**
    * The clearFlag method.
-   * @param {number} flag - The flag param.
+   * @param {number} flag - The flag value.
    */
   clearFlag(flag) {
     this.__flags &= ~flag
   }
 
   /**
-   * The testFlag method.
-   * @param {number} flag - The flag param.
-   * @return {any} - The return value.
+   * Returns true if the flag if set, otherwise returns false.
+   * @param {number} flag - The flag to test.
+   * @return {boolean} - Returns a boolean indicating if the flag is set.
    */
   testFlag(flag) {
     return (this.__flags & flag) != 0
@@ -146,26 +147,11 @@ class BaseParameter extends RefCounted {
   }
 
   /**
-   * The setDirty method.
-   * @param {any} cleanerFn - The cleanerFn param.
-   * @return {boolean} - The return value.
-   */
-  setDirty(cleanerFn) {
-    // If already dirty, simply return.
-    if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
-      return false
-    }
-    this.__cleanerFns.push(cleanerFn)
-
-    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
-    return true
-  }
-
-  /**
    * The setEnabled method.
-   * @param {any} state - The state param.
+   * @param {any} state - The state value.
    */
   setEnabled(state) {
+    console.warn("Deprecated Method: This method will be removed soon.")
     if (state) this.setFlag(ParamFlags.DISABLED)
     else this.clearFlag(ParamFlags.DISABLED)
   }
@@ -174,15 +160,74 @@ class BaseParameter extends RefCounted {
    * The isEnabled method.
    */
   isEnabled() {
+    console.warn("Deprecated Method: This method will be removed soon.")
     this.testFlag(ParamFlags.DISABLED)
   }
 
   /**
+   * The bindOperator method.
+   * @param {Operator} op - The cleanerFn value.
+   */
+  bindOperator(op) {
+    this.__boundOps.push(op)
+    this.__dirty = true
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+  }
+
+  /**
+   * The unbindOperator method.
+   * @param {Operator} op - The cleanerFn value.
+   * @return {boolean} - The return value.
+   */
+  unbindOperator(op) {
+    // If already dirty, simply return.
+    const index = this.__boundOps.indexOf(op)
+    if (index == -1) {
+      return false
+    }
+    this.__boundOps.splice(index, 1)
+    this.__dirty = true
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+  }
+
+  /**
+   * The setDirty method.
+   * @param {any} cleanerFn - The cleanerFn value.
+   * @return {boolean} - The return value.
+   */
+  setDirty(cleanerFn) {
+
+    // If already dirty, simply return.
+    if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
+      return false
+    }
+    this.__cleanerFns.push(cleanerFn)
+    this.__dirty = true
+
+    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    return true
+  }
+  /**
+   * The setDirtyFromOp method.
+   */
+  setDirtyFromOp() {
+    // As we migrate to bound ops, we will no longer call store
+    // cleaner fns and intead simply propagate.
+    if (!this.__dirty) {
+      this.__dirty = true
+      this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    }
+    return true
+  }
+  
+
+  /**
    * The isDirty method.
-   * @return {any} - The return value.
+   * @return {boolean} - Returns a boolean.
    */
   isDirty() {
-    return this.__cleanerFns.length > 0
+    return this.__dirty
+    // return this.__cleanerFns.length > 0
   }
 
   /**
@@ -190,8 +235,16 @@ class BaseParameter extends RefCounted {
    * @private
    */
   _clean() {
+    // The evaluation of the operators will set this op to clean
+    // but we should set first so that we don't get a cycle
+    // wehn caling causes a getValue.
+    // this.__dirty = false
+    if (this.__boundOps.length > 0){
+       const bo = 3
+    }
+
     // Clean the param before we start evaluating the connected op.
-    // this is so that operators can read from the current value
+    // This is so that operators can read from the current value
     // to compute the next.
     const fns = this.__cleanerFns
     this.__cleanerFns = []
@@ -199,14 +252,24 @@ class BaseParameter extends RefCounted {
       const res = fn(this.__value)
       if (res != undefined) this.__value = res
     }
+
+    // Note: we always evaluate all the ops in the stack, not just the dirty ones.
+    // A bas op might comptue global Xfo, and a subsequen modifies it.
+    for (const op of this.__boundOps) {
+      // The op can get the current value and modify it in place
+      // and set the output to clean. 
+      op.evaluate()
+    }
   }
 
   /**
    * The removeCleanerFn method.
-   * @param {any} cleanerFn - The cleanerFn param.
+   * @param {any} cleanerFn - The cleanerFn value.
    * @return {number} - The return value.
    */
   removeCleanerFn(cleanerFn) {
+    // Once operators store a dirty flag, then the op sets its
+    // self to clean before outputting.
     const index = this.__cleanerFns.indexOf(cleanerFn)
     if (index == -1) {
       // Note: when a getValue is called, first the cleaners array is reset
@@ -223,7 +286,7 @@ class BaseParameter extends RefCounted {
 
   /**
    * The clone method.
-   * @param {number} flags - The flags param.
+   * @param {number} flags - The flags value.
    */
   clone(flags) {
     console.error('TOOD: implment me')
@@ -233,9 +296,9 @@ class BaseParameter extends RefCounted {
    * The destroy method.
    */
   destroy() {
-    // Note: some parameters hold refs to geoms/materials,
+    // Note: Some parameters hold refs to geoms/materials,
     // which need to be explicitly cleaned up.
-    // e.g. freeing GPU Memory.
+    // E.g. freeing GPU Memory.
   }
 }
 
@@ -245,9 +308,9 @@ class BaseParameter extends RefCounted {
 class Parameter extends BaseParameter {
   /**
    * Create a parameter.
-   * @param {string} name - The name value.
-   * @param {any} value - The value value.
-   * @param {any} dataType - The dataType value.
+   * @param {string} name - The name of the parameter.
+   * @param {any} value - The value of the parameter.
+   * @param {any} dataType - The data type of the parameter.
    */
   constructor(name, value, dataType) {
     super(name)
@@ -265,11 +328,11 @@ class Parameter extends BaseParameter {
 
   /**
    * The getValue method.
-   * @param {any} mode - The mode param.
+   * @param {number} mode - The mode value.
    * @return {any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
-    if (mode == ValueGetMode.NORMAL && this.__cleanerFns.length > 0)
+    if (mode == ValueGetMode.NORMAL && this.__dirty)
       this._clean()
     return this.__value
   }
@@ -280,12 +343,16 @@ class Parameter extends BaseParameter {
    */
   setClean(value) {
     this.__value = value
+    // Note: an operator can write to multiple outputs, but is trigggered
+    // by exactly one output being cleaned. Before cleaning a given output
+    // we set it to clean so 
+    this.__dirty = false
   }
 
   /**
    * The getValue method.
    * @param {any} value - The value param.
-   * @param {any} mode - The mode param.
+   * @param {number} mode - The mode param.
    */
   setValue(value, mode = ValueSetMode.USER_SETVALUE) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
@@ -335,26 +402,14 @@ class Parameter extends BaseParameter {
     this.valueChanged.emit(ValueSetMode.USER_SETVALUE_DONE)
   }
 
-  /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  clone(flags) {
-    const clonedValue = this.__value
-    if (clonedValue.clone) clonedValue = clonedValue.clone()
-    const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType)
-    return clonedParam
-  }
-
   // ////////////////////////////////////////
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     if (this.__value.toJSON)
@@ -363,10 +418,10 @@ class Parameter extends BaseParameter {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     if (j.value == undefined) {
@@ -390,11 +445,27 @@ class Parameter extends BaseParameter {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     console.error('TODO')
+  }
+
+  // ////////////////////////////////////////
+  // Clone
+
+  /**
+   * The clone method constructs a new parameter, copies its values
+   * from this parameter and returns it.
+   * @param {number} flags - The flags value.
+   * @return {Parameter} - Returns a new cloned parameter.
+   */
+  clone(flags) {
+    const clonedValue = this.__value
+    if (clonedValue.clone) clonedValue = clonedValue.clone()
+    const clonedParam = new Parameter(this.__name, clonedValue, this.__dataType)
+    return clonedParam
   }
 }
 

@@ -9,8 +9,8 @@ import { GLFbo } from '../GLFbo.js'
 class VRController {
   /**
    * Create a VR controller.
-   * @param {any} vrviewport - The vrviewport value.
-   * @param {any} inputSource - The inputSource value.
+   * @param {any} vrviewport - The Vr viewport.
+   * @param {any} inputSource - The input source.
    * @param {any} id - The id value.
    */
   constructor(vrviewport, inputSource, id) {
@@ -83,7 +83,7 @@ class VRController {
               new Vec3(0.001, 0.001, 0.001) // VRAsset units are in mm.
             )
           )
-          this.__treeItem.addChild(controllerTree)
+          this.__treeItem.addChild(controllerTree, false)
         })
       })
     }
@@ -139,7 +139,7 @@ class VRController {
 
   /**
    * The isButtonPressed method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isButtonPressed() {
     return this.__buttonPressed
@@ -165,9 +165,9 @@ class VRController {
 
   /**
    * The updatePose method.
-   * @param {any} refSpace - The refSpace param.
-   * @param {any} xrFrame - The xrFrame param.
-   * @param {any} inputSource - The inputSource param.
+   * @param {any} refSpace - The refSpace value.
+   * @param {any} xrFrame - The xrFrame value.
+   * @param {any} inputSource - The inputSource value.
    */
   updatePose(refSpace, xrFrame, inputSource) {
     const inputPose = xrFrame.getPose(inputSource.gripSpace, refSpace)

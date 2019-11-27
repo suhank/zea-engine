@@ -8,10 +8,10 @@ import {
 } from '../../SceneTree/Parameters'
 import { StateAction } from '../StateAction.js'
 
-/** Class representing setting camera position and target.
+/** A state machine action that sets the camera position and target.
  * @extends StateAction
  */
-class SetCameraPosisionAndTarget extends StateAction {
+class SetCameraPositionAndTarget extends StateAction {
   /**
    * Create a set camera position and target.
    */
@@ -28,27 +28,26 @@ class SetCameraPosisionAndTarget extends StateAction {
   }
 
   /**
-   * The setCameraPosisionAndTarget method.
-   * @param {any} pos - The pos param.
-   * @param {any} target - The target param.
+   * Sets the camera's position and target.
+   * @param {any} pos - The position of the camera.
+   * @param {any} target - The target of the camera.
    */
-  setCameraPosisionAndTarget(pos, target) {
+  SetCameraPositionAndTarget(pos, target) {
     this.getParameter('cameraPos').setValue(pos)
     this.getParameter('cameraTarget').setValue(target)
   }
 
   /**
-   * The activate method.
+   * Activates the action.
    */
   activate() {
     const camera = this.getParameter('Camera').getValue()
     if (!camera) {
       console.warn(
-        'Camera not assigned to SetCameraPosisionAndTarget state action'
+        'Camera not assigned to SetCameraPositionAndTarget state action'
       )
       return
     }
-
     const posEnd = this.getParameter('cameraPos').getValue()
     const targetEnd = this.getParameter('cameraTarget').getValue()
     const interpTime = this.getParameter('interpTime').getValue()
@@ -117,7 +116,7 @@ class SetCameraPosisionAndTarget extends StateAction {
   }
 
   /**
-   * The cancel method.
+   * Cancels the action.
    */
   cancel() {
     if (this.__timeoutId) {
@@ -128,7 +127,7 @@ class SetCameraPosisionAndTarget extends StateAction {
 }
 
 sgFactory.registerClass(
-  'SetCameraPosisionAndTarget',
-  SetCameraPosisionAndTarget
+  'SetCameraPositionAndTarget',
+  SetCameraPositionAndTarget
 )
-export { SetCameraPosisionAndTarget }
+export { SetCameraPositionAndTarget }

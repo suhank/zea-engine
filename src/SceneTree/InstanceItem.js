@@ -3,13 +3,13 @@ import { ValueSetMode } from './Parameters'
 import { TreeItem, CloneFlags } from './TreeItem.js'
 import { sgFactory } from './SGFactory.js'
 
-/** Class representing an instance item.
+/** Class representing an instance item in a scene tree.
  * @extends TreeItem
  */
 class InstanceItem extends TreeItem {
   /**
    * Create an instance item.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the instance item.
    */
   constructor(name) {
     super(name)
@@ -17,26 +17,26 @@ class InstanceItem extends TreeItem {
 
   /**
    * The setSrcTree method.
-   * @param {any} treeItem - The treeItem param.
+   * @param {any} treeItem - The treeItem value.
    */
   setSrcTree(treeItem) {
     this.__srcTree = treeItem
 
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
-      const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-      child.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
-      this.addChild(child)
+      const clonedTree = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+      clonedTree.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
+      this.addChild(clonedTree, false)
     } else {
-      for (let i = 0; i < this.__srcTree.getNumChildren(); i++) {
-        this.addChild(
-          this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-        )
-      }
+      const children = this.__srcTree.getChildren()
+      children.forEach(child => {
+        const clonedChild = child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+        this.addChild(clonedChild, false)
+      })
     }
 
     // this.__srcTree.childAdded.connect((child)=>{
-    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE), false)
     // })
   }
 
@@ -76,8 +76,8 @@ class InstanceItem extends TreeItem {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context = {}) {
     super.readBinary(reader, context)
@@ -91,10 +91,10 @@ class InstanceItem extends TreeItem {
   }
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context = {}, flags = 0) {
     const j = super.toJSON(context, flags)
@@ -102,11 +102,11 @@ class InstanceItem extends TreeItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @param {any} onDone - The onDone param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @param {any} onDone - The onDone value.
    */
   fromJSON(j, context = {}, flags = 0, onDone) {}
 }

@@ -2,10 +2,15 @@ import { Signal } from '../Utilities'
 
 let counter = 0
 
-/** Class representing ref counted. */
+/** Class representing a ref counted object. RefCounted
+ *  objects track ownership and allow explicit cleanup
+ *  of resources. This is necessary when JavaScript
+ *  objects own references to GPU resources that need to
+ *  be cleaned up when the JavaScript object is destroyed.
+ */
 class RefCounted {
   /**
-   * Create ref counted.
+   * Create a ref counted object.
    */
   constructor() {
     if (this.constructor.name == 'RefCounted') {
@@ -18,7 +23,8 @@ class RefCounted {
   }
 
   /**
-   * The getId method.
+   * Returns the unique id of the object. Every Object has a unique
+   * identifier which is based on a counter that is incremented.
    * @return {any} - The return value.
    */
   getId() {
@@ -27,7 +33,7 @@ class RefCounted {
 
   /**
    * The numRefs method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   numRefs() {
     return this.__refs.length
@@ -35,8 +41,8 @@ class RefCounted {
 
   /**
    * The addRef method.
-   * @param {any} referer - The referer param.
-   * @return {any} - The return value.
+   * @param {any} referer - The referer value.
+   * @return {boolean} - The return value.
    */
   addRef(referer) {
     if (!referer)
@@ -50,7 +56,7 @@ class RefCounted {
 
   /**
    * The removeRef method.
-   * @param {any} referer - The referer param.
+   * @param {any} referer - The referer value.
    */
   removeRef(referer) {
     if (!referer)
@@ -70,7 +76,7 @@ class RefCounted {
 
   /**
    * The getRefer method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getRefer(index) {
@@ -79,7 +85,7 @@ class RefCounted {
 
   /**
    * The getRefIndex method.
-   * @param {any} referer - The referer param.
+   * @param {any} referer - The referer value.
    * @return {any} - The return value.
    */
   getRefIndex(referer) {
@@ -87,15 +93,19 @@ class RefCounted {
   }
 
   /**
-   * The isDestroyed method.
-   * @return {any} - The return value.
+   * Returns true if this object has already been destroyed.
+   * @return {boolean} - Returns true or false.
    */
   isDestroyed() {
     return this.__destroyed
   }
 
   /**
-   * The destroy method.
+   * The destroy method is invoked when the last owner
+   * is removed from a RefCounted object. Derived objects can
+   * override this method to perform explicit cleanup.
+   * The destructing signal is triggered so observers can
+   * respond to this objects destruction.
    */
   destroy() {
     this.__destroyed = true

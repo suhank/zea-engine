@@ -2,7 +2,14 @@ import { Color } from '../Math'
 import { BaseItem } from './BaseItem.js'
 import { NumberParameter, ColorParameter, ImageParameter } from './Parameters'
 
+/** Class representing scene settings in a scene tree.
+ * @extends BaseItem
+ */
 class SceneSettings extends BaseItem {
+  /**
+   * Create scene settings.
+   * @param {string} name - The name of the scene settings item.
+   */
   constructor(name) {
     super(name)
     this.addParameter(

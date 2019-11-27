@@ -8,7 +8,14 @@ import { QuerySet } from './Parameters/QuerySetParameter.js'
 import { Group } from './Group'
 import { sgFactory } from './SGFactory.js'
 
+/** Class representing an advanced group in the scene tree.
+ * @extends Group
+ */
 class AdvancedGroup extends Group {
+  /**
+   * Create an advanced group.
+   * @param {string} name - The name of the advanced group.
+   */
   constructor(name) {
     super(name)
 
@@ -26,12 +33,10 @@ class AdvancedGroup extends Group {
     })
   }
 
-  clone(flags) {
-    const cloned = new AdvancedGroup()
-    cloned.copyFrom(this, flags)
-    return cloned
-  }
-
+  /**
+   * Sets the owner of the advanced group
+   * @param {any} owner - The owner.
+   */
   setOwner(owner) {
     super.setOwner(owner)
 
@@ -39,9 +44,12 @@ class AdvancedGroup extends Group {
       this.__searchRootParam.setValue(owner)
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Items
 
+  /**
+   * The resolveQueries mothod.
+   */
   resolveQueries() {
     const searchRoot = this.__searchRootParam.getValue()
     if (searchRoot == undefined) return
@@ -254,16 +262,43 @@ class AdvancedGroup extends Group {
     this.setItems(new Set(result))
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Persistence
 
+  /**
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
+   */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     return j
   }
 
+  /**
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
+  }
+
+  // ////////////////////////////////////////
+  // Clone
+
+  /**
+   * The clone method constructs a new advanced group.
+   * copies its values and returns it.
+   * @param {number} flags - The flags value.
+   * @return {AdvancedGroup} - Returns a new cloned advanced group.
+   */
+  clone(flags) {
+    const cloned = new AdvancedGroup()
+    cloned.copyFrom(this, flags)
+    return cloned
   }
 }
 

@@ -101,7 +101,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getXfo method.
-   * @return {any} - The return value.
+   * @return {Xfo} - The return value.
    */
   getXfo() {
     return this.__stageXfo
@@ -109,7 +109,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The setXfo method.
-   * @param {any} xfo - The xfo param.
+   * @param {Xfo} xfo - The xfo value.
    */
   setXfo(xfo) {
     this.__stageXfo = xfo
@@ -140,7 +140,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The isPresenting method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isPresenting() {
     return this.__session
@@ -430,8 +430,8 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The __createController method.
-   * @param {any} id - The id param.
-   * @param {any} inputSource - The inputSource param.
+   * @param {any} id - The id value.
+   * @param {any} inputSource - The inputSource value.
    * @return {any} - The return value.
    * @private
    */
@@ -446,7 +446,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The updateControllers method.
-   * @param {any} xrFrame - The xrFrame param.
+   * @param {any} xrFrame - The xrFrame value.
    */
   updateControllers(xrFrame) {
     const inputSources = this.__session.inputSources
@@ -468,7 +468,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The draw method.
-   * @param {any} xrFrame - The xrFrame param.
+   * @param {any} xrFrame - The xrFrame value.
    */
   draw(xrFrame) {
     const session = xrFrame.session

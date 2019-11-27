@@ -1,10 +1,5 @@
 import { Signal } from '../../Utilities'
-import {
-  ParamFlags,
-  ValueSetMode,
-  Parameter,
-  ListParameter,
-} from './Parameter.js'
+import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a tree item parameter.
  * @extends Parameter
@@ -12,7 +7,7 @@ import {
 class TreeItemParameter extends Parameter {
   /**
    * Create a tree item parameter.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the tree item parameter.
    * @param {any} filterFn - The filterFn value.
    */
   constructor(name, filterFn = undefined) {
@@ -22,18 +17,8 @@ class TreeItemParameter extends Parameter {
   }
 
   /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  clone(flags) {
-    const clonedParam = new TreeItemParameter(this.__name, this.__filterFn)
-    return clonedParam
-  }
-
-  /**
    * The setOwner method.
-   * @param {any} owner - The owner param.
+   * @param {any} owner - The owner value.
    */
   setOwner(owner) {
     this.__owner = owner
@@ -49,9 +34,9 @@ class TreeItemParameter extends Parameter {
 
   /**
    * The setFilterFn method.
-   * @param {any} flterFn - The flterFn param.
+   * @param {any} flterFn - The flterFn value.
    */
-  setFilterFn(flterFn) {
+  setFilterFn() {
     this.__filterFn = filterFn
   }
 
@@ -65,9 +50,9 @@ class TreeItemParameter extends Parameter {
 
   /**
    * The setValue method.
-   * @param {any} treeItem - The treeItem param.
-   * @param {any} mode - The mode param.
-   * @return {any} - The return value.
+   * @param {any} treeItem - The treeItem value.
+   * @param {number} mode - The mode value.
+   * @return {boolean} - The return value.
    */
   setValue(treeItem, mode = ValueSetMode.USER_SETVALUE) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
@@ -100,10 +85,10 @@ class TreeItemParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     if ((this.__flags & ParamFlags.USER_EDITED) == 0) return
@@ -113,10 +98,10 @@ class TreeItemParameter extends Parameter {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     if (j.value == undefined) {
@@ -128,7 +113,7 @@ class TreeItemParameter extends Parameter {
       treeItem => {
         this.setValue(treeItem)
       },
-      reason => {
+      () => {
         console.warn(
           'Unable to resolve tree item parameter value:' + pj.paramPath
         )
@@ -137,8 +122,23 @@ class TreeItemParameter extends Parameter {
     this.__flags |= ParamFlags.USER_EDITED
   }
 
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
   /**
-   * The destroy method.
+   * The clone method constructs a new tree item parameter, copies its values
+   * from this parameter and returns it.
+   * @param {number} flags - The flags value.
+   * @return {TreeItemParameter} - Returns a new tree item parameter.
+   */
+  clone(flags) {
+    const clonedParam = new TreeItemParameter(this.__name, this.__filterFn)
+    return clonedParam
+  }
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     if (this.__value) {

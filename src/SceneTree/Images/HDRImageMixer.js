@@ -3,7 +3,7 @@ import { Async, Signal } from '../../Utilities'
 import { BaseImage } from '../BaseImage.js'
 import { FileImage } from './FileImage.js'
 
-/** Class representing an HDR image mixer.
+/** Class representing an HDR (high dynamic range) image mixer.
  * @extends BaseImage
  */
 class HDRImageMixer extends BaseImage {
@@ -48,7 +48,7 @@ class HDRImageMixer extends BaseImage {
 
   /**
    * The setURLs method.
-   * @param {any} urls - The urls param.
+   * @param {any} urls - The urls value.
    */
   setURLs(urls) {
     const async = new Async()
@@ -72,8 +72,8 @@ class HDRImageMixer extends BaseImage {
 
   /**
    * The setURL method.
-   * @param {any} index - The index param.
-   * @param {any} url - The url param.
+   * @param {number} index - The index value.
+   * @param {any} url - The url value.
    */
   setURL(index, url) {
     this.__subImages[index].loadUrl(url)
@@ -81,7 +81,7 @@ class HDRImageMixer extends BaseImage {
 
   /**
    * The setWeights method.
-   * @param {any} weights - The weights param.
+   * @param {any} weights - The weights value.
    */
   setWeights(weights) {
     this.__weights = weights
@@ -92,8 +92,8 @@ class HDRImageMixer extends BaseImage {
 
   /**
    * The setWeights method.
-   * @param {any} index - The index param.
-   * @param {any} weight - The weight param.
+   * @param {number} index - The index value.
+   * @param {any} weight - The weight value.
    */
   setWeight(index, weight) {
     this.__weights[index] = weight
@@ -115,20 +115,23 @@ class HDRImageMixer extends BaseImage {
     return params
   }
 
-  /**
-   * The fromJSON method.
-   * @param {object} json - The json param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(json, context, flags) {}
+  // ////////////////////////////////////////
+  // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   toJSON(context, flags) {}
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} json - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   */
+  fromJSON(json, context, flags) {}
 }
 
 export { HDRImageMixer }

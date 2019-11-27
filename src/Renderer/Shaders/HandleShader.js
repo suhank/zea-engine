@@ -22,6 +22,7 @@ attribute vec2 texCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float maintainScreenSize;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="modelMatrix.glsl"/>
@@ -37,8 +38,7 @@ void main(void) {
     mat4 modelMatrix = getModelMatrix();
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-    bool maintainScreenSize = true;// Could be passed as a flag.
-    if(maintainScreenSize) {
+    if(maintainScreenSize != 0.0) {
         float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
         float sc = dist;
         mat4 scmat = mat4(
@@ -117,6 +117,10 @@ void main(void) {
     paramDescs.push({
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
+    })
+    paramDescs.push({
+      name: 'maintainScreenSize',
+      defaultValue: 0,
     })
     return paramDescs
   }

@@ -1,5 +1,6 @@
 import { Vec2, Vec3 } from '../../Math'
-import { Operator, XfoOperatorOutput } from './Operator.js'
+import { Operator } from './Operator.js'
+import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -43,9 +44,18 @@ class ExplodePartParameter extends StructParameter {
   }
 
   /**
+   * The getStage method.
+   * @param {number} mode - The mode value.
+   * @return {any} - The return value.
+   */
+  getStage(mode = ValueSetMode.USER_GETVALUE) {
+    return this.__stageParam.getValue(mode)
+  }
+
+  /**
    * The setStage method.
-   * @param {any} stage - The stage param.
-   * @param {any} mode - The mode param.
+   * @param {any} stage - The stage value.
+   * @param {number} mode - The mode value.
    */
   setStage(stage, mode = ValueSetMode.USER_SETVALUE) {
     this.__stageParam.setValue(stage, mode)
@@ -61,14 +71,14 @@ class ExplodePartParameter extends StructParameter {
 
   /**
    * The evaluate method.
-   * @param {any} explode - The explode param.
-   * @param {any} explodeDist - The explodeDist param.
-   * @param {any} offset - The offset param.
-   * @param {any} stages - The stages param.
-   * @param {any} cascade - The cascade param.
-   * @param {any} centered - The centered param.
-   * @param {any} parentXfo - The parentXfo param.
-   * @param {any} parentDelta - The parentDelta param.
+   * @param {any} explode - The explode value.
+   * @param {any} explodeDist - The distance that the parts explode to.
+   * @param {any} offset - The offset value.
+   * @param {any} stages - The stages value.
+   * @param {any} cascade - In "cascade" mode, the parts move in a cascade.
+   * @param {any} centered - The centered value.
+   * @param {Xfo} parentXfo - The parentXfo value.
+   * @param {any} parentDelta - The parentDelta value.
    */
   evaluate(
     explode,
@@ -88,7 +98,7 @@ class ExplodePartParameter extends StructParameter {
     const movement = this.__movementParam.getValue()
     let dist
     if (cascade) {
-      // in 'cascade' mode, the parts move in a cascade,
+      // In 'cascade' mode, the parts move in a cascade,
       // starting with stage 0. then 1 ...
       let t = stage / stages
       if (centered) t -= 0.5
@@ -105,15 +115,15 @@ class ExplodePartParameter extends StructParameter {
 
     let explodeDir = this.__axisParam.getValue()
     const multiplier = this.__multiplierParam.getValue()
-    const initialxfo = this.__output.getInitialValue()
+    const initialXfo = this.__output.getInitialValue()
     let xfo
     if (parentXfo) {
-      xfo = parentDelta.multiply(initialxfo)
+      xfo = parentDelta.multiply(initialXfo)
       explodeDir = parentXfo.ori.rotateVec3(explodeDir)
       xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
     } else {
       xfo = this.__output.getValue()
-      xfo.tr = initialxfo.tr.add(explodeDir.scale(dist * multiplier))
+      xfo.tr = initialXfo.tr.add(explodeDir.scale(dist * multiplier))
     }
 
     this.__output.setClean(xfo)
@@ -123,10 +133,10 @@ class ExplodePartParameter extends StructParameter {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
@@ -137,10 +147,10 @@ class ExplodePartParameter extends StructParameter {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
@@ -183,17 +193,21 @@ class ExplodePartsOperator extends Operator {
         this.__invParentSpace = parentItem.getGlobalXfo().inverse()
       else this.__invParentSpace = undefined
     })
-    this.__parentItemParam.treeItemGlobalXfoChanged.connect(
-      this.__opInputChanged
-    )
+    this.__parentItemParam.treeItemGlobalXfoChanged.connect(this.setDirty)
 
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
     )
     this.__itemsParam.elementAdded.connect((value, index) => {
-      value.setStage(index)
+      if (index > 0) {
+        const prevStage = this.__itemsParam.getElement(index-1).getStage();
+        value.setStage(prevStage + 1)
+        this.__stagesParam.setClean(prevStage + 2)
+      } else {
+        this.__stagesParam.setClean(1)
+      }
       this.addOutput(value.getOutput())
-      this.__stagesParam.setClean(this.__stagesParam.getValue() + 1)
+      this.setDirty()
     })
     this.__itemsParam.elementRemoved.connect((value, index) => {
       this.removeOutput(value.getOutput())
@@ -243,27 +257,31 @@ class ExplodePartsOperator extends Operator {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     return super.toJSON(context, flags)
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
   }
 
+  // ////////////////////////////////////////
+  // Destroy
+
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     clearTimeout(this.__timeoutId)

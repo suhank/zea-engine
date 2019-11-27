@@ -1,6 +1,5 @@
 import { Signal } from '../../Utilities'
 import { RefCounted } from '../RefCounted.js'
-import { ResourceLoader } from '../ResourceLoader.js'
 import { VLHImage } from './VLHImage.js'
 
 /** Class representing a lightmap.
@@ -11,6 +10,7 @@ class Lightmap extends RefCounted {
    * Create a lightmap.
    * @param {any} filepath - The filepath value.
    * @param {any} asset - The asset value.
+   * @param {any} atlasSize - The atlasSize value.
    * @param {any} stream - The stream value.
    */
   constructor(filepath, asset, atlasSize, stream) {
@@ -46,19 +46,17 @@ class Lightmap extends RefCounted {
 
   /**
    * The loadResource method.
-   * @param {any} filepath - The filepath param.
+   * @param {any} filepath - The filepath value.
    */
   loadResource(filepath) {
     this.image.loadResource(filepath)
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j) {
     this.__atlasSize = j.atlasSize
   }
 }
@@ -106,10 +104,10 @@ class LightmapMixer extends RefCounted {
 
   /**
    * The loadResource method.
-   * @param {any} index - The index param.
-   * @param {any} resourceName - The resourceName param.
-   * @param {any} weight - The weight param.
-   * @param {boolean} stream - The stream param.
+   * @param {number} index - The index value.
+   * @param {string} resourceName - The resourceName value.
+   * @param {any} weight - The weight value.
+   * @param {boolean} stream - The stream value.
    */
   loadResource(index, resourceName, weight = undefined, stream = false) {
     if (!this.__images[index]) {
@@ -129,8 +127,8 @@ class LightmapMixer extends RefCounted {
 
   /**
    * The setWeight method.
-   * @param {any} index - The index param.
-   * @param {any} weight - The weight param.
+   * @param {number} index - The index value.
+   * @param {any} weight - The weight value.
    */
   setWeight(index, weight) {
     this.__weights[index] = weight
@@ -147,7 +145,7 @@ class LightmapMixer extends RefCounted {
 
   /**
    * The getSubImage method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getSubImage(index) {
@@ -156,7 +154,7 @@ class LightmapMixer extends RefCounted {
 
   /**
    * The getSubImageWeight method.
-   * @param {any} index - The index param.
+   * @param {value} index - The index value.
    * @return {any} - The return value.
    */
   getSubImageWeight(index) {
@@ -164,12 +162,10 @@ class LightmapMixer extends RefCounted {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
    */
-  fromJSON(j, context, flags) {
+  fromJSON(j) {
     this.__atlasSize = j['atlasSize']
   }
 }

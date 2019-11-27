@@ -22,8 +22,8 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer param.
-   * @param {any} passIndex - The passIndex param.
+   * @param {any} renderer - The renderer value.
+   * @param {any} passIndex - The passIndex value.
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -75,7 +75,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The addBillboard method.
-   * @param {any} billboard - The billboard param.
+   * @param {any} billboard - The billboard value.
    */
   addBillboard(billboard) {
     const imageParam = billboard.getParameter('image')
@@ -134,7 +134,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The removeBillboard method.
-   * @param {any} billboard - The billboard param.
+   * @param {any} billboard - The billboard value.
    */
   removeBillboard(billboard) {
     const index = billboard.getMetadata('GLBillboardsPass_Index')
@@ -168,9 +168,9 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The __populateBillboardDataArray method.
-   * @param {any} billboardData - The billboardData param.
-   * @param {any} index - The index param.
-   * @param {any} dataArray - The dataArray param.
+   * @param {any} billboardData - The billboardData value.
+   * @param {number} index - The index value.
+   * @param {any} dataArray - The dataArray value.
    * @private
    */
   __populateBillboardDataArray(billboardData, index, dataArray) {
@@ -276,9 +276,8 @@ class GLBillboardsPass extends GLPass {
     }
 
     const doIt = () => {
-      // Note: Currently the atlas destroys all the source images
-      // after loading them(to save memory). This means we can't
-      // re-render the atlas. If re-rendering is needed, add an age
+      // Note: Maybe the atlas is alreadu up to date. It should
+      // maintain its own coherencey by listening to the sub images.
       this.__atlas.renderAtlas()
 
       if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
@@ -360,7 +359,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The __updateBillboards method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @private
    */
   __updateBillboard(index) {
@@ -418,7 +417,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {any} cameraPos - The cameraPos param.
+   * @param {any} cameraPos - The cameraPos value.
    */
   sort(cameraPos) {
     for (const billboardData of this.__billboards) {
@@ -447,7 +446,7 @@ class GLBillboardsPass extends GLPass {
 
   /**
    * The sort method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   draw(renderstate) {
     if (
@@ -457,6 +456,8 @@ class GLBillboardsPass extends GLPass {
     ) {
       return
     }
+
+    if (this.indexArrayUpdateNeeded) this.__updateIndexArray()
 
     const gl = this.__gl
 
@@ -471,7 +472,7 @@ class GLBillboardsPass extends GLPass {
     if (dist > this.__threshold) {
       this.sort(cameraPos)
       this.__prevSortCameraPos = cameraPos.clone()
-      if (this.__billboards.length > 1) {
+      if (this.__drawCount > 1) {
         const v0 = this.__billboards[
           this.__indexArray[0]
         ].billboard.getGlobalXfo().tr
