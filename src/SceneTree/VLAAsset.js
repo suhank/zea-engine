@@ -3,7 +3,6 @@ import { Signal } from '../Utilities'
 import { SystemDesc } from '../BrowserDetection.js'
 import { FilePathParameter, ColorParameter } from './Parameters'
 import { AssetItem } from './AssetItem.js'
-import { ValueSetMode } from './Parameters/Parameter.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { sgFactory } from './SGFactory.js'
@@ -33,7 +32,7 @@ class VLAAsset extends AssetItem {
     this.__datafileParam = this.addParameter(
       new FilePathParameter('DataFilePath')
     )
-    this.__datafileParam.valueChanged.connect(mode => {
+    this.__datafileParam.valueChanged.connect(() => {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
@@ -45,8 +44,7 @@ class VLAAsset extends AssetItem {
       this.geomsLoaded.setToggled(false)
       this.loadDataFile(
         () => {
-          if (!this.loaded.isToggled())
-            this.loaded.emit()
+          if (!this.loaded.isToggled()) this.loaded.emit()
         },
         () => {
           // if(!this.loaded.isToggled()){
@@ -59,7 +57,6 @@ class VLAAsset extends AssetItem {
 
     this.addParameter(new ColorParameter('LightmapTint', new Color(1, 1, 1, 1)))
   }
-
 
   /**
    * The getLightmap method.
@@ -74,8 +71,8 @@ class VLAAsset extends AssetItem {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    * @return {any} - The return value.
    */
   readBinary(reader, context) {
@@ -83,7 +80,6 @@ class VLAAsset extends AssetItem {
 
     super.readBinary(reader, context)
 
-    const atlasSize = reader.loadFloat32Vec2()
     if (reader.remainingByteLength != 4) {
       throw new Error(
         'File needs to be re-exported:' +
@@ -106,8 +102,8 @@ class VLAAsset extends AssetItem {
 
   /**
    * The loadDataFile method.
-   * @param {any} onDone - The onDone param.
-   * @param {any} onGeomsDone - The onGeomsDone param.
+   * @param {any} onDone - The onDone value.
+   * @param {any} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
     const file = this.__datafileParam.getFileDesc()
@@ -167,9 +163,6 @@ class VLAAsset extends AssetItem {
         this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
           version,
         })
-        const id = this.__geomLibrary.loaded.connect(() => {
-          if (onGeomsDone) onGeomsDone()
-        })
       } else {
         // add the work for the the geom files....
         resourceLoader.addWork(fileId + 'geoms', 4 * numGeomsFiles) // (load + parse + extra)
@@ -200,7 +193,7 @@ class VLAAsset extends AssetItem {
     }
 
     const loadGeomsfile = (index, geomFileUrl) => {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         resourceLoader.loadUrl(
           fileId + index,
           geomFileUrl,
@@ -242,10 +235,10 @@ class VLAAsset extends AssetItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {any} onDone - The onDone param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {any} onDone - The onDone value.
    */
   fromJSON(j, context, onDone) {
     if (!context) context = {}

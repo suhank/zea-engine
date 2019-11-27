@@ -1,10 +1,6 @@
-import { Vec2, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
-import { ItemFlags } from '../BaseItem'
 import { sgFactory } from '../SGFactory.js'
-import { Parameter, ValueSetMode } from './Parameter.js'
+import { ValueSetMode } from './Parameter.js'
 import { StringParameter } from './StringParameter.js'
-import { ItemSetParameter } from './ItemSetParameter.js'
 
 const QUERY_TYPES = {
   NAME: 0,
@@ -34,7 +30,7 @@ const QUERY_LOGIC = {
 class QueryParameter extends StringParameter {
   /**
    * Create a query parameter.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the query parameter.
    * @param {any} queryType - The queryType value.
    * @param {any} matchType - The matchType value.
    * @param {any} locicalOperator - The locicalOperator value.
@@ -55,13 +51,26 @@ class QueryParameter extends StringParameter {
   }
 
   /**
-   * The clone method.
-   * @param {number} flags - The flags param.
+   * Getter for QUERY_TYPES.
    * @return {any} - The return value.
    */
-  clone(flags) {
-    const clonedParam = new QueryParameter(this.__name, this.__value)
-    return clonedParam
+  static get QUERY_TYPES() {
+    return QUERY_TYPES
+  }
+  /**
+   * Getter for QUERY_MATCH_TYPE.
+   * @return {any} - The return value.
+   */
+  static get QUERY_MATCH_TYPE() {
+    return QUERY_MATCH_TYPE
+  }
+
+  /**
+   * Getter for QUERY_LOGIC.
+   * @return {any} - The return value.
+   */
+  static get QUERY_LOGIC() {
+    return QUERY_LOGIC
   }
 
   /**
@@ -74,7 +83,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The setEnabled method.
-   * @param {any} ngate - The ngate param.
+   * @param {any} ngate - The ngate value.
    */
   setEnabled(ngate) {
     this.__enabled = ngate
@@ -91,7 +100,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The setEnabled method.
-   * @param {any} queryType - The queryType param.
+   * @param {any} queryType - The queryType value.
    */
   setQueryType(queryType) {
     this.__queryType = queryType
@@ -108,7 +117,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The setMatchType method.
-   * @param {any} matchType - The matchType param.
+   * @param {any} matchType - The matchType value.
    */
   setMatchType(matchType) {
     this.__matchType = matchType
@@ -125,7 +134,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The setLocicalOperator method.
-   * @param {any} locicalOperator - The locicalOperator param.
+   * @param {any} locicalOperator - The locicalOperator value.
    */
   setLocicalOperator(locicalOperator) {
     this.__locicalOperator = locicalOperator
@@ -142,7 +151,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The setNegate method.
-   * @param {any} ngate - The ngate param.
+   * @param {any} ngate - The ngate value.
    */
   setNegate(ngate) {
     this.__negate = ngate
@@ -159,7 +168,7 @@ class QueryParameter extends StringParameter {
 
   /**
    * The setPropertyName method.
-   * @param {any} val - The val param.
+   * @param {any} val - The val value.
    */
   setPropertyName(val) {
     this.__propName = val
@@ -196,32 +205,26 @@ class QueryParameter extends StringParameter {
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     const value = reader.loadStr()
     this.setValue(value, ValueSetMode.DATA_LOAD)
   }
 
-  /**
-   * Getter for QUERY_TYPES.
-   */
-  static get QUERY_TYPES() {
-    return QUERY_TYPES
-  }
-  /**
-   * Getter for QUERY_MATCH_TYPE.
-   */
-  static get QUERY_MATCH_TYPE() {
-    return QUERY_MATCH_TYPE
-  }
+  // ////////////////////////////////////////
+  // Clone
 
   /**
-   * Getter for QUERY_LOGIC.
+   * The clone method constructs a new query parameter, copies its values
+   * from this parameter and returns it.
+   * @param {number} flags - The flags value.
+   * @return {QueryParameter} - Returns a new query parameter.
    */
-  static get QUERY_LOGIC() {
-    return QUERY_LOGIC
+  clone(flags) {
+    const clonedParam = new QueryParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 

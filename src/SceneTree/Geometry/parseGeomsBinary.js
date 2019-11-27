@@ -2,6 +2,7 @@ import { Points } from './Points.js'
 import { Lines } from './Lines.js'
 import { Mesh } from './Mesh.js'
 import { BinReader } from '../BinReader.js'
+import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data, callback) => {
@@ -44,12 +45,24 @@ const parseGeomsBinary = (data, callback) => {
 
     const geomBuffers = geom.genBuffers(data.genBuffersOpts)
     if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
-    for (const name in geomBuffers.attrBuffers)
-      transferables.push(geomBuffers.attrBuffers[name].values.buffer)
+    for (const attrName in geomBuffers.attrBuffers) {
+      // Note: The type value assigned to the attribute can 
+      // not be transfered back to the main thread. Convert to
+      // the type name here and send back as a string.
+      const attrData = geomBuffers.attrBuffers[attrName]
+      const typeName = typeRegistry.getTypeName(attrData.dataType)
+      attrData.dataType = typeName
+
+      transferables.push(attrData.values.buffer)
+    }
 
     if (geomBuffers.vertexNeighbors) {
       transferables.push(geomBuffers.vertexNeighbors.buffer)
     }
+
+    // Transfer the bbox point buffers.
+    transferables.push(geom.boundingBox.p0.__data.buffer)
+    transferables.push(geom.boundingBox.p1.__data.buffer)
 
     geomDatas.push({
       name: geom.name,

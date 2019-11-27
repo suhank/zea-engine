@@ -10,7 +10,7 @@ import { SceneSettings } from './SceneSettings.js'
 
 const defaultGridColor = new Color('#DCDCDC')
 
-/** Class representing a scene. */
+/** Class representing a scene in a scene tree. */
 class Scene {
   /**
    * Create a scene.
@@ -20,7 +20,7 @@ class Scene {
     if (resources) {
       resourceLoader.setResources(resources)
     }
-    this.settings = new SceneSettings('Scene Settings');
+    this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')
     this.root.addRef(this)
     this.root.addChild(this.settings)
@@ -50,20 +50,30 @@ class Scene {
     return resourceLoader
   }
 
-  setEnvMap(envMap){
-    console.warn("Deprecated Function. Please access the Scene Settings object.")
-    this.settings.getParameter('EnvMap').setValue(envMap);
+  /**
+   * The setEnvMap method.
+   * @param {any} envMap - The envMap value.
+   */
+  setEnvMap(envMap) {
+    console.warn(
+      'Deprecated Function. Please access the Scene Settings object.'
+    )
+    this.settings.getParameter('EnvMap').setValue(envMap)
   }
 
-  addAsset(asset){
-    console.warn("Deprecated Function. Please access the Scene Root object.")
-    this.root.addChild(asset);
+  /**
+   * The addAsset method.
+   * @param {any} asset - The asset value.
+   */
+  addAsset(asset) {
+    console.warn('Deprecated Function. Please access the Scene Root object.')
+    this.root.addChild(asset, false)
   }
   /**
-   * The setupGrid method.
-   * @param {number} gridSize - The gridSize param.
-   * @param {number} resolution - The resolution param.
-   * @param {any} gridColor - The gridColor param.
+   * Set up the scene grid.
+   * @param {number} gridSize - The size of the grid.
+   * @param {number} resolution - The resolution of the grid.
+   * @param {Color} gridColor - The color of the grid.
    * @return {any} - The return value.
    */
   setupGrid(gridSize = 5, resolution = 50, gridColor = defaultGridColor) {
@@ -71,7 +81,7 @@ class Scene {
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
     gridMaterial.getParameter('Color').setValue(gridColor)
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
-    gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial))
+    gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
     const axisLine = new Lines()
     axisLine.setNumVertices(2)
     axisLine.setNumSegments(1)
@@ -83,7 +93,8 @@ class Scene {
       .getParameter('Color')
       .setValue(new Color(gridColor.luminance(), 0, 0))
     gridTreeItem.addChild(
-      new GeomItem('xAxisLine', axisLine, gridXAxisMaterial)
+      new GeomItem('xAxisLine', axisLine, gridXAxisMaterial),
+      false
     )
     const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader')
     gridZAxisMaterial
@@ -93,14 +104,14 @@ class Scene {
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)
     const zAxisLineItem = new GeomItem('yAxisLine', axisLine, gridZAxisMaterial)
     zAxisLineItem.setGeomOffsetXfo(geomOffset)
-    gridTreeItem.addChild(zAxisLineItem)
+    gridTreeItem.addChild(zAxisLineItem, false)
     gridTreeItem.setSelectable(false, true)
     gridTreeItem.setFlag(ItemFlags.IGNORE_BBOX)
 
     // Avoid persisting the grid and hide in the tree view.
     gridTreeItem.clearFlag(ItemFlags.USER_EDITED)
     gridTreeItem.setFlag(ItemFlags.INVISIBLE)
-    this.root.addChild(gridTreeItem)
+    this.root.addChild(gridTreeItem, false)
 
     return gridTreeItem
   }
@@ -109,10 +120,23 @@ class Scene {
   // Persistence
 
   /**
-   * The fromJSON method.
-   * @param {object} json - The json param.
-   * @param {object} context - The context param.
-   *
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
+   */
+  toJSON(context = {}, flags = 0) {
+    context.makeRelative = path => path
+    const json = {
+      root: this.root.toJSON(context, flags),
+    }
+    return json
+  }
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} json - The json object this item must decode.
+   * @param {object} context - The context value.
    */
   fromJSON(json, context = {}) {
     const plcbs = [] // Post load callbacks.
@@ -149,20 +173,6 @@ class Scene {
     // Invoke all the post-load callbacks to resolve any
     // remaning references.
     for (const cb of plcbs) cb()
-  }
-
-  /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  toJSON(context = {}, flags = 0) {
-    context.makeRelative = path => path
-    const json = {
-      root: this.root.toJSON(context, flags),
-    }
-    return json
   }
 }
 

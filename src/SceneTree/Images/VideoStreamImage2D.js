@@ -1,13 +1,12 @@
-import { Async, Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
 
-/** Class representing a video stream image 2D.
+/** Class representing a 2D video stream image.
  * @extends BaseImage
  */
 class VideoStreamImage2D extends BaseImage {
   /**
-   * Create a video stream image 2D.
+   * Create a 2D video stream image.
    */
   constructor() {
     super()
@@ -16,9 +15,9 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The connectWebcam method.
-   * @param {any} width - The width param.
-   * @param {any} height - The height param.
-   * @param {false} rearCamera - The rearCamera param.
+   * @param {number} width - The width of the video.
+   * @param {number} height - The height of the video.
+   * @param {false} rearCamera - Boolean determining if it is a rear camera or not.
    */
   connectWebcam(width, height, rearCamera = false) {
     const video = {
@@ -104,7 +103,7 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The setVideoStream method.
-   * @param {any} video - The video param.
+   * @param {any} video - The video value.
    */
   setVideoStream(video) {
     this.__loaded = false
@@ -138,7 +137,7 @@ class VideoStreamImage2D extends BaseImage {
 
   /**
    * The isLoaded method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isLoaded() {
     return this.__loaded

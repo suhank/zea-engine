@@ -96,18 +96,18 @@ class LabelManager {
   }
 
   /**
-   * The isLibraryFound method.
-   * @param {string} name - The name param.
-   * @return {any} - The return value.
+   * Checks if the library is found.
+   * @param {string} name - The name of the library.
+   * @return {boolean} - Returns true if the library is found.
    */
   isLibraryFound(name) {
     return name in this.__foundLabelLibraries
   }
 
   /**
-   * The isLibraryLoaded method.
-   * @param {string} name - The name param.
-   * @return {any} - The return value.
+   * Checks if the library is loaded.
+   * @param {string} name - The name of the library.
+   * @return {boolean} - Returns true if the library is loaded.
    */
   isLibraryLoaded(name) {
     return name in this.__labelLibraries
@@ -115,9 +115,9 @@ class LabelManager {
 
   /**
    * The getLabelText method.
-   * @param {any} libraryName - The libraryName param.
-   * @param {any} labelName - The labelName param.
-   * @return {any} - The return value.
+   * @param {string} libraryName - The name of the library.
+   * @param {string} labelName - The name of the label.
+   * @return {string} - The return value.
    */
   getLabelText(libraryName, labelName) {
     const library = this.__labelLibraries[libraryName]
@@ -158,9 +158,9 @@ class LabelManager {
 
   /**
    * The setLabelText method.
-   * @param {any} libraryName - The libraryName param.
-   * @param {any} labelName - The labelName param.
-   * @param {any} labelText - The labelText param.
+   * @param {string} libraryName - The name of the library.
+   * @param {string} labelName - The name of the label.
+   * @param {string} labelText - The text of the label.
    */
   setLabelText(libraryName, labelName, labelText) {
     let library = this.__labelLibraries[libraryName]

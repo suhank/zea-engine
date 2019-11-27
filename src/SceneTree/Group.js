@@ -16,28 +16,29 @@ import { BaseGeomItem } from './BaseGeomItem'
 import { sgFactory } from './SGFactory.js'
 
 const GROUP_INITIAL_XFO_MODES = {
-  first: 0,
-  average: 1,
-  globalOri: 2,
+  manual: 0,
+  first: 1,
+  average: 2,
+  globalOri: 3,
 }
 
-/** Class representing a group.
+/** Class representing a group in the scene tree.
  * @extends TreeItem
  */
 class Group extends TreeItem {
   /**
    * Create a group.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the group.
    */
   constructor(name) {
     super(name)
 
-    // Items which can be constructed by a user(not loaded in binary data.)
+    // Items which can be constructed by a user (not loaded in binary data.)
     // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
 
     this.calculatingGroupXfo = false
-    this.propagatingXfoToItems = false
+    this.dirty = false
 
     this.invGroupXfo = undefined
     this.__initialXfos = []
@@ -55,8 +56,7 @@ class Group extends TreeItem {
       this.__unbindItem(item, index)
     })
     this.__itemsParam.valueChanged.connect(() => {
-      this.calculatingGroupXfo = true
-      this._setGlobalXfoDirty()
+      this.calcGroupXfo()
       this._setBoundingBoxDirty()
     })
 
@@ -64,13 +64,12 @@ class Group extends TreeItem {
       new MultiChoiceParameter(
         'InitialXfoMode',
         GROUP_INITIAL_XFO_MODES.average,
-        ['first', 'average', 'global']
+        ['manual', 'first', 'average', 'global']
       ),
       pid++
     )
     this.__initialXfoModeParam.valueChanged.connect(() => {
-      this.calculatingGroupXfo = true
-      this._setGlobalXfoDirty()
+      this.calcGroupXfo()
     })
 
     this.__highlightedParam = this.insertParameter(
@@ -115,45 +114,26 @@ class Group extends TreeItem {
       pid++
     ).valueChanged.connect(this.__updateCutaway)
 
-    this.__globalXfoParam.valueChanged.connect(() => {
-      this._propagateGroupXfoToItems()
-    })
+    // TODO: this should be the way we propagate dirty. Instead
+    // of using the overloaded method (_setGlobalXfoDirty)
+    // this.__globalXfoParam.valueChanged.connect(mode => {
+    //   if (mode == ValueSetMode.OPERATOR_DIRTIED)
+    //     this._propagateDirtyXfoToItems()
+    // })
 
     this.mouseDownOnItem = new Signal()
   }
 
   /**
-   * The destroy method.
+   * Getter for INITIAL_XFO_MODES.
    */
-  destroy() {
-    super.destroy()
+  static get INITIAL_XFO_MODES() {
+    return GROUP_INITIAL_XFO_MODES
   }
-
-  /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  clone(flags) {
-    const cloned = new Group()
-    cloned.copyFrom(this, flags)
-    return cloned
-  }
-
-  /**
-   * The copyFrom method.
-   * @param {any} src - The src param.
-   * @param {number} flags - The flags param.
-   */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
-  }
-
-  // //////////////////////////////
 
   /**
    * The __updateVisiblity method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    * @private
    */
   __updateVisiblity() {
@@ -192,8 +172,8 @@ class Group extends TreeItem {
   }
 
   /**
-   * The setSelected method.
-   * @param {any} sel - The sel param.
+   * Returns a boolean indicating if this group is selectable.
+   * @param {boolean} sel - Boolean indicating the new selection state.
    */
   setSelected(sel) {
     super.setSelected(sel)
@@ -220,15 +200,21 @@ class Group extends TreeItem {
     // }
   }
 
-  //////////////////////////////////////////
+  // ////////////////////////////////////////
   // Global Xfo
 
-  _cleanGlobalXfo() {
-    return this.calcGroupXfo()
+  /**
+   * The _setGlobalXfoDirty method.
+   * @private
+   */
+  _setGlobalXfoDirty() {
+    super._setGlobalXfoDirty()
+    this._propagateDirtyXfoToItems()
   }
 
   /**
-   * The calcGroupXfo method.
+   * Calculate the group Xfo translate.
+   * @return {Xfo} - Returns a new Xfo.
    */
   calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue())
@@ -236,24 +222,21 @@ class Group extends TreeItem {
     this.calculatingGroupXfo = true
     const initialXfoMode = this.__initialXfoModeParam.getValue()
     let xfo
-    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = items[0].getGlobalXfo()
-      items.forEach((item, index) => {
-        if (item instanceof TreeItem) {
-          this.__initialXfos[index] = item.getGlobalXfo()
-        }
-      })
+    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.manual) {
+      // The xfo is manually set by the current global xfo.
+      this.invGroupXfo = this.getGlobalXfo().inverse()
+      this.calculatingGroupXfo = false
+      return;
+    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
+      xfo = this.__initialXfos[0]
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo()
-          xfo.tr.addInPlace(itemXfo.tr)
-          xfo.ori.addInPlace(itemXfo.ori)
-          // xfo.sc.addInPlace(itemXfo.sc)
-          this.__initialXfos[index] = itemXfo
+          xfo.tr.addInPlace(this.__initialXfos[index].tr)
+          xfo.ori.addInPlace(this.__initialXfos[index].ori)
           numTreeItems++
         }
       })
@@ -265,41 +248,57 @@ class Group extends TreeItem {
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          const itemXfo = item.getGlobalXfo()
-          xfo.tr.addInPlace(itemXfo.tr)
-          this.__initialXfos[index] = itemXfo
+          xfo.tr.addInPlace(this.__initialXfos[index].tr)
           numTreeItems++
         }
       })
       xfo.tr.scaleInPlace(1 / numTreeItems)
     } else {
-      throw 'Invalid mode.'
+      throw new Error('Invalid mode.')
     }
 
+    this.setGlobalXfo(xfo, ValueSetMode.GENERATED_VALUE)
     this.invGroupXfo = xfo.inverse()
     this.calculatingGroupXfo = false
-    return xfo
   }
 
-  _propagateGroupXfoToItems() {
+  /**
+   * The _propagateDirtyXfoToItems method.
+   * @private
+   */
+  _propagateDirtyXfoToItems() {
     if (this.calculatingGroupXfo) return
 
     const items = Array.from(this.__itemsParam.getValue())
     // Only after all the items are resolved do we have an invXfo and we can tranform our items.
-    if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
+    if (
+      !this.calculatingGroupXfo &&
+      items.length > 0 &&
+      this.invGroupXfo &&
+      !this.dirty
+    ) {
       let delta
-      this.propagatingXfoToItems = true
+      // Note: because each 'clean' function is a unique
+      // value, the parameter does not know that this Group
+      // has already registered a clean function. For now
+      // we use this 'dirty' hack to avoid registering multiple
+      // clean functions. However, once the cleaning is handled
+      // via a bound operator, then this code will be removed.
+      this.dirty = true
       const xfo = this.__globalXfoParam.getValue()
       const setDirty = (item, initialXfo) => {
+        const param = item.getParameter('GlobalXfo')
         const clean = () => {
           if (!delta) {
             // Compute the skinning transform that we can
             // apply to all the items in the group.
             delta = xfo.multiply(this.invGroupXfo)
+            this.dirty = false
           }
-          return delta.multiply(initialXfo)
+          const result = delta.multiply(initialXfo)
+          param.setClean(result)
         }
-        item.getParameter('GlobalXfo').setDirty(clean)
+        param.setDirty(clean)
       }
       items.forEach((item, index) => {
         if (item instanceof TreeItem) setDirty(item, this.__initialXfos[index])
@@ -307,6 +306,15 @@ class Group extends TreeItem {
       this.propagatingXfoToItems = false
     }
   }
+
+  // _propagateGroupXfoToItem(index) {
+  //   const clean = () => {
+  //     const xfo = this.__globalXfoParam.getValue()
+  //     const delta = xfo.multiply(this.invGroupXfo)
+  //     return delta.multiply(this.__initialXfos[index])
+  //   }
+  //   item.getParameter('GlobalXfo').setDirty(clean)
+  // }
 
   // ////////////////////////////////////////
   // Materials
@@ -363,36 +371,40 @@ class Group extends TreeItem {
   // Items
 
   /**
-   * The setPaths method.
-   * This function is mostly used in our demos, and
-   * should be removed from the interface
-   * @param {any} paths - The paths param.
+   * This method is mostly used in our demos,
+   * and should be removed from the interface
+   * @param {any} paths - The paths value.
    */
   setPaths(paths) {
     this.clearItems(false)
 
     const searchRoot = this.getOwner()
     if (searchRoot == undefined) return
-    let items = []
+    const items = []
     paths.forEach(path => {
       const treeItem = searchRoot.resolvePath(path)
       if (treeItem) items.push(treeItem)
       else {
-        console.warn("Path does not resolve to an Item:", path);
+        console.warn('Path does not resolve to an Item:', path)
       }
     })
     this.setItems(items)
   }
 
   /**
-   * The resolveItems method.
    * For backwards compatiblity.
-   * @param {any} paths - The paths param.
+   * @param {any} paths - The paths value.
    */
   resolveItems(paths) {
     this.setPaths(paths)
   }
 
+  /**
+   * The __bindItem method.
+   * @param {any} item - The item value.
+   * @param {number} index - The index value.
+   * @private
+   */
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
@@ -403,7 +415,7 @@ class Group extends TreeItem {
       this.mouseDownOnItem.emit(event, item)
     })
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the Material
     const material = this.getParameter('Material').getValue()
     if (material) {
@@ -421,7 +433,7 @@ class Group extends TreeItem {
       }, true)
     }
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the highlight
     if (
       item instanceof TreeItem &&
@@ -432,7 +444,7 @@ class Group extends TreeItem {
       item.addHighlight('groupItemHighlight' + this.getId(), color, true)
     }
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the item cutaway
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
     if (cutEnabled) {
@@ -453,7 +465,7 @@ class Group extends TreeItem {
       item.propagateVisiblity(-1)
     }
 
-    // Higlight the new item with branch selection color
+    // Higlight the new item with branch selection color.
     if (this.getSelected()) {
       if (item instanceof TreeItem)
         item.addHighlight(
@@ -463,13 +475,27 @@ class Group extends TreeItem {
         )
     }
 
+    const updateGlobalXfo = () => {
+      const initialXfoMode = this.__initialXfoModeParam.getValue()
+      if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first && index == 0) {
+        this.calcGroupXfo()
+      } else if (
+        initialXfoMode == GROUP_INITIAL_XFO_MODES.average ||
+        initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri
+      ) {
+        this.calcGroupXfo()
+      }
+    }
+
     signalIndices.globalXfoChangedIndex = item.globalXfoChanged.connect(
       mode => {
         if (
           mode != ValueSetMode.OPERATOR_SETVALUE &&
           mode != ValueSetMode.OPERATOR_DIRTIED
-        )
+        ) {
           this.__initialXfos[index] = item.getGlobalXfo()
+          updateGlobalXfo()
+        }
       }
     )
     this.__initialXfos[index] = item.getGlobalXfo()
@@ -479,12 +505,14 @@ class Group extends TreeItem {
     )
 
     this.__signalIndices[index] = signalIndices
+
+    updateGlobalXfo()
   }
 
   /**
    * The __unbindItem method.
-   * @param {any} item - The item param.
-   * @param {any} index - The index param.
+   * @param {any} item - The item value.
+   * @param {number} index - The index value.
    * @private
    */
   __unbindItem(item, index) {
@@ -498,12 +526,12 @@ class Group extends TreeItem {
     if (!this.getVisible()) {
       // Increment the visiblity counter which might cause
       // this item to become visible.
-      // It will stay invisible its parent is invisible, or if
+      // It will stay invisible if its parent is invisible, or if
       // multiple groups connect to it and say it is invisible.
       item.propagateVisiblity(1)
     }
 
-    /////////////////////////////////
+    // ///////////////////////////////
     // Update the item cutaway
     item.traverse(treeItem => {
       if (treeItem instanceof BaseGeomItem) {
@@ -523,9 +551,9 @@ class Group extends TreeItem {
   }
 
   /**
-   * The addItem method.
-   * @param {any} item - The item param.
-   * @param {any} emit - The emit param.
+   * Add an item to the group.
+   * @param {any} item - The item value.
+   * @param {boolean} emit - The emit value.
    */
   addItem(item, emit = true) {
     if (!item) {
@@ -536,16 +564,17 @@ class Group extends TreeItem {
   }
 
   /**
-   * The removeItem method.
-   * @param {any} item - The item param.
+   * Remove an item to the group.
+   * @param {any} item - The item value.
+   * @param {boolean} emit - The emit value.
    */
   removeItem(item, emit = true) {
     this.__itemsParam.removeItem(item, emit)
   }
 
   /**
-   * The clearItems method.
-   * @param {boolean} emit - The emit param.
+   * Clear items from the group.
+   * @param {boolean} emit - The emit value.
    */
   clearItems(emit = true) {
     // Note: Unbind reversed so that indices
@@ -569,7 +598,7 @@ class Group extends TreeItem {
 
   /**
    * The setItems method.
-   * @param {any} items - The items param.
+   * @param {any} items - The items value.
    */
   setItems(items) {
     this.clearItems(false)
@@ -578,8 +607,8 @@ class Group extends TreeItem {
 
   /**
    * The _cleanBoundingBox method.
-   * @param {any} bbox - The bbox param.
-   * @return {any} - The return value.
+   * @param {Box3} bbox - The bounding box value.
+   * @return {Box3} - The return value.
    * @private
    */
   _cleanBoundingBox(bbox) {
@@ -588,37 +617,37 @@ class Group extends TreeItem {
     items.forEach(item => {
       if (item instanceof TreeItem) {
         if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
-          bbox.addBox3(item.getBoundingBox())
+          result.addBox3(item.getBoundingBox())
       }
     })
-    return bbox
+    return result
   }
 
   // ///////////////////////
   // Events
 
   /**
-   * The onMouseDown method.
-   * @param {any} event - The event param.
-   * @return {boolean} - The return value.
+   * Occurs when a user presses a mouse button over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
+   * @return {boolean} - Returns false.
    */
   onMouseDown(event) {
     return false
   }
 
   /**
-   * The onMouseUp method.
-   * @param {any} event - The event param.
-   * @return {boolean} - The return value.
+   * Occurs when a user releases a mouse button over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
+   * @return {boolean} - Returns false.
    */
   onMouseUp(event) {
     return false
   }
 
   /**
-   * The onMouseMove method.
-   * @param {any} event - The event param.
-   * @return {boolean} - The return value.
+   * Occur when the mouse pointer is moving  while over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
+   * @return {boolean} - Returns false.
    */
   onMouseMove(event) {
     return false
@@ -628,10 +657,10 @@ class Group extends TreeItem {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
@@ -646,10 +675,10 @@ class Group extends TreeItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
@@ -672,7 +701,8 @@ class Group extends TreeItem {
           count--
           if (count == 0) {
             this.calculatingGroupXfo = true
-            this.setGlobalXfo(this.calcGroupXfo(), ValueSetMode.GENERATED_VALUE)
+            // this.setGlobalXfo(this.calcGroupXfo(), ValueSetMode.GENERATED_VALUE)
+            this.calcGroupXfo()
             this.calculatingGroupXfo = false
           }
         },
@@ -683,16 +713,41 @@ class Group extends TreeItem {
         }
       )
     }
-    for (let path of j.treeItems) {
+    for (const path of j.treeItems) {
       addItem(path)
     }
   }
 
+  // ////////////////////////////////////////
+  // Clone and Destroy
+
   /**
-   * Getter for INITIAL_XFO_MODES.
+   * The clone method constructs a new group,
+   * copies its values and returns it.
+   * @param {number} flags - The flags value.
+   * @return {Group} - Returns a new cloned group.
    */
-  static get INITIAL_XFO_MODES() {
-    return GROUP_INITIAL_XFO_MODES
+  clone(flags) {
+    const cloned = new Group()
+    cloned.copyFrom(this, flags)
+    return cloned
+  }
+
+  /**
+   * The copyFrom method.
+   * @param {Group} src - The group to copy from.
+   * @param {number} flags - The flags value.
+   */
+  copyFrom(src, flags) {
+    super.copyFrom(src, flags)
+  }
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
+   */
+  destroy() {
+    super.destroy()
   }
 }
 

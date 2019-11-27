@@ -1,8 +1,9 @@
 import { Signal } from '../../Utilities'
 import { Box3 } from '../../Math'
 import { RefCounted } from '../RefCounted.js'
+import { typeRegistry } from '../../Math/TypeRegistry.js'
 
-/** Class representing a base proxy.
+/** Class representing a base geometry proxy.
  * @extends RefCounted
  */
 class BaseProxy extends RefCounted {
@@ -14,6 +15,15 @@ class BaseProxy extends RefCounted {
     super()
     this.name = data.name
     this.__buffers = data.geomBuffers
+    if (this.__buffers.attrBuffers) {
+      // eslint-disable-next-line guard-for-in
+      for (const attrName in this.__buffers.attrBuffers) {
+        const attrData = this.__buffers.attrBuffers[attrName]
+        const dataType = typeRegistry.getType(attrData.dataType)
+        attrData.dataType = dataType
+      }
+    }
+
     this.boundingBox = new Box3()
     this.boundingBox.p0.__data = data.bbox.p0.__data
     this.boundingBox.p1.__data = data.bbox.p1.__data
@@ -62,7 +72,7 @@ class BaseProxy extends RefCounted {
 
   /**
    * The getMetadata method.
-   * @param {any} key - The key param.
+   * @param {any} key - The key value.
    * @return {any} - The return value.
    */
   getMetadata(key) {
@@ -71,7 +81,7 @@ class BaseProxy extends RefCounted {
 
   /**
    * The hasMetadata method.
-   * @param {any} key - The key param.
+   * @param {any} key - The key value.
    * @return {any} - The return value.
    */
   hasMetadata(key) {
@@ -80,8 +90,8 @@ class BaseProxy extends RefCounted {
 
   /**
    * The setMetadata method.
-   * @param {any} key - The key param.
-   * @param {object} metaData - The metaData param.
+   * @param {any} key - The key value.
+   * @param {object} metaData - The metaData value.
    */
   setMetadata(key, metaData) {
     this.__metaData.set(key, metaData)

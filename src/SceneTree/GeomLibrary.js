@@ -1,16 +1,20 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Signal } from '../Utilities'
-import { Mesh } from './Geometry/Mesh.js'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
 
+// The GeomLibrary parses geometry data using workers.
+// This can be difficult to debug, so you can disable this 
+// by setting the following boolena to false, and uncommenting
+// the import of parseGeomsBinary
+const multiThreadParsing = true
 const GeomParserWorker = require('worker-loader?inline!./Geometry/GeomParserWorker.js')
 // import {
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
 
-/** Class representing a geom library. */
+/** Class representing a geometry library. */
 class GeomLibrary {
   /**
    * Create a geom library.
@@ -25,7 +29,12 @@ class GeomLibrary {
 
     this.__workers = []
     this.__nextWorker = 0
-    for (let i = 0; i < 3; i++) this.__workers.push(this.__constructWorker())
+
+    if (multiThreadParsing) {
+      for (let i = 0; i < 3; i++) {
+        this.__workers.push(this.__constructWorker())
+      }
+    }
 
     this.clear()
   }
@@ -41,7 +50,7 @@ class GeomLibrary {
 
   /**
    * The __constructWorker method.
-   * @return {any} - The return value.
+   * @return {GeomParserWorker} - Returns a GeomParserWorker.
    * @private
    */
   __constructWorker() {
@@ -68,7 +77,7 @@ class GeomLibrary {
 
   /**
    * The setGenBufferOption method.
-   * @param {any} key - The key param.
+   * @param {any} key - The key value.
    * @param {any} value - The value param.
    */
   setGenBufferOption(key, value) {
@@ -77,7 +86,7 @@ class GeomLibrary {
 
   /**
    * The setNumGeoms method.
-   * @param {any} expectedNumGeoms - The expectedNumGeoms param.
+   * @param {any} expectedNumGeoms - The expectedNumGeoms value.
    */
   setNumGeoms(expectedNumGeoms) {
     this.__numGeoms = expectedNumGeoms
@@ -85,7 +94,7 @@ class GeomLibrary {
 
   /**
    * The getGeom method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getGeom(index) {
@@ -98,10 +107,9 @@ class GeomLibrary {
 
   /**
    * The loadUrl method.
-   * @param {any} fileUrl - The fileUrl param.
+   * @param {any} fileUrl - The fileUrl value.
    */
   loadUrl(fileUrl) {
-    const onLoad = this.loadBin
     loadBinfile(
       fileUrl,
       data => {
@@ -115,9 +123,9 @@ class GeomLibrary {
 
   /**
    * The readBinaryBuffer method.
-   * @param {any} key - The key param.
-   * @param {ArrayBuffer} buffer - The buffer param.
-   * @param {object} context - The context param.
+   * @param {any} key - The key value.
+   * @param {ArrayBuffer} buffer - The buffer value.
+   * @param {object} context - The context value.
    * @return {any} - The return value.
    */
   readBinaryBuffer(key, buffer, context) {
@@ -170,50 +178,53 @@ class GeomLibrary {
 
       // ////////////////////////////////////////////
       // Multi Threaded Parsing
-      this.__workers[this.__nextWorker].postMessage(
-        {
-          key,
-          toc,
-          geomIndexOffset,
-          geomsRange,
-          isMobileDevice: reader.isMobileDevice,
-          bufferSlice,
-          genBuffersOpts: this.__genBuffersOpts,
-          context,
-        },
-        [bufferSlice]
-      )
-      this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
-      // ////////////////////////////////////////////
-      // Main Threaded Parsing
-      // parseGeomsBinary({
-      //     key,
-      //     toc,
-      //     geomIndexOffset,
-      //     geomsRange,
-      //     isMobileDevice: reader.isMobileDevice,
-      //     bufferSlice,
-      //     genBuffersOpts: this.__genBuffersOpts,
-      //     context
-      //   },
-      //   (data, transferables)=>{
-      //     this.__recieveGeomDatas(
-      //       data.key,
-      //       data.geomDatas,
-      //       data.geomIndexOffset,
-      //       data.geomsRange
-      //     );
-      //   });
+      if (multiThreadParsing) {
+        this.__workers[this.__nextWorker].postMessage(
+          {
+            key,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context,
+          },
+          [bufferSlice]
+        )
+        this.__nextWorker = (this.__nextWorker + 1) % this.__workers.length
+      } else {
+        // ////////////////////////////////////////////
+        // Main Threaded Parsing
+        parseGeomsBinary({
+            key,
+            toc,
+            geomIndexOffset,
+            geomsRange,
+            isMobileDevice: reader.isMobileDevice,
+            bufferSlice,
+            genBuffersOpts: this.__genBuffersOpts,
+            context
+          },
+          (data, transferables)=>{
+            this.__recieveGeomDatas(
+              data.key,
+              data.geomDatas,
+              data.geomIndexOffset,
+              data.geomsRange
+            );
+          });
+      }
     }
     return numGeoms
   }
 
   /**
    * The __recieveGeomDatas method.
-   * @param {any} key - The key param.
-   * @param {any} geomDatas - The geomDatas param.
-   * @param {any} geomIndexOffset - The geomIndexOffset param.
-   * @param {any} geomsRange - The geomsRange param.
+   * @param {any} key - The key value.
+   * @param {any} geomDatas - The geomDatas value.
+   * @param {any} geomIndexOffset - The offset of the file geoms in the asset.
+   * @param {any} geomsRange - The range of geoms in the bin file.
    * @private
    */
   __recieveGeomDatas(key, geomDatas, geomIndexOffset, geomsRange) {
@@ -271,9 +282,12 @@ class GeomLibrary {
     }
   }
 
+  // ////////////////////////////////////////
+  // Persistence
+
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - Returns the json object.
    */
   toJSON() {
     return {
