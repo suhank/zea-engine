@@ -238,7 +238,6 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     for (const transparentItem of this.visibleItems) {
       if (!transparentItem.geomItem.isHighlighted()) continue
       if (!transparentItem.shaders.glselectedshader) continue
-      glgeomItem.getGeomItem().isHighlighted()
       const shaders = transparentItem.shaders
       if (cache.currentglShader != shaders.glselectedshader) {
         // Some passes, like the depth pass, bind custom uniforms.
