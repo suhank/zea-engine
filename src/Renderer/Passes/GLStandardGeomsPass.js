@@ -115,6 +115,36 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
+   * The constructShaders method.
+   * Given a material, generate the various shaders required to render objects
+   * using this material. There should always be at least a single glshader
+   * and optionally a glgeomdatashader for rendering the goem data buffer
+   * and a glselectedshader for rendering selection hilghlights
+   * @param {string} shaderName - The name of the base shader.
+   * @return {object} - The object containing the shader instances.
+   */
+  constructShaders(shaderName) {
+    let glgeomdatashader
+    let glselectedshader
+    const glshader = this.__renderer.getOrCreateShader(shaderName)
+    if (glshader.constructor.getGeomDataShaderName()) {
+      glgeomdatashader = this.__renderer.getOrCreateShader(
+        glshader.constructor.getGeomDataShaderName()
+      )
+    }
+    if (glshader.constructor.getSelectedShaderName()) {
+      glselectedshader = this.__renderer.getOrCreateShader(
+        glshader.constructor.getSelectedShaderName()
+      )
+    }
+    return {
+      glshader,
+      glgeomdatashader,
+      glselectedshader
+    }
+  }
+
+  /**
    * The addMaterial method.
    * @param {any} material - The material value.
    * @return {any} - The return value.

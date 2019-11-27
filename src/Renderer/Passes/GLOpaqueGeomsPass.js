@@ -12,10 +12,10 @@ class GLShaderMaterials {
    * @param {any} glgeomdatashader - The glgeomdatashader value.
    * @param {any} glselectedshader - The glselectedshader value.
    */
-  constructor(glshader, glgeomdatashader, glselectedshader) {
-    this.glshader = glshader
-    this.glgeomdatashader = glgeomdatashader
-    this.glselectedshader = glselectedshader
+  constructor(shaders) {
+    this.glshader = shaders.glshader
+    this.glgeomdatashader = shaders.glgeomdatashader
+    this.glselectedshader = shaders.glselectedshader
     this.glmaterialGeomItemSets = []
   }
 
@@ -187,27 +187,25 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   addGeomItem(geomItem) {
     const material = geomItem.getMaterial()
     const shaderName = material.getShaderName()
-    let glgeomdatashader
-    let glselectedshader
-    const glshader = this.__renderer.getOrCreateShader(shaderName)
-    if (glshader.constructor.getGeomDataShaderName())
-      glgeomdatashader = this.__renderer.getOrCreateShader(
-        glshader.constructor.getGeomDataShaderName()
-      )
-    if (glshader.constructor.getSelectedShaderName())
-      glselectedshader = this.__renderer.getOrCreateShader(
-        glshader.constructor.getSelectedShaderName()
-      )
+    const shaders = this.constructShaders(shaderName)
+    let glshader = shaders.glshader
+    let glgeomdatashader = shaders.glgeomdatashader
+    let glselectedshader = shaders.glselectedshader
+    // const glshader = this.__renderer.getOrCreateShader(shaderName)
+    // if (glshader.constructor.getGeomDataShaderName())
+    //   glgeomdatashader = this.__renderer.getOrCreateShader(
+    //     glshader.constructor.getGeomDataShaderName()
+    //   )
+    // if (glshader.constructor.getSelectedShaderName())
+    //   glselectedshader = this.__renderer.getOrCreateShader(
+    //     glshader.constructor.getSelectedShaderName()
+    //   )
     const glmaterial = this.addMaterial(material)
     const glgeomItem = super.addGeomItem(geomItem)
 
     let glshaderMaterials = this.__glshadermaterials[shaderName]
     if (!glshaderMaterials) {
-      glshaderMaterials = new GLShaderMaterials(
-        glshader,
-        glgeomdatashader,
-        glselectedshader
-      )
+      glshaderMaterials = new GLShaderMaterials(shaders)
       this.__glshadermaterials[shaderName] = glshaderMaterials
     }
 
