@@ -38,7 +38,7 @@ class Group extends TreeItem {
     this.setFlag(ItemFlags.USER_EDITED)
 
     this.calculatingGroupXfo = false
-    this.propagatingXfoToItems = false
+    this.dirty = false
 
     this.invGroupXfo = undefined
     this.__initialXfos = []
@@ -224,7 +224,7 @@ class Group extends TreeItem {
     let xfo
     if (initialXfoMode == GROUP_INITIAL_XFO_MODES.manual) {
       // The xfo is manually set by the current global xfo.
-      this.invGroupXfo = this.getGlobalXfo()
+      this.invGroupXfo = this.getGlobalXfo().inverse()
       this.calculatingGroupXfo = false
       return;
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
@@ -271,20 +271,34 @@ class Group extends TreeItem {
 
     const items = Array.from(this.__itemsParam.getValue())
     // Only after all the items are resolved do we have an invXfo and we can tranform our items.
-    if (!this.calculatingGroupXfo && items.length > 0 && this.invGroupXfo) {
+    if (
+      !this.calculatingGroupXfo &&
+      items.length > 0 &&
+      this.invGroupXfo &&
+      !this.dirty
+    ) {
       let delta
-      this.propagatingXfoToItems = true
+      // Note: because each 'clean' function is a unique
+      // value, the parameter does not know that this Group
+      // has already registered a clean function. For now
+      // we use this 'dirty' hack to avoid registering multiple
+      // clean functions. However, once the cleaning is handled
+      // via a bound operator, then this code will be removed.
+      this.dirty = true
       const xfo = this.__globalXfoParam.getValue()
       const setDirty = (item, initialXfo) => {
+        const param = item.getParameter('GlobalXfo')
         const clean = () => {
           if (!delta) {
             // Compute the skinning transform that we can
             // apply to all the items in the group.
             delta = xfo.multiply(this.invGroupXfo)
+            this.dirty = false
           }
-          return delta.multiply(initialXfo)
+          const result = delta.multiply(initialXfo)
+          param.setClean(result)
         }
-        item.getParameter('GlobalXfo').setDirty(clean)
+        param.setDirty(clean)
       }
       items.forEach((item, index) => {
         if (item instanceof TreeItem) setDirty(item, this.__initialXfos[index])
@@ -292,7 +306,6 @@ class Group extends TreeItem {
       this.propagatingXfoToItems = false
     }
   }
-  
 
   // _propagateGroupXfoToItem(index) {
   //   const clean = () => {
@@ -604,10 +617,10 @@ class Group extends TreeItem {
     items.forEach(item => {
       if (item instanceof TreeItem) {
         if (item.getVisible() && !item.testFlag(ItemFlags.IGNORE_BBOX))
-          bbox.addBox3(item.getBoundingBox())
+          result.addBox3(item.getBoundingBox())
       }
     })
-    return bbox
+    return result
   }
 
   // ///////////////////////
