@@ -95,17 +95,15 @@ class Xfo {
    * @return {Xfo} - Returns an Xfo.
    */
   multiply(xfo) {
-
     let this_sc = this.sc
     if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
       this_sc = xfo.ori.rotateVec3(this.sc)
-      if(Math.sign(this_sc.x) != Math.sign(this.sc.x)) this_sc.x = -this_sc.x;
-      if(Math.sign(this_sc.y) != Math.sign(this.sc.y)) this_sc.y = -this_sc.y;
-      if(Math.sign(this_sc.z) != Math.sign(this.sc.z)) this_sc.z = -this_sc.z;
+      if (Math.sign(this_sc.x) != Math.sign(this.sc.x)) this_sc.x = -this_sc.x
+      if (Math.sign(this_sc.y) != Math.sign(this.sc.y)) this_sc.y = -this_sc.y
+      if (Math.sign(this_sc.z) != Math.sign(this.sc.z)) this_sc.z = -this_sc.z
     }
-
     const result = new Xfo(
-      this.tr.add(this.ori.rotateVec3(this.sc.multiply(xfo.tr))),
+      this.tr.add(this.ori.rotateVec3(this_sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
       this_sc.multiply(xfo.sc)
     )
@@ -118,8 +116,22 @@ class Xfo {
    */
   inverse() {
     const result = new Xfo()
-    result.sc = this.sc.inverse()
     result.ori = this.ori.inverse()
+
+    if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
+      // Note: the following code has not been tested and
+      // may not be quire correct. We need to setup
+      // unit tests for this kind of sample.
+      // An example would be to lay out some boxes on different rotations
+      // and with non-uniform scale. Then parent them together. If they
+      // remain stationary, after parenting, then this math is correct.
+      result.sc = result.ori.rotateVec3(this.sc)
+      if (Math.sign(result.sc.x) != Math.sign(this.sc.x)) result.sc.x = -result.sc.x
+      if (Math.sign(result.sc.y) != Math.sign(this.sc.y)) result.sc.y = -result.sc.y
+      if (Math.sign(result.sc.z) != Math.sign(this.sc.z)) result.sc.z = -result.sc.z
+    } else {
+      result.sc = this.sc.inverse()
+    }
     result.tr = result.ori.rotateVec3(this.tr.negate().multiply(result.sc))
     return result
   }
