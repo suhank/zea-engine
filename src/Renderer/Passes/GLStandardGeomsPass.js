@@ -106,6 +106,16 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
+   * The addShader method.
+   * @param {any} material - The material value.
+   * @return {any} - The return value.
+   */
+  addShader(material) {
+    return this.__renderer.getOrCreateShader(material.getShaderName())
+  }
+
+  /**
+   * The constructShaders method.
    * Given a material, generate the various shaders required to render objects
    * using this material. There should always be at least a single glshader
    * and optionally a glgeomdatashader for rendering the goem data buffer
@@ -113,7 +123,7 @@ class GLStandardGeomsPass extends GLPass {
    * @param {string} shaderName - The name of the base shader.
    * @return {object} - The object containing the shader instances.
    */
-  createShaders(shaderName) {
+  constructShaders(shaderName) {
     let glgeomdatashader
     let glselectedshader
     const glshader = this.__renderer.getOrCreateShader(shaderName)
@@ -130,7 +140,7 @@ class GLStandardGeomsPass extends GLPass {
     return {
       glshader,
       glgeomdatashader,
-      glselectedshader,
+      glselectedshader
     }
   }
 

@@ -51,7 +51,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   addGeomItem(geomItem) {
     const material = geomItem.getMaterial()
     const shaderName = material.getShaderName()
-    const shaders = this.createShaders(shaderName)
+    const shaders = this.constructShaders(shaderName)
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
@@ -68,6 +68,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     })
 
     const item = {
+      geomItem,
       shaders,
       glmaterial,
       glgeomitem,
@@ -119,8 +120,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.resort = false
   }
 
-  _drawItem(renderstate, transparentItem, cache) {
 
+  _drawItem(renderstate, transparentItem, cache) {
     if (cache.currentglMaterial != transparentItem.glmaterial) {
       cache.currentglMaterial = transparentItem.glmaterial
       if (!cache.currentglMaterial.bind(renderstate)) {
@@ -163,11 +164,11 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
     for (const transparentItem of this.visibleItems) {
       if (cache.currentglShader != transparentItem.shaders.glshader) {
-        cache.currentglShader = transparentItem.shaders.glshader
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, cache.currentglShader)) {
+        if (!this.bindShader(renderstate, transparentItem.shaders.glshader)) {
           continue
         }
+        cache.currentglShader = transparentItem.shaders.glshader
       }
 
       this._drawItem(renderstate, transparentItem, cache)
@@ -224,7 +225,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   /**
    * The drawHighlightedGeoms method.
    * @param {any} renderstate - The renderstate value.
-  
+   */
   drawHighlightedGeoms(renderstate) {
     const gl = this.__gl
     gl.disable(gl.CULL_FACE) // 2-sided rendering.
@@ -235,19 +236,22 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       currentglGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
-      if (cache.currentglShader != transparentItem.shaders.glselectedshader) {
-        cache.currentglShader = transparentItem.shaders.glselectedshader
+      if (!transparentItem.geomItem.isHighlighted()) continue
+      if (!transparentItem.shaders.glselectedshader) continue
+      const shaders = transparentItem.shaders
+      if (cache.currentglShader != shaders.glselectedshader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, cache.currentglShader)) {
+        if (!this.bindShader(renderstate, shaders.glselectedshader)) {
           continue
         }
+        cache.currentglShader = shaders.glselectedshader
       }
 
       this._drawItem(renderstate, transparentItem, cache)
     }
 
     if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
-  } */
+  }
 
   /**
    * The getGeomItemAndDist method.
@@ -278,7 +282,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   /**
    * The drawGeomData method.
    * @param {any} renderstate - The renderstate value.
-
+   */
   drawGeomData(renderstate) {
     if (this.newItemsReadyForLoading()) this.finalize()
 
@@ -295,12 +299,13 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
       currentglGeom: null,
     }
     for (const transparentItem of this.visibleItems) {
-      if (cache.currentglShader != transparentItem.shaders.glgeomdatashader) {
-        cache.currentglShader = transparentItem.shaders.glgeomdatashader
+      const shaders = transparentItem.shaders
+      if (cache.currentglShader != shaders.glgeomdatashader) {
         // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, cache.currentglShader)) {
+        if (!this.bindShader(renderstate, shaders.glgeomdatashader)) {
           continue
         }
+        cache.currentglShader = shaders.glgeomdatashader
       }
       {
         const unif = renderstate.unifs.floatGeomBuffer
@@ -319,7 +324,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
 
     if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
-  }   */
+  }
 }
 
 GLRenderer.registerPass(GLTransparentGeomsPass, PassType.TRANSPARENT)
