@@ -32,7 +32,7 @@ class AimOperator extends Operator {
       ])
     )
 
-    this.addParameter(new BooleanParameter('Stretch', false))
+    this.addParameter(new NumberParameter('Stretch', 0.0))
     this.addParameter(new NumberParameter('Initial Dist', 1.0))
     this.addParameter(new XfoParameter('Target'))
     this.addOutput(new XfoOperatorOutput('InputOutput'))
@@ -93,23 +93,25 @@ class AimOperator extends Operator {
     xfo.ori = align.multiply(xfo.ori)
 
     const stretch = this.getParameter('Stretch').getValue()
-    if (stretch) {
+    if (stretch > 0.0) {
       const initialDist = this.getParameter('Initial Dist').getValue()
       // Scale the output to reach towards the target.
+      const sc = 1.0 + (dist / initialDist - 1.0) * stretch
       switch (axis) {
         case 0:
         case 1:
-          xfo.sc.x *= dist / initialDist
+          xfo.sc.x *= sc
           break
         case 2:
         case 3:
-          xfo.sc.y *= dist / initialDist
+          xfo.sc.y *= sc
           break
         case 4:
         case 5:
-          xfo.sc.y *= dist / initialDist
+          xfo.sc.z *= sc
           break
       }
+      // console.log("AimOperator.evaluate:", xfo.sc.toString())
     }
     output.setClean(xfo)
   }
