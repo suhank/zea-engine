@@ -76,14 +76,13 @@ class GLViewport extends GLBaseViewport {
    * @param {number} width - The width value.
    * @param {number} height - The height value.
    */
-  resize(canvasWidth, canvasHeight) {
-    
-    this.__canvasWidth = canvasWidth
-    this.__canvasHeight = canvasHeight
-    this.__x = canvasWidth * this.__bl.x
-    this.__y = canvasWidth * this.__bl.y
-    this.__width = canvasWidth * this.__tr.x - canvasWidth * this.__bl.x
-    this.__height = canvasHeight * this.__tr.y - canvasHeight * this.__bl.y
+  resize(width, height) {
+    this.__canvasWidth = width
+    this.__canvasHeight = height
+    this.__x = width * this.__bl.x
+    this.__y = width * this.__bl.y
+    this.__width = width * this.__tr.x - width * this.__bl.x
+    this.__height = height * this.__tr.y - height * this.__bl.y
     this.region = [this.__x, this.__y, this.__width, this.__height]
 
     if (this.__camera) this.__updateProjectionMatrix()
@@ -244,7 +243,7 @@ class GLViewport extends GLBaseViewport {
 
   /**
    * The createGeomDataFbo method.
-   * @param {boolean} floatGeomBuffer - true if the GPU supports rendering 
+   * @param {boolean} floatGeomBuffer - true if the GPU supports rendering
    * to floating point textures.
    */
   createGeomDataFbo(floatGeomBuffer) {
@@ -280,7 +279,7 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
-   * Renders the scene geometry to the viewports geom data buffer 
+   * Renders the scene geometry to the viewports geom data buffer
    * in preparation for mouse picking.
    */
   renderGeomDataFbo() {
@@ -397,6 +396,7 @@ class GLViewport extends GLBaseViewport {
           intersectionPos,
           geomItem: geomItemAndDist.geomItem,
           dist: geomItemAndDist.dist,
+          geomData,
         }
       }
       return this.__intersectionData
@@ -404,13 +404,14 @@ class GLViewport extends GLBaseViewport {
   }
 
   /**
+   * getGeomItemsInRect
    * Gathers all the geoms renders in a given rectangle of the viewport.
    * @param {Vec2} tl - The top left value of the rectangle.
    * @param {Vec2} br - The bottom right corner of the rectangle.
    * @return {Set} - The return value.
    */
-  // TODO: Use a Math.Rect instead
   getGeomItemsInRect(tl, br) {
+    // TODO: Use a Math.Rect instead
     if (this.__geomDataBufferFbo) {
       const gl = this.__renderer.gl
       gl.finish()
