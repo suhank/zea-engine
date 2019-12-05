@@ -1,6 +1,6 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Signal } from '../Utilities'
-import { Vec3 } from '../Math'
+import { Vec3, Xfo } from '../Math'
 import {
   Plane,
   LightmapMixer,
@@ -8,11 +8,13 @@ import {
   EnvMap,
 } from '../SceneTree'
 import { GLFbo } from './GLFbo.js'
+import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLLightmapMixer } from './GLLightmapMixer.js'
 import { GLEnvMap } from './GLEnvMap.js'
 import { GLBaseRenderer } from './GLBaseRenderer.js'
 import { GLTexture2D } from './GLTexture2D.js'
+import { PassType } from './Passes/GLPass.js'
 import {
   BackgroundImageShader,
   OctahedralEnvMapShader,
@@ -27,6 +29,8 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 // } from './Shaders/PostProcessing.js';
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
 import { GLMesh } from './GLMesh.js'
+
+const NON_OVERLAY_PASSES = PassType.OPAQUE | PassType.TRANSPARENT 
 
 /** Class representing a GL renderer.
  * @extends GLBaseRenderer
@@ -386,7 +390,7 @@ class GLRenderer extends GLBaseRenderer {
     )
     this.__highlightedGeomsBufferFbo.setClearColor([0, 0, 0, 0])
   }
-
+  
   /**
    * The getFbo method.
    * @return {any} - The return value.
@@ -413,6 +417,128 @@ class GLRenderer extends GLBaseRenderer {
     })
     this.__fbo = new GLFbo(gl, this.__fwBuffer, true)
     this.__fbo.setClearColor(this.__backgroundColor.asArray())
+  }
+
+  // //////////////////////////
+  // Raycasting
+
+  /**
+   * The createRayCastRenderTarget method.
+   */
+  createRayCastRenderTarget() {
+    // The geom data buffer is a 3x3 data buffer.
+    // See getGeomItemAtTip below
+    const gl = this.__gl
+    this.__rayCastRenderTarget = new GLRenderTarget(gl, {
+      type: 'FLOAT',
+      format: 'RGBA',
+      filter: 'NEAREST',
+      width: 3,
+      height: 3,
+      numColorChannels: 1
+    })
+    this.__rayCastRenderTargetProjMatrix = new Mat4()
+    this.rayCastDist = 0
+    this.rayCastArea = 0
+  }
+
+  
+  /**
+   * The raycast method.
+   * @return {any} - The return value.
+   */
+  raycastWithRay(ray, dist, area = 0.01, mask = NON_OVERLAY_PASSES) {
+    const xfo = new Xfo()
+    xfo.setLookAt(ray.start, ray.start.add(ray.dir))
+    this.raycast(xfo, ray, dist, area);
+  }
+  
+  raycastWithXfo(xfo, dist, area = 0.01, mask = NON_OVERLAY_PASSES) {
+    const ray = new Ray(xfo.tr, xfo.ori.getZaxis())
+    this.raycast(xfo, ray, dist, area);
+  }
+
+  /**
+   * The raycast method.
+   * @return {any} - The return value.
+   */
+  raycast(xfo, ray, dist, area = 0.01, mask = NON_OVERLAY_PASSES) {
+    if (this.rayCastDist != dist || this.rayCastArea != area) {
+      this.__rayCastRenderTargetProjMatrix.setOrthographicMatrix(
+        area * -0.5,
+        area * 0.5,
+        area * -0.5,
+        area * 0.5,
+        0.0,
+        dist
+      )
+      this.rayCastDist = dist
+      this.rayCastArea = area
+    }
+
+    const gl = this.__gl
+
+    const region = [0, 0, 3, 3]
+    const renderstate = {
+      viewports: [
+        {
+          region,
+          cameraMatrix: xfo.toMat4(),
+          viewMatrix: xfo.inverse().toMat4(),
+          projectionMatrix: this.__rayCastRenderTargetProjMatrix,
+          isOrthographic: true,
+        },
+      ],
+    }
+
+    this.__rayCastRenderTarget.bindForWriting(renderstate, true)
+    gl.enable(gl.CULL_FACE)
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthFunc(gl.LEQUAL)
+    gl.depthMask(true)
+
+    this.drawSceneGeomData(renderstate, mask)
+    gl.finish()
+    this.__geomDataBufferFbo.unbindForWriting()
+    this.__geomDataBufferFbo.bindForReading()
+
+    const geomDatas = new Float32Array(4 * 9)
+    gl.readPixels(0, 0, 3, 3, gl.RGBA, gl.FLOAT, geomDatas)
+    this.__geomDataBufferFbo.unbindForReading()
+
+    // ////////////////////////////////////
+    // We have a 3x3 grid of pixels, and we
+    // scan them to find if any geom was in the
+    // frustum.
+    // Starting with the center pixel (4),
+    // then left and right (3, 5)
+    // Then top bottom (1, 7)
+    const checkPixel = id => geomDatas[id * 4 + 3] != 0
+    const dataPixels = [4, 3, 5, 1, 7]
+    let geomData
+    for (const pixelID of dataPixels) {
+      if (checkPixel(pixelID)) {
+        geomData = geomDatas.subarray(pixelID * 4, pixelID * 4 + 4)
+        break
+      }
+    }
+    if (!geomData) return
+
+    // Mask the pass id to be only the first 6 bits of the integer.
+    const passId = Math.round(geomData[0]) & (64 - 1)
+    const geomItemAndDist = this.getPass(passId).getGeomItemAndDist(geomData)
+
+    if (geomItemAndDist) {
+      const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
+
+      return {
+        ray,
+        intersectionPos,
+        geomItem: geomItemAndDist.geomItem,
+        dist: geomItemAndDist.dist,
+        geomData,
+      }
+    }
   }
 
   // //////////////////////////

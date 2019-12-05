@@ -197,7 +197,7 @@ class GLRenderTarget {
   bindForWriting(renderstate, clear = false) {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
-      renderstate.boundRendertarget = this.__fbo
+      renderstate.boundRendertarget = this.frameBuffer
     }
     const gl = this.__gl
     if (gl.name == 'webgl2')
@@ -205,6 +205,18 @@ class GLRenderTarget {
     else gl.bindFramebuffer(gl.FRAMEBUFFER, this.frameBuffer)
     gl.viewport(0, 0, this.width, this.height) // Match the viewport to the texture size
     if (clear) this.clear()
+  }
+
+  /**
+   * The unbindForWriting method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  unbindForWriting(renderstate) {
+    if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
+    const gl = this.__gl
+    if (gl.name == 'webgl2')
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
+    else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo)
   }
 
   /**

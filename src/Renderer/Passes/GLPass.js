@@ -4,10 +4,11 @@ import { ParameterOwner } from '../../SceneTree/ParameterOwner.js'
 import { BooleanParameter } from '../../SceneTree/Parameters'
 
 const PassType = {
-  OPAQUE: 0,
-  TRANSPARENT: 1,
-  OVERLAY: 2,
+  OPAQUE: 1 << 0,
+  TRANSPARENT: 1 << 1,
+  OVERLAY: 1 << 2,
 }
+
 
 /** This class abstracts the rendering of a collection of geometries to screen.
  * @extends ParameterOwner

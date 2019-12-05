@@ -53,17 +53,7 @@ class VRController {
       this.__treeItem.addChild(this.__tip, false)
       vrviewport.getTreeItem().addChild(this.__treeItem)
 
-      this.__projMatrix = new Mat4()
       this.__activeVolumeSize = 0.04
-      this.__projMatrix.setOrthographicMatrix(
-        this.__activeVolumeSize * -0.5,
-        this.__activeVolumeSize * 0.5,
-        this.__activeVolumeSize * -0.5,
-        this.__activeVolumeSize * 0.5,
-        this.__activeVolumeSize * -0.5,
-        this.__activeVolumeSize * 0.5
-      )
-      this.createGeomDataFbo()
 
       vrviewport.loadHMDResources().then(asset => {
         asset.loaded.connect(() => {
@@ -198,99 +188,18 @@ class VRController {
   // ////////////////////////////////
 
   /**
-   * The createGeomDataFbo method.
-   */
-  createGeomDataFbo() {
-    // The geom data buffer is a 3x3 data buffer.
-    // See getGeomItemAtTip below
-    const gl = this.__vrviewport.getRenderer().gl
-    this.__geomDataBuffer = new GLTexture2D(gl, {
-      type: 'FLOAT',
-      format: 'RGBA',
-      filter: 'NEAREST',
-      width: 3,
-      height: 3,
-    })
-    this.__geomDataBufferFbo = new GLFbo(gl, this.__geomDataBuffer, true)
-    this.__geomDataBufferFbo.setClearColor([0, 0, 0, 0])
-  }
-
-  /**
    * The getGeomItemAtTip method.
    * @return {any} - The return value.
    */
   getGeomItemAtTip() {
-    if (this.__hitTested) return this.__geomAtTip
+    if (this.__hitTested) return this.__intersectionData
     this.__hitTested = true
 
     const renderer = this.__vrviewport.getRenderer()
-    const gl = renderer.gl
     const xfo = this.__tip.getGlobalXfo()
-
-    this.__geomDataBufferFbo.bindAndClear()
-    gl.viewport(0, 0, 3, 3)
-
-    const renderstate = {
-      viewports: [
-        {
-          region: [0, 0, 3, 3],
-          cameraMatrix: xfo.toMat4(),
-          viewMatrix: xfo.inverse().toMat4(),
-          projectionMatrix: this.__projMatrix,
-          isOrthographic: true,
-        },
-      ],
-    }
-
-    gl.enable(gl.CULL_FACE)
-    gl.enable(gl.DEPTH_TEST)
-    gl.depthFunc(gl.LEQUAL)
-    gl.depthMask(true)
-
-    renderer.drawSceneGeomData(renderstate)
-    gl.finish()
-    this.__geomDataBufferFbo.unbindForWriting()
-    this.__geomDataBufferFbo.bindForReading()
-
-    const geomDatas = new Float32Array(4 * 9)
-    gl.readPixels(0, 0, 3, 3, gl.RGBA, gl.FLOAT, geomDatas)
-    this.__geomDataBufferFbo.unbindForReading()
-
-    // ////////////////////////////////////
-    // We have a 3x3 grid of pixels, and we
-    // scan them to find if any geom was in the
-    // frustum.
-    // Starting with the center pixel (4),
-    // then left and right (3, 5)
-    // Then top bottom (1, 7)
-    const checkPixel = id => geomDatas[id * 4 + 3] != 0
-    const dataPixels = [4, 3, 5, 1, 7]
-    let geomData
-    for (const pixelID of dataPixels) {
-      if (checkPixel(pixelID)) {
-        geomData = geomDatas.subarray(pixelID * 4, pixelID * 4 + 4)
-        break
-      }
-    }
-    if (!geomData) return
-
-    const passId = Math.round(geomData[0])
-    const geomItemAndDist = renderer
-      .getPass(passId)
-      .getGeomItemAndDist(geomData)
-
-    if (geomItemAndDist) {
-      const ray = new Ray(xfo.tr, xfo.ori.getZaxis())
-      const intersectionPos = ray.start.add(ray.dir.scale(geomItemAndDist.dist))
-
-      this.__geomAtTip = {
-        controllerRay: ray,
-        intersectionPos,
-        geomItem: geomItemAndDist.geomItem,
-        dist: geomItemAndDist.dist,
-      }
-      return this.__geomAtTip
-    }
+    const vol = this.__activeVolumeSize
+    this.__intersectionData = renderer.raycastWithXfo(xfo, vol, vol)
+    return this.__intersectionData
   }
 }
 

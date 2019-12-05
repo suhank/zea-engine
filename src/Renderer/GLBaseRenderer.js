@@ -1149,9 +1149,15 @@ class GLBaseRenderer {
    * The drawSceneGeomData method.
    * @param {any} renderstate - The renderstate value.
    */
-  drawSceneGeomData(renderstate) {
+  drawSceneGeomData(renderstate, mask=255) {
     this.bindGLBaseRenderer(renderstate)
     for (const key in this.__passes) {
+      // Skip pass categories that do not match
+      // the mask. E.g. we may not want to hit
+      // "Overlay" geoms such as labels,
+      // or we might be trying to move labels and don't
+      // want to grab normal geoms.
+      if ((Number.parseInt(key) & mask) == 0) continue
       const passSet = this.__passes[key]
       for (const pass of passSet) {
         if (pass.enabled) pass.drawGeomData(renderstate)
