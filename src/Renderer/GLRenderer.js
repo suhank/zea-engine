@@ -10,7 +10,6 @@ import {
 import { GLFbo } from './GLFbo.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { GLHDRImage } from './GLHDRImage.js'
-import { GLLightmapMixer } from './GLLightmapMixer.js'
 import { GLEnvMap } from './GLEnvMap.js'
 import { GLBaseRenderer } from './GLBaseRenderer.js'
 import { GLTexture2D } from './GLTexture2D.js'
@@ -204,14 +203,9 @@ class GLRenderer extends GLBaseRenderer {
     // Note: we can have BaseItems in the tree now.
     if (treeItem instanceof VLAAsset) {
       const addLightmap = (name, lightmap) => {
-        let gllightmap
-        if (lightmap instanceof LightmapMixer)
-          gllightmap = new GLLightmapMixer(this.__gl, lightmap)
-        else {
-          gllightmap = lightmap.image.getMetadata('gltexture')
-          if (!gllightmap) {
-            gllightmap = new GLHDRImage(this.__gl, lightmap.image)
-          }
+        let gllightmap = lightmap.image.getMetadata('gltexture')
+        if (!gllightmap) {
+          gllightmap = new GLHDRImage(this.__gl, lightmap.image)
         }
         gllightmap.updated.connect(data => {
           this.requestRedraw()
