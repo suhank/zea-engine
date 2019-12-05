@@ -244,6 +244,16 @@ class GLRenderTarget {
   }
 
   /**
+   * The unbindForReading method.
+   */
+  unbindForReading() {
+    const gl = this.__gl
+    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null)
+    else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+  }
+
+
+  /**
    * The bindColorTexture method.
    * @param {any} renderstate - The renderstate value.
    * @param {any} unif - The unif value.

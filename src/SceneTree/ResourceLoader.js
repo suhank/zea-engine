@@ -70,11 +70,6 @@ class ResourceLoader {
       children: {},
     }
 
-    // Common resources are used by systems such at the renderer and VR controllers.
-    // Any asset that will probably be used my multiple differeint independent objects
-    // should be loaded here. (For now, it is being used to load VR Controller assets.)
-    this.__commonResources = {}
-
     this.__workers = []
     this.__nextWorker = 0
 
@@ -132,21 +127,6 @@ class ResourceLoader {
       const file = this.__resources[key]
       if (file.name.includes(filter)) fn(file)
     }
-  }
-
-  /**
-   * The loadCommonAssetResource method.
-   * @param {any} resourceId - The resourceId value.
-   * @return {any} - The return value.
-   */
-  loadCommonAssetResource(resourceId) {
-    if (resourceId in this.__commonResources) {
-      return this.__commonResources[resourceId]
-    }
-    const asset = new VLAAsset()
-    asset.getParameter('DataFilePath').setValue(resourceId)
-    this.__commonResources[resourceId] = asset
-    return asset
   }
 
   /**

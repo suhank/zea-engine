@@ -240,8 +240,10 @@ class VRViewport extends GLBaseViewport {
     // the loading is defered
     this.loadHMDResources().then(() => {
       navigator.xr
-        .requestSession('immersive-vr')
-        .then(session => {
+        .requestSession('immersive-vr', {
+          requiredFeatures: ['local-floor'],
+          optionalFeatures: ['bounded-floor']
+        }).then(session => {
           this.__renderer.__xrViewportPresenting = true
 
           // Add an output canvas that will allow XR to also send a view
@@ -364,7 +366,7 @@ class VRViewport extends GLBaseViewport {
           session
             .requestReferenceSpace('local-floor')
             .catch(e => {
-              if (!session.mode.startsWith('immersive')) {
+              // if (!session.mode.startsWith('immersive')) {
                 // If we're in inline mode, our underlying platform may not support
                 // the stationary reference space, but an identity space is guaranteed.
                 console.log('Falling back to identity reference space')
@@ -380,9 +382,9 @@ class VRViewport extends GLBaseViewport {
                       new XRRigidTransform({ y: -1.6 })
                     )
                   })
-              } else {
-                throw e
-              }
+              // } else {
+              //   throw e
+              // }
             })
             .then(refSpace => {
               this.__refSpace = refSpace

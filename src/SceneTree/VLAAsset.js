@@ -80,12 +80,16 @@ class VLAAsset extends AssetItem {
 
     super.readBinary(reader, context)
 
-    if (reader.remainingByteLength != 4) {
-      throw new Error(
-        'File needs to be re-exported:' +
-          this.getParameter('FilePath').getValue()
-      )
-    }
+    // Strangely, reading the latest HMD files gives us 12 bytes
+    // ad the end and the next 4 == 0. Not sure why.
+    // setNumGeoms sets 0, but this doesn't bother the loading
+    // so simply leaving for now.
+    // if (reader.remainingByteLength != 4) {
+    //   throw new Error(
+    //     'File needs to be re-exported:' +
+    //       this.getParameter('FilePath').getValue()
+    //   )
+    // }
     // Perpare the geom library for loading
     // This helps with progress bars, so we know how many geoms are coming in total.
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())

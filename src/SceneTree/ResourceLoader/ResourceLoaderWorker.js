@@ -99,7 +99,18 @@ onmessage = function(event) {
   else if(event.data.type == 'fetch') {
   	extract(event.data).then(data => {
 
-	    const [state, list] = data;
+      const [state, list] = data;
+      if (state.state == 'FAIL') {
+        const result = {
+          type: 'ERROR',
+          reason: state.reason,
+          msg: state.msg,
+          resourceId: event.data.resourceId,
+          url: event.data.url
+        };
+        self.postMessage(result);
+        return;
+      }
 	    const result = {
 	        type: 'FINISHED',
 	        resourceId: event.data.resourceId,

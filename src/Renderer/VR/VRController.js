@@ -49,7 +49,11 @@ class VRController {
       // ensure that the grid does not touch the controller,
       // else it will return the controller geom from
       // the getGeomItemAtTip function
-      this.__tip.setLocalXfo(new Xfo(new Vec3(0.0, -0.05, -0.13)))
+      const tipXfo = new Xfo()
+      tipXfo.tr.set(0.0, -0.05, -0.13)
+      // Flip the tip around so +z is forwards.
+      // tipXfo.ori.setFromAxisAndAngle(new Vec3(0, 1, 0), Math.PI)
+      this.__tip.setLocalXfo(tipXfo)
       this.__treeItem.addChild(this.__tip, false)
       vrviewport.getTreeItem().addChild(this.__treeItem)
 

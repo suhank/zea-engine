@@ -319,7 +319,7 @@ class GeomItem extends BaseGeomItem {
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.
-    this.__geomXfoParam.setDirty(this.__cleanGeomXfo)
+    this.__geomMatParam.setDirty(this.__cleanGeomMat)
   }
 
   /**

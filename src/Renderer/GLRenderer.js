@@ -1,9 +1,8 @@
 import { SystemDesc } from '../BrowserDetection.js'
 import { Signal } from '../Utilities'
-import { Vec3, Xfo } from '../Math'
+import { Vec3, Xfo, Mat4, Ray } from '../Math'
 import {
   Plane,
-  LightmapMixer,
   VLAAsset,
   EnvMap,
 } from '../SceneTree'
@@ -29,7 +28,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 import { OutlinesShader } from './Shaders/OutlinesShader.js'
 import { GLMesh } from './GLMesh.js'
 
-const NON_OVERLAY_PASSES = PassType.OPAQUE | PassType.TRANSPARENT 
+const ALL_PASSES = PassType.OPAQUE | PassType.TRANSPARENT | PassType.OVERLAY
 
 /** Class representing a GL renderer.
  * @extends GLBaseRenderer
@@ -86,6 +85,7 @@ class GLRenderer extends GLBaseRenderer {
     // this.__glshaderScreenPostProcess = new PostProcessing(gl);
 
     this.createSelectedGeomsFbo()
+    this.createRayCastRenderTarget()
   }
 
   /**
@@ -441,22 +441,22 @@ class GLRenderer extends GLBaseRenderer {
    * The raycast method.
    * @return {any} - The return value.
    */
-  raycastWithRay(ray, dist, area = 0.01, mask = NON_OVERLAY_PASSES) {
+  raycastWithRay(ray, dist, area = 0.01, mask = ALL_PASSES) {
     const xfo = new Xfo()
     xfo.setLookAt(ray.start, ray.start.add(ray.dir))
-    this.raycast(xfo, ray, dist, area);
+    return this.raycast(xfo, ray, dist, area, mask)
   }
   
-  raycastWithXfo(xfo, dist, area = 0.01, mask = NON_OVERLAY_PASSES) {
-    const ray = new Ray(xfo.tr, xfo.ori.getZaxis())
-    this.raycast(xfo, ray, dist, area);
+  raycastWithXfo(xfo, dist, area = 0.01, mask = ALL_PASSES) {
+    const ray = new Ray(xfo.tr, xfo.ori.getZaxis().negate())
+    return this.raycast(xfo, ray, dist, area, mask)
   }
 
   /**
    * The raycast method.
    * @return {any} - The return value.
    */
-  raycast(xfo, ray, dist, area = 0.01, mask = NON_OVERLAY_PASSES) {
+  raycast(xfo, ray, dist, area = 0.01, mask = ALL_PASSES) {
     if (this.rayCastDist != dist || this.rayCastArea != area) {
       this.__rayCastRenderTargetProjMatrix.setOrthographicMatrix(
         area * -0.5,
@@ -474,10 +474,10 @@ class GLRenderer extends GLBaseRenderer {
 
     const region = [0, 0, 3, 3]
     const renderstate = {
+      cameraMatrix: xfo.toMat4(),
       viewports: [
         {
           region,
-          cameraMatrix: xfo.toMat4(),
           viewMatrix: xfo.inverse().toMat4(),
           projectionMatrix: this.__rayCastRenderTargetProjMatrix,
           isOrthographic: true,
@@ -493,12 +493,12 @@ class GLRenderer extends GLBaseRenderer {
 
     this.drawSceneGeomData(renderstate, mask)
     gl.finish()
-    this.__geomDataBufferFbo.unbindForWriting()
-    this.__geomDataBufferFbo.bindForReading()
+    this.__rayCastRenderTarget.unbindForWriting()
+    this.__rayCastRenderTarget.bindForReading()
 
     const geomDatas = new Float32Array(4 * 9)
     gl.readPixels(0, 0, 3, 3, gl.RGBA, gl.FLOAT, geomDatas)
-    this.__geomDataBufferFbo.unbindForReading()
+    this.__rayCastRenderTarget.unbindForReading()
 
     // ////////////////////////////////////
     // We have a 3x3 grid of pixels, and we

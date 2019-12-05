@@ -7,6 +7,7 @@ import { ItemFlags } from './BaseItem.js'
 import { GeomItem } from './GeomItem.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { SceneSettings } from './SceneSettings.js'
+import { VLAAsset } from './VLAAsset.js'
 
 const defaultGridColor = new Color('#DCDCDC')
 
@@ -24,6 +25,13 @@ class Scene {
     this.root = new TreeItem('root')
     this.root.addRef(this)
     this.root.addChild(this.settings)
+
+    
+
+    // Common resources are used by systems such at the renderer and VR controllers.
+    // Any asset that will probably be used my multiple differeint independent objects
+    // should be loaded here. (For now, it is being used to load VR Controller assets.)
+    this.__commonResources = {}
   }
 
   /**
@@ -115,6 +123,22 @@ class Scene {
 
     return gridTreeItem
   }
+  
+  /**
+   * The loadCommonAssetResource method.
+   * @param {any} resourceId - The resourceId value.
+   * @return {any} - The return value.
+   */
+  loadCommonAssetResource(resourceId) {
+    if (resourceId in this.__commonResources) {
+      return this.__commonResources[resourceId]
+    }
+    const asset = new VLAAsset()
+    asset.getParameter('DataFilePath').setValue(resourceId)
+    this.__commonResources[resourceId] = asset
+    return asset
+  }
+
 
   // /////////////////////////////////////
   // Persistence
