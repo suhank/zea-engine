@@ -28,6 +28,9 @@ class VLAAsset extends AssetItem {
     this.geomsLoaded = new Signal(true)
     this.geomsLoaded.setToggled(false)
     this.loaded.setToggled(false)
+    this.__geomLibrary.loaded.connect(()=>{
+      this.geomsLoaded.emit()
+    })
 
     this.__datafileParam = this.addParameter(
       new FilePathParameter('DataFilePath')
@@ -50,7 +53,7 @@ class VLAAsset extends AssetItem {
           // if(!this.loaded.isToggled()){
           //   this.loaded.emit();
           // }
-          this.geomsLoaded.emit()
+          // this.geomsLoaded.emit()
         }
       )
     })
@@ -167,6 +170,7 @@ class VLAAsset extends AssetItem {
         this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
           version,
         })
+        onGeomsDone()
       } else {
         // add the work for the the geom files....
         resourceLoader.addWork(fileId + 'geoms', 4 * numGeomsFiles) // (load + parse + extra)
