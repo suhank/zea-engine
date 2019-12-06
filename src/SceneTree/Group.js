@@ -285,6 +285,7 @@ class Group extends TreeItem {
       // clean functions. However, once the cleaning is handled
       // via a bound operator, then this code will be removed.
       this.dirty = true
+      this.propagatingXfoToItems = true // Note: selection group needs this set.
       const xfo = this.__globalXfoParam.getValue()
       const setDirty = (item, initialXfo) => {
         const param = item.getParameter('GlobalXfo')

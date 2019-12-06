@@ -176,6 +176,10 @@ class LabelManager {
     label[this.__language] = labelText
     // TODO: Push to server.
   }
+
+  setLanguage(ln) {
+    this.__language = ln;
+  }
 }
 
 const labelManager = new LabelManager()
