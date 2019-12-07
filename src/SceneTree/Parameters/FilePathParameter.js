@@ -130,11 +130,12 @@ class FilePathParameter extends Parameter {
    * @param {any} url - The url value.
    * @param {number} mode - The mode value.
    */
-  setUrl(url, mode = ValueSetMode.USER_SETVALUE) {
+  setUrl(url, name, mode = ValueSetMode.USER_SETVALUE) {
     const parts = url.split('/')
-    const name = parts[parts.length - 1]
+    if (!name)
+      name = parts[parts.length - 1]
 
-    if (!url.startsWith('http:')) {
+    if (!url.startsWith('http:') && !url.startsWith('blob:')) {
       // Convert this relative url to an absolute.
       // Note: this is necessary because the HTTP requests
       // are invoked from the worker where the current file context
