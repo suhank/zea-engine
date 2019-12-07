@@ -517,6 +517,41 @@ class ResourceLoader {
   }
 
   /**
+   * The unpackBuffer method.
+   * @param {any} resourceId - The resourceId value.
+   * @param {Buffer} buffer - The binary buffer to unpack.
+   * @param {any} callback - The callback value.
+   * @param {boolean} addLoadWork - The addLoadWork value.
+   */
+  unpackBuffer(resourceId, buffer, callback, addLoadWork = true) {
+    return new Promise((resolve, reject) => {
+      if (addLoadWork) {
+        this.addWork(resourceId, 3) // Add work in 2 chunks. Loading, unpacking, parsing.
+      } else {
+        // the work for loading and parsing the work is already registered..
+        // See BinAsset. It knows that it will load a sequwnce of files
+        // and has already registered this work once is determined the
+        // toal number of files in the stream.
+      }
+
+      if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
+      if (callback)
+        this.__callbacks[resourceId].push(callback)
+      this.__callbacks[resourceId].push(entries => {
+        resolve(entries)
+      })
+
+      this.__getWorker().then(worker => {
+        worker.postMessage({
+          type: 'unpack',
+          resourceId,
+          buffer,
+        })
+      })
+    });
+  }
+
+  /**
    * The __onFinishedReceiveFileData method.
    * @param {any} fileData - The fileData value.
    * @private
