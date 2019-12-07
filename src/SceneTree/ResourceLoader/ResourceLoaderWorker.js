@@ -87,52 +87,66 @@ function extract({ resourceId, url }) {
   })
 }
 
+function returnData(event, data) {
+
+  const [state, list] = data;
+  if (state.state == 'FAIL') {
+    const result = {
+      type: 'ERROR',
+      reason: state.reason,
+      msg: state.msg,
+      resourceId: event.data.resourceId,
+      url: event.data.url
+    };
+    self.postMessage(result);
+    return;
+  }
+  const result = {
+      type: 'FINISHED',
+      resourceId: event.data.resourceId,
+      entries: {}
+  };
+
+  const transferables = []
+  if (list && list.files) {
+    for(const file of list.files) {
+      result.entries[file.fileHeader.name] = file.extract[1];
+      transferables.push(file.extract[1].buffer);
+    }
+  }
+  self.postMessage(result, transferables);
+}
+
 /**
  * Listen for messages sent to the worker.
  */
 onmessage = function(event) {
-  // console.log('onmessage', event)
+  console.log('onmessage', event)
   if(event.data.type == 'init') {
     unpack = initunpack(event.data.wasmUrl);
     unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
   }
   else if(event.data.type == 'fetch') {
-  	extract(event.data).then(data => {
-
-      const [state, list] = data;
-      if (state.state == 'FAIL') {
-        const result = {
-          type: 'ERROR',
-          reason: state.reason,
-          msg: state.msg,
-          resourceId: event.data.resourceId,
-          url: event.data.url
-        };
-        self.postMessage(result);
-        return;
-      }
-	    const result = {
-	        type: 'FINISHED',
-	        resourceId: event.data.resourceId,
-	        entries: {}
-	    };
-
-	    const transferables = []
-	    if (list && list.files) {
-	      for(const file of list.files) {
-	        result.entries[file.fileHeader.name] = file.extract[1];
-	        transferables.push(file.extract[1].buffer);
-	      }
-	    }
-	    self.postMessage(result, transferables);
-  	}, err => {
+  	extract(event.data).then(unpacked => {
+      returnData(event, unpacked)
+    }, err => {
       const result = {
           type: 'ERROR',
           resourceId: event.data.resourceId,
           url: event.data.url
       };
       self.postMessage(result);
-  	})
+    })
+  }
+  else if(event.data.type == 'unpack') {
+    const { buffer } = event.data;
+    
+    if (!unpackBridge) { throw new Error('unpackBridge not detected'); }
+    if (!unpack) { throw new Error('unpack not detected'); }
+
+    const extractor = unpackBridge.createExtractorFromData(buffer)
+    const unpacked = extractor.extractAll()
+    returnData(event, unpacked)
   }
 };
 
