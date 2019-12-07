@@ -8,6 +8,7 @@ import {
 import { sgFactory } from '../SGFactory.js'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
+import { Signal } from '../../Utilities'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -138,6 +139,7 @@ class Label extends DataImage {
 
     this.__requestedRerender = false
     this.__needsRender = false
+    this.labelRendered = new Signal();
     this.loadLabelData()
   }
 
@@ -259,7 +261,7 @@ class Label extends DataImage {
     lines.forEach(line => {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
-    const fontHeight = parseInt(fontSize)
+    const fontHeight = fontSize;//parseInt(fontSize)
     this.width = Math.ceil(width + marginAndBorder * 2)
     this.height = Math.ceil(fontHeight * lines.length + marginAndBorder * 2)
     ctx2d.canvas.width = this.width
@@ -307,6 +309,11 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
+    this.labelRendered.emit({
+      width: this.width,
+      height: this.height,
+      data: this.__data
+    })
   }
 
   /**
