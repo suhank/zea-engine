@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Zea Engine Index</title>
+	<title>Zea Engine Class: GLMaterial</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,110 +72,13 @@
 		<div id="main">
 			
 
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-    <section class="readme-section">
-        <article><h1>Zea Engine</h1>
-<p>A high performance 3d rendering engine for the web,</p>
-<p>Install the httpserver
-npm install http-server -g</p>
-<p><a href="https://www.npmjs.com/package/@zeainc/zea-engine"><img src="https://img.shields.io/npm/v/@zeainc/zea-engine?style=flat-square" alt="npm"></a>
-<a href="https://github.com/prettier/prettier"><img src="https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square" alt="Code style: Prettier"></a></p>
-<h2>Docs</h2>
-<p><a href="https://zea-engine.js.org/">https://zea-engine.js.org/</a></p>
-<h2>Getting started</h2>
-<ol>
-<li>Install Git</li>
-<li>Install Nodejs</li>
-</ol>
-<ul>
-<li>from here: https://nodejs.org/en/download/</li>
-<li>Use default options. It should be straight forward.</li>
-</ul>
-<ol start="3">
-<li>Install dependencies.</li>
-</ol>
-<ul>
-<li>Install yarn</li>
-<li>Run <code>yarn install</code></li>
-</ul>
-<ol start="4">
-<li>Run the HTTP Server</li>
-<li>Build:</li>
-</ol>
-<ul>
-<li>See npm scripts section below.</li>
-</ul>
-<h2>Scripts</h2>
-<ul>
-<li><code>yarn build</code> - produces production version of ZeaEngine.</li>
-<li><code>yarn build:dev</code> - produces development version of ZeaEngine and runs a watcher.  Edited source code should auto-recompile.</li>
-</ul>
-<h2>Typical development workflow</h2>
-<ol>
-<li>Open Git Bash Terminal</li>
-</ol>
-<ul>
-<li>Open a Terminal in the repo root (from Source Tree using the icon in the top right)</li>
-</ul>
-<ol start="2">
-<li>Build ZeaEngine in development mode</li>
-</ol>
-<ul>
-<li>Run <code>npm run build:dev</code>. This command will generate an non-minified version of ZeaEngine and will run a watcher so you get re-compilation on file changes.</li>
-</ul>
-<ol start="3">
-<li>Run the HTTP Server</li>
-</ol>
-<ul>
-<li>See server section above.</li>
-</ul>
-<ol start="4">
-<li>Run the tests/demos.</li>
-</ol>
-<ul>
-<li>Open <a href="http://localhost:8080/">http://localhost:8080/</a> in Chrome</li>
-<li>Be sure to disable caching in the Chrome Developer Tools.</li>
-</ul>
-<h2>Publishing a new build</h2>
-<ol>
-<li>install yarn.</li>
-<li>build production.</li>
-<li><code>yarn publish</code></li>
-</ol></article>
-    </section>
-
-
-
-
-
-
-
-	<h1 class="page-title">Index</h1>
+	<h1 class="page-title">Class: GLMaterial</h1>
 <section>
 
 <header>
     
         <h2>
-        external/Unpack.js
+        GLMaterial
         </h2>
         
     
@@ -186,12 +89,126 @@ npm install http-server -g</p>
     <div class="container-overview">
     
         
-            <div class="description">Defines a Long class for representing a 64-bit two's-complement
-integer value, which faithfully simulates the behavior of a Java "long". This
-implementation is derived from LongLib in GWT.</div>
+<hr>
+<dt>
+    <h4 class="name" id="GLMaterial"><span class="type-signature"></span>new GLMaterial(gl, material, glshader)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <div class="class-diagram"><svg width="270" height="70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><defs><marker id="Arrow" refY="2.5" orient="auto" style="overflow: visible;"><path d="M 0 0 L 5 2.5 L 0 5 z"></path></marker><style type="text/css"><![CDATA[rect {stroke-width: 2; stroke: black; fill: white;} a {cursor: pointer;} a text {fill: blue; text-decoration: underline;} path {stroke-width: 2; stroke: black; fill: none;} marker path {stroke-width:0; fill:black;} .child rect, .parent rect {stroke: blue;} .mixin rect {stroke: green;}]]></style></defs><g transform="translate(0, 20)"><g class="noi" transform="translate(10, 0)"><rect width="250" height="30"></rect><text dx="10" dy="20">GLMaterial</text></g></g></svg></div>Create a GL material.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
         
 
         
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>gl</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The gl value.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>material</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The material value.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>glshader</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The glshader value.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -224,7 +241,7 @@ implementation is derived from LongLib in GWT.</div>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		external/Unpack.js
+		Renderer/GLMaterial.js
 	</dd>
 	
 
@@ -236,7 +253,21 @@ implementation is derived from LongLib in GWT.</div>
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -252,6 +283,621 @@ implementation is derived from LongLib in GWT.</div>
 
     
 
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="bind"><span class="type-signature"></span>bind(renderstate, warnMissingUnifs)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        The bind method.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>renderstate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The renderstate param.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>warnMissingUnifs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The renderstate param.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Renderer/GLMaterial.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The return value.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="generateShaderBinding"><span class="type-signature"></span>generateShaderBinding()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        The generateShaderBinding method.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Renderer/GLMaterial.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getGLShader"><span class="type-signature"></span>getGLShader()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        The getGLShader method.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Renderer/GLMaterial.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The return value.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getMaterial"><span class="type-signature"></span>getMaterial()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        The getMaterial method.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Renderer/GLMaterial.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    - The return value.
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">any</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="unbind"><span class="type-signature"></span>unbind(renderstate)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        The unbind method.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>renderstate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">any</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The renderstate param.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Renderer/GLMaterial.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        </dl>
     
 
     
