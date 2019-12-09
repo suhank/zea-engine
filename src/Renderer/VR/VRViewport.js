@@ -260,14 +260,12 @@ class VRViewport extends GLBaseViewport {
             .replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
 
           session.addEventListener('end', event => {
-            if (event.session.mode == 'immersive-vr') {
-              this.__stageTreeItem.setVisible(false)
-              this.__renderer
-                .getDiv()
-                .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
-              this.__session = null
-              this.presentingChanged.emit(false)
-            }
+            this.__stageTreeItem.setVisible(false)
+            this.__renderer
+              .getDiv()
+              .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
+            this.__session = null
+            this.presentingChanged.emit(false)
           })
 
           const onSelectStart = ev => {
