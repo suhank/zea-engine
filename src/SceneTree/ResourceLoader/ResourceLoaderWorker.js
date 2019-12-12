@@ -121,7 +121,6 @@ function returnData(event, data) {
  * Listen for messages sent to the worker.
  */
 onmessage = function(event) {
-  console.log('onmessage', event)
   if(event.data.type == 'init') {
     unpack = initunpack(event.data.wasmUrl);
     unpack.onRuntimeInitialized = () => postMessage({ type: 'WASM_LOADED' });
