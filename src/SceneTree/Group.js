@@ -116,8 +116,11 @@ class Group extends TreeItem {
 
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
+    // However we seem to get infinite callstacks. 
+    // The migration to real operators should clean this up.
+    // Check: servo_mestre/?stage=assembly
     // this.__globalXfoParam.valueChanged.connect(mode => {
-    //   if (mode == ValueSetMode.OPERATOR_DIRTIED)
+    //   if (mode == ValueSetMode.OPERATOR_DIRTIED && !this.calculatingGroupXfo)
     //     this._propagateDirtyXfoToItems()
     // })
 
@@ -209,6 +212,9 @@ class Group extends TreeItem {
    */
   _setGlobalXfoDirty() {
     super._setGlobalXfoDirty()
+    // Note: dirty should propagat from one 
+    // Parameter to others following the operator graph.
+    // See: comment above (line 124)
     this._propagateDirtyXfoToItems()
   }
 
@@ -412,8 +418,12 @@ class Group extends TreeItem {
     const signalIndices = {}
 
     signalIndices.mouseDownIndex = item.mouseDown.connect(event => {
-      this.mouseDown.emit(event)
-      this.mouseDownOnItem.emit(event, item)
+      this.onMouseDown(event)
+      if (this.mouseDownOnItem.getNumConnections() > 0) {
+        console.warn("Signal will be deprecated. Please use mouseDown instead")
+        // TODO: Deprecate this method.
+        this.mouseDownOnItem.emit(event, item)
+      }
     })
 
     // ///////////////////////////////
@@ -630,28 +640,25 @@ class Group extends TreeItem {
   /**
    * Occurs when a user presses a mouse button over an element.
    * @param {MouseEvent} event - The mouse event that occurs.
-   * @return {boolean} - Returns false.
    */
   onMouseDown(event) {
-    return false
+    super.onMouseDown(event)
   }
 
   /**
    * Occurs when a user releases a mouse button over an element.
    * @param {MouseEvent} event - The mouse event that occurs.
-   * @return {boolean} - Returns false.
    */
   onMouseUp(event) {
-    return false
+    super.onMouseUp(event)
   }
 
   /**
    * Occur when the mouse pointer is moving  while over an element.
    * @param {MouseEvent} event - The mouse event that occurs.
-   * @return {boolean} - Returns false.
    */
   onMouseMove(event) {
-    return false
+    super.onMouseMove(event)
   }
 
   // ////////////////////////////////////////

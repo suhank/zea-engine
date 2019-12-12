@@ -109,7 +109,7 @@ class Signal {
 
   /**
    * The isToggled method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isToggled() {
     return this.__toggled
@@ -122,6 +122,14 @@ class Signal {
   setToggled(state) {
     this.__toggled = state
     this.__data = undefined
+  }
+
+  /**
+   * The getNumConnections method.
+   * @return {number} - The number of connections to this signal.
+   */
+  getNumConnections() {
+    return this.__slots.length
   }
 
   /**
