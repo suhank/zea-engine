@@ -227,7 +227,7 @@ class Label extends DataImage {
    * Renders the label text to a canvas element ready to display,
    */
   renderLabelToImage() {
-    console.log("renderLabelToImage")
+    // console.log("renderLabelToImage")
     const ctx2d = this.__canvasElem.getContext('2d', {
       alpha: true,
     })
