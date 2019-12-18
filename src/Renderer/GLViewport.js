@@ -539,6 +539,9 @@ class GLViewport extends GLBaseViewport {
    */
   releaseCapture() {
     this.capturedElement = null
+    // TODO: This should be a request, wbihch is fulfilled next time
+    // a frame is dranw.
+    this.renderGeomDataFbo()
   }
 
   /**

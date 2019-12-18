@@ -42,7 +42,7 @@ class Group extends TreeItem {
 
     this.invGroupXfo = undefined
     this.__initialXfos = []
-    this.__signalIndices = []
+    this.__sigIds = []
 
     let pid = 0
     this.__itemsParam = this.insertParameter(
@@ -116,7 +116,7 @@ class Group extends TreeItem {
 
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
-    // However we seem to get infinite callstacks. 
+    // However we seem to get infinite callstacks.
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
     this.__globalXfoParam.valueChanged.connect(mode => {
@@ -212,7 +212,7 @@ class Group extends TreeItem {
    */
   _setGlobalXfoDirty() {
     super._setGlobalXfoDirty()
-    // Note: dirty should propagat from one 
+    // Note: dirty should propagat from one
     // Parameter to others following the operator graph.
     // See: comment above (line 124)
     // this._propagateDirtyXfoToItems()
@@ -232,7 +232,7 @@ class Group extends TreeItem {
       // The xfo is manually set by the current global xfo.
       this.invGroupXfo = this.getGlobalXfo().inverse()
       this.calculatingGroupXfo = false
-      return;
+      return
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
       xfo = this.__initialXfos[0]
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
@@ -419,11 +419,18 @@ class Group extends TreeItem {
 
     signalIndices.mouseDownIndex = item.mouseDown.connect(event => {
       this.onMouseDown(event)
-      if (this.mouseDownOnItem.getNumConnections() > 0) {
-        console.warn("Signal will be deprecated. Please use mouseDown instead")
-        // TODO: Deprecate this method.
-        this.mouseDownOnItem.emit(event, item)
-      }
+    })
+    signalIndices.mouseUpIndex = item.mouseUp.connect(event => {
+      this.onMouseUp(event)
+    })
+    signalIndices.mouseMoveIndex = item.mouseMove.connect(event => {
+      this.onMouseMove(event)
+    })
+    signalIndices.mouseEnterIndex = item.mouseEnter.connect(event => {
+      this.onMouseEnter(event)
+    })
+    signalIndices.mouseLeaveIndex = item.mouseLeave.connect(event => {
+      this.onMouseLeave(event)
     })
 
     // ///////////////////////////////
@@ -515,7 +522,7 @@ class Group extends TreeItem {
       this._setBoundingBoxDirty
     )
 
-    this.__signalIndices[index] = signalIndices
+    this.__sigIds[index] = signalIndices
 
     updateGlobalXfo()
   }
@@ -550,14 +557,16 @@ class Group extends TreeItem {
       }
     }, true)
 
-    item.mouseDown.disconnectId(this.__signalIndices[index].mouseDownIndex)
-    item.globalXfoChanged.disconnectId(
-      this.__signalIndices[index].globalXfoChangedIndex
-    )
-    item.boundingChanged.disconnectId(
-      this.__signalIndices[index].bboxChangedIndex
-    )
-    this.__signalIndices.splice(index, 1)
+    const sigIds = this.__sigIds[index]
+    item.mouseDown.disconnectId(sigIds.mouseDownIndex)
+    item.mouseUp.disconnectId(sigIds.mouseUpIndex)
+    item.mouseMove.disconnectId(sigIds.mouseMoveIndex)
+    item.mouseEnter.disconnectId(sigIds.mouseEnterIndex)
+    item.mouseLeave.disconnectId(sigIds.mouseLeaveIndex)
+
+    item.globalXfoChanged.disconnectId(sigIds.globalXfoChangedIndex)
+    item.boundingChanged.disconnectId(sigIds.bboxChangedIndex)
+    this.__sigIds.splice(index, 1)
     this.__initialXfos.splice(index, 1)
   }
 
@@ -594,7 +603,7 @@ class Group extends TreeItem {
     for (let i = items.length - 1; i >= 0; i--) {
       this.__unbindItem(items[i], i)
     }
-    this.__signalIndices = []
+    this.__sigIds = []
     this.__initialXfos = []
     this.__itemsParam.clearItems(emit)
   }

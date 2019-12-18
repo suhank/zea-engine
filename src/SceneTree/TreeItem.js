@@ -1,9 +1,8 @@
-import { Color, Xfo, Box3 } from '../Math'
+import { Xfo, Box3 } from '../Math'
 import { Signal } from '../Utilities'
 import { sgFactory } from './SGFactory.js'
 import {
   ParamFlags,
-  ValueGetMode,
   ValueSetMode,
   Parameter,
   BooleanParameter,
@@ -60,6 +59,8 @@ class TreeItem extends BaseItem {
     this.mouseDown = new Signal()
     this.mouseUp = new Signal()
     this.mouseMove = new Signal()
+    this.mouseEnter = new Signal()
+    this.mouseLeave = new Signal()
 
     // /////////////////////////////////////
     // Add parameters.
@@ -721,8 +722,13 @@ class TreeItem extends BaseItem {
     return names
   }
 
+  /**
+   * UnBind an item from the group. This method is called
+   * automatically when an item is removed from the group.
+   * @param {number} index - The index value.
+   * @param {TreeItem} childItem - item to unbind.
+   */
   __unbindChild(index, childItem) {
-
     const signalIds = this.__childItemsSignalIds[index]
     childItem.nameChanged.disconnectId(signalIds.nameChangedId)
 
@@ -1002,6 +1008,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseEnter(event) {
+    this.mouseEnter.emit(event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseEnter(event)
     }
@@ -1012,6 +1019,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseLeave(event) {
+    this.mouseLeave.emit(event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseLeave(event)
     }
@@ -1174,7 +1182,7 @@ class TreeItem extends BaseItem {
 
     const itemflags = reader.loadUInt8()
 
-    const visibilityFlag = 1 << 1
+    // const visibilityFlag = 1 << 1
     // this.setVisible(itemflags&visibilityFlag);
 
     // this.setVisible(j.visibility);
