@@ -1,9 +1,7 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Vec3, Quat, Xfo, Mat4, Ray } from '../../Math'
+import { Vec3, Quat, Xfo, Mat4 } from '../../Math'
 import { Signal } from '../../Utilities'
 import { TreeItem } from '../../SceneTree'
-import { GLTexture2D } from '../GLTexture2D.js'
-import { GLFbo } from '../GLFbo.js'
 
 /** Class representing a VR controller. */
 class VRController {
@@ -187,6 +185,43 @@ class VRController {
     // Reset the geom at tip so it will be recomuted if necessary
     this.__geomAtTip = undefined
     this.__hitTested = false
+
+    // /////////////////////////////////
+    // Simulate Mouse Events.
+    const intersectionData = this.getGeomItemAtTip()
+    if (intersectionData != undefined) {
+      if (intersectionData.geomItem != this.mouseOverItem) {
+        if (this.mouseOverItem) {
+          const event = {
+            viewport: this.__vrviewport,
+            geomItem: this.mouseOverItem,
+          }
+          this.mouseOverItem.onMouseLeave(event)
+        }
+        this.mouseOverItem = intersectionData.geomItem
+        const event = {
+          viewport: this.__vrviewport,
+          geomItem: intersectionData.geomItem,
+          intersectionData,
+        }
+        this.mouseOverItem.onMouseEnter(event)
+      }
+
+      const event = {
+        viewport: this.__vrviewport,
+        geomItem: intersectionData.geomItem,
+        intersectionData,
+      }
+      intersectionData.geomItem.onMouseMove(event)
+    } else if (this.mouseOverItem) {
+      const event = {
+        viewport: this.__vrviewport,
+        geomItem: this.mouseOverItem,
+        intersectionData,
+      }
+      this.mouseOverItem.onMouseLeave(event)
+      this.mouseOverItem = null
+    }
   }
 
   // ////////////////////////////////

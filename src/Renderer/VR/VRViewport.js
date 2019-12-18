@@ -544,6 +544,13 @@ class VRViewport extends GLBaseViewport {
 
     this.__renderer.drawScene(renderstate)
 
+    if (this.capturedElement) {
+      const event = {
+        viewport: this,
+      }
+      this.capturedElement.onMouseMove(event)
+    }
+
     // ///////////////////////
     // Emit a signal for the shared session.
     const data = {
@@ -555,6 +562,35 @@ class VRViewport extends GLBaseViewport {
     }
     this.viewChanged.emit(data, this)
   }
+
+
+  /**
+   * The setCapture method.
+   * @param {any} target - The target value.
+   * @private
+   */
+  setCapture(target) {
+    this.capturedElement = target
+  }
+
+  /**
+   * The getCapture method.
+   * @return {any} - The return value.
+   */
+  getCapture() {
+    return this.capturedElement
+  }
+
+  /**
+   * The releaseCapture method.
+   */
+  releaseCapture() {
+    this.capturedElement = null
+    // TODO: This should be a request, wbihch is fulfilled next time
+    // a frame is dranw.
+    this.renderGeomDataFbo()
+  }
+
 }
 
 export { VRViewport }
