@@ -95,19 +95,24 @@ class AimOperator extends Operator {
     if (stretch > 0.0) {
       const initialDist = this.getParameter('Initial Dist').getValue()
       // Scale the output to reach towards the target.
+      // Note: once the base xfo is re-calculated, then
+      // we can make this scale relative. (e.g. *= sc)
+      // This will happen once GalcGlibalXfo is the base
+      // operator applied to GlobalXfo param.
+      // Until then, we must reset scale manually here.
       const sc = 1.0 + (dist / initialDist - 1.0) * stretch
       switch (axis) {
         case 0:
         case 1:
-          xfo.sc.x *= sc
+          xfo.sc.x = sc
           break
         case 2:
         case 3:
-          xfo.sc.y *= sc
+          xfo.sc.y = sc
           break
         case 4:
         case 5:
-          xfo.sc.z *= sc
+          xfo.sc.z = sc
           break
       }
       // console.log("AimOperator.evaluate:", xfo.sc.toString())
