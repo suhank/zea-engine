@@ -288,7 +288,6 @@ class Group extends TreeItem {
       this.invGroupXfo &&
       !this.dirty
     ) {
-      let delta
       // Note: because each 'clean' function is a unique
       // value, the parameter does not know that this Group
       // has already registered a clean function. For now
@@ -297,13 +296,14 @@ class Group extends TreeItem {
       // via a bound operator, then this code will be removed.
       this.dirty = true
       this.propagatingXfoToItems = true // Note: selection group needs this set.
-      const xfo = this.__globalXfoParam.getValue()
+      let delta
       const setDirty = (item, initialXfo) => {
         const param = item.getParameter('GlobalXfo')
         const clean = () => {
           if (!delta) {
             // Compute the skinning transform that we can
             // apply to all the items in the group.
+            const xfo = this.__globalXfoParam.getValue()
             delta = xfo.multiply(this.invGroupXfo)
             this.dirty = false
           }
