@@ -119,10 +119,10 @@ class Group extends TreeItem {
     // However we seem to get infinite callstacks. 
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    // this.__globalXfoParam.valueChanged.connect(mode => {
-    //   if (mode == ValueSetMode.OPERATOR_DIRTIED && !this.calculatingGroupXfo)
-    //     this._propagateDirtyXfoToItems()
-    // })
+    this.__globalXfoParam.valueChanged.connect(mode => {
+      if (mode == ValueSetMode.OPERATOR_DIRTIED && !this.calculatingGroupXfo)
+        this._propagateDirtyXfoToItems()
+    })
 
     this.mouseDownOnItem = new Signal()
   }
@@ -215,7 +215,7 @@ class Group extends TreeItem {
     // Note: dirty should propagat from one 
     // Parameter to others following the operator graph.
     // See: comment above (line 124)
-    this._propagateDirtyXfoToItems()
+    // this._propagateDirtyXfoToItems()
   }
 
   /**
