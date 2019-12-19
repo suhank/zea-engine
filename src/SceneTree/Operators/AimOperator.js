@@ -46,7 +46,6 @@ class AimOperator extends Operator {
     const output = this.getOutputByIndex(0)
     const xfo = output.getValue()
     const dist = target.tr.subtract(xfo.tr).length()
-    console.log("Initial Dist:", dist)
     this.getParameter('Initial Dist').setValue(dist)
   }
 
