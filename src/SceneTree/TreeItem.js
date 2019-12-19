@@ -96,7 +96,12 @@ class TreeItem extends BaseItem {
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
     this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty)
-
+    
+    // Note: if the user changes the global xfo, we compute the 
+    // local xfo when it is needed (generally when GlobalXfo is pulled)
+    // In the future, we will move this into the operators and ops
+    // will support 'inversion' where the param asks the op to
+    // proccess an input value.
     const cleanLocalXfo = prevValue => {
       const globalXfo = this.__globalXfoParam.getValue()
       if (this.__ownerItem !== undefined)

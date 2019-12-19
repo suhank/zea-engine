@@ -2,7 +2,6 @@ import { Quat } from '../../Math'
 import { Operator } from './Operator.js'
 import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
-  BooleanParameter,
   NumberParameter,
   MultiChoiceParameter,
   XfoParameter,
