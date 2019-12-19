@@ -2,7 +2,6 @@ import { Vec2, Vec3 } from '../../Math'
 import { Operator } from './Operator.js'
 import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
-  ValueGetMode,
   ValueSetMode,
   BooleanParameter,
   NumberParameter,
@@ -123,7 +122,6 @@ class ExplodePartParameter extends StructParameter {
       explodeDir = parentXfo.ori.rotateVec3(explodeDir)
       xfo.tr.addInPlace(explodeDir.scale(dist * multiplier))
     } else {
-      // Get the current value without triggering an eval
       xfo = this.__output.getValue()
       xfo.tr = initialXfo.tr.add(explodeDir.scale(dist * multiplier))
     }
@@ -195,9 +193,7 @@ class ExplodePartsOperator extends Operator {
         this.__invParentSpace = parentItem.getGlobalXfo().inverse()
       else this.__invParentSpace = undefined
     })
-    this.__parentItemParam.treeItemGlobalXfoChanged.connect(() => {
-      this.setDirty()
-    })
+    this.__parentItemParam.treeItemGlobalXfoChanged.connect(this.setDirty)
 
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
@@ -216,7 +212,7 @@ class ExplodePartsOperator extends Operator {
     this.__itemsParam.elementRemoved.connect((value, index) => {
       this.removeOutput(value.getOutput())
     })
-    
+
     this.__localXfos = []
     this.__parts = []
     this.__stages = 2

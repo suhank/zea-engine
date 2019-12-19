@@ -95,14 +95,6 @@ class VLAAsset extends AssetItem {
     // }
     // Perpare the geom library for loading
     // This helps with progress bars, so we know how many geoms are coming in total.
-    // Note: the geom library encodes in its binary buffer the number of geoms.
-    // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
-
-    if (context.version < 5) {
-      // Some data is no longer being read at the end of the buffer
-      // so we skip to the end here.
-      reader.seek(reader.byteLength - 4)
-    }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
 
     // Load the lightmap if available.
@@ -191,7 +183,7 @@ class VLAAsset extends AssetItem {
     const loadAllGeomFiles = () => {
       const promises = []
       for (let geomFileID = 0; geomFileID < numGeomsFiles; geomFileID++) {
-        // console.log('LoadingGeom File:', geomFileID)
+        console.log('LoadingGeom File:', geomFileID)
         if (isVLFile) {
           const nextGeomFileName = folder + stem + geomFileID + '.vlageoms'
           const geomFile = resourceLoader.resolveFilepath(nextGeomFileName)

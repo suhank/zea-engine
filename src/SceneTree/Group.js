@@ -119,10 +119,10 @@ class Group extends TreeItem {
     // However we seem to get infinite callstacks. 
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    this.__globalXfoParam.valueChanged.connect(mode => {
-      if (mode == ValueSetMode.OPERATOR_DIRTIED && !this.calculatingGroupXfo)
-        this._propagateDirtyXfoToItems()
-    })
+    // this.__globalXfoParam.valueChanged.connect(mode => {
+    //   if (mode == ValueSetMode.OPERATOR_DIRTIED && !this.calculatingGroupXfo)
+    //     this._propagateDirtyXfoToItems()
+    // })
 
     this.mouseDownOnItem = new Signal()
   }
@@ -215,7 +215,7 @@ class Group extends TreeItem {
     // Note: dirty should propagat from one 
     // Parameter to others following the operator graph.
     // See: comment above (line 124)
-    // this._propagateDirtyXfoToItems()
+    this._propagateDirtyXfoToItems()
   }
 
   /**
@@ -292,13 +292,13 @@ class Group extends TreeItem {
       // via a bound operator, then this code will be removed.
       this.dirty = true
       this.propagatingXfoToItems = true // Note: selection group needs this set.
+      const xfo = this.__globalXfoParam.getValue()
       const setDirty = (item, initialXfo) => {
         const param = item.getParameter('GlobalXfo')
         const clean = () => {
           if (!delta) {
             // Compute the skinning transform that we can
             // apply to all the items in the group.
-            const xfo = this.__globalXfoParam.getValue()
             delta = xfo.multiply(this.invGroupXfo)
             this.dirty = false
           }

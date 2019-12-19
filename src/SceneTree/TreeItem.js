@@ -3,7 +3,6 @@ import { Signal } from '../Utilities'
 import { sgFactory } from './SGFactory.js'
 import {
   ParamFlags,
-  ValueGetMode,
   ValueSetMode,
   Parameter,
   BooleanParameter,
@@ -315,11 +314,9 @@ class TreeItem extends BaseItem {
    */
   _cleanGlobalXfo(prevValue) {
     const parentItem = this.getParentItem()
-    const localXfo = this.__localXfoParam.getValue()
-    if (parentItem !== undefined) {
-      const parentGlobal = parentItem.getGlobalXfo()
-      return parentGlobal.multiply(localXfo)
-    } else return localXfo
+    if (parentItem !== undefined)
+      return parentItem.getGlobalXfo().multiply(this.__localXfoParam.getValue())
+    else return this.__localXfoParam.getValue()
   }
 
   /**

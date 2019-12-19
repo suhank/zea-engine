@@ -189,12 +189,6 @@ class GLRenderer extends GLBaseRenderer {
     envMapParam.valueChanged.connect(() => {
       this.__bindEnvMap(envMapParam.getValue())
     })
-    const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
-    this.__displayEnvironment = displayEnvMapParam.getValue()
-    displayEnvMapParam.valueChanged.connect(() => {
-      this.__displayEnvironment = displayEnvMapParam.getValue()
-      this.requestRedraw()
-    })
 
     super.setScene(scene)
   }
@@ -223,7 +217,7 @@ class GLRenderer extends GLBaseRenderer {
       }
       const vlaAsset = treeItem
       vlaAsset.loaded.connect(() => {
-        if (this.__glEnvMap && vlaAsset.getLightmap()) {
+        if (this.__glEnvMap) {
           addLightmap(vlaAsset.getName(), vlaAsset.getLightmap())
         }
       })

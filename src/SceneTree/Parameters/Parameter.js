@@ -27,12 +27,6 @@ const ParamFlags = {
   DISABLED: 1 << 2,
 }
 
-const ParamState = {
-  CLEAN: 0,
-  DIRTY: 1,
-  CLEANING: 2,
-}
-
 /** Class representing a base parameter.
  * @extends RefCounted
  */
@@ -46,7 +40,7 @@ class BaseParameter extends RefCounted {
     this.__name = name
     this.__cleanerFns = []
     this.__boundOps = []
-    this.__state = ParamState.CLEAN
+    this.__dirty = false
     this.__flags = 0
 
     this.valueChanged = new Signal()
@@ -176,7 +170,7 @@ class BaseParameter extends RefCounted {
    */
   bindOperator(op) {
     this.__boundOps.push(op)
-    this.__state = ParamState.DIRTY
+    this.__dirty = true
     this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
   }
 
@@ -192,7 +186,7 @@ class BaseParameter extends RefCounted {
       return false
     }
     this.__boundOps.splice(index, 1)
-    this.__state = ParamState.DIRTY
+    this.__dirty = true
     this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
   }
 
@@ -208,7 +202,7 @@ class BaseParameter extends RefCounted {
       return false
     }
     this.__cleanerFns.push(cleanerFn)
-    this.__state = ParamState.DIRTY
+    this.__dirty = true
 
     this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
     return true
@@ -219,19 +213,20 @@ class BaseParameter extends RefCounted {
   setDirtyFromOp() {
     // As we migrate to bound ops, we will no longer call store
     // cleaner fns and intead simply propagate.
-    if (this.__state == ParamState.CLEAN) {
-      this.__state = ParamState.DIRTY
+    if (!this.__dirty) {
+      this.__dirty = true
       this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
     }
     return true
   }
+  
 
   /**
    * The isDirty method.
    * @return {boolean} - Returns a boolean.
    */
   isDirty() {
-    return this.__state == ParamState.DIRTY
+    return this.__dirty
     // return this.__cleanerFns.length > 0
   }
 
@@ -240,7 +235,14 @@ class BaseParameter extends RefCounted {
    * @private
    */
   _clean() {
-    this.__state = ParamState.CLEANING
+    // The evaluation of the operators will set this op to clean
+    // but we should set first so that we don't get a cycle
+    // wehn caling causes a getValue.
+    // this.__dirty = false
+    if (this.__boundOps.length > 0){
+       const bo = 3
+    }
+
     // Clean the param before we start evaluating the connected op.
     // This is so that operators can read from the current value
     // to compute the next.
@@ -255,10 +257,9 @@ class BaseParameter extends RefCounted {
     // A bas op might comptue global Xfo, and a subsequen modifies it.
     for (const op of this.__boundOps) {
       // The op can get the current value and modify it in place
-      // and set the output to clean.
+      // and set the output to clean. 
       op.evaluate()
     }
-    this.__state = ParamState.CLEAN
   }
 
   /**
@@ -331,7 +332,7 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
-    if (/*mode == ValueGetMode.NORMAL && */this.__state == ParamState.DIRTY)
+    if (mode == ValueGetMode.NORMAL && this.__dirty)
       this._clean()
     return this.__value
   }
@@ -342,6 +343,10 @@ class Parameter extends BaseParameter {
    */
   setClean(value) {
     this.__value = value
+    // Note: an operator can write to multiple outputs, but is trigggered
+    // by exactly one output being cleaned. Before cleaning a given output
+    // we set it to clean so 
+    this.__dirty = false
   }
 
   /**
