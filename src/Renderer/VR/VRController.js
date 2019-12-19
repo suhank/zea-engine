@@ -188,40 +188,40 @@ class VRController {
 
     // /////////////////////////////////
     // Simulate Mouse Events.
-    const intersectionData = this.getGeomItemAtTip()
-    if (intersectionData != undefined) {
-      if (intersectionData.geomItem != this.mouseOverItem) {
-        if (this.mouseOverItem) {
-          const event = {
-            viewport: this.__vrviewport,
-            geomItem: this.mouseOverItem,
-          }
-          this.mouseOverItem.onMouseLeave(event)
-        }
-        this.mouseOverItem = intersectionData.geomItem
-        const event = {
-          viewport: this.__vrviewport,
-          geomItem: intersectionData.geomItem,
-          intersectionData,
-        }
-        this.mouseOverItem.onMouseEnter(event)
-      }
+    // const intersectionData = this.getGeomItemAtTip()
+    // if (intersectionData != undefined) {
+    //   if (intersectionData.geomItem != this.mouseOverItem) {
+    //     if (this.mouseOverItem) {
+    //       const event = {
+    //         viewport: this.__vrviewport,
+    //         geomItem: this.mouseOverItem,
+    //       }
+    //       this.mouseOverItem.onMouseLeave(event)
+    //     }
+    //     this.mouseOverItem = intersectionData.geomItem
+    //     const event = {
+    //       viewport: this.__vrviewport,
+    //       geomItem: intersectionData.geomItem,
+    //       intersectionData,
+    //     }
+    //     this.mouseOverItem.onMouseEnter(event)
+    //   }
 
-      const event = {
-        viewport: this.__vrviewport,
-        geomItem: intersectionData.geomItem,
-        intersectionData,
-      }
-      intersectionData.geomItem.onMouseMove(event)
-    } else if (this.mouseOverItem) {
-      const event = {
-        viewport: this.__vrviewport,
-        geomItem: this.mouseOverItem,
-        intersectionData,
-      }
-      this.mouseOverItem.onMouseLeave(event)
-      this.mouseOverItem = null
-    }
+    //   const event = {
+    //     viewport: this.__vrviewport,
+    //     geomItem: intersectionData.geomItem,
+    //     intersectionData,
+    //   }
+    //   intersectionData.geomItem.onMouseMove(event)
+    // } else if (this.mouseOverItem) {
+    //   const event = {
+    //     viewport: this.__vrviewport,
+    //     geomItem: this.mouseOverItem,
+    //     intersectionData,
+    //   }
+    //   this.mouseOverItem.onMouseLeave(event)
+    //   this.mouseOverItem = null
+    // }
   }
 
   // ////////////////////////////////

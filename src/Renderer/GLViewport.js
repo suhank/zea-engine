@@ -42,7 +42,7 @@ class GLViewport extends GLBaseViewport {
     // simply emit the new VR data.
     this.viewChanged = new Signal()
 
-    this.capturedElement = null
+    this.capturedItem = null
     this.keyDown = new Signal()
     this.keyPressed = new Signal()
     this.keyUp = new Signal()
@@ -500,6 +500,19 @@ class GLViewport extends GLBaseViewport {
     event.stopPropagation = () => {
       event.propagating = false
     }
+    event.setCapture = (item) => {
+      this.capturedItem = item
+    }
+    event.getCapture = (item) => {
+      return this.capturedItem
+    }
+    event.releaseCapture = () => {
+      this.capturedItem = null
+      // TODO: This should be a request, wbihch is fulfilled next time
+      // a frame is dranw.
+      this.renderGeomDataFbo()
+    }
+
     if (event instanceof MouseEvent) {
       const mousePos = this.__eventMousePos(event)
       event.mousePos = mousePos
@@ -523,7 +536,7 @@ class GLViewport extends GLBaseViewport {
    * @private
    */
   setCapture(target) {
-    this.capturedElement = target
+    this.capturedItem = target
   }
 
   /**
@@ -531,14 +544,14 @@ class GLViewport extends GLBaseViewport {
    * @return {any} - The return value.
    */
   getCapture() {
-    return this.capturedElement
+    return this.capturedItem
   }
 
   /**
    * The releaseCapture method.
    */
   releaseCapture() {
-    this.capturedElement = null
+    this.capturedItem = null
     // TODO: This should be a request, wbihch is fulfilled next time
     // a frame is dranw.
     this.renderGeomDataFbo()
@@ -552,14 +565,14 @@ class GLViewport extends GLBaseViewport {
   onMouseDown(event) {
     this.__prepareEvent(event)
 
-    if (this.capturedElement) {
-      this.capturedElement.onMouseDown(event)
+    if (this.capturedItem) {
+      this.capturedItem.onMouseDown(event)
       return
     }
 
     if (event.intersectionData != undefined) {
       event.intersectionData.geomItem.onMouseDown(event)
-      if (!event.propagating || this.capturedElement) return
+      if (!event.propagating || this.capturedItem) return
 
       this.mouseDownOnGeom.emit(event)
       if (!event.propagating) return
@@ -598,8 +611,8 @@ class GLViewport extends GLBaseViewport {
   onMouseMove(event) {
     this.__prepareEvent(event)
 
-    if (this.capturedElement) {
-      this.capturedElement.onMouseMove(event)
+    if (this.capturedItem) {
+      this.capturedItem.onMouseMove(event)
       return
     }
 
@@ -611,7 +624,7 @@ class GLViewport extends GLBaseViewport {
       }
 
       event.intersectionData.geomItem.onMouseMove(event)
-      if (!event.propagating || this.capturedElement) return
+      if (!event.propagating || this.capturedItem) return
     } else if (this.mouseOverItem) {
       this.mouseOverItem.onMouseLeave(event)
       this.mouseOverItem = null
@@ -631,13 +644,8 @@ class GLViewport extends GLBaseViewport {
   onMouseUp(event) {
     this.__prepareEvent(event)
 
-    if (this.capturedElement) {
-      this.capturedElement.onMouseUp(event)
-      if (this.capturedElement) {
-        console.warn(
-          "Element was captured by setCapture but no 'releaseCapture' has been called."
-        )
-      }
+    if (this.capturedItem) {
+      this.capturedItem.onMouseUp(event)
       return
     }
 
@@ -756,7 +764,7 @@ class GLViewport extends GLBaseViewport {
         event.intersectionData = intersectionData
         intersectionData.geomItem.onMouseDown(event, intersectionData)
         if (!event.propagating) return
-        if (this.capturedElement) return
+        if (this.capturedItem) return
 
         this.mouseDownOnGeom.emit(event)
         if (!event.propagating) return
@@ -793,7 +801,7 @@ class GLViewport extends GLBaseViewport {
   onTouchMove(event) {
     this.__prepareEvent(event)
 
-    if (this.capturedElement) {
+    if (this.capturedItem) {
       event.touchPos = []
       event.touchRay = []
       for (let index = 0; index < event.touches.length; index++) {
@@ -804,7 +812,7 @@ class GLViewport extends GLBaseViewport {
       }
       event.mousePos = event.touchPos[0]
       event.mouseRay = event.touchRay[0]
-      this.capturedElement.onMouseMove(event)
+      this.capturedItem.onMouseMove(event)
       return
     }
 
@@ -822,8 +830,8 @@ class GLViewport extends GLBaseViewport {
   onTouchEnd(event) {
     this.__prepareEvent(event)
 
-    if (this.capturedElement) {
-      this.capturedElement.onMouseUp(event)
+    if (this.capturedItem) {
+      this.capturedItem.onMouseUp(event)
       return
     }
 
@@ -841,8 +849,8 @@ class GLViewport extends GLBaseViewport {
   onTouchCancel(event) {
     this.__prepareEvent(event)
 
-    if (this.capturedElement) {
-      this.capturedElement.onTouchCancel(event)
+    if (this.capturedItem) {
+      this.capturedItem.onTouchCancel(event)
       return
     }
 
