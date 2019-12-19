@@ -264,7 +264,12 @@ class Group extends TreeItem {
     }
 
     this.setGlobalXfo(xfo, ValueSetMode.GENERATED_VALUE)
-    this.invGroupXfo = xfo.inverse()
+    
+    // Note: if the Group global param becomes dirty
+    // then it stops propagating dirty to its members.
+    const newGlobal = this.getGlobalXfo() // force a cleaning.
+    this.invGroupXfo = newGlobal.inverse()
+
     this.calculatingGroupXfo = false
   }
 
