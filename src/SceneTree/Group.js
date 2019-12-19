@@ -264,7 +264,12 @@ class Group extends TreeItem {
     }
 
     this.setGlobalXfo(xfo, ValueSetMode.GENERATED_VALUE)
-    this.invGroupXfo = xfo.inverse()
+    
+    // Note: if the Group global param becomes dirty
+    // then it stops propagating dirty to its members.
+    const newGlobal = this.getGlobalXfo() // force a cleaning.
+    this.invGroupXfo = newGlobal.inverse()
+
     this.calculatingGroupXfo = false
   }
 
@@ -283,7 +288,6 @@ class Group extends TreeItem {
       this.invGroupXfo &&
       !this.dirty
     ) {
-      let delta
       // Note: because each 'clean' function is a unique
       // value, the parameter does not know that this Group
       // has already registered a clean function. For now
@@ -292,6 +296,7 @@ class Group extends TreeItem {
       // via a bound operator, then this code will be removed.
       this.dirty = true
       this.propagatingXfoToItems = true // Note: selection group needs this set.
+      let delta
       const setDirty = (item, initialXfo) => {
         const param = item.getParameter('GlobalXfo')
         const clean = () => {
