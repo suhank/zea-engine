@@ -79,10 +79,10 @@ class VLAAsset extends AssetItem {
    * @return {any} - The return value.
    */
   readBinary(reader, context) {
-    
     const v = reader.loadUInt8()
     reader.seek(0)
-    if (v > 0) {
+    // 10 == ascii code for newline. Note: previous non-semver only reached 7
+    if (v != 10) {
       const version = new ZeaEngine.Version()
       version.patch = reader.loadUInt32()
       context.versions = { 'zea-mesh': version, 'zea-engine': version }
@@ -99,7 +99,7 @@ class VLAAsset extends AssetItem {
     super.readBinary(reader, context)
 
     // Strangely, reading the latest HMD files gives us 12 bytes
-    // ad the end and the next 4 == 0. Not sure why.
+    // at the end and the next 4 == 0. Not sure why.
     // setNumGeoms sets 0, but this doesn't bother the loading
     // so simply leaving for now.
     // if (reader.remainingByteLength != 4) {
@@ -108,6 +108,7 @@ class VLAAsset extends AssetItem {
     //       this.getParameter('FilePath').getValue()
     //   )
     // }
+    
     // Perpare the geom library for loading
     // This helps with progress bars, so we know how many geoms are coming in total.
     // Note: the geom library encodes in its binary buffer the number of geoms.
