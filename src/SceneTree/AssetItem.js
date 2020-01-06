@@ -74,6 +74,7 @@ class AssetItem extends TreeItem {
     if (!context.versions['zea-engine']) {
       context.versions['zea-engine'] = new ZeaEngine.Version(reader.loadStr())
     }
+    console.log("Loading Engine File version:", context.versions['zea-engine'])
 
     let layerRoot
     const layers = {}
