@@ -265,7 +265,8 @@ class Material extends BaseItem {
     }
     this.setShaderName(shaderName)
 
-    if (context.version < 3) {
+    // if (context.version < 3) {
+    if (context.versions['zea-engine'].lessThan([0, 0, 3])) {
       this.setName(reader.loadStr())
 
       function capitalizeFirstLetter(string) {

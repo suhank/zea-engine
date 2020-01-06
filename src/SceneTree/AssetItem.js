@@ -1,4 +1,5 @@
 import { Signal } from '../Utilities'
+import { Version } from './Version.js'
 import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
 import { GeomLibrary } from './GeomLibrary.js'
@@ -69,7 +70,10 @@ class AssetItem extends TreeItem {
     context.assetItem = this
     context.numTreeItems = 0
     context.numGeomItems = 0
-    if (context.version == undefined) context.version = 0
+
+    if (!context.versions['zea-engine']) {
+      context.versions['zea-engine'] = new ZeaEngine.Version(reader.loadStr())
+    }
 
     let layerRoot
     const layers = {}
@@ -122,7 +126,7 @@ class AssetItem extends TreeItem {
       this.setLocalXfo(xfo)
     }
 
-    if (context.version >= 7) {
+    if (context.versions['zea-engine'].greaterThan([0, 0, 6])) {
       // Loading units modifies our Xfo, which then propagates up
       // the tree forcing a re-computation. Better just do it at
       // the start.
@@ -133,7 +137,10 @@ class AssetItem extends TreeItem {
 
     super.readBinary(reader, context)
 
-    if (context.version >= 5 && context.version < 7) {
+    if (
+      context.versions['zea-engine'].greaterOrEqualThan([0, 0, 5]) &&
+      context.versions['zea-engine'].lessThan([0, 0, 7])
+    ) {
       loadUnits()
     }
 

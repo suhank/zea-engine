@@ -79,6 +79,21 @@ class VLAAsset extends AssetItem {
    * @return {any} - The return value.
    */
   readBinary(reader, context) {
+    
+    const v = reader.loadUInt8()
+    reader.seek(0)
+    if (v > 0) {
+      const version = new ZeaEngine.Version()
+      version.patch = reader.loadUInt32()
+      context.versions = { 'zea-mesh': version, 'zea-engine': version }
+    } else {
+      // Now we split the mesh out from the engine version.
+      const version = new ZeaEngine.Version(reader.loadStr())
+      context.versions = { 'zea-mesh': version }
+    }
+    this.meshfileversion = version
+    console.log("Loading CAD File version:", version, " exported using SDK:", context.cadSDK)
+
     const numGeomsFiles = reader.loadUInt32()
 
     super.readBinary(reader, context)
@@ -98,7 +113,8 @@ class VLAAsset extends AssetItem {
     // Note: the geom library encodes in its binary buffer the number of geoms.
     // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
 
-    if (context.version < 5) {
+    // if (context.version < 5) {
+    if (context.versions['zea-engine'].lessThan([0, 0, 5])) {
       // Some data is no longer being read at the end of the buffer
       // so we skip to the end here.
       reader.seek(reader.byteLength - 4)
@@ -148,7 +164,6 @@ class VLAAsset extends AssetItem {
           0,
           SystemDesc.isMobileDevice
         )
-        version = treeReader.loadUInt32()
       } else {
         const entry = entries.tree
           ? entries.tree

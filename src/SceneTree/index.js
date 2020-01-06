@@ -5,6 +5,7 @@ export * from './Utils.js'
 export * from './SGFactory.js'
 export * from './ResourceLoader.js'
 
+export * from './Version.js'
 export * from './BinReader.js'
 export * from './BinWriter.js'
 

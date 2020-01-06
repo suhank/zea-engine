@@ -260,7 +260,8 @@ class GeomItem extends BaseGeomItem {
     }
 
     // BaseGeomItem now handles loading materials.
-    if (context.version < 4) {
+    // if (context.version < 4) {
+    if (context.versions['zea-engine'].lessThan([0, 0, 4])) {
       const materialFlag = 1 << 3
       if (itemflags & materialFlag) {
         const materialLibrary = context.assetItem.getMaterialLibrary()
