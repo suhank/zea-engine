@@ -24,18 +24,18 @@ class GLTexture2D extends RefCounted {
     this.textureDesc = [0, 0, 0, 0] // To be populated by derived classes.
     this.__loaded = false
     this.__bound = false
-    const imageUpdated = () => {
-      // this.bufferData(data);
-      const params = this.__texture.getParams()
-      const width = params.width
-      const height = params.height
-      const data = params.data
-      this.bufferData(data, width, height)
-    }
     if (params != undefined) {
       if (params instanceof BaseImage) {
         this.__texture = params
         this.__texture.setMetadata('gltexture', this)
+        const imageUpdated = () => {
+          // this.bufferData(data);
+          const params = this.__texture.getParams()
+          const width = params.width
+          const height = params.height
+          const data = params.data
+          this.bufferData(data, width, height)
+        }
         if (this.__texture.isLoaded()) {
           this.configure(this.__texture.getParams())
           this.__texture.updated.connect(imageUpdated)

@@ -258,7 +258,8 @@ class ParameterOwner extends RefCounted {
   readBinary(reader, context) {
     // TODO: make this work
 
-    if (context.version >= 3) {
+    // if (context.version >= 3) {
+    if (context.versions['zea-engine'].greaterOrEqualThan([0, 0, 3])) {
       const numProps = reader.loadUInt32()
       for (let i = 0; i < numProps; i++) {
         const propType = reader.loadStr()

@@ -79,10 +79,9 @@ class BaseGeomItem extends TreeItem {
 
   /**
    * Getter for cutway vectors.
-   * @param {any} cutAwayVector - The cutAwayVector value.
    * @return {any} - The return value.
    */
-  getCutVector(cutAwayVector) {
+  getCutVector() {
     return this.__cutAwayVector
   }
 
@@ -97,10 +96,9 @@ class BaseGeomItem extends TreeItem {
 
   /**
    * Getter for the cutaway distance.
-   * @param {any} cutAwayDist - The cutAwayDist value.
    * @return {any} - The return value.
    */
-  getCutDist(cutAwayDist) {
+  getCutDist() {
     return this.__cutAwayDist
   }
 
@@ -124,7 +122,8 @@ class BaseGeomItem extends TreeItem {
   readBinary(reader, context) {
     super.readBinary(reader, context)
 
-    if (context.version >= 4) {
+    // if (context.version >= 4) {
+    if (context.versions['zea-engine'].greaterOrEqualThan([0, 0, 4])) {
       const materialName = reader.loadStr()
       // const materialName = 'Material' + this.__bodyDescId;
 

@@ -483,9 +483,12 @@ class TreeItem extends BaseItem {
         if (
           childItem.getVisible() &&
           !childItem.testFlag(ItemFlags.IGNORE_BBOX)
-        )
+        ) {
+          // console.log(" - ", childItem.constructor.name, childItem.getName(), childItem.getGlobalXfo().sc.x, childItem.getBoundingBox().toString())
           bbox.addBox3(childItem.getBoundingBox())
+        }
     })
+    // console.log(this.getName(), bbox.toString())
     return bbox
   }
 
@@ -643,9 +646,9 @@ class TreeItem extends BaseItem {
           .inverse()
           .multiply(childItem.getGlobalXfo())
       }
-      signalIds.bboxChangedId = childItem.boundingChanged.connect(
-        this._setBoundingBoxDirty
-      )
+      signalIds.bboxChangedId = childItem.boundingChanged.connect(() => {
+        this._setBoundingBoxDirty()
+      })
       signalIds.visChangedId = childItem.visibilityChanged.connect(
         this._setBoundingBoxDirty
       )
@@ -1130,6 +1133,7 @@ class TreeItem extends BaseItem {
           }
         }
       } else {
+        // eslint-disable-next-line guard-for-in
         for (const childName in childrenJson) {
           const childJson = childrenJson[childName]
           // Note: During loading of asset trees, we have an
@@ -1248,7 +1252,7 @@ class TreeItem extends BaseItem {
 
         // Flagging this node as a bin tree node. (A node generated from loading a binary file)
         childItem.setFlag(ItemFlags.BIN_NODE)
-
+        
         this.addChild(childItem, false, false)
       }
     }

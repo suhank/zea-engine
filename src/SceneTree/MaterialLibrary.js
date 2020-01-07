@@ -209,7 +209,7 @@ class MaterialLibrary {
    * @param {object} context - The context value.
    */
   readBinary(reader, context = {}) {
-    if (context.version == undefined) context.version = 0
+    // if (context.version == undefined) context.version = 0
 
     this.name = reader.loadStr()
 

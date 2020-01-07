@@ -420,6 +420,8 @@ class Group extends TreeItem {
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
+    console.log("__bindItem:", item.getName())
+
     const sigIds = {}
 
     sigIds.mouseDownIndex = item.mouseDown.connect(event => {
@@ -475,6 +477,7 @@ class Group extends TreeItem {
       const cutAwayDist = this.getParameter('CutDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
+          console.log("cutEnabled:", treeItem.getName(), cutAwayVector.toString())
           treeItem.setCutawayEnabled(cutEnabled)
           treeItem.setCutVector(cutAwayVector)
           treeItem.setCutDist(cutAwayDist)
