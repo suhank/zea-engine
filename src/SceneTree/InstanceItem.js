@@ -49,29 +49,6 @@ class InstanceItem extends TreeItem {
   }
 
   // ////////////////////////////////////////
-  // Children
-
-  // getChildren() {
-  //     return this.__srcTree.getChildren();
-  // }
-
-  // numChildren() {
-  //     return this.__childItems.length;
-  // }
-
-  // getNumChildren() {
-  //     return this.__srcTree.getNumChildren();
-  // }
-
-  // getChild(index) {
-  //     return this.__srcTree.getChild(index);
-  // }
-
-  // getChildByName(name) {
-  //     return this.__srcTree.getChildByName(name);
-  // }
-
-  // ////////////////////////////////////////
   // Persistence
 
   /**
