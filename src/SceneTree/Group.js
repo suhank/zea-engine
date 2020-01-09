@@ -420,8 +420,6 @@ class Group extends TreeItem {
   __bindItem(item, index) {
     if (!(item instanceof TreeItem)) return
 
-    console.log("__bindItem:", item.getName())
-
     const sigIds = {}
 
     sigIds.mouseDownIndex = item.mouseDown.connect(event => {
