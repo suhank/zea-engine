@@ -475,7 +475,7 @@ class Group extends TreeItem {
       const cutAwayDist = this.getParameter('CutDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
-          console.log("cutEnabled:", treeItem.getName(), cutAwayVector.toString())
+          // console.log("cutEnabled:", treeItem.getPath(), cutAwayVector.toString(), treeItem.getMaterial().getShaderName())
           treeItem.setCutawayEnabled(cutEnabled)
           treeItem.setCutVector(cutAwayVector)
           treeItem.setCutDist(cutAwayDist)

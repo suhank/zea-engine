@@ -4,6 +4,7 @@ import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class ScreenSpaceShader extends GLShader {
@@ -21,6 +22,7 @@ attribute vec2 texCoords;
 #endif
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */

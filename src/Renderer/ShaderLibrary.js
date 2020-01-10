@@ -249,16 +249,22 @@ class ShaderLibrary {
           line = parts.join(' ')
         } else if (trimmedline.startsWith('uniform')) {
           const parts = trimmedline.split(WHITESPACE_RE)
-          if (!(parts[1] in glslTypes))
+
+          // When a precision qualifier exists in the uniform definition.
+          // e.g. uniform highp int instancesTextureSize;
+          let typeIndex = 1
+          if (parts.length == 4) typeIndex = 2
+          const typeName = parts[typeIndex]
+          if (!(typeName in glslTypes))
             throw new Error(
               'Error while parsing :' +
                 shaderName +
                 ' \nType not recognized:' +
                 parts[1]
             )
-          const name = parts[2].slice(0, parts[2].length - 1)
-          result.uniforms[name] = glslTypes[parts[1]]
-          // console.log('uniform:' + name + ":" + parts[1]);
+          const name = parts[typeIndex + 1].slice(0, parts[typeIndex + 1].length - 1)
+          result.uniforms[name] = glslTypes[typeName]
+          // console.log('uniform:', name, ":", typeName);
 
           if (result.uniforms[name] == 'struct') {
             console.log(parts)

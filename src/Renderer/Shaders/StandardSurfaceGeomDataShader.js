@@ -4,6 +4,7 @@ import { sgFactory } from '../../SceneTree'
 
 import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/glsl-bits.js'
 
@@ -21,21 +22,33 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying float v_drawItemID;
+varying vec3 v_worldPos;
+varying vec4 v_cutAwayData;
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
-    vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
-    gl_Position = projectionMatrix * viewPos;
+  int drawItemId = getDrawItemId();
+  v_geomItemData = getInstanceData(drawItemId);
 
-    v_viewPos = -viewPos.xyz;
+  vec4 pos = vec4(positions, 1.);
+  mat4 modelMatrix = getModelMatrix();
+  mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  vec4 viewPos = modelViewMatrix * pos;
+  gl_Position = projectionMatrix * viewPos;
 
-    v_drawItemID = float(getId());
+  v_viewPos = -viewPos.xyz;
+
+  v_drawItemID = float(getDrawItemId());
+  
+  v_worldPos      = (modelMatrix * pos).xyz;
+  v_cutAwayData   = getCutaway(drawItemId);
 }
 `
     )
@@ -45,13 +58,20 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="GLSLUtils.glsl"/>
 <%include file="GLSLBits.glsl"/>
+<%include file="cutaways.glsl"/>
 
 uniform int floatGeomBuffer;
 uniform int passId;
 
+uniform color cutColor;
+
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying float v_drawItemID;
+varying vec3 v_worldPos;
+varying vec4 v_cutAwayData;
 
 
 #ifdef ENABLE_ES3
@@ -62,6 +82,24 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
+
+  int flags = int(v_geomItemData.r + 0.5);
+  // Cutaways
+  if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
+      vec3 planeNormal = v_cutAwayData.xyz;
+      float planeDist = v_cutAwayData.w;
+      if(cutaway(v_worldPos, planeNormal, planeDist)){
+          discard;
+          return;
+      }
+      else if(!gl_FrontFacing){
+          fragColor = cutColor;
+  #ifndef ENABLE_ES3
+          gl_FragColor = fragColor;
+  #endif
+          return;
+      }
+  }
 
     float dist = length(v_viewPos);
 

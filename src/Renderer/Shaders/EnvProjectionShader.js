@@ -7,6 +7,7 @@ import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/envmap-equirect.js'
 import './GLSL/envmap-octahedral.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class EnvProjectionShader extends GLShader {
@@ -25,6 +26,7 @@ uniform vec3 projectionCenter;
 
 <%include file="stack-gl/inverse.glsl"/>
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */

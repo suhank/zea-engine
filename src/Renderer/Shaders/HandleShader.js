@@ -4,6 +4,7 @@ import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class HandleShader extends GLShader {
@@ -25,6 +26,7 @@ uniform mat4 projectionMatrix;
 uniform float maintainScreenSize;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */

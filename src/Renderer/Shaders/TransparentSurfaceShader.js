@@ -5,6 +5,7 @@ import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
 import './GLSL/GGX_Specular.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 
@@ -25,6 +26,7 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -35,11 +37,12 @@ varying vec3 v_worldPos;
 /* VS Outputs */
 
 void main(void) {
+    int drawItemId = getDrawItemId();
 
-    vec4 geomItemData = getInstanceData();
+    vec4 geomItemData = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;

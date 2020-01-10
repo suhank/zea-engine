@@ -5,6 +5,8 @@ import { GLShader } from '../GLShader.js'
 
 import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
+import './GLSL/drawItemTexture.js'
+import './GLSL/modelMatrix.js'
 
 class FatPointsShader extends GLShader {
   constructor(gl) {
@@ -21,6 +23,7 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 <%include file="utils/quadVertexFromID.glsl"/>
 
@@ -48,7 +51,7 @@ void main(void) {
   // a surface. (else they get fully clipped)
   viewPos.z += 0.5 * PointSize;
 
-  v_drawItemID = float(getId());
+  v_drawItemID = float(getDrawItemId());
   v_viewPos = -viewPos.xyz;
   v_highlightColor = getHighlightColor();
   

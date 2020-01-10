@@ -5,6 +5,7 @@ import { GLShader } from '../GLShader.js'
 
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
 
@@ -28,6 +29,7 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -41,7 +43,8 @@ varying vec3 v_worldPos;
 varying vec4 v_cutAwayData;
 
 void main(void) {
-    v_geomItemData  = getInstanceData();
+    int drawItemId = getDrawItemId();
+    v_geomItemData  = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
     mat4 modelMatrix = getModelMatrix();
@@ -59,7 +62,7 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_cutAwayData = getCutaway();
+    v_cutAwayData = getCutaway(drawItemId);
 }
 `
     )

@@ -16,6 +16,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 
@@ -44,7 +45,7 @@ void main(void) {
 
     v_viewPos = -viewPos.xyz;
 
-    v_drawItemID = float(getId());
+    v_drawItemID = float(getDrawItemId());
 }
 `
     )

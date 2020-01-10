@@ -4,6 +4,7 @@ import { sgFactory } from '../../SceneTree'
 
 import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class StandardSurfaceSelectedGeomsShader extends GLShader {
@@ -20,9 +21,11 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-varying vec4 v_highlightColor;
+varying float v_drawItemId;
 
 void main(void) {
     mat4 modelMatrix = getModelMatrix();
@@ -30,7 +33,7 @@ void main(void) {
     vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
     gl_Position = projectionMatrix * viewPos;
 
-    v_highlightColor = getHighlightColor();
+    v_drawItemId = float(getDrawItemId());
 }
 `
     )
@@ -40,7 +43,24 @@ void main(void) {
       `
 precision highp float;
 
-varying vec4 v_highlightColor;
+varying float v_drawItemId;
+
+
+<%include file="drawItemTexture.glsl"/>
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getHighlightColor(int id) {
+  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
+}
+#else
+
+uniform vec4 highlightColor;
+
+vec4 getHighlightColor() {
+    return highlightColor;
+}
+
+#endif
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
@@ -50,8 +70,8 @@ void main(void) {
 #ifndef ENABLE_ES3
     vec4 fragColor;
 #endif
-
-    fragColor = v_highlightColor;
+    int drawItemId = int(v_drawItemId + 0.5);
+    fragColor = getHighlightColor(drawItemId);
 
 #ifndef ENABLE_ES3
     gl_FragColor = fragColor;

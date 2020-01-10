@@ -7,6 +7,7 @@ import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/envmap-equirect.js'
 import './GLSL/envmap-octahedral.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class BaseShadowCatcherShader extends GLShader {
@@ -26,21 +27,23 @@ uniform vec3 ProjectionCenter;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 attribute float clusterIDs;
 uniform vec2 lightmapSize;
 
 /* VS Outputs */
-varying vec2 v_lightmapCoord;
+// varying vec2 v_lightmapCoord;
 varying vec3 v_worldDir;
 
 void main(void) {
+    int drawItemId = getDrawItemId();
 
-    vec4 geomItemData = getInstanceData();
+    vec4 geomItemData = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position     = modelViewProjectionMatrix * pos;
 
