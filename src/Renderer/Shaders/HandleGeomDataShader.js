@@ -21,8 +21,11 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 
+varying float v_drawItemId;
+varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying float v_drawItemID;
+varying vec3 v_worldPos;
 
 void main(void) {
   int drawItemId = getDrawItemId();
