@@ -39,9 +39,9 @@ class Version {
    */
   lessThan(numbers) {
     return (
-      this.patch < numbers[2] ||
+      this.major < numbers[0] ||
       this.minor < numbers[1] ||
-      this.major < numbers[0]
+      this.patch < numbers[2]
     )
   }
 
@@ -52,9 +52,9 @@ class Version {
    */
   greaterThan(numbers) {
     return (
-      this.patch > numbers[2] ||
+      this.major > numbers[0] ||
       this.minor > numbers[1] ||
-      this.major > numbers[0]
+      this.patch > numbers[2]
     )
   }
 
@@ -64,10 +64,10 @@ class Version {
    * @return {boolean} - The return value.
    */
   greaterOrEqualThan(numbers) {
-    return (
-      this.patch >= numbers[2] ||
-      this.minor >= numbers[1] ||
-      this.major >= numbers[0]
+    return !(
+      this.major < numbers[0] ||
+      this.minor < numbers[1] ||
+      this.patch < numbers[2]
     )
   }
 }
