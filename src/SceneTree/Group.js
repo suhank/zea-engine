@@ -120,11 +120,8 @@ class Group extends TreeItem {
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
     this.__globalXfoParam.valueChanged.connect(mode => {
-      if (!this.calculatingGroupXfo)
-        this._propagateDirtyXfoToItems()
+      if (!this.calculatingGroupXfo) this._propagateDirtyXfoToItems()
     })
-
-    this.mouseDownOnItem = new Signal()
   }
 
   /**

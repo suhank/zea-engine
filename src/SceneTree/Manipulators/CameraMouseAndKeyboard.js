@@ -18,6 +18,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     this.__defaultManipulationState = 'orbit'
     this.__manipulationState = this.__defaultManipulationState
+    this.__mouseDown = false
+    this.__dragging = false
     this.__mouseDragDelta = new Vec2()
     this.__keyboardMovement = false
     this.__keysPressed = []
@@ -326,7 +328,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * Causes an event to occur when the user starts to drag an element.
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onDragStart(event) {
+  onMouseDown(event) {
     this.__mouseDownPos = event.mousePos
     this.initDrag(event)
 
@@ -339,13 +341,15 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     } else {
       this.__manipulationState = this.__defaultManipulationState
     }
+    this.__mouseDown = true;
   }
 
   /**
    * Causes an event to occur when an element is being dragged.
    * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onDrag(event) {
+  onMouseMove(event) {
+    if (!this.__mouseDown) return;
     const mousePos = event.mousePos
     // During requestPointerLock, the offsetX/Y values are not updated.
     // Instead we get a relative delta that we use to compute the total
@@ -377,6 +381,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.dolly(event, this.__mouseDragDelta)
         break
     }
+    this.__dragging = true
+    event.stopPropagation()
   }
 
   /**
@@ -384,9 +390,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {MouseEvent} event - The mouse event that occurs.
    * @return {boolean} - The return value.
    */
-  onDragEnd(event) {
-    this.movementFinished.emit()
-    return false
+  onMouseUp(event) {
+    if (this.__dragging) {
+      this.movementFinished.emit()
+      this.__dragging = false
+      event.stopPropagation()
+    }
+    this.__mouseDown = false
   }
 
   /**

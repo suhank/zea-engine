@@ -66,7 +66,6 @@ class GLViewport extends GLBaseViewport {
     //  camera cannot be part of the scene.
     this.setCamera(new Camera('Default'))
     this.setManipulator(new CameraMouseAndKeyboard())
-    this.__cameraManipulatorDragging = false
 
     this.resize(width, height)
   }
@@ -584,18 +583,16 @@ class GLViewport extends GLBaseViewport {
       this.__doubleClickTimeMSParam.getValue()
     ) {
       if (this.__cameraManipulator) {
-        this.__cameraManipulatorDragging = true
         this.__cameraManipulator.onDoubleClick(event)
-        return
+        if (!event.propagating) return
       }
 
       this.mouseDoubleClicked.emit(event)
     } else {
       this.__prevDownTime = downTime
       if (this.__cameraManipulator) {
-        this.__cameraManipulatorDragging = true
-        this.__cameraManipulator.onDragStart(event)
-        return
+        this.__cameraManipulator.onMouseDown(event)
+        if (!event.propagating) return
       }
 
       this.mouseDown.emit(event)
@@ -630,9 +627,9 @@ class GLViewport extends GLBaseViewport {
       this.mouseOverItem = null
     }
 
-    if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-      this.__cameraManipulator.onDrag(event)
-      return
+    if (this.__cameraManipulator) {
+      this.__cameraManipulator.onMouseMove(event)
+      if (!event.propagating) return
     }
     this.mouseMove.emit(event)
   }
@@ -654,10 +651,9 @@ class GLViewport extends GLBaseViewport {
       if (!event.propagating) return
     }
 
-    if (this.__cameraManipulator && this.__cameraManipulatorDragging) {
-      this.__cameraManipulator.onDragEnd(event)
-      this.__cameraManipulatorDragging = false
-      return
+    if (this.__cameraManipulator) {
+      this.__cameraManipulator.onMouseUp(event)
+      if (!event.propagating) return
     }
 
     this.mouseUp.emit(event)
@@ -776,9 +772,8 @@ class GLViewport extends GLBaseViewport {
         this.__doubleClickTimeMSParam.getValue()
       ) {
         if (this.__cameraManipulator) {
-          this.__cameraManipulatorDragging = true
           this.__cameraManipulator.onDoubleTap(event)
-          return
+          if (!event.propagating) return
         }
         this.doubleTapped.emit(event)
         return
