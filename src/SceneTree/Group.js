@@ -508,17 +508,14 @@ class Group extends TreeItem {
       }
     }
 
-    sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(
-      mode => {
-        if (
-          mode != ValueSetMode.OPERATOR_SETVALUE &&
-          mode != ValueSetMode.OPERATOR_DIRTIED
-        ) {
-          this.__initialXfos[index] = item.getGlobalXfo()
-          updateGlobalXfo()
-        }
+    sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(mode => {
+      // If the item's xfo changees, potentially through its own hierarchy
+      // then we need to re-bind here.
+      if (!this.propagatingXfoToItems) {
+        this.__initialXfos[index] = item.getGlobalXfo()
+        updateGlobalXfo()
       }
-    )
+    })
     this.__initialXfos[index] = item.getGlobalXfo()
 
     sigIds.bboxChangedIndex = item.boundingChanged.connect(
