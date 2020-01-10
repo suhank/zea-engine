@@ -9,7 +9,6 @@ shaderLibrary.setShaderModule(
 
 #ifdef ENABLE_FLOAT_TEXTURES
 
-
 mat4 getMatrix(sampler2D texture, int textureSize, int index) {
     // Unpack 3 x 4 matix columns into a 4 x 4 matrix.
     vec4 col0 = fetchTexel(texture, textureSize, (index * pixelsPerItem) + 1);
@@ -27,13 +26,6 @@ mat4 getModelMatrix(int id) {
 mat4 getModelMatrix() {
     return getModelMatrix(getDrawItemId());
 }
-
-
-vec4 getCutaway(int id) {
-    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-}
-
-
 
 #else
 

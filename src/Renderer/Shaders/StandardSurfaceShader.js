@@ -39,8 +39,8 @@ uniform mat4 projectionMatrix;
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
-attribute float clusterIDs;
-uniform vec2 lightmapSize;
+// attribute float clusterIDs;
+// uniform vec2 lightmapSize;
 
 /* VS Outputs */
 varying float v_drawItemId;
@@ -55,8 +55,8 @@ varying vec2 v_textureCoord;
 // varying float v_clusterID;
 // #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 /* VS Outputs */
+
 
 void main(void) {
     int drawItemId = getDrawItemId();
@@ -86,7 +86,6 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_cutAwayData   = getCutaway(drawItemId);
 }
 `
     )
@@ -120,17 +119,21 @@ varying vec2 v_textureCoord;
 // varying float v_clusterID;
 // #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 /* VS Outputs */
 
 
-uniform sampler2D lightmap;
-uniform bool lightmapConnected;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-<%include file="debugColors.glsl"/>
-uniform vec2 lightmapSize;
-uniform bool debugLightmapTexelSize;
-#endif
+// uniform sampler2D lightmap;
+// uniform bool lightmapConnected;
+// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
+// <%include file="debugColors.glsl"/>
+// uniform vec2 lightmapSize;
+// uniform bool debugLightmapTexelSize;
+// #endif
+
+uniform color cutColor;
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
 
 #ifdef ENABLE_INLINE_GAMMACORRECTION
 uniform float exposure;
@@ -170,7 +173,6 @@ uniform int NormalTexType;
 uniform sampler2D EmissiveStrengthTex;
 uniform int EmissiveStrengthTexType;
 
-uniform color cutColor;
 
 #endif
 
@@ -185,8 +187,9 @@ void main(void) {
     int flags = int(v_geomItemData.r + 0.5);
     // Cutaways
     if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-        vec3 planeNormal = v_cutAwayData.xyz;
-        float planeDist = v_cutAwayData.w;
+        vec4 cutAwayData   = getCutaway(drawItemId);
+        vec3 planeNormal = cutAwayData.xyz;
+        float planeDist = cutAwayData.w;
         if(cutaway(v_worldPos, planeNormal, planeDist)){
             discard;
             return;

@@ -27,14 +27,15 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying float v_drawItemID;
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 void main(void) {
   int drawItemId = getDrawItemId();
+  v_drawItemId = float(drawItemId);
   v_geomItemData = getInstanceData(drawItemId);
 
   vec4 pos = vec4(positions, 1.);
@@ -48,7 +49,6 @@ void main(void) {
   v_drawItemID = float(getDrawItemId());
   
   v_worldPos      = (modelMatrix * pos).xyz;
-  v_cutAwayData   = getCutaway(drawItemId);
 }
 `
     )
@@ -58,26 +58,30 @@ void main(void) {
       `
 precision highp float;
 
-<%include file="GLSLUtils.glsl"/>
-<%include file="GLSLBits.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="cutaways.glsl"/>
+<%include file="GLSLBits.glsl"/>
 
 uniform int floatGeomBuffer;
 uniform int passId;
 
 uniform color cutColor;
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
 
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying float v_drawItemID;
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 
 #ifdef ENABLE_ES3
     out vec4 fragColor;
 #endif
 void main(void) {
+  int drawItemId = int(v_drawItemId + 0.5);
 
 #ifndef ENABLE_ES3
     vec4 fragColor;
@@ -86,8 +90,9 @@ void main(void) {
   int flags = int(v_geomItemData.r + 0.5);
   // Cutaways
   if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) {
-      vec3 planeNormal = v_cutAwayData.xyz;
-      float planeDist = v_cutAwayData.w;
+      vec4 cutAwayData   = getCutaway(drawItemId);
+      vec3 planeNormal = cutAwayData.xyz;
+      float planeDist = cutAwayData.w;
       if(cutaway(v_worldPos, planeNormal, planeDist)){
           discard;
           return;

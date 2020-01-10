@@ -40,10 +40,10 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 void main(void) {
     int drawItemId = getDrawItemId();
+    v_drawItemId = float(drawItemId);
     v_geomItemData  = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
@@ -62,7 +62,6 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_cutAwayData = getCutaway(drawItemId);
 }
 `
     )
@@ -72,12 +71,13 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="drawItemTexture.glsl"/>
+<%include file="cutaways.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -85,7 +85,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 uniform mat4 cameraMatrix;
 
@@ -100,6 +99,9 @@ uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
 
 uniform color cutColor;
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
 
 #endif
 
@@ -108,13 +110,15 @@ uniform color cutColor;
 #endif
 
 void main(void) {
+    int drawItemId = int(v_drawItemId + 0.5);
 
     int flags = int(v_geomItemData.r + 0.5);
     // Cutaways
     if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
     {
-        vec3 planeNormal = v_cutAwayData.xyz;
-        float planeDist = v_cutAwayData.w;
+        vec4 cutAwayData   = getCutaway(drawItemId);
+        vec3 planeNormal = cutAwayData.xyz;
+        float planeDist = cutAwayData.w;
         if(cutaway(v_worldPos, planeNormal, planeDist)){
             discard;
             return;
