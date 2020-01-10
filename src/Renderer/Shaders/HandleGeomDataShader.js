@@ -16,6 +16,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
@@ -24,7 +25,8 @@ varying vec3 v_viewPos;
 varying float v_drawItemID;
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+  int drawItemId = getDrawItemId();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
     bool maintainScreenSize = true;// Could be passed as a flag.

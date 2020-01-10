@@ -26,6 +26,7 @@ uniform mat4 projectionMatrix;
 uniform float maintainScreenSize;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
@@ -37,7 +38,8 @@ varying vec2 v_textureCoord;
 
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+  int drawItemId = getDrawItemId();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
     if(maintainScreenSize != 0.0) {

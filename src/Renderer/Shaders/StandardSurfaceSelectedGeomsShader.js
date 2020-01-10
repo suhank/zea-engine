@@ -28,12 +28,13 @@ uniform mat4 projectionMatrix;
 varying float v_drawItemId;
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+    int drawItemId = getDrawItemId();
+    v_drawItemId = float(drawItemId);
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
     gl_Position = projectionMatrix * viewPos;
 
-    v_drawItemId = float(getDrawItemId());
 }
 `
     )

@@ -23,15 +23,11 @@ mat4 getModelMatrix(int id) {
     return getMatrix(instancesTexture, instancesTextureSize, id);
 }
 
-mat4 getModelMatrix() {
-    return getModelMatrix(getDrawItemId());
-}
-
 #else
 
 uniform mat4 modelMatrix;
 
-mat4 getModelMatrix() {
+mat4 getModelMatrix(int id) {
     return modelMatrix;
 }
 

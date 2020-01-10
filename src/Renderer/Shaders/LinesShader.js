@@ -20,13 +20,15 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+    int drawItemId = getDrawItemId();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(positions, 1.0);
 }

@@ -21,6 +21,7 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
@@ -35,9 +36,10 @@ varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
 void main(void) {
+  int drawItemId = getDrawItemId();
   int vertexID = int(vertexIDs);
 
-  mat4 modelMatrix = getModelMatrix();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
   int seqentialIndex_0 = int(mod(segmentIndices.x, 2.));

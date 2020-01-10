@@ -23,6 +23,7 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
 <%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 <%include file="utils/quadVertexFromID.glsl"/>
@@ -36,10 +37,11 @@ varying float v_drawItemID;
 varying vec4 v_highlightColor;
 
 void main(void) {
+  int drawItemId = getDrawItemId();
   vec2 quadPointPos = getQuadVertexPositionFromID();
   v_texCoord = quadPointPos + 0.5;
 
-  mat4 modelMatrix = getModelMatrix();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   
   vec4 viewPos = modelViewMatrix * vec4(positions, 1.);

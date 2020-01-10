@@ -53,18 +53,6 @@ vec4 getInstanceData(int id) {
     return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 0);
 }
 
-// vec4 getInstanceData() {
-//     return getInstanceData(getDrawItemId());
-// }
-
-// vec4 getCutaway(int id) {
-//     return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
-// }
-
-// vec4 getCutaway() {
-//     return getCutaway(getDrawItemId());
-// }
-
 #else
 
 uniform vec4 drawItemData;

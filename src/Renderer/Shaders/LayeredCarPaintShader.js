@@ -59,7 +59,7 @@ void main(void) {
     v_geomItemData = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
