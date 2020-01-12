@@ -34,6 +34,7 @@ uniform mat4 projectionMatrix;
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
