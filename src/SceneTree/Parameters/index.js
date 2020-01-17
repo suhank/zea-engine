@@ -28,6 +28,3 @@ export * from './ProxyParameter.js'
 // MaterialParameter imports MaterialLibraryManager which leads to circular imports
 // export * from './MaterialParameter.js';
 export * from './GeometryParameter.js'
-
-export * from './QueryParameter.js'
-export * from './QuerySetParameter.js'
