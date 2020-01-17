@@ -110,8 +110,12 @@ class GLBaseRenderer {
           } else {
             // New
             navigator.xr
-              .supportsSession('immersive-vr')
-              .then(setupXRViewport)
+              .isSessionSupported('immersive-vr')
+              .then(isSupported => {
+                if (isSupported) {
+                  setupXRViewport()
+                }
+              })
               .catch(reason => {
                 console.warn('Unable to setup XR:' + reason)
               })
