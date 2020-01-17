@@ -486,16 +486,6 @@ class Group extends TreeItem {
       item.propagateVisiblity(-1)
     }
 
-    // Higlight the new item with branch selection color.
-    if (this.getSelected()) {
-      if (item instanceof TreeItem)
-        item.addHighlight(
-          'branchselected' + this.getId(),
-          TreeItem.getBranchSelectionOutlineColor(),
-          true
-        )
-    }
-
     const updateGlobalXfo = () => {
       const initialXfoMode = this.__initialXfoModeParam.getValue()
       if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first && index == 0) {
