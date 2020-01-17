@@ -13,6 +13,7 @@ class BinReader {
     this.__byteOffset = byteOffset
     this.__dataView = new DataView(this.__data)
     this.__isMobileDevice = isMobileDevice
+    this.utf8decoder = new TextDecoder()
   }
 
   /**
@@ -238,10 +239,7 @@ class BinReader {
     const numChars = this.loadUInt32()
     const chars = new Uint8Array(this.__data, this.__byteOffset, numChars)
     this.__byteOffset += numChars
-    let result = ''
-    for (let i = 0; i < numChars; i++)
-      result = result + String.fromCharCode(chars[i])
-    return result
+    return this.utf8decoder.decode(chars)
   }
 
   /**
