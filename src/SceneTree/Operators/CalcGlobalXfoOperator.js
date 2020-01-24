@@ -47,7 +47,6 @@ class CalcGlobalXfoOperator {
 
     this.localXfoParam = localXfoParam
     this.localXfoParam.valueChanged.connect(this.setDirty)
-
   }
 
   /**

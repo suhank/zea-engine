@@ -14,6 +14,7 @@ import { ItemFlags } from './BaseItem'
 import { TreeItem } from './TreeItem'
 import { BaseGeomItem } from './BaseGeomItem'
 import { sgFactory } from './SGFactory.js'
+import { GroupMemberXfoOperator } from './Operators/GroupMemberXfoOperator.js'
 
 const GROUP_INITIAL_XFO_MODES = {
   manual: 0,
@@ -41,7 +42,7 @@ class Group extends TreeItem {
     this.dirty = false
 
     this.invGroupXfo = undefined
-    this.__initialXfos = []
+    this.memberXfoOps = []
     this.__signalIndices = []
 
     let pid = 0
@@ -119,9 +120,10 @@ class Group extends TreeItem {
     // However we seem to get infinite callstacks.
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    this.__globalXfoParam.valueChanged.connect(mode => {
-      if (!this.calculatingGroupXfo) this._propagateDirtyXfoToItems()
-    })
+    // this.__globalXfoParam.valueChanged.connect(mode => {
+    //   if (!this.calculatingGroupXfo) this._propagateDirtyXfoToItems()
+    // })
+
   }
 
   /**
@@ -209,10 +211,6 @@ class Group extends TreeItem {
    */
   _setGlobalXfoDirty() {
     super._setGlobalXfoDirty()
-    // Note: dirty should propagat from one
-    // Parameter to others following the operator graph.
-    // See: comment above (line 124)
-    // this._propagateDirtyXfoToItems()
   }
 
   /**
@@ -222,6 +220,11 @@ class Group extends TreeItem {
   calcGroupXfo() {
     const items = Array.from(this.__itemsParam.getValue())
     if (items.length == 0) return new Xfo()
+    
+    for(let op of this.memberXfoOps) {
+      op.calculatingGroupXfo()
+    }
+
     this.calculatingGroupXfo = true
     const initialXfoMode = this.__initialXfoModeParam.getValue()
     let xfo
@@ -231,15 +234,16 @@ class Group extends TreeItem {
       this.calculatingGroupXfo = false
       return
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = this.__initialXfos[0]
+      xfo = this.memberXfoOps[0].getInitialXfo()
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
       xfo = new Xfo()
       xfo.ori.set(0, 0, 0, 0)
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          xfo.tr.addInPlace(this.__initialXfos[index].tr)
-          xfo.ori.addInPlace(this.__initialXfos[index].ori)
+          const memberXfo = this.memberXfoOps[index].getInitialXfo()
+          xfo.tr.addInPlace(memberXfo.tr)
+          xfo.ori.addInPlace(memberXfo.ori)
           numTreeItems++
         }
       })
@@ -251,7 +255,8 @@ class Group extends TreeItem {
       let numTreeItems = 0
       items.forEach((item, index) => {
         if (item instanceof TreeItem) {
-          xfo.tr.addInPlace(this.__initialXfos[index].tr)
+          const memberXfo = this.memberXfoOps[index].getInitialXfo()
+          xfo.tr.addInPlace(memberXfo.tr)
           numTreeItems++
         }
       })
@@ -267,6 +272,10 @@ class Group extends TreeItem {
     const newGlobal = this.getGlobalXfo() // force a cleaning.
     this.invGroupXfo = newGlobal.inverse()
 
+    for(let op of this.memberXfoOps) {
+      op.setInvGroupXfo(this.invGroupXfo)
+    }
+
     this.calculatingGroupXfo = false
   }
 
@@ -274,47 +283,47 @@ class Group extends TreeItem {
    * The _propagateDirtyXfoToItems method.
    * @private
    */
-  _propagateDirtyXfoToItems() {
-    if (this.calculatingGroupXfo) return
+  // _propagateDirtyXfoToItems() {
+  //   if (this.calculatingGroupXfo) return
 
-    const items = Array.from(this.__itemsParam.getValue())
-    // Only after all the items are resolved do we have an invXfo and we can tranform our items.
-    if (
-      !this.calculatingGroupXfo &&
-      items.length > 0 &&
-      this.invGroupXfo &&
-      !this.dirty
-    ) {
-      // Note: because each 'clean' function is a unique
-      // value, the parameter does not know that this Group
-      // has already registered a clean function. For now
-      // we use this 'dirty' hack to avoid registering multiple
-      // clean functions. However, once the cleaning is handled
-      // via a bound operator, then this code will be removed.
-      this.dirty = true
-      this.propagatingXfoToItems = true // Note: selection group needs this set.
-      let delta
-      const setDirty = (item, initialXfo) => {
-        const param = item.getParameter('GlobalXfo')
-        const clean = () => {
-          if (!delta) {
-            // Compute the skinning transform that we can
-            // apply to all the items in the group.
-            const xfo = this.__globalXfoParam.getValue()
-            delta = xfo.multiply(this.invGroupXfo)
-            this.dirty = false
-          }
-          const result = delta.multiply(initialXfo)
-          param.setClean(result)
-        }
-        param.setDirty(clean)
-      }
-      items.forEach((item, index) => {
-        if (item instanceof TreeItem) setDirty(item, this.__initialXfos[index])
-      })
-      this.propagatingXfoToItems = false
-    }
-  }
+  //   const items = Array.from(this.__itemsParam.getValue())
+  //   // Only after all the items are resolved do we have an invXfo and we can tranform our items.
+  //   if (
+  //     !this.calculatingGroupXfo &&
+  //     items.length > 0 &&
+  //     this.invGroupXfo &&
+  //     !this.dirty
+  //   ) {
+  //     // Note: because each 'clean' function is a unique
+  //     // value, the parameter does not know that this Group
+  //     // has already registered a clean function. For now
+  //     // we use this 'dirty' hack to avoid registering multiple
+  //     // clean functions. However, once the cleaning is handled
+  //     // via a bound operator, then this code will be removed.
+  //     this.dirty = true
+  //     this.propagatingXfoToItems = true // Note: selection group needs this set.
+  //     let delta
+  //     const setDirty = (item, initialXfo) => {
+  //       const param = item.getParameter('GlobalXfo')
+  //       const clean = () => {
+  //         if (!delta) {
+  //           // Compute the skinning transform that we can
+  //           // apply to all the items in the group.
+  //           const xfo = this.__globalXfoParam.getValue()
+  //           delta = xfo.multiply(this.invGroupXfo)
+  //           this.dirty = false
+  //         }
+  //         const result = delta.multiply(initialXfo)
+  //         param.setClean(result)
+  //       }
+  //       param.setDirty(clean)
+  //     }
+  //     items.forEach((item, index) => {
+  //       if (item instanceof TreeItem) setDirty(item, this.__initialXfos[index])
+  //     })
+  //     this.propagatingXfoToItems = false
+  //   }
+  // }
 
   // _propagateGroupXfoToItem(index) {
   //   const clean = () => {
@@ -498,15 +507,22 @@ class Group extends TreeItem {
       }
     }
 
-    sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(mode => {
-      // If the item's xfo changees, potentially through its own hierarchy
-      // then we need to re-bind here.
-      if (!this.propagatingXfoToItems) {
-        this.__initialXfos[index] = item.getGlobalXfo()
-        updateGlobalXfo()
-      }
-    })
-    this.__initialXfos[index] = item.getGlobalXfo()
+    {
+      const groupGlobalXfoParam = this.getParameter("GlobalXfo")
+      const memberGlobalXfoParam = item.getParameter("GlobalXfo")
+      const memberXfoOp = new GroupMemberXfoOperator(groupGlobalXfoParam, memberGlobalXfoParam, this)
+      this.memberXfoOps[index] = memberXfoOp
+    }
+
+    // sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(mode => {
+    //   // If the item's xfo changees, potentially through its own hierarchy
+    //   // then we need to re-bind here.
+    //   if (!this.propagatingXfoToItems) {
+    //     this.__initialXfos[index] = item.getGlobalXfo()
+    //     updateGlobalXfo()
+    //   }
+    // })
+    // this.__initialXfos[index] = item.getGlobalXfo()
 
     sigIds.bboxChangedIndex = item.boundingChanged.connect(
       this._setBoundingBoxDirty
@@ -557,7 +573,8 @@ class Group extends TreeItem {
     item.globalXfoChanged.disconnectId(sigIds.globalXfoChangedIndex)
     item.boundingChanged.disconnectId(sigIds.bboxChangedIndex)
     this.__signalIndices.splice(index, 1)
-    this.__initialXfos.splice(index, 1)
+    // this.__initialXfos.splice(index, 1)
+    this.memberXfoOps.splice(index, 1)
   }
 
   /**
@@ -594,7 +611,8 @@ class Group extends TreeItem {
       this.__unbindItem(items[i], i)
     }
     this.__signalIndices = []
-    this.__initialXfos = []
+    // this.__initialXfos = []
+    this.memberXfoOps = []
     this.__itemsParam.clearItems(emit)
   }
 
