@@ -241,6 +241,15 @@ class BaseParameter extends RefCounted {
    */
   _clean() {
     this.__state = ParamState.CLEANING
+
+    // Note: we always evaluate all the ops in the stack, not just the dirty ones.
+    // A bas op might comptue global Xfo, and a subsequen modifies it.
+    for (const op of this.__boundOps) {
+      // The op can get the current value and modify it in place
+      // and set the output to clean.
+      op.evaluate()
+    }
+    
     // Clean the param before we start evaluating the connected op.
     // This is so that operators can read from the current value
     // to compute the next.
@@ -251,13 +260,6 @@ class BaseParameter extends RefCounted {
       if (res != undefined) this.__value = res
     }
 
-    // Note: we always evaluate all the ops in the stack, not just the dirty ones.
-    // A bas op might comptue global Xfo, and a subsequen modifies it.
-    for (const op of this.__boundOps) {
-      // The op can get the current value and modify it in place
-      // and set the output to clean.
-      op.evaluate()
-    }
     this.__state = ParamState.CLEAN
   }
 
@@ -351,22 +353,32 @@ class Parameter extends BaseParameter {
    */
   setValue(value, mode = ValueSetMode.USER_SETVALUE) {
     // 0 == normal set. 1 = changed via cleaner fn, 2=change by loading/cloning code.
-    if (this.__cleanerFns.length > 0) {
-      // Note: This message has not highlighted any real issues, and has become verbose.
-      // Enable if suspicious of operators being trampled by setValues.
-      // if(mode==0){
-      //     let cleanerNames = [];
-      //     for(let fn of this.__cleanerFns) {
-      //         cleanerNames.push(fn.name);
-      //     }
-      //     console.warn("Error setting "+this.__name + " value when cleaner is assigned:"+ cleanerNames);
-      // }
-      this.__cleanerFns = []
-    }
+    // if (this.__cleanerFns.length > 0) {
+    //   // Note: This message has not highlighted any real issues, and has become verbose.
+    //   // Enable if suspicious of operators being trampled by setValues.
+    //   // if(mode==0){
+    //   //     let cleanerNames = [];
+    //   //     for(let fn of this.__cleanerFns) {
+    //   //         cleanerNames.push(fn.name);
+    //   //     }
+    //   //     console.warn("Error setting "+this.__name + " value when cleaner is assigned:"+ cleanerNames);
+    //   // }
+    //   this.__cleanerFns = []
+    // }
 
     // if (value == undefined) {
     //     throw ("Invalud valu for setvalue.");
     // }
+
+    if (this.__boundOps.length > 0) {
+      for (let i = this.__boundOps.length - 1; i >= 0; i--) {
+        const op = this.__boundOps[i]
+        if (op.setValue) {
+          value = op.setValue(value)
+        }
+      }
+      return;
+    }
 
     if (!value.fromJSON) {
       // Note: equality tests on anything but simple values is going to be super expenseive.

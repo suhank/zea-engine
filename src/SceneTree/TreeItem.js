@@ -9,6 +9,7 @@ import {
   XfoParameter,
 } from './Parameters'
 import { ItemFlags, BaseItem } from './BaseItem.js'
+import { CalcGlobalXfoOperator } from './Operators/CalcGlobalXfoOperator.js'
 
 // Defines used to explicity specify types for WebGL.
 const SaveFlags = {
@@ -90,35 +91,37 @@ class TreeItem extends BaseItem {
     this.boundingChanged = this.__boundingBoxParam.valueChanged
 
     // Bind handlers
-    this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
-    this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this)
+    // this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
+    // this._setGlobalXfoDirty = this._setGlobalXfoDirty.bind(this)
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
-    this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty)
+    // this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty)
     
     // Note: if the user changes the global xfo, we compute the 
     // local xfo when it is needed (generally when GlobalXfo is pulled)
     // In the future, we will move this into the operators and ops
     // will support 'inversion' where the param asks the op to
     // proccess an input value.
-    const cleanLocalXfo = prevValue => {
-      const globalXfo = this.__globalXfoParam.getValue()
-      if (this.__ownerItem !== undefined)
-        return this.__ownerItem
-          .getGlobalXfo()
-          .inverse()
-          .multiply(globalXfo)
-      else return globalXfo
-    }
+    // const cleanLocalXfo = prevValue => {
+    //   const globalXfo = this.__globalXfoParam.getValue()
+    //   if (this.__ownerItem !== undefined)
+    //     return this.__ownerItem
+    //       .getGlobalXfo()
+    //       .inverse()
+    //       .multiply(globalXfo)
+    //   else return globalXfo
+    // }
+
+    this.globalXfoOp = new CalcGlobalXfoOperator(this.__globalXfoParam, this.__localXfoParam);
     this.__globalXfoParam.valueChanged.connect(mode => {
       // Dirtiness propagates from Local to Global, but not vice versa.
       // We need to move to using operators to invert values.
       // This system of having ops connected in all directions
       // is super difficult to debug.
-      if (mode != ValueSetMode.OPERATOR_DIRTIED) {
-        this.__localXfoParam.setDirty(cleanLocalXfo)
-      }
+      // if (mode != ValueSetMode.OPERATOR_DIRTIED) {
+      //   this.__localXfoParam.setDirty(cleanLocalXfo)
+      // }
       this._setBoundingBoxDirty()
     })
 
@@ -215,7 +218,7 @@ class TreeItem extends BaseItem {
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
-      this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty)
+      // this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty)
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter++
@@ -225,14 +228,17 @@ class TreeItem extends BaseItem {
 
     super.setOwner(parentItem)
 
-    this._setGlobalXfoDirty()
+    // this._setGlobalXfoDirty()
     if (this.__ownerItem) {
       this.setSelectable(this.__ownerItem.getSelectable(), true)
 
       // The effect of the invisible owner is added.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter--
 
-      this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty)
+      this.globalXfoOp.setParentGlobalParam(this.__ownerItem.getParameter('GlobalXfo'));
+      // this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty)
+    } else {
+      this.globalXfoOp.setParentGlobalParam(null)
     }
 
     this.__updateVisiblity()
@@ -303,14 +309,15 @@ class TreeItem extends BaseItem {
    * @param {number} mode - The mode value.
    */
   setGlobalXfo(xfo, mode) {
-    const owner = this.getOwner()
-    if (owner) {
-      const parentXfo = owner.getGlobalXfo()
-      const localXfo = parentXfo.inverse().multiply(xfo)
-      this.__localXfoParam.setValue(localXfo, mode)
-    } else {
-      this.__globalXfoParam.setValue(xfo, mode)
-    }
+    this.__globalXfoParam.setValue(xfo, mode)
+    // const owner = this.getOwner()
+    // if (owner) {
+    //   const parentXfo = owner.getGlobalXfo()
+    //   const localXfo = parentXfo.inverse().multiply(xfo)
+    //   this.__localXfoParam.setValue(localXfo, mode)
+    // } else {
+    //   this.__globalXfoParam.setValue(xfo, mode)
+    // }
   }
 
   /**
@@ -319,22 +326,22 @@ class TreeItem extends BaseItem {
    * @return {any} - The return value.
    * @private
    */
-  _cleanGlobalXfo(prevValue) {
-    const parentItem = this.getParentItem()
-    const localXfo = this.__localXfoParam.getValue()
-    if (parentItem !== undefined) {
-      const parentGlobal = parentItem.getGlobalXfo()
-      return parentGlobal.multiply(localXfo)
-    } else return localXfo
-  }
+  // _cleanGlobalXfo(prevValue) {
+  //   const parentItem = this.getParentItem()
+  //   const localXfo = this.__localXfoParam.getValue()
+  //   if (parentItem !== undefined) {
+  //     const parentGlobal = parentItem.getGlobalXfo()
+  //     return parentGlobal.multiply(localXfo)
+  //   } else return localXfo
+  // }
 
   /**
    * The _setGlobalXfoDirty method.
    * @private
    */
-  _setGlobalXfoDirty() {
-    this.__globalXfoParam.setDirty(this._cleanGlobalXfo)
-  }
+  // _setGlobalXfoDirty() {
+  //   this.__globalXfoParam.setDirty(this._cleanGlobalXfo)
+  // }
 
   // ////////////////////////////////////////
   // Visibility
