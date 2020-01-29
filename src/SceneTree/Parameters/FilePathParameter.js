@@ -135,7 +135,7 @@ class FilePathParameter extends Parameter {
     if (!name)
       name = parts[parts.length - 1]
 
-    if (!url.startsWith('http:') && !url.startsWith('blob:')) {
+    if (!url.startsWith('http:') && !url.startsWith('https:') && !url.startsWith('blob:')) {
       // Convert this relative url to an absolute.
       // Note: this is necessary because the HTTP requests
       // are invoked from the worker where the current file context
