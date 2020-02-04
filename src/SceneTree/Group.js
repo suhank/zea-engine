@@ -1,5 +1,4 @@
-import { Vec3, Color, Xfo } from '../Math'
-import { Signal } from '../Utilities'
+import { Vec3, Color } from '../Math'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -14,14 +13,10 @@ import { ItemFlags } from './BaseItem'
 import { TreeItem } from './TreeItem'
 import { BaseGeomItem } from './BaseGeomItem'
 import { sgFactory } from './SGFactory.js'
-import { GroupMemberXfoOperator } from './Operators/GroupMemberXfoOperator.js'
-
-const GROUP_INITIAL_XFO_MODES = {
-  manual: 0,
-  first: 1,
-  average: 2,
-  globalOri: 3,
-}
+import {
+  GroupMemberXfoOperator,
+  GROUP_XFO_MODES,
+} from './Operators/GroupMemberXfoOperator.js'
 
 /** Class representing a group in the scene tree.
  * @extends TreeItem
@@ -57,21 +52,21 @@ class Group extends TreeItem {
       this.__unbindItem(item, index)
     })
     this.__itemsParam.valueChanged.connect(() => {
-      this.calcGroupXfo()
+      // this.calcGroupXfo()
       this._setBoundingBoxDirty()
     })
 
     this.__initialXfoModeParam = this.insertParameter(
       new MultiChoiceParameter(
         'InitialXfoMode',
-        GROUP_INITIAL_XFO_MODES.average,
+        GROUP_XFO_MODES.average,
         ['manual', 'first', 'average', 'global']
       ),
       pid++
     )
-    this.__initialXfoModeParam.valueChanged.connect(() => {
-      this.calcGroupXfo()
-    })
+    // this.__initialXfoModeParam.valueChanged.connect(() => {
+    //   this.calcGroupXfo()
+    // })
 
     this.__highlightedParam = this.insertParameter(
       new BooleanParameter('Highlighted', false),
@@ -115,6 +110,10 @@ class Group extends TreeItem {
       pid++
     ).valueChanged.connect(this.__updateCutaway)
 
+    this.__memberXfoOp = new GroupMemberXfoOperator(
+      this.getParameter("GlobalXfo"),
+      this.getParameter("InitialXfoMode"),
+    )
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
     // However we seem to get infinite callstacks.
@@ -130,7 +129,7 @@ class Group extends TreeItem {
    * Getter for INITIAL_XFO_MODES.
    */
   static get INITIAL_XFO_MODES() {
-    return GROUP_INITIAL_XFO_MODES
+    return GROUP_XFO_MODES
   }
 
   /**
@@ -209,75 +208,75 @@ class Group extends TreeItem {
    * The _setGlobalXfoDirty method.
    * @private
    */
-  _setGlobalXfoDirty() {
-    super._setGlobalXfoDirty()
-  }
+  // _setGlobalXfoDirty() {
+  //   super._setGlobalXfoDirty()
+  // }
 
-  /**
-   * Calculate the group Xfo translate.
-   * @return {Xfo} - Returns a new Xfo.
-   */
-  calcGroupXfo() {
-    const items = Array.from(this.__itemsParam.getValue())
-    if (items.length == 0) return new Xfo()
+  // /**
+  //  * Calculate the group Xfo translate.
+  //  * @return {Xfo} - Returns a new Xfo.
+  //  */
+  // calcGroupXfo() {
+  //   const items = Array.from(this.__itemsParam.getValue())
+  //   if (items.length == 0) return new Xfo()
     
-    for(let op of this.memberXfoOps) {
-      op.calculatingGroupXfo()
-    }
+  //   for(let op of this.memberXfoOps) {
+  //     op.calculatingGroupXfo()
+  //   }
 
-    this.calculatingGroupXfo = true
-    const initialXfoMode = this.__initialXfoModeParam.getValue()
-    let xfo
-    if (initialXfoMode == GROUP_INITIAL_XFO_MODES.manual) {
-      // The xfo is manually set by the current global xfo.
-      this.invGroupXfo = this.getGlobalXfo().inverse()
-      this.calculatingGroupXfo = false
-      return
-    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
-      xfo = this.memberXfoOps[0].getInitialXfo()
-    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.average) {
-      xfo = new Xfo()
-      xfo.ori.set(0, 0, 0, 0)
-      let numTreeItems = 0
-      items.forEach((item, index) => {
-        if (item instanceof TreeItem) {
-          const memberXfo = this.memberXfoOps[index].getInitialXfo()
-          xfo.tr.addInPlace(memberXfo.tr)
-          xfo.ori.addInPlace(memberXfo.ori)
-          numTreeItems++
-        }
-      })
-      xfo.tr.scaleInPlace(1 / numTreeItems)
-      xfo.ori.normalizeInPlace()
-      // xfo.sc.scaleInPlace(1/ numTreeItems);
-    } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri) {
-      xfo = new Xfo()
-      let numTreeItems = 0
-      items.forEach((item, index) => {
-        if (item instanceof TreeItem) {
-          const memberXfo = this.memberXfoOps[index].getInitialXfo()
-          xfo.tr.addInPlace(memberXfo.tr)
-          numTreeItems++
-        }
-      })
-      xfo.tr.scaleInPlace(1 / numTreeItems)
-    } else {
-      throw new Error('Invalid mode.')
-    }
+  //   this.calculatingGroupXfo = true
+  //   const initialXfoMode = this.__initialXfoModeParam.getValue()
+  //   let xfo
+  //   if (initialXfoMode == GROUP_XFO_MODES.manual) {
+  //     // The xfo is manually set by the current global xfo.
+  //     this.invGroupXfo = this.getGlobalXfo().inverse()
+  //     this.calculatingGroupXfo = false
+  //     return
+  //   } else if (initialXfoMode == GROUP_XFO_MODES.first) {
+  //     xfo = this.memberXfoOps[0].getInitialXfo()
+  //   } else if (initialXfoMode == GROUP_XFO_MODES.average) {
+  //     xfo = new Xfo()
+  //     xfo.ori.set(0, 0, 0, 0)
+  //     let numTreeItems = 0
+  //     items.forEach((item, index) => {
+  //       if (item instanceof TreeItem) {
+  //         const memberXfo = this.memberXfoOps[index].getInitialXfo()
+  //         xfo.tr.addInPlace(memberXfo.tr)
+  //         xfo.ori.addInPlace(memberXfo.ori)
+  //         numTreeItems++
+  //       }
+  //     })
+  //     xfo.tr.scaleInPlace(1 / numTreeItems)
+  //     xfo.ori.normalizeInPlace()
+  //     // xfo.sc.scaleInPlace(1/ numTreeItems);
+  //   } else if (initialXfoMode == GROUP_XFO_MODES.globalOri) {
+  //     xfo = new Xfo()
+  //     let numTreeItems = 0
+  //     items.forEach((item, index) => {
+  //       if (item instanceof TreeItem) {
+  //         const memberXfo = this.memberXfoOps[index].getInitialXfo()
+  //         xfo.tr.addInPlace(memberXfo.tr)
+  //         numTreeItems++
+  //       }
+  //     })
+  //     xfo.tr.scaleInPlace(1 / numTreeItems)
+  //   } else {
+  //     throw new Error('Invalid mode.')
+  //   }
 
-    this.setGlobalXfo(xfo, ValueSetMode.GENERATED_VALUE)
+  //   this.setGlobalXfo(xfo, ValueSetMode.GENERATED_VALUE)
     
-    // Note: if the Group global param becomes dirty
-    // then it stops propagating dirty to its members.
-    const newGlobal = this.getGlobalXfo() // force a cleaning.
-    this.invGroupXfo = newGlobal.inverse()
+  //   // Note: if the Group global param becomes dirty
+  //   // then it stops propagating dirty to its members.
+  //   const newGlobal = this.getGlobalXfo() // force a cleaning.
+  //   this.invGroupXfo = newGlobal.inverse()
 
-    for(let op of this.memberXfoOps) {
-      op.setInvGroupXfo(this.invGroupXfo)
-    }
+  //   for(let op of this.memberXfoOps) {
+  //     op.setInvGroupXfo(this.invGroupXfo)
+  //   }
 
-    this.calculatingGroupXfo = false
-  }
+  //   this.calculatingGroupXfo = false
+  // }
 
   /**
    * The _propagateDirtyXfoToItems method.
@@ -495,23 +494,22 @@ class Group extends TreeItem {
       item.propagateVisiblity(-1)
     }
 
-    const updateGlobalXfo = () => {
-      const initialXfoMode = this.__initialXfoModeParam.getValue()
-      if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first && index == 0) {
-        this.calcGroupXfo()
-      } else if (
-        initialXfoMode == GROUP_INITIAL_XFO_MODES.average ||
-        initialXfoMode == GROUP_INITIAL_XFO_MODES.globalOri
-      ) {
-        this.calcGroupXfo()
-      }
-    }
+    // const updateGlobalXfo = () => {
+    //   const initialXfoMode = this.__initialXfoModeParam.getValue()
+    //   if (initialXfoMode == GROUP_XFO_MODES.first && index == 0) {
+    //     this.calcGroupXfo()
+    //   } else if (
+    //     initialXfoMode == GROUP_XFO_MODES.average ||
+    //     initialXfoMode == GROUP_XFO_MODES.globalOri
+    //   ) {
+    //     this.calcGroupXfo()
+    //   }
+    // }
 
-    {
-      const groupGlobalXfoParam = this.getParameter("GlobalXfo")
+    if (item instanceof TreeItem) {
       const memberGlobalXfoParam = item.getParameter("GlobalXfo")
-      const memberXfoOp = new GroupMemberXfoOperator(groupGlobalXfoParam, memberGlobalXfoParam, this)
-      this.memberXfoOps[index] = memberXfoOp
+      // this.memberXfoOps[index] = memberXfoOp
+      this.__memberXfoOp.addMember(memberGlobalXfoParam, index)
     }
 
     // sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(mode => {
@@ -530,7 +528,7 @@ class Group extends TreeItem {
 
     this.__signalIndices[index] = sigIds
 
-    updateGlobalXfo()
+    // updateGlobalXfo()
   }
 
   /**
@@ -570,11 +568,14 @@ class Group extends TreeItem {
     item.mouseEnter.disconnectId(sigIds.mouseEnterIndex)
     item.mouseLeave.disconnectId(sigIds.mouseLeaveIndex)
 
-    item.globalXfoChanged.disconnectId(sigIds.globalXfoChangedIndex)
+    // item.globalXfoChanged.disconnectId(sigIds.globalXfoChangedIndex)
     item.boundingChanged.disconnectId(sigIds.bboxChangedIndex)
     this.__signalIndices.splice(index, 1)
     // this.__initialXfos.splice(index, 1)
     this.memberXfoOps.splice(index, 1)
+
+    
+    this.memberXfoOp.removeMember(index)
   }
 
   /**
@@ -727,7 +728,7 @@ class Group extends TreeItem {
           if (count == 0) {
             this.calculatingGroupXfo = true
             // this.setGlobalXfo(this.calcGroupXfo(), ValueSetMode.GENERATED_VALUE)
-            this.calcGroupXfo()
+            // this.calcGroupXfo()
             this.calculatingGroupXfo = false
           }
         },
