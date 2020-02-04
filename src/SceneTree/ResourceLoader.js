@@ -507,13 +507,23 @@ class ResourceLoader {
     if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
     this.__callbacks[resourceId].push(callback)
 
-    this.__getWorker().then(worker => {
-      worker.postMessage({
-        type: 'fetch',
-        resourceId,
-        url,
+    function checkStatus(response) {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+      }
+      return response;
+    }
+    fetch(url)
+    .then(response => checkStatus(response) && response.arrayBuffer())
+    .then(buffer => {
+      this.__getWorker().then(worker => {
+        worker.postMessage({
+          type: 'unpack',
+          resourceId,
+          buffer,
+        })
       })
-    })
+    });
   }
 
   /**
@@ -546,7 +556,7 @@ class ResourceLoader {
           type: 'unpack',
           resourceId,
           buffer,
-        })
+        }, [buffer])
       })
     });
   }
