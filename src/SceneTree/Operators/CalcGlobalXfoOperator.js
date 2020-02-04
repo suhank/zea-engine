@@ -77,7 +77,7 @@ class CalcGlobalXfoOperator {
    * The setDirty method.
    */
   setDirty() {
-    this.globalXfoParam.setDirtyFromOp()
+    this.globalXfoParam.setDirtyFromOp(this)
   }
 
   /**
@@ -102,9 +102,9 @@ class CalcGlobalXfoOperator {
     const localXfo = this.localXfoParam.getValue()
     if (this.parentGlobalXfoParam) {
       const parentGlobaXfo = this.parentGlobalXfoParam.getValue()
-      this.globalXfoParam.setClean(parentGlobaXfo.multiply(localXfo))
+      this.globalXfoParam.setCleanFromOp(parentGlobaXfo.multiply(localXfo), this)
     } else {
-      this.globalXfoParam.setClean(localXfo)
+      this.globalXfoParam.setCleanFromOp(localXfo, this)
     }
   }
 }

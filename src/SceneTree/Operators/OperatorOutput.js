@@ -100,9 +100,19 @@ class OperatorOutput {
       this._param.setDirty(fn)
     }
   }
-  setDirtyFromOp() {
+  setDirtyFromOp(op) {
     if (this._param) {
-      this._param.setDirtyFromOp()
+      this._param.setDirtyFromOp(op)
+    }
+  }
+
+  /**
+   * The setCleanFromOp method.
+   * @param {any} value - The value param.
+   */
+  setCleanFromOp(value, op) {
+    if (this._param) {
+      this._param.setClean(value, op)
     }
   }
 

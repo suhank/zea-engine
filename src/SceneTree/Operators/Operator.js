@@ -34,7 +34,7 @@ class Operator extends BaseItem {
    */
   setDirty() {
     // for (const o of this.__outputs) o.setDirty(this.__evalOutput)
-    for (const o of this.__outputs) o.setDirtyFromOp()
+    for (const o of this.__outputs) o.setDirtyFromOp(this)
   }
 
   /**

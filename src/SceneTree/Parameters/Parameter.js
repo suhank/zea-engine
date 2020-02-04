@@ -47,6 +47,7 @@ class BaseParameter extends RefCounted {
     this.__cleanerFns = []
     this.__boundOps = []
     this.__state = ParamState.CLEAN
+    this.__dirtyOpIndex = -1
     this.__flags = 0
 
     this.valueChanged = new Signal()
@@ -209,6 +210,7 @@ class BaseParameter extends RefCounted {
     }
     this.__cleanerFns.push(cleanerFn)
     this.__state = ParamState.DIRTY
+    this.__dirtyOpIndex = 0
 
     this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
     return true
@@ -216,15 +218,34 @@ class BaseParameter extends RefCounted {
   /**
    * The setDirtyFromOp method.
    */
-  setDirtyFromOp() {
+  setDirtyFromOp(op) {
     // As we migrate to bound ops, we will no longer call store
     // cleaner fns and intead simply propagate.
-    if (this.__state == ParamState.CLEAN) {
+    let dirtyId
+    if (this.__dirtyOpIndex == -1) {
+      dirtyId = this.__boundOps.indexOf(op)
+    } else {
+      dirtyId = Math.min(this.__dirtyOpIndex, this.__boundOps.indexOf(op))
+    }
+    // console.log("setDirtyFromOp:", this.getPath(), dirtyId, this.__dirtyOpIndex)
+    // if (this.__state == ParamState.CLEAN) {
+    if (dirtyId != this.__dirtyOpIndex) {
       this.__state = ParamState.DIRTY
+      this.__dirtyOpIndex = dirtyId
       this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
     }
     return true
   }
+  
+  /**
+   * The setCleanFromOp method.
+   * @param {any} value - The value param.
+   */
+  setCleanFromOp(value, op) {
+    this.__value = value
+    this.__dirtyOpIndex = this.__boundOps.indexOf(op) + 1
+  }
+
 
   /**
    * The isDirty method.
@@ -242,12 +263,19 @@ class BaseParameter extends RefCounted {
   _clean() {
     this.__state = ParamState.CLEANING
 
+    // console.log("Cleaning:", this.getPath())
     // Note: we always evaluate all the ops in the stack, not just the dirty ones.
     // A bas op might comptue global Xfo, and a subsequen modifies it.
-    for (const op of this.__boundOps) {
-      // The op can get the current value and modify it in place
-      // and set the output to clean.
-      op.evaluate()
+    // for (const op of this.__boundOps) {
+    //   op.evaluate()
+    // }
+    if (this.__dirtyOpIndex != -1) {
+      for (let i = this.__dirtyOpIndex; i < this.__boundOps.length; i++) {
+        const op = this.__boundOps[i]
+        // The op can get the current value and modify it in place
+        // and set the output to clean.
+        op.evaluate()
+      }
     }
     
     // Clean the param before we start evaluating the connected op.
@@ -260,7 +288,8 @@ class BaseParameter extends RefCounted {
       if (res != undefined) this.__value = res
     }
 
-    this.__state = ParamState.CLEAN
+    if (this.__dirtyOpIndex == this.__boundOps.length)
+      this.__state = ParamState.CLEAN
   }
 
   /**

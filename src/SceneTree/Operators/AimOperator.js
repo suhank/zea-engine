@@ -116,7 +116,7 @@ class AimOperator extends Operator {
       }
       // console.log("AimOperator.evaluate:", xfo.sc.toString())
     }
-    output.setClean(xfo)
+    output.setCleanFromOp(xfo, this)
   }
 }
 
