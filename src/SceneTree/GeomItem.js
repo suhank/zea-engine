@@ -27,9 +27,10 @@ class GeomItem extends BaseGeomItem {
       this._setBoundingBoxDirty.bind(this)
     )
     this.__materialParam = this.insertParameter(
-      new MaterialParameter('material'),
+      new MaterialParameter('Material'),
       1
     )
+    this.__paramMapping['material'] = this.getParameterIndex(this.__materialParam)
 
     this.__lightmapCoordOffset = new Vec2()
     this.__geomOffsetXfoParam = this.addParameter(
