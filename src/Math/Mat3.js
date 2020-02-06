@@ -178,7 +178,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m22 value.
    */
   get m22() {
-    return this.__data[9]
+    return this.__data[8]
   }
 
   /**
@@ -186,7 +186,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m22(val) {
-    this.__data[9] = val
+    this.__data[8] = val
   }
 
   /**
