@@ -13,12 +13,12 @@ testingHarness.registerTest('Groups/GroupKinematics', (domElement, resources)=> 
 
     const group1 = new Z.Group('group1')
     group1.getParameter('Material').setValue(standardMaterial1)
-    group1.getParameter('InitialXfoMode').setValue(Z.Group.INITIAL_XFO_MODES.disabled)
+    // group1.getParameter('InitialXfoMode').setValue(Z.Group.INITIAL_XFO_MODES.disabled)
     scene.getRoot().addChild(group1)
 
     const group2 = new Z.Group('group2')
     group2.getParameter('Material').setValue(standardMaterial2)
-    group2.getParameter('InitialXfoMode').setValue(Z.Group.INITIAL_XFO_MODES.disabled)
+    // group2.getParameter('InitialXfoMode').setValue(Z.Group.INITIAL_XFO_MODES.disabled)
     scene.getRoot().addChild(group2)
 
     const group3 = new Z.Group('group3')
