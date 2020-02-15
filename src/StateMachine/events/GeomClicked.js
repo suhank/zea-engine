@@ -14,7 +14,7 @@ class GeomClicked extends StateEvent {
   constructor(name) {
     super(name)
     this.__geomParam = this.addParameter(new TreeItemParameter('TreeItem'))
-    this.__geomParam.valueChanged.connect(() => {
+    this.__geomParam.addEventListener('valueChanged', () => {
       this.__geom = this.__geomParam.getValue()
     })
   }
@@ -34,7 +34,7 @@ class GeomClicked extends StateEvent {
    */
   activate() {
     if (this.__geom) {
-      this.__geom.mouseDown.connect(this.__geomClicked.bind(this))
+      this.__geom.addEventListener('mouseDown', this.__geomClicked.bind(this))
     }
   }
 

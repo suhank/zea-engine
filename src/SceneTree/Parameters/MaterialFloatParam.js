@@ -50,8 +50,8 @@ class MaterialFloatParam extends NumberParameter {
       }
       this.__image = value
       this.__image.addRef(this)
-      // image.loaded.connect(imageUpdated);
-      // image.updated.connect(imageUpdated);
+      // image.addEventListener('loaded', imageUpdated);
+      // image.addEventListener('updated', imageUpdated);
       this.textureConnected.emit()
       this.valueChanged.emit(mode)
     } else {

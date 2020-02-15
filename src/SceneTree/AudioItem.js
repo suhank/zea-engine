@@ -33,7 +33,7 @@ class AudioItem extends TreeItem {
       audioSource.start(0)
       this.audioSourceCreated.emit(audioSource)
     }
-    fileParam.valueChanged.connect(() => {
+    fileParam.addEventListener('valueChanged', () => {
       const request = new XMLHttpRequest()
       request.open('GET', fileParam.getURL(), true)
       request.responseType = 'arraybuffer'
@@ -65,8 +65,8 @@ class AudioItem extends TreeItem {
     const playStateParam = this.addParameter(
       new NumberParameter('PlayState', 0)
     )
-    playStateParam.valueChanged.connect(mode => {
-      if (mode != ValueSetMode.CUSTOM) {
+    playStateParam.addEventListener('valueChanged', event => {
+      if (mode.mode != ValueSetMode.CUSTOM) {
         switch (playStateParam.getValue()) {
           case 0:
             if (this.__loaded) {
@@ -115,10 +115,10 @@ class AudioItem extends TreeItem {
     this.addParameter(new NumberParameter('coneOuterAngle', 0))
     this.addParameter(new NumberParameter('coneOuterGain', 1))
 
-    muteParam.valueChanged.connect(() => {
+    muteParam.addEventListener('valueChanged', () => {
       if (audioSource) audioSource.muted = muteParam.getValue()
     })
-    loopParam.valueChanged.connect(() => {
+    loopParam.addEventListener('valueChanged', () => {
       if (audioSource) audioSource.loop = loopParam.getValue()
     })
 

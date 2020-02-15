@@ -1,6 +1,5 @@
 import { SystemDesc } from '../../BrowserDetection.js'
 import { Vec3, Mat4, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
 import { TreeItem } from '../../SceneTree'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
@@ -50,21 +49,6 @@ class VRViewport extends GLBaseViewport {
     this.__rightViewMatrix = new Mat4()
     this.__rightProjectionMatrix = new Mat4()
 
-    // ////////////////////////////////////////////
-    // Signals
-    this.resized = new Signal()
-
-    // Signals to abstract the user view.
-    // i.e. when a user switches to VR mode, the signals
-    // simply emit the new VR data.
-    this.viewChanged = new Signal()
-    this.presentingChanged = new Signal()
-
-    this.controllerAdded = new Signal()
-    this.controllerButtonDown = new Signal()
-    this.controllerButtonUp = new Signal()
-    this.controllerDoubleClicked = new Signal()
-    this.controllerTouchpadTouched = new Signal()
   }
 
   /**
@@ -188,7 +172,8 @@ class VRViewport extends GLBaseViewport {
       // Resources
 
       // Note: when the VRViewport is setup
-      this.__renderer.sceneSet.connect(scene => {
+      const sceneSet = event => {
+        const scene = event.scene
         const resourceLoader = scene.getResourceLoader()
 
         let assetPath
@@ -209,7 +194,7 @@ class VRViewport extends GLBaseViewport {
           this.__vrAsset = this.__renderer
             .getScene()
             .loadCommonAssetResource(hmdAssetId)
-          this.__vrAsset.loaded.connect(() => {
+          this.__vrAsset.addEventListener('loaded', () => {
             const materialLibrary = this.__vrAsset.getMaterialLibrary()
             const materialNames = materialLibrary.getMaterialNames()
             for (const name of materialNames) {
@@ -222,7 +207,8 @@ class VRViewport extends GLBaseViewport {
             resolve(this.__vrAsset)
           })
         } else reject()
-      })
+      }
+      this.__renderer.addEventListener('sceneSet', sceneSet)
     })
     return this.__hmdAssetPromise
   }
@@ -265,7 +251,7 @@ class VRViewport extends GLBaseViewport {
               .getDiv()
               .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
             this.__session = null
-            this.presentingChanged.emit(false)
+            this.emitEvent('presentingChanged', { state: false })
           })
 
           const onSelectStart = ev => {
@@ -387,7 +373,7 @@ class VRViewport extends GLBaseViewport {
             .then(refSpace => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
-              this.presentingChanged.emit(true)
+              this.emitEvent('presentingChanged', { state: true })
               this.__startSession()
             })
             .catch(e => {
@@ -560,7 +546,7 @@ class VRViewport extends GLBaseViewport {
       controllers: this.__vrControllers,
       vrviewport: this,
     }
-    this.viewChanged.emit(data, this)
+    this.emitEvent('viewChanged', data)
   }
 
 

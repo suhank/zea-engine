@@ -208,7 +208,7 @@ class FilePathParameter extends Parameter {
     this.__value = value
     this.__file = file
 
-    resourceLoader.fileUpdated.connect(id => {
+    resourceLoader.addEventListener('fileUpdated', id => {
       if (id == this.__value) {
         this.__file = resourceLoader.getFile(this.__value)
         this.fileUpdated.emit()

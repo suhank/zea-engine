@@ -16,7 +16,6 @@ class GLTexture2D extends RefCounted {
 
     this.ready = new Signal(true)
     this.updated = new Signal()
-    this.resized = new Signal()
 
     this.width = 0
     this.height = 0
@@ -36,19 +35,18 @@ class GLTexture2D extends RefCounted {
           const data = params.data
           this.bufferData(data, width, height)
         }
-        if (this.__texture.isLoaded()) {
-          this.configure(this.__texture.getParams())
-          this.__texture.updated.connect(imageUpdated)
-        } else {
-          this.__texture.loaded.connect(() => {
+        this.configure(this.__texture.getParams())
+        this.__texture.addEventListener('updated', imageUpdated)
+        
+        if (!this.__texture.isLoaded()) {
+          this.__texture.addEventListener('loaded', () => {
             this.configure(this.__texture.getParams())
-            this.__texture.updated.connect(imageUpdated)
           })
         }
-        this.__texture.destructing.connect(() => {
-          console.log(this.__texture.getName() + ' destructing')
-          this.destroy()
-        })
+        // this.__texture.addEventListener('destructing', () => {
+        //   console.log(this.__texture.getName() + ' destructing')
+        //   this.destroy()
+        // })
       } else this.configure(params)
     }
   }
@@ -498,7 +496,7 @@ class GLTexture2D extends RefCounted {
     }
 
     if (emit) {
-      this.updated.emit()
+      this.emitEvent('updated', {})
     }
   }
 
@@ -657,7 +655,7 @@ class GLTexture2D extends RefCounted {
       this.height = height
 
       if (emit) {
-        this.resized.emit(width, height)
+        this.emitEvent('resized', { width, height })
       }
     }
   }

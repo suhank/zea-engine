@@ -58,12 +58,12 @@ class Cylinder extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.valueChanged.connect(resize)
-    this.__heightParam.valueChanged.connect(resize)
-    this.__sidesParam.valueChanged.connect(rebuild)
-    this.__loopsParam.valueChanged.connect(rebuild)
-    this.__capsParam.valueChanged.connect(rebuild)
-    this.__baseZAtZeroParam.valueChanged.connect(resize)
+    this.__radiusParam.addEventListener('valueChanged', resize)
+    this.__heightParam.addEventListener('valueChanged', resize)
+    this.__sidesParam.addEventListener('valueChanged', rebuild)
+    this.__loopsParam.addEventListener('valueChanged', rebuild)
+    this.__capsParam.addEventListener('valueChanged', rebuild)
+    this.__baseZAtZeroParam.addEventListener('valueChanged', resize)
   }
 
   /**
@@ -73,40 +73,17 @@ class Cylinder extends Mesh {
   __rebuild() {
     this.clear()
 
-    const radius = this.__radiusParam.getValue()
     const nbSides = this.__sidesParam.getValue()
     const nbLoops = this.__loopsParam.getValue()
-    const height = this.__heightParam.getValue()
     const caps = this.__capsParam.getValue()
-    const baseZAtZero = this.__baseZAtZeroParam.getValue()
 
     let numVertices = nbSides * nbLoops
-    let numTris = 0
-    const numQuads = nbSides
     if (caps) {
       numVertices += 2
-      numTris = nbSides * 2
     }
     this.setNumVertices(numVertices)
     if (caps) this.setFaceCounts([nbSides * 2, nbSides])
     else this.setFaceCounts([0, nbSides])
-
-    // ////////////////////////////
-    // Set Vertex Positions
-    // let vertex = 0;
-    // for (let i = 0; i < nbLoops; i++) {
-    //     let z = ((i / (nbLoops - 1)) * this.__height) - (height * 0.5);
-    //     for (let j = 0; j < nbSides; j++) {
-    //         let phi = (j / nbSides) * 2.0 * Math.PI;
-    //         this.getVertex(vertex).set(Math.sin(phi) * radius, Math.cos(phi) * radius, z);
-    //         vertex++;
-    //     }
-    // }
-    // if (caps) {
-    //     // Top caps
-    //     this.getVertex(numVertices - 1).set(0.0, 0.0, height * -0.5);
-    //     this.getVertex(numVertices - 2).set(0.0, 0.0, height * 0.5);
-    // }
 
     // ////////////////////////////
     // Build the topology

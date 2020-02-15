@@ -53,18 +53,18 @@ class HDRImageMixer extends BaseImage {
   setURLs(urls) {
     const async = new Async()
     async.incAsyncCount(urls.length)
-    async.ready.connect(() => {
+    async.addEventListener('ready', () => {
       if (!this.__loaded) {
         this.__loaded = true
         this.loaded.emit()
       } else {
-        this.updated.emit()
+        this.emitEvent('updated', {})
       }
     }, this)
     for (const fileUrl of urls) {
       const subImage = new FileImage(undefined, fileUrl)
-      subImage.loaded.connect(async.decAsyncCount)
-      subImage.updated.connect(this.updated.emit)
+      subImage.addEventListener('loaded', async.decAsyncCount)
+      subImage.addEventListener('updated', this.updated.emit)
       this.__subImages.push(subImage)
       this.__weights.push(1.0)
     }

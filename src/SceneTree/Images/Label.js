@@ -110,7 +110,7 @@ class Label extends DataImage {
     //     const text = textParam.getValue();
     //     labelManager.setLabelTextToLibrary(library, name, text);
     // }
-    // textParam.valueChanged.connect(setLabelText);
+    // textParam.addEventListener('valueChanged', setLabelText);
 
     this.addParameter(new ColorParameter('fontColor', new Color(0, 0, 0)))
     // this.addParameter(new StringParameter('textAlign', 'left'))
@@ -133,7 +133,7 @@ class Label extends DataImage {
     const reload = () => {
       this.loadLabelData()
     }
-    this.nameChanged.connect(reload)
+    this.addEventListener('nameChanged', reload)
 
     if (library) libraryParam.setValue(library)
 
@@ -146,11 +146,11 @@ class Label extends DataImage {
   /**
    * This method can be overrridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (!this.__requestedRerender) {
       this.__requestedRerender = true
       this.loadLabelData()
@@ -168,7 +168,7 @@ class Label extends DataImage {
         this.__loaded = true
         this.loaded.emit()
       } else {
-        this.updated.emit()
+        this.emitEvent('updated', {})
       }
     }
 
@@ -198,7 +198,7 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.labelLibraryLoaded.connect(loadedLibrary => {
+          labelManager.addEventListener('labelLibraryLoaded', loadedLibrary => {
             if (loadedLibrary == library) getLibraryText()
           })
         } else {

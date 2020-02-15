@@ -22,8 +22,8 @@ class GeomItem extends BaseGeomItem {
       new GeometryParameter('geometry'),
       0
     )
-    this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this))
-    this.__geomParam.boundingBoxDirtied.connect(
+    this.__geomParam.addEventListener('valueChanged', this._setBoundingBoxDirty.bind(this))
+    this.__geomParam.addEventListener('boundingBoxDirtied', 
       this._setBoundingBoxDirty.bind(this)
     )
     this.__materialParam = this.insertParameter(
@@ -39,10 +39,10 @@ class GeomItem extends BaseGeomItem {
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
     this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
-    this.__globalXfoParam.valueChanged.connect(mode => {
+    this.__globalXfoParam.addEventListener('valueChanged', () => {
       this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
-    this.__geomOffsetXfoParam.valueChanged.connect(mode => {
+    this.__geomOffsetXfoParam.addEventListener('valueChanged', () => {
       this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
 
@@ -244,7 +244,7 @@ class GeomItem extends BaseGeomItem {
           geomLibrary.rangeLoaded.disconnectId(connid)
         }
       }
-      const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded)
+      const connid = geomLibrary.addEventListener('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);

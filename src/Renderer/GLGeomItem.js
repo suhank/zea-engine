@@ -34,10 +34,6 @@ class GLGeomItem {
     // }
 
     this.lightmapName = geomItem.getLightmapName()
-    this.updated = new Signal()
-    this.destructing = new Signal()
-    this.visibilityChanged = new Signal()
-    this.highlightChanged = geomItem.highlightChanged
 
     this.updateVisibility = this.updateVisibility.bind(this)
     this.updateVisibility = this.updateVisibility.bind(this)
@@ -49,22 +45,26 @@ class GLGeomItem {
       }
     } else {
       this.updateXfo = geomXfo => {
-        this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
+        this.emitEvent('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
       }
     }
 
-    this.geomItem.geomXfoChanged.connect(this.updateXfo)
-    this.geomItem.visibilityChanged.connect(this.updateVisibility)
-    this.geomItem.cutAwayChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
-    })
-    this.geomItem.destructing.connect(this.destroy)
-    this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED)
-    })
-    this.glGeom.updated.connect(() => {
-      this.updated.emit(GLGeomItemChangeType.GEOM_CHANGED)
-    })
+    const cutAwayChanged = () => {
+      this.emitEvent('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+    }
+    const highlightChanged = () => {
+      this.emitEvent('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
+    }
+    const glGeomUpdated = () => {
+      this.emitEvent('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
+    }
+
+    this.geomItem.addEventListener('geomXfoChanged', this.updateXfo)
+    this.geomItem.addEventListener('visibilityChanged', this.updateVisibility)
+    this.geomItem.addEventListener('cutAwayChanged', cutAwayChanged)
+    this.geomItem.addEventListener('destructing', this.destroy)
+    this.highlightChangedId = this.geomItem.addEventListener('highlightChanged', highlightChanged)
+    this.glGeom.addEventListener('updated', glGeomUpdated)
 
     const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset()
     const materialId = 0
@@ -125,8 +125,8 @@ class GLGeomItem {
     const visible = geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
-      this.visibilityChanged.emit(visible)
-      this.updated.emit()
+      this.emitEvent('visibilityChanged', { visible })
+      this.emitEvent('updated', {})
     }
   }
 
@@ -214,11 +214,16 @@ class GLGeomItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
-    this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
-    this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
-    this.geomItem.destructing.disconnect(this.destroy)
-    this.destructing.emit(this)
+    // this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
+    // this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
+    // this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
+
+    this.geomItem.removeEventListener('visibilityChanged', this.updateVisibility)
+    this.geomItem.removeEventListener('geomXfoChanged', this.updateXfo)
+    this.geomItem.removeEventListenerById('highlightChanged', this.highlightChangedId)
+
+    // this.geomItem.destructing.disconnect(this.destroy)
+    // this.emitEvent('destructing', {})
   }
 }
 

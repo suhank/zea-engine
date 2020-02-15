@@ -315,7 +315,7 @@ class GLProceduralSky extends GLProbe {
    */
   set backgroundFocus(val) {
     this.__backgroundFocus = val
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**
@@ -331,7 +331,7 @@ class GLProceduralSky extends GLProbe {
    */
   set longitude(val) {
     this.__longitude = val
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**
@@ -347,7 +347,7 @@ class GLProceduralSky extends GLProbe {
    */
   set latitude(val) {
     this.__latitude = val
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**
@@ -372,7 +372,7 @@ class GLProceduralSky extends GLProbe {
     this.__unixTime = (1488517200 + minutes * 60 + hour * 3600) | 0
     console.log(this.__unixTime)
     // this.renderSky();
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**

@@ -69,7 +69,7 @@ class SetCameraPositionAndTarget extends StateAction {
           settingCameraDirection = false
         }
       }
-      camera.globalXfoChanged.connect(onCameraChanged)
+      camera.addEventListener('globalXfoChanged', onCameraChanged)
       const timerCallback = () => {
         step++
         if (step < steps) {

@@ -56,7 +56,7 @@ class GLStandardGeomsPass extends GLPass {
                   // and then geom assigned? (maybe inmpossible with our tools)
                   // e.g. a big asset loaded, added to the tree, then removed again
                   // The geoms will get assigned after the tree is removed.
-                  treeItem.geomAssigned.connect(() => {
+                  treeItem.addEventListener('geomAssigned', () => {
                     this.addGeomItem(geomItem)
                   })
                 } else {
@@ -156,12 +156,12 @@ class GLStandardGeomsPass extends GLPass {
     }
     const glshader = this.__renderer.getOrCreateShader(material.getShaderName())
     glmaterial = new GLMaterial(this.__gl, material, glshader)
-    glmaterial.updated.connect(() => {
+    const updatedId = glmaterial.addEventListener('updated', event => {
       this.__renderer.requestRedraw()
     })
-    material.destructing.connect(() => {
-      material.deleteMetadata('glmaterial')
-    })
+    // material.addEventListener('destructing', () => {
+    //   material.deleteMetadata('glmaterial')
+    // })
     material.setMetadata('glmaterial', glmaterial)
 
     return glmaterial
@@ -220,8 +220,8 @@ class GLStandardGeomsPass extends GLPass {
     const glgeomItem = new GLGeomItem(gl, geomItem, glgeom, index, flags)
     geomItem.setMetadata('glgeomItem', glgeomItem)
 
-    const updatedId = glgeomItem.updated.connect(type => {
-      switch (type) {
+    const updatedId = glgeomItem.addEventListener('updated', event => {
+      switch (event.type) {
         case GLGeomItemChangeType.GEOMITEM_CHANGED:
           if (this.__dirtyItemIndices.indexOf(index) != -1) return
           this.__dirtyItemIndices.push(index)

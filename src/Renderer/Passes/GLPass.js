@@ -26,19 +26,18 @@ class GLPass extends ParameterOwner {
     const enabledParam = this.addParameter(
       new BooleanParameter('Enabled', true)
     )
-    enabledParam.valueChanged.connect(
+    enabledParam.addEventListener('valueChanged', 
       mode => (this.enabled = enabledParam.getValue())
     )
   }
 
   /**
    * The __parameterValueChanged method.
-   * @param {any} param - The param value.
-   * @param {number} mode - The mode value.
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
-    super.__parameterValueChanged(param, mode)
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (this.__renderer) this.__renderer.requestRedraw()
   }
 

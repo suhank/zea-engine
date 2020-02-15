@@ -21,7 +21,7 @@ class StructParameter extends Parameter {
    */
   _addMember(parameter) {
     this.__value[parameter.getName()] = parameter.getValue()
-    parameter.valueChanged.connect(() => {
+    parameter.addEventListener('valueChanged', () => {
       this.__value[parameter.getName()] = parameter.getValue()
     })
     this.__members.push(parameter)

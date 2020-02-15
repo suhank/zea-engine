@@ -96,10 +96,10 @@ class GLMaterialGeomItemSets {
       this.geomItemSets.push(geomItemSet)
 
       this.drawCount += geomItemSet.drawCount
-      geomItemSet.drawCountChanged.connect(this.__drawCountChanged)
-      geomItemSet.destructing.connect(() => {
-        this.removeGeomItemSet(geomItemSet)
-      })
+      geomItemSet.addEventListener('drawCountChanged', this.__drawCountChanged)
+      // geomItemSet.addEventListener('destructing', () => {
+      //   this.removeGeomItemSet(geomItemSet)
+      // })
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
     }
@@ -112,7 +112,8 @@ class GLMaterialGeomItemSets {
   removeGeomItemSet(geomItemSet) {
     const index = this.geomItemSets.indexOf(geomItemSet)
     this.geomItemSets.splice(index, 1)
-    geomItemSet.drawCountChanged.disconnect(this.__drawCountChanged)
+    // geomItemSet.drawCountChanged.disconnect(this.__drawCountChanged)
+    geomItemSet.removeEventListener('drawCountChanged', this.__drawCountChanged)
   }
 
   /**

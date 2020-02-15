@@ -1,16 +1,16 @@
 import { Color } from '../Math/Color.js'
-import { Signal } from '../Utilities/Signal.js'
+import { EventEmitter } from '../Utilities/Signal.js'
 import { processTextureParams } from './processTextureParams.js'
 
 /** Class representing a GL render target. */
-class GLRenderTarget {
+class GLRenderTarget extends EventEmitter {
   /**
    * Create a GL render target.
    * @param {any} gl - The gl value.
    * @param {any} params - The params value.
    */
   constructor(gl, params) {
-    this.resized = new Signal()
+    super()
     this.updated = new Signal()
     this.__gl = gl
     this.textureTargets = []
@@ -331,7 +331,7 @@ class GLRenderTarget {
       this.__gltex = gltex;
       this.__updateGLTexParams();
       if (emit) {
-          this.resized.emit(width, height);
+        this.emitEvent('resized' { width, height });
       }
     }
 

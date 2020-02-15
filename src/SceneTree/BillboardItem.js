@@ -41,7 +41,7 @@ class BillboardItem extends TreeItem {
     linesMaterial
       .getParameter('Opacity')
       .setValue(1.0, ValueSetMode.OPERATOR_SETVALUE)
-    endParam.elementAdded.connect((elem, index) => {
+    endParam.addEventListener('elementAdded', (elem, index) => {
       const lineGeom = new Lines()
       lineGeom.setNumVertices(2)
       lineGeom.setNumSegments(1)
@@ -56,7 +56,7 @@ class BillboardItem extends TreeItem {
       updateLinePoints(index)
       this.addChild(line, false)
     })
-    endParam.elementRemoved.connect(() => {
+    endParam.addEventListener('elementRemoved', () => {
       // this.removeChildByHandle(lines[index]);
       // lines.splice(9, 1)
     })
@@ -75,9 +75,9 @@ class BillboardItem extends TreeItem {
       }
     }
 
-    startParam.valueChanged.connect(updateAllLinePoints)
-    endParam.valueChanged.connect(updateAllLinePoints)
-    this.__globalXfoParam.valueChanged.connect(updateAllLinePoints)
+    startParam.addEventListener('valueChanged', updateAllLinePoints)
+    endParam.addEventListener('valueChanged', updateAllLinePoints)
+    this.__globalXfoParam.addEventListener('valueChanged', updateAllLinePoints)
   }
 
   // ////////////////////////////////////////

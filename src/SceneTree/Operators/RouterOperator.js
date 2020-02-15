@@ -19,12 +19,12 @@ class RouterOperator extends Operator {
     this.__routesParam = this.addParameter(
       new ListParameter('Routes', NumberParameter)
     )
-    this.__routesParam.elementAdded.connect(value => {
-      value.setValue(1.0)
+    this.__routesParam.addEventListener('elementAdded', event => {
+      event.value.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })
-    this.__routesParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(this.getOutputByIndex(index))
+    this.__routesParam.addEventListener('elementRemoved', event => {
+      this.removeOutput(this.getOutputByIndex(event.index))
     })
   }
 

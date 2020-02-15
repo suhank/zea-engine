@@ -1,5 +1,5 @@
 import { Signal } from '../Utilities'
-import { TreeItem, sgFactory } from '../SceneTree'
+import { TreeItem, sgFactory, ParameterOwner, EventEmitter } from '../SceneTree'
 import { SystemDesc } from '../BrowserDetection.js'
 import { onResize } from '../external/onResize.js'
 import { create3DContext } from './GLContext.js'
@@ -17,13 +17,14 @@ let mouseLeft = false
 const registeredPasses = {}
 
 /** Class representing a GL base renderer. */
-class GLBaseRenderer {
+class GLBaseRenderer extends EventEmitter {
   /**
    * Create a GL base renderer.
    * @param {any} canvasDiv - The canvasDiv value.
    * @param {any} options - The options value.
    */
   constructor(canvasDiv, options = {}) {
+    super()
     if (!SystemDesc.gpuDesc) {
       console.warn('Unable to create renderer')
       return
@@ -52,17 +53,7 @@ class GLBaseRenderer {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.resized = new Signal()
     this.keyPressed = new Signal()
-    this.sceneSet = new Signal(true)
-    this.vrViewportSetup = new Signal(true)
-    this.sessionClientSetup = new Signal(true)
-
-    // Signals to abstract the user view.
-    // i.e. when a user switches to VR mode, the signals
-    // simply emit the new VR data.
-    this.viewChanged = new Signal()
-    this.redrawOccured = new Signal()
 
     this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {})
     this.bindEventHandlers()
@@ -95,7 +86,7 @@ class GLBaseRenderer {
             // this.__gl.setCompatibleXRDevice(device);
             this.__gl.makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
-              this.vrViewportSetup.emit(this.__xrViewport)
+              this.emitEvent('xrViewportSetup', { selected: this.__selected })
               resolve(this.__xrViewport)
             })
           }
@@ -178,15 +169,19 @@ class GLBaseRenderer {
    */
   addViewport(name) {
     const vp = new GLViewport(this, name, this.getWidth(), this.getHeight())
-    vp.updated.connect(() => {
-      this.requestRedraw()
-    })
-
+    
     vp.createGeomDataFbo(this.__floatGeomBuffer)
 
-    vp.viewChanged.connect(data => {
-      if (!this.__xrViewportPresenting) this.viewChanged.emit(data)
-    })
+    const updated = () => {
+      this.requestRedraw()
+    }
+    const viewChanged = data => {
+      if (!this.__xrViewportPresenting) {
+        this.emitEvent('viewChanged', data)
+      }
+    }
+    vp.addEventListener('updated', updated)
+    vp.addEventListener('viewChanged', viewChanged)
 
     this.__viewports.push(vp)
     return vp
@@ -323,7 +318,7 @@ class GLBaseRenderer {
     if (this.__gizmoContext)
       this.__gizmoContext.setSelectionManager(scene.getSelectionManager())
 
-    this.sceneSet.emit(this.__scene)
+    this.emitEvent('sceneSet', { scene: this.__scene })
   }
 
   /**
@@ -353,8 +348,8 @@ class GLBaseRenderer {
       if (childItem) this.addTreeItem(childItem)
     }
 
-    treeItem.childAdded.connect(this.addTreeItem)
-    treeItem.childRemoved.connect(this.removeTreeItem)
+    treeItem.addEventListener('childAdded', this.addTreeItem)
+    treeItem.addEventListener('childRemoved', this.removeTreeItem)
 
     this.renderGeomDataFbos()
   }
@@ -440,7 +435,10 @@ class GLBaseRenderer {
 
       this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
 
-      this.resized.emit(this.__glcanvas.width, this.__glcanvas.height)
+      this.emitEvent('resized', {
+        width: this.__glcanvas.width,
+        height: this.__glcanvas.height
+      })
       this.requestRedraw()
     }
   }
@@ -810,7 +808,7 @@ class GLBaseRenderer {
     }
     index += this.__passes[passtype].length
 
-    pass.updated.connect(this.requestRedraw.bind(this))
+    pass.addEventListener('updated', this.requestRedraw)
     pass.init(this, index)
     this.__passes[passtype].push(pass)
 
@@ -902,8 +900,13 @@ class GLBaseRenderer {
   __setupXRViewport() {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
+    
+    const emitViewChanged = event => {
+      this.emitEvent('viewChanged', event)
+    }
 
-    xrvp.presentingChanged.connect(state => {
+    xrvp.addEventListener('presentingChanged', event => {
+      const state = event.state
       this.__xrViewportPresenting = state
       if (state) {
         // Let the passes know that VR is starting.
@@ -915,9 +918,10 @@ class GLBaseRenderer {
           }
         }
 
-        xrvp.viewChanged.connect(this.viewChanged.emit)
+        xrvp.addEventListener('viewChanged', emitViewChanged)
       } else {
-        xrvp.viewChanged.disconnect(this.viewChanged.emit)
+        xrvp.removeEventListener('viewChanged', emitViewChanged)
+        this.emitEvent('updated', {})
 
         for (const key in this.__passes) {
           const passSet = this.__passes[key]
@@ -925,13 +929,13 @@ class GLBaseRenderer {
             pass.stopPresenting()
           }
         }
-
-        this.viewChanged.emit({
+        const event = {
           interfaceType: 'CameraAndPointer',
           viewXfo: this.getViewport()
             .getCamera()
             .getGlobalXfo(),
-        })
+        }
+        this.emitEvent('viewChanged', event)
 
         this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
         this.requestRedraw()

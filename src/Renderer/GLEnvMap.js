@@ -40,22 +40,20 @@ class GLEnvMap extends GLProbe {
       gl.__quadIndexBuffer
     )
 
-    // srcGLTex.updated.connect(() => {
-    //     this.convolveProbe(srcGLTex);
-    // });
     if (this.__envMap.isLoaded()) {
       this.convolveProbe(srcGLTex)
     } else {
-      this.__envMap.loaded.connect(() => {
+      const loaded = () => {
         // console.log(this.__envMap.getName() + " loaded");
         this.convolveProbe(srcGLTex)
-        this.loaded.emit()
-      })
+        this.emitEvent('loaded', {})
+      }
+      this.__envMap.addEventListener('loaded', loaded)
     }
-    srcGLTex.destructing.connect(() => {
-      console.log(this.__envMap.getName() + ' destructing')
-      this.destroy()
-    })
+    // srcGLTex.addEventListener('destructing', () => {
+    //   console.log(this.__envMap.getName() + ' destructing')
+    //   this.destroy()
+    // })
   }
 
   /**

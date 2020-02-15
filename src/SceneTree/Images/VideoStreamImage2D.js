@@ -88,7 +88,7 @@ class VideoStreamImage2D extends BaseImage {
             // If so, then we emit and update, which will cause a redraw.
             const currentFrame = Math.floor(domElement.currentTime * frameRate)
             if (prevFrame != currentFrame) {
-              this.updated.emit()
+              this.emitEvent('updated', {})
               prevFrame = currentFrame
             }
             setTimeout(timerCallback, 20) // Sample at 50fps.
@@ -131,7 +131,7 @@ class VideoStreamImage2D extends BaseImage {
    */
   start() {
     this.__intervalId = setInterval(() => {
-      this.updated.emit()
+      this.emitEvent('updated', {})
     }, 20) // Sample at 50fps.
   }
 

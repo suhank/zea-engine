@@ -52,15 +52,14 @@ class BaseItem extends ParameterOwner {
 
   /**
    * The __parameterValueChanged method.
-   * @param {any} param - The param value.
-   * @param {number} mode - The mode value.
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
-    super.__parameterValueChanged(param, mode)
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (
-      mode == ValueSetMode.USER_SETVALUE ||
-      mode == ValueSetMode.REMOTEUSER_SETVALUE
+      event.mode == ValueSetMode.USER_SETVALUE ||
+      event.mode == ValueSetMode.REMOTEUSER_SETVALUE
     ) {
       this.setFlag(ItemFlags.USER_EDITED)
     }
@@ -88,6 +87,7 @@ class BaseItem extends ParameterOwner {
       this.__name = name
       this.__updatePath()
       this.nameChanged.emit(name, oldName, mode)
+      this.emitEvent('nameChanged', { newName: name, oldName, mode })
     }
   }
 
@@ -251,6 +251,7 @@ class BaseItem extends ParameterOwner {
   setSelected(sel) {
     this.__selected = sel
     this.selectedChanged.emit(this.__selected)
+    this.emitEvent('selectedChanged', { selected: this.__selected })
   }
 
   // ////////////////////////////////////////

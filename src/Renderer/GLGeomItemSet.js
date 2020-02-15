@@ -26,7 +26,7 @@ class GLGeomItemSet {
     // this.inverted = false;
     this.lightmapName = undefined
 
-    this.drawCountChanged = new Signal()
+    // this.drawCountChanged = new Signal()
     this.destructing = new Signal()
 
     this.visibleItems = []
@@ -84,7 +84,7 @@ class GLGeomItemSet {
     }
     if (glgeomItem.visible) {
       this.visibleItems.push(index)
-      this.drawCountChanged.emit(1)
+      this.emitEvent('drawCountChanged', { count: 1 })
     }
     if (glgeomItem.getGeomItem().isHighlighted()) {
       this.highlightedItems.push(index)
@@ -97,7 +97,7 @@ class GLGeomItemSet {
 
     const signalIds = {}
 
-    signalIds.sel = glgeomItem.highlightChanged.connect(() => {
+    const highlightChanged = () => {
       if (glgeomItem.getGeomItem().isHighlighted()) {
         // Note: highlightChanged is fired when the color changes
         // or another hilight is added over the top. We avoid
@@ -109,18 +109,26 @@ class GLGeomItemSet {
       }
       // console.log("highlightChanged:", glgeomItem.getGeomItem().getName(), glgeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
-    })
-
-    signalIds.vis = glgeomItem.visibilityChanged.connect(visible => {
+    }
+    signalIds.sel = glgeomItem.addEventListener(
+      'highlightChanged',
+      highlightChanged
+    )
+    const visibilityChanged = event => {
+      const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
-        this.drawCountChanged.emit(1)
+        this.emitEvent('drawCountChanged', { count: 1 })
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-        this.drawCountChanged.emit(-1)
+        this.emitEvent('drawCountChanged', { count: -1 })
       }
       this.drawIdsBufferDirty = true
-    })
+    }
+    signalIds.sel = glgeomItem.addEventListener(
+      'visibilityChanged',
+      visibilityChanged
+    )
 
     this.glgeomItems[index] = glgeomItem
     this.glgeomItemSignalIds[index] = signalIds
@@ -135,8 +143,10 @@ class GLGeomItemSet {
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem)
     const signalIds = this.glgeomItemSignalIds[index]
-    glgeomItem.highlightChanged.disconnectId(signalIds.sel)
-    glgeomItem.visibilityChanged.disconnectId(signalIds.vis)
+    // glgeomItem.highlightChanged.disconnectId(signalIds.sel)
+    // glgeomItem.visibilityChanged.disconnectId(signalIds.vis)
+    glgeomItem.removeEventListenerById('highlightChanged', signalIds.sel)
+    glgeomItem.removeEventListenerById('visibilityChanged', signalIds.vis)
 
     this.glgeomItems[index] = null
     this.glgeomItemSignalIds[index] = null
@@ -145,7 +155,7 @@ class GLGeomItemSet {
 
     if (glgeomItem.visible) {
       this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-      this.drawCountChanged.emit(-1)
+      this.emitEvent('drawCountChanged', { count: -1 })
     }
     const highlighted = glgeomItem.getGeomItem().isHighlighted()
     if (highlighted) {
@@ -364,7 +374,7 @@ class GLGeomItemSet {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.destructing.emit()
+    this.emitEvent('destructing', {})
   }
 }
 

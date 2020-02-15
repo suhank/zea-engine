@@ -220,11 +220,11 @@ class XfoOperatorOutput extends OperatorOutput {
       if (this._initialParamValue == undefined) throw new Error('WTF?')
     }
     init()
-    // param.valueChanged.connect(mode => {
+    // param.addEventListener('valueChanged', event => {
     //   if (
-    //     mode == ValueSetMode.USER_SETVALUE ||
-    //     mode == ValueSetMode.REMOTEUSER_SETVALUE ||
-    //     mode == ValueSetMode.DATA_LOAD
+    //     event.mode == ValueSetMode.USER_SETVALUE ||
+    //     event.mode == ValueSetMode.REMOTEUSER_SETVALUE ||
+    //     event.mode == ValueSetMode.DATA_LOAD
     //   ) {
     //     init()
     //   }

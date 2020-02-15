@@ -58,7 +58,7 @@ class VRController {
       this.__activeVolumeSize = 0.04
 
       vrviewport.loadHMDResources().then(asset => {
-        asset.loaded.connect(() => {
+        asset.addEventListener('loaded', () => {
           let srcControllerTree
           if (id == 0)
             srcControllerTree = asset.getChildByName('LeftController')

@@ -37,10 +37,16 @@ class Plane extends Mesh {
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
     this.__rebuild()
     
-    this.__sizeXParam.valueChanged.connect(this.__resize.bind(this))
-    this.__sizeYParam.valueChanged.connect(this.__resize.bind(this))
-    this.__detailXParam.valueChanged.connect(this.__rebuild.bind(this))
-    this.__detailYParam.valueChanged.connect(this.__rebuild.bind(this))
+    const resize = () => {
+      this.__resize()
+    }
+    const rebuild = () => {
+      this.__rebuild()
+    }
+    this.__sizeXParam.addEventListener('valueChanged', resize)
+    this.__sizeYParam.addEventListener('valueChanged', resize)
+    this.__detailXParam.addEventListener('valueChanged', rebuild)
+    this.__detailYParam.addEventListener('valueChanged', rebuild)
   }
 
   /**

@@ -40,25 +40,24 @@ class GLViewport extends GLBaseViewport {
     // Signals to abstract the user view.
     // I.e. when a user switches to VR mode, the signals
     // simply emit the new VR data.
-    this.viewChanged = new Signal()
 
-    this.capturedItem = null
-    this.keyDown = new Signal()
-    this.keyPressed = new Signal()
-    this.keyUp = new Signal()
-    this.mouseDown = new Signal()
-    this.mouseDoubleClicked = new Signal()
-    this.mouseMove = new Signal()
-    this.mouseUp = new Signal()
-    this.mouseLeave = new Signal()
-    this.mouseDownOnGeom = new Signal()
-    this.mouseWheel = new Signal()
+    // this.capturedItem = null
+    // this.keyDown = new Signal()
+    // this.keyPressed = new Signal()
+    // this.keyUp = new Signal()
+    // this.mouseDown = new Signal()
+    // this.mouseDoubleClicked = new Signal()
+    // this.mouseMove = new Signal()
+    // this.mouseUp = new Signal()
+    // this.mouseLeave = new Signal()
+    // this.mouseDownOnGeom = new Signal()
+    // this.mouseWheel = new Signal()
 
-    this.touchStart = new Signal()
-    this.touchMove = new Signal()
-    this.touchEnd = new Signal()
-    this.touchCancel = new Signal()
-    this.doubleTapped = new Signal()
+    // this.touchStart = new Signal()
+    // this.touchMove = new Signal()
+    // this.touchEnd = new Signal()
+    // this.touchCancel = new Signal()
+    // this.doubleTapped = new Signal()
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 
@@ -90,7 +89,7 @@ class GLViewport extends GLBaseViewport {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.__geomDataBufferFbo.resize()
     }
-    this.resized.emit()
+    this.emitEvent('resized', { width, height });
   }
 
   /**
@@ -114,19 +113,19 @@ class GLViewport extends GLBaseViewport {
       this.__viewMat = this.__cameraMat.inverse()
     }
     getCameraParams()
-    globalXfoParam.valueChanged.connect(() => {
+    globalXfoParam.addEventListener('valueChanged', () => {
       getCameraParams()
       this.invalidateGeomDataBuffer()
-      this.updated.emit()
-      this.viewChanged.emit({
+      this.emitEvent('updated', {})
+      this.emitEvent('viewChanged', {
         interfaceType: 'CameraAndPointer',
         viewXfo: this.__cameraXfo,
         focalDistance: this.__camera.getFocalDistance(),
       })
     })
-    this.__camera.projectionParamChanged.connect(() => {
+    this.__camera.addEventListener('projectionParamChanged', () => {
       this.__updateProjectionMatrix()
-      this.updated.emit()
+      this.emitEvent('updated', {})
     })
 
     this.__updateProjectionMatrix()

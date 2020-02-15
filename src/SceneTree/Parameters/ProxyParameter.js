@@ -24,7 +24,7 @@ class ProxyParameter extends Parameter {
    */
   setSourceParameter(sourceParameter) {
     this.sourceParameter = sourceParameter;
-    this.sourceParameter.valueChanged.connect(this.__proxyValueChanged.bind(this));
+    this.sourceParameter.addEventListener('valueChanged', this.__proxyValueChanged.bind(this));
   }
 
   __proxyValueChanged(mode) {

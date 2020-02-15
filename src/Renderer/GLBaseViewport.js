@@ -20,14 +20,13 @@ class GLBaseViewport extends ParameterOwner {
     )
     this.__fbo = undefined
     this.updated = new Signal()
-    this.resized = new Signal()
 
-    this.__renderer.sceneSet.connect(() => {
+    const sceneSet = () => {
       const settings = renderer.getScene().settings
       const bgColorParam = settings.getParameter('BackgroundColor')
       const processBGValue = mode => {
         const value = bgColorParam.getValue()
-        let gl = this.__renderer.gl
+        const gl = this.__renderer.gl
         if (value instanceof BaseImage) {
           if (value.type === 'FLOAT') {
             this.__backgroundTexture = value
@@ -46,11 +45,13 @@ class GLBaseViewport extends ParameterOwner {
         } else {
           console.warn('Invalid background:' + value)
         }
-        this.updated.emit()
+        this.emitEvent('updated', {})
       }
       processBGValue(bgColorParam.getValue())
-      bgColorParam.valueChanged.connect(processBGValue)
-    })
+      bgColorParam.addEventListener('valueChanged', processBGValue)
+    }
+
+    this.__renderer.addEventListener('sceneSet', sceneSet)
   }
 
   /**
@@ -155,7 +156,7 @@ class GLBaseViewport extends ParameterOwner {
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**
@@ -168,7 +169,7 @@ class GLBaseViewport extends ParameterOwner {
     this.__canvasHeight = canvasHeight
     this.__width = canvasWidth
     this.__height = canvasHeight
-    this.resized.emit()
+    this.emitEvent('resized', { width: this.__width, height: this.__height })
   }
 
   // ///////////////////////////

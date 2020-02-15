@@ -58,28 +58,28 @@ class GLLightmapMixer extends GLTexture2D {
       }
       this.__srcTextures[index] = gltexture
       async.incAsyncCount()
-      gltexture.ready.connect(async.decAsyncCount)
+      gltexture.addEventListener('ready', async.decAsyncCount)
     }
 
     for (let i = 0; i < this.__lightmapMixer.numSubImages(); i++) {
       genGLTex(i)
     }
 
-    this.__lightmapMixer.lightmapAdded.connect(index => {
-      genGLTex(index)
+    this.__lightmapMixer.addEventListener('lightmapAdded', event => {
+      genGLTex(event.index)
     })
 
-    async.ready.connect(this.__renderTgtImage.bind(this))
+    async.addEventListener('ready', this.__renderTgtImage.bind(this))
     async.decAsyncCount()
 
-    this.__lightmapMixer.lightmapResourceChanged.connect(() => {
+    this.__lightmapMixer.addEventListener('lightmapResourceChanged', () => {
       this.__renderTgtImage()
     })
-    this.__lightmapMixer.lightmapWeightChanged.connect(() => {
+    this.__lightmapMixer.addEventListener('lightmapWeightChanged', () => {
       this.__renderTgtImage()
     })
 
-    this.__lightmapMixer.destructing.connect(() => {
+    this.__lightmapMixer.addEventListener('destructing', () => {
       console.log(this.__lightmapMixer.getName() + ' destructing')
       this.destroy()
     })
@@ -126,7 +126,7 @@ class GLLightmapMixer extends GLTexture2D {
       this.__srcTextures = []
     }
 
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**

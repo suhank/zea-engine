@@ -175,20 +175,22 @@ class GLImageAtlas extends GLRenderTarget {
       const gltexture = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
         this.__async.incAsyncCount()
-        subImage.loaded.connect(() => {
+        subImage.addEventListener('loaded', () => {
           this.__async.decAsyncCount()
         })
       }
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
       gltexture.addRef(this)
-      subImage.updated.connect(() => {
+
+      const updated = () => {
         // TODO: Check to see if the new dimensions
         // do not match the previous. If not, then we 
         // need to relayout. wE could also avlid a complete
         // relaout by reremoving and re-adding this image.
         this.__layoutNeedsRegeneration = true
         this.renderAtlas()
-      })
+      }
+      subImage.addEventListener('updated', updated)
       this.__subImages.push(gltexture)
     } else {
       subImage.addRef(this) // subImage is a GLTexture2D
@@ -425,7 +427,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     this.unbind(renderstate)
     // this.__fbo.unbind()
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**

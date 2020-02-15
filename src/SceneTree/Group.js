@@ -49,13 +49,13 @@ class Group extends TreeItem {
       new ItemSetParameter('Items', item => item instanceof TreeItem),
       pid++
     )
-    this.__itemsParam.itemAdded.connect((item, index) => {
-      this.__bindItem(item, index)
+    this.__itemsParam.addEventListener('itemAdded', event => {
+      this.__bindItem(event.item, event.index)
     })
-    this.__itemsParam.itemRemoved.connect((item, index) => {
-      this.__unbindItem(item, index)
+    this.__itemsParam.addEventListener('itemRemoved', event => {
+      this.__unbindItem(event.item, event.index)
     })
-    this.__itemsParam.valueChanged.connect(() => {
+    this.__itemsParam.addEventListener('valueChanged', () => {
       this.calcGroupXfo()
       this._setBoundingBoxDirty()
     })
@@ -68,7 +68,7 @@ class Group extends TreeItem {
       ),
       pid++
     )
-    this.__initialXfoModeParam.valueChanged.connect(() => {
+    this.__initialXfoModeParam.addEventListener('valueChanged', () => {
       this.calcGroupXfo()
     })
 
@@ -76,7 +76,7 @@ class Group extends TreeItem {
       new BooleanParameter('Highlighted', false),
       pid++
     )
-    this.__highlightedParam.valueChanged.connect(() => {
+    this.__highlightedParam.addEventListener('valueChanged', () => {
       this.__updateHighlight()
     })
 
@@ -85,18 +85,18 @@ class Group extends TreeItem {
       new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)),
       pid++
     )
-    highlightColorParam.valueChanged.connect(this.__updateHighlight)
+    highlightColorParam.addEventListener('valueChanged', this.__updateHighlight)
     const highlightFillParam = this.insertParameter(
       new NumberParameter('HighlightFill', 0.0, [0, 1]),
       pid++
     )
-    highlightFillParam.valueChanged.connect(this.__updateHighlight)
+    highlightFillParam.addEventListener('valueChanged', this.__updateHighlight)
 
     this.__materialParam = this.insertParameter(
       new MaterialParameter('Material'),
       pid++
     )
-    this.__materialParam.valueChanged.connect(() => {
+    this.__materialParam.addEventListener('valueChanged', () => {
       this.__updateMaterial()
     })
 
@@ -104,22 +104,22 @@ class Group extends TreeItem {
     this.insertParameter(
       new BooleanParameter('CutAwayEnabled', false),
       pid++
-    ).valueChanged.connect(this.__updateCutaway)
+    ).addEventListener('valueChanged', this.__updateCutaway)
     this.insertParameter(
       new Vec3Parameter('CutVector', new Vec3(1, 0, 0)),
       pid++
-    ).valueChanged.connect(this.__updateCutaway)
+    ).addEventListener('valueChanged', this.__updateCutaway)
     this.insertParameter(
       new NumberParameter('CutDist', 0.0),
       pid++
-    ).valueChanged.connect(this.__updateCutaway)
+    ).addEventListener('valueChanged', this.__updateCutaway)
 
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
     // However we seem to get infinite callstacks.
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    this.__globalXfoParam.valueChanged.connect(mode => {
+    this.__globalXfoParam.addEventListener('valueChanged', mode => {
       if (!this.calculatingGroupXfo) this._propagateDirtyXfoToItems()
     })
   }
@@ -419,19 +419,19 @@ class Group extends TreeItem {
 
     const sigIds = {}
 
-    sigIds.mouseDownIndex = item.mouseDown.connect(event => {
+    sigIds.mouseDownIndex = item.addEventListener('mouseDown', event => {
       this.onMouseDown(event)
     })
-    sigIds.mouseUpIndex = item.mouseUp.connect(event => {
+    sigIds.mouseUpIndex = item.addEventListener('mouseUp', event => {
       this.onMouseUp(event)
     })
-    sigIds.mouseMoveIndex = item.mouseMove.connect(event => {
+    sigIds.mouseMoveIndex = item.addEventListener('mouseMove', event => {
       this.onMouseMove(event)
     })
-    sigIds.mouseEnterIndex = item.mouseEnter.connect(event => {
+    sigIds.mouseEnterIndex = item.addEventListener('mouseEnter', event => {
       this.onMouseEnter(event)
     })
-    sigIds.mouseLeaveIndex = item.mouseLeave.connect(event => {
+    sigIds.mouseLeaveIndex = item.addEventListener('mouseLeave', event => {
       this.onMouseLeave(event)
     })
 
@@ -498,7 +498,7 @@ class Group extends TreeItem {
       }
     }
 
-    sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(mode => {
+    sigIds.globalXfoChangedIndex = item.addEventListener('globalXfoChanged', mode => {
       // If the item's xfo changees, potentially through its own hierarchy
       // then we need to re-bind here.
       if (!this.propagatingXfoToItems) {
@@ -508,7 +508,7 @@ class Group extends TreeItem {
     })
     this.__initialXfos[index] = item.getGlobalXfo()
 
-    sigIds.bboxChangedIndex = item.boundingChanged.connect(
+    sigIds.bboxChangedIndex = item.addEventListener('boundingChanged', 
       this._setBoundingBoxDirty
     )
 

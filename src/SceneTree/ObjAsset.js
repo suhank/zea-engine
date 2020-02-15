@@ -42,7 +42,7 @@ class ObjAsset extends AssetItem {
     this.addParameter(new StringParameter('defaultShader', ''))
 
     this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
-    this.objfileParam.valueChanged.connect(() => {
+    this.objfileParam.addEventListener('valueChanged', () => {
       this.loaded.untoggle()
       this.__loadObj(
         () => {
@@ -165,7 +165,7 @@ class ObjAsset extends AssetItem {
 
     const async = new Async()
     async.incAsyncCount()
-    async.ready.connect(() => {
+    async.addEventListener('ready', () => {
       buildChildItems()
     })
 

@@ -46,7 +46,7 @@ class GLAudioItemsPass extends GLPass {
     this.__renderer.registerPass(
       treeItem => {
         if (treeItem instanceof AudioItem) {
-          treeItem.audioSourceCreated.connect(audioSource => {
+          treeItem.addEventListener('audioSourceCreated', audioSource => {
             this.addAudioSource(treeItem, audioSource, treeItem)
           })
           return true
@@ -61,7 +61,7 @@ class GLAudioItemsPass extends GLPass {
               baseColorParam.getImage()
             ) {
               const image = baseColorParam.getImage()
-              image.loaded.connect(() => {
+              image.addEventListener('loaded', () => {
                 if (image.getAudioSource) {
                   const audioSource = image.getAudioSource()
                   if (
@@ -102,7 +102,7 @@ class GLAudioItemsPass extends GLPass {
       // param.value = vlParam.getValue();
       param.setValueAtTime(vlParam.getValue(), 0)
       param.setValueAtTime(vlParam.getValue(), 5)
-      vlParam.valueChanged.connect(() => {
+      vlParam.addEventListener('valueChanged', () => {
         // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
         param.value = vlParam.getValue()
       })
@@ -114,23 +114,23 @@ class GLAudioItemsPass extends GLPass {
       connectVLParamToAudioNodeParam(gainParam, gainNode.gain)
     }
 
-    source.connect(gainNode)
+  ('gasource', inNode)
 
     const spatializeParam = parameterOwner.getParameter('SpatializeAudio')
     if (spatializeParam && spatializeParam.getValue() == false) {
-      source.connect(audioCtx.destination)
+    ('ausource', dioCtx.destination)
     } else {
       const panner = audioCtx.createPanner()
       panner.panningModel = 'HRTF'
       panner.distanceModel = 'inverse'
-      source.connect(panner)
-      panner.connect(audioCtx.destination)
+    ('pasource', nner)
+    ('aupanner', dioCtx.destination)
 
       const connectVLParamToAudioNode = paramName => {
         const vlParam = parameterOwner.getParameter(paramName)
         if (!vlParam) return
         panner[paramName] = vlParam.getValue()
-        vlParam.valueChanged.connect(() => {
+        vlParam.addEventListener('valueChanged', () => {
           panner[paramName] = vlParam.getValue()
         })
       }
@@ -181,7 +181,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.globalXfoChanged.connect(changeType => {
+      treeItem.addEventListener('globalXfoChanged', changeType => {
         updatePannerNodePosition()
       })
     }
@@ -193,7 +193,7 @@ class GLAudioItemsPass extends GLPass {
       parameterOwner,
     })
 
-    this.updated.emit()
+    this.emitEvent('updated', {})
   }
 
   /**

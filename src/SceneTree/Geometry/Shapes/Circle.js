@@ -28,9 +28,16 @@ class Circle extends Lines {
         1
       )
     )
-    this.__radius.valueChanged.connect(this.__resize.bind(this))
-    this.__angle.valueChanged.connect(this.__rebuild.bind(this))
-    this.__numSegments.valueChanged.connect(this.__rebuild.bind(this))
+    
+    const resize = () => {
+      this.__resize()
+    }
+    const rebuild = () => {
+      this.__rebuild()
+    }
+    this.__radius.addEventListener('valueChanged', resize)
+    this.__angle.addEventListener('valueChanged', rebuild)
+    this.__numSegments.addEventListener('valueChanged', rebuild)
     this.__rebuild()
   }
 

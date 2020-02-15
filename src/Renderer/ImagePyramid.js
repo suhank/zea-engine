@@ -84,19 +84,19 @@ class ImagePyramid extends GLImageAtlas {
     this.__srcGLTex = srcGLTex
     this.__fbos = []
 
-    srcGLTex.updated.connect(() => {
+    srcGLTex.addEventListener('updated', () => {
       this.renderAtlas(destroySrcImage)
     })
     if (this.__srcGLTex.isLoaded()) {
       this.generateAtlasLayout(minTileSize)
       this.renderAtlas(destroySrcImage)
     } else {
-      this.__srcGLTex.updated.connect(() => {
+      this.__srcGLTex.addEventListener('updated', () => {
         this.generateAtlasLayout(minTileSize)
         this.renderAtlas(destroySrcImage)
       })
     }
-    srcGLTex.destructing.connect(() => {
+    srcGLTex.addEventListener('destructing', () => {
       console.log(this.__srcGLTex.getName() + ' ImagePyramid destructing')
       this.destroy()
     })

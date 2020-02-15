@@ -17,16 +17,24 @@ class LinesCuboid extends Lines {
     super()
 
     this.__x = this.addParameter(new NumberParameter('x', x))
-    this.__x.valueChanged.connect(this.__resize.bind(this))
     this.__y = this.addParameter(new NumberParameter('y', y))
-    this.__y.valueChanged.connect(this.__resize.bind(this))
     this.__z = this.addParameter(new NumberParameter('z', z))
-    this.__z.valueChanged.connect(this.__resize.bind(this))
+    
     this.__baseZAtZero = this.addParameter(
       new NumberParameter('BaseZAtZero', baseZAtZero)
     )
-    this.__baseZAtZero.valueChanged.connect(this.__rebuild.bind(this))
     this.__rebuild()
+    
+    const resize = () => {
+      this.__resize()
+    }
+    const rebuild = () => {
+      this.__rebuild()
+    }
+    this.__x.addEventListener('valueChanged', resize)
+    this.__y.addEventListener('valueChanged', resize)
+    this.__z.addEventListener('valueChanged', resize)
+    this.__baseZAtZero.addEventListener('valueChanged', rebuild)
   }
 
   /**

@@ -1,8 +1,8 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
 /** Class representing a GL material. */
-class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
+class GLMaterial  extends EventEmitter {
   /**
    * Create a GL material.
    * @param {any} gl - The gl value.
@@ -14,13 +14,10 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
     this.__gl = gl
     this.__material = material
     this.__glshader = glshader
-
-    this.updated = new Signal()
-    this.destructing = new Signal()
-
-    this.__material.destructing.connect(() => {
-      this.destructing.emit(this) // Note: propagate this signal so the GLPass can remove the item.
-    })
+    
+    // this.__material.addEventListener('destructing', () => {
+    //   this.emitEvent('destructing') // Note: propagate this signal so the GLPass can remove the item.
+    // })
 
     this.__shaderBindings = {}
   }

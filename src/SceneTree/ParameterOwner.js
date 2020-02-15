@@ -1,5 +1,5 @@
-import { Signal } from '../Utilities'
-import { RefCounted } from './RefCounted.js'
+import { Signal, EventEmitter } from '../Utilities'
+// import { RefCounted } from './RefCounted.js'
 import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
@@ -8,9 +8,9 @@ import { sgFactory } from './SGFactory.js'
 import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
 /** Class representing a parameter owner in the scene tree.
- * @extends RefCounted
+ * @extends EventEmitter
  */
-class ParameterOwner extends RefCounted {
+class ParameterOwner extends EventEmitter {
   /**
    * Create a parameter owner.
    */
@@ -94,8 +94,8 @@ class ParameterOwner extends RefCounted {
    * @param {any} mode - The mode param.
    * @private
    */
-  __parameterValueChanged(param, mode) {
-    this.parameterValueChanged.emit(param, mode)
+  __parameterValueChanged(event) {
+    this.emitEvent('parameterValueChanged', event)
   }
 
   /**
@@ -109,13 +109,14 @@ class ParameterOwner extends RefCounted {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
+    this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>
+      this.__parameterValueChanged({ ...event, param })
     )
     param.addRef(this)
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
     this.parameterAdded.emit(name)
+    this.emitEvent('parameterAdded', { name })
     return param
   }
 
@@ -131,8 +132,8 @@ class ParameterOwner extends RefCounted {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
+    this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>
+      this.__parameterValueChanged({ ...event, param })
     )
     param.addRef(this)
     this.__params.splice(index, 0, param)
@@ -143,6 +144,7 @@ class ParameterOwner extends RefCounted {
     }
     this.__paramMapping = paramMapping
     this.parameterAdded.emit(name)
+    this.emitEvent('parameterAdded', { name })
     return param
   }
 
@@ -165,6 +167,7 @@ class ParameterOwner extends RefCounted {
     }
     this.__paramMapping = paramMapping
     this.parameterRemoved.emit(paramName)
+    this.emitEvent('parameterRemoved', { name })
   }
 
   /**
@@ -180,8 +183,8 @@ class ParameterOwner extends RefCounted {
     prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
 
     param.addRef(this)
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
+    this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>
+      this.__parameterValueChanged({ ...event, param })
     )
     this.__params[index] = param
     return param
@@ -318,13 +321,14 @@ class ParameterOwner extends RefCounted {
   /**
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
-   */
+   
   destroy() {
     for (const param of this.__params) {
       param.destroy()
     }
     super.destroy()
   }
+  */
 }
 
 export { ParameterOwner }

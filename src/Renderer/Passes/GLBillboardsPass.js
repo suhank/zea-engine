@@ -43,8 +43,8 @@ class GLBillboardsPass extends GLPass {
       'UNSIGNED_BYTE',
       [1, 1, 1, 0]
     )
-    this.__atlas.loaded.connect(this.updated.emit)
-    this.__atlas.updated.connect(this.updated.emit)
+    this.__atlas.addEventListener('loaded', this.updated.emit)
+    this.__atlas.addEventListener('updated', this.updated.emit)
 
     this.__renderer.registerPass(
       treeItem => {
@@ -81,7 +81,7 @@ class GLBillboardsPass extends GLPass {
     const imageParam = billboard.getParameter('image')
     const image = imageParam.getValue()
     if (!image) {
-      imageParam.valueChanged.connect(() => this.addBillboard(billboard))
+      imageParam.addEventListener('valueChanged', () => this.addBillboard(billboard))
       return
     }
     
@@ -92,7 +92,7 @@ class GLBillboardsPass extends GLPass {
     const imageIndex = this.__atlas.addSubImage(image)
     billboard.setMetadata('GLBillboardsPass_Index', index)
 
-    const visibilityChangedId = billboard.visibilityChanged.connect(() => {
+    const visibilityChangedId = billboard.addEventListener('visibilityChanged', () => {
       if (billboard.getVisible()) {
         this.__drawCount++
         // The billboard Xfo might have changed while it was 
@@ -103,17 +103,17 @@ class GLBillboardsPass extends GLPass {
       this.__reqUpdateIndexArray()
     })
 
-    const xfoChangedId = billboard.getParameter('GlobalXfo').valueChanged.connect(() => {
+    const xfoChangedId = billboard.getParameter('GlobalXfo').addEventListener('valueChanged', () => {
       if (billboard.getVisible()) {
         this.__updateBillboard(index)
-        this.updated.emit()
+        this.emitEvent('updated', {})
       }
     })
 
-    const alphaChangedId = billboard.getParameter('alpha').valueChanged.connect(() => {
+    const alphaChangedId = billboard.getParameter('alpha').addEventListener('valueChanged', () => {
       if (billboard.getVisible()) {
         this.__updateBillboard(index)
-        this.updated.emit()
+        this.emitEvent('updated', {})
       }
     })
 
@@ -221,7 +221,7 @@ class GLBillboardsPass extends GLPass {
       // since the request was made.
       if (!this.indexArrayUpdateNeeded) return
       this.__updateIndexArray()
-      this.updated.emit()
+      this.emitEvent('updated', {})
     }, 1)
   }
 
@@ -353,7 +353,7 @@ class GLBillboardsPass extends GLPass {
     if (this.__atlas.isLoaded()) {
       doIt()
     } else {
-      this.__atlas.loaded.connect(doIt)
+      this.__atlas.addEventListener('loaded', doIt)
     }
   }
 

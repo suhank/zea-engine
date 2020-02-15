@@ -107,7 +107,7 @@ class GearsOperator extends Operator {
     )
     const rpmParam = this.addParameter(new NumberParameter('RPM', 0.0)) // revolutions per minute
     this.__timeoutId
-    rpmParam.valueChanged.connect(() => {
+    rpmParam.addEventListener('valueChanged', () => {
       const rpm = rpmParam.getValue()
       if (Math.abs(rpm) > 0.0) {
         if (!this.__timeoutId) {
@@ -129,11 +129,11 @@ class GearsOperator extends Operator {
     this.__gearsParam = this.addParameter(
       new ListParameter('Gears', GearParameter)
     )
-    this.__gearsParam.elementAdded.connect((value, index) => {
-      this.addOutput(value.getOutput())
+    this.__gearsParam.addEventListener('elementAdded', event => {
+      this.addOutput(event.value.getOutput())
     })
-    this.__gearsParam.elementRemoved.connect((value, index) => {
-      this.removeOutput(index)
+    this.__gearsParam.addEventListener('elementRemoved', event => {
+      this.removeOutput(event.index)
     })
 
     this.__gears = []

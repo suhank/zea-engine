@@ -95,7 +95,7 @@ class TreeItem extends BaseItem {
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
-    this.__localXfoParam.valueChanged.connect(this._setGlobalXfoDirty)
+    this.__localXfoParam.addEventListener('valueChanged', this._setGlobalXfoDirty)
     
     // Note: if the user changes the global xfo, we compute the 
     // local xfo when it is needed (generally when GlobalXfo is pulled)
@@ -111,18 +111,18 @@ class TreeItem extends BaseItem {
           .multiply(globalXfo)
       else return globalXfo
     }
-    this.__globalXfoParam.valueChanged.connect(mode => {
+    this.__globalXfoParam.addEventListener('valueChanged', event => {
       // Dirtiness propagates from Local to Global, but not vice versa.
       // We need to move to using operators to invert values.
       // This system of having ops connected in all directions
       // is super difficult to debug.
-      if (mode != ValueSetMode.OPERATOR_DIRTIED) {
+      if (event.mode != ValueSetMode.OPERATOR_DIRTIED) {
         this.__localXfoParam.setDirty(cleanLocalXfo)
       }
       this._setBoundingBoxDirty()
     })
 
-    this.__visibleParam.valueChanged.connect(mode => {
+    this.__visibleParam.addEventListener('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.__updateVisiblity()
     })
@@ -232,7 +232,7 @@ class TreeItem extends BaseItem {
       // The effect of the invisible owner is added.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter--
 
-      this.__ownerItem.globalXfoChanged.connect(this._setGlobalXfoDirty)
+      this.__ownerItem.addEventListener('globalXfoChanged', this._setGlobalXfoDirty)
     }
 
     this.__updateVisiblity()
@@ -632,11 +632,11 @@ class TreeItem extends BaseItem {
       throw new Error('childItem is destroyed:' + childItem.getPath())
 
     const signalIds = {}
-    signalIds.nameChangedId = childItem.nameChanged.connect((name, oldName) => {
+    signalIds.nameChangedId = childItem.addEventListener('nameChanged', event => {
       // Update the acceleration structure.
-      const index = this.__childItemsMapping[oldName]
-      delete this.__childItemsMapping[oldName]
-      this.__childItemsMapping[name] = index
+      const index = this.__childItemsMapping[event.oldName]
+      delete this.__childItemsMapping[event.oldName]
+      this.__childItemsMapping[event.newName] = index
     })
 
     let newLocalXfo
@@ -646,10 +646,10 @@ class TreeItem extends BaseItem {
           .inverse()
           .multiply(childItem.getGlobalXfo())
       }
-      signalIds.bboxChangedId = childItem.boundingChanged.connect(() => {
+      signalIds.bboxChangedId = childItem.addEventListener('boundingChanged', () => {
         this._setBoundingBoxDirty()
       })
-      signalIds.visChangedId = childItem.visibilityChanged.connect(
+      signalIds.visChangedId = childItem.addEventListener('visibilityChanged', 
         this._setBoundingBoxDirty
       )
     }
@@ -1293,7 +1293,7 @@ class TreeItem extends BaseItem {
     src.getChildren().forEach(srcChildItem => {
       if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
-      //     src.childAdded.connect((childItem, index)=>{
+      //     src.addEventListener('childAdded', (childItem, index)=>{
       //         this.addChild(childItem.clone(flags), false);
       //     })
       // }

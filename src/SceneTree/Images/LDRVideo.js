@@ -59,13 +59,13 @@ class LDRVideo extends FileImage {
 
         const muteParam = this.getParameter('Mute')
         videoElem.muted = muteParam.getValue()
-        muteParam.valueChanged.connect(() => {
+        muteParam.addEventListener('valueChanged', () => {
           videoElem.muted = muteParam.getValue()
         })
 
         const loopParam = this.getParameter('Loop')
         videoElem.loop = loopParam.getValue()
-        loopParam.valueChanged.connect(() => {
+        loopParam.addEventListener('valueChanged', () => {
           videoElem.loop = loopParam.getValue()
         })
 
@@ -86,7 +86,7 @@ class LDRVideo extends FileImage {
           // If so, then we emit and update, which will cause a redraw.
           const currentFrame = Math.floor(videoElem.currentTime * frameRate)
           if (prevFrame != currentFrame) {
-            this.updated.emit()
+            this.emitEvent('updated', {})
             prevFrame = currentFrame
           }
           setTimeout(timerCallback, 20) // Sample at 50fps.
