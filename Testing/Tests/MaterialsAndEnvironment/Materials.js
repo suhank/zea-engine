@@ -12,8 +12,9 @@
 
     const envMap = new Z.EnvMap();
     // envMap.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/HDR_029_Sky_Cloudy_Ref.vlh")
-    envMap.getParameter('FilePath').setUrl("https://storage.googleapis.com/zea-playground-assets/zea-engine/HDR_041_Path_Ref.vlenv")
-    scene.setEnvMap(envMap);
+    envMap.getParameter('FilePath').setUrl("Assets/HDR_041_Path_Ref.vlenv")
+    scene.setEnvMap(envMap)
+    scene.getSettings().getParameter('Display EnvMap').setValue(true)
 
     const addMeshShape = (name, shape, pos, mat)=>{
         const geomItem = new Z.GeomItem(name, shape, mat);

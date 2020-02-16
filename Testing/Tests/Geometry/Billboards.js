@@ -13,7 +13,7 @@ testingHarness.registerTest('Geometry/Billboards', (domElement, resources)=> {
 
     {   
         const image = new Z.LDRImage();
-        image.getParameter('FilePath').setUrl("Tests/Geometry/Assets/SolorFloorPerformer.png")
+        image.getParameter('FilePath').setUrl("Assets/SolorFloorPerformer.png")
         image.getParameter('Invert').setValue(true);
         image.getParameter('AlphaFromLuminance').setValue(true);
         const billboard = new Z.BillboardItem('SolorFloorPerformer', image);
@@ -28,7 +28,7 @@ testingHarness.registerTest('Geometry/Billboards', (domElement, resources)=> {
     }
     {
         const image = new Z.LDRImage();
-        image.getParameter('FilePath').setUrl("Tests/Geometry/Assets/VerticalDoubleMaleTrapeze2.png")
+        image.getParameter('FilePath').setUrl("Assets/VerticalDoubleMaleTrapeze2.png")
         image.getParameter('Invert').setValue(true);
         image.getParameter('AlphaFromLuminance').setValue(true);
         const billboard = new Z.BillboardItem('VerticalDoubleMaleTrapeze', image);
@@ -43,7 +43,7 @@ testingHarness.registerTest('Geometry/Billboards', (domElement, resources)=> {
     }
     {
         const image = new Z.LDRImage();
-        image.getParameter('FilePath').setUrl("Tests/Geometry/Assets/VerticalDoubleMaleTrapeze2.png")
+        image.getParameter('FilePath').setUrl("Assets/VerticalDoubleMaleTrapeze2.png")
         image.getParameter('Invert').setValue(true);
         image.getParameter('AlphaFromLuminance').setValue(true);
         const billboard = new Z.BillboardItem('VerticalDoubleMaleTrapeze2', image);
