@@ -56,7 +56,7 @@ class OperatorOutput {
    */
   setParam(param) {
     this._param = param
-    this.paramSet.emit()
+    this.emitEvent('paramSet', {})
   }
 
   /**
@@ -231,7 +231,7 @@ class XfoOperatorOutput extends OperatorOutput {
     // })
 
     this._param = param
-    this.paramSet.emit(param)
+    this.emitEvent('paramSet', {})
   }
 }
 sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput)

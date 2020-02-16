@@ -241,7 +241,7 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.rangeLoaded.disconnectId(connid)
+          geomLibrary.removeEventListenerById('rangeLoaded', connid)
         }
       }
       const connid = geomLibrary.addEventListener('rangeLoaded', onGeomLoaded)

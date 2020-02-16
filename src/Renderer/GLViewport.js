@@ -89,7 +89,7 @@ class GLViewport extends GLBaseViewport {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.__geomDataBufferFbo.resize()
     }
-    this.emitEvent('resized', { width, height });
+    this.emitEvent('resized', { width, height })
   }
 
   /**
@@ -572,7 +572,7 @@ class GLViewport extends GLBaseViewport {
       event.intersectionData.geomItem.onMouseDown(event)
       if (!event.propagating || this.capturedItem) return
 
-      this.mouseDownOnGeom.emit(event)
+      this.emitEvent('mouseDownOnGeom', event)
       if (!event.propagating) return
     }
 
@@ -586,7 +586,7 @@ class GLViewport extends GLBaseViewport {
         if (!event.propagating) return
       }
 
-      this.mouseDoubleClicked.emit(event)
+      this.emitEvent('mouseDoubleClicked', event)
     } else {
       this.__prevDownTime = downTime
       if (this.__cameraManipulator) {
@@ -594,7 +594,7 @@ class GLViewport extends GLBaseViewport {
         if (!event.propagating) return
       }
 
-      this.mouseDown.emit(event)
+      this.emitEvent('mouseDown', event)
     }
 
     return false
@@ -630,7 +630,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onMouseMove(event)
       if (!event.propagating) return
     }
-    this.mouseMove.emit(event)
+    this.emitEvent('mouseMove', event)
   }
 
   /**
@@ -655,7 +655,7 @@ class GLViewport extends GLBaseViewport {
       if (!event.propagating) return
     }
 
-    this.mouseUp.emit(event)
+    this.emitEvent('mouseUp', event)
   }
 
   /**
@@ -664,7 +664,7 @@ class GLViewport extends GLBaseViewport {
    */
   onMouseLeave(event) {
     this.__prepareEvent(event)
-    this.mouseLeave.emit(event)
+    this.emitEvent('mouseLeave', event)
   }
 
   /**
@@ -677,7 +677,7 @@ class GLViewport extends GLBaseViewport {
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyPressed(key, event)) return
     }
-    this.keyPressed.emit(key, event)
+    this.emitEvent('keyPressed', event)
   }
 
   /**
@@ -690,7 +690,7 @@ class GLViewport extends GLBaseViewport {
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyDown(key, event)) return
     }
-    this.keyDown.emit(key, event)
+    this.emitEvent('keyDown', event)
   }
 
   /**
@@ -703,7 +703,7 @@ class GLViewport extends GLBaseViewport {
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyUp(key, event)) return
     }
-    this.keyUp.emit(key, event)
+    this.emitEvent('keyUp', event)
   }
 
   /**
@@ -721,7 +721,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onWheel(event)
       return
     }
-    this.mouseWheel.emit(event)
+    this.emitEvent('mouseWheel', event)
   }
 
   // Touch events
@@ -761,7 +761,7 @@ class GLViewport extends GLBaseViewport {
         if (!event.propagating) return
         if (this.capturedItem) return
 
-        this.mouseDownOnGeom.emit(event)
+        this.emitEvent('mouseDownOnGeom', event)
         if (!event.propagating) return
       }
 
@@ -774,7 +774,7 @@ class GLViewport extends GLBaseViewport {
           this.__cameraManipulator.onDoubleTap(event)
           if (!event.propagating) return
         }
-        this.doubleTapped.emit(event)
+        this.emitEvent('doubleTapped', event)
         return
       } else {
         this.__prevDownTime = downTime
@@ -785,7 +785,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchStart(event)
       return
     }
-    this.touchStart.emit(event)
+    this.emitEvent('touchStart', event)
   }
 
   /**
@@ -814,7 +814,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchMove(event)
       return
     }
-    this.touchMove.emit(event)
+    this.emitEvent('touchMove', event)
   }
 
   /**
@@ -833,7 +833,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchEnd(event)
       return
     }
-    this.touchEnd.emit(event)
+    this.emitEvent('touchEnd', event)
   }
 
   /**
@@ -852,7 +852,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchCancel(event)
       return
     }
-    this.touchCancel.emit(event)
+    this.emitEvent('touchCancel', event)
   }
 
   // //////////////////////////

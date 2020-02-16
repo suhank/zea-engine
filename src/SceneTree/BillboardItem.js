@@ -41,22 +41,22 @@ class BillboardItem extends TreeItem {
     linesMaterial
       .getParameter('Opacity')
       .setValue(1.0, ValueSetMode.OPERATOR_SETVALUE)
-    endParam.addEventListener('elementAdded', (elem, index) => {
+    endParam.addEventListener('elementAdded', event => {
       const lineGeom = new Lines()
       lineGeom.setNumVertices(2)
       lineGeom.setNumSegments(1)
       lineGeom.setSegment(0, 0, 1)
 
-      const line = new GeomItem('line' + index)
+      const line = new GeomItem('line' + event.index)
       // Note: because the lines are generated geoms.
       // we do not want them being persisted in the JSON structure.
       line.setGeometry(lineGeom, ValueSetMode.OPERATOR_SETVALUE)
       line.setMaterial(linesMaterial, ValueSetMode.OPERATOR_SETVALUE)
       lines[index] = line
-      updateLinePoints(index)
+      updateLinePoints(event.index)
       this.addChild(line, false)
     })
-    endParam.addEventListener('elementRemoved', () => {
+    endParam.addEventListener('elementRemoved', event => {
       // this.removeChildByHandle(lines[index]);
       // lines.splice(9, 1)
     })

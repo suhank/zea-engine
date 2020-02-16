@@ -140,7 +140,10 @@ class KinematicGroupParameter extends ListParameter {
         j.treeItems[i],
         treeItem => {
           this.__value.push(treeItem)
-          this.elementAdded.emit(treeItem, this.__value.length - 1)
+          this.emitEvent('elementAdded', {
+            elem: treeItem,
+            index: this.__value.length - 1,
+          })
         },
         () => {
           console.warn(

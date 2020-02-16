@@ -166,7 +166,7 @@ class Label extends DataImage {
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emitEvent('loaded', {})
       } else {
         this.emitEvent('updated', {})
       }
@@ -309,7 +309,7 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
-    this.labelRendered.emit({
+    this.emitEvent('labelRendered', {
       width: this.width,
       height: this.height,
       data: this.__data

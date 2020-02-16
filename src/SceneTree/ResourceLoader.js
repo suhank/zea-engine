@@ -1,5 +1,5 @@
 import { hashStr } from '../Math'
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities'
 // import { VLAAsset } from './VLAAsset.js'
 
 // const asyncLoading = true;
@@ -48,16 +48,12 @@ export function mergeDeep(target, ...sources) {
 }
 
 /** Class representing a resource loader. */
-class ResourceLoader {
+class ResourceLoader extends EventEmitter {
   /**
    * Create a resource loader.
    */
   constructor() {
-    this.loaded = new Signal()
-    this.progressIncremented = new Signal()
-    this.allResourcesLoaded = new Signal()
-    this.fileUpdated = new Signal()
-
+    super()
     this.__totalWork = 0
     this.__totalWorkByCategory = {}
     this.__doneWork = 0
@@ -257,7 +253,7 @@ class ResourceLoader {
       resources[file.id] = file
       this.__buildTree(resources)
     }
-    this.fileUpdated.emit(file.id)
+    this.emitEvent('fileUpdated', { fileId: file.id })
   }
 
   /**
@@ -435,7 +431,8 @@ class ResourceLoader {
    */
   addWork(resourceId, amount) {
     this.__totalWork += amount
-    this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100)
+    const percent = (this.__doneWork / this.__totalWork) * 100
+    this.emitEvent('progressIncremented', { percent })
   }
 
   /**
@@ -445,12 +442,14 @@ class ResourceLoader {
    */
   addWorkDone(resourceId, amount) {
     this.__doneWork += amount
-    this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100)
+
+    const percent = (this.__doneWork / this.__totalWork) * 100
+    this.emitEvent('progressIncremented', { percent })
     if (this.__doneWork > this.__totalWork) {
       throw new Error('Mismatch between work loaded and work done.')
     }
     if (this.__doneWork == this.__totalWork) {
-      this.allResourcesLoaded.emit()
+      this.emitEvent('allResourcesLoaded', {})
     }
   }
 
@@ -576,7 +575,7 @@ class ResourceLoader {
       }
       delete this.__callbacks[resourceId]
     }
-    this.loaded.emit(resourceId)
+    this.emitEvent('loaded', { resourceId })
     this.addWorkDone(resourceId, 1) // parsing done...
   }
 

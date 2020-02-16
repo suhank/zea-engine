@@ -6,6 +6,7 @@ import {
   NumberParameter,
   Vec3Parameter,
   ListParameter,
+  Parameter
 } from '../Parameters'
 import { sgFactory } from '../SGFactory.js'
 
@@ -130,7 +131,7 @@ class GearsOperator extends Operator {
       new ListParameter('Gears', GearParameter)
     )
     this.__gearsParam.addEventListener('elementAdded', event => {
-      this.addOutput(event.value.getOutput())
+      this.addOutput(event.elem.getOutput())
     })
     this.__gearsParam.addEventListener('elementRemoved', event => {
       this.removeOutput(event.index)
@@ -190,7 +191,7 @@ class GearsOperator extends Operator {
     super.reattach()
 
     // Restart the operator.
-    this.getParameter('RPM').valueChanged.emit()
+    this.getParameter('RPM').emitEvent('valueChanged', { mode: Parameter.ValueSetMode.USER_SETVALUE })
   }
 
   /**

@@ -35,7 +35,7 @@ class SimpleUniformBinding {
     this.__val = param.getValue()
     param.addEventListener('valueChanged', () => {
       this.__val = param.getValue()
-      glmaterial.updated.emit()
+      glmaterial.emitEvent('updated', {})
     })
   }
 
@@ -85,7 +85,7 @@ class ComplexUniformBinding {
     this.__vals = param.getValue().asArray()
     param.addEventListener('valueChanged', () => {
       this.__vals = param.getValue().asArray()
-      glmaterial.updated.emit()
+      glmaterial.emitEvent('updated', {})
     })
   }
 
@@ -132,7 +132,7 @@ class MatrixUniformBinding {
     this.__vals = param.getValue().asArray()
     param.addEventListener('valueChanged', () => {
       this.__val = param.getValue().asArray()
-      glmaterial.updated.emit()
+      glmaterial.emitEvent('updated', {})
     })
   }
 
@@ -192,12 +192,12 @@ class ColorUniformBinding {
       }
       this.texBinding = gltexture.preBind(this.__textureUnif, unifs)
       gltexture.addEventListener('updated', () => {
-        glmaterial.updated.emit()
+        glmaterial.emitEvent('updated', {})
       })
       this.gltexture = gltexture
       this.textureType = textureType
       this.bind = this.bindTexture
-      glmaterial.updated.emit()
+      glmaterial.emitEvent('updated', {})
     }
 
     let boundImage
@@ -223,11 +223,11 @@ class ColorUniformBinding {
       this.bind = this.bindValue
 
       if (imageLoadedId) {
-        boundImage.loaded.disconnectId(imageLoadedId)
+        boundImage.removeEventListenerById('loaded', imageLoadedId)
       }
       boundImage = null
       imageLoadedId = null
-      glmaterial.updated.emit()
+      glmaterial.emitEvent('updated', {})
     }
 
     const update = () => {
@@ -246,7 +246,7 @@ class ColorUniformBinding {
           disconnectImage()
         }
       }
-      glmaterial.updated.emit()
+      glmaterial.emitEvent('updated',)
     }
 
     /**

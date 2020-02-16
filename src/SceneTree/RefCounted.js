@@ -110,7 +110,7 @@ class RefCounted {
   destroy() {
     this.__destroyed = true
     // console.log(this.constructor.name + " destructing");
-    this.destructing.emit(this)
+    this.emitEvent('destructing', {})
   }
 }
 export { RefCounted }

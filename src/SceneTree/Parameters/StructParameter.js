@@ -26,7 +26,7 @@ class StructParameter extends Parameter {
     })
     this.__members.push(parameter)
     this.__flags |= ParamFlags.USER_EDITED
-    this.valueChanged.emit()
+    this.emitEvent('valueChanged', {})
     return parameter
   }
 

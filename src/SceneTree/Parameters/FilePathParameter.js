@@ -13,8 +13,6 @@ class FilePathParameter extends Parameter {
    */
   constructor(name, exts) {
     super(name, '', 'FilePath')
-
-    this.fileUpdated = new Signal()
     if (exts) this.setSupportedExts(exts)
   }
 
@@ -148,7 +146,7 @@ class FilePathParameter extends Parameter {
     ) {
       this.__flags |= ParamFlags.USER_EDITED
     }
-    this.valueChanged.emit(mode)
+    this.emitEvent('valueChanged', { mode })
   }
 
   /**
@@ -208,16 +206,16 @@ class FilePathParameter extends Parameter {
     this.__value = value
     this.__file = file
 
-    resourceLoader.addEventListener('fileUpdated', id => {
-      if (id == this.__value) {
+    resourceLoader.addEventListener('fileUpdated', event => {
+      if (event.fileId == this.__value) {
         this.__file = resourceLoader.getFile(this.__value)
-        this.fileUpdated.emit()
+        this.emitEvent('fileUpdated', event)
       }
     })
 
     if (mode == ValueSetMode.USER_SETVALUE)
       this.__flags |= ParamFlags.USER_EDITED
-    this.valueChanged.emit(mode)
+    this.emitEvent('valueChanged', { mode })
   }
   // ////////////////////////////////////////
   // Persistence

@@ -59,7 +59,7 @@ class LinesCuboid extends Lines {
     this.setSegment(10, 2, 6)
     this.setSegment(11, 3, 7)
     this.__resize(-1)
-    this.geomDataTopologyChanged.emit()
+    this.emitEvent('geomDataTopologyChanged', {})
   }
 
   /**
@@ -88,7 +88,7 @@ class LinesCuboid extends Lines {
     this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
-    if (mode != -1) this.geomDataChanged.emit()
+    if (mode != -1) this.emitEvent('geomDataChanged', {})
   }
 
   /**

@@ -157,7 +157,7 @@ class GLRenderer extends GLBaseRenderer {
     this.__glEnvMap.addEventListener('loaded', this.requestRedraw)
     this.__glEnvMap.addEventListener('updated', this.requestRedraw)
 
-    this.envMapAssigned.emit(this.__glEnvMap)
+    this.emitEvent('envMapAssigned', this.__glEnvMap)
   }
 
   /**

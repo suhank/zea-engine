@@ -13,8 +13,6 @@ class ListParameter extends Parameter {
   constructor(name, dataType) {
     super(name, [])
     this.__dataType = dataType
-    this.elementAdded = new Signal()
-    this.elementRemoved = new Signal()
   }
 
   /**
@@ -51,7 +49,7 @@ class ListParameter extends Parameter {
    */
   setElement(index, value) {
     this.__value[index] = value
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   /**
@@ -67,8 +65,8 @@ class ListParameter extends Parameter {
 
     this.__value.push(elem)
     this.__flags |= ParamFlags.USER_EDITED
-    this.elementAdded.emit(elem, this.__value.length - 1)
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emitEvent('elementAdded', { elem, index: this.__value.length - 1 })
+    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
     return elem
   }
 
@@ -80,8 +78,8 @@ class ListParameter extends Parameter {
     const elem = this.__value[index]
     this.__value.splice(index, 1)
     this.__flags |= ParamFlags.USER_EDITED
-    this.elementRemoved.emit(elem, index)
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emitEvent('elementRemoved', { elem, index })
+    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   /**
@@ -94,8 +92,8 @@ class ListParameter extends Parameter {
     this.__value.splice(index, 0, elem)
     // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED
-    this.elementAdded.emit(elem, index)
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE)
+    this.emitEvent('elementAdded', { elem, index })
+    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   // ////////////////////////////////////////
@@ -144,9 +142,9 @@ class ListParameter extends Parameter {
         elem.fromJSON(j.items[i], context)
       }
       this.__value.push(elem)
-      this.elementAdded.emit(elem, this.__value.length - 1)
+      this.emitEvent('elementAdded', { elem, index: this.__value.length - 1 })
     }
-    this.valueChanged.emit(ValueSetMode.DATA_LOAD)
+    this.emitEvent('valueChanged', { mode: ValueSetMode.DATA_LOAD })
   }
 
   // ////////////////////////////////////////

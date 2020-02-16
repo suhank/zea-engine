@@ -29,7 +29,7 @@ class VLAAsset extends AssetItem {
     this.geomsLoaded.setToggled(false)
     this.loaded.setToggled(false)
     this.__geomLibrary.addEventListener('loaded', () => {
-      this.geomsLoaded.emit()
+      this.emitEvent('geomsLoaded', {})
     })
 
     this.__datafileParam = this.addParameter(
@@ -47,13 +47,13 @@ class VLAAsset extends AssetItem {
       this.geomsLoaded.setToggled(false)
       this.loadDataFile(
         () => {
-          if (!this.loaded.isToggled()) this.loaded.emit()
+          if (!this.loaded.isToggled()) this.emitEvent('loaded', {})
         },
         () => {
           // if(!this.loaded.isToggled()){
-          //   this.loaded.emit();
+          //   this.emitEvent('loaded', {});
           // }
-          // this.geomsLoaded.emit()
+          // this.emitEvent('geomsLoaded', {})
         }
       )
     })

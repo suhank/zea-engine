@@ -13,7 +13,11 @@ class MaterialParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, value, 'Material')
-    this.valueParameterValueChanged = new Signal()
+    this.__valueParameterValueChanged = this.__valueParameterValueChanged.bind(this)
+  }
+
+  __valueParameterValueChanged(event) {
+    this.emitEvent('valueParameterValueChanged', event)
   }
 
   /**
@@ -25,8 +29,8 @@ class MaterialParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
-        this.__value.parameterValueChanged.disconnect(
-          this.valueParameterValueChanged.emit
+        this.__value.removeEventListener('parameterValueChanged',
+          this.__valueParameterValueChanged
         )
         this.__value.removeRef(this)
       }
@@ -34,7 +38,7 @@ class MaterialParameter extends Parameter {
       if (this.__value) {
         this.__value.addRef(this)
         this.__value.addEventListener('parameterValueChanged',
-          this.valueParameterValueChanged.emit
+          this.__valueParameterValueChanged
         )
       }
       if (
@@ -45,7 +49,7 @@ class MaterialParameter extends Parameter {
       }
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emitEvent('valueChanged', { mode })
     }
   }
 
@@ -109,8 +113,8 @@ class MaterialParameter extends Parameter {
     // E.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.parameterValueChanged.disconnect(
-        this.valueParameterValueChanged.emit
+      this.__value.removeEventListener('parameterValueChanged',
+        this.__valueParameterValueChanged
       )
       this.__value.removeRef(this)
     }

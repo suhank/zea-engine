@@ -46,10 +46,10 @@ class ObjAsset extends AssetItem {
       this.loaded.untoggle()
       this.__loadObj(
         () => {
-          this.loaded.emit()
+          this.emitEvent('loaded', {})
         },
         () => {
-          this.geomsLoaded.emit()
+          this.emitEvent('geomsLoaded', {})
         }
       )
     })

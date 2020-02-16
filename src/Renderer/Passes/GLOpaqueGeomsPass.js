@@ -112,7 +112,6 @@ class GLMaterialGeomItemSets {
   removeGeomItemSet(geomItemSet) {
     const index = this.geomItemSets.indexOf(geomItemSet)
     this.geomItemSets.splice(index, 1)
-    // geomItemSet.drawCountChanged.disconnect(this.__drawCountChanged)
     geomItemSet.removeEventListener('drawCountChanged', this.__drawCountChanged)
   }
 

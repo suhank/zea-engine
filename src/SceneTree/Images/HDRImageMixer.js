@@ -56,7 +56,7 @@ class HDRImageMixer extends BaseImage {
     async.addEventListener('ready', () => {
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emitEvent('loaded', {})
       } else {
         this.emitEvent('updated', {})
       }
@@ -64,7 +64,7 @@ class HDRImageMixer extends BaseImage {
     for (const fileUrl of urls) {
       const subImage = new FileImage(undefined, fileUrl)
       subImage.addEventListener('loaded', async.decAsyncCount)
-      subImage.addEventListener('updated', this.updated.emit)
+      subImage.addEventListener('updated', () => this.emitEvent('updated', {}))
       this.__subImages.push(subImage)
       this.__weights.push(1.0)
     }
@@ -86,7 +86,7 @@ class HDRImageMixer extends BaseImage {
   setWeights(weights) {
     this.__weights = weights
     if (this.__loaded) {
-      this.weightsChanged.emit(this.__weights)
+      this.emitEvent('weightsChanged', { weights: this.__weights })
     }
   }
 
@@ -98,7 +98,7 @@ class HDRImageMixer extends BaseImage {
   setWeight(index, weight) {
     this.__weights[index] = weight
     if (this.__loaded) {
-      this.weightsChanged.emit(this.__weights)
+      this.emitEvent('weightsChanged', { weights: this.__weights })
     }
   }
 

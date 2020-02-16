@@ -86,7 +86,6 @@ class BaseItem extends ParameterOwner {
       const oldName = this.__name
       this.__name = name
       this.__updatePath()
-      this.nameChanged.emit(name, oldName, mode)
       this.emitEvent('nameChanged', { newName: name, oldName, mode })
     }
   }
@@ -250,7 +249,6 @@ class BaseItem extends ParameterOwner {
    */
   setSelected(sel) {
     this.__selected = sel
-    this.selectedChanged.emit(this.__selected)
     this.emitEvent('selectedChanged', { selected: this.__selected })
   }
 

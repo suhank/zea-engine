@@ -43,8 +43,9 @@ class GLBillboardsPass extends GLPass {
       'UNSIGNED_BYTE',
       [1, 1, 1, 0]
     )
-    this.__atlas.addEventListener('loaded', this.updated.emit)
-    this.__atlas.addEventListener('updated', this.updated.emit)
+    const emitUpdated = event => this.emitEvent('updated', event)
+    this.__atlas.addEventListener('loaded', emitUpdated)
+    this.__atlas.addEventListener('updated', emitUpdated)
 
     this.__renderer.registerPass(
       treeItem => {
@@ -153,9 +154,9 @@ class GLBillboardsPass extends GLPass {
     const image = billboardData.billboard.getParameter('image').getValue();
     this.__atlas.removeSubImage(image)
 
-    billboard.visibilityChanged.disconnectId(billboardData.visibilityChangedId)
-    billboard.getParameter('GlobalXfo').valueChanged.disconnectId(billboardData.xfoChangedId)
-    billboard.getParameter('alpha').valueChanged.disconnectId(billboardData.alphaChangedId)
+    billboard.removeEventListenerById('visibilityChanged', billboardData.visibilityChangedId)
+    billboard.getParameter('GlobalXfo').removeEventListenerById('valueChanged', billboardData.xfoChangedId)
+    billboard.getParameter('alpha').removeEventListenerById('valueChanged', billboardData.alphaChangedId)
 
     this.__billboards[index] = null
     this.__freeIndices.push(index)

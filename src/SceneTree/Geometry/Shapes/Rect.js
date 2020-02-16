@@ -78,7 +78,7 @@ class Rect extends Lines {
     this.setSegment(2, 2, 3)
     this.setSegment(3, 3, 0)
     this.__resize(-1)
-    this.geomDataTopologyChanged.emit()
+    this.emitEvent('geomDataTopologyChanged', {})
   }
 
   /**
@@ -95,7 +95,7 @@ class Rect extends Lines {
     this.getVertex(2).set(0.5 * x, 0.5 * y, 0.0)
     this.getVertex(3).set(-0.5 * x, 0.5 * y, 0.0)
     this.setBoundingBoxDirty()
-    if (mode != -1) this.geomDataChanged.emit()
+    if (mode != -1) this.emitEvent('geomDataChanged', {})
   }
 
   /**

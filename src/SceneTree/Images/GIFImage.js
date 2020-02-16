@@ -234,7 +234,7 @@ class GIFImage extends FileImage {
       // Playback
       this.__loaded = true
 
-      this.loaded.emit()
+      this.emitEvent('loaded', {})
     })
   }
 }

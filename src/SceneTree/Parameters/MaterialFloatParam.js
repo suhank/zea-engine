@@ -29,7 +29,7 @@ class MaterialFloatParam extends NumberParameter {
   }
 
   // let imageUpdated = () => {
-  //     valueChanged.emit();
+  //     this.emitEvent('valueChanged', , { mode: Parameter.ValueSetMode.USER_SETVALUE });
   // }
 
   /**
@@ -40,9 +40,9 @@ class MaterialFloatParam extends NumberParameter {
   setImage(value, mode = 0) {
     const disconnectImage = () => {
       this.__image.removeRef(this)
-      // image.loaded.disconnect(imageUpdated);
-      // image.updated.disconnect(imageUpdated);
-      this.textureDisconnected.emit()
+      // image.removeEventListener('loaded', imageUpdated);
+      // image.removeEventListener('updated', imageUpdated);
+      this.emitEvent('textureDisconnected', {})
     }
     if (value) {
       if (this.__image != undefined && this.__image !== value) {
@@ -52,13 +52,13 @@ class MaterialFloatParam extends NumberParameter {
       this.__image.addRef(this)
       // image.addEventListener('loaded', imageUpdated);
       // image.addEventListener('updated', imageUpdated);
-      this.textureConnected.emit()
-      this.valueChanged.emit(mode)
+      this.emitEvent('textureConnected', {})
+      this.emitEvent('valueChanged', { mode })
     } else {
       if (this.__image != undefined) {
         disconnectImage()
         this.__image = undefined
-        this.textureDisconnected.emit()
+        this.emitEvent('textureDisconnected', {})
       }
     }
   }

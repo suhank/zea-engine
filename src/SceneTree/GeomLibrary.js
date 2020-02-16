@@ -139,7 +139,7 @@ class GeomLibrary {
     }
 
     if (numGeoms == 0) {
-      this.streamFileParsed.emit(1)
+      this.emitEvent('streamFileParsed', {})
       return numGeoms
     }
     if (this.__numGeoms == 0) {
@@ -257,7 +257,7 @@ class GeomLibrary {
       }
       this.geoms[offset + i] = proxy
     }
-    this.rangeLoaded.emit(storedRange)
+    this.emitEvent('rangeLoaded', { storedRange })
 
     const loaded = storedRange[1] - storedRange[0]
     // console.log("GeomLibrary Loaded:" + loaded);
@@ -268,7 +268,7 @@ class GeomLibrary {
     streamInfo.done += loaded
     // console.log(key + " Loaded:" + streamInfo.done + " of :" + streamInfo.total);
     if (streamInfo.done == streamInfo.total) {
-      this.streamFileParsed.emit(1)
+      this.emitEvent('streamFileParsed', { count: 1 })
     }
 
     // Once all the geoms from all the files are loaded and parsed
@@ -278,7 +278,7 @@ class GeomLibrary {
     if (this.__loaded == this.__numGeoms) {
       // console.log("GeomLibrary Loaded:" + this.__name + " count:" + geomDatas.length + " loaded:" + this.__loaded);
       this.__terminateWorkers()
-      this.loaded.emit()
+      this.emitEvent('loaded',)
     }
   }
 

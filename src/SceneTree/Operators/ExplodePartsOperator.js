@@ -205,16 +205,16 @@ class ExplodePartsOperator extends Operator {
     this.__itemsParam.addEventListener('elementAdded', event => {
       if (event.index > 0) {
         const prevStage = this.__itemsParam.getElement(event.index-1).getStage();
-        event.value.setStage(prevStage + 1)
+        event.elem.setStage(prevStage + 1)
         this.__stagesParam.setClean(prevStage + 2)
       } else {
         this.__stagesParam.setClean(1)
       }
-      this.addOutput(event.value.getOutput())
+      this.addOutput(event.elem.getOutput())
       this.setDirty()
     })
     this.__itemsParam.addEventListener('elementRemoved', event => {
-      this.removeOutput(event.value.getOutput())
+      this.removeOutput(event.elem.getOutput())
     })
     
     this.__localXfos = []

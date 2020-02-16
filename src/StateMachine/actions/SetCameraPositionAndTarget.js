@@ -103,8 +103,8 @@ class SetCameraPositionAndTarget extends StateAction {
           )
         } else {
           // camera.setPositionAndTarget(posEnd, targetEnd);
-          camera.globalXfoChanged.disconnect(onCameraChanged)
-          camera.movementFinished.emit()
+          camera.removeEventListener('globalXfoChanged', onCameraChanged)
+          camera.emitEvent('movementFinished', {})
           this.__timeoutId = undefined
           this.__onDone()
         }

@@ -339,7 +339,7 @@ class GLTexture2D extends RefCounted {
       this.resize(width, height, false, false)
     }
     if (!this.__loaded) {
-      this.ready.emit()
+      this.emitEvent('ready', {})
       this.__loaded = true
     }
   }

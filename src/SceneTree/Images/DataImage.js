@@ -61,7 +61,7 @@ class DataImage extends BaseImage {
     this.__data = data
     if (!this.__loaded) {
       this.__loaded = true
-      this.loaded.emit()
+      this.emitEvent('loaded', {})
     } else this.emitEvent('updated', {})
   }
 

@@ -68,7 +68,7 @@ class StateMachine extends BaseItem {
     this.__currentState = this.__states[name]
     this.__currentState.activate()
 
-    this.stateChanged.emit(name)
+    this.emitEvent('stateChanged',{ name })
   }
 
   /**

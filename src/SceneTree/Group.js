@@ -548,14 +548,14 @@ class Group extends TreeItem {
     }, true)
 
     const sigIds = this.__signalIndices[index]
-    item.mouseDown.disconnectId(sigIds.mouseDownIndex)
-    item.mouseUp.disconnectId(sigIds.mouseUpIndex)
-    item.mouseMove.disconnectId(sigIds.mouseMoveIndex)
-    item.mouseEnter.disconnectId(sigIds.mouseEnterIndex)
-    item.mouseLeave.disconnectId(sigIds.mouseLeaveIndex)
+    item.removeEventListenerById('mouseDown', sigIds.mouseDownIndex)
+    item.removeEventListenerById('mouseUp', sigIds.mouseUpIndex)
+    item.removeEventListenerById('mouseMove', sigIds.mouseMoveIndex)
+    item.removeEventListenerById('mouseEnter', sigIds.mouseEnterIndex)
+    item.removeEventListenerById('mouseLeave', sigIds.mouseLeaveIndex)
 
-    item.globalXfoChanged.disconnectId(sigIds.globalXfoChangedIndex)
-    item.boundingChanged.disconnectId(sigIds.bboxChangedIndex)
+    item.removeEventListenerById('globalXfoChanged', sigIds.globalXfoChangedIndex)
+    item.removeEventListenerById('boundingChanged', sigIds.bboxChangedIndex)
     this.__signalIndices.splice(index, 1)
     this.__initialXfos.splice(index, 1)
   }

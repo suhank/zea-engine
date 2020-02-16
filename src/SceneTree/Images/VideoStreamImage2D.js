@@ -76,7 +76,7 @@ class VideoStreamImage2D extends BaseImage {
           console.log('Webcam:[' + this.width + ', ' + this.height + ']')
           this.__data = domElement
           this.__loaded = true
-          this.loaded.emit(domElement)
+          this.emitEvent('loaded', {})
 
           let prevFrame = 0
           const frameRate = 60
@@ -112,7 +112,7 @@ class VideoStreamImage2D extends BaseImage {
     this.start()
     this.__data = video
     this.__loaded = true
-    this.loaded.emit(video)
+    this.emitEvent('loaded', {})
   }
 
   // getAudioSource() {

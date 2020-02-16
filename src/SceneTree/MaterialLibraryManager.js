@@ -19,7 +19,7 @@ class MaterialLibraryManager {
         const matlib = new MaterialLibrary(stem)
         matlib.fromJSON(j)
         this.__materialLibraries[stem] = matlib
-        this.materialLibraryLoaded.emit(matlib)
+        this.emitEvent('materialLibraryLoaded', { matlib })
       })
     })
   }

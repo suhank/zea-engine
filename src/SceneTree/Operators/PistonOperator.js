@@ -250,15 +250,15 @@ class PistonOperator extends Operator {
     this.__pistonsParam = this.addParameter(
       new ListParameter('Pistons', PistonParameter)
     )
-    this.__pistonsParam.addEventListener('elementAdded', value => {
-      value.setCrankXfo(this.__baseCrankXfo)
+    this.__pistonsParam.addEventListener('elementAdded', event => {
+      event.elem.setCrankXfo(this.__baseCrankXfo)
 
-      this.addOutput(value.getRodOutput())
-      this.addOutput(value.getCapOutput())
+      this.addOutput(event.elem.getRodOutput())
+      this.addOutput(event.elem.getCapOutput())
     })
-    this.__pistonsParam.addEventListener('elementRemoved', value => {
-      this.removeOutput(value.getRodOutput())
-      this.removeOutput(value.getCapOutput())
+    this.__pistonsParam.addEventListener('elementRemoved', event => {
+      this.removeOutput(event.elem.getRodOutput())
+      this.removeOutput(event.elem.getCapOutput())
     })
 
     this.__baseCrankXfo = new Xfo()
@@ -320,7 +320,7 @@ class PistonOperator extends Operator {
       piston.evaluate(quat, crankAxis, revolutions)
     }
 
-    this.postEval.emit(revolutions)
+    this.emitEvent('postEval', {})
   }
 
   // ////////////////////////////////////////

@@ -161,7 +161,7 @@ class Sphere extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    this.geomDataTopologyChanged.emit()
+    this.emitEvent('geomDataTopologyChanged', {})
   }
 
   /**
@@ -199,7 +199,7 @@ class Sphere extends Mesh {
     vertex++
 
     this.setBoundingBoxDirty()
-    this.geomDataChanged.emit()
+    this.emitEvent('geomDataChanged', {})
   }
 }
 sgFactory.registerClass('Sphere', Sphere)

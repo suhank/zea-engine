@@ -120,7 +120,7 @@ class Material extends BaseItem {
     }
 
     this.__shaderName = shaderName
-    this.shaderNameChanged.emit(this.__shaderName)
+    this.emitEvent('shaderNameChanged', { shaderName })
   }
 
   /**

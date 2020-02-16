@@ -53,7 +53,7 @@ class Circle extends Lines {
     else this.setNumSegments(segs)
     for (let i = 0; i < (arc ? segs-1 : segs); i++) this.setSegment(i, i, (i + 1) % segs)
     this.__resize(-1)
-    this.geomDataTopologyChanged.emit()
+    this.emitEvent('geomDataTopologyChanged', {})
   }
 
   /**
@@ -72,7 +72,7 @@ class Circle extends Lines {
         0.0
       )
     this.setBoundingBoxDirty()
-    if (mode != -1) this.geomDataChanged.emit()
+    if (mode != -1) this.emitEvent('geomDataChanged', {})
   }
 }
 sgFactory.registerClass('Circle', Circle)

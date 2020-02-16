@@ -28,7 +28,7 @@ class ProxyParameter extends Parameter {
   }
 
   __proxyValueChanged(mode) {
-    this.valueChanged.emit(mode)
+    this.emitEvent('valueChanged', { mode })
   }
 
 

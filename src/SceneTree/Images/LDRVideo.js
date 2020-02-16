@@ -74,7 +74,7 @@ class LDRVideo extends FileImage {
         this.__data = videoElem
         this.__loaded = true
         resourceLoader.addWorkDone(fileDesc.id, 1)
-        this.loaded.emit(videoElem)
+        this.emitEvent('loaded', {})
 
         let prevFrame = 0
         const frameRate = 29.97

@@ -46,18 +46,18 @@ class ItemSetParameter extends Parameter {
   /**
    * The addItem method.
    * @param {any} item - The item value.
-   * @param {boolean} emit - The emit value.
+   * @param {boolean} emitValueChanged - The emit value.
    * @return {boolean} - The return value.
    */
-  addItem(item, emit = true) {
+  addItem(item, emitValueChanged = true) {
     if (this.__filterFn && !this.__filterFn(item)) {
       console.warn('ItemSet __filterFn rejecting item:', item.getPath())
       return false
     }
     this.__items.add(item)
     const index = Array.from(this.__items).indexOf(item)
-    this.itemAdded.emit(item, index)
-    if (emit) this.valueChanged.emit()
+    this.emitEvent('itemAdded', { item, index })
+    if (emitValueChanged) this.emitEvent('valueChanged', {})
     return index
   }
 
@@ -66,22 +66,22 @@ class ItemSetParameter extends Parameter {
    * @param {any} items - The index value.
    * @param {boolean} emit - The emit value.
    */
-  addItems(items, emit = true) {
+  addItems(items, emitValueChanged = true) {
     items.forEach(item => this.addItem(item, false))
-    if (emit) this.valueChanged.emit()
+    if (emitValueChanged) this.emitEvent('valueChanged', {})
   }
 
   /**
    * The removeItem method.
    * @param {any} index - The index value.
-   * @param {boolean} emit - The emit param.
+   * @param {boolean} emitValueChanged - The emit param.
    * @return {any} - The return value.
    */
-  removeItem(index, emit = true) {
+  removeItem(index, emitValueChanged = true) {
     const item = Array.from(this.__items)[index]
     this.__items.delete(item)
-    this.itemRemoved.emit(item, index)
-    if (emit) this.valueChanged.emit()
+    this.emitEvent('itemRemoved', { item, index })
+    if (emitValueChanged) this.emitEvent('valueChanged', {})
     return item
   }
 
@@ -102,16 +102,16 @@ class ItemSetParameter extends Parameter {
         this.addItem(item, false)
       }
     }
-    if (emit) this.valueChanged.emit()
+    if (emit) this.emitEvent('valueChanged', {})
   }
 
   /**
    * The clearItems method.
    * @param {boolean} emit - The emit value.
    */
-  clearItems(emit = true) {
+  clearItems(emitValueChanged = true) {
     this.__items.clear()
-    if (emit) this.valueChanged.emit()
+    if (emitValueChanged) this.emitEvent('valueChanged', {})
   }
 
   /**

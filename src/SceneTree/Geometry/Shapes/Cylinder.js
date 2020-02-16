@@ -206,7 +206,7 @@ class Cylinder extends Mesh {
     }
 
     // this.setBoundingBoxDirty();
-    this.geomDataTopologyChanged.emit()
+    this.emitEvent('geomDataTopologyChanged', {})
     this.__resize()
   }
 
@@ -255,7 +255,7 @@ class Cylinder extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    this.geomDataChanged.emit()
+    this.emitEvent('geomDataChanged', {})
   }
 }
 

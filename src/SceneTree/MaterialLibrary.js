@@ -235,7 +235,7 @@ class MaterialLibrary {
       }
     }
 
-    this.loaded.emit()
+    this.emitEvent('loaded', {})
   }
 
   /**

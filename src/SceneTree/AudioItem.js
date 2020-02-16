@@ -31,7 +31,7 @@ class AudioItem extends TreeItem {
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
       audioSource.start(0)
-      this.audioSourceCreated.emit(audioSource)
+      this.emitEvent('audioSourceCreated', { audioSource })
     }
     fileParam.addEventListener('valueChanged', () => {
       const request = new XMLHttpRequest()
@@ -48,7 +48,7 @@ class AudioItem extends TreeItem {
           buffer => {
             audioBuffer = buffer
             this.__loaded = true
-            this.loaded.emit(true)
+            this.emitEvent('loaded', {})
             if (autoplayParam.getValue()) startAudioPlayback()
           },
           e => {
@@ -146,8 +146,8 @@ class AudioItem extends TreeItem {
    */
   setAudioStream() {
     this.__loaded = true
-    this.loaded.emit()
-    this.audioSourceCreated.emit(audioSource)
+    this.emitEvent('loaded', {})
+    this.emitEvent('audioSourceCreated', { audioSource })
   }
 }
 

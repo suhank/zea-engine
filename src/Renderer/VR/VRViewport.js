@@ -270,8 +270,7 @@ class VRViewport extends GLBaseViewport {
                 downTime - controller.__prevDownTime <
                 this.__doubleClickTimeMSParam.getValue()
               ) {
-                this.controllerDoubleClicked.emit(
-                  {
+                this.emitEvent('controllerDoubleClicked', {
                     button: 1,
                     controller,
                     vleStopPropagation: false,
@@ -282,7 +281,7 @@ class VRViewport extends GLBaseViewport {
               } else {
                 controller.__prevDownTime = downTime
 
-                this.controllerButtonDown.emit(
+                this.emitEvent('controllerButtonDown',
                   {
                     button: 1,
                     controller,
@@ -300,7 +299,7 @@ class VRViewport extends GLBaseViewport {
             ]
             if (controller) {
               console.log('controller:', ev.inputSource.handedness, ' up')
-              this.controllerButtonUp.emit(
+              this.emitEvent('controllerButtonUp',
                 {
                   button: 1,
                   controller,
@@ -423,10 +422,10 @@ class VRViewport extends GLBaseViewport {
    */
   __createController(id, inputSource) {
     console.log('creating controller:', inputSource.handedness)
-    const vrController = new VRController(this, inputSource, id)
-    this.__vrControllersMap[inputSource.handedness] = vrController
-    this.__vrControllers[id] = vrController
-    this.controllerAdded.emit(vrController)
+    const controller = new VRController(this, inputSource, id)
+    this.__vrControllersMap[inputSource.handedness] = controller
+    this.__vrControllers[id] = controller
+    this.emitEvent('controllerAdded', { controller })
     return vrController
   }
 

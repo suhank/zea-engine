@@ -1,7 +1,7 @@
-import { Signal } from './Signal.js'
+import { EventEmitter } from './EventEmitter.js'
 
 /** Class representing an Async. */
-class Async {
+class Async extends EventEmitter {
   /**
    * Create a Async.
    * @param {number} asyncCount - The asyncCount value.
@@ -25,7 +25,7 @@ class Async {
     }.bind(this)
 
     this.__asyncsCompleted = function() {
-      this.ready.emit()
+      this.emitEvent('ready', {})
     }.bind(this)
   }
 

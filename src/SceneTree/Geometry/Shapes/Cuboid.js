@@ -140,7 +140,7 @@ class Cuboid extends Mesh {
     this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
-    this.geomDataChanged.emit()
+    this.emitEvent('geomDataChanged', {})
   }
 
   /**

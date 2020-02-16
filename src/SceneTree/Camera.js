@@ -37,13 +37,14 @@ class Camera extends TreeItem {
     // this.viewMatChanged = this.__viewMatParam.valueChanged;
     this.projectionParamChanged = new Signal()
     this.movementFinished = new Signal()
-
-    this.__isOrthographicParam.addEventListener('valueChanged', 
-      this.projectionParamChanged.emit
-    )
-    this.__fovParam.addEventListener('valueChanged', this.projectionParamChanged.emit)
-    this.__nearParam.addEventListener('valueChanged', this.projectionParamChanged.emit)
-    this.__farParam.addEventListener('valueChanged', this.projectionParamChanged.emit)
+    
+    const emitProjChanged = event => {
+      this.emitEvent('projectionParamChanged', event)
+    }
+    this.__isOrthographicParam.addEventListener('valueChanged', emitProjChanged)
+    this.__fovParam.addEventListener('valueChanged', emitProjChanged)
+    this.__nearParam.addEventListener('valueChanged', emitProjChanged)
+    this.__farParam.addEventListener('valueChanged', emitProjChanged)
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
@@ -290,7 +291,7 @@ class Camera extends TreeItem {
 
     this.setFocalDistance(newFocalDistance, mode)
     this.setGlobalXfo(globalXfo, mode)
-    this.movementFinished.emit()
+    this.emitEvent('movementFinished', { mode })
   }
 
   /**

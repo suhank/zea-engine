@@ -214,15 +214,11 @@ class GLGeomItem {
    * Users should never need to call this method directly.
    */
   destroy() {
-    // this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
-    // this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
-    // this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
-
     this.geomItem.removeEventListener('visibilityChanged', this.updateVisibility)
     this.geomItem.removeEventListener('geomXfoChanged', this.updateXfo)
     this.geomItem.removeEventListenerById('highlightChanged', this.highlightChangedId)
 
-    // this.geomItem.destructing.disconnect(this.destroy)
+    // this.geomItem.removeEventListenerById('destructing', this.destroy)
     // this.emitEvent('destructing', {})
   }
 }

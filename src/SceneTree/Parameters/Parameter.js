@@ -74,7 +74,7 @@ class BaseParameter extends RefCounted {
     if (name != this.__name) {
       const prevName = this.__name
       this.__name = name
-      this.nameChanged.emit(this.__name, prevName)
+      this.emitEvent('nameChanged', { mode:this.__name }, prevName)
     }
   }
 
@@ -177,7 +177,7 @@ class BaseParameter extends RefCounted {
   bindOperator(op) {
     this.__boundOps.push(op)
     this.__state = ParamState.DIRTY
-    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    this.emitEvent('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
   }
 
   /**
@@ -193,7 +193,7 @@ class BaseParameter extends RefCounted {
     }
     this.__boundOps.splice(index, 1)
     this.__state = ParamState.DIRTY
-    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    this.emitEvent('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
   }
 
   /**
@@ -210,7 +210,7 @@ class BaseParameter extends RefCounted {
     this.__cleanerFns.push(cleanerFn)
     this.__state = ParamState.DIRTY
 
-    this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+    this.emitEvent('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
     return true
   }
   /**
@@ -221,7 +221,7 @@ class BaseParameter extends RefCounted {
     // cleaner fns and intead simply propagate.
     if (this.__state == ParamState.CLEAN) {
       this.__state = ParamState.DIRTY
-      this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
+      this.emitEvent('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
     }
     return true
   }
@@ -381,7 +381,7 @@ class Parameter extends BaseParameter {
     }
 
     // During the cleaning process, we don't want notifications.
-    if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+    if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emitEvent('valueChanged', { mode })
   }
 
   /**
@@ -394,7 +394,7 @@ class Parameter extends BaseParameter {
    * @param {any} mode - The mode param.
    */
   setValueDone() {
-    this.valueChanged.emit(ValueSetMode.USER_SETVALUE_DONE)
+    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE_DONE })
   }
 
   // ////////////////////////////////////////
@@ -434,7 +434,7 @@ class Parameter extends BaseParameter {
       this.setValue(j.value, ValueSetMode.DATA_LOAD)
     else {
       this.__value.fromJSON(j.value, context)
-      this.valueChanged.emit(ValueSetMode.DATA_LOAD)
+      this.emitEvent('valueChanged', { mode: ValueSetMode.DATA_LOAD })
     }
   }
 

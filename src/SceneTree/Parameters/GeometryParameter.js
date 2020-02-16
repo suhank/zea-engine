@@ -12,8 +12,13 @@ class GeometryParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, undefined, 'Geometry')
-    this.boundingBoxDirtied = new Signal()
     this.setValue(value)
+
+    this.__emitboundingBoxDirtied = this.__emitboundingBoxDirtied.bind(this)
+  }
+
+  __emitboundingBoxDirtied(event) {
+    this.emitEvent('boundingBoxDirtied', event)
   }
 
   /**
@@ -25,13 +30,13 @@ class GeometryParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== geom) {
       if (this.__value) {
-        this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
+        this.__value.removeEventListener('boundingBoxDirtied', this.__emitboundingBoxDirtied)
         this.__value.removeRef(this)
       }
       this.__value = geom
       if (this.__value) {
         this.__value.addRef(this)
-        this.__value.addEventListener('boundingBoxDirtied', this.boundingBoxDirtied.emit)
+        this.__value.addEventListener('boundingBoxDirtied', this.__emitboundingBoxDirtied)
       }
 
       if (
@@ -42,7 +47,7 @@ class GeometryParameter extends Parameter {
       }
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.valueChanged.emit(mode)
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emitEvent('valueChanged', { mode })
     }
   }
 
@@ -94,7 +99,7 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
+      this.__value.removeEventListener('boundingBoxDirtied', this.__emitboundingBoxDirtied)
       this.__value.removeRef(this)
     }
   }

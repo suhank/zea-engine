@@ -362,8 +362,8 @@ class GLBaseRenderer extends EventEmitter {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.childAdded.disconnect(this.addTreeItem)
-    treeItem.childRemoved.disconnect(this.removeTreeItem)
+    treeItem.removeEventListener('childAdded', this.addTreeItem)
+    treeItem.removeEventListener('childRemoved', this.removeTreeItem)
 
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue

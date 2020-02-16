@@ -96,7 +96,7 @@ class Plane extends Mesh {
     }
 
     this.__resize(false)
-    this.geomDataTopologyChanged.emit()
+    this.emitEvent('geomDataTopologyChanged', {})
   }
 
   /**
@@ -119,7 +119,7 @@ class Plane extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    if (emit) this.geomDataChanged.emit()
+    if (emit) this.emitEvent('geomDataChanged', {})
   }
 }
 

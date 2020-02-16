@@ -57,7 +57,7 @@ class LabelManager {
       this.__foundLabelLibraries[stem] = file
       loadTextfile(file.url, text => {
         this.__labelLibraries[stem] = JSON.parse(text)
-        this.labelLibraryLoaded.emit(stem)
+        this.emitEvent('labelLibraryLoaded', { stem })
       })
     })
 
@@ -89,7 +89,7 @@ class LabelManager {
           })
 
           this.__labelLibraries[stem] = json
-          this.labelLibraryLoaded.emit(stem)
+          this.emitEvent('labelLibraryLoaded', { stem })
         })
       })
     }

@@ -149,7 +149,7 @@ class LDRImage extends FileImage {
       this.height = imageElem.height
       this.__data = imageElem
       this.__loaded = true
-      this.loaded.emit()
+      this.emitEvent('loaded', {})
     }
     const imageDataLibrary = FileImage.__imageDataLibrary()
     if (url in imageDataLibrary) {

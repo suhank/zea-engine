@@ -115,7 +115,6 @@ class ParameterOwner extends EventEmitter {
     param.addRef(this)
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
-    this.parameterAdded.emit(name)
     this.emitEvent('parameterAdded', { name })
     return param
   }
@@ -143,7 +142,6 @@ class ParameterOwner extends EventEmitter {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.parameterAdded.emit(name)
     this.emitEvent('parameterAdded', { name })
     return param
   }
@@ -159,14 +157,13 @@ class ParameterOwner extends EventEmitter {
     const index = this.__paramMapping[paramName]
     const param = this.__params[this.__paramMapping[paramName]]
     param.removeRef(this)
-    param.valueChanged.disconnectId(this.__paramSignalIds[paramName])
+    param.removeEventListenerById('valueChanged', this.__paramSignalIds[paramName])
     this.__params.splice(index, 1)
     const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.parameterRemoved.emit(paramName)
     this.emitEvent('parameterRemoved', { name })
   }
 
@@ -180,7 +177,7 @@ class ParameterOwner extends EventEmitter {
     const index = this.__paramMapping[name]
     const prevparam = this.__params[this.__paramMapping[name]]
     prevparam.removeRef(this)
-    prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
+    prevparam.removeEventListenerById('valueChanged', this.__paramSignalIds[name])
 
     param.addRef(this)
     this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>

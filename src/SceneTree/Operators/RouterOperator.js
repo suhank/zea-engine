@@ -20,7 +20,7 @@ class RouterOperator extends Operator {
       new ListParameter('Routes', NumberParameter)
     )
     this.__routesParam.addEventListener('elementAdded', event => {
-      event.value.setValue(1.0)
+      event.elem.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })
     this.__routesParam.addEventListener('elementRemoved', event => {
@@ -41,7 +41,7 @@ class RouterOperator extends Operator {
         input * routes[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
       )
     }
-    this.postEval.emit(input)
+    this.emitEvent('postEval', {})
   }
 
   // ////////////////////////////////////////

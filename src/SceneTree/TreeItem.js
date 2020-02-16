@@ -215,7 +215,7 @@ class TreeItem extends BaseItem {
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
-      this.__ownerItem.globalXfoChanged.disconnect(this._setGlobalXfoDirty)
+      this.__ownerItem.removeEventListener('globalXfoChanged', this._setGlobalXfoDirty)
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter++
@@ -378,7 +378,7 @@ class TreeItem extends BaseItem {
         if (childItem instanceof TreeItem)
           childItem.propagateVisiblity(this.__visible ? 1 : -1)
       }
-      this.visibilityChanged.emit(visible)
+      this.emitEvent('visibilityChanged',{ visible })
       return true
     }
     return false
@@ -402,7 +402,7 @@ class TreeItem extends BaseItem {
     }
     this.__highlights.push(name)
     this.__highlightMapping[name] = color
-    this.highlightChanged.emit()
+    this.emitEvent('highlightChanged', {})
 
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {
@@ -422,7 +422,7 @@ class TreeItem extends BaseItem {
       const id = this.__highlights.indexOf(name)
       this.__highlights.splice(id, 1)
       delete this.__highlightMapping[name]
-      this.highlightChanged.emit()
+      this.emitEvent('highlightChanged', {})
     }
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {
@@ -669,7 +669,7 @@ class TreeItem extends BaseItem {
     if (childItem.testFlag(ItemFlags.USER_EDITED))
       this.setFlag(ItemFlags.USER_EDITED)
 
-    this.childAdded.emit(childItem, index)
+    this.emitEvent('childAdded', { childItem, index })
 
     return childItem
   }
@@ -738,11 +738,11 @@ class TreeItem extends BaseItem {
    */
   __unbindChild(index, childItem) {
     const signalIds = this.__childItemsSignalIds[index]
-    childItem.nameChanged.disconnectId(signalIds.nameChangedId)
+    childItem.removeEventListenerById('nameChanged', signalIds.nameChangedId)
 
     if (childItem instanceof TreeItem) {
-      childItem.boundingChanged.disconnectId(signalIds.bboxChangedId)
-      childItem.visibilityChanged.disconnectId(signalIds.visChangedId)
+      childItem.removeEventListenerById('boundingChanged', signalIds.bboxChangedId)
+      childItem.removeEventListenerById('visibilityChanged', signalIds.visChangedId)
     }
 
     this.__childItems.splice(index, 1)
@@ -754,7 +754,7 @@ class TreeItem extends BaseItem {
       this._setBoundingBoxDirty()
     }
 
-    this.childRemoved.emit(childItem, index)
+    this.emitEvent('childRemoved', { childItem, index })
   }
 
   /**
@@ -839,7 +839,7 @@ class TreeItem extends BaseItem {
 
     component.setOwner(this)
 
-    // this.componentAdded.emit(component);
+    // this.emitEvent('componentAdded', { component });
   }
 
   /**
@@ -861,7 +861,7 @@ class TreeItem extends BaseItem {
       componentMapping[this.__components[i].getName()] = i
     this.__componentMapping = componentMapping
 
-    // this.componentRemoved.emit(component, index);
+    // this.emitEvent('componentRemoved', { component, index });
     return component
   }
 
@@ -983,7 +983,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
-    this.mouseDown.emit(event)
+    this.emitEvent('mouseDown', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseDown(event)
     }
@@ -994,7 +994,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseUp(event) {
-    this.mouseUp.emit(event)
+    this.emitEvent('mouseUp', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseUp(event)
     }
@@ -1005,7 +1005,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {
-    this.mouseMove.emit(event)
+    this.emitEvent('mouseMove', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseMove(event)
     }
@@ -1016,7 +1016,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseEnter(event) {
-    this.mouseEnter.emit(event)
+    this.emitEvent('mouseEnter', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseEnter(event)
     }
@@ -1027,7 +1027,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseLeave(event) {
-    this.mouseLeave.emit(event)
+    this.emitEvent('mouseLeave', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseLeave(event)
     }

@@ -265,7 +265,7 @@ class GLStandardGeomsPass extends GLPass {
     // glgeomItem.destructing.disconnectScope(this);
     // glgeomItem.transformChanged.disconnectScope(this);
 
-    // this.renderTreeUpdated.emit();
+    // this.emitEvent('renderTreeUpdated', {});
     this.__renderer.requestRedraw()
 
     geomItem.getMetadata('glpass')
@@ -400,7 +400,7 @@ class GLStandardGeomsPass extends GLPass {
         }
       }
       this.__dirtyItemIndices = []
-      // this.renderTreeUpdated.emit();
+      // this.emitEvent('renderTreeUpdated', {});
       return
     }
 

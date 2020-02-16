@@ -152,7 +152,7 @@ class FileImage extends BaseImage {
       this.height = imageElem.height
       this.__data = imageElem
       this.__loaded = true
-      this.loaded.emit()
+      this.emitEvent('loaded', {})
     }
     if (fileDesc.id in imageDataLibrary) {
       imageElem = imageDataLibrary[fileDesc.id]
@@ -324,7 +324,7 @@ class FileImage extends BaseImage {
         this.__data = videoElem
         this.__loaded = true
         resourceLoader.addWorkDone(fileDesc.id, 1)
-        this.loaded.emit(videoElem)
+        this.emitEvent('loaded', {})
 
         videoElem.play().then(
           () => {
@@ -408,7 +408,7 @@ class FileImage extends BaseImage {
         }
         if (!this.__loaded) {
           this.__loaded = true
-          this.loaded.emit()
+          this.emitEvent('loaded', {})
         } else {
           this.emitEvent('updated', {})
         }
@@ -624,7 +624,7 @@ class FileImage extends BaseImage {
       if (playing) incrementFrame()
       this.__loaded = true
 
-      this.loaded.emit()
+      this.emitEvent('loaded', {})
     })
   }
 
