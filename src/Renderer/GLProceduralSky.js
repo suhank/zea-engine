@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js'
 import { GLTexture2D } from './GLTexture2D.js'
@@ -293,8 +292,6 @@ class GLProceduralSky extends GLProbe {
 
     this.__longitude = 45.527162
     this.__latitude = -73.575307
-
-    this.updated = new Signal()
 
     const now = new Date()
     this.time = now.getHours() + now.getMinutes() / 60

@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { Box3 } from '../../Math'
 import { RefCounted } from '../RefCounted.js'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
@@ -29,10 +28,6 @@ class BaseProxy extends RefCounted {
     this.boundingBox.p1.__data = data.bbox.p1.__data
 
     this.__metaData = new Map()
-
-    this.boundingBoxDirtied = new Signal()
-    this.geomDataChanged = new Signal()
-    this.geomDataTopologyChanged = new Signal()
   }
 
   /**

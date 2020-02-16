@@ -1,8 +1,10 @@
 import { EventEmitter } from '../Utilities'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
-/** Class representing a GL material. */
-class GLMaterial  extends EventEmitter {
+/** Class representing a GL material.
+ * @extends EventEmitter
+ */
+class GLMaterial extends EventEmitter {
   /**
    * Create a GL material.
    * @param {any} gl - The gl value.
@@ -10,11 +12,11 @@ class GLMaterial  extends EventEmitter {
    * @param {any} glshader - The glshader value.
    */
   constructor(gl, material, glshader) {
-    // super(name);
+    super()
     this.__gl = gl
     this.__material = material
     this.__glshader = glshader
-    
+
     // this.__material.addEventListener('destructing', () => {
     //   this.emitEvent('destructing') // Note: propagate this signal so the GLPass can remove the item.
     // })

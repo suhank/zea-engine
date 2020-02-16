@@ -1,6 +1,5 @@
 import { SystemDesc } from '../../BrowserDetection.js'
 import { Vec3, Quat, Xfo, Mat4 } from '../../Math'
-import { Signal } from '../../Utilities'
 import { TreeItem } from '../../SceneTree'
 
 /** Class representing a VR controller. */
@@ -17,9 +16,6 @@ class VRController {
     this.__id = id
     this.__isDaydramController = SystemDesc.isMobileDevice
 
-    this.touchpadTouched = new Signal()
-    this.buttonPressed = new Signal()
-    this.buttonReleased = new Signal()
     this.__pressedButtons = []
 
     // /////////////////////////////////

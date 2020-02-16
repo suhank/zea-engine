@@ -8,7 +8,6 @@ import {
 import { sgFactory } from '../SGFactory.js'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
-import { Signal } from '../../Utilities'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -139,7 +138,6 @@ class Label extends DataImage {
 
     this.__requestedRerender = false
     this.__needsRender = false
-    this.labelRendered = new Signal();
     this.loadLabelData()
   }
 

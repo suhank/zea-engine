@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { Parameter } from './Parameter.js'
 
 /** Class representing an item set parameter.
@@ -14,8 +13,6 @@ class ItemSetParameter extends Parameter {
     super(name, undefined, 'BaseItem')
     this.__items = new Set()
     this.__filterFn = filterFn // Note: the filter Fn indicates that users will edit the set.
-    this.itemAdded = new Signal()
-    this.itemRemoved = new Signal()
   }
 
   /**

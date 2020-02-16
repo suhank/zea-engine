@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
@@ -18,7 +17,7 @@ class GeometryParameter extends Parameter {
   }
 
   __emitboundingBoxDirtied(event) {
-    this.emitEvent('boundingBoxDirtied', event)
+    this.emitEvent('boundingBoxChanged', event)
   }
 
   /**
@@ -30,13 +29,13 @@ class GeometryParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== geom) {
       if (this.__value) {
-        this.__value.removeEventListener('boundingBoxDirtied', this.__emitboundingBoxDirtied)
+        this.__value.removeEventListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
         this.__value.removeRef(this)
       }
       this.__value = geom
       if (this.__value) {
         this.__value.addRef(this)
-        this.__value.addEventListener('boundingBoxDirtied', this.__emitboundingBoxDirtied)
+        this.__value.addEventListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
       }
 
       if (
@@ -99,7 +98,7 @@ class GeometryParameter extends Parameter {
     // e.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.removeEventListener('boundingBoxDirtied', this.__emitboundingBoxDirtied)
+      this.__value.removeEventListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
       this.__value.removeRef(this)
     }
   }

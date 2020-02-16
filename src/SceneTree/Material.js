@@ -1,5 +1,4 @@
 import { Vec2, Vec3, Color } from '../Math'
-import { Signal } from '../Utilities'
 import { BaseItem } from './BaseItem.js'
 import { sgFactory } from './SGFactory.js'
 import {
@@ -53,8 +52,6 @@ class Material extends BaseItem {
    */
   constructor(name, shaderName) {
     super(name)
-
-    this.shaderNameChanged = new Signal()
     this.visibleInGeomDataBuffer = true
 
     if (shaderName) this.setShaderName(shaderName)

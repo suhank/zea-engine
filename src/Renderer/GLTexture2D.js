@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { BaseImage, RefCounted } from '../SceneTree'
 
 /** Class representing a GL texture 2D.
@@ -14,8 +13,7 @@ class GLTexture2D extends RefCounted {
     super()
     this.__gl = gl
 
-    this.ready = new Signal(true)
-    this.updated = new Signal()
+    this.ready = false
 
     this.width = 0
     this.height = 0

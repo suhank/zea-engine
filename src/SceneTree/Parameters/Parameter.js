@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { RefCounted } from '../RefCounted'
 import { sgFactory } from '../SGFactory'
 
@@ -48,9 +47,6 @@ class BaseParameter extends RefCounted {
     this.__boundOps = []
     this.__state = ParamState.CLEAN
     this.__flags = 0
-
-    this.valueChanged = new Signal()
-    this.nameChanged = new Signal()
 
     this.getName = this.getName.bind(this)
     this.setName = this.setName.bind(this)

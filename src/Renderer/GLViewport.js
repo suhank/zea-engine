@@ -1,5 +1,4 @@
 import { Vec2, Vec3, Ray, Mat4 } from '../Math'
-import { Signal } from '../Utilities'
 import { Camera } from '../SceneTree'
 import { GLBaseViewport } from './GLBaseViewport.js'
 import { GLFbo } from './GLFbo.js'
@@ -36,28 +35,6 @@ class GLViewport extends GLBaseViewport {
 
     this.__geomDataBuffer = undefined
     this.__geomDataBufferFbo = undefined
-
-    // Signals to abstract the user view.
-    // I.e. when a user switches to VR mode, the signals
-    // simply emit the new VR data.
-
-    // this.capturedItem = null
-    // this.keyDown = new Signal()
-    // this.keyPressed = new Signal()
-    // this.keyUp = new Signal()
-    // this.mouseDown = new Signal()
-    // this.mouseDoubleClicked = new Signal()
-    // this.mouseMove = new Signal()
-    // this.mouseUp = new Signal()
-    // this.mouseLeave = new Signal()
-    // this.mouseDownOnGeom = new Signal()
-    // this.mouseWheel = new Signal()
-
-    // this.touchStart = new Signal()
-    // this.touchMove = new Signal()
-    // this.touchEnd = new Signal()
-    // this.touchCancel = new Signal()
-    // this.doubleTapped = new Signal()
 
     // this.renderGeomDataFbo = this.renderGeomDataFbo.bind(this);
 

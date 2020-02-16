@@ -1,7 +1,5 @@
-import { Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory'
 import { NumberParameter } from './NumberParameter.js'
-
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a material float parameter.
@@ -16,8 +14,6 @@ class MaterialFloatParam extends NumberParameter {
    */
   constructor(name, value, range) {
     super(name, value, range)
-    this.textureConnected = new Signal()
-    this.textureDisconnected = new Signal()
   }
 
   /**

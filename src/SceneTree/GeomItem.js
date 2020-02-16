@@ -22,9 +22,10 @@ class GeomItem extends BaseGeomItem {
       new GeometryParameter('geometry'),
       0
     )
-    this.__geomParam.addEventListener('valueChanged', this._setBoundingBoxDirty.bind(this))
-    this.__geomParam.addEventListener('boundingBoxDirtied', 
-      this._setBoundingBoxDirty.bind(this)
+    this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
+    this.__geomParam.addEventListener('valueChanged', this._setBoundingBoxDirty)
+    this.__geomParam.addEventListener('boundingBoxChanged', 
+      this._setBoundingBoxDirty
     )
     this.__materialParam = this.insertParameter(
       new MaterialParameter('Material'),

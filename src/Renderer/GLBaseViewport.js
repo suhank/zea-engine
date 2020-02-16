@@ -1,5 +1,4 @@
 import { Color } from '../Math'
-import { Signal } from '../Utilities'
 import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
@@ -19,7 +18,6 @@ class GLBaseViewport extends ParameterOwner {
       new NumberParameter('DoubleClickTimeMS', 200)
     )
     this.__fbo = undefined
-    this.updated = new Signal()
 
     const sceneSet = () => {
       const settings = renderer.getScene().settings

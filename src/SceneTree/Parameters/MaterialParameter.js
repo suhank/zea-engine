@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 import { materialLibraryManager } from '../MaterialLibraryManager.js'
 

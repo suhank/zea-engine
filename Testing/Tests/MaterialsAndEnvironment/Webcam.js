@@ -23,7 +23,7 @@ testingHarness.registerTest('MaterialsAndEnvironment/Webcam', (domElement, resou
     // renderer.getViewport().setBackground(webcamimage);
     renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(1,1,2), new Z.Vec3(0,0,1));
 
-    // renderer.vrViewportSetup.connect((vrvp)=>{
+    // renderer.addEventListener('xrViewportSetup', event => {
     //     const geomItem = new Z.GeomItem('BG', plane, material);
     //     geomItem.localXfo.sc.set(8, 8, 1);
     //     geomItem.localXfo.tr.set(0, -4, -8);

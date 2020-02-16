@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import {
   ValueSetMode,
   FilePathParameter,
@@ -19,8 +18,6 @@ class AudioItem extends TreeItem {
     super(name)
 
     this.__loaded = false
-
-    this.audioSourceCreated = new Signal()
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     let audioSource
@@ -128,8 +125,7 @@ class AudioItem extends TreeItem {
 
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
-    this.loaded = new Signal(true)
-    this.loaded.setToggled(false)
+    this.loaded = false
   }
 
   /**

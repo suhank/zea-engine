@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { Parameter } from './Parameter.js'
 import { sgFactory } from '../SGFactory.js'
 
@@ -13,7 +12,6 @@ class ImageParameter extends Parameter {
    */
   constructor(name, value) {
     super(name, value, 'BaseImage')
-    this.valueParameterValueChanged = new Signal()
   }
 
   // ////////////////////////////////////////

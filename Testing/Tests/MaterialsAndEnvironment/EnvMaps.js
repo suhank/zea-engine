@@ -7,7 +7,7 @@ testingHarness.registerTest('MaterialsAndEnvironment/EnvMaps', (domElement, reso
     scene.setEnvMap(envMap);
     scene.setupGrid(60.0, 6);
 
-    envMap.loaded.connect(()=>{
+    envMap.addEventListener('loaded', event => {
         const data = envMap.getSampleSets();
         const disc = new Z.Disc(0.5)
         const up = new Z.Vec3(0,0,1);

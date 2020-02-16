@@ -7,8 +7,9 @@ class Async extends EventEmitter {
    * @param {number} asyncCount - The asyncCount value.
    */
   constructor(asyncCount = 0) {
+    super()
     this.__asyncCount = asyncCount
-    this.ready = new Signal(true)
+    this.ready = false
 
     this.incAsyncCount = function(count = 1) {
       this.__asyncCount += count

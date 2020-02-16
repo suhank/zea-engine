@@ -1,16 +1,16 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { loadTextfile } from './Utils.js'
 
 /** Class representing a material library manager. */
-class MaterialLibraryManager {
+class MaterialLibraryManager extends EventEmitter {
   /**
    * Create a material library manager.
    */
   constructor() {
+    super()
     this.__materialLibraries = {}
-    this.materialLibraryLoaded = new Signal()
 
     resourceLoader.registerResourceCallback('.matlib', file => {
       loadTextfile(file.url, data => {

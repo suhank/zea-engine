@@ -1,5 +1,3 @@
-import { Signal } from '../../Utilities'
-
 import { ParameterOwner } from '../../SceneTree/ParameterOwner.js'
 import { BooleanParameter } from '../../SceneTree/Parameters'
 
@@ -19,7 +17,6 @@ class GLPass extends ParameterOwner {
    */
   constructor() {
     super()
-    this.updated = new Signal()
     this.enabled = true
     this.__passIndex = 0
 

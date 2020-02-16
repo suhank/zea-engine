@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory'
 import { ItemFlags, BaseItem } from '../BaseItem.js'
 
@@ -19,8 +18,6 @@ class Operator extends BaseItem {
     
     this.__outputs = []
     this.__evalOutput = this.__evalOutput.bind(this)
-
-    this.postEval = new Signal()
   }
 
   /**

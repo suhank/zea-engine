@@ -1,5 +1,5 @@
-import { Signal, EventEmitter } from '../Utilities'
-// import { RefCounted } from './RefCounted.js'
+// import { EventEmitter } from '../Utilities'
+import { RefCounted } from './RefCounted.js'
 import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
@@ -8,9 +8,9 @@ import { sgFactory } from './SGFactory.js'
 import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
 /** Class representing a parameter owner in the scene tree.
- * @extends EventEmitter
+ * @extends RefCounted
  */
-class ParameterOwner extends EventEmitter {
+class ParameterOwner extends RefCounted {
   /**
    * Create a parameter owner.
    */
@@ -20,14 +20,6 @@ class ParameterOwner extends EventEmitter {
     this.__params = []
     this.__paramMapping = {}
     this.__paramSignalIds = {}
-
-    // Paramters are not intended to be dynamic.
-    // Instead they are part of the mixin architecture.
-    // Note: Materials add/remove paramters when the
-    // shader name is changed.
-    this.parameterAdded = new Signal()
-    this.parameterRemoved = new Signal()
-    this.parameterValueChanged = new Signal()
   }
 
   // ////////////////////////////////////////

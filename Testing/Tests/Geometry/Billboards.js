@@ -9,7 +9,7 @@ testingHarness.registerTest('Geometry/Billboards', (domElement, resources)=> {
 
     scene.setupGrid(60.0, 6);
     
-    scene.getCamera().setPositionAndTarget(new Z.Vec3(5,4,3), new Z.Vec3(0,0,0));
+    renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(5,4,3), new Z.Vec3(0,0,0));
 
     {   
         const image = new Z.LDRImage('SolorFloorPerformer');

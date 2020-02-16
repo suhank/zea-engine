@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { ValueSetMode, ValueGetMode } from '../Parameters'
 import { sgFactory } from '../SGFactory'
 
@@ -14,8 +13,6 @@ class OperatorOutput {
     this.__filterFn = filterFn
     this._param = undefined
     this.detached = false
-
-    this.paramSet = new Signal()
   }
 
   /**

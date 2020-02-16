@@ -1,5 +1,4 @@
 import { Xfo, Box3 } from '../Math'
-import { Signal } from '../Utilities'
 import { sgFactory } from './SGFactory.js'
 import {
   ParamFlags,
@@ -56,12 +55,6 @@ class TreeItem extends BaseItem {
     this.__components = []
     this.__componentMapping = {}
 
-    this.mouseDown = new Signal()
-    this.mouseUp = new Signal()
-    this.mouseMove = new Signal()
-    this.mouseEnter = new Signal()
-    this.mouseLeave = new Signal()
-
     // /////////////////////////////////////
     // Add parameters.
 
@@ -77,17 +70,6 @@ class TreeItem extends BaseItem {
     this.__boundingBoxParam = this.addParameter(
       new Parameter('BoundingBox', new Box3())
     )
-
-    this.parentChanged = this.ownerChanged
-    this.childAdded = new Signal()
-    this.childRemoved = new Signal()
-    // this.componentAdded = new Signal();
-    // this.componentRemoved = new Signal();
-    this.highlightChanged = new Signal()
-    this.visibilityChanged = new Signal()
-    this.localXfoChanged = this.__localXfoParam.valueChanged
-    this.globalXfoChanged = this.__globalXfoParam.valueChanged
-    this.boundingChanged = this.__boundingBoxParam.valueChanged
 
     // Bind handlers
     this._cleanGlobalXfo = this._cleanGlobalXfo.bind(this)
@@ -402,7 +384,7 @@ class TreeItem extends BaseItem {
     }
     this.__highlights.push(name)
     this.__highlightMapping[name] = color
-    this.emitEvent('highlightChanged', {})
+    this.emitEvent('highlightChanged', { name, color })
 
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {

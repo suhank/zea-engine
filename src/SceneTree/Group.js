@@ -1,5 +1,4 @@
 import { Vec3, Color, Xfo } from '../Math'
-import { Signal } from '../Utilities'
 import {
   ValueSetMode,
   BooleanParameter,

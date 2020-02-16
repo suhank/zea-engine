@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities'
 
 import '../SceneTree/GeomItem.js'
 
@@ -9,8 +9,10 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
-class GLGeomItem {
+/** This class abstracts the rendering of a collection of geometries to screen.
+ * @extends EventEmitter
+ */
+class GLGeomItem extends EventEmitter {
   /**
    * Create a GL geom item.
    * @param {any} gl - The gl value.
@@ -20,6 +22,7 @@ class GLGeomItem {
    * @param {number} flags - The flags value.
    */
   constructor(gl, geomItem, glGeom, id, flags = null) {
+    super()
     this.gl = gl
     this.geomItem = geomItem
     this.glGeom = glGeom

@@ -98,7 +98,7 @@ testingHarness.registerTest('DynamicScenes/ExplodedParts_Cascade', (domElement, 
         objAsset.getParameter('loadMtlFile').setValue(false);
         objAsset.getParameter('defaultShader').setValue('SimpleSurfaceShader');
         asset.addChild(objAsset);
-        objAsset.loaded.connect(function() {
+        objAsset.addEventListener('loaded', event => {
 
             let explodedPartsOp = new Z.ExplodePartsOperator('ExplodeParts');
             asset.addComponent(explodedPartsOp);
@@ -140,7 +140,7 @@ testingHarness.registerTest('DynamicScenes/ExplodedParts_Cascade', (domElement, 
                 animatingValue = false;
             };
             timeoutId = setTimeout(timerCallback, 1000); // half second delay
-            param.valueChanged.connect(()=>{
+            param.addEventListener('valueChanged', event => {
                 if(!animatingValue) {
                     clearTimeout(timeoutId);
                 }

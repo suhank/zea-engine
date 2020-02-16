@@ -1,5 +1,4 @@
 import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
@@ -20,10 +19,6 @@ class GeomLibrary {
    * Create a geom library.
    */
   constructor() {
-    this.rangeLoaded = new Signal()
-    this.streamFileParsed = new Signal()
-    this.loaded = new Signal(true)
-
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 

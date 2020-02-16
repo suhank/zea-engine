@@ -1,5 +1,5 @@
 import { Color } from '../Math/Color.js'
-import { EventEmitter } from '../Utilities/Signal.js'
+import { EventEmitter } from '../Utilities'
 import { processTextureParams } from './processTextureParams.js'
 
 /** Class representing a GL render target. */
@@ -11,7 +11,6 @@ class GLRenderTarget extends EventEmitter {
    */
   constructor(gl, params) {
     super()
-    this.updated = new Signal()
     this.__gl = gl
     this.textureTargets = []
     this.depthTexture = null

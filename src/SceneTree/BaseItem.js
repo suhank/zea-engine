@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { sgFactory } from './SGFactory.js'
 import { ValueSetMode } from './Parameters/Parameter.js'
 import { ParameterOwner } from './ParameterOwner.js'
@@ -29,11 +28,8 @@ class BaseItem extends ParameterOwner {
 
     this.__selectable = true
     this.__selected = false
-    this.selectedChanged = new Signal()
 
     this.__metaData = {}
-
-    this.nameChanged = new Signal()
 
     numBaseItems++
   }

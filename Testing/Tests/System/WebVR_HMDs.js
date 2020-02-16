@@ -31,7 +31,7 @@ testingHarness.registerTest('System/WebVR_HMDs', (domElement, resources)=> {
         const vrAsset = scene.loadCommonAssetResource(path);
         holder.addChild(vrAsset);
         scene.getRoot().addChild(holder);
-        vrAsset.loaded.connect( () => {
+        vrAsset.addEventListener('loaded', event => {
             vrAsset.traverse( (i) => console.log( i.getPath()))
         });
     }
@@ -39,7 +39,7 @@ testingHarness.registerTest('System/WebVR_HMDs', (domElement, resources)=> {
     loadAsset("ZeaEngine/Oculus.vla", new Z.Vec3(-0.2, 0, 0.0));
 
 
-    // vrAsset.loaded.connect((entries) => {
+    // vrAsset.addEventListener('loaded', event => {
     //     const controllerTree = vrAsset.getChildByName('Controller');
     //     controllerTree.setLocalXfo(new Z.Xfo(new Z.Vec3(0.25, 0,0)));
     // });

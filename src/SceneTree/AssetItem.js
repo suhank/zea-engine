@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { Version } from './Version.js'
 import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
@@ -19,11 +18,7 @@ class AssetItem extends TreeItem {
 
     this.__geomLibrary = new GeomLibrary()
     this.__materials = new MaterialLibrary()
-
-    this.loaded = new Signal(true)
-    // Assets that are generated inline can be considered loaded
-    // (e.g. the ground plane). So we set loaded to true, unless a file is specified.
-    this.loaded.setToggled(true)
+    this.loaded = false
   }
 
   /**

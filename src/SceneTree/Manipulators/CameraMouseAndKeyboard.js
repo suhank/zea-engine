@@ -1,6 +1,4 @@
-import { SystemDesc } from '../../BrowserDetection.js'
 import { Vec2, Vec3, Quat, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { NumberParameter } from '../Parameters'
 
@@ -40,8 +38,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__mouseWheelDollySpeedParam = this.addParameter(
       new NumberParameter('mouseWheelDollySpeed', 0.0005)
     )
-
-    this.movementFinished = new Signal()
   }
 
   /**

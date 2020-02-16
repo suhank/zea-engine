@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
 import { resourceLoader } from '../ResourceLoader.js'
 

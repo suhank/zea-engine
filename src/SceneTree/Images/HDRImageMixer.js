@@ -1,5 +1,5 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Async, Signal } from '../../Utilities'
+import { Async } from '../../Utilities'
 import { BaseImage } from '../BaseImage.js'
 import { FileImage } from './FileImage.js'
 
@@ -24,10 +24,6 @@ class HDRImageMixer extends BaseImage {
     this.__loaded = false
     this.__subImages = []
     this.__weights = []
-
-    this.loaded = new Signal()
-    this.updated = new Signal()
-    this.weightsChanged = new Signal()
   }
 
   /**

@@ -56,7 +56,7 @@ testingHarness.registerTest('Geometry/HitTesting', (domElement, resources)=> {
 
     const vp = renderer.getViewport()
     let drawing = false;
-    vp.mouseDownOnGeom.connect((event)=>{
+    vp.addEventListener('mouseDownOnGeom', event => {
         if(!event.altKey) {
             const {intersectionData} = event;
             if(intersectionData) {
@@ -67,7 +67,7 @@ testingHarness.registerTest('Geometry/HitTesting', (domElement, resources)=> {
             }
         }
     });
-    vp.mouseMove.connect((event)=>{
+    vp.addEventListener('mouseMove', event =>{
         if(drawing) {
             const intersectionData = vp.getGeomDataAtPos(event.mousePos, event.mouseRay);
             if(intersectionData) {
@@ -75,7 +75,7 @@ testingHarness.registerTest('Geometry/HitTesting', (domElement, resources)=> {
             }
         }
     });
-    vp.mouseUp.connect((event)=>{
+    vp.addEventListener('mouseUp', event =>{
         if(drawing) {
             drawing = false;
         }

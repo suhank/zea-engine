@@ -1,5 +1,4 @@
 import { Color } from '../Math/Color.js'
-import { Signal } from '../Utilities'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 import { ValueSetMode } from './Parameters'
@@ -18,8 +17,6 @@ class BaseGeomItem extends TreeItem {
     this.__cutAway = false
     this.__cutAwayVector = false
     this.__cutAwayDist = false
-    this.cutAwayChanged = new Signal()
-
     this.__layers = []
   }
 

@@ -136,8 +136,8 @@ testingHarness.registerTest('DynamicScenes/Groups', (domElement, resources)=> {
   renderer.frameAll();
   renderer.resumeDrawing();
 
-  renderer.getViewport().mouseDownOnGeom.connect((event)=>{
-    const geomItem = event.intersectionData.geomItem;
+  renderer.getViewport().addEventListener('mouseDownOnGeom', event => {
+    const geomItem = event.intersectionData.geomItem
     console.log(geomItem.getPath())
     if(event.ctrlKey){
       geomItem.setSelected(!geomItem.getSelected());

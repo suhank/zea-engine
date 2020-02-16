@@ -1,5 +1,4 @@
-import { Signal } from '../Utilities'
-import { TreeItem, sgFactory, ParameterOwner, EventEmitter } from '../SceneTree'
+import { TreeItem, sgFactory, ParameterOwner } from '../SceneTree'
 import { SystemDesc } from '../BrowserDetection.js'
 import { onResize } from '../external/onResize.js'
 import { create3DContext } from './GLContext.js'
@@ -16,8 +15,10 @@ let mouseLeft = false
 
 const registeredPasses = {}
 
-/** Class representing a GL base renderer. */
-class GLBaseRenderer extends EventEmitter {
+/** Class representing a GL base renderer.
+ * @extends ParameterOwner
+ */
+class GLBaseRenderer extends ParameterOwner {
   /**
    * Create a GL base renderer.
    * @param {any} canvasDiv - The canvasDiv value.
@@ -53,8 +54,6 @@ class GLBaseRenderer extends EventEmitter {
     this.renderGeomDataFbos = this.renderGeomDataFbos.bind(this)
     this.requestRedraw = this.requestRedraw.bind(this)
 
-    this.keyPressed = new Signal()
-
     this.setupWebGL(canvasDiv, options.webglOptions ? options.webglOptions : {})
     this.bindEventHandlers()
 
@@ -86,7 +85,9 @@ class GLBaseRenderer extends EventEmitter {
             // this.__gl.setCompatibleXRDevice(device);
             this.__gl.makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
-              this.emitEvent('xrViewportSetup', { selected: this.__selected })
+              this.emitEvent('xrViewportSetup', {
+                xrViewport: this.__xrViewport,
+              })
               resolve(this.__xrViewport)
             })
           }

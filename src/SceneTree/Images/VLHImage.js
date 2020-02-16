@@ -31,7 +31,7 @@ class VLHImage extends BaseImage {
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     fileParam.addEventListener('valueChanged', () => {
-      this.loaded.untoggle()
+      this.loaded = false
 
       if (this.getName() == sgFactory.getClassName(this)) {
         // Generate a name from the file path.

@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { BaseItem } from './BaseItem.js'
 
 import { BooleanParameter } from './Parameters'
@@ -28,7 +27,7 @@ class BaseImage extends BaseItem {
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     // Instead we should start using a loaded Promise.
-    this.loaded = new Signal(true)
+    this.loaded = false
   }
 
   /**

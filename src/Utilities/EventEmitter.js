@@ -55,7 +55,7 @@ class EventEmitter {
 
     const ids = []
     slots.forEach(function(item, index) {
-      if (item === fn) {
+      if (item === listener) {
         ids.push(index)
       }
     })
@@ -94,7 +94,7 @@ class EventEmitter {
    * Emit the signal to all slots(observers)
    * @param {BaseEvent} event - The event object.
    */
-  emitEvent(event) {
+  emitEvent(eventName, event) {
     const slots = this.__slots[eventName]
     if (!slots) {
       return

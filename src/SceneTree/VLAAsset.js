@@ -1,5 +1,4 @@
 import { Color } from '../Math'
-import { Signal } from '../Utilities'
 import { SystemDesc } from '../BrowserDetection.js'
 import { FilePathParameter, ColorParameter } from './Parameters'
 import { AssetItem } from './AssetItem.js'
@@ -25,9 +24,8 @@ class VLAAsset extends AssetItem {
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
     // when this signal emits.
-    this.geomsLoaded = new Signal(true)
-    this.geomsLoaded.setToggled(false)
-    this.loaded.setToggled(false)
+    this.geomsLoaded = false
+    this.loaded = false
     this.__geomLibrary.addEventListener('loaded', () => {
       this.emitEvent('geomsLoaded', {})
     })

@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { BaseItem, ItemFlags, sgFactory } from '../SceneTree'
 
 /** A state machine is a mathematical model that describes the behavior of
@@ -17,8 +16,6 @@ class StateMachine extends BaseItem {
     this.__states = {}
     this.__currentState
     this.__initialStateName
-
-    this.stateChanged = new Signal()
 
     // Always save state machines.
     // Then never come as part of the binary data.
@@ -68,7 +65,7 @@ class StateMachine extends BaseItem {
     this.__currentState = this.__states[name]
     this.__currentState.activate()
 
-    this.emitEvent('stateChanged',{ name })
+    this.emitEvent('stateChanged', { name })
   }
 
   /**

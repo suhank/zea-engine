@@ -1,7 +1,5 @@
-import { Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory'
 import { ColorParameter } from './ColorParameter.js'
-
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a material color parameter.
@@ -15,8 +13,6 @@ class MaterialColorParam extends ColorParameter {
    */
   constructor(name, value) {
     super(name, value)
-    this.textureConnected = new Signal()
-    this.textureDisconnected = new Signal()
     this.__imageUpdated = this.__imageUpdated.bind(this)
   }
 

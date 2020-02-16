@@ -12,7 +12,7 @@ class Circle extends Lines {
    * @param {number} radius - The radius of the circle.
    * @param {number} numSegments - The number of segments.
    */
-  constructor(radius = 1.0, angle = Math.PI * 2, numSegments = 32) {
+  constructor(radius = 1.0, numSegments = 32, angle = Math.PI * 2) {
     super()
 
     if (isNaN(radius) || isNaN(numSegments))

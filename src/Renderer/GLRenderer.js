@@ -1,5 +1,4 @@
 import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities'
 import { Vec3, Xfo, Mat4, Ray } from '../Math'
 import {
   Plane,
@@ -53,7 +52,6 @@ class GLRenderer extends GLBaseRenderer {
 
     this.__glEnvMap = undefined
     this.__glBackgroundMap = undefined
-    this.envMapAssigned = new Signal(true)
 
     this.__glLightmaps = {}
     this.__displayEnvironment = true
@@ -157,7 +155,7 @@ class GLRenderer extends GLBaseRenderer {
     this.__glEnvMap.addEventListener('loaded', this.requestRedraw)
     this.__glEnvMap.addEventListener('updated', this.requestRedraw)
 
-    this.emitEvent('envMapAssigned', this.__glEnvMap)
+    this.emitEvent('envMapAssigned', { envMap: this.__glEnvMap })
   }
 
   /**

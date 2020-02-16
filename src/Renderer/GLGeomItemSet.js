@@ -1,15 +1,18 @@
 import '../SceneTree/GeomItem.js'
 
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities'
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
-class GLGeomItemSet {
+/** This class abstracts the rendering of a collection of geometries to screen.
+ * @extends EventEmitter
+ */
+class GLGeomItemSet extends EventEmitter {
   /**
    * Create a GL geom item set.
    * @param {any} gl - The gl value.
    * @param {any} glgeom - The glgeom value.
    */
   constructor(gl, glgeom) {
+    super()
     this.gl = gl
     this.glgeom = glgeom
     this.glgeomItems = []
@@ -25,9 +28,6 @@ class GLGeomItemSet {
 
     // this.inverted = false;
     this.lightmapName = undefined
-
-    // this.drawCountChanged = new Signal()
-    this.destructing = new Signal()
 
     this.visibleItems = []
     this.highlightedItems = []

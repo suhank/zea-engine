@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { RefCounted } from '../RefCounted.js'
 import { VLHImage } from './VLHImage.js'
 
@@ -75,9 +74,6 @@ class LightmapMixer extends RefCounted {
     this.__images = []
     this.__weights = []
     this.__stream = false
-    this.lightmapAdded = new Signal()
-    this.lightmapResourceChanged = new Signal()
-    this.lightmapWeightChanged = new Signal()
   }
 
   /**

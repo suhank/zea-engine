@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities'
+import { EventEmitter } from '../Utilities'
 
 let counter = 0
 
@@ -8,17 +8,17 @@ let counter = 0
  *  objects own references to GPU resources that need to
  *  be cleaned up when the JavaScript object is destroyed.
  */
-class RefCounted {
+class RefCounted extends EventEmitter {
   /**
    * Create a ref counted object.
    */
   constructor() {
+    super()
     if (this.constructor.name == 'RefCounted') {
       throw new Error('RefCounted should not be instantiated directly.')
     }
     this.__id = ++counter
     this.__refs = []
-    this.destructing = new Signal()
     this.__destroyed = false
   }
 

@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities'
 import { BaseItem } from '../SceneTree'
 
 /** Class representing a GL shader.
@@ -32,7 +31,6 @@ class GLShader extends BaseItem {
 
     this.__shaderProgramHdls = {}
     this.__gltextures = {}
-    this.updated = new Signal()
 
     this.invisibleToGeomBuffer = false
   }

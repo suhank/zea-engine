@@ -1,4 +1,4 @@
-import { Signal } from '../../Utilities'
+import { EventEmitter } from '../../Utilities'
 import { resourceLoader } from '../ResourceLoader.js'
 import { loadTextfile, loadBinfile } from '../Utils.js'
 
@@ -35,13 +35,13 @@ const getFirstBrowserLanguage = function() {
 }
 
 /** Class representing a label manager. */
-class LabelManager {
+class LabelManager extends EventEmitter {
   /**
    * Create a label manager.
    */
   constructor() {
+    super()
     this.__labelLibraries = {}
-    this.labelLibraryLoaded = new Signal()
 
     const language = getFirstBrowserLanguage()
     if (language.startsWith('en')) this.__language = 'En'

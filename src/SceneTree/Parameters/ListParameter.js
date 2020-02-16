@@ -1,4 +1,3 @@
-import { Signal } from '../../Utilities'
 import { ValueSetMode, ParamFlags, Parameter } from './Parameter.js'
 
 /** Class representing a list parameter.

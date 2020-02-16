@@ -1,5 +1,4 @@
 import { Vec3, Box3, Xfo } from '../Math'
-import { Signal } from '../Utilities'
 import { TreeItem } from './TreeItem.js'
 import { ValueSetMode, BooleanParameter, NumberParameter } from './Parameters'
 import { sgFactory } from './SGFactory'
@@ -33,10 +32,6 @@ class Camera extends TreeItem {
     // this.__globalXfoParam.addEventListener('valueChanged', (changeType)=>{
     //     this.__viewMatParam.setDirty(_cleanViewMat);
     // });
-
-    // this.viewMatChanged = this.__viewMatParam.valueChanged;
-    this.projectionParamChanged = new Signal()
-    this.movementFinished = new Signal()
     
     const emitProjChanged = event => {
       this.emitEvent('projectionParamChanged', event)
