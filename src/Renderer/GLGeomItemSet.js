@@ -125,7 +125,7 @@ class GLGeomItemSet extends EventEmitter {
       }
       this.drawIdsBufferDirty = true
     }
-    signalIds.sel = glgeomItem.addEventListener(
+    signalIds.vis = glgeomItem.addEventListener(
       'visibilityChanged',
       visibilityChanged
     )
