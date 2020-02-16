@@ -616,11 +616,11 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    // document.addEventListener('dblclick', (event)=>{
+    // document.addEventListener('dblclick', event =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
-    // document.addEventListener('click', (event)=>{
+    // document.addEventListener('click', event =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });

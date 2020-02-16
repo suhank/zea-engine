@@ -196,7 +196,8 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.addEventListener('labelLibraryLoaded', loadedLibrary => {
+          labelManager.addEventListener('labelLibraryLoaded', event => {
+            const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
         } else {

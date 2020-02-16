@@ -1,14 +1,18 @@
 import { ValueSetMode, ValueGetMode } from '../Parameters'
 import { sgFactory } from '../SGFactory'
+import { EventEmitter } from '../../Utilities'
 
-/** Class representing an operator output. */
-class OperatorOutput {
+/** Class representing an operator output.
+ * @extends EventEmitter
+ */
+class OperatorOutput extends EventEmitter {
   /**
    * Create an operator output.
    * @param {string} name - The name value.
    * @param {any} filterFn - The filterFn value.
    */
   constructor(name, filterFn) {
+    super()
     this.__name = name
     this.__filterFn = filterFn
     this._param = undefined
@@ -53,7 +57,7 @@ class OperatorOutput {
    */
   setParam(param) {
     this._param = param
-    this.emitEvent('paramSet', {})
+    this.emitEvent('paramSet', { param })
   }
 
   /**
@@ -228,7 +232,7 @@ class XfoOperatorOutput extends OperatorOutput {
     // })
 
     this._param = param
-    this.emitEvent('paramSet', {})
+    this.emitEvent('paramSet', { param })
   }
 }
 sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput)

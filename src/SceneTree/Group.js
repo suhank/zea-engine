@@ -118,7 +118,7 @@ class Group extends TreeItem {
     // However we seem to get infinite callstacks.
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    this.__globalXfoParam.addEventListener('valueChanged', mode => {
+    this.__globalXfoParam.addEventListener('valueChanged', event => {
       if (!this.calculatingGroupXfo) this._propagateDirtyXfoToItems()
     })
   }
@@ -497,7 +497,7 @@ class Group extends TreeItem {
       }
     }
 
-    sigIds.globalXfoChangedIndex = item.addEventListener('globalXfoChanged', mode => {
+    sigIds.globalXfoChangedIndex = item.addEventListener('globalXfoChanged', event => {
       // If the item's xfo changees, potentially through its own hierarchy
       // then we need to re-bind here.
       if (!this.propagatingXfoToItems) {

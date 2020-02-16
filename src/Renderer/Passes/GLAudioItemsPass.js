@@ -46,7 +46,8 @@ class GLAudioItemsPass extends GLPass {
     this.__renderer.registerPass(
       treeItem => {
         if (treeItem instanceof AudioItem) {
-          treeItem.addEventListener('audioSourceCreated', audioSource => {
+          treeItem.addEventListener('audioSourceCreated', event => {
+            const { audioSource } = event
             this.addAudioSource(treeItem, audioSource, treeItem)
           })
           return true
@@ -181,7 +182,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.addEventListener('globalXfoChanged', changeType => {
+      treeItem.addEventListener('globalXfoChanged', event => {
         updatePannerNodePosition()
       })
     }

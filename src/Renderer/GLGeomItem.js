@@ -43,11 +43,11 @@ class GLGeomItem extends EventEmitter {
     this.destroy = this.destroy.bind(this)
 
     if (!gl.floatTexturesSupported) {
-      this.updateXfo = geomXfo => {
+      this.updateXfo = () => {
         this.updateGeomMatrix()
       }
     } else {
-      this.updateXfo = geomXfo => {
+      this.updateXfo = () => {
         this.emitEvent('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
       }
     }

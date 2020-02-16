@@ -23,17 +23,18 @@ class SetParameterValue extends StateAction {
     )
 
     this.__outParam = this.addOutput(new OperatorOutput('Param'))
-    this.__outParam.addEventListener('paramSet', () => {
+    this.__outParam.addEventListener('paramSet', event => {
+      const { param } = event
       if (
         !this.__valueParam ||
-        this.__outParam.getParam().getDataType() !=
+        param.getDataType() !=
           this.__valueParam.getDataType()
       ) {
-        const param = this.__outParam.getParam().clone()
+        const param = param.clone()
         param.setName('Value')
         if (this.__outParam.getInitialValue)
           param.setValue(this.__outParam.getInitialValue())
-        else param.setValue(this.__outParam.getParam().getValue())
+        else param.setValue(param.getValue())
         this.__valueParam = this.addParameter(param)
       }
     })

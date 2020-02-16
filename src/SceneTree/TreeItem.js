@@ -102,6 +102,7 @@ class TreeItem extends BaseItem {
         this.__localXfoParam.setDirty(cleanLocalXfo)
       }
       this._setBoundingBoxDirty()
+      this.emitEvent('globalXfoChanged', event)
     })
 
     this.__visibleParam.addEventListener('valueChanged', () => {
