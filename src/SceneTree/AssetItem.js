@@ -26,7 +26,7 @@ class AssetItem extends TreeItem {
    * @return {boolean} - Returns true if the asset has already loaded its data.
    */
   isLoaded() {
-    return this.loaded.isToggled()
+    return this.loaded
   }
 
   /**

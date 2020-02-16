@@ -18,7 +18,6 @@ class VLAAsset extends AssetItem {
   constructor(name) {
     super(name)
     this.loaded = false
-
     this.lightmap = null
 
     // A signal that is emitted once all the geoms are loaded.
@@ -45,10 +44,10 @@ class VLAAsset extends AssetItem {
       this.geomsLoaded = false
       this.loadDataFile(
         () => {
-          if (!this.loaded.isToggled()) this.emitEvent('loaded', {})
+          if (!this.loaded) this.emitEvent('loaded', {})
         },
         () => {
-          // if(!this.loaded.isToggled()){
+          // if(!this.loaded){
           //   this.emitEvent('loaded', {});
           // }
           // this.emitEvent('geomsLoaded', {})

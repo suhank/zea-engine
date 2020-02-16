@@ -2,6 +2,7 @@ import { SystemDesc } from '../BrowserDetection.js'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
+import { EventEmitter } from '../Utilities'
 
 // The GeomLibrary parses geometry data using workers.
 // This can be difficult to debug, so you can disable this 
@@ -14,11 +15,12 @@ const GeomParserWorker = require('worker-loader?inline!./Geometry/GeomParserWork
 // } from './Geometry/parseGeomsBinary.js';
 
 /** Class representing a geometry library. */
-class GeomLibrary {
+class GeomLibrary extends EventEmitter {
   /**
    * Create a geom library.
    */
   constructor() {
+    super()
     this.__streamInfos = {}
     this.__genBuffersOpts = {}
 
@@ -252,7 +254,7 @@ class GeomLibrary {
       }
       this.geoms[offset + i] = proxy
     }
-    this.emitEvent('rangeLoaded', { storedRange })
+    this.emitEvent('rangeLoaded', { range: storedRange })
 
     const loaded = storedRange[1] - storedRange[0]
     // console.log("GeomLibrary Loaded:" + loaded);

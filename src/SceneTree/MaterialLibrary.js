@@ -11,6 +11,7 @@ class MaterialLibrary extends EventEmitter {
    * @param {string} name - The name of the material library.
    */
   constructor(name = 'MaterialLibrary') {
+    super()
     this.__name = name
 
     this.lod = 0

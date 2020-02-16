@@ -46,10 +46,15 @@ class GeomItem extends BaseGeomItem {
     this.__geomOffsetXfoParam.addEventListener('valueChanged', () => {
       this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
-
-    this.geomXfoChanged = this.__geomMatParam.valueChanged
-    this.materialAssigned = this.__materialParam.valueChanged
-    this.geomAssigned = this.__geomParam.valueChanged
+    this.__geomMatParam.addEventListener('valueChanged', event => {
+      this.emitEvent('geomXfoChanged', event)
+    })
+    this.__materialParam.addEventListener('valueChanged', event => {
+      this.emitEvent('materialAssigned', event)
+    })
+    this.__geomParam.addEventListener('valueChanged', event => {
+      this.emitEvent('geomAssigned', event)
+    })
 
     if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
     if (material) this.setMaterial(material, ValueSetMode.DATA_LOAD)
@@ -237,7 +242,8 @@ class GeomItem extends BaseGeomItem {
     if (geom) {
       this.setGeometry(geom, ValueSetMode.DATA_LOAD)
     } else {
-      const onGeomLoaded = range => {
+      const onGeomLoaded = event => {
+        const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)

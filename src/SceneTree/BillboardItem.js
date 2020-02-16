@@ -30,6 +30,7 @@ class BillboardItem extends TreeItem {
     this.addParameter(new NumberParameter('alpha', 1.0))
     this.addParameter(new ColorParameter('color', new Color(1.0, 1.0, 1.0)))
     this.addParameter(new BooleanParameter('alignedToCamera', false))
+    this.addParameter(new BooleanParameter('drawOnTop', false))
 
     const startParam = this.addParameter(new Vec3Parameter('lineStartOffset'))
     const endParam = this.addParameter(new ListParameter('lineEnd', Vec3))
@@ -52,7 +53,7 @@ class BillboardItem extends TreeItem {
       // we do not want them being persisted in the JSON structure.
       line.setGeometry(lineGeom, ValueSetMode.OPERATOR_SETVALUE)
       line.setMaterial(linesMaterial, ValueSetMode.OPERATOR_SETVALUE)
-      lines[index] = line
+      lines[event.index] = line
       updateLinePoints(event.index)
       this.addChild(line, false)
     })

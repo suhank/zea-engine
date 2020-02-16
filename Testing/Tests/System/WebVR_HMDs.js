@@ -12,11 +12,9 @@ testingHarness.registerTest('System/WebVR_HMDs', (domElement, resources)=> {
     // Renderer
     
     const renderer = new Z.GLRenderer(domElement);
-    // const renderer = new Z.GLRenderer(div);
 
     renderer.getViewport().getCamera().setPositionAndTarget(new Z.Vec3(1, -1, 0.5), new Z.Vec3(0, 0, 0));
     renderer.setScene(scene);
-    // renderer.addGUI(gui);
 
     /////////////////////////////////////
     // Obj Asset

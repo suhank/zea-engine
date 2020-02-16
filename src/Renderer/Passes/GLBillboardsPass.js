@@ -181,6 +181,7 @@ class GLBillboardsPass extends GLPass {
     const scale = billboard.getParameter('scale').getValue()
     let flags = 0
     if (billboard.getParameter('alignedToCamera').getValue()) flags |= 1 << 2
+    if (billboard.getParameter('drawOnTop').getValue()) flags |= 1 << 3
     const alpha = billboard.getParameter('alpha').getValue()
     const color = billboard.getParameter('color').getValue()
 
