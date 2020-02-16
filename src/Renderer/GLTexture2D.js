@@ -33,10 +33,10 @@ class GLTexture2D extends RefCounted {
           const data = params.data
           this.bufferData(data, width, height)
         }
-        this.configure(this.__texture.getParams())
         this.__texture.addEventListener('updated', imageUpdated)
-        
-        if (!this.__texture.isLoaded()) {
+        if (this.__texture.isLoaded()) {
+          this.configure(this.__texture.getParams())
+        } else {
           this.__texture.addEventListener('loaded', () => {
             this.configure(this.__texture.getParams())
           })

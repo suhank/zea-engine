@@ -11,23 +11,23 @@ class Async extends EventEmitter {
     this.__asyncCount = asyncCount
     this.ready = false
 
-    this.incAsyncCount = function(count = 1) {
+    this.incAsyncCount = (count = 1) => {
       this.__asyncCount += count
-      this.ready.setToggled(false)
-    }.bind(this)
+      this.ready = false
+    }
 
-    this.decAsyncCount = function() {
+    this.decAsyncCount = () => {
       if (this.__asyncCount > 0) {
         this.__asyncCount--
         if (this.__asyncCount == 0) {
           this.__asyncsCompleted()
         }
       }
-    }.bind(this)
+    }
 
-    this.__asyncsCompleted = function() {
+    this.__asyncsCompleted = () => {
       this.emitEvent('ready', {})
-    }.bind(this)
+    }
   }
 
   /**

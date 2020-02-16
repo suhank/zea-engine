@@ -118,20 +118,21 @@ void main(void) {
   float width = layoutData.z * atlasBillboards_desc.x * scl * 0.002;
   float height = layoutData.w * atlasBillboards_desc.y * scl * 0.002;
   int flags = int(billboardData.y);
-  bool alignedToCamera = flags > 0;
+  bool alignedToCamera = (flags & (1<<2)) != 0;
+  mat4 modelViewProjectionMatrix;
   if(alignedToCamera){
     vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
     vec3 billboardPos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
     mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
   }
   else{
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
   }
+  gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
 
-  bool overlay = flags > 0;
+  // Note: nowhere are we setting this flag
+  bool overlay = (flags & (1<<3)) != 0;
   if(overlay){
     gl_Position.z -= 0.05;
   }

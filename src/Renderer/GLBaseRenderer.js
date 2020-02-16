@@ -35,8 +35,8 @@ class GLBaseRenderer extends ParameterOwner {
     this.__passes = {}
     this.__passCallbacks = []
 
-    this.addTreeItem = this.addTreeItem.bind(this)
-    this.removeTreeItem = this.removeTreeItem.bind(this)
+    this.__childItemAdded = this.__childItemAdded.bind(this)
+    this.__childItemRemoved = this.__childItemRemoved.bind(this)
 
     this.__viewports = []
     this.__activeViewport = undefined
@@ -322,6 +322,13 @@ class GLBaseRenderer extends ParameterOwner {
     this.emitEvent('sceneSet', { scene: this.__scene })
   }
 
+  __childItemAdded(event) {
+    this.addTreeItem(event.childItem)
+  }
+  __childItemRemoved(event) {
+    this.removeTreeItem(event.childItem)
+  }
+
   /**
    * Add tree items to the scene.
    * @param {any} treeItem - The tree item to add.
@@ -349,8 +356,8 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(childItem)
     }
 
-    treeItem.addEventListener('childAdded', this.addTreeItem)
-    treeItem.addEventListener('childRemoved', this.removeTreeItem)
+    treeItem.addEventListener('childAdded', this.__childItemAdded)
+    treeItem.addEventListener('childRemoved', this.__childItemRemoved)
 
     this.renderGeomDataFbos()
   }
@@ -363,8 +370,8 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.removeEventListener('childAdded', this.addTreeItem)
-    treeItem.removeEventListener('childRemoved', this.removeTreeItem)
+    treeItem.removeEventListener('childAdded', this.__childItemAdded)
+    treeItem.removeEventListener('childRemoved', this.__childItemRemoved)
 
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue

@@ -57,7 +57,6 @@ class GLMaterial extends EventEmitter {
    * @return {any} - The return value.
    */
   bind(renderstate, warnMissingUnifs) {
-    // console.log("Material:" + this.__material.getName());
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]

@@ -32,7 +32,7 @@ class ObjAsset extends AssetItem {
     // Often the state machine will activate the first state
     // when this signal emits.
     this.geomsLoaded = false
-    this.loaded.setToggled(false)
+    this.loaded = false
 
     this.addParameter(new BooleanParameter('splitObjects', false))
     this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false))

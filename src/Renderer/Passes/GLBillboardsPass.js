@@ -17,6 +17,7 @@ class GLBillboardsPass extends GLPass {
    * Create a GL billboards pass.
    */
   constructor() {
+    console.log("GLBillboardsPass")
     super()
   }
 
@@ -422,10 +423,10 @@ class GLBillboardsPass extends GLPass {
    */
   sort(cameraPos) {
     for (const billboardData of this.__billboards) {
-      if (billboardData && billboardData.billboard.getVisible()) {
-        billboardData.dist = billboardData.billboard
-          .getGlobalXfo()
-          .tr.distanceTo(cameraPos)
+      const { billboard } = billboardData
+      if (billboard && billboard.getVisible()) {
+        const xfo = billboard.getGlobalXfo()
+        billboardData.dist = xfo.tr.distanceTo(cameraPos)
       }
     }
     this.__indexArray.sort((a, b) => {

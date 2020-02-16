@@ -17,7 +17,7 @@ class VLAAsset extends AssetItem {
    */
   constructor(name) {
     super(name)
-    this.loaded.setToggled(false)
+    this.loaded = false
 
     this.lightmap = null
 
@@ -42,7 +42,7 @@ class VLAAsset extends AssetItem {
         this.setName(stem)
       }
 
-      this.geomsLoaded.setToggled(false)
+      this.geomsLoaded = false
       this.loadDataFile(
         () => {
           if (!this.loaded.isToggled()) this.emitEvent('loaded', {})

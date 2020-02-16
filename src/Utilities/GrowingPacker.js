@@ -66,6 +66,7 @@ Example:
 
 class GrowingPacker extends EventEmitter {
   constructor(w = 0, h = 0) {
+    super()
     this.root = {
       x: 0,
       y: 0,

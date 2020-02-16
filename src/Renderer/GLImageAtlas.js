@@ -146,7 +146,11 @@ class GLImageAtlas extends GLRenderTarget {
     this.__subImages = []
     this.__layoutNeedsRegeneration = false
     this.__async = new Async()
-    this.loaded = this.__async.ready
+    this.loaded = false
+    this.__async.addEventListener('ready', () => {
+      this.loaded = true
+      this.emitEvent('loaded', {})
+    })
   }
 
   /**
