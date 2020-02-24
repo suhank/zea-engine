@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Zea Engine Class: Frustum</title>
+	<title>Zea Engine Class: AttrValue</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,17 +72,18 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Frustum</h1>
+	<h1 class="page-title">Class: AttrValue</h1>
 <section>
 
 <header>
     
         <h2>
-        Frustum
+        AttrValue
         </h2>
         
-            <div class="class-description">Class representing a Frustum. Frustums are used to determine what
-is inside the camera's field of view.</div>
+            <div class="class-description">A base class for values that can be stored in vertex attributes.
+Note: these values use Float32Array values to store their data,
+and we can create references to values in attributes using</div>
         
     
 </header>
@@ -94,7 +95,7 @@ is inside the camera's field of view.</div>
         
 <hr>
 <dt>
-    <h4 class="name" id="Frustum"><span class="type-signature"></span>new Frustum(p0, p1, p2, p3, p4, p5)</h4>
+    <h4 class="name" id="AttrValue"><span class="type-signature"></span>new AttrValue()</h4>
     
     
 </dt>
@@ -102,7 +103,7 @@ is inside the camera's field of view.</div>
 
     
     <div class="description">
-        Create a Frustum
+        <div class="class-diagram"><svg width="270" height="70" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><defs><marker id="Arrow" refY="2.5" orient="auto" style="overflow: visible;"><path d="M 0 0 L 5 2.5 L 0 5 z"></path></marker><style type="text/css"><![CDATA[rect {stroke-width: 2; stroke: black; fill: white;} a {cursor: pointer;} a text {fill: blue; text-decoration: underline;} path {stroke-width: 2; stroke: black; fill: none;} marker path {stroke-width:0; fill:black;} .child rect, .parent rect {stroke: blue;} .mixin rect {stroke: green;}]]></style></defs><g transform="translate(0, 20)"><g class="noi" transform="translate(10, 0)"><rect width="250" height="30"></rect><text dx="10" dy="20">AttrValue</text></g></g></svg></div>
     </div>
     
 
@@ -111,176 +112,6 @@ is inside the camera's field of view.</div>
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>p0</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the p0 value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>p1</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the p1 value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>p2</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the p2 value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>p3</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the p3 value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>p4</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the p4 value.</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>p5</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">any</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">the p5 value.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -316,7 +147,7 @@ is inside the camera's field of view.</div>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Math/Frustum.js
+		Math/AttrValue.js
 	</dd>
 	
 
@@ -365,7 +196,7 @@ is inside the camera's field of view.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="fromJSON"><span class="type-signature"></span>fromJSON(j)</h4>
+    <h4 class="name" id=".createFromFloat32Buffer"><span class="type-signature">&lt;static> </span>createFromFloat32Buffer(buffer, offset)</h4>
     
     
 </dt>
@@ -373,7 +204,7 @@ is inside the camera's field of view.</div>
 
     
     <div class="description">
-        The fromJSON method decodes a json object for this type.
+        Creates a new value to wrap memory in an existing buffer.
     </div>
     
 
@@ -408,13 +239,13 @@ is inside the camera's field of view.</div>
 
         <tr>
             
-                <td class="name"><code>j</code></td>
+                <td class="name"><code>buffer</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">ArrayBuffer</span>
 
 
 
@@ -425,7 +256,31 @@ is inside the camera's field of view.</div>
 
             
 
-            <td class="description last">The json object.</td>
+            <td class="description last">the buffer value.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>offset</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">the offset value.</td>
         </tr>
 
     
@@ -467,7 +322,7 @@ is inside the camera's field of view.</div>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Math/Frustum.js
+		Math/AttrValue.js
 	</dd>
 	
 
@@ -498,7 +353,7 @@ is inside the camera's field of view.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="intersectsBox"><span class="type-signature"></span>intersectsBox(box3)</h4>
+    <h4 class="name" id=".numElements"><span class="type-signature">&lt;static> </span>numElements()</h4>
     
     
 </dt>
@@ -506,7 +361,7 @@ is inside the camera's field of view.</div>
 
     
     <div class="description">
-        Tests a box to see if it is entirely within the frustum.
+        Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
     </div>
     
 
@@ -515,56 +370,6 @@ is inside the camera's field of view.</div>
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>box3</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Box3.html">Box3</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The box to test.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -600,7 +405,90 @@ is inside the camera's field of view.</div>
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Math/Frustum.js
+		Math/AttrValue.js
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="asArray"><span class="type-signature"></span>asArray()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Returns the type as an array. Often used to pass types to the GPU.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		Math/AttrValue.js
 	</dd>
 	
 
@@ -627,7 +515,7 @@ is inside the camera's field of view.</div>
     
             
 <div class="param-desc">
-    - True if the frustum intersects the box.
+    - Returns the result as an array.
 </div>
 
 
@@ -638,7 +526,7 @@ is inside the camera's field of view.</div>
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">array</span>
 
 
 
@@ -655,7 +543,7 @@ is inside the camera's field of view.</div>
             
 <hr>
 <dt>
-    <h4 class="name" id="setFromMatrix"><span class="type-signature"></span>setFromMatrix(mat4)</h4>
+    <h4 class="name" id="isValid"><span class="type-signature"></span>isValid()</h4>
     
     
 </dt>
@@ -663,141 +551,7 @@ is inside the camera's field of view.</div>
 
     
     <div class="description">
-        The setFromMatrix configures a Frustum object using a matrix.
-Typically the matrix is a model view projection matrix.
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>mat4</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="Mat4.html">Mat4</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The matrix to use.</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		Math/Frustum.js
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="toJSON"><span class="type-signature"></span>toJSON()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        The toJSON method encodes this type as a json object for persistences.
+        The isValid method.
     </div>
     
 
@@ -841,7 +595,7 @@ Typically the matrix is a model view projection matrix.
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Math/Frustum.js
+		Math/AttrValue.js
 	</dd>
 	
 
@@ -868,7 +622,7 @@ Typically the matrix is a model view projection matrix.
     
             
 <div class="param-desc">
-    - The json object.
+    - Returns the result as a boolean.
 </div>
 
 
@@ -879,7 +633,7 @@ Typically the matrix is a model view projection matrix.
     </dt>
     <dd>
         
-<span class="param-type">object</span>
+<span class="param-type">boolean</span>
 
 
 
@@ -948,7 +702,7 @@ Typically the matrix is a model view projection matrix.
 	
 	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
 	<dd class="tag-source">
-		Math/Frustum.js
+		Math/AttrValue.js
 	</dd>
 	
 
