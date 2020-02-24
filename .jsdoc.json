@@ -9,11 +9,11 @@
       }
     },
     "recurse": true,
-    "template": "node_modules/ink-docstrap/template"
+    "template": "template"
   },
   "plugins": ["node_modules/jsdoc-inheritance-diagram"],
   "source": {
-    "include": ["src/", "README.md"]
+    "include": ["src/Renderer", "README.md"]
   },
   "templates": {
     "includeDate": false,
