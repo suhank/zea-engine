@@ -2,6 +2,8 @@
 
 A high performance 3d rendering engine for the web,
 
+testing. 1.2.3
+
 Install the httpserver
  npm install http-server -g
 
