@@ -120,7 +120,7 @@ class Xfo {
 
     if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
       // Note: the following code has not been tested and
-      // may not be quire correct. We need to setup
+      // may not be quite correct. We need to setup
       // unit tests for this kind of sample.
       // An example would be to lay out some boxes on different rotations
       // and with non-uniform scale. Then parent them together. If they
