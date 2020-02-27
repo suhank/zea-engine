@@ -66,7 +66,6 @@ class TreeItemParameter extends Parameter {
       }
       this.__value = treeItem
       if (this.__value) {
-        this.__value.addRef(this)
         this.__value.globalXfoChanged.connect(
           this.treeItemGlobalXfoChanged.emit
         )

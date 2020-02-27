@@ -8,14 +8,12 @@ import { sgFactory } from './SGFactory.js'
 import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
 /** Class representing a parameter owner in the scene tree.
- * @extends RefCounted
  */
-class ParameterOwner extends RefCounted {
+class ParameterOwner {
   /**
    * Create a parameter owner.
    */
   constructor() {
-    super()
 
     this.__params = []
     this.__paramMapping = {}
@@ -112,7 +110,6 @@ class ParameterOwner extends RefCounted {
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
       this.__parameterValueChanged(param, mode)
     )
-    param.addRef(this)
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
     this.parameterAdded.emit(name)
@@ -134,7 +131,6 @@ class ParameterOwner extends RefCounted {
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
       this.__parameterValueChanged(param, mode)
     )
-    param.addRef(this)
     this.__params.splice(index, 0, param)
 
     const paramMapping = {}
@@ -179,7 +175,6 @@ class ParameterOwner extends RefCounted {
     prevparam.removeRef(this)
     prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
 
-    param.addRef(this)
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
       this.__parameterValueChanged(param, mode)
     )

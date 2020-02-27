@@ -333,9 +333,6 @@ class GLBaseRenderer {
   addTreeItem(treeItem) {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
-    if (treeItem.isDestroyed()) {
-      throw new Error('treeItem is destroyed:' + treeItem.getPath())
-    }
 
     for (const passCbs of this.__passCallbacks) {
       const rargs = {

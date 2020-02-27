@@ -187,18 +187,7 @@ class BaseItem extends ParameterOwner {
   setOwner(ownerItem) {
     // this.__private.set(ownerItem, ownerItem);
     if (this.__ownerItem !== ownerItem) {
-      // Note: to avoid having no owners for a moment
-      // we add the new owner first, then remove the previous
-      // So we have 2 owners for brief moment.
-      const prevOwner = this.__ownerItem
-
       this.__ownerItem = ownerItem
-      if (this.__ownerItem) {
-        this.addRef(this.__ownerItem)
-      }
-      if (prevOwner) {
-        this.removeRef(prevOwner)
-      }
       this.__updatePath()
     }
   }

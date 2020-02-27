@@ -35,7 +35,6 @@ class GLGeomItem {
 
     this.lightmapName = geomItem.getLightmapName()
     this.updated = new Signal()
-    this.destructing = new Signal()
     this.visibilityChanged = new Signal()
     this.highlightChanged = geomItem.highlightChanged
 
@@ -58,7 +57,6 @@ class GLGeomItem {
     this.geomItem.cutAwayChanged.connect(() => {
       this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
     })
-    this.geomItem.destructing.connect(this.destroy)
     this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
       this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED)
     })
@@ -217,8 +215,6 @@ class GLGeomItem {
     this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
     this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
     this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
-    this.geomItem.destructing.disconnect(this.destroy)
-    this.destructing.emit(this)
   }
 }
 

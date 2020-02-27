@@ -32,7 +32,6 @@ class MaterialParameter extends Parameter {
       }
       this.__value = material
       if (this.__value) {
-        this.__value.addRef(this)
         this.__value.parameterValueChanged.connect(
           this.valueParameterValueChanged.emit
         )

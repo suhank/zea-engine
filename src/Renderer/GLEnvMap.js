@@ -52,10 +52,6 @@ class GLEnvMap extends GLProbe {
         this.loaded.emit()
       })
     }
-    srcGLTex.destructing.connect(() => {
-      console.log(this.__envMap.getName() + ' destructing')
-      this.destroy()
-    })
   }
 
   /**

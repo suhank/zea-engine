@@ -30,10 +30,6 @@ class GLGeom {
       this.updated.emit()
     }
     this.__geom.geomDataTopologyChanged.connect(regenBuffers)
-
-    this.__geom.destructing.connect(() => {
-      this.destroy()
-    })
   }
 
   /**

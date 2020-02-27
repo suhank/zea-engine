@@ -16,11 +16,6 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
     this.__glshader = glshader
 
     this.updated = new Signal()
-    this.destructing = new Signal()
-
-    this.__material.destructing.connect(() => {
-      this.destructing.emit(this) // Note: propagate this signal so the GLPass can remove the item.
-    })
 
     this.__shaderBindings = {}
   }

@@ -27,7 +27,6 @@ class GLGeomItemSet {
     this.lightmapName = undefined
 
     this.drawCountChanged = new Signal()
-    this.destructing = new Signal()
 
     this.visibleItems = []
     this.highlightedItems = []
@@ -364,7 +363,6 @@ class GLGeomItemSet {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.destructing.emit()
   }
 }
 

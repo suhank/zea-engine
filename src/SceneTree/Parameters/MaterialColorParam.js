@@ -54,7 +54,6 @@ class MaterialColorParam extends ColorParameter {
         disconnectImage()
       }
       this.__image = value
-      this.__image.addRef(this)
       this.__image.updated.connect(this.__imageUpdated)
       this.textureConnected.emit()
       this.valueChanged.emit(mode)

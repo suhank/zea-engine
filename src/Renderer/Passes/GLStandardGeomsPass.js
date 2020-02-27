@@ -159,9 +159,6 @@ class GLStandardGeomsPass extends GLPass {
     glmaterial.updated.connect(() => {
       this.__renderer.requestRedraw()
     })
-    material.destructing.connect(() => {
-      material.deleteMetadata('glmaterial')
-    })
     material.setMetadata('glmaterial', glmaterial)
 
     return glmaterial
@@ -197,9 +194,6 @@ class GLStandardGeomsPass extends GLPass {
    * @return {any} - The return value.
    */
   addGeomItem(geomItem) {
-    if (geomItem.isDestroyed()) {
-      throw new Error('geomItem is destroyed:' + geomItem.getPath())
-    }
     // let glmaterialGeomItemSets = this.addMaterial(geomItem.getMaterial());
     // if (!glmaterialGeomItemSets)
     //     return;
@@ -262,7 +256,6 @@ class GLStandardGeomsPass extends GLPass {
     this.__drawItemsIndexFreeList.push(index)
 
     // TODO: review signal disconnections
-    // glgeomItem.destructing.disconnectScope(this);
     // glgeomItem.transformChanged.disconnectScope(this);
 
     // this.renderTreeUpdated.emit();

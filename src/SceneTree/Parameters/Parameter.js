@@ -83,7 +83,7 @@ class BaseParameter extends RefCounted {
    * @return {any} - The return value.
    */
   getOwner() {
-    return this.getRefer(0)
+    return this.ownerItem
   }
 
   /**
@@ -91,7 +91,7 @@ class BaseParameter extends RefCounted {
    * @param {any} ownerItem - The ownerItem value.
    */
   addOwner(ownerItem) {
-    this.addRef(ownerItem)
+    this.ownerItem = ownerItem
   }
 
   /**

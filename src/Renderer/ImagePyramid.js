@@ -96,10 +96,6 @@ class ImagePyramid extends GLImageAtlas {
         this.renderAtlas(destroySrcImage)
       })
     }
-    srcGLTex.destructing.connect(() => {
-      console.log(this.__srcGLTex.getName() + ' ImagePyramid destructing')
-      this.destroy()
-    })
   }
 
   /**
