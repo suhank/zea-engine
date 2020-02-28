@@ -7,6 +7,9 @@ import { sgFactory } from './SGFactory.js'
 // 'addPArameter' without the parameter instance.
 import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
+
+let counter = 0
+
 /** Class representing a parameter owner in the scene tree.
  */
 class ParameterOwner {
@@ -14,6 +17,7 @@ class ParameterOwner {
    * Create a parameter owner.
    */
   constructor() {
+    this.__id = ++counter
 
     this.__params = []
     this.__paramMapping = {}
@@ -26,6 +30,15 @@ class ParameterOwner {
     this.parameterAdded = new Signal()
     this.parameterRemoved = new Signal()
     this.parameterValueChanged = new Signal()
+  }
+  
+  /**
+   * Returns the unique id of the object. Every Object has a unique
+   * identifier which is based on a counter that is incremented.
+   * @return {any} - The return value.
+   */
+  getId() {
+    return this.__id
   }
 
   // ////////////////////////////////////////
