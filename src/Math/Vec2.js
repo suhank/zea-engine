@@ -279,18 +279,42 @@ class Vec2 extends AttrValue {
   }
 
   /**
-   * Gets the angle between this Vec2 and other.
+   * Calculates the cross product of this Vec2 against another Vec2.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {number} - Returns the cross product.
+   */
+  cross(other) {
+    // just calculate the z-component
+    return this.x * other.y - this.y * other.x;
+  }
+
+  /**
+   * Gets the angle between this Vec2 and other assuming both are normalized vectors.
    * @param {Vec2} other - The other Vec2 to compare with.
    * @return {number} - Returns the angle in radians.
    */
   angleTo(other) {
-    return Math.Atan2(other.x - this.x, other.y - this.y)
+    const cosine = this.normalize().dot(other.normalize())
+    if (cosine > 1.0) return 0.0
+    else if (cosine < -1.0) return Math.PI
+    else return Math.acos(cosine)
+  }
+
+  /**
+   * Gets the angle between this Vec2 and other.
+   * @param {Vec2} other - The other Vec2 to compare with.
+   * @return {number} - Returns the angle in radians.
+   */
+  signedAngleTo(other) {
+    const angle = this.angleTo(other)
+    if (this.cross(other) < 0.0) return -angle
+    else return angle
   }
 
   /**
    * Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
    * @param {number} angle - The angle of rotation.
-   * @return {Vec2} - Returns the rotated vector.
+   * @return {Vec2} - Returns the rotated vect  or.
    */
   rotate(angle) {
     const cosa = Math.cos(angle)
