@@ -172,6 +172,7 @@ class GLStandardGeomsPass extends GLPass {
   addGeom(geom) {
     let glgeom = geom.getMetadata('glgeom')
     if (glgeom) {
+      glgeom.addRef(this)
       return glgeom
     }
     const gl = this.__gl
@@ -185,7 +186,20 @@ class GLStandardGeomsPass extends GLPass {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
     geom.setMetadata('glgeom', glgeom)
+    glgeom.addRef(this)
     return glgeom
+  }
+
+  /**
+   * The removeGeom method.
+   * @param {any} geom - The geom value.
+   */
+  removeGeom(geom) {
+    let glgeom = geom.getMetadata('glgeom')
+    if (glgeom) {
+      glgeom.removeRef(this) // Should result in a destroy
+      return glgeom
+    }
   }
 
   /**
@@ -248,6 +262,12 @@ class GLStandardGeomsPass extends GLPass {
    */
   removeGeomItem(geomItem) {
     if (geomItem.getMetadata('glpass') != this) return
+    
+    // TODO: Finish of ref counting GLGeoms.
+    // I'm not sure if we ever clean up the renderer properly
+    // when geoms are removed. (Run Instancing test and see if 
+    // GLGeom is ever destoryed when instance counts drop to zero.)
+    // this.removeGeom(geomItem.getGeometry())
 
     const glgeomItem = geomItem.getMetadata('glgeomItem')
 
