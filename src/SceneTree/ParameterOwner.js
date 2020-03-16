@@ -165,7 +165,6 @@ class ParameterOwner {
     }
     const index = this.__paramMapping[paramName]
     const param = this.__params[this.__paramMapping[paramName]]
-    param.removeRef(this)
     param.valueChanged.disconnectId(this.__paramSignalIds[paramName])
     this.__params.splice(index, 1)
     const paramMapping = {}

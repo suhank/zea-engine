@@ -28,7 +28,6 @@ class MaterialParameter extends Parameter {
         this.__value.parameterValueChanged.disconnect(
           this.valueParameterValueChanged.emit
         )
-        this.__value.removeRef(this)
       }
       this.__value = material
       if (this.__value) {
@@ -111,7 +110,6 @@ class MaterialParameter extends Parameter {
       this.__value.parameterValueChanged.disconnect(
         this.valueParameterValueChanged.emit
       )
-      this.__value.removeRef(this)
     }
   }
 }

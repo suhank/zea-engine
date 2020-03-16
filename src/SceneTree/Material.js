@@ -129,7 +129,8 @@ class Material extends BaseItem {
   removeAllTextures() {
     for (const param of this.__params) {
       if (param.getImage && param.getImage()) {
-        param.getImage().removeRef(this)
+        // emit a notification so the GLMaterial knows to 
+        // Remove refs to GLTexture objects.
         param.setImage(undefined)
       }
     }

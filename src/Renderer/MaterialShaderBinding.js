@@ -195,6 +195,7 @@ class ColorUniformBinding {
         glmaterial.updated.emit()
       })
       this.gltexture = gltexture
+      this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
       glmaterial.updated.emit()
@@ -216,7 +217,7 @@ class ColorUniformBinding {
 
     const disconnectImage = () => {
       const gltexture = boundImage.getMetadata('gltexture')
-      gltexture.destroy()
+      gltexture.removeRef(this);
       this.texBinding = null
       this.gltexture = null
       this.textureType = null
