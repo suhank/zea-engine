@@ -10,6 +10,7 @@ class GLGeom extends RefCounted {
    * @param {any} geom - The geom value.
    */
   constructor(gl, geom) {
+    super()
     this.__gl = gl
     this.__geom = geom
     this.__glattrs = {}
