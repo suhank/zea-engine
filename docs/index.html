@@ -35,7 +35,7 @@
     		z-index: 100;
     		padding: 15px;
 		    background: #343a40;
-		    color: white;
+		    color: rgba(255,255,255,.5);
 		}
 		.navbar-nav {
 			display: flex;
@@ -64,7 +64,7 @@
 		}
 		.left {
 		  background-color: #efefef;
-		  max-width: 220px;
+		  max-width: 250px;
 		  padding: 0;
 		}
 		.right {
@@ -91,6 +91,23 @@
 		.content div {
 		  overflow: auto;
 		}
+		.navbarSamples {
+		  display: flex;
+		  justify-content: center;
+		  width: 230px;
+		}
+		.navbarSamples a{
+			text-decoration: none;
+			font-size: 20px;
+			padding: 10px 0;
+			margin: 0 3px
+		}
+		.navbarSamples a:hover{
+			color: #EAD262;
+		}
+		.activelink {
+			color: #EAD262;
+		}
 	</style>
   </head>
 
@@ -101,7 +118,7 @@
 	      <h1 class="block:header::logo"><a href="/" transition><?xml version="1.0" encoding="utf-8"?>
 	<!-- Generator: Adobe Illustrator 23.0.3, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 	<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 141 39.2" style="enable-background:new 0 0 141 39.2;" xml:space="preserve">
+	 viewBox="0 0 141 39.2" style="enable-background:new 0 0 141 39.2;  fill: #EAD262;" xml:space="preserve">
 	<path id="Path_258" d="M83.7,29.1H57.4V10.2H79v4.7H61.3v4.5c0,3.1,2.5,5.7,5.7,5.7h22.2V5.6c0-3.1-2.5-5.6-5.6-5.6c0,0,0,0,0,0
 	H52.7c-3.1,0-5.6,2.5-5.6,5.6l0,0v28c0,3.1,2.5,5.6,5.6,5.6h36.6v-4.6C89.3,31.6,86.8,29.1,83.7,29.1C83.7,29.1,83.7,29.1,83.7,29.1
 	z"/>
@@ -132,6 +149,10 @@
 	  </header>
 	  <div class="content">
 	  	<div class="left">
+		<div class="navbarSamples">
+            <a href="/zea-engine" class="activelink">API Docs</a>
+            <a href="/samples" >Samples</a>
+        </div>
 	  		
 			<ul class="dropdown-menu ">
 				<li><a href="AtlasLayoutShader.html">AtlasLayoutShader</a></li><li><a href="ColorUniformBinding.html">ColorUniformBinding</a></li><li><a href="ComplexUniformBinding.html">ComplexUniformBinding</a></li><li><a href="GeomShaderBinding.html">GeomShaderBinding</a></li><li><a href="GLAudioItemsPass.html">GLAudioItemsPass</a></li><li><a href="GLBaseRenderer.html">GLBaseRenderer</a></li><li><a href="GLBaseViewport.html">GLBaseViewport</a></li><li><a href="GLBillboardsPass.html">GLBillboardsPass</a></li><li><a href="GLEnvMap.html">GLEnvMap</a></li><li><a href="GLFbo.html">GLFbo</a></li><li><a href="GLGeom.html">GLGeom</a></li><li><a href="GLGeomItem.html">GLGeomItem</a></li><li><a href="GLGeomItemSet.html">GLGeomItemSet</a></li><li><a href="GLHDRImage.html">GLHDRImage</a></li><li><a href="GLImageAtlas.html">GLImageAtlas</a></li><li><a href="GLImageStream.html">GLImageStream</a></li><li><a href="GLLDRAlphaImage.html">GLLDRAlphaImage</a></li><li><a href="GLLightmap.html">GLLightmap</a></li><li><a href="GLLightmapMixer.html">GLLightmapMixer</a></li><li><a href="GLLines.html">GLLines</a></li><li><a href="GLMaterial.html">GLMaterial</a></li><li><a href="GLMaterialGeomItemSets.html">GLMaterialGeomItemSets</a></li><li><a href="GLMesh.html">GLMesh</a></li><li><a href="GLOpaqueGeomsPass.html">GLOpaqueGeomsPass</a></li><li><a href="GLOverlayPass.html">GLOverlayPass</a></li><li><a href="GLPass.html">GLPass</a></li><li><a href="GLPoints.html">GLPoints</a></li><li><a href="GLProbe.html">GLProbe</a></li><li><a href="GLProceduralSky.html">GLProceduralSky</a></li><li><a href="GLRenderer.html">GLRenderer</a></li><li><a href="GLRenderTarget.html">GLRenderTarget</a></li><li><a href="GLScreenQuad.html">GLScreenQuad</a></li><li><a href="GLShader.html">GLShader</a></li><li><a href="GLShaderMaterials.html">GLShaderMaterials</a></li><li><a href="GLStandardGeomsPass.html">GLStandardGeomsPass</a></li><li><a href="GLTexture2D.html">GLTexture2D</a></li><li><a href="GLTransparentGeomsPass.html">GLTransparentGeomsPass</a></li><li><a href="GLViewport.html">GLViewport</a></li><li><a href="ImagePyramid.html">ImagePyramid</a></li><li><a href="MaterialShaderBinding.html">MaterialShaderBinding</a></li><li><a href="MatrixUniformBinding.html">MatrixUniformBinding</a></li><li><a href="ShaderLibrary.html">ShaderLibrary</a></li><li><a href="SimpleUniformBinding.html">SimpleUniformBinding</a></li><li><a href="SkyDomeShader.html">SkyDomeShader</a></li><li><a href="SkyShader.html">SkyShader</a></li><li><a href="VAOGeomShaderBinding.html">VAOGeomShaderBinding</a></li><li><a href="VRController.html">VRController</a></li><li><a href="VRHead.html">VRHead</a></li><li><a href="VRTool.html">VRTool</a></li><li><a href="VRViewport.html">VRViewport</a></li>
