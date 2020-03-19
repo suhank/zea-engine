@@ -73,25 +73,19 @@ class ResourceLoader {
     this.__workers = []
     this.__nextWorker = 0
 
-    if (
-      window.location.origin.startsWith('https://api.visualive.io') ||
-      window.location.origin.startsWith('https://apistage.visualive.io')
-    ) {
-      // For embeds using the old generated page system.
+    let engineUrl
+    const scripts = document.getElementsByTagName('script')
+    for (let i = 0; i < scripts.length; i++) {
+      const script = scripts[i]
+      if (script.src.includes('zea-engine')) {
+        engineUrl = script.src
+        break
+      }
+    }
+    if (!engineUrl) {
       this.wasmUrl = 'https://assets-visualive.storage.googleapis.com/oR3y6kdDu'
     } else {
-      let visualiveEngineUrl
-      const scripts = document.getElementsByTagName('script')
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i]
-        if (script.src.includes('zea-engine')) {
-          visualiveEngineUrl = script.src
-          break
-        }
-      }
-      if (!visualiveEngineUrl)
-        throw new Error('Unable to determine Zea Engine URL')
-      const parts = visualiveEngineUrl.split('/')
+      const parts = engineUrl.split('/')
       parts.pop()
       parts.pop()
       this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm'
