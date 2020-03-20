@@ -39,7 +39,6 @@ class MaterialFloatParam extends NumberParameter {
    */
   setImage(value, mode = 0) {
     const disconnectImage = () => {
-      this.__image.removeRef(this)
       // image.loaded.disconnect(imageUpdated);
       // image.updated.disconnect(imageUpdated);
       this.textureDisconnected.emit()

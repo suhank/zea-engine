@@ -34,15 +34,13 @@ const ParamState = {
 }
 
 /** Class representing a base parameter.
- * @extends RefCounted
  */
-class BaseParameter extends RefCounted {
+class BaseParameter {
   /**
    * Create a base parameter.
    * @param {string} name - The name of the base parameter.
    */
   constructor(name) {
-    super()
     this.__name = name
     this.__cleanerFns = []
     this.__boundOps = []

@@ -29,10 +29,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__ongoingTouches = {}
 
     this.__orbitRateParam = this.addParameter(
-      new NumberParameter(
-        'orbitRate',
-        ZeaEngine.SystemDesc.isMobileDevice ? -0.3 : 1
-      )
+      new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.3 : 1)
     )
     this.__dollySpeedParam = this.addParameter(
       new NumberParameter('dollySpeed', 0.02)

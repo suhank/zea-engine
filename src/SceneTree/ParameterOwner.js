@@ -184,7 +184,6 @@ class ParameterOwner {
     const name = param.getName()
     const index = this.__paramMapping[name]
     const prevparam = this.__params[this.__paramMapping[name]]
-    prevparam.removeRef(this)
     prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
 
     this.__paramSignalIds[name] = param.valueChanged.connect(mode =>

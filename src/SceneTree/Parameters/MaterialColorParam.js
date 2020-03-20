@@ -43,7 +43,6 @@ class MaterialColorParam extends ColorParameter {
    */
   setImage(value, mode = 0) {
     const disconnectImage = () => {
-      this.__image.removeRef(this)
       this.__image.loaded.disconnect(this.__imageUpdated)
       this.__image.updated.disconnect(this.__imageUpdated)
       this.__image = null

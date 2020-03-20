@@ -401,18 +401,21 @@ class GLImageAtlas extends GLRenderTarget {
 
     const unifs = renderstate.unifs
     for (let j = off; j < this.__subImages.length; j++) {
-      const image = this.__subImages[j]
+      const glimage = this.__subImages[j]
 
       const layoutItem = this.__layout[j]
-      image.bindToUniform(renderstate, unifs.srctexture)
+      glimage.bindToUniform(renderstate, unifs.srctexture)
       gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray())
       gl.uniform2fv(
         unifs.size.location,
         layoutItem.size.multiply(scl).asArray()
       )
-      gl.uniform2f(unifs.srctextureDim.location, image.width, image.height)
-      gl.uniform1i(unifs.alphaFromLuminance.location, image.alphaFromLuminance)
-      gl.uniform1i(unifs.invert.location, image.invert)
+      gl.uniform2f(unifs.srctextureDim.location, glimage.width, glimage.height)
+      gl.uniform1i(
+        unifs.alphaFromLuminance.location,
+        glimage.alphaFromLuminance
+      )
+      gl.uniform1i(unifs.invert.location, glimage.invert)
       gl.drawQuad()
 
       // After rendering the texture, we can reuse the texture unit.
@@ -469,8 +472,8 @@ class GLImageAtlas extends GLRenderTarget {
    * The cleanup method.
    */
   cleanup() {
-    for (const image of this.__subImages) {
-      image.removeRef(this)
+    for (const glimage of this.__subImages) {
+      glimage.removeRef(this)
     }
     this.__subImages = []
     this.destroy()

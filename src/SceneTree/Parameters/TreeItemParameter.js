@@ -62,7 +62,6 @@ class TreeItemParameter extends Parameter {
         this.__value.globalXfoChanged.disconnect(
           this.treeItemGlobalXfoChanged.emit
         )
-        this.__value.removeRef(this)
       }
       this.__value = treeItem
       if (this.__value) {
@@ -144,7 +143,6 @@ class TreeItemParameter extends Parameter {
       this.__value.parameterValueChanged.disconnect(
         this.valueParameterValueChanged.emit
       )
-      this.__value.removeRef(this)
     }
   }
 }

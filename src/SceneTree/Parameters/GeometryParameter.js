@@ -26,7 +26,6 @@ class GeometryParameter extends Parameter {
     if (this.__value !== geom) {
       if (this.__value) {
         this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
-        this.__value.removeRef(this)
       }
       this.__value = geom
       if (this.__value) {
@@ -94,7 +93,6 @@ class GeometryParameter extends Parameter {
 
     if (this.__value) {
       this.__value.boundingBoxDirtied.disconnect(this.boundingBoxDirtied.emit)
-      this.__value.removeRef(this)
     }
   }
 }

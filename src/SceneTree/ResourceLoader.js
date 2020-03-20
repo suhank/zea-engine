@@ -73,32 +73,30 @@ class ResourceLoader {
     this.__workers = []
     this.__nextWorker = 0
 
-    let engineUrl
+    let baseUrl
     const scripts = document.getElementsByTagName('script')
     for (let i = 0; i < scripts.length; i++) {
       const script = scripts[i]
       if (script.src.includes('zea-engine')) {
-        engineUrl = script.src
+        const parts = script.src.split('/')
+        parts.pop()
+        parts.pop()
+        baseUrl = parts.join('/')
         break
       }
     }
-    if (!engineUrl) {
-      this.wasmUrl = 'https://assets-visualive.storage.googleapis.com/oR3y6kdDu'
-    } else {
-      const parts = engineUrl.split('/')
-      parts.pop()
-      parts.pop()
-      this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm'
-
-      this.addResourceURL(
-        'ZeaEngine/Vive.vla',
-        parts.join('/') + '/public-resources/Vive.vla'
-      )
-      this.addResourceURL(
-        'ZeaEngine/Oculus.vla',
-        parts.join('/') + '/public-resources/Oculus.vla'
-      )
+    if (!baseUrl) {
+      baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
     }
+    this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+    this.addResourceURL(
+      'ZeaEngine/Vive.vla',
+      baseUrl + '/public-resources/Vive.vla'
+    )
+    this.addResourceURL(
+      'ZeaEngine/Oculus.vla',
+      baseUrl + '/public-resources/Oculus.vla'
+    )
   }
 
   /**

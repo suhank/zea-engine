@@ -6,6 +6,7 @@ import { AssetItem } from './AssetItem.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { sgFactory } from './SGFactory.js'
+import { Version } from './Version.js'
 // import { EnvMap, Lightmap, LightmapMixer } from './Images'
 
 /** Class representing a VLA asset.
@@ -80,7 +81,7 @@ class VLAAsset extends AssetItem {
    */
   readBinary(reader, context) {
     if (context.version != -1) { // Necessary for the smart lok
-      const version = new ZeaEngine.Version()
+      const version = new Version()
       version.patch = context.version
       context.versions = { 'zea-mesh': version, 'zea-engine': version }
       context.meshSdk = "FBX";
@@ -89,13 +90,13 @@ class VLAAsset extends AssetItem {
       reader.seek(0)
       // 10 == ascii code for newline. Note: previous non-semver only reached 7
       if (v != 10) {
-        const version = new ZeaEngine.Version()
+        const version = new Version()
         version.patch = reader.loadUInt32()
         context.versions = { 'zea-mesh': version, 'zea-engine': version }
         context.meshSdk = "FBX";
       } else {
         // Now we split the mesh out from the engine version.
-        const version = new ZeaEngine.Version(reader.loadStr())
+        const version = new Version(reader.loadStr())
         context.versions = { 'zea-mesh': version }
         context.meshSdk = "FBX";
       }
