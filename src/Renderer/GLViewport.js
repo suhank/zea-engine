@@ -342,7 +342,7 @@ class GLViewport extends GLBaseViewport {
       //     }
       // }
       // logGeomData();
-      // console.log("getGeomDataAtPos:", screenPos.toString())
+      // console.log("getGeomDataAtPos:", screenPos.toString(), screenPos.x,this.__width)
 
       // Allocate a 1 pixel block and read grom the GeomData buffer.
       let passId
@@ -475,7 +475,8 @@ class GLViewport extends GLBaseViewport {
   // Events
 
   /**
-   * The __eventMousePos method.
+   * The __eventMousePos method calculates the event coordinates relative to the viewprot.
+   * There could be multiple viewports connected to the current renderer.
    * @param {any} event - The event that occurs.
    * @return {Vec2} - Returns a new Vec2.
    * @private
@@ -906,7 +907,7 @@ class GLViewport extends GLBaseViewport {
     this.__initRenderState(renderstate)
     this.__renderer.drawScene(renderstate)
 
-    // // Turn this on to debug the geom data buffer.
+    // Turn this on to debug the geom data buffer.
     // {
     //     gl.screenQuad.bindShader(renderstate);
     //     gl.screenQuad.draw(renderstate, this.__geomDataBuffer);

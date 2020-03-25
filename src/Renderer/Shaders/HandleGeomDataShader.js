@@ -14,7 +14,7 @@ attribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
-uniform float maintainScreenSize;
+uniform int maintainScreenSize;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -32,9 +32,9 @@ void main(void) {
   int drawItemId = getDrawItemId();
   mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
-
-  if(maintainScreenSize) {
-    float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
+  
+  if(maintainScreenSize != 0) {
+    float dist = modelViewMatrix[3][2];
     float sc = dist;
     mat4 scmat = mat4(
       sc, 0.0, 0.0, 0.0,
