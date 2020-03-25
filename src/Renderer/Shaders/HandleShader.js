@@ -39,27 +39,27 @@ varying vec2 v_textureCoord;
 
 void main(void) {
   int drawItemId = getDrawItemId();
-    mat4 modelMatrix = getModelMatrix(drawItemId);
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-    if(maintainScreenSize != 0.0) {
-        float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
-        float sc = dist;
-        mat4 scmat = mat4(
-            sc, 0.0, 0.0, 0.0,
-            0.0, sc, 0.0, 0.0,
-            0.0, 0.0, sc, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        );
-        modelViewMatrix = modelViewMatrix * scmat;
-    }
+  if(maintainScreenSize != 0.0) {
+    float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
+    float sc = dist;
+    mat4 scmat = mat4(
+      sc, 0.0, 0.0, 0.0,
+      0.0, sc, 0.0, 0.0,
+      0.0, 0.0, sc, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    );
+    modelViewMatrix = modelViewMatrix * scmat;
+  }
 
-    vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
-    gl_Position = projectionMatrix * viewPos;
+  vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
+  gl_Position = projectionMatrix * viewPos;
 
-    v_viewPos = viewPos.xyz;
-    v_textureCoord = texCoords;
-    v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
+  v_viewPos = viewPos.xyz;
+  v_textureCoord = texCoords;
+  v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 }
 `
     )

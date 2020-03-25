@@ -14,6 +14,7 @@ attribute vec3 positions;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform float maintainScreenSize;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="drawItemId.glsl"/>
@@ -29,28 +30,27 @@ varying vec3 v_worldPos;
 
 void main(void) {
   int drawItemId = getDrawItemId();
-    mat4 modelMatrix = getModelMatrix(drawItemId);
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-    bool maintainScreenSize = true;// Could be passed as a flag.
-    if(maintainScreenSize) {
-        float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
-        float sc = dist;
-        mat4 scmat = mat4(
-            sc, 0.0, 0.0, 0.0,
-            0.0, sc, 0.0, 0.0,
-            0.0, 0.0, sc, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        );
-        modelViewMatrix = modelViewMatrix * scmat;
-    }
+  if(maintainScreenSize) {
+    float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
+    float sc = dist;
+    mat4 scmat = mat4(
+      sc, 0.0, 0.0, 0.0,
+      0.0, sc, 0.0, 0.0,
+      0.0, 0.0, sc, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    );
+    modelViewMatrix = modelViewMatrix * scmat;
+  }
 
-    vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
-    gl_Position = projectionMatrix * viewPos;
+  vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
+  gl_Position = projectionMatrix * viewPos;
 
-    v_viewPos = -viewPos.xyz;
+  v_viewPos = -viewPos.xyz;
 
-    v_drawItemID = float(getDrawItemId());
+  v_drawItemID = float(getDrawItemId());
 }
 `
     )
