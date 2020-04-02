@@ -21,7 +21,7 @@
 <meta property="og:description" content="Zea leverages the state-of-the-art cloud and web technologies to enable collaborative, web-based CAD visualization.">
 <meta property="og:image" content="https://zea.live/content/uploads/2019/05/zea_imagePreview.png">
 <meta name="author" content="Zea Inc.">
-	<style type="text/css">
+<style type="text/css">
 		body{
 		    margin:0px;
 		    background:#FFF;
@@ -109,7 +109,7 @@
 			color: #EAD262;
 		}
 	</style>
-  </head>
+</head>
 
 <body>
 	<main class="container">
@@ -136,9 +136,6 @@
                 <a class="nav-link" href="/about-zea">About Zea</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/zea-engine">Docs</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/resources">Resources</a>
             </li>
             <li class="nav-item">
@@ -148,24 +145,99 @@
 	    </div>
 	  </header>
 	  <div class="content">
-	  	<div class="left">
-		<div class="navbarSamples">
-            <a href="/zea-engine" class="activelink">API Docs</a>
-            <a href="/samples" >Samples</a>
-        </div>
-	  		<?js this.nav.topLevelNav.forEach(function(entry){ ?>
-			<ul class="dropdown-menu <?js= that.navOptions.navType ==='inline' ? 'inline' : '' ?>">
-				<?js entry.members.forEach(function(member){ ?><li><?js= member ?></li><?js	}); ?>
-			</ul>
-			<?js }); ?>
+	    <div class="left">
+	      <div class="navbarSamples">
+                <a href="/zea-engine" class="activelink">API Docs</a>
+		<a href="/samples" >Samples</a>
+              </div>
+	      <!-- search bar -->
+	      <form autocomplete="off">
+		<div class="autocomplete" style="overflow: visible; padding: 0; margin: 0 0 20px 0;">
+		  <input id="myInput" type="text" name="myCountry" placeholder="Search">
 		</div>
-		<div>
-			<?js= this.nav.index.title ?>
-
-			<?js= content ?>
-		</div>
-		<!-- end content -->
+	      </form>
+	      <!-- search bar end -->
+	      <?js this.nav.topLevelNav.forEach(function(entry){ ?>
+	      <ul class="dropdown-menu <?js= that.navOptions.navType ==='inline' ? 'inline' : '' ?>">
+		<?js entry.members.forEach(function(member){ ?><li><?js= member ?></li><?js	}); ?>
+	      </ul>
+	      <?js }); ?>
+	    </div>
+	    <div>
+	      <?js= this.nav.index.title ?>
+              <?js= content ?>
+	    </div>
+	    <!-- end content -->
 	  </div>
 	</main>
 </body>
 </html>
+
+<script src="/node_modules/elasticlunr/elasticlunr.js"></script>
+<script src="/docIndex.js"></script>
+<script src="/search.js"></script>
+<script src="/autocomplete.js"></script>
+<!-- search bar end -->
+<style>
+  * {
+  box-sizing: border-box;
+  }
+
+  body {
+  font: 16px Arial;
+  }
+
+  /*the container must be positioned relative:*/
+  .autocomplete {
+  position: relative;
+  display: inline-block;
+  }
+
+  #myInput {
+  border: 1px solid #d4d4d4;
+  background-color: #ffffff;
+  padding: 10px;
+  font-size: 16px;
+  }
+
+  input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+  }
+
+  input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+  cursor: pointer;
+  }
+
+  .autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  }
+
+  .autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #fff;
+  border-bottom: 1px solid #d4d4d4;
+  }
+
+  /*when hovering an item:*/
+  .autocomplete-items div:hover {
+  background-color: #e9e9e9;
+  }
+
+  /*when navigating through the items using the arrow keys:*/
+  .autocomplete-active {
+  background-color: DodgerBlue !important;
+  color: #ffffff;
+  }
+</style>
