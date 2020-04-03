@@ -21,7 +21,7 @@ function autocomplete(inp) {
 	for (i = 0; i < arr.length; i++) {
 	    /*create a DIV element for each matching element:*/
 	    docLink = document.createElement("a");
-	    docLink.setAttribute("href", "/docs/" + arr[i].className + ".html");
+	    docLink.setAttribute("href", "./" + arr[i].className + ".html");
 	    b = document.createElement("DIV");
 	    /*make the matching letters bold:*/
 	    b.innerHTML = "<strong>" + arr[i].className + "</strong>";
