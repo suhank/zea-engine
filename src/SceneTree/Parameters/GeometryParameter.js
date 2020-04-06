@@ -16,6 +16,7 @@ class GeometryParameter extends Parameter {
     this.__emitboundingBoxDirtied = this.__emitboundingBoxDirtied.bind(this)
   }
 
+  // eslint-disable-next-line require-jsdoc
   __emitboundingBoxDirtied(event) {
     this.emitEvent('boundingBoxChanged', event)
   }
@@ -30,11 +31,9 @@ class GeometryParameter extends Parameter {
     if (this.__value !== geom) {
       if (this.__value) {
         this.__value.removeEventListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
-        this.__value.removeRef(this)
       }
       this.__value = geom
       if (this.__value) {
-        this.__value.addRef(this)
         this.__value.addEventListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
       }
 
@@ -99,7 +98,6 @@ class GeometryParameter extends Parameter {
 
     if (this.__value) {
       this.__value.removeEventListener('boundingBoxChanged', this.__emitboundingBoxDirtied)
-      this.__value.removeRef(this)
     }
   }
 }

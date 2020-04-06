@@ -29,10 +29,6 @@ class GLGeom extends EventEmitter {
       this.emitEvent('updated', {})
     }
     this.__geom.addEventListener('geomDataTopologyChanged', regenBuffers)
-
-    // this.__geom.addEventListener('destructing', () => {
-    //   this.destroy()
-    // })
   }
 
   /**

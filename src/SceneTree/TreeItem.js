@@ -606,13 +606,11 @@ class TreeItem extends BaseItem {
         )
       }
     }
-    if (!(childItem instanceof BaseItem))
+    if (!(childItem instanceof BaseItem)) {
       throw new Error(
         'Object is is not a tree item :' + childItem.constructor.name
       )
-
-    if (childItem.isDestroyed())
-      throw new Error('childItem is destroyed:' + childItem.getPath())
+    }
 
     const signalIds = {}
     signalIds.nameChangedId = childItem.addEventListener('nameChanged', event => {

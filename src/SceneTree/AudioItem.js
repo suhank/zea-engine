@@ -23,7 +23,7 @@ class AudioItem extends TreeItem {
     let audioSource
     let audioBuffer
     const startAudioPlayback = () => {
-      audioSource = ZeaEngine.audioCtx.createBufferSource()
+      audioSource = window.ZeaAudioaudioCtx.createBufferSource()
       audioSource.buffer = audioBuffer
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
@@ -40,7 +40,7 @@ class AudioItem extends TreeItem {
         // Note: this code is not pretty and should not access the global object
         // However, its difficult to handle this case.
         // TODO: clean this up.
-        ZeaEngine.audioCtx.decodeAudioData(
+        window.ZeaAudioaudioCtx.decodeAudioData(
           audioData,
           buffer => {
             audioBuffer = buffer

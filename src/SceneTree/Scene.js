@@ -23,10 +23,7 @@ class Scene {
     }
     this.settings = new SceneSettings('Scene Settings')
     this.root = new TreeItem('root')
-    this.root.addRef(this)
     this.root.addChild(this.settings)
-
-    
 
     // Common resources are used by systems such at the renderer and VR controllers.
     // Any asset that will probably be used my multiple differeint independent objects

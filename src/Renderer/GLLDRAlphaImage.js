@@ -26,10 +26,6 @@ class GLLDRAlphaImage extends GLTexture2D {
         this.__unpackLDRAlpha(this.__hdrImage.getParams())
       })
     }
-    this.__hdrImage.addEventListener('destructing', () => {
-      console.log(this.__hdrImage.getName() + ' destructing')
-      this.destroy()
-    })
   }
 
   /**

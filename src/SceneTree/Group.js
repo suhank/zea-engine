@@ -387,13 +387,16 @@ class Group extends TreeItem {
     this.clearItems(false)
 
     const searchRoot = this.getOwner()
-    if (searchRoot == undefined) return
+    if (searchRoot == undefined) { 
+      console.warn('Group does not have an owner and so cannot resolve paths:', this.getName())
+      return
+    }
     const items = []
     paths.forEach(path => {
       const treeItem = searchRoot.resolvePath(path)
       if (treeItem) items.push(treeItem)
       else {
-        console.warn('Path does not resolve to an Item:', path)
+        console.warn('Path does not resolve to an Item:', path, " group:", this.getName())
       }
     })
     this.setItems(items)

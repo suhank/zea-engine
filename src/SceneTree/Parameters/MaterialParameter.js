@@ -15,6 +15,7 @@ class MaterialParameter extends Parameter {
     this.__valueParameterValueChanged = this.__valueParameterValueChanged.bind(this)
   }
 
+  // eslint-disable-next-line require-jsdoc
   __valueParameterValueChanged(event) {
     this.emitEvent('valueParameterValueChanged', event)
   }
@@ -31,11 +32,9 @@ class MaterialParameter extends Parameter {
         this.__value.removeEventListener('parameterValueChanged',
           this.__valueParameterValueChanged
         )
-        this.__value.removeRef(this)
       }
       this.__value = material
       if (this.__value) {
-        this.__value.addRef(this)
         this.__value.addEventListener('parameterValueChanged',
           this.__valueParameterValueChanged
         )
@@ -115,7 +114,6 @@ class MaterialParameter extends Parameter {
       this.__value.removeEventListener('parameterValueChanged',
         this.__valueParameterValueChanged
       )
-      this.__value.removeRef(this)
     }
   }
 }

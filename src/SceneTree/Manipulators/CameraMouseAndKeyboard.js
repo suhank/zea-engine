@@ -27,10 +27,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__ongoingTouches = {}
 
     this.__orbitRateParam = this.addParameter(
-      new NumberParameter(
-        'orbitRate',
-        ZeaEngine.SystemDesc.isMobileDevice ? -0.3 : 1
-      )
+      new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.3 : 1)
     )
     this.__dollySpeedParam = this.addParameter(
       new NumberParameter('dollySpeed', 0.02)
@@ -347,17 +344,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   onMouseMove(event) {
     if (!this.__mouseDown) return;
     const mousePos = event.mousePos
-    // During requestPointerLock, the offsetX/Y values are not updated.
-    // Instead we get a relative delta that we use to compute the total
-    // delta for the drag.
-    // if(this.__keyboardMovement){
-    //     this.__mouseDragDelta.x = event.movementX;
-    //     this.__mouseDragDelta.y = event.movementY;
-    // }
-    // else{
-    //     this.__mouseDragDelta.x += event.movementX;
-    //     this.__mouseDragDelta.y += event.movementY;
-    // }
     if (this.__keyboardMovement) {
       this.__mouseDragDelta = mousePos
     } else {

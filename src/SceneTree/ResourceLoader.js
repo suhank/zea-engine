@@ -69,38 +69,30 @@ class ResourceLoader extends EventEmitter {
     this.__workers = []
     this.__nextWorker = 0
 
-    if (
-      window.location.origin.startsWith('https://api.visualive.io') ||
-      window.location.origin.startsWith('https://apistage.visualive.io')
-    ) {
-      // For embeds using the old generated page system.
-      this.wasmUrl = 'https://assets-visualive.storage.googleapis.com/oR3y6kdDu'
-    } else {
-      let visualiveEngineUrl
-      const scripts = document.getElementsByTagName('script')
-      for (let i = 0; i < scripts.length; i++) {
-        const script = scripts[i]
-        if (script.src.includes('zea-engine')) {
-          visualiveEngineUrl = script.src
-          break
-        }
+    let baseUrl
+    const scripts = document.getElementsByTagName('script')
+    for (let i = 0; i < scripts.length; i++) {
+      const script = scripts[i]
+      if (script.src.includes('zea-engine')) {
+        const parts = script.src.split('/')
+        parts.pop()
+        parts.pop()
+        baseUrl = parts.join('/')
+        break
       }
-      if (!visualiveEngineUrl)
-        throw new Error('Unable to determine Zea Engine URL')
-      const parts = visualiveEngineUrl.split('/')
-      parts.pop()
-      parts.pop()
-      this.wasmUrl = parts.join('/') + '/public-resources/unpack.wasm'
-
-      this.addResourceURL(
-        'ZeaEngine/Vive.vla',
-        parts.join('/') + '/public-resources/Vive.vla'
-      )
-      this.addResourceURL(
-        'ZeaEngine/Oculus.vla',
-        parts.join('/') + '/public-resources/Oculus.vla'
-      )
     }
+    if (!baseUrl) {
+      baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
+    }
+    this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+    this.addResourceURL(
+      'ZeaEngine/Vive.vla',
+      baseUrl + '/public-resources/Vive.vla'
+    )
+    this.addResourceURL(
+      'ZeaEngine/Oculus.vla',
+      baseUrl + '/public-resources/Oculus.vla'
+    )
   }
 
   /**

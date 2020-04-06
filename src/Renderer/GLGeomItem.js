@@ -217,9 +217,15 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.removeEventListener('visibilityChanged', this.updateVisibility)
+    this.geomItem.removeEventListener(
+      'visibilityChanged',
+      this.updateVisibility
+    )
     this.geomItem.removeEventListener('geomXfoChanged', this.updateXfo)
-    this.geomItem.removeEventListenerById('highlightChanged', this.highlightChangedId)
+    this.geomItem.removeEventListenerById(
+      'highlightChanged',
+      this.highlightChangedId
+    )
 
     // this.geomItem.removeEventListenerById('destructing', this.destroy)
     // this.emitEvent('destructing', {})

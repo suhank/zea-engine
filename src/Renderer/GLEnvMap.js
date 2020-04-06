@@ -50,10 +50,6 @@ class GLEnvMap extends GLProbe {
       }
       this.__envMap.addEventListener('loaded', loaded)
     }
-    // srcGLTex.addEventListener('destructing', () => {
-    //   console.log(this.__envMap.getName() + ' destructing')
-    //   this.destroy()
-    // })
   }
 
   /**

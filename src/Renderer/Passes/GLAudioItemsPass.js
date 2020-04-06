@@ -256,4 +256,9 @@ class GLAudioItemsPass extends GLPass {
 
 GLRenderer.registerPass(GLAudioItemsPass, PassType.OVERLAY)
 
+// Hack so Audio Item can access the context.
+if (window) {
+  window.ZeaAudioaudioCtx = audioCtx;
+}
+
 export { GLAudioItemsPass, audioCtx }

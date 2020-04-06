@@ -17,10 +17,6 @@ class GLMaterial extends EventEmitter {
     this.__material = material
     this.__glshader = glshader
 
-    // this.__material.addEventListener('destructing', () => {
-    //   this.emitEvent('destructing') // Note: propagate this signal so the GLPass can remove the item.
-    // })
-
     this.__shaderBindings = {}
   }
 

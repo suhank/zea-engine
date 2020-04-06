@@ -26,10 +26,6 @@ class GLHDRImage extends GLTexture2D {
     } else {
       this.__hdrImage.addEventListener('loaded', loadImage)
     }
-    // this.__hdrImage.addEventListener('destructing', () => {
-    //   console.log(this.__hdrImage.getName() + ' destructing')
-    //   this.destroy()
-    // })
   }
 
   /**

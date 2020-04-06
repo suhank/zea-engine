@@ -336,9 +336,6 @@ class GLBaseRenderer extends ParameterOwner {
   addTreeItem(treeItem) {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
-    if (treeItem.isDestroyed()) {
-      throw new Error('treeItem is destroyed:' + treeItem.getPath())
-    }
 
     for (const passCbs of this.__passCallbacks) {
       const rargs = {
@@ -545,12 +542,19 @@ class GLBaseRenderer extends ParameterOwner {
       return this.__glcanvas.width > 0 && this.__glcanvas.height
     }
 
-    const calcRendererCoords = event => {
+    const calcRendererCoords = (event) => {
       const rect = this.__glcanvas.getBoundingClientRect()
       // Disabling devicePixelRatio for now. See: __onResize
       const dpr = 1.0;//window.devicePixelRatio
-      event.rendererX = (event.clientX - rect.left) * dpr
-      event.rendererY = (event.clientY - rect.top) * dpr
+      if (event.offsetX) {
+        event.rendererX = event.offsetX
+        event.rendererY = event.offsetY
+      } else {
+        // Touch events do not provide an offset X/Y and we must
+        // calculate them ourselves.
+        event.rendererX = (event.clientX - rect.left) * dpr
+        event.rendererY = (event.clientY - rect.top) * dpr
+      }
     }
 
     this.__glcanvas.addEventListener('mouseenter', event => {

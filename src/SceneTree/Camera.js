@@ -194,22 +194,6 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The getDefaultManipMode method.
-   * @return {any} - The return value.
-   */
-  getDefaultManipMode() {
-    return this.__defaultManipulationState
-  }
-
-  /**
-   * The setDefaultManipMode method.
-   * @param {number} mode - The mode value.
-   */
-  setDefaultManipMode(mode) {
-    this.__defaultManipulationState = mode
-  }
-
-  /**
    * Setter for the camera postion and target.
    * @param {Vec3} position - The position of the camera.
    * @param {Vec3} target - The target of the camera.

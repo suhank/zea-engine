@@ -41,11 +41,9 @@ class GLTexture2D extends RefCounted {
             this.configure(this.__texture.getParams())
           })
         }
-        // this.__texture.addEventListener('destructing', () => {
-        //   console.log(this.__texture.getName() + ' destructing')
-        //   this.destroy()
-        // })
-      } else this.configure(params)
+      } else {
+        this.configure(params)
+      }
     }
   }
 

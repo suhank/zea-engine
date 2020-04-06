@@ -65,11 +65,9 @@ class TreeItemParameter extends Parameter {
         this.__value.removeEventListener('globalXfoChanged', 
           this.__emittreeItemGlobalXfoChanged
         )
-        this.__value.removeRef(this)
       }
       this.__value = treeItem
       if (this.__value) {
-        this.__value.addRef(this)
         this.__value.addEventListener('globalXfoChanged', 
           this.__emittreeItemGlobalXfoChanged
         )
@@ -148,7 +146,6 @@ class TreeItemParameter extends Parameter {
       this.__value.removeEventListener('globalXfoChanged', 
         this.__emittreeItemGlobalXfoChanged
       )
-      this.__value.removeRef(this)
     }
   }
 }

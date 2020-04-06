@@ -78,11 +78,6 @@ class GLLightmapMixer extends GLTexture2D {
     this.__lightmapMixer.addEventListener('lightmapWeightChanged', () => {
       this.__renderTgtImage()
     })
-
-    this.__lightmapMixer.addEventListener('destructing', () => {
-      console.log(this.__lightmapMixer.getName() + ' destructing')
-      this.destroy()
-    })
   }
 
   /**

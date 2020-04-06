@@ -97,9 +97,6 @@ class GLMaterialGeomItemSets {
 
       this.drawCount += geomItemSet.drawCount
       geomItemSet.addEventListener('drawCountChanged', this.__drawCountChanged)
-      // geomItemSet.addEventListener('destructing', () => {
-      //   this.removeGeomItemSet(geomItemSet)
-      // })
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
     }

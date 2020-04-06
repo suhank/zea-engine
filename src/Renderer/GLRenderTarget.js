@@ -396,5 +396,26 @@ class GLRenderTarget extends EventEmitter {
 
     return true
   }
+
+  
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
+   */
+  destroy() {
+    const gl = this.__gl
+    this.textureTargets.forEach(colorTexture => {
+      gl.deleteTexture(colorTexture)
+    })
+    this.textureTargets = []
+    if (this.depthTexture) {
+      gl.deleteTexture(this.depthTexture)
+      this.depthTexture = null
+    }
+    if (this.frameBuffer){
+      gl.deleteFramebuffer(this.frameBuffer)
+    }
+  }
 }
 export { GLRenderTarget }

@@ -7,19 +7,30 @@ import { sgFactory } from './SGFactory.js'
 // 'addPArameter' without the parameter instance.
 import { ParamFlags, ValueSetMode } from './Parameters/Parameter.js'
 
+
+let counter = 0
+
 /** Class representing a parameter owner in the scene tree.
- * @extends RefCounted
  */
-class ParameterOwner extends RefCounted {
+class ParameterOwner {
   /**
    * Create a parameter owner.
    */
   constructor() {
-    super()
+    this.__id = ++counter
 
     this.__params = []
     this.__paramMapping = {}
     this.__paramSignalIds = {}
+  }
+  
+  /**
+   * Returns the unique id of the object. Every Object has a unique
+   * identifier which is based on a counter that is incremented.
+   * @return {any} - The return value.
+   */
+  getId() {
+    return this.__id
   }
 
   // ////////////////////////////////////////
@@ -101,10 +112,10 @@ class ParameterOwner extends RefCounted {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>
-      this.__parameterValueChanged({ ...event, param })
+    this.__paramSignalIds[name] = param.addEventListener(
+      'valueChanged',
+      event => this.__parameterValueChanged({ ...event, param })
     )
-    param.addRef(this)
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
     this.emitEvent('parameterAdded', { name })
@@ -123,10 +134,10 @@ class ParameterOwner extends RefCounted {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>
-      this.__parameterValueChanged({ ...event, param })
+    this.__paramSignalIds[name] = param.addEventListener(
+      'valueChanged',
+      event => this.__parameterValueChanged({ ...event, param })
     )
-    param.addRef(this)
     this.__params.splice(index, 0, param)
 
     const paramMapping = {}
@@ -148,8 +159,11 @@ class ParameterOwner extends RefCounted {
     }
     const index = this.__paramMapping[paramName]
     const param = this.__params[this.__paramMapping[paramName]]
-    param.removeRef(this)
-    param.removeEventListenerById('valueChanged', this.__paramSignalIds[paramName])
+
+    param.removeEventListenerById(
+      'valueChanged',
+      this.__paramSignalIds[paramName]
+    )
     this.__params.splice(index, 1)
     const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
@@ -168,12 +182,14 @@ class ParameterOwner extends RefCounted {
     const name = param.getName()
     const index = this.__paramMapping[name]
     const prevparam = this.__params[this.__paramMapping[name]]
-    prevparam.removeRef(this)
-    prevparam.removeEventListenerById('valueChanged', this.__paramSignalIds[name])
+    prevparam.removeEventListenerById(
+      'valueChanged',
+      this.__paramSignalIds[name]
+    )
 
-    param.addRef(this)
-    this.__paramSignalIds[name] = param.addEventListener('valueChanged', event =>
-      this.__parameterValueChanged({ ...event, param })
+    this.__paramSignalIds[name] = param.addEventListener(
+      'valueChanged',
+      event => this.__parameterValueChanged({ ...event, param })
     )
     this.__params[index] = param
     return param
