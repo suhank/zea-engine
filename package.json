@@ -15,8 +15,8 @@
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c rollup.config.dev.js -w",
-    "prepare": "yarn build",
-    "dist": "yarn build && yarn publish --access=public",
+    "prepare": "yarn run build",
+    "dist": "yarn publish --access=public",
     "docs": "jsdoc -c .jsdoc.json"
   },
   "dependencies": {},
