@@ -10,4 +10,5 @@ Resources/Cache/
 VisualiveUI/
 
 *.log
+.tmuxp.json
 package-lock.json
