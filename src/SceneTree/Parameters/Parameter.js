@@ -1,4 +1,4 @@
-import { RefCounted } from '../RefCounted'
+import { EventEmitter } from '../../Utilities/EventEmitter'
 import { sgFactory } from '../SGFactory'
 
 const ValueGetMode = {
@@ -34,12 +34,13 @@ const ParamState = {
 
 /** Class representing a base parameter.
  */
-class BaseParameter {
+class BaseParameter extends EventEmitter {
   /**
    * Create a base parameter.
    * @param {string} name - The name of the base parameter.
    */
   constructor(name) {
+    super()
     this.__name = name
     this.__cleanerFns = []
     this.__boundOps = []

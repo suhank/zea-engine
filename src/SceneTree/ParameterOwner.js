@@ -1,5 +1,4 @@
-// import { EventEmitter } from '../Utilities'
-import { RefCounted } from './RefCounted.js'
+import { EventEmitter } from '../Utilities/EventEmitter'
 import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
@@ -12,11 +11,12 @@ let counter = 0
 
 /** Class representing a parameter owner in the scene tree.
  */
-class ParameterOwner {
+class ParameterOwner extends EventEmitter {
   /**
    * Create a parameter owner.
    */
   constructor() {
+    super()
     this.__id = ++counter
 
     this.__params = []
