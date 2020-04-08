@@ -1,6 +1,7 @@
 import { Vec2, Vec3, Quat, Xfo } from '../../Math'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { NumberParameter } from '../Parameters'
+import { SystemDesc } from '../../BrowserDetection.js'
 
 /** Class representing a camera, mouse and keyboard.
  * @extends ParameterOwner

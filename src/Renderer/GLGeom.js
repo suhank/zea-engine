@@ -1,8 +1,8 @@
-import { EventEmitter } from '../Utilities'
+import { RefCounted } from '../SceneTree'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL geom. */
-class GLGeom extends EventEmitter {
+class GLGeom extends RefCounted {
   /**
    * Create a GL geom.
    * @param {any} gl - The gl value.

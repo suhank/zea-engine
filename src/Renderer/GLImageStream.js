@@ -1,10 +1,10 @@
-import { EventEmitter } from '../Utilities'
+import { RefCounted } from '../SceneTree'
 import { GLTexture2D } from './GLTexture2D.js'
 
 import './Shaders/GLSL/ImageStream.js'
 
 /** Class representing a GL image stream. */
-class GLImageStream extends EventEmitter {
+class GLImageStream extends RefCounted {
   /**
    * Create a GL image stream.
    * @param {any} gl - The gl value.

@@ -48,7 +48,7 @@ class MaterialColorParam extends ColorParameter {
       if (this.__image != undefined && this.__image !== value) {
         disconnectImage()
       }
-      this.__image = __value
+      this.__image = value
       this.__image.addEventListener('updated', this.__imageUpdated)
       this.emitEvent('textureConnected', {})
       this.emitEvent('valueChanged', { mode })
