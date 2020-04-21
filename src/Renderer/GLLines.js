@@ -15,10 +15,6 @@ class GLLines extends GLGeom {
   constructor(gl, lines) {
     super(gl, lines)
 
-    this.fatLines =
-      (lines.lineThickness > 0 ||
-        this.__geom.getVertexAttributes().lineThickness != undefined) &&
-      gl.floatTexturesSupported
     this.genBuffers()
   }
 
@@ -28,9 +24,15 @@ class GLLines extends GLGeom {
   genBuffers() {
     super.genBuffers()
 
+
     const gl = this.__gl
     const geomBuffers = this.__geom.genBuffers()
     const indices = geomBuffers.indices
+
+    this.fatLines =
+      (this.__geom.lineThickness > 0 ||
+        geomBuffers.attrBuffers.lineThickness) &&
+      gl.floatTexturesSupported
 
     if (this.fatLines) {
       if (!gl.__quadVertexIdsBuffer) {
