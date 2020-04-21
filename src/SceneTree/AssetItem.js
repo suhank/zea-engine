@@ -38,6 +38,14 @@ class AssetItem extends TreeItem {
    * The getGeometryLibrary method.
    * @return {any} - The return value.
    */
+  getEngineDataVersion() {
+    return this.__engineDataVersion
+  }
+
+  /**
+   * The getGeometryLibrary method.
+   * @return {any} - The return value.
+   */
   getGeometryLibrary() {
     return this.__geomLibrary
   }
@@ -74,6 +82,7 @@ class AssetItem extends TreeItem {
     if (!context.versions['zea-engine']) {
       context.versions['zea-engine'] = new ZeaEngine.Version(reader.loadStr())
     }
+    this.__engineDataVersion = context.versions['zea-engine']
     console.log("Loading Engine File version:", context.versions['zea-engine'])
 
     let layerRoot
