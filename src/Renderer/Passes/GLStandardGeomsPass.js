@@ -224,6 +224,8 @@ class GLStandardGeomsPass extends GLPass {
     }
     this.__dirtyItemIndices.push(index)
 
+    const material = geomItem.getMaterial();
+
     const gl = this.__gl
     const glgeomItem = new GLGeomItem(gl, geomItem, glgeom, index, flags)
     geomItem.setMetadata('glgeomItem', glgeomItem)
