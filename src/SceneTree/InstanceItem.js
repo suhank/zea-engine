@@ -22,7 +22,6 @@ class InstanceItem extends TreeItem {
   setSrcTree(treeItem, context) {
     this.__srcTree = treeItem
 
-    console.log("InstanceItem.clone:", this.getName())
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
       const clonedTree = this.__srcTree.clone(context)
