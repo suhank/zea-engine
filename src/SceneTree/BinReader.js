@@ -154,7 +154,7 @@ class BinReader {
   loadUInt32From2xUFloat16() {
     const partA = this.loadUFloat16()
     const partB = this.loadUFloat16()
-    return partA + (partB << 11)
+    return partA + partB * 4096
   }
 
   /**
@@ -164,9 +164,8 @@ class BinReader {
   loadSInt32From2xFloat16() {
     const partA = this.loadFloat16()
     const partB = this.loadFloat16()
-    return partA + (partB << 10)
+    return partA + partB * 2048
   }
-
 
   /**
    * The loadFloat32 method.
