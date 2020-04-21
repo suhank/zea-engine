@@ -172,6 +172,10 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     if (shaderClass) {
       if (shaderClass.isTransparent()) return false
       if (shaderClass.isOverlay()) return false
+
+      const baseColorParam = geomItem.getMaterial().getParameter('BaseColor')
+      if (baseColorParam && baseColorParam.getValue().a < 1.0) return false
+
       return true
     }
     return false

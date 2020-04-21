@@ -37,9 +37,12 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
   filterGeomItem(geomItem) {
     const shaderClass = geomItem.getMaterial().getShaderClass()
     if (shaderClass) {
-      if (!shaderClass.isTransparent()) return false
+      if (shaderClass.isTransparent()) return true
       if (shaderClass.isOverlay()) return false
-      return true
+
+      const baseColorParam = geomItem.getMaterial().getParameter("BaseColor")
+      if (baseColorParam && baseColorParam.getValue().a < 0.999)
+        return true;
     }
     return false
   }

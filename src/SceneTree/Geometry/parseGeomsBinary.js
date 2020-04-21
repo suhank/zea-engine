@@ -2,10 +2,22 @@ import { Points } from './Points.js'
 import { Lines } from './Lines.js'
 import { Mesh } from './Mesh.js'
 import { BinReader } from '../BinReader.js'
+import { Version } from '../Version.js'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data, callback) => {
+
+  // eslint-disable-next-line guard-for-in
+  for(let key in data.context.versions) {
+    const v = data.context.versions[key];
+    const version =  new Version();
+    version.major = v.major
+    version.minor = v.minor
+    version.patch = v.patch
+    version.branch = v.branch
+    data.context.versions[key] = version;
+  }
   const geomDatas = []
   const offset = data.toc[data.geomsRange[0]]
   // console.log("offset:" +  offset);
@@ -18,8 +30,8 @@ const parseGeomsBinary = (data, callback) => {
     )
     const className = reader.loadStr()
     const pos = reader.pos()
-    // let name = reader.loadStr();
-    // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
+    // const name = reader.loadStr()
+    //console.log(i + ":" + offset + " className:" +  className  + " name:" +  name/* + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength*/);
     let geom
     switch (className) {
       case 'Points':

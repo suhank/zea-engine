@@ -1,5 +1,6 @@
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
+import { Vec2 } from './Vec2.js'
 
 /** Class representing a Vec3. A Vec3 represents a three-dimensional coordinate.
  * Vector classes in zea-engine internally store values in Float32Arrays and
@@ -78,6 +79,22 @@ class Vec3 extends AttrValue {
    */
   set z(val) {
     this.__data[2] = val
+  }
+  
+  /**
+   * Getter for xy swizzel.
+   * @return {number} - Returns the z value.
+   */
+  get xy() {
+    return new Vec2(this.__data[0], this.__data[1]);
+  }
+
+  /**
+   * Getter for yz swizzel.
+   * @return {number} - Returns the z value.
+   */
+  get yz() {
+    return new Vec2(this.__data[1], this.__data[2]);
   }
 
   /**

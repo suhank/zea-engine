@@ -4,9 +4,9 @@ import { Vec2, Vec3, Quat, Color, Box2, Box3 } from '../Math/index'
 class BinReader {
   /**
    * Create a bin reader.
-   * @param {any} data - The data value.
-   * @param {number} byteOffset - The byteOffset value.
-   * @param {boolean} isMobileDevice - Boolean determining if on a mobile device.
+   * @param {Buffer} data - The data buffer.
+   * @param {number} byteOffset - The byte offset value to start reading the buffer.
+   * @param {boolean} isMobileDevice - The isMobileDevice value.
    */
   constructor(data, byteOffset = 0, isMobileDevice = true) {
     this.__data = data
@@ -18,7 +18,7 @@ class BinReader {
 
   /**
    * Getter for isMobileDevice.
-   * @return {boolean} - Returns true if on a mobile device.
+   * @return {Boolean} - Returns true is a mobile device is detected.
    */
   get isMobileDevice() {
     return this.__isMobileDevice
@@ -26,7 +26,7 @@ class BinReader {
 
   /**
    * Getter for data.
-   * @return {any} - The return value.
+   * @return {Buffer} - The data buffer we are reading from,
    */
   get data() {
     return this.__data
@@ -34,7 +34,7 @@ class BinReader {
 
   /**
    * Getter for byteLength.
-   * @return {number} - The return value.
+   * @return {number} - The total length of the buffer
    */
   get byteLength() {
     return this.__dataView.byteLength
@@ -42,7 +42,7 @@ class BinReader {
 
   /**
    * Getter for remainingByteLength.
-   * @return {number} - The return value.
+   * @return {number} - The reemaining length of the buffer to read.
    */
   get remainingByteLength() {
     return this.__dataView.byteLength - this.__byteOffset
@@ -50,7 +50,7 @@ class BinReader {
 
   /**
    * The pos method.
-   * @return {any} - The return value.
+   * @return {number} - The current offset in the binary buffer
    */
   pos() {
     return this.__byteOffset
@@ -58,7 +58,7 @@ class BinReader {
 
   /**
    * The seek method.
-   * @param {number} byteOffset - The byteOffset value.
+   * @param {number} byteOffset - The byteOffset param.
    */
   seek(byteOffset) {
     this.__byteOffset = byteOffset
@@ -66,7 +66,7 @@ class BinReader {
 
   /**
    * The advance method.
-   * @param {number} byteOffset - The byteOffset value.
+   * @param {number} byteOffset - The byte Offset amount.
    */
   advance(byteOffset) {
     this.__byteOffset += byteOffset
@@ -74,7 +74,7 @@ class BinReader {
 
   /**
    * The loadUInt8 method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   loadUInt8() {
     const result = this.__dataView.getUint8(this.__byteOffset)
@@ -84,7 +84,7 @@ class BinReader {
 
   /**
    * The loadUInt16 method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   loadUInt16() {
     const result = this.__dataView.getUint16(this.__byteOffset, true)
@@ -92,9 +92,10 @@ class BinReader {
     return result
   }
 
+
   /**
    * The loadUInt32 method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   loadUInt32() {
     const result = this.__dataView.getUint32(this.__byteOffset, true)
@@ -104,7 +105,7 @@ class BinReader {
 
   /**
    * The loadSInt32 method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   loadSInt32() {
     const result = this.__dataView.getInt32(this.__byteOffset, true)
@@ -114,7 +115,7 @@ class BinReader {
 
   /**
    * The loadFloat16 method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   loadFloat16() {
     const uint16 = this.loadUInt16()
@@ -122,8 +123,21 @@ class BinReader {
   }
 
   /**
+   * The loadUFloat16 returns a float where the sign big indicates it is > 201.
+   * @return {number} - The return value.
+   */
+  loadUFloat16() {
+    const result = this.loadFloat16()
+    if (result < 0.0) {
+      return 2048.0 - result // Note: subtract a negative number to add it.
+    } else {
+      return result
+    }
+  }
+
+  /**
    * The loadFloat16From2xUInt8 method.
-   * @return {any} - The return value.
+   * @return {number} - The return value.
    */
   loadFloat16From2xUInt8() {
     const result = this.__dataView.getFloat16(this.__byteOffset, true)
@@ -131,6 +145,26 @@ class BinReader {
     // return Math.decode16BitFloat(uint8s);
     this.__byteOffset += 2
     return result
+  }
+
+  /**
+   * The loadUInt32From2xUFloat16 loads a single Signed integer value from 2 Unsigned Float16 values.
+   * @return {number} - The return value.
+   */
+  loadUInt32From2xUFloat16() {
+    const partA = this.loadUFloat16()
+    const partB = this.loadUFloat16()
+    return partA + partB * 4096
+  }
+
+  /**
+   * The loadSInt32From2xFloat16 loads a single Signed integer value from 2 signed Float16 values.
+   * @return {number} - The return value.
+   */
+  loadSInt32From2xFloat16() {
+    const partA = this.loadFloat16()
+    const partB = this.loadFloat16()
+    return partA + partB * 2048
   }
 
   /**
@@ -145,8 +179,8 @@ class BinReader {
 
   /**
    * The loadUInt8Array method.
-   * @param {number} size - The size value.
-   * @param {boolean} clone - The clone value.
+   * @param {number} size - The size param.
+   * @param {boolean} clone - The clone param.
    * @return {any} - The return value.
    */
   loadUInt8Array(size = undefined, clone = false) {
@@ -160,8 +194,8 @@ class BinReader {
 
   /**
    * The loadUInt16Array method.
-   * @param {number} size - The size value.
-   * @param {boolean} clone - The clone value.
+   * @param {number} size - The size param.
+   * @param {boolean} clone - The clone param.
    * @return {any} - The return value.
    */
   loadUInt16Array(size = undefined, clone = false) {
@@ -185,8 +219,8 @@ class BinReader {
 
   /**
    * The loadUInt32Array method.
-   * @param {number} size - The size value.
-   * @param {boolean} clone - The clone value.
+   * @param {number} size - The size param.
+   * @param {boolean} clone - The clone param.
    * @return {any} - The return value.
    */
   loadUInt32Array(size = undefined, clone = false) {
@@ -209,8 +243,8 @@ class BinReader {
 
   /**
    * The loadFloat32Array method.
-   * @param {number} size - The size value.
-   * @param {boolean} clone - The clone value.
+   * @param {number} size - The size param.
+   * @param {boolean} clone - The clone param.
    * @return {any} - The return value.
    */
   loadFloat32Array(size = undefined, clone = false) {
@@ -244,11 +278,10 @@ class BinReader {
 
   /**
    * The loadStrArray method.
-   * @return {any} - The return value.
+   * @return {Array} - The return value.
    */
   loadStrArray() {
     const size = this.loadUInt32()
-
     const result = []
     for (let i = 0; i < size; i++) {
       result[i] = this.loadStr()
@@ -295,7 +328,7 @@ class BinReader {
     const y = this.loadFloat32()
     return new Vec2(x, y)
   }
-
+  
   /**
    * The loadFloat16Vec3 method.
    * @return {Vec3} - Returns a Vec3.
@@ -406,7 +439,7 @@ class BinReader {
 
   /**
    * The readPadd method.
-   * @param {any} stride - The stride value.
+   * @param {any} stride - The stride param.
    */
   readPadd(stride) {
     const padd = this.__byteOffset % stride

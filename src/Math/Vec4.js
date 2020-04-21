@@ -98,6 +98,15 @@ class Vec4 extends AttrValue {
     this.__data[3] = val
   }
 
+  
+  /**
+   * Getter for xy swizzel.
+   * @return {number} - Returns the z value.
+   */
+  get xyz() {
+    return new Vec3(this.__data[0], this.__data[1], this.__data[2]);
+  }
+
   /**
    * Setter from scalar components.
    * @param {number} x - The x value.
