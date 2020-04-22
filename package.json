@@ -2,7 +2,7 @@
   "name": "@zeainc/zea-engine",
   "fileName": "zea-engine",
   "libraryName": "ZeaEngine",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Zea Engine",
   "main": "dist/zea-engine.cjs.js",
   "module": "dist/zea-engine.esm.js",
