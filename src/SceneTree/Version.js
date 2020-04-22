@@ -38,11 +38,20 @@ class Version {
    * @return {boolean} - The return value.
    */
   lessThan(numbers) {
-    return (
-      this.major < numbers[0] ||
-      this.minor < numbers[1] ||
-      this.patch < numbers[2]
+    return !(
+      this.major >= numbers[0] ||
+      this.minor >= numbers[1] ||
+      this.patch >= numbers[2]
     )
+    // if (this.major >= numbers[0]) return false
+    // if (this.minor >= numbers[1]) return false
+    // if (this.patch >= numbers[2]) return false
+    // return true
+    // return (
+    //   this.major < numbers[0] ||
+    //   this.minor < numbers[1] ||
+    //   this.patch < numbers[2]
+    // )
   }
 
   /**
@@ -64,11 +73,19 @@ class Version {
    * @return {boolean} - The return value.
    */
   greaterOrEqualThan(numbers) {
-    return !(
-      this.major < numbers[0] ||
-      this.minor < numbers[1] ||
-      this.patch < numbers[2]
-    )
+    if (this.major < numbers[0]) return false
+    if (this.major > numbers[0]) return true
+
+    if (this.minor < numbers[1]) return false
+    if (this.minor > numbers[1]) return true
+
+    if (this.patch < numbers[2]) return false
+    return true
+    // return (
+    //   this.major >= numbers[0] &&
+    //   this.minor >= numbers[1] &&
+    //   this.patch >= numbers[2]
+    // )
   }
 }
 
