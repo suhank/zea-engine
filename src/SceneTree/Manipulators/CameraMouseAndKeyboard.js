@@ -232,14 +232,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const targetOffset = this.__mouseDownZaxis.scale(-focalDistance)
     this.__mouseDownCameraTarget = camera.getGlobalXfo().tr.add(targetOffset)
     this.__mouseDownFocalDist = focalDistance
-
-    this.__dragLitenerId = camera.getParameter("GlobalXfo").valueChanged.connect(this.__globalXfoChangedDuringDrag.bind(this))
+    
+    this.__dragListenerId = camera.getParameter("GlobalXfo").valueChanged.connect(this.__globalXfoChangedDuringDrag.bind(this))
   }
 
   __globalXfoChangedDuringDrag(mode) {
     if (!this.__calculatingDragAction) {
       const camera = this.__mouseDownViewport.getCamera()
-      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragLitenerId)
+      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
       this.initDrag({ viewport: this.__mouseDownViewport, mousePos: this.__mouseDownPos } );
     }
   }
@@ -248,11 +248,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {any} event - The event value.
    */
   endDrag(event) {
-    const { viewport } = event
-    const camera = viewport.getCamera()
-    camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragLitenerId)
-    this.__mouseDown = false;
-    this.__dragging = false;
+    if (this.__dragListenerId) {
+      const { viewport } = event
+      const camera = viewport.getCamera()
+      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      this.__dragListenerId = null;
+    }
+    this.__mouseDown = false
+    this.__dragging = false
   }
 
   /**
@@ -393,8 +396,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         break
     }
     this.__dragging = true
+    this.__calculatingDragAction = false
     event.stopPropagation()
-    this.__calculatingDragAction = false;
   }
 
   /**
@@ -590,8 +593,11 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       this.__startTouch(touches[i])
     }
 
-    if (Object.keys(this.__ongoingTouches).length == 1)
+    if (Object.keys(this.__ongoingTouches).length == 1) {
       this.initDrag(event)
+      
+      this.__dragging = true
+    }
   }
 
   /**
