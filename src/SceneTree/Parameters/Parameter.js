@@ -1,5 +1,4 @@
 import { Signal } from '../../Utilities/index'
-import { RefCounted } from '../RefCounted'
 import { sgFactory } from '../SGFactory'
 
 const ValueGetMode = {
@@ -155,7 +154,7 @@ class BaseParameter {
    * @param {any} state - The state value.
    */
   setEnabled(state) {
-    console.warn("Deprecated Method: This method will be removed soon.")
+    console.warn('Deprecated Method: This method will be removed soon.')
     if (state) this.setFlag(ParamFlags.DISABLED)
     else this.clearFlag(ParamFlags.DISABLED)
   }
@@ -164,7 +163,7 @@ class BaseParameter {
    * The isEnabled method.
    */
   isEnabled() {
-    console.warn("Deprecated Method: This method will be removed soon.")
+    console.warn('Deprecated Method: This method will be removed soon.')
     this.testFlag(ParamFlags.DISABLED)
   }
 
@@ -200,7 +199,6 @@ class BaseParameter {
    * @return {boolean} - The return value.
    */
   setDirty(cleanerFn) {
-
     // If already dirty, simply return.
     if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
       return false
@@ -211,6 +209,7 @@ class BaseParameter {
     this.valueChanged.emit(ValueSetMode.OPERATOR_DIRTIED) // changed via cleaner fn
     return true
   }
+
   /**
    * The setDirtyFromOp method.
    */
@@ -329,7 +328,7 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
-    if (/*mode == ValueGetMode.NORMAL && */this.__state == ParamState.DIRTY)
+    if (/*mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY)
       this._clean()
     return this.__value
   }
