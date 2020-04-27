@@ -2,7 +2,6 @@ import { Vec2, Vec3 } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
-  ValueGetMode,
   ValueSetMode,
   BooleanParameter,
   NumberParameter,
@@ -204,7 +203,7 @@ class ExplodePartsOperator extends Operator {
     )
     this.__itemsParam.elementAdded.connect((value, index) => {
       if (index > 0) {
-        const prevStage = this.__itemsParam.getElement(index-1).getStage();
+        const prevStage = this.__itemsParam.getElement(index - 1).getStage()
         value.setStage(prevStage + 1)
         this.__stagesParam.setClean(prevStage + 2)
       } else {
@@ -216,7 +215,7 @@ class ExplodePartsOperator extends Operator {
     this.__itemsParam.elementRemoved.connect((value, index) => {
       this.removeOutput(value.getOutput())
     })
-    
+
     this.__localXfos = []
     this.__parts = []
     this.__stages = 2
