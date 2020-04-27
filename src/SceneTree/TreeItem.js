@@ -733,6 +733,7 @@ class TreeItem extends BaseItem {
    * automatically when an item is removed from the group.
    * @param {number} index - The index value.
    * @param {TreeItem} childItem - item to unbind.
+   * @private
    */
   __unbindChild(index, childItem) {
     const signalIds = this.__childItemsSignalIds[index]
@@ -830,60 +831,56 @@ class TreeItem extends BaseItem {
   /**
    * Add a component.
    * @param {any} component - The component value.
-   */
-  addComponent(component) {
-    this.__components.push(component)
-    this.__componentMapping[component.getName()] = this.__components.length - 1
+  // addComponent(component) {
+  //   this.__components.push(component)
+  //   this.__componentMapping[component.getName()] = this.__components.length - 1
 
-    component.setOwner(this)
+  //   component.setOwner(this)
 
-    // this.componentAdded.emit(component);
-  }
+  //   // this.componentAdded.emit(component);
+  // }
 
   /**
    * Remove a component.
    * @param {string} name - The name value.
    * @return {any} - The return value.
-   */
-  removeComponent(name) {
-    const index = this.__componentMapping[name]
-    if (index == undefined) {
-      throw new Error('Component not found:' + name)
-    }
-    const component = this.__components[index]
-    component.setOwner(undefined)
-    this.__components.splice(index, 1)
+  // removeComponent(name) {
+  //   const index = this.__componentMapping[name]
+  //   if (index == undefined) {
+  //     throw new Error('Component not found:' + name)
+  //   }
+  //   const component = this.__components[index]
+  //   component.setOwner(undefined)
+  //   this.__components.splice(index, 1)
 
-    const componentMapping = {}
-    for (let i = 0; i < this.__components.length; i++)
-      componentMapping[this.__components[i].getName()] = i
-    this.__componentMapping = componentMapping
+  //   const componentMapping = {}
+  //   for (let i = 0; i < this.__components.length; i++)
+  //     componentMapping[this.__components[i].getName()] = i
+  //   this.__componentMapping = componentMapping
 
-    // this.componentRemoved.emit(component, index);
-    return component
-  }
+  //   // this.componentRemoved.emit(component, index);
+  //   return component
+  // }
 
   /**
    * The hasComponent method.
    * @param {string} name - The name value.
    * @return {any} - The return value.
-   */
-  hasComponent(name) {
-    return name in this.__componentMapping
-  }
+  // hasComponent(name) {
+  //   return name in this.__componentMapping
+  // }
 
   /**
    * The getComponent method.
    * @param {string} name - The name value.
    * @return {any} - The return value.
-   */
-  getComponent(name) {
-    if (!(name in this.__componentMapping)) {
-      console.log("No component named '" + name + "' found.")
-      return
-    }
-    return this.__components[this.__componentMapping[name]]
-  }
+  // getComponent(name) {
+  //   if (!(name in this.__componentMapping)) {
+  //     console.log("No component named '" + name + "' found.")
+  //     return
+  //   }
+  //   return this.__components[this.__componentMapping[name]]
+  // }
 
   // ////////////////////////////////////////
   // Path Traversial
