@@ -3072,7 +3072,7 @@ Module["_realloc"] = _realloc;
  * @fileoverview Defines a Long class for representing a 64-bit two's-complement
  * integer value, which faithfully simulates the behavior of a Java "long". This
  * implementation is derived from LongLib in GWT.
- *
+ * @private
  */
 var i64Math = (function() { // Emscripten wrapper
   var goog = { math: {} };

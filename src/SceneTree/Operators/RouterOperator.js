@@ -6,6 +6,7 @@ import { sgFactory } from '../SGFactory.js'
 
 /** Class representing a router operator.
  * @extends Operator
+ * @private
  */
 class RouterOperator extends Operator {
   /**

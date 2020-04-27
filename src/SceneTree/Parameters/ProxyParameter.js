@@ -5,6 +5,7 @@ import { Parameter } from './Parameter.js'
  * a parameter on one object with another. An existing parameter is
  * replaced with a proxy that binds to a parameter on another object.
  * @extends Parameter
+ * @private
  */
 class ProxyParameter extends Parameter {
   /**

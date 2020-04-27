@@ -3,6 +3,7 @@ import { Parameter } from './Parameter.js'
 
 /** Class representing an item set parameter.
  * @extends Parameter
+ * @private
  */
 class ItemSetParameter extends Parameter {
   /**
