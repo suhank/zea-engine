@@ -2,6 +2,7 @@ import { sgFactory } from '../SceneTree/SGFactory.js'
 
 /** Class representing a state in a state machine. A model can only be
  * in one state at a time.
+ * @private
  */
 class State {
   /**

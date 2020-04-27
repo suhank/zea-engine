@@ -16,7 +16,9 @@ let mouseLeft = false
 
 const registeredPasses = {}
 
-/** Class representing a GL base renderer. */
+/** Class representing a GL base renderer.
+ * @private
+ */
 class GLBaseRenderer {
   /**
    * Create a GL base renderer.

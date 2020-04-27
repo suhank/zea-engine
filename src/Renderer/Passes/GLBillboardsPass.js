@@ -11,6 +11,7 @@ const pixelsPerItem = 5 // The number of pixels per draw item.
 
 /** Class representing a GL billboards pass.
  * @extends GLPass
+ * @private
  */
 class GLBillboardsPass extends GLPass {
   /**

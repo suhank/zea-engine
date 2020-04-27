@@ -1,6 +1,6 @@
+/* eslint-disable require-jsdoc */
 import { Signal } from './Signal.js'
 
-/** Class representing an Async. */
 class Async {
   /**
    * Create a Async.

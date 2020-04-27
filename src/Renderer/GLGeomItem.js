@@ -9,7 +9,9 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
+/** This class abstracts the rendering of a collection of geometries to screen. 
+ * @private
+*/
 class GLGeomItem {
   /**
    * Create a GL geom item.

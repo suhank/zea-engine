@@ -7,6 +7,7 @@ let counter = 0
  *  of resources. This is necessary when JavaScript
  *  objects own references to GPU resources that need to
  *  be cleaned up when the JavaScript object is destroyed.
+ * @private
  */
 class RefCounted {
   /**

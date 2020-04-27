@@ -6,6 +6,7 @@ import { StateAction } from '../StateAction.js'
 
 /** A state machine action that switches between states.
  * @extends StateAction
+ * @private
  */
 class SwitchState extends StateAction {
   /**

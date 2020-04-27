@@ -3,6 +3,7 @@ import { ParamFlags, ValueSetMode, Parameter } from './Parameter.js'
 
 /** Class representing a geometry parameter.
  * @extends Parameter
+ * @private
  */
 class GeometryParameter extends Parameter {
   /**

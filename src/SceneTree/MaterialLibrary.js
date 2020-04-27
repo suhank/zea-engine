@@ -4,7 +4,9 @@ import { sgFactory } from './SGFactory.js'
 import { Material } from './Material.js'
 import { FileImage } from './Images/index'
 
-/** Class representing a material library in a scene tree. */
+/** Class representing a material library in a scene tree. 
+ * @private
+*/
 class MaterialLibrary {
   /**
    * Create a material library.

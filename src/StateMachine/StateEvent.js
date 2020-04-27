@@ -3,6 +3,7 @@ import { StateAction } from './StateAction.js'
 /** Class representing a state event. An event tiggers an action
  * that changes the state of the model.
  * @extends StateAction
+ * @private
  */
 class StateEvent extends StateAction {
   /**

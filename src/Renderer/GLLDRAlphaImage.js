@@ -5,6 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL (low dynamic range) LDR alpha image.
  * @extends GLTexture2D
+ * @private
  */
 class GLLDRAlphaImage extends GLTexture2D {
   /**

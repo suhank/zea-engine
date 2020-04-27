@@ -1,4 +1,7 @@
-/** Synchronously initialize the following scripts in order. */
+/* eslint-disable require-jsdoc */
+/** Synchronously initialize the following scripts in order. 
+ * @private
+*/
 Module = {
   ENVIRONMENT: 'WORKER'
 };
@@ -61,6 +64,7 @@ InternalError=Module["InternalError"]=extendError(Error,"InternalError");embind_
 
 /**
  * Returns a Promise containing the rar extractor for the given filename.
+ * @private
  */
 function getExtractor(url) {
   return fetch(new Request(url))
@@ -76,6 +80,7 @@ function getExtractor(url) {
 
 /**
  *  Returns a string representing the formatted contents of the given file.
+ * @private
  */
 function extract({ resourceId, url }) {
   return new Promise(function(resolve, reject) {
@@ -124,6 +129,7 @@ function returnData(event, data) {
 
 /**
  * Listen for messages sent to the worker.
+ * @private
  */
 onmessage = function(event) {
   if(event.data.type == 'init') {

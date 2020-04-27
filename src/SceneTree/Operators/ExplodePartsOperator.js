@@ -16,6 +16,7 @@ import { sgFactory } from '../SGFactory.js'
 
 /** Class representing an explode part parameter.
  * @extends StructParameter
+ * @private
  */
 class ExplodePartParameter extends StructParameter {
   /**

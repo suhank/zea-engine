@@ -34,7 +34,9 @@ const getFirstBrowserLanguage = function() {
   return null
 }
 
-/** Class representing a label manager. */
+/** Class representing a label manager.
+ * @private
+ */
 class LabelManager {
   /**
    * Create a label manager.

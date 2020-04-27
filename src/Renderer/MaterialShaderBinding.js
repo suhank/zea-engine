@@ -3,7 +3,9 @@ import { GLTexture2D } from './GLTexture2D.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLImageStream } from './GLImageStream.js'
 
-/** Class representing simple uniform binding. */
+/** Class representing simple uniform binding. 
+ * @private
+*/
 class SimpleUniformBinding {
   /**
    * Create simple uniform binding.
@@ -58,7 +60,9 @@ class SimpleUniformBinding {
   destroy() {}
 }
 
-/** Class representing complex uniform binding. */
+/** Class representing complex uniform binding. 
+ * @private
+*/
 class ComplexUniformBinding {
   /**
    * Create complex uniform binding.
@@ -108,7 +112,9 @@ class ComplexUniformBinding {
   destroy() {}
 }
 
-/** Class representing material uniform binding. */
+/** Class representing material uniform binding. 
+ * @private
+*/
 class MatrixUniformBinding {
   /**
    * Create material uniform binding.
@@ -155,7 +161,9 @@ class MatrixUniformBinding {
   destroy() {}
 }
 
-/** Class representing color uniform binding. */
+/** Class representing color uniform binding. 
+ * @private
+*/
 class ColorUniformBinding {
   /**
    * Create color uniform binding.
@@ -290,7 +298,9 @@ class ColorUniformBinding {
 
 const logged = {}
 
-/** Class representing material shader binding. */
+/** Class representing material shader binding. 
+ * @private
+*/
 class MaterialShaderBinding {
   /**
    * Create material shader binding.

@@ -4,6 +4,7 @@ import { ParameterOwner } from '../SceneTree/ParameterOwner.js'
 
 /** Class representing a state action.
  * @extends ParameterOwner
+ * @private
  */
 class StateAction extends ParameterOwner {
   /**

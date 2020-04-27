@@ -1,6 +1,8 @@
 import { SInt32, UInt32, Float32 } from './Common.js'
 
-/** Class representing a type registry. */
+/** Class representing a type registry. 
+ * @private
+*/
 class TypeRegistry {
   /**
    * Create a a type registry.

@@ -5,6 +5,7 @@ import { GLTexture2D } from './GLTexture2D.js'
 
 /** Class representing GL lines.
  * @extends GLGeom
+ * @private
  */
 class GLLines extends GLGeom {
   /**

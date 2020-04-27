@@ -4,7 +4,9 @@ import { GLRenderer } from '../GLRenderer.js'
 
 import { GLGeomItemSet } from '../GLGeomItemSet.js'
 
-/** Class representing GL shader materials. */
+/** Class representing GL shader materials. 
+ * @private
+*/
 class GLShaderMaterials {
   /**
    * Create a GL shader material.
@@ -56,7 +58,9 @@ class GLShaderMaterials {
   }
 }
 
-/** Class representing GL material geom item sets. */
+/** Class representing GL material geom item sets. 
+ * @private
+*/
 class GLMaterialGeomItemSets {
   /**
    * Create a GL material geom item set.
@@ -136,6 +140,7 @@ class GLMaterialGeomItemSets {
 
 /** Class representing a GL opaque geoms pass.
  * @extends GLStandardGeomsPass
+ * @private
  */
 class GLOpaqueGeomsPass extends GLStandardGeomsPass {
   /**

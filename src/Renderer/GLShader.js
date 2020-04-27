@@ -3,6 +3,7 @@ import { BaseItem } from '../SceneTree/index'
 
 /** Class representing a GL shader.
  * @extends BaseItem
+ * @private
  */
 class GLShader extends BaseItem {
   /**

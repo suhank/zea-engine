@@ -7,6 +7,7 @@ import { StateAction } from '../StateAction.js'
 
 /** A state machine action that sets parameter values.
  * @extends StateAction
+ * @private
  */
 class SetParameterValue extends StateAction {
   /**
