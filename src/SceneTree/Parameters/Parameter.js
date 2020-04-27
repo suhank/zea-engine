@@ -362,9 +362,10 @@ class Parameter extends BaseParameter {
       this.__cleanerFns = []
     }
 
-    // if (value == undefined) {
-    //     throw ("Invalud valu for setvalue.");
-    // }
+    if (value == undefined) {
+      // eslint-disable-next-line no-throw-literal
+      throw ("undefined was passed into the setvalue for param:" + this.getName())
+    }
 
     if (!value.fromJSON) {
       // Note: equality tests on anything but simple values is going to be super expenseive.

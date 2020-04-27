@@ -122,7 +122,6 @@ class BaseGeomItem extends TreeItem {
   readBinary(reader, context) {
     super.readBinary(reader, context)
 
-    // if (context.version >= 4) {
     if (context.versions['zea-engine'].greaterOrEqualThan([0, 0, 4])) {
       const materialName = reader.loadStr()
       // const materialName = 'Material' + this.__bodyDescId;
