@@ -115,8 +115,8 @@ void main(void) {
   v_texCoord += layoutData.xy;
 
   float scl = billboardData.x;
-  float width = layoutData.z * atlasBillboards_desc.x * scl * 0.002;
-  float height = layoutData.w * atlasBillboards_desc.y * scl * 0.002;
+  float width = layoutData.z * atlasBillboards_desc.x * scl;
+  float height = layoutData.w * atlasBillboards_desc.y * scl;
   int flags = int(billboardData.y);
   bool alignedToCamera = flags > 0;
   if(alignedToCamera){
