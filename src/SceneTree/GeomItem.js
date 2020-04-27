@@ -19,7 +19,7 @@ class GeomItem extends BaseGeomItem {
     super(name)
 
     this.__geomParam = this.insertParameter(
-      new GeometryParameter('geometry'),
+      new GeometryParameter('Geometry'),
       0
     )
     this.__geomParam.valueChanged.connect(this._setBoundingBoxDirty.bind(this))
