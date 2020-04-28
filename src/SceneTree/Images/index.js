@@ -5,5 +5,5 @@ export * from './LDRVideo.js'
 export * from './GIFImage.js'
 export * from './EnvMap.js'
 export * from './Label.js'
-export * from './VideoStreamImage2D.js'=
+export * from './VideoStreamImage2D.js'
 export * from './LabelManager.js'
