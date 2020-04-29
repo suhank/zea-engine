@@ -522,6 +522,7 @@ class Vec3 extends AttrValue {
    * Creates a new Vec3.
    * @param {...object} ...args - The ...args param.
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static create(...args) {
     return new Vec3(...args)
@@ -531,6 +532,7 @@ class Vec3 extends AttrValue {
    * The createFromJSON method.
    * @param {object} json - The json param.
    * @return {Vec3} - The return value.
+   * @private
    */
   static createFromJSON(json) {
     const result = new Vec3()
@@ -543,6 +545,7 @@ class Vec3 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
@@ -552,6 +555,7 @@ class Vec3 extends AttrValue {
    * The createFromFloat32Array method.
    * @param {Float32Array} array - A Float32Array value
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static createFromFloat32Array(array) {
     return new Vec3(array)
@@ -560,6 +564,7 @@ class Vec3 extends AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 3

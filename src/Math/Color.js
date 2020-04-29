@@ -617,6 +617,7 @@ class Color extends AttrValue {
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
    * @return {array} - Returns as a 3 component array.
+   * @private
    */
   as3ComponentArray() {
     return [this.__data[0], this.__data[1], this.__data[2]]
@@ -629,6 +630,7 @@ class Color extends AttrValue {
    * Creates a new color.
    * @param {...object} ...args - The ...args param.
    * @return {Color} - Returns a new color.
+   * @private
    */
   static create(...args) {
     return new Color(...args)
@@ -639,6 +641,7 @@ class Color extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Color} - Returns a new color.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Color(buffer, offset * 4) // 4 bytes per 32bit float
@@ -647,6 +650,7 @@ class Color extends AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 4

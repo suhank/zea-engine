@@ -7,8 +7,8 @@ import { typeRegistry } from './TypeRegistry.js'
 class Box2 {
   /**
    * Create a Box2
-   * @param {any} p0 - A point representing the corners of a 2D box.
-   * @param {any} p1 - A point representing the corners of a 2D box.
+   * @param {Vec2} p0 - A point representing the corners of a 2D box.
+   * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
   constructor(p0 = undefined, p1 = undefined) {
     if (p0 instanceof Vec2) {
@@ -34,7 +34,7 @@ class Box2 {
   }
 
   /**
-   * The reset method.
+   * Resets the box2 back to an uninitialized state.
    */
   reset() {
     this.p0.x = Number.POSITIVE_INFINITY
@@ -44,7 +44,7 @@ class Box2 {
   }
 
   /**
-   * The isValid method.
+   * Returns true if the box has been expanded to contain a point.
    * @return {any} - The return value.
    */
   isValid() {
@@ -106,6 +106,7 @@ class Box2 {
    * Creates a new Box2.
    * @param {...object} ...args - The ...args param.
    * @return {Box2} - Returns a new Box2.
+   * @private
    */
   static create(...args) {
     return new Box2(...args)

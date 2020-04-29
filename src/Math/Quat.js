@@ -996,6 +996,7 @@ class Quat extends AttrValue {
    * Creates a new Quat.
    * @param {...object} ...args - The ...args param.
    * @return {Quat} - Returns a new Quat.
+   * @private
    */
   static create(...args) {
     return new Quat(...args)
@@ -1006,6 +1007,7 @@ class Quat extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Quat} - Returns a new Quat.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Quat(buffer, offset * 4) // 4 bytes per 32bit float
@@ -1014,6 +1016,7 @@ class Quat extends AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 4
