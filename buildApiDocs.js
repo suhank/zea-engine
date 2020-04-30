@@ -77,10 +77,10 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
       if (READMEFilestxt.length > 0 || READMEFoldertxt.length > 0) {
         let READMEtxt = `# ${path.basename(tgtDir, '.js')}\n`
         if (READMEFilestxt.length > 0) {
-          READMEtxt = READMEtxt+ `# Classes\n${READMEFilestxt.join('\n')}\n\n`
+          READMEtxt = READMEtxt+ `## Classes\n${READMEFilestxt.join('\n')}\n\n`
         }
         if (READMEFoldertxt.length > 0) {
-          READMEtxt = READMEtxt+ `Folder\n${READMEFoldertxt.join('\n')}\n\n`
+          READMEtxt = READMEtxt+ `## Folders\n${READMEFoldertxt.join('\n')}\n\n`
         }
         const outPath = path.join(tgtDir, "README.md")
         const fullOutPath = path.join("docs", outPath)
@@ -97,8 +97,20 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
   return promise;
 }
 
-renderSourceFolderToMarkdown('src/Math', 'api').then((data) => {
+renderSourceFolderToMarkdown('src', 'api').then((data) => {
   console.log("done:")
+  
+  const searchToc = []
+  data.files.forEach(file => {
+    if (file.outPath.endsWith("README.md")) {
+      const parts = file.outPath.split("\\")
+      parts.pop()
+      searchToc.push(parts.join("/")+"/")
+    } else {
+      searchToc.push(path.basename(file.outPath, '.md').split("\\").join("/"))
+    }
+  })
+  fs.writeFileSync("docs/searchToc.json", JSON.stringify({ searchToc }))
 });
 
 
