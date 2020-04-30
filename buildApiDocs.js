@@ -12,18 +12,18 @@ const renderSourceFileToMarkdown = (filepath, tgtDir) => {
     dir: tgtDir,
     name: path.basename(filepath, '.js'),
     ext: '.md'
-  })
+  }).split("\\").join("/")
   const promise = new Promise((resolve, reject) =>{
-    // jsdoc2md.render({ files: filepath }).then(data => {
-    //   resolve({ outPath, data })
-    // })
+    jsdoc2md.render({ files: filepath }).then(data => {
+      resolve({ outPath, data })
+    })
   // documentation.build([filepath], {})
   //   .then(documentation.formats.md)
   //   .then(output => {
   //     // output is a string of Markdown data
   //     resolve({ outPath, data: output })
   //   });
-    resolve({ outPath })
+    // resolve({ outPath })
   })
   return promise
 }
@@ -56,16 +56,17 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
       const READMEFilestxt = []
       const READMEFoldertxt = []
       datas.forEach(fileRender => {
-        console.log(fileRender)
+        // console.log(fileRender)
         if (fileRender.type == "folder") {
           if (fileRender.outPath) {
             const parts = fileRender.outPath.split("\\")
             const folderName = parts[parts.length - 2]
-            console.log(fileRender.outPath, parts, folderName)
-            READMEFoldertxt.push(`- [${folderName}](${fileRender.outPath})`)
+            READMEFoldertxt.push(`- [${folderName}](${parts.join("/")})`)
           }
         } else {
-          READMEFilestxt.push(`- [${path.basename(fileRender.outPath, '.md')}](${fileRender.outPath})`)
+          if (fileRender.data) {
+            READMEFilestxt.push(`- [${path.basename(fileRender.outPath, '.md')}](${fileRender.outPath})`)
+          }
         }
       })
 
@@ -89,6 +90,7 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
         }
         fs.writeFileSync(fullOutPath, READMEtxt)
 
+        console.log(outPath)
         result.outPath = outPath
       }
       resolve(result)
@@ -102,6 +104,7 @@ renderSourceFolderToMarkdown('src', 'api').then((data) => {
   
   const searchToc = []
   data.files.forEach(file => {
+    if (!file.outPath) return
     if (file.outPath.endsWith("README.md")) {
       const parts = file.outPath.split("\\")
       parts.pop()
