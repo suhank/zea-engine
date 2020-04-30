@@ -244,9 +244,6 @@ class TreeItem extends BaseItem {
     for (const childItem of this.__childItems) {
       if (childItem) childItem.__updatePath()
     }
-    for (const component of this.__components) {
-      if (component) component.__updatePath()
-    }
   }
 
   /**
@@ -991,10 +988,6 @@ class TreeItem extends BaseItem {
     if (!this.testFlag(ItemFlags.USER_EDITED)) return
 
     const j = super.toJSON(context, flags)
-
-    const jcs = []
-    for (const c of this.__components) jcs.push(c.toJSON(context, flags))
-    if (jcs.length > 0) j.components = jcs
 
     // Some Items, such as the SliderSceneWidget do not need thier children
     // to be saved.
