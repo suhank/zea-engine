@@ -1,15 +1,16 @@
 {
   "name": "@zeainc/zea-engine",
-  "fileName": "zea-engine",
+  "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Zea Engine",
-  "main": "dist/zea-engine.cjs.js",
-  "module": "dist/zea-engine.esm.js",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
   "author": "Zea Inc.",
   "license": "ISC",
   "files": [
-    "/dist/",
+    "/dist/index.cjs.js",
+    "/dist/index.esm.js",
     "/public-resources/**"
   ],
   "scripts": {
