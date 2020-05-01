@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Parcel Sandbox</title>
+    <meta charset="UTF-8"/>
+    <script src="https://unpkg.com/@zeainc/zea-engine@0.0.92/dist/zea-engine.js"></script>
+  </head>
+
+  <body>
+    <div id="app"></div>
+  </body>
+  <script>
+const domElement = document.getElementById("app");
+
+const scene = new ZeaEngine.Scene();
+scene.setupGrid(10.0, 10);
+
+const color = new ZeaEngine.Color('#887744')
+scene.getSettings().getParameter('BackgroundColor').setValue(color)
+
+const renderer = new ZeaEngine.GLRenderer(domElement);
+renderer.setScene(scene);
+renderer.resumeDrawing();
+  </script>
+</html>

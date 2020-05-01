@@ -7,7 +7,7 @@ Tests/Assets/
 SteamServer/
 Resources/Cache/
 
-__docs/
+docs/api
 
 *.log
 .tmuxp.json
