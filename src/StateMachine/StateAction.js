@@ -73,7 +73,7 @@ class StateAction extends ParameterOwner {
   activate() {
     console.warn(
       'activate must be implmented by each action. this:' +
-        this.constructor.name
+        sgFactory.getClassName(this)
     )
   }
 

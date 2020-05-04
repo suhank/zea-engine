@@ -62,7 +62,6 @@ class RefCounted {
   removeRef(referer) {
     if (!referer)
       throw new Error('Error in RefCounted.removeRef: Must provide a referer')
-    // console.log(this.constructor.name + " removeRef:" + referer.constructor.name);
     const index = this.__refs.indexOf(referer)
     if (index == -1)
       throw new Error(

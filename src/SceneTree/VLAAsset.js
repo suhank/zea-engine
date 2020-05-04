@@ -39,7 +39,7 @@ class VLAAsset extends AssetItem {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         const stem = this.__datafileParam.getStem()
         this.setName(stem)
       }

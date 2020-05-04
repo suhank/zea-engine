@@ -408,7 +408,7 @@ class GLOpaqueGeomsPass extends GLStandardGeomsPass {
     gl.depthFunc(gl.LESS)
     gl.depthMask(true)
 
-    // for (let glshaderMaterials of this.__glshadermaterials) {
+    // eslint-disable-next-line guard-for-in
     for (const shaderName in this.__glshadermaterials) {
       const glshaderMaterials = this.__glshadermaterials[shaderName]
       if (!glshaderMaterials.glgeomdatashader) continue
