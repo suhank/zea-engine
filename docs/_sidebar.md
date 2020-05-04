@@ -28,6 +28,7 @@
   - [Setting up the Explode Operator](tutorials/explode-operator.md)
   - [Setting up the Gears Operator](tutorials/gears-operator.md)
   - [Setting up Cutaways](tutorials/cutaways.md)
+  - [Launching a VR Session](tutorials/VR.md)
 
 - User Interfaces 
   - [Zea User Interfaces Library](zea-web-components.md)
