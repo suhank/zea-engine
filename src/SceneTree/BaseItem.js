@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Signal } from '../Utilities/index'
 import { sgFactory } from './SGFactory.js'
 import { ValueSetMode } from './Parameters/Parameter.js'
@@ -21,9 +22,8 @@ class BaseItem extends ParameterOwner {
    */
   constructor(name) {
     super()
-    if (name == undefined) name = sgFactory.getClassName(this)
-    this.__name = name
-    this.__path = [name]
+    this.__name = name ? name : ""
+    this.__path = [this.__name]
     this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
     this.__flags = 0
 
