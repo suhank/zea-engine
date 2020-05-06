@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zea Engine Hello World</title>
+    <meta charset="UTF-8"/>
+  </head>
+  <body>
+    aeswrdtfyguhijokplp;
+    <div id="app" width=200px></div>
+  </body>
+  <script type="module">
+
+import { Scene, GLRenderer } from "https://unpkg.com/@zeainc/zea-engine@1.0.5/dist/index.esm.js"
+
+const domElement = document.getElementById("app");
+
+const scene = new Scene();
+scene.setupGrid(10.0, 10);
+
+const renderer = new GLRenderer(domElement, {
+  webglOptions: { canvasPosition: 'relative', alpha: false }
+});
+renderer.setScene(scene);
+renderer.resumeDrawing();
+
+  </script>
+</html>
