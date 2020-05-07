@@ -1,4 +1,4 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     frameworks: ['mocha', 'chai'],
     files: [
@@ -7,7 +7,7 @@ module.exports = function(config) {
       { pattern: 'tests/**/*.js', type: 'module' }
     ],
     reporters: ['progress'],
-    port: 9876,  // karma web server port
+    port: 9876, // karma web server port
     colors: true,
     logLevel: config.LOG_INFO,
 
@@ -15,14 +15,18 @@ module.exports = function(config) {
     customLaunchers: {
       MyHeadlessChrome: {
         base: 'ChromeHeadless',
-        flags: ['--disable-translate', '--disable-extensions',
-                '--no-first-run', '--disable-background-networking',
-                '--remote-debugging-port=9223']
-      }
+        flags: [
+          '--disable-translate',
+          '--disable-extensions',
+          '--no-first-run',
+          '--disable-background-networking',
+          '--remote-debugging-port=9223',
+        ],
+      },
     },
 
     autoWatch: false,
     // singleRun: false, // Karma captures browsers, runs the tests and exits
-    concurrency: Infinity
+    concurrency: Infinity,
   })
 }
