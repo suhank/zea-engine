@@ -53,19 +53,13 @@ function compareImages(image1, image2) {
           green: 0,
           blue: 255
         },
-        // errorType: "movement",
-        // transparency: 0.3,
-        // largeImageThreshold: 1200,
-        // useCrossOrigin: false,
         outputDiff: true
       },
       scaleToSameSize: true,
       ignore: "antialiasing"
     };
     resemble.compare(image1, image2, options, (err, data) => {
-      console.log("compareImages:", err)
       resolve(data)
-      /* { misMatchPercentage : 100, isSameDimensions: true, getImageDataUrl: function(){} } */
     })
   })
 }
@@ -85,10 +79,7 @@ function saveRefImage(dataURL, fileName) {
       body: formData,
       method: 'post',
     }).then((response) => {
-      // response.json().then((json) => {
-      //   console.log(json)
-        resolve("saveRefImage:", fileName)
-      // })
+      resolve("saveRefImage:", fileName)
     })
   })
 }
@@ -107,83 +98,96 @@ function createDiffImage(dataURL) {
   })
 }
 
+async function setupSceneAndRenderer(runTest) {
+
+  const container = document.createElement('div')
+  container.style.position = 'absolute'
+  container.style.margin = '0 auto;'
+  container.style.display = 'flex'
+  container.style['justify-content'] = 'space-between';
+  container.style['background'] = '#A0C5E8';
+  
+  const div = document.createElement('div')
+  div.style.position = 'relative'
+  div.style.padding = '10px'
+  container.appendChild(div)
+  const viewportDiv = document.createElement('div')
+  viewportDiv.style.position = 'relative'
+  viewportDiv.style.width = '480px'
+  viewportDiv.style.height = '340px'
+  div.appendChild(viewportDiv)
+  document.body.appendChild(container)
+
+  const scene = new Scene()
+
+  const renderer = new GLRenderer(viewportDiv, {
+    options: {
+      webglOptions: {
+        canvasPosition: 'relative',
+        alpha: false,
+      },
+    },
+  })
+  renderer.setScene(scene)
+  renderer.resumeDrawing()
+
+
+  runTest({
+    scene,
+    renderer,
+  })
+
+  renderer.getViewport().draw()
+  const dataURL = renderer.__glcanvas.toDataURL()
+  let refImage = await loadRefImage(refImageName)
+  if (!refImage) {
+    let res = await saveRefImage(dataURL, refImageName)
+    console.log(res)
+    assert(false)
+  } else {
+    refImage.style.position = 'relative'
+    refImage.style.padding = '10px'
+    container.appendChild(refImage)
+    console.log("====", refImage.width, refImage.height)
+
+    let cmp = await compareImages(dataURL, imageToDataUrl(refImage))
+    console.log("cmp:", cmp.misMatchPercentage)
+    const diffImage = await createDiffImage(cmp.getImageDataUrl())
+    diffImage.style.position = 'relative'
+    diffImage.style.padding = '10px'
+    container.appendChild(diffImage)
+    
+    // assert.equal(1, 1)
+    const misMatchPercentage = Number.parseFloat(cmp.misMatchPercentage)
+
+    if (misMatchPercentage > 2) {
+      container.style['background'] = '#FF0000';
+      var btn = document.createElement("button");
+      btn.innerHTML = "UPDATE";
+      btn.addEventListener('click', ()=>{
+        saveRefImage(dataURL, refImageName).then(res => {
+          console.log(res)
+        })
+      })
+      container.appendChild(btn)
+    }
+    expect(misMatchPercentage).to.be.below(threshold)
+    
+  }
+}
+
 describe('0.0-Grid', () => {
   it('Render a simple grid', async () => {
-    const container = document.createElement('div')
-    container.style.position = 'absolute'
-    container.style.margin = '0 auto;'
-    container.style.display = 'flex'
-    container.style['justify-content'] = 'space-between';
-    container.style['background'] = '#A0C5E8';
-    
-    const div = document.createElement('div')
-    div.style.position = 'relative'
-    div.style.padding = '10px'
-    container.appendChild(div)
-    const viewportDiv = document.createElement('div')
-    viewportDiv.style.position = 'relative'
-    viewportDiv.style.width = '480px'
-    viewportDiv.style.height = '340px'
-    div.appendChild(viewportDiv)
-    document.body.appendChild(container)
+    setupSceneAndRenderer(async (appData)=>{
+      const { scene, renderer } = appData 
 
-    const scene = new Scene()
-    scene.setupGrid(5.0, 50)
-
-    const renderer = new GLRenderer(viewportDiv, {
-      options: {
-        webglOptions: {
-          canvasPosition: 'relative',
-          alpha: false,
-        },
-      },
+      scene.setupGrid(5.0, 50)
+      renderer
+        .getViewport()
+        .getCamera()
+        .setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
+  
+      await compreRendererToRefImage(renderer, '0.0-Grid.png', 2)
     })
-    renderer.setScene(scene)
-    renderer
-      .getViewport()
-      .getCamera()
-      .setPositionAndTarget(new Vec3(2, 2, 1.7), new Vec3(0, 0, 0.4))
-
-    renderer.resumeDrawing()
-    renderer.getViewport().draw()
-    const dataURL = renderer.__glcanvas.toDataURL()
-
-    const imageName = '0.0-Grid.png'
-    
-    let refImage = await loadRefImage(imageName)
-    if (!refImage) {
-      let res = await saveRefImage(dataURL, imageName)
-      console.log(res)
-      assert(false)
-    } else {
-      refImage.style.position = 'relative'
-      refImage.style.padding = '10px'
-      container.appendChild(refImage)
-      console.log("====", refImage.width, refImage.height)
-
-      let cmp = await compareImages(dataURL, imageToDataUrl(refImage))
-      console.log("cmp:", cmp.misMatchPercentage)
-      const diffImage = await createDiffImage(cmp.getImageDataUrl())
-      diffImage.style.position = 'relative'
-      diffImage.style.padding = '10px'
-      container.appendChild(diffImage)
-      
-      // assert.equal(1, 1)
-      const misMatchPercentage = Number.parseFloat(cmp.misMatchPercentage)
-
-      if (misMatchPercentage > 2) {
-        container.style['background'] = '#FF0000';
-        var btn = document.createElement("button");
-        btn.innerHTML = "UPDATE";
-        btn.addEventListener('click', ()=>{
-          saveRefImage(dataURL, imageName).then(res => {
-            console.log(res)
-          })
-        })
-        container.appendChild(btn)
-      }
-      expect(misMatchPercentage).to.be.below(2)
-      
-    }
   })
 })
