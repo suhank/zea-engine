@@ -4,8 +4,18 @@ module.exports = function (config) {
     files: [
       /* https://github.com/karma-runner/karma/issues/2955 */
       { pattern: 'dist/index.esm.js', type: 'module', included: true },
-      { pattern: 'tests/**/*.js', type: 'module' }
+      {
+        pattern: 'node_modules/resemblejs/resemble.js',
+        type: 'js',
+        included: true,
+      },
+      { pattern: 'tests/**/*.js', type: 'module' },
+      { pattern: 'tests/**/*.png', included: false, nocache: true },
+      { pattern: 'tests/**/*.json', included: false, nocache: true }
     ],
+    proxies: {
+      '/refs/': '/base/tests/refs/'
+    },
     reporters: ['progress'],
     port: 9876, // karma web server port
     colors: true,
