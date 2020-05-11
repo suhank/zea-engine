@@ -9,6 +9,7 @@ module.exports = function (config) {
         type: 'js',
         included: true,
       },
+      { pattern: 'testing-server/setup-visual-test.js', type: 'module' },
       { pattern: 'tests/**/*.js', type: 'module' },
       { pattern: 'tests/**/*.png', included: false, nocache: true },
       { pattern: 'tests/**/*.json', included: false, nocache: true }
