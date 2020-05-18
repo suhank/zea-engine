@@ -74,7 +74,6 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
             )
 
             const fullOutPath = path.join('docs', fileRender.outPath)
-
             fs.writeFileSync(fullOutPath, fileRender.data)
           }
         }
@@ -97,10 +96,6 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
         }
         const outPath = path.join(tgtDir, 'README.md')
         const fullOutPath = path.join('docs', outPath)
-        const fullOutFolder = path.join('docs', tgtDir)
-        if (!fs.existsSync(fullOutFolder)) {
-          fs.mkdirSync(fullOutFolder, { recursive: true })
-        }
 
         fs.writeFileSync(fullOutPath, READMEtxt)
 
