@@ -6,7 +6,6 @@ const jsdoc2md = require('jsdoc-to-markdown')
 // var documentation = require('documentation');
 
 const renderSourceFileToMarkdown = (filepath, tgtDir) => {
-  // console.log("renderSourceFileToMarkdown:", filepath)
   const outPath = path
     .format({
       dir: tgtDir,
@@ -15,29 +14,21 @@ const renderSourceFileToMarkdown = (filepath, tgtDir) => {
     })
     .split('\\')
     .join('/')
-  const promise = new Promise((resolve, reject) => {
+
+  return new Promise((resolve, reject) => {
     jsdoc2md.render({ files: filepath }).then((data) => {
       resolve({ outPath, data })
     })
-    // documentation.build([filepath], {})
-    //   .then(documentation.formats.md)
-    //   .then(output => {
-    //     // output is a string of Markdown data
-    //     resolve({ outPath, data: output })
-    //   });
-    // resolve({ outPath })
   })
-  return promise
 }
 
 const renderSourceFolderToMarkdown = (dir, tgtDir) => {
   const promise = new Promise((resolve) => {
     const fileRenders = []
     const files = fs.readdirSync(dir)
-    // if (err) throw err
+
     files.forEach((file) => {
       const filepath = path.join(dir, file)
-      // console.log("filepath:", filepath)
       fileRenders.push(
         new Promise((resolve) => {
           fs.stat(filepath, (err, stats) => {
@@ -61,8 +52,13 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
     Promise.all(fileRenders).then((datas) => {
       const READMEFilestxt = []
       const READMEFoldertxt = []
+
+      const fullOutFolder = path.join('docs', tgtDir)
+      if (!fs.existsSync(fullOutFolder)) {
+        fs.mkdirSync(fullOutFolder, { recursive: true })
+      }
+
       datas.forEach((fileRender) => {
-        // console.log(fileRender)
         if (fileRender.type == 'folder') {
           if (fileRender.outPath) {
             const parts = fileRender.outPath.split('\\')
@@ -76,6 +72,10 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
                 fileRender.outPath
               })`
             )
+
+            const fullOutPath = path.join('docs', fileRender.outPath)
+
+            fs.writeFileSync(fullOutPath, fileRender.data)
           }
         }
       })
@@ -86,13 +86,14 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
       }
 
       if (READMEFilestxt.length > 0 || READMEFoldertxt.length > 0) {
-        let READMEtxt = `# ${path.basename(tgtDir, '.js')}\n`
+        let READMEtxt = `# ${path.basename(tgtDir, '.js')}\n`.toUpperCase()
         if (READMEFilestxt.length > 0) {
           READMEtxt = READMEtxt + `## Classes\n${READMEFilestxt.join('\n')}\n\n`
         }
+
         if (READMEFoldertxt.length > 0) {
-          READMEtxt =
-            READMEtxt + `## Folders\n${READMEFoldertxt.join('\n')}\n\n`
+          // eslint-disable-next-line prettier/prettier
+          READMEtxt = `${READMEtxt} ## Modules {docsify-ignore} \n${READMEFoldertxt.join('\n')}\n\n`
         }
         const outPath = path.join(tgtDir, 'README.md')
         const fullOutPath = path.join('docs', outPath)
@@ -103,7 +104,6 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
 
         fs.writeFileSync(fullOutPath, READMEtxt)
 
-        console.log(outPath)
         result.outPath = outPath
       }
       resolve(result)
