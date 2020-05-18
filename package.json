@@ -11,14 +11,15 @@
   "files": [
     "/dist/index.cjs.js",
     "/dist/index.esm.js",
-    "/public-resources/**"
+    "/public-resources/**",
+    "/buildApiDocs.js"
   ],
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c rollup.config.dev.js -w",
     "prepare": "yarn run build",
     "dist": "yarn publish --access=public",
-    "docs": "jsdoc -c .jsdoc.json"
+    "docs": "node buildApiDocs.js"
   },
   "dependencies": {},
   "devDependencies": {

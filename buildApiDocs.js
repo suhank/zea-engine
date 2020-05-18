@@ -17,13 +17,12 @@ const renderSourceFileToMarkdown = (filepath, tgtDir) => {
     jsdoc2md.render({ files: filepath }).then(data => {
       resolve({ outPath, data })
     })
-  // documentation.build([filepath], {})
-  //   .then(documentation.formats.md)
-  //   .then(output => {
-  //     // output is a string of Markdown data
-  //     resolve({ outPath, data: output })
-  //   });
-    // resolve({ outPath })
+  documentation.build([filepath], {})
+     .then(documentation.formats.md)
+     .then(output => {
+      // output is a string of Markdown data
+      resolve({ outPath, data: output })
+     });
   })
   return promise
 }
@@ -85,9 +84,11 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
         }
         const outPath = path.join(tgtDir, "README.md")
         const fullOutPath = path.join("docs", outPath)
-        if (!fs.existsSync(fullOutPath)){
-          fs.mkdirSync(fullOutPath, { recursive: true });
+        const fullOutFolder = path.join('docs', tgtDir)
+        if (!fs.existsSync(fullOutFolder)){
+          fs.mkdirSync(fullOutFolder, { recursive: true });
         }
+
         fs.writeFileSync(fullOutPath, READMEtxt)
 
         console.log(outPath)
