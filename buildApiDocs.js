@@ -67,12 +67,12 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
           if (fileRender.outPath) {
             const parts = fileRender.outPath.split('\\')
             const folderName = parts[parts.length - 2]
-            READMEFoldertxt.push(`- [${folderName}](${parts.join('/')})`)
+            READMEFoldertxt.push(`### [${folderName}](${parts.join('/')})`)
           }
         } else {
           if (fileRender.data) {
             READMEFilestxt.push(
-              `- [${path.basename(fileRender.outPath, '.md')}](${
+              `### [${path.basename(fileRender.outPath, '.md')}](${
                 fileRender.outPath
               })`
             )
