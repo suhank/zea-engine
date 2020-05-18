@@ -16,9 +16,14 @@ const renderSourceFileToMarkdown = (filepath, tgtDir) => {
     .join('/')
 
   return new Promise((resolve, reject) => {
-    jsdoc2md.render({ files: filepath }).then((data) => {
-      resolve({ outPath, data })
-    })
+    jsdoc2md
+      .render({
+        files: filepath,
+        // template: fs.readFileSync('template.hbs', 'utf8'),
+      })
+      .then((data) => {
+        resolve({ outPath, data })
+      })
   })
 }
 
