@@ -2,7 +2,7 @@
 ## Changing the Background Color
 
 
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>

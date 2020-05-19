@@ -6,10 +6,13 @@
   * [Kinematics](kinematics.md)
 
 - Getting started
-  * [Get started](get-started.md)
-  * [Writing more pages](more-pages.md)
-  * [Custom navbar](custom-navbar.md)
-  * [Cover page](cover.md)
+  * [Development Setup](getting-started/development-setup.md)
+  * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
+  * [Using Zea Engine with React](getting-started/using-react.md)
+
+- Concepts
+  * [Using Groups](concepts/groups.md)
+  * [Notifications](concepts/notifications.md)
 
 - Customization
   * [Configuration](configuration.md)
@@ -32,4 +35,5 @@
 - API Reference
   * [API](api/README.md)
 
-  * [Releases](changelog.md)
+- Releases
+  * [zea-engine-1.0.7](zea-engine-1.0.7.md)
