@@ -1,5 +1,5 @@
-import { Signal } from '../Utilities'
-import { BaseImage, RefCounted } from '../SceneTree'
+import { Signal } from '../Utilities/index'
+import { BaseImage, RefCounted } from '../SceneTree/index'
 
 /** Class representing a GL texture 2D.
  * @extends RefCounted
@@ -24,18 +24,18 @@ class GLTexture2D extends RefCounted {
     this.textureDesc = [0, 0, 0, 0] // To be populated by derived classes.
     this.__loaded = false
     this.__bound = false
-    const imageUpdated = () => {
-      // this.bufferData(data);
-      const params = this.__texture.getParams()
-      const width = params.width
-      const height = params.height
-      const data = params.data
-      this.bufferData(data, width, height)
-    }
     if (params != undefined) {
       if (params instanceof BaseImage) {
         this.__texture = params
         this.__texture.setMetadata('gltexture', this)
+        const imageUpdated = () => {
+          // this.bufferData(data);
+          const params = this.__texture.getParams()
+          const width = params.width
+          const height = params.height
+          const data = params.data
+          this.bufferData(data, width, height)
+        }
         if (this.__texture.isLoaded()) {
           this.configure(this.__texture.getParams())
           this.__texture.updated.connect(imageUpdated)
@@ -45,17 +45,15 @@ class GLTexture2D extends RefCounted {
             this.__texture.updated.connect(imageUpdated)
           })
         }
-        this.__texture.destructing.connect(() => {
-          console.log(this.__texture.getName() + ' destructing')
-          this.destroy()
-        })
-      } else this.configure(params)
+      } else {
+        this.configure(params)
+      }
     }
   }
 
   /**
    * The isLoaded method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isLoaded() {
     return this.__loaded
@@ -135,8 +133,8 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The configure method.
-   * @param {any} params - The params param.
-   * @param {boolean} emit - The emit param.
+   * @param {any} params - The params value.
+   * @param {boolean} emit - The emit value.
    */
   configure(params, emit = true) {
     if (
@@ -367,11 +365,11 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The bufferData method.
-   * @param {any} data - The data param.
-   * @param {number} width - The width param.
-   * @param {number} height - The height param.
-   * @param {boolean} bind - The bind param.
-   * @param {boolean} emit - The emit param.
+   * @param {any} data - The data value.
+   * @param {number} width - The width value.
+   * @param {number} height - The height value.
+   * @param {boolean} bind - The bind value.
+   * @param {boolean} emit - The emit value.
    */
   bufferData(data, width = -1, height = -1, bind = true, emit = true) {
     const gl = this.__gl
@@ -574,10 +572,10 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The resize method.
-   * @param {number} width - The width param.
-   * @param {number} height - The height param.
-   * @param {boolean} preserveData - The preserveData param.
-   * @param {boolean} emit - The emit param.
+   * @param {number} width - The width value.
+   * @param {number} height - The height value.
+   * @param {boolean} preserveData - The preserveData value.
+   * @param {boolean} emit - The emit value.
    */
   resize(width, height, preserveData = false, emit = true) {
     const gl = this.__gl
@@ -706,8 +704,8 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
    * @return {any} - The return value.
    */
   bind(renderstate, unif) {
@@ -717,8 +715,8 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The preBind method.
-   * @param {any} unif - The unif param.
-   * @param {any} unifs - The unifs param.
+   * @param {any} unif - The unif value.
+   * @param {any} unifs - The unifs value.
    * @return {any} - The return value.
    */
   preBind(unif, unifs) {
@@ -730,9 +728,9 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
-   * @param {any} bindings - The bindings param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
+   * @param {any} bindings - The bindings value.
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {
@@ -767,7 +765,8 @@ class GLTexture2D extends RefCounted {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     super.destroy()

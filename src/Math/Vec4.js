@@ -98,6 +98,15 @@ class Vec4 extends AttrValue {
     this.__data[3] = val
   }
 
+  
+  /**
+   * Getter for xy swizzel.
+   * @return {number} - Returns the z value.
+   */
+  get xyz() {
+    return new Vec3(this.__data[0], this.__data[1], this.__data[2]);
+  }
+
   /**
    * Setter from scalar components.
    * @param {number} x - The x value.
@@ -467,6 +476,7 @@ class Vec4 extends AttrValue {
    * Creates a new Vec3.
    * @param {...object} ...args - The ...args param.
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static create(...args) {
     return new Vec3(...args)
@@ -477,6 +487,7 @@ class Vec4 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec4} - Returns a new Vec3.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec4(buffer, offset * 4) // 4 bytes per 32bit float
@@ -485,6 +496,7 @@ class Vec4 extends AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 4

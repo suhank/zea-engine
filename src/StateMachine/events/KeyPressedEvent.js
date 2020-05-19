@@ -1,10 +1,11 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { Parameter } from '../../SceneTree/Parameters'
+import { StringParameter } from '../../SceneTree/Parameters/index'
 import { StateEvent } from '../StateEvent.js'
 
-/** Class representing a key pressed event.
+/** Triggers an state machine event to occur when a key is pressed.
  * @extends StateEvent
+ * @private
  */
 class KeyPressedEvent extends StateEvent {
   /**
@@ -14,12 +15,12 @@ class KeyPressedEvent extends StateEvent {
   constructor(name) {
     super(name)
     this.onKeyPressed = this.onKeyPressed.bind(this)
-    this.__keyParam = this.addParameter(new Parameter('Key', ''))
+    this.__keyParam = this.addParameter(new StringParameter('Key', ''))
   }
 
   /**
-   * The onKeyPressed method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when a key is pressed.
+   * @param {any} event - The event that occurs.
    */
   onKeyPressed(event) {
     console.log(event.key)

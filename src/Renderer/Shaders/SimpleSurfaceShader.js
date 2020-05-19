@@ -1,10 +1,11 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/materialparams.js'
 
@@ -28,9 +29,12 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -38,13 +42,14 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 void main(void) {
-    v_geomItemData  = getInstanceData();
+    int drawItemId = getDrawItemId();
+    v_drawItemId = float(drawItemId);
+    v_geomItemData  = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
@@ -59,7 +64,6 @@ void main(void) {
 #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
-    v_cutAwayData = getCutaway();
 }
 `
     )
@@ -69,12 +73,13 @@ void main(void) {
       `
 precision highp float;
 
+<%include file="drawItemTexture.glsl"/>
+<%include file="cutaways.glsl"/>
 <%include file="stack-gl/gamma.glsl"/>
 <%include file="materialparams.glsl"/>
-<%include file="GLSLUtils.glsl"/>
-<%include file="cutaways.glsl"/>
 
 /* VS Outputs */
+varying float v_drawItemId;
 varying vec4 v_geomItemData;
 varying vec3 v_viewPos;
 varying vec3 v_viewNormal;
@@ -82,7 +87,6 @@ varying vec3 v_viewNormal;
 varying vec2 v_textureCoord;
 #endif
 varying vec3 v_worldPos;
-varying vec4 v_cutAwayData;
 
 uniform mat4 cameraMatrix;
 
@@ -97,6 +101,9 @@ uniform sampler2D OpacityTex;
 uniform int OpacityTexType;
 
 uniform color cutColor;
+vec4 getCutaway(int id) {
+    return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 5);
+}
 
 #endif
 
@@ -105,13 +112,15 @@ uniform color cutColor;
 #endif
 
 void main(void) {
+    int drawItemId = int(v_drawItemId + 0.5);
 
     int flags = int(v_geomItemData.r + 0.5);
     // Cutaways
     if(testFlag(flags, GEOMITEM_FLAG_CUTAWAY)) 
     {
-        vec3 planeNormal = v_cutAwayData.xyz;
-        float planeDist = v_cutAwayData.w;
+        vec4 cutAwayData   = getCutaway(drawItemId);
+        vec3 planeNormal = cutAwayData.xyz;
+        float planeDist = cutAwayData.w;
         if(cutaway(v_worldPos, planeNormal, planeDist)){
             discard;
             return;

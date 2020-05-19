@@ -1,7 +1,7 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Vec3, Mat4, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
-import { TreeItem } from '../../SceneTree'
+import { Vec3, Mat4, Xfo } from '../../Math/index'
+import { Signal } from '../../Utilities/index'
+import { TreeItem } from '../../SceneTree/index'
 import { GLBaseViewport } from '../GLBaseViewport.js'
 import { VRHead } from './VRHead.js'
 import { VRController } from './VRController.js'
@@ -101,7 +101,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The getXfo method.
-   * @return {any} - The return value.
+   * @return {Xfo} - The return value.
    */
   getXfo() {
     return this.__stageXfo
@@ -109,7 +109,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The setXfo method.
-   * @param {any} xfo - The xfo param.
+   * @param {Xfo} xfo - The xfo value.
    */
   setXfo(xfo) {
     this.__stageXfo = xfo
@@ -140,7 +140,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The isPresenting method.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   isPresenting() {
     return this.__session
@@ -231,41 +231,46 @@ class VRViewport extends GLBaseViewport {
    * The startPresenting method.
    */
   startPresenting() {
+    return new Promise((resolve, reject) => {
+      
     // https://github.com/immersive-web/webxr/blob/master/explainer.md
 
     const gl = this.__renderer.gl
-    // Note: we should not need to load the resources here
-    // They could be loaded only once the controllers are
-    // being created. However, I can't see the controllers if
-    // the loading is defered
-    this.loadHMDResources().then(() => {
+
+    const __startPresenting = () => {
       navigator.xr
-        .requestSession('immersive-vr')
-        .then(session => {
+        .requestSession('immersive-vr', {
+          requiredFeatures: ['local-floor'],
+          optionalFeatures: ['bounded-floor']
+        }).then(session => {
           this.__renderer.__xrViewportPresenting = true
 
-          // Add an output canvas that will allow XR to also send a view
-          // back the monitor.
-          const mirrorCanvas = document.createElement('canvas')
-          mirrorCanvas.style.position = 'relative'
-          mirrorCanvas.style.left = '0px'
-          mirrorCanvas.style.top = '0px'
-          mirrorCanvas.style.width = '100%'
-          mirrorCanvas.style.height = '100%'
+          let mirrorCanvas;
+          if (!SystemDesc.isMobileDevice) {
+            // Add an output canvas that will allow XR to also send a view
+            // back the monitor.
+            mirrorCanvas = document.createElement('canvas')
+            mirrorCanvas.style.position = 'relative'
+            mirrorCanvas.style.left = '0px'
+            mirrorCanvas.style.top = '0px'
+            mirrorCanvas.style.width = '100%'
+            mirrorCanvas.style.height = '100%'
 
-          this.__renderer
-            .getDiv()
-            .replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
+            this.__renderer
+              .getDiv()
+              .replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
+
+            session.addEventListener('end', event => {
+                this.__renderer
+                  .getDiv()
+                  .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
+            })
+          }
 
           session.addEventListener('end', event => {
-            if (event.session.mode == 'immersive-vr') {
-              this.__stageTreeItem.setVisible(false)
-              this.__renderer
-                .getDiv()
-                .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
-              this.__session = null
-              this.presentingChanged.emit(false)
-            }
+            this.__stageTreeItem.setVisible(false)
+            this.__session = null
+            this.presentingChanged.emit(false)
           })
 
           const onSelectStart = ev => {
@@ -339,7 +344,7 @@ class VRViewport extends GLBaseViewport {
             baseLayer: new XRWebGLLayer(session, gl, {
               compositionDisabled: session.mode == 'inline',
             }),
-            outputContext: mirrorCanvas.getContext('xrpresent'),
+            outputContext: mirrorCanvas ? mirrorCanvas.getContext('xrpresent') : null,
           })
           // ////////////////////////////
 
@@ -362,9 +367,9 @@ class VRViewport extends GLBaseViewport {
           // approximately the right place.
           //   console.log('Falling back to floor-level reference space');
           session
-            .requestReferenceSpace('local-floor')
+            .requestReferenceSpace(SystemDesc.isMobileDevice ? 'local' : 'local-floor')
             .catch(e => {
-              if (!session.mode.startsWith('immersive')) {
+              // if (!session.mode.startsWith('immersive')) {
                 // If we're in inline mode, our underlying platform may not support
                 // the stationary reference space, but an identity space is guaranteed.
                 console.log('Falling back to identity reference space')
@@ -380,24 +385,38 @@ class VRViewport extends GLBaseViewport {
                       new XRRigidTransform({ y: -1.6 })
                     )
                   })
-              } else {
-                throw e
-              }
+              // } else {
+              //   throw e
+              // }
             })
             .then(refSpace => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
               this.presentingChanged.emit(true)
               this.__startSession()
+
+              resolve()
             })
             .catch(e => {
               console.warn(e.message)
+              reject("Unable to start XR Session:" + e.message)
             })
         })
         .catch(e => {
           console.warn(e.message)
         })
-    }) // end loadHMDResources
+    }
+
+    if (SystemDesc.isMobileDevice) {
+      __startPresenting()
+    } else {
+      // Note: we should not need to load the resources here
+      // They could be loaded only once the controllers are
+      // being created. However, I can't see the controllers if
+      // the loading is defered
+      this.loadHMDResources().then(__startPresenting)
+    }
+    })
   }
 
   /**
@@ -430,8 +449,8 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The __createController method.
-   * @param {any} id - The id param.
-   * @param {any} inputSource - The inputSource param.
+   * @param {any} id - The id value.
+   * @param {any} inputSource - The inputSource value.
    * @return {any} - The return value.
    * @private
    */
@@ -446,7 +465,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The updateControllers method.
-   * @param {any} xrFrame - The xrFrame param.
+   * @param {any} xrFrame - The xrFrame value.
    */
   updateControllers(xrFrame) {
     const inputSources = this.__session.inputSources
@@ -468,7 +487,7 @@ class VRViewport extends GLBaseViewport {
 
   /**
    * The draw method.
-   * @param {any} xrFrame - The xrFrame param.
+   * @param {any} xrFrame - The xrFrame value.
    */
   draw(xrFrame) {
     const session = xrFrame.session
@@ -544,6 +563,13 @@ class VRViewport extends GLBaseViewport {
 
     this.__renderer.drawScene(renderstate)
 
+    if (this.capturedElement) {
+      const event = {
+        viewport: this,
+      }
+      this.capturedElement.onMouseMove(event)
+    }
+
     // ///////////////////////
     // Emit a signal for the shared session.
     const data = {
@@ -555,6 +581,35 @@ class VRViewport extends GLBaseViewport {
     }
     this.viewChanged.emit(data, this)
   }
+
+
+  /**
+   * The setCapture method.
+   * @param {any} target - The target value.
+   * @private
+   */
+  setCapture(target) {
+    this.capturedElement = target
+  }
+
+  /**
+   * The getCapture method.
+   * @return {any} - The return value.
+   */
+  getCapture() {
+    return this.capturedElement
+  }
+
+  /**
+   * The releaseCapture method.
+   */
+  releaseCapture() {
+    this.capturedElement = null
+    // TODO: This should be a request, wbihch is fulfilled next time
+    // a frame is dranw.
+    this.renderGeomDataFbo()
+  }
+
 }
 
 export { VRViewport }

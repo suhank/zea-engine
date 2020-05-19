@@ -1,0 +1,22 @@
+{
+  "session_name": "Zea Engine",
+  "start_directory": "~/workspace/zea/engine/",
+  "windows": [
+    {
+      "window_name": "services",
+      "panes": ["yarn run start"]
+    },
+    {
+      "window_name": "nvim",
+      "panes": ["$EDITOR -S"]
+    },
+    {
+      "window_name": "vcs",
+      "panes": [
+        {
+          "shell_command": ["g fetch", "g s"]
+        }
+      ]
+    }
+  ]
+}

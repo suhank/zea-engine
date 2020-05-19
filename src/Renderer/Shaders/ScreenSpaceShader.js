@@ -1,9 +1,10 @@
 import { Color } from '../../Math/Color'
-import { sgFactory } from '../../SceneTree'
+import { sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class ScreenSpaceShader extends GLShader {
@@ -21,6 +22,8 @@ attribute vec2 texCoords;
 #endif
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -30,7 +33,8 @@ varying vec2 v_textureCoord;
 
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
+  int drawItemId = getDrawItemId();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
 
     gl_Position = (modelMatrix * vec4(positions, 1.0));
 

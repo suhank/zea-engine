@@ -2,9 +2,22 @@ import { Points } from './Points.js'
 import { Lines } from './Lines.js'
 import { Mesh } from './Mesh.js'
 import { BinReader } from '../BinReader.js'
+import { Version } from '../Version.js'
+import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 // key, toc, geomIndexOffset, geomsRange, isMobileDevice, bufferSlice, genBuffersOpts, context
 const parseGeomsBinary = (data, callback) => {
+
+  // eslint-disable-next-line guard-for-in
+  for(let key in data.context.versions) {
+    const v = data.context.versions[key];
+    const version =  new Version();
+    version.major = v.major
+    version.minor = v.minor
+    version.patch = v.patch
+    version.branch = v.branch
+    data.context.versions[key] = version;
+  }
   const geomDatas = []
   const offset = data.toc[data.geomsRange[0]]
   // console.log("offset:" +  offset);
@@ -17,8 +30,8 @@ const parseGeomsBinary = (data, callback) => {
     )
     const className = reader.loadStr()
     const pos = reader.pos()
-    // let name = reader.loadStr();
-    // console.log(i + ":" + offset + " className:" +  className  + " name:" +  name + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength);
+    // const name = reader.loadStr()
+    //console.log(i + ":" + offset + " className:" +  className  + " name:" +  name/* + " pos:" + (data.toc[i] - offset) + " bufferSlice.byteLength:" +  bufferSlice.byteLength*/);
     let geom
     switch (className) {
       case 'Points':
@@ -44,12 +57,24 @@ const parseGeomsBinary = (data, callback) => {
 
     const geomBuffers = geom.genBuffers(data.genBuffersOpts)
     if (geomBuffers.indices) transferables.push(geomBuffers.indices.buffer)
-    for (const name in geomBuffers.attrBuffers)
-      transferables.push(geomBuffers.attrBuffers[name].values.buffer)
+    for (const attrName in geomBuffers.attrBuffers) {
+      // Note: The type value assigned to the attribute can 
+      // not be transfered back to the main thread. Convert to
+      // the type name here and send back as a string.
+      const attrData = geomBuffers.attrBuffers[attrName]
+      const typeName = typeRegistry.getTypeName(attrData.dataType)
+      attrData.dataType = typeName
+
+      transferables.push(attrData.values.buffer)
+    }
 
     if (geomBuffers.vertexNeighbors) {
       transferables.push(geomBuffers.vertexNeighbors.buffer)
     }
+
+    // Transfer the bbox point buffers.
+    transferables.push(geom.boundingBox.p0.__data.buffer)
+    transferables.push(geom.boundingBox.p1.__data.buffer)
 
     geomDatas.push({
       name: geom.name,

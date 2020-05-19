@@ -1,23 +1,16 @@
-import { Color } from '../../Math'
-import { Signal, decodeText } from '../../Utilities'
+import { Color } from '../../Math/index'
 import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
-import {
-  Parameter,
-  NumberParameter,
-  Vec4Parameter,
-  FilePathParameter,
-  ParameterSet,
-} from '../Parameters'
+import { FilePathParameter } from '../Parameters/index'
 
 /** Class representing a VLH image.
  * @extends BaseImage
  */
 class VLHImage extends BaseImage {
   /**
-   * Create a VLH image..
+   * Create a VLH image.
    * @param {string} name - The name value.
    * @param {any} params - The params value.
    */
@@ -40,7 +33,7 @@ class VLHImage extends BaseImage {
     fileParam.valueChanged.connect(() => {
       this.loaded.untoggle()
 
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)
@@ -81,7 +74,7 @@ class VLHImage extends BaseImage {
 
   /**
    * The __decodeData method.
-   * @param {any} entries - The entries param.
+   * @param {any} entries - The entries value.
    * @private
    */
   __decodeData(entries) {
@@ -112,8 +105,8 @@ class VLHImage extends BaseImage {
 
   /**
    * The __loadVLH method.
-   * @param {any} fileId - The fileId param.
-   * @param {any} file - The file param.
+   * @param {any} fileId - The fileId value.
+   * @param {any} file - The file value.
    * @private
    */
   __loadVLH(fileId, file) {
@@ -166,7 +159,7 @@ class VLHImage extends BaseImage {
 
   /**
    * The setHDRTint method.
-   * @param {any} hdrtint - The hdrtint param.
+   * @param {any} hdrtint - The hdrtint value.
    */
   setHDRTint(hdrtint) {
     this.__hdrtint = hdrtint
@@ -184,24 +177,24 @@ class VLHImage extends BaseImage {
   // Persistence
 
   /**
-   * The fromJSON method.
-   * @param {object} json - The json param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(json, context, flags) {}
-
-  /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   toJSON(context, flags) {}
 
   /**
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} json - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   */
+  fromJSON(json, context, flags) {}
+
+  /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context) {
     // super.readBinary(reader, context);

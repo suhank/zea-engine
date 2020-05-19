@@ -1,20 +1,18 @@
-import { Xfo } from '../Math'
-import { Signal } from '../Utilities'
-import { FilePathParameter } from './Parameters'
+import { Signal } from '../Utilities/index'
+import { Version } from './Version.js'
 import { TreeItem } from './TreeItem.js'
 import { Group } from './Group.js'
-import { loadTextfile } from './Utils.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { sgFactory } from './SGFactory.js'
 
-/** Class representing an asset item.
+/** Class representing an asset item in a scene tree.
  * @extends TreeItem
  */
 class AssetItem extends TreeItem {
   /**
    * Create an asset item.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the asset item.
    */
   constructor(name) {
     super(name)
@@ -30,10 +28,18 @@ class AssetItem extends TreeItem {
 
   /**
    * The isLoaded method.
-   * @return {boolean} - Returns true the asset has already loaded its data.
+   * @return {boolean} - Returns true if the asset has already loaded its data.
    */
   isLoaded() {
     return this.loaded.isToggled()
+  }
+
+  /**
+   * The getGeometryLibrary method.
+   * @return {any} - The return value.
+   */
+  getEngineDataVersion() {
+    return this.__engineDataVersion
   }
 
   /**
@@ -52,19 +58,32 @@ class AssetItem extends TreeItem {
     return this.__materials
   }
 
+  /**
+   * The getUnitsConversion method.
+   * @return {any} - The return value.
+   */
+  getUnitsConversion() {
+    return this.__unitsScale
+  }
+
   // ////////////////////////////////////////
   // Persistence
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context = {}) {
     context.assetItem = this
     context.numTreeItems = 0
     context.numGeomItems = 0
-    if (context.version == undefined) context.version = 0
+
+    if (!context.versions['zea-engine']) {
+      context.versions['zea-engine'] = new Version(reader.loadStr())
+    }
+    this.__engineDataVersion = context.versions['zea-engine']
+    console.log("Loading Engine File version:", context.versions['zea-engine'])
 
     let layerRoot
     const layers = {}
@@ -72,11 +91,11 @@ class AssetItem extends TreeItem {
       if (!layers[layer]) {
         if (!layerRoot) {
           layerRoot = new TreeItem('Layers')
-          this.addChild(layerRoot)
+          this.addChild(layerRoot, false)
         }
         const group = new Group(layer)
         group.propagateXfoToItems = false
-        layerRoot.addChild(group)
+        layerRoot.addChild(group, false)
         layers[layer] = group
       }
       layers[layer].addItem(geomItem)
@@ -109,15 +128,15 @@ class AssetItem extends TreeItem {
           scaleFactor = 1609.34
           break
       }
-      this.__unitsScale = scaleFactor;
+      this.__unitsScale = scaleFactor
 
-      // Apply units change to existing Xfo. (avoid changing tr)
+      // Apply units change to existing Xfo (avoid changing tr).
       const xfo = this.getLocalXfo().clone()
       xfo.sc.scaleInPlace(scaleFactor)
       this.setLocalXfo(xfo)
     }
 
-    if (context.version >= 7) {
+    if (context.versions['zea-engine'].greaterThan([0, 0, 6])) {
       // Loading units modifies our Xfo, which then propagates up
       // the tree forcing a re-computation. Better just do it at
       // the start.
@@ -128,7 +147,10 @@ class AssetItem extends TreeItem {
 
     super.readBinary(reader, context)
 
-    if (context.version >= 5 && context.version < 7) {
+    if (
+      context.versions['zea-engine'].greaterOrEqualThan([0, 0, 5]) &&
+      context.versions['zea-engine'].lessThan([0, 0, 7])
+    ) {
       loadUnits()
     }
 
@@ -136,18 +158,10 @@ class AssetItem extends TreeItem {
   }
 
   /**
-   * The get method.
-   * @return {any} - The return value.
-   */
-  getUnitsConversion() {
-    return this.__unitsScale
-  }
-
-  /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context = {}, flags = 0) {
     context.makeRelative = path => {
@@ -173,11 +187,11 @@ class AssetItem extends TreeItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @param {any} onDone - The onDone param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @param {any} onDone - The onDone value.
    */
   fromJSON(j, context = {}, flags = 0, onDone) {
     if (!context) context = {}
@@ -215,7 +229,7 @@ class AssetItem extends TreeItem {
     }
     context.addPLCB = plcb => plcbs.push(plcb)
 
-    // Avoid loading the FilePAth as we are already loading json data.
+    // Avoid loading the FilePath as we are already loading json data.
     // if (j.params && j.params.FilePath) {
     //   delete j.params.FilePath
     // }

@@ -1,13 +1,12 @@
-import { Color } from '../Math'
-import { Signal } from '../Utilities'
+import { Color } from '../Math/index'
+import { Signal } from '../Utilities/index'
 import { SystemDesc } from '../BrowserDetection.js'
-import { FilePathParameter, ColorParameter } from './Parameters'
+import { FilePathParameter, ColorParameter } from './Parameters/index'
 import { AssetItem } from './AssetItem.js'
-import { ValueSetMode } from './Parameters/Parameter.js'
 import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { sgFactory } from './SGFactory.js'
-// import { EnvMap, Lightmap, LightmapMixer } from './Images'
+import { Version } from './Version.js'
 
 /** Class representing a VLA asset.
  * @extends AssetItem
@@ -29,15 +28,18 @@ class VLAAsset extends AssetItem {
     this.geomsLoaded = new Signal(true)
     this.geomsLoaded.setToggled(false)
     this.loaded.setToggled(false)
+    this.__geomLibrary.loaded.connect(()=>{
+      this.geomsLoaded.emit()
+    })
 
     this.__datafileParam = this.addParameter(
       new FilePathParameter('DataFilePath')
     )
-    this.__datafileParam.valueChanged.connect(mode => {
+    this.__datafileParam.valueChanged.connect(() => {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         const stem = this.__datafileParam.getStem()
         this.setName(stem)
       }
@@ -45,14 +47,13 @@ class VLAAsset extends AssetItem {
       this.geomsLoaded.setToggled(false)
       this.loadDataFile(
         () => {
-          if (!this.loaded.isToggled())
-            this.loaded.emit()
+          if (!this.loaded.isToggled()) this.loaded.emit()
         },
         () => {
           // if(!this.loaded.isToggled()){
           //   this.loaded.emit();
           // }
-          this.geomsLoaded.emit()
+          // this.geomsLoaded.emit()
         }
       )
     })
@@ -60,54 +61,76 @@ class VLAAsset extends AssetItem {
     this.addParameter(new ColorParameter('LightmapTint', new Color(1, 1, 1, 1)))
   }
 
-
-  /**
-   * The getLightmap method.
-   * @return {Lightmap} - The return lightmap.
-   */
-  getLightmap() {
-    return this.lightmap
-  }
-
   // ////////////////////////////////////////
   // Persistence
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    * @return {any} - The return value.
    */
   readBinary(reader, context) {
+    if (context.version != -1) { // Necessary for the smart lok
+      const version = new Version()
+      version.patch = context.version
+      context.versions = { 'zea-mesh': version, 'zea-engine': version }
+      context.meshSdk = "FBX";
+    } else {
+      const v = reader.loadUInt8()
+      reader.seek(0)
+      // 10 == ascii code for newline. Note: previous non-semver only reached 7
+      if (v != 10) {
+        const version = new Version()
+        version.patch = reader.loadUInt32()
+        context.versions = { 'zea-mesh': version, 'zea-engine': version }
+        context.meshSdk = "FBX";
+      } else {
+        // Now we split the mesh out from the engine version.
+        const version = new Version(reader.loadStr())
+        context.versions = { 'zea-mesh': version }
+        context.meshSdk = "FBX";
+      }
+    }
+    this.meshfileversion = context.versions['zea-mesh']
+    this.meshSdk = context.meshSdk
+    console.log("Loading CAD File version:", context.versions['zea-mesh'], " exported using SDK:", context.meshSdk)
+
     const numGeomsFiles = reader.loadUInt32()
 
     super.readBinary(reader, context)
 
-    const atlasSize = reader.loadFloat32Vec2()
-    if (reader.remainingByteLength != 4) {
-      throw new Error(
-        'File needs to be re-exported:' +
-          this.getParameter('FilePath').getValue()
-      )
-    }
+    // Strangely, reading the latest HMD files gives us 12 bytes
+    // at the end and the next 4 == 0. Not sure why.
+    // setNumGeoms sets 0, but this doesn't bother the loading
+    // so simply leaving for now.
+    // if (reader.remainingByteLength != 4) {
+    //   throw new Error(
+    //     'File needs to be re-exported:' +
+    //       this.getParameter('FilePath').getValue()
+    //   )
+    // }
+    
     // Perpare the geom library for loading
     // This helps with progress bars, so we know how many geoms are coming in total.
+    // Note: the geom library encodes in its binary buffer the number of geoms.
+    // No need to set it here. (and the number is now incorrect for a reason I do not understand.)
+
+    // if (context.version < 5) {
+    if (context.versions['zea-engine'].lessThan([0, 0, 5])) {
+      // Some data is no longer being read at the end of the buffer
+      // so we skip to the end here.
+      reader.seek(reader.byteLength - 4)
+    }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
-
-    // Load the lightmap if available.
-    // const folder = this.__datafileParam.getFileFolderPath();
-    // const stem = this.__datafileParam.getStem()
-    // const lod = context.lightmapLOD;
-    // const lightmapPath = `${folder}${stem}_${lightmapName}_Lightmap${lod}.vlh`
-    // this.lightmap = new Lightmap(lightmapPath, this, atlasSize)
-
+    
     return numGeomsFiles
   }
 
   /**
    * The loadDataFile method.
-   * @param {any} onDone - The onDone param.
-   * @param {any} onGeomsDone - The onGeomsDone param.
+   * @param {any} onDone - The onDone value.
+   * @param {any} onGeomsDone - The onGeomsDone value.
    */
   loadDataFile(onDone, onGeomsDone) {
     const file = this.__datafileParam.getFileDesc()
@@ -129,7 +152,7 @@ class VLAAsset extends AssetItem {
       // the scene tree of the asset, and also
       // tells us how many geom files will need to be loaded.
 
-      let version = 0
+      let version = -1
       let treeReader
       if (entries.tree2) {
         treeReader = new BinReader(
@@ -137,7 +160,6 @@ class VLAAsset extends AssetItem {
           0,
           SystemDesc.isMobileDevice
         )
-        version = treeReader.loadUInt32()
       } else {
         const entry = entries.tree
           ? entries.tree
@@ -167,9 +189,7 @@ class VLAAsset extends AssetItem {
         this.__geomLibrary.readBinaryBuffer(fileId, entries.geoms0.buffer, {
           version,
         })
-        const id = this.__geomLibrary.loaded.connect(() => {
-          if (onGeomsDone) onGeomsDone()
-        })
+        onGeomsDone()
       } else {
         // add the work for the the geom files....
         resourceLoader.addWork(fileId + 'geoms', 4 * numGeomsFiles) // (load + parse + extra)
@@ -182,7 +202,7 @@ class VLAAsset extends AssetItem {
     const loadAllGeomFiles = () => {
       const promises = []
       for (let geomFileID = 0; geomFileID < numGeomsFiles; geomFileID++) {
-        console.log('LoadingGeom File:', geomFileID)
+        // console.log('LoadingGeom File:', geomFileID)
         if (isVLFile) {
           const nextGeomFileName = folder + stem + geomFileID + '.vlageoms'
           const geomFile = resourceLoader.resolveFilepath(nextGeomFileName)
@@ -200,7 +220,7 @@ class VLAAsset extends AssetItem {
     }
 
     const loadGeomsfile = (index, geomFileUrl) => {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         resourceLoader.loadUrl(
           fileId + index,
           geomFileUrl,
@@ -242,10 +262,10 @@ class VLAAsset extends AssetItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {any} onDone - The onDone param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {any} onDone - The onDone value.
    */
   fromJSON(j, context, onDone) {
     if (!context) context = {}

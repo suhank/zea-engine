@@ -1,14 +1,18 @@
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
+import { RefCounted } from '../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL geom. */
-class GLGeom {
+/** Class representing a GL geom.
+ * @private
+ */
+class GLGeom extends RefCounted {
   /**
    * Create a GL geom.
    * @param {any} gl - The gl value.
    * @param {any} geom - The geom value.
    */
   constructor(gl, geom) {
+    super()
     this.__gl = gl
     this.__geom = geom
     this.__glattrs = {}
@@ -30,10 +34,6 @@ class GLGeom {
       this.updated.emit()
     }
     this.__geom.geomDataTopologyChanged.connect(regenBuffers)
-
-    this.__geom.destructing.connect(() => {
-      this.destroy()
-    })
   }
 
   /**
@@ -54,7 +54,7 @@ class GLGeom {
 
   /**
    * The updateBuffers method.
-   * @param {any} opts - The opts param.
+   * @param {any} opts - The opts value.
    */
   updateBuffers(opts) {}
 
@@ -63,7 +63,7 @@ class GLGeom {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -86,7 +86,7 @@ class GLGeom {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   unbind(renderstate) {
     // Unbinding a geom is important as it puts back some important
@@ -122,7 +122,7 @@ class GLGeom {
 
   /**
    * The bindAndDraw method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   bindAndDraw(renderstate) {
     this.bind(renderstate)
@@ -141,7 +141,8 @@ class GLGeom {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     this.__geom.deleteMetadata('glgeom')

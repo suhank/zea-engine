@@ -3,6 +3,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing GL points.
  * @extends GLGeom
+ * @private
  */
 class GLPoints extends GLGeom {
   /**
@@ -45,7 +46,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -78,7 +79,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   draw(renderstate) {
     const gl = this.__gl
@@ -97,7 +98,7 @@ class GLPoints extends GLGeom {
 
   /**
    * The drawInstanced method.
-   * @param {any} instanceCount - The instanceCount param.
+   * @param {any} instanceCount - The instanceCount value.
    */
   drawInstanced(instanceCount) {
     this.__gl.drawArraysInstanced(

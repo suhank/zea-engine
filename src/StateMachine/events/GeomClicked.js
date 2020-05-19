@@ -1,10 +1,11 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { TreeItemParameter } from '../../SceneTree/Parameters'
+import { TreeItemParameter } from '../../SceneTree/Parameters/index'
 import { StateEvent } from '../StateEvent.js'
 
-/** Class representing a geom being clicked.
+/** Triggers an state machine event to occur when geometry is clicked.
  * @extends StateEvent
+ * @private
  */
 class GeomClicked extends StateEvent {
   /**
@@ -21,7 +22,7 @@ class GeomClicked extends StateEvent {
 
   /**
    * The __geomClicked method.
-   * @param {any} event - The event param.
+   * @param {any} event - The event that occurs.
    * @private
    */
   __geomClicked(event) {

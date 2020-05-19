@@ -1,15 +1,15 @@
-import { Xfo } from '../Math'
-import { ValueSetMode } from './Parameters'
+import { Xfo } from '../Math/index'
+import { ValueSetMode } from './Parameters/index'
 import { TreeItem, CloneFlags } from './TreeItem.js'
 import { sgFactory } from './SGFactory.js'
 
-/** Class representing an instance item.
+/** Class representing an instance item in a scene tree.
  * @extends TreeItem
  */
 class InstanceItem extends TreeItem {
   /**
    * Create an instance item.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the instance item.
    */
   constructor(name) {
     super(name)
@@ -17,26 +17,26 @@ class InstanceItem extends TreeItem {
 
   /**
    * The setSrcTree method.
-   * @param {any} treeItem - The treeItem param.
+   * @param {any} treeItem - The treeItem value.
    */
-  setSrcTree(treeItem) {
+  setSrcTree(treeItem, context) {
     this.__srcTree = treeItem
 
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
-      const child = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-      child.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
-      this.addChild(child)
+      const clonedTree = this.__srcTree.clone(context)
+      clonedTree.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
+      this.addChild(clonedTree, false)
     } else {
-      for (let i = 0; i < this.__srcTree.getNumChildren(); i++) {
-        this.addChild(
-          this.__srcTree.getChild(i).clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
-        )
-      }
+      const children = this.__srcTree.getChildren()
+      children.forEach(child => {
+        const clonedChild = child.clone(context)
+        this.addChild(clonedChild, false)
+      })
     }
 
     // this.__srcTree.childAdded.connect((child)=>{
-    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE))
+    //     this.addChild(child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE), false)
     // })
   }
 
@@ -49,35 +49,12 @@ class InstanceItem extends TreeItem {
   }
 
   // ////////////////////////////////////////
-  // Children
-
-  // getChildren() {
-  //     return this.__srcTree.getChildren();
-  // }
-
-  // numChildren() {
-  //     return this.__childItems.length;
-  // }
-
-  // getNumChildren() {
-  //     return this.__srcTree.getNumChildren();
-  // }
-
-  // getChild(index) {
-  //     return this.__srcTree.getChild(index);
-  // }
-
-  // getChildByName(name) {
-  //     return this.__srcTree.getChildByName(name);
-  // }
-
-  // ////////////////////////////////////////
   // Persistence
 
   /**
    * The readBinary method.
-   * @param {object} reader - The reader param.
-   * @param {object} context - The context param.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
    */
   readBinary(reader, context = {}) {
     super.readBinary(reader, context)
@@ -86,15 +63,15 @@ class InstanceItem extends TreeItem {
     const path = reader.loadStrArray()
     // console.log("InstanceItem of:", path)
     context.resolvePath(path, treeItem => {
-      this.setSrcTree(treeItem)
+      this.setSrcTree(treeItem, context)
     })
   }
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context = {}, flags = 0) {
     const j = super.toJSON(context, flags)
@@ -102,11 +79,11 @@ class InstanceItem extends TreeItem {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @param {any} onDone - The onDone param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @param {any} onDone - The onDone value.
    */
   fromJSON(j, context = {}, flags = 0, onDone) {}
 }

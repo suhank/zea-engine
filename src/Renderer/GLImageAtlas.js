@@ -1,17 +1,16 @@
-import { Vec2, Vec4, Color } from '../Math'
+import { Vec2, Vec4, Color } from '../Math/index'
 
-import { Async, GrowingPacker } from '../Utilities'
+import { Async, GrowingPacker } from '../Utilities/index'
 
-import { BaseImage } from '../SceneTree'
+import { BaseImage } from '../SceneTree/index'
 import { shaderLibrary } from './ShaderLibrary'
 import { GLShader } from './GLShader.js'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing an atlas layout shader.
- * @extends GLShader
- */
+
+// eslint-disable-next-line require-jsdoc
 class AtlasLayoutShader extends GLShader {
   /**
    * Create an atlas layout shader.
@@ -125,9 +124,7 @@ void main(void) {
 
 import './Shaders/GLSL/ImageAtlas.js'
 
-/** Class representing an image atlas.
- * @extends GLRenderTarget
- */
+// eslint-disable-next-line require-jsdoc
 class GLImageAtlas extends GLRenderTarget {
   /**
    * Create an image atlas..
@@ -167,7 +164,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The addSubImage method.
-   * @param {any} subImage - The subImage param.
+   * @param {any} subImage - The subImage value.
    * @return {any} - The return value.
    */
   addSubImage(subImage) {
@@ -181,6 +178,14 @@ class GLImageAtlas extends GLRenderTarget {
       }
       subImage.setMetadata('ImageAtlas_gltex', gltexture)
       gltexture.addRef(this)
+      subImage.updated.connect(() => {
+        // TODO: Check to see if the new dimensions
+        // do not match the previous. If not, then we 
+        // need to relayout. wE could also avlid a complete
+        // relaout by reremoving and re-adding this image.
+        this.__layoutNeedsRegeneration = true
+        this.renderAtlas()
+      })
       this.__subImages.push(gltexture)
     } else {
       subImage.addRef(this) // subImage is a GLTexture2D
@@ -193,7 +198,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The removeSubImage method.
-   * @param {any} subImage - The subImage param.
+   * @param {any} subImage - The subImage value.
    */
   removeSubImage(subImage) {
     let index
@@ -214,7 +219,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The getSubImage method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getSubImage(index) {
@@ -364,7 +369,7 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The getLayoutData method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getLayoutData(index) {
@@ -373,8 +378,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The renderAtlas method.
-   * @param {boolean} cleanup - The cleanup param.
-   * @param {number} off - The off param.
+   * @param {boolean} cleanup - The cleanup value.
+   * @param {number} off - The off value.
    */
   renderAtlas(cleanup = false, off = 0) {
     if (this.__subImages.length == 0) {
@@ -393,18 +398,21 @@ class GLImageAtlas extends GLRenderTarget {
 
     const unifs = renderstate.unifs
     for (let j = off; j < this.__subImages.length; j++) {
-      const image = this.__subImages[j]
+      const glimage = this.__subImages[j]
 
       const layoutItem = this.__layout[j]
-      image.bindToUniform(renderstate, unifs.srctexture)
+      glimage.bindToUniform(renderstate, unifs.srctexture)
       gl.uniform2fv(unifs.pos.location, layoutItem.pos.multiply(scl).asArray())
       gl.uniform2fv(
         unifs.size.location,
         layoutItem.size.multiply(scl).asArray()
       )
-      gl.uniform2f(unifs.srctextureDim.location, image.width, image.height)
-      gl.uniform1i(unifs.alphaFromLuminance.location, image.alphaFromLuminance)
-      gl.uniform1i(unifs.invert.location, image.invert)
+      gl.uniform2f(unifs.srctextureDim.location, glimage.width, glimage.height)
+      gl.uniform1i(
+        unifs.alphaFromLuminance.location,
+        glimage.alphaFromLuminance
+      )
+      gl.uniform1i(unifs.invert.location, glimage.invert)
       gl.drawQuad()
 
       // After rendering the texture, we can reuse the texture unit.
@@ -430,8 +438,8 @@ class GLImageAtlas extends GLRenderTarget {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif) {
@@ -461,15 +469,16 @@ class GLImageAtlas extends GLRenderTarget {
    * The cleanup method.
    */
   cleanup() {
-    for (const image of this.__subImages) {
-      image.removeRef(this)
+    for (const glimage of this.__subImages) {
+      glimage.removeRef(this)
     }
     this.__subImages = []
     this.destroy()
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     this.cleanup()

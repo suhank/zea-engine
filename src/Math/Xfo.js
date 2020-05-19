@@ -95,28 +95,17 @@ class Xfo {
    * @return {Xfo} - Returns an Xfo.
    */
   multiply(xfo) {
-    if (
-      (this.sc.x != this.sc.y || this.sc.x != this.sc.z) &&
-      !xfo.ori.isIdentity()
-    ) {
-      if (
-        Math.abs(this.sc.x - this.sc.y) > 0.000001 ||
-        Math.abs(this.sc.x - this.sc.z) > 0.000001
-      ) {
-        console.warn(
-          'Xfo.multiply: Cannot multiply to xfos with non-uniform scaling without causing shearing. Use Mat44s instead.'
-        )
-      }
+    let this_sc = this.sc
+    if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
+      this_sc = xfo.ori.rotateVec3(this.sc)
+      if (Math.sign(this_sc.x) != Math.sign(this.sc.x)) this_sc.x = -this_sc.x
+      if (Math.sign(this_sc.y) != Math.sign(this.sc.y)) this_sc.y = -this_sc.y
+      if (Math.sign(this_sc.z) != Math.sign(this.sc.z)) this_sc.z = -this_sc.z
     }
-
-    // const sc_rot = this.ori.inverse();
-    // const rotated_unit = xfo.ori.rotateVec3(sc_helper);
-    // const rotated_sc = this.ori.inverse().rotateVec3(xfo.sc).multiply(rotated_unit);
-
     const result = new Xfo(
-      this.tr.add(this.ori.rotateVec3(this.sc.multiply(xfo.tr))),
+      this.tr.add(this.ori.rotateVec3(this_sc.multiply(xfo.tr))),
       this.ori.multiply(xfo.ori),
-      this.sc.multiply(xfo.sc)
+      this_sc.multiply(xfo.sc)
     )
     return result
   }
@@ -127,8 +116,22 @@ class Xfo {
    */
   inverse() {
     const result = new Xfo()
-    result.sc = this.sc.inverse()
     result.ori = this.ori.inverse()
+
+    if (this.sc.x != this.sc.y || this.sc.x != this.sc.z) {
+      // Note: the following code has not been tested and
+      // may not be quite correct. We need to setup
+      // unit tests for this kind of sample.
+      // An example would be to lay out some boxes on different rotations
+      // and with non-uniform scale. Then parent them together. If they
+      // remain stationary, after parenting, then this math is correct.
+      result.sc = result.ori.rotateVec3(this.sc)
+      if (Math.sign(result.sc.x) != Math.sign(this.sc.x)) result.sc.x = -result.sc.x
+      if (Math.sign(result.sc.y) != Math.sign(this.sc.y)) result.sc.y = -result.sc.y
+      if (Math.sign(result.sc.z) != Math.sign(this.sc.z)) result.sc.z = -result.sc.z
+    } else {
+      result.sc = this.sc.inverse()
+    }
     result.tr = result.ori.rotateVec3(this.tr.negate().multiply(result.sc))
     return result
   }
@@ -224,6 +227,7 @@ class Xfo {
    * Creates a new Xfo.
    * @param {...object} ...args - The ...args param.
    * @return {Xfo} - eturns a new Xfo.
+   * @private
    */
   static create(...args) {
     return new Xfo(...args)

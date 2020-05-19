@@ -1,5 +1,5 @@
-import { Color } from '../../Math'
-import { FileImage, sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { FileImage, sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/constants.js'
@@ -7,6 +7,7 @@ import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
 import './GLSL/GGX_Specular.js'
 import './GLSL/PBRSurface.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 import './GLSL/debugColors.js'
 import './GLSL/ImagePyramid.js'
@@ -31,6 +32,8 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 attribute float clusterIDs;
@@ -43,19 +46,20 @@ varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
-varying vec2 v_lightmapCoord;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-varying float v_clusterID;
-#endif
+// varying vec2 v_lightmapCoord;
+// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
+// varying float v_clusterID;
+// #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
 
 void main(void) {
+    int drawItemId = getDrawItemId();
 
-    v_geomItemData = getInstanceData();
+    v_geomItemData = getInstanceData(drawItemId);
 
     vec4 pos = vec4(positions, 1.);
-    mat4 modelMatrix = getModelMatrix();
+    mat4 modelMatrix = getModelMatrix(drawItemId);
     mat4 modelViewMatrix = viewMatrix * modelMatrix;
     vec4 viewPos    = modelViewMatrix * pos;
     gl_Position     = projectionMatrix * viewPos;
@@ -64,13 +68,13 @@ void main(void) {
 #ifdef ENABLE_TEXTURES
     v_textureCoord  = texCoords;
 #endif
-    v_lightmapCoord = (lightmapCoords + geomItemData.zw) / lightmapSize;
+    // v_lightmapCoord = (lightmapCoords + geomItemData.zw) / lightmapSize;
 
     // mat4 mvp = projectionMatrix * viewMatrix * modelMatrix;
     // gl_Position = mvp * vec4((lightmapCoords + geomItemData.xy), 0., 1.);
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-    v_clusterID = clusterIDs;
-#endif
+// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
+//     v_clusterID = clusterIDs;
+// #endif
 
     v_worldPos      = (modelMatrix * pos).xyz;
     mat3 normalMatrix = mat3(transpose(inverse(modelViewMatrix)));
@@ -104,10 +108,10 @@ varying vec3 v_viewNormal;
 #ifdef ENABLE_TEXTURES
 varying vec2 v_textureCoord;
 #endif
-varying vec2 v_lightmapCoord;
-#ifdef ENABLE_DEBUGGING_LIGHTMAPS
-varying float v_clusterID;
-#endif
+// varying vec2 v_lightmapCoord;
+// #ifdef ENABLE_DEBUGGING_LIGHTMAPS
+// varying float v_clusterID;
+// #endif
 varying vec3 v_worldPos;
 /* VS Outputs */
 

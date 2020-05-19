@@ -1,5 +1,4 @@
-import { Vec4, Color } from '../../Math'
-import { Async, Signal } from '../../Utilities'
+import { Vec4, Color } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
 import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
@@ -13,8 +12,7 @@ import {
   NumberParameter,
   Vec4Parameter,
   FilePathParameter,
-  ParameterSet,
-} from '../Parameters'
+} from '../Parameters/index'
 
 const imageDataLibrary = {}
 
@@ -36,12 +34,10 @@ class FileImage extends BaseImage {
     if (filePath.constructor == Object) {
       params = filePath
     }
-    let filepath
     if (name != undefined && name.lastIndexOf('.') != -1) {
       console.warn(
         'Deprecated signature. Please provide a name and filepath to the image constructor'
       )
-      filepath = name
       name = name.substring(name.lastIndexOf('/') + 1, name.lastIndexOf('.'))
     }
 
@@ -52,7 +48,7 @@ class FileImage extends BaseImage {
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     fileParam.valueChanged.connect(() => {
       this.loaded.untoggle()
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)
@@ -75,8 +71,44 @@ class FileImage extends BaseImage {
   }
 
   /**
+   * The __imageDataLibrary method.
+   * @return {any} - The return value.
+   * @private
+   */
+  static __imageDataLibrary() {
+    return imageDataLibrary
+  }
+
+  /**
+   * The registerLoader method.
+   * @param {any} exts - The exts param.
+   * @param {any} loaderClass - The loaderClass param.
+   */
+  static registerLoader(exts, loaderClass) {
+    imageLoaders[exts] = loaderClass
+  }
+
+  /**
+   * The constructLoader method.
+   * @param {any} file - The file value.
+   * @param {any} loaderName - The loaderName value.
+   * @return {any} - The return value.
+   */
+  static constructLoader(file, loaderName) {
+    for (const exts of imageLoaders) {
+      if (new RegExp('\\.(' + exts + ')$', 'i').test(file.name)) {
+        const loader = new imageLoaders[exts](loaderName)
+        if (loader) {
+          loader.getParameter('FilePath').setValue(file.id)
+          return loader
+        }
+      }
+    }
+  }
+
+  /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc param.
+   * @param {any} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {
@@ -84,13 +116,13 @@ class FileImage extends BaseImage {
     if (ext == '.jpg' || ext == '.png' || ext == '.webp') {
       this.__loadLDRImage(fileDesc, ext)
     } else if (ext == '.mp4' || ext == '.ogg') {
-      this.__loadLDRVideo(fileDesc, ext)
+      this.__loadLDRVideo(fileDesc)
       // } else if (ext == '.ldralpha') {
       //     this.__loadLDRAlpha(fileDesc, ext);
     } else if (ext == '.vlh') {
-      this.__loadVLH(fileDesc, ext)
+      this.__loadVLH(fileDesc)
     } else if (ext == '.gif') {
-      this.__loadGIF(fileDesc, ext)
+      this.__loadGIF(fileDesc)
     } else if (ext == '.svg') {
       console.warn('SVG Image not yet supported')
     } else {
@@ -100,8 +132,8 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadLDRImage method.
-   * @param {any} fileDesc - The fileDesc param.
-   * @param {any} ext - The ext param.
+   * @param {any} fileDesc - The fileDesc value.
+   * @param {any} ext - The ext value.
    * @private
    */
   __loadLDRImage(fileDesc, ext) {
@@ -247,11 +279,11 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadLDRVideo method.
-   * @param {any} fileDesc - The fileDesc param.
-   * @param {any} ext - The ext param.
+   * @param {any} fileDesc - The fileDesc value.
+   * @param {any} ext - The ext value.
    * @private
    */
-  __loadLDRVideo(fileDesc, ext) {
+  __loadLDRVideo(fileDesc) {
     this.format = 'RGB'
     this.type = 'UNSIGNED_BYTE'
     resourceLoader.addWork(fileDesc.id, 1)
@@ -260,30 +292,6 @@ class FileImage extends BaseImage {
     // Audio is disabled by default now in chrome.
     const muteParam = this.addParameter(new BooleanParameter('Mute', true))
     const loopParam = this.addParameter(new BooleanParameter('Loop', true))
-    const GainParam = this.addParameter(
-      new NumberParameter('Gain', 2.0)
-    ).setRange([0, 5])
-    const spatializeAudioParam = this.addParameter(
-      new BooleanParameter('SpatializeAudio', true)
-    )
-    const refDistanceParam = this.addParameter(
-      new NumberParameter('refDistance', 2)
-    )
-    const maxDistanceParam = this.addParameter(
-      new NumberParameter('maxDistance', 10000)
-    )
-    const rolloffFactorParam = this.addParameter(
-      new NumberParameter('rolloffFactor', 1)
-    )
-    const coneInnerAngleParam = this.addParameter(
-      new NumberParameter('coneInnerAngle', 360)
-    )
-    const coneOuterAngleParam = this.addParameter(
-      new NumberParameter('coneOuterAngle', 0)
-    )
-    const coneOuterGainParam = this.addParameter(
-      new NumberParameter('coneOuterGain', 1)
-    )
 
     const videoElem = document.createElement('video')
     // TODO - confirm its necessary to add to DOM
@@ -361,14 +369,13 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadVLH method.
-   * @param {any} fileDesc - The fileDesc param.
-   * @param {any} ext - The ext param.
+   * @param {any} fileDesc - The fileDesc value.
+   * @param {any} ext - The ext value.
    * @private
    */
-  __loadVLH(fileDesc, ext) {
+  __loadVLH(fileDesc) {
     this.type = 'FLOAT'
 
-    const hdrexposure = 1.0
     let hdrtint = new Color(1, 1, 1, 1)
     // let stream = 'stream' in params ? params['stream'] : false;
 
@@ -412,11 +419,11 @@ class FileImage extends BaseImage {
 
   /**
    * The __loadGIF method.
-   * @param {any} fileDesc - The fileDesc param.
-   * @param {any} ext - The ext param.
+   * @param {any} fileDesc - The fileDesc value.
+   * @param {any} ext - The ext value.
    * @private
    */
-  __loadGIF(fileDesc, ext) {
+  __loadGIF(fileDesc) {
     this.format = 'RGBA'
     this.type = 'UNSIGNED_BYTE'
     this.__streamAtlas = true
@@ -426,7 +433,7 @@ class FileImage extends BaseImage {
     this.addParameter(new NumberParameter('StreamAtlasIndex', 0))
     this.getParameter('StreamAtlasIndex').setRange([0, 1])
 
-    this.getFrameDelay = index => {
+    this.getFrameDelay = () => {
       return 20
     }
     let playing
@@ -661,19 +668,19 @@ class FileImage extends BaseImage {
   // Persistence
 
   /**
-   * The fromJSON method.
-   * @param {object} json - The json param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   */
-  fromJSON(json, context, flags) {}
-
-  /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   toJSON(context, flags) {}
+
+  /**
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} json - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   */
+  fromJSON(json, context, flags) {}
 
   /**
    * The readBinary method.
@@ -701,48 +708,9 @@ class FileImage extends BaseImage {
       this.getParameter('FilePath').setFilepath(filePath)
     }
   }
-
-  // ////////////////////////////////////////
-  // Static Methods
-
-  /**
-   * The __imageDataLibrary method.
-   * @return {any} - The return value.
-   * @private
-   */
-  static __imageDataLibrary() {
-    return imageDataLibrary
-  }
-
-  /**
-   * The registerLoader method.
-   * @param {any} exts - The exts param.
-   * @param {any} loaderClass - The loaderClass param.
-   */
-  static registerLoader(exts, loaderClass) {
-    imageLoaders[exts] = loaderClass
-  }
-
-  /**
-   * The constructLoader method.
-   * @param {any} file - The file param.
-   * @param {any} loaderName - The loaderName param.
-   * @return {any} - The return value.
-   */
-  static constructLoader(file, loaderName) {
-    for (const exts of imageLoaders) {
-      if (new RegExp('\\.(' + exts + ')$', 'i').test(file.name)) {
-        const loader = new imageLoaders[exts](loaderName)
-        if (loader) {
-          loader.getParameter('FilePath').setValue(file.id)
-          return loader
-        }
-      }
-    }
-  }
 }
 
-/** Class representing a file image 2D.
+/** Class representing a 2D file image.
  * @extends FileImage
  */
 class FileImage2D extends FileImage {

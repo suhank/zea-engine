@@ -1343,6 +1343,7 @@ class Mat4 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat4} - Returns a new Mat4.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Mat4(buffer, offset * 4) // 4 bytes per 32bit float
@@ -1380,6 +1381,7 @@ class Mat4 extends AttrValue {
    * Creates a new Mat4.
    * @param {...object} ...args - The ...args param.
    * @return {Mat4} - Returns a new Mat4.
+   * @private
    */
   static create(...args) {
     return new Mat4(...args)

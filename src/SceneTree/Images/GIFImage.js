@@ -1,4 +1,4 @@
-import { Vec4, Color } from '../../Math'
+import { Vec4 } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
 import { sgFactory } from '../SGFactory.js'
 import { FileImage } from './FileImage.js'
@@ -6,7 +6,7 @@ import { FileImage } from './FileImage.js'
 import { GIF } from '../../external/gifuct-js.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
-import { NumberParameter, Vec4Parameter } from '../Parameters'
+import { NumberParameter, Vec4Parameter } from '../Parameters/index'
 
 /** Class representing a GIF image.
  * @extends FileImage
@@ -54,7 +54,7 @@ class GIFImage extends FileImage {
 
   /**
    * The getFrameDelay method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getFrameDelay(index) {
@@ -64,7 +64,7 @@ class GIFImage extends FileImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc param.
+   * @param {any} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {

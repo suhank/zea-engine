@@ -1,8 +1,9 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class FatLinesShader extends GLShader {
@@ -20,6 +21,8 @@ uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 uniform sampler2D positionsTexture;
@@ -33,9 +36,10 @@ varying vec3 v_viewNormal;
 varying vec2 v_texCoord;
 
 void main(void) {
+  int drawItemId = getDrawItemId();
   int vertexID = int(vertexIDs);
 
-  mat4 modelMatrix = getModelMatrix();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
   int seqentialIndex_0 = int(mod(segmentIndices.x, 2.));

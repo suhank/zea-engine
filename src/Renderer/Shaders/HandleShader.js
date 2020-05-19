@@ -1,9 +1,10 @@
 import { Color } from '../../Math/Color'
-import { sgFactory } from '../../SceneTree'
+import { sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary.js'
 import { GLShader } from '../GLShader.js'
 import './GLSL/stack-gl/transpose.js'
 import './GLSL/stack-gl/gamma.js'
+import './GLSL/drawItemTexture.js'
 import './GLSL/modelMatrix.js'
 
 class HandleShader extends GLShader {
@@ -22,8 +23,11 @@ attribute vec2 texCoords;
 
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
+uniform int maintainScreenSize;
 
 <%include file="stack-gl/transpose.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 
 /* VS Outputs */
@@ -34,28 +38,28 @@ varying vec2 v_textureCoord;
 
 
 void main(void) {
-    mat4 modelMatrix = getModelMatrix();
-    mat4 modelViewMatrix = viewMatrix * modelMatrix;
+  int drawItemId = getDrawItemId();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
+  mat4 modelViewMatrix = viewMatrix * modelMatrix;
 
-    bool maintainScreenSize = true;// Could be passed as a flag.
-    if(maintainScreenSize) {
-        float dist = length(modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0));
-        float sc = dist;
-        mat4 scmat = mat4(
-            sc, 0.0, 0.0, 0.0,
-            0.0, sc, 0.0, 0.0,
-            0.0, 0.0, sc, 0.0,
-            0.0, 0.0, 0.0, 1.0
-        );
-        modelViewMatrix = modelViewMatrix * scmat;
-    }
+  if(maintainScreenSize != 0) {
+    float dist = modelViewMatrix[3][2];
+    float sc = dist;
+    mat4 scmat = mat4(
+      sc, 0.0, 0.0, 0.0,
+      0.0, sc, 0.0, 0.0,
+      0.0, 0.0, sc, 0.0,
+      0.0, 0.0, 0.0, 1.0
+    );
+    modelViewMatrix = modelViewMatrix * scmat;
+  }
 
-    vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
-    gl_Position = projectionMatrix * viewPos;
+  vec4 viewPos = modelViewMatrix * vec4(positions, 1.0);
+  gl_Position = projectionMatrix * viewPos;
 
-    v_viewPos = viewPos.xyz;
-    v_textureCoord = texCoords;
-    v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
+  v_viewPos = viewPos.xyz;
+  v_textureCoord = texCoords;
+  v_textureCoord.y = 1.0 - v_textureCoord.y;// Flip y
 }
 `
     )
@@ -117,6 +121,10 @@ void main(void) {
     paramDescs.push({
       name: 'BaseColor',
       defaultValue: new Color(1.0, 1.0, 0.5),
+    })
+    paramDescs.push({
+      name: 'maintainScreenSize',
+      defaultValue: 0,
     })
     return paramDescs
   }

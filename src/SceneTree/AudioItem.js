@@ -1,23 +1,19 @@
-import { Vec2 } from '../Math'
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 import {
-  Parameter,
   ValueSetMode,
   FilePathParameter,
   BooleanParameter,
   NumberParameter,
-} from './Parameters'
+} from './Parameters/index'
 import { TreeItem } from './TreeItem.js'
-import { GeomLibrary } from './GeomLibrary.js'
-import { MaterialLibrary } from './MaterialLibrary.js'
 
-/** Class representing an audio item.
+/** Class representing an audio item in a scene tree.
  * @extends TreeItem
  */
 class AudioItem extends TreeItem {
   /**
    * Create an audio item.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the audio item.
    */
   constructor(name) {
     super(name)
@@ -30,7 +26,7 @@ class AudioItem extends TreeItem {
     let audioSource
     let audioBuffer
     const startAudioPlayback = () => {
-      audioSource = ZeaEngine.audioCtx.createBufferSource()
+      audioSource = window.ZeaAudioaudioCtx.createBufferSource()
       audioSource.buffer = audioBuffer
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
@@ -47,7 +43,7 @@ class AudioItem extends TreeItem {
         // Note: this code is not pretty and should not access the global object
         // However, its difficult to handle this case.
         // TODO: clean this up.
-        ZeaEngine.audioCtx.decodeAudioData(
+        window.ZeaAudioaudioCtx.decodeAudioData(
           audioData,
           buffer => {
             audioBuffer = buffer
@@ -113,7 +109,7 @@ class AudioItem extends TreeItem {
     this.addParameter(new BooleanParameter('SpatializeAudio', true))
     this.addParameter(new NumberParameter('refDistance', 2))
     this.addParameter(new NumberParameter('maxDistance', 10000))
-    // defaults taken from here.: https://github.com/mdn/webaudio-examples/blob/master/panner-node/main.js
+    // Defaults taken from here.: https://github.com/mdn/webaudio-examples/blob/master/panner-node/main.js
     this.addParameter(new NumberParameter('rolloffFactor', 1))
     this.addParameter(new NumberParameter('coneInnerAngle', 360))
     this.addParameter(new NumberParameter('coneOuterAngle', 0))
@@ -130,7 +126,7 @@ class AudioItem extends TreeItem {
       muteParam.setValue(value, ValueSetMode.CUSTOM)
     }
 
-    // Note: many parts of the code assume a 'loaded' signal.
+    // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     this.loaded = new Signal(true)
     this.loaded.setToggled(false)
@@ -146,22 +142,22 @@ class AudioItem extends TreeItem {
 
   /**
    * The setAudioStream method.
-   * @param {any} audio - The audio param.
+   * @param {any} audio - The audio value.
    */
-  setAudioStream(audio) {
+  setAudioStream() {
     this.__loaded = true
     this.loaded.emit()
     this.audioSourceCreated.emit(audioSource)
   }
 }
 
-/** Class representing a file audio item.
+/** Class representing a audio file item in a scene tree.
  * @extends AudioItem
  */
 class FileAudioItem extends AudioItem {
   /**
-   * Create a file audio item..
-   * @param {string} name - The name value.
+   * Create a audio file item.
+   * @param {string} name - The name of the audio file.
    */
   constructor(name) {}
 }

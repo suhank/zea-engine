@@ -1,24 +1,18 @@
-import { Vec4 } from '../Math'
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 import { BaseItem } from './BaseItem.js'
 
-import {
-  Parameter,
-  BooleanParameter,
-  NumberParameter,
-  ParameterSet,
-} from './Parameters'
+import { BooleanParameter } from './Parameters/index'
 
-/** Class representing a base image.
+/** Class representing a base image in the scene tree.
  * @extends BaseItem
  */
 class BaseImage extends BaseItem {
   /**
    * Create a base image.
-   * @param {string} name - The name value.
-   * @param {any} params - The params value.
+   * @param {string} name - The name of the base image.
+   * @param {any} params - The parameters of the base image.
    */
-  constructor(name, params = {}) {
+  constructor(name) {
     super(name)
     this.width = 0
     this.height = 0
@@ -31,15 +25,15 @@ class BaseImage extends BaseItem {
 
     this.updated = this.parameterValueChanged
 
-    // Note: many parts of the code assume a 'loaded' signal.
+    // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     // Instead we should start using a loaded Promise.
     this.loaded = new Signal(true)
   }
 
   /**
-   * The isLoaded method.
-   * @return {boolean} - The return value.
+   * Returns true if loaded.
+   * @return {boolean} - Returns a boolean.
    */
   isLoaded() {
     return true
@@ -55,7 +49,7 @@ class BaseImage extends BaseItem {
 
   /**
    * The setMapping method
-   * @param {any} mapping - The mapping param.
+   * @param {any} mapping - The mapping value.
    */
   setMapping(mapping) {
     this.__mapping = mapping
@@ -63,7 +57,7 @@ class BaseImage extends BaseItem {
 
   /**
    * The isStream method.
-   * @return {boolean} - The return value.
+   * @return {boolean} - Returns a boolean.
    */
   isStream() {
     return false
@@ -71,7 +65,7 @@ class BaseImage extends BaseItem {
 
   /**
    * The isStreamAtlas method.
-   * @return {any} - The return value.
+   * @return {boolean} - Returns a boolean.
    */
   isStreamAtlas() {
     return this.__streamAtlas

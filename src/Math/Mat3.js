@@ -98,7 +98,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m10 value.
    */
   get m10() {
-    return this.__data[4]
+    return this.__data[3]
   }
 
   /**
@@ -106,7 +106,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m10(val) {
-    this.__data[4] = val
+    this.__data[3] = val
   }
 
   /**
@@ -114,7 +114,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m11 value.
    */
   get m11() {
-    return this.__data[5]
+    return this.__data[4]
   }
 
   /**
@@ -122,7 +122,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m11(val) {
-    this.__data[5] = val
+    this.__data[4] = val
   }
 
   /**
@@ -130,7 +130,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m12 value.
    */
   get m12() {
-    return this.__data[6]
+    return this.__data[5]
   }
 
   /**
@@ -138,7 +138,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m12(val) {
-    this.__data[6] = val
+    this.__data[5] = val
   }
 
   /**
@@ -146,7 +146,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m20 value.
    */
   get m20() {
-    return this.__data[8]
+    return this.__data[6]
   }
 
   /**
@@ -154,7 +154,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m20(val) {
-    this.__data[8] = val
+    this.__data[6] = val
   }
 
   /**
@@ -162,7 +162,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m21 value.
    */
   get m21() {
-    return this.__data[9]
+    return this.__data[7]
   }
 
   /**
@@ -170,7 +170,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m21(val) {
-    this.__data[9] = val
+    this.__data[7] = val
   }
 
   /**
@@ -178,7 +178,7 @@ class Mat3 extends AttrValue {
    * @return {number} - Returns the m22 value.
    */
   get m22() {
-    return this.__data[10]
+    return this.__data[8]
   }
 
   /**
@@ -186,7 +186,7 @@ class Mat3 extends AttrValue {
    * @param {number} val - The val param.
    */
   set m22(val) {
-    this.__data[10] = val
+    this.__data[8] = val
   }
 
   /**
@@ -493,6 +493,7 @@ class Mat3 extends AttrValue {
    * Create a new Mat3.
    * @param {...object} ...args - The ...args param.
    * @return {Mat3} - Returns a new Mat3.
+   * @private
    */
   static create(...args) {
     return new Mat3(...args)
@@ -503,6 +504,7 @@ class Mat3 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat3} - Returns a new Mat3.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Mat3(buffer, offset * 4) // 4 bytes per 32bit float

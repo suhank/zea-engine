@@ -1,4 +1,3 @@
-import { Async, Signal } from '../../Utilities'
 import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
 
@@ -52,9 +51,9 @@ class DataImage extends BaseImage {
 
   /**
    * The setData method.
-   * @param {any} width - The width param.
-   * @param {any} height - The height param.
-   * @param {any} data - The data param.
+   * @param {any} width - The width value.
+   * @param {any} height - The height value.
+   * @param {any} data - The data value.
    */
   setData(width, height, data) {
     this.width = width

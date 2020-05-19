@@ -1,16 +1,17 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters'
-import { OperatorOutput } from '../../SceneTree/Operators'
+import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters/index'
+import { OperatorOutput } from '../../SceneTree/Operators/index'
 
 import { StateAction } from '../StateAction.js'
 
-/** Class representing setting a parameter value.
+/** A state machine action that sets parameter values.
  * @extends StateAction
+ * @private
  */
 class SetParameterValue extends StateAction {
   /**
-   * Create a sett parameter value.
+   * Create a set parameter value.
    */
   constructor() {
     super()
@@ -40,7 +41,7 @@ class SetParameterValue extends StateAction {
   }
 
   /**
-   * The activate method.
+   * Activate the action.
    */
   activate() {
     if (this.__outParam.isConnected()) {
@@ -61,7 +62,7 @@ class SetParameterValue extends StateAction {
             // and cause the update of the scene. But we also don't want the parameter value to then
             // be considered modified so it is saved to the JSON file. I'm not sure how to address this.
             // We need to check what happens if a parameter emits a 'valueChanged' during cleaning. (maybe it gets ignored)
-            this.__outParam.setValue(newVal, ValueSetMode.STATEMACHINE_SETVALUE)
+            this.__outParam.setValue(newVal, ValueSetMode.GENERATED_VALUE)
             this.__timeoutId = window.setTimeout(
               timerCallback,
               1000 / updateFrequency
@@ -69,7 +70,7 @@ class SetParameterValue extends StateAction {
           } else {
             this.__outParam.setValue(
               this.__valueParam.getValue(),
-              ValueSetMode.STATEMACHINE_SETVALUE
+              ValueSetMode.GENERATED_VALUE
             )
             this.__timeoutId = undefined
             this.__onDone()
@@ -79,7 +80,7 @@ class SetParameterValue extends StateAction {
       } else {
         this.__outParam.setValue(
           this.__valueParam.getValue(),
-          ValueSetMode.STATEMACHINE_SETVALUE
+          ValueSetMode.GENERATED_VALUE
         )
         this.__onDone()
       }
@@ -87,7 +88,7 @@ class SetParameterValue extends StateAction {
   }
 
   /**
-   * The cancel method.
+   * The cancel the action.
    */
   cancel() {
     if (this.__timeoutId) {
@@ -100,24 +101,24 @@ class SetParameterValue extends StateAction {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     if (this.__valueParam) {
-      j.valueParamType = this.__valueParam.constructor.name
+      j.valueParamType = sgFactory.getClassName(this.__valueParam)
     }
     return j
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     if (j.valueParamType) {

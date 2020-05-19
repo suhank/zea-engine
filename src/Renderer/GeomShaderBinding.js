@@ -11,16 +11,18 @@ import {
   Vec3,
   Vec4,
   RGBA,
-} from '../Math'
+} from '../Math/index'
 
-/** Class representing a geom shader binding. */
+/** Class representing a geom shader binding. 
+ * @private
+*/
 class GeomShaderBinding {
   /**
-   * Create a  geom shader binding.
+   * Create a geom shader binding.
    * @param {any} gl - The gl value.
-   * @param {any} shaderAttrs - The shaderAttrs value.
+   * @param {any} shaderAttrs - The shader attributes.
    * @param {any} glattrbuffers - The glattrbuffers value.
-   * @param {any} indexBuffer - The indexBuffer value.
+   * @param {any} indexBuffer - The index buffer.
    */
   constructor(gl, shaderAttrs, glattrbuffers, indexBuffer) {
     this.__gl = gl
@@ -31,7 +33,7 @@ class GeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The render state.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -165,15 +167,18 @@ class GeomShaderBinding {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {}
 }
 
-/** Class representing a VAO geom shader binding. */
+/** Class representing vertex array objects (VAO) geom shader binding. 
+ * @private
+*/
 class VAOGeomShaderBinding {
   /**
-   * Create a VAO geom shader binding.
+   * Create VAO geom shader binding.
    * @param {any} gl - The gl value.
    * @param {any} shaderAttrs - The shaderAttrs value.
    * @param {any} glattrbuffers - The glattrbuffers value.
@@ -292,7 +297,7 @@ class VAOGeomShaderBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The render state.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -322,7 +327,8 @@ class VAOGeomShaderBinding {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     this.__gl.deleteVertexArray(this.__vao)

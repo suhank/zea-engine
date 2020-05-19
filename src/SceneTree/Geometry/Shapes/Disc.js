@@ -2,17 +2,17 @@ import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 
-import { BooleanParameter, NumberParameter } from '../../Parameters'
+import { NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** Class representing a disc.
+/** A class for generating a disc geometry.
  * @extends Mesh
  */
 class Disc extends Mesh {
   /**
    * Create a disc.
-   * @param {number} radius - The radius value.
-   * @param {number} sides - The sides value.
+   * @param {number} radius - The radius of the disc.
+   * @param {number} sides - The number of sides.
    */
   constructor(radius = 0.5, sides = 32) {
     super()
@@ -32,15 +32,16 @@ class Disc extends Mesh {
   }
 
   /**
-   * Getter for radius.
+   * Getter for the disc radius.
+   * @return {number} - Returns the radius.
    */
   get radius() {
     return this.__radius
   }
 
   /**
-   * Setter for radius.
-   * @param {number} val - The val param.
+   * Setter for disc radius.
+   * @param {number} val - The radius value.
    */
   set radius(val) {
     this.__radius = val
@@ -48,8 +49,8 @@ class Disc extends Mesh {
   }
 
   /**
-   * Setter for sides.
-   * @param {number} val - The val param.
+   * Setter for the number of sides.
+   * @param {number} val - The number of sides.
    */
   set sides(val) {
     this.__sides = val >= 3 ? val : 3
@@ -71,7 +72,7 @@ class Disc extends Mesh {
     this.getVertex(0).set(0.0, 0.0, 0.0)
 
     // ////////////////////////////
-    // build the topology
+    // Build the topology
     for (let j = 0; j < nbSides; j++) {
       const v1 = (j % nbSides) + 1
       const v2 = ((j + 1) % nbSides) + 1
@@ -100,15 +101,15 @@ class Disc extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    this.__resize(-1)
+    this.__resize()
   }
 
   /**
    * The __resize method.
-   * @param {any} mode - The mode param.
+   * @param {number} mode - The mode value.
    * @private
    */
-  __resize(mode) {
+  __resize() {
     const nbSides = this.__sidesParam.getValue()
     const radius = this.__radiusParam.getValue()
     for (let i = 0; i < nbSides; i++) {
@@ -123,8 +124,8 @@ class Disc extends Mesh {
   }
 
   /**
-   * The toJSON method.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @return {object} - Returns the json object.
    */
   toJSON() {
     const json = super.toJSON()

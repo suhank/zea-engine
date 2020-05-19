@@ -1,14 +1,14 @@
-import { Color } from '../../Math'
-import { Signal, Async } from '../../Utilities'
+import { Color } from '../../Math/index'
 import {
   BooleanParameter,
   NumberParameter,
   ColorParameter,
   StringParameter,
-} from '../Parameters'
+} from '../Parameters/index'
 import { sgFactory } from '../SGFactory.js'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
+import { Signal } from '../../Utilities/index'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -29,6 +29,7 @@ import { labelManager } from './LabelManager.js'
  * @param {Boolean} [fill = false] - Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] - Whether to stroke the rectangle.
  * @param {Number} [strokeWidth] - The strokeWidth param.
+ * @private
  */
 function roundRect(
   ctx,
@@ -99,8 +100,6 @@ class Label extends DataImage {
 
     this.__canvasElem = document.createElement('canvas')
     const fontSize = 22
-    const outlineColor = new Color(0.2, 0.2, 0.2, 1.0)
-    const backgroundColor = outlineColor.lerp(new Color(1, 1, 1, 1), 0.5)
 
     const libraryParam = this.addParameter(new StringParameter('library'))
     this.addParameter(new StringParameter('text', ''))
@@ -114,38 +113,57 @@ class Label extends DataImage {
     // }
     // textParam.valueChanged.connect(setLabelText);
 
-    this.addParameter(new ColorParameter('fontColor', new Color(1.0, 1.0, 1.0)))
-    this.addParameter(new StringParameter('textAlign', 'left'))
+    this.addParameter(new ColorParameter('fontColor', new Color(0, 0, 0)))
+    // this.addParameter(new StringParameter('textAlign', 'left'))
     // this.addParameter(MultiChoiceParameter('textAlign', 0, ['left', 'right']));
-    this.addParameter(new StringParameter('fillText', true))
+    // this.addParameter(new BooleanParameter('fillText', true))
     this.addParameter(new NumberParameter('margin', fontSize * 0.5))
     this.addParameter(new NumberParameter('borderWidth', 2))
     this.addParameter(new NumberParameter('borderRadius', fontSize * 0.5))
     this.addParameter(new BooleanParameter('outline', false))
-    this.addParameter(new BooleanParameter('outlineColor', outlineColor))
+    this.addParameter(new BooleanParameter('outlineColor', new Color(0, 0, 0)))
     this.addParameter(new BooleanParameter('background', true))
-    this.addParameter(new ColorParameter('backgroundColor', backgroundColor))
+    this.addParameter(
+      new ColorParameter('backgroundColor', new Color('#FBC02D'))
+    )
     this.addParameter(new BooleanParameter('fillBackground', true))
     this.addParameter(new BooleanParameter('strokeBackgroundOutline', true))
-    const fontSizeParam = this.addParameter(new NumberParameter('fontSize', 22))
-    const fontParam = this.addParameter(new StringParameter('font', 'Helvetica'))
+    this.addParameter(new NumberParameter('fontSize', 22))
+    this.addParameter(new StringParameter('font', 'Helvetica'))
 
     const reload = () => {
       this.loadLabelData()
     }
-    libraryParam.valueChanged.connect(reload)
     this.nameChanged.connect(reload)
-    fontSizeParam.valueChanged.connect(reload)
-    fontParam.valueChanged.connect(reload)
 
     if (library) libraryParam.setValue(library)
-    
-    this.__needsRender = false;
-    this.loadLabelData();
+
+    this.__requestedRerender = false
+    this.__needsRender = false
+    this.labelRendered = new Signal();
+    this.loadLabelData()
   }
 
+  /**
+   * This method can be overrridden in derived classes
+   * to perform general updates (see GLPass or BaseItem).
+   * @param {any} param - The param param.
+   * @param {any} mode - The mode param.
+   * @private
+   */
+  __parameterValueChanged(param, mode) {
+    if (!this.__requestedRerender) {
+      this.__requestedRerender = true
+      this.loadLabelData()
+    }
+  }
+
+  /**
+   * The loadLabelData method.
+   */
   loadLabelData() {
     const onLoaded = () => {
+      this.__requestedRerender = false
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
@@ -210,6 +228,7 @@ class Label extends DataImage {
    * Renders the label text to a canvas element ready to display,
    */
   renderLabelToImage() {
+    // console.log("renderLabelToImage")
     const ctx2d = this.__canvasElem.getContext('2d', {
       alpha: true,
     })
@@ -219,7 +238,7 @@ class Label extends DataImage {
 
     const font = this.getParameter('font').getValue()
     const fontColor = this.getParameter('fontColor').getValue()
-    const textAlign = this.getParameter('textAlign').getValue()
+    const textAlign = 'left';//this.getParameter('textAlign').getValue()
     const fontSize = this.getParameter('fontSize').getValue()
     const margin = this.getParameter('margin').getValue()
     const borderWidth = this.getParameter('borderWidth').getValue()
@@ -243,11 +262,13 @@ class Label extends DataImage {
     lines.forEach(line => {
       width = Math.max(ctx2d.measureText(line).width, width)
     })
-    const fontHeight = parseInt(fontSize)
-    this.width = width + marginAndBorder * 2
-    this.height = fontHeight * lines.length + marginAndBorder * 2
+    const fontHeight = fontSize;//parseInt(fontSize)
+    this.width = Math.ceil(width + marginAndBorder * 2)
+    this.height = Math.ceil(fontHeight * lines.length + marginAndBorder * 2)
     ctx2d.canvas.width = this.width
     ctx2d.canvas.height = this.height
+    this.__canvasElem.width = this.width
+    this.__canvasElem.height = this.height
 
     // ctx2d.clearRect(0, 0, this.width, this.height);
     ctx2d.fillStyle = 'rgba(0, 0, 0, 0.0)'
@@ -289,6 +310,11 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
+    this.labelRendered.emit({
+      width: this.width,
+      height: this.height,
+      data: this.__data
+    })
   }
 
   /**
@@ -304,10 +330,10 @@ class Label extends DataImage {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
@@ -315,10 +341,10 @@ class Label extends DataImage {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)

@@ -5,6 +5,7 @@ import { GLRenderer } from '../GLRenderer.js'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
+ * @private
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
   /**
@@ -16,8 +17,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer param.
-   * @param {any} passIndex - The passIndex param.
+   * @param {any} renderer - The renderer value.
+   * @param {any} passIndex - The passIndex value.
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -31,26 +32,30 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The init method.
-   * @param {any} geomItem - The geomItem param.
+   * @param {any} geomItem - The geomItem value.
    * @return {boolean} - The return value.
    */
   filterGeomItem(geomItem) {
     const shaderClass = geomItem.getMaterial().getShaderClass()
     if (shaderClass) {
-      if (!shaderClass.isTransparent()) return false
+      if (shaderClass.isTransparent()) return true
       if (shaderClass.isOverlay()) return false
-      return true
+
+      const baseColorParam = geomItem.getMaterial().getParameter("BaseColor")
+      if (baseColorParam && baseColorParam.getValue().a < 0.999)
+        return true;
     }
     return false
   }
 
   /**
    * The addGeomItem method.
-   * @param {any} geomItem - The geomItem param.
+   * @param {any} geomItem - The geomItem value.
    */
   addGeomItem(geomItem) {
     const material = geomItem.getMaterial()
-    const glshader = this.addShader(material)
+    const shaderName = material.getShaderName()
+    const shaders = this.constructShaders(shaderName)
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
@@ -67,7 +72,8 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     })
 
     const item = {
-      glshader,
+      geomItem,
+      shaders,
       glmaterial,
       glgeomitem,
       visibilityChangedId,
@@ -88,7 +94,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The removeGeomItem method.
-   * @param {any} geomItem - The geomItem param.
+   * @param {any} geomItem - The geomItem value.
    */
   removeGeomItem(geomItem) {
     if (!super.removeGeomItem(geomItem)) return
@@ -104,7 +110,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
 
   /**
    * The sortItems method.
-   * @param {any} viewPos - The viewPos param.
+   * @param {any} viewPos - The viewPos value.
    */
   sortItems(viewPos) {
     for (const transparentItem of this.visibleItems) {
@@ -118,60 +124,66 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this.resort = false
   }
 
-  /**
-   * The _drawItems method.
-   * @param {any} renderstate - The renderstate param.
-   * @private
-   */
-  _drawItems(renderstate) {
-    const gl = this.__gl
-    let currentglShader
-    let currentglMaterial
-    let currentglGeom
-    for (const transparentItem of this.visibleItems) {
-      const glshader = transparentItem.glmaterial.getGLShader()
-      if (currentglShader != transparentItem.glshader) {
-        // Some passes, like the depth pass, bind custom uniforms.
-        if (!this.bindShader(renderstate, transparentItem.glshader)) {
-          continue
-        }
-        currentglShader = transparentItem.glshader
-      }
 
-      if (currentglMaterial != transparentItem.glmaterial) {
-        if (!transparentItem.glmaterial.bind(renderstate)) {
-          continue
-        }
-        currentglMaterial = transparentItem.glmaterial
-      }
-
-      const glgeomitem = transparentItem.glgeomitem
-      if (currentglGeom != glgeomitem.glGeom) {
-        currentglGeom = glgeomitem.glGeom
-        if (!currentglGeom.bind(renderstate)) {
-          continue
-        }
-      }
-
-      if (glgeomitem.bind(renderstate)) {
-        // Specify an non-instanced draw to the shader
-        if (renderstate.unifs.instancedDraw) {
-          gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
-          gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
-        }
-
-        renderstate.bindViewports(renderstate.unifs, () => {
-          currentglGeom.draw(renderstate)
-        })
+  _drawItem(renderstate, transparentItem, cache) {
+    if (cache.currentglMaterial != transparentItem.glmaterial) {
+      cache.currentglMaterial = transparentItem.glmaterial
+      if (!cache.currentglMaterial.bind(renderstate)) {
+        return
       }
     }
 
-    if (currentglGeom) currentglGeom.unbind(renderstate)
+    const glgeomitem = transparentItem.glgeomitem
+    if (cache.currentglGeom != glgeomitem.glGeom) {
+      cache.currentglGeom = glgeomitem.glGeom
+      if (!cache.currentglGeom.bind(renderstate)) {
+        return
+      }
+    }
+
+    if (glgeomitem.bind(renderstate)) {
+      // Specify an non-instanced draw to the shader
+      if (renderstate.unifs.instancedDraw) {
+        const gl = this.__gl
+        gl.uniform1i(renderstate.unifs.instancedDraw.location, 0)
+        gl.disableVertexAttribArray(renderstate.attrs.instancedIds.location)
+      }
+
+      renderstate.bindViewports(renderstate.unifs, () => {
+        cache.currentglGeom.draw(renderstate)
+      })
+    }
+  }
+
+  /**
+   * The _drawItems method.
+   * @param {any} renderstate - The renderstate value.
+   * @private
+   */
+  _drawItems(renderstate) {
+    const cache = {
+      currentglShader: null,
+      currentglMaterial: null,
+      currentglGeom: null,
+    }
+    for (const transparentItem of this.visibleItems) {
+      if (cache.currentglShader != transparentItem.shaders.glshader) {
+        // Some passes, like the depth pass, bind custom uniforms.
+        if (!this.bindShader(renderstate, transparentItem.shaders.glshader)) {
+          continue
+        }
+        cache.currentglShader = transparentItem.shaders.glshader
+      }
+
+      this._drawItem(renderstate, transparentItem, cache)
+    }
+
+    if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
   }
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   draw(renderstate) {
     if (this.visibleItems.length == 0) return
@@ -212,6 +224,110 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     this._drawItems(renderstate)
 
     gl.disable(gl.BLEND)
+  }
+  
+  /**
+   * The drawHighlightedGeoms method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  drawHighlightedGeoms(renderstate) {
+    const gl = this.__gl
+    gl.disable(gl.CULL_FACE) // 2-sided rendering.
+
+    const cache = {
+      currentglShader: null,
+      currentglMaterial: null,
+      currentglGeom: null,
+    }
+    for (const transparentItem of this.visibleItems) {
+      if (!transparentItem.geomItem.isHighlighted()) continue
+      if (!transparentItem.shaders.glselectedshader) continue
+      const shaders = transparentItem.shaders
+      if (cache.currentglShader != shaders.glselectedshader) {
+        // Some passes, like the depth pass, bind custom uniforms.
+        if (!this.bindShader(renderstate, shaders.glselectedshader)) {
+          continue
+        }
+        cache.currentglShader = shaders.glselectedshader
+      }
+
+      this._drawItem(renderstate, transparentItem, cache)
+    }
+
+    if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
+  }
+
+  /**
+   * The getGeomItemAndDist method.
+   * @param {any} geomData - The geomData value.
+   * @return {any} - The return value.
+   */
+  getGeomItemAndDist(geomData) {
+    let itemId
+    let dist
+    const gl = this.__gl
+    if (gl.floatGeomBuffer) {
+      itemId = Math.round(geomData[1])
+      dist = geomData[3]
+    } else {
+      itemId = geomData[0] + (geomData[1] << 8)
+      dist = Math.decode16BitFloatFrom2xUInt8([geomData[2], geomData[3]])
+    }
+
+    const glgeomItem = this.__drawItems[itemId]
+    if (glgeomItem) {
+      return {
+        geomItem: glgeomItem.getGeomItem(),
+        dist,
+      }
+    }
+  }
+
+  /**
+   * The drawGeomData method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  drawGeomData(renderstate) {
+    if (this.newItemsReadyForLoading()) this.finalize()
+
+    const gl = this.__gl
+    gl.disable(gl.BLEND)
+    gl.disable(gl.CULL_FACE)
+    gl.enable(gl.DEPTH_TEST)
+    gl.depthFunc(gl.LESS)
+    gl.depthMask(true)
+
+    const cache = {
+      currentglShader: null,
+      currentglMaterial: null,
+      currentglGeom: null,
+    }
+    for (const transparentItem of this.visibleItems) {
+      const shaders = transparentItem.shaders
+      if (cache.currentglShader != shaders.glgeomdatashader) {
+        // Some passes, like the depth pass, bind custom uniforms.
+        if (!this.bindShader(renderstate, shaders.glgeomdatashader)) {
+          continue
+        }
+        cache.currentglShader = shaders.glgeomdatashader
+      }
+      {
+        const unif = renderstate.unifs.floatGeomBuffer
+        if (unif) {
+          gl.uniform1i(unif.location, gl.floatGeomBuffer ? 1 : 0)
+        }
+      }
+      {
+        const unif = renderstate.unifs.passId
+        if (unif) {
+          gl.uniform1i(unif.location, this.__passIndex)
+        }
+      }
+
+      this._drawItem(renderstate, transparentItem, cache)
+    }
+
+    if (cache.currentglGeom) cache.currentglGeom.unbind(renderstate)
   }
 }
 

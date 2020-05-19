@@ -1,9 +1,11 @@
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { loadTextfile } from './Utils.js'
 
-/** Class representing a material library manager. */
+/** Class representing a material library manager. 
+ * @private
+*/
 class MaterialLibraryManager {
   /**
    * Create a material library manager.
@@ -38,7 +40,7 @@ class MaterialLibraryManager {
 
   /**
    * The hasMaterialLibrary method.
-   * @param {string} name - The name param.
+   * @param {string} name - The name value.
    * @return {any} - The return value.
    */
   hasMaterialLibrary(name) {
@@ -47,7 +49,7 @@ class MaterialLibraryManager {
 
   /**
    * The getMaterialLibrary method.
-   * @param {string} name - The name param.
+   * @param {string} name - The name value.
    * @return {any} - The return value.
    */
   getMaterialLibrary(name) {
@@ -66,7 +68,7 @@ class MaterialLibraryManager {
 
   /**
    * The resolveMaterialFromPath method.
-   * @param {any} path - The path param.
+   * @param {any} path - The path value.
    * @return {any} - The return value.
    */
   resolveMaterialFromPath(path) {

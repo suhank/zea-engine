@@ -1,7 +1,9 @@
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
-/** Class representing a GL material. */
+/** Class representing a GL material. 
+ * @private
+ */
 class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
   /**
    * Create a GL material.
@@ -16,11 +18,6 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
     this.__glshader = glshader
 
     this.updated = new Signal()
-    this.destructing = new Signal()
-
-    this.__material.destructing.connect(() => {
-      this.destructing.emit(this) // Note: propagate this signal so the GLPass can remove the item.
-    })
 
     this.__shaderBindings = {}
   }
@@ -53,8 +50,8 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} warnMissingUnifs - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} warnMissingUnifs - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate, warnMissingUnifs) {
@@ -79,7 +76,7 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
 
   /**
    * The unbind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   unbind(renderstate) {
     // Enable texture units to be re-used by resetting the count back

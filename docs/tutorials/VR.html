@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Zea Engine VR</title>
+    <meta charset="UTF-8"/>
+    <style type="text/css">
+
+      html, body {
+        overflow: hidden;
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+      }
+
+      .float{
+        position:fixed;
+        width:160px;
+        height:160px;
+        top:calc(50% - 80px);
+        right:calc(50% - 80px);
+        background-color:#000;
+        color:#FFF;
+        border-radius:80px;
+        text-align:center;
+        box-shadow: 2px 2px 3px #999;
+      }
+
+      .my-float{
+        margin-top:22px;
+        font-size: 30px;
+        font-family: fantasy;
+        font-style: normal;
+        color: black;
+      }
+
+      .invisible {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <a href="#" class="float" id="vrbutton">
+      <i class="my-float">
+        <img src="./img/vricon.png"" alt="Launch VR" height="160" width="160">
+        Launch VR
+      </i>
+    </a>
+  </body>
+  <script type="module">
+
+import { Scene, GLRenderer } from "https://unpkg.com/@zeainc/zea-engine@1.0.5/dist/index.esm.js"
+
+const domElement = document.getElementById("app");
+
+const scene = new Scene();
+scene.setupGrid(10.0, 10);
+
+const renderer = new GLRenderer(domElement);
+renderer.setScene(scene);
+renderer.resumeDrawing();
+
+const vrButton = document.querySelector('#vrbutton');
+vrButton.addEventListener('mouseup', () =>{
+  vrButton.classList.add('invisible')
+
+  renderer.getXRViewport().then(xrViewport => {
+    xrViewport.startPresenting().then(() => {
+      const xfo = xrViewport.getXfo()
+      xfo.tr = headPos
+      xrViewport.setXfo(xfo)
+
+      xrViewport.presentingChanged.connect(() => {
+        vrButton.classList.remove('invisible')
+      })
+    })
+  })
+  .catch(reason => {
+    console.warn('Unable to setup XR:' + reason)
+  })
+})
+
+  </script>
+</html>

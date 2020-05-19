@@ -1,8 +1,8 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Vec2, Vec3, Quat, Xfo } from '../../Math'
-import { Signal } from '../../Utilities'
+import { Vec2, Vec3, Quat, Xfo } from '../../Math/index'
+import { Signal } from '../../Utilities/index'
 import { ParameterOwner } from '../ParameterOwner.js'
-import { NumberParameter } from '../Parameters'
+import { NumberParameter } from '../Parameters/index'
 
 /** Class representing a camera, mouse and keyboard.
  * @extends ParameterOwner
@@ -18,6 +18,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
     this.__defaultManipulationState = 'orbit'
     this.__manipulationState = this.__defaultManipulationState
+    this.__mouseDown = false
+    this.__dragging = false
     this.__mouseDragDelta = new Vec2()
     this.__keyboardMovement = false
     this.__keysPressed = []
@@ -27,10 +29,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__ongoingTouches = {}
 
     this.__orbitRateParam = this.addParameter(
-      new NumberParameter(
-        'orbitRate',
-        ZeaEngine.SystemDesc.isMobileDevice ? -0.3 : 1
-      )
+      new NumberParameter('orbitRate', SystemDesc.isMobileDevice ? -0.3 : 1)
     )
     this.__dollySpeedParam = this.addParameter(
       new NumberParameter('dollySpeed', 0.02)
@@ -43,8 +42,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * The setDefaultManipulationMode method.
-   * @param {any} mode - The mode param.
+   * Setter for the default manipulation mode.
+   * @param {mode} mode - The mode value.
    */
   setDefaultManipulationMode(mode) {
     this.__defaultManipulationState = mode
@@ -52,8 +51,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The look method.
-   * @param {any} event - The event param.
-   * @param {any} dragVec - The dragVec param.
+   * @param {any} event - The event value.
+   * @param {any} dragVec - The drag vector value.
    */
   look(event, dragVec) {
     const { viewport } = event
@@ -94,8 +93,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The orbit method.
-   * @param {any} event - The event param.
-   * @param {any} dragVec - The dragVec param.
+   * @param {any} event - The event value.
+   * @param {any} dragVec - The drag vector value.
    */
   orbit(event, dragVec) {
     const { viewport } = event
@@ -140,8 +139,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The pan method.
-   * @param {any} event - The event param.
-   * @param {any} dragVec - The dragVec param.
+   * @param {any} event - The event value.
+   * @param {any} dragVec - The drag vector value.
    */
   pan(event, dragVec) {
     const { viewport } = event
@@ -168,8 +167,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The dolly method.
-   * @param {any} event - The event param.
-   * @param {any} dragVec - The dragVec param.
+   * @param {any} event - The event value.
+   * @param {any} dragVec - The drag vector value.
    */
   dolly(event, dragVec) {
     const { viewport } = event
@@ -183,9 +182,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The panAndZoom method.
-   * @param {any} event - The event param.
-   * @param {any} panDelta - The panDelta param.
-   * @param {any} dragDist - The dragDist param.
+   * @param {any} event - The event value.
+   * @param {any} panDelta - The pan delta value.
+   * @param {any} dragDist - The drag distance value.
    */
   panAndZoom(event, panDelta, dragDist) {
     const { viewport } = event
@@ -216,24 +215,53 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The initDrag method.
-   * @param {any} event - The event param.
+   * @param {any} event - The event value.
    */
   initDrag(event) {
     const { viewport } = event
     const camera = viewport.getCamera()
     const focalDistance = camera.getFocalDistance()
+    
+    this.__mouseDown = true;
+    this.__calculatingDragAction = false;
+    this.__mouseDownPos = event.mousePos
+    this.__mouseDownViewport = viewport
     this.__mouseDragDelta.set(0, 0)
     this.__mouseDownCameraXfo = camera.getGlobalXfo().clone()
     this.__mouseDownZaxis = this.__mouseDownCameraXfo.ori.getZaxis()
     const targetOffset = this.__mouseDownZaxis.scale(-focalDistance)
     this.__mouseDownCameraTarget = camera.getGlobalXfo().tr.add(targetOffset)
     this.__mouseDownFocalDist = focalDistance
+    
+    this.__dragListenerId = camera.getParameter("GlobalXfo").valueChanged.connect(this.__globalXfoChangedDuringDrag.bind(this))
+  }
+
+  __globalXfoChangedDuringDrag(mode) {
+    if (!this.__calculatingDragAction) {
+      const camera = this.__mouseDownViewport.getCamera()
+      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      this.initDrag({ viewport: this.__mouseDownViewport, mousePos: this.__mouseDownPos } );
+    }
+  }
+  /**
+   * The initDrag method.
+   * @param {any} event - The event value.
+   */
+  endDrag(event) {
+    if (this.__dragListenerId) {
+      const { viewport } = event
+      const camera = viewport.getCamera()
+      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      this.__dragListenerId = null;
+    }
+    this.__mouseDown = false
+    this.__dragging = false
   }
 
   /**
    * The aimFocus method.
-   * @param {any} event - The event param.
-   * @param {any} pos - The pos param.
+   * @param {any} event - The event value.
+   * @param {any} pos - The position value.
    */
   aimFocus(event, pos) {
     const { viewport } = event
@@ -303,14 +331,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * The onMouseMove method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the mouse pointer is moving while over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {}
 
   /**
-   * The onDoubleClick method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when a user double clicks a mouse button over an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
   onDoubleClick(event) {
     if (event.intersectionData) {
@@ -323,11 +351,10 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * The onDragStart method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user starts to drag an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onDragStart(event) {
-    this.__mouseDownPos = event.mousePos
+  onMouseDown(event) {
     this.initDrag(event)
 
     if (event.button == 2) {
@@ -342,22 +369,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * The onDrag method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when an element is being dragged.
+   * @param {MouseEvent} event - The mouse event that occurs.
    */
-  onDrag(event) {
+  onMouseMove(event) {
+    if (!this.__mouseDown) return;
     const mousePos = event.mousePos
-    // During requestPointerLock, the offsetX/Y values are not updated.
-    // Instead we get a relative delta that we use to compute the total
-    // delta for the drag.
-    // if(this.__keyboardMovement){
-    //     this.__mouseDragDelta.x = event.movementX;
-    //     this.__mouseDragDelta.y = event.movementY;
-    // }
-    // else{
-    //     this.__mouseDragDelta.x += event.movementX;
-    //     this.__mouseDragDelta.y += event.movementY;
-    // }
+    this.__calculatingDragAction = true;
     if (this.__keyboardMovement) {
       this.__mouseDragDelta = mousePos
     } else {
@@ -377,21 +395,27 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.dolly(event, this.__mouseDragDelta)
         break
     }
+    this.__dragging = true
+    this.__calculatingDragAction = false
+    event.stopPropagation()
   }
 
   /**
-   * The onDragEnd method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user has finished dragging an element.
+   * @param {MouseEvent} event - The mouse event that occurs.
    * @return {boolean} - The return value.
    */
-  onDragEnd(event) {
-    this.movementFinished.emit()
-    return false
+  onMouseUp(event) {
+    if (this.__dragging) {
+      this.movementFinished.emit()
+      event.stopPropagation()
+    }
+    this.endDrag(event);
   }
 
   /**
-   * The onWheel method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the mouse wheel is rolled up or down over an element.
+   * @param {WheelEvent } event - The wheel event that occurs.
    */
   onWheel(event) {
     const { viewport } = event
@@ -425,7 +449,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The __integrateVelocityChange method.
-   * @param {any} event - The event param.
+   * @param {any} event - The event value.
    * @private
    */
   __integrateVelocityChange(event) {
@@ -437,9 +461,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * The onKeyPressed method.
-   * @param {any} key - The key param.
-   * @param {any} event - The event param.
+   * Causes an event to occurs when the user presses a key on the keyboard.
+   * @param {any} key - The key the user presses.
+   * @param {KeyboardEvent} event - The keyboard event that occurs.
    * @return {boolean} - The return value.
    */
   onKeyPressed(key, event) {
@@ -486,16 +510,16 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   }
 
   /**
-   * The onKeyDown method.
-   * @param {any} key - The key param.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user is pressing a key on the keyboard.
+   * @param {any} key - The key the user is pressing.
+   * @param {KeyboardEvent} event - The keyboard event that occurs.
    */
   onKeyDown(key, event) {}
 
   /**
-   * The onKeyUp method.
-   * @param {any} key - The key param.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user releases a key on the keyboard.
+   * @param {any} key - The key the user releases.
+   * @param {any} event - The event that occurs.
    * @return {boolean} - The return value.
    */
   onKeyUp(key, event) {
@@ -522,7 +546,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     if (this.__keysPressed.length == 0)
       this.__keyboardMovement = false;
     */
-    return true
   }
 
   // ///////////////////////////////////
@@ -530,7 +553,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The __startTouch method.
-   * @param {any} touch - The touch param.
+   * @param {any} touch - The touch value.
    * @private
    */
   __startTouch(touch) {
@@ -542,7 +565,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   /**
    * The __endTouch method.
-   * @param {any} touch - The touch param.
+   * @param {any} touch - The touch value.
    * @private
    */
   __endTouch(touch) {
@@ -554,8 +577,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   // Touch events
 
   /**
-   * The onTouchStart method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user touches an element on a touch screen.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchStart(event) {
     console.log('onTouchStart')
@@ -569,17 +592,25 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
     }
-    this.initDrag(event)
+
+    if (Object.keys(this.__ongoingTouches).length == 1) {
+      this.initDrag(event)
+      
+      this.__dragging = true
+    }
   }
 
   /**
-   * The onTouchMove method.
-   * @param {any} event - The event param.
+   * The event that occurs when the user moves his/her finger across a touch screen.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchMove(event) {
     event.preventDefault()
     event.stopPropagation()
     // console.log("this.__manipMode:" + this.__manipMode);
+
+    
+    this.__calculatingDragAction = true;
 
     const touches = event.touches
     if (touches.length == 1 && this.__manipMode != 'panAndZoom') {
@@ -614,11 +645,14 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       this.panAndZoom(event, dragVec, separationDist * 0.002)
       this.__manipMode = 'panAndZoom'
     }
+
+    
+    this.__calculatingDragAction = false;
   }
 
   /**
-   * The onTouchEnd method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user removes his/her finger from an element.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchEnd(event) {
     event.preventDefault()
@@ -634,11 +668,13 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     for (let i = 0; i < touches.length; i++) {
       this.__endTouch(touches[i])
     }
+    
+    if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event);
   }
 
   /**
-   * The onTouchCancel method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the touch event gets interrupted.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onTouchCancel(event) {
     event.preventDefault()
@@ -646,11 +682,12 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     for (let i = 0; i < touches.length; i++) {
       this.__endTouch(touches[i])
     }
+    if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event)
   }
 
   /**
-   * The onDoubleTap method.
-   * @param {any} event - The event param.
+   * Causes an event to occur when the user double taps an element on a touch screen.
+   * @param {TouchEvent} event - The touch event that occurs.
    */
   onDoubleTap(event) {
     if (event.intersectionData) {

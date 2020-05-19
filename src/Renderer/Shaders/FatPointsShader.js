@@ -1,10 +1,12 @@
-import { Color } from '../../Math'
-import { sgFactory } from '../../SceneTree'
+import { Color } from '../../Math/index'
+import { sgFactory } from '../../SceneTree/index'
 import { shaderLibrary } from '../ShaderLibrary'
 import { GLShader } from '../GLShader.js'
 
 import './GLSL/stack-gl/inverse.js'
 import './GLSL/stack-gl/transpose.js'
+import './GLSL/drawItemTexture.js'
+import './GLSL/modelMatrix.js'
 
 class FatPointsShader extends GLShader {
   constructor(gl) {
@@ -21,6 +23,8 @@ uniform mat4 projectionMatrix;
 
 <%include file="stack-gl/transpose.glsl"/>
 <%include file="stack-gl/inverse.glsl"/>
+<%include file="drawItemId.glsl"/>
+<%include file="drawItemTexture.glsl"/>
 <%include file="modelMatrix.glsl"/>
 <%include file="utils/quadVertexFromID.glsl"/>
 
@@ -29,14 +33,14 @@ uniform float PointSize;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_drawItemID;
-varying vec4 v_highlightColor;
+varying float v_drawItemId;
 
 void main(void) {
+  int drawItemId = getDrawItemId();
   vec2 quadPointPos = getQuadVertexPositionFromID();
   v_texCoord = quadPointPos + 0.5;
 
-  mat4 modelMatrix = getModelMatrix();
+  mat4 modelMatrix = getModelMatrix(drawItemId);
   mat4 modelViewMatrix = viewMatrix * modelMatrix;
   
   vec4 viewPos = modelViewMatrix * vec4(positions, 1.);
@@ -48,9 +52,8 @@ void main(void) {
   // a surface. (else they get fully clipped)
   viewPos.z += 0.5 * PointSize;
 
-  v_drawItemID = float(getId());
+  v_drawItemId = float(getDrawItemId());
   v_viewPos = -viewPos.xyz;
-  v_highlightColor = getHighlightColor();
   
   gl_Position = projectionMatrix * viewPos;
 }
@@ -71,7 +74,7 @@ uniform float BorderWidth;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_drawItemID;
+varying float v_drawItemId;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -151,7 +154,7 @@ uniform int passId;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_drawItemID;
+varying float v_drawItemId;
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -172,15 +175,15 @@ void main(void) {
 
   if(floatGeomBuffer != 0) {
     fragColor.r = float(passId); 
-    fragColor.g = float(v_drawItemID);
+    fragColor.g = float(v_drawItemId);
     fragColor.b = 0.0;// TODO: store poly-id or something.
     fragColor.a = viewDist;
   }
   else {
     ///////////////////////////////////
     // UInt8 buffer
-    fragColor.r = (mod(v_drawItemID, 256.) + 0.5) / 255.;
-    fragColor.g = (floor(v_drawItemID / 256.) + 0.5) / 255.;
+    fragColor.r = (mod(v_drawItemId, 256.) + 0.5) / 255.;
+    fragColor.g = (floor(v_drawItemId / 256.) + 0.5) / 255.;
 
     // encode the dist as a 16 bit float
     vec2 float16bits = encode16BitFloatInto2xUInt8(viewDist);
@@ -217,8 +220,25 @@ uniform int passId;
 /* VS Outputs */
 varying vec2 v_texCoord;
 varying vec3 v_viewPos;
-varying float v_drawItemID;
-varying vec4 v_highlightColor;
+varying float v_drawItemId;
+
+
+<%include file="drawItemTexture.glsl"/>
+
+#ifdef ENABLE_FLOAT_TEXTURES
+vec4 getHighlightColor(int id) {
+  return fetchTexel(instancesTexture, instancesTextureSize, (id * pixelsPerItem) + 4);
+}
+#else
+
+uniform vec4 highlightColor;
+
+vec4 getHighlightColor() {
+    return highlightColor;
+}
+
+#endif
+
 
 #ifdef ENABLE_ES3
 out vec4 fragColor;
@@ -234,7 +254,8 @@ void main(void) {
   if(dist > 0.5)
     discard;
   
-  fragColor = v_highlightColor;
+  int drawItemId = int(v_drawItemId + 0.5);
+  fragColor = getHighlightColor(drawItemId);
 
 #ifndef ENABLE_ES3
   gl_FragColor = fragColor;

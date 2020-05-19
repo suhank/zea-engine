@@ -1,8 +1,10 @@
 import '../SceneTree/GeomItem.js'
 
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
+/** This class abstracts the rendering of a collection of geometries to screen. 
+ * @private
+*/
 class GLGeomItemSet {
   /**
    * Create a GL geom item set.
@@ -27,7 +29,6 @@ class GLGeomItemSet {
     this.lightmapName = undefined
 
     this.drawCountChanged = new Signal()
-    this.destructing = new Signal()
 
     this.visibleItems = []
     this.highlightedItems = []
@@ -72,7 +73,7 @@ class GLGeomItemSet {
 
   /**
    * The addGeomItem method.
-   * @param {any} glgeomItem - The glgeomItem param.
+   * @param {any} glgeomItem - The glgeomItem value.
    */
   addGeomItem(glgeomItem) {
     let index
@@ -130,7 +131,7 @@ class GLGeomItemSet {
 
   /**
    * The removeGeomItem method.
-   * @param {any} glgeomItem - The glgeomItem param.
+   * @param {any} glgeomItem - The glgeomItem value.
    */
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem)
@@ -249,7 +250,7 @@ class GLGeomItemSet {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   draw(renderstate) {
     if (this.visibleItems.length == 0) {
@@ -289,7 +290,7 @@ class GLGeomItemSet {
 
   /**
    * The drawHighlighted method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   drawHighlighted(renderstate) {
     if (this.highlightedItems.length == 0) {
@@ -308,9 +309,9 @@ class GLGeomItemSet {
 
   /**
    * The __bindAndRender method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} itemIndices - The itemIndices param.
-   * @param {any} drawIdsBuffer - The drawIdsBuffer param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} itemIndices - The itemIndices value.
+   * @param {any} drawIdsBuffer - The drawIdsBuffer value.
    * @private
    */
   __bindAndRender(renderstate, itemIndices, drawIdsBuffer) {
@@ -360,10 +361,10 @@ class GLGeomItemSet {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
-    this.destructing.emit()
   }
 }
 

@@ -1,16 +1,16 @@
-import { Vec3, Box3, Xfo } from '../Math'
-import { Signal } from '../Utilities'
+import { Vec3, Box3, Xfo } from '../Math/index'
+import { Signal } from '../Utilities/index'
 import { TreeItem } from './TreeItem.js'
-import { ValueSetMode, BooleanParameter, NumberParameter } from './Parameters'
+import { ValueSetMode, BooleanParameter, NumberParameter } from './Parameters/index'
 import { sgFactory } from './SGFactory'
 
-/** Class representing a camera.
+/** Class representing a camera in the scene tree.
  * @extends TreeItem
  */
 class Camera extends TreeItem {
   /**
    * Create a camera.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the camera.
    */
   constructor(name = undefined) {
     if (name == undefined) name = 'Camera'
@@ -47,7 +47,11 @@ class Camera extends TreeItem {
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
-    this.setPositionAndTarget(new Vec3(3, 3, 1.75), new Vec3(0, 0, 1), ValueSetMode.GENERATED_VALUE)
+    this.setPositionAndTarget(
+      new Vec3(3, 3, 1.75),
+      new Vec3(0, 0, 1),
+      ValueSetMode.GENERATED_VALUE
+    )
     this.setLensFocalLength('28mm', ValueSetMode.GENERATED_VALUE)
   }
 
@@ -56,7 +60,7 @@ class Camera extends TreeItem {
 
   /**
    * The getNear method.
-   * @return {any} - The return value.
+   * @return {number} - Returns the near value.
    */
   getNear() {
     return this.__nearParam.getValue()
@@ -64,7 +68,7 @@ class Camera extends TreeItem {
 
   /**
    * The setNear method.
-   * @param {any} value - The value param.
+   * @param {number} value - The near value.
    */
   setNear(value) {
     this.__nearParam.setValue(value)
@@ -72,7 +76,7 @@ class Camera extends TreeItem {
 
   /**
    * The getFar method.
-   * @return {any} - The return value.
+   * @return {number} - Returns the far value.
    */
   getFar() {
     return this.__farParam.getValue()
@@ -80,31 +84,34 @@ class Camera extends TreeItem {
 
   /**
    * The setFar method.
-   * @param {any} value - The value param.
+   * @param {number} value - The far value.
    */
   setFar(value) {
     this.__farParam.setValue(value)
   }
 
   /**
-   * The getFov method.
-   * @return {any} - The return value.
+   * Getter for the camera field of view (FOV).
+   * The FOV is how much of the scene the camera can see at once.
+   * @return {number} - Returns the FOV value.
    */
   getFov() {
     return this.__fovParam.getValue()
   }
 
   /**
-   * The setFov method.
-   * @param {any} value - The value param.
+   * Setter for the camera field of view (FOV).
+   * The FOV is how much of the scene the camera can see at once.
+   * @param {number} value - The FOV value.
    */
   setFov(value) {
     this.__fovParam.setValue(value)
   }
 
   /**
-   * The setLensFocalLength method.
-   * @param {any} value - The value param.
+   * Setter for the camera lens focal length.
+   * @param {number} value - The lens focal length value.
+   * @param {number} mode - The mode value.
    */
   setLensFocalLength(value, mode = ValueSetMode.USER_SETVALUE) {
     // https://www.nikonians.org/reviews/fov-tables
@@ -154,17 +161,17 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The getFocalDistance method.
-   * @return {any} - The return value.
+   * Getter for the camera focal length.
+   * @return {any} - Returns the lens focal length value..
    */
   getFocalDistance() {
     return this.__focalDistanceParam.getValue()
   }
 
   /**
-   * The setFocalDistance method.
-   * @param {any} dist - The dist param.
-   * @param {any} mode - The mode param.
+   * Setter for the camera focal length.
+   * @param {number} dist - The focal distance value.
+   * @param {number} mode - The mode value.
    */
   setFocalDistance(dist, mode = ValueSetMode.USER_SETVALUE) {
     if (dist < 0.0001) console.error('Never set focal distance to zero')
@@ -184,33 +191,17 @@ class Camera extends TreeItem {
   /**
    * The setIsOrthographic method.
    * @param {any} value - The value param.
-   * @param {any} mode - The mode param.
+   * @param {number} mode - The mode value.
    */
   setIsOrthographic(value, mode = ValueSetMode.USER_SETVALUE) {
     this.__isOrthographicParam.setValue(value, mode)
   }
 
   /**
-   * The getDefaultManipMode method.
-   * @return {any} - The return value.
-   */
-  getDefaultManipMode() {
-    return this.__defaultManipulationState
-  }
-
-  /**
-   * The setDefaultManipMode method.
-   * @param {any} mode - The mode param.
-   */
-  setDefaultManipMode(mode) {
-    this.__defaultManipulationState = mode
-  }
-
-  /**
-   * The setPositionAndTarget method.
-   * @param {any} position - The position param.
-   * @param {any} target - The target param.
-   * @param {any} mode - The mode param.
+   * Setter for the camera postion and target.
+   * @param {Vec3} position - The position of the camera.
+   * @param {Vec3} target - The target of the camera.
+   * @param {number} mode - The mode value.
    */
   setPositionAndTarget(position, target, mode = ValueSetMode.USER_SETVALUE) {
     this.setFocalDistance(position.distanceTo(target), mode)
@@ -220,8 +211,8 @@ class Camera extends TreeItem {
   }
 
   /**
-   * The getTargetPostion method.
-   * @return {any} - The return value.
+   * Getter for the target position.
+   * @return {Vec3} - Returns the target position.
    */
   getTargetPostion() {
     const focalDistance = this.__focalDistanceParam.getValue()
@@ -236,8 +227,9 @@ class Camera extends TreeItem {
 
   /**
    * The frameView method.
-   * @param {any} viewport - The viewport param.
-   * @param {any} treeItems - The treeItems param.
+   * @param {any} viewport - The viewport value.
+   * @param {any} treeItems - The treeItems value.
+   * @param {number} mode - The mode value.
    */
   frameView(viewport, treeItems, mode = ValueSetMode.USER_SETVALUE) {
     const boundingBox = new Box3()
@@ -287,8 +279,8 @@ class Camera extends TreeItem {
 
   /**
    * The updateProjectionMatrix method.
-   * @param {any} mat - The mat param.
-   * @param {any} aspect - The aspect param.
+   * @param {any} mat - The mat value.
+   * @param {any} aspect - The aspect value.
    */
   updateProjectionMatrix(mat, aspect) {
     const isOrthographic = this.__isOrthographicParam.getValue()

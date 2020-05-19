@@ -30,8 +30,9 @@ class Ray {
   closestPoint(point) {
     const w = point.subtract(this.start)
     const c1 = w.dot(this.dir)
+    if (c1 < Number.EPSILON) return this.start
     const c2 = this.dir.dot(this.dir)
-    if (c2 < Number.EPSILON) return 0.0
+    // if (c2 < Number.EPSILON) return this.start
     const fract = c1 / c2
     return this.start.add(this.dir.scale(fract))
   }
@@ -130,6 +131,7 @@ class Ray {
    * Creates a new Ray.
    * @param {...object} ...args - The ...args param.
    * @return {Ray} - Returns a new Ray.
+   * @private
    */
   static create(...args) {
     return new Ray(...args)

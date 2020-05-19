@@ -1,17 +1,13 @@
-import { Signal } from '../../Utilities'
-import { Vec3, Quat, Xfo } from '../../Math'
-import { Operator, XfoOperatorOutput } from './Operator.js'
+import { Vec3, Quat, Xfo } from '../../Math/index'
+import { Operator } from './Operator.js'
+import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
   ValueGetMode,
-  ValueSetMode,
-  Parameter,
   NumberParameter,
   Vec3Parameter,
   StructParameter,
-  TreeItemParameter,
   ListParameter,
-  KinematicGroupParameter,
-} from '../Parameters'
+} from '../Parameters/index'
 
 import { sgFactory } from '../SGFactory.js'
 
@@ -64,7 +60,7 @@ class PistonParameter extends StructParameter {
 
   /**
    * The setCrankXfo method.
-   * @param {any} baseCrankXfo - The baseCrankXfo param.
+   * @param {Xfo} baseCrankXfo - The baseCrankXfo value.
    */
   setCrankXfo(baseCrankXfo) {
     this.__baseCrankXfo = baseCrankXfo
@@ -98,7 +94,6 @@ class PistonParameter extends StructParameter {
 
     const camAngle = camPhase * 2.0 * Math.PI
     const bigEndOffset = Math.sin(camAngle) * camLength
-    const rodAngle = Math.asin(bigEndOffset / rodLength)
     const headOffset =
       Math.sqrt(rodLength * rodLength - bigEndOffset * bigEndOffset) +
       Math.cos(camAngle) * camLength
@@ -107,9 +102,9 @@ class PistonParameter extends StructParameter {
 
   /**
    * The evaluate method.
-   * @param {any} quat - The quat param.
-   * @param {any} crankAxis - The crankAxis param.
-   * @param {any} revolutions - The revolutions param.
+   * @param {Quat} quat - The quat value.
+   * @param {any} crankAxis - The crankAxis value.
+   * @param {any} revolutions - The revolutions value.
    */
   evaluate(quat, crankAxis, revolutions) {
     const camPhase = this.__camPhaseParam.getValue()
@@ -148,18 +143,8 @@ class PistonParameter extends StructParameter {
   }
 
   /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  clone(flags) {
-    const clonedParam = new PistonParameter(this.__name, this.__value)
-    return clonedParam
-  }
-
-  /**
    * The setOwner method.
-   * @param {any} owner - The owner param.
+   * @param {any} owner - The owner value.
    */
   setOwner(owner) {
     this.__owner = owner
@@ -177,10 +162,10 @@ class PistonParameter extends StructParameter {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
@@ -188,13 +173,27 @@ class PistonParameter extends StructParameter {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
+  }
+
+  // ////////////////////////////////////////
+  // Clone
+
+  /**
+   * The clone method constructs a new pistom parameter, copies its values
+   * from this parameter and returns it.
+   * @param {number} flags - The flags value.
+   * @return {PistonParameter} - Returns a new cloned piston parameter.
+   */
+  clone(flags) {
+    const clonedParam = new PistonParameter(this.__name, this.__value)
+    return clonedParam
   }
 }
 
@@ -251,13 +250,13 @@ class PistonOperator extends Operator {
     this.__pistonsParam = this.addParameter(
       new ListParameter('Pistons', PistonParameter)
     )
-    this.__pistonsParam.elementAdded.connect((value, index) => {
+    this.__pistonsParam.elementAdded.connect(value => {
       value.setCrankXfo(this.__baseCrankXfo)
 
       this.addOutput(value.getRodOutput())
       this.addOutput(value.getCapOutput())
     })
-    this.__pistonsParam.elementRemoved.connect((value, index) => {
+    this.__pistonsParam.elementRemoved.connect(value => {
       this.removeOutput(value.getRodOutput())
       this.removeOutput(value.getCapOutput())
     })
@@ -268,7 +267,7 @@ class PistonOperator extends Operator {
 
   /**
    * The setOwner method.
-   * @param {any} ownerItem - The ownerItem param.
+   * @param {any} ownerItem - The ownerItem value.
    */
   setOwner(ownerItem) {
     super.setOwner(ownerItem)
@@ -328,20 +327,20 @@ class PistonOperator extends Operator {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     return super.toJSON(context, flags)
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {
     super.fromJSON(j, context, flags)
@@ -352,7 +351,8 @@ class PistonOperator extends Operator {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     clearTimeout(this.__timeoutId)

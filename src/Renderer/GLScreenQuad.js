@@ -1,8 +1,10 @@
-import { AttrValue } from '../Math'
+import { AttrValue } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL screen quad. */
+/** Class representing a GL screen quad. 
+ * @private
+ */
 class GLScreenQuad {
   /**
    * Create a GL screen quad.
@@ -32,10 +34,10 @@ class GLScreenQuad {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} texture - The texture param.
-   * @param {any} pos - The pos param.
-   * @param {any} size - The size param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} texture - The texture pavalueram.
+   * @param {any} pos - The pos value.
+   * @param {any} size - The size value.
    */
   bind(renderstate, texture, pos = undefined, size = undefined) {
     const unifs = renderstate.unifs
@@ -75,7 +77,7 @@ class GLScreenQuad {
 
   /**
    * The bindShader method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
    */
   bindShader(renderstate) {
@@ -84,10 +86,10 @@ class GLScreenQuad {
 
   /**
    * The draw method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} texture - The texture param.
-   * @param {any} pos - The pos param.
-   * @param {any} size - The size param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} texture - The texture value.
+   * @param {any} pos - The pos value.
+   * @param {any} size - The size value.
    */
   draw(renderstate, texture, pos = undefined, size = undefined) {
     this.bind(renderstate, texture, pos, size)
@@ -96,7 +98,8 @@ class GLScreenQuad {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {}
 }

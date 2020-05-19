@@ -1,10 +1,11 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { NumberParameter } from '../../SceneTree/Parameters'
+import { NumberParameter } from '../../SceneTree/Parameters/index'
 import { StateEvent } from '../StateEvent.js'
 
-/** Class representing a timed wait.
+/** Triggers an state machine event to occur after a certain time has passed.
  * @extends StateEvent
+ * @private
  */
 class TimedWait extends StateEvent {
   /**

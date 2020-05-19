@@ -1,4 +1,4 @@
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 
 import '../SceneTree/GeomItem.js'
 
@@ -9,7 +9,9 @@ const GLGeomItemChangeType = {
   HIGHLIGHT_CHANGED: 3,
 }
 
-/** This class abstracts the rendering of a collection of geometries to screen. */
+/** This class abstracts the rendering of a collection of geometries to screen. 
+ * @private
+*/
 class GLGeomItem {
   /**
    * Create a GL geom item.
@@ -35,7 +37,6 @@ class GLGeomItem {
 
     this.lightmapName = geomItem.getLightmapName()
     this.updated = new Signal()
-    this.destructing = new Signal()
     this.visibilityChanged = new Signal()
     this.highlightChanged = geomItem.highlightChanged
 
@@ -58,7 +59,6 @@ class GLGeomItem {
     this.geomItem.cutAwayChanged.connect(() => {
       this.updated.emit(GLGeomItemChangeType.GEOMITEM_CHANGED)
     })
-    this.geomItem.destructing.connect(this.destroy)
     this.highlightChangedId = this.geomItem.highlightChanged.connect(() => {
       this.updated.emit(GLGeomItemChangeType.HIGHLIGHT_CHANGED)
     })
@@ -132,7 +132,7 @@ class GLGeomItem {
 
   /**
    * The setCullState method.
-   * @param {any} culled - The culled param.
+   * @param {any} culled - The culled value.
    */
   setCullState(culled) {
     this.culled = culled
@@ -157,7 +157,7 @@ class GLGeomItem {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -210,14 +210,13 @@ class GLGeomItem {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     this.geomItem.visibilityChanged.disconnect(this.updateVisibility)
     this.geomItem.geomXfoChanged.disconnect(this.updateXfo)
     this.geomItem.highlightChanged.disconnectId(this.highlightChangedId)
-    this.geomItem.destructing.disconnect(this.destroy)
-    this.destructing.emit(this)
   }
 }
 

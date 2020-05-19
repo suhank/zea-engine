@@ -1,12 +1,11 @@
 import { sgFactory } from '../SGFactory.js'
-import { resourceLoader } from '../ResourceLoader.js'
 import { SystemDesc } from '../../BrowserDetection.js'
-import { NumberParameter } from '../Parameters'
+import { NumberParameter } from '../Parameters/index'
 import { FileImage } from './FileImage.js'
 
 const supportWebp = navigator.userAgent.indexOf('Chrome') !== -1 // || navigator.userAgent.indexOf("Samsung");
 
-/** Class representing a LDR image.
+/** Class representing a LDR (low dynamic range) image.
  * @extends FileImage
  */
 class LDRImage extends FileImage {
@@ -25,7 +24,7 @@ class LDRImage extends FileImage {
 
   /**
    * The setCrossOrigin method.
-   * @param {any} crossOrigin - The crossOrigin param.
+   * @param {any} crossOrigin - The crossOrigin value.
    */
   setCrossOrigin(crossOrigin) {
     this.__crossOrigin = crossOrigin
@@ -33,7 +32,7 @@ class LDRImage extends FileImage {
 
   /**
    * The __loadData method.
-   * @param {any} fileDesc - The fileDesc param.
+   * @param {any} fileDesc - The fileDesc value.
    * @private
    */
   __loadData(fileDesc) {
@@ -125,8 +124,8 @@ class LDRImage extends FileImage {
 
   /**
    * The setImageURL method.
-   * @param {any} url - The url param.
-   * @param {any} format - The format param.
+   * @param {any} url - The url value.
+   * @param {any} format - The format value.
    */
   setImageURL(url, format = 'RGB') {
     if (!format) {

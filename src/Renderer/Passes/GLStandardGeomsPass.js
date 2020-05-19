@@ -1,6 +1,6 @@
 import { GLPass } from './GLPass'
 
-import { Vec4 } from '../../Math'
+import { Vec4 } from '../../Math/index'
 
 import {
   GeomItem,
@@ -10,7 +10,7 @@ import {
   PointsProxy,
   LinesProxy,
   MeshProxy,
-} from '../../SceneTree'
+} from '../../SceneTree/index'
 
 import { GLPoints } from '../GLPoints.js'
 import { GLLines } from '../GLLines.js'
@@ -38,8 +38,8 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The init method.
-   * @param {any} renderer - The renderer param.
-   * @param {any} passIndex - The passIndex param.
+   * @param {any} renderer - The renderer value.
+   * @param {any} passIndex - The passIndex value.
    */
   init(renderer, passIndex) {
     super.init(renderer, passIndex)
@@ -98,7 +98,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The filterGeomItem method.
-   * @param {any} geomItem - The geomItem param.
+   * @param {any} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
   filterGeomItem(geomItem) {
@@ -107,7 +107,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The addShader method.
-   * @param {any} material - The material param.
+   * @param {any} material - The material value.
    * @return {any} - The return value.
    */
   addShader(material) {
@@ -115,8 +115,39 @@ class GLStandardGeomsPass extends GLPass {
   }
 
   /**
+   * The constructShaders method.
+   * Given a material, generate the various shaders required to render objects
+   * using this material. There should always be at least a single glshader
+   * and optionally a glgeomdatashader for rendering the goem data buffer
+   * and a glselectedshader for rendering selection hilghlights
+   * @param {string} shaderName - The name of the base shader.
+   * @return {object} - The object containing the shader instances.
+   */
+  constructShaders(shaderName) {
+    let glgeomdatashader
+    let glselectedshader
+    
+    const glshader = this.__renderer.getOrCreateShader(shaderName)
+    if (glshader.constructor.getGeomDataShaderName()) {
+      glgeomdatashader = this.__renderer.getOrCreateShader(
+        glshader.constructor.getGeomDataShaderName()
+      )
+    }
+    if (glshader.constructor.getSelectedShaderName()) {
+      glselectedshader = this.__renderer.getOrCreateShader(
+        glshader.constructor.getSelectedShaderName()
+      )
+    }
+    return {
+      glshader,
+      glgeomdatashader,
+      glselectedshader
+    }
+  }
+
+  /**
    * The addMaterial method.
-   * @param {any} material - The material param.
+   * @param {any} material - The material value.
    * @return {any} - The return value.
    */
   addMaterial(material) {
@@ -129,9 +160,6 @@ class GLStandardGeomsPass extends GLPass {
     glmaterial.updated.connect(() => {
       this.__renderer.requestRedraw()
     })
-    material.destructing.connect(() => {
-      material.deleteMetadata('glmaterial')
-    })
     material.setMetadata('glmaterial', glmaterial)
 
     return glmaterial
@@ -139,12 +167,13 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The addGeom method.
-   * @param {any} geom - The geom param.
+   * @param {any} geom - The geom value.
    * @return {any} - The return value.
    */
   addGeom(geom) {
     let glgeom = geom.getMetadata('glgeom')
     if (glgeom) {
+      glgeom.addRef(this)
       return glgeom
     }
     const gl = this.__gl
@@ -158,18 +187,28 @@ class GLStandardGeomsPass extends GLPass {
       throw new Error('Unsupported geom type:' + geom.constructor.name)
     }
     geom.setMetadata('glgeom', glgeom)
+    glgeom.addRef(this)
     return glgeom
   }
 
   /**
+   * The removeGeom method.
+   * @param {any} geom - The geom value.
+   */
+  removeGeom(geom) {
+    let glgeom = geom.getMetadata('glgeom')
+    if (glgeom) {
+      glgeom.removeRef(this) // Should result in a destroy
+      return glgeom
+    }
+  }
+
+  /**
    * The addGeomItem method.
-   * @param {any} geomItem - The geomItem param.
+   * @param {any} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
   addGeomItem(geomItem) {
-    if (geomItem.isDestroyed()) {
-      throw new Error('geomItem is destroyed:' + geomItem.getPath())
-    }
     // let glmaterialGeomItemSets = this.addMaterial(geomItem.getMaterial());
     // if (!glmaterialGeomItemSets)
     //     return;
@@ -219,11 +258,17 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The removeGeomItem method.
-   * @param {any} geomItem - The geomItem param.
+   * @param {any} geomItem - The geomItem value.
    * @return {any} - The return value.
    */
   removeGeomItem(geomItem) {
     if (geomItem.getMetadata('glpass') != this) return
+    
+    // TODO: Finish of ref counting GLGeoms.
+    // I'm not sure if we ever clean up the renderer properly
+    // when geoms are removed. (Run Instancing test and see if 
+    // GLGeom is ever destoryed when instance counts drop to zero.)
+    // this.removeGeom(geomItem.getGeometry())
 
     const glgeomItem = geomItem.getMetadata('glgeomItem')
 
@@ -232,7 +277,6 @@ class GLStandardGeomsPass extends GLPass {
     this.__drawItemsIndexFreeList.push(index)
 
     // TODO: review signal disconnections
-    // glgeomItem.destructing.disconnectScope(this);
     // glgeomItem.transformChanged.disconnectScope(this);
 
     // this.renderTreeUpdated.emit();
@@ -257,8 +301,8 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The removeGLGeom method.
-   * @param {any} geomItemMapping - The geomItemMapping param.
-   * @param {any} materialGeomMapping - The materialGeomMapping param.
+   * @param {any} geomItemMapping - The geomItemMapping value.
+   * @param {any} materialGeomMapping - The materialGeomMapping value.
    */
   removeGLGeom(geomItemMapping, materialGeomMapping) {
     const index = materialGeomMapping.geomItemMappings.indexOf(geomItemMapping)
@@ -275,7 +319,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The getGeomItem method.
-   * @param {any} id - The id param.
+   * @param {any} id - The id value.
    * @return {any} - The return value.
    */
   getGeomItem(id) {
@@ -296,9 +340,9 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The __populateDrawItemDataArray method.
-   * @param {any} geomItem - The geomItem param.
-   * @param {any} index - The index param.
-   * @param {any} dataArray - The dataArray param.
+   * @param {any} geomItem - The geomItem value.
+   * @param {number} index - The index value.
+   * @param {any} dataArray - The dataArray value.
    * @private
    */
   __populateDrawItemDataArray(geomItem, index, dataArray) {
@@ -478,7 +522,7 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -496,21 +540,21 @@ class GLStandardGeomsPass extends GLPass {
 
   /**
    * The bindShader method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} glshader - The glshader param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} glshader - The glshader value.
    * @return {any} - The return value.
    */
   bindShader(renderstate, glshader) {
-    if (!glshader.bind(renderstate, this.constructor.name)) return false
+    if (!glshader.bind(renderstate)) return false
     if (!this.bind(renderstate)) return false
     return true
   }
 
   /**
    * The bindMaterial method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} glmaterial - The glmaterial param.
-   * @param {any} warnMissingUnifs - The warnMissingUnifs param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} glmaterial - The glmaterial value.
+   * @param {any} warnMissingUnifs - The warnMissingUnifs value.
    * @return {any} - The return value.
    */
   bindMaterial(renderstate, glmaterial, warnMissingUnifs) {

@@ -76,6 +76,7 @@ class PlaneType extends AttrValue {
    * Creates a new plane.
    * @param {...object} ...args - The ...args param.
    * @return {Plane} - Returns a new plane.
+   * @private
    */
   static create(...args) {
     return new Plane(...args)

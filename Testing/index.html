@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Zea Engine Tests</title>
+        <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    </head>
+    <body text-align: left;>
+        <script type="module" src="node_modules/@zeainc/zea-engine/dist/zea-engine.esm.js"></script>
+        <script type="text/javascript" src="TestingHarness.js"></script>
+        <!-- <script type="text/javascript" src="index.js"></script> -->
+        
+        <script type="module" src="Tests/Basic/HelloWorld.js"></script>
+
+<!-- 
+         <script src="Tests/Geometry/PointsRendering.js"></script>
+        <script src="Tests/Geometry/LinesRendering.js"></script>
+        <script src="Tests/Geometry/MeshRendering.js"></script> -->
+        <script type="module" src="Tests/Geometry/PrimitiveShapes.js"></script>
+        <!--
+        <script src="Tests/Geometry/Billboards.js"></script>
+        <script src="Tests/Geometry/Grids.js"></script>
+        <script src="Tests/Geometry/Labels.js"></script>
+        <script src="Tests/Geometry/HitTesting.js"></script>
+        <script src="Tests/Geometry/GridCloud.js"></script>
+        <script src="Tests/Geometry/Instancing.js"></script>
+        <script src="Tests/Geometry/Highlights.js"></script>
+    - ->
+        <script src="Tests/Groups/GroupMaterials.js"></script>
+        <script src="Tests/Groups/GroupKinematics.js"></script>
+<!-- 
+    
+        
+        <script src="Tests/MaterialsAndEnvironment/Materials.js"></script>
+        <script src="Tests/MaterialsAndEnvironment/LatLongBackgroundLoading.js"></script>
+        <script src="Tests/MaterialsAndEnvironment/LatLongSterioBackgroundLoading.js"></script>
+        <script src="Tests/MaterialsAndEnvironment/LatLongVideoLoading.js"></script>
+        <script src="Tests/MaterialsAndEnvironment/GifLoading.js"></script>
+       
+        <script src="Tests/DynamicScenes/Gears.js"></script>
+        <script src="Tests/DynamicScenes/ExplodedParts.js"></script>
+        <script src="Tests/DynamicScenes/ExplodedParts_Cascade.js"></script>
+        <script src="Tests/DynamicScenes/Cutaway.js"></script>
+        <script src="Tests/DynamicScenes/Groups.js"></script> -->
+        <!-- <script src="Tests/DynamicScenes/Piston.js"></script> -->
+        <!-- <script src="Tests/DynamicScenes/TransformHierarchies.js"></script> -->
+        <!-- <script src="Tests/DynamicScenes/PositionalAudio.js"></script> -->
+        <!-- <script src="Tests/StateMachine.js"></script> -->
+          
+        <!-- <script src="Tests/EnvMaps.js"></script>
+        <script src="Tests/EnvProjection.js"></script>
+        <script src="Tests/EnvVideoProjection.js"></script>
+        <script src="Tests/EnvMaps_DynamicExposure.js"></script>
+        <script src="Tests/DualFisheyeBackgroundLoading.js"></script>
+        <script src="Tests/MultipleViewports.js"></script>
+        <script src="Tests/WebCam.js"></script>
+        <script src="Tests/VideoTextureWithAudio.js"></script> - ->
+        <script src="Tests/System/AddRemoveItemsFromRenderer.js"></script>
+        <script src="Tests/System/MemoryTest.js"></script>
+        <script src="Tests/System/GPUTest.js"></script>
+        <script src="Tests/System/WebVR.js"></script>
+        <script src="Tests/System/WebVR_HMDs.js"></script>
+        -->
+        <div id='viewport'></div>
+
+        <style>
+#viewport {
+    width: '100%';
+    height: '100%';
+    position: 'fixed';
+    top: 0;
+    left: 0;
+}
+ul { 
+    list-style: circle;
+    display: grid;
+}
+li { 
+    display:block;
+    float:left;
+    }
+
+#info label { 
+    float: left; 
+    width: 200px; 
+    margin-right: 15px; 
+    text-align: right; 
+}
+
+        </style>
+        
+        <script type="text/javascript">
+
+const rootURL = window.location.href.split('?')[0]
+const resources = {
+    'data': {
+        type: 'folder',
+        name: "data",
+        id: 'data'
+    },
+    'servo_mestre': {
+        name: "servo_mestre.zcad",
+        url: rootURL+"/data/servo_mestre.zcad",
+        id: 'servo_mestre',
+        parent: 'data'
+    },
+    'labels': {
+        name: "servo_mestre.labels",
+        url: rootURL+"/data/servo_mestre.labels",
+        id: 'servo_mestre',
+        parent: 'data'
+    },
+    'envmaps': {
+        type: 'folder',
+        name: "HDREnvironments",
+        id: 'envmaps'
+    },
+    'envmap': {
+        name: "HDR_029_Sky_Cloudy_Ref.vlenv",
+        url: rootURL+"/HDREnvironments/HDR_029_Sky_Cloudy_Ref.vlenv",
+        id: 'servo_mestre',
+        parent: 'envmaps'
+    }
+}
+
+        
+window.addEventListener('load', (event) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('test')) {
+        const test = urlParams.get('test');
+        testingHarness.runTest(test)
+    }
+    else {
+        testingHarness.genTOC()
+    }
+});
+        
+
+// vlmain(document.getElementById('viewport'), resources);
+
+        </script> 
+    </body>
+</html>

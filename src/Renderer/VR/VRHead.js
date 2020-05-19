@@ -1,11 +1,13 @@
-import { Mat4, Xfo } from '../../Math'
-import { TreeItem } from '../../SceneTree'
+import { Mat4, Xfo } from '../../Math/index'
+import { TreeItem } from '../../SceneTree/index'
 
-/** Class representing a VR head. */
+/** Class representing a VR head. 
+ * @private
+*/
 class VRHead {
   /**
    * Create a VR head.
-   * @param {any} vrviewport - The vrviewport value.
+   * @param {any} vrviewport - The VR viewport.
    * @param {any} stageTreeItem - The stageTreeItem value.
    */
   constructor(vrviewport, stageTreeItem) {
@@ -19,7 +21,7 @@ class VRHead {
 
   /**
    * The update method.
-   * @param {any} pose - The pose param.
+   * @param {any} pose - The pose value.
    */
   update(pose) {
     // Old
@@ -48,7 +50,7 @@ class VRHead {
 
   /**
    * The getXfo method.
-   * @return {any} - The return value.
+   * @return {Xfo} - The return value.
    */
   getXfo() {
     return this.__localXfo

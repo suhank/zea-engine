@@ -1,13 +1,14 @@
-import { Signal } from '../../Utilities'
+import { Signal } from '../../Utilities/index'
 import { Parameter } from './Parameter.js'
 
 /** Class representing an item set parameter.
  * @extends Parameter
+ * @private
  */
 class ItemSetParameter extends Parameter {
   /**
    * Create an item set parameter.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the item set parameter.
    * @param {any} filterFn - The filterFn value.
    */
   constructor(name, filterFn) {
@@ -19,18 +20,8 @@ class ItemSetParameter extends Parameter {
   }
 
   /**
-   * The clone method.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
-   */
-  clone(flags) {
-    const clonedParam = new ItemSetParameter(this.__name, this.__filterFn)
-    return clonedParam
-  }
-
-  /**
    * The setFilterFn method.
-   * @param {any} filterFn - The flags param.
+   * @param {any} filterFn - The filterFn value.
    */
   setFilterFn(filterFn) {
     this.__filterFn = filterFn
@@ -46,7 +37,7 @@ class ItemSetParameter extends Parameter {
 
   /**
    * The getItem method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index param.
    * @return {any} - The return value.
    */
   getItem(index) {
@@ -55,9 +46,9 @@ class ItemSetParameter extends Parameter {
 
   /**
    * The addItem method.
-   * @param {any} item - The item param.
-   * @param {boolean} emit - The emit param.
-   * @return {any} - The return value.
+   * @param {any} item - The item value.
+   * @param {boolean} emit - The emit value.
+   * @return {boolean} - The return value.
    */
   addItem(item, emit = true) {
     if (this.__filterFn && !this.__filterFn(item)) {
@@ -71,6 +62,11 @@ class ItemSetParameter extends Parameter {
     return index
   }
 
+  /**
+   * The addItems method.
+   * @param {any} items - The index value.
+   * @param {boolean} emit - The emit value.
+   */
   addItems(items, emit = true) {
     items.forEach(item => this.addItem(item, false))
     if (emit) this.valueChanged.emit()
@@ -78,7 +74,7 @@ class ItemSetParameter extends Parameter {
 
   /**
    * The removeItem method.
-   * @param {any} item - The item param.
+   * @param {any} index - The index value.
    * @param {boolean} emit - The emit param.
    * @return {any} - The return value.
    */
@@ -112,7 +108,7 @@ class ItemSetParameter extends Parameter {
 
   /**
    * The clearItems method.
-   * @param {boolean} emit - The emit param.
+   * @param {boolean} emit - The emit value.
    */
   clearItems(emit = true) {
     this.__items.clear()
@@ -139,9 +135,9 @@ class ItemSetParameter extends Parameter {
   // Persistence
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    * @return {any} - The return value.
    */
   toJSON(context, flags) {
@@ -149,12 +145,26 @@ class ItemSetParameter extends Parameter {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
    */
   fromJSON(j, context, flags) {}
+
+  // ////////////////////////////////////////
+  // Clone
+
+  /**
+   * The clone method constructs a item set new parameter, copies its values
+   * from this parameter and returns it.
+   * @param {number} flags - The flags value.
+   * @return {ItemSetParameter} - Returns a new item set parameter.
+   */
+  clone(flags) {
+    const clonedParam = new ItemSetParameter(this.__name, this.__filterFn)
+    return clonedParam
+  }
 }
 
 export { ItemSetParameter }

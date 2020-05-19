@@ -1,9 +1,8 @@
-import { Float32, UInt32, SInt32 } from '../../Math'
+import { Float32, UInt32, SInt32 } from '../../Math/index'
 import { typeRegistry } from '../../Math/TypeRegistry.js'
 
-function isTypedArray(obj)
-{
-    return !!obj && obj.byteLength !== undefined;
+function isTypedArray(obj) {
+  return !!obj && obj.byteLength !== undefined
 }
 
 /** Class representing an attribute. */
@@ -42,7 +41,7 @@ class Attribute {
 
   /**
    * The resize method.
-   * @param {any} size - The size param.
+   * @param {any} size - The size value.
    */
   resize(size) {
     const prevLength = this.__data.length
@@ -57,7 +56,7 @@ class Attribute {
 
   /**
    * The initRange method.
-   * @param {any} start - The start param.
+   * @param {any} start - The start value.
    */
   initRange(start) {
     // Initialize the values to invalid values.
@@ -76,6 +75,7 @@ class Attribute {
 
   /**
    * Getter for length.
+   * @return {any} - The return value.
    */
   get length() {
     return this.__data.length / this.__dimension
@@ -83,6 +83,7 @@ class Attribute {
 
   /**
    * Getter for data.
+   * @return {any} - The return value.
    */
   get dataType() {
     return this.__dataType
@@ -90,6 +91,7 @@ class Attribute {
 
   /**
    * Getter for data.
+   * @return {any} - The return value.
    */
   get data() {
     return this.__data
@@ -97,6 +99,7 @@ class Attribute {
 
   /**
    * Setter for data.
+   * @param {any} data - The data value.
    */
   set data(data) {
     this.__data = data
@@ -104,6 +107,7 @@ class Attribute {
 
   /**
    * Getter for numElements.
+   * @return {any} - The return value.
    */
   get numElements() {
     return this.__dimension
@@ -111,7 +115,7 @@ class Attribute {
 
   /**
    * The getFloat32Value method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getFloat32Value(index) {
@@ -120,7 +124,7 @@ class Attribute {
 
   /**
    * The setFloat32Value method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @param {any} value - The value param.
    */
   setFloat32Value(index, value) {
@@ -129,7 +133,7 @@ class Attribute {
 
   /**
    * The getValueRef method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @return {any} - The return value.
    */
   getValueRef(index) {
@@ -149,7 +153,7 @@ class Attribute {
 
   /**
    * The setValue method.
-   * @param {any} index - The index param.
+   * @param {number} index - The index value.
    * @param {any} value - The value param.
    */
   setValue(index, value) {
@@ -167,10 +171,10 @@ class Attribute {
   }
 
   /**
-   * The toJSON method.
-   * @param {object} context - The context param.
-   * @param {number} flags - The flags param.
-   * @return {any} - The return value.
+   * The toJSON method encodes this type as a json object for persistences.
+   * @param {object} context - The context value.
+   * @param {number} flags - The flags value.
+   * @return {object} - Returns the json object.
    */
   toJSON(context, flags) {
     return {
@@ -182,8 +186,8 @@ class Attribute {
   }
 
   /**
-   * The fromJSON method.
-   * @param {any} j - The j param.
+   * The fromJSON method decodes a json object for this type.
+   * @param {object} j - The json object this item must decode.
    */
   fromJSON(j) {
     this.__data = Float32Array.from(j.data)

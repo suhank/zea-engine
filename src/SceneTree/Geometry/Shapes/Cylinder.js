@@ -2,20 +2,20 @@ import { Vec2 } from '../../../Math/Vec2'
 import { Vec3 } from '../../../Math/Vec3'
 import { Mesh } from '../Mesh.js'
 
-import { BooleanParameter, NumberParameter } from '../../Parameters'
+import { BooleanParameter, NumberParameter } from '../../Parameters/index'
 import { sgFactory } from '../../SGFactory.js'
 
-/** Class representing a cylinder.
+/** A class for generating a cylinder geometry.
  * @extends Mesh
  */
 class Cylinder extends Mesh {
   /**
    * Create a cylinder.
-   * @param {number} radius - The radius value.
-   * @param {number} height - The height value.
-   * @param {number} sides - The sides value.
-   * @param {number} loops - The loops value.
-   * @param {boolean} caps - The caps value.
+   * @param {number} radius - The radius of the cylinder.
+   * @param {number} height - The height of the cylinder.
+   * @param {number} sides - The number of sides.
+   * @param {number} loops - The number of loops.
+   * @param {boolean} caps - A boolean indicating whether the ends of the cylinder are capped or open.
    * @param {boolean} baseZAtZero - The baseZAtZero value.
    */
   constructor(
@@ -109,7 +109,7 @@ class Cylinder extends Mesh {
     // }
 
     // ////////////////////////////
-    // build the topology
+    // Build the topology
     let faceIndex = 0
     // build the topology for the body of the cylinder
     for (let i = 0; i < nbLoops - 1; i++) {
@@ -278,6 +278,7 @@ class Cylinder extends Mesh {
     }
 
     this.setBoundingBoxDirty()
+    this.geomDataChanged.emit()
   }
 }
 

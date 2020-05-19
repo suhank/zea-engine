@@ -191,13 +191,13 @@ class GLRenderTarget {
 
   /**
    * The bindForWriting method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {boolean} clear - The clear param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {boolean} clear - The clear value.
    */
   bindForWriting(renderstate, clear = false) {
     if (renderstate) {
       this.__prevBoundFbo = renderstate.boundRendertarget
-      renderstate.boundRendertarget = this.__fbo
+      renderstate.boundRendertarget = this.frameBuffer
     }
     const gl = this.__gl
     if (gl.name == 'webgl2')
@@ -208,8 +208,20 @@ class GLRenderTarget {
   }
 
   /**
+   * The unbindForWriting method.
+   * @param {any} renderstate - The renderstate value.
+   */
+  unbindForWriting(renderstate) {
+    if (renderstate) renderstate.boundRendertarget = this.__prevBoundFbo
+    const gl = this.__gl
+    if (gl.name == 'webgl2')
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, this.__prevBoundFbo)
+    else gl.bindFramebuffer(gl.FRAMEBUFFER, this.__prevBoundFbo)
+  }
+
+  /**
    * The clear method.
-   * @param {boolean} clearDepth - The clearDepth param.
+   * @param {boolean} clearDepth - The clearDepth value.
    */
   clear(clearDepth = true) {
     const gl = this.__gl
@@ -232,10 +244,20 @@ class GLRenderTarget {
   }
 
   /**
+   * The unbindForReading method.
+   */
+  unbindForReading() {
+    const gl = this.__gl
+    if (gl.name == 'webgl2') gl.bindFramebuffer(gl.READ_FRAMEBUFFER, null)
+    else gl.bindFramebuffer(gl.FRAMEBUFFER, null)
+  }
+
+
+  /**
    * The bindColorTexture method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
-   * @param {number} channelId - The channelId param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
+   * @param {number} channelId - The channelId value.
    * @return {boolean} - The return value.
    */
   bindColorTexture(renderstate, unif, channelId = 0) {
@@ -249,8 +271,8 @@ class GLRenderTarget {
 
   /**
    * The bindDepthTexture method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
    * @return {boolean} - The return value.
    */
   bindDepthTexture(renderstate, unif) {
@@ -272,9 +294,9 @@ class GLRenderTarget {
 
   /**
    * The resize method.
-   * @param {any} width - The width param.
-   * @param {any} height - The height param.
-   * @param {boolean} preserveData - The preserveData param.
+   * @param {any} width - The width value.
+   * @param {any} height - The height value.
+   * @param {boolean} preserveData - The preserveData value.
    */
   resize(width, height, preserveData = false) {
     /*
@@ -374,6 +396,27 @@ class GLRenderTarget {
     }
 
     return true
+  }
+
+  
+
+  /**
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
+   */
+  destroy() {
+    const gl = this.__gl
+    this.textureTargets.forEach(colorTexture => {
+      gl.deleteTexture(colorTexture)
+    })
+    this.textureTargets = []
+    if (this.depthTexture) {
+      gl.deleteTexture(this.depthTexture)
+      this.depthTexture = null
+    }
+    if (this.frameBuffer){
+      gl.deleteFramebuffer(this.frameBuffer)
+    }
   }
 }
 export { GLRenderTarget }

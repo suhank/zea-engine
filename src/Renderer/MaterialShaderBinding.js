@@ -1,9 +1,20 @@
-import { SInt32, UInt32, Float32, Vec2, Vec3, Vec4, Color, Mat4 } from '../Math'
+import {
+  SInt32,
+  UInt32,
+  Float32,
+  Vec2,
+  Vec3,
+  Vec4,
+  Color,
+  Mat4,
+} from '../Math/index'
 import { GLTexture2D } from './GLTexture2D.js'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLImageStream } from './GLImageStream.js'
 
-/** Class representing simple uniform binding. */
+/** Class representing simple uniform binding.
+ * @private
+ */
 class SimpleUniformBinding {
   /**
    * Create simple uniform binding.
@@ -41,7 +52,7 @@ class SimpleUniformBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   bind(renderstate) {
     this.uniformXX(this.__unif.location, this.__val)
@@ -58,7 +69,9 @@ class SimpleUniformBinding {
   destroy() {}
 }
 
-/** Class representing complex uniform binding. */
+/** Class representing complex uniform binding. 
+ * @private
+*/
 class ComplexUniformBinding {
   /**
    * Create complex uniform binding.
@@ -91,7 +104,7 @@ class ComplexUniformBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   bind(renderstate) {
     this.uniformXX(this.__unif.location, this.__vals)
@@ -108,7 +121,9 @@ class ComplexUniformBinding {
   destroy() {}
 }
 
-/** Class representing material uniform binding. */
+/** Class representing material uniform binding. 
+ * @private
+*/
 class MatrixUniformBinding {
   /**
    * Create material uniform binding.
@@ -138,7 +153,7 @@ class MatrixUniformBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   bind(renderstate) {
     this.uniformMatrixXXX(this.__unif.location, false, this.__val)
@@ -155,7 +170,9 @@ class MatrixUniformBinding {
   destroy() {}
 }
 
-/** Class representing color uniform binding. */
+/** Class representing color uniform binding. 
+ * @private
+*/
 class ColorUniformBinding {
   /**
    * Create color uniform binding.
@@ -195,6 +212,7 @@ class ColorUniformBinding {
         glmaterial.updated.emit()
       })
       this.gltexture = gltexture
+      this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
       glmaterial.updated.emit()
@@ -216,7 +234,7 @@ class ColorUniformBinding {
 
     const disconnectImage = () => {
       const gltexture = boundImage.getMetadata('gltexture')
-      gltexture.destroy()
+      gltexture.removeRef(this);
       this.texBinding = null
       this.gltexture = null
       this.textureType = null
@@ -266,7 +284,7 @@ class ColorUniformBinding {
 
   /**
    * The bindValue method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   bindValue(renderstate) {
     this.uniform4fv(this.__unif.location, this.__vals)
@@ -276,7 +294,7 @@ class ColorUniformBinding {
 
   /**
    * The bindTexture method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    */
   bindTexture(renderstate) {
     this.gltexture.bindToUniform(
@@ -289,7 +307,9 @@ class ColorUniformBinding {
 
 const logged = {}
 
-/** Class representing material shader binding. */
+/** Class representing material shader binding. 
+ * @private
+*/
 class MaterialShaderBinding {
   /**
    * Create material shader binding.
@@ -370,7 +390,7 @@ class MaterialShaderBinding {
 
   /**
    * The bind method.
-   * @param {any} renderstate - The renderstate param.
+   * @param {any} renderstate - The renderstate value.
    * @return {any} - The return value.
    */
   bind(renderstate) {
@@ -390,7 +410,8 @@ class MaterialShaderBinding {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     for (const uniformBinding of this.__uniformBindings) {

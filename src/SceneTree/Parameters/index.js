@@ -1,4 +1,3 @@
-export * from './Command.js'
 export * from './Parameter.js'
 export * from './MultiChoiceParameter.js'
 export * from './BooleanParameter.js'
@@ -20,13 +19,11 @@ export * from './TreeItemParameter.js'
 export * from './ItemSetParameter.js'
 // export * from './KinematicGroupParameter.js';
 
-export * from './MaterialFloatParam.js'
-export * from './MaterialColorParam.js'
+export * from './ProxyParameter.js'
 
 // Note: can't be imported, because ParameterOwner imports these Parameters
 // MaterialParameter imports MaterialLibraryManager which leads to circular imports
 // export * from './MaterialParameter.js';
+// export * from './MaterialFloatParam.js'
+// export * from './MaterialColorParam.js'
 export * from './GeometryParameter.js'
-
-export * from './QueryParameter.js'
-export * from './QuerySetParameter.js'

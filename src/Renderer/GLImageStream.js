@@ -1,9 +1,11 @@
-import { Signal } from '../Utilities'
+import { Signal } from '../Utilities/index'
 import { GLTexture2D } from './GLTexture2D.js'
 
 import './Shaders/GLSL/ImageStream.js'
 
-/** Class representing a GL image stream. */
+/** Class representing a GL image stream. 
+ * @private
+*/
 class GLImageStream {
   /**
    * Create a GL image stream.
@@ -45,8 +47,8 @@ class GLImageStream {
 
   /**
    * The preBind method.
-   * @param {any} unif - The unif param.
-   * @param {any} unifs - The unifs param.
+   * @param {any} unif - The unif value.
+   * @param {any} unifs - The unifs value.
    * @return {any} - The return value.
    */
   preBind(unif, unifs) {
@@ -58,9 +60,9 @@ class GLImageStream {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
-   * @param {any} bindings - The bindings param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
+   * @param {any} bindings - The bindings value.
    * @return {boolean} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {

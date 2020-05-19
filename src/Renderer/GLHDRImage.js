@@ -3,14 +3,15 @@ import { UnpackHDRShader } from './Shaders/UnpackHDRShader.js'
 import { GLFbo } from './GLFbo.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL HDR image.
+/** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
+ * @private
  */
 class GLHDRImage extends GLTexture2D {
   /**
    * Create a GL HDR image.
    * @param {any} gl - The gl value.
-   * @param {any} hdrImage - The hdrImage value.
+   * @param {any} hdrImage - The HDR image.
    */
   constructor(gl, hdrImage) {
     super(gl)
@@ -27,15 +28,11 @@ class GLHDRImage extends GLTexture2D {
         this.__unpackHDRImage(this.__hdrImage.getParams())
       })
     }
-    this.__hdrImage.destructing.connect(() => {
-      console.log(this.__hdrImage.getName() + ' destructing')
-      this.destroy()
-    })
   }
 
   /**
    * The __unpackHDRImage method.
-   * @param {any} hdrImageParams - The hdrImageParams param.
+   * @param {any} hdrImageParams - The HDR image parameters.
    * @private
    */
   __unpackHDRImage(hdrImageParams) {
@@ -131,9 +128,9 @@ class GLHDRImage extends GLTexture2D {
 
   /**
    * The bindToUniform method.
-   * @param {any} renderstate - The renderstate param.
-   * @param {any} unif - The unif param.
-   * @param {any} bindings - The bindings param.
+   * @param {any} renderstate - The renderstate value.
+   * @param {any} unif - The unif value.
+   * @param {any} bindings - The bindings value.
    * @return {any} - The return value.
    */
   bindToUniform(renderstate, unif, bindings) {
@@ -141,7 +138,8 @@ class GLHDRImage extends GLTexture2D {
   }
 
   /**
-   * The destroy method.
+   * The destroy is called by the system to cause explicit resources cleanup.
+   * Users should never need to call this method directly.
    */
   destroy() {
     super.destroy()

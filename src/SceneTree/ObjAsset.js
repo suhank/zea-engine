@@ -1,5 +1,5 @@
-import { Vec2, Vec3, Xfo, Color } from '../Math'
-import { Signal, Async } from '../Utilities'
+import { Vec2, Vec3, Xfo, Color } from '../Math/index'
+import { Signal, Async } from '../Utilities/index'
 import { GeomItem } from './GeomItem'
 import { AssetItem } from './AssetItem'
 import { Mesh } from './Geometry/Mesh.js'
@@ -9,26 +9,21 @@ import { resourceLoader } from './ResourceLoader.js'
 import { GeomLibrary } from './GeomLibrary.js'
 import { MaterialLibrary } from './MaterialLibrary.js'
 import {
-  ValueSetMode,
-  Parameter,
   BooleanParameter,
   NumberParameter,
   StringParameter,
-  Vec2Parameter,
-  Vec3Parameter,
-  ColorParameter,
   FilePathParameter,
-} from './Parameters'
+} from './Parameters/index'
 
 // AssetItem.registerDataLoader('.obj', ObjDataLoader);
 
-/** Class representing an obj asset.
+/** Class representing an object asset.
  * @extends AssetItem
  */
 class ObjAsset extends AssetItem {
   /**
    * Create an obj asset.
-   * @param {string} name - The name value.
+   * @param {string} name - The name of the object asset.
    */
   constructor(name) {
     super(name)
@@ -47,7 +42,7 @@ class ObjAsset extends AssetItem {
     this.addParameter(new StringParameter('defaultShader', ''))
 
     this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
-    this.objfileParam.valueChanged.connect(mode => {
+    this.objfileParam.valueChanged.connect(() => {
       this.loaded.untoggle()
       this.__loadObj(
         () => {
@@ -80,8 +75,8 @@ class ObjAsset extends AssetItem {
 
   /**
    * The __loadObj method.
-   * @param {any} onDone - The onDone param.
-   * @param {any} onGeomsLoaded - The onGeomsLoaded param.
+   * @param {any} onDone - The onDone value.
+   * @param {any} onGeomsLoaded - The onGeomsLoaded value.
    * @private
    */
   __loadObj(onDone, onGeomsLoaded) {
@@ -175,7 +170,7 @@ class ObjAsset extends AssetItem {
     })
 
     const loadMtlFile = mtlFile => {
-      return new Promise((resolve, reject) => {
+      return new Promise(resolve => {
         loadTextfile(mtlFile.url, fileData => {
           resourceLoader.addWorkDone(stem, 1)
           parseMtlData(fileData)
@@ -193,9 +188,6 @@ class ObjAsset extends AssetItem {
     const geomDatas = {}
 
     const parseObjData = async fileData => {
-      // this.unloadDataFromTree();
-      const filePath = this.objfileParam.getValue()
-
       // performance.mark("parseObjData");
 
       // array of lines separated by the newline
@@ -228,7 +220,6 @@ class ObjAsset extends AssetItem {
       }
       newGeom(stem)
 
-      const splitObjects = this.getParameter('splitObjects').getValue()
       const splitGroupsIntoObjects = this.getParameter(
         'splitGroupsIntoObjects'
       ).getValue()
@@ -343,7 +334,6 @@ class ObjAsset extends AssetItem {
 
     const buildChildItem = (geomName, geomData) => {
       const numVertices = geomData.numVertices
-      const numTris = geomData.numTris
       const mesh = new Mesh(geomName)
       mesh.setFaceCounts([geomData.numTris, geomData.numQuads])
       mesh.setNumVertices(numVertices)
@@ -451,5 +441,5 @@ class ObjAsset extends AssetItem {
     loadObjData()
   }
 }
+
 export { ObjAsset }
-// ObjAsset;
