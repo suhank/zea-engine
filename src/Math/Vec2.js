@@ -383,6 +383,7 @@ class Vec2 extends AttrValue {
    * Creates a new Vec2.
    * @param {...object} ...args - The ...args param.
    * @return {Vec2} - Returns a new Vec2.
+   * @private
    */
   static create(...args) {
     return new Vec2(...args)
@@ -393,6 +394,7 @@ class Vec2 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec2} - Returns a new Vec2.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec2(buffer, offset * 4) // 4 bytes per 32bit float
@@ -402,6 +404,7 @@ class Vec2 extends AttrValue {
    * The createFromFloat32Array method.
    * @param {Float32Array} array - The array value.
    * @return {Vec2} - Returns a new Vec2.
+   * @private
    */
   static createFromFloat32Array(array) {
     return new Vec2(array)
@@ -411,6 +414,7 @@ class Vec2 extends AttrValue {
    * Returns the number of Float32 elements used by this type. Used to calculate storage requi
    * ents for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 2

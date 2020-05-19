@@ -1,11 +1,10 @@
+/* eslint-disable require-jsdoc */
 import { Signal } from './Signal.js'
 
-/** Class representing an Async. */
+
+// Note: this class will be deprecated soon. 
+// Please avoid using it in your code.
 class Async {
-  /**
-   * Create a Async.
-   * @param {number} asyncCount - The asyncCount value.
-   */
   constructor(asyncCount = 0) {
     this.__asyncCount = asyncCount
     this.ready = new Signal(true)
@@ -29,9 +28,6 @@ class Async {
     }.bind(this)
   }
 
-  /**
-   * Getter for count.
-   */
   get count() {
     return this.__asyncCount
   }

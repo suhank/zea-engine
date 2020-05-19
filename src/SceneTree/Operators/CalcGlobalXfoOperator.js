@@ -5,6 +5,7 @@ import { sgFactory } from '../SGFactory.js'
 
 /** An operator for aiming items at targets.
  * @extends Operator
+ * @private
  */
 class CalcGlobalXfoOperator extends Operator {
   /**

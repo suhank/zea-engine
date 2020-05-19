@@ -8,6 +8,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL probe.
  * @extends GLImageAtlas
+ * @private
  */
 class GLProbe extends GLImageAtlas {
   /**

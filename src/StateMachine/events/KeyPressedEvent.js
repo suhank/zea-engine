@@ -5,6 +5,7 @@ import { StateEvent } from '../StateEvent.js'
 
 /** Triggers an state machine event to occur when a key is pressed.
  * @extends StateEvent
+ * @private
  */
 class KeyPressedEvent extends StateEvent {
   /**

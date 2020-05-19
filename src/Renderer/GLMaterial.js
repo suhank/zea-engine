@@ -1,7 +1,9 @@
 import { Signal } from '../Utilities/index'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
-/** Class representing a GL material. */
+/** Class representing a GL material. 
+ * @private
+ */
 class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
   /**
    * Create a GL material.

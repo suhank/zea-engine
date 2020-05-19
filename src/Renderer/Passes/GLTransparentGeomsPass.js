@@ -5,6 +5,7 @@ import { GLRenderer } from '../GLRenderer.js'
 
 /** Class representing a GL transparent geoms pass.
  * @extends GLStandardGeomsPass
+ * @private
  */
 class GLTransparentGeomsPass extends GLStandardGeomsPass {
   /**

@@ -1,4 +1,3 @@
-export * from './Command.js'
 export * from './Parameter.js'
 export * from './MultiChoiceParameter.js'
 export * from './BooleanParameter.js'

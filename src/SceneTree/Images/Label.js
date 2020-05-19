@@ -29,6 +29,7 @@ import { Signal } from '../../Utilities/index'
  * @param {Boolean} [fill = false] - Whether to fill the rectangle.
  * @param {Boolean} [stroke = true] - Whether to stroke the rectangle.
  * @param {Number} [strokeWidth] - The strokeWidth param.
+ * @private
  */
 function roundRect(
   ctx,

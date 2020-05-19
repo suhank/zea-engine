@@ -1,6 +1,5 @@
 export * from './Operator.js'
 export * from './OperatorOutput.js'
-export * from './CalcGlobalXfoOperator.js'
 export * from './ExplodePartsOperator.js'
 export * from './GearsOperator.js'
 export * from './PistonOperator.js'

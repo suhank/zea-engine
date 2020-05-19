@@ -10,6 +10,7 @@ import { StateAction } from '../StateAction.js'
 
 /** A state machine action that sets the camera position and target.
  * @extends StateAction
+ * @private
  */
 class SetCameraPositionAndTarget extends StateAction {
   /**

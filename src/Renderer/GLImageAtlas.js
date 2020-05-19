@@ -9,9 +9,8 @@ import { GLTexture2D } from './GLTexture2D.js'
 import { GLRenderTarget } from './GLRenderTarget.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing an atlas layout shader.
- * @extends GLShader
- */
+
+// eslint-disable-next-line require-jsdoc
 class AtlasLayoutShader extends GLShader {
   /**
    * Create an atlas layout shader.
@@ -125,9 +124,7 @@ void main(void) {
 
 import './Shaders/GLSL/ImageAtlas.js'
 
-/** Class representing an image atlas.
- * @extends GLRenderTarget
- */
+// eslint-disable-next-line require-jsdoc
 class GLImageAtlas extends GLRenderTarget {
   /**
    * Create an image atlas..

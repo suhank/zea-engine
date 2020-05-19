@@ -1,3 +1,5 @@
+/* eslint-disable require-jsdoc */
+
 // Note: For maximum-speed code, see "Optimizing Code" on the Emscripten wiki, https://github.com/kripken/emscripten/wiki/Optimizing-Code
 // Note: Some Emscripten settings may limit the speed of the generated code.
 // The Module object: Our interface to the outside world. We import
@@ -3070,7 +3072,7 @@ Module["_realloc"] = _realloc;
  * @fileoverview Defines a Long class for representing a 64-bit two's-complement
  * integer value, which faithfully simulates the behavior of a Java "long". This
  * implementation is derived from LongLib in GWT.
- *
+ * @private
  */
 var i64Math = (function() { // Emscripten wrapper
   var goog = { math: {} };

@@ -5,6 +5,7 @@ import { typeRegistry } from '../../Math/TypeRegistry.js'
 
 /** Class representing a base geometry proxy.
  * @extends RefCounted
+ * @private
  */
 class BaseProxy extends RefCounted {
   /**
@@ -100,6 +101,7 @@ class BaseProxy extends RefCounted {
 
 /** Class representing a points proxy.
  * @extends BaseProxy
+ * @private
  */
 class PointsProxy extends BaseProxy {
   /**
@@ -113,6 +115,7 @@ class PointsProxy extends BaseProxy {
 
 /** Class representing a lines proxy.
  * @extends BaseProxy
+ * @private
  */
 class LinesProxy extends BaseProxy {
   /**
@@ -126,6 +129,7 @@ class LinesProxy extends BaseProxy {
 
 /** Class representing a mesh proxy.
  * @extends BaseProxy
+ * @private
  */
 class MeshProxy extends BaseProxy {
   /**

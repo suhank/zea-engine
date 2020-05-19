@@ -6,6 +6,7 @@ import { GLTexture2D } from './GLTexture2D.js'
 
 /** Class representing a GL base viewport.
  * @extends ParameterOwner
+ * @private
  */
 class GLBaseViewport extends ParameterOwner {
   /**

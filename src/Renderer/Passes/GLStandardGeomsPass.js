@@ -126,6 +126,7 @@ class GLStandardGeomsPass extends GLPass {
   constructShaders(shaderName) {
     let glgeomdatashader
     let glselectedshader
+    
     const glshader = this.__renderer.getOrCreateShader(shaderName)
     if (glshader.constructor.getGeomDataShaderName()) {
       glgeomdatashader = this.__renderer.getOrCreateShader(
@@ -544,7 +545,7 @@ class GLStandardGeomsPass extends GLPass {
    * @return {any} - The return value.
    */
   bindShader(renderstate, glshader) {
-    if (!glshader.bind(renderstate, this.constructor.name)) return false
+    if (!glshader.bind(renderstate)) return false
     if (!this.bind(renderstate)) return false
     return true
   }

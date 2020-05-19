@@ -14,7 +14,9 @@ import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker.js'
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
 
-/** Class representing a geometry library. */
+/** Class representing a geometry library.
+ * @private
+ */
 class GeomLibrary {
   /**
    * Create a geom library.
