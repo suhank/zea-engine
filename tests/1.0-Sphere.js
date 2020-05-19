@@ -1,4 +1,4 @@
-import { setupVisualTest } from '../testing-server/setup-visual-test.js'
+import { setupVisualTest } from '../setup-visual-test.js'
 import { Vec3, Color, Sphere, Material, GeomItem } from '../dist/index.esm.js'
 
 describe('1.0-simple Sphere', () => {

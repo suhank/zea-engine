@@ -12,7 +12,8 @@
     "/dist/index.cjs.js",
     "/dist/index.esm.js",
     "/public-resources/**",
-    "/buildApiDocs.js"
+    "/buildApiDocs.js",
+    "/setup-visual-test.js"
   ],
   "scripts": {
     "build": "rollup -c",

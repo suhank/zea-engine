@@ -1,5 +1,5 @@
 import { Vec3 } from '../dist/index.esm.js'
-import { setupVisualTest } from '../testing-server/setup-visual-test.js'
+import { setupVisualTest } from '../setup-visual-test.js'
 
 describe('0.0-Grid', () => {
   it('Render a simple grid', async () => {

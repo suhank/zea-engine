@@ -1,5 +1,5 @@
 import { Vec3, Color, Cuboid, Material, GeomItem } from '../dist/index.esm.js'
-import { setupVisualTest } from '../testing-server/setup-visual-test.js'
+import { setupVisualTest } from '../setup-visual-test.js'
 
 describe('1.0-simple Cuboid', () => {
   it('Render a simple Cuboid', async () => {

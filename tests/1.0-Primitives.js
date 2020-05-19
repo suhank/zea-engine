@@ -1,5 +1,5 @@
 import { Vec3, Color, Plane, Disc, Cuboid, Cone, Material, GeomItem } from '../dist/index.esm.js'
-import { setupVisualTest } from '../testing-server/setup-visual-test.js'
+import { setupVisualTest } from '../setup-visual-test.js'
 
 /*
 describe('1.0-Simple plane', () => {
