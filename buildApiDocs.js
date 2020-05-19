@@ -112,8 +112,12 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
   return promise
 }
 
+//////////////////////////////////
+// Entry
+
+fs.rmdirSync('docs/api', { recursive: true })
 renderSourceFolderToMarkdown('src', 'api').then((data) => {
-  console.log('done:')
+  console.log('writing : searchToc.json')
 
   const searchToc = []
   data.files.forEach((file) => {
@@ -128,3 +132,4 @@ renderSourceFolderToMarkdown('src', 'api').then((data) => {
   })
   fs.writeFileSync('docs/searchToc.json', JSON.stringify({ searchToc }))
 })
+
