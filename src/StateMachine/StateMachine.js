@@ -6,6 +6,7 @@ import { BaseItem, ItemFlags, sgFactory } from '../SceneTree/index'
  * two states can be "open" and "closed", but it cannot be both open and closed
  * at the same time.
  * @extends BaseItem
+ * @private
  */
 class StateMachine extends BaseItem {
   /**
@@ -84,7 +85,7 @@ class StateMachine extends BaseItem {
    * @return {any} - The return value.
    */
   getActiveStateName() {
-    return this.__currentState.constructor.name
+    return sgFactory.getClassName(this.__currentState)
   }
 
   /**

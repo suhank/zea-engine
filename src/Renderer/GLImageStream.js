@@ -3,7 +3,9 @@ import { GLTexture2D } from './GLTexture2D.js'
 
 import './Shaders/GLSL/ImageStream.js'
 
-/** Class representing a GL image stream. */
+/** Class representing a GL image stream. 
+ * @private
+*/
 class GLImageStream {
   /**
    * Create a GL image stream.

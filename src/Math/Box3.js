@@ -291,6 +291,7 @@ class Box3 {
    * Creates a new Box3.
    * @param {...object} ...args - The ...args param.
    * @return {Box3} - Returns a new Box3.
+   * @private
    */
   static create(...args) {
     return new Box3(...args)
@@ -299,6 +300,7 @@ class Box3 {
   /**
    * The sizeInBytes method.
    * @return {any} - The return value.
+   * @private
    */
   static sizeInBytes() {
     return 24
@@ -331,6 +333,7 @@ class Box3 {
    * The loadBin method.
    * @param {any} data - The data value.
    * @param {any} byteOffset - The byteOffset value.
+   * @private
    */
   loadBin(data, byteOffset) {
     this.p0.loadBin(data, byteOffset)
@@ -340,6 +343,7 @@ class Box3 {
   /**
    * The setFromFloat32Array method.
    * @param {Float32Array} float32array - The float32array value.
+   * @private
    */
   setFromFloat32Array(float32array) {
     this.p0 = new Vec3(float32array.buffer, float32array.byteOffset)

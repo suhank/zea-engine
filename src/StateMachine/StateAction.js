@@ -4,6 +4,7 @@ import { ParameterOwner } from '../SceneTree/ParameterOwner.js'
 
 /** Class representing a state action.
  * @extends ParameterOwner
+ * @private
  */
 class StateAction extends ParameterOwner {
   /**
@@ -72,7 +73,7 @@ class StateAction extends ParameterOwner {
   activate() {
     console.warn(
       'activate must be implmented by each action. this:' +
-        this.constructor.name
+        sgFactory.getClassName(this)
     )
   }
 

@@ -2,6 +2,7 @@ import { sgFactory } from '../SceneTree/SGFactory.js'
 
 /** Class representing a state in a state machine. A model can only be
  * in one state at a time.
+ * @private
  */
 class State {
   /**
@@ -9,7 +10,7 @@ class State {
    * @param {string} name - The name of the state.
    */
   constructor(name) {
-    this.__name = name ? name : this.constructor.name
+    this.__name = name ? name : sgFactory.getClassName(this)
 
     this.__stateEvents = []
     this.__activationActions = []
@@ -129,7 +130,7 @@ class State {
   toJSON(context, flags) {
     const j = {
       name: this.__name,
-      type: this.constructor.name,
+      type: sgFactory.getClassName(this),
     }
 
     const stateEventsJson = []

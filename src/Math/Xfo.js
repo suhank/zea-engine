@@ -227,6 +227,7 @@ class Xfo {
    * Creates a new Xfo.
    * @param {...object} ...args - The ...args param.
    * @return {Xfo} - eturns a new Xfo.
+   * @private
    */
   static create(...args) {
     return new Xfo(...args)

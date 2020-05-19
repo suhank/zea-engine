@@ -3,6 +3,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing GL points.
  * @extends GLGeom
+ * @private
  */
 class GLPoints extends GLGeom {
   /**

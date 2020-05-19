@@ -1,3 +1,4 @@
+/* eslint-disable require-jsdoc */
 import { shaderLibrary } from '../ShaderLibrary'
 import { GLShader } from '../GLShader.js'
 

@@ -46,6 +46,7 @@ class SphereType extends AttrValue {
    * Creates a new sphere.
    * @param {...object} ...args - The ...args param.
    * @return {Sphere} - Returns a new sphere.
+   * @private
    */
   static create(...args) {
     return new Sphere(...args)

@@ -7,6 +7,7 @@ import { StateAction } from '../StateAction.js'
 
 /** A state machine action that sets parameter values.
  * @extends StateAction
+ * @private
  */
 class SetParameterValue extends StateAction {
   /**
@@ -108,7 +109,7 @@ class SetParameterValue extends StateAction {
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     if (this.__valueParam) {
-      j.valueParamType = this.__valueParam.constructor.name
+      j.valueParamType = sgFactory.getClassName(this.__valueParam)
     }
     return j
   }

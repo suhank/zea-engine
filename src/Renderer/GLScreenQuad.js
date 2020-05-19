@@ -2,7 +2,9 @@ import { AttrValue } from '../Math/index'
 import { ScreenQuadShader } from './Shaders/ScreenQuadShader.js'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
-/** Class representing a GL screen quad. */
+/** Class representing a GL screen quad. 
+ * @private
+ */
 class GLScreenQuad {
   /**
    * Create a GL screen quad.

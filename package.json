@@ -1,23 +1,25 @@
 {
   "name": "@zeainc/zea-engine",
-  "fileName": "zea-engine",
+  "fileName": "index",
   "libraryName": "ZeaEngine",
-  "version": "1.0.4",
+  "version": "1.0.7",
   "description": "Zea Engine",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "author": "Zea Inc.",
   "license": "ISC",
   "files": [
-    "/dist/",
-    "/public-resources/**"
+    "/dist/index.cjs.js",
+    "/dist/index.esm.js",
+    "/public-resources/**",
+    "/buildApiDocs.js"
   ],
   "scripts": {
     "build": "rollup -c",
     "start": "rollup -c rollup.config.dev.js -w",
     "prepare": "yarn run build",
     "dist": "yarn publish --access=public",
-    "docs": "jsdoc -c .jsdoc.json",
+    "docs": "node buildApiDocs.js",
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "testBrowser": "karma start --single-run karma.conf.js"
   },
@@ -32,6 +34,7 @@
     "ink-docstrap": "^1.3.2",
     "jsdoc": "^3.6.3",
     "jsdoc-inheritance-diagram": "^1.2.3",
+    "jsdoc-to-markdown": "^5.0.3",
     "karma": "^5.0.4",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",

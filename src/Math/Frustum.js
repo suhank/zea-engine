@@ -5,6 +5,7 @@ import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing a Frustum. Frustums are used to determine what
  * is inside the camera's field of view.
+ * @private
  * */
 class Frustum {
   /**

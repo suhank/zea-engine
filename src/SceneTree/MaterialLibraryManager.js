@@ -3,7 +3,9 @@ import { MaterialLibrary } from './MaterialLibrary.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { loadTextfile } from './Utils.js'
 
-/** Class representing a material library manager. */
+/** Class representing a material library manager. 
+ * @private
+*/
 class MaterialLibraryManager {
   /**
    * Create a material library manager.

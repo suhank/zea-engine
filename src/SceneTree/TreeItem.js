@@ -53,9 +53,6 @@ class TreeItem extends BaseItem {
     this.__childItemsSignalIds = []
     this.__childItemsMapping = {}
 
-    this.__components = []
-    this.__componentMapping = {}
-
     this.mouseDown = new Signal()
     this.mouseUp = new Signal()
     this.mouseMove = new Signal()
@@ -730,6 +727,7 @@ class TreeItem extends BaseItem {
    * automatically when an item is removed from the group.
    * @param {number} index - The index value.
    * @param {TreeItem} childItem - item to unbind.
+   * @private
    */
   __unbindChild(index, childItem) {
     const signalIds = this.__childItemsSignalIds[index]
@@ -822,67 +820,6 @@ class TreeItem extends BaseItem {
   }
 
   // ////////////////////////////////////////
-  // Components
-
-  /**
-   * Add a component.
-   * @param {any} component - The component value.
-   */
-  addComponent(component) {
-    this.__components.push(component)
-    this.__componentMapping[component.getName()] = this.__components.length - 1
-
-    component.setOwner(this)
-
-    // this.componentAdded.emit(component);
-  }
-
-  /**
-   * Remove a component.
-   * @param {string} name - The name value.
-   * @return {any} - The return value.
-   */
-  removeComponent(name) {
-    const index = this.__componentMapping[name]
-    if (index == undefined) {
-      throw new Error('Component not found:' + name)
-    }
-    const component = this.__components[index]
-    component.setOwner(undefined)
-    this.__components.splice(index, 1)
-
-    const componentMapping = {}
-    for (let i = 0; i < this.__components.length; i++)
-      componentMapping[this.__components[i].getName()] = i
-    this.__componentMapping = componentMapping
-
-    // this.componentRemoved.emit(component, index);
-    return component
-  }
-
-  /**
-   * The hasComponent method.
-   * @param {string} name - The name value.
-   * @return {any} - The return value.
-   */
-  hasComponent(name) {
-    return name in this.__componentMapping
-  }
-
-  /**
-   * The getComponent method.
-   * @param {string} name - The name value.
-   * @return {any} - The return value.
-   */
-  getComponent(name) {
-    if (!(name in this.__componentMapping)) {
-      console.log("No component named '" + name + "' found.")
-      return
-    }
-    return this.__components[this.__componentMapping[name]]
-  }
-
-  // ////////////////////////////////////////
   // Path Traversial
   // Note: Path resolution starts at the root of the
   // tree the path was generated from (so index=1, because we don't resolve root).
@@ -913,25 +850,25 @@ class TreeItem extends BaseItem {
       return this
     }
 
-    if (path[index] == '>' && index == path.length - 2) {
-      if (this.hasComponent(path[index + 1])) {
-        const component = this.getComponent(path[index + 1])
-        return component.resolvePath(path, index + 2)
-      }
-    }
+    // if (path[index] == '>' && index == path.length - 2) {
+    //   if (this.hasComponent(path[index + 1])) {
+    //     const component = this.getComponent(path[index + 1])
+    //     return component.resolvePath(path, index + 2)
+    //   }
+    // }
 
     const childName = path[index]
     const childItem = this.getChildByName(childName)
     if (childItem == undefined) {
       // Maybe the name is a component name.
-      if (this.hasComponent(path[index])) {
-        const component = this.getComponent(path[index])
-        if (index == path.length) {
-          return component
-        } else {
-          return component.resolvePath(path, index + 1)
-        }
-      }
+      // if (this.hasComponent(path[index])) {
+      //   const component = this.getComponent(path[index])
+      //   if (index == path.length) {
+      //     return component
+      //   } else {
+      //     return component.resolvePath(path, index + 1)
+      //   }
+      // }
 
       // Maybe the name is a parameter name.
       const param = this.getParameter(path[index])
@@ -1159,15 +1096,15 @@ class TreeItem extends BaseItem {
       }
     }
 
-    if (j.components) {
-      for (const cj of j.components) {
-        const component = sgFactory.constructClass(cj.type ? cj.type : cj.name)
-        if (component) {
-          component.fromJSON(cj, context)
-          this.addComponent(component)
-        }
-      }
-    }
+    // if (j.components) {
+    //   for (const cj of j.components) {
+    //     const component = sgFactory.constructClass(cj.type ? cj.type : cj.name)
+    //     if (component) {
+    //       component.fromJSON(cj, context)
+    //       this.addComponent(component)
+    //     }
+    //   }
+    // }
   }
 
   /**

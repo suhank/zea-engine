@@ -48,7 +48,7 @@ class FileImage extends BaseImage {
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     fileParam.valueChanged.connect(() => {
       this.loaded.untoggle()
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)

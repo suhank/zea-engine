@@ -1,7 +1,9 @@
 import { hashStr } from '../Math/index'
 import { glslTypes } from './GLSLConstants.js'
 
-/** Class representing a shader library. */
+/** Class representing a shader library.
+ * @private
+ */
 class ShaderLibrary {
   /**
    * Create a shader library.

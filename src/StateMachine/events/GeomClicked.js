@@ -5,6 +5,7 @@ import { StateEvent } from '../StateEvent.js'
 
 /** Triggers an state machine event to occur when geometry is clicked.
  * @extends StateEvent
+ * @private
  */
 class GeomClicked extends StateEvent {
   /**

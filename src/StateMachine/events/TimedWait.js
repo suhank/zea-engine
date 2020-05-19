@@ -5,6 +5,7 @@ import { StateEvent } from '../StateEvent.js'
 
 /** Triggers an state machine event to occur after a certain time has passed.
  * @extends StateEvent
+ * @private
  */
 class TimedWait extends StateEvent {
   /**

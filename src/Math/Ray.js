@@ -131,6 +131,7 @@ class Ray {
    * Creates a new Ray.
    * @param {...object} ...args - The ...args param.
    * @return {Ray} - Returns a new Ray.
+   * @private
    */
   static create(...args) {
     return new Ray(...args)

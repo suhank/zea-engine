@@ -7,7 +7,6 @@ import { BinReader } from './BinReader.js'
 import { resourceLoader } from './ResourceLoader.js'
 import { sgFactory } from './SGFactory.js'
 import { Version } from './Version.js'
-// import { EnvMap, Lightmap, LightmapMixer } from './Images/index'
 
 /** Class representing a VLA asset.
  * @extends AssetItem
@@ -40,7 +39,7 @@ class VLAAsset extends AssetItem {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         const stem = this.__datafileParam.getStem()
         this.setName(stem)
       }
@@ -60,14 +59,6 @@ class VLAAsset extends AssetItem {
     })
 
     this.addParameter(new ColorParameter('LightmapTint', new Color(1, 1, 1, 1)))
-  }
-
-  /**
-   * The getLightmap method.
-   * @return {Lightmap} - The return lightmap.
-   */
-  getLightmap() {
-    return this.lightmap
   }
 
   // ////////////////////////////////////////
@@ -132,14 +123,7 @@ class VLAAsset extends AssetItem {
       reader.seek(reader.byteLength - 4)
     }
     this.__geomLibrary.setNumGeoms(reader.loadUInt32())
-
-    // Load the lightmap if available.
-    // const folder = this.__datafileParam.getFileFolderPath();
-    // const stem = this.__datafileParam.getStem()
-    // const lod = context.lightmapLOD;
-    // const lightmapPath = `${folder}${stem}_${lightmapName}_Lightmap${lod}.vlh`
-    // this.lightmap = new Lightmap(lightmapPath, this, atlasSize)
-
+    
     return numGeomsFiles
   }
 
