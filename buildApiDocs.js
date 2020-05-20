@@ -19,7 +19,6 @@ const renderSourceFileToMarkdown = (filepath, tgtDir) => {
     jsdoc2md
       .render({
         files: filepath,
-        // template: fs.readFileSync('template.hbs', 'utf8'),
       })
       .then((data) => {
         resolve({ outPath, data })
@@ -78,8 +77,18 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
               })`
             )
 
+            const data = fileRender.data
+              .replace(/\#{3} ([\w\d ]+\.)?([\w\d ]+).+/gim, '### $2')
+              .replace(
+                /\* \[[\.]?([\w\d ]+)(\(.*?\))\]\([\#\w\d\_\+]*\)([ ]?.*)/gim,
+                (a, b, c, d) => {
+                  const cleanedLink = b ? b.replace(' ', '-') : ''
+                  return `* [${b}${c}${d}](#${cleanedLink})`
+                }
+              )
+
             const fullOutPath = path.join('docs', fileRender.outPath)
-            fs.writeFileSync(fullOutPath, fileRender.data)
+            fs.writeFileSync(fullOutPath, data)
           }
         }
       })
