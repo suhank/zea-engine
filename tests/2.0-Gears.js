@@ -84,7 +84,7 @@ describe('2.0-Gears', () => {
       await compareRendererToRefImage('2.0-Gears-front.png', 2)
     })
     it('Render Gears - back', async () => {
-      revolutionsParam.setValue(3.0)
+      revolutionsParam.setValue(2.4)
       renderer
         .getViewport()
         .getCamera()
@@ -92,7 +92,6 @@ describe('2.0-Gears', () => {
 
       await compareRendererToRefImage('2.0-Gears-back.png', 2)
     })
-
     it('Cleanup', async () => {
       cleanup()
     })
