@@ -1,4 +1,4 @@
-# Manipulators
+# MANIPULATORS
 ## Classes
-- [CameraMouseAndKeyboard](api/SceneTree/Manipulators/CameraMouseAndKeyboard.md)
+### [CameraMouseAndKeyboard](api/SceneTree/Manipulators/CameraMouseAndKeyboard.md)
 
