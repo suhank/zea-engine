@@ -7,8 +7,6 @@ Tests/Assets/
 SteamServer/
 Resources/Cache/
 
-docs/api
-
 *.log
 .tmuxp.json
 package-lock.json
