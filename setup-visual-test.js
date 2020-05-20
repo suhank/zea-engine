@@ -163,20 +163,20 @@ async function setupVisualTest(runTest) {
 
       const misMatchPercentage = Number.parseFloat(cmp.misMatchPercentage)
 
-      if (misMatchPercentage > threshold) {
+      if (misMatchPercentage > 0.0) {
         container.style['background'] = '#FF0000';
         const parts = refImageName.split('.')
         parts.pop()
         const diffImageName = parts.join('.') + "-diff.png"
         await saveRefImage(diffImageData, diffImageName)
-        // const btn = document.createElement("button");
-        // btn.innerHTML = "UPDATE";
-        // btn.addEventListener('click', () => {
-        //   saveRefImage(dataURL, refImageName).then(() => {
-        //     console.log(`==Updated Ref Image: ${refImageName} ==`)
-        //   })
-        // })
-        // container.appendChild(btn)
+        const btn = document.createElement("button");
+        btn.innerHTML = "UPDATE";
+        btn.addEventListener('click', () => {
+          saveRefImage(dataURL, refImageName).then(() => {
+            console.log(`==Updated Ref Image: ${refImageName} ==`)
+          })
+        })
+        container.appendChild(btn)
       }
       assert.isBelow(misMatchPercentage, threshold, `expect: ${cmp.misMatchPercentage}.to.be.below:${threshold}`)
       // assert(misMatchPercentage < threshold)
