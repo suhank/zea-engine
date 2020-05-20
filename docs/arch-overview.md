@@ -1,7 +1,12 @@
 # Architectural Overview
 
+![Modular](_media/Zea-Modular-Architecture.png)
 
 The Zea Engine was designed with several goals in mind. 
+
+* [Zea CAD](https://zea-cad.js.org/#/)
+* [Zea Lidar](https://zea-potree.js.org/#/)
+* [Zea Curves](https://zea-potree.js.org/#/)
 
 
 # Renderer and Scene

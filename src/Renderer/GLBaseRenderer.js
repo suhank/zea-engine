@@ -652,7 +652,7 @@ class GLBaseRenderer {
     }
     if (window.addEventListener)
       /** DOMMouseScroll is for mozilla. */
-      window.addEventListener('wheel', onWheel, { passive: true })
+      window.addEventListener('wheel', onWheel, { passive: false })
     else {
       /** IE/Opera. */
       window.onmousewheel = document.onmousewheel = onWheel

@@ -27,6 +27,9 @@ class BaseItem extends ParameterOwner {
     this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
     this.__flags = 0
 
+    // Note: one day we will remove the concept of 'selection' from the engine
+    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // in the selection manager. Then the selection group will apply a highlight.
     this.__selectable = true
     this.__selected = false
     this.selectedChanged = new Signal()

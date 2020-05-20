@@ -1,4 +1,4 @@
-import { Xfo, Box3 } from '../Math/index'
+import { Color, Xfo, Box3 } from '../Math/index'
 import { Signal } from '../Utilities/index'
 import { sgFactory } from './SGFactory.js'
 import {
@@ -25,13 +25,13 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0,
 }
 
-// let selectionOutlineColor = new Color('#03E3AC')
-// selectionOutlineColor.a = 0.1
-// let branchSelectionOutlineColor = selectionOutlineColor.lerp(
-//   new Color('white'),
-//   0.5
-// )
-// branchSelectionOutlineColor.a = 0.1
+let selectionOutlineColor = new Color('#03E3AC')
+selectionOutlineColor.a = 0.1
+let branchSelectionOutlineColor = selectionOutlineColor.lerp(
+  new Color('white'),
+  0.5
+)
+branchSelectionOutlineColor.a = 0.1
 
 /** Class representing a tree item in the scene tree.
  * @extends BaseItem
@@ -122,6 +122,17 @@ class TreeItem extends BaseItem {
     this.__visibleParam.valueChanged.connect(mode => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.__updateVisiblity()
+    })
+
+    // Note: one day we will remove the concept of 'selection' from the engine
+    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // in the selection manager. Then the selection group will apply a highlight.
+    this.selectedChanged.connect(() => {
+      if (this.__selected) {
+        this.addHighlight('selected', selectionOutlineColor, true)
+      } else {
+        this.removeHighlight('selected', true)
+      }
     })
   }
 

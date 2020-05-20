@@ -12,8 +12,8 @@
   <body>
     <div id="app"></div>
   </body>
-  <script>
-import { Scene, GLRenderer } from "https://unpkg.com/@zeainc/zea-engine@1.0.5/dist/index.esm.js"
+  <script type=module>
+import { Scene, GLRenderer, Color } from "https://unpkg.com/@zeainc/zea-engine@1.0.5/dist/index.esm.js"
 
 const domElement = document.getElementById("app");
 
@@ -38,3 +38,6 @@ scene.getSettings().getParameter('BackgroundColor').setValue(color)
 
 
 [Different Background Color](./HelloWorld-DifferentBackgroundColor.html ':include :type=iframe width=100% height=800px')
+
+Click here to download the file to your computer to try it for yourself: 
+<a id="raw-url" href="./tutorials/HelloWorld-DifferentBackgroundColor.html" download>Download</a>

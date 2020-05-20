@@ -19,7 +19,6 @@ const renderSourceFileToMarkdown = (filepath, tgtDir) => {
     jsdoc2md
       .render({
         files: filepath,
-        // template: fs.readFileSync('template.hbs', 'utf8'),
       })
       .then((data) => {
         resolve({ outPath, data })
@@ -78,8 +77,18 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
               })`
             )
 
+            const data = fileRender.data
+              .replace(/\#{3} ([\w\d ]+\.)?([\w\d ]+).+/gim, '### $2')
+              .replace(
+                /\* \[[\.]?([\w\d ]+)(\(.*?\))\]\([\#\w\d\_\+]*\)([ ]?.*)/gim,
+                (a, b, c, d) => {
+                  const cleanedLink = b ? b.replace(' ', '-') : ''
+                  return `* [${b}${c}${d}](#${cleanedLink})`
+                }
+              )
+
             const fullOutPath = path.join('docs', fileRender.outPath)
-            fs.writeFileSync(fullOutPath, fileRender.data)
+            fs.writeFileSync(fullOutPath, data)
           }
         }
       })
@@ -112,8 +121,12 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
   return promise
 }
 
+//////////////////////////////////
+// Entry
+
+fs.rmdirSync('docs/api', { recursive: true })
 renderSourceFolderToMarkdown('src', 'api').then((data) => {
-  console.log('done:')
+  console.log('writing : searchToc.json')
 
   const searchToc = []
   data.files.forEach((file) => {
@@ -128,3 +141,4 @@ renderSourceFolderToMarkdown('src', 'api').then((data) => {
   })
   fs.writeFileSync('docs/searchToc.json', JSON.stringify({ searchToc }))
 })
+
