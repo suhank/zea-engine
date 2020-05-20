@@ -12,6 +12,7 @@ const gearsOp = new GearsOperator("Gears");
 asset.addChild(gearsOp);
 
 let index = 0;
+let sign = 1;
 let prevTeeth = 0;
 let prevRatio = 1.0;
 const addGear = (pos, radius, teeth, axis, color) => {
@@ -25,9 +26,11 @@ const addGear = (pos, radius, teeth, axis, color) => {
   geomItem.setLocalXfo(xfo);
   asset.addChild(geomItem);
 
-  const ratio = prevTeeth > 0 ? -prevTeeth / teeth : 1.0;
+  const ratio = (prevTeeth > 0 ? prevTeeth / teeth : 1.0) * sign;
+  console.log(index, ratio)
   prevTeeth = teeth;
   prevRatio = ratio;
+  sign = -sign;
 
   const gear = gearsOp.getParameter("Gears").addElement();
   gear.getMember("Ratio").setValue(ratio);

@@ -23,30 +23,33 @@ describe('2.0-Gears', () => {
     const gearsOp = new GearsOperator("Gears")
     asset.addChild(gearsOp)
 
-    let index = 0
-    let prevTeeth = 0
-    let prevRatio = 1.0
+    let index = 0;
+    let sign = 1;
+    let prevTeeth = 0;
+    let prevRatio = 1.0;
     const addGear = (pos, radius, teeth, axis, color) => {
-      const gearGeom = new Cylinder(radius, 0.2, teeth)
-      const gearmaterial = new Material("gearmaterial", "SimpleSurfaceShader")
-      gearmaterial.getParameter("BaseColor").setValue(color)
-      const geomItem = new GeomItem("gear" + index++, gearGeom, gearmaterial)
-      const xfo = new Xfo()
-      xfo.tr = pos
-      // xfo.ori.setFromDirectionAndUpvector(axis, new Vec3(1, 0, 0))
-      geomItem.setLocalXfo(xfo)
-      asset.addChild(geomItem)
-
-      const ratio = prevTeeth > 0 ? -prevTeeth / teeth : 1.0
-      prevTeeth = teeth
-      prevRatio = ratio
-
-      const gear = gearsOp.getParameter("Gears").addElement()
-      gear.getMember("Ratio").setValue(ratio)
-      gear.getMember("Axis").setValue(axis)
+      const gearGeom = new Cylinder(radius, 0.2, teeth);
+      const gearmaterial = new Material("gearmaterial", "SimpleSurfaceShader");
+      gearmaterial.getParameter("BaseColor").setValue(color);
+      const geomItem = new GeomItem("gear" + index++, gearGeom, gearmaterial);
+      const xfo = new Xfo();
+      xfo.tr = pos;
+      // xfo.ori.setFromDirectionAndUpvector(axis, new Vec3(1, 0, 0));
+      geomItem.setLocalXfo(xfo);
+      asset.addChild(geomItem);
+    
+      const ratio = (prevTeeth > 0 ? prevTeeth / teeth : 1.0) * sign;
+      console.log(index, ratio)
+      prevTeeth = teeth;
+      prevRatio = ratio;
+      sign = -sign;
+    
+      const gear = gearsOp.getParameter("Gears").addElement();
+      gear.getMember("Ratio").setValue(ratio);
+      gear.getMember("Axis").setValue(axis);
       // const gearGeoms = gear.getMember('Items')
-      // gearGeoms.addElement(binding.geomItem)
-      gear.getOutput().setParam(geomItem.getParameter("GlobalXfo"))
+      // gearGeoms.addElement(binding.geomItem);
+      gear.getOutput().setParam(geomItem.getParameter("GlobalXfo"));
     }
     addGear(
       new Vec3(0, 0, 0),
@@ -77,7 +80,7 @@ describe('2.0-Gears', () => {
       renderer
         .getViewport()
         .getCamera()
-        .setPositionAndTarget(new Vec3(5, 5, 6), new Vec3(0, 0, 0.4))
+        .setPositionAndTarget(new Vec3(-5, 5, 6), new Vec3(0, 0, 0.4))
       await compareRendererToRefImage('2.0-Gears-front.png', 2)
     })
     it('Render Gears - back', async () => {
@@ -85,7 +88,7 @@ describe('2.0-Gears', () => {
       renderer
         .getViewport()
         .getCamera()
-        .setPositionAndTarget(new Vec3(-5, -5, 6), new Vec3(0, 0, 0.4))
+        .setPositionAndTarget(new Vec3(-5, 5, 6), new Vec3(0, 0, 0.4))
 
       await compareRendererToRefImage('2.0-Gears-back.png', 2)
     })
