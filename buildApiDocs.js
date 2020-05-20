@@ -80,10 +80,10 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
             const data = fileRender.data
               .replace(/\#{3} ([\w\d ]+\.)?([\w\d ]+).+/gim, '### $2')
               .replace(
-                /\* \[[\.]?([\w\d ]+)(\(.*?\))\]\([\#\w\d\_\+]*\)([ ]?.*)/gim,
+                /\* \[[\.]?([\w\d ]+)(\(.*?\))?\]\(.*\)(.*)?/gm,
                 (a, b, c, d) => {
                   const cleanedLink = b ? b.replace(' ', '-') : ''
-                  return `* [${b}${c}${d}](#${cleanedLink})`
+                  return `* [${b}${c || ''}${d || ''}](#${cleanedLink})`
                 }
               )
 
@@ -121,7 +121,7 @@ const renderSourceFolderToMarkdown = (dir, tgtDir) => {
   return promise
 }
 
-//////////////////////////////////
+// ////////////////////////////////
 // Entry
 
 fs.rmdirSync('docs/api', { recursive: true })
@@ -141,4 +141,3 @@ renderSourceFolderToMarkdown('src', 'api').then((data) => {
   })
   fs.writeFileSync('docs/searchToc.json', JSON.stringify({ searchToc }))
 })
-
