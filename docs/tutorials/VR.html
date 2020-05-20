@@ -40,7 +40,7 @@
     </style>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="viewport"></div>
     <a href="#" class="float" id="vrbutton">
       <i class="my-float">
         <img src="./img/vricon.png"" alt="Launch VR" height="160" width="160">
@@ -52,7 +52,7 @@
 
 import { Scene, GLRenderer } from "https://unpkg.com/@zeainc/zea-engine@1.0.5/dist/index.esm.js"
 
-const domElement = document.getElementById("app");
+const domElement = document.getElementById("viewport");
 
 const scene = new Scene();
 scene.setupGrid(10.0, 10);

@@ -445,6 +445,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       }
     }
     applyMovement()
+
+    event.preventDefault()
+    event.stopPropagation()
   }
 
   /**
