@@ -64,18 +64,18 @@ const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader');
 standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255));
 
 const addGeomItem = (shape, row, count, i)=>{
-    const geomItem = new GeomItem('Item'+row+'-'+i, shape, standardMaterial);
-    geomItem.setLocalXfo(new Xfo(new Vec3(i * 3, row * 3, 0)));
-    tree1.addChild(geomItem);
+  const geomItem = new GeomItem('Item'+row+'-'+i, shape, standardMaterial);
+  geomItem.setLocalXfo(new Xfo(new Vec3(i * 3, row * 3, 0)));
+  tree1.addChild(geomItem);
 
-    group1.addItem(geomItem);
-    if(i%2 == 0)
-        group2.addItem(geomItem);
+  group1.addItem(geomItem);
+  if(i%2 == 0)
+    group2.addItem(geomItem);
 }
 const addMeshShape = (shape, row, count)=>{
-    for(let i=0; i<count; i++){
-        addGeomItem(shape, row, count, i);
-    }
+  for(let i=0; i<count; i++){
+    addGeomItem(shape, row, count, i);
+  }
 }
 
 addMeshShape(new Sphere(1.4, 13), 3, 1);
@@ -88,16 +88,16 @@ addMeshShape(new Torus(0.4, 1.3), -3, 4);
 
 
 setInterval(function(){ 
-    tree1.setSelected(!tree1.getSelected());
+  tree1.setSelected(!tree1.getSelected());
 }, 1200);
-// setInterval(function(){ 
-//     const p = group1.getParameter('Highlighted');
-//     p.setValue(!p.getValue());
-// }, 1000);
-// setInterval(function(){ 
-//     const p = group2.getParameter('Highlighted');
-//     p.setValue(!p.getValue());
-// }, 700);
+setInterval(function(){ 
+  const p = group1.getParameter('Highlighted');
+  p.setValue(!p.getValue());
+}, 1000);
+setInterval(function(){ 
+  const p = group2.getParameter('Highlighted');
+  p.setValue(!p.getValue());
+}, 700);
 
   </script>
 </html>
