@@ -5,7 +5,7 @@ describe('1.0-Simple plane', () => {
   it('Render a simple plane', async () => {
     console.log('Render a simple plane')
     setupVisualTest(async (appData) => {
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
       
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -15,6 +15,7 @@ describe('1.0-Simple plane', () => {
       renderer.frameAll()
 
       await compareRendererToRefImage('1.0-SimplePlane.png', 2)
+      cleanup()
     })
   })
 })
@@ -23,7 +24,7 @@ describe('1.1-dense plane', () => {
   it('Render a dense plane', async () => {
     setupVisualTest(async (appData) => {
       console.log('Render a dense plane')
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
 
       renderer
         .getViewport()
@@ -39,6 +40,7 @@ describe('1.1-dense plane', () => {
 
       console.log('compareRendererToRefImage')
       await compareRendererToRefImage('1.1-DensePlane.png', 2)
+      cleanup()
     })
   })
 })

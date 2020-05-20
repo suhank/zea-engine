@@ -41,8 +41,10 @@ scene.setupGrid(10.0, 10);
 const asset = new AssetItem("gears");
 scene.getRoot().addChild(asset);
 
+const gearsOp = new GearsOperator("Gears");
+asset.addChild(gearsOp);
+
 let index = 0;
-const gearBindings = [];
 let prevTeeth = 0;
 let prevRatio = 1.0;
 const addGear = (pos, radius, teeth, axis, color) => {
@@ -57,9 +59,15 @@ const addGear = (pos, radius, teeth, axis, color) => {
   asset.addChild(geomItem);
 
   const ratio = prevTeeth > 0 ? -prevTeeth / teeth : 1.0;
-  gearBindings.push({ geomItem, ratio: ratio * -prevRatio, axis });
   prevTeeth = teeth;
   prevRatio = ratio;
+
+  const gear = gearsOp.getParameter("Gears").addElement();
+  gear.getMember("Ratio").setValue(ratio);
+  gear.getMember("Axis").setValue(axis);
+  // const gearGeoms = gear.getMember('Items')
+  // gearGeoms.addElement(binding.geomItem);
+  gear.getOutput().setParam(geomItem.getParameter("GlobalXfo"));
 };
 addGear(
   new Vec3(0, 0, 0),
@@ -83,20 +91,9 @@ addGear(
   new Color(1.0, 1.0, 0.0)
 );
 
-const gearsOp = new GearsOperator("Gears");
-asset.addChild(gearsOp);
 const rpmParam = gearsOp.getParameter("RPM");
 rpmParam.setValue(12.0);
 rpmParam.setRange([0, 60]);
-
-for (let binding of gearBindings) {
-  const gear = gearsOp.getParameter("Gears").addElement();
-  gear.getMember("Ratio").setValue(binding.ratio);
-  gear.getMember("Axis").setValue(binding.axis);
-  // const gearGeoms = gear.getMember('Items')
-  // gearGeoms.addElement(binding.geomItem);
-  gear.getOutput().setParam(binding.geomItem.getParameter("GlobalXfo"));
-}
 
 const renderer = new GLRenderer(domElement);
 renderer.setScene(scene);

@@ -21,6 +21,7 @@
     "prepare": "yarn run build",
     "dist": "yarn publish --access=public",
     "docs": "node buildApiDocs.js",
+    "testing-server": "node testing-server/index.js",
     "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js",
     "testBrowser": "karma start --single-run karma.conf.js"
   },

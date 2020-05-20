@@ -5,7 +5,7 @@ describe('1.0-simple Cone', () => {
   it('Render a simple Cone', async () => {
     console.log('Render a simple Cone')
     setupVisualTest(async (appData) => {
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
       
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -15,6 +15,7 @@ describe('1.0-simple Cone', () => {
       renderer.frameAll()
 
       await compareRendererToRefImage('1.0-SimpleCone.png', 2)
+      cleanup()
     })
   })
 })
@@ -22,7 +23,7 @@ describe('1.0-simple Cone', () => {
 describe('1.1-dense Cone', async () => {
   setupVisualTest(async (appData) => {
     console.log('Render a dense Cone')
-    const { scene, renderer, compareRendererToRefImage } = appData
+    const { scene, renderer, compareRendererToRefImage, cleanup } = appData
     
     const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
     standardMaterial.getParameter('BaseColor').setValue(new Color(200 / 255, 50 / 255, 50 / 255))
@@ -37,10 +38,7 @@ describe('1.1-dense Cone', async () => {
         .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      console.log('compareRendererToRefImage')
       await compareRendererToRefImage('1.1-DenseCone-Top.png', 2)
-
-      console.log('Render a dense Cone - done')
     })
     it('Render a dense Cone - below', async () => {
       renderer
@@ -49,10 +47,10 @@ describe('1.1-dense Cone', async () => {
         .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      console.log('compareRendererToRefImage')
       await compareRendererToRefImage('1.1-DenseCone-Below.png', 2)
-
-      console.log('Render a dense Cone - done')
+    })
+    it('Cleanup', async () => {
+      cleanup()
     })
   })
 })

@@ -5,7 +5,7 @@ describe('1.0-simple Sphere', () => {
   it('Render a simple Sphere', async () => {
     console.log('Render a simple Sphere')
     setupVisualTest(async (appData) => {
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
       
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -20,6 +20,7 @@ describe('1.0-simple Sphere', () => {
       renderer.frameAll()
 
       await compareRendererToRefImage('1.0-SimpleSphere.png', 2)
+      cleanup()
     })
   })
 })
@@ -27,7 +28,7 @@ describe('1.0-simple Sphere', () => {
 describe('1.1-dense Sphere', async () => {
   setupVisualTest(async (appData) => {
     console.log('Render a dense Sphere')
-    const { scene, renderer, compareRendererToRefImage } = appData
+    const { scene, renderer, compareRendererToRefImage, cleanup } = appData
     
     const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
     standardMaterial.getParameter('BaseColor').setValue(new Color(200 / 255, 50 / 255, 50 / 255))
@@ -58,6 +59,9 @@ describe('1.1-dense Sphere', async () => {
       await compareRendererToRefImage('1.1-DenseSphere-Below.png', 2)
 
       console.log('Render a dense Sphere - done')
+    })
+    it('Cleanup', async () => {
+      cleanup()
     })
   })
 })

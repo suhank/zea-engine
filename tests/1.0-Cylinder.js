@@ -5,7 +5,7 @@ describe('1.0-simple Cylinder', () => {
   it('Render a simple Cylinder', async () => {
     console.log('Render a simple Cylinder')
     setupVisualTest(async (appData) => {
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
       
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -20,6 +20,8 @@ describe('1.0-simple Cylinder', () => {
       renderer.frameAll()
 
       await compareRendererToRefImage('1.0-SimpleCylinder.png', 2)
+      
+      cleanup()
     })
   })
 })
@@ -27,7 +29,7 @@ describe('1.0-simple Cylinder', () => {
 describe('1.1-dense Cylinder', async () => {
   setupVisualTest(async (appData) => {
     console.log('Render a dense Cylinder')
-    const { scene, renderer, compareRendererToRefImage } = appData
+    const { scene, renderer, compareRendererToRefImage, cleanup } = appData
     
     const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
     standardMaterial.getParameter('BaseColor').setValue(new Color(200 / 255, 50 / 255, 50 / 255))
@@ -42,10 +44,7 @@ describe('1.1-dense Cylinder', async () => {
         .setPositionAndTarget(new Vec3(2, 2, 2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      console.log('compareRendererToRefImage')
       await compareRendererToRefImage('1.1-DenseCylinder-Top.png', 2)
-
-      console.log('Render a dense Cylinder - done')
     })
     it('Render a dense Cylinder - below', async () => {
       renderer
@@ -54,10 +53,10 @@ describe('1.1-dense Cylinder', async () => {
         .setPositionAndTarget(new Vec3(2, 2, -2.7), new Vec3(0, 0, 0.4))
       renderer.frameAll()
 
-      console.log('compareRendererToRefImage')
       await compareRendererToRefImage('1.1-DenseCylinder-Below.png', 2)
-
-      console.log('Render a dense Cylinder - done')
+    })
+    it('Cleanup', async () => {
+      cleanup()
     })
   })
 })

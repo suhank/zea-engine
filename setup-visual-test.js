@@ -155,33 +155,44 @@ async function setupVisualTest(runTest) {
 
       const cmp = await compareImages(dataURL, imageToDataUrl(refImage))
       console.log(`==Ref Image found: ${refImageName}. misMatchPercentage: ${cmp.misMatchPercentage} ==`)
-      const diffImage = await createDiffImage(cmp.getImageDataUrl())
+      const diffImageData = cmp.getImageDataUrl()
+      const diffImage = await createDiffImage(diffImageData)
       diffImage.style.position = 'relative'
       diffImage.style.padding = '10px'
       container.appendChild(diffImage)
 
       const misMatchPercentage = Number.parseFloat(cmp.misMatchPercentage)
 
-      if (misMatchPercentage > 2) {
+      if (misMatchPercentage > threshold) {
         container.style['background'] = '#FF0000';
-        const btn = document.createElement("button");
-        btn.innerHTML = "UPDATE";
-        btn.addEventListener('click', () => {
-          saveRefImage(dataURL, refImageName).then(() => {
-            console.log(`==Updated Ref Image: ${refImageName} ==`)
-          })
-        })
-        container.appendChild(btn)
+        const parts = refImageName.split('.')
+        parts.pop()
+        const diffImageName = parts.join('.') + "-diff.png"
+        await saveRefImage(diffImageData, diffImageName)
+        // const btn = document.createElement("button");
+        // btn.innerHTML = "UPDATE";
+        // btn.addEventListener('click', () => {
+        //   saveRefImage(dataURL, refImageName).then(() => {
+        //     console.log(`==Updated Ref Image: ${refImageName} ==`)
+        //   })
+        // })
+        // container.appendChild(btn)
       }
       assert.isBelow(misMatchPercentage, threshold, `expect: ${cmp.misMatchPercentage}.to.be.below:${threshold}`)
       // assert(misMatchPercentage < threshold)
     }
   }
+  async function cleanup() {
+    console.log("Cleaning up")
+    const gl = renderer.gl
+    gl.getExtension('WEBGL_lose_context').loseContext();
+  }
 
   runTest({
     scene,
     renderer,
-    compareRendererToRefImage
+    compareRendererToRefImage,
+    cleanup
   })
 
 }

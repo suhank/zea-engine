@@ -5,7 +5,7 @@ describe('1.0-simple Disc', () => {
   it('Render a simple Disc', async () => {
     console.log('Render a simple Disc')
     setupVisualTest(async (appData) => {
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
       
       const standardMaterial = new Material('surfaces', 'SimpleSurfaceShader')
       standardMaterial.getParameter('BaseColor').setValue(new Color(89 / 255, 182 / 255, 92 / 255))
@@ -15,6 +15,7 @@ describe('1.0-simple Disc', () => {
       renderer.frameAll()
 
       await compareRendererToRefImage('1.0-SimpleDisc.png', 2)
+      cleanup()
     })
   })
 })
@@ -23,7 +24,7 @@ describe('1.1-dense Disc', () => {
   it('Render a dense Disc', async () => {
     setupVisualTest(async (appData) => {
       console.log('Render a dense Disc')
-      const { scene, renderer, compareRendererToRefImage } = appData
+      const { scene, renderer, compareRendererToRefImage, cleanup } = appData
 
       renderer
         .getViewport()
@@ -37,8 +38,8 @@ describe('1.1-dense Disc', () => {
       scene.getRoot().addChild(geomItem)
       renderer.frameAll()
 
-      console.log('compareRendererToRefImage')
       await compareRendererToRefImage('1.1-DenseDisc.png', 2)
+      cleanup()
     })
   })
 })
