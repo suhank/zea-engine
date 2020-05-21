@@ -6,7 +6,7 @@
   * [Kinematics](kinematics.md)
 
 - Getting started
-  * [Development Setup](getting-started/development-setup.md)
+  * [Get These Applications](getting-started/development-setup.md)
   * [Getting Started using Zea Engine](getting-started/get-started-with-engine.md)
   * [Using Zea Engine with NPM and Yarn](getting-started/using-npm-yarn.md)
   * [Using Zea Engine with React](getting-started/using-react.md)
