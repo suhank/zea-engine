@@ -1,6 +1,7 @@
 # Using Zea Engine with React
 
 ### What is React
+React is a popular client side library for building Single Page Applications.
 
 https://reactjs.org/
 
