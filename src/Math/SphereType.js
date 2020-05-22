@@ -75,7 +75,8 @@ class SphereType extends AttrValue {
   }
 
   /**
-   * The toString method.
+   * Calls `toJSON` method and stringifies it.
+   *
    * @return {string} - The return value.
    */
   toString() {

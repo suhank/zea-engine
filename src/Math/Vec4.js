@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
@@ -122,7 +123,7 @@ class Vec4 extends AttrValue {
    * @return {number} - Returns the z value.
    */
   get xyz() {
-    return new Vec3(this.__data[0], this.__data[1], this.__data[2]);
+    return new Vec3(this.__data[0], this.__data[1], this.__data[2])
   }
 
   /**

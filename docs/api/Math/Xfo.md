@@ -4,53 +4,54 @@
 Class representing an Xfo transform.
 
 **Kind**: global class  
+**See**: [`setFromOther`](#setFromOther) [`fromMat4`](#fromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)  
 
 * [Xfo](#Xfo)
     * [new Xfo(tr, ori, sc)](#new-Xfo)
     * [set(tr, ori, sc)](#set)
     * [setFromOther(other)](#setFromOther)
-    * [isIdentity() ⇒ <code>any</code>](#isIdentity)
+    * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
     * [setLookAt(pos, target, up)](#setLookAt)
     * [multiply(xfo)](#multiply)
     * [inverse()](#inverse)
-    * [transformVec3(vec3) ⇒ <code>any</code>](#transformVec3)
+    * [transformVec3(vec3) ⇒ <code>Vec3</code>](#transformVec3)
     * [toMat4() ⇒ <code>Mat4</code>](#toMat4)
     * [fromMat4(mat4)](#fromMat4)
     * [setFromFloat32Array(float32array)](#setFromFloat32Array)
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Xfo_new"></a>
 
 ### new Xfo
-Create a Xfo.
+Initializes the Xfo object.<br>**Note:** You can leave it empty and use other methods ti set the state of the class.
 
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tr | <code>any</code> | The translation value. |
-| ori | <code>any</code> | The orientation value. |
-| sc | <code>any</code> | The scaling value. |
+| tr | <code>Float32Array</code> \| <code>Vec3</code> | The translation value. |
+| ori | <code>Quat</code> | The orientation value. |
+| sc | <code>Vec3</code> | The scaling value. |
 
 <a name="Xfo+set"></a>
 
 ### set
-The set method.
+Sets the state of the Xfo object.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tr | <code>any</code> | The translation value. |
-| ori | <code>any</code> | The orientation value. |
-| sc | <code>any</code> | The scaling value. |
+| tr | <code>Float32Array</code> \| <code>Vec3</code> | The translation value. |
+| ori | <code>Quat</code> | The orientation value. |
+| sc | <code>Vec3</code> | The scaling value. |
 
 <a name="Xfo+setFromOther"></a>
 
 ### setFromOther
-Setter from another Xfo.
+Sets the state of the Xfo object using another Xfo object.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
 
@@ -61,10 +62,10 @@ Setter from another Xfo.
 <a name="Xfo+isIdentity"></a>
 
 ### isIdentity
-The isIdentity method.
+Verifies that the Xfo object is an `identity`, checking that the translation, orientation and scaling attributes are in their initial state.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="Xfo+setLookAt"></a>
 
 ### setLookAt
@@ -74,9 +75,9 @@ The setLookAt method.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| pos | <code>any</code> | The position value. |
-| target | <code>any</code> | The target value. |
-| up | <code>any</code> | The up value. |
+| pos | <code>Vec3</code> | The position value. |
+| target | <code>Vec3</code> | The target value. |
+| up | <code>Vec3</code> | The up value. |
 
 <a name="Xfo+multiply"></a>
 
@@ -93,17 +94,17 @@ Multiplies two Xfo transforms.
 <a name="Xfo+inverse"></a>
 
 ### inverse
-The inverse method.
+Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
 **Returns**: [<code>Xfo</code>](#Xfo) - - Returns a new Xfo.  
 <a name="Xfo+transformVec3"></a>
 
 ### transformVec3
-The transformVec3 method.
+Tranforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>Vec3</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -119,7 +120,7 @@ Converts this Xfo to a Mat4 (a 4x4 matrix).
 <a name="Xfo+fromMat4"></a>
 
 ### fromMat4
-The fromMat4 method.
+Sets the state of the Xfo object using Mat4.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
 
@@ -130,13 +131,13 @@ The fromMat4 method.
 <a name="Xfo+setFromFloat32Array"></a>
 
 ### setFromFloat32Array
-The setFromFloat32Array method.
+Sets the state of the Xfo object using an `Float32array`.<br>**Note:** You can set the byteOffset in your `Float32array` object
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| float32array | <code>array</code> | The float32array value. |
+| float32array | <code>Float32Array</code> | The float32array value. |
 
 <a name="Xfo+clone"></a>
 
@@ -166,7 +167,7 @@ The fromJSON method decodes a json object for this type.
 <a name="Xfo+toString"></a>
 
 ### toString
-The toString method.
+The fromJSON method decodes a json object for this type.
 
 **Kind**: instance method of [<code>Xfo</code>](#Xfo)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

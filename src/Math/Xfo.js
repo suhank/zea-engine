@@ -8,13 +8,20 @@ import { typeRegistry } from './TypeRegistry.js'
 
 const sc_helper = new Vec3(1, 1, 1)
 
-/** Class representing an Xfo transform. */
+/**
+ * Class representing an Xfo transform.
+ */
 class Xfo {
   /**
-   * Create a Xfo.
-   * @param {any} tr - The translation value.
-   * @param {any} ori - The orientation value.
-   * @param {any} sc - The scaling value.
+   * Initializes the Xfo object.
+   * <br>
+   * **Note:** You can leave it empty and use other methods ti set the state of the class.
+   *
+   * @see [`setFromOther`](#setFromOther) [`fromMat4`](#fromMat4) [`setFromFloat32Array`](#setFromFloat32Array) [`fromJSON`](#fromJSON)
+   *
+   * @param {Float32Array | Vec3} tr - The translation value.
+   * @param {Quat} ori - The orientation value.
+   * @param {Vec3} sc - The scaling value.
    */
   constructor(tr = undefined, ori = undefined, sc = undefined) {
     if (tr instanceof Float32Array) {
@@ -44,10 +51,11 @@ class Xfo {
   }
 
   /**
-   * The set method.
-   * @param {any} tr - The translation value.
-   * @param {any} ori - The orientation value.
-   * @param {any} sc - The scaling value.
+   * Sets the state of the Xfo object.
+   *
+   * @param {Float32Array | Vec3} tr - The translation value.
+   * @param {Quat} ori - The orientation value.
+   * @param {Vec3} sc - The scaling value.
    */
   set(tr, ori, sc = undefined) {
     this.tr = tr
@@ -56,7 +64,8 @@ class Xfo {
   }
 
   /**
-   * Setter from another Xfo.
+   * Sets the state of the Xfo object using another Xfo object.
+   *
    * @param {Xfo} other - The other Xfo to set from.
    */
   setFromOther(other) {
@@ -66,8 +75,9 @@ class Xfo {
   }
 
   /**
-   * The isIdentity method.
-   * @return {any} - The return value.
+   * Verifies that the Xfo object is an `identity`, checking that the translation, orientation and scaling attributes are in their initial state.
+   *
+   * @return {boolean} - The return value.
    */
   isIdentity() {
     return this.tr.isNull() && this.ori.isIdentity() && this.sc.is111()
@@ -75,9 +85,9 @@ class Xfo {
 
   /**
    * The setLookAt method.
-   * @param {any} pos - The position value.
-   * @param {any} target - The target value.
-   * @param {any} up - The up value.
+   * @param {Vec3} pos - The position value.
+   * @param {Vec3} target - The target value.
+   * @param {Vec3} up - The up value.
    */
   setLookAt(pos, target, up) {
     // Note: We look along the -z axis. Negate the direction.
@@ -93,6 +103,7 @@ class Xfo {
 
   /**
    * Multiplies two Xfo transforms.
+   *
    * @param {Xfo} xfo - The xfo to multiply with.
    * @return {Xfo} - Returns an Xfo.
    */
@@ -113,7 +124,8 @@ class Xfo {
   }
 
   /**
-   * The inverse method.
+   * Returns the inverse of the Xfo object, but returns. the result as a new Xfo.
+   *
    * @return {Xfo} - Returns a new Xfo.
    */
   inverse() {
@@ -142,9 +154,10 @@ class Xfo {
   }
 
   /**
-   * The transformVec3 method.
+   * Tranforms Xfo object using a `Vec3` object. First scaling it, then rotating and finally adding the result to current translation object.
+   *
    * @param {Vec3} vec3 - The vec3 value.
-   * @return {any} - The return value.
+   * @return {Vec3} - The return value.
    */
   transformVec3(vec3) {
     return this.tr.add(this.ori.rotateVec3(this.sc.multiply(vec3)))
@@ -152,6 +165,7 @@ class Xfo {
 
   /**
    * Converts this Xfo to a Mat4 (a 4x4 matrix).
+   *
    * @return {Mat4} - Returns a new Mat4.
    */
   toMat4() {
@@ -183,7 +197,8 @@ class Xfo {
   }
 
   /**
-   * The fromMat4 method.
+   * Sets the state of the Xfo object using Mat4.
+   *
    * @param {Mat4} mat4 - The mat4 value.
    */
   fromMat4(mat4) {
@@ -192,8 +207,11 @@ class Xfo {
   }
 
   /**
-   * The setFromFloat32Array method.
-   * @param {array} float32array - The float32array value.
+   * Sets the state of the Xfo object using an `Float32array`.
+   * <br>
+   * **Note:** You can set the byteOffset in your `Float32array` object
+   *
+   * @param {Float32Array} float32array - The float32array value.
    */
   setFromFloat32Array(float32array) {
     if (float32array.length == 7) {
@@ -219,6 +237,7 @@ class Xfo {
 
   /**
    * Clones this Xfo and returns a new Xfo.
+   *
    * @return {Xfo} - Returns a new Xfo.
    */
   clone() {
@@ -243,6 +262,7 @@ class Xfo {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -256,6 +276,7 @@ class Xfo {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -267,8 +288,9 @@ class Xfo {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * The fromJSON method decodes a json object for this type.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     // eslint-disable-next-line new-cap

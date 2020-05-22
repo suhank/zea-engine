@@ -1,15 +1,19 @@
+/* eslint-disable new-cap */
 import { AttrValue } from './AttrValue.js'
 import { Vec3 } from './Vec3.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** A class representing a 3x3 matrix.
+/**
+ * A class representing a 3x3 matrix.
  * This matrix class is based on GLM, and is column major.
+ *
  * @extends AttrValue
  */
 class Mat3 extends AttrValue {
   /**
-   * Create a Mat3.
-   * @param {number} m00 - Row 0, column 0.
+   * Initializes the Mat3 class with given data.
+   *
+   * @param {number | ArrayBuffer} m00 - Row 0, column 0.
    * @param {number} m01 - Row 0, column 1.
    * @param {number} m02 - Row 0, column 2.
    * @param {number} m10 - Row 1, column 0.
@@ -55,6 +59,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 0, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m00(val) {
@@ -63,6 +68,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 0, column 1.
+   *
    * @return {number} - Returns the m01 value.
    */
   get m01() {
@@ -71,6 +77,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 0, column 1.
+   *
    * @param {number} val - The val param.
    */
   set m01(val) {
@@ -79,6 +86,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 0, column 2.
+   *
    * @return {number} - Returns the m02 value.
    */
   get m02() {
@@ -87,6 +95,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 0, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m02(val) {
@@ -95,6 +104,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 1, column 0.
+   *
    * @return {number} - Returns the m10 value.
    */
   get m10() {
@@ -103,6 +113,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 1, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m10(val) {
@@ -110,7 +121,8 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Getter for row 1, column 1.
+   * Getter for row 1, column 1
+   *
    * @return {number} - Returns the m11 value.
    */
   get m11() {
@@ -119,6 +131,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 1, column 1.
+   *
    * @param {number} val - The val param.
    */
   set m11(val) {
@@ -127,6 +140,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 1, column 2.
+   *
    * @return {number} - Returns the m12 value.
    */
   get m12() {
@@ -135,6 +149,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 1, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m12(val) {
@@ -143,6 +158,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 2, column 0.
+   *
    * @return {number} - Returns the m20 value.
    */
   get m20() {
@@ -151,6 +167,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 2, column 0.
+   *
    * @param {number} val - The val param.
    */
   set m20(val) {
@@ -159,6 +176,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 2, column 1.
+   *
    * @return {number} - Returns the m21 value.
    */
   get m21() {
@@ -167,6 +185,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 2, column 1.
+   *
    * @param {number} val - The val param.
    */
   set m21(val) {
@@ -175,6 +194,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Getter for row 2, column 2.
+   *
    * @return {number} - Returns the m22 value.
    */
   get m22() {
@@ -183,6 +203,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Setter for row 2, column 2.
+   *
    * @param {number} val - The val param.
    */
   set m22(val) {
@@ -190,15 +211,17 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Getter for the x axis.
-   * @return {Vec3} - Returns the x axis as a Vec3.
+   * Getter for the `x` axis.
+   *
+   * @return {Vec3} - Returns the `x` axis as a Vec3.
    */
   get xAxis() {
     return Vec3.createFromFloat32Buffer(this.__data.buffer, 0)
   }
 
   /**
-   * Setter for the x axis.
+   * Setter for the `x` axis.
+   *
    * @param {Vec3} vec3 - The vec3 value.
    */
   set xAxis(vec3) {
@@ -206,15 +229,15 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Getter for the y axis.
-   * * @return {Vec3} - Returns the y axis as a Vec3.
+   * Getter for the `y` axis.
+   * * @return {Vec3} - Returns the `y` axis as a Vec3.
    */
   get yAxis() {
     return Vec3.createFromFloat32Buffer(this.__data.buffer, 3)
   }
 
   /**
-   * Setter for the y axis.
+   * Setter for the `y` axis.
    * @param {Vec3} vec3 - The vec3 value.
    */
   set yAxis(vec3) {
@@ -222,15 +245,15 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * Getter for the z axis.
-   * * @return {Vec3} - Returns the z axis as a Vec3.
+   * Getter for the `z` axis.
+   * * @return {Vec3} - Returns the `z` axis as a Vec3.
    */
   get zAxis() {
     return Vec3.createFromFloat32Buffer(this.__data.buffer, 6)
   }
 
   /**
-   * Setter for the z axis.
+   * Setter for the `z` axis.
    * @param {Vec3} vec3 - The vec3 value.
    */
   set zAxis(vec3) {
@@ -241,7 +264,8 @@ class Mat3 extends AttrValue {
   // Setters
 
   /**
-   * The set method.
+   * Sets the state of the Mat3 class
+   *
    * @param {number} m00 - Row 0, column 0.
    * @param {number} m01 - Row 0, column 1.
    * @param {number} m02 - Row 0, column 2.
@@ -275,16 +299,18 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * The setIdentity method.
+   * Sets state of the Mat3 with the identity  Matrix
    */
   setIdentity() {
     this.set()
   }
 
   /**
-   * The setFromMat method.
+   * Sets state of the Mat3 from another Mat3
+   * <br>
    * Note: works with either Mat3 or Mat4.
-   * @param {any} mat - The mat value.
+   *
+   * @param {Mat3} mat - The mat value.
    */
   setFromMat(mat) {
     this.__data[0] = mat.m00
@@ -299,9 +325,10 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * The setFromDirectionAndUpvector method.
-   * @param {any} dir - The dir value.
-   * @param {any} up - The up value.
+   * Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
+   *
+   * @param {Vec3} dir - The dir value.
+   * @param {Vec3} up - The up value.
    */
   setFromDirectionAndUpvector(dir, up) {
     const zAxis = dir
@@ -335,6 +362,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Inverts a Mat3 and returns the result as a new instance.
+   *
    * @return {Mat3} - Returns a new Mat3.
    */
   inverse() {
@@ -374,6 +402,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Inverts a Mat3.
+   *
    * @return {boolean} - The return value.
    */
   invertInPlace() {
@@ -415,6 +444,7 @@ class Mat3 extends AttrValue {
   /**
    * Transposes (exchanges columns with rows) this matrix
    * and returns the result as a new instance.
+   *
    * @return {Mat3} - Return a new transposed Mat3.
    */
   transpose() {
@@ -450,6 +480,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Transforms the Vec3 with a Mat3.
+   *
    * @param {Vec3} vec3 - The vec3 value.
    * @return {Vec3} - Return the result as a new Vec3.
    */
@@ -469,6 +500,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Clones this Mat3 returning a new instance.
+   *
    * @return {Mat3} - Returns a new Mat3.
    */
   clone() {
@@ -501,6 +533,7 @@ class Mat3 extends AttrValue {
 
   /**
    * Creates a new Mat3 to wrap existing memory in a buffer.
+   *
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Mat3} - Returns a new Mat3.
@@ -515,6 +548,7 @@ class Mat3 extends AttrValue {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -522,7 +556,8 @@ class Mat3 extends AttrValue {
   }
 
   /**
-   * The fromJSON method.
+   * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} json - The json param.
    */
   fromJSON(json) {
@@ -533,8 +568,9 @@ class Mat3 extends AttrValue {
   // Debugging
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return this.toJSON().toString()

@@ -77,6 +77,7 @@ class Frustum {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -92,6 +93,7 @@ class Frustum {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -104,7 +106,8 @@ class Frustum {
   }
 
   /**
-   * The toString method.
+   * Calls `toJSON` method and stringifies it.
+   *
    * @return {string} - The return value.
    */
   toString() {

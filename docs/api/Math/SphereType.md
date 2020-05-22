@@ -9,9 +9,9 @@ Class representing a sphere.
 * [SphereType ⇐ <code>AttrValue</code>](#SphereType)
     * [new SphereType(pos, radius)](#new-SphereType)
     * [clone() ⇒ <code>Sphere</code>](#clone)
-    * [intersectsBox(box) ⇒ <code>any</code>](#intersectsBox)
+    * [intersectsBox(box) ⇒ <code>boolean</code>](#intersectsBox)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_SphereType_new"></a>
 
@@ -37,11 +37,11 @@ Clones this sphere and returns a new sphere.
 Checks if this spehere intersects a box.
 
 **Kind**: instance method of [<code>SphereType</code>](#SphereType)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| box | <code>any</code> | The box value. |
+| box | <code>Box3</code> | The box value. |
 
 <a name="SphereType+toJSON"></a>
 
@@ -53,7 +53,7 @@ The toJSON method encodes this type as a json object for persistences.
 <a name="SphereType+toString"></a>
 
 ### toString
-The toString method.
+Calls `toJSON` method and stringifies it.
 
 **Kind**: instance method of [<code>SphereType</code>](#SphereType)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

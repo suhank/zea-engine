@@ -353,7 +353,7 @@ class Quat extends AttrValue {
   }
 
   /**
-   * The setFromDirectionAndUpvector method.
+   * Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
    *
    * @param {Vec3} dir - The direction value.
    * @param {Vec3} up - The up angle.

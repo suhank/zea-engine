@@ -55,9 +55,9 @@ A class representing a 4x4 matrix.This matrix class is based on GLM, and is col
     * [toMat3(mat4) ⇒ <code>Mat3</code>](#toMat3)
     * [transposeInPlace()](#transposeInPlace)
     * [transpose()](#transpose)
-    * [inverse() ⇒ <code>any</code>](#inverse)
+    * [inverse()](#inverse)
     * [invertInPlace() ⇒ <code>boolean</code>](#invertInPlace)
-    * [setInverse(mat4) ⇒ <code>any</code>](#setInverse)
+    * [setInverse(mat4) ⇒ <code>null</code>](#setInverse)
     * [multiply(other)](#multiply)
     * [multiplyInPlace(other)](#multiplyInPlace)
     * [postmultiplyInPlace(other) ⇒ <code>Mat3</code>](#postmultiplyInPlace)
@@ -81,12 +81,12 @@ A class representing a 4x4 matrix.This matrix class is based on GLM, and is col
 <a name="new_Mat4_new"></a>
 
 ### new Mat4
-Create a Mat4.
+Initializes the Mat3 class with given data.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| m00 | <code>number</code> | <code>1</code> | Row 0, column 0. |
+| m00 | <code>number</code> \| <code>Float32Array</code> \| <code>ArrayBuffer</code> | <code>1</code> | Row 0, column 0. |
 | m01 | <code>number</code> | <code>0</code> | Row 0, column 1. |
 | m02 | <code>number</code> | <code>0</code> | Row 0, column 2. |
 | m03 | <code>number</code> | <code>0</code> | Row 0, column 3. |
@@ -275,7 +275,7 @@ Getter for row 2, column 1.
 <a name="Mat4+m21"></a>
 
 ### m2
-Setter for row 2, column 1.
+Setter for row 2, column 1
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
 
@@ -322,7 +322,7 @@ Setter for row 2, column 3.
 <a name="Mat4+m30"></a>
 
 ### m30 
-Getter for row 3, column 0.
+Getter for row 3, column 0
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
 **Returns**: <code>number</code> - - Returns the m30 value.  
@@ -394,14 +394,14 @@ Setter for row 3, column 3.
 <a name="Mat4+xAxis"></a>
 
 ### xAxis 
-Getter for the x axis.
+Getter for the `x` axis.
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
-**Returns**: <code>Vec3</code> - - Returns the x axis as a Vec3.  
+**Returns**: <code>Vec3</code> - - Returns the `x` axis as a Vec3.  
 <a name="Mat4+xAxis"></a>
 
 ### xAxi
-Setter for the x axis.
+Setter for the `x` axis.
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
 
@@ -412,14 +412,14 @@ Setter for the x axis.
 <a name="Mat4+yAxis"></a>
 
 ### yAxis 
-Getter for the y axis.
+Getter for the `y` axis.
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
-**Returns**: <code>Vec3</code> - - Returns the y axis as a Vec3.  
+**Returns**: <code>Vec3</code> - - Returns the `y` axis as a Vec3.  
 <a name="Mat4+yAxis"></a>
 
 ### yAxi
-Setter for the y axis.
+Setter for the `y` axis.
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
 
@@ -430,14 +430,14 @@ Setter for the y axis.
 <a name="Mat4+zAxis"></a>
 
 ### zAxis 
-Getter for the z axis.
+Getter for the `z` axis.
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
-**Returns**: <code>Vec3</code> - - Returns the z axis as a Vec3.  
+**Returns**: <code>Vec3</code> - - Returns the `z` axis as a Vec3.  
 <a name="Mat4+zAxis"></a>
 
 ### zAxi
-Setter for the z axis.
+Setter for the `z` axis.
 
 **Kind**: instance property of [<code>Mat4</code>](#Mat4)  
 
@@ -466,7 +466,7 @@ Setter for the translation of the matrix.
 <a name="Mat4+set"></a>
 
 ### set
-The set method.
+Sets the state of the Mat4 class
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 
@@ -492,24 +492,24 @@ The set method.
 <a name="Mat4+setIdentity"></a>
 
 ### setIdentity
-The setIdentity method.
+Sets state of the Mat4 with the identity  Matrix
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 <a name="Mat4+setDataArray"></a>
 
 ### setDataArray
-The setDataArray method.
+Sets the state of the Mat4 Object.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| float32Array | <code>any</code> | The float32Array value. |
+| float32Array | <code>Float32Array</code> | The float32Array value. |
 
 <a name="Mat4+setFromMat4"></a>
 
 ### setFromMat4
-The setFromMat method.
+Sets state of the Mat4 from another Mat4<br>Note: works with either Mat3 or Mat4.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 
@@ -548,7 +548,7 @@ Transposes (exchanges columns with rows) this matrixand returns the result as a
 Inverts a Mat4 not using SIMD and returns the result as a new instance.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
-**Returns**: <code>any</code> - - Returns a new Mat4.  
+**Returns**: [<code>Mat4</code>](#Mat4) - - Returns a new Mat4.  
 <a name="Mat4+invertInPlace"></a>
 
 ### invertInPlace
@@ -562,7 +562,7 @@ Inverts a Mat4.
 Sets this matrix as the inverse of the given Mat4.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>null</code> - - In case the `determinant` can't be calculated, a `null` will be returned, otherwise, nothing is returned  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -688,31 +688,31 @@ Transforms the Vec4 with a Mat4.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec | <code>any</code> | The vec value. |
+| vec | <code>Vec4</code> | The vec value. |
 
 <a name="Mat4+transformVec3"></a>
 
 ### transformVec3
-The transformVec3 method.
+Transforms the Vec3 with a Mat4.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 **Returns**: <code>Vec3</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec | <code>any</code> | The vec value. |
+| vec | <code>Vec3</code> | The vec value. |
 
 <a name="Mat4+rotateVec3"></a>
 
 ### rotateVec3
-The rotateVec3 method.
+Rotates a given `Vec3` and the result is returned as a new `Vec3`
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 **Returns**: <code>Vec3</code> - - Return the result as a new Vec3.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vec | <code>any</code> | The vec value. |
+| vec | <code>Vec3</code> | The vec value. |
 
 <a name="Mat4+setPerspectiveMatrix"></a>
 
@@ -723,31 +723,31 @@ Set the perspective from a Mat4.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| fovy | <code>any</code> | The fovy value. |
-| aspect | <code>any</code> | The aspect value. |
-| near | <code>any</code> | The near value. |
-| far | <code>any</code> | The far value. |
+| fovy | <code>number</code> | The fovy value. |
+| aspect | <code>number</code> | The aspect value. |
+| near | <code>number</code> | The near value. |
+| far | <code>number</code> | The far value. |
 
 <a name="Mat4+setOrthographicMatrix"></a>
 
 ### setOrthographicMatrix
-The setOrthographicMatrix method.
+Calculates the orthographic matrix and sets the state of the Mat4 class
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| left | <code>any</code> | The left value. |
-| right | <code>any</code> | The right value. |
-| bottom | <code>any</code> | The bottom value. |
-| top | <code>any</code> | The top value. |
-| near | <code>any</code> | The near value. |
-| far | <code>any</code> | The far value. |
+| left | <code>number</code> | The left value. |
+| right | <code>number</code> | The right value. |
+| bottom | <code>number</code> | The bottom value. |
+| top | <code>number</code> | The top value. |
+| near | <code>number</code> | The near value. |
+| far | <code>number</code> | The far value. |
 
 <a name="Mat4+setScale"></a>
 
 ### setScale
-The setScale method.
+Scales Mat4 Matrix
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 
@@ -760,13 +760,13 @@ The setScale method.
 <a name="Mat4+setFromMat3x4Array"></a>
 
 ### setFromMat3x4Array
-The setFromMat3x4Array method.
+Transforms a 3x4 matrix into a 4x4 matrix and set the result to the Math4 state.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| m3x4 | <code>any</code> | The m3x4 value. |
+| m3x4 | <code>array</code> | The m3x4 value. |
 
 <a name="Mat4+clone"></a>
 
@@ -785,7 +785,7 @@ The toJSON method encodes this type as a json object for persistences.
 <a name="Mat4+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method.
+The fromJSON method decodes a json object for this type.
 
 **Kind**: instance method of [<code>Mat4</code>](#Mat4)  
 

@@ -1,7 +1,7 @@
 <a name="Box3"></a>
 
 ## Box3
-Class representing a box in 3D space.
+Represents a box in 3D space, needing two Vec3 vectors.
 
 **Kind**: global class  
 
@@ -11,26 +11,26 @@ Class representing a box in 3D space.
     * [max ⇒ <code>Vec3</code>](#max)
     * [set(p0, p1)](#set)
     * [reset()](#reset)
-    * [isValid() ⇒ <code>any</code>](#isValid)
+    * [isValid() ⇒ <code>boolean</code>](#isValid)
     * [addPoint(point)](#addPoint)
     * [addBox3(box3, xfo)](#addBox3)
     * [size()](#size)
     * [diagonal()](#diagonal)
     * [center() ⇒ <code>Vec3</code>](#center)
     * [toMat4() ⇒ <code>Mat4</code>](#toMat4)
-    * [getBoundingSphere() ⇒ <code>any</code>](#getBoundingSphere)
+    * [getBoundingSphere() ⇒ <code>SphereType</code>](#getBoundingSphere)
     * [intersectsBox(box) ⇒ <code>boolean</code>](#intersectsBox)
-    * [intersectsSphere(sphere) ⇒ <code>any</code>](#intersectsSphere)
-    * [intersectsPlane(plane) ⇒ <code>any</code>](#intersectsPlane)
+    * [intersectsSphere(sphere) ⇒ <code>boolean</code>](#intersectsSphere)
+    * [intersectsPlane(plane) ⇒ <code>boolean</code>](#intersectsPlane)
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Box3_new"></a>
 
 ### new Box3
-Create a Box3
+Creates a Box3 object using Vec3s.In case the parameters are not passed by, their values are pre-defined:<br>p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)<br>p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
 
 
 | Param | Type | Description |
@@ -55,7 +55,7 @@ Getter for the upper (x, y, z) boundary of the box.
 <a name="Box3+set"></a>
 
 ### set
-The set method.
+Sets both Vect3 points
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 
@@ -67,16 +67,16 @@ The set method.
 <a name="Box3+reset"></a>
 
 ### reset
-The reset method.
+Resets the box3 back to an uninitialized state.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 <a name="Box3+isValid"></a>
 
 ### isValid
-The isValid method.
+Returns `true` if the box has been expanded to contain a point.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="Box3+addPoint"></a>
 
 ### addPoint
@@ -91,19 +91,19 @@ Expands the Box3 to contain the new point.
 <a name="Box3+addBox3"></a>
 
 ### addBox3
-The addBox3 method.
+Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parametersit proceeds to apply the transform for the Vec3.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 
 | Param | Type | Description |
 | --- | --- | --- |
 | box3 | [<code>Box3</code>](#Box3) | A 3D box. |
-| xfo | <code>Vec3</code> | A 3D transform. |
+| xfo | <code>Xfo</code> | A 3D transform. |
 
 <a name="Box3+size"></a>
 
 ### size
-Returns the size of a Box3.
+Returns the size of the Box3.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 **Returns**: [<code>Box3</code>](#Box3) - - Returns a Box3.  
@@ -131,10 +131,10 @@ Converts this Box3 to a Mat4 (a 4x4 matrix).
 <a name="Box3+getBoundingSphere"></a>
 
 ### getBoundingSphere
-The getBoundingSphere method.
+Calculates and returns the bounding Sphere of the Box3
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>SphereType</code> - - The return value.  
 <a name="Box3+intersectsBox"></a>
 
 ### intersectsBox
@@ -145,7 +145,7 @@ Determines if this Box3 intersects a plane.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| box | <code>any</code> | The box to check for intersection against. |
+| box | [<code>Box3</code>](#Box3) | The box to check for intersection against. |
 
 <a name="Box3+intersectsSphere"></a>
 
@@ -153,7 +153,7 @@ Determines if this Box3 intersects a plane.
 Determines if this Box3 intersects a sphere.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -165,7 +165,7 @@ Determines if this Box3 intersects a sphere.
 Determines if this Box3 intersects a plane.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -181,14 +181,14 @@ Clones this Box3 and returns a new Box3.
 <a name="Box3+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+Encodes `Box3` Class as a JSON object for persistence.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 **Returns**: <code>object</code> - - The json object.  
 <a name="Box3+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method decodes a json object for this type.
+Decodes a JSON object to set the state of this class.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
 
@@ -199,7 +199,7 @@ The fromJSON method decodes a json object for this type.
 <a name="Box3+toString"></a>
 
 ### toString
-The toString method.
+Calls `toJSON` method and stringifies it.
 
 **Kind**: instance method of [<code>Box3</code>](#Box3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

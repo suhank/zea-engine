@@ -228,7 +228,7 @@ class Box3 {
   }
 
   /**
-   * The getBoundingSphere method.
+   * Calculates and returns the bounding Sphere of the Box3
    *
    * @return {SphereType} - The return value.
    */

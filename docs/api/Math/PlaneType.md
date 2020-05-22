@@ -10,11 +10,11 @@ Class representing a plane.
     * [new PlaneType(normal, w)](#new-PlaneType)
     * [set(x, y, z, w)](#set)
     * [divideScalar(value)](#divideScalar)
-    * [distanceToPoint(point) ⇒ <code>any</code>](#distanceToPoint)
+    * [distanceToPoint(point) ⇒ <code>number</code>](#distanceToPoint)
     * [normalizeInPlace()](#normalizeInPlace)
     * [clone() ⇒ <code>Plane</code>](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_PlaneType_new"></a>
 
@@ -30,7 +30,7 @@ Create a plane.
 <a name="PlaneType+set"></a>
 
 ### set
-Thet set method
+Setter from scalar components.
 
 **Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
 
@@ -55,14 +55,14 @@ Thet divideScalar method
 <a name="PlaneType+distanceToPoint"></a>
 
 ### distanceToPoint
-Thet distanceToPoint method
+Calculates the distance from a point to this place.
 
 **Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
-**Returns**: <code>any</code> - - The rreturn value.  
+**Returns**: <code>number</code> - - The rreturn value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| point | <code>any</code> | The point value. |
+| point | <code>Vec3</code> | The point value. |
 
 <a name="PlaneType+normalizeInPlace"></a>
 
@@ -87,7 +87,7 @@ The toJSON method encodes this type as a json object for persistences.
 <a name="PlaneType+toString"></a>
 
 ### toString
-The toString method.
+Calls `toJSON` method and stringifies it.
 
 **Kind**: instance method of [<code>PlaneType</code>](#PlaneType)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

@@ -10,11 +10,11 @@ Class representing a ray that emits from an origin in a specified direction.
     * [closestPoint(point)](#closestPoint)
     * [pointAtDist(dist)](#pointAtDist)
     * [intersectRayVector(ray)](#intersectRayVector)
-    * [intersectRayPlane(plane) ⇒ <code>any</code>](#intersectRayPlane)
+    * [intersectRayPlane(plane) ⇒ <code>number</code>](#intersectRayPlane)
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [fromJSON(j)](#fromJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Ray_new"></a>
 
@@ -69,11 +69,11 @@ Returns the two ray params that represent the closest point between the two rays
 Returns one ray param representing the intersectionof this ray against the plane defined by the given ray.
 
 **Kind**: instance method of [<code>Ray</code>](#Ray)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| plane | <code>any</code> | The plane to intersect with. |
+| plane | <code>Vec3</code> | The plane to intersect with. |
 
 <a name="Ray+clone"></a>
 
@@ -103,7 +103,7 @@ The fromJSON method decodes a json object for this type.
 <a name="Ray+toString"></a>
 
 ### toString
-The toString method.
+Calls `toJSON` method and stringifies it.
 
 **Kind**: instance method of [<code>Ray</code>](#Ray)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

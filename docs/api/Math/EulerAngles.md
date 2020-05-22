@@ -1,7 +1,7 @@
 <a name="EulerAngles"></a>
 
 ## EulerAngles ⇐ <code>AttrValue</code>
-Class representing euler angles. Euler angles decribe rotating an object around its various axis in a specified axis order.
+Class representing euler angles. Euler angles decribe rotating an objectaround its various axis in a specified axis order.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -19,7 +19,7 @@ Class representing euler angles. Euler angles decribe rotating an object around
 <a name="new_EulerAngles_new"></a>
 
 ### new EulerAngles
-Create a euler angle.
+Create a euler angle. Recieves the xyz values in degrees and the order that the rotations are applied.<br>Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`<br>It could be either the `string` or the `number` value.
 
 
 | Param | Type | Default | Description |
@@ -27,7 +27,7 @@ Create a euler angle.
 | x | <code>number</code> | <code>0</code> | The angle of the x axis in degrees. Default is 0. |
 | y | <code>number</code> | <code>0</code> | The angle of the y axis in degrees. Default is 0. |
 | z | <code>number</code> | <code>0</code> | The angle of the z axis in degrees. Default is 0. |
-| order | <code>number</code> | <code>0</code> | The order in which the rotations are applied. |
+| order | <code>number</code> \| <code>string</code> | <code>0</code> | The order in which the rotations are applied. |
 
 <a name="EulerAngles+x"></a>
 
@@ -86,7 +86,7 @@ Setter for z axis rotation.
 <a name="EulerAngles+set"></a>
 
 ### set
-The set method
+Sets the EulerAngles
 
 **Kind**: instance method of [<code>EulerAngles</code>](#EulerAngles)  
 
