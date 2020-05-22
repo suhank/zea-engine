@@ -1,17 +1,24 @@
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing euler angles. Euler angles decribe rotating an object
- *  around its various axis in a specified axis order.
+/**
+ * Class representing euler angles. Euler angles decribe rotating an object
+ * around its various axis in a specified axis order.
+ *
  * @extends AttrValue
  */
 class EulerAngles extends AttrValue {
   /**
-   * Create a euler angle.
+   * Create a euler angle. Recieves the xyz values in degrees and the order that the rotations are applied.
+   * <br>
+   * Order parameter values: `XYZ: 0`, `YZX: 1`, `ZXY: 2`, `XZY: 3`, `ZYX: 4`, `YXZ: 5`
+   * <br>
+   * It could be either the `string` or the `number` value.
+   *
    * @param {number} x - The angle of the x axis in degrees. Default is 0.
    * @param {number} y - The angle of the y axis in degrees. Default is 0.
    * @param {number} z - The angle of the z axis in degrees. Default is 0.
-   * @param {number} order - The order in which the rotations are applied.
+   * @param {number | string} order - The order in which the rotations are applied.
    */
   constructor(x = 0, y = 0, z = 0, order = 0) {
     super()
@@ -55,6 +62,7 @@ class EulerAngles extends AttrValue {
 
   /**
    * Getter for x axis rotation.
+   *
    * @return {number} - Returns the x axis rotation.
    */
   get x() {
@@ -63,6 +71,7 @@ class EulerAngles extends AttrValue {
 
   /**
    * Setter for x axis rotation.
+   *
    * @param {number} val - The val param.
    */
   set x(val) {
@@ -71,6 +80,7 @@ class EulerAngles extends AttrValue {
 
   /**
    * Getter for y axis rotation.
+   *
    * @return {number} - Returns the y axis rotation.
    */
   get y() {
@@ -79,6 +89,7 @@ class EulerAngles extends AttrValue {
 
   /**
    * Setter for y axis rotation.
+   *
    * @param {number} val - The val param.
    */
   set y(val) {
@@ -87,6 +98,7 @@ class EulerAngles extends AttrValue {
 
   /**
    * Getter for z axis rotation.
+   *
    * @return {number} - Returns the z axis rotation.
    */
   get z() {
@@ -95,6 +107,7 @@ class EulerAngles extends AttrValue {
 
   /**
    * Setter for z axis rotation.
+   *
    * @param {number} val - The val param.
    */
   set z(val) {
@@ -102,7 +115,8 @@ class EulerAngles extends AttrValue {
   }
 
   /**
-   * The set method
+   * Sets the EulerAngles
+   *
    * @param {number} x - The x axis rotation.
    * @param {number} y  - The y axis rotation.
    * @param {number} z  - The z axis rotation.
