@@ -53,7 +53,7 @@ class Xfo {
   /**
    * Sets the state of the Xfo object.
    *
-   * @param {Float32Array | Vec3} tr - The translation value.
+   * @param {Vec3} tr - The translation value.
    * @param {Quat} ori - The orientation value.
    * @param {Vec3} sc - The scaling value.
    */
