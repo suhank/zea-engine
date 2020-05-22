@@ -1,13 +1,16 @@
+/* eslint-disable require-jsdoc */
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing the red, green, blue and alpha channel of a color.
+/**
+ * Class representing the red, green, blue and alpha channel of a color.
+ *
  * @extends AttrValue
  */
 class RGBA extends AttrValue {
   /**
    * Create a RGBA.
-   * @param {number} r - The red channel of a color.
+   * @param {number | string | Float32Array | ArrayBuffer} r - The red channel of a color.
    * @param {number} g - The green channel of a color.
    * @param {number} b - The blue channel of a color.
    * @param {number} a - The alpha (transparency) channel of a color.
@@ -40,6 +43,7 @@ class RGBA extends AttrValue {
 
   /**
    * Getter for red channel.
+   *
    * @return {RGBA} - Returns the red channel.
    */
   get r() {
@@ -48,6 +52,7 @@ class RGBA extends AttrValue {
 
   /**
    * Setter for red channel.
+   *
    * @param {number} val - The val param.
    */
   set r(val) {
@@ -56,6 +61,7 @@ class RGBA extends AttrValue {
 
   /**
    * Getter for green channel.
+   *
    * @return {RGBA} - Returns the green channel.
    */
   get g() {
@@ -64,6 +70,7 @@ class RGBA extends AttrValue {
 
   /**
    * Setter for green channel.
+   *
    * @param {number} val - The val param.
    */
   set g(val) {
@@ -72,6 +79,7 @@ class RGBA extends AttrValue {
 
   /**
    * Getter for blue channel.
+   *
    * @return {RGBA} - Returns the blue channel.
    */
   get b() {
@@ -80,6 +88,7 @@ class RGBA extends AttrValue {
 
   /**
    * Setter for blue channel.
+   *
    * @param {number} val - The val param.
    */
   set b(val) {
@@ -88,6 +97,7 @@ class RGBA extends AttrValue {
 
   /**
    * Getter for alpha channel.
+   *
    * @return {RGBA} - Returns the alpha channel.
    */
   get a() {
@@ -95,6 +105,7 @@ class RGBA extends AttrValue {
   }
   /**
    * Setter for alpha value.
+   *
    * @param {number} val - The val param.
    */
   set a(val) {
@@ -103,6 +114,7 @@ class RGBA extends AttrValue {
 
   /**
    * Setter from scalar components.
+   *
    * @param {number} r - The red channel.
    * @param {number} g  - The green channel.
    * @param {number} b  - The blue channel.
@@ -117,6 +129,7 @@ class RGBA extends AttrValue {
 
   /**
    * Setter from another RGBA color.
+   *
    * @param {RGBA} other - The other RGBA to set from.
    */
   setFromOther(other) {
@@ -128,7 +141,8 @@ class RGBA extends AttrValue {
 
   /**
    * Setter from a scalar array.
-   * @param {any} vals - The vals param.
+   *
+   * @param {array} vals - The vals param.
    */
   setFromArray(vals) {
     this.r = vals[0]
@@ -140,6 +154,7 @@ class RGBA extends AttrValue {
   /**
    * Setter from a hexadecimal value.
    * E.g. #ff0000
+   *
    * @param {number} hex - The hex value.
    */
   setFromHex(hex) {
@@ -164,10 +179,11 @@ class RGBA extends AttrValue {
   /**
    * Setter from a CSS color name.
    * E.g. "red"
+   *
    * @param {string} name - The CSS color name.
    */
   setFromCSSColorName(name) {
-    const colourNameToHex = colour => {
+    const colourNameToHex = (colour) => {
       const colors = {
         aliceblue: '#f0f8ff',
         antiquewhite: '#faebd7',
@@ -326,7 +342,8 @@ class RGBA extends AttrValue {
 
   /**
    * Returns the hexadecimal value of this RGBA color.
-   * @return {number} - Returns the hex value.
+   *
+   * @return {string} - Returns the hex value.
    */
   toHex() {
     function componentToHex(int) {
@@ -343,6 +360,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns true if this RGBA color is exactly the same as other.
+   *
    * @param {RGBA} other - The other RGBA to compare with.
    * @return {boolean} - Returns true or false.
    */
@@ -357,6 +375,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns true if this RGBA color is NOT exactly the same as other.
+   *
    * @param {RGBA} other -  The other RGBA to compare with.
    * @return {boolean} - Returns true or false.
    */
@@ -371,6 +390,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns true if this RGBA color is approximately the same as other.
+   *
    * @param {RGBA} other - The other RGBA to compare with.
    * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
@@ -386,6 +406,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns a new RGBA color which is this RGBA color added to other.
+   *
    * @param {RGBA} other - The other RGBA to add.
    * @return {RGBA} - Returns a new RGBA.
    */
@@ -400,6 +421,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns a new RGBA color which is this RGBA color subtracted from other.
+   *
    * @param {RGBA} other - The other RGBA to subtract.
    * @return {RGBA} - Returns a new RGBA.
    */
@@ -414,6 +436,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns a new RGBA color which is this vector scaled by scalar.
+   *
    * @param {number} scalar - The scalar value.
    * @return {RGBA} - Returns a new RGBA.
    */
@@ -428,6 +451,7 @@ class RGBA extends AttrValue {
 
   /**
    * Scales this RGBA color by scalar.
+   *
    * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
@@ -439,6 +463,7 @@ class RGBA extends AttrValue {
 
   /**
    * Apply gamma correction to this RGBA color.
+   *
    * @param {number} gamma - The gamma value.
    */
   applyGamma(gamma) {
@@ -466,6 +491,7 @@ class RGBA extends AttrValue {
 
   /**
    * Converts to gamma color space and returns a new RGBA color.
+   *
    * @param {number} gamma - The gamma value.
    * @return {RGBA} - Returns a new RGBA.
    */
@@ -479,7 +505,8 @@ class RGBA extends AttrValue {
   }
 
   /**
-   * The luminance method.
+   * Calculates and returns the relative luminance of the linear RGB component.
+   *
    * @return {number} - The return value.
    */
   luminance() {
@@ -488,6 +515,7 @@ class RGBA extends AttrValue {
 
   /**
    * Performs a linear interpolation between this RGBA color and other.
+   *
    * @param {RGBA} other - The other RGBA to interpolate between.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {RGBA} - Returns a new RGBA.
@@ -507,6 +535,7 @@ class RGBA extends AttrValue {
 
   /**
    * Creates a random RGBA.
+   *
    * @param {number} gammaOffset - The gamma offset.
    * @param {boolean} randomAlpha - Determines whether the alpha channel is random.
    * @return {RGBA} - Returns a new random RGBA.
@@ -538,6 +567,7 @@ class RGBA extends AttrValue {
 
   /**
    * Clones this RGBA color and returns a new RGBA color.
+   *
    * @return {RGBA} - Returns a new RGBA.
    */
   clone() {
@@ -551,6 +581,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
+   *
    * @return {array} - Returns as an array.
    */
   asArray() {
@@ -559,6 +590,7 @@ class RGBA extends AttrValue {
 
   /**
    * Returns the type as a 3 component array. Often used to pass types to the GPU.
+   *
    * @return {array} - Returns as a 3 component array.
    */
   as3ComponentArray() {
@@ -580,6 +612,7 @@ class RGBA extends AttrValue {
 
   /**
    * The createFromFloat32Buffer method.
+   *
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {RGBA} - Returns a new color.
@@ -603,6 +636,7 @@ class RGBA extends AttrValue {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -616,6 +650,7 @@ class RGBA extends AttrValue {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -626,8 +661,9 @@ class RGBA extends AttrValue {
   }
 
   /**
-   * The toCSSString method.
-   * @return {any} - The return value.
+   * Returns the CSS rgba string.
+   *
+   * @return {string} - The return value.
    */
   toCSSString() {
     return (

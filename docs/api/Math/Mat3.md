@@ -44,17 +44,17 @@ A class representing a 3x3 matrix.This matrix class is based on GLM, and is col
     * [clone()](#clone)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
     * [fromJSON(json)](#fromJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Mat3_new"></a>
 
 ### new Mat3
-Create a Mat3.
+Initializes the Mat3 class with given data.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| m00 | <code>number</code> | <code>1</code> | Row 0, column 0. |
+| m00 | <code>number</code> \| <code>ArrayBuffer</code> | <code>1</code> | Row 0, column 0. |
 | m01 | <code>number</code> | <code>0</code> | Row 0, column 1. |
 | m02 | <code>number</code> | <code>0</code> | Row 0, column 2. |
 | m10 | <code>number</code> | <code>0</code> | Row 1, column 0. |
@@ -139,7 +139,7 @@ Setter for row 1, column 0.
 <a name="Mat3+m11"></a>
 
 ### m11 
-Getter for row 1, column 1.
+Getter for row 1, column 1
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 **Returns**: <code>number</code> - - Returns the m11 value.  
@@ -229,14 +229,14 @@ Setter for row 2, column 2.
 <a name="Mat3+xAxis"></a>
 
 ### xAxis 
-Getter for the x axis.
+Getter for the `x` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
-**Returns**: <code>Vec3</code> - - Returns the x axis as a Vec3.  
+**Returns**: <code>Vec3</code> - - Returns the `x` axis as a Vec3.  
 <a name="Mat3+xAxis"></a>
 
 ### xAxi
-Setter for the x axis.
+Setter for the `x` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 
@@ -247,13 +247,13 @@ Setter for the x axis.
 <a name="Mat3+yAxis"></a>
 
 ### yAxi
-Getter for the y axis.* @return {Vec3} - Returns the y axis as a Vec3.
+Getter for the `y` axis.* @return {Vec3} - Returns the `y` axis as a Vec3.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 <a name="Mat3+yAxis"></a>
 
 ### yAxi
-Setter for the y axis.
+Setter for the `y` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 
@@ -264,13 +264,13 @@ Setter for the y axis.
 <a name="Mat3+zAxis"></a>
 
 ### zAxi
-Getter for the z axis.* @return {Vec3} - Returns the z axis as a Vec3.
+Getter for the `z` axis.* @return {Vec3} - Returns the `z` axis as a Vec3.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 <a name="Mat3+zAxis"></a>
 
 ### zAxi
-Setter for the z axis.
+Setter for the `z` axis.
 
 **Kind**: instance property of [<code>Mat3</code>](#Mat3)  
 
@@ -281,7 +281,7 @@ Setter for the z axis.
 <a name="Mat3+set"></a>
 
 ### set
-The set method.
+Sets the state of the Mat3 class
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 
@@ -300,31 +300,31 @@ The set method.
 <a name="Mat3+setIdentity"></a>
 
 ### setIdentity
-The setIdentity method.
+Sets state of the Mat3 with the identity  Matrix
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 <a name="Mat3+setFromMat"></a>
 
 ### setFromMat
-The setFromMat method.Note: works with either Mat3 or Mat4.
+Sets state of the Mat3 from another Mat3<br>Note: works with either Mat3 or Mat4.
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| mat | <code>any</code> | The mat value. |
+| mat | [<code>Mat3</code>](#Mat3) | The mat value. |
 
 <a name="Mat3+setFromDirectionAndUpvector"></a>
 
 ### setFromDirectionAndUpvector
-The setFromDirectionAndUpvector method.
+Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dir | <code>any</code> | The dir value. |
-| up | <code>any</code> | The up value. |
+| dir | <code>Vec3</code> | The dir value. |
+| up | <code>Vec3</code> | The up value. |
 
 <a name="Mat3+inverse"></a>
 
@@ -382,7 +382,7 @@ The toJSON method encodes this type as a json object for persistences.
 <a name="Mat3+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method.
+The fromJSON method decodes a json object for this type.
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
 
@@ -393,7 +393,7 @@ The fromJSON method.
 <a name="Mat3+toString"></a>
 
 ### toString
-The toString method.
+Calls `toJSON` method and stringifies it.
 
 **Kind**: instance method of [<code>Mat3</code>](#Mat3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

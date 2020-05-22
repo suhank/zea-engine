@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec3 } from './Vec3.js'
 import { Mat4 } from './Mat4.js'
@@ -5,9 +6,18 @@ import { SphereType } from './SphereType.js'
 import { typeRegistry } from './TypeRegistry.js'
 
 /** Class representing a box in 3D space. */
+/**
+ * Represents a box in 3D space, needing two Vec3 vectors.
+ */
 class Box3 {
   /**
-   * Create a Box3
+   * Creates a Box3 object using Vec3s.
+   * In case the parameters are not passed by, their values are pre-defined:
+   * <br>
+   * p0 is a Vec2 with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY|`Number.POSITIVE_INFINITY`}
+   * <br>
+   * p1 is a Vec2 with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY|`Number.NEGATIVE_INFINITY`}
+   *
    * @param {Vec3} p0 - A point representing the corners of a 3D box.
    * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
@@ -38,6 +48,7 @@ class Box3 {
 
   /**
    * Getter for the lower (x, y, z) boundary of the box.
+   *
    * @return {Vec3} - Returns the minumum Vec3.
    */
   get min() {
@@ -46,6 +57,7 @@ class Box3 {
 
   /**
    * Getter for the upper (x, y, z) boundary of the box.
+   *
    * @return {Vec3} - Returns the minumum Vec3.
    */
   get max() {
@@ -53,7 +65,8 @@ class Box3 {
   }
 
   /**
-   * The set method.
+   * Sets both Vect3 points
+   *
    * @param {Vec3} p0 - A point representing the corners of a 3D box.
    * @param {Vec3} p1 - A point representing the corners of a 3D box.
    */
@@ -63,7 +76,7 @@ class Box3 {
   }
 
   /**
-   * The reset method.
+   * Resets the box3 back to an uninitialized state.
    */
   reset() {
     this.p0.x = Number.POSITIVE_INFINITY
@@ -75,8 +88,9 @@ class Box3 {
   }
 
   /**
-   * The isValid method.
-   * @return {any} - The return value.
+   * Returns `true` if the box has been expanded to contain a point.
+   *
+   * @return {boolean} - The return value.
    */
   isValid() {
     return (
@@ -91,6 +105,7 @@ class Box3 {
 
   /**
    * Expands the Box3 to contain the new point.
+   *
    * @param {Vec3} point - A point represents the corners of a 3D box.
    */
   addPoint(point) {
@@ -118,9 +133,11 @@ class Box3 {
   }
 
   /**
-   * The addBox3 method.
+   * Adds `Box3` to this `Box3`, of the Xfo instance is passed in the parameters
+   * it proceeds to apply the transform for the Vec3.
+   *
    * @param {Box3} box3 - A 3D box.
-   * @param {Vec3} xfo - A 3D transform.
+   * @param {Xfo} xfo - A 3D transform.
    */
   addBox3(box3, xfo = undefined) {
     if (xfo) {
@@ -152,7 +169,8 @@ class Box3 {
   }
 
   /**
-   * Returns the size of a Box3.
+   * Returns the size of the Box3.
+   *
    * @return {Box3} - Returns a Box3.
    */
   size() {
@@ -161,6 +179,7 @@ class Box3 {
 
   /**
    * Returns the size of a Box3 - the same as size().
+   *
    * @return {Box3} - Returns a Box3.
    */
   diagonal() {
@@ -169,6 +188,7 @@ class Box3 {
 
   /**
    * Returns the center point of a Box3.
+   *
    * @return {Vec3} - Returns a Vec3.
    */
   center() {
@@ -180,6 +200,7 @@ class Box3 {
 
   /**
    * Converts this Box3 to a Mat4 (a 4x4 matrix).
+   *
    * @return {Mat4} - Returns a new Mat4.
    */
   toMat4() {
@@ -187,16 +208,29 @@ class Box3 {
     const scy = this.p1.y - this.p0.y
     const scz = this.p1.z - this.p0.z
     return new Mat4(
-      scx, 0, 0, 0,
-      0, scy, 0, 0,
-      0, 0, scz, 0,
-      this.p0.x, this.p0.y, this.p0.z, 1.0
+      scx,
+      0,
+      0,
+      0,
+      0,
+      scy,
+      0,
+      0,
+      0,
+      0,
+      scz,
+      0,
+      this.p0.x,
+      this.p0.y,
+      this.p0.z,
+      1.0
     )
   }
 
   /**
-   * The getBoundingSphere method.
-   * @return {any} - The return value.
+   * Calculates and returns the bounding Sphere of the Box3
+   *
+   * @return {SphereType} - The return value.
    */
   getBoundingSphere() {
     return new SphereType(this.center(), this.diagonal().length() * 0.5)
@@ -204,7 +238,8 @@ class Box3 {
 
   /**
    * Determines if this Box3 intersects a plane.
-   * @param {any} box - The box to check for intersection against.
+   *
+   * @param {Box3} box - The box to check for intersection against.
    * @return {boolean} - The return value.
    */
   intersectsBox(box) {
@@ -221,8 +256,9 @@ class Box3 {
 
   /**
    * Determines if this Box3 intersects a sphere.
+   *
    * @param {Sphere} sphere - The sphere to check for intersection against.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   intersectsSphere(sphere) {
     // var closestPoint = new Vector3();
@@ -239,8 +275,9 @@ class Box3 {
 
   /**
    * Determines if this Box3 intersects a plane.
+   *
    * @param {Plane} plane - The plane to check for intersection against.
-   * @return {any} - The return value.
+   * @return {boolean} - The return value.
    */
   intersectsPlane(plane) {
     // We compute the minimum and maximum dot product values. If those values
@@ -310,7 +347,8 @@ class Box3 {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * Encodes `Box3` Class as a JSON object for persistence.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -321,7 +359,8 @@ class Box3 {
   }
 
   /**
-   * The fromJSON method decodes a json object for this type.
+   * Decodes a JSON object to set the state of this class.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -351,10 +390,12 @@ class Box3 {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
+    // eslint-disable-next-line new-cap
     return JSON_stringify_fixedPrecision(this.toJSON())
   }
 }

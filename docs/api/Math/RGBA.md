@@ -22,7 +22,7 @@ Class representing the red, green, blue and alpha channel of a color.
         * [setFromArray(vals)](#setFromArray)
         * [setFromHex(hex)](#setFromHex)
         * [setFromCSSColorName(name)](#setFromCSSColorName)
-        * [toHex() ⇒ <code>number</code>](#toHex)
+        * [toHex() ⇒ <code>string</code>](#toHex)
         * [equal(other) ⇒ <code>boolean</code>](#equal)
         * [notequals(other) ⇒ <code>boolean</code>](#notequals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
@@ -40,7 +40,7 @@ Class representing the red, green, blue and alpha channel of a color.
         * [as3ComponentArray() ⇒ <code>array</code>](#as3ComponentArray)
         * [toJSON() ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j)](#fromJSON)
-        * [toCSSString() ⇒ <code>any</code>](#toCSSString)
+        * [toCSSString() ⇒ <code>string</code>](#toCSSString)
     * _static_
         * [random(gammaOffset, randomAlpha)](#random)
 
@@ -52,7 +52,7 @@ Create a RGBA.
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| r | <code>number</code> | <code>0</code> | The red channel of a color. |
+| r | <code>number</code> \| <code>string</code> \| <code>Float32Array</code> \| <code>ArrayBuffer</code> | <code>0</code> | The red channel of a color. |
 | g | <code>number</code> | <code>0</code> | The green channel of a color. |
 | b | <code>number</code> | <code>0</code> | The blue channel of a color. |
 | a | <code>number</code> | <code>255</code> | The alpha (transparency) channel of a color. |
@@ -163,7 +163,7 @@ Setter from a scalar array.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vals | <code>any</code> | The vals param. |
+| vals | <code>array</code> | The vals param. |
 
 <a name="RGBA+setFromHex"></a>
 
@@ -193,7 +193,7 @@ Setter from a CSS color name.E.g. "red"
 Returns the hexadecimal value of this RGBA color.
 
 **Kind**: instance method of [<code>RGBA</code>](#RGBA)  
-**Returns**: <code>number</code> - - Returns the hex value.  
+**Returns**: <code>string</code> - - Returns the hex value.  
 <a name="RGBA+equal"></a>
 
 ### equal
@@ -316,7 +316,7 @@ Converts to gamma color space and returns a new RGBA color.
 <a name="RGBA+luminance"></a>
 
 ### luminance
-The luminance method.
+Calculates and returns the relative luminance of the linear RGB component.
 
 **Kind**: instance method of [<code>RGBA</code>](#RGBA)  
 **Returns**: <code>number</code> - - The return value.  
@@ -375,10 +375,10 @@ The fromJSON method decodes a json object for this type.
 <a name="RGBA+toCSSString"></a>
 
 ### toCSSString
-The toCSSString method.
+Returns the CSS rgba string.
 
 **Kind**: instance method of [<code>RGBA</code>](#RGBA)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  
 <a name="RGBA.random"></a>
 
 ### random

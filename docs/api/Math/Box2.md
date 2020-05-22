@@ -1,7 +1,7 @@
 <a name="Box2"></a>
 
 ## Box2
-Class representing a box in 2D space.
+Represents a box in 2D space. Needing two Vec2 vectors describing the corners
 
 **Kind**: global class  
 
@@ -9,18 +9,18 @@ Class representing a box in 2D space.
     * [new Box2(p0, p1)](#new-Box2)
     * [set(p0, p1)](#set)
     * [reset()](#reset)
-    * [isValid() ⇒ <code>any</code>](#isValid)
+    * [isValid() ⇒ <code>boolean</code>](#isValid)
     * [addPoint(point)](#addPoint)
     * [size()](#size)
     * [diagonal()](#diagonal)
     * [center() ⇒ <code>Vec2</code>](#center)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
-    * [toString() ⇒ <code>any</code>](#toString)
+    * [toString() ⇒ <code>string</code>](#toString)
 
 <a name="new_Box2_new"></a>
 
 ### new Box2
-Create a Box2
+Creates a Box2 object using Vec2s.In case the parameters are not passed by, their values are pre-defined:<br>p0 is a Vec2 with [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)<br>p1 is a Vec2 with [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)
 
 
 | Param | Type | Description |
@@ -31,7 +31,7 @@ Create a Box2
 <a name="Box2+set"></a>
 
 ### set
-The set method.
+Sets both Vect2 points
 
 **Kind**: instance method of [<code>Box2</code>](#Box2)  
 
@@ -46,13 +46,14 @@ The set method.
 Resets the box2 back to an uninitialized state.
 
 **Kind**: instance method of [<code>Box2</code>](#Box2)  
+**See**: [`Number.POSITIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY)and [`Number.NEGATIVE_INFINITY`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY)  
 <a name="Box2+isValid"></a>
 
 ### isValid
-Returns true if the box has been expanded to contain a point.
+Returns `true` if the box has been expanded to contain a point.
 
 **Kind**: instance method of [<code>Box2</code>](#Box2)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>boolean</code> - - The return value.  
 <a name="Box2+addPoint"></a>
 
 ### addPoint
@@ -88,14 +89,14 @@ Returns the center point of a Box2.
 <a name="Box2+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+Encodes `Box2` Class as a JSON object for persistence.
 
 **Kind**: instance method of [<code>Box2</code>](#Box2)  
 **Returns**: <code>object</code> - - The json object.  
 <a name="Box2+toString"></a>
 
 ### toString
-The toString method.
+Calls `toJSON` method and stringifies it.
 
 **Kind**: instance method of [<code>Box2</code>](#Box2)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  

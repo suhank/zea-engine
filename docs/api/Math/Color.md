@@ -9,25 +9,25 @@ Class representing a color.
 * [Color ⇐ <code>AttrValue</code>](#Color)
     * [new Color(r, g, b, a)](#new-Color)
     * _instance_
+        * [r ⇒ <code>number</code>](#r)
         * [r](#r)
-        * [r](#r)
+        * [g ⇒ <code>number</code>](#g)
         * [g](#g)
-        * [g](#g)
+        * [b ⇒ <code>number</code>](#b)
         * [b](#b)
-        * [b](#b)
-        * [a](#a)
+        * [a ⇒ <code>number</code>](#a)
         * [a](#a)
         * [set(r, g, b, a)](#set)
         * [setFromOther(other)](#setFromOther)
         * [setFromScalarArray(vals)](#setFromScalarArray)
-        * [getAsRGBArray()](#getAsRGBArray)
-        * [getAsRGBDict()](#getAsRGBDict)
+        * [getAsRGBArray() ⇒ <code>array</code>](#getAsRGBArray)
+        * [getAsRGBDict() ⇒ <code>object</code>](#getAsRGBDict)
         * [setFromRGB(r, g, b, a)](#setFromRGB)
         * [setFromRGBArray(vals)](#setFromRGBArray)
         * [setFromRGBDict(vals)](#setFromRGBDict)
         * [setFromHex(hex)](#setFromHex)
         * [setFromCSSColorName(name)](#setFromCSSColorName)
-        * [toHex() ⇒ <code>number</code>](#toHex)
+        * [toHex() ⇒ <code>string</code>](#toHex)
         * [equal(other) ⇒ <code>boolean</code>](#equal)
         * [notequals(other) ⇒ <code>boolean</code>](#notequals)
         * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
@@ -44,19 +44,19 @@ Class representing a color.
         * [asArray() ⇒ <code>array</code>](#asArray)
         * [toJSON() ⇒ <code>object</code>](#toJSON)
         * [fromJSON(j)](#fromJSON)
-        * [toCSSString() ⇒ <code>any</code>](#toCSSString)
+        * [toCSSString() ⇒ <code>string</code>](#toCSSString)
     * _static_
         * [random(gammaOffset, randomAlpha)](#random)
 
 <a name="new_Color_new"></a>
 
 ### new Color
-Create a color.
+Creates a `Color` object with an RGBA structure.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| r | <code>number</code> | <code>0</code> | The red channel of a color. |
+| r | <code>number</code> \| <code>string</code> \| <code>Float32Array</code> \| <code>ArrayBuffer</code> | <code>0</code> | The red channel of a color. |
 | g | <code>number</code> | <code>0</code> | The green channel of a color. |
 | b | <code>number</code> | <code>0</code> | The blue channel of a color. |
 | a | <code>number</code> | <code>1</code> | The alpha (transparency) channel of a color. |
@@ -67,7 +67,7 @@ Create a color.
 Getter for red channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
-**Returns**: [<code>Color</code>](#Color) - - Returns the red channel.  
+**Returns**: <code>number</code> - - Returns the red channel.  
 <a name="Color+r"></a>
 
 ### color
@@ -85,7 +85,7 @@ Setter for red channel.
 Getter for green channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
-**Returns**: [<code>Color</code>](#Color) - - Returns the green channel.  
+**Returns**: <code>number</code> - - Returns the green channel.  
 <a name="Color+g"></a>
 
 ### color
@@ -103,7 +103,7 @@ Setter for green channel.
 Getter for blue channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
-**Returns**: [<code>Color</code>](#Color) - - Returns the blue channel.  
+**Returns**: <code>number</code> - - Returns the blue channel.  
 <a name="Color+b"></a>
 
 ### color
@@ -121,7 +121,7 @@ Setter for blue channel.
 Getter for alpha channel.
 
 **Kind**: instance property of [<code>Color</code>](#Color)  
-**Returns**: [<code>Color</code>](#Color) - - Returns the alpha channel.  
+**Returns**: <code>number</code> - - Returns the alpha channel.  
 <a name="Color+a"></a>
 
 ### color
@@ -150,7 +150,7 @@ Setter from scalar components.
 <a name="Color+setFromOther"></a>
 
 ### setFromOther
-Setter from another color.
+Sets current color state with another `Color` object.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 
@@ -167,7 +167,7 @@ Setter from a scalar array.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vals | <code>any</code> | The vals param. |
+| vals | <code>Float32Array</code> | The vals param. |
 
 <a name="Color+getAsRGBArray"></a>
 
@@ -175,14 +175,14 @@ Setter from a scalar array.
 Getter from an RGB array.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
-**Returns**: [<code>Color</code>](#Color) - - The return value.  
+**Returns**: <code>array</code> - - The return value.  
 <a name="Color+getAsRGBDict"></a>
 
 ### getAsRGBDict
 Getter from an RGB dict.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
-**Returns**: [<code>Color</code>](#Color) - - The return value.  
+**Returns**: <code>object</code> - - The return value.  
 <a name="Color+setFromRGB"></a>
 
 ### setFromRGB
@@ -206,7 +206,7 @@ Setter from an RGB array.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vals | <code>any</code> | The vals param. |
+| vals | <code>Float32Array</code> | The vals param. |
 
 <a name="Color+setFromRGBDict"></a>
 
@@ -217,7 +217,7 @@ Setter from an RGB dict.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| vals | <code>any</code> | The vals param. |
+| vals | <code>Float32Array</code> | The vals param. |
 
 <a name="Color+setFromHex"></a>
 
@@ -247,7 +247,7 @@ Setter from a CSS color name.E.g. "red"
 Returns the hexadecimal value of this color.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
-**Returns**: <code>number</code> - - Returns the hex value.  
+**Returns**: <code>string</code> - - Returns the hex value.  
 <a name="Color+equal"></a>
 
 ### equal
@@ -288,7 +288,7 @@ Returns true if this color is approximately the same as other.
 <a name="Color+add"></a>
 
 ### add
-Returns a new color which is this color added to other.
+Returns a new Color which is this Color added to other.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
@@ -335,7 +335,7 @@ Scales this color by scalar.
 <a name="Color+applyGamma"></a>
 
 ### applyGamma
-Apply gamma correction to this color.
+Apply gamma correction to this color
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 
@@ -346,7 +346,7 @@ Apply gamma correction to this color.
 <a name="Color+toLinear"></a>
 
 ### toLinear
-Converts to linear color space and returns a new color.
+Converts to linear color space and returns a new color
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 **Returns**: [<code>Color</code>](#Color) - - Returns a new color.  
@@ -370,7 +370,7 @@ Converts to gamma color space and returns a new color.
 <a name="Color+luminance"></a>
 
 ### luminance
-The luminance method.
+Calculates and returns the relative luminance of the linear RGB component.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
 **Returns**: <code>number</code> - - The return value.  
@@ -422,10 +422,10 @@ The fromJSON method decodes a json object for this type.
 <a name="Color+toCSSString"></a>
 
 ### toCSSString
-The toCSSString method.
+Returns the CSS rgba string.
 
 **Kind**: instance method of [<code>Color</code>](#Color)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>string</code> - - The return value.  
 <a name="Color.random"></a>
 
 ### random

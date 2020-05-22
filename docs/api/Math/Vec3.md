@@ -1,7 +1,7 @@
 <a name="Vec3"></a>
 
 ## Vec3 ⇐ <code>AttrValue</code>
-Class representing a Vec3. A Vec3 represents a three-dimensional coordinate.Vector classes in zea-engine internally store values in Float32Arrays andexpose getters and setters for the component values.
+Representing a Vec3(three-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -14,8 +14,8 @@ Class representing a Vec3. A Vec3 represents a three-dimensional coordinate.Vec
     * [y](#y)
     * [z ⇒ <code>number</code>](#z)
     * [z](#z)
-    * [xy ⇒ <code>number</code>](#xy)
-    * [yz ⇒ <code>number</code>](#yz)
+    * [xy ⇒ <code>Vec2</code>](#xy)
+    * [yz ⇒ <code>Vec2</code>](#yz)
     * [set(x, y, z)](#set)
     * [setDataArray(float32Array)](#setDataArray)
     * [setFromOther(other)](#setFromOther)
@@ -40,7 +40,7 @@ Class representing a Vec3. A Vec3 represents a three-dimensional coordinate.Vec
     * [length() ⇒ <code>number</code>](#length)
     * [distanceTo(other) ⇒ <code>number</code>](#distanceTo)
     * [normalize()](#normalize)
-    * [normalizeInPlace() ⇒ <code>any</code>](#normalizeInPlace)
+    * [normalizeInPlace() ⇒ <code>number</code>](#normalizeInPlace)
     * [resize(length)](#resize)
     * [resizeInPlace(length)](#resizeInPlace)
     * [dot(other) ⇒ <code>number</code>](#dot)
@@ -58,7 +58,7 @@ Class representing a Vec3. A Vec3 represents a three-dimensional coordinate.Vec
 <a name="new_Vec3_new"></a>
 
 ### new Vec3
-Create a Vec3.
+Creates a Vec3.The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
@@ -70,14 +70,14 @@ Create a Vec3.
 <a name="Vec3+x"></a>
 
 ### x 
-Getter for x value.
+Getter for `x` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec3+x"></a>
 
 ### vec3
-Setter for x value.
+Setter for `x` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
 
@@ -88,14 +88,14 @@ Setter for x value.
 <a name="Vec3+y"></a>
 
 ### y 
-Getter for y value.
+Getter for `y` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec3+y"></a>
 
 ### vec3
-Setter for y value.
+Setter for `y` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
 
@@ -106,14 +106,14 @@ Setter for y value.
 <a name="Vec3+z"></a>
 
 ### z 
-Getter for z value.
+Getter for `z` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
 **Returns**: <code>number</code> - - Returns the z value.  
 <a name="Vec3+z"></a>
 
 ### vec3
-Setter for z value.
+Setter for `z` value.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
 
@@ -124,17 +124,17 @@ Setter for z value.
 <a name="Vec3+xy"></a>
 
 ### xy 
-Getter for xy swizzel.
+Getter for `xy` swizzel.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>number</code> - - Returns the z value.  
+**Returns**: <code>Vec2</code> - - Returns the z value.  
 <a name="Vec3+yz"></a>
 
 ### yz 
-Getter for yz swizzel.
+Getter for `yz` swizzel.
 
 **Kind**: instance property of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>number</code> - - Returns the z value.  
+**Returns**: <code>Vec2</code> - - Returns the z value.  
 <a name="Vec3+set"></a>
 
 ### set
@@ -151,18 +151,18 @@ Setter from scalar components.
 <a name="Vec3+setDataArray"></a>
 
 ### setDataArray
-The setDataArray method.
+Sets the state of a Vec3 Object.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| float32Array | <code>any</code> | The float32Array value. |
+| float32Array | <code>Float32Array</code> | The float32Array value. |
 
 <a name="Vec3+setFromOther"></a>
 
 ### setFromOther
-Setter from another Vec3.
+Sets the state of a Vec3 Object from another Vec3.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 
@@ -173,24 +173,24 @@ Setter from another Vec3.
 <a name="Vec3+isNull"></a>
 
 ### isNull
-Returns true if the Vec3 contains 0 0 0.
+Checks if the coordenates of this Vec3 are 0 0 0.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>boolean</code> - - Returns true or false.  
+**Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.  
 <a name="Vec3+is111"></a>
 
 ### is111
-The is111 method returns true if the Vec3 contains 1 1 1.
+Checks if the coordenates of this Vec3 are 1 1 1.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>boolean</code> - - The return value.  
+**Returns**: <code>boolean</code> - - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.  
 <a name="Vec3+equal"></a>
 
 ### equal
-Returns true if this Vec3 is exactly the same as other.
+Checks if this Vec3 is exactly the same as another Vec3.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>boolean</code> - - Returns true or false.  
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -199,10 +199,10 @@ Returns true if this Vec3 is exactly the same as other.
 <a name="Vec3+notEquals"></a>
 
 ### notEquals
-Returns true if this vector is NOT exactly the same other.
+Checks if this Vec2 is different from another Vec2.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>boolean</code> - - Returns true or false.  
+**Returns**: <code>boolean</code> - - Returns `true` if the Vec3s are different, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -211,7 +211,7 @@ Returns true if this vector is NOT exactly the same other.
 <a name="Vec3+approxEqual"></a>
 
 ### approxEqual
-Returns true if this Vec3 is approximately the same as other.
+Returns true if this Vec2 is approximately the same as other.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -339,14 +339,14 @@ Scales this Vec3 by scalar.
 <a name="Vec3+negate"></a>
 
 ### negate
-Negates this Vec3 (x = -x, y = -y and z = -z)and returns the result as a new Vec3.
+Negates this Vec3 (x = -x, y = -y and z = -z), but returns the result as a new Vec3.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
 <a name="Vec3+inverse"></a>
 
 ### inverse
-The inverse method.
+Returns the inverse of this Vec3, but returns. the result as a new Vec3
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns a new Vec3.  
@@ -379,21 +379,21 @@ Calculates the distance to another Vec3.
 <a name="Vec3+normalize"></a>
 
 ### normalize
-Normalizes the Vec3 and returns it as a new Vec3.
+Normalizes the Vec3 and returns it as a new Vec3.Multiplies coordenates value by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: [<code>Vec3</code>](#Vec3) - - Returns the Vec3 normalized.  
 <a name="Vec3+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes the vector, modifying it and returning its original length.
+Normalizes this Vec3 multiplying coordenate values by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="Vec3+resize"></a>
 
 ### resize
-The resize method returns a new Vec3 with the given length.
+Creates and returns a new Vec3 with the new coordenates(calculated with this Vec3 coordenates and the specified length).
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: [<code>Vec3</code>](#Vec3) - - The return value.  
@@ -405,7 +405,7 @@ The resize method returns a new Vec3 with the given length.
 <a name="Vec3+resizeInPlace"></a>
 
 ### resizeInPlace
-The resizeInPlace method.
+Modifies current coordenates using the specified length.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 
@@ -510,14 +510,14 @@ Returns the type as an array. Often used to pass types to the GPU.
 <a name="Vec3+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistences.
+Encodes Vec3 Class as a JSON object for persistence.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 **Returns**: <code>object</code> - - The json object.  
 <a name="Vec3+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method decodes a json object for this type.
+Decodes a JSON object to set the state of this class.
 
 **Kind**: instance method of [<code>Vec3</code>](#Vec3)  
 

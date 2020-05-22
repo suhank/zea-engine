@@ -20,14 +20,14 @@ Class representing a quaternion. Quaternions are used to represent rotationswit
     * [setDataArray(float32Array)](#setDataArray)
     * [setFromOther(other)](#setFromOther)
     * [setFromEulerAngles(eulerAngles)](#setFromEulerAngles)
-    * [toEulerAngles(rotationOrder) ⇒ <code>any</code>](#toEulerAngles)
+    * [toEulerAngles(rotationOrder) ⇒ <code>EulerAngles</code>](#toEulerAngles)
     * [setFromAxisAndAngle(axis, angle)](#setFromAxisAndAngle)
     * [setFromDirectionAndUpvector(dir, up)](#setFromDirectionAndUpvector)
     * [setFrom2Vectors(v0, v1)](#setFrom2Vectors)
     * [setFromMat3(mat3)](#setFromMat3)
     * [setFromMat4(mat4)](#setFromMat4)
     * [isIdentity() ⇒ <code>boolean</code>](#isIdentity)
-    * [getAngle() ⇒ <code>any</code>](#getAngle)
+    * [getAngle() ⇒ <code>number</code>](#getAngle)
     * [equal(other) ⇒ <code>boolean</code>](#equal)
     * [notequals(other) ⇒ <code>boolean</code>](#notequals)
     * [approxEqual(other, precision) ⇒ <code>boolean</code>](#approxEqual)
@@ -42,7 +42,7 @@ Class representing a quaternion. Quaternions are used to represent rotationswit
     * [normalizeInPlace()](#normalizeInPlace)
     * [dot(other) ⇒ <code>number</code>](#dot)
     * [cross(other)](#cross)
-    * [conjugate() ⇒ <code>any</code>](#conjugate)
+    * [conjugate()](#conjugate)
     * [inverse()](#inverse)
     * [alignWith(other)](#alignWith)
     * [multiply(other)](#multiply)
@@ -65,12 +65,12 @@ Class representing a quaternion. Quaternions are used to represent rotationswit
 <a name="new_Quat_new"></a>
 
 ### new Quat
-Create a quaternion.
+Creates a quaternion.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>0</code> | The angle of the x axis. Default is 0. |
+| x | <code>number</code> \| <code>ArrayBuffer</code> \| <code>object</code> | <code>0</code> | The angle of the x axis. Default is 0. |
 | y | <code>number</code> | <code>0</code> | The angle of the y axis. Default is 0. |
 | z | <code>number</code> | <code>0</code> | The angle of the z axis. Default is 0. |
 | w | <code>number</code> | <code>1</code> | The w value. Default is 1. |
@@ -78,14 +78,14 @@ Create a quaternion.
 <a name="Quat+x"></a>
 
 ### x 
-Getter for x axis rotation.
+Getter for `x` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 **Returns**: <code>number</code> - - Returns the x axis rotation.  
 <a name="Quat+x"></a>
 
 ### quat
-Setter for x axis rotation.
+Setter for `x` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 
@@ -96,14 +96,14 @@ Setter for x axis rotation.
 <a name="Quat+y"></a>
 
 ### y 
-Getter for y axis rotation.
+Getter for `y` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 **Returns**: <code>number</code> - - Returns the y axis rotation.  
 <a name="Quat+y"></a>
 
 ### quat
-Setter for y axis rotation.
+Setter for `y` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 
@@ -114,14 +114,14 @@ Setter for y axis rotation.
 <a name="Quat+z"></a>
 
 ### z 
-Getter for z axis rotation.
+Getter for `z` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 **Returns**: <code>number</code> - - Returns the z axis rotation.  
 <a name="Quat+z"></a>
 
 ### quat
-Setter for z axis rotation.
+Setter for `z` axis rotation.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 
@@ -132,14 +132,14 @@ Setter for z axis rotation.
 <a name="Quat+w"></a>
 
 ### w 
-Getter for w value.
+Getter for `w` value.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 **Returns**: <code>number</code> - - Returns the w value.  
 <a name="Quat+w"></a>
 
 ### quat
-Setter for w.
+Setter for `w`.
 
 **Kind**: instance property of [<code>Quat</code>](#Quat)  
 
@@ -164,13 +164,13 @@ Setter from scalar components.
 <a name="Quat+setDataArray"></a>
 
 ### setDataArray
-The setDataArray method.
+Sets the state of the Quat class using a Float32Array.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| float32Array | <code>any</code> | The float32Array value. |
+| float32Array | <code>Float32Array</code> | The float32Array value. |
 
 <a name="Quat+setFromOther"></a>
 
@@ -181,7 +181,7 @@ Setter from another vector.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| other | <code>any</code> | The other vector to set from. |
+| other | [<code>Quat</code>](#Quat) | The other vector to set from. |
 
 <a name="Quat+setFromEulerAngles"></a>
 
@@ -192,19 +192,19 @@ Set this quat from a euler rotation.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| eulerAngles | <code>any</code> | The euler angles rotation. |
+| eulerAngles | <code>EulerAngles</code> | The euler angles rotation. |
 
 <a name="Quat+toEulerAngles"></a>
 
 ### toEulerAngles
-The toEulerAngles method.
+Converts Quat to an EulerAngles
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>EulerAngles</code> - - The return value.  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| rotationOrder | <code>number</code> | The order in which the rotations are applied. |
+| rotationOrder | <code>number</code> \| <code>string</code> | The order in which the rotations are applied. |
 
 <a name="Quat+setFromAxisAndAngle"></a>
 
@@ -215,32 +215,32 @@ Set this quat to a rotation defined by an axis and an angle (in radians).
 
 | Param | Type | Description |
 | --- | --- | --- |
-| axis | <code>any</code> | The axis value. |
+| axis | <code>Vec3</code> | The axis value. |
 | angle | <code>number</code> | The axis angle. |
 
 <a name="Quat+setFromDirectionAndUpvector"></a>
 
 ### setFromDirectionAndUpvector
-The setFromDirectionAndUpvector method.
+Scales and calculates the cross product of the `Vec3` and sets the result in the Mat3
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| dir | <code>any</code> | The direction value. |
-| up | <code>any</code> | The up angle. |
+| dir | <code>Vec3</code> | The direction value. |
+| up | <code>Vec3</code> | The up angle. |
 
 <a name="Quat+setFrom2Vectors"></a>
 
 ### setFrom2Vectors
-The setFrom2Vectors method.
+Sets the state of the `Quat` from two `Vec3`.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| v0 | <code>any</code> | The v0 vector. |
-| v1 | <code>any</code> | The v1 vector. |
+| v0 | <code>Vec3</code> | The v0 vector. |
+| v1 | <code>Vec3</code> | The v1 vector. |
 
 <a name="Quat+setFromMat3"></a>
 
@@ -267,17 +267,17 @@ Set the quat from a Mat4.
 <a name="Quat+isIdentity"></a>
 
 ### isIdentity
-The isIdentity method.
+Checks if the angle of the Quat is less that ` Number.EPSILON`
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 **Returns**: <code>boolean</code> - - Returns true or false.  
 <a name="Quat+getAngle"></a>
 
 ### getAngle
-The getAngle method.
+Return the angle of the Quat.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: <code>number</code> - - The return value.  
 <a name="Quat+equal"></a>
 
 ### equal
@@ -305,7 +305,7 @@ Returns true if this Quat is NOT exactly the same other.
 <a name="Quat+approxEqual"></a>
 
 ### approxEqual
-Returns true if this Quat is approximately the same as other.
+Returns true if this Quat is approximately the same as other
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -430,11 +430,11 @@ Calculates the cross product of two Quats and returns the result as a new Quat.
 Returns the rotational conjugate of this Quat.Conjugation represents the same rotation of the Quat butin the opposite direction around the rotational axis.
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
-**Returns**: <code>any</code> - - the return value.  
+**Returns**: [<code>Quat</code>](#Quat) - - the return value.  
 <a name="Quat+inverse"></a>
 
 ### inverse
-The inverse method.
+Return the inverse of the `Quat`
 
 **Kind**: instance method of [<code>Quat</code>](#Quat)  
 **Returns**: [<code>Quat</code>](#Quat) - - Returns a new Quat.  

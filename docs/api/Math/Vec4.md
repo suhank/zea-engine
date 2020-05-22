@@ -1,7 +1,7 @@
 <a name="Vec4"></a>
 
 ## Vec4 ⇐ <code>AttrValue</code>
-Class representing a Vec4. A Vec4 represents a four-dimensional coordinate.Vector classes in zea-engine internally store values in Float32Arrays andexpose getters and setters for the component values.
+Representing a Vec4(four-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -43,13 +43,13 @@ Class representing a Vec4. A Vec4 represents a four-dimensional coordinate.Vect
     * [random(scale)](#random)
     * [clone()](#clone)
     * [toVec3() ⇒ <code>Vec3</code>](#toVec3)
-    * [asArray() ⇒ <code>any</code>](#asArray)
+    * [asArray() ⇒ <code>aray</code>](#asArray)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
 
 <a name="new_Vec4_new"></a>
 
 ### new Vec4
-Create a Vec4.
+/**Creates a Vec3.The type of values of the `(x, y, z)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
@@ -62,14 +62,14 @@ Create a Vec4.
 <a name="Vec4+x"></a>
 
 ### x 
-Getter for x value.
+Getter for `x` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec4+x"></a>
 
 ### vec4
-Setter for x value.
+Setter for `x` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 
@@ -80,14 +80,14 @@ Setter for x value.
 <a name="Vec4+y"></a>
 
 ### y 
-Getter for y value.
+Getter for `y` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec4+y"></a>
 
 ### vec4
-Setter for y value.
+Setter for `y` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 
@@ -98,7 +98,7 @@ Setter for y value.
 <a name="Vec4+z"></a>
 
 ### vec4
-Getter for z value.
+Getter for `z` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 
@@ -109,7 +109,7 @@ Getter for z value.
 <a name="Vec4+z"></a>
 
 ### vec4
-Setter for z value.
+Setter for `z` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 
@@ -120,7 +120,7 @@ Setter for z value.
 <a name="Vec4+t"></a>
 
 ### vec4
-Getter for t value.
+Getter for `t` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 
@@ -131,7 +131,7 @@ Getter for t value.
 <a name="Vec4+t"></a>
 
 ### vec4
-Setter for t value.
+Setter for `t` value.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 
@@ -142,7 +142,7 @@ Setter for t value.
 <a name="Vec4+xyz"></a>
 
 ### xyz 
-Getter for xy swizzel.
+Getter for `xy` swizzel.
 
 **Kind**: instance property of [<code>Vec4</code>](#Vec4)  
 **Returns**: <code>number</code> - - Returns the z value.  
@@ -163,7 +163,7 @@ Setter from scalar components.
 <a name="Vec4+setFromOther"></a>
 
 ### setFromOther
-Setter from another Vec4.
+Sets the state of a Vec4 Object from another Vec4.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
 
@@ -174,7 +174,7 @@ Setter from another Vec4.
 <a name="Vec4+equal"></a>
 
 ### equal
-Returns true if this Vec4 is exactly the same as other.
+Checks if this Vec4 is exactly the same as another Vec4.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -186,7 +186,7 @@ Returns true if this Vec4 is exactly the same as other.
 <a name="Vec4+notEquals"></a>
 
 ### notEquals
-Returns true if this Vec4 is NOT exactly the same as other.
+Checks if this Vec4 is different from another Vec4.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
 **Returns**: <code>boolean</code> - - Returns true or false.  
@@ -340,14 +340,14 @@ Calculates the squared length of this Vec4.
 <a name="Vec4+normalize"></a>
 
 ### normalize
-Normalizes the Vec4 and returns it as a new Vec4.
+Normalizes the Vec4 and returns it as a new Vec4.Multiplies coordenates value by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
 **Returns**: [<code>Vec4</code>](#Vec4) - - Returns the Vec4 normalized.  
 <a name="Vec4+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes the Vec4.
+Normalizes this Vec4 multiplying coordenate values by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
 <a name="Vec4+dot"></a>
@@ -431,7 +431,7 @@ Converts this Vec4 into a Vec3.
 Returns the type as an array. Often used to pass types to the GPU.
 
 **Kind**: instance method of [<code>Vec4</code>](#Vec4)  
-**Returns**: <code>any</code> - - Returns as an array.  
+**Returns**: <code>aray</code> - - Returns as an array.  
 <a name="Vec4+toJSON"></a>
 
 ### toJSON

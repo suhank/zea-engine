@@ -1,7 +1,7 @@
 <a name="Vec2"></a>
 
 ## Vec2 ⇐ <code>AttrValue</code>
-Class representing a Vec2. A Vec2 represents a two-dimensional coordinate.Vector classes in zea-engine internally store values in Float32Arrays andexpose getters and setters for the component values.
+Representing a Vec2(two-dimensional floating point vector).Vector classes in _zea-engine_ internally store values in [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array) andexpose getters and setters for the component values.
 
 **Kind**: global class  
 **Extends**: <code>AttrValue</code>  
@@ -39,7 +39,7 @@ Class representing a Vec2. A Vec2 represents a two-dimensional coordinate.Vecto
     * [rotate(angle)](#rotate)
     * [lerp(other, t)](#lerp)
     * [setRandomDir(scale)](#setRandomDir)
-    * [setRandom(scale) ⇒ <code>any</code>](#setRandom)
+    * [setRandom(scale)](#setRandom)
     * [clone()](#clone)
     * [asArray() ⇒ <code>array</code>](#asArray)
     * [toJSON() ⇒ <code>object</code>](#toJSON)
@@ -48,25 +48,25 @@ Class representing a Vec2. A Vec2 represents a two-dimensional coordinate.Vecto
 <a name="new_Vec2_new"></a>
 
 ### new Vec2
-Create a Vec2.
+Creates a Vec2.The type of values of the `(x, y)` coordenates can be [Float32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array),[Uint32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array),[Int32Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array) and[ArrayBuffer](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer).<br>You can also pass one JSON object parameter.
 
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
-| x | <code>number</code> | <code>0</code> | The x value. Default is 0. |
-| y | <code>number</code> | <code>0</code> | The y value. Default is 0. |
+| x | <code>Number</code> | <code>0</code> | The x value. Default is 0. |
+| y | <code>Number</code> | <code>0</code> | The y value. Default is 0. |
 
 <a name="Vec2+x"></a>
 
 ### x 
-Getter for x value.
+Getter for `x` value.
 
 **Kind**: instance property of [<code>Vec2</code>](#Vec2)  
 **Returns**: <code>number</code> - - Returns the x value.  
 <a name="Vec2+x"></a>
 
 ### vec2
-Setter for x value.
+Setter for `x` value.
 
 **Kind**: instance property of [<code>Vec2</code>](#Vec2)  
 
@@ -77,14 +77,14 @@ Setter for x value.
 <a name="Vec2+y"></a>
 
 ### y 
-Getter for y value.
+Getter for `y` value.
 
 **Kind**: instance property of [<code>Vec2</code>](#Vec2)  
 **Returns**: <code>number</code> - - Returns the y value.  
 <a name="Vec2+y"></a>
 
 ### vec2
-Setter for y value.
+Setter for `y` value.
 
 **Kind**: instance property of [<code>Vec2</code>](#Vec2)  
 
@@ -107,7 +107,7 @@ Setter from scalar components.
 <a name="Vec2+setFromOther"></a>
 
 ### setFromOther
-Setter from another Vec2.
+Replaces this Vec2 data with the Vec2 data passed as parameter.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 
@@ -118,10 +118,10 @@ Setter from another Vec2.
 <a name="Vec2+equal"></a>
 
 ### equal
-Returns true if this Vec2 is exactly the same as other.
+Checks if this Vec2 is exactly the same as another Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
-**Returns**: <code>boolean</code> - - Returns true or false.  
+**Returns**: <code>boolean</code> - - Returns `true` if are the same Vector, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -130,10 +130,10 @@ Returns true if this Vec2 is exactly the same as other.
 <a name="Vec2+notEquals"></a>
 
 ### notEquals
-Returns true if this vector is NOT exactly the same as other.
+Checks if this Vec2 is different from another Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
-**Returns**: <code>boolean</code> - - Returns true or false.  
+**Returns**: <code>boolean</code> - - Returns `true` if the Vec2s are different, otherwise, `false`.  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -167,7 +167,7 @@ Adds other to this Vec2 and returns the result as a new Vec2.
 <a name="Vec2+addInPlace"></a>
 
 ### addInPlace
-Adds other to this Vec2.
+Adds a Vec2 to this Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 
@@ -178,7 +178,7 @@ Adds other to this Vec2.
 <a name="Vec2+subtract"></a>
 
 ### subtract
-Subtracts other from this Vec2 and returns the result as a new Vec2.
+Subtracts a Vec2 from this Vec2 and returns the result as a new Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns a new Vec2.  
@@ -190,7 +190,7 @@ Subtracts other from this Vec2 and returns the result as a new Vec2.
 <a name="Vec2+subtractInPlace"></a>
 
 ### subtractInPlace
-Subtracts other from this Vec2.
+Subtracts a Vec2 from this Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns a new Vec2.  
@@ -239,7 +239,7 @@ Inverts this Vec2.
 <a name="Vec2+multiply"></a>
 
 ### multiply
-Multiplies two Vec2s and returns the result as a new Vec2.
+Multiplies a Vec2 with this Vec2 and returns the result as a new Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns a new Vec2.  
@@ -251,7 +251,7 @@ Multiplies two Vec2s and returns the result as a new Vec2.
 <a name="Vec2+multiplyInPlace"></a>
 
 ### multiplyInPlace
-Multiplies two Vec2s.
+Multiplies a Vec2 with this Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 
@@ -288,14 +288,14 @@ Calculates the distance to another vector.
 <a name="Vec2+normalize"></a>
 
 ### normalize
-Normalizes the Vec2 and returns it as a new Vec2.
+Normalizes the Vec2 and returns it as a new Vec2.Multiplies coordenates value by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns the Vec2 normalized.  
 <a name="Vec2+normalizeInPlace"></a>
 
 ### normalizeInPlace
-Normalizes the Vec2.
+Normalizes this Vec2 multiplying coordenate values by the inverse of the vector length.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 <a name="Vec2+dot"></a>
@@ -361,7 +361,7 @@ Rotates a Vec2 in a clockwise direction and returns a new rotated Vec2.
 <a name="Vec2+lerp"></a>
 
 ### lerp
-Performs a linear interpolation between this Vec2 and other.
+Performs a linear interpolation between this Vec2 and other Vec2.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: [<code>Vec2</code>](#Vec2) - - Returns a new Vec2.  
@@ -386,10 +386,10 @@ Generates a random vector with the given scale.
 <a name="Vec2+setRandom"></a>
 
 ### setRandom
-The setRandom method.
+Randomizes the scale of this Vec2 coordenates.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
-**Returns**: <code>any</code> - - The return value.  
+**Returns**: [<code>Vec2</code>](#Vec2) - - The return value.  
 
 | Param | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -405,21 +405,21 @@ Clones this Vec2 and returns a new Vec2.
 <a name="Vec2+asArray"></a>
 
 ### asArray
-Returns the tpye as an array. Often used to pass types to the GPU.
+Returns current Vec2 data as array. Often used to pass types to the GPU.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: <code>array</code> - - Returns as an array.  
 <a name="Vec2+toJSON"></a>
 
 ### toJSON
-The toJSON method encodes this type as a json object for persistence.
+Encodes Vec2 Class as a JSON object for persistence.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 **Returns**: <code>object</code> - - The json object.  
 <a name="Vec2+fromJSON"></a>
 
 ### fromJSON
-The fromJSON method decodes a json object for this type.
+Decodes a JSON object to set the state of this class.
 
 **Kind**: instance method of [<code>Vec2</code>](#Vec2)  
 
