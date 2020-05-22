@@ -1,14 +1,19 @@
+/* eslint-disable new-cap */
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
 import { Vec3 } from './Vec3.js'
 
-/** Class representing a plane.
+/**
+ * Class representing a plane.
+ *
  * @extends AttrValue
  */
 class PlaneType extends AttrValue {
   /**
    * Create a plane.
+   *
    * @param {Vec3} normal - The normal of the plane.
    * @param {number} w - The w value.
    */
@@ -23,7 +28,8 @@ class PlaneType extends AttrValue {
   }
 
   /**
-   * Thet set method
+   * Setter from scalar components.
+   *
    * @param {number} x - The x value.
    * @param {number} y - The y value.
    * @param {number} z - The z value.
@@ -36,6 +42,7 @@ class PlaneType extends AttrValue {
 
   /**
    * Thet divideScalar method
+   *
    * @param {number} value - The value value.
    */
   divideScalar(value) {
@@ -44,9 +51,10 @@ class PlaneType extends AttrValue {
   }
 
   /**
-   * Thet distanceToPoint method
-   * @param {any} point - The point value.
-   * @return {any} - The rreturn value.
+   * Calculates the distance from a point to this place.
+   *
+   * @param {Vec3} point - The point value.
+   * @return {number} - The rreturn value.
    */
   distanceToPoint(point) {
     return point.dot(this.normal) + this.w
@@ -63,6 +71,7 @@ class PlaneType extends AttrValue {
 
   /**
    * Clones this plane and returns a new plane.
+   *
    * @return {Plane} - Returns a new plane.
    */
   clone() {
@@ -87,6 +96,7 @@ class PlaneType extends AttrValue {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -97,8 +107,9 @@ class PlaneType extends AttrValue {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON_stringify_fixedPrecision(this.toJSON())

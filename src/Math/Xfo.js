@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec3 } from './Vec3.js'
 import { Mat4 } from './Mat4.js'
@@ -126,9 +128,12 @@ class Xfo {
       // and with non-uniform scale. Then parent them together. If they
       // remain stationary, after parenting, then this math is correct.
       result.sc = result.ori.rotateVec3(this.sc)
-      if (Math.sign(result.sc.x) != Math.sign(this.sc.x)) result.sc.x = -result.sc.x
-      if (Math.sign(result.sc.y) != Math.sign(this.sc.y)) result.sc.y = -result.sc.y
-      if (Math.sign(result.sc.z) != Math.sign(this.sc.z)) result.sc.z = -result.sc.z
+      if (Math.sign(result.sc.x) != Math.sign(this.sc.x))
+        result.sc.x = -result.sc.x
+      if (Math.sign(result.sc.y) != Math.sign(this.sc.y))
+        result.sc.y = -result.sc.y
+      if (Math.sign(result.sc.z) != Math.sign(this.sc.z))
+        result.sc.z = -result.sc.z
     } else {
       result.sc = this.sc.inverse()
     }
@@ -266,6 +271,7 @@ class Xfo {
    * @return {any} - The return value.
    */
   toString() {
+    // eslint-disable-next-line new-cap
     return JSON_stringify_fixedPrecision(this.toJSON())
   }
 }

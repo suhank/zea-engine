@@ -1,12 +1,21 @@
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 
 import { Vec2 } from './Vec2'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a box in 2D space. */
+/**
+ * Represents a box in 2D space. Needing two Vec2 vectors describing the corners
+ */
 class Box2 {
   /**
-   * Create a Box2
+   * Creates a Box2 object using Vec2s.
+   * In case the parameters are not passed by, their values are pre-defined:
+   * <br>
+   * p0 is a Vec2 with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY|`Number.POSITIVE_INFINITY`}
+   * <br>
+   * p1 is a Vec2 with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY|`Number.NEGATIVE_INFINITY`}
+   *
    * @param {Vec2} p0 - A point representing the corners of a 2D box.
    * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
@@ -24,7 +33,8 @@ class Box2 {
   }
 
   /**
-   * The set method.
+   * Sets both Vect2 points
+   *
    * @param {Vec2} p0 - A point representing the corners of a 2D box.
    * @param {Vec2} p1 - A point representing the corners of a 2D box.
    */
@@ -35,6 +45,9 @@ class Box2 {
 
   /**
    * Resets the box2 back to an uninitialized state.
+   *
+   * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/POSITIVE_INFINITY|`Number.POSITIVE_INFINITY`}
+   * and {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/NEGATIVE_INFINITY|`Number.NEGATIVE_INFINITY`}
    */
   reset() {
     this.p0.x = Number.POSITIVE_INFINITY
@@ -44,8 +57,9 @@ class Box2 {
   }
 
   /**
-   * Returns true if the box has been expanded to contain a point.
-   * @return {any} - The return value.
+   * Returns `true` if the box has been expanded to contain a point.
+   *
+   * @return {boolean} - The return value.
    */
   isValid() {
     return (
@@ -58,6 +72,7 @@ class Box2 {
 
   /**
    * Expands the Box2 to contain the new point.
+   *
    * @param {Vec2} point - A point represents the corners of a 2D box.
    */
   addPoint(point) {
@@ -74,6 +89,7 @@ class Box2 {
 
   /**
    * Returns the size of a Box2.
+   *
    * @return {Box2} - Returns a Box2.
    */
   size() {
@@ -82,6 +98,7 @@ class Box2 {
 
   /**
    * Returns the size of a Box2 - the same as size().
+   *
    * @return {Box2} - Returns a Box2.
    */
   diagonal() {
@@ -90,6 +107,7 @@ class Box2 {
 
   /**
    * Returns the center point of a Box2.
+   *
    * @return {Vec2} - Returns a Vec2.
    */
   center() {
@@ -116,7 +134,8 @@ class Box2 {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * Encodes `Box2` Class as a JSON object for persistence.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -127,10 +146,12 @@ class Box2 {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
+    // eslint-disable-next-line new-cap
     return JSON_stringify_fixedPrecision(this.toJSON())
   }
 }
