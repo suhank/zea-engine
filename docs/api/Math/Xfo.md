@@ -44,7 +44,7 @@ Sets the state of the Xfo object.
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tr | <code>Float32Array</code> \| <code>Vec3</code> | The translation value. |
+| tr | <code>Vec3</code> | The translation value. |
 | ori | <code>Quat</code> | The orientation value. |
 | sc | <code>Vec3</code> | The scaling value. |
 
