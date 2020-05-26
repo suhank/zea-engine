@@ -746,9 +746,9 @@ class GLTexture2D extends RefCounted {
 
   /**
    * The preBind method.
-   * @param {any} unif - The unif value.
-   * @param {any} unifs - The unifs value.
-   * @return {any} - The return value.
+   * @param {object} unif - The unif value.
+   * @param {object} unifs - The unifs value.
+   * @return {object} - The return value.
    */
   preBind(unif, unifs) {
     return {
