@@ -1,5 +1,4 @@
 *.fbx filter=lfs diff=lfs merge=lfs -text
-*.png filter=lfs diff=lfs merge=lfs -text
 *.3dm filter=lfs diff=lfs merge=lfs -text
 *.max filter=lfs diff=lfs merge=lfs -text
 *.bin filter=lfs diff=lfs merge=lfs -text
@@ -9,3 +8,5 @@
 
 #3dsmax arechived scripts.
 *.mzp filter=lfs diff=lfs merge=lfs -text 
+
+*.png filter=lfs diff=lfs merge=lfs -text

@@ -645,8 +645,8 @@ class GLBaseRenderer {
       if (activeGLRenderer) {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
-        if (!window.addEventListener) event.preventDefault()
         this.onWheel(event)
+        event.preventDefault()
       }
       return false
     }

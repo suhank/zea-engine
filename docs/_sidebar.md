@@ -24,7 +24,7 @@
 - How To
   * [Changing The Background](tutorials/changing-the-background.md)
   * [Setting up an Environment Map](tutorials/setting-up-an-environment-map.md)
-  * [Setting up the Groups and Highlights](tutorials/Highlights.md)
+  * [Setting up the Groups and Highlights](tutorials/highlights.md)
   * [Setting up the Labels](tutorials/labels.md)
   * [Setting up the multilingual Labels](tutorials/multilingual-labels.md)
   * [Setting up the Explode Operator](tutorials/explode-operator.md)
