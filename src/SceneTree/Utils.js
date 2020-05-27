@@ -105,7 +105,7 @@ const loadXMLfile = function(
   )
 }
 
-const loadBinfile = function(
+const loadBinfile = function (
   url,
   onSucceed,
   onFail = undefined,
