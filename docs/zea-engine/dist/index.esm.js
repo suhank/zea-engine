@@ -9885,7 +9885,7 @@ const loadXMLfile = function(
     });
 };
 
-const loadBinfile = function(
+const loadBinfile = function (
   url,
   onSucceed,
   onFail = undefined,
@@ -27807,8 +27807,11 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   __globalXfoChangedDuringDrag(mode) {
     if (!this.__calculatingDragAction) {
-      const camera = this.__mouseDownViewport.getCamera();
-      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId);
+      if (this.__dragListenerId != null) {
+        const camera = this.__mouseDownViewport.getCamera();
+        camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId);
+        this.__dragListenerId = null;
+      }
       this.initDrag({ viewport: this.__mouseDownViewport, mousePos: this.__mouseDownPos } );
     }
   }
@@ -27817,7 +27820,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {any} event - The event value.
    */
   endDrag(event) {
-    if (this.__dragListenerId) {
+    if (this.__dragListenerId != null) {
       const { viewport } = event;
       const camera = viewport.getCamera();
       camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId);
@@ -32129,7 +32132,7 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 }
 
 
-#endif
+#endif // ENABLE_ES3
 
 int uvToPixelIndex(vec2 uv, int textureSize){
     return int(uv.x * float(textureSize)) + (int(floor(uv.y * float(textureSize))) * textureSize);
@@ -37943,8 +37946,8 @@ class GLBaseRenderer {
       if (activeGLRenderer) {
         event.stopPropagation();
         event.undoRedoManager = this.undoRedoManager;
-        if (!window.addEventListener) event.preventDefault();
         this.onWheel(event);
+        event.preventDefault();
       }
       return false
     };
