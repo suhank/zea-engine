@@ -238,8 +238,11 @@ class CameraMouseAndKeyboard extends ParameterOwner {
 
   __globalXfoChangedDuringDrag(mode) {
     if (!this.__calculatingDragAction) {
-      const camera = this.__mouseDownViewport.getCamera()
-      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      if (this.__dragListenerId != null) {
+        const camera = this.__mouseDownViewport.getCamera()
+        camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+        this.__dragListenerId = null
+      }
       this.initDrag({ viewport: this.__mouseDownViewport, mousePos: this.__mouseDownPos } );
     }
   }
@@ -248,7 +251,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {any} event - The event value.
    */
   endDrag(event) {
-    if (this.__dragListenerId) {
+    if (this.__dragListenerId != null) {
       const { viewport } = event
       const camera = viewport.getCamera()
       camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
