@@ -56,7 +56,7 @@ class OperatorOutput {
    */
   setParam(param) {
     this._param = param
-    this.paramSet.emit()
+    this.paramSet.emit(param)
   }
 
   /**
