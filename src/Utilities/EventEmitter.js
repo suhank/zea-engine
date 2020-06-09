@@ -43,33 +43,26 @@ class EventEmitter {
       throw new Error('a function callback must be passed to EventEmitter.disconnect')
       
     const slots = this.__slots[eventName]
-    if (!slots) {
-      console.warn(
-        'callback :' +
-          fn.name +
-          ' was not connected to this signal:' +
-          this.__name
-      )
-      return
-    }
-
     const ids = []
-    slots.forEach(function(item, index) {
-      if (item === listener) {
-        ids.push(index)
-      }
-    })
-    if (ids.length == 0) {
-      console.warn(
-        'callback :' +
-          fn.name +
-          ' was not connected to this signal:' +
-          this.__name
-      )
-      return
+    if (slots) {
+      slots.forEach((item, index) => {
+        if (item === listener) {
+          ids.push(index)
+        }
+      })
     }
-    for (const id of ids) {
-      slots[id] = undefined
+    if (ids.length == 0) {
+      const name = this.getName ? this.getName() : this.constructor.name
+      console.warn(
+        'Error in removeListener. listener :' +
+          listener.name +
+          ' was not connected to this event emitter:' +
+          name
+      )
+    } else {
+      for (const id of ids) {
+        slots[id] = undefined
+      }
     }
   }
 
