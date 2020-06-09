@@ -560,6 +560,7 @@ class VRViewport extends GLBaseViewport {
     renderstate.viewScale = 1.0 / this.__stageScale
     renderstate.cameraMatrix = renderstate.viewXfo.toMat4()
     renderstate.region = this.__region
+    renderstate.vrPresenting = true // Some rendering is ajusted slightly in VR. e.g. Billboards
 
     this.__renderer.drawScene(renderstate)
 
