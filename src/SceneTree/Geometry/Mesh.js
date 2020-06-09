@@ -907,7 +907,7 @@ class Mesh extends BaseGeom {
     }
 
     // this.computeVertexNormals();
-    this.emitEvent('geomDataChanged', {})
+    this.emit('geomDataChanged', {})
   }
 
   /**

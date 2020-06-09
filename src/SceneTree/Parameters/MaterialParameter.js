@@ -17,7 +17,7 @@ class MaterialParameter extends Parameter {
 
   // eslint-disable-next-line require-jsdoc
   __valueParameterValueChanged(event) {
-    this.emitEvent('valueParameterValueChanged', event)
+    this.emit('valueParameterValueChanged', event)
   }
 
   /**
@@ -29,13 +29,13 @@ class MaterialParameter extends Parameter {
     // 0 == normal set. 1 = changed via cleaner fn, 2 = change by loading/cloning code.
     if (this.__value !== material) {
       if (this.__value) {
-        this.__value.removeEventListener('parameterValueChanged',
+        this.__value.removeListener('parameterValueChanged',
           this.__valueParameterValueChanged
         )
       }
       this.__value = material
       if (this.__value) {
-        this.__value.addEventListener('parameterValueChanged',
+        this.__value.addListener('parameterValueChanged',
           this.__valueParameterValueChanged
         )
       }
@@ -47,7 +47,7 @@ class MaterialParameter extends Parameter {
       }
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emitEvent('valueChanged', { mode })
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emit('valueChanged', { mode })
     }
   }
 
@@ -111,7 +111,7 @@ class MaterialParameter extends Parameter {
     // E.g. freeing GPU Memory.
 
     if (this.__value) {
-      this.__value.removeEventListener('parameterValueChanged',
+      this.__value.removeListener('parameterValueChanged',
         this.__valueParameterValueChanged
       )
     }

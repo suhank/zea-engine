@@ -85,7 +85,7 @@ class GLBaseRenderer extends ParameterOwner {
             // this.__gl.setCompatibleXRDevice(device);
             this.__gl.makeXRCompatible().then(() => {
               this.__xrViewport = this.__setupXRViewport()
-              this.emitEvent('xrViewportSetup', {
+              this.emit('xrViewportSetup', {
                 xrViewport: this.__xrViewport,
               })
               resolve(this.__xrViewport)
@@ -114,7 +114,7 @@ class GLBaseRenderer extends ParameterOwner {
           }
 
           // TODO:
-          // navigator.xr.addEventListener('devicechange', checkForXRSupport);
+          // navigator.xr.addListener('devicechange', checkForXRSupport);
         }
       }
     })
@@ -178,11 +178,11 @@ class GLBaseRenderer extends ParameterOwner {
     }
     const viewChanged = data => {
       if (!this.__xrViewportPresenting) {
-        this.emitEvent('viewChanged', data)
+        this.emit('viewChanged', data)
       }
     }
-    vp.addEventListener('updated', updated)
-    vp.addEventListener('viewChanged', viewChanged)
+    vp.addListener('updated', updated)
+    vp.addListener('viewChanged', viewChanged)
 
     this.__viewports.push(vp)
     return vp
@@ -319,7 +319,7 @@ class GLBaseRenderer extends ParameterOwner {
     if (this.__gizmoContext)
       this.__gizmoContext.setSelectionManager(scene.getSelectionManager())
 
-    this.emitEvent('sceneSet', { scene: this.__scene })
+    this.emit('sceneSet', { scene: this.__scene })
   }
 
   __childItemAdded(event) {
@@ -353,8 +353,8 @@ class GLBaseRenderer extends ParameterOwner {
       if (childItem) this.addTreeItem(childItem)
     }
 
-    treeItem.addEventListener('childAdded', this.__childItemAdded)
-    treeItem.addEventListener('childRemoved', this.__childItemRemoved)
+    treeItem.addListener('childAdded', this.__childItemAdded)
+    treeItem.addListener('childRemoved', this.__childItemRemoved)
 
     this.renderGeomDataFbos()
   }
@@ -367,8 +367,8 @@ class GLBaseRenderer extends ParameterOwner {
     // Note: we can have BaseItems in the tree now.
     if (!(treeItem instanceof TreeItem)) return
 
-    treeItem.removeEventListener('childAdded', this.__childItemAdded)
-    treeItem.removeEventListener('childRemoved', this.__childItemRemoved)
+    treeItem.removeListener('childAdded', this.__childItemAdded)
+    treeItem.removeListener('childRemoved', this.__childItemRemoved)
 
     for (const passCbs of this.__passCallbacks) {
       if (!passCbs.itemRemovedFn) continue
@@ -440,7 +440,7 @@ class GLBaseRenderer extends ParameterOwner {
 
       this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
 
-      this.emitEvent('resized', {
+      this.emit('resized', {
         width: this.__glcanvas.width,
         height: this.__glcanvas.height
       })
@@ -556,7 +556,7 @@ class GLBaseRenderer extends ParameterOwner {
       event.rendererY = (event.clientY - rect.top) * dpr
     }
 
-    this.__glcanvas.addEventListener('mouseenter', event => {
+    this.__glcanvas.addListener('mouseenter', event => {
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
@@ -567,7 +567,7 @@ class GLBaseRenderer extends ParameterOwner {
         mouseLeft = false
       }
     })
-    this.__glcanvas.addEventListener('mouseleave', event => {
+    this.__glcanvas.addListener('mouseleave', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
@@ -582,7 +582,7 @@ class GLBaseRenderer extends ParameterOwner {
         mouseLeft = true
       }
     })
-    this.__glcanvas.addEventListener('mousedown', event => {
+    this.__glcanvas.addListener('mousedown', event => {
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       calcRendererCoords(event)
@@ -596,7 +596,7 @@ class GLBaseRenderer extends ParameterOwner {
       mouseLeft = false
       return false
     })
-    document.addEventListener('mouseup', event => {
+    document.addListener('mouseup', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
@@ -619,16 +619,16 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    // document.addEventListener('dblclick', event =>{
+    // document.addListener('dblclick', event =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
-    // document.addEventListener('click', event =>{
+    // document.addListener('click', event =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
 
-    document.addEventListener('mousemove', event => {
+    document.addListener('mousemove', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       event.preventDefault()
       event.stopPropagation()
@@ -654,9 +654,9 @@ class GLBaseRenderer extends ParameterOwner {
       }
       return false
     }
-    if (window.addEventListener)
+    if (window.addListener)
       /** DOMMouseScroll is for mozilla. */
-      window.addEventListener('wheel', onWheel, { passive: false })
+      window.addListener('wheel', onWheel, { passive: false })
     else {
       /** IE/Opera. */
       window.onmousewheel = document.onmousewheel = onWheel
@@ -666,7 +666,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    document.addEventListener('keypress', event => {
+    document.addListener('keypress', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -675,7 +675,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keydown', event => {
+    document.addListener('keydown', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -684,7 +684,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keyup', event => {
+    document.addListener('keyup', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -693,7 +693,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    this.__glcanvas.addEventListener(
+    this.__glcanvas.addListener(
       'touchstart',
       event => {
         event.stopPropagation()
@@ -706,7 +706,7 @@ class GLBaseRenderer extends ParameterOwner {
       false
     )
 
-    this.__glcanvas.addEventListener(
+    this.__glcanvas.addListener(
       'touchmove',
       event => {
         event.stopPropagation()
@@ -719,7 +719,7 @@ class GLBaseRenderer extends ParameterOwner {
       false
     )
 
-    this.__glcanvas.addEventListener(
+    this.__glcanvas.addListener(
       'touchend',
       event => {
         event.stopPropagation()
@@ -732,7 +732,7 @@ class GLBaseRenderer extends ParameterOwner {
       false
     )
 
-    this.__glcanvas.addEventListener(
+    this.__glcanvas.addListener(
       'touchcancel',
       event => {
         event.stopPropagation()
@@ -819,7 +819,7 @@ class GLBaseRenderer extends ParameterOwner {
     }
     index += this.__passes[passtype].length
 
-    pass.addEventListener('updated', this.requestRedraw)
+    pass.addListener('updated', this.requestRedraw)
     pass.init(this, index)
     this.__passes[passtype].push(pass)
 
@@ -913,10 +913,10 @@ class GLBaseRenderer extends ParameterOwner {
     const xrvp = new VRViewport(this)
     
     const emitViewChanged = event => {
-      this.emitEvent('viewChanged', event)
+      this.emit('viewChanged', event)
     }
 
-    xrvp.addEventListener('presentingChanged', event => {
+    xrvp.addListener('presentingChanged', event => {
       const state = event.state
       this.__xrViewportPresenting = state
       if (state) {
@@ -929,10 +929,10 @@ class GLBaseRenderer extends ParameterOwner {
           }
         }
 
-        xrvp.addEventListener('viewChanged', emitViewChanged)
+        xrvp.addListener('viewChanged', emitViewChanged)
       } else {
-        xrvp.removeEventListener('viewChanged', emitViewChanged)
-        this.emitEvent('updated', {})
+        xrvp.removeListener('viewChanged', emitViewChanged)
+        this.emit('updated', {})
 
         for (const key in this.__passes) {
           const passSet = this.__passes[key]
@@ -946,7 +946,7 @@ class GLBaseRenderer extends ParameterOwner {
             .getCamera()
             .getGlobalXfo(),
         }
-        this.emitEvent('viewChanged', event)
+        this.emit('viewChanged', event)
 
         this.resizeFbos(this.__glcanvas.width, this.__glcanvas.height)
         this.requestRedraw()

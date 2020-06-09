@@ -21,16 +21,16 @@ class GLGeom extends RefCounted {
 
     const updateBuffers = opts => {
       this.updateBuffers(opts)
-      this.emitEvent('updated', {})
+      this.emit('updated', {})
     }
-    this.__geom.addEventListener('geomDataChanged', updateBuffers)
+    this.__geom.addListener('geomDataChanged', updateBuffers)
 
     const regenBuffers = opts => {
       this.clearShaderBindings()
       this.updateBuffers(opts)
-      this.emitEvent('updated', {})
+      this.emit('updated', {})
     }
-    this.__geom.addEventListener('geomDataTopologyChanged', regenBuffers)
+    this.__geom.addListener('geomDataTopologyChanged', regenBuffers)
   }
 
   /**
@@ -158,7 +158,7 @@ class GLGeom extends RefCounted {
 
     this.__shaderBindings = {}
     this.__destroyed = true
-    // this.emitEvent('destructing', {})
+    // this.emit('destructing', {})
   }
 }
 

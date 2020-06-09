@@ -42,10 +42,10 @@ class Cone extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.addEventListener('valueChanged', resize)
-    this.__heightParam.addEventListener('valueChanged', resize)
-    this.__detailParam.addEventListener('valueChanged', rebuild)
-    this.__capParam.addEventListener('valueChanged', rebuild)
+    this.__radiusParam.addListener('valueChanged', resize)
+    this.__heightParam.addListener('valueChanged', resize)
+    this.__detailParam.addListener('valueChanged', rebuild)
+    this.__capParam.addListener('valueChanged', rebuild)
   }
 
   /**

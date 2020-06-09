@@ -20,11 +20,11 @@ class RouterOperator extends Operator {
     this.__multipliersParam = this.addParameter(
       new ListParameter('Multipliers', NumberParameter)
     )
-    this.__routesParam.addEventListener('elementAdded', event => {
+    this.__routesParam.addListener('elementAdded', event => {
       event.elem.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })
-    this.__routesParam.addEventListener('elementRemoved', event => {
+    this.__routesParam.addListener('elementRemoved', event => {
       this.removeOutput(this.getOutputByIndex(event.index))
     })
   }
@@ -50,7 +50,7 @@ class RouterOperator extends Operator {
       const mult = mults[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
       output.setValue(input * mult)
     }
-    this.emitEvent('postEval', {})
+    this.emit('postEval', {})
   }
 
   // ////////////////////////////////////////

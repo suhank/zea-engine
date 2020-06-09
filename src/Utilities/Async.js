@@ -24,7 +24,7 @@ class Async extends EventEmitter {
     }
 
     this.__asyncsCompleted = () => {
-      this.emitEvent('ready', {})
+      this.emit('ready', {})
     }
   }
 

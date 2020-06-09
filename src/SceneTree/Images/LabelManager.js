@@ -60,7 +60,7 @@ class LabelManager extends EventEmitter {
       this.__foundLabelLibraries[stem] = file
       loadTextfile(file.url, text => {
         this.__labelLibraries[stem] = JSON.parse(text)
-        this.emitEvent('labelLibraryLoaded', { library: stem })
+        this.emit('labelLibraryLoaded', { library: stem })
       })
     })
 
@@ -92,7 +92,7 @@ class LabelManager extends EventEmitter {
           })
 
           this.__labelLibraries[stem] = json
-          this.emitEvent('labelLibraryLoaded', { library: stem })
+          this.emit('labelLibraryLoaded', { library: stem })
         })
       })
     }

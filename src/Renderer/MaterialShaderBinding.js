@@ -44,9 +44,9 @@ class SimpleUniformBinding {
     }
 
     this.__val = param.getValue()
-    param.addEventListener('valueChanged', () => {
+    param.addListener('valueChanged', () => {
       this.__val = param.getValue()
-      glmaterial.emitEvent('updated', {})
+      glmaterial.emit('updated', {})
     })
   }
 
@@ -96,9 +96,9 @@ class ComplexUniformBinding {
     }
 
     this.__vals = param.getValue().asArray()
-    param.addEventListener('valueChanged', () => {
+    param.addListener('valueChanged', () => {
       this.__vals = param.getValue().asArray()
-      glmaterial.emitEvent('updated', {})
+      glmaterial.emit('updated', {})
     })
   }
 
@@ -145,9 +145,9 @@ class MatrixUniformBinding {
     }
 
     this.__vals = param.getValue().asArray()
-    param.addEventListener('valueChanged', () => {
+    param.addListener('valueChanged', () => {
       this.__val = param.getValue().asArray()
-      glmaterial.emitEvent('updated', {})
+      glmaterial.emit('updated', {})
     })
   }
 
@@ -208,14 +208,14 @@ class ColorUniformBinding {
         }
       }
       this.texBinding = gltexture.preBind(this.__textureUnif, unifs)
-      gltexture.addEventListener('updated', () => {
-        glmaterial.emitEvent('updated', {})
+      gltexture.addListener('updated', () => {
+        glmaterial.emit('updated', {})
       })
       this.gltexture = gltexture
       this.gltexture.addRef(this)
       this.textureType = textureType
       this.bind = this.bindTexture
-      glmaterial.emitEvent('updated', {})
+      glmaterial.emit('updated', {})
     }
 
     let boundImage
@@ -225,7 +225,7 @@ class ColorUniformBinding {
     }
     const connectImage = image => {
       if (!image.isLoaded()) {
-        image.addEventListener('loaded', imageLoaded)
+        image.addListener('loaded', imageLoaded)
       } else {
         genGLTex(image)
       }
@@ -241,11 +241,11 @@ class ColorUniformBinding {
       this.bind = this.bindValue
 
       if (imageLoadedId) {
-        boundImage.removeEventListenerById('loaded', imageLoadedId)
+        boundImage.removeListenerById('loaded', imageLoadedId)
       }
       boundImage = null
       imageLoadedId = null
-      glmaterial.emitEvent('updated', {})
+      glmaterial.emit('updated', {})
     }
 
     const update = () => {
@@ -264,7 +264,7 @@ class ColorUniformBinding {
           disconnectImage()
         }
       }
-      glmaterial.emitEvent('updated',)
+      glmaterial.emit('updated',)
     }
 
     /**
@@ -272,11 +272,11 @@ class ColorUniformBinding {
      */
     update()
     if (param.textureConnected) {
-      param.addEventListener('textureConnected', () => {
+      param.addListener('textureConnected', () => {
         connectImage(param.getImage())
       })
     }
-    param.addEventListener('valueChanged', update)
+    param.addListener('valueChanged', update)
 
     this.uniform1i = gl.uniform1i.bind(gl)
     this.uniform4fv = gl.uniform4fv.bind(gl)

@@ -24,7 +24,7 @@ class SetParameterValue extends StateAction {
     )
 
     this.__outParam = this.addOutput(new OperatorOutput('Param'))
-    this.__outParam.addEventListener('paramSet', event => {
+    this.__outParam.addListener('paramSet', event => {
       const { param } = event
       if (
         !this.__valueParam ||

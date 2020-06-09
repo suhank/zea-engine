@@ -41,14 +41,14 @@ class ObjAsset extends AssetItem {
     this.addParameter(new StringParameter('defaultShader', ''))
 
     this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
-    this.objfileParam.addEventListener('valueChanged', () => {
+    this.objfileParam.addListener('valueChanged', () => {
       this.loaded = false
       this.__loadObj(
         () => {
-          this.emitEvent('loaded', {})
+          this.emit('loaded', {})
         },
         () => {
-          this.emitEvent('geomsLoaded', {})
+          this.emit('geomsLoaded', {})
         }
       )
     })
@@ -164,7 +164,7 @@ class ObjAsset extends AssetItem {
 
     const async = new Async()
     async.incAsyncCount()
-    async.addEventListener('ready', () => {
+    async.addListener('ready', () => {
       buildChildItems()
     })
 

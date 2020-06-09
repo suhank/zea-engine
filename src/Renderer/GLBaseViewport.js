@@ -44,13 +44,13 @@ class GLBaseViewport extends ParameterOwner {
         } else {
           console.warn('Invalid background:' + value)
         }
-        this.emitEvent('updated', {})
+        this.emit('updated', {})
       }
       processBGValue(bgColorParam.getValue())
-      bgColorParam.addEventListener('valueChanged', processBGValue)
+      bgColorParam.addListener('valueChanged', processBGValue)
     }
 
-    this.__renderer.addEventListener('sceneSet', sceneSet)
+    this.__renderer.addListener('sceneSet', sceneSet)
   }
 
   /**
@@ -155,7 +155,7 @@ class GLBaseViewport extends ParameterOwner {
     const settings = this.__renderer.getScene().settings
     const bgColorParam = settings.getParameter('BackgroundColor')
     bgColorParam.setValue(background)
-    this.emitEvent('updated', {})
+    this.emit('updated', {})
   }
 
   /**
@@ -168,7 +168,7 @@ class GLBaseViewport extends ParameterOwner {
     this.__canvasHeight = canvasHeight
     this.__width = canvasWidth
     this.__height = canvasHeight
-    this.emitEvent('resized', { width: this.__width, height: this.__height })
+    this.emit('resized', { width: this.__width, height: this.__height })
   }
 
   // ///////////////////////////

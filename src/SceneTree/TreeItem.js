@@ -75,7 +75,7 @@ class TreeItem extends BaseItem {
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
-    this.__localXfoParam.addEventListener('valueChanged', this._setGlobalXfoDirty)
+    this.__localXfoParam.addListener('valueChanged', this._setGlobalXfoDirty)
     
     // Note: if the user changes the global xfo, we compute the 
     // local xfo when it is needed (generally when GlobalXfo is pulled)
@@ -91,7 +91,7 @@ class TreeItem extends BaseItem {
           .multiply(globalXfo)
       else return globalXfo
     }
-    this.__globalXfoParam.addEventListener('valueChanged', event => {
+    this.__globalXfoParam.addListener('valueChanged', event => {
       // Dirtiness propagates from Local to Global, but not vice versa.
       // We need to move to using operators to invert values.
       // This system of having ops connected in all directions
@@ -100,10 +100,10 @@ class TreeItem extends BaseItem {
         this.__localXfoParam.setDirty(cleanLocalXfo)
       }
       this._setBoundingBoxDirty()
-      this.emitEvent('globalXfoChanged', event)
+      this.emit('globalXfoChanged', event)
     })
 
-    this.__visibleParam.addEventListener('valueChanged', () => {
+    this.__visibleParam.addListener('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.__updateVisiblity()
     })
@@ -207,7 +207,7 @@ class TreeItem extends BaseItem {
    */
   setOwner(parentItem) {
     if (this.__ownerItem) {
-      this.__ownerItem.removeEventListener('globalXfoChanged', this._setGlobalXfoDirty)
+      this.__ownerItem.removeListener('globalXfoChanged', this._setGlobalXfoDirty)
 
       // The effect of the invisible owner is removed.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter++
@@ -224,7 +224,7 @@ class TreeItem extends BaseItem {
       // The effect of the invisible owner is added.
       if (!this.__ownerItem.getVisible()) this.__visibleCounter--
 
-      this.__ownerItem.addEventListener('globalXfoChanged', this._setGlobalXfoDirty)
+      this.__ownerItem.addListener('globalXfoChanged', this._setGlobalXfoDirty)
     }
 
     this.__updateVisiblity()
@@ -367,7 +367,7 @@ class TreeItem extends BaseItem {
         if (childItem instanceof TreeItem)
           childItem.propagateVisiblity(this.__visible ? 1 : -1)
       }
-      this.emitEvent('visibilityChanged',{ visible })
+      this.emit('visibilityChanged',{ visible })
       return true
     }
     return false
@@ -391,7 +391,7 @@ class TreeItem extends BaseItem {
     }
     this.__highlights.push(name)
     this.__highlightMapping[name] = color
-    this.emitEvent('highlightChanged', { name, color })
+    this.emit('highlightChanged', { name, color })
 
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {
@@ -411,7 +411,7 @@ class TreeItem extends BaseItem {
       const id = this.__highlights.indexOf(name)
       this.__highlights.splice(id, 1)
       delete this.__highlightMapping[name]
-      this.emitEvent('highlightChanged', {})
+      this.emit('highlightChanged', {})
     }
     if (propagateToChildren) {
       this.__childItems.forEach(childItem => {
@@ -619,7 +619,7 @@ class TreeItem extends BaseItem {
     }
 
     const signalIds = {}
-    signalIds.nameChangedId = childItem.addEventListener('nameChanged', event => {
+    signalIds.nameChangedId = childItem.addListener('nameChanged', event => {
       // Update the acceleration structure.
       const index = this.__childItemsMapping[event.oldName]
       delete this.__childItemsMapping[event.oldName]
@@ -633,10 +633,10 @@ class TreeItem extends BaseItem {
           .inverse()
           .multiply(childItem.getGlobalXfo())
       }
-      signalIds.bboxChangedId = childItem.addEventListener('boundingChanged', () => {
+      signalIds.bboxChangedId = childItem.addListener('boundingChanged', () => {
         this._setBoundingBoxDirty()
       })
-      signalIds.visChangedId = childItem.addEventListener('visibilityChanged', 
+      signalIds.visChangedId = childItem.addListener('visibilityChanged', 
         this._setBoundingBoxDirty
       )
     }
@@ -656,7 +656,7 @@ class TreeItem extends BaseItem {
     if (childItem.testFlag(ItemFlags.USER_EDITED))
       this.setFlag(ItemFlags.USER_EDITED)
 
-    this.emitEvent('childAdded', { childItem, index })
+    this.emit('childAdded', { childItem, index })
 
     return childItem
   }
@@ -726,11 +726,11 @@ class TreeItem extends BaseItem {
    */
   __unbindChild(index, childItem) {
     const signalIds = this.__childItemsSignalIds[index]
-    childItem.removeEventListenerById('nameChanged', signalIds.nameChangedId)
+    childItem.removeListenerById('nameChanged', signalIds.nameChangedId)
 
     if (childItem instanceof TreeItem) {
-      childItem.removeEventListenerById('boundingChanged', signalIds.bboxChangedId)
-      childItem.removeEventListenerById('visibilityChanged', signalIds.visChangedId)
+      childItem.removeListenerById('boundingChanged', signalIds.bboxChangedId)
+      childItem.removeListenerById('visibilityChanged', signalIds.visChangedId)
     }
 
     this.__childItems.splice(index, 1)
@@ -742,7 +742,7 @@ class TreeItem extends BaseItem {
       this._setBoundingBoxDirty()
     }
 
-    this.emitEvent('childRemoved', { childItem, index })
+    this.emit('childRemoved', { childItem, index })
   }
 
   /**
@@ -910,7 +910,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
-    this.emitEvent('mouseDown', event)
+    this.emit('mouseDown', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseDown(event)
     }
@@ -921,7 +921,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseUp(event) {
-    this.emitEvent('mouseUp', event)
+    this.emit('mouseUp', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseUp(event)
     }
@@ -932,7 +932,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseMove(event) {
-    this.emitEvent('mouseMove', event)
+    this.emit('mouseMove', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseMove(event)
     }
@@ -943,7 +943,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseEnter(event) {
-    this.emitEvent('mouseEnter', event)
+    this.emit('mouseEnter', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseEnter(event)
     }
@@ -954,7 +954,7 @@ class TreeItem extends BaseItem {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseLeave(event) {
-    this.emitEvent('mouseLeave', event)
+    this.emit('mouseLeave', event)
     if (event.propagating && this.__ownerItem) {
       this.__ownerItem.onMouseLeave(event)
     }
@@ -1216,7 +1216,7 @@ class TreeItem extends BaseItem {
     src.getChildren().forEach(srcChildItem => {
       if (srcChildItem) this.addChild(srcChildItem.clone(flags), false, false)
       // if(flags& CloneFlags.CLONE_FLAG_INSTANCED_TREE) {
-      //     src.addEventListener('childAdded', (childItem, index)=>{
+      //     src.addListener('childAdded', (childItem, index)=>{
       //         this.addChild(childItem.clone(flags), false);
       //     })
       // }

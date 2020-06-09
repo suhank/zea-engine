@@ -66,7 +66,7 @@ class GLViewport extends GLBaseViewport {
       this.__geomDataBuffer.resize(this.__width, this.__height)
       this.__geomDataBufferFbo.resize()
     }
-    this.emitEvent('resized', { width, height })
+    this.emit('resized', { width, height })
   }
 
   /**
@@ -90,19 +90,19 @@ class GLViewport extends GLBaseViewport {
       this.__viewMat = this.__cameraMat.inverse()
     }
     getCameraParams()
-    globalXfoParam.addEventListener('valueChanged', () => {
+    globalXfoParam.addListener('valueChanged', () => {
       getCameraParams()
       this.invalidateGeomDataBuffer()
-      this.emitEvent('updated', {})
-      this.emitEvent('viewChanged', {
+      this.emit('updated', {})
+      this.emit('viewChanged', {
         interfaceType: 'CameraAndPointer',
         viewXfo: this.__cameraXfo,
         focalDistance: this.__camera.getFocalDistance(),
       })
     })
-    this.__camera.addEventListener('projectionParamChanged', () => {
+    this.__camera.addListener('projectionParamChanged', () => {
       this.__updateProjectionMatrix()
-      this.emitEvent('updated', {})
+      this.emit('updated', {})
     })
 
     this.__updateProjectionMatrix()
@@ -554,7 +554,7 @@ class GLViewport extends GLBaseViewport {
       event.intersectionData.geomItem.onMouseDown(event)
       if (!event.propagating || this.capturedItem) return
 
-      this.emitEvent('mouseDownOnGeom', event)
+      this.emit('mouseDownOnGeom', event)
       if (!event.propagating) return
     }
 
@@ -568,7 +568,7 @@ class GLViewport extends GLBaseViewport {
         if (!event.propagating) return
       }
 
-      this.emitEvent('mouseDoubleClicked', event)
+      this.emit('mouseDoubleClicked', event)
     } else {
       this.__prevDownTime = downTime
       if (this.__cameraManipulator) {
@@ -576,7 +576,7 @@ class GLViewport extends GLBaseViewport {
         if (!event.propagating) return
       }
 
-      this.emitEvent('mouseDown', event)
+      this.emit('mouseDown', event)
     }
 
     return false
@@ -612,7 +612,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onMouseMove(event)
       if (!event.propagating) return
     }
-    this.emitEvent('mouseMove', event)
+    this.emit('mouseMove', event)
   }
 
   /**
@@ -637,7 +637,7 @@ class GLViewport extends GLBaseViewport {
       if (!event.propagating) return
     }
 
-    this.emitEvent('mouseUp', event)
+    this.emit('mouseUp', event)
   }
 
   /**
@@ -646,7 +646,7 @@ class GLViewport extends GLBaseViewport {
    */
   onMouseLeave(event) {
     this.__prepareEvent(event)
-    this.emitEvent('mouseLeave', event)
+    this.emit('mouseLeave', event)
   }
 
   /**
@@ -659,7 +659,7 @@ class GLViewport extends GLBaseViewport {
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyPressed(key, event)) return
     }
-    this.emitEvent('keyPressed', event)
+    this.emit('keyPressed', event)
   }
 
   /**
@@ -672,7 +672,7 @@ class GLViewport extends GLBaseViewport {
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyDown(key, event)) return
     }
-    this.emitEvent('keyDown', event)
+    this.emit('keyDown', event)
   }
 
   /**
@@ -685,7 +685,7 @@ class GLViewport extends GLBaseViewport {
     if (this.__cameraManipulator) {
       if (this.__cameraManipulator.onKeyUp(key, event)) return
     }
-    this.emitEvent('keyUp', event)
+    this.emit('keyUp', event)
   }
 
   /**
@@ -703,7 +703,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onWheel(event)
       return
     }
-    this.emitEvent('mouseWheel', event)
+    this.emit('mouseWheel', event)
   }
 
   // Touch events
@@ -743,7 +743,7 @@ class GLViewport extends GLBaseViewport {
         if (!event.propagating) return
         if (this.capturedItem) return
 
-        this.emitEvent('mouseDownOnGeom', event)
+        this.emit('mouseDownOnGeom', event)
         if (!event.propagating) return
       }
 
@@ -756,7 +756,7 @@ class GLViewport extends GLBaseViewport {
           this.__cameraManipulator.onDoubleTap(event)
           if (!event.propagating) return
         }
-        this.emitEvent('doubleTapped', event)
+        this.emit('doubleTapped', event)
         return
       } else {
         this.__prevDownTime = downTime
@@ -767,7 +767,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchStart(event)
       return
     }
-    this.emitEvent('touchStart', event)
+    this.emit('touchStart', event)
   }
 
   /**
@@ -796,7 +796,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchMove(event)
       return
     }
-    this.emitEvent('touchMove', event)
+    this.emit('touchMove', event)
   }
 
   /**
@@ -815,7 +815,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchEnd(event)
       return
     }
-    this.emitEvent('touchEnd', event)
+    this.emit('touchEnd', event)
   }
 
   /**
@@ -834,7 +834,7 @@ class GLViewport extends GLBaseViewport {
       this.__cameraManipulator.onTouchCancel(event)
       return
     }
-    this.emitEvent('touchCancel', event)
+    this.emit('touchCancel', event)
   }
 
   // //////////////////////////

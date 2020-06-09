@@ -58,12 +58,12 @@ class Cylinder extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.addEventListener('valueChanged', resize)
-    this.__heightParam.addEventListener('valueChanged', resize)
-    this.__sidesParam.addEventListener('valueChanged', rebuild)
-    this.__loopsParam.addEventListener('valueChanged', rebuild)
-    this.__capsParam.addEventListener('valueChanged', rebuild)
-    this.__baseZAtZeroParam.addEventListener('valueChanged', resize)
+    this.__radiusParam.addListener('valueChanged', resize)
+    this.__heightParam.addListener('valueChanged', resize)
+    this.__sidesParam.addListener('valueChanged', rebuild)
+    this.__loopsParam.addListener('valueChanged', rebuild)
+    this.__capsParam.addListener('valueChanged', rebuild)
+    this.__baseZAtZeroParam.addListener('valueChanged', resize)
   }
 
   /**
@@ -206,7 +206,7 @@ class Cylinder extends Mesh {
     }
 
     // this.setBoundingBoxDirty();
-    this.emitEvent('geomDataTopologyChanged', {})
+    this.emit('geomDataTopologyChanged', {})
     this.__resize()
   }
 
@@ -255,7 +255,7 @@ class Cylinder extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    this.emitEvent('geomDataChanged', {})
+    this.emit('geomDataChanged', {})
   }
 }
 

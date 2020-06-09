@@ -31,7 +31,7 @@ class GLFbo {
     this.resize = this.resize.bind(this)
 
     if (this.__colorTexture) {
-      this.__colorTexture.addEventListener('resized', this.resize)
+      this.__colorTexture.addListener('resized', this.resize)
     }
 
     this.setup()
@@ -471,7 +471,7 @@ class GLFbo {
     gl.bindFramebuffer(gl.FRAMEBUFFER, null)
     gl.deleteFramebuffer(this.__fbo)
     this.__fbo = null
-    this.__colorTexture.removeEventListener('resized', this.resize)
+    this.__colorTexture.removeListener('resized', this.resize)
   }
 }
 

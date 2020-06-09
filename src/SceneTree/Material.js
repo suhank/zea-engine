@@ -123,7 +123,7 @@ class Material extends BaseItem {
     }
 
     this.__shaderName = shaderName
-    this.emitEvent('shaderNameChanged', { shaderName })
+    this.emit('shaderNameChanged', { shaderName })
   }
 
   /**
@@ -162,8 +162,8 @@ class Material extends BaseItem {
    */
   __makeParameterTexturable(param) {
     makeParameterTexturable(param)
-    // param.addEventListener('textureConnected', this.textureConnected.emit);
-    // param.addEventListener('textureDisconnected', this.textureDisconnected.emit);
+    // param.addListener('textureConnected', this.textureConnected.emit);
+    // param.addListener('textureDisconnected', this.textureDisconnected.emit);
   }
 
   /**

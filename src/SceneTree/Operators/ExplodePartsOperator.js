@@ -188,21 +188,21 @@ class ExplodePartsOperator extends Operator {
     this.__parentItemParam = this.addParameter(
       new TreeItemParameter('RelativeTo')
     )
-    this.__parentItemParam.addEventListener('valueChanged', () => {
+    this.__parentItemParam.addListener('valueChanged', () => {
       // compute the local xfos
       const parentItem = this.__parentItemParam.getValue()
       if (parentItem)
         this.__invParentSpace = parentItem.getGlobalXfo().inverse()
       else this.__invParentSpace = undefined
     })
-    this.__parentItemParam.addEventListener('treeItemGlobalXfoChanged', () => {
+    this.__parentItemParam.addListener('treeItemGlobalXfoChanged', () => {
       this.setDirty()
     })
 
     this.__itemsParam = this.addParameter(
       new ListParameter('Parts', ExplodePartParameter)
     )
-    this.__itemsParam.addEventListener('elementAdded', event => {
+    this.__itemsParam.addListener('elementAdded', event => {
       if (event.index > 0) {
         const prevStage = this.__itemsParam.getElement(event.index-1).getStage();
         event.elem.setStage(prevStage + 1)
@@ -213,7 +213,7 @@ class ExplodePartsOperator extends Operator {
       this.addOutput(event.elem.getOutput())
       this.setDirty()
     })
-    this.__itemsParam.addEventListener('elementRemoved', event => {
+    this.__itemsParam.addListener('elementRemoved', event => {
       this.removeOutput(event.elem.getOutput())
     })
 

@@ -110,7 +110,7 @@ class Label extends DataImage {
     //     const text = textParam.getValue();
     //     labelManager.setLabelTextToLibrary(library, name, text);
     // }
-    // textParam.addEventListener('valueChanged', setLabelText);
+    // textParam.addListener('valueChanged', setLabelText);
 
     this.addParameter(new ColorParameter('FontColor', new Color(0, 0, 0)))
     // this.addParameter(new StringParameter('TextAlign', 'left'))
@@ -133,7 +133,7 @@ class Label extends DataImage {
     const reload = () => {
       this.loadLabelData()
     }
-    this.addEventListener('nameChanged', reload)
+    this.addListener('nameChanged', reload)
 
     if (library) libraryParam.setValue(library)
 
@@ -165,9 +165,9 @@ class Label extends DataImage {
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
-        this.emitEvent('loaded', {})
+        this.emit('loaded', {})
       } else {
-        this.emitEvent('updated', {})
+        this.emit('updated', {})
       }
     }
 
@@ -197,7 +197,7 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.addEventListener('labelLibraryLoaded', event => {
+          labelManager.addListener('labelLibraryLoaded', event => {
             const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
@@ -309,7 +309,7 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
-    this.emitEvent('labelRendered', {
+    this.emit('labelRendered', {
       width: this.width,
       height: this.height,
       data: this.__data

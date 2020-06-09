@@ -85,7 +85,7 @@ class GLGeomItemSet extends EventEmitter {
     }
     if (glgeomItem.visible) {
       this.visibleItems.push(index)
-      this.emitEvent('drawCountChanged', { count: 1 })
+      this.emit('drawCountChanged', { count: 1 })
     }
     if (glgeomItem.getGeomItem().isHighlighted()) {
       this.highlightedItems.push(index)
@@ -111,7 +111,7 @@ class GLGeomItemSet extends EventEmitter {
       // console.log("highlightChanged:", glgeomItem.getGeomItem().getName(), glgeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
     }
-    signalIds.sel = glgeomItem.addEventListener(
+    signalIds.sel = glgeomItem.addListener(
       'highlightChanged',
       highlightChanged
     )
@@ -119,14 +119,14 @@ class GLGeomItemSet extends EventEmitter {
       const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
-        this.emitEvent('drawCountChanged', { count: 1 })
+        this.emit('drawCountChanged', { count: 1 })
       } else {
         this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-        this.emitEvent('drawCountChanged', { count: -1 })
+        this.emit('drawCountChanged', { count: -1 })
       }
       this.drawIdsBufferDirty = true
     }
-    signalIds.vis = glgeomItem.addEventListener(
+    signalIds.vis = glgeomItem.addListener(
       'visibilityChanged',
       visibilityChanged
     )
@@ -144,8 +144,8 @@ class GLGeomItemSet extends EventEmitter {
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem)
     const signalIds = this.glgeomItemSignalIds[index]
-    glgeomItem.removeEventListenerById('highlightChanged', signalIds.sel)
-    glgeomItem.removeEventListenerById('visibilityChanged', signalIds.vis)
+    glgeomItem.removeListenerById('highlightChanged', signalIds.sel)
+    glgeomItem.removeListenerById('visibilityChanged', signalIds.vis)
 
     this.glgeomItems[index] = null
     this.glgeomItemSignalIds[index] = null
@@ -154,7 +154,7 @@ class GLGeomItemSet extends EventEmitter {
 
     if (glgeomItem.visible) {
       this.visibleItems.splice(this.visibleItems.indexOf(index), 1)
-      this.emitEvent('drawCountChanged', { count: -1 })
+      this.emit('drawCountChanged', { count: -1 })
     }
     const highlighted = glgeomItem.getGeomItem().isHighlighted()
     if (highlighted) {
@@ -373,7 +373,7 @@ class GLGeomItemSet extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.emitEvent('destructing', {})
+    this.emit('destructing', {})
   }
 }
 

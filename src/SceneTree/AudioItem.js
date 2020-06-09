@@ -28,9 +28,9 @@ class AudioItem extends TreeItem {
       audioSource.loop = loopParam.getValue()
       audioSource.muted = muteParam.getValue()
       audioSource.start(0)
-      this.emitEvent('audioSourceCreated', { audioSource })
+      this.emit('audioSourceCreated', { audioSource })
     }
-    fileParam.addEventListener('valueChanged', () => {
+    fileParam.addListener('valueChanged', () => {
       const request = new XMLHttpRequest()
       request.open('GET', fileParam.getURL(), true)
       request.responseType = 'arraybuffer'
@@ -45,7 +45,7 @@ class AudioItem extends TreeItem {
           buffer => {
             audioBuffer = buffer
             this.__loaded = true
-            this.emitEvent('loaded', {})
+            this.emit('loaded', {})
             if (autoplayParam.getValue()) startAudioPlayback()
           },
           e => {
@@ -62,7 +62,7 @@ class AudioItem extends TreeItem {
     const playStateParam = this.addParameter(
       new NumberParameter('PlayState', 0)
     )
-    playStateParam.addEventListener('valueChanged', event => {
+    playStateParam.addListener('valueChanged', event => {
       if (mode.mode != ValueSetMode.CUSTOM) {
         switch (playStateParam.getValue()) {
           case 0:
@@ -112,10 +112,10 @@ class AudioItem extends TreeItem {
     this.addParameter(new NumberParameter('coneOuterAngle', 0))
     this.addParameter(new NumberParameter('coneOuterGain', 1))
 
-    muteParam.addEventListener('valueChanged', () => {
+    muteParam.addListener('valueChanged', () => {
       if (audioSource) audioSource.muted = muteParam.getValue()
     })
-    loopParam.addEventListener('valueChanged', () => {
+    loopParam.addListener('valueChanged', () => {
       if (audioSource) audioSource.loop = loopParam.getValue()
     })
 
@@ -142,8 +142,8 @@ class AudioItem extends TreeItem {
    */
   setAudioStream() {
     this.__loaded = true
-    this.emitEvent('loaded', {})
-    this.emitEvent('audioSourceCreated', { audioSource })
+    this.emit('loaded', {})
+    this.emit('audioSourceCreated', { audioSource })
   }
 }
 

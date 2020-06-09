@@ -33,14 +33,14 @@ class KeyPressedEvent extends StateEvent {
    * The activate method.
    */
   activate() {
-    document.addEventListener('keydown', this.onKeyPressed)
+    document.addListener('keydown', this.onKeyPressed)
   }
 
   /**
    * The deactivate method.
    */
   deactivate() {
-    document.removeEventListener('keydown', this.onKeyPressed)
+    document.removeListener('keydown', this.onKeyPressed)
   }
 }
 

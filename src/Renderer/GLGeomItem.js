@@ -48,26 +48,26 @@ class GLGeomItem extends EventEmitter {
       }
     } else {
       this.updateXfo = () => {
-        this.emitEvent('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+        this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
       }
     }
 
     const cutAwayChanged = () => {
-      this.emitEvent('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
+      this.emit('updated', { type: GLGeomItemChangeType.GEOMITEM_CHANGED })
     }
     const highlightChanged = () => {
-      this.emitEvent('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
+      this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
     }
     const glGeomUpdated = () => {
-      this.emitEvent('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
+      this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
     }
 
-    this.geomItem.addEventListener('geomXfoChanged', this.updateXfo)
-    this.geomItem.addEventListener('visibilityChanged', this.updateVisibility)
-    this.geomItem.addEventListener('cutAwayChanged', cutAwayChanged)
-    this.geomItem.addEventListener('destructing', this.destroy)
-    this.highlightChangedId = this.geomItem.addEventListener('highlightChanged', highlightChanged)
-    this.glGeom.addEventListener('updated', glGeomUpdated)
+    this.geomItem.addListener('geomXfoChanged', this.updateXfo)
+    this.geomItem.addListener('visibilityChanged', this.updateVisibility)
+    this.geomItem.addListener('cutAwayChanged', cutAwayChanged)
+    this.geomItem.addListener('destructing', this.destroy)
+    this.highlightChangedId = this.geomItem.addListener('highlightChanged', highlightChanged)
+    this.glGeom.addListener('updated', glGeomUpdated)
 
     const lightmapCoordsOffset = this.geomItem.getLightmapCoordsOffset()
     const materialId = 0
@@ -128,8 +128,8 @@ class GLGeomItem extends EventEmitter {
     const visible = geomVisible && !this.culled
     if (this.visible != visible) {
       this.visible = visible
-      this.emitEvent('visibilityChanged', { visible })
-      this.emitEvent('updated', {})
+      this.emit('visibilityChanged', { visible })
+      this.emit('updated', {})
     }
   }
 
@@ -217,18 +217,18 @@ class GLGeomItem extends EventEmitter {
    * Users should never need to call this method directly.
    */
   destroy() {
-    this.geomItem.removeEventListener(
+    this.geomItem.removeListener(
       'visibilityChanged',
       this.updateVisibility
     )
-    this.geomItem.removeEventListener('geomXfoChanged', this.updateXfo)
-    this.geomItem.removeEventListenerById(
+    this.geomItem.removeListener('geomXfoChanged', this.updateXfo)
+    this.geomItem.removeListenerById(
       'highlightChanged',
       this.highlightChangedId
     )
 
-    // this.geomItem.removeEventListenerById('destructing', this.destroy)
-    // this.emitEvent('destructing', {})
+    // this.geomItem.removeListenerById('destructing', this.destroy)
+    // this.emit('destructing', {})
   }
 }
 

@@ -25,14 +25,14 @@ class VLAAsset extends AssetItem {
     // when this signal emits.
     this.geomsLoaded = false
     this.loaded = false
-    this.__geomLibrary.addEventListener('loaded', () => {
-      this.emitEvent('geomsLoaded', {})
+    this.__geomLibrary.addListener('loaded', () => {
+      this.emit('geomsLoaded', {})
     })
 
     this.__datafileParam = this.addParameter(
       new FilePathParameter('DataFilePath')
     )
-    this.__datafileParam.addEventListener('valueChanged', () => {
+    this.__datafileParam.addListener('valueChanged', () => {
       const file = this.__datafileParam.getFileDesc()
       if (!file) return
       console.log(file)
@@ -44,13 +44,13 @@ class VLAAsset extends AssetItem {
       this.geomsLoaded = false
       this.loadDataFile(
         () => {
-          if (!this.loaded) this.emitEvent('loaded', {})
+          if (!this.loaded) this.emit('loaded', {})
         },
         () => {
           // if(!this.loaded){
-          //   this.emitEvent('loaded', {});
+          //   this.emit('loaded', {});
           // }
-          // this.emitEvent('geomsLoaded', {})
+          // this.emit('geomsLoaded', {})
         }
       )
     })
@@ -252,7 +252,7 @@ class VLAAsset extends AssetItem {
     // To ensure that the resource loader knows when
     // parsing is done, we listen to the GeomLibrary streamFileLoaded
     // signal. This is fired every time a file in the stream is finshed parsing.
-    this.__geomLibrary.addEventListener('streamFileParsed', event => {
+    this.__geomLibrary.addListener('streamFileParsed', event => {
       // A chunk of geoms are now parsed, so update the resource loader.
       resourceLoader.addWorkDone(fileId + 'geoms', event.fraction)
     })

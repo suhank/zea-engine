@@ -46,7 +46,7 @@ class GLAudioItemsPass extends GLPass {
     this.__renderer.registerPass(
       treeItem => {
         if (treeItem instanceof AudioItem) {
-          treeItem.addEventListener('audioSourceCreated', event => {
+          treeItem.addListener('audioSourceCreated', event => {
             const { audioSource } = event
             this.addAudioSource(treeItem, audioSource, treeItem)
           })
@@ -62,7 +62,7 @@ class GLAudioItemsPass extends GLPass {
               baseColorParam.getImage()
             ) {
               const image = baseColorParam.getImage()
-              image.addEventListener('loaded', () => {
+              image.addListener('loaded', () => {
                 if (image.getAudioSource) {
                   const audioSource = image.getAudioSource()
                   if (
@@ -103,7 +103,7 @@ class GLAudioItemsPass extends GLPass {
       // param.value = vlParam.getValue();
       param.setValueAtTime(vlParam.getValue(), 0)
       param.setValueAtTime(vlParam.getValue(), 5)
-      vlParam.addEventListener('valueChanged', () => {
+      vlParam.addListener('valueChanged', () => {
         // param.setTargetAtTime(vlParam.getValue(), audioCtx.currentTime);
         param.value = vlParam.getValue()
       })
@@ -131,7 +131,7 @@ class GLAudioItemsPass extends GLPass {
         const vlParam = parameterOwner.getParameter(paramName)
         if (!vlParam) return
         panner[paramName] = vlParam.getValue()
-        vlParam.addEventListener('valueChanged', () => {
+        vlParam.addListener('valueChanged', () => {
           panner[paramName] = vlParam.getValue()
         })
       }
@@ -182,7 +182,7 @@ class GLAudioItemsPass extends GLPass {
         // setVelocity()
       }
       updatePannerNodePosition()
-      treeItem.addEventListener('globalXfoChanged', event => {
+      treeItem.addListener('globalXfoChanged', event => {
         updatePannerNodePosition()
       })
     }
@@ -194,7 +194,7 @@ class GLAudioItemsPass extends GLPass {
       parameterOwner,
     })
 
-    this.emitEvent('updated', {})
+    this.emit('updated', {})
   }
 
   /**

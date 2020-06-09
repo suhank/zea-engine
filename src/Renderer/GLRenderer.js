@@ -117,8 +117,8 @@ class GLRenderer extends GLBaseRenderer {
           this.__glBackgroundMap = new GLTexture2D(gl, backgroundMap)
         }
       }
-      this.__glBackgroundMap.addEventListener('loaded', this.requestRedraw)
-      this.__glBackgroundMap.addEventListener('updated', this.requestRedraw)
+      this.__glBackgroundMap.addListener('loaded', this.requestRedraw)
+      this.__glBackgroundMap.addListener('updated', this.requestRedraw)
       if (!this.__backgroundMapShader) {
         if (!gl.__quadVertexIdsBuffer) gl.setupInstancedQuad()
         switch (backgroundMap.getMapping()) {
@@ -152,10 +152,10 @@ class GLRenderer extends GLBaseRenderer {
       // console.warn('Unsupported EnvMap:' + env)
       return
     }
-    this.__glEnvMap.addEventListener('loaded', this.requestRedraw)
-    this.__glEnvMap.addEventListener('updated', this.requestRedraw)
+    this.__glEnvMap.addListener('loaded', this.requestRedraw)
+    this.__glEnvMap.addListener('updated', this.requestRedraw)
 
-    this.emitEvent('envMapAssigned', { envMap: this.__glEnvMap })
+    this.emit('envMapAssigned', { envMap: this.__glEnvMap })
   }
 
   /**
@@ -184,12 +184,12 @@ class GLRenderer extends GLBaseRenderer {
     if (envMapParam.getValue() != undefined) {
       this.__bindEnvMap(envMapParam.getValue())
     }
-    envMapParam.addEventListener('valueChanged', () => {
+    envMapParam.addListener('valueChanged', () => {
       this.__bindEnvMap(envMapParam.getValue())
     })
     const displayEnvMapParam = scene.settings.getParameter('Display EnvMap')
     this.__displayEnvironment = displayEnvMapParam.getValue()
-    displayEnvMapParam.addEventListener('valueChanged', () => {
+    displayEnvMapParam.addListener('valueChanged', () => {
       this.__displayEnvironment = displayEnvMapParam.getValue()
       this.requestRedraw()
     })
@@ -211,7 +211,7 @@ class GLRenderer extends GLBaseRenderer {
         if (!gllightmap) {
           gllightmap = new GLHDRImage(this.__gl, lightmap.image)
         }
-        gllightmap.addEventListener('updated', data => {
+        gllightmap.addListener('updated', data => {
           this.requestRedraw()
         })
         this.__glLightmaps[name] = {
@@ -220,7 +220,7 @@ class GLRenderer extends GLBaseRenderer {
         }
       }
       const vlaAsset = treeItem
-      vlaAsset.addEventListener('loaded', () => {
+      vlaAsset.addListener('loaded', () => {
         if (this.__glEnvMap && vlaAsset.getLightmap()) {
           addLightmap(vlaAsset.getName(), vlaAsset.getLightmap())
         }
@@ -713,7 +713,7 @@ class GLRenderer extends GLBaseRenderer {
     // }
 
 
-    this.emitEvent('redrawOccured', {})
+    this.emit('redrawOccured', {})
   }
 }
 

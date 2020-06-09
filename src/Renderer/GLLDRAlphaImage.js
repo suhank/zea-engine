@@ -17,13 +17,13 @@ class GLLDRAlphaImage extends GLTexture2D {
     super(gl)
 
     this.__hdrImage = hdrImage
-    this.__hdrImage.addEventListener('updated', () => {
+    this.__hdrImage.addListener('updated', () => {
       this.__unpackLDRAlpha(this.__hdrImage.getParams())
     })
     if (this.__hdrImage.isLoaded()) {
       this.__unpackLDRAlpha(this.__hdrImage.getParams())
     } else {
-      this.__hdrImage.addEventListener('loaded', () => {
+      this.__hdrImage.addListener('loaded', () => {
         this.__unpackLDRAlpha(this.__hdrImage.getParams())
       })
     }
@@ -117,7 +117,7 @@ class GLLDRAlphaImage extends GLTexture2D {
       this.__srcAlphaTex = null
     }
 
-    this.emitEvent('updated', {})
+    this.emit('updated', {})
   }
 
   /**

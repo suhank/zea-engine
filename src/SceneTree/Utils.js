@@ -6,22 +6,22 @@ const loadfile = function(url, responseType, onSucceed, onFail, onProgress) {
   const xhr = new XMLHttpRequest()
   xhr.responseType = responseType
   try {
-    xhr.addEventListener('timeout', function(event) {
+    xhr.addListener('timeout', function(event) {
       throw new Error('The request for ' + url + ' timed out.')
     })
-    xhr.addEventListener('error', function(event) {
+    xhr.addListener('error', function(event) {
       throw new Error(
         'The request for ' + url + ': xhr.readyState:' + xhr.readyState
       )
       onFail(xhr.statusText)
     })
-    xhr.addEventListener('abort', function(event) {
+    xhr.addListener('abort', function(event) {
       throw new Error(
         'The request for ' + url + ': xhr.readyState:' + xhr.readyState
       )
       onFail(xhr.statusText)
     })
-    xhr.addEventListener('loadend', function(event) {
+    xhr.addListener('loadend', function(event) {
       if (xhr.status == 200) onSucceed(xhr)
       else onFail(xhr.statusText)
     })

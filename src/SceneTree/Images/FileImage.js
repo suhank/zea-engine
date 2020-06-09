@@ -46,7 +46,7 @@ class FileImage extends BaseImage {
     this.__loaded = false
 
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
-    fileParam.addEventListener('valueChanged', () => {
+    fileParam.addListener('valueChanged', () => {
       this.loaded = false
       if (this.getName() == "") {
         // Generate a name from the file path.
@@ -152,14 +152,14 @@ class FileImage extends BaseImage {
       this.height = imageElem.height
       this.__data = imageElem
       this.__loaded = true
-      this.emitEvent('loaded', {})
+      this.emit('loaded', {})
     }
     if (fileDesc.id in imageDataLibrary) {
       imageElem = imageDataLibrary[fileDesc.id]
       if (imageElem.complete) {
         loaded()
       } else {
-        imageElem.addEventListener('load', loaded)
+        imageElem.addListener('load', loaded)
       }
     } else {
       resourceLoader.addWork(fileDesc.id, 1)
@@ -251,8 +251,8 @@ class FileImage extends BaseImage {
       imageElem.crossOrigin = 'anonymous'
       imageElem.src = url
 
-      imageElem.addEventListener('load', loaded)
-      imageElem.addEventListener('load', () => {
+      imageElem.addListener('load', loaded)
+      imageElem.addListener('load', () => {
         resourceLoader.addWorkDone(fileDesc.id, 1)
       })
       imageDataLibrary[fileDesc.id] = imageElem
@@ -305,17 +305,17 @@ class FileImage extends BaseImage {
     }
 
     document.body.appendChild(videoElem)
-    videoElem.addEventListener(
+    videoElem.addListener(
       'loadedmetadata',
       () => {
         // videoElem.play();
 
         videoElem.muted = muteParam.getValue()
-        muteParam.addEventListener('valueChanged', () => {
+        muteParam.addListener('valueChanged', () => {
           videoElem.muted = muteParam.getValue()
         })
         videoElem.loop = loopParam.getValue()
-        loopParam.addEventListener('valueChanged', () => {
+        loopParam.addListener('valueChanged', () => {
           videoElem.loop = loopParam.getValue()
         })
 
@@ -324,7 +324,7 @@ class FileImage extends BaseImage {
         this.__data = videoElem
         this.__loaded = true
         resourceLoader.addWorkDone(fileDesc.id, 1)
-        this.emitEvent('loaded', {})
+        this.emit('loaded', {})
 
         videoElem.play().then(
           () => {
@@ -338,7 +338,7 @@ class FileImage extends BaseImage {
               // If so, then we emit and update, which will cause a redraw.
               const currentFrame = Math.floor(videoElem.currentTime * frameRate)
               if (prevFrame != currentFrame) {
-                this.emitEvent('updated', {})
+                this.emit('updated', {})
                 prevFrame = currentFrame
               }
               setTimeout(timerCallback, 20) // Sample at 50fps.
@@ -408,9 +408,9 @@ class FileImage extends BaseImage {
         }
         if (!this.__loaded) {
           this.__loaded = true
-          this.emitEvent('loaded', {})
+          this.emit('loaded', {})
         } else {
-          this.emitEvent('updated', {})
+          this.emit('updated', {})
         }
       }
       ldrPic.src = URL.createObjectURL(blob)
@@ -458,7 +458,7 @@ class FileImage extends BaseImage {
           const image = new Image()
           image.crossOrigin = 'anonymous'
           image.src = fileDesc.assets.atlas.url
-          image.addEventListener('load', () => {
+          image.addListener('load', () => {
             resolve({
               width: fileDesc.assets.atlas.width,
               height: fileDesc.assets.atlas.height,
@@ -624,7 +624,7 @@ class FileImage extends BaseImage {
       if (playing) incrementFrame()
       this.__loaded = true
 
-      this.emitEvent('loaded', {})
+      this.emit('loaded', {})
     })
   }
 

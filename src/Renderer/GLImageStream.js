@@ -18,8 +18,8 @@ class GLImageStream extends RefCounted {
     this.__streamImage = streamImage
     this.__descParam = this.__streamImage.getParameter('StreamAtlasDesc')
     this.__indexParam = this.__streamImage.getParameter('StreamAtlasIndex')
-    this.__indexParam.addEventListener('valueChanged', () => {
-      this.emitEvent('updated', {})
+    this.__indexParam.addListener('valueChanged', () => {
+      this.emit('updated', {})
     })
 
     // To support playing back the same image atlas through many different streams.
@@ -39,7 +39,7 @@ class GLImageStream extends RefCounted {
     if (this.__streamImage.isLoaded()) {
       configure()
     } else {
-      this.__indexParam.addEventListener('loaded', () => {
+      this.__indexParam.addListener('loaded', () => {
         configure()
       })
     }

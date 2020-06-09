@@ -43,10 +43,10 @@ class Plane extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__sizeXParam.addEventListener('valueChanged', resize)
-    this.__sizeYParam.addEventListener('valueChanged', resize)
-    this.__detailXParam.addEventListener('valueChanged', rebuild)
-    this.__detailYParam.addEventListener('valueChanged', rebuild)
+    this.__sizeXParam.addListener('valueChanged', resize)
+    this.__sizeYParam.addListener('valueChanged', resize)
+    this.__detailXParam.addListener('valueChanged', rebuild)
+    this.__detailYParam.addListener('valueChanged', rebuild)
   }
 
   /**
@@ -96,7 +96,7 @@ class Plane extends Mesh {
     }
 
     this.__resize(false)
-    this.emitEvent('geomDataTopologyChanged', {})
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -119,7 +119,7 @@ class Plane extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    if (emit) this.emitEvent('geomDataChanged', {})
+    if (emit) this.emit('geomDataChanged', {})
   }
 }
 

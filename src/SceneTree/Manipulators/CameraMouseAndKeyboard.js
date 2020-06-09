@@ -322,7 +322,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.__focusIntervalId = setTimeout(applyMovement, 20)
       } else {
         this.__focusIntervalId = undefined
-        this.emitEvent('movementFinished', {})
+        this.emit('movementFinished', {})
       }
     }
     applyMovement()
@@ -407,7 +407,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    */
   onMouseUp(event) {
     if (this.__dragging) {
-      this.emitEvent('movementFinished', {})
+      this.emit('movementFinished', {})
       this.__dragging = false
       event.stopPropagation()
     }
@@ -442,7 +442,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         this.__mouseWheelZoomIntervalId = setTimeout(applyMovement, 10)
       } else {
         this.__mouseWheelZoomIntervalId = undefined
-        this.emitEvent('movementFinished', {})
+        this.emit('movementFinished', {})
       }
     }
     applyMovement()

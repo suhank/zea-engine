@@ -98,7 +98,7 @@ class ParameterOwner extends EventEmitter {
    * @private
    */
   __parameterValueChanged(event) {
-    this.emitEvent('parameterValueChanged', event)
+    this.emit('parameterValueChanged', event)
   }
 
   /**
@@ -112,13 +112,13 @@ class ParameterOwner extends EventEmitter {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.addEventListener(
+    this.__paramSignalIds[name] = param.addListener(
       'valueChanged',
       event => this.__parameterValueChanged({ ...event, param })
     )
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
-    this.emitEvent('parameterAdded', { name })
+    this.emit('parameterAdded', { name })
     return param
   }
 
@@ -134,7 +134,7 @@ class ParameterOwner extends EventEmitter {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.addEventListener(
+    this.__paramSignalIds[name] = param.addListener(
       'valueChanged',
       event => this.__parameterValueChanged({ ...event, param })
     )
@@ -145,7 +145,7 @@ class ParameterOwner extends EventEmitter {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.emitEvent('parameterAdded', { name })
+    this.emit('parameterAdded', { name })
     return param
   }
 
@@ -160,7 +160,7 @@ class ParameterOwner extends EventEmitter {
     const index = this.__paramMapping[paramName]
     const param = this.__params[this.__paramMapping[paramName]]
 
-    param.removeEventListenerById(
+    param.removeListenerById(
       'valueChanged',
       this.__paramSignalIds[paramName]
     )
@@ -170,7 +170,7 @@ class ParameterOwner extends EventEmitter {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.emitEvent('parameterRemoved', { name })
+    this.emit('parameterRemoved', { name })
   }
 
   /**
@@ -182,12 +182,12 @@ class ParameterOwner extends EventEmitter {
     const name = param.getName()
     const index = this.__paramMapping[name]
     const prevparam = this.__params[this.__paramMapping[name]]
-    prevparam.removeEventListenerById(
+    prevparam.removeListenerById(
       'valueChanged',
       this.__paramSignalIds[name]
     )
 
-    this.__paramSignalIds[name] = param.addEventListener(
+    this.__paramSignalIds[name] = param.addListener(
       'valueChanged',
       event => this.__parameterValueChanged({ ...event, param })
     )

@@ -330,7 +330,7 @@ class GLRenderTarget extends EventEmitter {
       this.__gltex = gltex;
       this.__updateGLTexParams();
       if (emit) {
-        this.emitEvent('resized' { width, height });
+        this.emit('resized' { width, height });
       }
     }
 

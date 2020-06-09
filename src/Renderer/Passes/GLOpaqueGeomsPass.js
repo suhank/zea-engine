@@ -100,7 +100,7 @@ class GLMaterialGeomItemSets {
       this.geomItemSets.push(geomItemSet)
 
       this.drawCount += geomItemSet.drawCount
-      geomItemSet.addEventListener('drawCountChanged', this.__drawCountChanged)
+      geomItemSet.addListener('drawCountChanged', this.__drawCountChanged)
     } else {
       console.warn('geomItemSet already added to GLMaterialGeomItemSets')
     }
@@ -113,7 +113,7 @@ class GLMaterialGeomItemSets {
   removeGeomItemSet(geomItemSet) {
     const index = this.geomItemSets.indexOf(geomItemSet)
     this.geomItemSets.splice(index, 1)
-    geomItemSet.removeEventListener('drawCountChanged', this.__drawCountChanged)
+    geomItemSet.removeListener('drawCountChanged', this.__drawCountChanged)
   }
 
   /**

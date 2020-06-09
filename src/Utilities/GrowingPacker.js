@@ -89,7 +89,7 @@ class GrowingPacker extends EventEmitter {
       resized = true;
     }
     if(resized){
-      this.emitEvent('resized', { width: this.root.w, height: this.root.h })
+      this.emit('resized', { width: this.root.w, height: this.root.h })
     }
     const eachBlock = (block) => {
       block.fit = this.__addBlock(block)
@@ -116,7 +116,7 @@ class GrowingPacker extends EventEmitter {
       resized = true;
     }
     if(resized){
-      this.emitEvent('resized', { width: this.root.w, height: this.root.h })
+      this.emit('resized', { width: this.root.w, height: this.root.h })
     }
     const node = this.findNode(this.root, block.w, block.h);
     if (node)
@@ -189,7 +189,7 @@ class GrowingPacker extends EventEmitter {
     let res;
     if (node)
       res = this.splitNode(node, w, h);
-    this.emitEvent('resized', { width: this.root.w, height: this.root.h })
+    this.emit('resized', { width: this.root.w, height: this.root.h })
     return res;
   }
 
@@ -212,7 +212,7 @@ class GrowingPacker extends EventEmitter {
     let res;
     if (node)
       res = this.splitNode(node, w, h);
-    this.emitEvent('resized', { width: this.root.w, height: this.root.h })
+    this.emit('resized', { width: this.root.w, height: this.root.h })
     return res;
   }
 

@@ -21,11 +21,11 @@ class GLHDRImage extends GLTexture2D {
     const loadImage = () => {
       this.__unpackHDRImage(this.__hdrImage.getParams())
     }
-    this.__hdrImage.addEventListener('updated', loadImage)
+    this.__hdrImage.addListener('updated', loadImage)
     if (this.__hdrImage.isLoaded()) {
       loadImage()
     } else {
-      this.__hdrImage.addEventListener('loaded', loadImage)
+      this.__hdrImage.addListener('loaded', loadImage)
     }
   }
 
@@ -122,7 +122,7 @@ class GLHDRImage extends GLTexture2D {
     //     this.__srcCDMTex = null;
     // }
 
-    this.emitEvent('updated', {})
+    this.emit('updated', {})
   }
 
   /**

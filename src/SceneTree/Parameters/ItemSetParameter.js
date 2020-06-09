@@ -54,8 +54,8 @@ class ItemSetParameter extends Parameter {
     }
     this.__items.add(item)
     const index = Array.from(this.__items).indexOf(item)
-    this.emitEvent('itemAdded', { item, index })
-    if (emitValueChanged) this.emitEvent('valueChanged', {})
+    this.emit('itemAdded', { item, index })
+    if (emitValueChanged) this.emit('valueChanged', {})
     return index
   }
 
@@ -66,7 +66,7 @@ class ItemSetParameter extends Parameter {
    */
   addItems(items, emitValueChanged = true) {
     items.forEach(item => this.addItem(item, false))
-    if (emitValueChanged) this.emitEvent('valueChanged', {})
+    if (emitValueChanged) this.emit('valueChanged', {})
   }
 
   /**
@@ -78,8 +78,8 @@ class ItemSetParameter extends Parameter {
   removeItem(index, emitValueChanged = true) {
     const item = Array.from(this.__items)[index]
     this.__items.delete(item)
-    this.emitEvent('itemRemoved', { item, index })
-    if (emitValueChanged) this.emitEvent('valueChanged', {})
+    this.emit('itemRemoved', { item, index })
+    if (emitValueChanged) this.emit('valueChanged', {})
     return item
   }
 
@@ -100,7 +100,7 @@ class ItemSetParameter extends Parameter {
         this.addItem(item, false)
       }
     }
-    if (emit) this.emitEvent('valueChanged', {})
+    if (emit) this.emit('valueChanged', {})
   }
 
   /**
@@ -109,7 +109,7 @@ class ItemSetParameter extends Parameter {
    */
   clearItems(emitValueChanged = true) {
     this.__items.clear()
-    if (emitValueChanged) this.emitEvent('valueChanged', {})
+    if (emitValueChanged) this.emit('valueChanged', {})
   }
 
   /**

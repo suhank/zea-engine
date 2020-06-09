@@ -35,9 +35,9 @@ class Circle extends Lines {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radius.addEventListener('valueChanged', resize)
-    this.__angle.addEventListener('valueChanged', rebuild)
-    this.__numSegments.addEventListener('valueChanged', rebuild)
+    this.__radius.addListener('valueChanged', resize)
+    this.__angle.addListener('valueChanged', rebuild)
+    this.__numSegments.addListener('valueChanged', rebuild)
     this.__rebuild()
   }
 
@@ -53,7 +53,7 @@ class Circle extends Lines {
     else this.setNumSegments(segs)
     for (let i = 0; i < (arc ? segs-1 : segs); i++) this.setSegment(i, i, (i + 1) % segs)
     this.__resize(-1)
-    this.emitEvent('geomDataTopologyChanged', {})
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -72,7 +72,7 @@ class Circle extends Lines {
         0.0
       )
     this.setBoundingBoxDirty()
-    if (mode != -1) this.emitEvent('geomDataChanged', {})
+    if (mode != -1) this.emit('geomDataChanged', {})
   }
 }
 sgFactory.registerClass('Circle', Circle)

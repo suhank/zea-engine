@@ -144,9 +144,9 @@ class GLImageAtlas extends GLRenderTarget {
     this.__layoutNeedsRegeneration = false
     this.__async = new Async()
     this.loaded = false
-    this.__async.addEventListener('ready', () => {
+    this.__async.addListener('ready', () => {
       this.loaded = true
-      this.emitEvent('loaded', {})
+      this.emit('loaded', {})
     })
   }
 
@@ -176,7 +176,7 @@ class GLImageAtlas extends GLRenderTarget {
       const gltexture = new GLTexture2D(this.__gl, subImage)
       if (!subImage.isLoaded()) {
         this.__async.incAsyncCount()
-        subImage.addEventListener('loaded', () => {
+        subImage.addListener('loaded', () => {
           this.__async.decAsyncCount()
         })
       }
@@ -191,7 +191,7 @@ class GLImageAtlas extends GLRenderTarget {
         this.__layoutNeedsRegeneration = true
         this.renderAtlas()
       }
-      subImage.addEventListener('updated', updated)
+      subImage.addListener('updated', updated)
       this.__subImages.push(gltexture)
     } else {
       subImage.addRef(this) // subImage is a GLTexture2D
@@ -431,7 +431,7 @@ class GLImageAtlas extends GLRenderTarget {
 
     this.unbind(renderstate)
     // this.__fbo.unbind()
-    this.emitEvent('updated', {})
+    this.emit('updated', {})
   }
 
   /**

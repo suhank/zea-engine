@@ -59,7 +59,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
-    const visibilityChangedId = geomItem.addEventListener('visibilityChanged', event => {
+    const visibilityChangedId = geomItem.addListener('visibilityChanged', event => {
       if (event.visible) {
         this.visibleItems.push(item)
       } else {
@@ -67,7 +67,7 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
         this.visibleItems.splice(index, 1)
       }
     })
-    const geomXfoChangedId = geomItem.addEventListener('geomXfoChanged', () => {
+    const geomXfoChangedId = geomItem.addListener('geomXfoChanged', () => {
       this.resort = true
     })
 

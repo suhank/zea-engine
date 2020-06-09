@@ -23,8 +23,8 @@ class GeomItem extends BaseGeomItem {
       0
     )
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
-    this.__geomParam.addEventListener('valueChanged', this._setBoundingBoxDirty)
-    this.__geomParam.addEventListener('boundingBoxChanged', 
+    this.__geomParam.addListener('valueChanged', this._setBoundingBoxDirty)
+    this.__geomParam.addListener('boundingBoxChanged', 
       this._setBoundingBoxDirty
     )
     this.__materialParam = this.insertParameter(
@@ -40,20 +40,20 @@ class GeomItem extends BaseGeomItem {
     this.__geomMatParam = this.addParameter(new Mat4Parameter('GeomMat'))
 
     this.__cleanGeomMat = this.__cleanGeomMat.bind(this)
-    this.__globalXfoParam.addEventListener('valueChanged', () => {
+    this.__globalXfoParam.addListener('valueChanged', () => {
       this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
-    this.__geomOffsetXfoParam.addEventListener('valueChanged', () => {
+    this.__geomOffsetXfoParam.addListener('valueChanged', () => {
       this.__geomMatParam.setDirty(this.__cleanGeomMat)
     })
-    this.__geomMatParam.addEventListener('valueChanged', event => {
-      this.emitEvent('geomXfoChanged', event)
+    this.__geomMatParam.addListener('valueChanged', event => {
+      this.emit('geomXfoChanged', event)
     })
-    this.__materialParam.addEventListener('valueChanged', event => {
-      this.emitEvent('materialAssigned', event)
+    this.__materialParam.addListener('valueChanged', event => {
+      this.emit('materialAssigned', event)
     })
-    this.__geomParam.addEventListener('valueChanged', event => {
-      this.emitEvent('geomAssigned', event)
+    this.__geomParam.addListener('valueChanged', event => {
+      this.emit('geomAssigned', event)
     })
 
     if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
@@ -249,10 +249,10 @@ class GeomItem extends BaseGeomItem {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.removeEventListenerById('rangeLoaded', connid)
+          geomLibrary.removeListenerById('rangeLoaded', connid)
         }
       }
-      const connid = geomLibrary.addEventListener('rangeLoaded', onGeomLoaded)
+      const connid = geomLibrary.addListener('rangeLoaded', onGeomLoaded)
     }
 
     // this.setVisibility(j.visibility);

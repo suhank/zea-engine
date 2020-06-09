@@ -109,13 +109,13 @@ class LightmapMixer extends RefCounted {
     if (!this.__images[index]) {
       this.__images[index] = new FileImage(resourceName, { stream })
       this.__weights[index] = weight ? weight : 1.0
-      this.emitEvent('lightmapAdded', { index })
+      this.emit('lightmapAdded', { index })
     } else {
       this.__images[index].loadResource(resourceName)
-      this.emitEvent('lightmapResourceChanged', { index, weight })
+      this.emit('lightmapResourceChanged', { index, weight })
       if (weight) {
         this.__weights[index] = weight
-        this.emitEvent('lightmapWeightChanged', { index, weight })
+        this.emit('lightmapWeightChanged', { index, weight })
       }
     }
     this.__stream |= stream
@@ -128,7 +128,7 @@ class LightmapMixer extends RefCounted {
    */
   setWeight(index, weight) {
     this.__weights[index] = weight
-    this.emitEvent('lightmapWeightChanged', { index, weight })
+    this.emit('lightmapWeightChanged', { index, weight })
   }
 
   /**

@@ -49,13 +49,13 @@ class Group extends TreeItem {
       new ItemSetParameter('Items', item => item instanceof TreeItem),
       pid++
     )
-    this.__itemsParam.addEventListener('itemAdded', event => {
+    this.__itemsParam.addListener('itemAdded', event => {
       this.__bindItem(event.item, event.index)
     })
-    this.__itemsParam.addEventListener('itemRemoved', event => {
+    this.__itemsParam.addListener('itemRemoved', event => {
       this.__unbindItem(event.item, event.index)
     })
-    this.__itemsParam.addEventListener('valueChanged', () => {
+    this.__itemsParam.addListener('valueChanged', () => {
       this.calcGroupXfo()
       this._setBoundingBoxDirty()
     })
@@ -68,7 +68,7 @@ class Group extends TreeItem {
       ),
       pid++
     )
-    this.__initialXfoModeParam.addEventListener('valueChanged', () => {
+    this.__initialXfoModeParam.addListener('valueChanged', () => {
       this.calcGroupXfo()
     })
 
@@ -76,7 +76,7 @@ class Group extends TreeItem {
       new BooleanParameter('Highlighted', false),
       pid++
     )
-    this.__highlightedParam.addEventListener('valueChanged', () => {
+    this.__highlightedParam.addListener('valueChanged', () => {
       this.__updateHighlight()
     })
 
@@ -85,18 +85,18 @@ class Group extends TreeItem {
       new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)),
       pid++
     )
-    highlightColorParam.addEventListener('valueChanged', this.__updateHighlight)
+    highlightColorParam.addListener('valueChanged', this.__updateHighlight)
     const highlightFillParam = this.insertParameter(
       new NumberParameter('HighlightFill', 0.0, [0, 1]),
       pid++
     )
-    highlightFillParam.addEventListener('valueChanged', this.__updateHighlight)
+    highlightFillParam.addListener('valueChanged', this.__updateHighlight)
 
     this.__materialParam = this.insertParameter(
       new MaterialParameter('Material'),
       pid++
     )
-    this.__materialParam.addEventListener('valueChanged', () => {
+    this.__materialParam.addListener('valueChanged', () => {
       this.__updateMaterial()
     })
 
@@ -104,22 +104,22 @@ class Group extends TreeItem {
     this.insertParameter(
       new BooleanParameter('CutAwayEnabled', false),
       pid++
-    ).addEventListener('valueChanged', this.__updateCutaway)
+    ).addListener('valueChanged', this.__updateCutaway)
     this.insertParameter(
       new Vec3Parameter('CutVector', new Vec3(1, 0, 0)),
       pid++
-    ).addEventListener('valueChanged', this.__updateCutaway)
+    ).addListener('valueChanged', this.__updateCutaway)
     this.insertParameter(
       new NumberParameter('CutDist', 0.0),
       pid++
-    ).addEventListener('valueChanged', this.__updateCutaway)
+    ).addListener('valueChanged', this.__updateCutaway)
 
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
     // However we seem to get infinite callstacks.
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    this.__globalXfoParam.addEventListener('valueChanged', event => {
+    this.__globalXfoParam.addListener('valueChanged', event => {
       if (!this.calculatingGroupXfo && !this.groupXfoDirty) {
         this._propagateDirtyXfoToItems()
       }
@@ -426,19 +426,19 @@ class Group extends TreeItem {
 
     const sigIds = {}
 
-    sigIds.mouseDownIndex = item.addEventListener('mouseDown', event => {
+    sigIds.mouseDownIndex = item.addListener('mouseDown', event => {
       this.onMouseDown(event)
     })
-    sigIds.mouseUpIndex = item.addEventListener('mouseUp', event => {
+    sigIds.mouseUpIndex = item.addListener('mouseUp', event => {
       this.onMouseUp(event)
     })
-    sigIds.mouseMoveIndex = item.addEventListener('mouseMove', event => {
+    sigIds.mouseMoveIndex = item.addListener('mouseMove', event => {
       this.onMouseMove(event)
     })
-    sigIds.mouseEnterIndex = item.addEventListener('mouseEnter', event => {
+    sigIds.mouseEnterIndex = item.addListener('mouseEnter', event => {
       this.onMouseEnter(event)
     })
-    sigIds.mouseLeaveIndex = item.addEventListener('mouseLeave', event => {
+    sigIds.mouseLeaveIndex = item.addListener('mouseLeave', event => {
       this.onMouseLeave(event)
     })
 
@@ -505,7 +505,7 @@ class Group extends TreeItem {
       }
     }
 
-    sigIds.globalXfoChangedIndex = item.addEventListener('globalXfoChanged', event => {
+    sigIds.globalXfoChangedIndex = item.addListener('globalXfoChanged', event => {
       // If the item's xfo changees, potentially through its own hierarchy
       // then we need to re-bind here.
       if (!this.propagatingXfoToItems) {
@@ -516,7 +516,7 @@ class Group extends TreeItem {
     })
     this.__initialXfos[index] = item.getGlobalXfo()
 
-    sigIds.bboxChangedIndex = item.addEventListener('boundingChanged', 
+    sigIds.bboxChangedIndex = item.addListener('boundingChanged', 
       this._setBoundingBoxDirty
     )
 
@@ -556,14 +556,14 @@ class Group extends TreeItem {
     }, true)
 
     const sigIds = this.__signalIndices[index]
-    item.removeEventListenerById('mouseDown', sigIds.mouseDownIndex)
-    item.removeEventListenerById('mouseUp', sigIds.mouseUpIndex)
-    item.removeEventListenerById('mouseMove', sigIds.mouseMoveIndex)
-    item.removeEventListenerById('mouseEnter', sigIds.mouseEnterIndex)
-    item.removeEventListenerById('mouseLeave', sigIds.mouseLeaveIndex)
+    item.removeListenerById('mouseDown', sigIds.mouseDownIndex)
+    item.removeListenerById('mouseUp', sigIds.mouseUpIndex)
+    item.removeListenerById('mouseMove', sigIds.mouseMoveIndex)
+    item.removeListenerById('mouseEnter', sigIds.mouseEnterIndex)
+    item.removeListenerById('mouseLeave', sigIds.mouseLeaveIndex)
 
-    item.removeEventListenerById('globalXfoChanged', sigIds.globalXfoChangedIndex)
-    item.removeEventListenerById('boundingChanged', sigIds.bboxChangedIndex)
+    item.removeListenerById('globalXfoChanged', sigIds.globalXfoChangedIndex)
+    item.removeListenerById('boundingChanged', sigIds.bboxChangedIndex)
     this.__signalIndices.splice(index, 1)
     this.__initialXfos.splice(index, 1)
   }

@@ -21,7 +21,7 @@ class MaterialLibraryManager extends EventEmitter {
         const matlib = new MaterialLibrary(stem)
         matlib.fromJSON(j)
         this.__materialLibraries[stem] = matlib
-        this.emitEvent('materialLibraryLoaded', { matlib })
+        this.emit('materialLibraryLoaded', { matlib })
       })
     })
   }

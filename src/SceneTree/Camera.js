@@ -29,17 +29,17 @@ class Camera extends TreeItem {
     // const _cleanViewMat = (xfo)=>{
     //     return this.__globalXfoParam.getValue().inverse().toMat4();
     // }
-    // this.__globalXfoParam.addEventListener('valueChanged', (changeType)=>{
+    // this.__globalXfoParam.addListener('valueChanged', (changeType)=>{
     //     this.__viewMatParam.setDirty(_cleanViewMat);
     // });
     
     const emitProjChanged = event => {
-      this.emitEvent('projectionParamChanged', event)
+      this.emit('projectionParamChanged', event)
     }
-    this.__isOrthographicParam.addEventListener('valueChanged', emitProjChanged)
-    this.__fovParam.addEventListener('valueChanged', emitProjChanged)
-    this.__nearParam.addEventListener('valueChanged', emitProjChanged)
-    this.__farParam.addEventListener('valueChanged', emitProjChanged)
+    this.__isOrthographicParam.addListener('valueChanged', emitProjChanged)
+    this.__fovParam.addListener('valueChanged', emitProjChanged)
+    this.__nearParam.addListener('valueChanged', emitProjChanged)
+    this.__farParam.addListener('valueChanged', emitProjChanged)
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
@@ -270,7 +270,7 @@ class Camera extends TreeItem {
 
     this.setFocalDistance(newFocalDistance, mode)
     this.setGlobalXfo(globalXfo, mode)
-    this.emitEvent('movementFinished', { mode })
+    this.emit('movementFinished', { mode })
   }
 
   /**

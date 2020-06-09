@@ -57,7 +57,7 @@ class OperatorOutput extends EventEmitter {
    */
   setParam(param) {
     this._param = param
-    this.emitEvent('paramSet', { param })
+    this.emit('paramSet', { param })
   }
 
   /**
@@ -221,7 +221,7 @@ class XfoOperatorOutput extends OperatorOutput {
       if (this._initialParamValue == undefined) throw new Error('WTF?')
     }
     init()
-    // param.addEventListener('valueChanged', event => {
+    // param.addListener('valueChanged', event => {
     //   if (
     //     event.mode == ValueSetMode.USER_SETVALUE ||
     //     event.mode == ValueSetMode.REMOTEUSER_SETVALUE ||
@@ -232,7 +232,7 @@ class XfoOperatorOutput extends OperatorOutput {
     // })
 
     this._param = param
-    this.emitEvent('paramSet', { param })
+    this.emit('paramSet', { param })
   }
 }
 sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput)

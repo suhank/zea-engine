@@ -17,9 +17,9 @@ class EventEmitter {
    * @param {function} listener - The listener function.
    * @return {any} - The return value.
    */
-  addEventListener(eventName, listener) {
+  addListener(eventName, listener) {
     if (listener == undefined)
-      throw new Error('a function callback must be passed to EventEmitter.addEventListener')
+      throw new Error('a function callback must be passed to EventEmitter.addListener')
 
     if (!this.__slots[eventName]) this.__slots[eventName] = []
     const slots = this.__slots[eventName]
@@ -38,7 +38,7 @@ class EventEmitter {
    * @param {string} eventName - The name of the event.
    * @param {function} listener - The listener function.
    */
-  removeEventListener(eventName, listener) {
+  removeListener(eventName, listener) {
     if (listener == undefined)
       throw new Error('a function callback must be passed to EventEmitter.disconnect')
       
@@ -76,9 +76,9 @@ class EventEmitter {
   /**
    * The disconnectId method.
    * @param {string} eventName - The name of the event.
-   * @param {number} id - The id returned by AddEventListener
+   * @param {number} id - The id returned by addListener
    */
-  removeEventListenerById(eventName, id) {
+  removeListenerById(eventName, id) {
     const slots = this.__slots[eventName]
     if (!slots) {
       const msg =
@@ -89,12 +89,45 @@ class EventEmitter {
     if (!slots[id]) throw new Error('Invalid ID')
     slots[id] = undefined
   }
+  
+  /**
+   * Add a listener function to the EventEmiiter with the given eventName.
+   * When the given event is triggered, the listern function will be invoked.
+   * @param {string} eventName - The name of the event.
+   * @param {function} listener - The listener function.
+   * @return {any} - The return value.
+   */
+  on(eventName, listener) {
+    this.addListener(eventName, listener)
+  }
+
+  /**
+   * Add a listener function to the EventEmiiter with the given eventName.
+   * When the given event is triggered, the listern function will be invoked.
+   * @param {string} eventName - The name of the event.
+   * @param {function} listener - The listener function.
+   */
+  once(eventName, listener) {
+    const id = this.addListener(eventName, (event) => {
+      listener(event)
+      this.removeListenerById(eventName, id)
+    })
+  }
+  
+  /**
+   * The disconnectId method.
+   * @param {string} eventName - The name of the event.
+   * @param {number} id - The id returned by addListener
+   */
+  off(eventName, id) {
+    this.removeListenerById(eventName, id)
+  }
 
   /**
    * Emit the signal to all slots(observers)
    * @param {BaseEvent} event - The event object.
    */
-  emitEvent(eventName, event) {
+  emit(eventName, event) {
     const slots = this.__slots[eventName]
     if (!slots) {
       return

@@ -48,7 +48,7 @@ class ListParameter extends Parameter {
    */
   setElement(index, value) {
     this.__value[index] = value
-    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   /**
@@ -64,8 +64,8 @@ class ListParameter extends Parameter {
 
     this.__value.push(elem)
     this.__flags |= ParamFlags.USER_EDITED
-    this.emitEvent('elementAdded', { elem, index: this.__value.length - 1 })
-    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
+    this.emit('elementAdded', { elem, index: this.__value.length - 1 })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
     return elem
   }
 
@@ -77,8 +77,8 @@ class ListParameter extends Parameter {
     const elem = this.__value[index]
     this.__value.splice(index, 1)
     this.__flags |= ParamFlags.USER_EDITED
-    this.emitEvent('elementRemoved', { elem, index })
-    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
+    this.emit('elementRemoved', { elem, index })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   /**
@@ -91,8 +91,8 @@ class ListParameter extends Parameter {
     this.__value.splice(index, 0, elem)
     // this.setValue(this.__value);
     this.__flags |= ParamFlags.USER_EDITED
-    this.emitEvent('elementAdded', { elem, index })
-    this.emitEvent('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
+    this.emit('elementAdded', { elem, index })
+    this.emit('valueChanged', { mode: ValueSetMode.USER_SETVALUE })
   }
 
   // ////////////////////////////////////////
@@ -141,9 +141,9 @@ class ListParameter extends Parameter {
         elem.fromJSON(j.items[i], context)
       }
       this.__value.push(elem)
-      this.emitEvent('elementAdded', { elem, index: this.__value.length - 1 })
+      this.emit('elementAdded', { elem, index: this.__value.length - 1 })
     }
-    this.emitEvent('valueChanged', { mode: ValueSetMode.DATA_LOAD })
+    this.emit('valueChanged', { mode: ValueSetMode.DATA_LOAD })
   }
 
   // ////////////////////////////////////////

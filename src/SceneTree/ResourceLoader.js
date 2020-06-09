@@ -246,7 +246,7 @@ class ResourceLoader extends EventEmitter {
       resources[file.id] = file
       this.__buildTree(resources)
     }
-    this.emitEvent('fileUpdated', { fileId: file.id })
+    this.emit('fileUpdated', { fileId: file.id })
   }
 
   /**
@@ -425,7 +425,7 @@ class ResourceLoader extends EventEmitter {
   addWork(resourceId, amount) {
     this.__totalWork += amount
     const percent = (this.__doneWork / this.__totalWork) * 100
-    this.emitEvent('progressIncremented', { percent })
+    this.emit('progressIncremented', { percent })
   }
 
   /**
@@ -437,12 +437,12 @@ class ResourceLoader extends EventEmitter {
     this.__doneWork += amount
 
     const percent = (this.__doneWork / this.__totalWork) * 100
-    this.emitEvent('progressIncremented', { percent })
+    this.emit('progressIncremented', { percent })
     if (this.__doneWork > this.__totalWork) {
       throw new Error('Mismatch between work loaded and work done.')
     }
     if (this.__doneWork == this.__totalWork) {
-      this.emitEvent('allResourcesLoaded', {})
+      this.emit('allResourcesLoaded', {})
     }
   }
 
@@ -570,7 +570,7 @@ class ResourceLoader extends EventEmitter {
       }
       delete this.__callbacks[resourceId]
     }
-    this.emitEvent('loaded', { resourceId })
+    this.emit('loaded', { resourceId })
     this.addWorkDone(resourceId, 1) // parsing done...
   }
 

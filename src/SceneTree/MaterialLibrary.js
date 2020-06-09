@@ -236,7 +236,7 @@ class MaterialLibrary extends EventEmitter {
       }
     }
 
-    this.emitEvent('loaded', {})
+    this.emit('loaded', {})
   }
 
   /**

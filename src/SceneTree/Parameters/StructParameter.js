@@ -21,12 +21,12 @@ class StructParameter extends Parameter {
    */
   _addMember(parameter) {
     this.__value[parameter.getName()] = parameter.getValue()
-    parameter.addEventListener('valueChanged', () => {
+    parameter.addListener('valueChanged', () => {
       this.__value[parameter.getName()] = parameter.getValue()
     })
     this.__members.push(parameter)
     this.__flags |= ParamFlags.USER_EDITED
-    this.emitEvent('valueChanged', {})
+    this.emit('valueChanged', {})
     return parameter
   }
 

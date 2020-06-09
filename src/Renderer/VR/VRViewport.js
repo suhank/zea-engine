@@ -194,7 +194,7 @@ class VRViewport extends GLBaseViewport {
           this.__vrAsset = this.__renderer
             .getScene()
             .loadCommonAssetResource(hmdAssetId)
-          this.__vrAsset.addEventListener('loaded', () => {
+          this.__vrAsset.addListener('loaded', () => {
             const materialLibrary = this.__vrAsset.getMaterialLibrary()
             const materialNames = materialLibrary.getMaterialNames()
             for (const name of materialNames) {
@@ -208,7 +208,7 @@ class VRViewport extends GLBaseViewport {
           })
         } else reject()
       }
-      this.__renderer.addEventListener('sceneSet', sceneSet)
+      this.__renderer.addListener('sceneSet', sceneSet)
     })
     return this.__hmdAssetPromise
   }
@@ -246,17 +246,17 @@ class VRViewport extends GLBaseViewport {
               .getDiv()
               .replaceChild(mirrorCanvas, this.__renderer.getGLCanvas())
 
-            session.addEventListener('end', event => {
+            session.addListener('end', event => {
                 this.__renderer
                   .getDiv()
                   .replaceChild(this.__renderer.getGLCanvas(), mirrorCanvas)
             })
           }
 
-          session.addEventListener('end', event => {
+          session.addListener('end', event => {
             this.__stageTreeItem.setVisible(false)
             this.__session = null
-            this.emitEvent('presentingChanged', { state: false })
+            this.emit('presentingChanged', { state: false })
           })
 
           const onSelectStart = ev => {
@@ -275,7 +275,7 @@ class VRViewport extends GLBaseViewport {
                 downTime - controller.__prevDownTime <
                 this.__doubleClickTimeMSParam.getValue()
               ) {
-                this.emitEvent('controllerDoubleClicked', {
+                this.emit('controllerDoubleClicked', {
                     button: 1,
                     controller,
                     vleStopPropagation: false,
@@ -286,7 +286,7 @@ class VRViewport extends GLBaseViewport {
               } else {
                 controller.__prevDownTime = downTime
 
-                this.emitEvent('controllerButtonDown',
+                this.emit('controllerButtonDown',
                   {
                     button: 1,
                     controller,
@@ -304,7 +304,7 @@ class VRViewport extends GLBaseViewport {
             ]
             if (controller) {
               console.log('controller:', ev.inputSource.handedness, ' up')
-              this.emitEvent('controllerButtonUp',
+              this.emit('controllerButtonUp',
                 {
                   button: 1,
                   controller,
@@ -315,8 +315,8 @@ class VRViewport extends GLBaseViewport {
               )
             }
           }
-          session.addEventListener('selectstart', onSelectStart)
-          session.addEventListener('selectend', onSelectEnd)
+          session.addListener('selectstart', onSelectStart)
+          session.addListener('selectend', onSelectEnd)
 
           this.__session = session
 
@@ -377,7 +377,7 @@ class VRViewport extends GLBaseViewport {
             .then(refSpace => {
               this.__refSpace = refSpace
               this.__stageTreeItem.setVisible(true)
-              this.emitEvent('presentingChanged', { state: true })
+              this.emit('presentingChanged', { state: true })
               this.__startSession()
 
               resolve()
@@ -444,7 +444,7 @@ class VRViewport extends GLBaseViewport {
     const controller = new VRController(this, inputSource, id)
     this.__vrControllersMap[inputSource.handedness] = controller
     this.__vrControllers[id] = controller
-    this.emitEvent('controllerAdded', { controller })
+    this.emit('controllerAdded', { controller })
     return vrController
   }
 
@@ -565,7 +565,7 @@ class VRViewport extends GLBaseViewport {
       controllers: this.__vrControllers,
       vrviewport: this,
     }
-    this.emitEvent('viewChanged', data)
+    this.emit('viewChanged', data)
   }
 
 

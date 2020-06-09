@@ -145,7 +145,7 @@ class FilePathParameter extends Parameter {
     ) {
       this.__flags |= ParamFlags.USER_EDITED
     }
-    this.emitEvent('valueChanged', { mode })
+    this.emit('valueChanged', { mode })
   }
 
   /**
@@ -205,16 +205,16 @@ class FilePathParameter extends Parameter {
     this.__value = value
     this.__file = file
 
-    resourceLoader.addEventListener('fileUpdated', event => {
+    resourceLoader.addListener('fileUpdated', event => {
       if (event.fileId == this.__value) {
         this.__file = resourceLoader.getFile(this.__value)
-        this.emitEvent('fileUpdated', event)
+        this.emit('fileUpdated', event)
       }
     })
 
     if (mode == ValueSetMode.USER_SETVALUE)
       this.__flags |= ParamFlags.USER_EDITED
-    this.emitEvent('valueChanged', { mode })
+    this.emit('valueChanged', { mode })
   }
   // ////////////////////////////////////////
   // Persistence
