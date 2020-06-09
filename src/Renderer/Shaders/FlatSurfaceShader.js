@@ -81,7 +81,7 @@ void main(void) {
 #ifndef ENABLE_TEXTURES
     vec4 baseColor = BaseColor;
 #else
-    vec4 baseColor      = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
+    vec4 baseColor = getColorParamValue(BaseColor, BaseColorTex, BaseColorTexType, v_textureCoord);
 #endif
 
 #ifndef ENABLE_ES3
