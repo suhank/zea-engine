@@ -70,7 +70,7 @@ class SetCameraPositionAndTarget extends StateAction {
           settingCameraDirection = false
         }
       }
-      camera.globalXfoChanged.connect(onCameraChanged)
+      camera.addListener('globalXfoChanged', onCameraChanged)
       const timerCallback = () => {
         step++
         if (step < steps) {
@@ -104,8 +104,8 @@ class SetCameraPositionAndTarget extends StateAction {
           )
         } else {
           // camera.setPositionAndTarget(posEnd, targetEnd);
-          camera.globalXfoChanged.disconnect(onCameraChanged)
-          camera.movementFinished.emit()
+          camera.removeListener('globalXfoChanged', onCameraChanged)
+          camera.emit('movementFinished', {})
           this.__timeoutId = undefined
           this.__onDone()
         }

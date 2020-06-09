@@ -67,9 +67,9 @@ uniform vec4 billboardData;
 uniform vec4 tintColor;
 uniform vec4 layoutData;
 
-uniform int inVR;
-
 #endif
+
+uniform int inVR;
 
 mat4 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
   // vec3 rr = vec3(sin(roll), 0.0, cos(roll));
@@ -119,7 +119,8 @@ void main(void) {
   float width = layoutData.z * atlasBillboards_desc.x * scl;
   float height = layoutData.w * atlasBillboards_desc.y * scl;
   int flags = int(billboardData.y);
-  bool alignedToCamera = flags > 0;
+  bool alignedToCamera = (flags & (1<<2)) != 0;
+  mat4 modelViewProjectionMatrix;
   if(alignedToCamera){
     if (inVR == 0) {
       gl_Position = (viewMatrix * modelMatrix) * vec4(0.0, 0.0, 0.0, 1.0);
@@ -134,12 +135,13 @@ void main(void) {
     }
   }
   else{
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
+    modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;
     gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
   }
 
-  bool overlay = flags > 0;
-  if(overlay){
+  // Note: nowhere are we setting this flag
+  bool drawOnTop = (flags & (1<<3)) != 0;
+  if(drawOnTop){
     gl_Position.z -= 0.05;
   }
 }

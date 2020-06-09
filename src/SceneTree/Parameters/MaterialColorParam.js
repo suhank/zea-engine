@@ -1,7 +1,5 @@
-import { Signal } from '../../Utilities/index'
 import { sgFactory } from '../SGFactory'
 import { ColorParameter } from './ColorParameter.js'
-
 import { BaseImage } from '../BaseImage.js'
 
 /** Class representing a material color parameter.
@@ -15,8 +13,6 @@ class MaterialColorParam extends ColorParameter {
    */
   constructor(name, value) {
     super(name, value)
-    this.textureConnected = new Signal()
-    this.textureDisconnected = new Signal()
     this.__imageUpdated = this.__imageUpdated.bind(this)
   }
 
@@ -33,7 +29,7 @@ class MaterialColorParam extends ColorParameter {
    * @private
    */
   __imageUpdated() {
-    this.valueChanged.emit()
+    this.emit('valueChanged', {})
   }
 
   /**
@@ -43,24 +39,24 @@ class MaterialColorParam extends ColorParameter {
    */
   setImage(value, mode = 0) {
     const disconnectImage = () => {
-      this.__image.loaded.disconnect(this.__imageUpdated)
-      this.__image.updated.disconnect(this.__imageUpdated)
+      this.__image.removeListener('loaded', this.__imageUpdated)
+      this.__image.removeListener('updated', this.__imageUpdated)
       this.__image = null
-      this.textureDisconnected.emit()
+      this.emit('textureDisconnected', {})
     }
     if (value) {
       if (this.__image != undefined && this.__image !== value) {
         disconnectImage()
       }
       this.__image = value
-      this.__image.updated.connect(this.__imageUpdated)
-      this.textureConnected.emit()
-      this.valueChanged.emit(mode)
+      this.__image.addListener('updated', this.__imageUpdated)
+      this.emit('textureConnected', {})
+      this.emit('valueChanged', { mode })
     } else {
       if (this.__image != undefined) {
         disconnectImage()
         this.__image = undefined
-        this.textureDisconnected.emit()
+        this.emit('textureDisconnected', {})
       }
     }
   }

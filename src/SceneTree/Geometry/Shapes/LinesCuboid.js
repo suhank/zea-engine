@@ -17,16 +17,24 @@ class LinesCuboid extends Lines {
     super()
 
     this.__x = this.addParameter(new NumberParameter('x', x))
-    this.__x.valueChanged.connect(this.__resize.bind(this))
     this.__y = this.addParameter(new NumberParameter('y', y))
-    this.__y.valueChanged.connect(this.__resize.bind(this))
     this.__z = this.addParameter(new NumberParameter('z', z))
-    this.__z.valueChanged.connect(this.__resize.bind(this))
+    
     this.__baseZAtZero = this.addParameter(
       new NumberParameter('BaseZAtZero', baseZAtZero)
     )
-    this.__baseZAtZero.valueChanged.connect(this.__rebuild.bind(this))
     this.__rebuild()
+    
+    const resize = () => {
+      this.__resize()
+    }
+    const rebuild = () => {
+      this.__rebuild()
+    }
+    this.__x.addListener('valueChanged', resize)
+    this.__y.addListener('valueChanged', resize)
+    this.__z.addListener('valueChanged', resize)
+    this.__baseZAtZero.addListener('valueChanged', rebuild)
   }
 
   /**
@@ -51,7 +59,7 @@ class LinesCuboid extends Lines {
     this.setSegment(10, 2, 6)
     this.setSegment(11, 3, 7)
     this.__resize(-1)
-    this.geomDataTopologyChanged.emit()
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -80,7 +88,7 @@ class LinesCuboid extends Lines {
     this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
-    if (mode != -1) this.geomDataChanged.emit()
+    if (mode != -1) this.emit('geomDataChanged', {})
   }
 
   /**

@@ -1,24 +1,23 @@
 import { SystemDesc } from '../BrowserDetection.js'
-import { Signal } from '../Utilities/index'
+import { EventEmitter } from '../Utilities/index'
 import { sgFactory } from './SGFactory.js'
 import { Material } from './Material.js'
 import { FileImage } from './Images/index'
 
 /** Class representing a material library in a scene tree. 
  * @private
-*/
-class MaterialLibrary {
+ */
+class MaterialLibrary extends EventEmitter {
   /**
    * Create a material library.
    * @param {string} name - The name of the material library.
    */
   constructor(name = 'MaterialLibrary') {
+    super()
     this.__name = name
 
     this.lod = 0
     if (SystemDesc.isMobileDevice) this.lod = 1
-    this.loaded = new Signal()
-
     this.clear()
   }
 
@@ -237,7 +236,7 @@ class MaterialLibrary {
       }
     }
 
-    this.loaded.emit()
+    this.emit('loaded', {})
   }
 
   /**

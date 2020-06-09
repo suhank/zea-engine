@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities/index'
 import { RefCounted } from '../SceneTree/index'
 import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
@@ -19,21 +18,19 @@ class GLGeom extends RefCounted {
 
     this.__glattrbuffers = {}
     this.__shaderBindings = {}
-    this.destructing = new Signal()
-    this.updated = new Signal()
 
     const updateBuffers = opts => {
       this.updateBuffers(opts)
-      this.updated.emit()
+      this.emit('updated', {})
     }
-    this.__geom.geomDataChanged.connect(updateBuffers)
+    this.__geom.addListener('geomDataChanged', updateBuffers)
 
     const regenBuffers = opts => {
       this.clearShaderBindings()
       this.updateBuffers(opts)
-      this.updated.emit()
+      this.emit('updated', {})
     }
-    this.__geom.geomDataTopologyChanged.connect(regenBuffers)
+    this.__geom.addListener('geomDataTopologyChanged', regenBuffers)
   }
 
   /**
@@ -161,7 +158,7 @@ class GLGeom extends RefCounted {
 
     this.__shaderBindings = {}
     this.__destroyed = true
-    this.destructing.emit(this)
+    // this.emit('destructing', {})
   }
 }
 

@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities/index'
 import { BaseImage, RefCounted } from '../SceneTree/index'
 
 /** Class representing a GL texture 2D.
@@ -14,9 +13,7 @@ class GLTexture2D extends RefCounted {
     super()
     this.__gl = gl
 
-    this.ready = new Signal(true)
-    this.updated = new Signal()
-    this.resized = new Signal()
+    this.ready = false
 
     this.width = 0
     this.height = 0
@@ -36,13 +33,12 @@ class GLTexture2D extends RefCounted {
           const data = params.data
           this.bufferData(data, width, height)
         }
+        this.__texture.addListener('updated', imageUpdated)
         if (this.__texture.isLoaded()) {
           this.configure(this.__texture.getParams())
-          this.__texture.updated.connect(imageUpdated)
         } else {
-          this.__texture.loaded.connect(() => {
+          this.__texture.addListener('loaded', () => {
             this.configure(this.__texture.getParams())
-            this.__texture.updated.connect(imageUpdated)
           })
         }
       } else {
@@ -339,7 +335,7 @@ class GLTexture2D extends RefCounted {
       this.resize(width, height, false, false)
     }
     if (!this.__loaded) {
-      this.ready.emit()
+      this.emit('ready', {})
       this.__loaded = true
     }
   }
@@ -496,7 +492,7 @@ class GLTexture2D extends RefCounted {
     }
 
     if (emit) {
-      this.updated.emit()
+      this.emit('updated', {})
     }
   }
 
@@ -655,7 +651,7 @@ class GLTexture2D extends RefCounted {
       this.height = height
 
       if (emit) {
-        this.resized.emit(width, height)
+        this.emit('resized', { width, height })
       }
     }
   }

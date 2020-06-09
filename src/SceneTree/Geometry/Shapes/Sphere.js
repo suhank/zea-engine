@@ -40,9 +40,9 @@ class Sphere extends Mesh {
     const rebuild = () => {
       this.__rebuild()
     }
-    this.__radiusParam.valueChanged.connect(resize)
-    this.__sidesParam.valueChanged.connect(rebuild)
-    this.__loopsParam.valueChanged.connect(rebuild)
+    this.__radiusParam.addListener('valueChanged', resize)
+    this.__sidesParam.addListener('valueChanged', rebuild)
+    this.__loopsParam.addListener('valueChanged', rebuild)
   }
 
   /**
@@ -161,7 +161,7 @@ class Sphere extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    this.geomDataTopologyChanged.emit()
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -199,7 +199,7 @@ class Sphere extends Mesh {
     vertex++
 
     this.setBoundingBoxDirty()
-    this.geomDataChanged.emit()
+    this.emit('geomDataChanged', {})
   }
 }
 sgFactory.registerClass('Sphere', Sphere)

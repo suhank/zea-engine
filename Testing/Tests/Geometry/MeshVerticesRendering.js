@@ -15,11 +15,10 @@
 //     renderer.addPass(new Z.GLMeshPointsPass(renderer.gl));
 //     renderer.setScene(scene)
 
-//     let onLoaded = function() {
+//     objAsset.addEventListener('loaded', event => {
 //         renderer.resumeDrawing();
 //         scene.getCamera().frameView([scene.getRoot()]);
-//     }
-//     objAsset.loaded.connect(onLoaded);
+//     });
 //     objAsset.getParameter('ObjFilePath').setValue("/Assets/cow.obj");
     
 // });

@@ -59,15 +59,15 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     const glmaterial = this.addMaterial(material)
     const glgeomitem = super.addGeomItem(geomItem)
 
-    const visibilityChangedId = geomItem.visibilityChanged.connect(visible => {
-      if (visible) {
+    const visibilityChangedId = geomItem.addListener('visibilityChanged', event => {
+      if (event.visible) {
         this.visibleItems.push(item)
       } else {
         const index = this.visibleItems.indexOf(item)
         this.visibleItems.splice(index, 1)
       }
     })
-    const geomXfoChangedId = geomItem.geomXfoChanged.connect(() => {
+    const geomXfoChangedId = geomItem.addListener('geomXfoChanged', () => {
       this.resort = true
     })
 
@@ -304,6 +304,9 @@ class GLTransparentGeomsPass extends GLStandardGeomsPass {
     }
     for (const transparentItem of this.visibleItems) {
       const shaders = transparentItem.shaders
+      if (shaders.glgeomdatashader) {
+        continue
+      }
       if (cache.currentglShader != shaders.glgeomdatashader) {
         // Some passes, like the depth pass, bind custom uniforms.
         if (!this.bindShader(renderstate, shaders.glgeomdatashader)) {

@@ -1,5 +1,4 @@
 import { Vec2, Vec3, Color } from '../Math/index'
-import { Signal } from '../Utilities/index'
 import { BaseItem } from './BaseItem.js'
 import { sgFactory } from './SGFactory.js'
 import {
@@ -59,8 +58,6 @@ class Material extends BaseItem {
    */
   constructor(name, shaderName) {
     super(name)
-
-    this.shaderNameChanged = new Signal()
     this.visibleInGeomDataBuffer = true
 
     if (shaderName) this.setShaderName(shaderName)
@@ -126,7 +123,7 @@ class Material extends BaseItem {
     }
 
     this.__shaderName = shaderName
-    this.shaderNameChanged.emit(this.__shaderName)
+    this.emit('shaderNameChanged', { shaderName })
   }
 
   /**
@@ -165,8 +162,8 @@ class Material extends BaseItem {
    */
   __makeParameterTexturable(param) {
     makeParameterTexturable(param)
-    // param.textureConnected.connect(this.textureConnected.emit);
-    // param.textureDisconnected.connect(this.textureDisconnected.emit);
+    // param.addListener('textureConnected', this.textureConnected.emit);
+    // param.addListener('textureDisconnected', this.textureDisconnected.emit);
   }
 
   /**

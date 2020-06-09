@@ -44,10 +44,10 @@ class Cuboid extends Mesh {
     const resize = () => {
       this.__resize()
     }
-    this.__xParam.valueChanged.connect(resize)
-    this.__yParam.valueChanged.connect(resize)
-    this.__zParam.valueChanged.connect(resize)
-    this.__baseZAtZeroParam.valueChanged.connect(resize)
+    this.__xParam.addListener('valueChanged', resize)
+    this.__yParam.addListener('valueChanged', resize)
+    this.__zParam.addListener('valueChanged', resize)
+    this.__baseZAtZeroParam.addListener('valueChanged', resize)
   }
 
   /**
@@ -140,7 +140,7 @@ class Cuboid extends Mesh {
     this.getVertex(7).set(-0.5 * x, -0.5 * y, zoff * z)
 
     this.setBoundingBoxDirty()
-    this.geomDataChanged.emit()
+    this.emit('geomDataChanged', {})
   }
 
   /**

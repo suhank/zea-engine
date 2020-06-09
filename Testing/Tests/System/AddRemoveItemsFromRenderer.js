@@ -9,6 +9,7 @@ testingHarness.registerTest('System/AddRemoveItemsFromRenderer', (domElement, re
     renderer.resumeDrawing();
 
     scene.setupGrid(60.0, 6);
+    const root = scene.getRoot()
 
     const addGeomItem = (shape, row, count, i, material) => {
         const geomItem = new Z.GeomItem('Item' + row + '-' + i, shape, standardMaterial);
@@ -21,10 +22,11 @@ testingHarness.registerTest('System/AddRemoveItemsFromRenderer', (domElement, re
         let added = false;
         setInterval(function() {
             if (!added) {
-                scene.getRoot().addChild(geomItem);
+                root.addChild(geomItem);
                 added = true;
             } else {
-                scene.getRoot().removeChildByHandle(geomItem);
+                const index = root.getChildIndex(geomItem)
+                root.removeChild(index)
                 added = false;
             }
         }, (row * 200) + (i * 500));

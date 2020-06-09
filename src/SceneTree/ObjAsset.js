@@ -1,5 +1,5 @@
 import { Vec2, Vec3, Xfo, Color } from '../Math/index'
-import { Signal, Async } from '../Utilities/index'
+import { Async } from '../Utilities/index'
 import { GeomItem } from './GeomItem'
 import { AssetItem } from './AssetItem'
 import { Mesh } from './Geometry/Mesh.js'
@@ -31,9 +31,8 @@ class ObjAsset extends AssetItem {
     // A signal that is emitted once all the geoms are loaded.
     // Often the state machine will activate the first state
     // when this signal emits.
-    this.geomsLoaded = new Signal(true)
-    this.geomsLoaded.setToggled(false)
-    this.loaded.setToggled(false)
+    this.geomsLoaded = false
+    this.loaded = false
 
     this.addParameter(new BooleanParameter('splitObjects', false))
     this.addParameter(new BooleanParameter('splitGroupsIntoObjects', false))
@@ -42,14 +41,14 @@ class ObjAsset extends AssetItem {
     this.addParameter(new StringParameter('defaultShader', ''))
 
     this.objfileParam = this.addParameter(new FilePathParameter('ObjFilePath'))
-    this.objfileParam.valueChanged.connect(() => {
-      this.loaded.untoggle()
+    this.objfileParam.addListener('valueChanged', () => {
+      this.loaded = false
       this.__loadObj(
         () => {
-          this.loaded.emit()
+          this.emit('loaded', {})
         },
         () => {
-          this.geomsLoaded.emit()
+          this.emit('geomsLoaded', {})
         }
       )
     })
@@ -165,7 +164,7 @@ class ObjAsset extends AssetItem {
 
     const async = new Async()
     async.incAsyncCount()
-    async.ready.connect(() => {
+    async.addListener('ready', () => {
       buildChildItems()
     })
 

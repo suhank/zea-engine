@@ -1,5 +1,4 @@
 import { Color } from '../Math/Color.js'
-import { Signal } from '../Utilities/index'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
 import { ValueSetMode } from './Parameters/index'
@@ -18,8 +17,6 @@ class BaseGeomItem extends TreeItem {
     this.__cutAway = false
     this.__cutAwayVector = false
     this.__cutAwayDist = false
-    this.cutAwayChanged = new Signal()
-
     this.__layers = []
   }
 
@@ -74,7 +71,7 @@ class BaseGeomItem extends TreeItem {
    */
   setCutawayEnabled(state) {
     this.__cutAway = state
-    this.cutAwayChanged.emit()
+    this.emit('cutAwayChanged', {})
   }
 
   /**
@@ -91,7 +88,7 @@ class BaseGeomItem extends TreeItem {
    */
   setCutVector(cutAwayVector) {
     this.__cutAwayVector = cutAwayVector
-    this.cutAwayChanged.emit()
+    this.emit('cutAwayChanged', {})
   }
 
   /**
@@ -108,7 +105,7 @@ class BaseGeomItem extends TreeItem {
    */
   setCutDist(cutAwayDist) {
     this.__cutAwayDist = cutAwayDist
-    this.cutAwayChanged.emit()
+    this.emit('cutAwayChanged', {})
   }
 
   // ///////////////////////////

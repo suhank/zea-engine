@@ -1,5 +1,3 @@
-import { Signal } from '../../Utilities/index'
-
 import { ParameterOwner } from '../../SceneTree/ParameterOwner.js'
 import { BooleanParameter } from '../../SceneTree/Parameters/index'
 
@@ -19,26 +17,24 @@ class GLPass extends ParameterOwner {
    */
   constructor() {
     super()
-    this.updated = new Signal()
     this.enabled = true
     this.__passIndex = 0
 
     const enabledParam = this.addParameter(
       new BooleanParameter('Enabled', true)
     )
-    enabledParam.valueChanged.connect(
+    enabledParam.addListener('valueChanged', 
       mode => (this.enabled = enabledParam.getValue())
     )
   }
 
   /**
    * The __parameterValueChanged method.
-   * @param {any} param - The param value.
-   * @param {number} mode - The mode value.
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
-    super.__parameterValueChanged(param, mode)
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (this.__renderer) this.__renderer.requestRedraw()
   }
 

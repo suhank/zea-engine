@@ -44,11 +44,11 @@ testingHarness.registerTest('MaterialsAndEnvironment/EnvMaps/EnvProjection', (do
 
     renderer.resumeDrawing();
 
-    // envMap.loaded.connect(()=>{
+    // envMap.addEventListener('loaded', event => {
     //     let exposure = 1.0;
     //     const camera = renderer.getViewport().getCamera();
     //     renderer.startContinuousDrawing();
-    //     renderer.redrawOccured.connect((data) => {
+    //     renderer.addEventListener('redrawOccured', event => {
     //         const viewDir = camera.getGlobalXfo().ori.getZaxis().negate();
     //         const luminance = envMap.dirToLuminance(viewDir);
     //         // Apply a sigmoid function to reduce variance. 

@@ -1,5 +1,4 @@
 import { Vec2, Vec3, Box2, Box3, typeRegistry } from '../../Math/index'
-import { Signal } from '../../Utilities/index'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { Attribute } from './Attribute.js'
 import { sgFactory } from '../SGFactory.js'
@@ -24,10 +23,6 @@ class BaseGeom extends ParameterOwner {
     this.__vertexAttributes = new Map()
     this.__metaData = new Map()
     this.addVertexAttribute('positions', Vec3, 0.0)
-
-    this.boundingBoxDirtied = new Signal()
-    this.geomDataChanged = new Signal()
-    this.geomDataTopologyChanged = new Signal()
   }
 
   /**
@@ -188,7 +183,7 @@ class BaseGeom extends ParameterOwner {
    */
   setBoundingBoxDirty() {
     this.__boundingBoxDirty = true
-    this.boundingBoxDirtied.emit()
+    this.emit('boundingBoxChanged', {})
   }
 
   /**

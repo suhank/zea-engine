@@ -1,21 +1,22 @@
-import { Signal } from '../../Utilities/index'
 import { ValueSetMode, ValueGetMode } from '../Parameters/index'
 import { sgFactory } from '../SGFactory'
+import { EventEmitter } from '../../Utilities/index'
 
-/** Class representing an operator output. */
-class OperatorOutput {
+/** Class representing an operator output.
+ * @extends EventEmitter
+ */
+class OperatorOutput extends EventEmitter {
   /**
    * Create an operator output.
    * @param {string} name - The name value.
    * @param {any} filterFn - The filterFn value.
    */
   constructor(name, filterFn) {
+    super()
     this.__name = name
     this.__filterFn = filterFn
     this._param = undefined
     this.detached = false
-
-    this.paramSet = new Signal()
   }
 
   /**
@@ -56,7 +57,7 @@ class OperatorOutput {
    */
   setParam(param) {
     this._param = param
-    this.paramSet.emit(param)
+    this.emit('paramSet', { param })
   }
 
   /**
@@ -220,18 +221,18 @@ class XfoOperatorOutput extends OperatorOutput {
       if (this._initialParamValue == undefined) throw new Error('WTF?')
     }
     init()
-    // param.valueChanged.connect(mode => {
+    // param.addListener('valueChanged', event => {
     //   if (
-    //     mode == ValueSetMode.USER_SETVALUE ||
-    //     mode == ValueSetMode.REMOTEUSER_SETVALUE ||
-    //     mode == ValueSetMode.DATA_LOAD
+    //     event.mode == ValueSetMode.USER_SETVALUE ||
+    //     event.mode == ValueSetMode.REMOTEUSER_SETVALUE ||
+    //     event.mode == ValueSetMode.DATA_LOAD
     //   ) {
     //     init()
     //   }
     // })
 
     this._param = param
-    this.paramSet.emit(param)
+    this.emit('paramSet', { param })
   }
 }
 sgFactory.registerClass('XfoOperatorOutput', XfoOperatorOutput)

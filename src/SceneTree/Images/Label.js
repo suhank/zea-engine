@@ -8,7 +8,6 @@ import {
 import { sgFactory } from '../SGFactory.js'
 import { DataImage } from './DataImage.js'
 import { labelManager } from './LabelManager.js'
-import { Signal } from '../../Utilities/index'
 
 // http://stackoverflow.com/questions/1255512/how-to-draw-a-rounded-rectangle-on-html-canvas
 /**
@@ -111,7 +110,7 @@ class Label extends DataImage {
     //     const text = textParam.getValue();
     //     labelManager.setLabelTextToLibrary(library, name, text);
     // }
-    // textParam.valueChanged.connect(setLabelText);
+    // textParam.addListener('valueChanged', setLabelText);
 
     this.addParameter(new ColorParameter('FontColor', new Color(0, 0, 0)))
     // this.addParameter(new StringParameter('TextAlign', 'left'))
@@ -134,24 +133,23 @@ class Label extends DataImage {
     const reload = () => {
       this.loadLabelData()
     }
-    this.nameChanged.connect(reload)
+    this.addListener('nameChanged', reload)
 
     if (library) libraryParam.setValue(library)
 
     this.__requestedRerender = false
     this.__needsRender = false
-    this.labelRendered = new Signal();
     this.loadLabelData()
   }
 
   /**
    * This method can be overrridden in derived classes
    * to perform general updates (see GLPass or BaseItem).
-   * @param {any} param - The param param.
-   * @param {any} mode - The mode param.
+   * @param {object} event - The event object.
    * @private
    */
-  __parameterValueChanged(param, mode) {
+  __parameterValueChanged(event) {
+    super.__parameterValueChanged(event)
     if (!this.__requestedRerender) {
       this.__requestedRerender = true
       this.loadLabelData()
@@ -167,9 +165,9 @@ class Label extends DataImage {
       this.__needsRender = true
       if (!this.__loaded) {
         this.__loaded = true
-        this.loaded.emit()
+        this.emit('loaded', {})
       } else {
-        this.updated.emit()
+        this.emit('updated', {})
       }
     }
 
@@ -199,7 +197,8 @@ class Label extends DataImage {
           resolve()
         }
         if (!labelManager.isLibraryLoaded(library)) {
-          labelManager.labelLibraryLoaded.connect(loadedLibrary => {
+          labelManager.addListener('labelLibraryLoaded', event => {
+            const loadedLibrary = event.library
             if (loadedLibrary == library) getLibraryText()
           })
         } else {
@@ -310,7 +309,7 @@ class Label extends DataImage {
 
     this.__data = ctx2d.getImageData(0, 0, this.width, this.height)
     this.__needsRender = false
-    this.labelRendered.emit({
+    this.emit('labelRendered', {
       width: this.width,
       height: this.height,
       data: this.__data

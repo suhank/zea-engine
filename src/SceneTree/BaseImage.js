@@ -1,4 +1,3 @@
-import { Signal } from '../Utilities/index'
 import { BaseItem } from './BaseItem.js'
 
 import { BooleanParameter } from './Parameters/index'
@@ -23,12 +22,12 @@ class BaseImage extends BaseItem {
     this.addParameter(new BooleanParameter('Invert', false))
     this.addParameter(new BooleanParameter('FlipY', false))
 
-    this.updated = this.parameterValueChanged
+    this.on('parameterValueChanged', (event) => { this.emit('updated') })
 
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.
     // Instead we should start using a loaded Promise.
-    this.loaded = new Signal(true)
+    this.loaded = false
   }
 
   /**

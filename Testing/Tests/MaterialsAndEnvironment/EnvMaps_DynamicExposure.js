@@ -7,11 +7,11 @@ testingHarness.registerTest('MaterialsAndEnvironment/EnvMaps/DynamicExposure', (
     scene.setEnvMap(envMap);
     scene.setupGrid(60.0, 6);
 
-    envMap.loaded.connect(()=>{
+    envMap.addEventListener('loaded', event => {
         let exposure = 1.0;
         const camera = renderer.getViewport().getCamera();
         renderer.startContinuousDrawing();
-        renderer.redrawOccured.connect((data) => {
+        renderer.addEventListener('redrawOccured', event => {
             const viewDir = camera.getGlobalXfo().ori.getZaxis().negate();
             const uv = envMap.dirToUv(viewDir);
             const luminance = envMap.uvToLuminance(uv);

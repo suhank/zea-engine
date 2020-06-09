@@ -1,5 +1,4 @@
 import { Vec3, Box3, Xfo } from '../Math/index'
-import { Signal } from '../Utilities/index'
 import { TreeItem } from './TreeItem.js'
 import { ValueSetMode, BooleanParameter, NumberParameter } from './Parameters/index'
 import { sgFactory } from './SGFactory'
@@ -30,20 +29,17 @@ class Camera extends TreeItem {
     // const _cleanViewMat = (xfo)=>{
     //     return this.__globalXfoParam.getValue().inverse().toMat4();
     // }
-    // this.__globalXfoParam.valueChanged.connect((changeType)=>{
+    // this.__globalXfoParam.addListener('valueChanged', (changeType)=>{
     //     this.__viewMatParam.setDirty(_cleanViewMat);
     // });
-
-    // this.viewMatChanged = this.__viewMatParam.valueChanged;
-    this.projectionParamChanged = new Signal()
-    this.movementFinished = new Signal()
-
-    this.__isOrthographicParam.valueChanged.connect(
-      this.projectionParamChanged.emit
-    )
-    this.__fovParam.valueChanged.connect(this.projectionParamChanged.emit)
-    this.__nearParam.valueChanged.connect(this.projectionParamChanged.emit)
-    this.__farParam.valueChanged.connect(this.projectionParamChanged.emit)
+    
+    const emitProjChanged = event => {
+      this.emit('projectionParamChanged', event)
+    }
+    this.__isOrthographicParam.addListener('valueChanged', emitProjChanged)
+    this.__fovParam.addListener('valueChanged', emitProjChanged)
+    this.__nearParam.addListener('valueChanged', emitProjChanged)
+    this.__farParam.addListener('valueChanged', emitProjChanged)
 
     // Initial viewing coords of a person standing 3 meters away from the
     // center of the stage looking at something 1 meter off the ground.
@@ -274,7 +270,7 @@ class Camera extends TreeItem {
 
     this.setFocalDistance(newFocalDistance, mode)
     this.setGlobalXfo(globalXfo, mode)
-    this.movementFinished.emit()
+    this.emit('movementFinished', { mode })
   }
 
   /**

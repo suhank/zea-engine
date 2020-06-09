@@ -1,5 +1,4 @@
-import { Signal } from '../Utilities/index'
-import { RefCounted } from './RefCounted.js'
+import { EventEmitter } from '../Utilities/EventEmitter'
 import { sgFactory } from './SGFactory.js'
 
 // Explicit impport of files to avoid importing all the parameter types.
@@ -12,24 +11,17 @@ let counter = 0
 
 /** Class representing a parameter owner in the scene tree.
  */
-class ParameterOwner {
+class ParameterOwner extends EventEmitter {
   /**
    * Create a parameter owner.
    */
   constructor() {
+    super()
     this.__id = ++counter
 
     this.__params = []
     this.__paramMapping = {}
     this.__paramSignalIds = {}
-
-    // Paramters are not intended to be dynamic.
-    // Instead they are part of the mixin architecture.
-    // Note: Materials add/remove paramters when the
-    // shader name is changed.
-    this.parameterAdded = new Signal()
-    this.parameterRemoved = new Signal()
-    this.parameterValueChanged = new Signal()
   }
   
   /**
@@ -105,8 +97,8 @@ class ParameterOwner {
    * @param {any} mode - The mode param.
    * @private
    */
-  __parameterValueChanged(param, mode) {
-    this.parameterValueChanged.emit(param, mode)
+  __parameterValueChanged(event) {
+    this.emit('parameterValueChanged', event)
   }
 
   /**
@@ -120,12 +112,13 @@ class ParameterOwner {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
+    this.__paramSignalIds[name] = param.addListener(
+      'valueChanged',
+      event => this.__parameterValueChanged({ ...event, param })
     )
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
-    this.parameterAdded.emit(name)
+    this.emit('parameterAdded', { name })
     return param
   }
 
@@ -141,8 +134,9 @@ class ParameterOwner {
       console.warn('Replacing Parameter:' + name)
       this.removeParameter(name)
     }
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
+    this.__paramSignalIds[name] = param.addListener(
+      'valueChanged',
+      event => this.__parameterValueChanged({ ...event, param })
     )
     this.__params.splice(index, 0, param)
 
@@ -151,7 +145,7 @@ class ParameterOwner {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.parameterAdded.emit(name)
+    this.emit('parameterAdded', { name })
     return param
   }
 
@@ -165,14 +159,18 @@ class ParameterOwner {
     }
     const index = this.__paramMapping[paramName]
     const param = this.__params[this.__paramMapping[paramName]]
-    param.valueChanged.disconnectId(this.__paramSignalIds[paramName])
+
+    param.removeListenerById(
+      'valueChanged',
+      this.__paramSignalIds[paramName]
+    )
     this.__params.splice(index, 1)
     const paramMapping = {}
     for (let i = 0; i < this.__params.length; i++) {
       paramMapping[this.__params[i].getName()] = i
     }
     this.__paramMapping = paramMapping
-    this.parameterRemoved.emit(paramName)
+    this.emit('parameterRemoved', { name })
   }
 
   /**
@@ -184,10 +182,14 @@ class ParameterOwner {
     const name = param.getName()
     const index = this.__paramMapping[name]
     const prevparam = this.__params[this.__paramMapping[name]]
-    prevparam.valueChanged.disconnectId(this.__paramSignalIds[name])
+    prevparam.removeListenerById(
+      'valueChanged',
+      this.__paramSignalIds[name]
+    )
 
-    this.__paramSignalIds[name] = param.valueChanged.connect(mode =>
-      this.__parameterValueChanged(param, mode)
+    this.__paramSignalIds[name] = param.addListener(
+      'valueChanged',
+      event => this.__parameterValueChanged({ ...event, param })
     )
     this.__params[index] = param
     return param
@@ -324,13 +326,14 @@ class ParameterOwner {
   /**
    * The destroy is called by the system to cause explicit resources cleanup.
    * Users should never need to call this method directly.
-   */
+   
   destroy() {
     for (const param of this.__params) {
       param.destroy()
     }
     super.destroy()
   }
+  */
 }
 
 export { ParameterOwner }

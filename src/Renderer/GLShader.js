@@ -1,5 +1,4 @@
-import { Signal } from '../Utilities/index'
-import { BaseItem, sgFactory } from '../SceneTree/index'
+import { BaseItem } from '../SceneTree/index'
 
 // Every instance of every shader should have a unique id.
 // This is so that we can uniquely identify the bound shader during
@@ -8,6 +7,7 @@ import { BaseItem, sgFactory } from '../SceneTree/index'
 // which was only unique if the same shader was constructed once, and
 // never unique in release mode after the port to Rollup)
 let shaderInstanceId = 0
+
 
 /** Class representing a GL shader.
  * @extends BaseItem
@@ -41,7 +41,6 @@ class GLShader extends BaseItem {
 
     this.__shaderProgramHdls = {}
     this.__gltextures = {}
-    this.updated = new Signal()
 
     this.__id = shaderInstanceId++
 

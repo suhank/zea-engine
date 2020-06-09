@@ -1,6 +1,5 @@
 import { hashStr } from '../Math/index'
-import { Signal } from '../Utilities/index'
-// import { VLAAsset } from './VLAAsset.js'
+import { EventEmitter } from '../Utilities/index'
 
 // const asyncLoading = true;
 import ResourceLoaderWorker from 'web-worker:./ResourceLoader/ResourceLoaderWorker.js'
@@ -50,16 +49,12 @@ export function mergeDeep(target, ...sources) {
 }
 
 /** Class representing a resource loader. */
-class ResourceLoader {
+class ResourceLoader extends EventEmitter {
   /**
    * Create a resource loader.
    */
   constructor() {
-    this.loaded = new Signal()
-    this.progressIncremented = new Signal()
-    this.allResourcesLoaded = new Signal()
-    this.fileUpdated = new Signal()
-
+    super()
     this.__totalWork = 0
     this.__totalWorkByCategory = {}
     this.__doneWork = 0
@@ -251,7 +246,7 @@ class ResourceLoader {
       resources[file.id] = file
       this.__buildTree(resources)
     }
-    this.fileUpdated.emit(file.id)
+    this.emit('fileUpdated', { fileId: file.id })
   }
 
   /**
@@ -429,7 +424,8 @@ class ResourceLoader {
    */
   addWork(resourceId, amount) {
     this.__totalWork += amount
-    this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100)
+    const percent = (this.__doneWork / this.__totalWork) * 100
+    this.emit('progressIncremented', { percent })
   }
 
   /**
@@ -439,12 +435,14 @@ class ResourceLoader {
    */
   addWorkDone(resourceId, amount) {
     this.__doneWork += amount
-    this.progressIncremented.emit((this.__doneWork / this.__totalWork) * 100)
+
+    const percent = (this.__doneWork / this.__totalWork) * 100
+    this.emit('progressIncremented', { percent })
     if (this.__doneWork > this.__totalWork) {
       throw new Error('Mismatch between work loaded and work done.')
     }
     if (this.__doneWork == this.__totalWork) {
-      this.allResourcesLoaded.emit()
+      this.emit('allResourcesLoaded', {})
     }
   }
 
@@ -572,7 +570,7 @@ class ResourceLoader {
       }
       delete this.__callbacks[resourceId]
     }
-    this.loaded.emit(resourceId)
+    this.emit('loaded', { resourceId })
     this.addWorkDone(resourceId, 1) // parsing done...
   }
 

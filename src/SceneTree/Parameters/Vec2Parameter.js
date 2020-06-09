@@ -34,7 +34,7 @@ class Vec2Parameter extends Parameter {
   __setRange(range) {
     // Should be an array [0, 20]
     this.__range = range
-    this.rangeChanged.emit()
+    this.emit('rangeChanged', { range })
   }
 
   /**

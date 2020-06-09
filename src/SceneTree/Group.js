@@ -1,5 +1,4 @@
 import { Vec3, Color, Xfo } from '../Math/index'
-import { Signal } from '../Utilities/index'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -46,81 +45,71 @@ class Group extends TreeItem {
     this.__signalIndices = []
 
     let pid = 0
-    this.__itemsParam = this.insertParameter(
-      new ItemSetParameter('Items', item => item instanceof TreeItem),
-      pid++
+    this.__itemsParam = this.addParameter(
+      new ItemSetParameter('Items', item => item instanceof TreeItem)
     )
-    this.__itemsParam.itemAdded.connect((item, index) => {
-      this.__bindItem(item, index)
+    this.__itemsParam.addListener('itemAdded', event => {
+      this.__bindItem(event.item, event.index)
     })
-    this.__itemsParam.itemRemoved.connect((item, index) => {
-      this.__unbindItem(item, index)
+    this.__itemsParam.addListener('itemRemoved', event => {
+      this.__unbindItem(event.item, event.index)
     })
-    this.__itemsParam.valueChanged.connect(() => {
+    this.__itemsParam.addListener('valueChanged', () => {
       this.calcGroupXfo()
       this._setBoundingBoxDirty()
     })
 
-    this.__initialXfoModeParam = this.insertParameter(
+    this.__initialXfoModeParam = this.addParameter(
       new MultiChoiceParameter(
         'InitialXfoMode',
         GROUP_INITIAL_XFO_MODES.average,
         ['manual', 'first', 'average', 'global']
-      ),
-      pid++
+      )
     )
-    this.__initialXfoModeParam.valueChanged.connect(() => {
+    this.__initialXfoModeParam.addListener('valueChanged', () => {
       this.calcGroupXfo()
     })
 
-    this.__highlightedParam = this.insertParameter(
-      new BooleanParameter('Highlighted', false),
-      pid++
+    this.__highlightedParam = this.addParameter(
+      new BooleanParameter('Highlighted', false)
     )
-    this.__highlightedParam.valueChanged.connect(() => {
+    this.__highlightedParam.addListener('valueChanged', () => {
       this.__updateHighlight()
     })
 
     this.__updateHighlight = this.__updateHighlight.bind(this)
-    const highlightColorParam = this.insertParameter(
-      new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)),
-      pid++
+    const highlightColorParam = this.addParameter(
+      new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1))
     )
-    highlightColorParam.valueChanged.connect(this.__updateHighlight)
-    const highlightFillParam = this.insertParameter(
-      new NumberParameter('HighlightFill', 0.0, [0, 1]),
-      pid++
+    highlightColorParam.addListener('valueChanged', this.__updateHighlight)
+    const highlightFillParam = this.addParameter(
+      new NumberParameter('HighlightFill', 0.0, [0, 1])
     )
-    highlightFillParam.valueChanged.connect(this.__updateHighlight)
+    highlightFillParam.addListener('valueChanged', this.__updateHighlight)
 
-    this.__materialParam = this.insertParameter(
-      new MaterialParameter('Material'),
-      pid++
-    )
-    this.__materialParam.valueChanged.connect(() => {
+    this.__materialParam = this.addParameter(new MaterialParameter('Material'))
+    this.__materialParam.addListener('valueChanged', () => {
       this.__updateMaterial()
     })
 
     this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.insertParameter(
-      new BooleanParameter('CutAwayEnabled', false),
-      pid++
-    ).valueChanged.connect(this.__updateCutaway)
-    this.insertParameter(
-      new Vec3Parameter('CutVector', new Vec3(1, 0, 0)),
-      pid++
-    ).valueChanged.connect(this.__updateCutaway)
-    this.insertParameter(
-      new NumberParameter('CutDist', 0.0),
-      pid++
-    ).valueChanged.connect(this.__updateCutaway)
+    this.addParameter(
+      new BooleanParameter('CutAwayEnabled', false)
+    ).addListener('valueChanged', this.__updateCutaway)
+    this.addParameter(
+      new Vec3Parameter('CutPlaneNormal', new Vec3(1, 0, 0))
+    ).addListener('valueChanged', this.__updateCutaway)
+    this.addParameter(new NumberParameter('CutPlaneDist', 0.0)).addListener(
+      'valueChanged',
+      this.__updateCutaway
+    )
 
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
     // However we seem to get infinite callstacks.
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
-    this.__globalXfoParam.valueChanged.connect(mode => {
+    this.__globalXfoParam.addListener('valueChanged', event => {
       if (!this.calculatingGroupXfo && !this.groupXfoDirty) {
         this._propagateDirtyXfoToItems()
       }
@@ -367,8 +356,8 @@ class Group extends TreeItem {
    */
   __updateCutaway() {
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
-    const cutAwayVector = this.getParameter('CutVector').getValue()
-    const cutAwayDist = this.getParameter('CutDist').getValue()
+    const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
+    const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
@@ -427,19 +416,19 @@ class Group extends TreeItem {
 
     const sigIds = {}
 
-    sigIds.mouseDownIndex = item.mouseDown.connect(event => {
+    sigIds.mouseDownIndex = item.addListener('mouseDown', event => {
       this.onMouseDown(event)
     })
-    sigIds.mouseUpIndex = item.mouseUp.connect(event => {
+    sigIds.mouseUpIndex = item.addListener('mouseUp', event => {
       this.onMouseUp(event)
     })
-    sigIds.mouseMoveIndex = item.mouseMove.connect(event => {
+    sigIds.mouseMoveIndex = item.addListener('mouseMove', event => {
       this.onMouseMove(event)
     })
-    sigIds.mouseEnterIndex = item.mouseEnter.connect(event => {
+    sigIds.mouseEnterIndex = item.addListener('mouseEnter', event => {
       this.onMouseEnter(event)
     })
-    sigIds.mouseLeaveIndex = item.mouseLeave.connect(event => {
+    sigIds.mouseLeaveIndex = item.addListener('mouseLeave', event => {
       this.onMouseLeave(event)
     })
 
@@ -476,8 +465,8 @@ class Group extends TreeItem {
     // Update the item cutaway
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
     if (cutEnabled) {
-      const cutAwayVector = this.getParameter('CutVector').getValue()
-      const cutAwayDist = this.getParameter('CutDist').getValue()
+      const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
+      const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
           // console.log("cutEnabled:", treeItem.getPath(), cutAwayVector.toString(), treeItem.getMaterial().getShaderName())
@@ -506,7 +495,7 @@ class Group extends TreeItem {
       }
     }
 
-    sigIds.globalXfoChangedIndex = item.globalXfoChanged.connect(mode => {
+    sigIds.globalXfoChangedIndex = item.addListener('globalXfoChanged', event => {
       // If the item's xfo changees, potentially through its own hierarchy
       // then we need to re-bind here.
       if (!this.propagatingXfoToItems) {
@@ -517,7 +506,7 @@ class Group extends TreeItem {
     })
     this.__initialXfos[index] = item.getGlobalXfo()
 
-    sigIds.bboxChangedIndex = item.boundingChanged.connect(
+    sigIds.bboxChangedIndex = item.addListener('boundingChanged', 
       this._setBoundingBoxDirty
     )
 
@@ -557,14 +546,14 @@ class Group extends TreeItem {
     }, true)
 
     const sigIds = this.__signalIndices[index]
-    item.mouseDown.disconnectId(sigIds.mouseDownIndex)
-    item.mouseUp.disconnectId(sigIds.mouseUpIndex)
-    item.mouseMove.disconnectId(sigIds.mouseMoveIndex)
-    item.mouseEnter.disconnectId(sigIds.mouseEnterIndex)
-    item.mouseLeave.disconnectId(sigIds.mouseLeaveIndex)
+    item.removeListenerById('mouseDown', sigIds.mouseDownIndex)
+    item.removeListenerById('mouseUp', sigIds.mouseUpIndex)
+    item.removeListenerById('mouseMove', sigIds.mouseMoveIndex)
+    item.removeListenerById('mouseEnter', sigIds.mouseEnterIndex)
+    item.removeListenerById('mouseLeave', sigIds.mouseLeaveIndex)
 
-    item.globalXfoChanged.disconnectId(sigIds.globalXfoChangedIndex)
-    item.boundingChanged.disconnectId(sigIds.bboxChangedIndex)
+    item.removeListenerById('globalXfoChanged', sigIds.globalXfoChangedIndex)
+    item.removeListenerById('boundingChanged', sigIds.bboxChangedIndex)
     this.__signalIndices.splice(index, 1)
     this.__initialXfos.splice(index, 1)
   }

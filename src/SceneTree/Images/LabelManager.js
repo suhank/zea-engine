@@ -1,4 +1,4 @@
-import { Signal } from '../../Utilities/index'
+import { EventEmitter } from '../../Utilities/index'
 import { resourceLoader } from '../ResourceLoader.js'
 import { loadTextfile, loadBinfile } from '../Utils.js'
 
@@ -38,13 +38,13 @@ function getFirstBrowserLanguage() {
 /** Class representing a label manager.
  * @private
  */
-class LabelManager {
+class LabelManager extends EventEmitter {
   /**
    * Create a label manager.
    */
   constructor() {
+    super()
     this.__labelLibraries = {}
-    this.labelLibraryLoaded = new Signal()
 
     const language = getFirstBrowserLanguage()
     if (language.startsWith('en')) this.__language = 'En'
@@ -60,7 +60,7 @@ class LabelManager {
       this.__foundLabelLibraries[stem] = file
       loadTextfile(file.url, text => {
         this.__labelLibraries[stem] = JSON.parse(text)
-        this.labelLibraryLoaded.emit(stem)
+        this.emit('labelLibraryLoaded', { library: stem })
       })
     })
 
@@ -92,7 +92,7 @@ class LabelManager {
           })
 
           this.__labelLibraries[stem] = json
-          this.labelLibraryLoaded.emit(stem)
+          this.emit('labelLibraryLoaded', { library: stem })
         })
       })
     }

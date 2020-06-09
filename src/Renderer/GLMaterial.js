@@ -1,10 +1,11 @@
-import { Signal } from '../Utilities/index'
+import { EventEmitter } from '../Utilities/index'
 import { MaterialShaderBinding } from './MaterialShaderBinding.js'
 
-/** Class representing a GL material. 
+/** Class representing a GL material.
+ * @extends EventEmitter
  * @private
  */
-class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
+class GLMaterial extends EventEmitter {
   /**
    * Create a GL material.
    * @param {any} gl - The gl value.
@@ -12,12 +13,10 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    * @param {any} glshader - The glshader value.
    */
   constructor(gl, material, glshader) {
-    // super(name);
+    super()
     this.__gl = gl
     this.__material = material
     this.__glshader = glshader
-
-    this.updated = new Signal()
 
     this.__shaderBindings = {}
   }
@@ -55,7 +54,6 @@ class GLMaterial /* extends BaseItem why do we inherit base item here?*/ {
    * @return {any} - The return value.
    */
   bind(renderstate, warnMissingUnifs) {
-    // console.log("Material:" + this.__material.getName());
     this.__boundTexturesBeforeMaterial = renderstate.boundTextures
 
     let shaderBinding = this.__shaderBindings[renderstate.shaderkey]

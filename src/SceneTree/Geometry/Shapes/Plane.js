@@ -37,10 +37,16 @@ class Plane extends Mesh {
     if (addTextureCoords) this.addVertexAttribute('texCoords', Vec2)
     this.__rebuild()
     
-    this.__sizeXParam.valueChanged.connect(this.__resize.bind(this))
-    this.__sizeYParam.valueChanged.connect(this.__resize.bind(this))
-    this.__detailXParam.valueChanged.connect(this.__rebuild.bind(this))
-    this.__detailYParam.valueChanged.connect(this.__rebuild.bind(this))
+    const resize = () => {
+      this.__resize()
+    }
+    const rebuild = () => {
+      this.__rebuild()
+    }
+    this.__sizeXParam.addListener('valueChanged', resize)
+    this.__sizeYParam.addListener('valueChanged', resize)
+    this.__detailXParam.addListener('valueChanged', rebuild)
+    this.__detailYParam.addListener('valueChanged', rebuild)
   }
 
   /**
@@ -90,7 +96,7 @@ class Plane extends Mesh {
     }
 
     this.__resize(false)
-    this.geomDataTopologyChanged.emit()
+    this.emit('geomDataTopologyChanged', {})
   }
 
   /**
@@ -113,7 +119,7 @@ class Plane extends Mesh {
     }
 
     this.setBoundingBoxDirty()
-    if (emit) this.geomDataChanged.emit()
+    if (emit) this.emit('geomDataChanged', {})
   }
 }
 
