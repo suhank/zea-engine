@@ -67,9 +67,9 @@ uniform vec4 billboardData;
 uniform vec4 tintColor;
 uniform vec4 layoutData;
 
-uniform int inVR;
-
 #endif
+
+uniform int inVR;
 
 mat4 calcLookAtMatrix(vec3 origin, vec3 target, float roll) {
   // vec3 rr = vec3(sin(roll), 0.0, cos(roll));

@@ -20,11 +20,11 @@ class RouterOperator extends Operator {
     this.__multipliersParam = this.addParameter(
       new ListParameter('Multipliers', NumberParameter)
     )
-    this.__routesParam.addListener('elementAdded', event => {
+    this.__multipliersParam.on('elementAdded', event => {
       event.elem.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })
-    this.__routesParam.addListener('elementRemoved', event => {
+    this.__multipliersParam.on('elementRemoved', event => {
       this.removeOutput(this.getOutputByIndex(event.index))
     })
   }

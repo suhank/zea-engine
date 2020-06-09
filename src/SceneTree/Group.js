@@ -45,9 +45,8 @@ class Group extends TreeItem {
     this.__signalIndices = []
 
     let pid = 0
-    this.__itemsParam = this.insertParameter(
-      new ItemSetParameter('Items', item => item instanceof TreeItem),
-      pid++
+    this.__itemsParam = this.addParameter(
+      new ItemSetParameter('Items', item => item instanceof TreeItem)
     )
     this.__itemsParam.addListener('itemAdded', event => {
       this.__bindItem(event.item, event.index)
@@ -60,59 +59,50 @@ class Group extends TreeItem {
       this._setBoundingBoxDirty()
     })
 
-    this.__initialXfoModeParam = this.insertParameter(
+    this.__initialXfoModeParam = this.addParameter(
       new MultiChoiceParameter(
         'InitialXfoMode',
         GROUP_INITIAL_XFO_MODES.average,
         ['manual', 'first', 'average', 'global']
-      ),
-      pid++
+      )
     )
     this.__initialXfoModeParam.addListener('valueChanged', () => {
       this.calcGroupXfo()
     })
 
-    this.__highlightedParam = this.insertParameter(
-      new BooleanParameter('Highlighted', false),
-      pid++
+    this.__highlightedParam = this.addParameter(
+      new BooleanParameter('Highlighted', false)
     )
     this.__highlightedParam.addListener('valueChanged', () => {
       this.__updateHighlight()
     })
 
     this.__updateHighlight = this.__updateHighlight.bind(this)
-    const highlightColorParam = this.insertParameter(
-      new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1)),
-      pid++
+    const highlightColorParam = this.addParameter(
+      new ColorParameter('HighlightColor', new Color(0.5, 0.5, 1))
     )
     highlightColorParam.addListener('valueChanged', this.__updateHighlight)
-    const highlightFillParam = this.insertParameter(
-      new NumberParameter('HighlightFill', 0.0, [0, 1]),
-      pid++
+    const highlightFillParam = this.addParameter(
+      new NumberParameter('HighlightFill', 0.0, [0, 1])
     )
     highlightFillParam.addListener('valueChanged', this.__updateHighlight)
 
-    this.__materialParam = this.insertParameter(
-      new MaterialParameter('Material'),
-      pid++
-    )
+    this.__materialParam = this.addParameter(new MaterialParameter('Material'))
     this.__materialParam.addListener('valueChanged', () => {
       this.__updateMaterial()
     })
 
     this.__updateCutaway = this.__updateCutaway.bind(this)
-    this.insertParameter(
-      new BooleanParameter('CutAwayEnabled', false),
-      pid++
+    this.addParameter(
+      new BooleanParameter('CutAwayEnabled', false)
     ).addListener('valueChanged', this.__updateCutaway)
-    this.insertParameter(
-      new Vec3Parameter('CutVector', new Vec3(1, 0, 0)),
-      pid++
+    this.addParameter(
+      new Vec3Parameter('CutPlaneNormal', new Vec3(1, 0, 0))
     ).addListener('valueChanged', this.__updateCutaway)
-    this.insertParameter(
-      new NumberParameter('CutDist', 0.0),
-      pid++
-    ).addListener('valueChanged', this.__updateCutaway)
+    this.addParameter(new NumberParameter('CutPlaneDist', 0.0)).addListener(
+      'valueChanged',
+      this.__updateCutaway
+    )
 
     // TODO: this should be the way we propagate dirty. Instead
     // of using the overloaded method (_setGlobalXfoDirty)
@@ -366,8 +356,8 @@ class Group extends TreeItem {
    */
   __updateCutaway() {
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
-    const cutAwayVector = this.getParameter('CutVector').getValue()
-    const cutAwayDist = this.getParameter('CutDist').getValue()
+    const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
+    const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
 
     Array.from(this.__itemsParam.getValue()).forEach(item => {
       item.traverse(treeItem => {
@@ -475,8 +465,8 @@ class Group extends TreeItem {
     // Update the item cutaway
     const cutEnabled = this.getParameter('CutAwayEnabled').getValue()
     if (cutEnabled) {
-      const cutAwayVector = this.getParameter('CutVector').getValue()
-      const cutAwayDist = this.getParameter('CutDist').getValue()
+      const cutAwayVector = this.getParameter('CutPlaneNormal').getValue()
+      const cutAwayDist = this.getParameter('CutPlaneDist').getValue()
       item.traverse(treeItem => {
         if (treeItem instanceof BaseGeomItem) {
           // console.log("cutEnabled:", treeItem.getPath(), cutAwayVector.toString(), treeItem.getMaterial().getShaderName())
