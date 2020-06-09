@@ -556,7 +556,7 @@ class GLBaseRenderer extends ParameterOwner {
       event.rendererY = (event.clientY - rect.top) * dpr
     }
 
-    this.__glcanvas.addListener('mouseenter', event => {
+    this.__glcanvas.addEventListener('mouseenter', event => {
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
@@ -567,7 +567,7 @@ class GLBaseRenderer extends ParameterOwner {
         mouseLeft = false
       }
     })
-    this.__glcanvas.addListener('mouseleave', event => {
+    this.__glcanvas.addEventListener('mouseleave', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
@@ -582,7 +582,7 @@ class GLBaseRenderer extends ParameterOwner {
         mouseLeft = true
       }
     })
-    this.__glcanvas.addListener('mousedown', event => {
+    this.__glcanvas.addEventListener('mousedown', event => {
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       calcRendererCoords(event)
@@ -596,7 +596,7 @@ class GLBaseRenderer extends ParameterOwner {
       mouseLeft = false
       return false
     })
-    document.addListener('mouseup', event => {
+    document.addEventListener('mouseup', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
@@ -619,16 +619,16 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    // document.addListener('dblclick', event =>{
+    // document.addEventListener('dblclick', event =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
-    // document.addListener('click', event =>{
+    // document.addEventListener('click', event =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
 
-    document.addListener('mousemove', event => {
+    document.addEventListener('mousemove', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       event.preventDefault()
       event.stopPropagation()
@@ -647,16 +647,16 @@ class GLBaseRenderer extends ParameterOwner {
     const onWheel = event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
-        event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         this.onWheel(event)
+        event.stopPropagation()
         event.preventDefault()
       }
       return false
     }
-    if (window.addListener)
+    if (window.addEventListener)
       /** DOMMouseScroll is for mozilla. */
-      window.addListener('wheel', onWheel, { passive: false })
+      window.addEventListener('wheel', onWheel, { passive: false })
     else {
       /** IE/Opera. */
       window.onmousewheel = document.onmousewheel = onWheel
@@ -666,7 +666,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    document.addListener('keypress', event => {
+    document.addEventListener('keypress', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -675,7 +675,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addListener('keydown', event => {
+    document.addEventListener('keydown', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -684,7 +684,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addListener('keyup', event => {
+    document.addEventListener('keyup', event => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -693,7 +693,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    this.__glcanvas.addListener(
+    this.__glcanvas.addEventListener(
       'touchstart',
       event => {
         event.stopPropagation()
@@ -706,7 +706,7 @@ class GLBaseRenderer extends ParameterOwner {
       false
     )
 
-    this.__glcanvas.addListener(
+    this.__glcanvas.addEventListener(
       'touchmove',
       event => {
         event.stopPropagation()
@@ -719,7 +719,7 @@ class GLBaseRenderer extends ParameterOwner {
       false
     )
 
-    this.__glcanvas.addListener(
+    this.__glcanvas.addEventListener(
       'touchend',
       event => {
         event.stopPropagation()
@@ -732,7 +732,7 @@ class GLBaseRenderer extends ParameterOwner {
       false
     )
 
-    this.__glcanvas.addListener(
+    this.__glcanvas.addEventListener(
       'touchcancel',
       event => {
         event.stopPropagation()

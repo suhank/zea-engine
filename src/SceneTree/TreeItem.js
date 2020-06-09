@@ -1,4 +1,4 @@
-import { Xfo, Box3 } from '../Math/index'
+import { Color, Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
 import {
   ParamFlags,
@@ -111,7 +111,7 @@ class TreeItem extends BaseItem {
     // Note: one day we will remove the concept of 'selection' from the engine
     // and keep it only in UX. to Select an item, we will add it to the selectino
     // in the selection manager. Then the selection group will apply a highlight.
-    this.selectedChanged.connect(() => {
+    this.addListener('selectedChanged', () => {
       if (this.__selected) {
         this.addHighlight('selected', selectionOutlineColor, true)
       } else {

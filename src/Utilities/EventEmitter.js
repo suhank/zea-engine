@@ -74,7 +74,7 @@ class EventEmitter {
   }
 
   /**
-   * The disconnectId method.
+   * The removeListenerById method.
    * @param {string} eventName - The name of the event.
    * @param {number} id - The id returned by addListener
    */
@@ -98,7 +98,7 @@ class EventEmitter {
    * @return {any} - The return value.
    */
   on(eventName, listener) {
-    this.addListener(eventName, listener)
+    return this.addListener(eventName, listener)
   }
 
   /**
@@ -115,12 +115,12 @@ class EventEmitter {
   }
   
   /**
-   * The disconnectId method.
+   * The off method removes an event listener.
    * @param {string} eventName - The name of the event.
-   * @param {number} id - The id returned by addListener
+   * @param {function} listener - The listener function.
    */
-  off(eventName, id) {
-    this.removeListenerById(eventName, id)
+  off(eventName, listener) {
+    this.removeListener(eventName, listener)
   }
 
   /**

@@ -330,15 +330,16 @@ class GeomItem extends BaseGeomItem {
     if (!src.getGeometry() && src.geomIndex != -1) {
       const geomLibrary = context.assetItem.getGeometryLibrary()
       const geomIndex = src.geomIndex;
-      const onGeomLoaded = range => {
+      const onGeomLoaded = event => {
+        const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
           if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
           else console.warn('Geom not loaded:', this.getName())
-          geomLibrary.rangeLoaded.disconnectId(connid)
+          geomLibrary.removeListenerById('rangeLoaded', connid)
         }
       }
-      const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded)
+      const connid = geomLibrary.addListener('rangeLoaded', onGeomLoaded)
     }
 
     // Geom Xfo should be dirty after cloning.
