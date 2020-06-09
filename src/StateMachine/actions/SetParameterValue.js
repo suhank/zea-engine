@@ -86,6 +86,17 @@ class SetParameterValue extends StateAction {
       }
     }
   }
+  
+  /**
+   * The deactivate method.
+   */
+  deactivate() {
+    if (this.__timeoutId) {
+      clearTimeout(this.__timeoutId)
+      this.__timeoutId = undefined
+    }
+    super.deactivate()
+  }
 
   /**
    * The cancel the action.

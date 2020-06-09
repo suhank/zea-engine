@@ -495,6 +495,9 @@ class GLBillboardsPass extends GLPass {
     const unifs = renderstate.unifs
     this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards)
 
+    const inVR = renderstate.vrPresenting == true
+    gl.uniform1i(unifs.inVR.location, inVR)
+
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       const len = this.__indexArray.length
       for (let i = 0; i < len; i++) {

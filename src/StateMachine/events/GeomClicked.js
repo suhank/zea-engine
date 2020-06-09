@@ -18,6 +18,9 @@ class GeomClicked extends StateEvent {
     this.__geomParam.valueChanged.connect(() => {
       this.__geom = this.__geomParam.getValue()
     })
+    this.__geomClicked = this.__geomClicked.bind(this)
+    this.__geomClickedBindId = -1;
+
   }
 
   /**
@@ -35,7 +38,7 @@ class GeomClicked extends StateEvent {
    */
   activate() {
     if (this.__geom) {
-      this.__geom.mouseDown.connect(this.__geomClicked.bind(this))
+      this.__geomClickedBindId = this.__geom.mouseDown.connect(this.__geomClicked)
     }
   }
 
@@ -43,9 +46,10 @@ class GeomClicked extends StateEvent {
    * The deactivate method.
    */
   deactivate() {
-    if (this.__geom) {
-      this.__geom.mouseDown.disconnect(this.__geomClicked.bind(this))
+    if (this.__geom && this.__geomClickedBindId != -1) {
+      this.__geom.mouseDown.disconnectId(this.__geomClickedBindId)
     }
+    super.deactivate()
   }
 }
 

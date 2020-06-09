@@ -26,6 +26,17 @@ class StateEvent extends StateAction {
       action.activate()
     })
   }
+
+  
+  /**
+   * The deactivate method.
+   */
+  deactivate() {
+    // When a state is deactivating, all actions should deactivate also.
+    this.__childActions.forEach(action => {
+      action.deactivate()
+    })
+  }
 }
 
 export { StateEvent }

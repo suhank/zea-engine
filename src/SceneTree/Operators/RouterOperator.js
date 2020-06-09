@@ -17,16 +17,25 @@ class RouterOperator extends Operator {
     super(name)
 
     this.__inputParam = this.addParameter(new NumberParameter('Input'))
-    this.__routesParam = this.addParameter(
-      new ListParameter('Routes', NumberParameter)
+    this.__multipliersParam = this.addParameter(
+      new ListParameter('Multipliers', NumberParameter)
     )
-    this.__routesParam.elementAdded.connect(value => {
+    this.__multipliersParam.elementAdded.connect(value => {
       value.setValue(1.0)
       this.addOutput(new OperatorOutput('Output'))
     })
-    this.__routesParam.elementRemoved.connect((value, index) => {
+    this.__multipliersParam.elementRemoved.connect((value, index) => {
       this.removeOutput(this.getOutputByIndex(index))
     })
+  }
+
+  /**
+   * The addRoute method.
+   */
+  addRoute() {
+    const index = this.__multipliersParam.getCount()
+    this.__multipliersParam.addElement(new NumberParameter("Mult"+index))
+    return this.getOutputByIndex(index)
   }
 
   /**
@@ -34,13 +43,12 @@ class RouterOperator extends Operator {
    */
   evaluate() {
     const input = this.__inputParam.getValue(ValueGetMode.OPERATOR_GETVALUE)
-    const routes = this.__routesParam.getValue()
+    const mults = this.__multipliersParam.getValue()
     let i = this.__outputs.length
     while (i--) {
       const output = this.__outputs[i]
-      output.setValue(
-        input * routes[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
-      )
+      const mult = mults[i].getValue(ValueGetMode.OPERATOR_GETVALUE)
+      output.setValue(input * mult)
     }
     this.postEval.emit(input)
   }

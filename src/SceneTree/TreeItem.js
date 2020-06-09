@@ -912,7 +912,7 @@ class TreeItem extends BaseItem {
     }
     const __t = (treeItem, depth) => {
       if (callback(treeItem, depth) == false) return false
-      __c(treeItem, depth)
+      if (treeItem instanceof TreeItem) __c(treeItem, depth)
     }
     if (includeThis) __t(this, 1)
     else __c(this, 0)

@@ -67,6 +67,7 @@ uniform vec4 billboardData;
 uniform vec4 tintColor;
 uniform vec4 layoutData;
 
+uniform int inVR;
 
 #endif
 
@@ -120,11 +121,17 @@ void main(void) {
   int flags = int(billboardData.y);
   bool alignedToCamera = flags > 0;
   if(alignedToCamera){
-    vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
-    vec3 billboardPos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
-    mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
-    mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
-    gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    if (inVR == 0) {
+      gl_Position = (viewMatrix * modelMatrix) * vec4(0.0, 0.0, 0.0, 1.0);
+      gl_Position += vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 0.0);
+      gl_Position = projectionMatrix * gl_Position;
+    } else {
+      vec3 cameraPos = vec3(cameraMatrix[3][0], cameraMatrix[3][1], cameraMatrix[3][2]);
+      vec3 billboardPos = vec3(modelMatrix[3][0], modelMatrix[3][1], modelMatrix[3][2]);
+      mat4 lookAt = calcLookAtMatrix(billboardPos, cameraPos, 0.0);
+      mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * lookAt;
+      gl_Position = modelViewProjectionMatrix * vec4(quadVertex.x * width, (quadVertex.y + 0.5) * height, 0.0, 1.0);
+    }
   }
   else{
     mat4 modelViewProjectionMatrix = projectionMatrix * viewMatrix * modelMatrix;

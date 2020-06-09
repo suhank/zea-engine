@@ -1,3 +1,6 @@
+[//]: <> (Author: Michael Smith)
+[//]: <> (Date: May 22, 2020)
+
 ![logo](_media/logo-zea.svg)
 
 # Zea Engine <small>1.0.0</small>
@@ -8,7 +11,7 @@
 - Powerful
 - Customizable
 
-[Get Started](#zea-engine)
+[Get Started](README.md)
 
 
 <!-- background color -->
