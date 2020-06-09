@@ -22,7 +22,7 @@ class BaseImage extends BaseItem {
     this.addParameter(new BooleanParameter('Invert', false))
     this.addParameter(new BooleanParameter('FlipY', false))
 
-    this.updated = this.parameterValueChanged
+    this.on('parameterValueChanged', (event) => { this.emit('updated') })
 
     // Note: Many parts of the code assume a 'loaded' signal.
     // We should probably deprecate and use only 'updated'.

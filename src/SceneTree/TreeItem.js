@@ -75,14 +75,14 @@ class TreeItem extends BaseItem {
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
     this._cleanBoundingBox = this._cleanBoundingBox.bind(this)
 
-    this.__localXfoParam.addListener('valueChanged', this._setGlobalXfoDirty)
+    this.__localXfoParam.on('valueChanged', this._setGlobalXfoDirty)
     
     // Note: if the user changes the global xfo, we compute the 
     // local xfo when it is needed (generally when GlobalXfo is pulled)
     // In the future, we will move this into the operators and ops
     // will support 'inversion' where the param asks the op to
     // proccess an input value.
-    const cleanLocalXfo = prevValue => {
+    const cleanLocalXfo = () => {
       const globalXfo = this.__globalXfoParam.getValue()
       if (this.__ownerItem !== undefined)
         return this.__ownerItem
@@ -91,7 +91,7 @@ class TreeItem extends BaseItem {
           .multiply(globalXfo)
       else return globalXfo
     }
-    this.__globalXfoParam.addListener('valueChanged', event => {
+    this.__globalXfoParam.on('valueChanged', (event) => {
       // Dirtiness propagates from Local to Global, but not vice versa.
       // We need to move to using operators to invert values.
       // This system of having ops connected in all directions
@@ -103,7 +103,7 @@ class TreeItem extends BaseItem {
       this.emit('globalXfoChanged', event)
     })
 
-    this.__visibleParam.addListener('valueChanged', () => {
+    this.__visibleParam.on('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.__updateVisiblity()
     })
@@ -111,7 +111,7 @@ class TreeItem extends BaseItem {
     // Note: one day we will remove the concept of 'selection' from the engine
     // and keep it only in UX. to Select an item, we will add it to the selectino
     // in the selection manager. Then the selection group will apply a highlight.
-    this.addListener('selectedChanged', () => {
+    this.on('selectedChanged', () => {
       if (this.__selected) {
         this.addHighlight('selected', selectionOutlineColor, true)
       } else {

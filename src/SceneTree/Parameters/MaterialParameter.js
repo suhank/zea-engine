@@ -47,7 +47,9 @@ class MaterialParameter extends Parameter {
       }
 
       // During the cleaning process, we don't want notifications.
-      if (mode != ValueSetMode.OPERATOR_SETVALUE) this.emit('valueChanged', { mode })
+      if (mode != ValueSetMode.OPERATOR_SETVALUE) {
+        this.emit('valueChanged', { mode })
+      }
     }
   }
 

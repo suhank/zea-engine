@@ -18,7 +18,6 @@ class GLBillboardsPass extends GLPass {
    * Create a GL billboards pass.
    */
   constructor() {
-    console.log("GLBillboardsPass")
     super()
   }
 
