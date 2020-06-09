@@ -1,11 +1,16 @@
+/* eslint-disable new-cap */
+/* eslint-disable camelcase */
 import { JSON_stringify_fixedPrecision } from './Common.js'
 import { Vec3 } from './Vec3.js'
 import { typeRegistry } from './TypeRegistry.js'
 
-/** Class representing a ray that emits from an origin in a specified direction. */
+/**
+ * Class representing a ray that emits from an origin in a specified direction.
+ */
 class Ray {
   /**
    * Create a ray.
+   *
    * @param {Vec3} start - The origin of the ray.
    * @param {Vec3} dir - The direction of the ray.
    */
@@ -24,6 +29,7 @@ class Ray {
 
   /**
    * Get the closest point.
+   *
    * @param {Vec3} point - The point in 3D space.
    * @return {Ray} - Returns a Ray.
    */
@@ -39,6 +45,7 @@ class Ray {
 
   /**
    * Get the closest point at a distance.
+   *
    * @param {Vec3} dist - The distance value.
    * @return {Ray} - Returns a Ray.
    */
@@ -48,6 +55,7 @@ class Ray {
 
   /**
    * Returns the two ray params that represent the closest point between the two rays.
+   *
    * @param {Ray} ray - The ray value.
    * @return {Ray} - Returns a Ray.
    */
@@ -93,8 +101,9 @@ class Ray {
   /**
    * Returns one ray param representing the intersection
    * of this ray against the plane defined by the given ray.
-   * @param {any} plane - The plane to intersect with.
-   * @return {any} - The return value.
+   *
+   * @param {Vec3} plane - The plane to intersect with.
+   * @return {number} - The return value.
    */
   intersectRayPlane(plane) {
     const w = this.start.subtract(plane.start)
@@ -118,6 +127,7 @@ class Ray {
 
   /**
    * Clones this Ray and returns a new Ray.
+   *
    * @return {Ray} - Returns a new Ray.
    */
   clone() {
@@ -131,6 +141,7 @@ class Ray {
    * Creates a new Ray.
    * @param {...object} ...args - The ...args param.
    * @return {Ray} - Returns a new Ray.
+   * @private
    */
   static create(...args) {
     return new Ray(...args)
@@ -141,6 +152,7 @@ class Ray {
 
   /**
    * The toJSON method encodes this type as a json object for persistences.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -152,6 +164,7 @@ class Ray {
 
   /**
    * The fromJSON method decodes a json object for this type.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {
@@ -160,8 +173,9 @@ class Ray {
   }
 
   /**
-   * The toString method.
-   * @return {any} - The return value.
+   * Calls `toJSON` method and stringifies it.
+   *
+   * @return {string} - The return value.
    */
   toString() {
     return JSON_stringify_fixedPrecision(this.toJSON())

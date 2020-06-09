@@ -1,4 +1,4 @@
-import { EventEmitter } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 
 let counter = 0
 
@@ -7,6 +7,7 @@ let counter = 0
  *  of resources. This is necessary when JavaScript
  *  objects own references to GPU resources that need to
  *  be cleaned up when the JavaScript object is destroyed.
+ * @private
  */
 class RefCounted extends EventEmitter {
   /**
@@ -61,7 +62,6 @@ class RefCounted extends EventEmitter {
   removeRef(referer) {
     if (!referer)
       throw new Error('Error in RefCounted.removeRef: Must provide a referer')
-    // console.log(this.constructor.name + " removeRef:" + referer.constructor.name);
     const index = this.__refs.indexOf(referer)
     if (index == -1)
       throw new Error(

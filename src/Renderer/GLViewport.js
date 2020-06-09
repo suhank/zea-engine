@@ -1,10 +1,10 @@
-import { Vec2, Vec3, Ray, Mat4 } from '../Math'
-import { Camera } from '../SceneTree'
+import { Vec2, Vec3, Ray, Mat4 } from '../Math/index'
+import { Camera } from '../SceneTree/index'
 import { GLBaseViewport } from './GLBaseViewport.js'
 import { GLFbo } from './GLFbo.js'
 import { GLTexture2D } from './GLTexture2D.js'
 
-import { CameraMouseAndKeyboard } from '../SceneTree'
+import { CameraMouseAndKeyboard } from '../SceneTree/index'
 
 /** Class representing a GL viewport.
  * @extends GLBaseViewport
@@ -165,7 +165,11 @@ class GLViewport extends GLBaseViewport {
    * @param {array} treeItems - The treeItems value.
    */
   frameView(treeItems) {
-    this.__camera.frameView(this, treeItems)
+    if (this.__width > 0 && this.__height > 0)
+      this.__camera.frameView(this, treeItems)
+    else {
+      console.warn("Unable to frameView while Viewport with and height are 0.")
+    }
   }
 
   /**

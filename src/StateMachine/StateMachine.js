@@ -1,10 +1,11 @@
-import { BaseItem, ItemFlags, sgFactory } from '../SceneTree'
+import { BaseItem, ItemFlags, sgFactory } from '../SceneTree/index'
 
 /** A state machine is a mathematical model that describes the behavior of
  * a system that can be in only one state at a time. For example, a door with
  * two states can be "open" and "closed", but it cannot be both open and closed
  * at the same time.
  * @extends BaseItem
+ * @private
  */
 class StateMachine extends BaseItem {
   /**
@@ -22,10 +23,12 @@ class StateMachine extends BaseItem {
     this.setFlag(ItemFlags.USER_EDITED)
 
     // Manually invoke the callbacks for cases where the StateMAchine
-    // is not beingn constructed by the SGFactory.
-    if (!sgFactory.isConstructing()) {
-      sgFactory.invokeCallbacks(this)
-    }
+    // is not being constructed by the SGFactory.
+    // TODO: Maybe in BaseItem.construct we should invoke the callbacks
+    // for all classes.
+    // if (!sgFactory.isConstructing()) {
+    //   sgFactory.invokeCallbacks(this)
+    // }
   }
 
   /**
@@ -81,7 +84,7 @@ class StateMachine extends BaseItem {
    * @return {any} - The return value.
    */
   getActiveStateName() {
-    return this.__currentState.constructor.name
+    return sgFactory.getClassName(this.__currentState)
   }
 
   /**

@@ -1,8 +1,9 @@
-import { EventEmitter } from '../../Utilities'
+import { EventEmitter } from '../../Utilities/index'
 import { resourceLoader } from '../ResourceLoader.js'
 import { loadTextfile, loadBinfile } from '../Utils.js'
 
-const getFirstBrowserLanguage = function() {
+// eslint-disable-next-line require-jsdoc
+function getFirstBrowserLanguage() {
   const nav = window.navigator
   const browserLanguagePropertyKeys = [
     'language',
@@ -34,7 +35,9 @@ const getFirstBrowserLanguage = function() {
   return null
 }
 
-/** Class representing a label manager. */
+/** Class representing a label manager.
+ * @private
+ */
 class LabelManager extends EventEmitter {
   /**
    * Create a label manager.
@@ -93,6 +96,17 @@ class LabelManager extends EventEmitter {
         })
       })
     }
+  }
+
+  /**
+   * Load a label library into the manager.
+   * @param {string} name - The name of the library.
+   * @param {json} json - The json data of of the library.
+   */
+  loadLibrary(name, json) {
+    this.__foundLabelLibraries[name] = true
+    this.__labelLibraries[name] = json
+    this.labelLibraryLoaded.emit(name)
   }
 
   /**

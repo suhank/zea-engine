@@ -1,5 +1,5 @@
-import { Vec3, Vec4 } from '../../Math'
-import { BillboardItem } from '../../SceneTree'
+import { Vec3, Vec4 } from '../../Math/index'
+import { BillboardItem } from '../../SceneTree/index'
 import { BillboardShader } from '../Shaders/BillboardShader.js'
 import { GLPass, PassType } from './GLPass.js'
 import { GLImageAtlas } from '../GLImageAtlas.js'
@@ -11,6 +11,7 @@ const pixelsPerItem = 5 // The number of pixels per draw item.
 
 /** Class representing a GL billboards pass.
  * @extends GLPass
+ * @private
  */
 class GLBillboardsPass extends GLPass {
   /**
@@ -80,17 +81,16 @@ class GLBillboardsPass extends GLPass {
    * @param {any} billboard - The billboard value.
    */
   addBillboard(billboard) {
-    const imageParam = billboard.getParameter('image')
+    const imageParam = billboard.getParameter('Image')
     const image = imageParam.getValue()
     if (!image) {
       imageParam.addEventListener('valueChanged', () => this.addBillboard(billboard))
       return
     }
-    
     let index
     if (this.__freeIndices.length > 0) index = this.__freeIndices.pop()
     else index = this.__billboards.length
-    
+
     const imageIndex = this.__atlas.addSubImage(image)
     billboard.setMetadata('GLBillboardsPass_Index', index)
 
@@ -152,7 +152,7 @@ class GLBillboardsPass extends GLPass {
     // to the atlas. (for the Zahner demo)
     // Eventually we need to clean up the atlas, so debug this using the
     // survey-point-calibration 190528_Dummy_Srvy_Data.vlexe test
-    const image = billboardData.billboard.getParameter('image').getValue();
+    const image = billboardData.billboard.getParameter('Image').getValue();
     this.__atlas.removeSubImage(image)
 
     billboard.removeEventListenerById('visibilityChanged', billboardData.visibilityChangedId)
@@ -178,13 +178,13 @@ class GLBillboardsPass extends GLPass {
   __populateBillboardDataArray(billboardData, index, dataArray) {
     const billboard = billboardData.billboard
     const mat4 = billboard.getGlobalXfo().toMat4()
-    const scale = billboard.getParameter('scale').getValue()
+    const ppm = billboard.getParameter('PixelsPerMeter').getValue()
+    const scale = 1 / ppm
     let flags = 0
-    if (billboard.getParameter('alignedToCamera').getValue()) flags |= 1 << 2
-    if (billboard.getParameter('drawOnTop').getValue()) flags |= 1 << 3
-    const alpha = billboard.getParameter('alpha').getValue()
-    const color = billboard.getParameter('color').getValue()
-
+    if (billboard.getParameter('AlignedToCamera').getValue()) flags |= 1 << 2
+    if (billboard.getParameter('DrawOnTop').getValue()) flags |= 1 << 3
+    const alpha = billboard.getParameter('Alpha').getValue()
+    const color = billboard.getParameter('Color').getValue()
     const offset = index * pixelsPerItem * 4
     const col0 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset)
     const col1 = Vec4.createFromFloat32Buffer(dataArray.buffer, offset + 4)
@@ -228,6 +228,7 @@ class GLBillboardsPass extends GLPass {
     }, 1)
   }
 
+  // eslint-disable-next-line require-jsdoc
   __updateIndexArray() {
     const gl = this.__gl
     // Note: When the camera moves, this array is sorted and re-upload.
@@ -257,28 +258,29 @@ class GLBillboardsPass extends GLPass {
    */
   __updateBillboards() {
 
-    if (this.indexArrayUpdateNeeded)
-      this.__updateIndexArray()
-
-    const gl = this.__gl
-    if (!this.__glshader) {
-      if (!gl.__quadVertexIdsBuffer) {
-        gl.setupInstancedQuad()
-      }
-      this.__glshader = new BillboardShader(gl)
-      const shaderComp = this.__glshader.compileForTarget(
-        'GLBillboardsPass',
-        this.__renderer.getShaderPreproc()
-      )
-      this.__shaderBinding = generateShaderGeomBinding(
-        gl,
-        shaderComp.attrs,
-        gl.__quadattrbuffers,
-        gl.__quadIndexBuffer
-      )
-    }
-
     const doIt = () => {
+
+      if (this.indexArrayUpdateNeeded)
+        this.__updateIndexArray()
+
+      const gl = this.__gl
+      if (!this.__glshader) {
+        if (!gl.__quadVertexIdsBuffer) {
+          gl.setupInstancedQuad()
+        }
+        this.__glshader = new BillboardShader(gl)
+        const shaderComp = this.__glshader.compileForTarget(
+          'GLBillboardsPass',
+          this.__renderer.getShaderPreproc()
+        )
+        this.__shaderBinding = generateShaderGeomBinding(
+          gl,
+          shaderComp.attrs,
+          gl.__quadattrbuffers,
+          gl.__quadIndexBuffer
+        )
+      }
+
       // Note: Maybe the atlas is alreadu up to date. It should
       // maintain its own coherencey by listening to the sub images.
       this.__atlas.renderAtlas()
@@ -287,15 +289,17 @@ class GLBillboardsPass extends GLPass {
         this.__modelMatrixArray = []
         this.__billboardDataArray = []
         this.__tintColorArray = []
-        this.__indexArray.forEach(index => {
+        this.__indexArray.forEach((index) => {
           // if (index == -1) return;
           const billboardData = this.__billboards[index]
           const billboard = billboardData.billboard
           const mat4 = billboard.getGlobalXfo().toMat4()
-          const scale = billboard.getParameter('scale').getValue()
-          const flags = billboard.getParameter('flags').getValue()
-          const alpha = billboard.getParameter('alpha').getValue()
-          const color = billboard.getParameter('color').getValue()
+          const ppm = billboard.getParameter('PixelsPerMeter').getValue()
+          const scale = 1 / ppm
+          let flags = 0
+          if (billboard.getParameter('AlignedToCamera').getValue()) flags |= 1 << 2
+          const alpha = billboard.getParameter('Alpha').getValue()
+          const color = billboard.getParameter('Color').getValue()
 
           this.__modelMatrixArray[index] = mat4.asArray()
           this.__billboardDataArray[index] = [
@@ -493,6 +497,9 @@ class GLBillboardsPass extends GLPass {
 
     const unifs = renderstate.unifs
     this.__atlas.bindToUniform(renderstate, unifs.atlasBillboards)
+
+    const inVR = renderstate.vrPresenting == true
+    gl.uniform1i(unifs.inVR.location, inVR)
 
     if (!gl.floatTexturesSupported || !gl.drawElementsInstanced) {
       const len = this.__indexArray.length

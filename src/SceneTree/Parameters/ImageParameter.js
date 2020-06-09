@@ -26,7 +26,7 @@ class ImageParameter extends Parameter {
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     if (this.__value) {
-      j.imageType = this.__value.constructor.name
+      j.imageType = sgFactory.getClassName(this.__value)
     }
     return j
   }

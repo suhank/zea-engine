@@ -1,5 +1,5 @@
 import { ParameterOwner } from '../../SceneTree/ParameterOwner.js'
-import { BooleanParameter } from '../../SceneTree/Parameters'
+import { BooleanParameter } from '../../SceneTree/Parameters/index'
 
 const PassType = {
   OPAQUE: 1 << 0,

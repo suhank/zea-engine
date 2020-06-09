@@ -1,12 +1,13 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters'
-import { OperatorOutput } from '../../SceneTree/Operators'
+import { ValueSetMode, NumberParameter } from '../../SceneTree/Parameters/index'
+import { OperatorOutput } from '../../SceneTree/Operators/index'
 
 import { StateAction } from '../StateAction.js'
 
 /** A state machine action that sets parameter values.
  * @extends StateAction
+ * @private
  */
 class SetParameterValue extends StateAction {
   /**
@@ -86,6 +87,17 @@ class SetParameterValue extends StateAction {
       }
     }
   }
+  
+  /**
+   * The deactivate method.
+   */
+  deactivate() {
+    if (this.__timeoutId) {
+      clearTimeout(this.__timeoutId)
+      this.__timeoutId = undefined
+    }
+    super.deactivate()
+  }
 
   /**
    * The cancel the action.
@@ -109,7 +121,7 @@ class SetParameterValue extends StateAction {
   toJSON(context, flags) {
     const j = super.toJSON(context, flags)
     if (this.__valueParam) {
-      j.valueParamType = this.__valueParam.constructor.name
+      j.valueParamType = sgFactory.getClassName(this.__valueParam)
     }
     return j
   }

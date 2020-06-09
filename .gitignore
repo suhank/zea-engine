@@ -1,13 +1,13 @@
-/node_modules
+node_modules/
+testing-server/
 
 lib/
-dist/
+/dist/
 projects/
 Tests/Assets/
 SteamServer/
 Resources/Cache/
 
-VisualiveUI/
-
 *.log
+.tmuxp.json
 package-lock.json

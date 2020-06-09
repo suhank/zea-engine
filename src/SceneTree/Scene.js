@@ -1,4 +1,4 @@
-import { Vec3, Xfo, Color } from '../Math'
+import { Vec3, Xfo, Color } from '../Math/index'
 import { Material } from './Material.js'
 import { TreeItem } from './TreeItem.js'
 import { Lines } from './Geometry/Lines.js'
@@ -84,7 +84,7 @@ class Scene {
   setupGrid(gridSize = 5, resolution = 50, gridColor = defaultGridColor) {
     const gridTreeItem = new TreeItem('Grid')
     const gridMaterial = new Material('gridMaterial', 'LinesShader')
-    gridMaterial.getParameter('Color').setValue(gridColor)
+    gridMaterial.getParameter('BaseColor').setValue(gridColor)
     const grid = new Grid(gridSize, gridSize, resolution, resolution, true)
     gridTreeItem.addChild(new GeomItem('GridItem', grid, gridMaterial), false)
     const axisLine = new Lines()
@@ -95,7 +95,7 @@ class Scene {
     axisLine.getVertex(1).set(gridSize * 0.5, 0.0, 0.0)
     const gridXAxisMaterial = new Material('gridXAxisMaterial', 'LinesShader')
     gridXAxisMaterial
-      .getParameter('Color')
+      .getParameter('BaseColor')
       .setValue(new Color(gridColor.luminance(), 0, 0))
     gridTreeItem.addChild(
       new GeomItem('xAxisLine', axisLine, gridXAxisMaterial),
@@ -103,7 +103,7 @@ class Scene {
     )
     const gridZAxisMaterial = new Material('gridZAxisMaterial', 'LinesShader')
     gridZAxisMaterial
-      .getParameter('Color')
+      .getParameter('BaseColor')
       .setValue(new Color(0, gridColor.luminance(), 0))
     const geomOffset = new Xfo()
     geomOffset.ori.setFromAxisAndAngle(new Vec3(0, 0, 1), Math.PI * 0.5)

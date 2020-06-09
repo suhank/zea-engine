@@ -1,6 +1,6 @@
-import { ValueSetMode, ValueGetMode } from '../Parameters'
+import { ValueSetMode, ValueGetMode } from '../Parameters/index'
 import { sgFactory } from '../SGFactory'
-import { EventEmitter } from '../../Utilities'
+import { EventEmitter } from '../../Utilities/index'
 
 /** Class representing an operator output.
  * @extends EventEmitter
@@ -127,7 +127,7 @@ class OperatorOutput extends EventEmitter {
   toJSON(context, flags) {
     const paramPath = this._param ? this._param.getPath() : ''
     return {
-      type: this.constructor.name,
+      type: sgFactory.getClassName(this),
       paramPath:
         context && context.makeRelative
           ? context.makeRelative(paramPath)

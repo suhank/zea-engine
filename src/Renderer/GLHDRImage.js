@@ -5,6 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL high dynamic range (HDR) image.
  * @extends GLTexture2D
+ * @private
  */
 class GLHDRImage extends GLTexture2D {
   /**

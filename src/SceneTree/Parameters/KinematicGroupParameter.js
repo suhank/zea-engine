@@ -6,6 +6,7 @@ import { TreeItemParameter } from './TreeItemParameter.js'
 /** This class is deprecated. Use Groups instead.
  * Class representing a kinematic group parameter.
  * @extends ListParameter
+ * @private
  */
 class KinematicGroupParameter extends ListParameter {
   /**

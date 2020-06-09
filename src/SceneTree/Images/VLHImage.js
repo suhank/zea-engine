@@ -1,9 +1,9 @@
-import { Color } from '../../Math'
+import { Color } from '../../Math/index'
 import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
 import { resourceLoader } from '../ResourceLoader.js'
 
-import { FilePathParameter } from '../Parameters'
+import { FilePathParameter } from '../Parameters/index'
 
 /** Class representing a VLH image.
  * @extends BaseImage
@@ -33,7 +33,7 @@ class VLHImage extends BaseImage {
     fileParam.addEventListener('valueChanged', () => {
       this.loaded = false
 
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)

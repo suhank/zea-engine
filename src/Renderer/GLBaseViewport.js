@@ -1,10 +1,11 @@
-import { Color } from '../Math'
-import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree'
+import { Color } from '../Math/index'
+import { ParameterOwner, BaseImage, NumberParameter } from '../SceneTree/index'
 import { GLHDRImage } from './GLHDRImage.js'
 import { GLTexture2D } from './GLTexture2D.js'
 
 /** Class representing a GL base viewport.
  * @extends ParameterOwner
+ * @private
  */
 class GLBaseViewport extends ParameterOwner {
   /**

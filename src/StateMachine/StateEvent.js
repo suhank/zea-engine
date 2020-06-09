@@ -3,6 +3,7 @@ import { StateAction } from './StateAction.js'
 /** Class representing a state event. An event tiggers an action
  * that changes the state of the model.
  * @extends StateAction
+ * @private
  */
 class StateEvent extends StateAction {
   /**
@@ -23,6 +24,17 @@ class StateEvent extends StateAction {
   __onEvent() {
     this.__childActions.forEach(action => {
       action.activate()
+    })
+  }
+
+  
+  /**
+   * The deactivate method.
+   */
+  deactivate() {
+    // When a state is deactivating, all actions should deactivate also.
+    this.__childActions.forEach(action => {
+      action.deactivate()
     })
   }
 }

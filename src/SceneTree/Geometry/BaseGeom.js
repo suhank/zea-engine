@@ -1,4 +1,4 @@
-import { Vec2, Vec3, Box2, Box3, typeRegistry } from '../../Math'
+import { Vec2, Vec3, Box2, Box3, typeRegistry } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner.js'
 import { Attribute } from './Attribute.js'
 import { sgFactory } from '../SGFactory.js'

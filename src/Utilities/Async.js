@@ -1,11 +1,9 @@
+/* eslint-disable require-jsdoc */
 import { EventEmitter } from './EventEmitter.js'
 
-/** Class representing an Async. */
+// Note: this class will be deprecated soon.
+// Please avoid using it in your code.
 class Async extends EventEmitter {
-  /**
-   * Create a Async.
-   * @param {number} asyncCount - The asyncCount value.
-   */
   constructor(asyncCount = 0) {
     super()
     this.__asyncCount = asyncCount
@@ -30,9 +28,6 @@ class Async extends EventEmitter {
     }
   }
 
-  /**
-   * Getter for count.
-   */
   get count() {
     return this.__asyncCount
   }

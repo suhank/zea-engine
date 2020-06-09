@@ -1,6 +1,6 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Vec3, Quat, Xfo, Mat4 } from '../../Math'
-import { TreeItem } from '../../SceneTree'
+import { Vec3, Quat, Xfo, Mat4 } from '../../Math/index'
+import { TreeItem } from '../../SceneTree/index'
 
 /** Class representing a VR controller. */
 class VRController {

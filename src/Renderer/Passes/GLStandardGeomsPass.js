@@ -1,6 +1,6 @@
 import { GLPass } from './GLPass'
 
-import { Vec4 } from '../../Math'
+import { Vec4 } from '../../Math/index'
 
 import {
   GeomItem,
@@ -10,7 +10,7 @@ import {
   PointsProxy,
   LinesProxy,
   MeshProxy,
-} from '../../SceneTree'
+} from '../../SceneTree/index'
 
 import { GLPoints } from '../GLPoints.js'
 import { GLLines } from '../GLLines.js'
@@ -126,6 +126,7 @@ class GLStandardGeomsPass extends GLPass {
   constructShaders(shaderName) {
     let glgeomdatashader
     let glselectedshader
+    
     const glshader = this.__renderer.getOrCreateShader(shaderName)
     if (glshader.constructor.getGeomDataShaderName()) {
       glgeomdatashader = this.__renderer.getOrCreateShader(
@@ -547,7 +548,7 @@ class GLStandardGeomsPass extends GLPass {
    * @return {any} - The return value.
    */
   bindShader(renderstate, glshader) {
-    if (!glshader.bind(renderstate, this.constructor.name)) return false
+    if (!glshader.bind(renderstate)) return false
     if (!this.bind(renderstate)) return false
     return true
   }

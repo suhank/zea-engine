@@ -1,9 +1,8 @@
-import { hashStr } from '../Math'
-import { EventEmitter } from '../Utilities'
-// import { VLAAsset } from './VLAAsset.js'
+import { hashStr } from '../Math/index'
+import { EventEmitter } from '../Utilities/index'
 
 // const asyncLoading = true;
-const ResourceLoaderWorker = require('worker-loader?inline!./ResourceLoader/ResourceLoaderWorker.js')
+import ResourceLoaderWorker from 'web-worker:./ResourceLoader/ResourceLoaderWorker.js'
 // For synchronous loading, uncomment these lines.
 // import {
 //     ResourceLoaderWorker_onmessage
@@ -13,6 +12,7 @@ const ResourceLoaderWorker = require('worker-loader?inline!./ResourceLoader/Reso
  * Simple object check.
  * @param {any} item - The item value.
  * @return {boolean} - The return value.
+ * @private
  */
 export function isObject(item) {
   return item && typeof item === 'object' && !Array.isArray(item)
@@ -23,6 +23,7 @@ export function isObject(item) {
  * @param {any} target - The target value.
  * @param {...object} ...sources - The ...sources value.
  * @return {any} - The return value.
+ * @private
  */
 export function mergeDeep(target, ...sources) {
   if (!sources.length) return target
@@ -123,7 +124,7 @@ class ResourceLoader extends EventEmitter {
    * @private
    */
   __applyCallbacks(resourcesDict) {
-    const applyCallbacks = resource => {
+    const applyCallbacks = (resource) => {
       for (const filter in this.__resourceRegisterCallbacks) {
         if (resource.name.includes(filter))
           this.__resourceRegisterCallbacks[filter](resource)
@@ -141,7 +142,7 @@ class ResourceLoader extends EventEmitter {
    * @private
    */
   __buildTree(resources) {
-    const buildEntity = resourceId => {
+    const buildEntity = (resourceId) => {
       if (this.__resourcesTreeEntities[resourceId]) return
 
       const resource = resources[resourceId]
@@ -267,7 +268,7 @@ class ResourceLoader extends EventEmitter {
    */
   __getWorker() {
     const __constructWorker = () => {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         const worker = new ResourceLoaderWorker()
         // const worker = new Worker(this.__resourceLoaderFile.url);
 
@@ -275,7 +276,7 @@ class ResourceLoader extends EventEmitter {
           type: 'init',
           wasmUrl: this.wasmUrl,
         })
-        worker.onmessage = event => {
+        worker.onmessage = (event) => {
           if (event.data.type === 'WASM_LOADED') {
             resolve(worker)
           } else if (event.data.type === 'FINISHED') {
@@ -500,21 +501,21 @@ class ResourceLoader extends EventEmitter {
 
     function checkStatus(response) {
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status} - ${response.statusText}`);
+        throw new Error(`HTTP ${response.status} - ${response.statusText}`)
       }
-      return response;
+      return response
     }
     fetch(url)
-    .then(response => checkStatus(response) && response.arrayBuffer())
-    .then(buffer => {
-      this.__getWorker().then(worker => {
-        worker.postMessage({
-          type: 'unpack',
-          resourceId,
-          buffer,
+      .then((response) => checkStatus(response) && response.arrayBuffer())
+      .then((buffer) => {
+        this.__getWorker().then((worker) => {
+          worker.postMessage({
+            type: 'unpack',
+            resourceId,
+            buffer,
+          })
         })
       })
-    });
   }
 
   /**
@@ -536,20 +537,22 @@ class ResourceLoader extends EventEmitter {
       }
 
       if (!(resourceId in this.__callbacks)) this.__callbacks[resourceId] = []
-      if (callback)
-        this.__callbacks[resourceId].push(callback)
-      this.__callbacks[resourceId].push(entries => {
+      if (callback) this.__callbacks[resourceId].push(callback)
+      this.__callbacks[resourceId].push((entries) => {
         resolve(entries)
       })
 
-      this.__getWorker().then(worker => {
-        worker.postMessage({
-          type: 'unpack',
-          resourceId,
-          buffer,
-        }, [buffer])
+      this.__getWorker().then((worker) => {
+        worker.postMessage(
+          {
+            type: 'unpack',
+            resourceId,
+            buffer,
+          },
+          [buffer]
+        )
       })
-    });
+    })
   }
 
   /**
@@ -583,12 +586,12 @@ class ResourceLoader extends EventEmitter {
    * @param {any} callback - The callback value.
    */
   traverse(callback) {
-    const __c = fsItem => {
+    const __c = (fsItem) => {
       for (const childItemName in fsItem.children) {
         __t(fsItem.children[childItemName])
       }
     }
-    const __t = fsItem => {
+    const __t = (fsItem) => {
       if (callback(fsItem) == false) return false
       if (fsItem.children) __c(fsItem)
     }

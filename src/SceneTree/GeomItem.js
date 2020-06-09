@@ -1,5 +1,5 @@
-import { Vec2, Xfo } from '../Math'
-import { ValueSetMode, XfoParameter, Mat4Parameter } from './Parameters'
+import { Vec2, Xfo } from '../Math/index'
+import { ValueSetMode, XfoParameter, Mat4Parameter } from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter'
 import { GeometryParameter } from './Parameters/GeometryParameter'
 import { sgFactory } from './SGFactory.js'
@@ -19,7 +19,7 @@ class GeomItem extends BaseGeomItem {
     super(name)
 
     this.__geomParam = this.insertParameter(
-      new GeometryParameter('geometry'),
+      new GeometryParameter('Geometry'),
       0
     )
     this._setBoundingBoxDirty = this._setBoundingBoxDirty.bind(this)
@@ -242,7 +242,8 @@ class GeomItem extends BaseGeomItem {
     if (geom) {
       this.setGeometry(geom, ValueSetMode.DATA_LOAD)
     } else {
-      const onGeomLoaded = event => {
+      this.geomIndex = geomIndex
+      const onGeomLoaded = (event) => {
         const { range } = event
         if (geomIndex >= range[0] && geomIndex < range[1]) {
           const geom = geomLibrary.getGeom(geomIndex)
@@ -311,9 +312,9 @@ class GeomItem extends BaseGeomItem {
    * @param {number} flags - The flags value.
    * @return {GeomItem} - Returns a new cloned geom item.
    */
-  clone(flags) {
+  clone(context) {
     const cloned = new GeomItem()
-    cloned.copyFrom(this, flags)
+    cloned.copyFrom(this, context)
     return cloned
   }
 
@@ -322,9 +323,24 @@ class GeomItem extends BaseGeomItem {
    * @param {GeomItem} src - The geom item to copy from.
    * @param {number} flags - The flags value.
    */
-  copyFrom(src, flags) {
-    super.copyFrom(src, flags)
+  copyFrom(src, context) {
+    super.copyFrom(src, context)
     this.__lightmapCoordOffset = src.__lightmapCoordOffset
+
+    if (!src.getGeometry() && src.geomIndex != -1) {
+      const geomLibrary = context.assetItem.getGeometryLibrary()
+      const geomIndex = src.geomIndex;
+      const onGeomLoaded = range => {
+        if (geomIndex >= range[0] && geomIndex < range[1]) {
+          const geom = geomLibrary.getGeom(geomIndex)
+          if (geom) this.setGeometry(geom, ValueSetMode.DATA_LOAD)
+          else console.warn('Geom not loaded:', this.getName())
+          geomLibrary.rangeLoaded.disconnectId(connid)
+        }
+      }
+      const connid = geomLibrary.rangeLoaded.connect(onGeomLoaded)
+    }
+
     // Geom Xfo should be dirty after cloning.
     // Note: this might not be necessary. It should
     // always be dirty after cloning.

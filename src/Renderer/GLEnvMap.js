@@ -5,6 +5,7 @@ import { generateShaderGeomBinding } from './GeomShaderBinding.js'
 
 /** Class representing a GL environment map.
  * @extends GLProbe
+ * @private
  */
 class GLEnvMap extends GLProbe {
   /**

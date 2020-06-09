@@ -1,5 +1,5 @@
-import { Xfo } from '../Math'
-import { ValueSetMode } from './Parameters'
+import { Xfo } from '../Math/index'
+import { ValueSetMode } from './Parameters/index'
 import { TreeItem, CloneFlags } from './TreeItem.js'
 import { sgFactory } from './SGFactory.js'
 
@@ -19,18 +19,18 @@ class InstanceItem extends TreeItem {
    * The setSrcTree method.
    * @param {any} treeItem - The treeItem value.
    */
-  setSrcTree(treeItem) {
+  setSrcTree(treeItem, context) {
     this.__srcTree = treeItem
 
     const numChildren = this.__srcTree.getNumChildren()
     if (numChildren == 0) {
-      const clonedTree = this.__srcTree.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+      const clonedTree = this.__srcTree.clone(context)
       clonedTree.setLocalXfo(new Xfo(), ValueSetMode.DATA_LOAD)
       this.addChild(clonedTree, false)
     } else {
       const children = this.__srcTree.getChildren()
       children.forEach(child => {
-        const clonedChild = child.clone(CloneFlags.CLONE_FLAG_INSTANCED_TREE)
+        const clonedChild = child.clone(context)
         this.addChild(clonedChild, false)
       })
     }
@@ -63,7 +63,7 @@ class InstanceItem extends TreeItem {
     const path = reader.loadStrArray()
     // console.log("InstanceItem of:", path)
     context.resolvePath(path, treeItem => {
-      this.setSrcTree(treeItem)
+      this.setSrcTree(treeItem, context)
     })
   }
 

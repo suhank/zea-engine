@@ -1,11 +1,12 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { StringParameter } from '../../SceneTree/Parameters'
+import { StringParameter } from '../../SceneTree/Parameters/index'
 
 import { StateAction } from '../StateAction.js'
 
 /** A state machine action that switches between states.
  * @extends StateAction
+ * @private
  */
 class SwitchState extends StateAction {
   /**

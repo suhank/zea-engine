@@ -1,10 +1,11 @@
 import { sgFactory } from '../../SceneTree/SGFactory.js'
 
-import { TreeItemParameter } from '../../SceneTree/Parameters'
+import { TreeItemParameter } from '../../SceneTree/Parameters/index'
 import { StateEvent } from '../StateEvent.js'
 
 /** Triggers an state machine event to occur when geometry is clicked.
  * @extends StateEvent
+ * @private
  */
 class GeomClicked extends StateEvent {
   /**
@@ -17,6 +18,9 @@ class GeomClicked extends StateEvent {
     this.__geomParam.addEventListener('valueChanged', () => {
       this.__geom = this.__geomParam.getValue()
     })
+    this.__geomClicked = this.__geomClicked.bind(this)
+    this.__geomClickedBindId = -1;
+
   }
 
   /**
@@ -45,6 +49,7 @@ class GeomClicked extends StateEvent {
     if (this.__geom) {
       this.__geom.removeEventListener('mouseDown', this.__geomClicked.bind(this))
     }
+    super.deactivate()
   }
 }
 

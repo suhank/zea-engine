@@ -109,6 +109,17 @@ function getGPUDesc() {
   } catch (e) {}
 
   const debugInfo = webgl.getExtension('WEBGL_debug_renderer_info')
+  if (!debugInfo) {
+    console.warn('Unable to determine GPU Info:')
+    return {
+      vendor: "Unknown",
+      renderer: "Unknown",
+      gpuVendor: "Unknown",
+      maxTextureSize: "Unknown",
+      supportsWebGL2: webgl2 != undefined,
+    }
+  }
+
   const vendor = webgl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL)
   const renderer = webgl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
   const maxTextureSize = webgl.getParameter(webgl.MAX_TEXTURE_SIZE)

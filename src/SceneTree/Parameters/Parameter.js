@@ -152,7 +152,7 @@ class BaseParameter extends EventEmitter {
    * @param {any} state - The state value.
    */
   setEnabled(state) {
-    console.warn("Deprecated Method: This method will be removed soon.")
+    console.warn('Deprecated Method: This method will be removed soon.')
     if (state) this.setFlag(ParamFlags.DISABLED)
     else this.clearFlag(ParamFlags.DISABLED)
   }
@@ -161,7 +161,7 @@ class BaseParameter extends EventEmitter {
    * The isEnabled method.
    */
   isEnabled() {
-    console.warn("Deprecated Method: This method will be removed soon.")
+    console.warn('Deprecated Method: This method will be removed soon.')
     this.testFlag(ParamFlags.DISABLED)
   }
 
@@ -197,7 +197,6 @@ class BaseParameter extends EventEmitter {
    * @return {boolean} - The return value.
    */
   setDirty(cleanerFn) {
-
     // If already dirty, simply return.
     if (this.__cleanerFns.indexOf(cleanerFn) != -1) {
       return false
@@ -208,6 +207,7 @@ class BaseParameter extends EventEmitter {
     this.emitEvent('valueChanged', { mode: ValueSetMode.OPERATOR_DIRTIED }) // changed via cleaner fn
     return true
   }
+
   /**
    * The setDirtyFromOp method.
    */
@@ -326,7 +326,7 @@ class Parameter extends BaseParameter {
    * @return {any} - The return value.
    */
   getValue(mode = ValueGetMode.NORMAL) {
-    if (/*mode == ValueGetMode.NORMAL && */this.__state == ParamState.DIRTY)
+    if (/*mode == ValueGetMode.NORMAL && */ this.__state == ParamState.DIRTY)
       this._clean()
     return this.__value
   }
@@ -359,9 +359,10 @@ class Parameter extends BaseParameter {
       this.__cleanerFns = []
     }
 
-    // if (value == undefined) {
-    //     throw ("Invalud valu for setvalue.");
-    // }
+    if (value == undefined) {
+      // eslint-disable-next-line no-throw-literal
+      throw ("undefined was passed into the setvalue for param:" + this.getName())
+    }
 
     if (!value.fromJSON) {
       // Note: equality tests on anything but simple values is going to be super expenseive.

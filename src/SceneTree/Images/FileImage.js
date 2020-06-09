@@ -1,4 +1,4 @@
-import { Vec4, Color } from '../../Math'
+import { Vec4, Color } from '../../Math/index'
 import { loadBinfile } from '../Utils.js'
 import { sgFactory } from '../SGFactory.js'
 import { BaseImage } from '../BaseImage.js'
@@ -12,7 +12,7 @@ import {
   NumberParameter,
   Vec4Parameter,
   FilePathParameter,
-} from '../Parameters'
+} from '../Parameters/index'
 
 const imageDataLibrary = {}
 
@@ -48,7 +48,7 @@ class FileImage extends BaseImage {
     const fileParam = this.addParameter(new FilePathParameter('FilePath'))
     fileParam.addEventListener('valueChanged', () => {
       this.loaded = false
-      if (this.getName() == sgFactory.getClassName(this)) {
+      if (this.getName() == "") {
         // Generate a name from the file path.
         const stem = fileParam.getStem()
         const decorator = stem.substring(stem.length - 1)

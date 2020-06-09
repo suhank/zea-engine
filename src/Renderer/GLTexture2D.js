@@ -1,4 +1,4 @@
-import { BaseImage, RefCounted } from '../SceneTree'
+import { BaseImage, RefCounted } from '../SceneTree/index'
 
 /** Class representing a GL texture 2D.
  * @extends RefCounted

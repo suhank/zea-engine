@@ -1,4 +1,4 @@
-import { Xfo, Box3 } from '../Math'
+import { Xfo, Box3 } from '../Math/index'
 import { sgFactory } from './SGFactory.js'
 import {
   ParamFlags,
@@ -6,7 +6,7 @@ import {
   Parameter,
   BooleanParameter,
   XfoParameter,
-} from './Parameters'
+} from './Parameters/index'
 import { ItemFlags, BaseItem } from './BaseItem.js'
 
 // Defines used to explicity specify types for WebGL.
@@ -24,13 +24,13 @@ const CloneFlags = {
   CLONE_FLAG_INSTANCED_TREE: 1 << 0,
 }
 
-// let selectionOutlineColor = new Color('#03E3AC')
-// selectionOutlineColor.a = 0.1
-// let branchSelectionOutlineColor = selectionOutlineColor.lerp(
-//   new Color('white'),
-//   0.5
-// )
-// branchSelectionOutlineColor.a = 0.1
+let selectionOutlineColor = new Color('#03E3AC')
+selectionOutlineColor.a = 0.1
+let branchSelectionOutlineColor = selectionOutlineColor.lerp(
+  new Color('white'),
+  0.5
+)
+branchSelectionOutlineColor.a = 0.1
 
 /** Class representing a tree item in the scene tree.
  * @extends BaseItem
@@ -52,8 +52,6 @@ class TreeItem extends BaseItem {
     this.__childItemsSignalIds = []
     this.__childItemsMapping = {}
 
-    this.__components = []
-    this.__componentMapping = {}
 
     // /////////////////////////////////////
     // Add parameters.
@@ -108,6 +106,17 @@ class TreeItem extends BaseItem {
     this.__visibleParam.addEventListener('valueChanged', () => {
       this.__visibleCounter += this.__visibleParam.getValue() ? 1 : -1
       this.__updateVisiblity()
+    })
+
+    // Note: one day we will remove the concept of 'selection' from the engine
+    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // in the selection manager. Then the selection group will apply a highlight.
+    this.selectedChanged.connect(() => {
+      if (this.__selected) {
+        this.addHighlight('selected', selectionOutlineColor, true)
+      } else {
+        this.removeHighlight('selected', true)
+      }
     })
   }
 
@@ -229,9 +238,6 @@ class TreeItem extends BaseItem {
     super.__updatePath()
     for (const childItem of this.__childItems) {
       if (childItem) childItem.__updatePath()
-    }
-    for (const component of this.__components) {
-      if (component) component.__updatePath()
     }
   }
 
@@ -716,6 +722,7 @@ class TreeItem extends BaseItem {
    * automatically when an item is removed from the group.
    * @param {number} index - The index value.
    * @param {TreeItem} childItem - item to unbind.
+   * @private
    */
   __unbindChild(index, childItem) {
     const signalIds = this.__childItemsSignalIds[index]
@@ -808,67 +815,6 @@ class TreeItem extends BaseItem {
   }
 
   // ////////////////////////////////////////
-  // Components
-
-  /**
-   * Add a component.
-   * @param {any} component - The component value.
-   */
-  addComponent(component) {
-    this.__components.push(component)
-    this.__componentMapping[component.getName()] = this.__components.length - 1
-
-    component.setOwner(this)
-
-    // this.emitEvent('componentAdded', { component });
-  }
-
-  /**
-   * Remove a component.
-   * @param {string} name - The name value.
-   * @return {any} - The return value.
-   */
-  removeComponent(name) {
-    const index = this.__componentMapping[name]
-    if (index == undefined) {
-      throw new Error('Component not found:' + name)
-    }
-    const component = this.__components[index]
-    component.setOwner(undefined)
-    this.__components.splice(index, 1)
-
-    const componentMapping = {}
-    for (let i = 0; i < this.__components.length; i++)
-      componentMapping[this.__components[i].getName()] = i
-    this.__componentMapping = componentMapping
-
-    // this.emitEvent('componentRemoved', { component, index });
-    return component
-  }
-
-  /**
-   * The hasComponent method.
-   * @param {string} name - The name value.
-   * @return {any} - The return value.
-   */
-  hasComponent(name) {
-    return name in this.__componentMapping
-  }
-
-  /**
-   * The getComponent method.
-   * @param {string} name - The name value.
-   * @return {any} - The return value.
-   */
-  getComponent(name) {
-    if (!(name in this.__componentMapping)) {
-      console.log("No component named '" + name + "' found.")
-      return
-    }
-    return this.__components[this.__componentMapping[name]]
-  }
-
-  // ////////////////////////////////////////
   // Path Traversial
   // Note: Path resolution starts at the root of the
   // tree the path was generated from (so index=1, because we don't resolve root).
@@ -899,25 +845,25 @@ class TreeItem extends BaseItem {
       return this
     }
 
-    if (path[index] == '>' && index == path.length - 2) {
-      if (this.hasComponent(path[index + 1])) {
-        const component = this.getComponent(path[index + 1])
-        return component.resolvePath(path, index + 2)
-      }
-    }
+    // if (path[index] == '>' && index == path.length - 2) {
+    //   if (this.hasComponent(path[index + 1])) {
+    //     const component = this.getComponent(path[index + 1])
+    //     return component.resolvePath(path, index + 2)
+    //   }
+    // }
 
     const childName = path[index]
     const childItem = this.getChildByName(childName)
     if (childItem == undefined) {
       // Maybe the name is a component name.
-      if (this.hasComponent(path[index])) {
-        const component = this.getComponent(path[index])
-        if (index == path.length) {
-          return component
-        } else {
-          return component.resolvePath(path, index + 1)
-        }
-      }
+      // if (this.hasComponent(path[index])) {
+      //   const component = this.getComponent(path[index])
+      //   if (index == path.length) {
+      //     return component
+      //   } else {
+      //     return component.resolvePath(path, index + 1)
+      //   }
+      // }
 
       // Maybe the name is a parameter name.
       const param = this.getParameter(path[index])
@@ -950,7 +896,7 @@ class TreeItem extends BaseItem {
     }
     const __t = (treeItem, depth) => {
       if (callback(treeItem, depth) == false) return false
-      __c(treeItem, depth)
+      if (treeItem instanceof TreeItem) __c(treeItem, depth)
     }
     if (includeThis) __t(this, 1)
     else __c(this, 0)
@@ -1037,10 +983,6 @@ class TreeItem extends BaseItem {
     if (!this.testFlag(ItemFlags.USER_EDITED)) return
 
     const j = super.toJSON(context, flags)
-
-    const jcs = []
-    for (const c of this.__components) jcs.push(c.toJSON(context, flags))
-    if (jcs.length > 0) j.components = jcs
 
     // Some Items, such as the SliderSceneWidget do not need thier children
     // to be saved.
@@ -1149,15 +1091,15 @@ class TreeItem extends BaseItem {
       }
     }
 
-    if (j.components) {
-      for (const cj of j.components) {
-        const component = sgFactory.constructClass(cj.type ? cj.type : cj.name)
-        if (component) {
-          component.fromJSON(cj, context)
-          this.addComponent(component)
-        }
-      }
-    }
+    // if (j.components) {
+    //   for (const cj of j.components) {
+    //     const component = sgFactory.constructClass(cj.type ? cj.type : cj.name)
+    //     if (component) {
+    //       component.fromJSON(cj, context)
+    //       this.addComponent(component)
+    //     }
+    //   }
+    // }
   }
 
   /**

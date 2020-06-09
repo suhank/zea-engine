@@ -1,6 +1,6 @@
-import { Vec2, Vec3, Quat, Xfo } from '../../Math'
+import { Vec2, Vec3, Quat, Xfo } from '../../Math/index'
 import { ParameterOwner } from '../ParameterOwner.js'
-import { NumberParameter } from '../Parameters'
+import { NumberParameter } from '../Parameters/index'
 import { SystemDesc } from '../../BrowserDetection.js'
 
 /** Class representing a camera, mouse and keyboard.
@@ -218,12 +218,44 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     const { viewport } = event
     const camera = viewport.getCamera()
     const focalDistance = camera.getFocalDistance()
+    
+    this.__mouseDown = true;
+    this.__calculatingDragAction = false;
+    this.__mouseDownPos = event.mousePos
+    this.__mouseDownViewport = viewport
     this.__mouseDragDelta.set(0, 0)
     this.__mouseDownCameraXfo = camera.getGlobalXfo().clone()
     this.__mouseDownZaxis = this.__mouseDownCameraXfo.ori.getZaxis()
     const targetOffset = this.__mouseDownZaxis.scale(-focalDistance)
     this.__mouseDownCameraTarget = camera.getGlobalXfo().tr.add(targetOffset)
     this.__mouseDownFocalDist = focalDistance
+    
+    this.__dragListenerId = camera.getParameter("GlobalXfo").valueChanged.connect(this.__globalXfoChangedDuringDrag.bind(this))
+  }
+
+  __globalXfoChangedDuringDrag(mode) {
+    if (!this.__calculatingDragAction) {
+      if (this.__dragListenerId != null) {
+        const camera = this.__mouseDownViewport.getCamera()
+        camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+        this.__dragListenerId = null
+      }
+      this.initDrag({ viewport: this.__mouseDownViewport, mousePos: this.__mouseDownPos } );
+    }
+  }
+  /**
+   * The initDrag method.
+   * @param {any} event - The event value.
+   */
+  endDrag(event) {
+    if (this.__dragListenerId != null) {
+      const { viewport } = event
+      const camera = viewport.getCamera()
+      camera.getParameter("GlobalXfo").valueChanged.disconnectId(this.__dragListenerId)
+      this.__dragListenerId = null;
+    }
+    this.__mouseDown = false
+    this.__dragging = false
   }
 
   /**
@@ -323,7 +355,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
    * @param {MouseEvent} event - The mouse event that occurs.
    */
   onMouseDown(event) {
-    this.__mouseDownPos = event.mousePos
     this.initDrag(event)
 
     if (event.button == 2) {
@@ -335,7 +366,6 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     } else {
       this.__manipulationState = this.__defaultManipulationState
     }
-    this.__mouseDown = true;
   }
 
   /**
@@ -345,6 +375,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
   onMouseMove(event) {
     if (!this.__mouseDown) return;
     const mousePos = event.mousePos
+    this.__calculatingDragAction = true;
     if (this.__keyboardMovement) {
       this.__mouseDragDelta = mousePos
     } else {
@@ -365,6 +396,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
         break
     }
     this.__dragging = true
+    this.__calculatingDragAction = false
     event.stopPropagation()
   }
 
@@ -379,7 +411,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       this.__dragging = false
       event.stopPropagation()
     }
-    this.__mouseDown = false
+    this.endDrag(event);
   }
 
   /**
@@ -414,6 +446,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       }
     }
     applyMovement()
+
+    event.preventDefault()
+    event.stopPropagation()
   }
 
   /**
@@ -561,7 +596,12 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     for (let i = 0; i < touches.length; i++) {
       this.__startTouch(touches[i])
     }
-    this.initDrag(event)
+
+    if (Object.keys(this.__ongoingTouches).length == 1) {
+      this.initDrag(event)
+      
+      this.__dragging = true
+    }
   }
 
   /**
@@ -572,6 +612,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     event.preventDefault()
     event.stopPropagation()
     // console.log("this.__manipMode:" + this.__manipMode);
+
+    
+    this.__calculatingDragAction = true;
 
     const touches = event.touches
     if (touches.length == 1 && this.__manipMode != 'panAndZoom') {
@@ -606,6 +649,9 @@ class CameraMouseAndKeyboard extends ParameterOwner {
       this.panAndZoom(event, dragVec, separationDist * 0.002)
       this.__manipMode = 'panAndZoom'
     }
+
+    
+    this.__calculatingDragAction = false;
   }
 
   /**
@@ -626,6 +672,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     for (let i = 0; i < touches.length; i++) {
       this.__endTouch(touches[i])
     }
+    
+    if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event);
   }
 
   /**
@@ -638,6 +686,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     for (let i = 0; i < touches.length; i++) {
       this.__endTouch(touches[i])
     }
+    if (Object.keys(this.__ongoingTouches).length == 0) this.endDrag(event)
   }
 
   /**

@@ -1,7 +1,7 @@
 import { Color } from '../Math/Color.js'
 import { TreeItem } from './TreeItem'
 import { Material } from './Material'
-import { ValueSetMode } from './Parameters'
+import { ValueSetMode } from './Parameters/index'
 
 /** Class representing a base geometry item in a scene tree.
  * @extends TreeItem
@@ -119,7 +119,6 @@ class BaseGeomItem extends TreeItem {
   readBinary(reader, context) {
     super.readBinary(reader, context)
 
-    // if (context.version >= 4) {
     if (context.versions['zea-engine'].greaterOrEqualThan([0, 0, 4])) {
       const materialName = reader.loadStr()
       // const materialName = 'Material' + this.__bodyDescId;

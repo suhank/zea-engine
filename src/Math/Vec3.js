@@ -1,14 +1,25 @@
 import { AttrValue } from './AttrValue.js'
 import { typeRegistry } from './TypeRegistry.js'
+import { Vec2 } from './Vec2.js'
 
-/** Class representing a Vec3. A Vec3 represents a three-dimensional coordinate.
- * Vector classes in zea-engine internally store values in Float32Arrays and
+/**
+ * Representing a Vec3(three-dimensional floating point vector).
+ * Vector classes in _zea-engine_ internally store values in {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array} and
  * expose getters and setters for the component values.
+ *
  * @extends AttrValue
  */
 class Vec3 extends AttrValue {
   /**
-   * Create a Vec3.
+   * Creates a Vec3.
+   *
+   * The type of values of the `(x, y, z)` coordenates can be {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Float32Array|Float32Array},
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Uint32Array|Uint32Array},
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Int32Array|Int32Array} and
+   * {@link https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/ArrayBuffer|ArrayBuffer}.
+   * <br>
+   * You can also pass one JSON object parameter.
+   *
    * @param {number} x - The x value. Default is 0.
    * @param {number} y - The y value. Default is 0.
    * @param {number} z - The z value. Default is 0.
@@ -33,7 +44,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for x value.
+   * Getter for `x` value.
+   *
    * @return {number} - Returns the x value.
    */
   get x() {
@@ -41,7 +53,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Setter for x value.
+   * Setter for `x` value.
+   *
    * @param {number} val - The val param.
    */
   set x(val) {
@@ -49,7 +62,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for y value.
+   * Getter for `y` value.
+   *
    * @return {number} - Returns the y value.
    */
   get y() {
@@ -57,7 +71,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Setter for y value.
+   * Setter for `y` value.
+   *
    * @param {number} val - The val param.
    */
   set y(val) {
@@ -65,7 +80,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Getter for z value.
+   * Getter for `z` value.
+   *
    * @return {number} - Returns the z value.
    */
   get z() {
@@ -73,7 +89,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Setter for z value.
+   * Setter for `z` value.
+   *
    * @param {number} val - The val param.
    */
   set z(val) {
@@ -81,7 +98,26 @@ class Vec3 extends AttrValue {
   }
 
   /**
+   * Getter for `xy` swizzel.
+   *
+   * @return {Vec2} - Returns the z value.
+   */
+  get xy() {
+    return new Vec2(this.__data[0], this.__data[1])
+  }
+
+  /**
+   * Getter for `yz` swizzel.
+   *
+   * @return {Vec2} - Returns the z value.
+   */
+  get yz() {
+    return new Vec2(this.__data[1], this.__data[2])
+  }
+
+  /**
    * Setter from scalar components.
+   *
    * @param {number} x - The x value.
    * @param {number} y - The y value.
    * @param {number} z - The y value.
@@ -93,15 +129,17 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The setDataArray method.
-   * @param {any} float32Array - The float32Array value.
+   * Sets the state of a Vec3 Object.
+   *
+   * @param {Float32Array} float32Array - The float32Array value.
    */
   setDataArray(float32Array) {
     this.__data = float32Array
   }
 
   /**
-   * Setter from another Vec3.
+   * Sets the state of a Vec3 Object from another Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to set from.
    */
   setFromOther(other) {
@@ -111,8 +149,9 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Returns true if the Vec3 contains 0 0 0.
-   * @return {boolean} - Returns true or false.
+   * Checks if the coordenates of this Vec3 are 0 0 0.
+   *
+   * @return {boolean} - Returns `true` if the coordenates are(0, 0, 0), otherwise, `false`.
    */
   isNull() {
     return (
@@ -123,8 +162,9 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The is111 method returns true if the Vec3 contains 1 1 1.
-   * @return {boolean} - The return value.
+   * Checks if the coordenates of this Vec3 are 1 1 1.
+   *
+   * @return {boolean} - Returns `true` if the coordenates are(1, 1, 1), otherwise, `false`.
    */
   is111() {
     return (
@@ -135,25 +175,28 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Returns true if this Vec3 is exactly the same as other.
+   * Checks if this Vec3 is exactly the same as another Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns true or false.
+   * @return {boolean} - Returns `true` if are the same Vector, otherwise, `false`.
    */
   equal(other) {
     return this.x == other.x && this.y == other.y && this.z == other.z
   }
 
   /**
-   * Returns true if this vector is NOT exactly the same other.
+   * Checks if this Vec2 is different from another Vec2.
+   *
    * @param {Vec3} other - The other Vec3 to compare with.
-   * @return {boolean} - Returns true or false.
+   * @return {boolean} - Returns `true` if the Vec3s are different, otherwise, `false`.
    */
   notEquals(other) {
     return this.x != other.x && this.y != other.y && this.z != other.z
   }
 
   /**
-   * Returns true if this Vec3 is approximately the same as other.
+   * Returns true if this Vec2 is approximately the same as other.
+   *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @param {number} precision - The precision to which the values must match.
    * @return {boolean} - Returns true or false.
@@ -168,6 +211,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Adds other to this Vec3 and return the result as a new Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to add.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -177,6 +221,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Adds other to this Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to add.
    */
   addInPlace(other) {
@@ -187,6 +232,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Subtracts other from this Vec3 and returns the result as a new Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to subtract.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -196,6 +242,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Subtracts other from this Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to subtract.
    */
   subtractInPlace(other) {
@@ -206,6 +253,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Multiplies two Vec3s and returns the result as a new Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to multiply with.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -215,6 +263,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Multiplies two Vec3s.
+   *
    * @param {Vec3} other - The other Vec3 to multiply with.
    */
   multiplyInPlace(other) {
@@ -225,6 +274,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Divides two Vec3s and returns the result as a new Vec3.
+   *
    * @param {Vec3} vec3 - The other Vec3 to divide by.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -234,6 +284,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Divides two Vec3s.
+   *
    * @param {Vec3} vec3 - The other Vec3 to divide by.
    */
   divideInPlace(vec3) {
@@ -244,6 +295,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Scales this Vec3 by scalar and returns the result as a new Vec3.
+   *
    * @param {number} scalar - The scalar value.
    * @return {Vec3} - Returns a new Vec3.
    */
@@ -253,6 +305,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Scales this Vec3 by scalar.
+   *
    * @param {number} scalar - The scalar value.
    */
   scaleInPlace(scalar) {
@@ -262,8 +315,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Negates this Vec3 (x = -x, y = -y and z = -z)
-   * and returns the result as a new Vec3.
+   * Negates this Vec3 (x = -x, y = -y and z = -z), but returns the result as a new Vec3.
+   *
    * @return {Vec3} - Returns a new Vec3.
    */
   negate() {
@@ -271,7 +324,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The inverse method.
+   * Returns the inverse of this Vec3, but returns. the result as a new Vec3
+   *
    * @return {Vec3} - Returns a new Vec3.
    */
   inverse() {
@@ -280,6 +334,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the squared length of this Vec3.
+   *
    * @return {number} - Returns the length.
    */
   lengthSquared() {
@@ -291,6 +346,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the length of this Vec3.
+   *
    * @return {number} - Returns the length.
    */
   length() {
@@ -299,6 +355,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the distance to another Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to calculate the distance to.
    * @return {number} - Returns the distance between vectors.
    */
@@ -311,6 +368,8 @@ class Vec3 extends AttrValue {
 
   /**
    * Normalizes the Vec3 and returns it as a new Vec3.
+   * Multiplies coordenates value by the inverse of the vector length.
+   *
    * @return {Vec3} - Returns the Vec3 normalized.
    */
   normalize() {
@@ -332,8 +391,9 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * Normalizes the vector, modifying it and returning its original length.
-   * @return {any} - The return value.
+   * Normalizes this Vec3 multiplying coordenate values by the inverse of the vector length.
+   *
+   * @return {number} - The return value.
    */
   normalizeInPlace() {
     let len =
@@ -348,11 +408,13 @@ class Vec3 extends AttrValue {
     this.__data[0] *= tmp
     this.__data[1] *= tmp
     this.__data[2] *= tmp
+
     return len
   }
 
   /**
-   * The resize method returns a new Vec3 with the given length.
+   * Creates and returns a new Vec3 with the new coordenates(calculated with this Vec3 coordenates and the specified length).
+   *
    * @param {number} length - The length value.
    * @return {Vec3} - The return value.
    */
@@ -373,7 +435,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The resizeInPlace method.
+   * Modifies current coordenates using the specified length.
+   *
    * @param {number} length - The length value.
    */
   resizeInPlace(length) {
@@ -392,6 +455,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the dot product of this Vec3 against another Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {number} - Returns the dot product.
    */
@@ -401,6 +465,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Calculates the cross product of two Vec3s and returns the result as a new Vec3.
+   *
    * @param {Vec3} other - The other Vec3 to calculate with.
    * @return {Vec3} - Returns the cross product as a new Vec3.
    */
@@ -417,6 +482,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Gets the angle between this Vec3 and b.
+   *
    * @param {Vec3} other - The other Vec3 to compare with.
    * @return {number} - Returns the angle in radians.
    */
@@ -431,6 +497,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Performs a linear interpolation between this Vec3 and other.
+   *
    * @param {Vec3} other - The other Vec3 to interpolate between.
    * @param {number} t - Interpolation amount between the two inputs.
    * @return {Vec3} - Returns a new Vec3.
@@ -448,6 +515,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns a new Vec3 whose component values are the abs of this Vec3s component values.
+   *
    * @return {Vec3} - Returns a new Vec3.
    */
   abs() {
@@ -456,6 +524,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Sets the vector a random vector on the surface of a sphere with the radius of the givenn scale value.
+   *
    * @param {number} scale - The radius of the surface sphere.
    * @return {Vec3} - The random Vec3.
    */
@@ -472,6 +541,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Generates a randome vector anywhere in the sphere defined by the provided scale value.
+   *
    * @param {number} scale - The radius of the bounding sphere.
    * @return {Vec3} - The random Vec3.
    */
@@ -484,6 +554,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Clones this Vec3 and returns a new Vec3.
+   *
    * @return {Vec3} - Returns a new Vec3.
    */
   clone() {
@@ -492,6 +563,7 @@ class Vec3 extends AttrValue {
 
   /**
    * Returns the type as an array. Often used to pass types to the GPU.
+   *
    * @return {array} - Returns as an array.
    */
   asArray() {
@@ -503,8 +575,10 @@ class Vec3 extends AttrValue {
 
   /**
    * Creates a new Vec3.
+   *
    * @param {...object} ...args - The ...args param.
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static create(...args) {
     return new Vec3(...args)
@@ -514,6 +588,7 @@ class Vec3 extends AttrValue {
    * The createFromJSON method.
    * @param {object} json - The json param.
    * @return {Vec3} - The return value.
+   * @private
    */
   static createFromJSON(json) {
     const result = new Vec3()
@@ -526,6 +601,7 @@ class Vec3 extends AttrValue {
    * @param {ArrayBuffer} buffer - The buffer value.
    * @param {number} offset - The offset value.
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static createFromFloat32Buffer(buffer, offset = 0) {
     return new Vec3(buffer, offset * 4) // 4 bytes per 32bit float
@@ -535,6 +611,7 @@ class Vec3 extends AttrValue {
    * The createFromFloat32Array method.
    * @param {Float32Array} array - A Float32Array value
    * @return {Vec3} - Returns a new Vec3.
+   * @private
    */
   static createFromFloat32Array(array) {
     return new Vec3(array)
@@ -543,6 +620,7 @@ class Vec3 extends AttrValue {
   /**
    * Returns the number of Float32 elements used by this type. Used to calculate storage requirements for large arrays of this type.
    * @return {number} - The return value.
+   * @private
    */
   static numElements() {
     return 3
@@ -552,7 +630,8 @@ class Vec3 extends AttrValue {
   // Persistence
 
   /**
-   * The toJSON method encodes this type as a json object for persistences.
+   * Encodes Vec3 Class as a JSON object for persistence.
+   *
    * @return {object} - The json object.
    */
   toJSON() {
@@ -564,7 +643,8 @@ class Vec3 extends AttrValue {
   }
 
   /**
-   * The fromJSON method decodes a json object for this type.
+   * Decodes a JSON object to set the state of this class.
+   *
    * @param {object} j - The json object.
    */
   fromJSON(j) {

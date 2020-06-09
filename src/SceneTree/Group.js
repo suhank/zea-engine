@@ -1,4 +1,4 @@
-import { Vec3, Color, Xfo } from '../Math'
+import { Vec3, Color, Xfo } from '../Math/index'
 import {
   ValueSetMode,
   BooleanParameter,
@@ -7,7 +7,7 @@ import {
   ColorParameter,
   ItemSetParameter,
   MultiChoiceParameter,
-} from './Parameters'
+} from './Parameters/index'
 import { MaterialParameter } from './Parameters/MaterialParameter.js'
 import { ItemFlags } from './BaseItem'
 import { TreeItem } from './TreeItem'
@@ -36,6 +36,7 @@ class Group extends TreeItem {
     // Should always have this flag set.
     this.setFlag(ItemFlags.USER_EDITED)
 
+    this.groupXfoDirty = false
     this.calculatingGroupXfo = false
     this.dirty = false
 
@@ -119,7 +120,9 @@ class Group extends TreeItem {
     // The migration to real operators should clean this up.
     // Check: servo_mestre/?stage=assembly
     this.__globalXfoParam.addEventListener('valueChanged', event => {
-      if (!this.calculatingGroupXfo) this._propagateDirtyXfoToItems()
+      if (!this.calculatingGroupXfo && !this.groupXfoDirty) {
+        this._propagateDirtyXfoToItems()
+      }
     })
   }
 
@@ -228,6 +231,7 @@ class Group extends TreeItem {
       // The xfo is manually set by the current global xfo.
       this.invGroupXfo = this.getGlobalXfo().inverse()
       this.calculatingGroupXfo = false
+      this.groupXfoDirty = false
       return
     } else if (initialXfoMode == GROUP_INITIAL_XFO_MODES.first) {
       xfo = this.__initialXfos[0]
@@ -267,6 +271,7 @@ class Group extends TreeItem {
     this.invGroupXfo = newGlobal.inverse()
 
     this.calculatingGroupXfo = false
+    this.groupXfoDirty = false
   }
 
   /**
@@ -274,7 +279,7 @@ class Group extends TreeItem {
    * @private
    */
   _propagateDirtyXfoToItems() {
-    if (this.calculatingGroupXfo) return
+    if (this.groupXfoDirty || this.calculatingGroupXfo) return
 
     const items = Array.from(this.__itemsParam.getValue())
     // Only after all the items are resolved do we have an invXfo and we can tranform our items.
@@ -505,6 +510,7 @@ class Group extends TreeItem {
       // then we need to re-bind here.
       if (!this.propagatingXfoToItems) {
         this.__initialXfos[index] = item.getGlobalXfo()
+        this.groupXfoDirty = true
         updateGlobalXfo()
       }
     })

@@ -3,7 +3,7 @@ import {
   FilePathParameter,
   BooleanParameter,
   NumberParameter,
-} from './Parameters'
+} from './Parameters/index'
 import { TreeItem } from './TreeItem.js'
 
 /** Class representing an audio item in a scene tree.

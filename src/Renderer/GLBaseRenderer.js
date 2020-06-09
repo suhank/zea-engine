@@ -1,4 +1,4 @@
-import { TreeItem, sgFactory, ParameterOwner } from '../SceneTree'
+import { TreeItem, sgFactory, ParameterOwner } from '../SceneTree/index'
 import { SystemDesc } from '../BrowserDetection.js'
 import { onResize } from '../external/onResize.js'
 import { create3DContext } from './GLContext.js'
@@ -546,15 +546,14 @@ class GLBaseRenderer extends ParameterOwner {
       const rect = this.__glcanvas.getBoundingClientRect()
       // Disabling devicePixelRatio for now. See: __onResize
       const dpr = 1.0;//window.devicePixelRatio
-      if (event.offsetX) {
-        event.rendererX = event.offsetX
-        event.rendererY = event.offsetY
-      } else {
-        // Touch events do not provide an offset X/Y and we must
-        // calculate them ourselves.
-        event.rendererX = (event.clientX - rect.left) * dpr
-        event.rendererY = (event.clientY - rect.top) * dpr
-      }
+      // Note: the rendererX/Y values are relative to the viewport,
+      // but are available outside the viewport. So when a mouse
+      // drag occurs, and drags outside the viewport, these values
+      // provide consistent coords.
+      // offsetX/Y are only valid inside the viewport and so cause
+      // jumps when the mouse leaves the viewport.
+      event.rendererX = (event.clientX - rect.left) * dpr
+      event.rendererY = (event.clientY - rect.top) * dpr
     }
 
     this.__glcanvas.addEventListener('mouseenter', event => {
@@ -650,14 +649,14 @@ class GLBaseRenderer extends ParameterOwner {
       if (activeGLRenderer) {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
-        if (!window.addEventListener) event.preventDefault()
         this.onWheel(event)
+        event.preventDefault()
       }
       return false
     }
     if (window.addEventListener)
       /** DOMMouseScroll is for mozilla. */
-      window.addEventListener('wheel', onWheel, { passive: true })
+      window.addEventListener('wheel', onWheel, { passive: false })
     else {
       /** IE/Opera. */
       window.onmousewheel = document.onmousewheel = onWheel

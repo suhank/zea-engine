@@ -68,6 +68,7 @@ const Math_log2 = function(value) {
 
 /** Class representing an image pyramid.
  * @extends GLImageAtlas
+ * @private
  */
 class ImagePyramid extends GLImageAtlas {
   /**

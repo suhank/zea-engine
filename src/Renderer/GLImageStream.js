@@ -1,9 +1,11 @@
-import { RefCounted } from '../SceneTree'
+import { RefCounted } from '../SceneTree/index'
 import { GLTexture2D } from './GLTexture2D.js'
 
 import './Shaders/GLSL/ImageStream.js'
 
-/** Class representing a GL image stream. */
+/** Class representing a GL image stream.
+ * @private
+ */
 class GLImageStream extends RefCounted {
   /**
    * Create a GL image stream.

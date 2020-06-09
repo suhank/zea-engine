@@ -1,4 +1,4 @@
-import { shaderLibrary } from '../ShaderLibrary'
+import { shaderLibrary } from '../../../ShaderLibrary'
 
 shaderLibrary.setShaderModule(
   'pragmatic-pbr/tonemap-uncharted2.glsl',

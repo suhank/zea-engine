@@ -1,5 +1,5 @@
 import { SystemDesc } from '../../BrowserDetection.js'
-import { Async } from '../../Utilities'
+import { Async } from '../../Utilities/index'
 import { BaseImage } from '../BaseImage.js'
 import { FileImage } from './FileImage.js'
 

@@ -2,19 +2,23 @@ import { SystemDesc } from '../BrowserDetection.js'
 import { BinReader } from './BinReader.js'
 import { loadBinfile } from './Utils.js'
 import { PointsProxy, LinesProxy, MeshProxy } from './Geometry/GeomProxies.js'
-import { EventEmitter } from '../Utilities'
+import { EventEmitter } from '../Utilities/index'
 
 // The GeomLibrary parses geometry data using workers.
 // This can be difficult to debug, so you can disable this 
 // by setting the following boolena to false, and uncommenting
 // the import of parseGeomsBinary
 const multiThreadParsing = true
-const GeomParserWorker = require('worker-loader?inline!./Geometry/GeomParserWorker.js')
+
+import GeomParserWorker from 'web-worker:./Geometry/GeomParserWorker.js'
+
 // import {
 //     parseGeomsBinary
 // } from './Geometry/parseGeomsBinary.js';
 
-/** Class representing a geometry library. */
+/** Class representing a geometry library.
+ * @private
+ */
 class GeomLibrary extends EventEmitter {
   /**
    * Create a geom library.

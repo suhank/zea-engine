@@ -20,12 +20,14 @@ class BaseItem extends ParameterOwner {
    */
   constructor(name) {
     super()
-    if (name == undefined) name = sgFactory.getClassName(this)
-    this.__name = name
-    this.__path = [name]
+    this.__name = name ? name : ""
+    this.__path = [this.__name]
     this.__ownerItem = undefined // TODO: will create a circular ref. Figure out and use weak refs
     this.__flags = 0
 
+    // Note: one day we will remove the concept of 'selection' from the engine
+    // and keep it only in UX. to Select an item, we will add it to the selectino
+    // in the selection manager. Then the selection group will apply a highlight.
     this.__selectable = true
     this.__selected = false
 

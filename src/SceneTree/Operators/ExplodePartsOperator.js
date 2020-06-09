@@ -1,8 +1,7 @@
-import { Vec2, Vec3 } from '../../Math'
+import { Vec2, Vec3 } from '../../Math/index'
 import { Operator } from './Operator.js'
 import { XfoOperatorOutput } from './OperatorOutput.js'
 import {
-  ValueGetMode,
   ValueSetMode,
   BooleanParameter,
   NumberParameter,
@@ -11,12 +10,13 @@ import {
   ListParameter,
   StructParameter,
   TreeItemParameter,
-} from '../Parameters'
+} from '../Parameters/index'
 
 import { sgFactory } from '../SGFactory.js'
 
 /** Class representing an explode part parameter.
  * @extends StructParameter
+ * @private
  */
 class ExplodePartParameter extends StructParameter {
   /**
@@ -216,7 +216,7 @@ class ExplodePartsOperator extends Operator {
     this.__itemsParam.addEventListener('elementRemoved', event => {
       this.removeOutput(event.elem.getOutput())
     })
-    
+
     this.__localXfos = []
     this.__parts = []
     this.__stages = 2

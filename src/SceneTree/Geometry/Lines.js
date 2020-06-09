@@ -137,6 +137,26 @@ class Lines extends BaseGeom {
   // ////////////////////////////////////////
   // Persistence
 
+  // ////////////////////////////////////////
+  // Persistence
+
+  /**
+   * The readBinary method.
+   * @param {object} reader - The reader value.
+   * @param {object} context - The context value.
+   */
+  readBinary(reader, context) {
+    super.loadBaseGeomBinary(reader)
+
+    this.setNumSegments(reader.loadUInt32())
+
+    const bytes = reader.loadUInt8()
+    if (bytes == 1) this.__indices = reader.loadUInt8Array()
+    else if (bytes == 2) this.__indices = reader.loadUInt16Array()
+    else if (bytes == 4) this.__indices = reader.loadUInt32Array()
+
+    this.geomDataChanged.emit()
+  }
   /**
    * The toJSON method encodes this type as a json object for persistences.
    * @param {object} context - The context value.

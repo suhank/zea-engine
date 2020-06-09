@@ -90,7 +90,7 @@ vec4 fetchTexel(sampler2D texture, ivec2 textureSize, ivec2 texCoord) {
 }
 
 
-#endif
+#endif // ENABLE_ES3
 
 int uvToPixelIndex(vec2 uv, int textureSize){
     return int(uv.x * float(textureSize)) + (int(floor(uv.y * float(textureSize))) * textureSize);
