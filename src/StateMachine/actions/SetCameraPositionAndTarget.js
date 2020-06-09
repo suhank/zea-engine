@@ -22,10 +22,10 @@ class SetCameraPositionAndTarget extends StateAction {
     this.addParameter(
       new TreeItemParameter('Camera', treeItem => treeItem instanceof Camera)
     )
-    this.addParameter(new Vec3Parameter('cameraPos'))
-    this.addParameter(new Vec3Parameter('cameraTarget'))
-    this.addParameter(new NumberParameter('interpTime', 1.0))
-    this.addParameter(new NumberParameter('updateFrequency', 30))
+    this.addParameter(new Vec3Parameter('CameraPos'))
+    this.addParameter(new Vec3Parameter('CameraTarget'))
+    this.addParameter(new NumberParameter('InterpTime', 1.0))
+    this.addParameter(new NumberParameter('UpdateFrequency', 30))
   }
 
   /**
@@ -33,9 +33,9 @@ class SetCameraPositionAndTarget extends StateAction {
    * @param {any} pos - The position of the camera.
    * @param {any} target - The target of the camera.
    */
-  SetCameraPositionAndTarget(pos, target) {
-    this.getParameter('cameraPos').setValue(pos)
-    this.getParameter('cameraTarget').setValue(target)
+  setCameraPositionAndTarget(pos, target) {
+    this.getParameter('CameraPos').setValue(pos)
+    this.getParameter('CameraTarget').setValue(target)
   }
 
   /**
@@ -49,15 +49,15 @@ class SetCameraPositionAndTarget extends StateAction {
       )
       return
     }
-    const posEnd = this.getParameter('cameraPos').getValue()
-    const targetEnd = this.getParameter('cameraTarget').getValue()
-    const interpTime = this.getParameter('interpTime').getValue()
+    const posEnd = this.getParameter('CameraPos').getValue()
+    const targetEnd = this.getParameter('CameraTarget').getValue()
+    const interpTime = this.getParameter('InterpTime').getValue()
     if (interpTime > 0.0) {
       const posStart = camera.getGlobalXfo().tr
       const targetStart = camera.getTargetPostion()
       const distStart = posStart.subtract(targetStart).length()
 
-      const updateFrequency = this.getParameter('updateFrequency').getValue()
+      const updateFrequency = this.getParameter('UpdateFrequency').getValue()
 
       const distEnd = posEnd.subtract(targetEnd).length()
       let settingCameraDirection = true
@@ -114,6 +114,17 @@ class SetCameraPositionAndTarget extends StateAction {
     } else {
       camera.setPositionAndTarget(posEnd, targetEnd)
     }
+  }
+  
+  /**
+   * The deactivate method.
+   */
+  deactivate() {
+    if (this.__timeoutId) {
+      clearTimeout(this.__timeoutId)
+      this.__timeoutId = undefined
+    }
+    super.deactivate()
   }
 
   /**

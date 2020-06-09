@@ -68,6 +68,11 @@ class State {
     this.__stateEvents.forEach(stateEvent => {
       stateEvent.deactivate()
     })
+    // Any activation actions that are still running should be stopped.
+    // e.g. SetParameterValue.
+    this.__activationActions.forEach(action => {
+      action.deactivate()
+    })
     this.__deactivationActions.forEach(action => {
       action.activate()
     })

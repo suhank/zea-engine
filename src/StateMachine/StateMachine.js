@@ -26,10 +26,12 @@ class StateMachine extends BaseItem {
     this.setFlag(ItemFlags.USER_EDITED)
 
     // Manually invoke the callbacks for cases where the StateMAchine
-    // is not beingn constructed by the SGFactory.
-    if (!sgFactory.isConstructing()) {
-      sgFactory.invokeCallbacks(this)
-    }
+    // is not being constructed by the SGFactory.
+    // TODO: Maybe in BaseItem.construct we should invoke the callbacks
+    // for all classes.
+    // if (!sgFactory.isConstructing()) {
+    //   sgFactory.invokeCallbacks(this)
+    // }
   }
 
   /**

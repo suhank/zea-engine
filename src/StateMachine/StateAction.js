@@ -89,7 +89,11 @@ class StateAction extends ParameterOwner {
   /**
    * The deactivate method.
    */
-  deactivate() {}
+  deactivate() {
+    this.__childActions.forEach(action => {
+      action.deactivate()
+    })
+  }
 
   /**
    * The __onDone method.
