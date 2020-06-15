@@ -113,7 +113,11 @@ class EventEmitter {
    * @param {function} listener - The listener function.
    */
   off(eventName, listener) {
-    this.removeListener(eventName, listener)
+    if (typeof listener == 'number') {
+      this.removeListenerById(eventName, listener)
+    } else {
+      this.removeListener(eventName, listener)
+    }
   }
 
   /**
