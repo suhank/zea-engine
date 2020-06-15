@@ -209,17 +209,10 @@ class ParameterOwner extends EventEmitter {
     let savedParams = 0
     for (const param of this.__params) {
       if (!param.testFlag(ParamFlags.USER_EDITED)) continue
-      if (param.numRefs() > 1 && param.getRefIndex(this) != 0) {
-        paramsJSON[param.getName()] = {
-          paramPath: context.makeRelative(param.getPath()),
-        }
+      const paramJSON = param.toJSON(context, flags)
+      if (paramJSON) {
+        paramsJSON[param.getName()] = paramJSON
         savedParams++
-      } else {
-        const paramJSON = param.toJSON(context, flags)
-        if (paramJSON) {
-          paramsJSON[param.getName()] = paramJSON
-          savedParams++
-        }
       }
     }
     if (savedParams > 0) return { params: paramsJSON }
