@@ -8,6 +8,15 @@ shaderLibrary.setShaderModule(
 int ftoi(float val){
     return int(floor(val + 0.5));
 }
+ivec2 ftoi(vec2 v2) {
+    return ivec2(ftoi(v2.x), ftoi(v2.y));
+}
+ivec3 ftoi(vec3 v4) {
+    return ivec3(ftoi(v4.x), ftoi(v4.y), ftoi(v4.z));
+}
+ivec4 ftoi(vec4 v4) {
+    return ivec4(ftoi(v4.x), ftoi(v4.y), ftoi(v4.z), ftoi(v4.w));
+}
 
 #ifdef ENABLE_ES3
 
