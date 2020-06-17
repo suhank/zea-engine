@@ -111,11 +111,8 @@ class GLGeomItemSet extends EventEmitter {
       // console.log("highlightChanged:", glgeomItem.getGeomItem().getName(), glgeomItem.getGeomItem().isHighlighted(), this.highlightedItems)
       this.highlightedIdsBufferDirty = true
     }
-    signalIds.sel = glgeomItem.addListener(
-      'highlightChanged',
-      highlightChanged
-    )
-    const visibilityChanged = event => {
+    signalIds.hil = glgeomItem.on('highlightChanged', highlightChanged)
+    const visibilityChanged = (event) => {
       const visible = event.visible
       if (visible) {
         this.visibleItems.push(index)
@@ -126,10 +123,7 @@ class GLGeomItemSet extends EventEmitter {
       }
       this.drawIdsBufferDirty = true
     }
-    signalIds.vis = glgeomItem.addListener(
-      'visibilityChanged',
-      visibilityChanged
-    )
+    signalIds.vis = glgeomItem.on('visibilityChanged', visibilityChanged)
 
     this.glgeomItems[index] = glgeomItem
     this.glgeomItemSignalIds[index] = signalIds
@@ -144,7 +138,7 @@ class GLGeomItemSet extends EventEmitter {
   removeGeomItem(glgeomItem) {
     const index = this.glgeomItems.indexOf(glgeomItem)
     const signalIds = this.glgeomItemSignalIds[index]
-    glgeomItem.removeListenerById('highlightChanged', signalIds.sel)
+    glgeomItem.removeListenerById('highlightChanged', signalIds.hil)
     glgeomItem.removeListenerById('visibilityChanged', signalIds.vis)
 
     this.glgeomItems[index] = null

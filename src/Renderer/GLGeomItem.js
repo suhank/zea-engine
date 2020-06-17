@@ -57,6 +57,7 @@ class GLGeomItem extends EventEmitter {
     }
     const highlightChanged = () => {
       this.emit('updated', { type: GLGeomItemChangeType.HIGHLIGHT_CHANGED })
+      this.emit('highlightChanged')
     }
     const glGeomUpdated = () => {
       this.emit('updated', { type: GLGeomItemChangeType.GEOM_CHANGED })
