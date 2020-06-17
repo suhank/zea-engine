@@ -366,6 +366,8 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     } else {
       this.__manipulationState = this.__defaultManipulationState
     }
+    event.stopPropagation()
+    event.preventDefault()
   }
 
   /**
@@ -398,6 +400,7 @@ class CameraMouseAndKeyboard extends ParameterOwner {
     this.__dragging = true
     this.__calculatingDragAction = false
     event.stopPropagation()
+    event.preventDefault()
   }
 
   /**

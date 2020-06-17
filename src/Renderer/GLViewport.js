@@ -7,6 +7,7 @@ import { GLTexture2D } from './GLTexture2D.js'
 import { CameraMouseAndKeyboard } from '../SceneTree/index'
 
 /** Class representing a GL viewport.
+ * 
  * @extends GLBaseViewport
  */
 class GLViewport extends GLBaseViewport {
@@ -476,7 +477,6 @@ class GLViewport extends GLBaseViewport {
   __prepareEvent(event) {
     event.viewport = this
     event.propagating = true
-    event.stopPropagation()
     event.stopPropagation = () => {
       event.propagating = false
     }
