@@ -474,7 +474,7 @@ class GLBaseRenderer extends ParameterOwner {
     this.__glcanvasDiv = canvasDiv
     this.__glcanvasDiv.appendChild(this.__glcanvas)
 
-    onResize(this.__glcanvas, event => {
+    onResize(this.__glcanvas, (event) => {
       this.__onResize()
     })
     this.__onResize()
@@ -556,8 +556,7 @@ class GLBaseRenderer extends ParameterOwner {
       event.rendererY = (event.clientY - rect.top) * dpr
     }
 
-    this.__glcanvas.addEventListener('mouseenter', event => {
-      event.stopPropagation()
+    this.__glcanvas.addEventListener('mouseenter', (event) => {
       event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
         activeGLRenderer = this
@@ -567,9 +566,8 @@ class GLBaseRenderer extends ParameterOwner {
         mouseLeft = false
       }
     })
-    this.__glcanvas.addEventListener('mouseleave', event => {
+    this.__glcanvas.addEventListener('mouseleave', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       if (!mouseIsDown) {
         const vp = activeGLRenderer.getActiveViewport()
@@ -582,8 +580,7 @@ class GLBaseRenderer extends ParameterOwner {
         mouseLeft = true
       }
     })
-    this.__glcanvas.addEventListener('mousedown', event => {
-      event.stopPropagation()
+    this.__glcanvas.addEventListener('mousedown', (event) => {
       event.undoRedoManager = this.undoRedoManager
       calcRendererCoords(event)
       mouseIsDown = true
@@ -596,12 +593,9 @@ class GLBaseRenderer extends ParameterOwner {
       mouseLeft = false
       return false
     })
-    document.addEventListener('mouseup', event => {
+    document.addEventListener('mouseup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
-      // if(mouseIsDown && mouseMoveDist < 0.01)
-      //     mouseClick(event);
       calcRendererCoords(event)
       mouseIsDown = false
       const vp = activeGLRenderer.getActiveViewport()
@@ -619,19 +613,17 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    // document.addEventListener('dblclick', event =>{
+    // document.addEventListener('dblclick', (event) =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
-    // document.addEventListener('click', event =>{
+    // document.addEventListener('click', (event) =>{
     //     event.preventDefault();
     //     event.stopPropagation();
     // });
 
-    document.addEventListener('mousemove', event => {
+    document.addEventListener('mousemove', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
-      event.preventDefault()
-      event.stopPropagation()
       event.undoRedoManager = this.undoRedoManager
       calcRendererCoords(event)
       if (!mouseIsDown)
@@ -644,13 +636,11 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     })
 
-    const onWheel = event => {
+    const onWheel = (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       if (activeGLRenderer) {
         event.undoRedoManager = this.undoRedoManager
         this.onWheel(event)
-        event.stopPropagation()
-        event.preventDefault()
       }
       return false
     }
@@ -666,7 +656,7 @@ class GLBaseRenderer extends ParameterOwner {
       return false
     }
 
-    document.addEventListener('keypress', event => {
+    document.addEventListener('keypress', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -675,7 +665,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keydown', event => {
+    document.addEventListener('keydown', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -684,7 +674,7 @@ class GLBaseRenderer extends ParameterOwner {
       }
     })
 
-    document.addEventListener('keyup', event => {
+    document.addEventListener('keyup', (event) => {
       if (activeGLRenderer != this || !isValidCanvas()) return
       const key = String.fromCharCode(event.keyCode).toLowerCase()
       const vp = activeGLRenderer.getActiveViewport()
@@ -695,7 +685,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchstart',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         for (let i = 0; i < event.touches.length; i++) {
@@ -708,7 +698,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchmove',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         for (let i = 0; i < event.touches.length; i++) {
@@ -721,7 +711,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchend',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         for (let i = 0; i < event.touches.length; i++) {
@@ -734,7 +724,7 @@ class GLBaseRenderer extends ParameterOwner {
 
     this.__glcanvas.addEventListener(
       'touchcancel',
-      event => {
+      (event) => {
         event.stopPropagation()
         event.undoRedoManager = this.undoRedoManager
         this.getViewport().onTouchCancel(event)
@@ -912,11 +902,11 @@ class GLBaseRenderer extends ParameterOwner {
     // Always get the last display. Additional displays are added at the end.(e.g. [Polyfill, HMD])
     const xrvp = new VRViewport(this)
     
-    const emitViewChanged = event => {
+    const emitViewChanged = (event) => {
       this.emit('viewChanged', event)
     }
 
-    xrvp.addListener('presentingChanged', event => {
+    xrvp.addListener('presentingChanged', (event) => {
       const state = event.state
       this.__xrViewportPresenting = state
       if (state) {
