@@ -82,10 +82,10 @@ class BaseParameter extends EventEmitter {
   }
 
   /**
-   * Adds the owner of the parameter.
+   * Sets the owner of the parameter.
    * @param {any} ownerItem - The ownerItem value.
    */
-  addOwner(ownerItem) {
+  setOwner(ownerItem) {
     this.ownerItem = ownerItem
   }
 

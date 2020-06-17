@@ -118,6 +118,7 @@ class ParameterOwner extends EventEmitter {
     )
     this.__params.push(param)
     this.__paramMapping[name] = this.__params.length - 1
+    param.setOwner(this)
     this.emit('parameterAdded', { name })
     return param
   }
