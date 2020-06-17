@@ -21,7 +21,30 @@ const GROUP_INITIAL_XFO_MODES = {
   globalOri: 3,
 }
 
-/** Class representing a group in the scene tree.
+/** Groups are a special type of `TreeItem` that allows you to gather/classify/organize/modify
+ * multiple items contained within the group. Items can be added to the group directly, or using
+ * the path. It doesn't host the actual items; it only contains the reference to them. All
+ * parameters set to the group are also set to the children; in other words, it is a faster way
+ * to apply common things to multiple items.
+ * 
+ * == Parameters ===
+ * - 'CutAwayEnabled': erflkgm
+ * 
+ * ```
+ * const group = new Group("MyGroup")
+ * ```
+ * 
+ * ```
+ * group.addItem(treeItem)
+ * ```
+ * 
+ * ```
+ * group.resolveItems([
+ *    <path1>,
+ *    <path2>
+ *  ])
+ * ```
+ * 
  * @extends TreeItem
  */
 class Group extends TreeItem {
@@ -209,6 +232,7 @@ class Group extends TreeItem {
 
   /**
    * Calculate the group Xfo translate.
+   * @private
    * @return {Xfo} - Returns a new Xfo.
    */
   calcGroupXfo() {
