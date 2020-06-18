@@ -152,6 +152,16 @@ function isWebGLSupported() {
 }
 
 function getSystemDesc() {
+  if (!globalThis.navigator) {
+    return {
+      isMobileDevice: false,
+      isIOSDevice: false,
+      browserName: "Node",
+      webGLSupported: false,
+      gpuDesc: null,
+      deviceCategory: "High",
+    }
+  }
   const isMobile = isMobileDevice()
   const browserDesc = getBrowserDesc()
   const gpuDesc = getGPUDesc()

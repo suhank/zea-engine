@@ -70,30 +70,32 @@ class ResourceLoader extends EventEmitter {
     this.__workers = []
     this.__nextWorker = 0
 
-    let baseUrl
-    const scripts = document.getElementsByTagName('script')
-    for (let i = 0; i < scripts.length; i++) {
-      const script = scripts[i]
-      if (script.src.includes('zea-engine')) {
-        const parts = script.src.split('/')
-        parts.pop()
-        parts.pop()
-        baseUrl = parts.join('/')
-        break
+    if (globalThis.navigator) {
+      let baseUrl
+      const scripts = document.getElementsByTagName('script')
+      for (let i = 0; i < scripts.length; i++) {
+        const script = scripts[i]
+        if (script.src.includes('zea-engine')) {
+          const parts = script.src.split('/')
+          parts.pop()
+          parts.pop()
+          baseUrl = parts.join('/')
+          break
+        }
       }
+      if (!baseUrl) {
+        baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
+      }
+      this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
+      this.addResourceURL(
+        'ZeaEngine/Vive.vla',
+        baseUrl + '/public-resources/Vive.vla'
+      )
+      this.addResourceURL(
+        'ZeaEngine/Oculus.vla',
+        baseUrl + '/public-resources/Oculus.vla'
+      )
     }
-    if (!baseUrl) {
-      baseUrl = 'https://unpkg.com/@zeainc/zea-engine@0.1.3'
-    }
-    this.wasmUrl = baseUrl + '/public-resources/unpack.wasm'
-    this.addResourceURL(
-      'ZeaEngine/Vive.vla',
-      baseUrl + '/public-resources/Vive.vla'
-    )
-    this.addResourceURL(
-      'ZeaEngine/Oculus.vla',
-      baseUrl + '/public-resources/Oculus.vla'
-    )
   }
 
   /**
