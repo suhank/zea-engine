@@ -255,13 +255,7 @@ class ResourceLoader extends EventEmitter {
    * The freeData method.
    * @param {ArrayBuffer} buffer - The buffer value.
    */
-  freeData(buffer) {
-    // Note: Explicitly transfer data to a web worker and then
-    // terminate the worker. (hacky way to free TypedArray memory explicitly)
-    // let worker = new FreeMemWorker();
-    // worker.postMessage(buffer, [buffer]);
-    // worker.terminate();
-  }
+  freeData(buffer) {}
 
   /**
    * The __getWorker method.
